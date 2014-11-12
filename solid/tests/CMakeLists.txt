@@ -15,21 +15,6 @@ endif(WIN32)
 target_link_libraries(fakehardwaretest solid_static ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTTEST_LIBRARY} )
 add_definitions(-DTEST_DATA="\\"${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw/fakecomputer.xml\\"")
 
-
-########### halbasictest ###############
-
-if(NOT WIN32 AND NOT APPLE)
-set(halbasictest_SRCS halbasictest.cpp )
-
-kde4_add_executable(halbasictest ${halbasictest_SRCS})
-
-if(WIN32)
-  set_target_properties(halbasictest PROPERTIES COMPILE_FLAGS -DSOLID_EXPORT=)
-endif(WIN32)
-
-target_link_libraries(halbasictest solid_static ${KDEWIN_LIBRARIES} ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTTEST_LIBRARY} )
-endif(NOT WIN32 AND NOT APPLE)
-
 ########### solidhwtest ###############
 
 set(solidhwtest_SRCS 
@@ -47,24 +32,6 @@ if(WIN32)
 endif(WIN32)
 
 target_link_libraries(solidhwtest ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTTEST_LIBRARY} ${LIBS} solid_static)
-
-########### solidmttest ###############
-
-set(solidmttest_SRCS 
-   solidmttest.cpp )
-
-
-kde4_add_unit_test(solidmttest ${solidmttest_SRCS})
-add_definitions(-DFAKE_COMPUTER_XML="\\"${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw/fakecomputer.xml\\"")
-
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw )
-
-if(WIN32)
-  set_target_properties(solidmttest PROPERTIES COMPILE_FLAGS -DSOLID_EXPORT=)
-  set (LIBS ${KDEWIN_LIBRARIES})
-endif(WIN32)
-
-target_link_libraries(solidmttest ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTTEST_LIBRARY} ${LIBS} solid_static)
 
 ########### solidnettestdbusservice ###############
 

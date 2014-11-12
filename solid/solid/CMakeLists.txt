@@ -46,7 +46,6 @@ configure_file(config-processor.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-proce
 
 file(MAKE_DIRECTORY
    ${CMAKE_CURRENT_BINARY_DIR}/backends/fakehw
-   ${CMAKE_CURRENT_BINARY_DIR}/backends/hal
    ${CMAKE_CURRENT_BINARY_DIR}/backends/udev
    ${CMAKE_CURRENT_BINARY_DIR}/backends/wmi
    ${CMAKE_CURRENT_BINARY_DIR}/backends/win
@@ -249,33 +248,6 @@ if(NOT WIN32 AND NOT APPLE)
                       )
    endif( UDEV_FOUND )
 
-
-   message(STATUS "Building Solid HAL backend." )
-   set(solid_LIB_SRCS ${solid_LIB_SRCS}
-   backends/hal/halacadapter.cpp
-   backends/hal/halaudiointerface.cpp
-   backends/hal/halbattery.cpp
-   backends/hal/halblock.cpp
-   backends/hal/halbutton.cpp
-   backends/hal/halcamera.cpp
-   backends/hal/halcdrom.cpp
-   backends/hal/haldeviceinterface.cpp
-   backends/hal/haldvbinterface.cpp
-   backends/hal/halfstabhandling.cpp
-   backends/hal/halgenericinterface.cpp
-   backends/hal/haldevice.cpp
-   backends/hal/halmanager.cpp
-   backends/hal/halnetworkinterface.cpp
-   backends/hal/halserialinterface.cpp
-   backends/hal/halopticaldisc.cpp
-   backends/hal/halportablemediaplayer.cpp
-   backends/hal/halprocessor.cpp
-   backends/hal/halstorageaccess.cpp
-   backends/hal/halstorage.cpp
-   backends/hal/halvideo.cpp
-   backends/hal/halvolume.cpp
-   backends/hal/halsmartcardreader.cpp
-   )
 
    message(STATUS "Building Solid UPower backend." )
    set(solid_LIB_SRCS ${solid_LIB_SRCS}
