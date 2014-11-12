@@ -28,7 +28,7 @@
 #include <QtCore/QDir>
 #include <QtXml/QDomDocument>
 #include <QtCore/QFile>
-#include <QtCore/QTextIStream>
+#include <QtCore/QTextStream>
 #include <QtGui/QWidget>
 #include <QtCore/QDate>
 #include <QtCore/QVariant>

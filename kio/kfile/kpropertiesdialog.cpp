@@ -65,7 +65,7 @@ extern "C" {
 #include <QtGui/QPushButton>
 #include <QtGui/QCheckBox>
 #include <QtCore/QMutableStringListIterator>
-#include <QtCore/QTextIStream>
+#include <QtCore/QTextStream>
 #include <QtGui/QPainter>
 #include <QtGui/QLayout>
 #include <QtGui/QStyle>

@@ -9,7 +9,6 @@ install( FILES
  kfontrequester.png
  kurlrequester.png
  kcombobox.png
- k3iconview.png
  kintspinbox.png
  kled.png
  ksqueezedtextlabel.png
@@ -18,7 +17,6 @@ install( FILES
  kcmodule.png
  kdoublenuminput.png
  klistbox.png
- k3listview.png
  kactivelabel.png
  kiconbutton.png
  kcolorcombo.png

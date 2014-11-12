@@ -33,7 +33,7 @@
 #include <QtGui/QApplication>
 #include <QtCore/QFile>
 #include <QtCore/QMetaClassInfo>
-#include <QtCore/QTextIStream>
+#include <QtCore/QTextStream>
 
 #include <klocale.h>
 #include <ktemporaryfile.h>

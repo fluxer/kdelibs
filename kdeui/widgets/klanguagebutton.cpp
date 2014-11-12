@@ -23,7 +23,6 @@
 #include <QtGui/QMenu>
 #include <QtGui/QLayout>
 #include <QtGui/QPushButton>
-#include <QtGui/QMenuItem>
 
 #include <klocale.h>
 #include <kstandarddirs.h>

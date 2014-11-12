@@ -249,13 +249,6 @@ set(KDE4_KPTY_INCLUDES ${CMAKE_SOURCE_DIR}/kpty ${KDE4_KIO_INCLUDES} )
 set(KDE4_KPARTS_INCLUDES ${CMAKE_SOURCE_DIR}/kparts
                          ${KDE4_KIO_INCLUDES})
 
-# kde3support depends on kparts
-set(KDE4_KDE3SUPPORT_INCLUDES ${CMAKE_SOURCE_DIR}/kde3support
-                              ${CMAKE_SOURCE_DIR}/kde3support/kdecore
-                              ${CMAKE_SOURCE_DIR}/kde3support/kdeui
-                              ${CMAKE_SOURCE_DIR}/kde3support/kio
-                              ${KDE4_KPARTS_INCLUDES})
-
 if(NOT WINCE)
  set(KDE4_KHTML_INCLUDES ${CMAKE_SOURCE_DIR}/khtml)
 endif(NOT WINCE)
@@ -327,9 +320,6 @@ endif(NOT WINCE)
 add_subdirectory( kio )
 add_subdirectory( solid )
 add_subdirectory( kded       )
-if (QT_QT3SUPPORT_FOUND)
-   add_subdirectory( kde3support  )
-endif (QT_QT3SUPPORT_FOUND)
 add_subdirectory( kfile )
 add_subdirectory( kconf_update )
 if(NOT WINCE)

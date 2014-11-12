@@ -27,7 +27,6 @@
 # available ones to set include:
 #                    QT_DONT_USE_QTCORE
 #                    QT_DONT_USE_QTGUI
-#                    QT_USE_QT3SUPPORT
 #                    QT_USE_QTASSISTANT
 #                    QT_USE_QAXCONTAINER
 #                    QT_USE_QAXSERVER
@@ -175,7 +174,6 @@
 #  QT_EDITION_DESKTOPLIGHT  True if QT_EDITION == DesktopLight
 #  QT_QTCORE_FOUND          True if QtCore was found.
 #  QT_QTGUI_FOUND           True if QtGui was found.
-#  QT_QT3SUPPORT_FOUND      True if Qt3Support was found.
 #  QT_QTASSISTANT_FOUND     True if QtAssistant was found.
 #  QT_QTASSISTANTCLIENT_FOUND  True if QtAssistantClient was found.
 #  QT_QAXCONTAINER_FOUND    True if QAxContainer was found (Windows only).
@@ -224,7 +222,6 @@
 #
 #  QT_INCLUDE_DIR              Path to "include" of Qt4
 #  QT_QT_INCLUDE_DIR           Path to "include/Qt" 
-#  QT_QT3SUPPORT_INCLUDE_DIR   Path to "include/Qt3Support" 
 #  QT_QTASSISTANT_INCLUDE_DIR  Path to "include/QtAssistant" 
 #  QT_QTASSISTANTCLIENT_INCLUDE_DIR       Path to "include/QtAssistant"
 #  QT_QAXCONTAINER_INCLUDE_DIR Path to "include/ActiveQt" (Windows only)
@@ -263,8 +260,6 @@
 # For every library of Qt, a QT_QTFOO_LIBRARY variable is defined, with the full path to the library.
 #
 # So there are the following variables:
-# The Qt3Support library:     QT_QT3SUPPORT_LIBRARY
-#
 # The QtAssistant library:    QT_QTASSISTANT_LIBRARY
 #
 # The QtAssistantClient library:  QT_QTASSISTANTCLIENT_LIBRARY
@@ -366,18 +361,6 @@ IF( Qt4_FIND_COMPONENTS )
 
 ENDIF( Qt4_FIND_COMPONENTS )
 
-# If Qt3 has already been found, fail.
-IF(QT_QT_LIBRARY)
-  IF(Qt4_FIND_REQUIRED)
-    MESSAGE( FATAL_ERROR "Qt3 and Qt4 cannot be used together in one project.  If switching to Qt4, the CMakeCache.txt needs to be cleaned.")
-  ELSE(Qt4_FIND_REQUIRED)
-    IF(NOT Qt4_FIND_QUIETLY)
-      MESSAGE( STATUS    "Qt3 and Qt4 cannot be used together in one project.  If switching to Qt4, the CMakeCache.txt needs to be cleaned.")
-    ENDIF(NOT Qt4_FIND_QUIETLY)
-    RETURN()
-  ENDIF(Qt4_FIND_REQUIRED)
-ENDIF(QT_QT_LIBRARY)
-
 function(_QT4_QUERY_QMAKE VAR RESULT)
   exec_program(${QT_QMAKE_EXECUTABLE} ARGS "-query ${VAR}" RETURN_VALUE return_code OUTPUT_VARIABLE output )
   if(NOT return_code)
@@ -447,7 +430,6 @@ GET_FILENAME_COMPONENT(qt_install_version "[HKEY_CURRENT_USER\\Software\\trollte
 # Debian uses qmake-qt4
 # macports' Qt uses qmake-mac
 FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake qmake4 qmake-qt4 qmake-mac PATHS
-  "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
   "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\${qt_install_version};InstallDir]/bin"
   $ENV{QTDIR}/bin
@@ -466,11 +448,10 @@ IF (QT_QMAKE_EXECUTABLE)
   
   _qt4_query_qmake(QT_VERSION QTVERSION)
 
-  # check for qt3 qmake and then try and find qmake4 or qmake-qt4 in the path
+  # check for qmake and then try and find qmake4 or qmake-qt4 in the path
   IF(NOT QTVERSION)
     SET(QT_QMAKE_EXECUTABLE NOTFOUND CACHE FILEPATH "" FORCE)
     FIND_PROGRAM(QT_QMAKE_EXECUTABLE NAMES qmake4 qmake-qt4 PATHS
-      "[HKEY_CURRENT_USER\\Software\\Trolltech\\Qt3Versions\\4.0.0;InstallDir]/bin"
       "[HKEY_CURRENT_USER\\Software\\Trolltech\\Versions\\4.0.0;InstallDir]/bin"
       $ENV{QTDIR}/bin
       DOC "The qmake executable for the Qt installation to use"
@@ -702,7 +683,7 @@ IF (QT4_QMAKE_FOUND)
   #
   ########################################
 
-  SET(QT_MODULES QtCore QtGui Qt3Support QtSvg QtScript QtTest QtUiTools 
+  SET(QT_MODULES QtCore QtGui QtSvg QtScript QtTest QtUiTools 
                  QtHelp QtWebKit QtXmlPatterns QtNetwork QtMultimedia
                  QtNsPlugin QtOpenGL QtSql QtXml QtDesigner QtDBus QtScriptTools
                  QtDeclarative)
@@ -1025,7 +1006,6 @@ IF (QT4_QMAKE_FOUND)
   # library include path to QT_INCLUDES
   _QT4_ADJUST_LIB_VARS(QtCore)
   _QT4_ADJUST_LIB_VARS(QtGui)
-  _QT4_ADJUST_LIB_VARS(Qt3Support)
   _QT4_ADJUST_LIB_VARS(QtAssistant)
   _QT4_ADJUST_LIB_VARS(QtAssistantClient)
   _QT4_ADJUST_LIB_VARS(QtCLucene)
