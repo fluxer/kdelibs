@@ -1,7 +1,6 @@
 #ifndef _BLA_H_
 #define _BLA_H_
 
-#include <k3process.h>
 #include <QtCore/QString>
 #include <QtCore/QObject>
 
