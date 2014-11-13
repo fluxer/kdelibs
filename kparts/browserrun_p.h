@@ -24,13 +24,7 @@
 #include <kio/copyjob.h>
 #include <kdebug.h>
 
-#include "config-nepomuk.h"
-
 #include <QtCore/QDateTime>
-
-#ifdef HAVE_NEPOMUK
-#include "../nepomuk/utils/utils.h"
-#endif
 
 namespace KParts {
 
@@ -64,12 +58,6 @@ private Q_SLOTS:
             kDebug() << "download finished: srcUrl=" << fileCopyJob->srcUrl()
                      << "destUrl=" << fileCopyJob->destUrl()
                      << "referrer=" << m_metaData.value("referrer");
-#ifdef HAVE_NEPOMUK
-            Nepomuk::Utils::createCopyEvent( fileCopyJob->srcUrl(),
-                                             fileCopyJob->destUrl(),
-                                             m_downloadJobStartTime,
-                                             KUrl(m_metaData.value("referrer")) );
-#endif
         }
     }
 

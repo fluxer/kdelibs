@@ -2,36 +2,16 @@ project(kio)
 
 if(KDE_PLATFORM_FEATURE_BINARY_INCOMPATIBLE_FEATURE_REDUCTION)
    set(KIO_NO_SOLID TRUE)
-   set(KIO_NO_NEPOMUK TRUE)
 endif(KDE_PLATFORM_FEATURE_BINARY_INCOMPATIBLE_FEATURE_REDUCTION)
-
-if(NOT HAVE_NEPOMUK)
-   set(KIO_NO_NEPOMUK TRUE)
-endif(NOT HAVE_NEPOMUK)
 
 if(NOT STRIGI_FOUND)
    set(KIO_NO_STRIGI TRUE)
 endif(NOT STRIGI_FOUND)
 
-if(NOT SOPRANO_FOUND)
-   set(KIO_NO_SOPRANO TRUE)
-endif(NOT SOPRANO_FOUND)
-
 if(OPENSSL_FOUND)
    set(KSSL_HAVE_SSL 1)
    include_directories(${OPENSSL_INCLUDE_DIR})
 endif(OPENSSL_FOUND)
-
-if(NOT KIO_NO_NEPOMUK)
-    include_directories(
-       ${SOPRANO_INCLUDE_DIR}
-       ${CMAKE_SOURCE_DIR}/nepomuk/
-       ${CMAKE_SOURCE_DIR}/nepomuk/core/
-       ${CMAKE_SOURCE_DIR}/nepomuk/types/    
-       ${CMAKE_SOURCE_DIR}/nepomuk/ui/
-       ${CMAKE_SOURCE_DIR}/nepomuk/query/
-    )
-endif(NOT KIO_NO_NEPOMUK)
 
 # This applies to all subdirs; let's put kio's dependencies (and own dirs) here, once and for all
 include_directories(
@@ -52,10 +32,6 @@ if (NOT KIO_NO_STRIGI)
    include_directories(${STRIGI_INCLUDE_DIR})
    set(KIO_EXTRA_LIBS ${KIO_EXTRA_LIBS} ${STRIGI_STREAMANALYZER_LIBRARY} ${STRIGI_STREAMS_LIBRARY})
 endif()
-
-if (NOT KIO_NO_SOPRANO)
-   include_directories(${SOPRANO_INCLUDE_DIR})
-endif (NOT KIO_NO_SOPRANO)
 
 if(NOT KIO_NO_SOLID)
    include_directories(${CMAKE_BINARY_DIR}/solid/)
@@ -250,15 +226,6 @@ if(NOT KIO_NO_SOLID)
     )
 endif(NOT KIO_NO_SOLID)
 
-if(NOT KIO_NO_NEPOMUK)
-  set(kfile_STAT_SRCS
-    ${kfile_STAT_SRCS}
-    kfile/kcommentwidget.cpp
-    kfile/kfilemetadatareader.cpp
-    kfile/kfilemetadataprovider.cpp
-    )
-endif(NOT KIO_NO_NEPOMUK)
-
 if(NOT WIN32)
   set(kfile_STAT_SRCS
     ${kfile_STAT_SRCS}
@@ -305,12 +272,6 @@ set(kio_LIB_PRIVATE_SRCS
     kio/slaveinterface_p.h
 )
 
-if(NOT KIO_NO_NEPOMUK)
-    set(kfilemetadatareaderprocess_SRCS
-        kfile/kfilemetadatareaderprocess.cpp
-    )
-endif(NOT KIO_NO_NEPOMUK)
-
 kde4_add_ui_files(kio_LIB_SRCS
    kfile/kpropertiesdesktopadvbase.ui
    kfile/kpropertiesdesktopbase.ui
@@ -326,11 +287,6 @@ install(FILES kssl/ksslcertificatemanager.upd
 
 kde4_add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
-if(NOT KIO_NO_NEPOMUK)
-  kde4_add_executable(kfilemetadatareader ${kfilemetadatareaderprocess_SRCS})
-  target_link_libraries(kfilemetadatareader ${KDE4_KIO_LIBS} ${KDE4_NEPOMUK_LIBRARY} nepomukutils)
-  target_link_libraries(kio ${KDE4_NEPOMUK_LIBRARY} nepomukquery nepomukutils)
-endif(NOT KIO_NO_NEPOMUK)
 target_link_libraries(kio ${KDE4_KDEUI_LIBS} ${ZLIB_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${X11_LIBRARIES} ${KIO_EXTRA_LIBS})
 target_link_libraries(kio LINK_INTERFACE_LIBRARIES kdeui kdecore ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} )
 
@@ -349,9 +305,6 @@ set_target_properties(kio PROPERTIES VERSION ${KDE_NON_GENERIC_LIB_VERSION}
 
 ########### install files ###############
 install(TARGETS kio EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-if(NOT KIO_NO_NEPOMUK)
-    install(TARGETS kfilemetadatareader ${INSTALL_TARGETS_DEFAULT_ARGS})
-endif(NOT KIO_NO_NEPOMUK)
 
 install( PROGRAMS useragent.pl proxytype.pl  DESTINATION ${KCONF_UPDATE_INSTALL_DIR} )
 

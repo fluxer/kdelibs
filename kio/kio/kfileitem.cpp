@@ -1621,23 +1621,7 @@ KUrl KFileItem::targetUrl() const
 
 KUrl KFileItem::nepomukUri() const
 {
-#ifndef KIO_NO_NEPOMUK
-    if (!d)
-        return KUrl();
-
-    const QString nepomukUriStr = d->m_entry.stringValue( KIO::UDSEntry::UDS_NEPOMUK_URI );
-    if(!nepomukUriStr.isEmpty()) {
-        return KUrl(nepomukUriStr);
-    }
-    else if(targetUrl().isLocalFile()) {
-        return targetUrl();
-    }
-    else {
-        return KUrl();
-    }
-#else
     return KUrl();
-#endif
 }
 
 /*

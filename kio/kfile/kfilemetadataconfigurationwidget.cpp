@@ -27,15 +27,6 @@
 #include <klocale.h>
 
 #include <config-kio.h>
-#ifndef KIO_NO_NEPOMUK
-    #define DISABLE_NEPOMUK_LEGACY
-    #include <resource.h>
-    #include <resourcemanager.h>
-    #include <property.h>
-    #include <variant.h>
-
-    #include "kfilemetadataprovider_p.h"
-#endif
 
 #include <QEvent>
 #include <QListWidget>
@@ -60,9 +51,6 @@ public:
 
     int m_visibleDataTypes;
     KFileItemList m_fileItems;
-#ifndef KIO_NO_NEPOMUK
-    KFileMetaDataProvider* m_provider;
-#endif
     QListWidget* m_metaDataList;
 
 private:
@@ -72,9 +60,6 @@ private:
 KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWidget* parent) :
     m_visibleDataTypes(0),
     m_fileItems(),
-#ifndef KIO_NO_NEPOMUK
-    m_provider(0),
-#endif
     m_metaDataList(0),
     q(parent)
 {
@@ -85,9 +70,6 @@ KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWid
     QVBoxLayout* layout = new QVBoxLayout(q);
     layout->addWidget(m_metaDataList);
 
-#ifndef KIO_NO_NEPOMUK
-    m_provider = new KFileMetaDataProvider(q);
-#endif
 }
 
 KFileMetaDataConfigurationWidget::Private::~Private()
@@ -96,11 +78,6 @@ KFileMetaDataConfigurationWidget::Private::~Private()
 
 void KFileMetaDataConfigurationWidget::Private::loadMetaData()
 {
-#ifndef KIO_NO_NEPOMUK
-    m_provider->setItems(m_fileItems);
-    connect(m_provider, SIGNAL(loadingFinished()),
-            q, SLOT(slotLoadingFinished()));
-#endif
 }
 
 void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
@@ -133,13 +110,7 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     KConfigGroup settings = config.group("Show");
 
-#ifndef KIO_NO_NEPOMUK
-    const QString label = (m_provider == 0)
-                          ? KNfoTranslator::instance().translation(uri)
-                          : m_provider->label(uri);
-#else
     const QString label = KNfoTranslator::instance().translation(uri);
-#endif
 
     QListWidgetItem* item = new QListWidgetItem(label, m_metaDataList);
     item->setData(Qt::UserRole, key);
@@ -149,18 +120,6 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
 
 void KFileMetaDataConfigurationWidget::Private::slotLoadingFinished()
 {
-#ifndef KIO_NO_NEPOMUK
-    // Get all meta information labels that are available for
-    // the currently shown file item and add them to the list.
-    Q_ASSERT(m_provider != 0);
-
-    const QHash<KUrl, Nepomuk::Variant> data = m_provider->data();
-    QHash<KUrl, Nepomuk::Variant>::const_iterator it = data.constBegin();
-    while (it != data.constEnd()) {
-        addItem(it.key());
-        ++it;
-    }
-#endif
 }
 
 KFileMetaDataConfigurationWidget::KFileMetaDataConfigurationWidget(QWidget* parent) :

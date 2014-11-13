@@ -3,12 +3,6 @@ project(kparts)
 add_subdirectory( tests )
 
 include_directories(${KDE4_KIO_INCLUDES} ${kparts_BINARY_DIR})
-if(HAVE_NEPOMUK)
-    include_directories(${nepomuk_SOURCE_DIR} ${nepomuk_SOURCE_DIR}/core ${nepomuk_SOURCE_DIR}/types)
-endif(HAVE_NEPOMUK)
-if(Soprano_FOUND)
-include_directories(${SOPRANO_INCLUDE_DIR})
-endif(Soprano_FOUND)
 
 
 ########### next target ###############
@@ -37,10 +31,6 @@ kde4_add_library(kparts ${LIBRARY_TYPE} ${kparts_LIB_SRCS})
 
 target_link_libraries(kparts  ${KDE4_KDECORE_LIBS} kdeui kio)
 target_link_libraries(kparts  LINK_INTERFACE_LIBRARIES kio kdeui kdecore ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
-if(HAVE_NEPOMUK)
-  target_link_libraries(kparts  nepomuk nepomukutils)
-  target_link_libraries(kparts  LINK_INTERFACE_LIBRARIES nepomuk nepomukutils )
-endif(HAVE_NEPOMUK)
 
 set_target_properties(kparts PROPERTIES VERSION ${GENERIC_LIB_VERSION} 
                                         SOVERSION ${GENERIC_LIB_SOVERSION} 

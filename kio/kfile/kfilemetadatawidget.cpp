@@ -33,16 +33,6 @@
 #include <QTimer>
 
 #include <config-kio.h>
-#ifndef KIO_NO_NEPOMUK
-    #define DISABLE_NEPOMUK_LEGACY
-
-    #include <property.h>
-    #include <tag.h>
-
-    #include <QSpacerItem>
-
-    #include "kfilemetadataprovider_p.h"
-#endif
 
 class KFileMetaDataWidget::Private
 {
@@ -77,20 +67,8 @@ public:
     void slotDataChangeStarted();
     void slotDataChangeFinished();
 
-#ifndef KIO_NO_NEPOMUK
-    QList<KUrl> sortedKeys(const QHash<KUrl, Nepomuk::Variant>& data) const;
-
-    /**
-     * @return True, if at least one of the file items \a m_fileItems has
-     *         a valid Nepomuk URI.
-     */
-    bool hasNepomukUris() const;
-#endif
 
     QList<Row> m_rows;
-#ifndef KIO_NO_NEPOMUK
-    KFileMetaDataProvider* m_provider;
-#endif
     QGridLayout* m_gridLayout;
 
 private:
@@ -99,21 +77,11 @@ private:
 
 KFileMetaDataWidget::Private::Private(KFileMetaDataWidget* parent) :
     m_rows(),
-#ifndef KIO_NO_NEPOMUK
-    m_provider(0),
-#endif
     m_gridLayout(0),
     q(parent)
 {
     initMetaInfoSettings();
 
-#ifndef KIO_NO_NEPOMUK
-    // TODO: If KFileMetaDataProvider might get a public class in future KDE releases,
-    // the following code should be moved into KFileMetaDataWidget::setModel():
-    m_provider = new KFileMetaDataProvider(q);
-    connect(m_provider, SIGNAL(loadingFinished()), q, SLOT(slotLoadingFinished()));
-    connect(m_provider, SIGNAL(urlActivated(KUrl)), q, SIGNAL(urlActivated(KUrl)));
-#endif
 }
 
 KFileMetaDataWidget::Private::~Private()
@@ -188,77 +156,8 @@ void KFileMetaDataWidget::Private::deleteRows()
 
 void KFileMetaDataWidget::Private::slotLoadingFinished()
 {
-#ifndef KIO_NO_NEPOMUK
-    deleteRows();
-
-    if (!hasNepomukUris()) {
-        q->updateGeometry();
-        emit q->metaDataRequestFinished(m_provider->items());
-        return;
-    }
-
-    if (m_gridLayout == 0) {
-        m_gridLayout = new QGridLayout(q);
-        m_gridLayout->setMargin(0);
-        m_gridLayout->setSpacing(q->fontMetrics().height() / 4);
-    }
-
-    QHash<KUrl, Nepomuk::Variant> data = m_provider->data();
-
-    // Remove all items, that are marked as hidden in kmetainformationrc
-    KConfig config("kmetainformationrc", KConfig::NoGlobals);
-    KConfigGroup settings = config.group("Show");
-    QHash<KUrl, Nepomuk::Variant>::iterator it = data.begin();
-    while (it != data.end()) {
-        const QString uriString = it.key().url();
-        if (!settings.readEntry(uriString, true) ||
-            !Nepomuk::Types::Property(it.key()).userVisible()) {
-            it = data.erase(it);
-        } else {
-            ++it;
-        }
-    }
-
-    // Iterate through all remaining items embed the label
-    // and the value as new row in the widget
-    int rowIndex = 0;
-    const QList<KUrl> keys = sortedKeys(data);
-    foreach (const KUrl& key, keys) {
-        const Nepomuk::Variant value = data[key];
-        QString itemLabel = m_provider->label(key);
-        itemLabel.append(QLatin1Char(':'));
-
-        // Create label
-        QLabel* label = new QLabel(itemLabel, q);
-        label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-        label->setForegroundRole(q->foregroundRole());
-        label->setFont(q->font());
-        label->setWordWrap(true);
-        label->setAlignment(Qt::AlignTop | Qt::AlignRight);
-
-        // Create value-widget
-        QWidget* valueWidget = m_provider->createValueWidget(key, value, q);
-
-        // Add the label and value-widget to grid layout
-        m_gridLayout->addWidget(label, rowIndex, 0, Qt::AlignRight);
-        const int spacerWidth = QFontMetrics(q->font()).size(Qt::TextSingleLine, " ").width();
-        m_gridLayout->addItem(new QSpacerItem(spacerWidth, 1), rowIndex, 1);
-        m_gridLayout->addWidget(valueWidget, rowIndex, 2, Qt::AlignLeft);
-
-        // Remember the label and value-widget as row
-        Row row;
-        row.label = label;
-        row.value = valueWidget;
-        m_rows.append(row);
-
-        ++rowIndex;
-    }
-#endif
 
     q->updateGeometry();
-#ifndef KIO_NO_NEPOMUK
-    emit q->metaDataRequestFinished(m_provider->items());
-#endif
 }
 
 void KFileMetaDataWidget::Private::slotLinkActivated(const QString& link)
@@ -279,47 +178,6 @@ void KFileMetaDataWidget::Private::slotDataChangeFinished()
     q->setEnabled(true);
 }
 
-#ifndef KIO_NO_NEPOMUK
-QList<KUrl> KFileMetaDataWidget::Private::sortedKeys(const QHash<KUrl, Nepomuk::Variant>& data) const
-{
-    // Create a map, where the translated label prefixed with the
-    // sort priority acts as key. The data of each entry is the URI
-    // of the data. By this the all URIs are sorted by the sort priority
-    // and sub sorted by the translated labels.
-    QMap<QString, KUrl> map;
-    QHash<KUrl, Nepomuk::Variant>::const_iterator hashIt = data.constBegin();
-    while (hashIt != data.constEnd()) {
-        const KUrl uri = hashIt.key();
-
-        QString key = m_provider->group(uri);
-        key += m_provider->label(uri);
-
-        map.insert(key, uri);
-        ++hashIt;
-    }
-
-    // Apply the URIs from the map to the list that will get returned.
-    // The list will then be alphabetically ordered by the translated labels of the URIs.
-    QList<KUrl> list;
-    QMap<QString, KUrl>::const_iterator mapIt = map.constBegin();
-    while (mapIt != map.constEnd()) {
-        list.append(mapIt.value());
-        ++mapIt;
-    }
-
-    return list;
-}
-
-bool KFileMetaDataWidget::Private::hasNepomukUris() const
-{
-    foreach (const KFileItem& fileItem, m_provider->items()) {
-        if (fileItem.nepomukUri().isValid()) {
-            return true;
-        }
-    }
-    return false;
-}
-#endif
 
 KFileMetaDataWidget::KFileMetaDataWidget(QWidget* parent) :
     QWidget(parent),
@@ -334,34 +192,20 @@ KFileMetaDataWidget::~KFileMetaDataWidget()
 
 void KFileMetaDataWidget::setItems(const KFileItemList& items)
 {
-#ifndef KIO_NO_NEPOMUK
-    d->m_provider->setItems(items);
-#endif
 }
 
 KFileItemList KFileMetaDataWidget::items() const
 {
-#ifndef KIO_NO_NEPOMUK
-    return d->m_provider->items();
-#else
     return KFileItemList();
-#endif
 }
 
 void KFileMetaDataWidget::setReadOnly(bool readOnly)
 {
-#ifndef KIO_NO_NEPOMUK
-    d->m_provider->setReadOnly(readOnly);
-#endif
 }
 
 bool KFileMetaDataWidget::isReadOnly() const
 {
-#ifndef KIO_NO_NEPOMUK
-    return d->m_provider->isReadOnly();
-#else
     return true;
-#endif
 }
 
 QSize KFileMetaDataWidget::sizeHint() const

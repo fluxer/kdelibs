@@ -219,7 +219,6 @@ class QObject;
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KUrl &url);
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
 
-#if 1 || defined(KDE3_SUPPORT)
 #ifndef KDE_NO_DEPRECATED
 class KDE_DEPRECATED kndbgstream { };
 typedef QDebug kdbgstream;
@@ -231,7 +230,6 @@ static inline KDE_DEPRECATED QDebug kdFatal(int area = KDE_DEFAULT_DEBUG_AREA) {
 inline KDE_DEPRECATED QString kdBacktrace(int levels=-1) { return kBacktrace( levels ); }
 
 static inline KDE_DEPRECATED QDebug kndDebug() { return kDebugDevNull(); }
-#endif
 #endif
 
 class WrongSyntax {};

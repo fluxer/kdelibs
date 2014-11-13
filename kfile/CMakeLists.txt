@@ -5,9 +5,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/solid
   ${CMAKE_BINARY_DIR}/solid
 )
-if(Soprano_FOUND)
-include_directories(${SOPRANO_INCLUDE_DIR})
-endif(Soprano_FOUND)
 
 add_subdirectory(tests)
 

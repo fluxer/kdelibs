@@ -24,10 +24,6 @@
 #include <kurl.h>
 
 #include <config-kio.h>
-#ifndef KIO_NO_NEPOMUK
-#define DISABLE_NEPOMUK_LEGACY
-#include "property.h"
-#endif
 
 struct TranslationItem {
     const char* const key;
@@ -131,15 +127,11 @@ QString KNfoTranslator::translation(const KUrl& uri) const
     }
 
     // fallback if the URI is not translated
-#ifndef KIO_NO_NEPOMUK
-    const QString label = Nepomuk::Types::Property(uri).label();
-#else
     QString label;
     const int index = key.indexOf(QChar('#'));
     if (index >= 0) {
         label = key.right(key.size() - index - 1);
     }
-#endif
     QString tunedLabel;
     const int labelLength = label.length();
     if (labelLength > 0) {
