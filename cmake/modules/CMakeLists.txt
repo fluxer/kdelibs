@@ -75,7 +75,6 @@ set(cmakeFiles
                FindMsgfmt.cmake
                FindMusicBrainz.cmake
                FindMySQL.cmake
-               FindNepomuk.cmake
                FindNetworkManager.cmake
                FindOggVorbis.cmake
                FindOpenEXR.cmake
@@ -100,7 +99,6 @@ set(cmakeFiles
                FindSasl2.cmake
                FindSharedMimeInfo.cmake
                FindSharedDesktopOntologies.cmake
-               FindSoprano.cmake
                FindSqlite.cmake
                FindStrigi.cmake
                FindTaglib.cmake
@@ -128,8 +126,6 @@ set(cmakeFiles
                MacroOptionalFindPackage.cmake
                MacroPushRequiredVars.cmake
                MacroWriteBasicCMakeVersionFile.cmake
-               NepomukMacros.cmake
-               NepomukAddOntologyClasses.cmake
                PythonMacros.cmake
                SIPMacros.cmake
                Win32Macros.cmake
