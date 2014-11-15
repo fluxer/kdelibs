@@ -281,10 +281,6 @@ kde4_add_ui_files(kio_LIB_SRCS
    kssl/certificateparty.ui
 )
 
-install(FILES kssl/ksslcertificatemanager.upd
-              kssl/ksslcertificatemanager.upd.sh
-        DESTINATION  ${DATA_INSTALL_DIR}/kconf_update)
-
 kde4_add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
 target_link_libraries(kio ${KDE4_KDEUI_LIBS} ${ZLIB_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${X11_LIBRARIES} ${KIO_EXTRA_LIBS})
@@ -306,9 +302,6 @@ set_target_properties(kio PROPERTIES VERSION ${KDE_NON_GENERIC_LIB_VERSION}
 ########### install files ###############
 install(TARGETS kio EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install( PROGRAMS useragent.pl proxytype.pl  DESTINATION ${KCONF_UPDATE_INSTALL_DIR} )
-
-
 install( FILES data.protocol  DESTINATION  ${SERVICES_INSTALL_DIR} )
 install( FILES
  application.desktop
@@ -325,7 +318,6 @@ install( FILES
  kfile/kiofilemodule.desktop
 DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
 
-install( FILES kioslave.upd  DESTINATION  ${DATA_INSTALL_DIR}/kconf_update )
 install(  FILES
   kio/kio_export.h
   kio/accessmanager.h
