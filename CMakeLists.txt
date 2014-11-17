@@ -25,8 +25,6 @@ if (KHTML_BUILD_TESTREGRESSION)
    set (__KDE_HAVE_GCC_VISIBILITY 0)
 endif (KHTML_BUILD_TESTREGRESSION)
 
-option(STATIC_LIBRARY "Build kdelibs as static libraries." FALSE)
-
 ################# write platform profile file which will be installed #################
 include(CreateKDEPlatformProfile.cmake)
 
@@ -225,14 +223,6 @@ set(KDE4_KHTML_INCLUDES ${CMAKE_SOURCE_DIR}/khtml)
 
 
 ################# configure checks and create the configured files #################
-
-if(STATIC_LIBRARY)
-  set(LIBRARY_TYPE STATIC)
-  add_definitions(-DKDELIBS_STATIC_LIBS)
-  message(STATUS "Building kdelibs as static libraries")
-else(STATIC_LIBRARY)
-  set(LIBRARY_TYPE SHARED)
-endif(STATIC_LIBRARY)
 
 # ACL stuff (used in kio/ and kioslaves/)
 macro_optional_find_package(ACL)

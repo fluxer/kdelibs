@@ -35,7 +35,6 @@ ENDIF(UNIX)
 
 
 # find dependencies for some Qt modules
-# when doing builds against a static Qt, they are required
 # when doing builds against a shared Qt, they are not required
 # if a user needs the dependencies, and they couldn't be found, they can set
 # the variables themselves.
@@ -46,34 +45,6 @@ SET(QT_QTNETWORK_LIB_DEPENDENCIES "")
 SET(QT_QTOPENGL_LIB_DEPENDENCIES "")
 SET(QT_QTDBUS_LIB_DEPENDENCIES "")
 SET(QT_QTHELP_LIB_DEPENDENCIES ${QT_QTCLUCENE_LIBRARY})
-
-
-IF(WIN32)
-  # On Windows, qconfig.pri has "static" for static library builds
-  IF(QT_CONFIG MATCHES "static")
-    SET(QT_IS_STATIC 1)
-  ENDIF(QT_CONFIG MATCHES "static")
-ELSE(WIN32)
-  # On other platforms, check file extension to know if its static
-  IF(QT_QTCORE_LIBRARY_RELEASE)
-    GET_FILENAME_COMPONENT(qtcore_lib_ext "${QT_QTCORE_LIBRARY_RELEASE}" EXT)
-    IF("${qtcore_lib_ext}" STREQUAL "${CMAKE_STATIC_LIBRARY_SUFFIX}")
-      SET(QT_IS_STATIC 1)
-    ENDIF("${qtcore_lib_ext}" STREQUAL "${CMAKE_STATIC_LIBRARY_SUFFIX}")
-  ENDIF(QT_QTCORE_LIBRARY_RELEASE)
-  IF(QT_QTCORE_LIBRARY_DEBUG)
-    GET_FILENAME_COMPONENT(qtcore_lib_ext "${QT_QTCORE_LIBRARY_DEBUG}" EXT)
-    IF(${qtcore_lib_ext} STREQUAL ${CMAKE_STATIC_LIBRARY_SUFFIX})
-      SET(QT_IS_STATIC 1)
-    ENDIF(${qtcore_lib_ext} STREQUAL ${CMAKE_STATIC_LIBRARY_SUFFIX})
-  ENDIF(QT_QTCORE_LIBRARY_DEBUG)
-ENDIF(WIN32)
-
-# build using shared Qt needs -DQT_DLL on Windows
-IF(WIN32  AND  NOT QT_IS_STATIC)
-  SET(QT_DEFINITIONS ${QT_DEFINITIONS} -DQT_DLL)
-ENDIF(WIN32  AND  NOT QT_IS_STATIC)
-
 
 # QtOpenGL dependencies
 QT_QUERY_QMAKE(QMAKE_LIBS_OPENGL "QMAKE_LIBS_OPENGL")
