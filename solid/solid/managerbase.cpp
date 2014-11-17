@@ -27,9 +27,6 @@
 
 #include "backends/fakehw/fakemanager.h"
 
-#if defined (Q_OS_MAC)
-#include "backends/iokit/iokitmanager.h"
-#elif defined (Q_OS_UNIX)
 #if defined (WITH_SOLID_UDISKS2)
 #include "backends/udisks2/udisksmanager.h"
 #else
@@ -46,13 +43,6 @@
 #endif
 
 #include "backends/fstab/fstabmanager.h"
-
-#elif defined (Q_WS_WIN) && !defined(_WIN32_WCE)
-#include "backends/win/windevicemanager.h"
-#ifdef WITH_SOLID_WMI
-#include "backends/wmi/wmimanager.h"
-#endif
-#endif
 
 
 Solid::ManagerBasePrivate::ManagerBasePrivate()
@@ -71,25 +61,16 @@ void Solid::ManagerBasePrivate::loadBackends()
     if (!solidFakeXml.isEmpty()) {
         m_backends << new Solid::Backends::Fake::FakeManager(0, solidFakeXml);
     } else {
-#        if defined(Q_OS_MAC)
-            m_backends << new Solid::Backends::IOKit::IOKitManager(0);
-
-#        elif defined(Q_WS_WIN) && defined(WITH_SOLID_WMI) && !defined(_WIN32_WCE)
-            m_backends << new Solid::Backends::Wmi::WmiManager(0);
-#        elif defined(Q_WS_WIN) && !defined(_WIN32_WCE)
-            m_backends << new Solid::Backends::Win::WinDeviceManager(0);
-#        elif defined(Q_OS_LINUX)
-#           if defined(UDEV_FOUND)
-                m_backends << new Solid::Backends::UDev::UDevManager(0);
-#           endif
-#           if defined(WITH_SOLID_UDISKS2)
-                m_backends << new Solid::Backends::UDisks2::Manager(0)
-#           else
-                m_backends << new Solid::Backends::UDisks::UDisksManager(0)
-#           endif
-                << new Solid::Backends::UPower::UPowerManager(0)
-                << new Solid::Backends::Fstab::FstabManager(0);
-#        endif
+#       if defined(UDEV_FOUND)
+            m_backends << new Solid::Backends::UDev::UDevManager(0);
+#       endif
+#       if defined(WITH_SOLID_UDISKS2)
+            m_backends << new Solid::Backends::UDisks2::Manager(0)
+#       else
+            m_backends << new Solid::Backends::UDisks::UDisksManager(0)
+#       endif
+            << new Solid::Backends::UPower::UPowerManager(0)
+            << new Solid::Backends::Fstab::FstabManager(0);
 
 #        if defined (HUPNP_FOUND)
             m_backends << new Solid::Backends::UPnP::UPnPDeviceManager(0);

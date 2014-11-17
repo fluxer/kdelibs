@@ -11,16 +11,6 @@ Currently the following backends are implemented on Linux:
 <li><a href="http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html">udev</a></li>
 </ul>
 
-on MacOS X:
-<ul>
-<li><a href="http://developer.apple.com/mac/library/documentation/DeviceDrivers/Conceptual/IOKitFundamentals/Introduction/Introduction.html">IOKit</a></li>
-</ul>
-
-on Windows:
-<ul>
-<li><a href="http://msdn.microsoft.com/en-us/library/aa384642(v=VS.85).aspx">WMI</a></li>
-</ul>
-
 See the documentation for the Solid namespace, and the
 <a href="http://techbase.kde.org/Development/Tutorials/Solid_Tutorials">tutorial
 on TechBase</a>.
