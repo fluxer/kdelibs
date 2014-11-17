@@ -27,7 +27,7 @@ namespace KAuth
 DBusBackend::DBusBackend()
     : AuthBackend()
 {
-    setCapabilities(NoCapability);
+    setCapabilities(AuthorizeFromClientCapability);
 }
 
 Action::AuthStatus DBusBackend::authorizeAction(const QString &action)
