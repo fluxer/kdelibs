@@ -16,7 +16,7 @@ set (KDE_VERSION_STRING "${KDE_VERSION}")
 
 set (KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distribution in bug reports" )
 
-set (KDE_DEFAULT_HOME ".kde${_KDE_DEFAULT_HOME_POSTFIX}" CACHE STRING "The default KDE home directory" )
+set (KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 
 # this must be before FindKDE4Internal in order to preset the result of the visibility test, so that it will be skipped
 option(KHTML_BUILD_TESTREGRESSION "Build KHTML's testregression. Note: this disables hidden visibility")
