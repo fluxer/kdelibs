@@ -1,11 +1,11 @@
 ########################
 # Helper backend probing
 
-set(KAUTH_BACKEND "DBUS" CACHE STRING "Specifies the KAuth helper backend to build. Current available options are
+set(KAUTH_BACKEND "DBus" CACHE STRING "Specifies the KAuth helper backend to build. Current available options are
                                    DBus. Not setting this variable will build the most appropriate backend for your system")
 
 # Add the correct libraries/files depending on the backend
-if (KAUTH_BACKEND STREQUAL "DBUS")
+if (KAUTH_BACKEND STREQUAL "DBus")
   set(KAUTH_COMPILING_DBUS_HELPER_BACKEND TRUE)
   set(KAUTH_BACKEND_SRCS
         auth/backends/dbus/DBusBackend.cpp
@@ -32,11 +32,6 @@ if (KAUTH_BACKEND STREQUAL "DBUS")
                  auth/backends/dbus/dbus_service.stub
            DESTINATION ${DATA_INSTALL_DIR}/kauth COMPONENT Devel)
 endif()
-
-set(kdecore_LIB_SRCS
-  ${kdecore_LIB_SRCS}
-  ${KAUTH_BACKEND_SRCS}
-)
 
 # Set directories for plugins
 _set_fancy(KAUTH_HELPER_PLUGIN_DIR "${PLUGIN_INSTALL_DIR}/plugins/kauth/helper" "Where KAuth's helper plugin will be installed")

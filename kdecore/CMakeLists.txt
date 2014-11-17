@@ -347,6 +347,8 @@ set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS}
    util/krandomsequence.cpp
    util/qtest_kde.cpp
    ${kdecore_OPTIONAL_SRCS}
+   ${KAUTH_BACKEND_SRCS}
+   ${KAUTH_HELPER_BACKEND_SRCS}
 )
 
 if(NOT KDE_NO_DEPRECATED)
@@ -427,32 +429,28 @@ install(TARGETS kdecore EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_A
 
 ########### next target ###############
 
-if ( NOT WINCE )
-    ########### next target ###############
+# KAuth backend plugin
 
-    # KAuth backend plugin
+set(KAUTH_BACKEND_SRCS ${KAUTH_BACKEND_SRCS} auth/AuthBackend.cpp)
+kde4_add_plugin(kauth_backend_plugin ${KAUTH_BACKEND_SRCS})
+target_link_libraries(kauth_backend_plugin ${KAUTH_BACKEND_LIBS})
+install(TARGETS kauth_backend_plugin
+        LIBRARY DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+        ARCHIVE DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+        RUNTIME DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+)
 
-    set(KAUTH_BACKEND_SRCS ${KAUTH_BACKEND_SRCS} auth/AuthBackend.cpp)
-    kde4_add_plugin(kauth_backend_plugin ${KAUTH_BACKEND_SRCS})
-    target_link_libraries(kauth_backend_plugin ${KAUTH_BACKEND_LIBS})
-    install(TARGETS kauth_backend_plugin
-            LIBRARY DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-            ARCHIVE DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-            RUNTIME DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-    )
+########### next target ###############
 
-    ########### next target ###############
+# KAuth helper plugin
 
-    # KAuth helper plugin
-
-    kde4_add_plugin(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_SRCS} auth/HelperProxy.cpp)
-    target_link_libraries(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_LIBS})
-    install(TARGETS kauth_helper_plugin
-            LIBRARY DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-            ARCHIVE DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-            RUNTIME DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-    )
-endif ( NOT WINCE )
+kde4_add_plugin(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_SRCS} auth/HelperProxy.cpp)
+target_link_libraries(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_LIBS})
+install(TARGETS kauth_helper_plugin
+        LIBRARY DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+        ARCHIVE DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+        RUNTIME DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+)
 
 ########### next target ###############
 
