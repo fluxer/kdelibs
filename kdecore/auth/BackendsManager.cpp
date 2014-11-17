@@ -21,9 +21,9 @@
 
 #include "BackendsConfig.h"
 
-// Include fake backends
-#include "backends/fake/FakeBackend.h"
-#include "backends/fakehelper/FakeHelperProxy.h"
+// Include dbus backends
+#include "backends/dbus/DBusBackend.h"
+#include "backends/dbus/DBusHelperProxy.h"
 
 #include <QPluginLoader>
 #include <QDir>
@@ -98,22 +98,18 @@ void BackendsManager::init()
     }
 
     if (!auth) {
-        // Load the fake auth backend then
-        auth = new FakeBackend;
-#ifndef KAUTH_COMPILING_FAKE_BACKEND
+        // Load the dbus auth backend then
+        auth = new DBusBackend;
         // Spit a fat warning
         kWarning() << "WARNING: KAuth was compiled with a working backend, but was unable to load it! Check your installation!";
-#endif
     }
 
     if (!helper) {
-        // Load the fake helper backend then
-        helper = new FakeHelperProxy;
-#ifndef KAUTH_COMPILING_FAKE_BACKEND
+        // Load the dbus helper backend then
+        helper = new DBusHelperProxy;
         // Spit a fat warning
         kWarning() << "WARNING: KAuth was compiled with a working helper backend, but was unable to load it! "
                       "Check your installation!";
-#endif
     }
 }
 

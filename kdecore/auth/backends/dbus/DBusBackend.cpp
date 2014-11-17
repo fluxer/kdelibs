@@ -17,44 +17,50 @@
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA .
 */
 
-#include "FakeBackend.h"
+#include "DBusBackend.h"
+
+#include <QtCore/QCoreApplication>
 
 namespace KAuth
 {
 
-FakeBackend::FakeBackend()
+DBusBackend::DBusBackend()
     : AuthBackend()
 {
     setCapabilities(NoCapability);
 }
 
-Action::AuthStatus FakeBackend::authorizeAction(const QString &action)
+Action::AuthStatus DBusBackend::authorizeAction(const QString &action)
 {
     Q_UNUSED(action)
-    return Action::Denied;
+    return Action::Authorized;
 }
 
-void FakeBackend::setupAction(const QString &action)
+void DBusBackend::setupAction(const QString &action)
 {
     Q_UNUSED(action)
 }
 
-Action::AuthStatus FakeBackend::actionStatus(const QString &action)
+Action::AuthStatus DBusBackend::actionStatus(const QString &action)
 {
     Q_UNUSED(action)
-    return Action::Denied;
+    return Action::Authorized;
 }
 
-QByteArray FakeBackend::callerID() const
+QByteArray DBusBackend::callerID() const
 {
-    return QByteArray();
+    QByteArray a;
+    QDataStream s(&a, QIODevice::WriteOnly);
+    s << QCoreApplication::applicationPid();
+
+    return a;
 }
 
-bool FakeBackend::isCallerAuthorized(const QString &action, QByteArray callerID)
+bool DBusBackend::isCallerAuthorized(const QString &action, QByteArray callerID)
 {
     Q_UNUSED(action)
     Q_UNUSED(callerID)
-    return false;
+    return true;
 }
 
 } // namespace Auth

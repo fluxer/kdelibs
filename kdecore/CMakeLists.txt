@@ -246,8 +246,6 @@ set(kdecore_LIB_SRCS
    auth/BackendsManager.cpp
    auth/HelperProxy.cpp
    auth/kauthhelpersupport.cpp
-   auth/backends/fake/FakeBackend.cpp
-   auth/backends/fakehelper/FakeHelperProxy.cpp
    services/kfoldermimetype.cpp
    services/kmimetypefactory.cpp
    services/kmimemagicrule.cpp
@@ -429,49 +427,31 @@ install(TARGETS kdecore EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_A
 
 ########### next target ###############
 
-# KAuth policy generator executable
-
-# Compile only if fake backend has not been selected
-
-if (NOT "${KDE4_AUTH_BACKEND_NAME}" STREQUAL "FAKE")
-    # KAUTH_POLICY_GEN_SRCS has been generated from auth/ConfigureChecks.cmake
-    kde4_add_executable(kauth-policy-gen NOGUI ${KAUTH_POLICY_GEN_SRCS})
-
-    # KAUTH_POLICY_GEN_LIBRARIES has been generated from auth/ConfigureChecks.cmake
-    target_link_libraries( kauth-policy-gen ${KAUTH_POLICY_GEN_LIBRARIES} )
-
-    install( TARGETS kauth-policy-gen EXPORT kdelibsToolsTargets DESTINATION ${LIBEXEC_INSTALL_DIR})
-endif (NOT "${KDE4_AUTH_BACKEND_NAME}" STREQUAL "FAKE")
-
 if ( NOT WINCE )
     ########### next target ###############
 
     # KAuth backend plugin
 
-    if (NOT "${KDE4_AUTH_BACKEND_NAME}" STREQUAL "FAKE")
-        set(KAUTH_BACKEND_SRCS ${KAUTH_BACKEND_SRCS} auth/AuthBackend.cpp)
-        kde4_add_plugin(kauth_backend_plugin ${KAUTH_BACKEND_SRCS})
-        target_link_libraries(kauth_backend_plugin ${KAUTH_BACKEND_LIBS})
-        install(TARGETS kauth_backend_plugin
-                LIBRARY DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-                ARCHIVE DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-                RUNTIME DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-        )
-    endif (NOT "${KDE4_AUTH_BACKEND_NAME}" STREQUAL "FAKE")
+    set(KAUTH_BACKEND_SRCS ${KAUTH_BACKEND_SRCS} auth/AuthBackend.cpp)
+    kde4_add_plugin(kauth_backend_plugin ${KAUTH_BACKEND_SRCS})
+    target_link_libraries(kauth_backend_plugin ${KAUTH_BACKEND_LIBS})
+    install(TARGETS kauth_backend_plugin
+            LIBRARY DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+            ARCHIVE DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+            RUNTIME DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+    )
 
     ########### next target ###############
 
     # KAuth helper plugin
 
-    if (NOT "${KDE4_AUTH_HELPER_BACKEND_NAME}" STREQUAL "FAKE")
-        kde4_add_plugin(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_SRCS} auth/HelperProxy.cpp)
-        target_link_libraries(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_LIBS})
-        install(TARGETS kauth_helper_plugin
-                LIBRARY DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-                ARCHIVE DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-                RUNTIME DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-        )
-    endif (NOT "${KDE4_AUTH_HELPER_BACKEND_NAME}" STREQUAL "FAKE")
+    kde4_add_plugin(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_SRCS} auth/HelperProxy.cpp)
+    target_link_libraries(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_LIBS})
+    install(TARGETS kauth_helper_plugin
+            LIBRARY DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+            ARCHIVE DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+            RUNTIME DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+    )
 endif ( NOT WINCE )
 
 ########### next target ###############
