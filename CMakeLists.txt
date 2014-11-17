@@ -16,10 +16,6 @@ set (KDE_VERSION_STRING "${KDE_VERSION}")
 
 set (KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distribution in bug reports" )
 
-# win32: give kde home in debug mode a different name as the  release home dir because the settings and caches are different
-if (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set (_KDE_DEFAULT_HOME_POSTFIX "-debug" CACHE STRING "default KDE home directory postfix" )
-endif (WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
 set (KDE_DEFAULT_HOME ".kde${_KDE_DEFAULT_HOME_POSTFIX}" CACHE STRING "The default KDE home directory" )
 
 # this must be before FindKDE4Internal in order to preset the result of the visibility test, so that it will be skipped
@@ -81,17 +77,10 @@ set_package_properties(ZLIB PROPERTIES DESCRIPTION "Support for gzip compressed 
                       )
 
 find_package(Strigi 0.6.3)
-if (WIN32)
-    set (STRIGI_TYPE "OPTIONAL")
-    set (STRIGI_EXTRA_TEXT "")
-else (WIN32)
-    set (STRIGI_TYPE "REQUIRED")
-    set (STRIGI_EXTRA_TEXT "Required by some critical kioslaves")
-endif (WIN32)
 set_package_properties(Strigi PROPERTIES DESCRIPTION "Desktop indexing and search support"
                        URL "http://strigi.sourceforge.net"
-                       TYPE ${STRIGI_TYPE}
-                       PURPOSE ${STRIGI_EXTRA_TEXT}
+                       TYPE REQUIRED
+                       PURPOSE "Required by some critical kioslaves"
                       )
 
 find_package(LibAttica 0.4.2)
@@ -176,9 +165,7 @@ endif(QCA2_FOUND)
 set(KDE4_KJS_INCLUDES ${CMAKE_SOURCE_DIR}/kjs
                       ${CMAKE_BINARY_DIR}/kjs)
 
-if(NOT WINCE)
-    set(KDE4_KDECORE_INCLUDES ${KDE4_KJS_INCLUDES} )
-endif(NOT WINCE)
+set(KDE4_KDECORE_INCLUDES ${KDE4_KJS_INCLUDES} )
 
 # kdecore depends on Qt (need only headers from kjs)
 set(KDE4_KDECORE_INCLUDES ${KDE4_KDECORE_INCLUDES}
@@ -237,17 +224,10 @@ set(KDE4_KPTY_INCLUDES ${CMAKE_SOURCE_DIR}/kpty ${KDE4_KIO_INCLUDES} )
 set(KDE4_KPARTS_INCLUDES ${CMAKE_SOURCE_DIR}/kparts
                          ${KDE4_KIO_INCLUDES})
 
-if(NOT WINCE)
- set(KDE4_KHTML_INCLUDES ${CMAKE_SOURCE_DIR}/khtml)
-endif(NOT WINCE)
+set(KDE4_KHTML_INCLUDES ${CMAKE_SOURCE_DIR}/khtml)
 
 
 ################# configure checks and create the configured files #################
-
-if(WINCE)
-  set(STATIC_LIBRARY ON)
-  add_definitions(-DSTATIC_INSTALL_PATH=L\\\"/programme/kde\\\")
-endif(WINCE)
 
 if(STATIC_LIBRARY)
   set(LIBRARY_TYPE STATIC)
@@ -257,7 +237,6 @@ else(STATIC_LIBRARY)
   set(LIBRARY_TYPE SHARED)
 endif(STATIC_LIBRARY)
 
-if(NOT WIN32)
 # ACL stuff (used in kio/ and kioslaves/)
 macro_optional_find_package(ACL)
 set_package_properties(ACL PROPERTIES DESCRIPTION "Support for manipulating access control lists"
@@ -267,7 +246,6 @@ set_package_properties(ACL PROPERTIES DESCRIPTION "Support for manipulating acce
                       )
 
 macro_bool_to_01(ACL_FOUND HAVE_LIBACL HAVE_POSIX_ACL)
-endif()
 configure_file(config-acl.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-acl.h )
 
 include(ConfigureChecks.cmake)
@@ -288,22 +266,16 @@ check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)
 add_subdirectory( cmake )
 add_subdirectory( kdecore )
 add_subdirectory( kdeui )
-if (UNIX)
-   add_subdirectory( kpty )
-   add_subdirectory( kdesu )
-endif (UNIX)
-if(NOT WINCE)
+add_subdirectory( kpty )
+add_subdirectory( kdesu )
 add_subdirectory( kjs )
 add_subdirectory( kjsembed )
-endif(NOT WINCE)
 add_subdirectory( kio )
 add_subdirectory( solid )
 add_subdirectory( kded       )
 add_subdirectory( kfile )
 add_subdirectory( kconf_update )
-if(NOT WINCE)
 add_subdirectory( kdoctools  )
-endif(NOT WINCE)
 add_subdirectory( kioslave   )
 add_subdirectory( knewstuff  )
 add_subdirectory( kparts     )
@@ -313,23 +285,17 @@ add_subdirectory( mimetypes  )
 add_subdirectory( kinit  )
 add_subdirectory( threadweaver )
 add_subdirectory( sonnet  )
-if(NOT WINCE)
 add_subdirectory( khtml  )
-endif(NOT WINCE)
 add_subdirectory( interfaces  )
 #if ( NOT CMAKE_CROSSCOMPILING AND QT_QTDESIGNER_FOUND )
 add_subdirectory( kdewidgets  )
 #endif ( NOT CMAKE_CROSSCOMPILING AND QT_QTDESIGNER_FOUND )
 add_subdirectory( knotify )
-if(NOT WINCE)
 add_subdirectory( kimgio )
-endif(NOT WINCE)
 add_subdirectory( dnssd )
 add_subdirectory( kross )
 add_subdirectory( security )
-if(NOT WINCE)
 add_subdirectory( plasma )
-endif(NOT WINCE)
 add_subdirectory( kunitconversion )
 add_subdirectory( kdewebkit )
 add_subdirectory( includes )

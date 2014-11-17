@@ -3,10 +3,6 @@ add_subdirectory( ifaces )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 
-if(WIN32)
-   include_directories( ${KDEWIN_INCLUDES} )
-endif(WIN32)
-
 configure_file(solid_export.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h)
 
 include (CheckCXXSourceCompiles)
@@ -47,20 +43,12 @@ configure_file(config-processor.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-proce
 file(MAKE_DIRECTORY
    ${CMAKE_CURRENT_BINARY_DIR}/backends/fakehw
    ${CMAKE_CURRENT_BINARY_DIR}/backends/udev
-   ${CMAKE_CURRENT_BINARY_DIR}/backends/wmi
-   ${CMAKE_CURRENT_BINARY_DIR}/backends/win
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${KDE4_C_FLAGS}") # enable -fvisibility=hidden for C sources
 
-if(WIN32)
-   set(solid_LIB_SRCS networking_win.cpp)
-else()
-   set(solid_LIB_SRCS networking.cpp)
-endif()
-
 set(solid_LIB_SRCS
-   ${solid_LIB_SRCS}
+   networking.cpp
    solidnamespace.cpp
    managerbase.cpp
    device.cpp
@@ -146,34 +134,30 @@ set(solid_LIB_SRCS
    backends/shared/cpufeatures.cpp
 )
 
-if(NOT APPLE)
-  macro_optional_find_package( HUpnp )
+macro_optional_find_package( HUpnp )
 
-  set(HUPNP_ENABLED FALSE CACHE BOOL "explicitly enable the compilation of the hupnp backend")
-  if (HUPNP_ENABLED AND HUPNP_FOUND AND ((HUPNP_VERSION_MAJOR EQUAL 0 AND HUPNP_VERSION_MINOR EQUAL 9) OR (HUPNP_VERSION_MAJOR EQUAL 1)))
-    include_directories( ${HUPNP_INCLUDE_DIR} )
-    message(STATUS "Building Solid UPnP backend." )
-    set(solid_LIB_SRCS ${solid_LIB_SRCS}
-       backends/upnp/upnpdevice.cpp
-       backends/upnp/upnpdevicemanager.cpp
-       backends/upnp/upnpdeviceinterface.cpp
-       backends/upnp/upnpmediaserver.cpp
-       backends/upnp/upnpinternetgateway.cpp
-       backends/upnp/upnpcontrolpoint.cpp
-    )
-  else ()
-    if(NOT HUPNP_ENABLED)
-        message(STATUS "To have UPnP support, explicitly enable HUPNP_ENABLED in the cmake cache")
-    endif(NOT HUPNP_ENABLED)
-    set(HUPNP_FOUND false)
-  endif ()
-  macro_log_feature( HUPNP_FOUND "HUPnP" "UPnP support for Solid" "http://www.herqq.org" FALSE "" "Allows Solid to provide information about UPnP devices on the network" )
-endif(NOT APPLE)
+set(HUPNP_ENABLED FALSE CACHE BOOL "explicitly enable the compilation of the hupnp backend")
+if (HUPNP_ENABLED AND HUPNP_FOUND AND ((HUPNP_VERSION_MAJOR EQUAL 0 AND HUPNP_VERSION_MINOR EQUAL 9) OR (HUPNP_VERSION_MAJOR EQUAL 1)))
+  include_directories( ${HUPNP_INCLUDE_DIR} )
+  message(STATUS "Building Solid UPnP backend." )
+  set(solid_LIB_SRCS ${solid_LIB_SRCS}
+     backends/upnp/upnpdevice.cpp
+     backends/upnp/upnpdevicemanager.cpp
+     backends/upnp/upnpdeviceinterface.cpp
+     backends/upnp/upnpmediaserver.cpp
+     backends/upnp/upnpinternetgateway.cpp
+     backends/upnp/upnpcontrolpoint.cpp
+  )
+else ()
+  if(NOT HUPNP_ENABLED)
+      message(STATUS "To have UPnP support, explicitly enable HUPNP_ENABLED in the cmake cache")
+  endif(NOT HUPNP_ENABLED)
+  set(HUPNP_FOUND false)
+endif ()
+macro_log_feature( HUPNP_FOUND "HUPnP" "UPnP support for Solid" "http://www.herqq.org" FALSE "" "Allows Solid to provide information about UPnP devices on the network" )
 
-if(NOT WIN32 AND NOT APPLE)
-#   message(STATUS "Building Solid KUPnP backend." )
-#   set(solid_LIB_SRCS ${solid_LIB_SRCS}
-
+# message(STATUS "Building Solid KUPnP backend." )
+# set(solid_LIB_SRCS ${solid_LIB_SRCS}
 #   backends/kupnp/cagibidbuscodec.cpp
 #   backends/kupnp/cagibidevice.cpp
 #   backends/kupnp/kupnpstorageaccess.cpp
@@ -185,207 +169,121 @@ if(NOT WIN32 AND NOT APPLE)
 #   backends/kupnp/kupnpdevice.cpp
 #   backends/kupnp/kupnprootdevice.cpp
 #   backends/kupnp/kupnpmanager.cpp
+# )
 
-#   )
+macro_optional_find_package( UDev )
+set_package_properties(UDev PROPERTIES DESCRIPTION "UDev support for Solid"
+                       URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
+                       TYPE OPTIONAL
+                       PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
+                      )
+configure_file( config-solid.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h )
 
-   macro_optional_find_package( UDev )
-   set_package_properties(UDev PROPERTIES DESCRIPTION "UDev support for Solid"
-                          URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
-                          TYPE OPTIONAL
-                          PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
-                         )
-   configure_file( config-solid.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h )
+if ( UDEV_FOUND )
+     message(STATUS "Building Solid UDev backend." )
+     set(solid_LIB_SRCS ${solid_LIB_SRCS}
+     backends/udev/utils.cpp
+     backends/udev/udevdevice.cpp
+     backends/udev/udevmanager.cpp
+     backends/udev/udevdeviceinterface.cpp
+     backends/udev/udevgenericinterface.cpp
+     backends/udev/cpuinfo.cpp
+     backends/udev/udevprocessor.cpp
+     backends/udev/udevcamera.cpp
+     backends/udev/udevvideo.cpp
+     backends/udev/udevaudiointerface.cpp
+     backends/udev/udevnetworkinterface.cpp
+     backends/udev/udevserialinterface.cpp
+     backends/udev/udevaudiointerface_p.cpp
+     backends/udev/udevportablemediaplayer.cpp
+     backends/udev/udevdvbinterface.cpp
+     backends/udev/udevblock.cpp
+     backends/udev/udevbutton.cpp
+     backends/shared/udevqtclient.cpp
+     backends/shared/udevqtdevice.cpp
+     )
+     set(UDEV_DETAILED_OUTPUT OFF CACHE BOOL "provide extended output regarding udev events")
+     if(UDEV_DETAILED_OUTPUT)
+        add_definitions(-DUDEV_DETAILED_OUTPUT)
+     endif(UDEV_DETAILED_OUTPUT)
 
+     # check for media-player-info (runtime-only optional dependency)
+     set(XDG_DATA_DIRS_ENV $ENV{XDG_DATA_DIRS})  # if(ENV{..}) does not work for me
+     if(XDG_DATA_DIRS_ENV)
+        find_path(MEDIAPLAYERINFO_PATH sony_psp.mpi
+           PATHS ENV XDG_DATA_DIRS
+           PATH_SUFFIXES "media-player-info" NO_DEFAULT_PATH
+        )
+     else(XDG_DATA_DIRS_ENV)
+        set(XDG_DATA_DIRS "/usr/share")
+        message(STATUS "Warning: environment variable XDG_DATA_DIRS not set, falling back to ${XDG_DATA_DIRS}")
+        find_path(MEDIAPLAYERINFO_PATH sony_psp.mpi
+           PATHS "${XDG_DATA_DIRS}"
+           PATH_SUFFIXES "media-player-info" NO_DEFAULT_PATH
+        )
+     endif(XDG_DATA_DIRS_ENV)
 
-   if ( UDEV_FOUND )
-      message(STATUS "Building Solid UDev backend." )
-      set(solid_LIB_SRCS ${solid_LIB_SRCS}
-      backends/udev/utils.cpp
-      backends/udev/udevdevice.cpp
-      backends/udev/udevmanager.cpp
-      backends/udev/udevdeviceinterface.cpp
-      backends/udev/udevgenericinterface.cpp
-      backends/udev/cpuinfo.cpp
-      backends/udev/udevprocessor.cpp
-      backends/udev/udevcamera.cpp
-      backends/udev/udevvideo.cpp
-      backends/udev/udevaudiointerface.cpp
-      backends/udev/udevnetworkinterface.cpp
-      backends/udev/udevserialinterface.cpp
-      backends/udev/udevaudiointerface_p.cpp
-      backends/udev/udevportablemediaplayer.cpp
-      backends/udev/udevdvbinterface.cpp
-      backends/udev/udevblock.cpp
-      backends/udev/udevbutton.cpp
-      backends/shared/udevqtclient.cpp
-      backends/shared/udevqtdevice.cpp
-      )
-      set(UDEV_DETAILED_OUTPUT OFF CACHE BOOL "provide extended output regarding udev events")
-      if(UDEV_DETAILED_OUTPUT)
-         add_definitions(-DUDEV_DETAILED_OUTPUT)
-      endif(UDEV_DETAILED_OUTPUT)
-
-      # check for media-player-info (runtime-only optional dependency)
-      set(XDG_DATA_DIRS_ENV $ENV{XDG_DATA_DIRS})  # if(ENV{..}) does not work for me
-      if(XDG_DATA_DIRS_ENV)
-         find_path(MEDIAPLAYERINFO_PATH sony_psp.mpi
-            PATHS ENV XDG_DATA_DIRS
-            PATH_SUFFIXES "media-player-info" NO_DEFAULT_PATH
-         )
-      else(XDG_DATA_DIRS_ENV)
-         set(XDG_DATA_DIRS "/usr/share")
-         message(STATUS "Warning: environment variable XDG_DATA_DIRS not set, falling back to ${XDG_DATA_DIRS}")
-         find_path(MEDIAPLAYERINFO_PATH sony_psp.mpi
-            PATHS "${XDG_DATA_DIRS}"
-            PATH_SUFFIXES "media-player-info" NO_DEFAULT_PATH
-         )
-      endif(XDG_DATA_DIRS_ENV)
-
-      add_feature_info("media-player-info" MEDIAPLAYERINFO_PATH
-                       "Enables identification and querying of portable media players.
+     add_feature_info("media-player-info" MEDIAPLAYERINFO_PATH
+                      "Enables identification and querying of portable media players.
                        Runtime-only dependency of the udev solid backend.
                        Support for m-p-i is included even if not found during build"
                       )
-   endif( UDEV_FOUND )
+endif( UDEV_FOUND )
 
 
-   message(STATUS "Building Solid UPower backend." )
-   set(solid_LIB_SRCS ${solid_LIB_SRCS}
+message(STATUS "Building Solid UPower backend." )
+set(solid_LIB_SRCS ${solid_LIB_SRCS}
    backends/upower/upowermanager.cpp
    backends/upower/upowerdevice.cpp
    backends/upower/upowerbattery.cpp
    backends/upower/upoweracadapter.cpp
    backends/upower/upowerdeviceinterface.cpp
    backends/upower/upowergenericinterface.cpp
-   )
+)
 
-   # FIXME: this should work on more Unix systems
-   if (CMAKE_SYSTEM_NAME MATCHES Linux)
+# FIXME: this should work on more Unix systems
+if ( WITH_SOLID_UDISKS2 )
+  message(STATUS "Building Solid UDisks2 backend." )
+  add_definitions(-DWITH_SOLID_UDISKS2)
+  set(solid_LIB_SRCS ${solid_LIB_SRCS}
+    backends/udisks2/udisksmanager.cpp
+    backends/udisks2/udisksdevice.cpp
+    backends/udisks2/udisksdevicebackend.cpp
+    backends/udisks2/udisksblock.cpp
+    backends/udisks2/udisksstoragevolume.cpp
+    backends/udisks2/udisksdeviceinterface.cpp
+    backends/udisks2/udisksopticaldisc.cpp
+    backends/udisks2/udisksopticaldrive.cpp
+    backends/udisks2/udisksstoragedrive.cpp
+    backends/udisks2/udisksstorageaccess.cpp
+    backends/udisks2/udisksgenericinterface.cpp
+    backends/udisks2/dbus/manager.cpp
+  )
+else ( WITH_SOLID_UDISKS2 )
+  message(STATUS "Building Solid UDisks backend." )
+  set(solid_LIB_SRCS ${solid_LIB_SRCS}
+    backends/udisks/udisksmanager.cpp
+    backends/udisks/udisksdevice.cpp
+    backends/udisks/udisksblock.cpp
+    backends/udisks/udisksstoragevolume.cpp
+    backends/udisks/udisksdeviceinterface.cpp
+    backends/udisks/udisksopticaldisc.cpp
+    backends/udisks/udisksopticaldrive.cpp
+    backends/udisks/udisksstoragedrive.cpp
+    backends/udisks/udisksstorageaccess.cpp
+    backends/udisks/udisksgenericinterface.cpp
+  )
+endif ( WITH_SOLID_UDISKS2 )
 
-       if ( WITH_SOLID_UDISKS2 )
-           message(STATUS "Building Solid UDisks2 backend." )
-           add_definitions(-DWITH_SOLID_UDISKS2)
-           set(solid_LIB_SRCS ${solid_LIB_SRCS}
-           backends/udisks2/udisksmanager.cpp
-           backends/udisks2/udisksdevice.cpp
-           backends/udisks2/udisksdevicebackend.cpp
-           backends/udisks2/udisksblock.cpp
-           backends/udisks2/udisksstoragevolume.cpp
-           backends/udisks2/udisksdeviceinterface.cpp
-           backends/udisks2/udisksopticaldisc.cpp
-           backends/udisks2/udisksopticaldrive.cpp
-           backends/udisks2/udisksstoragedrive.cpp
-           backends/udisks2/udisksstorageaccess.cpp
-           backends/udisks2/udisksgenericinterface.cpp
-           backends/udisks2/dbus/manager.cpp
-           )
-       else ( WITH_SOLID_UDISKS2 )
-           message(STATUS "Building Solid UDisks backend." )
-           set(solid_LIB_SRCS ${solid_LIB_SRCS}
-           backends/udisks/udisksmanager.cpp
-           backends/udisks/udisksdevice.cpp
-           backends/udisks/udisksblock.cpp
-           backends/udisks/udisksstoragevolume.cpp
-           backends/udisks/udisksdeviceinterface.cpp
-           backends/udisks/udisksopticaldisc.cpp
-           backends/udisks/udisksopticaldrive.cpp
-           backends/udisks/udisksstoragedrive.cpp
-           backends/udisks/udisksstorageaccess.cpp
-           backends/udisks/udisksgenericinterface.cpp
-          )
-       endif ( WITH_SOLID_UDISKS2 )
-   endif (CMAKE_SYSTEM_NAME MATCHES Linux)
-
-   message(STATUS "Building Solid fstab backend." )
-   set(solid_LIB_SRCS ${solid_LIB_SRCS}
+message(STATUS "Building Solid fstab backend." )
+set(solid_LIB_SRCS ${solid_LIB_SRCS}
    backends/fstab/fstabmanager.cpp
    backends/fstab/fstabdevice.cpp
    backends/fstab/fstabnetworkshare.cpp
    backends/fstab/fstabstorageaccess.cpp
    backends/fstab/fstabhandling.cpp
    backends/fstab/fstabwatcher.cpp
-   )
-
-endif(NOT WIN32 AND NOT APPLE)
-
-if(APPLE)
-   find_package(IOKit REQUIRED)
-
-   message(STATUS "-- Building Solid IOKit backend." )
-   set(solid_LIB_SRCS ${solid_LIB_SRCS}
-   backends/iokit/iokitmanager.cpp
-   backends/iokit/iokitdevice.cpp
-   backends/iokit/cfhelper.cpp
-   backends/iokit/iokitdeviceinterface.cpp
-   backends/iokit/iokitgenericinterface.cpp
-   backends/iokit/iokitprocessor.cpp
-   backends/iokit/iokitnetworkinterface.cpp
-   backends/iokit/iokitserialinterface.cpp
-   backends/iokit/iokitbattery.cpp
-   )
-endif(APPLE)
-
-if(WIN32)
-    if(WITH_SOLID_WMI)
-       include(CheckIncludeFileCXX)
-       check_include_file_cxx(wbemidl.h HAVE_WBEM)
-       FIND_LIBRARY(WBEM_LIBRARIES NAMES wbemuuid wbemuuidd)
-       if(HAVE_WBEM AND WBEM_LIBRARIES)
-          set(HAVE_WBEM True)
-          message(STATUS "Found wbemuuid library: ${WBEM_LIBRARIES}")
-       else(HAVE_WBEM AND WBEM_LIBRARIES)
-          set(HAVE_WBEM False)
-          set(WITH_SOLID_WMI False)
-      endif(HAVE_WBEM AND WBEM_LIBRARIES)
-   endif(WITH_SOLID_WMI)
-   if(WITH_SOLID_WMI)
-       add_definitions(-DWITH_SOLID_WMI)
-       message(STATUS "-- Building Solid WMI backend." )
-
-       set(solid_LIB_SRCS ${solid_LIB_SRCS}
-       backends/wmi/wmiacadapter.cpp
-       backends/wmi/wmiaudiointerface.cpp
-       backends/wmi/wmibattery.cpp
-       backends/wmi/wmiblock.cpp
-       backends/wmi/wmibutton.cpp
-       backends/wmi/wmicamera.cpp
-       backends/wmi/wmicdrom.cpp
-       backends/wmi/wmideviceinterface.cpp
-       backends/wmi/wmidvbinterface.cpp
-       backends/wmi/wmigenericinterface.cpp
-       backends/wmi/wmidevice.cpp
-       backends/wmi/wmimanager.cpp
-       backends/wmi/wminetworkinterface.cpp
-       backends/wmi/wmiopticaldisc.cpp
-       backends/wmi/wmiportablemediaplayer.cpp
-       backends/wmi/wmiprocessor.cpp
-       backends/wmi/wmiquery.cpp
-       backends/wmi/wmistorageaccess.cpp
-       backends/wmi/wmistorage.cpp
-       backends/wmi/wmivideo.cpp
-       backends/wmi/wmivolume.cpp
-
-       )
-    else(WITH_SOLID_WMI)
-       message(STATUS "-- Building Solid Windows backend." )
-       set(solid_LIB_SRCS ${solid_LIB_SRCS}
-       backends/win/winblock.cpp
-       backends/win/winopticaldrive.cpp
-       backends/win/wininterface.cpp
-       backends/win/wingenericinterface.cpp
-       backends/win/windevice.cpp
-       backends/win/windevicemanager.cpp
-       backends/win/winopticaldisc.cpp
-       backends/win/winprocessor.cpp
-       #backends/win/wmiportablemediaplayer.cpp
-       backends/win/winstorageaccess.cpp
-       backends/win/winstoragedrive.cpp
-       backends/win/winstoragevolume.cpp
-       backends/win/winbattery.cpp
-       backends/win/winacadapter.cpp
-       )
-    endif(WITH_SOLID_WMI)
-endif(WIN32)
+)
 
 set_source_files_properties( org.freedesktop.PowerManagement.xml
                              org.freedesktop.PowerManagement.Inhibit.xml
@@ -401,19 +299,6 @@ qt4_add_dbus_interface(solid_LIB_SRCS org.kde.Solid.Networking.Client.xml
 
 set(solid_OPTIONAL_LIBS)
 
-if(WIN32)
-   set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDEWIN_LIBRARY} ${QT_QTNETWORK_LIBRARY})
-   if(WITH_SOLID_WMI)
-      set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${WBEM_LIBRARIES})
-   else()
-      set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} setupapi)
-   endif()
-endif()
-
-if(APPLE)
-   set(solid_OPTIONAL_LIBS ${IOKIT_LIBRARY})
-endif(APPLE)
-
 kde4_add_library(solid ${LIBRARY_TYPE} ${solid_LIB_SRCS})
 
 if ( HUPNP_FOUND )
@@ -426,10 +311,6 @@ endif ( UDEV_FOUND )
 
 target_link_libraries(solid ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} ${solid_OPTIONAL_LIBS} )
 target_link_libraries(solid LINK_INTERFACE_LIBRARIES ${QT_CORE_LIBRARY} )
-
-if (WINCE)
-   target_link_libraries(solid ${WCECOMPAT_LIBRARIES})
-endif(WINCE)
 
 set_target_properties(solid PROPERTIES
    VERSION ${GENERIC_LIB_VERSION}
@@ -448,9 +329,6 @@ kde4_add_library(solid_static STATIC ${solid_LIB_SRCS})
 
 target_link_libraries(solid_static ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} ${solid_OPTIONAL_LIBS})
 
-if(WIN32)
-   set_target_properties(solid_static PROPERTIES COMPILE_FLAGS -DSOLID_EXPORT=)
-endif(WIN32)
 ########### install files ###############
 
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h solidnamespace.h device.h
