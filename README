@@ -27,9 +27,6 @@ Here is an alphabetical list of all individual libraries:
 * kate
     KPart for 'kate', the KDE advanced text editor.
 
-* kde3support
-    This contains libraries that were part of KDE3, but have been replaced for KDE4
-
 * kdecore
     This is the core collection of KDE stuff. Non GUI classes reside here.
 
@@ -82,9 +79,6 @@ Here is an alphabetical list of all individual libraries:
 
 * kutils
     Utility library for printing, chatting and more.
-
-* nepomuk
-    Semantic information retrieval and tagging.
 
 * plasma
     Framework for the KDE 4 desktop shell and its widgets.
@@ -185,9 +179,7 @@ See also the file DEBUG.
 
 Upgrading
 ---------
-KDE 4 applications will try to migrate settings from your KDE 3 installation
-where possible.
-
+KDE 4 applications will try to migrate settings where possible.
 
 Compile Problems
 ----------------
