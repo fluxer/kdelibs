@@ -906,17 +906,6 @@ install( FILES
   ThreadWeaver/WeaverObserver
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/ThreadWeaver COMPONENT Devel)
 
-
-install( FILES
-  khtml/DrawContentsEvent
-  khtml/MouseDoubleClickEvent
-  khtml/MouseEvent
-  khtml/MouseMoveEvent
-  khtml/MousePressEvent
-  khtml/MouseReleaseEvent
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/khtml COMPONENT Devel)
-
-
 install(FILES
   Plasma/AbstractDialogManager
   Plasma/AbstractRunner
