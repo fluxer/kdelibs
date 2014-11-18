@@ -18,13 +18,6 @@ set (KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distrib
 
 set (KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 
-# this must be before FindKDE4Internal in order to preset the result of the visibility test, so that it will be skipped
-option(KHTML_BUILD_TESTREGRESSION "Build KHTML's testregression. Note: this disables hidden visibility")
-# Disable visibility if testregression is built, because the symbols are needed then
-if (KHTML_BUILD_TESTREGRESSION)
-   set (__KDE_HAVE_GCC_VISIBILITY 0)
-endif (KHTML_BUILD_TESTREGRESSION)
-
 ################# write platform profile file which will be installed #################
 include(CreateKDEPlatformProfile.cmake)
 
@@ -219,9 +212,6 @@ set(KDE4_KPTY_INCLUDES ${CMAKE_SOURCE_DIR}/kpty ${KDE4_KIO_INCLUDES} )
 set(KDE4_KPARTS_INCLUDES ${CMAKE_SOURCE_DIR}/kparts
                          ${KDE4_KIO_INCLUDES})
 
-set(KDE4_KHTML_INCLUDES ${CMAKE_SOURCE_DIR}/khtml)
-
-
 ################# configure checks and create the configured files #################
 
 set(LIBRARY_TYPE SHARED)
@@ -274,7 +264,6 @@ add_subdirectory( mimetypes  )
 add_subdirectory( kinit  )
 add_subdirectory( threadweaver )
 add_subdirectory( sonnet  )
-add_subdirectory( khtml  )
 add_subdirectory( interfaces  )
 #if ( NOT CMAKE_CROSSCOMPILING AND QT_QTDESIGNER_FOUND )
 add_subdirectory( kdewidgets  )
