@@ -53,7 +53,7 @@ if(UNIX AND Q_WS_X11)
 endif(UNIX AND Q_WS_X11)
 
 #required features:
-# Perl is used e.g. in khtml, kjs, kjsembed and others
+# FIXME: is perl really needed?
 find_package(Perl)
 set_package_properties(Perl PROPERTIES URL "http://www.perl.org" TYPE REQUIRED PURPOSE "Needed for building kdelibs")
 
@@ -150,12 +150,7 @@ endif(QCA2_FOUND)
 # Use the one variable for the lib you depend upon.
 # E.g. kdeui uses ${KDE4_KDECORE_INCLUDES}. Something that depends on kparts uses ${KDE4_KPARTS_INCLUDES}.
 
-set(KDE4_KJS_INCLUDES ${CMAKE_SOURCE_DIR}/kjs
-                      ${CMAKE_BINARY_DIR}/kjs)
-
-set(KDE4_KDECORE_INCLUDES ${KDE4_KJS_INCLUDES} )
-
-# kdecore depends on Qt (need only headers from kjs)
+# kdecore depends on Qt
 set(KDE4_KDECORE_INCLUDES ${KDE4_KDECORE_INCLUDES}
                           ${CMAKE_SOURCE_DIR}/kdecore
                           ${CMAKE_BINARY_DIR}/kdecore
@@ -247,8 +242,6 @@ add_subdirectory( kdecore )
 add_subdirectory( kdeui )
 add_subdirectory( kpty )
 add_subdirectory( kdesu )
-add_subdirectory( kjs )
-add_subdirectory( kjsembed )
 add_subdirectory( kio )
 add_subdirectory( solid )
 add_subdirectory( kded       )
