@@ -68,7 +68,6 @@ public:
         mAboutApp = 0;
         mAboutKDE = 0;
         mBugReport = 0;
-        mHandBookAction = 0;
         mWhatsThisAction = 0;
         mReportBugAction = 0;
         mAboutAppAction = 0;
@@ -98,7 +97,7 @@ public:
     bool mShowWhatsThis;
     bool mActionsCreated;
 
-    KAction *mHandBookAction, *mWhatsThisAction;
+    KAction *mWhatsThisAction;
     QAction *mReportBugAction, *mSwitchApplicationLanguageAction, *mAboutAppAction, *mAboutKDEAction;
 
     const KAboutData *mAboutData;
@@ -124,8 +123,6 @@ KHelpMenu::KHelpMenu( QWidget *parent, const KAboutData *aboutData,
 
     if (actions) {
         d->createActions(this);
-        if (d->mHandBookAction)
-            actions->addAction(d->mHandBookAction->objectName(), d->mHandBookAction);
         if (d->mWhatsThisAction)
             actions->addAction(d->mWhatsThisAction->objectName(), d->mWhatsThisAction);
         if (d->mReportBugAction)
@@ -150,9 +147,6 @@ void KHelpMenuPrivate::createActions(KHelpMenu* q)
         return;
     mActionsCreated = true;
 
-    if (KAuthorized::authorizeKAction("help_contents")) {
-        mHandBookAction = KStandardAction::helpContents(q, SLOT(appHelpActivated()), q);
-    }
     if (mShowWhatsThis && KAuthorized::authorizeKAction("help_whats_this")) {
         mWhatsThisAction = KStandardAction::whatsThis(q, SLOT(contextHelpActivated()), q);
     }
@@ -190,11 +184,6 @@ KMenu* KHelpMenu::menu()
     d->createActions(this);
 
     bool need_separator = false;
-    if (d->mHandBookAction) {
-      d->mMenu->addAction(d->mHandBookAction);
-      need_separator = true;
-    }
-
     if (d->mWhatsThisAction) {
       d->mMenu->addAction(d->mWhatsThisAction);
       need_separator = true;
@@ -233,10 +222,6 @@ QAction *KHelpMenu::action( MenuId id ) const
 {
   switch (id)
   {
-    case menuHelpContents:
-      return d->mHandBookAction;
-    break;
-
     case menuWhatsThis:
       return d->mWhatsThisAction;
     break;
