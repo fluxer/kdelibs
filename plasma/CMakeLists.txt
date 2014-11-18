@@ -229,14 +229,6 @@ set(plasma_LIB_SRCS
     ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/bindings/url.cpp
 )
 
-if(NOT KDE_NO_DEPRECATED)
-    set(plasma_LIB_SRCS
-        ${plasma_LIB_SRCS}
-        deprecated/animationdriver.cpp
-        deprecated/animator.cpp
-    )
-endif(NOT KDE_NO_DEPRECATED)
-
 kde4_add_kcfg_files(plasma_LIB_SRCS data/kconfigxt/libplasma-theme-global.kcfgc)
 
 kde4_add_ui_files(plasma_LIB_SRCS
