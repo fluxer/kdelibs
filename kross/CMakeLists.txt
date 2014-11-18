@@ -10,11 +10,5 @@ add_subdirectory( console )
 # unittests and such stuff
 add_subdirectory( test )
 
-# KDE Javascript using kjs and kjsembed
-# test kjsembed I think
-if (NOT WINCE)
-add_subdirectory( kjs )
-endif(NOT WINCE)
-
 # QtScript backend
 add_subdirectory( qts )
