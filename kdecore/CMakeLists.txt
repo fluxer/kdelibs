@@ -465,39 +465,6 @@ install(TARGETS kde4-config ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### next target ###############
 
-if(NOT WINCE)
-    # kjs hash stuff for transcript plugin
-    set( CREATE_HASH_TABLE ${CMAKE_SOURCE_DIR}/kjs/create_hash_table )
-
-    add_custom_command(
-       OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ktranscript.lut.h
-       COMMAND ${PERL_EXECUTABLE} ${CREATE_HASH_TABLE}
-               ${CMAKE_CURRENT_SOURCE_DIR}/localization/ktranscript.cpp
-               > ${CMAKE_CURRENT_BINARY_DIR}/ktranscript.lut.h
-       DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/localization/ktranscript.cpp
-    )
-
-    # the transcript plugin
-    set( ktranscript_LIB_SRCS
-       localization/ktranscript.cpp
-       localization/common_helpers.cpp
-    )
-
-    kde4_add_plugin( ktranscript ${ktranscript_LIB_SRCS} )
-
-    target_link_libraries( ktranscript kjs ${QT_QTCORE_LIBRARY} )
-
-
-    if(KDE4_ENABLE_FINAL)
-       macro_add_file_dependencies(${CMAKE_CURRENT_BINARY_DIR}/ktranscript_final_cpp.cpp ${CMAKE_CURRENT_BINARY_DIR}/ktranscript.lut.h)
-    else(KDE4_ENABLE_FINAL)
-       macro_add_file_dependencies(${CMAKE_CURRENT_SOURCE_DIR}/localization/ktranscript.cpp ${CMAKE_CURRENT_BINARY_DIR}/ktranscript.lut.h)
-    endif(KDE4_ENABLE_FINAL)
-
-    install( TARGETS ktranscript DESTINATION ${PLUGIN_INSTALL_DIR} )
-
-endif(NOT WINCE)
-
 ########### install files ###############
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/all_languages DESTINATION ${LOCALE_INSTALL_DIR}  )
 install( FILES localization/entry.desktop  DESTINATION  ${LOCALE_INSTALL_DIR}/en_US )

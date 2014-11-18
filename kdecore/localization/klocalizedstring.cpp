@@ -27,7 +27,6 @@
 #include <klocale_p.h>
 #include <klibrary.h>
 #include <kstandarddirs.h>
-#include <ktranscript_p.h>
 #include <kuitsemantics_p.h>
 #include "kcatalogname_p.h"
 
@@ -78,11 +77,6 @@ class KLocalizedStringPrivate
     QString postFormat (const QString &text,
                         const QString &lang,
                         const QString &ctxt) const;
-    QString substituteTranscript (const QString &trans,
-                                  const QString &lang,
-                                  const QString &ctry,
-                                  const QString &final,
-                                  bool &fallback) const;
     int resolveInterpolation (const QString &trans, int pos,
                               const QString &lang,
                               const QString &ctry,
@@ -90,14 +84,9 @@ class KLocalizedStringPrivate
                               QString &result,
                               bool &fallback) const;
     QVariant segmentToValue (const QString &arg) const;
-    QString postTranscript (const QString &pcall,
-                            const QString &lang,
-                            const QString &ctry,
-                            const QString &final) const;
 
     static void notifyCatalogsUpdated (const QStringList &languages,
                                        const QList<KCatalogName> &catalogs);
-    static void loadTranscript ();
 };
 
 class KLocalizedStringPrivateStatics
@@ -114,9 +103,6 @@ class KLocalizedStringPrivateStatics
     QHash<QString, QStringList> scriptModules;
     QList<QStringList> scriptModulesToLoad;
 
-    bool loadTranscriptCalled;
-    KTranscript *ktrs;
-
     QHash<QString, KuitSemantics*> formatters;
 
     KLocalizedStringPrivateStatics () :
@@ -129,9 +115,6 @@ class KLocalizedStringPrivateStatics
         scriptDir(QLatin1String("LC_SCRIPTS")),
         scriptModules(),
         scriptModulesToLoad(),
-
-        loadTranscriptCalled(false),
-        ktrs(NULL),
 
         formatters()
     {}
@@ -271,17 +254,6 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
 
         // Scripted translation.
         strans = rawtrans.mid(cdpos + s->theFence.length());
-
-        // Try to initialize Transcript if not initialized, and script not empty.
-        if (   !s->loadTranscriptCalled && !strans.isEmpty()
-            && locale && locale->useTranscript())
-        {
-            if (KGlobal::hasMainComponent())
-                loadTranscript();
-            else
-                kDebug(173) << QString::fromLatin1("Scripted message {%1} before transcript engine can be loaded.")
-                                      .arg(shortenMessage(trans));
-        }
     }
     else if (cdpos < 0)
     {
@@ -301,27 +273,6 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
     QString final = substituteSimple(trans);
     // Post-format ordinary translation.
     final = postFormat(final, lang, QString::fromLatin1(ctxt));
-
-    // If there is also a scripted translation.
-    if (!strans.isEmpty()) {
-        // Evaluate scripted translation.
-        bool fallback;
-        QString sfinal = substituteTranscript(strans, lang, ctry, final, fallback);
-
-        // If any translation produced and no fallback requested.
-        if (!sfinal.isEmpty() && !fallback) {
-            final = postFormat(sfinal, lang, QString::fromLatin1(ctxt));
-        }
-    }
-
-    // Execute any scripted post calls; they cannot modify the final result,
-    // but are used to set states.
-    if (s->ktrs != NULL)
-    {
-        QStringList pcalls = s->ktrs->postCalls(lang);
-        foreach(const QString &pcall, pcalls)
-            postTranscript(pcall, lang, ctry, final);
-    }
 
     return final;
 }
@@ -486,62 +437,6 @@ QString KLocalizedStringPrivate::postFormat (const QString &text,
     return final;
 }
 
-QString KLocalizedStringPrivate::substituteTranscript (const QString &strans,
-                                                       const QString &lang,
-                                                       const QString &ctry,
-                                                       const QString &final,
-                                                       bool &fallback) const
-{
-    const KLocalizedStringPrivateStatics *s = staticsKLSP;
-    QMutexLocker lock(kLocaleMutex());
-
-    if (s->ktrs == NULL)
-        // Scripting engine not available.
-        return QString();
-
-    // Iterate by interpolations.
-    QString sfinal;
-    fallback = false;
-    int ppos = 0;
-    int tpos = strans.indexOf(s->startInterp);
-    while (tpos >= 0)
-    {
-        // Resolve substitutions in preceding text.
-        QString ptext = substituteSimple(strans.mid(ppos, tpos - ppos),
-                                         s->scriptPlchar, true);
-        sfinal.append(ptext);
-
-        // Resolve interpolation.
-        QString result;
-        bool fallbackLocal;
-        tpos = resolveInterpolation(strans, tpos, lang, ctry, final,
-                                    result, fallbackLocal);
-
-        // If there was a problem in parsing the interpolation, cannot proceed
-        // (debug info already reported while parsing).
-        if (tpos < 0) {
-            return QString();
-        }
-        // If fallback has been explicitly requested, indicate global fallback
-        // but proceed with evaluations (other interpolations may set states).
-        if (fallbackLocal) {
-            fallback = true;
-        }
-
-        // Add evaluated interpolation to the text.
-        sfinal.append(result);
-
-        // On to next interpolation.
-        ppos = tpos;
-        tpos = strans.indexOf(s->startInterp, tpos);
-    }
-    // Last text segment.
-    sfinal.append(substituteSimple(strans.mid(ppos), s->scriptPlchar, true));
-
-    // Return empty string if fallback was requested.
-    return fallback ? QString() : sfinal;
-}
-
 int KLocalizedStringPrivate::resolveInterpolation (const QString &strans,
                                                    int pos,
                                                    const QString &lang,
@@ -686,10 +581,7 @@ int KLocalizedStringPrivate::resolveInterpolation (const QString &strans,
     QString msgid = QString::fromUtf8(msg);
     QString scriptError;
     bool fallbackLocal;
-    result = s->ktrs->eval(iargs, lang, ctry,
-                           msgctxt, dynctxt, msgid,
-                           args, vals, final, s->scriptModulesToLoad,
-                           scriptError, fallbackLocal);
+
     // s->scriptModulesToLoad will be cleared during the call.
 
     if (fallbackLocal) { // evaluation requested fallback
@@ -735,43 +627,6 @@ QVariant KLocalizedStringPrivate::segmentToValue (const QString &seg) const
 
     // Passed all hoops.
     return vals.at(index);
-}
-
-QString KLocalizedStringPrivate::postTranscript (const QString &pcall,
-                                                 const QString &lang,
-                                                 const QString &ctry,
-                                                 const QString &final) const
-{
-    KLocalizedStringPrivateStatics *s = staticsKLSP;
-    QMutexLocker lock(kLocaleMutex());
-
-    if (s->ktrs == NULL)
-        // Scripting engine not available.
-        // (Though this cannot happen, we wouldn't be here then.)
-        return QString();
-
-    // Resolve the post call.
-    QList<QVariant> iargs;
-    iargs.append(pcall);
-    QString msgctxt = QString::fromUtf8(ctxt);
-    QString msgid = QString::fromUtf8(msg);
-    QString scriptError;
-    bool fallback;
-    QString dummy = s->ktrs->eval(iargs, lang, ctry,
-                                  msgctxt, dynctxt, msgid,
-                                  args, vals, final, s->scriptModulesToLoad,
-                                  scriptError, fallback);
-    // s->scriptModulesToLoad will be cleared during the call.
-
-    // If the evaluation went wrong.
-    if (!scriptError.isEmpty())
-    {
-        kDebug(173) << QString::fromLatin1("Post call {%1} for message {%2} failed: %3")
-                              .arg(pcall, shortenMessage(msgid), scriptError);
-        return QString();
-    }
-
-    return final;
 }
 
 static QString wrapNum (const QString &tag, const QString &numstr,
@@ -940,35 +795,6 @@ KLocalizedString ki18ncp (const char* ctxt,
                           const char* singular, const char* plural)
 {
     return KLocalizedString(ctxt, singular, plural);
-}
-
-extern "C"
-{
-    typedef KTranscript *(*InitFunc)();
-}
-
-void KLocalizedStringPrivate::loadTranscript ()
-{
-    KLocalizedStringPrivateStatics *s = staticsKLSP;
-    QMutexLocker lock(kLocaleMutex());
-
-    s->loadTranscriptCalled = true;
-    s->ktrs = NULL; // null indicates that Transcript is not available
-
-    KLibrary lib(QLatin1String("ktranscript"));
-    if (!lib.load()) {
-        kDebug(173) << "Cannot load transcript plugin:" << lib.errorString();
-        return;
-    }
-
-    InitFunc initf = (InitFunc) lib.resolveFunction("load_transcript");
-    if (!initf) {
-        lib.unload();
-        kDebug(173) << "Cannot find function load_transcript in transcript plugin.";
-        return;
-    }
-
-    s->ktrs = initf();
 }
 
 void KLocalizedString::notifyCatalogsUpdated (const QStringList &languages,
