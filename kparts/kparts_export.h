@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KPARTS_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KPARTS_EXPORT
-# elif defined(MAKE_KPARTS_LIB)
+# if   defined(MAKE_KPARTS_LIB)
    /* We are building this library */ 
 #  define KPARTS_EXPORT KDE_EXPORT
 # else

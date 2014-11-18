@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KNOTIFYCONFIG_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KNOTIFYCONFIG_EXPORT
-# elif defined(MAKE_KNOTIFYCONFIG_LIB)
+# if   defined(MAKE_KNOTIFYCONFIG_LIB)
    /* We are building this library */ 
 #  define KNOTIFYCONFIG_EXPORT KDE_EXPORT
 # else

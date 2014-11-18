@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KCMUTILS_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KCMUTILS_EXPORT
-# elif defined(MAKE_KCMUTILS_LIB)
+# if   defined(MAKE_KCMUTILS_LIB)
    /* We are building this library */ 
 #  define KCMUTILS_EXPORT KDE_EXPORT
 # else

@@ -43,19 +43,12 @@
 #include <QtGlobal>
 
 // VG annotations for arenas disabled since still buggy
-#if 0 && defined(HAVE_VALGRIND_MEMCHECK_H) && !defined(NDEBUG)
-
-#include <valgrind/memcheck.h>
-#define VALGRIND_SUPPORT
-
-#else
 
 #define VALGRIND_CREATE_MEMPOOL(base, redZone, zeroed)
 #define VALGRIND_DESTROY_MEMPOOL(base)
 #define VALGRIND_MEMPOOL_ALLOC(base, addr, size)
 #define VALGRIND_MEMPOOL_FREE(base, addr)
 
-#endif
 
 
 #define ARENA_ALIGN_MASK 3

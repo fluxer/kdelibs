@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KHTML_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KHTML_EXPORT
-# elif defined(MAKE_KHTML_LIB)
+# if   defined(MAKE_KHTML_LIB)
    /* We are building this library */ 
 #  define KHTML_EXPORT KDE_EXPORT
 # else

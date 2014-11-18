@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KSPEECH_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KSPEECH_EXPORT
-# elif defined(MAKE_KSPEECH_LIB)
+# if   defined(MAKE_KSPEECH_LIB)
    /* We are building this library */ 
 #  define KSPEECH_EXPORT KDE_EXPORT
 # else

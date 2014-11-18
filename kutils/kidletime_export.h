@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KIDLETIME_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KIDLETIME_EXPORT
-# elif defined(MAKE_KIDLETIME_LIB)
+# if   defined(MAKE_KIDLETIME_LIB)
    /* We are building this library */ 
 #  define KIDLETIME_EXPORT KDE_EXPORT
 # else

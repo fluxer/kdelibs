@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KPRINTUTILS_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KPRINTUTILS_EXPORT
-# elif defined(MAKE_KPRINTUTILS_LIB)
+# if   defined(MAKE_KPRINTUTILS_LIB)
    /* We are building this library */ 
 #  define KPRINTUTILS_EXPORT KDE_EXPORT
 # else

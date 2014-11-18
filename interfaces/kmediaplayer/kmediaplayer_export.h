@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KMEDIAPLAYER_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KMEDIAPLAYER_EXPORT
-# elif defined(MAKE_KMEDIAPLAYER_LIB)
+# if   defined(MAKE_KMEDIAPLAYER_LIB)
    /* We are building this library */ 
 #  define KMEDIAPLAYER_EXPORT KDE_EXPORT
 # else

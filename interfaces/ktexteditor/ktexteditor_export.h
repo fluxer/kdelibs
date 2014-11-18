@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KTEXTEDITOR_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KTEXTEDITOR_EXPORT
-# elif defined(MAKE_KTEXTEDITOR_LIB)
+# if   defined(MAKE_KTEXTEDITOR_LIB)
    /* We are building this library */ 
 #  define KTEXTEDITOR_EXPORT KDE_EXPORT
 # else

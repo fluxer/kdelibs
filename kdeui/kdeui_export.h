@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KDEUI_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KDEUI_EXPORT
-# elif defined(MAKE_KDEUI_LIB)
+# if   defined(MAKE_KDEUI_LIB)
    /* We are building this library */ 
 #  define KDEUI_EXPORT KDE_EXPORT
 # else

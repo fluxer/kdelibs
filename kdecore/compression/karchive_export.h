@@ -26,10 +26,7 @@
 #include <kdemacros.h>
 
 #ifndef KARCHIVE_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KARCHIVE_EXPORT
-# elif defined(MAKE_KARCHIVE_LIB)
+# if   defined(MAKE_KARCHIVE_LIB)
    /* We are building this library */
 #  define KARCHIVE_EXPORT KDE_EXPORT
 # else

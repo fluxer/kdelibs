@@ -60,9 +60,6 @@ static HINSTANCE kdecoreDllInstance = NULL;
 #else
 static HANDLE kdecoreDllInstance = NULL;
 #endif
-#ifdef KDELIBS_STATIC_LIBS
-static bool kde4prefixInitialized = false;
-#endif
 static wchar_t kde4prefixUtf16[MAX_PATH + 2] = L"";
 
 static QString *kde4Prefix = NULL;
@@ -125,7 +122,6 @@ QString getKde4Prefix()
 #endif
 }
 
-#ifndef KDELIBS_STATIC_LIBS
 /**
  * The dll entry point - get the instance handle for GetModuleFleNameW
  * Maybe also some special initialization / cleanup can be done here
@@ -165,7 +161,6 @@ BOOL WINAPI DllMain ( HANDLE hinstDLL,DWORD fdwReason,LPVOID lpReserved)
     return true;
 }
 
-#endif
 
 /**
  \return a value from MS Windows native registry.

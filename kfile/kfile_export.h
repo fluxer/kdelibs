@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KFILE_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KFILE_EXPORT
-# elif defined(MAKE_KFILE_LIB)
+# if   defined(MAKE_KFILE_LIB)
    /* We are building this library */ 
 #  define KFILE_EXPORT KDE_EXPORT
 # else

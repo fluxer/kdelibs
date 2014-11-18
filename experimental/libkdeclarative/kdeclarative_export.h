@@ -24,10 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KDECLARATIVE_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define KDECLARATIVE_EXPORT
-# elif defined(MAKE_KDECLARATIVE_LIB)
+# if   defined(MAKE_KDECLARATIVE_LIB)
    /* We are building this library */
 #  define KDECLARATIVE_EXPORT KDE_EXPORT
 # else
