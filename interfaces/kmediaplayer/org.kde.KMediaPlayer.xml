@@ -13,13 +13,13 @@
       <arg name="msec" type="x" direction="in"/>
     </method>
     <property name="seekable" type="b" access="read">
-      <annotation name="com.trolltech.QtDBus.propertyGetter" value="isSeekable"/>
+      <annotation name="org.qtproject.QtDBus.propertyGetter" value="isSeekable"/>
     </property>
     <property name="position" type="x" access="read"/>
     <property name="hasLength" type="b" access="read"/>
     <property name="length" type="x" access="read"/>
     <property name="looping" type="b" access="readwrite">
-      <annotation name="com.trolltech.QtDBus.propertyGetter" value="isLooping"/>
+      <annotation name="org.qtproject.QtDBus.propertyGetter" value="isLooping"/>
     </property>
     <property name="state" type="i" access="readwrite"/>
   </interface>
