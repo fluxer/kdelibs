@@ -224,6 +224,8 @@ set(KDE4_KHTML_INCLUDES ${CMAKE_SOURCE_DIR}/khtml)
 
 ################# configure checks and create the configured files #################
 
+set(LIBRARY_TYPE SHARED)
+
 # ACL stuff (used in kio/ and kioslaves/)
 macro_optional_find_package(ACL)
 set_package_properties(ACL PROPERTIES DESCRIPTION "Support for manipulating access control lists"
