@@ -1,0 +1,775 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sairan Kikkarin <sairan@computer.org>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2012-08-31 10:11+0600\n"
+"Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
+"Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
+"Language:\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 1.2\n"
+
+#
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Сайран Киккарин"
+
+#
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sairan@computer.org"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr "Элементтерін таңдау"
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr "Элементтерді таңдау"
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] "%1 элемент таңдалған"
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "&Файл"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "Жаңа терезе"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "Басып шығару"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "Жабу"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "Өңд&еу"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr "Өңдеулі қылу"
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "&Көрініс"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "Ү&лкейту"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "К&ішірейту"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr "Үлкейту/Кішірейтуді ысыру"
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr "Жазуды ғана масштабтау"
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr " HTML дампы"
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "&Пішім"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr "Жазу бағыты"
+
+#: kdelauncher/main.cpp:301
+msgid "&Tools"
+msgstr "Құ&ралдар"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr "Элементтерін таңдау..."
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr "KDELauncher"
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr "KWebKitPart"
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr "QtWebKit шолғыш тетік бөлшегі"
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+" (C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr "Dawit Alemayehu"
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr "Жетілдіруші, құрастырушы"
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr "Urs Wolfer"
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr "Michael Howell"
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+msgid "Developer"
+msgstr "Құрастырушы"
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "Laurent Montel"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "Dirk Mueller"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "&Фреймді былай сақтау..."
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr "Басатынды қарап-шығу"
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "Жақыңдау"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "Алыстау"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "Шын өлшемі"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "&Кодтамасын орнату"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "&Құжаттың бастапқы кодын қарау"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr "<h3>Мәтінді табу</h3>Көрсетілген беттегі мәтінді іздеу диалогы."
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr "Бұл сайтың SSL мәліметі бүлінген сияқты."
+
+#: src/kwebkitpart.cpp:674
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "Эл.пошта: "
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " - Көшірмесі кімге: "
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " - Жасырын кімге: "
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " - Тақырыбы: "
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr " (Жаңа терезеде)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr " (Аталық фреймінде)"
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr "<qt><b>%1</b> дегенді іздеуді қалайсыз ба?</qt>"
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "Интернетте іздеу"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "&Іздеу"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr "Бұл сайт парольдерін сақтау &рұқсат етілсін"
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr "Бұл сайттың бүкіл сақталған парольдері өшірілсін"
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "&Әмиянды жабу"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "Терезе жабылсын ба?"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "Құптау талап етілген"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr ""
+"<html>%1 деген <b>%2</b> дегенге кіру мәліметін жаттап алсын ба?</html>"
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+msgid "HTML Toolbar"
+msgstr "HTML құралдары"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "URL сілтемені сүзгіге қосу"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "URL-ді келтіріңіз:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr "Жарнама сүзгісі бұғаттаған"
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "Сүзгі қатесі"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr "&Жаттау"
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr "&Бұл сайт үшін ешқашанда"
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr "Қ&азір емес"
+
+#: src/ui/searchbar.cpp:55
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "&Іздейтіні:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr "Іздеу панелін жабу"
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+msgid "&Find:"
+msgstr "&Іздейтіні:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr "Іздейтіннің келесі сәйкестігін табу"
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "&Келесі"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr "Іздейтіннің алдыңғы сәйкестігін табу"
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "&Алдыңғы"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "&Параметрлері"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr "Үлкен-кішілігін &ескеріп"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr "&Теру кезінде де іздеу"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr "&Бүкіл сәйкестіктерін бояулау"
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr "Сәйкестіктерін бояулау"
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr "Орнатылымыңызда жүктеу менеджер (%1) бағдарламасы табылмады."
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+"Оны орнатып. ол $PATH жолдарында бар екеніне қөз жеткізіңіз.\n"
+"\n"
+"Әзірше енді онымен бірігіп істтеу бұғатталады."
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+"<html><body><h3>Қате туралы хабарлама көрсетілмейді</h3><p>Оның <em>error."
+"html</em> деген үлгі файлы табылған жоқ.</p></body></html>"
+
+#: src/webpage.cpp:210
+#, kde-format
+msgid "Error: %1"
+msgstr "Қате: %1"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "Талап етілген әрекет аяқталмады"
+
+#: src/webpage.cpp:222
+#, kde-format
+msgid "Technical Reason: %1"
+msgstr "Техникалық себебі: %1"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "Талаптың егжей-тегжейі:"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "URL: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "Протоколы: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "Күні мен уақыты: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "Қосымша ақпарат: %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "Сипаттамасы:"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "Мүмкін себептері:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr "Мүмкін шешімдері:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr "Жүктеп беретін файлдарды таңдау"
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+"<qt><p>Керек веб-парағын қайта көрсету үшін өткенде жіберілген ақпаратты "
+"шолғыш жаңадан жібермек.</p><p>Ол онлайн сатып алуыңыздің мәліметі болса, "
+"тағы бір рет сатып алмау үшін Қайту дегенді басыңыз. Әйтпесе, жәй жаңарту "
+"үшін Жалғастыру дегенді басыңыз."
+
+#: src/webpage.cpp:399
+msgid "Resubmit Information"
+msgstr "Ақпаратты қайта жіберу"
+
+#: src/webpage.cpp:687
+#, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>Осы сенім артылмаған бетте<br/><b>%1</b>.<br />сілтемесі бар: Сілтемеге "
+"еру керек пе?</qt>"
+
+#: src/webpage.cpp:689
+msgid "Security Warning"
+msgstr "Қауіпсіздік ескертуі"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "Еру"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "Қауіпсіздік дабылы"
+
+#: src/webpage.cpp:693
+#, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr "<qt>Сенімсіз<b/><b>%1</b><br/>бетпен қатынасуға тыйым салынды.</qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+"Ескерту: бұл қорғалған пішін, бірақ ол деректеріңізді шифрланбаған түрде "
+"қайтаруға әрекеттеніп жатыр.\n"
+"Бөтендер бұл ашық ақпаратты сығалауы мүмкін.\n"
+"Бола берсін бе?"
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "Желі арқылы беру"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "&Шифрламай жіберу"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"Бұл сайт деректер пішінді эл.пошта арқылы жіберуге әрекет жасап жатыр.\n"
+"Бола берсін бе?"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "&Эл.поштаны жіберу"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+"<qt>Бұл сайтқа эл.пошта хатқа келесі файлдарды тіркемелеп жіберуге рұқсат "
+"бересіз бе?</qt>"
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr "Эл.пошта тіркемесі қылуды құптау"
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr "&Тіркемелеуі рұқсат"
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr "&Тіркемелеуге рұқсат жоқ"
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+"Сайтқа жіберу пішіміндегі деректерге жергілікті файлды тіркеу әрекеті. "
+"Қауіпсіздігіңіз үшін тіркелген файл жойылды."
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr "Тіркемесі өшірілді"
+
+#: src/webpage.cpp:875
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+"Бұл сайт жаңа қалқымалы терезе ашу әрекетін жасауда.\n"
+"Бұны рұқсат етесіз бе?"
+
+#: src/webpage.cpp:877
+#, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+"<qt>Бұл сайт <p>%1</p>дегенге қалқымалы терезе ашу әрекетін жасауда.<br/"
+">Бұны рұқсат етесіз бе?</qt>"
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr "Javascript қалқымалыны құптау"
+
+#: src/webpage.cpp:882
+msgid "Allow"
+msgstr "Құп"
+
+#: src/webpage.cpp:883
+msgid "Do Not Allow"
+msgstr "Рұқсат жоқ"
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr "Плагинін жегу"
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr "Қатынау пернелері белсендірілген"
+
+#: src/webview.cpp:413
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "Бағыты"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr "Әдетті"
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr "Солдан оңға"
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr "Оңдан солға"
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr "Емлені тексеру..."
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr "Таңдалғанның емлесін тексеру..."
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "Кескінді былай сақтау..."
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "Кескінді жіберу..."
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr "Кескі н URL-ін көшіріп алу"
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "Кескінді көшіріп алу"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "Кескінді қарау (%1)"
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "Кескінді бұғаттау..."
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "%1 дегендегі кескіндерді бұғаттау"
+
+#: src/webview.cpp:551
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "Фрейм"
+
+#: src/webview.cpp:553
+msgid "Open in New &Window"
+msgstr "Ж&аңа терезеде ашу"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "Осы &терезеде ашу"
+
+#: src/webview.cpp:563
+msgid "Open in &New Tab"
+msgstr "Жаңа &қойындыда ашу"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "Фреймді жаңарту"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "Фреймді басып шығару..."
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "Фреймнің бастапқы кодын қарау"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "Фреймді бұғаттау..."
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "Мәтінді &көшіріп алу"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "'%1' дегенді ашу"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "Эл.пошта адресін &көшіріп алу"
+
+#: src/webview.cpp:691
+msgid "Copy Link &Text"
+msgstr "Сілтеме мәтінін &көшіріп алу"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr "Сілтеме &URL-ін көшіріп алу"
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "&Сілтемені былай сақтау..."
+
+#: src/webview.cpp:723
+msgid "&Play"
+msgstr "&Орындау"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "&Аялдау"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr "Үнін шығару"
+
+#: src/webview.cpp:728
+msgid "&Mute"
+msgstr "&Үнін өшіру"
+
+#: src/webview.cpp:733
+msgid "&Loop"
+msgstr "Қ&айталана берсін"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr "&Тізгіндерін көрсету"
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr "Видеоны былай с&ақтау..."
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr "Видеоның URL-ін көшіріп алу"
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr "Аудионы былай сақта&у..."
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr "Аудионың URL-ны көшіріп алу"
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr "Мультимедианы былай сақтау..."
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr "Мультимедиа URL-ін көшіріп алу"
+
+#: src/webview.cpp:804
+#, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "%1 дегенде %2 дегенді іздеу"
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "'%1' дегенді мынамен іздеу:"

@@ -1,0 +1,775 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Park Shinjo <peremen@gmail.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2013-08-04 02:14+0900\n"
+"Last-Translator: Park Shinjo <peremen@gmail.com>\n"
+"Language-Team: Korean <kde@peremen.name>\n"
+"Language: ko\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Park Shinjo"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "kde@peremen.name"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr "원소 선택"
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr "원소 선택"
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] "원소 %1개 선택됨"
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "파일(&F)"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "새 창"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "인쇄"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "닫기"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "편집(&E)"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr "편집 설정"
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "보기(&V)"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "확대(&I)"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "축소(&O)"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr "원래 크기로"
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr "텍스트만 확대/축소"
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr "HTML 덤프"
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "형식(&O)"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr "기록 방향 "
+
+#: kdelauncher/main.cpp:301
+msgid "&Tools"
+msgstr "도구(&T)"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr "원소 선택..."
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr "KDELauncher"
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr "KWebKitPart"
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr "QtWebKit 브라우저 엔진 구성 요소"
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr "Dawit Alemayehu"
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr "관리자, 개발자"
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr "Urs Wolfer"
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr "Michael Howell"
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+msgid "Developer"
+msgstr "개발자"
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "Laurent Montel"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "Dirk Mueller"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "프레임을 다른 이름으로 저장(&F)..."
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr "인쇄 미리 보기"
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "확대"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "축소"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "원래 크기로"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "인코딩 설정(&E)"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "문서 원본 보기(&C)"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr ""
+"<h3>텍스트 찾기</h3>현재 페이지의 텍스트를 찾을 수 있는 대화 상자를 표시합니"
+"다."
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr "이 사이트의 SSL 정보가 잘못된 것 같습니다."
+
+#: src/kwebkitpart.cpp:674
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "전자 우편: "
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " - 참조: "
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " - 숨은 참조: "
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " - 제목: "
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr " (새 창에서)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr " (부모 프레임에서)"
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr "<qt><b>%1</b>(으)로 검색하시겠습니까?</qt>"
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "인터넷 검색"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "검색(&S)"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr "이 사이트에 암호 저장 허용(&A)"
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr "이 사이트의 모든 저장된 암호 삭제"
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "지갑 닫기(&C)"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "창을 닫으시겠습니까?"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "확인 필요"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr "<html>%1에서 <b>%2</b>의 로그인 정보를 기억하도록 하시겠습니까?</html>"
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+msgid "HTML Toolbar"
+msgstr "HTML 도구 모음"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "필터에 URL 추가"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "URL 입력:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr "광고 필터에 의해 차단됨"
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "필터 오류"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr "기억(&R)"
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr "이 사이트에서는 안 함(&V)"
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr "지금 안 함(&O)"
+
+#: src/ui/searchbar.cpp:55
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "찾기(&F):"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr "검색 도구 모음 닫기"
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+msgid "&Find:"
+msgstr "찾기(&F):"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr "현재 검색 구문과 일치하는 다음 텍스트 찾기"
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "다음(&N)"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr "현재 검색 구문과 일치하는 이전 텍스트 찾기"
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "이전(&P)"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "옵션(&O)"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr "대소문자 구별(&M)"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr "입력하는 대로 찾기(&S)"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr "검색 항목 모두 강조(&H)"
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr "일치하는 항목 강조"
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr "다운로드 관리자(%1)를 찾을 수 없습니다."
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+"$PATH에 등록되어 있는지 확인해 보십시오.\n"
+"\n"
+"통합을 사용할 수 없습니다."
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+"<html><body><h3>오류 메시지를 표시할 수 없음</h3><p>오류 템플릿 파일 "
+"<em>error.html</em>을 찾을 수 없습니다.</p></body></html>"
+
+#: src/webpage.cpp:210
+#, kde-format
+msgid "Error: %1"
+msgstr "오류: %1"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "요청한 작업을 완료할 수 없음"
+
+#: src/webpage.cpp:222
+#, kde-format
+msgid "Technical Reason: %1"
+msgstr "기술적 이유: %1"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "요청 정보:"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "URL: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "프로토콜: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "날짜와 시간: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "추가 정보: %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "설명:"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "가능한 이유:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr "가능한 해결책:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr "업로드할 파일 선택"
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+"<qt><p>요청한 웹 페이지를 다시 보려면 웹 브라우저에서 이전에 전달받은 정보를 "
+"다시 제출해야 합니다.</p><p>온라인 쇼핑에서 구매를 하는 등의 동작을 취했다면 "
+"이중으로 주문되는 것을 막기 위해서 취소 단추를 누르십시오. 그렇지 않으면 계"
+"속 단추를 눌러서 웹 페이지를 다시 보십시오.</p>"
+
+#: src/webpage.cpp:399
+msgid "Resubmit Information"
+msgstr "정보 다시 제출"
+
+#: src/webpage.cpp:687
+#, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>이 신뢰할 수 없는 페이지는<br/><b>%1</b><br/>(으)로 링크합니다. 따라가시"
+"겠습니까?</qt>"
+
+#: src/webpage.cpp:689
+msgid "Security Warning"
+msgstr "보안 경고"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "따라가기"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "보안 경고"
+
+#: src/webpage.cpp:693
+#, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr ""
+"<qt>신뢰할 수 없는 페이지에서<br/><b>%1</b><br/>에 접근하는 것을 차단하였습니"
+"다.</qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+"경고: 이 폼 자체는 안전하지만 데이터를 암호화하지 않고 보내려고 하고 있습니"
+"다.\n"
+"제 3자가 이 정보를 보고 가로챌 수도 있습니다.\n"
+"데이터를 암호화하지 안고 보내시겠습니까?"
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "네트워크 전송"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "암호화하지 않고 보냄(&S)"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"이 사이트는 폼 데이터를 이메일로 보내려고 하고 있습니다.\n"
+"계속 진행하시겠습니까?"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "이메일 보내기(&S)"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+"<qt>이 사이트에서 이메일 메시지에 다음 파일을 첨부할 수 있도록 허용하시겠습니"
+"까?</qt>"
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr "이메일 첨부 확인"
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr "첨부 허용(&A)"
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr "첨부 무시(&I)"
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+"이 사이트는 폼을 제출하는 과정에서 컴퓨터에 있는 파일을 첨부하려고 시도하였습"
+"니다. 보안을 위해서 첨부 파일을 삭제하였습니다."
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr "첨부 삭제됨"
+
+#: src/webpage.cpp:875
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+"이 사이트에서 새 창을 열려고 합니다.\n"
+"허용하시겠습니까?"
+
+#: src/webpage.cpp:877
+#, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+"<qt>이 사이트에서 팝업 창으로<p>%1</p><br/>을(를) 열려고 합니다. 허용하시겠습"
+"니까?</qt>"
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr "자바스크립트 팝업 확인"
+
+#: src/webpage.cpp:882
+msgid "Allow"
+msgstr "허용"
+
+#: src/webpage.cpp:883
+msgid "Do Not Allow"
+msgstr "허용하지 않음"
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr "플러그인 시작"
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr "액세스 키 활성화됨"
+
+#: src/webview.cpp:413
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "방향"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr "기본값"
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr "왼쪽에서 오른쪽"
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr "오른쪽에서 왼쪽"
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr "맞춤법 검사..."
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr "맞춤법 검사 선택..."
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "다른 이름으로 그림 저장..."
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "그림 보내기..."
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr "그림 URL 복사"
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "그림 복사"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "그림 보기 (%1)"
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "그림 차단..."
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "%1의 그림 차단"
+
+#: src/webview.cpp:551
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "프레임"
+
+#: src/webview.cpp:553
+msgid "Open in New &Window"
+msgstr "새 창으로 열기(&W)"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "이 창에서 열기(&T)"
+
+#: src/webview.cpp:563
+msgid "Open in &New Tab"
+msgstr "새 탭으로 열기(&N)"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "프레임 새로 고침"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "프레임 인쇄..."
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "프레임 원본 보기"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "IFrame 차단..."
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "텍스트 복사(&C)"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "'%1' 열기"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "이메일 주소 복사(&C)"
+
+#: src/webview.cpp:691
+msgid "Copy Link &Text"
+msgstr "링크 텍스트 복사(&T)"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr "링크 URL 복사(&U)"
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "다음으로 링크 저장(&S)..."
+
+#: src/webview.cpp:723
+msgid "&Play"
+msgstr "재생(&P)"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "일시 정지(&P)"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr "음소거 해제(&M)"
+
+#: src/webview.cpp:728
+msgid "&Mute"
+msgstr "음소거(&M)"
+
+#: src/webview.cpp:733
+msgid "&Loop"
+msgstr "반복(&L)"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr "컨트롤 보이기(&C)"
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr "다른 이름으로 비디오 저장(&V)..."
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr "비디오 URL 복사(&O)"
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr "다른 이름으로 오디오 저장(&V)..."
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr "오디오 링크 복사(&O)"
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr "다른 이름으로 미디어 저장(&V)..."
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr "미디어 링크 복사(&O)"
+
+#: src/webview.cpp:804
+#, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "%1에서 '%2' 검색"
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "다음에서 '%1' 검색"

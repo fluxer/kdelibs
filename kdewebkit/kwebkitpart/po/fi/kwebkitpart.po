@@ -1,0 +1,787 @@
+# Finnish messages for kwebkitpart.
+# Copyright © 2011, 2012 This_file_is_part_of_KDE
+# This file is distributed under the same license as the extragear-base package.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2011.
+# Jorma Karvonen <karvonen.jorma@gmail.com>, 2011.
+# Lasse Liehu <lasse.liehu@gmail.com>, 2012, 2013, 2014.
+#
+# KDE Finnish translation sprint participants:
+# Author: Artnay
+# Author: Karvjorm
+# Author: Lliehu
+msgid ""
+msgstr ""
+"Project-Id-Version: kwebkitpart\n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2014-03-17 10:33+0200\n"
+"Last-Translator: Lasse Liehu <lasse.liehu@gmail.com>\n"
+"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"Language: fi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-POT-Import-Date: 2012-12-01 22:20:04+0000\n"
+"X-Generator: Lokalize 1.5\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Tommi Nieminen,Jorma Karvonen"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "translator@legisign.org,karvonen.jorma@gmail.com"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr "Valitse elementit"
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr "Valitse elementit"
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] "%1 elementti valittu"
+msgstr[1] "%1 elementtiä valittu"
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "&Tiedosto"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "Uusi ikkuna"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "Tulosta"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "Sulje"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "&Muokkaa"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr "Aseta muokattavaksi"
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "&Näytä"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "L&ähennä"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "L&oitonna"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr "Palauta tavallinen koko"
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr "Muuta vain tekstin kokoa"
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr "Vedosta HTML"
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "M&uotoile"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr "Kirjoitussuunta"
+
+#: kdelauncher/main.cpp:301
+msgid "&Tools"
+msgstr "Työ&kalut"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr "Valitse elementit…"
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr "KDELauncher"
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr "KWebKit-osa"
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr "QtWebKit-selainmoottoriosa"
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+"© 2009–2010 Dawit Alemayehu\n"
+"© 2008–2010 Urs Wolfer\n"
+"© 2007 Trolltech ASA"
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr "Dawit Alemayehu"
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr "Ylläpitäjä, kehittäjä"
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr "Urs Wolfer"
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr "Michael Howell"
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+msgid "Developer"
+msgstr "Kehittäjä"
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "Laurent Montel"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "Dirk Mueller"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "Tallenna ke&hys nimellä…"
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr "Tulostuksen esikatselu"
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "Lähennä"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "Loitonna"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "Todellinen koko"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "Aseta koo&daus"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "Näytä asiakirjan &lähdekoodi"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr ""
+"<h3>Etsi tekstiä</h3>Näyttää kyselyikkunan, jonka avulla voit etsiä tekstiä "
+"näytetyltä sivulta."
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr "Sivuston SSL-tieto näyttää olevan vioittunut."
+
+#: src/kwebkitpart.cpp:674
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "Sähköposti: "
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " – Kopio: "
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " – Piilokopio: "
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " – Aihe: "
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr " (Uuteen ikkunaan)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr " (Ylempään kehykseen)"
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr "<qt>Haluatko etsiä kohdetta <b>%1</b>?</qt>"
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "Internethaku"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "&Etsi"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr "&Salli salasanavälimuisti tälle sivustolle"
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr "Poista kaikki tämän sivuston salasanat välimuistista"
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "S&ulje lompakko"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "Suljetaanko ikkuna?"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "Vahvistus tarvitaan"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr ""
+"<html>Haluatko ohjelman %1 muistavan kirjautumistiedot sivulle <b>%2</b>?</"
+"html>"
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+msgid "HTML Toolbar"
+msgstr "HTML-työkalurivi"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "Lisää verkko-osoite suodattimeen"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "Kirjoita verkko-osoite:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr "Mainossuodattimen estämää sisältöä"
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "Suodatusvirhe"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr "&Muista"
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr "Ei &koskaan tällä sivustolla"
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr "Ei &nyt"
+
+#: src/ui/searchbar.cpp:55
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "&Etsi:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr "Sulje hakurivi"
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+msgid "&Find:"
+msgstr "&Etsi:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr "Etsi nykyisen hakulausekkeen seuraava osuma"
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "&Seuraava"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr "Etsi nykyisen hakulausekkeen edellinen osuma"
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "&Edellinen"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "&Valinnat"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr "&Erota pien- ja suuraakkoset"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr "Etsi &kirjoittaessasi"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr "K&orosta kaikki osumat"
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr "Korosta osumat"
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr "Latauksenhallintaa (%1) ei löydetty asennuksestasi."
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+"Yritä asentaa se uudelleen ja varmista, että se löytyy hakupolusta.\n"
+"\n"
+"Integrointi poistetaan käytöstä."
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+"<html><body><h3>Virheilmoitusta ei voi näyttää</"
+"h3><p>Virhemallipohjatiedostoa <em>error.html</em> ei löytynyt.</p></body></"
+"html>"
+
+#: src/webpage.cpp:210
+#, kde-format
+msgid "Error: %1"
+msgstr "Virhe: %1"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "Pyydettyä toimintoa ei voitu päättää"
+
+#: src/webpage.cpp:222
+#, kde-format
+msgid "Technical Reason: %1"
+msgstr "Tekninen syy: %1"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "Pyynnön yksityiskohdat:"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "Verkko-osoite: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "Yhteyskäytäntö: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "Aika ja päiväys: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "Lisätiedot: %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "Kuvaus:"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "Todennäköiset syyt:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr "Mahdolliset ratkaisut:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr "Valitse palvelimelle kopioitavat tiedostot"
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+"<qt><p>Näyttääkseen pyytämäsi verkkosivun uudelleen selaimen täytyy lähettää "
+"aiemmin lähettämäsi tiedot uudelleen.</p><p>Jos olit verkko-ostoksilla ja "
+"ostit jotain, napsauta Peru välttääksesi kaksoisostoksen. Muutoin napsauta "
+"Jatka, jolloin verkkosivu näytetään uudelleen.</p>"
+
+#: src/webpage.cpp:399
+msgid "Resubmit Information"
+msgstr "Lähetä tiedot uudelleen"
+
+#: src/webpage.cpp:687
+#, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>Ei-luotetun sivu linkin osoittaa kohteeseen<br /><b>%1</b>.<br /> "
+"Haluatko seurata linkkiä?</qt>"
+
+#: src/webpage.cpp:689
+msgid "Security Warning"
+msgstr "Turvallisuusvaroitus"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "Seuraa"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "Turvallisuushälytys"
+
+#: src/webpage.cpp:693
+#, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr "<qt>Ei-luotetun sivun pääsy kohteeseen<br/><b>%1</b> torjuttu.</qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+"Varoitus: Tämä on suojattu lomake, mutta se yrittää lähettää tietosi "
+"takaisin salaamattomana.\n"
+"Kolmas osapuoli voi päästä näkemään nämä tiedot.\n"
+"Haluatko varmasti lähettää tiedot salaamattomana?"
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "Verkkolähetys"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "&Lähetä salaamattomana"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"Sivusto yrittää lähettää lomakkeen tiedot sähköpostitse.\n"
+"Haluatko jatkaa?"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "&Lähetä sähköpostitse"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+"<qt>Haluatko antaa sivuston liittää seuraavat tiedostot sähköpostiviestiin?</"
+"qt>"
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr "Vahvistus sähköpostiliitteestä"
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr "&Salli liitteet"
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr "&Ohita liitteet"
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+"Sivusto yrittää liittää tiedoston tietokoneeltasi lähetettävään "
+"lomakkeeseen. Liite poistettiin turvallisuussyistä."
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr "Liite poistettu"
+
+#: src/webpage.cpp:875
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+"Tämä sivu haluaa avata uuden ponnahdusikkunan.\n"
+"Sallitko ponnahdusikkunan avaamisen?"
+
+#: src/webpage.cpp:877
+#, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+"<qt>Tämä sivu haluaa avata ponnahdusikkunan osoitteen<p>%1</p><br/>Sallitko "
+"tämän?</qt>"
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr "JavaScript-ponnahdusikkunan vahvistus"
+
+#: src/webpage.cpp:882
+msgid "Allow"
+msgstr "Salli"
+
+#: src/webpage.cpp:883
+msgid "Do Not Allow"
+msgstr "Älä salli"
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr "Käynnistä liitännäinen"
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr "Valintanäppäimet käytössä"
+
+#: src/webview.cpp:413
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "Suunta"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr "Oletus"
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr "Vasemmalta oikealle"
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr "Oikealta vasemmalle"
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr "Tarkista oikeinkirjoitus…"
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr "Oikolue valinta…"
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "Tallenna kuva nimellä…"
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "Lähetä kuva…"
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr "Kopioi kuvan verkko-osoite"
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "Kopioi kuva"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "Näytä kuva (%1)"
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "Estä kuva…"
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "Estä kuvat kohteesta %1"
+
+#: src/webview.cpp:551
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "Kehys"
+
+#: src/webview.cpp:553
+msgid "Open in New &Window"
+msgstr "Avaa &uuteen ikkunaan"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "Avaa &tähän ikkunaan"
+
+#: src/webview.cpp:563
+msgid "Open in &New Tab"
+msgstr "Avaa uuteen &välilehteen"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "Lataa kehys uudelleen"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "Tulosta kehys…"
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "Näytä kehyksen lähdekoodi"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "Estä IFrame-kehys…"
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "&Kopioi teksti"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "Avaa ’%1’"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "&Kopioi sähköpostiosoite"
+
+#: src/webview.cpp:691
+msgid "Copy Link &Text"
+msgstr "Kopioi linkin &teksti"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr "K&opioi linkin verkko-osoite"
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "&Tallenna linkki nimellä…"
+
+#: src/webview.cpp:723
+msgid "&Play"
+msgstr "&Soita"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "Ta&uko"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr "Poista &vaimennus"
+
+#: src/webview.cpp:728
+msgid "&Mute"
+msgstr "&Vaimenna"
+
+#: src/webview.cpp:733
+msgid "&Loop"
+msgstr "Si&lmukka"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr "Näytä o&hjaimet"
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr "Tallenna video nimellä…"
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr "Ko&pioi videon verkko-osoite"
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr "Talle&nna äänitiedosto nimellä…"
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr "Kopioi ääniti&edoston verkko-osoite"
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr "Tallenna me&diatiedosto nimellä…"
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr "Kopioi medi&atiedoston verkko-osoite"
+
+# $[hakumuoto %1] = tunnetulle hakukoneelle määritetty muoto, esimerkiksi. ”Googlella”, ”Wikipediasta” jne.
+#: src/webview.cpp:804
+#, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "Etsi ”%2” hakukoneella %1|/|Etsi ”%2” $[hakumuoto %1]"
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "Etsi ”%1” hakukoneella"

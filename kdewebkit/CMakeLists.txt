@@ -1,5 +1,7 @@
 project(kdewebkit)
 
+add_subdirectory( kwebkitpart )
+
 add_feature_info(QtWebkit QT_QTWEBKIT_FOUND "Needed for building kdelibs" "http://trac.webkit.org/wiki/QtWebKit")
 
 if(NOT QT_QTWEBKIT_FOUND)

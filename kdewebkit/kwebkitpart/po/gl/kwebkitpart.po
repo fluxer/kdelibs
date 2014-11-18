@@ -1,0 +1,793 @@
+# translation of webkitkde.po to Galician
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+# mvillarino <mvillarino@users.sourceforge.net>, 2008.
+# Marce Villarino <mvillarino@users.sourceforge.net>, 2009.
+# marce villarino <mvillarino@users.sourceforge.net>, 2009.
+# Xosé <xosecalvo@gmail.com>, 2010.
+# Marce Villarino <mvillarino@gmail.com>, 2011.
+# Marce Villarino <mvillarino@kde-espana.es>, 2012, 2014.
+# Adrián Chaves Fernández <adriyetichaves@gmail.com>, 2012.
+# Miguel Branco <mgl.branco@gmail.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: webkitkde\n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2014-01-14 07:10+0100\n"
+"Last-Translator: Marce Villarino <mvillarino@kde-espana.org>\n"
+"Language-Team: Galician <proxecto@trasno.net>\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Marce Villarino, Xosé Calvo, Adrián Chaves Fernández (Gallaecio)"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr ""
+"mvillarino@users.sourceforge.net, xosecalvo@gmail.com, adriyetichaves@gmail."
+"com"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr "Selección de elementos"
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr "Escolla os elementos"
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] "Seleccionouse %1 elemento."
+msgstr[1] "Seleccionáronse %1 elementos."
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "&Ficheiro"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "Nova xanela"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "Imprimir"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "Pechar"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "&Modificar"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr "Facer modificábel"
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "&Vista"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "Ac&hegar"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "A&fastar"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr "Desfacer a ampliación"
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr "Ampliar só o texto"
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr "Envorcar o HTML"
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "F&ormato"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr "Dirección da escrita"
+
+#: kdelauncher/main.cpp:301
+msgid "&Tools"
+msgstr "Ferramen&tas"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr "Seleccionar os elementos…"
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr "KDELauncher"
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr "KWebKitPart"
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr "Compoñente do motor de navegación QtWebKit"
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+"© 2009-2010 Dawit Alemayehu\n"
+"© 2008-2010 Urs Wolfer\n"
+"© 2007 Trolltech ASA"
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr "Dawit Alemayehu"
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr "Mantedor, desenvolvedor."
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr "Urs Wolfer"
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr "Michael Howell"
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+msgid "Developer"
+msgstr "Desenvolvedor."
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "Laurent Montel"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "Dirk Mueller"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "Gardar o &marco como…"
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr "Vista previa do impreso"
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "Achegar"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "Afastar"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "Tamaño real"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "Estabelecer a &codificación"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "Ver a fonte do do&cumento"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr ""
+"<h3>Atopar un texto</h3> Mostra un diálogo que permite atopar un texto na "
+"páxina."
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr "Semella que a información da SSL deste sitio está corrompida."
+
+#: src/kwebkitpart.cpp:674
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "Correo: "
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " - Copia: "
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " - Copia oculta: "
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " - Asunto: "
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr " (nunha &xanela nova)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr " (no marco pai)"
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr "<qt>Quere buscar <b>%1</b>?</qt>"
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "Buscar en Internet"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "&Buscar"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr "&Permitir lembrar os contrasinais deste sitio"
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr "Eliminar todos os contrasinais que se lembran deste sitio"
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "&Pechar a carteira"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "Pechar esta xanela?"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "Requírese confirmación"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr ""
+"<html>Desexa que %1 lembre a información de rexistro de <b>%2</b>?</html>"
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+msgid "HTML Toolbar"
+msgstr "Barra de ferramentas de HTML"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "Engadir un enderezo"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "Escriba o enderezo:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr "Bloqueado polo filtro de publicidade."
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "Erro do filtro"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr "Lemb&rar"
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr "Nun&ca para este sitio"
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr "Agora &non"
+
+#: src/ui/searchbar.cpp:55
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "&Buscar:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr "Pechar a barra de busca"
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+msgid "&Find:"
+msgstr "A&topar:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr "Atopar a seguinte aparición da frase buscada."
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "Segui&nte"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr "Atopar a aparición anterior da frase buscada."
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "&Anterior"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "&Opcións"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr "Diferenciar &maiúsculas de minúsculas."
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr "Buscar sobre a &marcha"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr "&Salientar as aparicións"
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr "Salientar as aparicións atopadas."
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr "Non foi posíbel atopar o xestor de descargas (%1) no sistema."
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+"Asegúrese de que está instalado e nunha das rutas definidas na variábel de "
+"ambiente «$PATH».\n"
+"\n"
+"Desactivarase a integración."
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+"<html><body><h3>Non é posíbel mostrar a mensaxe de erro</h3><p>Non se atopou "
+"o ficheiro co modelo para os erros, <em>error.html</em>.</p></body></html>"
+
+#: src/webpage.cpp:210
+#, kde-format
+msgid "Error: %1"
+msgstr "Erro: %1"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "Non foi posíbel completar a operación solicitada."
+
+#: src/webpage.cpp:222
+#, kde-format
+msgid "Technical Reason: %1"
+msgstr "Razón técnica: %1"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "Detalles da solicitude:"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "URL: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "Protocolo: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "Data e hora: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "Información adicional: %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "Descrición:"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "Posíbeis causas:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr "Posíbel solución:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr "Escolla os ficheiros a enviar"
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+"<qt><p>Para volver mostrar a páxina web solicitada, o navegador ten que "
+"volver enviar a información que enviou anteriormente.</p><p>Se estaba "
+"facendo compras na web, prema «Cancelar» para evitar realizar a mesma compra "
+"dúas veces. En caso contrario, prema «Continuar» para mostrar de novo a "
+"páxina.</p>"
+
+#: src/webpage.cpp:399
+msgid "Resubmit Information"
+msgstr "Reenviar a información"
+
+#: src/webpage.cpp:687
+#, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>Esta páxina, na que non se confía, liga con <br/><b>%1</b>.<br/>Quere "
+"seguir a ligazón?</qt>"
+
+#: src/webpage.cpp:689
+msgid "Security Warning"
+msgstr "Advertencia de seguranza"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "Seguir"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "Alerta de seguranza"
+
+#: src/webpage.cpp:693
+#, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr ""
+"<qt>Denegado o acceso da páxina<br/>na que non se confía a <b>%1</b>.<br/></"
+"qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+"Advertencia: este é un formulario seguro, mais está a tentar enviar os datos "
+"de volta sen cifralos.\n"
+"Esta información podería ser interceptada por terceiros.\n"
+"Desexa realmente enviar os datos sen cifralos?"
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "Transmisión de rede"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "&Enviar sen cifrar"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"Este sitio está a tentar enviar os datos dun formulario mediante correo "
+"electrónico.\n"
+"Quere continuar?"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "&Enviar o correo"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+"<qt>Quere permitir que o sitio anexe os seguintes ficheiros á mensaxe de "
+"correo?</qt>"
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr "Confirmación de anexos no correo"
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr "Permitir os &anexos"
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr "&Ignorar os anexos"
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+"Este sitio tentou anexar un ficheiro do computador ao enviar o formulario. "
+"Eliminouse o anexo como medida de protección."
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr "Eliminouse un anexo"
+
+#: src/webpage.cpp:875
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+"O sitio solicita abrir unha nova xanela emerxente.\n"
+"Quere permitilo?"
+
+#: src/webpage.cpp:877
+#, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+"<qt>O sitio solicita abrir unha xanela emerxente a <p>%1</p>.<br/>Quere "
+"permitilo?</qt>"
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr "Confirmación da xanela de JavaScript"
+
+#: src/webpage.cpp:882
+msgid "Allow"
+msgstr "Permitir"
+
+#: src/webpage.cpp:883
+msgid "Do Not Allow"
+msgstr "Denegar"
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr "Complemento de inicio"
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr "Activáronse as teclas de acceso."
+
+#: src/webview.cpp:413
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "Dirección"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr "Predeterminada"
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr "De dereita a esquerda"
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr "De esquerda a dereita"
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr "Verificar a ortografía…"
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr "Ortografía da selección…"
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "Gardar a imaxe como…"
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "Enviar a imaxe…"
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr "Copiar o URL da imaxe"
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "Copiar a imaxe"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "Ver a imaxe (%1)"
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "Bloquear a imaxe…"
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "Bloquear as imaxes de %1"
+
+#: src/webview.cpp:551
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "Marco"
+
+#: src/webview.cpp:553
+msgid "Open in New &Window"
+msgstr "Abrir nunha &xanela nova"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "Abrir nesta &xanela"
+
+#: src/webview.cpp:563
+msgid "Open in &New Tab"
+msgstr "Abrir nunha lapela &nova"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "Cargar de novo o marco"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "Imprimir a o marco…"
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "Ver a fonte do marco"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "Bloquear a moldura integrada…"
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "&Copiar o texto"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "Abrir «%1»"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "&Copiar o enderezo de correo"
+
+#: src/webview.cpp:691
+msgid "Copy Link &Text"
+msgstr "&Copiar o texto da ligazón"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr "&Copiar o URL da ligazón"
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "&Gardar a ligazón como…"
+
+#: src/webview.cpp:723
+msgid "&Play"
+msgstr "&Reproducir"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "&Pausar"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr "Activar o &son"
+
+#: src/webview.cpp:728
+msgid "&Mute"
+msgstr "Desactivar o &son"
+
+#: src/webview.cpp:733
+msgid "&Loop"
+msgstr "&Bucle"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr "Mostrar os &controis"
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr "Gardar o &vídeo como…"
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr "Copiar o URL do vídeo"
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr "Gardar o &son como…"
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr "Copiar o URL do son"
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr "Gardar o &contido como…"
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr "Copiar o URL do contido"
+
+#: src/webview.cpp:804
+#, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "Buscar «%2» en %1."
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "Buscar «%1» con"

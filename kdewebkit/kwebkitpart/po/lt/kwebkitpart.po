@@ -1,0 +1,786 @@
+# Lithuanian translations for webkitkde package.
+# Copyright (C) 2009 This_file_is_part_of_KDE
+# This file is distributed under the same license as the webkitkde package.
+#
+# Andrius Štikonas <stikonas@gmail.com>, 2009.
+# Remigijus Jarmalavičius <remigijus@jarmalavicius.lt>, 2011.
+# Liudas Ališauskas <liudas.alisauskas@gmail.com>, 2011, 2012.
+# Liudas Alisauskas <liudas@akmc.lt>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: kwebkitpart\n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2013-04-23 19:51+0300\n"
+"Last-Translator: Liudas Alisauskas <liudas@akmc.lt>\n"
+"Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
+"Language: lt\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
+"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Lokalize 1.5\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Andrius Štikonas,Liudas Ališauskas"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "stikonas@gmail.com,liudas@akmc.lt"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr "Pažymėkite elementus"
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr "Pasirinkite elementus"
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] "Pažymėtas %1 objektas"
+msgstr[1] "Pažymėti %1 objektai"
+msgstr[2] "Pažymėta %1 objektų"
+msgstr[3] "Pažymėtas %1 objektas"
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "&Failas"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "Naujas langas"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "Spausdinti"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "Užverti"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "&Keisti"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr "Nustatyti redaguojamą"
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "&Rodymas"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "&Didinti"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "&Mažinti"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr "Atstatyti mastelį"
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr "Didinti tik tekstą"
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr "Parodyti HTML"
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "F&ormatas"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr "Rašymas krypties"
+
+#: kdelauncher/main.cpp:301
+msgid "&Tools"
+msgstr "Į&rankiai"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr "Pasirinkite elementus..."
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr "KDELauncher"
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr "KWebKitPart"
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr "QtWebKit naršyklės varikliuko komponentas"
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr "Dawit Alemayehu"
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr "Prižiūrėtojas, programuotojas"
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr "Urs Wolfer"
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr "Michael Howell"
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+msgid "Developer"
+msgstr "Programuotojas"
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "Laurent Montel"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "Dirk Mueller"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "Įrašyti kadrą kaip..."
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr "Spaudinio peržiūra"
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "Didinti"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "Mažinti"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "Tikras dydis"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "Nustatyti &koduotę"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "Peržiūrėti &dokumento kodą"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr ""
+"<h3>Ieškoti teksto</h3>Parodo dialogą, kuris leidžia jums ieškoti teksto "
+"rodomame puslapyje."
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr "Atrodo, kad SSL informacija šiai tinklavietei yra sugadinta."
+
+#: src/kwebkitpart.cpp:674
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "El. paštas: "
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " - CC: "
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " - BCC: "
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " - Tema: "
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr " (naujame lange)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr " (pirminiame rėmelyje)"
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr "<qt>Ar norite ieškoti Internete <b>%1</b>?</qt>"
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "Interneto paieška"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "&Ieškoti"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr "Leisti slaptažodžio išsaugojimą šiai svetainei"
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr "Pašalinti visus išsaugotus slaptažodžius šiai svetainei"
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "&Užverti slaptažodinę"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "Užverti langą?"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "Reikalingas patvirtinimas"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr ""
+"<html>Ar prisiminti %1 prisijungimo informaciją svetainei <b>%2</b>?</html>"
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+msgid "HTML Toolbar"
+msgstr "HTML įrankinė"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "Pridėti URL į filtrą"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "Įvesti URL:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr "Užblokavo reklamų filtras"
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "Filtro klaida"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr "&Prisiminti"
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr "Ni&ekada šiai svetainei"
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr "Ne dabar"
+
+#: src/ui/searchbar.cpp:55
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "&Rasti:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr "Užverti paieškos juostą"
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+msgid "&Find:"
+msgstr "&Rasti:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr "Rasti kitą atitikmenį dabartinei paieškos frazei"
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "&Kitas"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr "Rasti ankstesnį atitikmenį dabartinei paieškos frazei"
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "&Ankstesnis"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "&Parinktys"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr "&Skirti raidžių dydį"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr "&Ieškoti rašant"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr "&Paryškinti visus atitikmenis"
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr "Paryškinti atitikmenis"
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr "Atsisiuntimo tvarkyklė (%1) nerasta Jūsų įrenginyje."
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+"Pamėginkite įdiegti iš naujo ir įsitikinkite, kad tai yra pasiekiama adresu "
+"$PATH.\n"
+"\n"
+"Integracija bus išjungta."
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+"<html><body><h3>Nepavyksta parodyti klaidos pranešimo</h3><p>Klaidos šablono "
+"failas <em>error.html</em> nebuvo rastas.</p></body></html>"
+
+#: src/webpage.cpp:210
+#, kde-format
+msgid "Error: %1"
+msgstr "Klaida: %1"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "Pareikalauta operacija negali būti užbaigta"
+
+#: src/webpage.cpp:222
+#, kde-format
+msgid "Technical Reason: %1"
+msgstr "Techninė priežastis: %1"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "Užklausos detalės:"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "URL: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "Protokolas: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "Data ir laikas: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "Papildoma informacija: %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "Aprašymas:"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "Galimos priežastys:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr "Galimi sprendimai:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr "Nurodykite failus, kuriuos įkelti"
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+"<qt><p>Kad parodyti prašomą tinklapį vėl, naršyklei reikia nusiųsti Jūsų "
+"anksčiau pateiktą informaciją dar kartą.</p><p>Jei vykdėte pirkimą internetu "
+"ir apsipirkote, spauskite „Atšaukti“ mygtuką, kad išvengti dubliuoto pirkimo."
+"Jei ne, spauskite „Tęsti“ mygtuką, kad parodyti tinklapį vėl.</p>"
+
+#: src/webpage.cpp:399
+msgid "Resubmit Information"
+msgstr "Dar kartą pateikti informaciją"
+
+#: src/webpage.cpp:687
+#, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>Šiame nepatikimame puslapyje yra nuoroda <br /><b>%1</b>.<br />Ar norite "
+"sekti šia nuoroda?</qt>"
+
+#: src/webpage.cpp:689
+msgid "Security Warning"
+msgstr "Saugumo įspėjimas"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "Sekti"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "Įspėjimas dėl saugumo"
+
+#: src/webpage.cpp:693
+#, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr ""
+"<qt>Priėjimas iš nepatikimo puslapio į<br /><b>%1</b><br /> atmestas.</qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+"Perspėjimas:  Tai yra saugi forma, bet ji bando siųsti Jūsų duomenis atgal "
+"nešifruotus.\n"
+"Treti asmenys gali juos perimti ir peržiūrėti šią informaciją.\n"
+"Ar Jūs tikrai norite tęsti?"
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "Tinklo perdavimas"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "&Siųsti neužšifravus"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"Ši sritis bando siųsti formos duomenis naudodama el. paštą.\n"
+"Ar norite tęsti?"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "&Siųsti el. laišką"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+"<qt>Ar norite leisti šiai svetainei pridėti sekančius failus prie  el. "
+"laiško?</qt>"
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr "El. pašto priedo patvirtinimas"
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr "&Leisti priedus"
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr "&Ignoruoti priedus"
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+"Ši sritis bandė prisegti failą iš Jūsų kompiuterio formos siuntimo metu.  "
+"Prisegtas failas buvo pašalintas dėl jūsų saugumo."
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr "Priedas pašalintas"
+
+#: src/webpage.cpp:875
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+"Ši svetainė prašo atverti naują iššokantį langą.\n"
+"Ar norite leisti?"
+
+#: src/webpage.cpp:877
+#, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+"<qt>Ši svetainė prašo atverti naują iššokantį langą į<br /><b>%1</b>.<br /"
+">Ar norite leisti tai?</qt>"
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr "Javascript iškylantis patvirtinimas"
+
+#: src/webpage.cpp:882
+msgid "Allow"
+msgstr "Leisti"
+
+#: src/webpage.cpp:883
+#, fuzzy
+msgid "Do Not Allow"
+msgstr "&Ne dabar"
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr "Paleisti priedą"
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr "Priėjimo raktas aktyvuotas"
+
+#: src/webview.cpp:413
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "Kryptis"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr "Numatyta"
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr "Iš kairės į dešinę"
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr "Iš dešinės į kairę"
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr "Rašybos tikrinimas..."
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr "Rašybos tikrinimo parinkimas..."
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "Įrašyti paveikslėlį kaip..."
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "Siųsti paveikslėlį..."
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr "Kopijuoti paveikslėlio URL"
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "Kopijuoti paveikslėlį"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "Žiūrėti paveikslėlį (%1)"
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "Blokuoti paveikslėlį..."
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "Blokuoti paveikslėlius iš %1"
+
+#: src/webview.cpp:551
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "Kadras"
+
+#: src/webview.cpp:553
+msgid "Open in New &Window"
+msgstr "Atverti naujame &lange"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "Atverti š&iame lange"
+
+#: src/webview.cpp:563
+msgid "Open in &New Tab"
+msgstr "Atverti &naujoje kortelėje"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "Iš naujo įkelti kadrą"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "Spausdinti kadrą..."
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "Peržiūrėti ka&dro kodą"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "Blokuoti IFrame..."
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "&Kopijuoti tekstą"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "Atverti „%1“"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "&Kopijuoti el. pašto adresą"
+
+#: src/webview.cpp:691
+msgid "Copy Link &Text"
+msgstr "&Kopijuoti nuorodą ir tekstą"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr "Kopijuoti nuorodą ir &ULR"
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "Į&rašyti nuorodą kaip..."
+
+#: src/webview.cpp:723
+msgid "&Play"
+msgstr "&Groti"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "&Pristabdyti"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr "įjungti garsą"
+
+#: src/webview.cpp:728
+msgid "&Mute"
+msgstr "&Nutildyti"
+
+#: src/webview.cpp:733
+msgid "&Loop"
+msgstr "Cik&las"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr "Rodyti valdiklius"
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr "Įrašyti video kaip..."
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr "Kopijuoti video URL"
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr "Į&rašyti audio kaip..."
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr "Kopijuoti audio URL"
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr "Įrašyti media kaip..."
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr "Kopijuoti medijos URL"
+
+#: src/webview.cpp:804
+#, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "Ieškoti %1 su „%2“"
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "Ieškoti „%1“ su"

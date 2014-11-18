@@ -1,0 +1,785 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Yuri Chornoivan <yurchor@ukr.net>, 2010, 2011, 2012, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2013-10-20 18:11+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Lokalize 1.5\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "Юрій Чорноіван"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "yurchor@ukr.net"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr "Вибір елементів"
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr "Позначте елементи"
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] "Позначено %1 елемент"
+msgstr[1] "Позначено %1 елементи"
+msgstr[2] "Позначено %1 елементів"
+msgstr[3] "Позначено %1 елемент"
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "&Файл"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "Нове вікно"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "Надрукувати"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "Закрити"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "З&міни"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr "Зробити придатним для редагування"
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "П&ерегляд"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "З&більшити"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "З&меншити"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr "Відновити масштаб"
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr "Змінювати лише масштаб тексту"
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr "Створити дамп HTML"
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "Ф&ормат"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr "Напрям письма"
+
+#: kdelauncher/main.cpp:301
+msgid "&Tools"
+msgstr "&Інструменти"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr "Вибрати елементи..."
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr "KDELauncher"
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr "KWebKitPart"
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr "Компонент рушія перегляду QtWebKit"
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+"© Dawit Alemayehu, 2009–2010\n"
+"© Urs Wolfer, 2008–2010\n"
+"© Trolltech ASA, 2007"
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr "Dawit Alemayehu"
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr "Супровідник і розробник"
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr "Urs Wolfer"
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr "Michael Howell"
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+msgid "Developer"
+msgstr "Розробник"
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "Laurent Montel"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "Dirk Mueller"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "Зберегти &фрейм як..."
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr "Перегляд друку"
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "Збільшити"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "Зменшити"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "Фактичний розмір"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "Встановити &кодування"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "Переглянути джерело до&кумента"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr ""
+"<h3>Пошук тексту</h3>Відкриває діалогове вікно, за допомогою якого можна "
+"знайти текст на показаній сторінці."
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr "Схоже, що відомості SSL цього сайта пошкоджено."
+
+#: src/kwebkitpart.cpp:674
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "Ел. пошта: "
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " — Копія: "
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " — Потайна копія: "
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " — Тема: "
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr " (у новому вікні)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr " (у батьківському фреймі)"
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr "<qt>Бажаєте виконати пошук <b>%1</b>?</qt>"
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "Пошук у Інтернеті"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "&Шукати"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr "&Дозволити зберігання пароля для цього сайта"
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr "Вилучити всі збережені паролі для цього сайта"
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "&Закрити торбинку"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "Закрити вікно?"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "Потрібне підтвердження"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr ""
+"<html>Бажаєте, щоб програма %1 запам’ятала реєстраційні дані для <b>%2</b>?</"
+"html>"
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+msgid "HTML Toolbar"
+msgstr "Панель HTML"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "Додати адресу (URL) до фільтра"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "Введіть адресу URL:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr "Заблоковано фільтром реклами"
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "Помилка фільтра"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr "З&апам'ятати"
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr "Н&іколи на цьому сайті"
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr "&Не зараз"
+
+#: src/ui/searchbar.cpp:55
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "&Знайти:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr "Закрити панель пошуку"
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+msgid "&Find:"
+msgstr "&Знайти:"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr "Знайти наступний збіг для фрази пошуку"
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "&Наступне"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr "Знайти попередній збіг для фрази пошуку"
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "&Назад"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "&Параметри"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr "З в&рахуванням регістру"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr "Шукати одночасно з &введенням"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr "По&значити всі відповідники"
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr "Позначити відповідники"
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr ""
+"Інструмент керування звантаженнями (%1) не було знайдено серед встановлених "
+"компонентів."
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+"Спробуйте повторити процедуру встановлення і переконайтеся, що компонент "
+"зберігається у теці, описаній у змінній $PATH. \n"
+"\n"
+"Інтеграцію поки що буде вимкнено."
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+"<html><body><h3>Не вдалося показати повідомлення про помилку.</h3><p>Не "
+"знайдено файл шаблону повідомлення — <em>error.html</em>.</p></body></html>"
+
+#: src/webpage.cpp:210
+#, kde-format
+msgid "Error: %1"
+msgstr "Помилка: %1"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "Не вдалося завершити бажану дію"
+
+#: src/webpage.cpp:222
+#, kde-format
+msgid "Technical Reason: %1"
+msgstr "Технічна причина: %1"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "Подробиці запиту:"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "Адреса: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "Протокол: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "Дата і час: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "Додаткова інформація: %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "Опис:"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "Можливі причини:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr "Ймовірні вирішення:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr "Виберіть файли для вивантаження"
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+"<qt><p>Щоб показати сторінку знову, програмі для перегляду доведеться "
+"повторно надіслати раніше надані вами дані.</p><p>Якщо ви працюєте з "
+"інтернет-крамницею, натисніть кнопку «Скасувати», щоб уникнути повторної "
+"сплати. Якщо ж це не так, натисніть кнопку «Продовжити», щоб надати програмі "
+"змогу знову показати сторінку.</p>"
+
+#: src/webpage.cpp:399
+msgid "Resubmit Information"
+msgstr "Інформація щодо повторного надсилання даних"
+
+#: src/webpage.cpp:687
+#, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>Ця ненадійна сторінка посилається на <br /><b>%1</b>.<br />Хочете "
+"перейти за цим посиланням?</qt>"
+
+#: src/webpage.cpp:689
+msgid "Security Warning"
+msgstr "Попередження безпеки"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "Перейти за посиланням"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "Попередження безпеки"
+
+#: src/webpage.cpp:693
+#, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr ""
+"<qt>Доступ для ненадійної сторінки до <br /><b>%1</b><br /> заборонено.</qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+"Попередження: цю форму було звантажено через безпечне з'єднання, але вона "
+"намагається відіслати дані через незашифроване з'єднання.\n"
+"Третя сторона може перехопити та переглянути цю інформацію.\n"
+"Ви впевнені, що бажаєте надіслати незашифровані дані?"
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "Перенесення мережею"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "&Надіслати незашифрованим"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"Цей сайт намагається надіслати дані форми електронною поштою.\n"
+"Продовжити?"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "Надіслати &лист"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+"<qt>Бажаєте дозволити долучення наведених нижче файлів до повідомлення "
+"електронної пошти на цьому сайті?</qt>"
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr "Підтвердження долучення"
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr "&Дозволити долучення"
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr "&Ігнорувати долучення"
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+"Цей сайт спробував долучити файл з вашого комп'ютера при надсиланні даних "
+"форми. Долучення було вилучено з метою забезпечення вашої безпеки."
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr "Вилучено долучення"
+
+#: src/webpage.cpp:875
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+"Ця сторінка надіслала запит щодо відкриття нового контекстного вікна.\n"
+"Дозволити такий перехід?"
+
+#: src/webpage.cpp:877
+#, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+"<qt>Ця сторінка надіслала запит щодо відкриття контекстного вікна зі "
+"сторінкою<p>%1</p><br/>Дозволити такий перехід?</qt>"
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr "Контекстне підтвердження Javascript"
+
+#: src/webpage.cpp:882
+msgid "Allow"
+msgstr "Дозволити"
+
+#: src/webpage.cpp:883
+msgid "Do Not Allow"
+msgstr "Не дозволяти"
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr "Запустити додаток"
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr "Клавіші доступу активовано"
+
+#: src/webview.cpp:413
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "Напрямок"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr "Типовий"
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr "Зліва праворуч"
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr "Справа ліворуч"
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr "Перевірити правопис…"
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr "Перевірка правопису позначеного…"
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "Зберегти зображення як..."
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "Відіслати зображення..."
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr "Скопіювати адресу зображення"
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "Скопіювати зображення"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "Переглянути зображення (%1)"
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "Блокувати зображення…"
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "Блокувати зображення з %1"
+
+#: src/webview.cpp:551
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "Фрейм"
+
+#: src/webview.cpp:553
+msgid "Open in New &Window"
+msgstr "Відкр&ити у новому вікні"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "Відкр&ити у цьому вікні"
+
+#: src/webview.cpp:563
+msgid "Open in &New Tab"
+msgstr "Від&крити у новій вкладці"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "Перезавантажити блок"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "Друкувати фрейм..."
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "Переглянути джерело фрейма"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "Блокувати вбудований блок…"
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "С&копіювати текст"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "Відкрити «%1»"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "С&копіювати адресу ел. пошти"
+
+#: src/webview.cpp:691
+msgid "Copy Link &Text"
+msgstr "С&копіювати текст посилання"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr "Скопіювати &адресу посилання"
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "&Зберегти посилання як..."
+
+#: src/webview.cpp:723
+msgid "&Play"
+msgstr "Ві&дтворити"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "П&ризупинити"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr "&Увімкнути звук"
+
+#: src/webview.cpp:728
+msgid "&Mute"
+msgstr "&Вимкнути звук"
+
+#: src/webview.cpp:733
+msgid "&Loop"
+msgstr "За&циклити"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr "Показати &керування"
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr "З&берегти відео як…"
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr "К&опіювати адресу відео"
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr "З&берегти звукові дані як…"
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr "К&опіювати адресу звукових даних"
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr "З&берегти дані як…"
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr "К&опіювати адресу даних"
+
+#: src/webview.cpp:804
+#, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "Пошук «%2» за допомогою %1"
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "Пошук «%1» у"

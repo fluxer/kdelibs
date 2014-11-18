@@ -1,0 +1,752 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Chetan Khona <chetan@kompkin.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2013-04-01 15:36+0530\n"
+"Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
+"Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
+"Language: mr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
+"X-Generator: Lokalize 1.5\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "चेतन खोना"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "chetan@kompkin.com"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr ""
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr ""
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "फाईल (&F)"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "नवीन चौकट"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "छापा"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "बंद करा"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "संपादन (&E)"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr "संपादनास योग्य करा"
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "दृश्य (&V)"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "मोठे करा (&I)"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "लहान करा (&O)"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr "झूम पुन्हस्थापित करा"
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr "फक्त पाठ्य झूम करा"
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr ""
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "स्वरूप (&O)"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr "लिहिण्याची दिशा"
+
+#: kdelauncher/main.cpp:301
+msgid "&Tools"
+msgstr "साधने (&T)"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr "घटक निवडा..."
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr "केडीई-लाँचर"
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr "के-वेब-किट-पार्ट"
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr "क्युटी-वेब-किट ब्राऊजर इंजिन घटक"
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+"(C) 2009-2010 दावित अलेमायेहु\n"
+"(C) 2008-2010 उर्स वूल्फर\n"
+"(C) 2007 ट्रोलटेक एएसए"
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr "दावित अलेमायेहु"
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr "नियंत्रक, विकासकर्ता"
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr "उर्स वूल्फर"
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr "मायकेल होवेल"
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+msgid "Developer"
+msgstr "विकासकर्ता"
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "लोरेन्ट मोन्टेल"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "डिर्क मुलर"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "पटल असे साठवा (&F)..."
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr "छपाई पूर्वावलोकन"
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "मोठे करा"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "लहान करा"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "वास्तविक आकार"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "एन्कोडिंग निश्चित करा (&E)"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "दस्ताऐवज स्रोत पहा (&c)"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr "<h3>पाठ्य शोधा</h3>हा संवाद दर्शनीय पानावरील मजकूर शोधायला मदत करतो."
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr ""
+
+#: src/kwebkitpart.cpp:674
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "इमेल : "
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " - CC: "
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " - BCC: "
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " - विषय: "
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr " (नवीन चौकटीत)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr ""
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr ""
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "महाजाळ वरील शोध"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "शोध (&S)"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr ""
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr ""
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "पाकीट बंद करा (&C)"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "चौकट बंद करा?"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "खात्री आवश्यक आहे"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr ""
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+msgid "HTML Toolbar"
+msgstr "HTML साधनपट्टी"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "गाळणीला URL जोडा"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "URL दाखल करा:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr "जाहिरात गाळणीने अडवले आहे"
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "गाळणी त्रुटी"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr "लक्षात ठेवा (&R)"
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr "या स्थळा करिता कधीही नाही (&V)"
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr "आता नाही (&O)"
+
+#: src/ui/searchbar.cpp:55
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "शोधा (&F):"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr "शोध पट्टी बंद करा"
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+msgid "&Find:"
+msgstr "शोधा (&F):"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr "वर्तमान शोध वाक्यरचना करिता पुढील जुळवणी शोधा"
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "पुढील (&N)"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr "वर्तमान शोध वाक्यरचना करिता पूर्वीची जुळवणी शोधा"
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "मागील (&P)"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "पर्याय (&O)"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr "आकार जुळवा (&M)"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr "टाइप कराल तसे शोधा (&S)"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr "सर्व जुळण्या ठळक करा (&H)"
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr ""
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr ""
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+
+#: src/webpage.cpp:210
+#, kde-format
+msgid "Error: %1"
+msgstr "त्रुटी : %1"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "विनंतीकृत कार्यपध्दती पूर्ण केले जाऊ शकत नाही"
+
+#: src/webpage.cpp:222
+#, kde-format
+msgid "Technical Reason: %1"
+msgstr "तांत्रीक कारण : %1"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "विनंतीची तपशील :"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "URL: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "शिष्टाचार: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "दिनांक व वेळ: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "अधिक माहिती : %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "वर्णन :"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "संभाव्य कारण:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr "संभाव्य उपाय:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr ""
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+
+#: src/webpage.cpp:399
+msgid "Resubmit Information"
+msgstr ""
+
+#: src/webpage.cpp:687
+#, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>हे अविश्वसनिय पान<br/><b>%1</b> येथे लिंक करत आहे.<br/>तुम्हाला या लिंकच्याकडे जायचे "
+"आहे का?</qt>"
+
+#: src/webpage.cpp:689
+msgid "Security Warning"
+msgstr "सुरक्षा इशारा"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "जा"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "सुरक्षा सतर्कता"
+
+#: src/webpage.cpp:693
+#, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr "<qt>अविश्वासर्ह पानास<br/><b>%1</b><br/> करिता प्रवेशास परवानगी नाही.</qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "संजाळ स्थानांतरण"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "विनाकुटलिपी पाठवा (&S)"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"हे स्थळ, इमेल द्वारे फॉर्म डेटा जमा करण्याचा प्रयत्न करत आहे.\n"
+"तुम्हाला पुढे जायचे?"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "इमेल पाठवा (&S)"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr ""
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr ""
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr ""
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr ""
+
+#: src/webpage.cpp:875
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+
+#: src/webpage.cpp:877
+#, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr ""
+
+#: src/webpage.cpp:882
+msgid "Allow"
+msgstr "परवानगी द्या"
+
+#: src/webpage.cpp:883
+msgid "Do Not Allow"
+msgstr "परवानगी देऊ नका"
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr "प्लगइन सुरु करा"
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr "प्रवेश किल्ली सक्रिय केले"
+
+#: src/webview.cpp:413
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "दिशा"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr "मूलभूत"
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr "डावीकडुन उजवीकडे"
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr "उजवीकडुन डावीकडे"
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr "वर्णलेखन तपासा..."
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr ""
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "प्रतिमा अशी साठवा..."
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "प्रतिमा पाठवा..."
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr ""
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "प्रतिमेची प्रत करा"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "प्रतिमा पहा (%1)"
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "प्रतिमा रोखा..."
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "%1 पासून प्रतिमा रोखा"
+
+#: src/webview.cpp:551
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "चौकट"
+
+#: src/webview.cpp:553
+msgid "Open in New &Window"
+msgstr "नवीन चौकटीत उघडा (&W)"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "या चौकटीत उघडा (&T)"
+
+#: src/webview.cpp:563
+msgid "Open in &New Tab"
+msgstr "नवीन टॅब मध्ये उघडा (&N)"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "पटल पुन्हा दाखल करा"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "पटल छापा..."
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "पटल स्रोत पहा"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "IFrame रोखा..."
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "मजकूराची प्रत करा (&C)"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "'%1' उघडा"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "इमेल पत्त्याची प्रत करा (&C)"
+
+#: src/webview.cpp:691
+msgid "Copy Link &Text"
+msgstr "लिंक मजकूराची प्रत करा (&T)"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr "लिंक &URL ची प्रत करा"
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "लिंक अशी साठवा (&S)..."
+
+#: src/webview.cpp:723
+msgid "&Play"
+msgstr "सुरु करा (&P)"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "स्तब्ध करा (&P)"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr "अमौन (&M)"
+
+#: src/webview.cpp:728
+msgid "&Mute"
+msgstr "मौन (&M)"
+
+#: src/webview.cpp:733
+msgid "&Loop"
+msgstr "साखळी (&L)"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr ""
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr ""
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr ""
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr ""
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr ""
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr ""
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr ""
+
+#: src/webview.cpp:804
+#, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "'%2' याकरिता %1 शोधा :"
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "'%1' चा याने शोध घ्या"

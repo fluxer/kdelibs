@@ -1,0 +1,791 @@
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Mohammad Reza Mirdamadi <mohi@linuxshop.ir>, 2012.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugs.kde.org\n"
+"POT-Creation-Date: 2014-05-28 05:34+0000\n"
+"PO-Revision-Date: 2012-02-29 00:24+0330\n"
+"Last-Translator: Mohammad Reza Mirdamadi <mohi@linuxshop.ir>\n"
+"Language-Team: Farsi (Persian) <kde-i18n-fa@kde.org>\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 1.4\n"
+
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "محمدرضا میردامادی"
+
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "mohi@linuxshop.ir"
+
+#: kdelauncher/main.cpp:191
+msgctxt "input dialog window title for selecting html elements"
+msgid "Select elements"
+msgstr ""
+
+#: kdelauncher/main.cpp:192
+msgctxt "input dialog text for selecting html elements"
+msgid "Choose elements"
+msgstr ""
+
+#: kdelauncher/main.cpp:199
+#, kde-format
+msgid "%1 element selected"
+msgid_plural "%1 elements selected"
+msgstr[0] ""
+msgstr[1] ""
+
+#: kdelauncher/main.cpp:243
+msgid "&File"
+msgstr "&پرونده‌"
+
+#: kdelauncher/main.cpp:244
+msgid "New Window"
+msgstr "پنجره جدید"
+
+#: kdelauncher/main.cpp:246
+msgid "Print"
+msgstr "چاپ"
+
+#: kdelauncher/main.cpp:247
+msgid "Close"
+msgstr "بستن"
+
+#: kdelauncher/main.cpp:249
+msgid "&Edit"
+msgstr "&ویرایش‌"
+
+#: kdelauncher/main.cpp:257
+msgid "Set Editable"
+msgstr ""
+
+#: kdelauncher/main.cpp:260
+msgid "&View"
+msgstr "&نما‌"
+
+#: kdelauncher/main.cpp:264
+msgid "Zoom &In"
+msgstr "&بزرگ‌نمایی‌"
+
+#: kdelauncher/main.cpp:265
+msgid "Zoom &Out"
+msgstr "&کوچک‌نمایی‌"
+
+#: kdelauncher/main.cpp:266
+msgid "Reset Zoom"
+msgstr ""
+
+#: kdelauncher/main.cpp:267 src/kwebkitpart.cpp:220
+msgid "Zoom Text Only"
+msgstr ""
+
+#: kdelauncher/main.cpp:271
+msgid "Dump HTML"
+msgstr ""
+
+#: kdelauncher/main.cpp:273
+msgid "F&ormat"
+msgstr "&قالب‌"
+
+#: kdelauncher/main.cpp:279
+msgid "Writing Direction"
+msgstr ""
+
+#: kdelauncher/main.cpp:301
+#, fuzzy
+msgid "&Tools"
+msgstr "&ابزارها‌"
+
+#: kdelauncher/main.cpp:302
+msgid "Select elements..."
+msgstr ""
+
+#: kdelauncher/main.cpp:382
+msgid "KDELauncher"
+msgstr ""
+
+#: src/kwebkitpart.cpp:95
+msgctxt "Program Name"
+msgid "KWebKitPart"
+msgstr ""
+
+#: src/kwebkitpart.cpp:97
+msgctxt "Short Description"
+msgid "QtWebKit Browser Engine Component"
+msgstr ""
+
+#: src/kwebkitpart.cpp:99
+msgid ""
+"(C) 2009-2010 Dawit Alemayehu\n"
+"(C) 2008-2010 Urs Wolfer\n"
+"(C) 2007 Trolltech ASA"
+msgstr ""
+
+#: src/kwebkitpart.cpp:103
+msgid "Dawit Alemayehu"
+msgstr ""
+
+#: src/kwebkitpart.cpp:103 src/kwebkitpart.cpp:104
+msgid "Maintainer, Developer"
+msgstr ""
+
+#: src/kwebkitpart.cpp:104
+msgid "Urs Wolfer"
+msgstr ""
+
+#: src/kwebkitpart.cpp:105
+msgid "Michael Howell"
+msgstr ""
+
+#: src/kwebkitpart.cpp:105 src/kwebkitpart.cpp:106 src/kwebkitpart.cpp:107
+#, fuzzy
+msgid "Developer"
+msgstr "توسعه‌دهنده"
+
+#: src/kwebkitpart.cpp:106
+msgid "Laurent Montel"
+msgstr "Laurent Montel"
+
+#: src/kwebkitpart.cpp:107
+msgid "Dirk Mueller"
+msgstr "Dirk Mueller"
+
+#: src/kwebkitpart.cpp:197 src/webview.cpp:582
+msgid "Save &Frame As..."
+msgstr "ذخیره &قابک به عنوان...‌"
+
+#: src/kwebkitpart.cpp:201
+msgid "Print Preview"
+msgstr ""
+
+#: src/kwebkitpart.cpp:205
+msgctxt "zoom in action"
+msgid "Zoom In"
+msgstr "بزرگ‌نمایی"
+
+#: src/kwebkitpart.cpp:210
+msgctxt "zoom out action"
+msgid "Zoom Out"
+msgstr "کوچک‌نمایی"
+
+#: src/kwebkitpart.cpp:215
+msgctxt "reset zoom action"
+msgid "Actual Size"
+msgstr "اندازه واقعی‌"
+
+#: src/kwebkitpart.cpp:233
+msgid "Set &Encoding"
+msgstr "تنظیم &کدبندی‌"
+
+#: src/kwebkitpart.cpp:237
+msgid "View Do&cument Source"
+msgstr "مشاهده متن &سند‌"
+
+#: src/kwebkitpart.cpp:242 src/kwebkitpart.cpp:580
+msgctxt "Secure Sockets Layer"
+msgid "SSL"
+msgstr "SSL"
+
+#: src/kwebkitpart.cpp:247
+#, fuzzy
+msgctxt "find action \"whats this\" text"
+msgid ""
+"<h3>Find text</h3>Shows a dialog that allows you to find text on the "
+"displayed page."
+msgstr ""
+"<qt>یافتن متن<br /><br />محاوره‌ای را نشان می‌دهد که به شما اجازه یافتن متن در "
+"صفحه نمایش داده‌شده را می‌دهد.</qt>"
+
+#: src/kwebkitpart.cpp:578
+msgid "The SSL information for this site appears to be corrupt."
+msgstr ""
+
+#: src/kwebkitpart.cpp:674
+#, fuzzy
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid "Email: "
+msgstr "رایانامه"
+
+#: src/kwebkitpart.cpp:702
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - CC: "
+msgstr " - ر.ن:"
+
+#: src/kwebkitpart.cpp:704
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - BCC: "
+msgstr " - ر.ن.م:"
+
+#: src/kwebkitpart.cpp:706
+msgctxt ""
+"status bar text when hovering email links; looks like \"Email: xy@kde.org - "
+"CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\""
+msgid " - Subject: "
+msgstr " - موضوع:"
+
+#: src/kwebkitpart.cpp:710 src/kwebkitpart.cpp:720
+msgid " (In new window)"
+msgstr "(در پنجره جدید)"
+
+#: src/kwebkitpart.cpp:718
+msgid " (In parent frame)"
+msgstr ""
+
+#: src/kwebkitpart.cpp:782
+#, kde-format
+msgid "<qt>Do you want to search for <b>%1</b>?</qt>"
+msgstr ""
+
+#: src/kwebkitpart.cpp:783
+msgid "Internet Search"
+msgstr "جستجوی اینترنت"
+
+#: src/kwebkitpart.cpp:783
+msgid "&Search"
+msgstr "&جستجو‌"
+
+#: src/kwebkitpart.cpp:806
+msgid "&Allow password caching for this site"
+msgstr ""
+
+#: src/kwebkitpart.cpp:809
+msgid "Remove all cached passwords for this site"
+msgstr ""
+
+#: src/kwebkitpart.cpp:812
+msgid "&Close Wallet"
+msgstr "&بستن Wallet‌"
+
+#: src/kwebkitpart.cpp:870
+msgid "Close window?"
+msgstr "پنجره بسته شود؟"
+
+#: src/kwebkitpart.cpp:870
+msgid "Confirmation Required"
+msgstr "تأیید مورد نیاز"
+
+#: src/kwebkitpart.cpp:908
+#, kde-format
+msgid ""
+"<html>Do you want %1 to remember the login information for <b>%2</b>?</html>"
+msgstr ""
+
+#. i18n: ectx: ToolBar (htmlToolBar)
+#: src/kwebkitpart.rc:26
+#, fuzzy
+msgid "HTML Toolbar"
+msgstr "میله ابزار HTML"
+
+#: src/kwebkitpart_ext.cpp:408 src/kwebkitpart_ext.cpp:487
+msgid "Add URL to Filter"
+msgstr "افزودن نشانی وب به پالایه"
+
+#: src/kwebkitpart_ext.cpp:409 src/kwebkitpart_ext.cpp:488
+msgid "Enter the URL:"
+msgstr "نشانی وب را وارد کنید:"
+
+#: src/networkaccessmanager.cpp:50
+msgid "Blocked by ad filter"
+msgstr ""
+
+#: src/settings/webkitsettings.cpp:877
+msgid "Filter error"
+msgstr "خطای پالایه"
+
+#: src/ui/passwordbar.cpp:42
+msgctxt "@action:remember password"
+msgid "&Remember"
+msgstr ""
+
+#: src/ui/passwordbar.cpp:46
+msgctxt "@action:never for this site"
+msgid "Ne&ver for this site"
+msgstr ""
+
+#: src/ui/passwordbar.cpp:50
+msgctxt "@action:not now"
+msgid "N&ot now"
+msgstr ""
+
+#: src/ui/searchbar.cpp:55
+#, fuzzy
+msgctxt "label for input line to find text"
+msgid "&Find:"
+msgstr "&یافتن‌"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, closeButton)
+#: src/ui/searchbar.ui:23
+msgid "Close the search bar"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, searchInfo)
+#: src/ui/searchbar.ui:33
+#, fuzzy
+msgid "&Find:"
+msgstr "&یافتن‌"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:56
+msgid "Find the next match for the current search phrase"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QToolButton, nextButton)
+#: src/ui/searchbar.ui:59
+msgid "&Next"
+msgstr "&بعدی‌"
+
+#. i18n: ectx: property (toolTip), widget (QToolButton, previousButton)
+#. i18n: ectx: property (toolTip), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:69 src/ui/searchbar.ui:79
+msgid "Find the previous match for the current search phrase"
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QToolButton, previousButton)
+#: src/ui/searchbar.ui:72
+msgid "&Previous"
+msgstr "&قبلی‌"
+
+#. i18n: ectx: property (text), widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:82
+msgid "&Options"
+msgstr "&گزینه‌ها‌"
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:111
+msgid "&Match Case"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:122
+msgid "&Search As You Type"
+msgstr ""
+
+#. i18n: ectx: property (text), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:130
+msgid "&Highlight All Matches"
+msgstr ""
+
+#. i18n: ectx: property (toolTip), item, widget (QToolButton, optionsButton)
+#: src/ui/searchbar.ui:133
+msgid "Highlight Matches"
+msgstr ""
+
+#: src/webpage.cpp:147
+#, kde-format
+msgid "The download manager (%1) could not be found in your installation."
+msgstr ""
+
+#: src/webpage.cpp:148
+msgid ""
+"Try to reinstall it and make sure that it is available in $PATH. \n"
+"\n"
+"The integration will be disabled."
+msgstr ""
+
+#: src/webpage.cpp:204
+msgid ""
+"<html><body><h3>Unable to display error message</h3><p>The error template "
+"file <em>error.html</em> could not be found.</p></body></html>"
+msgstr ""
+
+#: src/webpage.cpp:210
+#, fuzzy, kde-format
+msgid "Error: %1"
+msgstr "خطا"
+
+#: src/webpage.cpp:215
+msgid "The requested operation could not be completed"
+msgstr "عملیات درخواست‌شده نتوانست کامل شود"
+
+#: src/webpage.cpp:222
+#, fuzzy, kde-format
+msgid "Technical Reason: %1"
+msgstr "دلیل فنی:"
+
+#: src/webpage.cpp:227
+msgid "Details of the Request:"
+msgstr "جزئیات درخواست:"
+
+#: src/webpage.cpp:229
+#, kde-format
+msgid "URL: %1"
+msgstr "نشانی وب: %1"
+
+#: src/webpage.cpp:234
+#, kde-format
+msgid "Protocol: %1"
+msgstr "قرارداد: %1"
+
+#: src/webpage.cpp:238
+#, kde-format
+msgid "Date and Time: %1"
+msgstr "تاریخ و زمان: %1"
+
+#: src/webpage.cpp:241
+#, kde-format
+msgid "Additional Information: %1"
+msgstr "اطلاعات اضافی: %1"
+
+#: src/webpage.cpp:243
+msgid "Description:"
+msgstr "توصیف:"
+
+#: src/webpage.cpp:250
+msgid "Possible Causes:"
+msgstr "دلایل ممکن:"
+
+#: src/webpage.cpp:258
+msgid "Possible Solutions:"
+msgstr " راه ‌حلهای ممکن:"
+
+#: src/webpage.cpp:290 src/webpage.cpp:293
+msgid "Choose files to upload"
+msgstr ""
+
+#: src/webpage.cpp:392
+msgid ""
+"<qt><p>To display the requested web page again, the browser needs to resend "
+"information you have previously submitted.</p><p>If you were shopping online "
+"and made a purchase, click the Cancel button to prevent a duplicate purchase."
+"Otherwise, click the Continue button to display the webpage again.</p>"
+msgstr ""
+
+#: src/webpage.cpp:399
+#, fuzzy
+#| msgid "Additional Information: %1"
+msgid "Resubmit Information"
+msgstr "اطلاعات اضافی: %1"
+
+#: src/webpage.cpp:687
+#, fuzzy, kde-format
+msgid ""
+"<qt>This untrusted page links to<br/><b>%1</b>.<br/>Do you want to follow "
+"the link?</qt>"
+msgstr ""
+"<qt>این صفحه غیرقابل اعتماد به <br /><b>%1</b> می‌پیوندد.<br />آیا می‌خواهید "
+"پیوند را ادامه دهید؟</qt>"
+
+#: src/webpage.cpp:689
+#, fuzzy
+msgid "Security Warning"
+msgstr "اخطار امنیت"
+
+#: src/webpage.cpp:690
+msgctxt "follow link despite of security warning"
+msgid "Follow"
+msgstr "دنبال کردن"
+
+#: src/webpage.cpp:692
+msgid "Security Alert"
+msgstr "اخطار امنیت"
+
+#: src/webpage.cpp:693
+#, fuzzy, kde-format
+msgid "<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>"
+msgstr ""
+"<qt>دستیابی توسط صفحه غیرقابل اعتماد به<br /><b>%1</b><br /> انکار شد.</qt>"
+
+#: src/webpage.cpp:721
+msgid ""
+"Warning: This is a secure form but it is attempting to send your data back "
+"unencrypted.\n"
+"A third party may be able to intercept and view this information.\n"
+"Are you sure you want to send the data unencrypted?"
+msgstr ""
+
+#: src/webpage.cpp:728 src/webpage.cpp:739
+msgid "Network Transmission"
+msgstr "انتقال شبکه"
+
+#: src/webpage.cpp:729
+msgid "&Send Unencrypted"
+msgstr "&ارسال رمزبندی‌نشده‌"
+
+#: src/webpage.cpp:736
+msgid ""
+"This site is attempting to submit form data via email.\n"
+"Do you want to continue?"
+msgstr ""
+"این پایگاه تلاش می‌کند، داده‌ها را از طریق رایانامه ارائه کند.\n"
+"می‌خواهید ادامه دهید؟"
+
+#: src/webpage.cpp:740
+msgid "&Send Email"
+msgstr "&ارسال رایانامه‌"
+
+#: src/webpage.cpp:788
+msgid ""
+"<qt>Do you want to allow this site to attach the following files to the "
+"email message?</qt>"
+msgstr ""
+
+#: src/webpage.cpp:790
+msgid "Email Attachment Confirmation"
+msgstr ""
+
+#: src/webpage.cpp:791
+msgid "&Allow attachments"
+msgstr ""
+
+#: src/webpage.cpp:792
+msgid "&Ignore attachments"
+msgstr ""
+
+#: src/webpage.cpp:804
+msgid ""
+"This site attempted to attach a file from your computer in the form "
+"submission. The attachment was removed for your protection."
+msgstr ""
+"این پایگاه تلاش می‌کند، یک پرونده را از رایانه شما در برگه ارائه پیوست کند. "
+"پیوست برای حفاظت شما حذف شد."
+
+#: src/webpage.cpp:807
+msgid "Attachment Removed"
+msgstr ""
+
+#: src/webpage.cpp:875
+#, fuzzy
+#| msgid ""
+#| "This site is attempting to submit form data via email.\n"
+#| "Do you want to continue?"
+msgid ""
+"This site is requesting to open a new popup window.\n"
+"Do you want to allow this?"
+msgstr ""
+"این پایگاه تلاش می‌کند، داده‌ها را از طریق رایانامه ارائه کند.\n"
+"می‌خواهید ادامه دهید؟"
+
+#: src/webpage.cpp:877
+#, fuzzy, kde-format
+msgid ""
+"<qt>This site is requesting to open a popup window to<p>%1</p><br/>Do you "
+"want to allow this?</qt>"
+msgstr ""
+"<qt>این صفحه غیرقابل اعتماد به <br /><b>%1</b> می‌پیوندد.<br />آیا می‌خواهید "
+"پیوند را ادامه دهید؟</qt>"
+
+#: src/webpage.cpp:881
+msgid "Javascript Popup Confirmation"
+msgstr ""
+
+#: src/webpage.cpp:882
+#, fuzzy
+#| msgctxt "follow link despite of security warning"
+#| msgid "Follow"
+msgid "Allow"
+msgstr "دنبال کردن"
+
+#: src/webpage.cpp:883
+msgid "Do Not Allow"
+msgstr ""
+
+#: src/webpluginfactory.cpp:75
+msgid "Start Plugin"
+msgstr ""
+
+#: src/webview.cpp:334
+msgid "Access keys activated"
+msgstr ""
+
+#: src/webview.cpp:413
+#, fuzzy
+#| msgid "Description:"
+msgctxt "Text direction"
+msgid "Direction"
+msgstr "توصیف:"
+
+#: src/webview.cpp:418
+msgid "Default"
+msgstr ""
+
+#: src/webview.cpp:427
+msgid "Left to right"
+msgstr ""
+
+#: src/webview.cpp:436
+msgid "Right to left"
+msgstr ""
+
+#: src/webview.cpp:476
+msgid "Check Spelling..."
+msgstr ""
+
+#: src/webview.cpp:482
+msgid "Spellcheck selection..."
+msgstr ""
+
+#: src/webview.cpp:509
+msgid "Save Image As..."
+msgstr "ذخیره تصویر به عنوان..."
+
+#: src/webview.cpp:514
+msgid "Send Image..."
+msgstr "ارسال تصویر..."
+
+#: src/webview.cpp:519
+msgid "Copy Image URL"
+msgstr ""
+
+#: src/webview.cpp:524
+msgid "Copy Image"
+msgstr "رونوشت تصویر"
+
+#: src/webview.cpp:530
+#, kde-format
+msgid "View Image (%1)"
+msgstr "مشاهده تصویر )%1("
+
+#: src/webview.cpp:536
+msgid "Block Image..."
+msgstr "بلوک تصویر..."
+
+#: src/webview.cpp:544
+#, kde-format
+msgid "Block Images From %1"
+msgstr "بلوک تصاویر از %1"
+
+#: src/webview.cpp:551
+#, fuzzy
+msgctxt "@title:menu HTML frame/iframe"
+msgid "Frame"
+msgstr "قابک"
+
+#: src/webview.cpp:553
+#, fuzzy
+msgid "Open in New &Window"
+msgstr "باز کردن در&پنجره جدید‌"
+
+#: src/webview.cpp:558
+msgid "Open in &This Window"
+msgstr "در &این پنجره باز شود‌"
+
+#: src/webview.cpp:563
+#, fuzzy
+msgid "Open in &New Tab"
+msgstr "در تب &جدید باز شود‌"
+
+#: src/webview.cpp:572
+msgid "Reload Frame"
+msgstr "بارگذاری مجدد قابک"
+
+#: src/webview.cpp:577
+msgid "Print Frame..."
+msgstr "چاپ قابک..."
+
+#: src/webview.cpp:587
+msgid "View Frame Source"
+msgstr "مشاهده متن قابک"
+
+#: src/webview.cpp:601
+msgid "Block IFrame..."
+msgstr "بلوک کردن IFrame..."
+
+#: src/webview.cpp:646 src/webview.cpp:679
+msgid "&Copy Text"
+msgstr "&رونوشت متن‌"
+
+#: src/webview.cpp:656
+#, kde-format
+msgctxt "open selected url"
+msgid "Open '%1'"
+msgstr "باز کردن »%1«"
+
+#: src/webview.cpp:685
+msgid "&Copy Email Address"
+msgstr "رونوشت نشانی رایانامه"
+
+#: src/webview.cpp:691
+#, fuzzy
+#| msgid "&Copy Text"
+msgid "Copy Link &Text"
+msgstr "&رونوشت متن‌"
+
+#: src/webview.cpp:697
+msgid "Copy Link &URL"
+msgstr ""
+
+#: src/webview.cpp:702
+msgid "&Save Link As..."
+msgstr "&ذخیره پیوند به عنوان...‌"
+
+#: src/webview.cpp:723
+#, fuzzy
+msgid "&Play"
+msgstr "پخش"
+
+#: src/webview.cpp:723
+msgid "&Pause"
+msgstr "مکث"
+
+#: src/webview.cpp:728
+msgid "Un&mute"
+msgstr ""
+
+#: src/webview.cpp:728
+#, fuzzy
+msgid "&Mute"
+msgstr "خاموش"
+
+#: src/webview.cpp:733
+#, fuzzy
+msgid "&Loop"
+msgstr "حلقه"
+
+#: src/webview.cpp:740
+msgid "Show &Controls"
+msgstr ""
+
+#: src/webview.cpp:753
+msgid "Sa&ve Video As..."
+msgstr ""
+
+#: src/webview.cpp:754
+msgid "C&opy Video URL"
+msgstr ""
+
+#: src/webview.cpp:756
+msgid "Sa&ve Audio As..."
+msgstr ""
+
+#: src/webview.cpp:757
+msgid "C&opy Audio URL"
+msgstr ""
+
+#: src/webview.cpp:759
+msgid "Sa&ve Media As..."
+msgstr ""
+
+#: src/webview.cpp:760
+msgid "C&opy Media URL"
+msgstr ""
+
+#: src/webview.cpp:804
+#, fuzzy, kde-format
+msgctxt "Search \"search provider\" for \"text\""
+msgid "Search %1 for '%2'"
+msgstr "جستجو برای"
+
+#: src/webview.cpp:815
+#, kde-format
+msgctxt "Search for \"text\" with"
+msgid "Search for '%1' with"
+msgstr "جستجوی »%1« با"
+
+#, fuzzy
+
+
+
+#, fuzzy
