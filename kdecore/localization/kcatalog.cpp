@@ -50,11 +50,6 @@ int kInitializeLocale()
 Q_CONSTRUCTOR_FUNCTION(kInitializeLocale)
 
 // not defined on win32 :(
-#ifdef _WIN32
-# ifndef LC_MESSAGES
-#  define LC_MESSAGES 42
-# endif
-#endif
 
 static char *langenv = 0;
 static const int langenvMaxlen = 42;

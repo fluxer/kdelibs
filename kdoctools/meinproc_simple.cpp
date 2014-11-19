@@ -29,9 +29,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#ifndef _WIN32
 extern "C" int xmlLoadExtDtdDefaultValue;
-#endif
 
 int main(int argc, char **argv) {
 

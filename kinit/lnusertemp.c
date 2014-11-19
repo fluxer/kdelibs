@@ -53,11 +53,7 @@ int check_tmp_dir(const char *tmp_dir, int check_ownership)
   result = lstat(tmp_dir, &stat_buf);
   if ((result == -1) && (errno == ENOENT))
   {
-#ifdef _WIN32
-    result = mkdir(tmp_dir);
-#else
     result = mkdir(tmp_dir, 0700);
-#endif
     if (result == -1)
     {
        snprintf(errorstring, sizeof(errorstring), "Error: cannot create directory \"%s\"", tmp_dir);
@@ -160,11 +156,7 @@ int build_link(const char* tmp, const char *tmp_prefix, const char *kde_prefix)
   result = stat(kde_tmp_dir, &stat_buf);
   if ((result == -1) && (errno == ENOENT))
   {
-#ifdef _WIN32
-     result = mkdir(kde_tmp_dir);
-#else
      result = mkdir(kde_tmp_dir, 0700);
-#endif
   }
   if (result == -1)
   {

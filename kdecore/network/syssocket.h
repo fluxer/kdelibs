@@ -99,14 +99,7 @@ namespace {
   // ioctl
   inline int kde_ioctl(int fd, int cmd, int* argp)
   {
-#if defined _WIN32 || defined _WIN64
-    unsigned long l_argp = *argp;
-    int iRet = ::ioctlsocket(fd, cmd, &l_argp);
-    *argp = (int) l_argp;
-    return iRet;
-#else
     return ::ioctl(fd, cmd, argp);
-#endif
   }
 
 } // anonymous namespace
