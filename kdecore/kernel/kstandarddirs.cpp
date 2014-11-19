@@ -32,8 +32,6 @@
 #include "kshell.h"
 #include "kuser.h"
 #include "kde_file.h"
-#include "kkernel_win.h"
-#include "kkernel_mac.h"
 #include "klocale.h"
 
 #include <config.h>
