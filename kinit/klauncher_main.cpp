@@ -48,9 +48,6 @@ static void sig_handler(int sig_num)
 }
 #endif
 
-#if defined(Q_OS_DARWIN) || defined (Q_OS_MAC)
-#include <kkernel_mac.h>
-#endif
 
 extern "C" KDE_EXPORT int kdemain( int argc, char**argv )
 {
@@ -63,9 +60,6 @@ extern "C" KDE_EXPORT int kdemain( int argc, char**argv )
       return 1;
    }
 
-#if defined(Q_OS_DARWIN) || defined (Q_OS_MAC)
-   mac_initialize_dbus();
-#endif
 
    KComponentData componentData("klauncher", "kdelibs4");
    KGlobal::locale();

@@ -1414,11 +1414,7 @@ static void kdeinit_library_path()
 {
    const QStringList ltdl_library_path =
      QFile::decodeName(qgetenv("LTDL_LIBRARY_PATH")).split(QLatin1Char(':'),QString::SkipEmptyParts);
-#ifdef Q_OS_DARWIN
-   const QByteArray ldlibpath = qgetenv("DYLD_LIBRARY_PATH");
-#else
    const QByteArray ldlibpath = qgetenv("LD_LIBRARY_PATH");
-#endif
    const QStringList ld_library_path =
      QFile::decodeName(ldlibpath).split(QLatin1Char(':'),QString::SkipEmptyParts);
 

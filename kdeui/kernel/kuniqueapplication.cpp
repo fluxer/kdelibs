@@ -66,9 +66,6 @@
 #  endif
 #endif
 
-#if defined(Q_OS_DARWIN) || defined (Q_OS_MAC)
-#include <kkernel_mac.h>
-#endif
 
 bool KUniqueApplication::Private::s_nofork = false;
 bool KUniqueApplication::Private::s_multipleInstances = false;
@@ -135,9 +132,6 @@ KUniqueApplication::start(StartFlags flags)
   if (Private::s_nofork)
   {
 
-#if defined(Q_OS_DARWIN) || defined (Q_OS_MAC)
-     mac_initialize_dbus();
-#endif
 
      QDBusConnectionInterface* dbusService = tryToInitDBusConnection();
 
@@ -158,10 +152,6 @@ KUniqueApplication::start(StartFlags flags)
      // We'll call newInstance in the constructor. Do nothing here.
      return true;
 
-#if defined(Q_OS_DARWIN) || defined (Q_OS_MAC)
-  } else {
-    mac_fork_and_reexec_self();
-#endif
 
   }
 
