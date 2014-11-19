@@ -176,7 +176,7 @@ static KStandardShortcutInfo g_infoStandardShortcut[] =
     { ReportBug                , "ReportBug"                , I18N_NOOP2("@action", "Report Bug")                , 0           , 0, KShortcut(), false },
     { SwitchApplicationLanguage, "SwitchApplicationLanguage", I18N_NOOP2("@action", "Switch Application Language"), 0           , 0, KShortcut(), false },
     { AboutApp                 , "AboutApp"                 , I18N_NOOP2("@action", "About Application")                 , 0           , 0, KShortcut(), false },
-    { AboutKDE                 , "AboutKDE"                 , I18N_NOOP2("@action", "About Katana")                 , 0           , 0, KShortcut(), false },
+    { AboutKDE                 , "AboutKatana"                 , I18N_NOOP2("@action", "About Katana")                 , 0           , 0, KShortcut(), false },
 
     //dummy entry to catch simple off-by-one errors. Insert new entries before this line.
     { AccelNone                , 0                          , 0                   , 0                           , 0, 0, KShortcut(), false }
