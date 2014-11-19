@@ -175,7 +175,6 @@ namespace KDE
   KDECORE_EXPORT int stat(const QString &path, KDE_struct_stat *buf);
   /** replacement for ::utime() to handle filenames in a platform independent way */
   KDECORE_EXPORT int utime(const QString &filename, struct utimbuf *buf);
-#ifndef Q_WS_WIN
   inline int access(const QString &path, int mode)
   {
     return ::access( QFile::encodeName(path).constData(), mode );
@@ -212,7 +211,6 @@ namespace KDE
   {
     return ::utime( QFile::encodeName(filename).constData(), buf );
   }
-#endif
 }
 
 #if defined _WIN32 || defined _WIN64

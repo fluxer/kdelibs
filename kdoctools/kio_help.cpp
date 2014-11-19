@@ -160,11 +160,7 @@ QString HelpProtocol::lookupFile(const QString &fname,
 
 void HelpProtocol::unicodeError( const QString &t )
 {
-#ifdef Q_WS_WIN
-   QString encoding = "UTF-8";
-#else
    QString encoding = QTextCodec::codecForLocale()->name();
-#endif   
    data(fromUnicode( QString(
         "<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=%1\"></head>\n"
         "%2</html>" ).arg( encoding, Qt::escape(t) ) ) );
@@ -282,16 +278,7 @@ void HelpProtocol::get( const KUrl& url )
             mParsed = transform(file, KStandardDirs::locate("dtd", "customization/kde-chunk.xsl"));
             if ( !mParsed.isEmpty() ) {
                 infoMessage( i18n( "Saving to cache" ) );
-#ifdef Q_WS_WIN
-                QFileInfo fi(file);
-                // make sure filenames do not contain the base path, otherwise
-                // accessing user data from another location invalids cached files
-                // Accessing user data under a different path is possible
-                // when using usb sticks - this may affect unix/mac systems also
-                QString cache = '/' + fi.absolutePath().remove(KStandardDirs::installPath("html"),Qt::CaseInsensitive).replace('/','_') + '_' + fi.baseName() + '.';
-#else
                 QString cache = file.left( file.length() - 7 );
-#endif
                 saveToCache( mParsed, KStandardDirs::locateLocal( "cache",
                                                                   "kio_help" + cache +
                                                                   "cache.bz2" ) );
@@ -394,45 +381,6 @@ void HelpProtocol::get_file( const KUrl& url )
 {
     kDebug( 7119 ) << "get_file " << url.url();
 
-#ifdef Q_WS_WIN
-    QFile f( url.toLocalFile() );
-    if ( !f.exists() ) {
-        error( KIO::ERR_DOES_NOT_EXIST, url.url() );
-        return;
-    }
-    if ( !f.open(QIODevice::ReadOnly) ) {
-        error( KIO::ERR_CANNOT_OPEN_FOR_READING, url.path() );
-        return;
-    }
-    int processed_size = 0;
-    totalSize( f.size() );
-
-    QByteArray array;
-    array.resize(MAX_IPC_SIZE);
-
-    while( 1 )
-    {
-        qint64 n = f.read(array.data(),array.size());
-        if (n == -1) {
-            error( KIO::ERR_COULD_NOT_READ, url.path());
-            f.close();
-            return;
-       }
-       if (n == 0)
-            break; // Finished
-
-       data( array );
-
-       processed_size += n;
-       processedSize( processed_size );
-    }
-
-    data( QByteArray() );
-    f.close();
-
-    processedSize( f.size() );
-    finished();
-#else
     QByteArray _path( QFile::encodeName(url.path()));
     KDE_struct_stat buff;
     if ( KDE_stat( _path.data(), &buff ) == -1 ) {
@@ -493,5 +441,4 @@ void HelpProtocol::get_file( const KUrl& url )
     processedSize( buff.st_size );
 
     finished();
-#endif
 }

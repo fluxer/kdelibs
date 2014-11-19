@@ -261,11 +261,7 @@ void KMimeTypeTest::testFindByPathUsingFileName_data()
     if ( exePath.isEmpty() )
         kWarning() << "kioexec not found";
     else {
-#ifdef Q_WS_WIN
-        const QString executableType = QString::fromLatin1( "application/x-ms-dos-executable" );
-#else
         const QString executableType = QString::fromLatin1( "application/x-executable" );
-#endif
         QTest::newRow("executable") << exePath << executableType;
     }
 }

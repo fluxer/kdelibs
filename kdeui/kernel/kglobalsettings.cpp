@@ -51,15 +51,6 @@
 #include <QtGui/QToolTip>
 #include <QtGui/QWhatsThis>
 
-#ifdef Q_WS_WIN
-#include <windows.h>
-#include <kkernel_win.h>
-
-static QRgb qt_colorref2qrgb(COLORREF col)
-{
-    return qRgb(GetRValue(col),GetGValue(col),GetBValue(col));
-}
-#endif
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
 #ifdef HAVE_XCURSOR
@@ -316,45 +307,29 @@ int KGlobalSettings::contextMenuKey ()
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::inactiveTitleColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTION));
-#else
     KConfigGroup g( KGlobal::config(), "WM" );
     return g.readEntry( "inactiveBackground", QColor(224,223,222) );
-#endif
 }
 
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::inactiveTextColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_INACTIVECAPTIONTEXT));
-#else
     KConfigGroup g( KGlobal::config(), "WM" );
     return g.readEntry( "inactiveForeground", QColor(75,71,67) );
-#endif
 }
 
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::activeTitleColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_ACTIVECAPTION));
-#else
     KConfigGroup g( KGlobal::config(), "WM" );
     return g.readEntry( "activeBackground", QColor(48,174,232));
-#endif
 }
 
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::activeTextColor()
 {
-#ifdef Q_WS_WIN
-    return qt_colorref2qrgb(GetSysColor(COLOR_CAPTIONTEXT));
-#else
     KConfigGroup g( KGlobal::config(), "WM" );
     return g.readEntry( "activeForeground", QColor(255,255,255) );
-#endif
 }
 
 int KGlobalSettings::contrast()
@@ -560,7 +535,6 @@ KGlobalSettings::KMouseSettings& KGlobalSettingsData::mouseSettings()
         mMouseSettings = new KGlobalSettings::KMouseSettings;
         KGlobalSettings::KMouseSettings& s = *mMouseSettings; // for convenience
 
-#ifndef Q_WS_WIN
         KConfigGroup g( KGlobal::config(), "Mouse" );
         QString setting = g.readEntry("MouseButtonMapping");
         if (setting == "RightHanded")
@@ -594,19 +568,7 @@ KGlobalSettings::KMouseSettings& KGlobalSettingsData::mouseSettings()
         // FIXME: Implement on other platforms
 #endif
         }
-#endif //Q_WS_WIN
     }
-#ifdef Q_WS_WIN
-    //not cached
-#ifndef _WIN32_WCE
-    mMouseSettings->handed = (GetSystemMetrics(SM_SWAPBUTTON) ?
-        KGlobalSettings::KMouseSettings::LeftHanded :
-        KGlobalSettings::KMouseSettings::RightHanded);
-#else
-// There is no mice under wince
-    mMouseSettings->handed =KGlobalSettings::KMouseSettings::RightHanded;
-#endif
-#endif
     return *mMouseSettings;
 }
 // KDE5: make this a const return?
@@ -617,10 +579,8 @@ KGlobalSettings::KMouseSettings & KGlobalSettings::mouseSettings()
 
 void KGlobalSettingsData::dropMouseSettingsCache()
 {
-#ifndef Q_WS_WIN
     delete mMouseSettings;
     mMouseSettings = 0;
-#endif
 }
 
 QString KGlobalSettings::desktopPath()
@@ -654,7 +614,6 @@ QString KGlobalSettings::downloadPath()
     // Qt 4.x does not have QDesktopServices::DownloadLocation, so we do our own xdg reading.
     QString defaultDownloadPath = QDir::homePath() + "/Downloads";
     QString downloadPath = defaultDownloadPath;
-#ifndef Q_WS_WIN
     const QString xdgUserDirs = KGlobal::dirs()->localxdgconfdir() + QLatin1String( "user-dirs.dirs" );
     if( QFile::exists( xdgUserDirs ) ) {
         KConfig xdgUserConf( xdgUserDirs, KConfig::SimpleConfig );
@@ -664,7 +623,6 @@ QString KGlobalSettings::downloadPath()
             downloadPath = defaultDownloadPath;
         }
     }
-#endif
     downloadPath = QDir::cleanPath( downloadPath );
     QDir().mkpath(downloadPath);
     if ( !downloadPath.endsWith( '/' ) ) {
@@ -693,15 +651,11 @@ QString KGlobalSettings::musicPath()
 
 bool KGlobalSettings::isMultiHead()
 {
-#ifdef Q_WS_WIN
-    return GetSystemMetrics(SM_CMONITORS) > 1;
-#else
     QByteArray multiHead = qgetenv("KDE_MULTIHEAD");
     if (!multiHead.isEmpty()) {
         return (multiHead.toLower() == "true");
     }
     return false;
-#endif
 }
 
 bool KGlobalSettings::wheelMouseZooms()
@@ -1138,16 +1092,12 @@ void KGlobalSettings::Private::applyCursorTheme()
 void KGlobalSettings::Private::propagateQtSettings()
 {
     KConfigGroup cg( KGlobal::config(), "KDE" );
-#ifndef Q_WS_WIN
     int num = cg.readEntry("CursorBlinkRate", QApplication::cursorFlashTime());
     if ((num != 0) && (num < 200))
         num = 200;
     if (num > 2000)
         num = 2000;
     QApplication::setCursorFlashTime(num);
-#else
-    int num;
-#endif
     num = cg.readEntry("DoubleClickInterval", QApplication::doubleClickInterval());
     QApplication::setDoubleClickInterval(num);
     num = cg.readEntry("StartDragTime", QApplication::startDragTime());

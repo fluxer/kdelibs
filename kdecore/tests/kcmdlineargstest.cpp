@@ -77,10 +77,8 @@ main(int argc, char *argv[])
    assert(u.url() == "http://www.kde.org");
 
    QFile file("a:b");
-#ifndef Q_WS_WIN
    bool ok = file.open(QIODevice::WriteOnly);
    assert(ok);
-#endif
    u = KCmdLineArgs::makeURL("a:b");
    qDebug() << u.toLocalFile();
    assert(u.isLocalFile());

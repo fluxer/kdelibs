@@ -1406,20 +1406,7 @@ bool CoreEngine::install(const QString &payloadfile)
             pathcounter++;
         }
         if (!m_installation->installPath().isEmpty()) {
-#if defined(Q_WS_WIN)
-#ifndef _WIN32_WCE
-            WCHAR wPath[MAX_PATH+1];
-            if ( SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, wPath) == S_OK) {
-                installdir = QString::fromUtf16((const ushort *) wPath) + QLatin1Char('/') + m_installation->installPath() + QLatin1Char('/');
-            } else {
-#endif
-                installdir =  QDir::home().path() + QLatin1Char('/') + m_installation->installPath() + QLatin1Char('/');
-#ifndef _WIN32_WCE
-            }
-#endif
-#else
             installdir = QDir::home().path() + '/' + m_installation->installPath() + '/';
-#endif
             pathcounter++;
         }
         if (!m_installation->absoluteInstallPath().isEmpty()) {

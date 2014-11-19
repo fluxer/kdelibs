@@ -55,22 +55,14 @@ QTEST_KDEMAIN( JobTest, NoGUI )
 
 static QString otherTmpDir()
 {
-#ifdef Q_WS_WIN
-    return QDir::tempPath() + "/jobtest/";
-#else
     // This one needs to be on another partition
     return "/tmp/jobtest/";
-#endif
 }
 
 #if 0
 static KUrl systemTmpDir()
 {
-#ifdef Q_WS_WIN
-    return KUrl( "system:" + QDir::homePath() + "/.kde-unit-test/jobtest-system/" );
-#else
     return KUrl( "system:/home/.kde-unit-test/jobtest-system/" );
-#endif
 }
 
 static QString realSystemPath()
@@ -252,13 +244,7 @@ void JobTest::copyLocalFile( const QString& src, const QString& dest )
         // The datapump solution ignores mtime, the app has to call FileCopyJob::setModificationTime()
         QFileInfo srcInfo( src );
         QFileInfo destInfo( dest );
-#ifdef Q_WS_WIN
-        // win32 time may differs in msec part
-        QCOMPARE( srcInfo.lastModified().toString("dd.MM.yyyy hh:mm"),
-                  destInfo.lastModified().toString("dd.MM.yyyy hh:mm") );
-#else
         QCOMPARE( srcInfo.lastModified(), destInfo.lastModified() );
-#endif
     }
 
     // cleanup and retry with KIO::copy()
@@ -274,13 +260,7 @@ void JobTest::copyLocalFile( const QString& src, const QString& dest )
         // check that the timestamp is the same (#24443)
         QFileInfo srcInfo( src );
         QFileInfo destInfo( dest );
-#ifdef Q_WS_WIN
-        // win32 time may differs in msec part
-        QCOMPARE( srcInfo.lastModified().toString("dd.MM.yyyy hh:mm"),
-                  destInfo.lastModified().toString("dd.MM.yyyy hh:mm") );
-#else
         QCOMPARE( srcInfo.lastModified(), destInfo.lastModified() );
-#endif
     }
     QCOMPARE(spyCopyingDone.count(), 1);
 }
@@ -314,14 +294,12 @@ void JobTest::copyLocalDirectory( const QString& src, const QString& _dest, int 
     }
 
     // CopyJob::setNextDirAttribute isn't implemented for Windows currently.
-#ifndef Q_WS_WIN
     {
         // Check that the timestamp is the same (#24443)
         QFileInfo srcInfo( src );
         QFileInfo destInfo( dest );
         QCOMPARE( srcInfo.lastModified(), destInfo.lastModified() );
     }
-#endif
 
     // Do it again, with Overwrite.
     // Use copyAs, we don't want a subdir inside d.
@@ -444,9 +422,7 @@ void JobTest::moveLocalDirectory( const QString& src, const QString& dest )
     QVERIFY( QFile::exists( src ) );
     QVERIFY( QFileInfo( src ).isDir() );
     QVERIFY( QFileInfo( src + "/testfile" ).isFile() );
-#ifndef Q_WS_WIN
     QVERIFY( QFileInfo( src + "/testlink" ).isSymLink() );
-#endif
     KUrl u;
     u.setPath( src );
     KUrl d;
@@ -460,9 +436,7 @@ void JobTest::moveLocalDirectory( const QString& src, const QString& dest )
     QVERIFY( QFileInfo( dest ).isDir() );
     QVERIFY( QFileInfo( dest + "/testfile" ).isFile() );
     QVERIFY( !QFile::exists( src ) ); // not there anymore
-#ifndef Q_WS_WIN
     QVERIFY( QFileInfo( dest + "/testlink" ).isSymLink() );
-#endif
 }
 
 void JobTest::moveFileToSamePartition()
@@ -494,32 +468,25 @@ void JobTest::moveFileToOtherPartition()
 
 void JobTest::moveSymlinkToOtherPartition()
 {
-#ifndef Q_WS_WIN
     kDebug() ;
     const QString filePath = homeTmpDir() + "testlink";
     const QString dest = otherTmpDir() + "testlink_moved";
     createTestSymlink( filePath );
     moveLocalSymlink( filePath, dest );
-#endif
 }
 
 void JobTest::moveDirectoryToOtherPartition()
 {
     kDebug() ;
-#ifndef Q_WS_WIN
     const QString src = homeTmpDir() + "dirFromHome";
     const QString dest = otherTmpDir() + "dirFromHome_moved";
     createTestDirectory( src );
     moveLocalDirectory( src, dest );
-#endif
 }
 
 void JobTest::moveFileNoPermissions()
 {
     kDebug() ;
-#ifdef Q_WS_WIN
-    kDebug() << "port to win32";
-#else
     const QString src = "/etc/passwd";
     const QString dest = homeTmpDir() + "passwd";
     QVERIFY( QFile::exists( src ) );
@@ -541,15 +508,11 @@ void JobTest::moveFileNoPermissions()
     // destination file remains.
     //QVERIFY( QFile::exists( dest ) );
     QVERIFY( QFile::exists( src ) );
-#endif
 }
 
 void JobTest::moveDirectoryNoPermissions()
 {
     kDebug() ;
-#ifdef Q_WS_WIN
-    kDebug() << "port to win32";
-#else
 
     // All of /etc is a bit much, so try to find something smaller:
     QString src = "/etc/fonts";
@@ -572,7 +535,6 @@ void JobTest::moveDirectoryNoPermissions()
     QCOMPARE( KIO::NetAccess::lastError(), (int)KIO::ERR_ACCESS_DENIED );
     //QVERIFY( QFile::exists( dest ) ); // see moveFileNoPermissions
     QVERIFY( QFile::exists( src ) );
-#endif
 }
 
 void JobTest::listRecursive()
@@ -580,11 +542,9 @@ void JobTest::listRecursive()
     // Note: many other tests must have been run before since we rely on the files they created
 
     const QString src = homeTmpDir();
-#ifndef Q_WS_WIN
     // Add a symlink to a dir, to make sure we don't recurse into those
     bool symlinkOk = symlink( "dirFromHome", QFile::encodeName( src + "/dirFromHome_link" ) ) == 0;
     QVERIFY( symlinkOk );
-#endif
     KIO::ListJob* job = KIO::listRecursive( KUrl(src), KIO::HideProgressInfo );
     job->setUiDelegate( 0 );
     connect( job, SIGNAL(entries(KIO::Job*,KIO::UDSEntryList)),
@@ -594,18 +554,12 @@ void JobTest::listRecursive()
     m_names.sort();
     QByteArray ref_names = QByteArray( ".,..,"
             "dirFromHome,dirFromHome/testfile,"
-#ifndef Q_WS_WIN
             "dirFromHome/testlink,"
-#endif
             "dirFromHome_copied,"
             "dirFromHome_copied/dirFromHome,dirFromHome_copied/dirFromHome/testfile,"
-#ifndef Q_WS_WIN
             "dirFromHome_copied/dirFromHome/testlink,"
-#endif
             "dirFromHome_copied/testfile,"
-#ifndef Q_WS_WIN
             "dirFromHome_copied/testlink,dirFromHome_link,"
-#endif
             "fileFromHome,fileFromHome_copied");
 
     const QString joinedNames = m_names.join( "," );
@@ -682,15 +636,9 @@ void JobTest::directorySize()
     kDebug() << "totalSize: " << job->totalSize();
     kDebug() << "totalFiles: " << job->totalFiles();
     kDebug() << "totalSubdirs: " << job->totalSubdirs();
-#ifdef Q_WS_WIN
-    QCOMPARE(job->totalFiles(), 5ULL); // see expected result in listRecursive() above
-    QCOMPARE(job->totalSubdirs(), 3ULL); // see expected result in listRecursive() above
-    QVERIFY(job->totalSize() > 54);
-#else
     QCOMPARE(job->totalFiles(), 8ULL); // see expected result in listRecursive() above
     QCOMPARE(job->totalSubdirs(), 4ULL); // see expected result in listRecursive() above
     QVERIFY(job->totalSize() >= 325);
-#endif
 
     qApp->sendPostedEvents(0, QEvent::DeferredDelete);
 }
@@ -1168,14 +1116,12 @@ void JobTest::deleteDirectory()
     // Let's put a few things in there to see if the recursive deletion works correctly
     // A hidden file:
     createTestFile(dest + "/.hidden");
-#ifndef Q_WS_WIN
     // A broken symlink:
     createTestSymlink(dest+"/broken_symlink");
     // A symlink to a dir:
     bool symlink_ok = symlink( KDESRCDIR, QFile::encodeName( dest + "/symlink_to_dir" ) ) == 0;
     if ( !symlink_ok )
         kFatal() << "couldn't create symlink: " << strerror( errno ) ;
-#endif
 
     KIO::Job* job = KIO::del(KUrl(dest), KIO::HideProgressInfo);
     job->setUiDelegate(0);
@@ -1189,7 +1135,6 @@ void JobTest::deleteSymlink(bool using_fast_path)
     extern KIO_EXPORT bool kio_resolve_local_urls;
     kio_resolve_local_urls = !using_fast_path;
 
-#ifndef Q_WS_WIN
     const QString src = homeTmpDir() + "dirFromHome";
     createTestDirectory(src);
     QVERIFY(QFile::exists(src));
@@ -1206,7 +1151,6 @@ void JobTest::deleteSymlink(bool using_fast_path)
     QVERIFY(ok);
     QVERIFY(!QFile::exists(dest));
     QVERIFY(QFile::exists(src));
-#endif
 
     kio_resolve_local_urls = true;
 }
@@ -1214,10 +1158,8 @@ void JobTest::deleteSymlink(bool using_fast_path)
 
 void JobTest::deleteSymlink()
 {
-#ifndef Q_WS_WIN
     deleteSymlink(true);
     deleteSymlink(false);
-#endif
 }
 
 void JobTest::deleteManyDirs(bool using_fast_path)
@@ -1527,7 +1469,6 @@ void JobTest::moveAndOverwrite()
     QVERIFY(ok);
     QVERIFY(!QFile::exists(sourceFile)); // it was moved
 
-#ifndef Q_WS_WIN
     // Now same thing when the target is a symlink to the source
     createTestFile( sourceFile );
     createTestSymlink( existingDest, QFile::encodeName(sourceFile) );
@@ -1558,12 +1499,10 @@ void JobTest::moveAndOverwrite()
     ok = KIO::NetAccess::synchronousRun(job, 0);
     QVERIFY(ok);
     QVERIFY(!QFile::exists(sourceFile)); // it was moved
-#endif
 }
 
 void JobTest::moveOverSymlinkToSelf() // #169547
 {
-#ifndef Q_WS_WIN
     const QString sourceFile = homeTmpDir() + "fileFromHome";
     createTestFile( sourceFile );
     const QString existingDest = homeTmpDir() + "testlink";
@@ -1576,7 +1515,6 @@ void JobTest::moveOverSymlinkToSelf() // #169547
     QVERIFY(!ok);
     QCOMPARE(job->error(), (int)KIO::ERR_FILE_ALREADY_EXIST); // and not ERR_IDENTICAL_FILES!
     QVERIFY(QFile::exists(sourceFile)); // it not moved
-#endif
 }
 
 #include "jobtest.moc"

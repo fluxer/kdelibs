@@ -123,10 +123,6 @@ void KDirListerTest::test()
 {
   KUrl home( QDir::homePath() );
   KUrl root( QDir::rootPath() );
-#ifdef Q_WS_WIN
-  lister->openUrl( home, KDirLister::Keep );
-  lister->openUrl( root, KDirLister::Keep | KDirLister::Reload );
-#else
 /*  lister->openUrl( home, KDirLister::Keep );
   lister->openUrl( root, KDirLister::Keep | KDirLister::Reload );
   lister->openUrl( KUrl("file:/etc"), KDirLister::Keep | KDirLister::Reload );
@@ -139,7 +135,6 @@ void KDirListerTest::test()
   lister->openUrl( KUrl("file:/usr/"), KDirLister::Keep | KDirLister::Reload );
 */
   lister->openUrl( KUrl("file:/dev"), KDirLister::Keep | KDirLister::Reload );
-#endif
 }
 
 void KDirListerTest::completed()

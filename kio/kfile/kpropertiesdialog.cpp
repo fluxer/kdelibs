@@ -134,12 +134,6 @@ extern "C" {
 #include <kbuildsycocaprogressdialog.h>
 #include <kmimetypechooser.h>
 
-#ifdef Q_WS_WIN
-# include <kkernel_win.h>
-#ifdef __GNUC__
-# warning TODO: port completely to win32
-#endif
-#endif
 
 using namespace KDEPrivate;
 
@@ -283,11 +277,6 @@ bool KPropertiesDialog::showDialog(const KFileItem& item, QWidget* parent,
 {
     // TODO: do we really want to show the win32 property dialog?
     // This means we lose metainfo, support for .desktop files, etc. (DF)
-#ifdef Q_WS_WIN
-    QString localPath = item.localPath();
-    if (!localPath.isEmpty())
-        return showWin32FilePropertyDialog(localPath);
-#endif
     KPropertiesDialog* dlg = new KPropertiesDialog(item, parent);
     if (modal) {
         dlg->exec();
@@ -301,10 +290,6 @@ bool KPropertiesDialog::showDialog(const KFileItem& item, QWidget* parent,
 bool KPropertiesDialog::showDialog(const KUrl& _url, QWidget* parent,
                                    bool modal)
 {
-#ifdef Q_WS_WIN
-    if (_url.isLocalFile())
-        return showWin32FilePropertyDialog( _url.toLocalFile() );
-#endif
     KPropertiesDialog* dlg = new KPropertiesDialog(_url, parent);
     if (modal) {
         dlg->exec();
@@ -735,11 +720,6 @@ KFilePropsPlugin::KFilePropsPlugin( KPropertiesDialog *_props )
         if ( magicMimeType->name() != KMimeType::defaultMimeType() )
             magicMimeComment = magicMimeType->comment();
     }
-#ifdef Q_WS_WIN
-    if ( isReallyLocal ) {
-        directory = QDir::toNativeSeparators( directory.mid( 1 ) );
-    }
-#endif
 
     // Those things only apply to 'single file' mode
     QString filename;

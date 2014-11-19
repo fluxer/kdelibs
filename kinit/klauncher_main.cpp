@@ -54,7 +54,6 @@ static void sig_handler(int sig_num)
 
 extern "C" KDE_EXPORT int kdemain( int argc, char**argv )
 {
-#ifndef Q_WS_WIN
    // Started via kdeinit.
    int launcherFd;
    if (argc != 2 || memcmp(argv[1], "--fd=", 5) || !(launcherFd = atoi(argv[1] + 5)))
@@ -63,7 +62,6 @@ extern "C" KDE_EXPORT int kdemain( int argc, char**argv )
                                  "klauncher: It is started automatically by kdeinit4.\n").toLocal8Bit().data());
       return 1;
    }
-#endif
 
 #if defined(Q_OS_DARWIN) || defined (Q_OS_MAC)
    mac_initialize_dbus();

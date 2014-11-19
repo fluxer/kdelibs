@@ -88,10 +88,6 @@ public:
     // starting is the only valid use of the timer in subclasses (BrowserRun, KHTMLRun and KonqRun)
     void startTimer();
 
-#ifdef Q_WS_WIN
-    static bool displayNativeOpenWithDialog( const KUrl::List& lst, QWidget* window, bool tempFiles,
-                                       const QString& suggestedFileName, const QByteArray& asn );
-#endif
     bool runExecutable(const QString& _exec);
 
     KRun *q;

@@ -169,9 +169,6 @@ QString KCatalog::localeDir() const
   return QFile::decodeName(d->localeDir);
 }
 
-#ifdef Q_WS_WIN
-  extern "C" int __declspec(dllimport) _nl_msg_cat_cntr;
-#endif
 
 void KCatalogPrivate::setupGettextEnv ()
 {

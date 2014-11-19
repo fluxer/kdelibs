@@ -35,9 +35,6 @@
 #ifdef Q_WS_X11
 #include <QX11Info>
 #endif
-#ifdef Q_WS_WIN
-#include <windows.h>
-#endif
 
 #include <kiconloader.h>
 #include <kapplication.h>
@@ -48,11 +45,7 @@
 #include <QMovie>
 #include <QPointer>
 
-#ifdef Q_WS_WIN
-class KSystemTrayIconPrivate : public QObject
-#else
 class KSystemTrayIconPrivate
-#endif
 {
 public:
     KSystemTrayIconPrivate(KSystemTrayIcon* trayIcon, QWidget* parent)
@@ -63,20 +56,10 @@ public:
         onAllDesktops = false;
         window = parent;
         movie = 0;
-#ifdef Q_WS_WIN
-		if ( window ) {
-            window->installEventFilter( this );
-		}
-#endif
     }
 
     ~KSystemTrayIconPrivate()
     {
-#ifdef Q_WS_WIN
-		if ( window ) {
-            window->removeEventFilter( this );
-		}
-#endif
         delete actionCollection;
         delete menu;
     }
@@ -87,16 +70,6 @@ public:
         q->setIcon(QIcon(movie->currentPixmap()));
     }
 
-#ifdef Q_WS_WIN
-    bool eventFilter(QObject *obj, QEvent *ev)
-    {
-      if(ev->type() == QEvent::ActivationChange) {
-        dwTickCount = GetTickCount();
-      }
-      return QObject::eventFilter(obj, ev);
-    }
-    DWORD dwTickCount;
-#endif
 
     KSystemTrayIcon* q;
     KActionCollection* actionCollection;
@@ -267,17 +240,7 @@ void KSystemTrayIcon::activateOrHide( QSystemTrayIcon::ActivationReason reasonCa
     {
         return;
     }
-#ifdef Q_WS_WIN
-    // the problem is that we lose focus when the systray icon is activated
-    // and we don't know the former active window
-    // therefore we watch for activation event and use our stopwatch :)
-    if( GetTickCount() - d->dwTickCount < 300 ) {
-        // we were active in the last 300ms -> hide it
-        minimizeRestore( false );
-    } else {
-        minimizeRestore( true );
-    }
-#elif defined(Q_WS_X11)
+#if   defined(Q_WS_X11)
     KWindowInfo info1 = KWindowSystem::windowInfo( pw->winId(), NET::XAWMState | NET::WMState );
     // mapped = visible (but possibly obscured)
     bool mapped = (info1.mappingState() == NET::Visible) && !info1.isMinimized();

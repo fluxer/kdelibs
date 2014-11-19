@@ -359,20 +359,10 @@ KFileWidget::KFileWidget( const KUrl& _startDir, QWidget *parent )
 
     KUrl u;
     KUrlComboBox *pathCombo = d->urlNavigator->editor();
-#ifdef Q_WS_WIN
-    foreach( const QFileInfo &drive,QFSFileEngine::drives() )
-    {
-        u.setPath( drive.filePath() );
-        pathCombo->addDefaultUrl(u,
-                                 KIO::pixmapForUrl( u, 0, KIconLoader::Small ),
-                                 i18n("Drive: %1",  u.toLocalFile()));
-    }
-#else
     u.setPath(QDir::rootPath());
     pathCombo->addDefaultUrl(u,
                              KIO::pixmapForUrl(u, 0, KIconLoader::Small),
                              u.toLocalFile());
-#endif
 
     u.setPath(QDir::homePath());
     pathCombo->addDefaultUrl(u, KIO::pixmapForUrl(u, 0, KIconLoader::Small),

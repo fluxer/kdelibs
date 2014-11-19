@@ -47,9 +47,6 @@
 #include "ksycocadevices_p.h"
 
 // TODO: remove mmap() from kdewin32 and use QFile::mmap() when needed
-#ifdef Q_WS_WIN
-#undef HAVE_MMAP
-#endif
 /**
  * Sycoca file version number.
  * If the existing file is outdated, it will not get read

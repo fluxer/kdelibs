@@ -67,12 +67,8 @@ static QString remoteTmpDir()
 
 static QString localTmpDir()
 {
-#ifdef Q_WS_WIN
-    return QDir::tempPath() + "/jobremotetest/";
-#else
     // This one needs to be on another partition
     return "/tmp/jobremotetest/";
-#endif
 }
 
 static bool myExists(const QString& pathOrUrl) {

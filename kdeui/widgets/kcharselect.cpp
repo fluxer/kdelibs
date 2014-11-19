@@ -254,11 +254,7 @@ void KCharSelectTablePrivate::_k_resizeCells()
     }
 
     hv = q->verticalHeader();
-#ifdef Q_WS_WIN
-    int new_h = QFontMetrics(font).lineSpacing() + 1;
-#else
     int new_h = QFontMetrics(font).xHeight() * 3;
-#endif
     if (new_h < 5 || new_h < 4 + QFontMetrics(font).height()) {
         new_h = qMax(5, 4 + QFontMetrics(font).height());
     }

@@ -74,12 +74,6 @@ bool KUniqueApplication::Private::s_nofork = false;
 bool KUniqueApplication::Private::s_multipleInstances = false;
 bool s_kuniqueapplication_startCalled = false;
 bool KUniqueApplication::Private::s_handleAutoStarted = false;
-#ifdef Q_WS_WIN
-/* private helpers from kapplication_win.cpp */
-#ifndef _WIN32_WCE
-void KApplication_activateWindowForProcess( const QString& executableName );
-#endif
-#endif
 
 void
 KUniqueApplication::addCmdLineOptions()
@@ -158,9 +152,6 @@ KUniqueApplication::start(StartFlags flags)
      {
         kError() << "KUniqueApplication: Can't setup D-Bus service. Probably already running."
                  << endl;
-#if defined(Q_WS_WIN) && !defined(_WIN32_WCE)
-        KApplication_activateWindowForProcess(KCmdLineArgs::aboutData()->appName());
-#endif
         ::exit(255);
      }
 
@@ -174,7 +165,6 @@ KUniqueApplication::start(StartFlags flags)
 
   }
 
-#ifndef Q_WS_WIN
   int fd[2];
   signed char result;
   if (0 > pipe(fd))
@@ -266,7 +256,6 @@ KUniqueApplication::start(StartFlags flags)
      if (result != 0)
         ::exit(result); // Error occurred in child.
 
-#endif
      QDBusConnectionInterface* dbusService = tryToInitDBusConnection();
      if (!dbusService->isServiceRegistered(appName))
      {
@@ -300,11 +289,9 @@ KUniqueApplication::start(StartFlags flags)
                  << "Error message was: " << err.name() << ": \"" << err.message() << "\"" << endl;
         ::exit(255);
      }
-#ifndef Q_WS_WIN
      ::exit(reply);
      break;
   }
-#endif
   return false; // make insure++ happy
 }
 
@@ -403,9 +390,6 @@ int KUniqueApplication::newInstance()
                 // and don't call the inherited one, use this (but NOT when newInstance()
                 // is called for the first time, like here).
                 KStartupInfo::setNewStartupId(mainWindow, startupId());
-#endif
-#ifdef Q_WS_WIN
-                KWindowSystem::forceActiveWindow( mainWindow->winId() );
 #endif
 
             }

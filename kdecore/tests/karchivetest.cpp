@@ -381,11 +381,7 @@ void KArchiveTest::testReadTar() // testCreateTarGz must have been run first.
 
     QFileInfo localFileData("test3");
 
-#ifndef Q_WS_WIN
     QCOMPARE( listing.count(), 15 );
-#else
-    QCOMPARE( listing.count(), 14 );
-#endif
     QCOMPARE( listing[ 0], QString("mode=40755 user=user group=group path=aaaemptydir type=dir") );
     QCOMPARE( listing[ 1], QString("mode=40777 user=%1 group=%2 path=dir type=dir").arg(localFileData.owner()).arg(localFileData.group()) );
     QCOMPARE( listing[ 2], QString("mode=40777 user=%1 group=%2 path=dir/subdir type=dir").arg(localFileData.owner()).arg(localFileData.group()) );
@@ -756,11 +752,7 @@ void KArchiveTest::testReadZip()
     // ZIP has no support for per-file user/group, so omit them from the listing
     const QStringList listing = recursiveListEntries( dir, "", 0 );
 
-#ifndef Q_WS_WIN
     QCOMPARE( listing.count(), 16 );
-#else
-    QCOMPARE( listing.count(), 15 );
-#endif
     QCOMPARE( listing[ 0], QString("mode=40755 path=aaaemptydir type=dir") );
     QCOMPARE( listing[ 1], QString("mode=40777 path=dir type=dir") );
     QCOMPARE( listing[ 2], QString("mode=40777 path=dir/subdir type=dir") );

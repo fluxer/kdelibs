@@ -23,9 +23,7 @@
 */
 
 #include "klocale.h"
-#if defined Q_WS_WIN
-    #include "klocale_win_p.h"
-#elif defined Q_OS_MAC
+#if   defined Q_OS_MAC
     #include "klocale_mac_p.h"
 #else
     #include "klocale_unix_p.h"
@@ -46,9 +44,7 @@
 #include "common_helpers_p.h"
 
 KLocale::KLocale(const QString &catalog, KSharedConfig::Ptr config)
-#if defined Q_WS_WIN
-        : d(new KLocaleWindowsPrivate(this, catalog, config))
-#elif defined Q_OS_MAC
+#if   defined Q_OS_MAC
         : d(new KLocaleMacPrivate(this, catalog, config))
 #else
         : d(new KLocaleUnixPrivate(this, catalog, config))
@@ -57,9 +53,7 @@ KLocale::KLocale(const QString &catalog, KSharedConfig::Ptr config)
 }
 
 KLocale::KLocale(const QString& catalog, const QString &language, const QString &country, KConfig *config)
-#if defined Q_WS_WIN
-        : d(new KLocaleWindowsPrivate(this, catalog, language, country, config))
-#elif defined Q_OS_MAC
+#if   defined Q_OS_MAC
         : d(new KLocaleMacPrivate(this, catalog, language, country, config))
 #else
         : d(new KLocaleUnixPrivate(this, catalog, language, country, config))

@@ -42,90 +42,6 @@ int closeQString(void * context) {
     return 0;
 }
 
-#if defined (SIMPLE_XSLT) && defined(Q_WS_WIN)
-
-#define MAX_PATHS 64 
-xmlExternalEntityLoader defaultEntityLoader = NULL;
-static xmlChar *paths[MAX_PATHS + 1]; 
-static int nbpaths = 0; 
-static QHash<QString,QString> replaceURLList;
-
-/*
-* Entity loading control and customization.
-* taken from xsltproc.c
-*/
-static xmlParserInputPtr xsltprocExternalEntityLoader(const char *_URL, const char *ID,xmlParserCtxtPtr ctxt) 
-{
-    xmlParserInputPtr ret;
-    warningSAXFunc warning = NULL;
-	
-	// use local available dtd versions instead of fetching it everytime from the internet    
-	QString url = QLatin1String(_URL);
-	QHash<QString, QString>::const_iterator i;
-	for(i = replaceURLList.constBegin(); i != replaceURLList.constEnd(); i++)
-	{
-		if (url.startsWith(i.key()))
-		{
-			url.replace(i.key(),i.value());
-			qDebug() << "converted" << _URL << "to" << url;
-		}
-	}
-	char URL[1024]; 
-	strcpy(URL,url.toLatin1().constData());
-
-    const char *lastsegment = URL;
-    const char *iter = URL;
-
-    if (nbpaths > 0) {
-        while (*iter != 0) {
-            if (*iter == '/')
-            lastsegment = iter + 1;
-            iter++;
-        }
-    }
-
-    if ((ctxt != NULL) && (ctxt->sax != NULL)) {
-        warning = ctxt->sax->warning;
-        ctxt->sax->warning = NULL;
-    }
-        
-    if (defaultEntityLoader != NULL) {
-        ret = defaultEntityLoader(URL, ID, ctxt);
-        if (ret != NULL) {
-            if (warning != NULL)
-                ctxt->sax->warning = warning;
-            qDebug() << "Loaded URL=\"" << URL << "\" ID=\"" << ID << "\"";
-            return(ret);
-        }
-    }
-    for (int i = 0;i < nbpaths;i++) {
-        xmlChar *newURL;
-
-        newURL = xmlStrdup((const xmlChar *) paths[i]);
-        newURL = xmlStrcat(newURL, (const xmlChar *) "/");
-        newURL = xmlStrcat(newURL, (const xmlChar *) lastsegment);
-        if (newURL != NULL) {
-            ret = defaultEntityLoader((const char *)newURL, ID, ctxt);
-        if (ret != NULL) {
-            if (warning != NULL)
-                ctxt->sax->warning = warning;
-                qDebug() << "Loaded URL=\"" << newURL << "\" ID=\"" << ID << "\"";
-                xmlFree(newURL);
-                return(ret);
-            }
-            xmlFree(newURL);
-        }
-    }
-    if (warning != NULL) {
-        ctxt->sax->warning = warning;
-        if (URL != NULL)
-            warning(ctxt, "failed to load external entity \"%s\"\n", URL);
-        else if (ID != NULL)
-            warning(ctxt, "failed to load external entity \"%s\"\n", ID);
-    }
-    return(NULL);
-} 
-#endif
 
 QString transform( const QString &pat, const QString& tss,
                    const QVector<const char *> &params )
@@ -133,16 +49,6 @@ QString transform( const QString &pat, const QString& tss,
     QString parsed;
 
     INFO(i18n("Parsing stylesheet"));
-#if defined (SIMPLE_XSLT) && defined(Q_WS_WIN)
-	// prepare use of local available dtd versions instead of fetching everytime from the internet
-	// this approach is url based
-    if (!defaultEntityLoader) {
-        defaultEntityLoader = xmlGetExternalEntityLoader();
-        xmlSetExternalEntityLoader(xsltprocExternalEntityLoader);
-
-        replaceURLList[QLatin1String("http://www.oasis-open.org/docbook/xml/4.2")] = QString("file:///%1").arg(DOCBOOK_XML_CURRDTD);
-    }
-#endif
 
     xsltStylesheetPtr style_sheet =
         xsltParseStylesheetFile((const xmlChar *)QFile::encodeName(tss).constData());
@@ -289,9 +195,6 @@ QString splitOut(const QString &parsed, int index)
 
 QByteArray fromUnicode( const QString &data )
 {
-#ifdef Q_WS_WIN
-    return data.toUtf8();
-#else
     QTextCodec *locale = QTextCodec::codecForLocale();
     QByteArray result;
     char buffer[30000];
@@ -334,22 +237,13 @@ QByteArray fromUnicode( const QString &data )
         offset += part_len;
     }
     return result;
-#endif	
 }
 
 void replaceCharsetHeader( QString &output )
 {
     QString name;
-#ifdef Q_WS_WIN
-    name = "utf-8"; 
-    // may be required for all xml output 
-    if (output.contains("<table-of-contents>"))
-        output.replace( QString( "<?xml version=\"1.0\"?>" ),
-                        QString( "<?xml version=\"1.0\" encoding=\"%1\"?>").arg( name ) );
-#else                    
     name = QTextCodec::codecForLocale()->name();
     name.replace( QString( "ISO " ), "iso-" );
     output.replace( QString( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">" ),
                     QString( "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=%1\">" ).arg( name ) );
-#endif    
 }

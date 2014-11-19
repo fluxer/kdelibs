@@ -162,11 +162,7 @@ void Frame::setImage(const QString &path)
     d->pixmap = 0;
 
     bool absolutePath = !path.isEmpty() &&
-                        #ifdef Q_WS_WIN
-                            !QDir::isRelativePath(path)
-                        #else
                             (path[0] == '/' || path.startsWith(QLatin1String(":/")))
-                        #endif
         ;
 
     if (absolutePath) {

@@ -65,9 +65,7 @@
 #endif
 #include <sys/wait.h>
 
-#ifndef Q_WS_WIN
 #include "kwindowsystem.h"
-#endif
 
 #include <fcntl.h>
 #include <stdlib.h> // srand(), rand()
@@ -134,9 +132,6 @@ static int kde_x_errhandler( Display *dpy, XErrorEvent *err )
 }
 #endif
 
-#ifdef Q_WS_WIN
-void KApplication_init_windows();
-#endif
 
 /*
   Private data to make keeping binary compatibility easier
@@ -595,9 +590,6 @@ void KApplicationPrivate::init(bool GUIenabled)
   qRegisterMetaType<KUrl>();
   qRegisterMetaType<KUrl::List>();
 
-#ifdef Q_WS_WIN
-  KApplication_init_windows();
-#endif
 }
 
 KApplication* KApplication::kApplication()
@@ -881,12 +873,10 @@ void KApplicationPrivate::parseCommandLine( )
     }
 #endif
 
-#ifndef Q_WS_WIN
     if (args->isSet("smkey"))
     {
         sessionKey = args->getOption("smkey");
     }
-#endif
 }
 
 extern void kDebugCleanup();

@@ -557,11 +557,7 @@ ConnectionServer::~ConnectionServer()
 
 void ConnectionServer::listenForRemote()
 {
-#ifdef Q_WS_WIN
-    d->backend = new SocketConnectionBackend(SocketConnectionBackend::TcpSocketMode, this);
-#else
     d->backend = new SocketConnectionBackend(SocketConnectionBackend::LocalSocketMode, this);
-#endif
     if (!d->backend->listenForRemote()) {
         delete d->backend;
         d->backend = 0;

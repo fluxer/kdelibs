@@ -445,14 +445,6 @@ QDir::SortFlags KDirOperator::sorting() const
 
 bool KDirOperator::isRoot() const
 {
-#ifdef Q_WS_WIN
-    if (url().isLocalFile()) {
-        const QString path = url().toLocalFile();
-        if (path.length() == 3)
-            return (path[0].isLetter() && path[1] == ':' && path[2] == '/');
-        return false;
-    } else
-#endif
     return url().path() == QString(QLatin1Char('/'));
 }
 
@@ -2626,11 +2618,7 @@ bool KDirOperator::Private::isReadable(const KUrl& url)
         return true; // what else can we say?
 
     KDE_struct_stat buf;
-#ifdef Q_WS_WIN
-    QString ts = url.toLocalFile();
-#else
     QString ts = url.path(KUrl::AddTrailingSlash);
-#endif
     bool readable = (KDE::stat(ts, &buf) == 0);
     if (readable) { // further checks
         DIR *test;

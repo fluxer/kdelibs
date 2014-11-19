@@ -182,10 +182,6 @@ void KUrlTest::testQUrl()
 {
   QUrl url1( "file:///home/dfaure/my#%2f" );
   QCOMPARE( url1.toString(), QString( "file:///home/dfaure/my#%2f" ) );
-#ifdef Q_WS_WIN
-  QUrl url2( "file:///c:/home/dfaure/my#%2f" );
-  QCOMPARE( url2.toString(), QString( "file:///c:/home/dfaure/my#%2f" ) );
-#endif
 
   // Show how toString() is confusing
   QUrl url3 = QUrl::fromLocalFile( "/home/dfaure/hash#file" );
@@ -227,20 +223,11 @@ void KUrlTest::testIsLocalFile()
   KUrl local_file_4("file:///my/file");
   QVERIFY( local_file_4.isLocalFile() );
 
-#ifdef Q_WS_WIN
-  KUrl local_file_4a("file:///c:/my/file");
-  QVERIFY( local_file_4a.isLocalFile() );
-#endif
 
   KUrl local_file_5;
   local_file_5.setPath("/foo?bar");
   QCOMPARE( local_file_5.url(), QString("file:///foo%3Fbar") );
 
-#ifdef Q_WS_WIN
-  KUrl local_file_5a;
-  local_file_5a.setPath("c:/foo?bar");
-  QCOMPARE( local_file_5a.url(), QString("file:///c:/foo%3Fbar") );
-#endif
 
   KUrl scummos("inf://localhost/test.txt");
   QVERIFY(!scummos.isLocalFile());
@@ -417,13 +404,6 @@ void KUrlTest::testSimpleMethods() // to test parsing, mostly
   KUrl percentEncodedQuery( "http://mail.yandex.ru/message_part/%D0%9A%D1%80%D0%B8%D1%82%D0%B5%D1%80%D0%B8%D0%B8%20%D0%BE%D1%86%D0%B5%D0%BD%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D0%BE%D1%80%D0%BB%D0%BE%D0%B2%D0%BE%D0%B9.rar?hid=1.1&mid=391.56424458.99241672611486679803334485488&name=%D0%9A%D1%80%D0%B8%D1%82%D0%B5%D1%80%D0%B8%D0%B8%20%D0%BE%D1%86%D0%B5%D0%BD%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D0%BE%D1%80%D0%BB%D0%BE%D0%B2%D0%BE%D0%B9.rar" );
   QCOMPARE( percentEncodedQuery.prettyUrl(), QString::fromUtf8("http://mail.yandex.ru/message_part/Критерии оценивания орловой.rar?hid=1.1&mid=391.56424458.99241672611486679803334485488&name=%D0%9A%D1%80%D0%B8%D1%82%D0%B5%D1%80%D0%B8%D0%B8%20%D0%BE%D1%86%D0%B5%D0%BD%D0%B8%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F%20%D0%BE%D1%80%D0%BB%D0%BE%D0%B2%D0%BE%D0%B9.rar"));
 
-#ifdef Q_WS_WIN
-#ifdef Q_CC_MSVC
-#pragma message ("port KUser")
-#else
-#warning port KUser
-#endif
-#else
   KUrl tilde;
   KUser currentUser;
   const QString userName = currentUser.loginName();
@@ -434,7 +414,6 @@ void KUrlTest::testSimpleMethods() // to test parsing, mostly
   tilde = KUrl("http://foo.bar/index.html");
   tilde.setPath( "~slajsjdlsjd/test.html" );
   QCOMPARE( tilde.url(), QString("http://foo.bar/~slajsjdlsjd/test.html"));
-#endif
 }
 
 void KUrlTest::testHostName()
@@ -1954,19 +1933,11 @@ void KUrlTest::testPathOrURL()
   QVERIFY( uloc.isValid() ); // KDE3: was invalid; same as above
   uloc = KUrl( "" );
   QVERIFY( !uloc.isValid() );
-#ifdef Q_WS_WIN
-#ifdef Q_CC_MSVC
-#pragma message ("port KUser")
-#else
-#warning port KUser
-#endif
-#else
   KUser currentUser;
   const QString userName = currentUser.loginName();
   QVERIFY( !userName.isEmpty() );
   uloc = KUrl(QString::fromUtf8("~%1/konqtests/Matériel").arg(userName));
   QCOMPARE( uloc.path(), QString::fromUtf8("%1/konqtests/Matériel").arg(currentUser.homeDir()) );
-#endif
 
   // pathOrUrl tests
   uloc = KUrl( "/home/dfaure/konqtests/Mat%C3%A9riel" );
@@ -2012,13 +1983,6 @@ void KUrlTest::testAssignment()
   QVERIFY( uloc.isValid() );
   uloc = KUrl( "" );
   QVERIFY( !uloc.isValid() );
-#ifdef Q_WS_WIN
-#ifdef Q_CC_MSVC
-#pragma message ("port KUser")
-#else
-#warning port KUser
-#endif
-#else
   KUser currentUser;
   const QString userName = currentUser.loginName();
   QVERIFY( !userName.isEmpty() );
@@ -2033,7 +1997,6 @@ void KUrlTest::testAssignment()
   uloc = KUrl(qurl);
   QCOMPARE( qurl.toEncoded(), uloc.toEncoded() );
   QCOMPARE( uloc.path(), QString::fromUtf8("%1/konqtests/Matériel").arg(currentUser.homeDir()) );
-#endif
 }
 
 void KUrlTest::testQueryItem()

@@ -93,13 +93,8 @@ static void createTestDirectory( const QString& path, CreateTestDirectoryOptions
         kFatal() << "couldn't create " << path;
     createTestFile( path + "/testfile" );
     if ( (opt & NoSymlink) == 0 ) {
-#ifndef Q_WS_WIN
         createTestSymlink( path + "/testlink" );
         QVERIFY( QFileInfo( path + "/testlink" ).isSymLink() );
-#else
-    // to not change the filecount everywhere in the tests
-        createTestFile( path + "/testlink" );
-#endif
     }
     setTimeStamp( path, s_referenceTimeStamp );
 }

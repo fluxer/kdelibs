@@ -47,11 +47,6 @@ public:
     {
         return macEvent(caller, event);
     }
-#elif defined(Q_WS_WIN)
-    bool publicWinEvent(MSG *message, long *result)
-    {
-        return winEvent(message, result);
-    }
 #endif
 };
 
@@ -112,19 +107,6 @@ bool KSystemEventFilterPrivate::filterEvent(void *message)
         Q_FOREACH (const QWeakPointer<QWidget> &wp, m_filters) {
             if (QWidget *w = wp.data()) {
                 if (static_cast<KEventHackWidget*>(w)->publicMacEvent(0, nsevt->eventRef)) {
-                    return true;
-                }
-            }
-        }*/
-#elif defined(Q_WS_WIN)
-        // FIXME: untested
-        
-/*        MSG *msg = static_cast<MSG*>(message);
-        long ret; // widget filter returns are discarded!
-        // pass the event as long as it's not consumed
-        Q_FOREACH (const QWeakPointer<QWidget> &wp, m_filters) {
-            if (QWidget *w = wp.data()) {
-                if (static_cast<KEventHackWidget*>(w)->publicWinEvent(msg, &ret)) {
                     return true;
                 }
             }

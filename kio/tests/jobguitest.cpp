@@ -28,12 +28,8 @@
 
 static QString otherTmpDir()
 {
-#ifdef Q_WS_WIN
-    return QDir::tempPath() + "/jobtest/";
-#else
     // This one needs to be on another partition
     return "/tmp/jobtest/";
-#endif
 }
 
 class JobGuiTest : public QObject

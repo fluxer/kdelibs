@@ -106,11 +106,6 @@ static QString cleanpath( const QString &_path, bool cleanDirSeparator, bool dec
     orig_pos = pos;
   }
 
-#ifdef Q_WS_WIN // prepend drive letter if exists (js)
-  if (orig_pos >= 2 && path[0].isLetter() && path[1] == QLatin1Char(':') ) {
-    result.prepend(QString(path[0]) + QLatin1Char(':') );
-  }
-#endif
 
   if ( result.isEmpty() )
     result = QLatin1Char('/');
@@ -120,42 +115,6 @@ static QString cleanpath( const QString &_path, bool cleanDirSeparator, bool dec
   return result;
 }
 
-#ifdef Q_WS_WIN
-
-// returns true if provided arguments desinate letter+colon or double slash
-#define IS_DRIVE_OR_DOUBLESLASH(isletter, char1, char2, colon, slash) \
-  ((isletter && char2 == colon) || (char1 == slash && char2 == slash))
-
-// Removes file:/// or file:// or file:/ or / prefix assuming that str
-// is (nonempty) Windows absolute path with a drive letter or double slash.
-// If there was file protocol, the path is decoded from percent encoding
-static QString removeSlashOrFilePrefix(const QString& str)
-{
-  // FIXME this should maybe be replaced with some (faster?)/nicer logic
-  const int len = str.length();
-  if (str[0]==QLatin1Char('f')) {
-    if ( len > 10 && str.startsWith( QLatin1String( "file:///" ) )
-         && IS_DRIVE_OR_DOUBLESLASH(str[8].isLetter(), str[8], str[9], QLatin1Char(':'), QLatin1Char('/')) )
-      return QUrl::fromPercentEncoding( str.toLatin1() ).mid(8);
-    else if ( len > 9 && str.startsWith( QLatin1String( "file://" ) )
-              && IS_DRIVE_OR_DOUBLESLASH(str[7].isLetter(), str[7], str[8], QLatin1Char(':'), QLatin1Char('/')) )
-      return QUrl::fromPercentEncoding( str.toLatin1() ).mid(7);
-    else if ( len > 8 && str.startsWith( QLatin1String( "file:/" ) )
-              && IS_DRIVE_OR_DOUBLESLASH(str[6].isLetter(), str[6], str[7], QLatin1Char(':'), QLatin1Char('/')) )
-      return QUrl::fromPercentEncoding( str.toLatin1() ).mid(6);
-  }
-  /* No 'else' here since there can be "f:/" path. */
-
-  /* '/' + drive letter or // */
-  if ( len > 2 && str[0] == QLatin1Char('/')
-       && IS_DRIVE_OR_DOUBLESLASH(str[1].isLetter(), str[1], str[2], QLatin1Char(':'), QLatin1Char('/')) )
-    return str.mid(1);
-  /* drive letter or // */
-  else if ( len >= 2 && IS_DRIVE_OR_DOUBLESLASH(str[0].isLetter(), str[0], str[1], QLatin1Char(':'), QLatin1Char('/')) )
-    return str;
-  return QString();
-}
-#endif
 
 bool KUrl::isRelativeUrl(const QString &_url)
 {
@@ -401,28 +360,6 @@ KUrl::KUrl( const QString &str )
   : QUrl(), d(0)
 {
   if ( !str.isEmpty() ) {
-#ifdef Q_WS_WIN
-#ifdef DEBUG_KURL
-    kDebug(kurlDebugArea()) << "KUrl::KUrl ( const QString &str = " << str.toLatin1().data() << " )";
-#endif
-    QString pathToSet;
-    // when it starts with file:// it's a url and must be valid. we don't care if the
-    // path exist/ is valid or not
-    if (!str.startsWith(QLatin1String("file://")))
-      pathToSet = removeSlashOrFilePrefix( QDir::fromNativeSeparators(str) );
-    if ( !pathToSet.isEmpty() ) {
-      // we have a prefix indicating this is a local URL
-      // remember the possible query using _setEncodedUrl(), then set up the correct path without query protocol part
-      int index = pathToSet.lastIndexOf(QLatin1Char('?'));
-      if (index == -1)
-        setPath( pathToSet );
-      else {
-        setPath( pathToSet.left( index ) );
-        _setQuery( pathToSet.mid( index + 1 ) );
-      }
-      return;
-    }
-#endif
     if ( str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~') )
       setPath( str );
     else {
@@ -434,29 +371,6 @@ KUrl::KUrl( const QString &str )
 KUrl::KUrl( const char * str )
   : QUrl(), d(0)
 {
-#ifdef Q_WS_WIN
-  // true if @a c is letter
-  #define IS_LETTER(c) \
-    ((c >= QLatin1Char('A') && c <= QLatin1Char('Z')) || (c >= QLatin1Char('a') && c <= QLatin1Char('z')))
-
-  // like IS_DRIVE_OR_DOUBLESLASH, but slash is prepended
-  #define IS_SLASH_AND_DRIVE_OR_DOUBLESLASH_0 \
-    ( QLatin1Char(str[0]) == QLatin1Char('/') && IS_DRIVE_OR_DOUBLESLASH(IS_LETTER(QLatin1Char(str[1])), QLatin1Char(str[1]), QLatin1Char(str[2]), QLatin1Char(':'), QLatin1Char('/')) )
-
-  // like IS_DRIVE_OR_DOUBLESLASH, with characters == str[0] and str[1]
-  #define IS_DRIVE_OR_DOUBLESLASH_0 \
-    ( IS_DRIVE_OR_DOUBLESLASH(IS_LETTER(QLatin1Char(str[0])), QLatin1Char(str[0]), QLatin1Char(str[1]), QLatin1Char(':'), QLatin1Char('/')) )
-
-#if defined(DEBUG_KURL)
-  kDebug(kurlDebugArea()) << "KUrl::KUrl " << " " << str;
-#endif
-  if ( str && str[0] && str[1] && str[2] ) {
-    if ( IS_SLASH_AND_DRIVE_OR_DOUBLESLASH_0 )
-      setPath( QString::fromUtf8( str+1 ) );
-    else if ( IS_DRIVE_OR_DOUBLESLASH_0 )
-      setPath( QString::fromUtf8( str ) );
-  }
-#endif
   if ( str && str[0] ) {
     if ( str[0] == '/' || str[0] == '~' )
       setPath( QString::fromUtf8( str ) );
@@ -469,18 +383,8 @@ KUrl::KUrl( const QByteArray& str )
    : QUrl(), d(0)
 {
   if ( !str.isEmpty() ) {
-#ifdef Q_WS_WIN
-#ifdef DEBUG_KURL
-    kDebug(kurlDebugArea()) << "KUrl::KUrl " << " " << str.data();
-#endif
-    if ( IS_SLASH_AND_DRIVE_OR_DOUBLESLASH_0 )
-      setPath( QString::fromUtf8( str.mid( 1 ) ) );
-    else if ( IS_DRIVE_OR_DOUBLESLASH_0 )
-      setPath( QString::fromUtf8( str ) );
-#else
     if ( str[0] == '/' || str[0] == '~' )
       setPath( QString::fromUtf8( str ) );
-#endif
     else
       _setEncodedUrl( str );
   }
@@ -489,25 +393,16 @@ KUrl::KUrl( const QByteArray& str )
 KUrl::KUrl( const KUrl& _u )
     : QUrl( _u ), d(0)
 {
-#if defined(Q_WS_WIN) && defined(DEBUG_KURL)
-    kDebug(kurlDebugArea()) << "KUrl::KUrl(KUrl) " << " path " << _u.path() << " toLocalFile " << _u.toLocalFile();
-#endif
 }
 
 KUrl::KUrl( const QUrl &u )
     : QUrl( u ), d(0)
 {
-#if defined(Q_WS_WIN) && defined(DEBUG_KURL)
-    kDebug(kurlDebugArea()) << "KUrl::KUrl(Qurl) " << " path " << u.path() << " toLocalFile " << u.toLocalFile();
-#endif
 }
 
 KUrl::KUrl( const KUrl& _u, const QString& _rel_url )
    : QUrl(), d(0)
 {
-#if defined(Q_WS_WIN) && defined(DEBUG_KURL)
-    kDebug(kurlDebugArea()) << "KUrl::KUrl(KUrl,QString rel_url) " << " path " << _u.path() << " toLocalFile " << _u.toLocalFile();
-#endif
 #if 0
   if (_u.hasSubUrl()) // Operate on the last suburl, not the first
   {
@@ -645,15 +540,6 @@ bool KUrl::equals( const KUrl &_u, const EqualsOptions& options ) const
             path2.clear();
     }
 
-#ifdef Q_WS_WIN
-    const bool bLocal1 = isLocalFile();
-    const bool bLocal2 = _u.isLocalFile();
-    if ( !bLocal1 && bLocal2 || bLocal1 && !bLocal2 )
-      return false;
-    // local files are case insensitive
-    if ( bLocal1 && bLocal2 && 0 != QString::compare( path1, path2, Qt::CaseInsensitive ) )
-      return false;
-#endif
     if ( path1 != path2 )
       return false;
 
@@ -872,14 +758,7 @@ void KUrl::setEncodedPathAndQuery( const QString& _txt )
 
 QString KUrl::path( AdjustPathOption trailing ) const
 {
-#ifdef Q_WS_WIN
-#ifdef DEBUG_KURL
-  kWarning() << (isLocalFile() ? "converted to local file - the related call should be converted to toLocalFile()" : "") << QUrl::path();
-#endif
-  return trailingSlash( trailing, isLocalFile() ? QUrl::toLocalFile() : QUrl::path() );
-#else
   return trailingSlash( trailing, QUrl::path() );
-#endif
 }
 
 QString KUrl::toLocalFile( AdjustPathOption trailing ) const
@@ -892,11 +771,9 @@ QString KUrl::toLocalFile( AdjustPathOption trailing ) const
 #ifdef __GNUC__
 #warning FIXME: Remove #ifdef below once upstream bug, QTBUG-20322, is fixed. Also see BR# 194746.
 #endif
-#ifndef Q_WS_WIN
     if (isLocalFile()) {
         return trailingSlash(trailing, QUrl::path());
     }
-#endif
     return trailingSlash(trailing, QUrl::toLocalFile());
 }
 
@@ -1123,10 +1000,6 @@ QString KUrl::prettyUrl( AdjustPathOption trailing ) const
   }
 
   tmp = path();
-#ifdef Q_WS_WIN
-  if (isLocalFile())
-    tmp.prepend(QLatin1Char('/')); // KUrl::path() returns toLocalFile() on windows so we need to add the / back to create a proper url
-#endif
   result += toPrettyPercentEncoding(tmp, false);
 
   // adjust the trailing slash, if necessary
@@ -1154,9 +1027,6 @@ QString KUrl::prettyUrl( int _trailing, AdjustementFlags _flags) const
   QString u = prettyUrl(_trailing);
   if (_flags & StripFileProtocol && u.startsWith("file://")) {
     u.remove(0, 7);
-#ifdef Q_WS_WIN
-    return QDir::convertSeparators(u);
-#endif
   }
   return u;
 }
@@ -1398,12 +1268,6 @@ QString KUrl::directory( const DirectoryOptions& options ) const
     return QString(QLatin1Char('/'));
   }
 
-#ifdef Q_WS_WIN
-  if ( i == 2 && result[1] == QLatin1Char(':') )
-  {
-    return result.left(3);
-  }
-#endif
 
   if ( options & AppendTrailingSlash )
     result = result.left( i + 1 );
@@ -1771,25 +1635,11 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
 
 void KUrl::setPath( const QString& _path )
 {
-#if defined(Q_WS_WIN) && defined(DEBUG_KURL)
-    kDebug(kurlDebugArea()) << "KUrl::setPath " << " " << _path.toLatin1().data();
-#endif
     if ( scheme().isEmpty() )
         setScheme( QLatin1String( "file" ) );
     QString path = KShell::tildeExpand( _path );
     if (path.isEmpty())
         path = _path;
-#ifdef Q_WS_WIN
-    const int len = path.length();
-    if( len == 2 && IS_LETTER(path[0]) && path[1] == QLatin1Char(':') )
-        path += QLatin1Char('/');
-    //This is necessary because QUrl has the "path" part including the first slash
-    //Without this QUrl doesn't understand that this is a path, and some operations fail
-    //e.g. C:/blah needs to become /C:/blah
-    else
-    if( len > 0 && path[0] != QLatin1Char('/') && scheme() == QLatin1String( "file" ) )
-        path = QLatin1Char('/') + path;
-#endif
     QUrl::setPath( path );
 }
 

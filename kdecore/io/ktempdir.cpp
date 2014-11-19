@@ -50,12 +50,6 @@
 #include <kdebug.h>
 #include "kde_file.h"
 
-#ifdef Q_WS_WIN
-#include <QtCore/QVarLengthArray>
-#include <windows.h>
-#include <shellapi.h>
-extern QString mkdtemp_QString (const QString &_template);
-#endif
 
 #ifdef _WIN32_WCE
 #include <shellapi.h>
@@ -86,28 +80,6 @@ bool KTempDir::create(const QString &directoryPrefix, int mode)
 {
    (void) KRandom::random();
 
-#ifdef Q_WS_WIN
-   const QString nme = directoryPrefix + QLatin1String("XXXXXX");
-   const QString realName = mkdtemp_QString(nme);
-   if(realName.isEmpty())
-   {
-       kWarning(180) << "KTempDir: Error trying to create " << nme
-		      << ": " << ::strerror(errno) << endl;
-       d->error = errno;
-       d->tmpName.clear();
-       return false;
-   }
-
-   // got a return value != 0
-   d->tmpName = realName + QLatin1Char('/');
-   kDebug(180) << "KTempDir: Temporary directory created :" << d->tmpName
-	        << endl;
-   mode_t umsk = KGlobal::umask();
-   KDE::chmod(nme, mode&(~umsk));
-
-   // Success!
-   d->exists = true;
-#else
    QByteArray nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
    char *realName;
    if((realName=mkdtemp(nme.data())) == 0)
@@ -147,7 +119,6 @@ bool KTempDir::create(const QString &directoryPrefix, int mode)
                      << ":" << ::strerror(errno);
    }
 
-#endif
    return true;
 }
 
@@ -195,7 +166,6 @@ void KTempDir::unlink()
     d->exists=false;
 }
 
-#ifndef Q_WS_WIN
 // Auxiliary recursive function for removeDirs
 static bool rmtree(const QByteArray& name)
 {
@@ -254,7 +224,6 @@ static bool rmtree(const QByteArray& name)
         return ! ::unlink( name );
     }
 }
-#endif
 
 bool KTempDir::removeDir( const QString& path )
 {
@@ -262,29 +231,7 @@ bool KTempDir::removeDir( const QString& path )
     if ( !QFile::exists( path ) )
         return true; // The goal is that there is no directory
 
-#ifdef Q_WS_WIN
-    QVarLengthArray<WCHAR, MAX_PATH> name;
-    name.resize( path.length() + 2 ); // double null terminated!
-    memcpy( name.data(), path.utf16(), path.length() * sizeof(WCHAR) );
-    name[path.length()     ] = 0;
-    name[path.length() + 1 ] = 0;
-    if(path.endsWith(QLatin1Char('/')) || path.endsWith(QLatin1Char('\\')))
-      name[path.length() - 1 ] = 0;
-    SHFILEOPSTRUCTW fileOp;
-    memset(&fileOp, 0, sizeof(SHFILEOPSTRUCTW) );
-    fileOp.wFunc = FO_DELETE;
-    fileOp.pFrom = (LPCWSTR)name.constData();
-    fileOp.fFlags = FOF_NOCONFIRMATION | FOF_SILENT;
-#ifdef _WIN32_WCE
-    // FOF_NOERRORUI is not defined in wince
-#else
-    fileOp.fFlags |= FOF_NOERRORUI;
-#endif
-    errno = SHFileOperationW( &fileOp );
-    return (errno == 0);
-#else
     const QByteArray cstr( QFile::encodeName( path ) );
     return rmtree( cstr );
-#endif
 }
 

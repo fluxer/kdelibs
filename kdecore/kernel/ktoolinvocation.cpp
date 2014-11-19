@@ -291,12 +291,7 @@ void KToolInvocation::invokeHelp( const QString& anchor,
     if ( !iface->isValid() )
     {
         QString error;
-#ifdef Q_WS_WIN
-        // startServiceByDesktopName() does not work yet; KRun:processDesktopExec returned 'KRun: syntax error in command "khelpcenter %u" , service "KHelpCenter" '
-        if (kdeinitExec(QLatin1String("khelpcenter"), QStringList() << url.url(), &error, 0, startup_id))
-#else
         if (startServiceByDesktopName(QLatin1String("khelpcenter"), url.url(), &error, 0, 0, startup_id, false))
-#endif
         {
             KMessage::message(KMessage::Error,
                               i18n("Could not launch the KDE Help Center:\n\n%1", error),
@@ -385,9 +380,7 @@ void KToolInvocation::startKdeinit()
 //  if ( gui )
 //    qApp->setOverrideCursor( Qt::WaitCursor );
   QStringList args;
-#ifndef Q_WS_WIN
   args += QString::fromLatin1("--suicide");
-#endif
   QProcess::execute(srv, args);
 //  if ( gui )
 //    qApp->restoreOverrideCursor();

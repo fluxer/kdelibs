@@ -61,9 +61,6 @@
 #include <sys/param.h>
 #include <kconfiggroup.h>
 
-#ifdef Q_WS_WIN
-#include <kkernel_win.h>
-#endif
 
 static bool expandTilde(QString&);
 static bool expandEnv(QString&);
@@ -1284,16 +1281,6 @@ void KUrlCompletion::postProcessMatch(QString* pMatch) const
 
             expandTilde(copy);
             expandEnv(copy);
-#ifdef Q_WS_WIN
-            DWORD dwAttr = GetFileAttributesW((LPCWSTR) copy.utf16());
-            if (dwAttr == INVALID_FILE_ATTRIBUTES) {
-                kDebug() << "Could not get file attribs ( "
-                         << GetLastError()
-                         << " ) for "
-                         << copy;
-            } else if ((dwAttr & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY)
-                pMatch->append(QLatin1Char('/'));
-#else
             if (QDir::isRelativePath(copy))
                 copy.prepend(d->cwd + QLatin1Char('/'));
 
@@ -1309,7 +1296,6 @@ void KUrlCompletion::postProcessMatch(QString* pMatch) const
             } else {
                 kDebug() << "Could not stat file" << copy;
             }
-#endif
         }
     }
 }

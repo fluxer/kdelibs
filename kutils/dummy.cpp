@@ -17,6 +17,3 @@ void _k__get_dummy_used()
     KIdleTime::instance();
 }
 
-#ifdef Q_WS_WIN
-__declspec(dllexport) int __dummy_function() { return 5; }
-#endif

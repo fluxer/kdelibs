@@ -109,9 +109,7 @@ static bool runFSDevice( const KUrl& _url, const KDesktopFile &cfg )
         if ( fstype == "Default" ) // KDE-1 thing
             fstype.clear();
         QString point = cg.readEntry( "MountPoint" );
-#ifndef Q_WS_WIN
         (void) new KAutoMount( ro, fstype.toLatin1(), dev, point, _url.toLocalFile() );
-#endif
         retval = false;
     }
 
@@ -318,17 +316,13 @@ void KDesktopFileActions::executeService( const KUrl::List& urls, const KService
                 if ( fstype == "Default" ) // KDE-1 thing
                     fstype.clear();
                 QString point = group.readEntry( "MountPoint" );
-#ifndef Q_WS_WIN
                 (void)new KAutoMount( ro, fstype.toLatin1(), dev, point, path, false );
-#endif
             } else if ( actionData == ST_UNMOUNT ) {
                 // Not mounted? Strange, but who knows ...
                 if ( !mp )
                     return;
 
-#ifndef Q_WS_WIN
                 (void)new KAutoUnmount( mp->mountPoint(), path );
-#endif
             }
         }
 #ifndef KIO_NO_SOLID

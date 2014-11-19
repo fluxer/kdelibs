@@ -37,9 +37,6 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#ifdef Q_WS_WIN
-#include <windows.h>
-#endif
 
 class KDirModelNode;
 class KDirModelDirNode;
@@ -715,24 +712,6 @@ QVariant KDirModel::data( const QModelIndex & index, int role ) const
 //                        slow
 //                        QDir dir(path);
 //                        count = dir.entryList(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::System).count();
-#ifdef Q_WS_WIN
-                        QString s = path + QLatin1String( "\\*.*" );
-                        s.replace('/', '\\');
-                        count = 0;
-                        WIN32_FIND_DATA findData;
-                        HANDLE hFile = FindFirstFile( (LPWSTR)s.utf16(), &findData );
-                        if( hFile != INVALID_HANDLE_VALUE ) {
-                            do {
-                                if (!( findData.cFileName[0] == '.' &&
-                                       findData.cFileName[1] == '\0' ) &&
-                                    !( findData.cFileName[0] == '.' &&
-                                       findData.cFileName[1] == '.' &&
-                                       findData.cFileName[2] == '\0' ) )
-                                    ++count;
-                            } while( FindNextFile( hFile, &findData ) != 0 );
-                            FindClose( hFile );
-                        }
-#else
                         DIR* dir = ::opendir(QFile::encodeName(path));
                         if (dir) {
                             count = 0;
@@ -748,7 +727,6 @@ QVariant KDirModel::data( const QModelIndex & index, int role ) const
                             }
                             ::closedir(dir);
                         }
-#endif
                         //kDebug(7008) << "child count for " << path << ":" << count;
                         dirNode->setChildCount(count);
                     }

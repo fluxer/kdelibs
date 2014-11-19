@@ -218,11 +218,7 @@ void KCookieServer::checkCookies(KHttpCookieList *cookieList, qlonglong windowId
                                      mCookieJar->preferredDefaultPolicy(),
                                      mCookieJar->showCookieDetails() );
     if (windowId > 0) {
-#ifndef Q_WS_WIN
         KWindowSystem::setMainWindow(kw, static_cast<WId>(windowId));
-#else
-        KWindowSystem::setMainWindow(kw, (HWND)(long)windowId);
-#endif
     }
 
     KCookieAdvice userAdvice = kw->advice(mCookieJar, currentCookie);

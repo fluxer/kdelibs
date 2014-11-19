@@ -92,9 +92,6 @@ Test_KLockFile::testLock()
 void
 Test_KLockFile::testStale()
 {
-#ifdef Q_WS_WIN
-    qDebug("unix stale lock support not implemented yet");
-#else
 	QVERIFY(lockFile->isLocked());
 
 	const int secs = 2;
@@ -115,7 +112,6 @@ Test_KLockFile::testStale()
 			QCOMPARE(host, QLatin1String(hostname));
 		QCOMPARE(app, QLatin1String("qttest")); // this is our KComponentData name
 	}
-#endif
 }
 
 void
@@ -130,9 +126,6 @@ Test_KLockFile::testUnlock()
 void
 Test_KLockFile::testStaleNoBlockFlag()
 {
-#ifdef Q_WS_WIN
-    QSKIP("lockfile on windows has different format",SkipSingle);
-#else
     char hostname[256];
     ::gethostname(hostname, sizeof(hostname));
 
@@ -151,7 +144,6 @@ Test_KLockFile::testStaleNoBlockFlag()
     QCOMPARE(lockFile->lock(KLockFile::NoBlockFlag|KLockFile::ForceFlag), KLockFile::LockOK);
 
     QVERIFY(lockFile->isLocked());
-#endif
 }
 
 

@@ -343,14 +343,8 @@ struct KIEImgEdit
 
 static bool painterSupportsAntialiasing()
 {
-#ifdef Q_WS_WIN
-   // apparently QApplication::desktop()->paintEngine() is null on windows
-   // but we can assume the paint engine supports antialiasing there, right?
-   return true;
-#else
    QPaintEngine* const pe = QApplication::desktop()->paintEngine();
    return pe && pe->hasFeature(QPaintEngine::Antialiasing);
-#endif
 }
 
 // Taken from KImageEffect. We don't want to link kdecore to kdeui! As long

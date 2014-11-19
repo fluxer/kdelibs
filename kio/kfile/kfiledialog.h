@@ -749,10 +749,6 @@ public:
      */
     static void setStartDir( const KUrl& directory );
 
-#ifdef Q_WS_WIN
-public Q_SLOTS:
-    int exec();
-#endif
 
 Q_SIGNALS:
     /**

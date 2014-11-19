@@ -47,11 +47,7 @@ QTEST_KDEMAIN( KDirModelTest, NoGUI )
 
 #define connect(a,b,c,d) QVERIFY(QObject::connect(a,b,c,d))
 
-#ifndef Q_WS_WIN
 #define SPECIALCHARS "specialchars%:.pdf"
-#else
-#define SPECIALCHARS "specialchars%.pdf"
-#endif
 
 Q_DECLARE_METATYPE(KFileItemList)
 
@@ -700,13 +696,11 @@ void KDirModelTest::testExpandToUrl_data()
     QTest::newRow("subdir/subsubdir/testfile sync")
         << int(NoFlag) << subsubdirfile << (QStringList()<<"subdir"<<subsubdir<<subsubdirfile);
 
-#ifndef Q_WS_WIN
     // Expand a symlink to a directory (#219547)
     const QString dirlink = m_tempDir->name() + "dirlink";
     createTestSymlink(dirlink, "/");
     QTest::newRow("dirlink")
         << int(NoFlag) << "dirlink/tmp" << (QStringList()<<"dirlink"<<"dirlink/tmp");
-#endif
 
     // Do a cold-cache test too, but nowadays it doesn't change anything anymore,
     // apart from testing different code paths inside KDirLister.

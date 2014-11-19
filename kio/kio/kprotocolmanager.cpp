@@ -653,8 +653,6 @@ static QString platform()
     return QL1S("X11");
 #elif defined(Q_WS_MAC)
     return QL1S("Macintosh");
-#elif defined(Q_WS_WIN)
-     return QL1S("Windows");
 #elif defined(Q_WS_S60)
      return QL1S("Symbian");
 #endif
@@ -863,28 +861,8 @@ bool KProtocolManager::getSystemNameVersionAndMachine(
   struct utsname unameBuf;
   if ( 0 != uname( &unameBuf ) )
     return false;
-#if defined(Q_WS_WIN) && !defined(_WIN32_WCE)
-  // we do not use unameBuf.sysname information constructed in kdewin32
-  // because we want to get separate name and version
-  systemName = QL1S( "Windows" );
-  OSVERSIONINFOEX versioninfo;
-  ZeroMemory(&versioninfo, sizeof(OSVERSIONINFOEX));
-  // try calling GetVersionEx using the OSVERSIONINFOEX, if that fails, try using the OSVERSIONINFO
-  versioninfo.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-  bool ok = GetVersionEx( (OSVERSIONINFO *) &versioninfo );
-  if ( !ok ) {
-    versioninfo.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
-    ok = GetVersionEx( (OSVERSIONINFO *) &versioninfo );
-  }
-  if ( ok ) {
-    systemVersion = QString::number(versioninfo.dwMajorVersion);
-    systemVersion +=  QL1C('.');
-    systemVersion += QString::number(versioninfo.dwMinorVersion);
-  }
-#else
   systemName = unameBuf.sysname;
   systemVersion = unameBuf.release;
-#endif
   machine = unameBuf.machine;
   return true;
 }

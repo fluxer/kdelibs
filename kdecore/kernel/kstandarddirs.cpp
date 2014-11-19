@@ -54,18 +54,6 @@
 #include <dirent.h>
 #include <pwd.h>
 #include <grp.h>
-#ifdef Q_WS_WIN
-#include <windows.h>
-#ifdef _WIN32_WCE
-#include <basetyps.h>
-#endif
-#ifdef Q_WS_WIN64
-// FIXME: did not find a reliable way to fix with kdewin mingw header
-#define interface struct
-#endif
-#include <shlobj.h>
-#include <QtCore/QVarLengthArray>
-#endif
 
 #include <QtCore/QMutex>
 #include <QtCore/QRegExp>
@@ -619,46 +607,6 @@ static void lookupDirectory(const QString& path, const QString &relPart,
     {
         if (path.isEmpty()) //for sanity
             return;
-#ifdef Q_WS_WIN
-        QString path_ = path + QLatin1String( "*.*" );
-        WIN32_FIND_DATA findData;
-        HANDLE hFile = FindFirstFile( (LPWSTR)path_.utf16(), &findData );
-        if( hFile == INVALID_HANDLE_VALUE )
-            return;
-        do {
-            const int len = wcslen( findData.cFileName );
-            if (!( findData.cFileName[0] == '.' &&
-                   findData.cFileName[1] == '\0' ) &&
-                !( findData.cFileName[0] == '.' &&
-                   findData.cFileName[1] == '.' &&
-                   findData.cFileName[2] == '\0' ) &&
-                 ( findData.cFileName[len-1] != '~' ) ) {
-                QString fn = QString::fromUtf16( (const unsigned short*)findData.cFileName );
-                if (!recursive && !regexp.exactMatch(fn))
-                    continue; // No match
-                QString pathfn = path + fn;
-                bool bIsDir = ( ( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY );
-                if ( recursive ) {
-                    if ( bIsDir ) {
-                        lookupDirectory(pathfn + QLatin1Char('/'),
-                                        relPart + fn + QLatin1Char('/'),
-                                        regexp, list, relList, recursive, unique);
-                    }
-                    if (!regexp.exactMatch(fn))
-                        continue; // No match
-                }
-                if ( !bIsDir )
-                {
-                    if ( !unique || !relList.contains(relPart + fn, cs) )
-                    {
-                        list.append( pathfn );
-                        relList.append( relPart + fn );
-                    }
-                }
-            }
-        } while( FindNextFile( hFile, &findData ) != 0 );
-        FindClose( hFile );
-#else
         // We look for a set of files.
         DIR *dp = opendir( QFile::encodeName(path));
         if (!dp)
@@ -714,7 +662,6 @@ static void lookupDirectory(const QString& path, const QString &relPart,
             }
         }
         closedir( dp );
-#endif
     }
     else
     {
@@ -762,39 +709,12 @@ static void lookupPrefix(const QString& prefix, const QString& relpath,
 
     if (prefix.isEmpty()) //for sanity
         return;
-#ifndef Q_WS_WIN
     // what does this assert check ?
     assert(prefix.endsWith(QLatin1Char('/')));
-#endif
     if (path.contains(QLatin1Char('*')) || path.contains(QLatin1Char('?'))) {
 
         QRegExp pathExp(path, Qt::CaseSensitive, QRegExp::Wildcard);
 
-#ifdef Q_WS_WIN
-        QString prefix_ = prefix + QLatin1String( "*.*" );
-        WIN32_FIND_DATA findData;
-        HANDLE hFile = FindFirstFile( (LPWSTR)prefix_.utf16(), &findData );
-        if( hFile == INVALID_HANDLE_VALUE )
-            return;
-        do {
-            const int len = wcslen( findData.cFileName );
-            if (!( findData.cFileName[0] == '.' &&
-                   findData.cFileName[1] == '\0' ) &&
-                !( findData.cFileName[0] == '.' &&
-                   findData.cFileName[1] == '.' &&
-                   findData.cFileName[2] == '\0' ) &&
-                 ( findData.cFileName[len-1] != '~' ) ) {
-                const QString fn = QString::fromUtf16( (const unsigned short*)findData.cFileName );
-                if ( !pathExp.exactMatch(fn) )
-                    continue; // No match
-                if ( ( findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == FILE_ATTRIBUTE_DIRECTORY )
-                    lookupPrefix(prefix + fn + QLatin1Char('/'),
-                                 rest, relPart + fn + QLatin1Char('/'),
-                                 regexp, list, relList, recursive, unique);
-            }
-        } while( FindNextFile( hFile, &findData ) != 0 );
-        FindClose( hFile );
-#else
         DIR *dp = opendir( QFile::encodeName(prefix) );
         if (!dp) {
             return;
@@ -834,7 +754,6 @@ static void lookupPrefix(const QString& prefix, const QString& relpath,
         }
 
         closedir( dp );
-#endif
     } else {
         // Don't stat, if the dir doesn't exist we will find out
         // when we try to open it.
@@ -913,12 +832,6 @@ KStandardDirs::findAllResources( const char *type,
 QString
 KStandardDirs::realPath(const QString &dirname)
 {
-#ifdef Q_WS_WIN
-    const QString strRet = realFilePath(dirname);
-    if (!strRet.endsWith(QLatin1Char('/')))
-        return strRet + QLatin1Char('/');
-    return strRet;
-#else
     if (dirname.isEmpty() || (dirname.size() == 1 && dirname.at(0) == QLatin1Char('/')))
        return dirname;
 
@@ -961,7 +874,6 @@ KStandardDirs::realPath(const QString &dirname)
         dir = realPath(dir) + relative;
     }
     return dir;
-#endif
 }
 
 // ####### KDE4: should this be removed, in favor of QDir::canonicalPath()?
@@ -972,18 +884,6 @@ KStandardDirs::realPath(const QString &dirname)
 QString
 KStandardDirs::realFilePath(const QString &filename)
 {
-#ifdef Q_WS_WIN
-    LPCWSTR lpIn = (LPCWSTR)filename.utf16();
-    QVarLengthArray<WCHAR, MAX_PATH> buf(MAX_PATH);
-    DWORD len = GetFullPathNameW(lpIn, buf.size(), buf.data(), NULL);
-    if (len > (DWORD)buf.size()) {
-        buf.resize(len);
-        len = GetFullPathNameW(lpIn, buf.size(), buf.data(), NULL);
-    }
-    if (len == 0)
-        return QString();
-    return QString::fromUtf16((const unsigned short*)buf.data()).replace(QLatin1Char('\\'),QLatin1Char('/'));
-#else
     char realpath_buffer[MAXPATHLEN + 1];
     memset(realpath_buffer, 0, MAXPATHLEN + 1);
 
@@ -994,7 +894,6 @@ KStandardDirs::realFilePath(const QString &filename)
     }
 
     return filename;
-#endif
 }
 
 
@@ -1032,15 +931,6 @@ void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type
             }
         }
     }
-#ifdef Q_WS_WIN
-    if (relink)
-    {
-        if (!makeDir(dir, 0700))
-            fprintf(stderr, "failed to create \"%s\"", qPrintable(dir));
-        else
-            result = readlink(QFile::encodeName(dir).constData(), link, 1023);
-    }
-#else //UNIX
     if (relink)
     {
         QString srv = findExe(QLatin1String("lnusertemp"), installPath("libexec"));
@@ -1062,7 +952,6 @@ void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type
         else
             dir = QDir::cleanPath(dir + QFile::decodeName(link));
     }
-#endif
     q->addResourceDir(type, dir + QLatin1Char('/'), false);
 }
 
@@ -1438,14 +1327,6 @@ int KStandardDirs::findAllExe( QStringList& list, const QString& appname,
 
 static inline QString equalizePath(QString &str)
 {
-#ifdef Q_WS_WIN
-    // filter pathes through QFileInfo to have always
-    // the same case for drive letters
-    QFileInfo f(str);
-    if (f.isAbsolute())
-        return f.absoluteFilePath();
-    else
-#endif
         return str;
 }
 
@@ -1574,9 +1455,6 @@ bool KStandardDirs::makeDir(const QString& dir, int mode)
     if (QDir::isRelativePath(dir))
         return false;
 
-#ifdef Q_WS_WIN
-    return QDir().mkpath(dir);
-#else
     QString target = dir;
     uint len = target.length();
 
@@ -1610,7 +1488,6 @@ bool KStandardDirs::makeDir(const QString& dir, int mode)
         i = pos + 1;
     }
     return true;
-#endif
 }
 
 static QString readEnvPath(const char *env)
@@ -1715,17 +1592,6 @@ void KStandardDirs::addKDEDefaults()
 
 #if defined(Q_WS_MACX)
         localKdeDir =  QDir::homePath() + QLatin1String("/Library/Preferences/KDE/");
-#elif defined(Q_WS_WIN)
-#ifndef _WIN32_WCE
-        WCHAR wPath[MAX_PATH+1];
-        if ( SHGetFolderPathW(NULL, CSIDL_APPDATA, NULL, SHGFP_TYPE_CURRENT, wPath) == S_OK) {
-          localKdeDir = QDir::fromNativeSeparators(QString::fromUtf16((const ushort *) wPath)) + QLatin1Char('/') + QString::fromLatin1(KDE_DEFAULT_HOME) + QLatin1Char('/');
-        } else {
-#endif
-          localKdeDir =  QDir::homePath() + QLatin1Char('/') + QString::fromLatin1(KDE_DEFAULT_HOME) + QLatin1Char('/');
-#ifndef _WIN32_WCE
-        }
-#endif
 #else
         localKdeDir =  QDir::homePath() + QLatin1Char('/') + QString::fromLatin1(KDE_DEFAULT_HOME) + QLatin1Char('/');
 #endif
@@ -1769,11 +1635,7 @@ void KStandardDirs::addKDEDefaults()
     {
         xdgdirList.clear();
         xdgdirList.append(QString::fromLatin1("/etc/xdg"));
-#ifdef Q_WS_WIN
-        xdgdirList.append(installPath("kdedir") + QString::fromLatin1("etc/xdg"));
-#else
         xdgdirList.append(QFile::decodeName(KDESYSCONFDIR "/xdg"));
-#endif
     }
 
     QString localXdgDir = readEnvPath("XDG_CONFIG_HOME");
@@ -1821,10 +1683,8 @@ void KStandardDirs::addKDEDefaults()
         }
     } else {
         xdgdirList = kdedirDataDirs;
-#ifndef Q_WS_WIN
         xdgdirList.append(QString::fromLatin1("/usr/local/share/"));
         xdgdirList.append(QString::fromLatin1("/usr/share/"));
-#endif
     }
 
     localXdgDir = readEnvPath("XDG_DATA_HOME");

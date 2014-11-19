@@ -242,11 +242,7 @@ void PushButton::setImage(const QString &path)
     d->imagePath = path;
 
     bool absolutePath = !path.isEmpty() &&
-                        #ifdef Q_WS_WIN
-                            !QDir::isRelativePath(path)
-                        #else
                             (path[0] == '/' || path.startsWith(QLatin1String(":/")))
-                        #endif
         ;
 
     if (absolutePath) {

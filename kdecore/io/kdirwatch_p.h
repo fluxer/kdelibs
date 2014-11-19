@@ -73,41 +73,7 @@ class QSocketNotifier;
 #ifdef HAVE_QFILESYSTEMWATCHER
 #include <QtCore/QFileSystemWatcher>
 
-#if defined Q_WS_WIN
-/* Helper implemented as a workaround for limitation on Windows:
- * the maximum number of object handles is MAXIMUM_WAIT_OBJECTS (64) per thread.
- *
- * From http://msdn.microsoft.com/en-us/library/ms687025(VS.85).aspx
- * "To wait on more than MAXIMUM_WAIT_OBJECTS handles, create a thread to wait
- *  on MAXIMUM_WAIT_OBJECTS handles, then wait on that thread plus the other handles.
- *  Use this technique to break the handles into groups of MAXIMUM_WAIT_OBJECTS."
- *
- * QFileSystemWatcher is implemented as thread, so KFileSystemWatcher
- * allocates more QFileSystemWatcher instances on demand (and deallocates them later).
- */
-class KFileSystemWatcher : public QObject
-{
-  Q_OBJECT
-public:
-  KFileSystemWatcher();
-  ~KFileSystemWatcher();
-  void addPath(const QString &file);
-  void removePath(const QString &file);
-
-Q_SIGNALS:
-    void fileChanged(const QString &path);
-    void directoryChanged(const QString &path);
-
-private:
-  QFileSystemWatcher* availableWatcher();
-  QFileSystemWatcher* m_recentWatcher;
-  QList<QFileSystemWatcher*> m_watchers;
-  QHash<QFileSystemWatcher*, uint> m_usedObjects;
-  QHash<QString,QFileSystemWatcher*> m_paths;
-};
-#else
 typedef QFileSystemWatcher KFileSystemWatcher;
-#endif
 #endif
 
 /* KDirWatchPrivate is a singleton and does the watching

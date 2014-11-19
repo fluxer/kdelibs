@@ -812,49 +812,6 @@ void KMainWindow::applyMainWindowSettings(const KConfigGroup &cg, bool force)
     d->letDirtySettings = oldLetDirtySettings;
 }
 
-#ifdef Q_WS_WIN
-
-/*
- The win32 implementation for restoring/savin windows size differs
- from the unix/max implementation in three topics:
-
-1. storing and restoring the position, which may not work on x11
-    see http://doc.trolltech.com/4.3/geometry.html#x11-peculiarities
-2. using QWidget::saveGeometry() and QWidget::restoreGeometry()
-    this would probably be usable on x11 and/or on mac, but I'm unable to
-    check this on unix/mac, so I leave this fix to the x11/mac experts.
-3. store geometry separately for each resolution -> on unix/max the size
-    and with of the window are already saved separately on non windows
-    system although not using ...Geometry functions -> could also be
-    fixed by x11/mac experts.
-*/
-void KMainWindow::restoreWindowSize( const KConfigGroup & _cg )
-{
-    K_D(KMainWindow);
-
-    int scnum = QApplication::desktop()->screenNumber(window());
-    QRect desk = QApplication::desktop()->screenGeometry(scnum);
-
-    QString geometryKey = QString::fromLatin1("geometry-%1-%2").arg(desk.width()).arg(desk.height());
-    QByteArray geometry = _cg.readEntry( geometryKey, QByteArray() );
-    // if first time run, center window
-    if (!restoreGeometry( QByteArray::fromBase64(geometry) ))
-        move( (desk.width()-width())/2, (desk.height()-height())/2 );
-}
-
-void KMainWindow::saveWindowSize( const KConfigGroup & _cg ) const
-{
-    K_D(const KMainWindow);
-    int scnum = QApplication::desktop()->screenNumber(window());
-    QRect desk = QApplication::desktop()->screenGeometry(scnum);
-
-    // geometry is saved separately for each resolution
-    QString geometryKey = QString::fromLatin1("geometry-%1-%2").arg(desk.width()).arg(desk.height());
-    QByteArray geometry = saveGeometry();
-    KConfigGroup cg(_cg);
-    cg.writeEntry( geometryKey, geometry.toBase64() );
-}
-#else
 void KMainWindow::saveWindowSize( const KConfigGroup & _cg ) const
 {
     K_D(const KMainWindow);
@@ -932,7 +889,6 @@ void KMainWindow::restoreWindowSize( const KConfigGroup & config )
         }
     }
 }
-#endif
 
 bool KMainWindow::initialGeometrySet() const
 {
@@ -1020,9 +976,6 @@ bool KMainWindow::event( QEvent* ev )
 {
     K_D(KMainWindow);
     switch( ev->type() ) {
-#ifdef Q_WS_WIN
-    case QEvent::Move:
-#endif
     case QEvent::Resize:
         d->setSizeDirty();
         break;

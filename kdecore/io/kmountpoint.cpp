@@ -28,10 +28,6 @@
 
 #include "kstandarddirs.h"
 
-#ifdef Q_WS_WIN
-#include <windows.h>
-#include <QDir>
-#endif
 
 #ifdef Q_OS_WIN
 static Qt::CaseSensitivity cs = Qt::CaseInsensitive;
@@ -207,9 +203,6 @@ void KMountPoint::Private::finalizeCurrentMountPoint(DetailsNeededFlags infoNeed
 
 KMountPoint::List KMountPoint::possibleMountPoints(DetailsNeededFlags infoNeeded)
 {
-#ifdef Q_WS_WIN
-    return KMountPoint::currentMountPoints(infoNeeded);
-#endif
 
     KMountPoint::List result;
 
@@ -400,22 +393,6 @@ KMountPoint::List KMountPoint::currentMountPoints(DetailsNeededFlags infoNeeded)
     }
 
     free( mntctl_buffer );
-#elif defined(Q_WS_WIN) && !defined(_WIN32_WCE)
-	//nothing fancy with infoNeeded but it gets the job done
-    DWORD bits = GetLogicalDrives();
-    if(!bits)
-        return result;
-
-    for(int i = 0; i < 26; i++)
-    {
-        if(bits & (1 << i))
-        {
-            Ptr mp(new KMountPoint);
-            mp->d->mountPoint = QString(QLatin1Char('A' + i) + QLatin1String(":/"));
-            result.append(mp);
-        }
-    }
-
 #elif defined(_WIN32_WCE)
 	Ptr mp(new KMountPoint);
     mp->d->mountPoint = QString("/");
@@ -501,12 +478,8 @@ static bool pathsAreParentAndChildOrEqual(const QString& parent, const QString& 
 
 KMountPoint::Ptr KMountPoint::List::findByPath(const QString& path) const
 {
-#ifndef Q_WS_WIN
     /* If the path contains symlinks, get the real name */
     const QString realname = KStandardDirs::realFilePath(path);
-#else
-    const QString realname = QDir::fromNativeSeparators(QDir(path).absolutePath());
-#endif
 
     int max = 0;
     KMountPoint::Ptr result;

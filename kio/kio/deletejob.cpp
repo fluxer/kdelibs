@@ -287,11 +287,7 @@ void DeleteJobPrivate::deleteNextFile()
             }
             // Normal deletion
             // If local file, try do it directly
-#ifdef Q_WS_WIN
-            if ( (*it).isLocalFile() && DeleteFileW( (LPCWSTR)(*it).toLocalFile().utf16() ) != 0 ) {
-#else
             if ( (*it).isLocalFile() && unlink( QFile::encodeName((*it).toLocalFile()) ) == 0 ) {
-#endif
                 //kdDebug(7007) << "DeleteJob deleted" << (*it).toLocalFile();
                 job = 0;
                 m_processedFiles++;
@@ -333,11 +329,7 @@ void DeleteJobPrivate::deleteNextDir()
             // Take first dir to delete out of list - last ones first !
             KUrl::List::iterator it = --dirs.end();
             // If local dir, try to rmdir it directly
-#ifdef Q_WS_WIN
-            if ( (*it).isLocalFile() && RemoveDirectoryW( (LPCWSTR)(*it).toLocalFile().utf16() ) != 0 ) {
-#else
             if ( (*it).isLocalFile() && ::rmdir( QFile::encodeName((*it).toLocalFile()) ) == 0 ) {
-#endif
                 m_processedDirs++;
                 if ( m_processedDirs % 100 == 1 ) { // update progress info every 100 dirs
                     m_currentURL = *it;

@@ -91,13 +91,8 @@ void KStandarddirsTest::testFindResource()
     if ( !isKdelibsInstalled() )
         QSKIP( "kdelibs not installed", SkipAll );
 
-#ifdef Q_WS_WIN
-#define EXT ".exe"
-#define KIOSLAVE "bin/kioslave.exe"
-#else
 #define EXT ""
 #define KIOSLAVE "kde4/libexec/kioslave"
-#endif
     const QString bin = KGlobal::dirs()->findResource( "exe", "kioslave" EXT );
     QVERIFY( !bin.isEmpty() );
     QVERIFY( bin.endsWith( KIOSLAVE ) );

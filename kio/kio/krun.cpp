@@ -80,8 +80,6 @@
 
 #ifdef Q_WS_X11
 #include <kwindowsystem.h>
-#elif defined(Q_WS_WIN)
-#include <QDesktopServices>
 #endif
 
 KRun::KRunPrivate::KRunPrivate(KRun *parent)
@@ -106,9 +104,6 @@ bool KRun::isExecutableFile(const KUrl& url, const QString &mimetype)
     if (file.isExecutable()) {    // Got a prospective file to run
         KMimeType::Ptr mimeType = KMimeType::mimeType(mimetype, KMimeType::ResolveAliases);
         if (mimeType && (mimeType->is(QLatin1String("application/x-executable")) ||
-#ifdef Q_WS_WIN
-                         mimeType->is(QLatin1String("application/x-ms-dos-executable")) ||
-#endif
                          mimeType->is(QLatin1String("application/x-executable-script")))
            )
         {
@@ -175,16 +170,10 @@ bool KRun::runUrl(const KUrl& u, const QString& _mimetype, QWidget* window, bool
     KService::Ptr offer = KMimeTypeTrader::self()->preferredService(_mimetype);
 
     if (!offer) {
-#ifdef Q_WS_WIN
-        // As KDE on windows doesnt know about the windows default applications offers will be empty in nearly all cases.
-        // So we use QDesktopServices::openUrl to let windows decide how to open the file
-        return QDesktopServices::openUrl(u);
-#else
         // Open-with dialog
         // TODO : pass the mimetype as a parameter, to show it (comment field) in the dialog !
         // Hmm, in fact KOpenWithDialog::setServiceType already guesses the mimetype from the first URL of the list...
         return displayOpenWithDialog(lst, window, tempFile, suggestedFileName, asn);
-#endif
     }
 
     return KRun::run(*offer, lst, window, tempFile, suggestedFileName, asn);
@@ -199,13 +188,6 @@ bool KRun::displayOpenWithDialog(const KUrl::List& lst, QWidget* window, bool te
         return false;
     }
 
-#ifdef Q_WS_WIN
-    KConfigGroup cfgGroup(KGlobal::config(), "KOpenWithDialog Settings");
-    if (cfgGroup.readEntry("Native", true)) {
-        return KRun::KRunPrivate::displayNativeOpenWithDialog(lst, window, tempFiles,
-                suggestedFileName, asn);
-    }
-#endif
     KOpenWithDialog l(lst, i18n("Open with:"), QString(), window);
     l.setWindowModality(Qt::WindowModal);
     if (l.exec()) {

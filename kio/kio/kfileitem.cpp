@@ -690,11 +690,6 @@ QString KFileItemPrivate::user() const
 {
     QString userName = m_entry.stringValue(KIO::UDSEntry::UDS_USER);
     if (userName.isEmpty() && m_bIsLocalUrl) {
-#ifdef Q_WS_WIN
-        QFileInfo a(m_url.toLocalFile( KUrl::RemoveTrailingSlash ));
-        userName = a.owner();
-        m_entry.insert( KIO::UDSEntry::UDS_USER, userName );
-#else
         KDE_struct_stat buff;
         if ( KDE::lstat( m_url.toLocalFile( KUrl::RemoveTrailingSlash ), &buff ) == 0) // get uid/gid of the link, if it's a link
         {
@@ -704,7 +699,6 @@ QString KFileItemPrivate::user() const
                 m_entry.insert( KIO::UDSEntry::UDS_USER, userName );
             }
         }
-#endif
     }
     return userName;
 }
@@ -722,11 +716,6 @@ QString KFileItemPrivate::group() const
     QString groupName = m_entry.stringValue( KIO::UDSEntry::UDS_GROUP );
     if (groupName.isEmpty() && m_bIsLocalUrl )
     {
-#ifdef Q_WS_WIN
-        QFileInfo a(m_url.toLocalFile( KUrl::RemoveTrailingSlash ));
-        groupName = a.group();
-        m_entry.insert( KIO::UDSEntry::UDS_GROUP, groupName );
-#else
         KDE_struct_stat buff;
         if ( KDE::lstat( m_url.toLocalFile( KUrl::RemoveTrailingSlash ), &buff ) == 0) // get uid/gid of the link, if it's a link
         {
@@ -740,7 +729,6 @@ QString KFileItemPrivate::group() const
                 groupName.sprintf("%d",buff.st_gid);
             m_entry.insert( KIO::UDSEntry::UDS_GROUP, groupName );
         }
-#endif
     }
     return groupName;
 }
@@ -1254,11 +1242,9 @@ QString KFileItem::getToolTipText(int maxcount) const
 
     tip += start + i18n("Modified:") + mid +
            timeString( KFileItem::ModificationTime ) + end
-#ifndef Q_WS_WIN //TODO: show win32-specific permissions
            +start + i18n("Owner:") + mid + user() + " - " + group() + end +
            start + i18n("Permissions:") + mid +
            permissionsString() + end
-#endif
            ;
 
     if (info.isValid())

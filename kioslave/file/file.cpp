@@ -61,10 +61,6 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QRegExp>
 #include <QtCore/QFile>
-#ifdef Q_WS_WIN
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#endif
 
 #include <kdebug.h>
 #include <kurl.h>

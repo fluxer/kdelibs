@@ -56,10 +56,8 @@ static QString destDir() { return homeTmpDir() + "destdir/"; }
 static QString srcFile() { return homeTmpDir() + "testfile"; }
 static QString destFile() { return destDir() + "testfile"; }
 
-#ifndef Q_WS_WIN
 static QString srcLink() { return homeTmpDir() + "symlink"; }
 static QString destLink() { return destDir() + "symlink"; }
-#endif
 
 static QString srcSubDir() { return homeTmpDir() + "subdir"; }
 static QString destSubDir() { return destDir() + "subdir"; }
@@ -68,9 +66,7 @@ static KUrl::List sourceList()
 {
     KUrl::List lst;
     lst << KUrl( srcFile() );
-#ifndef Q_WS_WIN
     lst << KUrl( srcLink() );
-#endif
     return lst;
 }
 
@@ -104,9 +100,7 @@ static void checkTestDirectory( const QString& path )
 {
     QVERIFY( QFileInfo( path ).isDir() );
     QVERIFY( QFileInfo( path + "/fileindir" ).isFile() );
-#ifndef Q_WS_WIN
     QVERIFY( QFileInfo( path + "/testlink" ).isSymLink() );
-#endif
     QVERIFY( QFileInfo( path + "/dirindir" ).isDir() );
     QVERIFY( QFileInfo( path + "/dirindir/nested" ).isFile() );
 }
@@ -118,9 +112,7 @@ static void createTestDirectory( const QString& path )
     if ( !ok )
         kFatal() << "couldn't create " << path ;
     createTestFile( path + "/fileindir", "File in dir" );
-#ifndef Q_WS_WIN
     createTestSymlink( path + "/testlink" );
-#endif
     ok = dir.mkdir( path + "/dirindir" );
     if ( !ok )
         kFatal() << "couldn't create " << path ;
@@ -181,9 +173,7 @@ void FileUndoManagerTest::initTestCase()
     }
 
     createTestFile( srcFile(), "Hello world" );
-#ifndef Q_WS_WIN
     createTestSymlink( srcLink() );
-#endif
     createTestDirectory( srcSubDir() );
 
     QDir().mkdir( destDir() );
@@ -231,10 +221,8 @@ void FileUndoManagerTest::testCopyFiles()
     QVERIFY( ok );
 
     QVERIFY( QFile::exists( destFile() ) );
-#ifndef Q_WS_WIN
     // Don't use QFile::exists, it's a broken symlink...
     QVERIFY( QFileInfo( destLink() ).isSymLink() );
-#endif
 
     // might have to wait for dbus signal here... but this is currently disabled.
     //QTest::qWait( 20 );
@@ -262,10 +250,8 @@ void FileUndoManagerTest::testCopyFiles()
 
     // Check that undo worked
     QVERIFY( !QFile::exists( destFile() ) );
-#ifndef Q_WS_WIN
     QVERIFY( !QFile::exists( destLink() ) );
     QVERIFY( !QFileInfo( destLink() ).isSymLink() );
-#endif
 }
 
 void FileUndoManagerTest::testMoveFiles()
@@ -283,20 +269,16 @@ void FileUndoManagerTest::testMoveFiles()
 
     QVERIFY( !QFile::exists( srcFile() ) ); // the source moved
     QVERIFY( QFile::exists( destFile() ) );
-#ifndef Q_WS_WIN
     QVERIFY( !QFileInfo( srcLink() ).isSymLink() );
     // Don't use QFile::exists, it's a broken symlink...
     QVERIFY( QFileInfo( destLink() ).isSymLink() );
-#endif
 
     doUndo();
 
     QVERIFY( QFile::exists( srcFile() ) ); // the source is back
     QVERIFY( !QFile::exists( destFile() ) );
-#ifndef Q_WS_WIN
     QVERIFY( QFileInfo( srcLink() ).isSymLink() );
     QVERIFY( !QFileInfo( destLink() ).isSymLink() );
-#endif
 }
 
 // Testing for overwrite isn't possible, because non-interactive jobs never overwrite.
@@ -447,9 +429,7 @@ void FileUndoManagerTest::testTrashFiles()
 
     // Check that things got removed
     QVERIFY( !QFile::exists( srcFile() ) );
-#ifndef Q_WS_WIN
     QVERIFY( !QFileInfo( srcLink() ).isSymLink() );
-#endif
     QVERIFY( !QFile::exists( srcSubDir() ) );
 
     // check trash?
@@ -461,9 +441,7 @@ void FileUndoManagerTest::testTrashFiles()
     doUndo();
 
     QVERIFY( QFile::exists( srcFile() ) );
-#ifndef Q_WS_WIN
     QVERIFY( QFileInfo( srcLink() ).isSymLink() );
-#endif
     QVERIFY( QFile::exists( srcSubDir() ) );
 
     // We can't check that the trash is empty; other partitions might have their own trash
