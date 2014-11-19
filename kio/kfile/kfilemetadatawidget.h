@@ -30,8 +30,6 @@
 class KUrl;
 
 /**
- * @deprecated since 4.12 use Nepomuk2::FileMetaDataWidget
- *
  * @brief Shows the meta data of one or more file items.
  *
  * Meta data like name, size, rating, comment, ... are
@@ -43,7 +41,7 @@ class KUrl;
  *
  * @since 4.5
  */
-class KIO_EXPORT_DEPRECATED KFileMetaDataWidget : public QWidget
+class KIO_EXPORT KFileMetaDataWidget : public QWidget
 {
     Q_OBJECT
     Q_PROPERTY(bool readOnly READ isReadOnly WRITE setReadOnly)
