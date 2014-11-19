@@ -120,9 +120,9 @@ share/sounds
 locale
 share/locale
 services
-share/kde4/services
+share/katana/services
 servicetypes
-share/kde4/servicetypes
+share/katana/servicetypes
 mime
 share/mimelnk
 cgi
@@ -134,9 +134,9 @@ share/templates
 exe
 bin
 module
-%lib/kde4
+%lib/katana
 qtplugins
-%lib/kde4/plugins
+%lib/katana/plugins
 kcfg
 share/config.kcfg
 emoticons
@@ -175,9 +175,9 @@ static const char types_string[] =
     "locale\0"
     "share/locale\0"
     "services\0"
-    "share/kde4/services\0"
+    "share/katana/services\0"
     "servicetypes\0"
-    "share/kde4/servicetypes\0"
+    "share/katana/servicetypes\0"
     "mime\0"
     "share/mimelnk\0"
     "cgi\0"
@@ -189,9 +189,9 @@ static const char types_string[] =
     "exe\0"
     "bin\0"
     "module\0"
-    "%lib/kde4\0"
+    "%lib/katana\0"
     "qtplugins\0"
-    "%lib/kde4/plugins\0"
+    "%lib/katana/plugins\0"
     "kcfg\0"
     "share/config.kcfg\0"
     "emoticons\0"
