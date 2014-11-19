@@ -28,11 +28,7 @@
 #include "xsyncbasedpoller.h"
 #endif
 #else
-#ifdef Q_WS_MAC
-#include "macpoller.h"
-#else
 #include "windowspoller.h"
-#endif
 #endif
 
 #include <QWeakPointer>
@@ -197,11 +193,7 @@ void KIdleTimePrivate::loadSystem()
 #endif
 #endif
 #else
-#ifdef Q_WS_MAC
-    poller = new MacPoller();
-#else
     poller = new WindowsPoller();
-#endif
 #endif
 
     if (!poller.isNull()) {

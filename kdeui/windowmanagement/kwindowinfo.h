@@ -217,11 +217,6 @@ public:
 private:
     class Private;
     Private * d; //krazy:exclude=dpointer (implicitly shared)
-#ifdef Q_WS_MAC
-    // KWindowSystem needs access to the d-pointer
-    friend class KWindowSystem;
-    friend class KWindowSystemPrivate;
-#endif
 };
 
 #endif // multiple inclusion guard

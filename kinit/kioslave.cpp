@@ -31,17 +31,6 @@
 #include <QtCore/QLibrary>
 #include <QtCore/QFile>
 
-#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
-#define USE_KPROCESS_FOR_KIOSLAVES
-#endif
-
-#ifdef USE_KPROCESS_FOR_KIOSLAVES
-#include <QtCore/QDir>
-#include <QtCore/QProcess>
-#include <QtCore/QStringList>
-#include "kstandarddirs.h"
-#endif
-
 /* These are to link libkio even if 'smart' linker is used */
 #include <kio/authinfo.h>
 extern "C" KIO::AuthInfo* _kioslave_init_kio() { return new KIO::AuthInfo(); }
@@ -65,43 +54,12 @@ int main(int argc, char **argv)
      }
 
      QLibrary lib(libpath);
-#ifdef USE_KPROCESS_FOR_KIOSLAVES
-     qDebug("trying to load '%s'", qPrintable(libpath));
-#endif
+
      if ( !lib.load() || !lib.isLoaded() )
      {
-#ifdef USE_KPROCESS_FOR_KIOSLAVES
-        libpath = KStandardDirs::installPath("module") + QFileInfo(libpath).fileName();
-        lib.setFileName( libpath );
-        if(!lib.load() || !lib.isLoaded())
-        {
-            QByteArray kdedirs = qgetenv("KDEDIRS");
-            if (!kdedirs.size()) {
-              qDebug("not able to find '%s' because KDEDIRS environment variable is not set.\n"
-                     "Set KDEDIRS to the KDE installation root dir and restart klauncher to fix this problem.",
-                     qPrintable(libpath));
-              exit(1);
-            }
-            QString paths = QString::fromLocal8Bit(kdedirs);
-            QStringList pathlist = paths.split(';');
-            Q_FOREACH(const QString &path, pathlist) {
-              QString slave_path = path + QLatin1String("/lib/katana/") + QFileInfo(libpath).fileName();
-              qDebug("trying to load '%s'",slave_path.toLatin1().data());
-              lib.setFileName(slave_path);
-              if (lib.load() && lib.isLoaded() )
-                break;
-            }
-            if (!lib.isLoaded())
-            {
-              qWarning("could not open %s: %s", libpath.data(), qPrintable (lib.errorString()) );
-              exit(1);
-            }
-        }
-#else
         fprintf(stderr, "could not open %s: %s", qPrintable(libpath),
                 qPrintable (lib.errorString()) );
         exit(1);
-#endif
      }  
 
      void* sym = lib.resolve("kdemain");
@@ -110,7 +68,6 @@ int main(int argc, char **argv)
         fprintf(stderr, "Could not find kdemain: %s\n", qPrintable(lib.errorString() ));
         exit(1);
      }
-
 
      int (*func)(int, char *[]) = (int (*)(int, char *[])) sym;
 

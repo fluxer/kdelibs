@@ -457,9 +457,6 @@ void KApplicationPrivate::init(bool GUIenabled)
      ::exit(127);
   }
 
-#ifdef Q_WS_MAC
-  mac_initialize_dbus();
-#endif
 
   KApplication::KApp = q;
 
@@ -572,20 +569,6 @@ void KApplicationPrivate::init(bool GUIenabled)
                q, SLOT(_k_slot_KToolInvocation_hook(QStringList&,QByteArray&)));
   }
 
-#ifdef Q_WS_MAC
-  if (q->type() == KApplication::GuiClient) {
-      // This is a QSystemTrayIcon instead of K* because we can't be sure q is a QWidget
-      QSystemTrayIcon *trayIcon; //krazy:exclude=qclasses
-      if (QSystemTrayIcon::isSystemTrayAvailable()) //krazy:exclude=qclasses
-      {
-          trayIcon = new QSystemTrayIcon(q); //krazy:exclude=qclasses
-          trayIcon->setIcon(q->windowIcon());
-          /* it's counter-intuitive, but once you do setIcon it's already set the
-             dock icon... ->show actually shows an icon in the menu bar too  :P */
-          // trayIcon->show();
-      }
-  }
-#endif
 
   qRegisterMetaType<KUrl>();
   qRegisterMetaType<KUrl::List>();

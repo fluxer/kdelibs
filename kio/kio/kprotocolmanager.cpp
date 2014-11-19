@@ -651,8 +651,6 @@ static QString platform()
 {
 #if defined(Q_WS_X11)
     return QL1S("X11");
-#elif defined(Q_WS_MAC)
-    return QL1S("Macintosh");
 #elif defined(Q_WS_S60)
      return QL1S("Symbian");
 #endif

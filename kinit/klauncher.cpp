@@ -655,11 +655,6 @@ KLauncher::requestStart(KLaunchRequest *request)
       args << arg;
 
    QString executable = request->name;
-#ifdef Q_WS_MAC
-   const QString bundlepath = KStandardDirs::findExe(executable);
-   if (!bundlepath.isEmpty())
-      executable = bundlepath;
-#endif
    process->setProgram(executable,args);
    process->start();
 

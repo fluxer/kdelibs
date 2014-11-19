@@ -31,9 +31,6 @@
 #include <fixx11h.h>
 #endif
 
-#if defined(Q_WS_WIN) || defined(Q_WS_MAC)
-#define USE_KPROCESS_FOR_KIOSLAVES
-#endif
 
 #include <QtCore/QString>
 #include <QtCore/QSocketNotifier>

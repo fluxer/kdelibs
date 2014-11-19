@@ -42,11 +42,6 @@ public:
     {
         return x11Event(e);
     }
-#elif defined(Q_WS_MAC)
-    bool publicMacEvent(EventHandlerCallRef caller, EventRef event)
-    {
-        return macEvent(caller, event);
-    }
 #endif
 };
 
@@ -99,18 +94,6 @@ bool KSystemEventFilterPrivate::filterEvent(void *message)
                 }
             }
         }
-#elif defined(Q_WS_MAC)
-        // FIXME: untested
-
-/*        NSEvent *nsevt = static_cast<NSEvent*>(message);
-        // pass the event as long as it's not consumed
-        Q_FOREACH (const QWeakPointer<QWidget> &wp, m_filters) {
-            if (QWidget *w = wp.data()) {
-                if (static_cast<KEventHackWidget*>(w)->publicMacEvent(0, nsevt->eventRef)) {
-                    return true;
-                }
-            }
-        }*/
 #endif
     }
 

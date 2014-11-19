@@ -78,11 +78,7 @@ KStatusBar::KStatusBar( QWidget *parent )
     // ...but on by default on OSX, else windows with a KStatusBar are not resizable at all (marijn)
     KSharedConfig::Ptr config = KGlobal::config();
     KConfigGroup group( config, QLatin1String("StatusBar style") );
-#ifdef Q_WS_MAC
-    bool grip_enabled = group.readEntry(QLatin1String("SizeGripEnabled"), true);
-#else
     bool grip_enabled = group.readEntry(QLatin1String("SizeGripEnabled"), false);
-#endif
     setSizeGripEnabled(grip_enabled);
 }
 

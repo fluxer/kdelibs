@@ -1773,11 +1773,7 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
 #ifdef HAVE_GETGROUPLIST
     // pick the groups to which the user belongs
     int groupCount = 0;
-#ifdef Q_OS_MAC
-    QVarLengthArray<int> groups;
-#else
     QVarLengthArray<gid_t> groups;
-#endif
     if (getgrouplist(strUser, user->pw_gid, NULL, &groupCount) < 0) {
         groups.resize(groupCount);
         if (groups.data())

@@ -535,9 +535,6 @@ static pid_t launch(int argc, const char *_name, const char *args,
 #endif
   // find out this path before forking, doing it afterwards
   // crashes on some platforms, notably OSX
-#ifdef Q_WS_MAC
-  const QString bundlepath = s_instance->dirs()->findExe(QFile::decodeName(execpath));
-#endif
 
   d.errorMsg = 0;
   d.fork = fork();
@@ -599,14 +596,6 @@ static pid_t launch(int argc, const char *_name, const char *args,
        QByteArray procTitle;
        d.argv = (char **) malloc(sizeof(char *) * (argc+1));
        d.argv[0] = (char *) _name;
-#ifdef Q_WS_MAC
-       QString argvexe = s_instance->dirs()->findExe(QString::fromLatin1(d.argv[0]));
-       if (!argvexe.isEmpty()) {
-          QByteArray cstr = argvexe.toLocal8Bit();
-          kDebug(7016) << "kdeinit4: launch() setting argv: " << cstr.data();
-          d.argv[0] = strdup(cstr.data());
-       }
-#endif
        for (int i = 1;  i < argc; i++)
        {
           d.argv[i] = (char *) args;
@@ -675,10 +664,6 @@ static pid_t launch(int argc, const char *_name, const char *args,
         setup_tty( tty );
 
         QByteArray executable = execpath;
-#ifdef Q_WS_MAC
-        if (!bundlepath.isEmpty())
-           executable = QFile::encodeName(bundlepath);
-#endif
 
         if (!executable.isEmpty())
            execvp(executable, d.argv);

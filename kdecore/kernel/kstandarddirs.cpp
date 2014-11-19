@@ -1101,41 +1101,9 @@ QStringList KStandardDirs::systemPaths( const QString& pstr )
     return exePaths;
 }
 
-#ifdef Q_WS_MAC
-static QString getBundle( const QString& path, bool ignore )
-{
-    //kDebug(180) << "getBundle(" << path << ", " << ignore << ") called";
-    QFileInfo info;
-    QString bundle = path;
-    bundle += QLatin1String(".app/Contents/MacOS/") + bundle.section(QLatin1Char('/'), -1);
-    info.setFile( bundle );
-    FILE *file;
-    if (file = fopen(info.absoluteFilePath().toUtf8().constData(), "r")) {
-        fclose(file);
-        struct stat _stat;
-        if ((stat(info.absoluteFilePath().toUtf8().constData(), &_stat)) < 0) {
-            return QString();
-        }
-        if ( ignore || (_stat.st_mode & S_IXUSR) ) {
-            if ( ((_stat.st_mode & S_IFMT) == S_IFREG) || ((_stat.st_mode & S_IFMT) == S_IFLNK) ) {
-                //kDebug(180) << "getBundle(): returning " << bundle;
-                return bundle;
-            }
-        }
-    }
-    return QString();
-}
-#endif
 
 static QString checkExecutable( const QString& path, bool ignoreExecBit )
 {
-#ifdef Q_WS_MAC
-    QString bundle = getBundle( path, ignoreExecBit );
-    if ( !bundle.isEmpty() ) {
-        //kDebug(180) << "findExe(): returning " << bundle;
-        return bundle;
-    }
-#endif
     QFileInfo info( path );
     QFileInfo orig = info;
 #if defined(Q_OS_DARWIN) || defined(Q_OS_MAC)
@@ -1238,13 +1206,6 @@ int KStandardDirs::findAllExe( QStringList& list, const QString& appname,
         p = (*it) + QLatin1Char('/');
         p += appname;
 
-#ifdef Q_WS_MAC
-        QString bundle = getBundle( p, (options & IgnoreExecBit) );
-        if ( !bundle.isEmpty() ) {
-            //kDebug(180) << "findExe(): returning " << bundle;
-            list.append( bundle );
-        }
-#endif
 
         info.setFile( p );
 

@@ -82,13 +82,9 @@ KfsProcessController::KfsProcessController()
 
 KfsProcessController::~KfsProcessController()
 {
-#ifndef Q_OS_MAC
 /* not sure why, but this is causing lockups */
   close( m_fd[0] );
   close( m_fd[1] );
-#else
-#warning FIXME: why does close() freeze up destruction?
-#endif
 }
 
 

@@ -873,13 +873,6 @@ KCmdLineArgsStatic::parseAllArgs()
          {
             KCmdLineArgs::usage(option.mid(5));
          }
-#ifdef Q_WS_MAC
-         // skip the finder -psn_* hint
-         else if (option.startsWith("psn_")) // krazy:exclude=strings
-         {
-            continue;
-         }
-#endif
          else if ((option == "version") || (option == "v"))
          {
             KCmdLineArgs::enable_i18n();

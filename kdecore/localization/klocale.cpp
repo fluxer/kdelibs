@@ -23,11 +23,7 @@
 */
 
 #include "klocale.h"
-#if   defined Q_OS_MAC
-    #include "klocale_mac_p.h"
-#else
     #include "klocale_unix_p.h"
-#endif
 
 #include <QtCore/QDateTime>
 #include <QtCore/QTextCodec>
@@ -44,20 +40,12 @@
 #include "common_helpers_p.h"
 
 KLocale::KLocale(const QString &catalog, KSharedConfig::Ptr config)
-#if   defined Q_OS_MAC
-        : d(new KLocaleMacPrivate(this, catalog, config))
-#else
         : d(new KLocaleUnixPrivate(this, catalog, config))
-#endif
 {
 }
 
 KLocale::KLocale(const QString& catalog, const QString &language, const QString &country, KConfig *config)
-#if   defined Q_OS_MAC
-        : d(new KLocaleMacPrivate(this, catalog, language, country, config))
-#else
         : d(new KLocaleUnixPrivate(this, catalog, language, country, config))
-#endif
 {
 }
 

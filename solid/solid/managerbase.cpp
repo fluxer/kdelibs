@@ -21,9 +21,7 @@
 #include "managerbase_p.h"
 
 #include <stdlib.h>
-#if !defined (Q_WS_WIN) && !defined (Q_OS_MAC)
 #include <config-solid.h>
-#endif
 
 #include "backends/fakehw/fakemanager.h"
 

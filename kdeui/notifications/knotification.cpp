@@ -270,11 +270,7 @@ void KNotification::Private::raiseWidget(QWidget *w)
 	if(w->isTopLevel())
 	{
 		w->raise();
-#if defined(Q_WS_MAC)
-		w->activateWindow();
-#else
 		KWindowSystem::activateWindow( w->winId() );
-#endif
 	}
 	else
 	{

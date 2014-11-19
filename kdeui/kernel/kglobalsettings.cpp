@@ -372,18 +372,10 @@ struct KFontData
 // NOTE: keep in sync with kdebase/workspace/kcontrol/fonts/fonts.cpp
 static const char GeneralId[] =      "General";
 static const char DefaultFont[] =    "Sans Serif";
-#ifdef Q_WS_MAC
-static const char DefaultMacFont[] = "Lucida Grande";
-#endif
 
 static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
 {
-#ifdef Q_WS_MAC
-    { GeneralId, "font",        DefaultMacFont, 13, -1, QFont::SansSerif },
-    { GeneralId, "fixed",       "Monaco",       10, -1, QFont::TypeWriter },
-    { GeneralId, "toolBarFont", DefaultMacFont, 11, -1, QFont::SansSerif },
-    { GeneralId, "menuFont",    DefaultMacFont, 13, -1, QFont::SansSerif },
-#elif defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
+#if   defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
     { GeneralId, "font",        DefaultFont, 16, -1, QFont::SansSerif },
     { GeneralId, "fixed",       "Monospace", 16, -1, QFont::TypeWriter },
     { GeneralId, "toolBarFont", DefaultFont, 16, -1, QFont::SansSerif },

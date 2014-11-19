@@ -438,12 +438,10 @@ void KCrash::startProcess(int argc, const char *argv[], bool waitAndExit)
     // This is done because it is dangerous to use fork() in the crash handler
     // (there can be functions registered to be performed before fork(), for example handling
     // of malloc locking, which doesn't work when malloc crashes because of heap corruption).
-#ifndef Q_OS_MAC
     // Fails on Apple OSX+KDE4, because kdeinit4 is using the wrong socket name.
     if (!(s_flags & AlwaysDirectly)) {
         startDirectly = !startProcessInternal(argc, argv, waitAndExit, false);
     }
-#endif
 
     // If we can't reach kdeinit, we can still at least try to fork()
     if (startDirectly) {
