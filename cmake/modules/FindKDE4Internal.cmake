@@ -55,11 +55,7 @@
 #  KDE4_KIDLETIME_LIBRARY   - the kidletime library
 #  KDE4_KCMUTILS_LIBRARY    - the kcmutils library
 #  KDE4_KPRINTUTILS_LIBRARY - the kprintutils library
-#  KDE4_KDE3SUPPORT_LIBRARY - the kde3support library
 #  KDE4_KFILE_LIBRARY       - the kfile library
-#  KDE4_KHTML_LIBRARY       - the khtml library
-#  KDE4_KJS_LIBRARY         - the kjs library
-#  KDE4_KJSAPI_LIBRARY      - the kjs public api library
 #  KDE4_KNEWSTUFF2_LIBRARY  - the knewstuff2 library
 #  KDE4_KNEWSTUFF3_LIBRARY  - the knewstuff3 library
 #  KDE4_KDNSSD_LIBRARY      - the kdnssd library
@@ -88,11 +84,7 @@
 #  KDE4_KIDLETIME_LIBS        - the kidletime library and all depending libraries
 #  KDE4_KCMUTILS_LIBS         - the kcmutils library and all depending libraries
 #  KDE4_KPRINTUTILS_LIBS      - the kprintutils library and all depending libraries
-#  KDE4_KDE3SUPPORT_LIBS      - the kde3support library and all depending libraries
 #  KDE4_KFILE_LIBS            - the kfile library and all depending libraries
-#  KDE4_KHTML_LIBS            - the khtml library and all depending libraries
-#  KDE4_KJS_LIBS              - the kjs library and all depending libraries
-#  KDE4_KJSAPI_LIBS           - the kjs public api library and all depending libraries
 #  KDE4_KNEWSTUFF2_LIBS       - the knewstuff2 library and all depending libraries
 #  KDE4_KNEWSTUFF3_LIBS       - the knewstuff3 library and all depending libraries
 #  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
@@ -665,11 +657,8 @@ _kde4_set_lib_variables(KDEWEBKIT     kdewebkit     "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KDNSSD        kdnssd        "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KEMOTICONS    kemoticons    "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KFILE         kfile         "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KHTML         khtml         "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KIDLETIME     kidletime     "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KIO           kio           "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KJS           kjs           "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KJSAPI        kjsapi        "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KNEWSTUFF2    knewstuff2    "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KNEWSTUFF3    knewstuff3    "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KNOTIFYCONFIG knotifyconfig "${KDE4_TARGET_PREFIX}")
