@@ -60,7 +60,7 @@ information.</action></para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Help</guimenu>
-<guimenuitem>About KDE</guimenuitem>
+<guimenuitem>About Katana</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>This displays the KDE version and other basic
 information.</action></para></listitem>

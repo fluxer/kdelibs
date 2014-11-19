@@ -208,7 +208,7 @@ class KDEUI_EXPORT KHelpMenu : public QObject
     void aboutApplication();
 
     /**
-     * Opens the standard "About KDE" dialog box.
+     * Opens the standard "About Katana" dialog box.
      */
     void aboutKDE();
 

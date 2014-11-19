@@ -590,7 +590,7 @@ namespace KStandardAction
   KDEUI_EXPORT KAction *aboutApp(const QObject *recvr, const char *slot, QObject *parent);
 
   /**
-   * Display the About KDE dialog.
+   * Display the About Katana dialog.
    */
   KDEUI_EXPORT KAction *aboutKDE(const QObject *recvr, const char *slot, QObject *parent);
 }

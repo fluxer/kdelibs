@@ -27,9 +27,9 @@
 namespace KDEPrivate {
 
 /**
- * @short Standard "About KDE" dialog box
+ * @short Standard "About Katana" dialog box
  *
- * This class provides the standard "About KDE" dialog box that is used
+ * This class provides the standard "About Katana" dialog box that is used
  * in KHelpMenu. Normally you should not use this class directly, but
  * rather the KHelpMenu class or even better just subclass your
  * toplevel window from KMainWindow. If you do the latter, the help
@@ -46,7 +46,7 @@ class KAboutKdeDialog : public KDialog
 
     public:
         /**
-         * Constructor. Creates a fully featured "About KDE" dialog box.
+         * Constructor. Creates a fully featured "About Katana" dialog box.
          * Note that this dialog is made modeless in the KHelpMenu class so
          * the users may expect a modeless dialog.
          *
