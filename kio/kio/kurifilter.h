@@ -33,9 +33,6 @@
 #include <QtCore/QPair>
 #include <QtCore/QStringList>
 
-#ifdef Q_OS_WIN
-#undef ERROR
-#endif
 
 class KUriFilterPrivate;
 class KUriFilterDataPrivate;

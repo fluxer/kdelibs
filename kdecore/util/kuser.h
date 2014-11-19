@@ -32,16 +32,11 @@ class QString;
 class QStringList;
 template <class T> class QList;
 
-#ifdef Q_OS_WIN
-typedef void *K_UID;
-typedef void *K_GID;
-#else
 #include <sys/types.h>
 typedef uid_t K_UID;
 typedef gid_t K_GID;
 struct passwd;
 struct group;
-#endif
 
 
 /**
@@ -103,7 +98,6 @@ public:
    */
   explicit KUser(const char* name);
 
-#ifndef Q_OS_WIN
   /**
    * Creates an object from a passwd structure.
    * If the pointer is null isValid() will return false.
@@ -111,7 +105,6 @@ public:
    * @param p the passwd structure to create the user from
    */
   explicit KUser(const passwd *p);
-#endif
 
   /**
    * Creates an object from another KUser object
@@ -151,13 +144,11 @@ public:
    */
   K_UID uid() const;
 
-#ifndef Q_OS_WIN
   /**
    * Returns the group id of the user.
    * @return the id of the group or -1 if user is invalid
    */
   K_GID gid() const;
-#endif
 
   /**
    * Checks whether the user is the super user (root).
@@ -277,7 +268,6 @@ public:
    */
   explicit KUserGroup(const char *name);
 
-#ifndef Q_OS_WIN
   /**
    * Create an object from the group of the current user.
    * @param mode if #KUser::UseEffectiveUID is passed the effective user
@@ -303,7 +293,6 @@ public:
    * @param g the group structure to create the group from.
    */
   explicit KUserGroup(const group *g);
-#endif
 
   /**
    * Creates a new KUserGroup instance from another KUserGroup object
@@ -340,13 +329,11 @@ public:
    */
   bool isValid() const;
 
-#ifndef Q_OS_WIN
   /**
    * Returns the group id of the group.
    * @return the group id of the group or -1 if the group is invalid
    */
   K_GID gid() const;
-#endif
 
   /**
    * The name of the group.

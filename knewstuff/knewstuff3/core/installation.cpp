@@ -37,10 +37,6 @@
 #include "kdebug.h"
 
 #include "core/security.h"
-#ifdef Q_OS_WIN
-#include <windows.h>
-#include <shlobj.h>
-#endif
 
 using namespace KNS3;
 

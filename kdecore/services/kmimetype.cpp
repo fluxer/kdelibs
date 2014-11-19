@@ -114,32 +114,6 @@ static KMimeType::Ptr findFromMode( const QString& path /*only used if is_local_
         return KMimeType::mimeType( QLatin1String("inode/fifo") );
     if ( S_ISSOCK( mode ) )
         return KMimeType::mimeType( QLatin1String("inode/socket") );
-#ifdef Q_OS_WIN
-    // FIXME: distinguish between mounted & unmounted
-    int size = path.size();
-    if ( size == 2 || size == 3 ) {
-    //GetDriveTypeW is not defined in wince
-#ifndef _WIN32_WCE
-        unsigned int type = GetDriveTypeW( (LPCWSTR) path.utf16() );
-        switch( type ) {
-            case DRIVE_REMOVABLE:
-                return KMimeType::mimeType( QLatin1String("media/floppy_mounted") );
-            case DRIVE_FIXED:
-                return KMimeType::mimeType( QLatin1String("media/hdd_mounted") );
-            case DRIVE_REMOTE:
-                return KMimeType::mimeType( QLatin1String("media/smb_mounted") );
-            case DRIVE_CDROM:
-                return KMimeType::mimeType( QLatin1String("media/cdrom_mounted") );
-            case DRIVE_RAMDISK:
-                return KMimeType::mimeType( QLatin1String("media/hdd_mounted") );
-            default:
-                break;
-        };
-#else
-        return KMimeType::mimeType( QLatin1String("media/hdd_mounted") );
-#endif
-    }
-#endif
     // remote executable file? stop here (otherwise findFromContent can do that better for local files)
     if ( !is_local_file && S_ISREG( mode ) && ( mode & ( S_IXUSR | S_IXGRP | S_IXOTH ) ) )
         return KMimeType::mimeType( QLatin1String("application/x-executable") );

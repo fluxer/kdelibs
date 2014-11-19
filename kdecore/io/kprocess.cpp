@@ -23,23 +23,14 @@
 
 #include <kstandarddirs.h>
 #include <kshell.h>
-#ifdef Q_OS_WIN
-# include <kshell_p.h>
-#endif
 
 #include <qfile.h>
 
-#ifdef Q_OS_WIN
-# include <windows.h>
-#else
 # include <unistd.h>
 # include <errno.h>
-#endif
 
-#ifndef Q_OS_WIN
 # define STD_OUTPUT_HANDLE 1
 # define STD_ERROR_HANDLE 2
-#endif
 
 #ifdef _WIN32_WCE
 #include <stdio.h>
@@ -47,17 +38,6 @@
 
 void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
 {
-#ifdef Q_OS_WIN
-#ifndef _WIN32_WCE
-    HANDLE h = GetStdHandle(fd);
-    if (h) {
-        DWORD wr;
-        WriteFile(h, buf.data(), buf.size(), &wr, 0);
-    }
-#else
-    fwrite(buf.data(), 1, buf.size(), (FILE*)fd);
-#endif
-#else
     int off = 0;
     do {
         int ret = ::write(fd, buf.data() + off, buf.size() - off);
@@ -68,7 +48,6 @@ void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
             off += ret;
         }
     } while (off < buf.size());
-#endif
 }
 
 void KProcessPrivate::forwardStd(KProcess::ProcessChannel good, int fd)
@@ -212,9 +191,6 @@ void KProcess::setProgram(const QString &exe, const QStringList &args)
 
     d->prog = exe;
     d->args = args;
-#ifdef Q_OS_WIN
-    setNativeArguments(QString());
-#endif
 }
 
 void KProcess::setProgram(const QStringList &argv)
@@ -224,9 +200,6 @@ void KProcess::setProgram(const QStringList &argv)
     Q_ASSERT( !argv.isEmpty() );
     d->args = argv;
     d->prog = d->args.takeFirst();
-#ifdef Q_OS_WIN
-    setNativeArguments(QString());
-#endif
 }
 
 KProcess &KProcess::operator<<(const QString &arg)
@@ -257,9 +230,6 @@ void KProcess::clearProgram()
 
     d->prog.clear();
     d->args.clear();
-#ifdef Q_OS_WIN
-    setNativeArguments(QString());
-#endif
 }
 
 void KProcess::setShellCommand(const QString &cmd)
@@ -273,9 +243,6 @@ void KProcess::setShellCommand(const QString &cmd)
         d->prog = KStandardDirs::findExe(d->args[0]);
         if (!d->prog.isEmpty()) {
             d->args.removeFirst();
-#ifdef Q_OS_WIN
-            setNativeArguments(QString());
-#endif
             return;
         }
     }

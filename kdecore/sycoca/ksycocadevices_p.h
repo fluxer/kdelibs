@@ -71,9 +71,7 @@ class KSycocaFileDevice : public KSycocaAbstractDevice
 public:
     KSycocaFileDevice(const QString& path) {
         m_database = new QFile(path);
-#ifndef Q_OS_WIN
         (void)fcntl(m_database->handle(), F_SETFD, FD_CLOEXEC);
-#endif
     }
     ~KSycocaFileDevice() {
         delete m_database;

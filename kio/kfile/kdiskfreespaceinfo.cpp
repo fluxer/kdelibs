@@ -29,12 +29,7 @@
 
 #include <kmountpoint.h>
 
-#ifdef Q_OS_WIN
-#include <QtCore/QDir>
-#include <windows.h>
-#else
 #include <sys/statvfs.h>
-#endif
 
 
 class KDiskFreeSpaceInfo::Private : public QSharedData
@@ -116,18 +111,6 @@ KDiskFreeSpaceInfo KDiskFreeSpaceInfo::freeSpaceInfo( const QString& path )
     if (mp)
         info.d->mountPoint = mp->mountPoint();
 
-#ifdef Q_OS_WIN
-    quint64 availUser;
-    QFileInfo fi(info.d->mountPoint);
-    QString dir = QDir::toNativeSeparators(fi.absoluteDir().canonicalPath());
-
-    if(GetDiskFreeSpaceExW((LPCWSTR)dir.utf16(),
-                           (PULARGE_INTEGER)&availUser,
-                           (PULARGE_INTEGER)&info.d->size,
-                           (PULARGE_INTEGER)&info.d->available) != 0) {
-        info.d->valid = true;
-    }
-#else
     struct statvfs statvfs_buf;
 
     // Prefer mountPoint if available, so that it even works with non-existing files.
@@ -138,7 +121,6 @@ KDiskFreeSpaceInfo KDiskFreeSpaceInfo::freeSpaceInfo( const QString& path )
         info.d->size = statvfs_buf.f_blocks * blksize;
         info.d->valid = true;
     }
-#endif
 
     return info;
 }

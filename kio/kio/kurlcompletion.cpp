@@ -769,9 +769,7 @@ bool KUrlCompletionPrivate::userCompletion(const KUrlCompletionPrivate::MyURL& u
 // Environment variables
 //
 
-#ifndef Q_OS_WIN
 extern char** environ; // Array of environment variables
-#endif
 
 bool KUrlCompletionPrivate::envCompletion(const KUrlCompletionPrivate::MyURL& url, QString* pMatch)
 {

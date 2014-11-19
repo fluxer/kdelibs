@@ -266,16 +266,12 @@ void KDebugTest::testNoMainComponentData()
     proc.setEnv("KDE_DEBUG_NOPROCESSINFO", "1");
     proc.setEnv("KDE_DEBUG_TIMESTAMP", "0");
     proc.setOutputChannelMode(KProcess::OnlyStderrChannel);
-#ifdef Q_OS_WIN
-    proc << "kdebug_qcoreapptest.exe";
-#else
     if (QFile::exists("./kdebug_qcoreapptest.shell"))
         proc << "./kdebug_qcoreapptest.shell";
     else {
         QVERIFY(QFile::exists("./kdebug_qcoreapptest"));
         proc << "./kdebug_qcoreapptest";
     }
-#endif
     //     kDebug() << proc.args();
     const int ok = proc.execute();
     QVERIFY(ok == 0);

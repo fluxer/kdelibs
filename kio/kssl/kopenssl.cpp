@@ -296,13 +296,7 @@ KOpenSSLProxy::KOpenSSLProxy()
    if (!upath.isEmpty())
       libpaths << upath;
 
-#ifdef Q_OS_WIN
-    d->cryptoLib = new KLibrary("libeay32.dll");
-    if (!d->cryptoLib->load()) {
-       delete d->cryptoLib;
-       d->cryptoLib = 0;
-    }
-#elif defined(__OpenBSD__)
+#if   defined(__OpenBSD__)
    {
    QString libname = findMostRecentLib("/usr/lib" KDELIBSUFF, "crypto");
    if (!libname.isNull()) {
@@ -530,13 +524,7 @@ KOpenSSLProxy::KOpenSSLProxy()
 #endif
    }
 
-#ifdef Q_OS_WIN
-    d->sslLib = new KLibrary("ssleay32.dll");
-    if (!d->sslLib->load()) {
-       delete d->sslLib;
-       d->sslLib = 0;
-    }
-#elif defined(__OpenBSD__)
+#if   defined(__OpenBSD__)
    {
    QString libname = findMostRecentLib("/usr/lib", "ssl");
    if (!libname.isNull()) {

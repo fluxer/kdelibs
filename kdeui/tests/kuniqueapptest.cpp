@@ -42,16 +42,12 @@ private Q_SLOTS:
         // Duplicated from kglobalsettingstest.cpp - make a shared helper method?
         KProcess* proc = new KProcess(this);
         const QString appName = "kuniqueapptest";
-#ifdef Q_OS_WIN
-        (*proc) << appName + ".exe";
-#else
         if (QFile::exists(appName+".shell"))
             (*proc) << "./" + appName+".shell";
         else {
             Q_ASSERT(QFile::exists(appName));
             (*proc) << "./" + appName;
         }
-#endif
         proc->start();
     }
 private:

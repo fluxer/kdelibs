@@ -63,16 +63,12 @@ void KGlobalSettingsTest::initTestCase()
 
 static void callClient( const QString& opt, const char* signalToWaitFor ) {
     KProcess proc;
-#ifdef Q_OS_WIN
-    proc << "kglobalsettingsclient.exe";
-#else
     if (QFile::exists("./kglobalsettingsclient.shell"))
         proc << "./kglobalsettingsclient.shell";
     else {
         QVERIFY(QFile::exists("./kglobalsettingsclient"));
         proc << "./kglobalsettingsclient";
     }
-#endif
     proc << opt;
 //     kDebug() << proc.args();
     int ok = proc.execute();

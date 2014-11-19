@@ -91,15 +91,7 @@ KSycocaPrivate::KSycocaPrivate()
       m_mmapFile(0),
       m_device(0)
 {
-#ifdef Q_OS_WIN
-    /*
-      on windows we use KMemFile (QSharedMemory) to avoid problems
-      with mmap (can't delete a mmap'd file)
-    */
-    m_sycocaStrategy = StrategyMemFile;
-#else
     m_sycocaStrategy = StrategyMmap;
-#endif
     KConfigGroup config(KGlobal::config(), "KSycoca");
     setStrategyFromString(config.readEntry("strategy"));
 }

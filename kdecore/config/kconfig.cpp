@@ -205,11 +205,6 @@ QString KConfigPrivate::expandString(const QString& value)
             }
             QString env;
             if (!aVarName.isEmpty()) {
-#ifdef Q_OS_WIN
-                if (aVarName == QLatin1String("HOME"))
-                    env = QDir::homePath();
-                else
-#endif
                 {
                     QByteArray pEnv = qgetenv( aVarName.toLatin1() );
                     if( !pEnv.isEmpty() )
@@ -566,11 +561,7 @@ void KConfigPrivate::changeFileName(const QString& name, const char* type)
         return;
     }
 
-#ifndef Q_OS_WIN
     bSuppressGlobal = (file == sGlobalFileName);
-#else
-    bSuppressGlobal = (file.compare(sGlobalFileName, Qt::CaseInsensitive) == 0);
-#endif
 
     if (bDynamicBackend || !mBackend) // allow dynamic changing of backend
         mBackend = KConfigBackend::create(componentData, file);
@@ -626,11 +617,7 @@ void KConfigPrivate::parseGlobalFiles()
     const QByteArray utf8Locale = locale.toUtf8();
     foreach(const QString& file, globalFiles) {
         KConfigBackend::ParseOptions parseOpts = KConfigBackend::ParseGlobal|KConfigBackend::ParseExpansions;
-#ifndef Q_OS_WIN
         if (file != sGlobalFileName)
-#else
-        if (file.compare(sGlobalFileName, Qt::CaseInsensitive) != 0)
-#endif
             parseOpts |= KConfigBackend::ParseDefaults;
 
         KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, file);
@@ -665,11 +652,7 @@ void KConfigPrivate::parseConfigFiles()
 
         const QByteArray utf8Locale = locale.toUtf8();
         foreach(const QString& file, files) {
-#ifndef Q_OS_WIN
             if (file == mBackend->filePath()) {
-#else
-            if (file.compare(mBackend->filePath(), Qt::CaseInsensitive) == 0) {
-#endif
                 switch (mBackend->parseConfig(utf8Locale, entryMap, KConfigBackend::ParseExpansions)) {
                 case KConfigBackend::ParseOk:
                     break;

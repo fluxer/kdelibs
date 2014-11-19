@@ -36,12 +36,7 @@
     #error "TEST_DATA not set. An XML file describing a computer is required for this test"
 #endif
 
-#ifdef Q_OS_WIN
-    //c:\ as root for windows
-    #define KDE_ROOT_PATH "C:\\"
-#else
     #define KDE_ROOT_PATH "/"
-#endif
 
 class KFilePlacesModelTest : public QObject
 {

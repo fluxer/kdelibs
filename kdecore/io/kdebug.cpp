@@ -650,10 +650,8 @@ struct KDebugPrivate
         case Unknown: // should not happen
         default:                // QtOutput
             s = setupQtWriter(type);
-#ifndef Q_OS_WIN
             //only color if the debug goes to a tty, unless env_colors_on_any_fd is set too.
             colored = env_colored && (env_colors_on_any_fd || isatty(fileno(stderr)));
-#endif
             break;
         }
 

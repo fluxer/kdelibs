@@ -1334,11 +1334,7 @@ int main( int argc, char **argv )
   parseArgs(app.arguments(), directoryName, inputFilename, codegenFilename);
 
   QString baseDir = directoryName;
-#ifdef Q_OS_WIN
-  if (!baseDir.endsWith('/') && !baseDir.endsWith('\\'))
-#else
   if (!baseDir.endsWith('/'))
-#endif
     baseDir.append("/");
 
   if (!codegenFilename.endsWith(QLatin1String(".kcfgc")))

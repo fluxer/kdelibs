@@ -61,24 +61,6 @@ extern QString makeLibName( const QString &libname );
 
 extern QString findLibrary(const QString &name, const KComponentData &cData);
 
-#ifdef Q_OS_WIN
-// removes "lib" prefix, if present
-QString fixLibPrefix(const QString& libname)
-{
-    int pos = libname.lastIndexOf( QLatin1Char('/') );
-    if ( pos >= 0 )
-    {
-        QString file = libname.mid( pos + 1 );
-        QString path = libname.left( pos );
-        if( !file.startsWith( QLatin1String("lib") ) )
-            return libname;
-        return path + QLatin1Char('/') + file.mid( 3 );
-    }
-    if( !libname.startsWith( QLatin1String("lib") ) )
-        return libname;
-    return libname.mid( 3 );
-}
-#endif
 
 //static
 QString KLibLoader::findLibrary(const QString &_name, const KComponentData &cData)

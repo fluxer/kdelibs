@@ -719,10 +719,6 @@ void KUrlTest::testSetFileName() // and addPath
   QCOMPARE( singleFile.pathOrUrl(), QString("foo.txt") );
 
   QString pre;
-#ifdef Q_OS_WIN
-  // On Windows we explicitly prepend a slash, see KUrl::setPath
-  pre = '/';
-#endif
   singleFile.setFileName( "bar.bin" );
   QCOMPARE( singleFile.path(), QString(pre + "bar.bin") );
   QCOMPARE( singleFile.pathOrUrl(), QString(pre + "bar.bin") );

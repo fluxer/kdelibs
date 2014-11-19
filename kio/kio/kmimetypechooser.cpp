@@ -205,9 +205,7 @@ void KMimeTypeChooserPrivate::_k_editMimeType()
                 q, SLOT(_k_slotSycocaDatabaseChanged(QStringList)) );
     QString keditfiletype = QString::fromLatin1("keditfiletype");
     KRun::runCommand( keditfiletype
-#ifndef Q_OS_WIN
                       + " --parent " + QString::number( (ulong)q->topLevelWidget()->winId())
-#endif
                       + " --caption " + KShell::quoteArg(KGlobal::caption())
                       + ' ' + KShell::quoteArg(mt),
                       keditfiletype, keditfiletype /*unused*/, q->topLevelWidget());

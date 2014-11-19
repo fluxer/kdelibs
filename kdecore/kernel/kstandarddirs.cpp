@@ -61,11 +61,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 
-#ifdef Q_OS_WIN
-static Qt::CaseSensitivity cs = Qt::CaseInsensitive;
-#else
 static Qt::CaseSensitivity cs = Qt::CaseSensitive;
-#endif
 
 class KStandardDirs::KStandardDirsPrivate
 {
@@ -461,12 +457,6 @@ QString KStandardDirs::findResource( const char *type,
 #endif
 
     QString filename(_filename);
-#ifdef Q_OS_WIN
-    if(strcmp(type, "exe") == 0) {
-      if(!filename.endsWith(QLatin1String(".exe"), Qt::CaseInsensitive))
-        filename += QLatin1String(".exe");
-    }
-#endif
     const QString dir = findResourceDir(type, filename);
     if (dir.isEmpty())
       return dir;
@@ -549,12 +539,6 @@ QString KStandardDirs::findResourceDir( const char *type,
 #endif
 
     QString filename(_filename);
-#ifdef Q_OS_WIN
-    if(strcmp(type, "exe") == 0) {
-      if(!filename.endsWith(QLatin1String(".exe"), Qt::CaseInsensitive))
-        filename += QLatin1String(".exe");
-    }
-#endif
     const QStringList candidates = d->resourceDirs(type, filename);
 
     for (QStringList::ConstIterator it = candidates.begin();
@@ -574,14 +558,6 @@ QString KStandardDirs::findResourceDir( const char *type,
 
 bool KStandardDirs::exists(const QString &fullPath)
 {
-#ifdef Q_OS_WIN
-    // access() and stat() give a stupid error message to the user
-    // if the path is not accessible at all (e.g. no disk in A:/ and
-    // we do stat("A:/.directory")
-    if (fullPath.endsWith(QLatin1Char('/')))
-        return QDir(fullPath).exists();
-    return QFileInfo(fullPath).exists();
-#else
     KDE_struct_stat buff;
     QByteArray cFullPath = QFile::encodeName(fullPath);
     if (access(cFullPath, R_OK) == 0 && KDE_stat( cFullPath, &buff ) == 0) {
@@ -593,7 +569,6 @@ bool KStandardDirs::exists(const QString &fullPath)
                 return true;
     }
     return false;
-#endif
 }
 
 static void lookupDirectory(const QString& path, const QString &relPart,
@@ -786,13 +761,8 @@ KStandardDirs::findAllResources( const char *type,
     QStringList candidates;
     if ( !QDir::isRelativePath(filter) ) // absolute path
     {
-#ifdef Q_OS_WIN
-        candidates << filterPath.left(3); //e.g. "C:\"
-        filterPath = filterPath.mid(3);
-#else
         candidates << QString::fromLatin1("/");
         filterPath = filterPath.mid(1);
-#endif
     }
     else
     {
@@ -1105,21 +1075,6 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
     return candidates;
 }
 
-#ifdef Q_OS_WIN
-static QStringList executableExtensions()
-{
-    QStringList ret = QString::fromLocal8Bit(qgetenv("PATHEXT")).split(QLatin1Char(';'));
-    if (!ret.contains(QLatin1String(".exe"), Qt::CaseInsensitive)) {
-        // If %PATHEXT% does not contain .exe, it is either empty, malformed, or distorted in ways that we cannot support, anyway.
-        ret.clear();
-        ret << QLatin1String(".exe")
-            << QLatin1String(".com")
-            << QLatin1String(".bat")
-            << QLatin1String(".cmd");
-    }
-    return ret;
-}
-#endif
 
 QStringList KStandardDirs::systemPaths( const QString& pstr )
 {
@@ -1220,19 +1175,6 @@ QString KStandardDirs::findExe( const QString& appname,
 {
     //kDebug(180) << "findExe(" << appname << ", pstr, " << ignoreExecBit << ") called";
 
-#ifdef Q_OS_WIN
-    QStringList executable_extensions = executableExtensions();
-    if (!executable_extensions.contains(appname.section(QLatin1Char('.'), -1, -1, QString::SectionIncludeLeadingSep), Qt::CaseInsensitive)) {
-        QString found_exe;
-        foreach (const QString& extension, executable_extensions) {
-            found_exe = findExe(appname + extension, pstr, options);
-            if (!found_exe.isEmpty()) {
-                return found_exe;
-            }
-        }
-        return QString();
-    }
-#endif
     QFileInfo info;
 
     // absolute or relative path?
@@ -1286,16 +1228,6 @@ QString KStandardDirs::findExe( const QString& appname,
 int KStandardDirs::findAllExe( QStringList& list, const QString& appname,
                                const QString& pstr, SearchOptions options )
 {
-#ifdef Q_OS_WIN
-    QStringList executable_extensions = executableExtensions();
-    if (!executable_extensions.contains(appname.section(QLatin1Char('.'), -1, -1, QString::SectionIncludeLeadingSep), Qt::CaseInsensitive)) {
-        int total = 0;
-        foreach (const QString& extension, executable_extensions) {
-            total += findAllExe (list, appname + extension, pstr, options);
-        }
-        return total;
-    }
-#endif
     QFileInfo info;
     QString p;
     list.clear();

@@ -622,11 +622,7 @@ void KUrl::setFileName( const QString& _txt )
 
   QString path = this->path();
   if ( path.isEmpty() )
-#ifdef Q_OS_WIN
-    path = isLocalFile() ? QDir::rootPath() : QLatin1String("/");
-#else
     path = QDir::rootPath();
-#endif
   else
   {
     int lastSlash = path.lastIndexOf( QLatin1Char('/') );
@@ -702,18 +698,7 @@ void KUrl::adjustPath( AdjustPathOption trailing )
 QString KUrl::encodedPathAndQuery( AdjustPathOption trailing , const EncodedPathAndQueryOptions &options) const
 {
     QString encodedPath;
-#ifdef Q_OS_WIN
-    // see KUrl::path()
-    if (isLocalFile()) {
-        // ### this is probably broken
-        encodedPath = trailingSlash(trailing, QUrl::toLocalFile());
-        encodedPath = QString::fromLatin1(QUrl::toPercentEncoding(encodedPath, "!$&'()*+,;=:@/"));
-    } else {
-        encodedPath = trailingSlash(trailing, QString::fromLatin1(QUrl::encodedPath()));
-    }
-#else
     encodedPath = trailingSlash(trailing, QString::fromLatin1(QUrl::encodedPath()));
-#endif
 
     if ((options & AvoidEmptyPath) && encodedPath.isEmpty()) {
         encodedPath.append(QLatin1Char('/'));
@@ -1296,11 +1281,7 @@ bool KUrl::cd( const QString& _dir )
   }
 
   // absolute path ?
-#ifdef Q_OS_WIN
-  if ( !QFileInfo(_dir).isRelative() )
-#else
   if ( _dir[0] == QLatin1Char('/') )
-#endif
   {
     //m_strPath_encoded.clear();
     setPath( _dir );

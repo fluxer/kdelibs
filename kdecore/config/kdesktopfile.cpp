@@ -153,11 +153,7 @@ bool KDesktopFile::isAuthorizedDesktopFile(const QString& path)
 
   // Check if the .desktop file is installed as part of KDE or XDG.
   foreach (const QString &prefix, kdePrefixes) {
-#ifndef Q_OS_WIN
     if (realPath.startsWith(prefix))
-#else
-    if (realPath.startsWith(prefix, Qt::CaseInsensitive))
-#endif
       return true;
   }
 

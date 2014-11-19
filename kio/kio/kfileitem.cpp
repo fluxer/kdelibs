@@ -51,10 +51,8 @@
 #include <kdesktopfile.h>
 #include <kmountpoint.h>
 #include <kconfiggroup.h>
-#ifndef Q_OS_WIN
 #include <knfsshare.h>
 #include <ksambashare.h>
-#endif
 #include <kfilesystemtype_p.h>
 
 class KFileItemPrivate : public QSharedData
@@ -976,7 +974,6 @@ QStringList KFileItem::overlays() const
         names.append("hidden");
     }
 
-#ifndef Q_OS_WIN
     if( S_ISDIR( d->m_fileMode ) && d->m_bIsLocalUrl)
     {
         if (KSambaShare::instance()->isDirectoryShared( d->m_url.toLocalFile() ) ||
@@ -986,7 +983,6 @@ QStringList KFileItem::overlays() const
             names.append("network-workgroup");
         }
     }
-#endif  // Q_OS_WIN
 
     if ( d->m_pMimeType && d->m_url.fileName().endsWith( QLatin1String( ".gz" ) ) &&
          d->m_pMimeType->is("application/x-gzip") ) {

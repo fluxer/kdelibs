@@ -46,11 +46,6 @@
 #include <QtXml/qdom.h>
 #include <QtCore/Q_PID>
 
-#if defined(Q_OS_WIN)
-#include <windows.h>
-#define _WIN32_IE 0x0500
-#include <shlobj.h>
-#endif
 
 using namespace KNS;
 

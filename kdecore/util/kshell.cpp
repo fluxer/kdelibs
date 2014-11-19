@@ -46,11 +46,7 @@ QString KShell::joinArgs( const QStringList &args )
     return ret;
 }
 
-#ifdef Q_OS_WIN
-# define ESCAPE '^'
-#else
 # define ESCAPE '\\'
-#endif
 
 QString KShell::tildeExpand( const QString &fname )
 {

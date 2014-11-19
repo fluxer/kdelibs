@@ -636,7 +636,6 @@ void KMimeTypeRepository::checkEssentialMimeTypes()
 
     if (!KMimeType::mimeType(QLatin1String("inode/directory")))
         missingMimeTypes.append(QLatin1String("inode/directory"));
-#ifndef Q_OS_WIN
     //if (!KMimeType::mimeType(QLatin1String("inode/directory-locked")))
     //  missingMimeTypes.append(QLatin1String("inode/directory-locked"));
     if (!KMimeType::mimeType(QLatin1String("inode/blockdevice")))
@@ -647,7 +646,6 @@ void KMimeTypeRepository::checkEssentialMimeTypes()
         missingMimeTypes.append(QLatin1String("inode/socket"));
     if (!KMimeType::mimeType(QLatin1String("inode/fifo")))
         missingMimeTypes.append(QLatin1String("inode/fifo"));
-#endif
     if (!KMimeType::mimeType(QLatin1String("application/x-shellscript")))
         missingMimeTypes.append(QLatin1String("application/x-shellscript"));
     if (!KMimeType::mimeType(QLatin1String("application/x-executable")))

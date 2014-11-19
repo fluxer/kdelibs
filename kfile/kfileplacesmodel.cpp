@@ -129,7 +129,7 @@ KFilePlacesModel::KFilePlacesModel(QObject *parent)
                                                   info.absoluteFilePath(), info.absoluteFilePath(),
                                                   KUrl(info.absoluteFilePath()), driveIcon);
         }
-#elif !defined(Q_OS_WIN)
+#else
         KFilePlacesItem::createSystemBookmark(d->bookmarkManager,
                                               "Root", I18N_NOOP2("KFile System Bookmarks", "Root"),
                                               KUrl("/"), "folder-red");

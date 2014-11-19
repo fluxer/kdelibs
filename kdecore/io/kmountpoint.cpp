@@ -29,11 +29,7 @@
 #include "kstandarddirs.h"
 
 
-#ifdef Q_OS_WIN
-static Qt::CaseSensitivity cs = Qt::CaseInsensitive;
-#else
 static Qt::CaseSensitivity cs = Qt::CaseSensitive;
-#endif
 
 #ifdef HAVE_VOLMGT
 #include <volmgt.h>

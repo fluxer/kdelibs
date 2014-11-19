@@ -30,10 +30,8 @@
 #include <kdebug.h>
 #include <kfilterdev.h>
 #include <ktempdir.h>
-#ifndef Q_OS_WIN
 #include <unistd.h> // symlink
 #include <errno.h>
-#endif
 
 QTEST_KDEMAIN_CORE( KArchiveTest )
 
@@ -79,10 +77,8 @@ static void writeTestFilesToArchive( KArchive* archive )
     // Now an empty directory
     QVERIFY( archive->writeDir( "aaaemptydir", "user", "group" ) );
 
-#ifndef Q_OS_WIN
     // Add local symlink
     QVERIFY( archive->addLocalFile( "test3_symlink", "z/test3_symlink") );
-#endif
 }
 
 enum { WithUserGroup = 1 }; // ListingFlags
@@ -172,12 +168,10 @@ static void testFileData( KArchive* archive )
     QByteArray secondLine = dev->read(100);
     QCOMPARE(QString::fromLatin1(secondLine), QString::fromLatin1("David."));
     delete dev;
-#ifndef Q_OS_WIN
     e = dir->entry( "z/test3_symlink" );
     QVERIFY(e);
     QVERIFY(e->isFile());
     QCOMPARE(e->symLinkTarget(), QString("test3"));
-#endif
 
     // Test "./" prefix for KOffice (xlink:href="./ObjectReplacements/Object 1")
     e = dir->entry( "./hugefile" );
@@ -230,7 +224,6 @@ static void testCopyTo( KArchive* archive )
     QVERIFY(fileInfo4.isFile());
     QCOMPARE(fileInfo4.size(), Q_INT64_C(29));
 
-#ifndef Q_OS_WIN
     const QString fileName = dirName+"z/test3_symlink";
     const QFileInfo fileInfo5(fileName);
     QVERIFY(fileInfo5.exists());
@@ -255,7 +248,6 @@ static void testCopyTo( KArchive* archive )
         symLinkTarget = QFile::decodeName(s);
     }
     QCOMPARE(symLinkTarget, QString("test3"));
-#endif
 }
 
 /**
@@ -281,14 +273,12 @@ void KArchiveTest::setupData()
  */
 void KArchiveTest::initTestCase()
 {
-#ifndef Q_OS_WIN
     // Prepare local symlink
     QFile::remove("test3_symlink");
     if (::symlink("test3", "test3_symlink") != 0) {
         qDebug() << errno;
         QVERIFY(false);
     }
-#endif
 
     // For better benchmarks: initialize KMimeTypeFactory magic here
     KMimeType::findByContent(QByteArray("hello"));
@@ -399,11 +389,9 @@ void KArchiveTest::testReadTar() // testCreateTarGz must have been run first.
     QString str = listing[13];
     str.replace(QRegExp("mode.*path"), "path" );
     QCOMPARE( str, QString("path=z/test3 type=file size=13") );
-#ifndef Q_OS_WIN
     str = listing[14];
     str.replace(QRegExp("mode.*path"), "path" );
     QCOMPARE( str, QString("path=z/test3_symlink type=file size=0 symlink=test3") );
-#endif
 
     QVERIFY( tar.close() );
 
@@ -771,11 +759,9 @@ void KArchiveTest::testReadZip()
     QString str = listing[14];
     str.replace(QRegExp("mode.*path"), "path" );
     QCOMPARE( str, QString("path=z/test3 type=file size=13") );
-#ifndef Q_OS_WIN
     str = listing[15];
     str.replace(QRegExp("mode.*path"), "path" );
     QCOMPARE( str, QString("path=z/test3_symlink type=file size=5 symlink=test3") );
-#endif
 
     QVERIFY( zip.close() );
 }
@@ -940,7 +926,5 @@ void KArchiveTest::cleanupTestCase()
     QFile::remove(s_zipMaxLengthFileName);
     QFile::remove(s_zipFileName);
     QFile::remove(s_zipLocaleFileName);
-#ifndef Q_OS_WIN
     QFile::remove("test3_symlink");
-#endif
 }

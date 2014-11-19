@@ -22,7 +22,6 @@
 #include <QDebug>
 //#include <errno.h>
 
-#ifndef Q_OS_WIN
 inline KFileSystemType::Type kde_typeFromName(const char *name)
 {
     if (qstrncmp(name, "nfs", 3) == 0
@@ -126,12 +125,6 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
 #else
     return kde_typeFromName(buf.f_basetype);
 #endif
-}
-#endif
-#else
-KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
-{
-    return KFileSystemType::Unknown;
 }
 #endif
 

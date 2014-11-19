@@ -838,12 +838,7 @@ void KDirWatchPrivate::addEntry(KDirWatch* instance, const QString& _path,
       watchModes = KDirWatch::WatchDirOnly;
     }
 
-#ifdef Q_OS_WIN
-    // ctime is the 'creation time' on windows - use mtime instead
-    e->m_ctime = stat_buf.st_mtime;
-#else
     e->m_ctime = stat_buf.st_ctime;
-#endif
     e->m_status = Normal;
     e->m_nlink = stat_buf.st_nlink;
     e->m_ino = stat_buf.st_ino;
@@ -1143,12 +1138,7 @@ bool KDirWatchPrivate::restartEntryScan( KDirWatch* instance, Entry* e,
       KDE_struct_stat stat_buf;
       bool exists = (KDE::stat(e->path, &stat_buf) == 0);
       if (exists) {
-#ifdef Q_OS_WIN
-        // ctime is the 'creation time' on windows - use mtime instead
-        e->m_ctime = stat_buf.st_mtime;
-#else
         e->m_ctime = stat_buf.st_ctime;
-#endif
         e->m_status = Normal;
         if (s_verboseDebug) {
           kDebug(7001) << "Setting status to Normal for" << e << e->path;

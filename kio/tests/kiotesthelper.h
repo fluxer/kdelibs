@@ -51,11 +51,6 @@ static void setTimeStamp( const QString& path, const QDateTime& mtime )
     utbuf.modtime = utbuf.actime;
     utime( QFile::encodeName( path ), &utbuf );
     //qDebug( "Time changed for %s", qPrintable( path ) );
-#elif defined(Q_OS_WIN)
-    struct _utimbuf utbuf;
-    utbuf.actime = mtime.toTime_t();
-    utbuf.modtime = utbuf.actime;
-    _wutime(reinterpret_cast<const wchar_t *>(path.utf16()), &utbuf);
 #endif
 }
 

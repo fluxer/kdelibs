@@ -44,9 +44,6 @@
 #include <ksystemtimezone.h>
 #include <kdebug.h>
 
-#ifdef Q_OS_WIN
-#include <windows.h>    // SYSTEMTIME
-#endif
 
 
 static const char shortDay[][4] = {
@@ -1240,18 +1237,9 @@ KDateTime KDateTime::currentLocalDateTime()
 KDateTime KDateTime::currentUtcDateTime()
 {
     KDateTime result;
-#ifdef Q_OS_WIN
-    SYSTEMTIME st;
-    memset(&st, 0, sizeof(SYSTEMTIME));
-    GetSystemTime(&st);
-    result = KDateTime(QDate(st.wYear, st.wMonth, st.wDay),
-                       QTime(st.wHour, st.wMinute, st.wSecond, st.wMilliseconds),
-                       UTC);
-#else
     time_t t;
     ::time(&t);
     result.setTime_t(static_cast<qint64>(t));
-#endif
 #ifndef NDEBUG
     return result.addSecs(KDateTimePrivate::currentDateTimeOffset);
 #else

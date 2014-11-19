@@ -121,9 +121,7 @@ extern "C" {
 #include <kcapacitybar.h>
 #include <kfileitemlistproperties.h>
 
-#ifndef Q_OS_WIN
 #include "kfilesharedialog.h"
-#endif
 
 #include "ui_kpropertiesdesktopbase.h"
 #include "ui_kpropertiesdesktopadvbase.h"

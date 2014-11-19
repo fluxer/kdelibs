@@ -34,13 +34,8 @@ QTEST_KDEMAIN_CORE( KStandarddirsTest )
 #include <config.h>
 
 // we need case-insensitive comparison of file paths on windows
-#ifdef Q_OS_WIN
-#define QCOMPARE_PATHS(x,y) QCOMPARE(QString(x).toLower(), QString(y).toLower())
-#define PATH_SENSITIVITY Qt::CaseInsensitive
-#else
 #define QCOMPARE_PATHS(x,y) QCOMPARE(QString(x), QString(y))
 #define PATH_SENSITIVITY Qt::CaseSensitive
-#endif
 
 void KStandarddirsTest::initTestCase()
 {
@@ -425,7 +420,6 @@ void KStandarddirsTest::testRestrictedResources()
 
 void KStandarddirsTest::testSymlinkResolution()
 {
-#ifndef Q_OS_WIN
     // This makes the save location for the david resource, "$HOME/.kde-unit-test/symlink/test/"
     // where symlink points to "real", and the subdir test will be created later
     // This used to confuse KStandardDirs and make it return unresolved paths,
@@ -458,7 +452,6 @@ void KStandarddirsTest::testSymlinkResolution()
     QCOMPARE(KStandardDirs::realPath(QString("/")), QString("/"));
 
     QCOMPARE(KStandardDirs::realPath(QString("/does_not_exist/")), QString("/does_not_exist/"));
-#endif
 }
 
 #include <QThreadPool>

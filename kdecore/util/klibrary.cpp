@@ -39,33 +39,6 @@ int kLibraryDebugArea() {
 QString findLibrary(const QString &name, const KComponentData &cData)
 {
     QString libname = findLibraryInternal(name, cData);
-#ifdef Q_OS_WIN
-    // we don't have 'lib' prefix on windows -> remove it and try again
-    if( libname.isEmpty() )
-    {
-      libname = name;
-      QString file, path;
-
-      int pos = libname.lastIndexOf( QLatin1Char('/') );
-      if ( pos >= 0 )
-      {
-        file = libname.mid( pos + 1 );
-        path = libname.left( pos );
-        libname = path + QLatin1Char('/') + file.mid( 3 );
-      }
-      else
-      {
-        file = libname;
-        libname = file.mid( 3 );
-      }
-      if( !file.startsWith( QLatin1String("lib") ) )
-          return file;
-
-      libname = findLibraryInternal(libname, cData);
-      if( libname.isEmpty() )
-        libname = name;
-    }
-#endif
     return libname;
 }
 
@@ -112,11 +85,6 @@ static KPluginFactory* kde3Factory(KLibrary *lib, const QByteArray &factoryname)
     t_func func = reinterpret_cast<t_func>(lib->resolveFunction( symname ));
     if ( !func )
     {
-#ifdef Q_OS_WIN
-        // a backup for cases when developer has set lib prefix for a plugin name (she should not...)
-        if (!factoryname.startsWith(QByteArray("lib")))
-            return kde3Factory(lib, QByteArray("lib")+symname.mid(5 /*"init_"*/));
-#endif
         kDebug(kLibraryDebugArea()) << "The library" << lib->fileName() << "does not offer an"
                     << symname << "function.";
         return 0;

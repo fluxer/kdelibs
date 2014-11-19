@@ -30,9 +30,6 @@
 
 #include <QtCore/QFile>
 #include <QtGui/QDesktopWidget>
-#ifdef Q_OS_WIN
-#include <QtCore/QDir>
-#endif
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
@@ -160,21 +157,12 @@ void KRecentFilesAction::addUrl( const KUrl& _url, const QString& name )
     if ( url.isLocalFile() && KGlobal::dirs()->relativeLocation("tmp", url.toLocalFile()) != url.toLocalFile() )
        return;
     const QString tmpName = name.isEmpty() ?  url.fileName() : name;
-#ifdef Q_OS_WIN
-    const QString file = url.isLocalFile() ? QDir::toNativeSeparators( url.pathOrUrl() ) : url.pathOrUrl();
-#else
     const QString file = url.pathOrUrl();
-#endif
 
     // remove file if already in list
     foreach (QAction* action, selectableActionGroup()->actions())
     {
-#ifdef Q_OS_WIN
-      const QString tmpFileName = url.isLocalFile() ? QDir::toNativeSeparators( d->m_urls[action].pathOrUrl() ) : d->m_urls[action].pathOrUrl();
-      if ( tmpFileName.endsWith(file, Qt::CaseInsensitive) )
-#else
       if ( d->m_urls[action].pathOrUrl().endsWith(file) )
-#endif
       {
         removeAction(action)->deleteLater();
         break;
@@ -295,11 +283,6 @@ void KRecentFilesAction::loadEntries( const KConfigGroup& _config)
         if (d->m_urls.values().contains(url))
           continue;
 
-#ifdef Q_OS_WIN
-        // convert to backslashes
-        if ( url.isLocalFile() )
-            value = QDir::toNativeSeparators( value );
-#endif
 
         nameKey = QString( "Name%1" ).arg( i );
         nameValue = cg.readPathEntry( nameKey, url.fileName() );
