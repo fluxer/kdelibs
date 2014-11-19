@@ -64,10 +64,6 @@ set(kdecore_OPTIONAL_LIBS)
 
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 
-if(WIN32)
-   set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${KDEWIN_LIBRARIES})
-endif(WIN32)
-
 # Needed for the kdatetime test in release mode
 if(KDE4_BUILD_TESTS)
    add_definitions(-DCOMPILING_TESTS)
@@ -97,45 +93,6 @@ if (HAVE_RESOLV_LIBRARY)
   set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} resolv)
 endif (HAVE_RESOLV_LIBRARY)
 
-if (APPLE)
-   set(kdecore_OPTIONAL_SRCS ${kdecore_OPTIONAL_SRCS}
-      kernel/kkernel_mac.cpp
-      localization/klocale_mac.cpp
-   )
-
-   set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${CARBON_LIBRARY})
-endif (APPLE)
-
-if (WIN32)
-   LIST(APPEND kdecore_OPTIONAL_SRCS
-      kernel/kkernel_win.cpp
-      kernel/ktoolinvocation_win.cpp
-      kernel/kstandarddirs_win.cpp
-      localization/klocale_win.cpp
-      network/klocalsocket_win.cpp
-      io/klockfile_win.cpp
-      util/kde_file_win.cpp
-      util/kmacroexpander_win.cpp
-      util/kshell_win.cpp
-      date/ktimezone_win.cpp
-   )
-   if(NOT WINCE)
-       LIST(APPEND kdecore_OPTIONAL_SRCS
-          util/kuser_win.cpp
-       )
-   else(NOT WINCE)
-       LIST(APPEND kdecore_OPTIONAL_SRCS
-          util/kuser_wince.cpp
-       )
-   endif(NOT WINCE)
-   if(NOT MSVC AND NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
-      LIST(APPEND kdecore_OPTIONAL_SRCS
-         network/netsupp.cpp
-      )
-   endif(NOT MSVC AND NOT ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
-endif (WIN32)
-
-
 if (UNIX)
    set(kdecore_OPTIONAL_SRCS ${kdecore_OPTIONAL_SRCS}
       kernel/ktoolinvocation_x11.cpp
@@ -154,9 +111,7 @@ endif (UNIX)
 add_subdirectory( kconfig_compiler )
 add_subdirectory( tests )
 add_subdirectory( sonnet/tests )
-if ( NOT WINCE )
-    add_subdirectory( network/kssld )
-endif ( NOT WINCE )
+add_subdirectory( network/kssld )
 
 ########### next target ###############
 
@@ -357,23 +312,18 @@ if(NOT KDE_NO_DEPRECATED)
     )
 endif(NOT KDE_NO_DEPRECATED)
 
-if(NOT WIN32)
-    set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS} util/kshareddatacache.cpp)
-    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
+set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS} util/kshareddatacache.cpp)
+set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
-    # KSharedDataCache uses exceptions as of 4.8.4, the rest of kdecore
-    # doesn't. Try to enable exceptions only for that file, except for
-    # enable-final builds where set_source_files_properties doesn't work.
-    if(KDE4_ENABLE_FINAL)
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-    else()
-        set_source_files_properties(util/kshareddatacache.cpp
-            PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}")
-    endif()
-else(NOT WIN32)
-    set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS} util/kshareddatacache_win.cpp)
-    set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS} io/kdirwatch_win.cpp)
-endif(NOT WIN32)
+# KSharedDataCache uses exceptions as of 4.8.4, the rest of kdecore
+# doesn't. Try to enable exceptions only for that file, except for
+# enable-final builds where set_source_files_properties doesn't work.
+if(KDE4_ENABLE_FINAL)
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+else()
+    set_source_files_properties(util/kshareddatacache.cpp
+        PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}")
+endif()
 
 if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
    add_definitions(-DNO_DISPLAY)
@@ -382,10 +332,6 @@ endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
 kde4_add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 
 target_link_libraries(kdecore ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${ZLIB_LIBRARY} ${kdecore_OPTIONAL_LIBS})
-
-if(WINCE)
-  target_link_libraries(kdecore ${WCECOMPAT_LIBRARIES} Ceshell.lib)
-endif(WINCE)
 
 set(SYS_INOTIFY_H_FOUND 0)
 if(SYS_INOTIFY_H_FOUND)
@@ -407,15 +353,7 @@ if(FAM_FOUND)
    target_link_libraries(kdecore ${FAM_LIBRARIES})
 endif(FAM_FOUND)
 
-if(WIN32)
-  set(kdecore_LINK_INTERFACE_LIBRARIES  ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} ${KDEWIN_LIBRARIES})
-else(WIN32)
-  if(APPLE)
-    set(kdecore_LINK_INTERFACE_LIBRARIES ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} ${CARBON_LIBRARY})
-  else(APPLE)
-    set(kdecore_LINK_INTERFACE_LIBRARIES ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
-  endif(APPLE)
-endif(WIN32)
+set(kdecore_LINK_INTERFACE_LIBRARIES ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
 target_link_libraries(kdecore LINK_INTERFACE_LIBRARIES ${kdecore_LINK_INTERFACE_LIBRARIES} )
 
