@@ -1610,7 +1610,7 @@ void KStandardDirs::addKDEDefaults()
         addResourceType(types_string + types_indices[index], 0, types_string + types_indices[index+1], true);
         index+=2;
     }
-    addResourceType("exe", "lib", "kde4/libexec", true );
+    addResourceType("exe", "lib", "katana/libexec", true );
 
     addResourceDir("home", QDir::homePath(), false);
 
