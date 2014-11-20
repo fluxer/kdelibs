@@ -624,16 +624,16 @@ public:
      * @li @c apps - @c share/applnk
      * @li @c sound - @c share/sounds
      * @li @c locale - @c share/locale
-     * @li @c services - @c share/katana/services
-     * @li @c servicetypes - @c share/katana/servicetypes
+     * @li @c services - @c share/kde4/services
+     * @li @c servicetypes - @c share/kde4/servicetypes
      * @li @c mime - @c share/mimelnk
      * @li @c cgi - @c cgi-bin
      * @li @c wallpaper - @c share/wallpapers
      * @li @c templates - @c share/templates
      * @li @c exe - @c bin
      * @li @c lib - @c lib[suffix]
-     * @li @c module - @c lib[suffix]/katana
-     * @li @c qtplugins - @c lib[suffix]/katana/plugins
+     * @li @c module - @c lib[suffix]/kde4
+     * @li @c qtplugins - @c lib[suffix]/kde4/plugins
      * @li @c kcfg - @c share/config.kcfg
      * @li @c emoticons - @c share/emoticons
      * @li @c xdgdata-apps - @c applications

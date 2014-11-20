@@ -265,8 +265,8 @@ void KServiceTest::testByStorageId()
 {
     if ( !KSycoca::isAvailable() )
         QSKIP("ksycoca not available", SkipAll);
-    if (KGlobal::dirs()->locate("xdgdata-apps", "katana/kmailservice.desktop").isEmpty()) {
-        QSKIP("katana/kmailservice.desktop not available", SkipAll);
+    if (KGlobal::dirs()->locate("xdgdata-apps", "kde4/kmailservice.desktop").isEmpty()) {
+        QSKIP("kde4/kmailservice.desktop not available", SkipAll);
     }
     QVERIFY(KService::serviceByMenuId("kde4-kmailservice.desktop"));
     QVERIFY(!KService::serviceByMenuId("kde4-kmailservice")); // doesn't work, extension mandatory
@@ -275,7 +275,7 @@ void KServiceTest::testByStorageId()
 
     // This one fails here; probably because there are two such files, so this would be too
     // ambiguous... According to the testAllServices output, the entryPaths are
-    // entryPath="/d/kde/inst/katana/share/applications/kde4/kmailservice.desktop"
+    // entryPath="/d/kde/inst/kde4/share/applications/kde4/kmailservice.desktop"
     // entryPath= "/usr/share/applications/kde4/kmailservice.desktop"
     //
     //QVERIFY(KService::serviceByDesktopPath("kmailservice.desktop"));
