@@ -8,8 +8,6 @@ set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
 # are listed explicitly:
 set(cmakeFilesDontInstall
                FindHUpnp.cmake
-               FindPolkitQt.cmake
-               FindPolkitQt-1.cmake
                FindUDev.cmake
                )
 
@@ -51,7 +49,6 @@ set(cmakeFiles
                FindGettext.cmake
                FindGphoto2.cmake
                FindHUNSPELL.cmake
-               FindIOKit.cmake
                FindKDE4Internal.cmake
                FindKDE4Workspace.cmake
                FindKDevPlatform.cmake
