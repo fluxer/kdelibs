@@ -500,27 +500,11 @@ if (_kdeBootStrapping)
 
    set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
 
-   if (WIN32)
-      set(LIBRARY_OUTPUT_PATH               ${EXECUTABLE_OUTPUT_PATH} )
-      # CMAKE_CFG_INTDIR is the output subdirectory created e.g. by XCode and MSVC
-      if (NOT WINCE)
-        set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-        set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
-      else (NOT WINCE)
-        set(KDE4_KCFGC_EXECUTABLE             ${HOST_BINDIR}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
-        set(KDE4_MEINPROC_EXECUTABLE          ${HOST_BINDIR}/${CMAKE_CFG_INTDIR}/meinproc4 )
-      endif(NOT WINCE)
-
-      set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4 )
-      set(KDE4_KAUTH_POLICY_GEN_EXECUTABLE  ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kauth-policy-gen )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets )
-   else (WIN32)
-      set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
-      set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX}.shell )
-      set(KDE4_KAUTH_POLICY_GEN_EXECUTABLE  ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kauth-policy-gen${CMAKE_EXECUTABLE_SUFFIX}.shell )
-      set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4${CMAKE_EXECUTABLE_SUFFIX}.shell )
-      set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
-   endif (WIN32)
+   set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
+   set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX}.shell )
+   set(KDE4_KAUTH_POLICY_GEN_EXECUTABLE  ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kauth-policy-gen${CMAKE_EXECUTABLE_SUFFIX}.shell )
+   set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4${CMAKE_EXECUTABLE_SUFFIX}.shell )
+   set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
 
@@ -542,19 +526,6 @@ else (_kdeBootStrapping)
    set( _KDE4_KAUTH_POLICY_GEN_EXECUTABLE_DEP)
 
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-
-   if (WIN32)
-      # we don't want to be forced to set two paths into the build tree
-      set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/bin )
-
-      # on win32 the install dir is determined on runtime not install time
-      # KDELIBS_INSTALL_DIR and QT_INSTALL_DIR are used in KDELibsDependencies.cmake to setup
-      # kde install paths and library dependencies
-      get_filename_component(_DIR ${KDE4_KDECONFIG_EXECUTABLE} PATH )
-      get_filename_component(KDE4_INSTALL_DIR ${_DIR} PATH )
-      get_filename_component(_DIR ${QT_QMAKE_EXECUTABLE} PATH )
-      get_filename_component(QT_INSTALL_DIR ${_DIR} PATH )
-   endif (WIN32)
 
    # These files contain information about the installed kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
@@ -719,24 +690,6 @@ endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSI
 # info from "http://www.linuxfromscratch.org/hlfs/view/unstable/glibc/chapter02/pie.html"
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
-if (WIN32)
-   list(APPEND CMAKE_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/share/apps/cmake/modules")
-   find_package(KDEWin REQUIRED)
-   option(KDE4_ENABLE_UAC_MANIFEST "add manifest to make vista uac happy" OFF)
-   if (KDE4_ENABLE_UAC_MANIFEST)
-      find_program(KDE4_MT_EXECUTABLE mt
-         PATHS ${KDEWIN_INCLUDE_DIR}/../bin
-         NO_DEFAULT_PATH
-      )
-      if (KDE4_MT_EXECUTABLE)
-         message(STATUS "Found KDE manifest tool at ${KDE4_MT_EXECUTABLE} ")
-      else (KDE4_MT_EXECUTABLE)
-         message(STATUS "KDE manifest tool not found, manifest generating for Windows Vista disabled")
-         set (KDE4_ENABLE_UAC_MANIFEST OFF)
-      endif (KDE4_MT_EXECUTABLE)
-   endif (KDE4_ENABLE_UAC_MANIFEST)
-endif (WIN32)
-
 #####################  some more settings   ##########################################
 
 if( KDE4_ENABLE_FINAL)
@@ -864,13 +817,6 @@ set(CMAKE_SYSTEM_PROGRAM_PATH ${CMAKE_SYSTEM_PROGRAM_PATH}
 set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH}
                               "${KDE4_LIB_INSTALL_DIR}" )
 
-# under Windows dlls may be also installed in bin/
-if(WIN32)
-  set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH}
-                                "${_CMAKE_INSTALL_DIR}/bin"
-                                "${CMAKE_INSTALL_PREFIX}/bin" )
-endif(WIN32)
-
 
 ######################################################
 #  and now the platform specific stuff
@@ -885,7 +831,7 @@ endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 
 if (WIN32 OR CYGWIN OR APPLE)
    message(FATAL_ERROR "Windows/Cygwin/Apple is NOT supported.")
-endif(WIN32 OR CYGWIN)
+endif(WIN32 OR CYGWIN OR APPLE)
 
 # setup default RPATH/install_name handling, may be overridden by KDE4_HANDLE_RPATH_FOR_EXECUTABLE
 # It sets up to build with full RPATH. When installing, RPATH will be changed to the LIB_INSTALL_DIR
@@ -975,19 +921,6 @@ macro(KDE_CHECK_FLAG_EXISTS FLAG VAR DOC)
       set(${VAR} "${${VAR}} ${FLAG}" CACHE STRING "Flags used by the linker during ${DOC} builds." FORCE)
    endif(NOT ${VAR} MATCHES "${FLAG}")
 endmacro(KDE_CHECK_FLAG_EXISTS FLAG VAR)
-
-if (MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
-   set (KDE4_ENABLE_EXCEPTIONS -EHsc)
-
-   # Qt disables the native wchar_t type, do it too to avoid linking issues
-   set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Zc:wchar_t-" )
-
-   # make sure that no header adds libcmt by default using #pragma comment(lib, "libcmt.lib") as done by mfc/afx.h
-   kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELWITHDEBINFO "Release with Debug Info")
-   kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_RELEASE "release")
-   kde_check_flag_exists("/NODEFAULTLIB:libcmt /DEFAULTLIB:msvcrt" CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "release minsize")
-   kde_check_flag_exists("/NODEFAULTLIB:libcmtd /DEFAULTLIB:msvcrtd" CMAKE_EXE_LINKER_FLAGS_DEBUG "debug")
-endif(MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
 
 # This macro is for internal use only
 # Return the directories present in gcc's include path.
@@ -1250,32 +1183,32 @@ endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND KDE4_INST
 
 macro (KDE4_PRINT_RESULTS)
 
-   # inside kdelibs the include dir and lib dir are internal, not "found"
-   if (NOT _kdeBootStrapping)
-       if(KDE4_INCLUDE_DIR)
-          message(STATUS "Found KDE 4.12 include dir: ${KDE4_INCLUDE_DIR}")
-       else(KDE4_INCLUDE_DIR)
-          message(STATUS "ERROR: unable to find the KDE 4 headers")
-       endif(KDE4_INCLUDE_DIR)
+# inside kdelibs the include dir and lib dir are internal, not "found"
+if (NOT _kdeBootStrapping)
+    if(KDE4_INCLUDE_DIR)
+      message(STATUS "Found KDE 4.12 include dir: ${KDE4_INCLUDE_DIR}")
+    else(KDE4_INCLUDE_DIR)
+      message(STATUS "ERROR: unable to find the KDE 4 headers")
+    endif(KDE4_INCLUDE_DIR)
 
-       if(KDE4_LIB_DIR)
-          message(STATUS "Found KDE 4.12 library dir: ${KDE4_LIB_DIR}")
-       else(KDE4_LIB_DIR)
-          message(STATUS "ERROR: unable to find the KDE 4 core library")
-       endif(KDE4_LIB_DIR)
-   endif (NOT _kdeBootStrapping)
+    if(KDE4_LIB_DIR)
+      message(STATUS "Found KDE 4.12 library dir: ${KDE4_LIB_DIR}")
+    else(KDE4_LIB_DIR)
+      message(STATUS "ERROR: unable to find the KDE 4 core library")
+    endif(KDE4_LIB_DIR)
+endif (NOT _kdeBootStrapping)
 
-   if(KDE4_KCFGC_EXECUTABLE)
-      message(STATUS "Found the KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
-   else(KDE4_KCFGC_EXECUTABLE)
-      message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
-   endif(KDE4_KCFGC_EXECUTABLE)
+if(KDE4_KCFGC_EXECUTABLE)
+  message(STATUS "Found the KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
+else(KDE4_KCFGC_EXECUTABLE)
+  message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
+endif(KDE4_KCFGC_EXECUTABLE)
 
-   if(AUTOMOC4_EXECUTABLE)
-      message(STATUS "Found automoc4: ${AUTOMOC4_EXECUTABLE}")
-   else(AUTOMOC4_EXECUTABLE)
-      message(STATUS "Didn't find automoc4")
-   endif(AUTOMOC4_EXECUTABLE)
+if(AUTOMOC4_EXECUTABLE)
+  message(STATUS "Found automoc4: ${AUTOMOC4_EXECUTABLE}")
+else(AUTOMOC4_EXECUTABLE)
+  message(STATUS "Didn't find automoc4")
+endif(AUTOMOC4_EXECUTABLE)
 endmacro (KDE4_PRINT_RESULTS)
 
 
