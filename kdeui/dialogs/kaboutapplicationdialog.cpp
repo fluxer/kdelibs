@@ -113,8 +113,8 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
         titleWidget->setText(i18n("<html><font size=\"5\">%1</font><br /><b>Version %2</b><br />&nbsp;</html>",
                                   aboutData->programName(), aboutData->version()));
     else
-        titleWidget->setText(i18nc("Program name, version and KDE platform version; do not translate 'Development Platform'",
-                                   "<html><font size=\"5\">%1</font><br /><b>Version %2</b><br />Using KDE Development Platform %3</html>",
+        titleWidget->setText(i18nc("Program name, version and Katana platform version; do not translate 'Development Platform'",
+                                   "<html><font size=\"5\">%1</font><br /><b>Version %2</b><br />Using Katana Development Platform %3</html>",
                                    aboutData->programName(), aboutData->version(), QString(KDE_VERSION_STRING)));
 
     //Then the tab bar...
