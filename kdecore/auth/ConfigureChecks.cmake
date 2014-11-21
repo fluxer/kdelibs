@@ -7,6 +7,8 @@ set(KAUTH_BACKEND "DBus" CACHE STRING "Specifies the KAuth helper backend to bui
 # Add the correct libraries/files depending on the backend
 if (KAUTH_BACKEND STREQUAL "DBus")
   set(KAUTH_COMPILING_DBUS_HELPER_BACKEND TRUE)
+  set(KDE4_AUTH_HELPER_BACKEND_NAME "DBUS")
+  set(KDE4_AUTH_BACKEND_NAME "DBUS")
   set(KAUTH_BACKEND_SRCS
         auth/backends/dbus/DBusBackend.cpp
         auth/backends/dbus/DBusBackend.h

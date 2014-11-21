@@ -502,7 +502,6 @@ if (_kdeBootStrapping)
 
    set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
    set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX}.shell )
-   set(KDE4_KAUTH_POLICY_GEN_EXECUTABLE  ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kauth-policy-gen${CMAKE_EXECUTABLE_SUFFIX}.shell )
    set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4${CMAKE_EXECUTABLE_SUFFIX}.shell )
    set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
 
@@ -511,7 +510,6 @@ if (_kdeBootStrapping)
 
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
-   set( _KDE4_KAUTH_POLICY_GEN_EXECUTABLE_DEP kauth-policy-gen)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc4)
 
@@ -523,7 +521,6 @@ else (_kdeBootStrapping)
    set( _KDE4_KCONFIG_COMPILER_DEP)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP)
-   set( _KDE4_KAUTH_POLICY_GEN_EXECUTABLE_DEP)
 
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
@@ -572,7 +569,6 @@ else (_kdeBootStrapping)
     set(KDE4_KCFGC_EXECUTABLE             ${HOST_BINDIR}/${CMAKE_CFG_INTDIR}/kconfig_compiler )
     set(KDE4_MEINPROC_EXECUTABLE          ${HOST_BINDIR}/${CMAKE_CFG_INTDIR}/meinproc4 )
    endif(NOT WINCE)
-   get_target_property(KDE4_KAUTH_POLICY_GEN_EXECUTABLE  ${KDE4_TARGET_PREFIX}kauth-policy-gen    LOCATION_${_firstConfig})
    get_target_property(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${KDE4_TARGET_PREFIX}makekdewidgets      LOCATION_${_firstConfig})
 
    # allow searching cmake modules in all given kde install locations (KDEDIRS based)
