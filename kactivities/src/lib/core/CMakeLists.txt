@@ -176,7 +176,6 @@ install (
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/KActivitiesConfig.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/KActivitiesConfigVersion.cmake
-    KActivitiesLibraryTargets.cmake
     DESTINATION
     ${LIB_INSTALL_DIR}/cmake/KActivities
 )
