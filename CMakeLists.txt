@@ -272,6 +272,7 @@ add_subdirectory( kdewebkit )
 add_subdirectory( includes )
 
 add_subdirectory( experimental )
+add_subdirectory( kactivities )
 
 ################# write dependency file which will be installed #################
 
