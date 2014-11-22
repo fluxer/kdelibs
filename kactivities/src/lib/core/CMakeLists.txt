@@ -130,6 +130,8 @@ target_link_libraries (
 
 ## install
 
+install(TARGETS kactivities EXPORT kactivitiesLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+
 set (
     kactivities_LIB_HEADERS
     consumer.h
