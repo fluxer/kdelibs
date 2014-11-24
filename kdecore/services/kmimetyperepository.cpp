@@ -716,11 +716,11 @@ static int mimeDataBaseVersion()
     }
 
     // Add platform specific hard-coded default paths to the list...
-    paths << QLatin1String("/usr/share/pkgconfig")
+    paths << QLatin1String("/usr/share/pkgconfig");
     paths << QLatin1String("/usr/lib/pkgconfig");
     paths << QLatin1String("/usr/lib32/pkgconfig");
     paths << QLatin1String("/usr/lib64/pkgconfig");
-    paths << QLatin1String("/share/pkgconfig")
+    paths << QLatin1String("/share/pkgconfig");
     paths << QLatin1String("/lib/pkgconfig");
     paths << QLatin1String("/lib32/pkgconfig");
     paths << QLatin1String("/lib64/pkgconfig");
