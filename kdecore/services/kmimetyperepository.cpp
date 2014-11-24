@@ -690,17 +690,6 @@ bool KMimeTypeRepository::useFavIcons()
     return m_useFavIcons;
 }
 
-static void addPlatformSpecificPkgConfigPath(QStringList& paths)
-{
-#if defined (Q_OS_FREEBSD)
-    paths << QLatin1String("/usr/local/libdata/pkgconfig"); // FreeBSD
-#elif defined(Q_OS_OPENBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_SOLARIS)
-    paths << QLatin1String("/usr/local/lib/pkgconfig"); // {Net,Open}BSD/OpenSolaris
-#elif defined (Q_OS_UNIX)
-    paths << QLatin1String("/usr/share/pkgconfig"); // Linux and all other unix
-#endif
-}
-
 static int mimeDataBaseVersion()
 {
     // shared-mime-info installs a "version" file since 0.91
@@ -727,7 +716,14 @@ static int mimeDataBaseVersion()
     }
 
     // Add platform specific hard-coded default paths to the list...
-    addPlatformSpecificPkgConfigPath(paths);
+    paths << QLatin1String("/usr/share/pkgconfig")
+    paths << QLatin1String("/usr/lib/pkgconfig");
+    paths << QLatin1String("/usr/lib32/pkgconfig");
+    paths << QLatin1String("/usr/lib64/pkgconfig");
+    paths << QLatin1String("/share/pkgconfig")
+    paths << QLatin1String("/lib/pkgconfig");
+    paths << QLatin1String("/lib32/pkgconfig");
+    paths << QLatin1String("/lib64/pkgconfig");
 
     Q_FOREACH(const QString& path, paths) {
         const QString fileName = path + QLatin1String("/shared-mime-info.pc");
