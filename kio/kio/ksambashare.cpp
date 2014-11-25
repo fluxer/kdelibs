@@ -35,6 +35,7 @@
 #include <kglobal.h>
 #include <kprocess.h>
 #include <kuser.h>
+#include <kstandarddirs.h>
 
 // Default smb.conf locations
 // sorted by priority, most priority first
@@ -69,8 +70,7 @@ KSambaSharePrivate::~KSambaSharePrivate()
 
 bool KSambaSharePrivate::isSambaInstalled()
 {
-    if (QFile::exists("/usr/sbin/smbd")
-        || QFile::exists("/usr/local/sbin/smbd")) {
+    if (!KStandardDirs::findExe("smbd").isEmpty()) {
         return true;
     }
 
