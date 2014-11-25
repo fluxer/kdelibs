@@ -35,7 +35,6 @@
 #include <kactioncollection.h>
 #include <kapplication.h>
 #include <kauthorized.h>
-#include <kbugreport.h>
 #include <kdialog.h>
 #include <kguiitem.h>
 #include <khbox.h>
@@ -67,7 +66,6 @@ public:
         mMenu = 0;
         mAboutApp = 0;
         mAboutKDE = 0;
-        mBugReport = 0;
         mWhatsThisAction = 0;
         mReportBugAction = 0;
         mAboutAppAction = 0;
@@ -78,7 +76,6 @@ public:
         delete mMenu;
         delete mAboutApp;
         delete mAboutKDE;
-        delete mBugReport;
         delete mSwitchApplicationLanguage;
     }
 
@@ -87,7 +84,6 @@ public:
     KMenu *mMenu;
     KDialog *mAboutApp;
     KAboutKdeDialog *mAboutKDE;
-    KBugReport *mBugReport;
     KSwitchLanguageDialog *mSwitchApplicationLanguage;
 
 // TODO evaluate if we use static_cast<QWidget*>(parent()) instead of mParent to win that bit of memory
@@ -310,12 +306,8 @@ void KHelpMenu::aboutKDE()
 
 void KHelpMenu::reportBug()
 {
-  if( !d->mBugReport )
-  {
-    d->mBugReport = new KBugReport( d->mParent, false, d->mAboutData );
-    connect( d->mBugReport, SIGNAL(finished()),this,SLOT(dialogFinished()) );
-  }
-  d->mBugReport->show();
+#warning "unhardcode the bug reports URL"
+  KToolInvocation::invokeBrowser( "http://entropy-linux.com/forums" );
 }
 
 
@@ -341,11 +333,6 @@ void KHelpMenu::timerExpired()
   if( d->mAboutKDE && !d->mAboutKDE->isVisible() )
   {
     delete d->mAboutKDE; d->mAboutKDE = 0;
-  }
-
-  if( d->mBugReport && !d->mBugReport->isVisible() )
-  {
-    delete d->mBugReport; d->mBugReport = 0;
   }
 
   if ( d->mSwitchApplicationLanguage && !d->mSwitchApplicationLanguage->isVisible() )

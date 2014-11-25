@@ -167,12 +167,11 @@ class KDEUI_EXPORT KHelpMenu : public QObject
 
     enum MenuId
     {
-      menuHelpContents = 0,
-      menuWhatsThis = 1,
-      menuAboutApp = 2,
-      menuAboutKDE = 3,
-      menuReportBug = 4,
-      menuSwitchLanguage = 5
+      menuWhatsThis = 0,
+      menuAboutApp = 1,
+      menuAboutKDE = 2,
+      menuReportBug = 3,
+      menuSwitchLanguage = 4
     };
 
     /**
