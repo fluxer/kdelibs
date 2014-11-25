@@ -53,6 +53,8 @@
 #include <QX11EmbedWidget>
 #endif
 
+#include <config-widgets.h>
+
 using namespace KDEPrivate;
 
 class KHelpMenuPrivate
@@ -306,8 +308,7 @@ void KHelpMenu::aboutKDE()
 
 void KHelpMenu::reportBug()
 {
-#warning "unhardcode the bug reports URL"
-  KToolInvocation::invokeBrowser( "http://entropy-linux.com/forums" );
+  KToolInvocation::invokeBrowser( BUG_REPORT_URL );
 }
 
 

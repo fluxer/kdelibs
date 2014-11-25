@@ -1,0 +1,1 @@
+#define BUG_REPORT_URL "${BUG_REPORT_URL}"
