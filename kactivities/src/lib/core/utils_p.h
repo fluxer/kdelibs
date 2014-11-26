@@ -25,7 +25,7 @@
 #include <QMutex>
 #include <QDebug>
 
-#include <KLocalizedString>
+#include <klocalizedstring.h>
 
 // Creates an async call to retrieve a value from the dbus service
 // and initializes the call watcher
