@@ -670,7 +670,6 @@ public:
             return;
         bool rejectY = false;
         bool rejectX = false;
-        bool moved = false;
 
         if (canYFlick()) {
             int dy = int(event->scenePos().y() - pressPos.y());
@@ -692,7 +691,6 @@ public:
                 }
                 if (!rejectY && stealEvent) {
                     setWidgetY(qRound(newY));
-                    moved = true;
                 }
                 if (qAbs(dy) > KGlobalSettings::dndEventDelay())
                     stealEvent = true;
@@ -719,7 +717,6 @@ public:
                 }
                 if (!rejectX && stealEvent) {
                     setWidgetX(qRound(newX));
-                    moved = true;
                 }
 
                 if (qAbs(dx) > KGlobalSettings::dndEventDelay())

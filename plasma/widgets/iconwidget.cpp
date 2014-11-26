@@ -1217,7 +1217,7 @@ void IconWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         painter->drawImage(textBoundingRect.topLeft() + shadowPos, shadow);
     } else if (!(d->text.isEmpty() && d->infoText.isEmpty()) &&
                !textBoundingRect.isEmpty()) {
-        QRect labelRect = d->labelRectangle(option, icon, d->text).toRect();
+        // QRect labelRect = d->labelRectangle(option, icon, d->text).toRect();
 
         foreach (const QRect &rect, d->haloRects) {
             Plasma::PaintUtils::drawHalo(painter, rect);

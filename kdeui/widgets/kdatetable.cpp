@@ -707,7 +707,7 @@ void KDateTable::mousePressEvent( QMouseEvent *e )
         return;
     }
 
-    int row, col, pos, temp;
+    int row, col, pos;
 
     QPoint mouseCoord = e->pos();
     row = mouseCoord.y() * d->m_numWeekRows / height();
@@ -725,7 +725,7 @@ void KDateTable::mousePressEvent( QMouseEvent *e )
     // the row with the days of the week in the calculation.
 
     // old selected date:
-    temp = posFromDate( date() );
+    // temp = posFromDate( date() );
 
     // new position and date
     pos = ( d->m_numDayColumns * ( row - 1 ) ) + col;

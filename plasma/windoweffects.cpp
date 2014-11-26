@@ -29,9 +29,6 @@
     #include <X11/Xatom.h>
     #include <X11/Xutil.h>
     #include <QX11Info>
-
-    #define DASHBOARD_WIN_NAME "dashboard"
-    #define DASHBOARD_WIN_CLASS "dashboard"
 #endif
 
 namespace Plasma
@@ -331,9 +328,11 @@ void enableBlurBehind(WId window, bool enable, const QRegion &region)
 void markAsDashboard(WId window)
 {
 #ifdef Q_WS_X11
+    // avoid cast warning
+    char dash[] = "dashboard";
     XClassHint classHint;
-    classHint.res_name = DASHBOARD_WIN_NAME;
-    classHint.res_class = DASHBOARD_WIN_CLASS;
+    classHint.res_name = dash;
+    classHint.res_class = dash;
     XSetClassHint(QX11Info::display(), window, &classHint);
 #endif
 }
