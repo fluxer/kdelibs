@@ -21,16 +21,16 @@
 
 #include "webkit_filter.h"
 
-#include <KDE/KConfig>
-#include <KDE/KConfigGroup>
-#include <KDE/KJob>
-#include <KDE/KIO/Job>
-#include <KDE/KDebug>
-#include <KDE/KGlobal>
-#include <KDE/KGlobalSettings>
-#include <KDE/KLocale>
-#include <KDE/KMessageBox>
-#include <KDE/KStandardDirs>
+#include <kconfig.h>
+#include <kconfiggroup.h>
+#include <kjob.h>
+#include <kio/job.h>
+#include <kdebug.h>
+#include <kglobal.h>
+#include <kglobalsettings.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kstandarddirs.h>
 
 #include <QWebSettings>
 #include <QFontDatabase>

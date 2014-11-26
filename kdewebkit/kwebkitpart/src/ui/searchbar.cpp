@@ -25,10 +25,10 @@
 
 #include "searchbar.h"
 
-#include <KDE/KLineEdit>
-#include <KDE/KColorScheme>
-#include <KDE/KIcon>
-#include <KDE/KLocalizedString>
+#include <klineedit.h>
+#include <kcolorscheme.h>
+#include <kicon.h>
+#include <klocalizedstring.h>
 
 #include <QResizeEvent>
 

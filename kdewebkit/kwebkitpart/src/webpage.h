@@ -25,8 +25,8 @@
 
 #include "websslinfo.h"
 
-#include <KDE/KWebPage>
-#include <KDE/KParts/BrowserExtension>
+#include <kwebpage.h>
+#include <kparts/browserextension.h>
 
 #include <QUrl>
 #include <QDebug>

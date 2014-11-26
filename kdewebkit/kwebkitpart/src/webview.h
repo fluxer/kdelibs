@@ -23,8 +23,8 @@
 #ifndef WEBVIEW_H
 #define WEBVIEW_H
 
-#include <KDE/KParts/BrowserExtension>
-#include <KDE/KWebView>
+#include <kparts/browserextension.h>
+#include <kwebview.h>
 
 #include <QWebHitTestResult>
 

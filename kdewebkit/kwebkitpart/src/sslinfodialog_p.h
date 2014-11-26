@@ -23,7 +23,7 @@
 
 #include <kdemacros.h>
 
-#include <KDE/KDialog>
+#include <kdialog.h>
 #include <ktcpsocket.h>
 
 // NOTE: We need a copy of this header file here because it is never

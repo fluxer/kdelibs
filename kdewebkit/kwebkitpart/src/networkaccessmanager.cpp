@@ -21,10 +21,10 @@
 #include "networkaccessmanager.h"
 #include "settings/webkitsettings.h"
 
-#include <KDE/KDebug>
-#include <KDE/KLocalizedString>
-#include <KDE/KProtocolInfo>
-#include <KDE/KRun>
+#include <kdebug.h>
+#include <klocalizedstring.h>
+#include <kprotocolinfo.h>
+#include <krun.h>
 
 #include <QTimer>
 #include <QWidget>

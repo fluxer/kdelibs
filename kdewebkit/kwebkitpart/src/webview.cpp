@@ -27,18 +27,18 @@
 #include "settings/webkitsettings.h"
 
 #include <kio/global.h>
-#include <KDE/KAboutData>
-#include <KDE/KAction>
-#include <KDE/KActionCollection>
-#include <KDE/KConfigGroup>
-#include <KDE/KMimeType>
-#include <KDE/KService>
-#include <KDE/KUriFilter>
-#include <KDE/KStandardDirs>
-#include <KDE/KActionMenu>
-#include <KDE/KIO/AccessManager>
-#include <KDE/KStringHandler>
-#include <KDE/KDebug>
+#include <kaboutdata.h>
+#include <kaction.h>
+#include <kactioncollection.h>
+#include <kconfiggroup.h>
+#include <kmimetype.h>
+#include <kservice.h>
+#include <kurifilter.h>
+#include <kstandarddirs.h>
+#include <kactionmenu.h>
+#include <kio/accessmanager.h>
+#include <kstringhandler.h>
+#include <kdebug.h>
 
 #include <QTimer>
 #include <QMimeData>

@@ -22,7 +22,7 @@
 #include "kwebkitpart_ext.h"
 #include "kwebkitpart.h"
 
-#include <KDE/KDebug>
+#include <kdebug.h>
 
 #include <QWidget>
 

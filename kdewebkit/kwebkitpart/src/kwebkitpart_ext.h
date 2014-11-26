@@ -21,9 +21,9 @@
 #ifndef WEBKITPART_EXT_H
 #define WEBKITPART_EXT_H
 
-#include <KDE/KParts/BrowserExtension>
-#include <KDE/KParts/TextExtension>
-#include <KDE/KParts/HtmlExtension>
+#include <kparts/browserextension.h>
+#include <kparts/textextension.h>
+#include <kparts/htmlextension.h>
 #include <kparts/scriptableextension.h>
 
 class KUrl;

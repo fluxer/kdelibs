@@ -21,7 +21,7 @@
 */
 
 #include "webkit_filter.h"
-#include <KDE/KDebug>
+#include <kdebug.h>
 
 #include <QHash>
 #include <QBitArray>

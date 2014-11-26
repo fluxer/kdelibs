@@ -23,10 +23,10 @@
 
 #include "settings/webkitsettings.h"
 
-#include <KDE/KIcon>
-#include <KDE/KDebug>
-#include <KDE/KColorScheme>
-#include <KDE/KLocalizedString>
+#include <kicon.h>
+#include <kdebug.h>
+#include <kcolorscheme.h>
+#include <klocalizedstring.h>
 
 #include <QCoreApplication>
 #include <QAction>

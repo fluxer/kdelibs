@@ -22,7 +22,7 @@
 #ifndef KWEBKITPART_H
 #define KWEBKITPART_H
 
-#include <KDE/KParts/ReadOnlyPart>
+#include <kparts/part.h>
 
 namespace KParts {
   class BrowserExtension;
