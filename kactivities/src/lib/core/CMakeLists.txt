@@ -1,7 +1,7 @@
 project (kactivities)
 
 find_package (Qt4 REQUIRED)
-find_package (KDE4 REQUIRED)
+find_package (KDE4Internal REQUIRED)
 include (KDE4Defaults)
 include (MacroLibrary)
 include (MacroOptionalAddSubdirectory)

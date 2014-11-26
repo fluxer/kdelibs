@@ -1,6 +1,6 @@
 project (KACTIVITIES)
 
-find_package (KDE4 REQUIRED)
+find_package (KDE4Internal REQUIRED)
 
 include (GenerateExportHeader)
 include (KDE4Defaults)
