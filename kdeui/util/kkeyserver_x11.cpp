@@ -20,6 +20,8 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <config-kkeyserver.h>
+
 #include "kkeyserver_x11.h"
 
 #include "kdebug.h"
@@ -31,7 +33,7 @@
 # include <X11/X.h>
 # include <X11/Xlib.h>
 # include <X11/Xutil.h>
-#ifdef X11_Xkb_FOUND
+#ifdef HAVE_XKB
 # include <X11/XKBlib.h>
 #endif
 # include <X11/keysymdef.h>
@@ -530,7 +532,7 @@ bool initializeMods()
 
             for( int k = 0; k < keysyms_per_keycode; ++k ) {
 
-#ifdef X11_Xkb_FOUND
+#ifdef HAVE_XKB
                 keySymX = XkbKeycodeToKeysym( QX11Info::display(), xmk->modifiermap[xmk->max_keypermod * i + j], 0, k );
 #else
                 keySymX = XKeycodeToKeysym( QX11Info::display(), xmk->modifiermap[xmk->max_keypermod * i + j], k );
@@ -678,7 +680,7 @@ uint getModsRequired(uint sym)
         // need to check index 0 before the others, so that a null-mod
         //  can take precedence over the others, in case the modified
         //  key produces the same symbol.
-#ifdef X11_Xkb_FOUND
+#ifdef HAVE_XKB
         if( sym == XkbKeycodeToKeysym( QX11Info::display(), code, 0, 0 ) )
             ;
         else if( sym == XkbKeycodeToKeysym( QX11Info::display(), code, 0, 1 ) )
@@ -847,7 +849,7 @@ bool xEventToQt( XEvent* e, int* keyQt )
     // If numlock is active and a keypad key is pressed, XOR the SHIFT state.
     //  e.g., KP_4 => Shift+KP_Left, and Shift+KP_4 => KP_Left.
     if( e->xkey.state & modXNumLock() ) {
-#ifdef X11_Xkb_FOUND
+#ifdef HAVE_XKB
         uint sym = XkbKeycodeToKeysym( QX11Info::display(), keyCodeX, 0, 0 );
 #else
         uint sym = XKeycodeToKeysym( QX11Info::display(), keyCodeX, 0 );

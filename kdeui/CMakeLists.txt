@@ -68,6 +68,14 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/util/config-kwallet.h
 )
 
+if (X11_Xkb_FOUND)
+     SET(HAVE_XKB TRUE)
+endif()
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/util/config-kkeyserver.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/util/config-kkeyserver.h
+)
+
 add_subdirectory( about )
 add_subdirectory( tests )
 add_subdirectory( sonnet/tests )
