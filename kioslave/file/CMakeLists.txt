@@ -9,12 +9,7 @@ configure_file(config-kioslave-file.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-k
 
 ########### next target ###############
 
-if(WIN32)
-  set(kio_file_PART_SRCS file.cpp file_win.cpp )
-else(WIN32)
-  set(kio_file_PART_SRCS file.cpp file_unix.cpp )
-endif(WIN32)
-
+set(kio_file_PART_SRCS file.cpp file_unix.cpp )
 
 kde4_add_plugin(kio_file ${kio_file_PART_SRCS})
 

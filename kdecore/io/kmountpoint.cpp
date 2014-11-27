@@ -389,11 +389,6 @@ KMountPoint::List KMountPoint::currentMountPoints(DetailsNeededFlags infoNeeded)
     }
 
     free( mntctl_buffer );
-#elif defined(_WIN32_WCE)
-	Ptr mp(new KMountPoint);
-    mp->d->mountPoint = QString("/");
-    result.append(mp);
-
 #else
    STRUCT_SETMNTENT mnttab;
    if ((mnttab = SETMNTENT(MNTTAB, "r")) == 0)

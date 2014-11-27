@@ -6,12 +6,6 @@ include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
 configure_file(solid_export.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h)
 
 include (CheckCXXSourceCompiles)
-if(MSVC OR (WIN32 AND "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel"))
-check_cxx_source_compiles("int main() { __asm { pxor mm0, mm0 }; }" HAVE_X86_MMX)
-check_cxx_source_compiles("int main() { __asm { xorps xmm0, xmm0 }; }" HAVE_X86_SSE)
-check_cxx_source_compiles("int main() { __asm { xorpd xmm0, xmm0 }; }" HAVE_X86_SSE2)
-check_cxx_source_compiles("int main() { __asm { femms }; }" HAVE_X86_3DNOW)
-else()
 check_cxx_source_compiles("	#ifdef __SUNPRO_CC
 					#define __asm__ asm
 				#endif
@@ -28,7 +22,6 @@ check_cxx_source_compiles("     #ifdef __SUNPRO_CC
                                         #define __asm__ asm
                                 #endif
 				int main() { __asm__(\"femms\"); }" HAVE_X86_3DNOW)
-endif()
 check_cxx_source_compiles("     #ifdef __SUNPRO_CC
                                         #define __asm__ asm
                                 #endif

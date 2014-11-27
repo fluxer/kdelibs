@@ -34,7 +34,6 @@ WindowsPoller::~WindowsPoller()
 
 int WindowsPoller::getIdleTime()
 {
-#ifndef _WIN32_WCE
     int idle = 0;
 
     LASTINPUTINFO lii;
@@ -48,9 +47,6 @@ int WindowsPoller::getIdleTime()
     }
 
     return idle;
-#else
-    return GetIdleTime();
-#endif
 }
 
 bool WindowsPoller::additionalSetUp()

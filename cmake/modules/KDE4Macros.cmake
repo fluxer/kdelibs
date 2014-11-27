@@ -176,10 +176,6 @@ macro (_KDE4_GET_MOC_FLAGS _moc_flags)
       set(${_moc_flags} ${${_moc_flags}} "-D${_current}")
    endforeach(_current ${_defines})
 
-   if(Q_WS_WIN)
-      set(${_moc_flags} ${${_moc_flags}} -DWIN32)
-   endif(Q_WS_WIN)
-
    # if Qt is installed only as framework, add -F /library/Frameworks to the moc arguments
    # otherwise moc can't find the headers in the framework include dirs
    if(APPLE  AND  "${QT_QTCORE_INCLUDE_DIR}" MATCHES "/Library/Frameworks/")
@@ -781,62 +777,25 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    # keep the linking logic from the CMakeLists.txt on UNIX working (under UNIX all necessary libs are linked against the kdeinit
    # library instead against the executable, under windows we want to have everything in the executable, but for compatibility we have to 
    # keep the library there-
-   if(WIN32)
-      if (MINGW)
-         list(FIND _SRCS ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_res.o _res_position)
-      else(MINGW)
-         list(FIND _SRCS ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}.rc _res_position)
-      endif(MINGW)
-      if(NOT _res_position EQUAL -1)
-         list(GET _SRCS ${_res_position} _resourcefile)
-         list(REMOVE_AT _SRCS ${_res_position})
-      endif(NOT _res_position EQUAL -1)
+   if (NOT CMAKE_AUTOMOC)
+     _automoc4_kde4_pre_target_handling(kdeinit_${_target_NAME} _SRCS)
+   endif()
 
-      set(_KDEINIT4_TARGET_NAME_ ${_target_NAME})
-      string(REGEX REPLACE "[-]" "_" _KDEINIT4_TARGET_NAME_ "${_KDEINIT4_TARGET_NAME_}")
-      configure_file(${KDE4_MODULE_DIR}/kde4init_win32lib_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_win32lib_dummy.cpp)
-      add_library(kdeinit_${_target_NAME} STATIC ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_win32lib_dummy.cpp)
+   if (KDE4_ENABLE_FINAL)
+      kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
+      add_library(kdeinit_${_target_NAME} SHARED  ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files})
+   else (KDE4_ENABLE_FINAL)
+      add_library(kdeinit_${_target_NAME} SHARED ${_SRCS})
+   endif (KDE4_ENABLE_FINAL)
 
-      if (KDE4_ENABLE_FINAL)
-         kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
-         kde4_add_executable(${_target_NAME} "${_nogui}" ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
+   if (NOT CMAKE_AUTOMOC)
+      _automoc4_kde4_post_target_handling(kdeinit_${_target_NAME})
+   endif()
 
-      else (KDE4_ENABLE_FINAL)
-         kde4_add_executable(${_target_NAME} "${_nogui}" ${_SRCS} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
-      endif (KDE4_ENABLE_FINAL)
+   set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
 
-      set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
-
-      target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY} kdeinit_${_target_NAME})
-   else(WIN32)
-      if (NOT CMAKE_AUTOMOC)
-        _automoc4_kde4_pre_target_handling(kdeinit_${_target_NAME} _SRCS)
-      endif()
-
-      if (KDE4_ENABLE_FINAL)
-         kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
-         add_library(kdeinit_${_target_NAME} SHARED  ${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp ${_separate_files})
-
-      else (KDE4_ENABLE_FINAL)
-         add_library(kdeinit_${_target_NAME} SHARED ${_SRCS})
-      endif (KDE4_ENABLE_FINAL)
-
-      if (NOT CMAKE_AUTOMOC)
-        _automoc4_kde4_post_target_handling(kdeinit_${_target_NAME})
-      endif()
-
-      set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
-
-      if (Q_WS_MAC)
-	      list(FIND _SRCS *.icns _icon_position)
-	      if(NOT _icon_position EQUAL -1)
-		      list(GET _SRCS ${_icon_position} _resourcefile)
-	      endif(NOT _icon_position EQUAL -1)
-      endif (Q_WS_MAC)
-      kde4_add_executable(${_target_NAME} "${_nogui}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
-      target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
-   endif(WIN32)
-
+   kde4_add_executable(${_target_NAME} "${_nogui}" ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp ${_resourcefile})
+   target_link_libraries(${_target_NAME} kdeinit_${_target_NAME})
 endmacro (KDE4_ADD_KDEINIT_EXECUTABLE)
 
 # Add a unit test, which is executed when running make test .
@@ -877,21 +836,7 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
     endforeach(_filename)
 
     get_target_property( loc ${_test_NAME} LOCATION )
-    if(WIN32)
-      if(MSVC_IDE)
-        STRING(REGEX REPLACE "\\$\\(.*\\)" "\${CTEST_CONFIGURATION_TYPE}" loc "${loc}")
-      endif()
-      # .bat because of rpath handling
-      set(_executable "${loc}.bat")
-    else(WIN32)
-      if (Q_WS_MAC AND NOT _nogui)
-        set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_test_NAME}.app/Contents/MacOS/${_test_NAME})
-      else (Q_WS_MAC AND NOT _nogui)
-        # .shell because of rpath handling
-        set(_executable "${loc}.shell")
-      endif (Q_WS_MAC AND NOT _nogui)
-    endif(WIN32)
-    
+
     if (using_qtest AND KDE4_TEST_OUTPUT STREQUAL "xml")
         #MESSAGE(STATUS "${_targetName} : Using QTestLib, can produce XML report.")
         add_test( ${_targetName} ${_executable} -xml -o ${_targetName}.tml)
@@ -980,17 +925,6 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
    set(_add_executable_param)
 
-   # determine additional parameters for add_executable()
-   # for GUI apps, create a bundle on OSX
-   if (Q_WS_MAC)
-      set(_add_executable_param MACOSX_BUNDLE)
-   endif (Q_WS_MAC)
-
-   # for GUI apps, this disables the additional console under Windows
-   if (WIN32)
-      set(_add_executable_param WIN32)
-   endif (WIN32)
-
    if (_nogui)
       set(_add_executable_param)
    endif (_nogui)
@@ -1023,11 +957,6 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    endif (_test)
 
    kde4_handle_rpath_for_executable(${_target_NAME})
-
-   if (WIN32)
-      target_link_libraries(${_target_NAME} ${QT_QTMAIN_LIBRARY})
-   endif (WIN32)
-
 endmacro (KDE4_ADD_EXECUTABLE)
 
 
@@ -1150,140 +1079,10 @@ macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
 endmacro (KDE4_CREATE_HTML_HANDBOOK)
 
 
-# adds application icon to target source list
-# 'appsources' - the sources of the application
-# 'pngfiles' - specifies the list of icon files
-# example: KDE4_ADD_WIN32_APP_ICON(myapp_SRCS "pics/cr16-myapp.png;pics/cr32-myapp.png")
-macro (KDE4_ADD_WIN32_APP_ICON appsources)
-    message(STATUS "KDE4_ADD_WIN32_APP_ICON() is deprecated, use KDE4_ADD_APP_ICON() instead")
-    if (WIN32)
-        if(NOT WINCE)
-        find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
-        else(NOT WINCE)
-        find_program(PNG2ICO_EXECUTABLE NAMES png2ico PATHS ${HOST_BINDIR} NO_DEFAULT_PATH )
-        endif(NOT WINCE)
-        string(REPLACE _SRCS "" appname ${appsources})
-        if (PNG2ICO_EXECUTABLE)
-            set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${appname})
-
-            # png2ico is found by the above find_program
-#            message("png2ico ${_outfilename}.ico ${ARGN}")
-            exec_program(png2ico ARGS ${_outfilename}.ico ${ARGN})
-
-            # now make rc file for adding it to the sources
-            file(WRITE ${_outfilename}.rc "IDI_ICON1        ICON        DISCARDABLE    \"${_outfilename}.ico\"\n")
-                list(APPEND ${appsources} ${CMAKE_CURRENT_BINARY_DIR}/${appname}.rc)
-        endif(PNG2ICO_EXECUTABLE)
-    endif(WIN32)
-endmacro (KDE4_ADD_WIN32_APP_ICON)
-
 # adds application icon to target source list 
 # for detailed documentation see the top of FindKDE4Internal.cmake
 macro (KDE4_ADD_APP_ICON appsources pattern)
     set (_outfilename ${CMAKE_CURRENT_BINARY_DIR}/${appsources})
-
-    if (WIN32)
-        if(NOT WINCE)
-        find_program(PNG2ICO_EXECUTABLE NAMES png2ico)
-        else(NOT WINCE)
-        find_program(PNG2ICO_EXECUTABLE NAMES png2ico PATHS ${HOST_BINDIR} NO_DEFAULT_PATH )
-        endif(NOT WINCE)
-        if (PNG2ICO_EXECUTABLE)
-            string(REPLACE "*" "(.*)" pattern_rx "${pattern}")
-            file(GLOB files  "${pattern}")
-            foreach (it ${files})
-                string(REGEX REPLACE "${pattern_rx}" "\\1" fn "${it}")
-                if (fn MATCHES ".*16.*" )
-                    list (APPEND _icons ${it})
-                endif (fn MATCHES ".*16.*")
-                if (fn MATCHES ".*32.*" )
-                    list (APPEND _icons ${it})
-                endif (fn MATCHES ".*32.*")
-                if (fn MATCHES ".*48.*" )
-                    list (APPEND _icons ${it})
-                endif (fn MATCHES ".*48.*")
-                if (fn MATCHES ".*64.*" )
-                    list (APPEND _icons ${it})
-                endif (fn MATCHES ".*64.*")
-                if (fn MATCHES ".*128.*" )
-                    list (APPEND _icons ${it})
-                endif (fn MATCHES ".*128.*")
-            endforeach (it)
-            if (_icons)
-                add_custom_command(OUTPUT ${_outfilename}.ico ${_outfilename}.rc
-                                   COMMAND ${PNG2ICO_EXECUTABLE} ARGS --rcfile ${_outfilename}.rc ${_outfilename}.ico ${_icons}
-                                   DEPENDS ${PNG2ICO_EXECUTABLE} ${_icons}
-                                   WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-                                  )
-                    list(APPEND ${appsources} ${_outfilename}.rc)
-            else(_icons)
-                message(STATUS "Unable to find a related icon that matches pattern ${pattern} for variable ${appsources} - application will not have an application icon!")
-            endif(_icons)
-        else(PNG2ICO_EXECUTABLE)
-            message(STATUS "Unable to find the png2ico utility - application will not have an application icon!")
-        endif(PNG2ICO_EXECUTABLE)
-    endif(WIN32)
-    if (Q_WS_MAC)
-        # first generate .iconset directory structure, then convert to .icns format using the Mac OS X "iconutil" utility,
-        # to create retina compatible icon, you need png source files in pixel resolution 16x16, 32x32, 64x64, 128x128,
-	# 256x256, 512x512, 1024x1024
-	find_program(ICONUTIL_EXECUTABLE NAMES iconutil)
-	if (ICONUTIL_EXECUTABLE)
-	    file(GLOB_RECURSE files  "${pattern}")
-	    add_custom_command(OUTPUT ${_outfilename}.iconset
-	                       COMMAND ${CMAKE_COMMAND} -E make_directory ${_outfilename}.iconset
-		               DEPENDS ${files}
-                              )
-	    set(_icons)
-	    macro(copy_icons _pattern output)
-	        foreach(it ${files})
-		    if(it MATCHES ${_pattern})
-		        add_custom_command(OUTPUT ${_outfilename}.iconset/icon_${output}.png
-				           COMMAND ${CMAKE_COMMAND} -E copy ${it} icon_${output}.png
-				           WORKING_DIRECTORY ${_outfilename}.iconset
-				           DEPENDS ${_outfilename}.iconset
-				          )
-	                list(APPEND _icons ${_outfilename}.iconset/icon_${output}.png)
-	            endif(it MATCHES ${_pattern})
-		endforeach(it ${files})
-            endmacro(copy_icons)
-
-            copy_icons(".*16.*" "16x16")
-            copy_icons(".*32.*" "16x16@2x")
-            copy_icons(".*32.*" "32x32")
-            copy_icons(".*64.*" "32x32@2x")
-            copy_icons(".*128.*" "128x128")
-            copy_icons(".*256.*" "128x128@2x")
-            copy_icons(".*256.*" "256x256")
-            copy_icons(".*512.*" "256x256@2x")
-            copy_icons(".*512.*" "512x512")
-            copy_icons(".*1024.*" "512x512@2x")
-	    if (_icons)
-                # generate .icns icon file
-                add_custom_command(OUTPUT ${_outfilename}.icns
-			           COMMAND ${ICONUTIL_EXECUTABLE} --convert icns
-				           --output ${_outfilename}.icns ${_outfilename}.iconset
-                                   DEPENDS ${_icons}
-                                  )
-                # This will register the icon into the bundle
-                set(MACOSX_BUNDLE_ICON_FILE ${appsources}.icns)
-
-                # Append the icns file to the sources list so it will be a dependency to the
-                # main target
-                list(APPEND ${appsources} ${_outfilename}.icns)
-
-                # Install the icon into the Resources dir in the bundle
-                set_source_files_properties(${_outfilename}.icns PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-            else(_icons)
-                message(STATUS "Unable to find an icon that matches pattern ${pattern}
-		        for variable ${appsources} - application will not have an
-			application icon!
-		    ")
-            endif(_icons)
-        else(ICONUTIL_EXECUTABLE)
-            message(STATUS "Unable to find the iconutil utility - application will not have an application icon!")
-        endif(ICONUTIL_EXECUTABLE)
-    endif(Q_WS_MAC)
 endmacro (KDE4_ADD_APP_ICON)
 
 

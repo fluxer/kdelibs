@@ -32,9 +32,6 @@
 # define STD_OUTPUT_HANDLE 1
 # define STD_ERROR_HANDLE 2
 
-#ifdef _WIN32_WCE
-#include <stdio.h>
-#endif
 
 void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
 {
@@ -62,20 +59,12 @@ void KProcessPrivate::forwardStd(KProcess::ProcessChannel good, int fd)
 
 void KProcessPrivate::_k_forwardStdout()
 {
-#ifndef _WIN32_WCE
     forwardStd(KProcess::StandardOutput, STD_OUTPUT_HANDLE);
-#else
-    forwardStd(KProcess::StandardOutput, (int)stdout);
-#endif
 }
 
 void KProcessPrivate::_k_forwardStderr()
 {
-#ifndef _WIN32_WCE
     forwardStd(KProcess::StandardError, STD_ERROR_HANDLE);
-#else
-    forwardStd(KProcess::StandardError, (int)stderr);
-#endif
 }
 
 /////////////////////////////
@@ -282,16 +271,11 @@ void KProcess::setShellCommand(const QString &cmd)
     // KShell::joinArgs() may generate these for security reasons.
     setEnv(PERCENT_VARIABLE, QLatin1String("%"));
 
-#ifndef _WIN32_WCE
     WCHAR sysdir[MAX_PATH + 1];
     UINT size = GetSystemDirectoryW(sysdir, MAX_PATH + 1);
     d->prog = QString::fromUtf16((const ushort *) sysdir, size);
     d->prog += QLatin1String("\\cmd.exe");
     setNativeArguments(QLatin1String("/V:OFF /S /C \"") + cmd + QLatin1Char('"'));
-#else
-    d->prog = QLatin1String("\\windows\\cmd.exe");
-    setNativeArguments(QLatin1String("/S /C \"") + cmd + QLatin1Char('"'));
-#endif
 #endif
 }
 

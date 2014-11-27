@@ -164,12 +164,6 @@ if(UNIX)
    )
 endif(UNIX)
 
-if(WIN32)
-   set(kiocore_STAT_SRCS ${kiocore_STAT_SRCS}
-       kio/krun_win.cpp
-   )
-endif(WIN32)
-
 set(kbookmarks_STAT_SRCS
   bookmarks/kbookmark.cc
   bookmarks/kbookmarkimporter.cc
@@ -226,13 +220,12 @@ if(NOT KIO_NO_SOLID)
     )
 endif(NOT KIO_NO_SOLID)
 
-if(NOT WIN32)
-  set(kfile_STAT_SRCS
+set(kfile_STAT_SRCS
     ${kfile_STAT_SRCS}
     kfile/kfilesharedialog.cpp
     kfile/kfsprocess.cpp
-  )
-endif(NOT WIN32)
+)
+
 qt4_add_resources(kfile_STAT_SRCS kfile/kacleditwidget.qrc)
 
 # kio/kssl/Makefile.am: kssl
@@ -357,11 +350,8 @@ install(  FILES
   kssl/sslui.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/kio COMPONENT Devel)
 
-if( NOT WIN32 )
-  install( FILES
-    kfile/kfilesharedialog.h
-    DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
-endif( NOT WIN32 )
+install( FILES kfile/kfilesharedialog.h
+         DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 install( FILES
   kio/kabstractfileitemactionplugin.h

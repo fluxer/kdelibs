@@ -51,9 +51,6 @@
 #include "kde_file.h"
 
 
-#ifdef _WIN32_WCE
-#include <shellapi.h>
-#endif
 
 class KTempDir::Private
 {

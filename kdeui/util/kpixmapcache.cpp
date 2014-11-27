@@ -40,9 +40,7 @@
 #include <kdebug.h>
 #include <klockfile.h>
 #include <ksavefile.h>
-#ifndef _WIN32_WCE
 #include <ksvgrenderer.h>
-#endif
 #include <kdefakes.h>
 
 #include <config.h>
@@ -1469,7 +1467,6 @@ QPixmap KPixmapCache::loadFromFile(const QString& filename)
     return pix;
 }
 
-#ifndef _WIN32_WCE
 QPixmap KPixmapCache::loadFromSvg(const QString& filename, const QSize& size)
 {
     QFileInfo fi(filename);
@@ -1502,5 +1499,4 @@ QPixmap KPixmapCache::loadFromSvg(const QString& filename, const QSize& size)
 
     return pix;
 }
-#endif
 

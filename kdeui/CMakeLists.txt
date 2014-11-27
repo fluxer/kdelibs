@@ -333,7 +333,6 @@ else(Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
   set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} util/kwallet.cpp)
 endif(Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
 
-if(NOT WINCE)
 set(kdeui_LIB_SRCS
  ${kdeui_LIB_SRCS}
  dialogs/kdeprintdialog.cpp
@@ -342,8 +341,6 @@ set(kdeui_LIB_SRCS
  notifications/kstatusnotifieritemdbus_p.cpp
  notifications/ksystemtrayicon.cpp
 )
-endif(NOT WINCE)
-
 
 
 if (Q_WS_X11)
@@ -421,10 +418,8 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS ${statusnotifierwatcher_xml} statusnotifie
 set(notifications_xml ${CMAKE_CURRENT_SOURCE_DIR}/notifications/org.freedesktop.Notifications.xml)
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${notifications_xml} notifications_interface)
 
-if(NOT WINCE)
 qt4_add_dbus_adaptor(kdeui_LIB_SRCS     ${CMAKE_CURRENT_SOURCE_DIR}/notifications/org.kde.StatusNotifierItem.xml
                      ${CMAKE_CURRENT_SOURCE_DIR}/notifications/kstatusnotifieritemdbus_p.h KStatusNotifierItemDBus)
-endif(NOT WINCE)
 
 set(kglobalaccel_xml ${CMAKE_CURRENT_SOURCE_DIR}/shortcuts/org.kde.KGlobalAccel.xml)
 set_source_files_properties(${kglobalaccel_xml} PROPERTIES INCLUDE "kglobalshortcutinfo_p.h")
@@ -444,9 +439,7 @@ kde4_add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
 target_link_libraries(kdeui ${KDE4_KDECORE_LIBS} ${X11_LIBRARIES} ${QT_QTGUI_LIBRARY}
                             ${QT_QTXML_LIBRARY} ${KDEUI_EXTRA_LIBS} ${QT_QTNETWORK_LIBRARY})
 
-if(NOT WINCE)
 target_link_libraries(kdeui  ${QT_QTSVG_LIBRARY} ${DBUSMENUQT_LIBRARIES})
-endif(NOT WINCE)
 
 if(MINGW)
    target_link_libraries(kdeui gdi32 oleaut32)
@@ -477,9 +470,7 @@ endif(X11_Xrender_FOUND)
 
 target_link_libraries(kdeui LINK_INTERFACE_LIBRARIES kdecore ${QT_QTGUI_LIBRARY})
 
-if(NOT WINCE)
 target_link_libraries(kdeui LINK_INTERFACE_LIBRARIES ${QT_QTSVG_LIBRARY})
-endif(NOT WINCE)
 
 set_target_properties(kdeui PROPERTIES VERSION ${KDE_NON_GENERIC_LIB_VERSION}
                                        SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION}
@@ -488,13 +479,7 @@ set_target_properties(kdeui PROPERTIES VERSION ${KDE_NON_GENERIC_LIB_VERSION}
 install(TARGETS kdeui EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 ########### install files ###############
 
-if (Q_WS_MAC)
-   install( FILES util/kkeyserver_mac.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
-elseif (Q_WS_WIN)
-    install( FILES util/kkeyserver_win.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )
-else(Q_WS_WIN)
-   install( FILES util/fixx11h.h util/kkeyserver_x11.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
-endif (Q_WS_MAC)
+install( FILES util/fixx11h.h util/kkeyserver_x11.h DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 install( FILES
  dialogs/aboutkde.png

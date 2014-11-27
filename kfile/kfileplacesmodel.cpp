@@ -21,11 +21,6 @@
 #include "kfileplacesitem_p.h"
 #include "kfileplacessharedbookmarks_p.h"
 
-#ifdef _WIN32_WCE
-#include "Windows.h"
-#include "WinBase.h"
-#include <QtCore/QDir>
-#endif
 
 #include <QtCore/QMimeData>
 #include <QtCore/QTimer>
@@ -121,19 +116,9 @@ KFilePlacesModel::KFilePlacesModel(QObject *parent)
         KFilePlacesItem::createSystemBookmark(d->bookmarkManager,
                                               "Network", I18N_NOOP2("KFile System Bookmarks", "Network"),
                                               KUrl("remote:/"), "network-workgroup");
-#if defined(_WIN32_WCE)
-        // adding drives
-        foreach ( const QFileInfo& info, QDir::drives() ) {
-            QString driveIcon = "drive-harddisk";
-            KFilePlacesItem::createSystemBookmark(d->bookmarkManager,
-                                                  info.absoluteFilePath(), info.absoluteFilePath(),
-                                                  KUrl(info.absoluteFilePath()), driveIcon);
-        }
-#else
         KFilePlacesItem::createSystemBookmark(d->bookmarkManager,
                                               "Root", I18N_NOOP2("KFile System Bookmarks", "Root"),
                                               KUrl("/"), "folder-red");
-#endif
         KFilePlacesItem::createSystemBookmark(d->bookmarkManager,
                                               "Trash", I18N_NOOP2("KFile System Bookmarks", "Trash"),
                                               KUrl("trash:/"), "user-trash");

@@ -34,11 +34,6 @@
 #include <QtDBus/QtDBus>
 #include <QtCore/QCache>
 
-#if !defined(QT_NO_NETWORKPROXY) && (defined (Q_OS_WIN32) || defined(Q_OS_MAC))
-#include <QtNetwork/QNetworkProxyFactory>
-#include <QtNetwork/QNetworkProxyQuery>
-#endif
-
 #include <kdeversion.h>
 #include <kdebug.h>
 #include <kglobal.h>
@@ -405,32 +400,6 @@ static QStringList getSystemProxyFor( const KUrl& url )
 {
   QStringList proxies;
 
-#if !defined(QT_NO_NETWORKPROXY) && (defined(Q_OS_WIN32) || defined(Q_OS_MAC))
-  QNetworkProxyQuery query ( url );
-  const QList<QNetworkProxy> proxyList = QNetworkProxyFactory::systemProxyForQuery(query);
-  Q_FOREACH(const QNetworkProxy& proxy, proxyList)
-  {
-    KUrl url;
-    const QNetworkProxy::ProxyType type = proxy.type();
-    if (type == QNetworkProxy::NoProxy || type == QNetworkProxy::DefaultProxy)
-    {
-      proxies << QL1S("DIRECT");
-      continue;
-    }
-
-    if (type == QNetworkProxy::HttpProxy || type == QNetworkProxy::HttpCachingProxy)
-      url.setProtocol(QL1S("http"));
-    else if (type == QNetworkProxy::Socks5Proxy)
-      url.setProtocol(QL1S("socks"));
-    else if (type == QNetworkProxy::FtpCachingProxy)
-      url.setProtocol(QL1S("ftp"));
-
-    url.setHost(proxy.hostName());
-    url.setPort(proxy.port());
-    url.setUser(proxy.user());
-    proxies << url.url();
-  }
-#else
   // On Unix/Linux use system environment variables if any are set.
   QString proxyVar (KProtocolManager::proxyFor(url.protocol()));
   // Check for SOCKS proxy, if not proxy is found for given url.
@@ -451,7 +420,6 @@ static QStringList getSystemProxyFor( const KUrl& url )
       proxies << proxy;
     }
   }
-#endif
   return proxies;
 }
 

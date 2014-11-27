@@ -1,10 +1,5 @@
 include_directories(${QT_INCLUDE_DIR} ${QT_QTCORE_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
-if(WIN32)
-   include_directories(${KDEWIN_INCLUDES})
-endif(WIN32)
-
-
 ########### next target ###############
 
 set(ThreadWeaver_LIB_SRCS

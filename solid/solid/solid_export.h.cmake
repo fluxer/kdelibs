@@ -38,20 +38,6 @@
 #  define SOLID_NO_EXPORT __attribute__ ((visibility("hidden")))
 #  define SOLID_EXPORT __attribute__ ((visibility("default")))
 
-# elif defined(_WIN32) || defined(_WIN64)
-
-#  define SOLID_NO_EXPORT
-# if defined(KDELIBS_STATIC_LIBS)
-   /* No export/import for static libraries */
-#  define SOLID_EXPORT
-#  elif defined(MAKE_SOLID_LIB)
-    /* We are building this library */
-#   define SOLID_EXPORT __declspec(dllexport)
-#  else
-    /* We are using this library */
-#   define SOLID_EXPORT __declspec(dllimport)
-#  endif
-
 # else
 
 #  define SOLID_NO_EXPORT

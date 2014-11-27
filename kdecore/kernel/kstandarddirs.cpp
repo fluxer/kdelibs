@@ -1366,19 +1366,9 @@ bool KStandardDirs::makeDir(const QString& dir, int mode)
 static QString readEnvPath(const char *env)
 {
     QByteArray c_path;
-#ifndef _WIN32_WCE
     c_path = qgetenv(env);
     if (c_path.isEmpty())
         return QString();
-#else
-    bool ok;
-    QString retval = getWin32RegistryValue(HKEY_LOCAL_MACHINE, "Software\\kde", "KDEDIRS", &ok);
-    if (!ok){
-        return QString();
-    } else {
-        c_path = retval.toLatin1();
-    }
-#endif
     return QDir::fromNativeSeparators(QFile::decodeName(c_path));
 }
 

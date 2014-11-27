@@ -71,11 +71,8 @@ target_link_libraries( kbuildsycoca4 kdeinit_kbuildsycoca4 )
 install(TARGETS kbuildsycoca4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
-if (WIN32)
-install( FILES applications.menu  DESTINATION  ${SHARE_INSTALL_PREFIX}/xdg/menus )
-else (WIN32)
+
 install( FILES applications.menu  DESTINATION  ${SYSCONF_INSTALL_DIR}/xdg/menus )
-endif (WIN32)
 install( FILES kdedmodule.desktop DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
 
 

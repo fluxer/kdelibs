@@ -27,29 +27,13 @@ endif(HAVE_SOCKET_LIBRARY)
 
 
 ########### kdeinit4 ###############
-if (WIN32)
-  set(kdeinit_SRCS kinit_win.cpp klauncher_cmds.cpp )
-  if(NOT WINCE)
-    set(kdeinit_LIBS psapi)
-  else(NOT WINCE)
-    set(kdeinit_LIBS Toolhelp.lib)
-  endif(NOT WINCE)
-else (WIN32)
-  set(kdeinit_SRCS kinit.cpp proctitle.cpp klauncher_cmds.cpp )
-  set(kdeinit_LIBS "")
-endif (WIN32)
+
+set(kdeinit_SRCS kinit.cpp proctitle.cpp klauncher_cmds.cpp )
+set(kdeinit_LIBS "")
 
 # on win32 kdeinit4 has to be a console application 
 # to be able to catch stderr based --verbose output
-if (Q_WS_MAC)
-  # this has to be GUI on OSX because it launches GUI apps and need a quartz context
-  kde4_add_executable(kdeinit4 ${kdeinit_SRCS})
-  set_target_properties(kdeinit4 PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.template)
-  set_target_properties(kdeinit4 PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.kdeinit4")
-  set_target_properties(kdeinit4 PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Init")
-else (Q_WS_MAC)
-  kde4_add_executable(kdeinit4 NOGUI ${kdeinit_SRCS})
-endif (Q_WS_MAC)
+kde4_add_executable(kdeinit4 NOGUI ${kdeinit_SRCS})
 
 target_link_libraries(kdeinit4 ${KDE4_KDEUI_LIBS} ${kdeinit_LIBS} ${KINIT_SOCKET_LIBRARY} )
 if (Q_WS_X11)
@@ -59,63 +43,52 @@ endif(Q_WS_X11)
 install(TARGETS kdeinit4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### kwrapper4 ###############
-if (WIN32)
-  set(kwrapper_SRCS kwrapper_win.cpp  )
-else (WIN32)
-  set(kwrapper_SRCS kwrapper.c  )
-endif (WIN32)
+
+set(kwrapper_SRCS kwrapper.c )
 
 kde4_add_executable(kwrapper4 NOGUI ${kwrapper_SRCS})
 
-if (WIN32)
-  target_link_libraries(kwrapper4 ${KDE4_KDECORE_LIBS} ${KINIT_SOCKET_LIBRARY})
-else (WIN32)
-  target_link_libraries(kwrapper4 ${KINIT_SOCKET_LIBRARY})
-endif (WIN32)
+target_link_libraries(kwrapper4 ${KINIT_SOCKET_LIBRARY})
 
 install(TARGETS kwrapper4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-if (NOT WIN32)
+########### kdeinit4_wrapper ###############
 
-  ########### kdeinit4_wrapper ###############
+kde4_add_executable(kdeinit4_wrapper NOGUI wrapper.c)
 
-  kde4_add_executable(kdeinit4_wrapper NOGUI wrapper.c)
+target_link_libraries(kdeinit4_wrapper  ${KINIT_SOCKET_LIBRARY})
 
-  target_link_libraries(kdeinit4_wrapper  ${KINIT_SOCKET_LIBRARY})
-
-  if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
+if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
     add_definitions(-DNO_DISPLAY)
-  endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
+endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
 
-  install(TARGETS kdeinit4_wrapper ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kdeinit4_wrapper ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-  ########### kshell4 ###############
+########### kshell4 ###############
 
-  kde4_add_executable(kshell4 NOGUI shell.c)
+kde4_add_executable(kshell4 NOGUI shell.c)
 
-  target_link_libraries(kshell4 ${KINIT_SOCKET_LIBRARY})
+target_link_libraries(kshell4 ${KINIT_SOCKET_LIBRARY})
 
-  install(TARGETS kshell4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kshell4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-  ########### kdeinit4_shutdown ###############
+########### kdeinit4_shutdown ###############
 
-  kde4_add_executable(kdeinit4_shutdown NOGUI wrapper.c)
+kde4_add_executable(kdeinit4_shutdown NOGUI wrapper.c)
 
-  target_link_libraries(kdeinit4_shutdown  ${KINIT_SOCKET_LIBRARY})
+target_link_libraries(kdeinit4_shutdown  ${KINIT_SOCKET_LIBRARY})
 
-  install(TARGETS kdeinit4_shutdown ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kdeinit4_shutdown ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-  ########### lnusertemp ###############
+########### lnusertemp ###############
 
-  set(lnusertemp_SRCS lnusertemp.c )
+set(lnusertemp_SRCS lnusertemp.c )
 
-  kde4_add_executable(lnusertemp NOGUI ${lnusertemp_SRCS})
+kde4_add_executable(lnusertemp NOGUI ${lnusertemp_SRCS})
 
-  target_link_libraries(lnusertemp kdefakes)
+target_link_libraries(lnusertemp kdefakes)
 
-  install(TARGETS lnusertemp DESTINATION ${LIBEXEC_INSTALL_DIR} )
-
-endif (NOT WIN32)
+install(TARGETS lnusertemp DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
 
 ########### kioslave ###############
@@ -155,20 +128,18 @@ target_link_libraries( klauncher kdeinit_klauncher )
 install(TARGETS klauncher DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
 ########### start_kdeinit ###############
-if (NOT WIN32)
-  set(start_kdeinit_SRCS start_kdeinit.c)
-  kde4_add_executable(start_kdeinit ${start_kdeinit_SRCS})
-  if(KDE4_ENABLE_FPIE)
-      macro_add_compile_flags(start_kdeinit ${KDE4_CXX_FPIE_FLAGS})
-      macro_add_link_flags(start_kdeinit ${KDE4_PIE_LDFLAGS})
-  endif(KDE4_ENABLE_FPIE)
+set(start_kdeinit_SRCS start_kdeinit.c)
+kde4_add_executable(start_kdeinit ${start_kdeinit_SRCS})
+if(KDE4_ENABLE_FPIE)
+    macro_add_compile_flags(start_kdeinit ${KDE4_CXX_FPIE_FLAGS})
+    macro_add_link_flags(start_kdeinit ${KDE4_PIE_LDFLAGS})
+endif(KDE4_ENABLE_FPIE)
 
-  set(start_kdeinit_wrapper_SRCS start_kdeinit_wrapper.c)
-  kde4_add_executable(start_kdeinit_wrapper ${start_kdeinit_wrapper_SRCS})
+set(start_kdeinit_wrapper_SRCS start_kdeinit_wrapper.c)
+kde4_add_executable(start_kdeinit_wrapper ${start_kdeinit_wrapper_SRCS})
 
-  install(TARGETS start_kdeinit DESTINATION ${LIBEXEC_INSTALL_DIR})
-  install(TARGETS start_kdeinit_wrapper DESTINATION ${LIBEXEC_INSTALL_DIR})
-endif (NOT WIN32)
+install(TARGETS start_kdeinit DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS start_kdeinit_wrapper DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 if (CMAKE_SYSTEM_NAME MATCHES Linux)
     MESSAGE(STATUS "Using setuid root kdeinit wrapper in order to protect it from bad Linux OOM-killer")

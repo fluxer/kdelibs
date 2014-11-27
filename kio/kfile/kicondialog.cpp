@@ -22,9 +22,7 @@
 #include <kiconloader.h>
 #include <kfiledialog.h>
 #include <kimagefilepreview.h>
-#ifndef _WIN32_WCE
 #include <ksvgrenderer.h>
-#endif
 
 #include <QtGui/QApplication>
 #include <QtGui/QGroupBox>
@@ -203,7 +201,6 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
         if (ext != "SVG" && ext != "VGZ") {
             img.load(*it);
         } else {
-#ifndef _WIN32_WCE
             // Special stuff for SVG icons
             img = QImage(canvasIconWidth, canvasIconHeight, QImage::Format_ARGB32_Premultiplied);
             img.fill(0);
@@ -212,7 +209,6 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
                 QPainter p(&img);
                 renderer.render(&p);
             }
-#endif
         }
 
         if (img.isNull()) {

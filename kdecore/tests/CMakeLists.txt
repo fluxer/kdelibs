@@ -6,18 +6,12 @@ MACRO(KDECORE_UNIT_TESTS)
        FOREACH(_testname ${ARGN})
                kde4_add_unit_test(${_testname} TESTNAME "kdecore-${_testname}" NOGUI ${_testname}.cpp)
                target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTNETWORK_LIBRARY})
-               if(WINCE)
-                target_link_libraries(${_testname} ${WCECOMPAT_LIBRARIES})
-               endif(WINCE)
        ENDFOREACH(_testname)
 ENDMACRO(KDECORE_UNIT_TESTS)
 MACRO(KDECORE_EXECUTABLE_TESTS)
        FOREACH(_testname ${ARGN})
                kde4_add_executable(${_testname} NOGUI TEST ${_testname}.cpp)
                target_link_libraries(${_testname} ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
-               if(WINCE)
-                target_link_libraries(${_testname} ${WCECOMPAT_LIBRARIES})
-               endif(WINCE)
        ENDFOREACH(_testname)
 ENDMACRO(KDECORE_EXECUTABLE_TESTS)
 
@@ -169,8 +163,6 @@ endif(NOT KDE_NO_DEPRECATED)
 
 ########### module for klibloadertest4 ###############
 
-if (NOT WIN32) # TODO: reenable for win32
-
 set(klibloadertestmodule4_PART_SRCS klibloadertest4_module.cpp )
 
 kde4_add_plugin(klibloadertestmodule4 ${klibloadertestmodule4_PART_SRCS})
@@ -178,8 +170,6 @@ kde4_add_plugin(klibloadertestmodule4 ${klibloadertestmodule4_PART_SRCS})
 target_link_libraries(klibloadertestmodule4  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
 set_target_properties(klibloadertestmodule4 PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
-
-endif (NOT WIN32)
 
 ########### kcompositejobtest ###############
 

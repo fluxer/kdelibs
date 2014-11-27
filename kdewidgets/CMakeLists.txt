@@ -46,14 +46,12 @@ if(QT_QTDESIGNER_FOUND)
   kde4_add_plugin(kdewidgets ${kdewidgets_PART_SRCS})
 
   target_link_libraries(kdewidgets  ${KDE4_KIO_LIBS})
-  if(NOT WIN32)
-    set_target_properties(kdewidgets PROPERTIES
-                                     INSTALL_RPATH_USE_LINK_PATH TRUE
-                                     SKIP_BUILD_RPATH TRUE
-                                     BUILD_WITH_INSTALL_RPATH TRUE
-                                     INSTALL_RPATH ${LIB_INSTALL_DIR}
-                         )
-  endif(NOT WIN32)
+  set_target_properties(kdewidgets PROPERTIES
+                                   INSTALL_RPATH_USE_LINK_PATH TRUE
+                                   SKIP_BUILD_RPATH TRUE
+                                   BUILD_WITH_INSTALL_RPATH TRUE
+                                   INSTALL_RPATH ${LIB_INSTALL_DIR}
+                       )
 
   install(TARGETS kdewidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
 
@@ -76,14 +74,12 @@ if(QT_QTDESIGNER_FOUND)
     kde4_add_plugin(kdedeprecated ${kdedeprecated_PART_SRCS})
 
     target_link_libraries(kdedeprecated  ${KDE4_KIO_LIBS})
-    if(NOT WIN32)
-      set_target_properties(kdedeprecated PROPERTIES
-                                          INSTALL_RPATH_USE_LINK_PATH TRUE
-                                          SKIP_BUILD_RPATH TRUE
-                                          BUILD_WITH_INSTALL_RPATH TRUE
-                                          INSTALL_RPATH ${LIB_INSTALL_DIR}
-                           )
-    endif(NOT WIN32)
+    set_target_properties(kdedeprecated PROPERTIES
+                                        INSTALL_RPATH_USE_LINK_PATH TRUE
+                                        SKIP_BUILD_RPATH TRUE
+                                        BUILD_WITH_INSTALL_RPATH TRUE
+                                        INSTALL_RPATH ${LIB_INSTALL_DIR}
+                          )
 
     install(TARGETS kdedeprecated  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
   endif(NOT KDE_NO_DEPRECATED)
@@ -111,14 +107,12 @@ if(QT_QTDESIGNER_FOUND)
   kde4_add_plugin(kdewebkitwidgets ${kdewebkitwidgets_PART_SRCS})
 
   target_link_libraries(kdewebkitwidgets ${KDE4_KDEUI_LIBS} ${KDE4_KDEWEBKIT_LIBS} ${QT_QTWEBKIT_LIBRARY})
-  if(NOT WIN32)
-    set_target_properties(kdewebkitwidgets PROPERTIES
+  set_target_properties(kdewebkitwidgets PROPERTIES
                                      INSTALL_RPATH_USE_LINK_PATH TRUE
                                      SKIP_BUILD_RPATH TRUE
                                      BUILD_WITH_INSTALL_RPATH TRUE
                                      INSTALL_RPATH ${LIB_INSTALL_DIR}
-                         )
-  endif(NOT WIN32)
+                       )
 
   install(TARGETS kdewebkitwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
 endif (QT_QTDESIGNER_FOUND)

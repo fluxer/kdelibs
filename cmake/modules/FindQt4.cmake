@@ -1087,22 +1087,8 @@ IF (QT4_QMAKE_FOUND)
   _find_qt4_program(QT_UIC_EXECUTABLE Qt4::uic uic-qt4 uic uic4)
   _find_qt4_program(QT_UIC3_EXECUTABLE Qt4::uic3 uic3)
   _find_qt4_program(QT_RCC_EXECUTABLE Qt4::rcc rcc)
-  if(NOT WINCE)
-    _find_qt4_program(QT_DBUSCPP2XML_EXECUTABLE Qt4::qdbuscpp2xml qdbuscpp2xml)
-    _find_qt4_program(QT_DBUSXML2CPP_EXECUTABLE Qt4::qdbusxml2cpp qdbusxml2cpp)
-  else()
-    FIND_PROGRAM(QT_DBUSCPP2XML_EXECUTABLE
-      NAMES qdbuscpp2xml
-      PATHS ${HOST_BINDIR}
-      NO_DEFAULT_PATH
-      )
-
-    FIND_PROGRAM(QT_DBUSXML2CPP_EXECUTABLE
-      NAMES qdbusxml2cpp
-      PATHS ${HOST_BINDIR}
-      NO_DEFAULT_PATH
-      )
-  endif()
+  _find_qt4_program(QT_DBUSCPP2XML_EXECUTABLE Qt4::qdbuscpp2xml qdbuscpp2xml)
+  _find_qt4_program(QT_DBUSXML2CPP_EXECUTABLE Qt4::qdbusxml2cpp qdbusxml2cpp)
   _find_qt4_program(QT_LUPDATE_EXECUTABLE Qt4::lupdate lupdate-qt4 lupdate lupdate4)
   _find_qt4_program(QT_LRELEASE_EXECUTABLE Qt4::lrelease lrelease-qt4 lrelease lrelease4)
   _find_qt4_program(QT_QCOLLECTIONGENERATOR_EXECUTABLE Qt4::qcollectiongenerator qcollectiongenerator-qt4 qcollectiongenerator)

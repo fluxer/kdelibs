@@ -43,9 +43,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QPixmapCache>
-#ifndef _WIN32_WCE
 #include <QtSvg/QSvgRenderer>
-#endif
 
 // kdecore
 #include <kconfig.h>
@@ -786,7 +784,6 @@ QImage KIconLoaderPrivate::createIconImage(const QString &path, int size)
     }
     else
     {
-#ifndef _WIN32_WCE
         QSvgRenderer renderer(path, q);
 
         if (renderer.isValid()) {
@@ -795,7 +792,6 @@ QImage KIconLoaderPrivate::createIconImage(const QString &path, int size)
             QPainter p(&img);
             renderer.render(&p);
         }
-#endif
     }
 
     return img;

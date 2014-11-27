@@ -923,9 +923,7 @@ extern "C" KDE_EXPORT int kdemain(int argc, char *argv[])
 
      Kded *kded = new Kded(); // Build data base
 
-#ifndef _WIN32_WCE
      KDE_signal(SIGTERM, sighandler);
-#endif
      KDE_signal(SIGHUP, sighandler);
      KDEDApplication k;
      k.setQuitOnLastWindowClosed(false);

@@ -1630,10 +1630,8 @@ static void secondary_child_handler(int)
 
 int main(int argc, char **argv, char **envp)
 {
-#ifndef _WIN32_WCE
     setlocale (LC_ALL, "");
     setlocale (LC_NUMERIC, "C");
-#endif
 
    pid_t pid;
    bool do_fork = true;

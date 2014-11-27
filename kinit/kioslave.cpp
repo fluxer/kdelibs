@@ -42,9 +42,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "Usage: kioslave <slave-lib> <protocol> <klauncher-socket> <app-socket>\n\nThis program is part of KDE.\n");
         exit(1);
      }
-#ifndef _WIN32_WCE
      setlocale(LC_ALL, "");
-#endif
      QString libpath = QFile::decodeName(argv[1]);
 
      if (libpath.isEmpty())

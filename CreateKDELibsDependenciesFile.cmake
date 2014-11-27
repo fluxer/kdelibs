@@ -94,24 +94,6 @@ set(KDE4_TARGET_PREFIX ${KDE4_TARGET_PREFIX} )
 
 ")
 
-
-# write library dependencies
-
-if (WIN32)
-   file(APPEND "${CMAKE_CURRENT_BINARY_DIR}/KDELibsDependencies.cmake"
-"if (NOT QT_INSTALL_DIR)
-   set (QT_INSTALL_DIR \"${QT_INSTALL_DIR}\")
-endif (NOT QT_INSTALL_DIR)
-")
-   # replace hard coded paths by variables
-   # !!! the following stuff does not work because export_library_dependencies
-   # !!! does not wait until the file is written completely
-#        export_library_dependencies(${CMAKE_BINARY_DIR}/tmpdeps.cmake)
-#        file(READ ${CMAKE_BINARY_DIR}/tmpdeps.cmake _deps)
-#        string(REPLACE "${QT_INSTALL_DIR}" "\${QT_INSTALL_DIR}" __deps "${_deps}")
-#        file (APPEND ${CMAKE_BINARY_DIR}/KDELibsDependencies.cmake "${__deps}")
-endif(WIN32)
-
 # This variable defines whether KPty::login/logout have been built with
 # utempter support so that they don't require special user permissions
 # in order to work properly. Used by kwrited.
