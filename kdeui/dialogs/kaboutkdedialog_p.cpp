@@ -64,8 +64,8 @@ KAboutKdeDialog::KAboutKdeDialog(QWidget *parent)
         "improved documentation. You decide!</html>"
         "<br /><br />"
         "Visit <a href=\"%2\">%2</a> to learn more about about Katana.</html>",
-        QLatin1String("http://www.entropy-linux.com/"),
-        QLatin1String("http://www.entropy-linux.com/")));
+        QLatin1String("http://fluxer.github.io/katana/"),
+        QLatin1String("http://fluxer.github.io/katana/")));
 
     QLabel *image = new QLabel;
     image->setPixmap(KStandardDirs::locate("data", "kdeui/pics/aboutkde.png"));
