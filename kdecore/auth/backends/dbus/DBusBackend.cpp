@@ -20,6 +20,10 @@
 #include "DBusBackend.h"
 
 #include <QtCore/QCoreApplication>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusPendingCall>
+#include <QLatin1String>
 
 namespace KAuth
 {
@@ -43,8 +47,11 @@ void DBusBackend::setupAction(const QString &action)
 
 Action::AuthStatus DBusBackend::actionStatus(const QString &action)
 {
-    Q_UNUSED(action)
-    return Action::Authorized;
+    if (isCallerAuthorized(action, callerID())) {
+        return Action::Authorized;
+    } else {
+        return Action::Denied;
+    }
 }
 
 QByteArray DBusBackend::callerID() const
@@ -58,8 +65,15 @@ QByteArray DBusBackend::callerID() const
 
 bool DBusBackend::isCallerAuthorized(const QString &action, QByteArray callerID)
 {
-    Q_UNUSED(action)
     Q_UNUSED(callerID)
+    QDBusMessage message;
+    message = QDBusMessage::createMethodCall(action, QLatin1String("/"), QLatin1String("org.kde.auth"), QLatin1String("Introspect"));
+
+    QDBusPendingCall reply = QDBusConnection::systemBus().asyncCall(message); // This is a NO_REPLY method
+    if (reply.reply().type() == QDBusMessage::ErrorMessage) {
+        return false;
+    }
+
     return true;
 }
 

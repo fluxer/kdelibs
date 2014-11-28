@@ -13,7 +13,7 @@ if (KAUTH_BACKEND STREQUAL "DBus")
         auth/backends/dbus/DBusBackend.cpp
         auth/backends/dbus/DBusBackend.h
   )
-  set(KAUTH_BACKEND_LIBS ${QT_QTCORE_LIBRARY})
+  set(KAUTH_BACKEND_LIBS ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY})
 
   qt4_add_dbus_adaptor(kauth_dbus_adaptor_SRCS
                         auth/backends/dbus/org.kde.auth.xml
