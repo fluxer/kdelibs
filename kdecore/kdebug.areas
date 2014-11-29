@@ -16,7 +16,6 @@
 170        kdecore (KNetwork socket)
 172        kdecore (KStartupInfo)
 173        kdecore (KLocale)
-174        kde3support (K3ProcIO)
 175        kdecore (KPty/K3Process)
 176        kdeui (KWindowInfo)
 179        kdecore (KNetwork resolver)
@@ -28,7 +27,6 @@
 264        kdeui (KIconLoader)
 265        kdeui (KIconEffect)
 281        kdeui (KCModule)
-282        kde3support (K3DockWidget)
 283        kdeui (K*Gesture*)
 285        kdeui (Wallet)
 291        kdeui (KAboutDialog)
@@ -80,10 +78,6 @@
 1220        remote kioslave
 1221        ktimezoned
 1222        networkstatus
-
-1400        khelpcenter (kdebase)
-1401        kcmhelpcenter
-1402        khc_indexbuilder
 
 1410        drkonqi
 
@@ -173,23 +167,6 @@
 5153          kwatchgnupg
 5154          kgpgconf
 5200        kitchensync
-5250        libakonadi
-5251        akonadiresource (ical)
-5252        akonadiresource (knut)
-5253        akonadiresource (localbookmarks)
-5254        akonadiresource (maildir)
-5255        akonadiresource (nntp)
-5256        akonadiresource (openchange)
-5257        akonadiresource (vcard)
-5258        akonadiagent (mailthreader)
-5259        akonadiagent (nepomukfeeder)
-5260        akonadiagent (strigifeeder)
-5261        akonadiserializer (addressee)
-5262        akonadiserializer (bookmark)
-5263        akonadiserializer (calendar)
-5264        akonadiserializer (mail)
-5265        akonadiconsole
-5266        akonadiresource (pop3)
 5295        kode
 5300        libkdepim
 5310        kprefs
@@ -234,30 +211,6 @@
 5960        kandy
 5970        ktimetracker
 5975        ktnef
-
-# libkhtml
-6000        khtml
-6005        khtml (encoding)
-6010        khtml (dom)
-6011        khtml (xpath)
-6020        khtml (xml)
-6030        khtml (html)
-6031        khtml (frames & objects)
-6035        khtml (parser)
-6036        khtml (tokenizer)
-6040        khtml (render)
-6041        khtml (bidi)
-6045        khtml (rendering tree)
-6050        khtml (part)
-6060        khtml (cache)
-6061        khtml (cache-expiredates)
-6070        khtml (jscript)
-6080        khtml (css)
-6090        khtml (memory)
-6100        kjas
-6200        khtml (caret)
-6201        khtml (caret table)
-6210        khtml (editor)
 
 # libkio
 7000        kio
@@ -463,7 +416,6 @@
 13035   Kate (Code Completion)
 13040   Kate (Plugins)
 13050   Kate (Scripting)
-13051	Kate (KJS Scripts)
 13060   Kate (Indentation)
 13070   Kate (Vi Input Mode)
 
@@ -703,9 +655,6 @@
 67100   kmix
 67200   kmid
 
-# kdebindings
-80001	kjsembed
-
 # kdeaddons
 90000   vimpart
 90010   noatun-plugins (dub)
@@ -737,17 +686,3 @@
 200002       rosegarden (matrix)
 200003       rosegarden (sequencer)
 200004       rosegarden (sequence manager)
-
-
-# Nepomuk-KDE (aka. Semantic KDE)
-
-300000       nepomuk (library)
-300001       nepomuk (server)
-300100       nepomuk (services)
-300101       nepomuk (filewatch service)
-300102       nepomuk (migration service)
-300103       nepomuk (ontologyloader service)
-300104       nepomuk (query service)
-300105       nepomuk (storage service)
-300106       nepomuk (strigi service)
-300200       nepomuk (ioslave)
