@@ -49,7 +49,7 @@ include(util/ConfigureChecks.cmake)
 configure_file(util/config-util.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-util.h)
 
 
-include_directories( ${KDE4_KDECORE_INCLUDES} )
+include_directories( ${KDE4_KDECORE_INCLUDES} ${KDE4_KDEUI_INCLUDES})
 include_directories( ${ZLIB_INCLUDE_DIR} )
 include_directories( ${QT_INCLUDES} )
 

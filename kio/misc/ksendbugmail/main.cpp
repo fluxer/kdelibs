@@ -32,10 +32,10 @@
 #include <kaboutdata.h>
 #include <kdebug.h>
 #include <kconfig.h>
+#include <kglobalsettings.h>
 
 #include "smtp.h"
 
-#include <config-misc.h>
 
 void BugMailer::slotError(int errornum) {
     QString lstr;

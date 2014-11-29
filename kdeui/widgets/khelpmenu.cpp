@@ -53,7 +53,7 @@
 #include <QX11EmbedWidget>
 #endif
 
-#include <config-misc.h>
+#include <kglobalsettings.h>
 
 using namespace KDEPrivate;
 

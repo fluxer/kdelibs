@@ -40,7 +40,10 @@ static void writeFile(const QString &path, const QString &content)
 {
     QFile file(path);
     bool ok = file.open(QIODevice::WriteOnly);
-    Q_ASSERT(ok);
+    // prevent a compiler warning, marvelous isn't it?
+    if (!ok) {
+        Q_ASSERT(ok);
+    }
     file.write(content.toUtf8());
 }
 

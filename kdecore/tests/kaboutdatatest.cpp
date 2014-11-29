@@ -26,7 +26,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
-#include <config-misc.h>
+#include <kglobalsettings.h>
 
 static const char AppName[] =            "app";
 static const char CatalogName[] =        "Catalog";

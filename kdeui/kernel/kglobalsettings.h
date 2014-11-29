@@ -55,6 +55,10 @@
 #define HTML_DEFAULT_VIEW_FANTASY_FONT "Sans Serif"
 #define HTML_DEFAULT_MIN_FONT_SIZE 7
 
+// misc overrides
+#define BUG_REPORT_URL "https://github.com/fluxer/katana/issues"
+#define BUG_REPORT_EMAIL "xakepa10@gmail.com"
+
 class KUrl;
 
 class QColor;

@@ -17,7 +17,7 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
-#include <config-misc.h>
+#include <kglobalsettings.h>
 
 #include "kmimetype.h"
 #include "kmimetype_p.h"

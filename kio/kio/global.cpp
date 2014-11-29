@@ -20,8 +20,8 @@
 #include "job.h"
 
 #include <config.h>
-#include <config-misc.h>
 
+#include <kglobalsettings.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kglobal.h>

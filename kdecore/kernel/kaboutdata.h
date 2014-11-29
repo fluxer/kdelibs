@@ -26,11 +26,11 @@
 
 #include <kdecore_export.h>
 #include <klocale.h>
+#include <kglobalsettings.h>
+
 // Qt
 #include <QtCore/QString>
 #include <QtCore/QSharedDataPointer>
-
-#include <config-misc.h>
 
 template <class T> class QList;
 class QVariant;

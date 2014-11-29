@@ -18,9 +18,9 @@
 
 #include "kcmdlineargs.h"
 #include <kdebug.h>
+#include <kglobalsettings.h>
 
 #include <config.h>
-#include <config-misc.h>
 
 #include <sys/param.h>
 
@@ -913,7 +913,7 @@ KCmdLineArgsStatic::parseAllArgs()
        {
          if (!s->about->customAuthorTextEnabled ())
          {
-           if (s->about->bugAddress().isEmpty() )
+           if (s->about->bugAddress().isEmpty() || s->about->bugAddress() == QLatin1String(BUG_REPORT_EMAIL))
              s->printQ( i18n( "Please use %1.\n", QLatin1String(BUG_REPORT_URL) ) );
            else
              s->printQ( i18n( "Please report bugs to %1.\n", s->about->bugAddress()) );
