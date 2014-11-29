@@ -1,8 +1,5 @@
 project(kdeui)
 
-set(BUG_REPORT_URL "https://github.com/fluxer/katana/issues"
-    CACHE STRING "Specifies the URL that will be opened from the help menu.")
-
 set(KDEUI_NO_ATTICA FALSE)
 if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
     set(KDEUI_NO_ATTICA TRUE)
@@ -51,10 +48,6 @@ endif(NOT KDEUI_NO_ATTICA)
 
 macro_bool_to_01(HAVE_ATTICA)
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/widgets/config-widgets.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/widgets/config-widgets.h
-)
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/widgets )
 
 configure_file(

@@ -26,6 +26,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
+#include <config-misc.h>
 
 static const char AppName[] =            "app";
 static const char CatalogName[] =        "Catalog";
@@ -56,7 +57,7 @@ void KAboutDataTest::testConstructorWithDefaults()
     QCOMPARE( aboutData.version(), QString(Version) );
     QCOMPARE( aboutData.catalogName(), QString(CatalogName) );
     QCOMPARE( aboutData.homepage(), QString() );
-    QCOMPARE( aboutData.bugAddress(), QString("submit@bugs.kde.org") );
+    QCOMPARE( aboutData.bugAddress(), QString(BUG_REPORT_EMAIL) );
     QVERIFY( aboutData.authors().isEmpty() );
     QVERIFY( aboutData.credits().isEmpty() );
     QVERIFY( aboutData.translators().isEmpty() );

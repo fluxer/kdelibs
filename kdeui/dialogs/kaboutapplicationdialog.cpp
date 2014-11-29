@@ -42,6 +42,8 @@
 #include <QtGui/QScrollBar>
 #include <QtGui/QTabWidget>
 
+#include <config-misc.h>
+
 class KAboutApplicationDialog::Private
 {
 public:
@@ -182,8 +184,8 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
             bugsLabel->setContentsMargins( 4, 2, 0, 4 );
             bugsLabel->setOpenExternalLinks( true );
             if (!aboutData->customAuthorTextEnabled()) {
-                if (aboutData->bugAddress().isEmpty() || aboutData->bugAddress() == "submit@bugs.kde.org")
-                    bugsLabel->setText( i18n("Please use <a href=\"http://bugs.kde.org\">http://bugs.kde.org</a> to report bugs.\n") );
+                if (aboutData->bugAddress().isEmpty())
+                    bugsLabel->setText( i18n("Please use <a href=\"%1\">%2</a> to report bugs.\n", BUG_REPORT_URL, BUG_REPORT_URL) );
                 else {
                     if( ( aboutData->authors().count() == 1 ) &&
                         ( aboutData->authors().first().emailAddress() == aboutData->bugAddress() ) ) {

@@ -20,6 +20,7 @@
 #include <kdebug.h>
 
 #include <config.h>
+#include <config-misc.h>
 
 #include <sys/param.h>
 
@@ -912,10 +913,10 @@ KCmdLineArgsStatic::parseAllArgs()
        {
          if (!s->about->customAuthorTextEnabled ())
          {
-           if (s->about->bugAddress().isEmpty() || s->about->bugAddress() == QLatin1String("submit@bugs.kde.org") )
-             s->printQ( i18n( "Please use http://bugs.kde.org to report bugs.\n" ) );
+           if (s->about->bugAddress().isEmpty() )
+             s->printQ( i18n( "Please use %1.\n", QLatin1String(BUG_REPORT_URL) ) );
            else
-             s->printQ( i18n( "Please report bugs to %1.\n" , s->about->bugAddress()) );
+             s->printQ( i18n( "Please report bugs to %1.\n", s->about->bugAddress()) );
          }
          else
          {

@@ -17,6 +17,8 @@
  *  Boston, MA 02110-1301, USA.
  **/
 
+#include <config-misc.h>
+
 #include "kmimetype.h"
 #include "kmimetype_p.h"
 #include "kmimetypefactory.h"
@@ -660,7 +662,7 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
                 xml.skipCurrentElement();
             }
             if (xml.name() != "mime-type") {
-                kFatal() << "Programming error in KMimeType XML loading, please create a bug report on http://bugs.kde.org and attach the file" << fullPath;
+                kFatal() << "Programming error in KMimeType XML loading, please create a bug report on " << BUG_REPORT_URL << "including the file" << fullPath;
             }
         }
     }

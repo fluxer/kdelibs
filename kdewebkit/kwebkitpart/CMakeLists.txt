@@ -11,4 +11,3 @@ add_subdirectory(icons)
 add_subdirectory(src)
 
 include(MacroOptionalAddSubdirectory)
-macro_optional_add_subdirectory( po )

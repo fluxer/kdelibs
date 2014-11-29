@@ -28,6 +28,15 @@ endif(KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
 ############### Give the user the option to build the udisks2 solid backend instead of the udisks backend ###############
 option(WITH_SOLID_UDISKS2 "Enable the udisks2 solid backend instead" "ON")
 
+############### Misc options ###############
+
+# FIXME: are those needed globally? maybe define them in kglobalsettings.h for external use?
+set(BUG_REPORT_URL "https://github.com/fluxer/katana/issues"
+    CACHE STRING "Specifies the URL that will be used to report issues.")
+
+set(BUG_REPORT_EMAIL "xakepa10@gmail.com"
+    CACHE STRING "Specifies the E-Mail that will be used as contact for issues.")
+
 ############### Load the CTest options ###############
 # CTestCustom.cmake has to be in the CTEST_BINARY_DIR.
 # in the KDE build system, this is the same as CMAKE_BINARY_DIR.
@@ -230,6 +239,7 @@ configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h
 configure_file(config-compiler.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-compiler.h )
 configure_file(config-pty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-pty.h )
 configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h )
+configure_file(config-misc.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-misc.h)
 
 # these two calls here should go somewhere else, Alex
 check_library_exists(nsl gethostbyname "" HAVE_NSL_LIBRARY)
@@ -247,7 +257,6 @@ add_subdirectory( solid )
 add_subdirectory( kded       )
 add_subdirectory( kfile )
 add_subdirectory( kconf_update )
-add_subdirectory( kdoctools  )
 add_subdirectory( kioslave   )
 add_subdirectory( knewstuff  )
 add_subdirectory( kparts     )

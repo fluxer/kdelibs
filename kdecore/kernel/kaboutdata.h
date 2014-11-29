@@ -30,6 +30,8 @@
 #include <QtCore/QString>
 #include <QtCore/QSharedDataPointer>
 
+#include <config-misc.h>
+
 template <class T> class QList;
 class QVariant;
 class KAboutData;
@@ -272,7 +274,7 @@ class KDECORE_EXPORT KAboutData
                 const KLocalizedString &copyrightStatement = KLocalizedString(),
                 const KLocalizedString &otherText = KLocalizedString(),
                 const QByteArray &homePageAddress = QByteArray(),
-                const QByteArray &bugsEmailAddress = "submit@bugs.kde.org"
+                const QByteArray &bugsEmailAddress = BUG_REPORT_EMAIL
               );
 
     /**

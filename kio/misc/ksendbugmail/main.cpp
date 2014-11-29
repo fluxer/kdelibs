@@ -35,6 +35,8 @@
 
 #include "smtp.h"
 
+#include <config-misc.h>
+
 void BugMailer::slotError(int errornum) {
     QString lstr;
 
@@ -77,7 +79,7 @@ int main(int argc, char **argv) {
 
     KCmdLineOptions options;
     options.add("subject <argument>", ki18n("Subject line"));
-    options.add("recipient <argument>", ki18n("Recipient"), "submit@bugs.kde.org");
+    options.add("recipient <argument>", ki18n("Recipient"), BUG_REPORT_EMAIL);
 
     KCmdLineArgs::init(argc, argv, &d);
     KCmdLineArgs::addCmdLineOptions(options);
@@ -87,7 +89,7 @@ int main(int argc, char **argv) {
 
     QString recipient = args->getOption("recipient");
     if (recipient.isEmpty())
-        recipient = "submit@bugs.kde.org";
+        recipient = BUG_REPORT_EMAIL;
     else {
         if (recipient.at(0) == '\'') {
             recipient = recipient.mid(1).left(recipient.length() - 2);
