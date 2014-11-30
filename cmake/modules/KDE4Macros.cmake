@@ -438,7 +438,7 @@ set(_KDE4_ICON_GROUP_animations "animations")
 set(_KDE4_ICON_GROUP_intl       "intl")
 
 # a "map" of short theme names to the theme directory
-set(_KDE4_ICON_THEME_ox "oxygen")
+set(_KDE4_ICON_THEME_ox "ariya")
 set(_KDE4_ICON_THEME_cr "crystalsvg")
 set(_KDE4_ICON_THEME_lo "locolor")
 set(_KDE4_ICON_THEME_hi "hicolor")
