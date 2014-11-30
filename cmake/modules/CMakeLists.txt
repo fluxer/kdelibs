@@ -124,7 +124,6 @@ set(cmakeFiles
                MacroWriteBasicCMakeVersionFile.cmake
                PythonMacros.cmake
                SIPMacros.cmake
-               Win32Macros.cmake
                check_installed_exports_file.cmake
                config-alsa.h.cmake
                create_exe_symlink.cmake
@@ -132,7 +131,6 @@ set(cmakeFiles
                kde4uic.cmake
                cmake-modules-styleguide.txt
                kde4init_dummy.cpp.in
-               kde4init_win32lib_dummy.cpp.in
                kde4_cmake_uninstall.cmake.in
                kde4automoc.files.in
                BasicFindPackageVersion.cmake.in
@@ -142,10 +140,6 @@ set(cmakeFiles
                FindSIP.py
                PythonCompile.py
                )
-
-if (KDE4_ENABLE_UAC_MANIFEST)
-   set(cmakeFiles ${cmakeFiles} Win32.Manifest.in )
-endif (KDE4_ENABLE_UAC_MANIFEST)
 
 install(FILES ${cmakeFiles}
         DESTINATION ${module_install_dir} )
