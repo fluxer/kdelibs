@@ -33,7 +33,6 @@ namespace Plasma
 {
 
 class DataEngineConsumer;
-class RemoteDataEngine;
 
 class ServiceMonitor : public QObject
 {
@@ -56,11 +55,9 @@ public:
     DataEngineConsumer();
     ~DataEngineConsumer();
     DataEngine *dataEngine(const QString &name);
-    DataEngine *remoteDataEngine(const KUrl &location, const QString &name);
 
 private:
     QSet<QString> m_loadedEngines;
-    QMap<QPair<QString, QString>, RemoteDataEngine*> m_remoteEngines;
     QMap<Service*, QString> m_engineNameForService;
     ServiceMonitor *m_monitor;
 

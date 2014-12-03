@@ -33,7 +33,6 @@
 #include <dnssd/servicebrowser.h>
 
 #include "plasma/configloader.h"
-#include "accessmanager_p.h"
 
 namespace Plasma
 {
@@ -95,13 +94,6 @@ public:
     void associatedWidgetDestroyed(QObject *obj);
 
     void associatedGraphicsWidgetDestroyed(QObject *obj);
-
-    void publish(AnnouncementMethods methods, const QString &name,
-                 const PackageMetadata &metadata = PackageMetadata());
-
-    void unpublish();
-
-    bool isPublished() const;
 
     KConfigGroup dummyGroup();
 

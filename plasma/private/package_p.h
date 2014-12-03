@@ -39,9 +39,6 @@ public:
     PackagePrivate &operator=(const PackagePrivate &rhs);
 
     void setPathFromStructure(const QString &p);
-    void publish(AnnouncementMethods methods);
-    void unpublish();
-    bool isPublished() const;
     bool isValid();
 
 

@@ -78,8 +78,6 @@
 #endif
 
 #include "abstracttoolbox.h"
-#include "authorizationmanager.h"
-#include "authorizationrule.h"
 #include "configloader.h"
 #include "containment.h"
 #include "corona.h"
@@ -109,14 +107,12 @@
 #include "pluginloader.h"
 
 #include "private/associatedapplicationmanager_p.h"
-#include "private/authorizationmanager_p.h"
 #include "private/containment_p.h"
 #include "private/extenderapplet_p.h"
 #include "private/package_p.h"
 #include "private/packages_p.h"
 #include "private/plasmoidservice_p.h"
 #include "private/popupapplet_p.h"
-#include "private/remotedataengine_p.h"
 #include "private/service_p.h"
 #include "ui_publish.h"
 
@@ -679,13 +675,7 @@ ConfigLoader *Applet::configScheme() const
 
 DataEngine *Applet::dataEngine(const QString &name) const
 {
-    if (!d->remoteLocation.isEmpty()) {
-        return d->remoteDataEngine(KUrl(d->remoteLocation), name);
-    } else if (!package() || package()->metadata().remoteLocation().isEmpty()) {
-        return d->dataEngine(name);
-    } else {
-        return d->remoteDataEngine(KUrl(package()->metadata().remoteLocation()), name);
-    }
+    return d->dataEngine(name);
 }
 
 const Package *Applet::package() const
@@ -1675,50 +1665,6 @@ bool Applet::isRegisteredAsDragHandle(QGraphicsItem *item)
 bool Applet::hasConfigurationInterface() const
 {
     return d->hasConfigurationInterface;
-}
-
-void Applet::publish(AnnouncementMethods methods, const QString &resourceName)
-{
-    if (d->package) {
-        d->package->d->publish(methods);
-    } else if (d->appletDescription.isValid()) {
-        if (!d->service) {
-            d->service = new PlasmoidService(this);
-        }
-
-        kDebug() << "publishing package under name " << resourceName;
-        PackageMetadata pm;
-        pm.setName(d->appletDescription.name());
-        pm.setDescription(d->appletDescription.comment());
-        pm.setIcon(d->appletDescription.icon());
-        d->service->d->publish(methods, resourceName, pm);
-    } else {
-        kDebug() << "Can not publish invalid applets.";
-    }
-}
-
-void Applet::unpublish()
-{
-    if (d->package) {
-        d->package->d->unpublish();
-    } else {
-        if (d->service) {
-            d->service->d->unpublish();
-        }
-    }
-}
-
-bool Applet::isPublished() const
-{
-    if (d->package) {
-        return d->package->d->isPublished();
-    } else {
-        if (d->service) {
-            return d->service->d->isPublished();
-        } else {
-            return false;
-        }
-    }
 }
 
 void Applet::setHasConfigurationInterface(bool hasInterface)

@@ -39,9 +39,7 @@
 #include <kzip.h>
 #include <kdebug.h>
 
-#include "authorizationmanager.h"
 #include "packagemetadata.h"
-#include "private/authorizationmanager_p.h"
 #include "private/package_p.h"
 #include "private/plasmoidservice_p.h"
 #include "private/service_p.h"
@@ -685,39 +683,6 @@ void PackagePrivate::setPathFromStructure(const QString &path)
 
     valid = false;
     structure->setPath(QString());
-}
-
-void PackagePrivate::publish(AnnouncementMethods methods)
-{
-    if (!structure) {
-        return;
-    }
-
-    if (!service) {
-        service = new PlasmoidService(structure->path());
-    }
-
-    QString resourceName =
-    i18nc("%1 is the name of a plasmoid, %2 the name of the machine that plasmoid is published on",
-          "%1 on %2", structure->metadata().name(), QHostInfo::localHostName());
-    kDebug() << "publishing package under name " << resourceName;
-    service->d->publish(methods, resourceName, structure->metadata());
-}
-
-void PackagePrivate::unpublish()
-{
-    if (service) {
-        service->d->unpublish();
-    }
-}
-
-bool PackagePrivate::isPublished() const
-{
-    if (service) {
-        return service->d->isPublished();
-    } else {
-        return false;
-    }
 }
 
 } // Namespace

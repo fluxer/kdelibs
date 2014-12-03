@@ -63,9 +63,6 @@
 #include "svg.h"
 #include "wallpaper.h"
 
-#include "remote/accessappletjob.h"
-#include "remote/accessmanager.h"
-
 #include "private/applet_p.h"
 #include "private/containmentactionspluginsconfig_p.h"
 #include "private/extenderitemmimedata_p.h"
@@ -1305,48 +1302,36 @@ void ContainmentPrivate::dropData(QPointF scenePos, QPoint screenPos, QGraphicsS
         //      to create widgets out of the matching URLs, if any
         const KUrl::List urls = KUrl::List::fromMimeData(mimeData);
         foreach (const KUrl &url, urls) {
-            if (AccessManager::supportedProtocols().contains(url.protocol())) {
-                AccessAppletJob *job = AccessManager::self()->accessRemoteApplet(url);
-                if (dropEvent) {
-                    dropPoints[job] = dropEvent->pos();
-                } else {
-                    dropPoints[job] = scenePos;
-                }
-                QObject::connect(AccessManager::self(), SIGNAL(finished(Plasma::AccessAppletJob*)),
-                                 q, SLOT(remoteAppletReady(Plasma::AccessAppletJob*)));
-            }
 #ifndef PLASMA_NO_KIO
-            else {
-                KMimeType::Ptr mime = KMimeType::findByUrl(url);
-                QString mimeName = mime->name();
-                QRectF geom(pos, QSize());
-                QVariantList args;
-                args << url.url();
-                kDebug() << "can decode" << mimeName << args;
+            KMimeType::Ptr mime = KMimeType::findByUrl(url);
+            QString mimeName = mime->name();
+            QRectF geom(pos, QSize());
+            QVariantList args;
+            args << url.url();
+            kDebug() << "can decode" << mimeName << args;
 
-                // It may be a directory or a file, let's stat
-                KIO::JobFlags flags = KIO::HideProgressInfo;
-                KIO::MimetypeJob *job = KIO::mimetype(url, flags);
-                if (dropEvent) {
-                    dropPoints[job] = dropEvent->pos();
-                } else {
-                    dropPoints[job] = scenePos;
-                }
-
-                QObject::connect(job, SIGNAL(result(KJob*)), q, SLOT(dropJobResult(KJob*)));
-                QObject::connect(job, SIGNAL(mimetype(KIO::Job*,QString)),
-                                 q, SLOT(mimeTypeRetrieved(KIO::Job*,QString)));
-
-                KMenu *choices = new KMenu("Content dropped");
-                choices->addAction(KIcon("process-working"), i18n("Fetching file type..."));
-                if (dropEvent) {
-                    choices->popup(dropEvent->screenPos());
-                } else {
-                    choices->popup(screenPos);
-                }
-
-                dropMenus[job] = choices;
+            // It may be a directory or a file, let's stat
+            KIO::JobFlags flags = KIO::HideProgressInfo;
+            KIO::MimetypeJob *job = KIO::mimetype(url, flags);
+            if (dropEvent) {
+                dropPoints[job] = dropEvent->pos();
+            } else {
+                dropPoints[job] = scenePos;
             }
+
+            QObject::connect(job, SIGNAL(result(KJob*)), q, SLOT(dropJobResult(KJob*)));
+            QObject::connect(job, SIGNAL(mimetype(KIO::Job*,QString)),
+                                q, SLOT(mimeTypeRetrieved(KIO::Job*,QString)));
+
+            KMenu *choices = new KMenu("Content dropped");
+            choices->addAction(KIcon("process-working"), i18n("Fetching file type..."));
+            if (dropEvent) {
+                choices->popup(dropEvent->screenPos());
+            } else {
+                choices->popup(screenPos);
+            }
+
+            dropMenus[job] = choices;
 #endif
         }
 
@@ -1440,23 +1425,6 @@ void ContainmentPrivate::clearDataForMimeJob(KIO::Job *job)
     delete choices;
     job->kill();
 #endif // PLASMA_NO_KIO
-}
-
-void ContainmentPrivate::remoteAppletReady(Plasma::AccessAppletJob *job)
-{
-    QPointF pos = dropPoints.take(job);
-    if (job->error()) {
-        //TODO: nice user visible error handling (knotification probably?)
-        kDebug() << "remote applet access failed: " << job->errorText();
-        return;
-    }
-
-    if (!job->applet()) {
-        kDebug() << "how did we end up here? if applet is null, the job->error should be nonzero";
-        return;
-    }
-
-    q->addApplet(job->applet(), pos);
 }
 
 void ContainmentPrivate::dropJobResult(KJob *job)

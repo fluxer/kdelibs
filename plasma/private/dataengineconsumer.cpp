@@ -26,7 +26,6 @@
 #include <kdebug.h>
 
 #include "plasma/dataenginemanager.h"
-#include "plasma/private/remotedataengine_p.h"
 #include <servicejob.h>
 
 namespace Plasma
@@ -48,15 +47,6 @@ void ServiceMonitor::slotJobFinished(Plasma::ServiceJob *job)
     QString location = job->destination();
     QPair<QString, QString> pair(location, engineName);
     kDebug() << "pair = " << pair;
-    if (!m_consumer->m_remoteEngines.contains(pair)) {
-        kDebug() << "engine does not exist yet!";
-    } else {
-        KUrl engineLocation(location);
-        engineLocation.setFileName(job->result().toString());
-        kDebug() << "setting location : "
-                 << engineLocation.prettyUrl();
-        m_consumer->m_remoteEngines[pair]->setLocation(engineLocation);
-    }
 }
 
 void ServiceMonitor::slotServiceReady(Plasma::Service *plasmoidService)
@@ -109,28 +99,6 @@ DataEngine *DataEngineConsumer::dataEngine(const QString &name)
 
     return engine;
 }
-
-DataEngine *DataEngineConsumer::remoteDataEngine(const KUrl &location, const QString &name)
-{
-    QPair<QString, QString> pair(location.prettyUrl(), name);
-    kDebug() << "pair = " << pair;
-    if (m_remoteEngines.contains(pair)) {
-        kDebug() << "existing remote dataengine at " << location;
-        return m_remoteEngines[pair];
-    }
-
-    kDebug() << "new remote dataengine at " << location;
-    RemoteDataEngine *engine = new RemoteDataEngine(KUrl());
-    m_remoteEngines[pair] = engine;
-    Service *plasmoidService = Service::access(location);
-    plasmoidService->setDestination(location.prettyUrl());
-    m_engineNameForService[plasmoidService] = name;
-    kDebug() << "name = " << name;
-    QObject::connect(plasmoidService, SIGNAL(serviceReady(Plasma::Service*)),
-                     m_monitor, SLOT(slotServiceReady(Plasma::Service*)));
-    return engine;
-}
-
 
 } // namespace Plasma
 

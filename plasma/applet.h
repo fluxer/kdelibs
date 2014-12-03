@@ -903,18 +903,6 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
         void setStatus(const ItemStatus stat);
 
         /**
-         * Publishes and optionally announces this applet on the network for remote access.
-         * @param methods the methods to use for announcing this applet.
-         * @param resourceName the name under which this applet will be published (has to be unique
-         * for each machine)
-         */
-        void publish(Plasma::AnnouncementMethods methods, const QString &resourceName);
-
-        void unpublish();
-
-        bool isPublished() const;
-
-        /**
          * Open the application associated to this applet, if it's not set
          * but some urls are, open those urls with the proper application
          * for their mimetype

@@ -18,12 +18,9 @@
 
 #include "getsource_p.h"
 
-#include "authorizationmanager_p.h"
 #include "dataengineservice_p.h"
 #include "service_p.h"
 
-#include "../remote/authorizationmanager.h"
-#include "../remote/authorizationrule.h"
 #include "../dataengine.h"
 #include "../service.h"
 
@@ -63,12 +60,6 @@ void GetSource::start()
         QString serviceName = "plasma-service-" + service->name();
 
         kDebug() << "serviceForSource: getting source " << serviceName;
-        service->d->publish(Plasma::NoAnnouncement, serviceName);
-        if (!AuthorizationManager::self()->d->matchingRule(serviceName, identity())) {
-            AuthorizationRule *rule = new AuthorizationRule(serviceName, identity().id());
-            rule->setPolicy(AuthorizationRule::Allow);
-            AuthorizationManager::self()->d->rules.append(rule);
-        }
         setResult(serviceName);
     }
 }

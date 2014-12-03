@@ -26,7 +26,6 @@
 #include <kservice.h>
 
 #include <plasma/plasma_export.h>
-#include "credentials.h"
 
 namespace Plasma
 {
@@ -90,11 +89,6 @@ public:
      * @return the parameters for the operation
      */
     QMap<QString, QVariant> parameters() const;
-
-    /**
-     * @return the identity of the caller of this operation
-     */
-    Credentials identity() const;
 
     /**
      * Returns the result of the operation

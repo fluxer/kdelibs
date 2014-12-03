@@ -18,13 +18,10 @@
 
 #include "plasmoidservice_p.h"
 
-#include "authorizationmanager_p.h"
 #include "dataengineconsumer_p.h"
 #include "dataengine_p.h"
 
 #include <plasma/applet.h>
-#include <plasma/remote/authorizationmanager.h>
-#include <plasma/remote/authorizationrule.h>
 #include <plasma/packagemetadata.h>
 #include <plasma/service.h>
 #include <plasma/servicejob.h>
@@ -73,14 +70,7 @@ void PlasmoidServiceJob::start()
         QFile file(tempFile.fileName());
         setResult(file.readAll());
     } else if (operationName() == "DataEngine") {
-        DataEngine *engine  = m_service->dataEngine(parameters()["EngineName"].toString());
         QString serviceName = "plasma-dataengine-" + parameters()["EngineName"].toString();
-        engine->d->publish(NoAnnouncement, serviceName);
-        if (!AuthorizationManager::self()->d->matchingRule(serviceName, identity())) {
-            AuthorizationRule *rule = new AuthorizationRule(serviceName, identity().id());
-            rule->setPolicy(AuthorizationRule::Allow);
-            AuthorizationManager::self()->d->rules.append(rule);
-        }
         setResult(serviceName);
     }
 }

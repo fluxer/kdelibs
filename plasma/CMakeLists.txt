@@ -17,9 +17,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${CMAKE_BINARY_DIR}/experimental/libkdeclarative
                     ${CMAKE_SOURCE_DIR}/threadweaver
                     ${CMAKE_SOURCE_DIR}/plasma/extenders
-                    ${CMAKE_SOURCE_DIR}/plasma/private/qtjolie-branch/qtjolie
-                    ${CMAKE_SOURCE_DIR}/plasma/private/qtjolie-branch
-                    ${CMAKE_SOURCE_DIR}/plasma/private/qtjolie-branch/includes
                     )
 
 if(NOT PLASMA_NO_KIO)
@@ -116,7 +113,6 @@ set(plasma_LIB_SRCS
     private/dataenginebindings.cpp
     private/dataengineconsumer.cpp
     private/dataengineservice.cpp
-    private/denyallauthorization.cpp
     private/dialogshadows.cpp
     private/effectwatcher.cpp
     private/extenderapplet.cpp
@@ -125,16 +121,12 @@ set(plasma_LIB_SRCS
     private/getsource.cpp
     private/nativetabbar.cpp
     private/packages.cpp
-    private/pinpairingauthorization.cpp
-    private/pinpairingdialog.cpp
     private/plasmoidservice.cpp
     private/runnerjobs.cpp
-    private/serviceprovider.cpp
     private/storage.cpp
     private/storagethread.cpp
     private/style.cpp
     private/themedwidgetinterface.cpp
-    private/trustedonlyauthorization.cpp
     private/tooltip.cpp
     private/wallpaperrenderthread.cpp
     private/windowpreview.cpp
@@ -189,20 +181,6 @@ set(plasma_LIB_SRCS
     widgets/textedit.cpp
     widgets/webview.cpp
 
-    #Temporary QtJolie branch
-    private/qtjolie-branch/qtjolie/abstractadaptor.cpp
-    private/qtjolie-branch/qtjolie/client.cpp
-    private/qtjolie-branch/qtjolie/clientthread.cpp
-    private/qtjolie-branch/qtjolie/value.cpp
-    private/qtjolie-branch/qtjolie/fault.cpp
-    private/qtjolie-branch/qtjolie/message.cpp
-    private/qtjolie-branch/qtjolie/metaservice.cpp
-    private/qtjolie-branch/qtjolie/pendingcall.cpp
-    private/qtjolie-branch/qtjolie/pendingcallwatcher.cpp
-    private/qtjolie-branch/qtjolie/pendingreply.cpp
-    private/qtjolie-branch/qtjolie/server.cpp
-    private/qtjolie-branch/qtjolie/serverthread.cpp
-
     #Temporary solution to not link to libkdeclarative
     ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/kdeclarative.cpp
     ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/private/engineaccess.cpp
@@ -216,7 +194,6 @@ set(plasma_LIB_SRCS
 kde4_add_kcfg_files(plasma_LIB_SRCS data/kconfigxt/libplasma-theme-global.kcfgc)
 
 kde4_add_ui_files(plasma_LIB_SRCS
-                  private/pinpairing.ui
                   private/publish.ui)
 #NEPOMUK_GENERATE_FROM_ONTOLOGY(
 #   nwc.nrl
