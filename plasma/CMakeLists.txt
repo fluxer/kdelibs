@@ -17,7 +17,6 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
                     ${CMAKE_BINARY_DIR}/experimental/libkdeclarative
                     ${CMAKE_SOURCE_DIR}/threadweaver
                     ${CMAKE_SOURCE_DIR}/plasma/extenders
-                    ${CMAKE_SOURCE_DIR}/plasma/remote
                     ${CMAKE_SOURCE_DIR}/plasma/private/qtjolie-branch/qtjolie
                     ${CMAKE_SOURCE_DIR}/plasma/private/qtjolie-branch
                     ${CMAKE_SOURCE_DIR}/plasma/private/qtjolie-branch/includes
@@ -49,10 +48,6 @@ if (NOT PLASMA_NO_KUTILS)
     set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KUTILS_LIBS})
 endif(NOT PLASMA_NO_KUTILS)
 
-if(QCA2_FOUND)
-    include_directories(${QCA2_INCLUDE_DIR})
-    set(ENABLE_REMOTE_WIDGETS TRUE)
-endif(QCA2_FOUND)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-plasma.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h)
 
 add_subdirectory(tests)
@@ -133,9 +128,6 @@ set(plasma_LIB_SRCS
     private/pinpairingauthorization.cpp
     private/pinpairingdialog.cpp
     private/plasmoidservice.cpp
-    private/remotedataengine.cpp
-    private/remoteservice.cpp
-    private/remoteservicejob.cpp
     private/runnerjobs.cpp
     private/serviceprovider.cpp
     private/storage.cpp
@@ -151,14 +143,6 @@ set(plasma_LIB_SRCS
     private/effects/halopainter.cpp
     private/effects/ripple.cpp
     querymatch.cpp
-    remote/accessmanager.cpp
-    remote/accessappletjob.cpp
-    remote/authorizationinterface.cpp
-    remote/authorizationmanager.cpp
-    remote/authorizationrule.cpp
-    remote/clientpinrequest.cpp
-    remote/credentials.cpp
-    remote/serviceaccessjob.cpp
     runnercontext.cpp
     runnermanager.cpp
     runnersyntax.cpp
@@ -263,10 +247,6 @@ target_link_libraries(plasma ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
                              ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY}
                              ${KDE4_KDEUI_LIBS} ${KDE4_KDNSSD_LIBS} ${KDE4_THREADWEAVER_LIBS} ${PLASMA_EXTRA_LIBS})
 
-if(QCA2_FOUND)
-   target_link_libraries(plasma ${QCA2_LIBRARIES})
-endif(QCA2_FOUND)
-
 if(X11_FOUND)
    target_link_libraries(plasma ${X11_LIBRARIES})
 endif(X11_FOUND)
@@ -333,14 +313,6 @@ set(plasma_LIB_INCLUDES
     plasma_export.h
     popupapplet.h
     querymatch.h
-    remote/accessappletjob.h
-    remote/accessmanager.h
-    remote/authorizationmanager.h
-    remote/authorizationrule.h
-    remote/authorizationinterface.h
-    remote/clientpinrequest.h
-    remote/credentials.h
-    remote/serviceaccessjob.h
     runnercontext.h
     runnermanager.h
     runnersyntax.h

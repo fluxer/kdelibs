@@ -25,9 +25,6 @@
 #include <QtCore/QMap>
 #include <QtCore/QString>
 
-#ifdef ENABLE_REMOTE_WIDGETS
-#include <QtCrypto>
-#endif
 
 #include <kconfiggroup.h>
 
@@ -68,9 +65,6 @@ class AuthorizationManagerPrivate
         void addCredentials(const Credentials &identity);
         void saveRules();
 
-#ifdef ENABLE_REMOTE_WIDGETS
-        QCA::Initializer            initializer;
-#endif
 
         AuthorizationManager        *q;
         Jolie::Server               *server;

@@ -99,36 +99,7 @@ void ServicePrivate::associatedGraphicsWidgetDestroyed(QObject *obj)
 
 void ServicePrivate::publish(AnnouncementMethods methods, const QString &name, const PackageMetadata &metadata)
 {
-#ifdef ENABLE_REMOTE_WIDGETS
-    if (!serviceProvider) {
-        AuthorizationManager::self()->d->prepareForServicePublication();
-
-        serviceProvider = new ServiceProvider(name, q);
-
-        if (methods.testFlag(ZeroconfAnnouncement) &&
-            (DNSSD::ServiceBrowser::isAvailable() == DNSSD::ServiceBrowser::Working)) {
-            //TODO: dynamically pick a free port number.
-            publicService = new DNSSD::PublicService(name, "_plasma._tcp", 4000);
-
-            QMap<QString, QByteArray> textData;
-            textData["name"] = name.toUtf8();
-            textData["plasmoidname"] = metadata.name().toUtf8();
-            textData["description"] = metadata.description().toUtf8();
-            textData["icon"] = metadata.icon().toUtf8();
-            publicService->setTextData(textData);
-            kDebug() << "about to publish";
-
-            publicService->publishAsync();
-        } else if (methods.testFlag(ZeroconfAnnouncement) &&
-                (DNSSD::ServiceBrowser::isAvailable() != DNSSD::ServiceBrowser::Working)) {
-            kDebug() << "sorry, but your zeroconf daemon doesn't seem to be running.";
-        }
-    } else {
-        kDebug() << "already published!";
-    }
-#else
     kWarning() << "libplasma is compiled without support for remote widgets. not publishing.";
-#endif
 }
 
 void ServicePrivate::unpublish()

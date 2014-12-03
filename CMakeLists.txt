@@ -105,12 +105,6 @@ set_package_properties(Libintl PROPERTIES DESCRIPTION "Support for multiple lang
                        PURPOSE "Enables KDE to be available in many different languages"
                       )
 
-macro_optional_find_package(QCA2 2.0.0)
-set_package_properties(QCA2 PROPERTIES DESCRIPTION "Support for remote plasma widgets"
-                       URL "http://delta.affinix.com/qca"
-                       TYPE OPTIONAL
-                      )
-
 find_package(DBusMenuQt)
 set_package_properties(DBusMenuQt PROPERTIES DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
                        URL "https://launchpad.net/libdbusmenu-qt"
@@ -138,13 +132,6 @@ add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 # for including config.h and for includes like <kparts/foo.h>
 include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/interfaces)
-
-if(QCA2_FOUND)
-    include_directories(
-        ${QCA2_INCLUDE_DIR}
-    )
-endif(QCA2_FOUND)
-
 
 # Those variables for  are only valid inside of kdelibs, of course.
 # Use the one variable for the lib you depend upon.

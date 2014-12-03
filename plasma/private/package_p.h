@@ -44,9 +44,6 @@ public:
     bool isPublished() const;
     bool isValid();
 
-#ifdef QCA2_FOUND
-    void updateHash(const QString &basePath, const QString &subPath, const QDir &dir, QCA::Hash &hash);
-#endif
 
     PackageStructure::Ptr structure;
     Service *service;
