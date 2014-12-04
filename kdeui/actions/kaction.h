@@ -502,14 +502,6 @@ public:
 
 
 Q_SIGNALS:
-#ifdef KDE3_SUPPORT
-    /**
-     * Emitted when this action is activated
-     *
-     * \deprecated use triggered(bool checked) instead.
-     */
-    QT_MOC_COMPAT void activated();
-#endif
 
     /**
      * Emitted when the action is triggered. Also provides the state of the

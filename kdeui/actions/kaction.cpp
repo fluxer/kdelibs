@@ -66,9 +66,6 @@ void KActionPrivate::setActiveGlobalShortcutNoEnable(const KShortcut &cut)
 
 void KActionPrivate::slotTriggered()
 {
-#ifdef KDE3_SUPPORT
-  emit q->activated();
-#endif
   emit q->triggered(QApplication::mouseButtons(), QApplication::keyboardModifiers());
 
   if (authAction) {

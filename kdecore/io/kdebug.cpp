@@ -26,9 +26,6 @@
 #ifndef QT_NO_CAST_TO_ASCII
 #define QT_NO_CAST_TO_ASCII
 #endif
-#ifndef KDE3_SUPPORT
-#define KDE3_SUPPORT
-#endif
 
 #include "kdebug.h"
 #include <QThreadStorage>

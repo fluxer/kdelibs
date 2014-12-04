@@ -28,14 +28,6 @@
 
 class KConfig;
 
-#ifdef KDE3_SUPPORT
-#include <krandom.h>
-#include <kcmdlineargs.h>
-#include <kiconloader.h>
-#include <kicontheme.h>
-#include <QtGui/QPixmap>
-#include <QtGui/QIcon>
-#endif
 
 typedef unsigned long Atom;
 #if !defined(Q_WS_X11)
@@ -161,18 +153,6 @@ public:
    */
   KConfig* sessionConfig();
 
-#ifdef KDE3_SUPPORT
- /**
-   * Is the application restored from the session manager?
-   *
-   * @return If true, this application was restored by the session manager.
-   *    Note that this may mean the config object returned by
-   * sessionConfig() contains data saved by a session closedown.
-   * @see sessionConfig()
-   * @deprecated use qApp->isSessionRestored()
-   */
-  inline KDE_DEPRECATED bool isRestored() const { return QApplication::isSessionRestored(); }
-#endif
 
   /**
    * Disables session management for this application.
@@ -214,27 +194,6 @@ public:
    */
   bool sessionSaving() const;
 
-#ifdef KDE3_SUPPORT
-  /**
-   * Returns a QPixmap with the application icon.
-   * @return the application icon
-   * @deprecated Use QApplication::windowIcon()
-   */
-  inline KDE_DEPRECATED QPixmap icon() const {
-      int size = IconSize(KIconLoader::Desktop);
-      return windowIcon().pixmap(size,size);
-  }
-
-  /**
-   * Returns the mini-icon for the application as a QPixmap.
-   * @return the application's mini icon
-   * @deprecated Use QApplication::windowIcon()
-   */
-  inline KDE_DEPRECATED QPixmap miniIcon() const {
-      int size = IconSize(KIconLoader::Small);
-      return windowIcon().pixmap(size,size);
-  }
-#endif
 
   /**
    *  Sets the top widget of the application.
@@ -271,16 +230,6 @@ public:
    */
   static QString checkRecoverFile( const QString& pFilename, bool& bRecover );
 
-#ifdef KDE3_SUPPORT
-#ifdef Q_WS_X11
-  /**
-   * Get the X11 display
-   * @return the X11 Display
-   * @deprecated use QX11Info::display()
-   */
-  static inline KDE_DEPRECATED Display *getDisplay() { return QX11Info::display(); }
-#endif
-#endif
 
   /**
    *  Installs widget filter as global X11 event filter.
@@ -299,22 +248,6 @@ public:
    */
   void removeX11EventFilter( const QWidget* filter );
 
-#ifdef KDE3_SUPPORT
-  /**
-   * Generates a uniform random number.
-   * @return A truly unpredictable number in the range [0, RAND_MAX)
-   * @deprecated Use KRandom::random()
-   */
-  static inline KDE_DEPRECATED int random() { return KRandom::random(); }
-
-  /**
-   * Generates a random string.  It operates in the range [A-Za-z0-9]
-   * @param length Generate a string of this length.
-   * @return the random string
-   * @deprecated use KRandom::randomString() instead.
-   */
-  static inline KDE_DEPRECATED QString randomString(int length) { return KRandom::randomString(length); }
-#endif
 
   /**
    * Returns the app startup notification identifier for this running
@@ -357,26 +290,6 @@ public:
    */
   void updateRemoteUserTimestamp( const QString& service, int time = 0 );
 
-#ifdef KDE3_SUPPORT
-    /**
-    * Returns the argument to --geometry if any, so the geometry can be set
-    * wherever necessary
-    * @return the geometry argument, or QString() if there is none
-    * @deprecated please use the following code instead:
-    *
-    * <code>
-    * QString geometry;
-    * KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
-    * if (args && args->isSet("geometry"))
-    *     geometry = args->getOption("geometry");
-    *
-    * </code>
-    */
-  static inline KDE_DEPRECATED QString geometryArgument() {
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
-    return args->isSet("geometry") ? args->getOption("geometry") : QString();
-  }
-#endif
 
   /**
       @internal

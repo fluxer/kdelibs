@@ -120,11 +120,6 @@ public:
   enum Button { NoAdditionalButton=0, Help=1, Default=2, Apply=4, Export=8 };
   Q_DECLARE_FLAGS( Buttons, Button )
 
-#ifdef KDE3_SUPPORT
-  KDE_CONSTRUCTOR_DEPRECATED KCModule( QWidget *parent, const char *name, const QStringList& args = QStringList() );
-
-  KDE_CONSTRUCTOR_DEPRECATED KCModule(const KComponentData &componentData, QWidget *parent, const QStringList& args);
-#endif
 
   /**
    * Base class for all KControlModules.

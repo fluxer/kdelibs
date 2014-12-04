@@ -191,9 +191,7 @@ public:
   {
   }
 
-#ifndef KDE3_SUPPORT
   KConfig *config() { return KGlobal::config().data(); }
-#endif
 
   void _k_x11FilterDestroyed();
   void _k_checkAppStartedSlot();

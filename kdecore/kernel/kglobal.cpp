@@ -24,8 +24,6 @@
  * Generated:	Sat May  1 02:08:43 EST 1999
  */
 
-#undef KDE3_SUPPORT
-
 #include "kglobal.h"
 #include "kglobal_p.h"
 #include <QThread>
