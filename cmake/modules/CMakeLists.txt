@@ -86,6 +86,7 @@ set(cmakeFiles
                Qt4Macros.cmake
                Qt4ConfigDependentSettings.cmake
                FindPythonLibrary.cmake
+               FindQCA2.cmake
                FindQImageBlitz.cmake
                FindQt4.cmake
                FindRUBY.cmake
