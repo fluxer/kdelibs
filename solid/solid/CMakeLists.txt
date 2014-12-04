@@ -170,6 +170,20 @@ set_package_properties(UDev PROPERTIES DESCRIPTION "UDev support for Solid"
                        TYPE OPTIONAL
                        PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
                       )
+
+############### prefer udisks2 over udisks
+macro_optional_find_package( UDisks2 )
+set_package_properties(UDisks2 PROPERTIES DESCRIPTION "UDisks2 support for Solid"
+                       URL "http://www.freedesktop.org/wiki/Software/udisks/"
+                       TYPE OPTIONAL
+                       PURPOSE "Allows Solid to use UDisks2 to provide information about devices on Linux"
+                      )
+if ( UDISKS2_FOUND )
+    set(WITH_SOLID_UDISKS2 ON)
+else ()
+    set(WITH_SOLID_UDISKS2 OFF)
+endif()
+
 configure_file( config-solid.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h )
 
 if ( UDEV_FOUND )

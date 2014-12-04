@@ -97,6 +97,7 @@ set(cmakeFiles
                FindSqlite.cmake
                FindStrigi.cmake
                FindTaglib.cmake
+               FindUDisks2.cmake
                FindUSB.cmake
                FindWcecompat.cmake
                FindX11.cmake
