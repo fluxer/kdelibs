@@ -72,26 +72,6 @@ public:
     bool _unmanagedWidgetChangeState : 1;
 };
 
-KCModule::KCModule( QWidget *parent, const char *name, const QStringList& )
-    : QWidget(parent), d(new KCModulePrivate)
-{
-    if (name && strlen(name)) {
-        d->_componentData = KComponentData(name);
-        KGlobal::locale()->insertCatalog(name);
-    } else
-        d->_componentData = KComponentData("kcmunnamed");
-}
-
-KCModule::KCModule(const KComponentData &componentData, QWidget *parent, const QStringList &)
-    : QWidget(parent), d(new KCModulePrivate)
-{
-    Q_ASSERT(componentData.isValid());
-
-    KGlobal::locale()->insertCatalog(componentData.componentName());
-
-    d->_componentData = componentData;
-}
-
 KCModule::KCModule(const KComponentData &componentData, QWidget *parent, const QVariantList &)
     : QWidget( parent ), d(new KCModulePrivate)
 {
