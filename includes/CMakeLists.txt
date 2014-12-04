@@ -786,15 +786,10 @@ install(FILES
   Plasma/AbstractDialogManager
   Plasma/AbstractRunner
   Plasma/AbstractToolBox
-  Plasma/AccessAppletJob
-  Plasma/AccessManager
   Plasma/Animation
   Plasma/Animator
   Plasma/Applet
   Plasma/AppletScript
-  Plasma/AuthorizationInterface
-  Plasma/AuthorizationManager
-  Plasma/AuthorizationRule
   Plasma/BusyWidget
   Plasma/CheckBox
   Plasma/ClientPinRequest
