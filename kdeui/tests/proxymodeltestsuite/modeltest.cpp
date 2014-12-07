@@ -263,6 +263,9 @@ void ModelTest::index()
 
     // index() is tested more extensively in checkChildren(),
     // but this catches the big mistakes
+
+    // compiler warnings
+    Q_UNUSED(columns)
 }
 
 /*!
@@ -466,6 +469,9 @@ void ModelTest::data()
     if ( textAlignmentVariant.isValid() ) {
         int alignment = textAlignmentVariant.toInt();
         Q_ASSERT ( alignment == ( alignment & ( Qt::AlignHorizontal_Mask | Qt::AlignVertical_Mask ) ) );
+
+        // compiler warnings
+        Q_UNUSED(alignment)
     }
 
     // General Purpose roles that should return a QColor
@@ -486,11 +492,10 @@ void ModelTest::data()
         Q_ASSERT ( state == Qt::Unchecked ||
                    state == Qt::PartiallyChecked ||
                    state == Qt::Checked );
-    }
 
-    // compiler warnings
-    Q_UNUSED(alignment)
-    Q_UNUSED(state)
+        // compiler warnings
+        Q_UNUSED(state)
+    }
 }
 
 /*!
