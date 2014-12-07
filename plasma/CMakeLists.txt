@@ -303,14 +303,6 @@ set(plasma_LIB_INCLUDES
     view.h
     wallpaper.h)
 
-if(NOT KDE_NO_DEPRECATED)
-    set(plasma_LIB_INCLUDES
-        ${plasma_LIB_INCLUDES}
-        animationdriver.h
-    )
-endif(NOT KDE_NO_DEPRECATED)
-
-
 if(QT_QTOPENGL_FOUND)
     set(plasma_LIB_INCLUDES
         ${plasma_LIB_INCLUDES}
