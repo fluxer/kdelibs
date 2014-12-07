@@ -866,13 +866,6 @@ if(QT_QTOPENGL_FOUND)
       DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Plasma COMPONENT Devel)
 endif(QT_QTOPENGL_FOUND)
 
-if(NOT KDE_NO_DEPRECATED)
-install( FILES
-  Plasma/AnimationDriver
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Plasma COMPONENT Devel)
-endif(NOT KDE_NO_DEPRECATED)
-
-
 install(FILES
   KUnitConversion/Converter
   KUnitConversion/Unit
