@@ -156,6 +156,9 @@ void ModelTest::nonDestructiveBasicTest()
     model->sibling ( 0, 0, QModelIndex() );
     model->span ( QModelIndex() );
     model->supportedDropActions();
+
+    // compiler warnings
+    Q_UNUSED(flags)
 }
 
 /*!
@@ -226,6 +229,10 @@ void ModelTest::hasIndex()
 
     // hasIndex() is tested more extensively in checkChildren(),
     // but this catches the big mistakes
+
+    // compiler warnings
+    Q_UNUSED(rows)
+    Q_UNUSED(columns)
 }
 
 /*!
@@ -480,6 +487,10 @@ void ModelTest::data()
                    state == Qt::PartiallyChecked ||
                    state == Qt::Checked );
     }
+
+    // compiler warnings
+    Q_UNUSED(alignment)
+    Q_UNUSED(state)
 }
 
 /*!
