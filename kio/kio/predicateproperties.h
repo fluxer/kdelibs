@@ -30,15 +30,11 @@ class QValidator;
  * It is identified by URI and it defines the type of the relationship.
  * For file metadata, a predicate can be seen as a fieldname.
  * It has a data type, a description, a short id, a cardinality
- *
- * @deprecated use Nepomuk::Types::Property instead
  **/
 class KIO_EXPORT PredicateProperties {
 friend class PredicatePropertyProvider;
 public:
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED PredicateProperties(const QString& predicate = QString());
-#endif
+    PredicateProperties(const QString& predicate = QString());
     PredicateProperties(const PredicateProperties& p);
     ~PredicateProperties();
     const PredicateProperties& operator=(const PredicateProperties& p);

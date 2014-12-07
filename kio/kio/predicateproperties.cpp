@@ -28,9 +28,7 @@ class PredicateProperties::Private : public QSharedData {
 public:
     static const QString nullString;
     static const QStringList nullStringList;
-#ifndef KDE_NO_DEPRECATED
     static const PredicateProperties nullPP;
-#endif
     PredicateProperties parent;
     QString key;
     QString name;
@@ -39,18 +37,14 @@ public:
 };
 const QString PredicateProperties::Private::nullString;
 const QStringList PredicateProperties::Private::nullStringList;
-#ifndef KDE_NO_DEPRECATED
 const PredicateProperties PredicateProperties::Private::nullPP;
-#endif
 
-#ifndef KDE_NO_DEPRECATED
 PredicateProperties::PredicateProperties(const QString& predicate) {
     if (!predicate.isEmpty()) {
         d = new Private();
         d->key = predicate;
     }
 }
-#endif
 PredicateProperties::PredicateProperties(const PredicateProperties& pp)
         : d(pp.d) {
 }
@@ -96,11 +90,7 @@ PredicateProperties::createValidator() const {
 }
 const PredicateProperties&
 PredicateProperties::parent() const {
-#ifndef KDE_NO_DEPRECATED
     return ( d) ? d->parent :Private::nullPP;
-#else
-    return d->parent;
-#endif
 }
 bool
 PredicateProperties::isValid() const {
