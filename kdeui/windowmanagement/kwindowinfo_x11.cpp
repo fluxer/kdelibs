@@ -34,8 +34,9 @@
 #include <QtGui/QX11Info>
 #include <X11/Xatom.h>
 
-struct KWindowInfo::Private
+class KWindowInfo::Private
 {
+    public:
 	Private()
 	: info( NULL )
 	{}
