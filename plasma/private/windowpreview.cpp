@@ -83,7 +83,7 @@ QSize WindowPreview::sizeHint() const
         return QSize();
     }
 
-    if (!windowSizes.size() == 0) {
+    if (windowSizes.size() != 0) {
         windowSizes = WindowEffects::windowSizes(ids);
     }
 
