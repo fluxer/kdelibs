@@ -49,10 +49,6 @@ QString KStandardDirs::installPath(const char *type)
             if (strcmp("exe", type) == 0)
                 return QFile::decodeName(BIN_INSTALL_DIR "/");
             break;
-        case 'm':
-            if (strcmp("man", type) == 0)
-                return QFile::decodeName(MAN_INSTALL_DIR "/");
-            break;
         case 'i':
             if (strcmp("icon", type) == 0)
                 return QFile::decodeName(ICON_INSTALL_DIR "/");
@@ -72,6 +68,8 @@ QString KStandardDirs::installPath(const char *type)
                 return QFile::decodeName(PLUGIN_INSTALL_DIR "/");
             if (strcmp("mime", type) == 0)
                 return QFile::decodeName(MIME_INSTALL_DIR "/");
+            if (strcmp("man", type) == 0)
+                return QFile::decodeName(MAN_INSTALL_DIR "/");
             break;
         case 'q':
             if (strcmp("qtplugins", type) == 0)
