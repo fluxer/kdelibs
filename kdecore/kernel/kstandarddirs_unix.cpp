@@ -49,9 +49,9 @@ QString KStandardDirs::installPath(const char *type)
             if (strcmp("exe", type) == 0)
                 return QFile::decodeName(BIN_INSTALL_DIR "/");
             break;
-        case 'h':
-            if (strcmp("html", type) == 0)
-                return QFile::decodeName(HTML_INSTALL_DIR "/");
+        case 'm':
+            if (strcmp("man", type) == 0)
+                return QFile::decodeName(MAN_INSTALL_DIR "/");
             break;
         case 'i':
             if (strcmp("icon", type) == 0)

@@ -15,7 +15,6 @@
 #  KDE4_BIN_INSTALL_DIR     - the directory where executables from kdelibs are installed
 #  KDE4_SBIN_INSTALL_DIR    - the directory where system executables from kdelibs are installed
 #  KDE4_DATA_INSTALL_DIR    - the parent directory where kdelibs applications install their data
-#  KDE4_HTML_INSTALL_DIR    - the directory where HTML documentation from kdelibs is installed
 #  KDE4_CONFIG_INSTALL_DIR  - the directory where config files from kdelibs are installed
 #  KDE4_ICON_INSTALL_DIR    - the directory where icons from kdelibs are
 #  KDE4_IMPORTS_INSTALL_DIR - the directory where imports from kdelibs are
@@ -113,7 +112,6 @@
 #  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
 #  CONFIG_INSTALL_DIR       - the directory where config files will be installed
 #  DATA_INSTALL_DIR         - the parent directory where applications can install their data
-#  HTML_INSTALL_DIR         - the directory where HTML documentation will be installed
 #  ICON_INSTALL_DIR         - the directory where the icons will be installed (default prefix/share/icons/)
 #  INFO_INSTALL_DIR         - the directory where info files will be installed (default prefix/info)
 #  KCFG_INSTALL_DIR         - the directory where kconfig files will be installed
@@ -152,9 +150,6 @@
 # This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
 # into bin/.
 #
-#
-# The following variable is provided, but seem to be unused:
-#  LIBS_HTML_INSTALL_DIR    /share/doc/HTML            CACHE STRING "Is this still used ?")
 #
 # The following user adjustable options are provided:
 #
@@ -260,12 +255,6 @@
 #  KDE4_INSTALL_ICONS( path theme)
 #    Installs all png and svgz files in the current directory to the icon
 #    directory given in path, in the subdirectory for the given icon theme.
-#
-#  KDE4_CREATE_HANDBOOK( docbookfile [INSTALL_DESTINATION installdest] [SUBDIR subdir])
-#   Create the handbook from the docbookfile (using meinproc4)
-#   The resulting handbook will be installed to <installdest> when using
-#   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
-#   SUBDIR <subdir> is specified.
 #
 #  KDE4_CREATE_MANPAGE( docbookfile section )
 #   Create the manpage for the specified section from the docbookfile (using meinproc4)
@@ -399,11 +388,11 @@ set(CMAKE_MODULE_PATH ${kde_cmake_module_dir} ${CMAKE_MODULE_PATH} )
 # if the minimum Qt requirement is changed, change all occurrence in the
 # following lines
 if( NOT QT_MIN_VERSION )
-  set(QT_MIN_VERSION "4.8.0")
+  set(QT_MIN_VERSION "4.8.2")
 endif( NOT QT_MIN_VERSION )
-if( ${QT_MIN_VERSION} VERSION_LESS "4.8.0" )
-  set(QT_MIN_VERSION "4.8.0")
-endif( ${QT_MIN_VERSION} VERSION_LESS "4.8.0" )
+if( ${QT_MIN_VERSION} VERSION_LESS "4.8.2" )
+  set(QT_MIN_VERSION "4.8.2")
+endif( ${QT_MIN_VERSION} VERSION_LESS "4.8.2" )
 
 # Tell FindQt4.cmake to point the QT_QTFOO_LIBRARY targets at the imported targets
 # for the Qt libraries, so we get full handling of release and debug versions of the
@@ -517,7 +506,7 @@ if (_kdeBootStrapping)
 
 else (_kdeBootStrapping)
 
-  # ... but NOT otherwise
+   # ... but NOT otherwise
    set( _KDE4_KCONFIG_COMPILER_DEP)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
    set( _KDE4_MEINPROC_EXECUTABLE_DEP)
@@ -535,7 +524,7 @@ else (_kdeBootStrapping)
       if (KDE4_FIND_VERSION_MAJOR)
          set(KDE_MIN_VERSION "${KDE4_FIND_VERSION_MAJOR}.${KDE4_FIND_VERSION_MINOR}.${KDE4_FIND_VERSION_PATCH}")
       else (KDE4_FIND_VERSION_MAJOR)
-         set(KDE_MIN_VERSION "4.0.0")
+         set(KDE_MIN_VERSION "4.14.3")
       endif (KDE4_FIND_VERSION_MAJOR)
    endif (NOT KDE_MIN_VERSION)
 
@@ -648,7 +637,7 @@ endif (UNIX)
 # which helps with finding the phonon installed as part of kdesupport:
 
 # only make Phonon REQUIRED if KDE4 itself is REQUIRED
-find_package(Phonon 4.3.80 ${_REQ_STRING_KDE4})
+find_package(Phonon 4.7.0 ${_REQ_STRING_KDE4})
 set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
 set(KDE4_PHONON_LIBS ${PHONON_LIBS})
 set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
@@ -663,7 +652,6 @@ endif(NOT PHONON_FOUND)
 
 option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests" ON)
-option(KDE4_ENABLE_HTMLHANDBOOK  "Create targets htmlhandbook for creating the html versions of the docbook docs")
 set(KDE4_SERIALIZE_TOOL "" CACHE STRING "Tool to serialize resource-intensive commands in parallel builds")
 
 # if CMake 2.6.3 or above is used, provide an option which should be used by other KDE packages
@@ -754,7 +742,6 @@ _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                "Th
 _set_fancy(IMPORTS_INSTALL_DIR       "${PLUGIN_INSTALL_DIR}/imports"                "The subdirectory relative to the install prefix where imports will be installed")
 _set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"         "The config file install dir")
 _set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"           "The parent directory where applications can install their data")
-_set_fancy(HTML_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/doc/HTML"       "The HTML install dir for documentation")
 _set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"          "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
 _set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"    "The install dir for kconfig files")
 _set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"         "The install dir for translations")

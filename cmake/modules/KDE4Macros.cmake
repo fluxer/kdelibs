@@ -988,12 +988,6 @@ macro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
    configure_file(${KDE4_MODULE_DIR}/kde4exportsheader.h.in ${_outputFile})
 endmacro(KDE4_CREATE_EXPORTS_HEADER _outputFile _libName)
 
-
-macro (KDE4_CREATE_HTML_HANDBOOK _docbook)
-   message(STATUS "KDE4_CREATE_HTML_HANDBOOK() is deprecated. Enable the option KDE4_ENABLE_HTMLHANDBOOK instead, this will give you targets htmlhandbook for creating the html help.")
-endmacro (KDE4_CREATE_HTML_HANDBOOK)
-
-
 # adds application icon to target source list 
 # for detailed documentation see the top of FindKDE4Internal.cmake
 macro (KDE4_ADD_APP_ICON appsources pattern)
