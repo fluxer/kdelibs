@@ -28,16 +28,3 @@ set(GENERIC_LIB_SOVERSION "4")
 set(KDE_NON_GENERIC_LIB_VERSION "5.14.3")
 set(KDE_NON_GENERIC_LIB_SOVERSION "5")
 
-# windows does not support LD_LIBRARY_PATH or similar
-# all searchable directories has to be defined by the PATH environment var
-# to reduce the number of required pathes executables are placed into
-# the build bin dir
-if (WIN32)
- set (EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-# set (LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-  if (MINGW)
-      set (CMAKE_RC_COMPILER_INIT windres)
-      enable_language (RC)
-      set (CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -i <SOURCE> -o <OBJECT>")
-  endif(MINGW)
-endif(WIN32)
