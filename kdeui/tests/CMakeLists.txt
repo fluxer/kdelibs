@@ -91,6 +91,7 @@ KDEUI_EXECUTABLE_TESTS(
   kcharselecttest
   kapptest
   kassistantdialogtest
+  kbugreporttest
   kcategorizedviewtest
   kcodecactiontest
   kcolorcollectiontest
@@ -103,6 +104,7 @@ KDEUI_EXECUTABLE_TESTS(
   kdatetabletest
   kdatetimewidgettest
   kdatewidgettest
+  kdebugtest_gui
   kdialogbuttonboxtest
   kdialogtest
   kfontdialogtest

@@ -105,6 +105,7 @@ set(kdeui_LIB_SRCS
  dialogs/kassistantdialog.cpp
  dialogs/kconfigdialog.cpp
  dialogs/kconfigdialogmanager.cpp
+ dialogs/kbugreport.cpp
  dialogs/kdialog.cpp
  dialogs/kedittoolbar.cpp
  dialogs/kinputdialog.cpp
@@ -515,6 +516,7 @@ install( FILES
  config/kconfigskeleton.h
  dialogs/kaboutapplicationdialog.h
  dialogs/kassistantdialog.h
+ dialogs/kbugreport.h
  dialogs/kconfigdialog.h
  dialogs/kconfigdialogmanager.h
  dialogs/kdeprintdialog.h
