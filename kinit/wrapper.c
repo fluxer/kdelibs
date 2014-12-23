@@ -318,7 +318,7 @@ static int kwrapper_run( pid_t wrapped, int sock )
     }
 
     read_socket(sock, buffer, header.arg_length);
-    pid = ((long *) buffer)[0];
+    pid = buffer[0];
     if( pid !=  kwrapper_pid)
     {
        fprintf(stderr, "Unexpected LAUNCHER_CHILD_DIED from KInit - pid = %ld\n", pid);
@@ -557,7 +557,7 @@ int main(int argc, char **argv)
           exit(255);
       }
       read_socket(sock, buffer, header.arg_length);
-      pid = *((long *) buffer);
+      pid = *(buffer);
       if( !kwrapper ) /* kwrapper shouldn't print any output */
           printf("Launched ok, pid = %ld\n", pid);
       else
