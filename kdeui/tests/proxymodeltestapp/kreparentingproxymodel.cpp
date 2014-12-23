@@ -412,6 +412,7 @@ void KReparentingProxyModelPrivate::verifyStructure(const QModelIndex &sourcePar
 
     bool allowMove = q->beginMoveRows(proxySourceParent, proxySourceStart, proxySourceEnd, proxyDestinationParent, destinationRow);
     Q_ASSERT(allowMove);
+    Q_UNUSED(allowMove);
 
     for (int row = proxySourceEnd; row >= proxySourceStart; --row)
     {
@@ -1063,6 +1064,7 @@ void KReparentingProxyModelPrivate::sourceRowsAboutToBeRemoved(const QModelIndex
 //         kDebug() << "Move from" << lastAffectedAncestor.data() << startRow << lastRow << " To " << proxyParent.data() << destRow;
         bool allowMove = q->beginMoveRows(lastAffectedAncestor, startRow, lastRow, proxyParent, destRow);
         Q_ASSERT(allowMove);
+        Q_UNUSED(allowMove);
 
         for (int i = startRow; i <= lastRow; ++i)
         {
@@ -1444,8 +1446,6 @@ void KReparentingProxyModelPrivate::emitDataChangedSignals(const QModelIndex &st
   Q_Q(KReparentingProxyModel);
 
   QModelIndex proxyParent = startIndex.parent();
-
-  const int column = 0;
 
   int numChanged = 1;
 

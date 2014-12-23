@@ -200,6 +200,7 @@ void ModelEventLogger::writeLog()
   QFile outputFile(logFileName);
   const bool logFileOpened = outputFile.open(QFile::WriteOnly | QFile::Text);
   Q_ASSERT(logFileOpened);
+  Q_UNUSED(logFileOpened);
 
   Grantlee::Engine engine;
   Grantlee::FileSystemTemplateLoader::Ptr loader(new Grantlee::FileSystemTemplateLoader);

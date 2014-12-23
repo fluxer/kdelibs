@@ -40,10 +40,8 @@ static void writeFile(const QString &path, const QString &content)
 {
     QFile file(path);
     bool ok = file.open(QIODevice::WriteOnly);
-    // prevent a compiler warning, marvelous isn't it?
-    if (!ok) {
-        Q_ASSERT(ok);
-    }
+    Q_ASSERT(ok);
+    Q_UNUSED(ok);
     file.write(content.toUtf8());
 }
 
@@ -52,6 +50,7 @@ static QString readFile(const QString &path)
     QFile file(path);
     bool ok = file.open(QIODevice::ReadOnly);
     Q_ASSERT(ok);
+    Q_UNUSED(ok);
     return QString::fromUtf8(file.readAll());
 }
 
@@ -61,6 +60,7 @@ static KTemporaryFile* writeUpdFile(const QString &content)
     file->setSuffix(".upd");
     bool ok = file->open();
     Q_ASSERT(ok);
+    Q_UNUSED(ok);
     file->write(content.toUtf8());
     file->flush();
     return file;
