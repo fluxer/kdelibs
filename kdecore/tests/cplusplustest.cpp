@@ -45,4 +45,7 @@ int main(int, char *[])
 
     Q_ASSERT(dictA["hello"] == pC);
     Q_ASSERT(dictB["hello"] == pC);
+
+    Q_UNUSED(pA);
+    Q_UNUSED(pB);
 }

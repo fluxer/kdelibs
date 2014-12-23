@@ -95,6 +95,7 @@ void tst_KActionCategory::tstSynchronization()
     delete category3;
     // Make sure the action is still there.
     Q_ASSERT( collection.actions().count(action3) == 1 );
+    Q_UNUSED(action3);
     }
 
 
@@ -153,6 +154,11 @@ void tst_KActionCategory::tstActionCreation()
     // There should be 6 actions inside the collection and category
     Q_ASSERT( category.actions().count() == 6 );
     Q_ASSERT( collection.actions().count() == 6 );
+
+    Q_UNUSED(action3);
+    Q_UNUSED(action4);
+    Q_UNUSED(action5);
+    Q_UNUSED(action6);
     }
 
 
