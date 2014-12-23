@@ -86,12 +86,8 @@ public:
     bool isValid() const;
     /**
      * @brief Retrieve the properties of this field type.
-     *
-     * @deprecated
      **/
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED const PredicateProperties& properties() const;
-#endif
+    const PredicateProperties& properties() const;
     /**
      * Localized name of the predicate.
      **/
