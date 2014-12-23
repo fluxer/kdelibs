@@ -359,7 +359,6 @@ private:
     QElapsedTimer m_startTime;
     const char *m_label; // KDE5 TODO: REMOVE
     int m_area;
-    int m_color;
     class Private;
     Private* d;
 };
