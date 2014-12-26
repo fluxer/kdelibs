@@ -23,7 +23,9 @@
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusPendingCall>
-#include <QLatin1String>
+#include <QtCore/QLatin1String>
+#include <QtCore/QStringList>
+#include <QtCore/QRegExp>
 
 namespace KAuth
 {
@@ -31,13 +33,12 @@ namespace KAuth
 DBusBackend::DBusBackend()
     : AuthBackend()
 {
-    setCapabilities(AuthorizeFromClientCapability);
+    setCapabilities(AuthorizeFromClientCapability | AuthorizeFromHelperCapability);
 }
 
 Action::AuthStatus DBusBackend::authorizeAction(const QString &action)
 {
-    Q_UNUSED(action)
-    return Action::Authorized;
+    return actionStatus(action);
 }
 
 void DBusBackend::setupAction(const QString &action)
@@ -67,9 +68,18 @@ bool DBusBackend::isCallerAuthorized(const QString &action, QByteArray callerID)
 {
     Q_UNUSED(callerID)
     QDBusMessage message;
-    message = QDBusMessage::createMethodCall(action, QLatin1String("/"), QLatin1String("org.kde.auth"), QLatin1String("Introspect"));
 
-    QDBusPendingCall reply = QDBusConnection::systemBus().asyncCall(message); // This is a NO_REPLY method
+    QRegExp rx(QLatin1String("(\\S+\\.\\S+\\.\\S+\\.\\S+)\\."));
+    int pos = rx.indexIn(action);
+    Q_UNUSED(pos);
+
+    message = QDBusMessage::createMethodCall(rx.capturedTexts()[1],
+                                             QLatin1String("/"),
+                                             QLatin1String("org.freedesktop.DBus.Introspectable"),
+                                             QLatin1String("Introspect"));
+
+    QDBusPendingCall reply = QDBusConnection::systemBus().asyncCall(message);
+    reply.waitForFinished();
     if (reply.reply().type() == QDBusMessage::ErrorMessage) {
         return false;
     }

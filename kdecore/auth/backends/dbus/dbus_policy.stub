@@ -8,4 +8,13 @@
     <allow own="@HELPER_ID@"/>
   </policy>
  
+  <!-- Only members of the wheel group and root can send messages to the foo helper -->
+  <policy user="root">
+    <allow send_destination="@HELPER_ID@"/>
+    <allow send_interface="@HELPER_ID@"/>
+  </policy>
+  <policy group="wheel">
+    <allow send_destination="@HELPER_ID@"/>
+    <allow send_interface="@HELPER_ID@"/>
+  </policy>
 </busconfig>
