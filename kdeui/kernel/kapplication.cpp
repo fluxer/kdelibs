@@ -89,14 +89,6 @@
 #include <QX11Info>
 #endif
 
-#ifdef Q_WS_MACX
-// ick
-#undef Status
-#include <Carbon/Carbon.h>
-#include <QImage>
-#include <ksystemtrayicon.h>
-#include <kkernel_mac.h>
-#endif
 
 #ifdef Q_OS_UNIX
 #include <signal.h>

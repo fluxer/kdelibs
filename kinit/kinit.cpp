@@ -72,9 +72,6 @@
 #endif
 #endif
 
-#ifdef Q_WS_MACX
-#include <kkernel_mac.h>
-#endif
 
 #include <kdeversion.h>
 
@@ -115,8 +112,6 @@ static char sock_file[MAX_SOCK_FILE];
 #define DISPLAY "DISPLAY"
 #elif defined(Q_WS_QWS)
 #define DISPLAY "QWS_DISPLAY"
-#elif defined(Q_WS_MACX)
-#define DISPLAY "MAC_DISPLAY"
 #else
 #error Use QT/X11 or QT/Embedded
 #endif
@@ -1649,12 +1644,7 @@ int main(int argc, char **argv, char **envp)
          launch_klauncher = 0;
       if (strcmp(safe_argv[i], "--no-kded") == 0)
          launch_kded = 0;
-#ifdef Q_WS_MACX
-      // make it nofork to match KUniqueApplication, technically command-line incompatible
-      if (strcmp(safe_argv[i], "--nofork") == 0)
-#else
       if (strcmp(safe_argv[i], "--no-fork") == 0)
-#endif
          do_fork = false;
       if (strcmp(safe_argv[i], "--suicide") == 0)
          d.suicide = true;
@@ -1674,11 +1664,7 @@ int main(int argc, char **argv, char **envp)
       {
         printf("Usage: kdeinit4 [options]\n");
      // printf("    --no-dcop         Do not start dcopserver\n");
-#ifdef Q_WS_MACX
-        printf("    --nofork          Do not fork\n");
-#else
         printf("    --no-fork         Do not fork\n");
-#endif
      // printf("    --no-klauncher    Do not start klauncher\n");
         printf("    --no-kded         Do not start kded\n");
         printf("    --suicide         Terminate when no KDE applications are left running\n");
@@ -1695,9 +1681,6 @@ int main(int argc, char **argv, char **envp)
    (void)dup2(2, 1);
 
    if (do_fork) {
-#ifdef Q_WS_MACX
-      mac_fork_and_reexec_self();
-#else
       if (pipe(d.initpipe) != 0) {
           perror("kdeinit4: pipe failed");
           return 1;
@@ -1722,7 +1705,6 @@ int main(int argc, char **argv, char **envp)
       }
       close(d.initpipe[0]);
       d.initpipe[0] = -1;
-#endif
    }
 
    /** Make process group leader (for shutting down children later) **/

@@ -1453,11 +1453,7 @@ void KStandardDirs::addKDEDefaults()
         // defaults to ~/.config) + '/' + $KDECONFIG (which would default to e.g. "KDE")
         // This would mean ~/.config/KDE/ by default, more xdg-compliant.
 
-#if defined(Q_WS_MACX)
-        localKdeDir =  QDir::homePath() + QLatin1String("/Library/Preferences/KDE/");
-#else
         localKdeDir =  QDir::homePath() + QLatin1Char('/') + QString::fromLatin1(KDE_DEFAULT_HOME) + QLatin1Char('/');
-#endif
     }
 
     if (localKdeDir != QLatin1String("-/"))
@@ -1466,17 +1462,6 @@ void KStandardDirs::addKDEDefaults()
         addPrefix(localKdeDir);
     }
 
-#ifdef Q_WS_MACX
-    // Adds the "Contents" directory of the current application bundle to
-    // the search path. This way bundled resources can be found.
-    QDir bundleDir(mac_app_filename());
-    if (bundleDir.dirName() == QLatin1String("MacOS")) { // just to be sure we're in a bundle
-        bundleDir.cdUp();
-        // now dirName should be "Contents". In there we can find our normal
-        // dir-structure, beginning with "share"
-        addPrefix(bundleDir.absolutePath());
-    }
-#endif
 
     QStringList::ConstIterator end(kdedirList.end());
     for (QStringList::ConstIterator it = kdedirList.constBegin();
@@ -1506,11 +1491,7 @@ void KStandardDirs::addKDEDefaults()
         if (!localXdgDir.endsWith(QLatin1Char('/')))
             localXdgDir += QLatin1Char('/');
     } else {
-#ifdef Q_WS_MACX
-        localXdgDir = QDir::homePath() + QString::fromLatin1("/Library/Preferences/XDG/");
-#else
         localXdgDir = QDir::homePath() + QString::fromLatin1("/.config/");
-#endif
     }
 
     localXdgDir = KShell::tildeExpand(localXdgDir);
