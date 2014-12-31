@@ -278,15 +278,9 @@ macro (KDE4_CREATE_MANPAGE _docbook _section)
    # sometimes we have "man-" prepended
    string(REGEX REPLACE "/man-" "/" _outdoc ${_doc})
 
-#   if (CMAKE_CROSSCOMPILING)
-#      set(IMPORT_MEINPROC4_EXECUTABLE "${KDE_HOST_TOOLS_PATH}/ImportMeinProc4Executable.cmake" CACHE FILEPATH "Point it to the export file of meinproc4 from a native build")
-#      include(${IMPORT_MEINPROC4_EXECUTABLE})
-#      set(KDE4_MEINPROC_EXECUTABLE meinproc4)
-#   endif (CMAKE_CROSSCOMPILING)
-
    add_custom_command(OUTPUT ${_outdoc}
-      COMMAND ${KDE4_MEINPROC_EXECUTABLE} --check ${_input}
-      DEPENDS ${_input} ${_KDE4_MEINPROC_EXECUTABLE_DEP}
+      COMMAND xsltproc ${_input}
+      DEPENDS ${_input} xsltproc
    )
    get_filename_component(_targ ${CMAKE_CURRENT_SOURCE_DIR} NAME)
    set(_targ "${_targ}-manpage-${_base}")

@@ -39,7 +39,6 @@
 #
 #  KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
 #  KDE4_AUTOMOC_EXECUTABLE  - the kde4automoc executable, deprecated, use AUTOMOC4_EXECUTABLE instead
-#  KDE4_MEINPROC_EXECUTABLE - the meinproc4 executable
 #  KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
 #
 # The following variables point to the location of the KDE libraries,
@@ -257,19 +256,10 @@
 #    directory given in path, in the subdirectory for the given icon theme.
 #
 #  KDE4_CREATE_MANPAGE( docbookfile section )
-#   Create the manpage for the specified section from the docbookfile (using meinproc4)
+#   Create the manpage for the specified section from the docbookfile
 #   The resulting manpage will be installed to <installdest> when using
 #   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
 #   SUBDIR <subdir> is specified.
-#
-#  KDE4_INSTALL_AUTH_ACTIONS( HELPER_ID ACTIONS_FILE )
-#   This macro generates an action file, depending on the backend used, for applications using KAuth.
-#   It accepts the helper id (the DBUS name) and a file containing the actions (check kdelibs/kdecore/auth/example
-#   for file format). The macro will take care of generating the file according to the backend specified,
-#   and to install it in the right location. This (at the moment) means that on Linux (PolicyKit) a .policy
-#   file will be generated and installed into the policykit action directory (usually /usr/share/PolicyKit/policy/),
-#   and on Mac (Authorization Services) will be added to the system action registry using the native MacOS API during
-#   the install phase
 #
 #  KDE4_INSTALL_AUTH_HELPER_FILES( HELPER_TARGET HELPER_ID HELPER_USER )
 #   This macro adds the needed files for an helper executable meant to be used by applications using KAuth.
@@ -491,7 +481,6 @@ if (_kdeBootStrapping)
 
    set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
    set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX}.shell )
-   set(KDE4_MEINPROC_EXECUTABLE          ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/meinproc4${CMAKE_EXECUTABLE_SUFFIX}.shell )
    set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
@@ -500,8 +489,6 @@ if (_kdeBootStrapping)
    # when building kdelibs, make the kcfg rules depend on the binaries...
    set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
    set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
-   set( _KDE4_MEINPROC_EXECUTABLE_DEP meinproc4)
-
    set(KDE4_INSTALLED_VERSION_OK TRUE)
 
 else (_kdeBootStrapping)
@@ -509,7 +496,6 @@ else (_kdeBootStrapping)
    # ... but NOT otherwise
    set( _KDE4_KCONFIG_COMPILER_DEP)
    set( _KDE4_MAKEKDEWIDGETS_DEP)
-   set( _KDE4_MEINPROC_EXECUTABLE_DEP)
 
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
@@ -552,7 +538,6 @@ else (_kdeBootStrapping)
    list(GET _importedConfigurations 0 _firstConfig)
 
    get_target_property(KDE4_KCFGC_EXECUTABLE             ${KDE4_TARGET_PREFIX}kconfig_compiler    LOCATION_${_firstConfig})
-   get_target_property(KDE4_MEINPROC_EXECUTABLE          ${KDE4_TARGET_PREFIX}meinproc4           LOCATION_${_firstConfig})
    get_target_property(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${KDE4_TARGET_PREFIX}makekdewidgets      LOCATION_${_firstConfig})
 
    # allow searching cmake modules in all given kde install locations (KDEDIRS based)
@@ -674,11 +659,6 @@ option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 if( KDE4_ENABLE_FINAL)
    add_definitions(-DKDE_USE_FINAL)
 endif(KDE4_ENABLE_FINAL)
-
-if(KDE4_SERIALIZE_TOOL)
-   # parallel build with many meinproc invocations can consume a huge amount of memory
-   set(KDE4_MEINPROC_EXECUTABLE ${KDE4_SERIALIZE_TOOL} ${KDE4_MEINPROC_EXECUTABLE})
-endif(KDE4_SERIALIZE_TOOL)
 
 # If we are building ! kdelibs, check where kdelibs are installed.
 # If they are installed in a directory which contains "lib64", we default to "64" for LIB_SUFFIX,
