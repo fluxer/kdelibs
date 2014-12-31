@@ -167,7 +167,7 @@ void VideoWidgetPrivate::showOpenFileDialog()
 
 void VideoWidgetPrivate::openFile(const QString &path)
 {
-    media->setCurrentSource(Phonon::MediaSource(path));
+    media->setCurrentSource(Phonon::MediaSource(KUrl(path)));
     media->play();
 }
 
@@ -282,18 +282,11 @@ Phonon::AudioOutput *VideoWidget::audioOutput() const
 
 void VideoWidget::setUrl(const QString &url)
 {
-    QString fileUrl;
-    if (url.startsWith('/')) {
-        fileUrl = "file://" % url;
-    } else {
-        fileUrl = url;
-    }
-
-    if (fileUrl == d->media->currentSource().url().toString()) {
+    if (url == d->media->currentSource().url().toString()) {
         return;
     }
 
-    d->media->setCurrentSource(Phonon::MediaSource(fileUrl));
+    d->media->setCurrentSource(Phonon::MediaSource(KUrl(url)));
 }
 
 QString VideoWidget::url() const
