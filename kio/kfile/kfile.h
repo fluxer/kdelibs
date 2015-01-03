@@ -102,9 +102,9 @@ public:
     static bool isPreviewContents( const FileView& view ); 
 
     static bool isPreviewInfo( const FileView& view );
-    
+
     static bool isTreeView( const FileView& view );
-    
+
     static bool isDetailTreeView( const FileView& view );
 
 private:
