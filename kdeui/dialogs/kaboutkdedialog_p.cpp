@@ -43,7 +43,7 @@ KAboutKdeDialog::KAboutKdeDialog(QWidget *parent)
     setButtons(KDialog::Close);
 
     KTitleWidget *titleWidget = new KTitleWidget(this);
-    titleWidget->setText(i18n("<html><font size=\"5\">Katana - Be Free and Be Fast!</font><br /><b>Platform Version %1</b></html>",
+    titleWidget->setText(i18n("<html><font size=\"5\">Katana - Be Free and Be Efficient!</font><br /><b>Platform Version %1</b></html>",
                          QString(KDE_VERSION_STRING)));
     titleWidget->setPixmap(KIcon("kde").pixmap(48), KTitleWidget::ImageLeft);
 
@@ -54,7 +54,7 @@ KAboutKdeDialog::KAboutKdeDialog(QWidget *parent)
     about->setOpenExternalLinks(true);
     about->setTextInteractionFlags(Qt::TextBrowserInteraction);
     about->setText(i18n("<html>"
-        "<b>Katana</b> is fork of KDE Software Distribution with emphasis on speed."
+        "<b>Katana</b> is fork of KDE Software Distribution with emphasis on efficiency."
         "<br /><br />"
         "Software can always be improved, and the Katana team is ready to do so. "
         "However, you - the user - must tell us when something does not work as "
