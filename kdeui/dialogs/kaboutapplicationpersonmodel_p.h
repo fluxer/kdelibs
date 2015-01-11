@@ -19,8 +19,6 @@
 #define KABOUT_APPLICATION_PERSON_MODEL_H
 
 #include "kdeui/icons/kicon.h"
-#include "dialogs/kaboutapplicationconfigattica_p.h"
-
 
 #include <kaboutdata.h>
 #include <kurl.h>
