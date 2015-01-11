@@ -17,9 +17,6 @@
 
 #include "kaboutapplicationpersonmodel_p.h"
 
-#ifdef HAVE_ATTICA
-#include <attica/person.h>
-#endif //HAVE_ATTICA
 
 #include <kdebug.h>
 #include <kaboutdata.h>
@@ -63,12 +60,6 @@ KAboutApplicationPersonModel::KAboutApplicationPersonModel( const QList< KAboutP
     m_ocsLinkIcons.insert( KAboutApplicationPersonProfileOcsLink::Blog, KIcon( "applications-internet" ).pixmap( 16 ) );
     m_ocsLinkIcons.insert( KAboutApplicationPersonProfileOcsLink::Homepage, KIcon( "applications-internet" ).pixmap( 16 ) );
 
-#ifdef HAVE_ATTICA
-    connect( &m_providerManager, SIGNAL(defaultProvidersLoaded()),
-             SLOT(onProvidersLoaded()) );
-    if( hasOcsUsernames )
-        m_providerManager.loadDefaultProviders();
-#endif //HAVE_ATTICA
 }
 
 int KAboutApplicationPersonModel::rowCount( const QModelIndex &parent ) const
@@ -107,160 +98,16 @@ Qt::ItemFlags KAboutApplicationPersonModel::flags( const QModelIndex &index ) co
 
 void KAboutApplicationPersonModel::onProvidersLoaded()   //SLOT
 {
-#ifdef HAVE_ATTICA
-    if( !m_providerManager.providers().isEmpty() ) {
-        m_provider = m_providerManager.providerByUrl( QUrl( m_providerUrl ) );
-        if( !m_provider.isValid() ) {
-            kDebug() << "OCS Provider error: could not find opendesktop.org provider.";
-            return;
-        }
-
-        m_providerName = m_provider.name();
-
-        int i = 0;
-        for( QList< KAboutApplicationPersonProfile >::const_iterator it = m_profileList.constBegin();
-             it != m_profileList.constEnd(); ++it ) {
-            KAboutApplicationPersonProfile profile = *it;
-            if( !profile.ocsUsername().isEmpty() ) {
-                Attica::ItemJob< Attica::Person > *job = m_provider.requestPerson( profile.ocsUsername() );
-                connect( job, SIGNAL(finished(Attica::BaseJob*)),
-                         this, SLOT(onPersonJobFinished(Attica::BaseJob*)) );
-                job->setProperty( "personProfile", i );
-                job->start();
-            }
-            ++i;
-        }
-    }
-#endif //HAVE_ATTICA
 }
 
 void KAboutApplicationPersonModel::onPersonJobFinished( Attica::BaseJob *job )   //SLOT
 {
-#ifndef HAVE_ATTICA
     Q_UNUSED( job )
-#endif //HAVE_ATTICA
-#ifdef HAVE_ATTICA
-    Attica::ItemJob< Attica::Person > *personJob =
-        static_cast< Attica::ItemJob< Attica::Person > * >( job );
-    if( personJob->metadata().error() == Attica::Metadata::NoError ) {
-        Attica::Person p = personJob->result();
-        int personProfileListIndex = personJob->property( "personProfile" ).toInt();
-        KAboutApplicationPersonProfile profile = m_profileList.value( personProfileListIndex );
-
-        //Let's set up OCS links...
-        QList< KAboutApplicationPersonProfileOcsLink > ocsLinks;
-
-        for( int i = 2; i <= 10; ++i ) { //OCS supports 10 total homepages as of 2/oct/2009
-                                         //This starts at 2 because the first homepage is
-                                         //just "homepage" in the OCS API and is exposed by
-                                         //Attica simply through Person::homepage()
-            QString atticaType = p.extendedAttribute( QString( "homepagetype%1" ).arg( i ) );
-            QString url = p.extendedAttribute( QString( "homepage%1" ).arg( i ) );
-            if( url.isEmpty() )
-                continue;
-
-            KAboutApplicationPersonProfileOcsLink::Type type =
-                    KAboutApplicationPersonProfileOcsLink::typeFromAttica( atticaType );
-            ocsLinks.append( KAboutApplicationPersonProfileOcsLink( type, KUrl( url ) ) );
-            if( !m_ocsLinkIcons.contains( type ) && !m_ocsLinkIconUrls.contains( type ) ) {
-                m_ocsLinkIconUrls.insert( type, p.extendedAttribute( QString( "homepageicon%1" ).arg( i ) ) );
-            }
-        }
-
-        if( profile.homepage().isEmpty() ) {
-            if( !p.homepage().isEmpty() )
-                profile.setHomepage( p.homepage() );
-            else {
-                if( !ocsLinks.isEmpty() ) {
-                    QList< KAboutApplicationPersonProfileOcsLink >::iterator toUse = ocsLinks.begin();
-                    for( QList< KAboutApplicationPersonProfileOcsLink >::iterator it = ocsLinks.begin();
-                         it != ocsLinks.end(); ++it ) {
-                        KAboutApplicationPersonProfileOcsLink link = *it;
-                        if( link.type() == KAboutApplicationPersonProfileOcsLink::Blog ||
-                            link.type() == KAboutApplicationPersonProfileOcsLink::Homepage ||
-                            link.type() == KAboutApplicationPersonProfileOcsLink::Other ) {
-                            toUse = it;
-                            break;
-                        }
-                    }
-                    profile.setHomepage( toUse->url().url() );
-                    ocsLinks.erase( toUse );
-                }
-            }
-        }
-        else
-        {
-            KAboutApplicationPersonProfileOcsLink::Type type =
-                KAboutApplicationPersonProfileOcsLink::typeFromAttica( p.extendedAttribute( "homepagetype" ) );
-            ocsLinks.insert( 0, KAboutApplicationPersonProfileOcsLink( type, KUrl( p.homepage() ) ) );   //we prepend the main homepage
-            if( !m_ocsLinkIcons.contains( type ) && !m_ocsLinkIconUrls.contains( type ) ) {
-                m_ocsLinkIconUrls.insert( type, p.extendedAttribute( "homepageicon" ) );
-            }
-        }
-
-        profile.setOcsLinks( ocsLinks );
-
-        if( !( p.city().isEmpty() && p.country().isEmpty() ) ) {
-            if( !p.city().isEmpty() )
-                profile.setLocation( i18nc( "City, Country", "%1, %2", p.city(), p.country() ) );
-            else
-                profile.setLocation( p.country() );
-        }
-
-        profile.setOcsProfileUrl( p.extendedAttribute( "profilepage" ) );
-
-        m_profileList.replace( personProfileListIndex, profile );
-
-        if( p.avatarUrl().isEmpty() ) {
-            emit dataChanged( index( personProfileListIndex ), index( personProfileListIndex ) );
-            fetchOcsLinkIcons( personProfileListIndex );
-        }
-        else {
-            //TODO: Create a PixmapFromUrlJob in Attica which would use KIO::get if available
-            //      and QNAM otherwise. - Teo 30/10/2010
-            QNetworkAccessManager *manager = new QNetworkAccessManager( this );
-            connect( manager, SIGNAL(finished(QNetworkReply*)),
-                     this, SLOT(onAvatarJobFinished(QNetworkReply*)) );
-
-            manager->get( QNetworkRequest( p.avatarUrl() ) );
-            manager->setProperty( "personProfile", personProfileListIndex );
-        }
-    }
-    else
-        kDebug() << "Could not fetch OCS person info.";
-#endif //HAVE_ATTICA
 }
 
 void KAboutApplicationPersonModel::onAvatarJobFinished( QNetworkReply *reply )  //SLOT
 {
-#ifndef HAVE_ATTICA
     Q_UNUSED( reply )
-#endif //HAVE_ATTICA
-#ifdef HAVE_ATTICA
-    QNetworkAccessManager *manager = reply->manager();
-    int personProfileListIndex = manager->property( "personProfile" ).toInt();
-
-    if( reply->error() != QNetworkReply::NoError ) {
-        kDebug() << "Could not fetch OCS person avatar.";
-        emit dataChanged( index( personProfileListIndex ), index( personProfileListIndex ) );
-        return;
-    }
-    QByteArray data = reply->readAll();
-    QPixmap pixmap;
-    pixmap.loadFromData( data );
-
-    KAboutApplicationPersonProfile profile = m_profileList.value( personProfileListIndex );
-    if( !pixmap.isNull() ) {
-        profile.setAvatar( pixmap );
-        m_hasAvatarPixmaps = true;
-    }
-
-    m_profileList.replace( personProfileListIndex, profile );
-
-    reply->deleteLater();
-
-    fetchOcsLinkIcons( personProfileListIndex );
-#endif //HAVE_ATTICA
 }
 
 void KAboutApplicationPersonModel::fetchOcsLinkIcons( int personProfileListIndex )

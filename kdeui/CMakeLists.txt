@@ -1,10 +1,5 @@
 project(kdeui)
 
-set(KDEUI_NO_ATTICA FALSE)
-if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
-    set(KDEUI_NO_ATTICA TRUE)
-endif(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
-
 include_directories(
  ${CMAKE_SOURCE_DIR}/interfaces
  ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
@@ -34,20 +29,7 @@ include_directories(
  ${DBUSMENUQT_INCLUDE_DIR}
 )
 
-if(NOT KDEUI_NO_ATTICA)
-   include_directories( ${LIBATTICA_INCLUDE_DIR} )
-   set(KDEUI_EXTRA_LIBS ${KDEUI_EXTRA_LIBS} ${LIBATTICA_LIBRARIES} )
-   set(HAVE_ATTICA TRUE)
-endif(NOT KDEUI_NO_ATTICA)
-
-macro_bool_to_01(HAVE_ATTICA)
-
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/widgets )
-
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/dialogs/kaboutapplicationconfigattica_p.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/dialogs/kaboutapplicationconfigattica_p.h
-)
 
 set(HAVE_KSECRETSSERVICE 0)
 configure_file(
