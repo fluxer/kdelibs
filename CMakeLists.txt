@@ -68,12 +68,6 @@ set_package_properties(Strigi PROPERTIES DESCRIPTION "Desktop indexing and searc
                        PURPOSE "Required by some critical kioslaves"
                       )
 
-find_package(LibAttica 0.4.2)
-set_package_properties(LibAttica PROPERTIES DESCRIPTION "Support for Get Hot New Stuff"
-                       URL "https://projects.kde.org/attica"
-                       TYPE REQUIRED
-                      )
-
 #optional features
 if(X11_FOUND)
   #X11_Xrender discovery is done by FindX11
@@ -232,7 +226,6 @@ add_subdirectory( kded       )
 add_subdirectory( kfile )
 add_subdirectory( kconf_update )
 add_subdirectory( kioslave   )
-add_subdirectory( knewstuff  )
 add_subdirectory( kparts     )
 add_subdirectory( kutils     )
 add_subdirectory( licenses   )
