@@ -51,10 +51,6 @@ Here is an alphabetical list of all individual libraries:
     contains "ksycoca", the system configure cache containing services,
     applications, servicetypes and mimetypes.
 
-* knewstuff
-    Allows applications to easily download data from the Internet to add
-    new information to the program. e.g. wallpapers, translation packs, etc.
-
 * knotify
     Handles user notifications, including sounds, logging to files, etc.
 
