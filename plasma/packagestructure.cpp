@@ -573,12 +573,6 @@ bool PackageStructure::uninstallPackage(const QString &packageName, const QStrin
     return Package::uninstallPackage(packageName, packageRoot, d->servicePrefix);
 }
 
-void PackageStructure::createNewWidgetBrowser(QWidget *parent)
-{
-    Q_UNUSED(parent)
-    emit newWidgetBrowserFinished();
-}
-
 QString PackageStructure::defaultPackageRoot() const
 {
     return d->packageRoot;

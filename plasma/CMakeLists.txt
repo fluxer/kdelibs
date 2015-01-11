@@ -3,7 +3,6 @@ kde4_no_enable_final(plasma)
 
 if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
     set(PLASMA_NO_KDEWEBKIT TRUE)
-    set(PLASMA_NO_KNEWSTUFF TRUE)
     set(PLASMA_NO_SOLID TRUE)
     set(PLASMA_NO_KIO TRUE)
     set(PLASMA_NO_KUTILS TRUE)
@@ -28,11 +27,6 @@ if(NOT PLASMA_NO_KDEWEBKIT)
     include_directories(${CMAKE_SOURCE_DIR}/kdewebkit/)
     set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} kdewebkit)
 endif(NOT PLASMA_NO_KDEWEBKIT)
-
-if(NOT PLASMA_NO_KNEWSTUFF)
-    include_directories(${CMAKE_SOURCE_DIR}/knewstuff/)
-    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} knewstuff3)
-endif(NOT PLASMA_NO_KNEWSTUFF)
 
 if(NOT PLASMA_NO_SOLID)
     include_directories(${CMAKE_BINARY_DIR}/solid/)
@@ -381,8 +375,6 @@ install(FILES
    data/services/plasma-applet-extenderapplet.desktop
    data/services/plasma.protocol
    DESTINATION ${SERVICES_INSTALL_DIR})
-
-install(FILES data/knewstuff/plasmoids.knsrc DESTINATION  ${CONFIG_INSTALL_DIR})
 
 install(FILES data/operations/dataengineservice.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)
 install(FILES data/operations/plasmoidservice.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)

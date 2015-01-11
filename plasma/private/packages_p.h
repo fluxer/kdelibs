@@ -26,12 +26,6 @@
 
 #include "config-plasma.h"
 
-#ifndef PLASMA_NO_KNEWSTUFF
-namespace KNS3
-{
-    class DownloadDialog;
-} // namespace KNS
-#endif
 
 namespace Plasma
 {
@@ -42,15 +36,11 @@ class PlasmoidPackage : public PackageStructure
 public:
     explicit PlasmoidPackage(QObject *parent = 0);
     ~PlasmoidPackage();
-    void createNewWidgetBrowser(QWidget *parent = 0);
 
 protected:
     void pathChanged();
 
 private:
-#ifndef PLASMA_NO_KNEWSTUFF
-    QWeakPointer<KNS3::DownloadDialog> m_knsDialog;
-#endif
 };
 
 class DataEnginePackage : public PackageStructure
