@@ -555,25 +555,6 @@ install( FILES
   KMediaPlayer/View
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KMediaPlayer COMPONENT Devel)
 
-
-if(NOT KDE_NO_DEPRECATED)
-install( FILES
-  KNS/Author
-  KNS/Category
-  KNS/Engine
-  KNS/Entry
-  KNS/Installation
-  KNS/KTranslatable
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KNS COMPONENT Devel)
-endif(NOT KDE_NO_DEPRECATED)
-
-install( FILES
-  KNS3/DownloadDialog
-  KNS3/Entry
-  KNS3/KNewStuffAction
-  KNS3/KNewStuffButton
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KNS3 COMPONENT Devel)
-
 install( FILES
   KNetwork/KActiveSocketBase
   KNetwork/KBufferedSocket
