@@ -54,7 +54,6 @@
 
 #include "abstracttoolbox.h"
 #include "animator.h"
-#include "context.h"
 #include "containmentactions.h"
 #include "containmentactionspluginsconfig.h"
 #include "corona.h"
@@ -204,11 +203,6 @@ void Containment::init()
     }
     if (d->type != PanelContainment && d->type != CustomPanelContainment) {
         if (corona()) {
-            //FIXME this is just here because of the darn keyboard shortcut :/
-            act = corona()->action("manage activities");
-            if (act) {
-                d->actions()->addAction("manage activities", act);
-            }
             //a stupid hack to make this one's keyboard shortcut work
             act = corona()->action("configure shortcuts");
             if (act) {
@@ -239,14 +233,6 @@ void ContainmentPrivate::addDefaultActions(KActionCollection *actions, Containme
     appAction->setShortcut(KShortcut("alt+d, alt+r"));
     if (c && c->d->isPanelContainment()) {
         appAction->setText(i18n("Remove this Panel"));
-    } else {
-        appAction->setText(i18n("Remove this Activity"));
-    }
-
-    appAction = qobject_cast<KAction*>(actions->action("configure"));
-    if (appAction) {
-        appAction->setShortcut(KShortcut("alt+d, alt+s"));
-        appAction->setText(i18n("Activity Settings"));
     }
 
     //add our own actions
@@ -324,11 +310,6 @@ void Containment::restore(KConfigGroup &group)
     d->lastScreen = group.readEntry("lastScreen", d->lastScreen);
     d->lastDesktop = group.readEntry("lastDesktop", d->lastDesktop);
     d->setScreen(group.readEntry("screen", d->screen), group.readEntry("desktop", d->desktop), false);
-    QString activityId = group.readEntry("activityId", QString());
-    if (!activityId.isEmpty()) {
-        d->context()->setCurrentActivityId(activityId);
-    }
-    setActivity(group.readEntry("activity", QString()));
 
     flushPendingConstraintsEvents();
     restoreContents(group);
@@ -351,11 +332,6 @@ void Containment::restore(KConfigGroup &group)
         if (source == "Global") {
             cfg = KConfigGroup(corona()->config(), "ActionPlugins");
             d->containmentActionsSource = ContainmentPrivate::Global;
-        } else if (source == "Activity") {
-            cfg = KConfigGroup(corona()->config(), "Activities");
-            cfg = KConfigGroup(&cfg, activityId);
-            cfg = KConfigGroup(&cfg, "ActionPlugins");
-            d->containmentActionsSource = ContainmentPrivate::Activity;
         } else if (source == "Local") {
             cfg = group;
             d->containmentActionsSource = ContainmentPrivate::Local;
@@ -420,8 +396,6 @@ void Containment::save(KConfigGroup &g) const
     group.writeEntry("lastDesktop", d->lastDesktop);
     group.writeEntry("formfactor", (int)d->formFactor);
     group.writeEntry("location", (int)d->location);
-    group.writeEntry("activity", d->context()->currentActivity());
-    group.writeEntry("activityId", d->context()->currentActivityId());
 
 
     QMetaObject::invokeMethod(d->toolBox.data(), "save", Q_ARG(KConfigGroup, group));
@@ -984,8 +958,6 @@ void ContainmentPrivate::setScreen(int newScreen, int newDesktop, bool preventIn
         newDesktop = -1;
     }
 
-    //kDebug() << activity() << "setting screen to " << newScreen << newDesktop << "and type is" << type;
-
     Containment *swapScreensWith(0);
     const bool isDesktopContainment = type == Containment::DesktopContainment ||
                                       type == Containment::CustomContainment;
@@ -1005,7 +977,6 @@ void ContainmentPrivate::setScreen(int newScreen, int newDesktop, bool preventIn
             if (currently && currently != q) {
                 kDebug() << "currently is on screen" << currently->screen()
                          << "desktop" << currently->desktop()
-                         << "and is" << currently->activity()
                          << (QObject*)currently << "i'm" << (QObject*)q;
                 currently->setScreen(-1, currently->desktop());
                 swapScreensWith = currently;
@@ -1866,8 +1837,6 @@ void Containment::setContainmentActions(const QString &trigger, const QString &p
         }
     } else {
         switch (d->containmentActionsSource) {
-        case ContainmentPrivate::Activity:
-            //FIXME
         case ContainmentPrivate::Local:
             plugin = ContainmentActions::load(this, pluginName);
             break;
@@ -1895,62 +1864,6 @@ QString Containment::containmentActions(const QString &trigger)
 {
     ContainmentActions *c = d->actionPlugins()->value(trigger);
     return c ? c->pluginName() : QString();
-}
-
-void Containment::setActivity(const QString &activity)
-{
-    Context *context = d->context();
-    if (context->currentActivity() != activity) {
-        context->setCurrentActivity(activity);
-    }
-}
-
-void ContainmentPrivate::onContextChanged(Plasma::Context *con)
-{
-    foreach (Applet *a, applets) {
-        a->updateConstraints(ContextConstraint);
-    }
-
-    KConfigGroup c = q->config();
-    QString act = con->currentActivityId();
-
-    //save anything that's been set (boy I hope this avoids overwriting things)
-    //FIXME of course if the user sets the name to an empty string we have a bug
-    //but once we get context retrieving the name as soon as the id is set, this issue should go away
-    if (!act.isEmpty()) {
-        c.writeEntry("activityId", act);
-    }
-    act = con->currentActivity();
-    if (!act.isEmpty()) {
-        c.writeEntry("activity", act);
-    }
-
-    if (toolBox) {
-        toolBox.data()->update();
-    }
-    emit q->configNeedsSaving();
-    emit q->contextChanged(con);
-}
-
-QString Containment::activity() const
-{
-    return d->context()->currentActivity();
-}
-
-Context *Containment::context() const
-{
-    return d->context();
-}
-
-Context *ContainmentPrivate::context()
-{
-    if (!con) {
-        con = new Context(q);
-        q->connect(con, SIGNAL(changed(Plasma::Context*)),
-                   q, SLOT(onContextChanged(Plasma::Context*)));
-    }
-
-    return con;
 }
 
 KActionCollection* ContainmentPrivate::actions()
@@ -2400,11 +2313,6 @@ KConfigGroup Containment::containmentActionsConfig()
         cfg = config();
         cfg = KConfigGroup(&cfg, "ActionPlugins");
         break;
-    case ContainmentPrivate::Activity:
-        cfg = KConfigGroup(corona()->config(), "Activities");
-        cfg = KConfigGroup(&cfg, d->context()->currentActivityId());
-        cfg = KConfigGroup(&cfg, "ActionPlugins");
-        break;
     default:
         cfg = KConfigGroup(corona()->config(), "ActionPlugins");
     }
@@ -2414,8 +2322,6 @@ KConfigGroup Containment::containmentActionsConfig()
 QHash<QString, ContainmentActions*> * ContainmentPrivate::actionPlugins()
 {
     switch (containmentActionsSource) {
-        case Activity:
-            //FIXME
         case Local:
             return &localActionPlugins;
         default:

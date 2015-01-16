@@ -96,6 +96,7 @@ static Atom kde_net_wm_window_type_override   = 0;
 static Atom kde_net_wm_window_type_topmenu    = 0;
 static Atom kde_net_wm_temporary_rules        = 0;
 static Atom kde_net_wm_frame_overlap          = 0;
+static Atom kde_net_wm_activities             = 0;
 static Atom kde_net_wm_block_compositing      = 0;
 static Atom kde_net_wm_shadow                 = 0;
 
@@ -235,7 +236,6 @@ static void refdec_nwi(NETWinInfoPrivate *p) {
 	delete [] p->startup_id;
 	delete [] p->class_class;
 	delete [] p->class_name;
-    delete [] p->activities;
 
 	int i;
 	for (i = 0; i < p->icons.size(); i++)
@@ -353,6 +353,7 @@ static void create_netwm_atoms(Display *d) {
 	    "WM_PROTOCOLS",
 
             "_NET_WM_FULL_PLACEMENT",
+            "_KDE_NET_WM_ACTIVITIES",
             "_KDE_NET_WM_BLOCK_COMPOSITING",
             "_KDE_NET_WM_SHADOW"
 	    };
@@ -453,6 +454,7 @@ static void create_netwm_atoms(Display *d) {
 	    &wm_protocols,
 
             &net_wm_full_placement,
+            &kde_net_wm_activities,
             &kde_net_wm_block_compositing,
             &kde_net_wm_shadow
 	    };
@@ -1291,6 +1293,9 @@ void NETRootInfo::setSupported() {
     if (p->properties[ PROTOCOLS2 ] & WM2FullPlacement)
 	atoms[pnum++] = net_wm_full_placement;
 
+    if (p->properties[ PROTOCOLS2 ] & WM2Activities)
+    atoms[pnum++] = kde_net_wm_activities;
+
     if (p->properties[ PROTOCOLS2 ] & WM2BlockCompositing)
     atoms[pnum++] = kde_net_wm_block_compositing;
 
@@ -1532,6 +1537,9 @@ void NETRootInfo::updateSupportedProperties( Atom atom )
         p->properties[ PROTOCOLS2 ] |= WM2KDETemporaryRules;
     else if( atom == net_wm_full_placement )
         p->properties[ PROTOCOLS2 ] |= WM2FullPlacement;
+
+    else if( atom == kde_net_wm_activities )
+        p->properties[ PROTOCOLS2 ] |= WM2Activities;
 
     else if( atom == kde_net_wm_block_compositing )
         p->properties[ PROTOCOLS2 ] |= WM2BlockCompositing;
@@ -2787,7 +2795,6 @@ NETWinInfo::NETWinInfo(Display *display, Window window, Window rootWindow,
     p->window_role = (char*) 0;
     p->client_machine = (char*) 0;
     p->icon_sizes = NULL;
-    p->activities = (char *) 0;
     p->blockCompositing = false;
 
     // p->strut.left = p->strut.right = p->strut.top = p->strut.bottom = 0;
@@ -2851,7 +2858,6 @@ NETWinInfo::NETWinInfo(Display *display, Window window, Window rootWindow,
     p->window_role = (char*) 0;
     p->client_machine = (char*) 0;
     p->icon_sizes = NULL;
-    p->activities = (char *) 0;
     p->blockCompositing = false;
 
     // p->strut.left = p->strut.right = p->strut.top = p->strut.bottom = 0;
@@ -3873,6 +3879,8 @@ void NETWinInfo::event(XEvent *event, unsigned long* properties, int properties_
                 dirty2 |= WM2WindowRole;
             else if (pe.xproperty.atom == XA_WM_CLIENT_MACHINE)
                 dirty2 |= WM2ClientMachine;
+        else if (pe.xproperty.atom == kde_net_wm_activities)
+        dirty2 |= WM2Activities;
         else if (pe.xproperty.atom == kde_net_wm_block_compositing)
         dirty2 |= WM2BlockCompositing;
             else if (pe.xproperty.atom == kde_net_wm_shadow)
@@ -4662,10 +4670,6 @@ const char* NETWinInfo::windowRole() const {
 
 const char* NETWinInfo::clientMachine() const {
     return p->client_machine;
-}
-
-const char* NETWinInfo::activities() const {
-    return p->activities;
 }
 
 void NETWinInfo::setBlockingCompositing(bool active) {

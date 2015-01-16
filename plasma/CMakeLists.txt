@@ -84,7 +84,6 @@ set(plasma_LIB_SRCS
     containment.cpp
     containmentactions.cpp
     containmentactionspluginsconfig.cpp
-    context.cpp
     corona.cpp
     datacontainer.cpp
     dataengine.cpp
@@ -266,7 +265,6 @@ set(plasma_LIB_INCLUDES
     containment.h
     containmentactions.h
     containmentactionspluginsconfig.h
-    context.h
     corona.h
     datacontainer.h
     dataengine.h

@@ -1269,14 +1269,6 @@ public:
     const char* clientMachine() const;
 
     /**
-     * returns a comma-separated list of the activities the window is associated with.
-     * FIXME this might be better as a NETRArray ?
-     * @since 4.6
-     */
-    const char* activities() const;
-
-
-    /**
      * Sets whether the client wishes to block compositing (for better performance)
      * @since 4.7
      */
