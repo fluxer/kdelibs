@@ -86,7 +86,7 @@ main(int argc, char *argv[])
 
    args->clear(); // Free up memory.
 
-
+   Q_UNUSED(ok);
 //   return app.exec();
    return 0;
 }
