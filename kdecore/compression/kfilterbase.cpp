@@ -20,7 +20,6 @@
 #include "kfilterbase.h"
 #include <config-compression.h>
 
-#include <QDebug>
 #include <QtCore/QIODevice>
 #include <kmimetype.h>
 #include "kgzipfilter.h"
@@ -146,12 +145,14 @@ KFilterBase * KFilterBase::findFilterByMimeType( const QString & mimeType )
     return 0;
 }
 
-void KFilterBase::terminate()
+bool KFilterBase::terminate()
 {
+    return false;
 }
 
-void KFilterBase::reset()
+bool KFilterBase::reset()
 {
+    return false;
 }
 
 void KFilterBase::setFilterFlags(FilterFlags flags)

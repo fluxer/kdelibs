@@ -39,10 +39,10 @@ public:
     KXzFilter();
     virtual ~KXzFilter();
 
-    virtual void init( int );
+    virtual bool init( int );
     virtual int mode() const;
-    virtual void terminate();
-    virtual void reset();
+    virtual bool terminate();
+    virtual bool reset();
     virtual bool readHeader() { return true; } // lzma handles it by itself ! Cool !
     virtual bool writeHeader( const QByteArray & ) { return true; }
     virtual void setOutBuffer( char * data, uint maxlen );

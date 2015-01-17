@@ -29,7 +29,7 @@ extern "C" {
 	#include <lzma.h>
 }
 
-#include <QDebug>
+#include <kdebug.h>
 
 #include <qiodevice.h>
 
@@ -60,29 +60,37 @@ KXzFilter::~KXzFilter()
     delete d;
 }
 
-void KXzFilter::init( int mode )
+bool KXzFilter::init( int mode )
 {
     if (d->isInitialized) {
         terminate();
     }
-  
-    lzma_ret result;
+
     d->zStream.next_in = 0;
     d->zStream.avail_in = 0;
     if ( mode == QIODevice::ReadOnly )
     {
-	/* We set the memlimit for decompression to 100MiB which should be
-	 * more than enough to be sufficient for level 9 which requires 65 MiB.
-	 */
-        result = lzma_auto_decoder(&d->zStream, 100<<20, 0);
-    	//kDebug(7131) << "lzma_auto_decoder returned " << result;
+        /* We set the memlimit for decompression to 100MiB which should be
+         * more than enough to be sufficient for level 9 which requires 65 MiB.
+        */
+        const lzma_ret result = lzma_auto_decoder(&d->zStream, 100<<20, 0);
+        if (result != LZMA_OK) {
+            kDebug(7131) << "lzma_auto_decoder returned " << result;
+            return false;
+        }
     } else if ( mode == QIODevice::WriteOnly ) {
-        result = lzma_easy_encoder(&d->zStream, LZMA_PRESET_DEFAULT, LZMA_CHECK_CRC32);
-    	//kDebug(7131) << "lzma_easy_encoder returned " << result;
-    } else
-        qWarning() << "Unsupported mode " << mode << ". Only QIODevice::ReadOnly and QIODevice::WriteOnly supported";
+        const lzma_ret result = lzma_easy_encoder(&d->zStream, LZMA_PRESET_DEFAULT, LZMA_CHECK_CRC32);
+        if (result != LZMA_OK) {
+            kDebug(7131) << "lzma_easy_encoder returned " << result;
+            return false;
+        }
+    } else {
+        kWarning(7131) << "Unsupported mode " << mode << ". Only QIODevice::ReadOnly and QIODevice::WriteOnly supported";
+        return false;
+    }
     d->mode = mode;
     d->isInitialized = true;
+    return true;
 }
 
 int KXzFilter::mode() const
@@ -90,23 +98,30 @@ int KXzFilter::mode() const
     return d->mode;
 }
 
-void KXzFilter::terminate()
+bool KXzFilter::terminate()
 {
     if (d->mode == QIODevice::ReadOnly || d->mode == QIODevice::WriteOnly) {
         lzma_end(&d->zStream);
     } else {
-        qWarning() << "Unsupported mode " << d->mode << ". Only QIODevice::ReadOnly and QIODevice::WriteOnly supported";
+        kWarning(7131) << "Unsupported mode " << d->mode << ". Only QIODevice::ReadOnly and QIODevice::WriteOnly supported";
+        return false;
     }
     d->isInitialized = false;
+    return false;
 }
 
 
-void KXzFilter::reset()
+bool KXzFilter::reset()
 {
-    //kDebug(7131) << "KXzFilter::reset";
+    kDebug(7131) << "KXzFilter::reset";
     // liblzma doesn't have a reset call...
-    terminate();
-    init( d->mode );
+    if (!terminate()) {
+        return false;
+    }
+    if (!init( d->mode )) {
+        return false;
+    }
+    return true;
 }
 
 void KXzFilter::setOutBuffer( char * data, uint maxlen )
@@ -137,8 +152,8 @@ KXzFilter::Result KXzFilter::uncompress()
     lzma_ret result = lzma_code(&d->zStream, LZMA_RUN);
     if ( result != LZMA_OK )
     {
-        qDebug() << "lzma_code returned " << result;
-        qDebug() << "KXzFilter::uncompress " << ( result == LZMA_STREAM_END ? KFilterBase::End : KFilterBase::Error );
+        kDebug(7131) << "lzma_code returned " << result;
+        kDebug(7131) << "KXzFilter::uncompress " << ( result == LZMA_STREAM_END ? KFilterBase::End : KFilterBase::Error );
     }
 
     switch (result) {
@@ -161,11 +176,11 @@ KXzFilter::Result KXzFilter::compress( bool finish )
                 return KFilterBase::Ok;
                 break;
         case LZMA_STREAM_END:
-                qDebug() << "  lzma_code returned " << result;
+                kDebug(7131) << "  lzma_code returned " << result;
                 return KFilterBase::End;
 		break;
         default:
-                qDebug() << "  lzma_code returned " << result;
+                kDebug(7131) << "  lzma_code returned " << result;
                 return KFilterBase::Error;
                 break;
     }

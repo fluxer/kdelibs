@@ -18,10 +18,12 @@
 
 #include "kfilterdev.h"
 #include "kfilterbase.h"
-#include <QDebug>
+
 #include <stdio.h> // for EOF
 #include <stdlib.h>
 #include <assert.h>
+
+#include <QDebug>
 #include <QtCore/QFile>
 
 #define BUFFER_SIZE 8*1024
