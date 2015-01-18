@@ -580,13 +580,9 @@ int KLocalizedStringPrivate::resolveInterpolation (const QString &strans,
     QString msgctxt = QString::fromUtf8(ctxt);
     QString msgid = QString::fromUtf8(msg);
     QString scriptError;
-    bool fallbackLocal;
 
     // s->scriptModulesToLoad will be cleared during the call.
 
-    if (fallbackLocal) { // evaluation requested fallback
-        fallback = true;
-    }
     if (!scriptError.isEmpty()) { // problem with evaluation
         fallback = true; // also signal fallback
         if (!scriptError.isEmpty()) {

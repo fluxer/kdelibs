@@ -25,8 +25,9 @@
 
 #include "kconfig.h"
 
-struct KSslCaCertificate
+class KSslCaCertificate
 {
+public:
     enum Store {
         SystemStore = 0,
         UserStore
