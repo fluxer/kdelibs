@@ -53,7 +53,7 @@ public:
 
   }
 
-  virtual QSharedPointer< Grantlee::OutputStream > clone() const {
+  virtual QSharedPointer< Grantlee::OutputStream > clone( QTextStream *stream ) const {
     return QSharedPointer<Grantlee::OutputStream>( new NoEscapeOutputStream );
   }
 
