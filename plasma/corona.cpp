@@ -792,7 +792,7 @@ CoronaPrivate::CoronaPrivate(Corona *corona)
       actions(corona)
 {
     if (KGlobal::hasMainComponent()) {
-        configName = KGlobal::mainComponent().componentName() + "-appletsrc";
+        configName = KGlobal::mainComponent().componentName();
     } else {
         configName = "plasma-appletsrc";
     }
