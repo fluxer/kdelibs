@@ -62,8 +62,10 @@
 
 // #define KLAUNCHER_VERBOSE_OUTPUT
 
+#ifdef KLAUNCHER_VERBOSE_OUTPUT
 static const char* const s_DBusStartupTypeToString[] =
     { "DBusNone", "DBusUnique", "DBusMulti", "DBusWait", "ERROR" };
+#endif
 
 using namespace KIO;
 
