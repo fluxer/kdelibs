@@ -6,7 +6,7 @@ X-KDE-ServiceTypes=KCModule
 
 X-KDE-Library=kcm_ssl
 X-KDE-ParentApp=kcontrol
-X-KDE-System-Settings-Parent-Category=network-and-connectivity
+X-KDE-System-Settings-Parent-Category=network-settings
 X-DocPath=kcontrol/kcm_ssl/index.html
 
 Name=SSL Preferences
