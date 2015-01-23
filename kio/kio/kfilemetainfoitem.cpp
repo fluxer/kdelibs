@@ -32,7 +32,6 @@ KFileMetaInfoItem::KFileMetaInfoItem(const QString& pp,
     : d(new KFileMetaInfoItemPrivate()) {
 #ifndef KDE_NO_DEPRECATED
     d->pp = pp;
-#else
 #endif
     d->value = v;
     d->writer = w;
@@ -41,32 +40,32 @@ KFileMetaInfoItem::KFileMetaInfoItem(const QString& pp,
 }
 KFileMetaInfoItem::~KFileMetaInfoItem() {
 }
-const KFileMetaInfoItem&
-KFileMetaInfoItem::operator=(const KFileMetaInfoItem& item) {
+
+const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& item) {
     d = item.d;
     return item;
 }
-const QString&
-KFileMetaInfoItem::name() const {
+
+const QString& KFileMetaInfoItem::name() const {
 #ifndef KDE_NO_DEPRECATED
     return d->pp.name();
 #else
     return QString::null;
-#endif	
+#endif
 }
-const QVariant&
-KFileMetaInfoItem::value() const {
+
+const QVariant& KFileMetaInfoItem::value() const {
     return d->value;
 }
-bool
-KFileMetaInfoItem::setValue(const QVariant& value) {
+
+bool KFileMetaInfoItem::setValue(const QVariant& value) {
     bool changed = d->value != value;
     d->value = value;
     d->modified |= changed;
     return changed;
 }
-bool
-KFileMetaInfoItem::addValue(const QVariant& value) {
+
+bool KFileMetaInfoItem::addValue(const QVariant& value) {
     QVariant& v = d->value;
     if (v.type() == QVariant::List) {
         QVariantList vl = v.toList();
@@ -75,20 +74,20 @@ KFileMetaInfoItem::addValue(const QVariant& value) {
     }
     return false;
 }
-bool
-KFileMetaInfoItem::isModified() const {
+
+bool KFileMetaInfoItem::isModified() const {
     return d->modified;
 }
-bool
-KFileMetaInfoItem::isRemoved() const {
+
+bool KFileMetaInfoItem::isRemoved() const {
     return d->modified && d->value.isNull();
 }
-bool
-KFileMetaInfoItem::isValid() const {
+
+bool KFileMetaInfoItem::isValid() const {
     return true;
 }
-bool
-KFileMetaInfoItem::isSkipped() const {
+
+bool KFileMetaInfoItem::isSkipped() const {
     // ########## TODO implement (vandenoever)
     return false;
 }
@@ -98,18 +97,17 @@ KFileMetaInfoItem::properties() const {
     return d->pp;
 }
 #endif
-bool
-KFileMetaInfoItem::isEditable() const {
+
+bool KFileMetaInfoItem::isEditable() const {
     return d->writer != 0;
 }
-QString
-KFileMetaInfoItem::suffix() const {
+
+QString KFileMetaInfoItem::suffix() const {
     // ########## TODO implement (vandenoever)
     return QString();
 }
 
-QString
-KFileMetaInfoItem::prefix() const {
+QString KFileMetaInfoItem::prefix() const {
     // ########## TODO implement (vandenoever)
     return QString();
 }
