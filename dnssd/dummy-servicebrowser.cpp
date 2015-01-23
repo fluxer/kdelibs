@@ -50,7 +50,7 @@ void ServiceBrowser::startBrowse()
 
 QList<RemoteService::Ptr> ServiceBrowser::services() const
 {
-	return QList<RemoteService::Ptr>();
+    return QList<RemoteService::Ptr>();
 }
 
 void ServiceBrowser::virtual_hook(int, void*)
@@ -58,12 +58,13 @@ void ServiceBrowser::virtual_hook(int, void*)
 
 QHostAddress ServiceBrowser::resolveHostName(const QString &hostname)
 {
-	return QHostAddress();
+    Q_UNUSED(hostname);
+    return QHostAddress();
 }
 
 QString ServiceBrowser::getLocalHostName()
 {
-	return QString();
+    return QString();
 }
 
 }
