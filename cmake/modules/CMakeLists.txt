@@ -115,7 +115,6 @@ set(cmakeFiles
                MacroBoolTo01.cmake
                MacroEnsureOutOfSourceBuild.cmake
                MacroEnsureVersion.cmake
-               MacroKAuth.cmake
                MacroLibrary.cmake
                MacroLogFeature.cmake
                MacroOptionalAddSubdirectory.cmake
