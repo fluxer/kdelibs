@@ -30,13 +30,13 @@ target_link_libraries(kdesu ${KDE4_KPTY_LIBS} )
 target_link_libraries(kdesu LINK_INTERFACE_LIBRARIES ${QT_QTCORE_LIBRARY} )
 
 if(KDESU_USE_SUDO_DEFAULT)
-   set_source_files_properties(su.cpp PROPERTIES 
+   set_source_files_properties(su.cpp PROPERTIES
                                COMPILE_FLAGS -DKDESU_USE_SUDO_DEFAULT)
 endif(KDESU_USE_SUDO_DEFAULT)
 
 set_target_properties(kdesu PROPERTIES
-   VERSION ${KDE_NON_GENERIC_LIB_VERSION}
-   SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION}
+   VERSION ${GENERIC_LIB_VERSION}
+   SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
 install(TARGETS kdesu EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
