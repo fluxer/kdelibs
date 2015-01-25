@@ -96,7 +96,6 @@ static Atom kde_net_wm_window_type_override   = 0;
 static Atom kde_net_wm_window_type_topmenu    = 0;
 static Atom kde_net_wm_temporary_rules        = 0;
 static Atom kde_net_wm_frame_overlap          = 0;
-static Atom kde_net_wm_activities             = 0;
 static Atom kde_net_wm_block_compositing      = 0;
 static Atom kde_net_wm_shadow                 = 0;
 
@@ -255,7 +254,7 @@ static int wcmp(const void *a, const void *b) {
 }
 
 
-static const int netAtomCount = 89;
+static const int netAtomCount = 88;
 static void create_netwm_atoms(Display *d) {
     static const char * const names[netAtomCount] =
     {
@@ -353,7 +352,6 @@ static void create_netwm_atoms(Display *d) {
 	    "WM_PROTOCOLS",
 
             "_NET_WM_FULL_PLACEMENT",
-            "_KDE_NET_WM_ACTIVITIES",
             "_KDE_NET_WM_BLOCK_COMPOSITING",
             "_KDE_NET_WM_SHADOW"
 	    };
@@ -454,7 +452,6 @@ static void create_netwm_atoms(Display *d) {
 	    &wm_protocols,
 
             &net_wm_full_placement,
-            &kde_net_wm_activities,
             &kde_net_wm_block_compositing,
             &kde_net_wm_shadow
 	    };
@@ -1293,9 +1290,6 @@ void NETRootInfo::setSupported() {
     if (p->properties[ PROTOCOLS2 ] & WM2FullPlacement)
 	atoms[pnum++] = net_wm_full_placement;
 
-    if (p->properties[ PROTOCOLS2 ] & WM2Activities)
-    atoms[pnum++] = kde_net_wm_activities;
-
     if (p->properties[ PROTOCOLS2 ] & WM2BlockCompositing)
     atoms[pnum++] = kde_net_wm_block_compositing;
 
@@ -1537,9 +1531,6 @@ void NETRootInfo::updateSupportedProperties( Atom atom )
         p->properties[ PROTOCOLS2 ] |= WM2KDETemporaryRules;
     else if( atom == net_wm_full_placement )
         p->properties[ PROTOCOLS2 ] |= WM2FullPlacement;
-
-    else if( atom == kde_net_wm_activities )
-        p->properties[ PROTOCOLS2 ] |= WM2Activities;
 
     else if( atom == kde_net_wm_block_compositing )
         p->properties[ PROTOCOLS2 ] |= WM2BlockCompositing;
@@ -3879,8 +3870,6 @@ void NETWinInfo::event(XEvent *event, unsigned long* properties, int properties_
                 dirty2 |= WM2WindowRole;
             else if (pe.xproperty.atom == XA_WM_CLIENT_MACHINE)
                 dirty2 |= WM2ClientMachine;
-        else if (pe.xproperty.atom == kde_net_wm_activities)
-        dirty2 |= WM2Activities;
         else if (pe.xproperty.atom == kde_net_wm_block_compositing)
         dirty2 |= WM2BlockCompositing;
             else if (pe.xproperty.atom == kde_net_wm_shadow)
