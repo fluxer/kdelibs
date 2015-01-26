@@ -37,9 +37,6 @@ set (QT_MIN_VERSION "4.8.2")
 find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
 include (MacroLibrary)
-if (APPLE)
-   find_package(Carbon REQUIRED)
-endif (APPLE)
 
 if(UNIX AND Q_WS_X11)
   #X11 Session Management (SM) is required
@@ -50,9 +47,8 @@ if(UNIX AND Q_WS_X11)
 endif(UNIX AND Q_WS_X11)
 
 #required features:
-# FIXME: is perl really needed?
 find_package(Perl)
-set_package_properties(Perl PROPERTIES URL "http://www.perl.org" TYPE REQUIRED PURPOSE "Needed for building kdelibs")
+set_package_properties(Perl PROPERTIES URL "http://www.perl.org" TYPE REQUIRED PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts")
 
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "Support for gzip compressed files and data streams"
