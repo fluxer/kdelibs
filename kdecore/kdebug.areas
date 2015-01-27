@@ -87,7 +87,6 @@
 1432        nspluginviewer (part)
 1433        nspluginscan
 
-1440        Solid (HAL)
 1441        Solid (NetworkManager)
 
 # kdeutils
@@ -202,9 +201,6 @@
 5900        kalarmautostart
 5950        kalarm
 5951        kalarm (resources)
-5952        akonadiresource (kalarm)
-5953        akonadiresource (kalarmdir)
-5954        akonadiserializer (kalarm)
 5955        kdepimlibs (kalarmcal)
 5960        kandy
 5970        ktimetracker
@@ -276,7 +272,6 @@
 7126        kio_devices
 7127        kio_fish
 7128        kio_svn
-7129        kio_akonadi
 7131        kio_xz
 
 # kdesdk
@@ -415,7 +410,6 @@
 13040   Kate (Plugins)
 13050   Kate (Scripting)
 13060   Kate (Indentation)
-13070   Kate (Vi Input Mode)
 
 # Kopete
 14000       kopete
@@ -684,3 +678,5 @@
 200002       rosegarden (matrix)
 200003       rosegarden (sequencer)
 200004       rosegarden (sequence manager)
+
+300000       kuassel
