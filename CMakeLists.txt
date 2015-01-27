@@ -48,7 +48,11 @@ endif(UNIX AND Q_WS_X11)
 
 #required features:
 find_package(Perl)
-set_package_properties(Perl PROPERTIES URL "http://www.perl.org" TYPE REQUIRED PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts")
+set_package_properties(Perl PROPERTIES
+                            URL "http://www.perl.org"
+                            TYPE REQUIRED
+                            PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts"
+                      )
 
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES DESCRIPTION "Support for gzip compressed files and data streams"
@@ -175,7 +179,7 @@ set(KDE4_KIO_INCLUDES ${CMAKE_SOURCE_DIR}/kio
                       ${KDE4_KDEUI_INCLUDES})
 
 # kpty
-set(KDE4_KPTY_INCLUDES ${CMAKE_SOURCE_DIR}/kpty ${KDE4_KIO_INCLUDES} )
+set(KDE4_KPTY_INCLUDES ${CMAKE_SOURCE_DIR}/kpty ${KDE4_KIO_INCLUDES})
 
 # kparts depends on kio
 set(KDE4_KPARTS_INCLUDES ${CMAKE_SOURCE_DIR}/kparts
@@ -194,16 +198,16 @@ set_package_properties(ACL PROPERTIES DESCRIPTION "Support for manipulating acce
                       )
 
 macro_bool_to_01(ACL_FOUND HAVE_LIBACL HAVE_POSIX_ACL)
-configure_file(config-acl.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-acl.h )
+configure_file(config-acl.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-acl.h)
 
 include(ConfigureChecks.cmake)
 
 # now create config headers
-configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h )
-configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h )
-configure_file(config-compiler.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-compiler.h )
-configure_file(config-pty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-pty.h )
-configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h )
+configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h)
+configure_file(config-compiler.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-compiler.h)
+configure_file(config-pty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-pty.h)
+configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h)
 
 # these two calls here should go somewhere else, Alex
 check_library_exists(nsl gethostbyname "" HAVE_NSL_LIBRARY)
@@ -230,9 +234,7 @@ add_subdirectory( kinit  )
 add_subdirectory( threadweaver )
 add_subdirectory( sonnet  )
 add_subdirectory( interfaces  )
-#if ( NOT CMAKE_CROSSCOMPILING AND QT_QTDESIGNER_FOUND )
 add_subdirectory( kdewidgets  )
-#endif ( NOT CMAKE_CROSSCOMPILING AND QT_QTDESIGNER_FOUND )
 add_subdirectory( knotify )
 add_subdirectory( kimgio )
 add_subdirectory( dnssd )
