@@ -585,6 +585,11 @@ namespace KStandardAction
   KDEUI_EXPORT KAction *reportBug(const QObject *recvr, const char *slot, QObject *parent);
 
   /**
+   * Open up the application Language switching dialog.
+   */
+  KDEUI_EXPORT KAction *switchApplicationLanguage(const QObject *recvr, const char *slot, QObject *parent);
+
+  /**
    * Display the application's About box.
    */
   KDEUI_EXPORT KAction *aboutApp(const QObject *recvr, const char *slot, QObject *parent);
