@@ -308,17 +308,6 @@ KOpenSSLProxy::KOpenSSLProxy()
          }
    }
    }
-#elif defined(__CYGWIN__)
-   libpaths << "/usr/bin/"
-   		<< "";
-
-   libnamess << "cygssl-0.9.8.dll"
-		 << "cygssl-0.9.7.dll"
-		 << "";
-
-   libnamesc << "cygcrypto-0.9.8.dll"
-		 << "cygcrypto-0.9.7.dll"
-		 << "";
 #else
    libpaths
             #ifdef _AIX
@@ -339,9 +328,6 @@ KOpenSSLProxy::KOpenSSLProxy()
              << "libssl.sl"
              #elif defined(_AIX)
              << "libssl.a(libssl.so.0)"
-	     #elif defined(__APPLE__)
-	     << "libssl.dylib"
-	     << "libssl.0.9.dylib"
              #else
              #ifdef SHLIB_VERSION_NUMBER
              << "libssl.so." SHLIB_VERSION_NUMBER
@@ -356,9 +342,6 @@ KOpenSSLProxy::KOpenSSLProxy()
              << "libcrypto.sl"
              #elif defined(_AIX)
              << "libcrypto.a(libcrypto.so.0)"
-	     #elif defined(__APPLE__)
-	     << "libcrypto.dylib"
-	     << "libcrypto.0.9.dylib"
 	     #else
              #ifdef SHLIB_VERSION_NUMBER
              << "libcrypto.so." SHLIB_VERSION_NUMBER
@@ -680,9 +663,6 @@ KOpenSSLProxy *KOpenSSLProxy::self() {
 
 
 #ifdef KSSL_HAVE_SSL
-
-
-
 int KOpenSSLProxy::SSL_connect(SSL *ssl) {
    if (K_SSL_connect) return (K_SSL_connect)(ssl);
    return -1;
