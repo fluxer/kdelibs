@@ -67,5 +67,3 @@ void AuthBackend::preAuthAction(const QString& action, QWidget* parent)
 }
 
 } //namespace KAuth
-
-#include "AuthBackend.moc"
