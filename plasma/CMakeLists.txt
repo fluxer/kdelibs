@@ -188,13 +188,6 @@ kde4_add_kcfg_files(plasma_LIB_SRCS data/kconfigxt/libplasma-theme-global.kcfgc)
 
 kde4_add_ui_files(plasma_LIB_SRCS
                   private/publish.ui)
-#NEPOMUK_GENERATE_FROM_ONTOLOGY(
-#   nwc.nrl
-#   ${metadata_test_BINARY_DIR}
-#   TEST_HEADERS
-#   TEST_SOURCES
-#   TEST_INCLUDES
-#)
 
 if (QT_QTOPENGL_FOUND)
     message(STATUS "Adding support for OpenGL applets to libplasma")
@@ -235,11 +228,7 @@ endif(QT_QTOPENGL_FOUND)
 
 target_link_libraries(plasma LINK_INTERFACE_LIBRARIES kdeui kdecore ${QT_QTGUI_LIBRARY})
 
-#do NOT use GENERIC versioning -- the plasma team will take care of versioning
-set_target_properties(plasma PROPERTIES
-                             VERSION 3.0.0
-                             SOVERSION 3
-                      )
+set_target_properties(plasma PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install(TARGETS plasma EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
