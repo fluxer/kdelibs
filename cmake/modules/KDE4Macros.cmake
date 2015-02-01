@@ -18,7 +18,6 @@
 # KDE4_INSTALL_ICONS
 # KDE4_REMOVE_OBSOLETE_CMAKE_FILES
 # KDE4_NO_ENABLE_FINAL
-# KDE4_CREATE_HANDBOOK
 # KDE4_ADD_APP_ICON
 # KDE4_CREATE_MANPAGE
 # KDE4_CREATE_BASIC_CMAKE_VERSION_FILE (function)
@@ -1050,10 +1049,6 @@ endmacro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES)
 macro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
    message(FATAL_ERROR "KDE4_TARGET_LINK_INTERFACE_LIBRARIES() doesn't exist anymore. Set the LINK_INTERFACE_LIBRARIES target property instead. See kdelibs/kdecore/CMakeLists.txt for an example.")
 endmacro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
-
-macro (KDE4_INSTALL_HANDBOOK _lang)
-   message(STATUS "KDE4_INSTALL_HANDBOOK() is deprecated. Remove it please. Now all is done in KDE4_CREATE_HANDBOOK.")
-endmacro (KDE4_INSTALL_HANDBOOK )
 
 macro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
    message(FATAL_ERROR "KDE4_SET_CUSTOM_TARGET_PROPERTY() is deprecated, just use a simple variable instead")
