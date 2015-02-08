@@ -75,7 +75,6 @@ protected:
   virtual void slotButtonClicked(int button);
 
 private :
-    QPushButton*   m_button;
     QRadioButton* m_onlyCookies, *m_allCookies, *m_allCookiesDomain;
     KCookieDetail* m_detailView;
 };
