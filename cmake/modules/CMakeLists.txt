@@ -132,7 +132,6 @@ set(cmakeFiles
                cmake-modules-styleguide.txt
                kde4init_dummy.cpp.in
                kde4_cmake_uninstall.cmake.in
-               kde4automoc.files.in
                BasicFindPackageVersion.cmake.in
                FindLibPython.py
                FindPyKDE4.py

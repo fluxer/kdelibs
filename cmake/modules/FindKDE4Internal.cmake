@@ -38,7 +38,6 @@
 # compile KDE software:
 #
 #  KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
-#  KDE4_AUTOMOC_EXECUTABLE  - the kde4automoc executable, deprecated, use AUTOMOC4_EXECUTABLE instead
 #  KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
 #
 # The following variables point to the location of the KDE libraries,
@@ -396,9 +395,6 @@ if (NOT AUTOMOC4_VERSION)
 endif (NOT AUTOMOC4_VERSION)
 set(_automoc4_min_version "0.9.88")
 macro_ensure_version("${_automoc4_min_version}" "${AUTOMOC4_VERSION}" _automoc4_version_ok)
-
-# for compatibility with KDE 4.0.x
-set(KDE4_AUTOMOC_EXECUTABLE        "${AUTOMOC4_EXECUTABLE}" )
 
 # Perl is not required for building KDE software, but we had that here since 4.0
 find_package(Perl)
