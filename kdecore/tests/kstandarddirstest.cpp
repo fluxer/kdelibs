@@ -93,9 +93,9 @@ void KStandarddirsTest::testFindResource()
     QVERIFY( bin.endsWith( KIOSLAVE ) );
     QVERIFY( !QDir::isRelativePath(bin) );
 
-    const QString data = KGlobal::dirs()->findResource( "data", "cmake/modules/FindSoprano.cmake" );
+    const QString data = KGlobal::dirs()->findResource( "data", "cmake/modules/KDE4Macros.cmake" );
     QVERIFY( !data.isEmpty() );
-    QVERIFY( data.endsWith( QLatin1String("share/apps/cmake/modules/FindSoprano.cmake") ) );
+    QVERIFY( data.endsWith( QLatin1String("share/apps/cmake/modules/KDE4Macros.cmake") ) );
     QVERIFY( !QDir::isRelativePath(data) );
 }
 
