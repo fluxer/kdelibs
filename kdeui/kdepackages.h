@@ -894,7 +894,6 @@ const char * const packages[] = {
 "marble/data",
 "marble/plasmoid",
 "metabar",
-"nepomuk",
 "Network Management",
 "Network Management/Control Module",
 "Network Management/KDED Module",

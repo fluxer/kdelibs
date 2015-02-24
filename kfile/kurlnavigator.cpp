@@ -682,7 +682,7 @@ void KUrlNavigator::Private::updateButtonVisibility()
         // Check whether going upwards is possible. If this is the case, show the drop-down button.
         KUrl url = m_navButtons.front()->url();
         url.adjustPath(KUrl::AddTrailingSlash);
-        const bool visible = !url.equals(url.upUrl()) && (url.protocol() != "nepomuksearch");
+        const bool visible = !url.equals(url.upUrl());
         m_dropDownButton->setVisible(visible);
     }
 }

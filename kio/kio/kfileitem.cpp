@@ -1601,11 +1601,6 @@ KUrl KFileItem::targetUrl() const
       return url();
 }
 
-KUrl KFileItem::nepomukUri() const
-{
-    return KUrl();
-}
-
 /*
  * Mimetype handling.
  *

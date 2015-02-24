@@ -257,8 +257,6 @@ void KFileMetaInfoPrivate::init ( QIODevice& stream, const KUrl& url, time_t mti
 
     QIODeviceInputStream strigiStream ( stream, c.maximalStreamReadLength(idx) );
     indexer.analyze ( idx, &strigiStream );
-
-    // TODO: get data from Nepomuk
 }
 
 void KFileMetaInfoPrivate::initWriters ( const KUrl& file )

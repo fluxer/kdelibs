@@ -18,8 +18,8 @@
    Boston, MA 02110-1301, USA.
  */
 
-#ifndef _NEPOMUK_RATING_PAINTER_H_
-#define _NEPOMUK_RATING_PAINTER_H_
+#ifndef _RATING_PAINTER_H_
+#define _RATING_PAINTER_H_
 
 #include <kdeui_export.h>
 
@@ -33,7 +33,7 @@ class QRect;
 
 
 /**
- * \class KRatingPainter kratingpainter.h Nepomuk/KRatingPainter
+ * \class KRatingPainter kratingpainter.h
  *
  * \brief Utility class that draws a row of stars for a rating value.
  *
