@@ -76,7 +76,7 @@ struct KPARTS_EXPORT BrowserArguments
 
   /**
    * This buffer can be used by the part to save and restore its contents.
-   * See KHTMLPart for instance.
+   * See KWebKitPart for instance.
    */
   QStringList docState;
 
@@ -707,7 +707,7 @@ private:
 /**
  * An extension class for container parts, i.e. parts that contain
  * other parts.
- * For instance a KHTMLPart hosts one part per frame.
+ * For instance a KWebKitPart hosts one part per frame.
  */
 class KPARTS_EXPORT BrowserHostExtension : public QObject
 {

@@ -269,6 +269,7 @@ void Applet::save(KConfigGroup &g) const
     // also checks kiosk and parent containers
     group.writeEntry("immutability", (int)d->immutability);
     group.writeEntry("plugin", pluginName());
+    group.writeEntry("desktop", pluginName());
 
     group.writeEntry("geometry", geometry());
     group.writeEntry("zvalue", zValue());
