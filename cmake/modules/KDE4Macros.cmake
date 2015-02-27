@@ -5,8 +5,6 @@
 # KDE4_ADD_KCFG_FILES
 # _KDE4_SET_CUSTOM_TARGET_PROPERTY
 # _KDE4_GET_CUSTOM_TARGET_PROPERTY
-# KDE4_MOC_HEADERS
-# KDE4_HANDLE_AUTOMOC
 # KDE4_CREATE_FINAL_FILES
 # KDE4_ADD_PLUGIN
 # KDE4_ADD_KDEINIT_EXECUTABLE
@@ -29,27 +27,6 @@
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-# This is for versions of automoc4 which don't provide these two macros.
-# If such a version is used, just use the "old" style automoc handling. 
-if(NOT COMMAND _AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
-
-   macro(_AUTOMOC4_KDE4_PRE_TARGET_HANDLING _target _srcs)
-      if(MSVC)
-         add_automoc4_target("${_target}_automoc" ${_srcs})
-      else(MSVC)
-         automoc4(${_target} ${_srcs} )
-      endif(MSVC)
-   endmacro(_AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
-
-
-   macro(_AUTOMOC4_KDE4_POST_TARGET_HANDLING _target)
-      if(MSVC)
-         add_dependencies(${_target} "${_target}_automoc")
-      endif(MSVC)
-   endmacro(_AUTOMOC4_KDE4_POST_TARGET_HANDLING)
-
-endif(NOT COMMAND _AUTOMOC4_KDE4_PRE_TARGET_HANDLING)
 
 
 macro (KDE4_ADD_KCFG_FILES _sources )
@@ -193,17 +170,6 @@ macro (_KDE4_GET_CUSTOM_TARGET_PROPERTY _var _target_name _property_name)
    string(REGEX REPLACE "[/ ]" "_" _dir "${CMAKE_CURRENT_SOURCE_DIR}")
    set(${_var} "${_kde4_${_dir}_${_target_name}_${_property_name}}")
 endmacro (_KDE4_GET_CUSTOM_TARGET_PROPERTY)
-
-
-macro (KDE4_MOC_HEADERS _target_NAME)
-   # if automoc4 from kdesupport has been found, use the macro provided there
-   automoc4_moc_headers(${_target_NAME} ${ARGN})
-endmacro (KDE4_MOC_HEADERS)
-
-macro(KDE4_HANDLE_AUTOMOC _target_NAME _SRCS)
-   # if automoc4 from kdesupport has been found, use the macro provided there
-   automoc4(${_target_NAME} ${_SRCS})
-endmacro(KDE4_HANDLE_AUTOMOC)
 
 macro(KDE4_INSTALL_TS_FILES _lang _sdir)
    file(GLOB_RECURSE _ts_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${_sdir}/*)
