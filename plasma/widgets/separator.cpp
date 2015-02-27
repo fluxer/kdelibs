@@ -96,4 +96,4 @@ QSizeF Separator::sizeHint(Qt::SizeHint which, const QSizeF & constraint) const
 
 } // Plasma namespace
 
-#include "separator.moc"
+#include "moc_separator.cpp"

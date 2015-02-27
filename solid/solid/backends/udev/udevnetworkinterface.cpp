@@ -118,4 +118,4 @@ qulonglong NetworkInterface::macAddress() const
     return mac_address;
 }
 
-#include "backends/udev/udevnetworkinterface.moc"
+#include "backends/udev/moc_udevnetworkinterface.cpp"

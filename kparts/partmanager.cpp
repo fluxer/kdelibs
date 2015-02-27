@@ -603,4 +603,4 @@ void PartManager::setIgnoreExplictFocusRequests(bool ignore)
     d->m_bIgnoreExplicitFocusRequest = ignore;
 }
 
-#include "partmanager.moc"
+#include "moc_partmanager.cpp"

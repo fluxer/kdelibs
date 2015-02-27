@@ -276,4 +276,4 @@ void KCheckAccelerators::checkAccelerators( bool automatic )
     // dlg will be destroyed before returning
 }
 
-#include "kcheckaccelerators.moc"
+#include "moc_kcheckaccelerators.cpp"

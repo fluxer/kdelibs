@@ -626,4 +626,4 @@ KMenuContext::KMenuContext(QPointer<KMenu> menu,QPointer<QAction> action)
 {
 }
 
-#include "kmenu.moc"
+#include "moc_kmenu.cpp"

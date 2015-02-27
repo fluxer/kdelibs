@@ -29,7 +29,7 @@
 #include <kxmlguiclient.h>
 #include "testxmlguiwindow.h"
 #include "testguiclient.h"
-#include "kxmlgui_unittest.moc"
+#include "moc_kxmlgui_unittest.cpp"
 #include <kxmlguiversionhandler_p.h>
 #include <kxmlguiversionhandler.cpp> // it's not exported, so we need to include the code here
 

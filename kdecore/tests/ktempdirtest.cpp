@@ -23,7 +23,7 @@
 #include <QtCore/QDir>
 
 #include "ktempdir.h"
-#include "ktempdirtest.moc"
+#include "moc_ktempdirtest.cpp"
 
 void KTempDirTest::testNoDelete()
 {

@@ -48,4 +48,4 @@ QString FakeBlock::device() const
     return fakeDevice()->property("device").toString();
 }
 
-#include "backends/fakehw/fakeblock.moc"
+#include "backends/fakehw/moc_fakeblock.cpp"

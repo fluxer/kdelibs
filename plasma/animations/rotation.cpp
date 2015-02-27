@@ -165,4 +165,4 @@ void RotationAnimation::updateEffectiveTime(int currentTime)
 
 }
 
-#include "rotation_p.moc"
+#include "moc_rotation_p.cpp"

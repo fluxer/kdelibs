@@ -27,7 +27,7 @@
 
 #include <parsinghelpers.h>
 
-#include "httpheadertokenizetest.moc"
+#include "moc_httpheadertokenizetest.cpp"
 
 #include <parsinghelpers.cpp>
 

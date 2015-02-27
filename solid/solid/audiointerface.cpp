@@ -67,4 +67,4 @@ Solid::AudioInterface::SoundcardType Solid::AudioInterface::soundcardType() cons
     return_SOLID_CALL(Ifaces::AudioInterface *, d->backendObject(), InternalSoundcard, soundcardType());
 }
 
-#include "audiointerface.moc"
+#include "moc_audiointerface.cpp"

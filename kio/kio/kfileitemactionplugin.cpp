@@ -29,4 +29,4 @@ KFileItemActionPlugin::~KFileItemActionPlugin()
 {
 }
 
-#include "kfileitemactionplugin.moc"
+#include "moc_kfileitemactionplugin.cpp"

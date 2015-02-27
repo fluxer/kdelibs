@@ -85,4 +85,4 @@ void KdedAdaptor::quit()
    QCoreApplication::instance()->quit();
 }
 
-#include "kdedadaptor.moc"
+#include "moc_kdedadaptor.cpp"

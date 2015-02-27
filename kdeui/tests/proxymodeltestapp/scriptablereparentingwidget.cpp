@@ -141,4 +141,4 @@ void ScriptableReparentingWidget::textChanged()
 }
 
 
-#include "scriptablereparentingwidget.moc"
+#include "moc_scriptablereparentingwidget.cpp"

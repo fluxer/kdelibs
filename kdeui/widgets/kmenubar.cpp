@@ -561,4 +561,4 @@ void KMenuBar::paintEvent( QPaintEvent* pe )
 #endif
 }
 
-#include "kmenubar.moc"
+#include "moc_kmenubar.cpp"

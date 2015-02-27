@@ -1077,4 +1077,4 @@ uint ExtenderItemPrivate::s_maxExtenderItemId = 0;
 
 } // namespace Plasma
 
-#include "extenderitem.moc"
+#include "moc_extenderitem.cpp"

@@ -139,4 +139,4 @@ QSizeF SvgWidget::sizeHint(Qt::SizeHint which, const QSizeF & constraint) const
 
 } // Plasma namespace
 
-#include "svgwidget.moc"
+#include "moc_svgwidget.cpp"

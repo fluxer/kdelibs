@@ -462,4 +462,4 @@ void KSaveFileTest::cleanupTestCase()
     }
 }
 
-#include "ksavefiletest.moc"
+#include "moc_ksavefiletest.cpp"

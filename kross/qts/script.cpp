@@ -271,4 +271,4 @@ QObject* EcmaScript::engine() const
     return d->m_engine;
 }
 
-#include "script.moc"
+#include "moc_script.cpp"

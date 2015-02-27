@@ -22,7 +22,7 @@
 #include <kstandarddirs.h>
 #include <qtest_kde.h>
 #include "kconfigcompiler_test.h"
-#include "kconfigcompiler_test.moc"
+#include "moc_kconfigcompiler_test.cpp"
 
 QTEST_KDEMAIN_CORE(KConfigCompiler_Test)
 

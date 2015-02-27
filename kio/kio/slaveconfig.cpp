@@ -217,4 +217,4 @@ void SlaveConfig::reset()
 
 }
 
-#include "slaveconfig.moc"
+#include "moc_slaveconfig.cpp"

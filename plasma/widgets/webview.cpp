@@ -333,5 +333,5 @@ void WebViewPrivate::loadingFinished(bool success)
 
 } // namespace Plasma
 
-#include "webview.moc"
+#include "moc_webview.cpp"
 

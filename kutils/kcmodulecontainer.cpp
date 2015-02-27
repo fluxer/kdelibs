@@ -18,7 +18,7 @@
 */
 
 #include "kcmodulecontainer.h"
-#include "kcmodulecontainer.moc"
+#include "moc_kcmodulecontainer.cpp"
 
 #include <QtGui/QLayout>
 #include <QtGui/QPixmap>

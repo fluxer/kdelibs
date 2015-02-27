@@ -186,4 +186,4 @@ void KLinkItemSelectionModelPrivate::sourceCurrentChanged(const QModelIndex& cur
     q->setCurrentIndex(mappedCurrent, QItemSelectionModel::NoUpdate);
 }
 
-#include "klinkitemselectionmodel.moc"
+#include "moc_klinkitemselectionmodel.cpp"

@@ -332,4 +332,4 @@ void KStatusNotifierItemDBus::Scroll(int delta, const QString &orientation)
 
 
 
-#include "kstatusnotifieritemdbus_p.moc"
+#include "moc_kstatusnotifieritemdbus_p.cpp"

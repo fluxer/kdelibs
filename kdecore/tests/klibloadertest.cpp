@@ -19,7 +19,7 @@
 #include "klibloadertest.h"
 
 #include <qtest_kde.h>
-#include "klibloadertest.moc"
+#include "moc_klibloadertest.cpp"
 
 QTEST_KDEMAIN_CORE( KLibLoaderTest )
 

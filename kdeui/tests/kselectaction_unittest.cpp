@@ -19,7 +19,7 @@
 
 #include "kselectaction_unittest.h"
 #include <QStandardItemModel>
-#include "kselectaction_unittest.moc"
+#include "moc_kselectaction_unittest.cpp"
 #include "qtest_kde.h"
 #include <kselectaction.h>
 #include <kcombobox.h>

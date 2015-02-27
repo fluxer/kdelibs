@@ -58,4 +58,4 @@ QStringList HSpellClient::languages() const
     return langs;
 }
 
-#include "kspell_hspellclient.moc"
+#include "moc_kspell_hspellclient.cpp"

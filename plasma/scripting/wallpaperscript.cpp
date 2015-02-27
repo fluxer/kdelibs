@@ -230,4 +230,4 @@ void WallpaperScript::urlDropped(const KUrl &url)
 
 } // Plasma namespace
 
-#include "wallpaperscript.moc"
+#include "moc_wallpaperscript.cpp"

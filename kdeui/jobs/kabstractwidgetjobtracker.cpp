@@ -104,4 +104,4 @@ void KAbstractWidgetJobTracker::slotClean(KJob *job)
     Q_UNUSED(job);
 }
 
-#include "kabstractwidgetjobtracker.moc"
+#include "moc_kabstractwidgetjobtracker.cpp"

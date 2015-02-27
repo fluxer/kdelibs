@@ -175,4 +175,4 @@ bool TestEngine::sourceRequestEvent(const QString &source)
 } // sourceRequestEvent()
 
 
-#include "testengine.moc"
+#include "moc_testengine.cpp"

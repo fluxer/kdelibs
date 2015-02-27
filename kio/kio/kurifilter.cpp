@@ -711,4 +711,4 @@ void KUriFilter::loadPlugins()
     }
 }
 
-#include "kurifilter.moc"
+#include "moc_kurifilter.cpp"

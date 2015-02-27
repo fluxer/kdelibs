@@ -188,4 +188,4 @@ HTTPFilterDeflate::HTTPFilterDeflate()
 {
 }
 
-#include "httpfilter.moc"
+#include "moc_httpfilter.cpp"

@@ -1261,4 +1261,4 @@ void KUrlNavigator::setHomeUrl(const QString& homeUrl)
 }
 #endif
 
-#include "kurlnavigator.moc"
+#include "moc_kurlnavigator.cpp"

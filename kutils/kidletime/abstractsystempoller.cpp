@@ -27,4 +27,4 @@ AbstractSystemPoller::~AbstractSystemPoller()
 {
 }
 
-#include "abstractsystempoller.moc"
+#include "moc_abstractsystempoller.cpp"

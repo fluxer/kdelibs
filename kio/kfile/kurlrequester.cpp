@@ -556,4 +556,4 @@ KUrlComboRequester::KUrlComboRequester( QWidget *parent)
 {
 }
 
-#include "kurlrequester.moc"
+#include "moc_kurlrequester.cpp"

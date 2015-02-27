@@ -90,4 +90,4 @@ Solid::Battery::ChargeState Solid::Battery::chargeState() const
     return_SOLID_CALL(Ifaces::Battery *, d->backendObject(), NoCharge, chargeState());
 }
 
-#include "battery.moc"
+#include "moc_battery.cpp"

@@ -40,4 +40,4 @@ int main( int argc, char ** argv )
     app.exec();
 }
 
-#include "khboxtest.moc"
+#include "moc_khboxtest.cpp"

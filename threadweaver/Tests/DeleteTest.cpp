@@ -64,4 +64,4 @@ void DeleteTest::deleteSequence(ThreadWeaver::Job* job)
 
 QMutex s_GlobalMutex;
 
-#include "DeleteTest.moc"
+#include "moc_DeleteTest.cpp"

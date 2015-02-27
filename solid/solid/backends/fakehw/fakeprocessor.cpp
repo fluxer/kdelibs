@@ -84,4 +84,4 @@ Solid::Processor::InstructionSets FakeProcessor::instructionSets() const
 
 }
 
-#include "backends/fakehw/fakeprocessor.moc"
+#include "backends/fakehw/moc_fakeprocessor.cpp"

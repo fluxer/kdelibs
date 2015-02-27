@@ -28,4 +28,4 @@ KVBox::~KVBox()
 {
 }
 
-#include "kvbox.moc"
+#include "moc_kvbox.cpp"

@@ -19,7 +19,7 @@
 
 #include "qtest_kde.h"
 #include "kmainwindow_unittest.h"
-#include "kmainwindow_unittest.moc"
+#include "moc_kmainwindow_unittest.cpp"
 #include <kmainwindow.h>
 #include <kstatusbar.h>
 #include <kglobal.h>

@@ -944,4 +944,4 @@ bool Extender::isEmpty() const
 
 } // Plasma namespace
 
-#include "extender.moc"
+#include "moc_extender.cpp"

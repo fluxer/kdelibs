@@ -19,7 +19,7 @@
 
 #include "kdirlistertest.h"
 #include <ktemporaryfile.h>
-#include "kdirlistertest.moc"
+#include "moc_kdirlistertest.cpp"
 #include <kdirlister.h>
 #include <qtest_kde.h>
 

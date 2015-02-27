@@ -286,4 +286,4 @@ int KIO::JobUiDelegate::requestMessageBox(KIO::JobUiDelegate::MessageBoxType typ
     return result;
 }
 
-#include "jobuidelegate.moc"
+#include "moc_jobuidelegate.cpp"

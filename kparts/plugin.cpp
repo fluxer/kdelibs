@@ -352,4 +352,4 @@ void Plugin::loadPlugins(QObject *parent, KXMLGUIClient* parentGUIClient,
 
 // vim:sw=4:et:sts=4
 
-#include "plugin.moc"
+#include "moc_plugin.cpp"

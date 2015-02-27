@@ -19,7 +19,7 @@
 #include <kconfiggroup.h>
 #include <ktemporaryfile.h>
 #include <kstandarddirs.h>
-#include "kdesktopfiletest.moc"
+#include "moc_kdesktopfiletest.cpp"
 
 #include "kdesktopfile.h"
 

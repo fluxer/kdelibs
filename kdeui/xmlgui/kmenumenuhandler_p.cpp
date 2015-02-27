@@ -194,4 +194,4 @@ void KMenuMenuHandler::slotAddToToolBar(int tb)
 
 } //END namespace KDEPrivate
 
-#include "kmenumenuhandler_p.moc"
+#include "moc_kmenumenuhandler_p.cpp"

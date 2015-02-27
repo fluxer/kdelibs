@@ -72,4 +72,4 @@ void XScreensaverBasedPoller::simulateUserActivity()
     emit resumingFromIdle();
 }
 
-#include "xscreensaverbasedpoller.moc"
+#include "moc_xscreensaverbasedpoller.cpp"

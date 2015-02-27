@@ -210,4 +210,4 @@ void GLApplet::makeCurrent()
 
 } // Plasma namespace
 
-#include "glapplet.moc"
+#include "moc_glapplet.cpp"

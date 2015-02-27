@@ -197,5 +197,5 @@ void KButtonGroupTest::testSignals() {
 
 QTEST_KDEMAIN(KButtonGroupTest, GUI)
 
-#include "kbuttongrouptest.moc"
+#include "moc_kbuttongrouptest.cpp"
 

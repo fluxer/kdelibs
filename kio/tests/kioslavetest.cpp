@@ -544,4 +544,4 @@ int main(int argc, char **argv) {
 }
 
 
-#include "kioslavetest.moc"
+#include "moc_kioslavetest.cpp"

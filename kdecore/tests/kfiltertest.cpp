@@ -428,4 +428,4 @@ void KFilterTest::slotFilterOutput(const QByteArray& data)
     m_filterOutput += data;
 }
 
-#include "kfiltertest.moc"
+#include "moc_kfiltertest.cpp"

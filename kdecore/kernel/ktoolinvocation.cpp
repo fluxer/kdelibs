@@ -386,4 +386,4 @@ void KToolInvocation::startKdeinit()
 //    qApp->restoreOverrideCursor();
 }
 
-#include "ktoolinvocation.moc"
+#include "moc_ktoolinvocation.cpp"

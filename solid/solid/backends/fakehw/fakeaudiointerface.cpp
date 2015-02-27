@@ -121,4 +121,4 @@ Solid::AudioInterface::SoundcardType FakeAudioInterface::soundcardType() const
     return Solid::AudioInterface::InternalSoundcard;
 }
 
-#include "backends/fakehw/fakeaudiointerface.moc"
+#include "backends/fakehw/moc_fakeaudiointerface.cpp"

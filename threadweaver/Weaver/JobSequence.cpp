@@ -70,4 +70,4 @@ void JobSequence::internalJobDone( Job* job)
 	JobCollection::internalJobDone(job);
 }
 
-#include "JobSequence.moc"
+#include "moc_JobSequence.cpp"

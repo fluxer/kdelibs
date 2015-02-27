@@ -30,4 +30,4 @@ void KFDTest::doit()
 //     qApp->quit();
 }
 
-#include "kfdtest.moc"
+#include "moc_kfdtest.cpp"

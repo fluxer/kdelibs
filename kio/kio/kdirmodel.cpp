@@ -1145,4 +1145,4 @@ bool KDirModel::removeColumns(int, int, const QModelIndex&)
     return false;
 }
 
-#include "kdirmodel.moc"
+#include "moc_kdirmodel.cpp"

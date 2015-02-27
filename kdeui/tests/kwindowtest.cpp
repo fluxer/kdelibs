@@ -438,5 +438,5 @@ int main( int argc, char *argv[] )
     return ret;
 }
 
-#include "kwindowtest.moc"
+#include "moc_kwindowtest.cpp"
 

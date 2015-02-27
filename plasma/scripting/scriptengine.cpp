@@ -288,5 +288,5 @@ PackageStructure::Ptr packageStructure(const QString &language, ComponentType ty
 
 } // namespace Plasma
 
-#include <scriptengine.moc>
+#include "moc_scriptengine.cpp"
 

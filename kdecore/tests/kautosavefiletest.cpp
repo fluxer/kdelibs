@@ -111,4 +111,4 @@ void KAutoSaveFileTest::test_locking()
 
 }
 
-#include "kautosavefiletest.moc"
+#include "moc_kautosavefiletest.cpp"

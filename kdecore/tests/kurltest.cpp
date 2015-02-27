@@ -22,7 +22,7 @@
 #include "kurltest.h"
 
 #include "qtest_kde.h"
-#include "kurltest.moc"
+#include "moc_kurltest.cpp"
 
 QTEST_KDEMAIN_CORE( KUrlTest )
 

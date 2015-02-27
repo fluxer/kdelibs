@@ -105,4 +105,4 @@ void UserNotificationHandler::processRequest()
     }
 }
 
-#include "usernotificationhandler_p.moc"
+#include "moc_usernotificationhandler_p.cpp"

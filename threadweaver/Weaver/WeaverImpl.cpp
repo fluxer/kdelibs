@@ -423,4 +423,4 @@ void WeaverImpl::dumpJobs()
     }
 }
 
-#include "WeaverImpl.moc"
+#include "moc_WeaverImpl.cpp"

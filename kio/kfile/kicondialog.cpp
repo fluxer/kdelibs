@@ -901,4 +901,4 @@ void KIconButton::KIconButtonPrivate::_k_newIconName(const QString& name)
     emit q->iconChanged(name);
 }
 
-#include "kicondialog.moc"
+#include "moc_kicondialog.cpp"

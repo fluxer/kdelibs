@@ -399,4 +399,4 @@ int ExtenderGroupPrivate::insertIndexFromPos(const QPointF &pos) const
 
 } // Plasma namespace
 
-#include "extendergroup.moc"
+#include "moc_extendergroup.cpp"

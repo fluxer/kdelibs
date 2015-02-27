@@ -57,5 +57,5 @@ KFileWriterProvider::loadPlugin(const QString& key) {
     return offers.first()->createInstance<KFileWritePlugin>();
 }
 
-#include "kfilewriteplugin.moc"
+#include "moc_kfilewriteplugin.cpp"
 

@@ -2985,5 +2985,5 @@ void Applet::geometryChanged()
 
 } // Plasma namespace
 
-#include "applet.moc"
-#include "private/applet_p.moc"
+#include "moc_applet.cpp"
+#include "private/moc_applet_p.cpp"

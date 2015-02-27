@@ -84,4 +84,4 @@ const SMIVItem* SMIVModel::data( int index ) const
     return m_data[index];
 }
 
-#include "SMIVModel.moc"
+#include "moc_SMIVModel.cpp"

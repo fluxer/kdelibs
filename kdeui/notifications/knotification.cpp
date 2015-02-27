@@ -436,4 +436,4 @@ bool KNotification::eventFilter( QObject * watched, QEvent * event )
 }
 
 
-#include "knotification.moc"
+#include "moc_knotification.cpp"

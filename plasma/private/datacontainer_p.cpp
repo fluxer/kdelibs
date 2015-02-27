@@ -166,5 +166,5 @@ void SignalRelay::timerEvent(QTimerEvent *event)
 
 } // Plasma namespace
 
-#include "datacontainer_p.moc"
+#include "moc_datacontainer_p.cpp"
 

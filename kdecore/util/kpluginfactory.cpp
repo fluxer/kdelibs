@@ -246,4 +246,4 @@ QVariantList KPluginFactory::stringListToVariantList(const QStringList &list)
     return variantlist;
 }
 
-#include "kpluginfactory.moc"
+#include "moc_kpluginfactory.cpp"

@@ -35,4 +35,4 @@ WeaverInterface:: WeaverInterface ( QObject* parent )
 {
 }
 
-#include "WeaverInterface.moc"
+#include "moc_WeaverInterface.cpp"

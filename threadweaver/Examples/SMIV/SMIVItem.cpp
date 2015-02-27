@@ -120,4 +120,4 @@ QImage SMIVItem::thumb() const
     return m_thumb->thumb();
 }
 
-#include "SMIVItem.moc"
+#include "moc_SMIVItem.cpp"

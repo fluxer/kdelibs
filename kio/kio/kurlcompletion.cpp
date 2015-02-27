@@ -1493,4 +1493,4 @@ static QString unescape(const QString& text)
     return result;
 }
 
-#include "kurlcompletion.moc"
+#include "moc_kurlcompletion.cpp"

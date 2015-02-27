@@ -101,4 +101,4 @@ void QSpellEnchantClient::removeDictRef(EnchantDict *dict)
     }
 }
 
-#include "enchantclient.moc"
+#include "moc_enchantclient.cpp"

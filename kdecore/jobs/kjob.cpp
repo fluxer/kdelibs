@@ -367,4 +367,4 @@ void KJob::setAutoDelete( bool autodelete )
     d->isAutoDelete = autodelete;
 }
 
-#include "kjob.moc"
+#include "moc_kjob.cpp"

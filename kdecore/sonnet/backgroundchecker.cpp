@@ -168,4 +168,4 @@ void Sonnet::BackgroundChecker::replace(int start, const QString &oldText,
     d->engine->filter()->replace(w, newText);
 }
 
-#include "backgroundchecker.moc"
+#include "moc_backgroundchecker.cpp"

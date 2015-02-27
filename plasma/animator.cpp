@@ -212,5 +212,5 @@ Plasma::Animation *Animator::create(const QString &anim, QObject *parent)
 
 } // namespace Plasma
 
-#include <animator.moc>
+#include "moc_animator.cpp"
 

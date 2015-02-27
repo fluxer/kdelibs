@@ -243,4 +243,4 @@ void tst_KLocalSocket::connected()
 
 QTEST_MAIN(tst_KLocalSocket)
 
-#include "klocalsockettest.moc"
+#include "moc_klocalsockettest.cpp"

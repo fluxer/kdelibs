@@ -85,4 +85,4 @@ void KPixmapSequenceWidget::setInterval(int msecs)
     d->m_painter.setInterval(msecs);
 }
 
-#include "kpixmapsequencewidget.moc"
+#include "moc_kpixmapsequencewidget.cpp"

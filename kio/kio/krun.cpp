@@ -1793,5 +1793,5 @@ KProcessRunner::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
     deleteLater();
 }
 
-#include "krun.moc"
-#include "krun_p.moc"
+#include "moc_krun.cpp"
+#include "moc_krun_p.cpp"

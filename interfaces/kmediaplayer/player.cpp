@@ -74,4 +74,4 @@ int KMediaPlayer::Player::state(void) const
 	return (int)currentState;
 }
 
-#include "player.moc"
+#include "moc_player.cpp"

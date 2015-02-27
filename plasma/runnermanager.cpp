@@ -839,4 +839,4 @@ void RunnerManager::reset()
 
 } // Plasma namespace
 
-#include "runnermanager.moc"
+#include "moc_runnermanager.cpp"

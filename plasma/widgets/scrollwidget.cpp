@@ -1584,5 +1584,5 @@ bool ScrollWidget::hasOverShoot() const
 } // namespace Plasma
 
 
-#include <scrollwidget.moc>
+#include "moc_scrollwidget.cpp"
 

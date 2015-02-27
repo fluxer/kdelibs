@@ -3399,6 +3399,6 @@ bool KDesktopPropsPlugin::supports( const KFileItemList& _items )
             KAuthorized::authorize("shell_access");
 }
 
-#include "kpropertiesdialog.moc"
-#include "kpropertiesdialog_p.moc"
+#include "moc_kpropertiesdialog.cpp"
+#include "moc_kpropertiesdialog_p.cpp"
 

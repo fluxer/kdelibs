@@ -19,7 +19,7 @@
 
 #include <qtest_kde.h>
 #include "kconfigskeletontest.h"
-#include "kconfigskeletontest.moc"
+#include "moc_kconfigskeletontest.cpp"
 
 #include <kconfig.h>
 #include <kdebug.h>

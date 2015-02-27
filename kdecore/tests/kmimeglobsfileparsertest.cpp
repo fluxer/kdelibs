@@ -272,4 +272,4 @@ private:
 
 QTEST_KDEMAIN_CORE( KMimeFileParserTest )
 
-#include "kmimefileparsertest.moc"
+#include "kmimeglobsfileparsertest.moc"

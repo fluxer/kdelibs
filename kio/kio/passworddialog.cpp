@@ -77,4 +77,4 @@ int PasswordDialog::getNameAndPassword( QString& user, QString& pass, bool* keep
  }
 
 
-#include "passworddialog.moc"
+#include "moc_passworddialog.cpp"

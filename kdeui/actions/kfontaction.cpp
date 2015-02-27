@@ -179,4 +179,4 @@ void KFontAction::setFont( const QString &family )
     kDebug(129) << "Font not found " << family.toLower();
 }
 
-#include "kfontaction.moc"
+#include "moc_kfontaction.cpp"

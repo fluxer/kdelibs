@@ -590,4 +590,4 @@ void KSycoca::clearCaches()
         ksycocaInstance->sycoca()->d->closeDatabase();
 }
 
-#include "ksycoca.moc"
+#include "moc_ksycoca.cpp"

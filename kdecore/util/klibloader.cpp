@@ -139,5 +139,5 @@ QString KLibLoader::errorString( int componentLoadingError )
     }
 }
 
-#include "klibloader.moc"
+#include "moc_klibloader.cpp"
 // vim: sw=4 sts=4 et

@@ -165,4 +165,4 @@ void KLibrary::setFileName(const QString &name, const KComponentData &data)
     QLibrary::setFileName(findLibrary(name, data));
 }
 
-#include "klibrary.moc"
+#include "moc_klibrary.cpp"

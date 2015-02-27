@@ -129,4 +129,4 @@ void KNotifyConfigWidget::slotActionChanged()
 }
 
 
-#include "knotifyconfigwidget.moc"
+#include "moc_knotifyconfigwidget.cpp"

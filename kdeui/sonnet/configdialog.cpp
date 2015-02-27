@@ -99,4 +99,4 @@ QString ConfigDialog::language() const
     return d->ui->language();
 }
 
-#include "configdialog.moc"
+#include "moc_configdialog.cpp"

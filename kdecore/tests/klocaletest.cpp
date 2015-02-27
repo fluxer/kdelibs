@@ -33,7 +33,7 @@
 #include <QtCore/QDate>
 #include <QtDBus/QtDBus>
 
-#include "klocaletest.moc"
+#include "moc_klocaletest.cpp"
 
 void
 KLocaleTest::initTestCase()

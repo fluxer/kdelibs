@@ -299,4 +299,4 @@ void tst_KLocalSocketServer::abstractUnixSocket()
 
 QTEST_MAIN(tst_KLocalSocketServer)
 
-#include "klocalsocketservertest.moc"
+#include "moc_klocalsocketservertest.cpp"

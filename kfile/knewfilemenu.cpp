@@ -1147,5 +1147,5 @@ QStringList KNewFileMenu::supportedMimeTypes() const
 }
 
 
-#include "knewfilemenu.moc"
+#include "moc_knewfilemenu.cpp"
 

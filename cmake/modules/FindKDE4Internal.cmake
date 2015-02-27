@@ -195,7 +195,6 @@
 #  KDE4_ADD_EXECUTABLE (name [NOGUI] [TEST] [RUN_UNINSTALLED] file1 ... fileN)
 #    Equivalent to ADD_EXECUTABLE(), but additionally adds some more features:
 #    -support for KDE4_ENABLE_FINAL
-#    -support for automoc
 #    -automatic RPATH handling
 #    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
 #    application bundles are created, with the NOGUI option no bundles but simple executables

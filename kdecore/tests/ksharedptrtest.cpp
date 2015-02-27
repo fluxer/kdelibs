@@ -162,4 +162,4 @@ void KSharedPtrTest::testOrdering()
 	QCOMPARE( map.count(), 2 );
 }
 
-#include "ksharedptrtest.moc"
+#include "moc_ksharedptrtest.cpp"

@@ -34,7 +34,7 @@
 #include "kstandarddirs.h"
 #include "kconfiggroup.h"
 
-#include "kcalendartest.moc"
+#include "moc_kcalendartest.cpp"
 
 QTEST_KDEMAIN_CORE_WITH_COMPONENTNAME(KCalendarTest, "kdecalendarsystems" /*so that the .po exists*/)
 

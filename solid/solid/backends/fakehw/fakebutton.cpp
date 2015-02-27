@@ -71,4 +71,4 @@ void FakeButton::press()
     emit pressed(type(), fakeDevice()->udi());
 }
 
-#include "backends/fakehw/fakebutton.moc"
+#include "backends/fakehw/moc_fakebutton.cpp"

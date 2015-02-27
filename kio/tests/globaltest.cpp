@@ -74,4 +74,4 @@ void GlobalTest::testOtherPermissionConversion()
     QCOMPARE(qPermissions & perms, perms);
 }
 
-#include "globaltest.moc"
+#include "moc_globaltest.cpp"

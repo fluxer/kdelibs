@@ -144,4 +144,4 @@ int main(int argc, char **argv)
     return a.exec();
 }
 
-#include "kcolorcombotest.moc"
+#include "moc_kcolorcombotest.cpp"

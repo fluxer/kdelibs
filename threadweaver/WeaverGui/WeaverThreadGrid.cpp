@@ -134,4 +134,4 @@ namespace ThreadWeaver {
 
 }
 
-#include "WeaverThreadGrid.moc"
+#include "moc_WeaverThreadGrid.cpp"

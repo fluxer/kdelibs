@@ -1370,4 +1370,4 @@ void KLauncher::terminate_kdeinit()
 #endif
 }
 
-#include "klauncher.moc"
+#include "moc_klauncher.cpp"

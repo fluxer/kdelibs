@@ -1000,5 +1000,5 @@ void KOpenWithDialogPrivate::saveComboboxHistory()
     }
 }
 
-#include "kopenwithdialog.moc"
-#include "kopenwithdialog_p.moc"
+#include "moc_kopenwithdialog.cpp"
+#include "moc_kopenwithdialog_p.cpp"

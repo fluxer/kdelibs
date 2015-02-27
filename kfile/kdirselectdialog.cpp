@@ -485,4 +485,4 @@ KUrl KDirSelectDialog::selectDirectory( const KUrl& startDir,
         return KUrl();
 }
 
-#include "kdirselectdialog.moc"
+#include "moc_kdirselectdialog.cpp"

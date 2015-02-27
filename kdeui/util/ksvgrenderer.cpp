@@ -46,4 +46,4 @@ KSvgRenderer::load(const QByteArray &contents)
     return QSvgRenderer::load(contents);
 }
 
-#include "ksvgrenderer.moc"
+#include "moc_ksvgrenderer.cpp"

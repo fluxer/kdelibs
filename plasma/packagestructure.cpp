@@ -683,5 +683,5 @@ void PackageStructure::setAllowExternalPaths(bool allow)
 
 } // Plasma namespace
 
-#include "packagestructure.moc"
+#include "moc_packagestructure.cpp"
 

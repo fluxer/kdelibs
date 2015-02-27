@@ -150,4 +150,4 @@ void KColorValueSelector::drawPalette( QPixmap *pixmap )
 }
 
 
-#include "kcolorvalueselector.moc"
+#include "moc_kcolorvalueselector.cpp"

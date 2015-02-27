@@ -179,4 +179,4 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-#include "kjobtrackerstest.moc"
+#include "moc_kjobtrackerstest.cpp"

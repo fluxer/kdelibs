@@ -7,7 +7,7 @@ from Trolltech.
 
 */
 
-#include "ThreadWeaver.moc"
-#include "WeaverImpl.moc"
+#include "moc_ThreadWeaver.cpp"
+#include "moc_WeaverImpl.cpp"
 #include "WeaverInterface.moc"
 #include "WeaverObserver.moc"

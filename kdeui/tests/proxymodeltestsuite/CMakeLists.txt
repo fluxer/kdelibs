@@ -73,7 +73,7 @@ if (proxymodeltestsuite_standalone)
 endif()
 
 
-automoc4_add_library(proxymodeltestsuite ${LIBRARY_TYPE}
+add_library(proxymodeltestsuite ${LIBRARY_TYPE}
   ${proxymodeltestsuite_SRCS}
   ${eventlogger_RCS_SRCS}
 )

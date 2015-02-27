@@ -404,5 +404,5 @@ QPair<int, int> KViewStateSaver::scrollState() const
   return qMakePair(d->m_scrollArea->verticalScrollBar()->value(), d->m_scrollArea->horizontalScrollBar()->value());
 }
 
-#include "kviewstatesaver.moc"
+#include "moc_kviewstatesaver.cpp"
 

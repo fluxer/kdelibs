@@ -1194,5 +1194,5 @@ void KFilePlacesView::dataChanged(const QModelIndex &topLeft, const QModelIndex 
     d->adaptItemSize();
 }
 
-#include "kfileplacesview.moc"
-#include "kfileplacesview_p.moc"
+#include "moc_kfileplacesview.cpp"
+#include "moc_kfileplacesview_p.cpp"

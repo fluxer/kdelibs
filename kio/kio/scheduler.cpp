@@ -1382,5 +1382,5 @@ void SchedulerPrivate::updateInternalMetaData(SimpleJob* job)
 }
 
 
-#include "scheduler.moc"
-#include "scheduler_p.moc"
+#include "moc_scheduler.cpp"
+#include "moc_scheduler_p.cpp"

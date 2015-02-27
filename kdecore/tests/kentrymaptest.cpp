@@ -22,7 +22,7 @@
 #include <qtest_kde.h>
 #include "kconfigdata.h"
 
-#include "kentrymaptest.moc"
+#include "moc_kentrymaptest.cpp"
 
 const QByteArray group1("A Group");
 const QByteArray key1("A Key");

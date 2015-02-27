@@ -18,7 +18,7 @@
 */
 
 #include "kapplication_unittest.h"
-#include "kapplication_unittest.moc"
+#include "moc_kapplication_unittest.cpp"
 #include <qtest_kde.h>
 
 QTEST_KDEMAIN( KApplication_UnitTest, GUI )

@@ -325,4 +325,4 @@ void KLed::paintLed(Shape shape, Look look)
     painter.end();
 }
 
-#include "kled.moc"
+#include "moc_kled.cpp"

@@ -259,5 +259,5 @@ void PublicService::virtual_hook(int, void*)
 
 }
 
-#include "publicservice.moc"
-#include "avahi-publicservice_p.moc"
+#include "moc_publicservice.cpp"
+#include "moc_avahi-publicservice_p.cpp"

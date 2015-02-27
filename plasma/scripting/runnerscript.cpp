@@ -201,4 +201,4 @@ QString RunnerScript::mainScript() const
 
 } // Plasma namespace
 
-#include "runnerscript.moc"
+#include "moc_runnerscript.cpp"

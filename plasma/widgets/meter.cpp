@@ -557,5 +557,5 @@ QSizeF Meter::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 
 } // End of namepace
 
-#include "meter.moc"
-#include "../private/meter_p.moc"
+#include "moc_meter.cpp"
+#include "../private/moc_meter_p.cpp"

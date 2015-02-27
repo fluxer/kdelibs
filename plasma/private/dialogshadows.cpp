@@ -419,5 +419,5 @@ bool DialogShadows::enabled() const
      return hasElement("shadow-left");
 }
 
-#include "dialogshadows_p.moc"
+#include "moc_dialogshadows_p.cpp"
 

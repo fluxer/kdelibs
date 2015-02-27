@@ -189,5 +189,5 @@ QString ServiceBrowser::getLocalHostName()
 
 }
 
-#include "servicebrowser.moc"
-#include "avahi-servicebrowser_p.moc"
+#include "moc_servicebrowser.cpp"
+#include "moc_avahi-servicebrowser_p.cpp"

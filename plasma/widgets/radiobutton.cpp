@@ -166,5 +166,5 @@ void RadioButton::changeEvent(QEvent *event)
 
 } // namespace Plasma
 
-#include <radiobutton.moc>
+#include "moc_radiobutton.cpp"
 

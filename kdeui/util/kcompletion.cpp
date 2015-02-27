@@ -988,4 +988,4 @@ KCompTreeNode *KCompTreeNodeList::at(uint index) const
 
 QSharedPointer<KZoneAllocator> KCompTreeNode::alloc(new KZoneAllocator(8*1024));
 
-#include "kcompletion.moc"
+#include "moc_kcompletion.cpp"

@@ -83,4 +83,4 @@ int main (int argc, char **argv)
 
   return a.exec();
 }
-#include "kdirwatchtest.moc"
+#include "moc_kdirwatchtest.cpp"

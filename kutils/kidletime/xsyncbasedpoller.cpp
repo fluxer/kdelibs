@@ -279,4 +279,4 @@ void XSyncBasedPoller::simulateUserActivity()
     XResetScreenSaver(QX11Info::display());
 }
 
-#include "xsyncbasedpoller.moc"
+#include "moc_xsyncbasedpoller.cpp"

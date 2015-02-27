@@ -74,4 +74,4 @@ void SkipDialog::autoSkipPressed()
   done(S_AUTO_SKIP);
 }
 
-#include "skipdialog.moc"
+#include "moc_skipdialog.cpp"

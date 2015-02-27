@@ -887,4 +887,4 @@ KAboutData *KCertPart::createAboutData()
 	return new KAboutData("KCertPart", 0, ki18n("KDE Certificate Part"), "1.0");
 }
 
-#include "kcertpart.moc"
+#include "moc_kcertpart.cpp"

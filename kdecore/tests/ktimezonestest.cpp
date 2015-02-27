@@ -27,7 +27,7 @@
 #include <config-date.h> // for HAVE_TM_GMTOFF
 #include "ksystemtimezone.h"
 #include "ktzfiletimezone.h"
-#include "ktimezonestest.moc"
+#include "moc_ktimezonestest.cpp"
 
 QTEST_KDEMAIN_CORE(KTimeZonesTest)
 

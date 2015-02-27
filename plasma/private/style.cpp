@@ -413,6 +413,6 @@ QSize Style::sizeFromContents(ContentsType type, const QStyleOption *option,
 
 }
 
-#include "style_p.moc"
+#include "moc_style_p.cpp"
 
 

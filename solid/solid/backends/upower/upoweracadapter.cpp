@@ -58,4 +58,4 @@ void AcAdapter::updateCache()
     m_isPlugged = isPlugged();
 }
 
-#include "backends/upower/upoweracadapter.moc"
+#include "backends/upower/moc_upoweracadapter.cpp"

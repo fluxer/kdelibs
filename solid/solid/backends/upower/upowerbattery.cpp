@@ -165,4 +165,4 @@ void Battery::updateCache()
     m_isPowerSupply = isPowerSupply();
 }
 
-#include "backends/upower/upowerbattery.moc"
+#include "backends/upower/moc_upowerbattery.cpp"

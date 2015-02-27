@@ -35,7 +35,7 @@
 #include "kstandarddirs.h"
 #include "kconfiggroup.h"
 
-#include "kdatetimeformattertest.moc"
+#include "moc_kdatetimeformattertest.cpp"
 
 QTEST_KDEMAIN_CORE_WITH_COMPONENTNAME(KDateTimeFormatterTest, "kdecalendarsystems" /*so that the .po exists*/)
 

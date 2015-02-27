@@ -29,7 +29,7 @@
 
 QTEST_KDEMAIN(KDateTimeEditTest, GUI)
 
-#include "kdatetimeedittest.moc"
+#include "moc_kdatetimeedittest.cpp"
 
 void KDateTimeEditTest::testDefaults()
 {

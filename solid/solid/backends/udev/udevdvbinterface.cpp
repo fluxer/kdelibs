@@ -90,4 +90,4 @@ int DvbInterface::deviceIndex() const
         return -1;
 }
 
-#include "backends/udev/udevdvbinterface.moc"
+#include "backends/udev/moc_udevdvbinterface.cpp"

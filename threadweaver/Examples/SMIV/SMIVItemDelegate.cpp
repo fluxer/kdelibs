@@ -111,4 +111,4 @@ QSize SMIVItemDelegate::sizeHint(const QStyleOptionViewItem & ,
     return QSize ( Width,  Height );
 }
 
-#include "SMIVItemDelegate.moc"
+#include "moc_SMIVItemDelegate.cpp"

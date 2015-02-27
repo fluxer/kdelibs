@@ -57,4 +57,4 @@ QString QProcessJob::result()
     return m_result;
 }
 
-#include "QProcessJob.moc"
+#include "moc_QProcessJob.cpp"

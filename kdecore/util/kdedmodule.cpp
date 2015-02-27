@@ -98,4 +98,4 @@ QString KDEDModule::moduleName() const
    return d->moduleName;
 }
 
-#include "kdedmodule.moc"
+#include "moc_kdedmodule.cpp"

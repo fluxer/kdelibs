@@ -209,4 +209,4 @@ int main( int argc, char **argv )
   return app.exec();
 }
 
-#include "kpagewidgettest.moc"
+#include "moc_kpagewidgettest.cpp"

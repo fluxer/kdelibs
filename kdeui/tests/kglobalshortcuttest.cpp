@@ -427,4 +427,4 @@ void KGlobalShortcutTest::testForgetGlobalShortcut()
 }
 
 
-#include "kglobalshortcuttest.moc"
+#include "moc_kglobalshortcuttest.cpp"

@@ -104,4 +104,4 @@ void KCompositeJobTest::testDeletionDuringExecution()
 
 QTEST_KDEMAIN_CORE( KCompositeJobTest );
 
-#include "kcompositejobtest.moc"
+#include "moc_kcompositejobtest.cpp"

@@ -191,4 +191,4 @@ QStringList KCupsOptionsJobWidget::jobOptions() const
     return optionList;
 }
 
-#include "kcupsoptionsjobwidget_p.moc"
+#include "moc_kcupsoptionsjobwidget_p.cpp"

@@ -663,4 +663,4 @@ bool KEditListWidget::eventFilter( QObject* o, QEvent* e )
     return false;
 }
 
-#include "keditlistwidget.moc"
+#include "moc_keditlistwidget.cpp"

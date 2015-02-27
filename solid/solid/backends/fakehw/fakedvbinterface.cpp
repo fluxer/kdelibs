@@ -74,4 +74,4 @@ int FakeDvbInterface::deviceIndex() const
     return fakeDevice()->property("deviceIndex").toInt();
 }
 
-#include "backends/fakehw/fakedvbinterface.moc"
+#include "backends/fakehw/moc_fakedvbinterface.cpp"

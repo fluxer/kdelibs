@@ -1517,4 +1517,4 @@ void JobTest::moveOverSymlinkToSelf() // #169547
     QVERIFY(QFile::exists(sourceFile)); // it not moved
 }
 
-#include "jobtest.moc"
+#include "moc_jobtest.cpp"

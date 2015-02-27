@@ -5586,4 +5586,4 @@ bool HTTPProtocol::davStatDestination()
     return true;
 }
 
-#include "http.moc"
+#include "moc_http.cpp"

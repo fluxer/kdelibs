@@ -52,4 +52,4 @@ qulonglong FakeNetworkInterface::macAddress() const
     return fakeDevice()->property("macAddress").toULongLong();
 }
 
-#include "backends/fakehw/fakenetworkinterface.moc"
+#include "backends/fakehw/moc_fakenetworkinterface.cpp"

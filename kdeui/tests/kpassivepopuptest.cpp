@@ -1,5 +1,5 @@
 #include "kpassivepopuptest.h"
-#include "kpassivepopuptest.moc"
+#include "moc_kpassivepopuptest.cpp"
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kpassivepopup.h>

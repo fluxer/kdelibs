@@ -19,7 +19,7 @@
  * 02110-1301  USA
  */
 #include "backgroundtest.h"
-#include "backgroundtest.moc"
+#include "moc_backgroundtest.cpp"
 
 #include "speller.h"
 using namespace Sonnet;

@@ -61,4 +61,4 @@ namespace ThreadWeaver {
 
 }
 
-#include "QImageLoaderJob.moc"
+#include "moc_QImageLoaderJob.cpp"

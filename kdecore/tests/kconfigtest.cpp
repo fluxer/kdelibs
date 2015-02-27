@@ -23,7 +23,7 @@
 #include <ktempdir.h>
 #include <kdesktopfile.h>
 #include <kstandarddirs.h>
-#include "kconfigtest.moc"
+#include "moc_kconfigtest.cpp"
 
 #include <kconfig.h>
 #include <kdebug.h>

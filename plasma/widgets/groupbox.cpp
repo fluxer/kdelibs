@@ -99,5 +99,5 @@ void GroupBox::changeEvent(QEvent *event)
 
 } // namespace Plasma
 
-#include <groupbox.moc>
+#include "moc_groupbox.cpp"
 

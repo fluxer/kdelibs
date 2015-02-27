@@ -165,4 +165,4 @@ void ClipboardUpdaterTest::testPasteAfterDeleteFiles()
     QVERIFY(!job);
 }
 
-#include "clipboardupdatertest.moc"
+#include "moc_clipboardupdatertest.cpp"

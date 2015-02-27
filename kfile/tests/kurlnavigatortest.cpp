@@ -189,4 +189,4 @@ void KUrlNavigatorTest::bug251553_goUpFromArchive()
     QCOMPARE(m_navigator->locationUrl().protocol(), QLatin1String("file"));
 }
 
-#include "kurlnavigatortest.moc"
+#include "moc_kurlnavigatortest.cpp"

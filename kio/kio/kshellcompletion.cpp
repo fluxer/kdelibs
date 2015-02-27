@@ -317,5 +317,5 @@ QString KShellCompletionPrivate::unquote(const QString &text) const
 	return result;
 }
 
-#include "kshellcompletion.moc"
+#include "moc_kshellcompletion.cpp"
 

@@ -154,4 +154,4 @@ void KMimeTypeValidator::fixup( QString &input ) const
   input.remove( invalidChars );
 }
 
-#include "kstringvalidator.moc"
+#include "moc_kstringvalidator.cpp"

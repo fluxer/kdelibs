@@ -335,5 +335,5 @@ QObject *FakeDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     return iface;
 }
 
-#include "backends/fakehw/fakedevice.moc"
-#include "backends/fakehw/fakedevice_p.moc"
+#include "backends/fakehw/moc_fakedevice.cpp"
+#include "backends/fakehw/moc_fakedevice_p.cpp"

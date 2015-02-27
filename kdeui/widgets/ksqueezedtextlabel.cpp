@@ -211,4 +211,4 @@ void KSqueezedTextLabel::mouseReleaseEvent(QMouseEvent* ev)
     }
 }
 
-#include "ksqueezedtextlabel.moc"
+#include "moc_ksqueezedtextlabel.cpp"

@@ -24,7 +24,7 @@
 #include <QtCore/QByteArray>
 #include <kdebug.h>
 
-#include "httpobjecttest.moc"
+#include "moc_httpobjecttest.cpp"
 
 QTEST_KDEMAIN(HeaderObjectTest, NoGUI)
 

@@ -237,4 +237,4 @@ int main ( int argc, char **argv)
   return a.exec();
 }
 
-#include "kcomboboxtest.moc"
+#include "moc_kcomboboxtest.cpp"

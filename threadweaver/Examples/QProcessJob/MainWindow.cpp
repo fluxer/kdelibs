@@ -68,4 +68,4 @@ void MainWindow::update( ThreadWeaver::Job *j )
     ui.pushButtonQuit->setEnabled( true );
 }
 
-#include "MainWindow.moc"
+#include "moc_MainWindow.cpp"

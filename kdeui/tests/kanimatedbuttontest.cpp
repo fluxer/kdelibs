@@ -92,4 +92,4 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-#include "kanimatedbuttontest.moc"
+#include "moc_kanimatedbuttontest.cpp"

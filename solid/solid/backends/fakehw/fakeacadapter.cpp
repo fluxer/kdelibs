@@ -49,4 +49,4 @@ void FakeAcAdapter::unplug()
     emit plugStateChanged(false, fakeDevice()->udi());
 }
 
-#include "backends/fakehw/fakeacadapter.moc"
+#include "backends/fakehw/moc_fakeacadapter.cpp"

@@ -686,5 +686,5 @@ const Package *Wallpaper::package() const
 
 } // Plasma namespace
 
-#include "wallpaper.moc"
-#include "private/wallpaper_p.moc"
+#include "moc_wallpaper.cpp"
+#include "private/moc_wallpaper_p.cpp"

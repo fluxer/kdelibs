@@ -799,7 +799,7 @@ QDomElement KXMLGUIFactory::findActionByName( QDomElement& elem, const QString& 
         return QDomElement();
 }
 
-#include "kxmlguifactory.moc"
+#include "moc_kxmlguifactory.cpp"
 
 /* vim: et sw=4
  */

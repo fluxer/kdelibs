@@ -86,4 +86,4 @@ QWidget* KMediaPlayer::View::videoWidget()
 	return d->videoWidget;
 }
 
-#include "view.moc"
+#include "moc_view.cpp"

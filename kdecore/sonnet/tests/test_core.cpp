@@ -169,4 +169,4 @@ void SonnetCoreTest::testCore2()
     kDebug()<<"\tlang is "<<Sonnet::detectLanguage(sentence);
 }
 
-#include "test_core.moc"
+#include "moc_test_core.cpp"

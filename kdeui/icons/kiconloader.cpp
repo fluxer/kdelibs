@@ -1635,5 +1635,5 @@ void KIconLoader::newIconLoader()
     emit iconLoaderSettingsChanged();
 }
 
-#include "kiconloader.moc"
+#include "moc_kiconloader.cpp"
 

@@ -326,5 +326,5 @@ void DeclarativeWidget::resizeEvent(QGraphicsSceneResizeEvent *event)
 
 } // namespace Plasma
 
-#include <declarativewidget.moc>
+#include "moc_declarativewidget.cpp"
 

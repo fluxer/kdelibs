@@ -21,7 +21,7 @@
 
 #include "karchivetest.h"
 #include <kmimetype.h>
-#include "karchivetest.moc"
+#include "moc_karchivetest.cpp"
 #include <ktar.h>
 #include <kzip.h>
 

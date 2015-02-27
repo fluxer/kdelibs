@@ -18,7 +18,7 @@
 
 #include <qtest_kde.h>
 #include "kbookmarktest.h"
-#include "kbookmarktest.moc"
+#include "moc_kbookmarktest.cpp"
 
 QTEST_KDEMAIN( KBookmarkTest, NoGUI )
 

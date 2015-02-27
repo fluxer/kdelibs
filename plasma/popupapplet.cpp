@@ -998,5 +998,5 @@ void PopupAppletPrivate::updateDialogPosition(bool move)
 
 } // Plasma namespace
 
-#include "popupapplet.moc"
+#include "moc_popupapplet.cpp"
 

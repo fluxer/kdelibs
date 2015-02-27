@@ -371,4 +371,4 @@ void TestKFind::testFindIncrementalDynamic()
 
 QTEST_KDEMAIN(TestKFind, GUI)
 
-#include "kfindtest.moc"
+#include "moc_kfindtest.cpp"

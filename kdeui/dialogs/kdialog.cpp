@@ -1108,5 +1108,5 @@ void KDialogQueue::Private::slotShowQueuedDialog()
     QTimer::singleShot( 20, q, SLOT(slotShowQueuedDialog()) );
 }
 
-#include "kdialog.moc"
-#include "kdialogqueue_p.moc"
+#include "moc_kdialog.cpp"
+#include "moc_kdialogqueue_p.cpp"

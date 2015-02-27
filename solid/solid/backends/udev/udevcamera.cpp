@@ -72,4 +72,4 @@ QVariant Camera::driverHandle(const QString &driver) const
     return QVariant();
 }
 
-#include "backends/udev/udevcamera.moc"
+#include "backends/udev/moc_udevcamera.cpp"

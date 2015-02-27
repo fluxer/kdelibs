@@ -58,4 +58,4 @@ int Solid::DvbInterface::deviceIndex() const
     return_SOLID_CALL(Ifaces::DvbInterface *, d->backendObject(), -1, deviceIndex());
 }
 
-#include "dvbinterface.moc"
+#include "moc_dvbinterface.cpp"

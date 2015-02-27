@@ -21,4 +21,4 @@
 
 #include "kselectionproxymodeltestsuite.h"
 
-#include "kselectionproxymodeltestsuite.moc"
+#include "moc_kselectionproxymodeltestsuite.cpp"

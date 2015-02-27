@@ -105,5 +105,5 @@ bool DomainBrowser::isRunning() const
 
 
 }
-#include "domainbrowser.moc"
-#include "avahi-domainbrowser_p.moc"
+#include "moc_domainbrowser.cpp"
+#include "moc_avahi-domainbrowser_p.cpp"

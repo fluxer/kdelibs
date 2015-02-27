@@ -684,4 +684,4 @@ bool KEditListBox::eventFilter( QObject* o, QEvent* e )
     return false;
 }
 
-#include "keditlistbox.moc"
+#include "moc_keditlistbox.cpp"

@@ -193,4 +193,4 @@ int main ( int argc, char ** argv)
     return app.exec();
 }
 
-#include "Jobs.moc"
+#include "moc_Jobs.cpp"

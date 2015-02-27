@@ -427,4 +427,4 @@ bool Manager::hasHandlerAssigned(const QByteArray& typeName) const
     return d->wrappers.contains(typeName);
 }
 
-#include "manager.moc"
+#include "moc_manager.cpp"

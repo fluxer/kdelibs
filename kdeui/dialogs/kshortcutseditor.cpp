@@ -723,4 +723,4 @@ void KShortcutsEditorPrivate::printShortcuts() const
     delete dlg;
 }
 
-#include "kshortcutseditor.moc"
+#include "moc_kshortcutseditor.cpp"

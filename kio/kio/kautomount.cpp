@@ -157,4 +157,4 @@ KAutoUnmount::~KAutoUnmount()
     delete d;
 }
 
-#include "kautomount.moc"
+#include "moc_kautomount.cpp"

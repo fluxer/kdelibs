@@ -489,5 +489,5 @@ bool Delegate::showToolTip() const
 
 }
 
-#include "delegate.moc"
+#include "moc_delegate.cpp"
 

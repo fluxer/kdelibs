@@ -351,5 +351,5 @@ void ComboBox::setCurrentIndex(int index)
 
 } // namespace Plasma
 
-#include <combobox.moc>
+#include "moc_combobox.cpp"
 

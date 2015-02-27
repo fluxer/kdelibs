@@ -64,5 +64,5 @@ QWidget *KPassivePopupMessageHandler::parentWidget()
     return qobject_cast<QWidget*>( parent() );
 }
 
-#include "kpassivepopupmessagehandler.moc"
+#include "moc_kpassivepopupmessagehandler.cpp"
 // kate: space-indent on; indent-width 4; encoding utf-8; replace-tabs on;

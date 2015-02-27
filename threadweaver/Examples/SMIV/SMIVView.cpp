@@ -26,4 +26,4 @@ SMIVView::~SMIVView ()
 {
 }
 
-#include "SMIVView.moc"
+#include "moc_SMIVView.cpp"

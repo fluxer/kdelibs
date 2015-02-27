@@ -125,4 +125,4 @@ void NotepadPart::slotSearchReplace()
 {
 }
 
-#include "notepad.moc"
+#include "moc_notepad.cpp"

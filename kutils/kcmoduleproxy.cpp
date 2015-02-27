@@ -356,6 +356,6 @@ QSize KCModuleProxy::minimumSizeHint() const
 //X }
 
 /***************************************************************/
-#include "kcmoduleproxy.moc"
+#include "moc_kcmoduleproxy.cpp"
 
 // vim: ts=4

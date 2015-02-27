@@ -1646,4 +1646,4 @@ VFolderMenu::setTrackId(const QString &id)
    m_trackId = id;
 }
 
-#include "vfolder_menu.moc"
+#include "moc_vfolder_menu.cpp"

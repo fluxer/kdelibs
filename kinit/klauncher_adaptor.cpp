@@ -163,4 +163,4 @@ void KLauncherAdaptor::terminate_kdeinit()
     p->terminate_kdeinit();
 }
 
-#include "klauncher_adaptor.moc"
+#include "moc_klauncher_adaptor.cpp"

@@ -68,4 +68,4 @@ int main( int argc, char **argv )
   return 0;
 }
 
-#include "kpagedialogtest.moc"
+#include "moc_kpagedialogtest.cpp"

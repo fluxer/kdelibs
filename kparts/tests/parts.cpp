@@ -140,4 +140,4 @@ void Part2::guiActivateEvent( KParts::GUIActivateEvent * event )
         emit setWindowCaption("[part2 activated]");
 }
 
-#include "parts.moc"
+#include "moc_parts.cpp"

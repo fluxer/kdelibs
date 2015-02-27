@@ -28,7 +28,7 @@
 #include <kconfiggroup.h>
 #include <QtDBus/QtDBus>
 
-#include "kdatetimetest.moc"
+#include "moc_kdatetimetest.cpp"
 
 //TODO: test new methods
 

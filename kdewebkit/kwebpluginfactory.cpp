@@ -164,4 +164,4 @@ bool KWebPluginFactory::excludedMimeType (const QString& mimeType) const
     return false;
 }
 
-#include "kwebpluginfactory.moc"
+#include "moc_kwebpluginfactory.cpp"

@@ -197,5 +197,5 @@ void KStatusBar::setItemFixed(int id, int w)
     }
 }
 
-#include "kstatusbar.moc"
+#include "moc_kstatusbar.cpp"
 

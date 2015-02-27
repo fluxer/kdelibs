@@ -619,4 +619,4 @@ void SelectionModel::select( const QItemSelection &selection, QItemSelectionMode
   QItemSelectionModel::select( selection, command );
 }
 
-#include "kpageview_p.moc"
+#include "moc_kpageview_p.cpp"

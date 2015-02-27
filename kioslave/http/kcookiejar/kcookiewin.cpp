@@ -337,4 +337,4 @@ void KCookieWin::slotButtonClicked(int button)
 }
 
 
-#include "kcookiewin.moc"
+#include "moc_kcookiewin.cpp"

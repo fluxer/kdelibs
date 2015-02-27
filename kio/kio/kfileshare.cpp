@@ -287,5 +287,5 @@ bool KFileShare::setShared( const QString& path, bool shared )
 }
 
 //#include "kfileshare.moc"
-#include "kfileshare_p.moc"
+#include "moc_kfileshare_p.cpp"
 

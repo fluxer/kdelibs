@@ -239,7 +239,7 @@ void tst_KActionCollection::testSetShortcuts()
 
 QTEST_KDEMAIN(tst_KActionCollection, GUI)
 
-#include "kactioncollectiontest.moc"
+#include "moc_kactioncollectiontest.cpp"
 
 /* vim: et sw=4 ts=4
  */

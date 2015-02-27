@@ -1915,7 +1915,7 @@ KDirWatch::Method KDirWatch::internalMethod()
 }
 
 
-#include "kdirwatch.moc"
-#include "kdirwatch_p.moc"
+#include "moc_kdirwatch.cpp"
+#include "moc_kdirwatch_p.cpp"
 
 //sven

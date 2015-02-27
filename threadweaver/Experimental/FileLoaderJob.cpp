@@ -98,4 +98,4 @@ void FileLoaderJob::freeMemory()
 
 }
 
-#include "FileLoaderJob.moc"
+#include "moc_FileLoaderJob.cpp"

@@ -370,4 +370,4 @@ void TestThread::run()
     }
 }
 
-#include "testobject.moc"
+#include "moc_testobject.cpp"

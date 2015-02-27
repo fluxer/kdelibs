@@ -452,5 +452,5 @@ QSizeF ToolButton::sizeHint(Qt::SizeHint which, const QSizeF & constraint) const
 
 } // namespace Plasma
 
-#include <toolbutton.moc>
+#include "moc_toolbutton.cpp"
 

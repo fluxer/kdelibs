@@ -13,7 +13,7 @@ This file has been placed in the Public Domain.
 #include "kstandarddirs.h"
 
 #include "ktemporaryfile.h"
-#include "ktemporaryfiletest.moc"
+#include "moc_ktemporaryfiletest.cpp"
 
 QTEST_KDEMAIN_CORE( KTemporaryFileTest )
 

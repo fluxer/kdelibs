@@ -220,5 +220,5 @@ bool KXMessages::x11Event( XEvent* ev_P )
     return false; // lets other KXMessages instances get the event too
     }
 
-#include "kxmessages.moc"
+#include "moc_kxmessages.cpp"
 #endif

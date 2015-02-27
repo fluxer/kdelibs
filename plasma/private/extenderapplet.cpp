@@ -83,5 +83,5 @@ void ExtenderApplet::extenderGeometryChanged()
 
 } // namespace Plasma
 
-#include "extenderapplet_p.moc"
+#include "moc_extenderapplet_p.cpp"
 

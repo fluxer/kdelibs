@@ -3,6 +3,10 @@ if (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
    include(CTest)
 endif (EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
 
+# let cmake handle mocking
+# since cmake 2.8.6
+set(CMAKE_AUTOMOC ON)
+
 # Always include srcdir and builddir in include path
 # This saves typing ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} in about every subdir
 # since cmake 2.4.0

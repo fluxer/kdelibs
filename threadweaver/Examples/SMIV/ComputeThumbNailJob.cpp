@@ -73,4 +73,4 @@ void ComputeThumbNailJob::run()
 #endif
 }
 
-#include "ComputeThumbNailJob.moc"
+#include "moc_ComputeThumbNailJob.cpp"

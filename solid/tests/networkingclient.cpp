@@ -217,5 +217,5 @@ int main(int argc, char **argv)
   return app.exec();
 }
 
-#include "networkingclient.moc"
+#include "moc_networkingclient.cpp"
 

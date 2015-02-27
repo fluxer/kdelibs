@@ -203,5 +203,5 @@ void TextEdit::focusOutEvent(QFocusEvent *event)
 
 } // namespace Plasma
 
-#include <textedit.moc>
+#include "moc_textedit.cpp"
 

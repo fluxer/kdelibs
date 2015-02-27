@@ -248,4 +248,4 @@ QList<QList<KSslError::Error> > KSslInfoDialog::errorsFromString(const QString &
     return ret;
 }
 
-#include "ksslinfodialog.moc"
+#include "moc_ksslinfodialog.cpp"

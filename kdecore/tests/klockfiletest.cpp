@@ -17,7 +17,7 @@
 */
 
 #include "klockfiletest.h"
-#include "klockfiletest.moc"
+#include "moc_klockfiletest.cpp"
 
 #include <kdebug.h>
 #include <unistd.h>

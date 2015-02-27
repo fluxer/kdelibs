@@ -174,4 +174,4 @@ int main ( int argc,  char** argv )
     return app.exec();
 }
 
-#include "SMIV.moc"
+#include "moc_SMIV.cpp"

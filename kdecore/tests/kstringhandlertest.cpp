@@ -1,7 +1,7 @@
 #include "kstringhandlertest.h"
 
 #include "qtest_kde.h"
-#include "kstringhandlertest.moc"
+#include "moc_kstringhandlertest.cpp"
 
 QTEST_KDEMAIN_CORE(KStringHandlerTest)
 

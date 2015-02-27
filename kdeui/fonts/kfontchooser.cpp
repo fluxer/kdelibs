@@ -1074,5 +1074,5 @@ QString KFontChooser::Private::styleIdentifier(const QFont &font)
            + QString::number(font.stretch());
 }
 
-#include "kfontchooser.moc"
-#include "sampleedit_p.moc"
+#include "moc_kfontchooser.cpp"
+#include "moc_sampleedit_p.cpp"

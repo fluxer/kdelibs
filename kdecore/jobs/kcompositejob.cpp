@@ -115,4 +115,4 @@ void KCompositeJob::slotInfoMessage( KJob *job, const QString &plain, const QStr
     emit infoMessage( job, plain, rich );
 }
 
-#include "kcompositejob.moc"
+#include "moc_kcompositejob.cpp"

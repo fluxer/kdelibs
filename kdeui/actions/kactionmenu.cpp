@@ -175,4 +175,4 @@ void KActionMenu::setMenu(KMenu *menu)
 /* vim: et sw=2 ts=2
  */
 
-#include "kactionmenu.moc"
+#include "moc_kactionmenu.cpp"

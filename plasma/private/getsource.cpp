@@ -66,5 +66,5 @@ void GetSource::start()
 
 }
 
-#include "getsource_p.moc"
+#include "moc_getsource_p.cpp"
 

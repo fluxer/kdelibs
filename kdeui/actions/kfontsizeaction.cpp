@@ -145,4 +145,4 @@ void KFontSizeAction::actionTriggered( QAction* action )
 /* vim: et sw=2 ts=2
  */
 
-#include "kfontsizeaction.moc"
+#include "moc_kfontsizeaction.cpp"

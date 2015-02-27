@@ -91,4 +91,4 @@ QString Solid::Backends::Fake::FakeVolume::encryptedContainerUdi() const
     return QString();
 }
 
-#include "backends/fakehw/fakevolume.moc"
+#include "backends/fakehw/moc_fakevolume.cpp"

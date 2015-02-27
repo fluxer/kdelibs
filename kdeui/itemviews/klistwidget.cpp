@@ -273,4 +273,4 @@ void KListWidget::mouseReleaseEvent ( QMouseEvent * e )
   d->m_eventPos = oldPos;
 }
 
-#include "klistwidget.moc"
+#include "moc_klistwidget.cpp"

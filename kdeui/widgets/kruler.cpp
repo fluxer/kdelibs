@@ -772,4 +772,4 @@ KRuler::paintEvent(QPaintEvent * /*e*/)
 
 }
 
-#include "kruler.moc"
+#include "moc_kruler.cpp"

@@ -461,4 +461,4 @@ void KMessageWidget::setIcon(const QIcon& icon)
 }
 
 
-#include "kmessagewidget.moc"
+#include "moc_kmessagewidget.cpp"

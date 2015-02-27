@@ -42,4 +42,4 @@ KPageModel::~KPageModel()
     delete d_ptr;
 }
 
-#include "kpagemodel.moc"
+#include "moc_kpagemodel.cpp"

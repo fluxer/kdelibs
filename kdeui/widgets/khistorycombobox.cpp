@@ -445,4 +445,4 @@ void KHistoryComboBox::reset()
   slotReset();
 }
 
-#include "khistorycombobox.moc"
+#include "moc_khistorycombobox.cpp"

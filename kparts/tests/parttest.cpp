@@ -223,4 +223,4 @@ void PartTest::testToolbarVisibility()
     window.testToolbarVisibility();
 }
 
-#include "parttest.moc"
+#include "moc_parttest.cpp"

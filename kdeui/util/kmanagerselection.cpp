@@ -485,5 +485,5 @@ void KSelectionWatcher::filterEvent( XEvent* ev_P )
 
 Atom KSelectionWatcher::Private::manager_atom = None;
 
-#include "kmanagerselection.moc"
+#include "moc_kmanagerselection.cpp"
 #endif

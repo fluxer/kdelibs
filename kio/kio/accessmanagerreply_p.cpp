@@ -487,4 +487,4 @@ void AccessManagerReply::emitFinished (bool state, Qt::ConnectionType type)
 
 }
 
-#include "accessmanagerreply_p.moc"
+#include "moc_accessmanagerreply_p.cpp"

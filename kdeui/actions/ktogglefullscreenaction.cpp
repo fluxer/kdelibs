@@ -117,4 +117,4 @@ void KToggleFullScreenAction::setFullScreen( QWidget* window, bool set )
     window->setWindowState( window->windowState() & ~Qt::WindowFullScreen );
 }
 
-#include "ktogglefullscreenaction.moc"
+#include "moc_ktogglefullscreenaction.cpp"

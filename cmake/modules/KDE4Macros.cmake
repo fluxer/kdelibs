@@ -527,11 +527,6 @@ macro (KDE4_ADD_PLUGIN _target_NAME )
 
    set(_SRCS ${_args})
 
-
-   if (NOT CMAKE_AUTOMOC)
-      _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
-   endif()
-
    if("${_add_lib_param}" STREQUAL "STATIC")
       add_definitions(-DQT_STATICPLUGIN)
    endif("${_add_lib_param}" STREQUAL "STATIC")
@@ -542,10 +537,6 @@ macro (KDE4_ADD_PLUGIN _target_NAME )
    else (KDE4_ENABLE_FINAL)
       add_library(${_target_NAME} ${_add_lib_param}  ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
-
-   if (NOT CMAKE_AUTOMOC)
-      _automoc4_kde4_post_target_handling(${_target_NAME})
-   endif()
 
    if (NOT _with_pre)
       set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
@@ -634,9 +625,6 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    # keep the linking logic from the CMakeLists.txt on UNIX working (under UNIX all necessary libs are linked against the kdeinit
    # library instead against the executable, under windows we want to have everything in the executable, but for compatibility we have to 
    # keep the library there-
-   if (NOT CMAKE_AUTOMOC)
-     _automoc4_kde4_pre_target_handling(kdeinit_${_target_NAME} _SRCS)
-   endif()
 
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/kdeinit_${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
@@ -644,10 +632,6 @@ macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
    else (KDE4_ENABLE_FINAL)
       add_library(kdeinit_${_target_NAME} SHARED ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
-
-   if (NOT CMAKE_AUTOMOC)
-      _automoc4_kde4_post_target_handling(kdeinit_${_target_NAME})
-   endif()
 
    set_target_properties(kdeinit_${_target_NAME} PROPERTIES OUTPUT_NAME kdeinit4_${_target_NAME})
 
@@ -788,10 +772,6 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
       set(_add_executable_param ${_add_executable_param} EXCLUDE_FROM_ALL)
    endif (_test AND NOT KDE4_BUILD_TESTS)
 
-   if (NOT CMAKE_AUTOMOC)
-      _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
-   endif()
-
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
       add_executable(${_target_NAME} ${_add_executable_param} ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
@@ -802,10 +782,6 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    IF (KDE4_ENABLE_UAC_MANIFEST)
        _kde4_add_manifest(${_target_NAME})
    ENDIF(KDE4_ENABLE_UAC_MANIFEST)
-
-   if (NOT CMAKE_AUTOMOC)
-      _automoc4_kde4_post_target_handling(${_target_NAME})
-   endif()
 
    if (_test)
       set_target_properties(${_target_NAME} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/\\"")
@@ -835,20 +811,12 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
    set(_SRCS ${_first_SRC} ${ARGN})
 
-   if (NOT CMAKE_AUTOMOC)
-      _automoc4_kde4_pre_target_handling(${_target_NAME} _SRCS)
-   endif()
-
    if (KDE4_ENABLE_FINAL)
       kde4_create_final_files(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp _separate_files ${_SRCS})
       add_library(${_target_NAME} ${_add_lib_param}  ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_final_cpp.cpp ${_separate_files})
    else (KDE4_ENABLE_FINAL)
       add_library(${_target_NAME} ${_add_lib_param} ${_SRCS})
    endif (KDE4_ENABLE_FINAL)
-
-   if (NOT CMAKE_AUTOMOC)
-      _automoc4_kde4_post_target_handling(${_target_NAME})
-   endif()
 
    # for shared libraries a -DMAKE_target_LIB is required
    string(TOUPPER ${_target_NAME} _symbol)

@@ -39,7 +39,7 @@
 #include "kconfigdata.h"
 #include "kdebug.h"
 #include "kstandarddirs.h"
-#include "kconfigbackend.moc"
+#include "moc_kconfigbackend.cpp"
 
 typedef KSharedPtr<KConfigBackend> BackendPtr;
 

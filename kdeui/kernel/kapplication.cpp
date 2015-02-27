@@ -1117,5 +1117,5 @@ void KApplication::setSynchronizeClipboard(bool synchronize)
     KClipboardSynchronizer::self()->setReverseSynchronizing(synchronize);
 }
 
-#include "kapplication.moc"
+#include "moc_kapplication.cpp"
 

@@ -173,4 +173,4 @@ KIO_EXPORT MetaInfoJob *KIO::fileMetaInfo( const KUrl::List &items)
     return job;
 }
 
-#include "metainfojob.moc"
+#include "moc_metainfojob.cpp"

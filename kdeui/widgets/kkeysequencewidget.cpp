@@ -830,5 +830,5 @@ bool KKeySequenceWidgetPrivate::isOkWhenModifierless(int keyQt)
     }
 }
 
-#include "kkeysequencewidget.moc"
-#include "kkeysequencewidget_p.moc"
+#include "moc_kkeysequencewidget.cpp"
+#include "moc_kkeysequencewidget_p.cpp"

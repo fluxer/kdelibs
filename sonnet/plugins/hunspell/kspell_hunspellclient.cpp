@@ -65,4 +65,4 @@ QStringList HunspellClient::languages() const
     return lst;
 }
 
-#include "kspell_hunspellclient.moc"
+#include "moc_kspell_hunspellclient.cpp"

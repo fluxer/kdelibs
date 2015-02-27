@@ -147,4 +147,4 @@ void MyNetworkAccessManager::slotFinished(bool ok)
 
 }
 
-#include "networkaccessmanager.moc"
+#include "moc_networkaccessmanager.cpp"

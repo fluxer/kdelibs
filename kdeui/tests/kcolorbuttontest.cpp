@@ -27,7 +27,7 @@
 
 QTEST_KDEMAIN(KColorButtonTest, GUI)
 
-#include "kcolorbuttontest.moc"
+#include "moc_kcolorbuttontest.cpp"
 
 void KColorButtonTest::initTestCase()
 {

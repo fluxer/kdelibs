@@ -44,7 +44,7 @@
 #include <QApplication>
 #include <QMimeData>
 
-#include "fileundomanagertest.moc"
+#include "moc_fileundomanagertest.cpp"
 
 QTEST_KDEMAIN( FileUndoManagerTest, GUI )
 

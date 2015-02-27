@@ -390,4 +390,4 @@ void JobRemoteTest::slotMimetype(KIO::Job* job, const QString& type)
     m_mimetype = type;
 }
 
-#include "jobremotetest.moc"
+#include "moc_jobremotetest.cpp"

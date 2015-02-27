@@ -54,7 +54,7 @@ int main( int argc, char **argv )
     return app.exec();
 }
 
-#include "kmainwindowtest.moc"
+#include "moc_kmainwindowtest.cpp"
 
 /* vim: et sw=4 ts=4
  */

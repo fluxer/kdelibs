@@ -357,6 +357,6 @@ namespace KPAC
     }
 }
 
-#include "proxyscout.moc"
+#include "moc_proxyscout.cpp"
 
 // vim: ts=4 sw=4 et

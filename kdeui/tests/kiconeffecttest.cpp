@@ -150,5 +150,5 @@ int main( int argc, char **argv )
     return app.exec();
 }
 
-#include "kiconeffecttest.moc"
+#include "moc_kiconeffecttest.cpp"
 

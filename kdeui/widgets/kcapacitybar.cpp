@@ -375,4 +375,4 @@ void KCapacityBar::paintEvent(QPaintEvent *event)
     p.end();
 }
 
-#include "kcapacitybar.moc"
+#include "moc_kcapacitybar.cpp"

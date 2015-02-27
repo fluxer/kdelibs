@@ -538,4 +538,4 @@ bool ActionCollectionProxyModel::filterAcceptsRow(int source_row, const QModelIn
     return true;
 }
 
-#include "model.moc"
+#include "moc_model.cpp"

@@ -25,4 +25,4 @@ OrgKdeKLauncherInterface::~OrgKdeKLauncherInterface()
 }
 
 
-#include "klauncher_iface.moc"
+#include "moc_klauncher_iface.cpp"

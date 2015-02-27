@@ -1168,4 +1168,4 @@ void KTextEdit::mousePopupMenuImplementation(const QPoint& pos)
     }
 }
 
-#include "ktextedit.moc"
+#include "moc_ktextedit.cpp"

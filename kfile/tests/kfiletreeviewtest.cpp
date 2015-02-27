@@ -82,4 +82,4 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-#include "kfiletreeviewtest.moc"
+#include "moc_kfiletreeviewtest.cpp"

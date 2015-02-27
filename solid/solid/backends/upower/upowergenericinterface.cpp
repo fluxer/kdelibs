@@ -48,4 +48,4 @@ bool GenericInterface::propertyExists(const QString &key) const
     return m_device.data()->propertyExists(key);
 }
 
-#include "backends/upower/upowergenericinterface.moc"
+#include "backends/upower/moc_upowergenericinterface.cpp"

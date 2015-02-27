@@ -69,4 +69,4 @@ namespace ThreadWeaver {
 
 }
 
-#include "WeaverObserverTest.moc"
+#include "moc_WeaverObserverTest.cpp"

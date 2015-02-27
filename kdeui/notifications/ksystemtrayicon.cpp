@@ -368,4 +368,4 @@ const QMovie* KSystemTrayIcon::movie() const
     return d->movie;
 }
 
-#include "ksystemtrayicon.moc"
+#include "moc_ksystemtrayicon.cpp"

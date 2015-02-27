@@ -117,4 +117,4 @@ void KToolBarPopupAction::setStickyMenu( bool sticky )
   d->stickyMenu = sticky;
 }
 
-#include "ktoolbarpopupaction.moc"
+#include "moc_ktoolbarpopupaction.cpp"

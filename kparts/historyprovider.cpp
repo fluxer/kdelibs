@@ -95,4 +95,4 @@ void HistoryProvider::clear()
     emit cleared();
 }
 
-#include "historyprovider.moc"
+#include "moc_historyprovider.cpp"

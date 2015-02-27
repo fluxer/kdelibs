@@ -544,5 +544,5 @@ bool KConfigDialogManager::isDefault() const
   return result;
 }
 
-#include "kconfigdialogmanager.moc"
+#include "moc_kconfigdialogmanager.cpp"
 

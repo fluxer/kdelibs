@@ -205,4 +205,4 @@ int main(int argc, char **argv )
 }
 
 
-#include "kcompletionuitest.moc"
+#include "moc_kcompletionuitest.cpp"

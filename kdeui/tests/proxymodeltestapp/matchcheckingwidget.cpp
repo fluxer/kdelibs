@@ -94,4 +94,4 @@ kDebug() << matchData << id <<  DynamicTreeModel::DynamicTreeModelId;
   }
 }
 
-#include "matchcheckingwidget.moc"
+#include "moc_matchcheckingwidget.cpp"

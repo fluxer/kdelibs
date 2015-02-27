@@ -19,7 +19,7 @@
 #include "kstandarddirstest.h"
 
 #include "qtest_kde.h"
-#include "kstandarddirstest.moc"
+#include "moc_kstandarddirstest.cpp"
 
 QTEST_KDEMAIN_CORE( KStandarddirsTest )
 

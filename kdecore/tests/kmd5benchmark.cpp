@@ -114,4 +114,4 @@ private Q_SLOTS:
 
 QTEST_KDEMAIN_CORE( KMd5Test )
 
-#include "kmd5test.moc"
+#include "kmd5benchmark.moc"

@@ -39,4 +39,4 @@ WeaverObserver::~WeaverObserver()
 {
 }
 
-#include "WeaverObserver.moc"
+#include "moc_WeaverObserver.cpp"

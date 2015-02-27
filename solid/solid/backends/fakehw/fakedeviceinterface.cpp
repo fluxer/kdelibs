@@ -30,4 +30,4 @@ FakeDeviceInterface::~FakeDeviceInterface()
 {
 }
 
-#include "backends/fakehw/fakedeviceinterface.moc"
+#include "backends/fakehw/moc_fakedeviceinterface.cpp"

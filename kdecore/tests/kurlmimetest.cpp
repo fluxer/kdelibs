@@ -23,7 +23,7 @@
 #include <kurl.h>
 #include <kdebug.h>
 
-#include "kurlmimetest.moc"
+#include "moc_kurlmimetest.cpp"
 
 QTEST_KDEMAIN_CORE( KUrlMimeTest )
 

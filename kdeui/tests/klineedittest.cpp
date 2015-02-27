@@ -183,4 +183,4 @@ int main ( int argc, char **argv)
     return a.exec();
 }
 
-#include "klineedittest.moc"
+#include "moc_klineedittest.cpp"

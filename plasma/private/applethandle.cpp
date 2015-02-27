@@ -1072,5 +1072,5 @@ void AppletHandle::calculateSize()
 
 } // Plasma Namespace
 
-#include "applethandle_p.moc"
+#include "moc_applethandle_p.cpp"
 

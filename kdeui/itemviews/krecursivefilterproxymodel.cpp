@@ -431,4 +431,4 @@ void KRecursiveFilterProxyModel::setSourceModel(QAbstractItemModel* model)
 
 }
 
-#include "krecursivefilterproxymodel.moc"
+#include "moc_krecursivefilterproxymodel.cpp"

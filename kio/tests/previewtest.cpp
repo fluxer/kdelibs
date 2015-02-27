@@ -10,7 +10,7 @@
 #include <kcmdlineargs.h>
 #include <kio/previewjob.h>
 
-#include "previewtest.moc"
+#include "moc_previewtest.cpp"
 
 PreviewTest::PreviewTest()
     :QWidget()

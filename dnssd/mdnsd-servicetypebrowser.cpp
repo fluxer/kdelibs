@@ -76,5 +76,5 @@ void ServiceTypeBrowserPrivate::removeService(DNSSD::RemoteService::Ptr srv)
 
 
 
-#include "servicetypebrowser.moc"
-#include "mdnsd-servicetypebrowser_p.moc"
+#include "moc_servicetypebrowser.cpp"
+#include "moc_mdnsd-servicetypebrowser_p.cpp"

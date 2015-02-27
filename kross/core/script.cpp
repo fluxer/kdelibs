@@ -63,4 +63,4 @@ Action* Script::action() const
     return d->action;
 }
 
-#include "script.moc"
+#include "moc_script.cpp"

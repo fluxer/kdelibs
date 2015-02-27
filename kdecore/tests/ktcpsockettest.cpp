@@ -386,4 +386,4 @@ void Server::errors()
 
 QTEST_MAIN(KTcpSocketTest)
 
-#include "ktcpsockettest.moc"
+#include "moc_ktcpsockettest.cpp"

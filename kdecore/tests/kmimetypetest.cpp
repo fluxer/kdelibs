@@ -996,4 +996,4 @@ void KMimeTypeTest::testProperties()
     QCOMPARE(patterns.toStringList(), pngMimeType->patterns());
 }
 
-#include "kmimetypetest.moc"
+#include "moc_kmimetypetest.cpp"

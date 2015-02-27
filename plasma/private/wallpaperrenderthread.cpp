@@ -265,5 +265,5 @@ void WallpaperRenderThread::run()
 
 } // namespace Plasma
 
-#include "wallpaperrenderthread_p.moc"
+#include "moc_wallpaperrenderthread_p.cpp"
 

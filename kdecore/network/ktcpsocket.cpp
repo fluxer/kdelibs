@@ -1150,4 +1150,4 @@ KSslErrorUiData &KSslErrorUiData::operator=(const KSslErrorUiData &other)
 }
 
 
-#include "ktcpsocket.moc"
+#include "moc_ktcpsocket.cpp"

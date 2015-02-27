@@ -149,4 +149,4 @@ void ScrollBar::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
 }
 
-#include <scrollbar.moc>
+#include "moc_scrollbar.cpp"

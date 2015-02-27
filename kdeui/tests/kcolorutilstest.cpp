@@ -130,4 +130,4 @@ void tst_KColorUtils::testShading()
 }
 
 QTEST_MAIN(tst_KColorUtils)
-#include "kcolorutilstest.moc"
+#include "moc_kcolorutilstest.cpp"

@@ -397,4 +397,4 @@ void KComboBox::setEditable(bool editable)
     }
 }
 
-#include "kcombobox.moc"
+#include "moc_kcombobox.cpp"

@@ -111,4 +111,4 @@ int main( int argc, char **argv )
     return app.exec();
 }
 
-#include "partviewer.moc"
+#include "moc_partviewer.cpp"

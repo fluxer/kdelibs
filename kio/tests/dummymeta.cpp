@@ -17,4 +17,4 @@ bool DummyMeta::readInfo( KFileMetaInfo::Internal & info )
    return 0L;
 }
 
-#include "dummymeta.moc"
+#include "moc_dummymeta.cpp"

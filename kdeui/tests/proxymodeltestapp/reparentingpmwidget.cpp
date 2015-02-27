@@ -54,5 +54,5 @@ ReparentingProxyModelWidget::ReparentingProxyModelWidget(QWidget* parent): QWidg
   setLayout(layout);
 }
 
-#include "reparentingpmwidget.moc"
+#include "moc_reparentingpmwidget.cpp"
 

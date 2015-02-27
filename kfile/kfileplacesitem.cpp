@@ -329,4 +329,4 @@ void KFilePlacesItem::onListerCompleted()
     emit itemChanged(id());
 }
 
-#include "kfileplacesitem_p.moc"
+#include "moc_kfileplacesitem_p.cpp"

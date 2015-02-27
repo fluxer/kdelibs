@@ -602,5 +602,5 @@ bool KWebPage::handleReply(QNetworkReply* reply, QString* contentType, KIO::Meta
     return false;
 }
 
-#include "kwebpage.moc"
+#include "moc_kwebpage.cpp"
 

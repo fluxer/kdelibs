@@ -437,4 +437,4 @@ void JobTests::DequeSuspendedSequence()
 
 QTEST_MAIN ( JobTests )
 
-#include "JobTests.moc"
+#include "moc_JobTests.cpp"

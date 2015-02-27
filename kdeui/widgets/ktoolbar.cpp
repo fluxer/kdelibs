@@ -1432,4 +1432,4 @@ bool KToolBar::toolBarsLocked()
     return KToolBar::Private::s_locked;
 }
 
-#include "ktoolbar.moc"
+#include "moc_ktoolbar.cpp"

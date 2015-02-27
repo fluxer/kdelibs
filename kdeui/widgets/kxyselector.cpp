@@ -258,4 +258,4 @@ void KXYSelector::drawMarker( QPainter *p, int xp, int yp )
 
 
 
-#include "kxyselector.moc"
+#include "moc_kxyselector.cpp"

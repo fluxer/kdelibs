@@ -60,4 +60,4 @@ QVariant Solid::Backends::Fake::FakeCamera::driverHandle(const QString &driver) 
     return QVariant();
 }
 
-#include "backends/fakehw/fakecamera.moc"
+#include "backends/fakehw/moc_fakecamera.cpp"
