@@ -36,6 +36,8 @@ class KShellTest : public QObject
     void quoteArg();
     void joinArgs();
     void splitJoin();
+    void quoteSplit();
+    void quoteSplit_data();
     void abortOnMeta();
 };
 
@@ -101,6 +103,26 @@ KShellTest::splitJoin()
     QCOMPARE(sj("~qU4rK ~" + KUser().loginName(), KShell::TildeExpand, &err),
              QString("'~qU4rK' " + QDir::homePath()));
     QVERIFY(err == KShell::NoError);
+}
+
+void
+KShellTest::quoteSplit_data()
+{
+    QTest::addColumn<QString>("string");
+
+    QTest::newRow("no space") << QString("hiho");
+    QTest::newRow("regular space") << QString("hi there");
+    QTest::newRow("special space") << QString::fromUtf8("如何定期清潔典型的電風扇　講義.pdf");
+}
+
+void
+KShellTest::quoteSplit()
+{
+    QFETCH(QString, string);
+
+    // Splitting a quote arg should always just return one argument
+    const QStringList args = KShell::splitArgs(KShell::quoteArg(string));
+    QCOMPARE(args.count(), 1);
 }
 
 void
