@@ -128,46 +128,11 @@ public:
     int iconSizeDefault() const; // KDE5: hide from public API. Doesn't make sense to export this, and it isn't used.
 
     /**
-     * This allows you to enable or disable the context menu.
-     *
-     * @param enable If false, then the context menu will be disabled
-     * @deprecated use setContextMenuPolicy
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setContextMenuEnabled( bool enable = true );
-#endif
-
-    /**
-     * Returns the context menu enabled flag
-     * @return true if the context menu is disabled
-     * @deprecated use contextMenuPolicy
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool contextMenuEnabled() const;
-#endif
-
-    /**
      * Save the toolbar settings to group @p configGroup in @p config.
      */
     void saveSettings( KConfigGroup &cg );
 
-    /**
-     * Read the toolbar settings from group @p configGroup in @p config
-     * and apply them.
-     *
-     * @param forceGlobal is deprecated. In kde3 it used to mean
-     * "force global settings, i.e. ignore @p cg", but only for visibility/position/index,
-     * not for icon size etc. Only visibility is still controlled by this.
-     */
     void applySettings( const KConfigGroup &cg, bool forceGlobal = false );
-
-    /**
-     * Sets the XML gui client.
-     * @deprecated use addXMLGUIClient.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setXMLGUIClient( KXMLGUIClient *client );
-#endif
 
     /**
      * Adds an XML gui client that uses this toolbar

@@ -126,13 +126,6 @@ bool KComboBox::autoCompletion() const
     return completionMode() == KGlobalSettings::CompletionAuto;
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KComboBox::setContextMenuEnabled( bool showMenu )
-{
-    if( d->klineEdit )
-        d->klineEdit->setContextMenuEnabled( showMenu );
-}
-#endif
 
 
 void KComboBox::setUrlDropsEnabled( bool enable )

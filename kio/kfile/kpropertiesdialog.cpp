@@ -606,12 +606,6 @@ KPropertiesDialogPlugin::~KPropertiesDialogPlugin()
     delete d;
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KPropertiesDialogPlugin::isDesktopFile( const KFileItem& _item )
-{
-    return _item.isDesktopFile();
-}
-#endif
 
 void KPropertiesDialogPlugin::setDirty( bool b )
 {

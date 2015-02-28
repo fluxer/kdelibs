@@ -183,60 +183,6 @@ public:
   // (We could do the last two without waiting, of course).
 
   /**
-   * Starts a service based on the (translated) name of the service.
-   * E.g. "Web Browser"
-   *
-   * @param _name the name of the service
-   * @param URL if not empty this URL is passed to the service
-   * @param error On failure, error contains a description of the error
-   *         that occurred. If the pointer is 0, the argument will be
-   *         ignored
-   * @param serviceName On success, serviceName contains the DCOP name
-   *         under which this service is available. If empty, the service does
-   *         not provide DCOP services. If the pointer is 0 the argument
-   *         will be ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
-   * @param startup_id for app startup notification, "0" for none,
-   *           "" ( empty string ) is the default
-   * @param noWait if set, the function does not wait till the service is running.
-   * @return an error code indicating success (== 0) or failure (> 0).
-   * @deprecated Use startServiceByDesktopName or startServiceByDesktopPath
-   */
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED static int startServiceByName( const QString& _name, const QString &URL,
-                                                QString *error=0, QString *serviceName=0, int *pid=0,
-                                                const QByteArray &startup_id = QByteArray(), bool noWait = false );
-#endif
-
-  /**
-   * Starts a service based on the (translated) name of the service.
-   * E.g. "Web Browser"
-   *
-   * @param _name the name of the service
-   * @param URLs if not empty these URLs will be passed to the service
-   * @param error On failure, @p error contains a description of the error
-   *         that occurred. If the pointer is 0, the argument will be
-   *         ignored
-   * @param serviceName On success, @p serviceName contains the DCOP name
-   *         under which this service is available. If empty, the service does
-   *         not provide DCOP services. If the pointer is 0 the argument
-   *         will be ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
-   * @param startup_id for app startup notification, "0" for none,
-   *           "" ( empty string ) is the default
-   * @param noWait if set, the function does not wait till the service is running.
-   * @return an error code indicating success (== 0) or failure (> 0).
-   * @deprecated Use startServiceByDesktopName or startServiceByDesktopPath
-   */
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED static int startServiceByName( const QString& _name, const QStringList &URLs=QStringList(),
-                                                QString *error=0, QString *serviceName=0, int *pid=0,
-                                                const QByteArray &startup_id = QByteArray(), bool noWait = false );
-#endif
-
-  /**
    * Starts a service based on the desktop path of the service.
    * E.g. "Applications/konqueror.desktop" or "/home/user/bla/myfile.desktop"
    *

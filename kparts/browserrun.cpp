@@ -354,33 +354,6 @@ bool BrowserRun::allowExecution( const QString &mimeType, const KUrl &url )
     i18n("Execute File?"), KGuiItem(i18n("Execute")) ) == KMessageBox::Continue );
 }
 
-//static, deprecated
-#ifndef KDE_NO_DEPRECATED
-BrowserRun::AskSaveResult BrowserRun::askSave( const KUrl & url, KService::Ptr offer, const QString& mimeType, const QString & suggestedFileName )
-{
-    Q_UNUSED(offer);
-    BrowserOpenOrSaveQuestion question(0, url, mimeType);
-    question.setSuggestedFileName(suggestedFileName);
-    const BrowserOpenOrSaveQuestion::Result result = question.askOpenOrSave();
-    return result == BrowserOpenOrSaveQuestion::Save ? Save
-        : BrowserOpenOrSaveQuestion::Open ? Open
-        : Cancel;
-}
-#endif
-
-//static, deprecated
-#ifndef KDE_NO_DEPRECATED
-BrowserRun::AskSaveResult BrowserRun::askEmbedOrSave( const KUrl & url, const QString& mimeType, const QString & suggestedFileName, int flags )
-{
-    BrowserOpenOrSaveQuestion question(0, url, mimeType);
-    question.setSuggestedFileName(suggestedFileName);
-    const BrowserOpenOrSaveQuestion::Result result = question.askEmbedOrSave(flags);
-    return result == BrowserOpenOrSaveQuestion::Save ? Save
-        : BrowserOpenOrSaveQuestion::Embed ? Open
-        : Cancel;
-}
-#endif
-
 // Default implementation, overridden in KHTMLRun
 void BrowserRun::save( const KUrl & url, const QString & suggestedFileName )
 {

@@ -256,19 +256,6 @@ public:
      * \param parent a parent object
      */
     explicit KPluginFactory(const KAboutData &aboutData, QObject *parent = 0);
-    /**
-     * @deprecated
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_CONSTRUCTOR_DEPRECATED explicit KPluginFactory(const KAboutData *aboutData, QObject *parent = 0);
-#endif
-
-    /**
-     * @deprecated
-     */
-#ifndef KDE_NO_DEPRECATED
-    explicit KDE_CONSTRUCTOR_DEPRECATED KPluginFactory(QObject *parent);
-#endif
 
     /**
      * This destroys the PluginFactory. It will remove the translation catalog for the plugin,
@@ -337,24 +324,10 @@ public:
     /**
      * @deprecated
      */
-#ifndef KDE_NO_DEPRECATED
-    template<typename T>
-    KDE_DEPRECATED
-    T *create(QObject *parent, const QStringList &args)
-    {
-        return create<T>(parent, stringListToVariantList(args));
-    }
-#endif
 
     /**
      * @deprecated
      */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED QObject *create(QObject *parent = 0, const char *classname = "QObject", const QStringList &args = QStringList())
-    {
-        return create(classname, 0, parent, stringListToVariantList(args), QString());
-    }
-#endif
 
 Q_SIGNALS:
     void objectCreated(QObject *object);
@@ -424,16 +397,10 @@ protected:
     /**
      * @deprecated
      */
-#ifndef KDE_NO_DEPRECATED
-    virtual KDE_DEPRECATED QObject *createObject(QObject *parent, const char *className, const QStringList &args);
-#endif
 
     /**
      * @deprecated
      */
-#ifndef KDE_NO_DEPRECATED
-    virtual KDE_DEPRECATED KParts::Part *createPartObject(QWidget *parentWidget, QObject *parent, const char *classname, const QStringList &args);
-#endif
 
 
     /**

@@ -90,16 +90,6 @@ KCModule* KCModuleLoader::loadModule(const KCModuleInfo& mod, ErrorReporting rep
         if (module) {
             return module;
         }
-#ifndef KDE_NO_DEPRECATED
-        // might be using K_EXPORT_COMPONENT_FACTORY
-        int error2 = 0;
-        module = KService::createInstance<KCModule>(mod.service(), parent, args, &error2);
-        if (module) {
-            kWarning(1208) << "This module still uses K_EXPORT_COMPONENT_FACTORY. Please port it to use KPluginFactory and K_EXPORT_PLUGIN.";
-            return module;
-        }
-        error += KLibLoader::errorString(error2);
-#endif
 //#ifndef NDEBUG
         {
             // get the create_ function
@@ -143,20 +133,6 @@ void KCModuleLoader::unloadModule(const KCModuleInfo &mod)
   loader.unload();
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KCModuleLoader::showLastLoaderError(QWidget *parent)
-{
-  KMessageBox::detailedError(parent,
-      i18n("There was an error loading the module."),i18n("<qt>The diagnosis is:<br />%1"
-        "<p>Possible reasons:</p><ul><li>An error occurred during your last "
-        "KDE upgrade leaving an orphaned control module</li><li>You have old third party "
-        "modules lying around.</li></ul><p>Check these points carefully and try to remove "
-        "the module mentioned in the error message. If this fails, consider contacting "
-        "your distributor or packager.</p></qt>",
-       KLibLoader::self()->lastErrorMessage()));
-
-}
-#endif
 
 KCModule* KCModuleLoader::reportError( ErrorReporting report, const QString & text,
         const QString &details, QWidget * parent )

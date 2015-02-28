@@ -208,18 +208,6 @@ public:
   void setTopWidget( QWidget *topWidget );
 
   /**
-   * Get a file name in order to make a temporary copy of your document.
-   *
-   * @param pFilename The full path to the current file of your
-   * document.
-   * @return A new filename for auto-saving.
-   * @deprecated use KTemporaryFile, KSaveFile or KAutoSaveFile instead
-   */
-#ifndef KDE_NO_DEPRECATED
-  static KDE_DEPRECATED QString tempSaveName( const QString& pFilename );
-#endif
-
-  /**
    * Check whether  an auto-save file exists for the document you want to
    * open.
    *

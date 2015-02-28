@@ -68,12 +68,6 @@ void KGlobalShortcutTest::setupTest(QString id)
 
     // Ensure that the previous test did cleanup correctly
     KGlobalAccel *kga = KGlobalAccel::self();
-#ifndef KDE_NO_DEPRECATED
-    QList<QStringList> components = kga->allMainComponents();
-    QStringList componentId;
-    componentId << "qttest" << QString() << "KDE Test Program" << QString();
-    // QVERIFY(!components.contains(componentId));
-#endif
 
     m_actionA = new KAction("Text For Action A", this);
     m_actionA->setObjectName("Action A:" + id);
@@ -241,23 +235,7 @@ void KGlobalShortcutTest::testListActions()
 
     // As in kdebase/workspace/kcontrol/keys/globalshortcuts.cpp
     KGlobalAccel *kga = KGlobalAccel::self();
-#ifndef KDE_NO_DEPRECATED
-    QList<QStringList> components = kga->allMainComponents();
-    //qDebug() << components;
-    QStringList componentId;
-    componentId << "qttest" << QString() << "KDE Test Program" << QString();
-    QVERIFY(components.contains(componentId));
-#endif
 
-#ifndef KDE_NO_DEPRECATED
-    QList<QStringList> actions = kga->allActionsForComponent(componentId);
-    QVERIFY(!actions.isEmpty());
-    QStringList actionIdA; actionIdA << "qttest" << "Action A:testListActions" << "KDE Test Program" << "Text For Action A";
-    QStringList actionIdB; actionIdB << "qttest" << "Action B:testListActions" << "KDE Test Program" << "Text For Action B";
-    //qDebug() << actions;
-    QVERIFY(actions.contains(actionIdA));
-    QVERIFY(actions.contains(actionIdB));
-#endif
 }
 
 void KGlobalShortcutTest::testComponentAssignment()
@@ -347,36 +325,6 @@ void KGlobalShortcutTest::testOverrideMainComponentData()
     action->forgetGlobalShortcut();
     delete coll.takeAction(action);
 
-#ifndef KDE_NO_DEPRECATED
-    // activate overrideMainComponentData, it's not revokable currently!
-    // overrideMainComponentData only overrides the component if the action
-    // gets a real global shortcut!
-    KComponentData globalComponent("test_component2");
-    KGlobalAccel::self()->overrideMainComponentData(globalComponent);
-
-    // Action with action collection gets the global component
-    action = new KAction("Text For Action A", this);
-    QVERIFY(action->d->componentData == KGlobal::mainComponent());
-    action->setObjectName("Action A");
-    action->setGlobalShortcut(cutB, KAction::ActiveShortcut, KAction::NoAutoloading);
-    QVERIFY(action->d->componentData == globalComponent);
-
-    // Action with action collection get the component of the collection until
-    // a global shortcut is set when overrideMainComponentData is active
-    action->forgetGlobalShortcut();
-    delete action;
-    QVERIFY(coll.isEmpty());
-
-    action = coll.addAction("Action A");
-    QVERIFY(action->d->componentData == otherComponent);
-    action->setGlobalShortcut(cutB, KAction::ActiveShortcut, KAction::NoAutoloading);
-    QVERIFY(action->d->componentData == globalComponent);
-
-    // forget the global shortcut
-    action->forgetGlobalShortcut();
-    // Actions that were created by the KActionCollection::addAction have the
-    // collections as parent. Ensure action is not deleted.
-#endif
 }
 
 void KGlobalShortcutTest::testNotification()
@@ -418,12 +366,6 @@ void KGlobalShortcutTest::testForgetGlobalShortcut()
     sleep(1);
 
     KGlobalAccel *kga = KGlobalAccel::self();
-#ifndef KDE_NO_DEPRECATED
-    QList<QStringList> components = kga->allMainComponents();
-    QStringList componentId;
-    componentId << "qttest" << QString() << "KDE Test Program" << QString();
-    QVERIFY(!components.contains(componentId));
-#endif
 }
 
 

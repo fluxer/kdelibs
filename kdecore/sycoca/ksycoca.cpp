@@ -332,12 +332,6 @@ void KSycoca::addFactory( KSycocaFactory *factory )
     d->addFactory(factory);
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KSycoca::isChanged(const char *type)
-{
-    return self()->d->changeList.contains(QString::fromLatin1(type));
-}
-#endif
 
 void KSycoca::notifyDatabaseChanged(const QStringList &changeList)
 {
@@ -350,9 +344,6 @@ void KSycoca::notifyDatabaseChanged(const QStringList &changeList)
     d->closeDatabase();
 
     // Now notify applications
-#ifndef KDE_NO_DEPRECATED
-    emit databaseChanged();
-#endif
     emit databaseChanged(changeList);
 }
 
@@ -562,12 +553,6 @@ void KSycoca::flagError()
     }
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KSycoca::readError() // KDE5: remove
-{
-    return false;
-}
-#endif
 
 bool KSycoca::isBuilding()
 {

@@ -311,20 +311,6 @@ public:
                                       const QByteArray& asn = QByteArray());
 
     /**
-     * Quotes a string for the shell.
-     * An empty string will @em not be quoted.
-     *
-     * @deprecated Use KShell::quoteArg() instead. @em Note that this function
-     *  behaves differently for empty arguments and returns the result
-     *  differently.
-     *
-     * @param str the string to quote. The quoted string will be written here
-     */
-#ifndef KDE_NO_DEPRECATED
-    static KDE_DEPRECATED void shellQuote(QString &str);
-#endif
-
-    /**
      * Processes a Exec= line as found in .desktop files.
      * @param _service the service to extract information from.
      * @param _urls The urls the service should open.
@@ -494,56 +480,9 @@ protected:
     KIO::Job* job();
 
     /**
-     * Returns the timer object.
-     * @deprecated setFinished(true) now takes care of the timer().start(0),
-     * so this can be removed.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED QTimer& timer();
-#endif
-
-    /**
-     * Indicate that the next action is to scan the file.
-     * @deprecated not useful in public API
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setDoScanFile(bool scanFile);
-#endif
-
-    /**
-     * Returns whether the file shall be scanned.
-     * @deprecated not useful in public API
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool doScanFile() const;
-#endif
-
-    /**
-     * Sets whether it is a directory.
-     * @deprecated typo in the name, and not useful as a public method
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setIsDirecory(bool isDirectory);
-#endif
-
-    /**
      * Returns whether it is a directory.
      */
     bool isDirectory() const;
-
-    /**
-     * @deprecated not useful in public API
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setInitializeNextAction(bool initialize);
-#endif
-
-    /**
-     * @deprecated not useful in public API
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool initializeNextAction() const;
-#endif
 
     /**
      * Sets whether it is a local file.

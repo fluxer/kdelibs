@@ -145,11 +145,6 @@ QString KUser::loginName() const {
 	return d->loginName;
 }
 
-#ifndef KDE_NO_DEPRECATED
-QString KUser::fullName() const {
-	return d->properties[FullName].toString();
-}
-#endif
 
 QString KUser::homeDir() const {
 	return d->homeDir;

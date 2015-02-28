@@ -102,9 +102,6 @@ org::kde::kglobalaccel::Component *KGlobalAccelPrivate::getComponent(const QStri
 
 KGlobalAccelPrivate::KGlobalAccelPrivate(KGlobalAccel *q)
      :  isUsingForeignComponentName(false),
-#ifndef KDE_NO_DEPRECATED
-        enabled(true),
-#endif
         iface("org.kde.kglobalaccel", "/kglobalaccel", QDBusConnection::sessionBus()),
         q(q)
 {
@@ -197,12 +194,6 @@ bool KGlobalAccel::isComponentActive(const QString &componentUnique)
 }
 
 
-#ifndef KDE_NO_DEPRECATED
-bool KGlobalAccel::isEnabled() const
-{
-    return d->enabled;
-}
-#endif
 
 
 org::kde::kglobalaccel::Component *KGlobalAccel::getComponent(const QString &componentUnique)
@@ -211,21 +202,8 @@ org::kde::kglobalaccel::Component *KGlobalAccel::getComponent(const QString &com
 }
 
 
-#ifndef KDE_NO_DEPRECATED
-void KGlobalAccel::setEnabled(bool enabled)
-{
-    d->enabled = enabled;
-}
-#endif
 
 
-#ifndef KDE_NO_DEPRECATED
-void KGlobalAccel::overrideMainComponentData(const KComponentData &kcd)
-{
-    d->readComponentData(kcd);
-    d->isUsingForeignComponentName = true;
-}
-#endif
 
 
 KGlobalAccel *KGlobalAccel::self()
@@ -491,32 +469,6 @@ void KGlobalAccelPrivate::reRegisterAll()
     }
 }
 
-
-#ifndef KDE_NO_DEPRECATED
-QList<QStringList> KGlobalAccel::allMainComponents()
-{
-    return d->iface.allMainComponents();
-}
-#endif
-
-
-#ifndef KDE_NO_DEPRECATED
-QList<QStringList> KGlobalAccel::allActionsForComponent(const QStringList &actionId)
-{
-    return d->iface.allActionsForComponent(actionId);
-}
-#endif
-
-
-//static
-#ifndef KDE_NO_DEPRECATED
-QStringList KGlobalAccel::findActionNameSystemwide(const QKeySequence &seq)
-{
-    return self()->d->iface.action(seq[0]);
-}
-#endif
-
-
 QList<KGlobalShortcutInfo> KGlobalAccel::getGlobalShortcutsByKey(const QKeySequence &seq)
 {
     return self()->d->iface.getGlobalShortcutsByKey(seq[0]);
@@ -527,28 +479,6 @@ bool KGlobalAccel::isGlobalShortcutAvailable(const QKeySequence &seq, const QStr
 {
         return self()->d->iface.isGlobalShortcutAvailable(seq[0], comp);
 }
-
-
-//static
-#ifndef KDE_NO_DEPRECATED
-bool KGlobalAccel::promptStealShortcutSystemwide(QWidget *parent, const QStringList &actionIdentifier,
-                                                 const QKeySequence &seq)
-{
-    if (actionIdentifier.size() < 4) {
-        return false;
-    }
-    QString title = i18n("Conflict with Global Shortcut");
-    QString message = i18n("The '%1' key combination has already been allocated "
-                           "to the global action \"%2\" in %3.\n"
-                           "Do you want to reassign it from that action to the current one?",
-                           seq.toString(), actionIdentifier.at(KGlobalAccel::ActionFriendly),
-                           actionIdentifier.at(KGlobalAccel::ComponentFriendly));
-
-    return KMessageBox::warningContinueCancel(parent, message, title, KGuiItem(i18n("Reassign")))
-           == KMessageBox::Continue;
-}
-#endif
-
 
 //static
 bool KGlobalAccel::promptStealShortcutSystemwide(

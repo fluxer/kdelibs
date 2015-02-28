@@ -190,11 +190,6 @@ public:
      * @return true if successful, false for failure
      */
     static bool file_copy( const KUrl& src, const KUrl& target, QWidget* window = 0 );
-    /// @deprecated, use file_copy instead
-#ifndef KDE_NO_DEPRECATED
-    static KDE_DEPRECATED bool copy( const KUrl& src, const KUrl& target,
-                                     QWidget* window = 0 );
-#endif
 
     /**
      * Alternative method for copying over the network.
@@ -222,45 +217,6 @@ public:
      * Overloaded method, which takes a list of source URLs
      */
     static bool dircopy( const KUrl::List& src, const KUrl& target, QWidget* window = 0L ); // TODO deprecate in favor of KIO::copy + synchronousRun (or job->exec())
-
-    /**
-     * Full-fledged equivalent of KIO::move.
-     * Moves or renames one file or directory.
-     * @deprecated use KIO::move and then KIO::NetAccess::synchronousRun (or job->exec())
-     */
-#ifndef KDE_NO_DEPRECATED
-    static KDE_DEPRECATED bool move( const KUrl& src, const KUrl& target, QWidget* window = 0L );
-#endif
-
-    /**
-     * Full-fledged equivalent of KIO::move.
-     * Moves or renames a list of files or directories.
-     * @deprecated use KIO::move and then KIO::NetAccess::synchronousRun (or job->exec())
-     */
-#ifndef KDE_NO_DEPRECATED
-    static KDE_DEPRECATED bool move( const KUrl::List& src, const KUrl& target, QWidget* window = 0L );
-#endif
-
-    /**
-     * Tests whether a URL exists.
-     *
-     * @param url the URL we are testing
-     * @param source if true, we want to read from that URL.
-     *               If false, we want to write to it.
-     * IMPORTANT: see documentation for KIO::stat for more details about this.
-     * @param window main window associated with this job. This is used to
-     *               automatically cache and discard authentication information
-     *               as needed. If NULL, authentication information will be
-     *               cached only for a short duration after which the user will
-     *               again be prompted for passwords as needed.
-     * @return true if the URL exists and we can do the operation specified by
-     *              @p source, false otherwise
-     *
-     * @deprecated use the StatSide enum instead of the bool source
-     */
-#ifndef KDE_NO_DEPRECATED
-    static KDE_DEPRECATED bool exists(const KUrl& url, bool source, QWidget* window);
-#endif
 
     /**
      * Tests whether a URL exists.

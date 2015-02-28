@@ -139,36 +139,7 @@ int KToolInvocation::startServiceInternal(const char *_function,
     return reply.arguments().at(0).toInt();
 }
 
-#ifndef KDE_NO_DEPRECATED
-int
-KToolInvocation::startServiceByName( const QString& _name, const QString &URL,
-                                     QString *error, QString *serviceName, int *pid,
-                                     const QByteArray& startup_id, bool noWait )
-{
-    if (!isMainThreadActive(error))
-        return EINVAL;
 
-    QStringList URLs;
-    if (!URL.isEmpty())
-        URLs.append(URL);
-    return self()->startServiceInternal("start_service_by_name",
-                                        _name, URLs, error, serviceName, pid, startup_id, noWait);
-}
-#endif
-
-#ifndef KDE_NO_DEPRECATED
-int
-KToolInvocation::startServiceByName( const QString& _name, const QStringList &URLs,
-                                     QString *error, QString *serviceName, int *pid,
-                                     const QByteArray& startup_id, bool noWait )
-{
-    if (!isMainThreadActive(error))
-        return EINVAL;
-
-    return self()->startServiceInternal("start_service_by_name",
-                                _name, URLs, error, serviceName, pid, startup_id, noWait);
-}
-#endif
 
 int
 KToolInvocation::startServiceByDesktopPath( const QString& _name, const QString &URL,

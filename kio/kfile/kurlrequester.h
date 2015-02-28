@@ -24,11 +24,7 @@
 #include <kurl.h>
 #include <khbox.h>
 
-#ifndef KDE_NO_DEPRECATED
-#include <keditlistbox.h>
-#else
 #include <keditlistwidget.h>
-#endif
 
 class KComboBox;
 class KFileDialog;
@@ -187,11 +183,7 @@ public:
      * KEditListWidget *editListWidget = new KEditListWidget( req->customEditor(), someWidget );
      * \endcode
      */
-#ifndef KDE_NO_DEPRECATED
-    const KEditListBox::CustomEditor &customEditor();
-#else
     const KEditListWidget::CustomEditor &customEditor();
-#endif
 
     /**
      * @returns the message set with setClickMessage
@@ -230,18 +222,6 @@ public Q_SLOTS:
      * @since 4.3
      */
     void setStartDir( const KUrl& startDir );
-
-    /**
-     * Sets the url in the lineedit to @p KUrl::fromPath(path).
-     * This is only for local paths; do not pass a url here.
-     * This method is mostly for "local paths only" url requesters,
-     * for instance those set up with setMode(KFile::File|KFile::ExistingOnly|KFile::LocalOnly)
-     *
-     * @deprecated Use setUrl(KUrl(path)) instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setPath(const QString& path);
-#endif
 
     /**
      * Sets the current text in the lineedit or combobox.

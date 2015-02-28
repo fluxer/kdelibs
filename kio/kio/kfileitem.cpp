@@ -195,9 +195,6 @@ public:
     // For special case like link to dirs over FTP
     QString m_guessedMimeType;
     mutable QString m_access;
-#ifndef KDE_NO_DEPRECATED
-    QMap<const void*, void*> m_extra; // DEPRECATED
-#endif
     mutable KFileMetaInfo m_metaInfo;
 
     enum { NumFlags = KFileItem::CreationTime + 1 };
@@ -658,23 +655,6 @@ KDateTime KFileItem::time( FileTimes which ) const
     return d->time(which);
 }
 
-#ifndef KDE_NO_DEPRECATED
-time_t KFileItem::time( unsigned int which ) const
-{
-    if (!d)
-        return 0;
-
-    switch (which) {
-    case KIO::UDSEntry::UDS_ACCESS_TIME:
-        return d->time(AccessTime).toTime_t();
-    case KIO::UDSEntry::UDS_CREATION_TIME:
-        return d->time(CreationTime).toTime_t();
-    case KIO::UDSEntry::UDS_MODIFICATION_TIME:
-    default:
-        return d->time(ModificationTime).toTime_t();
-    }
-}
-#endif
 
 QString KFileItem::user() const
 {
@@ -1149,28 +1129,6 @@ bool KFileItem::isFile() const
     return !isDir();
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KFileItem::acceptsDrops() const
-{
-    // A directory ?
-    if ( S_ISDIR( mode() ) ) {
-        return isWritable();
-    }
-
-    // But only local .desktop files and executables
-    if ( !d->m_bIsLocalUrl )
-        return false;
-
-    if ( mimetype() == "application/x-desktop")
-        return true;
-
-    // Executable, shell script ... ?
-    if ( QFileInfo(d->m_url.toLocalFile()).isExecutable() )
-        return true;
-
-    return false;
-}
-#endif
 
 QString KFileItem::getStatusBarInfo() const
 {
@@ -1203,84 +1161,6 @@ QString KFileItem::getStatusBarInfo() const
     return text;
 }
 
-#ifndef KDE_NO_DEPRECATED
-QString KFileItem::getToolTipText(int maxcount) const
-{
-    if (!d)
-        return QString();
-
-    // we can return QString() if no tool tip should be shown
-    QString tip;
-    KFileMetaInfo info = metaInfo();
-
-    // the font tags are a workaround for the fact that the tool tip gets
-    // screwed if the color scheme uses white as default text color
-    const QString colorName = QApplication::palette().color(QPalette::ToolTipText).name();
-    const QString start = "<tr><td align=\"right\"><nobr><font color=\"" + colorName + "\"><b>";
-    const QString mid = "&nbsp;</b></font></nobr></td><td><nobr><font color=\"" + colorName + "\">";
-    const char* end = "</font></nobr></td></tr>";
-
-    tip = "<table cellspacing=0 cellpadding=0>";
-
-    tip += start + i18n("Name:") + mid + text() + end;
-    tip += start + i18n("Type:") + mid;
-
-    QString type = Qt::escape(mimeComment());
-    if ( d->m_bLink ) {
-        tip += i18n("Link to %1 (%2)", linkDest(), type) + end;
-    } else
-        tip += type + end;
-
-    if ( !S_ISDIR ( d->m_fileMode ) )
-        tip += start + i18n("Size:") + mid +
-               QString("%1").arg(KIO::convertSize(size())) +
-               end;
-
-    tip += start + i18n("Modified:") + mid +
-           timeString( KFileItem::ModificationTime ) + end
-           +start + i18n("Owner:") + mid + user() + " - " + group() + end +
-           start + i18n("Permissions:") + mid +
-           permissionsString() + end
-           ;
-
-    if (info.isValid())
-    {
-        const QStringList keys = info.preferredKeys();
-
-        // now the rest
-        QStringList::ConstIterator it = keys.begin();
-        for (int count = 0; count<maxcount && it!=keys.end() ; ++it)
-        {
-            if ( count == 0 )
-            {
-                tip += "<tr><td colspan=2><center><s>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</s></center></td></tr>";
-            }
-
-            KFileMetaInfoItem item = info.item( *it );
-            if ( item.isValid() )
-            {
-                QString s = item.value().toString();
-                if ( !s.isEmpty() )
-                {
-                    count++;
-                    tip += start +
-                           Qt::escape( item.name() ) + ':' +
-                           mid +
-                           Qt::escape( s ) +
-                           end;
-                }
-
-            }
-        }
-    }
-    tip += "</table>";
-
-    //kDebug() << "making this the tool tip rich text:\n";
-    //kDebug() << tip;
-
-    return tip;
-}
-#endif
 
 void KFileItem::run( QWidget* parentWidget ) const
 {
@@ -1319,74 +1199,14 @@ bool KFileItem::operator!=(const KFileItem& other) const
     return !operator==(other);
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KFileItem::setUDSEntry( const KIO::UDSEntry& _entry, const KUrl& _url,
-                             bool _delayedMimeTypes, bool _urlIsDirectory )
-{
-    if (!d)
-        return;
-
-    d->m_entry = _entry;
-    d->m_url = _url;
-    d->m_strName.clear();
-    d->m_strText.clear();
-    d->m_iconName.clear();
-    d->m_strLowerCaseName.clear();
-    d->m_pMimeType = 0;
-    d->m_fileMode = KFileItem::Unknown;
-    d->m_permissions = KFileItem::Unknown;
-    d->m_bMarked = false;
-    d->m_bLink = false;
-    d->m_bIsLocalUrl = _url.isLocalFile();
-    d->m_bMimeTypeKnown = false;
-    d->m_hidden = KFileItemPrivate::Auto;
-    d->m_guessedMimeType.clear();
-    d->m_metaInfo = KFileMetaInfo();
-    d->m_delayedMimeTypes = _delayedMimeTypes;
-    d->m_useIconNameCache = false;
-
-    d->readUDSEntry( _urlIsDirectory );
-    d->init();
-}
-#endif
 
 KFileItem::operator QVariant() const
 {
     return qVariantFromValue(*this);
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KFileItem::setExtraData( const void *key, void *value )
-{
-    if (!d)
-        return;
 
-    if ( !key )
-        return;
 
-    d->m_extra.insert( key, value ); // replaces the value of key if already there
-}
-#endif
-
-#ifndef KDE_NO_DEPRECATED
-const void * KFileItem::extraData( const void *key ) const
-{
-    if (!d)
-        return 0;
-
-    return d->m_extra.value( key, 0 );
-}
-#endif
-
-#ifndef KDE_NO_DEPRECATED
-void KFileItem::removeExtraData( const void *key )
-{
-    if (!d)
-        return;
-
-    d->m_extra.remove( key );
-}
-#endif
 
 QString KFileItem::permissionsString() const
 {
@@ -1408,23 +1228,6 @@ QString KFileItem::timeString( FileTimes which ) const
     return KGlobal::locale()->formatDateTime( d->time(which) );
 }
 
-#ifndef KDE_NO_DEPRECATED
-QString KFileItem::timeString( unsigned int which ) const
-{
-    if (!d)
-        return QString();
-
-    switch (which) {
-    case KIO::UDSEntry::UDS_ACCESS_TIME:
-        return timeString(AccessTime);
-    case KIO::UDSEntry::UDS_CREATION_TIME:
-        return timeString(CreationTime);
-    case KIO::UDSEntry::UDS_MODIFICATION_TIME:
-    default:
-        return timeString(ModificationTime);
-    }
-}
-#endif
 
 void KFileItem::setMetaInfo( const KFileMetaInfo & info ) const
 {
@@ -1448,12 +1251,6 @@ KFileMetaInfo KFileItem::metaInfo(bool autoget, int what) const
     return d->m_metaInfo;
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KFileItem::assign( const KFileItem & item )
-{
-    *this = item;
-}
-#endif
 
 KUrl KFileItem::mostLocalUrl(bool &local) const
 {

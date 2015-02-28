@@ -283,28 +283,12 @@ void KAction::setGlobalShortcut( const KShortcut & shortcut, ShortcutTypes type,
   }
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KAction::globalShortcutAllowed() const
-{
-  return d->globalShortcutEnabled;
-}
-#endif
 
 bool KAction::isGlobalShortcutEnabled() const
 {
   return d->globalShortcutEnabled;
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KAction::setGlobalShortcutAllowed( bool allowed, GlobalShortcutLoading /* load */ )
-{
-  if (allowed) {
-      //### no-op
-  } else {
-      forgetGlobalShortcut();
-  }
-}
-#endif
 
 void KAction::forgetGlobalShortcut()
 {

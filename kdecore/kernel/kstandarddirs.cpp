@@ -371,14 +371,6 @@ QString KStandardDirs::kfsstnd_xdg_data_prefixes()
     return d->xdgdata_prefixes.join(QString(QLatin1Char(KPATH_SEPARATOR)));
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KStandardDirs::addResourceType( const char *type,
-                                     const QString& relativename,
-                                     bool priority )
-{
-    return addResourceType( type, 0, relativename, priority);
-}
-#endif
 
 bool KStandardDirs::addResourceType( const char *type,
                                      const char *basetype,
@@ -1222,12 +1214,6 @@ static void tokenize(QStringList& tokens, const QString& str,
     }
 }
 
-#ifndef KDE_NO_DEPRECATED
-QString KStandardDirs::kde_default(const char *type)
-{
-    return QString(QLatin1Char('%')) + QString::fromLatin1(type) + QLatin1Char('/');
-}
-#endif
 
 QString KStandardDirs::saveLocation(const char *type,
                                     const QString& suffix,

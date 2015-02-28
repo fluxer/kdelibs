@@ -148,12 +148,6 @@ bool NetAccess::file_copy( const KUrl & src, const KUrl & target, QWidget* windo
                                   window, false /*copy*/ );
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool NetAccess::copy( const KUrl& src, const KUrl& target, QWidget* window )
-{
-    return file_copy( src, target, window );
-}
-#endif
 
 // bool NetAccess::file_copy( const KUrl& src, const KUrl& target, int permissions,
 //                            bool overwrite, bool resume, QWidget* window )
@@ -185,34 +179,8 @@ bool NetAccess::dircopy( const KUrl::List & srcList, const KUrl & target, QWidge
   return kioNet.dircopyInternal( srcList, target, window, false /*copy*/ );
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool NetAccess::move( const KUrl& src, const KUrl& target, QWidget* window )
-{
-  KUrl::List srcList;
-  srcList.append( src );
-  NetAccess kioNet;
-  return kioNet.dircopyInternal( srcList, target, window, true /*move*/ );
-}
-#endif
 
-#ifndef KDE_NO_DEPRECATED
-bool NetAccess::move( const KUrl::List& srcList, const KUrl& target, QWidget* window )
-{
-  NetAccess kioNet;
-  return kioNet.dircopyInternal( srcList, target, window, true /*move*/ );
-}
-#endif
 
-#ifndef KDE_NO_DEPRECATED
-bool NetAccess::exists( const KUrl & url, bool source, QWidget* window )
-{
-  if ( url.isLocalFile() )
-    return QFile::exists( url.toLocalFile() );
-  NetAccess kioNet;
-  return kioNet.statInternal( url, 0 /*no details*/,
-                              source ? SourceSide : DestinationSide, window );
-}
-#endif
 
 bool NetAccess::exists( const KUrl & url, StatSide side, QWidget* window )
 {

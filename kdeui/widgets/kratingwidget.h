@@ -125,13 +125,6 @@ class KDEUI_EXPORT KRatingWidget : public QFrame
     void setRating( int rating );
 
     /**
-     * \deprecated use setRating( int rating )
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setRating( unsigned int rating );
-#endif
-
-    /**
      * Set the maximum allowed rating value. The default is 10 which means
      * that a rating from 1 to 10 is selectable. If \a max is uneven steps
      * are automatically only allowed full.
@@ -139,24 +132,10 @@ class KDEUI_EXPORT KRatingWidget : public QFrame
     void setMaxRating( int max );
 
     /**
-     * \deprecated use setMaxRating( int max )
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setMaxRating( unsigned int max );
-#endif
-
-    /**
      * If half steps are enabled (the default) then
      * one rating step corresponds to half a star.
      */
     void setHalfStepsEnabled( bool enabled );
-
-    /**
-     * \deprecated Use setHalfStepsEnabled
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setOnlyPaintFullSteps( bool );
-#endif
 
     /**
      * Set the spacing between the pixmaps. The default is 0.
@@ -183,16 +162,6 @@ class KDEUI_EXPORT KRatingWidget : public QFrame
      * Set a custom pixmap.
      */
     void setCustomPixmap( const QPixmap& pixmap );
-
-    /**
-     * Set the pixap to be used to display a rating step.
-     * By default the "rating" pixmap is loaded.
-     *
-     * \deprecated use setCustomPixmap
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setPixmap( const QPixmap& );
-#endif
 
     /**
      * Set the recommended size of the pixmaps. This is

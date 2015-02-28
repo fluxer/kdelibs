@@ -152,9 +152,6 @@ class KDEUI_EXPORT KLineEdit : public QLineEdit, public KCompletionBase //krazy:
     friend class KLineEditStyle;
 
     Q_OBJECT
-#ifndef KDE_NO_DEPRECATED
-    Q_PROPERTY( bool contextMenuEnabled READ isContextMenuEnabled WRITE setContextMenuEnabled )
-#endif
     Q_PROPERTY( bool urlDropsEnabled READ urlDropsEnabled WRITE setUrlDropsEnabled )
     Q_PROPERTY( bool trapEnterKeyEvent READ trapReturnKey WRITE setTrapReturnKey )
     Q_PROPERTY( bool squeezedTextEnabled READ isSqueezedTextEnabled WRITE setSqueezedTextEnabled )
@@ -207,32 +204,6 @@ public:
     * This method allows to disable some modes.
     */
     void setCompletionModeDisabled( KGlobalSettings::Completion mode, bool disable = true );
-
-   /**
-    * Enables/disables the popup (context) menu.
-    *
-    * This method only works if this widget is editable, i.e. read-write and
-    * allows you to enable/disable the context menu. It does nothing if invoked
-    * for a none-editable combo-box.
-    *
-    * By default, the context menu is created if this widget is editable.
-    * Call this function with the argument set to false to disable the popup
-    * menu.
-    *
-    * @param showMenu If @p true, show the context menu.
-    * @deprecated use setContextMenuPolicy
-    */
-#ifndef KDE_NO_DEPRECATED
-    virtual KDE_DEPRECATED void setContextMenuEnabled( bool showMenu );
-#endif
-
-    /**
-     * Returns @p true when the context menu is enabled.
-     * @deprecated use contextMenuPolicy
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool isContextMenuEnabled() const;
-#endif
 
     /**
      * Enables/Disables handling of URL drops. If enabled and the user
@@ -400,22 +371,6 @@ Q_SIGNALS:
      * Emitted when the shortcut for substring completion is pressed.
      */
     void substringCompletion( const QString& );
-
-    /**
-     * Emitted when the text is changed NOT by the suggested autocompletion:
-     * either when the user is physically typing keys, or when the text is changed programmatically,
-     * for example, by calling setText().
-     * But not when automatic completion changes the text temporarily.
-     *
-     * @since 4.2.2
-     * @deprecated since 4.5. You probably want to connect to textEdited() instead,
-     * which is emitted whenever the text is actually changed by the user
-     * (by typing or accepting autocompletion), without side effects from
-     * suggested autocompletion either. userTextChanged isn't needed anymore.
-     */
-#ifndef KDE_NO_DEPRECATED
-    QT_MOC_COMPAT void userTextChanged( const QString & );
-#endif
 
     /**
      * Emitted when the text rotation key-bindings are pressed.

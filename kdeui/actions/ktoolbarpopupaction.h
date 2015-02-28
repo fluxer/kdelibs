@@ -70,17 +70,6 @@ class KDEUI_EXPORT KToolBarPopupAction : public KAction
     virtual ~KToolBarPopupAction();
 
     /**
-     * The popup menu that is shown when clicking (some time) on the toolbar
-     * button. You may want to plug items into it on creation, or connect to
-     * aboutToShow for a more dynamic menu.
-     *
-     * \deprecated use menu() instead
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED KMenu *popupMenu() const;
-#endif
-
-    /**
      * Returns true if this action creates a delayed popup menu
      * when plugged in a KToolBar.
      */

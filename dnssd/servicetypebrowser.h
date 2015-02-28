@@ -89,15 +89,6 @@ public:
 	 */
 	void startBrowse();
 
-	/**
-	 * @deprecated
-	 * This method is unnecessary, since it is safe to call startBrowse()
-	 * multiple times.
-	 */
-#ifndef KDE_NO_DEPRECATED
-	KDE_DEPRECATED bool isRunning() const;
-#endif
-
 Q_SIGNALS:
 	/**
 	 * Emitted when there are no more services of this type

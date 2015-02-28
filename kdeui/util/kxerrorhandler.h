@@ -75,15 +75,6 @@ class KDEUI_EXPORT KXErrorHandler
          */
         explicit KXErrorHandler( int (*handler)( Display*, XErrorEvent* ), Display* dpy = QX11Info::display());
         /**
-         * This constructor takes pointer to a function that will get request number,
-         * error code number and resource id of the failed request, as provided
-         * by XErrorEvent. If the function returns true, the error flag will be set.
-         * @deprecated Use the variant with XErrorEvent.
-         */
-#ifndef KDE_NO_DEPRECATED
-        explicit KXErrorHandler( bool (*handler)( int request, int error_code, unsigned long resource_id ), Display* dpy = QX11Info::display()) KDE_DEPRECATED;
-#endif
-        /**
          * This function returns true if the error flag is set (i.e. no custom handler
          * function was used and there was any error, or the custom handler indicated
          * an error by its return value).

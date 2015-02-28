@@ -212,13 +212,6 @@ public:
    */
   bool restoringSession();
 
-  /**
-   * @internal
-   */
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED static void setHandleAutoStarted();
-#endif
-
 private:
   friend class KUniqueApplicationAdaptor;
   class Private;

@@ -160,22 +160,6 @@ KIcon KGuiItem::icon( ) const
     return KIcon();
 }
 
-// deprecated
-#ifndef KDE_NO_DEPRECATED
-QIcon KGuiItem::iconSet( KIconLoader::Group group, int size ) const
-{
-    if (d->m_hasIcon && KGlobal::mainComponent().isValid()) {
-        if( !d->m_iconName.isEmpty()) {
-            KIconLoader* iconLoader = KIconLoader::global();
-            return iconLoader->loadIconSet( d->m_iconName, group, size );
-        } else {
-            return d->m_icon;
-        }
-    } else
-        return QIcon();
-}
-#endif
-
 QString KGuiItem::iconName() const
 {
     return d->m_iconName;

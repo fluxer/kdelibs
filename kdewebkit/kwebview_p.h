@@ -126,18 +126,12 @@ public:
                         case KUriFilterData::LocalDir:
                         case KUriFilterData::NetProtocol:
                             emit q->selectionClipboardUrlPasted(data.uri(), QString());
-#ifndef KDE_NO_DEPRECATED
-                            emit q->selectionClipboardUrlPasted(data.uri());
-#endif
                             return true;
                         default:
                             break;
                         }
                     } else if (KUriFilter::self()->filterSearchUri(data, KUriFilter::NormalTextFilter)) {
                         emit q->selectionClipboardUrlPasted(data.uri(), clipboardText);
-#ifndef KDE_NO_DEPRECATED
-                        emit q->selectionClipboardUrlPasted(data.uri());
-#endif
                         return true;
                     }
                 }

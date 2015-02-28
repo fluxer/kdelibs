@@ -537,24 +537,6 @@ void KUriFilterPlugin::setSearchProvider( KUriFilterData &data, const QString& p
     data.d->searchTermSeparator = separator;
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KUriFilterPlugin::setPreferredSearchProviders(KUriFilterData &data, const ProviderInfoList &providers) const
-{
-    QHashIterator<QString, QPair<QString, QString> > it (providers);
-    while (it.hasNext())
-    {
-        it.next();
-        KUriFilterSearchProvider* searchProvider = data.d->searchProviderMap[it.key()];
-        searchProvider->setName(it.key());
-        searchProvider->setIconName(it.value().second);
-        QStringList keys;
-        const QStringList queries = it.value().first.split(QLatin1Char(','));
-        Q_FOREACH(const QString& query,  queries)
-            keys << query.left(query.indexOf(data.d->searchTermSeparator));
-        searchProvider->setKeys(keys);
-    }
-}
-#endif
 
 void KUriFilterPlugin::setSearchProviders(KUriFilterData &data, const QList<KUriFilterSearchProvider*>& providers) const
 {
@@ -664,12 +646,6 @@ QString KUriFilter::filteredUri( const QString &uri, const QStringList& filters 
     return data.uri().url();
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KUriFilter::filterSearchUri(KUriFilterData &data)
-{
-    return filterSearchUri(data, (NormalTextFilter | WebShortcutFilter));
-}
-#endif
 
 bool KUriFilter::filterSearchUri(KUriFilterData &data, SearchFilterTypes types)
 {

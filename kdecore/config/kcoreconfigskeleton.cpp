@@ -1195,16 +1195,6 @@ KCoreConfigSkeleton::ItemLongLong *KCoreConfigSkeleton::addItemLongLong( const Q
   return item;
 }
 
-#ifndef KDE_NO_DEPRECATED
-KCoreConfigSkeleton::ItemLongLong *KCoreConfigSkeleton::addItemInt64(
-        const QString& name,
-        qint64 &reference,
-        qint64 defaultValue,
-        const QString & key)
-{
-    return addItemLongLong(name, reference, defaultValue, key);
-}
-#endif
 
 KCoreConfigSkeleton::ItemULongLong *KCoreConfigSkeleton::addItemULongLong( const QString &name, quint64 &reference,
                                      quint64 defaultValue, const QString &key )
@@ -1216,16 +1206,6 @@ KCoreConfigSkeleton::ItemULongLong *KCoreConfigSkeleton::addItemULongLong( const
   return item;
 }
 
-#ifndef KDE_NO_DEPRECATED
-KCoreConfigSkeleton::ItemULongLong *KCoreConfigSkeleton::addItemUInt64(
-        const QString & name,
-        quint64 &reference,
-        quint64 defaultValue,
-        const QString & key)
-{
-    return addItemULongLong(name, reference, defaultValue, key);
-}
-#endif
 
 KCoreConfigSkeleton::ItemDouble *KCoreConfigSkeleton::addItemDouble( const QString &name, double &reference,
                                      double defaultValue, const QString &key )

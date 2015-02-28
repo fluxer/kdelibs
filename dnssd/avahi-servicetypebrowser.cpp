@@ -89,12 +89,6 @@ QStringList ServiceTypeBrowser::serviceTypes() const
 	return d->m_servicetypes;
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool ServiceTypeBrowser::isRunning() const
-{
-	return d->m_started;
-}
-#endif
 
 
 }

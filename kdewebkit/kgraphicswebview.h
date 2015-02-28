@@ -117,9 +117,6 @@ Q_SIGNALS:
      * @deprecated  use selectionClipboardUrlPasted(KUrl, bool) instead
      * @see QClipboard
      */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void selectionClipboardUrlPasted(const KUrl &url);
-#endif
 
     /**
      * Emitted when a URL from the selection clipboard is pasted on this view.

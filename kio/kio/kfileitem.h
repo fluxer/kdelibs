@@ -298,9 +298,6 @@ public:
      * @see timeString()
      */
     KDateTime time( FileTimes which ) const;
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED time_t time( unsigned int which ) const;
-#endif
 
     /**
      * Requests the modification, access or creation time as a string, depending
@@ -310,9 +307,6 @@ public:
      * @see time
      */
     QString timeString( FileTimes which = ModificationTime ) const;
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED QString timeString( unsigned int which) const;
-#endif
 
     /**
      * Returns true if the file is a local file.
@@ -421,34 +415,6 @@ public:
     QString getStatusBarInfo() const;
 
     /**
-     * Returns the string to be displayed in the tool tip when the mouse
-     * is over this item. This may load a plugin to determine additional
-     * information specific to the mimetype of the file.
-     *
-     * @param maxcount the maximum number of entries shown
-     * @return the tool tip string
-     *
-     * @deprecated File Managers implement more complete tooltips.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED QString getToolTipText(int maxcount = 6) const;
-#endif
-
-    /**
-     * Returns true if files can be dropped over this item.
-     * Contrary to popular belief, not only dirs will return true :)
-     * Executables, .desktop files, will do so as well.
-     * @return true if you can drop files over the item
-     *
-     * @deprecated This logic is application-dependent, the behavior described above
-     * mostly makes sense for file managers only.
-     * KDirModel has setDropsAllowed for similar (but configurable) logic.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool acceptsDrops() const;
-#endif
-
-    /**
      * Let's "KRun" this file !
      * (e.g. when file is clicked or double-clicked or return is pressed)
      */
@@ -512,68 +478,6 @@ public:
     operator QVariant() const;
 
     /**
-     * This allows to associate some "extra" data to a KFileItem. As one
-     * KFileItem can be used by several objects (often views) which all need
-     * to add some data, you have to use a key to reference your extra data
-     * within the KFileItem.
-     *
-     * That way a KFileItem can hold and provide access to all those views
-     * separately.
-     *
-     * I.e. a KFileIconView that associates a KFileIconViewItem (an item suitable
-     * for use with QIconView) does
-     *
-     * \code
-     * kfileItem->setExtraData( this, iconViewItem );
-     * \endcode
-     *
-     * and can later access the iconViewItem by doing
-     *
-     * \code
-     * KFileIconViewItem *iconViewItem = static_cast<KFileIconViewItem*>( kfileItem->extraData( this ));
-     * \endcode
-     *
-     * This is usually more efficient then having every view associate data to
-     * items by using a separate QDict or QMap.
-     *
-     * Note: you have to remove and destroy the data you associated yourself
-     * when you don't need it anymore!
-     *
-     * @param key the key of the extra data
-     * @param value the value of the extra data
-     * @see extraData
-     * @see removeExtraData
-     *
-     * @deprecated use model/view (KDirModel) and you won't need this anymore
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setExtraData( const void *key, void *value );
-#endif
-
-    /**
-     * Retrieves the extra data with the given @p key.
-     * @param key the key of the extra data
-     * @return the extra data associated to an item with @p key via
-     * setExtraData. 0L if nothing was associated with @p key.
-     * @see extraData
-     *
-     * @deprecated use model/view (KDirModel) and you won't need this anymore
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED const void * extraData( const void *key ) const;
-#endif
-
-    /**
-     * Removes the extra data associated with an item via @p key.
-     * @param key the key of the extra data to remove
-     *
-     * @deprecated use model/view (KDirModel) and you won't need this anymore
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void removeExtraData( const void *key );
-#endif
-
-    /**
      * Sets the metainfo of this item to @p info.
      *
      * Made const to avoid deep copy.
@@ -591,38 +495,6 @@ public:
      */
     KFileMetaInfo metaInfo(bool autoget = true,
                            int what = KFileMetaInfo::ContentInfo | KFileMetaInfo::TechnicalInfo) const;
-
-    /**
-     * @deprecated simply use '='
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void assign( const KFileItem & item );
-#endif
-
-    /**
-     * Reinitialize KFileItem with a new UDSEntry.
-     *
-     * Note: extra-data set with setExtraData() is not changed or deleted, so
-     * be careful what you do!
-     *
-     * KDirListerCache uses it to save new/delete calls by updating existing
-     * items that are otherwise not needed anymore.
-     *
-     * @param entry the UDSEntry to assign to this KFileItem
-     * @param url the file url
-     * @param delayedMimeTypes specifies if the mimetype of the given
-     *        URL should be determined immediately or on demand
-     * @param urlIsDirectory specifies if the url is just the directory of the
-     *        fileitem and the filename from the UDSEntry should be used.
-     *
-     * @deprecated why not just create another KFileItem and use operator=,
-     * now that it's a value class?
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setUDSEntry( const KIO::UDSEntry& entry, const KUrl& url,
-                                     bool delayedMimeTypes = false,
-                                     bool urlIsDirectory = false );
-#endif
 
     /**
      * Tries to give a local URL for this file item if possible.

@@ -194,14 +194,6 @@ KEncodingProber::ProberState KEncodingProber::state() const
     return d->proberState;
 }
 
-//DEPRECATED, do *not* use
-#ifndef KDE_NO_DEPRECATED
-const char* KEncodingProber::encodingName() const
-{
-    return qstrdup(encoding().constData());
-}
-#endif
-
 QByteArray KEncodingProber::encoding() const
 {
     if (!d->prober)

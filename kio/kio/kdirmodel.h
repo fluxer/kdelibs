@@ -74,14 +74,6 @@ public:
 
     /**
      * Return the index for a given kfileitem. This can be slow.
-     * @deprecated use the method that takes a KFileItem by value
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED QModelIndex indexForItem( const KFileItem* ) const;
-#endif
-
-    /**
-     * Return the index for a given kfileitem. This can be slow.
      */
     QModelIndex indexForItem( const KFileItem& ) const;
 

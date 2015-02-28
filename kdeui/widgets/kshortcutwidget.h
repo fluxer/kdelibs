@@ -58,16 +58,6 @@ public:
      */
     void setCheckActionCollections(const QList<KActionCollection *>& actionCollections);
 
-    /**
-     * @deprecated since 4.1
-     * Use setCheckActionCollections so that KShortcutWidget knows
-     * in which action collection to call the writeSettings method after stealing
-     * a shortcut from an action.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setCheckActionList(const QList<QAction*> &checkList);
-#endif
-
 Q_SIGNALS:
     void shortcutChanged(const KShortcut &cut);
 

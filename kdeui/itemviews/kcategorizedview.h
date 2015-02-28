@@ -310,26 +310,6 @@ protected:
 protected Q_SLOTS:
     /**
       * @internal
-      * @warning Deprecated since 4.4.
-      */
-#ifndef KDE_NO_DEPRECATED
-    virtual KDE_DEPRECATED void rowsInsertedArtifficial(const QModelIndex &parent,
-                                                        int start,
-                                                        int end);
-#endif
-
-    /**
-      * @internal
-      * @warning Deprecated since 4.4.
-      */
-#ifndef KDE_NO_DEPRECATED
-    virtual KDE_DEPRECATED void rowsRemoved(const QModelIndex &parent,
-                                            int start,
-                                            int end);
-#endif
-
-    /**
-      * @internal
       * Reposition items as needed.
       */
     virtual void slotLayoutChanged();

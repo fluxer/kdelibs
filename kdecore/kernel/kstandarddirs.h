@@ -238,34 +238,6 @@ public:
      * The later a suffix is added, the higher its priority. Note, that the
      * suffix should end with / but doesn't have to start with one (as prefixes
      * should end with one). So adding a suffix for app_pics would look
-     * like KGlobal::dirs()->addResourceType("app_pics", "data" ,"app/pics");
-     *
-     * @param type Specifies a short descriptive string to access
-     * files of this type.
-     * @param relativename Specifies a directory relative to the root
-     * of the KFSSTND.
-     * @param priority if true, the directory is added before any other,
-     * otherwise after
-     * @return true if successful, false otherwise.
-     *
-     * @deprecated, use addResourceType(type, 0, relativename, priority)
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool addResourceType( const char *type,
-                                         const QString& relativename, bool priority = true );
-#endif
-
-    /**
-     * Adds suffixes for types.
-     *
-     * You may add as many as you need, but it is advised that there
-     * is exactly one to make writing definite.
-     * All basic types are added by addKDEDefaults(),
-     * but for those you can add more relative paths as well.
-     *
-     * The later a suffix is added, the higher its priority. Note, that the
-     * suffix should end with / but doesn't have to start with one (as prefixes
-     * should end with one). So adding a suffix for app_pics would look
      * like KGlobal::dirs()->addResourceType("app_pics", "data", "app/pics");
      *
      * @param type Specifies a short descriptive string to access
@@ -649,9 +621,6 @@ public:
      * @see locate()
      * @see locateLocal()
      */
-#ifndef KDE_NO_DEPRECATED
-    static KDE_DEPRECATED QString kde_default(const char *type);
-#endif
 
     /**
      * @internal (for use by sycoca only)

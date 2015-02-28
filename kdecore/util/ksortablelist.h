@@ -117,13 +117,6 @@ public:
     const T& value() const { return this->second; }
 
     /**
-     * @return the first value (the key)
-     * @deprecated use key()
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED Key index() const { return this->first; }
-#endif
-    /**
      * @return the first value.
      */
     Key key() const { return this->first; }

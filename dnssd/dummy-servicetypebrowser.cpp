@@ -39,12 +39,6 @@ QStringList ServiceTypeBrowser::serviceTypes() const
 	return QStringList();
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool ServiceTypeBrowser::isRunning() const
-{
-	return false;
-}
-#endif
 
 }
 #include "moc_servicetypebrowser.cpp"

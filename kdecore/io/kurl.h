@@ -884,22 +884,6 @@ public:
   operator QVariant() const;
 
   /**
-   * The same as equals(), just with a less obvious name.
-   * Compares this url with @p u.
-   * @param u the URL to compare this one with.
-   * @param ignore_trailing set to true to ignore trailing '/' characters.
-   * @return True if both urls are the same. If at least one of the urls is invalid,
-   * false is returned.
-   * @see operator==. This function should be used if you want to
-   * ignore trailing '/' characters.
-   * @deprecated Use equals() instead.
-   */
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED bool cmp( const KUrl &u, bool ignore_trailing = false ) const;
-#endif
-
-
-  /**
    * Flags to be used in URL comparison functions like equals, or urlcmp
    */
   enum EqualsOption
@@ -1008,15 +992,6 @@ public:
   static KUrl fromPath( const QString& text );
 
   /**
-   * \deprecated
-   * Since KDE4 you can pass both urls and paths to the KUrl constructors.
-   * Use KUrl(text) instead.
-   */
-#ifndef KDE_NO_DEPRECATED
-  static KDE_DEPRECATED KUrl fromPathOrUrl( const QString& text );
-#endif
-
-  /**
    * Creates a KUrl from a string, using the standard conventions for mime data
    * (drag-n-drop or copy-n-paste).
    * Internally used by KUrl::List::fromMimeData, which is probably what you want to use instead.
@@ -1042,55 +1017,6 @@ public:
   void populateMimeData( QMimeData* mimeData,
                          const MetaDataMap& metaData = MetaDataMap(),
                          MimeDataFlags flags = DefaultMimeDataFlags ) const;
-
-  /**
-   * Convert unicoded string to local encoding and use %-style
-   * encoding for all common delimiters / non-ascii characters.
-   * @param str String to encode (can be QString()).
-   * @return the encoded string
-   *
-   * @deprecated use QUrl::toPercentEncoding instead, but note that it
-   * returns a QByteArray and not a QString. Which makes sense since
-   * everything is 7 bit (ascii) after being percent-encoded.
-   */
-#ifndef KDE_NO_DEPRECATED
-  static KDE_DEPRECATED QString encode_string(const QString &str) {
-    return QString::fromLatin1( QUrl::toPercentEncoding( str ).constData() ); //krazy:exclude=qclasses
-  }
-#endif
-
-  /**
-   * Convert unicoded string to local encoding and use %-style
-   * encoding for all common delimiters / non-ascii characters
-   * as well as the slash '/'.
-   * @param str String to encode
-   *
-   * @deprecated use QUrl::toPercentEncoding(str,"/") instead, but note that it
-   * returns a QByteArray and not a QString. Which makes sense since
-   * everything is 7 bit (ascii) after being percent-encoded.
-   *
-   */
-#ifndef KDE_NO_DEPRECATED
-  static KDE_DEPRECATED QString encode_string_no_slash(const QString &str) {
-      return QString::fromLatin1( QUrl::toPercentEncoding( str, "/" ).constData() ); //krazy:exclude=qclasses
-  }
-#endif
-
-  /**
-   * Decode %-style encoding and convert from local encoding to unicode.
-   * Reverse of encode_string()
-   * @param str String to decode (can be QString()).
-   *
-   * @deprecated use QUrl::fromPercentEncoding(encodedURL) instead, but
-   * note that it takes a QByteArray and not a QString. Which makes sense since
-   * everything is 7 bit (ascii) when being percent-encoded.
-   *
-   */
-#ifndef KDE_NO_DEPRECATED
-  static KDE_DEPRECATED QString decode_string(const QString &str) {
-      return QUrl::fromPercentEncoding( str.toLatin1() ); //krazy:exclude=qclasses
-  }
-#endif
 
 
   /**
@@ -1158,34 +1084,6 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::DirectoryOptions)
 
 Q_DECLARE_METATYPE(KUrl)
 Q_DECLARE_METATYPE(KUrl::List)
-
-/**
- * \relates KUrl
- * Compares URLs. They are parsed, split and compared.
- * Two malformed URLs with the same string representation
- * are nevertheless considered to be unequal.
- * That means no malformed URL equals anything else.
- * @deprecated use KUrl(_url1).equals(KUrl(_url2)) instead.
- */
-#ifndef KDE_NO_DEPRECATED
-KDECORE_EXPORT_DEPRECATED bool urlcmp( const QString& _url1, const QString& _url2 ); // KDE5: remove, KUrl::equals is better API
-#endif
-
-/**
- * \relates KUrl
- * Compares URLs. They are parsed, split and compared.
- * Two malformed URLs with the same string representation
- * are nevertheless considered to be unequal.
- * That means no malformed URL equals anything else.
- *
- * @param _url1 A reference URL
- * @param _url2 A URL that will be compared with the reference URL
- * @param options a set of KUrl::EqualsOption flags
- * @deprecated use KUrl(_url1).equals(KUrl(_url2), options) instead.
- */
-#ifndef KDE_NO_DEPRECATED
-KDECORE_EXPORT_DEPRECATED bool urlcmp( const QString& _url1, const QString& _url2, const KUrl::EqualsOptions& options ); // KDE5: remove, KUrl::equals is better API
-#endif
 
 KDECORE_EXPORT uint qHash(const KUrl& kurl);
 

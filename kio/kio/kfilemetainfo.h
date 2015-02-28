@@ -66,23 +66,18 @@ public:
       Fastest       = 0x1,  /**< do the fastest possible read and omit all items
                                  that might need a significantly longer time
                                  than the others */
-// Deprecated
-//      DontCare      = 0x2,  ///< let the plugin decide what to read.
-
-      TechnicalInfo = 0x4,  /**< extract technical details about the file, like
+      TechnicalInfo = 0x2,  /**< extract technical details about the file, like
                                  e.g. play time, resolution or a compressioni
                                  type */
-      ContentInfo   = 0x8,  /**< read information about the content of the file
+      ContentInfo   = 0x4,  /**< read information about the content of the file
                                  like comments or id3 tags */
-      ExternalSources = 0x10, /**<read external metadata sources such as
+      ExternalSources = 0x8, /**<read external metadata sources such as
                                  filesystem based extended attributes if
                                  they are supported for the filesystem;
                                  RDF storages etc */
-      Thumbnail     = 0x20, /**< only read the file's thumbnail, if it contains
+      Thumbnail     = 0x10, /**< only read the file's thumbnail, if it contains
                                  one */
-// Deprecated
-//      Preferred     = 0x40,  ///< get at least the preferred items
-      LinkedData    = 0x80, //< extract linked/related files like html links, source #include etc
+      LinkedData    = 0x40, //< extract linked/related files like html links, source #include etc
       Everything    = 0xffff ///< read everything, even if it might take a while
 
     };
@@ -129,29 +124,11 @@ public:
     KFileMetaInfoItem& item(const QString& key);
     const KFileMetaInfoItem& item(const QString& key) const;
     bool isValid() const;
-    /**
-     * Deprecated
-     **/
     QStringList preferredKeys() const;
-    /**
-     * Deprecated
-     **/
     QStringList supportedKeys() const;
     KIO_EXPORT friend QDataStream& operator >>(QDataStream& s, KFileMetaInfo& )
 ;
     KIO_EXPORT friend QDataStream& operator <<(QDataStream& s, const KFileMetaInfo&);
-    /**
-     * Deprecated
-     **/
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED KFileMetaInfoGroupList preferredGroups() const;
-#endif
-    /**
-     * Deprecated
-     **/
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED KFileMetaInfoGroupList supportedGroups() const;
-#endif
     KFileMetaInfoGroupList groups() const;
     QStringList keys() const;
     const KUrl& url() const;

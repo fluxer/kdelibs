@@ -70,17 +70,6 @@ public:
     void clearRule(const QSslCertificate &cert, const QString &hostName);
     KSslCertificateRule rule(const QSslCertificate &cert, const QString &hostName) const;
 
-    // do not use, it does nothing!
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setRootCertificates(const QList<QSslCertificate> &rootCertificates)
-        { Q_UNUSED(rootCertificates) }
-#endif
-    // use caCertificates() instead
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED QList<QSslCertificate> rootCertificates() const
-        { return caCertificates(); }
-#endif
-
     QList<QSslCertificate> caCertificates() const;
 
     static QList<KSslError> nonIgnorableErrors(const QList<KSslError> &);

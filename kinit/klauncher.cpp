@@ -750,9 +750,6 @@ KLauncher::start_service_by_name(const QString &serviceName, const QStringList &
 {
    KService::Ptr service;
    // Find service
-#ifndef KDE_NO_DEPRECATED
-   service = KService::serviceByName(serviceName);
-#endif
    if (!service)
    {
       requestResult.result = ENOENT;

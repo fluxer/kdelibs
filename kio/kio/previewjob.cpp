@@ -130,37 +130,6 @@ public:
     Q_DECLARE_PUBLIC(PreviewJob)
 };
 
-#ifndef KDE_NO_DEPRECATED
-PreviewJob::PreviewJob( const KFileItemList &items, int width, int height,
-    int iconSize, int iconAlpha, bool scale, bool save,
-    const QStringList *enabledPlugins )
-    : KIO::Job(*new PreviewJobPrivate)
-{
-    Q_D(PreviewJob);
-    d->tOrig = 0;
-    d->shmid = -1;
-    d->shmaddr = 0;
-    d->initialItems = items;
-    d->enabledPlugins = enabledPlugins ? *enabledPlugins : availablePlugins();
-    d->width = width;
-    d->height = height ? height : width;
-    d->cacheWidth = d->width;
-    d->cacheHeight = d->height;
-    d->iconSize = iconSize;
-    d->iconAlpha = iconAlpha;
-    d->bScale = scale;
-    d->bSave = save && scale;
-    d->succeeded = false;
-    d->thumbRoot = QDir::homePath() + QLatin1String("/.thumbnails/");
-    d->ignoreMaximumSize = false;
-    d->sequenceIndex = 0;
-    d->maximumLocalSize = 0;
-    d->maximumRemoteSize = 0;
-
-    // Return to event loop first, determineNextFile() might delete this;
-    QTimer::singleShot(0, this, SLOT(startPreview()));
-}
-#endif
 
 PreviewJob::PreviewJob(const KFileItemList &items,
                        const QSize &size,
@@ -751,40 +720,11 @@ QStringList PreviewJob::supportedMimeTypes()
     return result;
 }
 
-#ifndef KDE_NO_DEPRECATED
-PreviewJob *KIO::filePreview( const KFileItemList &items, int width, int height,
-    int iconSize, int iconAlpha, bool scale, bool save,
-    const QStringList *enabledPlugins )
-{
-    return new PreviewJob(items, width, height, iconSize, iconAlpha,
-                          scale, save, enabledPlugins);
-}
-
-PreviewJob *KIO::filePreview( const KUrl::List &items, int width, int height,
-    int iconSize, int iconAlpha, bool scale, bool save,
-    const QStringList *enabledPlugins )
-{
-    KFileItemList fileItems;
-    for (KUrl::List::ConstIterator it = items.begin(); it != items.end(); ++it) {
-        Q_ASSERT( (*it).isValid() ); // please call us with valid urls only
-        fileItems.append(KFileItem(KFileItem::Unknown, KFileItem::Unknown, *it, true));
-    }
-    return new PreviewJob(fileItems, width, height, iconSize, iconAlpha,
-                          scale, save, enabledPlugins);
-}
-#endif
 
 PreviewJob *KIO::filePreview(const KFileItemList &items, const QSize &size, const QStringList *enabledPlugins)
 {
     return new PreviewJob(items, size, enabledPlugins);
 }
 
-#ifndef KDE_NO_DEPRECATED
-KIO::filesize_t PreviewJob::maximumFileSize()
-{
-    KConfigGroup cg( KGlobal::config(), "PreviewSettings" );
-    return cg.readEntry( "MaximumSize", 5*1024*1024LL /* 5MB */ );
-}
-#endif
 
 #include "moc_previewjob.cpp"

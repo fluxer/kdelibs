@@ -120,16 +120,6 @@ namespace KIO {
         static void doJob(SimpleJob *job);
 
         /**
-         * Schedules @p job scheduled for later execution.
-         * This method is deprecated and just sets the job's priority to 1. It is
-         * recommended to replace calls to scheduleJob(job) with setJobPriority(job, 1).
-         * @param job the job to schedule
-         */
-#ifndef KDE_NO_DEPRECATED
-        KDE_DEPRECATED static void scheduleJob(SimpleJob *job);
-#endif
-
-        /**
          * Changes the priority of @p job; jobs of the same priority run in the order in which
          * they were created. Jobs of lower numeric priority always run before any
          * waiting jobs of higher numeric priority. The range of priority is -10 to 10,

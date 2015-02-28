@@ -1497,27 +1497,7 @@ void KCategorizedView::rowsInserted(const QModelIndex &parent,
     d->rowsInserted(parent, start, end);
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KCategorizedView::rowsInsertedArtifficial(const QModelIndex &parent,
-                                               int start,
-                                               int end)
-{
-    Q_UNUSED(parent);
-    Q_UNUSED(start);
-    Q_UNUSED(end);
-}
-#endif
 
-#ifndef KDE_NO_DEPRECATED
-void KCategorizedView::rowsRemoved(const QModelIndex &parent,
-                                   int start,
-                                   int end)
-{
-    Q_UNUSED(parent);
-    Q_UNUSED(start);
-    Q_UNUSED(end);
-}
-#endif
 
 void KCategorizedView::slotLayoutChanged()
 {

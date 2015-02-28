@@ -23,9 +23,6 @@
 #include <kparts/factory.h>
 #include <kparts/part.h>
 #include <kservicetypetrader.h>
-#ifndef KDE_NO_DEPRECATED
-#include <klibloader.h>
-#endif
 #include <kmimetypetrader.h>
 
 #include <QtCore/QFile>
@@ -34,144 +31,6 @@ namespace KParts
 {
     namespace ComponentFactory
     {
-        /**
-         * This template function allows to ask the given kparts factory to
-         * create an instance of the given template type.
-         *
-         * Example of usage:
-         * \code
-         *     KViewPart *doc = KParts::ComponentFactory::createPartInstanceFromFactory&lt;KViewPart&gt;( factory, parent );
-         * \endcode
-         *
-         * @deprecated use KPluginFactory::create instead
-         *
-         * @param factory The factory to ask for the creation of the component
-         * @param parentWidget the parent widget for the part
-         * @param parent The parent object (see QObject constructor)
-         * @param args A list of string arguments, passed to the factory and possibly
-         *             to the component (see KLibFactory)
-         * @return A pointer to the newly created object or a null pointer if the
-         *         factory was unable to create an object of the given type.
-         */
-#ifndef KDE_NO_DEPRECATED
-        template <class T>
-        KDE_DEPRECATED T *createPartInstanceFromFactory( KParts::Factory *factory,
-                                          QWidget *parentWidget = 0,
-                                          QObject *parent = 0,
-                                          const QStringList &args = QStringList() )
-        {
-            KParts::Part *object = factory->createPart( parentWidget,
-                                                        parent,
-                                                        T::staticMetaObject.className(),
-                                                        args );
-
-            T *result = dynamic_cast<T *>( object );
-            if ( !result )
-                delete object;
-            return result;
-        }
-#endif
-
-        /*
-         * @deprecated use KPluginFactory::create instead
-         */
-#ifndef KDE_NO_DEPRECATED
-        template <class T>
-        KDE_DEPRECATED T *createPartInstanceFromLibrary( const char *libraryName,
-                                          QWidget *parentWidget = 0,
-                                          QObject *parent = 0,
-                                          const QStringList &args = QStringList(),
-                                          int *error = 0 )
-        {
-            KLibrary *library = KLibLoader::self()->library( QFile::decodeName( libraryName ) ); // compatibility hack
-            if ( !library )
-            {
-                if ( error )
-                    *error = KLibLoader::ErrNoLibrary;
-                return 0;
-            }
-            KLibFactory *factory = library->factory();
-            if ( !factory )
-            {
-                library->unload();
-                if ( error )
-                    *error = KLibLoader::ErrNoFactory;
-                return 0;
-            }
-            KParts::Factory *partFactory = dynamic_cast<KParts::Factory *>( factory );
-            if ( !partFactory )
-            {
-                library->unload();
-                if ( error )
-                    *error = KLibLoader::ErrNoFactory;
-                return 0;
-            }
-            T *res = createPartInstanceFromFactory<T>( partFactory, parentWidget,
-                                                       parent, args );
-            if ( !res )
-            {
-                library->unload();
-                if ( error )
-                    *error = KLibLoader::ErrNoComponent;
-            }
-            return res;
-        }
-#endif
-
-        /**
-         * @deprecated use KService::createInstance instead
-         */
-#ifndef KDE_NO_DEPRECATED
-        template <class T>
-        KDE_DEPRECATED T *createPartInstanceFromService( const KService::Ptr &service,
-                                          QWidget *parentWidget = 0,
-                                          QObject *parent = 0,
-                                          const QStringList &args = QStringList(),
-                                          int *error = 0 )
-        {
-            QString library = service->library();
-            if ( library.isEmpty() )
-            {
-                if ( error )
-                    *error = KLibLoader::ErrServiceProvidesNoLibrary;
-                return 0;
-            }
-
-            return createPartInstanceFromLibrary<T>( QFile::encodeName( library ).constData(), parentWidget,
-                                                     parent, args, error );
-        }
-#endif
-
-#ifndef KDE_NO_DEPRECATED
-        template <class T, class ServiceIterator>
-        KDE_DEPRECATED T *createPartInstanceFromServices( ServiceIterator begin,
-                                           ServiceIterator end,
-                                           QWidget *parentWidget = 0,
-                                           QObject *parent = 0,
-                                           const QStringList &args = QStringList(),
-                                           int *error = 0 )
-         {
-            for (; begin != end; ++begin )
-            {
-                KService::Ptr service = *begin;
-
-                if ( error )
-                    *error = 0;
-
-                T *component = createPartInstanceFromService<T>( service, parentWidget,
-                                                                 parent, args, error );
-                if ( component )
-                    return component;
-            }
-
-            if ( error )
-                *error = KLibLoader::ErrNoServiceFound;
-
-            return 0;
-
-        }
-#endif
-
         /**
          * This method creates and returns a KParts part from a serviceType (e.g. a mimetype).
          *
@@ -200,28 +59,6 @@ namespace KParts
          * @return A pointer to the newly created object or a null pointer if the
          *         factory was unable to create an object of the given type.
          */
-#ifndef KDE_NO_DEPRECATED
-        template <class T>
-        KDE_DEPRECATED T *createPartInstanceFromQuery( const QString &mimeType,
-                                        const QString &constraint,
-                                        QWidget *parentWidget = 0,
-                                        QObject *parent = 0,
-                                        const QStringList &args = QStringList(),
-                                        int *error = 0 )
-        {
-            const KService::List offers = KMimeTypeTrader::self()->query( mimeType, QLatin1String("KParts/ReadOnlyPart"), constraint );
-            if ( offers.isEmpty() )
-            {
-                if ( error )
-                    *error = KLibLoader::ErrNoServiceFound;
-                return 0;
-            }
-
-            return createPartInstanceFromServices<T>( offers.begin(), offers.end(),
-                                                      parentWidget,
-                                                      parent, args, error );
-        }
-#endif // KDE_NO_DEPRECATED
     }
 }
 

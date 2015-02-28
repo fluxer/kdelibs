@@ -153,42 +153,6 @@ public:
   ~KRuler();
 
   /**
-   * Sets the minimal value of the ruler pointer (default is 0).
-   *
-   * This method calls update() so that the widget is painted after leaving
-   * to the main event loop.
-   *
-   **/
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED void setMinValue(int);
-#endif
-
-  /**
-   * Returns the minimal value of the ruler pointer.
-   **/
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED int minValue() const;
-#endif
-
-  /**
-   * Sets the maximum value of the ruler pointer (default is 100).
-   *
-   * This method calls update() so that the widget is painted after leaving
-   * to the main event loop.
-   */
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED void setMaxValue(int);
-#endif
-
-  /**
-   * Returns the maximal value of the ruler pointer.
-   */
-#ifndef KDE_NO_DEPRECATED
-  KDE_DEPRECATED int maxValue() const;
-#endif
-
-
-  /**
    * Sets the distance between tiny marks.
    *
    * This is mostly used in the English system (inches) with distance of 1.

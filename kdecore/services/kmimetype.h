@@ -319,20 +319,6 @@ public:
     bool isDefault() const;
 
     /**
-     * If this mimetype is a subclass of another mimetype,
-     * return the name of the parent.
-     *
-     * @return the parent mime type, or QString() if not set
-     *
-     * @deprecated this method does not support multiple inheritance,
-     * which is actually part of the shared-mime-info standard.
-     * Use is(), parentMimeTypes(), or allParentMimeTypes() instead of parentMimeType()
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED QString parentMimeType() const;
-#endif
-
-    /**
      * If this mimetype is a subclass of one or more other mimetypes,
      * return the list of those mimetypes.
      *

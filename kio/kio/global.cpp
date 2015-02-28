@@ -92,30 +92,6 @@ KIO_EXPORT QString KIO::convertSeconds( unsigned int seconds )
     return timeStr;
 }
 
-#ifndef KDE_NO_DEPRECATED
-KIO_EXPORT QTime KIO::calculateRemaining( KIO::filesize_t totalSize, KIO::filesize_t processedSize, KIO::filesize_t speed )
-{
-  QTime remainingTime;
-
-  if ( speed != 0 ) {
-    KIO::filesize_t secs;
-    if ( totalSize == 0 ) {
-      secs = 0;
-    } else {
-      secs = ( totalSize - processedSize ) / speed;
-    }
-    if (secs >= (24*60*60)) // Limit to 23:59:59
-       secs = (24*60*60)-1;
-    int hr = secs / ( 60 * 60 );
-    int mn = ( secs - hr * 60 * 60 ) / 60;
-    int sc = ( secs - hr * 60 * 60 - mn * 60 );
-
-    remainingTime.setHMS( hr, mn, sc );
-  }
-
-  return remainingTime;
-}
-#endif
 
 KIO_EXPORT QString KIO::itemsSummaryString(uint items, uint files, uint dirs, KIO::filesize_t size, bool showSize)
 {

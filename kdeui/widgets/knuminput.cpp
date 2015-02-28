@@ -95,14 +95,6 @@ KNumInput::KNumInput(QWidget* parent)
     setFocusPolicy(Qt::StrongFocus);
 }
 
-#ifndef KDE_NO_DEPRECATED
-KNumInput::KNumInput(QWidget* parent, KNumInput* below)
-    : QWidget(parent), d(new KNumInputPrivate(this, below))
-{
-    setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed));
-    setFocusPolicy(Qt::StrongFocus);
-}
-#endif
 
 KNumInput::~KNumInput()
 {
@@ -335,14 +327,6 @@ public:
 };
 
 
-#ifndef KDE_NO_DEPRECATED
-KIntNumInput::KIntNumInput(KNumInput* below, int val, QWidget *parent, int _base)
-    : KNumInput(parent, below)
-    , d(new KIntNumInputPrivate(this, val))
-{
-    init(val, _base);
-}
-#endif
 
 KIntNumInput::KIntNumInput(QWidget *parent)
     : KNumInput(parent)
@@ -470,13 +454,6 @@ void KIntNumInput::setRange(int lower, int upper, int singleStep)
     setSliderEnabled(priv->slider);
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KIntNumInput::setRange(int lower, int upper, int singleStep, bool slider)
-{
-    setRange(lower, upper, singleStep);
-    setSliderEnabled(slider);
-}
-#endif
 
 void KIntNumInput::setMinimum(int min)
 {
@@ -710,16 +687,6 @@ KDoubleNumInput::KDoubleNumInput(double lower, double upper, double value, QWidg
     init(value, lower, upper, singleStep, precision);
 }
 
-#ifndef KDE_NO_DEPRECATED
-KDoubleNumInput::KDoubleNumInput(KNumInput *below,
-                                 double lower, double upper, double value, QWidget *parent,
-                                 double singleStep, int precision)
-    : KNumInput(parent, below)
-    , d(new KDoubleNumInputPrivate(value))
-{
-    init(value, lower, upper, singleStep, precision);
-}
-#endif
 
 KDoubleNumInput::~KDoubleNumInput()
 {

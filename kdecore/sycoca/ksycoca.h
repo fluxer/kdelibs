@@ -154,37 +154,12 @@ public:
    static void disableAutoRebuild();
 
    /**
-    * When you receive a "databaseChanged" signal, you can query here if
-    * a change has occurred in a specific resource type.
-    * @see KStandardDirs for the various resource types.
-    *
-    * This method is meant to be called from the GUI thread only.
-    * @deprecated use the signal databaseChanged(QStringList) instead.
-    */
-#ifndef KDE_NO_DEPRECATED
-   static KDE_DEPRECATED bool isChanged(const char *type);
-#endif
-
-   /**
     * A read error occurs.
     * @internal
     */
    static void flagError();
 
-   /// @deprecated
-#ifndef KDE_NO_DEPRECATED
-   static KDE_DEPRECATED bool readError();
-#endif
-
 Q_SIGNALS:
-    /**
-     * Connect to this to get notified when the database changes
-     * @deprecated use the databaseChanged(QStringList) signal
-     */
-#ifndef KDE_NO_DEPRECATED
-    QT_MOC_COMPAT void databaseChanged(); // KDE5 TODO: remove
-#endif
-
     /**
      * Connect to this to get notified when the database changes
      * Example: when mimetype definitions have changed, applications showing
@@ -203,9 +178,6 @@ protected:
     KSycocaFactoryList* factories();
 
     // @internal was for kbuildsycoca
-#ifndef KDE_NO_DEPRECATED
-    QDataStream *m_str_deprecated; // KDE5: REMOVE
-#endif
     // @internal used by factories and kbuildsycoca
     QDataStream*& stream();
     friend class KSycocaFactory;

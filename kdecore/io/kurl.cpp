@@ -516,12 +516,6 @@ KUrl::operator QVariant() const
   return qVariantFromValue(*this);
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool KUrl::cmp( const KUrl &u, bool ignore_trailing ) const
-{
-  return equals( u, ignore_trailing ? CompareWithoutTrailingSlash : EqualsOptions(0) );
-}
-#endif
 
 bool KUrl::equals( const KUrl &_u, const EqualsOptions& options ) const
 {
@@ -1446,89 +1440,7 @@ void KUrl::_setEncodedUrl(const QByteArray& url)
     setUrl(QString::fromUtf8(url), QUrl::TolerantMode);
 }
 
-#ifndef KDE_NO_DEPRECATED
-bool urlcmp( const QString& _url1, const QString& _url2 )
-{
-  return QUrl( _url1, QUrl::TolerantMode ) == QUrl( _url2, QUrl::TolerantMode );
-#if 0
-  // Both empty ?
-  if ( _url1.isEmpty() && _url2.isEmpty() )
-    return true;
-  // Only one empty ?
-  if ( _url1.isEmpty() || _url2.isEmpty() )
-    return false;
 
-  KUrl::List list1 = KUrl::split( _url1 );
-  KUrl::List list2 = KUrl::split( _url2 );
-
-  // Malformed ?
-  if ( list1.isEmpty() || list2.isEmpty() )
-    return false;
-
-  return ( list1 == list2 );
-#endif
-}
-#endif
-
-#ifndef KDE_NO_DEPRECATED
-bool urlcmp( const QString& _url1, const QString& _url2, const KUrl::EqualsOptions& _options )
-{
-    // Both empty ?
-    if (_url1.isEmpty() && _url2.isEmpty())
-        return true;
-    // Only one empty ?
-    if (_url1.isEmpty() || _url2.isEmpty())
-        return false;
-
-    KUrl u1(_url1);
-    KUrl u2(_url2);
-    return u1.equals(u2, _options);
-
-#if 0 // kde3 code that supported nested urls
-
-  KUrl::List list1 = KUrl::split( _url1 );
-  KUrl::List list2 = KUrl::split( _url2 );
-
-  // Malformed ?
-  if ( list1.isEmpty() || list2.isEmpty() )
-    return false;
-
-  int size = list1.count();
-  if ( list2.count() != size )
-    return false;
-
-  if ( _ignore_ref )
-  {
-    (*list1.begin()).setRef(QString());
-    (*list2.begin()).setRef(QString());
-  }
-
-  KUrl::List::Iterator it1 = list1.begin();
-  KUrl::List::Iterator it2 = list2.begin();
-  for( ; it1 != list1.end() ; ++it1, ++it2 )
-    if ( !(*it1).equals( *it2, _ignore_trailing ) )
-      return false;
-  return true;
-#endif
-}
-#endif
-
-// static
-#ifndef KDE_NO_DEPRECATED
-KUrl KUrl::fromPathOrUrl( const QString& text )
-{
-    KUrl url;
-    if ( !text.isEmpty() )
-    {
-        if (!QDir::isRelativePath(text) || text[0] == QLatin1Char('~'))
-            url.setPath( text );
-        else
-            url = KUrl( text );
-    }
-
-    return url;
-}
-#endif
 
 static QString _relativePath(const QString &base_dir, const QString &path, bool &isParent)
 {

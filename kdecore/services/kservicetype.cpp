@@ -235,14 +235,6 @@ QString KServiceType::comment() const
     return d->comment();
 }
 
-// ## KDE4: remove?
-#ifndef KDE_NO_DEPRECATED
-QString KServiceType::desktopEntryPath() const
-{
-    return entryPath();
-}
-#endif
-
 bool KServiceType::isDerived() const
 {
     Q_D(const KServiceType);

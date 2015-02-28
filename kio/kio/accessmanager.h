@@ -107,26 +107,6 @@ public:
     bool isExternalContentAllowed() const;
 
     /**
-     * Sets the cookiejar's window id to @p id.
-     *
-     * This is a convenience function that allows you to set the cookiejar's
-     * window id. Note that this function does nothing unless the cookiejar in
-     * use is of type KIO::Integration::CookieJar.
-     *
-     * By default the cookiejar's window id is set to false. Make sure you call
-     * this function and set the window id to its proper value when create an
-     * instance of this object. Otherwise, the KDE cookiejar will not be able
-     * to properly manage session based cookies.
-     *
-     * @see KIO::Integration::CookieJar::setWindowId.
-     * @since 4.4
-     * @deprecated Use setWindow
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setCookieJarWindowId(WId id);
-#endif
-
-    /**
      * Sets the window associated with this network access manager.
      *
      * Note that @p widget will be used as a parent for dialogs in KIO as well
@@ -137,22 +117,6 @@ public:
      * @since 4.7
      */
     void setWindow(QWidget* widget);
-
-    /**
-     * Returns the cookiejar's window id.
-     *
-     * This is a convenience function that returns the window id associated
-     * with the cookiejar. Note that this function will return a 0 if the
-     * cookiejar is not of type KIO::Integration::CookieJar or a window id
-     * has not yet been set.
-     *
-     * @see KIO::Integration::CookieJar::windowId.
-     * @since 4.4
-     * @deprecated Use KIO::Integration::CookieJar::windowId
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED WId cookieJarWindowid() const;
-#endif
 
     /**
      * Returns the window associated with this network access manager.

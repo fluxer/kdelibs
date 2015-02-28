@@ -382,19 +382,7 @@ QStringList KFileMetaInfo::supportedKeys() const
     return QStringList();
 }
 
-#ifndef KDE_NO_DEPRECATED
-KFileMetaInfoGroupList KFileMetaInfo::preferredGroups() const
-{
-    return KFileMetaInfoGroupList();
-}
-#endif
 
-#ifndef KDE_NO_DEPRECATED
-KFileMetaInfoGroupList KFileMetaInfo::supportedGroups() const
-{
-    return KFileMetaInfoGroupList();
-}
-#endif
 #else //KIO_NO_STRIGI
 
 class KFileMetaInfoPrivate : public QSharedData

@@ -85,13 +85,6 @@ KShortcut KShortcutWidget::shortcut() const
     return ret;
 }
 
-#ifndef KDE_NO_DEPRECATED
-void KShortcutWidget::setCheckActionList(const QList<QAction*> &checkList)
-{
-    d->ui.priEditor->setCheckActionList(checkList);
-    d->ui.altEditor->setCheckActionList(checkList);
-}
-#endif
 
 void KShortcutWidget::setCheckActionCollections(const QList<KActionCollection *>& actionCollections)
 {

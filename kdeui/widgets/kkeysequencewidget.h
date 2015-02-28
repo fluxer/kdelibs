@@ -226,16 +226,6 @@ public:
 	 */
     void setCheckActionCollections(const QList<KActionCollection *>& actionCollections);
 
-    /**
-     * @deprecated since 4.1
-     * use setCheckActionCollections so that KKeySequenceWidget knows
-     * in which action collection to call the writeSettings method after stealing
-     * a shortcut from an action.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setCheckActionList(const QList<QAction*> &checkList);
-#endif
-
 	/**
 	 * If the component using this widget supports shortcuts contexts, it has
 	 * to set its component name so we can check conflicts correctly.

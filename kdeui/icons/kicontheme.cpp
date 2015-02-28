@@ -650,8 +650,6 @@ KIconThemeDir::KIconThemeDir(const QString& basedir, const QString &themedir, co
         mContext = KIconLoader::Device;
     else if (tmp == "MimeTypes")
         mContext = KIconLoader::MimeType;
-    else if (tmp == "FileSystems")
-        mContext = KIconLoader::FileSystem;
     else if (tmp == "Applications")
         mContext = KIconLoader::Application;
     else if (tmp == "Actions")

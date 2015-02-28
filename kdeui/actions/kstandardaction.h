@@ -188,11 +188,6 @@ namespace KStandardAction
    */
   KDEUI_EXPORT const char* name( StandardAction id );
 
-  /// @deprecated use name()
-#ifndef KDE_NO_DEPRECATED
-  inline KDE_DEPRECATED const char* stdName(StandardAction act_enum) { return name( act_enum ); }
-#endif
-
   /**
    * Returns a list of all standard names. Used by KAccelManager
    * to give those heigher weight.

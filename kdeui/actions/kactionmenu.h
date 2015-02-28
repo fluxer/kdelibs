@@ -56,27 +56,11 @@ public:
     KActionMenu(const KIcon& icon, const QString& text, QObject *parent);
     virtual ~KActionMenu();
 
-    /**
-     * @deprecated
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void remove( KAction* );
-#endif
-
     void addAction(QAction* action);
     QAction* addSeparator();
     void insertAction(QAction* before, QAction* action);
     QAction* insertSeparator(QAction* before);
     void removeAction(QAction* action);
-
-    /**
-     * Returns this action's menu as a KMenu, if it is one.
-     * If none exists, one will be created.
-     * @deprecated use menu() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    inline KDE_DEPRECATED KMenu* popupMenu() { return menu(); }
-#endif
 
     /**
      * Returns this action's menu as a KMenu, if it is one.

@@ -49,108 +49,6 @@ class KDEUI_EXPORT KTabBar: public QTabBar //krazy:exclude=qclasses
     virtual ~KTabBar();
 
     /**
-     * Sets the tab reordering enabled or disabled. If enabled,
-     * the user can reorder the tabs by drag and drop the tab
-     * headers with the middle mouse button.
-     *
-     * @deprecated Use QTabBar::setMovable() instead.
-     *
-     * Note, however, that QTabBar::setMovable(true) disables
-     * dragging tabs out of the KTabBar (e.g., dragging the tab
-     * URL from Konqueror to another application)!
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setTabReorderingEnabled( bool enable );
-#endif
-
-    /**
-     * Returns whether tab reordering is enabled.
-     *
-     * @deprecated Use QTabBar::isMovable() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool isTabReorderingEnabled() const;
-#endif
-
-    /**
-     * If enabled, a close button is shown above the tab icon.
-     * The signal KTabBar::closeRequest() is emitted, if the
-     * close button has been clicked. Note that the tab must have
-     * an icon to use this feature.
-     *
-     * @deprecated Use QTabBar::setTabsClosable() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setHoverCloseButton( bool );
-#endif
-
-    /** @deprecated Use QTabBar::tabsClosable() instead. */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool hoverCloseButton() const;
-#endif
-
-    /**
-     * If enabled, the close button cannot get clicked until a
-     * minor delay has been passed. This prevents that user
-     * accidentally closes a tab.
-     *
-     * @deprecated Use QTabBar::setTabsClosable() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setHoverCloseButtonDelayed( bool );
-#endif
-
-    /** @deprecated Use QTabBar::tabsClosable() instead. */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool hoverCloseButtonDelayed() const;
-#endif
-
-    /**
-     * If enabled, a close button is available for each tab. The
-     * signal KTabBar::closeRequest() is emitted, if the close button
-     * has been clicked.
-     *
-     * @since 4.1
-     *
-     * @deprecated Use QTabBar::setTabsClosable() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setCloseButtonEnabled( bool );
-#endif
-
-    /**
-     * Returns true if the close button is shown on tabs.
-     *
-     * @since 4.1
-     *
-     * @deprecated Use QTabBar::tabsClosable() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool isCloseButtonEnabled() const;
-#endif
-
-    /**
-     * Sets the 'activate previous tab on close' feature enabled
-     * or disabled. If enabled, as soon as you close a tab, the
-     * previously selected tab is activated again.
-     *
-     * @deprecated Use QTabBar::setSelectionBehaviorOnRemove() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setTabCloseActivatePrevious( bool );
-#endif
-
-    /**
-     * Returns whether the 'activate previous tab on close' feature
-     * is enabled.
-     *
-     * @deprecated Use QTabBar::selectionBehaviorOnRemove() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool tabCloseActivatePrevious() const;
-#endif
-
-    /**
      * Selects the tab which has a tab header at
      * given @param position.
      *
@@ -169,10 +67,6 @@ class KDEUI_EXPORT KTabBar: public QTabBar //krazy:exclude=qclasses
      * The signal is emitted on the press of the mouse button.
      */
     void emptyAreaContextMenu( const QPoint& globalPos );
-    /** @deprecated use tabDoubleClicked(int) and newTabRequest() instead. */
-#ifndef KDE_NO_DEPRECATED
-    QT_MOC_COMPAT void mouseDoubleClick( int );
-#endif
     /**
      * A double left mouse button click was performed over the tab with the @param index.
      * The signal is emitted on the second press of the mouse button, before the release.
@@ -196,10 +90,6 @@ class KDEUI_EXPORT KTabBar: public QTabBar //krazy:exclude=qclasses
      * Tells the KTabWidget which owns the KTabBar to move a tab.
      */
     void moveTab( int, int );
-    /** @deprecated Use QTabBar::tabCloseRequested(int) instead. */
-#ifndef KDE_NO_DEPRECATED
-    QT_MOC_COMPAT void closeRequest( int );
-#endif
 #ifndef QT_NO_WHEELEVENT
     void wheelDelta( int );
 #endif
@@ -222,14 +112,6 @@ class KDEUI_EXPORT KTabBar: public QTabBar //krazy:exclude=qclasses
     virtual QSize tabSizeHint( int index ) const;
 
   protected Q_SLOTS:
-    /** @deprecated */
-#ifndef KDE_NO_DEPRECATED
-    QT_MOC_COMPAT void closeButtonClicked();
-#endif
-    /** @deprecated */
-#ifndef KDE_NO_DEPRECATED
-    QT_MOC_COMPAT void enableCloseButton();
-#endif
     virtual void activateDragSwitchTab();
 
   protected:

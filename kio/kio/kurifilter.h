@@ -645,17 +645,6 @@ class KIO_EXPORT KUriFilterPlugin : public QObject
 
 public:
     /**
-     * List for holding the following search provider information:
-     * ([search provider name], [search query, search query icon name])
-     *
-     * @since 4.5
-     * @deprecated Use @ref KUriFilterSearchProvider instead. See @ref setSearchProviders;
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED typedef QHash<QString, QPair<QString, QString> > ProviderInfoList;
-#endif
-
-    /**
      * Constructs a filter plugin with a given name
      *
      * @param parent the parent object, or 0 for no parent
@@ -718,16 +707,6 @@ protected:
      */
     void setSearchProvider( KUriFilterData& data, const QString& provider,
                             const QString& term, const QChar& separator) const;
-
-    /**
-     * Sets the name of the preferred search providers in @p data.
-     *
-     * @since 4.5
-     * @deprecated Use @ref setSearchProviders instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setPreferredSearchProviders(KUriFilterData& data, const ProviderInfoList& providers) const;
-#endif
 
     /**
      * Sets the information about the search @p providers in @p data.
@@ -954,16 +933,6 @@ public:
      * @return the filtered URI or null if it cannot be filtered
      */
     QString filteredUri( const QString &uri, const QStringList& filters = QStringList() );
-
-    /**
-     * See @ref filterSearchUri(KUriFilterData&, SearchFilterTypes)
-     *
-     * @since 4.5
-     * @deprecated Use filterSearchUri(KUriFilterData&, SearchFilterTypes) instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool filterSearchUri(KUriFilterData &data);
-#endif
 
     /**
      * Filter @p data using the criteria specified by @p types.

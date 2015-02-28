@@ -342,33 +342,6 @@ public:
     bool isImmutable() const;
     /// @}
 
-    /// @{ global
-    /**
-     * @deprecated
-     *
-     * Forces all following write-operations to be performed on @c kdeglobals,
-     * independent of the @c Global flag in writeEntry().
-     *
-     * @param force true to force writing to kdeglobals
-     * @see forceGlobal
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setForceGlobal(bool force);
-#endif
-    /**
-     * @deprecated
-     *
-     * Returns whether all entries are being written to @c kdeglobals.
-     *
-     * @return @c true if all entries are being written to @c kdeglobals
-     * @see setForceGlobal
-     * @deprecated
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED bool forceGlobal() const;
-#endif
-    /// @}
-
     /// @reimp
     QStringList groupList() const;
 

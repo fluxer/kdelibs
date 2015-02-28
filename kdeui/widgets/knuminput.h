@@ -54,15 +54,6 @@ public:
     explicit KNumInput(QWidget* parent=0);
 
     /**
-     * @param below A pointer to another KNumInput.
-     * @param parent parent widget
-     * \deprecated - use the version without the below parameter instead
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_CONSTRUCTOR_DEPRECATED KNumInput(QWidget *parent, KNumInput* below);
-#endif
-
-    /**
      * Destructor
      */
     ~KNumInput();
@@ -203,28 +194,6 @@ public:
     explicit KIntNumInput(int value, QWidget *parent=0,int base = 10);
 
     /**
-     * Constructor
-     *
-     * the difference to the one above is the "below" parameter. It tells
-     * this instance that it is visually put below some other KNumInput widget.
-     * Note that these two KNumInput's need not to have the same parent widget
-     * or be in the same layout group.
-     * The effect is that it'll adjust its layout in correspondence
-     * with the layout of the other KNumInput's (you can build an arbitrary long
-     * chain).
-     *
-     * @param below  append KIntNumInput to the KNumInput chain
-     * @param value  initial value for the control
-     * @param base   numeric base used for display
-     * @param parent parent QWidget
-     *
-     * \deprecated use the version without the below parameter instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_CONSTRUCTOR_DEPRECATED KIntNumInput(KNumInput* below, int value, QWidget *parent, int base = 10);
-#endif
-
-    /**
      * Destructor
      *
      *
@@ -271,13 +240,6 @@ public:
      * @param step step size
      */
     void setRange(int min, int max, int singleStep=1);
-
-    /**
-     * @deprecated Use the other setRange function and setSliderEnabled instead
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setRange(int min, int max, int singleStep, bool slider);
-#endif
 
     /**
       * @param enabled Show the slider
@@ -490,33 +452,6 @@ public:
 
 
     /**
-     * Constructor
-     *
-     * the difference here is the "below" parameter. It tells this
-     * instance that it is visually put below some other KNumInput
-     * widget.  Note that these two KNumInput's need not to have the
-     * same parent widget or be in the same layout group.  The effect
-     * is that it'll adjust its layout in correspondence with the
-     * layout of the other KNumInput's (you can build an arbitrary long
-     * chain).
-     *
-     * @param below  append KDoubleNumInput to the KDoubleNumInput chain
-     * @param lower lower boundary value
-     * @param upper upper boundary value
-     * @param value  initial value for the control
-     * @param singleStep   step size to use for up/down arrow clicks
-     * @param precision number of digits after the decimal point
-     * @param parent parent QWidget
-     *
-     * \deprecated use the version without below instead
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_CONSTRUCTOR_DEPRECATED KDoubleNumInput(KNumInput* below,
-		    double lower, double upper, double value, QWidget *parent=0,double singleStep=0.02,
-		    int precision=2);
-#endif
-
-    /**
      * @return the current value.
      */
     double value() const;
@@ -591,9 +526,6 @@ public:
      */
     void setDecimals(int decimals);
 
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void setPrecision(int precision) { setDecimals(precision); }
-#endif
 
     /**
      * @return the reference point for relativeValue calculation

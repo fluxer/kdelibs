@@ -78,42 +78,8 @@ namespace KParts {
         bool serverSuggestsSave() const;
 
         enum AskSaveResult { Save, Open, Cancel };
-        /**
-         * Ask the user whether to save or open a url in another application.
-         * @param url the URL in question
-         * @param offer the application that will be used to open the URL
-         * @param mimeType the mimetype of the URL
-         * @param suggestedFileName optional file name suggested by the server
-         * @return Save, Open or Cancel.
-         * @deprecated use BrowserOpenOrSaveQuestion
-         * @code
-         *  BrowserOpenOrSaveQuestion dlg(parent, url, mimeType, suggestedFileName);
-         *  const BrowserOpenOrSaveQuestion::Result res = dlg.askOpenOrSave();
-         * @endcode
-         */
-#ifndef KDE_NO_DEPRECATED
-        static KDE_DEPRECATED AskSaveResult askSave( const KUrl & url, KService::Ptr offer, const QString& mimeType, const QString & suggestedFileName = QString() );
-#endif
 
         enum AskEmbedOrSaveFlags { InlineDisposition = 0, AttachmentDisposition = 1 };
-        /**
-         * Similar to askSave but for the case where the current application is
-         * able to embed the url itself (instead of passing it to another app).
-         * @param url the URL in question
-         * @param mimeType the mimetype of the URL
-         * @param suggestedFileName optional filename suggested by the server
-         * @param flags set to AttachmentDisposition if suggested by the server
-         * @return Save, Open or Cancel.
-         * @deprecated use BrowserOpenOrSaveQuestion
-         * @code
-         *  BrowserOpenOrSaveQuestion dlg(parent, url, mimeType, suggestedFileName);
-         *  const BrowserOpenOrSaveQuestion::Result res = dlg.askEmbedOrSave(flags);
-         *  // Important: returns Embed now, not Open!
-         * @endcode
-         */
-#ifndef KDE_NO_DEPRECATED
-        static KDE_DEPRECATED AskSaveResult askEmbedOrSave( const KUrl & url, const QString& mimeType, const QString & suggestedFileName = QString(), int flags = 0 );
-#endif
 
         // virtual so that KHTML can implement differently (HTML cache)
         virtual void save( const KUrl & url, const QString & suggestedFileName );

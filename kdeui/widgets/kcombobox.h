@@ -177,20 +177,6 @@ public:
     */
     virtual ~KComboBox();
 
-    /**
-     * Deprecated to reflect Qt api changes
-     * @deprecated
-     */
-#ifndef KDE_NO_DEPRECATED
-    KDE_DEPRECATED void insertURL( const KUrl& url, int index = -1 )
-    { insertUrl( index < 0 ? count() : index, url ); }
-    KDE_DEPRECATED void insertURL( const QPixmap& pixmap, const KUrl& url, int index = -1 )
-    { insertUrl( index < 0 ? count() : index, QIcon(pixmap), url ); }
-    KDE_DEPRECATED void changeURL( const KUrl& url, int index )
-    { changeUrl( index, url ); }
-    KDE_DEPRECATED void changeURL( const QPixmap& pixmap, const KUrl& url, int index )
-    { changeUrl( index, QIcon(pixmap), url ); }
-#endif
 
 	/**
      * Sets @p url into the edit field of the combobox. It uses
@@ -273,24 +259,6 @@ public:
     * @return @p true when completion mode is automatic.
     */
     bool autoCompletion() const;
-
-    /**
-    * Enables or disable the popup (context) menu.
-    *
-    * This method only works if this widget is editable, i.e. read-write and
-    * allows you to enable/disable the context menu. It does nothing if invoked
-    * for a none-editable combo-box.
-    *
-    * By default, the context menu is created if this widget is editable.
-    * Call this function with the argument set to false to disable the popup
-    * menu.
-    *
-    * @param showMenu If @p true, show the context menu.
-    * @deprecated use setContextMenuPolicy
-    */
-#ifndef KDE_NO_DEPRECATED
-    virtual KDE_DEPRECATED void setContextMenuEnabled( bool showMenu );
-#endif
 
     /**
      * Enables/Disables handling of URL drops. If enabled and the user

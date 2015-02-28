@@ -447,7 +447,6 @@ void KIconDialog::KIconDialogPrivate::init()
         KIconLoader::Device,
         KIconLoader::Emblem,
         KIconLoader::Emote,
-        KIconLoader::FileSystem,
         KIconLoader::International,
         KIconLoader::MimeType,
         KIconLoader::Place,

@@ -170,17 +170,6 @@ public:
     static int autoSelectDelay();
 
     /**
-     * Returns the KDE setting for the shortcut key to open
-     * context menus.
-     *
-     * @return the key that pops up context menus.
-     * @deprecated Simply reimplement QWidget::contextMenuEvent() instead.
-     */
-#ifndef KDE_NO_DEPRECATED
-    static KDE_DEPRECATED int contextMenuKey ();
-#endif
-
-    /**
      * Returns the KDE setting for context menus.
      *
      * @return whether context menus should be shown on button press

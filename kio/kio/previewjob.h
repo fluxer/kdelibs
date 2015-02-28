@@ -62,31 +62,6 @@ namespace KIO {
             ScaledAndCached
         };
 
-#ifndef KDE_NO_DEPRECATED
-        /**
-         * Creates a new PreviewJob.
-         * @param items a list of files to create previews for
-         * @param width the desired width
-         * @param height the desired height, 0 to use the @p width
-         * @param iconSize the size of the mimetype icon to overlay over the
-         * preview or zero to not overlay an icon. This has no effect if the
-         * preview plugin that will be used doesn't use icon overlays.
-         * @param iconAlpha transparency to use for the icon overlay
-         * @param scale if the image is to be scaled to the requested size or
-         * returned in its original size
-         * @param save if the image should be cached for later use
-         * @param enabledPlugins If non-zero, this points to a list containing
-         * the names of the plugins that may be used. If enabledPlugins is zero
-         * all available plugins are used.
-         *
-         * @deprecated Use PreviewJob(KFileItemList, QSize, QStringList) in combination
-         *             with the setter-methods instead. Note that the semantics of
-         *             \p enabledPlugins has been slightly changed.
-         */
-        KDE_DEPRECATED PreviewJob(const KFileItemList& items, int width, int height,
-                                  int iconSize, int iconAlpha, bool scale, bool save,
-                                  const QStringList *enabledPlugins);
-#endif
 
         /**
          * @param items          List of files to create previews for.
@@ -197,18 +172,6 @@ namespace KIO {
          */
         static QStringList supportedMimeTypes();
 
-        /**
-         * Returns the default "maximum file size", in bytes, used by PreviewJob.
-         * This is useful for applications providing a GUI for letting the user change the size.
-         * @since 4.1
-         * @deprecated PreviewJob uses different maximum file sizes dependent on the URL since 4.5.
-         *             The returned file size is only valid for local URLs.
-         */
-#ifndef KDE_NO_DEPRECATED
-        KDE_DEPRECATED static KIO::filesize_t maximumFileSize();
-#endif
-
-
     Q_SIGNALS:
         /**
          * Emitted when a thumbnail picture for @p item has been successfully
@@ -234,57 +197,6 @@ namespace KIO {
         Q_DECLARE_PRIVATE(PreviewJob)
     };
 
-#ifndef KDE_NO_DEPRECATED
-    /**
-     * Creates a PreviewJob to generate or retrieve a preview image
-     * for the given URL.
-     *
-     * @param items files to get previews for
-     * @param width the maximum width to use
-     * @param height the maximum height to use, if this is 0, the same
-     * value as width is used.
-     * @param iconSize the size of the mimetype icon to overlay over the
-     * preview or zero to not overlay an icon. This has no effect if the
-     * preview plugin that will be used doesn't use icon overlays.
-     * @param iconAlpha transparency to use for the icon overlay
-     * @param scale if the image is to be scaled to the requested size or
-     * returned in its original size
-     * @param save if the image should be cached for later use
-     * @param enabledPlugins if non-zero, this points to a list containing
-     * the names of the plugins that may be used.
-     * @return the new PreviewJob
-     * @see PreviewJob::availablePlugins()
-     * @deprecated Use KIO::filePreview(KFileItemList, QSize, QStringList) in combination
-     *             with the setter-methods instead. Note that the semantics of
-     *             \p enabledPlugins has been slightly changed.
-     */
-    KIO_EXPORT_DEPRECATED PreviewJob *filePreview( const KFileItemList &items, int width, int height = 0, int iconSize = 0, int iconAlpha = 70, bool scale = true, bool save = true, const QStringList *enabledPlugins = 0 ); // KDE5: use enums instead of bool scale + bool save
-
-    /**
-     * Creates a PreviewJob to generate or retrieve a preview image
-     * for the given URL.
-     *
-     * @param items files to get previews for
-     * @param width the maximum width to use
-     * @param height the maximum height to use, if this is 0, the same
-     * value as width is used.
-     * @param iconSize the size of the mimetype icon to overlay over the
-     * preview or zero to not overlay an icon. This has no effect if the
-     * preview plugin that will be used doesn't use icon overlays.
-     * @param iconAlpha transparency to use for the icon overlay
-     * @param scale if the image is to be scaled to the requested size or
-     * returned in its original size
-     * @param save if the image should be cached for later use
-     * @param enabledPlugins if non-zero, this points to a list containing
-     * the names of the plugins that may be used.
-     * @return the new PreviewJob
-     * @see PreviewJob::availablePlugins()
-     * @deprecated Use KIO::filePreview(KFileItemList, QSize, QStringList) in combination
-     *             with the setter-methods instead. Note that the semantics of
-     *             \p enabledPlugins has been slightly changed.
-     */
-    KIO_EXPORT_DEPRECATED PreviewJob *filePreview( const KUrl::List &items, int width, int height = 0, int iconSize = 0, int iconAlpha = 70, bool scale = true, bool save = true, const QStringList *enabledPlugins = 0 );
-#endif
 
     /**
      * Creates a PreviewJob to generate a preview image for the given items.
