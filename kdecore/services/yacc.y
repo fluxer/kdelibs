@@ -6,10 +6,8 @@
 
 #define YYLTYPE_IS_TRIVIAL 0
 #define YYENABLE_NLS 0
-#define YYLEX_PARAM _scanner
-#define YYPARSE_PARAM _scanner
 typedef void* yyscan_t;
-void yyerror(const char *s);
+void yyerror(void *_scanner, const char *s);
 int kiotraderlex(YYSTYPE * yylval, yyscan_t scanner);
 int kiotraderlex_init (yyscan_t* scanner);
 int kiotraderlex_destroy(yyscan_t scanner);
@@ -26,6 +24,9 @@ void KTraderParse_initFlex( const char *s, yyscan_t _scanner );
      char *name;
      void *ptr;
 }
+
+%lex-param { void *_scanner }
+%parse-param { void *_scanner }
 
 %token NOT
 %token EQ
@@ -147,7 +148,7 @@ factor: '(' bool_or ')' { $$ = KTraderParse_newBRACKETS( $<ptr>2 ); }
 
 %%
 
-void yyerror ( const char *s )  /* Called by yyparse on error */
+void yyerror ( void *_scanner, const char *s )  /* Called by yyparse on error */
 {
     KTraderParse_error( s );
 }
