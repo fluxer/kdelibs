@@ -1,6 +1,5 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
-#include <keditlistbox.h>
 #include <kurlrequester.h>
 #include <kurlrequesterdialog.h>
 

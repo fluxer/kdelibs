@@ -27,7 +27,6 @@
 #include <QtGui/QListView>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <kmimetyperesolver.h>
 #include <kfileitemdelegate.h>
 
 // Test controller for making the view open up while expandToUrl lists subdirs
