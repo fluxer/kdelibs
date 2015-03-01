@@ -308,12 +308,6 @@ set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS}
    ${KAUTH_HELPER_BACKEND_SRCS}
 )
 
-if(NOT KDE_NO_DEPRECATED)
-    set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS}
-       util/klibloader.cpp
-    )
-endif(NOT KDE_NO_DEPRECATED)
-
 set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS} util/kshareddatacache.cpp)
 set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
 
@@ -496,7 +490,6 @@ install(FILES
    util/kautostart.h
    util/kde_file.h
    util/kdedmodule.h
-   util/kgenericfactory.tcc
    util/klauncher_iface.h
    util/klibrary.h
    util/klibloader.h

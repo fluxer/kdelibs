@@ -24,7 +24,6 @@
 #include "loader_p.h"
 #include "settings_p.h"
 
-#include <keditlistbox.h>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <klocale.h>

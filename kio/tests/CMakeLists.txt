@@ -61,12 +61,6 @@ KIO_EXECUTABLE_TESTS(
   kfiledialogtest
 )
 
-if(NOT KDE_NO_DEPRECATED)
-KIO_EXECUTABLE_TESTS(
-  kiopassdlgtest
-)
-endif(NOT KDE_NO_DEPRECATED)
-
 ########### kfstest ###############
 
 set(kfstest_SRCS kfstest.cpp kfdtest.cpp)

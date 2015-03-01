@@ -21,7 +21,6 @@
 
 #include <kparts/factory.h>
 #include <kparts/part.h>
-#include <kgenericfactory.h>
 #include <kaboutdata.h>
 #include <kdebug.h>
 

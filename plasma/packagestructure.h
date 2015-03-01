@@ -23,7 +23,6 @@
 #include <QtCore/QStringList>
 #include <QtCore/QSharedData>
 
-#include <kgenericfactory.h>
 #include <klocale.h>
 #include <ksharedptr.h>
 

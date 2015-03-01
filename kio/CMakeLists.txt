@@ -130,14 +130,6 @@ set(kiocore_STAT_SRCS
   kio/clipboardupdater.cpp
 )
 
-if(NOT KDE_NO_DEPRECATED)
-  set(kiocore_STAT_SRCS
-    ${kiocore_STAT_SRCS}
-    kio/kmimetyperesolver.cpp
-    kio/passworddialog.cpp
-    )
-endif(NOT KDE_NO_DEPRECATED)
-
 if(NOT KIO_NO_SOLID)
   set(kiocore_STAT_SRCS
     ${kiocore_STAT_SRCS}
@@ -177,13 +169,6 @@ set(kbookmarks_STAT_SRCS
   bookmarks/kbookmarkdombuilder.cc
   bookmarks/kbookmarkdialog.cc
 )
-
-if(NOT KDE_NO_DEPRECATED)
-  set(kbookmarks_STAT_SRCS
-    ${kbookmarks_STAT_SRCS}
-    bookmarks/kbookmarkimporter_crash.cc
-    )
-endif(NOT KDE_NO_DEPRECATED)
 
 set(kfile_STAT_SRCS
   kfile/kabstractfilemodule.cpp
@@ -419,18 +404,6 @@ install( FILES
   bookmarks/konqbookmarkmenu.h
   bookmarks/kbookmarkdialog.h
   DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
-
-if(NOT KDE_NO_DEPRECATED)
-install( FILES
-  bookmarks/kbookmarkimporter_crash.h
-  kfile/kdiskfreespace.h
-  kio/kmimetyperesolver.h
-  DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
-
-install( FILES
-  kio/passworddialog.h
-  DESTINATION ${INCLUDE_INSTALL_DIR}/kio COMPONENT Devel)
-endif(NOT KDE_NO_DEPRECATED)
 
 if(NOT KIO_NO_SOLID)
 install( FILES

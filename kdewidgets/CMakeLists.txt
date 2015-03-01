@@ -55,36 +55,6 @@ if(QT_QTDESIGNER_FOUND)
 
   install(TARGETS kdewidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
 
-  # deprecated widgets
-  if(NOT KDE_NO_DEPRECATED)
-    add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kdedeprecated.cpp
-      COMMAND "${MAKEKDEWIDGETS_EXECUTABLE}" -o ${CMAKE_CURRENT_BINARY_DIR}/kdedeprecated.cpp ${CMAKE_CURRENT_SOURCE_DIR}/kdedeprecated.widgets
-      MAIN_DEPENDENCY kdedeprecated.widgets DEPENDS makekdewidgets)
-
-    set(kdedeprecated_PART_SRCS
-       classpreviews.cpp
-       ${CMAKE_CURRENT_BINARY_DIR}/kdedeprecated.cpp
-    )
-
-    qt4_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/kdedeprecated.cpp ${CMAKE_CURRENT_BINARY_DIR}/kdedeprecated.moc)
-
-
-    qt4_add_resources(kdedeprecated_PART_SRCS kdedeprecated.qrc)
-
-    kde4_add_plugin(kdedeprecated ${kdedeprecated_PART_SRCS})
-
-    target_link_libraries(kdedeprecated  ${KDE4_KIO_LIBS})
-    set_target_properties(kdedeprecated PROPERTIES
-                                        INSTALL_RPATH_USE_LINK_PATH TRUE
-                                        SKIP_BUILD_RPATH TRUE
-                                        BUILD_WITH_INSTALL_RPATH TRUE
-                                        INSTALL_RPATH ${LIB_INSTALL_DIR}
-                          )
-
-    install(TARGETS kdedeprecated  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
-  endif(NOT KDE_NO_DEPRECATED)
-
-
   # kdewebkit widgets
   include_directories(
     ${CMAKE_SOURCE_DIR}/kdewebkit

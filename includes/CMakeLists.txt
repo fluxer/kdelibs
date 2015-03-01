@@ -162,8 +162,6 @@ install( FILES
   KFontRequester
   KFontSizeAction
   KFontUtils
-  KGenericFactory
-  KGenericFactoryBase
   KGlobal
   KGlobalAccel
   KGlobalSettings
@@ -448,15 +446,6 @@ install( FILES
   KWebWallet
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE COMPONENT Devel)
 
-if(NOT KDE_NO_DEPRECATED)
-install( FILES
-  KArrowButton
-  KEditListBox
-  KDiskFreeSpace
-  KMimeTypeResolver
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE COMPONENT Devel)
-endif(NOT KDE_NO_DEPRECATED)
-
 if (UNIX)
    install( FILES
      KDEsuClient
@@ -542,13 +531,6 @@ install( FILES
   KIO/Task
   KIO/TransferJob
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KIO COMPONENT Devel)
-
-if(NOT KDE_NO_DEPRECATED)
-install( FILES
-  KIO/PasswordDialog
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KIO COMPONENT Devel)
-endif(NOT KDE_NO_DEPRECATED)
-
 
 install( FILES
   KMediaPlayer/Player

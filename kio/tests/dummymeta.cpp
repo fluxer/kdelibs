@@ -1,5 +1,3 @@
-#include <kgenericfactory.h>
-
 #include "dummymeta.h"
 
 K_EXPORT_COMPONENT_FACTORY( dummymeta, KGenericFactory<DummyMeta> )

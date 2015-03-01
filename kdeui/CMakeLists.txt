@@ -206,6 +206,7 @@ set(kdeui_LIB_SRCS
  util/kpixmapcache.cpp
  util/kpixmapprovider.cpp
  util/kstandardguiitem.cpp
+ util/kwallet.cpp
  util/kwordwrap.cpp
  util/kxerrorhandler.cpp
  util/kxmessages.cpp
@@ -283,26 +284,6 @@ set(kdeui_LIB_SRCS
  xmlgui/kxmlguiversionhandler.cpp
 )
 
-if(NOT KDE_NO_DEPRECATED)
-set(kdeui_LIB_SRCS
- ${kdeui_LIB_SRCS}
- widgets/karrowbutton.cpp
- widgets/keditlistbox.cpp
-)
-endif(NOT KDE_NO_DEPRECATED)
-
-option(MAC_USE_OSXKEYCHAIN "On OS X, use the keychain as backend for kwallet, instead of kwalletd.")
-
-if (Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
-    FIND_LIBRARY(SECURITY_LIBRARY Security)
-    set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} util/kwallet_mac.cpp util/qosxkeychain.cpp)
-    add_definitions(-DMAC_USE_OSXKEYCHAIN)
-else(Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
-     set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} util/kwallet.cpp)
-else(Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
-  set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} util/kwallet.cpp)
-endif(Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
-
 set(kdeui_LIB_SRCS
  ${kdeui_LIB_SRCS}
  dialogs/kdeprintdialog.cpp
@@ -320,27 +301,13 @@ if (Q_WS_X11)
                                          dialogs/kcupsoptionspageswidget_p.cpp
                                          dialogs/kcupsoptionssettingswidget_p.cpp )
 endif (Q_WS_X11)
-if (Q_WS_MAC)
-    set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} util/kkeyserver_mac.cpp )
-endif (Q_WS_MAC)
-if (Q_WS_WIN)
-    set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} kernel/kapplication_win.cpp util/kkeyserver_win.cpp )
-endif (Q_WS_WIN)
-
 
 if (Q_WS_X11)
     set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} windowmanagement/kwindowsystem_x11.cpp
                                          windowmanagement/kwindowinfo_x11.cpp
                                          windowmanagement/netwm.cpp )
 endif (Q_WS_X11)
-if (Q_WS_MAC)
-    set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} windowmanagement/kwindowsystem_mac.cpp
-                                         windowmanagement/kwindowinfo_mac.cpp)
-endif (Q_WS_MAC)
-if (Q_WS_WIN)
-    set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} windowmanagement/kwindowsystem_win.cpp
-                                         windowmanagement/kwindowinfo_win.cpp)
-endif (Q_WS_WIN)
+
 if (Q_WS_QWS)
     set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} windowmanagement/kwindowsystem_qws.cpp)
 endif (Q_WS_QWS)
@@ -414,13 +381,6 @@ target_link_libraries(kdeui  ${QT_QTSVG_LIBRARY} ${DBUSMENUQT_LIBRARIES})
 if(MINGW)
    target_link_libraries(kdeui gdi32 oleaut32)
 endif(MINGW)
-
-if(Q_WS_MAC)
-   target_link_libraries(kdeui ${CARBON_LIBRARY})
-   if (MAC_USE_OSXKEYCHAIN)
-     target_link_libraries(kdeui ${SECURITY_LIBRARY})
-   endif (MAC_USE_OSXKEYCHAIN)
-endif(Q_WS_MAC)
 
 if(X11_XTest_FOUND)
    target_link_libraries(kdeui ${X11_XTest_LIB})
@@ -672,13 +632,6 @@ install( FILES
  xmlgui/kxmlguifactory.h
  DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )
 
-if(NOT KDE_NO_DEPRECATED)
-install(FILES
- widgets/karrowbutton.h
- widgets/keditlistbox.h
- DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )
-endif(NOT KDE_NO_DEPRECATED)
-
 # KDE 5 remove this
 install(FILES
  widgets/kratingpainter.h
@@ -695,10 +648,6 @@ install( FILES
   DESTINATION  ${INCLUDE_INSTALL_DIR}/sonnet COMPONENT Devel )
 
 install(PROGRAMS preparetips DESTINATION ${BIN_INSTALL_DIR} )
-
-if (Q_WS_MAC)
-  install(PROGRAMS kernel/start-session-bus.sh DESTINATION ${BIN_INSTALL_DIR} )
-endif (Q_WS_MAC)
 
 install( FILES colors/40.colors colors/Oxygen.colors colors/Web.colors colors/Royal.colors colors/Rainbow.colors
          DESTINATION ${CONFIG_INSTALL_DIR}/colors)

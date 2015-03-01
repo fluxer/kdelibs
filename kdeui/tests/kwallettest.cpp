@@ -149,11 +149,9 @@ void KWalletTest::testWallet()
     QVERIFY( !wallet->removeEntry( testKeys[i] ) );
   }
 
-#ifndef MAC_USE_OSXKEYCHAIN
   // delete folder
   wallet->removeFolder( testFolder );
   QVERIFY( !wallet->hasFolder( testFolder ) );
-#endif
 
   // close
   Wallet::closeWallet( testWallet, true );

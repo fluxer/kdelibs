@@ -67,12 +67,6 @@ KDECORE_UNIT_TESTS(
  kmd5benchmark
 )
 
-if(NOT KDE_NO_DEPRECATED)
- KDECORE_UNIT_TESTS(
-  klibloadertest
- )
-endif(NOT KDE_NO_DEPRECATED)
-
 if(UNIX)
  KDECORE_UNIT_TESTS(
   klocalsockettest
@@ -148,18 +142,6 @@ include_directories( ${CMAKE_SOURCE_DIR}/kio/httpfilter )
 kde4_add_unit_test(kfiltertest TESTNAME kdecore-kfiltertest ${kfiltertest_SRCS})
 target_link_libraries(kfiltertest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
 target_link_libraries(kfiltertest ${ZLIB_LIBRARIES})
-
-########### module for klibloadertest ###############
-
-if(NOT KDE_NO_DEPRECATED)
-set(klibloadertestmodule_PART_SRCS klibloadertest_module.cpp )
-
-kde4_add_plugin(klibloadertestmodule ${klibloadertestmodule_PART_SRCS})
-
-target_link_libraries(klibloadertestmodule  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
-
-set_target_properties(klibloadertestmodule PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
-endif(NOT KDE_NO_DEPRECATED)
 
 ########### module for klibloadertest4 ###############
 

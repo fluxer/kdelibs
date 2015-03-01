@@ -7,8 +7,6 @@ include_directories( ${KDE4_KDEUI_INCLUDES} proxymodeltestsuite )
 # The alternative (which requires Qt>=4.6) is #include <QTestGui>
 add_definitions(-DQT_GUI_LIB)
 
-option(MAC_USE_OSXKEYCHAIN "On OS X, use the keychain as backend for kwallet, instead of kwalletd.")
-
 MACRO(KDEUI_UNIT_TESTS)
        FOREACH(_testname ${ARGN})
                kde4_add_unit_test(${_testname} TESTNAME kdeui-${_testname} ${_testname}.cpp)
@@ -154,17 +152,6 @@ KDEUI_EXECUTABLE_TESTS(
   testqtargs
   kpixmapsequenceoverlaypaintertest
 )
-
-if (Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
-  set_source_files_properties(kwallettest.cpp PROPERTIES 
-                               COMPILE_FLAGS -DMAC_USE_OSXKEYCHAIN)
-endif(Q_WS_MAC AND MAC_USE_OSXKEYCHAIN)
-
-if (NOT KDE_NO_DEPRECATED)
-KDEUI_EXECUTABLE_TESTS(
-  keditlistboxtest
-)
-endif (NOT KDE_NO_DEPRECATED)
 
 if (Q_WS_X11)
 
