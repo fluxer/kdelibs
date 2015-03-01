@@ -492,7 +492,6 @@ install(FILES
    util/kdedmodule.h
    util/klauncher_iface.h
    util/klibrary.h
-   util/klibloader.h
    util/kmacroexpander.h
    util/kexportplugin.h
    util/kpluginfactory.h
