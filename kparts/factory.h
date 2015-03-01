@@ -20,8 +20,7 @@
 #ifndef __kparts_factory_h__
 #define __kparts_factory_h__
 
-#include <klibloader.h>
-
+#include <kpluginfactory.h>
 #include <kparts/kparts_export.h>
 
 class QWidget;
@@ -37,9 +36,9 @@ class Part;
  * Factory is an abstract class. Reimplement the
  * createPartObject() method to give it functionality.
  *
- * @see KLibFactory.
+ * @see KPluginFactory.
  */
-class KPARTS_EXPORT Factory : public KLibFactory
+class KPARTS_EXPORT Factory : public KPluginFactory
 {
   Q_OBJECT
 public:
