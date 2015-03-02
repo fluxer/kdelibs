@@ -85,10 +85,6 @@ public:
      **/
     bool isValid() const;
     /**
-     * @brief Retrieve the properties of this field type.
-     **/
-    const PredicateProperties& properties() const;
-    /**
      * Localized name of the predicate.
      **/
     const QString& name() const;
