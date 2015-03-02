@@ -137,7 +137,6 @@ void SlaveInterface::calcSpeed()
     }
 }
 
-#ifndef KDE_USE_FINAL // already defined in slavebase.cpp
 /*
  * Map pid_t to a signed integer type that makes sense for QByteArray;
  * only the most common sizes 16 bit and 32 bit are special-cased.
@@ -145,7 +144,6 @@ void SlaveInterface::calcSpeed()
 template<int T> struct PIDType { typedef pid_t PID_t; } ;
 template<> struct PIDType<2> { typedef qint16 PID_t; } ;
 template<> struct PIDType<4> { typedef qint32 PID_t; } ;
-#endif
 
 bool SlaveInterface::dispatch(int _cmd, const QByteArray &rawdata)
 {
