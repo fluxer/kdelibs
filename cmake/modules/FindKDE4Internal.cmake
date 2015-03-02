@@ -147,7 +147,6 @@
 #
 # The following user adjustable options are provided:
 #
-#  KDE4_ENABLE_FINAL - enable KDE-style enable-final all-in-one-compilation
 #  KDE4_BUILD_TESTS  - enable this to build the testcases
 #  KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
 #  KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR - only present for CMake >= 2.6.3, defaults to TRUE
@@ -178,13 +177,11 @@
 #
 #  KDE4_ADD_PLUGIN ( name [WITH_PREFIX] file1 ... fileN )
 #    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
-#    It supports KDE4_ENABLE_FINAL.
 #    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
 #
 #  KDE4_ADD_KDEINIT_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
 #    Create a KDE application in the form of a module loadable via kdeinit.
 #    A library named kdeinit_<name> will be created and a small executable which links to it.
-#    It supports KDE4_ENABLE_FINAL
 #    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
 #    application bundles are created, with the NOGUI option no bundles but simple executables
 #    are created. Under Windows this flag is also necessary to separate between applications
@@ -194,7 +191,6 @@
 #
 #  KDE4_ADD_EXECUTABLE (name [NOGUI] [TEST] [RUN_UNINSTALLED] file1 ... fileN)
 #    Equivalent to ADD_EXECUTABLE(), but additionally adds some more features:
-#    -support for KDE4_ENABLE_FINAL
 #    -automatic RPATH handling
 #    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
 #    application bundles are created, with the NOGUI option no bundles but simple executables
@@ -208,8 +204,7 @@
 #    to the proper location when installing, so RUN_UNINSTALLED is not necessary anymore).
 #
 #  KDE4_ADD_LIBRARY (name [STATIC | SHARED | MODULE ] file1 ... fileN)
-#    Equivalent to ADD_LIBRARY(). Additionally it supports KDE4_ENABLE_FINAL,
-#    sets LINK_INTERFACE_LIBRARIES target property empty.
+#    Equivalent to ADD_LIBRARY(). Additionally it sets LINK_INTERFACE_LIBRARIES target property empty.
 #    The RPATH is set according to the global RPATH settings as set up by FindKDE4Internal.cmake
 #    (CMAKE_SKIP_BUILD_RPATH=FALSE, CMAKE_BUILD_WITH_INSTALL_RPATH=FALSE, CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE)
 #    Under Windows it adds a -DMAKE_<name>_LIB definition to the compilation.
@@ -598,7 +593,6 @@ endif(NOT PHONON_FOUND)
 
 #####################  provide some options   ##########################################
 
-option(KDE4_ENABLE_FINAL "Enable final all-in-one compilation")
 option(KDE4_BUILD_TESTS  "Build the tests" ON)
 set(KDE4_SERIALIZE_TOOL "" CACHE STRING "Tool to serialize resource-intensive commands in parallel builds")
 
@@ -617,10 +611,6 @@ endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSI
 option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
 
 #####################  some more settings   ##########################################
-
-if( KDE4_ENABLE_FINAL)
-   add_definitions(-DKDE_USE_FINAL)
-endif(KDE4_ENABLE_FINAL)
 
 # If we are building ! kdelibs, check where kdelibs are installed.
 # If they are installed in a directory which contains "lib64", we default to "64" for LIB_SUFFIX,
