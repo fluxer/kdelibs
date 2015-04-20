@@ -269,7 +269,7 @@ void KSystemTrayIcon::activateOrHide( QSystemTrayIcon::ActivationReason reasonCa
                 continue; // obscured by window kept above -> ignore
             NET::WindowType type = info2.windowType( NET::NormalMask | NET::DesktopMask
                 | NET::DockMask | NET::ToolbarMask | NET::MenuMask | NET::DialogMask
-                | NET::OverrideMask | NET::TopMenuMask | NET::UtilityMask | NET::SplashMask );
+                | NET::TopMenuMask | NET::UtilityMask | NET::SplashMask );
             if( type == NET::Dock || type == NET::TopMenu )
                 continue; // obscured by dock or topmenu -> ignore
             pw->raise();
