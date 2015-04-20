@@ -335,46 +335,42 @@ public:
 	**/
 	Dialog   = 5,
 	/**
-           @deprecated has unclear meaning and is KDE-only
-	**/
-	Override = 6, // NON STANDARD
-	/**
 	   indicates a toplevel menu (AKA macmenu). This is a KDE extension to the
 	   _NET_WM_WINDOW_TYPE mechanism.
 	**/
-	TopMenu  = 7, // NON STANDARD
+	TopMenu  = 6, // NON STANDARD
 	/**
 	   indicates a utility window
 	**/
-	Utility  = 8,
+	Utility  = 7,
 	/**
 	   indicates that this window is a splash screen window.
 	**/
-	Splash   = 9,
+	Splash   = 8,
         /**
            indicates a dropdown menu (from a menubar typically)
         **/
-        DropdownMenu = 10,
+        DropdownMenu = 9,
         /**
            indicates a popup menu (a context menu typically)
         **/
-        PopupMenu = 11,
+        PopupMenu = 10,
         /**
            indicates a tooltip window
         **/
-        Tooltip = 12,
+        Tooltip = 11,
         /**
            indicates a notification window
         **/
-        Notification = 13,
+        Notification = 12,
         /**
            indicates that the window is a list for a combobox
         **/
-        ComboBox = 14,
+        ComboBox = 13,
         /**
            indicates a window that represents the dragged object during DND operation
         **/
-        DNDIcon = 15
+        DNDIcon = 14
     };
     
     /**
@@ -388,16 +384,15 @@ public:
 	ToolbarMask  = 1<<3,   ///< @see Toolbar
 	MenuMask     = 1<<4,   ///< @see Menu
 	DialogMask   = 1<<5,   ///< @see Dialog
-	OverrideMask = 1<<6,   ///< @see Override
-	TopMenuMask  = 1<<7,   ///< @see TopMenu
-	UtilityMask  = 1<<8,   ///< @see Utility
-	SplashMask   = 1<<9,   ///< @see Splash
-        DropdownMenuMask = 1<<10, ///< @see DropdownMenu
-        PopupMenuMask    = 1<<11, ///< @see PopupMenu
-        TooltipMask      = 1<<12, ///< @see Tooltip
-        NotificationMask = 1<<13, ///< @see Notification
-        ComboBoxMask     = 1<<14, ///< @see ComboBox
-        DNDIconMask      = 1<<15, ///< @see DNDIcon
+	TopMenuMask  = 1<<6,   ///< @see TopMenu
+	UtilityMask  = 1<<7,   ///< @see Utility
+	SplashMask   = 1<<8,   ///< @see Splash
+        DropdownMenuMask = 1<<9, ///< @see DropdownMenu
+        PopupMenuMask    = 1<<10, ///< @see PopupMenu
+        TooltipMask      = 1<<11, ///< @see Tooltip
+        NotificationMask = 1<<12, ///< @see Notification
+        ComboBoxMask     = 1<<13, ///< @see ComboBox
+        DNDIconMask      = 1<<14, ///< @see DNDIcon
         AllTypesMask     = 0LU-1  ///< All window types.
     };
 
