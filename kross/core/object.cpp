@@ -58,8 +58,3 @@ QStringList Object::methodNames()
     return QStringList();
 }
 
-void Object::virtual_hook(int id, void* ptr)
-{
-    Q_UNUSED(id);
-    Q_UNUSED(ptr);
-}

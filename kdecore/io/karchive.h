@@ -352,8 +352,6 @@ protected:
      */
     void setRootDir( KArchiveDirectory *rootDir );
 
-protected:
-    virtual void virtual_hook( int id, void* data );
 private:
     KArchivePrivate* const d;
 };
@@ -440,8 +438,6 @@ public:
 protected:
     KArchive* archive() const;
 
-protected:
-    virtual void virtual_hook( int id, void* data );
 private:
     KArchiveEntryPrivate* const d;
 };
@@ -525,8 +521,6 @@ public:
      */
     void copyTo(const QString& dest) const;
 
-protected:
-    virtual void virtual_hook( int id, void* data );
 private:
     KArchiveFilePrivate* const d;
 };
@@ -599,8 +593,6 @@ public:
      */
      void copyTo(const QString& dest, bool recursive = true) const;
 
-protected:
-    virtual void virtual_hook( int id, void* data );
 private:
     KArchiveDirectoryPrivate* const d;
 };

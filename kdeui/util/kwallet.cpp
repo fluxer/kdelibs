@@ -1652,10 +1652,6 @@ bool Wallet::keyDoesNotExist(const QString& wallet, const QString& folder, const
 #endif
 }
 
-void Wallet::virtual_hook(int, void*) {
-    //BASE::virtual_hook( id, data );
-}
-
 
 KWalletDLauncher::KWalletDLauncher()
     : m_wallet(0),

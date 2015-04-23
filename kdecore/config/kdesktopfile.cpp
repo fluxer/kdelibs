@@ -353,9 +353,6 @@ KDesktopFile::sortOrder() const
   return d->desktopGroup.readEntry("SortOrder", QStringList());
 }
 
-//void KDesktopFile::virtual_hook( int id, void* data )
-//{ KConfig::virtual_hook( id, data ); }
-
 QString KDesktopFile::readDocPath() const
 {
   Q_D(const KDesktopFile);

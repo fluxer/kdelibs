@@ -89,10 +89,6 @@ void PublicService::publishAsync()
 	emit published(false);
 }
 
-void PublicService::virtual_hook(int, void*)
-{
-}
-
 }
 
 #include "moc_publicservice.cpp"

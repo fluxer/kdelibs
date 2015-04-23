@@ -95,7 +95,7 @@ class KRegExpEditorInterface
 {
 public:
   /**
-   * returns the regular expression of the editor in Qt3 QRegExp
+   * returns the regular expression of the editor in Qt QRegExp
    * syntax. Note, there is also a 'regexp' Qt property available.
    */
   virtual QString regExp() const = 0;
@@ -127,7 +127,7 @@ public:
 // These are public slots: in classes that implement the interface.
 
  /**
-  * Set the regular expression for the editor. The syntax must be Qt3
+  * Set the regular expression for the editor. The syntax must be Qt
   * QRegExp syntax.
   */
   virtual void setRegExp( const QString &regexp ) = 0;

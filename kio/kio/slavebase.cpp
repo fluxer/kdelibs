@@ -985,7 +985,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
         disconnectSlave();
         d->isConnectedToApp = true;
         connectSlave(app_socket);
-        virtual_hook(AppConnectionMade, 0);
     } break;
     case CMD_SLAVE_HOLD: {
         KUrl url;
@@ -1284,9 +1283,6 @@ void SlaveBase::send(int cmd, const QByteArray& arr )
        slaveWriteError = true;
    if (slaveWriteError) exit();
 }
-
-void SlaveBase::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
 
 void SlaveBase::lookupHost(const QString& host)
 {

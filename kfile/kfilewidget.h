@@ -414,9 +414,6 @@ public:
      */
     virtual void setCustomWidget(const QString& text, QWidget* widget);
 
-    /// @internal for future extensions
-    virtual void virtual_hook( int id, void* data );
-
 public Q_SLOTS:
     /**
      * Called when clicking ok (when this widget is used in KFileDialog)

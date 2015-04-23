@@ -133,5 +133,3 @@ KServiceType * KServiceTypeFactory::createEntry(int offset) const
    return newEntry;
 }
 
-void KServiceTypeFactory::virtual_hook( int id, void* data )
-{ KSycocaFactory::virtual_hook( id, data ); }

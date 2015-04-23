@@ -48,7 +48,4 @@ QList<KSessionManager *>& KSessionManager::sessionClients()
     return session_clients;
 }
 
-void KSessionManager::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
 

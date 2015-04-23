@@ -116,6 +116,3 @@ void KRemoteEncoding::setEncoding(const char *name)
 	    << "for name=" << name;
 }
 
-void KRemoteEncoding::virtual_hook(int, void*)
-{
-}

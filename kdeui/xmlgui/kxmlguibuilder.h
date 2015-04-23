@@ -89,8 +89,6 @@ class KDEUI_EXPORT KXMLGUIBuilder
 
   virtual void finalizeGUI( KXMLGUIClient *client );
 
-protected:
-  virtual void virtual_hook( int id, void* data );
 private:
   KXMLGUIBuilderPrivate * const d;
 };

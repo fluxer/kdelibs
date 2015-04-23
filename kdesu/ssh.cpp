@@ -256,7 +256,4 @@ QByteArray SshProcess::displayAuth()
     return "no";
 }
 
-void SshProcess::virtual_hook( int id, void* data )
-{ StubProcess::virtual_hook( id, data ); }
-
 }

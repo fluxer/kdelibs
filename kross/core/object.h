@@ -109,12 +109,6 @@ namespace Kross {
              */
             virtual QStringList methodNames();
 
-            /**
-             * \internal used virtual hook to easier the job to keep
-             * binary compatibility.
-             */
-            virtual void virtual_hook(int id, void* ptr);
-
         private:
             /// \internal d-pointer class.
             class Private;

@@ -179,5 +179,3 @@ bool KAr::closeArchive()
     return true;
 }
 
-void KAr::virtual_hook( int id, void* data )
-{ KArchive::virtual_hook( id, data ); }

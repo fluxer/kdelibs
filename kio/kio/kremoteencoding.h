@@ -109,9 +109,6 @@ public:
    */
   void setEncoding(const char* name);
 
-protected:
-  virtual void virtual_hook(int id, void* data);
-
 private:
   KRemoteEncodingPrivate* const d;
 

@@ -804,11 +804,6 @@ private:
     void setDefaultProperties();
     void updateSupportedProperties( Atom atom );
 
-protected:
-    /** Virtual hook, used to add new "virtual" functions while maintaining
-	binary compatibility. Unused in this class.
-    */
-    virtual void virtual_hook( int id, void* data );
 private:
     NETRootInfoPrivate *p; // krazy:exclude=dpointer (implicitly shared)
 };
@@ -1353,11 +1348,6 @@ private:
     void setIconInternal(NETRArray<NETIcon>& icons, int& icon_count, Atom property, NETIcon icon, Bool replace);
     NETIcon iconInternal(NETRArray<NETIcon>& icons, int icon_count, int width, int height) const;
 
-protected:
-    /** Virtual hook, used to add new "virtual" functions while maintaining
-	binary compatibility. Unused in this class.
-    */
-    virtual void virtual_hook( int id, void* data );
 private:
     NETWinInfoPrivate *p; // krazy:exclude=dpointer (implicitly shared)
     friend class NETWinInfo2;

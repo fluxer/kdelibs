@@ -64,8 +64,6 @@ private:
     enum SuErrors { error=-1, ok=0, killme=1, notauthorized=2 } ;
     int ConverseSU(const char *password);
 
-protected:
-    virtual void virtual_hook( int id, void* data );
 private:
     class SuProcessPrivate;
     SuProcessPrivate * const d;

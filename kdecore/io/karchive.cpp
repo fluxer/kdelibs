@@ -857,14 +857,3 @@ void KArchiveDirectory::copyTo(const QString& dest, bool recursiveCopy ) const
   }
 }
 
-void KArchive::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data )*/; }
-
-void KArchiveEntry::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
-void KArchiveFile::virtual_hook( int id, void* data )
-{ KArchiveEntry::virtual_hook( id, data ); }
-
-void KArchiveDirectory::virtual_hook( int id, void* data )
-{ KArchiveEntry::virtual_hook( id, data ); }

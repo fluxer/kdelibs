@@ -243,6 +243,3 @@ QDataStream* KSycocaFactory::stream() const
     return m_str;
 }
 
-void KSycocaFactory::virtual_hook( int /*id*/, void* /*data*/)
-{ /*BASE::virtual_hook( id, data );*/ }
-

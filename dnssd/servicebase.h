@@ -185,7 +185,6 @@ public:
 
 protected:
 	ServiceBase(ServiceBasePrivate* const d);
-	virtual void virtual_hook(int, void*);
 	ServiceBasePrivate* const d;
 
 };

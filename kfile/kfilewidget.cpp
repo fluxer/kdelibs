@@ -2706,29 +2706,6 @@ void KFileWidget::setCustomWidget(const QString& text, QWidget* widget)
     d->lafBox->addWidget(widget, 2, 1, Qt::AlignVCenter);
 }
 
-void KFileWidget::virtual_hook( int id, void* data )
-{
-    // this is a workaround to avoid binary compatibility breakage
-    // since setConfirmOverwrite in kabstractfilewidget.h is a new function
-    // introduced for 4.2. As stated in kabstractfilewidget.h this workaround
-    // is going to become a virtual function for KDE5
-
-    switch (id) {
-        case 0: { // setConfirmOverwrite(bool)
-                bool *enable = static_cast<bool*>(data);
-                d->confirmOverwrite = *enable;
-            }
-            break;
-        case 1: { // setInlinePreviewShown(bool)
-                bool *show = static_cast<bool*>(data);
-                d->setInlinePreviewShown(*show);
-            }
-            break;
-        default:
-            break;
-    }
-}
-
 KDirOperator* KFileWidget::dirOperator()
 {
     return d->ops;

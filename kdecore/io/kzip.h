@@ -155,9 +155,6 @@ protected:
                              const QString& group, mode_t perm, time_t atime,
                              time_t mtime, time_t ctime );
 
-protected:
-    virtual void virtual_hook( int id, void* data );
-
 private:
     class KZipPrivate;
     KZipPrivate * const d;

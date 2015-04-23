@@ -230,7 +230,4 @@ QByteArray StubProcess::displayAuth()
 #endif
 
 
-void StubProcess::virtual_hook( int id, void* data )
-{ PtyProcess::virtual_hook( id, data ); }
-
 }

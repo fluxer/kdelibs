@@ -857,6 +857,3 @@ bool KTar::doWriteSymLink(const QString &name, const QString &target,
     return retval;
 }
 
-void KTar::virtual_hook( int id, void* data ) {
-    KArchive::virtual_hook( id, data );
-}

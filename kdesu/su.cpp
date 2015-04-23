@@ -329,7 +329,4 @@ int SuProcess::ConverseSU(const char *password)
     return ok;
 }
 
-void SuProcess::virtual_hook( int id, void* data )
-{ StubProcess::virtual_hook( id, data ); }
-
 }

@@ -874,8 +874,4 @@ QString KConfigPrivate::lookupData(const QByteArray& group, const char* key,
     return entryMap.getEntry(group, key, QString(), flags, expand);
 }
 
-void KConfig::virtual_hook(int /*id*/, void* /*data*/)
-{
-	/* nothing */
-}
 

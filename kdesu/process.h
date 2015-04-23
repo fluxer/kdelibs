@@ -191,9 +191,6 @@ private:
     int init();
     int setupTTY();
 
-protected:
-    /** Standard hack to add virtual methods in a BC way. Unused. */
-    virtual void virtual_hook( int id, void* data );
 private:
     class PtyProcessPrivate;
     PtyProcessPrivate* const d;

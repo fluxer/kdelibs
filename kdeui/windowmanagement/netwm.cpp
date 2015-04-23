@@ -4674,12 +4674,6 @@ NET::MappingState NETWinInfo::mappingState() const {
     return p->mapping_state;
 }
 
-void NETRootInfo::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
-void NETWinInfo::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
 int NET::timestampCompare( unsigned long time1, unsigned long time2 )
     {
     return KXUtils::timestampCompare( time1, time2 );

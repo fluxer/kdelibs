@@ -130,6 +130,4 @@ KServiceGroup* KServiceGroupFactory::createEntry(int offset) const
    return createGroup(offset, true);
 }
 
-void KServiceGroupFactory::virtual_hook( int id, void* data )
-{ KSycocaFactory::virtual_hook( id, data ); }
 

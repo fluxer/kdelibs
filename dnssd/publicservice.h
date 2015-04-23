@@ -225,9 +225,6 @@ Q_SIGNALS:
 
 private:
 	friend class PublicServicePrivate;
-
-protected:
-	virtual void virtual_hook(int, void*);
 };
 
 

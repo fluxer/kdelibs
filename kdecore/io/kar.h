@@ -83,8 +83,6 @@ protected:
     virtual bool openArchive( QIODevice::OpenMode mode );
     virtual bool closeArchive();
 
-protected:
-    virtual void virtual_hook( int id, void* data );
 private:
     class KArPrivate;
     KArPrivate* const d;

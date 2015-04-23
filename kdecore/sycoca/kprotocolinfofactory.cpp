@@ -113,9 +113,6 @@ KProtocolInfo::Ptr KProtocolInfoFactory::findProtocol(const QString &protocol)
   return info;
 }
 
-void KProtocolInfoFactory::virtual_hook( int id, void* data )
-{ KSycocaFactory::virtual_hook( id, data ); }
-
 KProtocolInfoFactory* KProtocolInfoFactory::self()
 {
     return kProtocolInfoFactoryInstance->self();

@@ -103,11 +103,6 @@ public:
          */
         virtual bool copiedFileWasModified(const KUrl& src, const KUrl& dest, const KDateTime& srcTime, const KDateTime& destTime);
 
-        /**
-         * \internal, for future extensions
-         */
-        virtual void virtual_hook(int id, void* data);
-
     private:
         class UiInterfacePrivate;
         UiInterfacePrivate *d;

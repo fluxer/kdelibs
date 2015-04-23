@@ -994,11 +994,3 @@ void TCPSlaveBase::setBlocking(bool b)
     d->isBlocking = b;
 }
 
-void TCPSlaveBase::virtual_hook(int id, void* data)
-{
-    if (id == SlaveBase::AppConnectionMade) {
-        d->sendSslMetaData();
-    } else {
-        SlaveBase::virtual_hook(id, data);
-    }
-}

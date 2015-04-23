@@ -383,9 +383,6 @@ protected:
 
    // KDE5 TODO: virtual void loadActionLists() {}, called when the guiclient is added to the xmlgui factory
 
-protected:
-  virtual void virtual_hook( int id, void* data );
-
 private:
   KXMLGUIClientPrivate * const d;
 };

@@ -370,9 +370,6 @@ public:
     virtual void accept() = 0;
     virtual void slotCancel() = 0;
 
-    /// @internal for future extensions
-    virtual void virtual_hook( int id, void* data ) = 0;
-
     /**
      * Sets whether the user should be asked for confirmation
      * when an overwrite might occurr.
@@ -381,7 +378,6 @@ public:
      * @since 4.2
      */
     void setConfirmOverwrite(bool enable){  // KDE5 TODO: make this virtual
-        virtual_hook(0, static_cast<void*>(&enable));
     }
 
     /**
@@ -391,7 +387,6 @@ public:
      * @since 4.2
      */
     void setInlinePreviewShown(bool show) { // KDE5 TODO: make this virtual
-        virtual_hook(1, static_cast<void*>(&show));
     }
 };
 

@@ -896,7 +896,6 @@ protected:
     enum VirtualFunctionId {
         AppConnectionMade = 0
     };
-    virtual void virtual_hook( int id, void* data );
 
 private:
 #if 0 // TODO KDE5: enable

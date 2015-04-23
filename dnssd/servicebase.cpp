@@ -80,10 +80,6 @@ bool ServiceBase::operator!=(const ServiceBase& o) const
     return !(*this == o);
 }
 
-void ServiceBase::virtual_hook(int, void*)
-{}
-
-
 bool domainIsLocal(const QString& domain)
 {
 	return domain.section('.',-1,-1).toLower()==QLatin1String("local");

@@ -138,16 +138,3 @@ bool KIconEngine::write(QDataStream &out) const
     return true;
 }
 
-void KIconEngine::virtual_hook(int id, void *data)
-{
-    switch (id) {
-    case IconNameHook: {
-        QString *name = reinterpret_cast<QString*>(data);
-        *name = mIconName;
-        break;
-    }
-    default:
-        QIconEngineV2::virtual_hook(id, data);
-        break;
-    }
-}

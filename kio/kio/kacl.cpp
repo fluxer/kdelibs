@@ -652,9 +652,6 @@ QString KACL::KACLPrivate::getGroupName( gid_t gid ) const
 }
 #endif
 
-void KACL::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
-
 QDataStream & operator<< ( QDataStream & s, const KACL & a )
 {
     s << a.asString();

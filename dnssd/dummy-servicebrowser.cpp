@@ -53,9 +53,6 @@ QList<RemoteService::Ptr> ServiceBrowser::services() const
     return QList<RemoteService::Ptr>();
 }
 
-void ServiceBrowser::virtual_hook(int, void*)
-{}
-
 QHostAddress ServiceBrowser::resolveHostName(const QString &hostname)
 {
     Q_UNUSED(hostname);

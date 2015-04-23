@@ -417,6 +417,4 @@ void KXMLGUIBuilder::finalizeGUI( KXMLGUIClient * )
 #endif
 }
 
-void KXMLGUIBuilder::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }
 

@@ -41,5 +41,3 @@ QPixmap KUrlPixmapProvider::pixmapFor( const QString& url, int size )
 	return KIO::pixmapForUrl( u, 0, KIconLoader::Desktop, size );
 }
 
-void KUrlPixmapProvider::virtual_hook( int id, void* data )
-{ KPixmapProvider::virtual_hook( id, data ); }

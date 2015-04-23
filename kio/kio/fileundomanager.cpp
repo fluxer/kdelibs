@@ -812,9 +812,5 @@ bool FileUndoManager::UiInterface::showProgressInfo() const
     return d->m_showProgressInfo;
 }
 
-void FileUndoManager::UiInterface::virtual_hook(int, void*)
-{
-}
-
 #include "moc_fileundomanager_p.cpp"
 #include "moc_fileundomanager.cpp"

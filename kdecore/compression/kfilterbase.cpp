@@ -165,5 +165,3 @@ KFilterBase::FilterFlags KFilterBase::filterFlags() const
     return d->m_flags;
 }
 
-void KFilterBase::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }

@@ -108,5 +108,3 @@ KConfigBase::~KConfigBase()
 KConfigBase::KConfigBase()
 {}
 
-void KConfigBase::virtual_hook(int , void *)
-{}

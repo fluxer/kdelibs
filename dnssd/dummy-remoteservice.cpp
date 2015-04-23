@@ -50,12 +50,6 @@ bool RemoteService::isResolved() const
 }
 
 
-void RemoteService::virtual_hook(int, void*)
-{
-	// BASE::virtual_hook(int, void*);
-}
-
-
 }
 
 #include "moc_remoteservice.cpp"

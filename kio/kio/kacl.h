@@ -190,8 +190,6 @@ public:
    * to take such strings as input. */
   QString asString() const;
 
-protected:
-  virtual void virtual_hook( int id, void* data );
 private:
   class KACLPrivate;
   KACLPrivate* const d;

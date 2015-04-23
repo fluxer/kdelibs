@@ -231,5 +231,3 @@ QString KComponentData::catalogName() const
     return d->aboutData.catalogName();
 }
 
-void KComponentData::virtual_hook(int, void*)
-{ /*BASE::virtual_hook(id, data);*/ }

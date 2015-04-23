@@ -279,9 +279,6 @@ Q_SIGNALS:
 	 */
 	void finished();
 
-protected:
-	virtual void virtual_hook(int, void*);
-
 private:
 	friend class ServiceBrowserPrivate;
 	ServiceBrowserPrivate* const d;

@@ -71,8 +71,6 @@ protected:
 private:
     int ConverseSsh(const char *password, int check);
 
-protected:
-    virtual void virtual_hook( int id, void* data );
 private:
     class SshProcessPrivate;
     SshProcessPrivate * const d;

@@ -368,11 +368,6 @@ protected:
     friend class KConfigGroup;
     friend class KConfigGroupPrivate;
 
-    /** Virtual hook, used to add new "virtual" functions while maintaining
-     * binary compatibility. Unused in this class.
-     */
-    virtual void virtual_hook( int id, void* data );
-
     KConfigPrivate *const d_ptr;
 
     KConfig(KConfigPrivate &d);

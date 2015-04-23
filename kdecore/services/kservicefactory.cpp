@@ -309,6 +309,3 @@ bool KServiceFactory::hasOffer( int serviceTypeOffset, int serviceOffersOffset, 
     return found;
 }
 
-void KServiceFactory::virtual_hook( int id, void* data )
-{ KSycocaFactory::virtual_hook( id, data ); }
-

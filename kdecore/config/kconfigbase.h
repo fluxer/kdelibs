@@ -170,11 +170,6 @@ protected:
     virtual const KConfigGroup groupImpl(const QByteArray &b) const = 0;
     virtual void deleteGroupImpl(const QByteArray &group, WriteConfigFlags flags = Normal) = 0;
     virtual bool isGroupImmutableImpl(const QByteArray& aGroup) const = 0;
-
-    /** Virtual hook, used to add new "virtual" functions while maintaining
-     * binary compatibility. Unused in this class.
-     */
-    virtual void virtual_hook( int id, void* data );
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KConfigBase::WriteConfigFlags)

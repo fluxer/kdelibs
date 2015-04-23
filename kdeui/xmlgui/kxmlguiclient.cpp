@@ -747,5 +747,3 @@ void KXMLGUIClient::prepareXMLUnplug( QWidget * w )
     client->prepareXMLUnplug( w );
 }
 
-void KXMLGUIClient::virtual_hook( int, void* )
-{ /*BASE::virtual_hook( id, data );*/ }

@@ -543,11 +543,6 @@ class KDEUI_EXPORT Wallet : public QObject
 		WalletPrivate* const d;
 		Q_PRIVATE_SLOT(d, void walletServiceUnregistered())
 
-	protected:
-		/**
-		 *  @internal
-		 */
-		virtual void virtual_hook(int id, void *data);
 };
 
 }
