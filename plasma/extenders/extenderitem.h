@@ -292,13 +292,11 @@ class PLASMA_EXPORT ExtenderItem : public QGraphicsWidget
     protected:
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-        void moveEvent(QGraphicsSceneMoveEvent *event);
         void resizeEvent(QGraphicsSceneResizeEvent *event);
 
         void mousePressEvent(QGraphicsSceneMouseEvent *event);
         void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
         void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
         void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
         void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);

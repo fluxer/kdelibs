@@ -270,7 +270,6 @@ Q_SIGNALS:
     void currentChanged(int index);
 
 protected:
-    void wheelEvent(QGraphicsSceneWheelEvent *event);
     void resizeEvent(QGraphicsSceneResizeEvent * event);
     void changeEvent(QEvent *event);
 

@@ -651,12 +651,6 @@ void ExtenderItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     }
 }
 
-void ExtenderItem::moveEvent(QGraphicsSceneMoveEvent *event)
-{
-    Q_UNUSED(event)
-    //not needed anymore, but here for binary compatibility
-}
-
 void ExtenderItem::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     Q_UNUSED(event)
@@ -782,12 +776,6 @@ void ExtenderItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
 bool ExtenderItem::sceneEventFilter(QGraphicsItem *, QEvent *)
 {
     return false;
-}
-
-void ExtenderItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event)
-    //not needed anymore, but here for binary compatibility
 }
 
 void ExtenderItem::hoverMoveEvent(QGraphicsSceneHoverEvent *)

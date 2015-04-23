@@ -605,12 +605,6 @@ KTabBar *TabBar::nativeWidget() const
     return d->tabProxy->native;
 }
 
-void TabBar::wheelEvent(QGraphicsSceneWheelEvent * event)
-{
-    Q_UNUSED(event)
-    //Still here for binary compatibility
-}
-
 void TabBar::changeEvent(QEvent *event)
 {
     d->changeEvent(event);
