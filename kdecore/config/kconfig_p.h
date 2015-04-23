@@ -107,8 +107,6 @@ private:
     bool isReadOnly() const { return configState == KConfig::ReadOnly; }
 
     bool setLocale(const QString& aLocale);
-    QStringList getGlobalFiles() const;
-    void parseGlobalFiles();
     void parseConfigFiles();
     void initCustomized(KConfig*);
     bool lockLocal();

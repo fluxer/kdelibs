@@ -62,24 +62,8 @@ KConfigPrivate::KConfigPrivate(const KComponentData &componentData_, KConfig::Op
 {
     sGlobalFileName = componentData.dirs()->saveLocation("config", QString(), false) + QLatin1String("kdeglobals");
 
-    static int use_etc_kderc = -1;
-    if (use_etc_kderc < 0)
-        use_etc_kderc = getenv("KDE_SKIP_KDERC") != 0 ? 0 : 1; // for unit tests
-    if (use_etc_kderc) {
-
-        etc_kderc =
-            QLatin1String("/etc/kde4rc");
-        if (!KStandardDirs::checkAccess(etc_kderc, R_OK)) {
-            etc_kderc.clear();
-        }
-    }
-
 //    if (!mappingsRegistered) {
 //        KEntryMap tmp;
-//        if (!etc_kderc.isEmpty()) {
-//            KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, etc_kderc, QLatin1String("INI"));
-//            backend->parseConfig( "en_US", tmp, KConfigBackend::ParseDefaults);
-//        }
 //        const QString kde4rc(QDir::home().filePath(".kde4rc"));
 //        if (KStandardDirs::checkAccess(kde4rc, R_OK)) {
 //            KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, kde4rc, QLatin1String("INI"));
@@ -584,44 +568,7 @@ void KConfig::reparseConfiguration()
 
     d->bFileImmutable = false;
 
-    // Parse all desired files from the least to the most specific.
-    if (d->wantGlobals())
-        d->parseGlobalFiles();
-
     d->parseConfigFiles();
-}
-
-
-QStringList KConfigPrivate::getGlobalFiles() const
-{
-    const KStandardDirs *const dirs = componentData.dirs();
-    QStringList globalFiles;
-    foreach (const QString& dir1, dirs->findAllResources("config", QLatin1String("kdeglobals")))
-        globalFiles.push_front(dir1);
-    foreach (const QString& dir2, dirs->findAllResources("config", QLatin1String("system.kdeglobals")))
-        globalFiles.push_front(dir2);
-    if (!etc_kderc.isEmpty())
-        globalFiles.push_front(etc_kderc);
-    return globalFiles;
-}
-
-void KConfigPrivate::parseGlobalFiles()
-{
-    const QStringList globalFiles = getGlobalFiles();
-//    qDebug() << "parsing global files" << globalFiles;
-
-    // TODO: can we cache the values in etc_kderc / other global files
-    //       on a per-application basis?
-    const QByteArray utf8Locale = locale.toUtf8();
-    foreach(const QString& file, globalFiles) {
-        KConfigBackend::ParseOptions parseOpts = KConfigBackend::ParseGlobal|KConfigBackend::ParseExpansions;
-        if (file != sGlobalFileName)
-            parseOpts |= KConfigBackend::ParseDefaults;
-
-        KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, file);
-        if ( backend->parseConfig( utf8Locale, entryMap, parseOpts) == KConfigBackend::ParseImmutable)
-            break;
-    }
 }
 
 void KConfigPrivate::parseConfigFiles()
@@ -633,9 +580,7 @@ void KConfigPrivate::parseConfigFiles()
 
         QList<QString> files;
         if (wantDefaults()) {
-            if (bSuppressGlobal) {
-                files = getGlobalFiles();
-            } else {
+            if (!bSuppressGlobal) {
                 foreach (const QString& f, componentData.dirs()->findAllResources(
                                                     resourceType, fileName))
                     files.prepend(f);
