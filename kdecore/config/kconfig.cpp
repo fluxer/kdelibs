@@ -62,33 +62,6 @@ KConfigPrivate::KConfigPrivate(const KComponentData &componentData_, KConfig::Op
 {
     sGlobalFileName = componentData.dirs()->saveLocation("config", QString(), false) + QLatin1String("kdeglobals");
 
-    static int use_etc_kderc = -1;
-    if (use_etc_kderc < 0)
-        use_etc_kderc = getenv("KDE_SKIP_KDERC") != 0 ? 0 : 1; // for unit tests
-    if (use_etc_kderc) {
-
-        etc_kderc =
-            QLatin1String("/etc/kde4rc");
-        if (!KStandardDirs::checkAccess(etc_kderc, R_OK)) {
-            etc_kderc.clear();
-        }
-    }
-
-//    if (!mappingsRegistered) {
-//        KEntryMap tmp;
-//        if (!etc_kderc.isEmpty()) {
-//            KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, etc_kderc, QLatin1String("INI"));
-//            backend->parseConfig( "en_US", tmp, KConfigBackend::ParseDefaults);
-//        }
-//        const QString kde4rc(QDir::home().filePath(".kde4rc"));
-//        if (KStandardDirs::checkAccess(kde4rc, R_OK)) {
-//            KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, kde4rc, QLatin1String("INI"));
-//            backend->parseConfig( "en_US", tmp, KConfigBackend::ParseOptions());
-//        }
-//        KConfigBackend::registerMappings(tmp);
-//        mappingsRegistered = true;
-//    }
-
     setLocale(KGlobal::hasLocale() ? KGlobal::locale()->language() : KLocale::defaultLanguage());
 }
 
@@ -598,10 +571,6 @@ QStringList KConfigPrivate::getGlobalFiles() const
     QStringList globalFiles;
     foreach (const QString& dir1, dirs->findAllResources("config", QLatin1String("kdeglobals")))
         globalFiles.push_front(dir1);
-    foreach (const QString& dir2, dirs->findAllResources("config", QLatin1String("system.kdeglobals")))
-        globalFiles.push_front(dir2);
-    if (!etc_kderc.isEmpty())
-        globalFiles.push_front(etc_kderc);
     return globalFiles;
 }
 
