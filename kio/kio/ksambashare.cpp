@@ -70,7 +70,9 @@ KSambaSharePrivate::~KSambaSharePrivate()
 
 bool KSambaSharePrivate::isSambaInstalled()
 {
-    if (!KStandardDirs::findExe("smbd").isEmpty()) {
+    // smbd is usually found as /usr/sbin/smbd
+    const QString exePath = "/usr/sbin:/usr/bin:/sbin:/bin";
+    if (!KStandardDirs::findExe("smbd", exePath).isEmpty()) {
         return true;
     }
 
