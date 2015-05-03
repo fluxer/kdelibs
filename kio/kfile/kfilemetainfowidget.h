@@ -33,19 +33,9 @@ class KIO_EXPORT KFileMetaInfoWidget: public QWidget
 {
     Q_OBJECT
 public:
-    enum Mode
-    {
-      ReadOnly  = 1,  ///Only display the meta information, and do not permit the user to edit them
-      ReadWrite = 0,  ///Permits user to edit the displayed meta-info
-      Reserve = 0xff
-    };
-
-    explicit KFileMetaInfoWidget(KFileMetaInfoItem item,
+    KFileMetaInfoWidget(KFileMetaInfoItem item,
                                  QValidator* val = 0,
                                  QWidget* parent = 0);
-
-    KFileMetaInfoWidget(KFileMetaInfoItem item, Mode mode, QValidator* val = 0,
-                        QWidget* parent = 0 );
 
     virtual ~KFileMetaInfoWidget();
 

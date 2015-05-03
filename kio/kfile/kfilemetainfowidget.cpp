@@ -44,7 +44,7 @@ public:
     {
     }
 
-    void init(KFileMetaInfoItem item, KFileMetaInfoWidget::Mode mode);
+    void init(KFileMetaInfoItem item);
 
     KFileMetaInfoWidget *q;
     QVariant m_value;  // the value will be saved here until apply() is called
@@ -66,34 +66,22 @@ public:
 
 KFileMetaInfoWidget::KFileMetaInfoWidget(KFileMetaInfoItem item,
                                          QValidator* val,
-                                         QWidget* parent )
-    : QWidget(parent), d(new KFileMetaInfoWidgetPrivate(this))
-{
-    d->m_value = item.value();
-    d->m_item = item;
-    d->m_validator = val;
-    d->init(item, ReadWrite);
-}
-
-KFileMetaInfoWidget::KFileMetaInfoWidget(KFileMetaInfoItem item,
-                                         Mode mode,
-                                         QValidator* val,
                                          QWidget* parent)
     : QWidget(parent), d(new KFileMetaInfoWidgetPrivate(this))
 {
     d->m_value = item.value();
     d->m_item = item;
     d->m_validator = val;
-    d->init(item, mode);
+    d->init(item);
 }
 
-void KFileMetaInfoWidgetPrivate::init(KFileMetaInfoItem item, KFileMetaInfoWidget::Mode mode)
+void KFileMetaInfoWidgetPrivate::init(KFileMetaInfoItem item)
 {
     Q_UNUSED(item)
     kDebug(7033) << "*** item "  << m_item.name()
                   << " is a " << m_value.typeName() << endl;
 
-    if (m_item.isEditable() && !(mode & KFileMetaInfoWidget::ReadOnly))
+    if (m_item.isEditable())
         m_widget = q->makeWidget();
     else
         switch (m_value.type())
