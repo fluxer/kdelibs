@@ -25,6 +25,7 @@
 #include <kfilemetainfoitem.h>
 #include "knfotranslator_p.h"
 #include <klocale.h>
+#include "kfilemetadataprovider_p.h"
 
 #include <config-kio.h>
 
@@ -51,6 +52,7 @@ public:
 
     int m_visibleDataTypes;
     KFileItemList m_fileItems;
+    KFileMetaDataProvider* m_provider;
     QListWidget* m_metaDataList;
 
 private:
@@ -60,6 +62,7 @@ private:
 KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWidget* parent) :
     m_visibleDataTypes(0),
     m_fileItems(),
+    m_provider(0),
     m_metaDataList(0),
     q(parent)
 {
@@ -70,6 +73,7 @@ KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWid
     QVBoxLayout* layout = new QVBoxLayout(q);
     layout->addWidget(m_metaDataList);
 
+    m_provider = new KFileMetaDataProvider(q);
 }
 
 KFileMetaDataConfigurationWidget::Private::~Private()
@@ -78,6 +82,9 @@ KFileMetaDataConfigurationWidget::Private::~Private()
 
 void KFileMetaDataConfigurationWidget::Private::loadMetaData()
 {
+    m_provider->setItems(m_fileItems);
+    connect(m_provider, SIGNAL(loadingFinished()),
+            q, SLOT(slotLoadingFinished()));
 }
 
 void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
@@ -110,7 +117,9 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     KConfigGroup settings = config.group("Show");
 
-    const QString label = KNfoTranslator::instance().translation(uri);
+    const QString label = (m_provider == 0)
+                          ? KNfoTranslator::instance().translation(uri)
+                          : m_provider->label(uri);
 
     QListWidgetItem* item = new QListWidgetItem(label, m_metaDataList);
     item->setData(Qt::UserRole, key);
@@ -120,6 +129,16 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
 
 void KFileMetaDataConfigurationWidget::Private::slotLoadingFinished()
 {
+    // Get all meta information labels that are available for
+    // the currently shown file item and add them to the list.
+    Q_ASSERT(m_provider != 0);
+
+    const QHash<KUrl, QVariant> data = m_provider->data();
+    QHash<KUrl, QVariant>::const_iterator it = data.constBegin();
+    while (it != data.constEnd()) {
+        addItem(it.key());
+        ++it;
+    }
 }
 
 KFileMetaDataConfigurationWidget::KFileMetaDataConfigurationWidget(QWidget* parent) :

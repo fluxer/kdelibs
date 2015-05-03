@@ -1,6 +1,6 @@
 /*****************************************************************************
  * Copyright (C) 2008 by Sebastian Trueg <trueg@kde.org>                     *
- * Copyright (C) 2009-2010 by Peter Penz <peter.penz@gmx.at>                 *
+ * Copyright (C) 2009 by Peter Penz <peter.penz@gmx.at>                      *
  *                                                                           *
  * This library is free software; you can redistribute it and/or             *
  * modify it under the terms of the GNU Library General Public               *
@@ -18,69 +18,52 @@
  * Boston, MA 02110-1301, USA.                                               *
  *****************************************************************************/
 
-#ifndef KFILEMETADATAWIDGET_H
-#define KFILEMETADATAWIDGET_H
+#ifndef KCOMMENT_WIDGET
+#define KCOMMENT_WIDGET
 
-#include <kio/kio_export.h>
-#include <kfileitem.h>
-
-#include <QList>
+#include <QString>
 #include <QWidget>
 
-class KUrl;
+class QLabel;
 
 /**
- * @brief Shows the meta data of one or more file items.
- *
- * Meta data like name, size, ... are shown as several
- * rows containing a description and the meta data value.
- *
- * @since 4.5
+ * @brief Allows to edit and show a comment as part of KMetaDataWidget.
  */
-class KIO_EXPORT KFileMetaDataWidget : public QWidget
+class KCommentWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit KFileMetaDataWidget(QWidget* parent = 0);
-    virtual ~KFileMetaDataWidget();
+    explicit KCommentWidget(QWidget* parent = 0);
+    virtual ~KCommentWidget();
+
+    void setText(const QString& comment);
+    QString text() const;
 
     /**
-     * Sets the items for which the meta data should be shown.
-     * The signal metaDataRequestFinished() will be emitted,
-     * as soon as the meta data for the items has been received.
+     * If set to true, the comment cannot be changed by the user.
+     * Per default read-only is disabled.
      */
-    void setItems(const KFileItemList& items);
-    KFileItemList items() const;
-
-    /** @see QWidget::sizeHint() */
+    // TODO: provide common interface class for metadatawidgets
+    void setReadOnly(bool readOnly);
+    bool isReadOnly() const;
+    
     virtual QSize sizeHint() const;
 
-Q_SIGNALS:
-    /**
-     * Is emitted, if a meta data represents an URL that has
-     * been clicked by the user.
-     */
-    void urlActivated(const KUrl& url);
-
-    /**
-     * Is emitted after the meta data has been received for the items
-     * set by KFileMetaDataWidget::setItems().
-     * @since 4.6
-     */
-    void metaDataRequestFinished(const KFileItemList& items);
+signals:
+    void commentChanged(const QString& comment);
 
 protected:
     virtual bool event(QEvent* event);
 
-private:
-    class Private;
-    Private* d;
+private slots:
+    void slotLinkActivated(const QString& link);
 
-    Q_PRIVATE_SLOT(d, void slotLoadingFinished())
-    Q_PRIVATE_SLOT(d, void slotLinkActivated(QString))
-    Q_PRIVATE_SLOT(d, void slotDataChangeStarted())
-    Q_PRIVATE_SLOT(d, void slotDataChangeFinished())
+private:
+    bool m_readOnly;
+    QLabel* m_label;
+    QLabel* m_sizeHintHelper; // see comment in KCommentWidget::sizeHint()
+    QString m_comment;
 };
 
 #endif

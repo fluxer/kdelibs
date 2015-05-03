@@ -24,6 +24,7 @@
 #include <kconfiggroup.h>
 #include <kfileitem.h>
 #include <klocale.h>
+#include "kfilemetadataprovider_p.h"
 
 #include <QGridLayout>
 #include <QLabel>
@@ -31,6 +32,7 @@
 #include <QSet>
 #include <QString>
 #include <QTimer>
+#include <QSpacerItem>
 
 #include <config-kio.h>
 
@@ -67,8 +69,10 @@ public:
     void slotDataChangeStarted();
     void slotDataChangeFinished();
 
+    QList<KUrl> sortedKeys(const QHash<KUrl, QVariant>& data) const;
 
     QList<Row> m_rows;
+    KFileMetaDataProvider* m_provider;
     QGridLayout* m_gridLayout;
 
 private:
@@ -77,11 +81,17 @@ private:
 
 KFileMetaDataWidget::Private::Private(KFileMetaDataWidget* parent) :
     m_rows(),
+    m_provider(0),
     m_gridLayout(0),
     q(parent)
 {
     initMetaInfoSettings();
 
+    // TODO: If KFileMetaDataProvider might get a public class in future KDE releases,
+    // the following code should be moved into KFileMetaDataWidget::setModel():
+    m_provider = new KFileMetaDataProvider(q);
+    connect(m_provider, SIGNAL(loadingFinished()), q, SLOT(slotLoadingFinished()));
+    connect(m_provider, SIGNAL(urlActivated(KUrl)), q, SIGNAL(urlActivated(KUrl)));
 }
 
 KFileMetaDataWidget::Private::~Private()
@@ -156,8 +166,10 @@ void KFileMetaDataWidget::Private::deleteRows()
 
 void KFileMetaDataWidget::Private::slotLoadingFinished()
 {
+    deleteRows();
 
     q->updateGeometry();
+    emit q->metaDataRequestFinished(m_provider->items());
 }
 
 void KFileMetaDataWidget::Private::slotLinkActivated(const QString& link)
@@ -178,6 +190,35 @@ void KFileMetaDataWidget::Private::slotDataChangeFinished()
     q->setEnabled(true);
 }
 
+QList<KUrl> KFileMetaDataWidget::Private::sortedKeys(const QHash<KUrl, QVariant>& data) const
+{
+    // Create a map, where the translated label prefixed with the
+    // sort priority acts as key. The data of each entry is the URI
+    // of the data. By this the all URIs are sorted by the sort priority
+    // and sub sorted by the translated labels.
+    QMap<QString, KUrl> map;
+    QHash<KUrl, QVariant>::const_iterator hashIt = data.constBegin();
+    while (hashIt != data.constEnd()) {
+        const KUrl uri = hashIt.key();
+
+        QString key = m_provider->group(uri);
+        key += m_provider->label(uri);
+
+        map.insert(key, uri);
+        ++hashIt;
+    }
+
+    // Apply the URIs from the map to the list that will get returned.
+    // The list will then be alphabetically ordered by the translated labels of the URIs.
+    QList<KUrl> list;
+    QMap<QString, KUrl>::const_iterator mapIt = map.constBegin();
+    while (mapIt != map.constEnd()) {
+        list.append(mapIt.value());
+        ++mapIt;
+    }
+
+    return list;
+}
 
 KFileMetaDataWidget::KFileMetaDataWidget(QWidget* parent) :
     QWidget(parent),
@@ -192,20 +233,12 @@ KFileMetaDataWidget::~KFileMetaDataWidget()
 
 void KFileMetaDataWidget::setItems(const KFileItemList& items)
 {
+    d->m_provider->setItems(items);
 }
 
 KFileItemList KFileMetaDataWidget::items() const
 {
-    return KFileItemList();
-}
-
-void KFileMetaDataWidget::setReadOnly(bool readOnly)
-{
-}
-
-bool KFileMetaDataWidget::isReadOnly() const
-{
-    return true;
+    return d->m_provider->items();
 }
 
 QSize KFileMetaDataWidget::sizeHint() const
