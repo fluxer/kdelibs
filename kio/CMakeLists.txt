@@ -194,6 +194,8 @@ set(kfile_STAT_SRCS
   kfile/kurlcombobox.cpp
   kfile/kurlrequester.cpp
   kfile/kurlrequesterdialog.cpp
+  kfile/kfilemetadatareader.cpp
+  kfile/kfilemetadataprovider.cpp
 )
 
 if(NOT KIO_NO_SOLID)
@@ -250,6 +252,10 @@ set(kio_LIB_PRIVATE_SRCS
     kio/slaveinterface_p.h
 )
 
+set(kfilemetadatareaderprocess_SRCS
+    kfile/kfilemetadatareaderprocess.cpp
+)
+
 kde4_add_ui_files(kio_LIB_SRCS
    kfile/kpropertiesdesktopadvbase.ui
    kfile/kpropertiesdesktopbase.ui
@@ -261,6 +267,8 @@ kde4_add_ui_files(kio_LIB_SRCS
 
 kde4_add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
+kde4_add_executable(kfilemetadatareader ${kfilemetadatareaderprocess_SRCS})
+target_link_libraries(kfilemetadatareader ${KDE4_KIO_LIBS})
 target_link_libraries(kio ${KDE4_KDEUI_LIBS} ${ZLIB_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${X11_LIBRARIES} ${KIO_EXTRA_LIBS})
 target_link_libraries(kio LINK_INTERFACE_LIBRARIES kdeui kdecore ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} )
 
@@ -279,6 +287,7 @@ set_target_properties(kio PROPERTIES
 
 ########### install files ###############
 install(TARGETS kio EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kfilemetadatareader ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES data.protocol  DESTINATION  ${SERVICES_INSTALL_DIR} )
 install( FILES

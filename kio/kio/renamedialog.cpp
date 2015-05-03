@@ -627,7 +627,6 @@ QScrollArea* RenameDialog::createContainerLayout(QWidget* parent, const KFileIte
     // widget
     KFileMetaDataWidget* metaWidget =  new KFileMetaDataWidget(this);
 
-    metaWidget->setReadOnly(true);
     metaWidget->setItems(itemList);
     connect(metaWidget, SIGNAL(metaDataRequestFinished(KFileItemList)), this, SLOT(resizePanels()));
 

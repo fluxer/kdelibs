@@ -23,7 +23,7 @@
 
 #include "kurl.h"
 #include <config-kio.h>
-
+#include <predicateproperties.h>
 
 #include <QtCore/QHash>
 #include <QtCore/QSharedData>
