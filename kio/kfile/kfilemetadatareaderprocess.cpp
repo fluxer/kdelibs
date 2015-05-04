@@ -90,12 +90,7 @@ void KFileMetaDataReaderApplication::sendMetaData(const QHash<KUrl, QVariant>& d
         it.next();
 
         out << it.key();
-
-        // Unlike QVariant no streaming operators are implemented for QVariant.
-        // So it is required to manually encode the variant for the stream.
-        // The decoding counterpart is located in KFileMetaDataReader.
-        const QVariant& variant = it.value();
-        out << 2 << variant;
+        out << it.value();
     }
 
     cout << byteArray.toBase64().constData();

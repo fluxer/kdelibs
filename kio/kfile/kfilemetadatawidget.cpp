@@ -147,7 +147,7 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
         };
 
         for (int i = 0; disabledProperties[i] != 0; ++i) {
-            settings.writeEntry(disabledProperties[i], false);
+            settings.writeEntry(disabledProperties[i], true);
         }
 
         // mark the group as initialized
@@ -167,6 +167,62 @@ void KFileMetaDataWidget::Private::deleteRows()
 void KFileMetaDataWidget::Private::slotLoadingFinished()
 {
     deleteRows();
+
+    if (m_gridLayout == 0) {
+        m_gridLayout = new QGridLayout(q);
+        m_gridLayout->setMargin(0);
+        m_gridLayout->setSpacing(q->fontMetrics().height() / 4);
+    }
+
+    QHash<KUrl, QVariant> data = m_provider->data();
+
+    // Remove all items, that are marked as hidden in kmetainformationrc
+    KConfig config("kmetainformationrc", KConfig::NoGlobals);
+    KConfigGroup settings = config.group("Show");
+    QHash<KUrl, QVariant>::iterator it = data.begin();
+    while (it != data.end()) {
+        const QString uriString = it.key().url();
+        if (!settings.readEntry(uriString, true)) {
+            it = data.erase(it);
+        } else {
+            ++it;
+        }
+    }
+
+    // Iterate through all remaining items embed the label
+    // and the value as new row in the widget
+    int rowIndex = 0;
+    const QList<KUrl> keys = sortedKeys(data);
+    foreach (const KUrl& key, keys) {
+        const QVariant value = data[key];
+        QString itemLabel = m_provider->label(key);
+        itemLabel.append(QLatin1Char(':'));
+
+        // Create label
+        QLabel* label = new QLabel(itemLabel, q);
+        label->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+        label->setForegroundRole(q->foregroundRole());
+        label->setFont(q->font());
+        label->setWordWrap(true);
+        label->setAlignment(Qt::AlignTop | Qt::AlignRight);
+
+        // Create value-widget
+        QWidget* valueWidget = m_provider->createValueWidget(key, value, q);
+
+        // Add the label and value-widget to grid layout
+        m_gridLayout->addWidget(label, rowIndex, 0, Qt::AlignRight);
+        const int spacerWidth = QFontMetrics(q->font()).size(Qt::TextSingleLine, " ").width();
+        m_gridLayout->addItem(new QSpacerItem(spacerWidth, 1), rowIndex, 1);
+        m_gridLayout->addWidget(valueWidget, rowIndex, 2, Qt::AlignLeft);
+
+        // Remember the label and value-widget as row
+        Row row;
+        row.label = label;
+        row.value = valueWidget;
+        m_rows.append(row);
+
+        ++rowIndex;
+    }
 
     q->updateGeometry();
     emit q->metaDataRequestFinished(m_provider->items());

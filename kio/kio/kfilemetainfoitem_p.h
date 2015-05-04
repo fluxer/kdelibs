@@ -33,6 +33,7 @@ class KFileWritePlugin;
 class KFileMetaInfoItemPrivate : public QSharedData {
 public:
     KFileMetaInfoItemPrivate() : writer(0) {}
+    PredicateProperties pp;
     KUrl propertyUri;
     QVariant value;
     KFileWritePlugin* writer;

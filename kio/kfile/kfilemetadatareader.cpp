@@ -62,33 +62,7 @@ void KFileMetaDataReader::Private::slotLoadingFinished(int exitCode, QProcess::E
     QVariant value;
     while (!in.atEnd()) {
         in >> key;
-
-        // Unlike QVariant no streaming operators are implemented for QVariant.
-        // So it is required to manually decode the variant from the stream. See
-        // function sendMetaData() in kfilemetadatareaderprocess.cpp for the encoding
-        // counterpart.
-        int streamType;
-        in >> streamType;
-
-        switch (streamType) {
-        case 0: {
-            QStringList stringList;
-            in >> stringList;
-            value = stringList;
-            break;
-        }
-        case 1: {
-            QString resource;
-            in >> resource;
-            value = resource;
-            break;
-        }
-
-        default:
-            QVariant variant;
-            in >> variant;
-            value = QVariant(variant);
-        }
+        in >> value;
 
         m_metaData.insert(key, value);
     }

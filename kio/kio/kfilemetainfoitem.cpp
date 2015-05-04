@@ -34,6 +34,7 @@ KFileMetaInfoItem::KFileMetaInfoItem(const QString& pp,
     d->writer = w;
     d->embedded = e;
     d->modified = false;
+    d->pp = pp;
 }
 KFileMetaInfoItem::~KFileMetaInfoItem() {
 }
@@ -44,7 +45,7 @@ const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& i
 }
 
 const QString& KFileMetaInfoItem::name() const {
-    return QString::null;
+    return d->pp.name();
 }
 
 const QVariant& KFileMetaInfoItem::value() const {
