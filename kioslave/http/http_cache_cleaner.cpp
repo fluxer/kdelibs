@@ -725,7 +725,7 @@ private:
 };
 
 
-extern "C" KDE_EXPORT int kdemain(int argc, char **argv)
+int main(int argc, char **argv)
 {
     KCmdLineArgs::init(argc, argv, appName, "kdelibs4",
                        ki18n("KDE HTTP cache maintenance tool"), version,

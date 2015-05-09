@@ -49,7 +49,7 @@ static void sig_handler(int sig_num)
 #endif
 
 
-extern "C" KDE_EXPORT int kdemain( int argc, char**argv )
+int main( int argc, char**argv )
 {
    // Started via kdeinit.
    int launcherFd;

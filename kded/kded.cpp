@@ -856,7 +856,7 @@ public:
   bool startup;
 };
 
-extern "C" KDE_EXPORT int kdemain(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
      KAboutData aboutData( "kded" /*don't change this one to kded4! dbus registration should be org.kde.kded etc.*/,
         "kdelibs4", ki18n("KDE Daemon"),

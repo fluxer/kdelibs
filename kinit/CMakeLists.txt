@@ -104,7 +104,7 @@ install(TARGETS kioslave DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
 
 ########### klauncher ###############
-set(klauncher_KDEINIT_SRCS
+set(klauncher_SRCS
    klauncher.cpp
    klauncher_main.cpp
    klauncher_adaptor.cpp
@@ -117,14 +117,11 @@ set(klauncher_KDEINIT_SRCS
 qt4_generate_dbus_interface(klauncher_adaptor.h org.kde.KLauncher.xml)
 
 
-kde4_add_kdeinit_executable( klauncher NOGUI ${klauncher_KDEINIT_SRCS})
-set_target_properties(kdeinit_klauncher PROPERTIES DEFINE_SYMBOL MAKE_KLAUNCHER)
+kde4_add_executable( klauncher NOGUI ${klauncher_SRCS})
+set_target_properties(klauncher PROPERTIES DEFINE_SYMBOL MAKE_KLAUNCHER)
 
-target_link_libraries(kdeinit_klauncher  ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
+target_link_libraries(klauncher  ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
 
-install(TARGETS kdeinit_klauncher ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-target_link_libraries( klauncher kdeinit_klauncher )
 install(TARGETS klauncher DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
 ########### start_kdeinit ###############

@@ -36,18 +36,15 @@ add_subdirectory( tests )
 
 ########### next target ###############
 
-set(kio_http_cache_cleaner_KDEINIT_SRCS
+set(kio_http_cache_cleaner_SRCS
    http_cache_cleaner.cpp
    )
 
 
-kde4_add_kdeinit_executable( kio_http_cache_cleaner NOGUI ${kio_http_cache_cleaner_KDEINIT_SRCS})
+kde4_add_executable( kio_http_cache_cleaner NOGUI ${kio_http_cache_cleaner_SRCS})
 
-target_link_libraries(kdeinit_kio_http_cache_cleaner  ${KDE4_KIO_LIBS} ${ZLIB_LIBRARY})
+target_link_libraries(kio_http_cache_cleaner  ${KDE4_KIO_LIBS} ${ZLIB_LIBRARY})
 
-install(TARGETS kdeinit_kio_http_cache_cleaner ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-target_link_libraries( kio_http_cache_cleaner kdeinit_kio_http_cache_cleaner )
 install(TARGETS kio_http_cache_cleaner DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
 ########### next target ###############

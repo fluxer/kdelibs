@@ -630,7 +630,7 @@ static const char appFullName[] = "org.kde.kbuildsycoca";
 static const char appName[] = "kbuildsycoca4";
 static const char appVersion[] = "1.1";
 
-extern "C" KDE_EXPORT int kdemain(int argc, char **argv)
+int main(int argc, char **argv)
 {
    KAboutData d(appName, "kdelibs4", ki18n("KBuildSycoca"), appVersion,
                 ki18n("Rebuilds the system configuration cache."),
