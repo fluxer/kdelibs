@@ -22,7 +22,6 @@
 #include <kiconloader.h>
 #include <kfiledialog.h>
 #include <kimagefilepreview.h>
-#include <ksvgrenderer.h>
 
 #include <QtGui/QApplication>
 #include <QtGui/QGroupBox>
@@ -34,7 +33,7 @@
 #include <QtGui/QProgressBar>
 #include <QtGui/QPainter>
 #include <QtGui/QScrollBar>
-
+#include <QtSvg/QSvgRenderer>
 
 /**
  * Qt allocates very little horizontal space for the icon name,

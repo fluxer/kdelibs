@@ -34,13 +34,13 @@
 #include <QtCore/QMutex>
 #include <QtCore/QMutexLocker>
 #include <QtCore/QList>
+#include <QtSvg/QSvgRenderer>
 
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
 #include <klockfile.h>
 #include <ksavefile.h>
-#include <ksvgrenderer.h>
 #include <kdefakes.h>
 
 #include <config.h>

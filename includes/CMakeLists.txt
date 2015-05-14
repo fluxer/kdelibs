@@ -342,7 +342,6 @@ install( FILES
   KStringListValidator
   KStyle
   KStyleFactory
-  KSvgRenderer
   KSycoca
   KSycocaEntry
   KSystemEventFilter

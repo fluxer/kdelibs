@@ -287,7 +287,6 @@ set(kdeui_LIB_SRCS
 set(kdeui_LIB_SRCS
  ${kdeui_LIB_SRCS}
  dialogs/kdeprintdialog.cpp
- util/ksvgrenderer.cpp
  notifications/kstatusnotifieritem.cpp
  notifications/kstatusnotifieritemdbus_p.cpp
  notifications/ksystemtrayicon.cpp
@@ -557,7 +556,6 @@ install( FILES
  util/kpixmapprovider.h
  util/kimagecache.h
  util/kstandardguiitem.h
- util/ksvgrenderer.h
  util/kwallet.h
  util/kwordwrap.h
  util/kxerrorhandler.h
