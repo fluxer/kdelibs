@@ -198,10 +198,6 @@ void PublicServicePrivate::customEvent(QEvent* event)
 	}
 }
 
-void PublicService::virtual_hook(int, void*)
-{
-}
-
 }
 
 #include "moc_publicservice.cpp"

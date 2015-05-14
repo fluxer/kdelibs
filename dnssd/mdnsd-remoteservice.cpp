@@ -108,11 +108,6 @@ void RemoteServicePrivate::customEvent(QEvent* event)
 	}
 }
 
-void RemoteService::virtual_hook(int, void*)
-{
-	// BASE::virtual_hook(int, void*);
-}
-
 
 void resolve_callback    (    DNSServiceRef,
 			      DNSServiceFlags,

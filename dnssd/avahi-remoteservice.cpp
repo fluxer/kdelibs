@@ -110,11 +110,6 @@ void RemoteServicePrivate::stop()
     m_running=false;
 }
 
-void RemoteService::virtual_hook(int, void*)
-{
-	// BASE::virtual_hook(int, void*);
-}
-
 
 }
 

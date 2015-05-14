@@ -250,10 +250,6 @@ void PublicServicePrivate::groupStateChanged(int s,  const QString& reason)
     }
 }
 
-void PublicService::virtual_hook(int, void*)
-{
-}
-
 
 }
 

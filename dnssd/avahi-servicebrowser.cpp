@@ -152,9 +152,6 @@ QList<RemoteService::Ptr> ServiceBrowser::services() const
 	return d->m_services;
 }
 
-void ServiceBrowser::virtual_hook(int, void*)
-{}
-
 QHostAddress ServiceBrowser::resolveHostName(const QString &hostname)
 {
 	org::freedesktop::Avahi::Server s("org.freedesktop.Avahi","/",QDBusConnection::systemBus());
