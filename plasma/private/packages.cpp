@@ -30,9 +30,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-
-#include "kdeclarative.h"
-
 #include "private/wallpaper_p.h"
 
 namespace Plasma
@@ -41,16 +38,9 @@ namespace Plasma
 PlasmoidPackage::PlasmoidPackage(QObject *parent)
     : Plasma::PackageStructure(parent, QString("Plasmoid"))
 {
-    QStringList platform = KDeclarative::runtimePlatform();
-    if (!platform.isEmpty()) {
-        QMutableStringListIterator it(platform);
-        while (it.hasNext()) {
-            it.next();
-            it.setValue("platformcontents/" + it.value());
-        }
-        platform.append("contents");
-        setContentsPrefixPaths(platform);
-    }
+    QStringList platform;
+    platform << "platformcontents/desktop" << "contents";
+    setContentsPrefixPaths(platform);
 
     addDirectoryDefinition("images", "images", i18n("Images"));
     addDirectoryDefinition("theme",  "theme",  i18n("Themed Images"));
