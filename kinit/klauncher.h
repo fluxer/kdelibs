@@ -102,11 +102,6 @@ public:
 #endif
    QStringList envs; // env. variables to be app's environment
    QString cwd;
-#ifdef USE_KPROCESS_FOR_KIOSLAVES
-protected:
-   KProcess *process;
-   friend class KLauncher;
-#endif
 };
 
 struct serviceResult
@@ -270,10 +265,8 @@ protected:
    QList<KLaunchRequest*> requestQueue; // Requests waiting to being handled
    KLaunchRequest *lastRequest;
    QList<SlaveWaitRequest*> mSlaveWaitRequest;
-#ifndef USE_KPROCESS_FOR_KIOSLAVES
    int kdeinitSocket;
    QSocketNotifier *kdeinitNotifier;
-#endif
    KIO::ConnectionServer mConnectionServer;
    QList<IdleSlave*> mSlaveList;
    QTimer mTimer;
@@ -288,9 +281,5 @@ protected:
    Display *mCached_dpy;
 #endif
    void processRequestReturn(int status, const QByteArray &requestData);
-
-protected Q_SLOTS:
-    void slotGotOutput();
-    void slotFinished(int exitCode, QProcess::ExitStatus exitStatus);
 };
 #endif

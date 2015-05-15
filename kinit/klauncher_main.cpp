@@ -35,7 +35,6 @@
 #include "klauncher_cmds.h"
 #include <QtCore/QCoreApplication>
 
-#ifndef USE_KPROCESS_FOR_KIOSLAVES
 static int sigpipe[ 2 ];
 static void sig_handler(int sig_num)
 {
@@ -46,7 +45,6 @@ static void sig_handler(int sig_num)
    char tmp = 'x';
    write( sigpipe[ 1 ], &tmp, 1 );
 }
-#endif
 
 
 int main( int argc, char**argv )
@@ -102,14 +100,9 @@ int main( int argc, char**argv )
       // Try again...
    }
 
-#ifndef USE_KPROCESS_FOR_KIOSLAVES
    KLauncher *launcher = new KLauncher(launcherFd);
-#else
-   KLauncher *launcher = new KLauncher();
-#endif
    QDBusConnection::sessionBus().registerObject(QString::fromLatin1("/"), launcher);
 
-#ifndef USE_KPROCESS_FOR_KIOSLAVES
    if (pipe(sigpipe) != 0) {
        perror("klauncher: pipe failed.");
        return 1;
@@ -120,7 +113,6 @@ int main( int argc, char**argv )
    KDE_signal( SIGHUP, sig_handler);
    KDE_signal( SIGPIPE, SIG_IGN);
    KDE_signal( SIGTERM, sig_handler);
-#endif
 
    return app.exec();
 }
