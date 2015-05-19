@@ -927,9 +927,6 @@ KFilePropsPlugin::KFilePropsPlugin( KPropertiesDialog *_props )
             button->setText(i18n("File Type Options"));
 
         connect( button, SIGNAL(clicked()), SLOT(slotEditFileType()));
-
-        if (!KAuthorized::authorizeKAction("editfiletype"))
-            button->hide();
     }
 
     if ( !magicMimeComment.isEmpty() && magicMimeComment != mimeComment )
@@ -3388,9 +3385,7 @@ bool KDesktopPropsPlugin::supports( const KFileItemList& _items )
     }
 
     KDesktopFile config(url.toLocalFile());
-    return config.hasApplicationType() &&
-            KAuthorized::authorize("run_desktop_files") &&
-            KAuthorized::authorize("shell_access");
+    return config.hasApplicationType();
 }
 
 #include "moc_kpropertiesdialog.cpp"

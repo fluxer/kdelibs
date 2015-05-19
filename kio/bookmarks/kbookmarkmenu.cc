@@ -448,7 +448,7 @@ void KBookmarkMenu::refill()
 
 void KBookmarkMenu::addOpenInTabs()
 {
-    if( !m_pOwner || !m_pOwner->supportsTabs() || !KAuthorized::authorizeKAction("bookmarks") )
+    if( !m_pOwner || !m_pOwner->supportsTabs() )
         return;
 
     QString title = i18n( "Open Folder in Tabs" );
@@ -464,7 +464,7 @@ void KBookmarkMenu::addOpenInTabs()
 
 void KBookmarkMenu::addAddBookmarksList()
 {
-    if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) || !m_pOwner->supportsTabs() || !KAuthorized::authorizeKAction("bookmarks") )
+    if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) || !m_pOwner->supportsTabs() )
         return;
 
     if (d->bookmarksToFolder == 0) {
@@ -481,7 +481,7 @@ void KBookmarkMenu::addAddBookmarksList()
 
 void KBookmarkMenu::addAddBookmark()
 {
-  if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) || !KAuthorized::authorizeKAction("bookmarks") )
+  if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) )
     return;
 
     if (d->addAddBookmark == 0) {
@@ -499,7 +499,7 @@ void KBookmarkMenu::addAddBookmark()
 
 void KBookmarkMenu::addEditBookmarks()
 {
-  if( ( m_pOwner && !m_pOwner->enableOption(KBookmarkOwner::ShowEditBookmark) ) || !KAuthorized::authorizeKAction("bookmarks") )
+  if( ( m_pOwner && !m_pOwner->enableOption(KBookmarkOwner::ShowEditBookmark) ) )
     return;
 
   KAction * m_paEditBookmarks = m_actionCollection->addAction(KStandardAction::EditBookmarks, "edit_bookmarks",
@@ -510,7 +510,7 @@ void KBookmarkMenu::addEditBookmarks()
 
 void KBookmarkMenu::addNewFolder()
 {
-    if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) || !KAuthorized::authorizeKAction("bookmarks"))
+    if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) )
         return;
 
     if (d->newBookmarkFolder == 0) {

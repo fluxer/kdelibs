@@ -68,13 +68,6 @@ int main(int argc, char **argv)
             return 2;
         }
 
-        if (!KAuthorized::authorize("shell_access"))
-        {
-            KMessageBox::sorry(0,
-                i18n("You do not have permission to access the %1 protocol.", url.protocol()));
-            return 3;
-        }
-
     if (!url.user().isEmpty())
     {
         cmd << "-l";

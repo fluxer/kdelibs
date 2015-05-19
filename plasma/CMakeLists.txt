@@ -204,8 +204,11 @@ endif(PHONON_FOUND)
 kde4_add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
 target_link_libraries(plasma ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
-                             ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSQL_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY}
-                             ${KDE4_KDEUI_LIBS} ${KDE4_KDNSSD_LIBS} ${KDE4_THREADWEAVER_LIBS} ${PLASMA_EXTRA_LIBS})
+                             ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY}
+                             ${QT_QTXML_LIBRARY} ${QT_QTSQL_LIBRARY}
+                             ${QT_QTDECLARATIVE_LIBRARY} ${KDE4_KDEUI_LIBS}
+                             ${KDE4_KDNSSD_LIBS} ${KDE4_THREADWEAVER_LIBS}
+                             ${PLASMA_EXTRA_LIBS})
 
 if(X11_FOUND)
    target_link_libraries(plasma ${X11_LIBRARIES})

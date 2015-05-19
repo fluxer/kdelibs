@@ -405,9 +405,6 @@ void KLineEdit::setCompletionMode( KGlobalSettings::Completion mode )
     if ( echoMode() != QLineEdit::Normal )
         mode = KGlobalSettings::CompletionNone; // Override the request.
 
-    if ( kapp && !KAuthorized::authorize("lineedit_text_completion") )
-        mode = KGlobalSettings::CompletionNone;
-
     if ( mode == KGlobalSettings::CompletionPopupAuto ||
          mode == KGlobalSettings::CompletionAuto ||
          mode == KGlobalSettings::CompletionMan )
@@ -1200,7 +1197,7 @@ QMenu* KLineEdit::createStandardContextMenu()
     // If a completion object is present and the input
     // widget is not read-only, show the Text Completion
     // menu item.
-    if ( compObj() && !isReadOnly() && KAuthorized::authorize("lineedit_text_completion") )
+    if ( compObj() && !isReadOnly() )
     {
         QMenu *subMenu = popup->addMenu( KIcon("text-completion"), i18nc("@title:menu", "Text Completion") );
         connect( subMenu, SIGNAL(triggered(QAction*)),

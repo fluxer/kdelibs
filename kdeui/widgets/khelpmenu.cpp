@@ -145,28 +145,21 @@ void KHelpMenuPrivate::createActions(KHelpMenu* q)
         return;
     mActionsCreated = true;
 
-    if (mShowWhatsThis && KAuthorized::authorizeKAction("help_whats_this")) {
+    if (mShowWhatsThis) {
         mWhatsThisAction = KStandardAction::whatsThis(q, SLOT(contextHelpActivated()), q);
     }
 
     const KAboutData *aboutData = mAboutData ? mAboutData : KGlobal::mainComponent().aboutData();
-    if (KAuthorized::authorizeKAction("help_report_bug") && aboutData && !aboutData->bugAddress().isEmpty()) {
+    if (aboutData && !aboutData->bugAddress().isEmpty()) {
         mReportBugAction = KStandardAction::reportBug(q, SLOT(reportBug()), q);
     }
 
-    if (KAuthorized::authorizeKAction("switch_application_language")) {
-        if((KGlobal::dirs()->findAllResources("locale", QString::fromLatin1("*/entry.desktop"))).count() > 0) {
-            mSwitchApplicationLanguageAction = KStandardAction::create(KStandardAction::SwitchApplicationLanguage, q, SLOT(switchApplicationLanguage()), q);
-        }
+    if((KGlobal::dirs()->findAllResources("locale", QString::fromLatin1("*/entry.desktop"))).count() > 0) {
+        mSwitchApplicationLanguageAction = KStandardAction::create(KStandardAction::SwitchApplicationLanguage, q, SLOT(switchApplicationLanguage()), q);
     }
 
-    if (KAuthorized::authorizeKAction("help_about_app")) {
-        mAboutAppAction = KStandardAction::aboutApp(q, SLOT(aboutApplication()), q);
-    }
-
-    if (KAuthorized::authorizeKAction("help_about_kde")) {
-        mAboutKDEAction = KStandardAction::aboutKDE(q, SLOT(aboutKDE()), q);
-    }
+    mAboutAppAction = KStandardAction::aboutApp(q, SLOT(aboutApplication()), q);
+    mAboutKDEAction = KStandardAction::aboutKDE(q, SLOT(aboutKDE()), q);
 }
 
 // Used in the non-xml-gui case, like kfind or ksnapshot's help button.

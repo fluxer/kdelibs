@@ -590,7 +590,7 @@ void Containment::showContextMenu(const QPointF &containmentPos, const QPoint &s
 
 void Containment::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    if (!isContainment() || !KAuthorized::authorizeKAction("plasma/containment_context_menu")) {
+    if (!isContainment()) {
         Applet::contextMenuEvent(event);
         return;
     }
@@ -642,12 +642,6 @@ void Containment::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
 void ContainmentPrivate::addContainmentActions(KMenu &desktopMenu, QEvent *event)
 {
-    if (static_cast<Corona*>(q->scene())->immutability() != Mutable &&
-        !KAuthorized::authorizeKAction("plasma/containment_actions")) {
-        //kDebug() << "immutability";
-        return;
-    }
-
     const QString trigger = ContainmentActions::eventToString(event);
     prepareContainmentActions(trigger, QPoint(), &desktopMenu);
 }
@@ -1998,7 +1992,7 @@ void Containment::destroy(bool confirm)
 
 void ContainmentPrivate::createToolBox()
 {
-    if (!toolBox && KAuthorized::authorizeKAction("plasma/containment_context_menu")) {
+    if (!toolBox) {
         toolBox = Plasma::AbstractToolBox::load(q->corona()->preferredToolBoxPlugin(type), QVariantList(), q);
 
         if (toolBox) {

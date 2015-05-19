@@ -117,7 +117,6 @@ bool KRun::isExecutableFile(const KUrl& url, const QString &mimetype)
 bool KRun::runUrl(const KUrl& u, const QString& _mimetype, QWidget* window, bool tempFile, bool runExecutables, const QString& suggestedFileName, const QByteArray& asn)
 {
     bool noRun = false;
-    bool noAuth = false;
     if (_mimetype == QLatin1String("inode/directory-locked")) {
         KMessageBoxWrapper::error(window,
                                   i18n("<qt>Unable to enter <b>%1</b>.\nYou do not have access rights to this location.</qt>", Qt::escape(u.prettyUrl())));
@@ -130,13 +129,8 @@ bool KRun::runUrl(const KUrl& u, const QString& _mimetype, QWidget* window, bool
     }
     else if (isExecutableFile(u, _mimetype)) {
         if (u.isLocalFile() && runExecutables) {
-            if (KAuthorized::authorize("shell_access")) {
-                return (KRun::runCommand(KShell::quoteArg(u.toLocalFile()), QString(), QString(), window, asn, u.directory())); // just execute the url as a command
-                // ## TODO implement deleting the file if tempFile==true
-            }
-            else {
-                noAuth = true;
-            }
+            return (KRun::runCommand(KShell::quoteArg(u.toLocalFile()), QString(), QString(), window, asn, u.directory())); // just execute the url as a command
+            // ## TODO implement deleting the file if tempFile==true
         }
         else if (_mimetype == QLatin1String("application/x-executable")) {
             noRun = true;
@@ -146,21 +140,12 @@ bool KRun::runUrl(const KUrl& u, const QString& _mimetype, QWidget* window, bool
         if (!runExecutables) {
             noRun = true;
         }
-
-        if (!KAuthorized::authorize("shell_access")) {
-            noAuth = true;
-        }
     }
 
     if (noRun) {
         KMessageBox::sorry(window,
                            i18n("<qt>The file <b>%1</b> is an executable program. "
                                 "For safety it will not be started.</qt>", Qt::escape(u.prettyUrl())));
-        return false;
-    }
-    if (noAuth) {
-        KMessageBoxWrapper::error(window,
-                                  i18n("<qt>You do not have permission to run <b>%1</b>.</qt>", Qt::escape(u.prettyUrl())));
         return false;
     }
 
@@ -182,12 +167,6 @@ bool KRun::runUrl(const KUrl& u, const QString& _mimetype, QWidget* window, bool
 bool KRun::displayOpenWithDialog(const KUrl::List& lst, QWidget* window, bool tempFiles,
                                  const QString& suggestedFileName, const QByteArray& asn)
 {
-    if (!KAuthorized::authorizeKAction("openwith")) {
-        KMessageBox::sorry(window,
-                           i18n("You are not authorized to select an application to open this file."));
-        return false;
-    }
-
     KOpenWithDialog l(lst, i18n("Open with:"), QString(), window);
     l.setWindowModality(Qt::WindowModal);
     if (l.exec()) {
@@ -868,12 +847,6 @@ static bool makeFileExecutable(const QString &fileName)
 // to make the file executable or we failed to make it executable.
 static bool makeServiceExecutable(const KService& service, QWidget* window)
 {
-    if (!KAuthorized::authorize("run_desktop_files")) {
-        kWarning() << "No authorization to execute " << service.entryPath();
-        KMessageBox::sorry(window, i18n("You are not authorized to execute this service."));
-        return false; // Don't circumvent the Kiosk
-    }
-
     KGuiItem continueItem = KStandardGuiItem::cont();
 
     SecureMessageDialog *baseDialog = new SecureMessageDialog(window);
@@ -1114,16 +1087,6 @@ void KRun::init()
         // TODO KDE5: call virtual method on error (see BrowserRun::init)
         d->m_showingDialog = true;
         KMessageBoxWrapper::error(d->m_window, i18n("Malformed URL\n%1", d->m_strURL.url()));
-        d->m_showingDialog = false;
-        d->m_bFault = true;
-        d->m_bFinished = true;
-        d->startTimer();
-        return;
-    }
-    if (!KAuthorized::authorizeUrlAction("open", KUrl(), d->m_strURL)) {
-        QString msg = KIO::buildErrorString(KIO::ERR_ACCESS_DENIED, d->m_strURL.prettyUrl());
-        d->m_showingDialog = true;
-        KMessageBoxWrapper::error(d->m_window, msg);
         d->m_showingDialog = false;
         d->m_bFault = true;
         d->m_bFinished = true;

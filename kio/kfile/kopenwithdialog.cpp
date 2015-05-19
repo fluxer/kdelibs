@@ -556,7 +556,6 @@ void KOpenWithDialogPrivate::setMimeType(const KUrl::List &_urls)
 
 void KOpenWithDialogPrivate::init(const QString &_text, const QString &_value)
 {
-  bool bReadOnly = !KAuthorized::authorize("shell_access");
   m_terminaldirty = false;
     view = 0;
     m_pService = 0;
@@ -572,30 +571,21 @@ void KOpenWithDialogPrivate::init(const QString &_text, const QString &_value)
   label->setWordWrap(true);
   topLayout->addWidget(label);
 
-  if (!bReadOnly)
-  {
-    // init the history combo and insert it into the URL-Requester
-    KHistoryComboBox *combo = new KHistoryComboBox();
-    KLineEdit *lineEdit = new KLineEdit(q);
-    lineEdit->setClearButtonShown(true);
-    combo->setLineEdit(lineEdit);
-    combo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
-    combo->setDuplicatesEnabled( false );
-    KConfigGroup cg( KGlobal::config(), QString::fromLatin1("Open-with settings") );
-    int max = cg.readEntry( "Maximum history", 15 );
-    combo->setMaxCount( max );
-    int mode = cg.readEntry( "CompletionMode", int(KGlobalSettings::completionMode()));
-    combo->setCompletionMode((KGlobalSettings::Completion)mode);
-    const QStringList list = cg.readEntry( "History", QStringList() );
-    combo->setHistoryItems( list, true );
-    edit = new KUrlRequester( combo, mainWidget );
-  }
-  else
-  {
-    edit = new KUrlRequester( mainWidget );
-    edit->lineEdit()->setReadOnly(true);
-    edit->button()->hide();
-  }
+  // init the history combo and insert it into the URL-Requester
+  KHistoryComboBox *combo = new KHistoryComboBox();
+  KLineEdit *lineEdit = new KLineEdit(q);
+  lineEdit->setClearButtonShown(true);
+  combo->setLineEdit(lineEdit);
+  combo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
+  combo->setDuplicatesEnabled( false );
+  KConfigGroup cg( KGlobal::config(), QString::fromLatin1("Open-with settings") );
+  int max = cg.readEntry( "Maximum history", 15 );
+  combo->setMaxCount( max );
+  int mode = cg.readEntry( "CompletionMode", int(KGlobalSettings::completionMode()));
+  combo->setCompletionMode((KGlobalSettings::Completion)mode);
+  const QStringList list = cg.readEntry( "History", QStringList() );
+  combo->setHistoryItems( list, true );
+  edit = new KUrlRequester( combo, mainWidget );
 
   edit->setText( _value );
   edit->setWhatsThis(i18n(
@@ -635,9 +625,7 @@ void KOpenWithDialogPrivate::init(const QString &_text, const QString &_value)
                      q, SLOT(_k_slotDbClick()));
 
   terminal = new QCheckBox( i18n("Run in &terminal"), mainWidget );
-  if (bReadOnly)
-     terminal->hide();
-    QObject::connect(terminal, SIGNAL(toggled(bool)), q, SLOT(slotTerminalToggled(bool)));
+  QObject::connect(terminal, SIGNAL(toggled(bool)), q, SLOT(slotTerminalToggled(bool)));
 
   topLayout->addWidget(terminal);
 
@@ -660,7 +648,7 @@ void KOpenWithDialogPrivate::init(const QString &_text, const QString &_value)
   KConfigGroup confGroup( KGlobal::config(), QString::fromLatin1("General") );
   QString preferredTerminal = confGroup.readPathEntry("TerminalApplication", QString::fromLatin1("konsole"));
 
-  if (bReadOnly || preferredTerminal != "konsole")
+  if (preferredTerminal != "konsole")
      nocloseonexit->hide();
 
   nocloseonexitLayout->addWidget( nocloseonexit );

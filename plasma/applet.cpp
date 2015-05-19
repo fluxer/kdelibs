@@ -1225,9 +1225,8 @@ void Applet::flushPendingConstraintsEvents()
             }
 
             if (d->hasConfigurationInterface) {
-                bool canConfig = unlocked || KAuthorized::authorize("plasma/allow_configure_when_locked");
-                configAction->setVisible(canConfig);
-                configAction->setEnabled(canConfig);
+                configAction->setVisible(unlocked);
+                configAction->setEnabled(unlocked);
             }
         }
 
@@ -1253,9 +1252,8 @@ void Applet::flushPendingConstraintsEvents()
 
         action = d->actions->action("configure");
         if (action && d->hasConfigurationInterface) {
-            bool canConfig = unlocked || KAuthorized::authorize("plasma/allow_configure_when_locked");
-            action->setVisible(canConfig);
-            action->setEnabled(canConfig);
+            action->setVisible(unlocked);
+            action->setEnabled(unlocked);
         }
 
         if (d->extender) {
@@ -1671,8 +1669,7 @@ void Applet::setHasConfigurationInterface(bool hasInterface)
     if (configAction) {
         bool enable = hasInterface;
         if (enable) {
-            const bool unlocked = immutability() == Mutable;
-            enable = unlocked || KAuthorized::authorize("plasma/allow_configure_when_locked");
+            enable = immutability() == Mutable;
         }
         configAction->setEnabled(enable);
     }
@@ -1841,7 +1838,7 @@ void Applet::showConfigurationInterface()
         return;
     }
 
-    if (immutability() != Mutable && !KAuthorized::authorize("plasma/allow_configure_when_locked")) {
+    if (immutability() != Mutable) {
         return;
     }
 

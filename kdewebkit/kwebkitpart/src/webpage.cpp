@@ -677,40 +677,6 @@ void WebPage::slotGeometryChangeRequested(const QRect & rect)
 
 bool WebPage::checkLinkSecurity(const QNetworkRequest &req, NavigationType type) const
 {
-    // Check whether the request is authorized or not...
-    if (!KAuthorized::authorizeUrlAction("redirect", mainFrame()->url(), req.url())) {
-
-        //kDebug() << "*** Failed security check: base-url=" << mainFrame()->url() << ", dest-url=" << req.url();
-        QString buttonText, title, message;
-
-        int response = KMessageBox::Cancel;
-        KUrl linkUrl (req.url());
-
-        if (type == QWebPage::NavigationTypeLinkClicked) {
-            message = i18n("<qt>This untrusted page links to<br/><b>%1</b>."
-                           "<br/>Do you want to follow the link?</qt>", linkUrl.url());
-            title = i18n("Security Warning");
-            buttonText = i18nc("follow link despite of security warning", "Follow");
-        } else {
-            title = i18n("Security Alert");
-            message = i18n("<qt>Access by untrusted page to<br/><b>%1</b><br/> denied.</qt>",
-                           Qt::escape(linkUrl.prettyUrl()));
-        }
-
-        if (buttonText.isEmpty()) {
-            KMessageBox::error( 0, message, title);
-        } else {
-            // Dangerous flag makes the Cancel button the default
-            response = KMessageBox::warningContinueCancel(0, message, title,
-                                                          KGuiItem(buttonText),
-                                                          KStandardGuiItem::cancel(),
-                                                          QString(), // no don't ask again info
-                                                          KMessageBox::Notify | KMessageBox::Dangerous);
-        }
-
-        return (response == KMessageBox::Continue);
-    }
-
     return true;
 }
 

@@ -935,12 +935,6 @@ void KFileWidget::slotOk()
         KIO::StatJob *statJob = KIO::stat(url, KIO::HideProgressInfo);
         bool res = KIO::NetAccess::synchronousRun(statJob, this);
 
-        if (!KAuthorized::authorizeUrlAction("open", KUrl(), url)) {
-            QString msg = KIO::buildErrorString(KIO::ERR_ACCESS_DENIED, d->url.prettyUrl());
-            KMessageBox::error(this, msg);
-            return;
-        }
-
         // if we are on local mode, make sure we haven't got a remote base url
         if ((mode & KFile::LocalOnly) && !d->mostLocalUrl(d->url).isLocalFile()) {
             KMessageBox::sorry(this,

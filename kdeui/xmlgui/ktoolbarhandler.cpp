@@ -251,8 +251,7 @@ void ToolBarHandler::setupActions()
   // We have no XML file associated with our action collection, so load settings from KConfig
   actionCollection()->readSettings(); // #233712
 
-  if ( KAuthorized::authorizeKAction( "options_show_toolbar" ) )
-    plugActionList( actionListName, d->actions );
+  plugActionList( actionListName, d->actions );
 
   d->connectToActionContainers();
 }

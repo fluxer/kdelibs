@@ -188,9 +188,7 @@ void Corona::initializeLayout(const QString &configName)
         }
     }
 
-    if (config()->isImmutable() ||
-        !KAuthorized::authorize("plasma/" + KGlobal::mainComponent().aboutData()->appName() +
-                                "/unlockedDesktop")) {
+    if (config()->isImmutable()) {
         setImmutability(SystemImmutable);
     } else {
         KConfigGroup coronaConfig(config(), "General");

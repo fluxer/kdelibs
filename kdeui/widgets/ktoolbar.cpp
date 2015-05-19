@@ -246,10 +246,7 @@ void KToolBar::Private::init(bool readConfig, bool _isMainToolBar)
              q->mainWindow(), SLOT(setSettingsDirty()));
   }
 
-  if (!KAuthorized::authorize("movable_toolbars"))
-    q->setMovable(false);
-  else
-    q->setMovable(!KToolBar::toolBarsLocked());
+  q->setMovable(!KToolBar::toolBarsLocked());
 
   connect(q, SIGNAL(movableChanged(bool)),
            q, SLOT(slotMovableChanged(bool)));
@@ -1045,8 +1042,6 @@ int KToolBar::iconSizeDefault() const
 
 void KToolBar::slotMovableChanged(bool movable)
 {
-  if (movable && !KAuthorized::authorize("movable_toolbars"))
-    setMovable(false);
 }
 
 void KToolBar::dragEnterEvent(QDragEnterEvent *event)
