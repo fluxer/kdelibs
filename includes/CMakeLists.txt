@@ -817,12 +817,6 @@ install(FILES
   Plasma/WindowEffects
 DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/Plasma COMPONENT Devel)
 
-if(QT_QTOPENGL_FOUND)
-   install(FILES
-      Plasma/GLApplet
-      DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/Plasma COMPONENT Devel)
-endif(QT_QTOPENGL_FOUND)
-
 install(FILES
   KUnitConversion/Converter
   KUnitConversion/Unit

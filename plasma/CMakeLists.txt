@@ -186,13 +186,6 @@ kde4_add_kcfg_files(plasma_LIB_SRCS data/kconfigxt/libplasma-theme-global.kcfgc)
 kde4_add_ui_files(plasma_LIB_SRCS
                   private/publish.ui)
 
-if (QT_QTOPENGL_FOUND)
-    message(STATUS "Adding support for OpenGL applets to libplasma")
-    set(plasma_LIB_SRCS
-        ${plasma_LIB_SRCS}
-        glapplet.cpp)
-endif(QT_QTOPENGL_FOUND)
-
 if (PHONON_FOUND)
     message(STATUS "Adding support for Phonon to libplasma")
     include_directories(${KDE4_PHONON_INCLUDES})
@@ -283,12 +276,6 @@ set(plasma_LIB_INCLUDES
     version.h
     view.h
     wallpaper.h)
-
-if(QT_QTOPENGL_FOUND)
-    set(plasma_LIB_INCLUDES
-        ${plasma_LIB_INCLUDES}
-        glapplet.h)
-endif(QT_QTOPENGL_FOUND)
 
 install(FILES
         ${plasma_LIB_INCLUDES}

@@ -18,7 +18,6 @@ datacontainer
 datacontainer_p
 dataengine
 dataenginemanager
-glapplet
 packages_p
 phase
 plasma_export
