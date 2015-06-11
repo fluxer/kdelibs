@@ -44,7 +44,6 @@ configure_file(kio/config-kio.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kio/config-kio
 configure_file(kssl/ksslconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h )
 #macro_additional_clean_files( ${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h )
 
-add_subdirectory( kssl/kssl )
 add_subdirectory( kssl/kcm )
 add_subdirectory( misc )
 add_subdirectory( tests )
@@ -214,8 +213,6 @@ set(kfile_STAT_SRCS
 )
 
 qt4_add_resources(kfile_STAT_SRCS kfile/kacleditwidget.qrc)
-
-# kio/kssl/Makefile.am: kssl
 
 set(kssl_STAT_SRCS
   kssl/sslui.cpp
@@ -428,3 +425,5 @@ install(FILES
 
 
 install(FILES kio/accept-languages.codes DESTINATION ${CONFIG_INSTALL_DIR})
+
+install(FILES kssl/ca-bundle.crt DESTINATION ${DATA_INSTALL_DIR}/kssl )

@@ -9,6 +9,9 @@ for a user are shared across applications and managed with the kcontrol
 module "crypto".  If this file is not updated by release, you can contact
 the author for development information.
 
+The CA Root Certificates bundle was obtained from the cURL project which in
+turn converts raw data to bundle from Mozilla. See
+http://curl.haxx.se/docs/caextract.html for more details.
 
 George Staikos <staikos@kde.org>
 
