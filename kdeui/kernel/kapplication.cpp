@@ -686,7 +686,7 @@ static void checkRestartVersion( QSessionManager& sm )
         return; // we run in our native session, no need to wrap
 #define NUM_TO_STRING2( num ) #num
 #define NUM_TO_STRING( num ) NUM_TO_STRING2( num )
-    QString wrapper = KStandardDirs::findExe( "katana" NUM_TO_STRING( KDE_VERSION_MAJOR ) ); // "katana", etc.
+    QString wrapper = KStandardDirs::findExe( "kde" NUM_TO_STRING( KDE_VERSION_MAJOR ) ); // "kde4", etc.
 #undef NUM_TO_STRING
 #undef NUM_TO_STRING2
     if( !wrapper.isEmpty()) {

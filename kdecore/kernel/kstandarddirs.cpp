@@ -118,9 +118,9 @@ share/sounds
 locale
 share/locale
 services
-share/katana/services
+share/kde4/services
 servicetypes
-share/katana/servicetypes
+share/kde4/servicetypes
 mime
 share/mimelnk
 cgi
@@ -132,9 +132,9 @@ share/templates
 exe
 bin
 module
-%lib/katana
+%lib/kde4
 qtplugins
-%lib/katana/plugins
+%lib/kde4/plugins
 kcfg
 share/config.kcfg
 emoticons
@@ -173,9 +173,9 @@ static const char types_string[] =
     "locale\0"
     "share/locale\0"
     "services\0"
-    "share/katana/services\0"
+    "share/kde4/services\0"
     "servicetypes\0"
-    "share/katana/servicetypes\0"
+    "share/kde4/servicetypes\0"
     "mime\0"
     "share/mimelnk\0"
     "cgi\0"
@@ -187,9 +187,9 @@ static const char types_string[] =
     "exe\0"
     "bin\0"
     "module\0"
-    "%lib/katana\0"
+    "%lib/kde4\0"
     "qtplugins\0"
-    "%lib/katana/plugins\0"
+    "%lib/kde4/plugins\0"
     "kcfg\0"
     "share/config.kcfg\0"
     "emoticons\0"
@@ -1506,7 +1506,7 @@ void KStandardDirs::addKDEDefaults()
     if (!xdgdirs.isEmpty()) {
         tokenize(xdgdirList, xdgdirs, QString(QLatin1Char(KPATH_SEPARATOR)));
         // Ensure the kdedirDataDirs are in there too,
-        // otherwise resourceDirs() will add kdedir/share/applications/katana
+        // otherwise resourceDirs() will add kdedir/share/applications/kde4
         // as returned by installPath(), and that's incorrect.
         Q_FOREACH(const QString& dir, kdedirDataDirs) {
             if (!xdgdirList.contains(dir, cs))
@@ -1551,7 +1551,7 @@ void KStandardDirs::addKDEDefaults()
         addResourceType(types_string + types_indices[index], 0, types_string + types_indices[index+1], true);
         index+=2;
     }
-    addResourceType("exe", "lib", "katana/libexec", true );
+    addResourceType("exe", "lib", "kde4/libexec", true );
 
     addResourceDir("home", QDir::homePath(), false);
 

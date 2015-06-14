@@ -59,7 +59,7 @@ QString KStandardDirs::installPath(const char *type)
             if (strcmp("lib", type) == 0)
                 return QFile::decodeName(LIB_INSTALL_DIR "/");
             if (strcmp("libexec", type) == 0)
-                return QFile::decodeName(KDEDIR "/lib" KDELIBSUFF "/katana/libexec/");
+                return QFile::decodeName(KDEDIR "/lib" KDELIBSUFF "/kde4/libexec/");
             if (strcmp("locale", type) == 0)
                 return QFile::decodeName(LOCALE_INSTALL_DIR "/");
             break;
