@@ -441,7 +441,7 @@ install( FILES
   KWebView
   KWebPluginFactory
   KWebWallet
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE COMPONENT Devel)
 
 if (UNIX)
    install( FILES
@@ -453,14 +453,14 @@ if (UNIX)
      SshProcess
      StubProcess
      SuProcess
-   DESTINATION ${INCLUDE_INSTALL_DIR}/Katana COMPONENT Devel)
+   DESTINATION ${INCLUDE_INSTALL_DIR}/KDE COMPONENT Devel)
 endif (UNIX)
 
 install( FILES
   ConversionCheck/QVconvertible
   ConversionCheck/type_toQString
   ConversionCheck/type_toQVariant
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/ConversionCheck COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/ConversionCheck COMPONENT Devel)
 
 
 install( FILES
@@ -473,12 +473,12 @@ install( FILES
   DNSSD/ServiceBrowser
   DNSSD/ServiceModel
   DNSSD/ServiceTypeBrowser
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/DNSSD COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/DNSSD COMPONENT Devel)
 
 install( FILES
   KAccelGen/Deref
   KAccelGen/Deref_Key
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KAccelGen COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KAccelGen COMPONENT Devel)
 
 
 install( FILES
@@ -486,7 +486,7 @@ install( FILES
   KHE/ClipboardInterface
   KHE/ValueColumnInterface
   KHE/ZoomInterface
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KHE COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KHE COMPONENT Devel)
 
 
 install( FILES
@@ -527,12 +527,12 @@ install( FILES
   KIO/TCPSlaveBase
   KIO/Task
   KIO/TransferJob
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KIO COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KIO COMPONENT Devel)
 
 install( FILES
   KMediaPlayer/Player
   KMediaPlayer/View
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KMediaPlayer COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KMediaPlayer COMPONENT Devel)
 
 install( FILES
   KNetwork/KActiveSocketBase
@@ -556,7 +556,7 @@ install( FILES
   KNetwork/KSocksSocketDevice
   KNetwork/KStreamSocket
   KNetwork/KUnixSocketAddress
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KNetwork COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KNetwork COMPONENT Devel)
 
 install( FILES
   KParts/BrowserExtension
@@ -586,7 +586,7 @@ install( FILES
   KParts/StatusBarExtension
   KParts/TextExtension
   KParts/WindowArgs
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KParts COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KParts COMPONENT Devel)
 
 
 install( FILES
@@ -611,14 +611,14 @@ install( FILES
   Kross/Script
   Kross/ScriptingPlugin
   Kross/WrapperInterface
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/Kross COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Kross COMPONENT Devel)
 
 
 install( FILES
   KSettings/Dialog
   KSettings/Dispatcher
   KSettings/PluginPage
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KSettings COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KSettings COMPONENT Devel)
 
 
 #install( FILES
@@ -626,7 +626,7 @@ DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KSettings COMPONENT Devel)
 #  Sonnet/UnicodeData
 #  Sonnet/TextBreaks
 #  Sonnet/Spell
-#DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/Sonnet )
+#DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Sonnet )
 
 
 install( FILES
@@ -668,7 +668,7 @@ install( FILES
   KTextEditor/TextHintInterface
   KTextEditor/VariableInterface
   KTextEditor/View
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KTextEditor COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KTextEditor COMPONENT Devel)
 
 
 install( FILES
@@ -676,12 +676,12 @@ install( FILES
   KUnitTest/SlotTester
   KUnitTest/TestResults
   KUnitTest/Tester
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KUnitTest COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KUnitTest COMPONENT Devel)
 
 
 install( FILES
   KWallet/Wallet
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KWallet COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KWallet COMPONENT Devel)
 
 
 install( FILES
@@ -708,7 +708,7 @@ install( FILES
   Solid/StorageAccess
   Solid/StorageDrive
   Solid/StorageVolume
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/Solid COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Solid COMPONENT Devel)
 
 
 install( FILES
@@ -717,14 +717,14 @@ install( FILES
   Sonnet/Dialog
   Sonnet/DictionaryComboBox
   Sonnet/Highlighter
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/Sonnet COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Sonnet COMPONENT Devel)
 
 install( FILES
   KAuth/Action
   KAuth/ActionReply
   KAuth/ActionWatcher
   KAuth/HelperSupport
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KAuth COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KAuth COMPONENT Devel)
 
 install( FILES
   ThreadWeaver/DependencyPolicy
@@ -738,7 +738,7 @@ install( FILES
   ThreadWeaver/Weaver
   ThreadWeaver/WeaverInterface
   ThreadWeaver/WeaverObserver
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/ThreadWeaver COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/ThreadWeaver COMPONENT Devel)
 
 install(FILES
   Plasma/AbstractDialogManager
@@ -815,11 +815,11 @@ install(FILES
   Plasma/WallpaperScript
   Plasma/WebView
   Plasma/WindowEffects
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/Plasma COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Plasma COMPONENT Devel)
 
 install(FILES
   KUnitConversion/Converter
   KUnitConversion/Unit
   KUnitConversion/UnitCategory
   KUnitConversion/Value
-DESTINATION ${INCLUDE_INSTALL_DIR}/Katana/KUnitConversion COMPONENT Devel)
+DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KUnitConversion COMPONENT Devel)
