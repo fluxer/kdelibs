@@ -1138,7 +1138,7 @@ endif (NOT KDE4Internal_FIND_QUIETLY)
 #the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>
 set(KDE4_INCLUDES
    ${KDE4_INCLUDE_DIR}
-   ${KDE4_INCLUDE_DIR}/Katana
+   ${KDE4_INCLUDE_DIR}/KDE
    ${KDE4_PHONON_INCLUDES}
    ${QT_INCLUDES}
    ${_KDE4_PLATFORM_INCLUDE_DIRS}
