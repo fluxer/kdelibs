@@ -308,7 +308,7 @@ class KIconDialog::KIconDialogPrivate
     KIconLoader *mpLoader;
     KIconCanvas *mpCanvas;
     int mNumContext;
-    KIconLoader::Context mContextMap[ 12 ]; // must match KIcon::Context size, code has assert
+    KIconLoader::Context mContextMap[ 11 ]; // must match KIcon::Context size, code has assert
 
     bool m_bStrictIconSize, m_bLockUser, m_bLockCustomDir;
     QString custom;
@@ -433,7 +433,6 @@ void KIconDialog::KIconDialogPrivate::init()
         I18N_NOOP( "Devices" ),
         I18N_NOOP( "Emblems" ),
         I18N_NOOP( "Emotes" ),
-        I18N_NOOP( "Filesystems" ),
         I18N_NOOP( "International" ),
         I18N_NOOP( "Mimetypes" ),
         I18N_NOOP( "Places" ),
