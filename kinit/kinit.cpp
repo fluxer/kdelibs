@@ -86,10 +86,10 @@
 
 #ifdef Q_WS_X11
 static const char *extra_libs[] = {
-    "libkio.so.5",
+    "libkio.so.4",
     "libkparts.so.4",
 #ifdef __KDE_HAVE_GCC_VISIBILITY
-    "libplasma.so.3"
+    "libplasma.so.4"
 #endif
 };
 #endif
