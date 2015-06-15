@@ -244,7 +244,8 @@ add_subdirectory( plasma )
 add_subdirectory( kunitconversion )
 add_subdirectory( kdewebkit )
 add_subdirectory( includes )
-
+add_subdirectory( libkdcraw )
+add_subdirectory( libkexiv2 )
 add_subdirectory( experimental )
 
 ################# write dependency file which will be installed #################

@@ -215,10 +215,6 @@ if(DL_LIBRARY)
     target_link_libraries(plasma ${DL_LIBRARY})
 endif(DL_LIBRARY)
 
-if(QT_QTOPENGL_FOUND)
-    target_link_libraries(plasma ${QT_QTOPENGL_LIBRARY})
-endif(QT_QTOPENGL_FOUND)
-
 target_link_libraries(plasma LINK_INTERFACE_LIBRARIES kdeui kdecore ${QT_QTGUI_LIBRARY})
 
 set_target_properties(plasma PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
