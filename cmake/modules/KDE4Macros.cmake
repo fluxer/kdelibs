@@ -29,10 +29,6 @@
 
 macro (KDE4_ADD_KCFG_FILES _sources )
    foreach (_current_ARG ${ARGN})
-       if( ${_current_ARG} STREQUAL "GENERATE_MOC" )
-           set(_kcfg_generatemoc TRUE)
-       endif( ${_current_ARG} STREQUAL "GENERATE_MOC" )
-
        if( ${_current_ARG} STREQUAL "USE_RELATIVE_PATH" )
            set(_kcfg_relativepath TRUE)
        endif( ${_current_ARG} STREQUAL "USE_RELATIVE_PATH" )
@@ -91,12 +87,6 @@ macro (KDE4_ADD_KCFG_FILES _sources )
           ARGS ${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}
           MAIN_DEPENDENCY ${_tmp_FILE}
           DEPENDS ${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
-
-       if(_kcfg_generatemoc)
-         qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
-         set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # don't run automoc on this file
-         list(APPEND ${_sources} ${_moc_FILE})
-       endif(_kcfg_generatemoc)
 
        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
      endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC" AND NOT ${_current_FILE} STREQUAL "USE_RELATIVE_PATH")
@@ -550,13 +540,6 @@ endmacro(KDE4_CHECK_EXECUTABLE_PARAMS)
 macro (KDE4_ADD_KDEINIT_EXECUTABLE _target_NAME )
 
    kde4_check_executable_params(_SRCS _nogui _test ${ARGN})
-
-   configure_file(${KDE4_MODULE_DIR}/kde4init_dummy.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp)
-   set_source_files_properties(${CMAKE_CURRENT_BINARY_DIR}/${_target_NAME}_dummy.cpp PROPERTIES SKIP_AUTOMOC TRUE)
-   # under Windows, build a normal executable and additionally a dummy kdeinit4_foo.lib, whose only purpose on windows is to 
-   # keep the linking logic from the CMakeLists.txt on UNIX working (under UNIX all necessary libs are linked against the kdeinit
-   # library instead against the executable, under windows we want to have everything in the executable, but for compatibility we have to 
-   # keep the library there-
 
    add_library(kdeinit_${_target_NAME} SHARED ${_SRCS})
 
