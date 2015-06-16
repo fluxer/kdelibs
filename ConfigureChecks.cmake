@@ -196,6 +196,8 @@ if (UNIX)
   endif (openpty_in_libc OR openpty_in_libutil)
 
   check_function_exists(ptsname    HAVE_PTSNAME)
+  check_function_exists(tcgetattr  HAVE_TCGETATTR)
+  check_function_exists(tcsetattr  HAVE_TCSETATTR)
 endif (UNIX)
 
 # it seems this isn't used anywhere

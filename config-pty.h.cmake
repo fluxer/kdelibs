@@ -9,6 +9,8 @@
 #cmakedefine HAVE_REVOKE 1
 #cmakedefine HAVE_UNLOCKPT 1
 #cmakedefine HAVE__GETPTY 1
+#cmakedefine HAVE_TCGETATTR
+#cmakedefine HAVE_TCSETATTR
 
 #cmakedefine HAVE_LIBUTIL_H 1
 #cmakedefine HAVE_UTIL_H 1
