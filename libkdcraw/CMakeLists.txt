@@ -27,7 +27,7 @@ PROJECT(libkdcraw)
 MESSAGE(STATUS "----------------------------------------------------------------------------------")
 MESSAGE(STATUS "Starting CMake configuration for: libkdcraw")
 
-FIND_PACKAGE(KDE4 REQUIRED 4.14.3)
+FIND_PACKAGE(KDE4Internal REQUIRED 4.14.3)
 INCLUDE(KDE4Defaults)
 INCLUDE(MacroLibrary)
 INCLUDE(MacroOptionalAddSubdirectory)
