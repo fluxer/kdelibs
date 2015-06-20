@@ -68,6 +68,10 @@ INCLUDE_DIRECTORIES(${QDBUS_INCLUDE_DIRS}
                     ${CMAKE_BINARY_DIR}
                     ${KDE4_INCLUDES}
                     ${CMAKE_SOURCE_DIR}/threadweaver
+                    ${CMAKE_SOURCE_DIR}/solid
+                    ${CMAKE_BINARY_DIR}/solid
+                    ${KDE4_KDECORE_INCLUDES}
+                    ${KDE4_KIO_INCLUDES}
                     ${LibRaw_INCLUDE_DIR}
                    )
 
