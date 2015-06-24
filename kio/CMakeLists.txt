@@ -266,15 +266,15 @@ kde4_add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
 kde4_add_executable(kfilemetadatareader ${kfilemetadatareaderprocess_SRCS})
 target_link_libraries(kfilemetadatareader ${KDE4_KIO_LIBS})
-target_link_libraries(kio ${KDE4_KDEUI_LIBS} ${ZLIB_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${X11_LIBRARIES} ${KIO_EXTRA_LIBS})
-target_link_libraries(kio LINK_INTERFACE_LIBRARIES kdeui kdecore ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} )
+target_link_libraries(kio PRIVATE ${KDE4_KDEUI_LIBS} ${ZLIB_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${X11_LIBRARIES} ${KIO_EXTRA_LIBS})
+target_link_libraries(kio PUBLIC kdeui kdecore ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} )
 
 if(ACL_FOUND)
-   target_link_libraries(kio ${ACL_LIBS})
+   target_link_libraries(kio PRIVATE ${ACL_LIBS})
 endif(ACL_FOUND)
 
 if(X11_Xrender_FOUND)
-   target_link_libraries(kio ${X11_Xrender_LIB})
+   target_link_libraries(kio PRIVATE ${X11_Xrender_LIB})
 endif(X11_Xrender_FOUND)
 
 set_target_properties(kio PROPERTIES

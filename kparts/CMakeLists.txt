@@ -29,8 +29,8 @@ set(kparts_LIB_SRCS
 
 kde4_add_library(kparts ${LIBRARY_TYPE} ${kparts_LIB_SRCS})
 
-target_link_libraries(kparts  ${KDE4_KDECORE_LIBS} kdeui kio)
-target_link_libraries(kparts  LINK_INTERFACE_LIBRARIES kio kdeui kdecore ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
+target_link_libraries(kparts PRIVATE ${KDE4_KDECORE_LIBS} kdeui kio)
+target_link_libraries(kparts  PUBLIC kio kdeui kdecore ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} )
 
 set_target_properties(kparts PROPERTIES VERSION ${GENERIC_LIB_VERSION} 
                                         SOVERSION ${GENERIC_LIB_SOVERSION} 

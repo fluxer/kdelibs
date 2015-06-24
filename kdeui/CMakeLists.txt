@@ -372,34 +372,32 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
 
 kde4_add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
 
-target_link_libraries(kdeui ${KDE4_KDECORE_LIBS} ${X11_LIBRARIES} ${QT_QTGUI_LIBRARY}
+target_link_libraries(kdeui PRIVATE ${KDE4_KDECORE_LIBS} ${X11_LIBRARIES} ${QT_QTGUI_LIBRARY}
                             ${QT_QTXML_LIBRARY} ${KDEUI_EXTRA_LIBS} ${QT_QTNETWORK_LIBRARY})
 
-target_link_libraries(kdeui  ${QT_QTSVG_LIBRARY} ${DBUSMENUQT_LIBRARIES})
+target_link_libraries(kdeui PRIVATE ${QT_QTSVG_LIBRARY} ${DBUSMENUQT_LIBRARIES})
 
 if(MINGW)
-   target_link_libraries(kdeui gdi32 oleaut32)
+   target_link_libraries(kdeui PRIVATE gdi32 oleaut32)
 endif(MINGW)
 
 if(X11_XTest_FOUND)
-   target_link_libraries(kdeui ${X11_XTest_LIB})
+   target_link_libraries(kdeui PRIVATE ${X11_XTest_LIB})
 endif(X11_XTest_FOUND)
 
 if(X11_Xcursor_FOUND)
-   target_link_libraries(kdeui ${X11_Xcursor_LIB})
+   target_link_libraries(kdeui PRIVATE ${X11_Xcursor_LIB})
 endif(X11_Xcursor_FOUND)
 
 if (X11_Xfixes_FOUND)
-   target_link_libraries(kdeui ${X11_Xfixes_LIB})
+   target_link_libraries(kdeui PRIVATE ${X11_Xfixes_LIB})
 endif(X11_Xfixes_FOUND)
 
 if (X11_Xrender_FOUND)
-   target_link_libraries(kdeui ${X11_Xrender_LIB})
+   target_link_libraries(kdeui PRIVATE ${X11_Xrender_LIB})
 endif(X11_Xrender_FOUND)
 
-target_link_libraries(kdeui LINK_INTERFACE_LIBRARIES kdecore ${QT_QTGUI_LIBRARY})
-
-target_link_libraries(kdeui LINK_INTERFACE_LIBRARIES ${QT_QTSVG_LIBRARY})
+target_link_libraries(kdeui PUBLIC kdecore ${QT_QTGUI_LIBRARY} ${QT_QTSVG_LIBRARY})
 
 set_target_properties(kdeui PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}

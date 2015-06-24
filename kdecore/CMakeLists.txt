@@ -322,7 +322,7 @@ endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
 
 kde4_add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 
-target_link_libraries(kdecore ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${ZLIB_LIBRARY} ${kdecore_OPTIONAL_LIBS})
+target_link_libraries(kdecore PRIVATE ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${ZLIB_LIBRARY} ${kdecore_OPTIONAL_LIBS})
 
 set(SYS_INOTIFY_H_FOUND 0)
 if(SYS_INOTIFY_H_FOUND)
@@ -341,12 +341,10 @@ endif(SYS_INOTIFY_H_FOUND)
 
 if(FAM_FOUND)
    include_directories(${FAM_INCLUDE_DIR})
-   target_link_libraries(kdecore ${FAM_LIBRARIES})
+   target_link_libraries(kdecore PRIVATE ${FAM_LIBRARIES})
 endif(FAM_FOUND)
 
-set(kdecore_LINK_INTERFACE_LIBRARIES ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
-
-target_link_libraries(kdecore LINK_INTERFACE_LIBRARIES ${kdecore_LINK_INTERFACE_LIBRARIES} )
+target_link_libraries(kdecore PUBLIC ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
 set_target_properties(kdecore PROPERTIES
                               VERSION ${GENERIC_LIB_VERSION}

@@ -196,7 +196,7 @@ endif(PHONON_FOUND)
 
 kde4_add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
-target_link_libraries(plasma ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
+target_link_libraries(plasma PRIVATE ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
                              ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                              ${QT_QTXML_LIBRARY} ${QT_QTSQL_LIBRARY}
                              ${QT_QTDECLARATIVE_LIBRARY} ${KDE4_KDEUI_LIBS}
@@ -204,18 +204,18 @@ target_link_libraries(plasma ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
                              ${PLASMA_EXTRA_LIBS})
 
 if(X11_FOUND)
-   target_link_libraries(plasma ${X11_LIBRARIES})
+   target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
 endif(X11_FOUND)
 
 if(PHONON_FOUND)
-   target_link_libraries(plasma ${KDE4_PHONON_LIBS})
+   target_link_libraries(plasma PRIVATE ${KDE4_PHONON_LIBS})
 endif(PHONON_FOUND)
 
 if(DL_LIBRARY)
-    target_link_libraries(plasma ${DL_LIBRARY})
+    target_link_libraries(plasma PRIVATE ${DL_LIBRARY})
 endif(DL_LIBRARY)
 
-target_link_libraries(plasma LINK_INTERFACE_LIBRARIES kdeui kdecore ${QT_QTGUI_LIBRARY})
+target_link_libraries(plasma PUBLIC kdeui kdecore ${QT_QTGUI_LIBRARY})
 
 set_target_properties(plasma PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
