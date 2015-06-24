@@ -24,9 +24,6 @@
 
 PROJECT(libkexiv2)
 
-MESSAGE(STATUS "----------------------------------------------------------------------------------")
-MESSAGE(STATUS "Starting CMake configuration for: libkexiv2")
-
 FIND_PACKAGE(KDE4Internal REQUIRED 4.14.3)
 
 INCLUDE(KDE4Defaults)
@@ -71,4 +68,3 @@ IF (EXIV2_FOUND)
   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
 ENDIF (EXIV2_FOUND)
 
-MACRO_DISPLAY_FEATURE_LOG()

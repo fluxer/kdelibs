@@ -24,9 +24,6 @@
 
 PROJECT(libkdcraw)
 
-MESSAGE(STATUS "----------------------------------------------------------------------------------")
-MESSAGE(STATUS "Starting CMake configuration for: libkdcraw")
-
 FIND_PACKAGE(KDE4Internal REQUIRED 4.14.3)
 INCLUDE(KDE4Defaults)
 INCLUDE(MacroLibrary)
@@ -99,8 +96,3 @@ ENDIF(KDE4_BUILD_TESTS)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libkdcraw.pc.cmake  ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw.pc)
 INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
 
-FEATURE_SUMMARY(
-  WHAT ALL
-  INCLUDE_QUIET_PACKAGES
-  FATAL_ON_MISSING_REQUIRED_PACKAGES
-)
