@@ -153,16 +153,6 @@ void KDeclarative::setupBindings()
         d->declarativeEngine.data()->addImportPath(importPathIterator.previous());
     }
 
-    const QString target = componentsTarget();
-    if (target != defaultComponentsTarget()) {
-        const QStringList paths = KGlobal::dirs()->findDirs("module", "platformimports/" % target);
-        QStringListIterator it(paths);
-        it.toBack();
-        while (it.hasPrevious()) {
-            d->declarativeEngine.data()->addImportPath(it.previous());
-        }
-    }
-
     QScriptValue global = engine->globalObject();
 
     //KConfig and KJob
@@ -199,26 +189,11 @@ QString KDeclarative::defaultComponentsTarget()
 
 QString KDeclarative::componentsTarget()
 {
-    const QStringList platform = runtimePlatform();
-    if (platform.isEmpty()) {
-        return defaultComponentsTarget();
-    }
-
-    return platform.last();
+    return defaultComponentsTarget();
 }
 
 QStringList KDeclarative::runtimePlatform()
 {
-    static QStringList *runtimePlatform = 0;
-    if (!runtimePlatform) {
-        const QString env = getenv("PLASMA_PLATFORM");
-        runtimePlatform = new QStringList(env.split(":", QString::SkipEmptyParts));
-        if (runtimePlatform->isEmpty()) {
-            KConfigGroup cg(KGlobal::config(), "General");
-            *runtimePlatform = cg.readEntry("runtimePlatform", *runtimePlatform);
-        }
-    }
-
-    return *runtimePlatform;
+    return QStringList();
 }
 
