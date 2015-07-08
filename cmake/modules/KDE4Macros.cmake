@@ -29,6 +29,10 @@
 
 macro (KDE4_ADD_KCFG_FILES _sources )
    foreach (_current_ARG ${ARGN})
+       if( ${_current_ARG} STREQUAL "GENERATE_MOC" )
+           set(_kcfg_generatemoc TRUE)
+       endif( ${_current_ARG} STREQUAL "GENERATE_MOC" )
+
        if( ${_current_ARG} STREQUAL "USE_RELATIVE_PATH" )
            set(_kcfg_relativepath TRUE)
        endif( ${_current_ARG} STREQUAL "USE_RELATIVE_PATH" )
@@ -87,6 +91,12 @@ macro (KDE4_ADD_KCFG_FILES _sources )
           ARGS ${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}
           MAIN_DEPENDENCY ${_tmp_FILE}
           DEPENDS ${_kcfg_FILE} ${_KDE4_KCONFIG_COMPILER_DEP} )
+
+       if(_kcfg_generatemoc)
+         qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
+         set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)  # don't run automoc on this file
+         list(APPEND ${_sources} ${_moc_FILE})
+       endif(_kcfg_generatemoc)
 
        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
      endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC" AND NOT ${_current_FILE} STREQUAL "USE_RELATIVE_PATH")
