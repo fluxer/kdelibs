@@ -20,12 +20,6 @@ set(kded_SRCS kded.cpp kdedadaptor.cpp
 
 kde4_add_executable(kded4  ${kded_SRCS})
 
-if (Q_WS_MAC)
-    set_target_properties(kded4 PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist.template)
-    set_target_properties(kded4 PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kded.kded4")
-    set_target_properties(kded4 PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "KDE Daemon")
-endif (Q_WS_MAC)
-
 target_link_libraries(kded4  ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
 
 install(TARGETS kded4 ${INSTALL_TARGETS_DEFAULT_ARGS} )

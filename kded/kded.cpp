@@ -102,11 +102,6 @@ static void runBuildSycoca(QObject *callBackObj=0, const char *callBackSlot=0, c
    }
 }
 
-static void runKonfUpdate()
-{
-   KToolInvocation::kdeinitExecWait( "kconf_update", QStringList(), 0, 0, "0" /*no startup notification*/ );
-}
-
 static void runDontChangeHostname(const QByteArray &oldName, const QByteArray &newName)
 {
    QStringList args;
@@ -713,45 +708,6 @@ static void sighandler(int /*sig*/)
        qApp->quit();
 }
 
-KUpdateD::KUpdateD()
-{
-    m_pDirWatch = new KDirWatch;
-    m_pTimer = new QTimer;
-    m_pTimer->setSingleShot( true );
-    connect(m_pTimer, SIGNAL(timeout()), this, SLOT(runKonfUpdate()));
-    QObject::connect( m_pDirWatch, SIGNAL(dirty(QString)),
-           this, SLOT(slotNewUpdateFile()));
-
-    const QStringList dirs = KGlobal::dirs()->findDirs("data", "kconf_update");
-    for( QStringList::ConstIterator it = dirs.begin();
-         it != dirs.end();
-         ++it )
-    {
-       QString path = *it;
-       if (path[path.length()-1] != '/')
-          path += '/';
-
-       if (!m_pDirWatch->contains(path))
-          m_pDirWatch->addDir(path,KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
-    }
-}
-
-KUpdateD::~KUpdateD()
-{
-    delete m_pDirWatch;
-    delete m_pTimer;
-}
-
-void KUpdateD::runKonfUpdate()
-{
-    ::runKonfUpdate();
-}
-
-void KUpdateD::slotNewUpdateFile()
-{
-    m_pTimer->start( 500 );
-}
-
 KHostnameD::KHostnameD(int pollInterval)
 {
     m_Timer.start(pollInterval); // repetitive timer (not single-shot)
@@ -819,9 +775,6 @@ public:
 
           kded->recreate(true); // initial
 
-          if (bCheckUpdates)
-            (void) new KUpdateD; // Watch for updates
-
 #ifdef Q_WS_X11
           XEvent e;
           e.xclient.type = ClientMessage;
@@ -832,8 +785,6 @@ public:
           strcpy( e.xclient.data.b, "kded" );
           XSendEvent( QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e );
 #endif
-
-          runKonfUpdate(); // Run it once.
 
 #ifdef Q_WS_X11
           e.xclient.type = ClientMessage;
@@ -888,7 +839,6 @@ int main(int argc, char *argv[])
         KApplication app;
         checkStamps = cg.readEntry("CheckFileStamps", true);
         runBuildSycoca();
-        runKonfUpdate();
         return 0;
      }
 

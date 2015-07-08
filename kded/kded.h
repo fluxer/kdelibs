@@ -227,33 +227,6 @@ public Q_SLOTS:
 };
 
 
-class KUpdateD : public QObject
-{
-   Q_OBJECT
-public:
-   KUpdateD();
-   ~KUpdateD();
-
-public Q_SLOTS:
-   void runKonfUpdate();
-   void slotNewUpdateFile();
-
-private:
-   /**
-    * Pointer to the dirwatch class which tells us, when some directories
-    * changed.
-    * Slower polling for remote file systems is now done in KDirWatch (JW).
-    */
-   KDirWatch* m_pDirWatch;
-
-   /**
-    * When a desktop file is updated, a timer is started (5 sec)
-    * before rebuilding the binary - so that multiple updates result
-    * in only one rebuilding.
-    */
-   QTimer* m_pTimer;
-};
-
 class KHostnameD : public QObject
 {
    Q_OBJECT
