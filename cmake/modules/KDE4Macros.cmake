@@ -740,17 +740,6 @@ macro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
    string(REGEX REPLACE "[^_A-Za-z0-9]" "_" _symbol ${_symbol})
    set(_symbol "MAKE_${_symbol}_LIB")
    set_target_properties(${_target_NAME} PROPERTIES DEFINE_SYMBOL ${_symbol})
-
-   # By default don't add any linked libraries to the "exported"
-   # link interfaces, so that executables linking against this library
-   # will not automatically add implicit dependencies to their link list.
-   #
-   # This reduces inter-package dependencies and makes it easier to remove
-   # dependencies of shared libraries without breaking binary compatibility.
-   if(NOT "${_add_lib_param}" STREQUAL "STATIC")
-      set_target_properties(${_target_NAME} PROPERTIES LINK_INTERFACE_LIBRARIES "" )
-   endif(NOT "${_add_lib_param}" STREQUAL "STATIC")
-
 endmacro (KDE4_ADD_LIBRARY _target_NAME _lib_TYPE)
 
 macro (KDE4_ADD_WIDGET_FILES _sources)
@@ -860,24 +849,3 @@ endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
 function(KDE4_INSTALL_AUTH_ACTIONS HELPER_ID ACTIONS_FILE)
   message(AUTHOR_WARNING "PolicyKit/Polikt actions are not required")
 endfunction(KDE4_INSTALL_AUTH_ACTIONS)
-
-
-macro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES _append_or_write _filename)
-   message(FATAL_ERROR "_KDE4_EXPORT_LIBRARY_DEPENDENCIES() was an internal macro and has been removed again. Just remove the code which calls it, there is no substitute.")
-endmacro(_KDE4_EXPORT_LIBRARY_DEPENDENCIES)
-
-macro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
-   message(FATAL_ERROR "_KDE4_TARGET_LINK_INTERFACE_LIBRARIES() doesn't exist anymore. Set the LINK_INTERFACE_LIBRARIES target property instead. See kdelibs/kdecore/CMakeLists.txt for an example.")
-endmacro (_KDE4_TARGET_LINK_INTERFACE_LIBRARIES)
-
-macro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
-   message(FATAL_ERROR "KDE4_TARGET_LINK_INTERFACE_LIBRARIES() doesn't exist anymore. Set the LINK_INTERFACE_LIBRARIES target property instead. See kdelibs/kdecore/CMakeLists.txt for an example.")
-endmacro (KDE4_TARGET_LINK_INTERFACE_LIBRARIES _target _interface_libs)
-
-macro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
-   message(FATAL_ERROR "KDE4_SET_CUSTOM_TARGET_PROPERTY() is deprecated, just use a simple variable instead")
-endmacro (KDE4_SET_CUSTOM_TARGET_PROPERTY)
-
-macro (KDE4_GET_CUSTOM_TARGET_PROPERTY)
-   message(FATAL_ERROR "KDE4_GET_CUSTOM_TARGET_PROPERTY() is deprecated, just use a simple variable instead")
-endmacro (KDE4_GET_CUSTOM_TARGET_PROPERTY)
