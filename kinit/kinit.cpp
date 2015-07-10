@@ -84,16 +84,6 @@
 #include <kstartupinfo.h>
 #endif
 
-#ifdef Q_WS_X11
-static const char *extra_libs[] = {
-    "libkio.so.4",
-    "libkparts.so.4",
-#ifdef __KDE_HAVE_GCC_VISIBILITY
-    "libplasma.so.4"
-#endif
-};
-#endif
-
 // #define SKIP_PROCTITLE 1
 
 extern char **environ;
@@ -1750,28 +1740,6 @@ int main(int argc, char **argv, char **envp)
        */
       init_kdeinit_socket();
    }
-#ifdef Q_WS_X11
-    if (!d.suicide && qgetenv("KDE_IS_PRELINKED").isEmpty()) {
-        const int extrasCount = sizeof(extra_libs)/sizeof(extra_libs[0]);
-        for (int i=0; i<extrasCount; i++) {
-            QString extra = KStandardDirs::locate("lib", QLatin1String(extra_libs[i]), *s_instance);
-
-            // can't use KLibLoader here as it would unload the library
-            // again
-            if (!extra.isEmpty()) {
-                QLibrary l(extra);
-                l.setLoadHints(QLibrary::ExportExternalSymbolsHint);
-                (void)l.load();
-            }
-#ifndef NDEBUG
-            else {
-                fprintf( stderr, "%s was not found.\n", extra_libs[i] );
-            }
-#endif
-
-        }
-    }
-#endif
    if (launch_klauncher)
    {
       start_klauncher();
