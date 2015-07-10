@@ -38,14 +38,10 @@ KAboutApplicationPersonModel::KAboutApplicationPersonModel( const QList< KAboutP
     if( m_providerUrl.isEmpty() )
         m_providerUrl = QString( "https://api.opendesktop.org/v1/" );
 
-    bool hasOcsUsernames = false;
     QList< KAboutPerson >::const_iterator end(personList.constEnd());
     for( QList< KAboutPerson >::const_iterator it = personList.begin(); it != end; ++it )
     {
         KAboutPerson person = *it;
-
-        if( !person.ocsUsername().isEmpty() )
-            hasOcsUsernames = true;
 
         KAboutApplicationPersonProfile profile =
                 KAboutApplicationPersonProfile( person.name(),
