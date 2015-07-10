@@ -377,10 +377,6 @@ target_link_libraries(kdeui PRIVATE ${KDE4_KDECORE_LIBS} ${X11_LIBRARIES} ${QT_Q
 
 target_link_libraries(kdeui PRIVATE ${QT_QTSVG_LIBRARY} ${DBUSMENUQT_LIBRARIES})
 
-if(MINGW)
-   target_link_libraries(kdeui PRIVATE gdi32 oleaut32)
-endif(MINGW)
-
 if(X11_XTest_FOUND)
    target_link_libraries(kdeui PRIVATE ${X11_XTest_LIB})
 endif(X11_XTest_FOUND)
