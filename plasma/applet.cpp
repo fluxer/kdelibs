@@ -114,7 +114,6 @@
 #include "private/plasmoidservice_p.h"
 #include "private/popupapplet_p.h"
 #include "private/service_p.h"
-#include "ui_publish.h"
 
 
 namespace Plasma
@@ -1851,7 +1850,6 @@ void Applet::showConfigurationInterface()
         return;
     }
 
-    d->publishUI.publishCheckbox = 0;
     if (d->package) {
         KConfigDialog *dialog = 0;
 
@@ -2034,15 +2032,6 @@ void AppletPrivate::addGlobalShortcutsPage(KConfigDialog *dialog)
     QObject::connect(dialog, SIGNAL(applyClicked()), q, SLOT(configDialogFinished()), Qt::UniqueConnection);
     QObject::connect(dialog, SIGNAL(okClicked()), q, SLOT(configDialogFinished()), Qt::UniqueConnection);
 #endif
-}
-
-void AppletPrivate::publishCheckboxStateChanged(int state)
-{
-    if (state == Qt::Checked) {
-        publishUI.allUsersCheckbox->setEnabled(true);
-    } else {
-        publishUI.allUsersCheckbox->setEnabled(false);
-    }
 }
 
 void AppletPrivate::configDialogFinished()
@@ -2595,8 +2584,6 @@ AppletPrivate::AppletPrivate(KService::Ptr service, const KPluginInfo *info, int
     } else if (appletId > s_maxAppletId) {
         s_maxAppletId = appletId;
     }
-
-    publishUI.publishCheckbox = 0;
 }
 
 AppletPrivate::~AppletPrivate()

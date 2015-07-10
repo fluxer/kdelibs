@@ -183,9 +183,6 @@ set(plasma_LIB_SRCS
 
 kde4_add_kcfg_files(plasma_LIB_SRCS data/kconfigxt/libplasma-theme-global.kcfgc)
 
-kde4_add_ui_files(plasma_LIB_SRCS
-                  private/publish.ui)
-
 if (PHONON_FOUND)
     message(STATUS "Adding support for Phonon to libplasma")
     include_directories(${KDE4_PHONON_INCLUDES})

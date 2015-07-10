@@ -131,7 +131,6 @@ public:
     QString configDialogId() const;
     QString configWindowTitle() const;
     void updateShortcuts();
-    void publishCheckboxStateChanged(int state);
     void globalShortcutChanged();
     void propagateConfigChanged();
 
@@ -195,7 +194,6 @@ public:
 
     ItemStatus itemStatus;
     QString remoteLocation;
-    Ui::publishWidget publishUI;
 
     // the applet can change size policy by itself, so save the old one for eventual restore
     QSizePolicy preferredSizePolicy;
