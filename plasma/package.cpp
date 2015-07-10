@@ -307,13 +307,6 @@ const PackageStructure::Ptr Package::structure() const
 }
 
 
-QString Package::contentsHash() const
-{
-    // no QCA2!
-    kWarning() << "can not create hash for" << path() << "due to no cryptographic support (QCA2)";
-    return QString();
-}
-
 //TODO: provide a version of this that allows one to ask for certain types of packages, etc?
 //      should we be using KService here instead/as well?
 QStringList Package::listInstalled(const QString &packageRoot) // static
