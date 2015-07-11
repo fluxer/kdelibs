@@ -17,8 +17,8 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef _INCLUDE_KSSLUTILS_H
-#define _INCLUDE_KSSLUTILS_H
+#ifndef INCLUDE_KSSLUTILS_H
+#define INCLUDE_KSSLUTILS_H
 
 #include <kio/kio_export.h>
 #include <ksslconfig.h>

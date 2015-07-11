@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_KUPnP_KUPNPROOTDEVICE_H
-#define SOLID_BACKENDS_KUPnP_KUPNPROOTDEVICE_H
+#ifndef SOLID_BACKENDS_KUPNP_KUPNPROOTDEVICE_H
+#define SOLID_BACKENDS_KUPNP_KUPNPROOTDEVICE_H
 
 // Solid
 #include <solid/ifaces/device.h>

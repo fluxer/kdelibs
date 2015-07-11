@@ -14,8 +14,8 @@ from Trolltech, Norway. $
 $Id: Jobs.h 30 2005-08-16 16:16:04Z mirko $
 */
 
-#ifndef Jobs_H
-#define Jobs_H
+#ifndef JOBS_H
+#define JOBS_H
 
 #include <QtGui/QWidget>
 
@@ -71,4 +71,4 @@ namespace ThreadWeaver {
 
 }
 
-#endif // defined Jobs_H
+#endif // defined JOBS_H

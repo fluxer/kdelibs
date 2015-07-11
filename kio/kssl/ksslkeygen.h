@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _KSSLKEYGEN_H
-#define _KSSLKEYGEN_H
+#ifndef KSSLKEYGEN_H
+#define KSSLKEYGEN_H
 
 #include <kio/kio_export.h>
 

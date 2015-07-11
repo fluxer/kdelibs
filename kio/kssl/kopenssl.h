@@ -19,8 +19,8 @@
 
 // IF YOU ARE USING THIS CLASS, YOU ARE MAKING A MISTAKE.
 
-#ifndef __KOPENSSLPROXY_H
-#define __KOPENSSLPROXY_H
+#ifndef KOPENSSLPROXY_H
+#define KOPENSSLPROXY_H
 
 #define KOSSL KOpenSSLProxy
 class KOpenSSLProxyPrivate;

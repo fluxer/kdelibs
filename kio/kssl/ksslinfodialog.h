@@ -19,8 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSLINFODIALOG_H
-#define _KSSLINFODIALOG_H
+#ifndef KSSLINFODIALOG_H
+#define KSSLINFODIALOG_H
 
 #include <kssl.h>
 #include <kdialog.h>

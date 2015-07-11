@@ -5,8 +5,8 @@
 *
 * Licensed under the GNU General Public License version 2 or later
 */
-#ifndef _KNUMINPUTTEST_H
-#define _KNUMINPUTTEST_H
+#ifndef KNUMINPUTTEST_H
+#define KNUMINPUTTEST_H
 
 #include <QtGui/QWidget>
 

@@ -14,8 +14,8 @@
    $Id: SMIVView.h 30 2005-08-16 16:16:04Z mirko $
 */
 
-#ifndef SMIVView_H
-#define SMIVView_H
+#ifndef SMIVVIEW_H
+#define SMIVVIEW_H
 
 #include <QtGui/QListView>
 
@@ -28,4 +28,4 @@ public:
 };
 
 
-#endif // SMIVView_H
+#endif // SMIVVIEW_H

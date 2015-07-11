@@ -14,8 +14,8 @@
    $Id: SMIVModel.h 30 2005-08-16 16:16:04Z mirko $
 */
 
-#ifndef SMIVModel_H
-#define SMIVModel_H
+#ifndef SMIVMODEL_H
+#define SMIVMODEL_H
 
 #include <QtCore/QModelIndex>
 #include <QtCore/QList>
@@ -44,4 +44,4 @@ private:
     QList<const SMIVItem*> m_data;
 };
 
-#endif // SMIVModel_H
+#endif // SMIVMODEL_H

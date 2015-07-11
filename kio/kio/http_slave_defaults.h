@@ -16,8 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KIO_HTTP_SLAVE_DEFAULTS_H
-#define _KIO_HTTP_SLAVE_DEFAULTS_H
+#ifndef KIO_HTTP_SLAVE_DEFAULTS_H
+#define KIO_HTTP_SLAVE_DEFAULTS_H
 
 // CONNECTION
 #define DEFAULT_KEEP_ALIVE_TIMEOUT      60              // 60 seconds

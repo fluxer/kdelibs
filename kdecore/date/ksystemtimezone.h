@@ -24,8 +24,8 @@
  * @author S.R.Haque <srhaque@iee.org>.
  */
 
-#ifndef _KSYSTEMTIMEZONE_H
-#define _KSYSTEMTIMEZONE_H
+#ifndef KSYSTEMTIMEZONE_H
+#define KSYSTEMTIMEZONE_H
 
 #include <kdecore_export.h>
 #include "ktimezone.h"

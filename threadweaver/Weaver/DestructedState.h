@@ -26,8 +26,8 @@
    $Id: DestructedState.h 32 2005-08-17 08:38:01Z mirko $
 */
 
-#ifndef DestructedState_H
-#define DestructedState_H
+#ifndef DESTRUCTEDSTATE_H
+#define DESTRUCTEDSTATE_H
 
 #ifndef THREADWEAVER_PRIVATE_API
 #define THREADWEAVER_PRIVATE_API
@@ -62,4 +62,4 @@ namespace ThreadWeaver {
 
 }
 
-#endif // DestructedState_H
+#endif // DESTRUCTEDSTATE_H

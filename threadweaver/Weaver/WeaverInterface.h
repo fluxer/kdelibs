@@ -26,8 +26,8 @@
    $Id: WeaverImpl.h 29 2005-08-14 19:04:30Z mirko $
 */
 
-#ifndef WeaverInterface_H
-#define WeaverInterface_H
+#ifndef WEAVERINTERFACE_H
+#define WEAVERINTERFACE_H
 
 #include <QtCore/QObject>
 

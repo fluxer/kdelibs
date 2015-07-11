@@ -26,8 +26,8 @@
    $Id: SuspendingState.h 32 2005-08-17 08:38:01Z mirko $
 */
 
-#ifndef SuspendingState_H
-#define SuspendingState_H
+#ifndef SUSPENDINGSTATE_H
+#define SUSPENDINGSTATE_H
 
 #ifndef THREADWEAVER_PRIVATE_API
 #define THREADWEAVER_PRIVATE_API
@@ -65,4 +65,4 @@ namespace ThreadWeaver {
 
 }
 
-#endif // SuspendingState_H
+#endif // SUSPENDINGSTATE_H

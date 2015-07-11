@@ -25,8 +25,8 @@ http://creative-destruction.me $
 
 $Id: WeaverImpl.h 32 2005-08-17 08:38:01Z mirko $
 */
-#ifndef WeaverImpl_H
-#define WeaverImpl_H
+#ifndef WEAVERIMPL_H
+#define WEAVERIMPL_H
 
 #include <QtCore/QObject>
 #include <QtCore/QWaitCondition>
@@ -191,4 +191,4 @@ namespace ThreadWeaver {
 
 } // namespace ThreadWeaver
 
-#endif // WeaverImpl_H
+#endif // WEAVERIMPL_H

@@ -25,8 +25,8 @@
  * SUCH DAMAGE.
  *
  */
-#ifndef __KRECENTDOCUMENT_H
-#define __KRECENTDOCUMENT_H
+#ifndef KRECENTDOCUMENT_H
+#define KRECENTDOCUMENT_H
 
 #include <kio/kio_export.h>
 

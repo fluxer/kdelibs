@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSLCERTCHAIN_H
-#define _KSSLCERTCHAIN_H
+#ifndef KSSLCERTCHAIN_H
+#define KSSLCERTCHAIN_H
 
 #include <QtCore/QList>
 #include <kdemacros.h>

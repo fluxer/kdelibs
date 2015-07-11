@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSLSESSION_H
-#define _KSSLSESSION_H
+#ifndef KSSLSESSION_H
+#define KSSLSESSION_H
 
 #include <QtCore/QString>
 

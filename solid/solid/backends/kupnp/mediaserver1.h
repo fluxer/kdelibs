@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_KUPnP_MEDIASERVER1_H
-#define SOLID_BACKENDS_KUPnP_MEDIASERVER1_H
+#ifndef SOLID_BACKENDS_KUPNP_MEDIASERVER1_H
+#define SOLID_BACKENDS_KUPNP_MEDIASERVER1_H
 
 // KUPnP
 #include "kupnpdevice.h"

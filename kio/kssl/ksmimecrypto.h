@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __KSMIMECRYPTO_H
-#define __KSMIMECRYPTO_H
+#ifndef KSMIMECRYPTO_H
+#define KSMIMECRYPTO_H
 
 
 #include <QtCore/QList>

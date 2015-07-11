@@ -15,8 +15,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef _KGLOBALSETTINGS_H
-#define _KGLOBALSETTINGS_H
+#ifndef KGLOBALSETTINGS_H
+#define KGLOBALSETTINGS_H
 
 #include <kdeui_export.h>
 #include <ksharedconfig.h>

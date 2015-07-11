@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSLSETTINGS_H
-#define _KSSLSETTINGS_H
+#ifndef KSSLSETTINGS_H
+#define KSSLSETTINGS_H
 
 #include <kio/kio_export.h>
 

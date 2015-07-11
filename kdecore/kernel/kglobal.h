@@ -16,8 +16,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef _KGLOBAL_H
-#define _KGLOBAL_H
+#ifndef KGLOBAL_H
+#define KGLOBAL_H
 
 #include <kdecore_export.h>
 #include <QtCore/QAtomicPointer>
@@ -576,5 +576,5 @@ inline KDE_DEPRECATED T kClamp( const T& x, const T& low, const T& high )
 
 #endif
 
-#endif // _KGLOBAL_H
+#endif // KGLOBAL_H
 

@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSLPEERINFO_H
-#define _KSSLPEERINFO_H
+#ifndef KSSLPEERINFO_H
+#define KSSLPEERINFO_H
 
 class KSSL;
 

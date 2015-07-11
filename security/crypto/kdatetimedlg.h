@@ -18,8 +18,8 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-#ifndef _KDATETIMEDLG_H
-#define _KDATETIMEDLG_H
+#ifndef KDATETIMEDLG_H
+#define KDATETIMEDLG_H
 
 #include <kdialog.h>
 

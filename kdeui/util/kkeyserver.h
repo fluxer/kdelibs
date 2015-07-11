@@ -20,8 +20,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KKEYSERVER_H
-#define _KKEYSERVER_H
+#ifndef KKEYSERVER_H
+#define KKEYSERVER_H
 
 #include <kdeui_export.h>
 
@@ -62,4 +62,4 @@ namespace KKeyServer {
 
 } // namespace KKeyServer
 
-#endif // !_KKEYSERVER_H
+#endif // !KKEYSERVER_H

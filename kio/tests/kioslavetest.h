@@ -9,8 +9,8 @@
   LGPL version 2.
  */
 
-#ifndef _KIOSLAVETEST_H
-#define _KIOSLAVETEST_H
+#ifndef KIOSLAVETEST_H
+#define KIOSLAVETEST_H
 
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -108,4 +108,4 @@ private:
   KIO::Slave *slave;
 };
 
-#endif // _KIOSLAVETEST_H
+#endif // KIOSLAVETEST_H

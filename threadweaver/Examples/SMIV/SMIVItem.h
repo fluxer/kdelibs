@@ -14,8 +14,8 @@
    $Id: SMIVItem.h 30 2005-08-16 16:16:04Z mirko $
 */
 
-#ifndef SMIVItem_H
-#define SMIVItem_H
+#ifndef SMIVITEM_H
+#define SMIVITEM_H
 
 #include <QtCore/QObject>
 
@@ -58,4 +58,4 @@ protected:
     ComputeThumbNailJob *m_thumb;
 };
 
-#endif // SMIVItem_H
+#endif // SMIVITEM_H

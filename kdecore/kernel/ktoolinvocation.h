@@ -22,8 +22,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KTOOLINVOCATION_H
-#define _KTOOLINVOCATION_H
+#ifndef KTOOLINVOCATION_H
+#define KTOOLINVOCATION_H
 
 #include <kdecore_export.h>
 

@@ -23,8 +23,8 @@
  * @author David Jarvie <djarvie@kde.org>.
  */
 
-#ifndef _KTZFILETIMEZONE_H
-#define _KTZFILETIMEZONE_H
+#ifndef KTZFILETIMEZONE_H
+#define KTZFILETIMEZONE_H
 
 #include <kdecore_export.h>
 #include <ktimezone.h>

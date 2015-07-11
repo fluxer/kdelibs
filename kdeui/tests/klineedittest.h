@@ -1,5 +1,5 @@
-#ifndef _KLINEEDITTEST_H
-#define _KLINEEDITTEST_H
+#ifndef KLINEEDITTEST_H
+#define KLINEEDITTEST_H
 
 #include <QtGui/QWidget>
 #include <QtCore/QPointer>

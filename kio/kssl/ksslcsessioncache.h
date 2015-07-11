@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef __KSSLCSESSIONCACHE_H
-#define __KSSLCSESSIONCACHE_H
+#ifndef KSSLCSESSIONCACHE_H
+#define KSSLCSESSIONCACHE_H
 
 #include <kio/kio_export.h>
 

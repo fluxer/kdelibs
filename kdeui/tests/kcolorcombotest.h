@@ -1,5 +1,5 @@
-#ifndef _KCOLORCOMBOTEST_H
-#define _KCOLORCOMBOTEST_H
+#ifndef KCOLORCOMBOTEST_H
+#define KCOLORCOMBOTEST_H
 
 #include <QtGui/QWidget>
 

@@ -26,8 +26,8 @@
    $Id: ShuttingDownState.h 32 2005-08-17 08:38:01Z mirko $
 */
 
-#ifndef ShuttingDownState_H
-#define ShuttingDownState_H
+#ifndef SHUTTINGDOWNSTATE_H
+#define SHUTTINGDOWNSTATE_H
 
 #ifndef THREADWEAVER_PRIVATE_API
 #define THREADWEAVER_PRIVATE_API
@@ -62,4 +62,4 @@ namespace ThreadWeaver {
 
 }
 
-#endif // ShuttingDownState_H
+#endif // SHUTTINGDOWNSTATE_H

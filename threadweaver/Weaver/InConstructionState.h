@@ -26,8 +26,8 @@
    $Id: InConstructionState.h 32 2005-08-17 08:38:01Z mirko $
 */
 
-#ifndef InConstructionState_H
-#define InConstructionState_H
+#ifndef INCONSTRUCTIONSTATE_H
+#define INCONSTRUCTIONSTATE_H
 
 #ifndef THREADWEAVER_PRIVATE_API
 #define THREADWEAVER_PRIVATE_API
@@ -64,4 +64,4 @@ namespace ThreadWeaver {
 
 }
 
-#endif // InConstructionState_H
+#endif // INCONSTRUCTIONSTATE_H

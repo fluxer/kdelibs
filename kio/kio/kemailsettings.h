@@ -25,8 +25,8 @@
  *
  */
 
-#ifndef _KEMAILSETTINGS_H
-#define _KEMAILSETTINGS_H
+#ifndef KEMAILSETTINGS_H
+#define KEMAILSETTINGS_H
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

@@ -17,8 +17,8 @@
  * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef _INCLUDE_KCERTPART_H
-#define _INCLUDE_KCERTPART_H
+#ifndef INCLUDE_KCERTPART_H
+#define INCLUDE_KCERTPART_H
 
 #include <config.h>
 

@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSLCONNECTIONINFO_H
-#define _KSSLCONNECTIONINFO_H
+#ifndef KSSLCONNECTIONINFO_H
+#define KSSLCONNECTIONINFO_H
 
 #include <QtCore/QString>
 

@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _KWALLET_H
-#define _KWALLET_H
+#ifndef KWALLET_H
+#define KWALLET_H
 
 #include <QtCore/QStringList>
 #include <QtCore/QObject>
@@ -547,5 +547,5 @@ class KDEUI_EXPORT Wallet : public QObject
 
 }
 
-#endif //_KWALLET_H
+#endif //KWALLET_H
 

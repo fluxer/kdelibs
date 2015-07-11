@@ -1,6 +1,6 @@
 // -*- c++ -*-
-#ifndef _SPEED_H
-#define _SPEED_H
+#ifndef SPEED_H
+#define SPEED_H
 
 #include <kio/global.h>
 #include <kurl.h>

@@ -18,8 +18,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KCOLORMIMEDATA_H
-#define _KCOLORMIMEDATA_H
+#ifndef KCOLORMIMEDATA_H
+#define KCOLORMIMEDATA_H
 
 #include <kdeui_export.h>
 
@@ -66,4 +66,4 @@ namespace KColorMimeData
 }
 
 
-#endif // _KCOLORMIMEDATA_H
+#endif // KCOLORMIMEDATA_H

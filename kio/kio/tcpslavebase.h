@@ -22,8 +22,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _TCP_SLAVEBASE_H
-#define _TCP_SLAVEBASE_H
+#ifndef TCP_SLAVEBASE_H
+#define TCP_SLAVEBASE_H
 
 #include <sys/types.h>
 #include <stdio.h>

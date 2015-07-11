@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSL_H
-#define _KSSL_H
+#ifndef KSSL_H
+#define KSSL_H
 
 #include <ksslsettings.h>
 

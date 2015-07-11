@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
  
-#ifndef _KSSLX509V3_H
-#define _KSSLX509V3_H
+#ifndef KSSLX509V3_H
+#define KSSLX509V3_H
 
 #include <QtCore/QString>
 

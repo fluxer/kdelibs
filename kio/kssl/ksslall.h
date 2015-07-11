@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */ 
 
-#ifndef __INC_KSSL_ALL_H
-#define __INC_KSSL_ALL_H
+#ifndef INC_KSSL_ALL_H
+#define INC_KSSL_ALL_H
 #include <ksslcertificatefactory.h>
 #include <ksslinfodialog.h>
 #include <ksslx509map.h>

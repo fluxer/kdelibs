@@ -20,8 +20,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KKEYSERVER_X11_H
-#define _KKEYSERVER_X11_H
+#ifndef KKEYSERVER_X11_H
+#define KKEYSERVER_X11_H
 
 #include "kshortcut.h"
 #include <X11/Xlib.h>
@@ -169,4 +169,4 @@ namespace KKeyServer
 	KDEUI_EXPORT bool xEventToQt( XEvent* e, int* keyModQt );
 }
 
-#endif // !_KKEYSERVER_X11_H
+#endif // !KKEYSERVER_X11_H

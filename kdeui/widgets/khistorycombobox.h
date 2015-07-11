@@ -19,8 +19,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef KHistoryComboBoxBOX_H
-#define KHistoryComboBoxBOX_H
+#ifndef KHISTORYCOMBOBOXBOX_H
+#define KHISTORYCOMBOBOXBOX_H
 
 #include <kcombobox.h>
 

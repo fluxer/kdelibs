@@ -25,8 +25,8 @@
  * @author S.R.Haque <srhaque@iee.org>.
  */
 
-#ifndef _KTIMEZONES_H
-#define _KTIMEZONES_H
+#ifndef KTIMEZONES_H
+#define KTIMEZONES_H
 
 #include <kdecore_export.h>
 

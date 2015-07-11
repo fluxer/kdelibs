@@ -26,8 +26,8 @@
    $Id: WorkingHardState.h 32 2005-08-17 08:38:01Z mirko $
 */
 
-#ifndef WorkingHardState_H
-#define WorkingHardState_H
+#ifndef WORKINGHARDSTATE_H
+#define WORKINGHARDSTATE_H
 
 #include "StateImplementation.h"
 #include "WeaverImpl.h"

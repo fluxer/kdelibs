@@ -19,8 +19,8 @@
  */
 
 
-#ifndef _INCLUDE_KSSLSIGNERS_H
-#define _INCLUDE_KSSLSIGNERS_H
+#ifndef INCLUDE_KSSLSIGNERS_H
+#define INCLUDE_KSSLSIGNERS_H
 
 class KSSLCertificate;
 

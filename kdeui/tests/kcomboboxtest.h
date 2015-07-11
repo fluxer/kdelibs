@@ -1,5 +1,5 @@
-#ifndef _KCOMBOBOXTEST_H
-#define _KCOMBOBOXTEST_H
+#ifndef KCOMBOBOXTEST_H
+#define KCOMBOBOXTEST_H
 
 #include <QtGui/QWidget>
 

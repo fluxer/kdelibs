@@ -25,8 +25,8 @@
  * SUCH DAMAGE.
  *
  */
-#ifndef __KRECENTDIRS_H
-#define __KRECENTDIRS_H
+#ifndef KRECENTDIRS_H
+#define KRECENTDIRS_H
 
 #include <QtCore/QStringList>
 

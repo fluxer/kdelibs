@@ -19,8 +19,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _KSSLCERTIFICATE_H
-#define _KSSLCERTIFICATE_H
+#ifndef KSSLCERTIFICATE_H
+#define KSSLCERTIFICATE_H
 
 
 // UPDATE: I like the structure of this class less and less every time I look
