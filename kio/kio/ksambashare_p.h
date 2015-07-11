@@ -18,8 +18,8 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef ksambashare_p_h
-#define ksambashare_p_h
+#ifndef KSAMBASHARE_P_H
+#define KSAMBASHARE_P_H
 
 #include <QtCore/QMap>
 

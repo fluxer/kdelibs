@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef __kfilterbase__h
-#define __kfilterbase__h
+#ifndef KFILTERBASE_H
+#define KFILTERBASE_H
 
 #include <karchive_export.h>
 

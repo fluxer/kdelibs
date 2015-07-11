@@ -19,8 +19,8 @@
  *  Boston, MA 02110-1301, USA.
  */
 
-#ifndef kurl_h
-#define kurl_h
+#ifndef KURL_H
+#define KURL_H
 
 #include <kdecore_export.h>
 

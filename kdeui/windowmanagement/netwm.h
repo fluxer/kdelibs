@@ -24,8 +24,8 @@
 */
 
 
-#ifndef   netwm_h
-#define   netwm_h
+#ifndef   NETWM_H
+#define   NETWM_H
 
 #include <kdeui_export.h>
 #include <QtGui/QWidget>

@@ -20,8 +20,8 @@
 */
 
 
-#ifndef kptyprocesstest_h
-#define kptyprocesstest_h
+#ifndef KPTYPROCESSTEST_H
+#define KPTYPROCESSTEST_H
 
 #include <kptyprocess.h>
 

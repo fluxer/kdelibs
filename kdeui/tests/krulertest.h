@@ -1,7 +1,7 @@
 /* -*- c++ -*- */
 
-#ifndef krulertest_h
-#define krulertest_h
+#ifndef KRULERTEST_H
+#define KRULERTEST_H
 
 #include <QtGui/QCheckBox>
 #include <QtGui/QRadioButton>

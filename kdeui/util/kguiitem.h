@@ -19,8 +19,8 @@
     Many thanks to Simon tronical Hausmann
 */
 
-#ifndef kguiitem_h
-#define kguiitem_h
+#ifndef KGUIITEM_H
+#define KGUIITEM_H
 
 #include <QtCore/QString>
 

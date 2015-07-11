@@ -17,8 +17,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef kautosavefiletest_h
-#define kautosavefiletest_h
+#ifndef KAUTOSAVEFILETEST_H
+#define KAUTOSAVEFILETEST_H
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>

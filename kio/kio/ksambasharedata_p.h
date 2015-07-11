@@ -18,8 +18,8 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef ksambasharedata_p_h
-#define ksambasharedata_p_h
+#ifndef KSAMBASHAREDATA_P_H
+#define KSAMBASHAREDATA_P_H
 
 #include <QtCore/QSharedData>
 

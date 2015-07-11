@@ -18,8 +18,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef __kbookmarkimporter_ns_h
-#define __kbookmarkimporter_ns_h
+#ifndef KBOOKMARKIMPORTER_NS_H
+#define KBOOKMARKIMPORTER_NS_H
 
 #include <QtCore/QStringList>
 #include <kconfig.h>

@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef kparts_scriptableextension_p_h
-#define kparts_scriptableextension_p_h
+#ifndef KPARTS_SCRIPTABLEEXTENSION_P_H
+#define KPARTS_SCRIPTABLEEXTENSION_P_H
 
 #include "browserextension.h"
 

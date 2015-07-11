@@ -1,5 +1,5 @@
-#ifndef kledtest_h
-#define kledtest_h
+#ifndef KLEDTEST_H
+#define KLEDTEST_H
 
 #include <QtGui/QWidget>
 #include <QtCore/QTimer>

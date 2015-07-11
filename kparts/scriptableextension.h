@@ -18,8 +18,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef kparts_scriptableextension_h
-#define kparts_scriptableextension_h
+#ifndef KPARTS_SCRIPTABLEEXTENSION_H
+#define KPARTS_SCRIPTABLEEXTENSION_H
 
 #include <QtGlobal>
 #include <QObject>

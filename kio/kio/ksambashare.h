@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef ksambashare_h
-#define ksambashare_h
+#ifndef KSAMBASHARE_H
+#define KSAMBASHARE_H
 
 #include <QtCore/QObject>
 #include <kio/kio_export.h>

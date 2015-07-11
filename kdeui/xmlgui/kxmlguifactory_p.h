@@ -16,8 +16,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef kxmlguifactory_p_h
-#define kxmlguifactory_p_h
+#ifndef KXMLGUIFACTORY_P_H
+#define KXMLGUIFACTORY_P_H
 
 #include <QtCore/QStringList>
 #include <QtCore/QMap>

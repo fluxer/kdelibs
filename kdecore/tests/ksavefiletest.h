@@ -16,8 +16,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef ksavefiletest_h
-#define ksavefiletest_h
+#ifndef KSAVEFILETEST_H
+#define KSAVEFILETEST_H
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>

@@ -15,8 +15,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef __kfilterdev_h
-#define __kfilterdev_h
+#ifndef KFILTERDEV_H
+#define KFILTERDEV_H
 
 #include <karchive_export.h>
 #include <QtCore/QIODevice>

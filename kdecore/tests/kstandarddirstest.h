@@ -16,8 +16,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef kstandarddirstest_h
-#define kstandarddirstest_h
+#ifndef KSTANDARDDIRSTEST_H
+#define KSTANDARDDIRSTEST_H
 
 #include <QtCore/QObject>
 

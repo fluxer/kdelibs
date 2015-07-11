@@ -1,5 +1,5 @@
-#ifndef ktreewidgetsearchlinetest_h
-#define ktreewidgetsearchlinetest_h
+#ifndef KTREEWIDGETSEARCHLINETEST_H
+#define KTREEWIDGETSEARCHLINETEST_H
 
 #include <kdialog.h>
 

@@ -18,8 +18,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _kde_ksslpemcallback_h
-#define _kde_ksslpemcallback_h
+#ifndef KDE_KSSLPEMCALLBACK_H
+#define KDE_KSSLPEMCALLBACK_H
 
 #include <kio/kio_export.h>
 

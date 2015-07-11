@@ -18,8 +18,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef plugin_spellcheck_h
-#define plugin_spellcheck_h
+#ifndef PLUGIN_SPELLCHECK_H
+#define PLUGIN_SPELLCHECK_H
 
 #include <kparts/plugin.h>
 

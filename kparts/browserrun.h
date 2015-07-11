@@ -16,8 +16,8 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef kparts_browserrun_h
-#define kparts_browserrun_h
+#ifndef KPARTS_BROWSERRUN_H
+#define KPARTS_BROWSERRUN_H
 
 #include <krun.h>
 #include <kservice.h>

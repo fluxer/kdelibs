@@ -24,8 +24,8 @@
 */
 
 
-#ifndef   netwm_p_h
-#define   netwm_p_h
+#ifndef   NETWM_P_H
+#define   NETWM_P_H
 
 /**
    Resizable array class.

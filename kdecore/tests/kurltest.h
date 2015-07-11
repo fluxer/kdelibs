@@ -16,8 +16,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef kurltest_h
-#define kurltest_h
+#ifndef KURLTEST_H
+#define KURLTEST_H
 
 #include <QtCore/QObject>
 

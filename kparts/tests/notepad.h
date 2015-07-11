@@ -20,8 +20,8 @@
 */
 
 
-#ifndef notepad_h
-#define notepad_h
+#ifndef NOTEPAD_H
+#define NOTEPAD_H
 
 #include <kparts/part.h>
 

@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef kfileshare_h
-#define kfileshare_h
+#ifndef KFILESHARE_H
+#define KFILESHARE_H
 
 #include <kio/kio_export.h>
 class QString;

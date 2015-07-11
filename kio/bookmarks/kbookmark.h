@@ -17,8 +17,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef __kbookmark_h
-#define __kbookmark_h
+#ifndef KBOOKMARK_H
+#define KBOOKMARK_H
 
 #include <kio/kio_export.h>
 

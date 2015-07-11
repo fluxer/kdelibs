@@ -16,8 +16,8 @@
  *  Boston, MA 02110-1301, USA.
  */
 
-#ifndef _kruntest_h
-#define _kruntest_h
+#ifndef KRUNTEST_H
+#define KRUNTEST_H
 
 #include <krun.h>
 

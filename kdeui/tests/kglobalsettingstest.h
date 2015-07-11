@@ -16,8 +16,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef kglobalsettingstest_h
-#define kglobalsettingstest_h
+#ifndef KGLOBALSETTINGSTEST_H
+#define KGLOBALSETTINGSTEST_H
 
 #include <QtCore/QObject>
 

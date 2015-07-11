@@ -18,8 +18,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef kcharselect_h
-#define kcharselect_h
+#ifndef KCHARSELECT_H
+#define KCHARSELECT_H
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

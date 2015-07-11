@@ -4,8 +4,8 @@ This file is part of the KDE libraries
 This file has been placed in the Public Domain.
 */
 
-#ifndef ktemporaryfiletest_h
-#define ktemporaryfiletest_h
+#ifndef KTEMPORARYFILETEST_H
+#define KTEMPORARYFILETEST_H
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

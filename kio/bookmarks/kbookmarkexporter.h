@@ -20,8 +20,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef __kbookmarkexporter_h
-#define __kbookmarkexporter_h
+#ifndef KBOOKMARKEXPORTER_H
+#define KBOOKMARKEXPORTER_H
 
 #include <QtCore/QTextStream>
 #include <kbookmark.h>

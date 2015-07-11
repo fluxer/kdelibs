@@ -23,8 +23,8 @@
 
 */
 
-#ifndef   netwm_def_h
-#define   netwm_def_h
+#ifndef   NETWM_DEF_H
+#define   NETWM_DEF_H
 #include <kdeui_export.h>
 
 /**

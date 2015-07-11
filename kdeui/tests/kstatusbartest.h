@@ -1,5 +1,5 @@
-#ifndef test_kstatusbar_h
-#define test_kstatusbar_h
+#ifndef TEST_KSTATUSBAR_H
+#define TEST_KSTATUSBAR_H
 
 #include <kmenubar.h>
 #include <kstatusbar.h>

@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef kdirlister_p_h
-#define kdirlister_p_h
+#ifndef KDIRLISTER_P_H
+#define KDIRLISTER_P_H
 
 #include "kfileitem.h"
 

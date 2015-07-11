@@ -16,8 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef knfsshare_h
-#define knfsshare_h
+#ifndef KNFSSHARE_H
+#define KNFSSHARE_H
 
 #include <QtCore/QObject>
 

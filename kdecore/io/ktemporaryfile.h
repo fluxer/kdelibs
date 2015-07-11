@@ -18,8 +18,8 @@
  *  Boston, MA 02110-1301, USA.
  */
 
-#ifndef ktemporaryfile_h
-#define ktemporaryfile_h
+#ifndef KTEMPORARYFILE_H
+#define KTEMPORARYFILE_H
 
 #include <kdecore_export.h>
 #include <kglobal.h>

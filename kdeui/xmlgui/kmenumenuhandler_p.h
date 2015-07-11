@@ -18,8 +18,8 @@
 */
 
 
-#ifndef kmenumenuhandler_p_h
-#define kmenumenuhandler_p_h
+#ifndef KMENUMENUHANDLER_P_H
+#define KMENUMENUHANDLER_P_H
 
 
 #include <QObject>

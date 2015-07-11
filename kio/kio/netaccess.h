@@ -20,8 +20,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KIO_NETACCESS_h
-#define KIO_NETACCESS_h
+#ifndef KIO_NETACCESS_H
+#define KIO_NETACCESS_H
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

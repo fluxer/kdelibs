@@ -81,8 +81,8 @@
  * <a href="http://sourceforge.net/projects/loki-lib/">http://sourceforge.net/projects/loki-lib/</a>
  */
 
-#ifndef ktypelist_h
-#define ktypelist_h
+#ifndef KTYPELIST_H
+#define KTYPELIST_H
 
 /**
  * @name Typelist macros

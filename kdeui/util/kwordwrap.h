@@ -16,8 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef kwordwrap_h
-#define kwordwrap_h
+#ifndef KWORDWRAP_H
+#define KWORDWRAP_H
 
 #include <kdeui_export.h>
 #include <QtCore/Qt>

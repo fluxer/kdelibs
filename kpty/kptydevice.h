@@ -18,8 +18,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef kptydev_h
-#define kptydev_h
+#ifndef KPTYDEV_H
+#define KPTYDEV_H
 
 #include "kpty.h"
 

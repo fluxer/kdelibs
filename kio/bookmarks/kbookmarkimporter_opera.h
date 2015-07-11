@@ -16,8 +16,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef __kbookmarkimporter_opera_h
-#define __kbookmarkimporter_opera_h
+#ifndef KBOOKMARKIMPORTER_OPERA_H
+#define KBOOKMARKIMPORTER_OPERA_H
 
 #include <QtCore/QStringList>
 

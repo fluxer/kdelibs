@@ -18,8 +18,8 @@
  *   License along with this library.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef ksambasharedata_h
-#define ksambasharedata_h
+#ifndef KSAMBASHAREDATA_H
+#define KSAMBASHAREDATA_H
 
 #include <QtCore/QExplicitlySharedDataPointer>
 #include <kio/kio_export.h>

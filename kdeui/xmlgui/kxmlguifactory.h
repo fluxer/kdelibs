@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef kxmlguifactory_h
-#define kxmlguifactory_h
+#ifndef KXMLGUIFACTORY_H
+#define KXMLGUIFACTORY_H
 
 #include <kdeui_export.h>
 #include <kcomponentdata.h>

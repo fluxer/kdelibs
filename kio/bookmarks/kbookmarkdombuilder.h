@@ -17,8 +17,8 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef __kbookmarkdombuilder_h
-#define __kbookmarkdombuilder_h
+#ifndef KBOOKMARKDOMBUILDER_H
+#define KBOOKMARKDOMBUILDER_H
 
 #include <QtCore/QStack>
 #include <QtCore/QObject>

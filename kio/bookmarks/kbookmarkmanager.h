@@ -17,8 +17,8 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#ifndef __kbookmarkmanager_h
-#define __kbookmarkmanager_h
+#ifndef KBOOKMARKMANAGER_H
+#define KBOOKMARKMANAGER_H
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
