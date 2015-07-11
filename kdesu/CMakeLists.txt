@@ -12,6 +12,9 @@ set(CMAKE_EXTRA_INCLUDE_FILES)  #reset CMAKE_EXTRA_INCLUDE_FILES
 
 configure_file(config-kdesu.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdesu.h )
 
+find_package(Sudo)
+add_feature_info(Sudo SUDO_FOUND "Needed for password caching in kdesu" "http://www.sudo.ws/")
+
 ########### next target ###############
 
 set(kdesu_LIB_SRCS
@@ -29,10 +32,10 @@ kde4_add_library(kdesu ${LIBRARY_TYPE} ${kdesu_LIB_SRCS})
 target_link_libraries(kdesu PRIVATE ${KDE4_KPTY_LIBS} )
 target_link_libraries(kdesu PUBLIC ${QT_QTCORE_LIBRARY} )
 
-if(KDESU_USE_SUDO_DEFAULT)
+if(SUDO_FOUND)
    set_source_files_properties(su.cpp PROPERTIES
                                COMPILE_FLAGS -DKDESU_USE_SUDO_DEFAULT)
-endif(KDESU_USE_SUDO_DEFAULT)
+endif(SUDO_FOUND)
 
 set_target_properties(kdesu PROPERTIES
    VERSION ${GENERIC_LIB_VERSION}
@@ -54,7 +57,4 @@ install(TARGETS kdesu_stub DESTINATION ${LIBEXEC_INSTALL_DIR} )
 ########### install files ###############
 install( FILES kdesu_export.h client.h process.h su.h ssh.h stub.h defaults.h 
          DESTINATION  ${INCLUDE_INSTALL_DIR}/kdesu COMPONENT Devel)
-
-
-
 
