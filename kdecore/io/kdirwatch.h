@@ -220,7 +220,7 @@ class KDECORE_EXPORT KDirWatch : public QObject
     */
    static void statistics(); // TODO implement a QDebug operator for KDirWatch instead.
 
-   enum Method { FAM, INotify, DNotify /*now unused*/, Stat, QFSWatch };
+   enum Method { FAM, INotify, Stat, QFSWatch };
    /**
     * Returns the preferred internal method to
     * watch for changes.
