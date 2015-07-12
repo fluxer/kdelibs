@@ -197,8 +197,7 @@ target_link_libraries(plasma PRIVATE ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRA
                              ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                              ${QT_QTXML_LIBRARY} ${QT_QTSQL_LIBRARY}
                              ${QT_QTDECLARATIVE_LIBRARY} ${KDE4_KDEUI_LIBS}
-                             ${KDE4_KDNSSD_LIBS} ${KDE4_THREADWEAVER_LIBS}
-                             ${PLASMA_EXTRA_LIBS})
+                             ${KDE4_THREADWEAVER_LIBS} ${PLASMA_EXTRA_LIBS})
 
 if(X11_FOUND)
    target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
