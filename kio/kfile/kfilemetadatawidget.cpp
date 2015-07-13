@@ -106,7 +106,7 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     if (config.group("Misc").readEntry("version", 0) < currentVersion) {
         // The resource file is read the first time. Assure
-        // that some meta information is disabled per default.
+        // that some meta information is enabled per default.
 
         // clear old info
         config.deleteGroup("Show");
@@ -302,11 +302,8 @@ QSize KFileMetaDataWidget::sizeHint() const
     // Calculate the required width for the labels and values
     int leftWidthMax = 0;
     int rightWidthMax = 0;
-    int rightWidthAverage = 0;
     foreach (const Private::Row& row, d->m_rows) {
-        const QWidget* valueWidget = row.value;
-        const int rightWidth = valueWidget->sizeHint().width();
-        rightWidthAverage += rightWidth;
+        const int rightWidth = row.value->sizeHint().width();
         if (rightWidth > rightWidthMax) {
             rightWidthMax = rightWidth;
         }
@@ -317,22 +314,11 @@ QSize KFileMetaDataWidget::sizeHint() const
         }
     }
 
-    // Some value widgets might return a very huge width for the size hint.
-    // Limit the maximum width to the double width of the overall average
-    // to assure a less messed layout.
-    if (d->m_rows.count() > 1) {
-        rightWidthAverage /= d->m_rows.count();
-        if (rightWidthMax > rightWidthAverage * 2) {
-            rightWidthMax = rightWidthAverage * 2;
-        }
-    }
-
     // Based on the available width calculate the required height
     int height = d->m_gridLayout->margin() * 2 + d->m_gridLayout->spacing() * (d->m_rows.count() - 1);
     foreach (const Private::Row& row, d->m_rows) {
-        const QWidget* valueWidget = row.value;
         const int rowHeight = qMax(row.label->heightForWidth(leftWidthMax),
-                                   valueWidget->heightForWidth(rightWidthMax));
+                                   row.value->heightForWidth(rightWidthMax));
         height += rowHeight;
     }
 
