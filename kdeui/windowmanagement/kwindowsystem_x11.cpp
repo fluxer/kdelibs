@@ -815,7 +815,7 @@ bool KWindowSystem::compositingActive()
     if( QX11Info::display()) {
         init( INFO_BASIC );
         if (s_d_func()->haveXfixes) {
-            return s_d_func()->compositingEnabled;
+            ret = s_d_func()->compositingEnabled;
         } else {
             create_atoms();
             ret = XGetSelectionOwner( QX11Info::display(), net_wm_cm );
