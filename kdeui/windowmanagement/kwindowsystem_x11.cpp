@@ -811,21 +811,24 @@ void KWindowSystem::lowerWindow( WId win )
 
 bool KWindowSystem::compositingActive()
 {
+    bool ret = false;
     if( QX11Info::display()) {
         init( INFO_BASIC );
         if (s_d_func()->haveXfixes) {
             return s_d_func()->compositingEnabled;
         } else {
             create_atoms();
-            return XGetSelectionOwner( QX11Info::display(), net_wm_cm );
+            ret = XGetSelectionOwner( QX11Info::display(), net_wm_cm );
         }
     } else { // work even without QApplication instance
         Display* dpy = XOpenDisplay( NULL );
-        create_atoms( dpy );
-        bool ret = XGetSelectionOwner( dpy, net_wm_cm ) != None;
-        XCloseDisplay( dpy );
-        return ret;
+        if (dpy) {
+            create_atoms( dpy );
+            ret = XGetSelectionOwner( dpy, net_wm_cm ) != None;
+            XCloseDisplay( dpy );
+        }
     }
+    return ret;
 }
 
 QRect KWindowSystem::workArea( int desktop )
