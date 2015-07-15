@@ -174,7 +174,7 @@ void KLanguageButton::loadAllLanguages()
     KConfig entry(langlist[i], KConfig::SimpleConfig);
     KConfigGroup group(&entry, "KCM Locale");
     QString name = group.readEntry("Name", i18n("without name"));
-    insertLanguage(code, name);
+    insertLanguage(code, name, i);
   }
 
   const KLocale *locale = d->locale ? d->locale : KGlobal::locale();
