@@ -300,7 +300,6 @@ void KUrlTest::testSimpleMethods() // to test parsing, mostly
 
   u1 = "file:///home/dfaure/my#%2f";
   url1 = u1;
-  // KDE3: was %2f, Qt-4.0 to 4.4: #/, bad. 4.5: %2f again, good
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#%2f") );
   QVERIFY( url1.hasRef() );
   QVERIFY( url1.hasHTMLRef() );
@@ -970,7 +969,11 @@ void KUrlTest::testAdjustPath()
 
     {
     KUrl remote2("remote://");
+#if QT_VERSION < 0x040805
     QCOMPARE( remote2.url(), QString("remote:") ); // QUrl bug, fixed in Qt 4.8.5 and Qt5
+#else
+    QCOMPARE( remote2.url(), QString("remote://") );
+#endif
     QCOMPARE( remote2.url(KUrl::RemoveTrailingSlash ), QString("remote:") ); // QUrl bug, fixed in Qt5
     QCOMPARE( remote2.prettyUrl(), QString("remote://") );
     }
@@ -1258,8 +1261,6 @@ void KUrlTest::testSetEncodedFragment_data()
 
 void KUrlTest::testSetEncodedFragment()
 {
-    // Bug fixed in 4.5.1 by Thiago
-
     QFETCH(QByteArray, base);
     QFETCH(QByteArray, fragment);
     QFETCH(QByteArray, expected);
@@ -1345,7 +1346,6 @@ void KUrlTest::testSubURL()
   QCOMPARE(url1Splitted[1].url(), QString("gzip:/"));
   QCOMPARE(url1Splitted[2].url(), QString("tar:/README"));
   const KUrl url1Rejoined = KUrl::join(url1Splitted);
-  // Bug fixed in 4.5.1 by Thiago
   QCOMPARE(url1Rejoined.url(), url1.url());
   QCOMPARE(url1.upUrl().url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/"));
 
@@ -1729,7 +1729,11 @@ void KUrlTest::testSmb()
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb:/"));
   smb = "smb://"; // KDE3: kurl.cpp rev 1.106 made it invalid. Valid again with QUrl.
   QVERIFY( smb.isValid() );
+#if QT_VERSION < 0x040805
   QCOMPARE(smb.url(), QString::fromLatin1("smb:")); // QUrl bug, fixed in Qt 4.8.5 and Qt5
+#else
+  QCOMPARE(smb.url(), QString::fromLatin1("smb://"));
+#endif
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb://"));
   smb = "smb://host";
   QVERIFY( smb.isValid() );
@@ -1737,7 +1741,11 @@ void KUrlTest::testSmb()
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb://host"));
   smb = "smb:///";
   QVERIFY( smb.isValid() );
+#if QT_VERSION < 0x040805
   QCOMPARE(smb.url(), QString::fromLatin1("smb:/")); // QUrl bug, fixed in Qt 4.8.5 and Qt5
+#else
+  QCOMPARE(smb.url(), QString::fromLatin1("smb:///"));
+#endif
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb:/"));
 
   KUrl implicitSmb("file://host/path");
