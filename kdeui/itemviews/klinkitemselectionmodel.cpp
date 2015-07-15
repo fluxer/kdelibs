@@ -113,9 +113,6 @@ void KLinkItemSelectionModel::select(const QModelIndex &index, QItemSelectionMod
 // those out manually in a loop. Hopefully fixed in Qt 4.7.2, so we ifdef it out.
 // http://qt.gitorious.org/qt/qt/merge_requests/2474
 // http://qt.gitorious.org/qt/qt/merge_requests/831
-#if QT_VERSION < 0x040702
-#define RANGE_FIX_HACK
-#endif
 
 #ifdef RANGE_FIX_HACK
 static QItemSelection klink_removeInvalidRanges(const QItemSelection &selection)

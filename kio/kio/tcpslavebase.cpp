@@ -363,10 +363,8 @@ int TCPSlaveBase::connectToHost(const QString& host, quint16 port, QString* erro
 
     QSslConfiguration sslConfig = d->socket.sslConfiguration();
 
-#if QT_VERSION >= 0x040800
     // NOTE: Due to 'CRIME' SSL attacks, compression is always disabled.
     sslConfig.setSslOption(QSsl::SslOptionDisableCompression, true);
-#endif
     
     const int lastSslVerson = config()->readEntry("LastUsedSslVersion", static_cast<int>(KTcpSocket::SecureProtocols));
     KTcpSocket::SslVersion trySslVersion = static_cast<KTcpSocket::SslVersion>(lastSslVerson);
@@ -511,10 +509,8 @@ TCPSlaveBase::SslResult TCPSlaveBase::TcpSlaveBasePrivate::startTLSInternal (KTc
     //setMetaData("ssl_session_id", d->kssl->session()->toString());
     //### we don't support session reuse for now...
     usingSSL = true;
-#if QT_VERSION >= 0x040800
     kDebug(7027) << "Trying SSL handshake with protocol:" << version
                  << ", SSL compression ON:" << sslConfig.testSslOption(QSsl::SslOptionDisableCompression);
-#endif
     // Set the SSL version to use...
     socket.setAdvertisedSslVersion(version);
 

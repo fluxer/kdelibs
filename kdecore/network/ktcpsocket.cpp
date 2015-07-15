@@ -44,12 +44,10 @@ static KTcpSocket::SslVersion kSslVersionFromQ(QSsl::SslProtocol protocol)
         return KTcpSocket::TlsV1;
     case QSsl::AnyProtocol:
         return KTcpSocket::AnySslVersion;
-#if QT_VERSION >= 0x040800
     case QSsl::TlsV1SslV3:
         return KTcpSocket::TlsV1SslV3;
     case QSsl::SecureProtocols:
         return KTcpSocket::SecureProtocols;
-#endif
     default:
         return KTcpSocket::UnknownSslVersion;
     }
@@ -64,10 +62,8 @@ static QSsl::SslProtocol qSslProtocolFromK(KTcpSocket::SslVersion sslVersion)
     }
     //does it contain any valid protocol?
     KTcpSocket::SslVersions validVersions (KTcpSocket::SslV2 | KTcpSocket::SslV3 | KTcpSocket::TlsV1);
-#if QT_VERSION >= 0x040800
     validVersions |= KTcpSocket::TlsV1SslV3;
     validVersions |= KTcpSocket::SecureProtocols;
-#endif
     if (!(sslVersion & validVersions)) {
         return QSsl::UnknownProtocol;
     }
@@ -79,12 +75,10 @@ static QSsl::SslProtocol qSslProtocolFromK(KTcpSocket::SslVersion sslVersion)
         return QSsl::SslV3;
     case KTcpSocket::TlsV1:
         return QSsl::TlsV1;
-#if QT_VERSION >= 0x040800
     case KTcpSocket::TlsV1SslV3:
         return QSsl::TlsV1SslV3;
     case KTcpSocket::SecureProtocols:
         return QSsl::SecureProtocols;
-#endif
 
     default:
         //QSslSocket doesn't really take arbitrary combinations. It's one or all.
@@ -756,11 +750,7 @@ void KTcpSocket::setLocalCertificate(const QString &fileName, QSsl::EncodingForm
 
 void KTcpSocket::setVerificationPeerName(const QString& hostName)
 {
-#if QT_VERSION >= 0x040800
     d->sock.setPeerVerifyName(hostName);
-#else
-    Q_UNUSED(hostName);
-#endif
 }
 
 

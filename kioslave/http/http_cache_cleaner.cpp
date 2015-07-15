@@ -175,7 +175,6 @@ static bool readBinaryHeader(const QByteArray &d, CacheFileInfo *fi)
         return false;
     }
     QDataStream stream(d);
-    stream.setVersion(QDataStream::Qt_4_5);
 
     stream >> fi->version[0];
     stream >> fi->version[1];

@@ -1792,15 +1792,7 @@ void KSelectionProxyModelPrivate::selectionChanged(const QItemSelection &_select
     const QItemSelection selected = kNormalizeSelection(m_indexMapper->mapSelectionRightToLeft(_selected));
     const QItemSelection deselected = kNormalizeSelection(m_indexMapper->mapSelectionRightToLeft(_deselected));
 
-#if QT_VERSION < 0x040800
-    // The QItemSelectionModel sometimes doesn't remove deselected items from its selection
-    // Fixed in Qt 4.8 : http://qt.gitorious.org/qt/qt/merge_requests/2403
-    QItemSelection reportedSelection = m_selectionModel.data()->selection();
-    reportedSelection.merge(deselected, QItemSelectionModel::Deselect);
-    QItemSelection fullSelection = m_indexMapper->mapSelectionRightToLeft(reportedSelection);
-#else
     QItemSelection fullSelection = m_indexMapper->mapSelectionRightToLeft(m_selectionModel.data()->selection());
-#endif
 
     fullSelection = kNormalizeSelection(fullSelection);
 
@@ -2317,9 +2309,7 @@ int KSelectionProxyModel::columnCount(const QModelIndex &index) const
       // Qt 4.6 doesn't notice changes in columnCount, so we can't return 0 when
       // it's actually 0 ,but must return what the source model says, even if we
       // have no rows or columns.
-#if QT_VERSION >= 0x040700
       || d->m_rootIndexList.isEmpty()
-#endif
         )
         return 0;
 

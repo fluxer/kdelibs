@@ -720,16 +720,8 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
          */
         void releaseVisualFocus();
 
-#if QT_VERSION >= 0x040700
     protected:
         void geometryChanged(); // in QGraphicsWidget now; preserve BC
-#else
-        /**
-         * Emitted whenever the applet makes a geometry change, so that views
-         * can coordinate themselves with these changes if they desire.
-         */
-        void geometryChanged();
-#endif
 
     Q_SIGNALS:
         /**

@@ -4725,7 +4725,6 @@ bool HTTPProtocol::CacheTag::deserialize(const QByteArray &d)
         return false;
     }
     QDataStream stream(d);
-    stream.setVersion(QDataStream::Qt_4_5);
 
     bool ok = true;
     ok = ok && compareByte(&stream, 'A');
@@ -4941,7 +4940,6 @@ static QByteArray makeCacheCleanerCommand(const HTTPProtocol::CacheTag &cacheTag
 {
     QByteArray ret = cacheTag.serialize();
     QDataStream stream(&ret, QIODevice::WriteOnly);
-    stream.setVersion(QDataStream::Qt_4_5);
 
     stream.skipRawData(BinaryCacheFileHeader::size);
     // append the command code

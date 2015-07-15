@@ -301,11 +301,7 @@ void KUrlTest::testSimpleMethods() // to test parsing, mostly
   u1 = "file:///home/dfaure/my#%2f";
   url1 = u1;
   // KDE3: was %2f, Qt-4.0 to 4.4: #/, bad. 4.5: %2f again, good
-#if QT_VERSION < 0x040500
-  QCOMPARE( url1.url(), QString("file:///home/dfaure/my#/") );
-#else
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my#%2f") );
-#endif
   QVERIFY( url1.hasRef() );
   QVERIFY( url1.hasHTMLRef() );
   QVERIFY( !url1.hasSubUrl() );
@@ -974,11 +970,7 @@ void KUrlTest::testAdjustPath()
 
     {
     KUrl remote2("remote://");
-#if QT_VERSION < 0x040805
     QCOMPARE( remote2.url(), QString("remote:") ); // QUrl bug, fixed in Qt 4.8.5 and Qt5
-#else
-    QCOMPARE( remote2.url(), QString("remote://") );
-#endif
     QCOMPARE( remote2.url(KUrl::RemoveTrailingSlash ), QString("remote:") ); // QUrl bug, fixed in Qt5
     QCOMPARE( remote2.prettyUrl(), QString("remote://") );
     }
@@ -1267,9 +1259,6 @@ void KUrlTest::testSetEncodedFragment_data()
 void KUrlTest::testSetEncodedFragment()
 {
     // Bug fixed in 4.5.1 by Thiago
-#if QT_VERSION < 0x040501
-    QSKIP("Bug in Qt-4.4/4.5-rc1: setEncodedFragment doesn't work if the initial url has no fragment", SkipAll);
-#endif
 
     QFETCH(QByteArray, base);
     QFETCH(QByteArray, fragment);
@@ -1287,11 +1276,7 @@ void KUrlTest::testSubURL()
   QString u1 = "file:/home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/#myref";
   KUrl url1(u1);
   // KDE3: was #,#,#, Qt-4.0 to 4.4: #,%23,%23 . 4.5: #,#,#, good
-#if QT_VERSION < 0x040500
-  QCOMPARE( url1.url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/%23tar:/%23myref") );
-#else
   QCOMPARE( url1.url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/#myref") );
-#endif
   QVERIFY( url1.hasRef() );
   QVERIFY( !url1.isLocalFile() );  // Not strictly local!
   QVERIFY( url1.hasSubUrl() );
@@ -1305,9 +1290,6 @@ void KUrlTest::testSubURL()
   QCOMPARE( splitList[1].url(), QString("gzip:/#myref") );
   QCOMPARE( splitList[2].url(), QString("tar:/#myref") );
 
-#if QT_VERSION < 0x040500
-  QSKIP( "Multiple sub urls not supported with Qt < 4.5", SkipSingle );
-#endif
   KUrl rejoined = KUrl::join(splitList);
   QCOMPARE(rejoined.url(), url1.url());
 
@@ -1364,9 +1346,6 @@ void KUrlTest::testSubURL()
   QCOMPARE(url1Splitted[2].url(), QString("tar:/README"));
   const KUrl url1Rejoined = KUrl::join(url1Splitted);
   // Bug fixed in 4.5.1 by Thiago
-#if QT_VERSION < 0x040501
-  QSKIP("Bug in Qt-4.4/4.5-rc1: setEncodedFragment doesn't work if the initial url has no fragment", SkipAll);
-#endif
   QCOMPARE(url1Rejoined.url(), url1.url());
   QCOMPARE(url1.upUrl().url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/"));
 
@@ -1668,9 +1647,6 @@ void KUrlTest::testMoreBrokenStuff()
 
   QUrl dxOffEagle3;
   dxOffEagle3.setEncodedUrl( "http://something/newpage.html?[{\"foo: bar\"}]", QUrl::TolerantMode);
-#if QT_VERSION < 0x040500
-  QEXPECT_FAIL("","Issue N183630, task ID 183874; works with setUrl so we do that in _setEncodedUrl now", Continue);
-#endif
   QVERIFY(dxOffEagle3.isValid());
   QCOMPARE(dxOffEagle.toEncoded(), dxOffEagle3.toEncoded());
 
@@ -1678,9 +1654,6 @@ void KUrlTest::testMoreBrokenStuff()
   javascript.setUrl("javascript:window.location+\"__flashplugin_unique__\"", QUrl::TolerantMode);
   QVERIFY(javascript.isValid());
   javascript.setEncodedUrl("javascript:window.location+\"__flashplugin_unique__\"", QUrl::TolerantMode);
-#if QT_VERSION < 0x040500
-  QEXPECT_FAIL("","Issue N183630, task ID 183874", Continue);
-#endif
   QVERIFY(javascript.isValid());
 }
 
@@ -1756,11 +1729,7 @@ void KUrlTest::testSmb()
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb:/"));
   smb = "smb://"; // KDE3: kurl.cpp rev 1.106 made it invalid. Valid again with QUrl.
   QVERIFY( smb.isValid() );
-#if QT_VERSION < 0x040805
   QCOMPARE(smb.url(), QString::fromLatin1("smb:")); // QUrl bug, fixed in Qt 4.8.5 and Qt5
-#else
-  QCOMPARE(smb.url(), QString::fromLatin1("smb://"));
-#endif
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb://"));
   smb = "smb://host";
   QVERIFY( smb.isValid() );
@@ -1768,11 +1737,7 @@ void KUrlTest::testSmb()
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb://host"));
   smb = "smb:///";
   QVERIFY( smb.isValid() );
-#if QT_VERSION < 0x040805
   QCOMPARE(smb.url(), QString::fromLatin1("smb:/")); // QUrl bug, fixed in Qt 4.8.5 and Qt5
-#else
-  QCOMPARE(smb.url(), QString::fromLatin1("smb:///"));
-#endif
   QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb:/"));
 
   KUrl implicitSmb("file://host/path");
@@ -1809,11 +1774,6 @@ void KUrlTest::testOtherProtocols()
   QCOMPARE( testFrag.fragment(), QString("foo") );
 
   KUrl ptal( "ptal://mlc:usb@PC_970" ); // User=mlc, password=usb, host=PC_970
-#if QT_VERSION >= 0x040600 && QT_VERSION <= 0x040602 // Hostnames with underscores were invalid in 4.6.0 to 4.6.2, then allowed again in e301c82693c33c0f96c6a756d15fe35a9d877443
-  QCOMPARE(ptal.url(), QString("ptal://mlc:usb@")); // The host "PC_970" is invalid according to STD3 validation
-  KUrl ptalSimpler("ptal://mlc:usb@pc123");
-  QCOMPARE(ptalSimpler.url(), QString("ptal://mlc:usb@pc123"));
-#else
   QUrl ptal_qurl;
   ptal_qurl.setUrl("ptal://mlc:usb@PC_970", QUrl::TolerantMode);
   QVERIFY(ptal_qurl.isValid());
@@ -1824,7 +1784,6 @@ void KUrlTest::testOtherProtocols()
   QCOMPARE( ptal.host(), QString("pc_970") );
   QCOMPARE( ptal.user(), QString("mlc") );
   QCOMPARE( ptal.pass(), QString("usb") );
-#endif
 }
 
 void KUrlTest::testUtf8()

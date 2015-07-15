@@ -2959,13 +2959,11 @@ void AppletOverlayWidget::paint(QPainter *painter,
     painter->fillPath(backgroundShape, wash);
 }
 
-#if QT_VERSION >= 0x040700
 // in QGraphicsWidget now; preserve BC by implementing it as a protected method
 void Applet::geometryChanged()
 {
     emit QGraphicsWidget::geometryChanged();
 }
-#endif
 
 } // Plasma namespace
 
