@@ -33,20 +33,15 @@ class QStyleOption;
 class KCategorizedView;
 
 /**
-  * @deprecated
-  *
-  * The category drawing is performed by this class. It also gives information about the category
-  * height and margins.
-  *
-  * @warning Please use KCategoryDrawerV3 instead
+  * @since 4.5
   */
 class KDEUI_EXPORT KCategoryDrawer
+    : public QObject
 {
+    Q_OBJECT
+
 public:
-    KDE_DEPRECATED KCategoryDrawer();
-
-    virtual ~KCategoryDrawer();
-
+    // from KCategoryDrawerV1
     /**
       * This method purpose is to draw a category represented by the given
       * @param index with the given @param sortRole sorting role
@@ -54,7 +49,7 @@ public:
       * @note This method will be called one time per category, always with the
       *       first element in that category
       */
-    virtual void drawCategory(const QModelIndex &index,
+    void drawCategory(const QModelIndex &index,
                               int sortRole,
                               const QStyleOption &option,
                               QPainter *painter) const;
@@ -63,9 +58,8 @@ public:
       * @return The category height for the category representated by index @p index with
       *         style options @p option.
       */
-    virtual int categoryHeight(const QModelIndex &index, const QStyleOption &option) const;
+    int categoryHeight(const QModelIndex &index, const QStyleOption &option) const;
 
-    //TODO KDE5: make virtual as leftMargin
     /**
       * @note 0 by default
       *
@@ -80,7 +74,6 @@ public:
       */
     void setLeftMargin(int leftMargin);
 
-    //TODO KDE5: make virtual as rightMargin
     /**
       * @note 0 by default
       *
@@ -97,37 +90,7 @@ public:
 
     KCategoryDrawer &operator=(const KCategoryDrawer &cd);
 
-private:
-    class Private;
-    Private *const d;
-};
-
-
-/**
-  * @deprecated
-  *
-  * @since 4.4
-  *
-  * @warning Please use KCategoryDrawerV3 instead
-  */
-class KDEUI_EXPORT KCategoryDrawerV2
-    : public QObject
-    , public KCategoryDrawer
-{
-    Q_OBJECT
-
-public:
-    KDE_DEPRECATED KCategoryDrawerV2(QObject *parent = 0);
-    virtual ~KCategoryDrawerV2();
-
-    KDE_DEPRECATED virtual void mouseButtonPressed(const QModelIndex &index, QMouseEvent *event);
-
-    KDE_DEPRECATED virtual void mouseButtonReleased(const QModelIndex &index, QMouseEvent *event);
-
-    KDE_DEPRECATED virtual void mouseButtonMoved(const QModelIndex &index, QMouseEvent *event);
-
-    KDE_DEPRECATED virtual void mouseButtonDoubleClicked(const QModelIndex &index, QMouseEvent *event);
-
+    // from KCategoryDrawerV2
 Q_SIGNALS:
     /**
       * This signal becomes emitted when collapse or expand has been clicked.
@@ -142,30 +105,16 @@ Q_SIGNALS:
       * the connected slot can perform the needed changes (view, model, selection model, delegate...)
       */
     void actionRequested(int action, const QModelIndex &index);
-};
-
-/**
-  * @since 4.5
-  */
-class KDEUI_EXPORT KCategoryDrawerV3
-    : public KCategoryDrawerV2
-{
-    friend class KCategorizedView;
 
 public:
-    KCategoryDrawerV3(KCategorizedView *view);
-    virtual ~KCategoryDrawerV3();
+    KCategoryDrawer(KCategorizedView *view = 0);
+    virtual ~KCategoryDrawer();
 
     /**
       * @return The view this category drawer is associated with.
       */
     KCategorizedView *view() const;
 
-    using KCategoryDrawerV2::mouseButtonPressed;
-    using KCategoryDrawerV2::mouseButtonReleased;
-    using KCategoryDrawerV2::mouseButtonDoubleClicked;
-
-protected:
     /**
       * Method called when the mouse button has been pressed.
       *
@@ -177,7 +126,7 @@ protected:
       *          have to call event->accept() or event->ignore() at all possible case branches in
       *          your code.
       */
-    virtual void mouseButtonPressed(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
+    void mouseButtonPressed(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
 
     /**
       * Method called when the mouse button has been released.
@@ -190,7 +139,7 @@ protected:
       *          have to call event->accept() or event->ignore() at all possible case branches in
       *          your code.
       */
-    virtual void mouseButtonReleased(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
+    void mouseButtonReleased(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
 
     /**
       * Method called when the mouse has been moved.
@@ -199,7 +148,7 @@ protected:
       * @param blockRect The rect occupied by the block of items.
       * @param event The mouse event.
       */
-    virtual void mouseMoved(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
+    void mouseMoved(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
 
     /**
       * Method called when the mouse button has been double clicked.
@@ -212,7 +161,7 @@ protected:
       *          have to call event->accept() or event->ignore() at all possible case branches in
       *          your code.
       */
-    virtual void mouseButtonDoubleClicked(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
+    void mouseButtonDoubleClicked(const QModelIndex &index, const QRect &blockRect, QMouseEvent *event);
 
     /**
       * Method called when the mouse button has left this block.
@@ -220,7 +169,7 @@ protected:
       * @param index The representative index of the block of items.
       * @param blockRect The rect occupied by the block of items.
       */
-    virtual void mouseLeft(const QModelIndex &index, const QRect &blockRect);
+    void mouseLeft(const QModelIndex &index, const QRect &blockRect);
 
 private:
     class Private;

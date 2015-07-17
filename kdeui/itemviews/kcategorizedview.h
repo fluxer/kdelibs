@@ -26,7 +26,6 @@
 #include <kdeui_export.h>
 
 class KCategoryDrawer;
-class KCategoryDrawerV2;
 
 /**
   * @short Item view for listing items in a categorized fashion optionally
