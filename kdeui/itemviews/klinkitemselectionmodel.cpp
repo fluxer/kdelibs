@@ -109,34 +109,11 @@ void KLinkItemSelectionModel::select(const QModelIndex &index, QItemSelectionMod
     }
 }
 
-// QAbstractProxyModel::mapSelectionFromSource creates invalid ranges to we filter
-// those out manually in a loop. Hopefully fixed in Qt 4.7.2, so we ifdef it out.
-// http://qt.gitorious.org/qt/qt/merge_requests/2474
-// http://qt.gitorious.org/qt/qt/merge_requests/831
-
-#ifdef RANGE_FIX_HACK
-static QItemSelection klink_removeInvalidRanges(const QItemSelection &selection)
-{
-  QItemSelection result;
-  Q_FOREACH(const QItemSelectionRange &range, selection)
-  {
-    if (!range.isValid())
-      continue;
-    result << range;
-  }
-  return result;
-}
-#endif
-
 void KLinkItemSelectionModel::select(const QItemSelection &selection, QItemSelectionModel::SelectionFlags command)
 {
     Q_D(KLinkItemSelectionModel);
     d->m_ignoreCurrentChanged = true;
-#ifdef RANGE_FIX_HACK
-    QItemSelection _selection = klink_removeInvalidRanges(selection);
-#else
     QItemSelection _selection = selection;
-#endif
     QItemSelectionModel::select(_selection, command);
     Q_ASSERT(d->assertSelectionValid(_selection));
     QItemSelection mappedSelection = d->m_indexMapper->mapSelectionLeftToRight(_selection);
@@ -157,13 +134,8 @@ void KLinkItemSelectionModelPrivate::slotCurrentChanged(const QModelIndex& curre
 void KLinkItemSelectionModelPrivate::sourceSelectionChanged(const QItemSelection& selected, const QItemSelection& deselected)
 {
     Q_Q(KLinkItemSelectionModel);
-#ifdef RANGE_FIX_HACK
-    QItemSelection _selected = klink_removeInvalidRanges(selected);
-    QItemSelection _deselected = klink_removeInvalidRanges(deselected);
-#else
     QItemSelection _selected = selected;
     QItemSelection _deselected = deselected;
-#endif
     Q_ASSERT(assertSelectionValid(_selected));
     Q_ASSERT(assertSelectionValid(_deselected));
     const QItemSelection mappedDeselection = m_indexMapper->mapSelectionRightToLeft(_deselected);
