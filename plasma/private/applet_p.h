@@ -31,7 +31,6 @@
 #include "plasma/animator.h"
 #include "plasma/private/applethandle_p.h"
 #include "plasma/private/dataengineconsumer_p.h"
-#include "plasma/ui_publish.h"
 
 class KKeySequenceWidget;
 
