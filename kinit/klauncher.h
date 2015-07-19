@@ -117,11 +117,7 @@ class KLauncher : public QObject
    Q_OBJECT
 
 public:
-#ifndef USE_KPROCESS_FOR_KIOSLAVES
    KLauncher(int kdeinitSocket);
-#else
-   KLauncher();
-#endif
 
    ~KLauncher();
 
