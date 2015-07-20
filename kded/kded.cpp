@@ -796,8 +796,8 @@ public:
           XSendEvent( QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e );
 #endif
 
-//          if (bCheckHostname)
-//             (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
+          if (bCheckHostname)
+             (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
        } else
           runBuildSycoca();
 
