@@ -536,12 +536,6 @@ QString PackageStructure::contentsPrefix() const
     return d->contentsPrefixPaths.isEmpty() ? QString() : d->contentsPrefixPaths.first();
 }
 
-void PackageStructure::setContentsPrefix(const QString &prefix)
-{
-    d->contentsPrefixPaths.clear();
-    d->contentsPrefixPaths << prefix;
-}
-
 QStringList PackageStructure::contentsPrefixPaths() const
 {
     return d->contentsPrefixPaths;
