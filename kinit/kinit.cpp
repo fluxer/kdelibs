@@ -449,6 +449,7 @@ static void reset_oom_protect() {
 
 static pid_t launch(int argc, const char *_name, const char *args,
                     const char *cwd=0, int envc=0, const char *envs=0,
+                    bool reset_env = false,
                     const char *tty=0, bool avoid_loops = false,
                     const char* startup_id_str = "0" ) // krazy:exclude=doublequote_chars
 {
@@ -544,6 +545,22 @@ static pid_t launch(int argc, const char *_name, const char *args,
      // we still want to execute `foo` even if the chdir() failed.
      if (cwd && *cwd) {
          (void)chdir(cwd);
+     }
+
+     if( reset_env ) // KWRAPPER/SHELL
+     {
+
+         QList<QByteArray> unset_envs;
+         for( int tmp_env_count = 0;
+              environ[tmp_env_count];
+              tmp_env_count++)
+             unset_envs.append( environ[ tmp_env_count ] );
+         foreach(const QByteArray &tmp, unset_envs)
+         {
+             int pos = tmp.indexOf( '=' );
+             if( pos >= 0 )
+                 unsetenv( tmp.left( pos ));
+         }
      }
 
      for (int i = 0;  i < envc; i++)
@@ -1165,6 +1182,7 @@ static bool handle_launcher_request(int sock, const char *who)
           setenv(DISPLAY, kdedisplay, true);
 
       pid = launch( argc, name, args, cwd, envc, envs,
+          request_header.cmd == LAUNCHER_SHELL || request_header.cmd == LAUNCHER_KWRAPPER,
           tty, avoid_loops, startup_id_str );
 
       if (reset_display) {
