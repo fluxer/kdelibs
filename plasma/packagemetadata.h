@@ -91,7 +91,6 @@ public:
     QString requiredVersion() const;
     QString pluginName() const;
     QString implementationApi() const;
-    KUrl remoteLocation() const;
 
     QString type() const;
 
@@ -177,11 +176,6 @@ public:
      * method.
      */
     void setRequiredVersion(const QString &);
-
-    /**
-     * Set the url where this package is hosted.
-     */
-    void setRemoteLocation(const KUrl &);
 
     /**
      * Set the type of the package. If not defined this

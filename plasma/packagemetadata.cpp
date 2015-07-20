@@ -51,7 +51,6 @@ class PackageMetadataPrivate
         QString type;
         QString serviceType;
         QString api;
-        KUrl location;
 };
 
 PackageMetadata::PackageMetadata(const PackageMetadata &other)
@@ -107,7 +106,6 @@ void PackageMetadata::write(const QString &filename) const
     config.writeEntry("X-Plasma-API", d->api);
     config.writeEntry("X-KDE-ParentApp", d->app);
     config.writeEntry("Type", d->type);
-    config.writeEntry("X-Plasma-RemoteLocation", d->location);
 }
 
 void PackageMetadata::read(const QString &filename)
@@ -153,7 +151,6 @@ void PackageMetadata::read(const QString &filename)
     d->api = config.readEntry("X-Plasma-API", d->api);
     d->app = config.readEntry("X-KDE-ParentApp", d->app);
     d->type = config.readEntry("Type", d->type);
-    d->location = config.readEntry("X-Plasma-RemoteLocation", d->location);
 }
 
 QString PackageMetadata::name() const
@@ -229,11 +226,6 @@ QStringList PackageMetadata::keywords() const
 QString PackageMetadata::requiredVersion() const
 {
     return d->requiredVersion;
-}
-
-KUrl PackageMetadata::remoteLocation() const
-{
-    return d->location;
 }
 
 QString PackageMetadata::type() const
@@ -314,11 +306,6 @@ void PackageMetadata::setCategory(const QString &category)
 void PackageMetadata::setRequiredVersion(const QString &requiredVersion)
 {
     d->requiredVersion = requiredVersion;
-}
-
-void PackageMetadata::setRemoteLocation(const KUrl &location)
-{
-    d->location = location;
 }
 
 void PackageMetadata::setType(const QString &type)
