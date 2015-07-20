@@ -182,16 +182,14 @@ int SuProcess::exec(const char *password, int check)
         if (ret == killme)
         {
             if ( d->m_superUserCommand == "sudo" ) {
- 	        // sudo can not be killed, just return
- 	        return ret;
- 	    }
- 	    if (kill(m_Pid, SIGKILL) < 0) {
- 	        kDebug() << "kill < 0";
- 		//FIXME SIGKILL doesn't work for sudo,
- 		//why is this different from su?
- 		//A: because sudo runs as root. Perhaps we could write a Ctrl+C to its stdin, instead?
- 		ret=error;
- 	    }
+                // sudo can not be killed, just return
+                return ret;
+            }
+            if (kill(m_Pid, SIGKILL) < 0) {
+                kDebug() << "kill < 0";
+                // FIXME: SIGKILL doesn't work for sudo, perhaps write a Ctrl+C to its stdin, instead?
+                ret=error;
+            }
             else
             {
                 int iret = waitForChild();
