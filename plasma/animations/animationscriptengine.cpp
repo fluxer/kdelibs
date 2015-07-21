@@ -37,7 +37,6 @@
 
 #include "animator.h"
 #include "javascriptanimation_p.h"
-#include "bindings/animationgroup_p.h"
 
 namespace Plasma
 {
@@ -109,7 +108,7 @@ QScriptValue animationGroup(QScriptContext *context, QScriptEngine *engine)
         return engine->undefinedValue();
     }
 
-    QSequentialAnimationGroup *group = new SequentialAnimationGroup(parent);
+    QSequentialAnimationGroup *group = new QSequentialAnimationGroup(parent);
     return engine->newQObject(group);
 }
 
@@ -120,7 +119,7 @@ QScriptValue parallelAnimationGroup(QScriptContext *context, QScriptEngine *engi
         return engine->undefinedValue();
     }
 
-    ParallelAnimationGroup *group = new ParallelAnimationGroup(parent);
+    QParallelAnimationGroup *group = new QParallelAnimationGroup(parent);
     return engine->newQObject(group);
 }
 
