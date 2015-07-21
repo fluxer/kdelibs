@@ -297,6 +297,7 @@ install( FILES
  renamedialogplugin.desktop
  kfile/kpropertiesdialogplugin.desktop
  kio/kfilewrite.desktop
+ kio/kfileitemactionplugin.desktop
  kfile/kiofilemodule.desktop
 DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
 
