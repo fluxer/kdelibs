@@ -615,42 +615,7 @@ void Kded::readDirectory( const QString& _path )
   if ( m_pDirWatch->contains( path ) ) // Already seen this one?
      return;
 
-  m_pDirWatch->addDir(path,KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);          // add watch on this dir
-  return; // KDirWatch now claims to also support recursive watching
-#if 0
-  QDir d( _path, QString(), QDir::Unsorted, QDir::Readable | QDir::Executable | QDir::Dirs | QDir::Hidden );
-  // set QDir ...
-
-
-  //************************************************************************
-  //                           Setting dirs
-  //************************************************************************
-
-  if ( !d.exists() )                            // exists&isdir?
-  {
-    kDebug(7020) << "Does not exist:" << _path;
-    return;                             // return false
-  }
-
-  // Note: If some directory is gone, dirwatch will delete it from the list.
-
-  //************************************************************************
-  //                               Reading
-  //************************************************************************
-  QString file;
-  unsigned int i;                           // counter and string length.
-  unsigned int count = d.count();
-  for( i = 0; i < count; i++ )                        // check all entries
-  {
-     if (d[i] == "." || d[i] == ".." || d[i] == "magic")
-       continue;                          // discard those ".", "..", "magic"...
-
-     file = path;                           // set full path
-     file += d[i];                          // and add the file name.
-
-     readDirectory( file );      // yes, dive into it.
-  }
-#endif
+  m_pDirWatch->addDir(path,KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
 }
 
 /*
@@ -783,16 +748,6 @@ public:
           e.xclient.window = QX11Info::appRootWindow();
           e.xclient.format = 8;
           strcpy( e.xclient.data.b, "kded" );
-          XSendEvent( QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e );
-#endif
-
-#ifdef Q_WS_X11
-          e.xclient.type = ClientMessage;
-          e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False );
-          e.xclient.display = QX11Info::display();
-          e.xclient.window = QX11Info::appRootWindow();
-          e.xclient.format = 8;
-          strcpy( e.xclient.data.b, "confupdate" );
           XSendEvent( QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e );
 #endif
 
