@@ -265,7 +265,8 @@ public:
      * Register a debug area dynamically.
      * @param areaName the name of the area
      * @param enabled whether debug output should be enabled by default
-     * (users can override this in kdebugdialog or with DisableAll=true in kdebugrc)
+     * (all debug messages are disabled by default via DisableAll=true in
+       kdebugrc which can be changed by users from the system settings)
      * @return the area code that was allocated for this area
      *
      * Typical usage:
