@@ -181,14 +181,12 @@ int SuProcess::exec(const char *password, int check)
     {
         if (ret == killme)
         {
-            if ( d->m_superUserCommand == "sudo" ) {
-                // sudo can not be killed, just return
-                return ret;
-            }
             if (kill(m_Pid, SIGKILL) < 0) {
-                kDebug() << "kill < 0";
-                // FIXME: SIGKILL doesn't work for sudo, perhaps write a Ctrl+C to its stdin, instead?
-                ret=error;
+                // SIGKILL doesn't work for sudo
+                if (kill(m_Pid, SIGINT) < 0) {
+                    kDebug() << "kill < 0";
+                    ret=error;
+                }
             }
             else
             {
@@ -206,9 +204,8 @@ int SuProcess::exec(const char *password, int check)
     if (ret != ok)
     {
         kill(m_Pid, SIGKILL);
-        if (d->m_superUserCommand != "sudo") {
-            waitForChild();
-        }
+        kill(m_Pid, SIGINT);
+        waitForChild();
         return SuIncorrectPassword;
     }
 
@@ -222,6 +219,7 @@ int SuProcess::exec(const char *password, int check)
     else if (iret == 1)
     {
         kill(m_Pid, SIGKILL);
+        kill(m_Pid, SIGINT);
         waitForChild();
         return SuIncorrectPassword;
     }
@@ -252,7 +250,8 @@ int SuProcess::ConverseSU(const char *password)
     while (true)
     {
         line = readLine();
-        if (line.isNull())
+        // close your eyes for a sec and use that scroll button
+        if (line.isNull() || line == "Sorry, try again.")
             return ( state == HandleStub ? notauthorized : error);
         kDebug(kdesuDebugArea()) << k_lineinfo << "Read line" << line;
 
