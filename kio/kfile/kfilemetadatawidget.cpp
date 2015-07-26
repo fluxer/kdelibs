@@ -100,7 +100,7 @@ KFileMetaDataWidget::Private::~Private()
 
 void KFileMetaDataWidget::Private::initMetaInfoSettings()
 {
-    const int currentVersion = 3; // increase version, if the blacklist of disabled
+    const int currentVersion = 4; // increase version, if the blacklist of disabled
                                   // properties should be updated
 
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
@@ -112,7 +112,7 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
         config.deleteGroup("Show");
         KConfigGroup settings = config.group("Show");
 
-        static const char* const enabledProperties[] = {
+        static const char* enabledProperties[] = {
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#depends",
@@ -142,8 +142,20 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
             0 // mandatory last entry
         };
 
+        static const char* disabledProperties[] = {
+            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName",
+            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf",
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            0 // mandatory last entry
+        };
+
         for (int i = 0; enabledProperties[i] != 0; ++i) {
             settings.writeEntry(enabledProperties[i], true);
+        }
+
+        for (int i = 0; disabledProperties[i] != 0; ++i) {
+            settings.writeEntry(disabledProperties[i], false);
         }
 
         // mark the group as initialized
