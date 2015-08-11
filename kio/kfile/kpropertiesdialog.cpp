@@ -64,7 +64,7 @@ extern "C" {
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
 #include <QtGui/QCheckBox>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QTextStream>
 #include <QtGui/QPainter>
 #include <QtGui/QLayout>
@@ -72,6 +72,7 @@ extern "C" {
 #include <QtGui/QProgressBar>
 #include <QVector>
 #include <QFileInfo>
+#include <QtCore/qvarlengtharray.h>
 
 #ifdef HAVE_POSIX_ACL
 extern "C" {

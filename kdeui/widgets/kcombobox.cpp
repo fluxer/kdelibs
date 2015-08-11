@@ -26,7 +26,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QMenu>
 #include <QtGui/QApplication>
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 
 #include <kselectaction.h>
 #include <kcompletionbox.h>

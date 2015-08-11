@@ -23,7 +23,7 @@
 #include "ksambasharedata_p.h"
 
 #include <QtCore/QMap>
-#include <QtCore/QMutableMapIterator>
+#include <QtCore/qmap.h>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
 #include <QtCore/QFileInfo>

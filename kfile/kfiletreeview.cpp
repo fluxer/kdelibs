@@ -22,7 +22,7 @@
 #include "kfiletreeview.h"
 
 #include <QtCore/QDir>
-#include <QtGui/QContextMenuEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QMenu>
 
 #include <kdirlister.h>

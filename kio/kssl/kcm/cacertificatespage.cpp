@@ -28,7 +28,7 @@
 
 #include <QList>
 #include <QSslCertificate>
-#include <QtGui/QTreeWidgetItem>
+#include <QtGui/qtreewidget.h>
 #include <QtGui/QStandardItemModel>
 
 enum Columns {

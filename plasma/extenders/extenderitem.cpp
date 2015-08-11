@@ -23,8 +23,8 @@
 #include <QApplication>
 #include <QBitmap>
 #include <QDrag>
-#include <QGraphicsSceneResizeEvent>
-#include <QGraphicsSceneMouseEvent>
+#include <QtGui/qgraphicssceneevent.h>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsLinearLayout>
 #include <QLayout>
 #include <QMimeData>

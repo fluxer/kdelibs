@@ -23,8 +23,8 @@
 
 #include <QQueue>
 #include <QTimer>
-#include <QTime>
-#include <QTimerEvent>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qcoreevent.h>
 #include <QVariant>
 
 #include <kdebug.h>

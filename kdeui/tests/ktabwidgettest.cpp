@@ -1,5 +1,5 @@
 #include <QtGui/QLayout>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QMenu>
 #include <QtCore/QMimeData>
 

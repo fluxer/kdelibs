@@ -33,9 +33,11 @@
 #include <kprotocolinfo.h>
 #include <assert.h>
 
-#include <QtCore/QHash>
-#include <QtGui/QWidget>
+#include <QtCore/qhash.h>
+#include <QtGui/qwidget.h>
 #include <QtDBus/QtDBus>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qthread.h>
 
 // Slaves may be idle for a certain time (3 minutes) before they are killed.
 static const int s_idleSlaveLifetime = 3 * 60;

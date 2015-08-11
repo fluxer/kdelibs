@@ -20,7 +20,7 @@
 #ifndef KDECORE_KPLUGININFO_H
 #define KDECORE_KPLUGININFO_H
 
-#include <QtCore/QExplicitlySharedDataPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtCore/QString>
 #include <QtCore/QMap>
 #include <QtCore/QStringList>

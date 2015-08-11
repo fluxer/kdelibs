@@ -27,7 +27,7 @@
 #include <QLabel>
 #include <QBoxLayout>
 #include <QStackedWidget>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 
 #include <kpushbutton.h>
 #include <klocale.h>

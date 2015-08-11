@@ -533,15 +533,6 @@ Q_SIGNALS:
   void itemsFilteredByMime( const KFileItemList& items );
 
   /**
-   * Signals that an item has been deleted
-   *
-   * @deprecated Don't connect to this signal. Use itemsDeleted instead.
-   *
-   * @param _fileItem the fileItem to delete
-   */
-  QT_MOC_COMPAT void deleteItem( const KFileItem &_fileItem ); // KDE5: remove, and port to itemsDeleted
-
-  /**
    * Signal that items have been deleted.
    *
    * @since 4.1.2

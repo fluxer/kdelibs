@@ -22,8 +22,8 @@
 
 #include <QtCore/QPointer>
 #include <QtCore/QEvent>
-#include <QtCore/QSharedDataPointer>
-#include <QtXml/QDomElement> // KDE5: remove
+#include <QtCore/qshareddata.h>
+#include <QtXml/qdom.h> // KDE5: remove
 
 #include <kurl.h>
 #include <kxmlguiclient.h>

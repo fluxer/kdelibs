@@ -35,7 +35,7 @@
 #include <kstandarddirs.h>
 #include <kservicetypetrader.h>
 #include <QFile>
-#include <QtAlgorithms>
+#include <QtCore/qalgorithms.h>
 
 #include <QtDBus/QtDBus>
 

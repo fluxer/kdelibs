@@ -36,7 +36,7 @@
 
 #include <QImage>
 #include <QDataStream>
-#include <QImageIOPlugin>
+#include <QtGui/qimageiohandler.h>
 
 class K_IStream: public Imf::IStream
 {

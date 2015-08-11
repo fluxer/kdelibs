@@ -23,7 +23,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QCursor>
 #include <QtCore/QDataStream>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtCore/QFileInfo>
 #include <QtGui/QFrame>
 #include <QtGui/QLabel>

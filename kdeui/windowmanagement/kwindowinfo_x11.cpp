@@ -31,7 +31,7 @@
 #include <QDesktopWidget>
 #include <QtGui/QDialog>
 #include <QtDBus/QtDBus>
-#include <QtGui/QX11Info>
+#include <QtGui/qx11info_x11.h>
 #include <X11/Xatom.h>
 
 class KWindowInfo::Private

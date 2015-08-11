@@ -28,7 +28,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QHeaderView>
 #include <QtGui/QListView>
-#include <QtGui/QResizeEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QScrollBar>
 
 KDirOperatorDetailView::KDirOperatorDetailView(QWidget *parent) :

@@ -24,7 +24,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTimeLine>
 #include <QtCore/QTimer>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QColor>

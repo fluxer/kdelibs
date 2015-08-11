@@ -21,7 +21,7 @@
 #define POPUPAPPLET_P_H
 
 #include <QBasicTimer>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 #include <plasma/plasma.h>
 

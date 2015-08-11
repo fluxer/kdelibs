@@ -21,8 +21,8 @@
 #include "animablegraphicswebview_p.h"
 
 #include <QtGui/QApplication>
-#include <QGestureEvent>
-#include <QPinchGesture>
+#include <QtGui/qevent.h>
+#include <QtGui/qgesture.h>
 #include <QtWebKit/QWebFrame>
 
 #include <qwebpage.h>

@@ -21,8 +21,8 @@
 #define KERNEL_KCOMPONENTDATA_P_H
 
 #include "kcomponentdata.h"
-#include <QAtomicInt>
-#include <QtDebug>
+#include <QtCore/qatomic.h>
+#include <QtCore/qdebug.h>
 #include <QString>
 
 #include <kconfig.h>

@@ -138,16 +138,6 @@ namespace Sonnet
          */
         void activeChanged(const QString &description);
 
-        /**
-         *
-         * @param originalWord missspelled word
-         *
-         * @param suggestions list of word which can replace missspelled word
-         *
-         * @deprecated use isWordMisspelled() and suggestionsForWord() instead.
-         */
-        QT_MOC_COMPAT void newSuggestions(const QString &originalWord, const QStringList &suggestions);
-
     protected:
 
         virtual void highlightBlock(const QString &text);

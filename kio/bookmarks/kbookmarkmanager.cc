@@ -27,6 +27,9 @@
 #include <QtCore/QProcess>
 #include <QtCore/QRegExp>
 #include <QtCore/QTextStream>
+#include <QtCore/qreadwritelock.h>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/qthread.h>
 #include <QtDBus/QtDBus>
 #include <QtGui/QApplication>
 

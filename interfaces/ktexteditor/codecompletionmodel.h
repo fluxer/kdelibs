@@ -21,7 +21,7 @@
 #define KDELIBS_KTEXTEDITOR_CODECOMPLETIONMODEL_H
 
 #include <ktexteditor/ktexteditor_export.h>
-#include <QtCore/QModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <ktexteditor/range.h>
 
 namespace KTextEditor {

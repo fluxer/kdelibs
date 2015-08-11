@@ -37,7 +37,8 @@
 #include <kservicetype.h>
 #include <kservicetypeprofile.h>
 
-#include <QtCore/Q_PID>
+#include <QtCore/qprocess.h>
+#include <QtCore/qthread.h>
 
 QTEST_KDEMAIN_CORE( KServiceTest )
 

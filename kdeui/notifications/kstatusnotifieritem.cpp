@@ -28,7 +28,8 @@
 #include <QApplication>
 #include <QMovie>
 #include <QPainter>
-
+#include <QtCore/qtimer.h>
+#include <QtCore/qmetaobject.h>
 
 #include <kdebug.h>
 #include <ksystemtrayicon.h>

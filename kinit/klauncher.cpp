@@ -37,7 +37,8 @@
 #include <X11/Xlib.h>
 #endif
 
-#include <QtCore/QFile>
+#include <QtCore/qfile.h>
+#include <QtCore/qfileinfo.h>
 #include <qplatformdefs.h>
 
 #include <kconfig.h>

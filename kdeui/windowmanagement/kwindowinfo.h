@@ -25,7 +25,7 @@
 #define KWINDOWINFO_H
 
 #include <kdeui_export.h>
-#include <QtGui/QWidgetList> //For WId
+#include <QtGui/qwindowdefs.h> //For WId
 
 #include <netwm_def.h>
 

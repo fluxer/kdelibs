@@ -24,7 +24,7 @@
 
 #include <kcalendarsystem.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtGui/QLineEdit>
 #include <QtGui/QValidator>
 

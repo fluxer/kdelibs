@@ -30,8 +30,8 @@
 
 #include <typeinfo>
 
-//#include <QDate>
-//#include <QTime>
+//#include <QtCore/qdatetime.h>
+//#include <QtCore/qdatetime.h>
 //#include <QDateTime>
 
 namespace Kross {

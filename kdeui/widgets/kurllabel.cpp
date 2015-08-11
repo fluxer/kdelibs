@@ -19,7 +19,7 @@
 
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
-#include <QtGui/QMouseEvent>
+#include <QtGui/qevent.h>
 
 #include <kcursor.h>
 #include <kcolorscheme.h>

@@ -22,7 +22,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 #include <QtCore/QString>
 
 class QDate;

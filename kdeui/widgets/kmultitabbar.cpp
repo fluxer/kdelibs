@@ -27,12 +27,12 @@
 #include "moc_kmultitabbar.cpp"
 #include "moc_kmultitabbar_p.cpp"
 
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QLayout>
 #include <QtGui/QPainter>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QStyle>
-#include <QStyleOptionButton>
+#include <QtGui/qstyleoption.h>
 
 #include <kiconloader.h>
 #include <kdebug.h>

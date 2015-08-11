@@ -22,14 +22,14 @@
 #include <cmath>
 
 //Qt
-#include <QGraphicsSceneResizeEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsGridLayout>
 #include <QGraphicsScene>
 #include <QApplication>
-#include <QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QWidget>
 #include <QTimer>
-#include <QTime>
+#include <QtCore/qdatetime.h>
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
 

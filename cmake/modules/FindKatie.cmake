@@ -13,8 +13,13 @@
 #  KATIE_MOC_EXECUTABLE
 #  KATIE_UIC_EXECUTABLE
 #  KATIE_RCC_EXECUTABLE
-#  KATIE_DBUSXML2CPP_EXECUTABLE
-#  KATIE_DBUSCPP2XML_EXECUTABLE
+#  KATIE_QDBUSXML2CPP_EXECUTABLE
+#  KATIE_QDBUSCPP2XML_EXECUTABLE
+#  KATIE_QHELPGENERATOR_EXECUTABLE
+#  KATIE_QCOLLECTIONGENERATOR_EXECUTABLE
+#  KATIE_LUPDATE_EXECUTABLE
+#  KATIE_LRELEASE_EXECUTABLE
+#  KATIE_LCONVERT_EXECUTABLE
 #
 # In addition the following macros will be defined:
 #
@@ -34,8 +39,11 @@ endif(KATIE_INCLUDES AND KATIE_LIBRARIES)
 if(Katie_FIND_COMPONENTS)
     set(KATIECOMPONENTS ${Katie_FIND_COMPONENTS})
 else()
-    set(KATIECOMPONENTS Core Gui Network Multimedia OpenGL Sql Svg Test DBus Xml XmlPatterns Script ScriptTools WebKit Declarative)
+    # TODO: add Multimedia once it builds
+    set(KATIECOMPONENTS Core Gui Network OpenGL Sql Svg Test DBus Xml XmlPatterns Script ScriptTools WebKit Declarative Help UiTools)
 endif()
+# TODO: designer, linguist?
+set(KATIETOOLS moc uic rcc qdbusxml2cpp qdbuscpp2xml qhelpgenerator qcollectiongenerator lupdate lrelease lconvert)
 
 set(KATIE_FOUND TRUE)
 set(KATIE_INCLUDES ${CMAKE_BINARY_DIR}/_generated_)
@@ -52,55 +60,18 @@ find_path(KATIE_MKSPECS_DIR
     $ENV{QTDIR}/share
 )
 
-find_program(KATIE_MOC_EXECUTABLE
-    NAMES
-    moc moc-qt4
-    HINTS
-    /bin
-    /usr/bin
-    /usr/local/bin
-    $ENV{QTDIR}/bin
-)
-
-find_program(KATIE_UIC_EXECUTABLE
-    NAMES
-    uic uic-qt4
-    HINTS
-    /bin
-    /usr/bin
-    /usr/local/bin
-    $ENV{QTDIR}/bin
-)
-
-find_program(KATIE_RCC_EXECUTABLE
-    NAMES
-    rcc rcc-qt4
-    HINTS
-    /bin
-    /usr/bin
-    /usr/local/bin
-    $ENV{QTDIR}/bin
-)
-
-find_program(KATIE_DBUSXML2CPP_EXECUTABLE
-    NAMES
-    qdbusxml2cpp qdbusxml2cpp-qt4
-    HINTS
-    /bin
-    /usr/bin
-    /usr/local/bin
-    $ENV{QTDIR}/bin
-)
-
-find_program(KATIE_DBUSCPP2XML_EXECUTABLE
-    NAMES
-    qdbuscpp2xml qdbuscpp2xml-qt4
-    HINTS
-    /bin
-    /usr/bin
-    /usr/local/bin
-    $ENV{QTDIR}/bin
-)
+foreach(tool ${KATIETOOLS})
+    string(TOUPPER ${tool} uppertool)
+    find_program(KATIE_${uppertool}_EXECUTABLE
+        NAMES
+        ${tool} ${tool}-qt4 ${tool}-katie
+        HINTS
+        /bin
+        /usr/bin
+        /usr/local/bin
+        $ENV{QTDIR}/bin
+    )
+endforeach()
 
 foreach(component ${KATIECOMPONENTS})
     string(TOUPPER KATIE_${component} uppercomp)
@@ -170,7 +141,7 @@ if(${KATIE_COMPAT} AND KATIE_FOUND)
     set(QT_FOUND TRUE)
     set(QT4_FOUND TRUE)
     set(QT_VERSION_MAJOR ${KATIE_MAJOR})
-    set(QT_VERSION_MINOR.${KATIE_MINOR})
+    set(QT_VERSION_MINOR ${KATIE_MINOR})
     set(QT_VERSION_PATCH ${KATIE_MICRO})
     set(QT_VERSION ${KATIE_VERSION})
     set(QT_INCLUDES ${KATIE_INCLUDES})
@@ -179,47 +150,36 @@ if(${KATIE_COMPAT} AND KATIE_FOUND)
     set(QT_MOC_EXECUTABLE ${KATIE_MOC_EXECUTABLE})
     set(QT_UIC_EXECUTABLE ${KATIE_UIC_EXECUTABLE})
     set(QT_RCC_EXECUTABLE ${KATIE_RCC_EXECUTABLE})
-    set(QT_DBUSXML2CPP_EXECUTABLE ${KATIE_DBUSXML2CPP_EXECUTABLE})
-    set(QT_DBUSCPP2XML_EXECUTABLE ${KATIE_DBUSCPP2XML_EXECUTABLE})
+    set(QT_DBUSXML2CPP_EXECUTABLE ${KATIE_QDBUSXML2CPP_EXECUTABLE})
+    set(QT_DBUSCPP2XML_EXECUTABLE ${KATIE_QDBUSCPP2XML_EXECUTABLE})
+    set(QT_LUPDATE_EXECUTABLE ${KATIE_LUPDATE_EXECUTABLE})
+    set(QT_LRELEASE_EXECUTABLE ${KATIE_LRELEASE_EXECUTABLE})
     set(QT_MKSPECS_DIR ${KATIE_MKSPECS_DIR})
 
-    add_executable(Qt4::moc IMPORTED)
-    set_property(TARGET Qt4::moc PROPERTY IMPORTED_LOCATION ${KATIE_MOC_EXECUTABLE})
-    add_executable(Qt4::uic IMPORTED)
-    set_property(TARGET Qt4::uic PROPERTY IMPORTED_LOCATION ${KATIE_UIC_EXECUTABLE})
-    add_executable(Qt4::rcc IMPORTED)
-    set_property(TARGET Qt4::rcc PROPERTY IMPORTED_LOCATION ${KATIE_RCC_EXECUTABLE})
+    if(NOT "${KATIE_FIND_QUIETLY}")
+        foreach(tool ${KATIETOOLS})
+            string(TOUPPER ${tool} uppertool)
+            add_executable(Qt4::${tool} IMPORTED)
+            set_property(TARGET Qt4::${tool} PROPERTY IMPORTED_LOCATION ${KATIE_${uppertool}_EXECUTABLE})
+        endforeach()
 
-    set(QT_QTCORE_FOUND "${KATIE_CORE_FOUND}")
-    set(QT_QTCORE_LIBRARY "${KATIE_CORE_LIBRARIES}")
-    set(QT_QTGUI_FOUND "${KATIE_GUI_FOUND}")
-    set(QT_QTGUI_LIBRARY "${KATIE_GUI_LIBRARIES}")
-    set(QT_QTNETWORK_FOUND "${KATIE_NETWORK_FOUND}")
-    set(QT_QTNETWORK_LIBRARY "${KATIE_NETWORK_LIBRARIES}")
-    set(QT_QTMULTIMEDIA_FOUND "${KATIE_MULTIMEDIA_FOUND}")
-    set(QT_QTMULTIMEDIA_LIBRARY "${KATIE_MULTIMEDIA_LIBRARIES}")
-    set(QT_QTOPENGL_FOUND "${KATIE_OPENGL_FOUND}")
-    set(QT_QTOPENGL_LIBRARY "${KATIE_OPENGL_LIBRARIES}")
-    set(QT_QTSQL_FOUND "${KATIE_SQL_FOUND}")
-    set(QT_QTSQL_LIBRARY "${KATIE_SQL_LIBRARIES}")
-    set(QT_QTSVG_FOUND "${KATIE_SVG_FOUND}")
-    set(QT_QTSVG_LIBRARY "${KATIE_SVG_LIBRARIES}")
-    set(QT_QTTEST_FOUND "${KATIE_TEST_FOUND}")
-    set(QT_QTTEST_LIBRARY "${KATIE_TEST_LIBRARIES}")
-    set(QT_QTDBUS_LIBRARY "${KATIE_DBUS_LIBRARIES}")
-    set(QT_QTDBUS_FOUND "${KATIE_DBUS_FOUND}")
-    set(QT_QTXML_FOUND "${KATIE_XML_FOUND}")
-    set(QT_QTXML_LIBRARY "${KATIE_XML_LIBRARIES}")
-    set(QT_QTXMLPATTERNS_FOUND "${KATIE_XMLPATTERNS_FOUND}")
-    set(QT_QTXMLPATTERNS_LIBRARY "${KATIE_XMLPATTERNS_LIBRARIES}")
-    set(QT_QTSCRIPT_FOUND "${KATIE_SCRIPT_FOUND}")
-    set(QT_QTSCRIPT_LIBRARY "${KATIE_SCRIPT_LIBRARIES}")
-    set(QT_QTSCRIPTTOOLS_FOUND "${KATIE_SCRIPTTOOLS_FOUND}")
-    set(QT_QTSCRIPTTOOLS_LIBRARY "${KATIE_SCRIPTTOOLS_LIBRARIES}")
-    set(QT_QTWEBKIT_FOUND "${KATIE_WEBKIT_FOUND}")
-    set(QT_QTWEBKIT_LIBRARY "${KATIE_WEBKIT_LIBRARIES}")
-    set(QT_QTDECLARATIVE_FOUND "${KATIE_DECLARATIVE_FOUND}")
-    set(QT_QTDECLARATIVE_LIBRARY "${KATIE_DECLARATIVE_LIBRARIES}")
+        # XXX: should those be defined conditionally based on requested components?
+        foreach(component ${KATIECOMPONENTS})
+            add_library(Qt4::Qt${component} ${KATIE_TYPE} IMPORTED)
+        endforeach()
+    endif()
+
+    # bad assumption
+    if(UNIX)
+        set(Q_WS_X11 TRUE)
+        find_package(X11 REQUIRED)
+    endif()
+
+    foreach(component ${KATIECOMPONENTS})
+        string(TOUPPER ${component} uppercomp)
+        set(QT_QT${uppercomp}_FOUND "${KATIE_${uppercomp}_FOUND}")
+        set(QT_QT${uppercomp}_LIBRARY "${KATIE_${uppercomp}_LIBRARIES}")
+    endforeach()
     include(Qt4Macros)
 endif()
 

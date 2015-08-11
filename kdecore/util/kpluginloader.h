@@ -23,7 +23,7 @@
 #include <kexportplugin.h>
 
 #include <QtCore/QPluginLoader>
-#include <QtCore/QtPlugin>
+#include <QtCore/qplugin.h>
 
 
 class KComponentData;

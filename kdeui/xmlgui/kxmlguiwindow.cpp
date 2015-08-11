@@ -36,10 +36,10 @@
 
 #include <config.h>
 
-#include <QCloseEvent>
+#include <QtGui/qevent.h>
 #include <QDesktopWidget>
 #include <QDockWidget>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 #include <QtGui/QLayout>
 #include <QtCore/QObject>
 #include <QtGui/QSessionManager>

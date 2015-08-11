@@ -12,7 +12,7 @@
 
 
 #include <kdemacros.h>
-#include <QtGui/QImageIOPlugin>
+#include <QtGui/qimageiohandler.h>
 #include <QtCore/QDataStream>
 #include <QtGui/QColor>
 

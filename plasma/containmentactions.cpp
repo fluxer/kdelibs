@@ -25,12 +25,12 @@
 #include "private/containmentactions_p.h"
 #include "private/containment_p.h"
 
-#include <QMetaEnum>
-#include <QMouseEvent>
-#include <QWheelEvent>
-#include <QGraphicsSceneContextMenuEvent>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsSceneWheelEvent>
+#include <QtCore/qmetaobject.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qgraphicssceneevent.h>
+#include <QtGui/qgraphicssceneevent.h>
+#include <QtGui/qgraphicssceneevent.h>
 
 #include <kdebug.h>
 #include <kglobal.h>

@@ -21,7 +21,7 @@
 #define KROSS_TRANSLATION_H
 
 #include <QObject>
-#include <QVariantList>
+#include <QtCore/qvariant.h>
 
 class QString;
 

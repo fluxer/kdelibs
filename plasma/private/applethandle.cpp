@@ -21,15 +21,15 @@
 
 #include <QApplication>
 #include <QBitmap>
-#include <QtGui/QGraphicsSceneMouseEvent>
-#include <QtGui/QLinearGradient>
+#include <QtGui/qgraphicssceneevent.h>
+#include <QtGui/qbrush.h>
 #include <QtGui/QPainter>
 #include <QtGui/QApplication>
 #include <QtGui/QMenu>
-#include <QTouchEvent>
+#include <QtGui/qevent.h>
 #include <QMatrix>
 #include <QTransform>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QPropertyAnimation>
 
 #include <kcolorscheme.h>

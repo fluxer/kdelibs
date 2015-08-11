@@ -26,7 +26,7 @@
 
 #include "kdebug.h"
 
-#include <QItemSelection>
+#include <QtGui/qitemselectionmodel.h>
 
 class KLinkItemSelectionModelPrivate
 {

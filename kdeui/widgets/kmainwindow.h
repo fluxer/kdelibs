@@ -33,7 +33,7 @@
 #include <kdeui_export.h>
 
 #include <QtGui/QMainWindow>
-#include <QtCore/QMetaClassInfo>
+#include <QtCore/qmetaobject.h>
 
 class KMenu;
 class KConfig;

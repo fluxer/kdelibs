@@ -23,7 +23,7 @@
 #include "actioncollection.h"
 
 #include <QtCore/QObject>
-#include <QtCore/QArgument>
+#include <QtCore/qobjectdefs.h>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
 #include <QtCore/QFileInfo>

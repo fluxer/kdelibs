@@ -22,7 +22,7 @@
 #include <QAction>
 #include <QDesktopWidget>
 #include <QLabel>
-#include <QGraphicsSceneDragDropEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsGridLayout>
 #include <QGraphicsLinearLayout>
 #include <QPainter>

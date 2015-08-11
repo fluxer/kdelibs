@@ -34,7 +34,7 @@
 #include <QEvent>
 #include <QFile>
 #include <QGraphicsGridLayout>
-#include <QGraphicsSceneMouseEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsView>
 #include <QHostInfo>
 #include <QLabel>
@@ -43,7 +43,7 @@
 #include <QPainter>
 #include <QRegExp>
 #include <QSize>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 #include <QTextDocument>
 #include <QUiLoader>
 #include <QVBoxLayout>

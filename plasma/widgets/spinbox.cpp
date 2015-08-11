@@ -21,7 +21,7 @@
 #include "spinbox.h"
 
 #include <QPainter>
-#include <QStyleOptionSpinBox>
+#include <QtGui/qstyleoption.h>
 #include <QGraphicsView>
 
 #include <kmimetype.h>

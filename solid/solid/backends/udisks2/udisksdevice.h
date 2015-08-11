@@ -29,8 +29,9 @@
 #include <solid/solidnamespace.h>
 
 #include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusObjectPath>
+#include <QtDBus/qdbusextratypes.h>
 #include <QtCore/QStringList>
+#include <QtCore/qpointer.h>
 
 namespace Solid
 {

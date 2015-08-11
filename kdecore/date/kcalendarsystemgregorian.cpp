@@ -28,8 +28,8 @@
 #include "kglobal.h"
 #include "kconfiggroup.h"
 
-#include <QtCore/QDate>
-#include <QtCore/QCharRef>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qstring.h>
 
 // Shared d pointer base class definitions
 

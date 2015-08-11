@@ -22,7 +22,7 @@
 //Qt
 #include <QPainter>
 #include <QTimer>
-#include <QGraphicsSceneResizeEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QTextOption>
 
 //Plasma

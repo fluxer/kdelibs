@@ -43,7 +43,7 @@
 #include <QtXml/qdom.h>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QBuffer>
 #include <QtCore/QIODevice>
 #include <QtDBus/QtDBus>

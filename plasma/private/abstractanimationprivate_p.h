@@ -19,7 +19,7 @@
 #define PLASMA_ABSTRACTANIMATIONPRIVATE_P_H
 
 #include <QEasingCurve>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 class QAbstractAnimation;
 
 namespace Plasma

@@ -38,7 +38,7 @@
 #include <QStyle>
 #include <QApplication>
 #include <QToolTip>
-#include <QResizeEvent>
+#include <QtGui/qevent.h>
 
 namespace KDcrawIface
 {

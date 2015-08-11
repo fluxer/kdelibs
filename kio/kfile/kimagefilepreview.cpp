@@ -15,7 +15,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QComboBox>
 #include <QtGui/QCheckBox>
-#include <QtGui/QResizeEvent>
+#include <QtGui/qevent.h>
 #include <QtCore/QTimer>
 #include <QtCore/QTimeLine>
 

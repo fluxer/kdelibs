@@ -23,7 +23,7 @@
 #include <config.h>
 
 #include <QtCore/QFile>
-#include <QMutexLocker>
+#include <QtCore/qmutex.h>
 
 #include <kdebug.h>
 

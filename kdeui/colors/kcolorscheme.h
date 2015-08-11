@@ -23,7 +23,7 @@
 #include <kdeui_export.h>
 #include <ksharedconfig.h>
 
-#include <QtCore/QExplicitlySharedDataPointer>
+#include <QtCore/qsharedpointer.h>
 
 #include <QtGui/QPalette>
 

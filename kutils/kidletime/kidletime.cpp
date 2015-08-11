@@ -31,7 +31,7 @@
 #include "windowspoller.h"
 #endif
 
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QSet>
 
 #include <kglobal.h>

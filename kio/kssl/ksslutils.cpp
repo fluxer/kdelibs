@@ -24,7 +24,7 @@
 #include <QtCore/QString>
 #include <kglobal.h>
 #include <klocale.h>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 #include "kopenssl.h"
 

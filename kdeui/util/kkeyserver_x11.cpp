@@ -27,7 +27,7 @@
 #include "kdebug.h"
 #include "klocale.h"
 
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 # define XK_MISCELLANY
 # define XK_XKB_KEYS
 # include <X11/X.h>

@@ -21,7 +21,7 @@
 
 #include "kbuttongroup.h"
 
-#include <QChildEvent>
+#include <QtCore/qcoreevent.h>
 #include <QHash>
 #include <QAbstractButton>
 #include <QSignalMapper>

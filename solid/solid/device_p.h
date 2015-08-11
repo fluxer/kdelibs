@@ -23,7 +23,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QSharedData>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 namespace Solid
 {

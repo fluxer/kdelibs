@@ -23,10 +23,10 @@
 #define PLASMA_ICONWIDGET_P_H
 
 #include <QtCore/QEvent>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtGui/QApplication>
 #include <QtGui/QIcon>
-#include <QtGui/QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 #include <QtGui/QTextLayout>
 #include <QtGui/QTextOption>
 

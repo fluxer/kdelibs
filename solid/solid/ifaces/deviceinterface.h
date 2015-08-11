@@ -22,7 +22,7 @@
 #define SOLID_IFACES_DEVICEINTERFACE_H
 
 #include <QtCore/QObject>
-#include <QtCore/QBool>
+#include <QtCore/qglobal.h>
 
 namespace Solid
 {

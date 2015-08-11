@@ -24,7 +24,7 @@
 #ifndef KNTLM_DES_H
 #define KNTLM_DES_H
 
-#include <QtCore/QBool>
+#include <QtCore/qglobal.h>
 
 typedef struct des_key
 {

@@ -21,7 +21,7 @@
 #define KLOCALIZEDDATE_H
 
 #include <QtCore/QString>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 #include <kdecore_export.h>
 #include "kcalendarsystem.h"

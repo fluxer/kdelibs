@@ -20,7 +20,7 @@
 #include "frame.h"
 
 //Qt
-#include <QGraphicsSceneResizeEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QWidget>
 #include <QDir>
 #include <QPainter>

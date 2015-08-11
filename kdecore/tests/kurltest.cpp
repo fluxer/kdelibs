@@ -34,12 +34,14 @@ QTEST_KDEMAIN_CORE( KUrlTest )
 #include <kglobal.h>
 #include <kcharsets.h>
 #include <kuser.h>
-#include <QtCore/QTextCodec>
-#include <QtCore/QDataStream>
+#include <QtCore/qtextcodec.h>
+#include <QtCore/qdatastream.h>
+#include <QtCore/qmimedata.h>
 #include <QtCore/QMap>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> // gethostname
+#include <ctype.h>
 
 //QCOMPARE cannot be used to strictly check for empty or null QString as it treats QString("") == QString()
 #define QSTREMPTY(_str) QVERIFY(!_str.isNull() && _str.isEmpty())

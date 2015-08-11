@@ -22,7 +22,7 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kdirwatch.h>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtGui/QDialog>
 #include <QtCore/QDir>
 #include <QtGui/QApplication>

@@ -24,7 +24,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QHash>

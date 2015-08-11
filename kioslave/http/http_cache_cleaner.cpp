@@ -32,10 +32,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #include <QtCore/QDir>
 #include <QtCore/QString>
-#include <QtCore/QTime>
+#include <QtCore/qdatetime.h>
 #include <QtDBus/QtDBus>
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qcryptographichash.h>
 
 #include <kcmdlineargs.h>
 #include <kcomponentdata.h>

@@ -22,7 +22,7 @@
 #define BACKGROUNDTEST_H
 
 #include <QtCore/QObject>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 #include "backgroundchecker.h"
 

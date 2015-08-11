@@ -39,7 +39,7 @@
 #include <kcodecs.h>
 #include <kde_file.h>
 #include <klocale.h>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <ktemporaryfile.h>
 
 #include <sys/types.h>

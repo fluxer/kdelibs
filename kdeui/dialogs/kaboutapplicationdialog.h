@@ -24,7 +24,7 @@
 
 #include "kdialog.h"
 
-#include <QtCore/QFlags>
+#include <QtCore/qglobal.h>
 
 class KAboutData;
 

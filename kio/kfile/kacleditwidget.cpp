@@ -34,7 +34,7 @@
 #include <qcheckbox.h>
 #include <qlayout.h>
 #include <QStackedWidget>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QHeaderView>
 
 #include <klocale.h>

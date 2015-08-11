@@ -32,7 +32,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPainter>
-#include <QShowEvent>
+#include <QtGui/qevent.h>
 #include <QTimeLine>
 #include <QToolButton>
 #include <QStyle>

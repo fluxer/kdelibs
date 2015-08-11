@@ -42,9 +42,11 @@
 #include <QPixmap>
 #include <QScrollBar>
 #include <QIcon>
+#include <QtCore/qtimer.h>
+#include <QtGui/qmime.h>
 
 #if defined(Q_WS_X11) && defined(HAVE_XRENDER)
-#  include <QX11Info>
+#  include <qx11info_x11.h>
 #  include <X11/Xlib.h>
 #  include <X11/extensions/Xrender.h>
 #endif

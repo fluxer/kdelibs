@@ -23,7 +23,7 @@
 
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QImage>
 #include <QtGui/QIcon>
 

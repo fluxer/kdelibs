@@ -24,8 +24,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QObject>
 #include <QtCore/QPair>
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomElement>
+#include <QtXml/qdom.h>
+#include <QtXml/qdom.h>
 
 #include <kurl.h>
 #include "kbookmark.h"

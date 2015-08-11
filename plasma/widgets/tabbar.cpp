@@ -23,7 +23,7 @@
 #include <QGraphicsLayoutItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
-#include <QGraphicsSceneWheelEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QIcon>
 #include <QMenu>
 #include <QPainter>

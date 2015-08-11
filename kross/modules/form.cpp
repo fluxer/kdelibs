@@ -19,13 +19,13 @@
 
 #include "form.h"
 
-#include <QtCore/QByteRef>
+#include <QtCore/qbytearray.h>
 #include <QtCore/QBuffer>
 #include <QtCore/QRegExp>
 #include <QtCore/QFile>
-#include <QtCore/QArgument>
-#include <QtCore/QMetaEnum>
-#include <QtGui/QKeyEvent>
+#include <QtCore/qobjectdefs.h>
+#include <QtCore/qmetaobject.h>
+#include <QtGui/qevent.h>
 #include <QtGui/QDialog>
 #include <QtGui/QBoxLayout>
 #include <QtGui/QStackedLayout>
@@ -36,7 +36,7 @@
 #include <QtGui/QTextBrowser>
 #include <QUiLoader>
 #include <QTextCursor>
-#include <QTextBlock>
+#include <QtGui/qtextobject.h>
 
 #include <kdebug.h>
 #include <klocale.h>

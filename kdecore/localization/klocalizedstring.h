@@ -23,7 +23,7 @@
 
 
 #include <QtCore/QChar>
-#include <QtCore/QLatin1Char>
+#include <QtCore/qchar.h>
 #include <QtCore/QStringList>
 
 class KLocale;

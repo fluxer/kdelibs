@@ -21,7 +21,7 @@
 #include "style_p.h"
 
 #include <QPainter>
-#include <QStyleOptionComplex>
+#include <QtGui/qstyleoption.h>
 #include <QSpinBox>
 #include <QComboBox>
 #include <QApplication>

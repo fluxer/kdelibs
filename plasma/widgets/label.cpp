@@ -21,11 +21,11 @@
 
 #include <QApplication>
 #include <QDir>
-#include <QGraphicsSceneMouseEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QLabel>
 #include <QMenu>
 #include <QPainter>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 
 #include <kcolorscheme.h>
 #include <kglobalsettings.h>

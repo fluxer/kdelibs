@@ -26,7 +26,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QGraphicsView>
-#include <QGraphicsSceneDragDropEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsGridLayout>
 #include <QMimeData>
 #include <QPainter>

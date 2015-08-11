@@ -26,7 +26,7 @@
 #include <kparts/part.h>
 #include <kparts/event.h>
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 template <class T1, class T2> struct QPair;
 template<typename T> class Q3PtrList;

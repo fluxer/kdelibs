@@ -27,12 +27,12 @@
 #include <unistd.h>
 #include <math.h>
 
-#include <QtCore/QSysInfo>
+#include <QtCore/qglobal.h>
 #include <QtGui/QApplication>
 #include <QtGui/QPaintEngine>
 #include <QtGui/QDesktopWidget>
-#include <QtCore/QCharRef>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstring.h>
+#include <QtCore/qstringlist.h>
 #include <QtGui/QBitmap>
 #include <QtGui/QPixmap>
 #include <QtGui/QImage>

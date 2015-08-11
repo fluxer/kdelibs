@@ -27,7 +27,7 @@
 #include "kglobal.h"
 
 #include <QtCore/QStringList>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 class KCalendarSystemPrivate;
 class KCalendarEra;

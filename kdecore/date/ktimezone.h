@@ -38,7 +38,7 @@
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QByteArray>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 class KTimeZone;
 class KTimeZoneBackend;

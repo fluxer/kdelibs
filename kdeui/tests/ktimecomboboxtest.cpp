@@ -19,7 +19,7 @@
 
 #include "ktimecomboboxtest.h"
 
-#include <QtCore/QTime>
+#include <QtCore/qdatetime.h>
 
 #include "qtest_kde.h"
 #include "kdebug.h"

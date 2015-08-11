@@ -29,12 +29,12 @@
 #include <QtGui/QLabel>
 #include <QtGui/QCheckBox>
 #include <QtGui/QDoubleSpinBox>
-#include <QtGui/QDateEdit>
+#include <QtGui/qdatetimeedit.h>
 #include <QtGui/QPixmap>
 #include <QtGui/QImage>
 #include <QtGui/QLayout>
 #include <QtGui/QSizePolicy>
-#include <QtGui/QDoubleValidator>
+#include <QtGui/qvalidator.h>
 
 class KFileMetaInfoWidgetPrivate
 {

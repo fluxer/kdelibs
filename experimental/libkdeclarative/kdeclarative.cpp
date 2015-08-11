@@ -30,7 +30,7 @@
 #include <QtDeclarative/qdeclarativedebug.h>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 #include <kcmdlineargs.h>
 #include <kdebug.h>

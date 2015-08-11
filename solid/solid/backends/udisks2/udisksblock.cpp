@@ -21,9 +21,10 @@
 #include <linux/kdev_t.h>
 
 #include <QFile>
+#include <QtCore/qdebug.h>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusPendingReply>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 
 #include "udisksblock.h"
 

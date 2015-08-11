@@ -26,7 +26,7 @@
 #include "animationscriptengine_p.h"
 
 #include <QFile>
-#include <QMetaEnum>
+#include <QtCore/qmetaobject.h>
 #include <QParallelAnimationGroup>
 #include <QPauseAnimation>
 #include <QSequentialAnimationGroup>

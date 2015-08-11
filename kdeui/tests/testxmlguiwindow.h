@@ -25,7 +25,7 @@
 #include <kaction.h>
 #include <kdebug.h>
 #include <QMenu>
-#include <QResizeEvent>
+#include <QtGui/qevent.h>
 #include <ktoolbar.h>
 #include <kxmlguifactory.h>
 #include <kxmlguiwindow.h>

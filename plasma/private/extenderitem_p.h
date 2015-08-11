@@ -20,7 +20,7 @@
 #ifndef LIBS_PLASMA_EXTENDERITEM_P_H
 #define LIBS_PLASMA_EXTENDERITEM_P_H
 
-#include <QPointF>
+#include <QtCore/qpoint.h>
 #include <QPoint>
 #include <QRect>
 #include <QString>

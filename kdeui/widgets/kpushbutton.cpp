@@ -18,11 +18,11 @@
 */
 
 #include "kpushbutton.h"
-#include <QStyleOptionToolButton>
+#include <QtGui/qstyleoption.h>
 #include <QStylePainter>
 
 #include <QtGui/QDrag>
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QMenu>
 #include <QtCore/QPointer>
 #include <QtGui/QStyle>

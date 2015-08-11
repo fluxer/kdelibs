@@ -19,7 +19,7 @@
 
 #include "textbrowser.h"
 
-#include <QGraphicsSceneWheelEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QMenu>
 #include <QPainter>
 #include <QScrollBar>

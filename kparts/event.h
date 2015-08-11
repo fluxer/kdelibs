@@ -20,7 +20,7 @@
 #ifndef __kparts_event_h__
 #define __kparts_event_h__
 
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 
 #include <kparts/kparts_export.h>
 

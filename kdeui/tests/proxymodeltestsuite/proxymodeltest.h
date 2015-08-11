@@ -23,7 +23,7 @@
 #include <QtTest>
 #include <QtCore>
 #include <qtestevent.h>
-#include <QItemSelectionRange>
+#include <QtGui/qitemselectionmodel.h>
 #include <QAbstractProxyModel>
 
 #include "dynamictreemodel.h"

@@ -22,7 +22,7 @@
 #include <kdebug.h>
 
 #include <QtCore/QTimer>
-#include <QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QApplication>
 
 class KListWidget::KListWidgetPrivate

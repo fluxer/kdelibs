@@ -31,7 +31,7 @@
 
 #include <QApplication>
 #include <QHeaderView>
-#include <QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QLabel>
 #include <QPainter>
 #include <QTreeWidgetItemIterator>

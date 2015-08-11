@@ -28,7 +28,7 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusMetaType>
 #ifdef Q_WS_X11
-#include <QtGui/QX11Info>
+#include <QtGui/qx11info_x11.h>
 #include <netwm_def.h>
 #endif
 

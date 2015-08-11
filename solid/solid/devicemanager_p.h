@@ -26,7 +26,7 @@
 #include "devicenotifier.h"
 
 #include <QtCore/QMap>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtCore/QSharedData>
 #include <QtCore/QThreadStorage>
 

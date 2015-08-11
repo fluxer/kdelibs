@@ -20,8 +20,8 @@
 #include "kxyselector.h"
 #include <QStyle>
 #include <QPainter>
-#include <QStyleOptionFrame>
-#include <QMouseEvent>
+#include <QtGui/qstyleoption.h>
+#include <QtGui/qevent.h>
 #include <kdebug.h>
 
 //-----------------------------------------------------------------------------

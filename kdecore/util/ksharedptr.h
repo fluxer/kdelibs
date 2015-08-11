@@ -27,8 +27,8 @@
 #ifndef KSHAREDPTR_H
 #define KSHAREDPTR_H
 
-#include <QtCore/QExplicitlySharedDataPointer>
-#include <QtCore/QAtomicPointer>
+#include <QtCore/qsharedpointer.h>
+#include <QtCore/qatomic.h>
 #include <kdemacros.h>
 
 /**

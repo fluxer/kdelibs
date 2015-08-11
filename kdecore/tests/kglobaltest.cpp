@@ -19,6 +19,9 @@
 #include <kglobal.h>
 
 #include <QtCore/QObject>
+#include <QtCore/qthreadpool.h>
+#include <QtCore/qfuture.h>
+#include <QtCore/qtconcurrentrun.h>
 
 #include <qtest_kde.h>
 

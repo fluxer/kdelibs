@@ -18,7 +18,7 @@
 #ifndef KSERVICETEST_H
 #define KSERVICETEST_H
 
-#include <QAtomicInt>
+#include <QtCore/qatomic.h>
 #include <QtCore/QObject>
 
 class KServiceTest : public QObject

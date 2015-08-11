@@ -24,7 +24,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtDBus>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 
 #include "../shared/rootdevice.h"
 

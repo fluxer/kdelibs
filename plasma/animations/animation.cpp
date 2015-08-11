@@ -20,7 +20,7 @@
 #include "animation.h"
 #include "private/animationprivate_p.h"
 
-#include <QMapIterator>
+#include <QtCore/qmap.h>
 #include <QObject>
 #include <QParallelAnimationGroup>
 #include <QSequentialAnimationGroup>

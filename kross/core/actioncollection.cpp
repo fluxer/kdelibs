@@ -27,7 +27,7 @@
 #include <QtCore/QIODevice>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtXml/QDomAttr>
+#include <QtXml/qdom.h>
 
 #include <kicon.h>
 #include <klocalizedstring.h>

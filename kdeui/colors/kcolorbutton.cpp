@@ -30,8 +30,8 @@
 #include <QtGui/QStyle>
 #include <kglobalsettings.h>
 #include <kstandardshortcut.h>
-#include <QMouseEvent>
-#include <QStyleOptionButton>
+#include <QtGui/qevent.h>
+#include <QtGui/qstyleoption.h>
 #include "kcolordialog.h"
 #include "kcolorhelpers_p.h"
 #include "kcolormimedata.h"

@@ -29,8 +29,8 @@ DEALINGS IN THE SOFTWARE.
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QChildEvent>
-#include <QtGui/QWidgetList>
+#include <QtCore/qcoreevent.h>
+#include <QtGui/qwindowdefs.h>
 
 #include <sys/types.h>
 

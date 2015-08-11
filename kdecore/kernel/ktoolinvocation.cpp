@@ -31,9 +31,10 @@
 #include <klocale.h>
 
 #include <QMutex>
-#include <QMutexLocker>
+#include <QtCore/qmutex.h>
 #include <QCoreApplication>
 #include <QThread>
+#include <QtCore/qprocess.h>
 
 #include <errno.h>
 

@@ -26,7 +26,7 @@
 
 #include <QWidget>
 #include <QMap>
-#include <QTime>
+#include <QtCore/qdatetime.h>
 #include <QQueue>
 #include <QCheckBox>
 

@@ -24,7 +24,7 @@
 #include "krestrictedline.h"
 #include <kdebug.h>
 
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 
 class KRestrictedLinePrivate
 {

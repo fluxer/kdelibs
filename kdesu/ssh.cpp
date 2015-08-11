@@ -28,7 +28,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <QtCore/QBool>
+#include <QtCore/qglobal.h>
 
 #include <kdebug.h>
 #include <klocale.h>

@@ -45,8 +45,8 @@
 #include <QtGui/QApplication>
 #include <QtGui/QBoxLayout>
 #include <QtGui/QClipboard>
-#include <QtGui/QDropEvent>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOption>

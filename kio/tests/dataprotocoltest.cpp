@@ -14,6 +14,8 @@
 
 #include <kio/global.h>
 
+#include <QtCore/qdebug.h>
+
 QTEST_KDEMAIN(DataProtocolTest, NoGUI)
 
 class TestSlave {

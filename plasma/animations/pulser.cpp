@@ -22,7 +22,7 @@
 #include <QGraphicsWidget>
 #include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 #include <kdebug.h>
 

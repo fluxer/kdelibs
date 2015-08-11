@@ -37,8 +37,8 @@
 #include <kconfiggroup.h>
 
 #include <QMutex>
-#include <QMutexLocker>
-#include <QtCore/QBool>
+#include <QtCore/qmutex.h>
+#include <QtCore/qglobal.h>
 
 extern bool kde_kiosk_exception;
 

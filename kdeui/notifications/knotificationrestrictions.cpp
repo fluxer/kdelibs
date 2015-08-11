@@ -34,7 +34,7 @@
 
 #ifdef HAVE_XTEST
 #include <QTimer>
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 
 #include <X11/keysym.h>
 #include <X11/extensions/XTest.h>

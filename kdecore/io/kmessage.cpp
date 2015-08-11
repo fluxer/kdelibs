@@ -20,7 +20,7 @@
 
 #include <kglobal.h>
 
-#include <QtCore/QLatin1String>
+#include <QtCore/qstring.h>
 
 #include <iostream>
 

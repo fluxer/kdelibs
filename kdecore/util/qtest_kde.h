@@ -30,6 +30,10 @@
 #include <QtGui/QApplication>
 #include <QtCore/QEventLoop>
 #include <QtTest/QSignalSpy>
+#include <QTimer>
+#include <QtCore/qfile.h>
+#include <QtCore/qdir.h>
+#include <QtCore/qtextstream.h>
 
 namespace QTest
 {

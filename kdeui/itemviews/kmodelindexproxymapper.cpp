@@ -22,7 +22,7 @@
 #include "kmodelindexproxymapper.h"
 
 #include <QtCore/QAbstractItemModel>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtGui/QAbstractProxyModel>
 #include <QtGui/QItemSelectionModel>
 

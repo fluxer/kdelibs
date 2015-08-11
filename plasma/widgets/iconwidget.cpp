@@ -27,11 +27,11 @@
 
 #include <QAction>
 #include <QApplication>
-#include <QGraphicsSceneMouseEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsView>
 #include <QMenu>
 #include <QPainter>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 #include <QTextLayout>
 #include <QTimer>
 

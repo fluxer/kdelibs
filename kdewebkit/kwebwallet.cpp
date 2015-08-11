@@ -28,7 +28,7 @@
 #include <QtCore/QSet>
 #include <QtCore/QHash>
 #include <QtCore/QFile>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtCore/QScopedPointer>
 #include <QtWebKit/QWebPage>
 #include <QtWebKit/QWebFrame>

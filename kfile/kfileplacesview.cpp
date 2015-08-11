@@ -25,7 +25,7 @@
 #include <QtCore/QTimer>
 #include <QtGui/QPainter>
 #include <QtGui/QAbstractItemDelegate>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QApplication>
 #include <QtGui/QScrollBar>
 

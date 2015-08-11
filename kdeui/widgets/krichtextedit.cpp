@@ -33,7 +33,7 @@
 
 // Qt includes
 #include <QtGui/QTextDocumentFragment>
-#include <QtGui/QMouseEvent>
+#include <QtGui/qevent.h>
 
 /**
   Private class that helps to provide binary compatibility between releases.

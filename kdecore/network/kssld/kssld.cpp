@@ -31,7 +31,7 @@
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
 

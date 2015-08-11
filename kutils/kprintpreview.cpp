@@ -22,7 +22,7 @@
 #include <QtCore/QFile>
 #include <QtGui/QLabel>
 #include <QtGui/QPrinter>
-#include <QtGui/QShowEvent>
+#include <QtGui/qevent.h>
 
 #include <kmimetypetrader.h>
 #include <kparts/part.h>

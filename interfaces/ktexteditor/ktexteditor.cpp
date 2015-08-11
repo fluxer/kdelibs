@@ -17,6 +17,7 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include <QtCore/qcoreapplication.h>
 #include <QtDBus/QtDBus>
 
 #include "cursor.h"

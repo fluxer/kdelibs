@@ -21,7 +21,7 @@
 #include "kfileshare_p.h"
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/Q_PID>
+#include <QtCore/qprocess.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>

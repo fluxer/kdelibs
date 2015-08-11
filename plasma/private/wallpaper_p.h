@@ -23,7 +23,7 @@
 
 #include <QtCore/QQueue>
 #include <QtCore/QRunnable>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 #include "plasma/scripting/wallpaperscript.h"
 #include "plasma/private/dataengineconsumer_p.h"

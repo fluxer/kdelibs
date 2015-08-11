@@ -20,7 +20,7 @@
 
 #include <QFile>
 #include <QTextStream>
-#include <QDomDocument>
+#include <QtXml/qdom.h>
 
 #include <kconfiggroup.h>
 #include <kaction.h>

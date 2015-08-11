@@ -22,7 +22,7 @@
 #include "ksycocadict_p.h"
 #include "kservice.h"
 
-#include <QtCore/QCharRef>
+#include <QtCore/qstring.h>
 
 #include <klocale.h>
 #include <kdebug.h>

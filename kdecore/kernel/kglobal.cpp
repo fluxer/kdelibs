@@ -27,7 +27,7 @@
 #include "kglobal.h"
 #include "kglobal_p.h"
 #include <QThread>
-#include <QAtomicInt>
+#include <QtCore/qatomic.h>
 
 #include <config.h>
 

@@ -24,7 +24,7 @@
 
 #include "kkeyserver.h"
 
-#include <QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QTimer>
 #include <QtCore/QHash>
 #include <QHBoxLayout>

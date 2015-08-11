@@ -23,7 +23,7 @@
 #include <QMenu>
 #include <QFile>
 #include <QTextStream>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 #include <QFileDialog>
 
 #include <kcombobox.h>

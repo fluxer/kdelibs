@@ -20,7 +20,7 @@
 #ifndef KFILEPLACESVIEW_P_H
 #define KFILEPLACESVIEW_P_H
 
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 
 class KFilePlacesEventWatcher
     : public QObject

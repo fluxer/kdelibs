@@ -39,7 +39,7 @@ typedef void Display;
 #include <kglobal.h>
 
 #ifdef Q_WS_X11
-#include <QtGui/QX11Info>
+#include <QtGui/qx11info_x11.h>
 #endif
 
 struct _IceConn;

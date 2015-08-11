@@ -23,7 +23,7 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/Qt>
+#include <QtCore/qnamespace.h>
 
 class QIcon;
 class QPixmap;

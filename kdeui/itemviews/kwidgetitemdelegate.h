@@ -24,7 +24,7 @@
 
 #include <QtCore/QEvent>
 #include <QtCore/QList>
-#include <QtCore/QPersistentModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QtGui/QAbstractItemDelegate>
 
 #include <kdeui_export.h>

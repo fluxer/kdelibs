@@ -19,8 +19,8 @@
 
 #include "ktimecombobox.h"
 
-#include <QtCore/QTime>
-#include <QtGui/QKeyEvent>
+#include <QtCore/qdatetime.h>
+#include <QtGui/qevent.h>
 #include <QtGui/QLineEdit>
 
 #include "kglobal.h"

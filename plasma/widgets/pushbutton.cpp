@@ -22,8 +22,8 @@
 
 #include <QDir>
 #include <QPainter>
-#include <QStyleOptionGraphicsItem>
-#include <QWeakPointer>
+#include <QtGui/qstyleoption.h>
+#include <QtCore/qsharedpointer.h>
 
 #include <kicon.h>
 #include <kiconeffect.h>

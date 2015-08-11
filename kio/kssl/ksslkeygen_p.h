@@ -21,7 +21,7 @@
 #ifndef KSSLKEYGEN_P_H
 #define KSSLKEYGEN_P_H
 
-#include <QtGui/QWizardPage>
+#include <QtGui/qwizard.h>
 #include "ui_keygenwizard2.h"
 
 class KSSLKeyGenWizardPage2 : public QWizardPage

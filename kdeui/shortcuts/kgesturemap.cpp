@@ -21,7 +21,7 @@
 
 #include <kapplication.h>
 #include <kaction.h>
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 
 #include <kglobal.h>
 

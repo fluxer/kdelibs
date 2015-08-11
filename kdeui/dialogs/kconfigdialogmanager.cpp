@@ -25,7 +25,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QMetaObject>
-#include <QMetaProperty>
+#include <QtCore/qmetaobject.h>
 #include <QTimer>
 #include <QRadioButton>
 //#include <QButtonGroup>
@@ -111,7 +111,7 @@ void KConfigDialogManager::initMaps()
     //qsqlproperty map doesn't store the text, but the value!
     //s_changedMap->insert("QComboBox", SIGNAL(textChanged(QString)));
     s_changedMap->insert("QDateEdit", SIGNAL(dateChanged(QDate)));
-    s_changedMap->insert("QTimeEdit", SIGNAL(timeChanged(QTime)));
+    s_changedMap->insert("QDateTimeEdit", SIGNAL(timeChanged(QTime)));
     s_changedMap->insert("QDateTimeEdit", SIGNAL(dateTimeChanged(QDateTime)));
     s_changedMap->insert("QDial", SIGNAL(valueChanged(int)));
     s_changedMap->insert("QDoubleSpinBox", SIGNAL(valueChanged(double)));

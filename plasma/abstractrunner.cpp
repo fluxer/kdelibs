@@ -24,7 +24,7 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QMutex>
-#include <QMutexLocker>
+#include <QtCore/qmutex.h>
 #include <QTimer>
 
 #include <kdebug.h>

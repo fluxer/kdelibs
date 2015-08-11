@@ -21,7 +21,7 @@
 #include "testengine.h"
 
 #include <QtCore/QBitArray>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QLocale>
 #include <QtCore/QUrl>
 #include <QtGui/QBitmap>

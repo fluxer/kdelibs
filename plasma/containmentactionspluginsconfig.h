@@ -22,7 +22,7 @@
 
 #include <plasma/plasma_export.h>
 
-#include <Qt>
+#include <QtCore/qnamespace.h>
 
 class QString;
 class QEvent;

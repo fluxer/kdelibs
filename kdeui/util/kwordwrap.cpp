@@ -20,7 +20,7 @@
 #include <kdebug.h>
 
 #include <QtGui/QPainter>
-#include <QtCore/QMutableVectorIterator>
+#include <QtCore/qvector.h>
 
 class KWordWrapPrivate {
 public:

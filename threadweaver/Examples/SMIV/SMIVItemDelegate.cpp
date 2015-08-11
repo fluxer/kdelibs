@@ -18,7 +18,7 @@
 #include "SMIVModel.h"
 #include "SMIVItem.h"
 
-#include <QtCore/QModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QtGui/QPainter>
 
 #include <DebuggingAids.h>

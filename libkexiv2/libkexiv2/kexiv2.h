@@ -40,7 +40,7 @@
 #include <QtCore/QString>
 #include <QtCore/QDateTime>
 #include <QtCore/QMap>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtCore/QRegExp>

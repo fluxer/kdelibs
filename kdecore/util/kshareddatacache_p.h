@@ -23,7 +23,7 @@
 #include <config-util.h> // HAVE_SYS_MMAN_H
 
 #include <QtCore/QSharedPointer>
-#include <QtCore/QBasicAtomicInt>
+#include <QtCore/qbasicatomic.h>
 
 #include <unistd.h> // Check for sched_yield
 #include <sched.h>  // sched_yield

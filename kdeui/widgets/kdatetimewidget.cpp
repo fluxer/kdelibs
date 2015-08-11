@@ -18,9 +18,9 @@
 
 #include "kdatetimewidget.h"
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtGui/QLayout>
-#include <QTimeEdit>
+#include <QtGui/qdatetimeedit.h>
 
 #include <kdebug.h>
 

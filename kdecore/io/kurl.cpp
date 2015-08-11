@@ -38,7 +38,7 @@
 #include <unistd.h>
 
 #include <QtCore/QDir>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QRegExp>
 #include <QtCore/QMimeData>
 #include <QtCore/QTextCodec>

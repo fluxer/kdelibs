@@ -22,7 +22,7 @@
 #define KSPELL_HUNSPELLCLIENT_H
 
 #include "client_p.h"
-#include <QtCore/QVariantList>
+#include <QtCore/qvariant.h>
 
 #include "hunspell/hunspell.hxx"
 

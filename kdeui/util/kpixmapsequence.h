@@ -21,7 +21,7 @@
 #ifndef _K_PIXMAPSEQUENCE_H_
 #define _K_PIXMAPSEQUENCE_H_
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 #include <QtCore/QSize>
 
 #include "kdeui_export.h"

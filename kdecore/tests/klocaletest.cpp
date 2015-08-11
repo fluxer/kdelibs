@@ -30,7 +30,7 @@
 #include "kdatetime.h"
 #include "ksystemtimezone.h"
 #include <QtCore/QString>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtDBus/QtDBus>
 
 #include "moc_klocaletest.cpp"

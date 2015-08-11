@@ -33,14 +33,14 @@
 #include <kwindowsystem.h>
 
 #ifdef Q_WS_X11
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #endif
 
 #include <kiconloader.h>
 #include <kapplication.h>
 #include <kconfiggroup.h>
 
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QToolButton>
 #include <QMovie>
 #include <QPointer>

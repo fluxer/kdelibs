@@ -32,9 +32,9 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QFrame>
 #include <QtGui/QLayout>
-#include <QtGui/QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QToolButton>
-#include <QtXml/QDomElement>
+#include <QtXml/qdom.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>

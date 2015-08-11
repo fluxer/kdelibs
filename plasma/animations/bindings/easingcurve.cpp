@@ -17,7 +17,7 @@
  */
 
 #include <QEasingCurve>
-#include <QMetaEnum>
+#include <QtCore/qmetaobject.h>
 #include <QScriptValue>
 #include <QScriptEngine>
 #include <QScriptContext>

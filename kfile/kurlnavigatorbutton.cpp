@@ -32,7 +32,7 @@
 
 #include <QtCore/QTimer>
 #include <QtGui/QPainter>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QStyleOption>
 
 namespace KDEPrivate

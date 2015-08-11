@@ -34,7 +34,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QShortcutEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QToolBar>
 
 #include <kdebug.h>

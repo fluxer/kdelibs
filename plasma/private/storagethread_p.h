@@ -23,7 +23,7 @@
 
 #include <QThread>
 #include <QSqlDatabase>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 #include "storage_p.h"
 

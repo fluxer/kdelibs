@@ -18,7 +18,7 @@
     License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 
 #include "kmodifierkeyinfo.h"
 #include "kmodifierkeyinfoprovider_p.h"

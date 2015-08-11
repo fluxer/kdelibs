@@ -36,7 +36,7 @@
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtGui/QCloseEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QDockWidget>
 #include <QtGui/QLayout>

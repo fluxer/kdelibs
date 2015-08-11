@@ -38,7 +38,7 @@
 #include <network/ktcpsocket.h>
 
 #include <QtCore/QDataStream>
-#include <QtCore/QTime>
+#include <QtCore/qdatetime.h>
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QHostInfo>
 #include <QtNetwork/QSslConfiguration>

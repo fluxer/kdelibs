@@ -23,7 +23,7 @@
 
 #include <QWidget>
 #include <QMap>
-#include <QTime>
+#include <QtCore/qdatetime.h>
 #include <QBoxLayout>
 #include <QStackedWidget>
 

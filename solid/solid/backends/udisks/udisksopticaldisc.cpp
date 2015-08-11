@@ -26,7 +26,7 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QMap>
-#include <QtCore/QMutexLocker>
+#include <QtCore/qmutex.h>
 
 #include "udisksopticaldisc.h"
 #include "soliddefs_p.h"

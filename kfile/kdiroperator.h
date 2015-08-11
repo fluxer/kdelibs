@@ -23,7 +23,7 @@
 
 #include <QtGui/QWidget>
 #include <QtCore/QStack>
-#include <QtGui/QStyleOptionViewItem>
+#include <QtGui/qstyleoption.h>
 
 #include <ktoggleaction.h>
 #include <kcompletion.h>

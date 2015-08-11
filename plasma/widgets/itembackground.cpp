@@ -21,7 +21,7 @@
 
 #include <QPainter>
 #include <QTimer>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 
 #include <QPropertyAnimation>
 

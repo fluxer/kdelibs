@@ -28,10 +28,10 @@
 #include <QtGui/QStyle>
 #include <QtGui/QPainter>
 #include <QtGui/QBoxLayout>
-#include <QtGui/QPaintEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QPainterPath>
-#include <QtGui/QLinearGradient>
-#include <QtGui/QStyleOptionFrame>
+#include <QtGui/qbrush.h>
+#include <QtGui/qstyleoption.h>
 
 #include <kcolorscheme.h>
 

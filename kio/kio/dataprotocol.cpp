@@ -24,8 +24,8 @@
 #include <kglobal.h>
 
 #include <QtCore/QByteArray>
-#include <QtCore/QCharRef>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstring.h>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QTextCodec>
 
 #ifdef DATAKIOSLAVE

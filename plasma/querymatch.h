@@ -21,7 +21,7 @@
 #define PLASMA_QUERYMATCH_H
 
 #include <QtCore/QList>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 #include <plasma/plasma_export.h>
 

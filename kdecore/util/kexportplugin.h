@@ -22,7 +22,7 @@
 #include <kdeversion.h>
 
 #include <QtCore/QPluginLoader>
-#include <QtCore/QtPlugin>
+#include <QtCore/qplugin.h>
 
 /**
  * \internal

@@ -30,7 +30,7 @@
 #include "kcalendarsystemjalali_p.h"
 #include "kcalendarsystemprivate_p.h"
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 class KCalendarSystemJalaliPrivate : public KCalendarSystemPrivate
 {

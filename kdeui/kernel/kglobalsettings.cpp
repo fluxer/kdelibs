@@ -57,7 +57,7 @@
 #include <X11/Xcursor/Xcursor.h>
 #endif
 #include "fixx11h.h"
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #endif
 
 #include <stdlib.h>

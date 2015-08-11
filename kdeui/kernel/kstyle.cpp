@@ -56,7 +56,7 @@
 #include <QtGui/QFormLayout>
 #include <QtGui/QIcon>
 #include <QtGui/QLabel>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QPainter>
 #include <QtGui/QScrollBar>
 #include <QtGui/QStyleOption>

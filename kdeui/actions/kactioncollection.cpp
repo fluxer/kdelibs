@@ -35,7 +35,7 @@
 #include "kaction.h"
 #include "kaction_p.h"
 
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 #include <QtCore/QSet>
 #include <QtCore/QMap>
 #include <QtCore/QList>
@@ -329,8 +329,6 @@ QAction* KActionCollection::takeAction(QAction *action)
   }
 
   action->disconnect(this);
-
-  emit removed( action ); //deprecated
   return action;
 }
 
@@ -640,16 +638,10 @@ void KActionCollection::slotActionTriggered( )
     emit actionTriggered(action);
 }
 
-void KActionCollection::slotActionHighlighted( )
-{
-	slotActionHovered();
-}
-
 void KActionCollection::slotActionHovered( )
 {
   QAction* action = qobject_cast<QAction*>(sender());
   if (action) {
-    emit actionHighlighted(action);
     emit actionHovered(action);
   }
 }
@@ -663,9 +655,6 @@ void KActionCollectionPrivate::_k_actionDestroyed( QObject *obj )
 
   if (!unlistAction(action))
       return;
-
-  //HACK the object we emit is partly destroyed
-  emit q->removed(action); //deprecated. remove in KDE5
 }
 
 void KActionCollection::connectNotify ( const char * signal )
@@ -673,8 +662,7 @@ void KActionCollection::connectNotify ( const char * signal )
   if (d->connectHovered && d->connectTriggered)
     return;
 
-  if (QMetaObject::normalizedSignature(SIGNAL(actionHighlighted(QAction*))) == signal ||
-      QMetaObject::normalizedSignature(SIGNAL(actionHovered(QAction*))) == signal) {
+  if (QMetaObject::normalizedSignature(SIGNAL(actionHovered(QAction*))) == signal) {
     if (!d->connectHovered) {
       d->connectHovered = true;
       foreach (QAction* action, actions())

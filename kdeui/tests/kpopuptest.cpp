@@ -2,7 +2,7 @@
 #include <kcmdlineargs.h>
 #include <QtGui/QWidget>
 #include <QtGui/QCursor>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QPainter>
 #include "kmenu.h"
 

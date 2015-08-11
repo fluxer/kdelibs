@@ -22,7 +22,7 @@
 
 #include <QtGui/QAction>
 #include <QtGui/QMenu>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QTextBrowser>
 #include <QtGui/QWhatsThis>
 

@@ -21,7 +21,7 @@
 
 #include "kviewstatemaintainer.h"
 
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 class KViewStateMaintainerBasePrivate
 {

@@ -4,7 +4,7 @@
 #include <kapplication.h>
 #include <kdebug.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtGui/QPixmap>
 
 #include <stdio.h>

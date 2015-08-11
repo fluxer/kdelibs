@@ -25,7 +25,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDateTime>
 #include <QtCore/QMutex>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kprocess.h>

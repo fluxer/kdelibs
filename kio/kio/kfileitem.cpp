@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <unistd.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QMap>

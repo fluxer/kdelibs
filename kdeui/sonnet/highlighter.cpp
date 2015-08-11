@@ -34,13 +34,13 @@
 #include <kmessagebox.h>
 
 #include <QTextEdit>
-#include <QTextCharFormat>
+#include <QtGui/qtextformat.h>
 #include <QTimer>
 #include <QColor>
 #include <QHash>
 #include <QTextCursor>
 #include <QEvent>
-#include <QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QApplication>
 
 namespace Sonnet {
@@ -64,7 +64,6 @@ public:
     int wordCount, errorCount;
     QTimer *rehighlightRequest;
     QColor spellColor;
-    int suggestionListeners; // #of connections for the newSuggestions signal
 };
 
 Highlighter::Private::~Private()
@@ -88,7 +87,6 @@ Highlighter::Highlighter(QTextEdit *textEdit,
     d->intraWordEditing = false;
     d->completeRehighlightRequired = false;
     d->spellColor = _col.isValid() ? _col : Qt::red;
-    d->suggestionListeners = 0;
 
     textEdit->installEventFilter( this );
     textEdit->viewport()->installEventFilter( this );
@@ -146,15 +144,11 @@ bool Highlighter::spellCheckerFound() const
 // in that case
 void Highlighter::connectNotify(const char* signal)
 {
-    if (QLatin1String(signal) == SIGNAL(newSuggestions(QString,QStringList)))
-        ++d->suggestionListeners;
     QSyntaxHighlighter::connectNotify(signal);
 }
 
 void Highlighter::disconnectNotify(const char* signal)
 {
-    if (QLatin1String(signal) == SIGNAL(newSuggestions(QString,QStringList)))
-        --d->suggestionListeners;
     QSyntaxHighlighter::disconnectNotify(signal);
 }
 
@@ -282,8 +276,6 @@ void Highlighter::highlightBlock(const QString &text)
         if (d->dict->isMisspelled(w.word)) {
             ++d->errorCount;
             setMisspelled(w.start, w.word.length());
-            if (d->suggestionListeners)
-                emit newSuggestions(w.word, d->dict->suggest(w.word));
         } else
             unsetMisspelled(w.start, w.word.length());
         w = d->filter->nextWord();

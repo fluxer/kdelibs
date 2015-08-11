@@ -86,7 +86,7 @@
 #include <X11/SM/SMlib.h>
 #include <fixx11h.h>
 
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #endif
 
 
@@ -94,7 +94,7 @@
 #include <signal.h>
 #endif
 
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <kcomponentdata.h>
 
 KApplication* KApplication::KApp = 0L;

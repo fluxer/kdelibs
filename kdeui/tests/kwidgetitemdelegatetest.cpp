@@ -26,7 +26,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QPainter>
 #include <QtGui/QRadialGradient>
-#include <QtGui/QPaintEvent>
+#include <QtGui/qevent.h>
 #include <QtCore/QDebug>
 #include <QtGui/QToolButton>
 #include <QtGui/QMenu>
@@ -46,7 +46,7 @@
 #define EQUALLY_SIZED_TOOLBUTTONS 1
 
 #if EQUALLY_SIZED_TOOLBUTTONS
-#include <QtGui/QStyleOptionToolButton>
+#include <QtGui/qstyleoption.h>
 #endif
 
 class TestWidget

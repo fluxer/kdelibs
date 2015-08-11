@@ -26,12 +26,12 @@
 #define KXERRORHANDLER_H
 
 #include <QtGui/QWidget>
-#include <QtGui/QWidgetList>
+#include <QtGui/qwindowdefs.h>
 
 #ifdef Q_WS_X11
 
 #include <kdeui_export.h>
-#include <QtGui/QX11Info>
+#include <QtGui/qx11info_x11.h>
 #include <X11/Xlib.h>
 
 class KXErrorHandlerPrivate;

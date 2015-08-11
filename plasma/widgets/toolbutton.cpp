@@ -22,7 +22,7 @@
 #include <QDir>
 #include <QPainter>
 #include <QPropertyAnimation>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 #include <QToolButton>
 
 #include <kcolorutils.h>

@@ -19,7 +19,7 @@
 
 #include "kdatetimeedittest.h"
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 #include "qtest_kde.h"
 #include "kdebug.h"

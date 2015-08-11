@@ -22,7 +22,7 @@
  */
 
 
-#include <QtGui/QImageIOPlugin>
+#include <QtGui/qimageiohandler.h>
 #include <QtGui/QImage>
 #include <QtCore/QIODevice>
 #include <QtCore/QVector>

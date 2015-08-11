@@ -27,11 +27,11 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QFile>
-#include <QGraphicsSceneContextMenuEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsView>
 #include <QMimeData>
 #include <QPainter>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 #include <QGraphicsLayout>
 #include <QGraphicsLinearLayout>
 

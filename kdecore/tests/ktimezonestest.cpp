@@ -22,7 +22,7 @@
 #include <stdio.h>
 #include <qtest_kde.h>
 #include <QtCore/QDir>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtDBus/QtDBus>
 #include <config-date.h> // for HAVE_TM_GMTOFF
 #include "ksystemtimezone.h"

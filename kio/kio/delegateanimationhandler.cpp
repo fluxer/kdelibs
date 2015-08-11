@@ -23,8 +23,8 @@
 
 #include <QListView>
 #include <QAbstractItemView>
-#include <QPersistentModelIndex>
-#include <QTime>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtCore/qdatetime.h>
 #include <QDebug>
 
 #include <cmath>

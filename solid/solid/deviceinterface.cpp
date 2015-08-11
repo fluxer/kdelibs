@@ -23,7 +23,7 @@
 
 #include <solid/ifaces/deviceinterface.h>
 
-#include <QtCore/QMetaEnum>
+#include <QtCore/qmetaobject.h>
 
 
 Solid::DeviceInterface::DeviceInterface(DeviceInterfacePrivate &dd, QObject *backendObject)

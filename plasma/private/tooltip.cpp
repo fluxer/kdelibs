@@ -25,14 +25,14 @@
 #include <QBitmap>
 #include <QGridLayout>
 #include <QLabel>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QPainter>
 #include <QPalette>
 #include <QTextDocument>
 #include <QPropertyAnimation>
-#include <QTextBlock>
+#include <QtGui/qtextobject.h>
 #ifdef Q_WS_X11
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #include <netwm.h>
 #endif
 

@@ -31,7 +31,7 @@
 
 // Qt includes
 
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QPainter>
 #include <QPen>
 #include <QCursor>

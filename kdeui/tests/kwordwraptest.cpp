@@ -18,7 +18,7 @@
  */
 
 #include <QFontMetrics>
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #include <qtest_kde.h>
 
 #include <kdebug.h>

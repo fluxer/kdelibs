@@ -22,7 +22,7 @@
 #include "keditlistwidget.h"
 
 #include <QtCore/QStringList>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QListView>

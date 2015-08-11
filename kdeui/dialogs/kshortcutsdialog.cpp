@@ -33,7 +33,7 @@
 #include "klocale.h"
 
 #include <QApplication>
-#include <QDomDocument>
+#include <QtXml/qdom.h>
 
 #include <kmessagebox.h>
 #include <kxmlguiclient.h>

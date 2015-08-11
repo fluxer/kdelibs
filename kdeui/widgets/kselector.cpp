@@ -21,7 +21,7 @@
 
 #include <QImage>
 #include <QPainter>
-#include <QPaintEvent>
+#include <QtGui/qevent.h>
 #include <QPixmap>
 #include <QStyle>
 #include <QStyleOption>

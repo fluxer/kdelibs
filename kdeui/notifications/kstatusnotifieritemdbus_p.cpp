@@ -27,7 +27,7 @@
 #include <QImage>
 #include <QApplication>
 #include <QMovie>
-
+#include <QtCore/qmetaobject.h>
 
 #include <kdebug.h>
 #include <ksystemtrayicon.h>

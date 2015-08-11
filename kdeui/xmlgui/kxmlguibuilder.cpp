@@ -34,9 +34,9 @@
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kdebug.h>
-#include <QtXml/QDomElement>
+#include <QtXml/qdom.h>
 #include <QtCore/QObject>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include "kmenumenuhandler_p.h"
 #include <kcomponentdata.h>
 

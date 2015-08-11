@@ -25,7 +25,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QUrl>
 #include <QtGui/QAction>
-#include <QtXml/QDomAttr>
+#include <QtXml/qdom.h>
 #include <QtScript/QScriptable>
 
 #include "errorinterface.h"

@@ -63,7 +63,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QSplitter>
 #include <QtGui/QAbstractProxyModel>
-#include <QtGui/QHelpEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QApplication>
 #include <QtCore/QFSFileEngine>
 #include <kshell.h>
@@ -1032,7 +1032,6 @@ void KFileWidget::accept()
     d->addToRecentDocuments();
 
     if (!(mode() & KFile::Files)) { // single selection
-        emit fileSelected(d->url.url()); // old
         emit fileSelected(d->url);
     }
 
@@ -1062,7 +1061,6 @@ void KFileWidgetPrivate::_k_fileHighlighted(const KFileItem &i)
             setLocationText( url );
         }
 
-        emit q->fileHighlighted(url.url()); // old
         emit q->fileHighlighted(url);
     } else {
         multiSelectionChanged();

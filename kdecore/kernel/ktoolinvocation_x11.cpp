@@ -45,7 +45,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QHash>
 #include <QtCore/QDebug>
-#include <QtCore/QBool>
+#include <QtCore/qglobal.h>
 #include <QtCore/QFile>
 #include <QtDBus/QtDBus>
 

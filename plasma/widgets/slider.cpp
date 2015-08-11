@@ -22,8 +22,8 @@
 #include <QApplication>
 #include <QPainter>
 #include <QSlider>
-#include <QStyleOptionSlider>
-#include <QGraphicsSceneWheelEvent>
+#include <QtGui/qstyleoption.h>
+#include <QtGui/qgraphicssceneevent.h>
 #include <kmimetype.h>
 
 #include "theme.h"

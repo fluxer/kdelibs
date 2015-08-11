@@ -19,10 +19,10 @@
 
 #include "focusindicator_p.h"
 
-#include <QGraphicsSceneResizeEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QPainter>
 #include <QStringBuilder>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 
 #include <plasma/theme.h>
 #include <plasma/framesvg.h>

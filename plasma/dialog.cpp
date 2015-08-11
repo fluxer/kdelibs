@@ -25,10 +25,10 @@
 
 #include <QPainter>
 #include <QSvgRenderer>
-#include <QResizeEvent>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
 #ifdef Q_WS_X11
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #endif
 #include <QBitmap>
 #include <QTimer>

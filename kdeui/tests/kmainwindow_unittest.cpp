@@ -23,7 +23,7 @@
 #include <kmainwindow.h>
 #include <kstatusbar.h>
 #include <kglobal.h>
-#include <QResizeEvent>
+#include <QtGui/qevent.h>
 #include <ktoolbar.h>
 #include <kconfiggroup.h>
 

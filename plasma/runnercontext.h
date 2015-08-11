@@ -22,7 +22,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 #include <plasma/plasma_export.h>
 

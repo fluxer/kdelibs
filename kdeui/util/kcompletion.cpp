@@ -26,7 +26,7 @@
 #include <knotification.h>
 #include <kglobal.h>
 #include <kstringhandler.h>
-#include <QtCore/QMutableVectorIterator>
+#include <QtCore/qvector.h>
 
 class KCompletionPrivate
 {

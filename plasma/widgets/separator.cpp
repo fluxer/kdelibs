@@ -20,7 +20,7 @@
 #include "separator.h"
 
 #include <QtGui/QPainter>
-#include <QtGui/QGraphicsSceneMouseEvent>
+#include <QtGui/qgraphicssceneevent.h>
 
 #include "svg.h"
 

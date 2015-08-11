@@ -30,7 +30,7 @@
 
 // QT includes
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 // Local includes
 

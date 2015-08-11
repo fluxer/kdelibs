@@ -23,7 +23,7 @@
 #include <qtest_kde.h>
 #include <kdialog.h>
 #include <kpushbutton.h>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 Q_DECLARE_METATYPE(KDialog::ButtonCode)
 

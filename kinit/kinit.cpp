@@ -49,7 +49,7 @@
 #include <QtCore/QLibrary>
 #include <QtCore/QString>
 #include <QtCore/QFile>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QFileInfo>
 #include <QtCore/QRegExp>
 #include <QtGui/QFont>

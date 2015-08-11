@@ -25,7 +25,7 @@
 
 #include <QObject>
 #include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusObjectPath>
+#include <QtDBus/qdbusextratypes.h>
 #include <QtDBus/QDBusInterface>
 #include <QStringList>
 

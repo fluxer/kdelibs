@@ -34,7 +34,7 @@
 #include <kio/job.h>
 #include <kparts/part.h>
 
-#include <QtCore/QListIterator>
+#include <QtCore/qlist.h>
 #include <QtCore/QStringList>
 #include <QtCore/QList>
 

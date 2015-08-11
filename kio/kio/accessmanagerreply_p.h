@@ -24,7 +24,7 @@
 #ifndef KIO_ACCESSMANAGERREPLY_P_H
 #define KIO_ACCESSMANAGERREPLY_P_H
 
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtNetwork/QNetworkReply>
 
 namespace KIO

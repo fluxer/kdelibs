@@ -31,7 +31,7 @@
 #define PIC_MAGIC_NUMBER  0x5380f634
 
 #include <QtCore/QFile>
-#include <QtGui/QImageIOPlugin>
+#include <QtGui/qimageiohandler.h>
 #include <QtGui/QColor>
 
 /**

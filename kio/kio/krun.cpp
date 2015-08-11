@@ -64,7 +64,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QTextStream>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QRegExp>
 #include <QDir>
 #include <kdesktopfile.h>

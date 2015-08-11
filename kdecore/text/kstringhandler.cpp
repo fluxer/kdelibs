@@ -26,8 +26,8 @@
 #include <kglobal.h>
 
 #include <QtCore/QRegExp>            // for the word ranges
-#include <QtCore/QCharRef>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstring.h>
+#include <QtCore/qstringlist.h>
 
 
 

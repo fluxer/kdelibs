@@ -24,7 +24,7 @@
 
 #include <QItemSelectionModel>
 #include <QSortFilterProxyModel>
-#include <QStandardItem>
+#include <QtGui/qstandarditemmodel.h>
 #include <QStandardItemModel>
 
 QTEST_KDEMAIN(KLinkItemSelectionModelTest, GUI)

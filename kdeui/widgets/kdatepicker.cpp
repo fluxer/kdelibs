@@ -26,12 +26,12 @@
 #include <QtGui/QApplication>
 #include <QtGui/QFont>
 #include <QtGui/QLayout>
-#include <QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QMenu>
 #include <QtGui/QPainter>
 #include <QtGui/QStyle>
 #include <QtGui/QToolButton>
-#include <QtGui/QDoubleValidator>
+#include <QtGui/qvalidator.h>
 
 #include <kcalendarsystem.h>
 #include <klocalizeddate.h>

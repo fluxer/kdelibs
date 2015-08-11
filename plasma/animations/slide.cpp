@@ -19,7 +19,7 @@
 
 #include "slide_p.h"
 
-#include <QPointF>
+#include <QtCore/qpoint.h>
 #include <kdebug.h>
 
 namespace Plasma

@@ -19,7 +19,7 @@
 
 #include "kdatewidget.h"
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtGui/QLayout>
 #include <QtGui/QLineEdit>
 #include <QtGui/QDoubleSpinBox>

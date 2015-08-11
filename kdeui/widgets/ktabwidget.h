@@ -130,13 +130,6 @@ class KDEUI_EXPORT KTabWidget : public QTabWidget //krazy:exclude=qclasses
     /**
      * Removes the widget, reimplemented for
      * internal reasons (keeping labels in sync).
-     * @deprecated since 4.0
-     */
-    virtual QT_MOC_COMPAT void removePage ( QWidget * w );
-
-    /**
-     * Removes the widget, reimplemented for
-     * internal reasons (keeping labels in sync).
      */
     virtual void removeTab(int index); // but it's not virtual in QTabWidget...
 

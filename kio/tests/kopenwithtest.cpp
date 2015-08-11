@@ -20,7 +20,7 @@
 
 #include <kapplication.h>
 #include <QtGui/QWidget>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QDir>
 #include <kopenwithdialog.h>
 #include <kurl.h>

@@ -15,7 +15,7 @@
 
 #include <sys/types.h>
 
-#include <QtCore/QByteRef>
+#include <QtCore/qbytearray.h>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QList>

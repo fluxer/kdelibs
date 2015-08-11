@@ -31,7 +31,7 @@
 #include <kdynamicjobtracker_p.h>
 
 #include <QtCore/QByteArray>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtGui/QTextDocument>
 
 #include <sys/types.h>

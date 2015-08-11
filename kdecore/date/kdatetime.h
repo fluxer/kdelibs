@@ -30,7 +30,7 @@
 #include <ktimezone.h>
 
 #include <QtCore/QMetaType>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 class QDataStream;
 class KDateTimePrivate;

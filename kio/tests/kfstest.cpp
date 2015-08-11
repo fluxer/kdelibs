@@ -23,7 +23,7 @@
 #include <sys/stat.h>
 #include <QtCore/QDir>
 #include <QtGui/QLayout>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtGui/QWidget>
 
 #include <kfiledialog.h>

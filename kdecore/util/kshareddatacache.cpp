@@ -33,7 +33,7 @@
 #include <QtCore/QSharedPointer>
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
-#include <QtCore/QAtomicInt>
+#include <QtCore/qatomic.h>
 #include <QtCore/QList>
 
 #include <sys/types.h>

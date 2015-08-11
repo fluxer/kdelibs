@@ -55,8 +55,8 @@
 #include <string.h>
 #endif
 
-#include <QtCore/QByteRef>
-#include <QtCore/QDate>
+#include <QtCore/qbytearray.h>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QVarLengthArray>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QRegExp>

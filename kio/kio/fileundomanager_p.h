@@ -23,7 +23,7 @@
 
 #include "fileundomanager.h"
 #include <QtCore/QStack>
-#include <QUndoCommand>
+#include <QtGui/qundostack.h>
 #include <kurl.h>
 #include <ctime>
 

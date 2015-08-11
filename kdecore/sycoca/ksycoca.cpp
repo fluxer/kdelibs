@@ -38,6 +38,7 @@
 #include <QtCore/QBuffer>
 #include <QProcess>
 #include <QtDBus/QtDBus>
+#include <QtCore/qthread.h>
 
 #include <config.h>
 

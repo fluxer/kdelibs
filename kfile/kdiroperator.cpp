@@ -42,13 +42,13 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QListView>
-#include <QtGui/QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QTreeView>
 #include <QtGui/QPushButton>
 #include <QtGui/QProgressBar>
 #include <QtGui/QScrollBar>
 #include <QtGui/QSplitter>
-#include <QtGui/QWheelEvent>
+#include <QtGui/qevent.h>
 
 #include <kaction.h>
 #include <kapplication.h>

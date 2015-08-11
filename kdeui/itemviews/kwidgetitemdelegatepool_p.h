@@ -22,7 +22,7 @@
 #ifndef KWIDGETITEMDELEGATEPOOL_P_H
 #define KWIDGETITEMDELEGATEPOOL_P_H
 
-#include <QtCore/QModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QtCore/QHash>
 #include <QtCore/QList>
 

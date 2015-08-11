@@ -25,7 +25,7 @@
 
 #include "dynamictreemodel.h"
 #include "modelcommander.h"
-#include <QMetaMethod>
+#include <QtCore/qmetaobject.h>
 
 ModelCommanderWidget::ModelCommanderWidget(DynamicTreeModel *dynamicTreeModel, QWidget* parent, Qt::WindowFlags f)
   : QWidget(parent, f),

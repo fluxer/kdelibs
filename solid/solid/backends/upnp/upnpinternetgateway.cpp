@@ -27,7 +27,7 @@
 #include <HUpnpCore/HActionArguments>
 #include <HUpnpCore/HClientStateVariable>
 
-#include <QtCore/QtDebug>
+#include <QtCore/qdebug.h>
 
 namespace Solid
 {

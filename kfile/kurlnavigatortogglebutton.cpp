@@ -24,7 +24,7 @@
 #include <klocale.h>
 
 #include <QtGui/QPainter>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QApplication>
 
 namespace KDEPrivate

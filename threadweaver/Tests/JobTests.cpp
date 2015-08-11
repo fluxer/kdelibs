@@ -4,6 +4,7 @@
 
 #include <QtCore/QMutex>
 #include <QtTest/QtTest>
+#include <QtCore/qthread.h>
 
 #include <JobSequence.h>
 #include <ThreadWeaver.h>

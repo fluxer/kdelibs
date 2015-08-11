@@ -26,8 +26,8 @@
 
 #include <cstring>
 
-#include <QtCore/QDate>
-#include <QtCore/QtEndian>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qendian.h>
 #include <QtCore/QCryptographicHash>
 
 #include <krandom.h>

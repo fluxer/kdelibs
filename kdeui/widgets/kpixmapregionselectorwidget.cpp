@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #include <QtGui/QCursor>
 #include <QtGui/QApplication>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 #include "kactioncollection.h"
 
 class KPixmapRegionSelectorWidget::Private

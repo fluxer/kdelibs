@@ -25,7 +25,7 @@
 #include <QSharedData>
 #include <QStringList>
 #include <QVariant>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 #include <kdebug.h>
 

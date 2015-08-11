@@ -28,7 +28,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QMenuBar>
 #include <QtGui/qmenudata.h>
-#include <QtCore/QMetaClassInfo>
+#include <QtCore/qmetaobject.h>
 #include <QtCore/QObject>
 #include <QList>
 #include <QtGui/QPushButton>

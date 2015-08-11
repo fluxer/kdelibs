@@ -23,7 +23,7 @@
 #include "servicejob.h"
 #include "storage_p.h"
 
-#include <QtCore/QTimerEvent>
+#include <QtCore/qcoreevent.h>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QBasicTimer>
 

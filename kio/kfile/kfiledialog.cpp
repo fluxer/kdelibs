@@ -27,7 +27,7 @@
 #include "kfiledialog.h"
 
 #include <QtGui/QCheckBox>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QFileDialog>
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
@@ -296,10 +296,6 @@ KFileDialog::KFileDialog( const KUrl& startDir, const QString& filter,
                          SIGNAL(fileSelected(KUrl)));
     connect(fileQWidget, SIGNAL(fileHighlighted(KUrl)),
                          SIGNAL(fileHighlighted(KUrl)));
-    connect(fileQWidget, SIGNAL(fileSelected(QString)),
-                         SIGNAL(fileSelected(QString)));
-    connect(fileQWidget, SIGNAL(fileHighlighted(QString)),
-                         SIGNAL(fileHighlighted(QString)));
     connect(fileQWidget, SIGNAL(selectionChanged()),
                          SIGNAL(selectionChanged()));
     connect(fileQWidget, SIGNAL(filterChanged(QString)),

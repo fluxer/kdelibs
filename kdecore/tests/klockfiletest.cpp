@@ -22,6 +22,8 @@
 #include <kdebug.h>
 #include <unistd.h>
 
+#include <QtCore/qprocess.h>
+
 // TODO test locking from two different threads
 //#include <qtconcurrentrun.h>
 

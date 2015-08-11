@@ -34,7 +34,7 @@ $Id: Job.cpp 20 2005-08-08 21:02:51Z mirko $
 #include <QtCore/QMutex>
 #include <QtCore/QObject>
 #include <QtCore/QMap>
-#include <QtCore/QArgument>
+#include <QtCore/qobjectdefs.h>
 #include <QtCore/QWaitCondition>
 #include <DebuggingAids.h>
 #include <Thread.h>

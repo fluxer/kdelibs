@@ -19,7 +19,7 @@
 
 #include "textedit.h"
 
-#include <QGraphicsSceneContextMenuEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QMenu>
 #include <QPainter>
 #include <QScrollBar>

@@ -21,7 +21,7 @@
 
 #include <kuser.h>
 
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QDir>
 
 #include <pwd.h>

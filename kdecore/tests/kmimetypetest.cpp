@@ -41,6 +41,10 @@
 #include <ktemporaryfile.h>
 #include <kdesktopfile.h>
 
+#include <QtCore/qbuffer.h>
+#include <QtCore/qfuture.h>
+#include <QtCore/qtconcurrentrun.h>
+
 void KMimeTypeTest::initTestCase()
 {
     // Clean up local xdg dir in case of leftover mimetype definitions

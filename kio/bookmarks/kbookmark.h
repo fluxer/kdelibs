@@ -25,7 +25,7 @@
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QMetaType>
-#include <QtXml/QDomElement>
+#include <QtXml/qdom.h>
 #include <kurl.h>
 
 class KBookmarkManager;

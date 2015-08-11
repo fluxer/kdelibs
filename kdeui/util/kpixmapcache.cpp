@@ -32,7 +32,7 @@
 #include <QtCore/QQueue>
 #include <QtCore/QTimer>
 #include <QtCore/QMutex>
-#include <QtCore/QMutexLocker>
+#include <QtCore/qmutex.h>
 #include <QtCore/QList>
 #include <QtSvg/QSvgRenderer>
 

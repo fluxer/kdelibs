@@ -20,7 +20,7 @@
 
 #include <QSet>
 #include <QtCore/QFile>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QTextStream>
 
 #include <kdirwatch.h>

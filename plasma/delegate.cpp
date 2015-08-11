@@ -29,9 +29,9 @@
 #include <QApplication>
 #include <QFontMetrics>
 #include <QIcon>
-#include <QModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QPainter>
-#include <QStyleOptionViewItem>
+#include <QtGui/qstyleoption.h>
 
 // KDE
 #include <kcolorutils.h>

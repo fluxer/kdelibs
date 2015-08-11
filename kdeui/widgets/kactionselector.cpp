@@ -26,7 +26,7 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <QListWidget>
 
 class KActionSelectorPrivate {

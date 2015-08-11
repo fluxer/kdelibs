@@ -24,7 +24,7 @@
 
 #include <kparts/part.h>
 #include <QtGui/QTreeWidget>
-#include <QtCore/QVariantList>
+#include <QtCore/qvariant.h>
 
 class KSslCertificateBox;
 class QFrame;

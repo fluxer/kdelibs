@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QFileInfo>
 #include <QtGui/QCheckBox>
 #include <QtGui/QLabel>

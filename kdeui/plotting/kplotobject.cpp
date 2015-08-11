@@ -20,7 +20,7 @@
 
 #include "kplotobject.h"
 
-#include <QtAlgorithms>
+#include <QtCore/qalgorithms.h>
 #include <QPainter>
 
 #include <kdebug.h>

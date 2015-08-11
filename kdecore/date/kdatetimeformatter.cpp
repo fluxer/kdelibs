@@ -20,7 +20,7 @@
 
 #include "kdatetimeformatter_p.h"
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QChar>

@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QSet>
 #include <QAbstractEventDispatcher>
 #include <kglobal.h>

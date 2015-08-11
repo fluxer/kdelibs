@@ -20,7 +20,7 @@
 
 #include "kextendableitemdelegate.h"
 
-#include <QModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QScrollBar>
 #include <QTreeView>
 #include <QPainter>

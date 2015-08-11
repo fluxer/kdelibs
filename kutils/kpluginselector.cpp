@@ -26,7 +26,7 @@
 #include <QtGui/QBoxLayout>
 #include <QtGui/QApplication>
 #include <QtGui/QCheckBox>
-#include <QtGui/QStyleOptionViewItemV4>
+#include <QtGui/qstyleoption.h>
 
 #include <kdebug.h>
 #include <klineedit.h>

@@ -85,10 +85,12 @@ set(cmakeFiles
                FindPyQt4.cmake
                Qt4Macros.cmake
                Qt4ConfigDependentSettings.cmake
+               KatieMacros.cmake
                FindPythonLibrary.cmake
                FindQCA2.cmake
                FindQImageBlitz.cmake
                FindQt4.cmake
+               FindKatie.cmake
                FindRUBY.cmake
                FindSIP.cmake
                FindSamba.cmake

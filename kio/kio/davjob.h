@@ -27,7 +27,7 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QPointer>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>

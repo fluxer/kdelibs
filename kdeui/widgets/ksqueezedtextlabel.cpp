@@ -19,7 +19,7 @@
 #include "ksqueezedtextlabel.h"
 #include <kdebug.h>
 #include <klocale.h>
-#include <QContextMenuEvent>
+#include <QtGui/qevent.h>
 #include <kaction.h>
 #include <QMenu>
 #include <QClipboard>

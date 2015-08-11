@@ -31,7 +31,7 @@
 #include <kconfiggroup.h>
 
 #include <QtCore/QHash>
-#include <QtAlgorithms>
+#include <QtCore/qalgorithms.h>
 
 // servicetype -> profile
 class KServiceTypeProfiles : public QHash<QString, KServiceTypeProfileEntry *>

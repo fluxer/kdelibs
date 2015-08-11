@@ -33,6 +33,7 @@
 #include <QMimeData>
 #include <QFile>
 #include <QFileInfo>
+#include <QBitArray>
 #include <QDir>
 #include <sys/types.h>
 #include <dirent.h>

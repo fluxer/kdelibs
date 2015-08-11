@@ -26,7 +26,7 @@
 #include "kio/jobclasses.h"
 #include <QtCore/QTimer>
 #include <QtCore/QMap>
-#include <QtGui/QWidgetList>
+#include <QtGui/qwindowdefs.h>
 #include <sys/types.h> // pid_t
 
 namespace KIO {

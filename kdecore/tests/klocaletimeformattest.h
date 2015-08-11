@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
-#include <QtCore/QTime>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QMap>
 #include <klocale.h>
 

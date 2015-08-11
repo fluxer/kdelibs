@@ -25,7 +25,10 @@
 #include <QtDBus/QtDBus>
 #include <QtGui/QApplication>
 #include <QtGui/QWidget>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
+#include <QtCore/qtimer.h>
+#include <QtCore/qfile.h>
+#include <QtCore/qdebug.h>
 
 using namespace Solid::Backends::UDisks2;
 

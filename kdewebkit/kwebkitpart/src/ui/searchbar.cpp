@@ -30,7 +30,7 @@
 #include <kicon.h>
 #include <klocalizedstring.h>
 
-#include <QResizeEvent>
+#include <QtGui/qevent.h>
 
 
 SearchBar::SearchBar(QWidget *parent)

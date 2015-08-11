@@ -23,7 +23,7 @@
 #include "kdebug.h"
 #include "klocale.h"
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 //Reuse the Gregorian private implementation
 class KCalendarSystemMinguoPrivate : public KCalendarSystemGregorianPrivate

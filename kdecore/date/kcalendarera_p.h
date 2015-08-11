@@ -21,7 +21,7 @@
 #define KCALENDARERA_H
 
 #include <QtCore/QString>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 #include "klocale.h"
 

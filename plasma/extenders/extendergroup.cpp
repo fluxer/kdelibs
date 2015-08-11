@@ -26,7 +26,7 @@
 #include <QTimer>
 #include <QtGui/QGraphicsWidget>
 #include <QtGui/QGraphicsLinearLayout>
-#include <QtGui/QGraphicsSceneDragDropEvent>
+#include <QtGui/qgraphicssceneevent.h>
 
 #include "applet.h"
 #include "extender.h"

@@ -25,7 +25,7 @@
 
 #include <QApplication>
 #include <QClipboard>
-#include <QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QMenu>
 #include <QPainter>
 #include <QScrollBar>

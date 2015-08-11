@@ -10,7 +10,7 @@
 #ifndef KIMG_DDS_H
 #define KIMG_DDS_H
 
-#include <QtGui/QImageIOPlugin>
+#include <QtGui/qimageiohandler.h>
 
 class DDSHandler : public QImageIOHandler
 {

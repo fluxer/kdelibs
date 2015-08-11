@@ -24,7 +24,7 @@
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QCursor>
-#include <QtGui/QMouseEvent>
+#include <QtGui/qevent.h>
 
 #include <kglobalsettings.h>
 

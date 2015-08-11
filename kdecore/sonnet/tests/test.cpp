@@ -24,7 +24,7 @@
 #include <QCoreApplication>
 #include <kdebug.h>
 #include <kcmdlineargs.h>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 using namespace Sonnet;
 

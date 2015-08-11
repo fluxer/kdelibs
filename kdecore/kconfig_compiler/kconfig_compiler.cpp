@@ -32,7 +32,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QTextStream>
-#include <QtXml/QDomAttr>
+#include <QtXml/qdom.h>
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
 

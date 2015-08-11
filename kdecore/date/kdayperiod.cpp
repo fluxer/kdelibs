@@ -21,7 +21,7 @@
 
 #include <QtCore/QSharedData>
 #include <QtCore/QString>
-#include <QtCore/QTime>
+#include <QtCore/qdatetime.h>
 
 class KDayPeriodPrivate : public QSharedData
 {

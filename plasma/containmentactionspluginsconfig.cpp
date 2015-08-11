@@ -22,8 +22,8 @@
 
 #include <QHash>
 #include <QEvent>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsSceneWheelEvent>
+#include <QtGui/qgraphicssceneevent.h>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QString>
 
 #include <kdebug.h>

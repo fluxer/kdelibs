@@ -21,7 +21,7 @@
 #ifndef KSAMBASHAREDATA_H
 #define KSAMBASHAREDATA_H
 
-#include <QtCore/QExplicitlySharedDataPointer>
+#include <QtCore/qsharedpointer.h>
 #include <kio/kio_export.h>
 
 class QString;

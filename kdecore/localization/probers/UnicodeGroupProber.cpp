@@ -27,7 +27,7 @@
 
 #include "ctype_test_p.h"
 
-#include <QtAlgorithms>
+#include <QtCore/qalgorithms.h>
 #include <math.h>
 
 namespace kencodingprober {

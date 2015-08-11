@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QImage>
 #include <QPixmap>
-#include <QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 #include <QDebug>
 
 static const int RECURSION_MAX = 20;

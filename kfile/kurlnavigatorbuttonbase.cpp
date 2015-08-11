@@ -30,7 +30,7 @@
 #include <QClipboard>
 #include <QMimeData>
 #include <QStyle>
-#include <QStyleOptionFocusRect>
+#include <QtGui/qstyleoption.h>
 
 namespace KDEPrivate
 {

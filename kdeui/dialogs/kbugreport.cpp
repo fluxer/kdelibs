@@ -25,7 +25,7 @@
 #include <QtGui/QLayout>
 #include <QtGui/QRadioButton>
 #include <QtGui/QGroupBox>
-#include <QtGui/QCloseEvent>
+#include <QtGui/qevent.h>
 
 #include <kaboutdata.h>
 #include <kcombobox.h>

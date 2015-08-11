@@ -23,7 +23,7 @@
 #include "servicejob.h"
 #include "service.h"
 
-#include <QGraphicsObject>
+#include <QtGui/qgraphicsitem.h>
 #include <QMap>
 #include <QMultiHash>
 #include <QWidget>

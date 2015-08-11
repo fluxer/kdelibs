@@ -24,6 +24,8 @@
 #include <kptydevice.h>
 #include <qtest_kde.h>
 
+#include <QtCore/qthread.h>
+
 // Qt4 workaround, fixed in Qt5
 class MyQThread : public QThread
 {

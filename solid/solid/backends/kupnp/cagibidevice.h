@@ -22,7 +22,7 @@
 #define CAGIBIDEVICE_H
 
 // Qt
-#include <QtCore/QExplicitlySharedDataPointer>
+#include <QtCore/qsharedpointer.h>
 
 namespace Cagibi { class Device; }
 class QString;

@@ -22,13 +22,13 @@
 #include "ktabwidget.h"
 
 #include <QtGui/QApplication>
-#include <QtGui/QDragMoveEvent>
-#include <QtGui/QDropEvent>
-#include <QtGui/QMouseEvent>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
 #include <QtGui/QStyle>
 #include <QtGui/QStyleOption>
 #include <QtGui/QTextDocument>
-#include <QtGui/QWheelEvent>
+#include <QtGui/qevent.h>
 #include <QtCore/QList>
 
 #include <ksharedconfig.h>
@@ -564,19 +564,6 @@ void KTabWidget::moveTab( int from, int to )
 
 }
 
-void KTabWidget::removePage( QWidget *widget )
-{
-  // not just calling removeTab() because that one is also virtual.
-  const int index = indexOf(widget);
-  if ( d->m_automaticResizeTabs ) {
-    setUpdatesEnabled(false);
-    d->removeTab(index);
-    setUpdatesEnabled(true);
-  } else {
-    d->removeTab(index);
-  }
-}
-
 void KTabWidget::removeTab( int index )
 {
   if ( d->m_automaticResizeTabs ) {
@@ -588,12 +575,6 @@ void KTabWidget::removeTab( int index )
     d->removeTab( index );
   }
 }
-
-
-
-
-
-
 
 void KTabWidget::setAutomaticResizeTabs( bool enabled )
 {

@@ -26,6 +26,8 @@
 #include <ksycoca.h>
 #include <kstandarddirs.h>
 
+#include <QtCore/qbuffer.h>
+
 class KMimeFileParserTest : public QObject
 {
     Q_OBJECT

@@ -21,7 +21,7 @@
 #ifndef _KDISK_FREE_SPACE_INFO_H_
 #define _KDISK_FREE_SPACE_INFO_H_
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 #include <QtCore/QString>
 
 #include <kio/kio_export.h>

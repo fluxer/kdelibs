@@ -28,7 +28,7 @@
 #include <kmimetype.h>
 #include <kstandarddirs.h>
 
-#include <QtCore/QHashIterator>
+#include <QtCore/qhash.h>
 #include <QtCore/QStringBuilder>
 #include <QtNetwork/QHostInfo>
 #include <QtNetwork/QHostAddress>

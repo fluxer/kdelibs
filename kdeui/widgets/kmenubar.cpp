@@ -28,11 +28,11 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QPainter>
 #include <QtGui/QStyle>
-#include <QtGui/QStyleOptionMenuItem>
+#include <QtGui/qstyleoption.h>
 
 #include <kconfig.h>
 #include <kglobalsettings.h>

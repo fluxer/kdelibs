@@ -26,7 +26,7 @@
 #include <kdeui_export.h>
 
 #include <QtGui/QAbstractSlider>
-#include <QtGui/QGradient>
+#include <QtGui/qbrush.h>
 #include <QtGui/QWidget>
 
 /**

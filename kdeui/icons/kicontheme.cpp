@@ -29,8 +29,8 @@
 #include <stdlib.h>
 
 #include <QtGui/QAction>
-#include <QtCore/QCharRef>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstring.h>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QMap>
 #include <QtCore/QSet>
 #include <QtGui/QPixmap>

@@ -23,16 +23,16 @@
 
 // Qt
 #include <QIcon>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QPainter>
 #include <QApplication>
 #include <QStyleOption>
 #include <QToolButton>
 #include <QPropertyAnimation>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
-#include <QGradient>
-#include <QLinearGradient>
+#include <QtGui/qbrush.h>
+#include <QtGui/qbrush.h>
 
 // KDE
 #include <kdebug.h>

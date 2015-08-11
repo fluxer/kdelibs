@@ -29,7 +29,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-#include <QtCore/QCharRef>
+#include <QtCore/qstring.h>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QMap>

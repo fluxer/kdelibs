@@ -25,10 +25,10 @@
 #include <QBasicTimer>
 #include <QMap>
 #include <QLinkedList>
-#include <QPersistentModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QStyle>
 #include <QTimeLine>
-#include <QTime>
+#include <QtCore/qdatetime.h>
 #include <QTimer>
 
 

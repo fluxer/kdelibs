@@ -24,6 +24,7 @@
 #include <QWidget>
 #include <QtDBus/QtDBus>
 #include <QPointer>
+#include <QtCore/qbuffer.h>
 
 #include <kdebug.h>
 #include <kapplication.h>

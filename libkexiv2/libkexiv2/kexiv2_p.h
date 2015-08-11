@@ -47,7 +47,7 @@
 #include <QFile>
 #include <QImage>
 #include <QSize>
-#include <QLatin1String>
+#include <QtCore/qstring.h>
 #include <QTextCodec>
 #include <QMatrix>
 #include <QFileInfo>

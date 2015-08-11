@@ -27,7 +27,7 @@
 #include <QString>
 #include <QDBusArgument>
 #include <QDBusConnection>
-#include <QDBusObjectPath>
+#include <QtDBus/qdbusextratypes.h>
 #include <QPixmap>
 
 //Custom message type for DBus

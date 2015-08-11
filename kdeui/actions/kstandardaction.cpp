@@ -21,7 +21,7 @@
 #include "kstandardaction_p.h"
 #include "moc_kstandardaction_p.cpp"
 
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtGui/QToolButton>
 
 #include <kaboutdata.h>

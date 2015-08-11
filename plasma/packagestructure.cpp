@@ -24,7 +24,7 @@
 #include <QDirIterator>
 #include <QDir>
 #include <QMap>
-#include <QMutableListIterator>
+#include <QtCore/qlist.h>
 #include <QFileInfo>
 
 #include <kconfiggroup.h>

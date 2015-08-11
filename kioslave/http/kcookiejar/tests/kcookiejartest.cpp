@@ -20,7 +20,7 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QString>
 
 #include <qtest_kde.h>

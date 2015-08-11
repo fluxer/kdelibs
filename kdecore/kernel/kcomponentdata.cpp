@@ -31,7 +31,7 @@
 #include "klocale.h"
 #include "kconfiggroup.h"
 #include "kstandarddirs.h"
-#include <QtDebug>
+#include <QtCore/qdebug.h>
 
 KComponentData::KComponentData()
     : d(0)

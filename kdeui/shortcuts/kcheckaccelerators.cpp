@@ -28,8 +28,8 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QDialog>
-#include <QShortcutEvent>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
 #include <QLayout>
 #include <QMenuBar>
 #include <QMetaObject>

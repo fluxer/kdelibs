@@ -20,7 +20,7 @@
 #ifndef KPARTS_HTMLEXTENSION_H
 #define KPARTS_HTMLEXTENSION_H
 
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 #include <QtCore/QObject>
 
 #include <kparts/kparts_export.h>

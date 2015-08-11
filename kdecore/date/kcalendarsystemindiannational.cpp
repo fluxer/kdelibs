@@ -23,8 +23,8 @@
 #include "kdebug.h"
 #include "klocale.h"
 
-#include <QtCore/QDate>
-#include <QtCore/QCharRef>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qstring.h>
 
 class KCalendarSystemIndianNationalPrivate : public KCalendarSystemPrivate
 {

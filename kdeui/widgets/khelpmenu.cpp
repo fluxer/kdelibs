@@ -50,7 +50,7 @@
 
 #include <config.h>
 #ifdef Q_WS_X11
-#include <QX11EmbedWidget>
+#include <QtGui/qx11embed_x11.h>
 #endif
 
 #include <kglobalsettings.h>

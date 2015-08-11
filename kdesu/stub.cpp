@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <QtCore/QBool>
+#include <QtCore/qglobal.h>
 
 #include <kdebug.h>
 

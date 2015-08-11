@@ -23,7 +23,7 @@
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusPendingCall>
-#include <QtCore/QLatin1String>
+#include <QtCore/qstring.h>
 #include <QtCore/QStringList>
 #include <QtCore/QRegExp>
 

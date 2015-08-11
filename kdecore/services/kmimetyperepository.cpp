@@ -28,7 +28,7 @@
 #include "kfoldermimetype.h"
 #include <QFile>
 #include <QProcess>
-#include <QtEndian>
+#include <QtCore/qendian.h>
 
 extern int servicesDebugArea();
 

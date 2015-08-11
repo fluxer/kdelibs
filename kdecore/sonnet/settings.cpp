@@ -30,7 +30,7 @@
 #include <klocale.h>
 
 #include <QtCore/QMap>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 
 namespace Sonnet
 {

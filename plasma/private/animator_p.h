@@ -24,7 +24,7 @@
 #include <QHash>
 #include <QPixmap>
 #include <QSet>
-#include <QTime>
+#include <QtCore/qdatetime.h>
 #include <QTimeLine>
 
 class QGraphicsItem;

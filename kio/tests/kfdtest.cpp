@@ -1,6 +1,6 @@
 #include "kfdtest.h"
 
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <QtCore/QTimer>

@@ -27,6 +27,7 @@
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
 #include <QtDBus/QtDBus>
+#include <QtCore/qtimer.h>
 #include <ktoolinvocation.h>
 
 #include <assert.h>

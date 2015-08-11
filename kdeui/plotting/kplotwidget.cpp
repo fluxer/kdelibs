@@ -24,12 +24,12 @@
 #include <math.h>
 #include <kdebug.h>
 
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <QHash>
 #include <QPainter>
 #include <QPixmap>
 #include <QToolTip>
-#include <QtAlgorithms>
+#include <QtCore/qalgorithms.h>
 
 #include "kplotaxis.h"
 #include "kplotpoint.h"

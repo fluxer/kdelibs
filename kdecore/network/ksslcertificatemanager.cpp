@@ -32,6 +32,8 @@
 #include <ktoolinvocation.h>
 
 #include <QtDBus/QtDBus>
+#include <QtCore/qfile.h>
+#include <QtCore/qdir.h>
 
 #include "kssld/kssld_interface.h"
 

@@ -22,7 +22,7 @@
 #include <QtCore/QSize>
 #include <QtCore/QPoint>
 #include <QtCore/QRect>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QTimer>
 #include <QtGui/QColor>
 #include <QtGui/QFont>

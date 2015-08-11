@@ -24,7 +24,7 @@
 
 #include <QLabel>
 #include <QPainter>
-#include <QPaintEvent>
+#include <QtGui/qevent.h>
 #include <QPropertyAnimation>
 #include <QIcon>
 

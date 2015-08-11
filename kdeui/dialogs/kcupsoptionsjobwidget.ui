@@ -30,7 +30,7 @@
        <widget class="KComboBox" name="jobHoldComboBox" />
       </item>
       <item row="0" column="3" >
-       <widget class="QTimeEdit" name="jobHoldTimeEdit" />
+       <widget class="QDateTimeEdit" name="jobHoldTimeEdit" />
       </item>
       <item row="1" column="0" >
        <widget class="QLabel" name="jobBillingLabel" >

@@ -21,8 +21,8 @@
 
 #include <QtCore/QStack>
 #include <QtCore/QStringList>
-#include <QtCore/QWeakPointer>
-#include <QtGui/QItemSelectionRange>
+#include <QtCore/qsharedpointer.h>
+#include <QtGui/qitemselectionmodel.h>
 
 #include "kmodelindexproxymapper.h"
 #include "kbihash_p.h"

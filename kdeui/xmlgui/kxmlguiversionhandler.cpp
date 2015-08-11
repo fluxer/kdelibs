@@ -22,11 +22,11 @@
 #include "kxmlguiversionhandler_p.h"
 #include <kdebug.h>
 #include <QFile>
-#include <QDomDocument>
+#include <QtXml/qdom.h>
 #include "kxmlguifactory.h"
 #include <kglobal.h>
 #include <kstandarddirs.h>
-#include <QtXml/QDomElement>
+#include <QtXml/qdom.h>
 
 struct DocStruct
 {

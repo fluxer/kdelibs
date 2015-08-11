@@ -25,8 +25,8 @@
 #define KROSS_METAFUNCTION_H
 
 #include <QtCore/QObject>
-#include <QtCore/QArgument>
-#include <QtCore/QByteRef>
+#include <QtCore/qobjectdefs.h>
+#include <QtCore/qbytearray.h>
 #include <QtCore/QPointer>
 
 namespace Kross {

@@ -129,7 +129,7 @@ extern "C" {
 #include <kstandarddirs.h>	// findExe
 #include <kde_file.h>
 
-#include <QtCore/Q_PID>
+#include <QtCore/qprocess.h>
 
 #define TTY_GROUP "tty"
 

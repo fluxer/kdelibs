@@ -19,7 +19,7 @@
  */
 
 #include <QtGui/QApplication>
-#include <QtGui/QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 
 #include <fixx11h.h>
 #include <QtWebKit/QWebFrame>

@@ -50,6 +50,7 @@
 #include <QtCore/QFile>
 #include <sys/stat.h> // mode_t
 #include <QPointer>
+#include <QtCore/qfileinfo.h>
 
 #include "job_p.h"
 #include <kdiskfreespaceinfo.h>

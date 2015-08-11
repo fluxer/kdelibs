@@ -32,7 +32,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
-#include <QtGui/QResizeEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QSlider>
 
 #include <kdebug.h>

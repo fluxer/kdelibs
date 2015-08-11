@@ -23,9 +23,9 @@
 #include <QCheckBox>
 #include <QLabel>
 #include <QLayout>
-#include <QTime>
+#include <QtCore/qdatetime.h>
 #include <QTableWidget>
-#include <QTableWidgetItem>
+#include <QtGui/qtablewidget.h>
 #include <QHeaderView>
 #include <QPrinter>
 #include <QPrintEngine>

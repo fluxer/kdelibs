@@ -20,7 +20,7 @@
 #include "svgwidget.h"
 
 #include <QtGui/QPainter>
-#include <QtGui/QGraphicsSceneMouseEvent>
+#include <QtGui/qgraphicssceneevent.h>
 
 #include "kdebug.h"
 #include "svg.h"

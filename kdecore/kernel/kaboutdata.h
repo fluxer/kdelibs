@@ -30,7 +30,7 @@
 
 // Qt
 #include <QtCore/QString>
-#include <QtCore/QSharedDataPointer>
+#include <QtCore/qshareddata.h>
 
 template <class T> class QList;
 class QVariant;

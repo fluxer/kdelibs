@@ -19,7 +19,8 @@
  */
 
 #include "ktcpsockettest.h"
-#include <QtCore/QDebug>
+#include <QtCore/qdebug.h>
+#include <QtCore/qthread.h>
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QTcpServer>
 #include "ktcpsocket.h"

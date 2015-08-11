@@ -21,8 +21,8 @@
 #include "scrollbar.h"
 
 #include <QApplication>
-#include <QContextMenuEvent>
-#include <QGraphicsSceneContextMenuEvent>
+#include <QtGui/qevent.h>
+#include <QtGui/qgraphicssceneevent.h>
 
 #include <plasma/private/style_p.h>
 

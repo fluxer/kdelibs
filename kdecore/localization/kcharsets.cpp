@@ -30,8 +30,8 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QRegExp>
-#include <QtCore/QCharRef>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstring.h>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QTextCodec>
 
 #include <assert.h>

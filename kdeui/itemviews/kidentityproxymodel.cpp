@@ -21,7 +21,7 @@
 
 #include "kidentityproxymodel.h"
 
-#include <QtGui/QItemSelection>
+#include <QtGui/qitemselectionmodel.h>
 #include <QtCore/QStringList>
 #include <kdebug.h>
 

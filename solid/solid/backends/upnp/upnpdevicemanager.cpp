@@ -21,7 +21,7 @@
 #include "upnpdevicemanager.h"
 #include "upnpdevice.h"
 
-#include <QtCore/QtDebug>
+#include <QtCore/qdebug.h>
 #include <QtCore/QList>
 #include <QtCore/QMap>
 

@@ -18,7 +18,7 @@
 
 #include "xsyncbasedpoller.h"
 
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 
 #include <klocalizedstring.h>
 #include <kglobal.h>

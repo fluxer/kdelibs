@@ -22,7 +22,7 @@
 
 #include "kcharselect_p.h"
 
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QDoubleSpinBox>
 #include <QtGui/QHeaderView>
 #include <QtGui/QBoxLayout>

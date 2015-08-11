@@ -19,10 +19,10 @@
 */
 #include <kedittoolbar.h>
 #include <kedittoolbar_p.h>
-#include <QShowEvent>
+#include <QtGui/qevent.h>
 
 
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 #include <QtGui/QLayout>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -652,7 +652,6 @@ void KEditToolBarPrivate::_k_slotDefault()
     q->enableButtonApply(false);
 
     emit q->newToolBarConfig();
-    emit q->newToolbarConfig(); // compat
 }
 
 void KEditToolBarPrivate::_k_slotOk()
@@ -672,7 +671,6 @@ void KEditToolBarPrivate::_k_slotOk()
     // button was already pressed and no further changes were made.
     if (q->isButtonEnabled(KDialog::Apply)) {
         emit q->newToolBarConfig();
-        emit q->newToolbarConfig(); // compat
     }
     q->accept();
   }
@@ -683,7 +681,6 @@ void KEditToolBarPrivate::_k_slotApply()
     (void)m_widget->save();
     q->enableButtonApply(false);
     emit q->newToolBarConfig();
-    emit q->newToolbarConfig(); // compat
 }
 
 void KEditToolBar::setGlobalDefaultToolBar(const char *toolbarName)

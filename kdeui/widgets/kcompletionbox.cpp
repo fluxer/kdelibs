@@ -29,7 +29,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QStyle>
 #include <QtGui/QScrollBar>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 
 #include <kdebug.h>
 #include <kconfig.h>

@@ -20,7 +20,7 @@
 #include "kcurrencycode.h"
 
 #include <QtCore/QSharedData>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QFileInfo>

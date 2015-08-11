@@ -22,7 +22,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QRect>
-#include <QtCore/QSizeF>
+#include <QtCore/qsize.h>
 
 #include <kplugininfo.h>
 

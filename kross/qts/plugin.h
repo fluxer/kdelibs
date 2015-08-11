@@ -25,7 +25,7 @@
 //#include <QtCore/QVariant>
 //#include <QtCore/QObject>
 //#include <QtCore/QDir>
-//#include <QtXml/QDomAttr>
+//#include <QtXml/qdom.h>
 //#include <QtGui/QAction>
 //#include <QtCore/QUrl>
 

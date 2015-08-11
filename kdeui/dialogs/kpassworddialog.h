@@ -22,7 +22,7 @@
 #define KPASSWORDDIALOG_H
 
 #include <kdialog.h>
-#include <QtCore/QFlags>
+#include <QtCore/qglobal.h>
 
 /**
  * A dialog for requesting a password and optionaly a login from the end user.

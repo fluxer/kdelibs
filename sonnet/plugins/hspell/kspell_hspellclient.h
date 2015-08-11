@@ -23,7 +23,7 @@
 #define KSPELL_HSPELLCLIENT_H
 
 #include "client_p.h"
-#include <QtCore/QVariantList>
+#include <QtCore/qvariant.h>
 
 /* libhspell is a C library and it does not have #ifdef __cplusplus */
 extern "C" {

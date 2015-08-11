@@ -23,7 +23,7 @@
 
 #include "kdebug.h"
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 
 KCalendarEra::KCalendarEra()
 {

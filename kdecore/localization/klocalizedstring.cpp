@@ -30,7 +30,7 @@
 #include <kuitsemantics_p.h>
 #include "kcatalogname_p.h"
 
-#include <QMutexLocker>
+#include <QtCore/qmutex.h>
 #include <QStringList>
 #include <QByteArray>
 #include <QChar>

@@ -24,7 +24,7 @@
 #include "kurlnavigatorbuttonbase_p.h"
 #include <kurl.h>
 
-#include <QtCore/QPersistentModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 
 class KFilePlacesModel;
 class KMenu;

@@ -24,13 +24,13 @@
 #include "kopenwithdialog.h"
 #include "kopenwithdialog_p.h"
 
-#include <QtCore/QtAlgorithms>
+#include <QtCore/qalgorithms.h>
 #include <QtCore/QList>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QCheckBox>
 #include <QtGui/QStyle>
-#include <QtGui/QStyleOptionButton>
+#include <QtGui/qstyleoption.h>
 
 #include <kauthorized.h>
 #include <khistorycombobox.h>

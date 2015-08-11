@@ -30,7 +30,7 @@
 
 #include <QKeySequence>
 #include <QMetaType>
-#include <QModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QTreeWidget>
 #include <QtCore/QList>
 #include <QGroupBox>

@@ -16,9 +16,9 @@
 */
 
 #include "rotationstacked_p.h"
-#include <QGraphicsRotation>
+#include <QtGui/qgraphicstransform.h>
 #include <QSequentialAnimationGroup>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <kdebug.h>
 
 #include "stackedlayout.h"

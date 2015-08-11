@@ -20,7 +20,7 @@
 #include "script.h"
 
 #include <QMetaObject>
-#include <QMetaMethod>
+#include <QtCore/qmetaobject.h>
 #include <QScriptEngine>
 #include <QScriptValueIterator>
 

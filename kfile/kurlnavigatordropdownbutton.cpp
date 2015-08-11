@@ -22,7 +22,7 @@
 
 #include <kglobalsettings.h>
 
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QPainter>
 #include <QtGui/QStyleOption>
 

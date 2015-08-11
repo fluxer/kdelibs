@@ -29,7 +29,7 @@
 #include <kdebug.h>
 #include <kstringhandler.h>
 
-#include <QTreeWidgetItem>
+#include <QtGui/qtreewidget.h>
 
 KShortcutsEditorItem::KShortcutsEditorItem(QTreeWidgetItem *parent, KAction *action)
     : QTreeWidgetItem(parent, ActionItem)

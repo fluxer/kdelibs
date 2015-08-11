@@ -24,7 +24,7 @@
 #include <cmath>
 
 #include <QDir>
-#include <QDomDocument>
+#include <QtXml/qdom.h>
 #include <QMatrix>
 #include <QPainter>
 #include <QStringBuilder>

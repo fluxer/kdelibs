@@ -21,7 +21,7 @@
 #include "kmenu.h"
 #include "khbox.h"
 
-#include <QtCore/QMetaMethod>
+#include <QtCore/qmetaobject.h>
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtCore/QTimer>
@@ -29,7 +29,7 @@
 #include <QtGui/QCursor>
 #include <QtGui/QFontMetrics>
 #include <QtGui/QHBoxLayout>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
 #include <QtGui/QStyle>

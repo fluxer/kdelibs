@@ -36,6 +36,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QFile>
 #include <QPointer>
+#include <QtCore/qfileinfo.h>
 
 #include "job_p.h"
 

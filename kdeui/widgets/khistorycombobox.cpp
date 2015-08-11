@@ -24,9 +24,9 @@
 
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QApplication>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QMenu>
-#include <QtGui/QWheelEvent>
+#include <QtGui/qevent.h>
 
 #include <klocale.h>
 #include <knotification.h>

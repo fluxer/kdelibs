@@ -24,8 +24,8 @@
 #define PLASMA_ICONWIDGET_H
 
 #include <QtCore/QObject>
-#include <QtCore/QWeakPointer>
-#include <QtGui/QGraphicsTextItem>
+#include <QtCore/qsharedpointer.h>
+#include <QtGui/qgraphicsitem.h>
 #include <QtGui/QIcon>
 #include <QtGui/QGraphicsWidget>
 

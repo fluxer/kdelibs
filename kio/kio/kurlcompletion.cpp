@@ -32,7 +32,7 @@
 #include <limits.h>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QMutableStringListIterator>
+#include <QtCore/qstringlist.h>
 #include <QtCore/QRegExp>
 #include <QtCore/QTimer>
 #include <QtCore/QDir>
@@ -40,7 +40,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtCore/QThread>
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 
 #include <kauthorized.h>
 #include <kdebug.h>

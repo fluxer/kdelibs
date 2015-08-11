@@ -28,7 +28,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QExplicitlySharedDataPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
 

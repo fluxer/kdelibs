@@ -25,15 +25,15 @@
 
 #include <QtCore/qobjectdefs.h>
 #include <QtCore/QMetaObject>
-#include <QtCore/QMetaMethod>
-#include <QtCore/QMetaProperty>
+#include <QtCore/qmetaobject.h>
+#include <QtCore/qmetaobject.h>
 #include <QtCore/QPair>
 #include <QtCore/QHash>
 #include <QtCore/QList>
 #include <QtGui/QWidget>
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QApplication>
-#include <QtGui/QInputEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QAbstractProxyModel>
 
 #include <kdebug.h>

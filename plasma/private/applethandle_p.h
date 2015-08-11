@@ -21,10 +21,12 @@
 #define PLASMA_APPLETHANDLE_P_H
 
 #include <QtCore/QObject>
-#include <QtGui/QGraphicsObject>
+#include <QtGui/qgraphicsitem.h>
 #include <QTimer>
-#include <QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 #include <QPropertyAnimation>
+#include <QtGui/qgraphicsview.h>
+#include <QtGui/qgraphicsitem.h>
 
 #include "animator.h"
 #include "svg.h"

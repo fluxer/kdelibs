@@ -26,7 +26,8 @@
 #include <QDBusArgument>
 #include <QDBusConnection>
 #include <QPixmap>
-#include <QWheelEvent>
+#include <QtGui/qevent.h>
+#include <QtCore/qpointer.h>
 
 #include <ksystemtrayicon.h>
 

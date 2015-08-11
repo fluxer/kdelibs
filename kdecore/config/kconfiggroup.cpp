@@ -31,7 +31,7 @@
 #include "kconfigdata.h"
 #include <kdebug.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QSharedData>
 #include <QtCore/QFile>
 #include <QtCore/QPoint>

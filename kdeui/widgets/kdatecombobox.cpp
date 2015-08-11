@@ -21,7 +21,7 @@
 
 #include <QtGui/QAbstractItemView>
 #include <QtGui/QApplication>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QMenu>
 #include <QtGui/QLineEdit>
 #include <QtGui/QWidgetAction>

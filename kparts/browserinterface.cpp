@@ -19,7 +19,7 @@
 
 #include "browserinterface.h"
 
-#include <QtCore/QMetaEnum>
+#include <QtCore/qmetaobject.h>
 #include <QtCore/QStringList>
 
 #include <config.h>

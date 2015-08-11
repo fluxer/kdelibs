@@ -23,7 +23,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QMenu>
 #include <QtGui/QPainter>
-#include <QtGui/QPaintEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QStyleOption>
 
 #include <klocale.h>

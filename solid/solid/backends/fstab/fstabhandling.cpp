@@ -25,7 +25,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QProcess>
 #include <QtCore/QTextStream>
-#include <QtCore/QTime>
+#include <QtCore/qdatetime.h>
 
 #include <solid/soliddefs_p.h>
 

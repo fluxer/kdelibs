@@ -37,6 +37,8 @@
 #include <QtDBus/QtDBus>
 #include <QtCore/QHash>
 #include <QBuffer>
+#include <QtCore/qstack.h>
+#include <QtCore/qxmlstream.h>
 
 extern int servicesDebugArea();
 

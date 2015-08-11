@@ -20,7 +20,7 @@
 #include "kinputdialog.h"
 #include "kinputdialog_p.h"
 
-#include <QtGui/QDoubleValidator>
+#include <QtGui/qvalidator.h>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 

@@ -37,14 +37,14 @@
 #include "kaction.h"
 #include <kdeversion.h>
 
-#include <QtCore/QDate>
-#include <QtCore/QCharRef>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qstring.h>
 #include <QtGui/QPen>
 #include <QtGui/QPainter>
 #include <QtGui/QStyle>
-#include <QtGui/QStyleOptionViewItem>
+#include <QtGui/qstyleoption.h>
 #include <QtGui/QDialog>
-#include <QtGui/QActionEvent>
+#include <QtGui/qevent.h>
 #include <QtCore/QHash>
 #include <QtGui/QApplication>
 #include <assert.h>

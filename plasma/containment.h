@@ -24,7 +24,7 @@
 
 #include <QtGui/QGraphicsItem>
 #include <QtGui/QWidget>
-#include <QtGui/QStyleOptionGraphicsItem>
+#include <QtGui/qstyleoption.h>
 
 #include <kplugininfo.h>
 #include <ksharedconfig.h>

@@ -6,7 +6,7 @@
 
 #include <QtGui/QLayout>
 #include <QtGui/QLabel>
-#include <QtGui/QKeyEvent>
+#include <QtGui/qevent.h>
 #include <QtGui/QGroupBox>
 #include <QtGui/QButtonGroup>
 

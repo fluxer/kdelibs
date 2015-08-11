@@ -19,7 +19,7 @@
 
 #include "lineedit.h"
 
-#include <QGraphicsSceneResizeEvent>
+#include <QtGui/qgraphicssceneevent.h>
 #include <QIcon>
 #include <QPainter>
 #include <QGraphicsView>

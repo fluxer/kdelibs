@@ -29,7 +29,7 @@
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QHash>
 #include <QtCore/QRect>
 #include <QtCore/QStringList>

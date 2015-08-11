@@ -29,10 +29,10 @@
 
 #include <cstring>
 
-#include <QtCore/QCharRef>
+#include <QtCore/qstring.h>
 #include <QtGui/QApplication>
 #include <QtCore/QFile>
-#include <QtCore/QMetaClassInfo>
+#include <QtCore/qmetaobject.h>
 #include <QtCore/QTextStream>
 
 #include <klocale.h>

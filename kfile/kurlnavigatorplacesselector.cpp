@@ -27,9 +27,9 @@
 #include <kmimetype.h>
 #include <kdebug.h>
 
-#include <QtGui/QDragEnterEvent>
-#include <QtGui/QDragLeaveEvent>
-#include <QtGui/QDropEvent>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
+#include <QtGui/qevent.h>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <kicon.h>

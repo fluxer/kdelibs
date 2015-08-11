@@ -27,6 +27,7 @@
 #include <QtDBus/QDBusConnection>
 #include <QDebug>
 #include <QTimer>
+#include <QtCore/qeventloop.h>
 
 #include <klocalizedstring.h>
 

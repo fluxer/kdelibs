@@ -26,7 +26,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QList>
 
 #include <zlib.h>

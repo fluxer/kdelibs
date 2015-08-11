@@ -25,8 +25,8 @@
 
 #include <QtCore/QObject>
 #include <QtGui/QWidget>
-#include <QtCore/QModelIndex>
-#include <QtGui/QItemSelection>
+#include <QtCore/qabstractitemmodel.h>
+#include <QtGui/qitemselectionmodel.h>
 #include <QtGui/QTreeView>
 
 #include <kdialog.h>

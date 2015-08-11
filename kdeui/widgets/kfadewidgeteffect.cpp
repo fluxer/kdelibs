@@ -33,7 +33,7 @@
 #if defined(Q_WS_X11) && defined(HAVE_XRENDER)
 #  include <X11/Xlib.h>
 #  include <X11/extensions/Xrender.h>
-#  include <QX11Info>
+#  include <QtGui/qx11info_x11.h>
 #  undef KeyPress
 #  undef FocusOut
 #endif

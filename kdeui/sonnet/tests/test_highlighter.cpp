@@ -29,7 +29,7 @@
 #include <QTextEdit>
 #include <QAction>
 #include <QMenu>
-#include <QContextMenuEvent>
+#include <QtGui/qevent.h>
 
 TestSpell::TestSpell()
     : QTextEdit()

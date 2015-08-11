@@ -20,7 +20,7 @@
 
 #include "qtest_kde.h"
 #include "kxmlgui_unittest.h"
-#include <QShowEvent>
+#include <QtGui/qevent.h>
 #include <kedittoolbar.h>
 #include <kaction.h>
 #include <kpushbutton.h>

@@ -36,7 +36,7 @@
 #include "kio/scheduler.h"
 
 #if defined Q_WS_X11
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #include <netwm.h>
 #endif
 

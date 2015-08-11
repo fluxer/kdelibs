@@ -22,6 +22,7 @@
 #ifndef KGLOBALACCEL_P_H
 #define KGLOBALACCEL_P_H
 
+#include <QtCore/qset.h>
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
 

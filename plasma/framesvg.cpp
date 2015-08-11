@@ -21,7 +21,7 @@
 #include "framesvg.h"
 #include "private/framesvg_p.h"
 
-#include <QAtomicInt>
+#include <QtCore/qatomic.h>
 #include <QBitmap>
 #include <QCryptographicHash>
 #include <QPainter>

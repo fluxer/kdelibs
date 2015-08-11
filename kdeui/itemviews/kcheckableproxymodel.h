@@ -26,7 +26,7 @@
 
 #include "kdeui_export.h"
 
-#include <QItemSelection>
+#include <QtGui/qitemselectionmodel.h>
 
 class KCheckableProxyModelPrivate;
 

@@ -28,8 +28,8 @@
 // Qt
 
 #include <QtCore/QFile>
-#include <QtCore/QArgument>
-#include <QtCore/QMetaEnum>
+#include <QtCore/qobjectdefs.h>
+#include <QtCore/qmetaobject.h>
 
 // KDE
 #include <kdebug.h>

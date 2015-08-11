@@ -23,7 +23,7 @@
 #include <kaboutdata.h>
 #include <kurl.h>
 
-#include <QtCore/QAbstractListModel>
+#include <QtCore/qabstractitemmodel.h>
 #include <QtGui/QPixmap>
 #include <QtNetwork/QNetworkReply>
 

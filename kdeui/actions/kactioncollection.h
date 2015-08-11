@@ -258,18 +258,6 @@ Q_SIGNALS:
   void inserted( QAction* action );
 
   /**
-   * Indicates that \a action was removed from this action collection.
-   * @deprecated
-   */
-  QT_MOC_COMPAT void removed( QAction* action );
-
-  /**
-   * Indicates that \a action was highlighted (hovered over).
-   * @deprecated Replaced by actionHovered(QAction* action);
-   */
-  QT_MOC_COMPAT void actionHighlighted(QAction* action);
-  
-  /**
    * Indicates that \a action was hovered.
    */
   void actionHovered(QAction* action);
@@ -285,12 +273,6 @@ protected Q_SLOTS:
 
   virtual void slotActionTriggered();
   
-  /**
-   * @internal
-   * @deprecated Replaced by slotActionHovered();
-   */
-  QT_MOC_COMPAT virtual void slotActionHighlighted();
-
 private Q_SLOTS:
   void slotActionHovered();
   

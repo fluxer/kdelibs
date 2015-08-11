@@ -24,8 +24,8 @@
 #include "kdebug.h"
 #include "klocale.h"
 
-#include <QtCore/QDate>
-#include <QtCore/QCharRef>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qstring.h>
 
 // Shared d pointer implementations
 

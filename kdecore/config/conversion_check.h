@@ -25,7 +25,7 @@
 #include <QtCore/QString>
 #include <QtGui/QColor>
 #include <QtGui/QFont>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QPoint>
 #include <QtCore/QSize>
 #include <QtCore/QRect>

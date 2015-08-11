@@ -31,7 +31,7 @@
 #include <QDesktopWidget>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
-#include <QHideEvent>
+#include <QtGui/qevent.h>
 #include <QPointer>
 #include <QStyle>
 #include <QTimer>

@@ -26,7 +26,7 @@
 
 #include <kdeui_export.h>
 #include <QtCore/QObject>
-#include <QtGui/QWidgetList> //For WId
+#include <QtGui/qwindowdefs.h> //For WId
 #include <netwm_def.h>
 #include <kwindowinfo.h>
 

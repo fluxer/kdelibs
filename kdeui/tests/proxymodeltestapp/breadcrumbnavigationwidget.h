@@ -23,7 +23,7 @@
 #define BREADCRUMBNAVIGATION_WIDGET_H
 
 #include <QtGui/QWidget>
-#include <QItemSelection>
+#include <QtGui/qitemselectionmodel.h>
 #include <QLabel>
 #include <QListView>
 #include <kselectionproxymodel.h>

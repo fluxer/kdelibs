@@ -27,7 +27,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
-#include <QtCore/QWeakPointer>
+#include <QtCore/qsharedpointer.h>
 
 namespace Solid
 {

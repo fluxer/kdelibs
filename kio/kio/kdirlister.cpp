@@ -24,6 +24,7 @@
 #include "kdirlister_p.h"
 
 #include <QtCore/QRegExp>
+#include <QtCore/qcoreapplication.h>
 
 #include <kdebug.h>
 #include <kde_file.h>
@@ -1941,7 +1942,6 @@ void KDirListerCache::deleteDir( const KUrl& dirUrl )
                 {
                     // tell the view first. It might need the subdirs' items (which forgetDirs will delete)
                     if ( !kdl->d->rootFileItem.isNull() ) {
-                        emit kdl->deleteItem( kdl->d->rootFileItem );
                         emit kdl->itemsDeleted(KFileItemList() << kdl->d->rootFileItem);
                     }
                     forgetDirs( kdl );
@@ -2226,9 +2226,6 @@ void KDirLister::Private::emitChanges()
         }
         if (!deletedItems.isEmpty()) {
             emit m_parent->itemsDeleted(deletedItems);
-            // for compat
-            Q_FOREACH(const KFileItem& item, deletedItems)
-                emit m_parent->deleteItem(item);
         }
         emitItems();
     }
@@ -2544,13 +2541,7 @@ void KDirLister::Private::emitItemsDeleted(const KFileItemList &_items)
     KFileItemList items = _items;
     QMutableListIterator<KFileItem> it(items);
     while (it.hasNext()) {
-        const KFileItem& item = it.next();
-        if (isItemVisible(item) && m_parent->matchesMimeFilter(item)) {
-            // for compat
-            emit m_parent->deleteItem(item);
-        } else {
-            it.remove();
-        }
+        it.remove();
     }
     if (!items.isEmpty())
         emit m_parent->itemsDeleted(items);

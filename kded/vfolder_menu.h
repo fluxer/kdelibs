@@ -21,7 +21,7 @@
 #define KDED_VFOLDER_MENU_H
 
 #include <QtCore/QObject>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 #include <QtCore/QStringList>
 #include <QtCore/QHash>
 #include <QtCore/QSet>

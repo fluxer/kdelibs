@@ -151,8 +151,6 @@ Q_SIGNALS:
    */
   void newToolBarConfig();
 
-  QT_MOC_COMPAT void newToolbarConfig();
-
 protected:
   virtual void showEvent(QShowEvent* event);
   virtual void hideEvent(QHideEvent* event);

@@ -22,12 +22,12 @@
 #include <QApplication>
 #include <QFile>
 #include <QFileInfo>
-#include <QMutableListIterator>
+#include <QtCore/qlist.h>
 #include <QPair>
 #include <QStringBuilder>
 #include <QTimer>
 #ifdef Q_WS_X11
-#include <QX11Info>
+#include <QtGui/qx11info_x11.h>
 #include "private/effectwatcher_p.h"
 #endif
 

@@ -35,7 +35,7 @@
 #include <QTextDocument>
 #include <QTextTable>
 #include <QTextCursor>
-#include <QTextTableFormat>
+#include <QtGui/qtextformat.h>
 #include <QPrinter>
 #include <QPrintDialog>
 

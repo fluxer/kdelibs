@@ -35,7 +35,8 @@
 #include <kservicetype.h>
 #include <kservicetypeprofile.h>
 
-#include <QtCore/Q_PID>
+#include <QtCore/qprocess.h>
+#include <QtCore/qthread.h>
 
 // Helper method for all the trader tests
 static bool offerListHasService( const KService::List& offers,

@@ -23,7 +23,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
-#include <QtCore/QModelIndex>
+#include <QtCore/qabstractitemmodel.h>
 #include <QtCore/QStringList>
 #include <kbookmark.h>
 #include <solid/device.h>

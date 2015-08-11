@@ -22,11 +22,11 @@
 #define MODELSPY_H
 
 #include <QObject>
-#include <QVariantList>
-#include <QModelIndex>
+#include <QtCore/qvariant.h>
+#include <QtCore/qabstractitemmodel.h>
 
 #include "persistentchangelist.h"
-#include <QItemSelectionRange>
+#include <QtGui/qitemselectionmodel.h>
 
 #include "proxymodeltestsuite_export.h"
 

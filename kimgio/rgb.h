@@ -11,7 +11,7 @@
 #define KIMG_RGB_H
 
 
-#include <QtGui/QImageIOPlugin>
+#include <QtGui/qimageiohandler.h>
 #include <QtCore/QMap>
 #include <QtCore/QVector>
 

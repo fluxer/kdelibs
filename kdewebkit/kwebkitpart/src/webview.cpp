@@ -42,7 +42,7 @@
 
 #include <QTimer>
 #include <QMimeData>
-#include <QDropEvent>
+#include <QtGui/qevent.h>
 #include <QLabel>
 #include <QNetworkRequest>
 #include <QWebFrame>

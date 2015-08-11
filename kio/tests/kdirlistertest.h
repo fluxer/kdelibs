@@ -22,7 +22,7 @@
 #include <QSignalSpy>
 #include <QtCore/QObject>
 #include <ktempdir.h>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <kdirlister.h>
 #include <QtCore/QEventLoop>
 

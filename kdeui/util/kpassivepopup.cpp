@@ -25,10 +25,10 @@
 #include <QBitmap>
 #include <QLabel>
 #include <QLayout>
-#include <QMouseEvent>
+#include <QtGui/qevent.h>
 #include <QPainter>
 #include <QPainterPath>
-#include <QPolygonF>
+#include <QtGui/qpolygon.h>
 #include <QTimer>
 #include <QToolTip>
 #include <QSystemTrayIcon>

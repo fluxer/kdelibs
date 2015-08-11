@@ -24,7 +24,7 @@
 
 #include <limits.h>
 
-#include <QItemSelection>
+#include <QtGui/qitemselectionmodel.h>
 #include <QStringList>
 #include <QSize>
 

@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QFile>
 #include <QTextStream>
 

@@ -24,7 +24,8 @@
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
+#include <QtCore/qdebug.h>
 
 #include "solid/deviceinterface.h"
 #include "solid/genericinterface.h"

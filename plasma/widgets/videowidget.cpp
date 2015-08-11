@@ -24,7 +24,7 @@
 #include <QUrl>
 #include <QTimer>
 #include <QGraphicsLinearLayout>
-#include <QGraphicsSceneResizeEvent>
+#include <QtGui/qgraphicssceneevent.h>
 
 #include <kicon.h>
 #include <kiconloader.h>

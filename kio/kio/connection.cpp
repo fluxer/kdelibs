@@ -26,7 +26,7 @@
 
 #include <QQueue>
 #include <QPointer>
-#include <QTime>
+#include <QtCore/qdatetime.h>
 
 #include <kdebug.h>
 #include <kcomponentdata.h>

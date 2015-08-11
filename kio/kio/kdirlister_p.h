@@ -28,6 +28,7 @@
 #include <QtCore/QSet>
 #include <QtCore/QTimer>
 #include <QtGui/QWidget>
+#include <QtCore/qfileinfo.h>
 
 #include <kurl.h>
 #include <kdebug.h>

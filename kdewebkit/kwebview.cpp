@@ -28,7 +28,7 @@
 #include "kwebview_p.h"
 #include "kwebpage.h"
 
-#include <QtGui/QMouseEvent>
+#include <QtGui/qevent.h>
 
 
 KWebView::KWebView(QWidget *parent, bool createCustomPage)

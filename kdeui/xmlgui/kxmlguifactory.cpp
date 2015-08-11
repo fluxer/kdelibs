@@ -26,11 +26,11 @@
 #include <assert.h>
 
 #include <QtCore/QDir>
-#include <QtXml/QDomDocument>
+#include <QtXml/qdom.h>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtGui/QWidget>
-#include <QtCore/QDate>
+#include <QtCore/qdatetime.h>
 #include <QtCore/QVariant>
 #include <QTextCodec>
 

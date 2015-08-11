@@ -29,7 +29,7 @@
 
 // Qt includes
 
-#include <QMutexLocker>
+#include <QtCore/qmutex.h>
 
 // KDE includes
 
