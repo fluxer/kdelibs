@@ -27,7 +27,6 @@ set(cmakeFiles
                FindAutomoc4.cmake
                FindAvahi.cmake
                FindBerkeleyDB.cmake
-               FindBlitz.cmake
                FindBlueZ.cmake
                FindCarbon.cmake
                FindDBusMenuQt.cmake
@@ -77,7 +76,6 @@ set(cmakeFiles
                FindOpenEXR.cmake
                FindPCRE.cmake
                FindPhonon.cmake
-               FindPlasma.cmake
                FindPopplerQt4.cmake
                FindPostgreSQL.cmake
                FindPulseAudio.cmake
