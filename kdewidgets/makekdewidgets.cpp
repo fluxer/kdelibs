@@ -19,11 +19,11 @@ static const char classHeader[] = 	"/**\n"
 					"* The generated code in this file is licensed under the same license that the\n"
 					"* input file.\n"
                                    	"*/\n"
-					"#include <QIcon>\n"
-					"#include <QtDesigner/QDesignerContainerExtension>\n"
-					"#include <QDesignerCustomWidgetInterface>\n"
-					"#include <qplugin.h>\n"
-					"#include <qdebug.h>\n";
+					"#include <QtGui/qicon.h>\n"
+					"#include <QtDesigner/container.h>\n"
+					"#include <QtDesigner/customwidget.h>\n"
+					"#include <QtCore/qplugin.h>\n"
+					"#include <QtCore/qdebug.h>\n";
 
 static const char collClassDef[] = "class %CollName : public QObject, public QDesignerCustomWidgetCollectionInterface\n"
                                 "{\n"
