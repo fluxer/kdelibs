@@ -2541,7 +2541,10 @@ void KDirLister::Private::emitItemsDeleted(const KFileItemList &_items)
     KFileItemList items = _items;
     QMutableListIterator<KFileItem> it(items);
     while (it.hasNext()) {
-        it.remove();
+        const KFileItem& item = it.next();
+        if (!(isItemVisible(item) && m_parent->matchesMimeFilter(item))) {
+            it.remove();
+        }
     }
     if (!items.isEmpty())
         emit m_parent->itemsDeleted(items);
