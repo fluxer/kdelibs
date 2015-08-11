@@ -40,7 +40,7 @@ if(Katie_FIND_COMPONENTS)
     set(KATIECOMPONENTS ${Katie_FIND_COMPONENTS})
 else()
     # TODO: add Multimedia once it builds
-    set(KATIECOMPONENTS Core Gui Network OpenGL Sql Svg Test DBus Xml XmlPatterns Script ScriptTools WebKit Declarative Help UiTools)
+    set(KATIECOMPONENTS Core Gui Network OpenGL Sql Svg Test DBus Xml XmlPatterns Script ScriptTools WebKit Declarative Help UiTools Designer)
 endif()
 # TODO: designer, linguist?
 set(KATIETOOLS moc uic rcc qdbusxml2cpp qdbuscpp2xml qhelpgenerator qcollectiongenerator lupdate lrelease lconvert)
