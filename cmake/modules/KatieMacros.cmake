@@ -58,6 +58,18 @@ macro(KATIE_RESOURCES RESOURCES)
     endforeach()
 endmacro()
 
+macro(KATIE_RESOURCE RESOURCES OUTNAME)
+    set(rscout ${CMAKE_BINARY_DIR}/include/qrc_${OUTNAME}.cpp)
+    add_custom_command(
+        OUTPUT ${rscout}
+        COMMAND ${KATIE_RCC_EXECUTABLE} ${RESOURCES} -o "${rscout}" -name "${OUTNAME}"
+        # MAIN_DEPENDENCY ${resource}
+    )
+    foreach(tmpres ${RESOURCES})
+        set_property(SOURCE ${tmpres} APPEND PROPERTY OBJECT_DEPENDS ${rscout})
+    endforeach()
+endmacro()
+
 macro(KATIE_DBUS_ADAPTOR SRCDEP SRCIN SRCOUT)
     if(${ARG4})
         set(dbusxmlargs ${ARG4})

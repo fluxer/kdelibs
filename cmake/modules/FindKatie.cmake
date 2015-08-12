@@ -49,6 +49,10 @@ endif()
 # TODO: designer, linguist?
 set(KATIETOOLS moc uic rcc qdbusxml2cpp qdbuscpp2xml qhelpgenerator qcollectiongenerator lupdate lrelease lconvert)
 
+# enable compat by default
+if(NOT "${KATIE_COMPAT}" STREQUAL FALSE AND NOT "${KATIE_COMPAT}" STREQUAL OFF)
+    set(KATIE_COMPAT TRUE)
+endif()
 set(KATIE_FOUND TRUE)
 set(KATIE_INCLUDES ${CMAKE_BINARY_DIR}/_generated_)
 set(KATIE_LIBRARIES)
@@ -140,7 +144,7 @@ if(KATIE_MKSPECS_DIR)
     include(${KATIE_MKSPECS_DIR}/mkspecs/mkspecs.cmake)
 endif()
 
-if(${KATIE_COMPAT} AND KATIE_FOUND)
+if(KATIE_COMPAT AND KATIE_FOUND)
     set(Qt4_FOUND TRUE)
     set(QT_FOUND TRUE)
     set(QT4_FOUND TRUE)
@@ -187,7 +191,11 @@ if(${KATIE_COMPAT} AND KATIE_FOUND)
         set(QT_QT${uppercomp}_FOUND "${KATIE_${uppercomp}_FOUND}")
         set(QT_QT${uppercomp}_LIBRARY "${KATIE_${uppercomp}_LIBRARIES}")
     endforeach()
+
+    add_definitions(-DQT_INCLUDE_COMPAT)
+
     include(Qt4Macros)
+    include(Qt4ConfigDependentSettings)
 endif()
 
 include(FindPackageHandleStandardArgs)
