@@ -37,7 +37,11 @@ if(KATIE_INCLUDES AND KATIE_LIBRARIES)
 endif(KATIE_INCLUDES AND KATIE_LIBRARIES)
 
 if(Katie_FIND_COMPONENTS)
-    set(KATIECOMPONENTS ${Katie_FIND_COMPONENTS})
+    # for compat with Qt
+    foreach(comp ${Katie_FIND_COMPONENTS})
+        string(REPLACE REGEX "^Qt" "" modcomp ${comp})
+        set(KATIECOMPONENTS ${modcomp})
+    endforeach()
 else()
     # TODO: add Multimedia once it builds
     set(KATIECOMPONENTS Core Gui Network OpenGL Sql Svg Test DBus Xml XmlPatterns Script ScriptTools WebKit Declarative Help UiTools Designer)
@@ -84,7 +88,7 @@ foreach(component ${KATIECOMPONENTS})
         pkg_check_modules(PC_${uppercomp} QUIET ${component})
     endif(NOT WIN32)
 
-    find_path(${uppercomp}_INCLUDES
+    find_path(FIND_${uppercomp}_INCLUDES
         NAMES
         ${component}
         PATH_SUFFIXES ${component}
@@ -97,7 +101,7 @@ foreach(component ${KATIECOMPONENTS})
         ${INCLUDE_INSTALL_DIR}
     )
 
-    find_library(${uppercomp}_LIBRARIES
+    find_library(FIND_${uppercomp}_LIBRARIES
         ${component}
         HINTS
         /lib
@@ -108,8 +112,8 @@ foreach(component ${KATIECOMPONENTS})
         ${LIB_INSTALL_DIR}
     )
 
-    set(COMPONENT_INCLUDES ${${uppercomp}_INCLUDES})
-    set(COMPONENT_LIBRARIES ${${uppercomp}_LIBRARIES} ${PC_${uppercomp}_LIBRARIES})
+    set(COMPONENT_INCLUDES ${FIND_${uppercomp}_INCLUDES})
+    set(COMPONENT_LIBRARIES ${FIND_${uppercomp}_LIBRARIES} ${PC_${uppercomp}_LIBRARIES})
     set(COMPONENT_VERSION ${PC_${uppercomp}_VERSION})
     if(NOT COMPONENT_VERSION)
         set(COMPONENT_VERSION "unknown")
@@ -165,9 +169,10 @@ if(${KATIE_COMPAT} AND KATIE_FOUND)
             set_property(TARGET Qt4::${tool} PROPERTY IMPORTED_LOCATION ${KATIE_${uppertool}_EXECUTABLE})
         endforeach()
 
-        # XXX: should those be defined conditionally based on requested components?
         foreach(component ${KATIECOMPONENTS})
+            string(TOUPPER ${component} uppercomp)
             add_library(Qt4::Qt${component} ${KATIE_TYPE} IMPORTED)
+            set_property(TARGET Qt4::Qt${component} PROPERTY IMPORTED_LOCATION ${FIND_KATIE_${uppercomp}_LIBRARIES})
         endforeach()
     endif()
 
