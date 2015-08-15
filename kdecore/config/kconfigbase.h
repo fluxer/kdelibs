@@ -26,7 +26,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QtGlobal>
+#include <QtCore/qglobal.h>
 
 class QStringList;
 class KConfigGroup;

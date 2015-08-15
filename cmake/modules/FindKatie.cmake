@@ -195,7 +195,6 @@ if(KATIE_COMPAT AND KATIE_FOUND)
     add_definitions(-DQT_INCLUDE_COMPAT)
 
     include(Qt4Macros)
-    include(Qt4ConfigDependentSettings)
 endif()
 
 include(FindPackageHandleStandardArgs)
