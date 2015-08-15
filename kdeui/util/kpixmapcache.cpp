@@ -27,7 +27,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDateTime>
 #include <QtGui/QPixmapCache>
-#include <QtCore/QtGlobal>
+#include <QtCore/qglobal.h>
 #include <QtGui/QPainter>
 #include <QtCore/QQueue>
 #include <QtCore/QTimer>

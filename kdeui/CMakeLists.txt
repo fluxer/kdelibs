@@ -31,7 +31,6 @@ include_directories(
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/widgets )
 
-set(HAVE_KSECRETSSERVICE 0)
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/util/config-kwallet.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/util/config-kwallet.h
