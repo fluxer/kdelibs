@@ -146,10 +146,6 @@ int kdeinit_x_errhandler( Display *, XErrorEvent *err );
 }
 #endif
 
-#ifdef KDEINIT_OOM_PROTECT
-static int oom_pipe = -1;
-#endif
-
 /*
  * Clean up the file descriptor table by closing all file descriptors
  * that are still open.
@@ -165,10 +161,7 @@ static void cleanup_fds()
         maxfd = rl.rlim_max;
     for (int fd = 3; fd < maxfd; ++fd)
     {
-#ifdef KDEINIT_OOM_PROTECT
-       if( fd != oom_pipe )
-#endif
-          close(fd);
+        close(fd);
     }
 }
 
@@ -413,40 +406,6 @@ QByteArray execpath_avoid_loops( const QByteArray& exec, int envc, const char* e
      return QFile::encodeName(execpath);
 }
 
-#ifdef KDEINIT_OOM_PROTECT
-static void oom_protect_sighandler( int ) {
-}
-
-static void reset_oom_protect() {
-   if( oom_pipe <= 0 )
-      return;
-   struct sigaction act, oldact;
-   act.sa_handler = oom_protect_sighandler;
-   act.sa_flags = 0;
-   sigemptyset( &act.sa_mask );
-   sigaction( SIGUSR1, &act, &oldact );
-   sigset_t sigs, oldsigs;
-   sigemptyset( &sigs );
-   sigaddset( &sigs, SIGUSR1 );
-   sigprocmask( SIG_BLOCK, &sigs, &oldsigs );
-   pid_t pid = getpid();
-   if( write( oom_pipe, &pid, sizeof( pid_t )) > 0 ) {
-      sigsuspend( &oldsigs ); // wait for the signal to come
-   } else {
-#ifndef NDEBUG
-      fprintf( stderr, "Failed to reset OOM protection: %d\n", pid );
-#endif
-   }
-   sigprocmask( SIG_SETMASK, &oldsigs, NULL );
-   sigaction( SIGUSR1, &oldact, NULL );
-   close( oom_pipe );
-   oom_pipe = -1;
-}
-#else
-static void reset_oom_protect() {
-}
-#endif
-
 static pid_t launch(int argc, const char *_name, const char *args,
                     const char *cwd=0, int envc=0, const char *envs=0,
                     bool reset_env = false,
@@ -538,7 +497,6 @@ static pid_t launch(int argc, const char *_name, const char *args,
      /** Child **/
      close(d.fd[0]);
      close_fds();
-     reset_oom_protect();
 
      // Try to chdir, either to the requested directory or to the user's document path by default.
      // We ignore errors - if you write a desktop file with Exec=foo and Path=/doesnotexist,
@@ -1451,9 +1409,6 @@ static void kdeinit_library_path()
      display.truncate(i);
 
    display.replace(':','_');
-#ifdef __APPLE__
-   display.replace('/','_');
-#endif
    // WARNING, if you change the socket name, adjust kwrapper too
    const QString socketFileName = QString::fromLatin1("kdeinit4_%1").arg(QLatin1String(display));
    QByteArray socketName = QFile::encodeName(KStandardDirs::locateLocal("socket", socketFileName, *s_instance));
@@ -1646,10 +1601,6 @@ int main(int argc, char **argv, char **envp)
 	 printf("KDE: %s\n", KDE_VERSION_STRING);
 	 exit(0);
       }
-#ifdef KDEINIT_OOM_PROTECT
-      if (strcmp(safe_argv[i], "--oom-pipe") == 0 && i+1<argc)
-         oom_pipe = atol(argv[i+1]);
-#endif
       if (strcmp(safe_argv[i], "--help") == 0)
       {
         printf("Usage: kdeinit4 [options]\n");
@@ -1784,11 +1735,7 @@ int main(int argc, char **argv, char **envp)
 #endif
          handle_requests(pid);
       }
-      else if (safe_argv[i][0] == '-'
-#ifdef KDEINIT_OOM_PROTECT
-          || isdigit(safe_argv[i][0])
-#endif
-          )
+      else if (safe_argv[i][0] == '-')
       {
          // Ignore
       }

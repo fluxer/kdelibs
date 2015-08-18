@@ -77,10 +77,6 @@ static char *getDisplay()
       *screen = '\0';
    while((i = strchr(result, ':')))
      *i = '_';
-#ifdef __APPLE__
-   while((i = strchr(result, '/')))
-     *i = '_';
-#endif
    return result;
 }
 
@@ -236,7 +232,7 @@ static void sig_pass_handler( int signo );
 static void setup_signals( void );
 
 static void setup_signal_handler( int signo, int clean )
-{    
+{
     struct sigaction sa;
     if( clean )
         sa.sa_handler = SIG_DFL;
@@ -265,7 +261,7 @@ static void sig_pass_handler( int signo )
         setup_signal_handler( signo, 1 );
         raise( signo ); /* handle the signal again */
     }
-        
+
     errno = save_errno;
 }
 
@@ -454,9 +450,9 @@ int main(int argc, char **argv)
           size += strlen(tty)+1;
       }
    }
-   
+
    size += sizeof( avoid_loops );
-   
+
    if( !wrapper )
    {
        startup_id = getenv( "DESKTOP_STARTUP_ID" );
@@ -521,7 +517,7 @@ int main(int argc, char **argv)
           p+=strlen(tty)+1;
       }
    }
-   
+
    memcpy( p, &avoid_loops, sizeof( avoid_loops ));
    p += sizeof( avoid_loops );
 
@@ -530,7 +526,7 @@ int main(int argc, char **argv)
        memcpy(p, startup_id, strlen(startup_id)+1);
        p+= strlen(startup_id)+1;
    }
-   
+
    if( p - buffer != size ) /* should fail only if you change this source and do */
                                  /* a stupid mistake, it should be assert() actually */
    {
