@@ -22,6 +22,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <time.h>
+#include <pwd.h>
+#include <grp.h>
 #include <kdebug.h>
 #include <kmimetype.h>
 #include <QtCore/QRegExp>
@@ -108,6 +110,7 @@ bool KAr::openArchive( QIODevice::OpenMode mode )
         QByteArray name;
         int date, uid, gid, mode;
         qint64 size;
+        QString suid, sgid;
 
         dev->seek( dev->pos() + (2 - (dev->pos() % 2)) % 2 ); // Ar headers are padded to byte boundary
 
@@ -130,6 +133,9 @@ bool KAr::openArchive( QIODevice::OpenMode mode )
         gid = ar_header.mid( 34, 6 ).toInt();
         mode = ar_header.mid( 40, 8 ).toInt();
         size = ar_header.mid( 48, 10 ).toInt();
+
+        suid = QLatin1String(getpwuid(uid)->pw_name);
+        sgid = QLatin1String(getgrgid(gid)->gr_name);
 
         bool skip_entry = false; // Deal with special entries
         if (name.mid(0, 1) == "/") {
@@ -162,7 +168,7 @@ bool KAr::openArchive( QIODevice::OpenMode mode )
         kDebug(7042) << "Filename: " << name << " Size: " << size;
 
         KArchiveEntry* entry = new KArchiveFile(this, QString::fromLocal8Bit(name), mode, date,
-                                                /*uid*/ QString(), /*gid*/ QString(), /*symlink*/ QString(),
+                                                suid, sgid, /*symlink*/ QString(),
                                                 dev->pos(), size);
         rootDir()->addEntry(entry); // Ar files don't support directories, so everything in root
 
