@@ -51,7 +51,7 @@ void KOperaBookmarkImporter::parseOperaBookmarks( )
    int lineno = 0, version = 0;
    QTextStream stream(&file);
    stream.setCodec(codec);
-   while(! stream.atEnd()) {
+   while(!stream.atEnd()) {
         lineno++;
         QString line = stream.readLine().trimmed();
 

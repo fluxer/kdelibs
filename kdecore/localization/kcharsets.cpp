@@ -764,7 +764,6 @@ QTextCodec *KCharsets::codecForNameOrNull( const QByteArray& n ) const
             d->codecForNameDict.insert( n, codec );
             return codec;
         }
-        changed = false;
     }
 
     // these codecs are built into Qt, but the name given for the codec is different,

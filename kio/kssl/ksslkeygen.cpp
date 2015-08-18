@@ -293,5 +293,4 @@ void KSSLKeyGen::setKeySize(int idx)
 }
 
 #include "moc_ksslkeygen.cpp"
-
 #include "moc_ksslkeygen_p.cpp"

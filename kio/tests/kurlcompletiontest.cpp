@@ -67,11 +67,13 @@ void KUrlCompletionTest::setup( bool setDirAsURL )
     QFile f1( m_dir + "/file1" );
     bool ok = f1.open( QIODevice::WriteOnly );
     assert( ok );
+    Q_UNUSED( ok );
     f1.close();
 
     QFile f2( m_dir + "/file#a" );
     ok = f2.open( QIODevice::WriteOnly );
     assert( ok );
+    Q_UNUSED( ok );
     f2.close();
 
     QDir().mkdir( m_dir + "/file_subdir" );

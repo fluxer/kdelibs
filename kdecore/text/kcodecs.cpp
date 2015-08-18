@@ -183,7 +183,6 @@ void KCodecs::quotedPrintableEncode(const QByteArray& in, QByteArray& out, bool 
   cursor = out.data();
   data = in.data();
   lineLength = 0;
-  pos = 0;
 
   for (unsigned int i = 0; i < length; i++)
   {

@@ -61,10 +61,9 @@ KSycocaFactory::KSycocaFactory(KSycocaFactoryId factory_id)
         d->m_endEntryOffset = i;
 
         QDataStream* str = stream();
-        int saveOffset = str->device()->pos();
         // Init index tables
         d->m_sycocaDict = new KSycocaDict(str, d->m_sycocaDictOffset);
-        saveOffset = str->device()->seek(saveOffset);
+        str->device()->seek(str->device()->pos());
     } else {
         // We are in kbuildsycoca4 -- build new database!
         m_entryDict = new KSycocaEntryDict;

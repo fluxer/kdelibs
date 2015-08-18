@@ -1286,6 +1286,7 @@ static bool indexIsValid(bool startWithChildTrees, int row, const QList<QPersist
         const int proxyFirstRow = result.key();
         const QModelIndex sourceFirstChild = result.value();
         Q_ASSERT(proxyFirstRow >= 0);
+        Q_UNUSED(proxyFirstRow);
         Q_ASSERT(sourceFirstChild.isValid());
         Q_ASSERT(sourceFirstChild.parent().isValid());
         Q_ASSERT(row <= proxyFirstRow + sourceFirstChild.model()->rowCount(sourceFirstChild.parent()));

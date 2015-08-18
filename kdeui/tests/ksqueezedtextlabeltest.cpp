@@ -10,6 +10,7 @@ int main( int argc, char **argv )
 
   KVBox* box = new KVBox();
   KSqueezedTextLabel *l = new KSqueezedTextLabel( "This is a rather long string", box);
+  Q_UNUSED(*l);
   l = new KSqueezedTextLabel( "This is another long string, selectable by mouse", box );
   l->setTextElideMode( Qt::ElideRight );
   l->setTextInteractionFlags(Qt::TextSelectableByMouse);

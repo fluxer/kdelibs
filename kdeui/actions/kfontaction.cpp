@@ -165,7 +165,6 @@ void KFontAction::setFont( const QString &family )
     if (i > -1)
     {
        lowerName = lowerName.left(i);
-       i = 0;
        if (setCurrentAction(lowerName, Qt::CaseInsensitive))
           return;
     }

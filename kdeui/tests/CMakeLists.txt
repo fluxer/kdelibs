@@ -8,16 +8,24 @@ include_directories( ${KDE4_KDEUI_INCLUDES} proxymodeltestsuite )
 add_definitions(-DQT_GUI_LIB)
 
 MACRO(KDEUI_UNIT_TESTS)
-       FOREACH(_testname ${ARGN})
-               kde4_add_unit_test(${_testname} TESTNAME kdeui-${_testname} ${_testname}.cpp)
-               target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
-       ENDFOREACH(_testname)
+    FOREACH(_testname ${ARGN})
+        if(EXISTS ${_testname}.h)
+            kde4_add_unit_test(${_testname} TESTNAME kdeui-${_testname} ${_testname}.cpp ${_testname}.h)
+        else()
+            kde4_add_unit_test(${_testname} TESTNAME kdeui-${_testname} ${_testname}.cpp)
+        endif()
+        target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
+    ENDFOREACH(_testname)
 ENDMACRO(KDEUI_UNIT_TESTS)
 MACRO(KDEUI_EXECUTABLE_TESTS)
-       FOREACH(_testname ${ARGN})
-               kde4_add_executable(${_testname} TEST ${_testname}.cpp)
-               target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
-       ENDFOREACH(_testname)
+    FOREACH(_testname ${ARGN})
+        if(EXISTS ${_testname}.h)
+            kde4_add_executable(${_testname} TEST ${_testname}.cpp ${_testname}.h)
+        else()
+            kde4_add_executable(${_testname} TEST ${_testname}.cpp)
+        endif()
+        target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
+    ENDFOREACH(_testname)
 ENDMACRO(KDEUI_EXECUTABLE_TESTS)
 
 SET(proxyModelTestSources
@@ -27,19 +35,21 @@ SET(proxyModelTestSources
 add_subdirectory(proxymodeltestsuite)
 
 MACRO(KDEUI_PROXYMODEL_TESTS)
-       FOREACH(_testname ${ARGN})
-               kde4_add_unit_test(${_testname} TESTNAME kdeui-${_testname} ${_testname}.cpp ${proxyModelTestSources} )
-               target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN32_LIBRARIES} proxymodeltestsuite )
-       ENDFOREACH(_testname)
+    FOREACH(_testname ${ARGN})
+        if(EXISTS ${_testname}.h)
+            kde4_add_unit_test(${_testname} TESTNAME kdeui-${_testname} ${_testname}.cpp ${_testname}.h ${proxyModelTestSources})
+        else()
+            kde4_add_unit_test(${_testname} TESTNAME kdeui-${_testname} ${_testname}.cpp ${proxyModelTestSources})
+        endif()
+        target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN32_LIBRARIES} proxymodeltestsuite)
+    ENDFOREACH(_testname)
 ENDMACRO(KDEUI_PROXYMODEL_TESTS)
 
 
 KDEUI_UNIT_TESTS(
   kactioncollectiontest
-  kactioncategorytest
   kbuttongrouptest
   kcompletioncoretest
-  kconfigguitest
   kconfigskeletontest
   kdualactiontest
   kfadewidgeteffecttest
@@ -54,7 +64,6 @@ KDEUI_UNIT_TESTS(
   kstandardshortcuttest
   kuniqueapptest
   kwordwraptest
-  kapplication_unittest
   kstartupinfo_unittest
   kcolorutilstest
   kxmlgui_unittest
@@ -75,6 +84,9 @@ KDEUI_UNIT_TESTS(
   # klinkitemselectionmodeltest
   # kstandardactiontest
   # ktextedit_unittest
+  # kactioncategorytest
+  # kapplication_unittest
+  # kconfigguitest
 )
 
 KDEUI_PROXYMODEL_TESTS(
@@ -98,7 +110,6 @@ KDEUI_EXECUTABLE_TESTS(
   kcolordlgtest
   kcolorcombotest
   kcomboboxtest
-  kcompletionuitest
   kdatepicktest
   klanguagebuttontest
   kdatetabletest
@@ -116,12 +127,9 @@ KDEUI_EXECUTABLE_TESTS(
   kjobtrackerstest
   kledtest
   klineedittest
-  kmainwindowtest
-  kmainwindowrestoretest
   kmessageboxtest
   kmessagetest
   kmessagewidgettest
-  kmodifierkeyinfotest
   knewpassworddialogtest
   kstatusnotifieritemtest
   knotificationrestrictionstest
@@ -154,6 +162,10 @@ KDEUI_EXECUTABLE_TESTS(
   kpixmapsequenceoverlaypaintertest
   # FIXME: these doesn't get mocked!
   # ktreewidgetsearchlinetest
+  # kcompletionuitest
+  # kmainwindowrestoretest
+  # kmainwindowtest
+  # kmodifierkeyinfotest
 )
 
 if (Q_WS_X11)

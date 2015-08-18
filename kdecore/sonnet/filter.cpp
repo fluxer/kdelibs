@@ -116,7 +116,8 @@ static bool
 finderNextWord(QTextBoundaryFinder &finder, QString &word, int &bufferStart)
 {
     QTextBoundaryFinder::BoundaryReasons boundary = finder.boundaryReasons();
-    int start = finder.position(), end = finder.position();
+    int start = finder.position();
+    int end = finder.position();
     bool inWord = (boundary & QTextBoundaryFinder::StartWord) != 0;
     while (finder.toNextBoundary() > 0) {
         boundary = finder.boundaryReasons();
