@@ -899,7 +899,7 @@ static bool checkDesktopFile(const KFileItem& item, bool _determineMimeType)
     // only local files
     bool isLocal;
     const KUrl url = item.mostLocalUrl(isLocal);
-    if (!isLocal)
+    if (!url.isLocalFile())
         return false;
 
     // only regular files
