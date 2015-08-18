@@ -45,10 +45,7 @@ configure_file(
 )
 
 add_subdirectory( about )
-# FIXME: mocking fails with Katie
-if(NOT KATIE_FOUND)
-    add_subdirectory( tests )
-endif()
+add_subdirectory( tests )
 add_subdirectory( sonnet/tests )
 
 ########### next target ###############

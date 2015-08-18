@@ -32,7 +32,7 @@
 #include "kselectaction.h"
 #include "kselectaction_p.h"
 
-#include <QEvent>
+#include <QFocusEvent>
 #include <QToolButton>
 #include <QToolBar>
 #include <QtGui/qstandarditemmodel.h>
