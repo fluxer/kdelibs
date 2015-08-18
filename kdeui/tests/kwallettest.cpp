@@ -161,3 +161,4 @@ void KWalletTest::testWallet()
 
 QTEST_KDEMAIN(KWalletTest, GUI)
 
+#include "moc_kwallettest.cpp"

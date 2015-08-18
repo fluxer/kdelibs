@@ -111,4 +111,4 @@ int main(int argc, char **argv)
     return app.exec();
 }
 
-#include <kstatusnotifieritemtest.moc>
+#include "moc_kstatusnotifieritemtest.cpp"
