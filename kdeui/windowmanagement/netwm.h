@@ -391,7 +391,7 @@ public:
        NOTE: KDE uses virtual desktops and does not directly support
        viewport in any way. They are however mapped to virtual desktops
        if needed.
-       
+
        @param ignore_viewport if false, viewport is mapped to virtual desktops
 
        @return the number of the current desktop
@@ -440,7 +440,7 @@ public:
        NOTE: KDE uses virtual desktops and does not directly support
        viewport in any way. It is however mapped to virtual desktops
        if needed.
-       
+
        @param desktop the number of the desktop
        @param ignore_viewport if false, viewport is mapped to virtual desktops
     **/
@@ -991,7 +991,7 @@ public:
        NOTE: KDE uses virtual desktops and does not directly support
        viewport in any way. It is however mapped to virtual desktops
        if needed.
-       
+
        @param ignore_viewport if false, viewport is mapped to virtual desktops
 
        @return the number of the window's desktop
@@ -1109,7 +1109,7 @@ public:
        NOTE: KDE uses virtual desktops and does not directly support
        viewport in any way. It is however mapped to virtual desktops
        if needed.
-       
+
        @param desktop the number of the new desktop
        @param ignore_viewport if false, viewport is mapped to virtual desktops
 
@@ -1321,54 +1321,6 @@ public:
     **/
     static const int OnAllDesktops;
 
-protected:
-    /**
-       A Window Manager should subclass NETWinInfo and reimplement this function when
-       it wants to know when a Client made a request to change desktops (ie. move to
-       another desktop).
-
-       @param desktop the number of the desktop
-    **/
-    virtual void changeDesktop(int desktop) { Q_UNUSED(desktop); }
-
-    /**
-       A Window Manager should subclass NETWinInfo and reimplement this function when
-       it wants to know when a Client made a request to change state (ie. to
-       Shade / Unshade).
-
-       @param state the new state
-
-       @param mask the mask for the state
-    **/
-    virtual void changeState(unsigned long state, unsigned long mask) { Q_UNUSED(state); Q_UNUSED(mask); }
-
-private:
-    void update( const unsigned long[] );
-    void updateWMState();
-    void setIconInternal(NETRArray<NETIcon>& icons, int& icon_count, Atom property, NETIcon icon, Bool replace);
-    NETIcon iconInternal(NETRArray<NETIcon>& icons, int icon_count, int width, int height) const;
-
-private:
-    NETWinInfoPrivate *p; // krazy:exclude=dpointer (implicitly shared)
-    friend class NETWinInfo2;
-};
-
-
-/**
- This class is an extension of the NETWinInfo class, and exists solely
- for binary compatibility reasons (adds new virtual methods) until KDE5. Simply
- use it instead of NETWinInfo and override also the added virtual methods.
- @since 4.2
-*/
-class KDEUI_EXPORT NETWinInfo2 : public NETWinInfo {
-public:
-    NETWinInfo2(Display *display, Window window, Window rootWindow,
-                const unsigned long properties[], int properties_size,
-                Role role = Client);
-
-    NETWinInfo2(Display *display, Window window,
-                Window rootWindow, unsigned long properties,
-                Role role = Client);
 
     /**
        Sets the desired multiple-monitor topology (4 monitor indices indicating
@@ -1396,9 +1348,28 @@ public:
     NETFullscreenMonitors fullscreenMonitors() const;
 
 protected:
-    friend class NETWinInfo;
     /**
-       A Window Manager should subclass NETWinInfo2 and reimplement this function
+       A Window Manager should subclass NETWinInfo and reimplement this function when
+       it wants to know when a Client made a request to change desktops (ie. move to
+       another desktop).
+
+       @param desktop the number of the desktop
+    **/
+    virtual void changeDesktop(int desktop) { Q_UNUSED(desktop); }
+
+    /**
+       A Window Manager should subclass NETWinInfo and reimplement this function when
+       it wants to know when a Client made a request to change state (ie. to
+       Shade / Unshade).
+
+       @param state the new state
+
+       @param mask the mask for the state
+    **/
+    virtual void changeState(unsigned long state, unsigned long mask) { Q_UNUSED(state); Q_UNUSED(mask); }
+
+    /**
+       A Window Manager should subclass NETWinInfo and reimplement this function
        when it wants to know when a Client made a request to change the
        fullscreen monitor topology for its fullscreen state.
 
@@ -1406,9 +1377,16 @@ protected:
        fullscreen monitor topology.
     **/
     virtual void changeFullscreenMonitors(NETFullscreenMonitors topology) { Q_UNUSED(topology); }
-};
 
-//#define KWIN_FOCUS
+private:
+    void update( const unsigned long[] );
+    void updateWMState();
+    void setIconInternal(NETRArray<NETIcon>& icons, int& icon_count, Atom property, NETIcon icon, Bool replace);
+    NETIcon iconInternal(NETRArray<NETIcon>& icons, int icon_count, int width, int height) const;
+
+private:
+    NETWinInfoPrivate *p; // krazy:exclude=dpointer (implicitly shared)
+};
 
 #endif
 #endif // netwm_h
