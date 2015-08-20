@@ -268,15 +268,6 @@ enum AnnouncementMethod {
 };
 Q_DECLARE_FLAGS(AnnouncementMethods, AnnouncementMethod)
 
-enum TrustLevel {
-    InvalidCredentials = 0, /**< The credentials are invalid **/
-    UnknownCredentials = 1, /**< The credentials are unknown **/
-    ValidCredentials = 2, /**< The credentials are valid **/
-    TrustedCredentials = 3, /**< The credentials are trusted **/
-    UltimateCredentials = 4 /**< The ultimate trust level applies to the credentials **/
-};
-Q_ENUMS(TrustLevel)
-
 /**
  * @return the scaling factor (0..1) for a ZoomLevel
  **/
