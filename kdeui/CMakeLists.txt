@@ -314,6 +314,7 @@ if (Q_WS_X11 AND X11_Xkb_FOUND)
     include_directories (
         ${X11_Xkb_INCLUDE_PATH}
         ${X11_Xlib_INCLUDE_PATH}
+        ${XCB_INCLUDES}
     )
     set(kdeui_LIB_SRCS ${kdeui_LIB_SRCS} util/kmodifierkeyinfoprovider_x11.cpp)
 else (Q_WS_X11 AND X11_Xkb_FOUND)
@@ -372,9 +373,8 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
 kde4_add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
 
 target_link_libraries(kdeui PRIVATE ${KDE4_KDECORE_LIBS} ${X11_LIBRARIES} ${QT_QTGUI_LIBRARY}
-                            ${QT_QTXML_LIBRARY} ${KDEUI_EXTRA_LIBS} ${QT_QTNETWORK_LIBRARY})
-
-target_link_libraries(kdeui PRIVATE ${QT_QTSVG_LIBRARY} ${DBUSMENUQT_LIBRARIES})
+                            ${QT_QTXML_LIBRARY} ${KDEUI_EXTRA_LIBS} ${QT_QTNETWORK_LIBRARY}
+                            ${QT_QTSVG_LIBRARY} ${DBUSMENUQT_LIBRARIES})
 
 if(X11_XTest_FOUND)
    target_link_libraries(kdeui PRIVATE ${X11_XTest_LIB})
@@ -391,6 +391,10 @@ endif(X11_Xfixes_FOUND)
 if (X11_Xrender_FOUND)
    target_link_libraries(kdeui PRIVATE ${X11_Xrender_LIB})
 endif(X11_Xrender_FOUND)
+
+if (XCB_FOUND)
+   target_link_libraries(kdeui PRIVATE ${XCB_LIBRARIES})
+endif(XCB_FOUND)
 
 target_link_libraries(kdeui PUBLIC kdecore ${QT_QTGUI_LIBRARY} ${QT_QTSVG_LIBRARY})
 

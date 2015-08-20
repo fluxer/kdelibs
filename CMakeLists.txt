@@ -44,6 +44,10 @@ if(UNIX AND Q_WS_X11)
   if(NOT X11_SM_FOUND)
     message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.\nPlease install libSM.\n")
   endif(NOT X11_SM_FOUND)
+  find_package(XCB)
+  if(NOT XCB_FOUND)
+    message(FATAL_ERROR "\nThe XCB development package could not be found.\nPlease install libxcb.\n")
+  endif(NOT XCB_FOUND)
 endif(UNIX AND Q_WS_X11)
 
 #required features:

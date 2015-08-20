@@ -106,8 +106,8 @@ public:
     int xfixesEventBase;
     bool mapViewport();
 
-    void addClient(Window);
-    void removeClient(Window);
+    void addClient(xcb_window_t);
+    void removeClient(xcb_window_t);
 
     bool x11Event( XEvent * ev );
 
@@ -264,7 +264,7 @@ void KWindowSystemPrivate::updateStackingOrder()
 	stackingOrder.append( clientListStacking()[i] );
 }
 
-void KWindowSystemPrivate::addClient(Window w)
+void KWindowSystemPrivate::addClient(xcb_window_t w)
 {
     KWindowSystem* s_q = KWindowSystem::self();
 
@@ -289,7 +289,7 @@ void KWindowSystemPrivate::addClient(Window w)
         emit s_q->strutChanged();
 }
 
-void KWindowSystemPrivate::removeClient(Window w)
+void KWindowSystemPrivate::removeClient(xcb_window_t w)
 {
     KWindowSystem* s_q = KWindowSystem::self();
 
