@@ -176,7 +176,6 @@ struct NETExtendedStrut {
        Bottom border of the strut, width and range.
            **/
     int bottom_width, bottom_start, bottom_end;
-    
 };
 
 
@@ -288,14 +287,14 @@ public:
     **/
 
     enum Role {
-	/**
-	   indicates that the application is a client application.
-	**/
-	Client,
-	/**
-	   indicates that the application is a window manager application.
-	**/
-	WindowManager
+        /**
+        indicates that the application is a client application.
+        **/
+        Client,
+        /**
+        indicates that the application is a window manager application.
+        **/
+        WindowManager
     };
 
     /**
@@ -303,50 +302,50 @@ public:
     **/
 
     enum WindowType {
-	/**
-	   indicates that the window did not define a window type.
-	**/
-	Unknown  = -1,
-	/**
-	   indicates that this is a normal, top-level window
-	**/
-	Normal   = 0,
-	/**
-	   indicates a desktop feature. This can include a single window
-	   containing desktop icons with the same dimensions as the screen, allowing
-	   the desktop environment to have full control of the desktop, without the
-	   need for proxying root window clicks.
-	**/
-	Desktop  = 1,
-	/**
-	   indicates a dock or panel feature
-	**/
-	Dock     = 2,
-	/**
-	   indicates a toolbar window
-	**/
-	Toolbar  = 3,
-	/**
-	   indicates a pinnable (torn-off) menu window
-	**/
-	Menu     = 4,
-	/**
-	   indicates that this is a dialog window
-	**/
-	Dialog   = 5,
-	/**
-	   indicates a toplevel menu (AKA macmenu). This is a KDE extension to the
-	   _NET_WM_WINDOW_TYPE mechanism.
-	**/
-	TopMenu  = 6, // NON STANDARD
-	/**
-	   indicates a utility window
-	**/
-	Utility  = 7,
-	/**
-	   indicates that this window is a splash screen window.
-	**/
-	Splash   = 8,
+        /**
+        indicates that the window did not define a window type.
+        **/
+        Unknown  = -1,
+        /**
+        indicates that this is a normal, top-level window
+        **/
+        Normal   = 0,
+        /**
+        indicates a desktop feature. This can include a single window
+        containing desktop icons with the same dimensions as the screen, allowing
+        the desktop environment to have full control of the desktop, without the
+        need for proxying root window clicks.
+        **/
+        Desktop  = 1,
+        /**
+        indicates a dock or panel feature
+        **/
+        Dock     = 2,
+        /**
+        indicates a toolbar window
+        **/
+        Toolbar  = 3,
+        /**
+        indicates a pinnable (torn-off) menu window
+        **/
+        Menu     = 4,
+        /**
+        indicates that this is a dialog window
+        **/
+        Dialog   = 5,
+        /**
+        indicates a toplevel menu (AKA macmenu). This is a KDE extension to the
+        _NET_WM_WINDOW_TYPE mechanism.
+        **/
+        TopMenu  = 6, // NON STANDARD
+        /**
+        indicates a utility window
+        **/
+        Utility  = 7,
+        /**
+        indicates that this window is a splash screen window.
+        **/
+        Splash   = 8,
         /**
            indicates a dropdown menu (from a menubar typically)
         **/
@@ -372,21 +371,21 @@ public:
         **/
         DNDIcon = 14
     };
-    
+
     /**
         Values for WindowType when they should be OR'ed together, e.g.
         for the properties argument of the NETRootInfo constructor.
     **/
     enum WindowTypeMask {
-	NormalMask   = 1<<0,   ///< @see Normal
-	DesktopMask  = 1<<1,   ///< @see Desktop
-	DockMask     = 1<<2,   ///< @see Dock
-	ToolbarMask  = 1<<3,   ///< @see Toolbar
-	MenuMask     = 1<<4,   ///< @see Menu
-	DialogMask   = 1<<5,   ///< @see Dialog
-	TopMenuMask  = 1<<6,   ///< @see TopMenu
-	UtilityMask  = 1<<7,   ///< @see Utility
-	SplashMask   = 1<<8,   ///< @see Splash
+        NormalMask   = 1<<0,   ///< @see Normal
+        DesktopMask  = 1<<1,   ///< @see Desktop
+        DockMask     = 1<<2,   ///< @see Dock
+        ToolbarMask  = 1<<3,   ///< @see Toolbar
+        MenuMask     = 1<<4,   ///< @see Menu
+        DialogMask   = 1<<5,   ///< @see Dialog
+        TopMenuMask  = 1<<6,   ///< @see TopMenu
+        UtilityMask  = 1<<7,   ///< @see Utility
+        SplashMask   = 1<<8,   ///< @see Splash
         DropdownMenuMask = 1<<9, ///< @see DropdownMenu
         PopupMenuMask    = 1<<10, ///< @see PopupMenu
         TooltipMask      = 1<<11, ///< @see Tooltip
@@ -418,70 +417,70 @@ public:
     **/
 
     enum State {
-	/**
-	   indicates that this is a modal dialog box. The WM_TRANSIENT_FOR hint
-	   MUST be set to indicate which window the dialog is a modal for, or set to
-	   the root window if the dialog is a modal for its window group.
-	**/
-	Modal        = 1<<0,
-	/**
-	   indicates that the Window Manager SHOULD keep the window's position
-	   fixed on the screen, even when the virtual desktop scrolls. Note that this is
-	   different from being kept on all desktops.
-	**/
-	Sticky       = 1<<1,
-	/**
-	   indicates that the window is vertically maximized.
-	**/
-	MaxVert      = 1<<2,
-	/**
-	   indicates that the window is horizontally maximized.
-	**/
-	MaxHoriz     = 1<<3,
-	/**
-	   convenience value. Equal to MaxVert | MaxHoriz.
-	**/
-	Max = MaxVert | MaxHoriz,
-	/**
-	   indicates that the window is shaded (rolled-up).
-	**/
-	Shaded       = 1<<4,
-	/**
-	   indicates that a window should not be included on a taskbar.
-	**/
-	SkipTaskbar  = 1<<5,
-	/**
-	   indicates that a window should on top of most windows (but below fullscreen
-	   windows).
-	**/
-	KeepAbove    = 1<<6,
-	/**
-	   @deprecated This is an obsolete name for KeepAbove.
-	**/
-	StaysOnTop   = KeepAbove,	// NOT STANDARD
-	/**
-	   indicates that a window should not be included on a pager.
-	**/
-	SkipPager    = 1<<7,
-	/**
-	   indicates that a window should not be visible on the screen (e.g. when minimised).
-	   Only the window manager is allowed to change it.
-	**/
-	Hidden       = 1<<8,
-	/**
-	   indicates that a window should fill the entire screen and have no window
-	   decorations.
-	**/
-	FullScreen   = 1<<9,
-	/**
-	   indicates that a window should be below most windows (but above any desktop windows).
-	**/
-	KeepBelow    = 1<<10,
-	/**
-	   there was an attempt to activate this window, but the window manager prevented
-	   this. E.g. taskbar should mark such window specially to bring user's attention to
-	   this window. Only the window manager is allowed to change it.
-	**/
+        /**
+        indicates that this is a modal dialog box. The WM_TRANSIENT_FOR hint
+        MUST be set to indicate which window the dialog is a modal for, or set to
+        the root window if the dialog is a modal for its window group.
+        **/
+        Modal        = 1<<0,
+        /**
+        indicates that the Window Manager SHOULD keep the window's position
+        fixed on the screen, even when the virtual desktop scrolls. Note that this is
+        different from being kept on all desktops.
+        **/
+        Sticky       = 1<<1,
+        /**
+        indicates that the window is vertically maximized.
+        **/
+        MaxVert      = 1<<2,
+        /**
+        indicates that the window is horizontally maximized.
+        **/
+        MaxHoriz     = 1<<3,
+        /**
+        convenience value. Equal to MaxVert | MaxHoriz.
+        **/
+        Max = MaxVert | MaxHoriz,
+        /**
+        indicates that the window is shaded (rolled-up).
+        **/
+        Shaded       = 1<<4,
+        /**
+        indicates that a window should not be included on a taskbar.
+        **/
+        SkipTaskbar  = 1<<5,
+        /**
+        indicates that a window should on top of most windows (but below fullscreen
+        windows).
+        **/
+        KeepAbove    = 1<<6,
+        /**
+        @deprecated This is an obsolete name for KeepAbove.
+        **/
+        StaysOnTop   = KeepAbove,	// NOT STANDARD
+        /**
+        indicates that a window should not be included on a pager.
+        **/
+        SkipPager    = 1<<7,
+        /**
+        indicates that a window should not be visible on the screen (e.g. when minimised).
+        Only the window manager is allowed to change it.
+        **/
+        Hidden       = 1<<8,
+        /**
+        indicates that a window should fill the entire screen and have no window
+        decorations.
+        **/
+        FullScreen   = 1<<9,
+        /**
+        indicates that a window should be below most windows (but above any desktop windows).
+        **/
+        KeepBelow    = 1<<10,
+        /**
+        there was an attempt to activate this window, but the window manager prevented
+        this. E.g. taskbar should mark such window specially to bring user's attention to
+        this window. Only the window manager is allowed to change it.
+        **/
         DemandsAttention = 1<<11
     };
 
@@ -505,18 +504,18 @@ public:
     **/
 
     enum Direction {
-	TopLeft      = 0,
-	Top          = 1,
-	TopRight     = 2,
-	Right        = 3,
-	BottomRight  = 4,
-	Bottom       = 5,
-	BottomLeft   = 6,
-	Left         = 7,
-	Move         = 8,  // movement only
-	KeyboardSize = 9,  // size via keyboard
-	KeyboardMove = 10, // move via keyboard
-	MoveResizeCancel = 11 // to ask the WM to stop moving a window
+        TopLeft      = 0,
+        Top          = 1,
+        TopRight     = 2,
+        Right        = 3,
+        BottomRight  = 4,
+        Bottom       = 5,
+        BottomLeft   = 6,
+        Left         = 7,
+        Move         = 8,  // movement only
+        KeyboardSize = 9,  // size via keyboard
+        KeyboardMove = 10, // move via keyboard
+        MoveResizeCancel = 11 // to ask the WM to stop moving a window
     };
 
     /**
@@ -526,20 +525,20 @@ public:
        and you most probably don't want to use this state.
     **/
     enum MappingState {
-	/**
-	   indicates the client window is visible to the user.
-	**/
-	Visible = 1, //NormalState,
-	/**
-	   indicates that neither the client window nor its icon is visible.
-	**/
-	Withdrawn = 0, //WithdrawnState,
-	/**
-	   indicates that the client window is not visible, but its icon is.
-	   This can be when the window is minimized or when it's on a
-	   different virtual desktop. See also NET::Hidden.
-	**/
-	Iconic = 3 // IconicState
+        /**
+        indicates the client window is visible to the user.
+        **/
+        Visible = 1, //NormalState,
+        /**
+        indicates that neither the client window nor its icon is visible.
+        **/
+        Withdrawn = 0, //WithdrawnState,
+        /**
+        indicates that the client window is not visible, but its icon is.
+        This can be when the window is minimized or when it's on a
+        different virtual desktop. See also NET::Hidden.
+        **/
+        Iconic = 3 // IconicState
     };
 
     /**
@@ -558,7 +557,7 @@ public:
         ActionChangeDesktop  = 1<<8,
         ActionClose          = 1<<9
     };
-    
+
     /**
        Supported properties.  Clients and Window Managers must define which
        properties/protocols it wants to support.
@@ -605,44 +604,44 @@ public:
     **/
 
     enum Property {
-	// root
-	Supported             = 1<<0,
-	ClientList            = 1<<1,
-	ClientListStacking    = 1<<2,
-	NumberOfDesktops      = 1<<3,
-	DesktopGeometry       = 1<<4,
-	DesktopViewport       = 1<<5,
-	CurrentDesktop        = 1<<6,
-	DesktopNames          = 1<<7,
-	ActiveWindow          = 1<<8,
-	WorkArea              = 1<<9,
-	SupportingWMCheck     = 1<<10,
-	VirtualRoots          = 1<<11,
-        //
-	CloseWindow           = 1<<13,
-	WMMoveResize          = 1<<14,
+        // root
+        Supported             = 1<<0,
+        ClientList            = 1<<1,
+        ClientListStacking    = 1<<2,
+        NumberOfDesktops      = 1<<3,
+        DesktopGeometry       = 1<<4,
+        DesktopViewport       = 1<<5,
+        CurrentDesktop        = 1<<6,
+        DesktopNames          = 1<<7,
+        ActiveWindow          = 1<<8,
+        WorkArea              = 1<<9,
+        SupportingWMCheck     = 1<<10,
+        VirtualRoots          = 1<<11,
+            //
+        CloseWindow           = 1<<13,
+        WMMoveResize          = 1<<14,
 
-	// window
-	WMName                = 1<<15,
-	WMVisibleName         = 1<<16,
-	WMDesktop             = 1<<17,
-	WMWindowType          = 1<<18,
-	WMState               = 1<<19,
-	WMStrut               = 1<<20,
-	WMIconGeometry        = 1<<21,
-	WMIcon                = 1<<22,
-	WMPid                 = 1<<23,
-	WMHandledIcons        = 1<<24,
-	WMPing                = 1<<25,
-	XAWMState             = 1<<27,
+        // window
+        WMName                = 1<<15,
+        WMVisibleName         = 1<<16,
+        WMDesktop             = 1<<17,
+        WMWindowType          = 1<<18,
+        WMState               = 1<<19,
+        WMStrut               = 1<<20,
+        WMIconGeometry        = 1<<21,
+        WMIcon                = 1<<22,
+        WMPid                 = 1<<23,
+        WMHandledIcons        = 1<<24,
+        WMPing                = 1<<25,
+        XAWMState             = 1<<27,
         WMFrameExtents        = 1<<28,
 
-	// Need to be reordered
-	WMIconName            = 1<<29,
-	WMVisibleIconName     = 1<<30,
-	WMGeometry	      = 1<<31
+        // Need to be reordered
+        WMIconName            = 1<<29,
+        WMVisibleIconName     = 1<<30,
+        WMGeometry	      = 1<<31
     };
-    
+
     /**
         Supported properties. This enum is an extension to NET::Property,
         because them enum is limited only to 32 bits.
@@ -696,7 +695,7 @@ public:
        all desktops.
      **/ 
     enum { OnAllDesktops = -1 };
-    
+
     /**
        Source of the request.
     **/
@@ -715,7 +714,7 @@ public:
         **/
         FromTool = 2
     };
-    
+
     /**
       Orientation.
     **/
@@ -723,7 +722,7 @@ public:
         OrientationHorizontal = 0,
         OrientationVertical = 1
     };
-    
+
     /**
      Starting corner for desktop layout.
     **/
@@ -733,7 +732,7 @@ public:
         DesktopLayoutCornerBottomLeft = 2,
         DesktopLayoutCornerBottomRight = 3
     };
-    
+
     /**
      Compares two X timestamps, taking into account wrapping and 64bit architectures.
      Return value is like with strcmp(), 0 for equal, -1 for time1 < time2, 1 for time1 > time2.
