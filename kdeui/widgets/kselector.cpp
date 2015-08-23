@@ -21,6 +21,7 @@
 
 #include <QImage>
 #include <QPainter>
+#include <QtGui/qpen.h>
 #include <QtGui/qevent.h>
 #include <QPixmap>
 #include <QStyle>

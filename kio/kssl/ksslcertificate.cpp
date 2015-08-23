@@ -749,6 +749,7 @@ KSSLCertificate::KSSLValidationList KSSLCertificate::validateVerbose(KSSLCertifi
         // end of checking code
         //
 
+        Q_UNUSED(rc);
         //kDebug(7029) << "KSSL Validation procedure RC: "
         //        << rc << endl;
         //kDebug(7029) << "KSSL Validation procedure errcode: "

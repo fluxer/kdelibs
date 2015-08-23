@@ -20,6 +20,7 @@
 #include "kxyselector.h"
 #include <QStyle>
 #include <QPainter>
+#include <QtGui/qpen.h>
 #include <QtGui/qstyleoption.h>
 #include <QtGui/qevent.h>
 #include <kdebug.h>

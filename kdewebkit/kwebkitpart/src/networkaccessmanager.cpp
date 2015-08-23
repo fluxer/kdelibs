@@ -30,7 +30,7 @@
 #include <QWidget>
 #include <QNetworkReply>
 #include <QWebFrame>
-#include <QWebElementCollection>
+#include <QWebElement>
 
 
 #define QL1S(x) QLatin1String(x)

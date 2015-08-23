@@ -26,12 +26,14 @@
 #include <kparts/browserextension.h>
 #include <kwebview.h>
 
-#include <QWebHitTestResult>
+#include <QWebFrame>
 
 class KUrl;
 class KWebKitPart;
 class QWebHitTestResult;
+#ifndef QT_KATIE
 class QWebInspector;
+#endif
 class QLabel;
 
 class WebView : public KWebView
@@ -130,7 +132,9 @@ private:
     KActionCollection* m_actionCollection;
     QWebHitTestResult m_result;
     QPointer<KWebKitPart> m_part;
+#ifndef QT_KATIE
     QWebInspector* m_webInspector;
+#endif
 
     qint32 m_autoScrollTimerId;
     qint32 m_verticalAutoScrollSpeed;

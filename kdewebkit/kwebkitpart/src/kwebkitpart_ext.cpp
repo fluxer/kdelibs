@@ -55,7 +55,6 @@
 #include <QWebFrame>
 #include <QWebHistory>
 #include <QWebElement>
-#include <QWebElementCollection>
 
 #define QL1S(x)     QLatin1String(x)
 #define QL1C(x)     QLatin1Char(x)

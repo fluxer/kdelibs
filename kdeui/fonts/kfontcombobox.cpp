@@ -35,6 +35,7 @@
 #include <QAbstractItemDelegate>
 #include <QStringListModel>
 #include <QPainter>
+#include <QPen>
 #include <QList>
 #include <QHash>
 #include <QScrollBar>

@@ -60,6 +60,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QScrollBar>
 #include <QtGui/QStyleOption>
+#include <QtGui/qpen.h>
 
 #include <kcomponentdata.h>
 #include <kglobal.h>

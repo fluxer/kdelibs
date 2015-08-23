@@ -33,7 +33,6 @@
 #include <QtWebKit/QWebPage>
 #include <QtWebKit/QWebFrame>
 #include <QtWebKit/QWebElement>
-#include <QtWebKit/QWebElementCollection>
 #include <qwindowdefs.h>
 
 #define QL1S(x)   QLatin1String(x)

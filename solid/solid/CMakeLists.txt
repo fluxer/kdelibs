@@ -1,7 +1,7 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 add_subdirectory( ifaces )
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${QT_QTDBUS_INCLUDE_DIR} )
+include_directories( ${QT_QTDBUS_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR})
 
 configure_file(solid_export.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h)
 

@@ -23,6 +23,7 @@
 #include <kcolorutils.h>
 
 #include <QtGui/QPainter>
+#include <QtGui/QPen>
 #include <QtGui/QImage>
 #include <QtGui/QStyle>
 #include <QtGui/QStyleOption>

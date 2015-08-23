@@ -63,7 +63,7 @@
 #include <QDBusInterface>
 #include <QWebFrame>
 #include <QWebElement>
-#include <QWebHistoryItem>
+#include <QWebHistory>
 
 #define QL1S(x)  QLatin1String(x)
 #define QL1C(x)  QLatin1Char(x)

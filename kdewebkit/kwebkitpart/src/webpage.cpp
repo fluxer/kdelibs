@@ -55,7 +55,6 @@
 #include <QWebFrame>
 #include <QWebElement>
 #include <QWebHistory>
-#include <QWebHistoryItem>
 #include <QWebSecurityOrigin>
 
 #define QL1S(x)  QLatin1String(x)
