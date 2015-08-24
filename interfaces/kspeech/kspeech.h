@@ -207,7 +207,7 @@ public Q_SLOTS: // METHODS
     /**
     * Sets a friendly display name for the application.
     * @param applicationName    Friendly name for the application.
-    */    
+    */
     void setApplicationName(const QString &applicationName);
 
     /**
@@ -395,14 +395,13 @@ public Q_SLOTS: // METHODS
     */
     void resume();
 
-    
     void stop();
     void cancel();
 
     void setSpeed(int speed);
     void setPitch(int pitch);
     void setVolume(int volume);
-    
+
     /**
     * Removes the specified job.  If the job is speaking, it is stopped.
     * @param jobNum             Job Number.  If 0, the last job submitted by
@@ -643,7 +642,7 @@ Q_SIGNALS: // SIGNALS
     * This signal is emitted when KTTSD starts.
     */
     void kttsdStarted();
-    
+
     /**
     * This signal is emitted just before KTTS exits.
     */
@@ -683,13 +682,13 @@ private Q_SLOTS:
     void slotJobStateChanged(const QString& appId, int jobNum, KSpeech::JobState state);
     void slotMarker(const QString& appId, int jobNum, KSpeech::MarkerType markerType, const QString& markerData);
     void slotFilteringFinished();
-    
+
 private:
     /**
     * The DBUS connection name of the last application that called KTTSD.
     */
     QString callingAppId();
-    
+
     /*
     * Checks if KTTSD is ready to speak and at least one talker is configured.
     * If not, user is prompted to display the configuration dialog.

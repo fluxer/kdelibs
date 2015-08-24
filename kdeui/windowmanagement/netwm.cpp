@@ -840,15 +840,16 @@ void NETRootInfo::activate() {
         fprintf(stderr, "NETRootInfo::activate: setting supported properties on root\n");
 #endif
 
+        update(p->client_properties);
         setSupported();
     } else {
 
 #ifdef NETWMDEBUG
         fprintf(stderr, "NETRootInfo::activate: updating client information\n");
 #endif
-    }
 
-    update(p->client_properties);
+        update(p->client_properties);
+    }
 }
 
 

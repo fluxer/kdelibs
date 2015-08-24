@@ -85,9 +85,6 @@ And here is an alphabetical list of all further parts of kdelibs:
 * cmake
     Build system used throughout KDE.
 
-* doc
-    Documentation in docbook format.
-
 * includes
     Qt-style include file wrappers.
 
@@ -97,10 +94,6 @@ And here is an alphabetical list of all further parts of kdelibs:
 * kded
     The KDE daemon checks for newly installed software, update files
     or hostname changes and takes according actions.
-
-* kdoctools
-    Contains mostly stuff convert XML docbook files via XSLT into
-    human readable stuff.
 
 * kioslave
     I/O subprocesses to handle files, ftp, http, gzip and bzip2 streams.

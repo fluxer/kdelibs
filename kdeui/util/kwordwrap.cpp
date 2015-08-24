@@ -20,6 +20,8 @@
 #include <kdebug.h>
 
 #include <QtGui/QPainter>
+#include <QtGui/QFontMetrics>
+#include <QtGui/QPen>
 #include <QtCore/qvector.h>
 
 class KWordWrapPrivate {

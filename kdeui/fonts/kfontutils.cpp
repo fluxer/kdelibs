@@ -23,6 +23,7 @@
 #include "kfontutils.h"
 
 #include <qpainter.h>
+#include <qfont.h>
 
 qreal KFontUtils::adaptFontSize(QPainter &painter, const QString &string, qreal width, qreal height, qreal maxFontSize, qreal minFontSize, AdaptFontSizeOptions flags)
 {

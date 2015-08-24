@@ -22,6 +22,7 @@
 
 #include <QtCore/qalgorithms.h>
 #include <QPainter>
+#include <QPen>
 
 #include <kdebug.h>
 
