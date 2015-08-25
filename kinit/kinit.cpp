@@ -32,7 +32,7 @@
 #include <sys/un.h>
 #include <sys/wait.h>
 #ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h>		// Needed on some systems.
+#include <sys/select.h> // Needed on some systems.
 #endif
 
 #include <ctype.h>
@@ -617,19 +617,15 @@ static pid_t launch(int argc, const char *_name, const char *args,
         exit(255);
      }
 
-     void * sym = l.resolve( "kdeinitmain");
-     if (!sym )
-        {
-        sym = l.resolve( "kdemain" );
-        if ( !sym )
-           {
-            QString ltdlError = l.errorString();
-            fprintf(stderr, "Could not find kdemain: %s\n", qPrintable(ltdlError) );
-              QString errorMsg = i18n("Could not find 'kdemain' in '%1'.\n%2",
-                                      libpath, ltdlError);
-              exitWithErrorMsg(errorMsg);
-           }
-        }
+    void * sym = l.resolve( "kdemain" );
+    if ( !sym )
+    {
+        QString ltdlError = l.errorString();
+        fprintf(stderr, "Could not find kdemain: %s\n", qPrintable(ltdlError) );
+            QString errorMsg = i18n("Could not find 'kdemain' in '%1'.\n%2",
+                                    libpath, ltdlError);
+            exitWithErrorMsg(errorMsg);
+    }
 
      d.result = 0; // Success
      write(d.fd[1], &d.result, 1);
@@ -912,12 +908,12 @@ static void init_kdeinit_socket()
       if(bind(d.wrapper, (struct sockaddr *)&sa, socklen) != 0)
       {
           if (max_tries == 0) {
-	      perror("kdeinit4: Aborting. bind() failed");
-	      fprintf(stderr, "Could not bind to socket '%s'\n", sock_file);
-	      close(d.wrapper);
-	      exit(255);
-	  }
-	  max_tries--;
+              perror("kdeinit4: Aborting. bind() failed");
+              fprintf(stderr, "Could not bind to socket '%s'\n", sock_file);
+              close(d.wrapper);
+              exit(255);
+          }
+          max_tries--;
       } else
           break;
   }
@@ -1129,24 +1125,9 @@ static bool handle_launcher_request(int sock, const char *who)
        return true; // sure?
      }
 
-      // support for the old a bit broken way of setting DISPLAY for multihead
-      QByteArray olddisplay = qgetenv(DISPLAY);
-      QByteArray kdedisplay = qgetenv("KDE_DISPLAY");
-      bool reset_display = (! olddisplay.isEmpty() &&
-                            ! kdedisplay.isEmpty() &&
-                            olddisplay != kdedisplay);
-
-      if (reset_display)
-          setenv(DISPLAY, kdedisplay, true);
-
       pid = launch( argc, name, args, cwd, envc, envs,
           request_header.cmd == LAUNCHER_SHELL || request_header.cmd == LAUNCHER_KWRAPPER,
           tty, avoid_loops, startup_id_str );
-
-      if (reset_display) {
-          unsetenv("KDE_DISPLAY");
-          setenv(DISPLAY, olddisplay, true);
-      }
 
       if (pid && (d.result == 0))
       {
