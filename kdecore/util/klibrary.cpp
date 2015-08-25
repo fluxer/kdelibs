@@ -38,8 +38,7 @@ int kLibraryDebugArea() {
 //static
 QString findLibrary(const QString &name, const KComponentData &cData)
 {
-    QString libname = findLibraryInternal(name, cData);
-    return libname;
+    return findLibraryInternal(name, cData);;
 }
 
 
@@ -60,46 +59,6 @@ KLibrary::KLibrary(const QString &name, int verNum, const KComponentData &cData,
 
 KLibrary::~KLibrary()
 {
-}
-
-typedef QHash<QString, QPointer<KPluginFactory> > FactoryHash;
-
-K_GLOBAL_STATIC(FactoryHash, s_createdKde3Factories)
-
-static KPluginFactory* kde3Factory(KLibrary *lib, const QByteArray &factoryname)
-{
-    QByteArray symname = "init_";
-    if(!factoryname.isEmpty()) {
-        symname += factoryname;
-    } else {
-        symname += QFileInfo(lib->fileName()).fileName().split(QLatin1Char('.')).first().toLatin1();
-    }
-
-    const QString hashKey = lib->fileName() + QLatin1Char(':') + QString::fromLatin1(symname);
-    KPluginFactory *factory = s_createdKde3Factories->value(hashKey);
-    if (factory) {
-        return factory;
-    }
-
-    typedef KPluginFactory* (*t_func)();
-    t_func func = reinterpret_cast<t_func>(lib->resolveFunction( symname ));
-    if ( !func )
-    {
-        kDebug(kLibraryDebugArea()) << "The library" << lib->fileName() << "does not offer an"
-                    << symname << "function.";
-        return 0;
-    }
-
-    factory = func();
-
-    if( !factory )
-    {
-        kDebug(kLibraryDebugArea()) << "The library" << lib->fileName() << "does not offer a KDE compatible factory.";
-        return 0;
-    }
-    s_createdKde3Factories->insert(hashKey, factory);
-
-    return factory;
 }
 
 static KPluginFactory *kde4Factory(KLibrary *lib)
@@ -130,15 +89,13 @@ static KPluginFactory *kde4Factory(KLibrary *lib)
 // deprecated
 KPluginFactory* KLibrary::factory(const char* factoryname)
 {
+    Q_UNUSED(factoryname);
+
     if (fileName().isEmpty()) {
         return NULL;
     }
 
-    KPluginFactory *factory = kde4Factory(this);
-    if (!factory)
-        factory = kde3Factory(this, factoryname);
-
-    return factory;
+    return kde4Factory(this);
 }
 
 void *KLibrary::resolveSymbol( const char* symname )

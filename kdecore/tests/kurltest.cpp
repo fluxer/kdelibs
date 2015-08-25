@@ -715,10 +715,9 @@ void KUrlTest::testSetFileName() // and addPath
   QCOMPARE( singleFile.path(), QString("foo.txt") );
   QCOMPARE( singleFile.pathOrUrl(), QString("foo.txt") );
 
-  QString pre;
   singleFile.setFileName( "bar.bin" );
-  QCOMPARE( singleFile.path(), QString(pre + "bar.bin") );
-  QCOMPARE( singleFile.pathOrUrl(), QString(pre + "bar.bin") );
+  QCOMPARE( singleFile.path(), QString("bar.bin") );
+  QCOMPARE( singleFile.pathOrUrl(), QString("bar.bin") );
 }
 
 void KUrlTest::testDirectory()

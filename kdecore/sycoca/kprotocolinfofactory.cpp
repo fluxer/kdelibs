@@ -64,9 +64,7 @@ QStringList KProtocolInfoFactory::protocols() const
 {
     QStringList res;
     const KSycocaEntry::List list = allEntries();
-    for( KSycocaEntry::List::const_iterator it = list.begin();
-         it != list.end();
-         ++it) {
+    for( KSycocaEntry::List::const_iterator it = list.begin(); it != list.end(); ++it) {
         const KSycocaEntry *entry = (*it).data();
         const KProtocolInfo *info = static_cast<const KProtocolInfo *>(entry);
         res.append( info->name() );
@@ -78,9 +76,7 @@ KProtocolInfo::List KProtocolInfoFactory::allProtocols() const
 {
     KProtocolInfo::List result;
     const KSycocaEntry::List list = allEntries();
-    for( KSycocaEntry::List::ConstIterator it = list.begin();
-         it != list.end();
-         ++it) {
+    for( KSycocaEntry::List::ConstIterator it = list.begin(); it != list.end(); ++it) {
         if ((*it)->isType(KST_KProtocolInfo)) {
             result.append(KProtocolInfo::Ptr::staticCast(*it));
         }
@@ -96,9 +92,7 @@ KProtocolInfo::Ptr KProtocolInfoFactory::findProtocol(const QString &protocol)
   if (it != m_cache.end())
      return *it;
 
-  int offset;
-
-  offset = sycocaDict()->find_string( protocol );
+  int offset = sycocaDict()->find_string( protocol );
 
   if (!offset) return KProtocolInfo::Ptr(); // Not found;
 

@@ -522,7 +522,7 @@ KBookmark KBookmarkManager::findByAddress( const QString & address )
     // The address is something like /5/10/2+
     const QStringList addresses = address.split(QRegExp("[/+]"),QString::SkipEmptyParts);
     // kWarning() << addresses.join(",");
-    for ( QStringList::const_iterator it = addresses.begin() ; it != addresses.end() ; )
+    for ( QStringList::const_iterator it = addresses.begin() ; it != addresses.end() ; ++it)
     {
        bool append = ((*it) == "+");
        uint number = (*it).toUInt();
@@ -534,7 +534,6 @@ KBookmark KBookmarkManager::findByAddress( const QString & address )
            bk = group.next(bk);
          //kWarning() << i;
        }
-       it++;
        //kWarning() << "found section";
        result = bk;
     }

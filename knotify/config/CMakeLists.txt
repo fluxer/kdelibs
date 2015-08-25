@@ -4,10 +4,10 @@ include_directories(BEFORE ${KDE4_PHONON_INCLUDES})
 ########### next target ###############
 
 set(knotifyconfig_LIB_SRCS
-knotifyconfigactionswidget.cpp
-knotifyconfigelement.cpp
-knotifyeventlist.cpp
-knotifyconfigwidget.cpp
+    knotifyconfigactionswidget.cpp
+    knotifyconfigelement.cpp
+    knotifyeventlist.cpp
+    knotifyconfigwidget.cpp
 )
 
 
