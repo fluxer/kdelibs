@@ -180,8 +180,6 @@ void Kded::messageFilter(const QDBusMessage &message)
 
   // Remove the <MODULES_PATH> part
   obj = obj.mid(strlen(MODULES_PATH));
-  if (obj == "ksycoca")
-     return; // Ignore this one.
 
   // Remove the part after the modules name
   int index = obj.indexOf('/');
