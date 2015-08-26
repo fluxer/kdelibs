@@ -86,23 +86,8 @@ KCookieServer::KCookieServer(QObject* parent, const QList<QVariant>&)
    connect(mTimer, SIGNAL(timeout()), SLOT(slotSave()));
    mConfig = new KConfig("kcookiejarrc");
    mCookieJar->loadConfig( mConfig );
+   mCookieJar->loadCookies( KStandardDirs::locateLocal("data", "kcookiejar/cookies"));
 
-   const QString filename = KStandardDirs::locateLocal("data", "kcookiejar/cookies");
-
-   // Stay backwards compatible!
-   const QString filenameOld = KStandardDirs::locate("data", "kfm/cookies");
-   if (!filenameOld.isEmpty())
-   {
-      mCookieJar->loadCookies( filenameOld );
-      if (mCookieJar->saveCookies( filename))
-      {
-         QFile::remove(filenameOld); // Remove old kfm cookie file
-      }
-   }
-   else
-   {
-      mCookieJar->loadCookies( filename);
-   }
    connect(this, SIGNAL(windowUnregistered(qlonglong)),
            this, SLOT(slotDeleteSessionCookies(qlonglong)));
 }
