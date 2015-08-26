@@ -146,8 +146,7 @@
  * syntax.
  *
  * \note
- * KDE_DEPRECATED cannot be used at the end of the declaration anymore,
- * unlike what is done for KDE3.
+ * KDE_DEPRECATED cannot be used at the end of the declaration
  *
  * \note
  * KDE_DEPRECATED cannot be used for constructors, 

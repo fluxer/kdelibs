@@ -101,7 +101,7 @@ QAction *KXmlGuiWindow::toolBarMenuAction()
 {
     K_D(KXmlGuiWindow);
     if ( !d->toolBarHandler )
-	return 0;
+        return 0;
 
     return d->toolBarHandler->toolBarMenuAction();
 }

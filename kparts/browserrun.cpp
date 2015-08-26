@@ -381,7 +381,7 @@ void KParts::BrowserRun::saveUrl(const KUrl & url, const QString & suggestedFile
         if (!downloadManger.isEmpty())
         {
             // then find the download manager location
-            kDebug(1000) << "Using: "<<downloadManger <<" as Download Manager";
+            kDebug(1000) << "Using: " << downloadManger << " as Download Manager";
             QString cmd=KStandardDirs::findExe(downloadManger);
             if (cmd.isEmpty())
             {

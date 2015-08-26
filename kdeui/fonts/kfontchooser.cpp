@@ -92,10 +92,6 @@ public:
         customSizeRow = -1;
     }
 
-    // pointer to an optinally supplied list of fonts to
-    // inserted into the fontdialog font-family combo-box
-//    QStringList  fontList;
-
     void setFamilyBoxItems(const QStringList &fonts);
     void fillFamilyListBox(bool onlyFixedFonts = false);
     int nearestSizeRow(qreal val, bool customize);
