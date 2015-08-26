@@ -85,8 +85,8 @@ KCookieServer::KCookieServer(QObject* parent, const QList<QVariant>&)
    mTimer->setSingleShot(true);
    connect(mTimer, SIGNAL(timeout()), SLOT(slotSave()));
    mConfig = new KConfig("kcookiejarrc");
-   mCookieJar->loadConfig( mConfig );
-   mCookieJar->loadCookies( KStandardDirs::locateLocal("data", "kcookiejar/cookies"));
+   mCookieJar->loadConfig(mConfig);
+   mCookieJar->loadCookies(KStandardDirs::locateLocal("data", "kcookiejar/cookies"));
 
    connect(this, SIGNAL(windowUnregistered(qlonglong)),
            this, SLOT(slotDeleteSessionCookies(qlonglong)));

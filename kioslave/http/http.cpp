@@ -4978,26 +4978,6 @@ void HTTPProtocol::cacheFileClose()
             tempFile->write(header);
 
             ccCommand = makeCacheCleanerCommand(m_request.cacheTag, CreateFileNotificationCommand);
-
-            QString oldName = tempFile->fileName();
-            QString newName = oldName;
-            int basenameStart = newName.lastIndexOf(QLatin1Char('/')) + 1;
-            // remove the randomized name part added by QTemporaryFile
-            newName.chop(newName.length() - basenameStart - s_hashedUrlNibbles);
-            kDebug(7113) << "Renaming temporary file" << oldName << "to" << newName;
-
-            // on windows open files can't be renamed
-            tempFile->setAutoRemove(false);
-            delete tempFile;
-            file = 0;
-
-            if (!QFile::rename(oldName, newName)) {
-                // ### currently this hides a minor bug when force-reloading a resource. We
-                //     should not even open a new file for writing in that case.
-                kDebug(7113) << "Renaming temporary file failed, deleting it instead.";
-                QFile::remove(oldName);
-                ccCommand.clear();  // we have nothing of value to tell the cache cleaner
-            }
         } else {
             // oh, we've never written payload data to the cache file.
             // the temporary file is closed and removed and no proper cache entry is created.
