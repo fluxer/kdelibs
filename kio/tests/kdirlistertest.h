@@ -51,7 +51,6 @@ public:
           spyCanceled(this, SIGNAL(canceled())),
           spyCanceledKUrl(this, SIGNAL(canceled(KUrl))),
           spyRedirection(this, SIGNAL(redirection(KUrl))),
-          spyDeleteItem(this, SIGNAL(deleteItem(KFileItem))), 
           spyItemsDeleted(this, SIGNAL(itemsDeleted(KFileItemList)))
     {}
 
@@ -65,7 +64,6 @@ public:
         spyCanceled.clear();
         spyCanceledKUrl.clear();
         spyRedirection.clear();
-        spyDeleteItem.clear();
         spyItemsDeleted.clear();
     }
 
@@ -77,7 +75,6 @@ public:
     QSignalSpy spyCanceled;
     QSignalSpy spyCanceledKUrl;
     QSignalSpy spyRedirection;
-    QSignalSpy spyDeleteItem;
     QSignalSpy spyItemsDeleted;
 protected:
     virtual void handleError(KIO::Job* job);
