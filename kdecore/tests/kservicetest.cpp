@@ -145,8 +145,8 @@ void KServiceTest::testByName()
     QVERIFY( s0 );
     QCOMPARE( s0->name(), QString::fromLatin1("KParts/ReadOnlyPart") );
 
-    KService::Ptr khtml = KService::serviceByDesktopPath("khtml.desktop");
-    QCOMPARE( khtml->name(), QString::fromLatin1("KHTML"));
+    KService::Ptr httpcache = KService::serviceByDesktopPath("http_cache_cleaner.desktop");
+    QCOMPARE( httpcache->name(), QString::fromLatin1("HTTP Cache Cleaner"));
 }
 
 void KServiceTest::testProperty()
