@@ -245,13 +245,6 @@ Q_SIGNALS:
     void needSequenceIcon(const QModelIndex& index, int sequenceIndex);
 
 private:
-    // Make those private, they shouldn't be called by applications
-    virtual bool insertRows(int , int, const QModelIndex & = QModelIndex());
-    virtual bool insertColumns(int, int, const QModelIndex & = QModelIndex());
-    virtual bool removeRows(int, int, const QModelIndex & = QModelIndex());
-    virtual bool removeColumns(int, int, const QModelIndex & = QModelIndex());
-
-private:
     friend class KDirModelPrivate;
     KDirModelPrivate *const d;
 

@@ -34,9 +34,6 @@
 
 #include <QtNetwork/QSslConfiguration>
 
-#define QL1S(x)  QLatin1String(x)
-#define QL1C(x)  QLatin1Char(x)
-
 namespace KDEPrivate {
 
 AccessManagerReply::AccessManagerReply(const QNetworkAccessManager::Operation op,
@@ -153,7 +150,7 @@ bool AccessManagerReply::ignoreContentDisposition (const KIO::MetaData& metaData
         return true;
     }
 
-    if (!metaData.contains(QL1S("content-disposition-type"))) {
+    if (!metaData.contains(QLatin1String("content-disposition-type"))) {
         return true;
     }
 
@@ -182,27 +179,27 @@ void AccessManagerReply::setHeaderFromMetaData (const KIO::MetaData& _metaData)
         setSslConfiguration(sslConfig);
 
     // Set the raw header information...
-    const QStringList httpHeaders (metaData.value(QL1S("HTTP-Headers")).split(QL1C('\n'), QString::SkipEmptyParts));
+    const QStringList httpHeaders (metaData.value(QLatin1String("HTTP-Headers")).split(QLatin1Char('\n'), QString::SkipEmptyParts));
     if (httpHeaders.isEmpty()) {
-        if (metaData.contains(QL1S("charset"))) {
+        if (metaData.contains(QLatin1String("charset"))) {
           QString mimeType = header(QNetworkRequest::ContentTypeHeader).toString();
-          mimeType += QL1S(" ; charset=");
-          mimeType += metaData.value(QL1S("charset"));
+          mimeType += QLatin1String(" ; charset=");
+          mimeType += metaData.value(QLatin1String("charset"));
           // kDebug(7044) << "changed content-type to" << mimeType;
           setHeader(QNetworkRequest::ContentTypeHeader, mimeType.toUtf8());
         }
     } else {
         Q_FOREACH(const QString& httpHeader, httpHeaders) {
-            int index = httpHeader.indexOf(QL1C(':'));
+            int index = httpHeader.indexOf(QLatin1Char(':'));
             // Handle HTTP status line...
             if (index == -1) {
                 // Except for the status line, all HTTP header must be an nvpair of
                 // type "<name>:<value>"
-                if (!httpHeader.startsWith(QL1S("HTTP/"), Qt::CaseInsensitive)) {
+                if (!httpHeader.startsWith(QLatin1String("HTTP/"), Qt::CaseInsensitive)) {
                     continue;
                 }
 
-                QStringList statusLineAttrs (httpHeader.split(QL1C(' '), QString::SkipEmptyParts));
+                QStringList statusLineAttrs (httpHeader.split(QLatin1Char(' '), QString::SkipEmptyParts));
                 if (statusLineAttrs.count() > 1) {
                     setAttribute(QNetworkRequest::HttpStatusCodeAttribute, statusLineAttrs.at(1));
                 }
@@ -218,18 +215,18 @@ void AccessManagerReply::setHeaderFromMetaData (const KIO::MetaData& _metaData)
             QString headerValue = httpHeader.mid(index+1);
 
             // Ignore cookie header since it is handled by the http ioslave.
-            if (headerName.startsWith(QL1S("set-cookie"), Qt::CaseInsensitive)) {
+            if (headerName.startsWith(QLatin1String("set-cookie"), Qt::CaseInsensitive)) {
                 continue;
             }
 
-            if (headerName.startsWith(QL1S("content-disposition"), Qt::CaseInsensitive) &&
+            if (headerName.startsWith(QLatin1String("content-disposition"), Qt::CaseInsensitive) &&
                 ignoreContentDisposition(metaData)) {
                 continue;
             }
 
             // Without overridding the corrected mime-type sent by kio_http, add
             // back the "charset=" portion of the content-type header if present.
-            if (headerName.startsWith(QL1S("content-type"), Qt::CaseInsensitive)) {
+            if (headerName.startsWith(QLatin1String("content-type"), Qt::CaseInsensitive)) {
 
                 QString mimeType (header(QNetworkRequest::ContentTypeHeader).toString());
 
@@ -238,18 +235,18 @@ void AccessManagerReply::setHeaderFromMetaData (const KIO::MetaData& _metaData)
                     // real content type from the disposition filename.
                     if (mimeType == KMimeType::defaultMimeType()) {
                         int accuracy = 0;
-                        const QString fileName (metaData.value(QL1S("content-disposition-filename")));
+                        const QString fileName (metaData.value(QLatin1String("content-disposition-filename")));
                         KMimeType::Ptr mime = KMimeType::findByUrl((fileName.isEmpty() ? url().path() : fileName), 0, false, true, &accuracy);
                         if (!mime->isDefault() && accuracy == 100) {
                             mimeType = mime->name();
                         }
                     }
-                    metaData.remove(QL1S("content-disposition-type"));
-                    metaData.remove(QL1S("content-disposition-filename"));
+                    metaData.remove(QLatin1String("content-disposition-type"));
+                    metaData.remove(QLatin1String("content-disposition-filename"));
                 }
 
                 if (!headerValue.contains(mimeType, Qt::CaseInsensitive)) {
-                    index = headerValue.indexOf(QL1C(';'));
+                    index = headerValue.indexOf(QLatin1Char(';'));
                     if (index == -1) {
                         headerValue = mimeType;
                     } else {
@@ -289,7 +286,7 @@ bool AccessManagerReply::isLocalRequest (const KUrl& url)
 {
     const QString scheme (url.protocol());
     return (KProtocolInfo::isKnownProtocol(scheme) &&
-            KProtocolInfo::protocolClass(scheme).compare(QL1S(":local"), Qt::CaseInsensitive) == 0);
+            KProtocolInfo::protocolClass(scheme).compare(QLatin1String(":local"), Qt::CaseInsensitive) == 0);
 }
 
 void AccessManagerReply::readHttpResponseHeaders(KIO::Job *job)
@@ -441,7 +438,7 @@ void AccessManagerReply::slotStatResult(KJob* kJob)
     KIO::UDSEntry entry =  statJob->statResult();
     QString mimeType = entry.stringValue(KIO::UDSEntry::UDS_MIME_TYPE);
     if (mimeType.isEmpty() && entry.isDir())
-        mimeType = QL1S("inode/directory");
+        mimeType = QLatin1String("inode/directory");
 
     if (!mimeType.isEmpty())
         setHeader(QNetworkRequest::ContentTypeHeader, mimeType.toUtf8());
@@ -458,7 +455,7 @@ void AccessManagerReply::slotRedirection(KIO::Job* job, const KUrl& u)
         return;
     }
     setAttribute(QNetworkRequest::RedirectionTargetAttribute, QUrl(u));
-    if (job->queryMetaData(QL1S("redirect-to-get")) == QL1S("true")) {
+    if (job->queryMetaData(QLatin1String("redirect-to-get")) == QLatin1String("true")) {
       setOperation(QNetworkAccessManager::GetOperation);
     }
 }

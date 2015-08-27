@@ -1407,7 +1407,7 @@ int kdeinit_xio_errhandler( Display *disp )
     // disp is 0L when KDE shuts down. We don't want those warnings then.
 
     if ( disp )
-    qWarning( "kdeinit4: Fatal IO error: client killed" );
+    kWarning() << "Fatal IO error: client killed";
 
     if (sock_file[0])
     {
@@ -1426,7 +1426,7 @@ int kdeinit_xio_errhandler( Display *disp )
     }
 
     if ( disp )
-    qWarning( "kdeinit4: sending SIGHUP to children." );
+    kWarning() << "Sending SIGHUP to children.";
 
     /* this should remove all children we started */
     KDE_signal(SIGHUP, SIG_IGN);
@@ -1435,14 +1435,14 @@ int kdeinit_xio_errhandler( Display *disp )
     sleep(2);
 
     if ( disp )
-    qWarning( "kdeinit4: sending SIGTERM to children." );
+    kWarning() << "Sending SIGTERM to children.";
 
     /* and if they don't listen to us, this should work */
     KDE_signal(SIGTERM, SIG_IGN);
     kill(0, SIGTERM);
 
     if ( disp )
-    qWarning( "kdeinit4: Exit." );
+    kWarning() << "Exit.";
 
     exit( 0 );
     return 0;

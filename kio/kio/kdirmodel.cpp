@@ -909,9 +909,9 @@ QMimeData * KDirModel::mimeData( const QModelIndexList & indexes ) const
     QString application_x_qiconlist;
     const int items = urls.count();
     for (int i = 0; i < items; i++) {
-	const int offset = i*16;
-	QString tmp("%1$@@$%2$@@$32$@@$32$@@$%3$@@$%4$@@$32$@@$16$@@$no data$@@$");
-	application_x_qiconlist += tmp.arg(offset).arg(offset).arg(offset).arg(offset+40);
+        const int offset = i*16;
+        QString tmp("%1$@@$%2$@@$32$@@$32$@@$%3$@@$%4$@@$32$@@$16$@@$no data$@@$");
+        application_x_qiconlist += tmp.arg(offset).arg(offset).arg(offset).arg(offset+40);
     }
     data->setData("application/x-qiconlist", application_x_qiconlist.toLatin1());
 
@@ -1116,26 +1116,6 @@ void KDirModel::expandToUrl(const KUrl& url)
     const QModelIndex parentIndex = d->indexForNode(result); // O(n)
     Q_ASSERT(parentIndex.isValid());
     fetchMore(parentIndex);
-}
-
-bool KDirModel::insertRows(int , int, const QModelIndex&)
-{
-    return false;
-}
-
-bool KDirModel::insertColumns(int, int, const QModelIndex&)
-{
-    return false;
-}
-
-bool KDirModel::removeRows(int, int, const QModelIndex&)
-{
-    return false;
-}
-
-bool KDirModel::removeColumns(int, int, const QModelIndex&)
-{
-    return false;
 }
 
 #include "moc_kdirmodel.cpp"

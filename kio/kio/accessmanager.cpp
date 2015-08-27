@@ -48,14 +48,6 @@
 #include <QtNetwork/QSslCertificate>
 #include <QtNetwork/QSslConfiguration>
 
-#define QL1S(x)   QLatin1String(x)
-#define QL1C(x)   QLatin1Char(x)
-
-static QNetworkRequest::Attribute gSynchronousNetworkRequestAttribute = QNetworkRequest::SynchronousRequestAttribute;
-
-
-
-
 static qint64 sizeFromRequest(const QNetworkRequest& req)
 {
     const QVariant size = req.header(QNetworkRequest::ContentLengthHeader);
@@ -186,7 +178,7 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
 
     if (!d->externalContentAllowed &&
         !KDEPrivate::AccessManagerReply::isLocalRequest(reqUrl) &&
-        reqUrl.scheme() != QL1S("data")) {
+        reqUrl.scheme() != QLatin1String("data")) {
         kDebug( 7044 ) << "Blocked: " << reqUrl;
         return new KDEPrivate::AccessManagerReply(op, req, QNetworkReply::ContentAccessDenied, i18n("Blocked request."), this);
     }
@@ -215,7 +207,7 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
 
             // WORKAROUND: Avoid the brain damaged stuff QtWebKit does when a POST
             // operation is redirected! See BR# 268694.
-            metaData.remove(QL1S("content-type")); // Remove the content-type from a GET/HEAD request!
+            metaData.remove(QLatin1String("content-type")); // Remove the content-type from a GET/HEAD request!
             break;
         }
         case PutOperation: {
@@ -223,7 +215,7 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
             const qint64 size = sizeFromRequest(req);
             if (size > 0) {
                 kioJob = KIO::http_post(reqUrl, outgoingData, size, KIO::HideProgressInfo);
-                metaData.insert(QL1S("CustomHTTPMethod"), QL1S("PUT"));
+                metaData.insert(QLatin1String("CustomHTTPMethod"), QLatin1String("PUT"));
             } else {
                 kioJob = KIO::put(reqUrl, -1, KIO::HideProgressInfo);
             }
@@ -231,14 +223,14 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
         }
         case PostOperation: {
             kioJob = KIO::http_post(reqUrl, outgoingData, sizeFromRequest(req), KIO::HideProgressInfo);
-            if (!metaData.contains(QL1S("content-type")))  {
+            if (!metaData.contains(QLatin1String("content-type")))  {
                 const QVariant header = req.header(QNetworkRequest::ContentTypeHeader);
                 if (header.isValid()) {
-                    metaData.insert(QL1S("content-type"),
-                                    (QL1S("Content-Type: ") + header.toString()));
+                    metaData.insert(QLatin1String("content-type"),
+                                    (QLatin1String("Content-Type: ") + header.toString()));
                 } else {
-                    metaData.insert(QL1S("content-type"),
-                                    QL1S("Content-Type: application/x-www-form-urlencoded"));
+                    metaData.insert(QLatin1String("content-type"),
+                                    QLatin1String("Content-Type: application/x-www-form-urlencoded"));
                 }
             }
             break;
@@ -248,7 +240,7 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
             const qint64 size = sizeFromRequest(req);
             if (size > 0) {
                 kioJob = KIO::http_post(reqUrl, outgoingData, size, KIO::HideProgressInfo);
-                metaData.insert(QL1S("CustomHTTPMethod"), QL1S("DELETE"));
+                metaData.insert(QLatin1String("CustomHTTPMethod"), QLatin1String("DELETE"));
             } else {
                 kioJob = KIO::http_delete(reqUrl, KIO::HideProgressInfo);
             }
@@ -268,7 +260,7 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
             else
                 kioJob = KIO::get(reqUrl, KIO::NoReload, KIO::HideProgressInfo);
 
-            metaData.insert(QL1S("CustomHTTPMethod"), method);
+            metaData.insert(QLatin1String("CustomHTTPMethod"), method);
             break;
         }
         default: {
@@ -303,7 +295,7 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
       a solution is found, we have to live with the side effects of creating
       nested event loops.
     */
-    if (req.attribute(gSynchronousNetworkRequestAttribute).toBool()) {
+    if (req.attribute(QNetworkRequest::SynchronousRequestAttribute).toBool()) {
         KUrl finalURL;
         QByteArray data;
 
@@ -359,40 +351,40 @@ void AccessManager::AccessManagerPrivate::setMetaDataForRequest(QNetworkRequest 
     if (userMetaData.isValid() && userMetaData.type() == QVariant::Map)
         metaData += userMetaData.toMap();
 
-    metaData.insert(QL1S("PropagateHttpHeader"), QL1S("true"));
+    metaData.insert(QLatin1String("PropagateHttpHeader"), QLatin1String("true"));
 
     if (request.hasRawHeader("User-Agent")) {
-        metaData.insert(QL1S("UserAgent"), request.rawHeader("User-Agent"));
+        metaData.insert(QLatin1String("UserAgent"), request.rawHeader("User-Agent"));
         request.setRawHeader("User-Agent", QByteArray());
     }
 
     if (request.hasRawHeader("Accept")) {
-        metaData.insert(QL1S("accept"), request.rawHeader("Accept"));
+        metaData.insert(QLatin1String("accept"), request.rawHeader("Accept"));
         request.setRawHeader("Accept", QByteArray());
     }
 
     if (request.hasRawHeader("Accept-Charset")) {
-        metaData.insert(QL1S("Charsets"), request.rawHeader("Accept-Charset"));
+        metaData.insert(QLatin1String("Charsets"), request.rawHeader("Accept-Charset"));
         request.setRawHeader("Accept-Charset", QByteArray());
     }
 
     if (request.hasRawHeader("Accept-Language")) {
-        metaData.insert(QL1S("Languages"), request.rawHeader("Accept-Language"));
+        metaData.insert(QLatin1String("Languages"), request.rawHeader("Accept-Language"));
         request.setRawHeader("Accept-Language", QByteArray());
     }
 
     if (request.hasRawHeader("Referer")) {
-        metaData.insert(QL1S("referrer"), request.rawHeader("Referer"));
+        metaData.insert(QLatin1String("referrer"), request.rawHeader("Referer"));
         request.setRawHeader("Referer", QByteArray());
     }
 
     if (request.hasRawHeader("Content-Type")) {
-        metaData.insert(QL1S("content-type"), request.rawHeader("Content-Type"));
+        metaData.insert(QLatin1String("content-type"), request.rawHeader("Content-Type"));
         request.setRawHeader("Content-Type", QByteArray());
     }
 
     if (request.attribute(QNetworkRequest::AuthenticationReuseAttribute) == QNetworkRequest::Manual) {
-        metaData.insert(QL1S("no-preemptive-auth-reuse"), QL1S("true"));
+        metaData.insert(QLatin1String("no-preemptive-auth-reuse"), QLatin1String("true"));
     }
 
     request.setRawHeader("Content-Length", QByteArray());
@@ -405,11 +397,11 @@ void AccessManager::AccessManagerPrivate::setMetaDataForRequest(QNetworkRequest 
     Q_FOREACH(const QByteArray &key, request.rawHeaderList()) {
         const QByteArray value = request.rawHeader(key);
         if (value.length())
-            customHeaders << (key + QL1S(": ") + value);
+            customHeaders << (key + QLatin1String(": ") + value);
     }
 
     if (!customHeaders.isEmpty()) {
-        metaData.insert(QL1S("customHTTPHeader"), customHeaders.join("\r\n"));
+        metaData.insert(QLatin1String("customHTTPHeader"), customHeaders.join("\r\n"));
     }
 
     // Append per request meta data, if any...
@@ -449,11 +441,11 @@ bool KIO::Integration::sslConfigFromMetaData(const KIO::MetaData& metadata, QSsl
 {
     bool success = false;
 
-    if (metadata.value(QL1S("ssl_in_use")) == QL1S("TRUE")) {
-        const QSsl::SslProtocol sslProto = qSslProtocolFromString(metadata.value(QL1S("ssl_protocol_version")));
+    if (metadata.value(QLatin1String("ssl_in_use")) == QLatin1String("TRUE")) {
+        const QSsl::SslProtocol sslProto = qSslProtocolFromString(metadata.value(QLatin1String("ssl_protocol_version")));
         QList<QSslCipher> cipherList;
-        cipherList << QSslCipher(metadata.value(QL1S("ssl_cipher_name")), sslProto);
-        sslconfig.setCaCertificates(QSslCertificate::fromData(metadata.value(QL1S("ssl_peer_chain")).toUtf8()));
+        cipherList << QSslCipher(metadata.value(QLatin1String("ssl_cipher_name")), sslProto);
+        sslconfig.setCaCertificates(QSslCertificate::fromData(metadata.value(QLatin1String("ssl_peer_chain")).toUtf8()));
         sslconfig.setCiphers(cipherList);
         sslconfig.setProtocol(sslProto);
         success = sslconfig.isNull();
@@ -499,9 +491,9 @@ QList<QNetworkCookie> CookieJar::cookiesForUrl(const QUrl &url) const
     }
 
     const QString cookieStr = reply.value();
-    const QStringList cookies = cookieStr.split(QL1S("; "), QString::SkipEmptyParts);
+    const QStringList cookies = cookieStr.split(QLatin1String("; "), QString::SkipEmptyParts);
     Q_FOREACH(const QString& cookie, cookies) {
-        const int index = cookie.indexOf(QL1C('='));
+        const int index = cookie.indexOf(QLatin1Char('='));
         const QString name = cookie.left(index);
         const QString value = cookie.right((cookie.length() - index - 1));
         cookieList << QNetworkCookie(name.toUtf8(), value.toUtf8());

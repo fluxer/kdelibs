@@ -31,11 +31,10 @@
 #include <acl/libacl.h>
 #endif
 #include <QHash>
-
-#include <kdebug.h>
-
 #include <QList>
 #include <QPair>
+
+#include <kdebug.h>
 
 
 class KACL::KACLPrivate {

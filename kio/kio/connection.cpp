@@ -165,7 +165,6 @@ bool SocketConnectionBackend::connectToRemote(const KUrl &url)
 
     if (mode == LocalSocketMode) {
         KLocalSocket *sock = new KLocalSocket(this);
-        QString path = url.path();
 #if 0
         // TODO: Activate once abstract socket support is implemented in Qt.
         KLocalSocket::LocalSocketType type = KLocalSocket::UnixSocket;
@@ -173,7 +172,7 @@ bool SocketConnectionBackend::connectToRemote(const KUrl &url)
         if (url.queryItem(QLatin1String("abstract")) == QLatin1String("1"))
             type = KLocalSocket::AbstractUnixSocket;
 #endif
-        sock->connectToPath(path);
+        sock->connectToPath(url.path());
         socket = sock;
     } else {
         socket = new QTcpSocket(this);

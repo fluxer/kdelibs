@@ -38,6 +38,7 @@
 #include <QtCore/QFile>
 #include <QTextStream>
 
+#include "kdebug.h"
 #include "krandom.h"
 #include "kglobal.h"
 #include "kcomponentdata.h"
@@ -313,7 +314,7 @@ KLockFile::LockResult KLockFile::Private::deleteStaleLock()
     // I see no way to prevent the race condition here, where we could
     // delete a new lock file that another process just got after we
     // decided the old one was too stale for us too.
-    qWarning("WARNING: deleting stale lockfile %s", qPrintable(m_fileName));
+    kWarning() << "Deleting stale lockfile" << qPrintable(m_fileName);
     QFile::remove(m_fileName);
     return LockOK;
 }
@@ -350,7 +351,7 @@ KLockFile::LockResult KLockFile::Private::deleteStaleLockWithLink()
       if ((KDE_lstat(lckFile, &st_buf2) == 0) && st_buf1 == st_buf2)
       {
          // - - if yes, delete lock file, delete temp file, retry lock
-         qWarning("WARNING: deleting stale lockfile %s", lckFile.data());
+         kWarning() << "Deleting stale lockfile" << lckFile.data();
          ::unlink(lckFile);
          ::unlink(tmpFile);
          return KLockFile::LockOK;
@@ -366,18 +367,17 @@ KLockFile::LockResult KLockFile::Private::deleteStaleLockWithLink()
    if (!linkCountSupport)
    {
       // Without support for link counts we will have a little race condition
-      qWarning("WARNING: deleting stale lockfile %s", lckFile.data());
+      kWarning() << "Deleting stale lockfile" << lckFile.data();
       ::unlink(tmpFile);
       if (::unlink(lckFile) < 0) {
-          qWarning("WARNING: Problem deleting stale lockfile %s: %s", lckFile.data(),
-                  strerror(errno));
+          kWarning() << "Problem deleting stale lockfile" << lckFile.data() << ": " << strerror(errno);
           return KLockFile::LockFail;
       }
       return KLockFile::LockOK;
    }
 
    // Failed to delete stale lock file
-   qWarning("WARNING: Problem deleting stale lockfile %s", lckFile.data());
+   kWarning() << "Problem deleting stale lockfile" << lckFile.data();
    ::unlink(tmpFile);
    return KLockFile::LockFail;
 }

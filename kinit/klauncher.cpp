@@ -93,7 +93,7 @@ IdleSlave::gotInput()
    if (mConn.read( &cmd, data) == -1)
    {
       // Communication problem with slave.
-      //kError(7016) << "SlavePool: No communication with slave." << endl;
+      // kError(7016) << "No communication with slave." << endl;
       deleteLater();
    }
    else if (cmd == MSG_SLAVE_ACK)
@@ -102,7 +102,7 @@ IdleSlave::gotInput()
    }
    else if (cmd != MSG_SLAVE_STATUS)
    {
-      kError(7016) << "SlavePool: Unexpected data from slave." << endl;
+      kError(7016) << "Unexpected data from slave." << endl;
       deleteLater();
    }
    else
@@ -187,7 +187,7 @@ ssize_t kde_safe_write(int fd, const void *buf, size_t count)
     ssize_t ret = 0;
     K_EINTR_LOOP(ret, QT_WRITE(fd, buf, count));
     if (ret < 0)
-        qWarning() << "write failed:" << strerror(errno);
+        kWarning() << "write failed:" << strerror(errno);
     return ret;
 }
 
@@ -215,7 +215,7 @@ KLauncher::KLauncher(int _kdeinitSocket)
    if (!mConnectionServer.isListening())
    {
       // Severe error!
-      qDebug("KLauncher: Fatal error, can't create tempfile!");
+      kDebug() << "Fatal error, can't create tempfile!";
       ::_exit(1);
    }
 
@@ -231,13 +231,13 @@ KLauncher::KLauncher(int _kdeinitSocket)
    mSlaveDebug = QString::fromLocal8Bit(qgetenv("KDE_SLAVE_DEBUG_WAIT"));
    if (!mSlaveDebug.isEmpty())
    {
-      qWarning("Klauncher running in slave-debug mode for slaves of protocol '%s'", qPrintable(mSlaveDebug));
+      kWarning() << "Running in slave-debug mode for slaves of protocol:" << qPrintable(mSlaveDebug);
    }
    mSlaveValgrind = QString::fromLocal8Bit(qgetenv("KDE_SLAVE_VALGRIND"));
    if (!mSlaveValgrind.isEmpty())
    {
       mSlaveValgrindSkin = QString::fromLocal8Bit(qgetenv("KDE_SLAVE_VALGRIND_SKIN"));
-      qWarning("Klauncher running slaves through valgrind for slaves of protocol '%s'", qPrintable(mSlaveValgrind));
+      kWarning() << "Running slaves through valgrind for slaves of protocol:" << qPrintable(mSlaveValgrind);
    }
    klauncher_header request_header;
    request_header.cmd = LAUNCHER_OK;
