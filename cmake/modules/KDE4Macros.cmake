@@ -627,64 +627,6 @@ macro (KDE4_ADD_UNIT_TEST _test_NAME)
 
 endmacro (KDE4_ADD_UNIT_TEST)
 
-
-# add a  manifest file to executables. 
-# 
-# There is a henn-egg problem when a target runtime part is renamed using 
-# the OUTPUT_NAME option of cmake's set_target_properties command. 
-#
-# At now the Makefiles rules creating for manifest adding are performed 
-# *after* the cmake's add_executable command but *before* an optional 
-# set_target_properties command. 
-# This means that in KDE4_ADD_MANIFEST the LOCATION property contains 
-#  the unchanged runtime part name of the target. :-(
-# 
-# The recently used workaround is to specify a variable build off the target name followed 
-# by _OUTPUT_NAME before calling kde4_add_executable as shown in the following example: 
-# 
-# set(xyz_OUTPUT_NAME test)
-# kde4_add_executable( xyz <source>)
-# set_target_properties( xyz PROPERTIES OUTPUT_NAME ${xyz_OUTPUT_NAME} )  
-#
-# The full solution would be to introduce a kde4_target_link_libraries macro and to 
-# call KDE4_ADD_MANIFEST inside instead of calling in kde4_add_executable. 
-# This would require patching of *all* places in the KDE sources where target_link_libraries 
-# is used and to change the related docs.
-# 
-# Because yet I found only 2 locations where this problem occurs (kjs, k3b), the workaround 
-# seems to be a pragmatically solution. 
-# 
-# This macro is an internal macro only used by kde4_add_executable
-#
-macro (_KDE4_ADD_MANIFEST _target_NAME)
-    set(x ${_target_NAME}_OUTPUT_NAME)
-    if (${x})
-        get_target_property(_var ${_target_NAME} LOCATION )
-        string(REPLACE "${_target_NAME}" "${${x}}" _executable ${_var})
-    else(${x})
-        get_target_property(_executable ${_target_NAME} LOCATION )
-    endif(${x})
-
-    if (_kdeBootStrapping)
-        set(_cmake_module_path ${CMAKE_SOURCE_DIR}/cmake/modules)
-    else (_kdeBootStrapping)
-        set(_cmake_module_path ${KDE4_INSTALL_DIR}/share/apps/cmake/modules)
-    endif (_kdeBootStrapping)
-
-    set(_manifest ${_cmake_module_path}/Win32.Manifest.in)
-    #message(STATUS ${_executable} ${_manifest})
-    add_custom_command(
-        TARGET ${_target_NAME}
-        POST_BUILD
-        COMMAND ${KDE4_MT_EXECUTABLE}
-        ARGS
-           -manifest ${_manifest}
-           -updateresource:${_executable}
-        COMMENT "adding vista trustInfo manifest to ${_target_NAME}"
-   )
-endmacro(_KDE4_ADD_MANIFEST) 
-
-
 macro (KDE4_ADD_EXECUTABLE _target_NAME)
 
    kde4_check_executable_params( _SRCS _nogui _test ${ARGN})
@@ -700,10 +642,6 @@ macro (KDE4_ADD_EXECUTABLE _target_NAME)
    endif (_test AND NOT KDE4_BUILD_TESTS)
 
    add_executable(${_target_NAME} ${_add_executable_param} ${_SRCS})
-
-   IF (KDE4_ENABLE_UAC_MANIFEST)
-       _kde4_add_manifest(${_target_NAME})
-   ENDIF(KDE4_ENABLE_UAC_MANIFEST)
 
    if (_test)
       set_target_properties(${_target_NAME} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}/\\"")
