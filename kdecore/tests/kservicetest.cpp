@@ -303,7 +303,7 @@ void KServiceTest::testServiceTypeTraderForReadOnlyPart()
     QVERIFY( offerListHasService( offers, "fakepart.desktop" ) );
 
     QVERIFY( offerListHasService( offers, "kmultipart.desktop" ) );
-    QVERIFY( offerListHasService( offers, "khtml.desktop" ) );
+    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) );
     QVERIFY( offerListHasService( offers, "khtmlimage.desktop" ) );
     QVERIFY( offerListHasService( offers, "kjavaappletviewer.desktop" ) );
 
@@ -387,7 +387,7 @@ void KServiceTest::testWriteServiceTypeProfile()
     KService::List services, disabledServices;
     services.append(KService::serviceByDesktopPath("khtmlimage.desktop"));
     services.append(KService::serviceByDesktopPath("fakepart.desktop"));
-    disabledServices.append(KService::serviceByDesktopPath("khtml.desktop"));
+    disabledServices.append(KService::serviceByDesktopPath("kwebkitpart.desktop"));
 
     KService::List::ConstIterator servit = services.constBegin();
     for( ; servit != services.constEnd(); ++servit) {
@@ -412,7 +412,7 @@ void KServiceTest::testWriteServiceTypeProfile()
     QCOMPARE( offers[0]->entryPath(), QString("khtmlimage.desktop") );
     QCOMPARE( offers[1]->entryPath(), QString("fakepart.desktop") );
     QVERIFY( offerListHasService( offers, "kmultipart.desktop" ) ); // should still be somewhere in there
-    QVERIFY( !offerListHasService( offers, "khtml.desktop" ) ); // it got disabled above
+    QVERIFY( !offerListHasService( offers, "kwebkitpart.desktop" ) ); // it got disabled above
 }
 
 void KServiceTest::testDefaultOffers()
@@ -421,7 +421,7 @@ void KServiceTest::testDefaultOffers()
     const QString serviceType = "KParts/ReadOnlyPart";
     KService::List offers = KServiceTypeTrader::self()->defaultOffers( serviceType );
     QVERIFY( offers.count() > 0 ); // not empty
-    QVERIFY( offerListHasService( offers, "khtml.desktop" ) ); // it's here even though it's disabled in the profile
+    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) ); // it's here even though it's disabled in the profile
     if ( m_firstOffer.isEmpty() )
         QSKIP( "testServiceTypeTraderForReadOnlyPart not run", SkipAll );
     QCOMPARE( offers[0]->entryPath(), m_firstOffer );
@@ -434,7 +434,7 @@ void KServiceTest::testDeleteServiceTypeProfile()
 
     KService::List offers = KServiceTypeTrader::self()->query( serviceType );
     QVERIFY( offers.count() > 0 ); // not empty
-    QVERIFY( offerListHasService( offers, "khtml.desktop" ) ); // it's back
+    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) ); // it's back
 
     if ( m_firstOffer.isEmpty() )
         QSKIP( "testServiceTypeTraderForReadOnlyPart not run", SkipAll );
