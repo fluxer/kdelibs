@@ -106,12 +106,8 @@ KUniqueApplication::start(StartFlags flags)
   s_kuniqueapplication_startCalled = true;
 
   addCmdLineOptions(); // Make sure to add cmd line options
-#if defined(Q_WS_WIN) || defined(Q_WS_MACX)
-  Private::s_nofork = true;
-#else
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kuniqueapp");
   Private::s_nofork = !args->isSet("fork");
-#endif
 
   QString appName = KCmdLineArgs::aboutData()->appName();
   const QStringList parts = KCmdLineArgs::aboutData()->organizationDomain().split(QLatin1Char('.'), QString::SkipEmptyParts);

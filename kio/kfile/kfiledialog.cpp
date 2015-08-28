@@ -44,19 +44,12 @@
 #include "krecentdirs.h"
 #include "kservice.h"
 
-/** File dialogs are native by default on Windows. */
-#if defined(Q_WS_WIN) || defined(Q_WS_MAEMO_5)
-const bool NATIVE_FILEDIALOGS_BY_DEFAULT = true;
-#else
-const bool NATIVE_FILEDIALOGS_BY_DEFAULT = false;
-#endif
-
 static QStringList mime2KdeFilter( const QStringList &mimeTypes, QString *allExtensions = 0 )
 {
   const KUrl emptyUrl;
   QStringList kdeFilter;
   QStringList allExt;
-  foreach( const QString& mimeType, mimeTypes ) {
+  foreach (const QString& mimeType, mimeTypes) {
     KMimeType::Ptr mime( KMimeType::mimeType(mimeType) );
     if (mime) {
       allExt += mime->patterns();
@@ -205,7 +198,7 @@ public:
         w(0),
         cfgGroup(KGlobal::config(), ConfigGroup)
     {
-        if (cfgGroup.readEntry("Native", NATIVE_FILEDIALOGS_BY_DEFAULT) &&
+        if (cfgGroup.readEntry("Native", false) &&
             KFileDialogPrivate::Native::s_allowNative)
             native = new Native;
     }
@@ -215,7 +208,7 @@ public:
         if(!KFileDialogPrivate::Native::s_allowNative)
             return false;
         KConfigGroup cfgGroup(KGlobal::config(), ConfigGroup);
-        return cfgGroup.readEntry("Native", NATIVE_FILEDIALOGS_BY_DEFAULT);
+        return cfgGroup.readEntry("Native", false);
     }
     
     static QString getOpenFileName(const KUrl& startDir, const QString& filter,

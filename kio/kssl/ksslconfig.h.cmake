@@ -21,10 +21,6 @@
 #ifndef KSSLCONFIG_H
 #define KSSLCONFIG_H
 
-#ifdef Q_WS_WIN
-#include <winsock2.h>
-#endif
-
 #cmakedefine KSSL_HAVE_SSL 1
 
 #endif
