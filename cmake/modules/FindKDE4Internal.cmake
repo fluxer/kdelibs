@@ -47,7 +47,6 @@
 #  KDE4_KDEUI_LIBRARY       - the kdeui library
 #  KDE4_KIO_LIBRARY         - the kio library
 #  KDE4_KPARTS_LIBRARY      - the kparts library
-#  KDE4_KUTILS_LIBRARY      - the kutils library
 #  KDE4_KEMOTICONS_LIBRARY  - the kemoticons library
 #  KDE4_KIDLETIME_LIBRARY   - the kidletime library
 #  KDE4_KCMUTILS_LIBRARY    - the kcmutils library
@@ -74,7 +73,6 @@
 #  KDE4_KDEUI_LIBS            - the kdeui library and all depending libraries
 #  KDE4_KIO_LIBS              - the kio library and all depending libraries
 #  KDE4_KPARTS_LIBS           - the kparts library and all depending libraries
-#  KDE4_KUTILS_LIBS           - the kutils library and all depending libraries
 #  KDE4_KEMOTICONS_LIBS       - the kemoticons library and all depending libraries
 #  KDE4_KIDLETIME_LIBS        - the kidletime library and all depending libraries
 #  KDE4_KCMUTILS_LIBS         - the kcmutils library and all depending libraries
@@ -562,7 +560,6 @@ _kde4_set_lib_variables(KROSSCORE     krosscore     "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KROSSUI       krossui       "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KTEXTEDITOR   ktexteditor   "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KUNITCONVERSION kunitconversion "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KUTILS        kutils        "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(PLASMA        plasma        "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(SOLID         solid         "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(THREADWEAVER  threadweaver  "${KDE4_TARGET_PREFIX}")
