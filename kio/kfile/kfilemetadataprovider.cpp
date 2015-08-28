@@ -21,21 +21,13 @@
 
 #include <kfileitem.h>
 #include <kfilemetadatareader_p.h>
-#include "knfotranslator_p.h"
+#include <knfotranslator_p.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kurl.h>
 
-#include <QEvent>
 #include <QLabel>
-
-// Required includes for subDirectoriesCount():
-#ifdef Q_WS_WIN
-    #include <QDir>
-#else
-    #include <dirent.h>
-    #include <QFile>
-#endif
+#include <QDir>
 
 namespace {
     static QString plainText(const QString& richText)
@@ -347,35 +339,8 @@ QWidget* KFileMetaDataProvider::createValueWidget(const KUrl& metaDataUri,
 
 int KFileMetaDataProvider::Private::subDirectoriesCount(const QString& path)
 {
-#ifdef Q_WS_WIN
     QDir dir(path);
     return dir.entryList(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::System).count();
-#else
-    // Taken from kdelibs/kio/kio/kdirmodel.cpp
-    // Copyright (C) 2006 David Faure <faure@kde.org>
-
-    int count = -1;
-    DIR* dir = ::opendir(QFile::encodeName(path));
-    if (dir) {
-        count = 0;
-        struct dirent *dirEntry = 0;
-        while ((dirEntry = ::readdir(dir))) { // krazy:exclude=syscalls
-            if (dirEntry->d_name[0] == '.') {
-                if (dirEntry->d_name[1] == '\0') {
-                    // Skip "."
-                    continue;
-                }
-                if (dirEntry->d_name[1] == '.' && dirEntry->d_name[2] == '\0') {
-                    // Skip ".."
-                    continue;
-                }
-            }
-            ++count;
-        }
-        ::closedir(dir);
-    }
-    return count;
-#endif
 }
 
 #include "moc_kfilemetadataprovider_p.cpp"
