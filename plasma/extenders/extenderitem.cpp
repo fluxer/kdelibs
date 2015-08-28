@@ -24,7 +24,6 @@
 #include <QBitmap>
 #include <QDrag>
 #include <QtGui/qgraphicssceneevent.h>
-#include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsLinearLayout>
 #include <QLayout>
 #include <QMimeData>
@@ -436,12 +435,6 @@ void ExtenderItem::setExtender(Extender *extender, const QPointF &pos)
 Extender *ExtenderItem::extender() const
 {
     return d->extender;
-}
-
-//TODO KDE5: only one setGroup()
-void ExtenderItem::setGroup(ExtenderGroup *group)
-{
-    setGroup(group, QPointF(-1, -1));
 }
 
 void ExtenderItem::setGroup(ExtenderGroup *group, const QPointF &pos)
