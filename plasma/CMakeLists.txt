@@ -33,7 +33,7 @@ endif(NOT PLASMA_NO_SOLID)
 
 if (NOT PLASMA_NO_KUTILS)
     include_directories(${CMAKE_SOURCE_DIR}/kutils)
-    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KUTILS_LIBS})
+    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KCMUTILS_LIBRARY})
 endif(NOT PLASMA_NO_KUTILS)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-plasma.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h)
