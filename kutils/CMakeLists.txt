@@ -1,5 +1,5 @@
 project(kutils)
-include_directories( ${KDE4_KDEUI_INCLUDES} ${KDE4_KPARTS_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${KDE4_KDEUI_INCLUDES} ${KDE4_KPARTS_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR})
 
 ########### kemoticons ################
 add_subdirectory(kemoticons)
@@ -101,14 +101,14 @@ set_target_properties(kcmutils PROPERTIES
                       SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install( FILES
- kcmutils_export.h
- kcmoduleinfo.h
- kcmoduleloader.h
- kcmultidialog.h
- kcmoduleproxy.h
- kpluginselector.h
- kcmodulecontainer.h
- DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+    kcmutils_export.h
+    kcmoduleinfo.h
+    kcmoduleloader.h
+    kcmultidialog.h
+    kcmoduleproxy.h
+    kpluginselector.h
+    kcmodulecontainer.h
+    DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 install(FILES
         ksettings/dispatcher.h
@@ -134,28 +134,8 @@ set_target_properties(kprintutils PROPERTIES
                       SOVERSION ${GENERIC_LIB_SOVERSION})
 
 install( FILES
- kprintutils_export.h
- kprintpreview.h
- DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+    kprintutils_export.h
+    kprintpreview.h
+    DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 install(TARGETS kprintutils EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-
-########### kutils ###############
-# This is only for backwards compatibility, don't use in new projects
-if(NOT KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
-set(kutils_LIB_SRCS
-    dummy.cpp
-)
-
-kde4_add_library(kutils ${LIBRARY_TYPE} ${kutils_LIB_SRCS})
-
-target_link_libraries(kutils PRIVATE kemoticons kidletime kcmutils kprintutils ${QT_QTCORE_LIBRARY})
-target_link_libraries(kutils PUBLIC kdecore kdeui ${QT_QTGUI_LIBRARY} kemoticons kidletime kcmutils kprintutils)
-set_target_properties(kutils PROPERTIES
-                      VERSION ${GENERIC_LIB_VERSION}
-                      SOVERSION ${GENERIC_LIB_SOVERSION})
-
-install(TARGETS kutils EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-endif(NOT KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
-
