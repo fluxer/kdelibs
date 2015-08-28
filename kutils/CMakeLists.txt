@@ -50,10 +50,6 @@ if (Q_WS_X11)
       set(kidletime_LIB_SRCS ${kidletime_LIB_SRCS}
           kidletime/xsyncbasedpoller.cpp )
     endif (HAVE_XSYNC)
-elseif (Q_WS_MAC)
-    set(kidletime_LIB_SRCS ${kidletime_LIB_SRCS} kidletime/macpoller.cpp)
-elseif (Q_WS_WIN)
-    set(kidletime_LIB_SRCS ${kidletime_LIB_SRCS} kidletime/windowspoller.cpp)
 endif (Q_WS_X11)
 
 kde4_add_library(kidletime ${LIBRARY_TYPE} ${kidletime_LIB_SRCS})
