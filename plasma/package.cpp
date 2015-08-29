@@ -268,11 +268,6 @@ QString Package::filePath(const char *fileType, const QString &filename) const
     return QString();
 }
 
-QString Package::filePath(const char *fileType) const
-{
-    return filePath(fileType, QString());
-}
-
 QStringList Package::entryList(const char *fileType) const
 {
     if (!d->valid) {

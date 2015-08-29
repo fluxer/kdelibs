@@ -90,21 +90,11 @@ class PLASMA_EXPORT Package
          * Get the path to a given file.
          *
          * @param fileType the type of file to look for, as defined in the
-         *               package structure
-         * @param filename the name of the file
+         *               package structure.
+         * @param filename optional name of the file to locate within the package
          * @return path to the file on disk. QString() if not found.
          **/
-        QString filePath(const char *fileType, const QString &filename) const;
-
-        /**
-         * Get the path to a given file.
-         *
-         * @param fileType the type of file to look for, as defined in the
-         *               package structure. The type must refer to a file
-         *               in the package structure and not a directory.
-         * @return path to the file on disk. QString() if not found
-         **/
-        QString filePath(const char *fileType) const;
+        QString filePath(const char *fileType, const QString &filename = QString()) const;
 
         /**
          * Get the list of files of a given type.
