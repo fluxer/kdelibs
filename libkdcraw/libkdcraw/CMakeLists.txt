@@ -26,43 +26,50 @@ add_definitions(${KDE4_ENABLE_EXCEPTIONS})
 
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
-SET(kdcraw_LIB_SRCS kdcraw.cpp
-                    kdcraw_p.cpp
-                    dcrawsettingswidget.cpp
-                    dcrawinfocontainer.cpp
-                    rawdecodingsettings.cpp
-                    rcombobox.cpp
-                    rnuminput.cpp
-                    rexpanderbox.cpp
-                    ractionthreadbase.cpp
-                    ractionthreadbase_p.cpp
-                    squeezedcombobox.cpp
-   )
+SET(kdcraw_LIB_SRCS
+    kdcraw.cpp
+    kdcraw_p.cpp
+    dcrawsettingswidget.cpp
+    dcrawinfocontainer.cpp
+    rawdecodingsettings.cpp
+    rcombobox.cpp
+    rnuminput.cpp
+    rexpanderbox.cpp
+    ractionthreadbase.cpp
+    ractionthreadbase_p.cpp
+    squeezedcombobox.cpp
+)
 
 KDE4_ADD_LIBRARY(kdcraw SHARED ${kdcraw_LIB_SRCS})
 
-TARGET_LINK_LIBRARIES(kdcraw
-                      ${KDE4_KDEUI_LIBS}
-                      ${KDE4_KIO_LIBS}
-                      ${KDE4_SOLID_LIBS}
-                      ${KDE4_THREADWEAVER_LIBS}
-                      ${LibRaw_r_LIBRARIES}
-                     )
+TARGET_LINK_LIBRARIES(kdcraw PRIVATE
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
+    ${KDE4_SOLID_LIBS}
+    ${KDE4_THREADWEAVER_LIBS}
+)
+
+TARGET_LINK_LIBRARIES(kdcraw PUBLIC
+    ${LibRaw_r_LIBRARIES}
+)
 
 SET_TARGET_PROPERTIES(kdcraw PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
 
 INSTALL(TARGETS kdcraw ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-INSTALL(FILES rawdecodingsettings.h
-                  kdcraw.h
-                  dcrawsettingswidget.h
-                  rnuminput.h
-                  rcombobox.h
-                  rexpanderbox.h
-                  ractionthreadbase.h
-                  squeezedcombobox.h
-                  dcrawinfocontainer.h
-                  rawfiles.h
-                  libkdcraw_export.h
-                  ${CMAKE_CURRENT_BINARY_DIR}/version.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/libkdcraw COMPONENT Devel)
+INSTALL(FILES
+    rawdecodingsettings.h
+    kdcraw.h
+    dcrawsettingswidget.h
+    rnuminput.h
+    rcombobox.h
+    rexpanderbox.h
+    ractionthreadbase.h
+    squeezedcombobox.h
+    dcrawinfocontainer.h
+    rawfiles.h
+    libkdcraw_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/libkdcraw
+    COMPONENT Devel
+)
