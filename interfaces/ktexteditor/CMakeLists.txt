@@ -1,49 +1,51 @@
-include_directories( ${KDE4_KPARTS_INCLUDES} )
+include_directories(${KDE4_KPARTS_INCLUDES})
 
 ########### next target ###############
 
 set(ktexteditor_LIB_SRCS
-   ktexteditor.cpp
-   document.cpp
-   range.cpp
-   cursor.cpp
-   templateinterface.cpp
-   templateinterface2.cpp
-   editorchooser.cpp
-   attribute.cpp
-   cursorfeedback.cpp
-   rangefeedback.cpp
-   smartcursor.cpp
-   smartrange.cpp
-   codecompletioninterface.cpp
-   codecompletionmodel.cpp
-   codecompletionmodelcontrollerinterface.cpp
-   configinterface.cpp
-   smartinterface.cpp
-   highlightinterface.cpp
-   movinginterface.cpp
-   movingcursor.cpp
-   movingrange.cpp
-   movingrangefeedback.cpp
-   messageinterface.cpp
-   )
+    ktexteditor.cpp
+    document.cpp
+    range.cpp
+    cursor.cpp
+    templateinterface.cpp
+    templateinterface2.cpp
+    editorchooser.cpp
+    attribute.cpp
+    cursorfeedback.cpp
+    rangefeedback.cpp
+    smartcursor.cpp
+    smartrange.cpp
+    codecompletioninterface.cpp
+    codecompletionmodel.cpp
+    codecompletionmodelcontrollerinterface.cpp
+    configinterface.cpp
+    smartinterface.cpp
+    highlightinterface.cpp
+    movinginterface.cpp
+    movingcursor.cpp
+    movingrange.cpp
+    movingrangefeedback.cpp
+    messageinterface.cpp
+    editorchooser_ui.ui 
+)
 
+add_library(ktexteditor ${LIBRARY_TYPE} ${ktexteditor_LIB_SRCS})
 
-kde4_add_ui_files(ktexteditor_LIB_SRCS editorchooser_ui.ui )
+target_link_libraries(ktexteditor PRIVATE
+    ${KDE4_KDECORE_LIBS}
+    ${QT_QTDBUS_LIBRARY}
+    ${KDE4_KPARTS_LIBS}
+)
+target_link_libraries(ktexteditor PUBLIC ${KDE4_KPARTS_LIBS})
 
-kde4_add_library(ktexteditor ${LIBRARY_TYPE} ${ktexteditor_LIB_SRCS})
-
-target_link_libraries(ktexteditor PRIVATE ${KDE4_KDECORE_LIBS} ${QT_QTDBUS_LIBRARY} ${KDE4_KPARTS_LIBS} )
-target_link_libraries(ktexteditor PUBLIC ${KDE4_KPARTS_LIBS} )
-
-set_target_properties(ktexteditor
-   PROPERTIES VERSION ${GENERIC_LIB_VERSION}
-   SOVERSION ${GENERIC_LIB_SOVERSION}
+set_target_properties(ktexteditor PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 install(TARGETS ktexteditor EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
-install( FILES
+install(FILES
     ktexteditor_export.h
     factory.h
     editor.h
@@ -88,9 +90,22 @@ install( FILES
     movingrangefeedback.h
     recoveryinterface.h
     messageinterface.h
-    DESTINATION  ${INCLUDE_INSTALL_DIR}/ktexteditor COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/ktexteditor
+    COMPONENT Devel
+)
 
-install( FILES ktexteditor.desktop ktexteditorplugin.desktop  DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
-install( FILES kcm_ktexteditor.desktop  DESTINATION  ${DATA_INSTALL_DIR}/kcm_componentchooser )
+install(FILES
+    ktexteditor.desktop
+    ktexteditorplugin.desktop
+    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+)
 
-install( FILES ktexteditor_loadsavefiltercheckplugin.desktop  DESTINATION  ${SERVICETYPES_INSTALL_DIR} )
+install(FILES
+    kcm_ktexteditor.desktop
+    DESTINATION ${DATA_INSTALL_DIR}/kcm_componentchooser
+)
+
+install(FILES
+    ktexteditor_loadsavefiltercheckplugin.desktop
+    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+)

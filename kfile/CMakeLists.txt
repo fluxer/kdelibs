@@ -1,41 +1,43 @@
 project(kfile)
 
 include_directories(
-  ${KDE4_KIO_INCLUDES}
-  ${CMAKE_SOURCE_DIR}/solid
-  ${CMAKE_BINARY_DIR}/solid
+    ${KDE4_KIO_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/solid
+    ${CMAKE_BINARY_DIR}/solid
 )
 
-add_subdirectory(tests)
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
 
 set(kfile_LIB_SRCS
-  kdiroperator.cpp
-  kdiroperatordetailview.cpp
-  kdirselectdialog.cpp
-  kdirsortfilterproxymodel.cpp #used in combination with kio/kio/kdirmodel.cpp
-  kfilebookmarkhandler.cpp
-  kfilefiltercombo.cpp
-  kfiletreeview.cpp
-  kfilewidget.cpp
-  kfileplacesitem.cpp
-  kfileplacesmodel.cpp
-  kfileplacessharedbookmarks.cpp
-  kfileplacesview.cpp
-  kfileplaceeditdialog.cpp
-  kfilepreviewgenerator.cpp
-  knameandurlinputdialog.cpp
-  knewfilemenu.cpp
-  kurlnavigatordropdownbutton.cpp
-  kurlnavigatorbuttonbase.cpp
-  kurlnavigatorbutton.cpp
-  kurlnavigatorplacesselector.cpp
-  kurlnavigatorprotocolcombo.cpp
-  kurlnavigatortogglebutton.cpp
-  kurlnavigator.cpp
-  kurlnavigatormenu.cpp
+    kdiroperator.cpp
+    kdiroperatordetailview.cpp
+    kdirselectdialog.cpp
+    kdirsortfilterproxymodel.cpp #  used in combination with kio/kio/kdirmodel.cpp
+    kfilebookmarkhandler.cpp
+    kfilefiltercombo.cpp
+    kfiletreeview.cpp
+    kfilewidget.cpp
+    kfileplacesitem.cpp
+    kfileplacesmodel.cpp
+    kfileplacessharedbookmarks.cpp
+    kfileplacesview.cpp
+    kfileplaceeditdialog.cpp
+    kfilepreviewgenerator.cpp
+    knameandurlinputdialog.cpp
+    knewfilemenu.cpp
+    kurlnavigatordropdownbutton.cpp
+    kurlnavigatorbuttonbase.cpp
+    kurlnavigatorbutton.cpp
+    kurlnavigatorplacesselector.cpp
+    kurlnavigatorprotocolcombo.cpp
+    kurlnavigatortogglebutton.cpp
+    kurlnavigator.cpp
+    kurlnavigatormenu.cpp
 )
 
-kde4_add_library(kfile ${LIBRARY_TYPE} ${kfile_LIB_SRCS})
+add_library(kfile ${LIBRARY_TYPE} ${kfile_LIB_SRCS})
 target_link_libraries(kfile PRIVATE
    ${KDE4_KIO_LIBS}
    ${ZLIB_LIBRARY}
@@ -56,26 +58,31 @@ set_target_properties(kfile PROPERTIES VERSION ${GENERIC_LIB_VERSION}
 install(TARGETS kfile EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
-  kdiroperator.h
-  kdirselectdialog.h
-  kdirsortfilterproxymodel.h
-  kfilefiltercombo.h
-  kfileplacesmodel.h
-  kfileplacesview.h
-  kfilepreviewgenerator.h
-  kfiletreeview.h
-  kfilewidget.h
-  kurlnavigator.h
-  knewfilemenu.h
-  knameandurlinputdialog.h
-  kfile_export.h
-  DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel )
+    kdiroperator.h
+    kdirselectdialog.h
+    kdirsortfilterproxymodel.h
+    kfilefiltercombo.h
+    kfileplacesmodel.h
+    kfileplacesview.h
+    kfilepreviewgenerator.h
+    kfiletreeview.h
+    kfilewidget.h
+    kurlnavigator.h
+    knewfilemenu.h
+    knameandurlinputdialog.h
+    kfile_export.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}
+    COMPONENT Devel
+)
 
 ############ module used by KFileDialog ##########
 set(kfilemodule_SRCS
-  kfilemodule.cpp
+    kfilemodule.cpp
 )
+
 kde4_add_plugin(kfilemodule ${kfilemodule_SRCS})
+
 target_link_libraries(kfilemodule ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS})
+
 install(TARGETS kfilemodule DESTINATION ${PLUGIN_INSTALL_DIR})
 install(FILES kfilemodule.desktop DESTINATION ${SERVICES_INSTALL_DIR})

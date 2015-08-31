@@ -1,6 +1,8 @@
 project(kdeinit)
 
-add_subdirectory( tests )
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
 
 include_directories( ${KDE4_KPARTS_INCLUDES} )
 
@@ -31,9 +33,7 @@ endif(HAVE_SOCKET_LIBRARY)
 set(kdeinit_SRCS kinit.cpp proctitle.cpp klauncher_cmds.cpp )
 set(kdeinit_LIBS "")
 
-# on win32 kdeinit4 has to be a console application 
-# to be able to catch stderr based --verbose output
-kde4_add_executable(kdeinit4 NOGUI ${kdeinit_SRCS})
+add_executable(kdeinit4 ${kdeinit_SRCS})
 
 target_link_libraries(kdeinit4 ${KDE4_KDEUI_LIBS} ${kdeinit_LIBS} ${KINIT_SOCKET_LIBRARY} )
 if (Q_WS_X11)
@@ -46,7 +46,7 @@ install(TARGETS kdeinit4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 set(kwrapper_SRCS kwrapper.c )
 
-kde4_add_executable(kwrapper4 NOGUI ${kwrapper_SRCS})
+add_executable(kwrapper4 ${kwrapper_SRCS})
 
 target_link_libraries(kwrapper4 ${KINIT_SOCKET_LIBRARY})
 
@@ -54,7 +54,7 @@ install(TARGETS kwrapper4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### kdeinit4_wrapper ###############
 
-kde4_add_executable(kdeinit4_wrapper NOGUI wrapper.c)
+add_executable(kdeinit4_wrapper wrapper.c)
 
 target_link_libraries(kdeinit4_wrapper  ${KINIT_SOCKET_LIBRARY})
 
@@ -63,28 +63,21 @@ if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
 endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
 
 install(TARGETS kdeinit4_wrapper ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kdeinit4_wrapper ${INSTALL_TARGETS_DEFAULT_ARGS} RENAME kdeinit4_shutdown)
 
 ########### kshell4 ###############
 
-kde4_add_executable(kshell4 NOGUI shell.c)
+add_executable(kshell4 shell.c)
 
 target_link_libraries(kshell4 ${KINIT_SOCKET_LIBRARY})
 
 install(TARGETS kshell4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-########### kdeinit4_shutdown ###############
-
-kde4_add_executable(kdeinit4_shutdown NOGUI wrapper.c)
-
-target_link_libraries(kdeinit4_shutdown  ${KINIT_SOCKET_LIBRARY})
-
-install(TARGETS kdeinit4_shutdown ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
 ########### lnusertemp ###############
 
 set(lnusertemp_SRCS lnusertemp.c )
 
-kde4_add_executable(lnusertemp NOGUI ${lnusertemp_SRCS})
+add_executable(lnusertemp ${lnusertemp_SRCS})
 
 target_link_libraries(lnusertemp kdefakes)
 
@@ -95,10 +88,9 @@ install(TARGETS lnusertemp DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
 set(kioslave_SRCS kioslave.cpp)
 
+add_executable(kioslave ${kioslave_SRCS})
 
-kde4_add_executable(kioslave NOGUI ${kioslave_SRCS})
-
-target_link_libraries(kioslave  ${KDE4_KIO_LIBS} )
+target_link_libraries(kioslave ${KDE4_KIO_LIBS} )
 
 install(TARGETS kioslave DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
@@ -116,8 +108,7 @@ set(klauncher_SRCS
 # The adaptor is manually edited, generate the xml from it.
 qt4_generate_dbus_interface(klauncher_adaptor.h org.kde.KLauncher.xml)
 
-
-kde4_add_executable( klauncher NOGUI ${klauncher_SRCS})
+add_executable( klauncher ${klauncher_SRCS})
 set_target_properties(klauncher PROPERTIES DEFINE_SYMBOL MAKE_KLAUNCHER)
 
 target_link_libraries(klauncher  ${KDE4_KIO_LIBS} ${X11_LIBRARIES})

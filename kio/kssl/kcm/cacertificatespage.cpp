@@ -25,6 +25,7 @@
 
 #include <kdebug.h>
 #include <kfiledialog.h>
+#include <klocale.h>
 
 #include <QList>
 #include <QSslCertificate>

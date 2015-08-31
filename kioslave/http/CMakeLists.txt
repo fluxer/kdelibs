@@ -1,6 +1,4 @@
-
 project(kioslave-http)
-
 
 macro_optional_find_package(GSSAPI)
 set_package_properties(GSSAPI PROPERTIES DESCRIPTION "Allows KIO to make use of certain HTTP authentication services"
@@ -31,52 +29,51 @@ include_directories( ${KDE4_KIO_INCLUDES} ${ZLIB_INCLUDE_DIR} ${CMAKE_SOURCE_DIR
                      ${CMAKE_BINARY_DIR}/solid )
 include_directories( ${CMAKE_SOURCE_DIR}/interfaces ${CMAKE_SOURCE_DIR}/kio/httpfilter )
 
-add_subdirectory( kcookiejar )
-add_subdirectory( tests )
+add_subdirectory(kcookiejar)
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
 
 ########### next target ###############
 
 set(kio_http_cache_cleaner_SRCS
-   http_cache_cleaner.cpp
-   )
+    http_cache_cleaner.cpp
+)
 
-
-kde4_add_executable( kio_http_cache_cleaner NOGUI ${kio_http_cache_cleaner_SRCS})
+add_executable(kio_http_cache_cleaner ${kio_http_cache_cleaner_SRCS})
 
 target_link_libraries(kio_http_cache_cleaner  ${KDE4_KIO_LIBS} ${ZLIB_LIBRARY})
 
-install(TARGETS kio_http_cache_cleaner DESTINATION ${LIBEXEC_INSTALL_DIR} )
+install(TARGETS kio_http_cache_cleaner DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 ########### next target ###############
 
-# kio/httpfilter/Makefile.am: httpfilter
-
 set(kio_http_PART_SRCS
-   http.cpp
-   httpauthentication.cpp
-   ${httpfilter_STAT_SRCS}
-   ${CMAKE_SOURCE_DIR}/kio/httpfilter/httpfilter.cc
-   )
+    http.cpp
+    httpauthentication.cpp
+    ${httpfilter_STAT_SRCS}
+    ${CMAKE_SOURCE_DIR}/kio/httpfilter/httpfilter.cc
+)
 
 
 kde4_add_plugin(kio_http ${kio_http_PART_SRCS})
 
 target_link_libraries(kio_http ${KDE4_KIO_LIBS} ${KDE4_SOLID_LIBS} kntlm ${ZLIB_LIBRARY} )
 if(GSSAPI_FOUND)
-  target_link_libraries(kio_http ${GSSAPI_LIBS} )
+    target_link_libraries(kio_http ${GSSAPI_LIBS} )
 endif(GSSAPI_FOUND)
 
 install(TARGETS  kio_http  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
-
 ########### install files ###############
 
-install( FILES
+install(FILES
     http_cache_cleaner.desktop
     http.protocol
     https.protocol
     webdav.protocol
     webdavs.protocol
-  DESTINATION  ${SERVICES_INSTALL_DIR} )
+    DESTINATION ${SERVICES_INSTALL_DIR}
+)
 
 

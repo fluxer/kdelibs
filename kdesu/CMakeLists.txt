@@ -18,23 +18,22 @@ add_feature_info(Sudo SUDO_FOUND "Needed for password caching in kdesu" "http://
 ########### next target ###############
 
 set(kdesu_LIB_SRCS
-   client.cpp
-   process.cpp
-   kcookie.cpp
-   su.cpp
-   ssh.cpp
-   stub.cpp
-   )
+    client.cpp
+    process.cpp
+    kcookie.cpp
+    su.cpp
+    ssh.cpp
+    stub.cpp
+)
 
 
-kde4_add_library(kdesu ${LIBRARY_TYPE} ${kdesu_LIB_SRCS})
+add_library(kdesu ${LIBRARY_TYPE} ${kdesu_LIB_SRCS})
 
 target_link_libraries(kdesu PRIVATE ${KDE4_KPTY_LIBS} )
 target_link_libraries(kdesu PUBLIC ${QT_QTCORE_LIBRARY} )
 
 if(SUDO_FOUND)
-   set_source_files_properties(su.cpp PROPERTIES
-                               COMPILE_FLAGS -DKDESU_USE_SUDO_DEFAULT)
+    add_definitions(-DKDESU_USE_SUDO_DEFAULT)
 endif(SUDO_FOUND)
 
 set_target_properties(kdesu PROPERTIES
@@ -49,12 +48,20 @@ install(TARGETS kdesu EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARG
 
 set(kdesu_stub_SRCS kdesu_stub.c )
 
-kde4_add_executable(kdesu_stub NOGUI ${kdesu_stub_SRCS})
+add_executable(kdesu_stub ${kdesu_stub_SRCS})
 
 install(TARGETS kdesu_stub DESTINATION ${LIBEXEC_INSTALL_DIR} )
 
-
 ########### install files ###############
-install( FILES kdesu_export.h client.h process.h su.h ssh.h stub.h defaults.h 
-         DESTINATION  ${INCLUDE_INSTALL_DIR}/kdesu COMPONENT Devel)
 
+install(FILES
+    kdesu_export.h
+    client.h
+    process.h
+    su.h
+    ssh.h
+    stub.h
+    defaults.h 
+    DESTINATION ${INCLUDE_INSTALL_DIR}/kdesu
+    COMPONENT Devel
+)

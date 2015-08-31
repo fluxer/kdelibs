@@ -4,12 +4,12 @@ include_directories( ${KDE4_KDECORE_INCLUDES} )
 include_directories( ${QT_INCLUDES} )
 
 set(kpty_LIB_SRCS
-   kpty.cpp
-   kptydevice.cpp
-   kptyprocess.cpp
+    kpty.cpp
+    kptydevice.cpp
+    kptyprocess.cpp
 )
 
-kde4_add_library(kpty ${LIBRARY_TYPE} ${kpty_LIB_SRCS})
+add_library(kpty ${LIBRARY_TYPE} ${kpty_LIB_SRCS})
 
 target_link_libraries(kpty PRIVATE ${KDE4_KDECORE_LIBS} ${UTIL_LIBRARY} ${UTEMPTER_LIBRARY})
 target_link_libraries(kpty PUBLIC kdecore ${QT_QTCORE_LIBRARY} )
@@ -30,10 +30,12 @@ install( FILES
 
 ########### next target ###############
 
-if (NOT HAVE_OPENPTY)
-   kde4_add_executable(kgrantpty NOGUI kgrantpty.c)
-   target_link_libraries(kgrantpty kdefakes)
-   install(TARGETS kgrantpty DESTINATION ${LIBEXEC_INSTALL_DIR})
-endif (NOT HAVE_OPENPTY)
+if(NOT HAVE_OPENPTY)
+    add_executable(kgrantpty kgrantpty.c)
+    target_link_libraries(kgrantpty kdefakes)
+    install(TARGETS kgrantpty DESTINATION ${LIBEXEC_INSTALL_DIR})
+endif(NOT HAVE_OPENPTY)
 
-add_subdirectory( tests )
+if(ENABLE_TESTING)
+    add_subdirectory( tests )
+endif()

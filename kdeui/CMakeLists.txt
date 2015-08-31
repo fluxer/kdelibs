@@ -45,8 +45,10 @@ configure_file(
 )
 
 add_subdirectory( about )
-add_subdirectory( tests )
-add_subdirectory( sonnet/tests )
+if(ENABLE_TESTING)
+    add_subdirectory( tests )
+    add_subdirectory( sonnet/tests )
+endif()
 
 ########### next target ###############
 set(kdeui_LIB_SRCS
@@ -321,24 +323,24 @@ else (Q_WS_X11 AND X11_Xkb_FOUND)
     set (kdeui_LIB_SRCS ${kdeui_LIB_SRCS} util/kmodifierkeyinfoprovider_dummy.cpp)
 endif (Q_WS_X11 AND X11_Xkb_FOUND)
 
-set( kdeui_UI
-   dialogs/kpassworddialog.ui
-   dialogs/knewpassworddialog.ui
-   dialogs/kshortcutsdialog.ui
-   widgets/kdatetimeedit.ui
-   widgets/kshortcutwidget.ui
-   sonnet/sonnetui.ui
-   sonnet/configui.ui
-   )
+set(kdeui_LIB_SRCS
+    ${kdeui_LIB_SRCS}
+    dialogs/kpassworddialog.ui
+    dialogs/knewpassworddialog.ui
+    dialogs/kshortcutsdialog.ui
+    widgets/kdatetimeedit.ui
+    widgets/kshortcutwidget.ui
+    sonnet/sonnetui.ui
+    sonnet/configui.ui
+)
 
 if (Q_WS_X11)
-    set( kdeui_UI ${kdeui_UI} dialogs/kcupsoptionspageswidget.ui
-                              dialogs/kcupsoptionsjobwidget.ui
+    set(kdeui_LIB_SRCS
+        ${kdeui_LIB_SRCS}
+        dialogs/kcupsoptionspageswidget.ui
+        dialogs/kcupsoptionsjobwidget.ui
     )
 endif (Q_WS_X11)
-
-kde4_add_ui_files(kdeui_LIB_SRCS ${kdeui_UI} )
-
 
 set(kwallet_xml util/org.kde.KWallet.xml)
 install(FILES ${kwallet_xml} DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
@@ -370,7 +372,7 @@ install(FILES ${kglobalaccel_component_xml} DESTINATION ${DBUS_INTERFACES_INSTAL
 set(knotify_xml ${CMAKE_CURRENT_SOURCE_DIR}/notifications/org.kde.KNotify.xml)
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
 
-kde4_add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
+add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
 
 target_link_libraries(kdeui PRIVATE ${KDE4_KDECORE_LIBS} ${X11_LIBRARIES} ${QT_QTGUI_LIBRARY}
                             ${QT_QTXML_LIBRARY} ${KDEUI_EXTRA_LIBS} ${QT_QTNETWORK_LIBRARY}

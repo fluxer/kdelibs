@@ -57,7 +57,6 @@ if (STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
 
 else(STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
    # this else() branch is for finding strigi versions before November 16th, 2008. Alex
-   include(FindLibraryWithDebug)
    include(MacroPushRequiredVars)
 
    if (WIN32)
@@ -86,8 +85,7 @@ else(STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
    endif (NOT STRIGI_INCLUDEDIR)
 
 
-   find_library_with_debug(STRIGI_STREAMANALYZER_LIBRARY
-     WIN32_DEBUG_POSTFIX d
+   find_library(STRIGI_STREAMANALYZER_LIBRARY
      NAMES streamanalyzer
      PATHS
      ${strigi_home}/lib
@@ -95,8 +93,7 @@ else(STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
      ${_program_FILES_DIR}/strigi/lib
    )
 
-   find_library_with_debug(STRIGI_STREAMS_LIBRARY
-     WIN32_DEBUG_POSTFIX d
+   find_library(STRIGI_STREAMS_LIBRARY
      NAMES streams
      PATHS
      ${strigi_home}/lib
@@ -104,8 +101,7 @@ else(STRIGI_CONFIG_FOUND_AND_HAS_COMPLETE_INFORMATION)
      ${_program_FILES_DIR}/strigi/lib
    )
 
-   find_library_with_debug(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
-     WIN32_DEBUG_POSTFIX d
+   find_library(STRIGI_STRIGIQTDBUSCLIENT_LIBRARY
      NAMES strigiqtdbusclient
      PATHS
      ${strigi_home}/lib

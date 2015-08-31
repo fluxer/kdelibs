@@ -23,6 +23,8 @@
 
 #include <kapplication.h>
 #include <kdialog.h>
+#include <klocale.h>
+
 #include <QVBoxLayout>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>

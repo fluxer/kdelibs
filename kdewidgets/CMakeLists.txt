@@ -1,22 +1,21 @@
-
 project(kdewidgets)
 
-add_subdirectory( pics )
-add_subdirectory( tests )
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
 
-include_directories(
-  ${KDE4_KIO_INCLUDES}
- )
+add_subdirectory(pics)
+
+include_directories(${KDE4_KIO_INCLUDES})
 
 
 ########### next target ###############
 
 set(makekdewidgets_SRCS makekdewidgets.cpp )
 
+add_executable(makekdewidgets ${makekdewidgets_SRCS})
 
-kde4_add_executable(makekdewidgets NOGUI ${makekdewidgets_SRCS})
-
-target_link_libraries(makekdewidgets  ${KDE4_KDECORE_LIBS} )
+target_link_libraries(makekdewidgets ${KDE4_KDECORE_LIBS})
 
 # "export" this target too so we can use the LOCATION property of the imported target in
 # FindKDE4Internal.cmake to get the full path to the installed executable instead of using FIND_PROGRAM(), Alex
@@ -26,65 +25,38 @@ install(TARGETS makekdewidgets  EXPORT kdelibsToolsTargets ${INSTALL_TARGETS_DEF
 ########### next target ###############
 
 if(QT_QTDESIGNER_FOUND)
-  # get the name of the generated wrapper script (which sets up LD_LIBRARY_PATH)
-  get_target_property(MAKEKDEWIDGETS_EXECUTABLE makekdewidgets WRAPPER_SCRIPT)
+    KDE4_ADD_WIDGET_FILES(kde.widgets)
 
-  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kdewidgets.cpp
-    COMMAND "${MAKEKDEWIDGETS_EXECUTABLE}" -o ${CMAKE_CURRENT_BINARY_DIR}/kdewidgets.cpp ${CMAKE_CURRENT_SOURCE_DIR}/kde.widgets
-    MAIN_DEPENDENCY kde.widgets DEPENDS makekdewidgets)
+    set(kdewidgets_PART_SRCS
+        classpreviews.cpp
+        $<TARGET_OBJECTS:kde_autowidgets>
+    )
 
-  set(kdewidgets_PART_SRCS
-     classpreviews.cpp
-     ${CMAKE_CURRENT_BINARY_DIR}/kdewidgets.cpp
-  )
+    qt4_add_resources(kdewidgets_PART_SRCS kdewidgets.qrc)
 
-  qt4_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/kdewidgets.cpp ${CMAKE_CURRENT_BINARY_DIR}/kdewidgets.moc)
+    kde4_add_plugin(kdewidgets ${kdewidgets_PART_SRCS})
 
+    target_link_libraries(kdewidgets ${KDE4_KIO_LIBS})
 
-  qt4_add_resources(kdewidgets_PART_SRCS kdewidgets.qrc)
+    install(TARGETS kdewidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
 
-  kde4_add_plugin(kdewidgets ${kdewidgets_PART_SRCS})
+    # kdewebkit widgets
+    include_directories(${CMAKE_SOURCE_DIR}/kdewebkit)
 
-  target_link_libraries(kdewidgets  ${KDE4_KIO_LIBS})
-  set_target_properties(kdewidgets PROPERTIES
-                                   INSTALL_RPATH_USE_LINK_PATH TRUE
-                                   SKIP_BUILD_RPATH TRUE
-                                   BUILD_WITH_INSTALL_RPATH TRUE
-                                   INSTALL_RPATH ${LIB_INSTALL_DIR}
-                       )
+    KDE4_ADD_WIDGET_FILES(kdewebkit.widgets)
 
-  install(TARGETS kdewidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
+    set(kdewebkitwidgets_PART_SRCS
+        classpreviews.cpp
+        $<TARGET_OBJECTS:kdewebkit_autowidgets>
+    )
 
-  # kdewebkit widgets
-  include_directories(
-    ${CMAKE_SOURCE_DIR}/kdewebkit
-  )
+    qt4_add_resources(kdewebkitwidgets_PART_SRCS kdewebkitwidgets.qrc)
 
-  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/kdewebkitwidgets.cpp
-    COMMAND "${MAKEKDEWIDGETS_EXECUTABLE}" -o ${CMAKE_CURRENT_BINARY_DIR}/kdewebkitwidgets.cpp ${CMAKE_CURRENT_SOURCE_DIR}/kdewebkit.widgets
-    MAIN_DEPENDENCY kdewebkit.widgets DEPENDS makekdewidgets)
+    kde4_add_plugin(kdewebkitwidgets ${kdewebkitwidgets_PART_SRCS})
 
-  set(kdewebkitwidgets_PART_SRCS
-     classpreviews.cpp
-     ${CMAKE_CURRENT_BINARY_DIR}/kdewebkitwidgets.cpp
-  )
+    target_link_libraries(kdewebkitwidgets ${KDE4_KDEUI_LIBS} ${KDE4_KDEWEBKIT_LIBS} ${QT_QTWEBKIT_LIBRARY})
 
-  qt4_generate_moc(${CMAKE_CURRENT_BINARY_DIR}/kdewebkitwidgets.cpp ${CMAKE_CURRENT_BINARY_DIR}/kdewebkitwidgets.moc)
-
-
-  qt4_add_resources(kdewebkitwidgets_PART_SRCS kdewebkitwidgets.qrc)
-
-  kde4_add_plugin(kdewebkitwidgets ${kdewebkitwidgets_PART_SRCS})
-
-  target_link_libraries(kdewebkitwidgets ${KDE4_KDEUI_LIBS} ${KDE4_KDEWEBKIT_LIBS} ${QT_QTWEBKIT_LIBRARY})
-  set_target_properties(kdewebkitwidgets PROPERTIES
-                                     INSTALL_RPATH_USE_LINK_PATH TRUE
-                                     SKIP_BUILD_RPATH TRUE
-                                     BUILD_WITH_INSTALL_RPATH TRUE
-                                     INSTALL_RPATH ${LIB_INSTALL_DIR}
-                       )
-
-  install(TARGETS kdewebkitwidgets  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer )
+    install(TARGETS kdewebkitwidgets DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer)
 endif (QT_QTDESIGNER_FOUND)
 
 ########### install files ###############

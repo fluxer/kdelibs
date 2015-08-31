@@ -93,219 +93,213 @@ if (HAVE_RESOLV_LIBRARY)
   set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} resolv)
 endif (HAVE_RESOLV_LIBRARY)
 
-if (UNIX)
-   set(kdecore_OPTIONAL_SRCS ${kdecore_OPTIONAL_SRCS}
-      kernel/ktoolinvocation_x11.cpp
-      kernel/kstandarddirs_unix.cpp
-      localization/klocale_unix.cpp
-      network/klocalsocket_unix.cpp
-      network/netsupp.cpp
-      io/klockfile_unix.cpp
-      util/kshell_unix.cpp
-      util/kuser_unix.cpp
-      util/kmacroexpander_unix.cpp
-      fakes.c
-   )
-endif (UNIX)
-
 add_subdirectory( kconfig_compiler )
-add_subdirectory( tests )
-add_subdirectory( sonnet/tests )
+if(ENABLE_TESTING)
+    add_subdirectory( tests )
+    add_subdirectory( sonnet/tests )
+endif()
 add_subdirectory( network/kssld )
 
 ########### next target ###############
 
-if (UNIX)
+add_library(kdefakes ${LIBRARY_TYPE} fakes.c)
+set_target_properties(kdefakes PROPERTIES
+    VERSION ${KDE_NON_GENERIC_LIB_VERSION}
+    SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION})
+if (NOT HAVE_TRUNC)
+    target_link_libraries(kdefakes  m )
+endif (NOT HAVE_TRUNC)
 
-   kde4_add_library(kdefakes ${LIBRARY_TYPE} fakes.c)
-   set_target_properties(kdefakes PROPERTIES
-       VERSION ${KDE_NON_GENERIC_LIB_VERSION}
-       SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION})
-   if (NOT HAVE_TRUNC)
-       target_link_libraries(kdefakes  m )
-   endif (NOT HAVE_TRUNC)
-   install(TARGETS kdefakes EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
-endif (UNIX)
-
-
+install(TARGETS kdefakes
+    EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 ########### next target ###############
 
 set(kdecore_LIB_SRCS
-   compression/kgzipfilter.cpp
-   compression/kfilterbase.cpp
-   compression/kfilterdev.cpp
-   config/kconfig.cpp
-   config/kconfigbase.cpp
-   config/kconfigdata.cpp
-   config/kconfiggroup.cpp
-   config/kconfigbackend.cpp
-   config/kconfigini.cpp
-   config/kdesktopfile.cpp
-   config/ksharedconfig.cpp
-   config/kcoreconfigskeleton.cpp
-   date/kcalendarera.cpp
-   date/kcalendarsystem.cpp
-   date/kcalendarsystemcoptic.cpp
-   date/kcalendarsystemethiopian.cpp
-   date/kcalendarsystemqdate.cpp
-   date/kcalendarsystemgregorian.cpp
-   date/kcalendarsystemislamiccivil.cpp
-   date/kcalendarsystemhebrew.cpp
-   date/kcalendarsystemindiannational.cpp
-   date/kcalendarsystemjalali.cpp
-   date/kcalendarsystemjapanese.cpp
-   date/kcalendarsystemjulian.cpp
-   date/kcalendarsystemminguo.cpp
-   date/kcalendarsystemthai.cpp
-   date/kdatetime.cpp
-   date/kdatetimeformatter.cpp
-   date/kdatetimeparser.cpp
-   date/kdayperiod.cpp
-   date/klocalizeddate.cpp
-   date/ktimezone.cpp
-   date/ksystemtimezone.cpp
-   date/ktzfiletimezone.cpp
-   io/kar.cpp
-   io/karchive.cpp
-   io/kautosavefile.cpp
-   io/kdebug.cpp
-   io/kdebugdbusiface.cpp
-   io/kdirwatch.cpp
-   io/kfilesystemtype_p.cpp
-   io/klimitediodevice.cpp
-   io/kmessage.cpp
-   io/kmountpoint.cpp
-   io/kprocess.cpp
-   io/ksavefile.cpp
-   io/ktar.cpp
-   io/ktempdir.cpp
-   io/ktemporaryfile.cpp
-   io/kurl.cpp
-   io/kzip.cpp
-   jobs/kcompositejob.cpp
-   jobs/kjob.cpp
-   jobs/kjobuidelegate.cpp
-   jobs/kjobtrackerinterface.cpp
-   kernel/kauthorized.cpp
-   kernel/kaboutdata.cpp
-   kernel/kcmdlineargs.cpp
-   kernel/kdbusconnectionpool.cpp
-   kernel/kglobal.cpp
-   kernel/kcomponentdata.cpp
-   kernel/kstandarddirs.cpp
-   kernel/ktoolinvocation.cpp
-   auth/kauthaction.cpp
-   auth/kauthactionreply.cpp
-   auth/kauthactionwatcher.cpp
-   auth/AuthBackend.cpp
-   auth/BackendsManager.cpp
-   auth/HelperProxy.cpp
-   auth/kauthhelpersupport.cpp
-   services/kfoldermimetype.cpp
-   services/kmimetypefactory.cpp
-   services/kmimemagicrule.cpp
-   services/kmimetypetrader.cpp
-   services/kmimetype.cpp
-   services/kmimeglobsfileparser.cpp
-   services/kmimetyperepository.cpp
-   services/kservice.cpp
-   services/kserviceaction.cpp
-   services/kservicefactory.cpp
-   services/kservicegroup.cpp
-   services/kservicegroupfactory.cpp
-   services/kserviceoffer.cpp
-   services/kservicetype.cpp
-   services/kservicetypefactory.cpp
-   services/kservicetypeprofile.cpp
-   services/kservicetypetrader.cpp
-   services/ktraderparse.cpp
-   services/ktraderparsetree.cpp
-   services/yacc.c
-   services/lex.c
-   services/kplugininfo.cpp
-   sonnet/loader.cpp
-   sonnet/client.cpp
-   sonnet/spellerplugin.cpp
-   sonnet/speller.cpp
-   sonnet/filter.cpp
-   sonnet/settings.cpp
-   sonnet/backgroundchecker.cpp
-   sonnet/backgroundengine.cpp
-   sonnet/globals.cpp
-)
+    compression/kgzipfilter.cpp
+    compression/kfilterbase.cpp
+    compression/kfilterdev.cpp
+    config/kconfig.cpp
+    config/kconfigbase.cpp
+    config/kconfigdata.cpp
+    config/kconfiggroup.cpp
+    config/kconfigbackend.cpp
+    config/kconfigini.cpp
+    config/kdesktopfile.cpp
+    config/ksharedconfig.cpp
+    config/kcoreconfigskeleton.cpp
+    date/kcalendarera.cpp
+    date/kcalendarsystem.cpp
+    date/kcalendarsystemcoptic.cpp
+    date/kcalendarsystemethiopian.cpp
+    date/kcalendarsystemqdate.cpp
+    date/kcalendarsystemgregorian.cpp
+    date/kcalendarsystemislamiccivil.cpp
+    date/kcalendarsystemhebrew.cpp
+    date/kcalendarsystemindiannational.cpp
+    date/kcalendarsystemjalali.cpp
+    date/kcalendarsystemjapanese.cpp
+    date/kcalendarsystemjulian.cpp
+    date/kcalendarsystemminguo.cpp
+    date/kcalendarsystemthai.cpp
+    date/kdatetime.cpp
+    date/kdatetimeformatter.cpp
+    date/kdatetimeparser.cpp
+    date/kdayperiod.cpp
+    date/klocalizeddate.cpp
+    date/ktimezone.cpp
+    date/ksystemtimezone.cpp
+    date/ktzfiletimezone.cpp
+    io/kar.cpp
+    io/karchive.cpp
+    io/kautosavefile.cpp
+    io/kdebug.cpp
+    io/kdebugdbusiface.cpp
+    io/kdirwatch.cpp
+    io/kfilesystemtype_p.cpp
+    io/klimitediodevice.cpp
+    io/kmessage.cpp
+    io/kmountpoint.cpp
+    io/kprocess.cpp
+    io/ksavefile.cpp
+    io/ktar.cpp
+    io/ktempdir.cpp
+    io/ktemporaryfile.cpp
+    io/kurl.cpp
+    io/kzip.cpp
+    jobs/kcompositejob.cpp
+    jobs/kjob.cpp
+    jobs/kjobuidelegate.cpp
+    jobs/kjobtrackerinterface.cpp
+    kernel/kauthorized.cpp
+    kernel/kaboutdata.cpp
+    kernel/kcmdlineargs.cpp
+    kernel/kdbusconnectionpool.cpp
+    kernel/kglobal.cpp
+    kernel/kcomponentdata.cpp
+    kernel/kstandarddirs.cpp
+    kernel/ktoolinvocation.cpp
+    auth/kauthaction.cpp
+    auth/kauthactionreply.cpp
+    auth/kauthactionwatcher.cpp
+    auth/AuthBackend.cpp
+    auth/BackendsManager.cpp
+    auth/HelperProxy.cpp
+    auth/kauthhelpersupport.cpp
+    services/kfoldermimetype.cpp
+    services/kmimetypefactory.cpp
+    services/kmimemagicrule.cpp
+    services/kmimetypetrader.cpp
+    services/kmimetype.cpp
+    services/kmimeglobsfileparser.cpp
+    services/kmimetyperepository.cpp
+    services/kservice.cpp
+    services/kserviceaction.cpp
+    services/kservicefactory.cpp
+    services/kservicegroup.cpp
+    services/kservicegroupfactory.cpp
+    services/kserviceoffer.cpp
+    services/kservicetype.cpp
+    services/kservicetypefactory.cpp
+    services/kservicetypeprofile.cpp
+    services/kservicetypetrader.cpp
+    services/ktraderparse.cpp
+    services/ktraderparsetree.cpp
+    services/yacc.c
+    services/lex.c
+    services/kplugininfo.cpp
+    sonnet/loader.cpp
+    sonnet/client.cpp
+    sonnet/spellerplugin.cpp
+    sonnet/speller.cpp
+    sonnet/filter.cpp
+    sonnet/settings.cpp
+    sonnet/backgroundchecker.cpp
+    sonnet/backgroundengine.cpp
+    sonnet/globals.cpp
 
-set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS}
-   network/klocalsocket.cpp
-   network/ksocketfactory.cpp
-   network/ksslcertificatemanager.cpp
-   network/ktcpsocket.cpp
-   localization/kcatalog.cpp
-   localization/kcurrencycode.cpp
-   localization/kcharsets.cpp
-   localization/kencodingdetector.cpp
-   localization/guess_ja.cpp
-   localization/kencodingprober.cpp
-   localization/probers/CharDistribution.cpp
-   localization/probers/ChineseGroupProber.cpp
-   localization/probers/JapaneseGroupProber.cpp
-   localization/probers/JpCntx.cpp
-   localization/probers/LangBulgarianModel.cpp
-   localization/probers/LangCyrillicModel.cpp
-   localization/probers/LangGreekModel.cpp
-   localization/probers/LangHebrewModel.cpp
-   localization/probers/LangHungarianModel.cpp
-   localization/probers/LangThaiModel.cpp
-   localization/probers/UnicodeGroupProber.cpp
-   localization/probers/nsBig5Prober.cpp
-   localization/probers/nsCharSetProber.cpp
-   localization/probers/nsEUCJPProber.cpp
-   localization/probers/nsEUCKRProber.cpp
-   localization/probers/nsEUCTWProber.cpp
-   localization/probers/nsEscCharsetProber.cpp
-   localization/probers/nsEscSM.cpp
-   localization/probers/nsGB2312Prober.cpp
-   localization/probers/nsHebrewProber.cpp
-   localization/probers/nsLatin1Prober.cpp
-   localization/probers/nsMBCSGroupProber.cpp
-   localization/probers/nsMBCSSM.cpp
-   localization/probers/nsSBCSGroupProber.cpp
-   localization/probers/nsSBCharSetProber.cpp
-   localization/probers/nsSJISProber.cpp
-   localization/probers/nsUniversalDetector.cpp
-   localization/klocale.cpp
-   localization/klocale_kde.cpp
-   localization/klocalizedstring.cpp
-   localization/kuitsemantics.cpp
-   localization/kuitformats.cpp
-   localization/common_helpers.cpp
-   sycoca/ksycoca.cpp
-   sycoca/ksycocadict.cpp
-   sycoca/ksycocaentry.cpp
-   sycoca/ksycocafactory.cpp
-   sycoca/kprotocolinfo.cpp
-   sycoca/kprotocolinfofactory.cpp
-   sycoca/kmemfile.cpp
-   text/kascii.cpp
-   text/kcodecs.cpp
-   text/kstringhandler.cpp
-   util/kallocator.cpp
-   util/kautostart.cpp
-   util/kdedmodule.cpp
-   util/kdeversion.cpp
-   util/klauncher_iface.cpp
-   util/klibrary.cpp
-   util/kmacroexpander.cpp
-   util/kpluginfactory.cpp
-   util/kpluginloader.cpp
-   util/kshell.cpp
-   util/krandom.cpp
-   util/krandomsequence.cpp
-   util/qtest_kde.cpp
-   ${kdecore_OPTIONAL_SRCS}
-   ${KAUTH_BACKEND_SRCS}
-   ${KAUTH_HELPER_BACKEND_SRCS}
+    network/klocalsocket.cpp
+    network/ksocketfactory.cpp
+    network/ksslcertificatemanager.cpp
+    network/ktcpsocket.cpp
+    localization/kcatalog.cpp
+    localization/kcurrencycode.cpp
+    localization/kcharsets.cpp
+    localization/kencodingdetector.cpp
+    localization/guess_ja.cpp
+    localization/kencodingprober.cpp
+    localization/probers/CharDistribution.cpp
+    localization/probers/ChineseGroupProber.cpp
+    localization/probers/JapaneseGroupProber.cpp
+    localization/probers/JpCntx.cpp
+    localization/probers/LangBulgarianModel.cpp
+    localization/probers/LangCyrillicModel.cpp
+    localization/probers/LangGreekModel.cpp
+    localization/probers/LangHebrewModel.cpp
+    localization/probers/LangHungarianModel.cpp
+    localization/probers/LangThaiModel.cpp
+    localization/probers/UnicodeGroupProber.cpp
+    localization/probers/nsBig5Prober.cpp
+    localization/probers/nsCharSetProber.cpp
+    localization/probers/nsEUCJPProber.cpp
+    localization/probers/nsEUCKRProber.cpp
+    localization/probers/nsEUCTWProber.cpp
+    localization/probers/nsEscCharsetProber.cpp
+    localization/probers/nsEscSM.cpp
+    localization/probers/nsGB2312Prober.cpp
+    localization/probers/nsHebrewProber.cpp
+    localization/probers/nsLatin1Prober.cpp
+    localization/probers/nsMBCSGroupProber.cpp
+    localization/probers/nsMBCSSM.cpp
+    localization/probers/nsSBCSGroupProber.cpp
+    localization/probers/nsSBCharSetProber.cpp
+    localization/probers/nsSJISProber.cpp
+    localization/probers/nsUniversalDetector.cpp
+    localization/klocale.cpp
+    localization/klocale_kde.cpp
+    localization/klocalizedstring.cpp
+    localization/kuitsemantics.cpp
+    localization/kuitformats.cpp
+    localization/common_helpers.cpp
+    sycoca/ksycoca.cpp
+    sycoca/ksycocadict.cpp
+    sycoca/ksycocaentry.cpp
+    sycoca/ksycocafactory.cpp
+    sycoca/kprotocolinfo.cpp
+    sycoca/kprotocolinfofactory.cpp
+    sycoca/kmemfile.cpp
+    text/kascii.cpp
+    text/kcodecs.cpp
+    text/kstringhandler.cpp
+    util/kallocator.cpp
+    util/kautostart.cpp
+    util/kdedmodule.cpp
+    util/kdeversion.cpp
+    util/klauncher_iface.cpp
+    util/klibrary.cpp
+    util/kmacroexpander.cpp
+    util/kpluginfactory.cpp
+    util/kpluginloader.cpp
+    util/kshell.cpp
+    util/krandom.cpp
+    util/krandomsequence.cpp
+    util/qtest_kde.cpp
+
+    kernel/ktoolinvocation_x11.cpp
+    kernel/kstandarddirs_unix.cpp
+    localization/klocale_unix.cpp
+    network/klocalsocket_unix.cpp
+    network/netsupp.cpp
+    io/klockfile_unix.cpp
+    util/kshell_unix.cpp
+    util/kuser_unix.cpp
+    util/kmacroexpander_unix.cpp
+    fakes.c
+
+    ${kdecore_OPTIONAL_SRCS}
+    ${KAUTH_BACKEND_SRCS}
+    ${KAUTH_HELPER_BACKEND_SRCS}
 )
 
 set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS} util/kshareddatacache.cpp)
@@ -320,7 +314,7 @@ if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
    add_definitions(-DNO_DISPLAY)
 endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
 
-kde4_add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
+add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 
 target_link_libraries(kdecore PRIVATE ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${ZLIB_LIBRARY} ${kdecore_OPTIONAL_LIBS})
 
@@ -383,7 +377,7 @@ install(TARGETS kauth_helper_plugin
 
 configure_file(localization/all_languages.desktop ${CMAKE_CURRENT_BINARY_DIR}/all_languages @ONLY)
 
-kde4_add_executable(kde4-config NOGUI kde-config.cpp )
+add_executable(kde4-config kde-config.cpp )
 
 target_link_libraries(kde4-config ${KDE4_KDECORE_LIBS})
 

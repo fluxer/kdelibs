@@ -14,11 +14,9 @@ if(NOT TAGLIB_MIN_VERSION)
   set(TAGLIB_MIN_VERSION "1.4")
 endif(NOT TAGLIB_MIN_VERSION)
 
-if(NOT WIN32)
-    find_program(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
-       ${BIN_INSTALL_DIR}
-    )
-endif(NOT WIN32)
+find_program(TAGLIBCONFIG_EXECUTABLE NAMES taglib-config PATHS
+    ${BIN_INSTALL_DIR}
+)
 
 #reset vars
 set(TAGLIB_LIBRARIES)
@@ -48,7 +46,6 @@ if(TAGLIBCONFIG_EXECUTABLE)
 
 else(TAGLIBCONFIG_EXECUTABLE)
 
-  include(FindLibraryWithDebug)
   include(FindPackageHandleStandardArgs)
 
   find_path(TAGLIB_INCLUDES
@@ -60,14 +57,13 @@ else(TAGLIBCONFIG_EXECUTABLE)
     ${INCLUDE_INSTALL_DIR}
   )
 
-  find_library_with_debug(TAGLIB_LIBRARIES
-    WIN32_DEBUG_POSTFIX d
+  find_library(TAGLIB_LIBRARIES
     NAMES tag
     PATHS
     ${KDE4_LIB_DIR}
     ${LIB_INSTALL_DIR}
   )
-  
+
   find_package_handle_standard_args(Taglib DEFAULT_MSG 
                                     TAGLIB_INCLUDES TAGLIB_LIBRARIES)
 endif(TAGLIBCONFIG_EXECUTABLE)

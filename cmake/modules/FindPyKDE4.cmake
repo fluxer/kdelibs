@@ -141,7 +141,7 @@ ENDMACRO(PYKDE4_INSTALL_PYTHON_FILES)
 ###########################################################################
 # PYKDE4_ADD_EXECUTABLE(py_name exe_name)
 #
-# Creates a smybolic link with name exe_name at install time from the
+# Creates a symbolic link with name exe_name at install time from the
 # install bin directory to the Python file. The Python file is also make
 # executable.
 #

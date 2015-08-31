@@ -10,8 +10,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(FindLibraryWithDebug)
-
 if (QIMAGEBLITZ_INCLUDES AND QIMAGEBLITZ_LIBRARIES)
   set(QImageBlitz_FIND_QUIETLY TRUE)
 endif (QIMAGEBLITZ_INCLUDES AND QIMAGEBLITZ_LIBRARIES)
@@ -34,8 +32,7 @@ find_path(QIMAGEBLITZ_INCLUDES
   ${INCLUDE_INSTALL_DIR}
 )
 
-find_library_with_debug(QIMAGEBLITZ_LIBRARIES
-  WIN32_DEBUG_POSTFIX d
+find_library(QIMAGEBLITZ_LIBRARIES
   qimageblitz
   HINTS
   $ENV{QIMAGEBLITZDIR}/lib

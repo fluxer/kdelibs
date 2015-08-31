@@ -14,8 +14,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(FindLibraryWithDebug)
-
 if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
   # in cache already
@@ -30,11 +28,10 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
     set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS_OTHER})
   endif (NOT WIN32)
 
-  find_library_with_debug(QCA2_LIBRARIES
-                  WIN32_DEBUG_POSTFIX d
-                  NAMES qca
-                  HINTS ${PC_QCA2_LIBDIR} ${PC_QCA2_LIBRARY_DIRS}
-                  )
+  find_library(QCA2_LIBRARIES
+                NAMES qca
+                HINTS ${PC_QCA2_LIBDIR} ${PC_QCA2_LIBRARY_DIRS}
+                )
 
   find_path(QCA2_INCLUDE_DIR QtCrypto
             HINTS ${PC_QCA2_INCLUDEDIR} ${PC_QCA2_INCLUDE_DIRS}

@@ -26,7 +26,7 @@ set(kdeclarative_LIB_SRCS
     bindings/icon.cpp
     bindings/url.cpp)
 
-kde4_add_library(kdeclarative SHARED ${kdeclarative_LIB_SRCS})
+add_library(kdeclarative SHARED ${kdeclarative_LIB_SRCS})
 
 set_target_properties(kdeclarative PROPERTIES VERSION ${KDE_NON_GENERIC_LIB_VERSION} SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION})
 
@@ -37,7 +37,7 @@ target_link_libraries(kdeclarative ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QT_
 set(kdeclarative_TEST_SRCS
     test/test.cpp)
 
-kde4_add_executable(kdeclarativetest ${kdeclarative_TEST_SRCS})
+add_executable(kdeclarativetest ${kdeclarative_TEST_SRCS})
 
 target_link_libraries(kdeclarativetest kdeclarative ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${QT_QTSCRIPT_LIBRARY} ${QT_QTDECLARATIVE_LIBRARY})
 

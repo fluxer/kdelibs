@@ -48,6 +48,7 @@
 #include "kmessagebox.h"
 #include "kshortcut.h"
 #include "kaboutdata.h"
+#include "kconfiggroup.h"
 
 //---------------------------------------------------------------------
 // KShortcutsEditor

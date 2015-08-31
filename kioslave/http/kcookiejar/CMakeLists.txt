@@ -1,13 +1,11 @@
-
-add_subdirectory( tests )
-
-# all done by parent dir
-# include_directories( ${KDE4_KIO_INCLUDES} )
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
 
 ####### kcookiejar4: command line tool for talking to the kded kcookiejar module #######
 
 set(kcookiejar_SRCS
-main.cpp
+    main.cpp
 )
 
 
@@ -19,9 +17,9 @@ set(kcookieserver_xml ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KCookieServer.xml)
 set_source_files_properties(${kcookieserver_xml} PROPERTIES INCLUDE "kcookiejar_include.h")
 qt4_add_dbus_interfaces(kcookiejar_SRCS ${kcookieserver_xml})
 
-kde4_add_executable( kcookiejar4 NOGUI ${kcookiejar_SRCS})
+add_executable(kcookiejar4 ${kcookiejar_SRCS})
 
-target_link_libraries( kcookiejar4 ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kcookiejar4 ${KDE4_KDECORE_LIBS})
 
 install(TARGETS kcookiejar4 ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

@@ -306,7 +306,7 @@ qt4_add_dbus_interface(solid_LIB_SRCS org.kde.Solid.Networking.Client.xml
 
 set(solid_OPTIONAL_LIBS)
 
-kde4_add_library(solid ${LIBRARY_TYPE} ${solid_LIB_SRCS})
+add_library(solid ${LIBRARY_TYPE} ${solid_LIB_SRCS})
 
 if ( HUPNP_FOUND )
    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
@@ -332,7 +332,7 @@ install(FILES org.freedesktop.PowerManagement.Inhibit.xml DESTINATION ${DBUS_INT
 
 ########### static lib for tests  ###############
 
-kde4_add_library(solid_static STATIC ${solid_LIB_SRCS})
+add_library(solid_static STATIC ${solid_LIB_SRCS})
 
 target_link_libraries(solid_static ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} ${solid_OPTIONAL_LIBS})
 

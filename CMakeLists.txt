@@ -103,14 +103,10 @@ set_package_properties(DBusMenuQt PROPERTIES DESCRIPTION "Support for notificati
 
 ################# Disallow in-source build #################
 
-macro_ensure_out_of_source_build("kdelibs requires an out of source build. Please create a separate build directory and run 'cmake path_to_kdelibs [options]' there.")
+if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
+    message(SEND_ERROR "kdelibs requires an out of source build")
+endif()
 
-# ... and warn in case of an earlier in-source build
-set(generatedFileInSourceDir EXISTS ${kdelibs_SOURCE_DIR}/kdemacros.h OR EXISTS ${kdelibs_SOURCE_DIR}/config.h)
-if(${generatedFileInSourceDir})
-   message(STATUS "kdemacros.h or config.h exists in your source directory.")
-   message(FATAL_ERROR "Please run svn-clean, it would seem that your source directory has generated files in it.")
-endif(${generatedFileInSourceDir})
 #########################################################################
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
@@ -121,68 +117,84 @@ add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 ################# setup the include directories #################
 
 # for including config.h and for includes like <kparts/foo.h>
-include_directories( ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/interfaces)
+include_directories(
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/interfaces
+)
 
 # Those variables for  are only valid inside of kdelibs, of course.
 # Use the one variable for the lib you depend upon.
 # E.g. kdeui uses ${KDE4_KDECORE_INCLUDES}. Something that depends on kparts uses ${KDE4_KPARTS_INCLUDES}.
 
 # kdecore depends on Qt
-set(KDE4_KDECORE_INCLUDES ${KDE4_KDECORE_INCLUDES}
-                          ${CMAKE_SOURCE_DIR}/kdecore
-                          ${CMAKE_BINARY_DIR}/kdecore
-                          ${CMAKE_SOURCE_DIR}/kdecore/compression
-                          ${CMAKE_SOURCE_DIR}/kdecore/config
-                          ${CMAKE_SOURCE_DIR}/kdecore/date
-                          ${CMAKE_SOURCE_DIR}/kdecore/io
-                          ${CMAKE_SOURCE_DIR}/kdecore/jobs
-                          ${CMAKE_SOURCE_DIR}/kdecore/kernel
-                          ${CMAKE_SOURCE_DIR}/kdecore/auth
-                          ${CMAKE_SOURCE_DIR}/kdecore/network
-                          ${CMAKE_SOURCE_DIR}/kdecore/services
-                          ${CMAKE_SOURCE_DIR}/kdecore/localization
-                          ${CMAKE_SOURCE_DIR}/kdecore/sycoca
-                          ${CMAKE_SOURCE_DIR}/kdecore/text
-                          ${CMAKE_SOURCE_DIR}/kdecore/util
-                          ${CMAKE_SOURCE_DIR}/kdecore/sonnet
-                          ${QT_INCLUDES}
-                          ${_KDE4_PLATFORM_INCLUDE_DIRS})
+set(KDE4_KDECORE_INCLUDES
+    ${KDE4_KDECORE_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/kdecore
+    ${CMAKE_BINARY_DIR}/kdecore
+    ${CMAKE_SOURCE_DIR}/kdecore/compression
+    ${CMAKE_SOURCE_DIR}/kdecore/config
+    ${CMAKE_SOURCE_DIR}/kdecore/date
+    ${CMAKE_SOURCE_DIR}/kdecore/io
+    ${CMAKE_SOURCE_DIR}/kdecore/jobs
+    ${CMAKE_SOURCE_DIR}/kdecore/kernel
+    ${CMAKE_SOURCE_DIR}/kdecore/auth
+    ${CMAKE_SOURCE_DIR}/kdecore/network
+    ${CMAKE_SOURCE_DIR}/kdecore/services
+    ${CMAKE_SOURCE_DIR}/kdecore/localization
+    ${CMAKE_SOURCE_DIR}/kdecore/sycoca
+    ${CMAKE_SOURCE_DIR}/kdecore/text
+    ${CMAKE_SOURCE_DIR}/kdecore/util
+    ${CMAKE_SOURCE_DIR}/kdecore/sonnet
+    ${QT_INCLUDES}
+    ${_KDE4_PLATFORM_INCLUDE_DIRS}
+)
+
 # kdeui depends on kdecore
-set(KDE4_KDEUI_INCLUDES ${CMAKE_SOURCE_DIR}/kdeui
-                        ${CMAKE_SOURCE_DIR}/kdeui/actions
-                        ${CMAKE_SOURCE_DIR}/kdeui/colors
-                        ${CMAKE_SOURCE_DIR}/kdeui/config
-                        ${CMAKE_SOURCE_DIR}/kdeui/dialogs
-                        ${CMAKE_SOURCE_DIR}/kdeui/findreplace
-                        ${CMAKE_SOURCE_DIR}/kdeui/fonts
-                        ${CMAKE_SOURCE_DIR}/kdeui/icons
-                        ${CMAKE_SOURCE_DIR}/kdeui/itemviews
-                        ${CMAKE_SOURCE_DIR}/kdeui/jobs
-                        ${CMAKE_SOURCE_DIR}/kdeui/kernel
-                        ${CMAKE_SOURCE_DIR}/kdeui/notifications
-                        ${CMAKE_SOURCE_DIR}/kdeui/paged
-                        ${CMAKE_SOURCE_DIR}/kdeui/plotting
-                        ${CMAKE_SOURCE_DIR}/kdeui/shortcuts
-                        ${CMAKE_SOURCE_DIR}/kdeui/sonnet
-                        ${CMAKE_SOURCE_DIR}/kdeui/util
-                        ${CMAKE_SOURCE_DIR}/kdeui/widgets
-                        ${CMAKE_SOURCE_DIR}/kdeui/windowmanagement
-                        ${CMAKE_SOURCE_DIR}/kdeui/xmlgui
-                        ${KDE4_KDECORE_INCLUDES})
+set(KDE4_KDEUI_INCLUDES
+    ${CMAKE_SOURCE_DIR}/kdeui
+    ${CMAKE_SOURCE_DIR}/kdeui/actions
+    ${CMAKE_SOURCE_DIR}/kdeui/colors
+    ${CMAKE_SOURCE_DIR}/kdeui/config
+    ${CMAKE_SOURCE_DIR}/kdeui/dialogs
+    ${CMAKE_SOURCE_DIR}/kdeui/findreplace
+    ${CMAKE_SOURCE_DIR}/kdeui/fonts
+    ${CMAKE_SOURCE_DIR}/kdeui/icons
+    ${CMAKE_SOURCE_DIR}/kdeui/itemviews
+    ${CMAKE_SOURCE_DIR}/kdeui/jobs
+    ${CMAKE_SOURCE_DIR}/kdeui/kernel
+    ${CMAKE_SOURCE_DIR}/kdeui/notifications
+    ${CMAKE_SOURCE_DIR}/kdeui/paged
+    ${CMAKE_SOURCE_DIR}/kdeui/plotting
+    ${CMAKE_SOURCE_DIR}/kdeui/shortcuts
+    ${CMAKE_SOURCE_DIR}/kdeui/sonnet
+    ${CMAKE_SOURCE_DIR}/kdeui/util
+    ${CMAKE_SOURCE_DIR}/kdeui/widgets
+    ${CMAKE_SOURCE_DIR}/kdeui/windowmanagement
+    ${CMAKE_SOURCE_DIR}/kdeui/xmlgui
+    ${KDE4_KDECORE_INCLUDES}
+)
 
 # kio depends on kdeui
-set(KDE4_KIO_INCLUDES ${CMAKE_SOURCE_DIR}/kio
-                      ${CMAKE_SOURCE_DIR}/kio/bookmarks
-                      ${CMAKE_SOURCE_DIR}/kio/kio
-                      ${CMAKE_SOURCE_DIR}/kio/kfile
-                      ${KDE4_KDEUI_INCLUDES})
+set(KDE4_KIO_INCLUDES
+    ${CMAKE_SOURCE_DIR}/kio
+    ${CMAKE_SOURCE_DIR}/kio/bookmarks
+    ${CMAKE_SOURCE_DIR}/kio/kio
+    ${CMAKE_SOURCE_DIR}/kio/kfile
+    ${KDE4_KDEUI_INCLUDES}
+)
 
 # kpty
-set(KDE4_KPTY_INCLUDES ${CMAKE_SOURCE_DIR}/kpty ${KDE4_KIO_INCLUDES})
+set(KDE4_KPTY_INCLUDES
+    ${CMAKE_SOURCE_DIR}/kpty
+    ${KDE4_KIO_INCLUDES}
+)
 
 # kparts depends on kio
-set(KDE4_KPARTS_INCLUDES ${CMAKE_SOURCE_DIR}/kparts
-                         ${KDE4_KIO_INCLUDES})
+set(KDE4_KPARTS_INCLUDES
+    ${CMAKE_SOURCE_DIR}/kparts
+    ${KDE4_KIO_INCLUDES}
+)
 
 ################# configure checks and create the configured files #################
 
@@ -268,13 +280,21 @@ install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPlatformProfile.cmake  DESTINATION
 install(CODE "set(EXPORT_FILES KDELibs4LibraryTargets.cmake KDELibs4ToolsTargets.cmake)"
         CODE "set(EXPORT_INSTALL_DIR \"${DATA_INSTALL_DIR}/cmake/modules\")"
         SCRIPT "${CMAKE_SOURCE_DIR}/cmake/modules/check_installed_exports_file.cmake" )
-install( EXPORT kdelibsLibraryTargets DESTINATION ${DATA_INSTALL_DIR}/cmake/modules NAMESPACE ${KDE4_TARGET_PREFIX} FILE KDELibs4LibraryTargets.cmake )
-install( EXPORT kdelibsToolsTargets   DESTINATION ${DATA_INSTALL_DIR}/cmake/modules NAMESPACE ${KDE4_TARGET_PREFIX} FILE KDELibs4ToolsTargets.cmake )
+install(EXPORT kdelibsLibraryTargets
+    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    NAMESPACE ${KDE4_TARGET_PREFIX}
+    FILE KDELibs4LibraryTargets.cmake
+)
+install(EXPORT kdelibsToolsTargets
+    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    NAMESPACE ${KDE4_TARGET_PREFIX}
+    FILE KDELibs4ToolsTargets.cmake
+)
+
 # the following will be the correct locations once cmake has the improved FIND_PACKAGE()
-# install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDELibsDependencies.cmake DESTINATION ${PLUGIN_INSTALL_DIR}/cmake RENAME KDE4Config.cmake)
+# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDELibsDependencies.cmake DESTINATION ${PLUGIN_INSTALL_DIR}/cmake RENAME KDE4Config.cmake)
 
 feature_summary(WHAT ALL
-                     INCLUDE_QUIET_PACKAGES
-                     FATAL_ON_MISSING_REQUIRED_PACKAGES
-               )
-
+    INCLUDE_QUIET_PACKAGES
+    FATAL_ON_MISSING_REQUIRED_PACKAGES
+)

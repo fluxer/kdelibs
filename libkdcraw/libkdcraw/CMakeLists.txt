@@ -1,6 +1,6 @@
 # ===========================================================
 #
-# This file is a part of digiKam project
+# This file is was part of digiKam project
 # <a href="http://www.digikam.org">http://www.digikam.org</a>
 #
 # @date   2006-12-09
@@ -24,9 +24,12 @@
 
 add_definitions(${KDE4_ENABLE_EXCEPTIONS})
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+)
 
-SET(kdcraw_LIB_SRCS
+set(kdcraw_LIB_SRCS
     kdcraw.cpp
     kdcraw_p.cpp
     dcrawsettingswidget.cpp
@@ -40,24 +43,27 @@ SET(kdcraw_LIB_SRCS
     squeezedcombobox.cpp
 )
 
-KDE4_ADD_LIBRARY(kdcraw SHARED ${kdcraw_LIB_SRCS})
+add_library(kdcraw ${LIBRARY_TYPE} ${kdcraw_LIB_SRCS})
 
-TARGET_LINK_LIBRARIES(kdcraw PRIVATE
+target_link_libraries(kdcraw PRIVATE
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_SOLID_LIBS}
     ${KDE4_THREADWEAVER_LIBS}
 )
 
-TARGET_LINK_LIBRARIES(kdcraw PUBLIC
+target_link_libraries(kdcraw PUBLIC
     ${LibRaw_r_LIBRARIES}
 )
 
-SET_TARGET_PROPERTIES(kdcraw PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kdcraw PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
-INSTALL(TARGETS kdcraw ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdcraw ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-INSTALL(FILES
+install(FILES
     rawdecodingsettings.h
     kdcraw.h
     dcrawsettingswidget.h

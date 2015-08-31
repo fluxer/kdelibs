@@ -33,6 +33,7 @@
 #include <kmessagebox.h>
 #include <kxmlguiclient.h>
 #include <kinputdialog.h>
+#include <klocale.h>
 
 #include "kshortcutsdialog.h"
 #include "kshortcutschemeshelper_p.h"

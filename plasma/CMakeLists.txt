@@ -38,7 +38,9 @@ endif(NOT PLASMA_NO_KUTILS)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-plasma.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h)
 
-add_subdirectory(tests)
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1209)
 
 ########### next target ###############
@@ -190,7 +192,7 @@ if (PHONON_FOUND)
         widgets/videowidget.cpp)
 endif(PHONON_FOUND)
 
-kde4_add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
+add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
 target_link_libraries(plasma PRIVATE ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
                              ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY}

@@ -147,9 +147,6 @@
 #
 #  KDE4_BUILD_TESTS  - enable this to build the testcases
 #  KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
-#  KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR - only present for CMake >= 2.6.3, defaults to TRUE
-#                      If enabled, the package should install its <package>Config.cmake file to
-#                      lib/cmake/<package>/ instead to lib/<package>/cmake
 #  KDE4_SERIALIZE_TOOL - wrapper to serialize potentially resource-intensive commands during
 #                      parallel builds (set to 'icecc' when using icecream)
 #
@@ -218,18 +215,6 @@
 #    KDESRCDIR is set to the source directory of the test, this can be used with
 #    KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
 #
-#
-#  KDE4_ADD_APP_ICON (SRCS_VAR pattern)
-#  adds an application icon to target source list.
-#  Make sure you have a 128x128 icon, or the icon won't display on Mac OS X.
-#  Mac OSX notes : the application icon is added to a Mac OS X bundle so that Finder and friends show the right thing.
-#  Win32 notes: the application icon(s) are compiled into the application
-#  There is some workaround in kde4_add_kdeinit_executable to make it possible for those applications as well.
-# Parameters:
-#  SRCS_VAR  - specifies the list of source files
-#  pattern   - regular expression for searching application icons
-#  Example: KDE4_ADD_APP_ICON( myapp_SOURCES "pics/cr*-myapp.png")
-#  Example: KDE4_ADD_APP_ICON( myapp_KDEINIT_SRCS "icons/oxygen/*/apps/myapp.png")
 #
 #  KDE4_UPDATE_ICONCACHE()
 #    Notifies the icon cache that new icons have been installed by updating
@@ -438,23 +423,14 @@ if (_kdeBootStrapping)
    set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
 
    set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
-   set(KDE4_KCFGC_EXECUTABLE             ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX}.shell )
-   set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/makekdewidgets${CMAKE_EXECUTABLE_SUFFIX}.shell )
+   set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX} )
+   set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX} )
 
    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
 
-
-   # when building kdelibs, make the kcfg rules depend on the binaries...
-   set( _KDE4_KCONFIG_COMPILER_DEP kconfig_compiler)
-   set( _KDE4_MAKEKDEWIDGETS_DEP makekdewidgets)
    set(KDE4_INSTALLED_VERSION_OK TRUE)
 
 else (_kdeBootStrapping)
-
-   # ... but NOT otherwise
-   set( _KDE4_KCONFIG_COMPILER_DEP)
-   set( _KDE4_MAKEKDEWIDGETS_DEP)
-
    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
    # These files contain information about the installed kdelibs, Alex
@@ -464,23 +440,22 @@ else (_kdeBootStrapping)
    # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
    # KDE_VERSION is set in KDELibsDependencies.cmake since KDE 4.0.x. Alex
    # Support for the new-style (>= 2.6.0) support for requiring some version of a package:
-   if (NOT KDE_MIN_VERSION)
+   if(NOT KDE_MIN_VERSION)
       if (KDE4_FIND_VERSION_MAJOR)
          set(KDE_MIN_VERSION "${KDE4_FIND_VERSION_MAJOR}.${KDE4_FIND_VERSION_MINOR}.${KDE4_FIND_VERSION_PATCH}")
-      else (KDE4_FIND_VERSION_MAJOR)
+      else()
          set(KDE_MIN_VERSION "4.14.3")
-      endif (KDE4_FIND_VERSION_MAJOR)
-   endif (NOT KDE_MIN_VERSION)
+      endif()
+   endif()
 
    #message(FATAL_ERROR "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDE_VERSION} exact: -${KDE4_FIND_VERSION_EXACT}- version: -${KDE4_FIND_VERSION}-")
-   macro_ensure_version( ${KDE_MIN_VERSION} ${KDE_VERSION} KDE4_INSTALLED_VERSION_OK )
+   macro_ensure_version(${KDE_MIN_VERSION} ${KDE_VERSION} KDE4_INSTALLED_VERSION_OK)
 
 
    # KDE4_LIB_INSTALL_DIR and KDE4_INCLUDE_INSTALL_DIR are set in KDELibsDependencies.cmake,
    # use them to set the KDE4_LIB_DIR and KDE4_INCLUDE_DIR "public interface" variables
-   set(KDE4_LIB_DIR ${KDE4_LIB_INSTALL_DIR} )
-   set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR} )
-
+   set(KDE4_LIB_DIR ${KDE4_LIB_INSTALL_DIR})
+   set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR})
 
    # This setting is currently not recorded in KDELibsDependencies.cmake:
    find_file(KDE4_PLASMA_OPENGL_FOUND plasma/glapplet.h PATHS ${KDE4_INCLUDE_DIR} NO_DEFAULT_PATH)
@@ -563,12 +538,9 @@ _kde4_set_lib_variables(KUNITCONVERSION kunitconversion "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(PLASMA        plasma        "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(SOLID         solid         "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(THREADWEAVER  threadweaver  "${KDE4_TARGET_PREFIX}")
-
-if (UNIX)
-   _kde4_set_lib_variables(KDEFAKES kdefakes "${KDE4_TARGET_PREFIX}")
-   _kde4_set_lib_variables(KDESU kdesu       "${KDE4_TARGET_PREFIX}")
-   _kde4_set_lib_variables(KPTY kpty         "${KDE4_TARGET_PREFIX}")
-endif (UNIX)
+_kde4_set_lib_variables(KDEFAKES      kdefakes      "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KDESU         kdesu         "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KPTY          kpty          "${KDE4_TARGET_PREFIX}")
 
 ################### try to find Phonon ############################################
 
@@ -583,24 +555,25 @@ set(KDE4_PHONON_LIBS ${PHONON_LIBS})
 set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
 
 if(NOT PHONON_FOUND)
-   message(STATUS "KDE4 not found, because Phonon was not found")
-   return()
+    message(STATUS "KDE4 not found, because Phonon was not found")
+    return()
 endif(NOT PHONON_FOUND)
 
 
 #####################  provide some options   ##########################################
 
-option(KDE4_BUILD_TESTS  "Build the tests" ON)
+if(ENABLE_TESTING)
+    enable_testing()
+endif()
 set(KDE4_SERIALIZE_TOOL "" CACHE STRING "Tool to serialize resource-intensive commands in parallel builds")
 
-# if CMake 2.6.3 or above is used, provide an option which should be used by other KDE packages
-# whether to install a CMake FooConfig.cmake into lib/foo/cmake/ or /lib/cmake/foo/
-# (with 2.6.3 and above also lib/cmake/foo/ is supported):
-if(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
-   option(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead to lib/<package>/cmake" TRUE)
-else(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
-   set(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR  FALSE)
-endif(${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION}.${CMAKE_PATCH_VERSION} VERSION_GREATER 2.6.2)
+# for CMake 2.6.3 or above, provide an option which should be used by other KDE
+# packages whether to install a CMake FooConfig.cmake into lib/foo/cmake/ or
+# /lib/cmake/foo/ (with 2.6.3 and above also lib/cmake/foo/ is supported):
+option(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR
+    "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead to lib/<package>/cmake"
+    TRUE
+)
 
 # Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
 # which is something between a shared library and a normal executable.
@@ -623,78 +596,44 @@ endif ("${KDE4_LIB_DIR}" MATCHES lib32)
 
 set(LIB_SUFFIX "${_Init_LIB_SUFFIX}" CACHE STRING "Define suffix of directory name (32/64)" )
 
+set(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}")
+set(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share")
+set(BIN_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/bin")
+set(SBIN_INSTALL_DIR     "${EXEC_INSTALL_PREFIX}/sbin")
+set(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+set(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec")
+set(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include")
 
-########## the following are directories where stuff will be installed to  ###########
-#
-# this has to be after find_xxx() block above, since there KDELibsDependencies.cmake is included
-# which contains the install dirs from kdelibs, which are reused below
+set(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4")
+set(IMPORTS_INSTALL_DIR      "${PLUGIN_INSTALL_DIR}/imports")
+set(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config")
+set(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps")
+set(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons")
+set(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg")
+set(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale")
+set(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk")
+set(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services")
+set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes")
+set(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds")
+set(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates")
+set(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers")
+set(DEMO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/demos")
+set(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update")
+set(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart")
 
-# This macro implements some very special logic how to deal with the cache.
-# By default the various install locations inherit their value from their "parent" variable
-# so if you set CMAKE_INSTALL_PREFIX, then EXEC_INSTALL_PREFIX, PLUGIN_INSTALL_DIR will
-# calculate their value by appending subdirs to CMAKE_INSTALL_PREFIX .
-# This would work completely without using the cache.
-# But if somebody wants e.g. a different EXEC_INSTALL_PREFIX this value has to go into
-# the cache, otherwise it will be forgotten on the next cmake run.
-# Once a variable is in the cache, it doesn't depend on its "parent" variables
-# anymore and you can only change it by editing it directly.
-# this macro helps in this regard, because as long as you don't set one of the
-# variables explicitly to some location, it will always calculate its value from its
-# parents. So modifying CMAKE_INSTALL_PREFIX later on will have the desired effect.
-# But once you decide to set e.g. EXEC_INSTALL_PREFIX to some special location
-# this will go into the cache and it will no longer depend on CMAKE_INSTALL_PREFIX.
-#
-# additionally if installing to the same location as kdelibs, the other install
-# directories are reused from the installed kdelibs
-macro(_SET_FANCY _var _value _comment)
-    set(predefinedvalue "${_value}")
-    if ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
-        set(predefinedvalue "${KDE4_${_var}}")
-    endif ("${CMAKE_INSTALL_PREFIX}" STREQUAL "${KDE4_INSTALL_DIR}" AND DEFINED KDE4_${_var})
+set(XDG_APPS_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/applications/kde4")
+set(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories")
+set(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages")
 
-    if (NOT DEFINED ${_var})
-        set(${_var} ${predefinedvalue})
-    else (NOT DEFINED ${_var})
-        set(${_var} "${${_var}}" CACHE PATH "${_comment}")
-    endif (NOT DEFINED ${_var})
-endmacro(_SET_FANCY)
+set(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc")
+set(MAN_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/man")
+set(INFO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/info")
+set(DBUS_INTERFACES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces")
+set(DBUS_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/services")
+set(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/system-services")
 
-_set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}"                 "Base directory for executables and libraries")
-_set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share"           "Base directory for files which go to share/")
-_set_fancy(BIN_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/bin"              "The install dir for executables (default ${EXEC_INSTALL_PREFIX}/bin)")
-_set_fancy(SBIN_INSTALL_DIR     "${EXEC_INSTALL_PREFIX}/sbin"             "The install dir for system executables (default ${EXEC_INSTALL_PREFIX}/sbin)")
-_set_fancy(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}" "The subdirectory relative to the install prefix where libraries will be installed (default is ${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX})")
-_set_fancy(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec"         "The subdirectory relative to the install prefix where libraries will be installed (default is ${LIB_INSTALL_DIR}/kde4/libexec)")
-_set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include"         "The subdirectory to the header prefix")
-
-_set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4"                "The subdirectory relative to the install prefix where plugins will be installed (default is ${LIB_INSTALL_DIR}/kde4)")
-_set_fancy(IMPORTS_INSTALL_DIR       "${PLUGIN_INSTALL_DIR}/imports"                "The subdirectory relative to the install prefix where imports will be installed")
-_set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config"         "The config file install dir")
-_set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps"           "The parent directory where applications can install their data")
-_set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons"          "The icon install dir (default ${SHARE_INSTALL_PREFIX}/share/icons/)")
-_set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg"    "The install dir for kconfig files")
-_set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale"         "The install dir for translations")
-_set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk"        "The install dir for the mimetype desktop files")
-_set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services"  "The install dir for service (desktop, protocol, ...) files")
-_set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes" "The install dir for servicestypes desktop files")
-_set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds"         "The install dir for sound files")
-_set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates"      "The install dir for templates (Create new file...)")
-_set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers"     "The install dir for wallpapers")
-_set_fancy(DEMO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/demos"          "The install dir for demos")
-_set_fancy(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update"       "The kconf_update install dir")
-_set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart"      "The install dir for autostart files")
-
-_set_fancy(XDG_APPS_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/applications/kde4"         "The XDG apps dir")
-_set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories"      "The XDG directory")
-_set_fancy(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages"  "The install dir for the xdg mimetypes")
-
-_set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc"            "The sysconfig install dir (default ${CMAKE_INSTALL_PREFIX}/etc)")
-_set_fancy(MAN_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/man"            "The man install dir (default ${SHARE_INSTALL_PREFIX}/man/)")
-_set_fancy(INFO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/info"           "The info install dir (default ${SHARE_INSTALL_PREFIX}/info)")
-_set_fancy(DBUS_INTERFACES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces" "The dbus interfaces install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/interfaces)")
-_set_fancy(DBUS_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/services"     "The dbus services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/services)")
-_set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR      "${SHARE_INSTALL_PREFIX}/dbus-1/system-services"     "The dbus system services install dir (default  ${SHARE_INSTALL_PREFIX}/dbus-1/system-services)")
-
+set(KAUTH_HELPER_PLUGIN_DIR  "${PLUGIN_INSTALL_DIR}/plugins/kauth/helper")
+set(KAUTH_BACKEND_PLUGIN_DIR "${PLUGIN_INSTALL_DIR}/plugins/kauth/backend")
 
 # For more documentation see above.
 # Later on it will be possible to extend this for installing OSX frameworks
@@ -729,77 +668,67 @@ set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH}
 #  and now the platform specific stuff
 ######################################################
 
-# Set a default build type for single-configuration
-# CMake generators if no build type is set.
-if (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-   set(CMAKE_BUILD_TYPE RelWithDebInfo)
-endif (NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
-
-
 if (WIN32 OR CYGWIN OR APPLE)
-   message(FATAL_ERROR "Windows/Cygwin/Apple is NOT supported.")
+    message(FATAL_ERROR "Windows/Cygwin/Apple is NOT supported.")
 endif(WIN32 OR CYGWIN OR APPLE)
 
-# setup default RPATH/install_name handling, may be overridden by KDE4_HANDLE_RPATH_FOR_EXECUTABLE
-# It sets up to build with full RPATH. When installing, RPATH will be changed to the LIB_INSTALL_DIR
+# setup default RPATH/install_name handling, it sets up to build with full
+# RPATH. When installing, RPATH will be changed to the LIB_INSTALL_DIR
 # and all link directories which are not inside the current build dir.
-if (UNIX)
-    set( _KDE4_PLATFORM_INCLUDE_DIRS)
+set(_KDE4_PLATFORM_INCLUDE_DIRS)
 
-    # the rest is RPATH handling
-    # here the defaults are set
-    # which are partly overwritten in kde4_handle_rpath_for_library()
-    # and kde4_handle_rpath_for_executable(), both located in KDE4Macros.cmake, Alex
-    # add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of the standard system link
-    # directories listed in CMAKE_{PLATFORM,C,CXX}_IMPLICIT_LINK_DIRECTORIES) and use the RPATH figured out by cmake when compiling
+# add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of the standard system link
+# directories listed in CMAKE_{PLATFORM,C,CXX}_IMPLICIT_LINK_DIRECTORIES) and use the RPATH figured out by cmake when compiling
 
-    list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemPlatformLibDir)
-    list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCLibDir)
-    list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
-    if("${_isSystemPlatformLibDir}" STREQUAL "-1" AND "${_isSystemCLibDir}" STREQUAL "-1" AND "${_isSystemCxxLibDir}" STREQUAL "-1")
-        set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
-    endif("${_isSystemPlatformLibDir}" STREQUAL "-1" AND "${_isSystemCLibDir}" STREQUAL "-1" AND "${_isSystemCxxLibDir}" STREQUAL "-1")
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemPlatformLibDir)
+list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCLibDir)
+list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
+if("${_isSystemPlatformLibDir}" STREQUAL "-1" AND "${_isSystemCLibDir}" STREQUAL "-1" AND "${_isSystemCxxLibDir}" STREQUAL "-1")
+    set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
+endif("${_isSystemPlatformLibDir}" STREQUAL "-1" AND "${_isSystemCLibDir}" STREQUAL "-1" AND "${_isSystemCxxLibDir}" STREQUAL "-1")
 
-    set(CMAKE_SKIP_BUILD_RPATH FALSE)
-    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-endif (UNIX)
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
-if (Q_WS_X11)
+if(Q_WS_X11)
    # Done by FindQt4.cmake already
    #find_package(X11 REQUIRED)
    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
-endif (Q_WS_X11)
+endif()
 
-if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
-   if (CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-      set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE)
-      set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
-      set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
 
-      set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_SHARED_LINKER_FLAGS}")
-      set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_MODULE_LINKER_FLAGS}")
-      set ( CMAKE_EXE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_EXE_LINKER_FLAGS}")
+if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+    if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        set(_KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE)
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
+        set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
 
-      # we profile...
-      if(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
-        set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-        set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-      endif(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
-   endif (CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-   if (CMAKE_C_COMPILER MATCHES "icc")
-      set ( _KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE)
-      set ( CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
-      set ( CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
-   endif (CMAKE_C_COMPILER MATCHES "icc")
-endif (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_SHARED_LINKER_FLAGS}")
+        set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_MODULE_LINKER_FLAGS}")
+        set(CMAKE_EXE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_EXE_LINKER_FLAGS}")
 
-if (UNIX)
-   set ( _KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE")
+        # we profile...
+        if(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
+            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+            set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
+        endif()
+    endif()
 
-   check_cxx_source_compiles("
+    if(CMAKE_C_COMPILER MATCHES "icc")
+        set(_KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE)
+        set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
+        set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
+    endif()
+endif()
+
+
+if(UNIX)
+    set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE")
+
+    check_cxx_source_compiles("
 #include <sys/types.h>
  /* Check that off_t can represent 2**63 - 1 correctly.
     We can't simply define LARGE_OFF_T to be 9223372036854775807,
@@ -811,10 +740,10 @@ if (UNIX)
   int main() { return 0; }
 " _OFFT_IS_64BIT)
 
-   if (NOT _OFFT_IS_64BIT)
-     set ( _KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
-   endif (NOT _OFFT_IS_64BIT)
-endif (UNIX)
+    if(NOT _OFFT_IS_64BIT)
+        set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
+    endif()
+endif()
 
 
 ############################################################
@@ -832,20 +761,20 @@ endmacro(KDE_CHECK_FLAG_EXISTS FLAG VAR)
 # This macro is for internal use only
 # Return the directories present in gcc's include path.
 macro(_DETERMINE_GCC_SYSTEM_INCLUDE_DIRS _lang _result)
-  set(${_result})
-  set(_gccOutput)
-  file(WRITE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy" "\n" )
-  execute_process(COMMAND ${CMAKE_C_COMPILER} -v -E -x ${_lang} -dD dummy
+    set(${_result})
+    set(_gccOutput)
+    file(WRITE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy" "\n" )
+    execute_process(COMMAND ${CMAKE_C_COMPILER} -v -E -x ${_lang} -dD dummy
                   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles
                   ERROR_VARIABLE _gccOutput
                   OUTPUT_VARIABLE _gccStdout )
-  file(REMOVE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy")
+    file(REMOVE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy")
 
-  if( "${_gccOutput}" MATCHES "> search starts here[^\n]+\n *(.+) *\n *End of (search) list" )
-    SET(${_result} ${CMAKE_MATCH_1})
-    STRING(REPLACE "\n" " " ${_result} "${${_result}}")
-    SEPARATE_ARGUMENTS(${_result})
-  ENDIF( "${_gccOutput}" MATCHES "> search starts here[^\n]+\n *(.+) *\n *End of (search) list" )
+    if("${_gccOutput}" MATCHES "> search starts here[^\n]+\n *(.+) *\n *End of (search) list")
+        SET(${_result} ${CMAKE_MATCH_1})
+        STRING(REPLACE "\n" " " ${_result} "${${_result}}")
+        SEPARATE_ARGUMENTS(${_result})
+    endif()
 ENDMACRO(_DETERMINE_GCC_SYSTEM_INCLUDE_DIRS _lang)
 
 if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES Clang)
@@ -876,18 +805,18 @@ if (CMAKE_COMPILER_IS_GNUCXX)
    # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
 
-   if (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+   if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
      # This should not be needed, as it is also part of _KDE4_PLATFORM_DEFINITIONS below.
      # It is kept here nonetheless both for backwards compatibility in case one does not use add_definitions(${KDE4_DEFINITIONS})
      # and also because it is/was needed by glibc for snprintf to be available when building C files.
      # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
      add_definitions (-D_DEFAULT_SOURCE -D_BSD_SOURCE)
-   endif (CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+   endif(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
 
-   if (CMAKE_SYSTEM_NAME STREQUAL GNU)
-      set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
-      set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
-   endif (CMAKE_SYSTEM_NAME STREQUAL GNU)
+   if(CMAKE_SYSTEM_NAME STREQUAL GNU)
+      set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
+      set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
+   endif(CMAKE_SYSTEM_NAME STREQUAL GNU)
 
    # gcc under Windows
    if (MINGW)
@@ -1145,15 +1074,22 @@ set(KDE4_INCLUDES
 get_filename_component(_KDE4_CMAKE_TOPLEVEL_DIR "${CMAKE_SOURCE_DIR}/.." ABSOLUTE)
 string(LENGTH "${_KDE4_CMAKE_TOPLEVEL_DIR}" _KDE4_CMAKE_TOPLEVEL_DIR_LENGTH)
 
-set(KDE4_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} -DQT_NO_STL -DQT_NO_CAST_TO_ASCII -D_REENTRANT -DKDE_DEPRECATED_WARNINGS -DKDE4_CMAKE_TOPLEVEL_DIR_LENGTH=${_KDE4_CMAKE_TOPLEVEL_DIR_LENGTH})
+set(KDE4_DEFINITIONS
+    ${_KDE4_PLATFORM_DEFINITIONS}
+    -DQT_NO_STL
+    -DQT_NO_CAST_TO_ASCII
+    -D_REENTRANT
+    -DKDE_DEPRECATED_WARNINGS
+    -DKDE4_CMAKE_TOPLEVEL_DIR_LENGTH=${_KDE4_CMAKE_TOPLEVEL_DIR_LENGTH}
+)
 
-if (NOT _kde4_uninstall_rule_created)
+if(NOT _kde4_uninstall_rule_created)
    set(_kde4_uninstall_rule_created TRUE)
 
    configure_file("${kde_cmake_module_dir}/kde4_cmake_uninstall.cmake.in" "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" @ONLY)
 
    add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake")
 
-endif (NOT _kde4_uninstall_rule_created)
+endif(NOT _kde4_uninstall_rule_created)
 
 endif(NOT KDE4_FOUND)

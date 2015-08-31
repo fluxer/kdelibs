@@ -46,7 +46,9 @@ configure_file(kssl/ksslconfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconf
 
 add_subdirectory( kssl/kcm )
 add_subdirectory( misc )
-add_subdirectory( tests )
+if(ENABLE_TESTING)
+    add_subdirectory( tests )
+endif()
 if(STRIGI_FOUND)
    add_subdirectory( kio/dummyanalyzers )
 endif(STRIGI_FOUND)
@@ -239,6 +241,12 @@ set(kio_LIB_SRCS
    ${kbookmarks_STAT_SRCS}
    ${kfile_STAT_SRCS}
    ${kssl_STAT_SRCS}
+   kfile/kpropertiesdesktopadvbase.ui
+   kfile/kpropertiesdesktopbase.ui
+   kssl/keygenwizard.ui
+   kssl/keygenwizard2.ui
+   kssl/sslinfo.ui
+   kssl/certificateparty.ui
 )
 
 set(kio_LIB_PRIVATE_SRCS
@@ -252,18 +260,9 @@ set(kfilemetadatareaderprocess_SRCS
     kfile/kfilemetadatareaderprocess.cpp
 )
 
-kde4_add_ui_files(kio_LIB_SRCS
-   kfile/kpropertiesdesktopadvbase.ui
-   kfile/kpropertiesdesktopbase.ui
-   kssl/keygenwizard.ui
-   kssl/keygenwizard2.ui
-   kssl/sslinfo.ui
-   kssl/certificateparty.ui
-)
+add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
-kde4_add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
-
-kde4_add_executable(kfilemetadatareader ${kfilemetadatareaderprocess_SRCS})
+add_executable(kfilemetadatareader ${kfilemetadatareaderprocess_SRCS})
 target_link_libraries(kfilemetadatareader ${KDE4_KIO_LIBS})
 target_link_libraries(kio PRIVATE ${KDE4_KDEUI_LIBS} ${ZLIB_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTSVG_LIBRARY} ${X11_LIBRARIES} ${KIO_EXTRA_LIBS})
 target_link_libraries(kio PUBLIC kdeui kdecore ${QT_QTNETWORK_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} )

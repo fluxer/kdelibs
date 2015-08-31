@@ -39,7 +39,7 @@ install(TARGETS kded_proxyscout  DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 set(kpac_dhcp_helper_SRCS kpac_dhcp_helper.c)
 
-kde4_add_executable(kpac_dhcp_helper NOGUI ${kpac_dhcp_helper_SRCS})
+add_executable(kpac_dhcp_helper ${kpac_dhcp_helper_SRCS})
 
 if (HAVE_NSL_LIBRARY)
   # Assume Solaris

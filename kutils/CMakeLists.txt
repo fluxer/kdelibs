@@ -10,7 +10,7 @@ set(kemoticons_LIB_SRCS
     kemoticons/kemoticonsprovider.cpp
 )
 
-kde4_add_library(kemoticons ${LIBRARY_TYPE} ${kemoticons_LIB_SRCS})
+add_library(kemoticons ${LIBRARY_TYPE} ${kemoticons_LIB_SRCS})
 target_link_libraries(kemoticons PRIVATE ${KDE4_KIO_LIBS})
 target_link_libraries(kemoticons PUBLIC kdecore kdeui ${QT_QTGUI_LIBRARY})
 set_target_properties(kemoticons PROPERTIES
@@ -52,7 +52,7 @@ if (Q_WS_X11)
     endif (HAVE_XSYNC)
 endif (Q_WS_X11)
 
-kde4_add_library(kidletime ${LIBRARY_TYPE} ${kidletime_LIB_SRCS})
+add_library(kidletime ${LIBRARY_TYPE} ${kidletime_LIB_SRCS})
 target_link_libraries(kidletime PUBLIC kdecore kdeui ${QT_QTGUI_LIBRARY})
 target_link_libraries(kidletime PRIVATE ${KDE4_KDEUI_LIBS})
 
@@ -92,7 +92,7 @@ set(kcmutils_LIB_SRCS
     ksettings/componentsdialog.cpp
 )
 
-kde4_add_library(kcmutils ${LIBRARY_TYPE} ${kcmutils_LIB_SRCS})
+add_library(kcmutils ${LIBRARY_TYPE} ${kcmutils_LIB_SRCS})
 
 target_link_libraries(kcmutils PRIVATE ${KDE4_KDEUI_LIBS})
 target_link_libraries(kcmutils PUBLIC kdecore kdeui ${QT_QTGUI_LIBRARY})
@@ -125,17 +125,19 @@ set(kprintutils_LIB_SRCS
     kprintpreview.cpp
 )
 
-kde4_add_library(kprintutils ${LIBRARY_TYPE} ${kprintutils_LIB_SRCS})
-
+add_library(kprintutils ${LIBRARY_TYPE} ${kprintutils_LIB_SRCS})
 target_link_libraries(kprintutils PRIVATE ${KDE4_KPARTS_LIBS})
 target_link_libraries(kprintutils PUBLIC kdecore kdeui ${QT_QTGUI_LIBRARY})
 set_target_properties(kprintutils PROPERTIES
-                      VERSION ${GENERIC_LIB_VERSION}
-                      SOVERSION ${GENERIC_LIB_SOVERSION})
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install( FILES
     kprintutils_export.h
     kprintpreview.h
-    DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}
+    COMPONENT Devel
+)
 
 install(TARGETS kprintutils EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

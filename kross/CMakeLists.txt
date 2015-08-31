@@ -8,7 +8,9 @@ add_subdirectory( modules )
 add_subdirectory( console )
 
 # unittests and such stuff
-add_subdirectory( test )
+if(ENABLE_TESTING)
+    add_subdirectory( test )
+endif()
 
 # QtScript backend
 add_subdirectory( qts )

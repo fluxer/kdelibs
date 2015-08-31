@@ -25,7 +25,7 @@ set(ThreadWeaver_LIB_SRCS
 )
 
 
-kde4_add_library(threadweaver ${LIBRARY_TYPE} ${ThreadWeaver_LIB_SRCS})
+add_library(threadweaver ${LIBRARY_TYPE} ${ThreadWeaver_LIB_SRCS})
 target_link_libraries(threadweaver PRIVATE ${QT_QTCORE_LIBRARY})
 target_link_libraries(threadweaver PUBLIC ${QT_QTCORE_LIBRARY} )
 
@@ -48,5 +48,6 @@ install(FILES
     DependencyPolicy.h
     ResourceRestrictionPolicy.h
     QueuePolicy.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/threadweaver COMPONENT Devel
+    DESTINATION ${INCLUDE_INSTALL_DIR}/threadweaver
+    COMPONENT Devel
 )
