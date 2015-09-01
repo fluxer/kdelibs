@@ -1,6 +1,6 @@
 ## install the cmake files
 
-set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules )
+set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules)
 
 # maybe FindHUNSPELL.cmake doesn't have to be installed ?
 # This variable doesn't actually do anything, but it's probably a good idea
@@ -27,7 +27,6 @@ set(cmakeFiles
     FindAvahi.cmake
     FindBerkeleyDB.cmake
     FindBlueZ.cmake
-    FindCarbon.cmake
     FindDBusMenuQt.cmake
     FindDNSSD.cmake
     FindENCHANT.cmake
@@ -96,7 +95,6 @@ set(cmakeFiles
     FindTaglib.cmake
     FindUDisks2.cmake
     FindUSB.cmake
-    FindWcecompat.cmake
     FindX11.cmake
     FindXKB.cmake
     FindXine.cmake
@@ -121,7 +119,6 @@ set(cmakeFiles
     check_installed_exports_file.cmake
     config-alsa.h.cmake
     create_exe_symlink.cmake
-    kde4uic.cmake
     cmake-modules-styleguide.txt
     kde4_cmake_uninstall.cmake.in
     BasicFindPackageVersion.cmake.in
