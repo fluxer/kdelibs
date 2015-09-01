@@ -145,7 +145,6 @@
 #
 # The following user adjustable options are provided:
 #
-#  KDE4_BUILD_TESTS  - enable this to build the testcases
 #  KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
 #  KDE4_SERIALIZE_TOOL - wrapper to serialize potentially resource-intensive commands during
 #                      parallel builds (set to 'icecc' when using icecream)
@@ -164,61 +163,15 @@
 #    Use this to add widget description files for the makekdewidgets code generator
 #    for Qt Designer plugins.
 #
-#  KDE4_CREATE_FINAL_FILES (filename_CXX filename_C file1 ... fileN)
-#    This macro is intended mainly for internal uses.
-#    It is used for enable-final. It will generate two source files,
-#    one for the C files and one for the C++ files.
-#    These files will have the names given in filename_CXX and filename_C.
-#
 #  KDE4_ADD_PLUGIN ( name [WITH_PREFIX] file1 ... fileN )
 #    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
 #    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
 #
-#  KDE4_ADD_KDEINIT_EXECUTABLE (name [NOGUI] [RUN_UNINSTALLED] file1 ... fileN)
-#    Create a KDE application in the form of a module loadable via kdeinit.
-#    A library named kdeinit_<name> will be created and a small executable which links to it.
-#    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
-#    application bundles are created, with the NOGUI option no bundles but simple executables
-#    are created. Under Windows this flag is also necessary to separate between applications
-#    with GUI and without. On other UNIX systems this flag has no effect.
-#    RUN_UNINSTALLED is deprecated and is ignored, for details see the documentation for
-#    KDE4_ADD_EXECUTABLE().
-#
-#  KDE4_ADD_EXECUTABLE (name [NOGUI] [TEST] [RUN_UNINSTALLED] file1 ... fileN)
-#    Equivalent to ADD_EXECUTABLE(), but additionally adds some more features:
-#    -automatic RPATH handling
-#    If the executable doesn't have a GUI, use the option NOGUI. By default on OS X
-#    application bundles are created, with the NOGUI option no bundles but simple executables
-#    are created. Under Windows this flag is also necessary to separate between applications
-#    with GUI and without. On other UNIX systems this flag has no effect.
-#    The option TEST is for internal use only.
-#    The option RUN_UNINSTALLED is ignored. It was necessary with KDE 4.0 and 4.1
-#    if the executable had to be run from the build tree. Since KDE 4.2 all
-#    executables can be always run uninstalled (the RPATH of executables which are not
-#    yet installed points since then into the buildtree and is changed
-#    to the proper location when installing, so RUN_UNINSTALLED is not necessary anymore).
-#
-#  KDE4_ADD_LIBRARY (name [STATIC | SHARED | MODULE ] file1 ... fileN)
-#    Equivalent to ADD_LIBRARY(). Additionally it sets LINK_INTERFACE_LIBRARIES target property empty.
-#    The RPATH is set according to the global RPATH settings as set up by FindKDE4Internal.cmake
-#    (CMAKE_SKIP_BUILD_RPATH=FALSE, CMAKE_BUILD_WITH_INSTALL_RPATH=FALSE, CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE)
-#    Under Windows it adds a -DMAKE_<name>_LIB definition to the compilation.
-#
-#  KDE4_ADD_UNIT_TEST (testname [TESTNAME targetname] file1 ... fileN)
-#    add a unit test, which is executed when running make test
-#    it will be built with RPATH poiting to the build dir
-#    The targets are always created, but only built for the "all"
-#    target if the option KDE4_BUILD_TESTS is enabled. Otherwise the rules for the target
-#    are created but not built by default. You can build them by manually building the target.
-#    The name of the target can be specified using TESTNAME <targetname>, if it is not given
-#    the macro will default to the <testname>
-#    KDESRCDIR is set to the source directory of the test, this can be used with
-#    KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
-#
-#
-#  KDE4_UPDATE_ICONCACHE()
-#    Notifies the icon cache that new icons have been installed by updating
-#    mtime of ${ICON_INSTALL_DIR}/hicolor directory.
+#  KDE4_ADD_TEST (testname file1 ... fileN)
+#    add a unit test, which is executed when running make test. The targets
+#    are build and executed only if the ENABLE_TESTING option is enabled.
+#    KDESRCDIR is set to the source directory of the test, this can be used
+#    with KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
 #
 #  KDE4_INSTALL_ICONS( path theme)
 #    Installs all png and svgz files in the current directory to the icon

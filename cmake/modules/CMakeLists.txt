@@ -104,7 +104,6 @@ set(cmakeFiles
     HandleImportedTargetsInCMakeRequiredLibraries.cmake
     KDE4Defaults.cmake
     KDE4Macros.cmake
-    MacroAddCompileFlags.cmake
     MacroAddLinkFlags.cmake
     MacroAdditionalCleanFiles.cmake
     MacroAppendIf.cmake
