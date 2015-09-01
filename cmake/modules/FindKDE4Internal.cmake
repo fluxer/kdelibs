@@ -82,7 +82,7 @@
 #  KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 #  KDE4_KPTY_LIBS             - the kpty library and all depending libraries
 #  KDE4_PHONON_LIBS           - the phonon library and all depending librairies
-#  KDE4_THREADWEAVER_LIBRARIES- the threadweaver library and all depending libraries
+#  KDE4_THREADWEAVER_LIBS     - the threadweaver library and all depending libraries
 #  KDE4_SOLID_LIBS            - the solid library and all depending libraries
 #  KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
 #  KDE4_KROSSCORE_LIBS        - the kross core library and all depending libraries
@@ -271,22 +271,22 @@ endif (POLICY CMP0026)
 if(NOT KDE4_FOUND)
 
 # get the directory of the current file, used later on in the file
-get_filename_component( kde_cmake_module_dir  ${CMAKE_CURRENT_LIST_FILE} PATH)
+get_filename_component(kde_cmake_module_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 
-include (MacroEnsureVersion)
+include(MacroEnsureVersion)
 
 # We may only search for other packages with "REQUIRED" if we are required ourselves.
 # This file can be processed either (usually) included in FindKDE4.cmake or
 # (when building kdelibs) directly via FIND_PACKAGE(KDE4Internal), that's why
 # we have to check for both KDE4_FIND_REQUIRED and KDE4Internal_FIND_REQUIRED.
-if(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
+if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4 "REQUIRED")
   set(_REQ_STRING_KDE4_MESSAGE "FATAL_ERROR")
-else(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
+else(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4 )
   set(_REQ_STRING_KDE4_MESSAGE "STATUS")
-endif(KDE4_FIND_REQUIRED  OR  KDE4Internal_FIND_REQUIRED)
+endif(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
 
 
 # Store CMAKE_MODULE_PATH and then append the current dir to it, so we are sure
@@ -461,9 +461,6 @@ else (_kdeBootStrapping)
    # behaviour we set all these variables anyway as seen below. Alex
    include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
 
-   # This one is for compatibility only:
-   set(KDE4_THREADWEAVER_LIBRARIES ${KDE4_TARGET_PREFIX}threadweaver )
-
 endif (_kdeBootStrapping)
 
 
@@ -623,7 +620,7 @@ set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH}
 
 if (WIN32 OR CYGWIN OR APPLE)
     message(FATAL_ERROR "Windows/Cygwin/Apple is NOT supported.")
-endif(WIN32 OR CYGWIN OR APPLE)
+endif()
 
 # setup default RPATH/install_name handling, it sets up to build with full
 # RPATH. When installing, RPATH will be changed to the LIB_INSTALL_DIR
@@ -638,7 +635,7 @@ list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCLibDi
 list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
 if("${_isSystemPlatformLibDir}" STREQUAL "-1" AND "${_isSystemCLibDir}" STREQUAL "-1" AND "${_isSystemCxxLibDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
-endif("${_isSystemPlatformLibDir}" STREQUAL "-1" AND "${_isSystemCLibDir}" STREQUAL "-1" AND "${_isSystemCxxLibDir}" STREQUAL "-1")
+endif()
 
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
@@ -678,10 +675,9 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
 endif()
 
 
-if(UNIX)
-    set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE")
+set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE")
 
-    check_cxx_source_compiles("
+check_cxx_source_compiles("
 #include <sys/types.h>
  /* Check that off_t can represent 2**63 - 1 correctly.
     We can't simply define LARGE_OFF_T to be 9223372036854775807,
@@ -693,23 +689,14 @@ if(UNIX)
   int main() { return 0; }
 " _OFFT_IS_64BIT)
 
-    if(NOT _OFFT_IS_64BIT)
-        set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
-    endif()
+if(NOT _OFFT_IS_64BIT)
+    set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
 endif()
 
 
 ############################################################
 # compiler specific settings
 ############################################################
-
-
-# this macro is for internal use only.
-macro(KDE_CHECK_FLAG_EXISTS FLAG VAR DOC)
-   if(NOT ${VAR} MATCHES "${FLAG}")
-      set(${VAR} "${${VAR}} ${FLAG}" CACHE STRING "Flags used by the linker during ${DOC} builds." FORCE)
-   endif(NOT ${VAR} MATCHES "${FLAG}")
-endmacro(KDE_CHECK_FLAG_EXISTS FLAG VAR)
 
 # This macro is for internal use only
 # Return the directories present in gcc's include path.
@@ -764,18 +751,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
      # and also because it is/was needed by glibc for snprintf to be available when building C files.
      # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
      add_definitions (-D_DEFAULT_SOURCE -D_BSD_SOURCE)
-   endif(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+   endif()
 
    if(CMAKE_SYSTEM_NAME STREQUAL GNU)
       set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
       set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
-   endif(CMAKE_SYSTEM_NAME STREQUAL GNU)
-
-   # gcc under Windows
-   if (MINGW)
-      set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
-      set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--export-all-symbols")
-   endif (MINGW)
+   endif()
 
    check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
    if(KDE4_ENABLE_FPIE)
@@ -785,12 +766,12 @@ if (CMAKE_COMPILER_IS_GNUCXX)
        else(HAVE_FPIE_SUPPORT)
         message(STATUS "Your compiler doesn't support the PIE flag")
        endif(HAVE_FPIE_SUPPORT)
-   endif(KDE4_ENABLE_FPIE)
+   endif()
 
    check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
    if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
-   endif(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
+   endif()
 
    # visibility support
    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
@@ -808,11 +789,11 @@ if (CMAKE_COMPILER_IS_GNUCXX)
       endif (gcc_on_macos)
    endif (NOT _gcc_version)
 
-   if (_gcc_version)
+   if(_gcc_version)
       macro_ensure_version("4.1.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_1)
       macro_ensure_version("4.2.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_2)
       macro_ensure_version("4.3.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_3)
-   endif (_gcc_version)
+   endif()
 
    # save a little by making local statics not threadsafe
    # ### do not enable it for older compilers, see
@@ -853,10 +834,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
                message("${_compile_output_var}")
                message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
             endif(NOT _compile_result)
-       else(_basic_compile_result)
+       else()
          message("${_compile_output_var}")
          message(FATAL_ERROR "Unable to compile a basic Qt application. Qt has not been found correctly.")
-       endif(_basic_compile_result)
+       endif()
 
       if (GCC_IS_NEWER_THAN_4_2)
          set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type -fvisibility-inlines-hidden")
