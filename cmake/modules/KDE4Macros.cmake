@@ -257,12 +257,11 @@ endmacro(KDE4_INSTALL_ICONS)
 # If "WITH_PREFIX" is in the arugments then the standard "lib" prefix will be
 # preserved
 macro(KDE4_ADD_PLUGIN _target_NAME)
-    set(_args ${ARGN})
     set(_plugin_type MODULE)
     set(_plugin_prefix)
     set(_plugin_srcs)
 
-    foreach(arg ${_args})
+    foreach(arg ${ARGN})
         if(arg STREQUAL "STATIC")
             set(_plugin_type STATIC)
         elseif(arg STREQUAL "SHARED")
@@ -272,7 +271,7 @@ macro(KDE4_ADD_PLUGIN _target_NAME)
         else()
             list(APPEND _plugin_srcs ${arg})
         endif()
-    endforeach(arg)
+    endforeach()
 
     add_library(${_target_NAME} ${_plugin_type} ${_plugin_srcs})
 
