@@ -51,9 +51,6 @@ set(plasmagik_SRCS
     package.cpp
     )
 
-#to make the Temporary solution to not link to libkdeclarative work, disable the exports of libkdeclarative  
-add_definitions(-DKDECLARATIVE_EXPORT=)
-
 set(plasma_LIB_SRCS
     ${plasmagik_SRCS}
     abstractrunner.cpp
@@ -171,15 +168,6 @@ set(plasma_LIB_SRCS
     widgets/treeview.cpp
     widgets/textedit.cpp
     widgets/webview.cpp
-
-    #Temporary solution to not link to libkdeclarative
-    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/kdeclarative.cpp
-    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/private/engineaccess.cpp
-    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/private/kiconprovider.cpp
-    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/bindings/qscriptnonguibookkeeping.cpp
-    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/bindings/i18n.cpp
-    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/bindings/icon.cpp
-    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative/bindings/url.cpp
 )
 
 kde4_add_kcfg_files(plasma_LIB_SRCS data/kconfigxt/libplasma-theme-global.kcfgc)
@@ -198,7 +186,8 @@ target_link_libraries(plasma PRIVATE ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRA
                              ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY}
                              ${QT_QTXML_LIBRARY} ${QT_QTSQL_LIBRARY}
                              ${QT_QTDECLARATIVE_LIBRARY} ${KDE4_KDEUI_LIBS}
-                             ${KDE4_THREADWEAVER_LIBS} ${PLASMA_EXTRA_LIBS})
+                             ${KDE4_THREADWEAVER_LIBS} kdeclarative
+                             ${PLASMA_EXTRA_LIBS})
 
 if(X11_FOUND)
    target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
