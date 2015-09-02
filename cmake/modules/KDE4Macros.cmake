@@ -9,10 +9,12 @@
 # KDE4_CREATE_MANPAGE
 # KDE4_INSTALL_AUTH_HELPER_FILES
 # KDE4_AUTH_INSTALL_ACTIONS
+# KDE4_INSTALL_TS_FILES
 
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
 # Copyright (c) 2007 Matthias Kretz <kretz@kde.org>
+# Copyright (c) 2015 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -341,3 +343,18 @@ function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
             DESTINATION ${DBUS_SYSTEM_SERVICES_INSTALL_DIR})
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
+
+
+macro(KDE4_INSTALL_TS_FILES _lang _sdir)
+    file(GLOB_RECURSE _ts_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${_sdir}/*)
+    foreach(_current_TS_FILES ${_ts_files})
+        string(REGEX MATCH "\\.git/" _in_git ${_current_TS_FILES})
+        if(NOT _in_git)
+            get_filename_component(_subpath ${_current_TS_FILES} PATH)
+            install(
+                FILES ${_current_TS_FILES}
+                DESTINATION ${LOCALE_INSTALL_DIR}/${_lang}/LC_SCRIPTS/${_subpath}
+            )
+        endif()
+    endforeach()
+endmacro(KDE4_INSTALL_TS_FILES)
