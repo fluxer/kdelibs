@@ -238,7 +238,7 @@
 
 
 # this is required now by cmake 2.6 and so must not be skipped by if(KDE4_FOUND) below
-cmake_minimum_required(VERSION 2.8.11 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 
 # CMake 2.6, set compatibility behaviour to cmake 2.4
 # this must be executed always, because the CMAKE_MINIMUM_REQUIRED() command above
@@ -263,9 +263,9 @@ cmake_policy(SET CMP0011 OLD)
 cmake_policy(SET CMP0017 NEW)
 
 # since cmake 3.0: use of the LOCATION target property is disallowed while it is used in KDE4Macros.cmake
-if (POLICY CMP0026)
+if(POLICY CMP0026)
   cmake_policy(SET CMP0026 OLD)
-endif (POLICY CMP0026)
+endif(POLICY CMP0026)
 
 # Only do something if it hasn't been found yet
 if(NOT KDE4_FOUND)
