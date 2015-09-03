@@ -39,21 +39,22 @@ set(kfile_LIB_SRCS
 
 add_library(kfile ${LIBRARY_TYPE} ${kfile_LIB_SRCS})
 target_link_libraries(kfile PRIVATE
-   ${KDE4_KIO_LIBS}
-   ${ZLIB_LIBRARY}
-   ${KDE4_SOLID_LIBS}
-   ${X11_LIBRARIES}
+    ${KDE4_KIO_LIBS}
+    ${ZLIB_LIBRARY}
+    ${KDE4_SOLID_LIBS}
+    ${X11_LIBRARIES}
 )
 
 if(X11_Xrender_FOUND)
-  target_link_libraries(kfile PRIVATE ${X11_Xrender_LIB} )
+    target_link_libraries(kfile PRIVATE ${X11_Xrender_LIB})
 endif(X11_Xrender_FOUND)
 
-target_link_libraries(kfile PUBLIC kio kdeui kdecore ${QT_QTGUI_LIBRARY} )
+target_link_libraries(kfile PUBLIC kio kdeui kdecore ${QT_QTGUI_LIBRARY})
 
-set_target_properties(kfile PROPERTIES VERSION ${GENERIC_LIB_VERSION} 
-                                       SOVERSION ${GENERIC_LIB_SOVERSION} 
-                     )
+set_target_properties(kfile PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION} 
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install(TARGETS kfile EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -76,9 +77,8 @@ install( FILES
 )
 
 ############ module used by KFileDialog ##########
-set(kfilemodule_SRCS
-    kfilemodule.cpp
-)
+
+set(kfilemodule_SRCS kfilemodule.cpp)
 
 kde4_add_plugin(kfilemodule ${kfilemodule_SRCS})
 

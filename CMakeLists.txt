@@ -256,6 +256,8 @@ add_subdirectory( kdewebkit )
 add_subdirectory( includes )
 add_subdirectory( libkdcraw )
 add_subdirectory( libkexiv2 )
+add_subdirectory( libkcddb )
+add_subdirectory( libkcompactdisc )
 add_subdirectory( experimental )
 
 ################# write dependency file which will be installed #################

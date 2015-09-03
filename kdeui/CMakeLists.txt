@@ -1,32 +1,32 @@
 project(kdeui)
 
 include_directories(
- ${CMAKE_SOURCE_DIR}/interfaces
- ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
- ${CMAKE_SOURCE_DIR}/kdecore/sonnet
- ${CMAKE_SOURCE_DIR}/kdeui
- ${KDE4_KDECORE_INCLUDES}
- ${CMAKE_CURRENT_SOURCE_DIR}/actions
- ${CMAKE_CURRENT_SOURCE_DIR}/colors
- ${CMAKE_CURRENT_SOURCE_DIR}/config
- ${CMAKE_CURRENT_SOURCE_DIR}/dialogs
- ${CMAKE_CURRENT_SOURCE_DIR}/findreplace
- ${CMAKE_CURRENT_SOURCE_DIR}/fonts
- ${CMAKE_CURRENT_SOURCE_DIR}/icons
- ${CMAKE_CURRENT_SOURCE_DIR}/itemviews
- ${CMAKE_CURRENT_SOURCE_DIR}/jobs
- ${CMAKE_CURRENT_SOURCE_DIR}/kernel
- ${CMAKE_CURRENT_SOURCE_DIR}/notifications
- ${CMAKE_CURRENT_SOURCE_DIR}/paged
- ${CMAKE_CURRENT_SOURCE_DIR}/plotting
- ${CMAKE_CURRENT_SOURCE_DIR}/shortcuts
- ${CMAKE_CURRENT_SOURCE_DIR}/sonnet
- ${CMAKE_CURRENT_SOURCE_DIR}/util
- ${CMAKE_CURRENT_SOURCE_DIR}/widgets
- ${CMAKE_CURRENT_SOURCE_DIR}/windowmanagement
- ${CMAKE_CURRENT_SOURCE_DIR}/xmlgui
- ${CMAKE_CURRENT_BINARY_DIR}/util
- ${DBUSMENUQT_INCLUDE_DIR}
+    ${CMAKE_SOURCE_DIR}/interfaces
+    ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
+    ${CMAKE_SOURCE_DIR}/kdecore/sonnet
+    ${CMAKE_SOURCE_DIR}/kdeui
+    ${KDE4_KDECORE_INCLUDES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/actions
+    ${CMAKE_CURRENT_SOURCE_DIR}/colors
+    ${CMAKE_CURRENT_SOURCE_DIR}/config
+    ${CMAKE_CURRENT_SOURCE_DIR}/dialogs
+    ${CMAKE_CURRENT_SOURCE_DIR}/findreplace
+    ${CMAKE_CURRENT_SOURCE_DIR}/fonts
+    ${CMAKE_CURRENT_SOURCE_DIR}/icons
+    ${CMAKE_CURRENT_SOURCE_DIR}/itemviews
+    ${CMAKE_CURRENT_SOURCE_DIR}/jobs
+    ${CMAKE_CURRENT_SOURCE_DIR}/kernel
+    ${CMAKE_CURRENT_SOURCE_DIR}/notifications
+    ${CMAKE_CURRENT_SOURCE_DIR}/paged
+    ${CMAKE_CURRENT_SOURCE_DIR}/plotting
+    ${CMAKE_CURRENT_SOURCE_DIR}/shortcuts
+    ${CMAKE_CURRENT_SOURCE_DIR}/sonnet
+    ${CMAKE_CURRENT_SOURCE_DIR}/util
+    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
+    ${CMAKE_CURRENT_SOURCE_DIR}/windowmanagement
+    ${CMAKE_CURRENT_SOURCE_DIR}/xmlgui
+    ${CMAKE_CURRENT_BINARY_DIR}/util
+    ${DBUSMENUQT_INCLUDE_DIR}
 )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR}/widgets )
