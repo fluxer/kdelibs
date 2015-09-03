@@ -207,7 +207,7 @@ int StubProcess::ConverseStub(int check)
 	    return 0;
 	} else
 	{
-	    kWarning(kdesuDebugArea()) << k_lineinfo << "Unknown request:" << line;
+	    kWarning(kdesuDebugArea()) << "Unknown request:" << line;
 	    return 1;
 	}
     }

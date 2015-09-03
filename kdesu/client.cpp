@@ -60,7 +60,7 @@ KDEsuClient::KDEsuClient()
     QString display = QString::fromLatin1(qgetenv("DISPLAY"));
     if (display.isEmpty())
     {
-        kWarning(kdesuDebugArea()) << k_lineinfo << "$DISPLAY is not set.";
+        kWarning(kdesuDebugArea()) << "$DISPLAY is not set.";
         return;
     }
 
@@ -98,7 +98,7 @@ int KDEsuClient::connect()
     d->sockfd = socket(PF_UNIX, SOCK_STREAM, 0);
     if (d->sockfd < 0)
     {
-	kWarning(kdesuDebugArea()) << k_lineinfo << "socket():" << perror;
+	kWarning(kdesuDebugArea()) << "socket():" << perror;
 	return -1;
     }
     struct sockaddr_un addr;
@@ -107,7 +107,7 @@ int KDEsuClient::connect()
 
     if (::connect(d->sockfd, (struct sockaddr *) &addr, SUN_LEN(&addr)) < 0)
     {
-        kWarning(kdesuDebugArea()) << k_lineinfo << "connect():" << perror;
+        kWarning(kdesuDebugArea()) << "connect():" << perror;
 	close(d->sockfd); d->sockfd = -1;
 	return -1;
     }
@@ -206,7 +206,7 @@ int KDEsuClient::command(const QByteArray &cmd, QByteArray *result)
     int nbytes = recv(d->sockfd, buf, 1023, 0);
     if (nbytes <= 0)
     {
-	kWarning(kdesuDebugArea()) << k_lineinfo << "no reply from daemon.";
+	kWarning(kdesuDebugArea()) << "no reply from daemon.";
 	return -1;
     }
     buf[nbytes] = '\000';
@@ -405,7 +405,7 @@ static QString findDaemon()
 
     if (daemon.isEmpty())
     {
-	kWarning(kdesuDebugArea()) << k_lineinfo << "daemon not found.";
+	kWarning(kdesuDebugArea()) << "daemon not found.";
     }
     return daemon;
 }
@@ -420,7 +420,7 @@ bool KDEsuClient::isServerSGID()
     KDE_struct_stat sbuf;
     if (KDE::stat(d->daemon, &sbuf) < 0)
     {
-	kWarning(kdesuDebugArea()) << k_lineinfo << "stat():" << perror;
+	kWarning(kdesuDebugArea()) << "stat():" << perror;
 	return false;
     }
     return (sbuf.st_mode & S_ISGID);
@@ -434,7 +434,7 @@ int KDEsuClient::startServer()
        return -1;
 
     if (!isServerSGID()) {
-	kWarning(kdesuDebugArea()) << k_lineinfo << "kdesud not setgid!";
+        kWarning(kdesuDebugArea()) << "kdesud not setgid!";
     }
 
     // kdesud only forks to the background after it is accepting

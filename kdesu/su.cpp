@@ -161,20 +161,20 @@ int SuProcess::exec(const char *password, int check)
             return check ? SuNotFound : -1;
     }
 
-    // kDebug(kdesuDebugArea()) << k_lineinfo << "Call StubProcess::exec()";
+    // kDebug(kdesuDebugArea()) << "Call StubProcess::exec()";
     if (StubProcess::exec(command, args) < 0)
     {
         return check ? SuNotFound : -1;
     }
-    // kDebug(kdesuDebugArea()) << k_lineinfo << "Done StubProcess::exec()";
+    // kDebug(kdesuDebugArea()) << "Done StubProcess::exec()";
 
     SuErrors ret = (SuErrors) ConverseSU(password);
-    // kDebug(kdesuDebugArea()) << k_lineinfo << "Conversation returned" << ret;
+    // kDebug(kdesuDebugArea()) << "Conversation returned" << ret;
 
     if (ret == error)
     {
         if (!check)
-            kError(kdesuDebugArea()) << k_lineinfo << "Conversation with su failed.";
+            kError(kdesuDebugArea()) << "Conversation with su failed.";
         return ret;
     }
     if (check == NeedPassword)
@@ -213,7 +213,7 @@ int SuProcess::exec(const char *password, int check)
     if (iret < 0)
     {
         if (!check)
-            kError(kdesuDebugArea()) << k_lineinfo << "Conversation with kdesu_stub failed.";
+            kError(kdesuDebugArea()) << "Conversation with kdesu_stub failed.";
         return iret;
     }
     else if (iret == 1)
@@ -244,7 +244,7 @@ int SuProcess::ConverseSU(const char *password)
     enum { WaitForPrompt, CheckStar, HandleStub } state = WaitForPrompt;
     int colon;
     unsigned i, j;
-    // kDebug(kdesuDebugArea()) << k_lineinfo << "ConverseSU starting.";
+    // kDebug(kdesuDebugArea()) << "ConverseSU starting.";
 
     QByteArray line;
     while (true)
@@ -253,7 +253,7 @@ int SuProcess::ConverseSU(const char *password)
         // close your eyes for a sec and use that scroll button
         if (line.isNull() || line == "Sorry, try again.")
             return ( state == HandleStub ? notauthorized : error);
-        kDebug(kdesuDebugArea()) << k_lineinfo << "Read line" << line;
+        kDebug(kdesuDebugArea()) << "Read line" << line;
 
         if (line == "kdesu_stub")
         {
