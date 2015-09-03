@@ -44,46 +44,6 @@
 #include "kcalendarsystemqdate_p.h"
 #include "kcalendarsystemthai_p.h"
 
-KCalendarSystem *KCalendarSystem::create(const QString &calendarType, const KLocale *locale)
-{
-    return create(calendarSystem(calendarType), locale);
-}
-
-KCalendarSystem *KCalendarSystem::create(const QString &calendarType, KSharedConfig::Ptr config,
-                                         const KLocale *locale)
-{
-    return create(calendarSystem(calendarType), config, locale);
-}
-
-QStringList KCalendarSystem::calendarSystems()
-{
-    QStringList lst;
-
-    lst.append(QLatin1String("coptic"));
-    lst.append(QLatin1String("ethiopian"));
-    lst.append(QLatin1String("gregorian"));
-    lst.append(QLatin1String("gregorian-proleptic"));
-    lst.append(QLatin1String("hebrew"));
-    lst.append(QLatin1String("hijri"));
-    lst.append(QLatin1String("indian-national"));
-    lst.append(QLatin1String("jalali"));
-    lst.append(QLatin1String("japanese"));
-    lst.append(QLatin1String("julian"));
-    lst.append(QLatin1String("minguo"));
-    lst.append(QLatin1String("thai"));
-
-    return lst;
-}
-
-QString KCalendarSystem::calendarLabel(const QString &calendarType)
-{
-    if (calendarSystemsList().contains(calendarSystem(calendarType))) {
-        return KCalendarSystem::calendarLabel(KCalendarSystem::calendarSystem(calendarType));
-    } else {
-        return ki18nc("@item Calendar system", "Invalid Calendar Type").toString(KGlobal::locale());
-    }
-}
-
 KCalendarSystem *KCalendarSystem::create(KLocale::CalendarSystem calendarSystem, const KLocale *locale)
 {
     return create(calendarSystem, KSharedConfig::Ptr(), locale);
@@ -173,11 +133,6 @@ QString KCalendarSystem::calendarLabel(KLocale::CalendarSystem calendarSystem, c
     }
 
     return ki18nc("@item Calendar system", "Invalid Calendar Type").toString(locale);
-}
-
-KLocale::CalendarSystem KCalendarSystem::calendarSystemForCalendarType(const QString &calendarType )
-{
-    return calendarSystem( calendarType );
 }
 
 KLocale::CalendarSystem KCalendarSystem::calendarSystem(const QString &calendarType )
@@ -1297,12 +1252,6 @@ bool KCalendarSystem::setDateIsoWeek(QDate &date, int year, int isoWeekNumber, i
     return false;
 }
 
-// Deprecated
-bool KCalendarSystem::setYMD(QDate &date, int year, int month, int day) const
-{
-    return setDate(date, year, month, day);
-}
-
 // NOT VIRTUAL - If override needed use shared-d
 void KCalendarSystem::getDate(const QDate date, int *year, int *month, int *day) const
 {
@@ -1694,11 +1643,6 @@ int KCalendarSystem::dayOfWeek(const QDate &date) const
     return -1;
 }
 
-int KCalendarSystem::weekNumber(const QDate &date, int *yearNum) const
-{
-    return week(date, KLocale::IsoWeekNumber, yearNum);
-}
-
 // NOT VIRTUAL - Uses shared-d instead
 int KCalendarSystem::week(const QDate &date, int *yearNum) const
 {
@@ -1904,115 +1848,6 @@ QString KCalendarSystem::weekDayName(const QDate &date, WeekDayNameFormat format
     }
 
     return QString();
-}
-
-QString KCalendarSystem::yearString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::Year, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::Year, KLocale::LongNumber);
-    }
-}
-
-QString KCalendarSystem::monthString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::Month, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::Month, KLocale::LongNumber);
-    }
-}
-
-QString KCalendarSystem::dayString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::Day, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::Day, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::yearInEraString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::YearInEra, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::YearInEra, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::dayOfYearString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::DayOfYear, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::DayOfYear, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::dayOfWeekString(const QDate &date) const
-{
-    return formatDate(date, KLocale::DayOfWeek, KLocale::ShortNumber);
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::weekNumberString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::Week, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::Week, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::monthsInYearString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::MonthsInYear, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::MonthsInYear, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::weeksInYearString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::WeeksInYear, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::WeeksInYear, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::daysInYearString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::DaysInYear, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::DaysInYear, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::daysInMonthString(const QDate &date, StringFormat format) const
-{
-    if (format == ShortFormat) {
-        return formatDate(date, KLocale::DaysInMonth, KLocale::ShortNumber);
-    } else {
-        return formatDate(date, KLocale::DaysInMonth, KLocale::LongNumber);
-    }
-}
-
-// NOT VIRTUAL - If override needed use shared-d
-QString KCalendarSystem::daysInWeekString(const QDate &date) const
-{
-    return formatDate(date, KLocale::DaysInWeek, KLocale::ShortNumber);
 }
 
 int KCalendarSystem::yearStringToInteger(const QString &yearString, int &readLength) const
@@ -2481,22 +2316,4 @@ const KLocale * KCalendarSystem::locale() const
     Q_D(const KCalendarSystem);
 
     return d->locale();
-}
-
-// Deprecated
-void KCalendarSystem::setMaxMonthsInYear(int maxMonths)
-{
-    Q_UNUSED(maxMonths)
-}
-
-// Deprecated
-void KCalendarSystem::setMaxDaysInWeek(int maxDays)
-{
-    Q_UNUSED(maxDays)
-}
-
-// Deprecated
-void KCalendarSystem::setHasYear0(bool hasYear0)
-{
-    Q_UNUSED(hasYear0)
 }

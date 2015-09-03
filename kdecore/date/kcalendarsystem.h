@@ -69,38 +69,6 @@ public:
         NarrowDayName                /**< Narrow name format, e.g. "F". @since 4.7 */
     };
 
-    //KDE5 remove
-    /**
-     * @deprecated use create(KLocale::CalendarSystem, KLocale) instead
-     *
-     * Creates specific calendar type
-     *
-     * @param calType string identification of the specific calendar type
-     * to be constructed
-     * @param locale locale to use for translations. The global locale is used if null.
-     * @return a KCalendarSystem object
-     */
-    KDE_DEPRECATED static KCalendarSystem *create(const QString & calType = QLatin1String("gregorian"),
-                                                  const KLocale * locale = 0);
-
-    //KDE5 remove
-    /**
-     * @deprecated use create(KLocale::CalendarSystem, KSharedConfig, KLocale) instead
-     *
-     * @since 4.5
-     *
-     * Creates specific calendar type
-     *
-     * @param calType string identification of the specific calendar type to be constructed
-     * @param config a configuration file with a 'KCalendarSystem %calendarType' group detailing
-     *               locale-related preferences (such as era options).  The global config is used
-                     if null.
-     * @param locale locale to use for translations. The global locale is used if null.
-     * @return a KCalendarSystem object
-     */
-    KDE_DEPRECATED static KCalendarSystem *create(const QString & calType, KSharedConfig::Ptr config,
-                                                  const KLocale * locale = 0);
-
     //KDE5 add default value to calendarSystem
     /**
      * @since 4.6
@@ -129,16 +97,6 @@ public:
     static KCalendarSystem *create(KLocale::CalendarSystem calendarSystem, KSharedConfig::Ptr config,
                                    const KLocale *locale = 0);
 
-    //KDE5 remove
-    /**
-     * @deprecated use calendarSystemsList() instead
-     *
-     * Gets a list of names of supported calendar systems.
-     *
-     * @return list of names
-     */
-    KDE_DEPRECATED static QStringList calendarSystems();
-
     /**
      * @since 4.6
      *
@@ -147,20 +105,6 @@ public:
      * @return list of Calendar Systems
      */
     static QList<KLocale::CalendarSystem> calendarSystemsList();
-
-    //KDE5 remove
-    /**
-     * @deprecated use calendarLabel( KLocale::CalendarSystem ) instead
-     *
-     * Returns a typographically correct and translated label to display for
-     * the calendar system type.  Use with calendarSystems() to neatly
-     * format labels to display on combo widget of available calendar systems.
-     *
-     * @param calendarType the specific calendar type to return the label for
-     *
-     * @return label for calendar
-     */
-    KDE_DEPRECATED static QString calendarLabel(const QString &calendarType);
 
     /**
      * @since 4.6
@@ -175,19 +119,6 @@ public:
      * @return label for calendar
      */
     static QString calendarLabel(KLocale::CalendarSystem calendarSystem, const KLocale *locale = KGlobal::locale());
-
-    //KDE5 Remove
-    /**
-     * @deprecated use calendarSystem(const QString &calendarType) instead
-     * @since 4.6
-     *
-     * Returns the Calendar System enum value for a given Calendar Type,
-     * e.g. KLocale::QDateCalendar for "gregorian"
-     *
-     * @param calendarType the calendar type to convert
-     * @return calendar system for calendar type
-     */
-    KDE_DEPRECATED static KLocale::CalendarSystem calendarSystemForCalendarType(const QString &calendarType);
 
     //KDE5 Remove
     /**
@@ -234,15 +165,6 @@ public:
      * Destructor.
      */
     virtual ~KCalendarSystem();
-
-    /**
-     * @deprecated use calendarSystem() instead
-     *
-     * Returns the calendar system type.
-     *
-     * @return type of calendar system
-     */
-    KDE_DEPRECATED virtual QString calendarType() const = 0;
 
     //KDE5 make virtual?
     /**
@@ -415,24 +337,6 @@ public:
      * @return @c true if the date is valid, @c false otherwise
      */
     bool setDateIsoWeek(QDate &date, int year, int isoWeekNumber, int dayOfIsoWeek) const;
-
-    /**
-     * @deprecated Use setDate() instead
-     *
-     * Some implementations reject year range 00 to 99, but extended date
-     * ranges now require these to be accepted.  Equivalent in QDate is
-     * obsoleted.
-     *
-     * Changes the date's year, month and day. The range of the year, month
-     * and day depends on which calendar is being used.
-     *
-     * @param date Date to change
-     * @param y Year
-     * @param m Month number
-     * @param d Day of month
-     * @return true if the date is valid; otherwise returns false.
-     */
-    KDE_DEPRECATED virtual bool setYMD(QDate &date, int y, int m, int d) const;
 
     //KDE5 make virtual?
     /**
@@ -735,23 +639,6 @@ public:
      */
     virtual int dayOfWeek(const QDate &date) const;
 
-    /**
-     * @deprecated use week() instead
-     *
-     * Returns the ISO week number for the given date.
-     *
-     * ISO 8601 defines the first week of the year as the week containing the first Thursday.
-     * See http://en.wikipedia.org/wiki/ISO_8601 and http://en.wikipedia.org/wiki/ISO_week_date
-     *
-     * If the date falls in the last week of the previous year or the first week of the following
-     * year, then the yearNum returned will be set to the appropriate year.
-     *
-     * @param date the date to obtain week from
-     * @param yearNum returns the year the date belongs to
-     * @return ISO week number, -1 if input date invalid
-     */
-    KDE_DEPRECATED virtual int weekNumber(const QDate &date, int *yearNum = 0) const;
-
     //KDE5 Make virtual?
     /**
      * Returns the localized Week Number for the date.
@@ -945,174 +832,6 @@ public:
      * @return day name, empty string if any error
      */
     virtual QString weekDayName(const QDate &date, WeekDayNameFormat format = LongDayName) const;
-
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * Converts a date into a year literal
-     *
-     * @param date date to convert
-     * @param format format to return, either short or long
-     * @return year literal of the date, empty string if any error
-     * @see year()
-     */
-    KDE_DEPRECATED virtual QString yearString(const QDate &date, StringFormat format = LongFormat) const;
-
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * Converts a date into a month literal
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The month literal of the date, empty string if any error
-     * @see month()
-     */
-    KDE_DEPRECATED virtual QString monthString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * Converts a date into a day literal
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The day literal of the date, empty string if any error
-     * @see day()
-     */
-    KDE_DEPRECATED virtual QString dayString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.5
-     *
-     * Converts a date into a Year In Era literal
-     *
-     * @param date date to return Year In Era for
-     * @param format format to return, either short or long
-     * @return Year In Era literal of the date, empty string if any error
-     */
-    KDE_DEPRECATED QString yearInEraString(const QDate &date, StringFormat format = ShortFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Converts a date into a day of year literal
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The day of year literal of the date, empty string if any error
-     * @see dayOfYear()
-     */
-    KDE_DEPRECATED QString dayOfYearString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Converts a date into a day of week literal
-     *
-     * @param pDate The date to convert
-     * @return The day of week literal of the date, empty string if any error
-     * @see dayOfWeek()
-     */
-    KDE_DEPRECATED QString dayOfWeekString(const QDate &pDate) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Converts a date into a week number literal
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The day literal of the date, empty string if any error
-     * @see weekNumber()
-     */
-    KDE_DEPRECATED QString weekNumberString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Returns the months in year for a date as a numeric string
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The months in year literal of the date, empty string if any error
-     * @see monthsInYear()
-     */
-    KDE_DEPRECATED QString monthsInYearString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Returns the weeks in year for a date as a numeric string
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The weeks in year literal of the date, empty string if any error
-     * @see weeksInYear()
-     */
-    KDE_DEPRECATED QString weeksInYearString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Returns the days in year for a date as a numeric string
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The days in year literal of the date, empty string if any error
-     * @see daysInYear()
-     */
-    KDE_DEPRECATED QString daysInYearString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Returns the days in month for a date as a numeric string
-     *
-     * @param pDate The date to convert
-     * @param format The format to return, either short or long
-     * @return The days in month literal of the date, empty string if any error
-     * @see daysInMonth()
-     */
-    KDE_DEPRECATED QString daysInMonthString(const QDate &pDate, StringFormat format = LongFormat) const;
-
-    //KDE5 make virtual?
-    /**
-     * @deprecated use formatDate(QDate, KLocale::DateTimeComponent, KLocale::DateTimeComponentFormat)
-     *
-     * @since 4.4
-     *
-     * Returns the days in week for a date as a numeric string
-     *
-     * @param date The date to convert
-     * @return The days in week literal of the date, empty string if any error
-     * @see daysInWeek()
-     */
-    KDE_DEPRECATED QString daysInWeekString(const QDate &date) const;
 
     //KDE5 make protected or remove?
     /**
@@ -1513,19 +1232,6 @@ public:
     virtual int weekStartDay() const;
 
     /**
-     * @deprecated use KLocale::weekDayOfPray() instead
-     *
-     * Returns the day of the week traditionally associated with religious
-     * observance for this calendar system.  Note this may not be accurate
-     * for the users locale, e.g. Gregorian calendar used in non-Christian
-     * countries, in use cases where this could be an issue it is recommended
-     * to use KLocale::weekDayOfPray() instead.
-     *
-     * @return day number (None = 0, Monday = 1, ..., Sunday = 7)
-     */
-    KDE_DEPRECATED virtual int weekDayOfPray() const = 0;
-
-    /**
      * Returns whether the calendar is lunar based.
      *
      * @return @c true if the calendar is lunar based, @c false if not
@@ -1617,35 +1323,6 @@ protected:
      * @return locale to use
      */
     const KLocale *locale() const;
-
-    /**
-     * @deprecated for internal use only
-     *
-     * Sets the maximum number of months in a year
-     *
-     * Only for internal calendar system use
-     */
-    KDE_DEPRECATED void setMaxMonthsInYear(int maxMonths);
-
-    /**
-     * @deprecated for internal use only
-     *
-     * Sets the maximum number of days in a week
-     *
-     * Only for internal calendar system use
-     */
-    KDE_DEPRECATED void setMaxDaysInWeek(int maxDays);
-
-    /**
-     * @deprecated for internal use only
-     *
-     * @since 4.4
-     *
-     * Sets if Calendar System has Year 0 or not
-     *
-     * Only for internal calendar system use
-     */
-    KDE_DEPRECATED void setHasYear0(bool hasYear0);
 
     /**
      * Constructor of abstract calendar class. This will be called by derived classes.
