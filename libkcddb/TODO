@@ -1,0 +1,12 @@
+Better error checking, for example checking if the config is empty
+
+Try to comply with freedb's: "Guidelines for optimal freedb support"
+http://www.freedb.org/modules.php?name=Sections&sop=viewarticle&artid=38
+
+Saving playlist
+
+Make it possible for a program to in some way mark that
+an entry is not coming from freedb, but created from the
+program. Now it's not possible to know the difference, so
+the revision of a new entry is always 1 instead of 0 as
+it should be

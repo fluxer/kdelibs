@@ -1,0 +1,6 @@
+ClassName=ConfigBase
+File=libkcddb.kcfg
+Mutators=true
+IncludeFiles=libkcddb/kcddb_export.h
+Visibility=KCDDB_EXPORT
+MemberVariables=dpointer

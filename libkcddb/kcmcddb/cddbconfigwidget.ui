@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <comment>Used for configuring libkcddb.</comment>
+ <class>CDDBConfigWidgetBase</class>
+ <widget class="QWidget" name="CDDBConfigWidgetBase">
+  <property name="windowTitle">
+   <string>CDDB Settings</string>
+  </property>
+  <layout class="QVBoxLayout">
+   <property name="margin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QTabWidget" name="tabWidget2">
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="tabLookup">
+      <attribute name="title">
+       <string>&amp;Lookup</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="gridLayout_4">
+       <item>
+        <widget class="QCheckBox" name="kcfg_MusicBrainzLookupEnabled">
+         <property name="text">
+          <string>Enable MusicBrainz lookup</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="kcfg_FreedbLookupEnabled">
+         <property name="text">
+          <string>Enable freedb lookup</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="freedbServerBox">
+         <property name="title">
+          <string>Freedb Server</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout">
+          <item row="0" column="0">
+           <widget class="QLabel" name="TextLabel7">
+            <property name="text">
+             <string>Freedb server:</string>
+            </property>
+            <property name="buddy">
+             <cstring>kcfg_hostname</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QLineEdit" name="kcfg_hostname">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="whatsThis">
+               <string>Name of CDDB server which will be used to look up CD information.</string>
+              </property>
+              <property name="text">
+               <string>freedb.freedb.org</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="textLabel3_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Port:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="KIntSpinBox" name="kcfg_port">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="whatsThis">
+               <string>Port to connect to on CDDB server.</string>
+              </property>
+              <property name="maximum">
+               <number>64000</number>
+              </property>
+              <property name="value">
+               <number>8880</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="TextLabel9">
+            <property name="text">
+             <string>&amp;Transport:</string>
+            </property>
+            <property name="buddy">
+             <cstring>kcfg_FreedbLookupTransport</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QComboBox" name="kcfg_FreedbLookupTransport">
+              <property name="whatsThis">
+               <string>Type of lookup which should be tried at the CDDB server.</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>CDDB</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>HTTP</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <widget class="KPushButton" name="mirrorListButton">
+              <property name="text">
+               <string>Show &amp;Mirror List</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="cacheLocationsParent" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tabSubmit">
+      <attribute name="title">
+       <string>&amp;Submit</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="gridLayout_2">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <item>
+          <widget class="QLabel" name="textLabel1">
+           <property name="text">
+            <string>Email address:</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="kcfg_emailAddress"/>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="kcfg_FreedbSubmitTransport">
+         <property name="title">
+          <string>Submit Method</string>
+         </property>
+         <layout class="QFormLayout" name="formLayout_2">
+          <item row="0" column="0" colspan="2">
+           <widget class="QRadioButton" name="httpButton">
+            <property name="text">
+             <string>HTTP</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="textLabel2">
+            <property name="text">
+             <string>Server:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout">
+            <item>
+             <widget class="KLineEdit" name="kcfg_httpSubmitServer">
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="textLabel3_2">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Port:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="KIntSpinBox" name="kcfg_httpSubmitPort"/>
+            </item>
+           </layout>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QRadioButton" name="smtpButton">
+            <property name="text">
+             <string>SMTP (Email)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QLineEdit" name="kcfg_replyTo"/>
+          </item>
+          <item row="6" column="1">
+           <layout class="QHBoxLayout" name="horizontalLayout_2">
+            <item>
+             <widget class="QLineEdit" name="kcfg_smtpHostname"/>
+            </item>
+            <item>
+             <widget class="QLabel" name="textLabel3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Port:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="KIntSpinBox" name="kcfg_smtpPort">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="maximum">
+               <number>65535</number>
+              </property>
+              <property name="value">
+               <number>25</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="7" column="0" colspan="2">
+           <widget class="QCheckBox" name="needsAuthenticationBox">
+            <property name="text">
+             <string>Server needs authentication</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="1">
+           <widget class="QLineEdit" name="kcfg_smtpUsername">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="textLabel9_2">
+            <property name="text">
+             <string>Reply-To:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="6" column="0">
+           <widget class="QLabel" name="textLabel2_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>SMTP server:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="9" column="0">
+           <widget class="QLabel" name="textLabel4">
+            <property name="text">
+             <string>Username:</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KIntSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>knuminput.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <tabstops>
+  <tabstop>kcfg_hostname</tabstop>
+  <tabstop>kcfg_port</tabstop>
+  <tabstop>kcfg_FreedbLookupTransport</tabstop>
+ </tabstops>
+ <resources/>
+ <connections/>
+</ui>

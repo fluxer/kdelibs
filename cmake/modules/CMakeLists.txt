@@ -67,6 +67,7 @@ set(cmakeFiles
     FindLinuxWirelesstools.cmake
     FindMsgfmt.cmake
     FindMusicBrainz.cmake
+    FindMusicBrainz5.cmake
     FindMySQL.cmake
     FindNetworkManager.cmake
     FindOggVorbis.cmake

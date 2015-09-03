@@ -1,0 +1,43 @@
+project(libkcddb)
+
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${QT_INCLUDES}
+    ${KDE4_INCLUDES}
+)
+
+macro_optional_find_package(MusicBrainz5)
+macro_log_feature(MUSICBRAINZ5_FOUND
+    "MusicBrainz5"
+    "A library that provides access to metadata lookup on the MusicBrainz server"
+    "http://www.musicbrainz.org"
+    FALSE
+    ""
+    "Music metadata lookup for KDE multimedia applications through libkcddb. You need version 5.x of libmusicbrainz"
+)
+
+if(MUSICBRAINZ5_FOUND)
+    set(HAVE_MUSICBRAINZ5 1)
+    include_directories(${MUSICBRAINZ5_INCLUDE_DIRS})
+
+    set(libmusicbrainz_SRCS ${libmusicbrainz_SRCS}
+       musicbrainz/musicbrainzlookup.cpp
+       musicbrainz/asyncmusicbrainzlookup.cpp)
+
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+else(MUSICBRAINZ5_FOUND)
+    set(HAVE_MUSICBRAINZ5 0)
+    set(libmusicbrainz_SRCS)
+endif(MUSICBRAINZ5_FOUND)
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/config-musicbrainz.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-musicbrainz.h
+)
+
+if(ENABLE_TESTING)
+    add_subdirectory( test )
+endif()
+add_subdirectory( kcmcddb )
+add_subdirectory( libkcddb )
