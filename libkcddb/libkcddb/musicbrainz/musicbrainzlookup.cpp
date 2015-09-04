@@ -112,10 +112,14 @@ namespace KCDDB
                 // Uses musicbrainz discid for the first release,
                 // then discid-2, discid-3 and so on, to
                 // allow multiple releases with the same discid
-                if (relnr == 1)
+                if (relnr == 1) {
                   info.set(QLatin1String( "discid" ), discId);
-                else
-                  info.set(QLatin1String( "discid" ), discId+QLatin1String( "-" )+QString::number(relnr));
+                } else {
+                  QString adjusted = discId;
+                  adjusted.append(QLatin1String( "-" ));
+                  adjusted.append(QString::number(relnr));
+                  info.set(QLatin1String( "discid" ), adjusted);
+                }
 
                 QString title = QString::fromUtf8(FullRelease->Title().c_str());
 
