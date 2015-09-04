@@ -23,8 +23,7 @@
 #define KSSLD_H
 
 #include <kdedmodule.h>
-#include <QtCore/QList>
-#include <QtCore/QVariant>
+#include <QtCore/qvariant.h>
 
 
 class KSSLDPrivate;

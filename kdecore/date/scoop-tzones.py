@@ -18,7 +18,7 @@ import re
 
 cmdname = os.path.basename(sys.argv[0])
 def error (msg):
-    print >>sys.stderr, "%s: %s" % (cmdname, msg)
+    sys.stderr.write("%s: %s\n" % (cmdname, msg))
     sys.exit(1)
 
 system_zonetab_paths = [
@@ -26,19 +26,18 @@ system_zonetab_paths = [
 ]
 
 if len(sys.argv) not in (2, 3):
-    print >>sys.stderr, "usage: %s TIMEZONES_PATH [ZONETAB_PATH]" % cmdname
-    sys.exit(1)
+    error("usage: %s TIMEZONES_PATH [ZONETAB_PATH]" % cmdname)
 
 timezone_path = sys.argv[1]
 if not os.path.isfile(timezone_path):
     error("TIMEZONES file '%s' does not exist "
-          "(create manually an empty file if really starting from scratch")
+          "(create manually an empty file if starting from scratch" % timezone_path)
 
 if len(sys.argv) >= 3:
     zonetab_path = sys.argv[2]
     if not os.path.isfile(zonetab_path):
         error("zone.tab file '%s' does not exist" % zonetab_path)
-    print "using given zone.tab file at '%s'" % zonetab_path
+    print("using given zone.tab file at '%s'" % zonetab_path)
 else:
     for system_zonetab_path in system_zonetab_paths:
         if os.path.isfile(system_zonetab_path):
@@ -46,7 +45,7 @@ else:
             break
     if not zonetab_path:
         error("cannot fine zone.tab file at any of known system locations")
-    print "found system zone.tab file at '%s'" % zonetab_path
+    print("found system zone.tab file at '%s'" % zonetab_path)
 
 # Parse current timezones into dictionary zone->[comments].
 ifs = codecs.open(timezone_path, "r", "UTF-8")
@@ -117,6 +116,6 @@ if num_new_tzones or num_new_tzcomments:
     ofs.writelines(tzlines)
     ofs.close()
     num_new = num_new_tzones + num_new_tzcomments
-    print "added %d new timezones/comments to '%s'" % (num_new, timezone_path)
+    print("added %d new timezones/comments to '%s'" % (num_new, timezone_path))
 else:
-    print "no new timezones/comments to add"
+    print("no new timezones/comments to add")

@@ -30,16 +30,11 @@
 #include <io/config-kdirwatch.h>
 #include "kdirwatch.h"
 
-#ifndef QT_NO_FILESYSTEMWATCHER
-#define HAVE_QFILESYSTEMWATCHER
-#endif
+#include <QtCore/qset.h>
+#include <QtCore/qmap.h>
+#include <QtCore/qobject.h>
+#include <QtCore/qtimer.h>
 
-#include <QtCore/QList>
-#include <QtCore/QSet>
-#include <QtCore/QMap>
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QTimer>
 class QFileSystemWatcher;
 class QSocketNotifier;
 
@@ -70,8 +65,8 @@ class QSocketNotifier;
 
 #define invalid_ctime ((time_t)-1)
 
-#ifdef HAVE_QFILESYSTEMWATCHER
-#include <QtCore/QFileSystemWatcher>
+#ifndef QT_NO_FILESYSTEMWATCHER
+#include <QtCore/qfilesystemwatcher.h>
 
 typedef QFileSystemWatcher KFileSystemWatcher;
 #endif
@@ -226,7 +221,7 @@ public:
 
   bool useINotify(Entry*);
 #endif
-#ifdef HAVE_QFILESYSTEMWATCHER
+#ifndef QT_NO_FILESYSTEMWATCHER
   KFileSystemWatcher *fsWatcher;
   bool useQFSWatch(Entry* e);
 #endif

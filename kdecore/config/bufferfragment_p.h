@@ -32,16 +32,16 @@
 // - truncateLeft() provides way to cut off beginning of the buffer
 // - split() works more like strtok_r than QByteArray.split()
 // - truncateLeft() and mid() require position argument to be valid
-    
+
 class KConfigIniBackend::BufferFragment 
 {
-    
+
 public:
 
     BufferFragment() : d(0), len(0) 
     {
     }
-    
+
     BufferFragment(char* buf, int size) : d(buf), len(size) 
     {
     }
@@ -122,7 +122,7 @@ public:
     {
         return (d == 0);
     }
-        
+
     BufferFragment mid(unsigned int pos, int length=-1) const 
     {
         Q_ASSERT(pos < len);
@@ -171,7 +171,7 @@ public:
     QByteArray toByteArray() const {
         return QByteArray(d,len);
     }
-    
+
     // this is faster than toByteArray, but returned QByteArray becomes invalid
     // when buffer for this BufferFragment disappears
     QByteArray toVolatileByteArray() const {

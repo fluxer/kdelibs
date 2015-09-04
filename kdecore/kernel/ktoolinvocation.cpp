@@ -30,12 +30,6 @@
 #include <klockfile.h>
 #include <klocale.h>
 
-#include <QMutex>
-#include <QtCore/qmutex.h>
-#include <QCoreApplication>
-#include <QThread>
-#include <QtCore/qprocess.h>
-
 #include <errno.h>
 
 

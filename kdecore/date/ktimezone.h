@@ -33,11 +33,8 @@
 #include <sys/time.h>
 #include <ctime>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QMap>
-#include <QtCore/QList>
-#include <QtCore/QString>
-#include <QtCore/QByteArray>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qmap.h>
 #include <QtCore/qshareddata.h>
 
 class KTimeZone;

@@ -28,10 +28,6 @@
 #include <klocale.h>
 #include <kglobalsettings.h>
 
-// Qt
-#include <QtCore/QString>
-#include <QtCore/qshareddata.h>
-
 template <class T> class QList;
 class QVariant;
 class KAboutData;

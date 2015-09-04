@@ -19,8 +19,7 @@
 #define KFILTERDEV_H
 
 #include <karchive_export.h>
-#include <QtCore/QIODevice>
-#include <QtCore/QString>
+#include <QtCore/qfile.h>
 
 class QFile;
 class KFilterBase;

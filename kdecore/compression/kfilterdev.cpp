@@ -24,7 +24,7 @@
 #include <assert.h>
 
 #include <QDebug>
-#include <QtCore/QFile>
+#include <QtCore/qfile.h>
 
 #define BUFFER_SIZE 8*1024
 

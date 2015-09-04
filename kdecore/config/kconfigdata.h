@@ -23,10 +23,7 @@
 #ifndef KCONFIGDATA_H
 #define KCONFIGDATA_H
 
-#include <QtCore/QByteArray>
-#include <QtCore/QString>
-#include <QtCore/QMap>
-#include <QtCore/QDebug>
+#include <QtCore/qdebug.h>
 
 /**
  * map/dict/list config node entry.

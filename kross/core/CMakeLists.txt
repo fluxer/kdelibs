@@ -1,23 +1,37 @@
-include_directories(${CMAKE_SOURCE_DIR} ${KDE4_KDECORE_INCLUDES} ${KDE4_KDEUI_INCLUDES})
+include_directories(
+    ${CMAKE_SOURCE_DIR}
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+)
 
 set(krosscore_LIB_SRCS
-   krossconfig.cpp
-   interpreter.cpp
-   script.cpp
-   action.cpp
-   actioncollection.cpp
-   manager.cpp
-   object.cpp
+    krossconfig.cpp
+    interpreter.cpp
+    script.cpp
+    action.cpp
+    actioncollection.cpp
+    manager.cpp
+    object.cpp
 )
 
 add_library(krosscore ${LIBRARY_TYPE} ${krosscore_LIB_SRCS})
-target_link_libraries(krosscore PRIVATE ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTSCRIPT_LIBRARY} ${QT_QTXML_LIBRARY})
-target_link_libraries(krosscore PUBLIC kdecore ${QT_QTSCRIPT_LIBRARY} ${QT_QTXML_LIBRARY} )
 
-set_target_properties(krosscore PROPERTIES VERSION ${GENERIC_LIB_VERSION} 
-                                SOVERSION ${GENERIC_LIB_SOVERSION}
-                     )
+target_link_libraries(krosscore PRIVATE
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    ${QT_QTSCRIPT_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+)
+target_link_libraries(krosscore PUBLIC
+    kdecore
+    ${QT_QTSCRIPT_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+)
 
+set_target_properties(krosscore PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION} 
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install(TARGETS krosscore EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 

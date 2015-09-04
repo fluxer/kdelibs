@@ -32,10 +32,7 @@
 #include "kstandarddirs.h"
 #include "klocale.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QStack>
-#include <QtCore/QFile>
-#include <QtCore/QDir>
+#include <QtCore/qstack.h>
 
 #include <unistd.h>
 

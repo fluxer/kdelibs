@@ -24,7 +24,7 @@
 #include <kdecore_export.h>
 #include <kglobal.h>
 
-#include <QtCore/QTemporaryFile>
+#include <QtCore/qtemporaryfile.h>
 
 class KTemporaryFilePrivate;
 

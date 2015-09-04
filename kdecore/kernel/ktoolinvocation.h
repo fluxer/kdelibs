@@ -27,9 +27,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QByteArray>
-#include <QtCore/QStringList>
+#include <QtCore/qstringlist.h>
 
 class OrgKdeKLauncherInterface;
 class KUrl;

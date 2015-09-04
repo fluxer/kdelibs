@@ -21,12 +21,6 @@
 #include "ksycocadict_p.h"
 #include "ksycocaresourcelist.h"
 
-#include <kglobal.h>
-#include <kstandarddirs.h>
-#include <kdebug.h>
-#include <klocale.h>
-#include <assert.h>
-
 KBuildProtocolInfoFactory::KBuildProtocolInfoFactory() :
   KProtocolInfoFactory()
 {

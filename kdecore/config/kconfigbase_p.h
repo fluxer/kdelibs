@@ -22,7 +22,7 @@
 #ifndef KCONFIGBASE_P_H
 #define KCONFIGBASE_P_H
 
-#include <QtCore/QSharedData>
+#include <QtCore/qshareddata.h>
 
 class KConfigBasePrivate : public QSharedData
 {

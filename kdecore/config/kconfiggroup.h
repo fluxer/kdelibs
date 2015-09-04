@@ -29,8 +29,7 @@
 #include <kdecore_export.h>
 
 #include <QtCore/qsharedpointer.h>
-#include <QtCore/QVariant>
-#include <QtCore/QStringList>
+#include <QtCore/qvariant.h>
 
 class KConfig;
 class KConfigGroupPrivate;

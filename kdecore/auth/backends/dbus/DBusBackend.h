@@ -21,7 +21,6 @@
 #define FAKE_BACKEND_H
 
 #include "AuthBackend.h"
-#include <QHash>
 
 class QByteArray;
 

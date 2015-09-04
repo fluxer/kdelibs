@@ -41,14 +41,6 @@
 #include "kmessage.h"
 #include "kservice.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QProcess>
-#include <QtCore/QHash>
-#include <QtCore/QDebug>
-#include <QtCore/qglobal.h>
-#include <QtCore/QFile>
-#include <QtDBus/QtDBus>
-
 static QStringList splitEmailAddressList( const QString & aStr )
 {
     // This is a copy of KPIM::splitEmailAddrList().

@@ -21,7 +21,6 @@
 #define KGLOBAL_P_H
 
 #include <kdecore_export.h>
-#include <QtCore/qatomic.h>
 
 class KComponentData;
 

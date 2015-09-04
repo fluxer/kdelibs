@@ -21,9 +21,7 @@
 #ifndef ACTION_H
 #define ACTION_H
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QHash>
+#include <QtCore/qvariant.h>
 
 #include <kdecore_export.h>
 

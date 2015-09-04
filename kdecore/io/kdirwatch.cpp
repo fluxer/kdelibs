@@ -235,7 +235,7 @@ KDirWatchPrivate::KDirWatchPrivate()
              this, SLOT(inotifyEventReceived()) );
   }
 #endif
-#ifdef HAVE_QFILESYSTEMWATCHER
+#ifndef QT_NO_FILESYSTEMWATCHER
   availableMethods << "QFileSystemWatcher";
   fsWatcher = 0;
 #endif
@@ -261,7 +261,7 @@ KDirWatchPrivate::~KDirWatchPrivate()
   if ( supports_inotify )
     ::close( m_inotify_fd );
 #endif
-#ifdef HAVE_QFILESYSTEMWATCHER
+#ifndef QT_NO_FILESYSTEMWATCHER
   delete fsWatcher;
 #endif
 }
@@ -706,7 +706,7 @@ bool KDirWatchPrivate::useINotify( Entry* e )
   return false;
 }
 #endif
-#ifdef HAVE_QFILESYSTEMWATCHER
+#ifndef QT_NO_FILESYSTEMWATCHER
 bool KDirWatchPrivate::useQFSWatch(Entry* e)
 {
   e->m_mode = QFSWatchMode;
@@ -933,7 +933,7 @@ void KDirWatchPrivate::addWatch(Entry* e)
 #if defined(HAVE_SYS_INOTIFY_H)
     case KDirWatch::INotify: entryAdded = useINotify(e); break;
 #endif
-#if defined(HAVE_QFILESYSTEMWATCHER)
+#ifndef QT_NO_FILESYSTEMWATCHER
     case KDirWatch::QFSWatch: entryAdded = useQFSWatch(e); break;
 #endif
     case KDirWatch::Stat: entryAdded = useStat(e); break;
@@ -948,7 +948,7 @@ void KDirWatchPrivate::addWatch(Entry* e)
 #if defined(HAVE_FAM)
     if (useFAM(e)) return;
 #endif
-#if defined(HAVE_QFILESYSTEMWATCHER)
+#ifndef QT_NO_FILESYSTEMWATCHER
     if (useQFSWatch(e)) return;
 #endif
     useStat(e);
@@ -973,7 +973,7 @@ void KDirWatchPrivate::removeWatch(Entry* e)
         }
     }
 #endif
-#ifdef HAVE_QFILESYSTEMWATCHER
+#ifndef QT_NO_FILESYSTEMWATCHER
     if (e->m_mode == QFSWatchMode && fsWatcher) {
         if (s_verboseDebug)
             kDebug(7001) << "fsWatcher->removePath" << e->path;
@@ -1684,7 +1684,7 @@ void KDirWatchPrivate::statistics()
   }
 }
 
-#ifdef HAVE_QFILESYSTEMWATCHER
+#ifndef QT_NO_FILESYSTEMWATCHER
 // Slot for QFileSystemWatcher
 void KDirWatchPrivate::fswEventReceived(const QString &path)
 {

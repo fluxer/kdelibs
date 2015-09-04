@@ -25,9 +25,7 @@
 #include <sys/types.h>
 
 #include <QtCore/qdatetime.h>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QHash>
+#include <QtCore/qstringlist.h>
 
 #include <kdecore_export.h>
 

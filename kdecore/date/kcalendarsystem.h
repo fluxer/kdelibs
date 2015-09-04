@@ -26,7 +26,6 @@
 #include "klocale.h"  // needed for enums
 #include "kglobal.h"
 
-#include <QtCore/QStringList>
 #include <QtCore/qdatetime.h>
 
 class KCalendarSystemPrivate;

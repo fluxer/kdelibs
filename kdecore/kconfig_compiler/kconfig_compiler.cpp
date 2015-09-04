@@ -27,14 +27,13 @@
 // Compiling this file with this flag is just crazy
 #undef QT_NO_CAST_FROM_ASCII
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
-#include <QtCore/QTextStream>
+#include <QtCore/qcoreapplication.h>
+#include <QtCore/qfileinfo.h>
+#include <QtCore/qsettings.h>
+#include <QtCore/qtextstream.h>
+#include <QtCore/qregexp.h>
+#include <QtCore/qstringlist.h>
 #include <QtXml/qdom.h>
-#include <QtCore/QRegExp>
-#include <QtCore/QStringList>
 
 #include <ostream>
 #include <iostream>

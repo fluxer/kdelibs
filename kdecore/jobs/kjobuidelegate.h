@@ -23,7 +23,7 @@
 #define KJOBUIDELEGATE_H
 
 #include <kdecore_export.h>
-#include <QtCore/QObject>
+#include <QtCore/qobject.h>
 
 class KJob;
 

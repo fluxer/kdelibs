@@ -24,9 +24,8 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QVariant>
-#include <QtCore/QUrl>
-#include <QtCore/QMap>
+#include <QtCore/qvariant.h>
+#include <QtCore/qurl.h>
 
 class QStringList;
 class QMimeData;

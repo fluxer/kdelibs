@@ -21,10 +21,8 @@
 #ifndef ACTION_REPLY_H
 #define ACTION_REPLY_H
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QMap>
-#include <QtCore/QDataStream>
+#include <QtCore/qvariant.h>
+#include <QtCore/qdatastream.h>
 
 #include <kdecore_export.h>
 /**

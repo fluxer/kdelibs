@@ -24,8 +24,8 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QElapsedTimer>
+#include <QtCore/qdebug.h>
+#include <QtCore/qelapsedtimer.h>
 
 /**
  * \addtogroup kdebug Debug message generators

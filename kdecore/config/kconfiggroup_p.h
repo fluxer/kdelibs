@@ -21,7 +21,6 @@
 #ifndef KCONFIGGROUP_P_H
 #define KCONFIGGROUP_P_H
 
-#include <QtCore/QVariant>
 #include "kconfiggroup.h"
 
 class KConfigGroup;

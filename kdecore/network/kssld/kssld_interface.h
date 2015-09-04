@@ -23,9 +23,6 @@
 #define KSSLDINTERFACE_H
 
 #include <QtCore/QObject>
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-#include <QtCore/QString>
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 

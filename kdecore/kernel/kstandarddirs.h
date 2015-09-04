@@ -23,9 +23,8 @@
 #ifndef KSTANDARDDIRS_H
 #define KSTANDARDDIRS_H
 
-#include <QtCore/QStringList>
 #include <kglobal.h>
-#include <QtCore/QMap>
+#include <QtCore/qmap.h>
 
 class KConfig;
 

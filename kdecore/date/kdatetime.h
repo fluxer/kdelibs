@@ -29,7 +29,7 @@
 #include <kdecore_export.h>
 #include <ktimezone.h>
 
-#include <QtCore/QMetaType>
+#include <QtCore/qmetatype.h>
 #include <QtCore/qshareddata.h>
 
 class QDataStream;

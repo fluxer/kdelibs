@@ -28,10 +28,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
+#include <QtCore/qvariant.h>
 
 class KConfigGroup;
 class KComponentData;

@@ -20,9 +20,6 @@
 #ifndef ACTION_WATCHER_H
 #define ACTION_WATCHER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-
 #include <kdecore_export.h>
 
 #include "kauthactionreply.h"

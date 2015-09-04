@@ -23,8 +23,8 @@
 #include <kdecore_export.h>
 #include "kurl.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QList>
+#include <QtCore/qfile.h>
+#include <QtCore/qlist.h>
 
 class KAutoSaveFilePrivate;
 /**

@@ -23,9 +23,6 @@
 #ifndef KCONFIGBACKEND_H
 #define KCONFIGBACKEND_H
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-
 #include <kdecore_export.h>
 #include <kconfigbase.h>
 #include <kdebug.h>

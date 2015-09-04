@@ -21,8 +21,8 @@
 
 #include <stdio.h> // for FILENAME_MAX
 
-#include <QtCore/qchar.h>
-#include <QtCore/QCoreApplication>
+#include <QtCore/qstringlist.h>
+#include <QtCore/qcoreapplication.h>
 #include "klockfile.h"
 #include "krandom.h"
 #include "kglobal.h"

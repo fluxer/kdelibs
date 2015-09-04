@@ -19,8 +19,7 @@
 #ifndef KLIMITEDIODEVICE_P_H
 #define KLIMITEDIODEVICE_P_H
 
-#include <kdebug.h>
-#include <QtCore/QIODevice>
+#include <QtCore/qiodevice.h>
 /**
  * A readonly device that reads from an underlying device
  * from a given point to another (e.g. to give access to a single

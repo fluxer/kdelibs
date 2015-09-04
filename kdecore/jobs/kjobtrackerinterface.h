@@ -23,9 +23,6 @@
 #include <kdecore_export.h>
 #include <kjob.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QPair>
-
 /**
  * The interface to implement to track the progresses of a job.
  */

@@ -22,7 +22,7 @@
 #define KDBUSCONNECTIONPOOL_H
 
 #include <kdecore_export.h>
-#include <QtDBus/QDBusConnection>
+#include <QtDBus/qdbusconnection.h>
 
 namespace KDBusConnectionPool
 {

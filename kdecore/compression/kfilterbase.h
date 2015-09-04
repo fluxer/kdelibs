@@ -22,8 +22,7 @@
 
 #include <karchive_export.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
+#include <QtCore/qiodevice.h>
 
 class QIODevice;
 

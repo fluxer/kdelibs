@@ -23,7 +23,7 @@
 
 #include <time.h>
 #include <zlib.h>
-#include <QtCore/QIODevice>
+#include <QtCore/qiodevice.h>
 
 
 /* gzip flag byte */

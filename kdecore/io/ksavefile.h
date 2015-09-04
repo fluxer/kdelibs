@@ -24,8 +24,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QFile>
-#include <QtCore/QString>
+#include <QtCore/qfile.h>
 #include <kglobal.h>
 
 /**

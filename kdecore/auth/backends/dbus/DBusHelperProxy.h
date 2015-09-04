@@ -21,7 +21,6 @@
 #ifndef DBUS_HELPER_PROXY_H
 #define DBUS_HELPER_PROXY_H
 
-#include <QVariant>
 #include "HelperProxy.h"
 #include "kauthactionreply.h"
 

@@ -29,11 +29,7 @@
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 
-#include <QtCore/qdatetime.h>
-#include <QtCore/QHash>
-#include <QtCore/QRect>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
+#include <QtCore/qrect.h>
 
   class KConfigSkeletonItemPrivate;
   /**

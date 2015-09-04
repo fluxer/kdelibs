@@ -169,7 +169,7 @@ protected slots:
     }
 
     void print() {
-#if !defined(QT_NO_PRINTER)
+#ifndef QT_NO_PRINTER
         QScopedPointer<QPrintPreviewDialog> dlg (new QPrintPreviewDialog(this));
         connect(dlg.data(), SIGNAL(paintRequested(QPrinter*)),
                 view, SLOT(print(QPrinter*)));

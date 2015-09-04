@@ -29,8 +29,6 @@
 #include <kdecore_export.h>
 #include <ktimezone.h>
 
-#include <QtCore/QString>
-
 class KTzfileTimeZoneSource;
 class KTzfileTimeZonePrivate;
 class KTzfileTimeZoneDataPrivate;

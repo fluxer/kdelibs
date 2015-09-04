@@ -14,10 +14,10 @@ def RunTests( Number ):
 #    if re.search( "Darwin", Platform ):
 #        Command = "DYLD_LIBRARY_PATH=../Weaver:../Experimental ./JobTests.app/Contents/MacOs/JobTests >/dev/null"
     for count in range( Number ):
-	retValue = os.system ( Command)
-	resultString = " (FAILED)"
-	if retValue == 0:
-	    resultString = " (succeeded)"
+        retValue = os.system ( Command)
+        resultString = " (FAILED)"
+        if retValue == 0:
+            resultString = " (succeeded)"
             SuccessCount = SuccessCount + 1
         print "Test run #" + str(count + 1) + resultString
     return SuccessCount

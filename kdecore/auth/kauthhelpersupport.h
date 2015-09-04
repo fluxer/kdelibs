@@ -20,8 +20,7 @@
 #ifndef HELPER_SUPPORT_H
 #define HELPER_SUPPORT_H
 
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
+#include <QtCore/qvariant.h>
 
 #include <kdecore_export.h>
 

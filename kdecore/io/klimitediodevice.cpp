@@ -16,6 +16,7 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include <kdebug.h>
 #include "klimitediodevice_p.h"
 
 KLimitedIODevice::KLimitedIODevice( QIODevice *dev, qint64 start, qint64 length )

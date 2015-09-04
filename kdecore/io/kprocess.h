@@ -24,7 +24,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/QProcess>
+#include <QtCore/qprocess.h>
 
 class KProcessPrivate;
 

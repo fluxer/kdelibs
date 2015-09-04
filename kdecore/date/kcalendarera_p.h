@@ -20,9 +20,7 @@
 #ifndef KCALENDARERA_H
 #define KCALENDARERA_H
 
-#include <QtCore/QString>
 #include <QtCore/qdatetime.h>
-
 #include "klocale.h"
 
 class KCalendarSystemPrivate;
