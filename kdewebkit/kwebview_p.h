@@ -38,8 +38,6 @@
 
 #include "kwebpage.h"
 
-#define QL1S(x)   QLatin1String(x)
-
 template <class T>
 class KWebViewPrivate
 {
@@ -115,12 +113,12 @@ public:
                 return true;
 
             if (!hitTest.linkUrl().isValid() && !hitTest.isContentEditable() && !page->isModified()) {
-                QString subType (QL1S("plain"));
+                QString subType (QLatin1String("plain"));
                 const QString clipboardText = QApplication::clipboard()->text(subType, QClipboard::Selection);
                 if (!clipboardText.isEmpty()) {
                     KUriFilterData data (clipboardText.left(250).trimmed());
                     data.setCheckForExecutables(false); // don't allow executables...
-                    if (KUriFilter::self()->filterUri(data, QStringList(QL1S("kshorturifilter")))) {
+                    if (KUriFilter::self()->filterUri(data, QStringList(QLatin1String("kshorturifilter")))) {
                         switch (data.uriType()) {
                         case KUriFilterData::LocalFile:
                         case KUriFilterData::LocalDir:

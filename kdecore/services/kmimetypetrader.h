@@ -21,6 +21,7 @@
 #define KMIMETYPETRADER_H
 
 #include <kservice.h>
+
 class KServiceOffer;
 
 /**

@@ -20,9 +20,7 @@
 #ifndef WEBHISTORYINTERFACE_H
 #define WEBHISTORYINTERFACE_H
 
-
 #include <QWebHistoryInterface>
-
 
 class WebHistoryInterface : public QWebHistoryInterface
 {

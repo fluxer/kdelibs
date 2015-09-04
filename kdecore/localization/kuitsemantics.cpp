@@ -26,8 +26,6 @@
 #include <QRegExp>
 #include <QStack>
 #include <QtCore/qxmlstream.h>
-#include <QStringList>
-#include <QPair>
 #include <QDir>
 
 #include <kdebug.h>
@@ -35,8 +33,6 @@
 #include <kcatalog_p.h>
 #include <kuitformats_p.h>
 #include <klocale.h>
-
-#define QL1S(x)   QLatin1String(x)
 
 // Truncates string, for output of long messages.
 // (But don't truncate too much otherwise it's impossible to determine
@@ -308,16 +304,34 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
     SETUP_CUE(Shell, "shell");
 
     // Collect all Qt's rich text engine HTML tags, for some checks later.
-    qtHtmlTagNames << QL1S("a") << QL1S("address") << QL1S("b") << QL1S("big") << QL1S("blockquote")
-                   << QL1S("body") << QL1S("br") << QL1S("center") << QL1S("cita") << QL1S("code")
-                   << QL1S("dd") << QL1S("dfn") << QL1S("div") << QL1S("dl") << QL1S("dt") << QL1S("em")
-                   << QL1S("font") << QL1S("h1") << QL1S("h2") << QL1S("h3") << QL1S("h4") << QL1S("h5")
-                   << QL1S("h6") << QL1S("head") << QL1S("hr") << QL1S("html") << QL1S("i") << QL1S("img")
-                   << QL1S("kbd") << QL1S("meta") << QL1S("li") << QL1S("nobr") << QL1S("ol") << QL1S("p")
-                   << QL1S("pre") << QL1S("qt") << QL1S("s") << QL1S("samp") << QL1S("small") << QL1S("span")
-                   << QL1S("strong") << QL1S("sup") << QL1S("sub") << QL1S("table") << QL1S("tbody")
-                   << QL1S("td") << QL1S("tfoot") << QL1S("th") << QL1S("thead") << QL1S("title")
-                   << QL1S("tr") << QL1S("tt") << QL1S("u") << QL1S("ul") << QL1S("var");
+    qtHtmlTagNames << QLatin1String("a") << QLatin1String("address")
+                   << QLatin1String("b") << QLatin1String("big")
+                   << QLatin1String("blockquote") << QLatin1String("body")
+                   << QLatin1String("br") << QLatin1String("center")
+                   << QLatin1String("cita") << QLatin1String("code")
+                   << QLatin1String("dd") << QLatin1String("dfn")
+                   << QLatin1String("div") << QLatin1String("dl")
+                   << QLatin1String("dt") << QLatin1String("em")
+                   << QLatin1String("font") << QLatin1String("h1")
+                   << QLatin1String("h2") << QLatin1String("h3")
+                   << QLatin1String("h4") << QLatin1String("h5")
+                   << QLatin1String("h6") << QLatin1String("head")
+                   << QLatin1String("hr") << QLatin1String("html")
+                   << QLatin1String("i") << QLatin1String("img")
+                   << QLatin1String("kbd") << QLatin1String("meta")
+                   << QLatin1String("li") << QLatin1String("nobr")
+                   << QLatin1String("ol") << QLatin1String("p")
+                   << QLatin1String("pre") << QLatin1String("qt")
+                   << QLatin1String("s") << QLatin1String("samp")
+                   << QLatin1String("small") << QLatin1String("span")
+                   << QLatin1String("strong") << QLatin1String("sup")
+                   << QLatin1String("sub") << QLatin1String("table")
+                   << QLatin1String("tbody") << QLatin1String("td")
+                   << QLatin1String("tfoot") << QLatin1String("th")
+                   << QLatin1String("thead") << QLatin1String("title")
+                   << QLatin1String("tr") << QLatin1String("tt")
+                   << QLatin1String("u") << QLatin1String("ul")
+                   << QLatin1String("var");
 
     // Tags that format with number of leading newlines.
     #undef SETUP_TAG_NL

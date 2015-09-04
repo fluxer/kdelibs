@@ -22,8 +22,6 @@
 
 #include <assert.h>
 
-#include <QtCore/QStringList>
-
 #include "ksycocafactory.h"
 #include "kservicetype.h"
 

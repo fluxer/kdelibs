@@ -30,9 +30,7 @@
 
 #define PIC_MAGIC_NUMBER  0x5380f634
 
-#include <QtCore/QFile>
 #include <QtGui/qimageiohandler.h>
-#include <QtGui/QColor>
 
 /**
  * How fields are distributed over the image

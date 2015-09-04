@@ -19,8 +19,6 @@
 #ifndef KSERVICEGROUPFACTORY_H
 #define KSERVICEGROUPFACTORY_H
 
-#include <QtCore/QStringList>
-
 #include "kservicegroup.h"
 #include "ksycocafactory.h"
 #include <assert.h>

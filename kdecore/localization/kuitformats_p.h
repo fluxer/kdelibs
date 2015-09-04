@@ -20,8 +20,7 @@
 #ifndef KUITFORMATS_P_H
 #define KUITFORMATS_P_H
 
-#include <QString>
-#include <QHash>
+#include <QtCore/qhash.h>
 
 namespace KuitFormats {
     /**

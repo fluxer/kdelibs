@@ -21,8 +21,6 @@
 #ifndef __kservicefactory_h__
 #define __kservicefactory_h__
 
-#include <QtCore/QStringList>
-
 #include "kserviceoffer.h"
 #include "ksycocafactory.h"
 #include <assert.h>

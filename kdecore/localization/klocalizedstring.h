@@ -21,10 +21,8 @@
 
 #include <kdecore_export.h>
 
-
-#include <QtCore/QChar>
 #include <QtCore/qchar.h>
-#include <QtCore/QStringList>
+#include <QtCore/qstringlist.h>
 
 class KLocale;
 struct KCatalogName;

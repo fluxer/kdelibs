@@ -23,7 +23,7 @@
 #include <kdecore_export.h>
 
 #include <QtCore/qshareddata.h>
-#include <QtCore/QString>
+#include <QtCore/qdatetime.h>
 
 class QDate;
 class QStringList;

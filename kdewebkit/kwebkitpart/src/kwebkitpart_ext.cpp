@@ -46,18 +46,13 @@
 #include <kdeversion.h>
 
 #include <QBuffer>
-#include <QVariant>
 #include <QClipboard>
 #include <QApplication>
-#include <QPrinter>
 #include <QPrintDialog>
 #include <QPrintPreviewDialog>
 #include <QWebFrame>
 #include <QWebHistory>
 #include <QWebElement>
-
-#define QL1S(x)     QLatin1String(x)
-#define QL1C(x)     QLatin1Char(x)
 
 
 WebKitBrowserExtension::WebKitBrowserExtension(KWebKitPart *parent, const QByteArray& cachedHistoryData)
@@ -249,7 +244,7 @@ void WebKitBrowserExtension::updateEditActions()
 void WebKitBrowserExtension::updateActions()
 {
     const QString protocol (m_part->url().protocol());
-    const bool isValidDocument = (protocol != QL1S("about") && protocol != QL1S("error"));
+    const bool isValidDocument = (protocol != QLatin1String("about") && protocol != QLatin1String("error"));
     enableAction("print", isValidDocument);
 }
 
@@ -275,7 +270,7 @@ void WebKitBrowserExtension::searchProvider()
       return;
 
     KParts::BrowserArguments bargs;
-    bargs.frameName = QL1S("_blank");
+    bargs.frameName = QLatin1String("_blank");
     emit openUrlRequest(url, KParts::OpenUrlArguments(), bargs);
 }
 
@@ -378,7 +373,7 @@ void WebKitBrowserExtension::slotFrameInTop()
     uargs.setActionRequestedByUser(true);
 
     KParts::BrowserArguments bargs;
-    bargs.frameName = QL1S("_top");
+    bargs.frameName = QLatin1String("_top");
 
     QUrl url (view()->page()->currentFrame()->baseUrl());
     url.resolved(view()->page()->currentFrame()->url());
@@ -499,7 +494,7 @@ void WebKitBrowserExtension::slotBlockHost()
         return;
 
     QUrl url (view()->contextMenuResult().imageUrl());
-    url.setPath(QL1S("/*"));
+    url.setPath(QLatin1String("/*"));
     WebKitSettings::self()->addAdFilter(url.toString(QUrl::RemoveUserInfo | QUrl::RemovePort));
     reparseConfiguration();
 }
@@ -542,14 +537,14 @@ void WebKitBrowserExtension::slotViewDocumentSource()
 
     const KUrl pageUrl (view()->url());
     if (pageUrl.isLocalFile()) {
-        KRun::runUrl(pageUrl, QL1S("text/plain"), view(), false);
+        KRun::runUrl(pageUrl, QLatin1String("text/plain"), view(), false);
     } else {
         KTemporaryFile tempFile;
-        tempFile.setSuffix(QL1S(".html"));
+        tempFile.setSuffix(QLatin1String(".html"));
         tempFile.setAutoRemove(false);
         if (tempFile.open()) {
             tempFile.write(view()->page()->mainFrame()->toHtml().toUtf8());
-            KRun::runUrl(tempFile.fileName(), QL1S("text/plain"), view(), true, false);
+            KRun::runUrl(tempFile.fileName(), QLatin1String("text/plain"), view(), true, false);
         }
     }
 }
@@ -561,24 +556,24 @@ void WebKitBrowserExtension::slotViewFrameSource()
 
     const KUrl frameUrl(view()->page()->currentFrame()->url());
     if (frameUrl.isLocalFile()) {
-        KRun::runUrl(frameUrl, QL1S("text/plain"), view(), false);
+        KRun::runUrl(frameUrl, QLatin1String("text/plain"), view(), false);
     } else {
         KTemporaryFile tempFile;
-        tempFile.setSuffix(QL1S(".html"));
+        tempFile.setSuffix(QLatin1String(".html"));
         tempFile.setAutoRemove(false);
         if (tempFile.open()) {
             tempFile.write(view()->page()->currentFrame()->toHtml().toUtf8());
-            KRun::runUrl(tempFile.fileName(), QL1S("text/plain"), view(), true, false);
+            KRun::runUrl(tempFile.fileName(), QLatin1String("text/plain"), view(), true, false);
         }
     }
 }
 
 static bool isMultimediaElement(const QWebElement& element)
 {
-    if (element.tagName().compare(QL1S("video"), Qt::CaseInsensitive) == 0)
+    if (element.tagName().compare(QLatin1String("video"), Qt::CaseInsensitive) == 0)
         return true;
 
-    if (element.tagName().compare(QL1S("audio"), Qt::CaseInsensitive) == 0)
+    if (element.tagName().compare(QLatin1String("audio"), Qt::CaseInsensitive) == 0)
         return true;
 
     return false;
@@ -593,7 +588,7 @@ void WebKitBrowserExtension::slotLoopMedia()
     if (!isMultimediaElement(element))
         return;
 
-    element.evaluateJavaScript(QL1S("this.loop = !this.loop;"));
+    element.evaluateJavaScript(QLatin1String("this.loop = !this.loop;"));
 }
 
 void WebKitBrowserExtension::slotMuteMedia()
@@ -605,7 +600,7 @@ void WebKitBrowserExtension::slotMuteMedia()
     if (!isMultimediaElement(element))
         return;
 
-    element.evaluateJavaScript(QL1S("this.muted = !this.muted;"));
+    element.evaluateJavaScript(QLatin1String("this.muted = !this.muted;"));
 }
 
 void WebKitBrowserExtension::slotPlayMedia()
@@ -617,7 +612,7 @@ void WebKitBrowserExtension::slotPlayMedia()
     if (!isMultimediaElement(element))
         return;
 
-    element.evaluateJavaScript(QL1S("this.paused ? this.play() : this.pause();"));
+    element.evaluateJavaScript(QLatin1String("this.paused ? this.play() : this.pause();"));
 }
 
 void WebKitBrowserExtension::slotShowMediaControls()
@@ -629,15 +624,15 @@ void WebKitBrowserExtension::slotShowMediaControls()
     if (!isMultimediaElement(element))
         return;
 
-    element.evaluateJavaScript(QL1S("this.controls = !this.controls;"));
+    element.evaluateJavaScript(QLatin1String("this.controls = !this.controls;"));
 }
 
 static KUrl mediaUrlFrom(QWebElement& element)
 {
     QWebFrame* frame = element.webFrame();
-    QString src = frame ? element.attribute(QL1S("src")) : QString();
+    QString src = frame ? element.attribute(QLatin1String("src")) : QString();
     if (src.isEmpty())
-        src = frame ? element.evaluateJavaScript(QL1S("this.src")).toString() : QString();
+        src = frame ? element.evaluateJavaScript(QLatin1String("this.src")).toString() : QString();
 
     if (src.isEmpty())
         return KUrl();
@@ -703,7 +698,7 @@ static QVariant execJScript(WebView* view, const QString& script)
 
 void WebKitBrowserExtension::slotCheckSpelling()
 {
-    const QString text (execJScript(view(), QL1S("this.value")).toString());
+    const QString text (execJScript(view(), QLatin1String("this.value")).toString());
 
     if ( text.isEmpty() ) {
         return;
@@ -722,14 +717,14 @@ void WebKitBrowserExtension::slotCheckSpelling()
 
 void WebKitBrowserExtension::slotSpellCheckSelection()
 {
-    QString text (execJScript(view(), QL1S("this.value")).toString());
+    QString text (execJScript(view(), QLatin1String("this.value")).toString());
 
     if ( text.isEmpty() ) {
         return;
     }
 
-    m_spellTextSelectionStart = qMax(0, execJScript(view(), QL1S("this.selectionStart")).toInt());
-    m_spellTextSelectionEnd = qMax(0, execJScript(view(), QL1S("this.selectionEnd")).toInt());
+    m_spellTextSelectionStart = qMax(0, execJScript(view(), QLatin1String("this.selectionStart")).toInt());
+    m_spellTextSelectionEnd = qMax(0, execJScript(view(), QLatin1String("this.selectionEnd")).toInt());
     // kDebug() << "selection start:" << m_spellTextSelectionStart << "end:" << m_spellTextSelectionEnd;
 
     Sonnet::Dialog* spellDialog = new Sonnet::Dialog(new Sonnet::BackgroundChecker(this), view());
@@ -749,13 +744,13 @@ void WebKitBrowserExtension::spellCheckerCorrected(const QString& original, int 
     }
 
     const int index = pos + m_spellTextSelectionStart;
-    QString script(QL1S("this.value=this.value.substring(0,"));
+    QString script(QLatin1String("this.value=this.value.substring(0,"));
     script += QString::number(index);
-    script += QL1S(") + \"");
+    script += QLatin1String(") + \"");
     script +=  replacement;
-    script += QL1S("\" + this.value.substring(");
+    script += QLatin1String("\" + this.value.substring(");
     script += QString::number(index + original.length());
-    script += QL1S(")");
+    script += QLatin1String(")");
 
     //kDebug() << "**** script:" << script;
     execJScript(view(), script);
@@ -764,11 +759,11 @@ void WebKitBrowserExtension::spellCheckerCorrected(const QString& original, int 
 void WebKitBrowserExtension::spellCheckerMisspelling(const QString& text, int pos)
 {
     // kDebug() << text << pos;
-    QString selectionScript (QL1S("this.setSelectionRange("));
+    QString selectionScript (QLatin1String("this.setSelectionRange("));
     selectionScript += QString::number(pos + m_spellTextSelectionStart);
-    selectionScript += QL1C(',');
+    selectionScript += QLatin1Char(',');
     selectionScript += QString::number(pos + text.length() + m_spellTextSelectionStart);
-    selectionScript += QL1C(')');
+    selectionScript += QLatin1Char(')');
     execJScript(view(), selectionScript);
 }
 
@@ -777,11 +772,11 @@ void WebKitBrowserExtension::slotSpellCheckDone(const QString&)
     // Restore the text selection if one was present before we started the
     // spell check.
     if (m_spellTextSelectionStart > 0 || m_spellTextSelectionEnd > 0) {
-        QString script (QL1S("; this.setSelectionRange("));
+        QString script (QLatin1String("; this.setSelectionRange("));
         script += QString::number(m_spellTextSelectionStart);
-        script += QL1C(',');
+        script += QLatin1Char(',');
         script += QString::number(m_spellTextSelectionEnd);
-        script += QL1C(')');
+        script += QLatin1Char(')');
         execJScript(view(), script);
     }
 }
@@ -854,7 +849,7 @@ void WebKitBrowserExtension::slotLinkInTop()
     uargs.setActionRequestedByUser(true);
 
     KParts::BrowserArguments bargs;
-    bargs.frameName = QL1S("_top");
+    bargs.frameName = QLatin1String("_top");
 
     const KUrl url (view()->contextMenuResult().linkUrl());
 
@@ -950,9 +945,9 @@ static KParts::SelectorInterface::Element convertWebElement(const QWebElement& w
 
 static QString queryOne(const QString& query)
 {
-   QString jsQuery = QL1S("(function(query) { var element; var selectedElement = window.getSelection().getRangeAt(0).cloneContents().querySelector(\"");
+   QString jsQuery = QLatin1String("(function(query) { var element; var selectedElement = window.getSelection().getRangeAt(0).cloneContents().querySelector(\"");
    jsQuery += query;
-   jsQuery += QL1S("\"); if (selectedElement && selectedElement.length > 0) { element = new Object; "
+   jsQuery += QLatin1String("\"); if (selectedElement && selectedElement.length > 0) { element = new Object; "
                    "element.tagName = selectedElements[0].tagName; element.href = selectedElements[0].href; } "
                    "return element; }())");
    return jsQuery;
@@ -960,9 +955,9 @@ static QString queryOne(const QString& query)
 
 static QString queryAll(const QString& query)
 {
-   QString jsQuery = QL1S("(function(query) { var elements = []; var selectedElements = window.getSelection().getRangeAt(0).cloneContents().querySelectorAll(\"");
+   QString jsQuery = QLatin1String("(function(query) { var elements = []; var selectedElements = window.getSelection().getRangeAt(0).cloneContents().querySelectorAll(\"");
    jsQuery += query;
-   jsQuery += QL1S("\"); var numSelectedElements = (selectedElements ? selectedElements.length : 0);"
+   jsQuery += QLatin1String("\"); var numSelectedElements = (selectedElements ? selectedElements.length : 0);"
                    "for (var i = 0; i < numSelectedElements; ++i) { var element = new Object; "
                    "element.tagName = selectedElements[i].tagName; element.href = selectedElements[i].href;"
                    "elements.push(element); } return elements; } ())");
@@ -974,8 +969,8 @@ static KParts::SelectorInterface::Element convertSelectionElement(const QVariant
     KParts::SelectorInterface::Element element;
     if (!variant.isNull() && variant.type() == QVariant::Map) {
         const QVariantMap elementMap (variant.toMap());
-        element.setTagName(elementMap.value(QL1S("tagName")).toString());
-        element.setAttribute(QL1S("href"), elementMap.value(QL1S("href")).toString());
+        element.setTagName(elementMap.value(QLatin1String("tagName")).toString());
+        element.setAttribute(QLatin1String("href"), elementMap.value(QLatin1String("href")).toString());
     }
     return element;
 }
@@ -987,8 +982,8 @@ static QList<KParts::SelectorInterface::Element> convertSelectionElements(const 
     Q_FOREACH(const QVariant& result, resultList) {
         const QVariantMap elementMap = result.toMap();
         KParts::SelectorInterface::Element element;
-        element.setTagName(elementMap.value(QL1S("tagName")).toString());
-        element.setAttribute(QL1S("href"), elementMap.value(QL1S("href")).toString());
+        element.setTagName(elementMap.value(QLatin1String("tagName")).toString());
+        element.setAttribute(QLatin1String("href"), elementMap.value(QLatin1String("href")).toString());
         elements.append(element);
     }
     return elements;

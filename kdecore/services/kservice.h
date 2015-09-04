@@ -22,8 +22,6 @@
 #define KSERVICE_H
 
 #include "kserviceaction.h"
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
 #include <ksycocaentry.h>

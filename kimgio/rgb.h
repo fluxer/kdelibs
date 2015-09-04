@@ -10,11 +10,9 @@
 #ifndef KIMG_RGB_H
 #define KIMG_RGB_H
 
-
 #include <QtGui/qimageiohandler.h>
-#include <QtCore/QMap>
-#include <QtCore/QVector>
-
+#include <QtCore/qmap.h>
+#include <QtCore/qvector.h>
 
 class RGBHandler : public QImageIOHandler
 {

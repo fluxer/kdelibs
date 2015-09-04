@@ -25,9 +25,6 @@
 #include <klocalizedstring.h>
 #include <ksharedconfig.h>
 
-#include <QtCore/QString>
-#include <QtCore/QList>
-
 class QStringList;
 class QTextCodec;
 class QDate;

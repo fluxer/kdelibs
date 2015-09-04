@@ -48,7 +48,6 @@
 #include <kio/scheduler.h>
 #include <kparts/htmlextension.h>
 
-#include <QFile>
 #include <QApplication>
 #include <QTextDocument> // Qt::escape
 #include <QNetworkReply>
@@ -57,12 +56,9 @@
 #include <QWebHistory>
 #include <QWebSecurityOrigin>
 
-#define QL1S(x)  QLatin1String(x)
-#define QL1C(x)  QLatin1Char(x)
-
 static bool isBlankUrl(const KUrl& url)
 {
-    return (url.isEmpty() || url.url() == QL1S("about:blank"));
+    return (url.isEmpty() || url.url() == QLatin1String("about:blank"));
 }
 
 WebPage::WebPage(KWebKitPart *part, QWidget *parent)
@@ -85,7 +81,7 @@ WebPage::WebPage(KWebKitPart *part, QWidget *parent)
 
     setPluginFactory(new WebPluginFactory(part, this));
 
-    setSessionMetaData(QL1S("ssl_activate_warnings"), QL1S("TRUE"));
+    setSessionMetaData(QLatin1String("ssl_activate_warnings"), QLatin1String("TRUE"));
 
     // Set font sizes accordingly...
     if (view())
@@ -97,10 +93,10 @@ WebPage::WebPage(KWebKitPart *part, QWidget *parent)
     Q_FOREACH (const QString& protocol, KProtocolInfo::protocols()) {
         // file is already a known local scheme and about must not be added
         // to this list since there is about:blank.
-        if (protocol == QL1S("about") || protocol == QL1S("file"))
+        if (protocol == QLatin1String("about") || protocol == QLatin1String("file"))
             continue;
 
-        if (KProtocolInfo::protocolClass(protocol) != QL1S(":local"))
+        if (KProtocolInfo::protocolClass(protocol) != QLatin1String(":local"))
             continue;
 
         QWebSecurityOrigin::addLocalScheme(protocol);
@@ -178,9 +174,9 @@ static QString warningIconData()
 
     if (f.open(QIODevice::ReadOnly)) {
         KMimeType::Ptr mime = KMimeType::mimeType(f.fileName(), KMimeType::ResolveAliases);
-        data += QL1S("data:");
+        data += QLatin1String("data:");
         data += mime ? mime->name() : KMimeType::defaultMimeType();
-        data += QL1S(";base64,");
+        data += QLatin1String(";base64,");
         data += f.readAll().toBase64();
         f.close();
     }
@@ -198,72 +194,72 @@ QString WebPage::errorPage(int code, const QString& text, const KUrl& reqUrl) co
 
     stream >> errorName >> techName >> description >> causes >> solutions;
 
-    QFile file (KStandardDirs::locate ("data", QL1S("kwebkitpart/error.html")));
+    QFile file (KStandardDirs::locate ("data", QLatin1String("kwebkitpart/error.html")));
     if ( !file.open( QIODevice::ReadOnly ) )
         return i18n("<html><body><h3>Unable to display error message</h3>"
                     "<p>The error template file <em>error.html</em> could not be "
                     "found.</p></body></html>");
 
-    QString html( QL1S(file.readAll()) );
+    QString html( QLatin1String(file.readAll()) );
 
-    html.replace( QL1S( "TITLE" ), i18n( "Error: %1", errorName ) );
-    html.replace( QL1S( "DIRECTION" ), QApplication::isRightToLeft() ? "rtl" : "ltr" );
-    html.replace( QL1S( "ICON_PATH" ), warningIconData());
+    html.replace( QLatin1String( "TITLE" ), i18n( "Error: %1", errorName ) );
+    html.replace( QLatin1String( "DIRECTION" ), QApplication::isRightToLeft() ? "rtl" : "ltr" );
+    html.replace( QLatin1String( "ICON_PATH" ), warningIconData());
 
-    QString doc (QL1S( "<h1>" ));
+    QString doc (QLatin1String( "<h1>" ));
     doc += i18n( "The requested operation could not be completed" );
-    doc += QL1S( "</h1><h2>" );
+    doc += QLatin1String( "</h1><h2>" );
     doc += errorName;
-    doc += QL1S( "</h2>" );
+    doc += QLatin1String( "</h2>" );
 
     if ( !techName.isNull() ) {
-        doc += QL1S( "<h2>" );
+        doc += QLatin1String( "<h2>" );
         doc += i18n( "Technical Reason: %1", techName );
-        doc += QL1S( "</h2>" );
+        doc += QLatin1String( "</h2>" );
     }
 
-    doc += QL1S( "<h3>" );
+    doc += QLatin1String( "<h3>" );
     doc += i18n( "Details of the Request:" );
-    doc += QL1S( "</h3><ul><li>" );
+    doc += QLatin1String( "</h3><ul><li>" );
     // escape URL twice: once for i18n, and once for HTML.
     doc += i18n( "URL: %1", Qt::escape( Qt::escape( reqUrl.prettyUrl() ) ) );
-    doc += QL1S( "</li><li>" );
+    doc += QLatin1String( "</li><li>" );
 
     const QString protocol (reqUrl.protocol());
     if ( !protocol.isNull() ) {
         // escape protocol twice: once for i18n, and once for HTML.
         doc += i18n( "Protocol: %1", Qt::escape( Qt::escape( protocol ) ) );
-        doc += QL1S( "</li><li>" );
+        doc += QLatin1String( "</li><li>" );
     }
 
     doc += i18n( "Date and Time: %1",
                  KGlobal::locale()->formatDateTime(QDateTime::currentDateTime(), KLocale::LongDate) );
-    doc += QL1S( "</li><li>" );
+    doc += QLatin1String( "</li><li>" );
     // escape text twice: once for i18n, and once for HTML.
     doc += i18n( "Additional Information: %1", Qt::escape( Qt::escape( text ) ) );
-    doc += QL1S( "</li></ul><h3>" );
+    doc += QLatin1String( "</li></ul><h3>" );
     doc += i18n( "Description:" );
-    doc += QL1S( "</h3><p>" );
+    doc += QLatin1String( "</h3><p>" );
     doc += Qt::escape( description );
-    doc += QL1S( "</p>" );
+    doc += QLatin1String( "</p>" );
 
     if ( causes.count() ) {
-        doc += QL1S( "<h3>" );
+        doc += QLatin1String( "<h3>" );
         doc += i18n( "Possible Causes:" );
-        doc += QL1S( "</h3><ul><li>" );
+        doc += QLatin1String( "</h3><ul><li>" );
         doc += causes.join( "</li><li>" );
-        doc += QL1S( "</li></ul>" );
+        doc += QLatin1String( "</li></ul>" );
     }
 
     if ( solutions.count() ) {
-        doc += QL1S( "<h3>" );
+        doc += QLatin1String( "<h3>" );
         doc += i18n( "Possible Solutions:" );
-        doc += QL1S( "</h3><ul><li>" );
+        doc += QLatin1String( "</h3><ul><li>" );
         doc += solutions.join( "</li><li>" );
-        doc += QL1S( "</li></ul>" );
+        doc += QLatin1String( "</li></ul>" );
     }
 
-    html.replace( QL1S("TEXT"), doc );
+    html.replace( QLatin1String("TEXT"), doc );
 
     return html;
 }
@@ -336,8 +332,8 @@ static bool domainSchemeMatch(const QUrl& u1, const QUrl& u2)
     if (u1.scheme() != u2.scheme())
         return false;
 
-    QStringList u1List = u1.host().split(QL1C('.'), QString::SkipEmptyParts);
-    QStringList u2List = u2.host().split(QL1C('.'), QString::SkipEmptyParts);
+    QStringList u1List = u1.host().split(QLatin1Char('.'), QString::SkipEmptyParts);
+    QStringList u2List = u2.host().split(QLatin1Char('.'), QString::SkipEmptyParts);
 
     if (qMin(u1List.count(), u2List.count()) < 2)
         return false;  // better safe than sorry...
@@ -417,7 +413,7 @@ bool WebPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &r
             }
             break;
         case QWebPage::NavigationTypeReload:
-            setRequestMetaData(QL1S("cache"), QL1S("reload"));
+            setRequestMetaData(QLatin1String("cache"), QLatin1String("reload"));
             inPageRequest = false;
             if (!isBlankUrl(reqUrl)) {
                 resetPluginsLoadedOnDemandFor(pluginFactory());
@@ -438,11 +434,11 @@ bool WebPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequest &r
                 return false;
 
             if (m_sslInfo.isValid())
-                setRequestMetaData(QL1S("ssl_was_in_use"), QL1S("TRUE"));
+                setRequestMetaData(QLatin1String("ssl_was_in_use"), QLatin1String("TRUE"));
         }
 
         // Set the "main_frame_request" meta-data to aid SSL verification in KIO.
-        setRequestMetaData(QL1S("main_frame_request"), (isMainFrameRequest ? QL1S("TRUE") : QL1S("FALSE")));
+        setRequestMetaData(QLatin1String("main_frame_request"), (isMainFrameRequest ? QLatin1String("TRUE") : QLatin1String("FALSE")));
 
         // Insert the request into the queue...
         reqUrl.setUserInfo(QString());
@@ -462,7 +458,7 @@ QString WebPage::userAgentForUrl(const QUrl& url) const
     QString userAgent = KWebPage::userAgentForUrl(url);
 
     // Remove the useless "U" if it is present.
-    const int index = userAgent.indexOf(QL1S(" U;"), -1, Qt::CaseInsensitive);
+    const int index = userAgent.indexOf(QLatin1String(" U;"), -1, Qt::CaseInsensitive);
     if (index > -1)
         userAgent.remove(index, 3);
 
@@ -604,7 +600,7 @@ void WebPage::slotUnsupportedContent(QNetworkReply* reply)
         reply->deleteLater();
         if (qobject_cast<NewWindowPage*>(this) && isBlankUrl(m_part->url())) {
             m_part->closeUrl();
-            if (m_part->arguments().metaData().contains(QL1S("new-window"))) {
+            if (m_part->arguments().metaData().contains(QLatin1String("new-window"))) {
                 m_part->widget()->topLevelWidget()->close();
             } else {
                 delete m_part;
@@ -684,7 +680,7 @@ bool WebPage::checkFormData(const QNetworkRequest &req) const
     const QString scheme (req.url().scheme());
 
     if (m_sslInfo.isValid() &&
-        !scheme.compare(QL1S("https")) && !scheme.compare(QL1S("mailto")) &&
+        !scheme.compare(QLatin1String("https")) && !scheme.compare(QLatin1String("mailto")) &&
         (KMessageBox::warningContinueCancel(0,
                                            i18n("Warning: This is a secure form "
                                                 "but it is attempting to send "
@@ -700,7 +696,7 @@ bool WebPage::checkFormData(const QNetworkRequest &req) const
     }
 
 
-    if (scheme.compare(QL1S("mailto")) == 0 &&
+    if (scheme.compare(QLatin1String("mailto")) == 0 &&
         (KMessageBox::warningContinueCancel(0, i18n("This site is attempting to "
                                                     "submit form data via email.\n"
                                                     "Do you want to continue?"),
@@ -723,18 +719,18 @@ static QUrl sanitizeMailToUrl(const QUrl &url, QStringList& files) {
     if (url.hasQuery())
       sanitizedUrl = url;
     else
-      sanitizedUrl = QUrl(url.scheme() + QL1S(":?") + url.path());
+      sanitizedUrl = QUrl(url.scheme() + QLatin1String(":?") + url.path());
 
     QListIterator<QPair<QString, QString> > it (sanitizedUrl.queryItems());
     sanitizedUrl.setEncodedQuery(QByteArray());    // clear out the query componenet
 
     while (it.hasNext()) {
         QPair<QString, QString> queryItem = it.next();
-        if (queryItem.first.contains(QL1C('@')) && queryItem.second.isEmpty()) {
+        if (queryItem.first.contains(QLatin1Char('@')) && queryItem.second.isEmpty()) {
             // ### DF: this hack breaks mailto:faure@kde.org, kmail doesn't expect mailto:?to=faure@kde.org
             queryItem.second = queryItem.first;
             queryItem.first = "to";
-        } else if (QString::compare(queryItem.first, QL1S("attach"), Qt::CaseInsensitive) == 0) {
+        } else if (QString::compare(queryItem.first, QLatin1String("attach"), Qt::CaseInsensitive) == 0) {
             files << queryItem.second;
             continue;
         }
@@ -746,7 +742,7 @@ static QUrl sanitizeMailToUrl(const QUrl &url, QStringList& files) {
 
 bool WebPage::handleMailToUrl (const QUrl &url, NavigationType type) const
 {
-    if (QString::compare(url.scheme(), QL1S("mailto"), Qt::CaseInsensitive) == 0) {
+    if (QString::compare(url.scheme(), QLatin1String("mailto"), Qt::CaseInsensitive) == 0) {
         QStringList files;
         QUrl mailtoUrl (sanitizeMailToUrl(url, files));
 
@@ -757,12 +753,12 @@ bool WebPage::handleMailToUrl (const QUrl &url, NavigationType type) const
                                                                                     "the following files to the email message?</qt>"),
                                                                                files, i18n("Email Attachment Confirmation"),
                                                                                KGuiItem(i18n("&Allow attachments")),
-                                                                               KGuiItem(i18n("&Ignore attachments")), QL1S("WarnEmailAttachment")) == KMessageBox::Continue) {
+                                                                               KGuiItem(i18n("&Ignore attachments")), QLatin1String("WarnEmailAttachment")) == KMessageBox::Continue) {
 
                    // Re-add the attachments...
                     QStringListIterator filesIt (files);
                     while (filesIt.hasNext()) {
-                        mailtoUrl.addQueryItem(QL1S("attach"), filesIt.next());
+                        mailtoUrl.addQueryItem(QLatin1String("attach"), filesIt.next());
                     }
                 }
                 break;
@@ -871,7 +867,7 @@ bool NewWindowPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequ
 
         // OpenUrl args...
         KParts::OpenUrlArguments uargs;
-        uargs.setMimeType(QL1S("text/html"));
+        uargs.setMimeType(QLatin1String("text/html"));
         uargs.setActionRequestedByUser(false);
 
         // Window args...
@@ -885,7 +881,7 @@ bool NewWindowPage::acceptNavigationRequest(QWebFrame *frame, const QNetworkRequ
             return false;
         } else if (newWindowPart->widget()->topLevelWidget() != part()->widget()->topLevelWidget()) {
             KParts::OpenUrlArguments args;
-            args.metaData().insert(QL1S("new-window"), QL1S("true"));
+            args.metaData().insert(QLatin1String("new-window"), QLatin1String("true"));
             newWindowPart->setArguments(args);
         }
 
@@ -963,7 +959,7 @@ void NewWindowPage::slotLoadFinished(bool ok)
 
     // OpenUrl args...
     KParts::OpenUrlArguments uargs;
-    uargs.setMimeType(QL1S("text/html"));
+    uargs.setMimeType(QLatin1String("text/html"));
     uargs.setActionRequestedByUser(false);
 
     // Window args...
@@ -982,7 +978,7 @@ void NewWindowPage::slotLoadFinished(bool ok)
         // if a new window is created, set a new window meta-data flag.
         if (newWindowPart->widget()->topLevelWidget() != part()->widget()->topLevelWidget()) {
             KParts::OpenUrlArguments args;
-            args.metaData().insert(QL1S("new-window"), QL1S("true"));
+            args.metaData().insert(QLatin1String("new-window"), QLatin1String("true"));
             newWindowPart->setArguments(args);
         }
         // Reparent this page to the new webview to prevent memory leaks.

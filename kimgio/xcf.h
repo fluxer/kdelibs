@@ -23,9 +23,8 @@
 
 
 #include <QtGui/qimageiohandler.h>
-#include <QtGui/QImage>
-#include <QtCore/QIODevice>
-#include <QtCore/QVector>
+#include <QtGui/qimage.h>
+#include <QtCore/qvector.h>
 
 #include "gimp.h"
 

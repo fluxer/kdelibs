@@ -21,10 +21,6 @@
 #ifndef __kservicetypeprofile_h__
 #define __kservicetypeprofile_h__
 
-#include <QtCore/QMap> // KDE5: remove
-#include <QtCore/QString>
-#include <QtCore/QList>
-
 #include <kservicetypetrader.h>
 
 

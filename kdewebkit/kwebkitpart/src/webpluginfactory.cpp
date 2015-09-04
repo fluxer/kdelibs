@@ -35,13 +35,9 @@
 #include <QHBoxLayout>
 #include <QSpacerItem>
 #include <QPushButton>
-
 #include <QWebFrame>
 #include <QWebView>
 #include <QWebElement>
-
-#define QL1S(x)  QLatin1String(x)
-#define QL1C(x)  QLatin1Char(x)
 
 static QWebView* webViewFrom(QWidget* widget)
 {
@@ -176,7 +172,7 @@ static uint pluginId(const QUrl& url, const QStringList& argumentNames, const QS
         const int index = argumentNames.indexOf(properties[i]);
         if (index > -1) {
             signature += argumentNames.at(index);
-            signature += QL1C('=');
+            signature += QLatin1Char('=');
             signature += argumentValues.at(index);
         }
     }
@@ -249,8 +245,8 @@ QObject* WebPluginFactory::create (const QString& _mimeType, const QUrl& url, co
 
         if (page) {
             const QString scheme = page->currentFrame()->url().scheme();
-            if (page && (QString::compare (scheme, QL1S ("https"), Qt::CaseInsensitive) == 0 ||
-                         QString::compare (scheme, QL1S ("webdavs"), Qt::CaseInsensitive) == 0))
+            if (page && (QString::compare (scheme, QLatin1String ("https"), Qt::CaseInsensitive) == 0 ||
+                         QString::compare (scheme, QLatin1String ("webdavs"), Qt::CaseInsensitive) == 0))
                 metaData.insert ("ssl_was_in_use", "TRUE");
             else
                 metaData.insert ("ssl_was_in_use", "FALSE");

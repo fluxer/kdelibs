@@ -23,8 +23,6 @@
 #include <kdemacros.h>
 
 #include <QUrl>
-#include <QList>
-#include <QString>
 #include <QHostAddress>
 #include <QSslCertificate>
 

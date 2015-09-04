@@ -22,7 +22,6 @@
 #define SSLINFODIALOG_P_H
 
 #include <kdemacros.h>
-
 #include <kdialog.h>
 #include <ktcpsocket.h>
 

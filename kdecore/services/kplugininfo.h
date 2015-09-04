@@ -20,15 +20,9 @@
 #ifndef KDECORE_KPLUGININFO_H
 #define KDECORE_KPLUGININFO_H
 
-#include <QtCore/qsharedpointer.h>
-#include <QtCore/QString>
-#include <QtCore/QMap>
-#include <QtCore/QStringList>
-
 #include <kconfiggroup.h>
 #include <kservice.h>
 #include <kaboutdata.h>
-#include <QtCore/QList>
 
 class KPluginInfoPrivate;
 

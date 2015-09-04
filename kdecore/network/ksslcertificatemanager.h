@@ -25,8 +25,6 @@
 
 #include <QtNetwork/QSslCertificate>
 #include <QtNetwork/QSslError>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
 #include <QtCore/qdatetime.h>
 
 class QSslCertificate;

@@ -23,8 +23,6 @@
 
 #include <kwebpluginfactory.h>
 
-#include <QList>
-#include <QUrl>
 #include <QWidget>
 #include <QPointer>
 

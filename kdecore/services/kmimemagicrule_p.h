@@ -22,6 +22,7 @@
 
 #include <QList>
 #include <QString>
+
 class QIODevice;
 
 /**

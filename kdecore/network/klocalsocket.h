@@ -22,7 +22,7 @@
 #define KLOCALSOCKET_H
 
 #include <kdecore_export.h>
-#include <QtCore/QString>
+
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QTcpServer>
 

@@ -22,6 +22,9 @@
 #ifndef KSSLD_DBUSMETATYPES_H
 #define KSSLD_DBUSMETATYPES_H
 
+#include <QtDBus/qdbusargument.h>
+#include <QtDBus/qdbusmetatype.h>
+
 Q_DECLARE_METATYPE(QSslCertificate)
 Q_DECLARE_METATYPE(KSslCertificateRule)
 Q_DECLARE_METATYPE(QList<QSslCertificate>)

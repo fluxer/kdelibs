@@ -23,7 +23,6 @@
 #ifndef WEBKIT_FILTER_P_H
 #define WEBKIT_FILTER_P_H
 
-#include <QString>
 #include <QRegExp>
 #include <QVector>
 #include <kwebkitpart.h>

@@ -23,8 +23,6 @@
 #include <kdecore_export.h>
 #include <kjob.h>
 
-#include <QtCore/qlist.h>
-
 class KCompositeJobPrivate;
 /**
  * The base class for all jobs able to be composed of one

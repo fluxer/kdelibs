@@ -26,15 +26,12 @@
 #include <kprotocolinfo.h>
 #include <krun.h>
 
-#include <QTimer>
 #include <QWidget>
 #include <QNetworkReply>
 #include <QWebFrame>
 #include <QWebElement>
 
-
-#define QL1S(x) QLatin1String(x)
-#define HIDABLE_ELEMENTS   QL1S("audio,img,embed,object,iframe,frame,video")
+#define HIDABLE_ELEMENTS   QLatin1String("audio,img,embed,object,iframe,frame,video")
 
 /* Null network reply */
 class NullNetworkReply : public QNetworkReply
@@ -105,9 +102,9 @@ static void hideBlockedElements(const QUrl& url, QWebElementCollection& collecti
 {
     for (QWebElementCollection::iterator it = collection.begin(); it != collection.end(); ++it) {
         const QUrl baseUrl ((*it).webFrame()->baseUrl());
-        QString src = (*it).attribute(QL1S("src"));
+        QString src = (*it).attribute(QLatin1String("src"));
         if (src.isEmpty())
-            src = (*it).evaluateJavaScript(QL1S("this.src")).toString();
+            src = (*it).evaluateJavaScript(QLatin1String("this.src")).toString();
         if (src.isEmpty())
             continue;
         const QUrl resolvedUrl (baseUrl.resolved(src));

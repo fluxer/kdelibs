@@ -21,8 +21,8 @@
 #define KMIMEGLOBSFILEPARSER_P_H
 
 #include <kdebug.h>
-#include <QtCore/QStringList>
 #include <QtCore/QHash>
+
 class QIODevice;
 class QString;
 

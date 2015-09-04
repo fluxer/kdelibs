@@ -27,11 +27,8 @@
 #include <kurl.h>
 
 #include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QList>
 #include <QtCore/QPair>
 #include <QtGui/QWidget>
-#include <QtCore/QtGlobal>
 
 class QWebFrame;
 class QWebPage;

@@ -20,9 +20,6 @@
 #ifndef __kmimetype_h__
 #define __kmimetype_h__
 
-#include <QtCore/QStringList>
-#include <QtCore/QList>
-
 #include <kurl.h>
 #include <ksycocatype.h>
 #include <kservicetype.h>

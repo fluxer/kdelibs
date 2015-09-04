@@ -23,8 +23,6 @@
 
 #include <kpluginfactory.h>
 
-#include <QHash>
-
 class QWidget;
 
 class KWebKitFactory : public KPluginFactory

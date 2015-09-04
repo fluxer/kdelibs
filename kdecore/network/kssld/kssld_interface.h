@@ -22,9 +22,8 @@
 #ifndef KSSLDINTERFACE_H
 #define KSSLDINTERFACE_H
 
-#include <QtCore/QObject>
 #include <QtCore/QVariant>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusAbstractInterface>
 
 #include "kssld_dbusmetatypes.h"
 

@@ -24,7 +24,7 @@
 #define KENCODINGDETECTOR_H
 
 #include <kdecore_export.h>
-#include <QtCore/QString>
+#include <QtCore/qstring.h>
 
 class QTextCodec;
 class QTextDecoder;

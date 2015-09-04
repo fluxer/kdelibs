@@ -24,7 +24,6 @@ class KConfig;
 class KConfigGroup;
 
 #include <QColor>
-#include <QStringList>
 #include <QPair>
 
 #include <kparts/htmlextension.h>

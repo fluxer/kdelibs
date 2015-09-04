@@ -55,18 +55,10 @@
 #include <kprotocolinfo.h>
 #include <kparts/statusbarextension.h>
 
-#include <QUrl>
-#include <QFile>
 #include <QTextCodec>
-#include <QCoreApplication>
-#include <QVBoxLayout>
 #include <QDBusInterface>
-#include <QWebFrame>
 #include <QWebElement>
 #include <QWebHistory>
-
-#define QL1S(x)  QLatin1String(x)
-#define QL1C(x)  QLatin1Char(x)
 
 K_GLOBAL_STATIC_WITH_ARGS(QUrl, globalBlankUrl, ("about:blank"))
 
@@ -118,7 +110,7 @@ KWebKitPart::KWebKitPart(QWidget *parentWidget, QObject *parent,
                                                 .arg(KDE::versionMinor())
                                                 .arg(KDE::versionRelease()));
 
-    setXMLFile(QL1S("kwebkitpart.rc"));
+    setXMLFile(QLatin1String("kwebkitpart.rc"));
 
     // Create this KPart's widget
     QWidget *mainWidget = new QWidget (parentWidget);
@@ -252,18 +244,18 @@ void KWebKitPart::updateActions()
 {
     m_browserExtension->updateActions();
 
-    QAction* action = actionCollection()->action(QL1S("saveDocument"));
+    QAction* action = actionCollection()->action(QLatin1String("saveDocument"));
     if (action) {
         const QString protocol (url().protocol());
-        action->setEnabled(protocol != QL1S("about") && protocol != QL1S("error"));
+        action->setEnabled(protocol != QLatin1String("about") && protocol != QLatin1String("error"));
     }
 
-    action = actionCollection()->action(QL1S("printPreview"));
+    action = actionCollection()->action(QLatin1String("printPreview"));
     if (action) {
         action->setEnabled(m_browserExtension->isActionEnabled("print"));
     }
 
-    action = actionCollection()->action(QL1S("saveFrame"));
+    action = actionCollection()->action(QLatin1String("saveFrame"));
     if (action) {
         action->setEnabled((view()->page()->currentFrame() != view()->page()->mainFrame()));
     }
@@ -331,8 +323,8 @@ bool KWebKitPart::openUrl(const KUrl &_u)
     // a path component, we set the path to "/" here so that the security context
     // will properly allow access to local resources.
     if (u.host().isEmpty() && u.path().isEmpty()
-        && KProtocolInfo::protocolClass(u.protocol()) == QL1S(":local")) {
-        u.setPath(QL1S("/"));
+        && KProtocolInfo::protocolClass(u.protocol()) == QLatin1String(":local")) {
+        u.setPath(QLatin1String("/"));
     }
 
     // Do not emit update history when url is typed in since the embedding part
@@ -344,7 +336,7 @@ bool KWebKitPart::openUrl(const KUrl &_u)
     Q_ASSERT(p);
 
     // Handle error conditions...
-    if (u.protocol().compare(QL1S("error"), Qt::CaseInsensitive) == 0 && u.hasSubUrl()) {
+    if (u.protocol().compare(QLatin1String("error"), Qt::CaseInsensitive) == 0 && u.hasSubUrl()) {
         /**
          * The format of the error url is that two variables are passed in the query:
          * error = int kio error code, errText = QString error text from kio
@@ -378,7 +370,7 @@ bool KWebKitPart::openUrl(const KUrl &_u)
 
     if (u != *globalBlankUrl) {
         // Get the SSL information sent, if any...
-        if (args.metaData().contains(QL1S("ssl_in_use"))) {
+        if (args.metaData().contains(QLatin1String("ssl_in_use"))) {
             WebSslInfo sslInfo;
             sslInfo.restoreFrom(KIO::MetaData(args.metaData()).toVariant());
             sslInfo.setUrl(u);
@@ -489,16 +481,16 @@ void KWebKitPart::slotMainFrameLoadFinished (bool ok)
     // Set the favicon specified through the <link> tag...
     if (WebKitSettings::self()->favIconsEnabled()
         && !frame->page()->settings()->testAttribute(QWebSettings::PrivateBrowsingEnabled)) {
-        const QWebElement element = frame->findFirstElement(QL1S("head>link[rel=icon], "
+        const QWebElement element = frame->findFirstElement(QLatin1String("head>link[rel=icon], "
                                                                  "head>link[rel=\"shortcut icon\"]"));
         KUrl shortcutIconUrl;
         if (element.isNull()) {
             shortcutIconUrl = frame->baseUrl();
             QString urlPath = shortcutIconUrl.path();
-            const int index = urlPath.indexOf(QL1C('/'));
+            const int index = urlPath.indexOf(QLatin1Char('/'));
             if (index > -1)
               urlPath.truncate(index);
-            urlPath += QL1S("/favicon.ico");
+            urlPath += QLatin1String("/favicon.ico");
             shortcutIconUrl.setPath(urlPath);
         } else {
             shortcutIconUrl = KUrl (frame->baseUrl(), element.attribute("href"));
@@ -520,7 +512,7 @@ void KWebKitPart::slotLoadFinished(bool ok)
         QWebFrame* frame = (page() ? page()->currentFrame() : 0);
         if (ok &&
             frame == page()->mainFrame() &&
-            !frame->findFirstElement(QL1S("head>meta[http-equiv=refresh]")).isNull()) {
+            !frame->findFirstElement(QLatin1String("head>meta[http-equiv=refresh]")).isNull()) {
             if (WebKitSettings::self()->autoPageRefresh()) {
                 pending = true;
             } else {
@@ -549,7 +541,7 @@ void KWebKitPart::slotUrlChanged(const QUrl& url)
         return;
 
     // Ignore if error url
-    if (url.scheme().compare(QL1S("error"), Qt::CaseInsensitive) == 0)
+    if (url.scheme().compare(QLatin1String("error"), Qt::CaseInsensitive) == 0)
         return;
 
     const KUrl u (url);
@@ -660,7 +652,7 @@ void KWebKitPart::slotLinkHovered(const QString& _link, const QString& /*title*/
     QString message;
 
     if (_link.isEmpty()) {
-        message = QL1S("");
+        message = QLatin1String("");
         emit m_browserExtension->mouseOverInfo(KFileItem());
     } else {
         QUrl linkUrl (_link);
@@ -670,7 +662,7 @@ void KWebKitPart::slotLinkHovered(const QString& _link, const QString& /*title*/
         linkUrl.setUserName(QString());
         const QString link (linkUrl.toString());
 
-        if (QString::compare(scheme, QL1S("mailto"), Qt::CaseInsensitive) == 0) {
+        if (QString::compare(scheme, QLatin1String("mailto"), Qt::CaseInsensitive) == 0) {
             message += i18nc("status bar text when hovering email links; looks like \"Email: xy@kde.org - CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\"", "Email: ");
 
             // Workaround: for QUrl's parsing deficiencies of "mailto:foo@bar.com".
@@ -684,29 +676,29 @@ void KWebKitPart::slotLinkHovered(const QString& _link, const QString& /*title*/
             for(int i = 0; i < count; ++i) {
                 const QPair<QString, QString> queryItem (queryItems.at(i));
                 //kDebug() << "query: " << queryItem.first << queryItem.second;
-                if (queryItem.first.contains(QL1C('@')) && queryItem.second.isEmpty())
+                if (queryItem.first.contains(QLatin1Char('@')) && queryItem.second.isEmpty())
                     fields["to"] << queryItem.first;
-                if (QString::compare(queryItem.first, QL1S("to"), Qt::CaseInsensitive) == 0)
+                if (QString::compare(queryItem.first, QLatin1String("to"), Qt::CaseInsensitive) == 0)
                     fields["to"] << queryItem.second;
-                if (QString::compare(queryItem.first, QL1S("cc"), Qt::CaseInsensitive) == 0)
+                if (QString::compare(queryItem.first, QLatin1String("cc"), Qt::CaseInsensitive) == 0)
                     fields["cc"] << queryItem.second;
-                if (QString::compare(queryItem.first, QL1S("bcc"), Qt::CaseInsensitive) == 0)
+                if (QString::compare(queryItem.first, QLatin1String("bcc"), Qt::CaseInsensitive) == 0)
                     fields["bcc"] << queryItem.second;
-                if (QString::compare(queryItem.first, QL1S("subject"), Qt::CaseInsensitive) == 0)
+                if (QString::compare(queryItem.first, QLatin1String("subject"), Qt::CaseInsensitive) == 0)
                     fields["subject"] << queryItem.second;
             }
 
-            if (fields.contains(QL1S("to")))
-                message += fields.value(QL1S("to")).join(QL1S(", "));
-            if (fields.contains(QL1S("cc")))
-                message += i18nc("status bar text when hovering email links; looks like \"Email: xy@kde.org - CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\"", " - CC: ") + fields.value(QL1S("cc")).join(QL1S(", "));
-            if (fields.contains(QL1S("bcc")))
-                message += i18nc("status bar text when hovering email links; looks like \"Email: xy@kde.org - CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\"", " - BCC: ") + fields.value(QL1S("bcc")).join(QL1S(", "));
-            if (fields.contains(QL1S("subject")))
-                message += i18nc("status bar text when hovering email links; looks like \"Email: xy@kde.org - CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\"", " - Subject: ") + fields.value(QL1S("subject")).join(QL1S(" "));
-        } else if (scheme == QL1S("javascript")) {
+            if (fields.contains(QLatin1String("to")))
+                message += fields.value(QLatin1String("to")).join(QLatin1String(", "));
+            if (fields.contains(QLatin1String("cc")))
+                message += i18nc("status bar text when hovering email links; looks like \"Email: xy@kde.org - CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\"", " - CC: ") + fields.value(QLatin1String("cc")).join(QLatin1String(", "));
+            if (fields.contains(QLatin1String("bcc")))
+                message += i18nc("status bar text when hovering email links; looks like \"Email: xy@kde.org - CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\"", " - BCC: ") + fields.value(QLatin1String("bcc")).join(QLatin1String(", "));
+            if (fields.contains(QLatin1String("subject")))
+                message += i18nc("status bar text when hovering email links; looks like \"Email: xy@kde.org - CC: z@kde.org -BCC: x@kde.org - Subject: Hi translator\"", " - Subject: ") + fields.value(QLatin1String("subject")).join(QLatin1String(" "));
+        } else if (scheme == QLatin1String("javascript")) {
             message = KStringHandler::rsqueeze(link, 150);
-            if (link.startsWith(QL1S("javascript:window.open")))
+            if (link.startsWith(QLatin1String("javascript:window.open")))
                 message += i18n(" (In new window)");
         } else {
             message = link;

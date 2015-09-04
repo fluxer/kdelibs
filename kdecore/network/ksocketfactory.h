@@ -22,7 +22,7 @@
 #define KSOCKETFACTORY_H
 
 #include <kdecore_export.h>
-#include <QtCore/QString>
+
 #include <QtNetwork/QNetworkProxy>
 #include <QtNetwork/QHostAddress>
 

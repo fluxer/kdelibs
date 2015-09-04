@@ -28,8 +28,6 @@
 #include <kwebpage.h>
 #include <kparts/browserextension.h>
 
-#include <QUrl>
-#include <QDebug>
 #include <QMultiHash>
 
 class KUrl;
