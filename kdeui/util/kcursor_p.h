@@ -21,7 +21,7 @@
 #ifndef KCURSOR_P_H
 #define KCURSOR_P_H
 
-#include <QtCore/QHash>
+#include <QtCore/qhash.h>
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtGui/QCursor>

@@ -23,10 +23,6 @@
 
 #include <kurl.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QPointer>
 #include <QtXml/qdom.h>
 
 #include <sys/types.h>

@@ -24,7 +24,6 @@
 #include <kdedmodule.h>
 
 #include <QObject>
-#include <QString>
 #include <QDBusArgument>
 #include <QDBusConnection>
 #include <QtDBus/qdbusextratypes.h>

@@ -23,9 +23,6 @@
 
 #include "kio_export.h"
 
-#include <QtCore/QMap>
-#include <QtCore/QList>
-#include <QtCore/QStringList>
 #include <kurl.h>
 
 class QDBusArgument;

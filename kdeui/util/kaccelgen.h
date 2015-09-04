@@ -23,7 +23,6 @@
 #include <kdeui_export.h>
 
 #include <QtCore/QMap>
-#include <QtCore/QString>
 #include <QtCore/QStringList>
 
 /**

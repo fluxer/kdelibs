@@ -27,7 +27,6 @@
 
 #include <QtGui/QApplication>
 #include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusReply>
 
 #include <config.h>

@@ -40,6 +40,7 @@
 #include <QtGui/QCommonStyle>
 #include <QtGui/QPalette>
 #include <QtGui/QStylePlugin>
+
 #include <typeinfo>
 
 class QStyleOptionProgressBar;

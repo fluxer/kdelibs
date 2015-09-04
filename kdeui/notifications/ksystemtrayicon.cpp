@@ -40,10 +40,8 @@
 #include <kapplication.h>
 #include <kconfiggroup.h>
 
-#include <QtGui/qevent.h>
 #include <QToolButton>
 #include <QMovie>
-#include <QPointer>
 
 class KSystemTrayIconPrivate
 {

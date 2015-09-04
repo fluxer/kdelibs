@@ -21,7 +21,6 @@
 #include <kdeui_export.h>
 #include <ksharedconfig.h>
 #include <QtCore/QObject>
-#include <QtCore/QString>
 #include <QtGui/QPalette>
 
 #define KDE_DEFAULT_SINGLECLICK true

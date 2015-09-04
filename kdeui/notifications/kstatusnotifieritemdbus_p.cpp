@@ -22,12 +22,8 @@
 #include "kstatusnotifieritemprivate_p.h"
 #include "kstatusnotifieritem.h"
 
-#include <QDBusConnection>
-#include <QPixmap>
-#include <QImage>
 #include <QApplication>
 #include <QMovie>
-#include <QtCore/qmetaobject.h>
 
 #include <kdebug.h>
 #include <ksystemtrayicon.h>
@@ -41,22 +37,12 @@
 #include <kactioncollection.h>
 
 #include "statusnotifierwatcher_interface.h"
-
-
 #include "statusnotifieritemadaptor.h"
 
-#ifdef Q_OS_WIN64    
 __inline int toInt(WId wid) 
 {
-	return (int)((__int64)wid);
+    return (int)wid;
 }
-
-#else
-__inline int toInt(WId wid) 
-{
-	return (int)wid;
-}
-#endif        
 
 
 // Marshall the ImageStruct data into a D-BUS argument

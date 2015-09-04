@@ -23,7 +23,6 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QList>
 #include <QtGui/QSessionManager>
 
 /**

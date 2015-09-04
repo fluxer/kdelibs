@@ -22,7 +22,7 @@
 #define _K_PIXMAPSEQUENCE_H_
 
 #include <QtCore/qshareddata.h>
-#include <QtCore/QSize>
+#include <QtCore/qsize.h>
 
 #include "kdeui_export.h"
 #include <kiconloader.h>

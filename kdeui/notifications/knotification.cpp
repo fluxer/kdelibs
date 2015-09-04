@@ -40,16 +40,8 @@
 #include <kvbox.h>
 #include <kapplication.h>
 
-#include <QMap>
-#include <QPixmap>
-#include <QPointer>
-#include <QLabel>
 #include <QTimer>
 #include <QTabWidget>
-#include <QFile>
-#include <QStringList>
-#include <QTextStream>
-#include <QDateTime>
 #include <QDBusError>
 
 struct KNotification::Private

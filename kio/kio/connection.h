@@ -31,7 +31,6 @@
 #include "kio_export.h"
 
 #include <QtCore/QObject>
-#include <QtCore/QString>
 
 namespace KIO {
 

@@ -22,7 +22,6 @@
 #define KSTATUSNOTIFIERITEM_H
 
 #include <QtCore/QObject>
-#include <QtCore/QString>
 #include <QtDBus/QDBusArgument>
 #include <QtCore/QPoint>
 

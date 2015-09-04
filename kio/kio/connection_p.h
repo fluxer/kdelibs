@@ -20,7 +20,6 @@
 #ifndef KIO_CONNECTION_P_H
 #define KIO_CONNECTION_P_H
 
-#include <QObject>
 #include <klocalsocket.h>
 
 class KUrl;

@@ -16,16 +16,11 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include <QWidget>
+
 #include "knotificationmanager_p.h"
 #include <ktoolinvocation.h>
 #include "knotification.h"
-
-#include <QHash>
-#include <QWidget>
-#include <QtDBus/QtDBus>
-#include <QPointer>
-#include <QtCore/qbuffer.h>
-
 #include <kdebug.h>
 #include <kapplication.h>
 #include <kiconloader.h>

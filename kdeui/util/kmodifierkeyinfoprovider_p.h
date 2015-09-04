@@ -21,7 +21,6 @@
 #ifndef KMODIFIERKEYINFOPROVIDER_P_H
 #define KMODIFIERKEYINFOPROVIDER_P_H
 
-#include <QHash>
 #include <QWidget>
 #include <QSet>
 

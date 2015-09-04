@@ -22,14 +22,9 @@
 #include "kstatusnotifieritemprivate_p.h"
 #include "kstatusnotifieritemdbus_p.h"
 
-#include <QDBusConnection>
-#include <QPixmap>
-#include <QImage>
 #include <QApplication>
 #include <QMovie>
 #include <QPainter>
-#include <QtCore/qtimer.h>
-#include <QtCore/qmetaobject.h>
 
 #include <kdebug.h>
 #include <ksystemtrayicon.h>

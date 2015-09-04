@@ -21,8 +21,6 @@
 #ifndef PLASMA_PACKAGE_H
 #define PLASMA_PACKAGE_H
 
-#include <QtCore/QStringList>
-
 #include <plasma/plasma.h>
 #include <plasma/packagestructure.h>
 #include <plasma/plasma_export.h>
