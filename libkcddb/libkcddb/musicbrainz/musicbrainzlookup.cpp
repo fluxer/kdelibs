@@ -329,7 +329,7 @@ namespace KCDDB
 
   QString MusicBrainzLookup::artistFromCreditList(MusicBrainz5::CArtistCredit * artistCredit )
   {
-    kDebug() << k_funcinfo;
+    kDebug();
     QString artistName;
 
     MusicBrainz5::CNameCreditList *ArtistList=artistCredit->NameCreditList();

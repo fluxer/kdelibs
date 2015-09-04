@@ -105,7 +105,7 @@ void syncConfiguration()
 void DispatcherPrivate::unregisterComponent(QObject *obj)
 {
     if (!m_componentName.contains(obj)) {
-      kWarning(701) << k_funcinfo << "Tried to unregister an object which is not already registered.";
+      kWarning(701) << "Tried to unregister an object which is not already registered.";
       return;
     }
 

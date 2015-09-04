@@ -15,10 +15,10 @@ $i = 0;
 while (<STDIN>) {
     chomp;
     if (defined($hash{$_})) {
-	# Entry already seen, output one of the old addresses
-	print STDERR "Already seen " . $_ . "  " . $hash{$_} . "\n";
-	$sizes[$i++] = $hash{$_};
-	next;
+        # Entry already seen, output one of the old addresses
+        print STDERR "Already seen " . $_ . "  " . $hash{$_} . "\n";
+        $sizes[$i++] = $hash{$_};
+        next;
     }
 
     m/^(i18n:)?(.*)$/i;
@@ -34,7 +34,7 @@ while (<STDIN>) {
 print "    \"\\0\";\n\nstatic const int ${varname}_indices[] = {";
 for ($j = 0; $j < $i; ++$j) {
     if (($j % 8) == 0) {
-	print "\n   ";
+        print "\n   ";
     }
 
     printf " %4d,", $sizes[$j];

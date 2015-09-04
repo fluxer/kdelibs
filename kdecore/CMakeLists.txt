@@ -295,6 +295,7 @@ set(kdecore_LIB_SRCS
     util/kshell_unix.cpp
     util/kuser_unix.cpp
     util/kmacroexpander_unix.cpp
+    util/kshareddatacache.cpp
     fakes.c
 
     ${kdecore_OPTIONAL_SRCS}
@@ -302,13 +303,11 @@ set(kdecore_LIB_SRCS
     ${KAUTH_HELPER_BACKEND_SRCS}
 )
 
-set(kdecore_LIB_SRCS ${kdecore_LIB_SRCS} util/kshareddatacache.cpp)
-set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${CMAKE_THREAD_LIBS_INIT})
-
 # KSharedDataCache uses exceptions as of 4.8.4, the rest of kdecore
 # doesn't. Try to enable exceptions only for that file.
 set_source_files_properties(util/kshareddatacache.cpp
-        PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}")
+    PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
+)
 
 if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
    add_definitions(-DNO_DISPLAY)
@@ -316,7 +315,15 @@ endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
 
 add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 
-target_link_libraries(kdecore PRIVATE ${QT_QTCORE_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${ZLIB_LIBRARY} ${kdecore_OPTIONAL_LIBS})
+target_link_libraries(kdecore PRIVATE
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTDBUS_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+    ${ZLIB_LIBRARY}
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${kdecore_OPTIONAL_LIBS}
+)
 
 set(SYS_INOTIFY_H_FOUND 0)
 if(SYS_INOTIFY_H_FOUND)
