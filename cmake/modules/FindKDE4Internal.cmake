@@ -63,8 +63,6 @@
 #  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
 #  KDE4_KDEWEBKIT_LIBRARY   - the kdewebkit library
 #
-#  KDE4_PLASMA_OPENGL_FOUND  - TRUE if the OpenGL support of Plasma has been found, NOTFOUND otherwise
-#
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
 # should be used instead of the ones above:
@@ -120,7 +118,7 @@
 #  AUTOSTART_INSTALL_DIR    - the directory where autostart files will be installed
 #  DEMO_INSTALL_DIR         - the directory where demos will be installed
 #  KCONF_UPDATE_INSTALL_DIR - the directory where kconf_update files will be installed
-#  SYSCONF_INSTALL_DIR      - the directory where sysconfig files will be installed (default /etc)
+#  SYSCONF_INSTALL_DIR      - the directory where sysconfig files will be installed (default /usr/etc)
 #  XDG_APPS_INSTALL_DIR     - the XDG apps dir
 #  XDG_DIRECTORY_INSTALL_DIR- the XDG directory
 #  XDG_MIME_INSTALL_DIR     - the XDG mimetypes install dir
@@ -283,10 +281,10 @@ include(MacroEnsureVersion)
 if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
   set(_REQ_STRING_KDE4 "REQUIRED")
   set(_REQ_STRING_KDE4_MESSAGE "FATAL_ERROR")
-else(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
+else()
   set(_REQ_STRING_KDE4 )
   set(_REQ_STRING_KDE4_MESSAGE "STATUS")
-endif(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
+endif()
 
 
 # Store CMAKE_MODULE_PATH and then append the current dir to it, so we are sure
@@ -297,12 +295,12 @@ set(CMAKE_MODULE_PATH ${kde_cmake_module_dir} ${CMAKE_MODULE_PATH} )
 
 # if the minimum Qt requirement is changed, change all occurrence in the
 # following lines
-if( NOT QT_MIN_VERSION )
-  set(QT_MIN_VERSION "4.8.2")
-endif( NOT QT_MIN_VERSION )
-if( ${QT_MIN_VERSION} VERSION_LESS "4.8.2" )
-  set(QT_MIN_VERSION "4.8.2")
-endif( ${QT_MIN_VERSION} VERSION_LESS "4.8.2" )
+if(NOT QT_MIN_VERSION )
+    set(QT_MIN_VERSION "4.8.2")
+endif()
+if(${QT_MIN_VERSION} VERSION_LESS "4.8.2")
+    set(QT_MIN_VERSION "4.8.2")
+endif()
 
 # Tell FindQt4.cmake to point the QT_QTFOO_LIBRARY targets at the imported targets
 # for the Qt libraries, so we get full handling of release and debug versions of the
@@ -409,9 +407,6 @@ else (_kdeBootStrapping)
    # use them to set the KDE4_LIB_DIR and KDE4_INCLUDE_DIR "public interface" variables
    set(KDE4_LIB_DIR ${KDE4_LIB_INSTALL_DIR})
    set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR})
-
-   # This setting is currently not recorded in KDELibsDependencies.cmake:
-   find_file(KDE4_PLASMA_OPENGL_FOUND plasma/glapplet.h PATHS ${KDE4_INCLUDE_DIR} NO_DEFAULT_PATH)
 
    # Now include the file with the imported tools (executable targets).
    # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
