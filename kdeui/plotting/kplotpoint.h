@@ -23,7 +23,7 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QString>
+#include <QtCore/qstring.h>
 
 class QPointF;
 

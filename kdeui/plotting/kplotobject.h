@@ -23,8 +23,8 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QString>
-#include <QtGui/QColor>
+#include <QtCore/qstring.h>
+#include <QtGui/qcolor.h>
 
 class QBrush;
 class QPainter;

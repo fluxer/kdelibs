@@ -25,9 +25,6 @@
 #include <kdeui_export.h>
 
 #include <QtGui/QColor>
-#include <QtCore/QList>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
 
 /**
  * Class for handling color collections ("palettes").

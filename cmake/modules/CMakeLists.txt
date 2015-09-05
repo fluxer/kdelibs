@@ -65,7 +65,6 @@ set(cmakeFiles
     FindLibXslt.cmake
     FindLibintl.cmake
     FindLinuxWirelesstools.cmake
-    FindMsgfmt.cmake
     FindMusicBrainz.cmake
     FindMusicBrainz5.cmake
     FindMySQL.cmake

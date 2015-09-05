@@ -81,49 +81,28 @@ QString KDesktopFile::locateLocal(const QString &path)
   QString local;
   if (path.endsWith(QLatin1String(".directory")))
   {
-    local = path;
+    // XDG Desktop menu items come with absolute paths, we need to
+    // extract their relative path and then build a local path.
+    local = KGlobal::dirs()->relativeLocation("xdgdata-dirs", path);
     if (!QDir::isRelativePath(local))
     {
-      // Relative wrt apps?
-      local = KGlobal::dirs()->relativeLocation("apps", path);
+      // Hm, that didn't work...
+      // What now? Use filename only and hope for the best.
+      local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
     }
-
-    if (QDir::isRelativePath(local))
-    {
-      local = KStandardDirs::locateLocal("apps", local); // Relative to apps
-    }
-    else
-    {
-      // XDG Desktop menu items come with absolute paths, we need to
-      // extract their relative path and then build a local path.
-      local = KGlobal::dirs()->relativeLocation("xdgdata-dirs", local);
-      if (!QDir::isRelativePath(local))
-      {
-        // Hm, that didn't work...
-        // What now? Use filename only and hope for the best.
-        local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
-      }
-      local = KStandardDirs::locateLocal("xdgdata-dirs", local);
-    }
+    local = KStandardDirs::locateLocal("xdgdata-dirs", local);
   }
   else
   {
-    if (QDir::isRelativePath(path))
+    // XDG Desktop menu items come with absolute paths, we need to
+    // extract their relative path and then build a local path.
+    local = KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
+    if (!QDir::isRelativePath(local))
     {
-      local = KStandardDirs::locateLocal("apps", path); // Relative to apps
+      // What now? Use filename only and hope for the best.
+      local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
     }
-    else
-    {
-      // XDG Desktop menu items come with absolute paths, we need to
-      // extract their relative path and then build a local path.
-      local = KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
-      if (!QDir::isRelativePath(local))
-      {
-        // What now? Use filename only and hope for the best.
-        local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
-      }
-      local = KStandardDirs::locateLocal("xdgdata-apps", local);
-    }
+    local = KStandardDirs::locateLocal("xdgdata-apps", local);
   }
   return local;
 }
@@ -350,9 +329,6 @@ KDesktopFile::sortOrder() const
 QString KDesktopFile::readDocPath() const
 {
   Q_D(const KDesktopFile);
-  //legacy entry in kde3 apps
-  if(d->desktopGroup.hasKey( "DocPath" ))
-    return d->desktopGroup.readPathEntry( "DocPath", QString() );
   return d->desktopGroup.readPathEntry( "X-DocPath", QString() );
 }
 

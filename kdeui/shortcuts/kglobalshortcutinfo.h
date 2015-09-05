@@ -20,8 +20,6 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QList>
-#include <QtCore/QObject>
 #include <QtGui/QKeySequence>
 #include <QtDBus/QDBusArgument>
 

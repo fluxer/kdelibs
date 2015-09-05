@@ -19,11 +19,6 @@
 */
 
 #include <kconfiggroup.h>
-
-#include <QtCore/qstringlist.h>
-#include <QtGui/QColor>
-#include <QtGui/QFont>
-
 #include <kconfiggroup_p.h>
 #include <kdebug.h>
 

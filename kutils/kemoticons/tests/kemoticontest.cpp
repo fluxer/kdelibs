@@ -47,7 +47,7 @@ QTEST_KDEMAIN(KEmoticonTest, GUI)
 void KEmoticonTest::testEmoticonParser()
 {
     KEmoticonsTheme emo = KEmoticons().theme("kde4");
-    QString basePath = QString::fromLatin1(SRCDIR) + QString::fromLatin1("/emoticon-parser-testcases");
+    QString basePath = QString::fromLatin1(KDESRCDIR) + QString::fromLatin1("/emoticon-parser-testcases");
     QDir testCasesDir(basePath);
 
     QStringList inputFileNames = testCasesDir.entryList(QStringList(QLatin1String("*.input")));

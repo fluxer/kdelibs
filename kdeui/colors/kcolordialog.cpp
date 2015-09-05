@@ -36,13 +36,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <QtCore/QFile>
+#include <QtCore/QTimer>
+
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
-#include <QtGui/QDesktopWidget>
 #include <QtGui/QRadioButton>
 #include <QtGui/qdrawutil.h>
 #include <QtGui/qevent.h>
-#include <QtCore/QFile>
 #include <QtGui/QHeaderView>
 #include <QtGui/QImage>
 #include <QtGui/QStyledItemDelegate>
@@ -50,8 +51,9 @@
 #include <QtGui/QLayout>
 #include <QtGui/QPainter>
 #include <QtGui/QPushButton>
+#include <QtGui/QScrollArea>
+#include <QtGui/QDesktopWidget>
 #include <QtGui/QScrollBar>
-#include <QtCore/QTimer>
 
 #include <kapplication.h>
 #include <kcombobox.h>

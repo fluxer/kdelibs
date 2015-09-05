@@ -22,6 +22,7 @@
 #include "qtest_kde.h"
 
 #include <QtTest/QTestEvent>
+#include <QtTest/QtTestGui>
 
 #include <QtCore/QList>
 #include <QtGui/QRadioButton>

@@ -1,5 +1,3 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
 include_directories( ${KDE4_KPARTS_INCLUDES} )
 
 ########### next target ###############
@@ -10,9 +8,9 @@ set(kpartstest_SRCS
     notepad.cpp
 )
 
-add_executable(kpartstest ${kpartstest_SRCS})
+kde4_add_manual_test(kparts-kpartstest ${kpartstest_SRCS})
 
-target_link_libraries(kpartstest  ${KDE4_KPARTS_LIBS} )
+target_link_libraries(kparts-kpartstest  ${KDE4_KPARTS_LIBS} )
 
 
 ########### next target ###############
@@ -23,9 +21,9 @@ set(normalktmtest_SRCS
     notepad.cpp
 )
 
-add_executable(normalktmtest ${normalktmtest_SRCS})
+kde4_add_manual_test(kparts-normalktmtest ${normalktmtest_SRCS})
 
-target_link_libraries(normalktmtest  ${KDE4_KPARTS_LIBS} )
+target_link_libraries(kparts-normalktmtest  ${KDE4_KPARTS_LIBS} )
 
 
 ########### next target ###############
@@ -34,13 +32,14 @@ set(partviewer_SRCS
     partviewer.cpp
 )
 
-add_executable(partviewer ${partviewer_SRCS})
-target_link_libraries(partviewer  ${KDE4_KPARTS_LIBS} )
+kde4_add_manual_test(kparts-partviewer ${partviewer_SRCS})
+
+target_link_libraries(kparts-partviewer ${KDE4_KPARTS_LIBS} )
 
 ########### test prog for "open or save question" ###############
 
-add_executable(openorsavequestion openorsavequestion.cpp)
-target_link_libraries(openorsavequestion  ${KDE4_KPARTS_LIBS} )
+kde4_add_manual_test(kparts-openorsavequestion openorsavequestion.cpp)
+target_link_libraries(kparts-openorsavequestion  ${KDE4_KPARTS_LIBS} )
 
 ########### next target ###############
 
@@ -48,9 +47,9 @@ set(spellcheckplugin_PART_SRCS plugin_spellcheck.cpp )
 
 kde4_add_plugin(spellcheckplugin ${spellcheckplugin_PART_SRCS})
 
-target_link_libraries(spellcheckplugin  ${KDE4_KPARTS_LIBS} )
+target_link_libraries(spellcheckplugin ${KDE4_KPARTS_LIBS} )
 
-install(TARGETS spellcheckplugin  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(TARGETS spellcheckplugin DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### next target ###############
@@ -59,10 +58,11 @@ set(notepadpart_PART_SRCS notepad.cpp)
 
 kde4_add_plugin(notepadpart ${notepadpart_PART_SRCS})
 
-target_link_libraries(notepadpart  ${KDE4_KPARTS_LIBS} )
-set_target_properties(notepadpart PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
+target_link_libraries(notepadpart ${KDE4_KPARTS_LIBS} )
 
-install(TARGETS notepadpart  DESTINATION ${PLUGIN_INSTALL_DIR} )
+target_compile_definitions(notepadpart PRIVATE -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/")
+
+install(TARGETS notepadpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 
 
 ########### unit tests ###############
@@ -75,17 +75,15 @@ MACRO(KPARTS_UNIT_TESTS)
 ENDMACRO(KPARTS_UNIT_TESTS)
 MACRO(KPARTS_EXECUTABLE_TESTS)
     FOREACH(_testname ${ARGN})
-        add_executable(kparts-${_testname} ${_testname}.cpp)
+        kde4_add_manual_test(kparts-${_testname} ${_testname}.cpp)
         target_link_libraries(kparts-${_testname} ${KDE4_KPARTS_LIBS} ${QT_QTTEST_LIBRARY})
-        set_target_properties(kparts-${_testname} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
     ENDFOREACH(_testname)
 ENDMACRO(KPARTS_EXECUTABLE_TESTS)
 
-set(kparts_unittests
-  parttest
-  openorsavequestion_unittest
+KPARTS_UNIT_TESTS(
+    parttest
+    openorsavequestion_unittest
 )
-KPARTS_UNIT_TESTS(${kparts_unittests})
 
 ########### install files ###############
 

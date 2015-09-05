@@ -25,10 +25,9 @@
 #ifndef KCOLORDIALOG_H
 #define KCOLORDIALOG_H
 
-#include <kdialog.h>
-#include <QtGui/QPixmap>
-#include <QtGui/QScrollArea>
 #include <QtGui/QTableWidget>
+
+#include <kdialog.h>
 #include <kcolorchoosermode.h>
 
 

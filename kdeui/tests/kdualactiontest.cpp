@@ -19,6 +19,8 @@
  */
 #include <kdualaction.h>
 
+#include <QtTest/QtTestGui>
+
 #include "qtest_kde.h"
 
 Q_DECLARE_METATYPE(KAction*)

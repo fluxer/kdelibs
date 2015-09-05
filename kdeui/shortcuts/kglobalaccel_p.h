@@ -22,10 +22,6 @@
 #ifndef KGLOBALACCEL_P_H
 #define KGLOBALACCEL_P_H
 
-#include <QtCore/qset.h>
-#include <QtCore/QHash>
-#include <QtCore/QStringList>
-
 #include "kcomponentdata.h"
 #include "kglobalaccel_interface.h"
 #include "kglobalaccel_component_interface.h"

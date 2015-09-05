@@ -26,8 +26,6 @@
 #include "kaction.h"
 #include "kglobalshortcutinfo.h"
 
-#include <QtCore/QObject>
-
 class QWidget;
 class KShortcut;
 class KComponentData;

@@ -17,6 +17,8 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <QtTest/QtTestGui>
+
 #include "kcolorbuttontest.h"
 
 #include "qtest_kde.h"

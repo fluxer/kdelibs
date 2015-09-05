@@ -301,17 +301,24 @@ endmacro(KDE4_ADD_PLUGIN)
 # Add a unit test, which is executed when running make test. The targets are
 # always created and built unless ENABLE_TESTING is set to negative value.
 macro(KDE4_ADD_TEST _targetName)
-    set(_srcList ${ARGN})
-    add_executable(${_targetName} ${_srcList})
+    KDE4_ADD_MANUAL_TEST(${_targetName} ${ARGN})
 
     string(REPLACE "test" "" _testName ${_targetName})
     add_test(NAME ${_testName} COMMAND ${_targetName})
+endmacro(KDE4_ADD_TEST)
+
+macro(KDE4_ADD_MANUAL_TEST _targetName)
+    add_executable(${_targetName} ${ARGN})
 
     target_compile_definitions(
         ${_targetName} PRIVATE
         -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
     )
-endmacro(KDE4_ADD_TEST)
+    set_target_properties(
+        ${_targetName} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+    )
+endmacro(KDE4_ADD_MANUAL_TEST)
 
 macro(KDE4_ADD_WIDGET_FILES _sources)
     foreach(_current_FILE ${_sources})

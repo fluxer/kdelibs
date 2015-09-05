@@ -20,8 +20,6 @@
 #ifndef KSTANDARDSHORTCUT_H
 #define KSTANDARDSHORTCUT_H
 
-#include <QtCore/QString>
-
 #include "kshortcut.h"
 
 

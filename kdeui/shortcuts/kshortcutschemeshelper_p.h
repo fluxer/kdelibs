@@ -19,7 +19,6 @@
 #ifndef KSHORTCUTSCHEMESHELPER_P_H
 #define KSHORTCUTSCHEMESHELPER_P_H
 
-#include <QString>
 #include <kurl.h>
 
 class KActionCollection;

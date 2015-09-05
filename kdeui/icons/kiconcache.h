@@ -23,8 +23,6 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QList>
-#include <QtCore/QSet>
 #include <kicontheme.h>
 #include <kpixmapcache.h>
 

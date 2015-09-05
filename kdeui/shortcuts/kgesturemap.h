@@ -23,7 +23,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QHash>
 #include <QTimer>
-#include <QPolygon>
 
 #include "kgesture.h"
 

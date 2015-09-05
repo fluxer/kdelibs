@@ -23,8 +23,7 @@
 
 #include <kdeui_export.h>
 
-#include <QtGui/QFrame>
-#include <QtCore/QList>
+#include <QtGui/qframe.h>
 
 class KPlotAxis;
 class KPlotObject;

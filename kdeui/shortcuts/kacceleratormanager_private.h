@@ -21,10 +21,8 @@
 #ifndef KACCELERATORMANAGER_PRIVATE_H
 #define KACCELERATORMANAGER_PRIVATE_H
 
-
-#include <QtCore/QString>
-
-#include <QtCore/QObject>
+#include <QtCore/qstring.h>
+#include <QtCore/qobject.h>
 
 class QStackedWidget;
 

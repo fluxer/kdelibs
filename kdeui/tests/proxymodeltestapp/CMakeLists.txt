@@ -28,9 +28,9 @@ set(proxymodeltestapp_SRCS
     matchcheckingwidget.cpp
 )
 
-kde4_add_executable(proxymodeltestapp TEST ${proxymodeltestapp_SRCS})
+add_executable(kdeui-proxymodeltestapp ${proxymodeltestapp_SRCS})
 
-target_link_libraries(proxymodeltestapp
+target_link_libraries(kdeui-proxymodeltestapp
    ${KDE4_KDEUI_LIBS}
    proxymodeltestsuite
    ${QT_QTSCRIPT_LIBRARY}

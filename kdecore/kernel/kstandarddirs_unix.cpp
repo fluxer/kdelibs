@@ -17,6 +17,7 @@
 */
 
 #include "kstandarddirs.h"
+#include "kdebug.h"
 
 #include <config-prefix.h>
 #include <config.h>
@@ -29,8 +30,8 @@ QString KStandardDirs::installPath(const char *type)
     switch (type[0]) {
         case 'a':
             if (strcmp("apps", type) == 0)
-                return QFile::decodeName(APPLNK_INSTALL_DIR "/");
-            break;
+                kDebug() << "obsolete apps directory query";
+            // FALLTROUGH
         case 'c':
             if (strcmp("config", type) == 0)
                 return QFile::decodeName(CONFIG_INSTALL_DIR "/");

@@ -22,8 +22,6 @@
 #ifndef K3ICON_P_H
 #define K3ICON_P_H
 
-#include <QtCore/QString>
-
 #include <kdeui_export.h>
 #include <kiconloader.h>
 

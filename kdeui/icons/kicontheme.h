@@ -25,10 +25,6 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QList>
-
 #include "kiconloader.h"
 
 class QAction;

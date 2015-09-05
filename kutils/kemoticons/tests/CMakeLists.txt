@@ -1,6 +1,6 @@
 include_directories(${CMAKE_SOURCE_DIR} ../ ${CMAKE_CURRENT_BINARY_DIR})
 
-add_executable(kemoticonstest main.cpp)
+kde4_add_manual_test(kemoticonstest main.cpp)
 target_link_libraries(kemoticonstest ${KDE4_KDEUI_LIBS} kemoticons)
 
 add_definitions(-DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/")

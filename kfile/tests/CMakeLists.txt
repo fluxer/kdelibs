@@ -1,7 +1,7 @@
 MACRO(KFILE_UNIT_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_test(kfile-${_testname} ${_testname}.cpp)
-        target_link_libraries(${_testname}
+        target_link_libraries(kfile-${_testname}
             ${KDE4_KFILE_LIBS}
             ${KDE4_KIO_LIBS}
             ${QT_QTTEST_LIBRARY}
@@ -11,8 +11,8 @@ MACRO(KFILE_UNIT_TESTS)
 ENDMACRO(KFILE_UNIT_TESTS)
 MACRO(KFILE_EXECUTABLE_TESTS)
     FOREACH(_testname ${ARGN})
-        add_executable(${_testname} ${_testname}.cpp)
-        target_link_libraries(${_testname}
+        KDE4_ADD_MANUAL_TEST(kfile-${_testname} ${_testname}.cpp)
+        target_link_libraries(kfile-${_testname}
             ${KDE4_KFILE_LIBS}
             ${QT_QTTEST_LIBRARY}
         )

@@ -29,7 +29,6 @@
 #include <QtGui/QImage>
 #include <QtGui/QPixmap>
 #include <QtGui/QColor>
-#include <QtCore/QRect>
 
 class KIconEffectPrivate;
 

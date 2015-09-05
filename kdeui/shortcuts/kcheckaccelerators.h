@@ -26,7 +26,6 @@
 
 #include <QObject>
 #include <QPointer>
-
 #include <QTimer>
 
 class QDialog;

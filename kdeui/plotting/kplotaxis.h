@@ -23,8 +23,8 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QString>
-#include <QtCore/QList>
+#include <QtCore/qstring.h>
+#include <QtCore/qlist.h>
 
 /**
  * @short Axis for KPlotWidget

@@ -7,6 +7,6 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/../config )
 
 set(knotifytest_SRCS main.cpp knotifytestwindow.cpp knotifytestview.ui)
 
-add_executable(knotifytest ${knotifytest_SRCS})
+kde4_add_manual_test(knotifytest ${knotifytest_SRCS})
 
 target_link_libraries(knotifytest  ${KDE4_KIO_LIBS} knotifyconfig )

@@ -20,8 +20,8 @@
 #ifndef PAGED_KPAGEDIALOG_P_H
 #define PAGED_KPAGEDIALOG_P_H
 
-#include "paged/kpagedialog.h"
-#include "../dialogs/kdialog_p.h"
+#include "kpagedialog.h"
+#include "kdialog_p.h"
 #include <QtGui/QLayout>
 
 class KDEUI_EXPORT KPageDialogPrivate : public KDialogPrivate

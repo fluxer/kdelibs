@@ -28,7 +28,6 @@
 #define KCOLORCOMBO_H
 
 #include <QtGui/QComboBox>
-#include <QtCore/QList>
 
 #include <kdeui_export.h>
 

@@ -25,6 +25,7 @@
 #include <qtestevent.h>
 #include <QtGui/qitemselectionmodel.h>
 #include <QAbstractProxyModel>
+#include <QApplication>
 
 #include "dynamictreemodel.h"
 #include "indexfinder.h"

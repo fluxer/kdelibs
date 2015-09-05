@@ -27,6 +27,7 @@
 #include <kconfiggroup.h>
 #include <kiconloader.h>
 #include <QtXml/qdom.h>
+#include <QtTest/QtTestGui>
 #include <QToolButton>
 #include "testxmlguiwindow.h"
 #include "testguiclient.h"

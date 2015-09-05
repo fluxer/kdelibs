@@ -4,18 +4,16 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_BINARY_DIR}/
 
 
 MACRO(KCDDB_EXECUTABLE_TESTS)
-       FOREACH(_testname ${ARGN})
-               kde4_add_executable(${_testname} TEST ${_testname}.cpp)
-               target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS}
-                                     ${QT_QTTEST_LIBRARY} kcddb)
-       ENDFOREACH(_testname)
+    FOREACH(_testname ${ARGN})
+        add_executable(kcddb-${_testname} ${_testname}.cpp)
+        target_link_libraries(kcddb-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} kcddb)
+    ENDFOREACH(_testname)
 ENDMACRO(KCDDB_EXECUTABLE_TESTS)
 MACRO(KCDDB_UNIT_TESTS)
-       FOREACH(_testname ${ARGN})
-               kde4_add_unit_test(${_testname} TESTNAME kcddb-${_testname} ${_testname}.cpp)
-               target_link_libraries(${_testname} ${KDE4_KDEUI_LIBS}
-                                     ${QT_QTTEST_LIBRARY} kcddb)
-       ENDFOREACH(_testname)
+    FOREACH(_testname ${ARGN})
+        kde4_add_test(kcddb-${_testname} ${_testname}.cpp)
+        target_link_libraries(kcddb-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} kcddb)
+    ENDFOREACH(_testname)
 ENDMACRO(KCDDB_UNIT_TESTS)
 
 KCDDB_UNIT_TESTS(

@@ -23,8 +23,6 @@
 #include <kdeui_export.h>
 #include <ksharedconfig.h>
 
-#include <QtCore/qsharedpointer.h>
-
 #include <QtGui/QPalette>
 
 class QColor;
