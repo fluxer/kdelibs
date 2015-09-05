@@ -806,8 +806,6 @@ int main(int argc, char **argv)
       {
         // These directories may have been created with 0700 permission
         // better delete them if they are empty
-        QString applnkDir = KGlobal::dirs()->saveLocation("apps", QString(), false);
-        ::rmdir(QFile::encodeName(applnkDir));
         QString servicetypesDir = KGlobal::dirs()->saveLocation("servicetypes", QString(), false);
         ::rmdir(QFile::encodeName(servicetypesDir));
       }

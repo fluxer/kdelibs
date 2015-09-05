@@ -1327,7 +1327,7 @@ static QStringList parseLayoutNode(const QDomElement &docElem)
       }
       else if (e.tagName() == "Merge")
       {
-         QString type = e.attributeNode("type").value();
+         const QString type = e.attributeNode("type").value();
          if (type == "files")
             layout.append(":F");
          else if (type == "menus")
@@ -1386,10 +1386,8 @@ VFolderMenu::parseMenu(const QString &file)
    m_appsInfo = 0;
 
    const QStringList dirs = KGlobal::dirs()->resourceDirs("xdgconf-menu");
-   for(QStringList::ConstIterator it=dirs.begin();
-       it != dirs.end(); ++it)
-   {
-      registerDirectory(*it);
+   foreach(const QString it, dirs) {
+      registerDirectory(it);
    }
 
    loadMenu(file);

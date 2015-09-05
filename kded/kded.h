@@ -165,11 +165,6 @@ protected Q_SLOTS:
    /**
     * @internal Triggers rebuilding
     */
-   void dirDeleted(const QString& path);
-
-   /**
-    * @internal Triggers rebuilding
-    */
    void update (const QString& dir );
 
    void runDelayedCheck();

@@ -45,14 +45,10 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1209)
 
 ########### next target ###############
 
-set(plasmagik_SRCS
+set(plasma_LIB_SRCS
     packagemetadata.cpp
     packagestructure.cpp
     package.cpp
-    )
-
-set(plasma_LIB_SRCS
-    ${plasmagik_SRCS}
     abstractrunner.cpp
     abstracttoolbox.cpp
     animator.cpp

@@ -462,14 +462,10 @@ void Kded::updateDirWatch()
   QObject::connect( m_pDirWatch, SIGNAL(created(QString)),
            this, SLOT(update(QString)));
   QObject::connect( m_pDirWatch, SIGNAL(deleted(QString)),
-           this, SLOT(dirDeleted(QString)));
+           this, SLOT(update(QString)));
 
-  // For each resource
-  for( QStringList::ConstIterator it = m_allResourceDirs.constBegin();
-       it != m_allResourceDirs.constEnd();
-       ++it )
-  {
-     readDirectory( *it );
+  foreach(const QString it, m_allResourceDirs) {
+     readDirectory( it );
   }
 }
 
@@ -482,15 +478,11 @@ void Kded::updateResourceList()
   if (delayedCheck) return;
 
   const QStringList dirs = KSycoca::self()->allResourceDirs();
-  // For each resource
-  for( QStringList::ConstIterator it = dirs.begin();
-       it != dirs.end();
-       ++it )
-  {
-     if (!m_allResourceDirs.contains(*it))
+  foreach(const QString it, dirs) {
+     if (!m_allResourceDirs.contains(it))
      {
-        m_allResourceDirs.append(*it);
-        readDirectory(*it);
+        m_allResourceDirs.append(it);
+        readDirectory(it);
      }
   }
 }
@@ -572,11 +564,6 @@ void Kded::afterRecreateFinished()
    } else {
        initModules();
    }
-}
-
-void Kded::dirDeleted(const QString& path)
-{
-  update(path);
 }
 
 void Kded::update(const QString& )
