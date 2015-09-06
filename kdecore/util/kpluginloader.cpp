@@ -83,14 +83,9 @@ QString findLibraryInternal(const QString &name, const KComponentData &cData)
     QString libname = makeLibName(name);
     QFileInfo fileinfo(name);
     bool hasPrefix = fileinfo.fileName().startsWith(QLatin1String("lib"));
-    bool kdeinit = fileinfo.fileName().startsWith(QLatin1String("libkdeinit4_"));
 
-    if (hasPrefix && !kdeinit)
+    if (hasPrefix)
         kDebug(kLibraryDebugArea()) << "plugins should not have a 'lib' prefix:" << libname;
-#ifdef Q_CC_MSVC
-    // first remove the 'lib' prefix in front of windows plugins
-    libname = fixLibPrefix(libname);
-#endif
 
     // If it is a absolute path just return it
     if (!QDir::isRelativePath(libname))
@@ -112,9 +107,7 @@ QString findLibraryInternal(const QString &name, const KComponentData &cData)
 
     libfile = cData.dirs()->findResource("lib", libname);
     if (!libfile.isEmpty()) {
-        if (!kdeinit) {
-            kDebug(kLibraryDebugArea()) << "library" << libname << "not found under 'module' but under 'lib'";
-        }
+        kDebug(kLibraryDebugArea()) << "library" << libname << "not found under 'module' but under 'lib'";
         return libfile;
     }
 

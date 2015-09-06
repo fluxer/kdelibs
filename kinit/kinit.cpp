@@ -388,8 +388,7 @@ QByteArray execpath_avoid_loops( const QByteArray& exec, int envc, const char* e
      } else {
          paths = QString::fromLocal8Bit(qgetenv("PATH")).split(pathSepRegExp, QString::KeepEmptyParts);
      }
-     QString execpath =
-         s_instance->dirs()->findExe(QFile::decodeName(exec), paths.join(QLatin1String(":")));
+     QString execpath = s_instance->dirs()->findExe(QFile::decodeName(exec), paths.join(QLatin1String(":")));
      if (avoid_loops && !execpath.isEmpty()) {
          const int pos = execpath.lastIndexOf(QLatin1Char('/'));
          const QString bin_path = execpath.left(pos);
@@ -422,12 +421,8 @@ static pid_t launch(int argc, const char *_name, const char *args,
         name = _name;
         lib = QFile::decodeName(name);
         exec = name;
-        KLibrary klib(QLatin1String("libkdeinit4_") + lib, *s_instance );
+        KLibrary klib(lib, *s_instance );
         libpath = klib.fileName();
-        if( libpath.isEmpty()) {
-            KLibrary klib(lib, *s_instance);
-            libpath = klib.fileName();
-        }
         execpath = execpath_avoid_loops(exec, envc, envs, avoid_loops);
     } else {
         name = _name;
@@ -437,19 +432,6 @@ static pid_t launch(int argc, const char *_name, const char *args,
         if (lib.endsWith(QLatin1String(".so")))
             libpath = lib;
         else {
-            // try to match an absolute path to an executable binary (either in bin/ or in libexec/)
-            // to a kdeinit module in the same prefix
-            if( lib.contains( QLatin1String( "/lib" KDELIBSUFF "/kde4/libexec/" ))) {
-                libpath = QString( lib ).replace( QLatin1String( "/lib" KDELIBSUFF "/kde4/libexec/" ),
-                    QLatin1String("/lib" KDELIBSUFF "/libkdeinit4_")) + QLatin1String(".so");
-            } else if( lib.contains( QLatin1String( "/bin/" ))) {
-                libpath = QString( lib ).replace( QLatin1String( "/bin/" ),
-                    QLatin1String("/lib" KDELIBSUFF "/libkdeinit4_")) + QLatin1String(".so");
-            }
-            // Don't confuse the user with "Could not load libkdeinit4_foo.so" if it doesn't exist
-            if (!QFile::exists(libpath)) {
-                libpath.clear();
-            }
             execpath = exec;
         }
     }
