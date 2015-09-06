@@ -27,8 +27,6 @@
 #ifdef HAVE_XSYNC
 #include "xsyncbasedpoller.h"
 #endif
-#else
-#include "windowspoller.h"
 #endif
 
 #include <QtCore/qsharedpointer.h>
@@ -192,8 +190,6 @@ void KIdleTimePrivate::loadSystem()
     poller = new XScreensaverBasedPoller();
 #endif
 #endif
-#else
-    poller = new WindowsPoller();
 #endif
 
     if (!poller.isNull()) {

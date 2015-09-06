@@ -25,29 +25,29 @@
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../libkexiv2)
 
 SET(setiptcpreview_SRCS setiptcpreview.cpp)
-ADD_EXECUTABLE(kexiv2-setiptcpreview ${setiptcpreview_SRCS})
+KDE4_ADD_MANUAL_TEST(kexiv2-setiptcpreview ${setiptcpreview_SRCS})
 TARGET_LINK_LIBRARIES(kexiv2-setiptcpreview kexiv2 ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 SET(loadfromba_SRCS loadfromba.cpp)
-ADD_EXECUTABLE(kexiv2-loadfromba ${loadfromba_SRCS})
+KDE4_ADD_MANUAL_TEST(kexiv2-loadfromba ${loadfromba_SRCS})
 TARGET_LINK_LIBRARIES(kexiv2-loadfromba kexiv2 ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
 
 SET(erasetag_SRCS erasetag.cpp)
-ADD_EXECUTABLE(kexiv2-erasetag ${erasetag_SRCS})
+KDE4_ADD_MANUAL_TEST(kexiv2-erasetag ${erasetag_SRCS})
 TARGET_LINK_LIBRARIES(kexiv2-erasetag kexiv2 ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
 
 SET(printtagslist_SRCS printtagslist.cpp)
-ADD_EXECUTABLE(kexiv2-printtagslist ${printtagslist_SRCS})
+KDE4_ADD_MANUAL_TEST(kexiv2-printtagslist ${printtagslist_SRCS})
 TARGET_LINK_LIBRARIES(kexiv2-printtagslist kexiv2 ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
 
 SET(usexmpsidecar_SRCS usexmpsidecar.cpp)
-ADD_EXECUTABLE(kexiv2-usexmpsidecar ${usexmpsidecar_SRCS})
+KDE4_ADD_MANUAL_TEST(kexiv2-usexmpsidecar ${usexmpsidecar_SRCS})
 TARGET_LINK_LIBRARIES(kexiv2-usexmpsidecar kexiv2 ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
 
 SET(readimagewritexmpsidecar_SRCS readimagewritexmpsidecar.cpp)
-ADD_EXECUTABLE(kexiv2-readimagewritexmpsidecar ${readimagewritexmpsidecar_SRCS})
+KDE4_ADD_MANUAL_TEST(kexiv2-readimagewritexmpsidecar ${readimagewritexmpsidecar_SRCS})
 TARGET_LINK_LIBRARIES(kexiv2-readimagewritexmpsidecar kexiv2 ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
 
 SET(setxmpface_SRCS setxmpface.cpp)
-ADD_EXECUTABLE(kexiv2-setxmpface ${setxmpface_SRCS})
+KDE4_ADD_MANUAL_TEST(kexiv2-setxmpface ${setxmpface_SRCS})
 TARGET_LINK_LIBRARIES(kexiv2-setxmpface kexiv2 ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})

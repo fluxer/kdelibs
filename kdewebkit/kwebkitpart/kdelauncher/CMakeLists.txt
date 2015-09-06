@@ -1,13 +1,18 @@
 project(kdelauncher)
 
-include_directories(${KDE4_INCLUDES} ${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(
+    ${KDE4_INCLUDES}
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+    ${KDE4_KIO_INCLUDES}
+)
+
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
-add_executable(kdelauncher main.cpp )
+add_executable(kdelauncher main.cpp)
 target_link_libraries(kdelauncher
-    ${QT_QTWEBKIT_LIBRARY}
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTGUI_LIBRARY}
-    ${KDE4_KIO_LIBRARY}
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
     ${KDE4_KDEWEBKIT_LIBS}
 )

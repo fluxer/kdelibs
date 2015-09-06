@@ -7,7 +7,7 @@ set(krosstest_SRCS
 )
 
 
-add_executable(krosstest ${krosstest_SRCS})
+kde4_add_manual_test(krosstest ${krosstest_SRCS})
 
 target_link_libraries(krosstest ${KDE4_KDEUI_LIBS} krosscore )
 

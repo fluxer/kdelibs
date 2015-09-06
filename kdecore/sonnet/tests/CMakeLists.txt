@@ -5,7 +5,7 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 # TODO automate and merge with test_filter?
 set(test_suggest_SRCS test.cpp)
 
-add_executable(test_suggest ${test_suggest_SRCS})
+kde4_add_manual_test(test_suggest ${test_suggest_SRCS})
 
 target_link_libraries(test_suggest ${KDE4_KDECORE_LIBS} )
 

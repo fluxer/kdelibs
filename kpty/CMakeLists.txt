@@ -1,7 +1,6 @@
 project(kpty)
 
-include_directories( ${KDE4_KDECORE_INCLUDES} )
-include_directories( ${QT_INCLUDES} )
+include_directories(${KDE4_KDECORE_INCLUDES} ${QT_INCLUDES})
 
 set(kpty_LIB_SRCS
     kpty.cpp
@@ -12,7 +11,7 @@ set(kpty_LIB_SRCS
 add_library(kpty ${LIBRARY_TYPE} ${kpty_LIB_SRCS})
 
 target_link_libraries(kpty PRIVATE ${KDE4_KDECORE_LIBS} ${UTIL_LIBRARY} ${UTEMPTER_LIBRARY})
-target_link_libraries(kpty PUBLIC kdecore ${QT_QTCORE_LIBRARY} )
+target_link_libraries(kpty PUBLIC kdecore ${QT_QTCORE_LIBRARY})
 
 set_target_properties(kpty PROPERTIES
    VERSION ${GENERIC_LIB_VERSION}
@@ -20,7 +19,7 @@ set_target_properties(kpty PROPERTIES
 )
 install(TARGETS kpty EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-install( FILES
+install(FILES
    kpty_export.h
    kpty.h
    kptydevice.h

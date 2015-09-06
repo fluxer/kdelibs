@@ -1,9 +1,7 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
 include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/..
-  ${CMAKE_CURRENT_SOURCE_DIR}/..
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/..
+    ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
 set(proxymodeltestapp_SRCS
@@ -28,12 +26,12 @@ set(proxymodeltestapp_SRCS
     matchcheckingwidget.cpp
 )
 
-add_executable(kdeui-proxymodeltestapp ${proxymodeltestapp_SRCS})
+kde4_add_manual_test(kdeui-proxymodeltestapp ${proxymodeltestapp_SRCS})
 
 target_link_libraries(kdeui-proxymodeltestapp
-   ${KDE4_KDEUI_LIBS}
-   proxymodeltestsuite
-   ${QT_QTSCRIPT_LIBRARY}
+    ${KDE4_KDEUI_LIBS}
+    proxymodeltestsuite
+    ${QT_QTSCRIPT_LIBRARY}
 )
 
 

@@ -64,6 +64,6 @@ KIO_EXECUTABLE_TESTS(
 ########### kfstest ###############
 
 set(kfstest_SRCS kfstest.cpp kfdtest.cpp)
-add_executable(kfstest ${kfstest_SRCS})
-target_link_libraries(kfstest  ${KDE4_KIO_LIBS} )
+kde4_add_manual_test(kfstest ${kfstest_SRCS})
+target_link_libraries(kfstest ${KDE4_KIO_LIBS} )
 

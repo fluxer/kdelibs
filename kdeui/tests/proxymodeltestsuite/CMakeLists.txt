@@ -1,20 +1,8 @@
 project(proxymodeltestsuite)
 
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
-if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
-
-  # Building the test suite standalone
-  set(proxymodeltestsuite_standalone TRUE)
-
-  find_package(Qt4 REQUIRED)
-  find_package(Automoc4 REQUIRED)
-  cmake_minimum_required(VERSION 2.6.3)
-endif()
-
 include_directories(
-  ${QT_INCLUDES}
-  ${proxymodeltestsuite_BINARY_DIR}
+    ${QT_INCLUDES}
+    ${proxymodeltestsuite_BINARY_DIR}
 )
 
 set(proxymodeltestsuite_SRCS

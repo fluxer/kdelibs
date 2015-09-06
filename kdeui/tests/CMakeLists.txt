@@ -16,9 +16,9 @@ ENDMACRO(KDEUI_UNIT_TESTS)
 MACRO(KDEUI_EXECUTABLE_TESTS)
     FOREACH(_testname ${ARGN})
         if(EXISTS ${_testname}.h)
-            add_executable(kdeui-${_testname} ${_testname}.cpp ${_testname}.h)
+            kde4_add_manual_test(kdeui-${_testname} ${_testname}.cpp ${_testname}.h)
         else()
-            add_executable(kdeui-${_testname} ${_testname}.cpp)
+            kde4_add_manual_test(kdeui-${_testname} ${_testname}.cpp)
         endif()
         target_link_libraries(kdeui-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
         set_target_properties(kdeui-${_testname} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
@@ -176,13 +176,13 @@ endif (Q_WS_X11)
 ## kplottest
 
 set(kplottest_SRCS testplot_widget.cpp testplot_main.cpp)
-add_executable(kplottest ${kplottest_SRCS})
+kde4_add_manual_test(kplottest ${kplottest_SRCS})
 target_link_libraries(kplottest ${KDE4_KDEUI_LIBS})
 
 ## kcolorutilsdemo
 
 SET(kcolorUtilsDemoSources kcolorutilsdemo.cpp kimageframe.cpp ../colors/kcolorspaces.cpp kcolorutilsdemo.ui)
-add_executable(kcolorutilsdemo ${kcolorUtilsDemoSources})
+kde4_add_manual_test(kcolorutilsdemo ${kcolorUtilsDemoSources})
 target_link_libraries(kcolorutilsdemo ${KDE4_KDEUI_LIBS} ${KDEWIN_LIBRARIES})
 
 add_subdirectory(proxymodeltestapp)

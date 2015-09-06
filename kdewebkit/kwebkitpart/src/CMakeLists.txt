@@ -5,7 +5,6 @@ include_directories(
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kdewebkit
     ${CMAKE_SOURCE_DIR}/kutils
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
 )
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})

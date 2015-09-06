@@ -33,7 +33,7 @@ target_link_libraries(solid-solidhwtest ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY
 #QT4_ADD_DBUS_ADAPTOR(solidnettestdbusservice_SRCS ../solid/org.kde.Solid.Networking.Client.xml
 #                         solidnettestdbusservice.h TestNetworkingService)
 
-#add_executable(solidnettestdbusservice ${solidnettestdbusservice_SRCS})
+#kde4_add_manual_test(solidnettestdbusservice ${solidnettestdbusservice_SRCS})
 
 #target_link_libraries(solidnettestdbusservice ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTTEST_LIBRARY})
 
@@ -46,7 +46,7 @@ set(networkingclient_SRCS networkingclient.cpp networkingclientview.ui)
 
 qt4_add_dbus_interface(networkingclient_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/../solid/org.kde.Solid.Networking.Client.xml clientinterface)
 
-add_executable(solid-networkingclient ${networkingclient_SRCS})
+kde4_add_manual_test(solid-networkingclient ${networkingclient_SRCS})
 
 target_link_libraries(solid-networkingclient solid_static ${KDE4_KDEUI_LIBS})
 ########### install files ###############

@@ -5,7 +5,7 @@ include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/.. ${CMAKE_CURRENT_BINARY_DIR}/
 
 MACRO(KCDDB_EXECUTABLE_TESTS)
     FOREACH(_testname ${ARGN})
-        add_executable(kcddb-${_testname} ${_testname}.cpp)
+        kde4_add_manual_test(kcddb-${_testname} ${_testname}.cpp)
         target_link_libraries(kcddb-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} kcddb)
     ENDFOREACH(_testname)
 ENDMACRO(KCDDB_EXECUTABLE_TESTS)
