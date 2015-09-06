@@ -159,14 +159,14 @@ char **xstrsep(char *str)
     char *ptr = str, *nptr;
     while ((nptr = strchr(ptr, ',')) != 0L) 
     {
-	if (i > size-2)
-	    list = xrealloc(list, (size *= 2) * sizeof(char *));
-	*nptr = '\000';
-	list[i++] = ptr;
-	ptr = nptr+1;
+        if (i > size-2)
+            list = xrealloc(list, (size *= 2) * sizeof(char *));
+        *nptr = '\000';
+        list[i++] = ptr;
+        ptr = nptr+1;
     }
     if (*ptr != '\000')
-	list[i++] = ptr;
+        list[i++] = ptr;
     list[i] = 0L;
     return list;
 }
@@ -264,8 +264,8 @@ int main()
     pw = getpwnam(params[P_USER].value);
     if (pw == 0L) 
     {
-	printf("kdesu_stub: user %s does not exist!\n", params[P_USER].value);
-	exit(1);
+        printf("kdesu_stub: user %s does not exist!\n", params[P_USER].value);
+        exit(1);
     }
     xsetenv("HOME", pw->pw_dir);
 
@@ -375,8 +375,8 @@ int main()
     pid = fork();
     if (pid == -1) 
     {
-	perror("kdesu_stub: fork()");
-	exit(1);
+        perror("kdesu_stub: fork()");
+        exit(1);
     }
     if (pid) 
     {
@@ -401,15 +401,15 @@ int main()
         if (*xauthority)
             unlink(xauthority);
 #endif
-	exit(xit);
+        exit(xit);
     } else 
     {
         setsid();
-	/* Child: exec command. */
-	sprintf(buf, "%s", params[P_COMMAND].value);
-	dequote(buf);
-	execl("/bin/sh", "sh", "-c", buf, (void *)0);
-	perror("kdesu_stub: exec()");
-	_exit(1);
+        /* Child: exec command. */
+        sprintf(buf, "%s", params[P_COMMAND].value);
+        dequote(buf);
+        execl("/bin/sh", "sh", "-c", buf, (void *)0);
+        perror("kdesu_stub: exec()");
+        _exit(1);
     }
 }
