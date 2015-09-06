@@ -1137,15 +1137,11 @@ void KFilePropsPlugin::nameFileChanged(const QString &text )
 void KFilePropsPlugin::determineRelativePath( const QString & path )
 {
     // now let's make it relative
-    d->m_sRelativePath = KGlobal::dirs()->relativeLocation("apps", path);
+    d->m_sRelativePath =KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
     if (d->m_sRelativePath.startsWith('/'))
-    {
-        d->m_sRelativePath =KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
-        if (d->m_sRelativePath.startsWith('/'))
-            d->m_sRelativePath.clear();
-        else
-            d->m_sRelativePath = path;
-    }
+        d->m_sRelativePath.clear();
+    else
+        d->m_sRelativePath = path;
 }
 
 void KFilePropsPlugin::slotFoundMountPoint( const QString&,
@@ -3218,14 +3214,8 @@ void KDesktopPropsPlugin::applyChanges()
     config.sync();
 
     // KSycoca update needed?
-    QString sycocaPath = KGlobal::dirs()->relativeLocation("apps", path);
-    bool updateNeeded = !sycocaPath.startsWith('/');
-    if (!updateNeeded)
-    {
-        sycocaPath = KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
-        updateNeeded = !sycocaPath.startsWith('/');
-    }
-    if (updateNeeded)
+    const QString sycocaPath = KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
+    if(!sycocaPath.startsWith('/'))
         KBuildSycocaProgressDialog::rebuildKSycoca(d->m_frame);
 }
 

@@ -61,7 +61,6 @@ class KConfig;
  *
  * <b>Standard resources that kdelibs allocates are:</b>
  *
- * @li @c apps - Applications menu (.desktop files).
  * @li @c autostart - Autostart directories (both XDG and kde-specific)
  * @li @c cache - Cached information (e.g. favicons, web-pages)
  * @li @c cgi - CGIs to run from kdehelp.
@@ -592,7 +591,6 @@ public:
      * @li @c icon - @c share/icon
      * @li @c config - @c share/config
      * @li @c pixmap - @c share/pixmaps
-     * @li @c apps - @c share/applnk
      * @li @c sound - @c share/sounds
      * @li @c locale - @c share/locale
      * @li @c services - @c share/kde4/services

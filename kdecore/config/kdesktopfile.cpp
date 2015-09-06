@@ -59,7 +59,7 @@ KDesktopFile::KDesktopFile(const char * resourceType, const QString &fileName)
 }
 
 KDesktopFile::KDesktopFile(const QString &fileName)
-    : KConfig(*new KDesktopFilePrivate("apps", fileName)) // TODO KDE5: default to xdgdata-apps instead of apps
+    : KConfig(*new KDesktopFilePrivate("xdgdata-apps", fileName))
 {
     Q_D(KDesktopFile);
     reparseConfiguration();
@@ -123,7 +123,6 @@ bool KDesktopFile::isAuthorizedDesktopFile(const QString& path)
 
   KStandardDirs *dirs = KGlobal::dirs();
   QStringList kdePrefixes;
-  kdePrefixes += dirs->resourceDirs("apps");
   kdePrefixes += dirs->resourceDirs("services");
   kdePrefixes += dirs->resourceDirs("xdgdata-apps");
   kdePrefixes += dirs->resourceDirs("autostart");

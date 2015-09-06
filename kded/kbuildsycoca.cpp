@@ -302,7 +302,7 @@ bool KBuildSycoca::build()
 
   if (result || bMenuTest)
   {
-     g_resource = "apps";
+     g_resource = "xdgdata-apps";
      g_currentFactory = g_serviceFactory;
      g_currentEntryDict = serviceEntryDict;
      g_changed = false;
@@ -384,7 +384,7 @@ void KBuildSycoca::createMenu(const QString &caption_, const QString &name_, VFo
      if (bMenuTest)
      {
         if (!menu->isDeleted && !p->noDisplay())
-           printf("%s\t%s\t%s\n", qPrintable( caption ), qPrintable( p->menuId() ), qPrintable( KStandardDirs::locate("apps", p->entryPath() ) ) );
+           printf("%s\t%s\t%s\n", qPrintable( caption ), qPrintable( p->menuId() ), qPrintable( KStandardDirs::locate("xdgdata-apps", p->entryPath() ) ) );
      }
      else
      {

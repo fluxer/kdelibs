@@ -111,8 +111,6 @@ config
 share/config
 pixmap
 share/pixmaps
-apps
-share/applnk
 sound
 share/sounds
 locale
@@ -166,8 +164,6 @@ static const char types_string[] =
     "share/config\0"
     "pixmap\0"
     "share/pixmaps\0"
-    "apps\0"
-    "share/applnk\0"
     "sound\0"
     "share/sounds\0"
     "locale\0"
@@ -211,12 +207,12 @@ static const char types_string[] =
 
 static const int types_indices[] = {
        0,    5,   16,   21,   36,   41,   53,   60,
-      73,   80,   94,   99,  112,  118,  131,  138,
-     151,  160,  180,  193,  217,  222,  236,  240,
-     248,  258,  275,  285,  301,  305,  309,  316,
-     326,  336,  354,  359,  377,  387,  403,  416,
-     429,  442,  448,  463,  471,  484,  504,  217,
-     517,  530,  536,  554,   -1
+      73,   80,   94,  100,  113,  120,  133,  142,
+     162,  175,  199,  204,  218,  222,  230,  240,
+     257,  267,  283,  287,  291,  298,  308,  318,
+     336,  341,  359,  369,  385,  398,  411,  424,
+     430,  445,  453,  466,  486,  199,  499,  512,
+     518,  536,   -1
 };
 
 static void tokenize(QStringList& token, const QString& str,

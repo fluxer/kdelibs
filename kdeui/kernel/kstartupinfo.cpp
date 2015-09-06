@@ -1521,7 +1521,7 @@ void KStartupInfoData::setApplicationId( const QString& desktop )
         return;
         }
     // the spec requires this is always a full path, in order for everyone to be able to find it
-    QString desk = KStandardDirs::locate( "apps", desktop );
+    QString desk = KStandardDirs::locate( "xdgdata-apps", desktop );
     if( desk.isEmpty())
         desk = KStandardDirs::locate( "services", desktop );
     if( desk.isEmpty())

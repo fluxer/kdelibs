@@ -132,7 +132,6 @@ int main(int argc, char **argv)
         QStringList types = KGlobal::dirs()->allTypes();
         types.sort();
         const char *helptexts[] = {
-            "apps", I18N_NOOP("Applications menu (.desktop files)"),
             "autostart", I18N_NOOP("Autostart directories"),
             "cache", I18N_NOOP("Cached information (e.g. favicons, web-pages)"),
             "cgi", I18N_NOOP("CGIs to run from kdehelp"),
