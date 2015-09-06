@@ -9,7 +9,7 @@
 #define YYLEX_PARAM scanner
 #define YYPARSE_PARAM scanner
 typedef void* yyscan_t;
-void Soliderror(const char *s);
+void Soliderror(void *_scanner, const char *s);
 int Solidlex( YYSTYPE *yylval, yyscan_t scanner );
 int Solidlex_init( yyscan_t *scanner );
 int Solidlex_destroy( yyscan_t *scanner );
@@ -26,6 +26,9 @@ void PredicateParse_mainParse( const char *_code );
      char *name;
      void *ptr;
 }
+
+%lex-param { void *_scanner }
+%parse-param { void *_scanner }
 
 %token EQ
 %token MASK
@@ -83,7 +86,7 @@ string_list_rec: /* empty */ { $$ = PredicateParse_newEmptyStringListValue(); }
 
 %%
 
-void Soliderror ( const char *s )  /* Called by Solidparse on error */
+void Soliderror ( void *_scanner, const char *s )  /* Called by Solidparse on error */
 {
     PredicateParse_errorDetected(s);
 }
