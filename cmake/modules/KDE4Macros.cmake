@@ -374,8 +374,7 @@ endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
 macro(KDE4_INSTALL_TS_FILES _lang _sdir)
     file(GLOB_RECURSE _ts_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${_sdir}/*)
     foreach(_current_TS_FILES ${_ts_files})
-        string(REGEX MATCH "\\.git/" _in_git ${_current_TS_FILES})
-        if(NOT _in_git)
+        if(NOT ${_current_TS_FILES} MATCHES ".git/")
             get_filename_component(_subpath ${_current_TS_FILES} PATH)
             install(
                 FILES ${_current_TS_FILES}
