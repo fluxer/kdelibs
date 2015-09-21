@@ -501,7 +501,7 @@ namespace KGlobal
      * Returns a text for the window caption.
      *
      * This may be set by
-     * "-caption", otherwise it will be equivalent to the name of the
+     * "--caption", otherwise it will be equivalent to the name of the
      * executable.
      * @return the text for the window caption
      */

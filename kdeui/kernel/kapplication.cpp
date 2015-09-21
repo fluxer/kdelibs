@@ -802,7 +802,7 @@ void KApplicationPrivate::parseCommandLine( )
     }
 
     if ( q->type() != KApplication::Tty ) {
-        if (args && args->isSet("icon"))
+        if (args && args->isSet("icon") && !args->getOption("icon").trimmed().isEmpty())
         {
             q->setWindowIcon(KIcon(args->getOption("icon")));
         }

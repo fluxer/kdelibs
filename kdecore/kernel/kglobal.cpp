@@ -292,7 +292,7 @@ QString KGlobal::caption()
     PRIVATE_DATA;
     // Caption set from command line ?
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
-    if (args && args->isSet("caption")) {
+    if (args && args->isSet("caption") && !args->getOption("caption").trimmed().isEmpty()) {
         return args->getOption("caption");
     } else {
         // We have some about data ?

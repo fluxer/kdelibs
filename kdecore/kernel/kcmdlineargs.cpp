@@ -87,24 +87,24 @@
 class KCmdLineParsedOptions : public QHash<QByteArray,QByteArray>
 {
 public:
-   KCmdLineParsedOptions() { }
+    KCmdLineParsedOptions() { }
 };
 
 class KCmdLineParsedArgs : public QList<QByteArray>
 {
 public:
-   KCmdLineParsedArgs() { }
+    KCmdLineParsedArgs() { }
 };
 
 
 class KCmdLineArgsList: public QList<KCmdLineArgs*>
 {
 public:
-   KCmdLineArgsList() { }
-   ~KCmdLineArgsList() {
-	   while (count())
-		delete takeFirst();
-   }
+    KCmdLineArgsList() { }
+    ~KCmdLineArgsList() {
+        while (count())
+            delete takeFirst();
+    }
 };
 
 //
