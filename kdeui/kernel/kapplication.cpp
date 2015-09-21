@@ -819,8 +819,7 @@ void KApplicationPrivate::parseCommandLine( )
     if (!args)
         return;
 
-    bool nocrashhandler = (!qgetenv("KDE_DEBUG").isEmpty());
-    if (!nocrashhandler && args->isSet("crashhandler"))
+    if (qgetenv("KDE_DEBUG").isEmpty() && args->isSet("crashhandler"))
     {
         // enable drkonqi
         KCrash::setDrKonqiEnabled(true);

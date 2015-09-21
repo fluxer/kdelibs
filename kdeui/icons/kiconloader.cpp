@@ -610,16 +610,14 @@ void KIconLoaderPrivate::addBaseThemes(KIconThemeNode *node, const QString &appn
 
 void KIconLoaderPrivate::addInheritedThemes(KIconThemeNode *node, const QString &appname)
 {
-    const QStringList lst = node->theme->inherits();
-
-    for (QStringList::ConstIterator it = lst.begin(); it != lst.end(); ++it) {
-        if ((*it) == "hicolor") {
+    foreach (const QString it, node->theme->inherits()) {
+        if ((it) == "hicolor") {
           // The icon theme spec says that "hicolor" must be the very last
           // of all inherited themes, so don't add it here but at the very end
           // of addBaseThemes().
           continue;
         }
-        addThemeByName(*it, appname);
+        addThemeByName(it, appname);
     }
 }
 
@@ -1379,11 +1377,10 @@ QStringList KIconLoader::queryIconsByDir( const QString& iconsDir ) const
 {
     const QDir dir(iconsDir);
     const QStringList formats = QStringList() << "*.png" << "*.xpm" << "*.svg" << "*.svgz";
-    const QStringList lst = dir.entryList(formats, QDir::Files);
     QStringList result;
-    QStringList::ConstIterator it;
-    for (it=lst.begin(); it!=lst.end(); ++it)
-        result += iconsDir + '/' + *it;
+    foreach(const QString it, dir.entryList(formats, QDir::Files)) {
+        result.append(iconsDir + '/' + it);
+    }
     return result;
 }
 

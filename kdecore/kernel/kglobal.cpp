@@ -294,14 +294,12 @@ QString KGlobal::caption()
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
     if (args && args->isSet("caption") && !args->getOption("caption").trimmed().isEmpty()) {
         return args->getOption("caption");
-    } else {
+    } else if (d->mainComponent.isValid() && d->mainComponent.aboutData()) {
         // We have some about data ?
-        if (d->mainComponent.isValid() && d->mainComponent.aboutData()) {
-            return d->mainComponent.aboutData()->programName();
-        } else {
-            // Last resort : application name
-            return QCoreApplication::instance()->applicationName();
-        }
+        return d->mainComponent.aboutData()->programName();
+    } else {
+        // Last resort : application name
+        return QCoreApplication::instance()->applicationName();
     }
 }
 
