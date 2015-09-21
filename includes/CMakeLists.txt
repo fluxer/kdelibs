@@ -86,8 +86,6 @@ install( FILES
   KConfigSkeletonItem
   KSharedConfigPtr
   KCrash
-  KCrashBookmarkImporter
-  KCrashBookmarkImporterImpl
   KCurrencyCode
   KCursor
   KDBusServiceStarter
@@ -564,7 +562,6 @@ install( FILES
   KParts/BrowserInterface
   KParts/BrowserRun
   KParts/ComponentFactory
-  KParts/DockMainWindow3
   KParts/Event
   KParts/Factory
   KParts/FileInfoExtension
