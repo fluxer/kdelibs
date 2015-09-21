@@ -44,6 +44,7 @@
 #include "kdebug.h"
 #include "kglobal.h"
 #include "kicon.h"
+#include "kiconloader.h"
 #include "klocale.h"
 #include "ksessionmanager.h"
 #include "kstandarddirs.h"
@@ -802,13 +803,17 @@ void KApplicationPrivate::parseCommandLine( )
     }
 
     if ( q->type() != KApplication::Tty ) {
-        if (args && args->isSet("icon") && !args->getOption("icon").trimmed().isEmpty())
+        QString appicon;
+        if (args && args->isSet("icon")
+            && !args->getOption("icon").trimmed().isEmpty()
+            && !KIconLoader::global()->iconPath(args->getOption("icon"), -1, true).isEmpty())
         {
-            q->setWindowIcon(KIcon(args->getOption("icon")));
+            appicon = args->getOption("icon");
         }
-        else {
-            q->setWindowIcon(KIcon(componentData.aboutData()->programIconName()));
+        if(appicon.isEmpty()) {
+            appicon = componentData.aboutData()->programIconName();
         }
+        q->setWindowIcon(KIcon(appicon));
     }
 
     if (!args)
