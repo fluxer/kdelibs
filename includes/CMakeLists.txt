@@ -669,14 +669,6 @@ DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KTextEditor COMPONENT Devel)
 
 
 install( FILES
-  KUnitTest/Runner
-  KUnitTest/SlotTester
-  KUnitTest/TestResults
-  KUnitTest/Tester
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KUnitTest COMPONENT Devel)
-
-
-install( FILES
   KWallet/Wallet
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KWallet COMPONENT Devel)
 
@@ -813,6 +805,7 @@ install(FILES
   Plasma/WebView
   Plasma/WindowEffects
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Plasma COMPONENT Devel)
+
 
 install(FILES
   KUnitConversion/Converter
