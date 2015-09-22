@@ -1276,8 +1276,7 @@ void ContainmentPrivate::dropData(QPointF scenePos, QPoint screenPos, QGraphicsS
             kDebug() << "can decode" << mimeName << args;
 
             // It may be a directory or a file, let's stat
-            KIO::JobFlags flags = KIO::HideProgressInfo;
-            KIO::MimetypeJob *job = KIO::mimetype(url, flags);
+            KIO::MimetypeJob *job = KIO::mimetype(url, KIO::HideProgressInfo);
             if (dropEvent) {
                 dropPoints[job] = dropEvent->pos();
             } else {
