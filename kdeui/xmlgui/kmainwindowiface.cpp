@@ -40,8 +40,7 @@ KMainWindowInterface::~KMainWindowInterface()
 QStringList KMainWindowInterface::actions()
 {
 	QStringList tmp_actions;
-	QList<QAction *> lst = m_MainWindow->actionCollection()->actions();
-	foreach( QAction* it, lst ) {
+	foreach( QAction* it, m_MainWindow->actionCollection()->actions() ) {
 		if (it->associatedWidgets().count()>0)
 			tmp_actions.append( it->objectName() );
 	}

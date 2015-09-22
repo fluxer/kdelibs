@@ -95,11 +95,11 @@ void KNotificationManager::notificationClosed( int id )
 
 void KNotificationManager::close( int id, bool force )
 {
-	if(force || d->notifications.contains(id)) {
-		d->notifications.remove(id);
-		kDebug( 299 ) << id;
-		d->knotify->closeNotification(id);
-	}
+    if(force || d->notifications.contains(id)) {
+        d->notifications.remove(id);
+        kDebug( 299 ) << id;
+        d->knotify->closeNotification(id);
+    }
 }
 
 bool KNotificationManager::notify( KNotification* n, const QPixmap &pix,
@@ -143,8 +143,8 @@ void KNotificationManager::insert(KNotification *n, int id)
 
 void KNotificationManager::update(KNotification * n, int id)
 {
-	if(id <= 0)
-		return;
+    if(id <= 0)
+        return;
 
     QByteArray pixmapData;
     if(!n->pixmap().isNull())
@@ -159,17 +159,17 @@ void KNotificationManager::update(KNotification * n, int id)
 
 void KNotificationManager::reemit(KNotification * n, int id)
 {
-	QVariantList contextList;
-	typedef QPair<QString,QString> Context;
-	foreach (const Context& ctx, n->contexts())
-	{
-//		kDebug(299) << "add context " << ctx.first << "-" << ctx.second;
-		QVariantList vl;
-		vl << ctx.first << ctx.second;
-		contextList << vl;
-	}
+    QVariantList contextList;
+    typedef QPair<QString,QString> Context;
+    foreach (const Context& ctx, n->contexts())
+    {
+//      kDebug(299) << "add context " << ctx.first << "-" << ctx.second;
+        QVariantList vl;
+        vl << ctx.first << ctx.second;
+        contextList << vl;
+    }
 
-	d->knotify->reemit(id, contextList);
+    d->knotify->reemit(id, contextList);
 }
 
 

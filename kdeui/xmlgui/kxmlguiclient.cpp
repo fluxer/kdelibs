@@ -711,19 +711,15 @@ void KXMLGUIClient::stateChanged(const QString &newstate, KXMLGUIClient::Reverse
 
   // Enable actions which need to be enabled...
   //
-  for ( QStringList::const_iterator it = stateChange.actionsToEnable.constBegin();
-        it != stateChange.actionsToEnable.constEnd(); ++it ) {
-
-    QAction *action = actionCollection()->action(qPrintable((*it)));
+  foreach ( const QString it, stateChange.actionsToEnable ) {
+    QAction *action = actionCollection()->action(qPrintable(it));
     if (action) action->setEnabled(setTrue);
   }
 
   // and disable actions which need to be disabled...
   //
-  for ( QStringList::const_iterator it = stateChange.actionsToDisable.constBegin();
-        it != stateChange.actionsToDisable.constEnd(); ++it ) {
-
-    QAction *action = actionCollection()->action(qPrintable((*it)));
+  foreach ( const QString it, stateChange.actionsToDisable ) {
+    QAction *action = actionCollection()->action(qPrintable(it));
     if (action) action->setEnabled(setFalse);
   }
 

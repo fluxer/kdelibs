@@ -105,7 +105,7 @@ void KNotificationRestrictions::Private::screensaverFakeKeyEvent()
 void KNotificationRestrictions::Private::startScreenSaverPrevention()
 {
     kDebug(297);
-    
+
     QDBusMessage message = QDBusMessage::createMethodCall(
             "org.freedesktop.ScreenSaver", "/ScreenSaver", "org.freedesktop.ScreenSaver", "Inhibit");
     message << determineProgramName();
