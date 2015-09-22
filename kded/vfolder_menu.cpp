@@ -55,11 +55,10 @@ static void foldNode(QDomElement &docElem, QDomElement &e, QMap<QString,QDomElem
 
 static void replaceNode(QDomElement &docElem, QDomNode &n, const QStringList &list, const QString &tag)
 {
-   for(QStringList::ConstIterator it = list.begin();
-       it != list.end(); ++it)
+   foreach(const QString it, list)
    {
       QDomElement e = docElem.ownerDocument().createElement(tag);
-      QDomText txt = docElem.ownerDocument().createTextNode(*it);
+      QDomText txt = docElem.ownerDocument().createTextNode(it);
       e.appendChild(txt);
       docElem.insertAfter(e, n);
    }
@@ -88,23 +87,11 @@ void VFolderMenu::registerDirectory(const QString &directory)
 QStringList VFolderMenu::allDirectories()
 {
    if (m_allDirectories.isEmpty())
-     return m_allDirectories;
+      return m_allDirectories;
+
+   m_allDirectories.removeDuplicates();
    m_allDirectories.sort();
 
-   QStringList::Iterator it = m_allDirectories.begin();
-   QString previous = *it++;
-   for(;it != m_allDirectories.end();)
-   {
-     if ((*it).startsWith(previous))
-     {
-        it = m_allDirectories.erase(it);
-     }
-     else
-     {
-        previous = *it;
-        ++it;
-     }
-   }
    return m_allDirectories;
 }
 
@@ -130,7 +117,7 @@ VFolderMenu::matchItems(QHash<QString,KService::Ptr>& items1, const QHash<QStrin
    {
        QString id = p->menuId();
        if (!items2.contains(id))
-          items1.remove(id);
+            items1.remove(id);
    }
 }
 
@@ -631,10 +618,9 @@ VFolderMenu::mergeMenus(QDomElement &docElem, QString &name)
          QString dir = absoluteDir(e.text(), e.attribute("__BaseDir"), true);
 
          const QStringList dirs = KGlobal::dirs()->findDirs("xdgconf-menu", dir);
-         for(QStringList::ConstIterator it=dirs.begin();
-             it != dirs.end(); ++it)
+         foreach(const QString it, dirs)
          {
-            registerDirectory(*it);
+            registerDirectory(it);
          }
 
          QStringList fileList;
@@ -650,10 +636,9 @@ VFolderMenu::mergeMenus(QDomElement &docElem, QString &name)
                                                      KStandardDirs::NoDuplicates, fileList);
          }
 
-         for(QStringList::ConstIterator it=fileList.constBegin();
-             it != fileList.constEnd(); ++it)
+         foreach(const QString it, fileList)
          {
-            pushDocInfo(*it);
+            pushDocInfo(it);
             mergeFile(docElem, n);
             popDocInfo();
          }
@@ -800,11 +785,9 @@ VFolderMenu::locateDirectoryFile(const QString &fileName)
    }
 
    // First location in the list wins
-   for(QStringList::ConstIterator it = m_directoryDirs.constBegin();
-       it != m_directoryDirs.constEnd();
-       ++it)
+   foreach(const QString it, m_directoryDirs)
    {
-      QString tmp = (*it)+fileName;
+      const QString tmp = it+fileName;
       if (KStandardDirs::exists(tmp))
          return tmp;
    }
