@@ -355,10 +355,10 @@ void Containment::restore(KConfigGroup &group)
     } else { //shell defaults
         ContainmentActionsPluginsConfig conf = corona()->containmentActionsDefaults(d->type);
         //steal the data directly, for efficiency
-        QHash<QString,QString> defaults = conf.d->plugins;
-        for (QHash<QString,QString>::const_iterator it = defaults.constBegin(),
-                end = defaults.constEnd(); it != end; ++it) {
-            setContainmentActions(it.key(), it.value());
+        QHashIterator<QString,QString> defaults(conf.d->plugins);
+        while(defaults.hasNext()) {
+            defaults.next();
+            setContainmentActions(defaults.key(), defaults.value());
         }
     }
 
