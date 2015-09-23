@@ -83,13 +83,13 @@ bool KBzip2Filter::init( int mode )
     if ( mode == QIODevice::ReadOnly )
     {
         const int result = bzDecompressInit(&d->zStream, 0, 0);
-        if (!result) {
+        if (result != BZ_OK) {
             kDebug(7118) << "bzDecompressInit returned " << result;
             return false;
         }
     } else if ( mode == QIODevice::WriteOnly ) {
         const int result = bzCompressInit(&d->zStream, 5, 0, 0);
-        if (!result) {
+        if (result != BZ_OK) {
             kDebug(7118) << "bzDecompressInit returned " << result;
             return false;
         }
@@ -111,13 +111,13 @@ bool KBzip2Filter::terminate()
 {
     if (d->mode == QIODevice::ReadOnly) {
         const int result = bzDecompressEnd(&d->zStream);
-        if (!result) {
+        if (result != BZ_OK) {
             kDebug(7118) << "bzDecompressEnd returned " << result;
             return false;
         }
     } else if (d->mode == QIODevice::WriteOnly) {
         const int result = bzCompressEnd(&d->zStream);
-        if (!result) {
+        if (result != BZ_OK) {
             kDebug(7118) << "bzDecompressEnd returned " << result;
             return false;
         }
