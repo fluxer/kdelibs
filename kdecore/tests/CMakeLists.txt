@@ -18,7 +18,7 @@ ENDMACRO(KDECORE_EXECUTABLE_TESTS)
 ########### next target ###############
 
 KDECORE_UNIT_TESTS(
-    # FIXME: due to issues with kbzip2filter the test bellow is disabled as it
+    # FIXME: due to issues with kgzipfilter the test bellow is disabled as it
     # causes a hang
     # karchivetest
     kdirwatch_unittest
