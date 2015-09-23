@@ -230,12 +230,10 @@ bool KBuildSycoca::build()
   g_ctimeInfo = new KCTimeInfo(); // This is a build factory too, don't delete!!
   bool uptodate = true;
   // For all resources
-  for( QStringList::ConstIterator it1 = allResources.constBegin();
-       it1 != allResources.constEnd();
-       ++it1 )
+  foreach(const QString it1, allResources)
   {
      g_changed = false;
-     g_resource = (*it1).toLatin1();
+     g_resource = it1.toLatin1();
 
      QStringList relFiles;
 
@@ -266,16 +264,14 @@ bool KBuildSycoca::build()
              ++it2 )
         {
            KSycocaResource res = (*it2);
-           if (res.resource != (*it1)) continue;
+           if (res.resource != it1) continue;
 
            // For each file in the resource
-           for( QStringList::ConstIterator it3 = relFiles.constBegin();
-                it3 != relFiles.constEnd();
-                ++it3 )
+           foreach(const QString it3, relFiles)
            {
                // Check if file matches filter
-               if ((*it3).endsWith(res.extension))
-                   createEntry(*it3, true);
+               if (it3.endsWith(res.extension))
+                   createEntry(it3, true);
            }
         }
      }
@@ -577,18 +573,16 @@ bool KBuildSycoca::checkDirTimestamps( const QString& dirname, const QDateTime& 
 // means that there's no need to rebuild ksycoca
 bool KBuildSycoca::checkTimestamps( quint32 timestamp, const QStringList &dirs )
 {
-   kDebug( 7021 ) << "checking file timestamps";
-   QDateTime stamp;
-   stamp.setTime_t( timestamp );
-   for( QStringList::ConstIterator it = dirs.begin();
-        it != dirs.end();
-        ++it )
-   {
-      if( !checkDirTimestamps( *it, stamp, true ))
+    kDebug( 7021 ) << "checking file timestamps";
+    QDateTime stamp;
+    stamp.setTime_t( timestamp );
+    foreach(const QString it, dirs)
+    {
+        if( !checkDirTimestamps( it, stamp, true ))
             return false;
-   }
-   kDebug( 7021 ) << "timestamps check ok";
-   return true;
+    }
+    kDebug( 7021 ) << "timestamps check ok";
+    return true;
 }
 
 QStringList KBuildSycoca::existingResourceDirs()

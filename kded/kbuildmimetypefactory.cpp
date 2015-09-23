@@ -27,7 +27,6 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <assert.h>
 #include <QtCore/QHash>
 
 KBuildMimeTypeFactory::KBuildMimeTypeFactory() :
@@ -52,7 +51,7 @@ KBuildMimeTypeFactory::~KBuildMimeTypeFactory()
 
 KMimeTypeFactory::MimeTypeEntry::Ptr KBuildMimeTypeFactory::findMimeTypeEntryByName(const QString &_name, KMimeType::FindByNameOption options)
 {
-    assert (KSycoca::self()->isBuilding());
+    Q_ASSERT (KSycoca::self()->isBuilding());
 
     QString name = _name;
     if (options & KMimeType::ResolveAliases) {
@@ -66,7 +65,7 @@ KMimeTypeFactory::MimeTypeEntry::Ptr KBuildMimeTypeFactory::findMimeTypeEntryByN
 
 KSycocaEntry::List KBuildMimeTypeFactory::allEntries() const
 {
-    assert (KSycoca::self()->isBuilding());
+    Q_ASSERT (KSycoca::self()->isBuilding());
     KSycocaEntry::List lst;
     KSycocaEntryDict::Iterator itmime = m_entryDict->begin();
     const KSycocaEntryDict::Iterator endmime = m_entryDict->end();

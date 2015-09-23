@@ -51,23 +51,21 @@ void KCTimeDict::dump() const
 
 QStringList KCTimeDict::resourceList() const
 {
-    QSet<QString> resources;
-    Hash::const_iterator it = m_hash.constBegin();
-    const Hash::const_iterator end = m_hash.constEnd();
-    for ( ; it != end; ++it ) {
+    QStringList resources;
+    QHashIterator<QString,quint32> it(m_hash);
+    while (it.hasNext()) {
+        it.next();
         const QString key = it.key();
-        const QString res = key.left(key.indexOf('|'));
-        resources.insert(res);
+        resources << key.left(key.indexOf('|'));
     }
-    return resources.toList();
+    return resources;
 }
 
 void KCTimeDict::load(QDataStream &str)
 {
     QString key;
     quint32 ctime;
-    while(true)
-    {
+    while (true) {
         KSycocaEntry::read(str, key);
         str >> ctime;
         if (key.isEmpty()) break;
@@ -77,10 +75,10 @@ void KCTimeDict::load(QDataStream &str)
 
 void KCTimeDict::save(QDataStream &str) const
 {
-    Hash::const_iterator it = m_hash.constBegin();
-    const Hash::const_iterator end = m_hash.constEnd();
-    for ( ; it != end; ++it ) {
-       str << it.key() << it.value();
+    QHashIterator<QString,quint32> it(m_hash);
+    while (it.hasNext()) {
+        it.next();
+        str << it.key() << it.value();
     }
     str << QString() << (quint32) 0;
 }

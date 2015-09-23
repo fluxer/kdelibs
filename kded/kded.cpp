@@ -72,12 +72,6 @@ static bool bCheckSycoca;
 static bool bCheckUpdates;
 static bool bCheckHostname;
 
-#ifdef Q_DBUS_EXPORT
-extern Q_DBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
-#else
-extern QDBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
-#endif
-
 static void runBuildSycoca(QObject *callBackObj=0, const char *callBackSlot=0, const char *callBackErrorSlot=0)
 {
    const QString exe = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
@@ -128,7 +122,7 @@ Kded::Kded()
   session.registerObject("/kbuildsycoca", this);
   session.registerObject("/kded", this);
 
-  qDBusAddSpyHook(messageFilter);
+  Q_DBUS_EXPORT(messageFilter);
 
   m_pTimer = new QTimer(this);
   m_pTimer->setSingleShot( true );

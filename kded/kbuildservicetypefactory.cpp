@@ -109,7 +109,9 @@ KBuildServiceTypeFactory::saveHeader(QDataStream &str)
 {
     KSycocaFactory::saveHeader(str);
     str << (qint32) m_propertyTypeDict.count();
-    for (QMap<QString, int>::ConstIterator it = m_propertyTypeDict.constBegin(); it != m_propertyTypeDict.constEnd(); ++it) {
+    QMapIterator<QString, int> it(m_propertyTypeDict);
+    while(it.hasNext()) {
+        it.next();
         str << it.key() << (qint32)it.value();
     }
 }
@@ -136,9 +138,9 @@ KBuildServiceTypeFactory::addEntry(const KSycocaEntry::Ptr& newEntry)
 
     KServiceType::Ptr serviceType = KServiceType::Ptr::staticCast( newEntry );
 
-    const QMap<QString,QVariant::Type>& pd = serviceType->propertyDefs();
-    QMap<QString,QVariant::Type>::ConstIterator pit = pd.begin();
-    for( ; pit != pd.end(); ++pit ) {
+    QMapIterator<QString, QVariant::Type> pit(serviceType->propertyDefs());
+    while(pit.hasNext()) {
+        pit.next();
         const QString property = pit.key();
         QMap<QString, int>::iterator dictit = m_propertyTypeDict.find(property);
         if (dictit == m_propertyTypeDict.end())
