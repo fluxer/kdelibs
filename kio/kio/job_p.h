@@ -29,7 +29,7 @@
 #include "jobuidelegate.h"
 #include "kjobtrackerinterface.h"
 
-#include <QPointer>
+#include <QtCore/qpointer.h>
 
 #define KIO_ARGS QByteArray packedArgs; QDataStream stream( &packedArgs, QIODevice::WriteOnly ); stream
 

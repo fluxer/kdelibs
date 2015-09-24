@@ -9,7 +9,6 @@
 #define KIO_KIMAGEIO_H
 
 #include <QtCore/QStringList>
-#include <QtCore/QString>
 
 #include <kio/kio_export.h>
 

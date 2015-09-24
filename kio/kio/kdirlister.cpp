@@ -23,6 +23,7 @@
 #include "kdirlister.h"
 #include "kdirlister_p.h"
 
+#include <QtCore/qlinkedlist.h>
 #include <QtCore/QRegExp>
 #include <QtCore/qcoreapplication.h>
 

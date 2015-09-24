@@ -21,9 +21,6 @@
 #ifndef KCMUTILS_KCMODULEPROXY_H
 #define KCMUTILS_KCMODULEPROXY_H
 
-#include <QtGui/QImage>
-#include <QtCore/QStringList>
-
 #include <kcmodule.h>
 #include <kservice.h>
 #include <kcmutils_export.h>

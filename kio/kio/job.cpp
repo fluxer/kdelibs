@@ -38,6 +38,7 @@ extern "C" {
 #include <pwd.h>
 #include <grp.h>
 }
+#include <QtCore/qlinkedlist.h>
 #include <QtCore/QTimer>
 #include <QtCore/QFile>
 #include <QtCore/qbuffer.h>

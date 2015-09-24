@@ -31,6 +31,8 @@
 #include <typeinfo>
 #include <sys/stat.h>
 
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 #include <QtGui/QWidget>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
@@ -61,16 +63,9 @@
 #include <kprotocolmanager.h>
 #include <kstandarddirs.h>
 #include <kprocess.h>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QTextStream>
-#include <QtCore/qdatetime.h>
-#include <QtCore/QRegExp>
-#include <QDir>
 #include <kdesktopfile.h>
 #include <kmacroexpander.h>
 #include <kshell.h>
-#include <QTextDocument>
 #include <kde_file.h>
 #include <kconfiggroup.h>
 #include <kdialog.h>

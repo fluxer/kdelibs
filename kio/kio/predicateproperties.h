@@ -23,6 +23,7 @@
 #include <kio/kio_export.h>
 #include <QtCore/QSharedData>
 #include <QtCore/QVariant>
+
 class QValidator;
 
 /**

@@ -27,7 +27,6 @@
 
 #include <kurl.h>
 #include <QtGui/QWidget>
-#include <QtCore/QByteArray>
 
 class KFilePlacesModel;
 class KUrlComboBox;

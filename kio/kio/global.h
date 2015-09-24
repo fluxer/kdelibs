@@ -21,10 +21,6 @@
 
 #include <kio/kio_export.h>
 
-#include <QtCore/QString>
-#include <QtCore/QHash>
-#include <QtCore/QMap>
-#include <QtCore/QList>
 #include <QtCore/QVariant>
 #include <QtCore/QFile>  // for QFile::Permissions
 
@@ -35,10 +31,6 @@
 #include <sys/types.h> // mode_t
 
 #include <kjob.h>
-
-#ifdef Q_CC_MSVC
-template class KDE_EXPORT QMap<QString, QString>;
-#endif
 
 class KUrl;
 class KJobTrackerInterface;

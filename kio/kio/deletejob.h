@@ -22,8 +22,6 @@
 #ifndef KIO_DELETEJOB_H
 #define KIO_DELETEJOB_H
 
-#include <QtCore/QStringList>
-
 #include <kurl.h>
 #include "global.h"
 

@@ -27,7 +27,6 @@
 #include <kserviceaction.h>
 #include <kservice.h>
 #include <QActionGroup>
-#include <QObject>
 
 class KFileItemActions;
 

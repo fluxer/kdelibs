@@ -32,6 +32,7 @@
 
 #include <unistd.h>
 
+#include <QtCore/QStack>
 #include <QtCore/QDir>
 #include <QtCore/QRegExp>
 #include <QtCore/QTimer>

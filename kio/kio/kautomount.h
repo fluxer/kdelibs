@@ -20,8 +20,6 @@
 #define KAUTOMOUNT_H
 
 #include <QtCore/QObject>
-#include <QtCore/QString>
-
 #include <QtGlobal>
 
 #include <kio/kio_export.h>

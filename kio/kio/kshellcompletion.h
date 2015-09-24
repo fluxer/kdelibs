@@ -20,7 +20,6 @@
 #ifndef KSHELLCOMPLETION_H
 #define KSHELLCOMPLETION_H
 
-#include <QtCore/QString>
 #include <QtCore/QStringList>
 
 #include "kurlcompletion.h"

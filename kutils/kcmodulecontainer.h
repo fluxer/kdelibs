@@ -20,12 +20,8 @@
 #ifndef KCMODULECONTAINER_H
 #define KCMODULECONTAINER_H
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-
 #include <kcmodule.h>
 #include <kcmoduleloader.h>
-#include <QtCore/QList>
 
 class QWidget;
 

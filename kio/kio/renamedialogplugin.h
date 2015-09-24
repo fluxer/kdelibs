@@ -29,7 +29,6 @@
 #include <kio/renamedialog.h>
 #include <QtGui/QDialog>
 #include <sys/types.h>
-#include <QtCore/QString>
 #include <QtCore/QStringList>
 
 

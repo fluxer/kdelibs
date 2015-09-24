@@ -21,9 +21,6 @@
 #define KFILEFILTERCOMBO_H
 
 #include <kfile_export.h>
-
-#include <QtCore/QStringList>
-
 #include <kcombobox.h>
 
 class KFILE_EXPORT KFileFilterCombo : public KComboBox

@@ -46,6 +46,7 @@
 #endif
 #include <assert.h>
 
+#include <QtCore/qlinkedlist.h>
 #include <QtCore/QTimer>
 #include <QtCore/QFile>
 #include <sys/stat.h> // mode_t

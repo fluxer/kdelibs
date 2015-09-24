@@ -20,8 +20,8 @@
 #ifndef JOBURLCACHE_H
 #define JOBURLCACHE_H
 
-#include <QObject>
-#include <QStringList>
+#include <QtCore/qobject.h>
+#include <QtCore/qstringlist.h>
 
 class JobUrlCache : public QObject
 {

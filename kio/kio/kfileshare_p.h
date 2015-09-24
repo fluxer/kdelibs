@@ -21,6 +21,7 @@
 #define KFILESHAREPRIVATE_H
 
 #include <QObject>
+
 class KDirWatch;
 
 /**

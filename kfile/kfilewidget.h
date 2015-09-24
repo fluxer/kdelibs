@@ -28,9 +28,10 @@
 #ifndef KFILEWIDGET_H
 #define KFILEWIDGET_H
 
+#include <QtGui/qwidget.h>
+
 #include "kfile_export.h"
 #include "kabstractfilewidget.h"
-#include <QtGui/QWidget>
 
 class KJob;
 class KFileItem;

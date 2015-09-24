@@ -26,7 +26,6 @@
 #include <kio/jobclasses.h> // for KIO::JobFlags
 #include <klocale.h>
 
-#include <QtCore/QByteArray>
 #include <QtNetwork/QHostInfo>
 
 class KConfigGroup;

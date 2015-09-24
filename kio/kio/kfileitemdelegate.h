@@ -26,7 +26,6 @@
 #include <QtGui/QTextOption>
 #include <kio/global.h>
 
-
 class QAbstractItemModel;
 class QAbstractItemView;
 class QHelpEvent;

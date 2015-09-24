@@ -29,8 +29,6 @@
 #include <kurl.h>
 
 #include <QtCore/QObject>
-#include <QtCore/QHash>
-#include <QtCore/QPair>
 #include <QtCore/QStringList>
 
 

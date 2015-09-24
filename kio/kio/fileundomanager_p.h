@@ -22,7 +22,7 @@
 #define FILEUNDOMANAGER_P_H
 
 #include "fileundomanager.h"
-#include <QtCore/QStack>
+#include <QtCore/qstack.h>
 #include <QtGui/qundostack.h>
 #include <kurl.h>
 #include <ctime>

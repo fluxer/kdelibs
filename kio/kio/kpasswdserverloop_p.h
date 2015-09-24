@@ -23,7 +23,6 @@
 #define KPASSWDSERVERLOOP_P_H
 
 #include <kio/authinfo.h>
-#include <QtCore/QByteArray>
 #include <QtCore/QEventLoop>
 
 namespace KIO {

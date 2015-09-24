@@ -25,7 +25,6 @@
 #include <QtGui/QTreeView>
 
 #include <kurl.h>
-
 #include <kfile_export.h>
 
 /**

@@ -23,6 +23,7 @@
 
 #include <kfile_export.h>
 #include <kdialog.h>
+
 class KLineEdit;
 class KUrlRequester;
 class KNameAndUrlInputDialogPrivate;

@@ -22,7 +22,6 @@
 #define KDIROPERATOR_H_
 
 #include <QtGui/QWidget>
-#include <QtCore/QStack>
 #include <QtGui/qstyleoption.h>
 
 #include <ktoggleaction.h>

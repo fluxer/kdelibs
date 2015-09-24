@@ -18,8 +18,9 @@
 
 #ifndef KMESSAGEBOXWRAPPER_H
 #define KMESSAGEBOXWRAPPER_H
+
+#include <QtGui/qapplication.h>
 #include <kmessagebox.h>
-#include <QtGui/QApplication>
 #include <kdebug.h>
 
 /**
@@ -34,21 +35,22 @@ public:
                     const QString &text, 
                     const QString &caption = QString())
     {
-	if (qApp && qApp->type() == QApplication::GuiClient) {
-      	  KMessageBox::error( parent, text, caption );
-	} else 
-	  kWarning() << text;
+        if (qApp && qApp->type() == QApplication::GuiClient) {
+            KMessageBox::error( parent, text, caption );
+        } else 
+            kWarning() << text;
     }
 
   static void sorry(QWidget *parent, 
                     const QString &text,
                     const QString &caption = QString())
     {
-      if (qApp && qApp->type() == QApplication::GuiClient) {
-         KMessageBox::sorry( parent, text, caption );
-      } else
-	kWarning() << text;
+        if (qApp && qApp->type() == QApplication::GuiClient) {
+            KMessageBox::sorry( parent, text, caption );
+        } else
+            kWarning() << text;
     }
   
 };
+
 #endif

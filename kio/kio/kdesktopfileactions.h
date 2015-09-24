@@ -23,6 +23,7 @@
 #include <kserviceaction.h>
 #include <kio/kio_export.h>
 #include <kurl.h>
+
 class KDesktopFile;
 class KService;
 

@@ -21,8 +21,7 @@
 #ifndef KSAMBASHARE_P_H
 #define KSAMBASHARE_P_H
 
-#include <QtCore/QMap>
-
+#include <QtCore/qmap.h>
 #include "ksambasharedata.h"
 
 class QString;

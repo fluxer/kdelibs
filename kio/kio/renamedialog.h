@@ -25,7 +25,6 @@
 #include <ksqueezedtextlabel.h>
 #include <kurl.h>
 #include <QtGui/QDialog>
-#include <QtCore/QString>
 #include <sys/types.h>
 
 #include <kio/global.h>

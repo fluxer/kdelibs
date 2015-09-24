@@ -24,11 +24,10 @@
 #include "kurlnavigatorbuttonbase_p.h"
 #include "kurlnavigatormenu_p.h"
 
+#include <QtCore/qpointer.h>
 #include <kio/global.h>
 #include <kio/udsentry.h>
 #include <kurl.h>
-
-#include <QPointer>
 
 class KJob;
 class QDropEvent;

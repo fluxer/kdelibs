@@ -22,9 +22,9 @@
 #define KURLNAVIGATORPLACESSELECTOR_P_H
 
 #include "kurlnavigatorbuttonbase_p.h"
-#include <kurl.h>
 
 #include <QtCore/qabstractitemmodel.h>
+#include <kurl.h>
 
 class KFilePlacesModel;
 class KMenu;

@@ -22,8 +22,6 @@
 #define KDATATOOL_H
 
 #include <kio/kio_export.h>
-#include <QtCore/QObject>
-#include <QtCore/QString>
 
 #include <kaction.h>
 #include <kservice.h>

@@ -25,7 +25,6 @@
 #include <config-kio.h>
 #include <predicateproperties.h>
 
-#include <QtCore/QHash>
 #include <QtCore/QSharedData>
 
 class KFileWritePlugin;

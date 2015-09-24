@@ -25,12 +25,10 @@
 #include <kio/global.h>
 #include <kio/udsentry.h>
 #include <kurl.h>
-
 #include <kacl.h>
 #include <kmimetype.h>
 #include <kfilemetainfo.h>
 #include <kdatetime.h>
-#include <QtCore/QList>
 
 class KFileItemPrivate;
 

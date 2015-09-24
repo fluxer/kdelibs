@@ -12,13 +12,11 @@
 #define KDIRNOTIFY_H_268161151672021
 
 #include <QtCore/QObject>
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-#include <QtCore/QMap>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusAbstractInterface>
 #include <kio/kio_export.h>
 
 /**

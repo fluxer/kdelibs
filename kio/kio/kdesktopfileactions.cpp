@@ -23,10 +23,13 @@
 
 #include "krun.h"
 #include "kautomount.h"
+
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
+
 #include <kmessageboxwrapper.h>
 #include <kdirnotify.h>
 #include <kmountpoint.h>
-
 #include <kstandarddirs.h>
 #include <kdesktopfile.h>
 #include <kconfiggroup.h>

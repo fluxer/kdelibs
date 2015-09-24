@@ -23,8 +23,6 @@
 
 #include <QtGui/QWidget>
 
-#include <QtCore/QList>
-
 #include <kcmutils_export.h>
 #include <ksharedconfig.h>
 

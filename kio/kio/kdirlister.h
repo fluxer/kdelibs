@@ -24,9 +24,6 @@
 #include "kfileitem.h"
 #include "kdirnotify.h"
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-
 #include <kurl.h>
 
 class KJob;

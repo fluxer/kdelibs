@@ -21,6 +21,7 @@
 
 #include "global.h"
 #include "connection.h"
+
 #include <QtCore/QTimer>
 #include <QtGui/QWidget>
 #include <QtCore/QPointer>
