@@ -21,7 +21,6 @@ MACRO(KDEUI_EXECUTABLE_TESTS)
             kde4_add_manual_test(kdeui-${_testname} ${_testname}.cpp)
         endif()
         target_link_libraries(kdeui-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
-        set_target_properties(kdeui-${_testname} PROPERTIES COMPILE_FLAGS -DKDESRCDIR="\\"${CMAKE_CURRENT_SOURCE_DIR}\\"")
     ENDFOREACH(_testname)
 ENDMACRO(KDEUI_EXECUTABLE_TESTS)
 
