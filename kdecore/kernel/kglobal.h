@@ -63,22 +63,12 @@ class KCleanUpGlobalStatic
         inline ~KCleanUpGlobalStatic() { func(); }
 };
 
-#ifdef Q_CC_MSVC
-/**
- * @internal
- *
- * MSVC seems to give anonymous structs the same name which fails at link time. So instead we name
- * the struct and hope that by adding the line number to the name it's unique enough to never clash.
- */
-# define K_GLOBAL_STATIC_STRUCT_NAME(NAME) _k_##NAME##__LINE__
-#else
 /**
  * @internal
  *
  * Make the struct of the K_GLOBAL_STATIC anonymous.
  */
-# define K_GLOBAL_STATIC_STRUCT_NAME(NAME)
-#endif
+#define K_GLOBAL_STATIC_STRUCT_NAME(NAME)
 
 /// @endcond
 

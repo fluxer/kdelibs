@@ -426,13 +426,8 @@
  * @sa KDE_BF_ENUM
  */
 
-#ifdef Q_CC_MSVC
-# define KDE_BF_ENUM(a) unsigned int
-# define KDE_CAST_BF_ENUM(a,b) static_cast<a>(b)
-#else
-# define KDE_BF_ENUM(a) a
-# define KDE_CAST_BF_ENUM(a,b) b
-#endif
+#define KDE_BF_ENUM(a) a
+#define KDE_CAST_BF_ENUM(a,b) b
 
 /**
  * @def KDE_WEAK_SYMBOL

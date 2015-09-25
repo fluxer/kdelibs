@@ -100,10 +100,8 @@ QString findLibraryInternal(const QString &name, const KComponentData &cData)
         return libfile;
 
     // Now look where they don't belong but sometimes are
-#ifndef Q_CC_MSVC
     if (!hasPrefix)
         libname = fileinfo.path() + QLatin1String("/lib") + fileinfo.fileName();
-#endif
 
     libfile = cData.dirs()->findResource("lib", libname);
     if (!libfile.isEmpty()) {

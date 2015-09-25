@@ -104,11 +104,9 @@ public:
         }
 
     private:
-#ifndef Q_CC_MSVC
         using Container::iterator::operator*;
         using Container::iterator::operator->;
         using Container::iterator::value;
-#endif
     };
 
     typedef _iterator<LeftContainer>                      left_iterator;
