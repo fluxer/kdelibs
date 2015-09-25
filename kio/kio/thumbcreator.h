@@ -61,8 +61,6 @@ class QWidget;
  * set(filetypethumbnail_SRCS filetypethumbnail.cpp)
  *
  *
- * kde4_add_ui_files(filetypethumbnail_SRCS config.ui )
- *
  * kde4_add_plugin(filetypethumbnail ${filetypethumbnail_SRCS})
  * target_link_libraries(filetypethumbnail ${KDE4_KIO_LIBS})
  *

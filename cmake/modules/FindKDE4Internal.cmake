@@ -147,10 +147,6 @@
 #  KDE4_SERIALIZE_TOOL - wrapper to serialize potentially resource-intensive commands during
 #                      parallel builds (set to 'icecc' when using icecream)
 #
-# It also adds the following macros and functions (from KDE4Macros.cmake)
-#  KDE4_ADD_UI_FILES (SRCS_VAR file1.ui ... fileN.ui)
-#    Use this to add Qt designer ui files to your application/library.
-#
 #  KDE4_ADD_KCFG_FILES (SRCS_VAR [GENERATE_MOC] [USE_RELATIVE_PATH] file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
 #    Use optional GENERATE_MOC to generate moc if you use signals in your kcfg files.
@@ -170,6 +166,9 @@
 #    are build and executed only if the ENABLE_TESTING option is enabled.
 #    KDESRCDIR is set to the source directory of the test, this can be used
 #    with KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
+#
+#  KDE4_ADD_MANUAL_TEST (testname file1 ... fileN)
+#    same as KDE_ADD_TEST() except that the test is not run on `make test`
 #
 #  KDE4_INSTALL_ICONS( path theme)
 #    Installs all png and svgz files in the current directory to the icon
