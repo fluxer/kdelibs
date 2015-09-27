@@ -43,6 +43,7 @@
 #include <QtGui/QSessionManager>
 #include <QtGui/QStyle>
 #include <QtGui/QWidget>
+#include <QtDBus/QDBusConnection>
 
 #include <kaction.h>
 #include <kapplication.h>

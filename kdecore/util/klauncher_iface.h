@@ -29,7 +29,8 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusAbstractInterface>
+#include <QtDBus/QDBusReply>
 
 /*
  * Proxy class for interface org.kde.KLauncher

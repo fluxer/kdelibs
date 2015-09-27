@@ -35,12 +35,9 @@
 #include "kbuildprotocolinfofactory.h"
 #include "kctimefactory.h"
 #include <ktemporaryfile.h>
-#include <QtCore/QDataStream>
 #include <QtCore/QDir>
-#include <QtCore/QEventLoop>
-#include <QtCore/QFile>
-#include <QtCore/QTimer>
-#include <QtDBus/QtDBus>
+#include <QtCore/QFileInfo>
+#include <QtDBus/QDBusConnectionInterface>
 #include <errno.h>
 
 #include <assert.h>

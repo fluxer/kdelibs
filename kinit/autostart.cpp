@@ -82,17 +82,15 @@ AutoStart::loadAutoStartList()
                                                                QString::fromLatin1("*.desktop"),
                                                                KStandardDirs::NoDuplicates);
 
-   for(QStringList::ConstIterator it = files.begin();
-       it != files.end();
-       ++it)
+   foreach(const QString it, files)
    {
-       KAutostart config(*it);
+       KAutostart config(it);
        if( !config.autostarts(QString::fromLatin1("KDE"), KAutostart::CheckAll))
            continue;
 
        AutoStartItem *item = new AutoStartItem;
-       item->name = extractName(*it);
-       item->service = *it;
+       item->name = extractName(it);
+       item->service = it;
        item->startAfter = config.startAfter();
        item->phase = config.startPhase();
        if (item->phase < 0)

@@ -32,7 +32,7 @@
 #include <QtGui/QBitmap>
 #include <QDesktopWidget>
 #include <QtGui/QDialog>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusInterface>
 #include <QtGui/qx11info_x11.h>
 #include <X11/Xatom.h>
 

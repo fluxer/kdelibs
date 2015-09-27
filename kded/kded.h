@@ -25,8 +25,8 @@
 #include <QtCore/QTimer>
 #include <QtCore/QHash>
 #include <QtCore/QSet>
-
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusAbstractAdaptor>
 
 #include <ksycoca.h>
 #include <ksycocatype.h>

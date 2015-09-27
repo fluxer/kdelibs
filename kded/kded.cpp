@@ -30,12 +30,6 @@
 #include <signal.h>
 #include <time.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QTimer>
-
-#include <QtDBus/QtDBus>
-
 #include <kuniqueapplication.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>

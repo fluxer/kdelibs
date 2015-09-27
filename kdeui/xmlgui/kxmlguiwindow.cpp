@@ -36,17 +36,15 @@
 
 #include <config.h>
 
-#include <QtGui/qevent.h>
 #include <QDesktopWidget>
 #include <QDockWidget>
 #include <QtXml/qdom.h>
+#include <QtGui/qevent.h>
 #include <QtGui/QLayout>
-#include <QtCore/QObject>
 #include <QtGui/QSessionManager>
 #include <QtGui/QStyle>
-#include <QtCore/QTimer>
 #include <QtGui/QWidget>
-#include <QtCore/QList>
+#include <QtDBus/QDBusConnection>
 #include <kaction.h>
 #include <kapplication.h>
 #include <kauthorized.h>

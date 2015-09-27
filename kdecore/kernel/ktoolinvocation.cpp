@@ -32,6 +32,11 @@
 
 #include <errno.h>
 
+#include <QtCore/QThread>
+#include <QtCore/QProcess>
+#include <QtCore/QCoreApplication>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusConnectionInterface>
 
 KToolInvocation *KToolInvocation::self()
 {

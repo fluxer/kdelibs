@@ -37,7 +37,8 @@
 #include <QtCore/QTimer>
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusMessage>
+#include <QtDBus/QDBusConnectionInterface>
 
 #include <kservice.h>
 #include <kprocess.h>
