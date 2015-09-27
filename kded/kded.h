@@ -27,6 +27,7 @@
 #include <QtCore/QSet>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusAbstractAdaptor>
+#include <QtDBus/QDBusServiceWatcher>
 
 #include <ksycoca.h>
 #include <ksycocatype.h>
