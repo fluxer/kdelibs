@@ -88,9 +88,6 @@ And here is an alphabetical list of all further parts of kdelibs:
 * includes
     Qt-style include file wrappers.
 
-* kconf_update
-    Auto-Updater for config files.
-
 * kded
     The KDE daemon checks for newly installed software, update files
     or hostname changes and takes according actions.

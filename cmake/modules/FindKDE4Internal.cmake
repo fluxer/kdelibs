@@ -24,7 +24,6 @@
 #  KDE4_SOUND_INSTALL_DIR   - the directory where sound files from kdelibs are installed
 #  KDE4_TEMPLATES_INSTALL_DIR     - the directory where templates (Create new file...) from kdelibs are installed
 #  KDE4_WALLPAPER_INSTALL_DIR     - the directory where wallpapers from kdelibs are installed
-#  KDE4_KCONF_UPDATE_INSTALL_DIR  - the directory where kconf_update files from kdelibs are installed
 #  KDE4_AUTOSTART_INSTALL_DIR     - the directory where autostart from kdelibs are installed
 #  KDE4_XDG_APPS_INSTALL_DIR      - the XDG apps dir from kdelibs
 #  KDE4_XDG_DIRECTORY_INSTALL_DIR - the XDG directory from kdelibs
@@ -97,7 +96,6 @@
 # Under Windows they are always relative.
 #
 #  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
-#  BUNDLE_INSTALL_DIR       - Mac only: the directory where application bundles will be installed (default is /Applications/KDE4 )
 #  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
 #  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
 #  CONFIG_INSTALL_DIR       - the directory where config files will be installed
@@ -116,8 +114,6 @@
 #  TEMPLATES_INSTALL_DIR    - the directory where templates (Create new file...) will be installed
 #  WALLPAPER_INSTALL_DIR    - the directory where wallpapers will be installed
 #  AUTOSTART_INSTALL_DIR    - the directory where autostart files will be installed
-#  DEMO_INSTALL_DIR         - the directory where demos will be installed
-#  KCONF_UPDATE_INSTALL_DIR - the directory where kconf_update files will be installed
 #  SYSCONF_INSTALL_DIR      - the directory where sysconfig files will be installed (default /usr/etc)
 #  XDG_APPS_INSTALL_DIR     - the XDG apps dir
 #  XDG_DIRECTORY_INSTALL_DIR- the XDG directory
@@ -129,8 +125,7 @@
 # The variable INSTALL_TARGETS_DEFAULT_ARGS can be used when installing libraries
 # or executables into the default locations.
 # The INSTALL_TARGETS_DEFAULT_ARGS variable should be used when libraries are installed.
-# It should also be used when installing applications, since then
-# on OS X application bundles will be installed to BUNDLE_INSTALL_DIR.
+# It should also be used when installing applications.
 # The variable MUST NOT be used for installing plugins.
 # It also MUST NOT be used for executables which are intended to go into sbin/ or libexec/.
 #
@@ -561,8 +556,6 @@ set(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes" CACHE P
 set(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds" CACHE PATH "")
 set(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates" CACHE PATH "")
 set(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers" CACHE PATH "")
-set(DEMO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/demos" CACHE PATH "")
-set(KCONF_UPDATE_INSTALL_DIR "${DATA_INSTALL_DIR}/kconf_update" CACHE PATH "")
 set(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart" CACHE PATH "")
 
 set(XDG_APPS_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/applications/kde4" CACHE PATH "")
