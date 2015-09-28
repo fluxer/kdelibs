@@ -782,9 +782,10 @@ KLauncher::start_service(KService::Ptr service, const QStringList &_urls,
       // application.
       foreach(const QString it, urls) {
          QByteArray startup_id2 = startup_id;
+         const QStringList singleUrl(it);
          if( !startup_id2.isEmpty() && startup_id2 != "0" )
              startup_id2 = "0"; // can't use the same startup_id several times // krazy:exclude=doublequote_chars
-         start_service( service, QStringList(it), envs, startup_id2, true, false, msg);
+         start_service( service, singleUrl, envs, startup_id2, true, false, msg);
       }
       QString firstURL = *(urls.begin());
       urls.clear();
