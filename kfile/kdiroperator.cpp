@@ -1381,7 +1381,7 @@ bool KDirOperator::Private::checkPreviewInternal() const
     if (parent->dirOnlyMode() && supported.indexOf("inode/directory") == -1)
         return false;
 
-    QStringList mimeTypes = dirLister->mimeFilters();
+    const QStringList mimeTypes = dirLister->mimeFilters();
     const QStringList nameFilter = dirLister->nameFilter().split(' ', QString::SkipEmptyParts);
 
     if (mimeTypes.isEmpty() && nameFilter.isEmpty() && !supported.isEmpty())
@@ -1390,38 +1390,32 @@ bool KDirOperator::Private::checkPreviewInternal() const
         QRegExp r;
         r.setPatternSyntax(QRegExp::Wildcard);   // the "mimetype" can be "image/*"
 
-        if (!mimeTypes.isEmpty()) {
-            QStringList::ConstIterator it = supported.begin();
+        foreach(const QString it, supported) {
+            r.setPattern(it);
 
-            for (; it != supported.end(); ++it) {
-                r.setPattern(*it);
-
-                QStringList result = mimeTypes.filter(r);
-                if (!result.isEmpty()) {   // matches! -> we want previews
-                    return true;
-                }
+            const QStringList result = mimeTypes.filter(r);
+            if (!result.isEmpty()) {   // matches! -> we want previews
+                return true;
             }
         }
 
-        if (!nameFilter.isEmpty()) {
-            // find the mimetypes of all the filter-patterns
-            foreach(const QString it1, nameFilter) {
-                if (it1 == "*") {
+        // find the mimetypes of all the filter-patterns
+        foreach(const QString it1, nameFilter) {
+            if (it1 == "*") {
+                return true;
+            }
+
+            KMimeType::Ptr mt = KMimeType::findByPath(it1, 0, true /*fast mode, no file contents exist*/);
+            if (!mt)
+                continue;
+            const QString mime = mt->name();
+
+            // the "mimetypes" we get from the PreviewJob can be "image/*"
+            // so we need to check in wildcard mode
+            foreach(const QString it2, supported) {
+                r.setPattern(it2);
+                if (r.indexIn(mime) != -1) {
                     return true;
-                }
-
-                KMimeType::Ptr mt = KMimeType::findByPath(it1, 0, true /*fast mode, no file contents exist*/);
-                if (!mt)
-                    continue;
-                const QString mime = mt->name();
-
-                // the "mimetypes" we get from the PreviewJob can be "image/*"
-                // so we need to check in wildcard mode
-                foreach(const QString it2, supported) {
-                    r.setPattern(it2);
-                    if (r.indexIn(mime) != -1) {
-                        return true;
-                    }
                 }
             }
         }
