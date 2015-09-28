@@ -1405,22 +1405,20 @@ bool KDirOperator::Private::checkPreviewInternal() const
 
         if (!nameFilter.isEmpty()) {
             // find the mimetypes of all the filter-patterns
-            QStringList::const_iterator it1 = nameFilter.begin();
-            for (; it1 != nameFilter.end(); ++it1) {
-                if ((*it1) == "*") {
+            foreach(const QString it1, nameFilter) {
+                if (it1 == "*") {
                     return true;
                 }
 
-                KMimeType::Ptr mt = KMimeType::findByPath(*it1, 0, true /*fast mode, no file contents exist*/);
+                KMimeType::Ptr mt = KMimeType::findByPath(it1, 0, true /*fast mode, no file contents exist*/);
                 if (!mt)
                     continue;
-                QString mime = mt->name();
+                const QString mime = mt->name();
 
                 // the "mimetypes" we get from the PreviewJob can be "image/*"
                 // so we need to check in wildcard mode
-                QStringList::ConstIterator it2 = supported.begin();
-                for (; it2 != supported.end(); ++it2) {
-                    r.setPattern(*it2);
+                foreach(const QString it2, supported) {
+                    r.setPattern(it2);
                     if (r.indexIn(mime) != -1) {
                         return true;
                     }
