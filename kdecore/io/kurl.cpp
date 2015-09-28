@@ -225,7 +225,7 @@ void KUrl::List::populateMimeData( QMimeData* mimeData,
     if ( !metaData.isEmpty() )
     {
         QByteArray metaDataData; // :)
-        QMapIterator<QString, QString> it = metaData;
+        QMapIterator<QString, QString> it(metaData);
         while(it.hasNext())
         {
             it.next();
