@@ -93,8 +93,6 @@ Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVari
 
     bool isContainment = false;
     if (offers.isEmpty()) {
-        //TODO: what would be -really- cool is offer to try and download the applet
-        //      from the network at this point
         offers = KServiceTypeTrader::self()->query("Plasma/Containment", constraint);
         if (offers.count() > 0) {
             isContainment = true;
@@ -262,7 +260,7 @@ KPluginInfo::List PluginLoader::listAppletInfo(const QString &category, const QS
             constraint.append(" and [X-KDE-PluginInfo-Category] != '").append(category).append("'");
         }
     } else { //specific category (this could be an excluded one - is that bad?)
-        constraint.append(" and ").append("[X-KDE-PluginInfo-Category] == '").append(category).append("'");
+        constraint.append(" and [X-KDE-PluginInfo-Category] == '").append(category).append("'");
         if (category == "Miscellaneous") {
             constraint.append(" or (not exist [X-KDE-PluginInfo-Category] or [X-KDE-PluginInfo-Category] == '')");
         }
