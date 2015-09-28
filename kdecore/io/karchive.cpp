@@ -817,8 +817,8 @@ void KArchiveDirectory::copyTo(const QString& dest, bool recursiveCopy ) const
     root.mkdir(curDirName);
 
     const QStringList dirEntries = curDir->entries();
-    for ( QStringList::const_iterator it = dirEntries.begin(); it != dirEntries.end(); ++it ) {
-      const KArchiveEntry* curEntry = curDir->entry(*it);
+    foreach(const QString it, dirEntries) {
+      const KArchiveEntry* curEntry = curDir->entry(it);
       if (!curEntry->symLinkTarget().isEmpty()) {
           const QString linkName = curDirName+QLatin1Char('/')+curEntry->name();
 #ifdef Q_OS_UNIX
@@ -850,11 +850,9 @@ void KArchiveDirectory::copyTo(const QString& dest, bool recursiveCopy ) const
 
   qSort( fileList.begin(), fileList.end(), sortByPosition );  // sort on d->pos, so we have a linear access
 
-  for ( QList<const KArchiveFile*>::const_iterator it = fileList.constBegin(), end = fileList.constEnd() ;
-        it != end ; ++it ) {
-      const KArchiveFile* f = *it;
-      qint64 pos = f->position();
-      f->copyTo( fileToDir[pos] );
+  foreach(const KArchiveFile *it, fileList) {
+      qint64 pos = it->position();
+      it->copyTo( fileToDir[pos] );
   }
 }
 

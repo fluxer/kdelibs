@@ -1312,8 +1312,6 @@ void KDirOperator::changeEvent(QEvent *event)
 
 bool KDirOperator::eventFilter(QObject *watched, QEvent *event)
 {
-    Q_UNUSED(watched);
-
     // If we are not hovering any items, check if there is a current index
     // set. In that case, we show the preview of that item.
     switch(event->type()) {

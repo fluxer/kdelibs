@@ -892,10 +892,9 @@ void KDirWatchPrivate::addEntry(KDirWatch* instance, const QString& _path,
 
     QDir basedir (e->path);
     const QFileInfoList contents = basedir.entryInfoList(filters);
-    for (QFileInfoList::const_iterator iter = contents.constBegin();
-         iter != contents.constEnd(); ++iter)
+    foreach(const QFileInfo iter, contents)
     {
-      const QFileInfo &fileInfo = *iter;
+      const QFileInfo &fileInfo = iter;
       // treat symlinks as files--don't follow them.
       bool isDir = fileInfo.isDir() && !fileInfo.isSymLink();
 

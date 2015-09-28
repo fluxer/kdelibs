@@ -184,21 +184,14 @@ QStringList KUrl::List::toStringList(KUrl::AdjustPathOption trailing) const
 
 static QByteArray uriListData(const KUrl::List& urls)
 {
-    QList<QByteArray> urlStringList;
-    KUrl::List::ConstIterator uit = urls.constBegin();
-    const KUrl::List::ConstIterator uEnd = urls.constEnd();
-    for (; uit != uEnd ; ++uit) {
+    QByteArray uriListData;
+    foreach(const KUrl uit, urls) {
         // Get each URL encoded in utf8 - and since we get it in escaped
         // form on top of that, .toLatin1() is fine.
-        urlStringList.append((*uit).toMimeDataString().toLatin1());
+        uriListData += uit.toMimeDataString().toLatin1();
     }
+    uriListData += "\r\n";
 
-    QByteArray uriListData;
-    for (int i = 0, n = urlStringList.count(); i < n; ++i) {
-      uriListData += urlStringList.at(i);
-        if (i < n-1)
-          uriListData += "\r\n";
-    }
     return uriListData;
 }
 
@@ -232,8 +225,10 @@ void KUrl::List::populateMimeData( QMimeData* mimeData,
     if ( !metaData.isEmpty() )
     {
         QByteArray metaDataData; // :)
-        for( KUrl::MetaDataMap::const_iterator it = metaData.begin(); it != metaData.end(); ++it )
+        QMapIterator<QString, QString> it = metaData;
+        while(it.hasNext())
         {
+            it.next();
             metaDataData += it.key().toUtf8();
             metaDataData += "$@@$";
             metaDataData += it.value().toUtf8();
@@ -308,14 +303,13 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
             Q_ASSERT(str.endsWith(QLatin1String("$@@$")));
             str.truncate( str.length() - 4 );
             const QStringList lst = str.split(QLatin1String("$@@$"));
-            QStringList::ConstIterator it = lst.begin();
             bool readingKey = true; // true, then false, then true, etc.
             QString key;
-            for ( ; it != lst.end(); ++it ) {
+            foreach(const QString it, lst) {
                 if ( readingKey )
-                    key = *it;
+                    key = it;
                 else
-                    metaData->insert( key, *it );
+                    metaData->insert( key, it );
                 readingKey = !readingKey;
             }
             Q_ASSERT( readingKey ); // an odd number of items would be, well, odd ;-)
@@ -825,11 +819,9 @@ QString KUrl::fileEncoding() const
      q = q.mid(1);
 
   const QStringList args = q.split(QLatin1Char('&'), QString::SkipEmptyParts);
-  for(QStringList::ConstIterator it = args.begin();
-      it != args.end();
-      ++it)
+  foreach(const QString it, args)
   {
-      QString s = QUrl::fromPercentEncoding((*it).toLatin1());
+      QString s = QUrl::fromPercentEncoding(it.toLatin1());
       if (s.startsWith(QLatin1String("charset=")))
          return s.mid(8);
   }
@@ -1556,13 +1548,13 @@ QMap< QString, QString > KUrl::queryItems( const QueryItemsOptions &options ) co
 
   QMap< QString, QString > result;
   const QStringList items = strQueryEncoded.split( QLatin1Char('&'), QString::SkipEmptyParts );
-  for ( QStringList::const_iterator it = items.begin() ; it != items.end() ; ++it ) {
-    const int equal_pos = (*it).indexOf(QLatin1Char('='));
+  foreach(const QString it, items) {
+    const int equal_pos = it.indexOf(QLatin1Char('='));
     if ( equal_pos > 0 ) { // = is not the first char...
-      QString name = (*it).left( equal_pos );
+      QString name = it.left( equal_pos );
       if ( options & CaseInsensitiveKeys )
 	name = name.toLower();
-      QString value = (*it).mid( equal_pos + 1 );
+      QString value = it.mid( equal_pos + 1 );
       if ( value.isEmpty() )
         result.insert( name, QString::fromLatin1("") );
       else {
@@ -1571,7 +1563,7 @@ QMap< QString, QString > KUrl::queryItems( const QueryItemsOptions &options ) co
 	result.insert( name, QUrl::fromPercentEncoding( value.toLatin1() ) );
       }
     } else if ( equal_pos < 0 ) { // no =
-      QString name = (*it);
+      QString name = it;
       if ( options & CaseInsensitiveKeys )
 	name = name.toLower();
       result.insert( name, QString() );

@@ -220,12 +220,12 @@ QString PackageStructure::type() const
 QList<const char*> PackageStructure::directories() const
 {
     QList<const char*> dirs;
-    QMap<QByteArray, ContentStructure>::const_iterator it = d->contents.constBegin();
-    while (it != d->contents.constEnd()) {
+    QMapIterator<QByteArray, ContentStructure> it(d->contents);
+    while (it.hasNext()) {
+        it.next();
         if (it.value().directory) {
             dirs << it.key();
         }
-        ++it;
     }
     return dirs;
 }
@@ -233,13 +233,13 @@ QList<const char*> PackageStructure::directories() const
 QList<const char*> PackageStructure::requiredDirectories() const
 {
     QList<const char*> dirs;
-    QMap<QByteArray, ContentStructure>::const_iterator it = d->contents.constBegin();
-    while (it != d->contents.constEnd()) {
+    QMapIterator<QByteArray, ContentStructure> it(d->contents);
+    while (it.hasNext()) {
+        it.next();
         if (it.value().directory &&
             it.value().required) {
             dirs << it.key();
         }
-        ++it;
     }
     return dirs;
 }
@@ -247,12 +247,12 @@ QList<const char*> PackageStructure::requiredDirectories() const
 QList<const char*> PackageStructure::files() const
 {
     QList<const char*> files;
-    QMap<QByteArray, ContentStructure>::const_iterator it = d->contents.constBegin();
-    while (it != d->contents.constEnd()) {
+    QMapIterator<QByteArray, ContentStructure> it(d->contents);
+    while (it.hasNext()) {
+        it.next();
         if (!it.value().directory) {
             files << it.key();
         }
-        ++it;
     }
     return files;
 }
@@ -260,12 +260,12 @@ QList<const char*> PackageStructure::files() const
 QList<const char*> PackageStructure::requiredFiles() const
 {
     QList<const char*> files;
-    QMap<QByteArray, ContentStructure>::const_iterator it = d->contents.constBegin();
-    while (it != d->contents.constEnd()) {
+    QMapIterator<QByteArray, ContentStructure> it(d->contents);
+    while (it.hasNext()) {
+        it.next();
         if (!it.value().directory && it.value().required) {
             files << it.key();
         }
-        ++it;
     }
     return files;
 }
@@ -512,8 +512,9 @@ void PackageStructure::write(KConfigBase *config) const
     general.writeEntry("DefaultPackageRoot", d->packageRoot);
     general.writeEntry("AllowExternalPaths", d->externalPaths);
 
-    QMap<QByteArray, ContentStructure>::const_iterator it = d->contents.constBegin();
-    while (it != d->contents.constEnd()) {
+    QMapIterator<QByteArray, ContentStructure> it(d->contents);
+    while (it.hasNext()) {
+        it.next();
         KConfigGroup group = config->group(it.key());
         group.writeEntry("Path", it.value().paths);
         group.writeEntry("Name", it.value().name);
@@ -526,8 +527,6 @@ void PackageStructure::write(KConfigBase *config) const
         if (it.value().required) {
             group.writeEntry("Required", true);
         }
-
-        ++it;
     }
 }
 

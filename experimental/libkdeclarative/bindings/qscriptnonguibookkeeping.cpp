@@ -70,16 +70,15 @@ QScriptValue qScriptValueFromKConfigGroup(QScriptEngine *engine, const KConfigGr
     }
 
     QMap<QString, QString> entryMap = config.entryMap();
-    QMap<QString, QString>::const_iterator it = entryMap.constBegin();
-    QMap<QString, QString>::const_iterator begin = it;
-    QMap<QString, QString>::const_iterator end = entryMap.constEnd();
+    QMapIterator<QString, QString> it(entryMap);
 
     //setting the group name
     obj.setProperty("__file", QScriptValue(engine, config.config()->name()));
     obj.setProperty("__name", QScriptValue(engine, config.name()));
 
     //setting the key/value pairs
-    for (it = begin; it != end; ++it) {
+    while(it.hasNext()) {
+        it.next();
         //kDebug() << "setting" << it.key() << "to" << it.value();
         QString prop = it.key();
         prop.replace(' ', '_');

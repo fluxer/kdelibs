@@ -889,10 +889,9 @@ QStringList KService::keywords() const
 QStringList KServicePrivate::serviceTypes() const
 {
     QStringList ret;
-    QVector<KService::ServiceTypeAndPreference>::const_iterator it = m_serviceTypes.begin();
-    for ( ; it < m_serviceTypes.end(); ++it ) {
-        Q_ASSERT(!(*it).serviceType.isEmpty());
-        ret.append((*it).serviceType);
+    foreach(const KService::ServiceTypeAndPreference it, m_serviceTypes) {
+        Q_ASSERT(!it.serviceType.isEmpty());
+        ret.append(it.serviceType);
     }
     return ret;
 }
@@ -907,9 +906,8 @@ QStringList KService::mimeTypes() const
 {
     Q_D(const KService);
     QStringList ret;
-    QVector<KService::ServiceTypeAndPreference>::const_iterator it = d->m_serviceTypes.begin();
-    for ( ; it < d->m_serviceTypes.end(); ++it ) {
-        const QString sv = (*it).serviceType;
+    foreach(const KService::ServiceTypeAndPreference it, d->m_serviceTypes) {
+        const QString sv = it.serviceType;
         if (KMimeType::mimeType(sv)) // keep only mimetypes, filter out servicetypes
             ret.append(sv);
     }
