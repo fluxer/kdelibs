@@ -68,46 +68,46 @@ void FrameSvg::setImagePath(const QString &path)
     bool updateNeeded = true;
     clearCache();
 
-    FrameData *fd = d->frames[d->prefix];
-    if (fd->refcount() == 1) {
+    FrameData *frame = d->frames[d->prefix];
+    if (frame->refcount() == 1) {
         // we're the only user of it, let's remove it from the shared keys
         // we don't want to deref it, however, as we'll still be using it
-        const QString oldKey = d->cacheId(fd, d->prefix);
+        const QString oldKey = d->cacheId(frame, d->prefix);
         FrameSvgPrivate::s_sharedFrames.remove(oldKey);
     } else {
         // others are using this frame, so deref it for ourselves
-        fd->deref(this);
-        fd = 0;
+        frame->deref(this);
+        frame = 0;
     }
 
     Svg::d->setImagePath(path);
 
-    if (!fd) {
+    if (!frame) {
         // we need to replace our frame, start by looking in the frame cache
         FrameData *oldFd = d->frames[d->prefix];
         const QString key = d->cacheId(oldFd, d->prefix);
-        fd = FrameSvgPrivate::s_sharedFrames.value(key);
+        frame = FrameSvgPrivate::s_sharedFrames.value(key);
 
-        if (fd) {
+        if (frame) {
             // we found one, so ref it and use it; we also don't need to (or want to!)
             // trigger a full update of the frame since it is already the one we want
             // and likely already rendered just fine
-            fd->ref(this);
+            frame->ref(this);
             updateNeeded = false;
         } else {
             // nothing exists for us in the cache, so create a new FrameData based
             // on the old one
-            fd = new FrameData(*oldFd, this);
+            frame = new FrameData(*oldFd, this);
         }
 
-        d->frames.insert(d->prefix, fd);
+        d->frames.insert(d->prefix, frame);
     }
 
     setContainsMultipleImages(true);
     if (updateNeeded) {
         // ensure our frame is in the cache
-        const QString key = d->cacheId(fd, d->prefix);
-        FrameSvgPrivate::s_sharedFrames.insert(key, fd);
+        const QString key = d->cacheId(frame, d->prefix);
+        FrameSvgPrivate::s_sharedFrames.insert(key, frame);
 
         // this will emit repaintNeeded() as well when it is done
         d->updateAndSignalSizes();
@@ -118,11 +118,11 @@ void FrameSvg::setImagePath(const QString &path)
 
 void FrameSvg::setEnabledBorders(const EnabledBorders borders)
 {
-    if (borders == d->frames[d->prefix]->enabledBorders) {
+    FrameData *fd = d->frames[d->prefix];
+
+    if (borders == fd->enabledBorders) {
         return;
     }
-
-    FrameData *fd = d->frames[d->prefix];
 
     const QString oldKey = d->cacheId(fd, d->prefix);
     const EnabledBorders oldBorders = fd->enabledBorders;
@@ -387,26 +387,28 @@ QSizeF FrameSvg::frameSize() const
 
 qreal FrameSvg::marginSize(const Plasma::MarginEdge edge) const
 {
-    if (d->frames[d->prefix]->noBorderPadding) {
+    FrameData *frame = d->frames[d->prefix];
+
+    if (frame->noBorderPadding) {
         return .0;
     }
 
     switch (edge) {
     case Plasma::TopMargin:
-        return d->frames[d->prefix]->topMargin;
+        return frame->topMargin;
     break;
 
     case Plasma::LeftMargin:
-        return d->frames[d->prefix]->leftMargin;
+        return frame->leftMargin;
     break;
 
     case Plasma::RightMargin:
-        return d->frames[d->prefix]->rightMargin;
+        return frame->rightMargin;
     break;
 
     //Plasma::BottomMargin
     default:
-        return d->frames[d->prefix]->bottomMargin;
+        return frame->bottomMargin;
     break;
     }
 }
