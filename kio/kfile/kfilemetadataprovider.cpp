@@ -259,37 +259,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
 
 QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
 {
-    struct TranslationItem {
-        const char* const key;
-        const char* const context;
-        const char* const value;
-    };
-
-    static const TranslationItem translations[] = {
-        { "kfileitem#modified", I18N_NOOP2_NOSTRIP("@label", "Modified") },
-        { "kfileitem#owner", I18N_NOOP2_NOSTRIP("@label", "Owner") },
-        { "kfileitem#permissions", I18N_NOOP2_NOSTRIP("@label", "Permissions") },
-        { "kfileitem#size", I18N_NOOP2_NOSTRIP("@label", "Size") },
-        { "kfileitem#totalSize", I18N_NOOP2_NOSTRIP("@label", "Total Size") },
-        { "kfileitem#type", I18N_NOOP2_NOSTRIP("@label", "Type") },
-        { 0, 0, 0} // Mandatory last entry
-    };
-
-    static QHash<QString, QString> hash;
-    if (hash.isEmpty()) {
-        const TranslationItem* item = &translations[0];
-        while (item->key != 0) {
-            hash.insert(item->key, i18nc(item->context, item->value));
-            ++item;
-        }
-    }
-
-    QString value = hash.value(metaDataUri.url());
-    if (value.isEmpty()) {
-        value = KNfoTranslator::instance().translation(metaDataUri);
-    }
-
-    return value;
+    return KNfoTranslator::instance().translation(metaDataUri.url());
 }
 
 QString KFileMetaDataProvider::group(const KUrl& metaDataUri) const

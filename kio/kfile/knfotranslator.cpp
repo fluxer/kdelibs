@@ -32,7 +32,13 @@ struct TranslationItem {
 };
 
 // TODO: a lot of NFOs are missing yet
-static const TranslationItem g_translations[] = {    
+static const TranslationItem g_translations[] = {
+    { "kfileitem#modified", I18N_NOOP2_NOSTRIP("@label", "Modified") },
+    { "kfileitem#owner", I18N_NOOP2_NOSTRIP("@label", "Owner") },
+    { "kfileitem#permissions", I18N_NOOP2_NOSTRIP("@label", "Permissions") },
+    { "kfileitem#size", I18N_NOOP2_NOSTRIP("@label", "Size") },
+    { "kfileitem#totalSize", I18N_NOOP2_NOSTRIP("@label", "Total Size") },
+    { "kfileitem#type", I18N_NOOP2_NOSTRIP("@label", "Type") },
     { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", I18N_NOOP2_NOSTRIP("@label", "Comment") },
     { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", I18N_NOOP2_NOSTRIP("@label creation date", "Created") },
     { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize", I18N_NOOP2_NOSTRIP("@label file content size", "Size") },
