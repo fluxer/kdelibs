@@ -262,8 +262,7 @@ QList<KUrl> KFileMetaDataWidget::Private::sortedKeys(const QHash<KUrl, QVariant>
     QHashIterator<KUrl, QVariant> hashIt(data);
     while (hashIt.hasNext()) {
         hashIt.next();
-        const KUrl uri = hashIt.key();
-        list.append(uri);
+        list.append(hashIt.key());
     }
 
     return list;
@@ -323,11 +322,6 @@ QSize KFileMetaDataWidget::sizeHint() const
                       d->m_gridLayout->spacing() + rightWidthMax;
 
     return QSize(width, height);
-}
-
-bool KFileMetaDataWidget::event(QEvent* event)
-{
-    return QWidget::event(event);
 }
 
 #include "moc_kfilemetadatawidget.cpp"
