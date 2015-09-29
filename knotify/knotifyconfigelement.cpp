@@ -51,9 +51,10 @@ void KNotifyConfigElement::writeEntry( const QString & entry, const QString &dat
 
 void KNotifyConfigElement::save(  )
 {
-	QMap<QString, QString>::const_iterator it = m_cache.constBegin();
-	for ( ; it != m_cache.constEnd() ; ++it)
+	QMapIterator<QString, QString> it(m_cache);
+	while(it.hasNext())
 	{
+		it.next();
 		m_config->writeEntry(it.key() , it.value() );
 	}
 	m_config->sync();

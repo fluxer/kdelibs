@@ -141,9 +141,10 @@ void DialogShadows::Private::windowDestroyed(QObject *deletedObject)
 void DialogShadows::Private::updateShadows()
 {
     setupPixmaps();
-    QHash<const QWidget *, Plasma::FrameSvg::EnabledBorders>::const_iterator i;
-    for (i = m_windows.constBegin(); i != m_windows.constEnd(); ++i) {
-        updateShadow(i.key(), i.value());
+    QHashIterator<const QWidget *, Plasma::FrameSvg::EnabledBorders> it(m_windows);
+    while (it.hasNext()) {
+        it.next();
+        updateShadow(it.key(), it.value());
     }
 }
 

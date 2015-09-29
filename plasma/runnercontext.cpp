@@ -567,10 +567,10 @@ void RunnerContext::save(KConfigGroup &config)
 {
     QStringList countList;
 
-    typedef QHash<QString, int>::const_iterator Iterator;
-    Iterator end = d->launchCounts.constEnd();
-    for (Iterator i = d->launchCounts.constBegin(); i != end; ++i) {
-        countList << QString("%2 %1").arg(i.key()).arg(i.value());
+    QHashIterator<QString, int> it(d->launchCounts);
+    while( it.hasNext()) {
+        it.next();
+        countList << QString("%2 %1").arg(it.key()).arg(it.value());
     }
 
     config.writeEntry("LaunchCounts", countList);

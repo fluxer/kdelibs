@@ -498,10 +498,8 @@ void KDirListerCache::stopListJob(const QString& url, bool silent)
 void KDirListerCache::setAutoUpdate( KDirLister *lister, bool enable )
 {
     // IMPORTANT: this method does not check for the current autoUpdate state!
-
-    for ( KUrl::List::const_iterator it = lister->d->lstDirs.constBegin();
-          it != lister->d->lstDirs.constEnd(); ++it ) {
-        DirItem* dirItem = itemsInUse.value((*it).url());
+    foreach(const KUrl it, lister->d->lstDirs) {
+        DirItem* dirItem = itemsInUse.value(it.url());
         Q_ASSERT(dirItem);
         if ( enable )
             dirItem->incAutoUpdate();
@@ -808,9 +806,8 @@ KFileItem KDirListerCache::findByName( const KDirLister *lister, const QString& 
 {
     Q_ASSERT(lister);
 
-    for (KUrl::List::const_iterator it = lister->d->lstDirs.constBegin();
-         it != lister->d->lstDirs.constEnd(); ++it) {
-        DirItem* dirItem = itemsInUse.value((*it).url());
+    foreach(const KUrl it, lister->d->lstDirs) {
+        DirItem* dirItem = itemsInUse.value(it.url());
         Q_ASSERT(dirItem);
         const KFileItem item = dirItem->lstItems.findByName(_name);
         if (!item.isNull())
@@ -912,8 +909,9 @@ void KDirListerCache::slotFilesRemoved(const KUrl::List& fileList)
         }
     }
 
-    QMap<QString, KFileItemList>::const_iterator rit = removedItemsByDir.constBegin();
-    for(; rit != removedItemsByDir.constEnd(); ++rit) {
+    QMapIterator<QString, KFileItemList> rit(removedItemsByDir);
+    while(rit.hasNext()) {
+        rit.next();
         // Tell the views about it before calling deleteDir.
         // They might need the subdirs' file items (see the dirtree).
         DirectoryDataHash::const_iterator dit = directoryData.constFind(rit.key());

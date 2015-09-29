@@ -133,11 +133,10 @@ void KFileMetaDataConfigurationWidget::Private::slotLoadingFinished()
     // the currently shown file item and add them to the list.
     Q_ASSERT(m_provider != 0);
 
-    const QHash<KUrl, QVariant> data = m_provider->data();
-    QHash<KUrl, QVariant>::const_iterator it = data.constBegin();
-    while (it != data.constEnd()) {
+    QHashIterator<KUrl, QVariant> it(m_provider->data());
+    while (it.hasNext()) {
+        it.next();
         addItem(it.key());
-        ++it;
     }
 }
 

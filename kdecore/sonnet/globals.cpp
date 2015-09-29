@@ -45,10 +45,10 @@ QString detectLanguage(const QString &sentence)
     QMap<QString, int> correctHits;
     QSet<QString> seenLangs;
     {
-        QMap<QString, QString>::const_iterator itr = dicts.constBegin();
-        for (int i = 0; i < dicts.count(); ++i) {
+        QMapIterator<QString, QString> itr(dicts);
+        while (itr.hasNext()) {
+            itr.next();
             seenLangs.insert(itr.value());
-            ++itr;
         }
     }
 

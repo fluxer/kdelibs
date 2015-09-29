@@ -816,10 +816,9 @@ void ExtenderPrivate::updateBorders()
 
 void ExtenderPrivate::delayItemAddedEvent()
 {
-    QHash<Plasma::ExtenderItem *, QPointF>::const_iterator i = pendingItems.constBegin();
-    while (i != pendingItems.constEnd()) {
-        q->itemAddedEvent(i.key(), i.value());
-        ++i;
+    QHashIterator<Plasma::ExtenderItem *, QPointF> it(pendingItems);
+    while (it.hasNext()) {
+        q->itemAddedEvent(it.key(), it.value());
     }
     pendingItems.clear();
 }

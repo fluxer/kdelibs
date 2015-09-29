@@ -256,29 +256,14 @@ void KFileMetaDataWidget::Private::slotDataChangeFinished()
 
 QList<KUrl> KFileMetaDataWidget::Private::sortedKeys(const QHash<KUrl, QVariant>& data) const
 {
-    // Create a map, where the translated label prefixed with the
-    // sort priority acts as key. The data of each entry is the URI
-    // of the data. By this the all URIs are sorted by the sort priority
-    // and sub sorted by the translated labels.
-    QMap<QString, KUrl> map;
-    QHash<KUrl, QVariant>::const_iterator hashIt = data.constBegin();
-    while (hashIt != data.constEnd()) {
-        const KUrl uri = hashIt.key();
-
-        QString key = m_provider->group(uri);
-        key += m_provider->label(uri);
-
-        map.insert(key, uri);
-        ++hashIt;
-    }
-
-    // Apply the URIs from the map to the list that will get returned.
+    // Apply the URIs to the list that will get returned.
     // The list will then be alphabetically ordered by the translated labels of the URIs.
     QList<KUrl> list;
-    QMap<QString, KUrl>::const_iterator mapIt = map.constBegin();
-    while (mapIt != map.constEnd()) {
-        list.append(mapIt.value());
-        ++mapIt;
+    QHashIterator<KUrl, QVariant> hashIt(data);
+    while (hashIt.hasNext()) {
+        hashIt.next();
+        const KUrl uri = hashIt.key();
+        list.append(uri);
     }
 
     return list;

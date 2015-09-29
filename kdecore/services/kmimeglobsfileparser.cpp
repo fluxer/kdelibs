@@ -197,9 +197,9 @@ KMimeGlobsFileParser::PatternsMap KMimeGlobsFileParser::AllGlobs::patternsMap() 
     // This is just to fill in KMimeType::patterns. This has no real effect
     // on the actual mimetype matching.
 
-    QHash<QString, QStringList>::const_iterator it = m_fastPatterns.begin();
-    const QHash<QString, QStringList>::const_iterator end = m_fastPatterns.end();
-    for (; it != end; ++it) {
+    QHashIterator<QString, QStringList> it(m_fastPatterns);
+    while (it.hasNext()) {
+        it.next();
         Q_FOREACH(const QString& mime, it.value())
             patMap[mime].append(QString::fromLatin1("*.") + it.key());
     }

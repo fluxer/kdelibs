@@ -73,12 +73,9 @@ bool kmodifierKeyInfoEventFilter(void *message)
     if (KModifierKeyInfoProvider::s_eventFilterEnabled) {
         XEvent *evt = reinterpret_cast<XEvent*>(message);
         if (evt) {
-            QSet<KModifierKeyInfoProvider*>::const_iterator it =
-                KModifierKeyInfoProvider::s_providerList.constBegin();
-            QSet<KModifierKeyInfoProvider*>::const_iterator end =
-                KModifierKeyInfoProvider::s_providerList.constEnd();
-            for ( ; it != end; ++it) {
-                if ((*it)->x11Event(evt)) {
+            QSetIterator<KModifierKeyInfoProvider*> it(KModifierKeyInfoProvider::s_providerList);
+            while (it.hasNext()) {
+                if (it.next()->x11Event(evt)) {
                     // providers usually return don't consume events and return false.
                     // If under any circumstance an event is consumed, don't forward it to
                     // other event filters.

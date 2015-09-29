@@ -325,8 +325,9 @@ bool KFileMetaInfo::applyChanges()
 {
     // go through all editable fields and group them by writer
     QHash<KFileWritePlugin*, QVariantMap> data;
-    QHash<QString, KFileMetaInfoItem>::const_iterator i;
-    for ( i = d->items.constBegin(); i != d->items.constEnd(); ++i ) {
+    QHashIterator<QString, KFileMetaInfoItem> i(d->items);
+    while ( i.hasNext() ) {
+        i.next();
         if ( i.value().isModified() && i.value().d->writer ) {
             data[i.value().d->writer][i.key() ] = i.value().value();
         }
@@ -334,8 +335,9 @@ bool KFileMetaInfo::applyChanges()
 
     // call the writers on the data they can write
     bool ok = true;
-    QHash<KFileWritePlugin*, QVariantMap>::const_iterator j;
-    for ( j = data.constBegin(); j != data.constEnd(); ++j ) {
+    QHashIterator<KFileWritePlugin*, QVariantMap> j(data);
+    while ( j.hasNext() ) {
+        j.next();
         ok &= j.key()->write ( d->m_url, j.value() );
     }
     return ok;
