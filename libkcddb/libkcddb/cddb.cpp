@@ -121,12 +121,11 @@ namespace KCDDB
     CDInfoList infoList;
     QStringList cddbCacheDirs = config.cacheLocations();
 
-    for (QStringList::const_iterator cddbCacheDir = cddbCacheDirs.constBegin();
-        cddbCacheDir != cddbCacheDirs.constEnd(); ++cddbCacheDir)
+    foreach (const QString cddbCacheDir, cddbCacheDirs)
     {
       foreach(const QString &category, categories)
       {
-        QFile f( *cddbCacheDir + QLatin1Char( '/' ) + category + QLatin1Char( '/' ) + trackOffsetListToId(offsetList) );
+        QFile f( cddbCacheDir + QLatin1Char( '/' ) + category + QLatin1Char( '/' ) + trackOffsetListToId(offsetList) );
         if ( f.exists() && f.open(QIODevice::ReadOnly) )
         {
             QTextStream ts(&f);

@@ -851,19 +851,16 @@ QList<KAboutPerson> KAboutData::translators() const
        emailList = translatorEmail.split(QString(QLatin1Char(',')), QString::KeepEmptyParts);
     }
 
-    QStringList::const_iterator nit;
-    QStringList::const_iterator eit = emailList.constBegin();
-
-    for( nit = nameList.constBegin(); nit != nameList.constEnd(); ++nit )
+    foreach ( const QString nit, nameList )
     {
+        // overkill?
         QString email;
-        if ( eit != emailList.constEnd() )
+        foreach (const QString eit, emailList )
         {
-            email = *eit;
-            ++eit;
+            email = eit;
         }
 
-        personList.append( KAboutPerson( (*nit).trimmed(), email.trimmed() ) );
+        personList.append( KAboutPerson( nit.trimmed(), email.trimmed() ) );
     }
 
     return personList;

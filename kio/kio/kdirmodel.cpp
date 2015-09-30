@@ -397,13 +397,11 @@ void KDirModelPrivate::_k_slotNewItems(const KUrl& directoryUrl, const KFileItem
 
     QList<QModelIndex> emitExpandFor;
 
-    KFileItemList::const_iterator it = items.begin();
-    KFileItemList::const_iterator end = items.end();
-    for ( ; it != end ; ++it ) {
-        const bool isDir = it->isDir();
+    foreach (const KFileItem it, items) {
+        const bool isDir = it.isDir();
         KDirModelNode* node = isDir
-                              ? new KDirModelDirNode( dirNode, *it )
-                              : new KDirModelNode( dirNode, *it );
+                              ? new KDirModelDirNode( dirNode, it )
+                              : new KDirModelNode( dirNode, it );
 #ifndef NDEBUG
         // Test code for possible duplication of items in the childnodes list,
         // not sure if/how it ever happened.
@@ -413,7 +411,7 @@ void KDirModelPrivate::_k_slotNewItems(const KUrl& directoryUrl, const KFileItem
         //             << "url=" << dirNode->m_childNodes.last()->item().url();
 #endif
         dirNode->m_childNodes.append(node);
-        const KUrl url = it->url();
+        const KUrl url = it.url();
         m_nodeHash.insert(cleanupUrl(url), node);
         //kDebug(7008) << url;
 

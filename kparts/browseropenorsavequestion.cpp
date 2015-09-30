@@ -225,8 +225,8 @@ BrowserOpenOrSaveQuestion::Result BrowserOpenOrSaveQuestion::askOpenOrSave()
                 d->setButtonGuiItem(BrowserOpenOrSaveQuestionPrivate::OpenWith, openWithItem);
                 d->setButtonMenu(BrowserOpenOrSaveQuestionPrivate::OpenWith, menu, KDialog::InstantPopup);
                 QObject::connect(menu, SIGNAL(triggered(QAction*)), d, SLOT(slotAppSelected(QAction*)));
-                for (KService::List::const_iterator it = apps.begin(); it != apps.end(); ++it) {
-                    KAction* act = createAppAction(*it, d);
+                foreach (const KSharedPtr<KService> it, apps) {
+                    KAction* act = createAppAction(it, d);
                     menu->addAction(act);
                 }
                 KAction* openWithDialogAction = new KAction(d);

@@ -1213,8 +1213,8 @@ void CopyJobPrivate::createNextDir()
             // To speed things up and prevent double-notification, we disable KDirWatch
             // on those dirs temporarily (using KDirWatch::self, that's the instanced
             // used by e.g. kdirlister).
-            for ( QSet<QString>::const_iterator it = m_parentDirs.constBegin() ; it != m_parentDirs.constEnd() ; ++it )
-                KDirWatch::self()->stopDirScan( *it );
+            foreach ( const QString it, m_parentDirs )
+                KDirWatch::self()->stopDirScan( it );
         }
 
         state = STATE_COPYING_FILES;
@@ -1768,8 +1768,8 @@ void CopyJob::emitResult()
 
     // Re-enable watching on the dirs that held the deleted/moved files
     if (d->m_mode == CopyJob::Move) {
-        for (QSet<QString>::const_iterator it = d->m_parentDirs.constBegin() ; it != d->m_parentDirs.constEnd() ; ++it)
-            KDirWatch::self()->restartDirScan( *it );
+        foreach (const QString it, d->m_parentDirs)
+            KDirWatch::self()->restartDirScan( it );
     }
     Job::emitResult();
 }

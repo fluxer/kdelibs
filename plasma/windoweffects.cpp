@@ -195,16 +195,15 @@ void showWindowThumbnails(WId parent, const QList<WId> &windows, const QList<QRe
     QVarLengthArray<long, 64> data(1 + (6 * numWindows));
     data[0] = numWindows;
 
-    QList<WId>::const_iterator windowsIt;
     QList<QRect>::const_iterator rectsIt = rects.constBegin();
     int i = 0;
-    for (windowsIt = windows.constBegin(); windowsIt != windows.constEnd(); ++windowsIt) {
+    foreach(const WId windowsIt, windows) {
 
         const int start = (i * 6) + 1;
         const QRect thumbnailRect = (*rectsIt);
 
         data[start] = 5;
-        data[start+1] = (*windowsIt);
+        data[start+1] = windowsIt;
         data[start+2] = thumbnailRect.x();
         data[start+3] = thumbnailRect.y();
         data[start+4] = thumbnailRect.width();
@@ -228,7 +227,6 @@ void presentWindows(WId controller, const QList<WId> &ids)
     for (int i = 0; i < numWindows; ++i) {
         data[i] = ids.at(i);
         ++actualCount;
-
     }
 
     if (actualCount != numWindows) {

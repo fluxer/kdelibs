@@ -135,12 +135,9 @@ QItemSelection KBreadcrumbSelectionModelPrivate::getBreadcrumbSelection(const QI
   if (m_includeActualSelection)
     breadcrumbSelection = selection;
 
-  QItemSelection::const_iterator it = selection.constBegin();
-  const QItemSelection::const_iterator end = selection.constEnd();
-
-  for ( ; it != end; ++it)
+  foreach (const QItemSelectionRange it, selection)
   {
-    QModelIndex parent = it->parent();
+    QModelIndex parent = it.parent();
 
     if (breadcrumbSelection.contains(parent))
       continue;

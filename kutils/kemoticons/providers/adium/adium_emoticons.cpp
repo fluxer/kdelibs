@@ -84,10 +84,9 @@ bool AdiumEmoticons::addEmoticon(const QString &emo, const QString &text, AddEmo
 
     QDomElement arr = m_themeXml.createElement("array");
 
-    QStringList::const_iterator constIterator;
-    for (constIterator = splitted.begin(); constIterator != splitted.end(); ++constIterator) {
+    foreach(const QString it, splitted) {
         QDomElement emoText = m_themeXml.createElement("string");
-        QDomText txt = m_themeXml.createTextNode((*constIterator).trimmed());
+        QDomText txt = m_themeXml.createTextNode(it.trimmed());
         emoText.appendChild(txt);
         arr.appendChild(emoText);
     }

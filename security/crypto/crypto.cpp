@@ -923,12 +923,12 @@ void KCryptoConfig::load()
   QStringList groups = policies->groupList();
 
   otherSSLBox->clear();
-  for (QStringList::const_iterator i = groups.constBegin(); i != groups.constEnd(); ++i) {
-    if (*i == "General") continue;
-    KConfigGroup _cg(policies, *i);
+  foreach (const QString i, groups) {
+    if (i == "General") continue;
+    KConfigGroup _cg(policies, i);
     KSSLCertificate *cert = KSSLCertificate::fromString(_cg.readEntry("Certificate", QString()).toLocal8Bit());
     if (cert) {
-      new OtherCertItem(otherSSLBox, cert->getSubject(), *i,
+      new OtherCertItem(otherSSLBox, cert->getSubject(), i,
                         _cg.readEntry("Permanent", true),
                         _cg.readEntry("Policy", 3),
                         _cg.readEntry("Expires", QDateTime()), this );
@@ -939,12 +939,12 @@ void KCryptoConfig::load()
   groups = pcerts->groupList();
 
   yourSSLBox->clear();
-  for (QStringList::const_iterator i = groups.constBegin(); i != groups.constEnd(); ++i) {
-    KConfigGroup _cg(pcerts, *i);
+  foreach (const QString i, groups) {
+    KConfigGroup _cg(pcerts, i);
     YourCertItem *j = new YourCertItem(yourSSLBox,
                      _cg.readEntry("PKCS12Base64"),
                      _cg.readEntry("Password"),
-                     *i, this );
+                     i, this );
     j->setPassCache(QString());
   }
 

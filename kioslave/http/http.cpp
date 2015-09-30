@@ -3609,11 +3609,11 @@ void HTTPProtocol::parseContentDisposition(const QString &disposition)
 {
     const QMap<QString, QString> parameters = contentDispositionParser(disposition);
 
-    QMap<QString, QString>::const_iterator i = parameters.constBegin();
-    while (i != parameters.constEnd()) {
-        setMetaData(QLatin1String("content-disposition-") + i.key(), i.value());
-        kDebug(7113) << "Content-Disposition:" << i.key() << "=" << i.value();
-        ++i;
+    QMapIterator<QString, QString> it(parameters);
+    while (it.hasNext()) {
+        it.next();
+        setMetaData(QLatin1String("content-disposition-") + it.key(), it.value());
+        kDebug(7113) << "Content-Disposition:" << it.key() << "=" << it.value();
     }
 }
 

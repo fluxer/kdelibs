@@ -522,10 +522,10 @@ KBookmark KBookmarkManager::findByAddress( const QString & address )
     // The address is something like /5/10/2+
     const QStringList addresses = address.split(QRegExp("[/+]"),QString::SkipEmptyParts);
     // kWarning() << addresses.join(",");
-    for ( QStringList::const_iterator it = addresses.begin() ; it != addresses.end() ; ++it)
+    foreach (const QString it, addresses)
     {
-       bool append = ((*it) == "+");
-       uint number = (*it).toUInt();
+       bool append = (it == "+");
+       uint number = it.toUInt();
        Q_ASSERT(result.isGroup());
        KBookmarkGroup group = result.toGroup();
        KBookmark bk = group.first(), lbk = bk; // last non-null bookmark

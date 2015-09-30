@@ -104,7 +104,7 @@ void PopupApplet::setPopupIcon(const QString &iconName)
     }
 
     // Attempt 2: is it a svg in the icons directory?
-    QString name = QString("icons/") + iconName.split("-").first();
+    const QString name = QString("icons/") + iconName.split("-").first();
     if (!Plasma::Theme::defaultTheme()->imagePath(name).isEmpty()) {
         d->createIconWidget();
         d->icon->setSvg(name, iconName);

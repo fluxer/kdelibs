@@ -2575,14 +2575,9 @@ void ListJobPrivate::slotListEntries( const KIO::UDSEntryList& list )
         // cull the unwanted hidden dirs and/or parent dir references from the listing, then emit that
         UDSEntryList newlist;
 
-        UDSEntryList::const_iterator it = list.begin();
-        const UDSEntryList::const_iterator end = list.end();
-        for (; it != end; ++it) {
-
-            // Modify the name in the UDSEntry
-            UDSEntry newone = *it;
-            const QString filename = newone.stringValue( KIO::UDSEntry::UDS_NAME );
-            QString displayName = newone.stringValue(KIO::UDSEntry::UDS_DISPLAY_NAME);
+        foreach (KIO::UDSEntry entry, list) {
+            const QString filename = entry.stringValue( KIO::UDSEntry::UDS_NAME );
+            QString displayName = entry.stringValue(KIO::UDSEntry::UDS_DISPLAY_NAME);
             if (displayName.isEmpty())
                 displayName = filename;
             // Avoid returning entries like subdir/. and subdir/.., but include . and .. for
@@ -2591,9 +2586,9 @@ void ListJobPrivate::slotListEntries( const KIO::UDSEntryList& list )
                   && (includeHidden || (filename[0] != '.') )  )
             {
                 // ## Didn't find a way to use the iterator instead of re-doing a key lookup
-                newone.insert( KIO::UDSEntry::UDS_NAME, m_prefix + filename );
-                newone.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, m_displayPrefix + displayName);
-                newlist.append(newone);
+                entry.insert( KIO::UDSEntry::UDS_NAME, m_prefix + filename );
+                entry.insert(KIO::UDSEntry::UDS_DISPLAY_NAME, m_displayPrefix + displayName);
+                newlist.append(entry);
             }
         }
 

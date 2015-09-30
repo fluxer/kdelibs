@@ -453,6 +453,10 @@ QRegion FrameSvg::mask() const
 {
     FrameData *frame = d->frames[d->prefix];
     QString id = d->cacheId(frame, QString());
+    // sub-optimal but should improve caching overall
+    if(frame->cachedMasks.isEmpty()) {
+        frame->cachedMasks.reserve(frame->MAX_CACHED_MASKS);
+    }
     if (!frame->cachedMasks.contains(id)) {
         //TODO: Implement a better way to cap the number of cached masks
         if (frame->cachedMasks.count() > frame->MAX_CACHED_MASKS) {

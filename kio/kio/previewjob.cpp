@@ -274,12 +274,10 @@ void PreviewJobPrivate::startPreview()
 
     // Look for images and store the items in our todo list :)
     bool bNeedCache = false;
-    KFileItemList::const_iterator kit = initialItems.constBegin();
-    const KFileItemList::const_iterator kend = initialItems.constEnd();
-    for ( ; kit != kend; ++kit )
+    foreach ( const KFileItem kit, initialItems )
     {
         PreviewItem item;
-        item.item = *kit;
+        item.item = kit;
         const QString mimeType = item.item.mimetype();
         KService::Ptr plugin(0);
 
@@ -319,13 +317,13 @@ void PreviewJobPrivate::startPreview()
             item.plugin = plugin;
             items.append(item);
             if (!bNeedCache && bSave &&
-                ((*kit).url().protocol() != "file" ||
-                 !(*kit).url().directory( KUrl::AppendTrailingSlash ).startsWith(thumbRoot)) &&
+                (kit.url().protocol() != "file" ||
+                 !kit.url().directory( KUrl::AppendTrailingSlash ).startsWith(thumbRoot)) &&
                 plugin->property("CacheThumbnail").toBool()) {
                 bNeedCache = true;
             }
         } else {
-            emit q->failed( *kit );
+            emit q->failed( kit );
         }
     }
 

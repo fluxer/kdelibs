@@ -521,9 +521,8 @@ void KDirListerCache::forgetDirs( KDirLister *lister )
     lister->d->lstDirs.clear();
 
     //kDebug() << "Iterating over dirs" << lstDirsCopy;
-    for ( KUrl::List::const_iterator it = lstDirsCopy.begin();
-          it != lstDirsCopy.end(); ++it ) {
-        forgetDirs( lister, *it, false );
+    foreach ( const KUrl it, lstDirsCopy ) {
+        forgetDirs( lister, it, false );
     }
 }
 

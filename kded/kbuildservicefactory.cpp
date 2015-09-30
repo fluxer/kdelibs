@@ -176,13 +176,11 @@ void KBuildServiceFactory::collectInheritedServices(const QString& mimeTypeName,
 
         ++mimeTypeInheritanceLevel;
         const QList<KServiceOffer>& offers = m_offerHash.offersFor(parentMimeType);
-        QList<KServiceOffer>::const_iterator itserv = offers.begin();
-        const QList<KServiceOffer>::const_iterator endserv = offers.end();
-        for ( ; itserv != endserv; ++itserv ) {
-            if (!m_offerHash.hasRemovedOffer(mimeTypeName, (*itserv).service())) {
-                KServiceOffer offer(*itserv);
+        foreach (const KServiceOffer itserv, offers ) {
+            if (!m_offerHash.hasRemovedOffer(mimeTypeName, itserv.service())) {
+                KServiceOffer offer(itserv);
                 offer.setMimeTypeInheritanceLevel(mimeTypeInheritanceLevel);
-                //kDebug(7021) << "INHERITANCE: Adding service" << (*itserv).service()->entryPath() << "to" << mimeTypeName << "mimeTypeInheritanceLevel=" << mimeTypeInheritanceLevel;
+                //kDebug(7021) << "INHERITANCE: Adding service" << itserv.service()->entryPath() << "to" << mimeTypeName << "mimeTypeInheritanceLevel=" << mimeTypeInheritanceLevel;
                 m_offerHash.addServiceOffer( mimeTypeName, offer );
             }
         }

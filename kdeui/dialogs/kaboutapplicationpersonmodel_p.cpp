@@ -38,11 +38,8 @@ KAboutApplicationPersonModel::KAboutApplicationPersonModel( const QList< KAboutP
     if( m_providerUrl.isEmpty() )
         m_providerUrl = QString( "https://api.opendesktop.org/v1/" );
 
-    QList< KAboutPerson >::const_iterator end(personList.constEnd());
-    for( QList< KAboutPerson >::const_iterator it = personList.begin(); it != end; ++it )
+    foreach( const KAboutPerson person, personList )
     {
-        KAboutPerson person = *it;
-
         KAboutApplicationPersonProfile profile =
                 KAboutApplicationPersonProfile( person.name(),
                                                 person.task(),

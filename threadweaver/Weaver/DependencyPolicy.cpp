@@ -129,11 +129,13 @@ QList<Job*> DependencyPolicy::getDependencies( Job* job ) const
 {
     REQUIRE (job != 0);
     QList<Job*> result;
-    JobMultiMap::const_iterator it;
+    // basicly JobMultiMap
+    QMapIterator<ThreadWeaver::Job*, ThreadWeaver::Job*> it(d->dependencies());
     QMutexLocker l( & d->mutex() );
 
-    for ( it = d->dependencies().constBegin(); it != d->dependencies().constEnd(); ++it )
+    while ( it.hasNext() )
     {
+        it.next();
         if ( it.key() == job )
         {
             result.append( it.value() );
@@ -189,10 +191,13 @@ void DependencyPolicy::destructed( Job* job )
 void DependencyPolicy::dumpJobDependencies()
 {
     QMutexLocker l( & d->mutex() );
+    // basicly JobMultiMap
+    QMapIterator<ThreadWeaver::Job*, ThreadWeaver::Job*> it(d->dependencies());
 
     debug ( 0, "Job Dependencies (left depends on right side):\n" );
-    for ( JobMultiMap::const_iterator it = d->dependencies().constBegin(); it != d->dependencies().constEnd(); ++it )
+    while ( it.hasNext() )
     {
+        it.next();
         debug( 0, "  : %p (%s%s) <-- %p (%s%s)\n",
                (void*)it.key(),
                it.key()->objectName().isEmpty() ? "" : qPrintable ( QString(it.key()->objectName() + QObject::tr ( " of type " )) ),

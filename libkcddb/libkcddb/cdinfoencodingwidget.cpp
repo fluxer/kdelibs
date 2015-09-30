@@ -55,9 +55,8 @@ namespace KCDDB
     songsBox->clear();
     QStringList newTitles;
 
-    for (QStringList::const_iterator it = m_songTitles.constBegin();
-        it != m_songTitles.constEnd(); ++it)
-      newTitles << codec->toUnicode((*it).toLatin1().constData());
+    foreach (const QString it, m_songTitles)
+      newTitles << codec->toUnicode(it.toLatin1().constData());
 
     songsBox->clear();
     songsBox->addItems(newTitles);
