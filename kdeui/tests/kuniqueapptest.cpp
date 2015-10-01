@@ -41,13 +41,9 @@ private Q_SLOTS:
     void executeNewChild() {
         // Duplicated from kglobalsettingstest.cpp - make a shared helper method?
         KProcess* proc = new KProcess(this);
-        const QString appName = "kuniqueapptest";
-        if (QFile::exists(appName+".shell"))
-            (*proc) << "./" + appName+".shell";
-        else {
-            Q_ASSERT(QFile::exists(appName));
-            (*proc) << "./" + appName;
-        }
+        const QString appName = "kdeui-kuniqueapptest";
+        Q_ASSERT(QFile::exists(appName));
+        (*proc) << "./" + appName;
         proc->start();
     }
 private:
