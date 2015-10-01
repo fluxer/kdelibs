@@ -169,10 +169,6 @@ private Q_SLOTS:
         // Now load kdialog again, to use the real kiconcache
         iconPath2 = appIconLoader.iconPath("kdialog", KIconLoader::User);
         QCOMPARE(iconPath, iconPath2);
-
-        appIconLoader.addAppDir( "khtml" );
-        QString iconPathFail = appIconLoader.iconPath("fail", KIconLoader::User);
-        QVERIFY( iconPathFail.endsWith( "khtml/pics/fail.xpm"));
     }
 
     void testAppPicsDir_KIcon()
