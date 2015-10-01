@@ -1630,95 +1630,92 @@ bool KStandardDirs::addCustomized(KConfig *config)
 
     // save the numbers of config directories. If this changes,
     // we will return true to give KConfig a chance to reparse
-    int configdirs = resourceDirs("config").count();
+    const int configdirs = resourceDirs("config").count();
 
-    if (true)
+    // reading the prefixes in
+    QString group = QLatin1String("Directories");
+    KConfigGroup cg(config, group);
+
+    QString kioskAdmin = cg.readEntry("kioskAdmin");
+    if (!kioskAdmin.isEmpty() && !kde_kiosk_admin)
     {
-        // reading the prefixes in
-        QString group = QLatin1String("Directories");
-        KConfigGroup cg(config, group);
+        int i = kioskAdmin.indexOf(QLatin1Char(':'));
+        QString user = kioskAdmin.left(i);
+        QString host = kioskAdmin.mid(i+1);
 
-        QString kioskAdmin = cg.readEntry("kioskAdmin");
-        if (!kioskAdmin.isEmpty() && !kde_kiosk_admin)
+        KUser thisUser;
+        char hostname[ 256 ];
+        hostname[ 0 ] = '\0';
+        if (!gethostname( hostname, 255 ))
+            hostname[sizeof(hostname)-1] = '\0';
+
+        if ((user == thisUser.loginName()) &&
+            (host.isEmpty() || (host == QLatin1String(hostname))))
         {
-            int i = kioskAdmin.indexOf(QLatin1Char(':'));
-            QString user = kioskAdmin.left(i);
-            QString host = kioskAdmin.mid(i+1);
+            kde_kiosk_admin = true;
+        }
+    }
 
-            KUser thisUser;
-            char hostname[ 256 ];
-            hostname[ 0 ] = '\0';
-            if (!gethostname( hostname, 255 ))
-                hostname[sizeof(hostname)-1] = '\0';
+    bool readProfiles = true;
 
-            if ((user == thisUser.loginName()) &&
-                (host.isEmpty() || (host == QLatin1String(hostname))))
-            {
-                kde_kiosk_admin = true;
-            }
+    if (kde_kiosk_admin && !qgetenv("KDE_KIOSK_NO_PROFILES").isEmpty())
+        readProfiles = false;
+
+    QString userMapFile = cg.readEntry("userProfileMapFile");
+    QString profileDirsPrefix = cg.readEntry("profileDirsPrefix");
+    if (!profileDirsPrefix.isEmpty() && !profileDirsPrefix.endsWith(QLatin1Char('/')))
+        profileDirsPrefix.append(QLatin1Char('/'));
+
+    QStringList profiles;
+    if (readProfiles)
+        profiles = lookupProfiles(userMapFile);
+    QString profile;
+
+    bool priority = false;
+    while(true)
+    {
+        KConfigGroup cg(config, group);
+        const QStringList list = cg.readEntry("prefixes", QStringList());
+        for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
+        {
+            addPrefix(*it, priority);
+            addXdgConfigPrefix(*it + QLatin1String("/etc/xdg"), priority);
+            addXdgDataPrefix(*it + QLatin1String("/share"), priority);
+        }
+        // If there are no prefixes defined, check if there is a directory
+        // for this profile under <profileDirsPrefix>
+        if (list.isEmpty() && !profile.isEmpty() && !profileDirsPrefix.isEmpty())
+        {
+            QString dir = profileDirsPrefix + profile;
+            addPrefix(dir, priority);
+            addXdgConfigPrefix(dir + QLatin1String("/etc/xdg"), priority);
+            addXdgDataPrefix(dir + QLatin1String("/share"), priority);
         }
 
-        bool readProfiles = true;
-
-        if (kde_kiosk_admin && !qgetenv("KDE_KIOSK_NO_PROFILES").isEmpty())
-            readProfiles = false;
-
-        QString userMapFile = cg.readEntry("userProfileMapFile");
-        QString profileDirsPrefix = cg.readEntry("profileDirsPrefix");
-        if (!profileDirsPrefix.isEmpty() && !profileDirsPrefix.endsWith(QLatin1Char('/')))
-            profileDirsPrefix.append(QLatin1Char('/'));
-
-        QStringList profiles;
-        if (readProfiles)
-            profiles = lookupProfiles(userMapFile);
-        QString profile;
-
-        bool priority = false;
-        while(true)
+        // iterating over all entries in the group Directories
+        // to find entries that start with dir_$type
+        const QMap<QString, QString> entries = config->entryMap(group);
+        for (QMap<QString, QString>::ConstIterator it2 = entries.begin();
+                it2 != entries.end(); ++it2)
         {
-            KConfigGroup cg(config, group);
-            const QStringList list = cg.readEntry("prefixes", QStringList());
-            for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
-            {
-                addPrefix(*it, priority);
-                addXdgConfigPrefix(*it + QLatin1String("/etc/xdg"), priority);
-                addXdgDataPrefix(*it + QLatin1String("/share"), priority);
-            }
-            // If there are no prefixes defined, check if there is a directory
-            // for this profile under <profileDirsPrefix>
-            if (list.isEmpty() && !profile.isEmpty() && !profileDirsPrefix.isEmpty())
-            {
-                QString dir = profileDirsPrefix + profile;
-                addPrefix(dir, priority);
-                addXdgConfigPrefix(dir + QLatin1String("/etc/xdg"), priority);
-                addXdgDataPrefix(dir + QLatin1String("/share"), priority);
-            }
-
-            // iterating over all entries in the group Directories
-            // to find entries that start with dir_$type
-            const QMap<QString, QString> entries = config->entryMap(group);
-            for (QMap<QString, QString>::ConstIterator it2 = entries.begin();
-                 it2 != entries.end(); ++it2)
-            {
-                const QString key = it2.key();
-                if (key.startsWith(QLatin1String("dir_"))) {
-                    // generate directory list, there may be more than 1.
-                    const QStringList dirs = (*it2).split(QString(QLatin1Char(',')));
-                    QStringList::ConstIterator sIt(dirs.begin());
-                    QString resType = key.mid(4);
-                    for (; sIt != dirs.end(); ++sIt)
-                    {
-                        addResourceDir(resType.toLatin1(), *sIt, priority);
-                    }
+            const QString key = it2.key();
+            if (key.startsWith(QLatin1String("dir_"))) {
+                // generate directory list, there may be more than 1.
+                const QStringList dirs = (*it2).split(QString(QLatin1Char(',')));
+                QStringList::ConstIterator sIt(dirs.begin());
+                QString resType = key.mid(4);
+                for (; sIt != dirs.end(); ++sIt)
+                {
+                    addResourceDir(resType.toLatin1(), *sIt, priority);
                 }
             }
-            if (profiles.isEmpty())
-                break;
-            profile = profiles.back();
-            group = QString::fromLatin1("Directories-%1").arg(profile);
-            profiles.pop_back();
-            priority = true;
         }
+        if (profiles.isEmpty())
+            break;
+        profile = profiles.back();
+        group = QString::fromLatin1("Directories-%1").arg(profile);
+        profiles.pop_back();
+        priority = true;
     }
 
     // Process KIOSK restrictions.
@@ -1742,7 +1739,7 @@ bool KStandardDirs::addCustomized(KConfig *config)
     }
 
     // check if the number of config dirs changed
-    bool configDirsChanged = (resourceDirs("config").count() != configdirs);
+    const bool configDirsChanged = (resourceDirs("config").count() != configdirs);
     // If the config dirs changed, we check kiosk restrictions again.
     d->m_checkRestrictions = configDirsChanged;
     // return true if the number of config dirs changed: reparse config file

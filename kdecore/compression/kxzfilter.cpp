@@ -26,7 +26,7 @@
 
 #if HAVE_XZ_SUPPORT
 extern "C" {
-	#include <lzma.h>
+    #include <lzma.h>
 }
 
 #include <kdebug.h>
