@@ -40,7 +40,7 @@ void KDesktopFileTest::testRead()
     QCOMPARE(df.hasMimeTypeType(), false);
     QCOMPARE(df.hasApplicationType(), false);
     QCOMPARE(df.fileName(), KStandardDirs::realFilePath(fileName));
-    QCOMPARE(df.resource(), "apps"); // default for .desktop files
+    QCOMPARE(df.resource(), "xdgdata-apps"); // default for .desktop files
 }
 
 void KDesktopFileTest::testSuccessfulTryExec()
