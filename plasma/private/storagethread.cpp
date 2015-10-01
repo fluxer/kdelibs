@@ -235,6 +235,7 @@ void StorageThread::retrieve(QWeakPointer<StorageJob> wcaller, const QVariantMap
         const int binaryColumn = rec.indexOf("binary");
 
         QVariantHash data;
+        data.reserve(query.size());
         while (query.next()) {
             const QString key = query.value(keyColumn).toString();
             if (!query.value(textColumn).isNull()) {
