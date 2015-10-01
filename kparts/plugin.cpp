@@ -93,26 +93,24 @@ QList<Plugin::PluginInfo> Plugin::pluginInfos(const KComponentData &componentDat
     "data", componentData.componentName()+"/kpartplugins/*", KStandardDirs::Recursive );
 
   QMap<QString,QStringList> sortedPlugins;
-
-  QStringList::ConstIterator pIt = pluginDocs.begin();
-  QStringList::ConstIterator pEnd = pluginDocs.end();
-  for (; pIt != pEnd; ++pIt )
+  const QStringList dummy;
+  foreach ( const QString pIt, pluginDocs )
   {
-      QFileInfo fInfo( *pIt );
-      if ( fInfo.completeSuffix() == QLatin1String( "desktop" ) )
+      if ( pIt.endsWith(QLatin1String( ".desktop" ) ) )
           continue;
 
+      QFileInfo fInfo( pIt );
       QMap<QString,QStringList>::Iterator mapIt = sortedPlugins.find( fInfo.fileName() );
       if ( mapIt == sortedPlugins.end() )
-          mapIt = sortedPlugins.insert( fInfo.fileName(), QStringList() );
+          mapIt = sortedPlugins.insert( fInfo.fileName(), dummy );
 
-      mapIt.value().append( *pIt );
+      mapIt.value().append( pIt );
   }
 
-  QMap<QString,QStringList>::ConstIterator mapIt = sortedPlugins.constBegin();
-  QMap<QString,QStringList>::ConstIterator mapEnd = sortedPlugins.constEnd();
-  for (; mapIt != mapEnd; ++mapIt )
+  QMapIterator<QString,QStringList> mapIt(sortedPlugins);
+  while ( mapIt.hasNext() )
   {
+      mapIt.next();
       PluginInfo info;
       QString doc;
       info.m_absXMLFileName = KXMLGUIClient::findMostRecentXMLFile( mapIt.value(), doc );
