@@ -189,8 +189,8 @@ static QByteArray uriListData(const KUrl::List& urls)
         // Get each URL encoded in utf8 - and since we get it in escaped
         // form on top of that, .toLatin1() is fine.
         uriListData += uit.toMimeDataString().toLatin1();
+        uriListData += "\r\n";
     }
-    uriListData += "\r\n";
 
     return uriListData;
 }
