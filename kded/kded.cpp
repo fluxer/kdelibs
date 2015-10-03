@@ -141,10 +141,9 @@ Kded::~Kded()
   delete m_pTimer;
   delete m_pDirWatch;
 
-  for (QHash<QByteArray,KDEDModule*>::iterator
-           it(m_modules.begin()), itEnd(m_modules.end());
-       it != itEnd; ++it)
-  {
+  QHashIterator<QString,KDEDModule*> it(m_modules);
+  while (it.hasNext()) {
+      it.next();
       KDEDModule* module(it.value());
 
       // first disconnect otherwise slotKDEDModuleRemoved() is called

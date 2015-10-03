@@ -611,7 +611,7 @@ void KIconLoaderPrivate::addBaseThemes(KIconThemeNode *node, const QString &appn
 void KIconLoaderPrivate::addInheritedThemes(KIconThemeNode *node, const QString &appname)
 {
     foreach (const QString it, node->theme->inherits()) {
-        if ((it) == "hicolor") {
+        if (it == "hicolor") {
           // The icon theme spec says that "hicolor" must be the very last
           // of all inherited themes, so don't add it here but at the very end
           // of addBaseThemes().
