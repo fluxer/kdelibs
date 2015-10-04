@@ -733,8 +733,6 @@ install(FILES
   Plasma/AbstractDialogManager
   Plasma/AbstractRunner
   Plasma/AbstractToolBox
-  Plasma/Animation
-  Plasma/Animator
   Plasma/Applet
   Plasma/AppletScript
   Plasma/BusyWidget

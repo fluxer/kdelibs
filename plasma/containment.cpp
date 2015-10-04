@@ -53,7 +53,6 @@
 #endif
 
 #include "abstracttoolbox.h"
-#include "animator.h"
 #include "containmentactions.h"
 #include "containmentactionspluginsconfig.h"
 #include "corona.h"
@@ -69,7 +68,6 @@
 #include "private/wallpaper_p.h"
 
 #include "plasma/plasma.h"
-#include "animations/animation.h"
 
 namespace Plasma
 {
@@ -880,17 +878,7 @@ void Containment::addApplet(Applet *applet, const QPointF &pos, bool delayInit)
     if (!delayInit && !currentContainment) {
         applet->restore(*applet->d->mainConfigGroup());
         applet->init();
-        Plasma::Animation *anim = Plasma::Animator::create(Plasma::Animator::AppearAnimation);
-        if (anim) {
-            connect(anim, SIGNAL(finished()), this, SLOT(appletAppearAnimationComplete()));
-            anim->setTargetWidget(applet);
-            //FIXME: small hack until we have proper js anim support; allows 'zoom' to work in the
-            //'right' direction for appearance
-            anim->setDirection(QAbstractAnimation::Backward);
-            anim->start(QAbstractAnimation::DeleteWhenStopped);
-        } else {
-            d->appletAppeared(applet);
-        }
+        d->appletAppeared(applet);
     }
 
     applet->setFlag(QGraphicsItem::ItemIsMovable, true);
@@ -2122,17 +2110,6 @@ void ContainmentPrivate::appletDestroyed(Plasma::Applet *applet)
 
     emit q->appletRemoved(applet);
     emit q->configNeedsSaving();
-}
-
-void ContainmentPrivate::appletAppearAnimationComplete()
-{
-    Animation *anim = qobject_cast<Animation *>(q->sender());
-    if (anim) {
-        Applet *applet = qobject_cast<Applet*>(anim->targetWidget());
-        if (applet) {
-            appletAppeared(applet);
-        }
-    }
 }
 
 void ContainmentPrivate::appletAppeared(Applet *applet)

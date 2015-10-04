@@ -30,11 +30,9 @@
 #include <QtGui/QGraphicsWidget>
 
 #include <plasma/dataengine.h>
-#include <plasma/animator.h>
 #include <plasma/plasma_export.h>
 
 class QAction;
-class QPropertyAnimation;
 
 /**
  * @class IconWidget plasma/widgets/iconwidget.h <Plasma/Widgets/IconWidget>

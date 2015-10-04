@@ -33,7 +33,6 @@
 #include <plasma/configloader.h>
 #include <plasma/packagestructure.h>
 #include <plasma/plasma.h>
-#include <plasma/animator.h>
 #include <plasma/version.h>
 #include <plasma/framesvg.h>
 
@@ -719,9 +718,6 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
          * triggered by an item it is displaying.
          */
         void releaseVisualFocus();
-
-    protected:
-        void geometryChanged(); // in QGraphicsWidget now; preserve BC
 
     Q_SIGNALS:
         /**

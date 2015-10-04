@@ -28,7 +28,6 @@
 #include <kactioncollection.h>
 #include <kconfigdialog.h>
 
-#include "plasma/animator.h"
 #include "plasma/private/applethandle_p.h"
 #include "plasma/private/dataengineconsumer_p.h"
 

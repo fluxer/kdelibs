@@ -28,10 +28,7 @@
 #include <QApplication>
 #include <QStyleOption>
 #include <QToolButton>
-#include <QPropertyAnimation>
 #include <QtCore/qsharedpointer.h>
-
-#include <QtGui/qbrush.h>
 #include <QtGui/qbrush.h>
 
 // KDE
@@ -43,7 +40,6 @@
 
 #include "plasma/plasma.h"
 #include "plasma/theme.h"
-#include "plasma/animator.h"
 #include "plasma/framesvg.h"
 #include "plasma/paintutils.h"
 
@@ -107,8 +103,6 @@ public:
 
     QList<bool> highlightedTabs;
 
-    QWeakPointer<QPropertyAnimation> anim;
-
     QRect currentAnimRect;
     QRect startAnimRect;
     QPoint mousePressOffset;
@@ -140,13 +134,11 @@ NativeTabBar::NativeTabBar(QWidget *parent)
         : KTabBar(parent),
           d(new NativeTabBarPrivate(this))
 {
-    connect(this, SIGNAL(currentChanged(int)), this, SLOT(startAnimation()));
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
 NativeTabBar::~NativeTabBar()
 {
-    d->anim.clear();
     delete d;
 }
 
@@ -263,13 +255,7 @@ void NativeTabBar::paintEvent(QPaintEvent *event)
     }
 
     // Drawing Tabborders
-    QRect movingRect;
-
-    if (d->currentAnimRect.isNull() || !d->anim || d->anim.data()->state() != QAbstractAnimation::Running) {
-        movingRect = tabRect(currentIndex());
-    } else {
-        movingRect = d->currentAnimRect;
-    }
+    const QRect movingRect = d->currentAnimRect;
 
     //resizing here because in resizeevent the first time is invalid (still no tabs)
     d->buttonSvg->resizeFrame(movingRect.size());
@@ -445,55 +431,15 @@ void NativeTabBar::tabLayoutChange()
     }
 }
 
-void NativeTabBar::startAnimation()
-{
-    d->storeLastIndex();
-
-    QPropertyAnimation *anim = d->anim.data();
-    if (anim) {
-        anim->stop();
-        d->anim.clear();
-    }
-
-    anim = new QPropertyAnimation(this,  "onValueChanged",  this);
-    d->anim = anim;
-    anim->setDuration(150);
-
-    QRect rect = tabRect(currentIndex());
-    QRect lastRect = d->startAnimRect.isNull() ? tabRect(lastIndex())
-                                               : d->startAnimRect;
-    int x = isHorizontal() ? (int)(lastRect.x() -  (lastRect.x() - rect.x())) : rect.x();
-    int y = isHorizontal() ? rect.y() : (int)(lastRect.y() -  (lastRect.y() - rect.y()));
-    QSizeF sz = lastRect.size() - (lastRect.size() - rect.size());
-    d->currentAnimRect = QRect(x, y, (int)(sz.width()), (int)(sz.height()));
-
-    anim->setStartValue(lastRect);
-    anim->setEndValue(d->currentAnimRect);
-    anim->start(QAbstractAnimation::DeleteWhenStopped);
-}
-
 void NativeTabBar::setOnValueChanged(QRectF value)
 {
-    if (value == d->anim.data()->endValue()) {
-        d->animProgress = 1;
-        animationFinished();
-        return;
-    }
-
-    d->currentAnimRect = value.toRect();
+    Q_UNUSED(value);
     update();
 }
 
 QRectF NativeTabBar::onValueChanged() const
 {
     return d->currentAnimRect;
-}
-
-void NativeTabBar::animationFinished()
-{
-    d->startAnimRect = QRect();
-    d->currentAnimRect = QRect();
-    update();
 }
 
 bool NativeTabBar::isVertical() const

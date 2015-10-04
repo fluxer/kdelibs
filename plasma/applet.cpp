@@ -25,8 +25,6 @@
 
 #include "config-plasma.h"
 
-#include <plasma/animations/animation.h>
-
 #include <cmath>
 #include <limits>
 
@@ -480,14 +478,7 @@ void Applet::destroy()
 
     d->transient = true;
 
-    if (isContainment()) {
-        d->cleanUpAndDelete();
-    } else {
-        Animation *zoomAnim = Plasma::Animator::create(Plasma::Animator::ZoomAnimation);
-        connect(zoomAnim, SIGNAL(finished()), this, SLOT(cleanUpAndDelete()));
-        zoomAnim->setTargetWidget(this);
-        zoomAnim->start();
-    }
+    d->cleanUpAndDelete();
 }
 
 bool Applet::destroyed() const
@@ -2904,14 +2895,7 @@ AppletOverlayWidget::AppletOverlayWidget(QGraphicsWidget *parent)
 
 void AppletOverlayWidget::destroy()
 {
-    Animation *anim = Plasma::Animator::create(Plasma::Animator::DisappearAnimation);
-    if (anim) {
-        connect(anim, SIGNAL(finished()), this, SLOT(overlayAnimationComplete()));
-        anim->setTargetWidget(this);
-        anim->start();
-    } else {
-        overlayAnimationComplete();
-    }
+    overlayAnimationComplete();
 }
 
 void AppletOverlayWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -2957,12 +2941,6 @@ void AppletOverlayWidget::paint(QPainter *painter,
 
     painter->setRenderHints(QPainter::Antialiasing);
     painter->fillPath(backgroundShape, wash);
-}
-
-// in QGraphicsWidget now; preserve BC by implementing it as a protected method
-void Applet::geometryChanged()
-{
-    emit QGraphicsWidget::geometryChanged();
 }
 
 } // Plasma namespace

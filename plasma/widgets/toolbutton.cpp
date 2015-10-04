@@ -30,7 +30,6 @@
 #include <kiconeffect.h>
 #include <kmimetype.h>
 
-#include "animator.h"
 #include "framesvg.h"
 #include "paintutils.h"
 #include "private/actionwidgetinterface_p.h"

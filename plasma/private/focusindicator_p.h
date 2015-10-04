@@ -22,8 +22,6 @@
 
 #include <QGraphicsWidget>
 
-#include <plasma/animations/animation.h>
-
 namespace Plasma
 {
     class FrameSvg;
@@ -40,7 +38,6 @@ public:
     void setCustomGeometry(const QRectF &geometry);
     void setCustomPrefix(const QString &prefix);
 
-    void animateVisibility(const bool visible);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
     void setFrameSvg(FrameSvg *svg);
@@ -57,8 +54,6 @@ private:
     void init(QGraphicsWidget *parent); 
     QGraphicsWidget *m_parent;
     Plasma::FrameSvg *m_background;
-    Animation *m_fade;
-    Animation *m_hoverAnimation;
     QRectF m_customGeometry;
     QString m_prefix;
     QString m_customPrefix;

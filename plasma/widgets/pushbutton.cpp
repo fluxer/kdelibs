@@ -30,8 +30,6 @@
 #include <kmimetype.h>
 #include <kpushbutton.h>
 
-#include "animator.h"
-#include "animations/animation.h"
 #include "framesvg.h"
 #include "paintutils.h"
 #include "private/actionwidgetinterface_p.h"
@@ -102,15 +100,6 @@ public:
         static_cast<KPushButton*>(q->widget())->setIcon(KIcon(pm));
     }
 
-    void pressedChanged()
-    {
-        if (q->nativeWidget()->isDown() || q->nativeWidget()->isChecked()) {
-            focusIndicator->animateVisibility(false);
-        } else {
-            focusIndicator->animateVisibility(true);
-        }
-    }
-
     void syncFrame()
     {
         if (background) {
@@ -122,11 +111,9 @@ public:
 
             background->setElementPrefix("normal");
             background->resizeFrame(q->size());
-            hoverAnimation->setProperty("startPixmap", background->framePixmap());
 
             background->setElementPrefix("active");
             background->resizeFrame(activeRect.size());
-            hoverAnimation->setProperty("targetPixmap", background->framePixmap());
         }
     }
 
@@ -137,8 +124,6 @@ public:
     bool fadeIn;
     qreal opacity;
     QRectF activeRect;
-
-    Animation *hoverAnimation;
 
     FocusIndicator *focusIndicator;
     QString imagePath;
@@ -189,14 +174,9 @@ PushButton::PushButton(QGraphicsWidget *parent)
 
     d->background->setElementPrefix("normal");
 
-    d->hoverAnimation = Animator::create(Animator::PixmapTransitionAnimation);
-    d->hoverAnimation->setTargetWidget(this);
-
     KPushButton *native = new KPushButton;
     connect(native, SIGNAL(pressed()), this, SIGNAL(pressed()));
-    connect(native, SIGNAL(pressed()), this, SLOT(pressedChanged()));
     connect(native, SIGNAL(released()), this, SIGNAL(released()));
-    connect(native, SIGNAL(released()), this, SLOT(pressedChanged()));
     connect(native, SIGNAL(clicked()), this, SIGNAL(clicked()));
     connect(native, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
     setWidget(native);
@@ -378,17 +358,7 @@ void PushButton::paint(QPainter *painter,
         painter->drawPixmap(0, 0, bufferPixmap);
     }
 
-    //if is under mouse draw the animated glow overlay
-    if (!nativeWidget()->isDown() && !nativeWidget()->isChecked() && isEnabled() && acceptHoverEvents() && d->background->hasElementPrefix("active")) {
-        if (d->hoverAnimation->state() == QAbstractAnimation::Running && !isUnderMouse() && !nativeWidget()->isDefault()) {
-            d->background->setElementPrefix("active");
-            d->background->paintFrame(painter, d->activeRect.topLeft());
-        } else {
-            painter->drawPixmap(
-                d->activeRect.topLeft(),
-                d->hoverAnimation->property("currentPixmap").value<QPixmap>());
-        }
-    } else if (isEnabled()) {
+    if (isEnabled()) {
         d->background->paintFrame(painter);
     }
 
@@ -473,15 +443,9 @@ void PushButton::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
         return;
     }
 
-    d->hoverAnimation->setProperty("duration", 75);
-
     d->background->setElementPrefix("normal");
-    d->hoverAnimation->setProperty("startPixmap", d->background->framePixmap());
 
     d->background->setElementPrefix("active");
-    d->hoverAnimation->setProperty("targetPixmap", d->background->framePixmap());
-
-    d->hoverAnimation->start();
 
     QGraphicsProxyWidget::hoverEnterEvent(event);
 }
@@ -498,15 +462,9 @@ void PushButton::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
         return;
     }
 
-    d->hoverAnimation->setProperty("duration", 150);
-
     d->background->setElementPrefix("active");
-    d->hoverAnimation->setProperty("startPixmap", d->background->framePixmap());
 
     d->background->setElementPrefix("normal");
-    d->hoverAnimation->setProperty("targetPixmap", d->background->framePixmap());
-
-    d->hoverAnimation->start();
 
     QGraphicsProxyWidget::hoverLeaveEvent(event);
 }

@@ -28,7 +28,6 @@
 #include <QtGui/qgraphicsview.h>
 #include <QtGui/qgraphicsitem.h>
 
-#include "animator.h"
 #include "svg.h"
 
 class QGraphicsView;
