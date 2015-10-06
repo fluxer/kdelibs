@@ -282,7 +282,7 @@ void KCookieServer::saveCookieJar()
 void KCookieServer::putCookie( QStringList& out, const KHttpCookie& cookie,
                                const QList<int>& fields )
 {
-    foreach ( int i, fields ) {
+    foreach ( const int i, fields ) {
        switch(i)
         {
          case CF_DOMAIN :
