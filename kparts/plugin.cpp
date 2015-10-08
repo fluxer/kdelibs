@@ -196,11 +196,9 @@ QList<KParts::Plugin *> Plugin::pluginObjects( QObject *parent )
 
   // TODO: move to a new method KGlobal::findDirectChildren, if there is more than one use of this?
   const QObjectList plugins = parent->children();
-
-  QObjectList::ConstIterator it = plugins.begin();
-  for ( ; it != plugins.end() ; ++it )
+  foreach ( QObject *it, plugins )
   {
-    Plugin * plugin = qobject_cast<Plugin *>( *it );
+    Plugin * plugin = qobject_cast<Plugin *>( it );
     if ( plugin )
         objects.append( plugin );
   }
@@ -236,11 +234,9 @@ void Plugin::loadPlugins(QObject *parent, KXMLGUIClient* parentGUIClient,
 {
     KConfigGroup cfgGroup( componentData.config(), "KParts Plugins" );
     const QList<PluginInfo> plugins = pluginInfos( componentData );
-    QList<PluginInfo>::ConstIterator pIt = plugins.begin();
-    const QList<PluginInfo>::ConstIterator pEnd = plugins.end();
-    for (; pIt != pEnd; ++pIt )
+    foreach ( const PluginInfo pIt, plugins )
     {
-        QDomElement docElem = (*pIt).m_document.documentElement();
+        QDomElement docElem = pIt.m_document.documentElement();
         QString library = docElem.attribute( "library" );
         QString keyword;
 
@@ -257,7 +253,7 @@ void Plugin::loadPlugins(QObject *parent, KXMLGUIClient* parentGUIClient,
         }
         else
         { // no user-setting, load plugin default setting
-            QString relPath = QString( componentData.componentName() ) + '/' + (*pIt).m_relXMLFileName;
+            QString relPath = QString( componentData.componentName() ) + '/' + pIt.m_relXMLFileName;
             relPath.truncate( relPath.lastIndexOf( '.' ) ); // remove extension
             relPath += ".desktop";
             //kDebug(1000) << "looking for " << relPath;
@@ -290,9 +286,9 @@ void Plugin::loadPlugins(QObject *parent, KXMLGUIClient* parentGUIClient,
         const QObjectList pluginList = parent->children();
 
         bool pluginFound = false;
-        for ( QObjectList::ConstIterator it = pluginList.begin(); it != pluginList.end() ; ++it )
+        foreach ( QObject *it, pluginList )
         {
-            Plugin * plugin = qobject_cast<Plugin *>( *it );
+            Plugin * plugin = qobject_cast<Plugin *>( it );
             if( plugin && plugin->d->m_library == library )
             {
                 // delete and unload disabled plugins
@@ -321,8 +317,8 @@ void Plugin::loadPlugins(QObject *parent, KXMLGUIClient* parentGUIClient,
         if ( plugin )
         {
             plugin->d->m_parentInstance = componentData;
-            plugin->setXMLFile( (*pIt).m_relXMLFileName, false, false );
-            plugin->setDOMDocument( (*pIt).m_document );
+            plugin->setXMLFile( pIt.m_relXMLFileName, false, false );
+            plugin->setDOMDocument( pIt.m_document );
             parentGUIClient->insertChildClient( plugin );
         }
     }
