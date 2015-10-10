@@ -103,9 +103,6 @@ Name[zh_TW]=應用程式
 [PropertyDef::NoDisplay]
 Type=bool
 
-[PropertyDef::DocPath]
-Type=QString
-
 [PropertyDef::X-DocPath]
 Type=QString
 

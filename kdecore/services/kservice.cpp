@@ -725,10 +725,7 @@ QString KService::docPath() const
     Q_D(const KService);
     QMap<QString,QVariant>::ConstIterator it = d->m_mapProps.find(QLatin1String("X-DocPath"));
     if ((it == d->m_mapProps.end()) || (!it->isValid())) {
-        it = d->m_mapProps.find(QString::fromLatin1("DocPath"));
-        if ((it == d->m_mapProps.end()) || (!it->isValid())) {
-            return QString();
-        }
+        return QString();
     }
 
     return it->toString();
