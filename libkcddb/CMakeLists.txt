@@ -5,6 +5,9 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${QT_INCLUDES}
     ${KDE4_INCLUDES}
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+    ${KDE4_KIO_INCLUDES}
 )
 
 macro_optional_find_package(MusicBrainz5)

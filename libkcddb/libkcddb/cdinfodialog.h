@@ -24,7 +24,7 @@
 #include <libkcddb/cdinfo.h>
 #include <libkcddb/kcddb.h>
 
-#include <KDE/KDialog>
+#include <kdialog.h>
 
 class QStandardItemModel;
 class QModelIndex;
