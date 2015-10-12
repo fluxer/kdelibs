@@ -459,15 +459,6 @@ public:
     QString negativeSign() const;
 
     /**
-     * @deprecated use decimalPlaces() or monetaryDecimalPlaces()
-     *
-     * The number of fractional digits to include in monetary values (usually 2).
-     *
-     * @return Default number of fractional digits used by locale.
-     */
-    KDE_DEPRECATED int fracDigits() const;
-
-    /**
      * @since 4.4
      *
      * The number of decimal places to include in numeric values (usually 2).

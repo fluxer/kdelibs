@@ -266,11 +266,6 @@ QString KLocale::negativeSign() const
     return d->negativeSign();
 }
 
-int KLocale::fracDigits() const
-{
-    return monetaryDecimalPlaces();
-}
-
 int KLocale::monetaryDecimalPlaces() const
 {
     return d->monetaryDecimalPlaces();
