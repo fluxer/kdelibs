@@ -63,8 +63,7 @@ KAboutKdeDialog::KAboutKdeDialog(QWidget *parent)
         "translate program interfaces. You can provide graphics, themes, sounds, and "
         "improved documentation. You decide!</html>"
         "<br /><br />"
-        "Visit <a href=\"%1\">%2</a> to learn more about Katana.</html>",
-        QLatin1String("http://fluxer.github.io/katana/"),
+        "Visit <a href=\"%1\">%1</a> to learn more about Katana.</html>",
         QLatin1String("http://fluxer.github.io/katana/")));
 
     QLabel *image = new QLabel;

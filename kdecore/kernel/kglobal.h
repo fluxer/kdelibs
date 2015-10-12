@@ -20,7 +20,6 @@
 #define KGLOBAL_H
 
 #include <kdecore_export.h>
-#include <QtCore/qatomic.h>
 #include <QtCore/qobject.h>
 
 #include <sys/types.h>
