@@ -292,30 +292,6 @@ static const char autocompletionWhatsThisText[] = I18N_NOOP("<qt>While typing in
                                                   "This feature can be controlled by clicking with the right mouse button "
                                                   "and selecting a preferred mode from the <b>Text Completion</b> menu.</qt>");
 
-// returns true if the string contains "<a>:/" sequence, where <a> is at least 2 alpha chars
-static bool containsProtocolSection( const QString& string )
-{
-    int len = string.length();
-    static const char prot[] = ":/";
-    for (int i=0; i < len;) {
-        i = string.indexOf( QLatin1String(prot), i );
-        if (i == -1)
-            return false;
-        int j=i-1;
-        for (; j >= 0; j--) {
-            const QChar& ch( string[j] );
-            if (ch.toLatin1() == 0 || !ch.isLetter())
-                break;
-            if (ch.isSpace() && (i-j-1) >= 2)
-                return true;
-        }
-        if (j < 0 && i >= 2)
-            return true; // at least two letters before ":/"
-        i += 3; // skip : and / and one char
-    }
-    return false;
-}
-
 KFileWidget::KFileWidget( const KUrl& _startDir, QWidget *parent )
     : QWidget(parent), KAbstractFileWidget(), d(new KFileWidgetPrivate(this))
 {
@@ -875,7 +851,7 @@ void KFileWidget::slotOk()
         // the user, convert it to relative
         if (!locationEditCurrentText.isEmpty() && !(mode & KFile::Directory) &&
             (QDir::isAbsolutePath(locationEditCurrentText) ||
-             containsProtocolSection(locationEditCurrentText))) {
+             !KUrl::isRelativeUrl(locationEditCurrentText))) {
 
             QString fileName;
             KUrl url(locationEditCurrentText);
@@ -1597,7 +1573,7 @@ KUrl::List& KFileWidgetPrivate::parseSelectedUrls()
     urlList.clear();
     if ( filenames.contains( '/' )) { // assume _one_ absolute filename
         KUrl u;
-        if ( containsProtocolSection( filenames ) )
+        if ( !KUrl::isRelativeUrl(filenames) )
             u = filenames;
         else
             u.setPath( filenames );
