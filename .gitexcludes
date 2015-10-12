@@ -55,15 +55,8 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
-# You can uncomment the ".directory" it if you don't care about e.g.:
-#
-# kde-baseapps/konqueror/sidebar/trees/init/remote/.directory
-# kde-baseapps/konqueror/sidebar/trees/init/remote/web/.directory
-# kde-baseapps/konqueror/sidebar/trees/init/remote/ftp/.directory
-# kde-baseapps/konqueror/sidebar/trees/init/services/.directory
-#
-#*.directory
 
+*.directory
 *.kdev4
 *-swp
 *.swp

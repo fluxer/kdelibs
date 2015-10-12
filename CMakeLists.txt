@@ -18,12 +18,7 @@ set (KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distrib
 
 set (KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 
-################# write platform profile file which will be installed #################
-include(CreateKDEPlatformProfile.cmake)
-
-if(KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
-   set(KDE_NO_DEPRECATED TRUE)
-endif(KDE_PLATFORM_FEATURE_DISABLE_DEPRECATED)
+set (KDE_NO_DEPRECATED TRUE CACHE BOOL "Whether deprecated functionality is desired")
 
 ################# now find all used packages #################
 
@@ -31,7 +26,7 @@ set (QT_MIN_VERSION "4.8.2")
 
 find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
-include (MacroLibrary)
+include(MacroLibrary)
 
 if(UNIX AND Q_WS_X11)
   #X11 Session Management (SM) is required
@@ -270,7 +265,6 @@ include(CreateKDELibsDependenciesFile.cmake)
 
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h  DESTINATION  ${INCLUDE_INSTALL_DIR} )
 install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDELibsDependencies.cmake DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDEPlatformProfile.cmake  DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
 
 
 # run a script before installing the exports files which deletes previously installed

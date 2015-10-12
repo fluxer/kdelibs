@@ -380,7 +380,6 @@ else (_kdeBootStrapping)
 
    # These files contain information about the installed kdelibs, Alex
    include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
-   include(${kde_cmake_module_dir}/KDEPlatformProfile.cmake)
 
    # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
    # KDE_VERSION is set in KDELibsDependencies.cmake since KDE 4.0.x. Alex
