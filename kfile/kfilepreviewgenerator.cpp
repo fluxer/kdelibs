@@ -1266,12 +1266,6 @@ bool KFilePreviewGenerator::isPreviewShown() const
     return d->m_previewShown;
 }
 
-// deprecated (use updateIcons() instead)
-void KFilePreviewGenerator::updatePreviews()
-{
-    updateIcons();
-}
-
 void KFilePreviewGenerator::updateIcons()
 {
     d->killPreviewJobs();

@@ -77,11 +77,6 @@ public:
     bool isPreviewShown() const;
 
     /**
-     * @deprecated Use KFilePreviewGenerator::updateIcons() instead.
-     */
-    void updatePreviews();
-
-    /**
      * Updates the icons for all items. Usually it is only
      * necessary to invoke this method when the icon size of the abstract item view
      * has been changed by QAbstractItemView::setIconSize(). Note that this method

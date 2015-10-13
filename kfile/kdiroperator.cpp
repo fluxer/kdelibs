@@ -944,7 +944,7 @@ void KDirOperator::setIconsZoom(int _value)
     const int val = (maxSize * value / 100) + KIconLoader::SizeSmall;
     d->itemView->setIconSize(QSize(val, val));
     d->updateListViewGrid();
-    d->previewGenerator->updatePreviews();
+    d->previewGenerator->updateIcons();
 
     emit currentIconSizeChanged(value);
 }
