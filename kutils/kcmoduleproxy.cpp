@@ -21,36 +21,24 @@
 #include "kcmoduleproxy_p.h"
 
 #include <QtGui/QApplication>
-#include <QtGui/QCursor>
-#include <QtCore/QDataStream>
-#include <QtGui/qevent.h>
-#include <QtCore/QFileInfo>
-#include <QtGui/QFrame>
-#include <QtGui/QLabel>
 #include <QtGui/QLayout>
-#include <QtCore/QPoint>
-
-#include <QtGui/QImage>
-
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusConnectionInterface>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 
 #include <kaboutdata.h>
 #include <kcmodule.h>
 #include <kcmoduleinfo.h>
-
 #include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kservice.h>
 #include <kstandarddirs.h>
 #include <kuser.h>
-
 #include <kvbox.h>
-
 #include <kcmoduleloader.h>
 
 #include "kcolorscheme.h"
-
 #include "ksettingswidgetadaptor.h"
 
 /*
