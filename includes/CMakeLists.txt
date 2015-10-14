@@ -208,7 +208,6 @@ install( FILES
   KMD5
   KMacroExpanderBase
   KMainWindow
-  KMakeTypeList
   KMenu
   KMenuBar
   KMessage
@@ -373,9 +372,6 @@ install( FILES
   KToolInvocation
   KTreeWidgetSearchLine
   KTreeWidgetSearchLineWidget
-  KTypeList
-  KTypeListIndexOf
-  KTypeListLength
   KTzfileTimeZone
   KTzfileTimeZoneSource
   KUndoStack
