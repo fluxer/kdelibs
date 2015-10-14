@@ -26,7 +26,7 @@
 #include <kurl.h>
 
 #include <QtCore/QMap>
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusMessage>
 
 class QFileSystemWatcher;
 

@@ -37,6 +37,7 @@
 #endif
 
 #include <QtCore/QFileSystemWatcher>
+#include <QtDBus/QDBusConnection>
 
 #include <cstdlib>
 #include <ctime>

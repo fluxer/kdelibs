@@ -21,7 +21,7 @@
 #ifndef _ktexteditor_documentadaptor_p_h_
 #define _ktexteditor_documentadaptor_p_h_
 
-#include <QtDBus/QtDBus>
+#include <QtDBus/QDBusAbstractAdaptor>
 
 namespace KTextEditor {
 	class Document;

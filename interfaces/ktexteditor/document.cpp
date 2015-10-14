@@ -18,6 +18,8 @@
  *  Boston, MA 02110-1301, USA.
  */
 
+#include <QPoint>
+
 #include "document.h"
 #include "moc_document.cpp"
 
