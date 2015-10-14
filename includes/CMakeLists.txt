@@ -49,7 +49,6 @@ install( FILES
   KCMultiDialog
   KIdleTime
   KCalendarSystem
-  KCalendarSystemFactory
   KCharMacroExpander
   KCharSelect
   KCharsets
@@ -146,7 +145,6 @@ install( FILES
   KFilePlacesModel
   KFileShare
   KFileSharePropsPlugin
-  KFileTreeBranch
   KFileTreeView
   KFilterBase
   KFilterDev
@@ -318,7 +316,6 @@ install( FILES
   KShortcutsDialog
   KShortcutsEditor
   KShortcutWidget
-  KSocks
   KSortableItem
   KSortableList
   KSpeech
@@ -529,30 +526,6 @@ install( FILES
 DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KMediaPlayer COMPONENT Devel)
 
 install( FILES
-  KNetwork/KActiveSocketBase
-  KNetwork/KBufferedSocket
-  KNetwork/KClientSocketBase
-  KNetwork/KDatagramPacket
-  KNetwork/KDatagramSocket
-  KNetwork/KHttpProxySocketDevice
-  KNetwork/KInetSocketAddress
-  KNetwork/KIpAddress
-  KNetwork/KPassiveSocketBase
-  KNetwork/KResolver
-  KNetwork/KResolverEntry
-  KNetwork/KResolverResults
-  KNetwork/KReverseResolver
-  KNetwork/KServerSocket
-  KNetwork/KSocketAddress
-  KNetwork/KSocketBase
-  KNetwork/KSocketDevice
-  KNetwork/KSocketDeviceFactory
-  KNetwork/KSocksSocketDevice
-  KNetwork/KStreamSocket
-  KNetwork/KUnixSocketAddress
-DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KNetwork COMPONENT Devel)
-
-install( FILES
   KParts/BrowserExtension
   KParts/BrowserHostExtension
   KParts/BrowserInterface
@@ -733,13 +706,11 @@ install(FILES
   Plasma/AppletScript
   Plasma/BusyWidget
   Plasma/CheckBox
-  Plasma/ClientPinRequest
   Plasma/ComboBox
   Plasma/ConfigLoader
   Plasma/Containment
   Plasma/ContainmentActions
   Plasma/Corona
-  Plasma/Credentials
   Plasma/DataContainer
   Plasma/DataEngine
   Plasma/DataEngineManager
