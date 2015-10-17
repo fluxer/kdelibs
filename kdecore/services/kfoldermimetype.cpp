@@ -89,7 +89,7 @@ QString KFolderMimeTypePrivate::iconName( const KUrl& _url ) const
   QString icon;
   // using KStandardDirs as this one checks for path being
   // a file instead of a directory
-  if ( KStandardDirs::exists( u.toLocalFile() ) )
+  if ( KGlobal::dirs()->exists( u.toLocalFile() ) )
   {
     KDesktopFile cfg( u.toLocalFile() );
     KConfigGroup group = cfg.desktopGroup();

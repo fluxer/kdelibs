@@ -60,6 +60,7 @@
 #include <QtCore/QSettings>
 
 static Qt::CaseSensitivity cs = Qt::CaseSensitive;
+static int max_file_info = 10000;
 
 class KStandardDirs::KStandardDirsPrivate
 {
@@ -74,6 +75,8 @@ public:
     bool hasDataRestrictions(const QString &relPath) const;
     QStringList resourceDirs(const char* type, const QString& subdirForRestrictions);
     void createSpecialResource(const char*);
+    bool exists(const QString &fullPath);
+    QString realPath(const QString &dirname);
 
     bool m_restrictionsActive : 1;
     bool m_checkRestrictions : 1;
@@ -91,6 +94,7 @@ public:
     // Caches (protected by mutex in const methods, cf ctor docu)
     QMap<QByteArray, QStringList> m_dircache;
     QMap<QByteArray, QString> m_savelocations;
+    QHash<QString, QFileInfo> m_infocache;
     QMutex m_cacheMutex;
 
     KStandardDirs* q;
@@ -542,18 +546,39 @@ QString KStandardDirs::findResourceDir( const char *type,
     return QString();
 }
 
-bool KStandardDirs::exists(const QString &fullPath)
+bool KStandardDirs::exists(const QString &fullPath) const
 {
-#ifndef NDEBUG
-    kDebug(180) << "exists check on" << fullPath;
+    return d->exists(fullPath);
+}
+
+bool KStandardDirs::KStandardDirsPrivate::exists(const QString &fullPath)
+{
+    Q_UNUSED(max_file_info);
+#if 0
+    QFileInfo fileinfo;
+    if(m_infocache.count() == max_file_info) {
+        m_infocache.clear();
+    }
 #endif
-    QFileInfo finfo(fullPath);
-    if (!finfo.isReadable()) {
+    if(m_infocache.contains(fullPath)) {
+#ifndef NDEBUG
+        kDebug(180) << "cached exists check on" << fullPath;
+#endif
+        fileinfo = m_infocache.value(fullPath);
+    } else {
+#ifndef NDEBUG
+        kDebug(180) << "new exists check on" << fullPath;
+#endif
+        fileinfo = QFileInfo(fullPath);
+        m_infocache.insert(fullPath, fileinfo);
+    }
+
+    if (!fileinfo.isReadable()) {
         return false;
     } else if (!fullPath.endsWith(QLatin1Char('/'))) {
-        return !finfo.isDir() && finfo.exists();
+        return !fileinfo.isDir() && fileinfo.exists();
     } else {
-        return finfo.isDir() && finfo.exists();
+        return fileinfo.isDir() && fileinfo.exists();
     }
 }
 
@@ -786,7 +811,7 @@ KStandardDirs::findAllResources( const char *type,
 //         even if the directory doesn't exist. so ... no, we can't drop this
 //         yet
 QString
-KStandardDirs::realPath(const QString &dirname)
+KStandardDirs::KStandardDirsPrivate::realPath(const QString &dirname)
 {
     if (dirname.isEmpty() || (dirname.size() == 1 && dirname.at(0) == QLatin1Char('/')))
        return dirname;
@@ -816,7 +841,7 @@ KStandardDirs::realPath(const QString &dirname)
     if (!dir.endsWith(QLatin1Char('/')))
         dir += QLatin1Char('/');
     QString relative;
-    while (!KStandardDirs::exists(dir)) {
+    while (!exists(dir)) {
         //qDebug() << "does not exist:" << dir;
         const int pos = dir.lastIndexOf(QLatin1Char('/'), -2);
         Q_ASSERT(pos >= 0); // what? even "/" doesn't exist?
@@ -830,6 +855,12 @@ KStandardDirs::realPath(const QString &dirname)
         dir = realPath(dir) + relative;
     }
     return dir;
+}
+
+QString
+KStandardDirs::realPath(const QString &dirname) const
+{
+    return d->realPath(dirname);
 }
 
 // ####### KDE4: should this be removed, in favor of QDir::canonicalPath()?

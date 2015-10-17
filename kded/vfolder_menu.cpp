@@ -741,7 +741,7 @@ VFolderMenu::locateMenuFile(const QString &fileName)
 {
    if (!QDir::isRelativePath(fileName))
    {
-      if (KStandardDirs::exists(fileName))
+      if (KGlobal::dirs()->exists(fileName))
          return fileName;
       return QString();
    }
@@ -779,7 +779,7 @@ VFolderMenu::locateDirectoryFile(const QString &fileName)
 
    if (!QDir::isRelativePath(fileName))
    {
-      if (KStandardDirs::exists(fileName))
+      if (KGlobal::dirs()->exists(fileName))
          return fileName;
       return QString();
    }
@@ -788,7 +788,7 @@ VFolderMenu::locateDirectoryFile(const QString &fileName)
    foreach(const QString it, m_directoryDirs)
    {
       const QString tmp = it+fileName;
-      if (KStandardDirs::exists(tmp))
+      if (KGlobal::dirs()->exists(tmp))
          return tmp;
    }
 

@@ -667,7 +667,7 @@ public:
      *                 (and no slash for a file, obviously).
      * @return @c true if the directory exists, @c false otherwise
      */
-    static bool exists(const QString &fullPath);
+    bool exists(const QString &fullPath) const;
 
     /**
      * Expands all symbolic links and resolves references to
@@ -676,7 +676,7 @@ public:
      * The resulting path will have no symbolic link, '/./'
      * or '/../' components.
      */
-    static QString realPath(const QString &dirname);
+    QString realPath(const QString &dirname) const;
 
     /**
      * Expands all symbolic links and resolves references to
