@@ -110,10 +110,10 @@ class KConfig;
  *          specified.
  * @li @c KDEHOME - The directory where changes are saved to. This directory is
  *          used to search for resources first. If @c KDEHOME is not
- *          specified it defaults to @c "$HOME/.kde"
+ *          specified it defaults to @c "$HOME/.katana"
  * @li @c KDEROOTHOME - Like KDEHOME, but used for the root user.
- *          If @c KDEROOTHOME is not set it defaults to the <tt>.kde</tt> directory in the
- *          home directory of root, usually @c "/root/.kde".
+ *          If @c KDEROOTHOME is not set it defaults to the <tt>.katana</tt> directory in the
+ *          home directory of root, usually @c "/root/.katana".
  *          Note that the setting of @c $HOME is ignored in this case.
  *
  * @see KGlobalSettings
@@ -636,7 +636,7 @@ public:
 
     /**
      * Returns the toplevel directory in which KStandardDirs
-     * will store things. Most likely <tt>$HOME/.kde</tt>.
+     * will store things. Most likely <tt>$HOME/.katana</tt>.
      * Don't use this function if you can use locateLocal()
      * @return the toplevel directory
      */
