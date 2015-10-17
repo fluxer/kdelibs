@@ -31,12 +31,8 @@
 #include <fixx11h.h>
 #endif
 
-
-#include <QtCore/QString>
 #include <QtCore/QSocketNotifier>
 #include <QtCore/QTimer>
-#include <QtCore/QList>
-#include <QtCore/QObject>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnectionInterface>
 

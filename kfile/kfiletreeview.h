@@ -75,7 +75,7 @@ class KFILE_EXPORT KFileTreeView : public QTreeView  // KDE5: remove KFILE_EXPOR
      * @reimplemented
      */
     QSize sizeHint() const;
-        
+
     public Q_SLOTS:
         /**
          * Sets whether the dir-only mode is @p enabled.

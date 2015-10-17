@@ -21,14 +21,6 @@
  */
 
 #include "klauncher_adaptor.h"
-#include <QtCore/qobjectdefs.h>
-#include <QtCore/qbytearray.h>
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
-
 #include "klauncher.h"
 
 /*
