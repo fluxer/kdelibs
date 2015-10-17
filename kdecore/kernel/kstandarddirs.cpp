@@ -555,11 +555,11 @@ bool KStandardDirs::KStandardDirsPrivate::exists(const QString &fullPath)
 {
     Q_UNUSED(max_file_info);
 #if 0
-    QFileInfo fileinfo;
     if(m_infocache.count() == max_file_info) {
         m_infocache.clear();
     }
 #endif
+    QFileInfo fileinfo;
     if(m_infocache.contains(fullPath)) {
 #ifndef NDEBUG
         kDebug(180) << "cached exists check on" << fullPath;
