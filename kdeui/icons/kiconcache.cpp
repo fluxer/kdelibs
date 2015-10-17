@@ -200,11 +200,10 @@ QSet<QString> KIconCache::existingIconThemeDirs(const QStringList& themeNames) c
     // Check which of theme actually contain existing dir of one of the
     //  given themes
     QSet<QString> dirs;
-    for (QStringList::ConstIterator it = icondirs.constBegin(); it != icondirs.constEnd(); ++it) {
-        QStringList::ConstIterator themeIt;
-        for (themeIt = themeNames.begin(); themeIt != themeNames.end(); ++themeIt) {
-            QString dirName = *it + *themeIt + '/';
-            if (KStandardDirs::exists(dirName)) {
+    foreach (const QString it, icondirs) {
+        foreach (const QString themeIt, themeNames) {
+            QString dirName = it + themeIt + '/';
+            if (KGlobal::dirs()->exists(dirName)) {
                 dirs.insert(dirName);
             }
         }
