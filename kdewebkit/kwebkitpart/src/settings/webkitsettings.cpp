@@ -404,6 +404,7 @@ void WebKitSettings::init( KConfig * config, bool reset )
     // Fonts and colors
     if( reset ) {
         d->defaultFonts = QStringList();
+        d->defaultFonts.reserve(7);
         d->defaultFonts.append( cgHtml.readEntry( "StandardFont", KGlobalSettings::generalFont().family() ) );
         d->defaultFonts.append( cgHtml.readEntry( "FixedFont", KGlobalSettings::fixedFont().family() ) );
         d->defaultFonts.append( cgHtml.readEntry( "SerifFont", HTML_DEFAULT_VIEW_SERIF_FONT ) );
