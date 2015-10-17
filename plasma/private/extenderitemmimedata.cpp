@@ -36,9 +36,7 @@ ExtenderItemMimeData::~ExtenderItemMimeData()
 
 QStringList ExtenderItemMimeData::formats() const
 {
-    QStringList list;
-    list.append(mimeType());
-    return list;
+    return QStringList(mimeType());
 }
 
 bool ExtenderItemMimeData::hasFormat(const QString &type) const
