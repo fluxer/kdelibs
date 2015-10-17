@@ -544,17 +544,17 @@ QString KStandardDirs::findResourceDir( const char *type,
 
 bool KStandardDirs::exists(const QString &fullPath)
 {
-    KDE_struct_stat buff;
-    QByteArray cFullPath = QFile::encodeName(fullPath);
-    if (access(cFullPath, R_OK) == 0 && KDE_stat( cFullPath, &buff ) == 0) {
-        if (!fullPath.endsWith(QLatin1Char('/'))) {
-            if (S_ISREG( buff.st_mode ))
-                return true;
-        } else
-            if (S_ISDIR( buff.st_mode ))
-                return true;
+#ifndef NDEBUG
+    kDebug(180) << "exists check on" << fullPath;
+#endif
+    QFileInfo finfo(fullPath);
+    if (!finfo.isReadable()) {
+        return false;
+    } else if (!fullPath.endsWith(QLatin1Char('/'))) {
+        return !finfo.isDir() && finfo.exists();
+    } else {
+        return finfo.isDir() && finfo.exists();
     }
-    return false;
 }
 
 static void lookupDirectory(const QString& path, const QString &relPart,
