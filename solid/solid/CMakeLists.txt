@@ -332,9 +332,11 @@ install(FILES org.freedesktop.PowerManagement.Inhibit.xml DESTINATION ${DBUS_INT
 
 ########### static lib for tests  ###############
 
-add_library(solid_static STATIC ${solid_LIB_SRCS})
+if(ENABLE_TESTING)
+    add_library(solid_static STATIC ${solid_LIB_SRCS})
 
-target_link_libraries(solid_static ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} ${solid_OPTIONAL_LIBS})
+    target_link_libraries(solid_static ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} ${solid_OPTIONAL_LIBS})
+endif()
 
 ########### install files ###############
 

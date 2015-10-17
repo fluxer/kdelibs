@@ -1,6 +1,3 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
-
 ########### fakehardwaretest ###############
 
 set(fakehardwaretest_SRCS fakehardwaretest.cpp )
