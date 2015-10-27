@@ -158,7 +158,7 @@ static void readImage1( QImage &img, QDataStream &s, const PCXHEADER &header )
   QByteArray buf( header.BytesPerLine, 0 );
 
   img = QImage( header.width(), header.height(), QImage::Format_Mono );
-  img.setNumColors( 2 );
+  img.setColorCount( 2 );
 
   for ( int y=0; y<header.height(); ++y )
   {
@@ -186,7 +186,7 @@ static void readImage4( QImage &img, QDataStream &s, const PCXHEADER &header )
   QByteArray pixbuf( header.width(), 0 );
 
   img = QImage( header.width(), header.height(), QImage::Format_Indexed8 );
-  img.setNumColors( 16 );
+  img.setColorCount( 16 );
 
   for ( int y=0; y<header.height(); ++y )
   {
@@ -222,7 +222,7 @@ static void readImage8( QImage &img, QDataStream &s, const PCXHEADER &header )
   QByteArray buf( header.BytesPerLine, 0 );
 
   img = QImage( header.width(), header.height(), QImage::Format_Indexed8 );
-  img.setNumColors( 256 );
+  img.setColorCount( 256 );
 
   for ( int y=0; y<header.height(); ++y )
   {
@@ -497,7 +497,7 @@ bool PCXHandler::read(QImage *outImage)
     readImage24( img, s, header );
   }
 
-  kDebug( 399 ) << "Image Bytes: " << img.numBytes();
+  kDebug( 399 ) << "Image Bytes: " << img.byteCount();
   kDebug( 399 ) << "Image Bytes Per Line: " << img.bytesPerLine();
   kDebug( 399 ) << "Image Depth: " << img.depth();
 
@@ -526,7 +526,7 @@ bool PCXHandler::write(const QImage &image)
   kDebug( 399 ) << "Height: " << h;
   kDebug( 399 ) << "Depth: " << img.depth();
   kDebug( 399 ) << "BytesPerLine: " << img.bytesPerLine();
-  kDebug( 399 ) << "Num Colors: " << img.numColors();
+  kDebug( 399 ) << "Num Colors: " << img.colorCount();
 
   PCXHEADER header;
 
@@ -546,7 +546,7 @@ bool PCXHandler::write(const QImage &image)
   {
     writeImage1( img, s, header );
   }
-  else if ( img.depth() == 8 && img.numColors() <= 16 )
+  else if ( img.depth() == 8 && img.colorCount() <= 16 )
   {
     writeImage4( img, s, header );
   }

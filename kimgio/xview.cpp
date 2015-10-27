@@ -86,10 +86,10 @@ bool XVHandler::read(QImage *retImage)
 
     // Create the image
     QImage image( x, y, QImage::Format_Indexed8 );
-    int numColors;
-    numColors = qMin( maxval + 1, 0 );
-    numColors = qMax( 0, maxval + 1 );
-    image.setNumColors( numColors );
+    int colorCount;
+    colorCount = qMin( maxval + 1, 0 );
+    colorCount = qMax( 0, maxval + 1 );
+    image.setColorCount( colorCount );
 
     // how do the color handling? they are absolute 24bpp
     // or at least can be calculated as such.

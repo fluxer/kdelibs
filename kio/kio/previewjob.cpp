@@ -507,15 +507,15 @@ bool PreviewJobPrivate::statResultThumbnail()
     QImage thumb;
     if ( !thumb.load( thumbPath + thumbName ) ) return false;
 
-    if ( thumb.text( "Thumb::URI", 0 ) != origName ||
-         thumb.text( "Thumb::MTime", 0 ).toInt() != tOrig ) return false;
+    if ( thumb.text( QLatin1String("Thumb::URI") ) != origName ||
+         thumb.text( QLatin1String("Thumb::MTime") ).toInt() != tOrig ) return false;
 
     QString thumbnailerVersion = currentItem.plugin->property("ThumbnailerVersion", QVariant::String).toString();
 
-    if (!thumbnailerVersion.isEmpty() && thumb.text("Software", 0).startsWith("KDE Thumbnail Generator")) {
+    if (!thumbnailerVersion.isEmpty() && thumb.text(QLatin1String("Software")).startsWith("KDE Thumbnail Generator")) {
         //Check if the version matches
         //The software string should read "KDE Thumbnail Generator pluginName (vX)"
-        QString softwareString = thumb.text("Software", 0).remove("KDE Thumbnail Generator").trimmed();
+        QString softwareString = thumb.text(QLatin1String("Software")).remove("KDE Thumbnail Generator").trimmed();
         if (softwareString.isEmpty()) {
             // The thumbnail has been created with an older version, recreating
             return false;

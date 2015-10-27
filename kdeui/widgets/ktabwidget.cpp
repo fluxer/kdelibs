@@ -316,10 +316,6 @@ QColor KTabWidget::tabTextColor( int index ) const
   return tabBar()->tabTextColor( index );
 }
 
-
-
-
-
 int KTabWidget::tabBarWidthForMaxChars( int maxLength )
 {
   int hframe, overlap;
