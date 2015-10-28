@@ -63,4 +63,4 @@ install(FILES
     DESTINATION ${INCLUDE_INSTALL_DIR}/libkcddb COMPONENT Devel)
 install( FILES libkcddb.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 
-install(TARGETS kcddb EXPORT LibkcddbTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kcddb EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

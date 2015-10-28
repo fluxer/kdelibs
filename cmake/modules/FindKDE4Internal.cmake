@@ -61,6 +61,10 @@
 #  KDE4_PLASMA_LIBRARY      - the plasma library
 #  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
 #  KDE4_KDEWEBKIT_LIBRARY   - the kdewebkit library
+#  KDE4_KCDDB_LIBRARY       - the kcddb library
+#  KDE4_KCOMPACTDISC_LIBRARY - the kcompactdisc library
+#  KDE4_KDCRAW_LIBRARY       - the kdcraw library
+#  KDE4_KEXIV2_LIBRARY       - the kexiv2 library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -88,6 +92,10 @@
 #  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
 #  KDE4_KUNITCONVERSION_LIBS  - the kunitconversion library and all depending libraries
 #  KDE4_KDEWEBKIT_LIBS        - the kdewebkit library and all depending libraries
+#  KDE4_KCDDB_LIBS            - the kcddb library and all depending libraries
+#  KDE4_KCOMPACTDISC_LIBS     - the kcompactdisc library and all depending libraries
+#  KDE4_KDCRAW_LIBS           - the kdcraw library and all depending libraries
+#  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
 #
 # This module defines also a bunch of variables used as locations for install directories
 # for files of the package which is using this module. These variables don't say
@@ -479,6 +487,10 @@ _kde4_set_lib_variables(THREADWEAVER  threadweaver  "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KDEFAKES      kdefakes      "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KDESU         kdesu         "${KDE4_TARGET_PREFIX}")
 _kde4_set_lib_variables(KPTY          kpty          "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KCDDB         kcddb         "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KCOMPACTDISC  kcompactdisc  "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KDCRAW        kdcraw        "${KDE4_TARGET_PREFIX}")
+_kde4_set_lib_variables(KEXIV2        kexiv2        "${KDE4_TARGET_PREFIX}")
 
 ################### try to find Phonon ############################################
 

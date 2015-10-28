@@ -80,4 +80,4 @@ set_target_properties(kcompactdisc PROPERTIES
 
 install(FILES kcompactdisc.h DESTINATION ${INCLUDE_INSTALL_DIR}/libkcompactdisc COMPONENT Devel)
 
-install(TARGETS kcompactdisc EXPORT LibkcompactdiscTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kcompactdisc EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})

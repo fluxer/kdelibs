@@ -61,7 +61,7 @@ set_target_properties(kdcraw PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-install(TARGETS kdcraw ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kdcraw EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES
     rawdecodingsettings.h
