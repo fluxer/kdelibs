@@ -347,7 +347,7 @@ void KXmlGuiWindow::applyMainWindowSettings(const KConfigGroup &config, bool for
 {
     K_D(KXmlGuiWindow);
     KMainWindow::applyMainWindowSettings(config, force);
-    KStatusBar *sb = qFindChild<KStatusBar *>(this);
+    KStatusBar *sb = this->findChild<KStatusBar*>();
     if (sb && d->showStatusBarAction)
         d->showStatusBarAction->setChecked(!sb->isHidden());
 }
