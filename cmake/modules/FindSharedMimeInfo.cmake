@@ -52,8 +52,7 @@ find_package_handle_standard_args(SharedMimeInfo REQUIRED_VARS UPDATE_MIME_DATAB
 # For backward compatibility:
 set(SHARED_MIME_INFO_FOUND ${SHAREDMIMEINFO_FOUND} )
 
-# This should go into MacroLogFeature/FeatureSummary:
-#            message(FATAL_ERROR "Could NOT find shared-mime-info. See http://freedesktop.org/wiki/Software/shared-mime-info.")
+# message(FATAL_ERROR "Could NOT find shared-mime-info. See http://freedesktop.org/wiki/Software/shared-mime-info.")
 
 
 mark_as_advanced(UPDATE_MIME_DATABASE_EXECUTABLE)

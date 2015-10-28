@@ -49,11 +49,8 @@ set(cmakeFiles
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
     FindKDevPlatform.cmake
-    FindKdcraw.cmake
-    FindKdeMultimedia.cmake
     FindKdepim.cmake
     FindKdepimLibs.cmake
-    FindKexiv2.cmake
     FindKipi.cmake
     FindKopete.cmake
     FindKorundum.cmake
@@ -110,7 +107,6 @@ set(cmakeFiles
     MacroLibrary.cmake
     MacroLogFeature.cmake
     MacroOptionalAddSubdirectory.cmake
-    MacroOptionalDependPackage.cmake
     MacroOptionalFindPackage.cmake
     MacroPushRequiredVars.cmake
     MacroWriteBasicCMakeVersionFile.cmake
