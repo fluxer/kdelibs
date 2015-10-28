@@ -222,16 +222,16 @@ public:
     {
         if (!source)
             return engine->nullValue();
-        return engine->newVariant(qVariantFromValue(source));
+        return engine->newVariant(QVariant::fromValue(source));
     }
 
     static void fromScriptValue(const QScriptValue &value, T* &target)
     {
         if (value.isVariant()) {
             QVariant var = value.toVariant();
-            if (qVariantCanConvert<T*>(var)) {
+            if (var.canConvert<T*>())) {
                 target = qvariant_cast<T*>(var);
-            } else if (qVariantCanConvert<wrapped_pointer_type>(var)) {
+            } else if (var.canConvert<wrapped_pointer_type>()) {
                 target = qvariant_cast<wrapped_pointer_type>(var)->operator T*();
             } else {
                 // look in prototype chain
