@@ -43,10 +43,12 @@
 #include <kshortcutsdialog.h>
 #include <kwindowsystem.h>
 
+#include "animator.h"
 #include "abstracttoolbox.h"
 #include "containment.h"
 #include "containmentactionspluginsconfig.h"
 #include "view.h"
+#include "private/animator_p.h"
 #include "private/applet_p.h"
 #include "private/containment_p.h"
 #include "tooltipmanager.h"
@@ -352,6 +354,16 @@ Containment *Corona::addContainmentDelayed(const QString &name, const QVariantLi
     }
 
     return 0;
+}
+
+void Corona::mapAnimation(Animator::Animation from, Animator::Animation to)
+{
+    AnimatorPrivate::mapAnimation(from, to);
+}
+
+void Corona::mapAnimation(Animator::Animation from, const QString &to)
+{
+    AnimatorPrivate::mapAnimation(from, to);
 }
 
 void Corona::addOffscreenWidget(QGraphicsWidget *widget)

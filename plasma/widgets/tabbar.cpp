@@ -33,6 +33,8 @@
 
 #include <kdebug.h>
 
+#include "animator.h"
+#include "animations/animation.h"
 #include "private/nativetabbar_p.h"
 #include "private/themedwidgetinterface_p.h"
 #include "theme.h"
@@ -74,6 +76,8 @@ public:
           tabProxy(0),
           currentIndex(0),
           tabWidgetMode(true),
+          oldPageAnimId(-1),
+          newPageAnimId(-1),
           tabBarShown(true)
     {
     }
@@ -99,6 +103,10 @@ public:
 
     QWeakPointer<QGraphicsWidget> oldPage;
     QWeakPointer<QGraphicsWidget> newPage;
+    int oldPageAnimId;
+    int newPageAnimId;
+    Animation *oldPageAnim;
+    Animation *newPageAnim;
     QParallelAnimationGroup *animGroup;
     bool tabBarShown;
     QWeakPointer<QGraphicsWidget> firstPositionWidget;
@@ -154,6 +162,7 @@ void TabBarPrivate::slidingNewPageCompleted()
     if (newPage) {
         tabWidgetLayout->addItem(newPage.data());
     }
+    newPageAnimId = -1;
     mainLayout->invalidate();
     emit q->currentChanged(currentIndex);
 
@@ -162,8 +171,9 @@ void TabBarPrivate::slidingNewPageCompleted()
 
 void TabBarPrivate::slidingOldPageCompleted()
 {
-    QGraphicsWidget *item = oldPage.data();
+    QGraphicsWidget *item = oldPageAnim->targetWidget();
 
+    oldPageAnimId = -1;
     if (item) {
         item->hide();
     }
@@ -239,10 +249,20 @@ TabBar::TabBar(QGraphicsWidget *parent)
     d->tabBarLayout->setContentsMargins(0,0,0,0);
     //d->tabBarLayout->setStretchFactor(d->tabProxy, 2);
 
+
+    d->newPageAnim = Animator::create(Animator::SlideAnimation);
+    d->oldPageAnim = Animator::create(Animator::SlideAnimation);
+    d->animGroup = new QParallelAnimationGroup(this);
+
+    d->animGroup->addAnimation(d->newPageAnim);
+    d->animGroup->addAnimation(d->oldPageAnim);
+
     connect(d->tabProxy->native, SIGNAL(currentChanged(int)),
             this, SLOT(setCurrentIndex(int)));
     connect(d->tabProxy->native, SIGNAL(shapeChanged(QTabBar::Shape)),
             this, SLOT(shapeChanged(QTabBar::Shape)));
+    connect(d->newPageAnim, SIGNAL(finished()), this, SLOT(slidingNewPageCompleted()));
+    connect(d->oldPageAnim, SIGNAL(finished()), this, SLOT(slidingOldPageCompleted()));
     d->initTheming();
 }
 
@@ -376,11 +396,27 @@ void TabBar::setCurrentIndex(int index)
 
         if (index > d->currentIndex) {
             d->newPage.data()->setPos(d->oldPage.data()->geometry().topRight());
-            d->slidingNewPageCompleted();
-            d->slidingOldPageCompleted();
+            d->newPageAnim->setProperty("movementDirection", Animation::MoveLeft);
+            d->newPageAnim->setProperty("distancePointF", QPointF(d->oldPage.data()->size().width(), 0));
+            d->newPageAnim->setTargetWidget(d->newPage.data());
+
+            d->oldPageAnim->setProperty("movementDirection", Animation::MoveLeft);
+            d->oldPageAnim->setProperty("distancePointF", QPointF(beforeCurrentGeom.width(), 0));
+            d->oldPageAnim->setTargetWidget(d->oldPage.data());
+
+            d->animGroup->start();
         } else {
             d->newPage.data()->setPos(beforeCurrentGeom.topLeft());
-            d->slidingOldPageCompleted();
+            d->newPageAnim->setProperty("movementDirection", Animation::MoveRight);
+            d->newPageAnim->setProperty("distancePointF", QPointF(d->oldPage.data()->size().width(), 0));
+            d->newPageAnim->setTargetWidget(d->newPage.data());
+
+            d->oldPageAnim->setProperty("movementDirection", Animation::MoveRight);
+            d->oldPageAnim->setProperty("distancePointF",
+                                        QPointF(d->oldPage.data()->size().width(), 0));
+            d->oldPageAnim->setTargetWidget(d->oldPage.data());
+
+            d->animGroup->start();
         }
     } else if (d->newPage) {
         d->tabWidgetLayout->addItem(d->newPage.data());
@@ -400,6 +436,9 @@ void TabBar::removeTab(int index)
     if (index >= d->pages.count() || index < 0) {
         return;
     }
+
+    d->newPageAnim->stop();
+    d->oldPageAnim->stop();
 
     int oldCurrentIndex = d->tabProxy->native->currentIndex();
     d->tabProxy->native->removeTab(index);

@@ -46,6 +46,7 @@
 #include <netwm.h>
 
 #include "plasma/applet.h"
+#include "plasma/animator.h"
 #include "plasma/containment.h"
 #include "plasma/corona.h"
 #include "plasma/extenders/extender.h"

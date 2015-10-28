@@ -24,10 +24,12 @@
 
 #include <QPainter>
 #include <QTimeLine>
+#include <QPropertyAnimation>
 
 #include <kdebug.h>
 #include <kglobalsettings.h>
 
+#include "plasma/animator.h"
 #include "plasma/framesvg.h"
 #include "plasma/theme.h"
 
@@ -269,10 +271,13 @@ Meter::Meter(QGraphicsItem *parent) :
         d(new MeterPrivate(this))
 {
     d->setSizePolicyAndPreferredSize();
+
+    d->animation = new QPropertyAnimation(d, "meterValue");
 }
 
 Meter::~Meter()
 {
+    delete d->animation;
     delete d;
 }
 
@@ -310,11 +315,19 @@ void Meter::setValue(int value)
     d->targetValue = qBound(d->minimum, value, d->maximum);
     int delta = abs(d->value - d->targetValue);
 
+    if (d->animation->state() != QAbstractAnimation::Running) {
+        d->animation->stop();
+    }
+
     //kDebug() << d->targetValue << d->value << delta;
     if (!(KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) ||
         delta / qreal(d->maximum) < 0.1) {
         d->value = value;
         update();
+    } else  {
+        d->animation->setStartValue(d->value);
+        d->animation->setEndValue(value);
+        d->animation->start();
     }
     emit valueChanged(value);
 }

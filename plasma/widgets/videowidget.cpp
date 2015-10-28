@@ -40,6 +40,7 @@
 #include <phonon/mediasource.h>
 #include <phonon/audiooutput.h>
 
+#include <plasma/animations/animation.h>
 #include <plasma/widgets/iconwidget.h>
 #include <plasma/widgets/slider.h>
 #include <plasma/widgets/frame.h>
@@ -54,6 +55,7 @@ public:
          : q(video),
            ticking(false),
            forceControlsVisible(false),
+           animation(0),
            hideTimer(0),
            shownControls(VideoWidget::NoControls),
            controlsWidget(0),
@@ -98,6 +100,7 @@ public:
     bool forceControlsVisible;
 
     //control widgets
+    Plasma::Animation *animation;
     QTimer *hideTimer;
     VideoWidget::Controls shownControls;
     Plasma::Frame *controlsWidget;
@@ -195,6 +198,17 @@ void VideoWidgetPrivate::animateControlWidget(bool show)
 
     //clip only when animating
     q->setFlags(q->flags()|QGraphicsItem::ItemClipsChildrenToShape);
+
+    if (!animation) {
+        animation = Plasma::Animator::create(Plasma::Animator::SlideAnimation, q);
+        animation->setTargetWidget(controlsWidget);
+        animation->setProperty("movementDirection", Animation::MoveDown);
+        q->connect(animation, SIGNAL(finished()), q, SLOT(slidingCompleted()));
+    }
+
+    animation->setProperty("distance", distance);
+    animation->setProperty("direction", show? QAbstractAnimation::Forward : QAbstractAnimation::Backward);
+    animation->start();
 }
 
 void VideoWidgetPrivate::hideControlWidget()

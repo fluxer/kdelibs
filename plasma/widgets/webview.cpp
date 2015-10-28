@@ -34,6 +34,7 @@
 #endif
 #include <kdebug.h>
 
+#include "animator.h"
 #include "plasma.h"
 #include "widgets/webview.h"
 #include "widgets/scrollwidget.h"

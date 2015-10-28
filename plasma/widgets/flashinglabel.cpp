@@ -31,6 +31,8 @@
 
 #include <kdebug.h>
 
+#include <plasma/animator.h>
+#include <plasma/animations/animation.h>
 #include <plasma/theme.h>
 
 using namespace Plasma;
@@ -79,6 +81,7 @@ class Plasma::FlashingLabelPrivate
         QFont font;
         QPixmap pixmap;
 
+        QWeakPointer<Plasma::Animation> anim;
         QPixmap renderedPixmap;
 
         QTextOption textOption;
@@ -165,6 +168,14 @@ void FlashingLabel::flash(const QPixmap &pixmap, int duration, Qt::Alignment ali
 void FlashingLabel::setAutohide(bool autohide)
 {
     d->autohide = autohide;
+
+    if (autohide) {
+        if (d->anim.data()) {
+            connect(d->anim.data(), SIGNAL(finished()), this, SLOT(elementAnimationFinished()));
+        }
+    } else if (d->anim.data()) {
+        disconnect(d->anim.data(), SIGNAL(finished()), this, SLOT(elementAnimationFinished()));
+    }
 }
 
 bool FlashingLabel::autohide() const
@@ -188,6 +199,19 @@ void FlashingLabel::fadeIn()
     }
 
     d->state = FlashingLabelPrivate::Visible;
+    if (!d->anim.data()) {
+        d->anim = Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation);
+        Plasma::Animation *animation = d->anim.data();
+        animation->setProperty("startPixmap", d->renderedPixmap);
+        animation->setTargetWidget(this);
+        animation->start();
+    } else {
+        Plasma::Animation *animation = d->anim.data();
+        if (animation->state() == QAbstractAnimation::Running) {
+            animation->stop();
+            animation->start();
+        }
+    }
 }
 
 void FlashingLabel::fadeOut()
@@ -197,6 +221,18 @@ void FlashingLabel::fadeOut()
     }
 
     d->state = FlashingLabelPrivate::Invisible;
+    if (d->anim.data()) {
+        Plasma::Animation *animation = d->anim.data();
+        animation->setProperty("direction", QAbstractAnimation::Backward);
+        animation->start(QAbstractAnimation::DeleteWhenStopped);
+    } else {
+        d->anim = Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation);
+        Plasma::Animation *animation = d->anim.data();
+        animation->setProperty("direction", QAbstractAnimation::Backward);
+        animation->setProperty("startPixmap", d->renderedPixmap);
+        animation->setTargetWidget(this);
+        animation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
 }
 
 void FlashingLabel::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
@@ -204,7 +240,10 @@ void FlashingLabel::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     Q_UNUSED(option)
     Q_UNUSED(widget)
 
-    if (d->state == FlashingLabelPrivate::Visible) {
+    if (d->anim.data() && d->anim.data()->state() == QAbstractAnimation::Running) {
+        Plasma::Animation *animation = d->anim.data();
+        painter->drawPixmap(0, 0, qvariant_cast<QPixmap>(animation->property("currentPixmap")));
+    } else if (d->state == FlashingLabelPrivate::Visible) {
         painter->drawPixmap(0, 0, d->renderedPixmap);
     }
 }
@@ -252,6 +291,11 @@ void FlashingLabelPrivate::renderPixmap(const QSize &size)
         painter.drawPixmap(p, pixmap);
     }
     painter.end();
+
+    if (anim.data()) {
+        Plasma::Animation *animation = anim.data();
+        animation->setProperty("startPixmap", renderedPixmap);
+    }
 }
 
 void FlashingLabelPrivate::setupFlash(int duration)
@@ -273,7 +317,7 @@ void FlashingLabelPrivate::setupFlash(int duration)
 
 void FlashingLabelPrivate::elementAnimationFinished()
 {
-    if (autohide && state == FlashingLabelPrivate::Invisible) {
+    if (autohide && state == FlashingLabelPrivate::Invisible && anim.data()) {
         q->hide();
     }
 }

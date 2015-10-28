@@ -44,6 +44,8 @@
 #include <kmimetype.h>
 #include <kurl.h>
 
+#include "animator.h"
+#include "animations/animation.h"
 #include "paintutils.h"
 #include "private/themedwidgetinterface_p.h"
 #include "theme.h"
@@ -75,6 +77,11 @@ bool IconHoverAnimation::fadeIn() const
     return m_fadeIn;
 }
 
+QPropertyAnimation *IconHoverAnimation::animation() const
+{
+    return m_animation.data();
+}
+
 void IconHoverAnimation::setValue(qreal value)
 {
     m_value = value;
@@ -85,6 +92,11 @@ void IconHoverAnimation::setValue(qreal value)
 void IconHoverAnimation::setFadeIn(bool fadeIn)
 {
     m_fadeIn = fadeIn;
+}
+
+void IconHoverAnimation::setAnimation(QPropertyAnimation *animation)
+{
+    m_animation = animation;
 }
 
 IconWidgetPrivate::IconWidgetPrivate(IconWidget *i)
@@ -158,18 +170,48 @@ IconAction::IconAction(IconWidget *icon, QAction *action)
 
 void IconAction::show()
 {
+    Animation *animation = m_animation.data();
+    if (!animation) {
+        animation = Plasma::Animator::create(Plasma::Animator::PixmapTransitionAnimation, m_icon);
+        animation->setTargetWidget(m_icon);
+        m_animation = animation;
+    } else if (animation->state() == QAbstractAnimation::Running) {
+        animation->pause();
+    }
+
     rebuildPixmap();
     m_visible = true;
+
+    animation->setProperty("targetPixmap", m_pixmap);
+    animation->setDirection(QAbstractAnimation::Forward);
+    animation->start();
 }
 
 void IconAction::hide()
 {
+    if (!m_animation) {
+        return;
+    }
+
+    Animation *animation = m_animation.data();
+    if (animation->state() == QAbstractAnimation::Running) {
+        animation->pause();
+    }
+
     m_visible = false;
+
+    animation->setDirection(QAbstractAnimation::Backward);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 bool IconAction::isVisible() const
 {
     return m_visible;
+}
+
+bool IconAction::isAnimating() const
+{
+    return !m_animation.isNull();
 }
 
 bool IconAction::isPressed() const
@@ -297,8 +339,12 @@ void IconAction::paint(QPainter *painter) const
         return;
     }
 
-    if (m_visible) {
+    Animation *animation = m_animation.data();
+    if (m_visible && !animation) {
         painter->drawPixmap(m_rect.toRect(), m_pixmap);
+    } else {
+        painter->drawPixmap(m_rect.toRect(),
+                animation->property("currentPixmap").value<QPixmap>());
     }
 }
 
@@ -702,6 +748,21 @@ void IconWidgetPrivate::animateMainIcon(bool show, const IconWidgetStates state)
 
     hoverAnimation->setFadeIn(show);
 
+    QPropertyAnimation *animation = hoverAnimation->animation();
+    if (!animation) {
+        animation = new QPropertyAnimation(hoverAnimation, "value");
+        animation->setDuration(150);
+        animation->setEasingCurve(QEasingCurve::OutQuad);
+        animation->setStartValue(0.0);
+        animation->setEndValue(1.0);
+        hoverAnimation->setAnimation(animation);
+        q->connect(animation, SIGNAL(finished()), q, SLOT(hoverAnimationFinished()));
+    } else if (animation->state() == QAbstractAnimation::Running) {
+        animation->pause();
+    }
+
+    animation->setDirection(show ? QAbstractAnimation::Forward : QAbstractAnimation::Backward);
+    animation->start(show ? QAbstractAnimation::KeepWhenStopped : QAbstractAnimation::DeleteWhenStopped);
     q->update();
 }
 
@@ -1102,10 +1163,11 @@ void IconWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         painter->drawPixmap(iconPos, icon);
     }
 
-#pragma probably drop the loop entirely
     // Draw corner actions
     foreach (const IconAction *action, d->cornerActions) {
-        action->paint(painter);
+        if (action->isAnimating()) {
+            action->paint(painter);
+        }
     }
 
     // Draw text last because it is overlayed

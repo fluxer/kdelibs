@@ -74,6 +74,8 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event);
 
 protected slots:
+    void animationFinished();
+    void startAnimation();
     void setOnValueChanged(QRectF val);
     QRectF onValueChanged() const;
 

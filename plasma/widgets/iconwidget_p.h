@@ -79,6 +79,7 @@ public:
     void show();
     void hide();
     bool isVisible() const;
+    bool isAnimating() const;
 
     QAction *action() const;
 

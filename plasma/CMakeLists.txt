@@ -51,6 +51,25 @@ set(plasma_LIB_SRCS
     package.cpp
     abstractrunner.cpp
     abstracttoolbox.cpp
+    animator.cpp
+    animations/animation.cpp
+    animations/animationscriptengine.cpp
+    animations/bindings/easingcurve.cpp
+    animations/easinganimation.cpp
+    animations/fade.cpp
+    animations/grow.cpp
+    animations/javascriptanimation.cpp
+    animations/pendulumcurve.cpp
+    animations/pixmaptransition.cpp
+    animations/pulser.cpp
+    animations/rotation.cpp
+    animations/rotationstacked.cpp
+    animations/slide.cpp
+    animations/stackedlayout.cpp
+    animations/geometry.cpp
+    animations/water.cpp
+    animations/widgetsnapshot.cpp
+    animations/zoom.cpp
     applet.cpp
     configloader.cpp
     containment.cpp
@@ -199,6 +218,8 @@ set(plasma_LIB_INCLUDES
     abstractdialogmanager.h
     abstractrunner.h
     abstracttoolbox.h
+    animations/animation.h
+    animator.h
     applet.h
     configloader.h
     containment.h
@@ -283,6 +304,12 @@ if(PHONON_FOUND)
 endif(PHONON_FOUND)
 
 install(FILES
+    animations/animation.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/animations COMPONENT Devel)
+
+
+install(FILES
+   data/servicetypes/plasma-animator.desktop
    data/servicetypes/plasma-applet.desktop
    data/servicetypes/plasma-applet-popupapplet.desktop
    data/servicetypes/plasma-containment.desktop

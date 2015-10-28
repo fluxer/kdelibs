@@ -28,6 +28,7 @@
 #include <kdebug.h>
 
 #include <plasma/framesvg.h>
+#include <plasma/animator.h>
 #include <plasma/theme.h>
 namespace Plasma
 {
@@ -62,6 +63,9 @@ ItemBackground::ItemBackground(QGraphicsWidget *parent)
       d(new ItemBackgroundPrivate(this))
 {
     d->frameSvg = new Plasma::FrameSvg(this);
+    d->anim = new QPropertyAnimation(this, "animationUpdate", this);
+    d->anim->setStartValue(0);
+    d->anim->setEndValue(1);
     d->opacity = 1;
     d->fading = false;
     d->fadeIn = false;
@@ -118,6 +122,10 @@ void ItemBackground::setTarget(const QRectF &newGeometry)
         d->newGeometry = d->newGeometry.intersected(QRectF(QPointF(0,0), pw->size()));
     }
 
+    if (d->anim->state() != QAbstractAnimation::Stopped) {
+        d->anim->stop();
+    }
+
     if (d->target && d->target->isVisible() && !isVisible()) {
         setZValue(d->target->zValue()-1);
         setGeometry(newGeometry);
@@ -126,6 +134,7 @@ void ItemBackground::setTarget(const QRectF &newGeometry)
     } else {
         d->fading = false;
         d->opacity = 1;
+        d->anim->start();
     }
 
 }
@@ -232,11 +241,18 @@ QVariant ItemBackground::itemChange(GraphicsItemChange change, const QVariant &v
     if (change == ItemVisibleChange) {
         bool visible = value.toBool();
         bool retVisible = visible;
-        if (visible == isVisible()) {
+        if (visible == isVisible() || d->anim->state() == QAbstractAnimation::Stopped) {
             retVisible = true;
         }
         d->fading = true;
         d->fadeIn = visible;
+
+        if (d->anim->state() != QAbstractAnimation::Stopped) {
+            d->anim->stop();
+        }
+
+        d->anim->setDuration(250);
+        d->anim->start();
 
         return retVisible;
 
