@@ -1677,15 +1677,6 @@ public:
     void setNegativePrefixCurrencySymbol(bool prefix);
 
     /**
-     * @deprecated use setDecimalPlaces() or setMonetaryDecimalPlaces()
-     *
-     * Changes the number of digits used when formating numbers.
-     *
-     * @param digits The default number of digits to use.
-     */
-    KDE_DEPRECATED void setFracDigits(int digits);
-
-    /**
      * @since 4.4
      *
      * Changes the number of decimal places used when formating numbers.

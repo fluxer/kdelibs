@@ -544,11 +544,6 @@ void KLocale::setNegativePrefixCurrencySymbol(bool prefix)
     d->setNegativePrefixCurrencySymbol(prefix);
 }
 
-void KLocale::setFracDigits(int digits)
-{
-    setMonetaryDecimalPlaces(digits);
-}
-
 void KLocale::setMonetaryDecimalPlaces(int digits)
 {
     d->setMonetaryDecimalPlaces(digits);
