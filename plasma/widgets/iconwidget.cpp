@@ -1102,7 +1102,7 @@ void IconWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
         painter->drawPixmap(iconPos, icon);
     }
 
-#pragma probably drop the loop interly
+#pragma probably drop the loop entirely
     // Draw corner actions
     foreach (const IconAction *action, d->cornerActions) {
         action->paint(painter);

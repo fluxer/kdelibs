@@ -229,7 +229,7 @@ public:
     {
         if (value.isVariant()) {
             QVariant var = value.toVariant();
-            if (var.canConvert<T*>())) {
+            if (var.canConvert<T*>()) {
                 target = qvariant_cast<T*>(var);
             } else if (var.canConvert<wrapped_pointer_type>()) {
                 target = qvariant_cast<wrapped_pointer_type>(var)->operator T*();
