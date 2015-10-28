@@ -203,9 +203,6 @@ class QObject;
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KUrl &url);
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
 
-
-class WrongSyntax {};
-
 /**
  * @internal
  * A class for using operator()
@@ -271,9 +268,6 @@ public:
      * in other files (with a better name for the function of course).
      */
     static KDECORE_EXPORT int registerArea(const QByteArray& areaName, bool enabled = true);
-
-private:
-    WrongSyntax operator()(const char*) {return WrongSyntax();} // error! Use kDebug() << "..." or kWarning() << "..." instead.
 };
 
 
