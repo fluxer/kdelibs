@@ -64,7 +64,6 @@ set(cmakeFiles
     FindKopete.cmake
     FindKorundum.cmake
     FindKSane.cmake
-    FindKTp.cmake
     FindLCMS.cmake
     FindLCMS2.cmake
     FindLibArt.cmake
