@@ -36,7 +36,12 @@ find_program (UPDATE_MIME_DATABASE_EXECUTABLE NAMES update-mime-database)
 # Store the version number in the cache, so we don't have to search the next time again:
 if (UPDATE_MIME_DATABASE_EXECUTABLE  AND NOT  SHAREDMIMEINFO_VERSION)
 
-    exec_program (${UPDATE_MIME_DATABASE_EXECUTABLE} ARGS -v RETURN_VALUE _null OUTPUT_VARIABLE _smiVersionRaw)
+    execute_process(
+        COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} -v
+        RETURN_VALUE _null
+        ERROR_VARIABLE _smiVersionRaw
+        OUTPUT_QUIET
+     )
 
     string(REGEX REPLACE "update-mime-database \\([a-zA-Z\\-]+\\) ([0-9]\\.[0-9]+).*"
            "\\1" smiVersion "${_smiVersionRaw}")

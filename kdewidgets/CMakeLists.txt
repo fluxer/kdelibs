@@ -19,7 +19,7 @@ target_link_libraries(makekdewidgets ${KDE4_KDECORE_LIBS})
 
 # "export" this target too so we can use the LOCATION property of the imported target in
 # FindKDE4Internal.cmake to get the full path to the installed executable instead of using FIND_PROGRAM(), Alex
-install(TARGETS makekdewidgets  EXPORT kdelibsToolsTargets ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS makekdewidgets EXPORT kdelibsToolsTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

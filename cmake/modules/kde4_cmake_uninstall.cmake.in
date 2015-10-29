@@ -7,8 +7,8 @@ STRING(REGEX REPLACE "\n" ";" files "${files}")
 FOREACH(file ${files})
   MESSAGE(STATUS "Uninstalling \"${file}\"")
   IF(EXISTS "${file}")
-    EXEC_PROGRAM(
-      "@CMAKE_COMMAND@" ARGS "-E remove \"${file}\""
+    EXECUTE_PROCESS(
+      "@CMAKE_COMMAND@" -E remove \"${file}\""
       OUTPUT_VARIABLE rm_out
       RETURN_VALUE rm_retval
       )

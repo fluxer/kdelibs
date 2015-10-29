@@ -8,93 +8,99 @@ include(CPack)
 
 ################# set KDE specific information #################
 
-set (KDE_VERSION_MAJOR 4)
-set (KDE_VERSION_MINOR 17)
-set (KDE_VERSION_RELEASE 0)
-set (KDE_VERSION "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KDE_VERSION_RELEASE}" )
-set (KDE_VERSION_STRING "${KDE_VERSION}")
+set(KDE_VERSION_MAJOR 4)
+set(KDE_VERSION_MINOR 17)
+set(KDE_VERSION_RELEASE 0)
+set(KDE_VERSION "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KDE_VERSION_RELEASE}" )
+set(KDE_VERSION_STRING "${KDE_VERSION}")
 
-set (KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distribution in bug reports" )
+set(KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distribution in bug reports" )
 
-set (KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
+set(KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 
-set (KDE_NO_DEPRECATED TRUE CACHE BOOL "Whether deprecated functionality is desired")
+set(KDE_NO_DEPRECATED TRUE CACHE BOOL "Whether deprecated functionality is desired")
 
 ################# now find all used packages #################
-
-set (QT_MIN_VERSION "4.8.2")
 
 find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 
 if(UNIX AND Q_WS_X11)
-  #X11 Session Management (SM) is required
-  #X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
-  if(NOT X11_SM_FOUND)
-    message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.\nPlease install libSM.\n")
-  endif(NOT X11_SM_FOUND)
-  find_package(XCB)
-  if(NOT XCB_FOUND)
-    message(FATAL_ERROR "\nThe XCB development package could not be found.\nPlease install libxcb.\n")
-  endif(NOT XCB_FOUND)
+    #X11 Session Management (SM) is required
+    #X11_SM_FOUND is set in FindX11, which is required by KDE4Internal
+    if(NOT X11_SM_FOUND)
+        message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.\nPlease install libSM.\n")
+    endif(NOT X11_SM_FOUND)
+    find_package(XCB)
+    if(NOT XCB_FOUND)
+        message(FATAL_ERROR "\nThe XCB development package could not be found.\nPlease install libxcb.\n")
+    endif(NOT XCB_FOUND)
 endif(UNIX AND Q_WS_X11)
 
 #required features:
 find_package(Perl)
-set_package_properties(Perl PROPERTIES
-                            URL "http://www.perl.org"
-                            TYPE REQUIRED
-                            PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts"
-                      )
+set_package_properties(Perl
+    PROPERTIES
+    URL "http://www.perl.org"
+    TYPE REQUIRED
+    PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts"
+)
 
 find_package(ZLIB)
-set_package_properties(ZLIB PROPERTIES DESCRIPTION "Support for gzip compressed files and data streams"
-                       URL "http://www.zlib.net"
-                       TYPE REQUIRED
-                       PURPOSE "Required by the core KDE libraries and some critical kioslaves"
-                      )
+set_package_properties(ZLIB
+    PROPERTIES DESCRIPTION "Support for gzip compressed files and data streams"
+    URL "http://www.zlib.net"
+    TYPE REQUIRED
+    PURPOSE "Required by the core KDE libraries and some critical kioslaves"
+)
 
 find_package(Strigi 0.6.3)
-set_package_properties(Strigi PROPERTIES DESCRIPTION "Desktop indexing and search support"
-                       URL "http://strigi.sourceforge.net"
-                       TYPE REQUIRED
-                       PURPOSE "Required by some critical kioslaves"
-                      )
+set_package_properties(Strigi
+    PROPERTIES DESCRIPTION "Desktop indexing and search support"
+    URL "http://strigi.sourceforge.net"
+    TYPE REQUIRED
+    PURPOSE "Required by some critical kioslaves"
+)
 
 #optional features
 if(X11_FOUND)
-  #X11_Xrender discovery is done by FindX11
-  add_feature_info("X Rendering Extension (libXrender)" X11_Xrender_FOUND "Support for compositing, rendering operations, and alpha-blending. STRONGLY RECOMMENDED")
-  macro_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)
-  macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)
-  add_feature_info("X Screensaver Extension (libXss)" HAVE_XSCREENSAVER "Support for KIdleTime (fallback mode)")
-  add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime. STRONGLY RECOMMENDED")
+    #X11_Xrender discovery is done by FindX11
+    add_feature_info("X Rendering Extension (libXrender)" X11_Xrender_FOUND "Support for compositing, rendering operations, and alpha-blending. STRONGLY RECOMMENDED")
+    macro_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)
+    macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)
+    add_feature_info("X Screensaver Extension (libXss)" HAVE_XSCREENSAVER "Support for KIdleTime (fallback mode)")
+    add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime. STRONGLY RECOMMENDED")
 
-  if(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
-    message(FATAL_ERROR "\nNeither the XSync (libXext) nor XScreensaver (libXss) development package was found.\nPlease install one of them (XSync is recommended)\n")
-  endif(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
+    if(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
+        message(FATAL_ERROR "\nNeither the XSync (libXext) nor XScreensaver (libXss) development package was found.\nPlease install one of them (XSync is recommended)\n")
+    endif(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
 endif(X11_FOUND)
 
 macro_optional_find_package(OpenSSL)
-set_package_properties(OpenSSL PROPERTIES DESCRIPTION "Support for secure network communications (SSL and TLS)"
-                       URL "http://openssl.org"
-                       TYPE RECOMMENDED
-                       PURPOSE "KDE uses OpenSSL for the bulk of secure communications, including secure web browsing via HTTPS"
-                      )
+set_package_properties(OpenSSL
+    PROPERTIES DESCRIPTION "Support for secure network communications (SSL and TLS)"
+    URL "http://openssl.org"
+    TYPE RECOMMENDED
+    PURPOSE "KDE uses OpenSSL for the bulk of secure communications, including secure web browsing via HTTPS"
+)
 
 macro_optional_find_package(Libintl)
-set_package_properties(Libintl PROPERTIES DESCRIPTION "Support for multiple languages"
-                       URL "http://www.gnu.org/software/gettext"
-                       TYPE RECOMMENDED
-                       PURPOSE "Enables KDE to be available in many different languages"
-                      )
+set_package_properties(Libintl
+    PROPERTIES
+    DESCRIPTION "Support for multiple languages"
+    URL "http://www.gnu.org/software/gettext"
+    TYPE RECOMMENDED
+    PURPOSE "Enables KDE to be available in many different languages"
+)
 
 find_package(DBusMenuQt)
-set_package_properties(DBusMenuQt PROPERTIES DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
-                       URL "https://launchpad.net/libdbusmenu-qt"
-                       TYPE REQUIRED
-                      )
+set_package_properties(DBusMenuQt
+    PROPERTIES
+    DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
+    URL "https://launchpad.net/libdbusmenu-qt"
+    TYPE REQUIRED
+)
 
 ################# Disallow in-source build #################
 
@@ -197,11 +203,13 @@ set(LIBRARY_TYPE SHARED)
 
 # ACL stuff (used in kio/ and kioslaves/)
 macro_optional_find_package(ACL)
-set_package_properties(ACL PROPERTIES DESCRIPTION "Support for manipulating access control lists"
-                       URL "ftp://oss.sgi.com/projects/xfs/cmd_tars"
-                       TYPE RECOMMENDED
-                       PURPOSE "STRONGLY RECOMMENDED"
-                      )
+set_package_properties(ACL
+    PROPERTIES
+    DESCRIPTION "Support for manipulating access control lists"
+    URL "ftp://oss.sgi.com/projects/xfs/cmd_tars"
+    TYPE RECOMMENDED
+    PURPOSE "STRONGLY RECOMMENDED"
+)
 
 macro_bool_to_01(ACL_FOUND HAVE_LIBACL HAVE_POSIX_ACL)
 configure_file(config-acl.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-acl.h)
@@ -255,16 +263,28 @@ add_subdirectory( libkcddb )
 add_subdirectory( libkcompactdisc )
 add_subdirectory( experimental )
 
-################# write dependency file which will be installed #################
+################# write kdelibs package config files which will be installed #################
 
-# Used in configure_file() and install(EXPORT)
-set(KDE4_TARGET_PREFIX KDE4__)
-include(CreateKDELibsDependenciesFile.cmake)
+macro_bool_to_01(HAVE_UTEMPTER KDE4_KPTY_BUILT_WITH_UTEMPTER)
+configure_file(KDE4Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake @ONLY)
+configure_file(KDE4Version.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake @ONLY)
 
 ################# install files #################
 
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h  DESTINATION  ${INCLUDE_INSTALL_DIR} )
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDELibsDependencies.cmake DESTINATION ${DATA_INSTALL_DIR}/cmake/modules)
+install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h
+    DESTINATION
+    ${INCLUDE_INSTALL_DIR}
+)
+
+# the following will be the correct locations once cmake has the improved
+# FIND_PACKAGE(): ${SHARE_INSTALL_PREFIX}/cmake/KDE4)
+install(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake
+    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+)
 
 
 # run a script before installing the exports files which deletes previously installed
@@ -273,22 +293,23 @@ install( FILES ${CMAKE_CURRENT_BINARY_DIR}/KDELibsDependencies.cmake DESTINATION
 # that this main file doesn't include older and different configuration specific exports files,
 # which might have a different set of targets or targets with different names.
 # The code for installing the exports files will soon go into a macro. Alex
-install(CODE "set(EXPORT_FILES KDELibs4LibraryTargets.cmake KDELibs4ToolsTargets.cmake)"
-        CODE "set(EXPORT_INSTALL_DIR \"${DATA_INSTALL_DIR}/cmake/modules\")"
-        SCRIPT "${CMAKE_SOURCE_DIR}/cmake/modules/check_installed_exports_file.cmake" )
-install(EXPORT kdelibsLibraryTargets
-    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+install(
+    CODE "set(EXPORT_FILES KDELibs4LibraryTargets.cmake KDELibs4ToolsTargets.cmake)"
+    CODE "set(EXPORT_INSTALL_DIR \"${DATA_INSTALL_DIR}/cmake/modules\")"
+    SCRIPT "${CMAKE_SOURCE_DIR}/cmake/modules/check_installed_exports_file.cmake"
+)
+install(
+    EXPORT kdelibsLibraryTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4LibraryTargets.cmake
-)
-install(EXPORT kdelibsToolsTargets
     DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+)
+install(
+    EXPORT kdelibsToolsTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4ToolsTargets.cmake
+    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
 )
-
-# the following will be the correct locations once cmake has the improved FIND_PACKAGE()
-# install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KDELibsDependencies.cmake DESTINATION ${PLUGIN_INSTALL_DIR}/cmake RENAME KDE4Config.cmake)
 
 feature_summary(WHAT ALL
     INCLUDE_QUIET_PACKAGES

@@ -43,7 +43,6 @@
 #cmakedefine HAVE_SYS_MNTTAB_H 1
 #cmakedefine HAVE_SYS_MNTENT_H 1
 #cmakedefine HAVE_SYS_MOUNT_H 1
-#cmakedefine HAVE_CRTDBG_H 1
 
 #cmakedefine HAVE_ALLOCA_H 1
 #cmakedefine HAVE_CRT_EXTERNS_H 1
@@ -66,7 +65,6 @@
 
 #cmakedefine   HAVE_BACKTRACE 1
 #cmakedefine   HAVE_GETMNTINFO 1
-#cmakedefine   HAVE_GETPAGESIZE 1
 #cmakedefine   HAVE_INITGROUPS 1
 #cmakedefine   HAVE_FDATASYNC 1
 #cmakedefine   HAVE_MADVISE 1

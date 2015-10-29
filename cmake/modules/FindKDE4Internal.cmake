@@ -101,7 +101,6 @@
 # for files of the package which is using this module. These variables don't say
 # anything about the location of the installed KDE.
 # They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
-# Under Windows they are always relative.
 #
 #  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
 #  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
@@ -147,8 +146,6 @@
 # The following user adjustable options are provided:
 #
 #  KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
-#  KDE4_SERIALIZE_TOOL - wrapper to serialize potentially resource-intensive commands during
-#                      parallel builds (set to 'icecc' when using icecream)
 #
 #  KDE4_ADD_KCFG_FILES (SRCS_VAR [GENERATE_MOC] [USE_RELATIVE_PATH] file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
@@ -195,7 +192,7 @@
 #
 #  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
 #  the flags for those buildtypes. FindKDE4Internal supports the values
-#  Debug, Release, RelWithDebInfo, Profile and Debugfull:
+#  Release, RelWithDebInfo and Debug:
 #
 #  Release
 #          optimised for speed, qDebug/kDebug turned off, no debug symbols, no asserts
@@ -204,10 +201,6 @@
 #  Debug
 #          optimised but debuggable, debugging on (-g)
 #          (-fno-reorder-blocks -fno-schedule-insns -fno-inline)
-#  DebugFull
-#          no optimization, full debugging on (-g3)
-#  Profile
-#          DebugFull + -ftest-coverage -fprofile-arcs
 #
 #
 #  The default buildtype is RelWithDebInfo.
@@ -221,7 +214,7 @@
 #  To acomplish that one should use the appropriate cmake syntax for
 #  find_package. For example to depend on kdelibs >= 4.1.0 one should use
 #
-#  find_package(KDE4 4.1.0 REQUIRED)
+#  find_package(KDE4 4.14.3 REQUIRED)
 #
 #  In earlier versions of KDE you could use the variable KDE_MIN_VERSION to
 #  have such a dependency. This variable is deprecated with KDE 4.2.0, but
@@ -237,35 +230,20 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 
-# this is required now by cmake 2.6 and so must not be skipped by if(KDE4_FOUND) below
+# this is required by cmake >=2.6
 cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 
 # CMake 2.6, set compatibility behaviour to cmake 2.4
 # this must be executed always, because the CMAKE_MINIMUM_REQUIRED() command above
 # resets the policy settings, so we get a lot of warnings
 
-# CMP0000: don't require cmake_minimum_version() directly in the top level CMakeLists.txt, FindKDE4Internal.cmake is good enough
+# CMP0000: don't require cmake_minimum_version() directly in the top level
+# CMakeLists.txt, FindKDE4Internal.cmake is good enough
 cmake_policy(SET CMP0000 OLD)
-# CMP0002: in KDE4 we have multiple targets with the same name for the unit tests
-cmake_policy(SET CMP0002 OLD)
 # CMP0003: add the link paths to the link command as with cmake 2.4
 cmake_policy(SET CMP0003 OLD)
 # CMP0005: keep escaping behaviour for definitions added via add_definitions()
 cmake_policy(SET CMP0005 OLD)
-# since cmake 2.6.3: NEW behaviour is that setting policies doesn't "escape" the file
-# where this is done, macros and functions are executed with the policies as they
-# were when the were defined. Keep the OLD behaviour so we can set the policies here
-# for all KDE software without the big warning
-cmake_policy(SET CMP0011 OLD)
-
-# since cmake 2.8.4: when include()ing from inside cmake's module dir, prefer the files
-# in this directory over those from CMAKE_MODULE_PATH
-cmake_policy(SET CMP0017 NEW)
-
-# since cmake 3.0: use of the LOCATION target property is disallowed while it is used in KDE4Macros.cmake
-if(POLICY CMP0026)
-  cmake_policy(SET CMP0026 OLD)
-endif(POLICY CMP0026)
 
 # Only do something if it hasn't been found yet
 if(NOT KDE4_FOUND)
@@ -273,19 +251,16 @@ if(NOT KDE4_FOUND)
 # get the directory of the current file, used later on in the file
 get_filename_component(kde_cmake_module_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
-
-include(MacroEnsureVersion)
-
 # We may only search for other packages with "REQUIRED" if we are required ourselves.
 # This file can be processed either (usually) included in FindKDE4.cmake or
 # (when building kdelibs) directly via FIND_PACKAGE(KDE4Internal), that's why
 # we have to check for both KDE4_FIND_REQUIRED and KDE4Internal_FIND_REQUIRED.
 if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
-  set(_REQ_STRING_KDE4 "REQUIRED")
-  set(_REQ_STRING_KDE4_MESSAGE "FATAL_ERROR")
+    set(_REQ_STRING_KDE4 REQUIRED)
+    set(_REQ_STRING_KDE4_MESSAGE FATAL_ERROR)
 else()
-  set(_REQ_STRING_KDE4 )
-  set(_REQ_STRING_KDE4_MESSAGE "STATUS")
+    set(_REQ_STRING_KDE4 )
+    set(_REQ_STRING_KDE4_MESSAGE STATUS)
 endif()
 
 
@@ -312,185 +287,180 @@ set(QT_USE_IMPORTED_TARGETS TRUE)
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
 find_package(Qt4 ${_REQ_STRING_KDE4})
-# set(KATIE_COMPAT TRUE)
 # find_package(Katie)
 
-# Perl is not required for building KDE software, but we had that here since 4.0
+# Perl is not required for building KDE software but is during runtime from
+# kdelibs and kde-workspace, also it is here since 4.0
 find_package(Perl)
 if(NOT PERL_FOUND)
-   message(STATUS "Perl not found")
+    message(STATUS "Perl not found")
 endif(NOT PERL_FOUND)
 
 # restore the original CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${_kde_cmake_module_path_back})
 
-# we check for Phonon not here, but further below, i.e. after KDELibsDependencies.cmake
-# has been loaded, which helps in the case that phonon is installed to the same
-# directory as kdelibs.
-# find_package(Phonon ${_REQ_STRING_KDE4})
-
-
 # Check that we really found everything.
-# If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something wasn't found
-# already above in the other FIND_PACKAGE() calls.
-# If KDE4 was searched without REQUIRED and something in the FIND_PACKAGE() calls above wasn't found,
-# then we get here and must check that everything has actually been found. If something is missing,
-# we must not fail with FATAL_ERROR, but only not set KDE4_FOUND.
-
+# If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something
+# wasn't found already above in the other FIND_PACKAGE() calls. If KDE4 was
+# searched without REQUIRED and something in the FIND_PACKAGE() calls above
+# wasn't found,then we get here and must check that everything has actually
+# been found. If something is missing, we must not fail with FATAL_ERROR, but only not set KDE4_FOUND.
 if(NOT QT4_FOUND)
-   message(STATUS "KDE4 not found, because Qt4 was not found")
-   return()
+    message(STATUS "KDE4 not found, because Qt4 was not found")
+    return()
 endif(NOT QT4_FOUND)
 
 
 # now we are sure we have everything we need
 
-include (MacroLibrary)
-include (CheckCXXCompilerFlag)
-include (CheckCXXSourceCompiles)
+include(MacroLibrary)
+include(CheckCXXCompilerFlag)
+include(CheckCXXSourceCompiles)
 
 
 # are we trying to compile kdelibs ? kdelibs_SOURCE_DIR comes from "project(kdelibs)" in kdelibs/CMakeLists.txt
 # then enter bootstrap mode
 
 if(kdelibs_SOURCE_DIR)
-   set(_kdeBootStrapping TRUE)
-   message(STATUS "Building kdelibs...")
+    set(_kdeBootStrapping TRUE)
+    message(STATUS "Building kdelibs...")
 else(kdelibs_SOURCE_DIR)
-   set(_kdeBootStrapping FALSE)
+    set(_kdeBootStrapping FALSE)
 endif(kdelibs_SOURCE_DIR)
 
-
-# helper macro, sets both the KDE4_FOO_LIBRARY and KDE4_FOO_LIBS variables to KDE4__foo
-# It is used both in bootstrapping and in normal mode.
-macro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
-   set(KDE4_${_var}_LIBRARY ${_prefix}${_lib} )
-   set(KDE4_${_var}_LIBS    ${_prefix}${_lib} )
-endmacro(_KDE4_SET_LIB_VARIABLES _var _lib _prefix)
+# Used in configure_file() and install(EXPORT)
+set(KDE4_TARGET_PREFIX KDE4::)
 
 #######################  #now try to find some kde stuff  ################################
 
 if (_kdeBootStrapping)
-   set(KDE4_INCLUDE_DIR ${kdelibs_SOURCE_DIR})
+    set(KDE4_INCLUDE_DIR ${kdelibs_SOURCE_DIR})
 
-   set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
+    set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
 
-   set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
-   set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX} )
-   set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX} )
+    set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
+    set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX} )
+    set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX} )
 
-   set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
+    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
 
-   set(KDE4_INSTALLED_VERSION_OK TRUE)
-
+    set(KDE4_INSTALLED_VERSION_OK TRUE)
 else (_kdeBootStrapping)
-   set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
+    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
-   # These files contain information about the installed kdelibs, Alex
-   include(${kde_cmake_module_dir}/KDELibsDependencies.cmake)
+    # These files contain information about the installed kdelibs
+    include(${kde_cmake_module_dir}/KDE4Config.cmake)
+    include(${kde_cmake_module_dir}/KDE4Version.cmake)
 
-   # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
-   # KDE_VERSION is set in KDELibsDependencies.cmake since KDE 4.0.x. Alex
-   # Support for the new-style (>= 2.6.0) support for requiring some version of a package:
-   if(NOT KDE_MIN_VERSION)
-      if (KDE4_FIND_VERSION_MAJOR)
-         set(KDE_MIN_VERSION "${KDE4_FIND_VERSION_MAJOR}.${KDE4_FIND_VERSION_MINOR}.${KDE4_FIND_VERSION_PATCH}")
-      else()
-         set(KDE_MIN_VERSION "4.14.3")
-      endif()
-   endif()
+    # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
+    # KDE_VERSION is set in KDE4Config.cmake since KDE 4.17.x.
+    if(NOT KDE_MIN_VERSION)
+        set(KDE_MIN_VERSION "4.17.0")
+    endif()
 
-   #message(FATAL_ERROR "KDE_MIN_VERSION=${KDE_MIN_VERSION}  found ${KDE_VERSION} exact: -${KDE4_FIND_VERSION_EXACT}- version: -${KDE4_FIND_VERSION}-")
-   macro_ensure_version(${KDE_MIN_VERSION} ${KDE_VERSION} KDE4_INSTALLED_VERSION_OK)
+    set(KDE4_INSTALLED_VERSION_OK FALSE)
+    if(NOT "${KDE_VERSION}" VERSION_LESS "${KDE_MIN_VERSION}")
+        set(KDE4_INSTALLED_VERSION_OK TRUE)
+    endif()
 
 
-   # KDE4_LIB_INSTALL_DIR and KDE4_INCLUDE_INSTALL_DIR are set in KDELibsDependencies.cmake,
-   # use them to set the KDE4_LIB_DIR and KDE4_INCLUDE_DIR "public interface" variables
-   set(KDE4_LIB_DIR ${KDE4_LIB_INSTALL_DIR})
-   set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR})
+    # KDE4_LIB_INSTALL_DIR and KDE4_INCLUDE_INSTALL_DIR are set in KDE4Config.cmake,
+    # use them to set the KDE4_LIB_DIR and KDE4_INCLUDE_DIR "public interface" variables
+    set(KDE4_LIB_DIR ${KDE4_LIB_INSTALL_DIR})
+    set(KDE4_INCLUDE_DIR ${KDE4_INCLUDE_INSTALL_DIR})
 
-   # Now include the file with the imported tools (executable targets).
-   # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
-   # Having the libs and tools in two separate files should help with cross compiling.
-   include(${kde_cmake_module_dir}/KDELibs4ToolsTargets.cmake)
+    # Now include the file with the imported tools (executable targets).
+    # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
+    # Having the libs and tools in two separate files should help with cross compiling.
+    include(${kde_cmake_module_dir}/KDELibs4ToolsTargets.cmake)
 
-   # get the build CONFIGURATIONS which were exported in this file, and use just the first
-   # of them to get the location of the installed executables
-   get_target_property(_importedConfigurations  ${KDE4_TARGET_PREFIX}kconfig_compiler IMPORTED_CONFIGURATIONS )
-   list(GET _importedConfigurations 0 _firstConfig)
+    set(KDE4_KCFGC_EXECUTABLE             ${KDE4_TARGET_PREFIX}kconfig_compiler)
+    set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${KDE4_TARGET_PREFIX}makekdewidgets)
 
-   get_target_property(KDE4_KCFGC_EXECUTABLE             ${KDE4_TARGET_PREFIX}kconfig_compiler    LOCATION_${_firstConfig})
-   get_target_property(KDE4_MAKEKDEWIDGETS_EXECUTABLE    ${KDE4_TARGET_PREFIX}makekdewidgets      LOCATION_${_firstConfig})
+    # allow searching cmake modules in all given kde install locations (KDEDIRS based)
+    execute_process(
+        COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path data
+        OUTPUT_VARIABLE _data_DIR
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    file(TO_CMAKE_PATH "${_data_DIR}" _data_DIR)
+    foreach(dir ${_data_DIR})
+        set (apath "${dir}/cmake/modules")
+        if (EXISTS "${apath}")
+            set (included 0)
+            string(TOLOWER "${apath}" _apath)
+            # ignore already added pathes, case insensitive
+            foreach(adir ${CMAKE_MODULE_PATH})
+                string(TOLOWER "${adir}" _adir)
+                if ("${_adir}" STREQUAL "${_apath}")
+                set (included 1)
+                endif ("${_adir}" STREQUAL "${_apath}")
+            endforeach(adir)
+            if (NOT included)
+                message(STATUS "Adding ${apath} to CMAKE_MODULE_PATH")
+                set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${apath}")
+            endif (NOT included)
+        endif (EXISTS "${apath}")
+    endforeach(dir)
 
-   # allow searching cmake modules in all given kde install locations (KDEDIRS based)
-   execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path data OUTPUT_VARIABLE _data_DIR ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
-   file(TO_CMAKE_PATH "${_data_DIR}" _data_DIR)
-   foreach(dir ${_data_DIR})
-      set (apath "${dir}/cmake/modules")
-      if (EXISTS "${apath}")
-         set (included 0)
-         string(TOLOWER "${apath}" _apath)
-         # ignore already added pathes, case insensitive
-         foreach(adir ${CMAKE_MODULE_PATH})
-            string(TOLOWER "${adir}" _adir)
-            if ("${_adir}" STREQUAL "${_apath}")
-               set (included 1)
-            endif ("${_adir}" STREQUAL "${_apath}")
-         endforeach(adir)
-         if (NOT included)
-            message(STATUS "Adding ${apath} to CMAKE_MODULE_PATH")
-            set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${apath}")
-         endif (NOT included)
-      endif (EXISTS "${apath}")
-   endforeach(dir)
 
-
-   # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
-   # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
-   # "namespace" to separate the imported targets from "normal" targets, it is stored in
-   # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
-   # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
-   # Include it to "import" the libraries from kdelibs into the current projects as targets.
-   # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
-   # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
-   # dependent libraries handled correctly. But to keep compatibility and not to change
-   # behaviour we set all these variables anyway as seen below. Alex
-   include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
-
+    # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
+    # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
+    # "namespace" to separate the imported targets from "normal" targets, it is stored in
+    # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
+    # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
+    # Include it to "import" the libraries from kdelibs into the current projects as targets.
+    # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
+    # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
+    # dependent libraries handled correctly. But to keep compatibility and not to change
+    # behaviour we set all these variables anyway as seen below. Alex
+    include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
 endif (_kdeBootStrapping)
-
 
 # Set the various KDE4_FOO_LIBRARY/LIBS variables.
 # In bootstrapping mode KDE4_TARGET_PREFIX is empty, so e.g. KDE4_KDECORE_LIBRARY
 # will be simply set to "kdecore".
-
-# Sorted by names:
-_kde4_set_lib_variables(KCMUTILS      kcmutils      "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KDECORE       kdecore       "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KDEUI         kdeui         "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KDEWEBKIT     kdewebkit     "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KDNSSD        kdnssd        "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KEMOTICONS    kemoticons    "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KFILE         kfile         "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KIDLETIME     kidletime     "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KIO           kio           "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KNOTIFYCONFIG knotifyconfig "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KPARTS        kparts        "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KPRINTUTILS   kprintutils   "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KROSSCORE     krosscore     "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KROSSUI       krossui       "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KTEXTEDITOR   ktexteditor   "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KUNITCONVERSION kunitconversion "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(PLASMA        plasma        "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(SOLID         solid         "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(THREADWEAVER  threadweaver  "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KDEFAKES      kdefakes      "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KDESU         kdesu         "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KPTY          kpty          "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KCDDB         kcddb         "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KCOMPACTDISC  kcompactdisc  "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KDCRAW        kdcraw        "${KDE4_TARGET_PREFIX}")
-_kde4_set_lib_variables(KEXIV2        kexiv2        "${KDE4_TARGET_PREFIX}")
+set(_kde_libraries
+    kcddb
+    kcmutils
+    kcompactdisc
+    kdcraw
+    kdecore
+    kdefakes
+    kdesu
+    kdeui
+    kdeui
+    kdewebkit
+    kdewebkit
+    kdnssd
+    kemoticons
+    kexiv2
+    kfile
+    kidletime
+    kio
+    knotifyconfig
+    kparts
+    kprintutils
+    kpty
+    krosscore
+    krossui
+    ktexteditor
+    kunitconversion
+    plasma
+    solid
+    threadweaver
+)
+foreach(_lib ${_kde_libraries})
+    string(TOUPPER ${_lib} _upperlib)
+    if(_kdeBootStrapping)
+        set(KDE4_${_upperlib}_LIBRARY ${_lib})
+        set(KDE4_${_upperlib}_LIBS    ${_lib})
+    else()
+        set(KDE4_${_upperlib}_LIBRARY ${KDE4_TARGET_PREFIX}${_lib})
+        set(KDE4_${_upperlib}_LIBS    ${KDE4_TARGET_PREFIX}${_lib})
+    endif()
+endforeach()
 
 ################### try to find Phonon ############################################
 
@@ -507,7 +477,7 @@ set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
 if(NOT PHONON_FOUND)
     message(STATUS "KDE4 not found, because Phonon was not found")
     return()
-endif(NOT PHONON_FOUND)
+endif()
 
 
 #####################  provide some options   ##########################################
@@ -515,15 +485,6 @@ endif(NOT PHONON_FOUND)
 if(ENABLE_TESTING)
     enable_testing()
 endif()
-set(KDE4_SERIALIZE_TOOL "" CACHE STRING "Tool to serialize resource-intensive commands in parallel builds")
-
-# for CMake 2.6.3 or above, provide an option which should be used by other KDE
-# packages whether to install a CMake FooConfig.cmake into lib/foo/cmake/ or
-# /lib/cmake/foo/ (with 2.6.3 and above also lib/cmake/foo/ is supported):
-option(KDE4_USE_COMMON_CMAKE_PACKAGE_CONFIG_DIR
-    "Prefer to install the <package>Config.cmake files to lib/cmake/<package> instead to lib/<package>/cmake"
-    TRUE
-)
 
 # Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
 # which is something between a shared library and a normal executable.
@@ -598,31 +559,39 @@ _set_fancy(KAUTH_BACKEND_PLUGIN_DIR "${PLUGIN_INSTALL_DIR}/plugins/kauth/backend
 #   -only the development files: cmake -DCOMPONENT=Devel -P cmake_install.cmake
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
-set(INSTALL_TARGETS_DEFAULT_ARGS  RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
-                                  LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-                                  ARCHIVE DESTINATION "${LIB_INSTALL_DIR}" COMPONENT Devel )
-
+set(INSTALL_TARGETS_DEFAULT_ARGS
+    RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
+    LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
+    ARCHIVE DESTINATION "${LIB_INSTALL_DIR}"
+    COMPONENT Devel
+)
 
 ##############  add some more default search paths  ###############
 #
 # the KDE4_xxx_INSTALL_DIR variables are empty when building kdelibs itself
 # and otherwise point to the kde4 install dirs
 
-set(CMAKE_SYSTEM_INCLUDE_PATH ${CMAKE_SYSTEM_INCLUDE_PATH}
-                              "${KDE4_INCLUDE_INSTALL_DIR}")
+set(CMAKE_SYSTEM_INCLUDE_PATH
+    ${CMAKE_SYSTEM_INCLUDE_PATH}
+    "${KDE4_INCLUDE_INSTALL_DIR}"
+)
 
-set(CMAKE_SYSTEM_PROGRAM_PATH ${CMAKE_SYSTEM_PROGRAM_PATH}
-                              "${KDE4_BIN_INSTALL_DIR}" )
+set(CMAKE_SYSTEM_PROGRAM_PATH
+    ${CMAKE_SYSTEM_PROGRAM_PATH}
+    "${KDE4_BIN_INSTALL_DIR}"
+)
 
-set(CMAKE_SYSTEM_LIBRARY_PATH ${CMAKE_SYSTEM_LIBRARY_PATH}
-                              "${KDE4_LIB_INSTALL_DIR}" )
+set(CMAKE_SYSTEM_LIBRARY_PATH
+    ${CMAKE_SYSTEM_LIBRARY_PATH}
+    "${KDE4_LIB_INSTALL_DIR}"
+)
 
 
 ######################################################
 #  and now the platform specific stuff
 ######################################################
 
-if (WIN32 OR CYGWIN OR APPLE)
+if(WIN32 OR CYGWIN OR APPLE)
     message(FATAL_ERROR "Windows/Cygwin/Apple is NOT supported.")
 endif()
 
@@ -702,127 +671,115 @@ endif()
 # compiler specific settings
 ############################################################
 
-# This macro is for internal use only
-# Return the directories present in gcc's include path.
-macro(_DETERMINE_GCC_SYSTEM_INCLUDE_DIRS _lang _result)
-    set(${_result})
-    set(_gccOutput)
-    file(WRITE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy" "\n" )
-    execute_process(COMMAND ${CMAKE_C_COMPILER} -v -E -x ${_lang} -dD dummy
-                  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/CMakeFiles
-                  ERROR_VARIABLE _gccOutput
-                  OUTPUT_VARIABLE _gccStdout )
-    file(REMOVE "${CMAKE_BINARY_DIR}/CMakeFiles/dummy")
-
-    if("${_gccOutput}" MATCHES "> search starts here[^\n]+\n *(.+) *\n *End of (search) list")
-        SET(${_result} ${CMAKE_MATCH_1})
-        STRING(REPLACE "\n" " " ${_result} "${${_result}}")
-        SEPARATE_ARGUMENTS(${_result})
-    endif()
-ENDMACRO(_DETERMINE_GCC_SYSTEM_INCLUDE_DIRS _lang)
-
-if (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES Clang)
-   _DETERMINE_GCC_SYSTEM_INCLUDE_DIRS(c _dirs)
-   set(CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES
-       ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES} ${_dirs})
-endif (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID MATCHES Clang)
-
 if (CMAKE_COMPILER_IS_GNUCXX)
-   _DETERMINE_GCC_SYSTEM_INCLUDE_DIRS(c++ _dirs)
-   set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES
-       ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES} ${_dirs})
+    set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
+    # Select flags.
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
 
-   set (KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-   # Select flags.
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
-   set(CMAKE_CXX_FLAGS_PROFILE        "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
-   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
-   set(CMAKE_C_FLAGS_PROFILE          "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
+    # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
 
-   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-   # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
+    if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
+        # This should not be needed, as it is also part of _KDE4_PLATFORM_DEFINITIONS below.
+        # It is kept here nonetheless both for backwards compatibility in case one does not use add_definitions(${KDE4_DEFINITIONS})
+        # and also because it is/was needed by glibc for snprintf to be available when building C files.
+        # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
+        add_definitions (-D_DEFAULT_SOURCE -D_BSD_SOURCE)
+    endif()
 
-   if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
-     # This should not be needed, as it is also part of _KDE4_PLATFORM_DEFINITIONS below.
-     # It is kept here nonetheless both for backwards compatibility in case one does not use add_definitions(${KDE4_DEFINITIONS})
-     # and also because it is/was needed by glibc for snprintf to be available when building C files.
-     # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
-     add_definitions (-D_DEFAULT_SOURCE -D_BSD_SOURCE)
-   endif()
+    if(CMAKE_SYSTEM_NAME STREQUAL GNU)
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
+        set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
+    endif()
 
-   if(CMAKE_SYSTEM_NAME STREQUAL GNU)
-      set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
-      set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
-   endif()
+    check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
+    if(KDE4_ENABLE_FPIE)
+        if(HAVE_FPIE_SUPPORT)
+            set (KDE4_CXX_FPIE_FLAGS "-fPIE")
+            set (KDE4_PIE_LDFLAGS "-pie")
+        else(HAVE_FPIE_SUPPORT)
+            message(STATUS "Your compiler doesn't support the PIE flag")
+        endif(HAVE_FPIE_SUPPORT)
+    endif()
 
-   check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
-   if(KDE4_ENABLE_FPIE)
-       if(HAVE_FPIE_SUPPORT)
-        set (KDE4_CXX_FPIE_FLAGS "-fPIE")
-        set (KDE4_PIE_LDFLAGS "-pie")
-       else(HAVE_FPIE_SUPPORT)
-        message(STATUS "Your compiler doesn't support the PIE flag")
-       endif(HAVE_FPIE_SUPPORT)
-   endif()
+    check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
+    if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
+    endif()
 
-   check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
-   if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
-       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
-   endif()
+    # visibility support
+    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
+    set(__KDE_HAVE_GCC_VISIBILITY ${__KDE_HAVE_GCC_VISIBILITY} CACHE BOOL "GCC support for hidden visibility")
 
-   # visibility support
-   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
-   set( __KDE_HAVE_GCC_VISIBILITY ${__KDE_HAVE_GCC_VISIBILITY} CACHE BOOL "GCC support for hidden visibility")
+        # get the gcc version
+        execute_process(
+            COMMAND ${CMAKE_C_COMPILER} --version
+            ERROR_QUIET
+            OUTPUT_VARIABLE _gcc_version_info
+        )
 
-   # get the gcc version
-   exec_program(${CMAKE_C_COMPILER} ARGS ${CMAKE_C_COMPILER_ARG1} --version OUTPUT_VARIABLE _gcc_version_info)
+    string (REGEX MATCH "[345]\\.[0-9]\\.[0-9]" _gcc_version "${_gcc_version_info}")
+    # gcc on mac just reports: "gcc (GCC) 3.3 20030304 ..." without the patch level, handle this here:
+    if (NOT _gcc_version)
+        string (REGEX MATCH ".*\\(GCC\\).* ([34]\\.[0-9]) .*" "\\1.0" _gcc_version "${gcc_on_macos}")
+        if (gcc_on_macos)
+            string (REGEX REPLACE ".*\\(GCC\\).* ([34]\\.[0-9]) .*" "\\1.0" _gcc_version "${_gcc_version_info}")
+        endif (gcc_on_macos)
+    endif (NOT _gcc_version)
 
-   string (REGEX MATCH "[345]\\.[0-9]\\.[0-9]" _gcc_version "${_gcc_version_info}")
-   # gcc on mac just reports: "gcc (GCC) 3.3 20030304 ..." without the patch level, handle this here:
-   if (NOT _gcc_version)
-      string (REGEX MATCH ".*\\(GCC\\).* ([34]\\.[0-9]) .*" "\\1.0" _gcc_version "${gcc_on_macos}")
-      if (gcc_on_macos)
-        string (REGEX REPLACE ".*\\(GCC\\).* ([34]\\.[0-9]) .*" "\\1.0" _gcc_version "${_gcc_version_info}")
-      endif (gcc_on_macos)
-   endif (NOT _gcc_version)
+    if(_gcc_version)
+        if(NOT "${_gcc_version}" VERSION_LESS "4.1.0")
+            set(GCC_IS_NEWER_THAN_4_1 TRUE)
+            if(NOT "${_gcc_version}" VERSION_LESS "4.2.0")
+                set(GCC_IS_NEWER_THAN_4_2 TRUE)
+                if(NOT "${_gcc_version}" VERSION_LESS "4.3.0")
+                    set(GCC_IS_NEWER_THAN_4_3 TRUE)
+                endif()
+            endif()
+        endif()
+    endif()
 
-   if(_gcc_version)
-      macro_ensure_version("4.1.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_1)
-      macro_ensure_version("4.2.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_2)
-      macro_ensure_version("4.3.0" "${_gcc_version}" GCC_IS_NEWER_THAN_4_3)
-   endif()
+    # save a little by making local statics not threadsafe
+    # ### do not enable it for older compilers, see
+    # ### http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31806
+    if (GCC_IS_NEWER_THAN_4_3)
+        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
+    endif (GCC_IS_NEWER_THAN_4_3)
 
-   # save a little by making local statics not threadsafe
-   # ### do not enable it for older compilers, see
-   # ### http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31806
-   if (GCC_IS_NEWER_THAN_4_3)
-       set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
-   endif (GCC_IS_NEWER_THAN_4_3)
+    set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
+    if (GCC_IS_NEWER_THAN_4_1)
+        execute_process(
+            COMMAND ${CMAKE_C_COMPILER} -v
+            ERROR_QUIET
+            OUTPUT_VARIABLE _gcc_alloc_info
+        )
+        string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
+    endif()
 
-   set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
-   if (GCC_IS_NEWER_THAN_4_1)
-      exec_program(${CMAKE_C_COMPILER} ARGS ${CMAKE_C_COMPILER_ARG1} -v OUTPUT_VARIABLE _gcc_alloc_info)
-      string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
-   endif (GCC_IS_NEWER_THAN_4_1)
+    if (__KDE_HAVE_GCC_VISIBILITY
+        AND GCC_IS_NEWER_THAN_4_1
+        AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR
+        AND NOT WIN32)
+        set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
 
-   if (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR AND NOT WIN32)
-      set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
+        # first check if we can compile a Qt application
+        set(_source "#include <QtCore/QtGlobal>\n int main() \n {\n return 0; \n } \n")
+        set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_application.cpp)
+        file(WRITE "${_source_file}" "${_source}")
 
-      # first check if we can compile a Qt application
-      set(_source "#include <QtCore/QtGlobal>\n int main() \n {\n return 0; \n } \n")
-      set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_application.cpp)
-      file(WRITE "${_source_file}" "${_source}")
+        try_compile(_basic_compile_result
+            ${CMAKE_BINARY_DIR} ${_source_file}
+            CMAKE_FLAGS "${_include_dirs}"
+            OUTPUT_VARIABLE _compile_output_var
+        )
 
-      try_compile(_basic_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
-
-      if(_basic_compile_result)
+        if(_basic_compile_result)
             # now ready to check for visibility=hidden
             set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
             set (KDE4_C_FLAGS "-fvisibility=hidden")
@@ -832,112 +789,107 @@ if (CMAKE_COMPILER_IS_GNUCXX)
             set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
             file(WRITE "${_source_file}" "${_source}")
 
-            try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
+            try_compile(_compile_result
+                ${CMAKE_BINARY_DIR}
+                ${_source_file}
+                CMAKE_FLAGS "${_include_dirs}"
+                OUTPUT_VARIABLE _compile_output_var
+            )
 
             if(NOT _compile_result)
-               message("${_compile_output_var}")
-               message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
+            message("${_compile_output_var}")
+            message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
             endif(NOT _compile_result)
-       else()
-         message("${_compile_output_var}")
-         message(FATAL_ERROR "Unable to compile a basic Qt application. Qt has not been found correctly.")
-       endif()
+        else()
+            message("${_compile_output_var}")
+            message(FATAL_ERROR "Unable to compile a basic Qt application. Qt has not been found correctly.")
+        endif()
 
-      if (GCC_IS_NEWER_THAN_4_2)
-         set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type -fvisibility-inlines-hidden")
-      endif (GCC_IS_NEWER_THAN_4_2)
-   else (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR AND NOT WIN32)
-      set (__KDE_HAVE_GCC_VISIBILITY 0)
-   endif (__KDE_HAVE_GCC_VISIBILITY AND GCC_IS_NEWER_THAN_4_1 AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR AND NOT WIN32)
+        if(GCC_IS_NEWER_THAN_4_2)
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type -fvisibility-inlines-hidden")
+        endif()
+    else(__KDE_HAVE_GCC_VISIBILITY
+        AND GCC_IS_NEWER_THAN_4_1
+        AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR
+        AND NOT WIN32)
+        set(__KDE_HAVE_GCC_VISIBILITY 0)
+    endif()
 
-endif (CMAKE_COMPILER_IS_GNUCXX)
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    # Note that exceptions are enabled by default when building with clang. That
+    # is, -fno-exceptions is not set in CMAKE_CXX_FLAGS below. This is because a
+    # lot of code in different KDE modules ends up including code that throws
+    # exceptions. Most (or all) of the occurrences are in template code that
+    # never gets instantiated. Contrary to GCC, ICC and MSVC, clang (most likely
+    # rightfully) complains about that. Trying to work around the issue by
+    # passing -fdelayed-template-parsing brings other problems, as noted in
+    # http://lists.kde.org/?l=kde-core-devel&m=138157459706783&w=2.
+    # The generated code will be slightly bigger, but there is no way to avoid
+    # it.
+    set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-   _DETERMINE_GCC_SYSTEM_INCLUDE_DIRS(c++ _dirs)
-   set(CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES
-       ${CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES} ${_dirs})
+    # Select flags.
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-inline")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-inline")
 
-   # Note that exceptions are enabled by default when building with clang. That
-   # is, -fno-exceptions is not set in CMAKE_CXX_FLAGS below. This is because a
-   # lot of code in different KDE modules ends up including code that throws
-   # exceptions. Most (or all) of the occurrences are in template code that
-   # never gets instantiated. Contrary to GCC, ICC and MSVC, clang (most likely
-   # rightfully) complains about that. Trying to work around the issue by
-   # passing -fdelayed-template-parsing brings other problems, as noted in
-   # http://lists.kde.org/?l=kde-core-devel&m=138157459706783&w=2.
-   # The generated code will be slightly bigger, but there is no way to avoid
-   # it.
-   set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-common -fvisibility=hidden -Werror=return-type -fvisibility-inlines-hidden")
+    set(KDE4_C_FLAGS    "-fvisibility=hidden")
 
-   # Select flags.
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-inline")
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g3 -fno-inline")
-   set(CMAKE_CXX_FLAGS_PROFILE        "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
-   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-inline")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g3 -fno-inline")
-   set(CMAKE_C_FLAGS_PROFILE          "-g3 -fno-inline -ftest-coverage -fprofile-arcs")
+    # At least kdepim exports one function with C linkage that returns a
+    # QString in a plugin, but clang does not like that.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type-c-linkage")
 
-   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-common -fvisibility=hidden -Werror=return-type -fvisibility-inlines-hidden")
-   set(KDE4_C_FLAGS    "-fvisibility=hidden")
+    set(KDE4_CXX_FPIE_FLAGS "-fPIE")
+    set(KDE4_PIE_LDFLAGS    "-pie")
 
-   # At least kdepim exports one function with C linkage that returns a
-   # QString in a plugin, but clang does not like that.
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type-c-linkage")
+    if (CMAKE_SYSTEM_NAME STREQUAL GNU)
+        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
+        set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
+    endif (CMAKE_SYSTEM_NAME STREQUAL GNU)
 
-   set(KDE4_CXX_FPIE_FLAGS "-fPIE")
-   set(KDE4_PIE_LDFLAGS    "-pie")
+    set(__KDE_HAVE_GCC_VISIBILITY TRUE)
 
-   if (CMAKE_SYSTEM_NAME STREQUAL GNU)
-      set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
-      set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
-   endif (CMAKE_SYSTEM_NAME STREQUAL GNU)
-
-   set(__KDE_HAVE_GCC_VISIBILITY TRUE)
-
-   # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
-   # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
-   set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
-   set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
-   file(WRITE "${_source_file}" "${_source}")
-   set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
-   try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
-   if(NOT _compile_result)
-       message("${_compile_output_var}")
-       message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
-   endif(NOT _compile_result)
-endif (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
+    # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
+    set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
+    set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
+    file(WRITE "${_source_file}" "${_source}")
+    set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
+    try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
+    if(NOT _compile_result)
+        message("${_compile_output_var}")
+        message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
+    endif(NOT _compile_result)
+endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
 
-if (CMAKE_C_COMPILER MATCHES "icc")
+if(CMAKE_C_COMPILER MATCHES "icc")
+    set(KDE4_ENABLE_EXCEPTIONS "-fexceptions")
+    # Select flags.
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -g -fno-inline -noalign")
+    set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
+    set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_C_FLAGS_DEBUG            "-O2 -g -fno-inline -noalign")
 
-   set (KDE4_ENABLE_EXCEPTIONS -fexceptions)
-   # Select flags.
-   set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
-   set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_CXX_FLAGS_DEBUG          "-O2 -g -fno-inline -noalign")
-   set(CMAKE_CXX_FLAGS_DEBUGFULL      "-g -fno-inline -noalign")
-   set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g")
-   set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-   set(CMAKE_C_FLAGS_DEBUG            "-O2 -g -fno-inline -noalign")
-   set(CMAKE_C_FLAGS_DEBUGFULL        "-g -fno-inline -noalign")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wall -w1 -Wpointer-arith -fno-common")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
 
-   set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wall -w1 -Wpointer-arith -fno-common")
-   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
-
-   # visibility support
-   set(__KDE_HAVE_ICC_VISIBILITY)
-#   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_ICC_VISIBILITY)
-#   if (__KDE_HAVE_ICC_VISIBILITY)
-#      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-#   endif (__KDE_HAVE_ICC_VISIBILITY)
-
-endif (CMAKE_C_COMPILER MATCHES "icc")
+    # visibility support
+    set(__KDE_HAVE_ICC_VISIBILITY)
+    #   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_ICC_VISIBILITY)
+    #   if (__KDE_HAVE_ICC_VISIBILITY)
+    #      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
+    #   endif (__KDE_HAVE_ICC_VISIBILITY)
+endif()
 
 
 ###########    end of platform specific stuff  ##########################
@@ -946,57 +898,57 @@ endif (CMAKE_C_COMPILER MATCHES "icc")
 # KDE4Macros.cmake contains all the KDE specific macros
 include(${kde_cmake_module_dir}/KDE4Macros.cmake)
 
-
 # decide whether KDE4 has been found
 set(KDE4_FOUND FALSE)
-if (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND KDE4_INSTALLED_VERSION_OK)
+if (KDE4_INCLUDE_DIR
+    AND KDE4_LIB_DIR
+    AND KDE4_KCFGC_EXECUTABLE
+    AND KDE4_INSTALLED_VERSION_OK)
    set(KDE4_FOUND TRUE)
    set(KDE4Internal_FOUND TRUE) # for feature_summary
-endif (KDE4_INCLUDE_DIR AND KDE4_LIB_DIR AND KDE4_KCFGC_EXECUTABLE AND KDE4_INSTALLED_VERSION_OK)
+endif()
+
+macro(KDE4_PRINT_RESULTS)
+    # inside kdelibs the include dir and lib dir are internal, not "found"
+    if(NOT _kdeBootStrapping)
+        if(KDE4_INCLUDE_DIR)
+            message(STATUS "Found KDE 4.17 include dir: ${KDE4_INCLUDE_DIR}")
+        else()
+            message(STATUS "ERROR: unable to find the KDE 4 headers")
+        endif()
+
+        if(KDE4_LIB_DIR)
+            message(STATUS "Found KDE 4.17 library dir: ${KDE4_LIB_DIR}")
+        else()
+            message(STATUS "ERROR: unable to find the KDE 4 core library")
+        endif()
+    endif(NOT _kdeBootStrapping)
+
+    if(KDE4_KCFGC_EXECUTABLE)
+        message(STATUS "Found the KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
+    else(KDE4_KCFGC_EXECUTABLE)
+        message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
+    endif(KDE4_KCFGC_EXECUTABLE)
+endmacro()
 
 
-macro (KDE4_PRINT_RESULTS)
+if(KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
+    #bail out if something wasn't found
+    kde4_print_results()
+    if (NOT KDE4_INSTALLED_VERSION_OK)
+        message(FATAL_ERROR "ERROR: the installed kdelibs version ${KDE_VERSION} is too old, at least version ${KDE_MIN_VERSION} is required")
+    endif()
 
-# inside kdelibs the include dir and lib dir are internal, not "found"
-if (NOT _kdeBootStrapping)
-    if(KDE4_INCLUDE_DIR)
-      message(STATUS "Found KDE 4.17 include dir: ${KDE4_INCLUDE_DIR}")
-    else(KDE4_INCLUDE_DIR)
-      message(STATUS "ERROR: unable to find the KDE 4 headers")
-    endif(KDE4_INCLUDE_DIR)
+    if(NOT KDE4_KCFGC_EXECUTABLE)
+        message(FATAL_ERROR "ERROR: could not detect a usable kconfig_compiler")
+    endif()
 
-    if(KDE4_LIB_DIR)
-      message(STATUS "Found KDE 4.17 library dir: ${KDE4_LIB_DIR}")
-    else(KDE4_LIB_DIR)
-      message(STATUS "ERROR: unable to find the KDE 4 core library")
-    endif(KDE4_LIB_DIR)
-endif (NOT _kdeBootStrapping)
+    message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
+endif()
 
-if(KDE4_KCFGC_EXECUTABLE)
-  message(STATUS "Found the KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
-else(KDE4_KCFGC_EXECUTABLE)
-  message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
-endif(KDE4_KCFGC_EXECUTABLE)
-endmacro (KDE4_PRINT_RESULTS)
-
-
-if (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
-   #bail out if something wasn't found
-   kde4_print_results()
-   if (NOT KDE4_INSTALLED_VERSION_OK)
-     message(FATAL_ERROR "ERROR: the installed kdelibs version ${KDE_VERSION} is too old, at least version ${KDE_MIN_VERSION} is required")
-   endif (NOT KDE4_INSTALLED_VERSION_OK)
-
-   if (NOT KDE4_KCFGC_EXECUTABLE)
-     message(FATAL_ERROR "ERROR: could not detect a usable kconfig_compiler")
-   endif (NOT KDE4_KCFGC_EXECUTABLE)
-
-   message(FATAL_ERROR "ERROR: could NOT find everything required for compiling KDE 4 programs")
-endif (KDE4Internal_FIND_REQUIRED AND NOT KDE4_FOUND)
-
-if (NOT KDE4Internal_FIND_QUIETLY)
-   kde4_print_results()
-endif (NOT KDE4Internal_FIND_QUIETLY)
+if(NOT KDE4Internal_FIND_QUIETLY)
+    kde4_print_results()
+endif()
 
 #add the found Qt and KDE include directories to the current include path
 #the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>

@@ -103,7 +103,6 @@ set(cmakeFiles
     MacroAdditionalCleanFiles.cmake
     MacroAppendIf.cmake
     MacroBoolTo01.cmake
-    MacroEnsureVersion.cmake
     MacroLibrary.cmake
     MacroLogFeature.cmake
     MacroOptionalAddSubdirectory.cmake

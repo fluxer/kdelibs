@@ -22,10 +22,6 @@ set( KDELIBSUFF ${LIB_SUFFIX} )
 
 macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore, khtml, kjs
 
-# FIXME: Make this changeable!
-# khtml svg support
-set(SVG_SUPPORT 1)              # unused yet, but for the future
-
 # now check for dlfcn.h using the cmake supplied CHECK_INCLUDE_FILES() macro
 # If definitions like -D_GNU_SOURCE are needed for these checks they
 # should be added to _KDE4_PLATFORM_DEFINITIONS when it is originally
@@ -38,7 +34,7 @@ check_include_files(stdio.h       HAVE_STDIO_H)                        # various
 check_include_files(stdlib.h      HAVE_STDLIB_H)                       # various
 check_include_files(string.h      HAVE_STRING_H)                       # various
 check_include_files(strings.h     HAVE_STRINGS_H)                      # various
-check_include_files(malloc.h      HAVE_MALLOC_H)                       # khtml
+check_include_files(malloc.h      HAVE_MALLOC_H)                       # unused?
 check_include_files(sys/time.h    TIME_WITH_SYS_TIME)                  # kdecore, kioslave
 check_include_files(crt_externs.h HAVE_CRT_EXTERNS_H)                  # kinit, config.h
 
@@ -61,14 +57,12 @@ check_include_files(paths.h       HAVE_PATHS_H)                        # kdecore
 
 check_include_files(errno.h       HAVE_ERRNO_H)                        # kjs, errno.h is used in many places, but only guarded in kjs/
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
-check_include_files(valgrind/memcheck.h   HAVE_VALGRIND_MEMCHECK_H)    # khtml
-check_include_files(crtdbg.h      HAVE_CRTDBG_H)                       # kjs
 check_include_files(langinfo.h    HAVE_LANGINFO_H)                     # kdecore
 
-macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)                                                   # kdecore
-macro_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)                                               # kdeui
-macro_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)                                                 # kdeui
-macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)                                               # kio
+macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)                           # kdecore
+macro_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)                       # kdeui
+macro_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)                         # kdeui
+macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)                       # kio
 
 
 # Use check_symbol_exists to check for symbols in a reliable
@@ -86,7 +80,6 @@ check_symbol_exists(posix_madvise   "sys/mman.h"               HAVE_MADVISE)    
 check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST)# kdecore/fakes.c
 
 check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore, kio
-check_function_exists(getpagesize      HAVE_GETPAGESIZE)              # khtml
 # This is broken on OSX 10.6 (succeeds but shouldn't do) and doesn't exist
 # on previous versions so don't do the check on APPLE.
 if(NOT APPLE)
@@ -97,7 +90,7 @@ check_function_exists(mmap             HAVE_MMAP)                     # kdecore,
 check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave
 check_function_exists(srandom         HAVE_SRANDOM)                   # config.h
 check_function_exists(_NSGetEnviron   HAVE_NSGETENVIRON)              # kinit, config.h
-check_function_exists(gettimeofday    HAVE_GETTIMEOFDAY)              # testkjs
+check_function_exists(gettimeofday    HAVE_GETTIMEOFDAY)              # kpty, kdeui, some tests
 check_function_exists(getgrouplist    HAVE_GETGROUPLIST)              # kio
 
 check_library_exists(volmgt volmgt_running "" HAVE_VOLMGT)            # various
