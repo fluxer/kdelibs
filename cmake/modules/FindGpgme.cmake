@@ -47,7 +47,6 @@ macro( macro_bool_to_bool FOUND_VAR )
   endforeach()
 endmacro()
 
-include (MacroEnsureVersion)
 include (MacroBoolTo01)
 
 
