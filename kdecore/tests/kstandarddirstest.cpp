@@ -71,7 +71,7 @@ void KStandarddirsTest::testChangeSaveLocation()
     const QString newSaveLoc = m_kdehome + "/newconfigdir/";
     //cData.dirs()->addResourceDir("config", newSaveLoc); // can't be done, absolute paths have less priority than relative paths
     cData.dirs()->addResourceType("config", 0, "newconfigdir");
-    QCOMPARE_PATHS(KStandardDirs::realPath(cData.dirs()->saveLocation("config")), newSaveLoc);
+    QCOMPARE_PATHS(KGlobal::dirs()->realPath(cData.dirs()->saveLocation("config")), newSaveLoc);
 }
 
 static bool isKdelibsInstalled()
@@ -317,7 +317,7 @@ void KStandarddirsTest::testAddResourceType()
 
     KGlobal::dirs()->addResourceType("xdgdata-ontology", 0, "ontology");
     const QStringList ontologyDirs = KGlobal::dirs()->resourceDirs("xdgdata-ontology");
-    QCOMPARE(ontologyDirs.first(), KStandardDirs::realPath(QString(qgetenv("XDG_DATA_HOME")) + "/ontology/"));
+    QCOMPARE(ontologyDirs.first(), KGlobal::dirs()->realPath(QString(qgetenv("XDG_DATA_HOME")) + "/ontology/"));
     if (QFile::exists("/usr/share/ontology") &&
         KGlobal::dirs()->kfsstnd_xdg_data_prefixes().contains("/usr/share")) {
         QVERIFY(ontologyDirs.contains("/usr/share/ontology/"));
@@ -333,14 +333,14 @@ void KStandarddirsTest::testAddResourceDir()
 
     KGlobal::dirs()->addResourceDir("here", dir);
     ret = KStandardDirs::locate( "here", file );
-    QCOMPARE_PATHS(ret, KStandardDirs::realPath(dir) + "Cairo");
+    QCOMPARE_PATHS(ret, KGlobal::dirs()->realPath(dir) + "Cairo");
 }
 
 void KStandarddirsTest::testSetXdgDataDirs()
 {
     // By default we should have KDEDIR/share/applications in `kde4-config --path xdgdata-apps`
     const QStringList dirs = KGlobal::dirs()->resourceDirs("xdgdata-apps");
-    const QString kdeDataApps = KStandardDirs::realPath(KDEDIR "/share/applications/");
+    const QString kdeDataApps = KGlobal::dirs()->realPath(KDEDIR "/share/applications/");
     if (!dirs.contains(kdeDataApps)) {
         kDebug() << "ERROR:" << kdeDataApps << "not in" << dirs;
         kDebug() << "XDG_DATA_DIRS=" << qgetenv("XDG_DATA_DIRS");
@@ -367,7 +367,7 @@ void KStandarddirsTest::testRestrictedResources()
     localFile.open(QIODevice::WriteOnly|QIODevice::Text);
     localFile.write("foo");
     localFile.close();
-    const QString localAppsDir = KStandardDirs::realPath(QFileInfo(localFile).absolutePath() + '/');
+    const QString localAppsDir = KGlobal::dirs()->realPath(QFileInfo(localFile).absolutePath() + '/');
     QVERIFY(!localAppsDir.contains("foo.desktop"));
     // Ensure we have a local share/apps/qttest dir
     const QString localDataDir = KStandardDirs::locateLocal("data", "qttest/");
@@ -378,7 +378,7 @@ void KStandarddirsTest::testRestrictedResources()
 
     // Check unrestricted results first
     const QStringList appsDirs = KGlobal::dirs()->resourceDirs("xdgdata-apps");
-    const QString kdeDataApps = KStandardDirs::realPath(KDEDIR "/share/applications/");
+    const QString kdeDataApps = KGlobal::dirs()->realPath(KDEDIR "/share/applications/");
     QCOMPARE_PATHS(appsDirs.first(), localAppsDir);
     QVERIFY(appsDirs.contains(kdeDataApps, PATH_SENSITIVITY));
     const QStringList dataDirs = KGlobal::dirs()->findDirs("data", "qttest");
@@ -434,7 +434,7 @@ void KStandarddirsTest::testSymlinkResolution()
     // The issue at this point is that saveLoc does not actually exist yet.
     QVERIFY(QDir(saveLoc).canonicalPath().isEmpty()); // this is why we can't use canonicalPath
     QVERIFY(!QFile::exists(saveLoc));
-    QCOMPARE(saveLoc, KStandardDirs::realPath(saveLoc)); // must be resolved
+    QCOMPARE(saveLoc, KGlobal::dirs()->realPath(saveLoc)); // must be resolved
     QCOMPARE(saveLoc, expected);
     QVERIFY(QDir(m_kdehome).mkpath("real/test")); // KConfig calls mkdir on its own, we simulate that here
     const QString sameSaveLoc = KGlobal::dirs()->resourceDirs("david").first();
@@ -442,10 +442,10 @@ void KStandarddirsTest::testSymlinkResolution()
     QCOMPARE(sameSaveLoc, KGlobal::dirs()->saveLocation("david"));
 
     // While we're here...
-    QCOMPARE(KStandardDirs::realPath(QString()), QString());
-    QCOMPARE(KStandardDirs::realPath(QString("/")), QString("/"));
+    QCOMPARE(KGlobal::dirs()->realPath(QString()), QString());
+    QCOMPARE(KGlobal::dirs()->realPath(QString("/")), QString("/"));
 
-    QCOMPARE(KStandardDirs::realPath(QString("/does_not_exist/")), QString("/does_not_exist/"));
+    QCOMPARE(KGlobal::dirs()->realPath(QString("/does_not_exist/")), QString("/does_not_exist/"));
 }
 
 #include <QThreadPool>
