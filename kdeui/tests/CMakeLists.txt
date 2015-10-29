@@ -10,7 +10,11 @@ MACRO(KDEUI_UNIT_TESTS)
         else()
             kde4_add_test(kdeui-${_testname} ${_testname}.cpp)
         endif()
-        target_link_libraries(kdeui-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
+        target_link_libraries(kdeui-${_testname}
+            ${KDE4_KDEUI_LIBS}
+            ${QT_QTTEST_LIBRARY}
+            ${QT_QTXML_LIBRARY}
+        )
     ENDFOREACH(_testname)
 ENDMACRO(KDEUI_UNIT_TESTS)
 MACRO(KDEUI_EXECUTABLE_TESTS)
@@ -20,7 +24,11 @@ MACRO(KDEUI_EXECUTABLE_TESTS)
         else()
             kde4_add_manual_test(kdeui-${_testname} ${_testname}.cpp)
         endif()
-        target_link_libraries(kdeui-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
+        target_link_libraries(kdeui-${_testname}
+            ${KDE4_KDEUI_LIBS}
+            ${QT_QTTEST_LIBRARY}
+            ${QT_QTXML_LIBRARY}
+        )
     ENDFOREACH(_testname)
 ENDMACRO(KDEUI_EXECUTABLE_TESTS)
 
@@ -33,11 +41,21 @@ add_subdirectory(proxymodeltestsuite)
 MACRO(KDEUI_PROXYMODEL_TESTS)
     FOREACH(_testname ${ARGN})
         if(EXISTS ${_testname}.h)
-            kde4_add_test(kdeui-${_testname} ${_testname}.cpp ${_testname}.h ${proxyModelTestSources})
+            kde4_add_test(kdeui-${_testname}
+                ${_testname}.cpp ${_testname}.h
+                ${proxyModelTestSources})
         else()
-            kde4_add_test(kdeui-${_testname} ${_testname}.cpp ${proxyModelTestSources})
+            kde4_add_test(kdeui-${_testname}
+                ${_testname}.cpp
+                ${proxyModelTestSources}
+            )
         endif()
-        target_link_libraries(kdeui-${_testname} ${KDE4_KDEUI_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN32_LIBRARIES} proxymodeltestsuite)
+        target_link_libraries(kdeui-${_testname}
+            ${KDE4_KDEUI_LIBS}
+            ${QT_QTTEST_LIBRARY}
+            ${QT_QTXML_LIBRARY}
+            proxymodeltestsuite
+        )
     ENDFOREACH(_testname)
 ENDMACRO(KDEUI_PROXYMODEL_TESTS)
 
@@ -180,9 +198,14 @@ target_link_libraries(kplottest ${KDE4_KDEUI_LIBS})
 
 ## kcolorutilsdemo
 
-SET(kcolorUtilsDemoSources kcolorutilsdemo.cpp kimageframe.cpp ../colors/kcolorspaces.cpp kcolorutilsdemo.ui)
+SET(kcolorUtilsDemoSources
+    kcolorutilsdemo.cpp
+    kimageframe.cpp
+    ../colors/kcolorspaces.cpp
+    kcolorutilsdemo.ui
+)
 kde4_add_manual_test(kcolorutilsdemo ${kcolorUtilsDemoSources})
-target_link_libraries(kcolorutilsdemo ${KDE4_KDEUI_LIBS} ${KDEWIN_LIBRARIES})
+target_link_libraries(kcolorutilsdemo ${KDE4_KDEUI_LIBS})
 
 add_subdirectory(proxymodeltestapp)
 
