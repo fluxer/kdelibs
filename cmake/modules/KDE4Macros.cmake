@@ -302,9 +302,7 @@ endmacro(KDE4_ADD_PLUGIN)
 # always created and built unless ENABLE_TESTING is set to negative value.
 macro(KDE4_ADD_TEST _targetName)
     KDE4_ADD_MANUAL_TEST(${_targetName} ${ARGN})
-
-    string(REPLACE "test" "" _testName ${_targetName})
-    add_test(NAME ${_testName} COMMAND ${_targetName})
+    add_test(NAME ${_targetName} COMMAND ${_targetName})
 endmacro(KDE4_ADD_TEST)
 
 macro(KDE4_ADD_MANUAL_TEST _targetName)
