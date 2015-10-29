@@ -127,7 +127,7 @@ set(solid_LIB_SRCS
    backends/shared/cpufeatures.cpp
 )
 
-macro_optional_find_package( HUpnp VERSION "0.9")
+macro_optional_find_package( HUpnp )
 set_package_properties(HUpnp PROPERTIES
     URL "http://www.herqq.org"
     PURPOSE "Allows Solid to provide information about UPnP devices on the network"
