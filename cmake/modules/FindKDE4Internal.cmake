@@ -310,16 +310,13 @@ if(NOT QT4_FOUND)
     return()
 endif(NOT QT4_FOUND)
 
-
 # now we are sure we have everything we need
-
 include(MacroLibrary)
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
 
-
-# are we trying to compile kdelibs ? kdelibs_SOURCE_DIR comes from "project(kdelibs)" in kdelibs/CMakeLists.txt
-# then enter bootstrap mode
+# are we trying to compile kdelibs? then enter bootstrap mode
+# kdelibs_SOURCE_DIR comes from "project(kdelibs)" in kdelibs/CMakeLists.txt
 
 if(kdelibs_SOURCE_DIR)
     set(_kdeBootStrapping TRUE)
@@ -345,7 +342,7 @@ if (_kdeBootStrapping)
     set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
 
     set(KDE4_INSTALLED_VERSION_OK TRUE)
-else (_kdeBootStrapping)
+else(_kdeBootStrapping)
     set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
 
     # These files contain information about the installed kdelibs
@@ -416,7 +413,7 @@ else (_kdeBootStrapping)
     # dependent libraries handled correctly. But to keep compatibility and not to change
     # behaviour we set all these variables anyway as seen below. Alex
     include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
-endif (_kdeBootStrapping)
+endif(_kdeBootStrapping)
 
 # Set the various KDE4_FOO_LIBRARY/LIBS variables.
 # In bootstrapping mode KDE4_TARGET_PREFIX is empty, so e.g. KDE4_KDECORE_LIBRARY
@@ -601,13 +598,17 @@ endif()
 # and all link directories which are not inside the current build dir.
 set(_KDE4_PLATFORM_INCLUDE_DIRS)
 
-# add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of the standard system link
-# directories listed in CMAKE_{PLATFORM,C,CXX}_IMPLICIT_LINK_DIRECTORIES) and use the RPATH figured out by cmake when compiling
+# add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of the
+# standard system link directories listed in
+# CMAKE_{PLATFORM,C,CXX}_IMPLICIT_LINK_DIRECTORIES) and use the RPATH figured
+# out by cmake when compiling
 
 list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemPlatformLibDir)
 list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCLibDir)
 list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
-if("${_isSystemPlatformLibDir}" STREQUAL "-1" AND "${_isSystemCLibDir}" STREQUAL "-1" AND "${_isSystemCxxLibDir}" STREQUAL "-1")
+if("${_isSystemPlatformLibDir}" STREQUAL "-1"
+    AND "${_isSystemCLibDir}" STREQUAL "-1"
+    AND "${_isSystemCxxLibDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
 endif()
 
@@ -615,14 +616,12 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-
 if(Q_WS_X11)
    # Done by FindQt4.cmake already
    #find_package(X11 REQUIRED)
    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
 endif()
-
 
 if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
     if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -647,7 +646,6 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
         set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
     endif()
 endif()
-
 
 set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE")
 
@@ -691,7 +689,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
         # It is kept here nonetheless both for backwards compatibility in case one does not use add_definitions(${KDE4_DEFINITIONS})
         # and also because it is/was needed by glibc for snprintf to be available when building C files.
         # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
-        add_definitions (-D_DEFAULT_SOURCE -D_BSD_SOURCE)
+        add_definitions(-D_DEFAULT_SOURCE -D_BSD_SOURCE)
     endif()
 
     if(CMAKE_SYSTEM_NAME STREQUAL GNU)
@@ -798,8 +796,8 @@ if (CMAKE_COMPILER_IS_GNUCXX)
             )
 
             if(NOT _compile_result)
-            message("${_compile_output_var}")
-            message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
+                message("${_compile_output_var}")
+                message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
             endif(NOT _compile_result)
         else()
             message("${_compile_output_var}")
@@ -892,9 +890,7 @@ if(CMAKE_C_COMPILER MATCHES "icc")
     #   endif (__KDE_HAVE_ICC_VISIBILITY)
 endif()
 
-
 ###########    end of platform specific stuff  ##########################
-
 
 # KDE4Macros.cmake contains all the KDE specific macros
 include(${kde_cmake_module_dir}/KDE4Macros.cmake)
@@ -923,13 +919,13 @@ macro(KDE4_PRINT_RESULTS)
         else()
             message(STATUS "ERROR: unable to find the KDE 4 core library")
         endif()
-    endif(NOT _kdeBootStrapping)
+    endif()
 
     if(KDE4_KCFGC_EXECUTABLE)
         message(STATUS "Found the KDE4 kconfig_compiler preprocessor: ${KDE4_KCFGC_EXECUTABLE}")
-    else(KDE4_KCFGC_EXECUTABLE)
+    else()
         message(STATUS "Didn't find the KDE4 kconfig_compiler preprocessor")
-    endif(KDE4_KCFGC_EXECUTABLE)
+    endif()
 endmacro()
 
 
@@ -976,12 +972,14 @@ set(KDE4_DEFINITIONS
 )
 
 if(NOT _kde4_uninstall_rule_created)
-   set(_kde4_uninstall_rule_created TRUE)
-
-   configure_file("${kde_cmake_module_dir}/kde4_cmake_uninstall.cmake.in" "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" @ONLY)
-
-   add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake")
-
-endif(NOT _kde4_uninstall_rule_created)
+    set(_kde4_uninstall_rule_created TRUE)
+    configure_file(
+        "${kde_cmake_module_dir}/kde4_cmake_uninstall.cmake.in"
+        "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake" @ONLY
+    )
+    add_custom_target(uninstall
+        COMMAND "${CMAKE_COMMAND}" -P "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+    )
+endif()
 
 endif(NOT KDE4_FOUND)

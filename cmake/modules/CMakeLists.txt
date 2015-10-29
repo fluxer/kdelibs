@@ -27,9 +27,15 @@ set(cmakeFiles
     FindAvahi.cmake
     FindBerkeleyDB.cmake
     FindBlueZ.cmake
+    FindCanberra.cmake
+    FindCHM.cmake
+    FindCUPS.cmake
     FindDBusMenuQt.cmake
+    FindKDevelop.cmake
+    FindDjVuLibre.cmake
     FindDNSSD.cmake
     FindENCHANT.cmake
+    FindEPub.cmake
     FindEigen.cmake
     FindEigen2.cmake
     FindExiv2.cmake
@@ -38,12 +44,16 @@ set(cmakeFiles
     FindFlac.cmake
     FindFlex.cmake
     FindFontconfig.cmake
+    FindLibGcrypt.cmake
     FindGLIB2.cmake
     FindGMP.cmake
     FindGObject.cmake
     FindGSSAPI.cmake
     FindGStreamer.cmake
     FindGettext.cmake
+    FindGettextPO.cmake
+    FindSpeechd.cmake
+    FindGpgme.cmake
     FindGphoto2.cmake
     FindHUNSPELL.cmake
     FindKDE4Internal.cmake
@@ -54,17 +64,29 @@ set(cmakeFiles
     FindKipi.cmake
     FindKopete.cmake
     FindKorundum.cmake
+    FindKSane.cmake
+    FindKTp.cmake
     FindLCMS.cmake
+    FindLCMS2.cmake
     FindLibArt.cmake
     FindLibAttica.cmake
+    FindLibKasten.cmake
     FindLibKonq.cmake
     FindLibLZMA.cmake
+    FindLibOkteta.cmake
+    FindLibOktetaKasten.cmake
     FindLibXslt.cmake
     FindLibintl.cmake
+    FindLibNXCL.cmake
+    FindLibSpectre.cmake
+    FindLibVNCServer.cmake
+    FindLIBPARTED.cmake
     FindLinuxWirelesstools.cmake
+    FindLibMms.cmake
     FindMusicBrainz.cmake
     FindMusicBrainz5.cmake
     FindMySQL.cmake
+    FindMPFR.cmake
     FindNetworkManager.cmake
     FindOggVorbis.cmake
     FindOpenEXR.cmake
@@ -77,6 +99,7 @@ set(cmakeFiles
     FindPyQt4.cmake
     Qt4Macros.cmake
     Qt4ConfigDependentSettings.cmake
+    FindPoppler.cmake
     FindPythonLibrary.cmake
     FindQCA2.cmake
     FindQImageBlitz.cmake
@@ -89,10 +112,13 @@ set(cmakeFiles
     FindSharedMimeInfo.cmake
     FindSqlite.cmake
     FindStrigi.cmake
+    FindSubversionLibrary.cmake
     FindTaglib.cmake
     FindUDisks2.cmake
     FindUSB.cmake
+    FindXCB.cmake
     FindX11.cmake
+    FindX11_XCB.cmake
     FindXKB.cmake
     FindXine.cmake
     FindXmms.cmake
