@@ -256,12 +256,12 @@ add_subdirectory( security )
 add_subdirectory( plasma )
 add_subdirectory( kunitconversion )
 add_subdirectory( kdewebkit )
+add_subdirectory( kdeclarative )
 add_subdirectory( includes )
 add_subdirectory( libkdcraw )
 add_subdirectory( libkexiv2 )
 add_subdirectory( libkcddb )
 add_subdirectory( libkcompactdisc )
-add_subdirectory( experimental )
 
 ################# write kdelibs package config files which will be installed #################
 

@@ -427,6 +427,7 @@ set(_kde_libraries
     kcompactdisc
     kdcraw
     kdecore
+    kdeclarative
     kdefakes
     kdesu
     kdeui
