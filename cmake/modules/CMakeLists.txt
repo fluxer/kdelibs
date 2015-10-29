@@ -8,7 +8,6 @@ set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules)
 # are listed explicitly:
 set(cmakeFilesDontInstall
     FindHUpnp.cmake
-    FindUDev.cmake
 )
 
 # Explicitly list all files which will be installed.
@@ -114,6 +113,7 @@ set(cmakeFiles
     FindStrigi.cmake
     FindSubversionLibrary.cmake
     FindTaglib.cmake
+    FindUDev.cmake
     FindUDisks2.cmake
     FindUSB.cmake
     FindXCB.cmake
