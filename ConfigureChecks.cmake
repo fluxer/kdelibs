@@ -80,11 +80,7 @@ check_symbol_exists(posix_madvise   "sys/mman.h"               HAVE_MADVISE)    
 check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST)# kdecore/fakes.c
 
 check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore, kio
-# This is broken on OSX 10.6 (succeeds but shouldn't do) and doesn't exist
-# on previous versions so don't do the check on APPLE.
-if(NOT APPLE)
-   check_function_exists(fdatasync     HAVE_FDATASYNC)                # kdecore, kate
-endif(NOT APPLE)
+check_function_exists(fdatasync     HAVE_FDATASYNC)                # kdecore, kate
 check_function_exists(mmap             HAVE_MMAP)                     # kdecore, khtml
 
 check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave
@@ -103,6 +99,9 @@ check_library_exists(resolv __res_init "" HAVE___RES_INIT_IN_RESOLV_LIBRARY)
 if (HAVE___RES_INIT_IN_RESOLV_LIBRARY OR HAVE_RES_INIT_IN_RESOLV_LIBRARY)
    set(HAVE_RESOLV_LIBRARY TRUE)
 endif (HAVE___RES_INIT_IN_RESOLV_LIBRARY OR HAVE_RES_INIT_IN_RESOLV_LIBRARY)
+
+check_library_exists(nsl gethostbyname "" HAVE_NSL_LIBRARY)
+check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)
 
 if (UNIX)
 

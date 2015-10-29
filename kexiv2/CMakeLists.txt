@@ -24,29 +24,27 @@
 
 PROJECT(libkexiv2)
 
-FIND_PACKAGE(KDE4Internal REQUIRED 4.14.3)
+ADD_DEFINITIONS(
+    ${QT_DEFINITIONS}
+    ${QT_QTDBUS_DEFINITIONS}
+    ${KDE4_DEFINITIONS}
+    -DKDE_DEFAULT_DEBUG_AREA=51003
+)
+INCLUDE_DIRECTORIES(
+    ${QDBUS_INCLUDE_DIRS}
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_BINARY_DIR}
+    ${KDE4_INCLUDES}
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+)
 
-INCLUDE(KDE4Defaults)
-INCLUDE(MacroLibrary)
-INCLUDE(MacroOptionalAddSubdirectory)
-INCLUDE(MacroOptionalFindPackage)
-INCLUDE(FindPackageHandleStandardArgs)
-
-ADD_DEFINITIONS (${QT_DEFINITIONS} ${QT_QTDBUS_DEFINITIONS} ${KDE4_DEFINITIONS})
-INCLUDE_DIRECTORIES (${QDBUS_INCLUDE_DIRS}
-  ${CMAKE_SOURCE_DIR}
-  ${CMAKE_BINARY_DIR}
-  ${KDE4_INCLUDES}
-  ${KDE4_KDECORE_INCLUDES}
-  ${KDE4_KDEUI_INCLUDES})
-
-SET(LIBKEXIV2_AREA_CODE_GENERAL 51003)
-ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=${LIBKEXIV2_AREA_CODE_GENERAL})
-
-SET(EXIV2_MIN_VERSION "0.21")
-FIND_PACKAGE(Exiv2)
-MACRO_LOG_FEATURE(EXIV2_FOUND "Exiv2" "Required to build libkexiv2." "http://www.exiv2.org"
-                  TRUE ${EXIV2_MIN_VERSION} "")
+FIND_PACKAGE(Exiv2 REQUIRED VERSION "0.21")
+SET_PACKAGE_PROPERTIES(Exiv2 PROPERTIES
+    DESCRIPTION "Image metadata library and tools"
+    URL "http://www.exiv2.org"
+    PURPOSE "Required to build libkexiv2"
+)
 
 # =======================================================
 # Set env. variables accordinly.
@@ -57,14 +55,18 @@ SET(KEXIV2_LIB_SO_VERSION_STRING "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KD
 
 # =======================================================
 
-IF(EXIV2_FOUND)
-    ADD_SUBDIRECTORY(libkexiv2)
+ADD_SUBDIRECTORY(libkexiv2)
 
-    if(ENABLE_TESTING)
-        add_subdirectory(tests)
-    endif()
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
 
-    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libkexiv2.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc)
-    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
-ENDIF(EXIV2_FOUND)
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/libkexiv2.pc.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc
+)
+INSTALL(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc
+    DESTINATION ${LIB_INSTALL_DIR}/pkgconfig
+)
 

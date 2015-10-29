@@ -127,27 +127,26 @@ set(solid_LIB_SRCS
    backends/shared/cpufeatures.cpp
 )
 
-macro_optional_find_package( HUpnp )
+macro_optional_find_package( HUpnp VERSION "0.9")
+set_package_properties(HUpnp PROPERTIES
+    URL "http://www.herqq.org"
+    PURPOSE "Allows Solid to provide information about UPnP devices on the network"
+    TYPE OPTIONAL
+)
 
-set(HUPNP_ENABLED FALSE CACHE BOOL "explicitly enable the compilation of the hupnp backend")
-if (HUPNP_ENABLED AND HUPNP_FOUND AND ((HUPNP_VERSION_MAJOR EQUAL 0 AND HUPNP_VERSION_MINOR EQUAL 9) OR (HUPNP_VERSION_MAJOR EQUAL 1)))
-  include_directories( ${HUPNP_INCLUDE_DIR} )
-  message(STATUS "Building Solid UPnP backend." )
-  set(solid_LIB_SRCS ${solid_LIB_SRCS}
-     backends/upnp/upnpdevice.cpp
-     backends/upnp/upnpdevicemanager.cpp
-     backends/upnp/upnpdeviceinterface.cpp
-     backends/upnp/upnpmediaserver.cpp
-     backends/upnp/upnpinternetgateway.cpp
-     backends/upnp/upnpcontrolpoint.cpp
-  )
-else ()
-  if(NOT HUPNP_ENABLED)
-      message(STATUS "To have UPnP support, explicitly enable HUPNP_ENABLED in the cmake cache")
-  endif(NOT HUPNP_ENABLED)
-  set(HUPNP_FOUND false)
-endif ()
-macro_log_feature( HUPNP_FOUND "HUPnP" "UPnP support for Solid" "http://www.herqq.org" FALSE "" "Allows Solid to provide information about UPnP devices on the network" )
+if(HUPNP_FOUND)
+    include_directories( ${HUPNP_INCLUDE_DIR} )
+    message(STATUS "Building Solid UPnP backend." )
+    set(solid_LIB_SRCS ${solid_LIB_SRCS}
+        backends/upnp/upnpdevice.cpp
+        backends/upnp/upnpdevicemanager.cpp
+        backends/upnp/upnpdeviceinterface.cpp
+        backends/upnp/upnpmediaserver.cpp
+        backends/upnp/upnpinternetgateway.cpp
+        backends/upnp/upnpcontrolpoint.cpp
+    )
+endif()
+
 
 # message(STATUS "Building Solid KUPnP backend." )
 # set(solid_LIB_SRCS ${solid_LIB_SRCS}
@@ -164,23 +163,26 @@ macro_log_feature( HUPNP_FOUND "HUPnP" "UPnP support for Solid" "http://www.herq
 #   backends/kupnp/kupnpmanager.cpp
 # )
 
-macro_optional_find_package( UDev )
-set_package_properties(UDev PROPERTIES DESCRIPTION "UDev support for Solid"
-                       URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
-                       TYPE OPTIONAL
-                       PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
-                      )
+macro_optional_find_package(UDev)
+set_package_properties(UDev PROPERTIES
+    DESCRIPTION "UDev support for Solid"
+    URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
+    PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
+    TYPE OPTIONAL
+)
 
 ############### prefer udisks2 over udisks
-macro_optional_find_package( UDisks2 )
-set_package_properties(UDisks2 PROPERTIES DESCRIPTION "UDisks2 support for Solid"
-                       URL "http://www.freedesktop.org/wiki/Software/udisks/"
-                       TYPE OPTIONAL
-                       PURPOSE "Allows Solid to use UDisks2 to provide information about devices on Linux"
-                      )
-if ( UDISKS2_FOUND )
+macro_optional_find_package(UDisks2)
+set_package_properties(UDisks2 PROPERTIES
+    DESCRIPTION "UDisks2 support for Solid"
+    URL "http://www.freedesktop.org/wiki/Software/udisks/"
+    PURPOSE "Allows Solid to use UDisks2 to provide information about devices on Linux"
+    TYPE OPTIONAL
+)
+
+if(UDISKS2_FOUND )
     set(WITH_SOLID_UDISKS2 ON)
-else ()
+else()
     set(WITH_SOLID_UDISKS2 OFF)
 endif()
 

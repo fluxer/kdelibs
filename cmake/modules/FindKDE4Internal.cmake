@@ -593,9 +593,6 @@ if(WIN32 OR CYGWIN OR APPLE)
     message(FATAL_ERROR "Windows/Cygwin/Apple is NOT supported.")
 endif()
 
-# setup default RPATH/install_name handling, it sets up to build with full
-# RPATH. When installing, RPATH will be changed to the LIB_INSTALL_DIR
-# and all link directories which are not inside the current build dir.
 set(_KDE4_PLATFORM_INCLUDE_DIRS)
 
 # add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of the
@@ -612,6 +609,8 @@ if("${_isSystemPlatformLibDir}" STREQUAL "-1"
     set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
 endif()
 
+# add our LIB_INSTALL_DIR to the RPATH, also skip re-linking during install
+set(CMAKE_INSTALL_RPATH "${LIB_INSTALL_DIR}")
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -848,7 +847,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(KDE4_CXX_FPIE_FLAGS "-fPIE")
     set(KDE4_PIE_LDFLAGS    "-pie")
 
-    if (CMAKE_SYSTEM_NAME STREQUAL GNU)
+    if(CMAKE_SYSTEM_NAME STREQUAL GNU)
         set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
         set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
     endif (CMAKE_SYSTEM_NAME STREQUAL GNU)
@@ -947,8 +946,8 @@ if(NOT KDE4Internal_FIND_QUIETLY)
     kde4_print_results()
 endif()
 
-#add the found Qt and KDE include directories to the current include path
-#the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>
+# add the found Qt and KDE include directories to the current include path
+# the ${KDE4_INCLUDE_DIR}/KDE directory is for forwarding includes, eg. #include <KMainWindow>
 set(KDE4_INCLUDES
    ${KDE4_INCLUDE_DIR}
    ${KDE4_INCLUDE_DIR}/KDE

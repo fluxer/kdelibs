@@ -11,13 +11,10 @@ include_directories(
 )
 
 macro_optional_find_package(MusicBrainz5)
-macro_log_feature(MUSICBRAINZ5_FOUND
-    "MusicBrainz5"
-    "A library that provides access to metadata lookup on the MusicBrainz server"
-    "http://www.musicbrainz.org"
-    FALSE
-    ""
-    "Music metadata lookup for KDE multimedia applications through libkcddb. You need version 5.x of libmusicbrainz"
+set_package_properties(MusicBrainz5 PROPERTIES
+    DESCRIPTION "A library that provides access to metadata lookup on the MusicBrainz server"
+    URL "http://www.musicbrainz.org"
+    PURPOSE "Music metadata lookup for KDE multimedia applications through libkcddb. You need version 5.x of libmusicbrainz"
 )
 
 if(MUSICBRAINZ5_FOUND)
