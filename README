@@ -123,7 +123,7 @@ headings and other identifying marks.
 Common Mistakes
 ---------------
 If cmake claims Qt cannot be found, look at http://qt.nokia.com/
-to get a copy of Qt, version 4.7 or newer. If you have peeked there
+to get a copy of Qt, version 4.8 or newer. If you have peeked there
 already, grab the SVN module qt-copy from anonsvn.kde.org, or a snapshot
 thereof.  Alternatively the svn module qt-copy from svn.kde.org can also be
 used.
@@ -200,7 +200,4 @@ So, here are some tips on bug reporting:
 
 More info
 ---------
-http://www.kde.org/ is a good starting point for info on KDE. If you are a
-developer, you may also point your browser to http://techbase.kde.org/.
-There is a plethora of mailing lists available, you can gain an overview
-quickly by looking at http://lists.kde.org/.
+https://github.com/fluxer/katana/wiki is a good starting point for info on KDE.
