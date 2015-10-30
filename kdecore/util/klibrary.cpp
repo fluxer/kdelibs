@@ -98,11 +98,6 @@ KPluginFactory* KLibrary::factory(const char* factoryname)
     return kde4Factory(this);
 }
 
-void *KLibrary::resolveSymbol( const char* symname )
-{
-    return resolve( symname );
-}
-
 KLibrary::void_function_ptr KLibrary::resolveFunction( const char* symname )
 {
     void *psym = resolve( symname );

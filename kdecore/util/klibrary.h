@@ -64,14 +64,6 @@ public:
      * @param name the name of the symbol to look up
      * @return the address of the symbol, or 0 if it does not exist
      */
-    void *resolveSymbol(const char *name);
-
-    /**
-     * Looks up a symbol from the library. This is a very low level
-     * function that you usually don't want to use.
-     * @param name the name of the symbol to look up
-     * @return the address of the symbol, or 0 if it does not exist
-     */
     void_function_ptr resolveFunction(const char *name);
 
     void setFileName(const QString &name, const KComponentData &data = KGlobal::mainComponent());
