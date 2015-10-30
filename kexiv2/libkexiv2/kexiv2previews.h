@@ -69,7 +69,7 @@ public:
 
     /// Returns how many embedded previews are available
     int        count();
-    int        size() { return count(); }
+    inline int size() { return count(); }
 
     /**
      * For each contained preview image, return the size
