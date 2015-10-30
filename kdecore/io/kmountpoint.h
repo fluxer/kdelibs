@@ -32,7 +32,7 @@
  *
  * @author Waldo Bastian <bastian@kde.org>
  */
-class KDECORE_EXPORT KMountPoint : public KShared
+class KDECORE_EXPORT KMountPoint : public QSharedData
 {
 public:
     typedef KSharedPtr<KMountPoint> Ptr;

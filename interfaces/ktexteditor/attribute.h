@@ -57,7 +57,7 @@ class SmartRange;
  *
  * \author Hamish Rodda \<rodda@kde.org\>
  */
-class KTEXTEDITOR_EXPORT Attribute : public QTextCharFormat, public KShared
+class KTEXTEDITOR_EXPORT Attribute : public QTextCharFormat, public QSharedData
 {
   friend class SmartRange;
 

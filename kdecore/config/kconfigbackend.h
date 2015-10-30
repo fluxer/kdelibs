@@ -46,7 +46,7 @@ class QDateTime;
  * to create plugins that allow access to other file formats and
  * configuration systems.
  */
-class KDECORE_EXPORT KConfigBackend : public QObject, public KShared
+class KDECORE_EXPORT KConfigBackend : public QObject, public QSharedData
 {
     Q_OBJECT
     Q_FLAGS(ParseOption)

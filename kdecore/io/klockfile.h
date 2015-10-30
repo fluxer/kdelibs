@@ -33,7 +33,7 @@ class QString;
  *
  * @author Waldo Bastian <bastian@kde.org>
  */
-class KDECORE_EXPORT KLockFile : public KShared
+class KDECORE_EXPORT KLockFile : public QSharedData
 {
 public:
    typedef KSharedPtr<KLockFile> Ptr;

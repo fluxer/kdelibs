@@ -30,7 +30,7 @@
 
 QTEST_KDEMAIN_CORE( KSharedPtrTest )
 
-class SharedString : public KShared
+class SharedString : public QSharedData
 {
 public:
     SharedString( const QString& data ) : mStr( data ) {}
@@ -94,7 +94,7 @@ void KSharedPtrTest::testWithStrings()
 }
 
 static int dtor_called = 0;
-class Base : public KShared
+class Base : public QSharedData
 {
 public:
 	virtual ~Base() { ++dtor_called; }

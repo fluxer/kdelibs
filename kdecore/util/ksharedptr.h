@@ -32,12 +32,6 @@
 #include <kdemacros.h>
 
 /**
- * @deprecated
- * Use QSharedData instead.
- */
-typedef QSharedData KShared;
-
-/**
  * \class KSharedPtr ksharedptr.h <KSharedPtr>
  *
  * Can be used to control the lifetime of an object that has derived
