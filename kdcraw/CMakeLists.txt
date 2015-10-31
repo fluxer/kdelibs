@@ -27,7 +27,7 @@ PROJECT(libkdcraw)
 # NOTE: Libraw 0.16.x is prefered version to use because it's ported to Cmake
 # with full features supported. Until libraw 0.16.0 is release (ends of 2013),
 # we will support previous version (with limited support)
-FIND_PACKAGE(LibRaw VERSION 0.15 REQUIRED)
+FIND_PACKAGE(LibRaw 0.15 REQUIRED)
 SET_PACKAGE_PROPERTIES(LibRaw PROPERTIES
     DESCRIPTION "library that provides image Raw file demosaicing"
     URL "http://www.libraw.org"
