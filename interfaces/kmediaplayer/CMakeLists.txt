@@ -12,19 +12,26 @@ set(kmediaplayer_LIB_SRCS
 
 add_library(kmediaplayer ${LIBRARY_TYPE} ${kmediaplayer_LIB_SRCS})
 
-target_link_libraries(kmediaplayer PRIVATE ${KDE4_KPARTS_LIBS} )
-target_link_libraries(kmediaplayer PUBLIC ${KDE4_KPARTS_LIBS} ${QT_QTGUI_LIBRARY} )
+target_link_libraries(kmediaplayer PUBLIC
+    ${KDE4_KPARTS_LIBS}
+    ${QT_QTGUI_LIBRARY}
+)
 
 set_target_properties(kmediaplayer PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
-install(TARGETS kmediaplayer EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kmediaplayer
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 
 ########### install files ###############
 
-install(FILES
+install(
+    FILES
     kmediaplayer_export.h
     player.h
     view.h
@@ -32,14 +39,16 @@ install(FILES
     COMPONENT Devel
 )
 
-install(FILES
+install(
+    FILES
     kmediaplayerengine.desktop
     kmediaplayer.desktop
     DESTINATION
     ${SERVICETYPES_INSTALL_DIR}
 )
 
-install(FILES
+install(
+    FILES
     org.kde.KMediaPlayer.xml
     DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
 )

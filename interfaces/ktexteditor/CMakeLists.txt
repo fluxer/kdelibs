@@ -34,7 +34,6 @@ add_library(ktexteditor ${LIBRARY_TYPE} ${ktexteditor_LIB_SRCS})
 target_link_libraries(ktexteditor PRIVATE
     ${KDE4_KDECORE_LIBS}
     ${QT_QTDBUS_LIBRARY}
-    ${KDE4_KPARTS_LIBS}
 )
 target_link_libraries(ktexteditor PUBLIC ${KDE4_KPARTS_LIBS})
 
@@ -42,10 +41,15 @@ set_target_properties(ktexteditor PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
-install(TARGETS ktexteditor EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS ktexteditor
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 ########### install files ###############
-install(FILES
+install(
+    FILES
     ktexteditor_export.h
     factory.h
     editor.h
@@ -94,18 +98,16 @@ install(FILES
     COMPONENT Devel
 )
 
-install(FILES
-    ktexteditor.desktop
-    ktexteditorplugin.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
-)
-
-install(FILES
+install(
+    FILES
     kcm_ktexteditor.desktop
     DESTINATION ${DATA_INSTALL_DIR}/kcm_componentchooser
 )
 
-install(FILES
+install(
+    FILES
+    ktexteditor.desktop
+    ktexteditorplugin.desktop
     ktexteditor_loadsavefiltercheckplugin.desktop
     DESTINATION ${SERVICETYPES_INSTALL_DIR}
 )

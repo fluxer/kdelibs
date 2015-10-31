@@ -1,23 +1,29 @@
 project(dnssd)
+
 macro_optional_find_package(Avahi)
 macro_bool_to_01(AVAHI_FOUND HAVE_AVAHI)
-set_package_properties(Avahi PROPERTIES DESCRIPTION "Facilities for service discovery on a local network (DNSSD)"
-                       URL "http://avahi.org"
-                       TYPE OPTIONAL
-                       PURPOSE "Either Avahi or DNSSD is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
-                      )
+set_package_properties(Avahi PROPERTIES
+    DESCRIPTION "Facilities for service discovery on a local network (DNSSD)"
+    URL "http://avahi.org"
+    TYPE OPTIONAL
+    PURPOSE "Either Avahi or DNSSD is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
+)
 
 if(KDE_PLATFORM_FEATURE_BINARY_INCOMPATIBLE_FEATURE_REDUCTION)
-   include_directories( ${KDE4_KDECORE_INCLUDES} )
-   set(KDNSSD_BASE_LIBS ${KDE4_KDECORE_LIBS})
-else(KDE_PLATFORM_FEATURE_BINARY_INCOMPATIBLE_FEATURE_REDUCTION)
-   include_directories( ${KDE4_KDEUI_INCLUDES} )
-   set(KDNSSD_BASE_LIBS ${KDE4_KDEUI_LIBS})
-endif(KDE_PLATFORM_FEATURE_BINARY_INCOMPATIBLE_FEATURE_REDUCTION)
+    include_directories( ${KDE4_KDECORE_INCLUDES} )
+    set(KDNSSD_BASE_LIBS ${KDE4_KDECORE_LIBS})
+else()
+    include_directories( ${KDE4_KDEUI_INCLUDES} )
+    set(KDNSSD_BASE_LIBS ${KDE4_KDEUI_LIBS})
+endif()
 
 include(CreateKcfgFiles.cmake)
 
-set(kdnssd_LIB_SRCS  servicebase.cpp servicemodel.cpp domainmodel.cpp)
+set(kdnssd_LIB_SRCS
+    servicebase.cpp
+    servicemodel.cpp
+    domainmodel.cpp
+)
 kde4_add_kcfg_files(kdnssd_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/settings.kcfgc )
 
 if(HAVE_AVAHI) 
@@ -67,7 +73,7 @@ else(HAVE_AVAHI)
             mdnsd-servicebrowser.cpp
             mdnsd-servicetypebrowser.cpp
         )
-   else(HAVE_DNSSD)
+    else(HAVE_DNSSD)
         set(kdnssd_LIB_SRCS ${kdnssd_LIB_SRCS}
             dummy-domainbrowser.cpp
             dummy-remoteservice.cpp
@@ -75,7 +81,7 @@ else(HAVE_AVAHI)
             dummy-servicebrowser.cpp
             dummy-servicetypebrowser.cpp
         )
-   endif(HAVE_DNSSD)
+    endif(HAVE_DNSSD)
 endif(HAVE_AVAHI)
 
 ########### next target ###############
@@ -83,11 +89,18 @@ endif(HAVE_AVAHI)
 add_library(kdnssd ${LIBRARY_TYPE} ${kdnssd_LIB_SRCS})
 
 # KDE 5: don't link against KDEUI_LIBS (when settings.kfgc is changed)
-if (HAVE_DNSSD)
-  target_link_libraries(kdnssd PRIVATE ${KDNSSD_BASE_LIBS} ${DNSSD_LIBRARIES} ${QT_QTNETWORK_LIBRARY})
-else (HAVE_DNSSD)
-  target_link_libraries(kdnssd PRIVATE ${KDNSSD_BASE_LIBS} ${QT_QTNETWORK_LIBRARY})
-endif (HAVE_DNSSD)
+if(HAVE_DNSSD)
+    target_link_libraries(kdnssd PRIVATE
+        ${KDNSSD_BASE_LIBS}
+        ${DNSSD_LIBRARIES}
+        ${QT_QTNETWORK_LIBRARY}
+    )
+else(HAVE_DNSSD)
+    target_link_libraries(kdnssd PRIVATE
+        ${KDNSSD_BASE_LIBS}
+        ${QT_QTNETWORK_LIBRARY}
+    )
+endif(HAVE_DNSSD)
 
 target_link_libraries(kdnssd PUBLIC kdecore ${QT_QTCORE_LIBRARY} )
 
@@ -96,10 +109,15 @@ set_target_properties(kdnssd PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-install(TARGETS kdnssd EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kdnssd
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 ########### install files ###############
-install(FILES
+install(
+    FILES
     dnssd_export.h
     domainbrowser.h
     remoteservice.h
