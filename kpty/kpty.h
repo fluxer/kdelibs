@@ -23,7 +23,7 @@
 
 #include "kpty_export.h"
 
-struct KPtyPrivate;
+class KPtyPrivate;
 struct termios;
 
 /**

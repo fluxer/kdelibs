@@ -27,9 +27,10 @@
 
 #include <QtCore/QByteArray>
 
-struct KPtyPrivate {
+class KPtyPrivate {
     Q_DECLARE_PUBLIC(KPty)
 
+public:
     KPtyPrivate(KPty* parent);
     virtual ~KPtyPrivate();
 #ifndef HAVE_OPENPTY

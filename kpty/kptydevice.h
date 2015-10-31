@@ -25,7 +25,7 @@
 
 #include <QtCore/QIODevice>
 
-struct KPtyDevicePrivate;
+class KPtyDevicePrivate;
 
 #define Q_DECLARE_PRIVATE_MI(Class, SuperClass) \
     inline Class##Private* d_func() { return reinterpret_cast<Class##Private *>(SuperClass::d_ptr); } \
