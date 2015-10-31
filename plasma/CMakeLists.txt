@@ -6,14 +6,15 @@ if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
     set(PLASMA_NO_GLOBAL_SHORTCUTS TRUE)
 endif(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-                    ${KDE4_KDECORE_INCLUDES}
-                    ${KDE4_KDEUI_INCLUDES}
-                    ${CMAKE_SOURCE_DIR}/experimental/libkdeclarative
-                    ${CMAKE_BINARY_DIR}/experimental/libkdeclarative
-                    ${CMAKE_SOURCE_DIR}/threadweaver
-                    ${CMAKE_SOURCE_DIR}/plasma/extenders
-                    )
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/kdeclarative
+    ${CMAKE_BINARY_DIR}/kdeclarative
+    ${CMAKE_SOURCE_DIR}/threadweaver
+    ${CMAKE_SOURCE_DIR}/plasma/extenders
+)
 
 if(NOT PLASMA_NO_KIO)
    include_directories(${KDE4_KIO_INCLUDES})
@@ -36,7 +37,10 @@ if (NOT PLASMA_NO_KUTILS)
     set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KCMUTILS_LIBRARY})
 endif(NOT PLASMA_NO_KUTILS)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-plasma.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/config-plasma.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h
+)
 
 if(ENABLE_TESTING)
     add_subdirectory(tests)
