@@ -11,6 +11,18 @@ set(KDE_VERSION_RELEASE 0)
 set(KDE_VERSION "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KDE_VERSION_RELEASE}" )
 set(KDE_VERSION_STRING "${KDE_VERSION}")
 
+execute_process(
+    COMMAND git rev-parse --short HEAD
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    OUTPUT_VARIABLE git_revision
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    ERROR_QUIET
+    RESULT_VARIABLE _unused
+)
+if(git_revision)
+    set(KDE_VERSION_STRING "${KDE_VERSION_STRING} (${git_revision})")
+endif()
+
 set(KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distribution in bug reports" )
 
 set(KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
