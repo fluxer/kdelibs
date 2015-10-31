@@ -364,7 +364,6 @@ set_target_properties(kdecore PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-
 install(
     TARGETS kdecore
     EXPORT kdelibsLibraryTargets

@@ -47,7 +47,7 @@ if(UNIX AND Q_WS_X11)
     endif(NOT XCB_FOUND)
 endif(UNIX AND Q_WS_X11)
 
-#required features:
+# required features:
 find_package(Perl)
 set_package_properties(Perl PROPERTIES
     URL "http://www.perl.org"

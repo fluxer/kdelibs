@@ -1,1 +1,1 @@
-set(CTEST_PROJECT_NAME "kdelibs") 
+set(CTEST_PROJECT_NAME "kdelibs")

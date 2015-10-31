@@ -402,7 +402,8 @@ target_link_libraries(kdeui PUBLIC kdecore ${QT_QTGUI_LIBRARY} ${QT_QTSVG_LIBRAR
 
 set_target_properties(kdeui PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
-    SOVERSION ${GENERIC_LIB_SOVERSION})
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install(TARGETS kdeui EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
 ########### install files ###############
