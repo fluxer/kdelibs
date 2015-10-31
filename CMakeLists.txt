@@ -49,24 +49,23 @@ endif(UNIX AND Q_WS_X11)
 
 #required features:
 find_package(Perl)
-set_package_properties(Perl
-    PROPERTIES
+set_package_properties(Perl PROPERTIES
     URL "http://www.perl.org"
     TYPE REQUIRED
     PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts"
 )
 
 find_package(ZLIB)
-set_package_properties(ZLIB
-    PROPERTIES DESCRIPTION "Support for gzip compressed files and data streams"
+set_package_properties(ZLIB PROPERTIES
+    DESCRIPTION "Support for gzip compressed files and data streams"
     URL "http://www.zlib.net"
     TYPE REQUIRED
     PURPOSE "Required by the core KDE libraries and some critical kioslaves"
 )
 
 find_package(Strigi 0.6.3)
-set_package_properties(Strigi
-    PROPERTIES DESCRIPTION "Desktop indexing and search support"
+set_package_properties(Strigi PROPERTIES
+    DESCRIPTION "Desktop indexing and search support"
     URL "http://strigi.sourceforge.net"
     TYPE REQUIRED
     PURPOSE "Required by some critical kioslaves"
@@ -87,16 +86,15 @@ if(X11_FOUND)
 endif(X11_FOUND)
 
 macro_optional_find_package(OpenSSL)
-set_package_properties(OpenSSL
-    PROPERTIES DESCRIPTION "Support for secure network communications (SSL and TLS)"
+set_package_properties(OpenSSL PROPERTIES
+    DESCRIPTION "Support for secure network communications (SSL and TLS)"
     URL "http://openssl.org"
     TYPE RECOMMENDED
     PURPOSE "KDE uses OpenSSL for the bulk of secure communications, including secure web browsing via HTTPS"
 )
 
 macro_optional_find_package(Libintl)
-set_package_properties(Libintl
-    PROPERTIES
+set_package_properties(Libintl PROPERTIES
     DESCRIPTION "Support for multiple languages"
     URL "http://www.gnu.org/software/gettext"
     TYPE RECOMMENDED
@@ -104,8 +102,7 @@ set_package_properties(Libintl
 )
 
 find_package(DBusMenuQt)
-set_package_properties(DBusMenuQt
-    PROPERTIES
+set_package_properties(DBusMenuQt PROPERTIES
     DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
     URL "https://launchpad.net/libdbusmenu-qt"
     TYPE REQUIRED

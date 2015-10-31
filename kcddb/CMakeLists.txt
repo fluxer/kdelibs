@@ -1,6 +1,8 @@
 project(libkcddb)
 
 include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${QT_INCLUDES}
     ${KDE4_INCLUDES}
     ${KDE4_KDECORE_INCLUDES}
