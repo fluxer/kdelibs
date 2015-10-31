@@ -1,8 +1,6 @@
 project(libkcddb)
 
 include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}
     ${QT_INCLUDES}
     ${KDE4_INCLUDES}
     ${KDE4_KDECORE_INCLUDES}
@@ -21,9 +19,10 @@ if(MUSICBRAINZ5_FOUND)
     set(HAVE_MUSICBRAINZ5 1)
     include_directories(${MUSICBRAINZ5_INCLUDE_DIRS})
 
-    set(libmusicbrainz_SRCS ${libmusicbrainz_SRCS}
-       musicbrainz/musicbrainzlookup.cpp
-       musicbrainz/asyncmusicbrainzlookup.cpp)
+    set(libmusicbrainz_SRCS
+        musicbrainz/musicbrainzlookup.cpp
+        musicbrainz/asyncmusicbrainzlookup.cpp
+    )
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 else(MUSICBRAINZ5_FOUND)
@@ -37,7 +36,7 @@ configure_file(
 )
 
 if(ENABLE_TESTING)
-    add_subdirectory( test )
+    add_subdirectory(test)
 endif()
-add_subdirectory( kcmcddb )
-add_subdirectory( libkcddb )
+add_subdirectory(kcmcddb )
+add_subdirectory(libkcddb)

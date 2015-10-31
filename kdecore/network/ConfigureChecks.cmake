@@ -10,23 +10,25 @@ include(CheckStructMember)
 if(KATIE_FOUND)
     set(HAVE_QSSLSOCKET TRUE)
 else()
-macro_push_required_vars()
-  set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
-  message(STATUS ${QT_INCLUDE_DIR})
-  if (QT_USE_FRAMEWORKS)
-    set(CMAKE_REQUIRED_FLAGS "-F${QT_LIBRARY_DIR} ")
-  endif (QT_USE_FRAMEWORKS)
-  check_cxx_source_compiles(
+    macro_push_required_vars()
+    set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
+    message(STATUS ${QT_INCLUDE_DIR})
+    if (QT_USE_FRAMEWORKS)
+        set(CMAKE_REQUIRED_FLAGS "-F${QT_LIBRARY_DIR} ")
+    endif (QT_USE_FRAMEWORKS)
+    check_cxx_source_compiles(
 "#include <QtNetwork/QSslSocket>
 int main()
 {
     QSslSocket *socket;
     return 0;
-}" HAVE_QSSLSOCKET)
-  if (NOT HAVE_QSSLSOCKET)
-    message(SEND_ERROR "KDE Requires Qt to be built with SSL support")
-  endif (NOT HAVE_QSSLSOCKET)
-macro_pop_required_vars()
+}" HAVE_QSSLSOCKET
+    )
+
+    if (NOT HAVE_QSSLSOCKET)
+        message(SEND_ERROR "KDE Requires Qt to be built with SSL support")
+    endif()
+    macro_pop_required_vars()
 endif(KATIE_FOUND)
 
 check_include_files("sys/types.h;sys/socket.h;net/if.h" HAVE_NET_IF_H)

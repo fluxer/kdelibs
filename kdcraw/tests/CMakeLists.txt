@@ -24,10 +24,8 @@
 
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../libkdcraw)
 
-SET(raw2png_SRCS raw2png.cpp)
-ADD_EXECUTABLE(raw2png ${raw2png_SRCS})
-TARGET_LINK_LIBRARIES(raw2png kdcraw ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+KDE4_ADD_MANUAL_TESTS(kdcraw-raw2png raw2png.cpp)
+TARGET_LINK_LIBRARIES(kdcraw-raw2png kdcraw ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 
-SET(libinfo_SRCS libinfo.cpp)
-ADD_EXECUTABLE(libinfo ${libinfo_SRCS})
+KDE4_ADD_MANUAL_TESTS(kdcraw-libinfo libinfo.cpp)
 TARGET_LINK_LIBRARIES(libinfo kdcraw ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})

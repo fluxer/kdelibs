@@ -361,42 +361,42 @@ void KArchiveTest::testReadTar() // testCreateTarGz must have been run first.
     // used when writing.
     QBENCHMARK {
 
-    KTar tar( fileName );
+        KTar tar( fileName );
 
-    QVERIFY( tar.open( QIODevice::ReadOnly ) );
+        QVERIFY( tar.open( QIODevice::ReadOnly ) );
 
-    const KArchiveDirectory* dir = tar.directory();
-    QVERIFY( dir != 0 );
-    const QStringList listing = recursiveListEntries( dir, "", WithUserGroup );
+        const KArchiveDirectory* dir = tar.directory();
+        QVERIFY( dir != 0 );
+        const QStringList listing = recursiveListEntries( dir, "", WithUserGroup );
 
-    QFileInfo localFileData("test3");
+        QFileInfo localFileData("test3");
 
-    const QString owner = localFileData.owner();
-    const QString group = localFileData.group();
+        const QString owner = localFileData.owner();
+        const QString group = localFileData.group();
 
-    QCOMPARE( listing.count(), 15 );
-    QCOMPARE( listing[ 0], QString("mode=40755 user=user group=group path=aaaemptydir type=dir") );
-    QCOMPARE( listing[ 1], QString("mode=40777 user=%1 group=%2 path=dir type=dir").arg(owner, group) );
-    QCOMPARE( listing[ 2], QString("mode=40777 user=%1 group=%2 path=dir/subdir type=dir").arg(owner,group) );
-    QCOMPARE( listing[ 3], QString("mode=100644 user=user group=group path=dir/subdir/mediumfile2 type=file size=100") );
-    QCOMPARE( listing[ 4], QString("mode=100644 user=weis group=users path=empty type=file size=0") );
-    QCOMPARE( listing[ 5], QString("mode=100644 user=user group=group path=hugefile type=file size=20000") );
-    QCOMPARE( listing[ 6], QString("mode=100644 user=user group=group path=mediumfile type=file size=100") );
-    QCOMPARE( listing[ 7], QString("mode=40777 user=%1 group=%2 path=my type=dir").arg(owner, group) );
-    QCOMPARE( listing[ 8], QString("mode=40777 user=%1 group=%2 path=my/dir type=dir").arg(owner, group) );
-    QCOMPARE( listing[ 9], QString("mode=100644 user=dfaure group=hackers path=my/dir/test3 type=file size=29") );
-    QCOMPARE( listing[10], QString("mode=100440 user=weis group=users path=test1 type=file size=5") );
-    QCOMPARE( listing[11], QString("mode=100644 user=weis group=users path=test2 type=file size=8") );
-    QCOMPARE( listing[12], QString("mode=40777 user=%1 group=%2 path=z type=dir").arg(owner, group) );
-    // This one was added with addLocalFile, so ignore mode/user/group.
-    QString str = listing[13];
-    str.replace(QRegExp("mode.*path"), "path" );
-    QCOMPARE( str, QString("path=z/test3 type=file size=13") );
-    str = listing[14];
-    str.replace(QRegExp("mode.*path"), "path" );
-    QCOMPARE( str, QString("path=z/test3_symlink type=file size=0 symlink=test3") );
+        QCOMPARE( listing.count(), 15 );
+        QCOMPARE( listing[ 0], QString("mode=40755 user=user group=group path=aaaemptydir type=dir") );
+        QCOMPARE( listing[ 1], QString("mode=40777 user=%1 group=%2 path=dir type=dir").arg(owner, group) );
+        QCOMPARE( listing[ 2], QString("mode=40777 user=%1 group=%2 path=dir/subdir type=dir").arg(owner,group) );
+        QCOMPARE( listing[ 3], QString("mode=100644 user=user group=group path=dir/subdir/mediumfile2 type=file size=100") );
+        QCOMPARE( listing[ 4], QString("mode=100644 user=weis group=users path=empty type=file size=0") );
+        QCOMPARE( listing[ 5], QString("mode=100644 user=user group=group path=hugefile type=file size=20000") );
+        QCOMPARE( listing[ 6], QString("mode=100644 user=user group=group path=mediumfile type=file size=100") );
+        QCOMPARE( listing[ 7], QString("mode=40777 user=%1 group=%2 path=my type=dir").arg(owner, group) );
+        QCOMPARE( listing[ 8], QString("mode=40777 user=%1 group=%2 path=my/dir type=dir").arg(owner, group) );
+        QCOMPARE( listing[ 9], QString("mode=100644 user=dfaure group=hackers path=my/dir/test3 type=file size=29") );
+        QCOMPARE( listing[10], QString("mode=100440 user=weis group=users path=test1 type=file size=5") );
+        QCOMPARE( listing[11], QString("mode=100644 user=weis group=users path=test2 type=file size=8") );
+        QCOMPARE( listing[12], QString("mode=40777 user=%1 group=%2 path=z type=dir").arg(owner, group) );
+        // This one was added with addLocalFile, so ignore mode/user/group.
+        QString str = listing[13];
+        str.replace(QRegExp("mode.*path"), "path" );
+        QCOMPARE( str, QString("path=z/test3 type=file size=13") );
+        str = listing[14];
+        str.replace(QRegExp("mode.*path"), "path" );
+        QCOMPARE( str, QString("path=z/test3_symlink type=file size=0 symlink=test3") );
 
-    QVERIFY( tar.close() );
+        QVERIFY( tar.close() );
 
     }
 }

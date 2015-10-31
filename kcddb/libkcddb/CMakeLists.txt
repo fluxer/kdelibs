@@ -1,8 +1,3 @@
-
-include_directories(
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
-
 ########### next target ###############
 
 set(kcddb_LIB_SRCS ${libmusicbrainz_SRCS}
@@ -35,7 +30,7 @@ set(kcddb_LIB_SRCS ${libmusicbrainz_SRCS}
     cdinfoencodingwidget.ui
 )
 
-kde4_add_kcfg_files(kcddb_LIB_SRCS configbase.kcfgc )
+kde4_add_kcfg_files(kcddb_LIB_SRCS configbase.kcfgc)
 
 add_library(kcddb SHARED ${kcddb_LIB_SRCS})
 
@@ -51,7 +46,8 @@ set_target_properties(kcddb PROPERTIES
 
 ########### install files ###############
 
-install(FILES
+install(
+    FILES
     cdinfo.h
     cdinfodialog.h
     client.h
@@ -60,7 +56,17 @@ install(FILES
     kcddb.h
     kcddb_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/configbase.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/libkcddb COMPONENT Devel)
-install( FILES libkcddb.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+    DESTINATION ${INCLUDE_INSTALL_DIR}/libkcddb
+    COMPONENT Devel
+)
 
-install(TARGETS kcddb EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    FILES libkcddb.kcfg
+    DESTINATION ${KCFG_INSTALL_DIR}
+)
+
+install(
+    TARGETS kcddb
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)

@@ -24,24 +24,16 @@
 
 PROJECT(libkdcraw)
 
-INCLUDE(MacroLibrary)
-INCLUDE(MacroOptionalAddSubdirectory)
-INCLUDE(FindPackageHandleStandardArgs)
-INCLUDE(CMakePackageConfigHelpers)
-
 # NOTE: Libraw 0.16.x is prefered version to use because it's ported to Cmake
 # with full features supported. Until libraw 0.16.0 is release (ends of 2013),
 # we will support previous version (with limited support)
-FIND_PACKAGE(LibRaw 0.15)
+FIND_PACKAGE(LibRaw VERSION 0.15 REQUIRED)
 SET_PACKAGE_PROPERTIES(LibRaw PROPERTIES
     DESCRIPTION "library that provides image Raw file demosaicing"
     URL "http://www.libraw.org"
     TYPE REQUIRED
     PURPOSE "Required to build libkdcraw"
 )
-IF(NOT LIBRAW_FOUND)
-    RETURN()
-ENDIF()
 
 # Check LibRaw config header.
 MESSAGE(STATUS "LibRaw version: ${LibRaw_VERSION_STRING}")
@@ -53,26 +45,22 @@ ELSE()
     MESSAGE(STATUS "LibRaw config file exists: no")
 ENDIF()
 
-ADD_DEFINITIONS(${QT_DEFINITIONS}
-                ${QT_QTDBUS_DEFINITIONS}
-                ${KDE4_DEFINITIONS}
-                ${LibRaw_r_DEFINITIONS}
-               )
+ADD_DEFINITIONS(
+    ${QT_QTDBUS_DEFINITIONS}
+    ${LibRaw_r_DEFINITIONS}
+    -DKDE_DEFAULT_DEBUG_AREA=51002
+)
 
-INCLUDE_DIRECTORIES(${QDBUS_INCLUDE_DIRS} 
-                    ${CMAKE_SOURCE_DIR}
-                    ${CMAKE_BINARY_DIR}
-                    ${KDE4_INCLUDES}
-                    ${CMAKE_SOURCE_DIR}/threadweaver
-                    ${CMAKE_SOURCE_DIR}/solid
-                    ${CMAKE_BINARY_DIR}/solid
-                    ${KDE4_KDECORE_INCLUDES}
-                    ${KDE4_KIO_INCLUDES}
-                    ${LibRaw_INCLUDE_DIR}
-                   )
-
-SET(LIBKDCRAW_AREA_CODE_GENERAL 51002)
-ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=${LIBKDCRAW_AREA_CODE_GENERAL})
+INCLUDE_DIRECTORIES(
+    ${QDBUS_INCLUDE_DIRS} 
+    ${KDE4_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/threadweaver
+    ${CMAKE_SOURCE_DIR}/solid
+    ${CMAKE_BINARY_DIR}/solid
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KIO_INCLUDES}
+    ${LibRaw_INCLUDE_DIR}
+)
 
 # ==================================================================================================
 # Set env. variables accordinly.
@@ -91,6 +79,13 @@ IF(ENABLE_TESTING)
     ADD_SUBDIRECTORY(tests)
 ENDIF()
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libkdcraw.pc.cmake  ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw.pc)
-INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig)
+CONFIGURE_FILE(
+    ${CMAKE_CURRENT_SOURCE_DIR}/libkdcraw.pc.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw.pc
+)
+INSTALL(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw.pc
+    DESTINATION ${LIB_INSTALL_DIR}/pkgconfig
+)
 

@@ -1,22 +1,29 @@
-
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/../libkcddb
     ${CMAKE_CURRENT_BINARY_DIR}/../libkcddb
 )
 
-########### next target ###############
-
-set(kcm_cddb_PART_SRCS cddbconfigwidget.cpp kcmcddb.cpp cddbconfigwidget.ui)
+set(kcm_cddb_PART_SRCS
+    cddbconfigwidget.cpp
+    kcmcddb.cpp
+    cddbconfigwidget.ui
+)
 
 kde4_add_plugin(kcm_cddb ${kcm_cddb_PART_SRCS})
 
-target_link_libraries(kcm_cddb  ${KDE4_KIO_LIBS} kcddb)
+target_link_libraries(kcm_cddb
+    ${KDE4_KIO_LIBS}
+    kcddb
+)
 
-install(TARGETS kcm_cddb  DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(
+    TARGETS kcm_cddb
+    DESTINATION ${PLUGIN_INSTALL_DIR}
+)
 
-
-########### install files ###############
-
-install( FILES libkcddb.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
+install(
+    FILES libkcddb.desktop
+    DESTINATION ${SERVICES_INSTALL_DIR}
+)
 
 

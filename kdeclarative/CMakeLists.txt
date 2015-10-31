@@ -44,10 +44,16 @@ if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
 
-set(kdeclarative_LIB_HEADERS
+install(
+    FILES
     kdeclarative.h
-    kdeclarative_export.h)
+    kdeclarative_export.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}
+    COMPONENT Devel
+)
 
-install(FILES ${kdeclarative_LIB_HEADERS} DESTINATION ${INCLUDE_INSTALL_DIR}/ COMPONENT Devel)
-
-install(TARGETS kdeclarative EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kdeclarative
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)

@@ -1,13 +1,22 @@
 project(kdecore)
 
 # Generate config-kstandarddirs.h
-configure_file(config-kstandarddirs.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kstandarddirs.h )
+configure_file(
+    config-kstandarddirs.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-kstandarddirs.h
+)
 
 # Generate kdefakes.h
-configure_file(kdefakes.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdefakes.h )
+configure_file(
+    kdefakes.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/kdefakes.h
+)
 
 # Generate kdeversion.h
-configure_file(util/kdeversion.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h )
+configure_file(
+    util/kdeversion.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
+)
 
 # Configure checks for kdirwatch
 macro_optional_find_package(FAM)
@@ -17,43 +26,66 @@ check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
 macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
 
 # Generate io/config-kdirwatch.h
-configure_file(io/config-kdirwatch.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/io/config-kdirwatch.h )
+configure_file(
+    io/config-kdirwatch.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/io/config-kdirwatch.h
+)
 
 # Configure checks for network/ but also for netsupp.*
 include(network/ConfigureChecks.cmake)
-configure_file(network/config-network.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/network/config-network.h )
-include_directories( ${CMAKE_CURRENT_BINARY_DIR}/network )
+configure_file(
+    network/config-network.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/network/config-network.h
+)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/network)
 
 # Configure checks for date/
 include(date/ConfigureChecks.cmake)
-configure_file(date/config-date.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/date/config-date.h)
-include_directories( ${CMAKE_CURRENT_BINARY_DIR}/date )
+configure_file(
+    date/config-date.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/date/config-date.h
+)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/date)
 
 # Configure checks for compression/
 include(compression/ConfigureChecks.cmake)
-configure_file(compression/config-compression.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/compression/config-compression.h)
-include_directories( ${CMAKE_CURRENT_BINARY_DIR}/compression )
+configure_file(
+    compression/config-compression.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/compression/config-compression.h
+)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/compression)
 
 # This file handles all the logic for compiling KAuth's backends
 include(auth/ConfigureChecks.cmake)
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/auth/ )
 
 # Configure a small file to tell BackendsManager what to use
-configure_file(auth/BackendsConfig.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/BackendsConfig.h)
+configure_file(
+    auth/BackendsConfig.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/BackendsConfig.h
+)
 
 # Configure checks for localization
-configure_file(localization/config-localization.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-localization.h)
+configure_file(
+    localization/config-localization.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-localization.h
+)
 
 # Configure checks for util
 include(util/ConfigureChecks.cmake)
-configure_file(util/config-util.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-util.h)
+configure_file(
+    util/config-util.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-util.h
+)
 
 
-include_directories( ${KDE4_KDECORE_INCLUDES} ${KDE4_KDEUI_INCLUDES})
-include_directories( ${ZLIB_INCLUDE_DIR} )
-include_directories( ${QT_INCLUDES} )
-
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/sonnet/ )
+include_directories(
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+    ${ZLIB_INCLUDE_DIR}
+    ${QT_INCLUDES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/auth
+    ${CMAKE_CURRENT_SOURCE_DIR}/sonnet
+)
 
 # kdecore_OPTIONAL_SRCS is used to collect source files
 # which are not always compiled into kdecore
@@ -66,52 +98,55 @@ add_definitions(-DQT_NO_CAST_FROM_ASCII)
 
 # Needed for the kdatetime test in release mode
 if(ENABLE_TESTING)
-   add_definitions(-DCOMPILING_TESTS)
+    add_definitions(-DCOMPILING_TESTS)
 endif(ENABLE_TESTING)
 
 # compile bzip2 support if available
 if(BZIP2_FOUND)
-   include_directories(${BZIP2_INCLUDE_DIR})
-   set(kdecore_OPTIONAL_SRCS ${kdecore_OPTIONAL_SRCS} compression/kbzip2filter.cpp )
-   set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${BZIP2_LIBRARIES})
+    include_directories(${BZIP2_INCLUDE_DIR})
+    set(kdecore_OPTIONAL_SRCS ${kdecore_OPTIONAL_SRCS} compression/kbzip2filter.cpp)
+    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${BZIP2_LIBRARIES})
 endif(BZIP2_FOUND)
 
 # compile lzma support if available
 if(LIBLZMA_FOUND)
-   include_directories(${LIBLZMA_INCLUDE_DIRS})
-   set(kdecore_OPTIONAL_SRCS ${kdecore_OPTIONAL_SRCS} compression/kxzfilter.cpp )
-   set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBLZMA_LIBRARIES})
+    include_directories(${LIBLZMA_INCLUDE_DIRS})
+    set(kdecore_OPTIONAL_SRCS ${kdecore_OPTIONAL_SRCS} compression/kxzfilter.cpp)
+    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBLZMA_LIBRARIES})
 endif(LIBLZMA_FOUND)
 
 # compile Gettext support if available
 if(LIBINTL_FOUND)
-  include_directories(${LIBINTL_INCLUDE_DIR})
-  set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBINTL_LIBRARIES})
-endif(LIBINTL_FOUND)
-
-if (HAVE_RESOLV_LIBRARY)
-  set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} resolv)
-endif (HAVE_RESOLV_LIBRARY)
-
-add_subdirectory( kconfig_compiler )
-if(ENABLE_TESTING)
-    add_subdirectory( tests )
-    add_subdirectory( sonnet/tests )
+    include_directories(${LIBINTL_INCLUDE_DIR})
+    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBINTL_LIBRARIES})
 endif()
-add_subdirectory( network/kssld )
+
+if(HAVE_RESOLV_LIBRARY)
+    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} resolv)
+endif()
+
+add_subdirectory(kconfig_compiler)
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+    add_subdirectory(sonnet/tests)
+endif()
+add_subdirectory(network/kssld)
 
 ########### next target ###############
 
 add_library(kdefakes ${LIBRARY_TYPE} fakes.c)
 set_target_properties(kdefakes PROPERTIES
     VERSION ${KDE_NON_GENERIC_LIB_VERSION}
-    SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION})
-if (NOT HAVE_TRUNC)
+    SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION}
+)
+if(NOT HAVE_TRUNC)
     target_link_libraries(kdefakes  m )
-endif (NOT HAVE_TRUNC)
+endif()
 
-install(TARGETS kdefakes
-    EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS}
+install(
+    TARGETS kdefakes
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 ########### next target ###############
@@ -281,9 +316,9 @@ set_source_files_properties(util/kshareddatacache.cpp
     PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
 )
 
-if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
-   add_definitions(-DNO_DISPLAY)
-endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
+if(NOT Q_WS_X11 AND NOT Q_WS_QWS)
+    add_definitions(-DNO_DISPLAY)
+endif()
 
 add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 
@@ -299,17 +334,19 @@ target_link_libraries(kdecore PRIVATE
 
 set(SYS_INOTIFY_H_FOUND 0)
 if(SYS_INOTIFY_H_FOUND)
-   set_package_properties(FAM PROPERTIES DESCRIPTION "File alteration notification support via a separate service"
-                          URL "http://oss.sgi.com/projects/fam"
-                          TYPE OPTIONAL
-                          PURPOSE "You have file alteration notification support built into your kernel, however you might consider installing FAM as it also supports NFS."
-                         )
+    set_package_properties(FAM PROPERTIES
+        DESCRIPTION "File alteration notification support via a separate service"
+        URL "http://oss.sgi.com/projects/fam"
+        TYPE OPTIONAL
+        PURPOSE "You have file alteration notification support built into your kernel, however you might consider installing FAM as it also supports NFS."
+    )
 else(SYS_INOTIFY_H_FOUND)
-   set_package_properties(FAM PROPERTIES DESCRIPTION "File alteration notification support via a separate service"
-                          URL "http://oss.sgi.com/projects/fam"
-                          TYPE OPTIONAL
-                          PURPOSE "Provides file alteration notification facilities using a separate service."
-                         )
+    set_package_properties(FAM PROPERTIES
+        DESCRIPTION "File alteration notification support via a separate service"
+        URL "http://oss.sgi.com/projects/fam"
+        TYPE OPTIONAL
+        PURPOSE "Provides file alteration notification facilities using a separate service."
+    )
 endif(SYS_INOTIFY_H_FOUND)
 
 if(FAM_FOUND)
@@ -317,15 +354,22 @@ if(FAM_FOUND)
    target_link_libraries(kdecore PRIVATE ${FAM_LIBRARIES})
 endif(FAM_FOUND)
 
-target_link_libraries(kdecore PUBLIC ${QT_QTDBUS_LIBRARY} ${QT_QTCORE_LIBRARY} )
+target_link_libraries(kdecore PUBLIC
+    ${QT_QTDBUS_LIBRARY}
+    ${QT_QTCORE_LIBRARY}
+)
 
 set_target_properties(kdecore PROPERTIES
-                              VERSION ${GENERIC_LIB_VERSION}
-                              SOVERSION ${GENERIC_LIB_SOVERSION}
-                     )
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 
-install(TARGETS kdecore EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kdecore
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 ########### next target ###############
 
@@ -334,10 +378,11 @@ install(TARGETS kdecore EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_A
 set(KAUTH_BACKEND_SRCS ${KAUTH_BACKEND_SRCS} auth/AuthBackend.cpp)
 kde4_add_plugin(kauth_backend_plugin ${KAUTH_BACKEND_SRCS})
 target_link_libraries(kauth_backend_plugin ${KAUTH_BACKEND_LIBS})
-install(TARGETS kauth_backend_plugin
-        LIBRARY DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-        ARCHIVE DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-        RUNTIME DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+install(
+    TARGETS kauth_backend_plugin
+    LIBRARY DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+    ARCHIVE DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+    RUNTIME DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
 )
 
 ########### next target ###############
@@ -346,141 +391,163 @@ install(TARGETS kauth_backend_plugin
 
 kde4_add_plugin(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_SRCS} auth/HelperProxy.cpp)
 target_link_libraries(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_LIBS})
-install(TARGETS kauth_helper_plugin
-        LIBRARY DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-        ARCHIVE DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-        RUNTIME DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+install(
+    TARGETS kauth_helper_plugin
+    LIBRARY DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+    ARCHIVE DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+    RUNTIME DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
 )
 
 ########### next target ###############
 
-configure_file(localization/all_languages.desktop ${CMAKE_CURRENT_BINARY_DIR}/all_languages @ONLY)
+configure_file(
+    localization/all_languages.desktop
+    ${CMAKE_CURRENT_BINARY_DIR}/all_languages
+    @ONLY
+)
 
 add_executable(kde4-config kde-config.cpp )
 
 target_link_libraries(kde4-config ${KDE4_KDECORE_LIBS})
 
-install(TARGETS kde4-config ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS kde4-config ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
 
 ########### install files ###############
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/all_languages DESTINATION ${LOCALE_INSTALL_DIR}  )
-install( FILES localization/entry.desktop  DESTINATION  ${LOCALE_INSTALL_DIR}/en_US )
-install( FILES kdebug.areas kdebugrc DESTINATION ${CONFIG_INSTALL_DIR} )
-install( FILES
-   kdecore_export.h
-   compression/kfilterbase.h
-   compression/karchive_export.h
-   compression/kfilterdev.h
-   config/conversion_check.h
-   config/kconfig.h
-   #config/kconfigbackend.h re-enable post-API review and implementation (4.2?)
-   config/kconfigbase.h
-   config/kconfiggroup.h
-   config/kdesktopfile.h
-   config/ksharedconfig.h
-   config/kcoreconfigskeleton.h
-   date/kcalendarsystem.h
-   date/kdatetime.h
-   date/klocalizeddate.h
-   date/ksystemtimezone.h
-   date/ktimezone.h
-   date/ktzfiletimezone.h
-   io/kar.h
-   io/karchive.h
-   io/kautosavefile.h
-   io/kdebug.h
-   io/kdirwatch.h
-   io/kmessage.h
-   io/kprocess.h
-   io/klockfile.h
-   io/kmountpoint.h
-   io/ksavefile.h
-   io/ktar.h
-   io/ktempdir.h
-   io/ktemporaryfile.h
-   io/kurl.h
-   io/kzip.h
-   jobs/kcompositejob.h
-   jobs/kjob.h
-   jobs/kjobuidelegate.h
-   jobs/kjobtrackerinterface.h
-   kernel/kaboutdata.h
-   kernel/kauthorized.h
-   kernel/kcmdlineargs.h
-   kernel/kdbusconnectionpool.h
-   kernel/kglobal.h
-   kernel/kcomponentdata.h
-   kernel/kstandarddirs.h
-   kernel/ktoolinvocation.h
-   DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel
+
+install(
+    FILES
+    localization/entry.desktop
+    ${CMAKE_CURRENT_BINARY_DIR}/all_languages
+    DESTINATION ${LOCALE_INSTALL_DIR}/en_US
 )
 
-install(FILES
-   network/klocalsocket.h
-   network/ksocketfactory.h
-   network/ktcpsocket.h
-   auth/kauthaction.h
-   auth/kauthactionreply.h
-   auth/kauthactionwatcher.h
-   auth/kauthhelpersupport.h
-   auth/kauth.h
-   services/kmimetype.h
-   services/kmimetypetrader.h
-   services/kservice.h
-   services/kserviceaction.h
-   services/kservicegroup.h
-   #services/kservicefactory.h: do not install, internal API
-   services/kservicetype.h
-   #services/kservicetypefactory.h: do not install, internal API
-   services/kservicetypeprofile.h
-   services/kservicetypetrader.h
-   #services/kserviceoffer.h: do not install, internal API
-   services/kplugininfo.h
-   localization/kcharsets.h
-   localization/kcurrencycode.h
-   localization/kencodingdetector.h
-   localization/klocale.h
-   localization/klocalizedstring.h
-   sycoca/kprotocolinfo.h
-   sycoca/ksycoca.h
-   sycoca/ksycocaentry.h
-   sycoca/ksycocatype.h
-   text/kascii.h
-   text/kcodecs.h
-   text/kstringhandler.h
-   util/kallocator.h
-   util/kautostart.h
-   util/kde_file.h
-   util/kdedmodule.h
-   util/klauncher_iface.h
-   util/klibrary.h
-   util/kmacroexpander.h
-   util/kexportplugin.h
-   util/kpluginfactory.h
-   util/kpluginloader.h
-   util/kshell.h
-   util/krandom.h
-   util/krandomsequence.h
-   util/kshareddatacache.h
-   util/ksharedptr.h
-   util/ksortablelist.h
-   util/kuser.h
-   util/qtest_kde.h
-   ${CMAKE_CURRENT_BINARY_DIR}/kdefakes.h
-   ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
-   DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel
+install(
+    FILES
+    kdebug.areas
+    kdebugrc
+    DESTINATION ${CONFIG_INSTALL_DIR}
 )
 
-install( FILES sonnet/backgroundchecker.h sonnet/speller.h sonnet/globals.h
-         DESTINATION ${INCLUDE_INSTALL_DIR}/sonnet COMPONENT Devel)
+install(
+    FILES
+    kdecore_export.h
+    compression/kfilterbase.h
+    compression/karchive_export.h
+    compression/kfilterdev.h
+    config/conversion_check.h
+    config/kconfig.h
+    #config/kconfigbackend.h re-enable post-API review and implementation (4.2?)
+    config/kconfigbase.h
+    config/kconfiggroup.h
+    config/kdesktopfile.h
+    config/ksharedconfig.h
+    config/kcoreconfigskeleton.h
+    date/kcalendarsystem.h
+    date/kdatetime.h
+    date/klocalizeddate.h
+    date/ksystemtimezone.h
+    date/ktimezone.h
+    date/ktzfiletimezone.h
+    io/kar.h
+    io/karchive.h
+    io/kautosavefile.h
+    io/kdebug.h
+    io/kdirwatch.h
+    io/kmessage.h
+    io/kprocess.h
+    io/klockfile.h
+    io/kmountpoint.h
+    io/ksavefile.h
+    io/ktar.h
+    io/ktempdir.h
+    io/ktemporaryfile.h
+    io/kurl.h
+    io/kzip.h
+    jobs/kcompositejob.h
+    jobs/kjob.h
+    jobs/kjobuidelegate.h
+    jobs/kjobtrackerinterface.h
+    kernel/kaboutdata.h
+    kernel/kauthorized.h
+    kernel/kcmdlineargs.h
+    kernel/kdbusconnectionpool.h
+    kernel/kglobal.h
+    kernel/kcomponentdata.h
+    kernel/kstandarddirs.h
+    kernel/ktoolinvocation.h
+    network/klocalsocket.h
+    network/ksocketfactory.h
+    network/ktcpsocket.h
+    auth/kauthaction.h
+    auth/kauthactionreply.h
+    auth/kauthactionwatcher.h
+    auth/kauthhelpersupport.h
+    auth/kauth.h
+    services/kmimetype.h
+    services/kmimetypetrader.h
+    services/kservice.h
+    services/kserviceaction.h
+    services/kservicegroup.h
+    #services/kservicefactory.h: do not install, internal API
+    services/kservicetype.h
+    #services/kservicetypefactory.h: do not install, internal API
+    services/kservicetypeprofile.h
+    services/kservicetypetrader.h
+    #services/kserviceoffer.h: do not install, internal API
+    services/kplugininfo.h
+    localization/kcharsets.h
+    localization/kcurrencycode.h
+    localization/kencodingdetector.h
+    localization/klocale.h
+    localization/klocalizedstring.h
+    sycoca/kprotocolinfo.h
+    sycoca/ksycoca.h
+    sycoca/ksycocaentry.h
+    sycoca/ksycocatype.h
+    text/kascii.h
+    text/kcodecs.h
+    text/kstringhandler.h
+    util/kallocator.h
+    util/kautostart.h
+    util/kde_file.h
+    util/kdedmodule.h
+    util/klauncher_iface.h
+    util/klibrary.h
+    util/kmacroexpander.h
+    util/kexportplugin.h
+    util/kpluginfactory.h
+    util/kpluginloader.h
+    util/kshell.h
+    util/krandom.h
+    util/krandomsequence.h
+    util/kshareddatacache.h
+    util/ksharedptr.h
+    util/ksortablelist.h
+    util/kuser.h
+    util/qtest_kde.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdefakes.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}
+    COMPONENT Devel
+)
 
-install( FILES
-   config/kconfigbackend.desktop
-   services/kplugininfo.desktop
-   sonnet/sonnetspeller.desktop
-   DESTINATION  ${SERVICETYPES_INSTALL_DIR}
+install(
+    FILES
+    sonnet/backgroundchecker.h
+    sonnet/speller.h
+    sonnet/globals.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/sonnet
+    COMPONENT Devel
+)
+
+install(
+    FILES
+    config/kconfigbackend.desktop
+    services/kplugininfo.desktop
+    sonnet/sonnetspeller.desktop
+    DESTINATION ${SERVICETYPES_INSTALL_DIR}
 )
 

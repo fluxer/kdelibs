@@ -1,19 +1,19 @@
+kde4_add_plugin(kded_kssld kssld.cpp)
 
-########### next target ###############
+target_link_libraries(kded_kssld
+    ${KDE4_KDECORE_LIBS}
+    ${QT_QTNETWORK_LIBRARY}
+)
 
-set(kded_kssld_PART_SRCS kssld.cpp )
+install(
+    TARGETS kded_kssld
+    DESTINATION ${PLUGIN_INSTALL_DIR}
+)
 
-
-kde4_add_plugin(kded_kssld ${kded_kssld_PART_SRCS})
-
-target_link_libraries(kded_kssld  ${KDE4_KDECORE_LIBS} ${QT_QTNETWORK_LIBRARY} )
-
-install(TARGETS kded_kssld  DESTINATION ${PLUGIN_INSTALL_DIR} )
-
-
-########### install files ###############
-
-install( FILES kssld.desktop  DESTINATION  ${SERVICES_INSTALL_DIR}/kded )
+install(
+    FILES kssld.desktop
+    DESTINATION ${SERVICES_INSTALL_DIR}/kded
+)
 
 
 

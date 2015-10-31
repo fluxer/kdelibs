@@ -14,7 +14,11 @@ target_link_libraries(test_suggest ${KDE4_KDECORE_LIBS} )
 MACRO(SONNET_UNIT_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_test(sonnet-${_testname} ${_testname}.cpp)
-        target_link_libraries(sonnet-${_testname} ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTXML_LIBRARY} ${KDEWIN_LIBRARIES})
+        target_link_libraries(sonnet-${_testname}
+            ${KDE4_KDECORE_LIBS}
+            ${QT_QTTEST_LIBRARY}
+            ${QT_QTXML_LIBRARY}
+        )
     ENDFOREACH(_testname)
 ENDMACRO(SONNET_UNIT_TESTS)
 
