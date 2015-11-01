@@ -429,14 +429,6 @@ install(
 
 install(
     FILES
-    util/fixx11h.h
-    util/kkeyserver_x11.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
-)
-
-install(
-    FILES
     dialogs/aboutkde.png
     dialogs/kdeprint_nup1.png
     dialogs/kdeprint_nup2.png
@@ -665,6 +657,8 @@ install(
     xmlgui/kxmlguiclient.h
     xmlgui/kxmlguibuilder.h
     xmlgui/kxmlguifactory.h
+    util/fixx11h.h
+    util/kkeyserver_x11.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
@@ -709,11 +703,6 @@ install(
     jobs/org.kde.JobViewServer.xml
     jobs/org.kde.JobView.xml
     jobs/org.kde.JobViewV2.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
-)
-
-install(
-    FILES
     notifications/org.kde.StatusNotifierItem.xml
     notifications/org.kde.StatusNotifierWatcher.xml
     DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
@@ -730,30 +719,30 @@ endif()
 
 install(
     FILES
-    body-background.png
-    bar-bottom-left.png
-    bar-top-right.png
-    bar-bottom-middle.png
-    # bottom-left.png
-    box-middle-left.png
-    # top-right.png
-    bar-bottom-right.png
+    about/body-background.png
+    about/bar-bottom-left.png
+    about/bar-top-right.png
+    about/bar-bottom-middle.png
+    # about/bottom-left.png
+    about/box-middle-left.png
+    # about/top-right.png
+    about/bar-bottom-right.png
     # bottom-middle.png
-    box-middle-right.png
-    top-middle.png
-    bar-middle-left.png
-    # bottom-right.png
-    box-top-left.png
-    bar-middle-right.png
-    box-bottom-left.png
-    box-top-middle.png
-    bar-top-left.png
-    box-bottom-middle.png
-    box-top-right.png
-    bar-top-middle.png
-    box-bottom-right.png
-    box-center.png
-    kde_infopage.css
-    kde_infopage_rtl.css
+    about/box-middle-right.png
+    about/top-middle.png
+    about/bar-middle-left.png
+    # about/bottom-right.png
+    about/box-top-left.png
+    about/bar-middle-right.png
+    about/box-bottom-left.png
+    about/box-top-middle.png
+    about/bar-top-left.png
+    about/box-bottom-middle.png
+    about/box-top-right.png
+    about/bar-top-middle.png
+    about/box-bottom-right.png
+    about/box-center.png
+    about/kde_infopage.css
+    about/kde_infopage_rtl.css
     DESTINATION ${DATA_INSTALL_DIR}/kdeui/about
 )
