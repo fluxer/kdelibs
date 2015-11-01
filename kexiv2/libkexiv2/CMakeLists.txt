@@ -22,44 +22,65 @@
 #
 # ============================================================
 
-INCLUDE_DIRECTORIES(${EXIV2_INCLUDE_DIR})
+include_directories(${EXIV2_INCLUDE_DIR})
 
-ADD_DEFINITIONS(${EXIV2_DEFINITIONS})
-ADD_DEFINITIONS(${KDE4_ENABLE_EXCEPTIONS})
+add_definitions(${EXIV2_DEFINITIONS} ${KDE4_ENABLE_EXCEPTIONS})
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+)
 
 # This was used to enable catching of exceptions thrown by libexiv2.
 # We use now #pragma GCC visibility push(default) around the headers
-#SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=default")
 
-SET(kexiv2_LIB_SRCS kexiv2.cpp
-                    kexiv2_p.cpp
-                    kexiv2image.cpp
-                    kexiv2comments.cpp
-                    kexiv2exif.cpp
-                    kexiv2iptc.cpp
-                    kexiv2gps.cpp
-                    kexiv2xmp.cpp
-                    kexiv2previews.cpp
-                    altlangstredit.cpp
-                    msgtextedit.cpp
-                    countryselector.cpp
-                    subjectwidget.cpp
-                    rotationmatrix.cpp
-   )
+set(kexiv2_LIB_SRCS
+    kexiv2.cpp
+    kexiv2_p.cpp
+    kexiv2image.cpp
+    kexiv2comments.cpp
+    kexiv2exif.cpp
+    kexiv2iptc.cpp
+    kexiv2gps.cpp
+    kexiv2xmp.cpp
+    kexiv2previews.cpp
+    altlangstredit.cpp
+    msgtextedit.cpp
+    countryselector.cpp
+    subjectwidget.cpp
+    rotationmatrix.cpp
+)
 
-ADD_LIBRARY(kexiv2 SHARED ${kexiv2_LIB_SRCS})
+add_library(kexiv2 SHARED ${kexiv2_LIB_SRCS})
 
-TARGET_LINK_LIBRARIES(kexiv2 ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY}
-                             ${QT_QTXML_LIBRARY} ${EXIV2_LIBRARIES})
-SET_TARGET_PROPERTIES(kexiv2 PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+target_link_libraries(kexiv2
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KDECORE_LIBS}
+    ${QT_QTGUI_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+    ${EXIV2_LIBRARIES}
+)
 
-install(TARGETS kexiv2 EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+set_target_properties(kexiv2 PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
-INSTALL(FILES topicset.iptc-subjectcode.xml DESTINATION ${DATA_INSTALL_DIR}/libkexiv2/data)
+install(
+    TARGETS kexiv2
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
-INSTALL(FILES
+install(
+    FILES
+    topicset.iptc-subjectcode.xml
+    DESTINATION ${DATA_INSTALL_DIR}/libkexiv2/data
+)
+
+install(
+    FILES
     kexiv2.h
     kexiv2data.h
     kexiv2previews.h

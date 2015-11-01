@@ -22,23 +22,23 @@
 #
 # ============================================================
 
-PROJECT(libkexiv2)
+project(libkexiv2)
 
-ADD_DEFINITIONS(
+add_definitions(
     ${QT_QTDBUS_DEFINITIONS}
     -DKDE_DEFAULT_DEBUG_AREA=51003
 )
-INCLUDE_DIRECTORIES(
+
+include_directories(
     ${QDBUS_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
-    ${KDE4_INCLUDES}
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}
 )
 
-FIND_PACKAGE(Exiv2 REQUIRED VERSION "0.21")
-SET_PACKAGE_PROPERTIES(Exiv2 PROPERTIES
+find_package(Exiv2 REQUIRED VERSION "0.21")
+set_package_properties(Exiv2 PROPERTIES
     DESCRIPTION "Image metadata library and tools"
     URL "http://www.exiv2.org"
     PURPOSE "Required to build libkexiv2"
@@ -47,23 +47,24 @@ SET_PACKAGE_PROPERTIES(Exiv2 PROPERTIES
 # =======================================================
 # Set env. variables accordinly.
 
-SET(KEXIV2_LIB_VERSION_STRING "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KDE_VERSION_RELEASE}")
-SET(KEXIV2_LIB_VERSION_ID "0x0${KDE_VERSION_MAJOR}0${KDE_VERSION_MINOR}0${KDE_VERSION_RELEASE}")
-SET(KEXIV2_LIB_SO_VERSION_STRING "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KDE_VERSION_RELEASE}")
+set(KEXIV2_LIB_VERSION_STRING "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KDE_VERSION_RELEASE}")
+set(KEXIV2_LIB_VERSION_ID "0x0${KDE_VERSION_MAJOR}0${KDE_VERSION_MINOR}0${KDE_VERSION_RELEASE}")
+set(KEXIV2_LIB_SO_VERSION_STRING "${KDE_VERSION_MAJOR}.${KDE_VERSION_MINOR}.${KDE_VERSION_RELEASE}")
 
 # =======================================================
 
-ADD_SUBDIRECTORY(libkexiv2)
+add_subdirectory(libkexiv2)
 
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
 
-CONFIGURE_FILE(
+configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/libkexiv2.pc.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc
 )
-INSTALL(
+
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc
     DESTINATION ${LIB_INSTALL_DIR}/pkgconfig
 )

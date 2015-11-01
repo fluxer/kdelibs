@@ -14,7 +14,8 @@ set(kfile_LIB_SRCS
     kdiroperator.cpp
     kdiroperatordetailview.cpp
     kdirselectdialog.cpp
-    kdirsortfilterproxymodel.cpp #  used in combination with kio/kio/kdirmodel.cpp
+    # used in combination with kio/kio/kdirmodel.cpp
+    kdirsortfilterproxymodel.cpp
     kfilebookmarkhandler.cpp
     kfilefiltercombo.cpp
     kfiletreeview.cpp
@@ -38,6 +39,7 @@ set(kfile_LIB_SRCS
 )
 
 add_library(kfile ${LIBRARY_TYPE} ${kfile_LIB_SRCS})
+
 target_link_libraries(kfile PRIVATE
     ${KDE4_KIO_LIBS}
     ${ZLIB_LIBRARY}
@@ -49,16 +51,26 @@ if(X11_Xrender_FOUND)
     target_link_libraries(kfile PRIVATE ${X11_Xrender_LIB})
 endif(X11_Xrender_FOUND)
 
-target_link_libraries(kfile PUBLIC kio kdeui kdecore ${QT_QTGUI_LIBRARY})
+target_link_libraries(kfile PUBLIC
+    kio
+    kdeui
+    kdecore
+    ${QT_QTGUI_LIBRARY}
+)
 
 set_target_properties(kfile PROPERTIES
     VERSION ${GENERIC_LIB_VERSION} 
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-install(TARGETS kfile EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS kfile
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
-install( FILES
+install(
+    FILES
     kdiroperator.h
     kdirselectdialog.h
     kdirsortfilterproxymodel.h
@@ -78,11 +90,19 @@ install( FILES
 
 ############ module used by KFileDialog ##########
 
-set(kfilemodule_SRCS kfilemodule.cpp)
+kde4_add_plugin(kfilemodule kfilemodule.cpp)
 
-kde4_add_plugin(kfilemodule ${kfilemodule_SRCS})
+target_link_libraries(kfilemodule
+    ${KDE4_KFILE_LIBS}
+    ${KDE4_KIO_LIBS}
+)
 
-target_link_libraries(kfilemodule ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS})
+install(
+    TARGETS kfilemodule
+    DESTINATION ${PLUGIN_INSTALL_DIR}
+)
 
-install(TARGETS kfilemodule DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kfilemodule.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(
+    FILES kfilemodule.desktop
+    DESTINATION ${SERVICES_INSTALL_DIR}
+)

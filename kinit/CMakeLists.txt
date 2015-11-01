@@ -8,9 +8,9 @@ include_directories(${KDE4_KPARTS_INCLUDES})
 
 ########### Configuring (mainly for proctitle) ###########
 
-include (CheckFunctionExists)
-include (CheckIncludeFiles)
-include (CheckVariableExists)
+include(CheckFunctionExists)
+include(CheckIncludeFiles)
+include(CheckVariableExists)
 check_variable_exists(__progname HAVE___PROGNAME)
 check_variable_exists(__progname_full HAVE___PROGNAME_FULL)
 check_include_files(sys/pstat.h HAVE_SYS_PSTAT_H)
@@ -21,11 +21,10 @@ check_function_exists(setproctitle HAVE_SETPROCTITLE)
 
 
 # used by 4 executables in this file
+set(KINIT_SOCKET_LIBRARY)
 if(HAVE_SOCKET_LIBRARY)
     set(KINIT_SOCKET_LIBRARY socket)
-else(HAVE_SOCKET_LIBRARY)
-    set(KINIT_SOCKET_LIBRARY)
-endif(HAVE_SOCKET_LIBRARY)
+endif()
 
 
 ########### kdeinit4 ###############
@@ -55,7 +54,7 @@ install(TARGETS kwrapper4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_executable(kdeinit4_wrapper wrapper.c)
 
-target_link_libraries(kdeinit4_wrapper  ${KINIT_SOCKET_LIBRARY})
+target_link_libraries(kdeinit4_wrapper ${KINIT_SOCKET_LIBRARY})
 
 if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
     add_definitions(-DNO_DISPLAY)
@@ -124,4 +123,8 @@ install(
 )
 
 ########### config-kdeinit.h ############
-configure_file(config-kdeinit.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kdeinit.h)
+
+configure_file(
+    config-kdeinit.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-kdeinit.h
+)
