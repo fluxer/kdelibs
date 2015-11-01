@@ -121,6 +121,7 @@ set(cmakeFiles
     FindXKB.cmake
     FindXine.cmake
     FindXmms.cmake
+    FindWebP.cmake
     HandleImportedTargetsInCMakeRequiredLibraries.cmake
     KDE4Defaults.cmake
     KDE4Macros.cmake

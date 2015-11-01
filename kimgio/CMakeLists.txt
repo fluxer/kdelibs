@@ -2,21 +2,31 @@
 project(kimgio)
 
 macro_optional_find_package(Jasper)
-set_package_properties(Jasper PROPERTIES DESCRIPTION "Support for JPEG-2000 images"
-                       URL "http://www.ece.uvic.ca/~mdadams/jasper"
-                       TYPE OPTIONAL
-                      )
+set_package_properties(Jasper PROPERTIES
+    DESCRIPTION "Support for JPEG-2000 images"
+    URL "http://www.ece.uvic.ca/~mdadams/jasper"
+    TYPE OPTIONAL
+)
 
 macro_optional_find_package(OpenEXR)
-set_package_properties(OpenEXR PROPERTIES DESCRIPTION "Support for OpenEXR images"
-                       URL "http://www.openexr.com"
-                       TYPE OPTIONAL
-                      )
+set_package_properties(OpenEXR PROPERTIES
+    DESCRIPTION "Support for OpenEXR images"
+    URL "http://www.openexr.com"
+    TYPE OPTIONAL
+)
+
+macro_optional_find_package(WebP)
+set_package_properties(WebP PROPERTIES
+    DESCRIPTION "A new image format for the Web"
+    URL "https://developers.google.com/speed/webp"
+    TYPE OPTIONAL
+)
 
 include_directories( ${KDE4_KDEUI_INCLUDES} )
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
+##################################
 
 if(JASPER_FOUND)
 
@@ -97,7 +107,7 @@ target_link_libraries(kimg_psd ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
 install(TARGETS kimg_psd  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/ )
 
 ##################################
-                                              
+
 set(kimg_xview_LIB_SRCS xview.cpp)
 kde4_add_plugin(kimg_xview ${kimg_xview_LIB_SRCS})
 target_link_libraries(kimg_xview ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
@@ -107,14 +117,14 @@ install(TARGETS kimg_xview  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageforma
 ##################################
 
 if(OPENEXR_FOUND)
-    include_directories( ${CMAKE_SOURCE_DIR}/kio ${OPENEXR_INCLUDE_DIR} )
+    include_directories( ${CMAKE_SOURCE_DIR}/kio ${OPENEXR_INCLUDE_DIR})
     add_definitions(${OPENEXR_DEFINITIONS})
     set(kimg_exr_LIB_SRCS exr.cpp)
     kde4_add_plugin(kimg_exr ${kimg_exr_LIB_SRCS})
-    target_link_libraries(kimg_exr ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${OPENEXR_LIBRARIES} )
+    target_link_libraries(kimg_exr ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${OPENEXR_LIBRARIES})
 
-install(TARGETS kimg_exr  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/ )
-install( FILES exr.desktop DESTINATION  ${SERVICES_INSTALL_DIR}/qimageioplugins/ )
+    install(TARGETS kimg_exr  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/ )
+    install( FILES exr.desktop DESTINATION  ${SERVICES_INSTALL_DIR}/qimageioplugins/ )
 endif(OPENEXR_FOUND)
 
 ##################################
@@ -125,38 +135,56 @@ target_link_libraries(kimg_pic ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY})
 
 install(TARGETS kimg_pic  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/ )
 
+##################################
+
+if(WEBP_FOUND)
+    include_directories( ${WEBP_INCLUDES} )
+    kde4_add_plugin(kimg_webp webp.cpp)
+    target_link_libraries(kimg_webp ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${WEBP_LIBRARIES})
+
+    install(TARGETS kimg_webp  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/)
+    install(FILES webp.desktop DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins/)
+
+    install(FILES webp.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
+    update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+endif()
 
 ########### install files ###############
 
-install( FILES
-  png.desktop
-  xpm.desktop
-  bmp.desktop
-  pbm.desktop
-  pgm.desktop
-  pnm.desktop
-  ppm.desktop
-  xbm.desktop
-  jpeg.desktop
-  xv.desktop
-  eps.desktop
-  ico.desktop
-  gif.desktop
-  pcx.desktop
-  tga.desktop
-  ras.desktop
-  rgb.desktop
-  xcf.desktop
-  dds.desktop
-  mng.desktop
-  psd.desktop
-  hdr.desktop
-  tiff.desktop
-  pic.desktop
-  svg+xml.desktop
-  svg+xml-compressed.desktop
-  DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins/ )
+install(
+    FILES
+    png.desktop
+    xpm.desktop
+    bmp.desktop
+    pbm.desktop
+    pgm.desktop
+    pnm.desktop
+    ppm.desktop
+    xbm.desktop
+    jpeg.desktop
+    xv.desktop
+    eps.desktop
+    ico.desktop
+    gif.desktop
+    pcx.desktop
+    tga.desktop
+    ras.desktop
+    rgb.desktop
+    xcf.desktop
+    dds.desktop
+    mng.desktop
+    psd.desktop
+    hdr.desktop
+    tiff.desktop
+    pic.desktop
+    svg+xml.desktop
+    svg+xml-compressed.desktop
+    DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins/
+)
 
-install( FILES qimageio_plugin.desktop DESTINATION  ${SERVICETYPES_INSTALL_DIR}/ )
+install(
+    FILES qimageio_plugin.desktop
+    DESTINATION ${SERVICETYPES_INSTALL_DIR}/
+)
 
 
