@@ -34,7 +34,7 @@ KBuildServiceTypeFactory::KBuildServiceTypeFactory() :
     KServiceTypeFactory()
 {
     m_resourceList = new KSycocaResourceList;
-    m_resourceList->add("servicetypes", "*.desktop");
+    m_resourceList->add("servicetypes", ".desktop");
 }
 
 // return all service types for this factory

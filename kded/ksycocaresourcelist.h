@@ -22,7 +22,6 @@
 #include <QtCore/QString>
 #include <QtCore/QRegExp>
 
-
 struct KSycocaResource
 {
    QString resource;
@@ -34,11 +33,11 @@ class KSycocaResourceList : public QLinkedList<KSycocaResource>
 public:
    KSycocaResourceList() { }
 
-   void add(const QString &resource, const QString &filter)
+   void add(const QString &resource, const QString &extension)
    {
      KSycocaResource res;
      res.resource = resource;
-     res.extension = filter.mid(1);
+     res.extension = extension;
      append(res);
    }
 };

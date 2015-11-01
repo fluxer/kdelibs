@@ -25,7 +25,7 @@ KBuildProtocolInfoFactory::KBuildProtocolInfoFactory() :
   KProtocolInfoFactory()
 {
    m_resourceList = new KSycocaResourceList();
-   m_resourceList->add( "services", "*.protocol" );
+   m_resourceList->add( "services", ".protocol" );
 }
 
 // return all service types for this factory
