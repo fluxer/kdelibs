@@ -7,7 +7,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/kutils
     ${CMAKE_BINARY_DIR}
 )
-add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
 set(kwebkit_LIB_SRCS
     kwebkitpart.cpp
@@ -27,15 +26,29 @@ set(kwebkit_LIB_SRCS
 )
 
 ########################### kwebkitpart #############################
+
 kde4_add_plugin(kwebkitpart ${kwebkit_LIB_SRCS})
 
-target_link_libraries(kwebkitpart ${KDE4_KPARTS_LIBS} kdewebkit ${QT_QTWEBKIT_LIBRARY} ${QT_QTUITOOLS_LIBRARY})
+target_link_libraries(kwebkitpart
+    ${KDE4_KPARTS_LIBS}
+    ${KDE4_KDEWEBKIT_LIBS}
+    ${QT_QTWEBKIT_LIBRARY}
+    ${QT_QTUITOOLS_LIBRARY}
+)
+
 ########################### kwebkitpart #############################
 
 install(TARGETS kwebkitpart DESTINATION ${PLUGIN_INSTALL_DIR})
 
-install(FILES kwebkitpart.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(
+    FILES
+    kwebkitpart.desktop
+    DESTINATION ${SERVICES_INSTALL_DIR}
+)
 
-install(FILES kwebkitpart.rc DESTINATION ${DATA_INSTALL_DIR}/kwebkitpart)
-
-install(FILES error.html DESTINATION ${DATA_INSTALL_DIR}/kwebkitpart)
+install(
+    FILES
+    error.html
+    kwebkitpart.rc
+    DESTINATION ${DATA_INSTALL_DIR}/kwebkitpart
+)

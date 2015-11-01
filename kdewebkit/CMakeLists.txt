@@ -9,9 +9,9 @@ if(NOT QT_QTWEBKIT_FOUND)
 endif()
 
 include_directories(
- ${KDE4_KDECORE_INCLUDES}
- ${KDE4_KDEUI_INCLUDES}
- ${KDE4_KIO_INCLUDES}
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+    ${KDE4_KIO_INCLUDES}
 )
 
 set(kdewebkit_LIB_SRCS
@@ -22,22 +22,41 @@ set(kdewebkit_LIB_SRCS
     kwebpluginfactory.cpp
 )
 
-add_library(kdewebkit ${LIBRARY_TYPE} 
-    ${kdewebkit_LIB_SRCS} 
+add_library(kdewebkit ${LIBRARY_TYPE} ${kdewebkit_LIB_SRCS})
+
+target_link_libraries(kdewebkit PRIVATE
+    ${KDE4_KPARTS_LIBS}
+    ${KDE4_KDEUI_LIBS}
+)
+target_link_libraries(kdewebkit PUBLIC
+    kparts
+    kio
+    kdecore
+    ${QT_QTWEBKIT_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+    ${QT_QTCORE_LIBRARY}
 )
 
-target_link_libraries(kdewebkit PRIVATE ${KDE4_KPARTS_LIBS} ${KDE4_KDEUI_LIBS} ${QT_QTWEBKIT_LIBRARY})
-target_link_libraries(kdewebkit PUBLIC kparts kio kdecore ${QT_QTWEBKIT_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY})
+set_target_properties(kdewebkit PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
-set_target_properties(kdewebkit PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+install(
+    TARGETS kdewebkit
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
-install(TARGETS kdewebkit EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-install(FILES
+install(
+    FILES
     kdewebkit_export.h
     kwebwallet.h
     kgraphicswebview.h
     kwebpluginfactory.h
     kwebpage.h
     kwebview.h
-    DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}
+    COMPONENT Devel
+)

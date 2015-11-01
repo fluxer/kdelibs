@@ -153,7 +153,7 @@
 #    Use optional USE_RELATIVE_PATH to generate the classes in the build following the given
 #    relative path to the file.
 #
-#  KDE4_ADD_WIDGET_FILES (SRCS_VAR file1.widgets ... fileN.widgets)
+#  KDE4_ADD_WIDGET (SRCS_VAR file1.widgets ... fileN.widgets)
 #    Use this to add widget description files for the makekdewidgets code generator
 #    for Qt Designer plugins.
 #

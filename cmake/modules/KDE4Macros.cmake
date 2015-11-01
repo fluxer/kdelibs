@@ -4,7 +4,7 @@
 # KDE4_ADD_KCFG_FILES
 # KDE4_ADD_PLUGIN
 # KDE4_ADD_TEST
-# KDE4_ADD_WIDGET_FILES
+# KDE4_ADD_WIDGET
 # KDE4_INSTALL_ICONS
 # KDE4_CREATE_MANPAGE
 # KDE4_INSTALL_AUTH_HELPER_FILES
@@ -172,7 +172,7 @@ set(_KDE4_ICON_THEME_hi "hicolor")
 
 
 # only used internally by KDE4_INSTALL_ICONS
-macro(_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAME _install_NAME _l10n_SUBDIR)
+macro(_KDE4_ADD_ICON_INSTALL_RULE _install_PATH _group _orig_NAME _install_NAME _l10n_SUBDIR)
     # if the string doesn't match the pattern, the result is the full string,
     # so all three have the same content
     if(NOT ${_group} STREQUAL ${_install_NAME})
@@ -180,7 +180,7 @@ macro(_KDE4_ADD_ICON_INSTALL_RULE _install_SCRIPT _install_PATH _group _orig_NAM
         if(NOT _icon_GROUP)
             set(_icon_GROUP "actions")
         endif()
-        # message(STATUS "icon: ${_current_ICON} size: ${_size} group: ${_group} name: ${_name} l10n: ${_l10n_SUBDIR}")
+        # message(STATUS "path: ${_install_PATH} group: ${_group} name: ${_install_NAME} l10n: ${_l10n_SUBDIR}")
         install(
             FILES ${_orig_NAME}
             DESTINATION ${_install_PATH}/${_icon_GROUP}/${_l10n_SUBDIR}/
@@ -216,9 +216,11 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
         set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
         if( _theme_GROUP)
             _KDE4_ADD_ICON_INSTALL_RULE(
-                ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
-                ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR}
+                ${_group}
+                ${_current_ICON}
+                ${_name}
+                ${_l10n_SUBDIR}
             )
         endif( _theme_GROUP)
     endforeach(_current_ICON)
@@ -238,9 +240,11 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
         set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
         if(_theme_GROUP)
             _KDE4_ADD_ICON_INSTALL_RULE(
-                ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
-                ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR}
+                ${_group}
+                ${_current_ICON}
+                ${_name}
+                ${_l10n_SUBDIR}
             )
         endif()
     endforeach()
@@ -259,9 +263,11 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
         set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
         if(_theme_GROUP)
             _KDE4_ADD_ICON_INSTALL_RULE(
-                ${CMAKE_CURRENT_BINARY_DIR}/install_icons.cmake
                 ${_defaultpath}/${_theme_GROUP}/scalable
-                ${_group} ${_current_ICON} ${_name} ${_l10n_SUBDIR}
+                ${_group}
+                ${_current_ICON}
+                ${_name}
+                ${_l10n_SUBDIR}
             )
         endif()
     endforeach()
@@ -318,7 +324,7 @@ macro(KDE4_ADD_MANUAL_TEST _targetName)
     )
 endmacro(KDE4_ADD_MANUAL_TEST)
 
-macro(KDE4_ADD_WIDGET_FILES _sources)
+macro(KDE4_ADD_WIDGET _output _sources)
     foreach(_current_FILE ${_sources})
         get_filename_component(_input ${_current_FILE} ABSOLUTE)
         get_filename_component(_basename ${_input} NAME_WE)
@@ -328,7 +334,8 @@ macro(KDE4_ADD_WIDGET_FILES _sources)
         set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.moc)
 
         # create source file from the .widgets file
-        add_custom_command(OUTPUT ${_source}
+        add_custom_command(
+            OUTPUT ${_source}
             COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE} -o ${_source} ${_input}
             MAIN_DEPENDENCY ${_input}
         )
@@ -336,8 +343,10 @@ macro(KDE4_ADD_WIDGET_FILES _sources)
         qt4_generate_moc(${_source} ${_moc})
 
         add_library(${_basename}_autowidgets OBJECT ${_source} ${_moc})
+
+        set(${_output} ${${_output}} ${_source})
     endforeach(_current_FILE)
-endmacro(KDE4_ADD_WIDGET_FILES)
+endmacro(KDE4_ADD_WIDGET)
 
 
 # This macro adds the needed files for an helper executable meant to be used by
