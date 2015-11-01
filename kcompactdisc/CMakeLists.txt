@@ -12,7 +12,7 @@ find_package(Alsa)
 alsa_configure_file(${CMAKE_CURRENT_BINARY_DIR}/config-alsa.h)
 
 # TODO: drop wmlib entirely?
-if(CMAKE_SYSTEM_NAME STREQUAL GNU)
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
     set(USE_WMLIB FALSE)
 else ()
     set(USE_WMLIB TRUE)

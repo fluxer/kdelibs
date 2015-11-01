@@ -1,3 +1,5 @@
+cmake_minimum_required(VERSION 2.6)
+
 macro(LOG line)
    message(STATUS ${line})
    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/SystemInfo.txt "${line}\n")
