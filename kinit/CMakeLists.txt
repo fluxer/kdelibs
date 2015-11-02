@@ -11,6 +11,7 @@ include_directories(${KDE4_KPARTS_INCLUDES})
 include(CheckFunctionExists)
 include(CheckIncludeFiles)
 include(CheckVariableExists)
+
 check_variable_exists(__progname HAVE___PROGNAME)
 check_variable_exists(__progname_full HAVE___PROGNAME_FULL)
 check_include_files(sys/pstat.h HAVE_SYS_PSTAT_H)
@@ -19,17 +20,19 @@ check_include_files(unistd.h HAVE_UNISTD_H)
 check_function_exists(pstat HAVE_PSTAT)
 check_function_exists(setproctitle HAVE_SETPROCTITLE)
 
-
 # used by 4 executables in this file
 set(KINIT_SOCKET_LIBRARY)
 if(HAVE_SOCKET_LIBRARY)
     set(KINIT_SOCKET_LIBRARY socket)
 endif()
 
-
 ########### kdeinit4 ###############
 
-set(kdeinit_SRCS kinit.cpp proctitle.cpp klauncher_cmds.cpp)
+set(kdeinit_SRCS
+    kinit.cpp
+    proctitle.cpp
+    klauncher_cmds.cpp
+)
 
 add_executable(kdeinit4 ${kdeinit_SRCS})
 
@@ -42,9 +45,7 @@ install(TARGETS kdeinit4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### kwrapper4 ###############
 
-set(kwrapper_SRCS kwrapper.c)
-
-add_executable(kwrapper4 ${kwrapper_SRCS})
+add_executable(kwrapper4 kwrapper.c)
 
 target_link_libraries(kwrapper4 ${KINIT_SOCKET_LIBRARY})
 
@@ -73,9 +74,7 @@ install(TARGETS kshell4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### lnusertemp ###############
 
-set(lnusertemp_SRCS lnusertemp.c)
-
-add_executable(lnusertemp ${lnusertemp_SRCS})
+add_executable(lnusertemp lnusertemp.c)
 
 target_link_libraries(lnusertemp kdefakes)
 
@@ -84,9 +83,7 @@ install(TARGETS lnusertemp DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 ########### kioslave ###############
 
-set(kioslave_SRCS kioslave.cpp)
-
-add_executable(kioslave ${kioslave_SRCS})
+add_executable(kioslave kioslave.cpp)
 
 target_link_libraries(kioslave ${KDE4_KIO_LIBS})
 
@@ -118,7 +115,8 @@ install(TARGETS klauncher DESTINATION ${LIBEXEC_INSTALL_DIR})
 ########### install files ###############
 
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KLauncher.xml
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KLauncher.xml
     DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
 )
 

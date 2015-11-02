@@ -19,8 +19,6 @@ add_library(krosscore ${LIBRARY_TYPE} ${krosscore_LIB_SRCS})
 target_link_libraries(krosscore PRIVATE
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
-    ${QT_QTSCRIPT_LIBRARY}
-    ${QT_QTXML_LIBRARY}
 )
 target_link_libraries(krosscore PUBLIC
     kdecore
@@ -33,9 +31,14 @@ set_target_properties(krosscore PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-install(TARGETS krosscore EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS krosscore
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
-install(FILES
+install(
+    FILES
     kross_export.h
     krossconfig.h
     errorinterface.h
@@ -49,4 +52,6 @@ install(FILES
     actioncollection.h
     manager.h
     object.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kross/core COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/kross/core
+    COMPONENT Devel
+)
