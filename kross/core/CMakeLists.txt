@@ -16,12 +16,9 @@ set(krosscore_LIB_SRCS
 
 add_library(krosscore ${LIBRARY_TYPE} ${krosscore_LIB_SRCS})
 
-target_link_libraries(krosscore PRIVATE
+target_link_libraries(krosscore
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
-)
-target_link_libraries(krosscore PUBLIC
-    kdecore
     ${QT_QTSCRIPT_LIBRARY}
     ${QT_QTXML_LIBRARY}
 )

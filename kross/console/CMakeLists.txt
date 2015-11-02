@@ -5,7 +5,8 @@ include_directories(
     ${KDE4_KIO_INCLUDES}
 )
 
-set(kross_SRCS main.cpp )
-add_executable(kross ${kross_SRCS})
+add_executable(kross main.cpp)
+
 target_link_libraries(kross ${KDE4_KDEUI_LIBS} krosscore)
+
 install(TARGETS kross ${INSTALL_TARGETS_DEFAULT_ARGS})

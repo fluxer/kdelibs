@@ -12,7 +12,6 @@ kde4_add_manual_test(kparts-kpartstest ${kpartstest_SRCS})
 
 target_link_libraries(kparts-kpartstest ${KDE4_KPARTS_LIBS})
 
-
 ########### next target ###############
 
 set(normalktmtest_SRCS
@@ -25,45 +24,35 @@ kde4_add_manual_test(kparts-normalktmtest ${normalktmtest_SRCS})
 
 target_link_libraries(kparts-normalktmtest ${KDE4_KPARTS_LIBS})
 
-
 ########### next target ###############
 
-set(partviewer_SRCS
-    partviewer.cpp
-)
-
-kde4_add_manual_test(kparts-partviewer ${partviewer_SRCS})
+kde4_add_manual_test(kparts-partviewer partviewer.cpp)
 
 target_link_libraries(kparts-partviewer ${KDE4_KPARTS_LIBS})
 
 ########### test prog for "open or save question" ###############
 
 kde4_add_manual_test(kparts-openorsavequestion openorsavequestion.cpp)
+
 target_link_libraries(kparts-openorsavequestion ${KDE4_KPARTS_LIBS})
 
 ########### next target ###############
 
-set(spellcheckplugin_PART_SRCS plugin_spellcheck.cpp)
-
-kde4_add_plugin(spellcheckplugin ${spellcheckplugin_PART_SRCS})
+kde4_add_plugin(spellcheckplugin plugin_spellcheck.cpp)
 
 target_link_libraries(spellcheckplugin ${KDE4_KPARTS_LIBS})
 
 install(TARGETS spellcheckplugin DESTINATION ${PLUGIN_INSTALL_DIR})
 
-
 ########### next target ###############
 
-set(notepadpart_PART_SRCS notepad.cpp)
-
-kde4_add_plugin(notepadpart ${notepadpart_PART_SRCS})
+kde4_add_plugin(notepadpart notepad.cpp)
 
 target_link_libraries(notepadpart ${KDE4_KPARTS_LIBS})
 
 target_compile_definitions(notepadpart PRIVATE -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 
 install(TARGETS notepadpart DESTINATION ${PLUGIN_INSTALL_DIR})
-
 
 ########### unit tests ###############
 

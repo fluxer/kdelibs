@@ -3,7 +3,7 @@ project(kunitconversion)
 if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
     set(KUNITCONVERSION_NO_SOLID TRUE)
     set(KUNITCONVERSION_NO_KIO TRUE)
-endif(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
+endif()
 
 configure_file(
     config-kunitconversion.h.cmake

@@ -1,6 +1,6 @@
 project(knotify)
 
-include_directories( ${KDE4_KIO_INCLUDES})
+include_directories(${KDE4_KIO_INCLUDES})
 include_directories(BEFORE ${KDE4_PHONON_INCLUDES})
 
 if(ENABLE_TESTING)
@@ -20,8 +20,12 @@ set(knotifyconfig_LIB_SRCS
 add_library(knotifyconfig ${LIBRARY_TYPE} ${knotifyconfig_LIB_SRCS})
 
 # Needs KIO for KUrlRequester
-target_link_libraries(knotifyconfig PRIVATE ${KDE4_KIO_LIBS} ${KDE4_PHONON_LIBS}  )
-target_link_libraries(knotifyconfig PUBLIC kdecore ${QT_QTGUI_LIBRARY})
+target_link_libraries(knotifyconfig
+    ${KDE4_KIO_LIBS}
+    ${KDE4_PHONON_LIBS}
+    ${KDE4_KDECORE_LIBS}
+    ${QT_QTGUI_LIBRARY}
+)
 
 set_target_properties(knotifyconfig PROPERTIES
    VERSION ${GENERIC_LIB_VERSION}
@@ -34,6 +38,7 @@ install(
 )
 
 ########### install files ###############
+
 install(
     FILES
     knotifyconfig_export.h

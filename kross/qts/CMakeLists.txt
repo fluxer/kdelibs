@@ -1,20 +1,33 @@
-include_directories(${CMAKE_SOURCE_DIR} ${KDE4_KDECORE_INCLUDES} ${KDE4_KDEUI_INCLUDES})
+include_directories(
+    ${CMAKE_SOURCE_DIR}
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+    ${KDE4_KIO_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/kross
+)
 
 ########### next target ###############
-set(krossqtsplugin_LIB_SRCS plugin.cpp)
-add_library(krossqtsplugin ${LIBRARY_TYPE} ${krossqtsplugin_LIB_SRCS})
-target_link_libraries(krossqtsplugin ${QT_QTUITOOLS_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} krosscore ${QT_QTSCRIPT_LIBRARY})
-if (NOT CYGWIN)
-    set_target_properties(krossqtsplugin PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-endif (NOT CYGWIN)
+
+add_library(krossqtsplugin ${LIBRARY_TYPE} plugin.cpp)
+
+target_link_libraries(krossqtsplugin
+    ${QT_QTUITOOLS_LIBRARY}
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    krosscore
+    ${QT_QTSCRIPT_LIBRARY}
+)
+
+set_target_properties(krossqtsplugin PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
 install(TARGETS krossqtsplugin DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/script)
 
 ########### next target ###############
 
-include_directories(${CMAKE_SOURCE_DIR}/kross ${KDE4_KDECORE_INCLUDES} ${KDE4_KDEUI_INCLUDES} ${KDE4_KIO_INCLUDES})
-set(krossqtstest_SRCS main.cpp)
-# add_executable(krossqtstest ${krossqtstest_SRCS})
+# add_executable(krossqtstest main.cpp)
 # target_link_libraries(krossqtstest ${KDE4_KDEUI_LIBS} krossqtsplugin ${QT_QTSCRIPT_LIBRARY})
 # set(krossqtsplugintest_SRCS main.cpp)
 # target_link_libraries(krossqtsplugintest ${KDE4_KDECORE_LIBS} )
@@ -23,9 +36,15 @@ set(krossqtstest_SRCS main.cpp)
 
 ########### next target ###############
 
-#include_directories(${CMAKE_SOURCE_DIR}/kross ${KDE4_KJS_INCLUDES} ${CMAKE_SOURCE_DIR}/kjsembed ${KDE4_KDECORE_INCLUDES} ${KDE4_KDEUI_INCLUDES} ${KDE4_KIO_INCLUDES})
 set(krossqts_PART_SRCS interpreter.cpp script.cpp)
+
 kde4_add_plugin(krossqts ${krossqts_PART_SRCS})
-target_link_libraries(krossqts ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS} krosscore ${QT_QTSCRIPT_LIBRARY})
+
+target_link_libraries(krossqts
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KDECORE_LIBS}
+    krosscore
+    ${QT_QTSCRIPT_LIBRARY}
+)
 
 install(TARGETS krossqts DESTINATION ${PLUGIN_INSTALL_DIR})
