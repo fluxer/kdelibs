@@ -54,7 +54,7 @@ configure_file(
     kssl/ksslconfig.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h
 )
-# macro_additional_clean_files( ${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h )
+# macro_additional_clean_files(${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h)
 
 add_subdirectory(kssl/kcm)
 add_subdirectory(misc)
@@ -252,6 +252,13 @@ set(kssl_STAT_SRCS
 
 ########### next target ###############
 
+set(kio_LIB_SRCS
+   ${kiocore_STAT_SRCS}
+   ${kbookmarks_STAT_SRCS}
+   ${kfile_STAT_SRCS}
+   ${kssl_STAT_SRCS}
+)
+
 set(kio_LIB_PRIVATE_SRCS
     kio/kfileshare_p.h
     kio/krun_p.h
@@ -266,15 +273,15 @@ set(kfilemetadatareaderprocess_SRCS
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
 add_executable(kfilemetadatareader ${kfilemetadatareaderprocess_SRCS})
+
 target_link_libraries(kfilemetadatareader ${KDE4_KIO_LIBS})
-target_link_libraries(kio PRIVATE
+
+target_link_libraries(kio
     ${KDE4_KDEUI_LIBS}
     ${ZLIB_LIBRARY}
     ${QT_QTSVG_LIBRARY}
     ${X11_LIBRARIES}
     ${KIO_EXTRA_LIBS}
-)
-target_link_libraries(kio PUBLIC
     kdeui
     kdecore
     ${QT_QTNETWORK_LIBRARY}
@@ -283,11 +290,11 @@ target_link_libraries(kio PUBLIC
 )
 
 if(ACL_FOUND)
-    target_link_libraries(kio PRIVATE ${ACL_LIBS})
+    target_link_libraries(kio ${ACL_LIBS})
 endif()
 
 if(X11_Xrender_FOUND)
-   target_link_libraries(kio PRIVATE ${X11_Xrender_LIB})
+   target_link_libraries(kio ${X11_Xrender_LIB})
 endif()
 
 set_target_properties(kio PROPERTIES
@@ -376,13 +383,6 @@ install(
 
 install(
     FILES
-    kfile/kfilesharedialog.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
-)
-
-install(
-    FILES
     kio/kabstractfileitemactionplugin.h
     kio/kacl.h
     kio/kautomount.h
@@ -435,6 +435,7 @@ install(
     kfile/kurlcombobox.h
     kfile/kurlrequester.h
     kfile/kurlrequesterdialog.h
+    kfile/kfilesharedialog.h
     bookmarks/kbookmark.h
     bookmarks/kbookmarkexporter.h
     bookmarks/kbookmarkimporter.h

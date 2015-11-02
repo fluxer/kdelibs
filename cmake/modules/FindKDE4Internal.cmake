@@ -170,17 +170,17 @@
 #  KDE4_ADD_MANUAL_TEST (testname file1 ... fileN)
 #    same as KDE_ADD_TEST() except that the test is not run on `make test`
 #
-#  KDE4_INSTALL_ICONS( path theme)
+#  KDE4_INSTALL_ICONS ( path theme)
 #    Installs all png and svgz files in the current directory to the icon
 #    directory given in path, in the subdirectory for the given icon theme.
 #
-#  KDE4_CREATE_MANPAGE( docbookfile section )
+#  KDE4_CREATE_MANPAGE ( docbookfile section )
 #   Create the manpage for the specified section from the docbookfile
 #   The resulting manpage will be installed to <installdest> when using
 #   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
 #   SUBDIR <subdir> is specified.
 #
-#  KDE4_INSTALL_AUTH_HELPER_FILES( HELPER_TARGET HELPER_ID HELPER_USER )
+#  KDE4_INSTALL_AUTH_HELPER_FILES ( HELPER_TARGET HELPER_ID HELPER_USER )
 #   This macro adds the needed files for an helper executable meant to be used by applications using KAuth.
 #   It accepts the helper target, the helper ID (the DBUS name) and the user under which the helper will run on.
 #   This macro takes care of generate the needed files, and install them in the right location. This boils down
@@ -296,7 +296,7 @@ find_package(Qt4 ${_REQ_STRING_KDE4})
 find_package(Perl)
 if(NOT PERL_FOUND)
     message(STATUS "Perl not found")
-endif(NOT PERL_FOUND)
+endif()
 
 # restore the original CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${_kde_cmake_module_path_back})
@@ -671,7 +671,7 @@ endif()
 # compiler specific settings
 ############################################################
 
-if (CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_COMPILER_IS_GNUCXX)
     set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
     # Select flags.
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
@@ -687,9 +687,10 @@ if (CMAKE_COMPILER_IS_GNUCXX)
 
     if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
         # This should not be needed, as it is also part of _KDE4_PLATFORM_DEFINITIONS below.
-        # It is kept here nonetheless both for backwards compatibility in case one does not use add_definitions(${KDE4_DEFINITIONS})
-        # and also because it is/was needed by glibc for snprintf to be available when building C files.
-        # See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
+        # It is kept here nonetheless both for backwards compatibility in case
+        # one does not use add_definitions(${KDE4_DEFINITIONS}) and also
+        # because it is/was needed by glibc for snprintf to be available when
+        # building C files.See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
         add_definitions(-D_DEFAULT_SOURCE -D_BSD_SOURCE)
     endif()
 

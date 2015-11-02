@@ -40,23 +40,18 @@ set(kfile_LIB_SRCS
 
 add_library(kfile ${LIBRARY_TYPE} ${kfile_LIB_SRCS})
 
-target_link_libraries(kfile PRIVATE
-    ${KDE4_KIO_LIBS}
+target_link_libraries(kfile
     ${ZLIB_LIBRARY}
     ${KDE4_SOLID_LIBS}
     ${X11_LIBRARIES}
+    ${KDE4_KIO_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KDECORE_LIBS}
 )
 
 if(X11_Xrender_FOUND)
-    target_link_libraries(kfile PRIVATE ${X11_Xrender_LIB})
-endif(X11_Xrender_FOUND)
-
-target_link_libraries(kfile PUBLIC
-    kio
-    kdeui
-    kdecore
-    ${QT_QTGUI_LIBRARY}
-)
+    target_link_libraries(kfile ${X11_Xrender_LIB})
+endif()
 
 set_target_properties(kfile PROPERTIES
     VERSION ${GENERIC_LIB_VERSION} 
