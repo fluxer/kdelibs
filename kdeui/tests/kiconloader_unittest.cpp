@@ -149,7 +149,7 @@ private Q_SLOTS:
         // as the "data" resource. But if the file is installed, then it will be
         // preferred (because KStandardDirs::resourceDirs() looks at relative paths first)
         // So we have to expect that one -or- the other will be found.
-        const QString dataDir = KStandardDirs::realPath(KDESRCDIR "/../../");
+        const QString dataDir = KGlobal::dirs()->realPath(KDESRCDIR "/../../");
         KGlobal::dirs()->addResourceDir("data", dataDir);
 
         const QString appName = "kdewidgets";
@@ -173,7 +173,7 @@ private Q_SLOTS:
 
     void testAppPicsDir_KIcon()
     {
-        const QString dataDir = KStandardDirs::realPath(KDESRCDIR "/../../");
+        const QString dataDir = KGlobal::dirs()->realPath(KDESRCDIR "/../../");
         KGlobal::dirs()->addResourceDir("data", dataDir);
         // #### This test is broken; it passes even if appName is set to foobar, because
         // KIcon::pixmap returns an unknown icon if it can't find the real icon...
