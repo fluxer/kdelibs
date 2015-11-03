@@ -553,22 +553,13 @@ bool KStandardDirs::exists(const QString &fullPath) const
 
 bool KStandardDirs::KStandardDirsPrivate::exists(const QString &fullPath)
 {
-    Q_UNUSED(max_file_info);
-#if 0
     if(m_infocache.count() == max_file_info) {
         m_infocache.clear();
     }
-#endif
     QFileInfo fileinfo;
     if(m_infocache.contains(fullPath)) {
-#ifndef NDEBUG
-        kDebug(180) << "cached exists check on" << fullPath;
-#endif
         fileinfo = m_infocache.value(fullPath);
     } else {
-#ifndef NDEBUG
-        kDebug(180) << "new exists check on" << fullPath;
-#endif
         fileinfo = QFileInfo(fullPath);
         m_infocache.insert(fullPath, fileinfo);
     }
