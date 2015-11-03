@@ -1,4 +1,9 @@
-include_directories(${QT_INCLUDE_DIR} ${QT_QTCORE_INCLUDE_DIR} ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+include_directories(
+    ${QT_INCLUDE_DIR}
+    ${QT_QTCORE_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 ########### next target ###############
 
@@ -24,18 +29,22 @@ set(ThreadWeaver_LIB_SRCS
     ResourceRestrictionPolicy.cpp
 )
 
-
 add_library(threadweaver ${LIBRARY_TYPE} ${ThreadWeaver_LIB_SRCS})
-target_link_libraries(threadweaver PRIVATE ${QT_QTCORE_LIBRARY})
-target_link_libraries(threadweaver PUBLIC ${QT_QTCORE_LIBRARY} )
+
+target_link_libraries(threadweaver ${QT_QTCORE_LIBRARY})
 
 set_target_properties(threadweaver PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
-install(TARGETS threadweaver EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS threadweaver
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
-install(FILES
+install(
+    FILES
     WeaverInterface.h
     ThreadWeaver.h
     DebuggingAids.h

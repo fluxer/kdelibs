@@ -1,133 +1,158 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 add_subdirectory( ifaces )
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR} )
-include_directories( ${QT_QTDBUS_INCLUDE_DIR} ${QT_QTGUI_INCLUDE_DIR})
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${QT_QTDBUS_INCLUDE_DIR}
+    ${QT_QTGUI_INCLUDE_DIR}
+)
 
-configure_file(solid_export.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h)
+configure_file(
+    solid_export.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h
+)
 
 include (CheckCXXSourceCompiles)
-check_cxx_source_compiles("	#ifdef __SUNPRO_CC
-					#define __asm__ asm
-				#endif
-				int main() { __asm__(\"pxor %mm0, %mm0\") ; }" HAVE_X86_MMX)
-check_cxx_source_compiles("     #ifdef __SUNPRO_CC
-                                        #define __asm__ asm
-                                #endif
-				int main() { __asm__(\"xorps %xmm0, %xmm0\"); }" HAVE_X86_SSE)
-check_cxx_source_compiles("     #ifdef __SUNPRO_CC
-                                        #define __asm__ asm
-                                #endif
-				int main() { __asm__(\"xorpd %xmm0, %xmm0\"); }" HAVE_X86_SSE2)
-check_cxx_source_compiles("     #ifdef __SUNPRO_CC
-                                        #define __asm__ asm
-                                #endif
-				int main() { __asm__(\"femms\"); }" HAVE_X86_3DNOW)
-check_cxx_source_compiles("     #ifdef __SUNPRO_CC
-                                        #define __asm__ asm
-                                #endif
-				int main() { __asm__(\"mtspr 256, %0; vand %%v0, %%v0, %%v0\" : : \"r\"(-1) ); }" HAVE_PPC_ALTIVEC)
+check_cxx_source_compiles("
+#ifdef __SUNPRO_CC
+#define __asm__ asm
+#endif
+int main() { __asm__(\"pxor %mm0, %mm0\") ; }"
+    HAVE_X86_MMX
+)
 
-configure_file(config-processor.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-processor.h )
+check_cxx_source_compiles("
+#ifdef __SUNPRO_CC
+#define __asm__ asm
+#endif
+int main() { __asm__(\"xorps %xmm0, %xmm0\"); }"
+    HAVE_X86_SSE
+)
 
+check_cxx_source_compiles("
+#ifdef __SUNPRO_CC
+#define __asm__ asm
+#endif
+int main() { __asm__(\"xorpd %xmm0, %xmm0\"); }"
+    HAVE_X86_SSE2
+)
 
+check_cxx_source_compiles("
+#ifdef __SUNPRO_CC
+#define __asm__ asm
+#endif
+int main() { __asm__(\"femms\"); }"
+    HAVE_X86_3DNOW
+)
+check_cxx_source_compiles("
+#ifdef __SUNPRO_CC
+#define __asm__ asm
+#endif
+int main() { __asm__(\"mtspr 256, %0; vand %%v0, %%v0, %%v0\" : : \"r\"(-1) ); }"
+    HAVE_PPC_ALTIVEC
+)
+
+configure_file(
+    config-processor.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-processor.h
+)
 
 ########### next target ###############
 
-file(MAKE_DIRECTORY
-   ${CMAKE_CURRENT_BINARY_DIR}/backends/fakehw
-   ${CMAKE_CURRENT_BINARY_DIR}/backends/udev
-)
+make_directory(${CMAKE_CURRENT_BINARY_DIR}/backends/fakehw)
+make_directory(${CMAKE_CURRENT_BINARY_DIR}/backends/udev)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${KDE4_C_FLAGS}") # enable -fvisibility=hidden for C sources
+# enable -fvisibility=hidden for C sources
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${KDE4_C_FLAGS}")
 
 set(solid_LIB_SRCS
-   networking.cpp
-   solidnamespace.cpp
-   managerbase.cpp
-   device.cpp
-   devicemanager.cpp
-   deviceinterface.cpp
-   genericinterface.cpp
-   processor.cpp
-   block.cpp
-   storagedrive.cpp
-   opticaldrive.cpp
-   storagevolume.cpp
-   opticaldisc.cpp
-   storageaccess.cpp
-   camera.cpp
-   portablemediaplayer.cpp
-   networkinterface.cpp
-   networkshare.cpp
-   serialinterface.cpp
-   acadapter.cpp
-   battery.cpp
-   button.cpp
-   audiointerface.cpp
-   dvbinterface.cpp
-   predicate.cpp
-   predicateparse.cpp
-   predicate_lexer.c
-   predicate_parser.c
-   powermanagement.cpp
-   video.cpp
-   smartcardreader.cpp
-   internetgateway.cpp
-   xdgbasedirs.cpp
+    networking.cpp
+    solidnamespace.cpp
+    managerbase.cpp
+    device.cpp
+    devicemanager.cpp
+    deviceinterface.cpp
+    genericinterface.cpp
+    processor.cpp
+    block.cpp
+    storagedrive.cpp
+    opticaldrive.cpp
+    storagevolume.cpp
+    opticaldisc.cpp
+    storageaccess.cpp
+    camera.cpp
+    portablemediaplayer.cpp
+    networkinterface.cpp
+    networkshare.cpp
+    serialinterface.cpp
+    acadapter.cpp
+    battery.cpp
+    button.cpp
+    audiointerface.cpp
+    dvbinterface.cpp
+    predicate.cpp
+    predicateparse.cpp
+    predicate_lexer.c
+    predicate_parser.c
+    powermanagement.cpp
+    video.cpp
+    smartcardreader.cpp
+    internetgateway.cpp
+    xdgbasedirs.cpp
 
-   ifaces/acadapter.cpp
-   ifaces/audiointerface.cpp
-   ifaces/battery.cpp
-   ifaces/block.cpp
-   ifaces/button.cpp
-   ifaces/camera.cpp
-   ifaces/opticaldrive.cpp
-   ifaces/device.cpp
-   ifaces/deviceinterface.cpp
-   ifaces/devicemanager.cpp
-   ifaces/dvbinterface.cpp
-   ifaces/genericinterface.cpp
-   ifaces/networkinterface.cpp
-   ifaces/networkshare.cpp
-   ifaces/serialinterface.cpp
-   ifaces/opticaldisc.cpp
-   ifaces/portablemediaplayer.cpp
-   ifaces/processor.cpp
-   ifaces/storagedrive.cpp
-   ifaces/storagevolume.cpp
-   ifaces/storageaccess.cpp
-   ifaces/video.cpp
-   ifaces/smartcardreader.cpp
-   ifaces/internetgateway.cpp
+    ifaces/acadapter.cpp
+    ifaces/audiointerface.cpp
+    ifaces/battery.cpp
+    ifaces/block.cpp
+    ifaces/button.cpp
+    ifaces/camera.cpp
+    ifaces/opticaldrive.cpp
+    ifaces/device.cpp
+    ifaces/deviceinterface.cpp
+    ifaces/devicemanager.cpp
+    ifaces/dvbinterface.cpp
+    ifaces/genericinterface.cpp
+    ifaces/networkinterface.cpp
+    ifaces/networkshare.cpp
+    ifaces/serialinterface.cpp
+    ifaces/opticaldisc.cpp
+    ifaces/portablemediaplayer.cpp
+    ifaces/processor.cpp
+    ifaces/storagedrive.cpp
+    ifaces/storagevolume.cpp
+    ifaces/storageaccess.cpp
+    ifaces/video.cpp
+    ifaces/smartcardreader.cpp
+    ifaces/internetgateway.cpp
 
-   backends/fakehw/fakeacadapter.cpp
-   backends/fakehw/fakeaudiointerface.cpp
-   backends/fakehw/fakebattery.cpp
-   backends/fakehw/fakeblock.cpp
-   backends/fakehw/fakebutton.cpp
-   backends/fakehw/fakecamera.cpp
-   backends/fakehw/fakecdrom.cpp
-   backends/fakehw/fakedevice.cpp
-   backends/fakehw/fakedeviceinterface.cpp
-   backends/fakehw/fakedvbinterface.cpp
-   backends/fakehw/fakegenericinterface.cpp
-   backends/fakehw/fakemanager.cpp
-   backends/fakehw/fakenetworkshare.cpp
-   backends/fakehw/fakenetworkinterface.cpp
-   backends/fakehw/fakeopticaldisc.cpp
-   backends/fakehw/fakeportablemediaplayer.cpp
-   backends/fakehw/fakeprocessor.cpp
-   backends/fakehw/fakestorage.cpp
-   backends/fakehw/fakestorageaccess.cpp
-   backends/fakehw/fakevideo.cpp
-   backends/fakehw/fakevolume.cpp
-   backends/fakehw/fakesmartcardreader.cpp
+    backends/fakehw/fakeacadapter.cpp
+    backends/fakehw/fakeaudiointerface.cpp
+    backends/fakehw/fakebattery.cpp
+    backends/fakehw/fakeblock.cpp
+    backends/fakehw/fakebutton.cpp
+    backends/fakehw/fakecamera.cpp
+    backends/fakehw/fakecdrom.cpp
+    backends/fakehw/fakedevice.cpp
+    backends/fakehw/fakedeviceinterface.cpp
+    backends/fakehw/fakedvbinterface.cpp
+    backends/fakehw/fakegenericinterface.cpp
+    backends/fakehw/fakemanager.cpp
+    backends/fakehw/fakenetworkshare.cpp
+    backends/fakehw/fakenetworkinterface.cpp
+    backends/fakehw/fakeopticaldisc.cpp
+    backends/fakehw/fakeportablemediaplayer.cpp
+    backends/fakehw/fakeprocessor.cpp
+    backends/fakehw/fakestorage.cpp
+    backends/fakehw/fakestorageaccess.cpp
+    backends/fakehw/fakevideo.cpp
+    backends/fakehw/fakevolume.cpp
+    backends/fakehw/fakesmartcardreader.cpp
 
-   backends/shared/rootdevice.cpp
-   backends/shared/cpufeatures.cpp
+    backends/shared/rootdevice.cpp
+    backends/shared/cpufeatures.cpp
 )
 
-macro_optional_find_package( HUpnp )
+macro_optional_find_package(HUpnp)
 set_package_properties(HUpnp PROPERTIES
     URL "http://www.herqq.org"
     PURPOSE "Allows Solid to provide information about UPnP devices on the network"
@@ -186,169 +211,229 @@ else()
     set(WITH_SOLID_UDISKS2 OFF)
 endif()
 
-configure_file( config-solid.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h )
+configure_file(
+    config-solid.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h
+)
 
-if ( UDEV_FOUND )
-     message(STATUS "Building Solid UDev backend." )
-     set(solid_LIB_SRCS ${solid_LIB_SRCS}
-     backends/udev/utils.cpp
-     backends/udev/udevdevice.cpp
-     backends/udev/udevmanager.cpp
-     backends/udev/udevdeviceinterface.cpp
-     backends/udev/udevgenericinterface.cpp
-     backends/udev/cpuinfo.cpp
-     backends/udev/udevprocessor.cpp
-     backends/udev/udevcamera.cpp
-     backends/udev/udevvideo.cpp
-     backends/udev/udevaudiointerface.cpp
-     backends/udev/udevnetworkinterface.cpp
-     backends/udev/udevserialinterface.cpp
-     backends/udev/udevaudiointerface_p.cpp
-     backends/udev/udevportablemediaplayer.cpp
-     backends/udev/udevdvbinterface.cpp
-     backends/udev/udevblock.cpp
-     backends/udev/udevbutton.cpp
-     backends/shared/udevqtclient.cpp
-     backends/shared/udevqtdevice.cpp
-     )
-     set(UDEV_DETAILED_OUTPUT OFF CACHE BOOL "provide extended output regarding udev events")
-     if(UDEV_DETAILED_OUTPUT)
+if(UDEV_FOUND)
+    message(STATUS "Building Solid UDev backend." )
+    set(solid_LIB_SRCS ${solid_LIB_SRCS}
+        backends/udev/utils.cpp
+        backends/udev/udevdevice.cpp
+        backends/udev/udevmanager.cpp
+        backends/udev/udevdeviceinterface.cpp
+        backends/udev/udevgenericinterface.cpp
+        backends/udev/cpuinfo.cpp
+        backends/udev/udevprocessor.cpp
+        backends/udev/udevcamera.cpp
+        backends/udev/udevvideo.cpp
+        backends/udev/udevaudiointerface.cpp
+        backends/udev/udevnetworkinterface.cpp
+        backends/udev/udevserialinterface.cpp
+        backends/udev/udevaudiointerface_p.cpp
+        backends/udev/udevportablemediaplayer.cpp
+        backends/udev/udevdvbinterface.cpp
+        backends/udev/udevblock.cpp
+        backends/udev/udevbutton.cpp
+        backends/shared/udevqtclient.cpp
+        backends/shared/udevqtdevice.cpp
+    )
+    set(UDEV_DETAILED_OUTPUT OFF CACHE BOOL "provide extended output regarding udev events")
+    if(UDEV_DETAILED_OUTPUT)
         add_definitions(-DUDEV_DETAILED_OUTPUT)
-     endif(UDEV_DETAILED_OUTPUT)
+    endif()
 
-     # check for media-player-info (runtime-only optional dependency)
-     set(XDG_DATA_DIRS_ENV $ENV{XDG_DATA_DIRS})  # if(ENV{..}) does not work for me
-     if(XDG_DATA_DIRS_ENV)
+    # check for media-player-info (runtime-only optional dependency)
+    set(XDG_DATA_DIRS_ENV $ENV{XDG_DATA_DIRS})  # if(ENV{..}) does not work for me
+    if(XDG_DATA_DIRS_ENV)
         find_path(MEDIAPLAYERINFO_PATH sony_psp.mpi
-           PATHS ENV XDG_DATA_DIRS
-           PATH_SUFFIXES "media-player-info" NO_DEFAULT_PATH
+            PATHS ENV XDG_DATA_DIRS
+            PATH_SUFFIXES "media-player-info"
+            NO_DEFAULT_PATH
         )
-     else(XDG_DATA_DIRS_ENV)
+    else(XDG_DATA_DIRS_ENV)
         set(XDG_DATA_DIRS "/usr/share")
         message(STATUS "Warning: environment variable XDG_DATA_DIRS not set, falling back to ${XDG_DATA_DIRS}")
         find_path(MEDIAPLAYERINFO_PATH sony_psp.mpi
-           PATHS "${XDG_DATA_DIRS}"
-           PATH_SUFFIXES "media-player-info" NO_DEFAULT_PATH
+            PATHS "${XDG_DATA_DIRS}"
+            PATH_SUFFIXES "media-player-info"
+            NO_DEFAULT_PATH
         )
-     endif(XDG_DATA_DIRS_ENV)
+    endif(XDG_DATA_DIRS_ENV)
 
-     add_feature_info("media-player-info" MEDIAPLAYERINFO_PATH
-                      "Enables identification and querying of portable media players.
-                       Runtime-only dependency of the udev solid backend.
-                       Support for m-p-i is included even if not found during build"
-                      )
-endif( UDEV_FOUND )
+    add_feature_info("media-player-info" MEDIAPLAYERINFO_PATH
+                    "Enables identification and querying of portable media players.
+                    Runtime-only dependency of the udev solid backend.
+                    Support for m-p-i is included even if not found during build"
+                    )
+endif(UDEV_FOUND)
 
 
 message(STATUS "Building Solid UPower backend." )
 set(solid_LIB_SRCS ${solid_LIB_SRCS}
-   backends/upower/upowermanager.cpp
-   backends/upower/upowerdevice.cpp
-   backends/upower/upowerbattery.cpp
-   backends/upower/upoweracadapter.cpp
-   backends/upower/upowerdeviceinterface.cpp
-   backends/upower/upowergenericinterface.cpp
+    backends/upower/upowermanager.cpp
+    backends/upower/upowerdevice.cpp
+    backends/upower/upowerbattery.cpp
+    backends/upower/upoweracadapter.cpp
+    backends/upower/upowerdeviceinterface.cpp
+    backends/upower/upowergenericinterface.cpp
 )
 
 # FIXME: this should work on more Unix systems
-if ( WITH_SOLID_UDISKS2 )
-  message(STATUS "Building Solid UDisks2 backend." )
-  add_definitions(-DWITH_SOLID_UDISKS2)
-  set(solid_LIB_SRCS ${solid_LIB_SRCS}
-    backends/udisks2/udisksmanager.cpp
-    backends/udisks2/udisksdevice.cpp
-    backends/udisks2/udisksdevicebackend.cpp
-    backends/udisks2/udisksblock.cpp
-    backends/udisks2/udisksstoragevolume.cpp
-    backends/udisks2/udisksdeviceinterface.cpp
-    backends/udisks2/udisksopticaldisc.cpp
-    backends/udisks2/udisksopticaldrive.cpp
-    backends/udisks2/udisksstoragedrive.cpp
-    backends/udisks2/udisksstorageaccess.cpp
-    backends/udisks2/udisksgenericinterface.cpp
-    backends/udisks2/dbus/manager.cpp
-  )
-else ( WITH_SOLID_UDISKS2 )
-  message(STATUS "Building Solid UDisks backend." )
-  set(solid_LIB_SRCS ${solid_LIB_SRCS}
-    backends/udisks/udisksmanager.cpp
-    backends/udisks/udisksdevice.cpp
-    backends/udisks/udisksblock.cpp
-    backends/udisks/udisksstoragevolume.cpp
-    backends/udisks/udisksdeviceinterface.cpp
-    backends/udisks/udisksopticaldisc.cpp
-    backends/udisks/udisksopticaldrive.cpp
-    backends/udisks/udisksstoragedrive.cpp
-    backends/udisks/udisksstorageaccess.cpp
-    backends/udisks/udisksgenericinterface.cpp
-  )
-endif ( WITH_SOLID_UDISKS2 )
+if(WITH_SOLID_UDISKS2)
+    message(STATUS "Building Solid UDisks2 backend." )
+    add_definitions(-DWITH_SOLID_UDISKS2)
+    set(solid_LIB_SRCS
+        ${solid_LIB_SRCS}
+        backends/udisks2/udisksmanager.cpp
+        backends/udisks2/udisksdevice.cpp
+        backends/udisks2/udisksdevicebackend.cpp
+        backends/udisks2/udisksblock.cpp
+        backends/udisks2/udisksstoragevolume.cpp
+        backends/udisks2/udisksdeviceinterface.cpp
+        backends/udisks2/udisksopticaldisc.cpp
+        backends/udisks2/udisksopticaldrive.cpp
+        backends/udisks2/udisksstoragedrive.cpp
+        backends/udisks2/udisksstorageaccess.cpp
+        backends/udisks2/udisksgenericinterface.cpp
+        backends/udisks2/dbus/manager.cpp
+    )
+else(WITH_SOLID_UDISKS2)
+    message(STATUS "Building Solid UDisks backend." )
+    set(solid_LIB_SRCS
+        ${solid_LIB_SRCS}
+        backends/udisks/udisksmanager.cpp
+        backends/udisks/udisksdevice.cpp
+        backends/udisks/udisksblock.cpp
+        backends/udisks/udisksstoragevolume.cpp
+        backends/udisks/udisksdeviceinterface.cpp
+        backends/udisks/udisksopticaldisc.cpp
+        backends/udisks/udisksopticaldrive.cpp
+        backends/udisks/udisksstoragedrive.cpp
+        backends/udisks/udisksstorageaccess.cpp
+        backends/udisks/udisksgenericinterface.cpp
+    )
+endif(WITH_SOLID_UDISKS2)
 
 message(STATUS "Building Solid fstab backend." )
-set(solid_LIB_SRCS ${solid_LIB_SRCS}
-   backends/fstab/fstabmanager.cpp
-   backends/fstab/fstabdevice.cpp
-   backends/fstab/fstabnetworkshare.cpp
-   backends/fstab/fstabstorageaccess.cpp
-   backends/fstab/fstabhandling.cpp
-   backends/fstab/fstabwatcher.cpp
+set(solid_LIB_SRCS
+    ${solid_LIB_SRCS}
+    backends/fstab/fstabmanager.cpp
+    backends/fstab/fstabdevice.cpp
+    backends/fstab/fstabnetworkshare.cpp
+    backends/fstab/fstabstorageaccess.cpp
+    backends/fstab/fstabhandling.cpp
+    backends/fstab/fstabwatcher.cpp
 )
 
-set_source_files_properties( org.freedesktop.PowerManagement.xml
-                             org.freedesktop.PowerManagement.Inhibit.xml
-                             org.kde.Solid.PowerManagement.PolicyAgent.xml
-                             PROPERTIES NO_NAMESPACE TRUE)
+set_source_files_properties(
+    org.freedesktop.PowerManagement.xml
+    org.freedesktop.PowerManagement.Inhibit.xml
+    org.kde.Solid.PowerManagement.PolicyAgent.xml
+    PROPERTIES NO_NAMESPACE TRUE)
 
-qt4_add_dbus_interfaces(solid_LIB_SRCS org.freedesktop.PowerManagement.xml
-                        org.freedesktop.PowerManagement.Inhibit.xml
-                        org.kde.Solid.PowerManagement.PolicyAgent.xml)
+qt4_add_dbus_interfaces(solid_LIB_SRCS
+    org.freedesktop.PowerManagement.xml
+    org.freedesktop.PowerManagement.Inhibit.xml
+    org.kde.Solid.PowerManagement.PolicyAgent.xml
+)
 
-qt4_add_dbus_interface(solid_LIB_SRCS org.kde.Solid.Networking.Client.xml
-                       org_kde_solid_networking_client)
+qt4_add_dbus_interface(solid_LIB_SRCS
+    org.kde.Solid.Networking.Client.xml
+    org_kde_solid_networking_client
+)
 
 set(solid_OPTIONAL_LIBS)
 
 add_library(solid ${LIBRARY_TYPE} ${solid_LIB_SRCS})
 
-if ( HUPNP_FOUND )
-   set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
-endif( HUPNP_FOUND )
+if(HUPNP_FOUND)
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
+endif()
 
-if ( UDEV_FOUND )
-   set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${UDEV_LIBS})
-endif ( UDEV_FOUND )
+if(UDEV_FOUND)
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${UDEV_LIBS})
+endif()
 
-target_link_libraries(solid PRIVATE ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} ${solid_OPTIONAL_LIBS} )
-target_link_libraries(solid PUBLIC ${QT_CORE_LIBRARY} )
+target_link_libraries(solid
+    ${QT_QTCORE_LIBRARY}
+    ${QT_QTDBUS_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
+    ${QT_CORE_LIBRARY}
+    ${solid_OPTIONAL_LIBS}
+)
 
 set_target_properties(solid PROPERTIES
    VERSION ${GENERIC_LIB_VERSION}
    SOVERSION ${GENERIC_LIB_SOVERSION}
 )
-install(TARGETS solid EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(
+    TARGETS solid
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
-install(FILES org.kde.Solid.Networking.Client.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
-install(FILES org.kde.Solid.PowerManagement.PolicyAgent.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
-install(FILES org.freedesktop.PowerManagement.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
-install(FILES org.freedesktop.PowerManagement.Inhibit.xml DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
+install(
+    FILES
+    org.kde.Solid.Networking.Client.xml
+    org.kde.Solid.PowerManagement.PolicyAgent.xml
+    org.freedesktop.PowerManagement.xml
+    org.freedesktop.PowerManagement.Inhibit.xml
+    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+)
 
 ########### static lib for tests  ###############
 
 if(ENABLE_TESTING)
     add_library(solid_static STATIC ${solid_LIB_SRCS})
 
-    target_link_libraries(solid_static ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY} ${QT_QTXML_LIBRARY} ${QT_QTGUI_LIBRARY} ${solid_OPTIONAL_LIBS})
+    target_link_libraries(solid_static
+        ${QT_QTCORE_LIBRARY}
+        ${QT_QTDBUS_LIBRARY}
+        ${QT_QTXML_LIBRARY}
+        ${QT_QTGUI_LIBRARY}
+        ${solid_OPTIONAL_LIBS}
+    )
 endif()
 
 ########### install files ###############
 
-install( FILES ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h solidnamespace.h device.h
-               devicenotifier.h deviceinterface.h genericinterface.h processor.h block.h
-               storageaccess.h storagedrive.h opticaldrive.h storagevolume.h opticaldisc.h
-               camera.h portablemediaplayer.h networkinterface.h acadapter.h battery.h
-               button.h audiointerface.h dvbinterface.h predicate.h powermanagement.h
-               networking.h video.h serialinterface.h smartcardreader.h internetgateway.h
-               networkshare.h DESTINATION ${INCLUDE_INSTALL_DIR}/solid COMPONENT Devel)
+install(
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h
+    solidnamespace.h
+    device.h
+    devicenotifier.h
+    deviceinterface.h
+    genericinterface.h
+    processor.h
+    block.h
+    storageaccess.h
+    storagedrive.h
+    opticaldrive.h
+    storagevolume.h
+    opticaldisc.h
+    camera.h
+    portablemediaplayer.h
+    networkinterface.h
+    acadapter.h
+    battery.h
+    button.h
+    audiointerface.h
+    dvbinterface.h
+    predicate.h
+    powermanagement.h
+    networking.h
+    video.h 
+    serialinterface.h
+    smartcardreader.h
+    internetgateway.h
+    networkshare.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/solid
+    COMPONENT Devel
+)
 
 ########### parser build ###############
 
@@ -356,31 +441,33 @@ set(lexer_FILE predicate_lexer)
 set(parser_FILE predicate_parser)
 
 find_package(FLEX)
-set_package_properties(FLEX PROPERTIES DESCRIPTION "Allows the Solid predicate parser to be updated"
-                       URL "http://flex.sourceforge.net"
-                       TYPE OPTIONAL
-                       PURPOSE "Required by the UpdateSolidPredicateParser target (mainly useful for developers)"
-                      )
+set_package_properties(FLEX PROPERTIES
+    DESCRIPTION "Allows the Solid predicate parser to be updated"
+    URL "http://flex.sourceforge.net"
+    PURPOSE "Required by the UpdateSolidPredicateParser target (mainly useful for developers)"
+    TYPE OPTIONAL
+)
 
 find_package(BISON)
-set_package_properties(BISON PROPERTIES DESCRIPTION "Allows the Solid predicate parser to be updated"
-                       URL "http://www.gnu.org/software/bison"
-                       TYPE OPTIONAL
-                       PURPOSE "Required by the UpdateSolidPredicateParser target (mainly useful for developers)"
-                      )
+set_package_properties(BISON PROPERTIES
+    DESCRIPTION "Allows the Solid predicate parser to be updated"
+    URL "http://www.gnu.org/software/bison"
+    PURPOSE "Required by the UpdateSolidPredicateParser target (mainly useful for developers)"
+    TYPE OPTIONAL
+)
 
-if (FLEX_FOUND AND BISON_FOUND)
-
+if(FLEX_FOUND AND BISON_FOUND)
+    add_custom_target(UpdateSolidPredicateParser
+        COMMAND ${FLEX_EXECUTABLE} -P Solid -o${lexer_FILE}.c ${lexer_FILE}.l
+        COMMAND ${BISON_EXECUTABLE} -p Solid -d -b ${parser_FILE} ${parser_FILE}.y
+        COMMAND ${CMAKE_COMMAND} -E copy ${parser_FILE}.tab.c ${CMAKE_CURRENT_SOURCE_DIR}/${parser_FILE}.c
+        COMMAND ${CMAKE_COMMAND} -E copy ${parser_FILE}.tab.h ${CMAKE_CURRENT_SOURCE_DIR}/${parser_FILE}.h
+        COMMAND ${CMAKE_COMMAND} -E remove ${parser_FILE}.tab.c ${parser_FILE}.tab.h
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+else()
    add_custom_target(UpdateSolidPredicateParser
-                     COMMAND ${FLEX_EXECUTABLE} -P Solid -o${lexer_FILE}.c ${lexer_FILE}.l
-                     COMMAND ${BISON_EXECUTABLE} -p Solid -d -b ${parser_FILE} ${parser_FILE}.y
-                     COMMAND ${CMAKE_COMMAND} -E copy ${parser_FILE}.tab.c ${CMAKE_CURRENT_SOURCE_DIR}/${parser_FILE}.c
-                     COMMAND ${CMAKE_COMMAND} -E copy ${parser_FILE}.tab.h ${CMAKE_CURRENT_SOURCE_DIR}/${parser_FILE}.h
-                     COMMAND ${CMAKE_COMMAND} -E remove ${parser_FILE}.tab.c ${parser_FILE}.tab.h
-                     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-
-else ()
-   add_custom_target(UpdateSolidPredicateParser
-                     COMMAND echo "flex and/or bison not found, so target UpdateSolidPredicateParser inactive")
-endif ()
+        COMMAND echo "flex and/or bison not found, so target UpdateSolidPredicateParser inactive"
+    )
+endif()
 

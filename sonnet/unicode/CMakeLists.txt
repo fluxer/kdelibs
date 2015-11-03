@@ -1,19 +1,13 @@
-PROJECT( parseucd )
+project(parseucd)
 
-SET( SOURCE_FILES
-    ./parseucd/parseucd.cpp
+include_directories(
+    ${CMAKE_BINARY_DIR}
+    ${X11_INCLUDE_DIR}
 )
-FIND_PACKAGE( Qt4 REQUIRED )
 
-INCLUDE( ${QT_USE_FILE} )
+add_executable(parseucd parseucd/parseucd.cpp)
 
-INCLUDE_DIRECTORIES( ${CMAKE_BINARY_DIR}
-                     ${X11_INCLUDE_DIR}
-                   )
-
-ADD_EXECUTABLE( parseucd ${SOURCE_FILES} )
-
-        TARGET_LINK_LIBRARIES( parseucd
-                       ${QT_LIBRARIES}
-                       ${X11_LIBRARIES}
-                     )
+target_link_libraries(parseucd
+    ${QT_LIBRARIES}
+    ${X11_LIBRARIES}
+)

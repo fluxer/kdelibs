@@ -1,7 +1,7 @@
-
 include_directories(
- ${CMAKE_SOURCE_DIR}/kdecore/sonnet ${KDE4_KDECORE_INCLUDES}
- )
+    ${CMAKE_SOURCE_DIR}/kdecore/sonnet
+    ${KDE4_KDECORE_INCLUDES}
+)
 
 # you can find macro_optional_find_package() in kdelibs/cmake/modules/OptionalFindPackage.cmake
 # it is the same as FIND_PACKAGE(<name>) but additionally creates an OPTION(WITH_<name>)
@@ -9,13 +9,13 @@ include_directories(
 macro_optional_find_package(HSPELL)
 set_package_properties(HSPELL PROPERTIES
     URL "http://ivrix.org.il/projects/spell-checker/"
-    TYPE OPTIONAL
     PURPOSE "Spell checking support for Hebrew"
+    TYPE OPTIONAL
 )
 
-if (HSPELL_FOUND)
-   add_subdirectory( hspell )
-endif (HSPELL_FOUND)
+if(HSPELL_FOUND)
+   add_subdirectory(hspell)
+endif()
 
 macro_optional_find_package(ENCHANT)
 set_package_properties(ENCHANT PROPERTIES
@@ -38,7 +38,7 @@ endif()
 #     TYPE OPTIONAL
 # )
 
-if (HUNSPELL_FOUND)
-   add_subdirectory( hunspell )
-endif (HUNSPELL_FOUND)
+if(HUNSPELL_FOUND)
+    add_subdirectory(hunspell)
+endif()
 

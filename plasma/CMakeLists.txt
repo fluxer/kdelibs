@@ -4,7 +4,7 @@ if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
     set(PLASMA_NO_KIO TRUE)
     set(PLASMA_NO_KUTILS TRUE)
     set(PLASMA_NO_GLOBAL_SHORTCUTS TRUE)
-endif(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
+endif()
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -19,26 +19,26 @@ include_directories(
 if(NOT PLASMA_NO_KIO)
    include_directories(${KDE4_KIO_INCLUDES})
    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KIO_LIBS})
-endif(NOT PLASMA_NO_KIO)
+endif()
 
 if(NOT PLASMA_NO_KDEWEBKIT)
     include_directories(${CMAKE_SOURCE_DIR}/kdewebkit/)
     set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} kdewebkit)
-endif(NOT PLASMA_NO_KDEWEBKIT)
+endif()
 
 if(NOT PLASMA_NO_SOLID)
     include_directories(${CMAKE_BINARY_DIR}/solid/)
     include_directories(${CMAKE_SOURCE_DIR}/solid/)
     set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_SOLID_LIBS})
-endif(NOT PLASMA_NO_SOLID)
+endif()
 
-if (NOT PLASMA_NO_KUTILS)
+if(NOT PLASMA_NO_KUTILS)
     include_directories(${CMAKE_SOURCE_DIR}/kutils)
     set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KCMUTILS_LIBRARY})
-endif(NOT PLASMA_NO_KUTILS)
+endif()
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/config-plasma.h.cmake
+    config-plasma.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h
 )
 
@@ -170,55 +170,66 @@ set(plasma_LIB_SRCS
     widgets/webview.cpp
 )
 
-kde4_add_kcfg_files(plasma_LIB_SRCS data/kconfigxt/libplasma-theme-global.kcfgc)
+kde4_add_kcfg_files(plasma_LIB_SRCS
+    data/kconfigxt/libplasma-theme-global.kcfgc
+)
 
-if (PHONON_FOUND)
+if(PHONON_FOUND)
     message(STATUS "Adding support for Phonon to libplasma")
     include_directories(${KDE4_PHONON_INCLUDES})
     set(plasma_LIB_SRCS
         ${plasma_LIB_SRCS}
-        widgets/videowidget.cpp)
-endif(PHONON_FOUND)
+        widgets/videowidget.cpp
+    )
+endif()
 
 add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
-target_link_libraries(plasma PRIVATE ${QT_QTUITOOLS_LIBRARY} ${QT_QTWEBKIT_LIBRARY}
-                             ${QT_QTSCRIPT_LIBRARY} ${QT_QTNETWORK_LIBRARY}
-                             ${QT_QTXML_LIBRARY} ${QT_QTSQL_LIBRARY}
-                             ${QT_QTDECLARATIVE_LIBRARY} ${KDE4_KDEUI_LIBS}
-                             ${KDE4_THREADWEAVER_LIBS} kdeclarative
-                             ${PLASMA_EXTRA_LIBS})
+target_link_libraries(plasma
+    ${QT_QTUITOOLS_LIBRARY}
+    ${QT_QTWEBKIT_LIBRARY}
+    ${QT_QTSCRIPT_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+    ${QT_QTSQL_LIBRARY}
+    ${QT_QTDECLARATIVE_LIBRARY}
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_THREADWEAVER_LIBS}
+    ${KDE4_KDECLARATIVE_LIBS}
+    ${PLASMA_EXTRA_LIBS}
+)
 
 if(X11_FOUND)
-   target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
+   target_link_libraries(plasma ${X11_LIBRARIES})
 endif(X11_FOUND)
 
 if(PHONON_FOUND)
-   target_link_libraries(plasma PRIVATE ${KDE4_PHONON_LIBS})
+   target_link_libraries(plasma ${KDE4_PHONON_LIBS})
 endif(PHONON_FOUND)
 
 if(DL_LIBRARY)
-    target_link_libraries(plasma PRIVATE ${DL_LIBRARY})
+    target_link_libraries(plasma ${DL_LIBRARY})
 endif(DL_LIBRARY)
 
-target_link_libraries(plasma PUBLIC kdeui kdecore ${QT_QTGUI_LIBRARY})
+set_target_properties(plasma PROPERTIES
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
+)
 
-set_target_properties(plasma PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
-
-install(TARGETS plasma EXPORT kdelibsLibraryTargets ${INSTALL_TARGETS_DEFAULT_ARGS})
-
+install(
+    TARGETS plasma
+    EXPORT kdelibsLibraryTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
 
 ########### install files ###############
 
-set(plasmagik_HEADERS
+install(
+    FILES
     packagemetadata.h
     packagestructure.h
     package.h
-    )
-
-install(FILES ${plasmagik_HEADERS} DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/ COMPONENT Devel)
-
-set(plasma_LIB_INCLUDES
     abstractdialogmanager.h
     abstractrunner.h
     abstracttoolbox.h
@@ -257,13 +268,13 @@ set(plasma_LIB_INCLUDES
     tooltipmanager.h
     version.h
     view.h
-    wallpaper.h)
+    wallpaper.h
+    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma
+    COMPONENT Devel
+)
 
-install(FILES
-        ${plasma_LIB_INCLUDES}
-        DESTINATION ${INCLUDE_INSTALL_DIR}/plasma COMPONENT Devel)
-
-install(FILES
+install(
+    FILES
     widgets/checkbox.h
     widgets/combobox.h
     widgets/declarativewidget.h
@@ -291,48 +302,67 @@ install(FILES
     widgets/treeview.h
     widgets/textedit.h
     widgets/webview.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/widgets COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/widgets
+    COMPONENT Devel
+)
 
-install(FILES
+install(
+    FILES
     scripting/appletscript.h
     scripting/dataenginescript.h
     scripting/runnerscript.h
     scripting/wallpaperscript.h
     scripting/scriptengine.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/scripting COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/scripting
+    COMPONENT Devel
+)
 
 if(PHONON_FOUND)
-    install (FILES
+    install(
+        FILES
         widgets/videowidget.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/widgets COMPONENT Devel)
-endif(PHONON_FOUND)
+        DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/widgets
+        COMPONENT Devel
+    )
+endif()
 
-install(FILES
+install(
+    FILES
     animations/animation.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/animations COMPONENT Devel)
+    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/animations
+    COMPONENT Devel
+)
 
 
-install(FILES
-   data/servicetypes/plasma-animator.desktop
-   data/servicetypes/plasma-applet.desktop
-   data/servicetypes/plasma-applet-popupapplet.desktop
-   data/servicetypes/plasma-containment.desktop
-   data/servicetypes/plasma-containmentactions.desktop
-   data/servicetypes/plasma-dataengine.desktop
-   data/servicetypes/plasma-packagestructure.desktop
-   data/servicetypes/plasma-runner.desktop
-   data/servicetypes/plasma-scriptengine.desktop
-   data/servicetypes/plasma-service.desktop
-   data/servicetypes/plasma-toolbox.desktop
-   data/servicetypes/plasma-wallpaper.desktop
-   DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install(
+    FILES
+    data/servicetypes/plasma-animator.desktop
+    data/servicetypes/plasma-applet.desktop
+    data/servicetypes/plasma-applet-popupapplet.desktop
+    data/servicetypes/plasma-containment.desktop
+    data/servicetypes/plasma-containmentactions.desktop
+    data/servicetypes/plasma-dataengine.desktop
+    data/servicetypes/plasma-packagestructure.desktop
+    data/servicetypes/plasma-runner.desktop
+    data/servicetypes/plasma-scriptengine.desktop
+    data/servicetypes/plasma-service.desktop
+    data/servicetypes/plasma-toolbox.desktop
+    data/servicetypes/plasma-wallpaper.desktop
+    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+)
 
-install(FILES
-   data/services/plasma-applet-extenderapplet.desktop
-   data/services/plasma.protocol
-   DESTINATION ${SERVICES_INSTALL_DIR})
+install(
+    FILES
+    data/services/plasma-applet-extenderapplet.desktop
+    data/services/plasma.protocol
+    DESTINATION ${SERVICES_INSTALL_DIR}
+)
 
-install(FILES data/operations/dataengineservice.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)
-install(FILES data/operations/plasmoidservice.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)
-install(FILES data/operations/storage.operations DESTINATION ${DATA_INSTALL_DIR}/plasma/services)
+install(
+    FILES
+    data/operations/dataengineservice.operations
+    data/operations/plasmoidservice.operations
+    data/operations/storage.operations
+    DESTINATION ${DATA_INSTALL_DIR}/plasma/services
+)
 
