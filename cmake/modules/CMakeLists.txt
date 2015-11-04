@@ -100,6 +100,7 @@ set(cmakeFiles
     FindPoppler.cmake
     FindPythonLibrary.cmake
     FindQCA2.cmake
+    FindQJSON.cmake
     FindQImageBlitz.cmake
     FindQt4.cmake
     FindRUBY.cmake
