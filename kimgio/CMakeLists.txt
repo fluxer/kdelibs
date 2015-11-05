@@ -50,25 +50,47 @@ endif(JASPER_FOUND)
 ##################################
 
 if(OPENEXR_FOUND)
-    include_directories( ${CMAKE_SOURCE_DIR}/kio ${OPENEXR_INCLUDE_DIR})
+    include_directories(${CMAKE_SOURCE_DIR}/kio ${OPENEXR_INCLUDE_DIR})
     add_definitions(${OPENEXR_DEFINITIONS})
     set(kimg_exr_LIB_SRCS exr.cpp)
     kde4_add_plugin(kimg_exr ${kimg_exr_LIB_SRCS})
-    target_link_libraries(kimg_exr ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${OPENEXR_LIBRARIES})
+    target_link_libraries(kimg_exr
+        ${KDE4_KDECORE_LIBS}
+        ${QT_QTGUI_LIBRARY}
+        ${OPENEXR_LIBRARIES}
+    )
 
-    install(TARGETS kimg_exr  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/ )
-    install( FILES exr.desktop DESTINATION  ${SERVICES_INSTALL_DIR}/qimageioplugins/ )
+    install(
+        TARGETS kimg_exr
+        DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats
+    )
+    install(
+        FILES exr.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins
+    )
 endif(OPENEXR_FOUND)
 
 ##################################
 
 if(WEBP_FOUND)
-    include_directories( ${WEBP_INCLUDES} )
+    include_directories(${WEBP_INCLUDES})
     kde4_add_plugin(kimg_webp webp.cpp)
-    target_link_libraries(kimg_webp ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${WEBP_LIBRARIES})
+    target_link_libraries(kimg_webp
+        ${KDE4_KDECORE_LIBS}
+        ${QT_QTGUI_LIBRARY}
+        ${WEBP_LIBRARIES}
+    )
 
-    install(TARGETS kimg_webp  DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats/)
-    install(FILES webp.desktop DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins/)
+    install(
+        TARGETS kimg_webp
+        DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats
+    )
+    install(
+        FILES
+        webp.desktop
+        x-webp.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins
+    )
 
     install(FILES webp.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
     update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})

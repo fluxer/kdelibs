@@ -4,4 +4,8 @@
     <comment>WebP image</comment>
     <glob pattern="*.webp"/>
   </mime-type>
+  <mime-type type="image/webp">
+    <comment>WebP image</comment>
+    <glob pattern="*.webp"/>
+  </mime-type>
 </mime-info>
