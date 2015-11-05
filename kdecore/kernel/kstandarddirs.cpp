@@ -70,7 +70,7 @@ public:
           m_checkRestrictions(true),
           m_cacheMutex(QMutex::Recursive), // resourceDirs is recursive
           q(qq)
-    { }
+    { m_infocache.reserve(max_file_info); }
 
     bool hasDataRestrictions(const QString &relPath) const;
     QStringList resourceDirs(const char* type, const QString& subdirForRestrictions);
