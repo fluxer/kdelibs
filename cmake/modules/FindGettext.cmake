@@ -126,7 +126,11 @@ MACRO(GETTEXT_CREATE_TRANSLATIONS _potFile _firstPoFile)
          DEPENDS ${_absPotFile} ${_absFile} 
       )
 
-      INSTALL(FILES ${_gmoFile} DESTINATION share/locale/${_lang}/LC_MESSAGES RENAME ${_potBasename}.mo) 
+      INSTALL(
+         FILES ${_gmoFile}
+         DESTINATION share/locale/${_lang}/LC_MESSAGES
+         RENAME ${_potBasename}.mo
+      )
       SET(_gmoFiles ${_gmoFiles} ${_gmoFile})
 
    ENDFOREACH (_currentPoFile )
@@ -218,18 +222,26 @@ MACRO(GETTEXT_PROCESS_PO_FILES _lang)
       GET_FILENAME_COMPONENT(_name ${_current_PO_FILE} NAME)
       STRING(REGEX REPLACE "^(.+)(\\.[^.]+)$" "\\1" _basename ${_name})
       SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.gmo)
-      add_custom_command(OUTPUT ${_gmoFile}
+      add_custom_command(
+            OUTPUT  ${_gmoFile}
             COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} -o ${_gmoFile} ${_current_PO_FILE}
             WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
             DEPENDS ${_current_PO_FILE}
-         )
+      )
 
       IF(_installDest)
-         INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.gmo DESTINATION ${_installDest}/${_lang}/LC_MESSAGES/ RENAME ${_basename}.mo)
+         INSTALL(
+           FILES ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.gmo
+           DESTINATION ${_installDest}/${_lang}/LC_MESSAGES/
+           RENAME ${_basename}.mo
+         )
       ENDIF(_installDest)
       LIST(APPEND _gmoFiles ${_gmoFile})
    ENDFOREACH(_current_PO_FILE)
-   ADD_CUSTOM_TARGET(pofiles ${_addToAll} DEPENDS ${_gmoFiles})
+
+   STRING(RANDOM LENGHT 10 _random)
+   STRING(REPLACE "@" "_" _uniqueName ${_lang}_${_random})
+   ADD_CUSTOM_TARGET(profile_${_uniqueName} ${_addToAll} DEPENDS ${_gmoFiles})
 ENDMACRO(GETTEXT_PROCESS_PO_FILES)
 
 
