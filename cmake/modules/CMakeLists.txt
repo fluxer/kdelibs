@@ -16,9 +16,14 @@ set(cmakeFilesDontInstall
 # so become part of the public interface of kdelibs which has to be kept
 # compatible).
 set(cmakeFiles
+    BasicFindPackageVersion.cmake.in
+    check_installed_exports_file.cmake
     CheckPointerMember.cmake
     CheckPrototypeExists.cmake
     CheckStructMember.cmake
+    cmake-modules-styleguide.txt
+    config-alsa.h.cmake
+    create_exe_symlink.cmake
     FindACL.cmake
     FindAGG.cmake
     FindAkode.cmake
@@ -28,87 +33,103 @@ set(cmakeFiles
     FindBlueZ.cmake
     FindCanberra.cmake
     FindCHM.cmake
+    FindCLucene.cmake
     FindCUPS.cmake
+    FindDBus.cmake
     FindDBusMenuQt.cmake
-    FindKDevelop.cmake
     FindDjVuLibre.cmake
     FindDNSSD.cmake
+    FindEigen2.cmake
+    FindEigen3.cmake
+    FindEigen.cmake
     FindENCHANT.cmake
     FindEPub.cmake
-    FindEigen.cmake
-    FindEigen2.cmake
     FindExiv2.cmake
     FindFAM.cmake
     FindFFmpeg.cmake
     FindFlac.cmake
     FindFlex.cmake
     FindFontconfig.cmake
-    FindLibGcrypt.cmake
+    FindGettext.cmake
+    FindGettextPO.cmake
     FindGLIB2.cmake
     FindGMP.cmake
     FindGObject.cmake
-    FindGSSAPI.cmake
-    FindGStreamer.cmake
-    FindGettext.cmake
-    FindGettextPO.cmake
-    FindSpeechd.cmake
     FindGpgme.cmake
     FindGphoto2.cmake
+    FindGSSAPI.cmake
+    FindGStreamer.cmake
     FindHUNSPELL.cmake
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
-    FindKDevPlatform.cmake
     FindKdepim.cmake
     FindKdepimLibs.cmake
+    FindKDevelop.cmake
+    FindKDevPlatform.cmake
     FindKipi.cmake
     FindKopete.cmake
     FindKorundum.cmake
     FindKSane.cmake
-    FindLCMS.cmake
     FindLCMS2.cmake
+    FindLCMS.cmake
     FindLibArt.cmake
     FindLibAttica.cmake
+    FindLibGcrypt.cmake
+    FindLibintl.cmake
     FindLibKasten.cmake
     FindLibKonq.cmake
     FindLibLZMA.cmake
+    FindLibMms.cmake
+    FindLibNXCL.cmake
     FindLibOkteta.cmake
     FindLibOktetaKasten.cmake
-    FindLibXslt.cmake
-    FindLibintl.cmake
-    FindLibNXCL.cmake
-    FindLibSpectre.cmake
-    FindLibVNCServer.cmake
     FindLIBPARTED.cmake
+    FindLibPython.py
+    FindLibSpectre.cmake
+    FindLibSSH.cmake
+    FindLibVNCServer.cmake
+    FindLibXKlavier.cmake
+    FindLibXslt.cmake
     FindLinuxWirelesstools.cmake
-    FindLibMms.cmake
-    FindMusicBrainz.cmake
-    FindMusicBrainz5.cmake
-    FindMySQL.cmake
     FindMPFR.cmake
+    FindMtp.cmake
+    FindMusicBrainz5.cmake
+    FindMusicBrainz.cmake
+    FindMySQL.cmake
     FindNetworkManager.cmake
     FindOggVorbis.cmake
     FindOpenEXR.cmake
+    FindOpenGLES.cmake
+    FindPAM.cmake
+    FindPCIUTILS.cmake
     FindPCRE.cmake
     FindPhonon.cmake
+    FindPoppler.cmake
     FindPopplerQt4.cmake
     FindPostgreSQL.cmake
     FindPulseAudio.cmake
     FindPyKDE4.cmake
+    FindPyKDE4.py
     FindPyQt4.cmake
-    Qt4Macros.cmake
-    Qt4ConfigDependentSettings.cmake
-    FindPoppler.cmake
+    FindPyQt.py
     FindPythonLibrary.cmake
+    FindQalculate.cmake
     FindQCA2.cmake
-    FindQJSON.cmake
     FindQImageBlitz.cmake
+    FindQJSON.cmake
+    FindQNtrack.cmake
     FindQt4.cmake
+    FindRAW1394.cmake
     FindRUBY.cmake
-    FindSIP.cmake
     FindSamba.cmake
     FindSane.cmake
     FindSasl2.cmake
+    FindSensors.cmake
     FindSharedMimeInfo.cmake
+    FindSIP.cmake
+    FindSIP.py
+    FindSLP.cmake
+    FindSpeechd.cmake
     FindSqlite.cmake
     FindStrigi.cmake
     FindSubversionLibrary.cmake
@@ -116,39 +137,35 @@ set(cmakeFiles
     FindUDev.cmake
     FindUDisks2.cmake
     FindUSB.cmake
-    FindXCB.cmake
+    FindWebP.cmake
     FindX11.cmake
     FindX11_XCB.cmake
-    FindXKB.cmake
+    FindXCB.cmake
     FindXine.cmake
+    FindXKB.cmake
     FindXmms.cmake
-    FindWebP.cmake
     HandleImportedTargetsInCMakeRequiredLibraries.cmake
+    kde4_cmake_uninstall.cmake.in
     KDE4Defaults.cmake
     KDE4Macros.cmake
-    MacroAddLinkFlags.cmake
     MacroAdditionalCleanFiles.cmake
+    MacroAddLinkFlags.cmake
     MacroAppendIf.cmake
     MacroBoolTo01.cmake
+    MacroDBusAddActivationService.cmake
     MacroLibrary.cmake
     MacroLogFeature.cmake
     MacroOptionalAddSubdirectory.cmake
     MacroOptionalFindPackage.cmake
     MacroPushRequiredVars.cmake
     MacroWriteBasicCMakeVersionFile.cmake
-    PythonMacros.cmake
-    SIPMacros.cmake
-    check_installed_exports_file.cmake
-    config-alsa.h.cmake
-    create_exe_symlink.cmake
-    cmake-modules-styleguide.txt
-    kde4_cmake_uninstall.cmake.in
-    BasicFindPackageVersion.cmake.in
-    FindLibPython.py
-    FindPyKDE4.py
-    FindPyQt.py
-    FindSIP.py
+    PkgConfigGetVar.cmake
     PythonCompile.py
+    PythonMacros.cmake
+    Qt4ConfigDependentSettings.cmake
+    Qt4Macros.cmake
+    SIPMacros.cmake
+    UnixAuth.cmake
 )
 
 install(FILES ${cmakeFiles} DESTINATION ${module_install_dir})
