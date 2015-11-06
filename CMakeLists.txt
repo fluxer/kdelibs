@@ -285,17 +285,14 @@ configure_file(KDE4Version.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake @
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${INCLUDE_INSTALL_DIR}
 )
 
-# the following will be the correct locations once cmake has the improved
-# FIND_PACKAGE(): ${SHARE_INSTALL_PREFIX}/cmake/KDE4)
 install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake
-    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${LIB_INSTALL_DIR}/cmake/KDE4
 )
 
 
@@ -307,20 +304,20 @@ install(
 # The code for installing the exports files will soon go into a macro. Alex
 install(
     CODE "set(EXPORT_FILES KDELibs4LibraryTargets.cmake KDELibs4ToolsTargets.cmake)"
-    CODE "set(EXPORT_INSTALL_DIR \"${DATA_INSTALL_DIR}/cmake/modules\")"
+    CODE "set(EXPORT_INSTALL_DIR \"${LIB_INSTALL_DIR}/cmake/KDE4\")"
     SCRIPT "${CMAKE_SOURCE_DIR}/cmake/modules/check_installed_exports_file.cmake"
 )
 install(
     EXPORT kdelibsLibraryTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4LibraryTargets.cmake
-    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${LIB_INSTALL_DIR}/cmake/KDE4
 )
 install(
     EXPORT kdelibsToolsTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4ToolsTargets.cmake
-    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${LIB_INSTALL_DIR}/cmake/KDE4
 )
 
 feature_summary(WHAT ALL
