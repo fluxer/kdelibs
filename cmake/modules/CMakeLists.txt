@@ -48,7 +48,6 @@ set(cmakeFiles
     FindFFmpeg.cmake
     FindFlac.cmake
     FindFontconfig.cmake
-    FindGettext.cmake
     FindGettextPO.cmake
     FindGLIB2.cmake
     FindGMP.cmake
