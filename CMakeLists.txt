@@ -285,8 +285,7 @@ configure_file(KDE4Version.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake @
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h
-    DESTINATION
-    ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${INCLUDE_INSTALL_DIR}
 )
 
 # the following will be the correct locations once cmake has the improved
