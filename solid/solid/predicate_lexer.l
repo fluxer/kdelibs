@@ -19,6 +19,7 @@ void PredicateParse_initFlex( const char *_code, yyscan_t _scanner );
 %option nostack
 %option reentrant
 %option bison-bridge
+%option nounput
 
 DIGIT [0-9]
 
