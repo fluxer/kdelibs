@@ -15,8 +15,12 @@
 get_filename_component(_currentListFileDir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
 function(MACRO_WRITE_BASIC_CMAKE_VERSION_FILE _filename _major _minor _patch)
-   set(PROJECT_VERSION_MAJOR ${_major})
-   set(PROJECT_VERSION_MINOR ${_minor})
-   set(PROJECT_VERSION_PATCH ${_patch})
-   configure_file(${_currentListFileDir}/BasicFindPackageVersion.cmake.in "${_filename}" @ONLY)
-endfunction(MACRO_WRITE_BASIC_CMAKE_VERSION_FILE _major _minor _patch)
+    set(PROJECT_VERSION_MAJOR ${_major})
+    set(PROJECT_VERSION_MINOR ${_minor})
+    set(PROJECT_VERSION_PATCH ${_patch})
+    configure_file(
+        ${_currentListFileDir}/BasicFindPackageVersion.cmake.in
+        "${_filename}"
+        @ONLY
+    )
+endfunction()

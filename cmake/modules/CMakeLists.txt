@@ -34,7 +34,6 @@ set(cmakeFiles
     FindCanberra.cmake
     FindCHM.cmake
     FindCLucene.cmake
-    FindCUPS.cmake
     FindDBus.cmake
     FindDBusMenuQt.cmake
     FindDjVuLibre.cmake
