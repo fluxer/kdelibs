@@ -580,8 +580,6 @@ extern int Solidwrap (yyscan_t yyscanner );
 #endif
 #endif
 
-    static void yyunput (int c,char *buf_ptr  ,yyscan_t yyscanner);
-    
 #ifndef yytext_ptr
 static void yy_flex_strncpy (char *,yyconst char *,int ,yyscan_t yyscanner);
 #endif
@@ -735,10 +733,10 @@ YY_DECL
 		}
 
 	{
-#line 25 "predicate_lexer.l"
+#line 26 "predicate_lexer.l"
 
 
-#line 742 "predicate_lexer.c"
+#line 740 "predicate_lexer.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -793,87 +791,87 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 27 "predicate_lexer.l"
+#line 28 "predicate_lexer.l"
 { return EQ; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 28 "predicate_lexer.l"
+#line 29 "predicate_lexer.l"
 { return MASK; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 30 "predicate_lexer.l"
+#line 31 "predicate_lexer.l"
 { return AND; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 31 "predicate_lexer.l"
+#line 32 "predicate_lexer.l"
 { return OR; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 32 "predicate_lexer.l"
+#line 33 "predicate_lexer.l"
 { return IS; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 34 "predicate_lexer.l"
+#line 35 "predicate_lexer.l"
 { yylval->valb = 1; return VAL_BOOL; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "predicate_lexer.l"
+#line 36 "predicate_lexer.l"
 { yylval->valb = 0; return VAL_BOOL; }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 37 "predicate_lexer.l"
+#line 38 "predicate_lexer.l"
 { yylval->name = PredicateParse_putString( yytext ); return VAL_STRING; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 39 "predicate_lexer.l"
+#line 40 "predicate_lexer.l"
 { yylval->vali = atoi( yytext ); return VAL_NUM; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 40 "predicate_lexer.l"
+#line 41 "predicate_lexer.l"
 { yylval->vali = atoi( yytext ); return VAL_NUM; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 42 "predicate_lexer.l"
+#line 43 "predicate_lexer.l"
 { yylval->vald = atof( yytext ); return VAL_FLOAT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 44 "predicate_lexer.l"
+#line 45 "predicate_lexer.l"
 { yylval->name = PredicateParse_putSymbol( yytext ); return VAL_ID; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 46 "predicate_lexer.l"
+#line 47 "predicate_lexer.l"
 { yylval->name = 0; return (int)(*yytext); }
 	YY_BREAK
 case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
-#line 48 "predicate_lexer.l"
+#line 49 "predicate_lexer.l"
 /* eat up whitespace */
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 50 "predicate_lexer.l"
+#line 51 "predicate_lexer.l"
 { PredicateLexer_unknownToken(yytext); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 52 "predicate_lexer.l"
+#line 53 "predicate_lexer.l"
 ECHO;
 	YY_BREAK
-#line 877 "predicate_lexer.c"
+#line 875 "predicate_lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1206,44 +1204,6 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 	(void)yyg;
 	return yy_is_jam ? 0 : yy_current_state;
-}
-
-    static void yyunput (int c, register char * yy_bp , yyscan_t yyscanner)
-{
-	register char *yy_cp;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-
-    yy_cp = yyg->yy_c_buf_p;
-
-	/* undo effects of setting up yytext */
-	*yy_cp = yyg->yy_hold_char;
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		register yy_size_t number_to_move = yyg->yy_n_chars + 2;
-		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		register char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			yyg->yy_n_chars = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-	yyg->yytext_ptr = yy_bp;
-	yyg->yy_hold_char = *yy_cp;
-	yyg->yy_c_buf_p = yy_cp;
 }
 
 #ifndef YY_NO_INPUT
@@ -2039,7 +1999,7 @@ void Solidfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 52 "predicate_lexer.l"
+#line 53 "predicate_lexer.l"
 
 
 
