@@ -295,13 +295,11 @@ install(
     DESTINATION ${LIB_INSTALL_DIR}/cmake/KDE4
 )
 
-
-# run a script before installing the exports files which deletes previously installed
-# configuration specific export files KDELibs4(Library|Tools)Targets-<config>.cmake
-# if the main exports file KDELibs4(Library|Tools)Targets.cmake has changed. This makes sure
-# that this main file doesn't include older and different configuration specific exports files,
-# which might have a different set of targets or targets with different names.
-# The code for installing the exports files will soon go into a macro. Alex
+# run a script before installing the exports files which deletes previously
+# installed configuration specific export files, if the main exports file has
+# changed this makes sure it doesn't include older and different configuration
+# specific exports files, which might have a different set of targets or
+# targets with different names.
 install(
     CODE "set(EXPORT_FILES KDELibs4LibraryTargets.cmake KDELibs4ToolsTargets.cmake)"
     CODE "set(EXPORT_INSTALL_DIR \"${LIB_INSTALL_DIR}/cmake/KDE4\")"
