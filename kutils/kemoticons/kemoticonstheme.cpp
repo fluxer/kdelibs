@@ -190,11 +190,11 @@ QString KEmoticonsTheme::parseEmoticons(const QString &text, ParseMode mode, con
 
 bool EmoticonCompareEscaped( const KEmoticonsProvider::Emoticon &s1, const KEmoticonsProvider::Emoticon &s2)
 {
-	return s1.matchTextEscaped.length()>s2.matchTextEscaped.length();
+    return s1.matchTextEscaped.length()>s2.matchTextEscaped.length();
 }
 bool EmoticonCompare( const KEmoticonsProvider::Emoticon &s1, const KEmoticonsProvider::Emoticon &s2)
 {
-	return s1.matchText.length()>s2.matchText.length();
+    return s1.matchText.length()>s2.matchText.length();>
 }
 
 

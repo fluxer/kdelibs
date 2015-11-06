@@ -3114,8 +3114,8 @@ QStringList KLocalePrivate::allCountriesList() const
 {
     QStringList countries;
     const QStringList paths = KGlobal::dirs()->findAllResources("locale", QLatin1String("l10n/*/entry.desktop"));
-    for (QStringList::ConstIterator it = paths.begin(); it != paths.end(); ++it) {
-        QString code = (*it).mid((*it).length() - 16, 2);
+    foreach (const QString it, paths) {
+        const QString code = it.mid(it.length() - 16, 2);
         if (code != QLatin1String("/C")) {
             countries.append(code);
         }
