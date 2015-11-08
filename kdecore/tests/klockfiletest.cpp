@@ -69,7 +69,7 @@ Test_KLockFile::initTestCase()
 
 static KLockFile::LockResult testLockFromProcess(const QString& lockName)
 {
-    const int ret = QProcess::execute("./kdecore-klockfile_testlock", QStringList() << lockName);
+    const int ret = QProcess::execute(KDEBINDIR "/kdecore-klockfile_testlock", QStringList() << lockName);
     return KLockFile::LockResult(ret);
 }
 

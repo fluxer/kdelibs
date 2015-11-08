@@ -266,8 +266,8 @@ void KDebugTest::testNoMainComponentData()
     proc.setEnv("KDE_DEBUG_NOPROCESSINFO", "1");
     proc.setEnv("KDE_DEBUG_TIMESTAMP", "0");
     proc.setOutputChannelMode(KProcess::OnlyStderrChannel);
-    QVERIFY(QFile::exists("./kdecore-kdebug_qcoreapptest"));
-    proc << "./kdecore-kdebug_qcoreapptest";
+    QVERIFY(QFile::exists(KDEBINDIR "/kdecore-kdebug_qcoreapptest"));
+    proc << KDEBINDIR "/kdecore-kdebug_qcoreapptest";
     //     kDebug() << proc.args();
     const int ok = proc.execute();
     QVERIFY(ok == 0);
@@ -276,8 +276,8 @@ void KDebugTest::testNoMainComponentData()
     //qDebug() << receivedLines;
     QList<QByteArray> expectedLines;
     expectedLines << "qcoreapp_myarea main: Test debug using qcoreapp_myarea 1";
-    expectedLines << "kdebug_qcoreapptest main: Debug in area 100";
-    expectedLines << "kdebug_qcoreapptest main: Simple debug";
+    expectedLines << "kdecore-kdebug_qcoreapptest main: Debug in area 100";
+    expectedLines << "kdecore-kdebug_qcoreapptest main: Simple debug";
     expectedLines << "kdebug_qcoreapptest_mainData main: This should appear, under the kdebug_qcoreapptest_mainData area";
     expectedLines << "kdebug_qcoreapptest_mainData main: Debug in area 100";
     expectedLines << ""; // artefact of split, I guess?
