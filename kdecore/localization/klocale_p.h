@@ -1061,16 +1061,6 @@ protected:
      */
     virtual QByteArray systemCodeset() const;
 
-    /**
-     * @internal A QFile filename encoding function (QFile::encodeFn).
-     */
-    static QByteArray encodeFileNameUTF8(const QString &fileName);
-
-    /**
-     * @internal QFile filename decoding function (QFile::decodeFn).
-     */
-    static QString decodeFileNameUTF8(const QByteArray &localFileName);
-
 public:
 
     /**

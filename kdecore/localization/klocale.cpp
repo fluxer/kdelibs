@@ -23,7 +23,7 @@
 */
 
 #include "klocale.h"
-    #include "klocale_unix_p.h"
+#include "klocale_unix_p.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QTextCodec>
