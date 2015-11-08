@@ -428,8 +428,8 @@ set(_kde_libraries
     kcmutils
     kcompactdisc
     kdcraw
-    kdecore
     kdeclarative
+    kdecore
     kdefakes
     kdesu
     kdeui
@@ -440,8 +440,11 @@ set(_kde_libraries
     kemoticons
     kexiv2
     kfile
+    khtml
     kidletime
     kio
+    kjs
+    kjsapi
     knotifyconfig
     kparts
     kprintutils

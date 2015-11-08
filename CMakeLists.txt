@@ -212,6 +212,14 @@ set(KDE4_KPARTS_INCLUDES
     ${KDE4_KIO_INCLUDES}
 )
 
+# kjs depends on kio
+set(KDE4_KJS_INCLUDES
+    ${CMAKE_SOURCE_DIR}/kjs
+    ${CMAKE_SOURCE_DIR}/kjs/wtf
+    ${CMAKE_BINARY_DIR}/kjs
+)
+
+
 ################# configure checks and create the configured files #################
 
 set(LIBRARY_TYPE SHARED)
@@ -276,6 +284,10 @@ add_subdirectory( security )
 add_subdirectory( solid )
 add_subdirectory( sonnet )
 add_subdirectory( threadweaver )
+
+add_subdirectory(kjs)
+add_subdirectory(khtml)
+
 
 ################# write kdelibs package config files which will be installed #################
 
