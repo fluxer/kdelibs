@@ -6,6 +6,10 @@ if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
     set(PLASMA_NO_GLOBAL_SHORTCUTS TRUE)
 endif()
 
+if(NOT QT_QTWEBKIT_FOUND)
+    set(PLASMA_NO_KDEWEBKIT TRUE)
+endif()
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${KDE4_KDECORE_INCLUDES}
@@ -23,7 +27,7 @@ endif()
 
 if(NOT PLASMA_NO_KDEWEBKIT)
     include_directories(${CMAKE_SOURCE_DIR}/kdewebkit/)
-    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} kdewebkit)
+    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KDEWEBKIT_LIBS})
 endif()
 
 if(NOT PLASMA_NO_SOLID)
@@ -101,7 +105,6 @@ set(plasma_LIB_SRCS
     framesvg.cpp
     plasma.cpp
     popupapplet.cpp
-    private/animablegraphicswebview.cpp
     private/applethandle.cpp
     private/associatedapplicationmanager.cpp
     private/datacontainer_p.cpp
@@ -174,8 +177,16 @@ set(plasma_LIB_SRCS
     widgets/textbrowser.cpp
     widgets/treeview.cpp
     widgets/textedit.cpp
-    widgets/webview.cpp
 )
+
+if(QT_QTWEBKIT_FOUND)
+    set(plasma_LIB_SRCS
+        ${plasma_LIB_SRCS}
+        private/animablegraphicswebview.cpp
+        private/animablegraphicswebview_p.h
+        widgets/webview.cpp
+    )
+endif()
 
 kde4_add_kcfg_files(plasma_LIB_SRCS
     data/kconfigxt/libplasma-theme-global.kcfgc
@@ -194,7 +205,6 @@ add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
 target_link_libraries(plasma
     ${QT_QTUITOOLS_LIBRARY}
-    ${QT_QTWEBKIT_LIBRARY}
     ${QT_QTSCRIPT_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
