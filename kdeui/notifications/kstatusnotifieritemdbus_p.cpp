@@ -24,6 +24,7 @@
 
 #include <QApplication>
 #include <QMovie>
+#include <QMetaObject>
 
 #include <kdebug.h>
 #include <ksystemtrayicon.h>

@@ -25,6 +25,8 @@
 #include <QApplication>
 #include <QMovie>
 #include <QPainter>
+#include <QMetaObject>
+#include <QTimer>
 
 #include <kdebug.h>
 #include <ksystemtrayicon.h>

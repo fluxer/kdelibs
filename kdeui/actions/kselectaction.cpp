@@ -32,10 +32,11 @@
 #include "kselectaction.h"
 #include "kselectaction_p.h"
 
-#include <QFocusEvent>
+#include <QEvent>
 #include <QToolButton>
 #include <QToolBar>
 #include <QtGui/qstandarditemmodel.h>
+
 #include <kicon.h>
 #include <klocale.h>
 #include <kdebug.h>

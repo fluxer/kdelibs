@@ -17,6 +17,7 @@
 */
 
 #include <QWidget>
+#include <QBuffer>
 
 #include "knotificationmanager_p.h"
 #include <ktoolinvocation.h>

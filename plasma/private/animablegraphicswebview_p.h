@@ -22,9 +22,6 @@
 #define ANIMABLEWEBVIEW_P_H
 
 #include <QtGui/qgraphicssceneevent.h>
-#include <QtGui/qgraphicssceneevent.h>
-#include <QtGui/qgraphicssceneevent.h>
-#include <QtGui/qgraphicssceneevent.h>
 #include <QtGui/QGraphicsView>
 
 #include <config-plasma.h>

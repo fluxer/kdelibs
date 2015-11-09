@@ -21,6 +21,7 @@
 #ifndef KSTATUSNOTIFIERITEMPRIVATE_H
 #define KSTATUSNOTIFIERITEMPRIVATE_H
 
+#include <QtCore/qpointer.h>
 #include <QtGui/qevent.h>
 
 #include <ksystemtrayicon.h>

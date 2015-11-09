@@ -47,7 +47,7 @@ FstabWatcher::FstabWatcher()
     }
 
     m_mtabFile = new QFile(MTAB, this);
-    if (m_mtabFile && m_mtabFile->symLinkTarget().startsWith("/proc/")
+    if (m_mtabFile && m_mtabFile->readLink().startsWith("/proc/")
         && m_mtabFile->open(QIODevice::ReadOnly) ) {
 
         m_mtabSocketNotifier = new QSocketNotifier(m_mtabFile->handle(),

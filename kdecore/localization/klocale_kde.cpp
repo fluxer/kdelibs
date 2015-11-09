@@ -46,7 +46,7 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QLocale>
 #include <QtCore/QHash>
-#include <QtCore/QMutexLocker>
+#include <QtCore/QMutex>
 #include <QtCore/QStringList>
 
 #include "kcatalog_p.h"

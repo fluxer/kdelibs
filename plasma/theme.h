@@ -21,6 +21,7 @@
 #define PLASMA_THEME_H
 
 #include <QtCore/QObject>
+#include <QtCore/QRect>
 #include <QtGui/QFont>
 #include <QtGui/QFontMetrics>
 
