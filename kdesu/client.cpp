@@ -399,7 +399,7 @@ int KDEsuClient::stopServer()
 
 static QString findDaemon()
 {
-    const QString daemon = KStandardDirs::locate("bin", "kdesud");
+    const QString daemon = KStandardDirs::locate("exe", "kdesud");
 
     if (daemon.isEmpty())
     {
