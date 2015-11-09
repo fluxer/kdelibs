@@ -1290,6 +1290,7 @@ QVariant KHTMLPart::executeScript(const QString& filename, int baseLine, const D
   KJS::Completion comp;
   QVariant ret = proxy->evaluate(filename, baseLine, script, n, &comp);
 
+#ifdef KJS_DEBUGGER
   /*
    *  Error handling
    */
@@ -1302,6 +1303,7 @@ QVariant KHTMLPart::executeScript(const QString& filename, int baseLine, const D
                          Qt::escape(filename), Qt::escape(msg)));
     }
   }
+#endif
 
   // Handle immediate redirects now (e.g. location='foo')
   if ( !d->m_redirectURL.isEmpty() && d->m_delayRedirect == -1 )
@@ -1338,6 +1340,7 @@ QVariant KHTMLPart::executeScript( const DOM::Node &n, const QString &script )
   const QVariant ret = proxy->evaluate( QString(), 1, script, n, &comp );
   --(d->m_runningScripts);
 
+#ifdef KJS_DEBUGGER
   /*
    *  Error handling
    */
@@ -1350,6 +1353,7 @@ QVariant KHTMLPart::executeScript( const DOM::Node &n, const QString &script )
                          n.nodeName().string(), Qt::escape(msg)));
     }
   }
+#endif
 
   if (!d->m_runningScripts && d->m_doc && !d->m_doc->parsing() && d->m_submitForm )
       submitFormAgain();

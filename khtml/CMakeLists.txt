@@ -307,21 +307,28 @@ set(kjs_html_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/ecma/kjs_arraybufferview.cpp
     ${CMAKE_SOURCE_DIR}/khtml/ecma/kjs_arraytyped.cpp
     ${CMAKE_SOURCE_DIR}/khtml/ecma/kjs_clientrect.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/debugwindow.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/debugdocument.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/consoledock.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/breakpointsdock.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/callstackdock.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/localvariabledock.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/scriptsdock.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/value2string.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/errordlg.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/interpreter_ctx.cpp
 )
 
-qt4_add_resources(kjs_html_STAT_SRCS
-    ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/debugger.qrc
-)
+if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    set(kjs_html_STAT_SRCS
+        ${kjs_html_STAT_SRCS}
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/debugwindow.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/debugdocument.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/consoledock.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/breakpointsdock.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/callstackdock.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/localvariabledock.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/scriptsdock.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/value2string.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/errordlg.cpp
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/interpreter_ctx.cpp
+    )
+
+    qt4_add_resources(kjs_html_STAT_SRCS
+        ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/debugger.qrc
+    )
+    add_definitions(-DKJS_DEBUGGER)
+endif()
 
 set(khtmlrender_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/rendering/bidi.cpp

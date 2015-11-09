@@ -20,8 +20,6 @@
 #ifndef DEBUGWINDOW_H
 #define DEBUGWINDOW_H
 
-#define KJS_DEBUGGER
-
 #include <kcomponentdata.h>
 #include <kxmlguiwindow.h>
 
