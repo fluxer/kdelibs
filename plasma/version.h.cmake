@@ -28,14 +28,14 @@
  * String version of libplasma version, suitable for use in
  * file formats or network protocols
  */
-#define PLASMA_VERSION_STRING "4.17.0"
+#define PLASMA_VERSION_STRING "@KDE_VERSION@"
 
 /// @brief Major version of libplasma, at compile time
-#define PLASMA_VERSION_MAJOR 4
+#define PLASMA_VERSION_MAJOR @KDE_VERSION_MAJOR@
 /// @brief Minor version of libplasma, at compile time
-#define PLASMA_VERSION_MINOR 17
+#define PLASMA_VERSION_MINOR @KDE_VERSION_MINOR@
 /// @brief Release version of libplasma, at compile time
-#define PLASMA_VERSION_RELEASE 0
+#define PLASMA_VERSION_RELEASE @KDE_VERSION_RELEASE@
 
 #define PLASMA_MAKE_VERSION(a,b,c) (((a) << 16) | ((b) << 8) | (c))
 

@@ -42,9 +42,16 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h
 )
 
+configure_file(
+    version.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
+    @ONLY
+)
+
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
+
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1209)
 
 ########### next target ###############
@@ -266,7 +273,7 @@ install(
     theme.h
     tooltipcontent.h
     tooltipmanager.h
-    version.h
+    ${CMAKE_CURRENT_BINARY_DIR}/version.h
     view.h
     wallpaper.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/plasma
