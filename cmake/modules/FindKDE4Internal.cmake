@@ -288,8 +288,11 @@ set(QT_USE_IMPORTED_TARGETS TRUE)
 
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
-find_package(Qt4 ${_REQ_STRING_KDE4})
-# find_package(Katie)
+set(KATIE_COMPAT TRUE)
+find_package(Katie)
+if(NOT KATIE_FOUND)
+    find_package(Qt4 ${_REQ_STRING_KDE4})
+endif()
 
 # Perl is not required for building KDE software but is during runtime from
 # kdelibs and kde-workspace, also it is here since 4.0
@@ -769,7 +772,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
         set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
 
         # first check if we can compile a Qt application
-        set(_source "#include <QtCore/QtGlobal>\n int main() \n {\n return 0; \n } \n")
+        set(_source "#include <QtCore/qglobal.h>\n int main() \n {\n return 0; \n } \n")
         set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_application.cpp)
         file(WRITE "${_source_file}" "${_source}")
 
@@ -785,7 +788,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
             set (KDE4_C_FLAGS "-fvisibility=hidden")
             # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
             # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
-            set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
+            set(_source "#include <QtCore/qglobal.h>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
             set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
             file(WRITE "${_source_file}" "${_source}")
 
