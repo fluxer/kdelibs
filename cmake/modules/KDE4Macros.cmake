@@ -317,6 +317,7 @@ macro(KDE4_ADD_MANUAL_TEST _targetName)
     target_compile_definitions(
         ${_targetName} PRIVATE
         -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
+        -DKDEBINDIR="${CMAKE_CURRENT_BINARY_DIR}/"
     )
     set_target_properties(
         ${_targetName} PROPERTIES
