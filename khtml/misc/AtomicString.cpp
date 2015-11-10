@@ -85,7 +85,7 @@ DOMStringImpl* AtomicString::add(const char* c)
 
 struct UCharBuffer {
     const QChar* s;
-    unsigned length;
+    int length;
 };
 
 static inline bool equal(DOMStringImpl* string, const QChar* characters, unsigned length)
