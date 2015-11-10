@@ -26,16 +26,7 @@
 #ifndef AffineTransform_h
 #define AffineTransform_h
 
-#if PLATFORM(CG)
-#include <CoreGraphics/CGAffineTransform.h>
-#elif PLATFORM(QT)
 #include <QMatrix>
-#elif PLATFORM(CAIRO)
-#include <cairo.h>
-#elif PLATFORM(WX) && USE(WXGC)
-#include <wx/defs.h>
-#include <wx/graphics.h>
-#endif
 
 namespace WebCore {
 
@@ -48,15 +39,7 @@ class AffineTransform {
 public:
     AffineTransform();
     AffineTransform(double a, double b, double c, double d, double e, double f);
-#if PLATFORM(CG)
-    AffineTransform(CGAffineTransform transform);
-#elif PLATFORM(QT)
     AffineTransform(const QMatrix &matrix);
-#elif PLATFORM(CAIRO)
-    AffineTransform(const cairo_matrix_t &matrix);
-#elif PLATFORM(WX) && USE(WXGC)
-    AffineTransform(const wxGraphicsMatrix &matrix);
-#endif
 
     void setMatrix(double a, double b, double c, double d, double e, double f);
     void map(double x, double y, double *x2, double *y2) const;
@@ -105,15 +88,7 @@ public:
     bool isInvertible() const;
     AffineTransform inverse() const;
 
-#if PLATFORM(CG)
-    operator CGAffineTransform() const;
-#elif PLATFORM(QT)
     operator QMatrix() const;
-#elif PLATFORM(CAIRO)
-    operator cairo_matrix_t() const;
-#elif PLATFORM(WX) && USE(WXGC)
-    operator wxGraphicsMatrix() const;
-#endif
 
     bool operator==(const AffineTransform&) const;
     bool operator!=(const AffineTransform& other) const { return !(*this == other); }
@@ -121,15 +96,7 @@ public:
     AffineTransform operator*(const AffineTransform&);
     
 private:
-#if PLATFORM(CG)
-    CGAffineTransform m_transform;
-#elif PLATFORM(QT)
     QMatrix m_transform;
-#elif PLATFORM(CAIRO)
-    cairo_matrix_t m_transform;
-#elif PLATFORM(WX) && USE(WXGC)
-    wxGraphicsMatrix m_transform;
-#endif
 };
 
 } // namespace WebCore

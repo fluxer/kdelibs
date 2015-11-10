@@ -28,29 +28,10 @@
 
 #include <wtf/Platform.h>
 
-#if PLATFORM(CG)
-typedef struct CGSize CGSize;
-#endif
-
-#if PLATFORM(MAC)
-#ifdef NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
-typedef struct CGSize NSSize;
-#else
-typedef struct _NSSize NSSize;
-#endif
-#endif
-
-#if PLATFORM(WIN)
-typedef struct tagSIZE SIZE;
-#elif PLATFORM(QT)
 #include <qglobal.h>
 QT_BEGIN_NAMESPACE
 class QSize;
 QT_END_NAMESPACE
-#endif
-#if PLATFORM(SYMBIAN)
-class TSize;
-#endif
 
 namespace WebCore {
 
@@ -84,30 +65,8 @@ public:
         *this = expandedTo(IntSize());
     }
 
-#if PLATFORM(CG)
-    explicit IntSize(const CGSize&); // don't do this implicitly since it's lossy
-    operator CGSize() const;
-#endif
-
-#if PLATFORM(MAC) && !defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
-    explicit IntSize(const NSSize &); // don't do this implicitly since it's lossy
-    operator NSSize() const;
-#endif
-
-#if PLATFORM(WIN)
-    IntSize(const SIZE&);
-    operator SIZE() const;
-#endif
-
-#if PLATFORM(QT)
     IntSize(const QSize&);
     operator QSize() const;
-#endif
-#if PLATFORM(SYMBIAN)
-    IntSize(const TSize&);
-    operator TSize() const;
-#endif
-
 
 private:
     int m_width, m_height;

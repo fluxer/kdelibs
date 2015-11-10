@@ -89,13 +89,6 @@ public:
 
     virtual TextStream& externalRepresentation(TextStream&) const;
 
-#if PLATFORM(CI)
-    virtual CIFilter* getCIFilter(const FloatRect& bbox) const;
-
-private:
-    CIFilter* getFunctionFilter(SVGChannelSelectorType, CIImage* inputImage) const;
-#endif
-
 private:
     SVGComponentTransferFunction m_redFunc;
     SVGComponentTransferFunction m_greenFunc;

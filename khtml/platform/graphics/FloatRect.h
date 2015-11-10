@@ -30,27 +30,9 @@
 #include "FloatPoint.h"
 #include "IntRect.h"
 
-#if PLATFORM(CG)
-typedef struct CGRect CGRect;
-#endif
-
-#if PLATFORM(MAC)
-#ifdef NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
-typedef struct CGRect NSRect;
-#else
-typedef struct _NSRect NSRect;
-#endif
-#endif
-
-#if PLATFORM(QT)
 QT_BEGIN_NAMESPACE
 class QRectF;
 QT_END_NAMESPACE
-#endif
-
-#if PLATFORM(WX) && USE(WXGC)
-class wxRect2DDouble;
-#endif
 
 namespace WebCore {
 
@@ -115,30 +97,8 @@ public:
     void inflate(float d) { inflateX(d); inflateY(d); }
     void scale(float s);
 
-#if PLATFORM(CG)
-    FloatRect(const CGRect&);
-    operator CGRect() const;
-#endif
-
-#if PLATFORM(MAC) && !defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
-    FloatRect(const NSRect&);
-    operator NSRect() const;
-#endif
-
-#if PLATFORM(QT)
     FloatRect(const QRectF&);
     operator QRectF() const;
-#endif
-#if PLATFORM(SYMBIAN)
-    FloatRect(const TRect&);
-    operator TRect() const;
-    TRect rect() const;
-#endif
-
-#if PLATFORM(WX) && USE(WXGC)
-    FloatRect(const wxRect2DDouble&);
-    operator wxRect2DDouble() const;
-#endif
 
 private:
     FloatPoint m_location;

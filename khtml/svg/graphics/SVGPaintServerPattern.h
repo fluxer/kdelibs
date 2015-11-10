@@ -62,14 +62,7 @@ namespace WebCore {
 
         virtual TextStream& externalRepresentation(TextStream&) const;
 
-#if PLATFORM(CG)
-        virtual bool setup(GraphicsContext*&, const RenderObject*, SVGPaintTargetType, bool isPaintingText) const;
-        virtual void teardown(GraphicsContext*&, const RenderObject*, SVGPaintTargetType, bool isPaintingText) const; 
-#endif
-
-#if PLATFORM(QT) || PLATFORM(CAIRO)
         virtual bool setup(QPainter* painter, QPainterPaht* painterPath, const RenderObject*, SVGPaintTargetType, bool isPaintingText) const;
-#endif
 
     private:
         SVGPaintServerPattern(const SVGPatternElement*);
@@ -77,12 +70,7 @@ namespace WebCore {
         OwnPtr<ImageBuffer> m_tile;
         const SVGPatternElement* m_ownerElement;
         AffineTransform m_patternTransform;
-        FloatRect m_patternBoundaries;
-
-#if PLATFORM(CG)
-        mutable CGColorSpaceRef m_patternSpace;
-        mutable CGPatternRef m_pattern;
-#endif                
+        FloatRect m_patternBoundaries;           
     };
 
 } // namespace WebCore

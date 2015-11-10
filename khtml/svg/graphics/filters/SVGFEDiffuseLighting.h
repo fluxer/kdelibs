@@ -55,10 +55,6 @@ public:
 
     virtual TextStream& externalRepresentation(TextStream&) const;
 
-#if PLATFORM(CI)
-    virtual CIFilter* getCIFilter(const FloatRect& bbox) const;
-#endif
-
 private:
     Color m_lightingColor;
     float m_surfaceScale;

@@ -61,10 +61,6 @@ public:
 
     virtual TextStream& externalRepresentation(TextStream&) const;
 
-#if PLATFORM(CI)
-    virtual CIFilter* getCIFilter(const FloatRect& bbox) const;
-#endif
-
 private:
     SVGCompositeOperationType m_operation;
     float m_k1;

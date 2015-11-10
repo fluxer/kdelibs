@@ -30,24 +30,10 @@
 #include "FloatSize.h"
 #include <wtf/Platform.h>
 
-#if PLATFORM(CG)
-typedef struct CGPoint CGPoint;
-#endif
-
-#if PLATFORM(MAC)
-#ifdef NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
-typedef struct CGPoint NSPoint;
-#else
-typedef struct _NSPoint NSPoint;
-#endif
-#endif
-
-#if PLATFORM(QT)
 #include "qglobal.h"
 QT_BEGIN_NAMESPACE
 class QPointF;
 QT_END_NAMESPACE
-#endif
 
 #if PLATFORM(SYMBIAN)
 class TPoint;
@@ -73,20 +59,8 @@ public:
     void setY(float y) { m_y = y; }
     void move(float dx, float dy) { m_x += dx; m_y += dy; }
 
-#if PLATFORM(CG)
-    FloatPoint(const CGPoint&);
-    operator CGPoint() const;
-#endif
-
-#if PLATFORM(MAC) && !defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
-    FloatPoint(const NSPoint&);
-    operator NSPoint() const;
-#endif
-
-#if PLATFORM(QT)
     FloatPoint(const QPointF&);
     operator QPointF() const;
-#endif
 
 #if PLATFORM(SYMBIAN)
     operator TPoint() const;

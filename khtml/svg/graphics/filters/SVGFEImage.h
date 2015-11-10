@@ -42,10 +42,6 @@ public:
 
     virtual TextStream& externalRepresentation(TextStream&) const;
 
-#if PLATFORM(CI)
-    virtual CIFilter* getCIFilter(const FloatRect& bbox) const;
-#endif
-
     virtual void imageChanged(CachedImage*);
     
 private:

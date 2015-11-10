@@ -29,34 +29,9 @@
 #include "IntPoint.h"
 #include <wtf/Platform.h>
 
-#if PLATFORM(CG)
-typedef struct CGRect CGRect;
-#endif
-
-#if PLATFORM(MAC)
-#ifdef NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
-typedef struct CGRect NSRect;
-#else
-typedef struct _NSRect NSRect;
-#endif
-#endif
-
-#if PLATFORM(WIN)
-typedef struct tagRECT RECT;
-#elif PLATFORM(QT)
 QT_BEGIN_NAMESPACE
 class QRect;
 QT_END_NAMESPACE
-#elif PLATFORM(GTK)
-typedef struct _GdkRectangle GdkRectangle;
-#endif
-#if PLATFORM(SYMBIAN)
-class TRect;
-#endif
-
-#if PLATFORM(WX)
-class wxRect;
-#endif
 
 namespace WebCore {
 
@@ -128,34 +103,8 @@ public:
     void inflate(int d) { inflateX(d); inflateY(d); }
     void scale(float s);
 
-#if PLATFORM(WX)
-    IntRect(const wxRect&);
-    operator wxRect() const;
-#endif
-
-#if PLATFORM(WIN)
-    IntRect(const RECT&);
-    operator RECT() const;
-#elif PLATFORM(QT)
     IntRect(const QRect&);
     operator QRect() const;
-#elif PLATFORM(GTK)
-    IntRect(const GdkRectangle&);
-    operator GdkRectangle() const;
-#endif
-#if PLATFORM(SYMBIAN)
-    IntRect(const TRect&);
-    operator TRect() const;
-    TRect Rect() const;
-#endif
-
-#if PLATFORM(CG)
-    operator CGRect() const;
-#endif
-
-#if PLATFORM(MAC) && !defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
-    operator NSRect() const;
-#endif
 
 private:
     IntPoint m_location;
@@ -185,14 +134,6 @@ inline bool operator!=(const IntRect& a, const IntRect& b)
 {
     return a.location() != b.location() || a.size() != b.size();
 }
-
-#if PLATFORM(CG)
-IntRect enclosingIntRect(const CGRect&);
-#endif
-
-#if PLATFORM(MAC) && !defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
-IntRect enclosingIntRect(const NSRect&);
-#endif
 
 } // namespace WebCore
 

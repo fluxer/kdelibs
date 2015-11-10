@@ -29,35 +29,9 @@
 #include "IntSize.h"
 #include <wtf/Platform.h>
 
-#if PLATFORM(CG)
-typedef struct CGPoint CGPoint;
-#endif
-
-#if PLATFORM(MAC)
-#ifdef NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
-typedef struct CGPoint NSPoint;
-#else
-typedef struct _NSPoint NSPoint;
-#endif
-#endif
-
-#if PLATFORM(WIN)
-typedef struct tagPOINT POINT;
-typedef struct tagPOINTS POINTS;
-#elif PLATFORM(QT)
 QT_BEGIN_NAMESPACE
 class QPoint;
 QT_END_NAMESPACE
-#elif PLATFORM(GTK)
-typedef struct _GdkPoint GdkPoint;
-#endif
-#if PLATFORM(SYMBIAN)
-class TPoint;
-#endif
-
-#if PLATFORM(WX)
-class wxPoint;
-#endif
 
 namespace WebCore {
 
@@ -73,38 +47,9 @@ public:
     void setY(int y) { m_y = y; }
 
     void move(int dx, int dy) { m_x += dx; m_y += dy; }
-    
-#if PLATFORM(CG)
-    explicit IntPoint(const CGPoint&); // don't do this implicitly since it's lossy
-    operator CGPoint() const;
-#endif
 
-#if PLATFORM(MAC) && !defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
-    explicit IntPoint(const NSPoint&); // don't do this implicitly since it's lossy
-    operator NSPoint() const;
-#endif
-
-#if PLATFORM(WIN)
-    IntPoint(const POINT&);
-    operator POINT() const;
-    IntPoint(const POINTS&);
-    operator POINTS() const;
-#elif PLATFORM(QT)
     IntPoint(const QPoint&);
     operator QPoint() const;
-#elif PLATFORM(GTK)
-    IntPoint(const GdkPoint&);
-    operator GdkPoint() const;
-#endif
-#if PLATFORM(SYMBIAN)
-    IntPoint(const TPoint&);
-    operator TPoint() const;
-#endif
-
-#if PLATFORM(WX)
-    IntPoint(const wxPoint&);
-    operator wxPoint() const;
-#endif
 
 private:
     int m_x, m_y;

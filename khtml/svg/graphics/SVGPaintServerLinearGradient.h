@@ -48,9 +48,7 @@ namespace WebCore {
 
         /*virtual TextStream& externalRepresentation(TextStream&) const;*/
 
-#if PLATFORM(QT)
         virtual QGradient setupGradient(QPainter* painter, QPainterPath* painterPath, const RenderObject*) const;
-#endif
 
     private:
         SVGPaintServerLinearGradient(const SVGGradientElement* owner);

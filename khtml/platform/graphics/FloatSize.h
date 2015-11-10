@@ -29,18 +29,6 @@
 
 #include <wtf/Platform.h>
 
-#if PLATFORM(CG)
-typedef struct CGSize CGSize;
-#endif
-
-#if PLATFORM(MAC)
-#ifdef NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES
-typedef struct CGSize NSSize;
-#else
-typedef struct _NSSize NSSize;
-#endif
-#endif
-
 namespace WebCore {
 
 class IntSize;
@@ -66,16 +54,6 @@ public:
         return FloatSize(m_width > other.m_width ? m_width : other.m_width,
             m_height > other.m_height ? m_height : other.m_height);
     }
-
-#if PLATFORM(CG)
-    explicit FloatSize(const CGSize&); // don't do this implicitly since it's lossy
-    operator CGSize() const;
-#endif
-
-#if PLATFORM(MAC) && !defined(NSGEOMETRY_TYPES_SAME_AS_CGGEOMETRY_TYPES)
-    explicit FloatSize(const NSSize &); // don't do this implicitly since it's lossy
-    operator NSSize() const;
-#endif
 
 private:
     float m_width, m_height;

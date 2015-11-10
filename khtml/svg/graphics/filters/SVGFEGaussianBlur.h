@@ -39,10 +39,6 @@ public:
 
     virtual TextStream& externalRepresentation(TextStream&) const;
 
-#if PLATFORM(CI)
-    virtual CIFilter* getCIFilter(const FloatRect& bbox) const;
-#endif
-
 private:
     float m_x;
     float m_y;
