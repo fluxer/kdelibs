@@ -26,7 +26,6 @@ include_directories(
     windowmanagement
     xmlgui
     ${CMAKE_CURRENT_BINARY_DIR}/util
-    ${DBUSMENUQT_INCLUDE_DIR}
 )
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/widgets)
@@ -283,11 +282,32 @@ set(kdeui_LIB_SRCS
     xmlgui/kxmlguifactory_p.cpp
     xmlgui/kxmlguiversionhandler.cpp
     dialogs/kdeprintdialog.cpp
-    notifications/kstatusnotifieritem.cpp
-    notifications/kstatusnotifieritemdbus_p.cpp
     notifications/ksystemtrayicon.cpp
 )
 
+if(DBUSMENUQT_FOUND)
+    set(kdeui_LIB_SRCS
+        ${kdeui_LIB_SRCS
+        notifications/kstatusnotifieritem.cpp
+        notifications/kstatusnotifieritemdbus_p.cpp
+    )
+
+    include_directories(${DBUSMENUQT_INCLUDE_DIR})
+    set(KDEUI_EXTRA_LIBS
+        ${KDEUI_EXTRA_LIBS}
+        ${DBUSMENUQT_LIBRARIES}
+    )
+
+    qt4_add_dbus_interface(kdeui_LIB_SRCS
+        notifications/org.kde.StatusNotifierWatcher.xml
+        statusnotifierwatcher_interface
+    )
+
+    qt4_add_dbus_adaptor(kdeui_LIB_SRCS
+        notifications/org.kde.StatusNotifierItem.xml
+        notifications/kstatusnotifieritemdbus_p.h KStatusNotifierItemDBus
+    )
+endif()
 
 if(Q_WS_X11)
     set(kdeui_LIB_SRCS
@@ -347,18 +367,8 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS
 )
 
 qt4_add_dbus_interface(kdeui_LIB_SRCS
-    notifications/org.kde.StatusNotifierWatcher.xml
-    statusnotifierwatcher_interface
-)
-
-qt4_add_dbus_interface(kdeui_LIB_SRCS
     notifications/org.freedesktop.Notifications.xml
     notifications_interface
-)
-
-qt4_add_dbus_adaptor(kdeui_LIB_SRCS
-    notifications/org.kde.StatusNotifierItem.xml
-    notifications/kstatusnotifieritemdbus_p.h KStatusNotifierItemDBus
 )
 
 set(kglobalaccel_xml shortcuts/org.kde.KGlobalAccel.xml)
@@ -384,7 +394,6 @@ target_link_libraries(kdeui PRIVATE
     ${KDEUI_EXTRA_LIBS}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTSVG_LIBRARY}
-    ${DBUSMENUQT_LIBRARIES}
 )
 
 

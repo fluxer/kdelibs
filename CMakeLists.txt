@@ -114,7 +114,7 @@ find_package(DBusMenuQt)
 set_package_properties(DBusMenuQt PROPERTIES
     DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
     URL "https://launchpad.net/libdbusmenu-qt"
-    TYPE REQUIRED
+    TYPE OPTIONAL
 )
 
 ################# Disallow in-source build #################
