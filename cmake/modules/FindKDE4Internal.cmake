@@ -475,12 +475,18 @@ endforeach()
 # which helps with finding the phonon installed as part of kdesupport:
 
 # only make Phonon REQUIRED if KDE4 itself is REQUIRED
-find_package(Phonon 4.7.0 ${_REQ_STRING_KDE4})
-set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
-set(KDE4_PHONON_LIBS ${PHONON_LIBS})
-set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
+if(NOT KATIE_FOUND AND NOT KATIE_PHONON_FOUND)
+    find_package(Phonon 4.7.0 ${_REQ_STRING_KDE4})
+    set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
+    set(KDE4_PHONON_LIBS ${PHONON_LIBS})
+    set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
+else()
+    set(KDE4_PHONON_LIBRARY ${KATIE_PHONON_LIBRARIES})
+    set(KDE4_PHONON_LIBS ${KATIE_PHONON_LIBRARIES})
+    set(KDE4_PHONON_INCLUDES ${KATIE_PHONON_INCLUDES})
+endif()
 
-if(NOT PHONON_FOUND)
+if(NOT PHONON_FOUND AND NOT KATIE_PHONON_FOUND)
     message(STATUS "KDE4 not found, because Phonon was not found")
     return()
 endif()
