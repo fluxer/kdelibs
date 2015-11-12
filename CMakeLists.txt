@@ -110,11 +110,11 @@ set_package_properties(Libintl PROPERTIES
     PURPOSE "Enables KDE to be available in many different languages"
 )
 
-find_package(DBusMenuQt)
+macro_optional_find_package(DBusMenuQt)
 set_package_properties(DBusMenuQt PROPERTIES
     DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
     URL "https://launchpad.net/libdbusmenu-qt"
-    TYPE OPTIONAL
+    TYPE RECOMMENDED
 )
 
 ################# Disallow in-source build #################
