@@ -287,7 +287,7 @@ set(kdeui_LIB_SRCS
 
 if(DBUSMENUQT_FOUND)
     set(kdeui_LIB_SRCS
-        ${kdeui_LIB_SRCS
+        ${kdeui_LIB_SRCS}
         notifications/kstatusnotifieritem.cpp
         notifications/kstatusnotifieritemdbus_p.cpp
     )
