@@ -690,13 +690,14 @@ install(
 
 ########### khtmlpart ###############
 
-set(khtmlpart_PART_SRCS khtml_factory.cpp )
+kde4_add_plugin(khtmlpart khtml_factory.cpp)
 
-kde4_add_plugin(khtmlpart ${khtmlpart_PART_SRCS})
+target_link_libraries(khtmlpart ${KDE4_KDECORE_LIBS} khtml)
 
-target_link_libraries(khtmlpart ${KDE4_KDECORE_LIBS} khtml )
-
-install(TARGETS khtmlpart DESTINATION ${PLUGIN_INSTALL_DIR} )
+install(
+    TARGETS khtmlpart
+    DESTINATION ${PLUGIN_INSTALL_DIR}
+)
 
 ########### next target ###############
 
@@ -724,23 +725,9 @@ install(
 
 ########### next target ###############
 
-set(testkhtml_SRCS
-    testkhtml.cpp
-)
-
-add_executable(testkhtml ${testkhtml_SRCS})
+add_executable(testkhtml testkhtml.cpp)
 
 target_link_libraries(testkhtml ${KDE4_KDECORE_LIBS} khtml)
-
-########### next target ###############
-
-set(testkhtml_static_SRCS
-    testkhtml.cpp
-)
-
-add_executable(testkhtml_static ${testkhtml_static_SRCS} )
-
-target_link_libraries(testkhtml_static  ${KDE4_KDECORE_LIBS} khtml )
 
 ########### next target ###############
 
@@ -774,7 +761,8 @@ endif(KHTML_BUILD_TESTREGRESSION)
 
 ########### install files ###############
 install(
-    FILES khtml_export.h
+    FILES
+    khtml_export.h
     khtmlview.h
     khtml_part.h
     khtml_events.h
