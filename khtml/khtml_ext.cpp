@@ -226,7 +226,6 @@ void KHTMLPartBrowserExtension::copy()
 
         QClipboard *cb = QApplication::clipboard();
         disconnect( cb, SIGNAL(selectionChanged()), m_part, SLOT(slotClearSelection()) );
-#ifndef QT_NO_MIMECLIPBOARD
   QString htmltext;
   /*
    * When selectionModeEnabled, that means the user has just selected
@@ -244,9 +243,6 @@ void KHTMLPartBrowserExtension::copy()
       mimeData->setHtml(htmltext);
   }
         cb->setMimeData(mimeData);
-#else
-  cb->setText(text);
-#endif
 
         connect( cb, SIGNAL(selectionChanged()), m_part, SLOT(slotClearSelection()) );
     }
@@ -316,13 +312,8 @@ void KHTMLPartBrowserExtension::updateEditActions()
     }
 
     // ### duplicated from KonqMainWindow::slotClipboardDataChanged
-#ifndef QT_NO_MIMECLIPBOARD // Handle minimalized versions of Qt Embedded
     const QMimeData *data = QApplication::clipboard()->mimeData();
     enableAction( "paste", data->hasFormat( "text/plain" ) );
-#else
-    QString data=QApplication::clipboard()->text();
-    enableAction( "paste", data.contains("://"));
-#endif
     bool hasSelection = false;
 
     if( m_editableFormWidget) {
@@ -556,13 +547,11 @@ KHTMLPopupGUIClient::KHTMLPopupGUIClient( KHTMLPart *khtml, const KUrl &url )
         connect( action, SIGNAL(triggered(bool)), this, SLOT(slotSendImage()) );
         partActions.append(action);
 
-#ifndef QT_NO_MIMECLIPBOARD
         action = new KAction( i18n( "Copy Image" ), this );
         d->m_actionCollection->addAction( "copyimage", action );
         action->setEnabled(!d->m_pixmap.isNull());
         connect( action, SIGNAL(triggered(bool)), this, SLOT(slotCopyImage()) );
         partActions.append(action);
-#endif
 
         if(d->m_pixmap.isNull()) {    //fallback to image location if still loading the image.  this will always be true if ifdef QT_NO_MIMECLIPBOARD
             action = new KAction( i18n( "Copy Image Location" ), this );
@@ -755,7 +744,6 @@ void KHTMLPopupGUIClient::slotCopyLinkLocation()
 {
   KUrl safeURL(d->m_url);
   safeURL.setPass(QString());
-#ifndef QT_NO_MIMECLIPBOARD
   // Set it in both the mouse selection and in the clipboard
   QMimeData* mimeData = new QMimeData;
   safeURL.populateMimeData( mimeData );
@@ -765,9 +753,6 @@ void KHTMLPopupGUIClient::slotCopyLinkLocation()
   safeURL.populateMimeData( mimeData );
   QApplication::clipboard()->setMimeData( mimeData, QClipboard::Selection );
 
-#else
-  QApplication::clipboard()->setText( safeURL.url() ); //FIXME(E): Handle multiple entries
-#endif
 }
 
 void KHTMLPopupGUIClient::slotStopAnimations()
@@ -777,7 +762,6 @@ void KHTMLPopupGUIClient::slotStopAnimations()
 
 void KHTMLPopupGUIClient::slotCopyImage()
 {
-#ifndef QT_NO_MIMECLIPBOARD
   KUrl safeURL(d->m_imageURL);
   safeURL.setPass(QString());
 
@@ -791,16 +775,12 @@ void KHTMLPopupGUIClient::slotCopyImage()
   mimeData->setImageData( d->m_pixmap );
   safeURL.populateMimeData( mimeData );
   QApplication::clipboard()->setMimeData( mimeData, QClipboard::Selection );
-#else
-  kDebug() << "slotCopyImage called when the clipboard does not support this.  This should not be possible.";
-#endif
 }
 
 void KHTMLPopupGUIClient::slotCopyImageLocation()
 {
   KUrl safeURL(d->m_imageURL);
   safeURL.setPass(QString());
-#ifndef QT_NO_MIMECLIPBOARD
   // Set it in both the mouse selection and in the clipboard
   QMimeData* mimeData = new QMimeData;
   safeURL.populateMimeData( mimeData );
@@ -808,9 +788,6 @@ void KHTMLPopupGUIClient::slotCopyImageLocation()
   mimeData = new QMimeData;
   safeURL.populateMimeData( mimeData );
   QApplication::clipboard()->setMimeData( mimeData, QClipboard::Selection );
-#else
-  QApplication::clipboard()->setText( safeURL.url() ); //FIXME(E): Handle multiple entries
-#endif
 }
 
 void KHTMLPopupGUIClient::slotViewImage()
