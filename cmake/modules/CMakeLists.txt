@@ -72,6 +72,7 @@ set(cmakeFiles
     FindLibArt.cmake
     FindLibAttica.cmake
     FindLibGcrypt.cmake
+    FindLibGPS.cmake
     FindLibintl.cmake
     FindLibKasten.cmake
     FindLibKonq.cmake
