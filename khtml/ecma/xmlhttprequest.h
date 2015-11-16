@@ -110,11 +110,7 @@ namespace KJS {
 
     XMLHttpRequestQObject *qObject;
 
-#ifdef APPLE_CHANGES
-    void slotData( KIO::Job* job, const char *data, int size );
-#else
     void slotData( KIO::Job* job, const QByteArray &data );
-#endif
     void slotFinished( KJob* );
     void slotRedirection( KIO::Job*, const KUrl& );
 

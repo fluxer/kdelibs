@@ -36,12 +36,10 @@
 
 #include <QStack>
 
-#ifndef APPLE_CHANGES
-#  ifdef assert
-#    undef assert
-#  endif
-#  define assert(x) Q_ASSERT(x)
+#ifdef assert
+#  undef assert
 #endif
+#define assert(x) Q_ASSERT(x)
 
 #define PREPARE_JSEDITOR_CALL(command, retval) \
 	JSEditor *js = m_part->xmlDocImpl() ? m_part->xmlDocImpl()->jsEditor() : 0; \
@@ -433,14 +431,10 @@ void Editor::unappliedEditing(EditCommandImpl *cmd)
 
   m_part->setCaret(cmd->startingSelection());
   d->registerRedo(cmd);
-#ifdef APPLE_CHANGES
-  KWQ(this)->respondToChangedContents();
-#else
   m_part->editorContext()->m_selection.setNeedsLayout(true);
   m_part->selectionLayoutChanged();
   // ### only emit if caret pos changed
   m_part->emitCaretPositionChanged(cmd->startingSelection().caretPos());
-#endif
   d->m_lastEditCommand = 0;
 }
 
@@ -451,13 +445,9 @@ void Editor::reappliedEditing(EditCommandImpl *cmd)
 
   m_part->setCaret(cmd->endingSelection());
   d->registerUndo(cmd, false /*clearRedoStack*/);
-#ifdef APPLE_CHANGES
-  KWQ(this)->respondToChangedContents();
-#else
   m_part->selectionLayoutChanged();
   // ### only emit if caret pos changed
   m_part->emitCaretPositionChanged(cmd->endingSelection().caretPos());
-#endif
   d->m_lastEditCommand = 0;
 }
 

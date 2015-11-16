@@ -436,9 +436,6 @@ StyleCSS3NonInheritedData::StyleCSS3NonInheritedData()
 StyleCSS3NonInheritedData::StyleCSS3NonInheritedData(const StyleCSS3NonInheritedData& o)
 :Shared<StyleCSS3NonInheritedData>(),
  opacity(o.opacity),
-#ifdef APPLE_CHANGES
- flexibleBox(o.flexibleBox),
-#endif
  marquee(o.marquee),
  borderRadius(o.borderRadius)
 {
@@ -448,18 +445,12 @@ bool StyleCSS3NonInheritedData::operator==(const StyleCSS3NonInheritedData& o) c
 {
     return
      opacity == o.opacity &&
-#ifdef APPLE_CHANGES
-     flexibleBox == o.flexibleBox &&
-#endif
      marquee == o.marquee &&
      borderRadius == o.borderRadius;
 }
 
 StyleCSS3InheritedData::StyleCSS3InheritedData()
 :Shared<StyleCSS3InheritedData>(), textShadow(0), wordWrap(RenderStyle::initialWordWrap())
-#ifdef APPLE_CHANGES
-, userModify(READ_ONLY), textSizeAdjust(RenderStyle::initialTextSizeAdjust())
-#endif
 {
 
 }
@@ -469,10 +460,6 @@ StyleCSS3InheritedData::StyleCSS3InheritedData(const StyleCSS3InheritedData& o)
 {
     textShadow = o.textShadow ? new ShadowData(*o.textShadow) : 0;
     wordWrap = o.wordWrap;
-#ifdef APPLE_CHANGES
-    userModify = o.userModify;
-    textSizeAdjust = o.textSizeAdjust;
-#endif
 }
 
 StyleCSS3InheritedData::~StyleCSS3InheritedData()
@@ -483,9 +470,6 @@ StyleCSS3InheritedData::~StyleCSS3InheritedData()
 bool StyleCSS3InheritedData::operator==(const StyleCSS3InheritedData& o) const
 {
     return shadowDataEquivalent(o) && (wordWrap == o.wordWrap)
-#ifdef APPLE_CHANGES
-            && (userModify == o.userModify) && (textSizeAdjust == o.textSizeAdjust)
-#endif
     ;
 }
 
@@ -585,9 +569,6 @@ RenderStyle::RenderStyle(bool)
     surround.init();
     generated.init();
     css3NonInheritedData.init();
-#ifdef APPLE_CHANGES	// ### yet to be merged
-    css3NonInheritedData.access()->flexibleBox.init();
-#endif
     css3NonInheritedData.access()->marquee.init();
     css3NonInheritedData.access()->borderRadius.init();
     css3InheritedData.init();

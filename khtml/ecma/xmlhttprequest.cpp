@@ -73,17 +73,10 @@ XMLHttpRequestQObject::XMLHttpRequestQObject(XMLHttpRequest *_jsObject)
   jsObject = _jsObject;
 }
 
-#ifdef APPLE_CHANGES
-void XMLHttpRequestQObject::slotData( KIO::Job* job, const char *data, int size )
-{
-  jsObject->slotData(job, data, size);
-}
-#else
 void XMLHttpRequestQObject::slotData( KIO::Job* job, const QByteArray &data )
 {
   jsObject->slotData(job, data);
 }
-#endif
 
 void XMLHttpRequestQObject::slotFinished( KJob* job )
 {
@@ -545,14 +538,10 @@ void XMLHttpRequest::send(const QString& _body, int& ec)
     KUrl finalURL;
     QString headers;
 
-#ifdef APPLE_CHANGES
-    data = KWQServeSynchronousRequest(khtml::Cache::loader(), doc->docLoader(), job, finalURL, headers);
-#else
     QMap<QString, QString> metaData;
     if ( NetAccess::synchronousRun( job, 0, &data, &finalURL, &metaData ) ) {
       headers = metaData[ "HTTP-Headers" ];
     }
-#endif
     job = 0;
     processSyncLoadResults(data, finalURL, headers);
     return;
@@ -560,21 +549,12 @@ void XMLHttpRequest::send(const QString& _body, int& ec)
 
   qObject->connect( job, SIGNAL(result(KJob*)),
 		    SLOT(slotFinished(KJob*)) );
-#ifdef APPLE_CHANGES
-  qObject->connect( job, SIGNAL(data(KIO::Job*,const char*,int)),
-		    SLOT(slotData(KIO::Job*,const char*,int)) );
-#else
   qObject->connect( job, SIGNAL(data(KIO::Job*,QByteArray)),
 		    SLOT(slotData(KIO::Job*,QByteArray)) );
-#endif
   qObject->connect( job, SIGNAL(redirection(KIO::Job*,KUrl)),
 		    SLOT(slotRedirection(KIO::Job*,KUrl)) );
 
-#ifdef APPLE_CHANGES
-  KWQServeRequest(khtml::Cache::loader(), doc->docLoader(), job);
-#else
   KIO::Scheduler::setJobPriority( job, 1 );
-#endif
 }
 
 void XMLHttpRequest::clearDecoder()
@@ -751,14 +731,7 @@ void XMLHttpRequest::processSyncLoadResults(const QByteArray &data, const KUrl &
     return;
   }
 
-#ifdef APPLE_CHANGES
-  const char *bytes = (const char *)data.data();
-  int len = (int)data.size();
-
-  slotData(0, bytes, len);
-#else
   slotData(0, data);
-#endif
 
   if (aborted) {
     return;
@@ -797,11 +770,7 @@ static QString encodingFromContentType(const QString& type)
     return encoding;
 }
 
-#ifdef APPLE_CHANGES
-void XMLHttpRequest::slotData( KIO::Job*, const char *data, int len )
-#else
 void XMLHttpRequest::slotData(KIO::Job*, const QByteArray &_data)
-#endif
 {
   if (m_state < XHRS_Sent ) {
     responseHeaders = job->queryMetaData("HTTP-Headers");
@@ -818,10 +787,8 @@ void XMLHttpRequest::slotData(KIO::Job*, const QByteArray &_data)
     changeState(XHRS_Sent);
   }
 
-#ifndef APPLE_CHANGES
   const char *data = (const char *)_data.data();
   int len = (int)_data.size();
-#endif
 
   if ( !decoder && !binaryMode ) {
     if (!m_mimeTypeOverride.isEmpty())

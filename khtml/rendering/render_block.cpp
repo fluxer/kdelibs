@@ -1218,13 +1218,6 @@ int RenderBlock::collapseMargins(RenderObject* child, MarginInfo& marginInfo, in
             ypos = m_height + collapsedTopPos - collapsedTopNeg;
     }
     else {
-#ifdef APPLE_CHANGES
-        if (child->style()->marginTopCollapse() == MSEPARATE) {
-            m_height += marginInfo.margin() + child->marginTop();
-            ypos = m_height;
-        }
-        else
-#endif
         if (!marginInfo.atTopOfBlock() ||
             (!marginInfo.canCollapseTopWithChildren()
              && (!style()->htmlHacks() || !marginInfo.quirkContainer() || !marginInfo.topQuirk()))) {
@@ -1534,13 +1527,6 @@ void RenderBlock::layoutBlockChildren( bool relayoutChildren )
         // The child is a normal flow object.  Compute its vertical margins now.
         child->calcVerticalMargins();
 
-#ifdef APPLE_CHANGES /* margin-*-collapse not merged yet */
-        // Do not allow a collapse if the margin top collapse style is set to SEPARATE.
-        if (child->style()->marginTopCollapse() == MSEPARATE) {
-            marginInfo.setAtTopOfBlock(false);
-            marginInfo.clearMargin();
-        }
-#endif
 
         // Try to guess our correct y position.  In most cases this guess will
         // be correct.  Only if we're wrong (when we compute the real y position)
@@ -1605,12 +1591,6 @@ void RenderBlock::layoutBlockChildren( bool relayoutChildren )
         // Update our height now that the child has been placed in the correct position.
         m_height += child->height();
 
-#ifdef APPLE_CHANGES
-        if (child->style()->marginBottomCollapse() == MSEPARATE) {
-            m_height += child->marginBottom();
-            marginInfo.clearMargin();
-        }
-#endif
 
         // Check for page-breaks
         if (canvas()->pagedMode())

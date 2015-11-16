@@ -169,7 +169,6 @@ QColor khtml::colorForCSSValue( int css_value )
     const uiColors *uicol = uimap;
     while ( uicol->css_value && uicol->css_value != css_value )
 	++uicol;
-#ifndef APPLE_CHANGES
     if ( !uicol->css_value ) {
         switch ( css_value ) {
             case CSS_VAL_ACTIVEBORDER:
@@ -190,7 +189,6 @@ QColor khtml::colorForCSSValue( int css_value )
 	        return QColor();
         }
     }
-#endif
 
     const QPalette &pal = qApp->palette();
     return pal.color( uicol->group, uicol->role );

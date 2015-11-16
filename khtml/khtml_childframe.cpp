@@ -90,8 +90,7 @@ void ChildFrame::dumpFrameTree(KHTMLPart* part)
         ind(qDebug(), i) << "objects:";
         i += 4;
 
-        for (QList<khtml::ChildFrame*>::Iterator io = d->m_objects.begin(); io != d->m_objects.end(); ++io) {
-            khtml::ChildFrame* cf = (*io);
+        foreach (khtml::ChildFrame* cf, d->m_objects) {
             cf->dump(i);
             if (KHTMLPart* p = ::qobject_cast<KHTMLPart*>(cf->m_part.data())) {
                 i += 4;
@@ -106,8 +105,7 @@ void ChildFrame::dumpFrameTree(KHTMLPart* part)
         ind(qDebug(), i) << "frames:";
         i += 4;
 
-        for (QList<khtml::ChildFrame*>::Iterator ifr = d->m_frames.begin(); ifr != d->m_frames.end(); ++ifr) {
-            khtml::ChildFrame* cf = (*ifr);
+        foreach (khtml::ChildFrame* cf, d->m_frames) {
             cf->dump(i);
             if (KHTMLPart* p = ::qobject_cast<KHTMLPart*>(cf->m_part.data())) {
                 i += 4;

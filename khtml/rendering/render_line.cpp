@@ -735,11 +735,6 @@ void InlineFlowBox::placeBoxesVertically(int y, int maxHeight, int maxAscent, bo
         int overflowBottom = 0;
         if (curr->isInlineTextBox() || curr->isInlineFlowBox()) {
             const QFontMetrics &fm = curr->object()->fontMetrics( m_firstLine );
-#ifdef APPLE_CHANGES
-            newBaseline = fm.ascent();
-            newY += curr->baseline() - newBaseline;
-            newHeight = newBaseline+fm.descent();
-#else
             // only adjust if the leading delta is superior to the font's natural leading
             if ( qAbs(fm.ascent() - curr->baseline()) > fm.leading()/2 ) {
                 int ascent = fm.ascent()+fm.leading()/2;
@@ -747,7 +742,6 @@ void InlineFlowBox::placeBoxesVertically(int y, int maxHeight, int maxAscent, bo
                 newY += curr->baseline() - newBaseline;
                 newHeight = fm.lineSpacing();
             }
-#endif
             for (ShadowData* shadow = curr->object()->style()->textShadow(); shadow; shadow = shadow->next) {
                 overflowTop = qMin(overflowTop, shadow->y - shadow->blur);
                 overflowBottom = qMax(overflowBottom, shadow->y + shadow->blur);
@@ -776,18 +770,12 @@ void InlineFlowBox::placeBoxesVertically(int y, int maxHeight, int maxAscent, bo
 
     if (isRootInlineBox()) {
         const QFontMetrics &fm = object()->fontMetrics( m_firstLine );
-#ifdef APPLE_CHANGES
-        setHeight(fm.ascent()+fm.descent());
-        setYPos(yPos() + baseline() - fm.ascent());
-        setBaseline(fm.ascent());
-#else
         if ( qAbs(fm.ascent() - baseline()) > fm.leading()/2 ) {
             int ascent = fm.ascent()+fm.leading()/2;
             setHeight(fm.lineSpacing());
             setYPos(yPos() + baseline() - ascent);
             setBaseline(ascent);
         }
-#endif
         if (hasTextDescendant() || strictMode) {
             if (yPos() < topPosition)
                 topPosition = yPos();

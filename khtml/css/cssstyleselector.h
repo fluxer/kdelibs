@@ -222,11 +222,6 @@ namespace khtml
 
         void addDependency(int dependencyType, DOM::ElementImpl* dependency);
         void setupDefaultRootStyle(DOM::DocumentImpl *d=0);
-#ifdef APPLE_CHANGES
-	/* This function fixes up the default font size if it detects that the
-	   current generic font family has changed. -dwh */
-	void checkForGenericFamilyChange(RenderStyle* aStyle, RenderStyle* aParentStyle);
-#endif
         // locates potentially similar style
         RenderStyle* locateSimilarStyle();
 

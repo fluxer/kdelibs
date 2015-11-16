@@ -3314,11 +3314,7 @@ void KHTMLPart::clearSelection()
 {
   clearCaretRectIfNeeded();
   setFocusNodeIfNeeded(d->editor_context.m_selection);
-#ifdef APPLE_CHANGES
-  d->editor_context.m_selection.clear();
-#else
   d->editor_context.m_selection.collapse();
-#endif
   notifySelectionChanged();
 }
 
@@ -3348,11 +3344,7 @@ void KHTMLPart::slotClearSelection()
        && !d->editor_context.m_selection.caretPos().node()->isContentEditable())
     clearCaretRectIfNeeded();
   bool hadSelection = hasSelection();
-#ifdef APPLE_CHANGES
-  d->editor_context.m_selection.clear();
-#else
   d->editor_context.m_selection.collapse();
-#endif
   if (hadSelection)
     notifySelectionChanged();
 }
@@ -6600,9 +6592,6 @@ void KHTMLPart::khtmlMouseReleaseEvent( khtml::MouseReleaseEvent *event )
             && d->m_dragStartPos.y() == event->y()
             && d->editor_context.m_selection.state() == Selection::RANGE) {
       Selection selection;
-#ifdef APPLE_CHANGES
-      if (d->editor_context.m_selection.base().node()->isContentEditable())
-#endif
         selection.moveTo(d->editor_context.m_selection.base().node()->positionForCoordinates(event->x(), event->y()).position());
       setCaret(selection);
     }

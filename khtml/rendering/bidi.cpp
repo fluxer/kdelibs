@@ -2087,9 +2087,6 @@ BidiIterator RenderBlock::findNextLineBreak(BidiIterator &start, BidiState &bidi
             bool autoWrap = o->style()->autoWrap();
             bool preserveWS = o->style()->preserveWS();
             bool preserveLF = o->style()->preserveLF();
-#ifdef APPLE_CHANGES
-            int wordSpacing = o->style()->wordSpacing();
-#endif
             bool nextIsSoftBreakable = false;
             bool checkBreakWord = autoWrap && (o->style()->wordWrap() == WWBREAKWORD);
 
@@ -2132,9 +2129,6 @@ BidiIterator RenderBlock::findNextLineBreak(BidiIterator &start, BidiState &bidi
                     lastSpace = pos; // Cheesy hack to prevent adding in widths of the run twice.
                     continue;
                 }
-#ifdef APPLE_CHANGES    // KDE applies wordspacing differently
-                bool applyWordSpacing = false;
-#endif
                 if (ignoringSpaces) {
                     // We need to stop ignoring spaces, if we encounter a non-space or
                     // a run that doesn't collapse spaces.
@@ -2156,10 +2150,6 @@ BidiIterator RenderBlock::findNextLineBreak(BidiIterator &start, BidiState &bidi
                 bool isbreakablePosition = (preserveLF && c.unicode() == '\n') || (autoWrap && (isBreakable( str, pos, strlen ) || isSoftBreakable));
                 if ( isbreakablePosition || checkBreakWord) {
                     tmpW += t->width(lastSpace, pos - lastSpace, f);
-#ifdef APPLE_CHANGES
-                    applyWordSpacing = (wordSpacing && currentCharacterIsSpace && !previousCharacterIsSpace &&
-                        !t->containsOnlyWhitespace(pos+1, strlen-(pos+1)));
-#endif
 #ifdef DEBUG_LINEBREAKS
                     kDebug(6041) << "found space at " << pos << " in string '" << QString( str, strlen ).toLatin1().constData() << "' adding " << tmpW << " new width = " << w;
 #endif
@@ -2199,10 +2189,6 @@ BidiIterator RenderBlock::findNextLineBreak(BidiIterator &start, BidiState &bidi
                     }
 
                     lastSpace = pos;
-#ifdef APPLE_CHANGES
-                    if (applyWordSpacing)
-                        w += wordSpacing;
-#endif
                 }
 
                 if (!ignoringSpaces && !preserveWS) {

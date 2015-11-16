@@ -544,10 +544,6 @@ static void initShorthandMap(QHash<int, PropertyLonghand>& shorthandMap)
     };
     SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP_MARGIN, marginProperties);
 
-#ifdef APPLE_CHANGES
-    static const int marginCollapseProperties[] = { CSS_PROP__KHTML_MARGIN_TOP_COLLAPSE, CSS_PROP__KHTML_MARGIN_BOTTOM_COLLAPSE };
-    SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP__KHTML_MARGIN_COLLAPSE, marginCollapseProperties);
-#endif
 
     static const int marqueeProperties[] = {
         CSS_PROP__KHTML_MARQUEE_DIRECTION,
@@ -574,10 +570,6 @@ static void initShorthandMap(QHash<int, PropertyLonghand>& shorthandMap)
     };
     SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP_PADDING, paddingProperties);
 
-#ifdef APPLE_CHANGES
-    static const int textStrokeProperties[] = { CSS_PROP__KHTML_TEXT_STROKE_COLOR, CSS_PROP__KHTML_TEXT_STROKE_WIDTH };
-    SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP__KHTML_TEXT_STROKE, textStrokeProperties);
-#endif
 
     static const int backgroundProperties[] = {
         CSS_PROP_BACKGROUND_ATTACHMENT,
@@ -591,17 +583,6 @@ static void initShorthandMap(QHash<int, PropertyLonghand>& shorthandMap)
     };
     SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP_BACKGROUND, backgroundProperties);
 
-#ifdef APPLE_CHANGES
-    static const int columnsProperties[] = { CSS_PROP__KHTML_COLUMN_WIDTH, CSS_PROP__KHTML_COLUMN_COUNT };
-    SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP__KHTML_COLUMNS, columnsProperties);
-
-    static const int columnRuleProperties[] = {
-        CSS_PROP__KHTML_COLUMN_RULE_COLOR,
-        CSS_PROP__KHTML_COLUMN_RULE_STYLE,
-        CSS_PROP__KHTML_COLUMN_RULE_WIDTH
-    };
-    SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP__KHTML_COLUMN_RULE, columnRuleProperties);
-#endif
 
     static const int overflowProperties[] = { CSS_PROP_OVERFLOW_X, CSS_PROP_OVERFLOW_Y };
     SET_SHORTHAND_MAP_ENTRY(shorthandMap, CSS_PROP_OVERFLOW, overflowProperties);

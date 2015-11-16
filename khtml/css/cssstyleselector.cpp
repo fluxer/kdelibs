@@ -501,13 +501,8 @@ void CSSStyleSelector::computeFontSizes(int logicalDpiY,  int zoomFactor)
 
 void CSSStyleSelector::computeFontSizesFor(int logicalDpiY, int zoomFactor, QVector<int>& fontSizes, bool isFixed)
 {
-#ifdef APPLE_CHANGES
-    // We don't want to scale the settings by the dpi.
-    const float toPix = 1.0;
-#else
     Q_UNUSED( isFixed );
     const float toPix = qMax(logicalDpiY, 96) / 72.0f;
-#endif // ######### fix isFixed code again.
 
     fontSizes.resize( MAXFONTSIZES );
     float scale = 1.0;
@@ -516,11 +511,6 @@ void CSSStyleSelector::computeFontSizesFor(int logicalDpiY, int zoomFactor, QVec
     float mediumFontSize, factor;
     if (!khtml::printpainter) {
         scale *= zoomFactor / 100.0;
-#ifdef APPLE_CHANGES
-	if (isFixed)
-	    mediumFontSize = settings->mediumFixedFontSize() * toPix;
-	else
-#endif
 	    mediumFontSize = settings->mediumFontSize() * toPix;
         m_minFontSize = settings->minFontSize() * toPix;
     }
@@ -734,9 +724,6 @@ RenderStyle *CSSStyleSelector::styleForElement(ElementImpl *e, RenderStyle* fall
 		if ( fontDirty && propsToApply[i]->priority >= (1 << 30) ) {
 		    // we are past the font properties, time to update to the
 		    // correct font
-#ifdef APPLE_CHANGES
-		    checkForGenericFamilyChange(style, parentStyle);
-#endif
 		    style->htmlFont().update(logicalDpiY);
 		    fontDirty = false;
 		}
@@ -746,9 +733,6 @@ RenderStyle *CSSStyleSelector::styleForElement(ElementImpl *e, RenderStyle* fall
                 applyRule( prop->m_id, prop->value() );
 	    }
 	    if ( fontDirty ) {
-#ifdef APPLE_CHANGES
-	        checkForGenericFamilyChange(style, parentStyle);
-#endif
 		style->htmlFont().update(logicalDpiY);
             }
         }
@@ -3052,7 +3036,6 @@ void CSSStyleSelector::applyRule( int id, DOM::CSSValueImpl *value )
             style->setColor(col); break;
         case CSS_PROP_OUTLINE_COLOR:
             style->setOutlineColor(col); break;
-#ifndef APPLE_CHANGES
         case CSS_PROP_SCROLLBAR_FACE_COLOR:
             style->setPaletteColor(QPalette::Active, QPalette::Button, col);
             style->setPaletteColor(QPalette::Inactive, QPalette::Button, col);
@@ -3085,7 +3068,6 @@ void CSSStyleSelector::applyRule( int id, DOM::CSSValueImpl *value )
             style->setPaletteColor(QPalette::Active, QPalette::ButtonText, col);
             style->setPaletteColor(QPalette::Inactive, QPalette::ButtonText, col);
             break;
-#endif
         default:
             return;
         }
@@ -3444,12 +3426,7 @@ void CSSStyleSelector::applyRule( int id, DOM::CSSValueImpl *value )
         else if(primitiveValue->getIdent()) {
 	    // keywords are being used.  Pick the correct default
 	    // based off the font family.
-#ifdef APPLE_CHANGES
-	    const QVector<int>& fontSizes = (fontDef.genericFamily == FontDef::eMonospace) ?
-					 m_fixedFontSizes : m_fontSizes;
-#else
 	    const QVector<int>& fontSizes = m_fontSizes;
-#endif
             int oldSize;
             if (parentNode) {
                 oldSize = parentStyle->font().pixelSize();
@@ -3764,11 +3741,7 @@ void CSSStyleSelector::applyRule( int id, DOM::CSSValueImpl *value )
         else if (isInitial) {
             FontDef fontDef = style->htmlFont().fontDef;
             FontDef initialDef = FontDef();
-#ifdef APPLE_CHANGES
-            fontDef.family = initialDef.firstFamily();
-#else
             fontDef.family = initialDef.family;
-#endif
             if (style->setFontDef(fontDef))
                 fontDirty = true;
             return;
@@ -4527,39 +4500,6 @@ void CSSStyleSelector::mapBackgroundYPosition(BackgroundLayer* layer, DOM::CSSVa
     layer->setBackgroundYPosition(l);
 }
 
-#ifdef APPLE_CHANGES
-void CSSStyleSelector::checkForGenericFamilyChange(RenderStyle* aStyle, RenderStyle* aParentStyle)
-{
-  const FontDef& childFont = aStyle->htmlFont().fontDef;
-
-  if (childFont.sizeSpecified || !aParentStyle)
-    return;
-
-  const FontDef& parentFont = aParentStyle->htmlFont().fontDef;
-
-  if (childFont.genericFamily == parentFont.genericFamily)
-    return;
-
-  // For now, lump all families but monospace together.
-  if (childFont.genericFamily != FontDef::eMonospace &&
-      parentFont.genericFamily != FontDef::eMonospace)
-    return;
-
-  // We know the parent is monospace or the child is monospace, and that font
-  // size was unspecified.  We want to alter our font size to use the correct
-  // "medium" font for our family.
-  float size = 0;
-  int minFontSize = settings->minFontSize();
-  size = (childFont.genericFamily == FontDef::eMonospace) ? m_fixedFontSizes[3] : m_fontSizes[3];
-  int isize = (int)size;
-  if (isize < minFontSize)
-    isize = minFontSize;
-
-  FontDef newFontDef(childFont);
-  newFontDef.size = isize;
-  aStyle->setFontDef(newFontDef);
-}
-#endif
 
 // #### FIXME!! this is ugly and isn't even properly updated or destroyed.
 

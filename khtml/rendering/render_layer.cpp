@@ -811,11 +811,7 @@ int RenderLayer::verticalScrollbarWidth()
     if (!m_vBar)
         return 0;
 
-#ifdef APPLE_CHANGES
-    return m_vBar->width();
-#else
     return m_vBar->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
-#endif
 
 }
 
@@ -824,32 +820,12 @@ int RenderLayer::horizontalScrollbarHeight()
     if (!m_hBar)
         return 0;
 
-#ifdef APPLE_CHANGES
-    return m_hBar->height();
-#else
     return m_hBar->style()->pixelMetric(QStyle::PM_ScrollBarExtent);
-#endif
 
 }
 
 void RenderLayer::positionScrollbars(const QRect& absBounds)
 {
-#ifdef APPLE_CHANGES
-    if (m_vBar) {
-        view->addChild(m_vBar, absBounds.x()+absBounds.width()-m_object->borderRight()-m_vBar->width(),
-                     absBounds.y()+m_object->borderTop());
-        m_vBar->resize(m_vBar->width(), absBounds.height() -
-                       (m_object->borderTop()+m_object->borderBottom()) -
-                       (m_hBar ? m_hBar->height()-1 : 0));
-    }
-
-    if (m_hBar) {
-        view->addChild(m_hBar, absBounds.x()+m_object->borderLeft(),
-                     absBounds.y()+absBounds.height()-m_object->borderBottom()-m_hBar->height());
-        m_hBar->resize(absBounds.width() - (m_object->borderLeft()+m_object->borderRight()) -
-                       (m_vBar ? m_vBar->width()-1 : 0), m_hBar->height());
-    }
-#else
     int tx = absBounds.x();
     int ty = absBounds.y();
     int bl = m_object->borderLeft();
@@ -880,7 +856,6 @@ void RenderLayer::positionScrollbars(const QRect& absBounds)
         m_hBar->resize(hBarRect.width(), hBarRect.height());
         m_hBar->m_kwp->setPos(QPoint(hBarRect.x(), hBarRect.y()));
     }
-#endif
 }
 
 #define LINE_STEP   10

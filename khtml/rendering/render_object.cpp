@@ -853,13 +853,6 @@ bool RenderObject::sizesToMaxWidth() const
             return true;
     }
 
-#ifdef APPLE_CHANGES	// ### what the heck is a flexbox?
-    // Flexible horizontal boxes lay out children at their maxwidths.  Also vertical boxes
-    // that don't stretch their kids lay out their children at their maxwidths.
-    if (parent()->isFlexibleBox() &&
-        (parent()->style()->boxOrient() == HORIZONTAL || parent()->style()->boxAlign() != BSTRETCH))
-        return true;
-#endif
 
     return false;
 }
@@ -1791,15 +1784,6 @@ void RenderObject::paintOutline(QPainter *p, int _tx, int _ty, int w, int h, con
     EBorderStyle os = style->outlineStyle();
     int offset = style->outlineOffset();
 
-#ifdef APPLE_CHANGES
-    if (style->outlineStyleIsAuto()) {
-        p->initFocusRing(ow, offset, oc);
-        addFocusRingRects(p, _tx, _ty);
-        p->drawFocusRing();
-        p->clearFocusRing();
-        return;
-    }
-#endif
 
     _tx -= offset;
     _ty -= offset;

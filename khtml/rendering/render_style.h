@@ -660,9 +660,6 @@ public:
     }
 
     float opacity;         // Whether or not we're transparent.
-#ifdef APPLE_CHANGES	// ### we don't have those (yet)
-    DataRef<StyleFlexibleBoxData> flexibleBox; // Flexible box properties
-#endif
     DataRef<StyleMarqueeData> marquee; // Marquee properties
     DataRef<BorderRadiusData> borderRadius;
 };
@@ -684,10 +681,6 @@ class StyleCSS3InheritedData : public Shared<StyleCSS3InheritedData>
         bool shadowDataEquivalent(const StyleCSS3InheritedData& o) const;
 
         ShadowData* textShadow;  // Our text shadow information for shadowed text drawing.
-#ifdef APPLE_CHANGES
-        EUserModify userModify : 2; // Flag used for editing state
-        bool textSizeAdjust : 1;    // An Apple extension.  Not really CSS3 but not worth making a new struct over.
-#endif
         KDE_BF_ENUM(EWordWrap) wordWrap : 1;
     private:
         StyleCSS3InheritedData &operator=(const StyleCSS3InheritedData &);
