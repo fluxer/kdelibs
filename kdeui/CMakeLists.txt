@@ -283,31 +283,31 @@ set(kdeui_LIB_SRCS
     xmlgui/kxmlguiversionhandler.cpp
     dialogs/kdeprintdialog.cpp
     notifications/ksystemtrayicon.cpp
+    notifications/kstatusnotifieritem.cpp
+    notifications/kstatusnotifieritemdbus_p.cpp
 )
 
 if(DBUSMENUQT_FOUND)
-    set(kdeui_LIB_SRCS
-        ${kdeui_LIB_SRCS}
-        notifications/kstatusnotifieritem.cpp
-        notifications/kstatusnotifieritemdbus_p.cpp
-    )
+    add_definitions(-DHAVE_DBUSMENUQT)
 
     include_directories(${DBUSMENUQT_INCLUDE_DIR})
+
     set(KDEUI_EXTRA_LIBS
         ${KDEUI_EXTRA_LIBS}
         ${DBUSMENUQT_LIBRARIES}
     )
-
-    qt4_add_dbus_interface(kdeui_LIB_SRCS
-        notifications/org.kde.StatusNotifierWatcher.xml
-        statusnotifierwatcher_interface
-    )
-
-    qt4_add_dbus_adaptor(kdeui_LIB_SRCS
-        notifications/org.kde.StatusNotifierItem.xml
-        notifications/kstatusnotifieritemdbus_p.h KStatusNotifierItemDBus
-    )
 endif()
+
+qt4_add_dbus_interface(kdeui_LIB_SRCS
+    notifications/org.kde.StatusNotifierWatcher.xml
+    statusnotifierwatcher_interface
+)
+
+qt4_add_dbus_adaptor(kdeui_LIB_SRCS
+    notifications/org.kde.StatusNotifierItem.xml
+    notifications/kstatusnotifieritemdbus_p.h
+    KStatusNotifierItemDBus
+)
 
 if(Q_WS_X11)
     set(kdeui_LIB_SRCS
