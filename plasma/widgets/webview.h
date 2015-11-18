@@ -226,22 +226,6 @@ class PLASMA_EXPORT WebView : public QGraphicsWidget
         /**
          * Reimplementation
          */
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-        void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-        void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
-        void mousePressEvent(QGraphicsSceneMouseEvent *event);
-        void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
-        void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-        void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-        void wheelEvent(QGraphicsSceneWheelEvent *event);
-        void keyPressEvent(QKeyEvent * event);
-        void keyReleaseEvent(QKeyEvent * event);
-        void focusInEvent(QFocusEvent * event);
-        void focusOutEvent(QFocusEvent * event);
-        void dragEnterEvent(QGraphicsSceneDragDropEvent * event);
-        void dragLeaveEvent(QGraphicsSceneDragDropEvent * event);
-        void dragMoveEvent(QGraphicsSceneDragDropEvent * event);
-        void dropEvent(QGraphicsSceneDragDropEvent * event);
         QVariant itemChange(GraphicsItemChange change, const QVariant &value);
         QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint) const;
 
