@@ -421,6 +421,8 @@ void KStatusNotifierItem::setContextMenu(KMenu *menu)
     } else if (d->menu != menu) {
 #ifdef HAVE_DBUSMENUQT
         if (getenv("KSNI_NO_DBUSMENU")) {
+#else
+            d->setLegacySystemTrayEnabled(true);
 #endif
             // This is a hack to make it possible to disable DBusMenu in an
             // application. The string "/NO_DBUSMENU" must be the same as in
