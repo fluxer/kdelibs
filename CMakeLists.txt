@@ -263,6 +263,9 @@ add_subdirectory( kdesu )
 add_subdirectory( kdeui )
 if(QT_QTWEBKIT_FOUND)
     add_subdirectory( kdewebkit )
+else()
+    add_subdirectory(kjs)
+    add_subdirectory(khtml)
 endif()
 add_subdirectory( kdewidgets )
 add_subdirectory( kexiv2 )
@@ -284,9 +287,6 @@ add_subdirectory( security )
 add_subdirectory( solid )
 add_subdirectory( sonnet )
 add_subdirectory( threadweaver )
-
-add_subdirectory(kjs)
-add_subdirectory(khtml)
 
 
 ################# write kdelibs package config files which will be installed #################

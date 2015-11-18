@@ -317,6 +317,4 @@ void KStatusNotifierItemDBus::Scroll(int delta, const QString &orientation)
     emit m_statusNotifierItem->scrollRequested(delta, dir);
 }
 
-
-
 #include "moc_kstatusnotifieritemdbus_p.cpp"
