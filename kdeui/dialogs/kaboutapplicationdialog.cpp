@@ -42,6 +42,7 @@
 #include <QtGui/QScrollBar>
 #include <QtGui/QTabWidget>
 
+#include <kdeversion.h>
 #include <kglobalsettings.h>
 
 class KAboutApplicationDialog::Private

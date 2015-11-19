@@ -19,7 +19,7 @@
         */
 
 #include "kapplication.h"
-// TODO: KDE5 +#include "kdeversion.h"
+#include "kdeversion.h"
 
 #include <config.h>
 

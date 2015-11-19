@@ -15,6 +15,7 @@
 #include <QtCore/QTemporaryFile>
 #include <kapplication.h>
 #include <kdebug.h>
+#include <kdeversion.h>
 
 #define BUFLEN 200
 
