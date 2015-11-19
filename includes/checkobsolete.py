@@ -1,10 +1,13 @@
 #!/usr/bin/python2
 
-# a script to check for Qt4 meta-headers inclusion in source files
+# a script to check for redundant fancy headers
 
 import os, re, sys
 
-lexceptions = ['../../dnssd/settings.h']
+lexceptions = [
+    '../../dnssd/settings.h',
+    '../../plasma/version.h',
+]
 
 lall = []
 for root, dirs, files in os.walk('%s/..' % os.getcwd()):
