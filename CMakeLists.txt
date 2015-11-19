@@ -265,7 +265,7 @@ if(QT_QTWEBKIT_FOUND)
     add_subdirectory( kdewebkit )
     # it requires for adblock to work
     install(
-      FILES khtmlrc
+      FILES khtml/khtmlrc
       DESTINATION ${CONFIG_INSTALL_DIR}
     )
 else()
