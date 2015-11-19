@@ -263,9 +263,14 @@ add_subdirectory( kdesu )
 add_subdirectory( kdeui )
 if(QT_QTWEBKIT_FOUND)
     add_subdirectory( kdewebkit )
+    # it requires for adblock to work
+    install(
+      FILES khtmlrc
+      DESTINATION ${CONFIG_INSTALL_DIR}
+    )
 else()
-    add_subdirectory(kjs)
-    add_subdirectory(khtml)
+    add_subdirectory( kjs )
+    add_subdirectory( khtml )
 endif()
 add_subdirectory( kdewidgets )
 add_subdirectory( kexiv2 )
