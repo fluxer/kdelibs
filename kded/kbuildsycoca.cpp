@@ -58,7 +58,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
-#include <memory> // auto_ptr
 
 typedef QHash<QString, KSycocaEntry::Ptr> KBSEntryDict;
 typedef QList<KSycocaEntry::List> KSycocaEntryListList;
