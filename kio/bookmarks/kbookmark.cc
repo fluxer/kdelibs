@@ -345,14 +345,6 @@ QString KBookmark::icon() const
     QDomElement iconElement = cd(metaDataNode, "bookmark:icon", false).toElement();
 
     QString icon = iconElement.attribute("name");
-
-    // migration code
-    if (icon.isEmpty())
-      icon = element.attribute("icon");
-    if (icon == "www") // common icon for kde3 bookmarks
-        return "internet-web-browser";
-    // end migration code
-
     if (icon == "bookmark_folder") {
         return "folder-bookmarks";
     }

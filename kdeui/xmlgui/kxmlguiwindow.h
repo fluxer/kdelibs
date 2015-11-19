@@ -41,8 +41,6 @@ class KConfigGroup;
 class KToolBar;
 class KXmlGuiWindowPrivate;
 
-#define KDE_DEFAULT_WINDOWFLAGS 0
-
 /**
  * @short %KDE top level main window with predefined action layout
  *
@@ -104,7 +102,7 @@ public:
      * for the composer windows "composer#".
      *
      */
-    explicit KXmlGuiWindow( QWidget* parent = 0, Qt::WindowFlags f = KDE_DEFAULT_WINDOWFLAGS );
+    explicit KXmlGuiWindow( QWidget* parent = 0, Qt::WindowFlags f = 0 );
 
     /**
      * \brief Destructor.

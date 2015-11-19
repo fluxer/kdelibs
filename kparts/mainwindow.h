@@ -50,7 +50,7 @@ class KPARTS_EXPORT MainWindow : public KXmlGuiWindow, virtual public PartBase
   /**
    * Constructor, same signature as KMainWindow.
    */
-  explicit MainWindow( QWidget* parent = 0, Qt::WindowFlags f = KDE_DEFAULT_WINDOWFLAGS );
+  explicit MainWindow( QWidget* parent = 0, Qt::WindowFlags f = 0 );
   /**
    * Destructor.
    */
