@@ -1318,47 +1318,6 @@ static void handle_requests(pid_t waitForPid)
 
 static void kdeinit_library_path()
 {
-   const QStringList ltdl_library_path =
-     QFile::decodeName(qgetenv("LTDL_LIBRARY_PATH")).split(QLatin1Char(':'),QString::SkipEmptyParts);
-   const QByteArray ldlibpath = qgetenv("LD_LIBRARY_PATH");
-   const QStringList ld_library_path =
-     QFile::decodeName(ldlibpath).split(QLatin1Char(':'),QString::SkipEmptyParts);
-
-   QByteArray extra_path;
-   const QStringList candidates = s_instance->dirs()->resourceDirs("lib");
-   for (QStringList::ConstIterator it = candidates.begin();
-        it != candidates.end();
-        ++it)
-   {
-      QString d = *it;
-      if (ltdl_library_path.contains(d))
-          continue;
-      if (ld_library_path.contains(d))
-          continue;
-      if (d[d.length()-1] == QLatin1Char('/'))
-      {
-         d.truncate(d.length()-1);
-         if (ltdl_library_path.contains(d))
-            continue;
-         if (ld_library_path.contains(d))
-            continue;
-      }
-      if ((d == QLatin1String("/lib")) || (d == QLatin1String("/usr/lib")))
-         continue;
-
-      QByteArray dir = QFile::encodeName(d);
-
-      if (access(dir, R_OK))
-          continue;
-
-      if ( !extra_path.isEmpty())
-         extra_path += ':';
-      extra_path += dir;
-   }
-
-//   if (!extra_path.isEmpty())
-//      lt_dlsetsearchpath(extra_path.data());
-
    QByteArray display = qgetenv(DISPLAY);
    if (display.isEmpty())
    {
