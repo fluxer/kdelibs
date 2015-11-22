@@ -1283,16 +1283,10 @@ QString KIconLoader::moviePath(const QString& name, KIconLoader::Group group, in
             icon = themeNode->theme->iconPath(file, size, KIconLoader::MatchExact);
             if (icon.isValid())
                 break;
-        }
 
-        if ( !icon.isValid() )
-        {
-            foreach(KIconThemeNode *themeNode, d->links)
-            {
-                icon = themeNode->theme->iconPath(file, size, KIconLoader::MatchBest);
-                if (icon.isValid())
-                    break;
-            }
+            icon = themeNode->theme->iconPath(file, size, KIconLoader::MatchBest);
+            if (icon.isValid())
+                break;
         }
 
         file = icon.isValid() ? icon.path : QString();
