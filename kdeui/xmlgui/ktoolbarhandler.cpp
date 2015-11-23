@@ -201,13 +201,6 @@ void ToolBarHandler::Private::connectToActionContainer( QWidget *container )
            parent, SLOT(setupActions()) );
 }
 
-ToolBarHandler::ToolBarHandler( KXmlGuiWindow *mainWindow )
-  : QObject( mainWindow ), KXMLGUIClient( mainWindow ),
-    d( new Private( this ) )
-{
-  d->init( mainWindow );
-}
-
 ToolBarHandler::ToolBarHandler( KXmlGuiWindow *mainWindow, QObject *parent )
   : QObject( parent ), KXMLGUIClient( mainWindow ),
     d( new Private( this ) )
