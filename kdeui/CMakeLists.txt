@@ -323,13 +323,6 @@ if(Q_WS_X11)
     )
 endif()
 
-if(Q_WS_QWS)
-    set(kdeui_LIB_SRCS
-        ${kdeui_LIB_SRCS}
-        windowmanagement/kwindowsystem_qws.cpp
-    )
-endif()
-
 if (Q_WS_X11 AND X11_Xkb_FOUND)
     include_directories (
         ${X11_Xkb_INCLUDE_PATH}

@@ -53,8 +53,6 @@ public:
   private:
     KXMLGUIBuilder *m_builder;
     KSelectAction *m_toolbarAction;
-    
-    
 };
 
 } //END namespace KDEPrivate

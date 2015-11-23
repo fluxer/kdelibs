@@ -62,8 +62,14 @@ public:
         Indexes for the properties array.
     **/
     // update also NETRootInfoPrivate::properties[] size when extending this
-    enum { PROTOCOLS, WINDOW_TYPES, STATES, PROTOCOLS2, ACTIONS,
-        PROPERTIES_SIZE };
+    enum {
+        PROTOCOLS,
+        WINDOW_TYPES,
+        STATES,
+        PROTOCOLS2,
+        ACTIONS,
+        PROPERTIES_SIZE
+    };
 
     /**
        Window Managers should use this constructor to create a NETRootInfo object,
