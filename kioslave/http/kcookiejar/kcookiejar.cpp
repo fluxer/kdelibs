@@ -1276,11 +1276,18 @@ bool KCookieJar::saveCookies(const QString &_filename)
 
     ts << "# KDE Cookie File v2\n#\n";
 
-    QString s;
-    s.sprintf("%-20s %-20s %-12s %-10s %-4s %-20s %-4s %s\n",
-              "# Host", "Domain", "Path", "Exp.date", "Prot",
-              "Name", "Sec", "Value");
-    ts << s.toLatin1().constData();
+    ts << qSetFieldWidth(20);
+    ts << "# Host" << "Domain";
+    ts << qSetFieldWidth(12);
+    ts << "Path";
+    ts << qSetFieldWidth(4);
+    ts << "Prot";
+    ts << qSetFieldWidth(20);
+    ts << "Name";
+    ts << qSetFieldWidth(4);
+    ts << "Sec";
+    ts << qSetFieldWidth(1);
+    ts << "Value\n";
 
     QStringListIterator it(m_domainList);
     while (it.hasNext())
@@ -1312,16 +1319,26 @@ bool KCookieJar::saveCookies(const QString &_filename)
                 const QString domain = QL1S("\"") + cookie.domain() + QL1C('"');
                 const QString host = hostWithPort(&cookie);
 
-                // TODO: replace with direct QTextStream output ?
-                s.sprintf("%-20s %-20s %-12s %10lld  %3d %-20s %-4i %s\n",
-                        host.toLatin1().constData(), domain.toLatin1().constData(),
-                        path.toLatin1().constData(), cookie.expireDate(),
-                        cookie.protocolVersion(),
-                        cookie.name().isEmpty() ? cookie.value().toLatin1().constData() : cookie.name().toLatin1().constData(),
-                        (cookie.isSecure() ? 1 : 0) + (cookie.isHttpOnly() ? 2 : 0) +
-                        (cookie.hasExplicitPath() ? 4 : 0) + (cookie.name().isEmpty() ? 8 : 0),
-                        cookie.value().toLatin1().constData());
-                ts << s.toLatin1().constData();
+                ts << host.toLatin1().constData() << domain.toLatin1().constData();
+                ts << qSetFieldWidth(20);
+                ts << path.toLatin1().constData();
+                ts << qSetFieldWidth(12);
+                ts << cookie.expireDate();
+                ts << qSetFieldWidth(10);
+                ts << cookie.protocolVersion();
+                ts << qSetFieldWidth(3);
+                if(cookie.name().isEmpty()) {
+                   ts << cookie.value().toLatin1().constData();
+                } else {
+                    ts << cookie.name().toLatin1().constData();
+                }
+                ts << qSetFieldWidth(20);
+                ts << (cookie.isSecure() ? 1 : 0) + (cookie.isHttpOnly() ? 2 : 0) +
+                        (cookie.hasExplicitPath() ? 4 : 0) + (cookie.name().isEmpty() ? 8 : 0);
+                ts << qSetFieldWidth(4);
+                ts << cookie.value().toLatin1().constData();
+                ts << qSetFieldWidth(1);
+                ts << "\n";
             }
         }
     }
