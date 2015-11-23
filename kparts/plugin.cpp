@@ -138,22 +138,20 @@ void Plugin::loadPlugins(QObject *parent, const KComponentData &componentData)
 
 void Plugin::loadPlugins(QObject *parent, const QList<PluginInfo> &pluginInfos, const KComponentData &componentData)
 {
-   QList<PluginInfo>::ConstIterator pIt = pluginInfos.begin();
-   QList<PluginInfo>::ConstIterator pEnd = pluginInfos.end();
-   for (; pIt != pEnd; ++pIt )
+   foreach (const PluginInfo pIt, pluginInfos )
    {
-     QString library = (*pIt).m_document.documentElement().attribute( "library" );
+     QString library = pIt.m_document.documentElement().attribute( "library" );
 
      if ( library.isEmpty() || hasPlugin( parent, library ) )
        continue;
 
-     Plugin *plugin = loadPlugin( parent, library, (*pIt).m_document.documentElement().attribute( "X-KDE-PluginKeyword" ) );
+     Plugin *plugin = loadPlugin( parent, library, pIt.m_document.documentElement().attribute( "X-KDE-PluginKeyword" ) );
 
      if ( plugin )
      {
        plugin->d->m_parentInstance = componentData;
-       plugin->setXMLFile( (*pIt).m_relXMLFileName, false, false );
-       plugin->setDOMDocument( (*pIt).m_document );
+       plugin->setXMLFile( pIt.m_relXMLFileName, false, false );
+       plugin->setDOMDocument( pIt.m_document );
 
      }
    }
@@ -163,11 +161,6 @@ void Plugin::loadPlugins(QObject *parent, const QList<PluginInfo> &pluginInfos, 
 void Plugin::loadPlugins( QObject *parent, const QList<PluginInfo> &pluginInfos )
 {
    loadPlugins(parent, pluginInfos, KComponentData());
-}
-
-Plugin* Plugin::loadPlugin( QObject * parent, const QString &libname )
-{
-    return loadPlugin( parent, libname, "" );
 }
 
 // static
@@ -209,11 +202,9 @@ QList<KParts::Plugin *> Plugin::pluginObjects( QObject *parent )
 bool Plugin::hasPlugin( QObject* parent, const QString& library )
 {
   const QObjectList plugins = parent->children();
-
-  QObjectList::ConstIterator it = plugins.begin();
-  for ( ; it != plugins.end() ; ++it )
+  foreach ( QObject *it, plugins )
   {
-      Plugin * plugin = qobject_cast<Plugin *>( *it );
+      Plugin * plugin = qobject_cast<Plugin *>( it );
       if ( plugin && plugin->d->m_library == library )
       {
           return true;
