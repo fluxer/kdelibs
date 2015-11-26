@@ -515,7 +515,8 @@ int kiotraderwrap();
 int kiotraderlex(YYSTYPE * yylval, yyscan_t scanner);
 void KTraderParse_initFlex( const char *_code, yyscan_t _scanner );
 
-#line 519 "lex.c"
+#define YY_NO_INPUT 1
+#line 520 "lex.c"
 
 #define INITIAL 0
 
@@ -626,8 +627,6 @@ extern int kiotraderwrap (yyscan_t yyscanner );
 #endif
 #endif
 
-    static void yyunput (int c,char *buf_ptr  ,yyscan_t yyscanner);
-    
 #ifndef yytext_ptr
 static void yy_flex_strncpy (char *,yyconst char *,int ,yyscan_t yyscanner);
 #endif
@@ -781,10 +780,10 @@ YY_DECL
 		}
 
 	{
-#line 27 "lex.l"
+#line 29 "lex.l"
 
 
-#line 788 "lex.c"
+#line 787 "lex.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -839,162 +838,162 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 29 "lex.l"
+#line 31 "lex.l"
 { return EQ; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 30 "lex.l"
+#line 32 "lex.l"
 { return EQI; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "lex.l"
+#line 33 "lex.l"
 { return NEQ; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 32 "lex.l"
+#line 34 "lex.l"
 { return NEQI; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 33 "lex.l"
+#line 35 "lex.l"
 { return LE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 34 "lex.l"
+#line 36 "lex.l"
 { return GR; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 35 "lex.l"
+#line 37 "lex.l"
 { return LEQ; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 36 "lex.l"
+#line 38 "lex.l"
 { return GEQ; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 37 "lex.l"
+#line 39 "lex.l"
 { return MATCH_INSENSITIVE; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 38 "lex.l"
+#line 40 "lex.l"
 { return NOT; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 39 "lex.l"
+#line 41 "lex.l"
 { return AND; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 40 "lex.l"
+#line 42 "lex.l"
 { return OR; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 41 "lex.l"
+#line 43 "lex.l"
 { return TOKEN_IN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 42 "lex.l"
+#line 44 "lex.l"
 { return TOKEN_IN_INSENSITIVE; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 43 "lex.l"
+#line 45 "lex.l"
 { return TOKEN_IN_SUBSTRING; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 44 "lex.l"
+#line 46 "lex.l"
 { return TOKEN_IN_SUBSTRING_INSENSITIVE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 45 "lex.l"
+#line 47 "lex.l"
 { return EXIST; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 46 "lex.l"
+#line 48 "lex.l"
 { return MAX; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 47 "lex.l"
+#line 49 "lex.l"
 { return MIN; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 49 "lex.l"
+#line 51 "lex.l"
 { yylval->name = 0L; return (int)(*yytext); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 51 "lex.l"
+#line 53 "lex.l"
 { yylval->valb = 1; return VAL_BOOL; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 52 "lex.l"
+#line 54 "lex.l"
 { yylval->valb = 0; return VAL_BOOL; }
 	YY_BREAK
 case 23:
 /* rule 23 can match eol */
 YY_RULE_SETUP
-#line 54 "lex.l"
+#line 56 "lex.l"
 { yylval->name = KTraderParse_putString( yytext ); return VAL_STRING; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 56 "lex.l"
+#line 58 "lex.l"
 { yylval->vali = atoi( yytext ); return VAL_NUM; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 57 "lex.l"
+#line 59 "lex.l"
 { yylval->vali = atoi( yytext ); return VAL_NUM; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 59 "lex.l"
+#line 61 "lex.l"
 { yylval->vald = KTraderParse_putSimplePositiveFloat( yytext ); return VAL_FLOAT; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 61 "lex.l"
+#line 63 "lex.l"
 { yylval->name = KTraderParse_putSymbolInBrackets( yytext ); return VAL_ID; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 63 "lex.l"
+#line 65 "lex.l"
 { yylval->name = KTraderParse_putSymbol( yytext ); return VAL_ID; }
 	YY_BREAK
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 65 "lex.l"
+#line 67 "lex.l"
 /* eat up whitespace */
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 67 "lex.l"
+#line 69 "lex.l"
 { printf( "Unrecognized character: %s\n", yytext ); }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 69 "lex.l"
+#line 71 "lex.l"
 ECHO;
 	YY_BREAK
-#line 998 "lex.c"
+#line 997 "lex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1327,44 +1326,6 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 
 	(void)yyg;
 	return yy_is_jam ? 0 : yy_current_state;
-}
-
-    static void yyunput (int c, register char * yy_bp , yyscan_t yyscanner)
-{
-	register char *yy_cp;
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-
-    yy_cp = yyg->yy_c_buf_p;
-
-	/* undo effects of setting up yytext */
-	*yy_cp = yyg->yy_hold_char;
-
-	if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-		{ /* need to shift things up to make room */
-		/* +2 for EOB chars. */
-		register yy_size_t number_to_move = yyg->yy_n_chars + 2;
-		register char *dest = &YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[
-					YY_CURRENT_BUFFER_LVALUE->yy_buf_size + 2];
-		register char *source =
-				&YY_CURRENT_BUFFER_LVALUE->yy_ch_buf[number_to_move];
-
-		while ( source > YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
-			*--dest = *--source;
-
-		yy_cp += (int) (dest - source);
-		yy_bp += (int) (dest - source);
-		YY_CURRENT_BUFFER_LVALUE->yy_n_chars =
-			yyg->yy_n_chars = YY_CURRENT_BUFFER_LVALUE->yy_buf_size;
-
-		if ( yy_cp < YY_CURRENT_BUFFER_LVALUE->yy_ch_buf + 2 )
-			YY_FATAL_ERROR( "flex scanner push-back overflow" );
-		}
-
-	*--yy_cp = (char) c;
-
-	yyg->yytext_ptr = yy_bp;
-	yyg->yy_hold_char = *yy_cp;
-	yyg->yy_c_buf_p = yy_cp;
 }
 
 #ifndef YY_NO_INPUT
@@ -2160,7 +2121,7 @@ void kiotraderfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 69 "lex.l"
+#line 71 "lex.l"
 
 
 

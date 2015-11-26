@@ -469,7 +469,8 @@ char *PredicateParse_putSymbol( char *_name );
 char *PredicateParse_putString( char *_str );
 void PredicateParse_initFlex( const char *_code, yyscan_t _scanner );
 
-#line 473 "predicate_lexer.c"
+#define YY_NO_INPUT 1
+#line 474 "predicate_lexer.c"
 
 #define INITIAL 0
 
@@ -733,10 +734,10 @@ YY_DECL
 		}
 
 	{
-#line 26 "predicate_lexer.l"
+#line 27 "predicate_lexer.l"
 
 
-#line 740 "predicate_lexer.c"
+#line 741 "predicate_lexer.c"
 
 	while ( 1 )		/* loops until end-of-file is reached */
 		{
@@ -791,87 +792,87 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 28 "predicate_lexer.l"
+#line 29 "predicate_lexer.l"
 { return EQ; }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 29 "predicate_lexer.l"
+#line 30 "predicate_lexer.l"
 { return MASK; }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 31 "predicate_lexer.l"
+#line 32 "predicate_lexer.l"
 { return AND; }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 32 "predicate_lexer.l"
+#line 33 "predicate_lexer.l"
 { return OR; }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 33 "predicate_lexer.l"
+#line 34 "predicate_lexer.l"
 { return IS; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 35 "predicate_lexer.l"
+#line 36 "predicate_lexer.l"
 { yylval->valb = 1; return VAL_BOOL; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 36 "predicate_lexer.l"
+#line 37 "predicate_lexer.l"
 { yylval->valb = 0; return VAL_BOOL; }
 	YY_BREAK
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 38 "predicate_lexer.l"
+#line 39 "predicate_lexer.l"
 { yylval->name = PredicateParse_putString( yytext ); return VAL_STRING; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 40 "predicate_lexer.l"
+#line 41 "predicate_lexer.l"
 { yylval->vali = atoi( yytext ); return VAL_NUM; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 41 "predicate_lexer.l"
+#line 42 "predicate_lexer.l"
 { yylval->vali = atoi( yytext ); return VAL_NUM; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 43 "predicate_lexer.l"
+#line 44 "predicate_lexer.l"
 { yylval->vald = atof( yytext ); return VAL_FLOAT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 45 "predicate_lexer.l"
+#line 46 "predicate_lexer.l"
 { yylval->name = PredicateParse_putSymbol( yytext ); return VAL_ID; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 47 "predicate_lexer.l"
+#line 48 "predicate_lexer.l"
 { yylval->name = 0; return (int)(*yytext); }
 	YY_BREAK
 case 14:
 /* rule 14 can match eol */
 YY_RULE_SETUP
-#line 49 "predicate_lexer.l"
+#line 50 "predicate_lexer.l"
 /* eat up whitespace */
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 51 "predicate_lexer.l"
+#line 52 "predicate_lexer.l"
 { PredicateLexer_unknownToken(yytext); }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 53 "predicate_lexer.l"
+#line 54 "predicate_lexer.l"
 ECHO;
 	YY_BREAK
-#line 875 "predicate_lexer.c"
+#line 876 "predicate_lexer.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1999,7 +2000,7 @@ void Solidfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#line 53 "predicate_lexer.l"
+#line 54 "predicate_lexer.l"
 
 
 
