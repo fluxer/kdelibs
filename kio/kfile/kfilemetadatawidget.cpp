@@ -100,8 +100,8 @@ KFileMetaDataWidget::Private::~Private()
 
 void KFileMetaDataWidget::Private::initMetaInfoSettings()
 {
-    const int currentVersion = 5; // increase version, if the blacklist of disabled
-                                  // properties should be updated
+    // increase version, if the blacklist of disabled properties should be updated
+    static const int currentVersion = 6;
 
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     if (config.group("Misc").readEntry("version", 0) < currentVersion) {
@@ -114,7 +114,6 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
 
         static const char* enabledProperties[] = {
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#depends",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent",
@@ -146,6 +145,7 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#lastModified",
+            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             0 // mandatory last entry
         };
