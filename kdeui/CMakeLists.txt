@@ -131,7 +131,6 @@ set(kdeui_LIB_SRCS
     itemviews/klinkitemselectionmodel.cpp
     itemviews/kidentityproxymodel.cpp
     itemviews/krecursivefilterproxymodel.cpp
-    itemviews/kdescendantsproxymodel.cpp
     itemviews/klistwidget.cpp
     itemviews/klistwidgetsearchline.cpp
     itemviews/ktreewidgetsearchline.cpp
@@ -147,7 +146,6 @@ set(kdeui_LIB_SRCS
     itemviews/kwidgetitemdelegatepool.cpp
     # This requires patches which are not yet in Qt. Disabled for now.
     # itemviews/kreparentingproxymodel.cpp
-    itemviews/kselectionproxymodel.cpp
     jobs/kdialogjobuidelegate.cpp
     jobs/kabstractwidgetjobtracker.cpp
     jobs/kwidgetjobtracker.cpp
@@ -524,7 +522,6 @@ install(
     itemviews/kcheckableproxymodel.h
     itemviews/klinkitemselectionmodel.h
     itemviews/krecursivefilterproxymodel.h
-    itemviews/kdescendantsproxymodel.h
     itemviews/klistwidget.h
     itemviews/kidentityproxymodel.h
     itemviews/kviewstatesaver.h
@@ -539,7 +536,6 @@ install(
     itemviews/kmodelindexproxymapper.h
     itemviews/kwidgetitemdelegate.h
     # itemviews/kreparentingproxymodel.h
-    itemviews/kselectionproxymodel.h
     jobs/kdialogjobuidelegate.h
     jobs/kabstractwidgetjobtracker.h
     jobs/kwidgetjobtracker.h

@@ -1,7 +1,7 @@
 # FIXME: they are bogus
 # add_subdirectory(kconfig_compiler)
 
-include_directories( ${KDE4_KDEUI_INCLUDES} proxymodeltestsuite )
+include_directories( ${KDE4_KDEUI_INCLUDES} )
 
 MACRO(KDEUI_UNIT_TESTS)
     FOREACH(_testname ${ARGN})
@@ -31,34 +31,6 @@ MACRO(KDEUI_EXECUTABLE_TESTS)
         )
     ENDFOREACH(_testname)
 ENDMACRO(KDEUI_EXECUTABLE_TESTS)
-
-SET(proxyModelTestSources
-    kselectionproxymodeltestsuite.cpp
-)
-
-add_subdirectory(proxymodeltestsuite)
-
-MACRO(KDEUI_PROXYMODEL_TESTS)
-    FOREACH(_testname ${ARGN})
-        if(EXISTS ${_testname}.h)
-            kde4_add_test(kdeui-${_testname}
-                ${_testname}.cpp ${_testname}.h
-                ${proxyModelTestSources})
-        else()
-            kde4_add_test(kdeui-${_testname}
-                ${_testname}.cpp
-                ${proxyModelTestSources}
-            )
-        endif()
-        target_link_libraries(kdeui-${_testname}
-            ${KDE4_KDEUI_LIBS}
-            ${QT_QTTEST_LIBRARY}
-            ${QT_QTXML_LIBRARY}
-            proxymodeltestsuite
-        )
-    ENDFOREACH(_testname)
-ENDMACRO(KDEUI_PROXYMODEL_TESTS)
-
 
 KDEUI_UNIT_TESTS(
     kactioncollectiontest
@@ -100,12 +72,6 @@ KDEUI_UNIT_TESTS(
     kactioncategorytest
     kapplication_unittest
     kconfigguitest
-)
-
-KDEUI_PROXYMODEL_TESTS(
-    kdescendantsproxymodeltest
-    kselectionproxymodeltest
-    testmodelqueuedconnections
 )
 
 KDEUI_EXECUTABLE_TESTS(
@@ -206,6 +172,4 @@ SET(kcolorUtilsDemoSources
 )
 kde4_add_manual_test(kcolorutilsdemo ${kcolorUtilsDemoSources})
 target_link_libraries(kcolorutilsdemo ${KDE4_KDEUI_LIBS})
-
-add_subdirectory(proxymodeltestapp)
 
