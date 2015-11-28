@@ -104,7 +104,6 @@ install(
     KDateTimeWidget
     KDateValidator
     KDateWidget
-    KDescendantsProxyModel
     KDesktopFile
     KDialog
     KDialogButtonBox
@@ -296,7 +295,6 @@ install(
     KScanDialog
     KSelectAction
     KSelectionOwner
-    KSelectionProxyModel
     KSelectionWatcher
     KSelector
     KSeparator
