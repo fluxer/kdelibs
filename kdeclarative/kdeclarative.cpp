@@ -172,6 +172,22 @@ void KDeclarative::setupBindings()
 
     // setup ImageProvider for KDE icons
     d->declarativeEngine.data()->addImageProvider(QString("icon"), new KIconProvider);
+
+    if (KCmdLineArgs::parsedArgs("qt")->isSet("qmljsdebugger")) {
+#ifdef QT_KATIE
+        QScriptEngineDebugger debugger;
+        debugger.attachTo(engine);
+        QMainWindow *dbgwindow = debugger.standardWindow();
+        QWidget *dbgwidget = new QWidget();
+        QGridLayout *dbglayout = new QGridLayout();
+        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::CodeWidget));
+        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ConsoleWidget));
+        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ErrorLogWidget));
+        dbgwidget->setLayout(dbglayout);
+        dbgwindow->setCentralWidget(dbgwidget);
+        dbgwindow->show();
+#endif
+    }
 }
 
 QScriptEngine *KDeclarative::scriptEngine() const
@@ -184,18 +200,6 @@ void KDeclarative::setupQmlJsDebugger()
     if (KCmdLineArgs::parsedArgs("qt")->isSet("qmljsdebugger")) {
 #ifndef QT_KATIE
         QDeclarativeDebuggingEnabler enabler;
-#else
-        QScriptEngineDebugger debugger;
-        debugger.attachTo(d->declarativeEngine);
-        QMainWindow *dbgwindow = debugger.standardWindow();
-        QWidget *dbgwidget = new QWidget();
-        QGridLayout *dbglayout = new QGridLayout();
-        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::CodeWidget));
-        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ConsoleWidget));
-        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ErrorLogWidget));
-        dbgwidget->setLayout(dbglayout);
-        dbgwindow->setCentralWidget(dbgwidget);
-        dbgwindow->show();
 #endif
     }
 }
