@@ -24,7 +24,8 @@ set(kdeclarative_LIB_SRCS
     bindings/qscriptnonguibookkeeping.cpp
     bindings/i18n.cpp
     bindings/icon.cpp
-    bindings/url.cpp)
+    bindings/url.cpp
+)
 
 add_library(kdeclarative SHARED ${kdeclarative_LIB_SRCS})
 
@@ -39,6 +40,10 @@ target_link_libraries(kdeclarative
     ${QT_QTSCRIPT_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
 )
+
+if(KATIE_FOUND)
+    target_link_libraries(kdeclarative ${QT_QTSCRIPTTOOLS_LIBRARY})
+endif()
 
 if(ENABLE_TESTING)
     add_subdirectory(tests)

@@ -27,11 +27,15 @@
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include <QtDeclarative/QDeclarativeExpression>
-#include <QtDeclarative/qdeclarativedebug.h>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
-#include <QtCore/qsharedpointer.h>
-
+#ifndef QT_KATIE
+#  include <QtDeclarative/qdeclarativedebug.h>
+#else
+#  include <QtScriptTools/QScriptEngineDebugger>
+#  include <QtGui/QMainWindow>
+#  include <QtGui/QHBoxLayout>
+#endif // QT_KATIE
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 #include <kglobal.h>
@@ -178,7 +182,21 @@ QScriptEngine *KDeclarative::scriptEngine() const
 void KDeclarative::setupQmlJsDebugger()
 {
     if (KCmdLineArgs::parsedArgs("qt")->isSet("qmljsdebugger")) {
+#ifndef QT_KATIE
         QDeclarativeDebuggingEnabler enabler;
+#else
+        QScriptEngineDebugger debugger;
+        debugger.attachTo(d->declarativeEngine);
+        QMainWindow *dbgwindow = debugger.standardWindow();
+        QWidget *dbgwidget = new QWidget();
+        QGridLayout *dbglayout = new QGridLayout();
+        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::CodeWidget));
+        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ConsoleWidget));
+        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ErrorLogWidget));
+        dbgwidget->setLayout(dbglayout);
+        dbgwindow->setCentralWidget(dbgwidget);
+        dbgwindow->show();
+#endif
     }
 }
 
