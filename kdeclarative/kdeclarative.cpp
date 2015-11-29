@@ -189,7 +189,7 @@ void KDeclarative::setupQmlJsDebugger()
     if (KCmdLineArgs::parsedArgs("kde")->isSet("qmljsdebugger")) {
         QScriptEngine *engine = scriptEngine();
         if (!engine) {
-            kWarning() << "no engine has been set";
+            kWarning() << "Failed to get the script engine";
             return;
         }
 
