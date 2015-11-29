@@ -172,9 +172,27 @@ void KDeclarative::setupBindings()
 
     // setup ImageProvider for KDE icons
     d->declarativeEngine.data()->addImageProvider(QString("icon"), new KIconProvider);
+}
 
+QScriptEngine *KDeclarative::scriptEngine() const
+{
+    return d->scriptEngine.data();
+}
+
+void KDeclarative::setupQmlJsDebugger()
+{
+#ifndef QT_KATIE
     if (KCmdLineArgs::parsedArgs("qt")->isSet("qmljsdebugger")) {
-#ifdef QT_KATIE
+        QDeclarativeDebuggingEnabler enabler;
+    }
+#else
+    if (KCmdLineArgs::parsedArgs("kde")->isSet("qmljsdebugger")) {
+        QScriptEngine *engine = scriptEngine();
+        if (!engine) {
+            kWarning() << "no engine has been set";
+            return;
+        }
+
         QScriptEngineDebugger debugger;
         debugger.attachTo(engine);
         QMainWindow *dbgwindow = debugger.standardWindow();
@@ -186,22 +204,8 @@ void KDeclarative::setupBindings()
         dbgwidget->setLayout(dbglayout);
         dbgwindow->setCentralWidget(dbgwidget);
         dbgwindow->show();
-#endif
     }
-}
-
-QScriptEngine *KDeclarative::scriptEngine() const
-{
-    return d->scriptEngine.data();
-}
-
-void KDeclarative::setupQmlJsDebugger()
-{
-    if (KCmdLineArgs::parsedArgs("qt")->isSet("qmljsdebugger")) {
-#ifndef QT_KATIE
-        QDeclarativeDebuggingEnabler enabler;
 #endif
-    }
 }
 
 QString KDeclarative::defaultComponentsTarget()

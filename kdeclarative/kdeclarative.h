@@ -45,10 +45,10 @@ public:
 
     /**
      * This method must be called very early at startup time to ensure the
-     * QDeclarativeDebugger is enabled. Ideally it should be called in main(),
-     * after command-line options are defined.
+     * debugger is enabled. Ideally it should be called in main(), after
+     * command-line options are defined.
      */
-    static void setupQmlJsDebugger();
+    void setupQmlJsDebugger();
 
     /**
      * @return the runtime platform, e.g. "desktop" or "tablet, touch". The first entry/ies in
