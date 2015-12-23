@@ -22,6 +22,8 @@
 #include "udisksstorageaccess.h"
 #include "udisks.h"
 
+#include <QtCore/QDebug>
+#include <QtCore/QTimer>
 #include <QtCore/QProcess>
 #include <QtDBus/QtDBus>
 #include <QtGui/QApplication>
