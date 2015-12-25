@@ -290,8 +290,13 @@ set(QT_USE_IMPORTED_TARGETS TRUE)
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
 option(WITH_KATIE "Build against Katie instead of Qt4" OFF)
 
-find_package(Katie)
-if(WITH_KATIE AND NOT KATIE_FOUND)
+# TODO: once Katie goes stable make it required from const in KDEConfig if
+# kdelibs is build against it, this file may go away due to order issues
+# and be merged into KDEConfig.
+if(WITH_KATIE)
+    find_package(Katie)
+endif()
+if(NOT KATIE_FOUND)
     find_package(Qt4 ${_REQ_STRING_KDE4})
 else()
     # avoid the need to check WITH_KATIE in addition to KATIE_FOUND
