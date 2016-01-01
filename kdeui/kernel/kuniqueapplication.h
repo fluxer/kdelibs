@@ -154,9 +154,7 @@ public:
    * @return true if registration is successful.
    *         false if another process was already running.
    */
-  static bool start(StartFlags flags);
-  // BIC: merge with start(StartFlags flags = StartFlags()) 
-  static bool start();
+  static bool start(StartFlags flags = 0);
 
   /**
    * Destructor

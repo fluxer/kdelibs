@@ -93,11 +93,6 @@ static QDBusConnectionInterface *tryToInitDBusConnection()
     return dbusService;
 }
 
-bool KUniqueApplication::start()
-{
-	return start(0);
-}
-
 bool
 KUniqueApplication::start(StartFlags flags)
 {
