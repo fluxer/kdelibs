@@ -1220,13 +1220,10 @@ KLauncher::slotSlaveGone()
 void
 KLauncher::idleTimeout()
 {
-    bool keepOneFileSlave=true;
-    time_t now = time(0);
+    const time_t now = time(0);
     foreach (IdleSlave *slave, mSlaveList)
     {
-        if ((slave->protocol()==QLatin1String("file")) && (keepOneFileSlave))
-           keepOneFileSlave=false;
-        else if (slave->age(now) > SLAVE_MAX_IDLE)
+        if (slave->age(now) > SLAVE_MAX_IDLE)
         {
            // killing idle slave
            delete slave;
