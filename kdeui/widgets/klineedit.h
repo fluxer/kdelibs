@@ -583,10 +583,6 @@ protected:
 
     virtual void paintEvent( QPaintEvent *ev );
 
-    virtual void focusInEvent( QFocusEvent *ev );
-
-    virtual void focusOutEvent( QFocusEvent *ev );
-
 private Q_SLOTS:
     void completionMenuActivated( QAction *act );
     void tripleClickTimeout();  // resets possibleTripleClick

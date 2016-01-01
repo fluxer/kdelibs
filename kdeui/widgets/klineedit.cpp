@@ -1793,16 +1793,6 @@ void KLineEdit::paintEvent( QPaintEvent *ev )
     }
 }
 
-void KLineEdit::focusInEvent( QFocusEvent *ev )
-{
-    QLineEdit::focusInEvent( ev );
-}
-
-void KLineEdit::focusOutEvent( QFocusEvent *ev )
-{
-    QLineEdit::focusOutEvent( ev );
-}
-
 void KLineEdit::setClickMessage( const QString &msg )
 {
     d->enableClickMsg = !msg.isEmpty();
