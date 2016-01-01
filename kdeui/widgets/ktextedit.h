@@ -403,7 +403,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * Reimplemented to paint clickMessage.
      */
     virtual void paintEvent(QPaintEvent *);
-    virtual void focusOutEvent(QFocusEvent *);
 
     /**
      * Reimplemented for internal reasons

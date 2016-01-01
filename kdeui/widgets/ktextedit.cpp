@@ -1148,11 +1148,6 @@ void KTextEdit::paintEvent(QPaintEvent *ev)
     }
 }
 
-void KTextEdit::focusOutEvent(QFocusEvent *ev)
-{
-    QTextEdit::focusOutEvent(ev);
-}
-
 void KTextEdit::showAutoCorrectButton(bool show)
 {
     d->showAutoCorrectionButton = show;
