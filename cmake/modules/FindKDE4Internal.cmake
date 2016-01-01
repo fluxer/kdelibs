@@ -288,10 +288,15 @@ set(QT_USE_IMPORTED_TARGETS TRUE)
 
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
-set(KATIE_COMPAT TRUE)
+option(WITH_KATIE "Build against Katie instead of Qt4" OFF)
+add_feature_info(katie WITH_KATIE "Building against Katie is EXPERIMENTAL")
+
 find_package(Katie)
-if(NOT KATIE_FOUND)
+if(WITH_KATIE AND NOT KATIE_FOUND)
     find_package(Qt4 ${_REQ_STRING_KDE4})
+else()
+    # avoid the need to check WITH_KATIE in addition to KATIE_FOUND
+    set(KATIE_FOUND FALSE)
 endif()
 
 # Perl is not required for building KDE software but is during runtime from
