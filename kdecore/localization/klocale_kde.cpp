@@ -2672,11 +2672,8 @@ void KLocalePrivate::initFileNameEncoding()
     m_utf8FileEncoding = !qgetenv("KDE_UTF8_FILENAMES").isEmpty();
     if (!m_utf8FileEncoding) {
         const QByteArray ctype = setlocale(LC_CTYPE, 0);
-        int indexOfDot = ctype.indexOf('.');
-        if (indexOfDot != -1) {
-            if (!qstrnicmp(ctype.data() + indexOfDot + 1, "UTF-8", 5)) {
-                m_utf8FileEncoding = true;
-            }
+        if (ctype.endsWith("UTF-8")) {
+            m_utf8FileEncoding = true;
             return;
         }
         QByteArray lang = qgetenv("LC_ALL");
@@ -2686,11 +2683,9 @@ void KLocalePrivate::initFileNameEncoding()
         if (lang.isEmpty() || lang == "C") {
             lang = qgetenv("LANG");
         }
-        indexOfDot = lang.indexOf('.');
-        if (indexOfDot != -1) {
-            if (!qstrnicmp(lang.data() + indexOfDot + 1, "UTF-8", 5)) {
-                m_utf8FileEncoding = true;
-            }
+        if (lang.endsWith("UTF-8")) {
+            m_utf8FileEncoding = true;
+            return;
         }
     }
     // Otherwise, stay with QFile's default filename encoding functions
