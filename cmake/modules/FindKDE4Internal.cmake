@@ -289,7 +289,6 @@ set(QT_USE_IMPORTED_TARGETS TRUE)
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
 option(WITH_KATIE "Build against Katie instead of Qt4" OFF)
-add_feature_info(katie WITH_KATIE "Building against Katie is EXPERIMENTAL")
 
 find_package(Katie)
 if(WITH_KATIE AND NOT KATIE_FOUND)
