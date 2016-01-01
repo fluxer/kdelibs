@@ -1208,11 +1208,6 @@ int KStandardDirs::findAllExe( QStringList& list, const QString& appname,
     return list.count();
 }
 
-static inline QString equalizePath(QString &str)
-{
-        return str;
-}
-
 static void tokenize(QStringList& tokens, const QString& str,
                     const QString& delim)
 {
@@ -1221,14 +1216,14 @@ static void tokenize(QStringList& tokens, const QString& str,
 
     for(int index = 0; index < len; index++) {
         if (delim.contains(str[index])) {
-            tokens.append(equalizePath(token));
+            tokens.append(token);
             token.clear();
         } else {
             token += str[index];
         }
     }
     if (!token.isEmpty()) {
-        tokens.append(equalizePath(token));
+        tokens.append(token);
     }
 }
 
