@@ -282,7 +282,7 @@ public:
     QString mLockFileName;
     QMutex mMutex;
 
-    quint32 mTimestamp;
+    time_t mTimestamp;
     quint32 mCacheId;  // Unique id, will change when cache is recreated
     int mCacheLimit;
     RemoveStrategy mRemoveStrategy:4;
