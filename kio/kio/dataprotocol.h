@@ -20,8 +20,6 @@
 #define DATAPROTOCOL_H
 
 // dataprotocol.* interprets the following defines
-// DATAKIOSLAVE: define if you want to compile this into a stand-alone
-//		kioslave
 // TESTKIO: define for test-driving
 // Both defines are mutually exclusive. Defining none of them compiles
 // DataProtocol for internal usage within libkiocore.
@@ -34,18 +32,13 @@
  * However, given that data-urls don't depend on any external data it seemed
  * overkill, therefore I added a special hack that the kio-dataslave is invoked
  * in-process on the client side.
- *
- * Hence, by defining DATAKIOSLAVE you can disable this special hack and compile
- * dataprotocol.* into a standalone kioslave.
  */
 
 class QByteArray;
 
 class KUrl;
 
-#if defined(DATAKIOSLAVE)
-#  include <kio/slavebase.h>
-#elif !defined(TESTKIO)
+#if !defined(TESTKIO)
 #  include "kio/dataslave.h"
 #endif
 
@@ -55,20 +48,14 @@ namespace KIO {
  * @see http://www.ietf.org/rfc/rfc2397.txt
  * @author Leo Savernik
  */
-#if defined(DATAKIOSLAVE)
-class DataProtocol : public KIO::SlaveBase {
-#elif defined(TESTKIO)
+#if defined(TESTKIO)
 class DataProtocol : public TestSlave {
 #else
 class DataProtocol : public DataSlave {
 #endif
 
 public:
-#if defined(DATAKIOSLAVE)
-  DataProtocol(const QByteArray &pool_socket, const QByteArray &app_socket);
-#else
   DataProtocol();
-#endif
   virtual ~DataProtocol();
   virtual void mimetype(const KUrl &url);
   virtual void get(const KUrl &url);

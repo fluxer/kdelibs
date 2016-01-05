@@ -28,39 +28,7 @@
 #include <QtCore/qstringlist.h>
 #include <QtCore/QTextCodec>
 
-#ifdef DATAKIOSLAVE
-#  include <kinstance.h>
-#  include <stdlib.h>
-#endif
-
-#if !defined(DATAKIOSLAVE)
-#  define DISPATCH(f) dispatch_##f
-#else
-#  define DISPATCH(f) f
-#endif
-
 using namespace KIO;
-#ifdef DATAKIOSLAVE
-extern "C" {
-
-  int kdemain( int argc, char **argv ) {
-    KComponentData componentData( "kio_data" );
-
-    kDebug(7101) << "*** Starting kio_data ";
-
-    if (argc != 4) {
-      kDebug(7101) << "Usage: kio_data  protocol domain-socket1 domain-socket2";
-      exit(-1);
-    }
-
-    DataProtocol slave(argv[2], argv[3]);
-    slave.dispatchLoop();
-
-    kDebug(7101) << "*** kio_data Done";
-    return 0;
-  }
-}
-#endif
 
 /** structure containing header information */
 struct DataHeader {
@@ -235,12 +203,7 @@ static DataHeader parseDataHeader(const KUrl &url, const bool mimeOnly)
   return header_info;
 }
 
-#ifdef DATAKIOSLAVE
-DataProtocol::DataProtocol(const QByteArray &pool_socket, const QByteArray &app_socket)
-	: SlaveBase("kio_data", pool_socket, app_socket) {
-#else
 DataProtocol::DataProtocol() {
-#endif
   kDebug();
 }
 
@@ -283,14 +246,7 @@ void DataProtocol::get(const KUrl& url) {
   totalSize(outData.size());
 
   //kDebug() << "emit setMetaData@"<<this;
-#if defined(DATAKIOSLAVE)
-  MetaData::ConstIterator it;
-  for (it = hdr.attributes.constBegin(); it != hdr.attributes.constEnd(); ++it) {
-    setMetaData(it.key(),it.value());
-  }/*next it*/
-#else
   setAllMetaData(hdr.attributes);
-#endif
 
   //kDebug() << "emit sendMetaData@"<<this;
   sendMetaData();
@@ -298,9 +254,9 @@ void DataProtocol::get(const KUrl& url) {
   // empiric studies have shown that this shouldn't be queued & dispatched
   data(outData);
 //   kDebug() << "(2) queue size " << dispatchQueue.size();
-  DISPATCH(data(QByteArray()));
+  dispatch_data(QByteArray());
 //   kDebug() << "(3) queue size " << dispatchQueue.size();
-  DISPATCH(finished());
+  dispatch_finished();
 //   kDebug() << "(4) queue size " << dispatchQueue.size();
   deref();
 }
