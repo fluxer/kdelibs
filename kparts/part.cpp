@@ -134,11 +134,6 @@ QObject *PartBase::partObject() const
     return d->m_obj;
 }
 
-void PartBase::setComponentData(const KComponentData &componentData)
-{
-    setComponentData(componentData, true);
-}
-
 void PartBase::setComponentData(const KComponentData &componentData, bool bLoadPlugins)
 {
     Q_D(PartBase);
