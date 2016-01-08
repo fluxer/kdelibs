@@ -97,7 +97,7 @@ protected:
    * KParts::MainWindow, plugins are automatically loaded in createGUI anyway,
    * so set loadPlugins to false for KParts::MainWindow as well).
    */
-  virtual void setComponentData(const KComponentData &componentData, bool loadPlugins=true);
+  virtual void setComponentData(const KComponentData &componentData, bool loadPlugins = true);
     // In the case of KParts MainWindows, plugins are automatically loaded in createGUI anyway,
     // so setComponentData() should really not load the plugins.
 

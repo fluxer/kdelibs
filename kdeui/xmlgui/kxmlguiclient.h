@@ -310,7 +310,7 @@ protected:
    * Call this first in the inherited class constructor.
    * (At least before setXMLFile().)
    */
-  virtual void setComponentData(const KComponentData &componentData);
+  virtual void setComponentData(const KComponentData &componentData, bool loadPlugins = true);
 
   /**
    * Sets the name of the rc file containing the XML for the part.

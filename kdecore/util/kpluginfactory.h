@@ -395,15 +395,6 @@ protected:
     KPluginFactoryPrivate *const d_ptr;
 
     /**
-     * @deprecated
-     */
-
-    /**
-     * @deprecated
-     */
-
-
-    /**
      * This method sets the component data of the plugin. You can access the component data object
      * later with componentData().
      * Normally you don't have to call this, because the factory constructs a component data object

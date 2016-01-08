@@ -213,10 +213,10 @@ bool Plugin::hasPlugin( QObject* parent, const QString& library )
   return false;
 }
 
-void Plugin::setComponentData(const KComponentData &componentData)
+void Plugin::setComponentData(const KComponentData &componentData, bool loadPlugins)
 {
     KGlobal::locale()->insertCatalog(componentData.catalogName());
-    KXMLGUIClient::setComponentData(componentData);
+    KXMLGUIClient::setComponentData(componentData, loadPlugins);
 }
 
 void Plugin::loadPlugins(QObject *parent, KXMLGUIClient* parentGUIClient,

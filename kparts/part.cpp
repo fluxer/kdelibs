@@ -138,7 +138,7 @@ void PartBase::setComponentData(const KComponentData &componentData, bool bLoadP
 {
     Q_D(PartBase);
 
-    KXMLGUIClient::setComponentData(componentData);
+    KXMLGUIClient::setComponentData(componentData, bLoadPlugins);
     KGlobal::locale()->insertCatalog(componentData.catalogName());
     // install 'instancename'data resource type
     KGlobal::dirs()->addResourceType(QString(componentData.componentName() + "data").toUtf8(),

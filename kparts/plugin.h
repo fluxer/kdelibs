@@ -171,7 +171,7 @@ protected:
      */
     static Plugin* loadPlugin( QObject * parent, const QString &libname, const QString &keyword = QString() );
 
-    virtual void setComponentData(const KComponentData &instance);
+    virtual void setComponentData(const KComponentData &instance, bool loadPlugins = true);
 
 private:
     static bool hasPlugin( QObject* parent, const QString& library );
