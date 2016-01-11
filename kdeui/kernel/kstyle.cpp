@@ -2652,6 +2652,7 @@ int KStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QW
         case PM_ExclusiveIndicatorHeight:
             return widgetLayoutProp(WT_RadioButton, RadioButton::Size, option, widget);
 
+#ifndef QT_KATIE
         case PM_CheckListControllerSize:
         case PM_CheckListButtonSize:
         {
@@ -2659,6 +2660,7 @@ int KStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QW
             int radioButtonSize = widgetLayoutProp(WT_RadioButton, RadioButton::Size, option, widget);
             return qMax(checkBoxSize, radioButtonSize);
         }
+#endif // QT_KATIE
 
         case PM_DockWidgetFrameWidth:
             return widgetLayoutProp(WT_DockWidget, DockWidget::FrameWidth, option, widget);
@@ -3163,6 +3165,7 @@ void  KStyle::drawComplexControl (ComplexControl cc, const QStyleOptionComplex* 
         }
         break;
 
+#ifndef QT_KATIE
         case CC_Q3ListView:
         {
             const QStyleOptionQ3ListView* lvOpt = qstyleoption_cast<const QStyleOptionQ3ListView*>(opt);
@@ -3266,6 +3269,7 @@ void  KStyle::drawComplexControl (ComplexControl cc, const QStyleOptionComplex* 
             } //if have branch or expander
         } //CC_Q3ListView
         break;
+#endif // QT_KATIE
 
         case CC_Slider:
         {
