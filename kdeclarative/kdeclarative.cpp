@@ -193,17 +193,9 @@ void KDeclarative::setupQmlJsDebugger()
             return;
         }
 
-        QScriptEngineDebugger debugger;
-        debugger.attachTo(engine);
-        QMainWindow *dbgwindow = debugger.standardWindow();
-        QWidget *dbgwidget = new QWidget();
-        QGridLayout *dbglayout = new QGridLayout();
-        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::CodeWidget));
-        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ConsoleWidget));
-        dbglayout->addWidget(debugger.widget(QScriptEngineDebugger::ErrorLogWidget));
-        dbgwidget->setLayout(dbglayout);
-        dbgwindow->setCentralWidget(dbgwidget);
-        dbgwindow->show();
+        QScriptEngineDebugger *debugger = new QScriptEngineDebugger;
+        debugger->attachTo(engine);
+        debugger->standardWindow()->show();
     }
 #endif
 }
