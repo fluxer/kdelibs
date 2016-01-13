@@ -155,7 +155,7 @@ void Containment::init()
     setFlag(QGraphicsItem::ItemIsMovable, false);
     setFlag(QGraphicsItem::ItemClipsChildrenToShape, true);
     setAcceptDrops(true);
-    setAcceptsHoverEvents(true);
+    setAcceptHoverEvents(true);
 
     if (d->type == NoContainmentType) {
         setContainmentType(DesktopContainment);

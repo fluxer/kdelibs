@@ -147,11 +147,7 @@ void DirectorySizeJobPrivate::startNextJob( const KUrl & url )
 
 void DirectorySizeJobPrivate::slotEntries( KIO::Job*, const KIO::UDSEntryList & list )
 {
-    KIO::UDSEntryList::ConstIterator it = list.begin();
-    const KIO::UDSEntryList::ConstIterator end = list.end();
-    for (; it != end; ++it) {
-
-        const KIO::UDSEntry& entry = *it;
+    foreach (const KIO::UDSEntry& entry, list) {
         const long device = entry.numberValue(KIO::UDSEntry::UDS_DEVICE_ID, 0);
         if (device) {
             // Hard-link detection (#67939)

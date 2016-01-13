@@ -363,7 +363,7 @@ void Applet::setFailedToLaunch(bool failed, const QString &reason)
 {
     if (d->failed == failed) {
         if (failed && !reason.isEmpty()) {
-            foreach (QGraphicsItem *item, QGraphicsItem::children()) {
+            foreach (QGraphicsItem *item, QGraphicsItem::childItems()) {
                 Label *l = dynamic_cast<Label *>(item);
                 if (l) {
                     l->setText(d->visibleFailureText(reason));
@@ -564,7 +564,7 @@ void AppletPrivate::cleanUpAndDelete()
 void AppletPrivate::createMessageOverlay(bool usePopup)
 {
     if (messageOverlay) {
-        qDeleteAll(messageOverlay->children());
+        qDeleteAll(messageOverlay->childItems());
         messageOverlay->setLayout(0);
     }
 
@@ -616,7 +616,7 @@ void AppletPrivate::positionMessageOverlay()
 
     // raise the overlay above all the other children!
     int zValue = 100;
-    foreach (QGraphicsItem *child, topItem->children()) {
+    foreach (QGraphicsItem *child, topItem->childItems()) {
         if (child->zValue() > zValue) {
             zValue = child->zValue() + 1;
         }
@@ -2611,7 +2611,7 @@ void AppletPrivate::init(const QString &packagePath)
     // WARNING: do not access config() OR globalConfig() in this method!
     //          that requires a scene, which is not available at this point
     q->setCacheMode(Applet::DeviceCoordinateCache);
-    q->setAcceptsHoverEvents(true);
+    q->setAcceptHoverEvents(true);
     q->setFlag(QGraphicsItem::ItemIsFocusable, true);
     q->setFocusPolicy(Qt::ClickFocus);
     // FIXME: adding here because nothing seems to be doing it in QGraphicsView,

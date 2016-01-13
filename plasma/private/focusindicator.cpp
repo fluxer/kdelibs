@@ -55,7 +55,7 @@ void FocusIndicator::init(QGraphicsWidget *parent)
 {
     setVisible(!Theme::defaultTheme()->useNativeWidgetStyle());
     setFlag(QGraphicsItem::ItemStacksBehindParent);
-    setAcceptsHoverEvents(true);
+    setAcceptHoverEvents(true);
 
     m_background->setCacheAllRenderedFrames(true);
 

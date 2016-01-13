@@ -96,7 +96,7 @@ AppletHandle::AppletHandle(Containment *containment, Applet *applet, const QPoin
     connect(m_leaveTimer, SIGNAL(timeout()), this, SLOT(leaveTimeout()));
     connect(m_applet, SIGNAL(appletDestroyed(Plasma::Applet*)), this, SLOT(appletDestroyed()));
 
-    setAcceptsHoverEvents(true);
+    setAcceptHoverEvents(true);
     m_hoverTimer->start();
 
     //icons
@@ -999,7 +999,7 @@ void AppletHandle::startFading(FadeType anim, const QPointF &hoverPos, bool pres
 
 void AppletHandle::forceDisappear()
 {
-    setAcceptsHoverEvents(false);
+    setAcceptHoverEvents(false);
     startFading(FadeOut, m_entryPos);
 }
 

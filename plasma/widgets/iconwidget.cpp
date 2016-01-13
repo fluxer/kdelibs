@@ -389,7 +389,7 @@ void IconWidgetPrivate::init()
     QObject::connect(KGlobalSettings::self(), SIGNAL(iconChanged(int)), q, SLOT(iconConfigChanged()));
 
     // setAcceptedMouseButtons(Qt::LeftButton);
-    q->setAcceptsHoverEvents(true);
+    q->setAcceptHoverEvents(true);
     q->setCacheMode(QGraphicsItem::DeviceCoordinateCache);
 
     background = new Plasma::FrameSvg(q);

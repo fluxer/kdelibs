@@ -224,7 +224,7 @@ ExtenderItem::ExtenderItem(Extender *hostExtender, uint extenderItemId)
     //show or hide the toolbox interface itmems
     d->updateToolBox();
 
-    setAcceptsHoverEvents(true);
+    setAcceptHoverEvents(true);
 
     connect(Plasma::Theme::defaultTheme(), SIGNAL(themeChanged()), this, SLOT(themeChanged()));
     d->setMovable(d->extender->d->applet.data()->immutability() == Plasma::Mutable);
