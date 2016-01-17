@@ -297,10 +297,10 @@ if(WITH_KATIE)
     find_package(Katie)
 endif()
 if(NOT KATIE_FOUND)
-    find_package(Qt4 ${_REQ_STRING_KDE4})
-else()
     # avoid the need to check WITH_KATIE in addition to KATIE_FOUND
     set(KATIE_FOUND FALSE)
+
+    find_package(Qt4 ${_REQ_STRING_KDE4})
 endif()
 
 # Perl is not required for building KDE software but is during runtime from
