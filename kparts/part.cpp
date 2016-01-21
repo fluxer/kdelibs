@@ -364,20 +364,19 @@ class ReadOnlyPartPrivate: public PartPrivate
 public:
     Q_DECLARE_PUBLIC(ReadOnlyPart)
 
-    ReadOnlyPartPrivate(ReadOnlyPart *q): PartPrivate(q)
+    ReadOnlyPartPrivate(ReadOnlyPart *q): PartPrivate(q),
+        m_job(0),
+        m_statJob(0),
+        m_uploadJob(0),
+        m_showProgressInfo(true),
+        m_saveOk(false),
+        m_waitForSave(false),
+        m_duringSaveAs(false),
+        m_bTemp(false),
+        m_bAutoDetectedMime(false),
+        m_url(0),
+        m_file("")
     {
-        m_job = 0;
-        m_statJob = 0;
-        m_uploadJob = 0;
-        m_showProgressInfo = true;
-        m_saveOk = false;
-        m_waitForSave = false;
-        m_duringSaveAs = false;
-        m_bTemp = false;
-        m_bAutoDetectedMime = false;
-        m_url = 0;
-        m_file = 0;
-        m_arguments = 0;
     }
 
     ~ReadOnlyPartPrivate()
