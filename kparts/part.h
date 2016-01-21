@@ -510,10 +510,6 @@ public:
      */
     bool isProgressInfoEnabled() const;
 
-#ifndef KDE_NO_COMPAT
-    void showProgressInfo( bool show );
-#endif
-
 public Q_SLOTS:
     /**
      * Only reimplement openUrl if you don't want the network transparency support

@@ -502,15 +502,6 @@ bool ReadOnlyPart::isProgressInfoEnabled() const
     return d->m_showProgressInfo;
 }
 
-#ifndef KDE_NO_COMPAT
-void ReadOnlyPart::showProgressInfo( bool show )
-{
-    Q_D(ReadOnlyPart);
-
-    d->m_showProgressInfo = show;
-}
-#endif
-
 bool ReadOnlyPart::openUrl( const KUrl &url )
 {
     Q_D(ReadOnlyPart);
