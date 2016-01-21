@@ -140,15 +140,6 @@ public:
      * @return flags for this plugin
      */
     virtual Flags flags() const;
-};
-
-/**
- * @since 4.7
- */
-class KIO_EXPORT ThumbCreatorV2 : public ThumbCreator
-{
-public:
-    virtual ~ThumbCreatorV2();
 
     /**
      * Creates a widget that allows to configure the
@@ -167,7 +158,7 @@ public:
     /**
      * Writes the configuration that is specified by \p configurationWidget.
      * The passed configuration widget is the instance created by
-     * ThumbCreatorV2::createConfigurationWidget().
+     * ThumbCreator::createConfigurationWidget().
      */
     virtual void writeConfiguration(const QWidget* configurationWidget);
 };
