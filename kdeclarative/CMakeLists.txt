@@ -38,9 +38,12 @@ target_link_libraries(kdeclarative
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QT_QTSCRIPT_LIBRARY}
-    ${QT_QTSCRIPTTOOLS_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
 )
+
+if(KATIE_FOUND)
+    target_link_libraries(kdeclarative ${QT_QTSCRIPTTOOLS_LIBRARY})
+endif()
 
 if(ENABLE_TESTING)
     add_subdirectory(tests)
