@@ -375,6 +375,9 @@ public:
         m_duringSaveAs = false;
         m_bTemp = false;
         m_bAutoDetectedMime = false;
+        m_url = 0;
+        m_file = 0;
+        m_arguments = 0;
     }
 
     ~ReadOnlyPartPrivate()
