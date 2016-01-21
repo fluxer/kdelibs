@@ -76,7 +76,6 @@ set(kiocore_STAT_SRCS
     kio/dataslave.cpp
     kio/davjob.cpp
     kio/defaultviewadapter.cpp
-    kio/delegateanimationhandler.cpp
     kio/deletejob.cpp
     kio/directorysizejob.cpp
     kio/filejob.cpp
