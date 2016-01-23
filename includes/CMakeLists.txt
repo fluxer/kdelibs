@@ -252,8 +252,6 @@ install(
     KPassivePopupMessageHandler
     KPasswordDialog
     KPasteTextAction
-    KPixmapCache
-    KPixmapProvider
     KPixmapRegionSelectorDialog
     KPixmapRegionSelectorWidget
     KPlotAxis
@@ -380,7 +378,6 @@ install(
     KUrlCompletion
     KUrlLabel
     KUrlNavigator
-    KUrlPixmapProvider
     KUrlRequester
     KUrlRequesterDialog
     KUser
