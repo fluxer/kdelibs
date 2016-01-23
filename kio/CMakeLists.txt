@@ -114,7 +114,6 @@ set(kiocore_STAT_SRCS
     kio/kshellcompletion.cpp
     kio/kurifilter.cpp
     kio/kurlcompletion.cpp
-    kio/kurlpixmapprovider.cpp
     kio/metainfojob.cpp
     kio/netaccess.cpp
     kio/paste.cpp
@@ -413,7 +412,6 @@ install(
     kio/kshellcompletion.h
     kio/kurifilter.h
     kio/kurlcompletion.h
-    kio/kurlpixmapprovider.h
     kio/predicateproperties.h
     kfile/kabstractfilemodule.h
     kfile/kabstractfilewidget.h

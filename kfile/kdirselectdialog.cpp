@@ -47,7 +47,6 @@
 #include <krecentdirs.h>
 #include <ktoggleaction.h>
 #include <kurlcompletion.h>
-#include <kurlpixmapprovider.h>
 #include <kdebug.h>
 #include <kpropertiesdialog.h>
 #include <kpushbutton.h>
@@ -297,7 +296,6 @@ KDirSelectDialog::KDirSelectDialog(const KUrl &startDir, bool localOnly,
     d->m_urlCombo->setLayoutDirection( Qt::LeftToRight );
     d->m_urlCombo->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
     d->m_urlCombo->setTrapReturnKey( true );
-    d->m_urlCombo->setPixmapProvider( new KUrlPixmapProvider() );
     KUrlCompletion *comp = new KUrlCompletion();
     comp->setMode( KUrlCompletion::DirCompletion );
     d->m_urlCombo->setCompletionObject( comp, true );

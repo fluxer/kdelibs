@@ -30,17 +30,16 @@
 
 #include <klocale.h>
 #include <knotification.h>
-#include <kpixmapprovider.h>
 #include <kstandardshortcut.h>
 #include <kicontheme.h>
 #include <kicon.h>
-
+#include <kiconloader.h>
 #include <kdebug.h>
 
 class KHistoryComboBox::Private
 {
 public:
-    Private(KHistoryComboBox *q): q(q), myPixProvider(0) {}
+    Private(KHistoryComboBox *q): q(q) {}
 
     KHistoryComboBox *q;
 
@@ -59,7 +58,6 @@ public:
      * Needed to allow going back after rotation.
      */
     bool myRotated;
-    KPixmapProvider *myPixProvider;
 };
 
 // we are always read-write
@@ -88,7 +86,6 @@ void KHistoryComboBox::init( bool useCompletion )
     setInsertPolicy( NoInsert );
     d->myIterateIndex = -1;
     d->myRotated = false;
-    d->myPixProvider = 0L;
 
     // obey HISTCONTROL setting
     QByteArray histControl = qgetenv("HISTCONTROL");
@@ -106,7 +103,6 @@ void KHistoryComboBox::init( bool useCompletion )
 
 KHistoryComboBox::~KHistoryComboBox()
 {
-    delete d->myPixProvider;
     delete d;
 }
 
@@ -204,10 +200,8 @@ void KHistoryComboBox::addToHistory( const QString& item )
     }
 
     // now add the item
-    if ( d->myPixProvider )
-        insertItem( 0, d->myPixProvider->pixmapFor(item, iconSize().height()), item);
-    else
-        insertItem( 0, item );
+    const QPixmap pixmap = KIconLoader::global()->loadMimeTypeIcon( item, KIconLoader::Desktop, iconSize().height() );
+    insertItem( 0, pixmap, item );
 
     if ( wasCurrent )
         setCurrentIndex( 0 );
@@ -373,25 +367,6 @@ void KHistoryComboBox::slotReset()
     d->myRotated = false;
 }
 
-
-void KHistoryComboBox::setPixmapProvider( KPixmapProvider *prov )
-{
-    if ( d->myPixProvider == prov )
-        return;
-
-    delete d->myPixProvider;
-    d->myPixProvider = prov;
-
-    // re-insert all the items with/without pixmap
-    // I would prefer to use changeItem(), but that doesn't honor the pixmap
-    // when using an editable combobox (what we do)
-    if ( count() > 0 ) {
-        QStringList items( historyItems() );
-        clear();
-        insertItems( items );
-    }
-}
-
 void KHistoryComboBox::insertItems( const QStringList& items )
 {
     QStringList::ConstIterator it = items.constBegin();
@@ -400,11 +375,8 @@ void KHistoryComboBox::insertItems( const QStringList& items )
     while ( it != itEnd ) {
         const QString item = *it;
         if ( !item.isEmpty() ) { // only insert non-empty items
-            if ( d->myPixProvider )
-                addItem( d->myPixProvider->pixmapFor(item, iconSize().height()),
-                            item );
-            else
-                addItem( item );
+            const QPixmap pixmap = KIconLoader::global()->loadMimeTypeIcon( item, KIconLoader::Desktop, iconSize().height() );
+            addItem( item );
         }
         ++it;
     }
@@ -433,11 +405,6 @@ void KHistoryComboBox::slotSimulateActivated( const QString& text )
     else if (insertPolicy() != InsertAtCurrent && count() >= maxCount()) {
         emit activated(text);
     }
-}
-
-KPixmapProvider *KHistoryComboBox::pixmapProvider() const
-{
-  return d->myPixProvider;
 }
 
 void KHistoryComboBox::reset()

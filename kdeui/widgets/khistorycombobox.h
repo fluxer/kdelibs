@@ -24,8 +24,6 @@
 
 #include <kcombobox.h>
 
-class KPixmapProvider;
-
 /**
  * @short A combobox for offering a history and completion
  *
@@ -155,27 +153,6 @@ public:
     bool removeFromHistory( const QString& item );
 
     /**
-     * Sets a pixmap provider, so that items in the combobox can have a pixmap.
-     * KPixmapProvider is just an abstract class with the one pure virtual
-     * method KPixmapProvider::pixmapFor(). This method is called whenever
-     * an item is added to the KHistoryComboBoxBox. Implement it to return your
-     * own custom pixmaps, or use the KUrlPixmapProvider from libkio,
-     * which uses KMimeType::pixmapForUrl to resolve icons.
-     *
-     * Set @p prov to 0L if you want to disable pixmaps. Default no pixmaps.
-     *
-     * @see pixmapProvider
-     */
-    void setPixmapProvider( KPixmapProvider *prov );
-
-    /**
-     * @returns the current pixmap provider.
-     * @see setPixmapProvider
-     * @see KPixmapProvider
-     */
-    KPixmapProvider * pixmapProvider() const;
-
-    /**
      * Resets the current position of the up/down history. Call this
      * when you manually call setCurrentItem() or clearEdit().
      */
@@ -228,12 +205,12 @@ protected:
     virtual void wheelEvent( QWheelEvent *ev );
 
     /**
-     * Inserts @p items into the combo, honoring pixmapProvider()
+     * Inserts @p items into the combo,
      * Does not update the completionObject.
      *
      * Note: duplicatesEnabled() is not honored here.
      *
-     * Called from setHistoryItems() and setPixmapProvider()
+     * Called from setHistoryItems()
      */
     void insertItems( const QStringList& items );
 

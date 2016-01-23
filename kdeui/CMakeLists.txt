@@ -125,7 +125,6 @@ set(kdeui_LIB_SRCS
     icons/kicon.cpp
     icons/kiconloader.cpp
     icons/kicontheme.cpp
-    icons/kiconcache.cpp
     itemviews/kbreadcrumbselectionmodel.cpp
     itemviews/kcheckableproxymodel.cpp
     itemviews/klinkitemselectionmodel.cpp
@@ -200,8 +199,6 @@ set(kdeui_LIB_SRCS
     util/knumvalidator.cpp
     util/kpassivepopup.cpp
     util/kpassivepopupmessagehandler.cpp
-    util/kpixmapcache.cpp
-    util/kpixmapprovider.cpp
     util/kstandardguiitem.cpp
     util/kwallet.cpp
     util/kwordwrap.cpp
@@ -517,7 +514,6 @@ install(
     icons/k3icon_p.h
     icons/kiconloader.h
     icons/kicontheme.h
-    icons/kiconcache.h
     itemviews/kbreadcrumbselectionmodel.h
     itemviews/kcheckableproxymodel.h
     itemviews/klinkitemselectionmodel.h
@@ -579,8 +575,6 @@ install(
     util/knumvalidator.h
     util/kpassivepopup.h
     util/kpassivepopupmessagehandler.h
-    util/kpixmapcache.h
-    util/kpixmapprovider.h
     util/kimagecache.h
     util/kstandardguiitem.h
     util/kwallet.h
