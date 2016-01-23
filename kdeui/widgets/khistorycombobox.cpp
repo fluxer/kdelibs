@@ -34,6 +34,7 @@
 #include <kicontheme.h>
 #include <kicon.h>
 #include <kiconloader.h>
+#include <kmimetype.h>
 #include <kdebug.h>
 
 class KHistoryComboBox::Private
@@ -200,7 +201,10 @@ void KHistoryComboBox::addToHistory( const QString& item )
     }
 
     // now add the item
-    const QPixmap pixmap = KIconLoader::global()->loadMimeTypeIcon( item, KIconLoader::Desktop, iconSize().height() );
+#warning implement icon for KUrl/QUrl into KIconLoader?
+    // the logic is the same as in KIO::pixmapForUrl() but kdeui cannot depend on kio
+    const QString iconName = KMimeType::iconNameForUrl( KUrl(item), KIconLoader::Desktop );
+    const QPixmap pixmap = KIconLoader::global()->loadMimeTypeIcon( iconName, KIconLoader::Desktop, iconSize().height() );
     insertItem( 0, pixmap, item );
 
     if ( wasCurrent )
@@ -375,7 +379,9 @@ void KHistoryComboBox::insertItems( const QStringList& items )
     while ( it != itEnd ) {
         const QString item = *it;
         if ( !item.isEmpty() ) { // only insert non-empty items
-            const QPixmap pixmap = KIconLoader::global()->loadMimeTypeIcon( item, KIconLoader::Desktop, iconSize().height() );
+            // the logic is the same as in KIO::pixmapForUrl() but kdeui cannot depend on kio
+            const QString iconName = KMimeType::iconNameForUrl( KUrl(item), KIconLoader::Desktop );
+            const QPixmap pixmap = KIconLoader::global()->loadMimeTypeIcon( iconName, KIconLoader::Desktop, iconSize().height() );
             addItem( item );
         }
         ++it;
