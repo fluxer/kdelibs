@@ -690,11 +690,6 @@ QSize Svg::size() const
     return d->size.toSize();
 }
 
-void Svg::resize(qreal width, qreal height)
-{
-    resize(QSize(width, height));
-}
-
 void Svg::resize(const QSizeF &size)
 {
     if (qFuzzyCompare(size.width(), d->size.width()) &&

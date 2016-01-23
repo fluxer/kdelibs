@@ -177,10 +177,9 @@ class PLASMA_EXPORT Svg : public QObject
          * image will be scaled to this size and each element will be
          * scaled appropriately.
          *
-         * @param width   the new width
-         * @param height  the new height
+         * @param size  the new size of the image
          **/
-        Q_INVOKABLE void resize(qreal width, qreal height);
+        Q_INVOKABLE void resize(const QSizeF &size);
 
         /**
          * Resizes the rendered image.
@@ -192,9 +191,10 @@ class PLASMA_EXPORT Svg : public QObject
          * image will be scaled to this size and each element will be
          * scaled appropriately.
          *
-         * @param size  the new size of the image
+         * @param width   the new width
+         * @param height  the new height
          **/
-        Q_INVOKABLE void resize(const QSizeF &size);
+        Q_INVOKABLE inline void resize(qreal width, qreal height) { resize(QSize(width, height)); }
 
         /**
          * Resizes the rendered image to the natural size of the SVG.
