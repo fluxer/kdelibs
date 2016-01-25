@@ -382,7 +382,7 @@ void KHistoryComboBox::insertItems( const QStringList& items )
             // the logic is the same as in KIO::pixmapForUrl() but kdeui cannot depend on kio
             const QString iconName = KMimeType::iconNameForUrl( KUrl(item), KIconLoader::Desktop );
             const QPixmap pixmap = KIconLoader::global()->loadMimeTypeIcon( iconName, KIconLoader::Desktop, iconSize().height() );
-            addItem( item );
+            addItem( pixmap, item );
         }
         ++it;
     }
