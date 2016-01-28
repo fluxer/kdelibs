@@ -371,7 +371,6 @@ install(
 install(
     FILES
     data/services/plasma-applet-extenderapplet.desktop
-    data/services/plasma.protocol
     DESTINATION ${SERVICES_INSTALL_DIR}
 )
 

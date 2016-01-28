@@ -104,7 +104,6 @@ public:
     void appletAppearAnimationComplete();
     void appletAppeared(Applet*);
     void clearDataForMimeJob(KIO::Job *job);
-    void remoteAppletReady(Plasma::AccessAppletJob *job);
     void mimeTypeRetrieved(KIO::Job *job, const QString &mimetype);
     void dropJobResult(KJob *);
     void addContainmentActions(KMenu &desktopMenu, QEvent *event);

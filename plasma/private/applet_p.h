@@ -192,7 +192,6 @@ public:
     QWeakPointer<KKeySequenceWidget> shortcutEditor; //TODO: subclass KConfigDialog and encapsulate this in there
 
     ItemStatus itemStatus;
-    QString remoteLocation;
 
     // the applet can change size policy by itself, so save the old one for eventual restore
     QSizePolicy preferredSizePolicy;
