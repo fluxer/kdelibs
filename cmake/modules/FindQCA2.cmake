@@ -21,20 +21,19 @@ if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
 else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
-
   if (NOT WIN32)
     find_package(PkgConfig)
-    pkg_check_modules(PC_QCA2 QUIET qca2)
-    set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS_OTHER})
+    pkg_check_modules(PC_QCA2 QUIET qca2 qca2-katie)
+    set(QCA2_DEFINITIONS ${PC_QCA2_qca2_CFLAGS_OTHER} ${PC_QCA2_qca2-katie_CFLAGS_OTHER})
   endif (NOT WIN32)
 
   find_library(QCA2_LIBRARIES
                 NAMES qca
-                HINTS ${PC_QCA2_LIBDIR} ${PC_QCA2_LIBRARY_DIRS}
+                HINTS ${PC_QCA2_qca2_LIBDIR} ${PC_QCA2_qca2-katie_LIBRARY_DIRS}
                 )
 
   find_path(QCA2_INCLUDE_DIR QtCrypto
-            HINTS ${PC_QCA2_INCLUDEDIR} ${PC_QCA2_INCLUDE_DIRS}
+            HINTS ${PC_QCA2_qca2_INCLUDEDIR} ${PC_QCA2_qca2-katie_INCLUDE_DIRS}
             PATH_SUFFIXES QtCrypto)
 
   include(FindPackageHandleStandardArgs)
