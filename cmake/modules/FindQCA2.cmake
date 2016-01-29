@@ -34,7 +34,7 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
 
   find_path(QCA2_INCLUDE_DIR QtCrypto
             HINTS ${PC_QCA2_qca2_INCLUDEDIR} ${PC_QCA2_qca2-katie_INCLUDE_DIRS}
-            PATH_SUFFIXES QtCrypto Qca-katie)
+            PATH_SUFFIXES QtCrypto Qca-katie/QtCrypto)
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(QCA2  DEFAULT_MSG  QCA2_LIBRARIES QCA2_INCLUDE_DIR)
