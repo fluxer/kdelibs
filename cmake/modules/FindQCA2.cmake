@@ -28,13 +28,13 @@ else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
   endif (NOT WIN32)
 
   find_library(QCA2_LIBRARIES
-                NAMES qca
+                NAMES qca qca-katie
                 HINTS ${PC_QCA2_qca2_LIBDIR} ${PC_QCA2_qca2-katie_LIBRARY_DIRS}
                 )
 
   find_path(QCA2_INCLUDE_DIR QtCrypto
             HINTS ${PC_QCA2_qca2_INCLUDEDIR} ${PC_QCA2_qca2-katie_INCLUDE_DIRS}
-            PATH_SUFFIXES QtCrypto)
+            PATH_SUFFIXES QtCrypto Qca-katie)
 
   include(FindPackageHandleStandardArgs)
   find_package_handle_standard_args(QCA2  DEFAULT_MSG  QCA2_LIBRARIES QCA2_INCLUDE_DIR)
