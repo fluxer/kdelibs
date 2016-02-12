@@ -535,12 +535,12 @@ bool KIconLoaderPrivate::initIconThemes()
     QStringList dirs;
     dirs += mpDirs->resourceDirs("icon");
     dirs += mpDirs->resourceDirs("pixmap");
+    dirs += mpDirs->resourceDirs("pixmaps");
     dirs += mpDirs->resourceDirs("xdgdata-icon");
-    dirs += "/usr/share/pixmaps";
     // These are not in the icon spec, but e.g. GNOME puts some icons there anyway.
     dirs += mpDirs->resourceDirs("xdgdata-pixmap");
-    for (QStringList::ConstIterator it = dirs.constBegin(); it != dirs.constEnd(); ++it)
-        mpDirs->addResourceDir("appicon", *it);
+    foreach (const QString it, dirs)
+        mpDirs->addResourceDir("appicon", it);
 
 #ifndef NDEBUG
     QString dbgString = "Theme tree: ";
