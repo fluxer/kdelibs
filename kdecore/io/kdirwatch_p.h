@@ -60,6 +60,7 @@ class QSocketNotifier;
 
 #include <sys/time.h>
 #include <sys/param.h> // ino_t
+#include <sys/stat.h> // ino_t
 #include <ctime>
 
 
