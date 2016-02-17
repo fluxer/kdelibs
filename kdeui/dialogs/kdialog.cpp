@@ -537,7 +537,7 @@ static QRect screenRect( QWidget *widget, int screen )
        cg.readEntry( "XineramaEnabled", true ) &&
        cg.readEntry( "XineramaPlacementEnabled", true ) ) {
 
-    if ( screen < 0 || screen >= desktop->numScreens() ) {
+    if ( screen < 0 || screen >= desktop->screenCount() ) {
       if ( screen == -1 )
         screen = desktop->primaryScreen();
       else if ( screen == -3 )
