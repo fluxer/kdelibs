@@ -255,40 +255,14 @@ bool KDesktopFile::tryExec() const
   QString te = d->desktopGroup.readEntry("TryExec", QString());
 
   if (!te.isEmpty()) {
-    if (!QDir::isRelativePath(te)) {
-      if (KDE::access(te, X_OK))
-        return false;
-    } else {
-      // !!! Sergey A. Sukiyazov <corwin@micom.don.ru> !!!
-      // Environment PATH may contain filenames in 8bit locale specified
-      // encoding (Like a filenames).
-      const QStringList dirs = QFile::decodeName(qgetenv("PATH"))
-        .split(QLatin1Char(KPATH_SEPARATOR), QString::SkipEmptyParts);
-      QStringList::ConstIterator it(dirs.begin());
-      bool match = false;
-      for (; it != dirs.end(); ++it) {
-        QString fName = *it + QLatin1Char(KDIR_SEPARATOR) + te;
-        if (KDE::access(fName, X_OK) == 0)
-        {
-          match = true;
-          break;
-        }
-      }
-      // didn't match at all
-      if (!match)
+    if(KGlobal::dirs()->findExe(te).isEmpty()) {
         return false;
     }
   }
   const QStringList list = d->desktopGroup.readEntry("X-KDE-AuthorizeAction", QStringList());
-  if (!list.isEmpty())
-  {
-     for(QStringList::ConstIterator it = list.begin();
-         it != list.end();
-         ++it)
-     {
-        if (!KAuthorized::authorize((*it).trimmed()))
-           return false;
-     }
+  foreach (const QString it, list) {
+    if (!KAuthorized::authorize(it.trimmed()))
+      return false;
   }
 
   // See also KService::username()
