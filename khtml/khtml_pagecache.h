@@ -109,13 +109,13 @@ private:
   KHTMLPageCachePrivate* const d;
 };
 
-class QIODevice;
+class QFile;
 class KHTMLPageCacheDelivery : public QObject
 {
    friend class KHTMLPageCache;
 Q_OBJECT
 public:
-   KHTMLPageCacheDelivery(QIODevice *_file): file(_file) {}
+   KHTMLPageCacheDelivery(QFile *_file): file(_file) {}
    ~KHTMLPageCacheDelivery();
 
 Q_SIGNALS:
@@ -123,7 +123,7 @@ Q_SIGNALS:
 
 public: 
    QObject *recvObj;
-   QIODevice *file;
+   QFile *file;
 };
 
 

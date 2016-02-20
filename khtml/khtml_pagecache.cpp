@@ -60,7 +60,7 @@ private:
   long m_id;
   bool m_complete;
   QByteArray m_buffer;
-  QIODevice* m_file;
+  QTemporaryFile* m_file;
   QString m_fileName;
 };
 
@@ -78,15 +78,11 @@ KHTMLPageCacheEntry::KHTMLPageCacheEntry(long id)
     : m_id(id)
     , m_complete(false)
 {
-  //get tmp file name
-  QTemporaryFile* f=new QTemporaryFile(KStandardDirs::locateLocal("tmp", "")+"khtmlcacheXXXXXX.tmp");
-  f->open();
-  m_fileName=f->fileName();
-  f->setAutoRemove(false);
-  delete f;
-
-  m_file = KFilterDev::deviceForFile(m_fileName, "application/x-gzip"/*,false*/);
-  m_file->open(QIODevice::WriteOnly);
+  m_file = new QTemporaryFile(KStandardDirs::locateLocal("tmp", "")+"khtmlcacheXXXXXX.tmp");
+  m_file->open();
+  m_file->setAutoRemove(true
+  );
+  m_fileName = m_file->fileName();
 }
 
 KHTMLPageCacheEntry::~KHTMLPageCacheEntry()
@@ -99,16 +95,16 @@ KHTMLPageCacheEntry::~KHTMLPageCacheEntry()
 void
 KHTMLPageCacheEntry::addData(const QByteArray &data)
 {
-    m_buffer+=data;
+  m_buffer+=data;
 }
 
 void
 KHTMLPageCacheEntry::endData()
 {
   m_complete = true;
- m_file->write(m_buffer);
- m_buffer.clear();
- m_file->close();
+  m_file->write(m_buffer);
+  m_buffer.clear();
+  m_file->close();
 }
 
 
@@ -116,9 +112,7 @@ KHTMLPageCacheDelivery *
 KHTMLPageCacheEntry::fetchData(QObject *recvObj, const char *recvSlot)
 {
   // Duplicate fd so that entry can be safely deleted while delivering the data.
-  KHTMLPageCacheDelivery *delivery=new KHTMLPageCacheDelivery(
-                                                              KFilterDev::deviceForFile (m_fileName, "application/x-gzip")
-                                                             );
+  KHTMLPageCacheDelivery *delivery=new KHTMLPageCacheDelivery(new QFile (m_fileName));
   delivery->file->open(QIODevice::ReadOnly);
 
   recvObj->connect(delivery, SIGNAL(emitData(QByteArray)), recvSlot);
@@ -275,7 +269,7 @@ KHTMLPageCache::saveData(long id, QDataStream *str)
       return;
   }
 
-  QIODevice* file = KFilterDev::deviceForFile (entry->fileName(), "application/x-gzip");
+  QFile* file = new QFile (entry->fileName());
   if (!file->open(QIODevice::ReadOnly))
     return;
 

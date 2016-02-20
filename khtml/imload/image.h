@@ -27,7 +27,6 @@
 
 #include <QByteArray> 
 #include <QSize>
-#include <QTimer>
 #include <QPair>
 #include <QMap>
 
