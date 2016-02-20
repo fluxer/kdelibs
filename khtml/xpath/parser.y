@@ -24,9 +24,11 @@ using namespace khtml::XPath;
 
 #include <QList>
 #include <QPair>
-#include <QtDebug>
+#include <QDebug>
 
+#ifndef NDEBUG
 #define YYDEBUG 1
+#endif
 
 Expression * khtmlParseXPathStatement( const DOM::DOMString &statement, int& ec );
 

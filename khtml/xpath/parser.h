@@ -71,7 +71,7 @@ extern int khtmlxpathyydebug;
 
 union YYSTYPE
 {
-#line 39 "parser.y" /* yacc.c:1909  */
+#line 41 "parser.y" /* yacc.c:1909  */
 
 	khtml::XPath::Step::AxisType axisType;
 	int        num;
