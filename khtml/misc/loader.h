@@ -453,9 +453,8 @@ namespace khtml
     class Request
     {
     public:
-	Request(DocLoader* dl, CachedObject *_object, bool _incremental, int priority);
+	Request(DocLoader* dl, CachedObject *_object, int priority);
 	~Request();
-	bool incremental;
 	int priority; // -10 to 10, smaller values mean higher priority
 	QBuffer m_buffer;
 	CachedObject *object;
@@ -474,7 +473,7 @@ namespace khtml
 	Loader();
 	~Loader();
 
-	void load(DocLoader* dl, CachedObject *object, bool incremental = true, int priority = 0);
+	void load(DocLoader* dl, CachedObject *object, int priority = 0);
 
         int numRequests( DocLoader* dl ) const;
         void cancelRequests( DocLoader* dl );

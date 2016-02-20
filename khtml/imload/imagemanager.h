@@ -26,7 +26,7 @@
 #define IMAGE_MANAGER_H
 
 #include "animtimer.h"
-#include "loaderdatabase.h"
+#include "imageloader.h"
 #include "tilecache.h"
 #include "updater.h"
 
@@ -40,14 +40,12 @@ private:
     static AnimTimer* anmTimer;
     static TileCache* imgCache;
     static TileCache* pixCache;
-    static LoaderDatabase* loaderDB;
     static Updater*        theUpdater;
     static QPixmap*        emptyPix;
-    
+
     static unsigned int pixmapCacheSize();
     static unsigned int imageCacheSize();
-    
-    static void initLoaders();
+
 public:
     // IMPORTANT: Don't even think about changing these to signed; it's security-critical
     // This method determines whether we'll ever accept an image so large
@@ -86,16 +84,9 @@ public:
             theUpdater = new Updater();
         return theUpdater;
     }
-    
-    static LoaderDatabase* loaderDatabase()
-    {
-        if (!loaderDB)
-        {
-            loaderDB = new LoaderDatabase();
-            initLoaders(); //Register built-in decoders
-        }
-        return loaderDB;
-    }
+
+    static const QStringList& supportedMimeTypes();
+    static ImageLoader* loaderFor(const QByteArray& prefix);
 };
 
 }

@@ -22,19 +22,22 @@
 
 */
 
-
 #include "imagemanager.h"
-#include "decoders/jpegloader.h"
-#include "decoders/pngloader.h"
-#include "decoders/gifloader.h"
-#include "decoders/qimageioloader.h"
+
+#include <QBuffer>
+#include <QByteArray>
+#include <QStringList>
+#include <QImageReader>
+
+#include "kservice.h"
+#include "kservicetypetrader.h"
+#include "kdebug.h"
 
 namespace khtmlImLoad {
 
 TileCache*      ImageManager::imgCache   = 0;
 TileCache*      ImageManager::pixCache   = 0;
 Updater*        ImageManager::theUpdater = 0;
-LoaderDatabase* ImageManager::loaderDB   = 0;
 QPixmap*        ImageManager::emptyPix   = 0;
 AnimTimer*      ImageManager::anmTimer   = 0;
 
@@ -52,14 +55,6 @@ unsigned int ImageManager::imageCacheSize()
 unsigned int ImageManager::pixmapCacheSize()
 {
     return 64*64;
-}
-
-void ImageManager::initLoaders()
-{
-    loaderDB->registerLoaderProvider(new JPEGLoaderProvider);
-    loaderDB->registerLoaderProvider(new PNGLoaderProvider);
-    loaderDB->registerLoaderProvider(new GIFLoaderProvider);
-    loaderDB->registerLoaderProvider(new QImageIOLoaderProvider);
 }
 
 bool ImageManager::isAcceptableSize(unsigned width, unsigned height)
@@ -86,6 +81,124 @@ bool ImageManager::isAcceptableScaleSize(unsigned width, unsigned height)
     // The scaling tables are at most 256KiB each. So this is all reasonable,
     // even too reasonable.
     return true;
+}
+
+class QImageIOLoader: public ImageLoader
+{
+    QBuffer buffer;
+    QImage image;
+public:
+    QImageIOLoader()
+    {
+    }
+
+    ~QImageIOLoader()
+    {
+    }
+
+    virtual int processData(char* data, int length)
+    {
+        buffer.setData(data, length);
+        buffer.open(QIODevice::ReadOnly);
+
+        QByteArray qformat = QImageReader::imageFormat(&buffer);
+        QImageReader reader(&buffer, qformat);
+
+        if (!reader.canRead()) {
+            return Error;
+        }
+
+        QSize size = reader.size();
+        if (size.isValid()) {
+            if (ImageManager::isAcceptableSize(size.width(), size.height()))
+                notifyImageInfo(size.width(), size.height());
+            else
+                return Error;
+        }
+
+        if (!reader.read(&image)) {
+            return Error;
+        }
+
+        if (!size.isValid()) {
+            // Might be too late by now..
+            if (ImageManager::isAcceptableSize(image.width(), image.height()))
+                notifyImageInfo(image.width(), image.height());
+            else
+                return Error;
+        }
+
+        ImageFormat format;
+        if (!imageFormat(image, format)) {
+            return Error;
+        }
+        notifyAppendFrame(image.width(), image.height(), format);
+
+        notifyQImage(1, &image);
+
+        return Done;
+    }
+    bool imageFormat(QImage &image, ImageFormat &format) {
+        switch(image.format()) {
+        case QImage::Format_RGB32:
+            format.type  = ImageFormat::Image_RGB_32;
+            break;
+        case QImage::Format_ARGB32:
+            format.type  = ImageFormat::Image_ARGB_32_DontPremult;
+            break;
+        case QImage::Format_ARGB32_Premultiplied:
+            format.type  = ImageFormat::Image_ARGB_32;
+            break;
+        case QImage::Format_Indexed8:
+            format.type  = ImageFormat::Image_Palette_8;
+            format.palette = image.colorTable();
+            break;
+        case QImage::Format_Mono:
+        case QImage::Format_MonoLSB:
+            image = image.convertToFormat(QImage::Format_Indexed8);
+            format.type  = ImageFormat::Image_Palette_8;
+            format.palette = image.colorTable();
+            break;
+        case QImage::Format_Invalid:
+        default:
+            // unsupported formats
+            return false;
+        }
+        return true;
+    }
+};
+
+static QStringList s_formats;
+
+const QStringList& ImageManager::supportedMimeTypes()
+{
+    if (!s_formats.isEmpty()) return s_formats;
+
+    KService::List services = KServiceTypeTrader::self()->query("QImageIOPlugins");
+    foreach(const KService::Ptr &service, services) {
+        const QStringList format = service->property("X-KDE-ImageFormat").toStringList();
+        const QString mimetype = service->property("X-KDE-MimeType").toString();
+        if (!format.isEmpty()) {
+            s_formats << format;
+            kDebug(399) << "QImageIO - Format supported: " << mimetype << endl;
+        }
+    }
+    return s_formats;
+}
+
+ImageLoader* ImageManager::loaderFor(const QByteArray& prefix)
+{
+    QByteArray pref = prefix;
+    QBuffer prefixBuffer(&pref);
+    prefixBuffer.open(QIODevice::ReadOnly);
+    QByteArray format = QImageReader::imageFormat(&prefixBuffer);
+    prefixBuffer.close();
+    if (format.isEmpty() || !supportedMimeTypes().contains(format, Qt::CaseInsensitive))
+        return 0;
+    else
+        kDebug(399) << "QImageIO - Format guessed: " << format << endl;
+
+    return new QImageIOLoader;
 }
 
 }

@@ -1980,7 +1980,7 @@ MimeType KHTMLPartPrivate::classifyMimeType(const QString& mimeStr)
   if (mime && mime->is("text/plain"))
       return MimeText;
 
-  if (khtmlImLoad::ImageManager::loaderDatabase()->supportedMimeTypes().contains(mimeStr))
+  if (khtmlImLoad::ImageManager::supportedMimeTypes().contains(mimeStr))
       return MimeImage;
 
   // Sometimes our subclasses like to handle custom mimetypes. In that case,

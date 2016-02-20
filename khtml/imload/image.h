@@ -44,8 +44,7 @@ class ImageLoader;
 class PixmapPlane;
 
 /**
- An image represents a static picture or an animation, that
- may be incrementally loaded.
+ An image represents a static picture or an animation
 */
 class Image
 {
@@ -61,13 +60,7 @@ public:
      Provides new data for decoding. The method will return false if there is no longer any use to feeding it more data 
      (i.e. if the image is complete, or broken, etc.); however, it is safe to do so.
     */
-    bool processData(uchar* data, int length);
-    
-    /**
-     Notifies the image that the data source is exhausted, in case it cares. This should be called at the 
-     end of the data stream in order for non-incremental decoders to work
-    */
-    void processEOF();
+    bool processData(char* data, int length);
     
     /**
      Cleans up
@@ -168,7 +161,6 @@ protected:
     void notifyFrameChange();
 
     //Loader stuff.
-    QByteArray bufferPreDetect;
     ImageLoader* loader;
     PixmapPlane* loaderPlane;
     unsigned int loaderScanline;

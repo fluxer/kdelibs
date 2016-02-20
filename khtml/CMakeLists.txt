@@ -13,30 +13,6 @@ if(ENABLE_TESTING)
     add_subdirectory( tests )
 endif()
 
-find_package(JPEG)
-set_package_properties(JPEG PROPERTIES
-    DESCRIPTION "JPEG image format support"
-    URL "http://www.ijg.org"
-    TYPE REQUIRED
-    PURPOSE "Required by khtml"
-)
-
-find_package(GIF)
-set_package_properties(GIF PROPERTIES
-    DESCRIPTION "GIF image format support"
-    URL "http://sourceforge.net/projects/giflib"
-    TYPE REQUIRED
-    PURPOSE "Required by khtml"
-)
-
-find_package(PNG)
-set_package_properties(PNG PROPERTIES
-    DESCRIPTION "PNG image format support"
-    URL "http://www.libpng.org/pub/png"
-    TYPE REQUIRED
-    PURPOSE "Required by khtml"
-)
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 configure_file(
@@ -418,13 +394,6 @@ set(khtmlimload_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/imload/canvasimage.cpp
 )
 
-set(decoders_STAT_SRCS
-    ${CMAKE_SOURCE_DIR}/khtml/imload/decoders/jpegloader.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/imload/decoders/pngloader.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/imload/decoders/gifloader.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/imload/decoders/qimageioloader.cpp
-)
-
 # khtml/xpath/
 set(xpath_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/xpath/expression.cpp
@@ -490,8 +459,6 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}/css
 )
 
-include_directories(${JPEG_INCLUDE_DIR} ${GIF_INCLUDE_DIR} ${PNG_INCLUDE_DIR} )
-
 add_subdirectory( kmultipart )
 add_subdirectory( java )
 
@@ -528,7 +495,6 @@ set(khtml_LIB_SRCS
     ${kjs_html_STAT_SRCS}
     ${khtmldom_STAT_SRCS}
     ${khtmlimload_STAT_SRCS}
-    ${decoders_STAT_SRCS}
     # for WebCore compatibility
     ${khtmlgraphics_STAT_SRCS}
     # for SVG
@@ -561,9 +527,6 @@ target_link_libraries(khtml
     ${KDE4_KPARTS_LIBS}
     ktexteditor
     kjs
-    ${JPEG_LIBRARIES}
-    ${GIF_LIBRARIES}
-    ${PNG_LIBRARIES}
     ${X11_LIBRARIES}
     kparts
     kio

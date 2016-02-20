@@ -341,7 +341,7 @@ HTMLEmbedElementImpl* HTMLObjectBaseElementImpl::relevantEmbed()
 
 bool HTMLObjectBaseElementImpl::mimetypeHandledInternally(const QString& mime)
 {
-    QStringList supportedImageTypes = khtmlImLoad::ImageManager::loaderDatabase()->supportedMimeTypes();
+    QStringList supportedImageTypes = khtmlImLoad::ImageManager::supportedMimeTypes();
 
     bool newImageLike = supportedImageTypes.contains(mime);
 
@@ -482,7 +482,7 @@ void HTMLObjectBaseElementImpl::computeContent()
 
     // Figure out if may be we're image-like. In this case, we don't need to load anything,
     // but may need to do a detach/attach
-    QStringList supportedImageTypes = khtmlImLoad::ImageManager::loaderDatabase()->supportedMimeTypes();
+    QStringList supportedImageTypes = khtmlImLoad::ImageManager::supportedMimeTypes();
 
     bool newImageLike = effectiveServiceType.startsWith(QLatin1String("image/")) && supportedImageTypes.contains(effectiveServiceType);
 

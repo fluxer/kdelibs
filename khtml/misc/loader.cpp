@@ -247,7 +247,7 @@ CachedCSSStyleSheet::CachedCSSStyleSheet(DocLoader* dl, const DOMString &url, KI
     // Do |not| touch the priority value unless you conducted thorough tests and
     // can back your choice with meaningful data, testing page load time and
     // time to first paint.
-    Cache::loader()->load(dl, this, false, -8);
+    Cache::loader()->load(dl, this, -8);
     m_loading = true;
 }
 
@@ -355,7 +355,7 @@ CachedScript::CachedScript(DocLoader* dl, const DOMString &url, KIO::CacheContro
     // load the file.
     // Scripts block document parsing. They are therefore second in our list of most
     // desired resources.
-    Cache::loader()->load(dl, this, false/*incremental*/, -6);
+    Cache::loader()->load(dl, this, -6);
     m_loading = true;
     m_hadError = false;
 }
@@ -736,12 +736,10 @@ void CachedImage::data ( QBuffer &_buffer, bool eof )
 #ifdef LOADER_DEBUG
     kDebug( 6060 ) << this << "buffersize =" << _buffer.buffer().size() << ", eof =" << eof << ", pos :" << _buffer.pos();
 #endif
-    i->processData((uchar*)_buffer.data().data(), _buffer.pos());
+    kDebug( 6060 ) << this << "buffersize =" << _buffer.buffer().size() << ", eof =" << eof << ", pos :" << _buffer.pos();
+    i->processData((char*)_buffer.data().data(), _buffer.pos());
 
     _buffer.close();
-
-    if (eof)
-        i->processEOF();
 }
 
 void CachedImage::finish()
@@ -769,7 +767,7 @@ CachedSound::CachedSound(DocLoader* dl, const DOMString &url, KIO::CacheControl 
     : CachedObject(url, Sound, _cachePolicy, 0)
 {
     setAccept( QLatin1String("*/*") ); // should be whatever phonon would accept...
-    Cache::loader()->load(dl, this, false/*incremental*/, 2);
+    Cache::loader()->load(dl, this, 2);
     m_loading = true;
 }
 
@@ -814,7 +812,7 @@ CachedFont::CachedFont(DocLoader* dl, const DOMString &url, KIO::CacheControl _c
     // Fonts are desired early because their absence will lead to a page being rendered
     // with a default replacement, then the text being re-rendered with the new font when it arrives.
     // This can be fairly disturbing for the reader - more than missing images for instance.
-    Cache::loader()->load(dl, this, false /*incremental*/, -4);
+    Cache::loader()->load(dl, this, -4);
     m_loading = true;
 }
 
@@ -884,11 +882,10 @@ void CachedFont::error( int /*err*/, const char* /*text*/ )
 
 // ------------------------------------------------------------------------------------------
 
-Request::Request(DocLoader* dl, CachedObject *_object, bool _incremental, int _priority)
+Request::Request(DocLoader* dl, CachedObject *_object, int _priority)
 {
     object = _object;
     object->setRequest(this);
-    incremental = _incremental;
     priority = _priority;
     m_docLoader = dl;
 }
@@ -1082,7 +1079,7 @@ CachedImage *DocLoader::requestImage( const DOM::DOMString &url)
     CachedImage* i = Cache::requestObject<CachedImage, CachedObject::Image>( this, fullURL, 0);
 
     if (i && i->status() == CachedObject::Unknown && autoloadImages())
-        Cache::loader()->load(this, i, true /*incremental*/);
+        Cache::loader()->load(this, i);
 
     return i;
 }
@@ -1148,7 +1145,7 @@ void DocLoader::setAutoloadImages( bool enable )
             if ( status != CachedObject::Unknown )
                 continue;
 
-            Cache::loader()->load(this, img, true /*incremental*/);
+            Cache::loader()->load(this, img);
         }
     }
 }
@@ -1174,7 +1171,7 @@ void DocLoader::setShowAnimations( KHTMLSettings::KAnimationAdvice showAnimation
 
 Loader::Loader() : QObject()
 {
-    m_supportedImageTypes = khtmlImLoad::ImageManager::loaderDatabase()->supportedMimeTypes();
+    m_supportedImageTypes = khtmlImLoad::ImageManager::supportedMimeTypes();
 }
 
 Loader::~Loader()
@@ -1182,9 +1179,9 @@ Loader::~Loader()
     qDeleteAll(m_requestsLoading);
 }
 
-void Loader::load(DocLoader* dl, CachedObject *object, bool incremental, int priority)
+void Loader::load(DocLoader* dl, CachedObject *object, int priority)
 {
-    Request *req = new Request(dl, object, incremental, priority);
+    Request *req = new Request(dl, object, priority);
     scheduleRequest(req);
     emit requestStarted( req->m_docLoader, req->object );
 }
@@ -1324,9 +1321,6 @@ void Loader::slotData( KIO::Job*job, const QByteArray &data )
         r->m_buffer.open( QIODevice::WriteOnly );
 
     r->m_buffer.write( data.data(), data.size() );
-
-    if(r->incremental)
-        r->object->data( r->m_buffer, false );
 }
 
 int Loader::numRequests( DocLoader* dl ) const

@@ -129,19 +129,7 @@ public:
      Decodes a portion of the image, and returns the appropriate 
      status, or the number of bytes read
     */
-    virtual int processData(uchar* data, int length) = 0;
-
-    /**
-     This method is called to notify the decoder that the input is done, if the decoder 
-     has not already indicated some sort of completion on the stream; this is intended 
-     mostly for non-incremental decoders. It should return Done if all is OK. Note that 
-     the "if" above should mean that the non-incremental decoders should just return 
-     the bytes read in processData
-    */
-    virtual int processEOF()
-    {
-        return Done; //### Probably should be Error if notifyImageInfo has not been called
-    }
+    virtual int processData(char* data, int length) = 0;
 };
 
 }

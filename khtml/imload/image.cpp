@@ -102,7 +102,7 @@ void Image::loadError()
     owner->imageError(this);
 }
 
-bool Image::processData(uchar* data, int length)
+bool Image::processData(char* data, int length)
 {
     if (inError)
         return false;
@@ -117,71 +117,28 @@ bool Image::processData(uchar* data, int length)
         }
         else
         {
-            //need to to do auto detection... so append all the data into a buffer
-            int oldSize = bufferPreDetect.size();
-            bufferPreDetect.resize(oldSize + length);
-            memcpy(bufferPreDetect.data() + oldSize, data, length);
-
             //Attempt to create a loader
-            loader = ImageManager::loaderDatabase()->loaderFor(bufferPreDetect);
+            loader = ImageManager::loaderFor(QByteArray(data));
 
             //if can't, return...
             if (!loader)
             {
-                //if there is more than 4K of data,
-                //and we see no use for it, abort.
-                if (bufferPreDetect.size() > 4096)
-                {
-                    loadError();
-                    return false;
-                }
-                return true;
+                loadError();
+                return false;
             }
 
             loader->setImage(this);
-
-            //All the data is now in the buffer
-            length = 0;
         }
     }
 
-    int pos = 0, stat = 0;
-
-    //If we got this far, we have the loader.
-    //just feed it any buffered data, and the new data.
-    if (!bufferPreDetect.isEmpty())
-    {
-        do
-        {
-            stat = loader->processData(reinterpret_cast<uchar*>(bufferPreDetect.data() + pos),
-                                           bufferPreDetect.size() - pos);
-            if (stat == bufferPreDetect.size() - pos)
-                break;
-
-            pos += stat;
-        }
-        while (stat > 0);
-        bufferPreDetect.resize(0);
-    }
-
-    if (length) //if there is something we did not feed from the buffer already..
-    {
-        pos = 0;
-        do
-        {
-            stat = loader->processData(data + pos, length - pos);
-
-            if (stat == length - pos)
-                break;
-
-            pos  += stat;
-        }
-        while (stat > 0);
-    }
+    int stat = loader->processData(data, length);
 
     //If we just finished decoding...
     if (stat == ImageLoader::Done)
     {
+        if (original && original->animProvider)
+            original->animProvider->setShowAnimations(animationAdvice);
+
         fullyDecoded = true;
         owner->imageDone(this);
         return false;
@@ -195,40 +152,6 @@ bool Image::processData(uchar* data, int length)
 
     return true; //Need more stuff
 }
-
-void Image::processEOF()
-{
-    if (inError) //Input error already - nothing to do
-        return;
-
-    //If no loader detected, and we're at EOF, it's an error
-    if (!loader)
-    {
-        loadError();
-        return;
-    }
-
-    //Otherwise, simply tell the loader, and check whether we decoded all right
-    bool decodedOK = loader->processEOF() == ImageLoader::Done;
-
-    //... and get rid of it
-    delete loader;
-    loader = 0;
-
-    if (!decodedOK)
-    {
-        loadError();
-    }
-    else
-    {
-        if (original && original->animProvider)
-            original->animProvider->setShowAnimations(animationAdvice);
-
-        fullyDecoded = true;
-        owner->imageDone(this);
-    }
-}
-
 
 void Image::notifyImageInfo(int _width, int _height)
 {
