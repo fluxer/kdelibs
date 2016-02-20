@@ -56,6 +56,7 @@
 #include <QtCore/QMutex>
 #include <QtCore/QRegExp>
 #include <QtCore/QDir>
+#include <QtCore/QCache>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 
@@ -70,7 +71,7 @@ public:
           m_checkRestrictions(true),
           m_cacheMutex(QMutex::Recursive), // resourceDirs is recursive
           q(qq)
-    { m_infocache.reserve(max_file_info); }
+    { m_infocache.setMaxCost(max_file_info); }
 
     bool hasDataRestrictions(const QString &relPath) const;
     QStringList resourceDirs(const char* type, const QString& subdirForRestrictions);
@@ -94,7 +95,7 @@ public:
     // Caches (protected by mutex in const methods, cf ctor docu)
     QMap<QByteArray, QStringList> m_dircache;
     QMap<QByteArray, QString> m_savelocations;
-    QHash<QString, QFileInfo> m_infocache;
+    QCache<QString, QFileInfo> m_infocache;
     QMutex m_cacheMutex;
 
     KStandardDirs* q;
@@ -553,23 +554,20 @@ bool KStandardDirs::exists(const QString &fullPath) const
 
 bool KStandardDirs::KStandardDirsPrivate::exists(const QString &fullPath)
 {
-    if(m_infocache.count() == max_file_info) {
-        m_infocache.clear();
-    }
-    QFileInfo fileinfo;
+    QFileInfo *fileinfo;
     if(m_infocache.contains(fullPath)) {
-        fileinfo = m_infocache.value(fullPath);
+        fileinfo = m_infocache.object(fullPath);
     } else {
-        fileinfo = QFileInfo(fullPath);
+        fileinfo = new QFileInfo(fullPath);
         m_infocache.insert(fullPath, fileinfo);
     }
 
-    if (!fileinfo.isReadable()) {
+    if (!fileinfo->isReadable()) {
         return false;
     } else if (!fullPath.endsWith(QLatin1Char('/'))) {
-        return !fileinfo.isDir() && fileinfo.exists();
+        return !fileinfo->isDir() && fileinfo->exists();
     } else {
-        return fileinfo.isDir() && fileinfo.exists();
+        return fileinfo->isDir() && fileinfo->exists();
     }
 }
 
