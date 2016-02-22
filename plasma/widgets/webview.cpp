@@ -66,7 +66,7 @@ WebView::WebView(QGraphicsItem *parent)
 {
     d->loaded = false;
     setAcceptTouchEvents(true);
-    setAcceptsHoverEvents(true);
+    setAcceptHoverEvents(true);
     setFlags(QGraphicsItem::ItemIsFocusable);
 
     d->scrollWidget = new Plasma::ScrollWidget(this);
