@@ -34,12 +34,13 @@
 #include <kparts/browserextension.h>
 #include <kparts/scriptableextension.h>
 
-#include <QtCore/qdatetime.h>
+#include <QtCore/QDateTime>
 #include <QtCore/QPointer>
 #include <QtCore/QMap>
 #include <QtCore/QTimer>
 #include <QtCore/QList>
 #include <QtCore/QQueue>
+#include <QtCore/QCache>
 
 #include "html/html_formimpl.h"
 #include "html/html_objectimpl.h"
@@ -57,6 +58,8 @@
 #include "ui/findbar/khtmlfind_p.h"
 #include "ui/passwordbar/storepassbar.h"
 #include "ecma/kjs_scriptable.h"
+
+static QCache<qlonglong,QByteArray> s_pageCache;
 
 class KFind;
 class KFindDialog;
@@ -128,6 +131,7 @@ public:
     m_formNotification = KHTMLPart::NoNotification;
 
     m_cacheId = 0;
+    m_pageBuffer = QByteArray();
     m_frameNameId = 1;
 
     m_restored = false;
@@ -245,6 +249,7 @@ public:
   QString m_encoding;
   QString m_sheetUsed;
   qlonglong m_cacheId;
+  QByteArray m_pageBuffer;
 
 #ifndef KHTML_NO_WALLET
   KWallet::Wallet* m_wallet;

@@ -200,12 +200,12 @@ void KHTMLPartIface::saveDocument(const QString &destination)
 {
     KUrl srcURL( part->url() );
 
-	if ( srcURL.fileName(KUrl::ObeyTrailingSlash).isEmpty() )
+    if ( srcURL.fileName(KUrl::ObeyTrailingSlash).isEmpty() )
         srcURL.setFileName( "index.html" );
 
     KIO::MetaData metaData;
     // Referrer unknown?
-    KHTMLPopupGUIClient::saveURL( part->widget(), srcURL, KUrl( destination ), metaData, part->cacheId() );
+    KHTMLPopupGUIClient::saveURL( part->widget(), srcURL, KUrl( destination ), metaData );
 }
 
 void KHTMLPartIface::setUserStyleSheet(const QString &styleSheet)

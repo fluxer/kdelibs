@@ -478,7 +478,6 @@ set(khtml_LIB_SRCS
     khtml_filter.cpp
     khtml_events.cpp
     khtml_ext.cpp
-    khtml_pagecache.cpp
     khtml_printsettings.cpp
     khtml_iface.cc
     khtmlimage.cpp

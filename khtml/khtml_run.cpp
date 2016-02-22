@@ -101,7 +101,7 @@ void KHTMLRun::handleError(KJob*)
 
 void KHTMLRun::save( const KUrl & url, const QString & suggestedFilename )
 {
-    KHTMLPopupGUIClient::saveURL( part()->widget(), i18n( "Save As" ), url, arguments().metaData(), QString(), 0, suggestedFilename );
+    KHTMLPopupGUIClient::saveURL( part()->widget(), i18n( "Save As" ), url, arguments().metaData(), QString(), suggestedFilename );
 }
 
 #include "moc_khtml_run.cpp"

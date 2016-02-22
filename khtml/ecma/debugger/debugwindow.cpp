@@ -59,7 +59,6 @@
 #include "kjs_binding.h"
 #include "khtml_part.h"
 #include "khtmlview.h"
-#include "khtml_pagecache.h"
 #include "khtml_settings.h"
 #include "khtml_factory.h"
 #include <kjs/ustring.h>

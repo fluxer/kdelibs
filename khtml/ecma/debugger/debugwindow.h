@@ -34,7 +34,6 @@
 #include <ktexteditor/editor.h>
 #include <ktexteditor/markinterface.h>
 
-#include "khtml_pagecache.h"
 #include "khtml_part.h"
 #include "dom/dom_misc.h"
 #include "misc/shared.h"

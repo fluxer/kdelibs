@@ -26,7 +26,6 @@
 
 #include "khtml_ext.h"
 #include "khtmlview.h"
-#include "khtml_pagecache.h"
 #include "rendering/render_form.h"
 #include "rendering/render_image.h"
 #include "html/html_imageimpl.h"
@@ -51,7 +50,6 @@
 #include <kio/job.h>
 #include <kshell.h>
 #include <ktoolbar.h>
-#include <ksavefile.h>
 #include <kstringhandler.h>
 #include <ktoolinvocation.h>
 #include <kmessagebox.h>
@@ -703,7 +701,7 @@ void KHTMLPopupGUIClient::slotSaveImageAs()
 {
   KIO::MetaData metaData;
   metaData["referrer"] = d->m_khtml->referrer();
-  saveURL( d->m_khtml->widget(), i18n( "Save Image As" ), d->m_imageURL, metaData, QString(), 0, d->m_suggestedFilename );
+  saveURL( d->m_khtml->widget(), i18n( "Save Image As" ), d->m_imageURL, metaData, QString(), d->m_suggestedFilename );
 }
 
 void KHTMLPopupGUIClient::slotBlockHost()
@@ -835,8 +833,9 @@ void KHTMLPopupGUIClient::slotFrameInTab()
 
 void KHTMLPopupGUIClient::saveURL( QWidget *parent, const QString &caption,
                                    const KUrl &url,
-                                   const QMap<QString, QString> &metadata,
-                                   const QString &filter, long cacheId,
+                                   const QMap<QString,
+                                   QString> &metadata,
+                                   const QString &filter,
                                    const QString & suggestedFilename )
 {
   QString name = QLatin1String( "index.html" );
@@ -862,85 +861,42 @@ void KHTMLPopupGUIClient::saveURL( QWidget *parent, const QString &caption,
    } while ( query == KMessageBox::Cancel );
 
   if ( destURL.isValid() )
-    saveURL(parent, url, destURL, metadata, cacheId);
+    saveURL(parent, url, destURL, metadata);
 }
 
 void KHTMLPopupGUIClient::saveURL( QWidget* parent, const KUrl &url, const KUrl &destURL,
-                                   const QMap<QString, QString> &metadata,
-                                   long cacheId )
+                                   const QMap<QString, QString> &metadata )
 {
     if ( destURL.isValid() )
     {
-        bool saved = false;
-        if (KHTMLPageCache::self()->isComplete(cacheId))
-        {
-            if (destURL.isLocalFile())
+        // DownloadManager <-> konqueror integration
+        // find if the integration is enabled
+        // the empty key  means no integration
+        // only use download manager for non-local urls!
+        KConfigGroup cfg = KSharedConfig::openConfig("konquerorrc", KConfig::NoGlobals)->group("HTML Settings");
+        QString downloadManger = cfg.readPathEntry("DownloadManager", QString());
+        if (!url.isLocalFile() && !downloadManger.isEmpty()) {
+            // then find the download manager location
+            QString cmd = KStandardDirs::findExe(downloadManger);
+            kDebug(1000) << "Using: " << cmd << " as Download Manager";
+            if (cmd.isEmpty())
             {
-                KSaveFile destFile(destURL.toLocalFile());
-                if (destFile.open())
-                {
-                    QDataStream stream ( &destFile );
-                    KHTMLPageCache::self()->saveData(cacheId, &stream);
-                    saved = true;
-                }
+                QString errMsg=i18n("The Download Manager (%1) could not be found in your $PATH ", downloadManger);
+                QString errMsgEx= i18n("Try to reinstall it  \n\nThe integration with Konqueror will be disabled.");
+                KMessageBox::detailedSorry(0,errMsg,errMsgEx);
+                cfg.writePathEntry("DownloadManager",QString());
+                cfg.sync ();
+            } else {
+                KUrl cleanDest = destURL;
+                cleanDest.setPass( QString() ); // don't put password into commandline
+                cmd += ' ' + KShell::quoteArg(url.url()) + ' ' +
+                        KShell::quoteArg(cleanDest.url());
+                kDebug(1000) << "Calling command  "<<cmd;
+                KRun::runCommand(cmd, parent->topLevelWidget());
             }
-            else
-            {
-                // save to temp file, then move to final destination.
-                KTemporaryFile destFile;
-                if (destFile.open())
-                {
-                    QDataStream stream ( &destFile );
-                    KHTMLPageCache::self()->saveData(cacheId, &stream);
-                    KUrl url2 = KUrl();
-                    url2.setPath(destFile.fileName());
-                    KIO::file_move(url2, destURL, -1, KIO::Overwrite);
-                    saved = true;
-                }
-            }
+        } else {
+            KParts::BrowserRun::saveUrlUsingKIO(url, destURL, parent, metadata);
         }
-        if(!saved)
-        {
-          // DownloadManager <-> konqueror integration
-          // find if the integration is enabled
-          // the empty key  means no integration
-          // only use download manager for non-local urls!
-          bool downloadViaKIO = true;
-          if ( !url.isLocalFile() )
-          {
-            KConfigGroup cfg = KSharedConfig::openConfig("konquerorrc", KConfig::NoGlobals)->group("HTML Settings");
-            QString downloadManger = cfg.readPathEntry("DownloadManager", QString());
-            if (!downloadManger.isEmpty())
-            {
-                // then find the download manager location
-                kDebug(1000) << "Using: "<<downloadManger <<" as Download Manager";
-                QString cmd = KStandardDirs::findExe(downloadManger);
-                if (cmd.isEmpty())
-                {
-                    QString errMsg=i18n("The Download Manager (%1) could not be found in your $PATH ", downloadManger);
-                    QString errMsgEx= i18n("Try to reinstall it  \n\nThe integration with Konqueror will be disabled.");
-                    KMessageBox::detailedSorry(0,errMsg,errMsgEx);
-                    cfg.writePathEntry("DownloadManager",QString());
-                    cfg.sync ();
-                }
-                else
-                {
-                    downloadViaKIO = false;
-                    KUrl cleanDest = destURL;
-                    cleanDest.setPass( QString() ); // don't put password into commandline
-                    cmd += ' ' + KShell::quoteArg(url.url()) + ' ' +
-                           KShell::quoteArg(cleanDest.url());
-                    kDebug(1000) << "Calling command  "<<cmd;
-                    KRun::runCommand(cmd, parent->topLevelWidget());
-                }
-            }
-          }
-
-          if ( downloadViaKIO )
-          {
-              KParts::BrowserRun::saveUrlUsingKIO(url, destURL, parent, metadata);
-          }
-        } //end if(!saved)
     }
 }
 

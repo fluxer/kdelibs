@@ -33,7 +33,6 @@
 #include "ui_htmlpageinfo.h"
 
 #include "khtmlviewbar.h"
-#include "khtml_pagecache.h"
 
 #include "dom/dom_string.h"
 #include "dom/dom_element.h"
@@ -610,7 +609,27 @@ bool KHTMLPart::restoreURL( const KUrl &url )
   disconnect(d->m_view, SIGNAL(finishedLayout()), this, SLOT(restoreScrollPosition()));
   connect(d->m_view, SIGNAL(finishedLayout()), this, SLOT(restoreScrollPosition()));
 
-  KHTMLPageCache::self()->fetchData( d->m_cacheId, this, SLOT(slotRestoreData(QByteArray)));
+    // The first data ?
+  if ( !d->m_workingURL.isEmpty() )
+  {
+     long saveCacheId = d->m_cacheId;
+     QString savePageReferrer = d->m_pageReferrer;
+     QString saveEncoding     = d->m_encoding;
+     begin( d->m_workingURL, arguments().xOffset(), arguments().yOffset() );
+     d->m_encoding     = saveEncoding;
+     d->m_pageReferrer = savePageReferrer;
+     d->m_cacheId = saveCacheId;
+     d->m_workingURL = KUrl();
+  }
+
+  if(s_pageCache.contains(d->m_cacheId)) {
+    //kDebug( 6050 ) << "reusing" << d->m_cacheId;
+    write( s_pageCache.object(d->m_cacheId)->constData() );
+  }
+
+  //kDebug( 6050 ) << "<<end of data>>";
+  if (d->m_doc && d->m_doc->parsing())
+      end(); //will emit completed()
 
   emit started( 0L );
 
@@ -923,7 +942,6 @@ bool KHTMLPart::closeUrl()
 {
   if ( d->m_job )
   {
-    KHTMLPageCache::self()->cancelEntry(d->m_cacheId);
     d->m_job->kill();
     d->m_job = 0;
   }
@@ -945,7 +963,6 @@ bool KHTMLPart::closeUrl()
 
   disconnect(d->m_view, SIGNAL(finishedLayout()), this, SLOT(restoreScrollPosition()));
 
-  KHTMLPageCache::self()->cancelFetch(this);
   if ( d->m_doc && d->m_doc->parsing() )
   {
     kDebug( 6050 ) << " was still parsing... calling end ";
@@ -1017,12 +1034,9 @@ DOM::Document KHTMLPart::document() const
 QString KHTMLPart::documentSource() const
 {
   QString sourceStr;
-  if ( !( url().isLocalFile() ) && KHTMLPageCache::self()->isComplete( d->m_cacheId ) )
+  if ( !( url().isLocalFile() ) && d->m_bComplete )
   {
-     QByteArray sourceArray;
-     QDataStream dataStream( &sourceArray, QIODevice::WriteOnly );
-     KHTMLPageCache::self()->saveData( d->m_cacheId, &dataStream );
-     QTextStream stream( sourceArray, QIODevice::ReadOnly );
+     QTextStream stream( s_pageCache.object(d->m_cacheId)->constData(), QIODevice::ReadOnly );
      stream.setCodec( QTextCodec::codecForName( encoding().toLatin1().constData() ) );
      sourceStr = stream.readAll();
   } else
@@ -1694,7 +1708,7 @@ void KHTMLPart::slotData( KIO::Job* kio_job, const QByteArray &data )
 
     d->m_workingURL = KUrl();
 
-    d->m_cacheId = KHTMLPageCache::self()->createCacheEntry();
+    d->m_cacheId = s_pageCache.count();
 
     // When the first data arrives, the metadata has just been made available
     d->m_httpHeaders = d->m_job->queryMetaData("HTTP-Headers");
@@ -1760,35 +1774,8 @@ void KHTMLPart::slotData( KIO::Job* kio_job, const QByteArray &data )
       d->m_lastModified.clear(); // done on-demand by lastModified()
   }
 
-  KHTMLPageCache::self()->addData(d->m_cacheId, data);
+  d->m_pageBuffer.append(data);
   write( data.data(), data.size() );
-}
-
-void KHTMLPart::slotRestoreData(const QByteArray &data )
-{
-  // The first data ?
-  if ( !d->m_workingURL.isEmpty() )
-  {
-     long saveCacheId = d->m_cacheId;
-     QString savePageReferrer = d->m_pageReferrer;
-     QString saveEncoding     = d->m_encoding;
-     begin( d->m_workingURL, arguments().xOffset(), arguments().yOffset() );
-     d->m_encoding     = saveEncoding;
-     d->m_pageReferrer = savePageReferrer;
-     d->m_cacheId = saveCacheId;
-     d->m_workingURL = KUrl();
-  }
-
-  //kDebug( 6050 ) << data.size();
-  write( data.data(), data.size() );
-
-  if (data.size() == 0)
-  {
-      //kDebug( 6050 ) << "<<end of data>>";
-     // End of data.
-    if (d->m_doc && d->m_doc->parsing())
-        end(); //will emit completed()
-  }
 }
 
 void KHTMLPart::showError( KJob* job )
@@ -1915,8 +1902,6 @@ void KHTMLPart::slotFinished( KJob * job )
 
   if (job->error())
   {
-    KHTMLPageCache::self()->cancelEntry(d->m_cacheId);
-
     // The following catches errors that occur as a result of HTTP
     // to FTP redirections where the FTP URL is a directory. Since
     // KIO cannot change a redirection request from GET to LISTDIR,
@@ -1951,8 +1936,8 @@ void KHTMLPart::slotFinished( KJob * job )
   }
 
   //kDebug( 6050 ) << "slotFinished";
-
-  KHTMLPageCache::self()->endData(d->m_cacheId);
+  s_pageCache.insert(d->m_cacheId, new QByteArray(d->m_pageBuffer));
+  d->m_pageBuffer.clear();
 
   if ( d->m_doc && d->m_doc->docLoader()->expireDate() && url().protocol().startsWith("http"))
       KIO::http_update_cache(url(), false, d->m_doc->docLoader()->expireDate());
@@ -3794,15 +3779,14 @@ void KHTMLPart::slotViewDocumentSource()
 {
   KUrl currentUrl(this->url());
   bool isTempFile = false;
-  if (!(currentUrl.isLocalFile()) && KHTMLPageCache::self()->isComplete(d->m_cacheId))
-  {
+  if (!currentUrl.isLocalFile() && d->m_bComplete) {
      KTemporaryFile sourceFile;
      sourceFile.setSuffix(defaultExtension());
      sourceFile.setAutoRemove(false);
      if (sourceFile.open())
      {
         QDataStream stream ( &sourceFile );
-        KHTMLPageCache::self()->saveData(d->m_cacheId, &stream);
+        stream << s_pageCache.object(d->m_cacheId)->constData();
         currentUrl = KUrl();
         currentUrl.setPath(sourceFile.fileName());
         isTempFile = true;
@@ -3904,21 +3888,21 @@ void KHTMLPart::slotViewFrameSource()
   if (!(url.isLocalFile()) && frame->inherits("KHTMLPart"))
   {
        long cacheId = static_cast<KHTMLPart *>(frame)->d->m_cacheId;
+       bool complete = static_cast<KHTMLPart *>(frame)->d->m_bComplete;
 
-       if (KHTMLPageCache::self()->isComplete(cacheId))
+       if (complete && s_pageCache.contains(cacheId))
        {
            KTemporaryFile sourceFile;
            sourceFile.setSuffix(defaultExtension());
            sourceFile.setAutoRemove(false);
            if (sourceFile.open())
            {
-               QDataStream stream ( &sourceFile );
-               KHTMLPageCache::self()->saveData(cacheId, &stream);
+               sourceFile.write( s_pageCache.object(cacheId)->constData() );
                url = KUrl();
                url.setPath(sourceFile.fileName());
                isTempFile = true;
            }
-     }
+        }
   }
 
   (void) KRun::runUrl( url, QLatin1String("text/plain"), view(), isTempFile );
@@ -3951,7 +3935,7 @@ void KHTMLPart::slotSaveDocument()
 
   KIO::MetaData metaData;
   // Referre unknown?
-  KHTMLPopupGUIClient::saveURL( d->m_view, i18n( "Save As" ), srcURL, metaData, "text/html", d->m_cacheId );
+  KHTMLPopupGUIClient::saveURL( d->m_view, i18n( "Save As" ), srcURL, metaData, "text/html" );
 }
 
 void KHTMLPart::slotSecurity()
@@ -4372,7 +4356,7 @@ bool KHTMLPart::processObjectRequest( khtml::ChildFrame *child, const KUrl &_url
 
             switch( res ) {
             case KParts::BrowserOpenOrSaveQuestion::Save:
-                KHTMLPopupGUIClient::saveURL( widget(), i18n( "Save As" ), url, child->m_args.metaData(), QString(), 0, suggestedFileName );
+                KHTMLPopupGUIClient::saveURL( widget(), i18n( "Save As" ), url, child->m_args.metaData(), QString(), suggestedFileName );
                 // fall-through
             case KParts::BrowserOpenOrSaveQuestion::Cancel:
                 child->m_bCompleted = true;
@@ -5659,7 +5643,7 @@ void KHTMLPart::restoreState( QDataStream &stream )
     browserArgs.docState = docState;
     d->m_extension->setBrowserArguments(browserArgs);
 
-    if (!KHTMLPageCache::self()->isComplete(d->m_cacheId))
+    if (!d->m_bComplete)
     {
        d->m_restored = true;
        openUrl( u );

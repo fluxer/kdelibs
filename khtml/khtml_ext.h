@@ -124,12 +124,11 @@ public:
 
   static void saveURL( QWidget *parent, const QString &caption, const KUrl &url,
                        const QMap<QString, QString> &metaData = KIO::MetaData(),
-                       const QString &filter = QString(), long cacheId = 0,
+                       const QString &filter = QString(),
                        const QString &suggestedFilename = QString() );
 
   static void saveURL( QWidget* parent, const KUrl &url, const KUrl &destination,
-                       const QMap<QString, QString> &metaData = KIO::MetaData(),
-                       long cacheId = 0 );
+                       const QMap<QString, QString> &metaData = KIO::MetaData() );
 
     static QString selectedTextAsOneLine(KHTMLPart* part);
 

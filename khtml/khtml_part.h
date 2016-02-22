@@ -1421,10 +1421,6 @@ private Q_SLOTS:
   /**
    * @internal
    */
-  void slotRestoreData( const QByteArray &data );
-  /**
-   * @internal
-   */
   void slotFinishedParsing();
   /**
    * @internal
