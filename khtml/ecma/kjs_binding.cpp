@@ -188,7 +188,7 @@ bool ScriptInterpreter::shouldInterruptScript() const
 UString::UString(const QString &d)
 {
   unsigned int len = d.length();
-  UChar *dat = static_cast<UChar*>(fastMalloc(sizeof(UChar)*len));
+  UChar *dat = static_cast<UChar*>(malloc(sizeof(UChar)*len));
   memcpy(dat, d.unicode(), len * sizeof(UChar));
   m_rep = UString::Rep::create(dat, len);
 }
@@ -204,7 +204,7 @@ UString::UString(const DOM::DOMString &d)
   }
 
   unsigned int len = d.length();
-  UChar *dat = static_cast<UChar*>(fastMalloc(sizeof(UChar)*len));
+  UChar *dat = static_cast<UChar*>(malloc(sizeof(UChar)*len));
   memcpy(dat, d.unicode(), len * sizeof(UChar));
   m_rep = UString::Rep::create(dat, len);
 }
