@@ -322,7 +322,7 @@ set(kjs_html_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/ecma/kjs_clientrect.cpp
 )
 
-if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(kjs_html_STAT_SRCS
         ${kjs_html_STAT_SRCS}
         ${CMAKE_SOURCE_DIR}/khtml/ecma/debugger/debugwindow.cpp

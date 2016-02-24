@@ -679,13 +679,13 @@ inline RenderObject::BorderSide newBorderSide(RenderObject::BorderSide oldBS, in
         bool t = oldBS == RenderObject::BSTop;
         bool b = oldBS == RenderObject::BSBottom;
         if ((t || b) && last.y() != cur.y())
-            return (cur.y() < last.y()) ^ (t && below || b && !below)
+            return (cur.y() < last.y()) ^ ((t && below) || (b && !below))
                     ? RenderObject::BSLeft : RenderObject::BSRight;
     } else /*if (last.y() == cur.y())*/ {	// new segment is horizontal
         bool l = oldBS == RenderObject::BSLeft;
         bool r = oldBS == RenderObject::BSRight;
         if ((l || r) && last.x() != cur.x())
-            return (cur.x() < last.x()) ^ (l && below || r && !below)
+            return (cur.x() < last.x()) ^ ((l && below) || (r && !below))
                     ? RenderObject::BSTop : RenderObject::BSBottom;
     }
     return oldBS;			// same direction

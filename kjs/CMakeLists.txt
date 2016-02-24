@@ -108,10 +108,6 @@ add_custom_command(
 string(REPLACE "--pedantic" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 string(REPLACE "-pedantic" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
-add_definitions(-DBUILDING_KDE__)
-
-add_subdirectory( wtf )
-
 set(CREATE_HASH_TABLE ${CMAKE_CURRENT_SOURCE_DIR}/create_hash_table )
 
 macro(CREATE_LUT _srcs_LIST _in_FILE _out_FILE _dep_FILE)

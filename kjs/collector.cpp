@@ -528,14 +528,7 @@ void Collector::markCurrentThreadConservatively()
 {
     // setjmp forces volatile registers onto the stack
     jmp_buf registers;
-#if COMPILER(MSVC)
-#pragma warning(push)
-#pragma warning(disable: 4611)
-#endif
     setjmp(registers);
-#if COMPILER(MSVC)
-#pragma warning(pop)
-#endif
 
     void* dummy;
     void* stackPointer = &dummy;

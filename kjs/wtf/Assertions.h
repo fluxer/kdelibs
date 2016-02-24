@@ -30,9 +30,6 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#define ASSERT(x) assert(x)
-#define ASSERT_NOT_REACHED() assert(!"Should not be reached")
-
 /* COMPILE_ASSERT */
 #ifndef COMPILE_ASSERT
 #define COMPILE_ASSERT(exp, name) typedef int dummy##name [(exp) ? 1 : -1];
@@ -40,8 +37,12 @@
 
 #ifdef NDEBUG
 #define ASSERT_DISABLED 1
+#define ASSERT(x)
+#define ASSERT_NOT_REACHED()
 #else
 #define ASSERT_DISABLED 0
+#define ASSERT(x) assert(x)
+#define ASSERT_NOT_REACHED() assert(!"Should not be reached")
 #endif
 
 #define CRASH() abort()

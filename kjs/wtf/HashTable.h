@@ -348,7 +348,9 @@ namespace WTF {
         template<typename T, typename HashTranslator> FullLookupType fullLookupForWriting(const T&);
         template<typename T, typename HashTranslator> LookupType lookupForWriting(const T&);
 
+#if !ASSERT_DISABLED
         template<typename T, typename HashTranslator> void checkKey(const T&);
+#endif
 
         void removeAndInvalidateWithoutEntryConsistencyCheck(ValueType*);
         void removeAndInvalidate(ValueType*);
@@ -425,16 +427,7 @@ namespace WTF {
         return key;
     }
 
-#if ASSERT_DISABLED
-
-    template<typename Key, typename Value, typename Extractor, typename HashFunctions, typename Traits, typename KeyTraits>
-    template<typename T, typename HashTranslator>
-    inline void HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::checkKey(const T&)
-    {
-    }
-
-#else
-
+#if !ASSERT_DISABLED
     template<typename Key, typename Value, typename Extractor, typename HashFunctions, typename Traits, typename KeyTraits>
     template<typename T, typename HashTranslator>
     void HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::checkKey(const T& key)
@@ -455,7 +448,9 @@ namespace WTF {
     template<typename T, typename HashTranslator>
     inline Value* HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::lookup(const T& key)
     {
+#if !ASSERT_DISABLED
         checkKey<T, HashTranslator>(key);
+#endif
 
         int k = 0;
         int sizeMask = m_tableSizeMask;
@@ -503,7 +498,9 @@ namespace WTF {
     inline typename HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::LookupType HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::lookupForWriting(const T& key)
     {
         ASSERT(m_table);
+#if !ASSERT_DISABLED
         checkKey<T, HashTranslator>(key);
+#endif
 
         int k = 0;
         ValueType* table = m_table;
@@ -555,7 +552,9 @@ namespace WTF {
     inline typename HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::FullLookupType HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::fullLookupForWriting(const T& key)
     {
         ASSERT(m_table);
+#if !ASSERT_DISABLED
         checkKey<T, HashTranslator>(key);
+#endif
 
         int k = 0;
         ValueType* table = m_table;
@@ -606,7 +605,9 @@ namespace WTF {
     template<typename T, typename Extra, typename HashTranslator>
     inline pair<typename HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::iterator, bool> HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::add(const T& key, const Extra& extra)
     {
+#if !ASSERT_DISABLED
         checkKey<T, HashTranslator>(key);
+#endif
 
         invalidateIterators();
 
@@ -689,7 +690,9 @@ namespace WTF {
     template<typename T, typename Extra, typename HashTranslator>
     inline pair<typename HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::iterator, bool> HashTable<Key, Value, Extractor, HashFunctions, Traits, KeyTraits>::addPassingHashCode(const T& key, const Extra& extra)
     {
+#if !ASSERT_DISABLED
         checkKey<T, HashTranslator>(key);
+#endif
 
         invalidateIterators();
 

@@ -77,7 +77,7 @@ static inline UChar* allocChars(size_t length)
 
 static inline UChar* reallocChars(UChar* buffer, size_t length)
 {
-    ASSERT(length);
+    assert(length);
     if (length > maxUChars())
         return 0;
     return static_cast<UChar*>(realloc(buffer, sizeof(UChar) * length));
@@ -740,9 +740,8 @@ UString& UString::append(const UString& subStr, int subPos, int subLength)
 {
   int subSize = subStr.size();
 
-  if (subPos < 0)
-    subPos = 0;
-  else if (subPos >= subSize)
+  ASSERT(subPos >= 0);
+  if (subPos >= subSize)
     subPos = subSize;
   if (subLength < 0)
     subLength = subSize;
@@ -1146,8 +1145,7 @@ int UString::find(const UString &f, int pos) const
   int fsz = f.size();
   if (sz < fsz)
     return -1;
-  if (pos < 0)
-    pos = 0;
+  ASSERT(pos >= 0);
   if (fsz == 0)
     return pos;
   const UChar* data_ = data();
@@ -1165,8 +1163,7 @@ int UString::find(const UString &f, int pos) const
 
 int UString::find(UChar ch, int pos) const
 {
-  if (pos < 0)
-    pos = 0;
+  ASSERT(pos >= 0);
   const UChar* data_ = data();
   const UChar *end = data_ + size();
   for (const UChar *c = data_ + pos; c < end; c++)
@@ -1182,8 +1179,7 @@ int UString::rfind(const UString &f, int pos) const
   int fsz = f.size();
   if (sz < fsz)
     return -1;
-  if (pos < 0)
-    pos = 0;
+  ASSERT(pos >= 0);
   if (pos > sz - fsz)
     pos = sz - fsz;
   if (fsz == 0)
@@ -1218,9 +1214,8 @@ UString UString::substr(int pos, int len) const
 {
   int s = size();
 
-  if (pos < 0)
-    pos = 0;
-  else if (pos >= s)
+  ASSERT(pos >= 0);
+  if (pos >= s)
     pos = s;
   if (len < 0)
     len = s;

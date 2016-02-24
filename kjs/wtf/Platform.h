@@ -27,11 +27,6 @@
 #ifndef WTF_Platform_h
 #define WTF_Platform_h
 
-/* Force KDE build here in our tree... */
-#ifndef BUILDING_KDE__
-#define BUILDING_KDE__ 1
-#endif
-
 /* PLATFORM handles OS, operating environment, graphics API, and CPU */
 #if defined(_MSC_VER)
 #define PLATFORM(WTF_FEATURE) (WTF_PLATFORM_##WTF_FEATURE)
