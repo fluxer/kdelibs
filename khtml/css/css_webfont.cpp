@@ -513,8 +513,6 @@ void CSSFontSelector::addFontFaceRule(const CSSFontFaceRuleImpl* fontFaceRule)
 
     const int srcLength = srcList->length();
 
-    bool foundLocal = false;
-
 #if 0
     // ENABLE(SVG_FONTS)
     bool foundSVGFont = false;
@@ -540,7 +538,6 @@ void CSSFontSelector::addFontFaceRule(const CSSFontFaceRuleImpl* fontFaceRule)
             }
         } else {
             source = new CSSFontFaceSource(item->resource());
-            foundLocal = true;
         }
 
         if (!fontFace)

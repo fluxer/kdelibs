@@ -75,7 +75,7 @@ namespace WebCore {
         }
         
         const SVGElement* element;
-        AtomicStringImpl* attributeName;
+        DOMStringImpl* attributeName;
     };
     
     struct SVGAnimatedTypeWrapperKeyHash {

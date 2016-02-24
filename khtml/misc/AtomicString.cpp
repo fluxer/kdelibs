@@ -241,7 +241,7 @@ PassRefPtr<StringImpl> AtomicString::add(const KJS::UString& ustring)
     return adoptRef(*addResult.first);
 }
 
-AtomicStringImpl* AtomicString::find(const KJS::Identifier& identifier)
+DOMStringImpl* AtomicString::find(const KJS::Identifier& identifier)
 {
     if (identifier.isNull())
         return 0;
@@ -249,13 +249,13 @@ AtomicStringImpl* AtomicString::find(const KJS::Identifier& identifier)
     UString::Rep* string = identifier.ustring().rep();
     unsigned length = string->size();
     if (!length)
-        return static_cast<AtomicStringImpl*>(StringImpl::empty());
+        return static_cast<DOMStringImpl*>(StringImpl::empty());
 
     HashAndCharacters buffer = { string->computedHash(), string->data(), length }; 
     HashSet<StringImpl*>::iterator iterator = stringTable->find<HashAndCharacters, HashAndCharactersTranslator>(buffer);
     if (iterator == stringTable->end())
         return 0;
-    return static_cast<AtomicStringImpl*>(*iterator);
+    return static_cast<DOMStringImpl*>(*iterator);
 }
 
 AtomicString::operator UString() const

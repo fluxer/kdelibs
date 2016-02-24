@@ -41,53 +41,6 @@ using namespace khtml;
 using namespace khtml::XPath;
 
 
-static bool areAdjacentTextNodes( NodeImpl *n, NodeImpl *m )
-{
-	if ( !n || !m ) {
-		return false;
-	}
-
-	if ( n->nodeType() != Node::TEXT_NODE && n->nodeType() != Node::CDATA_SECTION_NODE ) {
-		return false;
-	}
-	if ( m->nodeType() != Node::TEXT_NODE && m->nodeType() != Node::CDATA_SECTION_NODE ) {
-		return false;
-	}
-
-	// ###
-#ifdef __GNUC__
-#warning "Might need more generic adjacency -- check"
-#endif
-
-	return ( n->nextSibling() && ( n->nextSibling() == m ) ) ||
-	       ( m->nextSibling() && ( m->nextSibling() == n ) );
-}
-
-static DomNodeList compressTextNodes( const DomNodeList &nodes )
-{
-	DomNodeList outNodes = new StaticNodeListImpl;
-
-	for ( unsigned long n = 0; n < nodes->length(); ++n) {
-		NodeImpl* node = nodes->item( n );
-		NodeImpl* next = n+1 < nodes->length() ? nodes->item( n+1 ) : 0;
-		
-		if ( !next || !areAdjacentTextNodes( node, next ) ) {
-			outNodes->append( node );
-		} else if ( areAdjacentTextNodes( node, next ) ) {
-			QString s = node->nodeValue().string();
-
-			// n2 is a potential successor, and is always in-range
-			unsigned long n2 = n+1;
-			while (n2 < nodes->length() && areAdjacentTextNodes( nodes->item( n2 ), nodes->item( n2-1) ) ) {
-				s += nodes->item( n2 )->nodeValue().string();
-				++n2;
-			}
-			outNodes->append( node->document()->createTextNode( new DOMStringImpl( s.data(), s.length() ) ) );
-		}
-	}
-	return outNodes;
-}
-
 QString Step::axisAsString( AxisType axis )
 {
 	switch ( axis ) {

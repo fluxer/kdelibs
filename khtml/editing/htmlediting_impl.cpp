@@ -150,6 +150,7 @@ static bool shouldPruneNode(NodeImpl *node)
     return true;
 }
 
+/*
 static Position leadingWhitespacePosition(const Position &pos)
 {
     assert(pos.notEmpty());
@@ -188,6 +189,7 @@ static Position trailingWhitespacePosition(const Position &pos)
 
     return Position();
 }
+*/
 
 static bool textNodesAreJoinable(TextImpl *text1, TextImpl *text2)
 {

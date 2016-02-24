@@ -90,9 +90,6 @@
 /* PLATFORM(MAC) */
 /* PLATFORM(WIN) */
 #define WTF_PLATFORM_KDE 1
-#if defined(BUILDING_GDK__)
-#define WTF_PLATFORM_GDK 1
-#endif
 
 
 /* CPU */

@@ -1,23 +1,62 @@
 project(khtml)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=6000)
-
-########svg#########
 add_definitions(-DENABLE_SVG)
 add_definitions(-DENABLE_SVG_FONTS)
+add_definitions(-DENABLE_VIDEO)
 add_definitions(-DWTF_PLATFORM_QT)
-
-########svg#########
-
-if(ENABLE_TESTING)
-    add_subdirectory( tests )
-endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 configure_file(
     config-khtml.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/config-khtml.h
+)
+
+include_directories(
+    ${KDE4_PHONON_INCLUDES}
+    ${KDE4_KPARTS_INCLUDES}
+    ${CMAKE_BINARY_DIR}/kio/kssl
+    ${KDE4_KJS_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/kimgio
+    ${CMAKE_SOURCE_DIR}/kio/kssl
+    ${CMAKE_SOURCE_DIR}/interfaces
+    ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/misc
+    ${CMAKE_CURRENT_SOURCE_DIR}/dom
+    ${CMAKE_CURRENT_SOURCE_DIR}/xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/html
+    ${CMAKE_CURRENT_SOURCE_DIR}/rendering
+    ${CMAKE_CURRENT_SOURCE_DIR}/ecma
+    ${CMAKE_CURRENT_SOURCE_DIR}/imload
+    ${CMAKE_CURRENT_SOURCE_DIR}/imload/decoders
+    ${CMAKE_CURRENT_SOURCE_DIR}/java
+    ${CMAKE_CURRENT_SOURCE_DIR}/svg
+    ${CMAKE_CURRENT_SOURCE_DIR}/svg/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform/text
+    ${CMAKE_CURRENT_SOURCE_DIR}/platform
+    ${CMAKE_CURRENT_SOURCE_DIR}/compat
+    ${CMAKE_CURRENT_SOURCE_DIR}/css
+    ${CMAKE_CURRENT_SOURCE_DIR}/xpath
+
+    # ${CMAKE_CURRENT_BINARY_DIR}/misc
+    # ${CMAKE_CURRENT_BINARY_DIR}/dom
+    # ${CMAKE_CURRENT_BINARY_DIR}/xml
+    # ${CMAKE_CURRENT_BINARY_DIR}/html
+    # ${CMAKE_CURRENT_BINARY_DIR}/rendering
+    ${CMAKE_CURRENT_BINARY_DIR}/ecma
+    # ${CMAKE_CURRENT_BINARY_DIR}/imload
+    # ${CMAKE_CURRENT_BINARY_DIR}/imload/decoders
+    ${CMAKE_CURRENT_BINARY_DIR}/java
+    # ${CMAKE_CURRENT_BINARY_DIR}/svg
+    # ${CMAKE_CURRENT_BINARY_DIR}/svg/graphics
+    # ${CMAKE_CURRENT_BINARY_DIR}/platform/graphics
+    # ${CMAKE_CURRENT_BINARY_DIR}/platform/text
+    # ${CMAKE_CURRENT_SOURCE_DIR}/platform
+    # ${CMAKE_CURRENT_BINARY_DIR}/compat
+    ${CMAKE_CURRENT_BINARY_DIR}/css
 )
 
 set(khtmlgraphics_STAT_SRCS
@@ -188,8 +227,6 @@ set(khtmldom_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/dom/QualifiedName.cpp
     ${CMAKE_SOURCE_DIR}/khtml/dom/dom3_xpath.cpp
 )
-
-#set_source_files_properties(${khtmldom_STAT_SRCS} PROPERTIES COMPILE_FLAGS ${KDE4_ENABLE_EXCEPTIONS})
 
 set(khtmlmisc_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/misc/loader.cpp
@@ -394,7 +431,6 @@ set(khtmlimload_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/imload/canvasimage.cpp
 )
 
-# khtml/xpath/
 set(xpath_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/xpath/expression.cpp
     ${CMAKE_SOURCE_DIR}/khtml/xpath/functions.cpp
@@ -408,61 +444,6 @@ set(xpath_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/xpath/variablereference.cpp
     # ${CMAKE_SOURCE_DIR}/khtml/xpath/XPathNSResolverImpl.cpp
 )
-
-add_subdirectory( css )
-add_subdirectory( pics )
-add_subdirectory( ecma )
-
-include_directories(
-    ${KDE4_PHONON_INCLUDES}
-    ${KDE4_KPARTS_INCLUDES}
-    ${CMAKE_BINARY_DIR}/kio/kssl
-    ${KDE4_KJS_INCLUDES}
-    ${CMAKE_SOURCE_DIR}/kimgio
-    ${CMAKE_SOURCE_DIR}/kio/kssl
-    ${CMAKE_SOURCE_DIR}/interfaces
-    ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
-
-    ${CMAKE_CURRENT_SOURCE_DIR}/misc
-    ${CMAKE_CURRENT_SOURCE_DIR}/dom
-    ${CMAKE_CURRENT_SOURCE_DIR}/xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/html
-    ${CMAKE_CURRENT_SOURCE_DIR}/rendering
-    ${CMAKE_CURRENT_SOURCE_DIR}/ecma
-    ${CMAKE_CURRENT_SOURCE_DIR}/imload
-    ${CMAKE_CURRENT_SOURCE_DIR}/imload/decoders
-    ${CMAKE_CURRENT_SOURCE_DIR}/java
-    ${CMAKE_CURRENT_SOURCE_DIR}/svg
-    ${CMAKE_CURRENT_SOURCE_DIR}/svg/graphics
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform/graphics
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform/text
-    ${CMAKE_CURRENT_SOURCE_DIR}/platform
-    ${CMAKE_CURRENT_SOURCE_DIR}/compat
-    ${CMAKE_CURRENT_SOURCE_DIR}/css
-    ${CMAKE_CURRENT_SOURCE_DIR}/xpath
-
-    # ${CMAKE_CURRENT_BINARY_DIR}/misc
-    # ${CMAKE_CURRENT_BINARY_DIR}/dom
-    # ${CMAKE_CURRENT_BINARY_DIR}/xml
-    # ${CMAKE_CURRENT_BINARY_DIR}/html
-    # ${CMAKE_CURRENT_BINARY_DIR}/rendering
-    ${CMAKE_CURRENT_BINARY_DIR}/ecma
-    # ${CMAKE_CURRENT_BINARY_DIR}/imload
-    # ${CMAKE_CURRENT_BINARY_DIR}/imload/decoders
-    ${CMAKE_CURRENT_BINARY_DIR}/java
-    # ${CMAKE_CURRENT_BINARY_DIR}/svg
-    # ${CMAKE_CURRENT_BINARY_DIR}/svg/graphics
-    # ${CMAKE_CURRENT_BINARY_DIR}/platform/graphics
-    # ${CMAKE_CURRENT_BINARY_DIR}/platform/text
-    # ${CMAKE_CURRENT_SOURCE_DIR}/platform
-    # ${CMAKE_CURRENT_BINARY_DIR}/compat
-    ${CMAKE_CURRENT_BINARY_DIR}/css
-)
-
-add_subdirectory( kmultipart )
-add_subdirectory( java )
-
-add_definitions(-DENABLE_VIDEO)
 
 ########### libkhtml ###############
 
@@ -701,9 +682,7 @@ if(KHTML_BUILD_TESTREGRESSION)
         test_regression_fontoverload.cpp
     )
 
-    include_directories(${QT_INCLUDE_DIR}/../src/3rdparty/harfbuzz/src)
-
-    kde4_add_executable(testregression ${testregression_SRCS})
+    add_executable(testregression ${testregression_SRCS})
 
     target_link_libraries(testregression ${KDE4_KDECORE_LIBS} ${X11_X11_LIB} khtml)
 
@@ -720,6 +699,14 @@ if(KHTML_BUILD_TESTREGRESSION)
 
     target_link_libraries(testregressiongui ${KDE4_KDECORE_LIBS} khtml)
 endif(KHTML_BUILD_TESTREGRESSION)
+
+add_subdirectory( css )
+add_subdirectory( pics )
+add_subdirectory( kmultipart )
+add_subdirectory( java )
+if(ENABLE_TESTING)
+    add_subdirectory( tests )
+endif()
 
 ########### install files ###############
 install(

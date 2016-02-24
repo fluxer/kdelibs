@@ -830,7 +830,7 @@ void CSSStyleSelector::prepareToMatchElement(DOM::ElementImpl* e, bool withDeps)
         if (idValue && idValue->length()) {
             bool caseSensitive = (current->document()->htmlMode() == DocumentImpl::XHtml) || strictParsing;
             AtomicString currentId = caseSensitive ? idValue : idValue->lower();
-            // though currentId is local and could be deleted from AtomicStringImpl cache right away
+            // though currentId is local and could be deleted from DOMStringImpl cache right away
             // don't care about that, cause selector values are stable and only they will be checked later
             idCache.add((quintptr)currentId.impl());
         }

@@ -21,7 +21,6 @@
 #ifndef StringHash_h
 #define StringHash_h
 
-#include "AtomicStringImpl.h"
 #include "dom/dom_string.h"
 #include "xml/dom_stringimpl.h"
 #include <wtf/HashTraits.h>

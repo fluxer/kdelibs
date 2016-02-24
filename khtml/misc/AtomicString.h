@@ -21,7 +21,6 @@
 #ifndef AtomicString_h
 #define AtomicString_h
 
-#include "AtomicStringImpl.h"
 #include "dom/dom_string.h"
 
 using DOM::DOMString;
@@ -40,17 +39,16 @@ public:
     //AtomicString(const KJS::UString& s) : m_string(add(s)) { }
     //AtomicString(const KJS::Identifier& s) : m_string(add(s)) { }
     AtomicString(DOMStringImpl* imp) : m_string(add(imp)) { }
-    AtomicString(AtomicStringImpl* imp) : m_string(imp) { }
     AtomicString(const DOMString& s) : m_string(add(s.implementation())) { }
 
-    //static AtomicStringImpl* find(const KJS::Identifier&);
+    //static DOMStringImpl* find(const KJS::Identifier&);
 
     operator const DOMString&() const { return m_string; }
     const DOMString& string() const { return m_string; };
 
     //operator KJS::UString() const;
 
-    AtomicStringImpl* impl() const { return static_cast<AtomicStringImpl *>(m_string.implementation()); }
+    DOMStringImpl* impl() const { return m_string.implementation(); }
     
     const QChar* characters() const { return m_string.characters(); }
     unsigned length() const { return m_string.length(); }
