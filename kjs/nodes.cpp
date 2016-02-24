@@ -46,6 +46,7 @@
 #include <wtf/HashSet.h>
 #include <wtf/HashCountedSet.h>
 #include <wtf/MathExtras.h>
+#include <wtf/UnusedParam.h>
 
 #include "bytecode/machine.h"
 
@@ -857,6 +858,7 @@ void FunctionBodyNode::addFunDecl(const Identifier& ident, int attr, FuncDeclNod
 void FunctionBodyNode::reserveSlot(size_t id, bool shouldMark)
 {
   ASSERT(id == m_symbolList.size());
+  UNUSED_PARAM(id); // to avoid compiler warning in release builds
   m_symbolList.append(SymbolInfo(shouldMark ? 0 : DontMark, 0));
 }
 
