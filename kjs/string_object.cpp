@@ -907,7 +907,7 @@ JSValue *StringObjectFuncImp::callAsFunction(ExecState *exec, JSObject* /*thisOb
 {
   UString s;
   if (args.size()) {
-    UChar *buf = static_cast<UChar *>(fastMalloc(args.size() * sizeof(UChar)));
+    UChar *buf = static_cast<UChar *>(malloc(args.size() * sizeof(UChar)));
     UChar *p = buf;
     ListIterator it = args.begin();
     while (it != args.end()) {

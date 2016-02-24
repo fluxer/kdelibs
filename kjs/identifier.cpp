@@ -22,7 +22,6 @@
 #include "identifier.h"
 #include <config-kjs.h>
 
-#include <wtf/FastMalloc.h>
 #include <wtf/HashSet.h>
 #include <string.h> // for strlen
 #include <new> // for placement new
@@ -75,7 +74,7 @@ struct CStringTranslator
     static void translate(UString::Rep*& location, const char *c, unsigned hash)
     {
         size_t length = strlen(c);
-        UChar *d = static_cast<UChar *>(fastMalloc(sizeof(UChar) * length));
+        UChar *d = static_cast<UChar *>(malloc(sizeof(UChar) * length));
         for (size_t i = 0; i != length; i++)
             d[i] = c[i];
 
@@ -122,7 +121,7 @@ struct UCharBufferTranslator
 
     static void translate(UString::Rep *& location, const UCharBuffer& buf, unsigned hash)
     {
-        UChar *d = static_cast<UChar *>(fastMalloc(sizeof(UChar) * buf.length));
+        UChar *d = static_cast<UChar *>(malloc(sizeof(UChar) * buf.length));
         for (unsigned i = 0; i != buf.length; i++)
             d[i] = buf.s[i];
 

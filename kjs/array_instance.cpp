@@ -102,7 +102,7 @@ ArrayInstance::ArrayInstance(JSObject* prototype, unsigned initialLength)
 
     m_length = initialLength;
     m_vectorLength = initialCapacity;
-    m_storage = static_cast<ArrayStorage*>(fastCalloc(storageSize(initialCapacity), 1));
+    m_storage = static_cast<ArrayStorage*>(calloc(storageSize(initialCapacity), 1));
     m_lengthAttributes = DontDelete | DontEnum;
 
     Collector::reportExtraMemoryCost(initialCapacity * sizeof(ArrayEntity));
@@ -117,7 +117,7 @@ ArrayInstance::ArrayInstance(JSObject* prototype, const List& list)
     m_vectorLength = length;
     m_lengthAttributes = DontDelete | DontEnum;
 
-    ArrayStorage* storage = static_cast<ArrayStorage*>(fastMalloc(storageSize(length)));
+    ArrayStorage* storage = static_cast<ArrayStorage*>(malloc(storageSize(length)));
 
     storage->m_numValuesInVector = length;
     storage->m_sparseValueMap = 0;
@@ -137,7 +137,7 @@ ArrayInstance::ArrayInstance(JSObject* prototype, const List& list)
 ArrayInstance::~ArrayInstance()
 {
     delete m_storage->m_sparseValueMap;
-    fastFree(m_storage);
+    free(m_storage);
 }
 
 JSValue* ArrayInstance::getItem(unsigned i) const
@@ -596,7 +596,7 @@ void ArrayInstance::putDirect(unsigned i, JSValue* value, int attributes)
         }
     }
 
-    storage = static_cast<ArrayStorage*>(fastRealloc(storage, storageSize(newVectorLength)));
+    storage = static_cast<ArrayStorage*>(realloc(storage, storageSize(newVectorLength)));
 
     unsigned vectorLength = m_vectorLength;
 
@@ -693,7 +693,7 @@ void ArrayInstance::increaseVectorLength(unsigned newLength)
     ASSERT(newLength > vectorLength);
     unsigned newVectorLength = increasedVectorLength(newLength);
 
-    storage = static_cast<ArrayStorage*>(fastRealloc(storage, storageSize(newVectorLength)));
+    storage = static_cast<ArrayStorage*>(realloc(storage, storageSize(newVectorLength)));
     m_vectorLength = newVectorLength;
 
     for (unsigned i = vectorLength; i < newVectorLength; ++i)
@@ -815,7 +815,7 @@ void ArrayInstance::sort(ExecState* exec)
         // The mergesort algorithm does not guarantee this, so we sort a copy rather
         // than the original.
         size_t size = storageSize(m_vectorLength);
-        ArrayStorage* copy = static_cast<ArrayStorage*>(fastMalloc(size));
+        ArrayStorage* copy = static_cast<ArrayStorage*>(malloc(size));
         memcpy(copy, m_storage, size);
         mergesort(copy->m_vector, lengthNotIncludingUndefined, sizeof(ArrayEntity), compareByStringForQSort);
         fastFree(m_storage);
@@ -885,7 +885,7 @@ void ArrayInstance::sort(ExecState* exec, JSObject* compareFunction)
         // The mergesort algorithm does not guarantee this, so we sort a copy rather
         // than the original.
         size_t size = storageSize(m_vectorLength);
-        ArrayStorage* copy = static_cast<ArrayStorage*>(fastMalloc(size));
+        ArrayStorage* copy = static_cast<ArrayStorage*>(malloc(size));
         memcpy(copy, m_storage, size);
         mergesort(copy->m_vector, lengthNotIncludingUndefined, sizeof(ArrayEntity), compareWithCompareFunctionForQSort);
         fastFree(m_storage);

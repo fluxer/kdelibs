@@ -26,7 +26,6 @@
 #include "protect.h"
 #include "PropertyNameArray.h"
 #include <algorithm>
-#include <wtf/FastMalloc.h>
 #include <wtf/Vector.h>
 
 using std::max;
@@ -127,7 +126,7 @@ PropertyMap::~PropertyMap()
         } else
             ++minimumKeysToProcess;
     }
-    fastFree(m_u.table);
+    free(m_u.table);
 }
 
 void PropertyMap::clear()
@@ -483,7 +482,7 @@ void PropertyMap::createTable()
     JSValue* oldSingleEntryValue = m_u.singleEntryValue;
 #endif
 
-    m_u.table = (Table *)fastCalloc(1, sizeof(Table) + (newTableSize - 1) * sizeof(Entry));
+    m_u.table = (Table *)calloc(1, sizeof(Table) + (newTableSize - 1) * sizeof(Entry));
     m_u.table->size = newTableSize;
     m_u.table->sizeMask = newTableSize - 1;
     m_usingTable = true;
@@ -512,7 +511,7 @@ void PropertyMap::rehash(int newTableSize)
     int oldTableSize = oldTable->size;
     int oldTableKeyCount = oldTable->keyCount;
 
-    m_u.table = (Table *)fastCalloc(1, sizeof(Table) + (newTableSize - 1) * sizeof(Entry));
+    m_u.table = (Table *)calloc(1, sizeof(Table) + (newTableSize - 1) * sizeof(Entry));
     m_u.table->size = newTableSize;
     m_u.table->sizeMask = newTableSize - 1;
     m_u.table->keyCount = oldTableKeyCount;
@@ -529,7 +528,7 @@ void PropertyMap::rehash(int newTableSize)
     }
     m_u.table->lastIndexUsed = lastIndexUsed;
 
-    fastFree(oldTable);
+    free(oldTable);
 
     checkConsistency();
 }

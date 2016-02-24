@@ -27,7 +27,6 @@
 #include "kjs/global.h"
 
 #include <wtf/AlwaysInline.h>
-#include <wtf/FastMalloc.h>
 #include <wtf/RefPtr.h>
 #include <wtf/PassRefPtr.h>
 #include <wtf/Vector.h>

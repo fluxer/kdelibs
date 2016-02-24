@@ -24,7 +24,6 @@
 #define WTF_Vector_h
 
 #include "Assertions.h"
-#include "FastMalloc.h"
 #include "Noncopyable.h"
 #include "VectorTraits.h"
 #include <limits>
@@ -253,14 +252,14 @@ namespace WTF {
             m_capacity = newCapacity;
             if (newCapacity > std::numeric_limits<size_t>::max() / sizeof(T))
                 CRASH();
-            m_buffer = static_cast<T*>(fastMalloc(newCapacity * sizeof(T)));
+            m_buffer = static_cast<T*>(malloc(newCapacity * sizeof(T)));
         }
 
         void deallocateBuffer(T* bufferToDeallocate)
         {
             if (m_buffer == bufferToDeallocate)
                 m_buffer = 0;
-            fastFree(bufferToDeallocate);
+            free(bufferToDeallocate);
         }
 
         T* buffer() { return m_buffer; }
@@ -840,7 +839,7 @@ namespace WTF {
             // that means it was using the inline buffer. In that case,
             // we create a brand new buffer so the caller always gets one.
             size_t bytes = m_size * sizeof(T);
-            buffer = static_cast<T*>(fastMalloc(bytes));
+            buffer = static_cast<T*>(malloc(bytes));
             memcpy(buffer, data(), bytes);
         }
         ASSERT(buffer);

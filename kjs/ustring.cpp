@@ -72,7 +72,7 @@ static inline UChar* allocChars(size_t length)
     assert(length);
     if (length > maxUChars())
         return 0;
-    return static_cast<UChar*>(fastMalloc(sizeof(UChar) * length));
+    return static_cast<UChar*>(malloc(sizeof(UChar) * length));
 }
 
 static inline UChar* reallocChars(UChar* buffer, size_t length)
@@ -80,7 +80,7 @@ static inline UChar* reallocChars(UChar* buffer, size_t length)
     ASSERT(length);
     if (length > maxUChars())
         return 0;
-    return static_cast<UChar*>(fastRealloc(buffer, sizeof(UChar) * length));
+    return static_cast<UChar*>(realloc(buffer, sizeof(UChar) * length));
 }
 
 CString::CString(const char *c)
@@ -221,7 +221,7 @@ void UString::Rep::destroy()
   if (baseString != this) {
     baseString->deref();
   } else {
-    fastFree(buf);
+    free(buf);
   }
   delete this;
 }
@@ -385,7 +385,7 @@ void UString::expandPreCapacity(int requiredPreCap)
       return;
     }
     memcpy(newBuf + delta, r->buf, (r->capacity + r->preCapacity) * sizeof(UChar));
-    fastFree(r->buf);
+    free(r->buf);
     r->buf = newBuf;
 
     r->preCapacity = newCapacity - r->capacity;

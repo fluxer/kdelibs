@@ -22,7 +22,6 @@
 #ifndef WTF_HashTable_h
 #define WTF_HashTable_h
 
-#include "FastMalloc.h"
 #include "HashTraits.h"
 #include <wtf/Assertions.h>
 
@@ -841,8 +840,8 @@ namespace WTF {
         // would use a template member function with explicit specializations here, but
         // gcc doesn't appear to support that
         if (Traits::emptyValueIsZero)
-            return static_cast<ValueType*>(fastZeroedMalloc(size * sizeof(ValueType)));
-        ValueType* result = static_cast<ValueType*>(fastMalloc(size * sizeof(ValueType)));
+            return static_cast<ValueType*>(calloc(size * sizeof(ValueType), 1));
+        ValueType* result = static_cast<ValueType*>(malloc(size * sizeof(ValueType)));
         for (int i = 0; i < size; i++)
             initializeBucket(result[i]);
         return result;
@@ -857,7 +856,7 @@ namespace WTF {
                     table[i].~ValueType();
             }
         }
-        fastFree(table);
+        free(table);
     }
 
     template<typename Key, typename Value, typename Extractor, typename HashFunctions, typename Traits, typename KeyTraits>

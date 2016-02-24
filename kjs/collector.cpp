@@ -24,7 +24,6 @@
 #include "collector.h"
 #include <config-kjs.h>
 
-#include <wtf/FastMalloc.h>
 #include <wtf/HashCountedSet.h>
 #include "internal.h"
 #include "list.h"
@@ -115,7 +114,7 @@ struct BlockList {
             if (m_capacity > maxNumBlocks)
                 CRASH();
             m_capacity = max(MIN_ARRAY_SIZE, m_capacity * GROWTH_FACTOR);
-            m_data = static_cast<CollectorBlock **>(fastRealloc(m_data, m_capacity * sizeof(CollectorBlock *)));
+            m_data = static_cast<CollectorBlock **>(realloc(m_data, m_capacity * sizeof(CollectorBlock *)));
         }
         m_data[m_used] = block;
         ++m_used;
@@ -423,7 +422,6 @@ void Collector::registerThread()
 
   if (!pthread_getspecific(registeredThreadKey)) {
     pthread_t pthread = pthread_self();
-    WTF::fastMallocRegisterThread(pthread);
     Collector::Thread *thread = new Collector::Thread(pthread, pthread_mach_thread_np(pthread));
     thread->next = registeredThreads;
     registeredThreads = thread;

@@ -14,5 +14,5 @@
 # FIXME: Actually, most of these should NOT be installed. The only
 # ones that need be are those needed from instaled KJS headers
 # KJS headers are no longer installed, so don't install WTF headers either
-#install( FILES AlwaysInline.h Assertions.h FastMalloc.h HashCountedSet.h HashMap.h HashSet.h HashFunctions.h HashTable.h HashTraits.h Noncopyable.h OwnArrayPtr.h OwnPtr.h PassRefPtr.h Platform.h RefPtr.h SharedPtr.h Vector.h VectorTraits.h DESTINATION  ${INCLUDE_INSTALL_DIR}/wtf )
+#install( FILES AlwaysInline.h Assertions.h HashCountedSet.h HashMap.h HashSet.h HashFunctions.h HashTable.h HashTraits.h Noncopyable.h OwnArrayPtr.h OwnPtr.h PassRefPtr.h Platform.h RefPtr.h SharedPtr.h Vector.h VectorTraits.h DESTINATION  ${INCLUDE_INSTALL_DIR}/wtf )
 
