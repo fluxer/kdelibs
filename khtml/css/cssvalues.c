@@ -175,9 +175,6 @@ hash_val (register const char *str, register unsigned int len)
 
 #ifdef __GNUC__
 __inline
-#if defined __GNUC_STDC_INLINE__ || defined __GNUC_GNU_INLINE__
-__attribute__ ((__gnu_inline__))
-#endif
 #endif
 const struct css_value *
 findValue (register const char *str, register unsigned int len)

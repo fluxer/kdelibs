@@ -131,10 +131,9 @@ bool Image::processData(char* data, int length)
         }
     }
 
-    int stat = loader->processData(data, length);
-
+    const bool success = loader->processData(data, length);
     //If we just finished decoding...
-    if (stat == ImageLoader::Done)
+    if (success)
     {
         if (original && original->animProvider)
             original->animProvider->setShowAnimations(animationAdvice);
@@ -142,15 +141,11 @@ bool Image::processData(char* data, int length)
         fullyDecoded = true;
         owner->imageDone(this);
         return false;
+
     }
 
-    if (stat == ImageLoader::Error)
-    {
-        loadError();
-        return false;
-    }
-
-    return true; //Need more stuff
+    loadError();
+    return false;
 }
 
 void Image::notifyImageInfo(int _width, int _height)
@@ -404,13 +399,6 @@ QImage* Image::qimage() const
         return 0;
 
     return &static_cast<RawImagePlane*>(original->parent)->image;
-}
-
-bool Image::hasAlpha() const
-{
-    if (!original || !original->parent)
-        return false;
-    return original->parent->format.hasAlpha();
 }
 
 void Image::setShowAnimations(KHTMLSettings::KAnimationAdvice newAdvice)

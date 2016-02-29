@@ -616,7 +616,7 @@ QPixmap CachedImage::pixmap( ) const
     int w = i->size().width();
     int h = i->size().height();
 
-    if (i->hasAlpha() && QApplication::desktop()->paintEngine() &&
+    if (i->qimage()->hasAlphaChannel() && QApplication::desktop()->paintEngine() &&
                         !QApplication::desktop()->paintEngine()->hasFeature(QPaintEngine::PorterDuff)) {
         QImage im(w, h, QImage::Format_ARGB32_Premultiplied);
         QPainter paint(&im);
@@ -627,7 +627,7 @@ QPixmap CachedImage::pixmap( ) const
         return QPixmap::fromImage( im, Qt::NoOpaqueDetection );
     } else {
         QPixmap pm(w, h);
-        if (i->hasAlpha())
+        if (i->qimage()->hasAlphaChannel())
             pm.fill(Qt::transparent);
         QPainter paint(&pm);
         paint.setCompositionMode(QPainter::CompositionMode_Source);

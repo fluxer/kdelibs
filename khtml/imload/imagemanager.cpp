@@ -96,7 +96,7 @@ public:
     {
     }
 
-    virtual int processData(char* data, int length)
+    virtual bool processData(char* data, int length)
     {
         buffer.setData(data, length);
         buffer.open(QIODevice::ReadOnly);
@@ -105,7 +105,7 @@ public:
         QImageReader reader(&buffer, qformat);
 
         if (!reader.canRead()) {
-            return Error;
+            return false;
         }
 
         QSize size = reader.size();
@@ -113,11 +113,11 @@ public:
             if (ImageManager::isAcceptableSize(size.width(), size.height()))
                 notifyImageInfo(size.width(), size.height());
             else
-                return Error;
+                return false;
         }
 
         if (!reader.read(&image)) {
-            return Error;
+            return false;
         }
 
         if (!size.isValid()) {
@@ -125,18 +125,18 @@ public:
             if (ImageManager::isAcceptableSize(image.width(), image.height()))
                 notifyImageInfo(image.width(), image.height());
             else
-                return Error;
+                return false;
         }
 
         ImageFormat format;
         if (!imageFormat(image, format)) {
-            return Error;
+            return false;
         }
         notifyAppendFrame(image.width(), image.height(), format);
 
         notifyQImage(1, &image);
 
-        return Done;
+        return true;
     }
     bool imageFormat(QImage &image, ImageFormat &format) {
         switch(image.format()) {

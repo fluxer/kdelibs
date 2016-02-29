@@ -118,18 +118,12 @@ public:
     
     virtual ~ImageLoader()
     {}
-    
-    enum Status
-    {
-        Done  = -2,
-        Error = -1
-    };
-    
+
     /**
-     Decodes a portion of the image, and returns the appropriate 
-     status, or the number of bytes read
+     Decodes the image, and returns the appropriate status,
+     or the number of bytes read
     */
-    virtual int processData(char* data, int length) = 0;
+    virtual bool processData(char* data, int length) = 0;
 };
 
 }

@@ -90,11 +90,6 @@ struct ImageFormat
         return toRet;
     }
 
-    bool hasAlpha() const
-    {
-        return  (type == Image_ARGB_32 || type == Image_ARGB_32_DontPremult);
-    }
-
     mutable QVector<QRgb> palette;
 
     //A helper for setting up a format descriptor for 8-bit grayscale
