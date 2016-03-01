@@ -30,7 +30,6 @@
 
 #include "render_text.h"
 #include "render_canvas.h"
-#include "break_lines.h"
 #include "render_arena.h"
 #include "rendering/render_position.h"
 #include <xml/dom_nodeimpl.h>
@@ -41,6 +40,7 @@
 #include <QtGui/QBitmap>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
+#include <QtCore/QTextBoundaryFinder>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <assert.h>
@@ -1579,6 +1579,17 @@ bool RenderText::isFixedWidthFont() const
 {
     return QFontInfo(style()->font()).fixedPitch();
 }
+
+bool RenderText::isBreakable( const QChar *str, const int pos, int len )
+    {
+        const QChar *c = str+pos;
+        if(c->isSpace() || c->isPunct()) {
+            return true;
+        }
+        QTextBoundaryFinder *finder = new QTextBoundaryFinder(QTextBoundaryFinder::Line, c, len);
+        finder->setPosition(pos);
+        return finder->isAtBoundary();
+    }
 
 short RenderText::verticalPositionHint( bool firstLine ) const
 {

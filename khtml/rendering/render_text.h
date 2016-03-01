@@ -181,7 +181,7 @@ public:
     // Return before, after (offset set to max), or inside the text, at @p offset
     virtual FindSelectionResult checkSelectionPoint( int _x, int _y, int _tx, int _ty,
                                                      DOM::NodeImpl*& node, int & offset,
-						     SelPointState & );
+                                                    SelPointState & );
 
     unsigned int length() const { if (str) return str->l; else return 0; }
     QChar *text() const { if (str) return str->s; else return 0; }
@@ -226,6 +226,7 @@ public:
     virtual short verticalPositionHint( bool firstLine ) const;
 
     bool isFixedWidthFont() const;
+    bool isBreakable( const QChar *str, const int pos, int len );
 
     void setText(DOM::DOMStringImpl *text, bool force=false);
 

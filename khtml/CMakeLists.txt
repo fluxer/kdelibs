@@ -345,7 +345,6 @@ endif()
 
 set(khtmlrender_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/rendering/bidi.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/rendering/break_lines.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_block.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_inline.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_style.cpp

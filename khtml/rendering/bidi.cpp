@@ -23,7 +23,6 @@
  *
  */
 #include "rendering/bidi.h"
-#include "rendering/break_lines.h"
 #include "rendering/render_block.h"
 #include "rendering/render_text.h"
 #include "rendering/render_arena.h"
@@ -2147,7 +2146,7 @@ BidiIterator RenderBlock::findNextLineBreak(BidiIterator &start, BidiState &bidi
                         continue;
                     }
                 }
-                bool isbreakablePosition = (preserveLF && c.unicode() == '\n') || (autoWrap && (isBreakable( str, pos, strlen ) || isSoftBreakable));
+                bool isbreakablePosition = (preserveLF && c.unicode() == '\n') || (autoWrap && (t->isBreakable( str, pos, strlen ) || isSoftBreakable));
                 if ( isbreakablePosition || checkBreakWord) {
                     tmpW += t->width(lastSpace, pos - lastSpace, f);
 #ifdef DEBUG_LINEBREAKS

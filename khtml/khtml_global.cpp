@@ -27,7 +27,6 @@
 #include "css/css_mediaquery.h"
 #include "html/html_imageimpl.h"
 #include "rendering/render_style.h"
-#include "rendering/break_lines.h"
 #include "misc/htmlnames.h"
 #include "misc/loader.h"
 #include "misc/arena.h"
@@ -109,7 +108,6 @@ KHTMLGlobal::~KHTMLGlobal()
         khtml::PaintBuffer::cleanup();
         khtml::MediaQueryEvaluator::cleanup();
         khtml::Cache::clear();
-        khtml::cleanup_thaibreaks();
         khtml::ArenaFinish();
     }
     else
