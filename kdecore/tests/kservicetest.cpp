@@ -161,10 +161,6 @@ void KServiceTest::testProperty()
     QVERIFY(!kdedkcookiejar->property("Name").toString().isEmpty());
     QVERIFY(!kdedkcookiejar->property("Name[fr]", QVariant::String).isValid());
 
-    KService::Ptr kjavaappletviewer = KService::serviceByDesktopPath("kjavaappletviewer.desktop");
-    QVERIFY(kjavaappletviewer);
-    QCOMPARE(kjavaappletviewer->property("X-KDE-BrowserView-PluginsInfo").toString(), QString("kjava/pluginsinfo"));
-
     // Test property("X-KDE-Protocols"), which triggers the KServiceReadProperty code.
     KService::Ptr fakePart = KService::serviceByDesktopPath("fakepart.desktop");
     QVERIFY(fakePart); // see initTestCase; it should be found.
@@ -304,8 +300,6 @@ void KServiceTest::testServiceTypeTraderForReadOnlyPart()
 
     QVERIFY( offerListHasService( offers, "kmultipart.desktop" ) );
     QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) );
-    QVERIFY( offerListHasService( offers, "khtmlimage.desktop" ) );
-    QVERIFY( offerListHasService( offers, "kjavaappletviewer.desktop" ) );
 
     // Check ordering according to InitialPreference
     int lastPreference = -1;

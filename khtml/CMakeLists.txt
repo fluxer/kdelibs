@@ -30,8 +30,6 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/rendering
     ${CMAKE_CURRENT_SOURCE_DIR}/ecma
     ${CMAKE_CURRENT_SOURCE_DIR}/imload
-    ${CMAKE_CURRENT_SOURCE_DIR}/imload/decoders
-    ${CMAKE_CURRENT_SOURCE_DIR}/java
     ${CMAKE_CURRENT_SOURCE_DIR}/svg
     ${CMAKE_CURRENT_SOURCE_DIR}/svg/graphics
     ${CMAKE_CURRENT_SOURCE_DIR}/platform/graphics
@@ -48,8 +46,6 @@ include_directories(
     # ${CMAKE_CURRENT_BINARY_DIR}/rendering
     ${CMAKE_CURRENT_BINARY_DIR}/ecma
     # ${CMAKE_CURRENT_BINARY_DIR}/imload
-    # ${CMAKE_CURRENT_BINARY_DIR}/imload/decoders
-    ${CMAKE_CURRENT_BINARY_DIR}/java
     # ${CMAKE_CURRENT_BINARY_DIR}/svg
     # ${CMAKE_CURRENT_BINARY_DIR}/svg/graphics
     # ${CMAKE_CURRENT_BINARY_DIR}/platform/graphics
@@ -460,7 +456,6 @@ set(khtml_LIB_SRCS
     khtml_ext.cpp
     khtml_printsettings.cpp
     khtml_iface.cc
-    khtmlimage.cpp
     kjserrordlg.cpp
     ${xpath_STAT_SRCS}
     ${khtmlfind_STAT_SRCS}
@@ -643,19 +638,6 @@ install(
 
 ########### next target ###############
 
-# Note that khtmlimage.cpp is part of libkhtml because it uses internal objects (render tree and loader)
-# Only the entry point is separated into khtmlimage_init.cpp
-kde4_add_plugin(khtmlimagepart khtmlimage_init.cpp)
-
-target_link_libraries(khtmlimagepart khtml)
-
-install(
-    TARGETS khtmlimagepart
-    DESTINATION ${PLUGIN_INSTALL_DIR}
-)
-
-########### next target ###############
-
 kde4_add_plugin(khtmladaptorpart khtmladaptorpart.cpp)
 
 target_link_libraries(khtmladaptorpart ${KDE4_KPARTS_LIBS} kjs)
@@ -702,7 +684,6 @@ endif(KHTML_BUILD_TESTREGRESSION)
 add_subdirectory( css )
 add_subdirectory( pics )
 add_subdirectory( kmultipart )
-add_subdirectory( java )
 if(ENABLE_TESTING)
     add_subdirectory( tests )
 endif()
@@ -758,7 +739,6 @@ install(
 install(
     FILES
     khtml.desktop
-    khtmlimage.desktop
     khtmladaptorpart.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}
 )
