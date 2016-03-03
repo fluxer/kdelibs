@@ -773,7 +773,6 @@ int main(int argc, char *argv[])
     part->setJScriptEnabled(true);
 
     part->executeScript(DOM::Node(), ""); // force the part to create an interpreter
-    part->setJavaEnabled(false);
     part->setPluginsEnabled(false);
 
     if (args->isSet("show"))

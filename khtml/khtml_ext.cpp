@@ -1150,8 +1150,6 @@ QVariant KHTMLHtmlExtension::htmlSettingsProperty(HtmlSettingsInterface::HtmlSet
             return part()->autoloadImages();
         case KParts::HtmlSettingsInterface::DnsPrefetchEnabled:
             return (part()->dnsPrefetch() == KHTMLPart::DNSPrefetchEnabled);
-        case KParts::HtmlSettingsInterface::JavaEnabled:
-            return part()->javaEnabled();
         case KParts::HtmlSettingsInterface::JavascriptEnabled:
             return part()->jScriptEnabled();
         case KParts::HtmlSettingsInterface::MetaRefreshEnabled:
@@ -1176,9 +1174,6 @@ bool KHTMLHtmlExtension::setHtmlSettingsProperty(HtmlSettingsInterface::HtmlSett
             return true;
         case KParts::HtmlSettingsInterface::DnsPrefetchEnabled:
             p->setDNSPrefetch((value.toBool() ? KHTMLPart::DNSPrefetchEnabled : KHTMLPart::DNSPrefetchDisabled));
-            return true;
-        case KParts::HtmlSettingsInterface::JavaEnabled:
-            p->setJavaEnabled(value.toBool());
             return true;
         case KParts::HtmlSettingsInterface::JavascriptEnabled:
             p->setJScriptEnabled(value.toBool());

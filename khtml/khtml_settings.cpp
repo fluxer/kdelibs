@@ -903,11 +903,6 @@ void KHTMLSettings::addAdFilter( const QString &url )
     }
 }
 
-bool KHTMLSettings::isJavaEnabled( const QString& hostname ) const
-{
-  return lookup_hostname_policy(d,hostname.toLower()).m_bEnableJava;
-}
-
 bool KHTMLSettings::isJavaScriptEnabled( const QString& hostname ) const
 {
   return lookup_hostname_policy(d,hostname.toLower()).m_bEnableJavaScript;

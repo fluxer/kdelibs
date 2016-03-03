@@ -447,7 +447,6 @@ void KHTMLPart::init( KHTMLView *view, GUIProfile prof )
   d->m_bOpenMiddleClick = d->m_settings->isOpenMiddleClickEnabled();
   d->m_bJScriptEnabled = d->m_settings->isJavaScriptEnabled();
   setDebugScript( d->m_settings->isJavaScriptDebugEnabled() );
-  d->m_bJavaEnabled = d->m_settings->isJavaEnabled();
   d->m_bPluginsEnabled = d->m_settings->isPluginsEnabled();
 
   // Set the meta-refresh flag...
@@ -600,7 +599,6 @@ bool KHTMLPart::restoreURL( const KUrl &url )
   // set the java(script) flags according to the current host.
   d->m_bJScriptEnabled = KHTMLGlobal::defaultHTMLSettings()->isJavaScriptEnabled(url.host());
   setDebugScript( KHTMLGlobal::defaultHTMLSettings()->isJavaScriptDebugEnabled() );
-  d->m_bJavaEnabled = KHTMLGlobal::defaultHTMLSettings()->isJavaEnabled(url.host());
   d->m_bPluginsEnabled = KHTMLGlobal::defaultHTMLSettings()->isPluginsEnabled(url.host());
 
   setUrl(url);
@@ -909,7 +907,6 @@ bool KHTMLPart::openUrl( const KUrl &url )
   // set the javascript flags according to the current url
   d->m_bJScriptEnabled = KHTMLGlobal::defaultHTMLSettings()->isJavaScriptEnabled(url.host());
   setDebugScript( KHTMLGlobal::defaultHTMLSettings()->isJavaScriptDebugEnabled() );
-  d->m_bJavaEnabled = KHTMLGlobal::defaultHTMLSettings()->isJavaEnabled(url.host());
   d->m_bPluginsEnabled = KHTMLGlobal::defaultHTMLSettings()->isPluginsEnabled(url.host());
 
 
@@ -1286,7 +1283,7 @@ void KHTMLPart::launchJSErrorDialog() {
 
 void KHTMLPart::launchJSConfigDialog() {
   QStringList args;
-  args << "khtml_java_js";
+  args << "khtml_js";
   KToolInvocation::kdeinitExec( "kcmshell4", args );
 }
 
@@ -1376,25 +1373,6 @@ QVariant KHTMLPart::executeScript( const DOM::Node &n, const QString &script )
   kDebug(6070) << "done";
 #endif
   return ret;
-}
-
-void KHTMLPart::setJavaEnabled( bool enable )
-{
-  d->m_bJavaForce = enable;
-  d->m_bJavaOverride = true;
-}
-
-bool KHTMLPart::javaEnabled() const
-{
-  if (onlyLocalReferences()) return false;
-
-#ifndef Q_WS_QWS
-  if( d->m_bJavaOverride )
-      return d->m_bJavaForce;
-  return d->m_bJavaEnabled;
-#else
-  return false;
-#endif
 }
 
 void KHTMLPart::setPluginsEnabled( bool enable )
@@ -5984,7 +5962,6 @@ void KHTMLPart::reparseConfiguration()
   d->m_bOpenMiddleClick = settings->isOpenMiddleClickEnabled();
   d->m_bJScriptEnabled = settings->isJavaScriptEnabled(url().host());
   setDebugScript( settings->isJavaScriptDebugEnabled() );
-  d->m_bJavaEnabled = settings->isJavaEnabled(url().host());
   d->m_bPluginsEnabled = settings->isPluginsEnabled(url().host());
   d->m_metaRefreshEnabled = settings->isAutoDelayedActionsEnabled ();
 

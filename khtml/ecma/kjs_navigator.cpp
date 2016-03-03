@@ -737,7 +737,6 @@ JSValue *MimeType::getValueProperty(ExecState* exec, int token) const
 JSValue *NavigatorFunc::callAsFunction(ExecState *exec, JSObject *thisObj, const List &)
 {
   KJS_CHECK_THIS( KJS::Navigator, thisObj );
-  Navigator *nav = static_cast<Navigator *>(thisObj);
   // javaEnabled()
-  return jsBoolean(nav->part()->javaEnabled());
+  return jsBoolean(false);
 }

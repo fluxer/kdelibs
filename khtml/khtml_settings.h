@@ -180,8 +180,7 @@ public:
     /// @deprecated do not use, feature was moved to be only in konqueror
     bool isBackRightClickEnabled();
 
-    // Java and JavaScript
-    bool isJavaEnabled( const QString& hostname = QString() ) const;
+    // JavaScript
     bool isJavaScriptEnabled( const QString& hostname = QString() ) const;
     bool isJavaScriptDebugEnabled( const QString& hostname = QString() ) const;
     bool isJavaScriptErrorReportingEnabled( const QString& hostname = QString() ) const;

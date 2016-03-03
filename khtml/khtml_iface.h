@@ -37,7 +37,6 @@ class KHTMLPartIface : public QDBusAbstractAdaptor
     Q_PROPERTY(bool dndEnabled READ dndEnabled WRITE setDndEnabled)
     Q_PROPERTY(QString encoding READ encoding WRITE setEncoding)
     Q_PROPERTY(bool jScriptEnabled READ jScriptEnabled WRITE setJScriptEnabled)
-    Q_PROPERTY(bool javaEnabled READ javaEnabled WRITE setJavaEnabled)
     Q_PROPERTY(QString lastModified READ lastModified)
     Q_PROPERTY(bool metaRefreshEnabled READ metaRefreshEnabled WRITE setMetaRefreshEnabled)
     Q_PROPERTY(bool onlyLocalReferences READ onlyLocalReferences WRITE setOnlyLocalReferences)
@@ -91,20 +90,6 @@ public Q_SLOTS:
      * Returns whether Dragn'n'Drop support is enabled or not.
      */
     bool dndEnabled() const;
-
-    /**
-     * Enables/disables Java applet support. Note that calling this function
-     * will permanently override the User settings about Java applet support.
-     * Not calling this function is the only way to let the default settings
-     * apply.
-     */
-    void setJavaEnabled( bool enable );
-
-    /**
-     * Return if Java applet support is enabled/disabled.
-     */
-    bool javaEnabled() const;
-
 
     /**
      * Enables or disables plugins via, default is enabled

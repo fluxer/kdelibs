@@ -501,13 +501,6 @@ void HTMLObjectBaseElementImpl::computeContent()
     if (!document()->isURLAllowed(effectiveURL))
         newRenderAlternative = true;
 
-    // If Java is off, render alternative as well...
-    if (effectiveServiceType == "application/x-java-applet") {
-        KHTMLPart* p = document()->part();
-        if (!p || !p->javaEnabled())
-            newRenderAlternative = true;
-    }
-
     // If there is no <embed> (here or as a child), and we don't have a type + url to go on,
     // we need to render alternative as well
     if (!embed && effectiveURL.isEmpty() && effectiveServiceType.isEmpty())

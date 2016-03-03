@@ -70,16 +70,6 @@ bool KHTMLPartIface::dndEnabled() const
     return part->dndEnabled();
 }
 
-void KHTMLPartIface::setJavaEnabled( bool enable )
-{
-    part->setJavaEnabled( enable );
-}
-
-bool KHTMLPartIface::javaEnabled() const
-{
-    return part->javaEnabled();
-}
-
 void KHTMLPartIface::setPluginsEnabled( bool enable )
 {
     part->setPluginsEnabled( enable );

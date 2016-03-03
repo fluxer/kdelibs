@@ -87,7 +87,6 @@ TestKHTML::TestKHTML()
     setupActions();
 
     m_part->setJScriptEnabled(true);
-    m_part->setJavaEnabled(true);
     m_part->setPluginsEnabled(true);
     m_part->setURLCursor(QCursor(Qt::PointingHandCursor));
 

@@ -683,7 +683,6 @@ void TestRegressionWindow::initOutputBrowser()
 	layout->addWidget(m_browserPart->widget());
 	m_ui.secondTab->setLayout(layout);
 
-	m_browserPart->setJavaEnabled(true);
 	m_browserPart->setJScriptEnabled(true);
 	m_browserPart->setPluginsEnabled(true);
 	m_browserPart->setURLCursor(QCursor(Qt::PointingHandCursor));

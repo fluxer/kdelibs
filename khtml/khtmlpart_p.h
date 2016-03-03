@@ -259,7 +259,6 @@ public:
   bool m_bOpenMiddleClick;
   bool m_bJScriptEnabled;
   bool m_bJScriptDebugEnabled;
-  bool m_bJavaEnabled;
   bool m_bPluginsEnabled;
   bool m_bJScriptForce;
   bool m_bJScriptOverride;

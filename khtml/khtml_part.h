@@ -156,7 +156,6 @@ namespace KWallet
  *
  * \code
  * w->setJScriptEnabled(false);
- * w->setJavaEnabled(false);
  * w->setMetaRefreshEnabled(false);
  * w->setPluginsEnabled(false);
  * \endcode
@@ -253,7 +252,6 @@ class KHTML_EXPORT KHTMLPart : public KParts::ReadOnlyPart
   friend class WebCore::SVGDocumentExtensions;
 
   Q_PROPERTY( bool javaScriptEnabled READ jScriptEnabled WRITE setJScriptEnabled )
-  Q_PROPERTY( bool javaEnabled READ javaEnabled WRITE setJavaEnabled )
   Q_PROPERTY( bool dndEnabled READ dndEnabled WRITE setDNDEnabled )
   Q_PROPERTY( bool pluginsEnabled READ pluginsEnabled WRITE setPluginsEnabled )
   Q_PROPERTY( DNSPrefetch dnsPrefetch READ dnsPrefetch WRITE setDNSPrefetch )
@@ -451,19 +449,6 @@ public:
    * Returns whether Dragn'n'Drop support is enabled or not.
    */
   bool dndEnabled() const;
-
-  /**
-   * Enables/disables Java applet support. Note that calling this function
-   * will permanently override the User settings about Java applet support.
-   * Not calling this function is the only way to let the default settings
-   * apply.
-   */
-  void setJavaEnabled( bool enable );
-
-  /**
-   * Return @p true if Java applet support is enabled, @p false if disabled
-   */
-  bool javaEnabled() const;
 
   /**
    * Enables or disables plugins, default is enabled

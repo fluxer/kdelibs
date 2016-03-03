@@ -123,7 +123,6 @@ int main(int argc, char *argv[])
     toplevel->guiFactory()->addClient( doc );
 
     doc->setJScriptEnabled(true);
-    doc->setJavaEnabled(true);
     doc->setPluginsEnabled( true );
     doc->setURLCursor(QCursor(Qt::PointingHandCursor));
     a.setTopWidget(doc->widget());
