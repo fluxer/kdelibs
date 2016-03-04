@@ -60,8 +60,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 
-static Qt::CaseSensitivity cs = Qt::CaseSensitive;
-static int max_file_info = 10000;
+#define case_sensitivity Qt::CaseSensitive
+#define max_file_info 10000
 
 class KStandardDirs::KStandardDirsPrivate
 {
@@ -311,7 +311,7 @@ void KStandardDirs::addPrefix( const QString& _dir, bool priority )
     if (dir.at(dir.length() - 1) != QLatin1Char('/'))
         dir += QLatin1Char('/');
 
-    if (!d->m_prefixes.contains(dir, cs)) {
+    if (!d->m_prefixes.contains(dir, case_sensitivity)) {
         priorityAdd(d->m_prefixes, dir, priority);
         d->m_dircache.clear();
     }
@@ -331,7 +331,7 @@ void KStandardDirs::addXdgConfigPrefix( const QString& _dir, bool priority )
     if (dir.at(dir.length() - 1) != QLatin1Char('/'))
         dir += QLatin1Char('/');
 
-    if (!d->xdgconf_prefixes.contains(dir, cs)) {
+    if (!d->xdgconf_prefixes.contains(dir, case_sensitivity)) {
         priorityAdd(d->xdgconf_prefixes, dir, priority);
         d->m_dircache.clear();
     }
@@ -351,7 +351,7 @@ void KStandardDirs::addXdgDataPrefix( const QString& _dir, bool priority )
     if (dir.at(dir.length() - 1) != QLatin1Char('/'))
         dir += QLatin1Char('/');
 
-    if (!d->xdgdata_prefixes.contains(dir, cs)) {
+    if (!d->xdgdata_prefixes.contains(dir, case_sensitivity)) {
         priorityAdd(d->xdgdata_prefixes, dir, priority);
         d->m_dircache.clear();
     }
@@ -391,7 +391,7 @@ bool KStandardDirs::addResourceType( const char *type,
     QByteArray typeBa = type;
     QStringList& rels = d->m_relatives[typeBa]; // find or insert
 
-    if (!rels.contains(copy, cs)) {
+    if (!rels.contains(copy, case_sensitivity)) {
         if (priority)
             rels.prepend(copy);
         else
@@ -417,7 +417,7 @@ bool KStandardDirs::addResourceDir( const char *type,
 
     QByteArray typeBa = type;
     QStringList &paths = d->m_absolutes[typeBa];
-    if (!paths.contains(copy, cs)) {
+    if (!paths.contains(copy, case_sensitivity)) {
         if (priority)
             paths.prepend(copy);
         else
@@ -629,7 +629,7 @@ static void lookupDirectory(const QString& path, const QString &relPart,
             }
             if ( isReg )
             {
-                if (!unique || !relList.contains(relPart + fn, cs))
+                if (!unique || !relList.contains(relPart + fn, case_sensitivity))
                 {
                     list.append( pathfn );
                     relList.append( relPart + fn );
@@ -648,7 +648,7 @@ static void lookupDirectory(const QString& path, const QString &relPart,
             return; // File not found
         if ( S_ISREG( buff.st_mode))
         {
-            if (!unique || !relList.contains(relPart + fn, cs))
+            if (!unique || !relList.contains(relPart + fn, case_sensitivity))
             {
                 list.append( pathfn );
                 relList.append( relPart + fn );
@@ -995,7 +995,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
                     {
                         const QString path = realPath( *it2 + rest );
                         testdir.setPath(path);
-                        if ((local || testdir.exists()) && !candidates.contains(path, cs))
+                        if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity))
                             candidates.append(path);
                         local = false;
                     }
@@ -1014,7 +1014,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
                  pit != prefixList->end();
                  ++pit)
             {
-            if((*pit).compare(installprefix, cs) != 0 || installdir.isEmpty())
+            if((*pit).compare(installprefix, case_sensitivity) != 0 || installdir.isEmpty())
             {
                     for (QStringList::ConstIterator it = dirs.constBegin();
                          it != dirs.constEnd(); ++it)
@@ -1025,7 +1025,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
                         testdir.setPath(path);
                         if (local && restrictionActive)
                             continue;
-                        if ((local || testdir.exists()) && !candidates.contains(path, cs))
+                        if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity))
                             candidates.append(path);
                     }
                     local = false;
@@ -1034,7 +1034,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
             {
                     // we have a custom install path, so use this instead of <installprefix>/<relative dir>
                 testdir.setPath(installdir);
-                    if(testdir.exists() && ! candidates.contains(installdir, cs))
+                    if(testdir.exists() && ! candidates.contains(installdir, case_sensitivity))
                         candidates.append(installdir);
             }
         }
@@ -1044,7 +1044,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
         if (!installdir.isEmpty()) {
             bool ok = true;
             foreach (const QString &s, candidates) {
-                if (installdir.startsWith(s, cs)) {
+                if (installdir.startsWith(s, case_sensitivity)) {
                     ok = false;
                     break;
                 }
@@ -1060,7 +1060,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
             testdir.setPath(*it);
             if (testdir.exists()) {
                 const QString filename = realPath( *it );
-                if (!candidates.contains(filename, cs)) {
+                if (!candidates.contains(filename, case_sensitivity)) {
                     candidates.append(filename);
                 }
             }
@@ -1311,7 +1311,7 @@ QString KStandardDirs::relativeLocation(const char *type, const QString &absPath
 
     for (QStringList::ConstIterator it = candidates.begin();
          it != candidates.end(); ++it) {
-        if (fullPath.startsWith(*it, cs)) {
+        if (fullPath.startsWith(*it, case_sensitivity)) {
             return fullPath.mid((*it).length());
         }
     }
@@ -1431,7 +1431,7 @@ void KStandardDirs::addKDEDefaults()
     kdedirList.append(installPath("kdedir"));
 
     QString execPrefix(QFile::decodeName(EXEC_INSTALL_PREFIX));
-    if (!execPrefix.isEmpty() && !kdedirList.contains(execPrefix, cs))
+    if (!execPrefix.isEmpty() && !kdedirList.contains(execPrefix, case_sensitivity))
         kdedirList.append(execPrefix);
 #ifdef __linux__
     const QString linuxExecPrefix = executablePrefix();
@@ -1519,7 +1519,7 @@ void KStandardDirs::addKDEDefaults()
         // otherwise resourceDirs() will add kdedir/share/applications/kde4
         // as returned by installPath(), and that's incorrect.
         Q_FOREACH(const QString& dir, kdedirDataDirs) {
-            if (!xdgdirList.contains(dir, cs))
+            if (!xdgdirList.contains(dir, case_sensitivity))
                 xdgdirList.append(dir);
         }
     } else {
