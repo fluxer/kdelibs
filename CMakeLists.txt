@@ -99,7 +99,7 @@ set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Support for secure network communications (SSL and TLS)"
     URL "http://openssl.org"
     TYPE RECOMMENDED
-    PURPOSE "KDE uses OpenSSL for the bulk of secure communications, including secure web browsing via HTTPS"
+    PURPOSE "For the bulk of secure communications, including secure web browsing via HTTPS"
 )
 
 macro_optional_find_package(Libintl)
@@ -115,6 +115,14 @@ set_package_properties(DBusMenuQt PROPERTIES
     DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
     URL "https://launchpad.net/libdbusmenu-qt"
     TYPE RECOMMENDED
+)
+
+macro_optional_find_package(PCRE)
+set_package_properties(PCRE PROPERTIES
+    DESCRIPTION "Perl-compatible regular expressions in KJS"
+    URL "http://www.pcre.org"
+    TYPE RECOMMENDED
+    PURPOSE "Faster regular expression in KJS, increases web pages compatibility"
 )
 
 ################# Disallow in-source build #################

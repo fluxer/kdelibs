@@ -83,7 +83,7 @@ bool pluginRootGet(ExecState* exec, ScriptableExtension* ext, const KJS::Identif
         return false;
 
     QVariant v = rootObj.owner->get(0 /* ### we don't expect leaves to check credentials*/,
-                                       rootObj.objId, i.qstring());
+                                       rootObj.objId, i.ascii());
 
     bool ok = false;
     if (!isException(v)) {
@@ -102,7 +102,7 @@ bool pluginRootPut(ExecState* /*exec*/, ScriptableExtension* ext, const KJS::Ide
         return false;
 
     QVariant qv = ScriptableOperations::exportValue(v, true);
-    bool ok = rootObj.owner->put(0, rootObj.objId, i.qstring(), qv);
+    bool ok = rootObj.owner->put(0, rootObj.objId, i.ascii(), qv);
     ScriptableExtension::releaseValue(qv);
     
     rootObj.owner->release(rootObj.objId);
@@ -199,7 +199,7 @@ bool WrapScriptableObject::getOwnPropertySlot(ExecState* exec, const Identifier&
     if (!ok)
         return false;
 
-    QVariant v = doGet(exec, actualObj, i.qstring(), &ok);
+    QVariant v = doGet(exec, actualObj, i.ascii(), &ok);
 
     if (!ok)
         return false;
@@ -217,7 +217,7 @@ void WrapScriptableObject::put(ExecState* exec, const Identifier& i, JSValue* va
         return;
 
     QVariant sv = ScriptableOperations::exportValue(value, true);
-    actualObj.owner->put(principal(exec), actualObj.objId, i.qstring(), sv);
+    actualObj.owner->put(principal(exec), actualObj.objId, i.ascii(), sv);
     ScriptableExtension::releaseValue(sv);
 }
 
@@ -230,7 +230,7 @@ bool WrapScriptableObject::deleteProperty(ExecState* exec, const Identifier& i)
         return false;
 
     return actualObj.owner->removeProperty(principal(exec),
-                                           actualObj.objId, i.qstring());
+                                           actualObj.objId, i.ascii());
 }
 
 ScriptableExtension::ArgList WrapScriptableObject::exportArgs(const List& l)
@@ -550,7 +550,7 @@ QVariant ScriptableOperations::handleReturn(ExecState* exec, JSValue* v)
         if (JSObject* eo = e->getObject()) {
             JSValue* msgVal = eo->get(exec, exec->propertyNames().message);
             if (!msgVal->isUndefined())
-                msg = msgVal->toString(exec).qstring();
+                msg = msgVal->toString(exec).ascii();
             
             // in case the get failed too.
             exec->clearException();
@@ -706,7 +706,7 @@ bool ScriptableOperations::enumerateProperties(ScriptableExtension* caller,
     o->getPropertyNames(exec, pa);
 
     for (int i = 0; i < pa.size(); ++i)
-        result->append(pa[i].qstring());
+        result->append(pa[i].ascii());
     return true;
 }
 

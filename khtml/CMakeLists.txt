@@ -494,21 +494,31 @@ qt4_add_dbus_interface(khtml_LIB_SRCS
     kcookiejar_interface
 )
 
-add_library(khtml ${LIBRARY_TYPE} ${khtml_LIB_SRCS})
+# going trough the extra trouble to not use shared KJS library for performance reasons
+add_library(khtml ${LIBRARY_TYPE} ${khtml_LIB_SRCS} $<TARGET_OBJECTS:kjs>)
 
 target_link_libraries(khtml
     ${KDE4_PHONON_LIBRARY}
     ${KDE4_KPARTS_LIBS}
     ktexteditor
-    kjs
-    ${X11_LIBRARIES}
     kparts
     kio
     kdeui
     kdecore
+    ${X11_LIBRARIES}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}
+    # for KJS
+    m
 )
+
+# for KJS
+if(CMAKE_THREAD_LIBS_INIT)
+    target_link_libraries(khtml ${CMAKE_THREAD_LIBS_INIT})
+endif()
+if(PCRE_FOUND)
+    target_link_libraries(khtml ${PCRE_LIBRARIES})
+endif()
 
 set_target_properties(khtml PROPERTIES
     VERSION ${KDE_NON_GENERIC_LIB_VERSION}
@@ -640,7 +650,7 @@ install(
 
 kde4_add_plugin(khtmladaptorpart khtmladaptorpart.cpp)
 
-target_link_libraries(khtmladaptorpart ${KDE4_KPARTS_LIBS} kjs)
+target_link_libraries(khtmladaptorpart ${KDE4_KPARTS_LIBS} khtml)
 
 install(
     TARGETS khtmladaptorpart

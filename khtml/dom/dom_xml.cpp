@@ -234,11 +234,11 @@ ProcessingInstruction &ProcessingInstruction::operator = (const Node &other)
     NodeImpl* ohandle = other.handle();
     if ( impl != ohandle ) {
         if (!ohandle || ohandle->nodeType() != PROCESSING_INSTRUCTION_NODE) {
-	    if ( impl ) impl->deref();
+            if ( impl ) impl->deref();
             impl = 0;
-	} else {
+        } else {
             Node::operator =(other);
-	}
+        }
     }
     return *this;
 }
@@ -256,7 +256,7 @@ ProcessingInstruction::~ProcessingInstruction()
 DOMString ProcessingInstruction::target() const
 {
     if (!impl)
-	return DOMString(); // ### enable throw DOMException(DOMException::NOT_FOUND_ERR);
+        return DOMString(); // ### enable throw DOMException(DOMException::NOT_FOUND_ERR);
 
     return ((ProcessingInstructionImpl*)impl)->target();
 }
@@ -264,7 +264,7 @@ DOMString ProcessingInstruction::target() const
 DOMString ProcessingInstruction::data() const
 {
     if (!impl)
-	return DOMString(); // ### enable throw DOMException(DOMException::NOT_FOUND_ERR);
+        return DOMString(); // ### enable throw DOMException(DOMException::NOT_FOUND_ERR);
 
     return ((ProcessingInstructionImpl*)impl)->data();
 }
@@ -272,12 +272,12 @@ DOMString ProcessingInstruction::data() const
 void ProcessingInstruction::setData( const DOMString &_data )
 {
     if (!impl)
-	return; // ### enable throw DOMException(DOMException::NOT_FOUND_ERR);
+        return; // ### enable throw DOMException(DOMException::NOT_FOUND_ERR);
 
     int exceptioncode = 0;
     ((ProcessingInstructionImpl*)impl)->setData(_data, exceptioncode);
     if (exceptioncode)
-	throw DOMException(exceptioncode);
+        throw DOMException(exceptioncode);
 }
 
 ProcessingInstruction::ProcessingInstruction(ProcessingInstructionImpl *i) : Node(i)

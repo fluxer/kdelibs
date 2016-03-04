@@ -216,7 +216,7 @@ DOM::DOMString UString::domString() const
 
 QString UString::qstring() const
 {
-  return QString((QChar*) data(), size());
+  return QString::fromRawData((QChar*) data(), size());
 }
 
 DOM::DOMString Identifier::domString() const
@@ -226,7 +226,7 @@ DOM::DOMString Identifier::domString() const
 
 QString Identifier::qstring() const
 {
-  return QString((QChar*) data(), size());
+  return QString::fromRawData((QChar*) data(), size());
 }
 
 JSValue* valueGetterAdapter(ExecState* exec, JSObject*, const Identifier& , const PropertySlot& slot)
@@ -270,7 +270,7 @@ QVariant ValueToVariant(ExecState* exec, JSValue *val) {
     res = QVariant(val->toNumber(exec));
     break;
   case StringType:
-    res = QVariant(val->toString(exec).qstring());
+    res = QVariant(val->toString(exec).ascii());
     break;
   default:
     // everything else will be 'invalid'

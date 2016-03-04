@@ -128,7 +128,7 @@ JSValue* KJS::HTMLDocFunction::callAsFunction(ExecState *exec, JSObject *thisObj
     if (id == HTMLDocument::WriteLn)
       str += "\n";
 #ifdef KJS_VERBOSE
-    kDebug(6070) << "document.write: " << str.qstring();
+    kDebug(6070) << "document.write: " << str.ascii();
 #endif
     doc.write(str.qstring());
     return jsUndefined();
@@ -222,7 +222,7 @@ static bool isLateProperty(unsigned token)
 bool KJS::HTMLDocument::getOwnPropertySlot(ExecState *exec, const Identifier &propertyName, PropertySlot& slot)
 {
 #ifdef KJS_VERBOSE
-  kDebug(6070) << "KJS::HTMLDocument::getOwnPropertySlot " << propertyName.qstring();
+  kDebug(6070) << "KJS::HTMLDocument::getOwnPropertySlot " << propertyName.ascii();
 #endif
 
   DOM::DocumentImpl* docImpl = impl();
@@ -261,7 +261,7 @@ bool KJS::HTMLDocument::getOwnPropertySlot(ExecState *exec, const Identifier &pr
 
   // Check for frames/iframes with name==propertyName
   if ( part ) {
-    if (part->findFrame( propertyName.qstring() )) {
+    if (part->findFrame( propertyName.ascii() )) {
       slot.setCustom(this, frameNameGetter);
       return true;
     }
@@ -322,7 +322,7 @@ JSValue *HTMLDocument::frameNameGetter(ExecState*, JSObject*, const Identifier& 
 {
   HTMLDocument *thisObj = static_cast<HTMLDocument*>(slot.slotBase());
   // Check for frames/iframes with name==propertyName
-  return Window::retrieve(thisObj->impl()->part()->findFrame( name.qstring() ));
+  return Window::retrieve(thisObj->impl()->part()->findFrame( name.ascii() ));
 }
 
 JSValue *HTMLDocument::objectNameGetter(ExecState *exec, JSObject*, const Identifier& name, const PropertySlot& slot)

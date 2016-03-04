@@ -452,8 +452,6 @@ set(_kde_libraries
     khtml
     kidletime
     kio
-    kjs
-    kjsapi
     knotifyconfig
     kparts
     kprintutils

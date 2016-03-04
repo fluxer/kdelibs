@@ -822,7 +822,7 @@ bool Window::getOwnPropertySlot(ExecState *exec, const Identifier& propertyName,
     }
 
     // Now do frame indexing.
-    KParts::ReadOnlyPart *rop = part->findFramePart( propertyName.qstring() );
+    KParts::ReadOnlyPart *rop = part->findFramePart( propertyName.ascii() );
     if (rop) {
         slot.setCustom(this, framePartGetter);
         return true;
@@ -849,7 +849,7 @@ bool Window::getOwnPropertySlot(ExecState *exec, const Identifier& propertyName,
     // This isn't necessarily a bug. Some code uses if(!window.blah) window.blah=1
     // But it can also mean something isn't loaded or implemented, hence the WARNING to help grepping.
 #ifdef KJS_VERBOSE
-    kDebug(6070) << "WARNING: Window::get property not found: " << propertyName.qstring();
+    kDebug(6070) << "WARNING: Window::get property not found: " << propertyName.ascii();
 #endif
 
     return JSObject::getOwnPropertySlot(exec, propertyName, slot);
@@ -881,7 +881,7 @@ JSValue *Window::framePartGetter(ExecState *exec, JSObject*, const Identifier& p
   Q_UNUSED(exec);
   Window* thisObj = static_cast<Window*>(slot.slotBase());
   KHTMLPart *part = qobject_cast<KHTMLPart*>(thisObj->m_frame->m_part);
-  KParts::ReadOnlyPart *rop = part->findFramePart( propertyName.qstring() );
+  KParts::ReadOnlyPart *rop = part->findFramePart( propertyName.ascii() );
   return thisObj->retrieve(rop);
 }
 
@@ -1352,10 +1352,10 @@ void Window::put(ExecState* exec, const Identifier &propertyName, JSValue *value
   if (entry)
   {
 #ifdef KJS_VERBOSE
-    kDebug(6070) << "Window("<<this<<")::put " << propertyName.qstring();
+    kDebug(6070) << "Window("<<this<<")::put " << propertyName.ascii();
 #endif
     if (entry->value == _Location) {
-        goURL(exec, value->toString(exec).qstring());
+        goURL(exec, value->toString(exec).ascii());
         return;
     }
 
@@ -1366,7 +1366,7 @@ void Window::put(ExecState* exec, const Identifier &propertyName, JSValue *value
       if  (isSafeScript(exec) && part->settings()->windowStatusPolicy(part->url().host())
 		== KHTMLSettings::KJSWindowStatusAllow) {
       UString s = value->toString(exec);
-      part->setJSStatusBarText(s.qstring());
+      part->setJSStatusBarText(s.ascii());
       }
       return;
     }
@@ -1374,7 +1374,7 @@ void Window::put(ExecState* exec, const Identifier &propertyName, JSValue *value
       if (isSafeScript(exec) && part->settings()->windowStatusPolicy(part->url().host())
 		== KHTMLSettings::KJSWindowStatusAllow) {
       UString s = value->toString(exec);
-      part->setJSDefaultStatusBarText(s.qstring());
+      part->setJSDefaultStatusBarText(s.ascii());
       }
       return;
     }
@@ -1495,7 +1495,7 @@ void Window::put(ExecState* exec, const Identifier &propertyName, JSValue *value
       pluginRootPut(exec, m_frame->m_scriptable.data(), propertyName, value))
     return;
   if (safe) {
-    //kDebug(6070) << "Window("<<this<<")::put storing " << propertyName.qstring();
+    //kDebug(6070) << "Window("<<this<<")::put storing " << propertyName.ascii();
     JSObject::put(exec, propertyName, value, attr);
   }
 }
@@ -1853,9 +1853,14 @@ JSValue *Window::openWindow(ExecState *exec, const List& args)
   }
 
   KHTMLSettings::KJSWindowOpenPolicy policy =
-		part->settings()->windowOpenPolicy(part->url().host());
+    part->settings()->windowOpenPolicy(part->url().host());
 
-  QString frameName = args.size() > 1 ? args[1]->toString(exec).qstring() : QString("_blank");
+  char *frameName;
+  if(args.size() > 1) {
+    frameName = args[1]->toString(exec).ascii();
+  } else {
+    frameName = "_blank";
+  }
 
   // Always permit opening in an exist frame (including _self, etc.)
   if ( targetIsExistingWindow( part, frameName ) )
@@ -2220,7 +2225,7 @@ JSValue *WindowFunc::callAsFunction(ExecState *exec, JSObject *thisObj, const Li
     return new KJS::DOMSelection(exec, part->xmlDocImpl());
 
   case Window::Navigate:
-    window->goURL(exec, args[0]->toString(exec).qstring());
+    window->goURL(exec, args[0]->toString(exec).ascii());
     return jsUndefined();
   case Window::Focus: {
     KHTMLSettings::KJSWindowFocusPolicy policy =
@@ -2265,7 +2270,7 @@ JSValue *WindowFunc::callAsFunction(ExecState *exec, JSObject *thisObj, const Li
         }
         
         QString sourceOrigin = part->xmlDocImpl()->origin()->toString();
-        QString targetOrigin = args[1]->toString(exec).qstring();
+        QString targetOrigin = args[1]->toString(exec).ascii();
         KUrl    targetURL(targetOrigin);
         kDebug(6070) << "postMessage targetting:" << targetOrigin;
 
@@ -2832,7 +2837,7 @@ KParts::ReadOnlyPart *Location::part() const {
 bool Location::getOwnPropertySlot(ExecState *exec, const Identifier &p, PropertySlot& slot)
 {
 #ifdef KJS_VERBOSE
-  kDebug(6070) << "Location::getOwnPropertySlot " << p.qstring() << " m_part=" << (void*)m_frame->m_part;
+  kDebug(6070) << "Location::getOwnPropertySlot " << p.ascii() << " m_part=" << (void*)m_frame->m_part;
 #endif
 
   if (m_frame.isNull() || m_frame->m_part.isNull())
@@ -2910,7 +2915,7 @@ JSValue* Location::getValueProperty(ExecState *exec, int token) const
 void Location::put(ExecState *exec, const Identifier &p, JSValue *v, int attr)
 {
 #ifdef KJS_VERBOSE
-  kDebug(6070) << "Location::put " << p.qstring() << " m_part=" << (void*)m_frame->m_part;
+  kDebug(6070) << "Location::put " << p.ascii() << " m_part=" << (void*)m_frame->m_part;
 #endif
   if (m_frame.isNull() || m_frame->m_part.isNull())
     return;
@@ -3029,10 +3034,10 @@ JSValue *LocationFunc::callAsFunction(ExecState *exec, JSObject *thisObj, const 
 
   switch (id) {
   case Location::Assign:
-    window->goURL(exec, args[0]->toString(exec).qstring());
+    window->goURL(exec, args[0]->toString(exec).ascii());
     break;
   case Location::Replace:
-    window->goURL(exec, args[0]->toString(exec).qstring(), true/*lock history*/);
+    window->goURL(exec, args[0]->toString(exec).ascii(), true/*lock history*/);
     break;
   case Location::Reload: {
     KHTMLPart *khtmlpart = qobject_cast<KHTMLPart*>(part);

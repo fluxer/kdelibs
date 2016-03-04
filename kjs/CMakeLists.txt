@@ -1,9 +1,5 @@
 project(kjs)
 
-if(ENABLE_TESTING)
-    add_subdirectory(tests)
-endif()
-
 # Configuration checks
 include(FindThreads)
 check_library_exists(pthread pthread_attr_get_np "" HAVE_PTHREAD_ATTR_GET_NP)
@@ -23,16 +19,6 @@ check_function_exists(posix_memalign     HAVE_FUNC_POSIX_MEMALIGN)
 check_symbol_exists(isnan   "math.h" HAVE_FUNC_ISNAN)
 check_symbol_exists(isinf   "math.h" HAVE_FUNC_ISINF)
 macro_pop_required_vars()
-
-#Do not make PCRE optional here. PCRE is a hard requirement for modern systems
-#but we give old systems some slack... that's why we don't specify "REQUIRED".
-find_package(PCRE)
-set_package_properties(PCRE PROPERTIES
-    DESCRIPTION "Perl-compatible regular expressions in KJS"
-    URL "http://www.pcre.org"
-    PURPOSE "Without PCRE, KJS will have extremely poor regular expression support, breaking many webpages."
-    TYPE OPTIONAL
-)
 
 macro_bool_to_01(PCRE_FOUND HAVE_PCREPOSIX)
 
@@ -180,42 +166,31 @@ set(kjs_LIB_SRCS
     propertydescriptor.cpp
 )
 
-add_library(kjs ${LIBRARY_TYPE} ${kjs_LIB_SRCS})
+add_library(kjs OBJECT ${kjs_LIB_SRCS})
 
-if(CMAKE_THREAD_LIBS_INIT)
-    target_link_libraries(kjs ${CMAKE_THREAD_LIBS_INIT})
+if(ENABLE_TESTING)
+    add_library(kjs ${LIBRARY_TYPE} ${kjs_LIB_SRCS})
+
+    if(CMAKE_THREAD_LIBS_INIT)
+        target_link_libraries(kjs ${CMAKE_THREAD_LIBS_INIT})
+    endif()
+    if(PCRE_FOUND)
+        target_link_libraries(kjs ${PCRE_LIBRARIES})
+    endif()
+    target_link_libraries(kjs m)
+
+    add_subdirectory(tests)
+
+    # 'kjs_bin' because cmake doesn't like having a lib and app with the same name
+    add_executable(kjs_bin kjs.cpp)
+
+    set_target_properties(kjs_bin PROPERTIES RUNTIME_OUTPUT_NAME kjs)
+
+    target_link_libraries(kjs_bin kjs)
+
+    # it is only for testing purposes, if you use it you abuse it
+    # install(TARGETS kjs_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif()
-
-if(PCRE_FOUND)
-   target_link_libraries(kjs ${PCRE_LIBRARIES})
-endif(PCRE_FOUND)
-
-target_link_libraries(kjs m)
-
-set_target_properties(kjs PROPERTIES
-    VERSION ${GENERIC_LIB_VERSION}
-    SOVERSION ${GENERIC_LIB_SOVERSION}
-)
-install(
-    TARGETS kjs
-    EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
-)
-
-########### kjs - basic shell ###############
-
-# 'kjs_bin' because cmake doesn't like having a lib and app with the same name
-add_executable(kjs_bin kjs.cpp)
-
-set_target_properties(kjs_bin PROPERTIES RUNTIME_OUTPUT_NAME kjs)
-
-target_link_libraries(kjs_bin kjs)
-
-install(TARGETS kjs_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-########### KDE-specific API ##############
-
-add_subdirectory(api)
 
 ########### install files ###############
 # install( FILES
