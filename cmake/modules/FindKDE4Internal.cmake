@@ -113,7 +113,7 @@
 #  LOCALE_INSTALL_DIR       - the directory where translations will be installed
 #  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
 #  MIME_INSTALL_DIR         - the directory where mimetype desktop files will be installed
-#  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR}/kde4)
+#  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR})
 #  IMPORTS_INSTALL_DIR      - the subdirectory relative to the install prefix where imports will be installed
 #  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
 #  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
@@ -541,8 +541,8 @@ _set_fancy(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
 _set_fancy(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec")
 _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include")
 
-_set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}/kde4")
-_set_fancy(IMPORTS_INSTALL_DIR      "${PLUGIN_INSTALL_DIR}/imports")
+_set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}")
+_set_fancy(IMPORTS_INSTALL_DIR      "${PLUGIN_INSTALL_DIR}/kde4/imports")
 _set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config")
 _set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps")
 _set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons")
@@ -567,8 +567,8 @@ _set_fancy(DBUS_INTERFACES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/interface
 _set_fancy(DBUS_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/services")
 _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/system-services")
 
-_set_fancy(KAUTH_HELPER_PLUGIN_DIR  "${PLUGIN_INSTALL_DIR}/plugins/kauth/helper")
-_set_fancy(KAUTH_BACKEND_PLUGIN_DIR "${PLUGIN_INSTALL_DIR}/plugins/kauth/backend")
+_set_fancy(KAUTH_HELPER_PLUGIN_DIR  "${PLUGIN_INSTALL_DIR}/kde4/plugins/kauth/helper")
+_set_fancy(KAUTH_BACKEND_PLUGIN_DIR "${PLUGIN_INSTALL_DIR}/kde4/plugins/kauth/backend")
 
 # For more documentation see above.
 # Later on it will be possible to extend this for installing OSX frameworks
