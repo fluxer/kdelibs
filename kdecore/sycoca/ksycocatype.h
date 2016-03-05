@@ -29,9 +29,9 @@
  * at the top of your class definition.
  */
 enum KSycocaType { KST_KSycocaEntry = 0, KST_KService = 1, KST_KServiceType = 2, KST_KMimeType = 3,
-                   KST_KFolderMimeType = 4, KST_KDEDesktopMimeType = 5 /*compat*/, KST_KMimeTypeEntry = 6 /*internal*/,
-                   KST_KServiceGroup = 7, KST_KImageIOFormat = 8, KST_KProtocolInfo = 9,
-                   KST_KServiceSeparator = 10,
+                   KST_KFolderMimeType = 4, KST_KMimeTypeEntry = 5 /*internal*/,
+                   KST_KServiceGroup = 6, KST_KImageIOFormat = 7, KST_KProtocolInfo = 8,
+                   KST_KServiceSeparator = 9,
                    KST_KCustom = 1000 };
 
 /**
@@ -44,9 +44,8 @@ enum KSycocaType { KST_KSycocaEntry = 0, KST_KService = 1, KST_KServiceType = 2,
 enum KSycocaFactoryId { KST_KServiceFactory = 1,
                         KST_KServiceTypeFactory = 2,
                         KST_KServiceGroupFactory = 3,
-                        KST_KImageIO = 4, // unused, KDE5: remove
-                        KST_KProtocolInfoFactory = 5,
-                        KST_KMimeTypeFactory = 6,
+                        KST_KProtocolInfoFactory = 4,
+                        KST_KMimeTypeFactory = 5,
                         KST_CTimeInfo = 100 };
 
 #define K_SYCOCAFACTORY( factory_id ) \
