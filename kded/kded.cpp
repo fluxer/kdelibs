@@ -34,7 +34,6 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
-#include <klibrary.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfig.h>
@@ -415,7 +414,7 @@ QStringList Kded::loadedModules()
 void Kded::slotKDEDModuleRemoved(KDEDModule *module)
 {
   m_modules.remove(module->moduleName());
-  //KLibrary *lib = m_libs.take(module->moduleName());
+  //QLibrary *lib = m_libs.take(module->moduleName());
   //if (lib)
   //   lib->unload();
 }

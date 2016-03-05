@@ -19,17 +19,16 @@
 #include "templateinterface.h"
 #include "document.h"
 #include "view.h"
-#include <QtCore/QString>
+#include <QString>
+#include <QDateTime>
+#include <QRegExp>
+#include <QLibrary>
 #include <klocale.h>
 #include <kglobal.h>
-#include <QtCore/qdatetime.h>
-#include <QtCore/QRegExp>
 #include <kmessagebox.h>
 #include <kcalendarsystem.h>
-#include <unistd.h>
-#include <klibrary.h>
-
 #include <kdebug.h>
+#include <unistd.h>
 
 #define DUMMY_VALUE "!KTE:TEMPLATEHANDLER_DUMMY_VALUE!"
 
@@ -59,8 +58,8 @@ bool TemplateInterface::expandMacros( QMap<QString, QString> &map, QWidget *pare
       {
         if (kabcbridgecall==0)
         {
-          KLibrary lib(QLatin1String("ktexteditorkabcbridge"));
-          kabcbridgecall=(kabcbridgecalltype)lib.resolveFunction("ktexteditorkabcbridge");
+          QLibrary lib(QLatin1String("ktexteditorkabcbridge"));
+          kabcbridgecall=(kabcbridgecalltype)lib.resolve("ktexteditorkabcbridge");
           if (kabcbridgecall == 0)
           {
             KMessageBox::sorry(parentWindow,i18n("The template needs information about you, which is stored in your address book.\nHowever, the required plugin could not be loaded.\n\nPlease install the KDEPIM/Kontact package for your system."));

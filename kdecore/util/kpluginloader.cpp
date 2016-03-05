@@ -24,14 +24,11 @@
 #include <klocale.h>
 #include "kpluginfactory.h"
 #include <kservice.h>
-#include "klibrary.h"
 #include <kdebug.h>
 
 #include <QtCore/QLibrary>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
-
-extern int kLibraryDebugArea();
 
 class KPluginLoaderPrivate
 {
@@ -51,7 +48,7 @@ protected:
     KDEPluginVerificationData *verificationData;
     QString errorString;
 
-    KLibrary *lib;
+    QLibrary *lib;
 };
 
 inline QString makeLibName( const QString &libname )
@@ -85,7 +82,7 @@ QString findLibraryInternal(const QString &name, const KComponentData &cData)
     bool hasPrefix = fileinfo.fileName().startsWith(QLatin1String("lib"));
 
     if (hasPrefix)
-        kDebug(kLibraryDebugArea()) << "plugins should not have a 'lib' prefix:" << libname;
+        kDebug() << "plugins should not have a 'lib' prefix:" << libname;
 
     // If it is a absolute path just return it
     if (!QDir::isRelativePath(libname))
@@ -105,7 +102,7 @@ QString findLibraryInternal(const QString &name, const KComponentData &cData)
 
     libfile = cData.dirs()->findResource("lib", libname);
     if (!libfile.isEmpty()) {
-        kDebug(kLibraryDebugArea()) << "library" << libname << "not found under 'module' but under 'lib'";
+        kDebug() << "library" << libname << "not found under 'module' but under 'lib'";
         return libfile;
     }
 
@@ -186,7 +183,7 @@ KPluginFactory *KPluginLoader::factory()
     KPluginFactory *factory = qobject_cast<KPluginFactory *>(obj);
 
     if (factory == 0) {
-        kDebug(kLibraryDebugArea()) << "Expected a KPluginFactory, got a" << obj->metaObject()->className();
+        kDebug() << "Expected a KPluginFactory, got a" << obj->metaObject()->className();
         delete obj;
         d->errorString = i18n("The library %1 does not offer a KDE 4 compatible factory." , d->name);
     }
@@ -202,7 +199,7 @@ bool KPluginLoader::load()
         return true;
 
     if (!QPluginLoader::load()) {
-        d->lib = new KLibrary(d->name);
+        d->lib = new QLibrary(d->name);
         if (d->lib->load())
             return true;
 
@@ -224,7 +221,7 @@ bool KPluginLoader::load()
             return false;
         }
     } else {
-        kDebug(kLibraryDebugArea()) << "The plugin" << d->name << "doesn't contain a kde_plugin_verification_data structure";
+        kDebug() << "The plugin" << d->name << "doesn't contain a kde_plugin_verification_data structure";
     }
 
     quint32 *version = (quint32 *) lib.resolve("kde_plugin_version");

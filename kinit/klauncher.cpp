@@ -44,7 +44,6 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kde_file.h>
-#include <klibrary.h>
 #include <klocale.h>
 #include <kprotocolmanager.h>
 #include <kprotocolinfo.h>
@@ -1115,15 +1114,16 @@ KLauncher::requestSlave(const QString &protocol,
        kde_safe_write(kdeinitSocket, &request_header, sizeof(request_header));
     }
     if (mSlaveValgrind == protocol) {
-       KLibrary lib(name, KGlobal::mainComponent());
+       KPluginLoader lib(name, KGlobal::mainComponent());
        arg_list.prepend(lib.fileName());
        arg_list.prepend(KStandardDirs::locate("exe", QString::fromLatin1("kioslave")));
        name = QString::fromLatin1("valgrind");
 
        if (!mSlaveValgrindSkin.isEmpty()) {
            arg_list.prepend(QLatin1String("--tool=") + mSlaveValgrindSkin);
-       } else
-	   arg_list.prepend(QLatin1String("--tool=memcheck"));
+       } else {
+           arg_list.prepend(QLatin1String("--tool=memcheck"));
+       }
     }
 #endif
     KLaunchRequest *request = new KLaunchRequest;

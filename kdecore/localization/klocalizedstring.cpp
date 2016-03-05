@@ -25,7 +25,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <klocale_p.h>
-#include <klibrary.h>
 #include <kstandarddirs.h>
 #include <kuitsemantics_p.h>
 #include "kcatalogname_p.h"

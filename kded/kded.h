@@ -197,7 +197,7 @@ private:
    bool m_recreateBusy;
 
    QHash<QString,KDEDModule *> m_modules;
-    //QHash<QString,KLibrary *> m_libs;
+    //QHash<QString,QLibrary *> m_libs;
    QHash<QString,QObject *> m_dontLoad;
 
    //window id tracking, with a QDBusServiceWatcher to remove them as needed

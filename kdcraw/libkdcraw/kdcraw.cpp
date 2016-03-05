@@ -37,8 +37,7 @@
 #include <QStringList>
 
 // KDE includes
-
-#include <klibrary.h>
+#include <kglobal.h>
 
 // LibRaw includes
 

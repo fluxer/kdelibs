@@ -284,7 +284,6 @@ set(kdecore_LIB_SRCS
     util/kdedmodule.cpp
     util/kdeversion.cpp
     util/klauncher_iface.cpp
-    util/klibrary.cpp
     util/kmacroexpander.cpp
     util/kpluginfactory.cpp
     util/kpluginloader.cpp
@@ -514,7 +513,6 @@ install(
     util/kde_file.h
     util/kdedmodule.h
     util/klauncher_iface.h
-    util/klibrary.h
     util/kmacroexpander.h
     util/kexportplugin.h
     util/kpluginfactory.h

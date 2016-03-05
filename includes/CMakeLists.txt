@@ -193,7 +193,6 @@ install(
     KKeySequenceWidget
     KLanguageButton
     KLed
-    KLibrary
     KLineEdit
     KLinkItemSelectionModel
     KListWidget

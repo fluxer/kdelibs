@@ -54,7 +54,6 @@
 #include <QtCore/QRegExp>
 #include <QtGui/QFont>
 #include <kcomponentdata.h>
-#include <klibrary.h>
 #include <kdemacros.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
@@ -64,6 +63,7 @@
 #include <kdebug.h>
 #include <kde_file.h>
 #include <ksavefile.h>
+#include <kpluginloader.h>
 
 #ifdef Q_OS_LINUX
 #include <sys/prctl.h>
@@ -421,7 +421,7 @@ static pid_t launch(int argc, const char *_name, const char *args,
         name = _name;
         lib = QFile::decodeName(name);
         exec = name;
-        KLibrary klib(lib, *s_instance );
+        KPluginLoader klib(lib, *s_instance );
         libpath = klib.fileName();
         execpath = execpath_avoid_loops(exec, envc, envs, avoid_loops);
     } else {

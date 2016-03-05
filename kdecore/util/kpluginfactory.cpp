@@ -28,8 +28,6 @@
 
 K_GLOBAL_STATIC(QObjectCleanupHandler, factorycleanup)
 
-extern int kLibraryDebugArea();
-
 KPluginFactory::KPluginFactory(const char *componentName, const char *catalogName, QObject *parent)
     : QObject(parent), d_ptr(new KPluginFactoryPrivate)
 {
@@ -86,7 +84,7 @@ void KPluginFactory::registerPlugin(const QString &keyword, const QMetaObject *m
     // we allow different interfaces to be registered without keyword
     if (!keyword.isEmpty()) {
         if (d->createInstanceHash.contains(keyword)) {
-            kFatal(kLibraryDebugArea()) << "A plugin with the keyword" << keyword << "was already registered. A keyword must be unique!";
+            kFatal() << "A plugin with the keyword" << keyword << "was already registered. A keyword must be unique!";
         }
         d->createInstanceHash.insert(keyword, KPluginFactoryPrivate::Plugin(metaObject, instanceFunction));
     } else {
@@ -97,7 +95,7 @@ void KPluginFactory::registerPlugin(const QString &keyword, const QMetaObject *m
                 for (const QMetaObject *otherSuper = plugin.first->superClass(); otherSuper;
                         otherSuper = otherSuper->superClass()) {
                     if (superClass == otherSuper) {
-                        kFatal(kLibraryDebugArea()) << "Two plugins with the same interface(" << superClass->className() << ") were registered. Use keywords to identify the plugins.";
+                        kFatal() << "Two plugins with the same interface(" << superClass->className() << ") were registered. Use keywords to identify the plugins.";
                     }
                 }
             }
@@ -108,7 +106,7 @@ void KPluginFactory::registerPlugin(const QString &keyword, const QMetaObject *m
                 for (const QMetaObject *otherSuper = metaObject->superClass(); otherSuper;
                         otherSuper = otherSuper->superClass()) {
                     if (superClass == otherSuper) {
-                        kFatal(kLibraryDebugArea()) << "Two plugins with the same interface(" << superClass->className() << ") were registered. Use keywords to identify the plugins.";
+                        kFatal() << "Two plugins with the same interface(" << superClass->className() << ") were registered. Use keywords to identify the plugins.";
                     }
                 }
             }
@@ -138,7 +136,7 @@ QObject *KPluginFactory::create(const char *iface, QWidget *parentWidget, QObjec
         for (const QMetaObject *current = plugin.first; current; current = current->superClass()) {
             if (0 == qstrcmp(iface, current->className())) {
                 if (obj) {
-                    kFatal(kLibraryDebugArea()) << "ambiguous interface requested from a DSO containing more than one plugin";
+                    kFatal() << "ambiguous interface requested from a DSO containing more than one plugin";
                 }
                 obj = plugin.second(parentWidget, parent, args);
                 break;

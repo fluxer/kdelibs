@@ -39,7 +39,6 @@
 #include <kstandarddirs.h>
 #include <ktoolinvocation.h>
 #include <klauncher_iface.h>
-#include <klibrary.h>
 
 #include "dataprotocol.h"
 #include "kservice.h"
@@ -436,7 +435,7 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
           delete slave;
           return 0;
        }
-       KLibrary lib(_name, KGlobal::mainComponent());
+       KPluginLoader lib(_name, KGlobal::mainComponent());
        QString lib_path = lib.fileName();
        if (lib_path.isEmpty())
        {

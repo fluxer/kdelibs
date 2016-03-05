@@ -24,7 +24,6 @@
 #include <QtGui/QWidget>
 
 #include <kpluginloader.h>
-#include <klibrary.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kcomponentdata.h>
