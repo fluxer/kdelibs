@@ -6,7 +6,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/kfile
 )
 
-if(QT_QTDESIGNER_FOUND )
+if(QT_QTDESIGNER_FOUND)
     ############################################
     # the forms module
 

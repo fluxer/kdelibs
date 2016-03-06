@@ -38,7 +38,7 @@ if(JASPER_FOUND)
 
     install(
         TARGETS kimg_jp2
-        DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats
+        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
     install(
         FILES
@@ -62,7 +62,7 @@ if(OPENEXR_FOUND)
 
     install(
         TARGETS kimg_exr
-        DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats
+        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
     install(
         FILES exr.desktop
@@ -83,7 +83,7 @@ if(WEBP_FOUND)
 
     install(
         TARGETS kimg_webp
-        DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats
+        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
     install(
         FILES
@@ -118,7 +118,7 @@ foreach(plugin ${imgioplugins})
     )
     install(
         TARGETS kimg_${plugin}
-        DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats
+        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
 endforeach()
 
@@ -139,7 +139,7 @@ target_link_libraries(kimg_pic
 
 install(
     TARGETS kimg_pic
-    DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/imageformats
+    DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
 )
 
 ########### install files ###############

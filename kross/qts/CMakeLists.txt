@@ -23,7 +23,7 @@ set_target_properties(krossqtsplugin PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-install(TARGETS krossqtsplugin DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/script)
+install(TARGETS krossqtsplugin DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/script)
 
 ########### next target ###############
 

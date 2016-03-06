@@ -36,6 +36,11 @@ if(QT_QTDESIGNER_FOUND)
 
     target_link_libraries(kdewidgets ${KDE4_KIO_LIBS})
 
+    install(
+        TARGETS kdewidgets
+        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/designer
+    )
+
     if(QT_QTWEBKIT_FOUND)
         include_directories(${CMAKE_SOURCE_DIR}/kdewebkit)
 
@@ -56,8 +61,8 @@ if(QT_QTDESIGNER_FOUND)
         )
 
         install(
-            TARGETS kdewidgets kdewebkitwidgets
-            DESTINATION ${PLUGIN_INSTALL_DIR}/plugins/designer
+            TARGETS kdewebkitwidgets
+            DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/designer
         )
     endif()
 endif(QT_QTDESIGNER_FOUND)
