@@ -448,14 +448,8 @@ QRegion Corona::availableScreenRegion(int id) const
     return QRegion(screenGeometry(id));
 }
 
-QPoint Corona::popupPosition(const QGraphicsItem *item, const QSize &s)
-{
-    return popupPosition(item, s, Qt::AlignLeft);
-}
-
 QPoint Corona::popupPosition(const QGraphicsItem *item, const QSize &s, Qt::AlignmentFlag alignment)
 {
-    // TODO: merge both methods (also these in Applet) into one (with optional alignment) when we can break compatibility
     // TODO: add support for more flags in the future?
 
     const QGraphicsItem *actualItem = item;

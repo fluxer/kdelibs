@@ -232,9 +232,6 @@ namespace KJS {
     // important property lookup functions, to avoid taking PIC branches in Mach-O binaries
     const CommonIdentifiers& propertyNames() const { return *m_propertyNames; }
 
-    // Compatibility stuff:
-    ExecState* context() { return this; }
-    ExecState* callingContext() { return callingExecState(); }
   protected:
     ExecState(Interpreter* intp, ExecState* save);
     ~ExecState();
@@ -275,8 +272,6 @@ namespace KJS {
 
     CodeType m_codeType;
   };
-
-  typedef ExecState Context; // Compatibility only
 
     class GlobalExecState : public ExecState {
     public:

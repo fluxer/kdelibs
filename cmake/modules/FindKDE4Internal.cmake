@@ -235,10 +235,6 @@
 # this is required by cmake >=2.6
 cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 
-# CMake 2.6, set compatibility behaviour to cmake 2.4
-# this must be executed always, because the CMAKE_MINIMUM_REQUIRED() command above
-# resets the policy settings, so we get a lot of warnings
-
 # CMP0000: don't require cmake_minimum_version() directly in the top level
 # CMakeLists.txt, FindKDE4Internal.cmake is good enough
 cmake_policy(SET CMP0000 OLD)

@@ -195,15 +195,6 @@ public:
     virtual QRegion availableScreenRegion(int id) const;
 
     /**
-    * Recommended position for a popup window like a menu or a tooltip
-    * given its size
-    * @param item the item that the popup should appear adjacent to (an applet, say)
-    * @param size size of the popup
-    * @returns reccomended position
-    */
-    QPoint popupPosition(const QGraphicsItem *item, const QSize &size);
-
-    /**
      * @since 4.4
     * Recommended position for a popup window like a menu or a tooltip
     * given its size
@@ -212,7 +203,7 @@ public:
     * @param alignment alignment of the popup, valid flags are Qt::AlignLeft, Qt::AlignRight and Qt::AlignCenter
     * @returns reccomended position
     */
-    QPoint popupPosition(const QGraphicsItem *item, const QSize &size, Qt::AlignmentFlag alignment);
+    QPoint popupPosition(const QGraphicsItem *item, const QSize &size, Qt::AlignmentFlag alignment = Qt::AlignLeft);
 
     /**
      * This method is useful in order to retrieve the list of available

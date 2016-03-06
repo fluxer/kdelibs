@@ -3450,8 +3450,7 @@ endParsing:
 
         // We need to reread the header if we got a '100 Continue' or '102 Processing'
         // This may be a non keepalive connection so we handle this kind of loop internally
-        if ( cont )
-        {
+        if ( cont ) {
             kDebug(7113) << "cont; returning to mark try_again";
             goto try_again;
         }
