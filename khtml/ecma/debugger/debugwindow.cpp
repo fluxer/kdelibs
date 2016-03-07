@@ -652,7 +652,7 @@ bool DebugWindow::exception(ExecState *exec, int sourceId, int lineNo, JSValue *
 
     // Figure out filename.
     QString url = "????";
-    if (exec->context()->codeType() == EvalCode)
+    if (exec->codeType() == EvalCode)
         url = "eval";
     if (!doc->url().isEmpty())
         url = doc->url();
@@ -746,7 +746,7 @@ bool DebugWindow::enterContext(ExecState *exec, int sourceId, int lineno, JSObje
             stackEntry = functionName;
     }
 
-    if (exec->context()->codeType() == EvalCode)
+    if (exec->codeType() == EvalCode)
         stackEntry = "eval";
 
     ctx->addCall(document, stackEntry, lineno);
@@ -806,7 +806,7 @@ bool DebugWindow::exitContext(ExecState *exec, int sourceId, int lineno, JSObjec
         if (ic->execContexts.isEmpty())
             setUIMode(Stopped);
         else
-            fatalAssert(exec->context()->callingContext(), "Apparent event re-entry");
+            fatalAssert(exec->callingExecState(), "Apparent event re-entry");
             // Sanity check: the modality protection should disallow us to exit
             // from a context called by KHTML unless it's at very top level
             // (e.g. no other execs on top)
@@ -816,7 +816,7 @@ bool DebugWindow::exitContext(ExecState *exec, int sourceId, int lineno, JSObjec
     // clear the corresponding document, unless it's open.
     // We can not do it safely if there are any functions declared,
     // however, since they can escape.
-    if (exec->context()->codeType() == EvalCode)
+    if (exec->codeType() == EvalCode)
     {
         DebugDocument::Ptr doc = m_docForSid[sourceId];
         if (!m_openDocuments.contains(doc.get()) && !doc->hasFunctions())
@@ -844,7 +844,7 @@ void DebugWindow::doEval(const QString& qcode)
         exec = m_callStack->selectedFrameContext();
         if (!exec)
             exec = m_activeSessionCtxs.top()->execContexts.top();
-        thisObj = exec->context()->thisValue();
+        thisObj = exec->thisValue();
     }
     else
     {

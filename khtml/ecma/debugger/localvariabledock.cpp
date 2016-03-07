@@ -161,16 +161,12 @@ void LocalVariablesDock::updateDisplay(KJS::ExecState *exec)
 
     // Find out out scope object...
     KJS::JSObject* scopeObject = 0;
-    KJS::Context*  context =0;
-
-    if (exec)
-        context = exec->context();
 
     // Find the nearest local scope, or 
     // failing that the topmost scope
-    if (context)
+    if (exec)
     {
-        KJS::ScopeChain chain = context->scopeChain();
+        KJS::ScopeChain chain = exec->scopeChain();
         for( KJS::ScopeChainIterator iter = chain.begin();
             iter != chain.end(); ++iter)
         {
