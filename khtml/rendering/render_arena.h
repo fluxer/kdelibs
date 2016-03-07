@@ -36,7 +36,9 @@
 #ifndef RENDERARENA_H
 #define RENDERARENA_H
 
+#ifndef NDEBUG
 #define KHTML_USE_ARENA_ALLOCATOR
+#endif
 
 #include "misc/arena.h"
 #include "misc/shared.h"
