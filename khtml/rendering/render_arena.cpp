@@ -74,69 +74,22 @@ RenderArena::~RenderArena()
 
 void* RenderArena::allocate(size_t size)
 {
-#ifndef KHTML_USE_ARENA_ALLOCATOR
     // Use standard malloc so that memory debugging tools work.
     void *block = ::malloc(sizeof(RenderArenaDebugHeader) + size);
     RenderArenaDebugHeader *header = (RenderArenaDebugHeader *)block;
     header->arena = this;
     header->size = size;
     return header + 1;
-#else
-    void* result = 0;
-
-    // Ensure we have correct alignment for pointers.  Important for Tru64
-    size = KHTML_ROUNDUP(size, sizeof(void*));
-
-    // Check recyclers first
-    if (size < KHTML_MAX_RECYCLED_SIZE) {
-        const int   index = size >> 2;
-
-        result = m_recyclers[index];
-        if (result) {
-#ifdef VALGRIND_SUPPORT
-            VALGRIND_MEMPOOL_ALLOC(findContainingArena(&m_pool, result)->base, result, size);
-#endif
-            // Need to move to the next object
-            void* next = *((void**)result);
-            m_recyclers[index] = next;
-        }
-    }
-
-    if (!result) {
-        // Allocate a new chunk from the arena
-        ARENA_ALLOCATE(result, &m_pool, size);
-    }
-
-    return result;
-#endif
 }
 
 void RenderArena::free(size_t size, void* ptr)
 {
-#ifndef KHTML_USE_ARENA_ALLOCATOR
     // Use standard free so that memory debugging tools work.
     assert(this);
     RenderArenaDebugHeader *header = (RenderArenaDebugHeader *)ptr - 1;
     //assert(header->size == size);
     //assert(header->arena == this);
     ::free(header);
-#else
-
-#ifdef VALGRIND_SUPPORT
-    VALGRIND_MEMPOOL_FREE(findContainingArena(&m_pool, ptr)->base, ptr);
-#endif
-
-    // Ensure we have correct alignment for pointers.  Important for Tru64
-    size = KHTML_ROUNDUP(size, sizeof(void*));
-
-    // See if it's a size that we recycle
-    if (size < KHTML_MAX_RECYCLED_SIZE) {
-        const int   index = size >> 2;
-        void*       currentTop = m_recyclers[index];
-        m_recyclers[index] = ptr;
-        *((void**)ptr) = currentTop;
-    }
-#endif
 }
 
 }

@@ -100,10 +100,6 @@ void RenderObject::operator delete(void* ptr, size_t sz)
 {
     assert(baseOfRenderObjectBeingDeleted == ptr);
 
-#ifdef KHTML_USE_ARENA_ALLOCATOR
-    // Stash size where detach can find it.
-    *(size_t *)ptr = sz;
-#endif
 }
 
 RenderObject *RenderObject::createObject(DOM::NodeImpl* node,  RenderStyle* style)
