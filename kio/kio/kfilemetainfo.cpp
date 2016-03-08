@@ -395,10 +395,13 @@ public:
 KFileMetaInfo::KFileMetaInfo ( const QString& path, const QString& /*mimetype*/,
                                KFileMetaInfo::WhatFlags w )
 {
+    Q_UNUSED(path);
+    Q_UNUSED(w);
 }
 
 KFileMetaInfo::KFileMetaInfo ( const KUrl& url )
 {
+    Q_UNUSED(url);
 }
 
 KFileMetaInfo::KFileMetaInfo()
@@ -407,11 +410,13 @@ KFileMetaInfo::KFileMetaInfo()
 
 KFileMetaInfo::KFileMetaInfo ( const KFileMetaInfo& k )
 {
+    Q_UNUSED(k);
 }
 
-const KFileMetaInfo& KFileMetaInfo::operator= ( KFileMetaInfo const & kfmi )
+KFileMetaInfo& KFileMetaInfo::operator= ( KFileMetaInfo const & kfmi )
 {
-    return kfmi;
+    Q_UNUSED(kfmi);
+    return *this;
 }
 
 KFileMetaInfo::~KFileMetaInfo()
@@ -437,6 +442,7 @@ const QHash<QString, KFileMetaInfoItem>& KFileMetaInfo::items() const
 
 const KFileMetaInfoItem& KFileMetaInfo::item ( const QString& key ) const
 {
+    Q_UNUSED(key);
     static const KFileMetaInfoItem item;
     return item;
 }
@@ -448,6 +454,7 @@ QStringList KFileMetaInfo::keys() const
 
 KFileMetaInfoItem& KFileMetaInfo::item ( const QString& key )
 {
+    Q_UNUSED(key);
     static KFileMetaInfoItem item;
     return item;
 }
