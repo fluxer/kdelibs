@@ -31,6 +31,8 @@
 #include <QTimer>
 #include <QRunnable>
 #include <QThreadPool>
+#include <QPainter>
+#include <QSvgRenderer>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -480,16 +482,138 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
         }
     }
 
-    WallpaperRenderRequest request;
-    renderToken = request.token;
-    request.requester = q;
-    request.providedImage = image;
-    request.file = sourceImagePath;
-    request.size = size;
-    request.resizeMethod = resizeMethod;
-    request.color = color;
-    WallpaperRenderThread::render(request);
-    //kDebug() << "rendering" << sourceImagePath << ", token is" << d->renderToken;
+    kDebug() << "rendering wallpaper" << sourceImagePath;
+    QImage result(size, QImage::Format_ARGB32_Premultiplied);
+    result.fill(color.rgba());
+
+    if (sourceImagePath.isEmpty() && image.isNull() && !QFile::exists(sourceImagePath)) {
+        kDebug() << "wrong request or file does not exist";
+        return;
+    }
+
+    QPoint pos(0, 0);
+    //const float ratio = qMax(float(1), size.width() / float(size.height()));
+    const bool scalable = sourceImagePath.endsWith(QLatin1String("svg")) || sourceImagePath.endsWith(QLatin1String("svgz"));
+    bool tiled = false;
+    QSize scaledSize;
+    QImage img;
+
+    // set image size
+    QSize imgSize(1, 1);
+    if (!image.isNull()) {
+        img = image;
+        kDebug() << "going to resize the img" << img.size();
+        imgSize = imgSize.expandedTo(img.size());
+    } else if (scalable) {
+        // scalable: image can be of any size
+        imgSize = imgSize.expandedTo(size);
+    } else {
+        // otherwise, use the natural size of the loaded image
+        img = QImage(sourceImagePath);
+        imgSize = imgSize.expandedTo(img.size());
+        //kDebug() << "loaded with" << imgSize << ratio;
+    }
+
+    // set render parameters according to resize mode
+    switch (resizeMethod)
+    {
+        case Wallpaper::ScaledResize:
+            scaledSize = size;
+            break;
+        case Wallpaper::CenteredResize:
+            scaledSize = imgSize;
+            pos = QPoint((size.width() - scaledSize.width()) / 2,
+                         (size.height() - scaledSize.height()) / 2);
+
+            //If the picture is bigger than the screen, shrink it
+            if (size.width() < imgSize.width() && imgSize.width() > imgSize.height()) {
+                int width = size.width();
+                int height = width * scaledSize.height() / imgSize.width();
+                scaledSize = QSize(width, height);
+                pos = QPoint((size.width() - scaledSize.width()) / 2,
+                        (size.height() - scaledSize.height()) / 2);
+            } else if (size.height() < imgSize.height()) {
+                int height = size.height();
+                int width = height * imgSize.width() / imgSize.height();
+                scaledSize = QSize(width, height);
+                pos = QPoint((size.width() - scaledSize.width()) / 2,
+                             (size.height() - scaledSize.height()) / 2);
+            }
+
+            break;
+        case Wallpaper::MaxpectResize: {
+            float xratio = (float) size.width() / imgSize.width();
+            float yratio = (float) size.height() / imgSize.height();
+            if (xratio > yratio) {
+                int height = size.height();
+                int width = height * imgSize.width() / imgSize.height();
+                scaledSize = QSize(width, height);
+            } else {
+                int width = size.width();
+                int height = width * imgSize.height() / imgSize.width();
+                scaledSize = QSize(width, height);
+            }
+
+            pos = QPoint((size.width() - scaledSize.width()) / 2,
+                         (size.height() - scaledSize.height()) / 2);
+            break;
+        }
+        case Wallpaper::ScaledAndCroppedResize: {
+            float xratio = (float) size.width() / imgSize.width();
+            float yratio = (float) size.height() / imgSize.height();
+            if (xratio > yratio) {
+                int width = size.width();
+                int height = width * imgSize.height() / imgSize.width();
+                scaledSize = QSize(width, height);
+            } else {
+                int height = size.height();
+                int width = height * imgSize.width() / imgSize.height();
+                scaledSize = QSize(width, height);
+            }
+            pos = QPoint((size.width() - scaledSize.width()) / 2,
+                         (size.height() - scaledSize.height()) / 2);
+            break;
+        }
+        case Wallpaper::TiledResize:
+            scaledSize = imgSize;
+            tiled = true;
+            break;
+        case Wallpaper::CenterTiledResize:
+            scaledSize = imgSize;
+            pos = QPoint(-scaledSize.width() + ((size.width() - scaledSize.width()) / 2) % scaledSize.width(),
+                         -scaledSize.height() + ((size.height() - scaledSize.height()) / 2) % scaledSize.height());
+            tiled = true;
+            break;
+    }
+
+    QPainter p(&result);
+    //kDebug() << token << scalable << scaledSize << imgSize;
+    if (scalable) {
+        // tiling is ignored for scalable wallpapers
+        QSvgRenderer svg(sourceImagePath);
+        svg.render(&p);
+    } else {
+        if (scaledSize != imgSize) {
+            img = img.scaled(scaledSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        }
+
+        if (tiled) {
+            for (int x = pos.x(); x < size.width(); x += scaledSize.width()) {
+                for (int y = pos.y(); y < size.height(); y += scaledSize.height()) {
+                    p.drawImage(QPoint(x, y), img);
+                }
+            }
+        } else {
+            p.drawImage(pos, img);
+        }
+    }
+
+    if (cacheRendering) {
+        q->insertIntoCache(cacheKey(sourceImagePath, size, resizeMethod, color), result);
+    }
+
+    //kDebug() << "rendering complete!";
+    emit q->renderCompleted(result);
 }
 
 WallpaperPrivate::WallpaperPrivate(KService::Ptr service, Wallpaper *wallpaper) :
@@ -540,22 +664,6 @@ QString WallpaperPrivate::cacheKey(const QString &sourceImagePath, const QSize &
 QString WallpaperPrivate::cachePath(const QString &key) const
 {
     return KGlobal::dirs()->locateLocal("cache", "plasma-wallpapers/" + key + ".png");
-}
-
-void WallpaperPrivate::newRenderCompleted(const WallpaperRenderRequest &request, const QImage &image)
-{
-    kDebug() << request.token << renderToken;
-    if (request.token != renderToken) {
-        //kDebug() << "render token mismatch" << token << renderToken;
-        return;
-    }
-
-    if (cacheRendering) {
-        q->insertIntoCache(cacheKey(request.file, request.size, request.resizeMethod, request.color), image);
-    }
-
-    //kDebug() << "rendering complete!";
-    emit q->renderCompleted(image);
 }
 
 // put all setup routines for script here. at this point we can assume that

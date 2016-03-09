@@ -27,7 +27,6 @@
 
 #include "plasma/scripting/wallpaperscript.h"
 #include "plasma/private/dataengineconsumer_p.h"
-#include "plasma/private/wallpaperrenderthread_p.h"
 
 namespace Plasma
 {
@@ -44,7 +43,6 @@ public:
 
     bool findInCache(const QString &key, unsigned int lastModified = 0);
 
-    void newRenderCompleted(const WallpaperRenderRequest &render, const QImage &image);
     void setupScriptSupport();
     void renderWallpaper(const QString &sourceImagePath, const QImage &image, const QSize &size,
                          Wallpaper::ResizeMethod resizeMethod, const QColor &color);

@@ -126,7 +126,6 @@ set(plasma_LIB_SRCS
     private/style.cpp
     private/themedwidgetinterface.cpp
     private/tooltip.cpp
-    private/wallpaperrenderthread.cpp
     private/windowpreview.cpp
     private/kineticscroll.cpp
     private/declarative/declarativenetworkaccessmanagerfactory.cpp
