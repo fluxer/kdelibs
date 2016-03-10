@@ -20,19 +20,19 @@ install(
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-
 ########### next target ###############
 
 if(QT_QTDESIGNER_FOUND)
-    kde4_add_widget(kdewidgets_PART_SRCS kde.widgets)
+    kde4_add_widget(kdewidgets_SRCS kde.widgets)
 
-    set(kdewidgets_PART_SRCS
+    set(kdewidgets_SRCS
+        ${kdewidgets_SRCS}
         classpreviews.cpp
     )
 
-    qt4_add_resources(kdewidgets_PART_SRCS kdewidgets.qrc)
+    qt4_add_resources(kdewidgets_SRCS kdewidgets.qrc)
 
-    kde4_add_plugin(kdewidgets ${kdewidgets_PART_SRCS})
+    kde4_add_plugin(kdewidgets ${kdewidgets_SRCS})
 
     target_link_libraries(kdewidgets ${KDE4_KIO_LIBS})
 
@@ -44,15 +44,16 @@ if(QT_QTDESIGNER_FOUND)
     if(QT_QTWEBKIT_FOUND)
         include_directories(${CMAKE_SOURCE_DIR}/kdewebkit)
 
-        kde4_add_widget(kdewebkitwidgets_PART_SRCS kdewebkit.widgets)
+        kde4_add_widget(kdewebkitwidgets_SRCS kdewebkit.widgets)
 
-        set(kdewebkitwidgets_PART_SRCS
+        set(kdewebkitwidgets_SRCS
+            ${kdewebkitwidgets_SRCS}
             classpreviews.cpp
         )
 
-        qt4_add_resources(kdewebkitwidgets_PART_SRCS kdewebkitwidgets.qrc)
+        qt4_add_resources(kdewebkitwidgets_SRCS kdewebkitwidgets.qrc)
 
-        kde4_add_plugin(kdewebkitwidgets ${kdewebkitwidgets_PART_SRCS})
+        kde4_add_plugin(kdewebkitwidgets ${kdewebkitwidgets_SRCS})
 
         target_link_libraries(kdewebkitwidgets
             ${KDE4_KDEUI_LIBS}
