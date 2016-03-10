@@ -80,7 +80,7 @@ void InlineTextBox::detach(RenderArena* renderArena, bool noRemove)
 #endif
 
     // Recover the size left there for us by operator delete and free the memory.
-    renderArena->free(*(size_t *)this, this);
+    renderArena->deallocate(*(size_t *)this, this);
 }
 
 void* InlineTextBox::operator new(size_t sz, RenderArena* renderArena) throw()
@@ -91,11 +91,6 @@ void* InlineTextBox::operator new(size_t sz, RenderArena* renderArena) throw()
 void InlineTextBox::operator delete(void* ptr, size_t sz)
 {
     assert(inInlineTextBoxDetach);
-
-#ifdef KHTML_USE_ARENA_ALLOCATOR
-    // Stash size where detach can find it.
-    *(size_t *)ptr = sz;
-#endif
 }
 
 void InlineTextBox::selectionStartEnd(int& sPos, int& ePos)

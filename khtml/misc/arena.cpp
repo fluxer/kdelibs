@@ -154,7 +154,6 @@ void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
                 pool->current = a;
                 rp = (char *)a->avail;
                 a->avail += nb;
-                VALGRIND_MEMPOOL_ALLOC(a->base, rp, nb);
                 return rp;
             }
         } while( NULL != (a = a->next) );
@@ -173,7 +172,6 @@ void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
                 a->avail = a->base;
                 rp = (char *)a->avail;
                 a->avail += nb;
-                VALGRIND_MEMPOOL_ALLOC(a->base, rp, nb);
                 /* the newly allocated arena is linked after pool->current
                  *  and becomes pool->current */
                 a->next = pool->current->next;
@@ -211,10 +209,8 @@ void* ArenaAllocate(ArenaPool *pool, unsigned int nb)
         if (a)  {
             a->limit = (uword)a + sz;
             a->base = a->avail = (uword)ARENA_ALIGN(pool, a + 1);
-            VALGRIND_CREATE_MEMPOOL(a->base, 0, 0);
             rp = (char *)a->avail;
             a->avail += nb;
-            VALGRIND_MEMPOOL_ALLOC(a->base, rp, nb);
 
             /* the newly allocated arena is linked after pool->current
             *  and becomes pool->current */
@@ -261,7 +257,6 @@ static void FreeArenaList(ArenaPool *pool, Arena *head, bool reallyFree)
     if (reallyFree) {
         do {
             *ap = a->next;
-            VALGRIND_DESTROY_MEMPOOL(a->base);
             CLEAR_ARENA(a);
 #ifdef DEBUG_ARENA_MALLOC
             if (a) {
@@ -282,7 +277,6 @@ static void FreeArenaList(ArenaPool *pool, Arena *head, bool reallyFree)
         if (*ap) {
             Arena *xa, *n;
             for (xa = *ap; xa; xa = n) {
-                VALGRIND_DESTROY_MEMPOOL(xa->base);
                 n = xa->next;
 #ifdef DEBUG_ARENA_MALLOC
                 i--;

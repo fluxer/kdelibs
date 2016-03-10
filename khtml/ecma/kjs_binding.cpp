@@ -23,13 +23,6 @@
 #include "kjs_binding.h"
 
 #include <config-khtml.h>
-#if defined(HAVE_VALGRIND_MEMCHECK_H)
-
-#include <valgrind/memcheck.h>
-#define VALGRIND_SUPPORT
-
-#endif
-
 
 #include "kjs_dom.h"
 #include "kjs_range.h"
@@ -157,13 +150,7 @@ void ScriptInterpreter::startCPUGuard()
 {
   if (s_disableCPUGuard) return;
 
-  unsigned time = 5000;
-#ifdef VALGRIND_SUPPORT
-  if (RUNNING_ON_VALGRIND)
-    time *= 50;
-#endif
-
-  setTimeoutTime(time);
+  setTimeoutTime(5000);
   startTimeoutCheck();
 }
 

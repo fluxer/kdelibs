@@ -1855,11 +1855,9 @@ JSValue *Window::openWindow(ExecState *exec, const List& args)
   KHTMLSettings::KJSWindowOpenPolicy policy =
     part->settings()->windowOpenPolicy(part->url().host());
 
-  char *frameName;
+  char *frameName = "_blank";
   if(args.size() > 1) {
     frameName = args[1]->toString(exec).ascii();
-  } else {
-    frameName = "_blank";
   }
 
   // Always permit opening in an exist frame (including _self, etc.)

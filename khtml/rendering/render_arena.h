@@ -36,19 +36,12 @@
 #ifndef RENDERARENA_H
 #define RENDERARENA_H
 
-#ifndef NDEBUG
-#define KHTML_USE_ARENA_ALLOCATOR
-#endif
-
 #include "misc/arena.h"
 #include "misc/shared.h"
 
 #include <stdlib.h>
 
 namespace khtml {
-
-#define KHTML_MAX_RECYCLED_SIZE 400
-#define KHTML_ROUNDUP(x,y) ((((x)+((y)-1))/(y))*(y))
 
 class RenderArena: public Shared<RenderArena> {
 public:
@@ -57,15 +50,11 @@ public:
 
   // Memory management functions
   void* allocate(size_t size);
-  void  free(size_t size, void* ptr);
+  void  deallocate(size_t size, void* ptr);
 
 private:
   // Underlying arena pool
   ArenaPool m_pool;
-
-  // The recycler array is sparse with the indices being multiples of 4,
-  // i.e., 0, 4, 8, 12, 16, 20, ...
-  void* m_recyclers[KHTML_MAX_RECYCLED_SIZE >> 2];
 };
 
 

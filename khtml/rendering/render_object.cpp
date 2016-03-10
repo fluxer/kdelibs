@@ -99,11 +99,6 @@ void* RenderObject::operator new(size_t sz, RenderArena* renderArena) throw()
 void RenderObject::operator delete(void* ptr, size_t sz)
 {
     assert(baseOfRenderObjectBeingDeleted == ptr);
-
-#ifdef KHTML_USE_ARENA_ALLOCATOR
-    // Stash size where detach can find it.
-    *(size_t *)ptr = sz;
-#endif
 }
 
 RenderObject *RenderObject::createObject(DOM::NodeImpl* node,  RenderStyle* style)
@@ -2421,7 +2416,7 @@ void RenderObject::arenaDelete(RenderArena *arena, void *base)
 #endif
 
     // Recover the size left there for us by operator delete and free the memory.
-    arena->free(*(size_t *)base, base);
+    arena->deallocate(*(size_t *)base, base);
 }
 
 void RenderObject::arenaDelete(RenderArena *arena)
