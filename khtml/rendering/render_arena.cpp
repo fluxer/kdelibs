@@ -42,11 +42,6 @@ using namespace khtml;
 
 namespace khtml {
 
-typedef struct {
-    RenderArena *arena;
-    size_t size;
-} RenderArenaDebugHeader;
-
 RenderArena::RenderArena(unsigned int arenaSize)
 {
     // Initialize the arena pool
@@ -57,26 +52,6 @@ RenderArena::~RenderArena()
 {
     // Free the arena in the pool and finish using it
     FreeArenaPool(&m_pool);
-}
-
-void* RenderArena::allocate(size_t size)
-{
-    // Use standard malloc so that memory debugging tools work.
-    void *block = ::malloc(sizeof(RenderArenaDebugHeader) + size);
-    RenderArenaDebugHeader *header = (RenderArenaDebugHeader *)block;
-    header->arena = this;
-    header->size = size;
-    return header + 1;
-}
-
-void RenderArena::deallocate(size_t size, void* ptr)
-{
-    // Use standard free so that memory debugging tools work.
-    assert(this);
-    RenderArenaDebugHeader *header = (RenderArenaDebugHeader *)ptr - 1;
-    //assert(header->size == size);
-    //assert(header->arena == this);
-    ::free(header);
 }
 
 }

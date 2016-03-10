@@ -2416,7 +2416,7 @@ void RenderObject::arenaDelete(RenderArena *arena, void *base)
 #endif
 
     // Recover the size left there for us by operator delete and free the memory.
-    arena->deallocate(*(size_t *)base, base);
+    arena->deallocate(base);
 }
 
 void RenderObject::arenaDelete(RenderArena *arena)

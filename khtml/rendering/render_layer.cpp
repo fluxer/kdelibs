@@ -493,10 +493,6 @@ void* RenderLayer::operator new(size_t sz, RenderArena* renderArena) throw()
 void RenderLayer::operator delete(void* ptr, size_t sz)
 {
     assert(inRenderLayerDetach);
-#ifdef KHTML_USE_ARENA_ALLOCATOR
-    // Stash size where detach can find it.
-    *(size_t *)ptr = sz;
-#endif
 }
 
 void RenderLayer::detach(RenderArena* renderArena)
@@ -510,7 +506,7 @@ void RenderLayer::detach(RenderArena* renderArena)
 #endif
 
     // Recover the size left there for us by operator delete and free the memory.
-    renderArena->deallocate(*(size_t *)this, this);
+    renderArena->deallocate(this);
 }
 
 void RenderLayer::addChild(RenderLayer *child, RenderLayer* beforeChild)

@@ -139,7 +139,7 @@ void BidiRun::detach(RenderArena* renderArena)
 #endif
 
     // Recover the size left there for us by operator delete and free the memory.
-    renderArena->deallocate(*(size_t *)this, this);
+    renderArena->deallocate(this);
 }
 
 void* BidiRun::operator new(size_t sz, RenderArena* renderArena) throw()
