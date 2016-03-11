@@ -56,8 +56,6 @@ namespace KJS {
 
 RegExp::UTF8SupportState RegExp::utf8Support = RegExp::Unknown;
 
-static bool sanitizePatternExtensions(UString &p, WTF::Vector<int>* parenIdx = 0);
-
 // JS regexps can contain Unicode escape sequences (\uxxxx) which
 // are rather uncommon elsewhere. As our regexp libs don't understand
 // them we do the unescaping ourselves internally.
@@ -138,122 +136,7 @@ static UString sanitizePattern(const UString &p)
       }
     }
   }
-  // Rewrite very inefficient RE formulation:
-  // (.|\s)+ is often used instead of the less intuitive, but vastly preferable [\w\W]+
-  // The first wording needs to recurse at each character matched in libPCRE, leading to rapid exhaustion of stack space.
-  if (p.find(".|\\s)")>=0) {
-      if (np.isEmpty())
-          np = p;
-      bool didRewrite = false;
-      WTF::Vector<int> parenIdx;
-      sanitizePatternExtensions(np, &parenIdx);
-      Vector<int>::const_iterator end = parenIdx.end();
-      int previdx = 0;
-      UString tmp;
-      bool nonCapturing = false;
-      for (Vector<int>::const_iterator it = parenIdx.begin(); it != end; ++it) {
-          int idx = *it;
-          if (np.size() < idx+6)
-              break;
-          if (np[idx+1] == '?' && np[idx+2] == ':') {
-              nonCapturing = true;
-              idx += 3;
-          } else {
-             ++idx;
-          }
-          if (!(np[idx] == '.' && np[idx+1] == '|' && np[idx+2] == '\\' && np[idx+3] == 's'))
-              continue;
-          if (np.size() >= idx+6 && (np[idx+5] == '+' || (np[idx+5] == '*')) &&
-              // no need to do anything if the pattern is minimal e.g. (.|\s)+?
-              !(np.size() > idx+6 && np[idx+6] == '?')) {
-                  didRewrite = true;
-                  if (nonCapturing) {               // trivial case: (?:.|\s)+ => [\w\W]+
-                      tmp.append(np, previdx, idx-previdx-3);
-                      tmp.append("[\\w\\W]");
-                      tmp.append(np[idx+5]);
-                  } else if (np[idx+5] == '*') {    // capture zero of one or more: (.|\s)* => (?:[\w\W]*([\w\W])|[\w\W]?)
-                      tmp.append(np, previdx, idx-previdx-1);
-                      tmp.append("(?:[\\w\\W]*([\\w\\W])|[\\w\\W]?)");
-                  } else {                          // capture last of one or more: (.|\s)+ => [\w\W]*([\w\W])
-                      assert(np[idx+5] == '+');
-                      tmp.append(np, previdx, idx-previdx-1);
-                      tmp.append("[\\w\\W]*([\\w\\W])");
-                  }
-          } else {
-              tmp.append(np, previdx, idx-previdx+5);
-          }
-          previdx = idx+6;
-      }
-      if (didRewrite) {
-          tmp.append(np, previdx);
-          fprintf(stderr, "Pattern: %s ", np.ascii());
-          fprintf(stderr, "was rewritten to: %s\n", tmp.ascii());
-          np = tmp;
-          changed = true;
-      }
-  }
   return (changed ? np : p);
-}
-
-// For now, the only 'extension' to standard we are willing to deal with is
-// a non-escaped closing bracket, outside of a character class. e.g. /.*]/
-static bool sanitizePatternExtensions(UString &p, WTF::Vector<int>* parenIdx)
-{
-  UString newPattern;
-
-  static const int StateNominal = 0, StateOpenBracket = 1;
-  WTF::Vector<int> v;
-  bool escape = false;
-
-  int state = StateNominal;
-  int escapedSinceLastParen = 0;
-  for (int i = 0; i < p.size(); ++i) {
-      UChar c = p[i];
-      if (escape) {
-        escape = false;
-      } else {
-        if (c == '\\') {
-          escape = true;
-        } else if (c == ']') {
-            if (state == StateOpenBracket) {
-                state = StateNominal;
-            } else if (state == StateNominal) {
-                v.append(i);
-                ++escapedSinceLastParen;
-            }
-        } else if (c == '[') {
-            if (state == StateOpenBracket) {
-                v.append(i);
-                ++escapedSinceLastParen;
-            } else if (state == StateNominal) {
-                state = StateOpenBracket;
-            }
-        } else if (c == '(') {
-            if (parenIdx && state == StateNominal) {
-                parenIdx->append(i+escapedSinceLastParen);
-                escapedSinceLastParen = 0;
-            }
-        }
-    }
-  }
-  if (state == StateOpenBracket) {
-      // this is not recoverable.
-      return false;
-  }
-  if (v.size()) {
-      int pos=0;
-      Vector<int>::const_iterator end = v.end();
-      for (Vector<int>::const_iterator it = v.begin(); it != end; ++it) {
-          newPattern += p.substr(pos, *it-pos);
-          pos = *it;
-          newPattern += UString('\\');
-      }
-      newPattern += p.substr(pos);
-      p = newPattern;
-      return true;
-  } else {
-      return false;
-  }
 }
 
 bool RegExp::tryGrowingMaxStackSize = true;
@@ -271,8 +154,8 @@ RegExp::RegExp(const UString &p, char flags)
 #ifdef HAVE_PCREPOSIX
   // Determine whether libpcre has unicode support if need be..
   if (utf8Support == Unknown) {
-    int supported;
-    pcre_config(PCRE_CONFIG_UTF8, (void*)&supported);
+    void* supported;
+    pcre_config(PCRE_CONFIG_UTF8, &supported);
     utf8Support = supported ? Supported : Unsupported;
   }
 #endif
@@ -299,7 +182,6 @@ RegExp::RegExp(const UString &p, char flags)
 
   const char *errorMessage;
   int errorOffset;
-  bool secondTry = false;
 
   while (1) {
     RegExpStringContext converted(intern);
@@ -307,18 +189,6 @@ RegExp::RegExp(const UString &p, char flags)
     _regex = pcre_compile(converted.buffer(), options, &errorMessage, &errorOffset, NULL);
 
     if (!_regex) {
-#ifdef PCRE_JAVASCRIPT_COMPAT
-      // The compilation failed. It is likely the pattern contains non-standard extensions.
-      // We may try to tolerate some of those extensions.
-      bool doRecompile = !secondTry && sanitizePatternExtensions(intern);
-      if (doRecompile) {
-        secondTry = true;
-#ifndef NDEBUG
-        fprintf(stderr, "KJS: pcre_compile() failed with '%s' - non-standard extensions detected in pattern, trying second compile after correction.\n", errorMessage);
-#endif
-        continue;
-      }
-#endif
 #ifndef NDEBUG
       fprintf(stderr, "KJS: pcre_compile() failed with '%s'\n", errorMessage);
 #endif

@@ -69,9 +69,9 @@ public:
         assert(this);
         ::free(ptr);
     }
-#endif
 private:
     int m_alloccount;
+#endif
 };
 
 } // namespace
