@@ -29,7 +29,6 @@
 #include "rendering/render_style.h"
 #include "misc/htmlnames.h"
 #include "misc/loader.h"
-#include "misc/arena.h"
 #include "misc/paintbuffer.h"
 
 #include <QtCore/QLinkedList>
@@ -108,10 +107,9 @@ KHTMLGlobal::~KHTMLGlobal()
         khtml::PaintBuffer::cleanup();
         khtml::MediaQueryEvaluator::cleanup();
         khtml::Cache::clear();
-        khtml::ArenaFinish();
-    }
-    else
+    } else {
         deref();
+    }
 }
 
 void KHTMLGlobal::ref()

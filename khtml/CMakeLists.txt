@@ -227,7 +227,6 @@ set(khtmldom_STAT_SRCS
 set(khtmlmisc_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/misc/loader.cpp
     ${CMAKE_SOURCE_DIR}/khtml/misc/helper.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/misc/arena.cpp
     ${CMAKE_SOURCE_DIR}/khtml/misc/stringit.cpp
     ${CMAKE_SOURCE_DIR}/khtml/misc/paintbuffer.cpp
     ${CMAKE_SOURCE_DIR}/khtml/misc/imagefilter.cpp
@@ -349,7 +348,6 @@ set(khtmlrender_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_box.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_flow.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_text.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/rendering/render_arena.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_layer.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_image.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_table.cpp

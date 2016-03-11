@@ -36,7 +36,6 @@
 #ifndef RENDERARENA_H
 #define RENDERARENA_H
 
-#include "misc/arena.h"
 #include "misc/shared.h"
 #include "wtf/AlwaysInline.h"
 
@@ -46,11 +45,10 @@ namespace khtml {
 
 class RenderArena: public Shared<RenderArena> {
 public:
-    RenderArena(unsigned int arenaSize = 4096);
-    ~RenderArena();
-
-    // Memory management functions
 #ifdef NDEBUG
+    RenderArena() { };
+    ~RenderArena() { };
+
     ALWAYS_INLINE void* allocate(size_t size) {
         return ::malloc(size);
     }
@@ -58,18 +56,22 @@ public:
         ::free(ptr);
     }
 #else
+    RenderArena() { m_alloccount = 0; };
+    // if you get assert here the application is leaking memory
+    ~RenderArena() { assert(m_alloccount == 0); };
+
     NEVER_INLINE void* allocate(size_t size) {
+        m_alloccount++;
         return ::malloc(size);
     }
     NEVER_INLINE void deallocate(void* ptr) {
+        m_alloccount--;
         assert(this);
         ::free(ptr);
     }
 #endif
-
 private:
-    // Underlying arena pool
-    ArenaPool m_pool;
+    int m_alloccount;
 };
 
 } // namespace
