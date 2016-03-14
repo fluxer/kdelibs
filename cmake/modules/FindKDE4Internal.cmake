@@ -52,7 +52,6 @@
 #  KDE4_KPRINTUTILS_LIBRARY - the kprintutils library
 #  KDE4_KFILE_LIBRARY       - the kfile library
 #  KDE4_KDNSSD_LIBRARY      - the kdnssd library
-#  KDE4_PHONON_LIBRARY      - the phonon library
 #  KDE4_THREADWEAVER_LIBRARY- the threadweaver library
 #  KDE4_SOLID_LIBRARY       - the solid library
 #  KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
@@ -62,7 +61,6 @@
 #  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
 #  KDE4_KDEWEBKIT_LIBRARY   - the kdewebkit library
 #  KDE4_KCDDB_LIBRARY       - the kcddb library
-#  KDE4_KCOMPACTDISC_LIBRARY - the kcompactdisc library
 #  KDE4_KDCRAW_LIBRARY       - the kdcraw library
 #  KDE4_KEXIV2_LIBRARY       - the kexiv2 library
 #
@@ -82,7 +80,6 @@
 #  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 #  KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 #  KDE4_KPTY_LIBS             - the kpty library and all depending libraries
-#  KDE4_PHONON_LIBS           - the phonon library and all depending librairies
 #  KDE4_THREADWEAVER_LIBS     - the threadweaver library and all depending libraries
 #  KDE4_SOLID_LIBS            - the solid library and all depending libraries
 #  KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
@@ -93,7 +90,6 @@
 #  KDE4_KUNITCONVERSION_LIBS  - the kunitconversion library and all depending libraries
 #  KDE4_KDEWEBKIT_LIBS        - the kdewebkit library and all depending libraries
 #  KDE4_KCDDB_LIBS            - the kcddb library and all depending libraries
-#  KDE4_KCOMPACTDISC_LIBS     - the kcompactdisc library and all depending libraries
 #  KDE4_KDCRAW_LIBS           - the kdcraw library and all depending libraries
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
 #
@@ -431,7 +427,6 @@ endif(_kdeBootStrapping)
 set(_kde_libraries
     kcddb
     kcmutils
-    kcompactdisc
     kdcraw
     kdeclarative
     kdecore
@@ -470,31 +465,6 @@ foreach(_lib ${_kde_libraries})
         set(KDE4_${_upperlib}_LIBS    ${KDE4_TARGET_PREFIX}${_lib})
     endif()
 endforeach()
-
-################### try to find Phonon ############################################
-
-# we do this here instead of above together with the checks for Perl etc.
-# since FindPhonon.cmake also uses ${KDE4_LIB_INSTALL_DIR} to check for Phonon,
-# which helps with finding the phonon installed as part of kdesupport:
-
-# only make Phonon REQUIRED if KDE4 itself is REQUIRED
-if(NOT KATIE_FOUND AND NOT KATIE_PHONON_FOUND)
-    find_package(Phonon 4.7.0 ${_REQ_STRING_KDE4})
-    set(KDE4_PHONON_LIBRARY ${PHONON_LIBRARY})
-    set(KDE4_PHONON_LIBS ${PHONON_LIBS})
-    set(KDE4_PHONON_INCLUDES ${PHONON_INCLUDES})
-else()
-    set(PHONON_FOUND TRUE)
-    set(KDE4_PHONON_LIBRARY ${KATIE_PHONON_LIBRARIES})
-    set(KDE4_PHONON_LIBS ${KATIE_PHONON_LIBRARIES})
-    set(KDE4_PHONON_INCLUDES ${KATIE_PHONON_INCLUDES})
-endif()
-
-if(NOT PHONON_FOUND)
-    message(STATUS "KDE4 not found, because Phonon was not found")
-    return()
-endif()
-
 
 #####################  provide some options   ##########################################
 
@@ -969,7 +939,6 @@ endif()
 set(KDE4_INCLUDES
    ${KDE4_INCLUDE_DIR}
    ${KDE4_INCLUDE_DIR}/KDE
-   ${KDE4_PHONON_INCLUDES}
    ${QT_INCLUDES}
    ${_KDE4_PLATFORM_INCLUDE_DIRS}
 )

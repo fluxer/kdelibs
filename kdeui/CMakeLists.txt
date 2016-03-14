@@ -376,12 +376,12 @@ add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
 
 target_link_libraries(kdeui PRIVATE
     ${KDE4_KDECORE_LIBS}
-    ${X11_LIBRARIES}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTXML_LIBRARY}
-    ${KDEUI_EXTRA_LIBS}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTSVG_LIBRARY}
+    ${X11_LIBRARIES}
+    ${KDEUI_EXTRA_LIBS}
 )
 
 

@@ -26,8 +26,7 @@
 #ifndef HTMLVideoElement_h
 #define HTMLVideoElement_h
 
-#include <phonon/mediaobject.h>
-#include <phonon/videowidget.h>
+#include <kmediawidget.h>
 #include "HTMLMediaElement.h"
 
 namespace khtml {

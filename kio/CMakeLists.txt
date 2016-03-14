@@ -7,6 +7,7 @@ endif()
 if(NOT STRIGI_FOUND)
     set(KIO_NO_STRIGI TRUE)
 endif()
+set(KIO_NO_STRIGI TRUE)
 
 if(OPENSSL_FOUND)
     set(KSSL_HAVE_SSL 1)

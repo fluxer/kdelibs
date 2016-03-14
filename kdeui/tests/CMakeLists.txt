@@ -164,12 +164,10 @@ target_link_libraries(kplottest ${KDE4_KDEUI_LIBS})
 
 ## kcolorutilsdemo
 
-SET(kcolorUtilsDemoSources
+set(kcolorUtilsDemoSources
     kcolorutilsdemo.cpp
     kimageframe.cpp
     ../colors/kcolorspaces.cpp
-    kcolorutilsdemo.ui
 )
 kde4_add_manual_test(kcolorutilsdemo ${kcolorUtilsDemoSources})
 target_link_libraries(kcolorutilsdemo ${KDE4_KDEUI_LIBS})
-

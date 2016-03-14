@@ -314,7 +314,6 @@ void KLocalePrivate::initMainCatalogs()
 
         // catalogs from which each application can draw translations
         const int numberOfCatalogs = m_catalogNames.size();
-        m_catalogNames.append(KCatalogName(QString::fromLatin1("libphonon")));
         m_catalogNames.append(KCatalogName(QString::fromLatin1("kio4")));
         m_catalogNames.append(KCatalogName(QString::fromLatin1("kdelibs4")));
         m_catalogNames.append(KCatalogName(QString::fromLatin1("kdeqt")));

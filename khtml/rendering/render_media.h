@@ -27,20 +27,11 @@
 #ifndef render_media_h
 #define render_media_h
 
-#include <phonon/videoplayer.h>
+#include <kmediawidget.h>
 #include <rendering/render_replaced.h>
 #include <html/HTMLMediaElement.h>
 
 namespace khtml {
-
-class MediaPlayer : public Phonon::VideoPlayer {
-Q_OBJECT
-public:
-    inline MediaPlayer(Phonon::Category category, QWidget *parent = 0) : Phonon::VideoPlayer(category, parent)
-    {
-    }
-    inline explicit MediaPlayer(QWidget* parent = 0) : Phonon::VideoPlayer(parent) {};
-};
 
 class RenderMedia : public RenderWidget {
 Q_OBJECT
@@ -48,9 +39,9 @@ public:
     virtual const char *renderName() const { return "RenderMedia"; }
     virtual bool isMedia() const { return true; }
 
-    void setPlayer(MediaPlayer* player);
-    MediaPlayer* player() { return m_player; }
-    const MediaPlayer* player() const { return m_player; }
+    void setPlayer(KMediaWidget* player);
+    KMediaWidget* player() { return m_player; }
+    const KMediaWidget* player() const { return m_player; }
     HTMLMediaElement* mediaElement() { return static_cast<HTMLMediaElement*>(RenderWidget::element()); }
     const HTMLMediaElement* mediaElement() const { return static_cast<const HTMLMediaElement*>(RenderWidget::element()); }
 
@@ -64,7 +55,7 @@ private:
     RenderMedia(HTMLMediaElement* element);
     void layout();
     void updateFromElement();
-    MediaPlayer* m_player;
+    KMediaWidget* m_player;
     friend class HTMLMediaElement;
 };
 

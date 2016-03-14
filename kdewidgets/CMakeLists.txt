@@ -6,7 +6,10 @@ endif()
 
 add_subdirectory(pics)
 
-include_directories(${KDE4_KIO_INCLUDES})
+include_directories(
+    ${KDE4_KIO_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/kutils/kmediaplayer
+)
 
 ########### next target ###############
 
@@ -34,7 +37,7 @@ if(QT_QTDESIGNER_FOUND)
 
     kde4_add_plugin(kdewidgets ${kdewidgets_SRCS})
 
-    target_link_libraries(kdewidgets ${KDE4_KIO_LIBS})
+    target_link_libraries(kdewidgets ${KDE4_KIO_LIBS} kmediaplayer)
 
     install(
         TARGETS kdewidgets

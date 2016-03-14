@@ -422,6 +422,8 @@ install(
     KPixmapSequenceWidget
     KPixmapSequenceOverlayPainter
     KGraphicsWebView
+    KMediaPlayer
+    KMediaWidget
     KWebPage
     KWebView
     KWebPluginFactory
@@ -522,14 +524,6 @@ install(
     KIO/Task
     KIO/TransferJob
     DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KIO
-    COMPONENT Devel
-)
-
-install(
-    FILES
-    KMediaPlayer/Player
-    KMediaPlayer/View
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KMediaPlayer
     COMPONENT Devel
 )
 
@@ -804,7 +798,6 @@ install(
     Plasma/ToolTipManager
     Plasma/TreeView
     Plasma/Version
-    Plasma/VideoWidget
     Plasma/View
     Plasma/Wallpaper
     Plasma/WallpaperScript

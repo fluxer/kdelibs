@@ -20,8 +20,7 @@
 
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-
-#include <phonon/mediaobject.h>
+#include <kmediaplayer.h>
 
 KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
 	: QWidget(parent)
@@ -135,8 +134,8 @@ void KNotifyConfigActionsWidget::slotPlay(  )
 		if ( search.isEmpty() )*/
 		soundURL = KUrl::fromPath( KStandardDirs::locate( "sound", soundString ) );
 	}
-	Phonon::MediaObject* media = Phonon::createPlayer( Phonon::NotificationCategory, soundURL );
-	media->play();
+	KAudioPlayer* media = new KAudioPlayer(this);
+	media->load(soundURL.url());
 	connect(media, SIGNAL(finished()), media, SLOT(deleteLater()));
 }
 

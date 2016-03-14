@@ -32,13 +32,13 @@
 #include "ExceptionCode.h"
 #include <wtf/PassRefPtr.h>
 #include <QPointer>
+#include <kmediawidget.h>
 
 namespace khtml {
 
 class MediaError;
 class TimeRanges;
 class RenderMedia;
-class MediaPlayer;
 
 class HTMLMediaElement : public HTMLElement {
 public:
@@ -118,7 +118,6 @@ private:
     void loadResource(String& url);
     void updateLoadState();
     
-    void updateVolume();
     void updatePlayState();
     bool endedPlayback() const;
 
@@ -134,10 +133,7 @@ protected:
     bool m_loadedFirstFrame;
     bool m_autoplaying;
     bool m_autobuffer;
-    
-    float m_volume;
-    bool m_muted;
-    
+
     bool m_paused;
     bool m_seeking;
     
@@ -147,7 +143,7 @@ protected:
     double m_previousProgressTime;
     bool m_sentStalledEvent;
     
-    QPointer<MediaPlayer> m_player;
+    QPointer<KMediaWidget> m_player;
 };
 
 } //namespace

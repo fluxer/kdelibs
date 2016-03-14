@@ -25,10 +25,8 @@
  */
 
 #include "render_media.h"
-#include "media_controls.h"
-#include <phonon/mediaobject.h>
-#include <phonon/videowidget.h>
-#include <QtGui/QVBoxLayout>
+#include <QVBoxLayout>
+#include <kmediawidget.h>
 
 const double doubleMax = 999999999.8; // ### numeric_limits<double>::max()
 const double doubleInf = 999999999.0; // ### numeric_limits<double>::infinity()
@@ -45,12 +43,12 @@ RenderMedia::RenderMedia(HTMLMediaElement* element) : RenderWidget(element), m_p
     setQWidget(container);
 }
 
-void RenderMedia::setPlayer(MediaPlayer* player)
+void RenderMedia::setPlayer(KMediaWidget* player)
 {
     if (m_player == player) return;
     if (m_player) m_player->deleteLater();
     m_player = player;
-    connect(player->mediaObject(), SIGNAL(metaDataChanged()), SLOT(slotMetaDataChanged()));
+    connect(player->player(), SIGNAL(loaded()), SLOT(slotMetaDataChanged()));
     player->setParent(widget());
     widget()->layout()->addWidget(player);
 }
@@ -61,15 +59,6 @@ void RenderMedia::layout()
     calcHeight();
 
     RenderWidget::layout();
-
-    if (mediaElement()->controls() && widget()->layout()->count() == 1) {
-        MediaControls* toolbox = new MediaControls(player(), widget());
-	widget()->layout()->addWidget(toolbox);
-	if ((!widget()->underMouse()) && mediaElement()->isVideo())
-	    toolbox->hide();
-	else
-	    toolbox->show();
-    }
 }
 
 bool RenderMedia::eventFilter(QObject* o, QEvent* e)
@@ -99,9 +88,9 @@ void RenderMedia::updateFromElement()
 void RenderMedia::slotMetaDataChanged()
 {
     if (mediaElement()->isVideo()) {
-        if (player()->videoWidget()->sizeHint().isValid()) {
-	    setIntrinsicWidth(player()->videoWidget()->sizeHint().width());
-	    setIntrinsicHeight(player()->videoWidget()->sizeHint().height());
+        if (player()->sizeHint().isValid()) {
+	    setIntrinsicWidth(player()->sizeHint().width());
+	    setIntrinsicHeight(player()->sizeHint().height());
         }
     } else {
         if (widget()->sizeHint().isValid()) {

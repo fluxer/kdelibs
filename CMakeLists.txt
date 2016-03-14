@@ -80,6 +80,13 @@ set_package_properties(SharedMimeInfo PROPERTIES
     PURPOSE "Allows KDE applications to determine file types"
 )
 
+find_package(MPV)
+set_package_properties(MPV PROPERTIES
+    DESCRIPTION "A fork of mplayer2 and MPlayer"
+    URL "https://mpv.io/"
+    TYPE REQUIRED
+)
+
 #optional features
 if(X11_FOUND)
     #X11_Xrender discovery is done by FindX11
@@ -227,7 +234,6 @@ set(KDE4_KJS_INCLUDES
     ${CMAKE_BINARY_DIR}/kjs
 )
 
-
 ################# configure checks and create the configured files #################
 
 set(LIBRARY_TYPE SHARED)
@@ -262,7 +268,6 @@ add_subdirectory( dnssd )
 add_subdirectory( includes )
 add_subdirectory( interfaces )
 add_subdirectory( kcddb )
-add_subdirectory( kcompactdisc ) 
 add_subdirectory( kdcraw )
 add_subdirectory( kdeclarative )
 add_subdirectory( kdecore )
@@ -300,7 +305,6 @@ add_subdirectory( security )
 add_subdirectory( solid )
 add_subdirectory( sonnet )
 add_subdirectory( threadweaver )
-
 
 ################# write kdelibs package config files which will be installed #################
 

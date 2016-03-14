@@ -37,8 +37,6 @@
 399        kimgio
 410        kross (kdelibs)
 500        kdeprint
-600        phonon (KDE plugin)
-601        phonon (kded module)
 700        kutils (KSettings::Dialog)
 701        kutils (KSettings::Dispatcher)
 702        kutils (KPluginSelector)
@@ -47,12 +45,12 @@
 711        kutils (KCModuleProxy)
 712        kutils (KCModuleInfo)
 713        kutils (KCModuleContainer)
-750        kde3support (kspell)
 800        kdewebkit
 912        ksmartcard (kdelibs)
 920        Solid (kdelibs)
 921        Solid Networking
 930        KUnitConversion
+940        KMediaPlayer
 
 1000        kparts
 

@@ -191,15 +191,6 @@ kde4_add_kcfg_files(plasma_LIB_SRCS
     data/kconfigxt/libplasma-theme-global.kcfgc
 )
 
-if(PHONON_FOUND)
-    message(STATUS "Adding support for Phonon to libplasma")
-    include_directories(${KDE4_PHONON_INCLUDES})
-    set(plasma_LIB_SRCS
-        ${plasma_LIB_SRCS}
-        widgets/videowidget.cpp
-    )
-endif()
-
 add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
 target_link_libraries(plasma
@@ -219,10 +210,6 @@ target_link_libraries(plasma
 if(X11_FOUND)
    target_link_libraries(plasma ${X11_LIBRARIES})
 endif(X11_FOUND)
-
-if(PHONON_FOUND)
-   target_link_libraries(plasma ${KDE4_PHONON_LIBS})
-endif(PHONON_FOUND)
 
 if(DL_LIBRARY)
     target_link_libraries(plasma ${DL_LIBRARY})
@@ -332,15 +319,6 @@ install(
     DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/scripting
     COMPONENT Devel
 )
-
-if(PHONON_FOUND)
-    install(
-        FILES
-        widgets/videowidget.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/widgets
-        COMPONENT Devel
-    )
-endif()
 
 install(
     FILES

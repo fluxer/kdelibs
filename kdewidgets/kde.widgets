@@ -366,3 +366,9 @@ IncludeFile=sonnet/dictionarycombobox.h
 ToolTip=Dictionary Combobox
 WhatsThis=A combobox to select a dictionary for spellchecking
 Group=Sonnet (KDE)
+
+[KMediaWidget]
+ToolTip=Multimedia files player (KDE)
+WhatsThis=A widget holding media controls for playing media files
+Group=Display (KDE)
+ConstructorArgs=(parent)

@@ -1,7 +1,9 @@
 project(knotify)
 
-include_directories(${KDE4_KIO_INCLUDES})
-include_directories(BEFORE ${KDE4_PHONON_INCLUDES})
+include_directories(
+    ${KDE4_KIO_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/kutils/kmediaplayer
+)
 
 if(ENABLE_TESTING)
     add_subdirectory(tests)
@@ -14,7 +16,6 @@ set(knotifyconfig_LIB_SRCS
     knotifyconfigelement.cpp
     knotifyeventlist.cpp
     knotifyconfigwidget.cpp
-    knotifyconfigactionswidgetbase.ui
 )
 
 add_library(knotifyconfig ${LIBRARY_TYPE} ${knotifyconfig_LIB_SRCS})
@@ -22,9 +23,9 @@ add_library(knotifyconfig ${LIBRARY_TYPE} ${knotifyconfig_LIB_SRCS})
 # Needs KIO for KUrlRequester
 target_link_libraries(knotifyconfig
     ${KDE4_KIO_LIBS}
-    ${KDE4_PHONON_LIBS}
     ${KDE4_KDECORE_LIBS}
     ${QT_QTGUI_LIBRARY}
+    kmediaplayer
 )
 
 set_target_properties(knotifyconfig PROPERTIES

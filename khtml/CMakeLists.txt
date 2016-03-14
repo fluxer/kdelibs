@@ -14,12 +14,13 @@ configure_file(
 )
 
 include_directories(
-    ${KDE4_PHONON_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
     ${KDE4_KPARTS_INCLUDES}
     ${CMAKE_BINARY_DIR}/kio/kssl
     ${KDE4_KJS_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kimgio
     ${CMAKE_SOURCE_DIR}/kio/kssl
+    ${CMAKE_SOURCE_DIR}/kutils/kmediaplayer
     ${CMAKE_SOURCE_DIR}/interfaces
     ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
 
@@ -367,7 +368,6 @@ set(khtmlrender_STAT_SRCS
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_canvasimage.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_position.cpp
     ${CMAKE_SOURCE_DIR}/khtml/rendering/render_media.cpp
-    ${CMAKE_SOURCE_DIR}/khtml/rendering/media_controls.cpp
 )
 
 set(khtmlcss_STAT_SRCS
@@ -496,13 +496,14 @@ qt4_add_dbus_interface(khtml_LIB_SRCS
 add_library(khtml ${LIBRARY_TYPE} ${khtml_LIB_SRCS} $<TARGET_OBJECTS:kjs>)
 
 target_link_libraries(khtml
-    ${KDE4_PHONON_LIBRARY}
+    ${KDE4_KDEUI_LIBRARY}
     ${KDE4_KPARTS_LIBS}
     ktexteditor
     kparts
     kio
     kdeui
     kdecore
+    kmediaplayer
     ${X11_LIBRARIES}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTGUI_LIBRARY}

@@ -101,7 +101,6 @@ set(cmakeFiles
     FindPAM.cmake
     FindPCIUTILS.cmake
     FindPCRE.cmake
-    FindPhonon.cmake
     FindPoppler.cmake
     FindPopplerQt4.cmake
     FindPostgreSQL.cmake

@@ -37,10 +37,10 @@
 #include "css/cssproperties.h"
 #include "css/cssvalues.h"
 #include "css/csshelper.h"
-#include <phonon/mediaobject.h>
-#include <phonon/backendcapabilities.h>
 #include <rendering/render_media.h>
 #include <rendering/render_style.h>
+
+#include <kmediawidget.h>
 
 const double doubleMax = 999999999.8; // ### numeric_limits<double>::max()
 const double doubleInf = 999999999.0; // ### numeric_limits<double>::infinity()
@@ -57,15 +57,13 @@ HTMLMediaElement::HTMLMediaElement(Document* doc)
     , m_loadedFirstFrame(false)
     , m_autoplaying(true)
     , m_autobuffer(true)
-    , m_volume(0.5f)
-    , m_muted(false)
     , m_paused(true)
     , m_seeking(false)
     , m_currentTimeDuringSeek(0)
     , m_previousProgress(0)
     , m_previousProgressTime(doubleMax)
     , m_sentStalledEvent(false)
-    , m_player(new MediaPlayer())
+    , m_player(new KMediaWidget(NULL, KMediaWidget::FullscreenVideo))
 {
 }
 
@@ -182,13 +180,9 @@ void HTMLMediaElement::load(ExceptionCode&)
 
 void HTMLMediaElement::loadResource(String &url)
 {
-    KUrl kurl(url.string());
     if (!m_player)
         return;
-    if (autoplay())
-        m_player->play(kurl);
-    else
-        m_player->load(kurl);
+    m_player->open(url.string());
 }
 
 void HTMLMediaElement::updateLoadState()
@@ -206,16 +200,10 @@ String HTMLMediaElement::canPlayType(String type)
 {
     QString theType = type.string().simplified();
     int paramsIdx = theType.indexOf(';');
-    bool hasParams = (paramsIdx > 0 );
-    // FIXME: Phonon doesn't provide the API to handle codec parameters yet
-    if (hasParams)
+    if (paramsIdx > 0)
         theType.truncate(paramsIdx);
-    if (theType == QLatin1String("audio/ogg") || theType == QLatin1String("video/ogg"))
-        theType = QLatin1String("application/ogg");
-    if (Phonon::BackendCapabilities::isMimeTypeAvailable(theType))
+    if (m_player->player()->isMimeSupported(theType))
         return "probably";
-    if (theType == QLatin1String("application/octet-stream") && hasParams)
-        return "";
     return "maybe";
 }
 
@@ -247,7 +235,7 @@ float HTMLMediaElement::currentTime() const
         return 0;
     if (m_seeking)
         return m_currentTimeDuringSeek;
-    return m_player->currentTime();
+    return m_player->player()->currentTime();
 }
 
 void HTMLMediaElement::setCurrentTime(float time, ExceptionCode& ec)
@@ -264,7 +252,7 @@ float HTMLMediaElement::startTime() const
 
 float HTMLMediaElement::duration() const
 {
-    return m_player ? m_player->totalTime() : 0;
+    return m_player ? m_player->player()->totalTime() : 0;
 }
 
 bool HTMLMediaElement::paused() const
@@ -394,35 +382,31 @@ void HTMLMediaElement::setControls(bool b)
 
 float HTMLMediaElement::volume() const
 {
-    return m_volume;
+    if (!m_player) {
+        return 0;
+    }
+    return m_player->player()->volume();
 }
 
 void HTMLMediaElement::setVolume(float vol, ExceptionCode& ec)
 {
-    if (vol < 0.0f || vol > 1.0f) {
-        ec = DOMException::INDEX_SIZE_ERR;
-        return;
-    }
-    
-    if (m_volume != vol) {
-        m_volume = vol;
-        updateVolume();
-        // ### dispatchEventAsync(volumechangeEvent);
-    }
+    // that's a stub, KMediaWidget manages its state per-application
+    Q_UNUSED(vol);
+    Q_UNUSED(ec);
 }
 
 bool HTMLMediaElement::muted() const
 {
-    return m_muted;
+    if (m_player) {
+        return m_player->player()->mute();
+    }
+    return false;
 }
 
 void HTMLMediaElement::setMuted(bool muted)
 {
-    if (m_muted != muted) {
-        m_muted = muted;
-        updateVolume();
-        // ### dispatchEventAsync(volumechangeEvent);
-    }
+    // that's a stub, KMediaWidget manages its state per-application
+    Q_UNUSED(muted);
 }
 
 String HTMLMediaElement::pickMedia()
@@ -502,18 +486,7 @@ bool HTMLMediaElement::endedPlayback() const
 #if 0
     return networkState() >= LOADED_METADATA && currentTime() >= effectiveEnd() && currentLoop() == playCount() - 1;
 #endif
-    return m_player && m_player->mediaObject()->remainingTime() == 0;
-}
-
-void HTMLMediaElement::updateVolume()
-{
-    if (!m_player)
-        return;
-
-    m_player->setVolume(m_muted ? 0 : m_volume);
-    
-    if (renderer())
-        renderer()->updateFromElement();
+    return m_player && m_player->player()->remainingTime() == 0;
 }
 
 void HTMLMediaElement::updatePlayState()
@@ -522,10 +495,7 @@ void HTMLMediaElement::updatePlayState()
         return;
     if (m_autoplaying)
         return;
-    if (m_paused && !m_player->isPaused())
-        m_player->pause();
-    if (!m_paused && !m_player->isPlaying())
-        m_player->play();
+    m_player->setPlay();
 }
 
 }
