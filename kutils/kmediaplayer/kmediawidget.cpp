@@ -226,14 +226,16 @@ void KMediaWidget::_fullscreen()
     if (!m_parent && (parentWidget() == window()) && !m_parenthack) {
         kDebug() << i18n("using parent widget from parentWidget()");
         m_parent = parentWidget();
+        m_parentsizehack = QSize(-1, -1);
+        m_parenthack = NULL;
     } else if (!m_parent && parentWidget()) {
         kWarning() << i18n("creating a parent, detaching widget, starting voodoo dance..");
         m_parent = parentWidget();
         m_parentsizehack = m_parent->size();
-        m_parenthack = new QMainWindow(parentWidget());
+        m_parenthack = new QMainWindow();
     }
     if (m_player->isFullscreen()) {
-        if (m_parenthack && m_parent) {
+        if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
             kDebug() << i18n("restoring parent from hack widget");
             setParent(m_parent);
             resize(m_parentsizehack);
@@ -248,7 +250,7 @@ void KMediaWidget::_fullscreen()
         }
         m_player->setFullscreen(false);
     } else {
-        if (m_parenthack && m_parent) {
+        if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
             kDebug() << i18n("using parent hack widget");
             m_parenthack->setCentralWidget(this);
             m_parenthack->showFullScreen();
