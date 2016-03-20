@@ -167,7 +167,7 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
         mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG); \
         mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG); \
         mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG); \
-        mpv_request_log_messages(m_handle, "debug"); \
+        mpv_request_log_messages(m_handle, "info"); \
     }
 
 #define COMMON_DESTRUCTOR \
