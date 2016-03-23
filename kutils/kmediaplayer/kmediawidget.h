@@ -51,7 +51,6 @@
 */
 
 class Ui_KMediaWidgetPrivate;
-class Ui_KPlaylistManagerPrivate;
 
 class KMEDIAPLAYER_EXPORT KMediaWidget: public QWidget
 {
@@ -61,7 +60,7 @@ public:
         //! @brief No options at all
         NoOptions = 0,
         /*!
-            @long When URLs are dragged to the widget it will append them to the playlist
+            @long When URLs are dragged to the widget it will be opened
         */
         DragDrop = 1,
         /*!
@@ -69,7 +68,7 @@ public:
         */
         FullscreenVideo = 2,
         /*!
-            @long Currently previous/next buttons and a menu with some goodies
+            @long Currently only a menu button with some goodies
         */
         ExtendedControls = 4,
         /*!
@@ -108,6 +107,11 @@ protected:
     virtual void mouseMoveEvent(QMouseEvent *event);
     //! @brief Reimplementation to support hidden controls
     virtual void timerEvent(QTimerEvent *event);
+    //! @brief Reimplementation to support Drag-n-Drop
+    virtual void dragEnterEvent(QDragEnterEvent *event);
+    //! @brief Reimplementation to support Drag-n-Drop
+    virtual void dropEvent(QDropEvent *event);
+
 
 public slots:
     /*!
@@ -139,19 +143,10 @@ private slots:
     void _updatePlay(bool paused);
     void _updateSeekable(bool seekable);
     void _updatePosition(double seconds);
-    void _updateMove();
+    void _updateLoaded();
     void _updateStatus(QString error);
-    void _updateFinished();
     void _updateError(QString error);
-    void _movePrevious();
-    void _moveNext();
 
-    void _pathsOpen();
-    void _pathsOpenURL();
-    void _pathsSave();
-    void _pathsReject();
-
-    void _menuManagePaths();
     void _menuOpenURL();
     void _menuOpen();
     void _menuQuit();
@@ -165,11 +160,9 @@ private:
     QElapsedTimer m_timer;
     bool m_visible;
     QString m_path;
-    bool m_failed;
+    bool m_replay;
     QMenu *m_menu;
     Ui_KMediaWidgetPrivate *d;
-    QDialog *m_pathmanager;
-    Ui_KPlaylistManagerPrivate *d2;
 };
 
 #endif // KMEDIAWIDGET_H

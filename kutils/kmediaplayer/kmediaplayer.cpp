@@ -55,6 +55,16 @@ void KAbstractPlayer::stop()
     command("stop");
 }
 
+QString KAbstractPlayer::path()
+{
+    return property("path").toString();
+}
+
+QString KAbstractPlayer::title()
+{
+    return property("media-title").toString();
+}
+
 float KAbstractPlayer::currentTime()
 {
     return property("time-pos").toFloat();
@@ -121,10 +131,10 @@ bool KAbstractPlayer::isProtocolSupported(QString protocol)
 bool KAbstractPlayer::isPathSupported(QString path)
 {
     KMimeType::Ptr mime = KMimeType::findByPath(path);
-    if ((mime && isMimeSupported(mime->name())) || isProtocolSupported(path)) {
+    if (mime && isMimeSupported(mime->name())) {
         return true;
     }
-    return false;
+    return isProtocolSupported(path);
 }
 
 void KAbstractPlayer::setVolume(float volume)
@@ -360,10 +370,6 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         setVolume(m_settings->value("state/volume", 90).toInt());
         setMute(m_settings->value("state/mute", false).toBool());
         setFullscreen(m_settings->value("state/fullscreen", false).toBool());
-        QStringList paths = m_settings->value("state/paths", QStringList()).toStringList();
-        foreach (const QString path, paths) {
-            addPath(path);
-        }
     }
 }
 
@@ -374,7 +380,6 @@ KMediaPlayer::~KMediaPlayer()
         m_settings->setValue("volume", volume());
         m_settings->setValue("mute", mute());
         m_settings->setValue("fullScreen", isFullscreen());
-        m_settings->setValue("paths", m_paths);
         m_settings->endGroup();
         m_settings->sync();
     } else {
@@ -413,59 +418,6 @@ bool KMediaPlayer::isMimeSupported(QString mime)
 {
     return mime.startsWith("audio/") || mime.startsWith("video/")
         || mime == QLatin1String("application/octet-stream");
-}
-
-void KMediaPlayer::load(QString path)
-{
-    command(QStringList() << "loadfile" << path);
-    addPath(path);
-}
-
-void KMediaPlayer::addPath(QString path)
-{
-    if (!m_paths.contains(path)) {
-        m_paths.append(path);
-    }
-}
-
-void KMediaPlayer::removePath(QString path)
-{
-    m_paths.removeOne(path);
-}
-
-void KMediaPlayer::setPaths(QStringList paths)
-{
-    foreach (const QString path, paths) {
-        addPath(path);
-    }
-}
-
-void KMediaPlayer::clearPaths()
-{
-    m_paths.clear();
-}
-QStringList KMediaPlayer::paths()
-{
-    return m_paths;
-}
-
-void KMediaPlayer::dragEnterEvent(QDragEnterEvent *event)
-{
-    if (event->mimeData()->hasUrls()) {
-        event->acceptProposedAction();
-    }
-}
-
-void KMediaPlayer::dropEvent(QDropEvent *event)
-{
-    QList<QUrl> urls = event->mimeData()->urls();
-    foreach (const QUrl url, urls) {
-        if (!isProtocolSupported(url.scheme())) {
-            continue;
-        }
-        addPath(url.toString());
-    }
-    event->acceptProposedAction();
 }
 
 #include "moc_kmediaplayer.cpp"

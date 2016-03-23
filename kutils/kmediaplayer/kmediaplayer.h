@@ -65,7 +65,7 @@ public:
         such! That is choice of the vendors and you should be well aware of what yours is doing
         @link https://github.com/mpv-player/mpv/blob/master/DOCS/man/mpv.rst#protocols
     */
-    virtual void load(QString path);
+    void load(QString path);
    /*!
         @brief Send a play command to the player, it may do nothing if a path was not loaded first
     */
@@ -88,6 +88,14 @@ public:
         @brief Send a stop command to the player
     */
     void stop();
+    /*!
+        @brief current or last set path to be played
+    */
+    QString path();
+    /*!
+        @brief current loaded path title
+    */
+    QString title();
     /*!
         @brief Gets you the current play time, the time should be threated as seconds
         @return current play time, it may return 0 if not playing
@@ -277,28 +285,6 @@ public:
 
     bool isMimeSupported(QString mime);
 
-    //! @brief Reimplementation to ensure that playlist is updated
-    void load(QString path);
-    //@{
-    /**!
-        Paths managing methods. Paths playlist is not build on top of internal MPV functionality
-        because it will require great effort to manage the playlist natively.
-        @todo add move functionality, the player must be aware of anything MPV may have loaded
-        and finally notification signals to make KMediaWidget aware of any changes to the lists
-    **/
-    void addPath(QString path);
-    void removePath(QString path);
-    void setPaths(QStringList paths);
-    void clearPaths();
-    QStringList paths();
-    //@}
-
-protected:
-    //! @brief Reimplementation to support Drag-n-Drop
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-    //! @brief Reimplementation to support Drag-n-Drop
-    virtual void dropEvent(QDropEvent *event);
-
 signals:
     //! @brief Signals that a path was loaded
     void loaded();
@@ -330,7 +316,6 @@ private:
     mpv_handle *m_handle;
 #endif // MAKE_KMEDIAPLAYER_LIB
     QSettings *m_settings;
-    QStringList m_paths;
 };
 
 #endif // KMEDIAPLAYER_H

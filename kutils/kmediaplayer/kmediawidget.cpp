@@ -30,7 +30,6 @@
 #include "kmediaplayer.h"
 #include "kmediawidget.h"
 #include "ui_kmediawidget.h"
-#include "ui_kplaylistmanager.h"
 
 KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     : QWidget(parent)
@@ -50,7 +49,7 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     connect(d->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
 
     connect(m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
-    connect(m_player, SIGNAL(loaded()), this, SLOT(_updateMove()));
+    connect(m_player, SIGNAL(loaded()), this, SLOT(_updateLoaded()));
     connect(m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
     connect(m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
     connect(m_player, SIGNAL(seekable(bool)), this, SLOT(_updateSeekable(bool)));
@@ -63,33 +62,16 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
 
     bool extcontrols = (options & ExtendedControls);
     if (extcontrols) {
-        _updateStatus(i18n("Awaiting input..."));
-
-        _updateMove();
-        connect(d->w_previous, SIGNAL(clicked()), this, SLOT(_movePrevious()));
-        connect(d->w_next, SIGNAL(clicked()), this, SLOT(_moveNext()));
+        _updateLoaded();
 
         m_menu = new QMenu(d->w_menu);
-        m_menu->addAction(KIcon("view-list-text"), i18n("&Playlist"), this, SLOT(_menuManagePaths()));
-        m_menu->addSeparator();
         m_menu->addAction(KIcon("document-open-remote"), i18n("O&pen URL"), this, SLOT(_menuOpenURL()));
         m_menu->addAction(KIcon("document-open"), i18n("&Open"), this, SLOT(_menuOpen()));
         m_menu->addSeparator();
         m_menu->addAction(KIcon("application-exit"), i18n("&Quit"), this, SLOT(_menuQuit()));
         connect(d->w_menu, SIGNAL(clicked()), this, SLOT(_showMenu()));
-
-        m_pathmanager = new QDialog(this);
-        d2 = new Ui_KPlaylistManagerPrivate();
-        d2->setupUi(m_pathmanager);
-        connect(d2->w_open, SIGNAL(clicked()), this, SLOT(_pathsOpen()));
-        connect(d2->w_openurl, SIGNAL(clicked()), this, SLOT(_pathsOpenURL()));
-        connect(d2->w_ok, SIGNAL(clicked()), this, SLOT(_pathsSave()));
-        connect(d2->w_cancel, SIGNAL(clicked()), this, SLOT(_pathsReject()));
     }
-    d->w_previous->setVisible(extcontrols);
-    d->w_next->setVisible(extcontrols);
     d->w_menu->setVisible(extcontrols);
-    d->w_status->setVisible(extcontrols);
 
     if (options & HiddenControls) {
         setMouseTracking(true);
@@ -104,8 +86,9 @@ KMediaWidget::~KMediaWidget()
 
 void KMediaWidget::open(QString path)
 {
+    // m_path should be updated from _updateLoaded() but that may be too late
     m_path = path;
-    _updateStatus(i18n("Now playing: %1", path));
+    m_replay = false;
 
     d->w_play->setEnabled(true);
     d->w_position->setEnabled(true);
@@ -113,8 +96,6 @@ void KMediaWidget::open(QString path)
     m_player->load(path);
 
     d->w_position->setEnabled(m_player->isSeekable());
-
-    m_failed = false;
 
     if (m_options & HiddenControls) {
         startTimer(200);
@@ -130,7 +111,7 @@ KMediaPlayer* KMediaWidget::player()
 void KMediaWidget::setPlay(int value)
 {
     // TODO: can we reliably store the position and restore it as well?
-    if (m_failed && !m_path.isEmpty()) {
+    if (m_replay && !m_path.isEmpty()) {
         open(m_path);
         return;
     }
@@ -193,24 +174,6 @@ void KMediaWidget::_showMenu()
     m_menu->exec(QCursor::pos());
 }
 
-void KMediaWidget::_movePrevious()
-{
-    QStringList playlist = m_player->paths();
-    int position = playlist.indexOf(m_path);
-    if (position > 0) {
-        open(playlist.at(position-1));
-    }
-}
-
-void KMediaWidget::_moveNext()
-{
-    QStringList playlist = m_player->paths();
-    int position = playlist.indexOf(m_path);
-    if (position+1 < playlist.count()) {
-        open(playlist.at(position+1));
-    }
-}
-
 void KMediaWidget::_fullscreen()
 {
     /*
@@ -232,7 +195,7 @@ void KMediaWidget::_fullscreen()
         kWarning() << i18n("creating a parent, detaching widget, starting voodoo dance..");
         m_parent = parentWidget();
         m_parentsizehack = m_parent->size();
-        m_parenthack = new QMainWindow();
+        m_parenthack = new QMainWindow(m_parent);
     }
     if (m_player->isFullscreen()) {
         if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
@@ -266,7 +229,8 @@ void KMediaWidget::_fullscreen()
 
 void KMediaWidget::_updateControls(bool visible)
 {
-    if (m_visible != visible && !m_path.isEmpty()) {
+    // checking the path is done to avoid hiding the controls until something is played
+    if (m_visible != visible && !m_player->path().isEmpty()) {
         m_visible = visible;
         d->w_frame->setVisible(visible);
     }
@@ -294,38 +258,24 @@ void KMediaWidget::_updatePosition(double seconds)
     d->w_position->setValue(seconds);
 }
 
-void KMediaWidget::_updateMove()
+void KMediaWidget::_updateLoaded()
 {
-    QStringList playlist = m_player->paths();
-    d->w_previous->setEnabled(false);
-    d->w_next->setEnabled(false);
-    int position = playlist.indexOf(m_path);
-    if (position > 0) {
-        d->w_previous->setEnabled(true);
+    m_path = m_player->path();
+    QString title = m_player->title();
+    if (!title.isEmpty()) {
+        _updateStatus(title);
     }
-    if (position+1 < playlist.count()) {
-        d->w_next->setEnabled(true);
-    }
-
     _updatePlay(!m_player->isPlaying());
-    if (playlist.count() > 0) {
-        d->w_play->setEnabled(true);
-        m_path = playlist.first();
-    }
 }
 
 void KMediaWidget::_updateStatus(QString error)
 {
     if (m_options & ExtendedControls) {
-        d->w_status->setText(error);
+        QWidget *windowwidget = window();
+        if (windowwidget) {
+            windowwidget->setWindowTitle(error);
+        }
     }
-}
-
-void KMediaWidget::_updateFinished()
-{
-    _updateStatus(i18n("Was playing: %1", m_path));
-    // BUG: it will move to start/end, what if there was a reason arg for finished()?
-    // TODO: _moveNext()
 }
 
 void KMediaWidget::_updateError(QString error)
@@ -338,88 +288,15 @@ void KMediaWidget::_updateError(QString error)
     // since there are not many ways to indicate an error when
     // there are no extended controls use the play button to do so
     if (m_options & ExtendedControls) {
-        d->w_status->setText(error);
+        _updateStatus(error);
     } else {
         d->w_play->setIcon(KIcon("dialog-error"));
         d->w_play->setText(i18n("Error"));
     }
 
-    m_failed = true;
+    m_replay = true;
 
     d->w_position->setEnabled(false);
-}
-
-void KMediaWidget::_menuManagePaths()
-{
-    d2->w_list->clear();
-    QStringList playlist = m_player->paths();
-    d2->w_list->insertStringList(playlist);
-    m_pathmanager->show();
-}
-
-void KMediaWidget::_pathsOpen()
-{
-    QStringList paths = QFileDialog::getOpenFileNames(this, i18n("Select paths"));
-    if (!paths.isEmpty()) {
-        QStringList invalid, duplicate;
-        foreach (const QString path, paths) {
-            if (!m_player->isPathSupported(path)) {
-                kDebug() << i18n("ignoring unsupported:\n%1", path);
-                invalid.append(path);
-                continue;
-            } else if (d2->w_list->items().contains(path)) {
-                duplicate.append(path);
-                continue;
-            }
-            d2->w_list->insertItem(path);
-        }
-        if (!duplicate.isEmpty()) {
-            QMessageBox::warning(this, i18n("Duplicate paths"),
-                i18n("Some paths are duplicate:\n%1", duplicate.join("\n")));
-        }
-        if (!invalid.isEmpty()) {
-            QMessageBox::warning(this, i18n("Invalid paths"),
-                i18n("Some paths are invalid:\n%1", invalid.join("\n")));
-        }
-    }
-}
-
-void KMediaWidget::_pathsOpenURL()
-{
-    QString url = QInputDialog::getText(this, i18n("Input URL"),
-        i18n("Supported protocols are: %1", m_player->protocols().join(",")));
-    if (!url.isEmpty()) {
-        if (!m_player->isPathSupported(url)) {
-            kDebug() << i18n("ignoring unsupported:\n%1", url);
-            QMessageBox::warning(this, i18n("Invalid URL"),
-                i18n("Invalid URL:\n%1", url));
-        } else if (d2->w_list->items().contains(url)) {
-            QMessageBox::warning(this, i18n("Duplicate URL"),
-                i18n("Duplicate URL:\n%1", url));
-        } else {
-            d2->w_list->insertItem(url);
-        }
-    }
-}
-
-void KMediaWidget::_pathsSave()
-{
-    m_player->clearPaths();
-    QStringList playlist = d2->w_list->items();
-    for (int i = 0; i < playlist.count(); ++i) {
-        m_player->addPath(playlist.at(i));
-    }
-    _updateMove();
-    if (!playlist.isEmpty()) {
-        d->w_play->setEnabled(true);
-    }
-    m_path = playlist.first();
-    m_pathmanager->hide();
-}
-
-void KMediaWidget::_pathsReject()
-{
-    m_pathmanager->hide();
 }
 
 void KMediaWidget::_menuOpenURL()
@@ -439,25 +316,14 @@ void KMediaWidget::_menuOpenURL()
 
 void KMediaWidget::_menuOpen()
 {
-    QStringList paths = QFileDialog::getOpenFileNames(this, i18n("Select paths"));
-    if (!paths.isEmpty()) {
-        bool isfirst = true;
-        QStringList invalid;
-        foreach (const QString path, paths) {
-            if (!m_player->isPathSupported(path)) {
-                kDebug() << i18n("ignoring unsupported:\n%1", path);
-                invalid.append(path);
-                continue;
-            }
-            if (isfirst) {
-                open(path);
-                isfirst = false;
-            }
-            m_player->addPath(path);
-        }
-        if (!invalid.isEmpty()) {
-            QMessageBox::warning(this, i18n("Invalid paths"),
-                i18n("Some paths are invalid:\n%1", invalid.join("\n")));
+    QString path = QFileDialog::getOpenFileName(this, i18n("Select paths"));
+    if (!path.isEmpty()) {
+        if (!m_player->isPathSupported(path)) {
+            kDebug() << i18n("ignoring unsupported:\n%1", path);
+            QMessageBox::warning(this, i18n("Invalid path"),
+                i18n("The path is invalid:\n%1", path));
+        } else {
+            open(path);
         }
     }
 }
@@ -466,5 +332,33 @@ void KMediaWidget::_menuQuit()
 {
     qApp->quit();
 }
+
+void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls()) {
+        event->acceptProposedAction();
+    }
+}
+
+void KMediaWidget::dropEvent(QDropEvent *event)
+{
+    QList<QUrl> urls = event->mimeData()->urls();
+    QStringList invalid;
+    foreach (const QUrl url, urls) {
+        QString urlstring = url.toString();
+        if (!m_player->isPathSupported(urlstring)) {
+            kDebug() << i18n("ignoring unsupported:\n%1", urlstring);
+            invalid.append(urlstring);
+            continue;
+        }
+        open(urlstring);
+    }
+    if (!invalid.isEmpty()) {
+        QMessageBox::warning(this, i18n("Invalid paths"),
+            i18n("Some paths are invalid:\n%1", invalid.join("\n")));
+    }
+    event->acceptProposedAction();
+}
+
 
 #include "moc_kmediawidget.cpp"
