@@ -258,7 +258,7 @@ private:
     The KMediaPlayer class provides an embedable widget that can be used to playback from various
     media sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
     SMB, file-descriptor, raw data, you name it. It supports per-application state too, this
-    includes volume, mute, fullscreen and playlist state currently.
+    includes volume, mute and fullscreen state currently.
 
     For an extended version of this class check out KMediaWidget.
 

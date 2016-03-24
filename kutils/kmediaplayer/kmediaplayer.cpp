@@ -170,14 +170,16 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
         int rc = mpv_initialize(m_handle); \
         if (rc < 0) { \
             kWarning() << mpv_error_string(rc); \
-            return; \
+        } else { \
+            mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE); \
+            mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE); \
+            mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG); \
+            mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG); \
+            mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG); \
+            mpv_request_log_messages(m_handle, "info"); \
         } \
-        mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE); \
-        mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE); \
-        mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG); \
-        mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG); \
-        mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG); \
-        mpv_request_log_messages(m_handle, "info"); \
+    } else { \
+        kWarning() << i18n("context creation failed"); \
     }
 
 #define COMMON_DESTRUCTOR \
