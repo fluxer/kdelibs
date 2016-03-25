@@ -145,6 +145,7 @@ private slots:
     void _updatePosition(double seconds);
     void _updateLoaded();
     void _updateStatus(QString error);
+    void _updateFinished();
     void _updateError(QString error);
 
     void _menuOpenURL();

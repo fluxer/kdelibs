@@ -50,6 +50,7 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
 
     connect(m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
     connect(m_player, SIGNAL(loaded()), this, SLOT(_updateLoaded()));
+    connect(m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
     connect(m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
     connect(m_player, SIGNAL(seekable(bool)), this, SLOT(_updateSeekable(bool)));
     connect(m_player, SIGNAL(position(double)), this, SLOT(_updatePosition(double)));
@@ -228,7 +229,9 @@ void KMediaWidget::_fullscreen()
 void KMediaWidget::_updateControls(bool visible)
 {
     // avoid hiding the controls until something has been played
-    if (!m_player->path().isEmpty()) {
+    if (m_player->path().isEmpty()) {
+        d->w_frame->setVisible(true);
+    } else {
         d->w_frame->setVisible(visible);
     }
 }
@@ -273,6 +276,13 @@ void KMediaWidget::_updateStatus(QString error)
             windowwidget->setWindowTitle(error);
         }
     }
+}
+
+void KMediaWidget::_updateFinished()
+{
+    m_replay = true;
+
+    _updatePlay(true);
 }
 
 void KMediaWidget::_updateError(QString error)

@@ -290,7 +290,11 @@ signals:
     void loaded();
     //! @brief Signals that the playing state was paused/unpaused when buffering data
     void buffering(bool buffering);
-    //! @brief Signals that the playing state was paused/unpaused
+    /*!
+        @brief Signals that the playing state was paused/unpaused
+        @note You will still have to connect to the finished signal to update play/pause buttons
+        (if any) when the path is done playing
+    */
     void paused(bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
     void seekable(bool seekable);
