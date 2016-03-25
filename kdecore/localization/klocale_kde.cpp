@@ -456,19 +456,6 @@ void KLocalePrivate::initFormat()
     entryFile.setLocale(m_language);
     KConfigGroup entry(&entryFile, "KCM Locale");
 
-    //One-time conversion in 4.4 from FracDigits to DecimalPlaces and MonetaryDecimalPlaces
-    //If user has personal setting for FracDigits then use it for both Decimal Places
-    //TODO: Possible to do with kconf_update
-    if (cg.hasKey("FracDigits")) {
-        QString fracDigits = cg.readEntry("FracDigits", "");
-        if (!fracDigits.isEmpty()) {
-            cg.writeEntry("DecimalPlaces", fracDigits);
-            cg.writeEntry("MonetaryDecimalPlaces", fracDigits);
-        }
-        cg.deleteEntry("FracDigits");
-        cg.config()->sync();
-    }
-
     // Numeric
 #define readConfigEntry(key, default, save) \
         save = entry.readEntry(key, default); \
@@ -1257,13 +1244,6 @@ QString KLocalePrivate::negativeSign() const
 {
     return m_negativeSign;
 }
-
-/* Just copy to keep the diff looking clean, delete later
-int KLocale::fracDigits() const
-{
-    return monetaryDecimalPlaces();
-}
-*/
 
 int KLocalePrivate::monetaryDecimalPlaces() const
 {

@@ -50,7 +50,6 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
 
     connect(m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
     connect(m_player, SIGNAL(loaded()), this, SLOT(_updateLoaded()));
-    connect(m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
     connect(m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
     connect(m_player, SIGNAL(seekable(bool)), this, SLOT(_updateSeekable(bool)));
     connect(m_player, SIGNAL(position(double)), this, SLOT(_updatePosition(double)));
@@ -178,13 +177,12 @@ void KMediaWidget::_fullscreen()
 {
     /*
         Making a QWidget go fullscreen requires quite some magic for X11
-        because showFullScreen() requires the parent of the widget to be
-        a window (QMainWindow) thus some black magic bellow. asking the
-        parent widget to go fullscreen is required to preserve the media
-        controls visible and interactive. Note that setting the MPV
-        property is just for consistency and possible clients quering it
-        and nothing more as it does nothing when MPV is embed (as of the
-        time of writing this)
+        because showFullScreen() requires the parent of the widget to be a
+        window (QMainWindow) thus the hack bellow. Asking the parent widget to
+        go fullscreen is required to preserve the media controls visible and
+        interactive. Note that setting the MPV property is just for consistency
+        and possible clients quering it, it does nothing when MPV is embed (as
+        of the time of writing this).
     */
     if (!m_parent && (parentWidget() == window()) && !m_parenthack) {
         kDebug() << i18n("using parent widget from parentWidget()");
@@ -229,9 +227,8 @@ void KMediaWidget::_fullscreen()
 
 void KMediaWidget::_updateControls(bool visible)
 {
-    // checking the path is done to avoid hiding the controls until something is played
-    if (m_visible != visible && !m_player->path().isEmpty()) {
-        m_visible = visible;
+    // avoid hiding the controls until something has been played
+    if (!m_player->path().isEmpty()) {
         d->w_frame->setVisible(visible);
     }
 }
@@ -359,6 +356,5 @@ void KMediaWidget::dropEvent(QDropEvent *event)
     }
     event->acceptProposedAction();
 }
-
 
 #include "moc_kmediawidget.cpp"

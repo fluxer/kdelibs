@@ -100,6 +100,7 @@ public:
 
     //! @brief Reimplementation to provide more accurate size hint
     virtual QSize sizeHint() const;
+
 protected:
     //! @brief Reimplementation to support fullscreen
     virtual void mouseDoubleClickEvent(QMouseEvent *event);
@@ -111,7 +112,6 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *event);
     //! @brief Reimplementation to support Drag-n-Drop
     virtual void dropEvent(QDropEvent *event);
-
 
 public slots:
     /*!
@@ -158,7 +158,6 @@ private:
     QMainWindow *m_parenthack;
     QSize m_parentsizehack;
     QElapsedTimer m_timer;
-    bool m_visible;
     QString m_path;
     bool m_replay;
     QMenu *m_menu;
