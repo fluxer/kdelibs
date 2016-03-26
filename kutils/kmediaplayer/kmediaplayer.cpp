@@ -296,7 +296,6 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
 
         setVolume(m_settings->value("state/volume", 90).toInt());
         setMute(m_settings->value("state/mute", false).toBool());
-        setFullscreen(m_settings->value("state/fullscreen", false).toBool());
     }
 }
 

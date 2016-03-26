@@ -178,7 +178,7 @@ void KDialogPrivate::init(KDialog *q)
 
     q->connect(&mButtonSignalMapper, SIGNAL(mapped(int)), q, SLOT(slotButtonClicked(int)));
 
-    q->setPlainCaption(KGlobal::caption()); // set appropriate initial window title for case it gets not set later
+    q->setWindowTitle(KGlobal::caption()); // set appropriate initial window title for case it gets not set later
 }
 
 void KDialogPrivate::helpLinkClicked()
@@ -469,7 +469,7 @@ QString KDialog::makeStandardCaption( const QString &userCaption,
 void KDialog::setCaption( const QString &_caption )
 {
   const QString caption = makeStandardCaption( _caption, this );
-  setPlainCaption( caption );
+  setWindowTitle( caption );
 }
 
 void KDialog::setCaption( const QString &caption, bool modified )
@@ -481,19 +481,7 @@ void KDialog::setCaption( const QString &caption, bool modified )
         flags |= ModifiedCaption;
     }
 
-    setPlainCaption( makeStandardCaption(caption, this, flags) );
-}
-
-
-void KDialog::setPlainCaption( const QString &caption )
-{
-    if (QWidget *win = window()) {
-        win->setWindowTitle( caption );
-#ifdef Q_WS_X11
-        NETWinInfo info( QX11Info::display(), win->winId(), QX11Info::appRootWindow(), 0 );
-        info.setName( caption.toUtf8().constData() );
-#endif
-    }
+    setWindowTitle( makeStandardCaption(caption, this, flags) );
 }
 
 void KDialog::resizeLayout( QWidget *widget, int margin, int spacing ) //static

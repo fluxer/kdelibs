@@ -65,11 +65,7 @@ public:
 
     void init(KMainWindow *_q);
     void polish(KMainWindow *q);
-    enum CallCompression {
-        NoCompressCalls = 0,
-        CompressCalls
-    };
-    void setSettingsDirty(CallCompression callCompression = NoCompressCalls);
+    void setSettingsDirty(bool compressCalls = false);
     void setSizeDirty();
 };
 

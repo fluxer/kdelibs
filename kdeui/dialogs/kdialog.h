@@ -571,14 +571,6 @@ class KDEUI_EXPORT KDialog : public QDialog //krazy:exclude=qclasses
     virtual void setCaption( const QString &caption, bool modified );
 
     /**
-     * Make a plain caption without any modifications.
-     *
-     * @param caption Your caption. This is the string that will be
-     * displayed in the window title.
-     */
-    virtual void setPlainCaption( const QString &caption );
-
-    /**
      * Enable or disable (gray out) a general action button.
      *
      * @param id Button identifier.

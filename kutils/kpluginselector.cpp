@@ -764,7 +764,7 @@ void KPluginSelector::Private::PluginDelegate::slotAboutClicked()
             const KAboutData *aboutData = factory->componentData().aboutData();
             if (!aboutData->programName().isEmpty()) { // Be sure the about data is not completely empty
                 KAboutApplicationDialog aboutPlugin(aboutData, itemView());
-                aboutPlugin.setPlainCaption(i18nc("Used only for plugins", "About %1", aboutData->programName()));
+                aboutPlugin.setWindowTitle(i18nc("Used only for plugins", "About %1", aboutData->programName()));
                 aboutPlugin.exec();
                 return;
             }
@@ -793,7 +793,7 @@ void KPluginSelector::Private::PluginDelegate::slotAboutClicked()
         }
     }
     KAboutApplicationDialog aboutPlugin(&aboutData, itemView());
-    aboutPlugin.setPlainCaption(i18nc("Used only for plugins", "About %1", aboutData.programName()));
+    aboutPlugin.setWindowTitle(i18nc("Used only for plugins", "About %1", aboutData.programName()));
     aboutPlugin.exec();
 }
 

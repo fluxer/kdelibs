@@ -92,7 +92,7 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
         return;
     }
 
-    q->setPlainCaption(i18n("About %1", aboutData->programName()));
+    q->setWindowTitle(i18n("About %1", aboutData->programName()));
     q->setButtons(KDialog::Close);
     q->setDefaultButton(KDialog::Close);
     q->setModal(false);

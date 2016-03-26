@@ -438,14 +438,6 @@ public Q_SLOTS:
     virtual void setCaption( const QString &caption, bool modified );
 
     /**
-     * Make a plain caption without any modifications.
-     *
-     * @param caption Your caption. This is the string that will be
-     * displayed in the window title.
-     */
-    virtual void setPlainCaption( const QString &caption );
-
-    /**
      * Open the help page for the application.
      *
      *  The application name is

@@ -120,7 +120,7 @@ bool DockResizeListener::eventFilter(QObject *watched, QEvent *event)
     case QEvent::Resize:
     case QEvent::Move:
     case QEvent::Hide:
-        m_win->k_ptr->setSettingsDirty(KMainWindowPrivate::CompressCalls);
+        m_win->k_ptr->setSettingsDirty(true);
         break;
 
     default:
@@ -387,7 +387,7 @@ void KMainWindowPrivate::polish(KMainWindow *q)
                                        QDBusConnection::ExportAdaptors);
 }
 
-void KMainWindowPrivate::setSettingsDirty(CallCompression callCompression)
+void KMainWindowPrivate::setSettingsDirty(bool compressCalls)
 {
     if (!letDirtySettings) {
         return;
@@ -395,7 +395,7 @@ void KMainWindowPrivate::setSettingsDirty(CallCompression callCompression)
 
     settingsDirty = true;
     if (autoSaveSettings) {
-        if (callCompression == CompressCalls) {
+        if (compressCalls) {
             if (!settingsTimer) {
                 settingsTimer = new QTimer(q);
                 settingsTimer->setInterval(500);
@@ -547,7 +547,7 @@ bool KMainWindow::restore( int number, bool show )
 
 void KMainWindow::setCaption( const QString &caption )
 {
-    setPlainCaption( KDialog::makeStandardCaption( caption, this ) );
+    setWindowTitle( KDialog::makeStandardCaption( caption, this ) );
 }
 
 void KMainWindow::setCaption( const QString &caption, bool modified )
@@ -559,12 +559,7 @@ void KMainWindow::setCaption( const QString &caption, bool modified )
         flags |= KDialog::ModifiedCaption;
     }
 
-    setPlainCaption( KDialog::makeStandardCaption(caption, this, flags) );
-}
-
-void KMainWindow::setPlainCaption( const QString &caption )
-{
-	setWindowTitle(caption);
+    setWindowTitle( KDialog::makeStandardCaption(caption, this, flags) );
 }
 
 void KMainWindow::appHelpActivated( void )

@@ -47,31 +47,19 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     connect(d->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
     connect(d->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
     connect(d->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
+    connect(d->w_fullscreen, SIGNAL(clicked()), SLOT(setFullscreen()));
 
     connect(m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
     connect(m_player, SIGNAL(loaded()), this, SLOT(_updateLoaded()));
-    connect(m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
-    connect(m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
     connect(m_player, SIGNAL(seekable(bool)), this, SLOT(_updateSeekable(bool)));
     connect(m_player, SIGNAL(position(double)), this, SLOT(_updatePosition(double)));
+    connect(m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
+    connect(m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
 
     if (options & DragDrop) {
         setAcceptDrops(true);
         m_player->setAcceptDrops(true);
     }
-
-    bool extcontrols = (options & ExtendedControls);
-    if (extcontrols) {
-        _updateLoaded();
-
-        m_menu = new QMenu(d->w_menu);
-        m_menu->addAction(KIcon("document-open-remote"), i18n("O&pen URL"), this, SLOT(_menuOpenURL()));
-        m_menu->addAction(KIcon("document-open"), i18n("&Open"), this, SLOT(_menuOpen()));
-        m_menu->addSeparator();
-        m_menu->addAction(KIcon("application-exit"), i18n("&Quit"), this, SLOT(_menuQuit()));
-        connect(d->w_menu, SIGNAL(clicked()), this, SLOT(_showMenu()));
-    }
-    d->w_menu->setVisible(extcontrols);
 
     if (options & HiddenControls) {
         setMouseTracking(true);
@@ -139,43 +127,14 @@ void KMediaWidget::setVolume(int value)
     m_player->setVolume(value);
 }
 
-QSize KMediaWidget::sizeHint() const
+void KMediaWidget::setFullscreen(int value)
 {
-    return d->w_player->sizeHint();
-}
-
-void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    if (m_options & FullscreenVideo) {
-        _fullscreen();
-        event->ignore();
+    bool fullscreen;
+    if (value == -1) {
+        fullscreen = !m_player->isFullscreen();
+    } else {
+        fullscreen = bool(value);
     }
-}
-
-void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
-{
-    if (m_options & HiddenControls) {
-        _updateControls(true);
-        m_timer.restart();
-        event->ignore();
-    }
-}
-
-void KMediaWidget::timerEvent(QTimerEvent *event)
-{
-    if (m_timer.elapsed() > 3000) {
-        _updateControls(false);
-    }
-    Q_UNUSED(event);
-}
-
-void KMediaWidget::_showMenu()
-{
-    m_menu->exec(QCursor::pos());
-}
-
-void KMediaWidget::_fullscreen()
-{
     /*
         Making a QWidget go fullscreen requires quite some magic for X11
         because showFullScreen() requires the parent of the widget to be a
@@ -196,7 +155,20 @@ void KMediaWidget::_fullscreen()
         m_parentsizehack = m_parent->size();
         m_parenthack = new QMainWindow(m_parent);
     }
-    if (m_player->isFullscreen()) {
+
+    if (fullscreen) {
+        if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
+            kDebug() << i18n("using parent hack widget");
+            m_parenthack->setCentralWidget(this);
+            m_parenthack->showFullScreen();
+        } else if (m_parent) {
+            kDebug() << i18n("using parent widget");
+            m_parent->showFullScreen();
+        } else {
+            kWarning() << i18n("cannot set fullscreen state");
+        }
+        m_player->setFullscreen(true);
+    } else {
         if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
             kDebug() << i18n("restoring parent from hack widget");
             setParent(m_parent);
@@ -211,29 +183,43 @@ void KMediaWidget::_fullscreen()
             kWarning() << i18n("cannot restore to non-fullscreen state");
         }
         m_player->setFullscreen(false);
-    } else {
-        if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
-            kDebug() << i18n("using parent hack widget");
-            m_parenthack->setCentralWidget(this);
-            m_parenthack->showFullScreen();
-        } else if (m_parent) {
-            kDebug() << i18n("using parent widget");
-            m_parent->showFullScreen();
-        } else {
-            kWarning() << i18n("cannot set fullscreen state");
-        }
-        m_player->setFullscreen(true);
     }
+}
+
+QSize KMediaWidget::sizeHint() const
+{
+    return d->w_player->sizeHint();
+}
+
+void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    if (m_options & FullscreenVideo) {
+        setFullscreen();
+        event->ignore();
+    }
+}
+
+void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    if (m_options & HiddenControls) {
+        _updateControls(true);
+        m_timer.restart();
+        event->ignore();
+    }
+}
+
+void KMediaWidget::timerEvent(QTimerEvent *event)
+{
+    if (m_timer.elapsed() > 3000) {
+        _updateControls(false);
+    }
+    event->ignore();
 }
 
 void KMediaWidget::_updateControls(bool visible)
 {
-    // avoid hiding the controls until something has been played
-    if (m_player->path().isEmpty()) {
-        d->w_frame->setVisible(true);
-    } else {
-        d->w_frame->setVisible(visible);
-    }
+    d->w_frame->setVisible(visible);
+    emit controlsHidden(visible);
 }
 
 void KMediaWidget::_updatePlay(bool paused)
@@ -270,7 +256,7 @@ void KMediaWidget::_updateLoaded()
 
 void KMediaWidget::_updateStatus(QString error)
 {
-    if (m_options & ExtendedControls) {
+    if (m_options & FullscreenVideo) {
         QWidget *windowwidget = window();
         if (windowwidget) {
             windowwidget->setWindowTitle(error);
@@ -282,62 +268,26 @@ void KMediaWidget::_updateFinished()
 {
     m_replay = true;
 
-    _updatePlay(true);
-}
-
-void KMediaWidget::_updateError(QString error)
-{
     if (m_options & HiddenControls) {
         // show the controls until the next open
         m_timer.invalidate();
         _updateControls(true);
     }
+    _updatePlay(true);
+}
+
+void KMediaWidget::_updateError(QString error)
+{
     // since there are not many ways to indicate an error when
     // there are no extended controls use the play button to do so
-    if (m_options & ExtendedControls) {
+    if (m_options & FullscreenVideo) {
         _updateStatus(error);
     } else {
         d->w_play->setIcon(KIcon("dialog-error"));
         d->w_play->setText(i18n("Error"));
     }
 
-    m_replay = true;
-
     d->w_position->setEnabled(false);
-}
-
-void KMediaWidget::_menuOpenURL()
-{
-    QString url = QInputDialog::getText(this, i18n("Input URL"),
-        i18n("Supported protocols are: %1", m_player->protocols().join(",")));
-    if (!url.isEmpty()) {
-        if (!m_player->isPathSupported(url)) {
-            kDebug() << i18n("ignoring unsupported:\n%1", url);
-            QMessageBox::warning(this, i18n("Invalid URL"),
-                i18n("Invalid URL:\n%1", url));
-        } else {
-            open(url);
-        }
-    }
-}
-
-void KMediaWidget::_menuOpen()
-{
-    QString path = QFileDialog::getOpenFileName(this, i18n("Select paths"));
-    if (!path.isEmpty()) {
-        if (!m_player->isPathSupported(path)) {
-            kDebug() << i18n("ignoring unsupported:\n%1", path);
-            QMessageBox::warning(this, i18n("Invalid path"),
-                i18n("The path is invalid:\n%1", path));
-        } else {
-            open(path);
-        }
-    }
-}
-
-void KMediaWidget::_menuQuit()
-{
-    qApp->quit();
 }
 
 void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)

@@ -39,7 +39,7 @@ KAboutKdeDialog::KAboutKdeDialog(QWidget *parent)
   : KDialog(parent),
     d( 0 )
 {
-    setPlainCaption(i18n("About Katana"));
+    setWindowTitle(i18n("About Katana"));
     setButtons(KDialog::Close);
 
     KTitleWidget *titleWidget = new KTitleWidget(this);

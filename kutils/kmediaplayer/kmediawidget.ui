@@ -38,13 +38,13 @@
       <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="2">
-       <widget class="QDial" name="w_volume">
-        <property name="maximumSize">
-         <size>
-          <width>30</width>
-          <height>30</height>
-         </size>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="w_fullscreen">
+        <property name="text">
+         <string>Fullscreen</string>
+        </property>
+        <property name="icon">
+         <iconset theme="view-fullscreen"/>
         </property>
        </widget>
       </item>
@@ -60,15 +60,13 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="w_menu">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="icon">
-         <iconset theme="show-menu">
-          <normaloff/>
-         </iconset>
+      <item row="0" column="2">
+       <widget class="QDial" name="w_volume">
+        <property name="maximumSize">
+         <size>
+          <width>30</width>
+          <height>30</height>
+         </size>
         </property>
        </widget>
       </item>

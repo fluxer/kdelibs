@@ -194,7 +194,7 @@ public:
     The KAudioPlayer class provides an object that can be used to playback from various media
     sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray, SMB,
     file-descriptor, raw data, you name it. It supports per-application state too, this
-    includes volume, mute and fullscreen state currently.
+    includes volume and mute state currently.
 
     For an extended version of this class check out KMediaPlayer and KMediaWidget.
 
@@ -225,7 +225,11 @@ signals:
     void loaded();
     //! @brief Signals that the playing state was paused/unpaused when buffering data
     void buffering(bool buffering);
-    //! @brief Signals that the playing state was paused/unpaused
+    /*!
+        @brief Signals that the playing state was paused/unpaused
+        @note You will still have to connect to the finished signal to update play/pause buttons
+        (if any) when the path is done playing
+    */
     void paused(bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
     void seekable(bool seekable);

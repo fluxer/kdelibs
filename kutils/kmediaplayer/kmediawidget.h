@@ -22,12 +22,11 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QElapsedTimer>
-#include <QMenu>
 #include <kmediaplayer_export.h>
 #include <kmediaplayer.h>
 
 /*!
-    The KMediaPlayer class provides an embedable widget that can be used to playback from various
+    The KMediaWidget class provides an embedable widget that can be used to playback from various
     media sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
     SMB, file-descriptor, raw data, you name it. Unlike KMediaPlayer it provides interactive media
     controls to play/pause, seek to position and set volume. It is ment to be a simple player but
@@ -41,10 +40,10 @@
     player->open("http://video.webmfiles.org/big-buck-bunny_trailer.webm");
     @endcode
 
-    @note You should construct it with parent widget so that it can be layered on top of it.
-    Otherwise when a video is played the widget will be floating. Ensuring that the widget has
-    parent is a key to the fullscreen support as it will ask the parent to maximize itself when
-    that needs to happen to ensure that the media controls are visible.
+    @note You should construct it with parent widget, preferably a QMainWindow so that it can be
+    layered on top of it. Otherwise when a video is played the widget will be floating. Ensuring
+    that the widget has parent is a key to the fullscreen support as it will ask the parent to
+    maximize itself when that needs to happen to ensure that the media controls are visible.
     @warning The API is not stable yet and it may break in the future!
     @see KMediaPlayer
     @todo keyboard shortcuts
@@ -68,16 +67,12 @@ public:
         */
         FullscreenVideo = 2,
         /*!
-            @long Currently only a menu button with some goodies
-        */
-        ExtendedControls = 4,
-        /*!
             @long After a certain ammount of time the controls will hide themselfs allowing more
             screen space to be taken by the display widget
         */
-        HiddenControls = 5,
+        HiddenControls = 4,
         //! @brief All available options
-        AllOptions = DragDrop | FullscreenVideo | ExtendedControls | HiddenControls,
+        AllOptions = DragDrop | FullscreenVideo | HiddenControls,
         //! @brief Default options, currently none
         DefaultOptions = NoOptions
     };
@@ -119,6 +114,7 @@ public slots:
         @param value A tristate value for the play state, if "-1" the state will be automatically
         decided for you. If "0" it will set the state to play (unpaused) and if "1" it will set it
         to pause (paused). Whenever called it updates the play/pause button state.
+        @see KMediaPlayer::play, KMediaPlayer::pause
     */
     void setPlay(int value = -1);
     /*!
@@ -135,10 +131,24 @@ public slots:
         @see KMediaPlayer::setVolume
     */
     void setVolume(int value);
+    /*!
+        @brief Set the fullscreen state
+        @param value A tristate value for the fullscreen state, if "-1" the state will be
+        automatically decided for you. If "0" it will set the state to fullscreen and if "1" it
+        will set it non-fullscreen.
+        @see KMediaPlayer::isFullscreen, KMediaPlayer::setFullscreen
+    */
+    void setFullscreen(int value = -1);
+
+signals:
+    /*!
+        @brief Signals that controls were hidden/unhidden
+        @long This signal can be used to show/hide parent widget elements, such as menubar, when
+        the media controls of this widget are hidden/unhidden
+    */
+    void controlsHidden(bool hidden);
 
 private slots:
-    void _showMenu();
-    void _fullscreen();
     void _updateControls(bool visible);
     void _updatePlay(bool paused);
     void _updateSeekable(bool seekable);
@@ -147,10 +157,6 @@ private slots:
     void _updateStatus(QString error);
     void _updateFinished();
     void _updateError(QString error);
-
-    void _menuOpenURL();
-    void _menuOpen();
-    void _menuQuit();
 
 private:
     KMediaPlayer *m_player;
@@ -161,7 +167,6 @@ private:
     QElapsedTimer m_timer;
     QString m_path;
     bool m_replay;
-    QMenu *m_menu;
     Ui_KMediaWidgetPrivate *d;
 };
 

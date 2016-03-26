@@ -472,7 +472,7 @@ int KMessageBox::questionYesNoListWId(WId parent_id, const QString &text,
     dialog->setEscapeButton( KDialog::No );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -533,7 +533,7 @@ int KMessageBox::questionYesNoCancelWId(WId parent_id,
     dialog->setDefaultButton( KDialog::Yes );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -621,7 +621,7 @@ int KMessageBox::warningYesNoListWId(WId parent_id, const QString &text,
     dialog->setEscapeButton( KDialog::No );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -701,7 +701,7 @@ int KMessageBox::warningContinueCancelListWId(WId parent_id, const QString &text
     dialog->setEscapeButton( KDialog::No );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -788,7 +788,7 @@ int KMessageBox::warningYesNoCancelListWId(WId parent_id, const QString &text,
     dialog->setDefaultButton( KDialog::Yes );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -843,7 +843,7 @@ void KMessageBox::errorListWId(WId parent_id,  const QString &text, const QStrin
     dialog->setEscapeButton( KDialog::Ok );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -873,7 +873,7 @@ void KMessageBox::detailedErrorWId(WId parent_id,  const QString &text,
     dialog->setEscapeButton( KDialog::Ok );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -917,7 +917,7 @@ void KMessageBox::sorryWId(WId parent_id, const QString &text,
     dialog->setEscapeButton( KDialog::Ok );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -946,7 +946,7 @@ void KMessageBox::detailedSorryWId(WId parent_id, const QString &text,
     dialog->setEscapeButton( KDialog::Ok );
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
@@ -990,7 +990,7 @@ void KMessageBox::informationListWId(WId parent_id,const QString &text, const QS
     dialog->setEscapeButton( KDialog::Ok);
     applyOptions( dialog, options );
     if ( options & KMessageBox::PlainCaption ) {
-        dialog->setPlainCaption( caption );
+        dialog->setWindowTitle( caption );
     }
     if ( parent == NULL && parent_id ) {
         KWindowSystem::setMainWindow( dialog, parent_id );
