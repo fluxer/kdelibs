@@ -19,6 +19,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kicon.h>
+#include <kmainwindow.h>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
@@ -59,6 +60,10 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     if (options & DragDrop) {
         setAcceptDrops(true);
         m_player->setAcceptDrops(true);
+    }
+
+    if ((options & FullscreenVideo) == 0) {
+        d->w_fullscreen->setVisible(false);
     }
 
     if (options & HiddenControls) {
@@ -254,12 +259,15 @@ void KMediaWidget::_updateLoaded()
     _updatePlay(!m_player->isPlaying());
 }
 
-void KMediaWidget::_updateStatus(QString error)
+void KMediaWidget::_updateStatus(QString string)
 {
     if (m_options & FullscreenVideo) {
         QWidget *windowwidget = window();
-        if (windowwidget) {
-            windowwidget->setWindowTitle(error);
+        KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
+        if (kmainwindow) {
+            kmainwindow->setCaption(string);
+        } else if (windowwidget) {
+            windowwidget->setWindowTitle(string);
         }
     }
 }

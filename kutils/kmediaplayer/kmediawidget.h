@@ -154,7 +154,7 @@ private slots:
     void _updateSeekable(bool seekable);
     void _updatePosition(double seconds);
     void _updateLoaded();
-    void _updateStatus(QString error);
+    void _updateStatus(QString string);
     void _updateFinished();
     void _updateError(QString error);
 
