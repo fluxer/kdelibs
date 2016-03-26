@@ -48,24 +48,26 @@ public:
         temporary solution, for testing purposes, etc. but beware there be dragons!
     **/
     //! @brief A low-level player command sender
-    virtual void command(const QVariant& params) = 0;
+    virtual void command(const QVariant& params) const = 0;
     //! @brief A low-level player property setter
-    virtual void setProperty(const QString& name, const QVariant& value) = 0;
+    virtual void setProperty(const QString& name, const QVariant& value) const = 0;
     //! @brief A low-level player property getter
     virtual QVariant property(const QString& name) const = 0;
     //! @brief A low-level player option setter
-    virtual void setOption(const QString& name, const QVariant& value) = 0;
+    virtual void setOption(const QString& name, const QVariant& value) const = 0;
     //@}
 
     /*!
         @brief Start playing from a path
+        @long This a virtual method that should be reimplemented to delay initialization of the
+        player to delay it until something is actually about to be played
         @param path a path to load, it can start with "file://", "dvd://", "http://" and other
         valid MPV protocols
         @warning Some protocols may not be supported if MPV itself was not build with support for
         such! That is choice of the vendors and you should be well aware of what yours is doing
         @link https://github.com/mpv-player/mpv/blob/master/DOCS/man/mpv.rst#protocols
     */
-    void load(QString path);
+    virtual void load(QString path) = 0;
    /*!
         @brief Send a play command to the player, it may do nothing if a path was not loaded first
     */
@@ -146,7 +148,7 @@ public:
         quotes)
         @return Whether the MIME type is supported
     */
-    virtual bool isMimeSupported(QString mime) = 0;
+    virtual bool isMimeSupported(QString mime) const = 0;
     /*!
         @note You can obtain the scheme, which is the same as the meaning of protocol here, from a 
         KUrl/QUrl via url.scheme(). If you pass "http://" instead of just "http" the protocol will
@@ -165,7 +167,7 @@ public:
         @return Whether the path is supported
         @see isMimeSupported, isProtocolSupported
     */
-    bool isPathSupported(QString path);
+    bool isPathSupported(QString path) const;
     /*!
         @param volume desired volume level
         @warning It does not do boundry check so you should be aware of the maximum volume value if
@@ -209,16 +211,13 @@ public:
     KAudioPlayer(QObject *parent = 0);
     ~KAudioPlayer();
 
-    //! @brief A low-level player command sender
-    void command(const QVariant& params);
-    //! @brief A low-level player property setter
-    void setProperty(const QString& name, const QVariant& value);
-    //! @brief A low-level player property getter
+    void command(const QVariant& params) const;
+    void setProperty(const QString& name, const QVariant& value) const;
     QVariant property(const QString& name) const;
-    //! @brief A low-level player option setter
-    void setOption(const QString& name, const QVariant& value);
+    void setOption(const QString& name, const QVariant& value) const;
 
-    bool isMimeSupported(QString mime);
+    void load(QString path);
+    bool isMimeSupported(QString mime) const;
 
 signals:
     //! @brief Signals that a path was loaded
@@ -254,6 +253,7 @@ private:
 #ifdef MAKE_KMEDIAPLAYER_LIB
     mpv_handle *m_handle;
 #endif // MAKE_KMEDIAPLAYER_LIB
+    bool m_initialized;
     QSettings *m_settings;
 };
 
@@ -278,16 +278,13 @@ public:
     KMediaPlayer(QWidget *parent = 0);
     ~KMediaPlayer();
 
-    //! @brief A low-level player command sender
-    void command(const QVariant& params);
-    //! @brief A low-level player property setter
-    void setProperty(const QString& name, const QVariant& value);
-    //! @brief A low-level player property getter
+    void command(const QVariant& params) const;
+    void setProperty(const QString& name, const QVariant& value) const;
     QVariant property(const QString& name) const;
-    //! @brief A low-level player option setter
-    void setOption(const QString& name, const QVariant& value);
+    void setOption(const QString& name, const QVariant& value) const;
 
-    bool isMimeSupported(QString mime);
+    void load(QString path);
+    bool isMimeSupported(QString mime) const;
 
 signals:
     //! @brief Signals that a path was loaded
@@ -323,6 +320,7 @@ private:
 #ifdef MAKE_KMEDIAPLAYER_LIB
     mpv_handle *m_handle;
 #endif // MAKE_KMEDIAPLAYER_LIB
+    bool m_initialized;
     QSettings *m_settings;
 };
 
