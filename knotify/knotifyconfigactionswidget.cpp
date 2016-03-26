@@ -135,7 +135,7 @@ void KNotifyConfigActionsWidget::slotPlay(  )
 		soundURL = KUrl::fromPath( KStandardDirs::locate( "sound", soundString ) );
 	}
 	KAudioPlayer* media = new KAudioPlayer(this);
-	media->load(soundURL.url());
+	media->load(soundURL.prettyUrl());
 	connect(media, SIGNAL(finished()), media, SLOT(deleteLater()));
 }
 
