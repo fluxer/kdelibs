@@ -24,7 +24,6 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kstatusbar.h>
-#include <kmenubar.h>
 
 #include "kmainwindowtest.h"
 

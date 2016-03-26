@@ -2,7 +2,6 @@
 #define QT3_SUPPORT_WARNINGS
 
 #include <QtGui/QWidget>
-#include <QtCore/QString>
 #include <QtGui/QMessageBox>
 #include <QtGui/QTextEdit>
 #include <QtGui/QPixmap>
@@ -14,14 +13,13 @@
 #include <kcmdlineargs.h>
 #include <kapplication.h>
 #include <kmainwindow.h>
-#include <kmenubar.h>
 #include "kstatusbartest.h"
 
 testWindow::testWindow (QWidget *)
     : KXmlGuiWindow (0)
  {
     // Setup Menus
-    menuBar = new KMenuBar (this);
+    menuBar = new QMenuBar (this);
     fileMenu = new QMenu;
     menuBar->addAction ( "&File" );
     QAction *action = fileMenu->addAction("&Exit");

@@ -205,7 +205,6 @@ install(
     KMacroExpanderBase
     KMainWindow
     KMenu
-    KMenuBar
     KMessage
     KMessageBox
     KMessageBoxMessageHandler

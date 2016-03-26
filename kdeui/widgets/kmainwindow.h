@@ -39,7 +39,6 @@ class KMenu;
 class KConfig;
 class KConfigGroup;
 class KStatusBar;
-class KMenuBar;
 class KMWSessionManager;
 class KMainWindowPrivate;
 class KToolBar;
@@ -265,13 +264,6 @@ public:
      * Returns true, if there is a menubar
      */
      bool hasMenuBar();
-
-    /**
-     * Returns a pointer to the menu bar.
-     *
-     * If there is no menu bar yet one will be created.
-     **/
-    KMenuBar *menuBar();
 
     /**
      * Returns a pointer to the status bar.

@@ -1,9 +1,9 @@
 #ifndef TEST_KSTATUSBAR_H
 #define TEST_KSTATUSBAR_H
 
-#include <kmenubar.h>
 #include <kstatusbar.h>
 #include <kxmlguiwindow.h>
+#include <QMenuBar>
 
 class QTextEdit;
 
@@ -23,7 +23,7 @@ public Q_SLOTS:
 protected:
     QMenu *fileMenu;
     QMenu *smenu;
-    KMenuBar *menuBar;
+    QMenuBar *menuBar;
     KStatusBar *statusbar;
     bool insert;
     QTextEdit *widget;

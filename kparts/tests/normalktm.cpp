@@ -36,7 +36,6 @@
 #include <kactioncollection.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
-#include <kmenubar.h>
 #include <kicon.h>
 
 TestMainWindow::TestMainWindow()

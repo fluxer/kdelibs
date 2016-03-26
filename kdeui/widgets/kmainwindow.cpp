@@ -43,6 +43,7 @@
 #include <QtGui/QSessionManager>
 #include <QtGui/QStyle>
 #include <QtGui/QWidget>
+#include <QtGui/QMenuBar>
 #include <QtDBus/QDBusConnection>
 
 #include <kaction.h>
@@ -53,7 +54,6 @@
 #include <kdialog.h>
 #include <khelpmenu.h>
 #include <klocale.h>
-#include <kmenubar.h>
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
 #include <ktoolbar.h>
@@ -73,11 +73,6 @@
 #include <config.h>
 
 static bool no_query_exit = false;
-
-static KMenuBar *internalMenuBar(KMainWindow *mw)
-{
-    return KGlobal::findDirectChild<KMenuBar *>(mw);
-}
 
 static KStatusBar *internalStatusBar(KMainWindow *mw)
 {
@@ -676,7 +671,7 @@ void KMainWindow::saveMainWindowSettings(const KConfigGroup &_cg)
            cg.writeEntry("StatusBar", sb->isHidden() ? "Disabled" : "Enabled");
     }
 
-    QMenuBar* mb = internalMenuBar(this);
+    QMenuBar* mb = menuBar();
     if (mb) {
        const QString MenuBar = QLatin1String("MenuBar");
        if(!cg.hasDefault("MenuBar") && !mb->isHidden() )
@@ -763,7 +758,7 @@ void KMainWindow::applyMainWindowSettings(const KConfigGroup &cg, bool force)
            sb->show();
     }
 
-    QMenuBar* mb = internalMenuBar(this);
+    QMenuBar* mb = menuBar();
     if (mb) {
         QString entry = cg.readEntry ("MenuBar", "Enabled");
         if ( entry == "Disabled" )
@@ -1035,19 +1030,7 @@ bool KMainWindow::event( QEvent* ev )
 
 bool KMainWindow::hasMenuBar()
 {
-    return internalMenuBar(this);
-}
-
-KMenuBar *KMainWindow::menuBar()
-{
-    KMenuBar * mb = internalMenuBar(this);
-    if ( !mb ) {
-        mb = new KMenuBar( this );
-        // trigger a re-layout and trigger a call to the private
-        // setMenuBar method.
-        setMenuBar(mb);
-    }
-    return mb;
+    return menuBar();
 }
 
 KStatusBar *KMainWindow::statusBar()

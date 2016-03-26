@@ -22,7 +22,6 @@
 
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <kmenubar.h>
 #include <kdebug.h>
 
 #include "kselectactiontest.h"

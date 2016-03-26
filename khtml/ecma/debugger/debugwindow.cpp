@@ -37,7 +37,6 @@
 #include <kmessagebox.h>
 #include <kguiitem.h>
 #include <kmenu.h>
-#include <kmenubar.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <ktoggleaction.h>

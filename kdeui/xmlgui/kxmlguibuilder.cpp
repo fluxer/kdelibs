@@ -31,14 +31,13 @@
 #include "kxmlguiwindow.h"
 #include "kaction.h"
 #include "kglobalsettings.h"
+#include "kmenumenuhandler_p.h"
 #include <klocale.h>
 #include <kiconloader.h>
 #include <kdebug.h>
-#include <QtXml/qdom.h>
-#include <QtCore/QObject>
-#include <QtCore/qstringlist.h>
-#include "kmenumenuhandler_p.h"
 #include <kcomponentdata.h>
+#include <QtXml/qdom.h>
+#include <QtGui/QMenuBar>
 
 using namespace KDEPrivate;
 
@@ -138,11 +137,11 @@ QWidget *KXMLGUIBuilder::createContainer( QWidget *parent, int index, const QDom
 
     if ( tagName == d->tagMenuBar ) {
         KMainWindow *mainWin = qobject_cast<KMainWindow*>( d->m_widget );
-        KMenuBar *bar = 0;
+        QMenuBar *bar = 0;
         if (mainWin)
             bar = mainWin->menuBar();
         if (!bar)
-            bar = new KMenuBar( d->m_widget );
+            bar = new QMenuBar( d->m_widget );
         bar->show();
         return bar;
     }
@@ -259,9 +258,9 @@ void KXMLGUIBuilder::removeContainer( QWidget *container, QWidget *parent, QDomE
     tb->saveState( element );
     delete tb;
   }
-  else if ( qobject_cast<KMenuBar*>( container ) )
+  else if ( qobject_cast<QMenuBar*>( container ) )
   {
-    KMenuBar *mb = static_cast<KMenuBar *>( container );
+    QMenuBar *mb = static_cast<QMenuBar *>( container );
     mb->hide();
     // Don't delete menubar - it can be reused by createContainer.
     // If you decide that you do need to delete the menubar, make

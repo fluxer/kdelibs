@@ -51,7 +51,7 @@ class KHelpMenuPrivate;
  *
  * \code
  * mHelpMenu = new KHelpMenu( this, <someText> );
- * kmenubar->addMenu(mHelpMenu->menu() );
+ * menubar->addMenu(mHelpMenu->menu() );
  * \endcode
  *
  * or if you just want to open a dialog box:

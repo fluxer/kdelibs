@@ -40,6 +40,7 @@
 #include <QDockWidget>
 #include <QtXml/qdom.h>
 #include <QtGui/qevent.h>
+#include <QtGui/QMenuBar>
 #include <QtGui/QLayout>
 #include <QtGui/QSessionManager>
 #include <QtGui/QStyle>
@@ -53,7 +54,6 @@
 #include <kedittoolbar.h>
 #include <khelpmenu.h>
 #include <klocale.h>
-#include <kmenubar.h>
 #include <kstandarddirs.h>
 #include <kstatusbar.h>
 #include <ktoolbar.h>

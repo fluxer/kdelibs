@@ -52,7 +52,7 @@ namespace KStandardShortcut
    */
   enum StandardShortcut {
     //C++ requires that the value of an enum symbol be one more than the previous one.
-	//This means that everything will be well-ordered from here on.
+    //This means that everything will be well-ordered from here on.
     AccelNone=0,
     // File menu
     Open, New, Close, Save,

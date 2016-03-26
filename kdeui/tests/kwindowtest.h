@@ -3,7 +3,6 @@
 
 #include <QtCore/QTimer>
 #include <QtGui/QProgressBar>
-#include <kmenubar.h>
 #include <kstatusbar.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
