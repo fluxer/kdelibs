@@ -739,7 +739,7 @@ KStartupInfo::startup_t KStartupInfo::Private::check_startup_internal( WId w_P, 
     // ignore NET::Tool and other special window types, if they can't be matched
     NET::WindowType type = info.windowType( NET::NormalMask | NET::DesktopMask
         | NET::DockMask | NET::ToolbarMask | NET::MenuMask | NET::DialogMask
-        | NET::TopMenuMask | NET::UtilityMask | NET::SplashMask );
+        | NET::UtilityMask | NET::SplashMask );
     if( type != NET::Normal
         && type != NET::Unknown
         && type != NET::Dialog

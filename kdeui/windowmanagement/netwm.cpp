@@ -93,7 +93,6 @@ static Atom kde_net_wm_frame_strut   = 0;
 static Atom net_wm_fullscreen_monitors = 0;
 
 // KDE extensions
-static Atom kde_net_wm_window_type_topmenu    = 0;
 static Atom kde_net_wm_temporary_rules        = 0;
 static Atom kde_net_wm_frame_overlap          = 0;
 static Atom kde_net_wm_block_compositing      = 0;
@@ -255,7 +254,7 @@ static int wcmp(const void *a, const void *b) {
 }
 
 
-static const int netAtomCount = 87;
+static const int netAtomCount = 86;
 static void create_netwm_atoms(Display *d) {
     static const char * const names[netAtomCount] =
     {
@@ -344,7 +343,6 @@ static void create_netwm_atoms(Display *d) {
 	    "_NET_WM_STATE_STAYS_ON_TOP",
 
 	    "_KDE_NET_WM_FRAME_STRUT",
-	    "_KDE_NET_WM_WINDOW_TYPE_TOPMENU",
             "_KDE_NET_WM_TEMPORARY_RULES",
             "_NET_WM_FRAME_OVERLAP",
 
@@ -443,7 +441,6 @@ static void create_netwm_atoms(Display *d) {
         &net_wm_state_stays_on_top,
 
         &kde_net_wm_frame_strut,
-        &kde_net_wm_window_type_topmenu,
         &kde_net_wm_temporary_rules,
         &kde_net_wm_frame_overlap,
 
@@ -1180,10 +1177,6 @@ void NETRootInfo::setSupported() {
             atoms[pnum++] = net_wm_window_type_combobox;
         if (p->properties[ WINDOW_TYPES ] & DNDIconMask)
             atoms[pnum++] = net_wm_window_type_dnd;
-
-        // KDE extensions
-        if (p->properties[ WINDOW_TYPES ] & TopMenuMask)
-            atoms[pnum++] = kde_net_wm_window_type_topmenu;
     }
 
     if (p->properties[ PROTOCOLS ] & WMState) {
@@ -1424,9 +1417,6 @@ void NETRootInfo::updateSupportedProperties( Atom atom )
         p->properties[ WINDOW_TYPES ] |= ComboBoxMask;
     else if( atom == net_wm_window_type_dnd )
         p->properties[ WINDOW_TYPES ] |= DNDIconMask;
-    // KDE extensions
-    else if( atom == kde_net_wm_window_type_topmenu )
-        p->properties[ WINDOW_TYPES ] |= TopMenuMask;
 
     else if( atom == net_wm_state )
         p->properties[ PROTOCOLS ] |= WMState;
@@ -3266,14 +3256,6 @@ void NETWinInfo::setWindowType(WindowType type) {
 	len = 1;
 	break;
 
-    case TopMenu:
-	// spec extension: override window type.  we must comply with the spec
-	// and provide a fall back (dock seems best)
-	data[0] = kde_net_wm_window_type_topmenu;
-	data[1] = net_wm_window_type_dock;
-	len = 2;
-	break;
-
     case Toolbar:
 	data[0] = net_wm_window_type_toolbar;
 	data[1] = None;
@@ -4157,8 +4139,6 @@ void NETWinInfo::update(const unsigned long dirty_props[]) {
 			p->types[ pos++ ] = ComboBox;
 		    else if ((Atom) types[count] == net_wm_window_type_dnd)
 			p->types[ pos++ ] = DNDIcon;
-		    else if ((Atom) types[count] == kde_net_wm_window_type_topmenu)
-			p->types[ pos++ ] = TopMenu;
 
 		    count++;
 		}
@@ -4543,7 +4523,6 @@ bool NET::typeMatchesMask( WindowType type, unsigned long mask ) {
         CHECK_TYPE_MASK( Toolbar )
         CHECK_TYPE_MASK( Menu )
         CHECK_TYPE_MASK( Dialog )
-        CHECK_TYPE_MASK( TopMenu )
         CHECK_TYPE_MASK( Utility )
         CHECK_TYPE_MASK( Splash )
         CHECK_TYPE_MASK( DropdownMenu )
