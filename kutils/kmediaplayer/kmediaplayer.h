@@ -59,15 +59,13 @@ public:
 
     /*!
         @brief Start playing from a path
-        @long This a virtual method that should be reimplemented to delay initialization of the
-        player to delay it until something is actually about to be played
         @param path a path to load, it can start with "file://", "dvd://", "http://" and other
         valid MPV protocols
         @warning Some protocols may not be supported if MPV itself was not build with support for
         such! That is choice of the vendors and you should be well aware of what yours is doing
         @link https://github.com/mpv-player/mpv/blob/master/DOCS/man/mpv.rst#protocols
     */
-    virtual void load(QString path) = 0;
+    void load(QString path);
    /*!
         @brief Send a play command to the player, it may do nothing if a path was not loaded first
     */
@@ -216,7 +214,6 @@ public:
     QVariant property(const QString& name) const;
     void setOption(const QString& name, const QVariant& value) const;
 
-    void load(QString path);
     bool isMimeSupported(QString mime) const;
 
 signals:
@@ -226,8 +223,8 @@ signals:
     void buffering(bool buffering);
     /*!
         @brief Signals that the playing state was paused/unpaused
-        @note You will still have to connect to the finished signal to update play/pause buttons
-        (if any) when the path is done playing
+        @note You still have to connect to the finished signal to update play/pause buttons (if
+        any) when the path is done playing
     */
     void paused(bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
@@ -253,7 +250,6 @@ private:
 #ifdef MAKE_KMEDIAPLAYER_LIB
     mpv_handle *m_handle;
 #endif // MAKE_KMEDIAPLAYER_LIB
-    bool m_initialized;
     QSettings *m_settings;
 };
 
@@ -283,7 +279,6 @@ public:
     QVariant property(const QString& name) const;
     void setOption(const QString& name, const QVariant& value) const;
 
-    void load(QString path);
     bool isMimeSupported(QString mime) const;
 
 signals:
@@ -293,8 +288,8 @@ signals:
     void buffering(bool buffering);
     /*!
         @brief Signals that the playing state was paused/unpaused
-        @note You will still have to connect to the finished signal to update play/pause buttons
-        (if any) when the path is done playing
+        @note You still have to connect to the finished signal to update play/pause buttons (if
+        any) when the path is done playing
     */
     void paused(bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
@@ -320,7 +315,6 @@ private:
 #ifdef MAKE_KMEDIAPLAYER_LIB
     mpv_handle *m_handle;
 #endif // MAKE_KMEDIAPLAYER_LIB
-    bool m_initialized;
     QSettings *m_settings;
 };
 

@@ -27,6 +27,12 @@
 #include <mpv/client.h>
 #include <mpv/qthelper.hpp>
 
+
+void KAbstractPlayer::load(QString path)
+{
+    command(QStringList() << "loadfile" << path);
+}
+
 void KAbstractPlayer::play()
 {
     setProperty("pause", false);
@@ -160,26 +166,21 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     pre-processor definitions used to share the code as much as possible making modifications
     easier
 */
-#define COMMON_INITIALIZER \
-    if (m_handle && !m_initialized) { \
-        int rc = mpv_initialize(m_handle); \
-        if (rc < 0) { \
-            kWarning() << mpv_error_string(rc); \
-        } \
-    } \
-    m_initialized = true;
-
 #define COMMON_CONSTRUCTOR \
-    m_initialized = false; \
     setlocale(LC_NUMERIC, "C"); \
     m_handle = mpv_create(); \
     if (m_handle) { \
-        mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE); \
-        mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE); \
-        mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG); \
-        mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG); \
-        mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG); \
-        mpv_request_log_messages(m_handle, "info"); \
+        int rc = mpv_initialize(m_handle); \
+        if (rc < 0) { \
+            kWarning() << mpv_error_string(rc); \
+        } else {\
+            mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE); \
+            mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE); \
+            mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG); \
+            mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG); \
+            mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG); \
+            mpv_request_log_messages(m_handle, "info"); \
+        } \
     } else { \
         kWarning() << i18n("context creation failed"); \
     }
@@ -342,12 +343,6 @@ void KAudioPlayer::_processHandleEvents()
     COMMMON_EVENT_HANDLER
 }
 
-void KAudioPlayer::load(QString path)
-{
-    COMMON_INITIALIZER
-    command(QStringList() << "loadfile" << path);
-}
-
 bool KAudioPlayer::isMimeSupported(QString mime) const
 {
     return mime.startsWith("audio/") || mime == QLatin1String("application/octet-stream");
@@ -421,12 +416,6 @@ void KMediaPlayer::setOption(const QString& name, const QVariant& value) const
 void KMediaPlayer::_processHandleEvents()
 {
     COMMMON_EVENT_HANDLER
-}
-
-void KMediaPlayer::load(QString path)
-{
-    COMMON_INITIALIZER
-    command(QStringList() << "loadfile" << path);
 }
 
 bool KMediaPlayer::isMimeSupported(QString mime) const
