@@ -52,7 +52,7 @@ void KAbstractPlayer::seek(int position)
 
 void KAbstractPlayer::stop()
 {
-    command("stop");
+    command(QVariantList() <<"stop");
 }
 
 QString KAbstractPlayer::path()
