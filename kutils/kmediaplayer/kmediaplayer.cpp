@@ -241,7 +241,9 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
                 } else if (prop->reason == MPV_END_FILE_REASON_EOF \
                     || prop->reason == MPV_END_FILE_REASON_STOP \
                     || prop->reason == MPV_END_FILE_REASON_QUIT) { \
-                    emit finished(); \
+                    if (property("path").isNull()) { \
+                        emit finished(); \
+                    } \
                 } \
                 break; \
             } \
