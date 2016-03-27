@@ -126,6 +126,15 @@ public:
     */
     QStringList protocols();
     /*!
+        @return Audio output
+    */
+    QString audiooutput();
+    /*!
+        @return Audio outputs
+        @todo maybe that should return a QMap?
+    */
+    QStringList audiooutputs();
+    /*!
         @return Whether the current state is playing (not paused), does not mean it's not buffering
     */
     bool isPlaying();
@@ -182,6 +191,10 @@ public:
         @param mute mute state
     */
     void setMute(bool mute);
+    /*!
+        @param output audio output
+    */
+    void setAudioOutput(QString output);
     /*!
         @param fullscreen wheather it should take all screen space
         @warning This will most likely fail and the property will be set but MPV will do nothing
@@ -250,6 +263,7 @@ private:
 #ifdef MAKE_KMEDIAPLAYER_LIB
     mpv_handle *m_handle;
 #endif // MAKE_KMEDIAPLAYER_LIB
+    QString m_appname;
     QSettings *m_settings;
 };
 
@@ -315,6 +329,7 @@ private:
 #ifdef MAKE_KMEDIAPLAYER_LIB
     mpv_handle *m_handle;
 #endif // MAKE_KMEDIAPLAYER_LIB
+    QString m_appname;
     QSettings *m_settings;
 };
 

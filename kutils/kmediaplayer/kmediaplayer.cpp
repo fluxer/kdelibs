@@ -102,6 +102,27 @@ QStringList KAbstractPlayer::protocols()
     return s_protocols;
 }
 
+QString KAbstractPlayer::audiooutput()
+{
+    return property("audio-device").toString();
+}
+
+QStringList KAbstractPlayer::audiooutputs()
+{
+    const QVariantList value = property("audio-device-list").toList();
+    QStringList stringlist;
+    foreach (QVariant variant, value) {
+        QMapIterator<QString,QVariant> iter(variant.toMap());
+        while (iter.hasNext()) {
+            iter.next();
+            if (iter.key() == "name") {
+                stringlist.append(iter.value().toString());
+            }
+        }
+    }
+    return stringlist;
+}
+
 bool KAbstractPlayer::isPlaying()
 {
     return !property("pause").toBool() && !property("path").isNull();
@@ -150,10 +171,14 @@ void KAbstractPlayer::setVolume(int volume)
     setProperty("volume", volume);
 }
 
-
 void KAbstractPlayer::setMute(bool mute)
 {
     setProperty("mute", mute);
+}
+
+void KAbstractPlayer::setAudioOutput(QString output)
+{
+    setProperty("audio-device", output);
 }
 
 void KAbstractPlayer::setFullscreen(bool fullscreen)
@@ -295,25 +320,30 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
 {
     COMMON_CONSTRUCTOR
 
-    m_settings = new QSettings("KMediaPlayer", QCoreApplication::applicationName());
+    m_appname = QCoreApplication::applicationName();
+    m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
     if (m_handle) {
         mpv_set_wakeup_callback(m_handle, wakeup_audio, this);
         // TODO: newer releases use vid, video is compat!
         // NOTE: the change is pre-2014
         setProperty("video", "no");
 
-        setVolume(m_settings->value("state/volume", 90).toInt());
-        setMute(m_settings->value("state/mute", false).toBool());
+        QString globalaudio = m_settings->value("global/audiooutput", "auto").toString();
+        int globalvolume = m_settings->value("global/volume", 90).toInt();
+        bool globalmute = m_settings->value("global/mute", false).toBool();
+        setAudioOutput(m_settings->value(m_appname + "/audiooutput", globalaudio).toString());
+        setVolume(m_settings->value(m_appname + "/volume", globalvolume).toInt());
+        setMute(m_settings->value(m_appname + "/mute", globalmute).toBool());
     }
 }
 
 KAudioPlayer::~KAudioPlayer()
 {
     if (m_handle && m_settings && m_settings->isWritable()) {
-        m_settings->beginGroup("state");
+        m_settings->beginGroup(m_appname);
+        m_settings->setValue("audiooutput", audiooutput());
         m_settings->setValue("volume", volume());
         m_settings->setValue("mute", mute());
-        m_settings->setValue("fullScreen", isFullscreen());
         m_settings->endGroup();
         m_settings->sync();
     } else {
@@ -364,7 +394,8 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
 {
     COMMON_CONSTRUCTOR
 
-    m_settings = new QSettings("KMediaPlayer", QCoreApplication::applicationName());
+    m_appname = QCoreApplication::applicationName();
+    m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
     if (m_handle) {
         mpv_set_wakeup_callback(m_handle, wakeup_media, this);
         QVariant wid;
@@ -376,19 +407,22 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         }
         setOption("wid", wid);
 
-        setVolume(m_settings->value("state/volume", 90).toInt());
-        setMute(m_settings->value("state/mute", false).toBool());
-        setFullscreen(m_settings->value("state/fullscreen", false).toBool());
+        QString globalaudio = m_settings->value("global/audiooutput", "auto").toString();
+        int globalvolume = m_settings->value("global/volume", 90).toInt();
+        bool globalmute = m_settings->value("global/mute", false).toBool();
+        setAudioOutput(m_settings->value(m_appname + "/audiooutput", globalaudio).toString());
+        setVolume(m_settings->value(m_appname + "/volume", globalvolume).toInt());
+        setMute(m_settings->value(m_appname + "/mute", globalmute).toBool());
     }
 }
 
 KMediaPlayer::~KMediaPlayer()
 {
     if (m_handle && m_settings && m_settings->isWritable()) {
-        m_settings->beginGroup("state");
+        m_settings->beginGroup(m_appname);
+        m_settings->setValue("audiooutput", audiooutput());
         m_settings->setValue("volume", volume());
         m_settings->setValue("mute", mute());
-        m_settings->setValue("fullScreen", isFullscreen());
         m_settings->endGroup();
         m_settings->sync();
     } else {

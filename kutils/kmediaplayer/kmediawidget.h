@@ -58,22 +58,15 @@ public:
     enum KMediaOption {
         //! @brief No options at all
         NoOptions = 0,
-        /*!
-            @long When URL is dragged to the widget it will be opened
-        */
+        //! @brief When URL is dragged to the widget it will be opened
         DragDrop = 1,
-        /*!
-            @long Provide fullscreen option, it is such because it will ask the parent to do it
-        */
+        //! @brief Provide fullscreen option, it is such because it will ask the parent to do it
         FullscreenVideo = 2,
-        /*!
-            @long After a certain amount of time the controls will hide themselfs allowing more
-            screen space to be taken by the video widget
-        */
+        //! @brief After a certain amount of time the controls will hide and show again when needed
         HiddenControls = 3,
         //! @brief All available options
         AllOptions = DragDrop | FullscreenVideo | HiddenControls,
-        //! @brief Default options, currently none
+        //! @brief Default options
         DefaultOptions = NoOptions
     };
     Q_DECLARE_FLAGS(KMediaOptions, KMediaOption);
