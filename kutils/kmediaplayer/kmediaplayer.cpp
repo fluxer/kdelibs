@@ -192,7 +192,10 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 
 #define COMMMON_COMMAND_SENDER \
     if (m_handle) { \
-        mpv::qt::command_variant(m_handle, params); \
+        QVariant error = mpv::qt::command_variant(m_handle, params); \
+        if (!error.isNull()) { \
+            kWarning() << error; \
+        } \
     }
 
 #define COMMON_PROPERTY_SETTER \
