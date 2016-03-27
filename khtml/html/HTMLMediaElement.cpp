@@ -63,7 +63,7 @@ HTMLMediaElement::HTMLMediaElement(Document* doc)
     , m_previousProgress(0)
     , m_previousProgressTime(doubleMax)
     , m_sentStalledEvent(false)
-    , m_player(new KMediaWidget(NULL, KMediaWidget::FullscreenVideo))
+    , m_player(new KMediaWidget(NULL, KMediaWidget::HiddenControls | KMediaWidget::FullscreenVideo))
 {
 }
 

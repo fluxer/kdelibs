@@ -55,27 +55,29 @@ class KMEDIAPLAYER_EXPORT KMediaWidget: public QWidget
 {
     Q_OBJECT
 public:
-    enum KMediaOptions {
+    enum KMediaOption {
         //! @brief No options at all
         NoOptions = 0,
         /*!
-            @long When URLs are dragged to the widget it will be opened
+            @long When URL is dragged to the widget it will be opened
         */
         DragDrop = 1,
         /*!
-            @long Provide fullscreen option, it is option because it will ask the parent to do it
+            @long Provide fullscreen option, it is such because it will ask the parent to do it
         */
         FullscreenVideo = 2,
         /*!
-            @long After a certain ammount of time the controls will hide themselfs allowing more
-            screen space to be taken by the display widget
+            @long After a certain amount of time the controls will hide themselfs allowing more
+            screen space to be taken by the video widget
         */
-        HiddenControls = 4,
+        HiddenControls = 3,
         //! @brief All available options
         AllOptions = DragDrop | FullscreenVideo | HiddenControls,
         //! @brief Default options, currently none
         DefaultOptions = NoOptions
     };
+    Q_DECLARE_FLAGS(KMediaOptions, KMediaOption);
+
     KMediaWidget(QWidget *parent, KMediaOptions options = DefaultOptions);
     ~KMediaWidget();
 
@@ -169,5 +171,6 @@ private:
     bool m_replay;
     Ui_KMediaWidgetPrivate *d;
 };
+Q_DECLARE_OPERATORS_FOR_FLAGS(KMediaWidget::KMediaOptions);
 
 #endif // KMEDIAWIDGET_H
