@@ -45,33 +45,24 @@ namespace khtml {
 
 class RenderArena: public Shared<RenderArena> {
 public:
-#ifdef NDEBUG
     RenderArena() { };
-    ~RenderArena() { };
-
-    ALWAYS_INLINE void* allocate(size_t size) {
-        return ::malloc(size);
+    ~RenderArena() {
+        foreach (void *alloc, m_allocations) {
+            ::free(alloc);
+        }
     }
-    ALWAYS_INLINE void deallocate(void* ptr) {
-        ::free(ptr);
-    }
-#else
-    RenderArena() { m_alloccount = 0; };
-    // if you get assert here the application is leaking memory
-    ~RenderArena() { assert(m_alloccount == 0); };
 
     NEVER_INLINE void* allocate(size_t size) {
-        m_alloccount++;
-        return ::malloc(size);
+        void *alloc = ::malloc(size);
+        m_allocations.append(alloc);
+        return alloc;
     }
-    NEVER_INLINE void deallocate(void* ptr) {
-        m_alloccount--;
-        assert(this);
-        ::free(ptr);
+
+    ALWAYS_INLINE void deallocate(void* ptr) {
+        Q_UNUSED(ptr);
     }
 private:
-    int m_alloccount;
-#endif
+    QList<void*> m_allocations;
 };
 
 } // namespace
