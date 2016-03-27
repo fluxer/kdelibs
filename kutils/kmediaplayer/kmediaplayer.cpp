@@ -104,7 +104,7 @@ QStringList KAbstractPlayer::protocols()
 
 bool KAbstractPlayer::isPlaying()
 {
-    return (!property("pause").toBool() && !property("path").isNull());
+    return !property("pause").toBool() && !property("path").isNull();
 }
 
 bool KAbstractPlayer::isBuffering()

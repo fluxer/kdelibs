@@ -20,11 +20,9 @@
 
 #include "qtest_kde.h"
 #include "kxmlgui_unittest.h"
-#include <QtGui/qevent.h>
 #include <kedittoolbar.h>
 #include <kaction.h>
 #include <kpushbutton.h>
-#include <kmenubar.h>
 #include <kxmlguibuilder.h>
 #include <kxmlguiclient.h>
 #include "testxmlguiwindow.h"
@@ -32,6 +30,8 @@
 #include "moc_kxmlgui_unittest.cpp"
 #include <kxmlguiversionhandler_p.h>
 #include <kxmlguiversionhandler.cpp> // it's not exported, so we need to include the code here
+#include <QtGui/qevent.h>
+#include <QtGui/QMenuBar>
 
 QTEST_KDEMAIN(KXmlGui_UnitTest, GUI)
 
