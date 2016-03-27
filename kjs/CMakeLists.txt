@@ -169,15 +169,15 @@ set(kjs_LIB_SRCS
 add_library(kjs OBJECT ${kjs_LIB_SRCS})
 
 if(ENABLE_TESTING)
-    add_library(kjs ${LIBRARY_TYPE} ${kjs_LIB_SRCS})
+    add_library(kjs_library ${LIBRARY_TYPE} ${kjs_LIB_SRCS})
 
     if(CMAKE_THREAD_LIBS_INIT)
-        target_link_libraries(kjs ${CMAKE_THREAD_LIBS_INIT})
+        target_link_libraries(kjs_library ${CMAKE_THREAD_LIBS_INIT})
     endif()
     if(PCRE_FOUND)
-        target_link_libraries(kjs ${PCRE_LIBRARIES})
+        target_link_libraries(kjs_library ${PCRE_LIBRARIES})
     endif()
-    target_link_libraries(kjs m)
+    target_link_libraries(kjs_library m)
 
     add_subdirectory(tests)
 
@@ -186,7 +186,7 @@ if(ENABLE_TESTING)
 
     set_target_properties(kjs_bin PROPERTIES RUNTIME_OUTPUT_NAME kjs)
 
-    target_link_libraries(kjs_bin kjs)
+    target_link_libraries(kjs_bin kjs_library)
 
     # it is only for testing purposes, if you use it you abuse it
     # install(TARGETS kjs_bin ${INSTALL_TARGETS_DEFAULT_ARGS})

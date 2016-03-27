@@ -20,7 +20,7 @@ kde4_add_manual_test(ecmatest
     ecmatest.cpp
     ecmatest.h
 )
-target_link_libraries(ecmatest ${KDE4_KDECORE_LIBS} kjs ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(ecmatest ${KDE4_KDECORE_LIBS} kjs_library ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 function(ADD_ECMATEST ECMA262_CHAPTER)
     if (IS_DIRECTORY "${ECMATEST_BASEDIR}/test/suite/${ECMA262_CHAPTER}")
