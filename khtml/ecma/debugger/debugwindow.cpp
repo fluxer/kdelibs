@@ -73,6 +73,7 @@
 #include <QTabWidget>
 #include <QToolButton>
 #include <QTextDocument>
+#include <QMenuBar>
 
 #include "breakpointsdock.h"
 #include "consoledock.h"

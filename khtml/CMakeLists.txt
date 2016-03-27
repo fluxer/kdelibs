@@ -499,9 +499,7 @@ target_link_libraries(khtml
     ${KDE4_KDEUI_LIBRARY}
     ${KDE4_KPARTS_LIBS}
     ktexteditor
-    kparts
     kio
-    kdeui
     kdecore
     kmediaplayer
     ${X11_LIBRARIES}

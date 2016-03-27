@@ -107,7 +107,7 @@ KSycocaEntry* KBuildServiceFactory::createEntry( const QString& file, const char
             delete serv;
             return 0;
         }
-    } // TODO else if a Windows application,  new KService(name, exec, icon)
+    }
     return 0;
 }
 
