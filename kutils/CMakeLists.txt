@@ -3,6 +3,8 @@ project(kutils)
 include_directories(
     ${KDE4_KDEUI_INCLUDES}
     ${KDE4_KPARTS_INCLUDES}
+    # keep it, required by kemoticons and others
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_subdirectory(kmediaplayer)

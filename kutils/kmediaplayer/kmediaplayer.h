@@ -207,7 +207,7 @@ public:
     The KAudioPlayer class provides an object that can be used to playback from various media
     sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray, SMB,
     file-descriptor, raw data, you name it. It supports per-application state too, this
-    includes volume and mute state currently.
+    includes audio output device, volume and mute state currently.
 
     For an extended version of this class check out KMediaPlayer and KMediaWidget.
 
@@ -272,7 +272,7 @@ private:
     The KMediaPlayer class provides an embedable widget that can be used to playback from various
     media sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
     SMB, file-descriptor, raw data, you name it. It supports per-application state too, this
-    includes volume, mute and fullscreen state currently.
+    includes audio output device, volume and mute state currently.
 
     For an extended version of this class check out KMediaWidget.
 
