@@ -19,6 +19,7 @@
 */
 
 #include <QtGui/QToolBar>
+#include <QtGui/QMenuBar>
 
 #include <kcmdlineargs.h>
 #include <kapplication.h>

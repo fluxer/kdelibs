@@ -1277,20 +1277,10 @@ KCoreConfigSkeleton::ItemIntList *KCoreConfigSkeleton::addItemIntList( const QSt
   return item;
 }
 
-bool KCoreConfigSkeleton::isImmutable(const QString &name)
-{
-  return const_cast<const KCoreConfigSkeleton*>(this)->isImmutable(name);
-}
-
 bool KCoreConfigSkeleton::isImmutable(const QString &name) const
 {
   KConfigSkeletonItem *item = findItem(name);
   return !item || item->isImmutable();
-}
-
-KConfigSkeletonItem *KCoreConfigSkeleton::findItem(const QString &name)
-{
-  return const_cast<const KCoreConfigSkeleton*>(this)->findItem(name);
 }
 
 KConfigSkeletonItem *KCoreConfigSkeleton::findItem(const QString &name) const

@@ -20,6 +20,7 @@
 
 #include <QtCore/QTimer>
 #include <QtGui/QLabel>
+#include <QtGui/QMenuBar>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
