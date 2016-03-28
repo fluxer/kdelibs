@@ -30,6 +30,11 @@
 
 #include <QtCore/qsharedpointer.h>
 #include <QtCore/qvariant.h>
+#include <QtGui/qcolor.h>
+#include <QtGui/qfont.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qrect.h>
+#include <kurl.h>
 
 class KConfig;
 class KConfigGroupPrivate;
@@ -695,21 +700,15 @@ const QMetaEnum M_enum = M_obj->enumerator(M_index);                        \
 group.writeEntry(key, QByteArray(M_enum.valueToKeys(value)), flags);              \
 }
 
-#include "conversion_check.h"
-
 template <typename T>
 T KConfigGroup::readCheck(const char *key, const T &defaultValue) const
 {
-  ConversionCheck::to_QVariant<T>();
   return qvariant_cast<T>(readEntry(key, qVariantFromValue(defaultValue)));
 }
 
 template <typename T>
 QList<T> KConfigGroup::readListCheck(const char *key, const QList<T> &defaultValue) const
 {
-  ConversionCheck::to_QVariant<T>();
-  ConversionCheck::to_QString<T>();
-
   QVariantList data;
 
   Q_FOREACH(const T& value, defaultValue)
@@ -728,7 +727,6 @@ template <typename T>
 void KConfigGroup::writeCheck(const char *key, const T &value,
                               WriteConfigFlags pFlags)
 {
-    ConversionCheck::to_QVariant<T>();
     writeEntry(key, qVariantFromValue(value), pFlags);
 }
 
@@ -736,8 +734,6 @@ template <typename T>
 void KConfigGroup::writeListCheck(const char *key, const QList<T> &list,
                                   WriteConfigFlags pFlags)
 {
-  ConversionCheck::to_QVariant<T>();
-  ConversionCheck::to_QString<T>();
   QVariantList data;
   Q_FOREACH(const T &value, list) {
     data.append(qVariantFromValue(value));

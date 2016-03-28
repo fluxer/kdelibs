@@ -27,7 +27,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#include "kconfigbackend.h"
 #include "kconfiggroup.h"
 #include <kde_file.h>
 #include <kstringhandler.h>
@@ -56,7 +55,7 @@ bool KConfigPrivate::mappingsRegistered=false;
 KConfigPrivate::KConfigPrivate(const KComponentData &componentData_, KConfig::OpenFlags flags,
                                const char* resource)
     : openFlags(flags), resourceType(resource), mBackend(0),
-      bDynamicBackend(true),  bDirty(false), bReadDefaults(false),
+      bDirty(false), bReadDefaults(false),
       bFileImmutable(false), bForceGlobal(false), bSuppressGlobal(false),
       componentData(componentData_), configState(KConfigBase::NoAccess)
 {
@@ -215,17 +214,6 @@ KConfig::KConfig( const KComponentData& componentData, const QString& file, Open
     : d_ptr(new KConfigPrivate(componentData, mode, resourceType))
 {
     d_ptr->changeFileName(file, resourceType); // set the local file name
-
-    // read initial information off disk
-    reparseConfiguration();
-}
-
-KConfig::KConfig(const QString& file, const QString& backend, const char* resourceType)
-    : d_ptr(new KConfigPrivate(KGlobal::mainComponent(), SimpleConfig, resourceType))
-{
-    d_ptr->mBackend = KConfigBackend::create(d_ptr->componentData, file, backend);
-    d_ptr->bDynamicBackend = false;
-    d_ptr->changeFileName(file, ""); // set the local file name
 
     // read initial information off disk
     reparseConfiguration();
@@ -418,13 +406,14 @@ void KConfig::sync()
         d->bDirty = false; // will revert to true if a config write fails
 
         if (d->wantGlobals() && writeGlobals) {
-            KSharedPtr<KConfigBackend> tmp = KConfigBackend::create(componentData(), d->sGlobalFileName);
+            KConfigIniBackend *tmp = new KConfigIniBackend();
+            tmp->setFilePath(d->sGlobalFileName);
             if (d->configState == ReadWrite && !tmp->lock(componentData())) {
                 qWarning() << "couldn't lock global file";
                 d->bDirty = true;
                 return;
             }
-            if (!tmp->writeConfig(utf8Locale, d->entryMap, KConfigBackend::WriteGlobal, d->componentData)) {
+            if (!tmp->writeConfig(utf8Locale, d->entryMap, KConfigIniBackend::WriteGlobal, d->componentData)) {
                 d->bDirty = true;
                 // TODO KDE5: return false? (to tell the app that writing wasn't possible, e.g.
                 // config file is immutable or disk full)
@@ -435,7 +424,7 @@ void KConfig::sync()
         }
 
         if (writeLocals) {
-            if (!d->mBackend->writeConfig(utf8Locale, d->entryMap, KConfigBackend::WriteOptions(), d->componentData)) {
+            if (!d->mBackend->writeConfig(utf8Locale, d->entryMap, KConfigIniBackend::WriteOptions(), d->componentData)) {
                 d->bDirty = true;
                 // TODO KDE5: return false? (to tell the app that writing wasn't possible, e.g.
                 // config file is immutable or disk full)
@@ -534,10 +523,9 @@ void KConfigPrivate::changeFileName(const QString& name, const char* type)
 
     bSuppressGlobal = (file == sGlobalFileName);
 
-    if (bDynamicBackend || !mBackend) // allow dynamic changing of backend
-        mBackend = KConfigBackend::create(componentData, file);
-    else
-        mBackend->setFilePath(file);
+    if (!mBackend)
+        mBackend = new KConfigIniBackend();
+    mBackend->setFilePath(file);
 
     configState = mBackend->accessMode();
 }
@@ -583,12 +571,13 @@ void KConfigPrivate::parseGlobalFiles()
     //       on a per-application basis?
     const QByteArray utf8Locale = locale.toUtf8();
     foreach(const QString& file, globalFiles) {
-        KConfigBackend::ParseOptions parseOpts = KConfigBackend::ParseGlobal|KConfigBackend::ParseExpansions;
+        KConfigIniBackend::ParseOptions parseOpts = KConfigIniBackend::ParseGlobal|KConfigIniBackend::ParseExpansions;
         if (file != sGlobalFileName)
-            parseOpts |= KConfigBackend::ParseDefaults;
+            parseOpts |= KConfigIniBackend::ParseDefaults;
 
-        KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, file);
-        if ( backend->parseConfig( utf8Locale, entryMap, parseOpts) == KConfigBackend::ParseImmutable)
+        KConfigIniBackend *backend = new KConfigIniBackend();
+        backend->setFilePath(file);
+        if ( backend->parseConfig( utf8Locale, entryMap, parseOpts) == KConfigIniBackend::ParseImmutable)
             break;
     }
 }
@@ -620,21 +609,22 @@ void KConfigPrivate::parseConfigFiles()
         const QByteArray utf8Locale = locale.toUtf8();
         foreach(const QString& file, files) {
             if (file == mBackend->filePath()) {
-                switch (mBackend->parseConfig(utf8Locale, entryMap, KConfigBackend::ParseExpansions)) {
-                case KConfigBackend::ParseOk:
+                switch (mBackend->parseConfig(utf8Locale, entryMap, KConfigIniBackend::ParseExpansions)) {
+                case KConfigIniBackend::ParseOk:
                     break;
-                case KConfigBackend::ParseImmutable:
+                case KConfigIniBackend::ParseImmutable:
                     bFileImmutable = true;
                     break;
-                case KConfigBackend::ParseOpenError:
+                case KConfigIniBackend::ParseOpenError:
                     configState = KConfigBase::NoAccess;
                     break;
                 }
             } else {
-                KSharedPtr<KConfigBackend> backend = KConfigBackend::create(componentData, file);
+                KConfigIniBackend *backend = new KConfigIniBackend();
+                backend->setFilePath(file);
                 bFileImmutable = (backend->parseConfig(utf8Locale, entryMap,
-                                        KConfigBackend::ParseDefaults|KConfigBackend::ParseExpansions)
-                                  == KConfigBackend::ParseImmutable);
+                                        KConfigIniBackend::ParseDefaults|KConfigIniBackend::ParseExpansions)
+                                  == KConfigIniBackend::ParseImmutable);
             }
 
             if (bFileImmutable)

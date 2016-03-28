@@ -46,7 +46,6 @@ KDesktopFilePrivate::KDesktopFilePrivate(const char * resourceType, const QStrin
     : KConfigPrivate(KGlobal::mainComponent(), KConfig::NoGlobals, resourceType)
 {
     mBackend = new KConfigIniBackend();
-    bDynamicBackend = false;
     changeFileName(fileName, resourceType);
 }
 

@@ -26,7 +26,7 @@
 
 #include "kconfigdata.h"
 #include <kglobal.h>
-#include "kconfigbackend.h"
+#include "kconfigini_p.h"
 #include "kconfiggroup.h"
 #include "kcomponentdata.h"
 #include "kstandarddirs.h"
@@ -66,7 +66,7 @@ public:
     static QString expandString(const QString& value);
 
 protected:
-    KSharedPtr<KConfigBackend> mBackend;
+    KSharedPtr<KConfigIniBackend> mBackend;
 
     KConfigPrivate(const KComponentData &componentData_, KConfig::OpenFlags flags,
            const char* resource);
@@ -75,7 +75,6 @@ protected:
     {
     }
 
-    bool bDynamicBackend:1; // do we own the backend?
 private:
     bool bDirty:1;
     bool bLocaleInitialized:1;

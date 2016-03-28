@@ -159,7 +159,6 @@ set(kdecore_LIB_SRCS
     config/kconfigbase.cpp
     config/kconfigdata.cpp
     config/kconfiggroup.cpp
-    config/kconfigbackend.cpp
     config/kconfigini.cpp
     config/kdesktopfile.cpp
     config/ksharedconfig.cpp
@@ -435,9 +434,7 @@ install(
     compression/kfilterbase.h
     compression/karchive_export.h
     compression/kfilterdev.h
-    config/conversion_check.h
     config/kconfig.h
-    #config/kconfigbackend.h re-enable post-API review and implementation (4.2?)
     config/kconfigbase.h
     config/kconfiggroup.h
     config/kdesktopfile.h
@@ -542,7 +539,6 @@ install(
 
 install(
     FILES
-    config/kconfigbackend.desktop
     services/kplugininfo.desktop
     sonnet/sonnetspeller.desktop
     DESTINATION ${SERVICETYPES_INSTALL_DIR}

@@ -23,12 +23,13 @@
 #include "kconfigini_p.h"
 
 #include "kconfig.h"
-#include "kconfigbackend.h"
 #include "bufferfragment_p.h"
 #include "kconfigdata.h"
 #include <ksavefile.h>
 #include <kde_file.h>
 #include "kstandarddirs.h"
+#include <kdebug.h>
+#include <klocale.h>
 
 #include <qdatetime.h>
 #include <qdir.h>
@@ -56,7 +57,6 @@ QString KConfigIniBackend::warningProlog(const QFile &file, int line)
 }
 
 KConfigIniBackend::KConfigIniBackend()
- : KConfigBackend()
 {
 }
 
@@ -64,16 +64,15 @@ KConfigIniBackend::~KConfigIniBackend()
 {
 }
 
-KConfigBackend::ParseInfo
-        KConfigIniBackend::parseConfig(const QByteArray& currentLocale, KEntryMap& entryMap,
-                                       ParseOptions options)
+KConfigIniBackend::ParseInfo KConfigIniBackend::parseConfig(const QByteArray& currentLocale,
+    KEntryMap& entryMap, ParseOptions options)
 {
     return parseConfig(currentLocale, entryMap, options, false);
 }
 
 // merging==true is the merging that happens at the beginning of writeConfig:
 // merge changes in the on-disk file with the changes in the KConfig object.
-KConfigBackend::ParseInfo
+KConfigIniBackend::ParseInfo
 KConfigIniBackend::parseConfig(const QByteArray& currentLocale, KEntryMap& entryMap,
                                ParseOptions options, bool merging)
 {
@@ -771,4 +770,34 @@ void KConfigIniBackend::printableToString(BufferFragment* aString, const QFile& 
         }
     }
     aString->truncate(r - aString->constData());
+}
+
+QString KConfigIniBackend::filePath() const
+{
+    return m_localFileName;
+}
+
+void KConfigIniBackend::setLocalFilePath(const QString& file)
+{
+    m_localFileName = file;
+}
+
+QDateTime KConfigIniBackend::lastModified() const
+{
+    return m_lastModified;
+}
+
+void KConfigIniBackend::setLastModified(const QDateTime& dt)
+{
+    m_lastModified = dt;
+}
+
+qint64 KConfigIniBackend::size() const
+{
+    return m_size;
+}
+
+void KConfigIniBackend::setSize(qint64 sz)
+{
+    m_size = sz;
 }

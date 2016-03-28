@@ -161,20 +161,6 @@ public:
     explicit KConfig(const KComponentData& componentData, const QString& file = QString(),
                      OpenFlags mode = FullConfig, const char* resourceType = "config");
 
-    /**
-     * @internal
-     *
-     * Creates a KConfig object using the specified backend. If the backend can not
-     * be found or loaded, then the standard configuration parser is used as a fallback.
-     *
-     * @param file the file to be parsed
-     * @param backend the backend to load
-     * @param resourceType where to look for the file if an absolute path is not provided
-     *
-     * @since 4.1
-     */
-    KConfig(const QString& file, const QString& backend, const char* resourceType = "config");
-
     virtual ~KConfig();
 
     /**

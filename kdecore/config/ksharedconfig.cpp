@@ -20,7 +20,6 @@
 */
 
 #include "ksharedconfig.h"
-#include "kconfigbackend.h"
 #include "kconfiggroup.h"
 #include "kcomponentdata.h"
 #include "kglobal.h"
