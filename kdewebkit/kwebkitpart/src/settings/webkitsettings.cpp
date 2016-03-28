@@ -35,6 +35,7 @@
 #include <QWebSettings>
 #include <QFontDatabase>
 #include <QFileInfo>
+#include <QDateTime>
 
 // browser window color defaults -- Bernd
 #define HTML_DEFAULT_LNK_COLOR Qt::blue
