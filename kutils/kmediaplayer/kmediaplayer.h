@@ -89,7 +89,7 @@ public:
     */
     void stop();
     /*!
-        @brief current or last set path to be played
+        @brief Current path
     */
     QString path();
     /*!
@@ -163,10 +163,8 @@ public:
         @param protocol protocol type in the format \<protocol\>, e.g. "file" (without quotes)
         @return Whether the protocol is supported
         @see KUrl
-        @todo The check is incomplete and there is no protocols property (yet?). it implements
-        checks only for those listed in the MPV shipped .desktop file and should be improved
     */
-    static bool isProtocolSupported(QString protocol);
+    bool isProtocolSupported(QString protocol);
     /*!
         @note This will check MIME and protocol type, possibly some other things too. The MIME will
         be obtained via KMimeType which may be slow
@@ -174,7 +172,7 @@ public:
         @return Whether the path is supported
         @see isMimeSupported, isProtocolSupported
     */
-    bool isPathSupported(QString path) const;
+    bool isPathSupported(QString path);
     /*!
         @param volume desired volume level
         @warning It does not do boundry check so you should be aware of the maximum volume value if

@@ -97,7 +97,7 @@ QStringList KAbstractPlayer::protocols()
 {
     static QStringList s_protocols;
     if (s_protocols.isEmpty()) {
-        s_protocols << "file" << "ftp" << "sftp" << "http" << "https" << "mms" << "rtmp" << "rtsp" << "smb";
+        s_protocols << property("protocol-list").toStringList();
     }
     return s_protocols;
 }
@@ -145,14 +145,15 @@ bool KAbstractPlayer::isFullscreen()
 
 bool KAbstractPlayer::isProtocolSupported(QString protocol)
 {
-    return protocol.startsWith("file") || protocol.startsWith("ftp")
-        || protocol.startsWith("sftp") || protocol.startsWith("http")
-        || protocol.startsWith("https") || protocol.startsWith("mms")
-        || protocol.startsWith("rtmp") || protocol.startsWith("rtsp")
-        || protocol.startsWith("smb");
+    foreach(QString proto, protocols()) {
+        if (protocol.startsWith(proto)) {
+            return true;
+        }
+    }
+    return false;
 }
 
-bool KAbstractPlayer::isPathSupported(QString path) const
+bool KAbstractPlayer::isPathSupported(QString path)
 {
     KMimeType::Ptr mime = KMimeType::findByPath(path);
     if (mime && isMimeSupported(mime->name())) {

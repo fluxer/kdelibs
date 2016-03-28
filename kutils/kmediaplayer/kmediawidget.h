@@ -30,8 +30,8 @@
     media sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
     SMB, file-descriptor, raw data, you name it. Unlike KMediaPlayer it provides interactive media
     controls to play/pause, seek to position and set volume. It is ment to be a simple player but
-    supports drag-n-drop actions, fullscreen support, extended media controls and can automatically
-    hide the media controls optionally.
+    supports drag-n-drop actions, fullscreen support and can automatically hide the media controls
+    optionally.
 
     For a simpler version of this class check out KMediaPlayer.
 
