@@ -30,11 +30,6 @@
 
 #include <QtCore/qsharedpointer.h>
 #include <QtCore/qvariant.h>
-#include <QtGui/qcolor.h>
-#include <QtGui/qfont.h>
-#include <QtCore/qdatetime.h>
-#include <QtCore/qrect.h>
-#include <kurl.h>
 
 class KConfig;
 class KConfigGroupPrivate;

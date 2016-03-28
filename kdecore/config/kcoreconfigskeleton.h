@@ -29,7 +29,8 @@
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
 
-#include <QtCore/qrect.h>
+#include <QtCore/QRect>
+#include <QtCore/QDateTime>
 
   class KConfigSkeletonItemPrivate;
   /**

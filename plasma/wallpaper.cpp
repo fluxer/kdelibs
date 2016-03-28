@@ -33,6 +33,7 @@
 #include <QThreadPool>
 #include <QPainter>
 #include <QSvgRenderer>
+#include <QDateTime>
 
 #include <kdebug.h>
 #include <kglobal.h>

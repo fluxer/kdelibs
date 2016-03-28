@@ -25,6 +25,7 @@
 #include <QSqlField>
 #include <QSqlDriver>
 #include <QSqlRecord>
+#include <QDateTime>
 
 #include <kdebug.h>
 #include <kstandarddirs.h>

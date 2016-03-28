@@ -10,7 +10,7 @@ set(testkjs_SRCS testkjs.cpp )
 
 kde4_add_manual_test(testkjs ${testkjs_SRCS})
 
-target_link_libraries(testkjs ${KDE4_KJS_LIBS} ${QT_QTCORE_LIBRARY})
+target_link_libraries(testkjs kjs_library ${QT_QTCORE_LIBRARY})
 
 ########### ecmatest ##############
 

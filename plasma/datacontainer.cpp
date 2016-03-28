@@ -21,6 +21,7 @@
 #include "private/storage_p.h"
 
 #include <kdebug.h>
+#include <QDateTime>
 
 #include "plasma.h"
 

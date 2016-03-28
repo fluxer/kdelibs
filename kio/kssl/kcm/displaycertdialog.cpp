@@ -22,6 +22,8 @@
 #include <kstandardguiitem.h>
 #include <klocale.h>
 
+#include <QDateTime>
+
 DisplayCertDialog::DisplayCertDialog(QWidget *parent)
  : KDialog(parent),
    m_index(0)

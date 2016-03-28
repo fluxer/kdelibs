@@ -37,6 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "kcookiewin.h"
 #include "kcookiejar.h"
 
+#include <QtCore/QUrl>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QGroupBox>

@@ -42,6 +42,7 @@
 #include <kmenu.h>
 #include <kstandardaction.h>
 #include <kstandardshortcut.h>
+#include <kurl.h>
 
 #include <QtCore/QTimer>
 #include <QtGui/QClipboard>

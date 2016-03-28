@@ -24,8 +24,8 @@
 #include <QMenu>
 #include <QMimeData>
 #include <QMutex>
-#include <QtCore/qmutex.h>
 #include <QTimer>
+#include <QDateTime>
 
 #include <kdebug.h>
 #include <kicon.h>

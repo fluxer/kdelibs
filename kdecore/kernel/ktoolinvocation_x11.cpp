@@ -28,6 +28,7 @@
 
 #include <kconfiggroup.h>
 #include <kmimetypetrader.h>
+#include <kurl.h>
 
 #include "kcmdlineargs.h"
 #include "kconfig.h"

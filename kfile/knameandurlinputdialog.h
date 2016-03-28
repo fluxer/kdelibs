@@ -23,6 +23,7 @@
 
 #include <kfile_export.h>
 #include <kdialog.h>
+#include <kurl.h>
 
 class KLineEdit;
 class KUrlRequester;

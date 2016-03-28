@@ -47,6 +47,7 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
+#include <QtCore/QDateTime>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QTcpSocket>
 #include <QtNetwork/QTcpServer>

@@ -36,6 +36,7 @@
 #include <QtGui/QTextBrowser>
 #include <QUiLoader>
 #include <QTextCursor>
+#include <QDateTime>
 #include <QtGui/qtextobject.h>
 
 #include <kdebug.h>

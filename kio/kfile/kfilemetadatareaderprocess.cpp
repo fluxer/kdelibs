@@ -25,6 +25,7 @@
 #include <kcomponentdata.h>
 #include <kconfiggroup.h>
 #include <klocale.h>
+#include <kurl.h>
 
 #include <QtCore/QByteArray>
 #include <QtCore/QCoreApplication>

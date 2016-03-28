@@ -30,6 +30,7 @@
 #include "kcomponentdata.h"
 #include "kconfigdata.h"
 #include <kdebug.h>
+#include <kurl.h>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QSharedData>

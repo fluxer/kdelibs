@@ -26,6 +26,7 @@
 #include <QTextCodec>
 #include <QStringList>
 #include <QStandardItemModel>
+#include <QDateTime>
 
 #include <kdebug.h>
 #include <kglobal.h>

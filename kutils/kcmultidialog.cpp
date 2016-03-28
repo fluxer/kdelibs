@@ -38,6 +38,7 @@
 #include <ktoolinvocation.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <kurl.h>
 
 #include "auth/kauthaction.h"
 

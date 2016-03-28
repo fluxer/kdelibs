@@ -38,6 +38,7 @@
 
 #include <QtCore/QUrl>
 #include <QtCore/QPointer>
+#include <QtCore/QDateTime>
 #include <QtGui/QWidget>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnection>

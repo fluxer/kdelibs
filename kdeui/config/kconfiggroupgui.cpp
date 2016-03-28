@@ -22,6 +22,8 @@
 #include <kconfiggroup_p.h>
 #include <kdebug.h>
 
+#include <QColor>
+
 /**
  * Try to read a GUI type from config group @p cg at key @p key.
  * @p input is the default value and also indicates the type to be read.
