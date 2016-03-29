@@ -377,8 +377,7 @@ public:
      * @param enable Set this to true to enable checking.
      * @since 4.2
      */
-    void setConfirmOverwrite(bool enable){  // KDE5 TODO: make this virtual
-    }
+    virtual void setConfirmOverwrite(bool enable) { Q_UNUSED(enable); };
 
     /**
      * Forces the inline previews to be shown or hidden, depending on @p show.
@@ -386,8 +385,7 @@ public:
      * @param show Whether to show inline previews or not.
      * @since 4.2
      */
-    void setInlinePreviewShown(bool show) { // KDE5 TODO: make this virtual
-    }
+    virtual void setInlinePreviewShown(bool show) { Q_UNUSED(show); };
 };
 
 Q_DECLARE_INTERFACE(KAbstractFileWidget, "org.kde.KAbstractFileWidget")

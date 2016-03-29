@@ -685,15 +685,6 @@ KUrl KFileDialog::baseUrl() const
 
 QString KFileDialog::getSaveFileName(const KUrl& dir, const QString& filter,
                                      QWidget *parent,
-                                     const QString& caption)
-{
-    //TODO KDE5: replace this method by the method below (with default parameter values in declaration)
-    // Set no confirm-overwrite mode for backwards compatibility
-    return KFileDialogPrivate::getSaveFileName(dir, filter, parent, caption, Options(0), 0);
-}
-
-QString KFileDialog::getSaveFileName(const KUrl& dir, const QString& filter,
-                                     QWidget *parent,
                                      const QString& caption, Options options)
 {
     return KFileDialogPrivate::getSaveFileName(dir, filter, parent, caption, options, 0);
@@ -752,15 +743,6 @@ QString KFileDialogPrivate::getSaveFileName(const KUrl& dir, const QString& filt
 
 QString KFileDialog::getSaveFileNameWId(const KUrl& dir, const QString& filter,
                                      WId parent_id,
-                                     const QString& caption)
-{
-    //TODO KDE5: replace this method by the method below (with default parameter values in declaration)
-    // Set no confirm-overwrite mode for backwards compatibility
-    return getSaveFileNameWId(dir, filter, parent_id, caption, Options(0));
-}
-
-QString KFileDialog::getSaveFileNameWId(const KUrl& dir, const QString& filter,
-                                     WId parent_id,
                                      const QString& caption, Options options)
 {
     if (KFileDialogPrivate::isNative()) {
@@ -785,14 +767,6 @@ QString KFileDialog::getSaveFileNameWId(const KUrl& dir, const QString& filter,
         KRecentDocument::add(filename);
 
     return filename;
-}
-
-KUrl KFileDialog::getSaveUrl(const KUrl& dir, const QString& filter,
-                             QWidget *parent, const QString& caption)
-{
-    //TODO KDE5: replace this method by the method below (with default parameter values in declaration)
-    // Set no confirm-overwrite mode for backwards compatibility
-    return KFileDialogPrivate::getSaveUrl(dir, filter, parent, caption, Options(0), 0);
 }
 
 KUrl KFileDialog::getSaveUrl(const KUrl& dir, const QString& filter,
