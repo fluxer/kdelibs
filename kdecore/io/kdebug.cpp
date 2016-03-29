@@ -90,12 +90,8 @@
 #endif
 #endif
 
-#include "kdebugdbusiface_p.h"
 #include <QMutex>
 
-
-
-KDECORE_EXPORT bool kde_kdebug_enable_dbus_interface = false;
 
 class KNoDebugStream: public QIODevice
 {
@@ -206,26 +202,10 @@ struct KDebugPrivate
     typedef QHash<unsigned int, Area> Cache;
 
     KDebugPrivate()
-        : config(0), kDebugDBusIface(0), m_disableAll(false), m_seenMainComponent(false)
+        : config(0), m_disableAll(false), m_seenMainComponent(false)
     {
         Q_ASSERT(int(QtDebugMsg) == 0);
         Q_ASSERT(int(QtFatalMsg) == 3);
-
-        // Create the D-Bus interface if it has not been created yet
-        // But only register to D-Bus if we are in a process with a D-Bus event loop,
-        // otherwise introspection will just hang.
-        // Examples of processes without a D-Bus event loop: kioslaves and the main kdeinit process.
-        //
-        // How to know that we have a real event loop? That's tricky.
-        // We could delay registration in kDebugDBusIface with a QTimer, but
-        // it would still get triggered by kioslaves that use enterLoop/exitLoop
-        // to run kio jobs synchronously.
-        //
-        // Solution: we have a bool that is set by KApplication
-        // (kioslaves should use QCoreApplication but not KApplication).
-        if (kde_kdebug_enable_dbus_interface) {
-            kDebugDBusIface = new KDebugDBusIface;
-        }
 
         for (int i = 0; i < 8; i++) {
             m_nullOutputYesNoCache[i] = -1;
@@ -236,7 +216,6 @@ struct KDebugPrivate
     ~KDebugPrivate()
     {
         delete config;
-        delete kDebugDBusIface;
     }
 
     void loadAreaNames()
@@ -672,7 +651,6 @@ struct KDebugPrivate
 
     QMutex mutex;
     KConfig *config;
-    KDebugDBusIface *kDebugDBusIface;
     Cache cache;
     bool m_disableAll;
     bool m_seenMainComponent; // false: area zero still contains qAppName

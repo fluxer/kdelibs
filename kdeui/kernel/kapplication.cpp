@@ -455,9 +455,6 @@ void KApplicationPrivate::init(bool GUIenabled)
   if(GUIenabled)
     (void) QApplication::clipboard();
 
-  extern KDECORE_EXPORT bool kde_kdebug_enable_dbus_interface;
-  kde_kdebug_enable_dbus_interface = true;
-
   parseCommandLine();
 
   if(GUIenabled)

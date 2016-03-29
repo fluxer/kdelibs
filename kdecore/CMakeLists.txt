@@ -189,7 +189,6 @@ set(kdecore_LIB_SRCS
     io/karchive.cpp
     io/kautosavefile.cpp
     io/kdebug.cpp
-    io/kdebugdbusiface.cpp
     io/kdirwatch.cpp
     io/kfilesystemtype_p.cpp
     io/klimitediodevice.cpp
@@ -323,7 +322,6 @@ add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 target_link_libraries(kdecore PRIVATE
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
-    ${QT_QTDBUS_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${ZLIB_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT}
