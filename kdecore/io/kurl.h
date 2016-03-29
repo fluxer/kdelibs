@@ -303,7 +303,7 @@ public:
        * @since 4.2.3
        */
       static KUrl::List fromMimeData( const QMimeData *mimeData,
-                                      KUrl::MetaDataMap* metaData = 0
+                                      KUrl::MetaDataMap* metaData = 0,
                                       DecodeOptions decodeOptions = PreferKdeUrls );
 
   };
