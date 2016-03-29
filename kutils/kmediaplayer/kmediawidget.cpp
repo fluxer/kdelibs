@@ -20,6 +20,7 @@
 #include <klocale.h>
 #include <kicon.h>
 #include <kmainwindow.h>
+#include <kstatusbar.h>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
@@ -270,6 +271,14 @@ void KMediaWidget::_updateStatus(QString string)
         KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
         if (kmainwindow) {
             kmainwindow->setCaption(string);
+            KStatusBar *statusbar = kmainwindow->statusBar();
+            if (statusbar) {
+                if (m_player->isPlaying()) {
+                    statusbar->showMessage(i18n("Now playing: %1", string));
+                } else {
+                    statusbar->showMessage(string);
+                }
+            }
         } else if (windowwidget) {
             windowwidget->setWindowTitle(string);
         }
