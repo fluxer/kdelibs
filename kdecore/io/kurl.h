@@ -297,14 +297,14 @@ public:
        * Decoding will fail if @p mimeData does not contain any URLs, or if at
        * least one extracted URL is not valid.
        * @param mimeData the mime data to extract from; cannot be 0
-       * @param decodeOptions options for decoding
        * @param metaData optional pointer to a map holding the metadata
+       * @param decodeOptions options for decoding
        * @return the list of urls
        * @since 4.2.3
        */
       static KUrl::List fromMimeData( const QMimeData *mimeData,
-                                      DecodeOptions decodeOptions = PreferKdeUrls,
-                                      KUrl::MetaDataMap* metaData = 0 );
+                                      KUrl::MetaDataMap* metaData = 0
+                                      DecodeOptions decodeOptions = PreferKdeUrls );
 
   };
   /**

@@ -263,8 +263,8 @@ QStringList KUrl::List::mimeDataTypes()
 
 
 KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
-                                    DecodeOptions decodeOptions,
-                                    KUrl::MetaDataMap* metaData)
+                                    KUrl::MetaDataMap* metaData,
+                                    DecodeOptions decodeOptions)
 {
 
     KUrl::List uris;
