@@ -106,7 +106,7 @@ QHash<KUrl, QVariant> KFileMetaDataReaderApplication::readFileMetaData(const QLi
     // ranges for each key.
     if (urls.count() == 1) {
         const QString path = urls.first().toLocalFile();
-        KFileMetaInfo metaInfo(path, QString(), KFileMetaInfo::Fastest);
+        KFileMetaInfo metaInfo(path, KFileMetaInfo::Fastest);
         const QHash<QString, KFileMetaInfoItem> metaInfoItems = metaInfo.items();
         foreach (const KFileMetaInfoItem& metaInfoItem, metaInfoItems) {
             const QString uriString = metaInfoItem.name();

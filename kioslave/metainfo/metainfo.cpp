@@ -22,14 +22,12 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #include <kapplication.h>
-#include <kmimetype.h>
 #include <kdebug.h>
 #include <kfilemetainfo.h>
 #include <klocale.h>
 #include <stdlib.h>
 
 // Recognized metadata entries:
-// mimeType     - the mime type of the file, so we need not extra determine it
 // what         - what to load
 
 using namespace KIO;
@@ -66,8 +64,7 @@ MetaInfoProtocol::~MetaInfoProtocol()
 
 void MetaInfoProtocol::get(const KUrl &url)
 {
-    QString mimeType = metaData("mimeType");
-    KFileMetaInfo info(url.toLocalFile(), mimeType);
+    KFileMetaInfo info(url.toLocalFile());
 
     QByteArray arr;
     QDataStream stream(&arr, QIODevice::WriteOnly);
@@ -80,7 +77,6 @@ void MetaInfoProtocol::get(const KUrl &url)
 
 void MetaInfoProtocol::put(const KUrl& url, int, KIO::JobFlags)
 {
-    QString mimeType = metaData("mimeType");
     KFileMetaInfo info;
 
     QByteArray arr;
