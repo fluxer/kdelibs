@@ -181,6 +181,7 @@ void KMediaWidget::setFullscreen(int value)
             show();
             delete m_parenthack;
             m_parenthack = NULL;
+            m_parent = NULL;
         } else if (m_parent) {
             kDebug() << i18n("restoring from parent widget");
             m_parent->showNormal();
