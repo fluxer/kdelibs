@@ -162,6 +162,7 @@ private:
     QElapsedTimer m_timer;
     QString m_path;
     bool m_replay;
+    bool m_visible;
     Ui_KMediaWidgetPrivate *d;
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(KMediaWidget::KMediaOptions);

@@ -224,8 +224,11 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
 
 void KMediaWidget::_updateControls(bool visible)
 {
-    d->w_frame->setVisible(visible);
-    emit controlsHidden(visible);
+    if (visible != m_visible) {
+        m_visible = visible;
+        d->w_frame->setVisible(visible);
+        emit controlsHidden(visible);
+    }
 }
 
 void KMediaWidget::_updatePlay(bool paused)
