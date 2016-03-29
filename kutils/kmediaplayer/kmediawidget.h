@@ -90,6 +90,8 @@ public:
 
     //! @brief Reimplementation to provide more accurate size hint
     virtual QSize sizeHint() const;
+    //! @brief Reimplementation to provide reasonable minimum size
+    virtual QSize minimumSizeHint() const;
 
 protected:
     //! @brief Reimplementation to support fullscreen

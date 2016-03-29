@@ -198,6 +198,14 @@ QSize KMediaWidget::sizeHint() const
     return d->w_player->sizeHint();
 }
 
+QSize KMediaWidget::minimumSizeHint() const
+{
+    if (m_options & FullscreenVideo) {
+        return QSize(300, 233);
+    }
+    return QSize(180, 140);
+}
+
 void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (m_options & FullscreenVideo) {
