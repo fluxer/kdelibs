@@ -46,11 +46,12 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
     setModal(true);
 
     QWidget *frame = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(frame);
+    QGridLayout *layout = new QGridLayout(frame);
     layout->setMargin(0);
 
     m_label = new QLabel(label, frame);
     m_label->setWordWrap(true);
+    m_label->setAlignment(Qt::AlignTop);
     layout->addWidget(m_label);
 
     m_lineEdit = new KLineEdit(value, frame);
@@ -59,8 +60,6 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
 
     m_lineEdit->setFocus();
     m_label->setBuddy(m_lineEdit);
-
-    layout->addStretch();
 
     if (validator)
         m_lineEdit->setValidator(validator);
@@ -88,16 +87,17 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
     setDefaultButton(Ok);
     setModal(true);
     QWidget *frame = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(frame);
+    QGridLayout *layout = new QGridLayout(frame);
     layout->setMargin(0);
 
     m_label = new QLabel(label, frame);
     m_label->setWordWrap(true);
+    m_label->setAlignment(Qt::AlignTop);
     layout->addWidget(m_label);
 
     m_textEdit = new KTextEdit(frame);
     m_textEdit->insertPlainText(value);
-    layout->addWidget(m_textEdit, 10);
+    layout->addWidget(m_textEdit, 0, 10);
 
     m_textEdit->setFocus();
     m_label->setBuddy(m_textEdit);
@@ -120,16 +120,16 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
     setModal(true);
 
     QWidget *frame = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(frame);
+    QGridLayout *layout = new QGridLayout(frame);
 
     m_label = new QLabel(label, frame);
     m_label->setWordWrap(true);
+    m_label->setAlignment(Qt::AlignTop);
     layout->addWidget(m_label);
 
     m_intSpinBox = new KIntSpinBox(minValue, maxValue, step, value, frame, base);
     layout->addWidget(m_intSpinBox);
 
-    layout->addStretch();
     layout->setMargin(0);
 
     m_intSpinBox->setFocus();
@@ -149,10 +149,11 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
     setModal(true);
 
     QWidget *frame = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(frame);
+    QGridLayout *layout = new QGridLayout(frame);
 
     m_label = new QLabel(label, frame);
     m_label->setWordWrap(true);
+    m_label->setAlignment(Qt::AlignTop);
     layout->addWidget(m_label);
 
     m_doubleSpinBox = new QDoubleSpinBox(frame);
@@ -163,7 +164,6 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
 
     layout->addWidget(m_doubleSpinBox);
 
-    layout->addStretch();
     layout->setMargin(0);
 
     m_doubleSpinBox->setFocus();
@@ -183,10 +183,11 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
     setModal(true);
 
     QWidget *frame = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(frame);
+    QGridLayout *layout = new QGridLayout(frame);
 
     m_label = new QLabel(label, frame);
     m_label->setWordWrap(true);
+    m_label->setAlignment(Qt::AlignTop);
     layout->addWidget(m_label);
 
     if (editable) {
@@ -206,13 +207,12 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
         m_listBox = new KListWidget(frame);
         m_listBox->addItems(list);
         m_listBox->setCurrentRow(current);
-        layout->addWidget(m_listBox, 10);
+        layout->addWidget(m_listBox, 0, 10);
         connect(m_listBox, SIGNAL(executed(QListWidgetItem*)),
                 SLOT(accept()));
         m_listBox->setFocus();
     }
 
-    layout->addStretch();
     layout->setMargin(0);
     setMainWidget(frame);
     setMinimumWidth(320);
@@ -230,11 +230,12 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
     setModal(true);
 
     QWidget *frame = new QWidget(this);
-    QVBoxLayout *layout = new QVBoxLayout(frame);
+    QGridLayout *layout = new QGridLayout(frame);
 
     m_label = new QLabel(label, frame);
-    m_label->setWordWrap(true); 
-   layout->addWidget(m_label);
+    m_label->setWordWrap(true);
+    m_label->setAlignment(Qt::AlignTop);
+    layout->addWidget(m_label);
 
     m_listBox = new KListWidget(frame);
     m_listBox->addItems(list);
@@ -262,7 +263,6 @@ KInputDialogHelper::KInputDialogHelper( const QString &caption, const QString &l
 
     m_listBox->setFocus();
 
-    layout->addStretch();
     layout->setMargin(0);
     setMainWidget(frame);
     setMinimumWidth(320);
