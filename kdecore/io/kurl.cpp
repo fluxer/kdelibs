@@ -319,11 +319,6 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
     return uris;
 }
 
-KUrl::List KUrl::List::fromMimeData( const QMimeData *mimeData, KUrl::MetaDataMap* metaData )
-{
-    return fromMimeData(mimeData, PreferKdeUrls, metaData);
-}
-
 KUrl::List::operator QVariant() const
 {
   return qVariantFromValue(*this);
@@ -1002,11 +997,6 @@ QString KUrl::prettyUrl( int _trailing, AdjustementFlags _flags) const
   return u;
 }
 #endif
-
-QString KUrl::pathOrUrl() const
-{
-    return pathOrUrl(LeaveTrailingSlash);
-}
 
 QString KUrl::pathOrUrl(AdjustPathOption trailing) const
 {

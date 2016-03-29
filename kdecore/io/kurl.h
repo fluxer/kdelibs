@@ -272,16 +272,6 @@ public:
       static QStringList mimeDataTypes();
 
       /**
-       * Extract a list of KUrls from the contents of @p mimeData.
-       * Decoding will fail if @p mimeData does not contain any URLs, or if at
-       * least one extracted URL is not valid.
-       * @param mimeData the mime data to extract from; cannot be 0
-       * @param metaData optional pointer to a map holding the metadata
-       * @return the list of urls
-       */
-      static KUrl::List fromMimeData( const QMimeData *mimeData, KUrl::MetaDataMap* metaData = 0 );
-
-      /**
        * Flags to be used in fromMimeData.
        * @since 4.2.3
        */
@@ -313,7 +303,7 @@ public:
        * @since 4.2.3
        */
       static KUrl::List fromMimeData( const QMimeData *mimeData,
-                                      DecodeOptions decodeOptions, // TODO KDE5: = PreferKdeUrls, and merge with above
+                                      DecodeOptions decodeOptions = PreferKdeUrls,
                                       KUrl::MetaDataMap* metaData = 0 );
 
   };
@@ -837,15 +827,11 @@ public:
    * You can give the result of pathOrUrl back to the KUrl constructor, it accepts
    * both paths and urls.
    *
-   * @return the new KUrl
-   */
-  QString pathOrUrl() const;
-  /**
-   * Overload with @p trailing parameter
    * @param trailing use to add or remove a trailing slash to/from the path. see adjustPath.
+   * @return the new KUrl
    * @since 4.2
    */
-  QString pathOrUrl(AdjustPathOption trailing) const; // KDE5: merge with above. Rename to toUrlOrLocalFile?
+  QString pathOrUrl(AdjustPathOption trailing = LeaveTrailingSlash) const;
 
   /**
    * Returns the URL as a string, using the standard conventions for mime data

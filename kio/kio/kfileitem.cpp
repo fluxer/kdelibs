@@ -1246,7 +1246,7 @@ KFileMetaInfo KFileItem::metaInfo(bool autoget, int what) const
     {
         bool isLocalUrl;
         KUrl url(mostLocalUrl(isLocalUrl));
-        d->m_metaInfo = KFileMetaInfo(url.toLocalFile(), mimetype(), (KFileMetaInfo::What)what);
+        d->m_metaInfo = KFileMetaInfo(url.toLocalFile(), (KFileMetaInfo::What)what);
     }
     return d->m_metaInfo;
 }

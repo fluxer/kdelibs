@@ -261,7 +261,6 @@ void KFileMetaInfoPrivate::init ( QIODevice& stream, const KUrl& url, time_t mti
 
 void KFileMetaInfoPrivate::initWriters ( const KUrl& file )
 {
-    QStringList mimetypes;
     QHash<QString, KFileMetaInfoItem>::iterator i;
     for ( i = items.begin(); i != items.end(); ++i ) {
         KFileWritePlugin *w =
@@ -272,8 +271,7 @@ void KFileMetaInfoPrivate::initWriters ( const KUrl& file )
     }
 }
 
-KFileMetaInfo::KFileMetaInfo ( const QString& path, const QString& /*mimetype*/,
-                               KFileMetaInfo::WhatFlags w )
+KFileMetaInfo::KFileMetaInfo ( const QString& path, KFileMetaInfo::WhatFlags w )
         : d ( new KFileMetaInfoPrivate() )
 {
     QFileInfo fileinfo ( path );
@@ -392,8 +390,7 @@ class KFileMetaInfoPrivate : public QSharedData
 public:
 };
 
-KFileMetaInfo::KFileMetaInfo ( const QString& path, const QString& /*mimetype*/,
-                               KFileMetaInfo::WhatFlags w )
+KFileMetaInfo::KFileMetaInfo ( const QString& path, KFileMetaInfo::WhatFlags w )
 {
     Q_UNUSED(path);
     Q_UNUSED(w);

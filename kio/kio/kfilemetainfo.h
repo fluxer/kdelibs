@@ -87,9 +87,12 @@ public:
      * the resource pointed to by @p path.
      *
      * When w is not Everything, a limit of 64kbytes is imposed on the file size.
+     * @note The path must be full (start with a slash) or relative, e.g.
+     * "/home/joe/pic.png" or "../joe/pic.png". If it starts with a URL scheme,
+     * e.g. "file:///home/joe/pic.png" it will be considered invalid. If it may
+     * start with URL scheme use the constructor that takes KUrl.
      **/
-    explicit KFileMetaInfo(const QString& path, const QString& mimetype = QString(),
-        WhatFlags w = Everything);
+    explicit KFileMetaInfo(const QString& path, WhatFlags w = Everything);
     /**
      * @brief Construct a KFileMetaInfo that contains metainformation about
      * the resource pointed to by @p url.
