@@ -51,15 +51,6 @@ public:
     virtual ~KFileMetaDataReader();
 
     /**
-     * If \p read is set to true also metadata that is persisted outside the
-     * files itself (like e.g. rating, comments or tags) are read. Per
-     * default the reading of context data is enabled. Pass false if only the metadata
-     * persisted inside the file should be read.
-     */
-    void setReadContextData(bool read);
-    bool readContextData() const;
-
-    /**
      * Starts the reading of the metadata inside a custom process.
      * The signal finished() will get emitted if the reading has been finished.
      * Use metaData() to access the read metadata.
@@ -81,10 +72,8 @@ Q_SIGNALS:
     void finished();
 
 private:
-    class Private;
-    Private* d;
-
-    Q_PRIVATE_SLOT(d, void slotLoadingFinished(int, QProcess::ExitStatus))
+    QList<KUrl> m_urls;
+    QHash<KUrl, QVariant> m_metaData;
 };
 
 #endif

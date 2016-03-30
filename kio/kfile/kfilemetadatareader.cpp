@@ -19,102 +19,46 @@
 
 #include "kfilemetadatareader_p.h"
 
-#include <kprocess.h>
-#include <kstandarddirs.h>
-
-class KFileMetaDataReader::Private
-{
-public:
-    Private(KFileMetaDataReader* parent);
-    ~Private();
-
-    void slotLoadingFinished(int exitCode, QProcess::ExitStatus exitStatus);
-
-    bool m_readContextData;
-    KProcess* m_process;
-    QHash<KUrl, QVariant> m_metaData;
-
-private:
-    KFileMetaDataReader* const q;
-};
-
-KFileMetaDataReader::Private::Private(KFileMetaDataReader* parent) :
-    m_readContextData(true),
-    m_process(new KProcess()),
-    m_metaData(),
-    q(parent)
-{
-}
-
-KFileMetaDataReader::Private::~Private()
-{
-    delete m_process;
-}
-
-void KFileMetaDataReader::Private::slotLoadingFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-    Q_UNUSED(exitCode);
-    Q_UNUSED(exitStatus);
-
-    QDataStream in(QByteArray::fromBase64(m_process->readLine()));
-
-    KUrl key;
-    QVariant value;
-    while (!in.atEnd()) {
-        in >> key;
-        in >> value;
-
-        m_metaData.insert(key, value);
-    }
-
-    emit q->finished();
-}
+#include <kfilemetainfo.h>
+#include <kdebug.h>
+#include <klocale.h>
 
 KFileMetaDataReader::KFileMetaDataReader(const QList<KUrl>& urls, QObject* parent) :
-    QObject(parent),
-    d(new Private(this))
+    QObject(parent)
 {
-    const QString fileMetaDataReaderExe = KStandardDirs::findExe(QLatin1String("kfilemetadatareader"));
-    (*d->m_process) << fileMetaDataReaderExe;
-
-    foreach (const KUrl& url, urls) {
-        (*d->m_process) << url.url();
+    if (urls.count() > 1) {
+        kWarning() << i18n("more then one URL was passed");
     }
-
-    d->m_process->setOutputChannelMode(KProcess::OnlyStdoutChannel);
-    d->m_process->setNextOpenMode(QIODevice::ReadOnly);
-    connect(d->m_process, SIGNAL(finished(int,QProcess::ExitStatus)),
-            this, SLOT(slotLoadingFinished(int,QProcess::ExitStatus)));
+    m_urls = urls;
 }
 
 KFileMetaDataReader::~KFileMetaDataReader()
 {
-    delete d;
-}
-
-void KFileMetaDataReader::setReadContextData(bool read)
-{
-    d->m_readContextData = read;
-}
-
-bool KFileMetaDataReader::readContextData() const
-{
-    return d->m_readContextData;
 }
 
 void KFileMetaDataReader::start()
 {
-    if (d->m_process->state() == QProcess::NotRunning) {
-        if (!d->m_readContextData) {
-            (*d->m_process) << "--file";
+#warning implement multi-URL metadata support
+    foreach (const KUrl& url, m_urls) {
+        // Currently only the meta-data of one file is supported.
+        // It might be an option to read all meta-data and show
+        // ranges for each key.
+
+        const QString path = url.toLocalFile();
+        KFileMetaInfo metaInfo(path, KFileMetaInfo::Fastest);
+        const QHash<QString, KFileMetaInfoItem> metaInfoItems = metaInfo.items();
+        foreach (const KFileMetaInfoItem& metaInfoItem, metaInfoItems) {
+            const QString uriString = metaInfoItem.name();
+            const QVariant value(metaInfoItem.value());
+            m_metaData.insert(uriString, value);
         }
-        d->m_process->start();
     }
+    emit finished();
 }
 
 QHash<KUrl, QVariant> KFileMetaDataReader::metaData() const
 {
-    return d->m_metaData;
+    return m_metaData;
 }
 
 #include "moc_kfilemetadatareader_p.cpp"

@@ -21,7 +21,7 @@ int main (int argc, char **argv)
 		KMimeType::Ptr p;
 		p = KMimeType::findByPath(file);
 		qWarning("Mime type (findByPath): %s", p->name().toLatin1().constData());
-		KFileMetaInfo meta(file, QString(), KFileMetaInfo::TechnicalInfo | KFileMetaInfo::ContentInfo);
+		KFileMetaInfo meta(file, KFileMetaInfo::TechnicalInfo | KFileMetaInfo::ContentInfo);
 	}
 
 	return 0;

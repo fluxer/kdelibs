@@ -264,15 +264,7 @@ set(kio_LIB_PRIVATE_SRCS
     kio/slaveinterface_p.h
 )
 
-set(kfilemetadatareaderprocess_SRCS
-    kfile/kfilemetadatareaderprocess.cpp
-)
-
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
-
-add_executable(kfilemetadatareader ${kfilemetadatareaderprocess_SRCS})
-
-target_link_libraries(kfilemetadatareader ${KDE4_KIO_LIBS})
 
 target_link_libraries(kio
     ${KDE4_KDEUI_LIBS}
@@ -306,11 +298,6 @@ set_target_properties(kio PROPERTIES
 install(
     TARGETS kio
     EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
-)
-
-install(
-    TARGETS kfilemetadatareader
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
