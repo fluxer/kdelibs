@@ -61,7 +61,7 @@ static bool decodeIsCutSelection(const QMimeData *mimeData)
 //KIO_EXPORT Job *pasteClipboardUrls(const KUrl& destDir, JobFlags flags = DefaultFlags);
 static KIO::Job *pasteClipboardUrls(const QMimeData* mimeData, const KUrl& destDir, KIO::JobFlags flags = KIO::DefaultFlags)
 {
-    const KUrl::List urls = KUrl::List::fromMimeData(mimeData, KUrl::List::PreferLocalUrls);
+    const KUrl::List urls = KUrl::List::fromMimeData(mimeData, 0, KUrl::List::PreferLocalUrls);
     if (!urls.isEmpty()) {
         const bool move = decodeIsCutSelection(mimeData);
         KIO::Job *job = 0;
