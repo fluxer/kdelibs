@@ -66,6 +66,13 @@ public:
         @link https://github.com/mpv-player/mpv/blob/master/DOCS/man/mpv.rst#protocols
     */
     void load(QString path);
+    /*!
+        @brief Start playing from data
+        @param data the raw data that should be played
+        @warning Use only when you absolutely have to, when possible use load(QString)
+        @overload
+    */
+    void load(QByteArray data);
    /*!
         @brief Send a play command to the player, it may do nothing if a path was not loaded first
     */

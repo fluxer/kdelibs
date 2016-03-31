@@ -33,6 +33,11 @@ void KAbstractPlayer::load(QString path)
     command(QStringList() << "loadfile" << path);
 }
 
+void KAbstractPlayer::load(QByteArray data)
+{
+    command(QStringList() << "loadfile" << QString("memory://%1").arg(data.data()));
+}
+
 void KAbstractPlayer::play()
 {
     setProperty("pause", false);
