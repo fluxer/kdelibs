@@ -214,7 +214,6 @@ set(kfile_STAT_SRCS
     kfile/kurlcombobox.cpp
     kfile/kurlrequester.cpp
     kfile/kurlrequesterdialog.cpp
-    kfile/kfilemetadatareader.cpp
     kfile/kfilemetadataprovider.cpp
     kfile/kfilesharedialog.cpp
     kfile/kfsprocess.cpp

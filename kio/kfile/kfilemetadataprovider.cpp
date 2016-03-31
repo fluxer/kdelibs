@@ -20,66 +20,14 @@
 #include "kfilemetadataprovider_p.h"
 
 #include <kfileitem.h>
-#include <kfilemetadatareader_p.h>
 #include <knfotranslator_p.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kurl.h>
+#include <kdebug.h>
 
 #include <QLabel>
 #include <QDir>
-
-namespace {
-    static QString plainText(const QString& richText)
-    {
-        QString plainText;
-        plainText.reserve(richText.length());
-
-        bool skip = false;
-        for (int i = 0; i < richText.length(); ++i) {
-            const QChar c = richText.at(i);
-            if (c == QLatin1Char('<')) {
-                skip = true;
-            } else if (c == QLatin1Char('>')) {
-                skip = false;
-            } else if (!skip) {
-                plainText.append(c);
-            }
-        }
-
-        return plainText;
-    }
-}
-
-// The default size hint of QLabel tries to return a square size.
-// This does not work well in combination with layouts that use
-// heightForWidth(): In this case it is possible that the content
-// of a label might get clipped. By specifying a size hint
-// with a maximum width that is necessary to contain the whole text,
-// using heightForWidth() assures having a non-clipped text.
-class ValueWidget : public QLabel
-{
-public:
-    explicit ValueWidget(QWidget* parent = 0);
-    virtual QSize sizeHint() const;
-};
-
-ValueWidget::ValueWidget(QWidget* parent) :
-    QLabel(parent)
-{
-}
-
-QSize ValueWidget::sizeHint() const
-{
-    QFontMetrics metrics(font());
-    // TODO: QLabel internally provides already a method sizeForWidth(),
-    // that would be sufficient. However this method is not accessible, so
-    // as workaround the tags from a richtext are removed manually here to
-    // have a proper size hint.
-    return metrics.size(Qt::TextSingleLine, plainText(text()));
-}
-
-
 
 class KFileMetaDataProvider::Private
 {
@@ -88,7 +36,7 @@ public:
     Private(KFileMetaDataProvider* parent);
     ~Private();
 
-    void slotLoadingFinished();
+    void readMetadata();
 
     void slotMetaDataUpdateDone();
     void slotLinkActivated(const QString& link);
@@ -110,10 +58,8 @@ public:
 
     QList<KFileItem> m_fileItems;
 
+    QList<KUrl> m_urls;
     QHash<KUrl, QVariant> m_data;
-
-    QList<KFileMetaDataReader*> m_metaDataReaders;
-    KFileMetaDataReader* m_latestMetaDataReader;
 
 private:
     KFileMetaDataProvider* const q;
@@ -122,37 +68,28 @@ private:
 KFileMetaDataProvider::Private::Private(KFileMetaDataProvider* parent) :
     m_fileItems(),
     m_data(),
-    m_metaDataReaders(),
-    m_latestMetaDataReader(0),
     q(parent)
 {
 }
 
 KFileMetaDataProvider::Private::~Private()
 {
-    qDeleteAll(m_metaDataReaders);
 }
 
-void KFileMetaDataProvider::Private::slotLoadingFinished()
+void KFileMetaDataProvider::Private::readMetadata()
 {
-    KFileMetaDataReader* finishedMetaDataReader = qobject_cast<KFileMetaDataReader*>(q->sender());
-    // The process that has emitted the finished() signal
-    // will get deleted and removed from m_metaDataReaders.
-    for (int i = 0; i < m_metaDataReaders.count(); ++i) {
-        KFileMetaDataReader* metaDataReader = m_metaDataReaders[i];
-        if (metaDataReader == finishedMetaDataReader) {
-            m_metaDataReaders.removeAt(i);
-            if (metaDataReader != m_latestMetaDataReader) {
-                // Ignore data of older processs, as the data got
-                // obsolete by m_latestMetaDataReader.
-                metaDataReader->deleteLater();
-                return;
-            }
-        }
+#warning implement multi-URL metadata support
+    if (m_urls.count() > 1) {
+        kWarning() << "the API does not handle multile URLs metadata";
     }
-
-    m_data = m_latestMetaDataReader->metaData();
-    m_latestMetaDataReader->deleteLater();
+    const QString path = m_urls.first().toLocalFile();
+    KFileMetaInfo metaInfo(path, KFileMetaInfo::Fastest);
+    const QHash<QString, KFileMetaInfoItem> metaInfoItems = metaInfo.items();
+    foreach (const KFileMetaInfoItem& metaInfoItem, metaInfoItems) {
+        const QString uriString = metaInfoItem.name();
+        const QVariant value = metaInfoItem.value();
+        m_data.insert(uriString, value);
+    }
 
     if (m_fileItems.count() == 1) {
         // TODO: Handle case if remote URLs are used properly. isDir() does
@@ -214,10 +151,11 @@ QList<QString> KFileMetaDataProvider::Private::resourceList() const
 
 QWidget* KFileMetaDataProvider::Private::createValueWidget(const QString& value, QWidget* parent)
 {
-    ValueWidget* valueWidget = new ValueWidget(parent);
+    QLabel* valueWidget = new QLabel(parent);
     valueWidget->setWordWrap(true);
     valueWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    valueWidget->setText(plainText(value));
+    valueWidget->setTextFormat(Qt::PlainText);
+    valueWidget->setText(value);
     connect(valueWidget, SIGNAL(linkActivated(QString)), q, SLOT(slotLinkActivated(QString)));
     return valueWidget;
 }
@@ -242,18 +180,14 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
     }
     Q_PRIVATE_SLOT(d,void slotDataChangeStarted())
     Q_PRIVATE_SLOT(d,void slotDataChangeFinished())
-    QList<KUrl> urls;
+    d->m_urls.clear();
     foreach (const KFileItem& item, items) {
         const KUrl url = item.url();
         if (url.isValid()) {
-            urls.append(url);
+            d->m_urls.append(url);
         }
     }
-
-    d->m_latestMetaDataReader = new KFileMetaDataReader(urls);
-    connect(d->m_latestMetaDataReader, SIGNAL(finished()), this, SLOT(slotLoadingFinished()));
-    d->m_metaDataReaders.append(d->m_latestMetaDataReader);
-    d->m_latestMetaDataReader->start();
+    d->readMetadata();
 }
 
 QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const

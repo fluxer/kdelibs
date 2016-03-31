@@ -36,10 +36,9 @@ class QWidget;
 /**
  * @brief Provides the data for the KMetaDataWidget.
  *
- * The default implementation provides all meta data
- * that are available due to Strigi and Nepomuk. If custom
- * meta data should be added, the method KFileMetaDataProvider::loadData()
- * must be overwritten.
+ * The default implementation provides all meta data that are available due to
+ * Strigi. If custom meta data should be added, the method
+ * KFileMetaDataProvider::loadData() must be overwritten.
  *
  * @see KFileMetaDataWidget
  */
@@ -118,7 +117,6 @@ private:
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT(d, void slotLoadingFinished())
     Q_PRIVATE_SLOT(d, void slotLinkActivated(const QString&))
 
     friend class KLoadMetaDataThread; // invokes KMetaDataObject::loadData()
