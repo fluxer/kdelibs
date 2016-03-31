@@ -125,7 +125,7 @@ void KUrlMimeTest::testMostLocalUrlList()
     QCOMPARE(decodedURLs.toStringList().join(" "), urls.toStringList().join(" ") );
 
     // KUrl can also be told to decode the "most local" urls
-    decodedURLs = KUrl::List::fromMimeData(mimeData, KUrl::List::PreferLocalUrls);
+    decodedURLs = KUrl::List::fromMimeData(mimeData, 0, KUrl::List::PreferLocalUrls);
     QVERIFY(!decodedURLs.isEmpty());
     QCOMPARE(decodedURLs.toStringList().join(" "), localUrls.toStringList().join(" ") );
 
