@@ -376,9 +376,7 @@ QString KCookieJar::findCookies(const QString &_url, bool useDOMFormat, long win
        }
        else
        {
-          if ((*it).isNull())
-              cookieList = m_cookieDomains.value(QL1S(""));
-          else
+          if (!(*it).isNull())
               cookieList = m_cookieDomains.value(*it);
 
           if (!cookieList)
@@ -952,11 +950,9 @@ void KCookieJar::addCookie(KHttpCookie &cookie)
     while (it.hasNext())
     {
         const QString& key = it.next();
-        KHttpCookieList* list;
+        KHttpCookieList* list = 0;
 
-        if (key.isNull())
-            list = m_cookieDomains.value(QL1S(""));
-        else
+        if (!key.isNull())
             list = m_cookieDomains.value(key);
 
         if (list)
@@ -964,10 +960,8 @@ void KCookieJar::addCookie(KHttpCookie &cookie)
     }
 
     const QString domain = stripDomain( cookie );
-    KHttpCookieList* cookieList;
-    if (domain.isNull())
-        cookieList = m_cookieDomains.value(QL1S(""));
-    else
+    KHttpCookieList* cookieList = 0;
+    if (!domain.isNull())
         cookieList = m_cookieDomains.value(domain);
 
     if (!cookieList)
