@@ -130,7 +130,7 @@ public:
     */
     QString audiooutput();
     /*!
-        @return Audio outputs
+        @return A list of available audio outputs
         @todo maybe that should return a QMap?
     */
     QStringList audiooutputs();

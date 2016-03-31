@@ -19,21 +19,18 @@
 #include <QDebug>
 #include <QApplication>
 #include <QMainWindow>
-#include <QFileDialog>
 
-#include "kmediawidget.h"
+#include "kaudiowidget.h"
 
 int main(int argc, char **argv)
 {
     QApplication *app = new QApplication(argc, argv);
     QMainWindow *window = new QMainWindow();
-
-    KMediaWidget *widget = new KMediaWidget(window, KMediaWidget::AllOptions);
-    window->setCentralWidget(widget);
     window->show();
+
+    KAudioWidget *widget = new KAudioWidget(window, KAudioWidget::AllOptions);
+    window->setCentralWidget(widget);
     widget->open("http://video.webmfiles.org/big-buck-bunny_trailer.webm");
 
-    // qDebug() << widget->player()->property("property-list");
-    // qDebug() << widget->player()->property("audio-device-list");
     return app->exec();
 }

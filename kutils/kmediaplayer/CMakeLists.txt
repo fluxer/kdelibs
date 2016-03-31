@@ -10,6 +10,7 @@ add_definitions(
 set(kmediaplayer_LIB_SRCS
     kmediaplayer.cpp
     kmediawidget.cpp
+    kaudiowidget.cpp
 )
 
 add_library(kmediaplayer ${LIBRARY_TYPE} ${kmediaplayer_LIB_SRCS})
@@ -18,6 +19,7 @@ target_link_libraries(kmediaplayer
     ${MPV_LIBRARIES}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KFILE_LIBS}
 )
 
 set_target_properties(kmediaplayer PROPERTIES
@@ -39,3 +41,7 @@ install(
     EXPORT kdelibsLibraryTargets
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
