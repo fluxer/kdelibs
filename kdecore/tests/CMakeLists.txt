@@ -36,7 +36,6 @@ KDECORE_UNIT_TESTS(
     # kcalendartest
     kmacroexpandertest
     kshelltest
-    kasciitest
     ktimezonestest
     kconfigtest
     kurlmimetest

@@ -17,7 +17,6 @@ install(
     KArchiveDirectory
     KArchiveEntry
     KArchiveFile
-    KAscii
     KAssistantDialog
     KAuthorized
     KAutoMount

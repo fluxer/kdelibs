@@ -152,7 +152,6 @@ sycoca/
   ksycocafactory.cpp              David Faure <faure@kde.org>
 
 text/
-  kascii.cpp
   kstringhandler.cpp
 
 util/
