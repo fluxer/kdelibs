@@ -418,6 +418,7 @@ install(
     KPixmapSequenceWidget
     KPixmapSequenceOverlayPainter
     KGraphicsWebView
+    KAudioPlayer
     KMediaPlayer
     KMediaWidget
     KWebPage
