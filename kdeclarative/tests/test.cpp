@@ -52,7 +52,7 @@ int main(int argc, char *argv[])
     testValue.setScope(global);
     global.setProperty("testObject", testValue);
 
-    view.setSource(QUrl::fromLocalFile("test.qml"));
+    view.setSource(QUrl::fromLocalFile(KDESRCDIR "test.qml"));
     view.show();
 
     return app.exec();
