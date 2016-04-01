@@ -439,16 +439,6 @@ install(
 
 install(
     FILES
-    ConversionCheck/QVconvertible
-    ConversionCheck/type_toQString
-    ConversionCheck/type_toQVariant
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/ConversionCheck
-    COMPONENT Devel
-)
-
-
-install(
-    FILES
     DNSSD/Configuration
     DNSSD/DomainBrowser
     DNSSD/DomainModel
