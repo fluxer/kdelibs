@@ -21,6 +21,7 @@
 
 #include <QFile>
 #include <QTextStream>
+#include <QDateTime>
 
 #include <kdebug.h>
 #include <kglobal.h>

@@ -38,13 +38,12 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
-#include <kcodecs.h>
 #include <kconfiggroup.h>
 #include <kio/authinfo.h>
 #include <misc/kntlm/kntlm.h>
 
 #include <QtCore/QTextCodec>
-
+#include <QtCore/QCryptographicHash>
 
 static bool isWhiteSpace(char ch)
 {
@@ -449,7 +448,7 @@ struct DigestAuthInfo
 //calculateResponse() from the original HTTPProtocol
 static QByteArray calculateResponse(const DigestAuthInfo &info, const KUrl &resource)
 {
-  KMD5 md;
+  QCryptographicHash md(QCryptographicHash::Md5);
   QByteArray HA1;
   QByteArray HA2;
 
@@ -459,19 +458,19 @@ static QByteArray calculateResponse(const DigestAuthInfo &info, const KUrl &reso
   authStr += info.realm;
   authStr += ':';
   authStr += info.password;
-  md.update( authStr );
+  md.addData( authStr );
 
   if ( info.algorithm.toLower() == "md5-sess" )
   {
-    authStr = md.hexDigest();
+    authStr = md.result().toHex();
     authStr += ':';
     authStr += info.nonce;
     authStr += ':';
     authStr += info.cnonce;
     md.reset();
-    md.update( authStr );
+    md.addData( authStr );
   }
-  HA1 = md.hexDigest();
+  HA1 = md.result().toHex();
 
   kDebug(7113) << "A1 => " << HA1;
 
@@ -483,12 +482,12 @@ static QByteArray calculateResponse(const DigestAuthInfo &info, const KUrl &reso
   {
     authStr += ':';
     md.reset();
-    md.update(info.entityBody);
-    authStr += md.hexDigest();
+    md.addData(info.entityBody);
+    authStr += md.result().toHex();
   }
   md.reset();
-  md.update( authStr );
-  HA2 = md.hexDigest();
+  md.addData( authStr );
+  HA2 = md.result().toHex();
 
   kDebug(7113) << "A2 => " << HA2;
 
@@ -508,9 +507,9 @@ static QByteArray calculateResponse(const DigestAuthInfo &info, const KUrl &reso
   }
   authStr += HA2;
   md.reset();
-  md.update( authStr );
+  md.addData( authStr );
 
-  const QByteArray response = md.hexDigest();
+  const QByteArray response = md.result().toHex();
   kDebug(7113) << "Response =>" << response;
   return response;
 }

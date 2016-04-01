@@ -21,7 +21,6 @@
 
 #include <qtest_kde.h>
 #include <kdebug.h>
-#include <kcodecs.h>
 #include <krandom.h>
 #include <kconfiggroup.h>
 #include <misc/kntlm/kntlm.h>

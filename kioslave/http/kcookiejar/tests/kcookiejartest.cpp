@@ -153,9 +153,7 @@ static void processCheck(QString &line)
    QString expectedCookies = line;
 
    QString cookies = jar->findCookies(urlStr, false, windowId, 0).trimmed();
-   if (cookies != expectedCookies)
-      FAIL(urlStr+QString("\nGot '%1' expected '%2'")
-              .arg(cookies, expectedCookies));
+   QCOMPARE(cookies, expectedCookies);
 }
 
 static void processClear(QString &line)

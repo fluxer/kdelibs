@@ -32,7 +32,6 @@
 
 #include "kcmdlineargs.h"
 #include "kconfig.h"
-#include "kcodecs.h"
 #include "kdebug.h"
 #include "kglobal.h"
 #include "kshell.h"

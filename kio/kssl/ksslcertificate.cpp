@@ -36,7 +36,6 @@
 #include "ksslutils.h"
 
 #include <kstandarddirs.h>
-#include <kcodecs.h>
 #include <kde_file.h>
 #include <klocale.h>
 #include <QtCore/qdatetime.h>

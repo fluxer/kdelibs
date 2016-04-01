@@ -5,6 +5,7 @@
 #include <QVector>
 #include <QStringList>
 #include <QApplication>
+#include <QCryptographicHash>
 
 #include "kjs_binding.h"
 #include "khtml_part.h"
@@ -16,7 +17,6 @@
 #include <ktexteditor/markinterface.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
-#include <kcodecs.h>
 
 using namespace KJS;
 using namespace KJSDebugger;
@@ -167,8 +167,8 @@ QVector<int>& DebugDocument::breakpoints()
 
         if (m_md5.isEmpty())
         {
-            KMD5 hash(m_sourceLines.join("\n").toUtf8());
-            m_md5 = QString::fromLatin1(hash.hexDigest());
+            QByteArray hash = QCryptographicHash::hash(m_sourceLines.join("\n").toUtf8(), QCryptographicHash::Md5);
+            m_md5 = QString::fromLatin1(hash.toHex());
         }
 
         return (*s_perHashBreakPoints)[m_md5];

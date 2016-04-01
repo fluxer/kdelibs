@@ -37,16 +37,16 @@
 #include <QtGui/QImage>
 #include <QtCore/QTimer>
 #include <QtCore/QRegExp>
+#include <QtCore/QCryptographicHash>
+#include <QtCore/QLinkedList>
 
 #include <kfileitem.h>
 #include <kde_file.h>
 #include <ktemporaryfile.h>
 #include <kservicetypetrader.h>
-#include <kcodecs.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kservice.h>
-#include <QtCore/QLinkedList>
 #include <kconfiggroup.h>
 #include <kprotocolinfo.h>
 
@@ -501,8 +501,8 @@ bool PreviewJobPrivate::statResultThumbnail()
     url.setPass(QString());
     origName = url.url();
 
-    KMD5 md5( QFile::encodeName( origName ) );
-    thumbName = QFile::encodeName( md5.hexDigest() ) + ".png";
+    QByteArray md5 = QCryptographicHash::hash( QFile::encodeName( origName ), QCryptographicHash::Md5 );
+    thumbName = QFile::encodeName( md5.toHex() ) + ".png";
 
     QImage thumb;
     if ( !thumb.load( thumbPath + thumbName ) ) return false;

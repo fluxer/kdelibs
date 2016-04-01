@@ -275,7 +275,6 @@ set(kdecore_LIB_SRCS
     sycoca/kprotocolinfofactory.cpp
     sycoca/kmemfile.cpp
     text/kascii.cpp
-    text/kcodecs.cpp
     text/kstringhandler.cpp
     util/kallocator.cpp
     util/kautostart.cpp
@@ -501,7 +500,6 @@ install(
     sycoca/ksycocaentry.h
     sycoca/ksycocatype.h
     text/kascii.h
-    text/kcodecs.h
     text/kstringhandler.h
     util/kallocator.h
     util/kautostart.h

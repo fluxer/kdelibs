@@ -27,7 +27,7 @@ class KGzipFilter;
 #include <QBuffer>
 
 #include <QObject>
-#include <kcodecs.h>
+#include <QCryptographicHash>
 
 class HTTPFilterBase : public QObject
 {
@@ -76,7 +76,7 @@ public Q_SLOTS:
     void slotInput(const QByteArray &d);
 
 private:
-    KMD5 context;
+    QCryptographicHash *context;
 };
 
 

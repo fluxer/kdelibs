@@ -66,7 +66,6 @@ KDECORE_UNIT_TESTS(
     qcoreapptest
     kdebug_qcoreapptest
     kmimetype_nomimetypes
-    kmd5benchmark
 )
 
 KDECORE_UNIT_TESTS(
@@ -83,7 +82,6 @@ KDECORE_EXECUTABLE_TESTS(
     kcmdlineargstest
     kmemtest
     dbuscalltest
-    kmdcodectest
     startserviceby
     klockfile_testlock # helper for klockfiletest
 )

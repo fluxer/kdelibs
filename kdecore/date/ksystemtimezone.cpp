@@ -50,7 +50,6 @@
 
 #include <kglobal.h>
 #include <klocale.h>
-#include <kcodecs.h>
 #include <kstringhandler.h>
 #include <ktemporaryfile.h>
 #include <ktoolinvocation.h>

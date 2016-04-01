@@ -57,7 +57,6 @@ install(
     KCmdLineArgs
     KCmdLineOptions
     KCodecAction
-    KCodecs
     KColor
     KColorButton
     KColorCells
@@ -201,7 +200,6 @@ install(
     KLocalizedDate
     KLocalizedString
     KLockFile
-    KMD5
     KMacroExpanderBase
     KMainWindow
     KMenu

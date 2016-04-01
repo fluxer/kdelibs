@@ -55,7 +55,6 @@
 #include <kglobal.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kcodecs.h>
 #include <kmessagebox.h>
 #include <kpassworddialog.h>
 #include <knewpassworddialog.h>
@@ -1924,7 +1923,7 @@ void KCryptoConfig::slotCAImport() {
 			cr = new char[qf.size()+1];
 			qf.read(cr, qf.size());
 			QByteArray qba(cr, qf.size());
-			certtext = KCodecs::base64Encode(qba);
+			certtext = qba.toBase64();
 			delete [] cr;
 		}
 

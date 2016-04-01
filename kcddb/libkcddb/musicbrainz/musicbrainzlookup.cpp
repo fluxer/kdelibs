@@ -21,7 +21,6 @@
 #include "musicbrainzlookup.h"
 
 #include <kdebug.h>
-#include <kcodecs.h>
 #include <klocale.h>
 #include <qcryptographichash.h>
 #include <cstdio>
