@@ -282,7 +282,6 @@ const char * const packages[] = {
 "kdelibs/kmediaplayer",
 "kdelibs/shortcuts",
 "kdemultimedia",
-"kdemultimedia/mplayerthumbs",
 "kdepasswd",
 "kdepimlibs",
 "kdepimlibs/gpgme++",
