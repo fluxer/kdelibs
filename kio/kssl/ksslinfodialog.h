@@ -22,7 +22,7 @@
 #ifndef KSSLINFODIALOG_H
 #define KSSLINFODIALOG_H
 
-#include <kssl.h>
+#include <kio/kio_export.h>
 #include <kdialog.h>
 
 #include "ktcpsocket.h"

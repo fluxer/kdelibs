@@ -23,8 +23,6 @@
 #include "ui_sslinfo.h"
 #include "ksslcertificatebox.h"
 
-#include <kssl.h>
-
 #include <QtGui/QFrame>
 #include <QtCore/qdatetime.h>
 #include <QtCore/QFile>
@@ -36,9 +34,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 
-#include "ksslcertificate.h"
-#include "ksslcertchain.h"
-#include "ksslsigners.h"
 #include "ktcpsocket.h"
 
 

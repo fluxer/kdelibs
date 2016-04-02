@@ -45,8 +45,6 @@
 #undef crypt
 #endif
 
-#include <kopenssl.h>
-
 #ifdef KSSL_HAVE_SSL
 #define sk_new d->kossl->sk_new
 #define sk_push d->kossl->sk_push
@@ -75,13 +73,11 @@ class CipherNode {
 class KSSLSettingsPrivate {
 	public:
 		KSSLSettingsPrivate() {
-			kossl = 0L;   // try to delay this as long as possible
 		}
 		~KSSLSettingsPrivate() {
 
 		}
 
-		KOSSL *kossl;
 		bool m_bUseEGD;
 		bool m_bUseEFile;
 		QString m_EGDPath;

@@ -234,16 +234,7 @@ set(kssl_STAT_SRCS
     kssl/sslui.cpp
     kssl/ksslcertificatebox.cpp
     kssl/ksslinfodialog.cpp
-    # below is what's left of KDE2/3 SSL code, still required for certificate chain validation
-    # by hand and for key generation. Network code has been removed.
-    kssl/kopenssl.cpp
-    kssl/kssl.cpp
-    kssl/ksslcertchain.cpp
-    kssl/ksslcertificate.cpp
-    kssl/ksslkeygen.cpp
     kssl/ksslsettings.cpp
-    kssl/ksslutils.cpp
-    kssl/ksslx509v3.cpp
 )
 
 
@@ -456,10 +447,4 @@ install(
     FILES
     kio/accept-languages.codes
     DESTINATION ${CONFIG_INSTALL_DIR}
-)
-
-install(
-    FILES
-    kssl/ca-bundle.crt DESTINATION
-    ${DATA_INSTALL_DIR}/kssl
 )
