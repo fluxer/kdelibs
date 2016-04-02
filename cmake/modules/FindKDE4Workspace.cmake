@@ -59,8 +59,9 @@
 # for details. Alex
 
 
+find_package(KDE4 REQUIRED)
 set(_KDE4Workspace_FIND_QUIETLY  ${KDE4Workspace_FIND_QUIETLY})
-find_package(KDE4Workspace QUIET NO_MODULE PATHS ${KDE4_LIB_DIR}/KDE4Workspace/cmake )
+find_package(KDE4Workspace QUIET NO_MODULE PATHS ${CMAKE_MODULE_PATH} )
 set(KDE4Workspace_FIND_QUIETLY ${_KDE4Workspace_FIND_QUIETLY})
 
 include(FindPackageHandleStandardArgs)
