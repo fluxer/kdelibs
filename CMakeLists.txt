@@ -51,7 +51,7 @@ endif(UNIX AND Q_WS_X11)
 find_package(Perl)
 set_package_properties(Perl PROPERTIES
     URL "http://www.perl.org"
-    TYPE REQUIRED
+    TYPE RUNTIME
     PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts"
 )
 

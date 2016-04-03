@@ -295,13 +295,6 @@ if(NOT KATIE_FOUND)
     find_package(Qt4 ${_REQ_STRING_KDE4})
 endif()
 
-# Perl is not required for building KDE software but is during runtime from
-# kdelibs and kde-workspace, also it is here since 4.0
-find_package(Perl)
-if(NOT PERL_FOUND)
-    message(STATUS "Perl not found")
-endif()
-
 # restore the original CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${_kde_cmake_module_path_back})
 
