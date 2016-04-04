@@ -72,6 +72,12 @@ set(DBUS_SYSTEM_SERVICES_INSTALL_DIR "@DBUS_SYSTEM_SERVICES_INSTALL_DIR@")
 set(KAUTH_HELPER_PLUGIN_DIR  "@KAUTH_HELPER_PLUGIN_DIR@")
 set(KAUTH_BACKEND_PLUGIN_DIR "@KAUTH_BACKEND_PLUGIN_DIR@")
 
+# someone made exception once and will be gone in future release
+set(DBUS_INTERFACES_DIR "@DBUS_INTERFACES_INSTALL_DIR@")
+set(DBUS_SERVICES_DIR "@DBUS_SERVICES_INSTALL_DIR@")
+set(KDE4_DBUS_INTERFACES_DIR "@DBUS_INTERFACES_INSTALL_DIR@")
+set(KDE4_DBUS_SERVICES_DIR "@DBUS_SERVICES_INSTALL_DIR@")
+
 # This variable defines whether KPty::login/logout have been built with
 # utempter support so that they don't require special user permissions
 # in order to work properly. Used by kwrited.

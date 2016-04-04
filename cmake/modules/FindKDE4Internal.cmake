@@ -349,11 +349,7 @@ else(_kdeBootStrapping)
     include(${kde_cmake_module_dir}/KDE4Version.cmake)
 
     # Check the version of KDE. It must be at least KDE_MIN_VERSION as set by the user.
-    # KDE_VERSION is set in KDE4Config.cmake since KDE 4.17.x.
-    if(NOT KDE_MIN_VERSION)
-        set(KDE_MIN_VERSION "4.18.0")
-    endif()
-
+    # KDE_VERSION is set in KDE4Version.cmake since KDE 4.17.x.
     set(KDE4_INSTALLED_VERSION_OK FALSE)
     if(NOT "${KDE_VERSION}" VERSION_LESS "${KDE_MIN_VERSION}")
         set(KDE4_INSTALLED_VERSION_OK TRUE)
@@ -382,22 +378,18 @@ else(_kdeBootStrapping)
     )
     file(TO_CMAKE_PATH "${_data_DIR}" _data_DIR)
     foreach(dir ${_data_DIR})
-        set (apath "${dir}/cmake/modules")
-        if (EXISTS "${apath}")
-            set (included 0)
+        set(apath "${dir}/cmake/modules")
+        if(EXISTS "${apath}")
             string(TOLOWER "${apath}" _apath)
             # ignore already added pathes, case insensitive
             foreach(adir ${CMAKE_MODULE_PATH})
                 string(TOLOWER "${adir}" _adir)
-                if ("${_adir}" STREQUAL "${_apath}")
-                set (included 1)
+                if (NOT "${_adir}" STREQUAL "${_apath}")
+                    message(STATUS "Adding ${apath} to CMAKE_MODULE_PATH")
+                    set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${apath}")
                 endif ("${_adir}" STREQUAL "${_apath}")
-            endforeach(adir)
-            if (NOT included)
-                message(STATUS "Adding ${apath} to CMAKE_MODULE_PATH")
-                set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${apath}")
-            endif (NOT included)
-        endif (EXISTS "${apath}")
+            endforeach()
+        endif()
     endforeach(dir)
 
 
@@ -408,7 +400,7 @@ else(_kdeBootStrapping)
     # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
     # Include it to "import" the libraries from kdelibs into the current projects as targets.
     # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
-    # the kdeui library could now also be used just as "KDE4__kdeui" and still have all their
+    # the kdeui library could now also be used just as "KDE4::kdeui" and still have all their
     # dependent libraries handled correctly. But to keep compatibility and not to change
     # behaviour we set all these variables anyway as seen below. Alex
     include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
