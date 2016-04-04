@@ -193,9 +193,9 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 }
 
 /*
-    Since exposing mpv_handle is not desirable and sigals/slots cannot be virtual here are some
-    pre-processor definitions used to share the code as much as possible making modifications
-    easier
+    Since exposing mpv_handle is not desirable and sigals/slots cannot be virtual nor multiple
+    QObject inheritance works here are some pre-processor definitions used to share the code as
+    much as possible making modifications easier
 */
 #define COMMON_CONSTRUCTOR \
     setlocale(LC_NUMERIC, "C"); \
@@ -384,7 +384,7 @@ void KAudioPlayer::_processHandleEvents()
     COMMMON_EVENT_HANDLER
 }
 
-bool KAudioPlayer::isMimeSupported(QString mime) const
+bool KAudioPlayer::isMimeSupported(const QString mime) const
 {
     return mime.startsWith("audio/") || mime == QLatin1String("application/octet-stream");
 }
@@ -463,7 +463,7 @@ void KMediaPlayer::_processHandleEvents()
     COMMMON_EVENT_HANDLER
 }
 
-bool KMediaPlayer::isMimeSupported(QString mime) const
+bool KMediaPlayer::isMimeSupported(const QString mime) const
 {
     return mime.startsWith("audio/") || mime.startsWith("video/")
         || mime == QLatin1String("application/octet-stream");

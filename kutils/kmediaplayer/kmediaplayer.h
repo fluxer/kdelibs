@@ -162,7 +162,7 @@ public:
         quotes)
         @return Whether the MIME type is supported
     */
-    virtual bool isMimeSupported(QString mime) const = 0;
+    virtual bool isMimeSupported(const QString mime) const = 0;
     /*!
         @note You can obtain the scheme, which is the same as the meaning of protocol here, from a 
         KUrl/QUrl via url.scheme(). If you pass "http://" instead of just "http" the protocol will
@@ -232,7 +232,7 @@ public:
     QVariant property(const QString& name) const;
     void setOption(const QString& name, const QVariant& value) const;
 
-    bool isMimeSupported(QString mime) const;
+    bool isMimeSupported(const QString mime) const;
 
 signals:
     //! @brief Signals that a path was loaded
@@ -298,7 +298,7 @@ public:
     QVariant property(const QString& name) const;
     void setOption(const QString& name, const QVariant& value) const;
 
-    bool isMimeSupported(QString mime) const;
+    bool isMimeSupported(const QString mime) const;
 
 signals:
     //! @brief Signals that a path was loaded
