@@ -111,16 +111,13 @@ bool KNotificationManager::notify( KNotification* n, const QPixmap &pix,
     WId winId=n->widget() ? n->widget()->topLevelWidget()->winId()  : 0;
 
     QByteArray pixmapData;
-    {
-        QBuffer buffer(&pixmapData);
-        buffer.open(QIODevice::WriteOnly);
-        pix.save(&buffer, "PNG");
-    }
+    QBuffer buffer(&pixmapData);
+    buffer.open(QIODevice::WriteOnly);
+    pix.save(&buffer, "PNG");
 
     QVariantList contextList;
     typedef QPair<QString,QString> Context;
-    foreach (const Context& ctx, contexts)
-    {
+    foreach (const Context& ctx, contexts) {
         QVariantList vl;
         vl << ctx.first << ctx.second;
         contextList << vl;
@@ -144,12 +141,11 @@ void KNotificationManager::insert(KNotification *n, int id)
 
 void KNotificationManager::update(KNotification * n, int id)
 {
-    if(id <= 0)
+    if (id <= 0)
         return;
 
     QByteArray pixmapData;
-    if(!n->pixmap().isNull())
-    {
+    if(!n->pixmap().isNull()) {
         QBuffer buffer(&pixmapData);
         buffer.open(QIODevice::WriteOnly);
         n->pixmap().save(&buffer, "PNG");

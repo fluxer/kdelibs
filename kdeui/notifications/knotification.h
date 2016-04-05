@@ -42,7 +42,7 @@ class QDBusError;
  * window. This allows us to play sounds when a dialog appears.
  * This is an instant notification.  It ends automatically after a small timeout.
  *
- * @li persistant notifications:
+ * @li persistent notifications:
  * Notify when the user received a new message, or when something else important happened
  * the user has to know about.  This notification has a start and a end.  It begins when
  * the event actually occurs, and finishes when the message is acknowledged or read.
@@ -206,6 +206,11 @@ public:
 	enum NotificationFlag
 	{
 		/**
+		 * The notification will be automatically closed after a timeout. (this is the default)
+		 */
+		CloseOnTimeout=0x00,
+
+		/**
 		 * When the notification is activated, raise the notification's widget.
 		 *
 		 * This will change the desktop, raise the window, and switch to the tab.
@@ -213,11 +218,6 @@ public:
 		 */
 		RaiseWidgetOnActivation=0x01,
 
-		/**
-		 * The notification will be automatically closed after a timeout. (this is the default)
-		 */
-		CloseOnTimeout=0x00,
-		
 		/**
 		 * The notification will NOT be automatically closed after a timeout.
 		 * You will have to track the notification, and close it with the 
@@ -235,11 +235,7 @@ public:
 		 * This only works if the widget is the toplevel widget
 		 * @todo make it work with tabulated widget
 		 */
-		CloseWhenWidgetActivated=0x04,
-		/**
-		 * DEPRECATED - Misspelling of 'Persistent'.  Do not use in new code.
-		 */
-		Persistant = Persistent,
+		CloseWhenWidgetActivated=0x03,
 		/**
 		 * @internal
 		 * The event is a standard kde event, and not an event of the application

@@ -118,7 +118,6 @@ public:
         SystemServices = 3,
         /// This application shows hardware status or a means to control it
         Hardware = 4,
-        Reserved = 129
     };
 
     /**
