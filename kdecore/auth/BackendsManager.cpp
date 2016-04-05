@@ -98,18 +98,11 @@ void BackendsManager::init()
     }
 
     if (!auth) {
-        // Load the dbus auth backend then
         auth = new DBusBackend;
-        // Spit a fat warning
-        kWarning() << "WARNING: KAuth was compiled with a working backend, but was unable to load it! Check your installation!";
     }
 
     if (!helper) {
-        // Load the dbus helper backend then
         helper = new DBusHelperProxy;
-        // Spit a fat warning
-        kWarning() << "WARNING: KAuth was compiled with a working helper backend, but was unable to load it! "
-                      "Check your installation!";
     }
 }
 
