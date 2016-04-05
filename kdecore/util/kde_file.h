@@ -30,10 +30,8 @@
  * \since 3.3
  */
 
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <utime.h>
+#include <qplatformdefs.h>
 #include <kdecore_export.h>
 
 /* added not for Solaris and OpenSolaris platforms */
@@ -56,84 +54,48 @@
  * 64-bit support.
  * (A.3.2.3 Mixed API and Compile Environments within a Single Process)
  */
-#define KDE_stat		::stat64
-#define KDE_lstat		::lstat64
-#define KDE_fstat		::fstat64
-#define KDE_open		::open64
-#define KDE_lseek		::lseek64
-#define KDE_fseek		::fseek64
-#define KDE_ftell		::ftell64
-#define KDE_fgetpos		::fgetpos64
-#define KDE_fsetpos		::fsetpos64
-#define KDE_readdir		::readdir64
-#define KDE_sendfile		::sendfile64
-#define KDE_struct_stat 	struct stat64
-#define KDE_struct_dirent	struct dirent64
-#define KDE_rename		::rename
-#define KDE_mkdir		::mkdir
-/* TODO: define for win32 */
+#define KDE_sendfile            ::sendfile64
+
+#ifdef _LFS64_STDIO
+#define KDE_freopen             ::freopen64
+#endif /* _LFS64_STDIO */
 
 #else /* !_LFS64_LARGEFILE */
 
 /*
  * This section defines portable defines for standard file support.
  */
-
-/*
-     Platform specific definitions for Solaris and OpenSolaris tested with gcc 4.3.2
-*/
-#if defined __sun__ 
-#define KDE_stat		::stat
-#define KDE_lstat		::lstat
-#define KDE_fstat		::fstat
-#define KDE_open		::open
-#define KDE_lseek		::lseek
-#define KDE_fseek		::fseek
-#define KDE_ftell		::ftell
-#define KDE_fgetpos		::fgetpos
-#define KDE_fsetpos		::fsetpos
-#define KDE_readdir		::readdir
-#define KDE_sendfile		::sendfile
-#define KDE_struct_stat 	struct stat
-#define KDE_struct_dirent	struct dirent
-#define KDE_rename		::rename
-#define KDE_mkdir		::mkdir
-
-#else
-
-#define KDE_stat		::stat
-#define KDE_lstat		::lstat
-#define KDE_open		::open
-#define KDE_rename		::rename
-#define KDE_mkdir		::mkdir
-
-#define KDE_fstat		::fstat
-#define KDE_lseek		::lseek
-#define KDE_fseek		::fseek
-#define KDE_ftell		::ftell
-#define KDE_fgetpos		::fgetpos
-#define KDE_fsetpos		::fsetpos
-#define KDE_readdir		::readdir
-#define KDE_sendfile		::sendfile
-#define KDE_struct_stat 	struct stat
-#define KDE_struct_dirent	struct dirent
-#endif
+#define KDE_sendfile            ::sendfile
 
 #ifdef _LFS64_STDIO
-#define KDE_fopen		::fopen64
-#define KDE_freopen		::freopen64
-/* TODO: define for win32 */
-#else
-#define KDE_fopen		::fopen
-#endif
-#endif
+#define KDE_freopen             ::freopen
+#endif /* _LFS64_STDIO */
+
+#endif /* !_LFS64_LARGEFILE */
+
+/* definitions that are for compatibility, will be removed in the future */
+#define KDE_stat                QT_STAT
+#define KDE_lstat               QT_LSTAT
+#define KDE_fstat               QT_FSTAT
+#define KDE_open                QT_OPEN
+#define KDE_fopen               QT_FOPEN
+#define KDE_lseek               QT_LSEEK
+#define KDE_fseek               QT_FSEEK
+#define KDE_ftell               QT_FTELL
+#define KDE_fgetpos             QT_FGETPOS
+#define KDE_fsetpos             QT_FSETPOS
+#define KDE_readdir             QT_READDIR
+#define KDE_struct_stat         QT_STATBUF
+#define KDE_struct_dirent       QT_DIRENT
 
 /* functions without 64-bit version but wrapped for compatibility reasons */
-#define KDE_fdopen	::fdopen
-#define KDE_signal	::signal
+#define KDE_rename          ::rename
+#define KDE_mkdir           ::mkdir
+#define KDE_fdopen          ::fdopen
+#define KDE_signal          ::signal
 
 #include <QtCore/QFile>
-class QString;
+
 namespace KDE
 {
   /** replacement for ::access() to handle filenames in a platform independent way */
@@ -164,27 +126,27 @@ namespace KDE
   }
   inline FILE *fopen(const QString &pathname, const char *mode)
   {
-    return KDE_fopen( QFile::encodeName(pathname).constData(), mode );
+    return QT_FOPEN( QFile::encodeName(pathname).constData(), mode );
   }
   inline int lstat(const QString &path, KDE_struct_stat *buf)
   {
-    return KDE_lstat( QFile::encodeName(path).constData(), buf );
+    return QT_LSTAT( QFile::encodeName(path).constData(), buf );
   }
   inline int mkdir(const QString &pathname, mode_t mode)
   {
-    return KDE_mkdir( QFile::encodeName(pathname).constData(), mode );
+    return ::mkdir( QFile::encodeName(pathname).constData(), mode );
   }
   inline int open(const QString &pathname, int flags, mode_t mode)
   {
-    return KDE_open( QFile::encodeName(pathname).constData(), flags, mode );
+    return QT_OPEN( QFile::encodeName(pathname).constData(), flags, mode );
   }
   inline int rename(const QString &in, const QString &out)
   {
-    return KDE_rename( QFile::encodeName(in).constData(), QFile::encodeName(out).constData() );
+    return ::rename( QFile::encodeName(in).constData(), QFile::encodeName(out).constData() );
   }
   inline int stat(const QString &path, KDE_struct_stat *buf)
   {
-    return KDE_stat( QFile::encodeName(path).constData(), buf );
+    return QT_STAT( QFile::encodeName(path).constData(), buf );
   }
   inline int utime(const QString &filename, struct utimbuf *buf)
   {
