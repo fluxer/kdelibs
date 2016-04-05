@@ -283,7 +283,7 @@ public:
     QList<KIconThemeNode *> links;
 
     // This shares the icons across all processes
-    KSharedDataCache* mIconCache;
+    QSharedPointer<QCache<QString, QByteArray> >* mIconCache;
 
     // This caches rendered QPixmaps in just this process.
     QCache<QString, PixmapWithPath> mPixmapCache;
@@ -465,10 +465,9 @@ void KIconLoaderPrivate::init( const QString& _appname, KStandardDirs *_dirs )
         appname = KGlobal::mainComponent().componentName();
 
     // Initialize icon cache
-    mIconCache = new KSharedDataCache("icon-cache", 10 * 1024 * 1024);
-    // Cost here is number of pixels, not size. So this is actually a bit
-    // smaller.
-    mPixmapCache.setMaxCost(10 * 1024 * 1024);
+    mIconCache = new QSharedPointer<QCache<QString, QByteArray> >(new QCache<QString, QByteArray>());
+    mIconCache->data()->setMaxCost(10240);
+    mPixmapCache.setMaxCost(10240);
 
     // These have to match the order in kicontheme.h
     static const char * const groups[] = { "Desktop", "Toolbar", "MainToolbar", "Small", "Panel", "Dialog", 0L };
@@ -800,6 +799,13 @@ void KIconLoaderPrivate::insertCachedPixmapWithPath(
     const QPixmap &data,
     const QString &path = QString())
 {
+    // reject anything bigger than 1024x1024, it is questionable what limit should be because
+    // in some projects the icon loader is abused with pixmaps bigger than that
+    if (data.width() > 1024 || data.height() > 1024) {
+        kWarning(264) << "trying to insert pixmap bigger than 1024x1024 with path:" << path;
+        return;
+    }
+
     // Even if the pixmap is null, we add it to the caches so that we record
     // the fact that whatever icon led to us getting a null pixmap doesn't
     // exist.
@@ -817,8 +823,9 @@ void KIconLoaderPrivate::insertCachedPixmapWithPath(
 
     output.close();
 
-    // The byte array contained in the QBuffer is what we want in the cache.
-    mIconCache->insert(key, output.buffer());
+    // The byte array contained in the QBuffer is what we want in the cache
+    // and we do not want a reference to the buffer so hard-copy it.
+    mIconCache->data()->insert(key, new QByteArray(output.buffer()));
 
     // Also insert the object into our process-local cache for even more
     // speed.
@@ -843,14 +850,14 @@ bool KIconLoaderPrivate::findCachedPixmapWithPath(const QString &key, QPixmap &d
 
     // Otherwise try to find it in our shared memory cache since that will
     // be quicker than the disk, especially for SVGs.
-    QByteArray result;
+    QByteArray *result = mIconCache->data()->object(key);
 
-    if (!mIconCache->find(key, &result) || result.isEmpty()) {
+    if (!result || result->isEmpty()) {
         return false;
     }
 
     QBuffer buffer;
-    buffer.setBuffer(&result);
+    buffer.setBuffer(result);
     buffer.open(QIODevice::ReadOnly);
 
     QDataStream inputStream(&buffer);
