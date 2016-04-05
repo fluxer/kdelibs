@@ -26,6 +26,8 @@
 #include <QPair>
 #include <QStringBuilder>
 #include <QTimer>
+#include <QCache>
+#include <QBuffer>
 #ifdef Q_WS_X11
 #include <QtGui/qx11info_x11.h>
 #include "private/effectwatcher_p.h"
@@ -39,7 +41,6 @@
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <kmanagerselection.h>
-#include <kimagecache.h>
 #include <ksharedconfig.h>
 #include <kstandarddirs.h>
 #include <kwindowsystem.h>
@@ -84,7 +85,6 @@ public:
           defaultWallpaperSuffix(DEFAULT_WALLPAPER_SUFFIX),
           defaultWallpaperWidth(DEFAULT_WALLPAPER_WIDTH),
           defaultWallpaperHeight(DEFAULT_WALLPAPER_HEIGHT),
-          pixmapCache(0),
           cachesToDiscard(NoCache),
           locolor(false),
           compositingActive(KWindowSystem::self()->compositingActive()),
@@ -97,6 +97,9 @@ public:
         generalFont = QApplication::font();
         ThemeConfig config;
         cacheTheme = config.cacheTheme();
+
+        pixmapCache = new QSharedPointer<QCache<QString, QPixmap> >(new QCache<QString, QPixmap>());
+        pixmapCache->data()->setMaxCost(config.themeCacheKb() * 1024);
 
         saveTimer = new QTimer(q);
         saveTimer->setSingleShot(true);
@@ -184,7 +187,7 @@ public:
     QString defaultWallpaperSuffix;
     int defaultWallpaperWidth;
     int defaultWallpaperHeight;
-    KImageCache *pixmapCache;
+    QSharedPointer<QCache<QString, QPixmap> > *pixmapCache;
     KSharedConfigPtr svgElementsCache;
     QHash<QString, QSet<QString> > invalidElements;
     QHash<QString, QPixmap> pixmapsToCache;
@@ -223,11 +226,8 @@ EffectWatcher *ThemePrivate::s_blurEffectWatcher = 0;
 
 bool ThemePrivate::useCache()
 {
-    bool cachesTooOld = false;
-
     if (cacheTheme && !pixmapCache) {
         const bool isRegularTheme = themeName != systemColorsTheme;
-        QString cacheFile = "plasma_theme_" + themeName;
 
         // clear any cached values from the previous theme cache
         themeVersion.clear();
@@ -237,66 +237,18 @@ bool ThemePrivate::useCache()
         }
         themeMetadataPath = KStandardDirs::locate("data", "desktoptheme/" + themeName + "/metadata.desktop");
 
-        if (isRegularTheme) {
-            const QString cacheFileBase = cacheFile + "*.kcache";
-
-            // if the path is empty, then we haven't found the theme and so
-            // we will leave currentCacheFileName empty, resulting in the deletion of
-            // *all* matching cache files
-            QString currentCacheFileName;
-            if (!themeMetadataPath.isEmpty()) {
-                // now we record the theme version, if we can
-                const KPluginInfo pluginInfo(themeMetadataPath);
-                themeVersion = pluginInfo.version();
-                if (!themeVersion.isEmpty()) {
-                    cacheFile += "_v" + themeVersion;
-                    currentCacheFileName = cacheFile + ".kcache";
-                }
-
-                // watch the metadata file for changes at runtime
-                KDirWatch::self()->addFile(themeMetadataPath);
-                QObject::connect(KDirWatch::self(), SIGNAL(created(QString)),
-                                 q, SLOT(settingsFileChanged(QString)),
-                                 Qt::UniqueConnection);
-                QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
-                                 q, SLOT(settingsFileChanged(QString)),
-                                 Qt::UniqueConnection);
-            }
-
-            // now we check for (and remove) old caches
-            foreach (const QString &file, KGlobal::dirs()->findAllResources("cache", cacheFileBase)) {
-                if (currentCacheFileName.isEmpty() ||
-                    !file.endsWith(currentCacheFileName)) {
-                    QFile::remove(file);
-                }
-            }
-        }
-
-        // now we do a sanity check: if the metadata.desktop file is newer than the cache, drop
-        // the cache
         if (isRegularTheme && !themeMetadataPath.isEmpty()) {
-            // now we check to see if the theme metadata file itself is newer than the pixmap cache
-            // this is done before creating the pixmapCache object since that can change the mtime
-            // on the cache file
-
-            // FIXME: when using the system colors, if they change while the application is not running
-            // the cache should be dropped; we need a way to detect system color change when the
-            // application is not running.
-            // check for expired cache
-            const QString cacheFilePath = KStandardDirs::locateLocal("cache", cacheFile);
-            if (!cacheFilePath.isEmpty()) {
-                const QFileInfo cacheFileInfo(cacheFilePath);
-                const QFileInfo metadataFileInfo(themeMetadataPath);
-                cachesTooOld = cacheFileInfo.lastModified().toTime_t() > metadataFileInfo.lastModified().toTime_t();
-            }
+            // watch the metadata file for changes at runtime
+            KDirWatch::self()->addFile(themeMetadataPath);
+            QObject::connect(KDirWatch::self(), SIGNAL(created(QString)),
+                                q, SLOT(settingsFileChanged(QString)),
+                                Qt::UniqueConnection);
+            QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
+                                q, SLOT(settingsFileChanged(QString)),
+                                Qt::UniqueConnection);
         }
 
-        ThemeConfig config;
-        pixmapCache = new KImageCache(cacheFile, config.themeCacheKb() * 1024);
-
-        if (cachesTooOld) {
-            discardCache(PixmapCache | SvgElementsCache);
-        }
+        // TODO: discardCache(PixmapCache | SvgElementsCache); ?
     }
 
     if (cacheTheme && !svgElementsCache) {
@@ -308,7 +260,7 @@ bool ThemePrivate::useCache()
 
         // now we check for (and remove) old caches
         foreach (const QString &file, KGlobal::dirs()->findAllResources("cache", svgElementsFileNameBase + "*")) {
-            if (cachesTooOld || !file.endsWith(svgElementsFileName)) {
+            if (!file.endsWith(svgElementsFileName)) {
                 QFile::remove(file);
             }
         }
@@ -376,13 +328,10 @@ void ThemePrivate::discardCache(CacheTypes caches)
     if (caches & PixmapCache) {
         pixmapsToCache.clear();
         saveTimer->stop();
-        if (pixmapCache) {
-            pixmapCache->clear();
-        }
-    } else {
-        // This deletes the object but keeps the on-disk cache for later use
-        delete pixmapCache;
-        pixmapCache = 0;
+    }
+    // FIXME: this is always done to properly change theme but should be done only on demand
+    if (pixmapCache) {
+        pixmapCache->data()->clear();
     }
 
     cachedStyleSheets.clear();
@@ -400,7 +349,7 @@ void ThemePrivate::scheduledCacheUpdate()
         QHashIterator<QString, QPixmap> it(pixmapsToCache);
         while (it.hasNext()) {
             it.next();
-            pixmapCache->insertPixmap(idsToCache[it.key()], it.value());
+            pixmapCache->data()->insert(idsToCache[it.key()], new QPixmap(it.value()));
         }
     }
 
@@ -1031,9 +980,12 @@ bool Theme::findInCache(const QString &key, QPixmap &pix)
             return !pix.isNull();
         }
 
-        QPixmap temp;
-        if (d->pixmapCache->findPixmap(key, &temp) && !temp.isNull()) {
-            pix = temp;
+        QPixmap *temp = d->pixmapCache->data()->object(key);
+        if (temp && !temp->isNull()) {
+            QBuffer buffer(this);
+            buffer.open(QIODevice::WriteOnly);
+            temp->save(&buffer, "PNG"); 
+            pix.loadFromData(buffer.buffer(), "PNG");
             return true;
         }
     }
@@ -1041,20 +993,10 @@ bool Theme::findInCache(const QString &key, QPixmap &pix)
     return false;
 }
 
-// BIC FIXME: Should be merged with the other findInCache method above when we break BC
-bool Theme::findInCache(const QString &key, QPixmap &pix, unsigned int lastModified)
-{
-    if (d->useCache() && lastModified > uint(d->pixmapCache->lastModifiedTime())) {
-        return false;
-    }
-
-    return findInCache(key, pix);
-}
-
 void Theme::insertIntoCache(const QString& key, const QPixmap& pix)
 {
     if (d->useCache()) {
-        d->pixmapCache->insertPixmap(key, pix);
+        d->pixmapCache->data()->insert(key, new QPixmap(pix));
     }
 }
 

@@ -191,7 +191,6 @@ set(kdeui_LIB_SRCS
     util/kcrash.cpp
     util/kcursor.cpp
     util/kguiitem.cpp
-    util/kimagecache.cpp
     util/kkeyserver.cpp
     util/kmanagerselection.cpp
     util/kmodifierkeyinfo.cpp
@@ -574,7 +573,6 @@ install(
     util/knumvalidator.h
     util/kpassivepopup.h
     util/kpassivepopupmessagehandler.h
-    util/kimagecache.h
     util/kstandardguiitem.h
     util/kwallet.h
     util/kwordwrap.h

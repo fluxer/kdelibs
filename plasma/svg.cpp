@@ -138,7 +138,6 @@ SvgPrivate::SvgPrivate(Svg *svg)
     : q(svg),
       renderer(0),
       styleCrc(0),
-      lastModified(0),
       multipleImages(false),
       themed(false),
       applyColors(false),
@@ -226,12 +225,6 @@ bool SvgPrivate::setImagePath(const QString &imagePath)
             cacheAndColorsTheme()->insertIntoRectsCache(path, "_Natural", QRectF(QPointF(0,0), naturalSize));
             //kDebug() << "natural size for" << path << "from cache is" << naturalSize;
         }
-    }
-
-    if (!themed) {
-        QFile f(imagePath);
-        QFileInfo info(f);
-        lastModified = info.lastModified().toTime_t();
     }
 
     return updateNeeded;
@@ -336,7 +329,7 @@ QPixmap SvgPrivate::findInCache(const QString &elementId, const QSizeF &s)
     //kDebug() << "id is " << id;
 
     QPixmap p;
-    if (cacheRendering && cacheAndColorsTheme()->findInCache(id, p, lastModified)) {
+    if (cacheRendering && cacheAndColorsTheme()->findInCache(id, p)) {
         //kDebug() << "found cached version of " << id << p.size();
         return p;
     }

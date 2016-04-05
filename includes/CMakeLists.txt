@@ -177,7 +177,6 @@ install(
     KIconLoader
     KIconTheme
     KIdentityProxyModel
-    KImageCache
     KImageFilePreview
     KImageIO
     KInputDialog
@@ -299,7 +298,6 @@ install(
     KServiceTypeTrader
     KSessionManager
     KSharedConfig
-    KSharedDataCache
     KSharedPtr
     KShell
     KShellCompletion

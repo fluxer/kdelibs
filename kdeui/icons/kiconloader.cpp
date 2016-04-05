@@ -54,7 +54,6 @@
 #include <kglobalsettings.h>
 #include <kcomponentdata.h>
 #include <kde_file.h>
-#include <kshareddatacache.h>
 
 // kdeui
 #include "kicontheme.h"
@@ -748,7 +747,7 @@ void KIconLoaderPrivate::normalizeIconMetadata(KIconLoader::Group &group, int &s
 QString KIconLoaderPrivate::makeCacheKey(const QString &name, KIconLoader::Group group,
                                          const QStringList &overlays, int size, int state) const
 {
-    // The KSharedDataCache is shared so add some namespacing. The following code
+    // The icon cache is shared so add some namespacing. The following code
     // uses QStringBuilder (new in Qt 4.6)
 
     return (group == KIconLoader::User

@@ -107,7 +107,6 @@ public:
     QSizeF size;
     QSizeF naturalSize;
     QChar styleCrc;
-    unsigned int lastModified;
     bool multipleImages : 1;
     bool themed : 1;
     bool applyColors : 1;

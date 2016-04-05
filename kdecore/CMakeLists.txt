@@ -297,18 +297,11 @@ set(kdecore_LIB_SRCS
     util/kshell_unix.cpp
     util/kuser_unix.cpp
     util/kmacroexpander_unix.cpp
-    util/kshareddatacache.cpp
     fakes.c
 
     ${kdecore_OPTIONAL_SRCS}
     ${KAUTH_BACKEND_SRCS}
     ${KAUTH_HELPER_BACKEND_SRCS}
-)
-
-# KSharedDataCache uses exceptions as of 4.8.4, the rest of kdecore
-# doesn't. Try to enable exceptions only for that file.
-set_source_files_properties(util/kshareddatacache.cpp
-    PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
 )
 
 if(NOT Q_WS_X11 AND NOT Q_WS_QWS)
@@ -511,7 +504,6 @@ install(
     util/kshell.h
     util/krandom.h
     util/krandomsequence.h
-    util/kshareddatacache.h
     util/ksharedptr.h
     util/ksortablelist.h
     util/kuser.h
