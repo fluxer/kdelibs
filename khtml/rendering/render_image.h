@@ -77,7 +77,7 @@ public:
     virtual short calcReplacedWidth() const;
     virtual int   calcReplacedHeight() const;
 
-    virtual SelectionState selectionState() const {return KDE_CAST_BF_ENUM(SelectionState, m_selectionState);}
+    virtual SelectionState selectionState() const {return m_selectionState;}
     virtual void setSelectionState(SelectionState s) {m_selectionState = s; }
 #if 0
     virtual void caretPos(int offset, int flags, int &_x, int &_y, int &width, int &height) const;
@@ -98,7 +98,7 @@ private:
 
     bool berrorPic : 1;
     bool bUnfinishedImageFrame :1;
-    KDE_BF_ENUM(SelectionState) m_selectionState : 3; // FIXME: don't forget to enlarge this as the enum grows
+    SelectionState m_selectionState : 3; // FIXME: don't forget to enlarge this as the enum grows
 };
 
 

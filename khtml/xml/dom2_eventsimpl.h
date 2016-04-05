@@ -337,7 +337,7 @@ public:
     long pageY() const { return m_pageY; } // non-DOM extension
     virtual int which() const { return button() + 1; } // non-DOM extension
     bool isDoubleClick() const { return m_isDoubleClick; } // non-DOM extension
-    Orientation orientation() const { return KDE_CAST_BF_ENUM(Orientation, m_orientation); } // non-DOM extension
+    Orientation orientation() const { return m_orientation; } // non-DOM extension
     bool ctrlKey() const { return m_ctrlKey; }
     bool shiftKey() const { return m_shiftKey; }
     bool altKey() const { return m_altKey; }
@@ -380,7 +380,7 @@ protected:
     bool m_shiftKey : 1;
     bool m_metaKey : 1;
     bool m_isDoubleClick : 1;
-    KDE_BF_ENUM(Orientation) m_orientation : 2;
+    Orientation m_orientation : 2;
     unsigned short m_button;
     NodeImpl *m_relatedTarget;
     QMouseEvent *m_qevent;

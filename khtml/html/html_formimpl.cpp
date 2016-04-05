@@ -51,6 +51,7 @@
 #include <kmessagebox.h>
 #include <krandom.h>
 #include <klocale.h>
+#include <ksslkeygen.h>
 #ifndef KHTML_NO_WALLET
 #include <kwallet.h>
 #endif
@@ -59,10 +60,6 @@
 #include <QtCore/QFile>
 #include <QtCore/QDir>
 #include <QtCore/QTextCodec>
-
-// for keygen
-#include <QtCore/qstring.h>
-#include <ksslkeygen.h>
 
 #include <assert.h>
 

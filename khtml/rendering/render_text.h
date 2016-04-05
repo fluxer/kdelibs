@@ -230,7 +230,7 @@ public:
 
     void setText(DOM::DOMStringImpl *text, bool force=false);
 
-    virtual SelectionState selectionState() const {return KDE_CAST_BF_ENUM(SelectionState, m_selectionState);}
+    virtual SelectionState selectionState() const {return m_selectionState;}
     virtual void setSelectionState(SelectionState s) {m_selectionState = s; }
     virtual void caretPos(int offset, int flags, int &_x, int &_y, int &width, int &height) const;
     virtual bool absolutePosition(int &/*xPos*/, int &/*yPos*/, bool f = false) const;
@@ -299,7 +299,7 @@ protected:
     short m_beginMinWidth;
     short m_endMinWidth;
 
-    KDE_BF_ENUM(SelectionState) m_selectionState : 3 ;
+    SelectionState m_selectionState : 3;
     bool m_hasReturn : 1;
     bool m_hasBreakableChar : 1;
     bool m_hasBreak : 1;

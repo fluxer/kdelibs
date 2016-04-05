@@ -150,7 +150,7 @@ namespace DOM {
 	PseudoType pseudoType() const {
             if (_pseudoType == PseudoNotParsed)
                 extractPseudoType();
-            return KDE_CAST_BF_ENUM(PseudoType, _pseudoType);
+            return _pseudoType;
         }
 
         mutable khtml::AtomicString value;
@@ -162,10 +162,10 @@ namespace DOM {
         LocalName tagLocalName;
         NamespaceName tagNamespace;
 
-	KDE_BF_ENUM(Relation) relation     : 3;
-	mutable KDE_BF_ENUM(Match) 	 match         : 4;
+	Relation relation     : 3;
+	mutable Match 	 match         : 4;
 	unsigned int pseudoId : 4;
-	mutable KDE_BF_ENUM(PseudoType) _pseudoType : 6;
+	mutable PseudoType _pseudoType : 6;
 
     private:
 	void extractPseudoType() const;

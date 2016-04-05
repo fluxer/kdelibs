@@ -315,8 +315,8 @@ protected:
 
     HTMLTableSectionElementImpl *tFirstBody() const { return firstBody.get(this); }
 
-    KDE_BF_ENUM(Frame) frame : 4;
-    KDE_BF_ENUM(Rules) rules : 4;
+    Frame frame : 4;
+    Rules rules : 4;
 
     bool m_solid        : 1;
     uint unused		: 7;

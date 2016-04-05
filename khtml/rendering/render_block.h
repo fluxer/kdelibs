@@ -240,7 +240,7 @@ protected:
         int endY;
         short left;
         short width;
-        KDE_BF_ENUM(Type) type : 1; // left or right aligned
+        Type type : 1; // left or right aligned
         bool noPaint : 1;
         bool crossedLayer : 1; // lock noPaint flag
     };
@@ -383,7 +383,7 @@ protected:
 private:
     bool m_childrenInline : 1;
     bool m_firstLine      : 1; // used in inline layouting
-    KDE_BF_ENUM(EClear) m_clearStatus  : 2; // used during layuting of paragraphs
+    EClear m_clearStatus  : 2; // used during layuting of paragraphs
     bool m_avoidPageBreak : 1; // anonymous avoid page-break block
     bool m_topMarginQuirk : 1;
     bool m_bottomMarginQuirk : 1;

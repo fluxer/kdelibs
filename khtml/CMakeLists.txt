@@ -703,7 +703,6 @@ install(
     khtml_part.h
     khtml_events.h
     khtml_settings.h
-    khtmldefaults.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )

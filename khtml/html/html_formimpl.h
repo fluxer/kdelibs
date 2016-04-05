@@ -219,7 +219,7 @@ public:
     virtual bool isEnumerable() const { return true; }
 
     DOMString type() const;
-    typeEnum buttonType() const { return KDE_CAST_BF_ENUM(typeEnum, m_type); }
+    typeEnum buttonType() const { return m_type; }
     virtual void parseAttribute(AttributeImpl *attr);
     virtual void defaultEventHandler(EventImpl *evt);
     virtual bool encoding(const QTextCodec*, khtml::encodingList&, bool);
@@ -230,7 +230,7 @@ public:
 protected:
     DOMString             m_value;
     QString               m_currValue;
-    KDE_BF_ENUM(typeEnum) m_type : 2;
+    typeEnum              m_type : 2;
     bool                  m_dirty : 1;
     bool                  m_clicked : 1;
     bool                  m_activeSubmit : 1;
@@ -315,7 +315,7 @@ public:
     virtual void attach();
     virtual bool encoding(const QTextCodec*, khtml::encodingList&, bool);
 
-    typeEnum inputType() const { return KDE_CAST_BF_ENUM(typeEnum, m_type); }
+    typeEnum inputType() const { return m_type; }
     virtual void reset();
 
     // used in case input type=image was clicked.
@@ -351,7 +351,7 @@ protected:
     short     m_size;
     short     yPos;
 
-    KDE_BF_ENUM(typeEnum) m_type : 4;
+    typeEnum m_type : 4;
     bool m_clicked : 1 ;
     bool m_checked : 1;
     bool m_defaultChecked : 1; // could do without by checking ATTR_CHECKED

@@ -18,7 +18,6 @@
 */
 
 #include "khtml_settings.h"
-#include "khtmldefaults.h"
 
 #include <kconfig.h>
 #include <kconfiggroup.h>

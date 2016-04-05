@@ -54,7 +54,6 @@ configure_file(
     kssl/ksslconfig.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h
 )
-# macro_additional_clean_files(${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h)
 
 add_subdirectory(kssl/kcm)
 add_subdirectory(misc)
@@ -232,9 +231,12 @@ qt4_add_resources(kfile_STAT_SRCS kfile/kacleditwidget.qrc)
 
 set(kssl_STAT_SRCS
     kssl/sslui.cpp
+    # for sslui.cpp
     kssl/ksslcertificatebox.cpp
     kssl/ksslinfodialog.cpp
     kssl/ksslsettings.cpp
+    # for KHTML
+    kssl/ksslkeygen.cpp
 )
 
 

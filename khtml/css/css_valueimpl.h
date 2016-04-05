@@ -179,7 +179,7 @@ public:
     virtual DOM::DOMString cssText() const;
 
 protected:
-    KDE_BF_ENUM(Separator) m_separator: 1;
+    Separator m_separator: 1;
     QList<CSSValueImpl*> m_values;
 };
 

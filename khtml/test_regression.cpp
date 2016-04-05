@@ -44,7 +44,6 @@
 #include <dom_string.h>
 #include "rendering/render_style.h"
 #include "rendering/render_layer.h"
-#include "khtmldefaults.h"
 #include <QtCore/QProcess>
 #include <QtGui/QWindowsStyle>
 #include <QtGui/QStyleOption>

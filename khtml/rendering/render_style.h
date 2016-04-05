@@ -398,12 +398,12 @@ public:
     CachedImage* backgroundImage() const { return m_image; }
     Length backgroundXPosition() const { return m_xPosition; }
     Length backgroundYPosition() const { return m_yPosition; }
-    EBackgroundAttachment backgroundAttachment() const { return KDE_CAST_BF_ENUM(EBackgroundAttachment, m_bgAttachment); }
-    EBackgroundBox backgroundClip() const { return KDE_CAST_BF_ENUM(EBackgroundBox, m_bgClip); }
-    EBackgroundBox backgroundOrigin() const { return KDE_CAST_BF_ENUM(EBackgroundBox, m_bgOrigin); }
-    EBackgroundRepeat backgroundRepeat() const { return KDE_CAST_BF_ENUM(EBackgroundRepeat, m_bgRepeat); }
+    EBackgroundAttachment backgroundAttachment() const { return m_bgAttachment; }
+    EBackgroundBox backgroundClip() const { return m_bgClip; }
+    EBackgroundBox backgroundOrigin() const { return m_bgOrigin; }
+    EBackgroundRepeat backgroundRepeat() const { return m_bgRepeat; }
     LengthSize backgroundSize() const { return m_backgroundSize; }
-    EBackgroundSizeType backgroundSizeType() const { return KDE_CAST_BF_ENUM(EBackgroundSizeType, m_bgSizeType); }
+    EBackgroundSizeType backgroundSizeType() const { return m_bgSizeType; }
 
     BackgroundLayer* next() const { return m_next; }
     BackgroundLayer* next() { return m_next; }
@@ -467,11 +467,11 @@ public:
     Length m_xPosition;
     Length m_yPosition;
 
-    KDE_BF_ENUM(EBackgroundAttachment) m_bgAttachment : 2;
-    KDE_BF_ENUM(EBackgroundBox) m_bgClip : 2;
-    KDE_BF_ENUM(EBackgroundBox) m_bgOrigin : 2;
-    KDE_BF_ENUM(EBackgroundRepeat) m_bgRepeat : 2;
-    KDE_BF_ENUM(EBackgroundSizeType) m_bgSizeType : 2;
+    EBackgroundAttachment m_bgAttachment : 2;
+    EBackgroundBox m_bgClip : 2;
+    EBackgroundBox m_bgOrigin : 2;
+    EBackgroundRepeat m_bgRepeat : 2;
+    EBackgroundSizeType m_bgSizeType : 2;
 
     LengthSize m_backgroundSize;
 
@@ -681,7 +681,7 @@ class StyleCSS3InheritedData : public Shared<StyleCSS3InheritedData>
         bool shadowDataEquivalent(const StyleCSS3InheritedData& o) const;
 
         ShadowData* textShadow;  // Our text shadow information for shadowed text drawing.
-        KDE_BF_ENUM(EWordWrap) wordWrap : 1;
+        EWordWrap wordWrap : 1;
     private:
         StyleCSS3InheritedData &operator=(const StyleCSS3InheritedData &);
 };
@@ -844,24 +844,24 @@ protected:
 
         union {
             struct {
-                KDE_BF_ENUM(EEmptyCell) _empty_cells : 1 ;
-                KDE_BF_ENUM(ECaptionSide) _caption_side : 2;
-                KDE_BF_ENUM(EListStyleType) _list_style_type : 6;
-                KDE_BF_ENUM(EListStylePosition) _list_style_position : 1;
+                EEmptyCell _empty_cells : 1 ;
+                ECaptionSide _caption_side : 2;
+                EListStyleType _list_style_type : 6;
+                EListStylePosition _list_style_position : 1;
 
-                KDE_BF_ENUM(EVisibility) _visibility : 2;
-                KDE_BF_ENUM(ETextAlign) _text_align : 4;
-                KDE_BF_ENUM(ETextTransform) _text_transform : 2;
+                EVisibility _visibility : 2;
+                ETextAlign _text_align : 4;
+                ETextTransform _text_transform : 2;
                 unsigned _text_decorations : 4;
-                KDE_BF_ENUM(ECursor) _cursor_style : 5;
+                ECursor _cursor_style : 5;
 
-                KDE_BF_ENUM(EDirection) _direction : 1;
+                EDirection _direction : 1;
                 unsigned _border_collapse : 1 ;
-                KDE_BF_ENUM(EWhiteSpace) _white_space : 3;
+                EWhiteSpace _white_space : 3;
                 // non CSS2 inherited
                 unsigned _visuallyOrdered : 1;
                 unsigned _htmlHacks : 1;
-                KDE_BF_ENUM(EUserInput) _user_input : 2;
+                EUserInput _user_input : 2;
 
                 unsigned _page_break_inside : 1; // AUTO/AVOID
 
@@ -881,24 +881,24 @@ protected:
 
         union {
             struct {
-                KDE_BF_ENUM(EDisplay) _display : 5;
-                KDE_BF_ENUM(EDisplay) _originalDisplay : 5;
-                KDE_BF_ENUM(EOverflow) _overflowX : 4 ;
-                KDE_BF_ENUM(EOverflow) _overflowY : 4 ;
-                KDE_BF_ENUM(EVerticalAlign) _vertical_align : 4;
-                KDE_BF_ENUM(EClear) _clear : 2;
-                KDE_BF_ENUM(EPosition) _position : 2;
-                KDE_BF_ENUM(EFloat) _floating : 3;
-                KDE_BF_ENUM(ETableLayout) _table_layout : 1;
+                EDisplay _display : 5;
+                EDisplay _originalDisplay : 5;
+                EOverflow _overflowX : 4 ;
+                EOverflow _overflowY : 4 ;
+                EVerticalAlign _vertical_align : 4;
+                EClear _clear : 2;
+                EPosition _position : 2;
+                EFloat _floating : 3;
+                ETableLayout _table_layout : 1;
                 unsigned _flowAroundFloats : 1;
 
-                KDE_BF_ENUM(EPageBreak) _page_break_before : 3;
-                KDE_BF_ENUM(EPageBreak) _page_break_after : 3;
+                EPageBreak _page_break_before : 3;
+                EPageBreak _page_break_after : 3;
 
-                KDE_BF_ENUM(PseudoId) _styleType : 4;
+                PseudoId _styleType : 4;
                 unsigned _hasClip : 1;
                 unsigned _pseudoBits : 8;
-                KDE_BF_ENUM(EUnicodeBidi) _unicodeBidi : 2;
+                EUnicodeBidi _unicodeBidi : 2;
 
                 // non CSS2 non-inherited
                 unsigned _textOverflow : 1; // Whether or not lines that spill out should be truncated with "..."
@@ -993,7 +993,7 @@ public:
     void inheritFrom(const RenderStyle* inheritParent);
     void compactWith(const RenderStyle* similarStyle);
 
-    PseudoId styleType() const { return KDE_CAST_BF_ENUM(PseudoId, noninherited_flags.f._styleType); }
+    PseudoId styleType() const { return noninherited_flags.f._styleType; }
     void setStyleType(PseudoId pi) { noninherited_flags.f._styleType = pi; }
     bool isGenerated() const {
         if (styleType() == AFTER || styleType() == BEFORE || styleType() == MARKER || styleType() == REPLACED)
@@ -1029,16 +1029,16 @@ public:
 
 // attribute getter methods
 
-    EDisplay 	display() const { return KDE_CAST_BF_ENUM(EDisplay, noninherited_flags.f._display); }
-    EDisplay    originalDisplay() const { return KDE_CAST_BF_ENUM(EDisplay, noninherited_flags.f._originalDisplay); }
+    EDisplay 	display() const { return noninherited_flags.f._display; }
+    EDisplay    originalDisplay() const { return noninherited_flags.f._originalDisplay; }
 
     Length  	left() const {  return surround->offset.left; }
     Length  	right() const {  return surround->offset.right; }
     Length  	top() const {  return surround->offset.top; }
     Length  	bottom() const {  return surround->offset.bottom; }
 
-    EPosition 	position() const { return KDE_CAST_BF_ENUM(EPosition, noninherited_flags.f._position); }
-    EFloat  	floating() const { return KDE_CAST_BF_ENUM(EFloat, noninherited_flags.f._floating); }
+    EPosition 	position() const { return noninherited_flags.f._position; }
+    EFloat  	floating() const { return noninherited_flags.f._floating; }
 
     Length  	width() const { return box->width; }
     Length  	height() const { return box->height; }
@@ -1078,15 +1078,15 @@ public:
     bool outlineStyleIsAuto() const { return background->m_outline._auto; }
     const QColor &  outlineColor() const { return background->m_outline.color; }
 
-    EOverflow overflowX() const { return KDE_CAST_BF_ENUM(EOverflow, noninherited_flags.f._overflowX); }
-    EOverflow overflowY() const { return KDE_CAST_BF_ENUM(EOverflow, noninherited_flags.f._overflowY); }
+    EOverflow overflowX() const { return noninherited_flags.f._overflowX; }
+    EOverflow overflowY() const { return noninherited_flags.f._overflowY; }
     bool hidesOverflow() const {
         // either both overflow are visible or none are
         return overflowX() != OVISIBLE;
     }
 
-    EVisibility visibility() const { return KDE_CAST_BF_ENUM(EVisibility, inherited_flags.f._visibility); }
-    EVerticalAlign verticalAlign() const { return  KDE_CAST_BF_ENUM(EVerticalAlign, noninherited_flags.f._vertical_align); }
+    EVisibility visibility() const { return inherited_flags.f._visibility; }
+    EVerticalAlign verticalAlign() const { return  noninherited_flags.f._vertical_align; }
     Length verticalAlignLength() const { return box->vertical_align; }
 
     Length clipLeft() const { return visual->clip.left; }
@@ -1096,10 +1096,10 @@ public:
     LengthBox clip() const { return visual->clip; }
     bool hasClip() const { return noninherited_flags.f._hasClip; }
 
-    EUnicodeBidi unicodeBidi() const { return KDE_CAST_BF_ENUM(EUnicodeBidi, noninherited_flags.f._unicodeBidi); }
+    EUnicodeBidi unicodeBidi() const { return noninherited_flags.f._unicodeBidi; }
 
-    EClear clear() const { return KDE_CAST_BF_ENUM(EClear, noninherited_flags.f._clear); }
-    ETableLayout tableLayout() const { return KDE_CAST_BF_ENUM(ETableLayout, noninherited_flags.f._table_layout); }
+    EClear clear() const { return noninherited_flags.f._clear; }
+    ETableLayout tableLayout() const { return noninherited_flags.f._table_layout; }
 
     const QFont & font() const { return inherited->font.cfi->f; }
     // use with care. call font->update() after modifications
@@ -1108,17 +1108,17 @@ public:
 
     const QColor & color() const { return inherited->color; }
     Length textIndent() const { return inherited->indent; }
-    ETextAlign textAlign() const { return KDE_CAST_BF_ENUM(ETextAlign, inherited_flags.f._text_align); }
-    ETextTransform textTransform() const { return KDE_CAST_BF_ENUM(ETextTransform, inherited_flags.f._text_transform); }
+    ETextAlign textAlign() const { return inherited_flags.f._text_align; }
+    ETextTransform textTransform() const { return inherited_flags.f._text_transform; }
     int textDecorationsInEffect() const { return inherited_flags.f._text_decorations; }
     int textDecoration() const { return visual->textDecoration; }
     int wordSpacing() const { return inherited->font.wordSpacing; }
     int letterSpacing() const { return inherited->font.letterSpacing; }
 
-    EDirection direction() const { return KDE_CAST_BF_ENUM(EDirection, inherited_flags.f._direction); }
+    EDirection direction() const { return inherited_flags.f._direction; }
     Length lineHeight() const { return inherited->line_height; }
 
-    EWhiteSpace whiteSpace() const { return KDE_CAST_BF_ENUM(EWhiteSpace, inherited_flags.f._white_space); }
+    EWhiteSpace whiteSpace() const { return inherited_flags.f._white_space; }
     bool autoWrap() const {
         if (whiteSpace() == NORMAL || whiteSpace() == PRE_WRAP || whiteSpace() == PRE_LINE)
             return true;
@@ -1141,7 +1141,7 @@ public:
     const QColor & backgroundColor() const { return background->m_color; }
     CachedImage *backgroundImage() const { return background->m_background.m_image; }
     EBackgroundRepeat backgroundRepeat() const { return static_cast<EBackgroundRepeat>(background->m_background.m_bgRepeat); }
-    EBackgroundAttachment backgroundAttachment() const { return KDE_CAST_BF_ENUM(EBackgroundAttachment, background->m_background.m_bgAttachment); }
+    EBackgroundAttachment backgroundAttachment() const { return background->m_background.m_bgAttachment; }
     Length backgroundXPosition() const { return background->m_background.m_xPosition; }
     Length backgroundYPosition() const { return background->m_background.m_yPosition; }
     BackgroundLayer* accessBackgroundLayers() { return &(background.access()->m_background); }
@@ -1151,12 +1151,12 @@ public:
     bool borderCollapse() const { return inherited_flags.f._border_collapse; }
     short borderHorizontalSpacing() const { return inherited->border_hspacing; }
     short borderVerticalSpacing() const { return inherited->border_vspacing; }
-    EEmptyCell emptyCells() const { return KDE_CAST_BF_ENUM(EEmptyCell, inherited_flags.f._empty_cells); }
-    ECaptionSide captionSide() const { return KDE_CAST_BF_ENUM(ECaptionSide, inherited_flags.f._caption_side); }
+    EEmptyCell emptyCells() const { return inherited_flags.f._empty_cells; }
+    ECaptionSide captionSide() const { return inherited_flags.f._caption_side; }
 
-    EListStyleType listStyleType() const { return KDE_CAST_BF_ENUM(EListStyleType, inherited_flags.f._list_style_type); }
+    EListStyleType listStyleType() const { return inherited_flags.f._list_style_type; }
     CachedImage *listStyleImage() const { return inherited->style_image; }
-    EListStylePosition listStylePosition() const { return KDE_CAST_BF_ENUM(EListStylePosition, inherited_flags.f._list_style_position); }
+    EListStylePosition listStylePosition() const { return inherited_flags.f._list_style_position; }
 
     Length marginTop() const { return surround->margin.top; }
     Length marginBottom() const {  return surround->margin.bottom; }
@@ -1168,13 +1168,13 @@ public:
     Length paddingLeft() const { return surround->padding.left; }
     Length paddingRight() const {  return surround->padding.right; }
 
-    ECursor cursor() const { return KDE_CAST_BF_ENUM(ECursor, inherited_flags.f._cursor_style); }
+    ECursor cursor() const { return inherited_flags.f._cursor_style; }
 
     short widows() const { return inherited->widows; }
     short orphans() const { return inherited->orphans; }
     bool pageBreakInside() const { return inherited_flags.f._page_break_inside; }
-    EPageBreak pageBreakBefore() const { return KDE_CAST_BF_ENUM(EPageBreak, noninherited_flags.f._page_break_before); }
-    EPageBreak pageBreakAfter() const { return KDE_CAST_BF_ENUM(EPageBreak, noninherited_flags.f._page_break_after); }
+    EPageBreak pageBreakBefore() const { return noninherited_flags.f._page_break_before; }
+    EPageBreak pageBreakAfter() const { return noninherited_flags.f._page_break_after; }
 
     DOM::QuotesValueImpl* quotes() const { return inherited->quotes; }
     QString openQuote(int level) const;
@@ -1187,9 +1187,9 @@ public:
         return background->m_outline._offset;
     }
     ShadowData* textShadow() const { return css3InheritedData->textShadow; }
-    EWordWrap wordWrap() const { return KDE_CAST_BF_ENUM(EWordWrap, css3InheritedData->wordWrap); }
+    EWordWrap wordWrap() const { return css3InheritedData->wordWrap; }
     float opacity() const { return css3NonInheritedData->opacity; }
-    EUserInput userInput() const { return KDE_CAST_BF_ENUM(EUserInput, inherited_flags.f._user_input); }
+    EUserInput userInput() const { return inherited_flags.f._user_input; }
 
     Length marqueeIncrement() const { return css3NonInheritedData->marquee->increment; }
     int marqueeSpeed() const { return css3NonInheritedData->marquee->speed; }
