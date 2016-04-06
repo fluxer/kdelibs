@@ -551,7 +551,7 @@ void PackageStructure::setContentsPrefixPaths(const QStringList &prefixPaths)
         it.next();
 
         if (!it.value().endsWith('/')) {
-            it.setValue(it.value() % '/');
+            it.setValue(it.value() + '/');
         }
     }
 }

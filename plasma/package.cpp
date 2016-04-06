@@ -616,7 +616,7 @@ PackagePrivate::PackagePrivate(const PackageStructure::Ptr st, const QString &pa
         : structure(st),
           service(0)
 {
-    setPathFromStructure(packageRoot.isEmpty() ? path : packageRoot % "/" % path);
+    setPathFromStructure(packageRoot.isEmpty() ? path : packageRoot + "/" + path);
 }
 
 PackagePrivate::PackagePrivate(const PackagePrivate &other)
@@ -649,7 +649,7 @@ void PackagePrivate::setPathFromStructure(const QString &path)
     if (path.isEmpty()) {
         paths << structure->defaultPackageRoot();
     } else if (QDir::isRelativePath(path)) {
-        QString p = structure->defaultPackageRoot() % "/" % path % "/";
+        QString p = structure->defaultPackageRoot() + "/" + path + "/";
 
         if (QDir::isRelativePath(p)) {
             paths = KGlobal::dirs()->findDirs("data", p);
