@@ -124,25 +124,25 @@ public:
      */
     enum Group {
         /// No group
-        NoGroup = -1,
+        NoGroup=-1,
         /// Desktop icons
-        Desktop = 0,
-        /// Toolbar icons
-        Toolbar = 1,
-        /// Main toolbar icons
-        MainToolbar = 2,
-        /// Small icons, e.g. for buttons
-        Small = 3,
-        /// Panel (Plasma Taskbar) icons
-        Panel = 4,
-        /// Icons for use in dialog titles, page lists, etc
-        Dialog = 5,
-        /// User icons
-        User = 6,
+        Desktop=0,
         /// First group
-        FirstGroup = Desktop,
+        FirstGroup=0,
+        /// Toolbar icons
+        Toolbar,
+        /// Main toolbar icons
+        MainToolbar,
+        /// Small icons, e.g. for buttons
+        Small,
+        /// Panel (Plasma Taskbar) icons
+        Panel,
+        /// Icons for use in dialog titles, page lists, etc
+        Dialog,
         /// Last group
-        LastGroup = Dialog,
+        LastGroup,
+        /// User icons
+        User
     };
 
     /**
