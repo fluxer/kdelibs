@@ -19,7 +19,6 @@ configure_file(
 )
 
 # Configure checks for kdirwatch
-macro_optional_find_package(FAM)
 macro_bool_to_01(FAM_FOUND HAVE_FAM)
 
 check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
@@ -318,23 +317,6 @@ target_link_libraries(kdecore PRIVATE
     ${CMAKE_THREAD_LIBS_INIT}
     ${kdecore_OPTIONAL_LIBS}
 )
-
-set(SYS_INOTIFY_H_FOUND 0)
-if(SYS_INOTIFY_H_FOUND)
-    set_package_properties(FAM PROPERTIES
-        DESCRIPTION "File alteration notification support via a separate service"
-        URL "http://oss.sgi.com/projects/fam"
-        TYPE OPTIONAL
-        PURPOSE "You have file alteration notification support built into your kernel, however you might consider installing FAM as it also supports NFS."
-    )
-else(SYS_INOTIFY_H_FOUND)
-    set_package_properties(FAM PROPERTIES
-        DESCRIPTION "File alteration notification support via a separate service"
-        URL "http://oss.sgi.com/projects/fam"
-        TYPE OPTIONAL
-        PURPOSE "Provides file alteration notification facilities using a separate service."
-    )
-endif(SYS_INOTIFY_H_FOUND)
 
 if(FAM_FOUND)
    include_directories(${FAM_INCLUDE_DIR})

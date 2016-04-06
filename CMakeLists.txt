@@ -132,6 +132,14 @@ set_package_properties(PCRE PROPERTIES
     PURPOSE "Faster regular expression in KJS, increases web pages compatibility"
 )
 
+macro_optional_find_package(FAM)
+set_package_properties(FAM PROPERTIES
+    DESCRIPTION "File alteration notification support via a separate service"
+    URL "http://oss.sgi.com/projects/fam"
+    TYPE OPTIONAL
+    PURPOSE "Provides file alteration notification facilities using a separate service."
+)
+
 ################# Disallow in-source build #################
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
@@ -142,8 +150,6 @@ endif()
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 remove_definitions(-DQT3_SUPPORT_WARNINGS -DQT3_SUPPORT)
-
-add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 
 ################# setup the include directories #################
 

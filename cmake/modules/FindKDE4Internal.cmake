@@ -245,19 +245,6 @@ if(NOT KDE4_FOUND)
 # get the directory of the current file, used later on in the file
 get_filename_component(kde_cmake_module_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
-# We may only search for other packages with "REQUIRED" if we are required ourselves.
-# This file can be processed either (usually) included in FindKDE4.cmake or
-# (when building kdelibs) directly via FIND_PACKAGE(KDE4Internal), that's why
-# we have to check for both KDE4_FIND_REQUIRED and KDE4Internal_FIND_REQUIRED.
-if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
-    set(_REQ_STRING_KDE4 REQUIRED)
-    set(_REQ_STRING_KDE4_MESSAGE FATAL_ERROR)
-else()
-    set(_REQ_STRING_KDE4 )
-    set(_REQ_STRING_KDE4_MESSAGE STATUS)
-endif()
-
-
 # Store CMAKE_MODULE_PATH and then append the current dir to it, so we are sure
 # we get the FindQt4.cmake located next to us and not a different one.
 # The original CMAKE_MODULE_PATH is restored later on.
@@ -278,6 +265,14 @@ endif()
 # Qt libs and are flexible regarding the install location of Qt under Windows:
 set(QT_USE_IMPORTED_TARGETS TRUE)
 
+# We may only search for other packages with "REQUIRED" if we are required ourselves.
+# This file can be processed either (usually) included in FindKDE4.cmake or
+# (when building kdelibs) directly via FIND_PACKAGE(KDE4Internal), that's why
+# we have to check for both KDE4_FIND_REQUIRED and KDE4Internal_FIND_REQUIRED.
+if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
+    set(_REQ_STRING_KDE4 REQUIRED)
+endif()
+
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
 option(WITH_KATIE "Build against Katie instead of Qt4" OFF)
@@ -286,7 +281,7 @@ option(WITH_KATIE "Build against Katie instead of Qt4" OFF)
 # kdelibs is build against it, this file may go away due to order issues
 # and be merged into KDEConfig.
 if(WITH_KATIE)
-    find_package(Katie)
+    find_package(Katie ${_REQ_STRING_KDE4})
 endif()
 if(NOT KATIE_FOUND)
     # avoid the need to check WITH_KATIE in addition to KATIE_FOUND
@@ -394,7 +389,7 @@ else(_kdeBootStrapping)
 
 
     # This file contains the exported library target from kdelibs (new with cmake 2.6.x), e.g.
-    # the library target "kdeui" is exported as "KDE4__kdeui". The "KDE4__" is used as
+    # the library target "kdeui" is exported as "KDE4::kdeui". The "KDE4::" is used as
     # "namespace" to separate the imported targets from "normal" targets, it is stored in
     # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
     # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
@@ -591,8 +586,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 if(Q_WS_X11)
-   # Done by FindQt4.cmake already
-   #find_package(X11 REQUIRED)
+   find_package(X11 REQUIRED)
    # UNIX has already set _KDE4_PLATFORM_INCLUDE_DIRS, so append
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
 endif()
@@ -939,6 +933,9 @@ set(KDE4_DEFINITIONS
     ${_KDE4_PLATFORM_DEFINITIONS}
     -DQT_NO_CAST_TO_ASCII
     -DQT_DEPRECATED_WARNINGS
+    -DQT_USE_QSTRINGBUILDER
+    -DQT_USE_FAST_CONCATENATION
+    -DQT_USE_FAST_OPERATOR_PLUS
     -D_REENTRANT
     -DKDE_DEPRECATED_WARNINGS
     -DKDE4_CMAKE_TOPLEVEL_DIR_LENGTH=${_KDE4_CMAKE_TOPLEVEL_DIR_LENGTH}

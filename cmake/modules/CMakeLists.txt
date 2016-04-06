@@ -115,7 +115,6 @@ set(cmakeFiles
     FindQImageBlitz.cmake
     FindQJSON.cmake
     FindQNtrack.cmake
-    FindQt4.cmake
     FindRAW1394.cmake
     FindRUBY.cmake
     FindSamba.cmake
@@ -159,8 +158,6 @@ set(cmakeFiles
     PkgConfigGetVar.cmake
     PythonCompile.py
     PythonMacros.cmake
-    Qt4ConfigDependentSettings.cmake
-    Qt4Macros.cmake
     SIPMacros.cmake
     UnixAuth.cmake
 )
