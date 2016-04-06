@@ -97,7 +97,6 @@ KWebKitPart::KWebKitPart(QWidget *parentWidget, QObject *parent,
     about.addAuthor(ki18n("Michael Howell"), ki18n("Developer"), "mhowell123@gmail.com");
     about.addAuthor(ki18n("Laurent Montel"), ki18n("Developer"), "montel@kde.org");
     about.addAuthor(ki18n("Dirk Mueller"), ki18n("Developer"), "mueller@kde.org");
-    about.setProductName("kwebkitpart/general");
     KComponentData componentData(&about);
     setComponentData(componentData, false /*don't load plugins yet*/);
 

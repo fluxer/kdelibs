@@ -49,7 +49,6 @@ void KAboutDataTest::testConstructorWithDefaults()
     KAboutData aboutData(AppName, CatalogName, ki18n(ProgramName), Version );
 
     QCOMPARE( aboutData.appName(), QLatin1String(AppName) );
-    QCOMPARE( aboutData.productName(), QLatin1String(AppName) );
     QCOMPARE( aboutData.programName(), ki18n(ProgramName).toString() );
     QCOMPARE( aboutData.programIconName(), QLatin1String(AppName) );
     QCOMPARE( aboutData.programLogo(), QVariant() );
@@ -93,7 +92,6 @@ void KAboutDataTest::testConstructor()
                 HomePageAddress, BugsEmailAddress );
 
     QCOMPARE( aboutData.appName(), QLatin1String(AppName) );
-    QCOMPARE( aboutData.productName(), QLatin1String(AppName) );
     QCOMPARE( aboutData.programName(), ki18n(ProgramName).toString() );
     QCOMPARE( aboutData.programIconName(), QLatin1String(AppName) );
     QCOMPARE( aboutData.programLogo(), QVariant() );

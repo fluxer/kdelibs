@@ -37,7 +37,6 @@ install(
     KBookmarkMenu
     KBookmarkOwner
     KBreadcrumbSelectionModel
-    KBugReport
     KBuildSycocaProgressDialog
     KButtonGroup
     KCapacityBar

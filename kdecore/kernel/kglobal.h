@@ -473,13 +473,13 @@ namespace KGlobal
     /**
      * The component currently active (useful in a multi-component
      * application, such as a KParts application).
-     * Don't use this - it's mainly for KAboutDialog and KBugReport.
+     * Don't use this - it's mainly for KAboutDialog
      * @internal
      */
     KDECORE_EXPORT KComponentData activeComponent();
 
     /**
-     * Set the active component for use by KAboutDialog and KBugReport.
+     * Set the active component for use by KAboutDialog.
      * To be used only by a multi-component (KParts) application.
      *
      * @see activeComponent()

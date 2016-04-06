@@ -146,7 +146,7 @@ public:
   virtual QString quickHelp() const;
 
   /**
-   * This is generally only called for the KBugReport.
+   * This is generally only called for the KBugReport (which is no more).
    * If you override you should  have it return a pointer to a constant.
    *
    *

@@ -407,7 +407,6 @@ public:
     QList<KAboutLicense> _licenseList;
     KLocalizedString translatorName;
     KLocalizedString translatorEmail;
-    QString productName;
     QString programIconName;
     QVariant programLogo;
     KLocalizedString customAuthorPlainText, customAuthorRichText;
@@ -669,22 +668,9 @@ KAboutData &KAboutData::setOrganizationDomain( const QByteArray &domain )
   return *this;
 }
 
-KAboutData &KAboutData::setProductName( const QByteArray &_productName )
-{
-  d->productName = QString::fromUtf8(_productName);
-  return *this;
-}
-
 QString KAboutData::appName() const
 {
   return QString::fromUtf8(d->_appName);
-}
-
-QString KAboutData::productName() const
-{
-   if (!d->productName.isEmpty())
-      return d->productName;
-   return appName();
 }
 
 QString KAboutData::programName() const

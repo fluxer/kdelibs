@@ -173,9 +173,8 @@ class KAboutLicense;
  * for bug reporting, multiple authors and contributors
  * (using KAboutPerson), license and copyright information.
  *
- * Currently, the values set here are shown by the "About" box
- * (see KAboutDialog), used by the bug report dialog (see KBugReport),
- * and by the help shown on command line (see KCmdLineArgs).
+ * Currently, the values set here are shown by the "About" box (see
+ * KAboutDialog), and by the help shown on command line (see KCmdLineArgs).
  * They are also used for the icon and the name of the program's windows.
  *
  * @note Instead of the more usual i18n calls, for translatable text the ki18n
@@ -632,29 +631,10 @@ class KDECORE_EXPORT KAboutData
     KAboutData &setOrganizationDomain( const QByteArray &domain );
 
     /**
-     * Defines the product name which will be used in the KBugReport dialog.
-     * By default it's the appName, but you can overwrite it here to provide
-     * support for special components e.g. in the form 'product/component',
-     * such as 'kontact/summary'.
-     *
-     * @param name The name of product
-     */
-    KAboutData &setProductName( const QByteArray &name );
-
-    /**
      * Returns the application's internal name.
      * @return the internal program name.
      */
     QString appName() const;
-
-    /**
-     * Returns the application's product name, which will be used in KBugReport
-     * dialog. By default it returns appName(), otherwise the one which is set
-     * with setProductName()
-     *
-     * @return the product name.
-     */
-    QString productName() const;
 
     /**
      * Returns the translated program name.
