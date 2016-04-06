@@ -147,10 +147,8 @@ void KComponentDataPrivate::lazyInit(const KComponentData &component)
     if (dirs && kdeLibraryPathsAdded != KdeLibraryPathsAddedDone) {
         kdeLibraryPathsAdded = KdeLibraryPathsAddedDone;
         const QStringList &plugins = dirs->resourceDirs("qtplugins");
-        QStringList::ConstIterator it = plugins.begin();
-        while (it != plugins.end()) {
-            QCoreApplication::addLibraryPath(*it);
-            ++it;
+        foreach (const QString it, plugins) {
+            QCoreApplication::addLibraryPath(it);
         }
     }
 }

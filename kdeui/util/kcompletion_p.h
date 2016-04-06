@@ -26,8 +26,6 @@
 
 class KCompTreeNode;
 
-#include <kallocator.h>
-
 /**
  * @internal
  */
@@ -91,15 +89,6 @@ public:
           myWeight( weight ) {}
     ~KCompTreeNode();
 
-    void * operator new( size_t s ) {
-      Q_ASSERT(alloc);
-      return alloc->allocate( s );
-    }
-    void operator delete( void * s ) {
-      Q_ASSERT(alloc);
-      alloc->deallocate( s );
-    }
-
     // Returns a child of this node matching ch, if available.
     // Otherwise, returns 0L
     inline KCompTreeNode * find( const QChar& ch ) const {
@@ -136,15 +125,9 @@ public:
        use an accessor, but just a public member.  */
     KCompTreeNode *next;
 
-    /**
-     * Custom allocator used for all KCompTreeNode instances
-     */
-    static QSharedPointer<KZoneAllocator> allocator() { return alloc; }
-
 private:
     uint myWeight;
     KCompTreeNodeList	myChildren;
-    static QSharedPointer<KZoneAllocator> alloc;
 };
 
 

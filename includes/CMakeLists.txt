@@ -391,7 +391,6 @@ install(
     KXYSelector
     KZip
     KZipFileEntry
-    KZoneAllocator
     KonqBookmarkMenu
     KonqBookmarkOwner
     NET

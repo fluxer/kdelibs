@@ -155,7 +155,6 @@ text/
   kstringhandler.cpp
 
 util/
-  kallocator.cpp
   kdedmodule.cpp
   kde_file_win.cpp
   kdeversion.cpp

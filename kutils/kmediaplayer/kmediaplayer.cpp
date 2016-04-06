@@ -219,6 +219,9 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 #define COMMON_DESTRUCTOR \
     if (m_handle) { \
         mpv_terminate_destroy(m_handle); \
+    } \
+    if (m_settings) { \
+        delete m_settings; \
     }
 
 #define COMMMON_COMMAND_SENDER \
