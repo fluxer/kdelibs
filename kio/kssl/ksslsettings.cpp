@@ -18,14 +18,12 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#include "config.h"
+#include "ksslconfig.h"
 #include "ksslsettings.h"
-
-#include <config.h>
-#include <ksslconfig.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include <stdlib.h>
 #include <pwd.h>
 #include <unistd.h>

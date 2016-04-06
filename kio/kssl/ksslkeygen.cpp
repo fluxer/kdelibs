@@ -19,6 +19,7 @@
  */
 
 
+#include "ksslconfig.h"
 #include "ksslkeygen.h"
 #include "ksslkeygen_p.h"
 #include "ui_keygenwizard.h"
