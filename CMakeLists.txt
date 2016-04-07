@@ -124,14 +124,6 @@ set_package_properties(DBusMenuQt PROPERTIES
     TYPE RECOMMENDED
 )
 
-macro_optional_find_package(PCRE)
-set_package_properties(PCRE PROPERTIES
-    DESCRIPTION "Perl-compatible regular expressions in KJS"
-    URL "http://www.pcre.org"
-    TYPE RECOMMENDED
-    PURPOSE "Faster regular expression in KJS, increases web pages compatibility"
-)
-
 macro_optional_find_package(FAM)
 set_package_properties(FAM PROPERTIES
     DESCRIPTION "File alteration notification support via a separate service"
@@ -233,13 +225,6 @@ set(KDE4_KPARTS_INCLUDES
     ${KDE4_KIO_INCLUDES}
 )
 
-# kjs depends on kio
-set(KDE4_KJS_INCLUDES
-    ${CMAKE_SOURCE_DIR}/kjs
-    ${CMAKE_SOURCE_DIR}/kjs/wtf
-    ${CMAKE_BINARY_DIR}/kjs
-)
-
 ################# configure checks and create the configured files #################
 
 set(LIBRARY_TYPE SHARED)
@@ -282,14 +267,6 @@ add_subdirectory( kdesu )
 add_subdirectory( kdeui )
 if(QT_QTWEBKIT_FOUND)
     add_subdirectory( kdewebkit )
-    # it is required for adblock
-    install(
-      FILES khtml/khtmlrc
-      DESTINATION ${CONFIG_INSTALL_DIR}
-    )
-else()
-    add_subdirectory( kjs )
-    add_subdirectory( khtml )
 endif()
 add_subdirectory( kdewidgets )
 add_subdirectory( kexiv2 )

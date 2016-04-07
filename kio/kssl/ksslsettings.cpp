@@ -19,7 +19,6 @@
  */
 
 #include "config.h"
-#include "ksslconfig.h"
 #include "ksslsettings.h"
 
 #include <sys/types.h>
@@ -34,24 +33,6 @@
 #include <kstandarddirs.h>
 #include <kdebug.h>
 #include <kconfiggroup.h>
-
-// this hack provided by Malte Starostik to avoid glibc/openssl bug
-// on some systems
-#ifdef KSSL_HAVE_SSL
-#define crypt _openssl_crypt
-#include <openssl/ssl.h>
-#undef crypt
-#endif
-
-#ifdef KSSL_HAVE_SSL
-#define sk_new d->kossl->sk_new
-#define sk_push d->kossl->sk_push
-#define sk_free d->kossl->sk_free
-#define sk_value d->kossl->sk_value
-#define sk_num d->kossl->sk_num
-#define sk_dup d->kossl->sk_dup
-#define sk_pop d->kossl->sk_pop
-#endif
 
 class CipherNode {
 	public:
@@ -138,12 +119,6 @@ void KSSLSettings::load() {
 	cfg = KConfigGroup(m_cfg, "Auth");
 	d->m_bSendX509 = ("send" == cfg.readEntry("AuthMethod", ""));
 	d->m_bPromptX509 = ("prompt" == cfg.readEntry("AuthMethod", ""));
-
-#ifdef KSSL_HAVE_SSL
-
-
-
-#endif
 }
 
 
@@ -181,7 +156,6 @@ void KSSLSettings::save() {
 	m_cfg->sync();
 	// FIXME - ciphers
 #if 0
-#ifdef KSSL_HAVE_SSL
 	cfg.setGroup("SSLv3");
 	for (unsigned int i = 0; i < v3ciphers.count(); i++) {
 		QString ciphername;
@@ -191,7 +165,6 @@ void KSSLSettings::save() {
 		} else cfg.writeEntry(ciphername, false);
 	}
         m_cfg->sync();
-#endif
 
 	// insure proper permissions -- contains sensitive data
 	QString cfgName(KGlobal::dirs()->findResource("config", "cryptodefaults"));
@@ -213,13 +186,3 @@ bool KSSLSettings::useEFile() const          { return d->m_bUseEFile;    }
 bool KSSLSettings::autoSendX509() const      { return d->m_bSendX509; }
 bool KSSLSettings::promptSendX509() const    { return d->m_bPromptX509; }
 QString& KSSLSettings::getEGDPath()       { return d->m_EGDPath; }
-
-#ifdef KSSL_HAVE_SSL
-#undef sk_new
-#undef sk_push
-#undef sk_free
-#undef sk_value
-#undef sk_num
-#undef sk_pop
-#undef sk_dup
-#endif

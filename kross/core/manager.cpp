@@ -157,30 +157,6 @@ Manager::Manager()
     }
 #endif
 
-#ifdef KROSS_JAVA_LIBRARY
-    if( void* funcPtr = loadLibrary(KROSS_JAVA_LIBRARY, "krossinterpreter") ) {
-        d->interpreterinfos.insert("java",
-            new InterpreterInfo("java",
-                funcPtr, // library
-                "*.java *.class *.jar", // file filter-wildcard
-                QStringList() << "application/java" // mimetypes
-            )
-        );
-    }
-#endif
-
-#ifdef KROSS_KJS_LIBRARY
-    if( void* funcPtr = loadLibrary(KROSS_KJS_LIBRARY, "krossinterpreter") ) {
-        d->interpreterinfos.insert("javascript",
-            new InterpreterInfo("javascript",
-                funcPtr, // library
-                "*.js", // file filter-wildcard
-                QStringList() << "application/javascript" // mimetypes
-            )
-        );
-    }
-#endif
-
 #ifdef KROSS_FALCON_LIBRARY
     if( void* funcPtr = loadLibrary(KROSS_FALCON_LIBRARY, "krossinterpreter") ) {
         d->interpreterinfos.insert("falcon",
@@ -200,6 +176,15 @@ Manager::Manager()
                 funcPtr, // library
                 "*.es", // file filter-wildcard
                 QStringList() << "application/ecmascript" // mimetypes
+            )
+        );
+    }
+    if( void* funcPtr = loadLibrary(KROSS_QTSCRIPT_LIBRARY, "krossinterpreter") ) {
+        d->interpreterinfos.insert("javascript",
+            new InterpreterInfo("javascript",
+                funcPtr, // library
+                "*.js", // file filter-wildcard
+                QStringList() << "application/javascript" // mimetypes
             )
         );
     }

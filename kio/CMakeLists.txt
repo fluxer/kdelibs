@@ -50,11 +50,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/kio/config-kio.h
 )
 
-configure_file(
-    kssl/ksslconfig.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/kssl/ksslconfig.h
-)
-
 add_subdirectory(kssl/kcm)
 add_subdirectory(misc)
 if(ENABLE_TESTING)
@@ -236,14 +231,6 @@ set(kssl_STAT_SRCS
     kssl/ksslinfodialog.cpp
     kssl/ksslsettings.cpp
 )
-if(NOT QT_QTWEBKIT_FOUND)
-    set(kssl_STAT_SRCS
-        # for KHTML
-        kssl/ksslkeygen.cpp
-        kssl/kopenssl.cpp
-    )
-endif()
-
 
 ########### next target ###############
 

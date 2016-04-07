@@ -60,3 +60,9 @@ install(
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
+
+# it is required for adblock
+install(
+    FILES khtmlrc
+    DESTINATION ${CONFIG_INSTALL_DIR}
+)

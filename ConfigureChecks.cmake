@@ -20,7 +20,7 @@ set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 
 set( KDELIBSUFF ${LIB_SUFFIX} )
 
-macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore, khtml, kjs
+macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore
 
 # now check for dlfcn.h using the cmake supplied CHECK_INCLUDE_FILES() macro
 # If definitions like -D_GNU_SOURCE are needed for these checks they
@@ -55,7 +55,7 @@ check_include_files(unistd.h      HAVE_UNISTD_H)                       # various
 check_include_files(stdint.h      HAVE_STDINT_H)                       # various
 check_include_files(paths.h       HAVE_PATHS_H)                        # kdecore, kio
 
-check_include_files(errno.h       HAVE_ERRNO_H)                        # kjs, errno.h is used in many places, but only guarded in kjs/
+check_include_files(errno.h       HAVE_ERRNO_H)                        # various
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
 check_include_files(langinfo.h    HAVE_LANGINFO_H)                     # kdecore
 
