@@ -22,6 +22,7 @@
 #include "ksslconfig.h"
 #include "ksslkeygen.h"
 #include "ksslkeygen_p.h"
+#include "kopenssl.h"
 #include "ui_keygenwizard.h"
 
 #include <kdebug.h>
@@ -155,7 +156,6 @@ bool KSSLKeyGen::validateCurrentPage() {
     kpd->deleteLater();
     return true;
 }
-
 
 int KSSLKeyGen::generateCSR(const QString& name, const QString& pass, int bits, int e) {
 #ifdef KSSL_HAVE_SSL
