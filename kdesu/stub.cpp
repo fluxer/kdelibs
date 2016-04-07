@@ -78,17 +78,6 @@ void StubProcess::setScheduler(int sched)
     m_Scheduler = sched;
 }
 
-
-QByteArray StubProcess::commaSeparatedList(const QList<QByteArray> &lst)
-{
-    QByteArray str;
-    for (int i = 0; i < lst.count(); ++i) {
-        str += ',';
-        str += lst.at(i);
-    }
-    return str;
-}
-
 void StubProcess::writeString(const QByteArray &str)
 {
     QByteArray out;

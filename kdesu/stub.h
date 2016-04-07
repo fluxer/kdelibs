@@ -94,7 +94,6 @@ protected:
     KDESuPrivate::KCookie *m_pCookie;
 
 private:
-    QByteArray commaSeparatedList(const QList<QByteArray> &);
     void writeString(const QByteArray &str);
 
 private:
