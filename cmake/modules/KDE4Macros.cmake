@@ -329,7 +329,6 @@ macro(KDE4_ADD_WIDGET _output _sources)
     foreach(_current_FILE ${_sources})
         get_filename_component(_input ${_current_FILE} ABSOLUTE)
         get_filename_component(_basename ${_input} NAME_WE)
-        get_filename_component(_extension ${_input} EXT)
 
         set(_source ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.cpp)
         set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.moc)
@@ -341,11 +340,11 @@ macro(KDE4_ADD_WIDGET _output _sources)
             MAIN_DEPENDENCY ${_input}
         )
 
-        qt4_generate_moc(${_source} ${_moc})
+        qt4_generate_moc("${_source}" "${_moc}")
 
         add_library(${_basename}_autowidgets OBJECT ${_source} ${_moc})
 
-        set(${_output} ${${_output}} ${_source})
+        set(${_output} ${${_output}} ${_source} ${_moc})
     endforeach(_current_FILE)
 endmacro(KDE4_ADD_WIDGET)
 
