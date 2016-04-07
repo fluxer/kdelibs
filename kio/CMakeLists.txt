@@ -235,9 +235,14 @@ set(kssl_STAT_SRCS
     kssl/ksslcertificatebox.cpp
     kssl/ksslinfodialog.cpp
     kssl/ksslsettings.cpp
-    # for KHTML
-    kssl/ksslkeygen.cpp
 )
+if(NOT QT_QTWEBKIT_FOUND)
+    set(kssl_STAT_SRCS
+        # for KHTML
+        kssl/ksslkeygen.cpp
+        kssl/kopenssl.cpp
+    )
+endif()
 
 
 ########### next target ###############
