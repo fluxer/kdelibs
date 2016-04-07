@@ -23,101 +23,10 @@
 
 #include <kdebug.h>
 
-//#include <Weaver/DebuggingAids.h>
-#include <Weaver/ThreadWeaver.h>
-
 #include "runnermanager.h"
 #include "plasma/querymatch.h"
 
-using ThreadWeaver::Job;
-using ThreadWeaver::Weaver;
-
 namespace Plasma {
-
-DelayedRunnerPolicy::DelayedRunnerPolicy()
-    : QueuePolicy()
-{}
-
-DelayedRunnerPolicy::~DelayedRunnerPolicy()
-{}
-
-DelayedRunnerPolicy& DelayedRunnerPolicy::instance()
-{
-    static DelayedRunnerPolicy policy;
-    return policy;
-}
-
-bool DelayedRunnerPolicy::canRun(Job *job)
-{
-    FindMatchesJob *aJob = static_cast<FindMatchesJob*>(job);
-    if (QTimer *t = aJob->delayTimer()) {
-        // If the timer is active, the required delay has not been reached
-        //kDebug() << "delayed timer" << aJob->runner()->name() << !t->isActive();
-        return !t->isActive(); // DATA RACE!  (with QTimer start/stop from runnermanager.cpp)
-    }
-
-    return true;
-}
-
-void DelayedRunnerPolicy::free(Job *job)
-{
-    Q_UNUSED(job)
-}
-
-void DelayedRunnerPolicy::release(Job *job)
-{
-    free(job);
-}
-
-void DelayedRunnerPolicy::destructed(Job *job)
-{
-    Q_UNUSED(job)
-}
-
-DefaultRunnerPolicy::DefaultRunnerPolicy()
-    : QueuePolicy(),
-      m_cap(2)
-{}
-
-DefaultRunnerPolicy::~DefaultRunnerPolicy()
-{}
-
-DefaultRunnerPolicy& DefaultRunnerPolicy::instance()
-{
-    static DefaultRunnerPolicy policy;
-    return policy;
-}
-
-bool DefaultRunnerPolicy::canRun(Job *job)
-{
-    Plasma::AbstractRunner *runner = static_cast<FindMatchesJob*>(job)->runner();
-    QMutexLocker l(&m_mutex);
-
-    if (m_runCounts[runner->name()] > m_cap) {
-        return false;
-    } else {
-        ++m_runCounts[runner->name()];
-        return true;
-    }
-}
-
-void DefaultRunnerPolicy::free(Job *job)
-{
-    Plasma::AbstractRunner *runner = static_cast<FindMatchesJob*>(job)->runner();
-    QMutexLocker l(&m_mutex);
-
-    --m_runCounts[runner->name()];
-}
-
-void DefaultRunnerPolicy::release(Job *job)
-{
-    free(job);
-}
-
-void DefaultRunnerPolicy::destructed(Job *job)
-{
-    Q_UNUSED(job)
-}
 
 ////////////////////
 // Jobs
@@ -125,38 +34,23 @@ void DefaultRunnerPolicy::destructed(Job *job)
 
 FindMatchesJob::FindMatchesJob(Plasma::AbstractRunner *runner,
                                Plasma::RunnerContext *context, QObject *parent)
-    : ThreadWeaver::Job(parent),
+    : QThread(parent),
       m_context(*context, 0),
-      m_runner(runner),
-      m_timer(0)
+      m_runner(runner)
 {
-    if (runner->speed() == Plasma::AbstractRunner::SlowSpeed) {
-        assignQueuePolicy(&DelayedRunnerPolicy::instance());
-    } else {
-        assignQueuePolicy(&DefaultRunnerPolicy::instance());
-    }
 }
 
 FindMatchesJob::~FindMatchesJob()
 {
-}
-
-QTimer* FindMatchesJob::delayTimer() const
-{
-    return m_timer;
-}
-
-void FindMatchesJob::setDelayTimer(QTimer *timer)
-{
-    m_timer = timer;
+    wait(3000);
 }
 
 void FindMatchesJob::run()
 {
-//     kDebug() << "Running match for " << m_runner->objectName()
-//              << " in Thread " << thread()->id() << endl;
+    // kDebug() << "Running match for " << m_runner->objectName();
     if (m_context.isValid()) {
         m_runner->performMatch(m_context);
+        emit done(this);
     }
 }
 
@@ -170,50 +64,6 @@ Plasma::AbstractRunner* FindMatchesJob::runner() const
     return m_runner;
 }
 
-DelayedJobCleaner::DelayedJobCleaner(const QSet<FindMatchesJob *> &jobs, const QSet<AbstractRunner *> &runners)
-    : QObject(Weaver::instance()),
-      m_weaver(Weaver::instance()),
-      m_jobs(jobs),
-      m_runners(runners)
-{
-    connect(m_weaver, SIGNAL(finished()), this, SLOT(checkIfFinished()));
-
-    foreach (FindMatchesJob *job, m_jobs) {
-        connect(job, SIGNAL(done(ThreadWeaver::Job*)), this, SLOT(jobDone(ThreadWeaver::Job*)));
-    }
-}
-
-DelayedJobCleaner::~DelayedJobCleaner()
-{
-    qDeleteAll(m_runners);
-}
-
-void DelayedJobCleaner::jobDone(ThreadWeaver::Job *job)
-{
-    FindMatchesJob *runJob = dynamic_cast<FindMatchesJob *>(job);
-
-    if (!runJob) {
-        return;
-    }
-
-    m_jobs.remove(runJob);
-    runJob->deleteLater();
-
-    if (m_jobs.isEmpty()) {
-        deleteLater();
-    }
-}
-
-void DelayedJobCleaner::checkIfFinished()
-{
-    if (m_weaver->isIdle()) {
-        qDeleteAll(m_jobs);
-        m_jobs.clear();
-        deleteLater();
-    }
-}
-
-
 } // Plasma namespace
 
-// #include "runnerjobs.moc"
+#include "moc_runnerjobs_p.cpp"

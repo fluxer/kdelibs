@@ -32,22 +32,9 @@
 #include <kservicetypetrader.h>
 #include <kstandarddirs.h>
 
-#ifndef PLASMA_NO_SOLID
-#include <solid/device.h>
-#include <solid/deviceinterface.h>
-#endif
-
-#include <Weaver/DebuggingAids.h>
-#include <Weaver/State.h>
-#include <Weaver/Thread.h>
-#include <Weaver/ThreadWeaver.h>
-
 #include "private/runnerjobs_p.h"
 #include "pluginloader.h"
 #include "querymatch.h"
-
-using ThreadWeaver::Weaver;
-using ThreadWeaver::Job;
 
 //#define MEASURE_PREPTIME
 
@@ -74,11 +61,9 @@ public:
         singleRunnerWasLoaded(false)
     {
         matchChangeTimer.setSingleShot(true);
-        delayTimer.setSingleShot(true);
 
         QObject::connect(&matchChangeTimer, SIGNAL(timeout()), q, SLOT(matchesChanged()));
         QObject::connect(&context, SIGNAL(matchesChanged()), q, SLOT(scheduleMatchesChanged()));
-        QObject::connect(&delayTimer, SIGNAL(timeout()), q, SLOT(unblockJobs()));
     }
 
     ~RunnerManagerPrivate()
@@ -101,24 +86,9 @@ public:
     {
         KConfigGroup config = configGroup();
 
-        //The number of threads used scales with the number of processors.
-#ifndef PLASMA_NO_SOLID
-        const int numProcs =
-            qMax(Solid::Device::listFromType(Solid::DeviceInterface::Processor).count(), 1);
-#else
-        const int numProcs = 1;
-#endif
+        // TODO: instead of that hard-limit use QThreadPool and QRunnable
         //This entry allows to define a hard upper limit independent of the number of processors.
-        const int maxThreads = config.readEntry("maxThreads", 16);
-        const int numThreads = qMin(maxThreads, 2 + ((numProcs - 1) * 2));
-        //kDebug() << "setting up" << numThreads << "threads for" << numProcs << "processors";
-        if (numThreads > Weaver::instance()->maximumNumberOfThreads()) {
-            Weaver::instance()->setMaximumNumberOfThreads(numThreads);
-        }
-        // Limit the number of instances of a single normal speed runner and all of the slow runners
-        // to half the number of threads
-        const int cap = qMax(2, numThreads/2);
-        DefaultRunnerPolicy::instance().setCap(cap);
+        maxThreads = config.readEntry("maxThreads", 32);
 
         context.restore(config);
     }
@@ -232,7 +202,7 @@ public:
                 QSet<FindMatchesJob *> deadJobs;
                 foreach (FindMatchesJob *job, searchJobs) {
                     if (deadRunners.contains(job->runner())) {
-                        QObject::disconnect(job, SIGNAL(done(ThreadWeaver::Job*)), q, SLOT(jobDone(ThreadWeaver::Job*)));
+                        QObject::disconnect(job, SIGNAL(done(QThread*)), q, SLOT(jobDone(QThread*)));
                         searchJobs.remove(job);
                         deadJobs.insert(job);
                     }
@@ -248,7 +218,11 @@ public:
             if (deadJobs.isEmpty()) {
                 qDeleteAll(deadRunners);
             } else {
-                new DelayedJobCleaner(deadJobs, deadRunners);
+                // cleaner
+                foreach (FindMatchesJob *job, deadJobs) {
+                    job->quit();
+                }
+                deadJobs.clear();
             }
         }
 
@@ -301,7 +275,7 @@ public:
         return runner;
     }
 
-    void jobDone(ThreadWeaver::Job *job)
+    void jobDone(QThread *job)
     {
         FindMatchesJob *runJob = dynamic_cast<FindMatchesJob *>(job);
 
@@ -338,13 +312,6 @@ public:
             return;
         }
 
-        if (Weaver::instance()->isIdle()) {
-            qDeleteAll(searchJobs);
-            searchJobs.clear();
-            qDeleteAll(oldSearchJobs);
-            oldSearchJobs.clear();
-        }
-
         if (searchJobs.isEmpty() && oldSearchJobs.isEmpty()) {
             if (allRunnersPrepped) {
                 foreach (AbstractRunner *runner, runners) {
@@ -369,21 +336,6 @@ public:
         }
     }
 
-    void unblockJobs()
-    {
-        // WORKAROUND: Queue an empty job to force ThreadWeaver to awaken threads
-        if (searchJobs.isEmpty() && Weaver::instance()->isIdle()) {
-            qDeleteAll(oldSearchJobs);
-            oldSearchJobs.clear();
-            checkTearDown();
-            return;
-        }
-
-        DummyJob *dummy = new DummyJob(q);
-        Weaver::instance()->enqueue(dummy);
-        QObject::connect(dummy, SIGNAL(done(ThreadWeaver::Job*)), dummy, SLOT(deleteLater()));
-    }
-
     void runnerMatchingSuspended(bool suspended)
     {
         if (suspended || !prepped || teardownRequested) {
@@ -400,24 +352,21 @@ public:
     void startJob(AbstractRunner *runner)
     {
         if ((runner->ignoredTypes() & context.type()) == 0) {
-            FindMatchesJob *job = new FindMatchesJob(runner, &context, Weaver::instance());
-            QObject::connect(job, SIGNAL(done(ThreadWeaver::Job*)), q, SLOT(jobDone(ThreadWeaver::Job*)));
-            if (runner->speed() == AbstractRunner::SlowSpeed) {
-                job->setDelayTimer(&delayTimer);
+            if (searchJobs.count() >= maxThreads) {
+                // kWarning() << "not starting a runner due to hard limit of" << maxThreads;
+                return;
             }
-            Weaver::instance()->enqueue(job);
+            FindMatchesJob *job = new FindMatchesJob(runner, &context, q);
+            QObject::connect(job, SIGNAL(done(QThread*)), q, SLOT(jobDone(QThread*)));
+            job->start();
             searchJobs.insert(job);
         }
     }
-
-    // Delay in ms before slow runners are allowed to run
-    static const int slowRunDelay = 400;
 
     RunnerManager *q;
     QueryMatch deferredRun;
     RunnerContext context;
     QTimer matchChangeTimer;
-    QTimer delayTimer; // Timer to control when to run slow runners
     QHash<QString, AbstractRunner*> runners;
     QHash<QString, QString> advertiseSingleRunnerIds;
     AbstractRunner* currentSingleRunner;
@@ -432,6 +381,7 @@ public:
     bool teardownRequested : 1;
     bool singleMode : 1;
     bool singleRunnerWasLoaded : 1;
+    int maxThreads;
 };
 
 /*****************************************************
@@ -443,7 +393,6 @@ RunnerManager::RunnerManager(QObject *parent)
       d(new RunnerManagerPrivate(this))
 {
     d->loadConfiguration();
-    //ThreadWeaver::setDebugLevel(true, 4);
 }
 
 RunnerManager::RunnerManager(KConfigGroup &c, QObject *parent)
@@ -454,13 +403,20 @@ RunnerManager::RunnerManager(KConfigGroup &c, QObject *parent)
     // more sense.
     d->conf = KConfigGroup(&c, "PlasmaRunnerManager");
     d->loadConfiguration();
-    //ThreadWeaver::setDebugLevel(true, 4);
 }
 
 RunnerManager::~RunnerManager()
 {
     if (!qApp->closingDown() && (!d->searchJobs.isEmpty() || !d->oldSearchJobs.isEmpty())) {
-        new DelayedJobCleaner(d->searchJobs + d->oldSearchJobs);
+        // cleaner
+        foreach (FindMatchesJob *job, d->searchJobs) {
+            job->quit();
+        }
+        d->searchJobs.clear();
+        foreach (FindMatchesJob *job, d->oldSearchJobs) {
+            job->quit();
+        }
+        d->searchJobs.clear();
     }
 
     delete d;
@@ -756,9 +712,6 @@ void RunnerManager::launchQuery(const QString &untrimmedTerm, const QString &run
 
         d->startJob(r);
     }
-
-    // Start timer to unblock slow runners
-    d->delayTimer.start(RunnerManagerPrivate::slowRunDelay);
 }
 
 bool RunnerManager::execQuery(const QString &term)
@@ -813,17 +766,10 @@ QString RunnerManager::query() const
 
 void RunnerManager::reset()
 {
-    // If ThreadWeaver is idle, it is safe to clear previous jobs
-    if (Weaver::instance()->isIdle()) {
-        qDeleteAll(d->searchJobs);
-        qDeleteAll(d->oldSearchJobs);
-        d->oldSearchJobs.clear();
-    } else {
-        Q_FOREACH(FindMatchesJob *job, d->searchJobs) {
-            Weaver::instance()->dequeue(job);
-        }
-        d->oldSearchJobs += d->searchJobs;
+    Q_FOREACH(FindMatchesJob *job, d->searchJobs) {
+        job->terminate();
     }
+    d->oldSearchJobs += d->searchJobs;
 
     d->searchJobs.clear();
 
