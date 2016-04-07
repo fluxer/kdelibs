@@ -38,8 +38,6 @@ set(kdcraw_LIB_SRCS
     rcombobox.cpp
     rnuminput.cpp
     rexpanderbox.cpp
-    ractionthreadbase.cpp
-    ractionthreadbase_p.cpp
     squeezedcombobox.cpp
 )
 
@@ -48,8 +46,6 @@ add_library(kdcraw ${LIBRARY_TYPE} ${kdcraw_LIB_SRCS})
 target_link_libraries(kdcraw PRIVATE
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
-    ${KDE4_SOLID_LIBS}
-    ${KDE4_THREADWEAVER_LIBS}
 )
 
 target_link_libraries(kdcraw PUBLIC
@@ -75,7 +71,6 @@ install(
     rnuminput.h
     rcombobox.h
     rexpanderbox.h
-    ractionthreadbase.h
     squeezedcombobox.h
     dcrawinfocontainer.h
     rawfiles.h
