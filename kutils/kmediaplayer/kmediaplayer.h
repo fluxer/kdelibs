@@ -227,7 +227,7 @@ public:
     KAudioPlayer(QObject *parent = 0);
     ~KAudioPlayer();
 
-    void command(const QVariant& params) const;
+    void command(const QVariant& command) const;
     void setProperty(const QString& name, const QVariant& value) const;
     QVariant property(const QString& name) const;
     void setOption(const QString& name, const QVariant& value) const;
@@ -293,7 +293,7 @@ public:
     KMediaPlayer(QWidget *parent = 0);
     ~KMediaPlayer();
 
-    void command(const QVariant& params) const;
+    void command(const QVariant& command) const;
     void setProperty(const QString& name, const QVariant& value) const;
     QVariant property(const QString& name) const;
     void setOption(const QString& name, const QVariant& value) const;

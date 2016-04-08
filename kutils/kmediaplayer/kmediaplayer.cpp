@@ -60,7 +60,7 @@ void KAbstractPlayer::seek(int position)
 
 void KAbstractPlayer::stop()
 {
-    command(QVariantList() <<"stop");
+    command(QVariantList() << "stop");
 }
 
 QString KAbstractPlayer::path()
@@ -198,6 +198,7 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     much as possible making modifications easier
 */
 #define COMMON_CONSTRUCTOR \
+    kDebug() << i18n("initializing player"); \
     setlocale(LC_NUMERIC, "C"); \
     m_handle = mpv_create(); \
     if (m_handle) { \
@@ -217,6 +218,7 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     }
 
 #define COMMON_DESTRUCTOR \
+    kDebug() << i18n("destroying player"); \
     if (m_handle) { \
         mpv_terminate_destroy(m_handle); \
     } \
@@ -225,30 +227,35 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     }
 
 #define COMMMON_COMMAND_SENDER \
+    kDebug() << i18n("sending command") << command; \
     if (m_handle) { \
-        QVariant error = mpv::qt::command_variant(m_handle, params); \
+        QVariant error = mpv::qt::command_variant(m_handle, command); \
         if (!error.isNull()) { \
             kWarning() << error; \
         } \
     }
 
 #define COMMON_PROPERTY_SETTER \
+    kDebug() << i18n("setting property") << name << value; \
     if (m_handle) { \
         mpv::qt::set_property_variant(m_handle, name, value); \
     }
 
 #define COMMON_PROPERTY_GETTER \
+    kDebug() << i18n("getting property") << name; \
     if (m_handle) { \
         return mpv::qt::get_property_variant(m_handle, name); \
     } \
     return QVariant();
 
 #define COMMON_OPTION_SETTER \
+    kDebug() << i18n("setting option") << name << value; \
     if (m_handle) { \
         mpv::qt::set_option_variant(m_handle, name, value); \
     }
 
 #define COMMMON_EVENT_HANDLER \
+    // kDebug() << i18n("processing events"); \
     while (m_handle) { \
         mpv_event *event = mpv_wait_event(m_handle, 0); \
         if (event->event_id == MPV_EVENT_NONE) { \
@@ -321,7 +328,8 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 
 static void wakeup_audio(void *ctx)
 {
-    QMetaObject::invokeMethod(static_cast<KAudioPlayer*>(ctx), "_processHandleEvents", Qt::QueuedConnection);
+    KAudioPlayer *pctx = static_cast<KAudioPlayer*>(ctx);
+    QMetaObject::invokeMethod(pctx, "_processHandleEvents", Qt::QueuedConnection);
 }
 
 KAudioPlayer::KAudioPlayer(QObject *parent)
@@ -362,7 +370,7 @@ KAudioPlayer::~KAudioPlayer()
     COMMON_DESTRUCTOR
 }
 
-void KAudioPlayer::command(const QVariant& params) const
+void KAudioPlayer::command(const QVariant& command) const
 {
     COMMMON_COMMAND_SENDER
 }
@@ -395,7 +403,8 @@ bool KAudioPlayer::isMimeSupported(const QString mime) const
 /////
 static void wakeup_media(void *ctx)
 {
-    QMetaObject::invokeMethod(static_cast<KMediaPlayer*>(ctx), "_processHandleEvents", Qt::QueuedConnection);
+    KMediaPlayer *pctx = static_cast<KMediaPlayer*>(ctx);
+    QMetaObject::invokeMethod(pctx, "_processHandleEvents", Qt::QueuedConnection);
 }
 
 KMediaPlayer::KMediaPlayer(QWidget *parent)
@@ -441,7 +450,7 @@ KMediaPlayer::~KMediaPlayer()
     COMMON_DESTRUCTOR
 }
 
-void KMediaPlayer::command(const QVariant& params) const
+void KMediaPlayer::command(const QVariant& command) const
 {
     COMMMON_COMMAND_SENDER
 }

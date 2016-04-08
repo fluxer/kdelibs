@@ -16,7 +16,6 @@ include_directories(
     ${KDE4_KDEUI_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kdeclarative
     ${CMAKE_BINARY_DIR}/kdeclarative
-    ${CMAKE_SOURCE_DIR}/threadweaver
     ${CMAKE_SOURCE_DIR}/plasma/extenders
 )
 
