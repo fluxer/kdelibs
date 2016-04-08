@@ -20,7 +20,7 @@
 #ifndef KFILTERBASE_H
 #define KFILTERBASE_H
 
-#include <karchive_export.h>
+#include <kdecore_export.h>
 
 #include <QtCore/qiodevice.h>
 
@@ -32,7 +32,7 @@ class QIODevice;
  * Don't use directly, use KFilterDev instead.
  * @internal
  */
-class KARCHIVE_EXPORT KFilterBase
+class KDECORE_EXPORT KFilterBase
 {
 public:
     KFilterBase();

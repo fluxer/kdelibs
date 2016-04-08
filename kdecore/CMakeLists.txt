@@ -402,7 +402,6 @@ install(
     FILES
     kdecore_export.h
     compression/kfilterbase.h
-    compression/karchive_export.h
     compression/kfilterdev.h
     config/kconfig.h
     config/kconfigbase.h
@@ -450,7 +449,6 @@ install(
     auth/kauthactionreply.h
     auth/kauthactionwatcher.h
     auth/kauthhelpersupport.h
-    auth/kauth.h
     services/kmimetype.h
     services/kmimetypetrader.h
     services/kservice.h

@@ -85,7 +85,7 @@
  The helper.h file declares the class that implements the helper. It looks like:
 
  @code
- #include <kauth.h>
+ #include <kauthactionreply.h>
 
  using namespace KAuth;
 
