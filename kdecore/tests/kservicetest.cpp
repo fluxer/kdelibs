@@ -379,7 +379,6 @@ void KServiceTest::testWriteServiceTypeProfile()
 {
     const QString serviceType = "KParts/ReadOnlyPart";
     KService::List services, disabledServices;
-    services.append(KService::serviceByDesktopPath("khtmlimage.desktop"));
     services.append(KService::serviceByDesktopPath("fakepart.desktop"));
     disabledServices.append(KService::serviceByDesktopPath("kwebkitpart.desktop"));
 
@@ -402,9 +401,8 @@ void KServiceTest::testWriteServiceTypeProfile()
     //foreach( KService::Ptr service, offers )
     //    qDebug( "%s %s", qPrintable( service->name() ), qPrintable( service->entryPath() ) );
 
-    QVERIFY( offers.count() >= 3 ); // at least 3, even
-    QCOMPARE( offers[0]->entryPath(), QString("khtmlimage.desktop") );
-    QCOMPARE( offers[1]->entryPath(), QString("fakepart.desktop") );
+    QVERIFY( offers.count() >= 2 ); // at least 2, even
+    QCOMPARE( offers[0]->entryPath(), QString("fakepart.desktop") );
     QVERIFY( offerListHasService( offers, "kmultipart.desktop" ) ); // should still be somewhere in there
     QVERIFY( !offerListHasService( offers, "kwebkitpart.desktop" ) ); // it got disabled above
 }
