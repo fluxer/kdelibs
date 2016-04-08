@@ -19,14 +19,9 @@
 #ifndef KPROTOCOLINFO_H
 #define KPROTOCOLINFO_H
 
-#include <kglobal.h>
-
 #include <kurl.h>
 #include <ksycocaentry.h>
-#include <ksycocatype.h>
 #include <kservice.h>
-#include <QtCore/QVariant>
-#include <QtCore/QStringList>
 
 class QDataStream;
 class KProtocolInfoPrivate;

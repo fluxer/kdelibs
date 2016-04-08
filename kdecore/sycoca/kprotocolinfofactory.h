@@ -22,10 +22,8 @@
 
 #include "kprotocolinfo.h"
 
-#include <QtCore/QMap>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <kurl.h>
+#include <qmap.h>
+#include <qstring.h>
 #include <ksycocafactory.h>
 
 

@@ -23,8 +23,6 @@
 #ifndef KCORECONFIGSKELETON_H
 #define KCORECONFIGSKELETON_H
 
-#include <kdecore_export.h>
-
 #include <kurl.h>
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>

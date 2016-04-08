@@ -19,8 +19,6 @@
 #ifndef KSERVICEGROUP_H
 #define KSERVICEGROUP_H
 
-#include <kdecore_export.h>
-#include <ksycocaentry.h>
 #include <kservice.h>
 
 class KBuildServiceGroupFactory;

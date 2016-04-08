@@ -20,7 +20,6 @@
 #ifndef KJOBTRACKERINTERFACE_H
 #define KJOBTRACKERINTERFACE_H
 
-#include <kdecore_export.h>
 #include <kjob.h>
 
 /**

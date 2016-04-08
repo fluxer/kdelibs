@@ -26,7 +26,6 @@
 #ifndef KTZFILETIMEZONE_H
 #define KTZFILETIMEZONE_H
 
-#include <kdecore_export.h>
 #include <ktimezone.h>
 
 class KTzfileTimeZoneSource;

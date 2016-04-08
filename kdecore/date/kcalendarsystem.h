@@ -22,7 +22,6 @@
 #ifndef KCALENDARSYSTEM_H
 #define KCALENDARSYSTEM_H
 
-#include <kdecore_export.h>
 #include "klocale.h"  // needed for enums
 #include "kglobal.h"
 

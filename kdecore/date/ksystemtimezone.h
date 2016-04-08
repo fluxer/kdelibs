@@ -27,11 +27,9 @@
 #ifndef KSYSTEMTIMEZONE_H
 #define KSYSTEMTIMEZONE_H
 
-#include <kdecore_export.h>
 #include "ktimezone.h"
 
-#include <QtCore/qobject.h>
-#include <QtCore/qdatetime.h>
+#include <qobject.h>
 
 class KSystemTimeZoneSource;
 class KSystemTimeZonePrivate;

@@ -20,7 +20,6 @@
 #ifndef KCOMPOSITEJOB_H
 #define KCOMPOSITEJOB_H
 
-#include <kdecore_export.h>
 #include <kjob.h>
 
 class KCompositeJobPrivate;

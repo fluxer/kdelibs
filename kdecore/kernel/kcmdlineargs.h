@@ -19,8 +19,6 @@
 #ifndef KCMDLINEARGS_H
 #define KCMDLINEARGS_H
 
-#include <kdecore_export.h>
-
 #include <klocale.h>
 
 template <class T> class QList;

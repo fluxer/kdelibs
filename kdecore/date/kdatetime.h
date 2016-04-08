@@ -26,11 +26,9 @@
 #ifndef _KDATETIME_H_
 #define _KDATETIME_H_
 
-#include <kdecore_export.h>
 #include <ktimezone.h>
 
 #include <QtCore/qmetatype.h>
-#include <QtCore/qshareddata.h>
 
 class QDataStream;
 class KDateTimePrivate;

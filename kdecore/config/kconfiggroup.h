@@ -26,8 +26,6 @@
 
 #include "kconfigbase.h"
 
-#include <kdecore_export.h>
-
 #include <QtCore/qsharedpointer.h>
 #include <QtCore/qvariant.h>
 

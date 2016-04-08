@@ -21,11 +21,7 @@
 #define __kmimetype_h__
 
 #include <kurl.h>
-#include <ksycocatype.h>
 #include <kservicetype.h>
-
-#include <sys/types.h>
-#include <sys/stat.h>
 
 class KMimeTypePrivate;
 
