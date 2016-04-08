@@ -107,7 +107,7 @@ bool KXzFilter::terminate()
         return false;
     }
     d->isInitialized = false;
-    return false;
+    return true;
 }
 
 
