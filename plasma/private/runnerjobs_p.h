@@ -41,7 +41,6 @@ public:
                    Plasma::RunnerContext *context);
 
     Plasma::AbstractRunner* runner() const;
-    bool isFinished();
 
 protected:
     void run();
@@ -49,7 +48,6 @@ protected:
 private:
     Plasma::RunnerContext m_context;
     Plasma::AbstractRunner *m_runner;
-    bool m_finished;
 };
 
 }

@@ -36,19 +36,16 @@ FindMatchesJob::FindMatchesJob(Plasma::AbstractRunner *runner,
                                Plasma::RunnerContext *context)
     : QRunnable(),
       m_context(*context, 0),
-      m_runner(runner),
-      m_finished(false)
+      m_runner(runner)
 {
 }
 
 void FindMatchesJob::run()
 {
-    m_finished = false;
     // kDebug() << "Running match for " << m_runner->objectName();
     if (m_context.isValid()) {
         m_runner->performMatch(m_context);
     }
-    m_finished = true;
 }
 
 Plasma::AbstractRunner* FindMatchesJob::runner() const
@@ -56,11 +53,4 @@ Plasma::AbstractRunner* FindMatchesJob::runner() const
     return m_runner;
 }
 
-bool FindMatchesJob::isFinished()
-{
-    return m_finished;
-}
-
 } // Plasma namespace
-
-#include "moc_runnerjobs_p.cpp"

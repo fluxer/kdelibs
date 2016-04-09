@@ -263,18 +263,6 @@ public:
         return runner;
     }
 
-    void jobDone()
-    {
-        if (searchJobs.isEmpty() && context.matches().isEmpty()) {
-            // we finished our run, and there are no valid matches, and so no
-            // signal will have been sent out. so we need to emit the signal
-            // ourselves here
-            emit q->matchesChanged(context.matches());
-        }
-
-        checkTearDown();
-    }
-
     void checkTearDown()
     {
         //kDebug() << prepped << teardownRequested << searchJobs.count();
