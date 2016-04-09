@@ -40,6 +40,7 @@
 #include <kmessagebox.h>
 #include <ksavefile.h>
 #include <kstandarddirs.h>
+#include <kmimetype.h>
 
 #include "kbookmarkmenu.h"
 #include "kbookmarkmenu_p.h"
@@ -86,6 +87,15 @@ void KBookmarkMap::update(KBookmarkManager *manager)
         m_bk_map.clear();
         KBookmarkGroup root = manager->root();
         traverse(root);
+
+        QMapIterator<QString, KBookmarkList> iter(m_bk_map);
+        while (iter.hasNext()) {
+            iter.next();
+            foreach (KBookmark it, iter.value()) {
+                kDebug() << "updating favicon for" << it.url();
+                it.setIcon(KMimeType::favIconForUrl(it.url()));
+            }
+        }
     }
 }
 
@@ -539,6 +549,9 @@ KBookmark KBookmarkManager::findByAddress( const QString & address )
     }
     if (result.isNull()) {
        kWarning() << "KBookmarkManager::findByAddress: couldn't find item " << address;
+    } else {
+        kDebug() << "updating favicon for" << result.url();
+        result.setIcon(KMimeType::favIconForUrl(result.url()));
     }
     //kWarning() << "found " << result.address();
     return result;
@@ -645,26 +658,21 @@ bool KBookmarkManager::updateAccessMetadata( const QString & url )
 {
     d->m_map.update(this);
     QList<KBookmark> list = d->m_map.find(url);
-    if ( list.count() == 0 )
-        return false;
-
-    for ( QList<KBookmark>::iterator it = list.begin();
-          it != list.end(); ++it )
-        (*it).updateAccessMetadata();
+    foreach ( KBookmark it, list ) {
+        it.updateAccessMetadata();
+    }
 
     return true;
 }
 
-void KBookmarkManager::updateFavicon( const QString &url, const QString &/*faviconurl*/ )
+void KBookmarkManager::updateFavicon( const QString &url, const QString &faviconurl )
 {
     d->m_map.update(this);
     QList<KBookmark> list = d->m_map.find(url);
-    for ( QList<KBookmark>::iterator it = list.begin();
-          it != list.end(); ++it )
+    foreach ( KBookmark it, list )
     {
-        // TODO - update favicon data based on faviconurl
-        //        but only when the previously used icon
-        //        isn't a manually set one.
+        KUrl iconurl(faviconurl);
+        it.setIcon(KMimeType::favIconForUrl(iconurl));
     }
 }
 
