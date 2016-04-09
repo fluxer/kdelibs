@@ -413,14 +413,11 @@ set(_kde_libraries
     kdefakes
     kdesu
     kdeui
-    kdeui
-    kdewebkit
     kdewebkit
     kdnssd
     kemoticons
     kexiv2
     kfile
-    khtml
     kidletime
     kio
     knotifyconfig
