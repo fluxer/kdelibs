@@ -33,35 +33,32 @@ namespace Plasma {
 ////////////////////
 
 FindMatchesJob::FindMatchesJob(Plasma::AbstractRunner *runner,
-                               Plasma::RunnerContext *context, QObject *parent)
-    : QThread(parent),
+                               Plasma::RunnerContext *context)
+    : QRunnable(),
       m_context(*context, 0),
-      m_runner(runner)
+      m_runner(runner),
+      m_finished(false)
 {
-}
-
-FindMatchesJob::~FindMatchesJob()
-{
-    wait(3000);
 }
 
 void FindMatchesJob::run()
 {
+    m_finished = false;
     // kDebug() << "Running match for " << m_runner->objectName();
     if (m_context.isValid()) {
         m_runner->performMatch(m_context);
-        emit done(this);
     }
-}
-
-int FindMatchesJob::priority() const
-{
-    return m_runner->priority();
+    m_finished = true;
 }
 
 Plasma::AbstractRunner* FindMatchesJob::runner() const
 {
     return m_runner;
+}
+
+bool FindMatchesJob::isFinished()
+{
+    return m_finished;
 }
 
 } // Plasma namespace

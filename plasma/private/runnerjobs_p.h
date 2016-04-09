@@ -23,7 +23,7 @@
 #include <QHash>
 #include <QMutex>
 #include <QSet>
-#include <QThread>
+#include <QRunnable>
 
 #include "abstractrunner.h"
 
@@ -34,19 +34,14 @@ namespace Plasma {
  * FindMatchesJob class
  * Class to run queries in different threads
  */
-class FindMatchesJob : public QThread
+class FindMatchesJob : public QRunnable
 {
-    Q_OBJECT
 public:
     FindMatchesJob(Plasma::AbstractRunner *runner,
-                   Plasma::RunnerContext *context, QObject *parent = 0);
-    ~FindMatchesJob();
+                   Plasma::RunnerContext *context);
 
-    int priority() const;
     Plasma::AbstractRunner* runner() const;
-
-signals:
-    void done(QThread *thread);
+    bool isFinished();
 
 protected:
     void run();
@@ -54,6 +49,7 @@ protected:
 private:
     Plasma::RunnerContext m_context;
     Plasma::AbstractRunner *m_runner;
+    bool m_finished;
 };
 
 }

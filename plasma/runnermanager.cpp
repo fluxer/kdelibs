@@ -26,6 +26,7 @@
 #include <QMutex>
 #include <QTimer>
 #include <QCoreApplication>
+#include <QThreadPool>
 
 #include <kdebug.h>
 #include <kplugininfo.h>
@@ -51,8 +52,8 @@ public:
 
     RunnerManagerPrivate(RunnerManager *parent)
       : q(parent),
-        deferredRun(0),
         currentSingleRunner(0),
+        threadPool(0),
         prepped(false),
         allRunnersPrepped(false),
         singleRunnerPrepped(false),
@@ -60,6 +61,8 @@ public:
         singleMode(false),
         singleRunnerWasLoaded(false)
     {
+        threadPool = new QThreadPool();
+
         matchChangeTimer.setSingleShot(true);
 
         QObject::connect(&matchChangeTimer, SIGNAL(timeout()), q, SLOT(matchesChanged()));
@@ -70,6 +73,10 @@ public:
     {
         KConfigGroup config = configGroup();
         context.save(config);
+
+        kDebug() << "waiting for runner jobs";
+        threadPool->waitForDone();
+        delete threadPool;
     }
 
     void scheduleMatchesChanged()
@@ -86,9 +93,14 @@ public:
     {
         KConfigGroup config = configGroup();
 
-        // TODO: instead of that hard-limit use QThreadPool and QRunnable
+        int idealThreads = QThread::idealThreadCount();
+        if (idealThreads < 0) {
+            idealThreads = 4;
+        }
+        const int maxThreads = config.readEntry("maxThreads", idealThreads);
+        kDebug() << "limiting runner threads to" << maxThreads;
         //This entry allows to define a hard upper limit independent of the number of processors.
-        maxThreads = config.readEntry("maxThreads", 32);
+        threadPool->setMaxThreadCount(maxThreads);
 
         context.restore(config);
     }
@@ -199,31 +211,7 @@ public:
         }
 
         if (!deadRunners.isEmpty()) {
-                QSet<FindMatchesJob *> deadJobs;
-                foreach (FindMatchesJob *job, searchJobs) {
-                    if (deadRunners.contains(job->runner())) {
-                        QObject::disconnect(job, SIGNAL(done(QThread*)), q, SLOT(jobDone(QThread*)));
-                        searchJobs.remove(job);
-                        deadJobs.insert(job);
-                    }
-                }
-
-                foreach (FindMatchesJob *job, oldSearchJobs) {
-                    if (deadRunners.contains(job->runner())) {
-                        oldSearchJobs.remove(job);
-                        deadJobs.insert(job);
-                    }
-                }
-
-            if (deadJobs.isEmpty()) {
-                qDeleteAll(deadRunners);
-            } else {
-                // cleaner
-                foreach (FindMatchesJob *job, deadJobs) {
-                    job->quit();
-                }
-                deadJobs.clear();
-            }
+             qDeleteAll(deadRunners);
         }
 
         if (!singleRunnerWasLoaded) {
@@ -275,25 +263,8 @@ public:
         return runner;
     }
 
-    void jobDone(QThread *job)
+    void jobDone()
     {
-        FindMatchesJob *runJob = dynamic_cast<FindMatchesJob *>(job);
-
-        if (!runJob) {
-            return;
-        }
-
-        if (deferredRun.isEnabled() && runJob->runner() == deferredRun.runner()) {
-            //kDebug() << "job actually done, running now **************";
-            QueryMatch tmpRun = deferredRun;
-            deferredRun = QueryMatch(0);
-            tmpRun.run(context);
-        }
-
-        searchJobs.remove(runJob);
-        oldSearchJobs.remove(runJob);
-        runJob->deleteLater();
-
         if (searchJobs.isEmpty() && context.matches().isEmpty()) {
             // we finished our run, and there are no valid matches, and so no
             // signal will have been sent out. so we need to emit the signal
@@ -306,13 +277,13 @@ public:
 
     void checkTearDown()
     {
-        //kDebug() << prepped << teardownRequested << searchJobs.count() << oldSearchJobs.count();
+        //kDebug() << prepped << teardownRequested << searchJobs.count();
 
         if (!prepped || !teardownRequested) {
             return;
         }
 
-        if (searchJobs.isEmpty() && oldSearchJobs.isEmpty()) {
+        if (searchJobs.isEmpty()) {
             if (allRunnersPrepped) {
                 foreach (AbstractRunner *runner, runners) {
                     emit runner->teardown();
@@ -352,26 +323,20 @@ public:
     void startJob(AbstractRunner *runner)
     {
         if ((runner->ignoredTypes() & context.type()) == 0) {
-            if (searchJobs.count() >= maxThreads) {
-                // kWarning() << "not starting a runner due to hard limit of" << maxThreads;
-                return;
-            }
-            FindMatchesJob *job = new FindMatchesJob(runner, &context, q);
-            QObject::connect(job, SIGNAL(done(QThread*)), q, SLOT(jobDone(QThread*)));
-            job->start();
+            FindMatchesJob *job = new FindMatchesJob(runner, &context);
             searchJobs.insert(job);
+            threadPool->start(job);
         }
     }
 
     RunnerManager *q;
-    QueryMatch deferredRun;
     RunnerContext context;
     QTimer matchChangeTimer;
     QHash<QString, AbstractRunner*> runners;
     QHash<QString, QString> advertiseSingleRunnerIds;
     AbstractRunner* currentSingleRunner;
     QSet<FindMatchesJob*> searchJobs;
-    QSet<FindMatchesJob*> oldSearchJobs;
+    QThreadPool *threadPool;
     KConfigGroup conf;
     QString singleModeRunnerId;
     bool loadAll : 1;
@@ -381,7 +346,6 @@ public:
     bool teardownRequested : 1;
     bool singleMode : 1;
     bool singleRunnerWasLoaded : 1;
-    int maxThreads;
 };
 
 /*****************************************************
@@ -407,18 +371,6 @@ RunnerManager::RunnerManager(KConfigGroup &c, QObject *parent)
 
 RunnerManager::~RunnerManager()
 {
-    if (!qApp->closingDown() && (!d->searchJobs.isEmpty() || !d->oldSearchJobs.isEmpty())) {
-        // cleaner
-        foreach (FindMatchesJob *job, d->searchJobs) {
-            job->quit();
-        }
-        d->searchJobs.clear();
-        foreach (FindMatchesJob *job, d->oldSearchJobs) {
-            job->quit();
-        }
-        d->searchJobs.clear();
-    }
-
     delete d;
 }
 
@@ -559,22 +511,6 @@ void RunnerManager::run(const QueryMatch &match)
     if (!match.isEnabled()) {
         return;
     }
-
-    //TODO: this function is not const as it may be used for learning
-    AbstractRunner *runner = match.runner();
-
-    foreach (FindMatchesJob *job, d->searchJobs) {
-        if (job->runner() == runner && !job->isFinished()) {
-            kDebug() << "deferred run";
-            d->deferredRun = match;
-            return;
-        }
-    }
-
-    if (d->deferredRun.isValid()) {
-        d->deferredRun = QueryMatch(0);
-    }
-
     d->context.run(match);
 }
 
@@ -766,19 +702,8 @@ QString RunnerManager::query() const
 
 void RunnerManager::reset()
 {
-    Q_FOREACH(FindMatchesJob *job, d->searchJobs) {
-        job->terminate();
-    }
-    d->oldSearchJobs += d->searchJobs;
-
+    d->threadPool->waitForDone(3000);
     d->searchJobs.clear();
-
-    if (d->deferredRun.isEnabled()) {
-        //kDebug() << "job actually done, running now **************";
-        QueryMatch tmpRun = d->deferredRun;
-        d->deferredRun = QueryMatch(0);
-        tmpRun.run(d->context);
-    }
 
     d->context.reset();
 }

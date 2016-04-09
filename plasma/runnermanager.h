@@ -288,7 +288,7 @@ class PLASMA_EXPORT RunnerManager : public QObject
     private:
         Q_PRIVATE_SLOT(d, void scheduleMatchesChanged())
         Q_PRIVATE_SLOT(d, void matchesChanged())
-        Q_PRIVATE_SLOT(d, void jobDone(QThread*))
+        Q_PRIVATE_SLOT(d, void jobDone())
         Q_PRIVATE_SLOT(d, void runnerMatchingSuspended(bool))
 
         RunnerManagerPrivate * const d;
