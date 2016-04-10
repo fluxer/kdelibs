@@ -358,6 +358,8 @@ int PtyProcess::exec(const QByteArray &command, const QList<QByteArray> &args)
     argp[i] = NULL;
 
     execv(path, const_cast<char **>(argp));
+    free(argp);
+
     kError(kdesuDebugArea()) << "execv(" << path << "):" << perror;
     _exit(1);
     return -1; // Shut up compiler. Never reached.
