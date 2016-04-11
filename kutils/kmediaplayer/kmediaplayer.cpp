@@ -255,7 +255,6 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     }
 
 #define COMMMON_EVENT_HANDLER \
-    // kDebug() << i18n("processing events"); \
     while (m_handle) { \
         mpv_event *event = mpv_wait_event(m_handle, 0); \
         if (event->event_id == MPV_EVENT_NONE) { \
