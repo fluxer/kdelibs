@@ -265,13 +265,13 @@ public:
 
     void checkTearDown()
     {
-        //kDebug() << prepped << teardownRequested << threadPool.activeThreadCount();
+        //kDebug() << prepped << teardownRequested << threadPool->activeThreadCount();
 
         if (!prepped || !teardownRequested) {
             return;
         }
 
-        if (threadPool.activeThreadCount() <= 0) {
+        if (threadPool->activeThreadCount() <= 0) {
             if (allRunnersPrepped) {
                 foreach (AbstractRunner *runner, runners) {
                     emit runner->teardown();
