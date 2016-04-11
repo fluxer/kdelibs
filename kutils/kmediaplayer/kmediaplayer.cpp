@@ -301,6 +301,14 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
                         value = *(bool *)prop->data; \
                     } \
                     emit seekable(value); \
+                } else if (strcmp(prop->name, "partially-seekable") == 0) { \
+                    if (property("seekable").toBool() == false) { \
+                        bool value = false; \
+                        if (prop->format == MPV_FORMAT_FLAG) { \
+                            value = *(bool *)prop->data; \
+                        } \
+                        emit seekable(value); \
+                    } \
                 } else if (strcmp(prop->name, "paused-for-cache") == 0) { \
                     bool value = false; \
                     if (prop->format == MPV_FORMAT_FLAG) { \
