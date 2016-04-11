@@ -1428,14 +1428,13 @@ QString KDateTime::toString(const QString &format) const
     KCalendarSystemQDate calendar(locale);
     QString result;
     QString s;
-    int num, numLength, zone;
     bool escape = false;
     ushort flag = 0;
     for (int i = 0, end = format.length();  i < end;  ++i)
     {
-        zone = TZNone;
-        num = NO_NUMBER;
-        numLength = 0;    // no leading zeroes
+        int zone = TZNone;
+        int num = NO_NUMBER;
+        int numLength = 0;    // no leading zeroes
         ushort ch = format[i].unicode();
         if (!escape)
         {

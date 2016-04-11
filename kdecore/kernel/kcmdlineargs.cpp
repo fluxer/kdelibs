@@ -657,13 +657,10 @@ int
 KCmdLineArgsStatic::findOption(const KCmdLineOptions &options, QByteArray &opt,
                                QByteArray &opt_name, QString &def, bool &enabled)
 {
-   int result;
-   bool inverse;
-
    for (int i = 0; i < options.d->names.size(); i++)
    {
-      result = 0;
-      inverse = false;
+      int result = 0;
+      bool inverse = false;
       opt_name = options.d->names[i];
       if (opt_name.startsWith(':') || opt_name.isEmpty())
       {

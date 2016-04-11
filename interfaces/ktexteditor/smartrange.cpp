@@ -109,12 +109,9 @@ static int lowerBound(const QList<SmartRange*>& ranges, const Cursor& pos)
     int begin = 0;
     int n = ranges.count();
 
-    int half;
-    int middle;
-
     while (n > 0) {
-        half = n >> 1;
-        middle = begin + half;
+        int half = n >> 1;
+        int middle = begin + half;
         if(ranges[middle]->end() > pos) {
           n = half;
         }else{
@@ -132,12 +129,9 @@ static int lowerBoundRange(const QList<SmartRange*>& ranges, const Cursor& pos, 
     int begin = 0;
     int n = ranges.count();
 
-    int half;
-    int middle;
-
     while (n > 0) {
-        half = n >> 1;
-        middle = begin + half;
+        int half = n >> 1;
+        int middle = begin + half;
         if(ranges[begin] == range)
           return begin;
         if(ranges[middle] == range)

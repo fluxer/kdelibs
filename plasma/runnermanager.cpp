@@ -265,13 +265,13 @@ public:
 
     void checkTearDown()
     {
-        //kDebug() << prepped << teardownRequested << searchJobs.count();
+        //kDebug() << prepped << teardownRequested << threadPool.activeThreadCount();
 
         if (!prepped || !teardownRequested) {
             return;
         }
 
-        if (searchJobs.isEmpty()) {
+        if (threadPool.activeThreadCount() <= 0) {
             if (allRunnersPrepped) {
                 foreach (AbstractRunner *runner, runners) {
                     emit runner->teardown();
@@ -312,7 +312,6 @@ public:
     {
         if ((runner->ignoredTypes() & context.type()) == 0) {
             FindMatchesJob *job = new FindMatchesJob(runner, &context);
-            searchJobs.insert(job);
             threadPool->start(job);
         }
     }
@@ -323,7 +322,6 @@ public:
     QHash<QString, AbstractRunner*> runners;
     QHash<QString, QString> advertiseSingleRunnerIds;
     AbstractRunner* currentSingleRunner;
-    QSet<FindMatchesJob*> searchJobs;
     QThreadPool *threadPool;
     KConfigGroup conf;
     QString singleModeRunnerId;
@@ -691,7 +689,6 @@ QString RunnerManager::query() const
 void RunnerManager::reset()
 {
     d->threadPool->waitForDone(3000);
-    d->searchJobs.clear();
 
     d->context.reset();
 }

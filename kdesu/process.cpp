@@ -240,11 +240,10 @@ QByteArray PtyProcess::readLine(bool block)
 {
     d->m_Inbuf = readAll(block);
 
-    int pos;
     QByteArray ret;
     if (!d->m_Inbuf.isEmpty())
     {
-        pos = d->m_Inbuf.indexOf('\n');
+        int pos = d->m_Inbuf.indexOf('\n');
         if (pos == -1)
         {
             // NOTE: this means we return something even if there in no full line!
@@ -291,7 +290,6 @@ void PtyProcess::setExitString(const QByteArray &exit)
 int PtyProcess::exec(const QByteArray &command, const QList<QByteArray> &args)
 {
     kDebug(kdesuDebugArea()) << "Running" << command;
-    int i;
 
     if (init() < 0)
         return -1;
@@ -313,7 +311,7 @@ int PtyProcess::exec(const QByteArray &command, const QList<QByteArray> &args)
     if (setupTTY() < 0)
         _exit(1);
 
-    for (i = 0; i < d->env.count(); ++i)
+    for (int i = 0; i < d->env.count(); ++i)
     {
         putenv(const_cast<char *>(d->env.at(i).constData()));
     }
@@ -335,13 +333,11 @@ int PtyProcess::exec(const QByteArray &command, const QList<QByteArray> &args)
     // From now on, terminal output goes through the tty.
 
     QByteArray path;
-    if (command.contains('/'))
+    if (command.contains('/')) {
         path = command;
-    else
-    {
+    } else {
         QString file = KStandardDirs::findExe(command);
-        if (file.isEmpty())
-        {
+        if (file.isEmpty()) {
             kError(kdesuDebugArea()) << command << "not found.";
             _exit(1);
         }
@@ -349,12 +345,12 @@ int PtyProcess::exec(const QByteArray &command, const QList<QByteArray> &args)
     }
 
     const char **argp = (const char **)malloc((args.count()+2)*sizeof(char *));
-
-    i = 0;
-    argp[i++] = path;
-    for (QList<QByteArray>::ConstIterator it=args.begin(); it!=args.end(); ++it, ++i)
-        argp[i] = *it;
-
+    int i = 1;
+    argp[i] = path;
+    foreach (QByteArray it, args) {
+        argp[i] = it;
+        i++;
+    }
     argp[i] = NULL;
 
     execv(path, const_cast<char **>(argp));

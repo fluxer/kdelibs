@@ -201,9 +201,8 @@ int main()
 #ifndef QWS
     char xauthority[200];
 #endif
-    int i/*, res, sycoca*/, prio;
+    int i/*, res, sycoca*/;
     pid_t pid;
-    FILE *fout;
     struct passwd *pw;
     const char* kdesu_lc_all;
 
@@ -273,24 +272,23 @@ int main()
     unsetenv("DBUS_SESSION_BUS_ADDRESS");
 
     /* Set scheduling/priority */
-
-    prio = atoi(params[P_PRIORITY].value);
-    if (!strcmp(params[P_SCHEDULER].value, "realtime")) 
-    {
-#ifdef POSIX1B_SCHEDULING
-	struct sched_param sched;
-	int min = sched_get_priority_min(SCHED_FIFO);
-	int max = sched_get_priority_max(SCHED_FIFO);
-	sched.sched_priority = min + (int) (((double) prio) * (max - min) / 100 + 0.5);
-	sched_setscheduler(0, SCHED_FIFO, &sched);
-#else
-	printf("kdesu_stub: realtime scheduling not supported\n");
+#if defined(POSIX1B_SCHEDULING) || defined(HAVE_SETPRIORITY)
+    double prio = (double) atoi(params[P_PRIORITY].value);
 #endif
-    } else 
-    {
+    if (!strcmp(params[P_SCHEDULER].value, "realtime")) {
+#ifdef POSIX1B_SCHEDULING
+        struct sched_param sched;
+        int min = sched_get_priority_min(SCHED_FIFO);
+        int max = sched_get_priority_max(SCHED_FIFO);
+        sched.sched_priority = min + (int) (prio * (max - min) / 100 + 0.5);
+        sched_setscheduler(0, SCHED_FIFO, &sched);
+#else
+        printf("kdesu_stub: realtime scheduling not supported\n");
+#endif
 #ifdef HAVE_SETPRIORITY
-	int val = 20 - (int) (((double) prio) * 40 / 100 + 0.5);
-	setpriority(PRIO_PROCESS, getpid(), val);
+    } else {
+        int val = 20 - (int) (prio * 40 / 100 + 0.5);
+        setpriority(PRIO_PROCESS, getpid(), val);
 #endif 
     }
 
@@ -348,7 +346,7 @@ int main()
                 close(fd2);
            xsetenv("XAUTHORITY", xauthority);
 
-	   fout = popen("xauth >/dev/null 2>&1","w");
+	   FILE *fout = popen("xauth >/dev/null 2>&1","w");
            if (fout == NULL)
 	   {
 		perror("kdesu_stub: popen(xauth)");
@@ -381,10 +379,11 @@ int main()
     if (pid) 
     {
 	/* Parent: wait for child, delete tempfiles and return. */
-	int ret, state, xit = 1;
+	int xit = 1;
 	while (1) 
 	{
-	    ret = waitpid(pid, &state, 0);
+	    int state;
+	    int ret = waitpid(pid, &state, 0);
 	    if (ret == -1) 
 	    {
 		if (errno == EINTR)

@@ -135,10 +135,6 @@ QString Loader::languageNameForCode(const QString &langCode) const
         localizedCountry;    // localized country
     QByteArray variantEnglish; // dictionary variant in English
 
-    int underscorePos,     // position of "_" char
-        minusPos,          // position of "-" char
-        variantCount = 0;  // used to iterate over variantList
-
     struct variantListType
     {
         const char* variantShortName;
@@ -170,8 +166,8 @@ QString Loader::languageNameForCode(const QString &langCode) const
         { 0, 0 }
     };
 
-    minusPos = currentDictionary.indexOf(QLatin1Char('-'));
-    underscorePos = currentDictionary.indexOf(QLatin1Char('_'));
+    const int minusPos = currentDictionary.indexOf(QLatin1Char('-'));
+    const int underscorePos = currentDictionary.indexOf(QLatin1Char('_'));
     if (underscorePos != -1 && underscorePos <= 3) {
         cISOName = currentDictionary.mid(underscorePos + 1, 2);
         lISOName = currentDictionary.left(underscorePos);
@@ -197,6 +193,7 @@ QString Loader::languageNameForCode(const QString &langCode) const
             localizedCountry = cISOName;
     }
     if (!variantName.isEmpty()) {
+        int variantCount = 0;
         while (variantList[variantCount].variantShortName != 0)
             if (QLatin1String(variantList[variantCount].variantShortName) == variantName)
                 break;

@@ -636,7 +636,7 @@ void KCoreConfigSkeleton::ItemULongLong::setMaxValue(quint64 v)
 KCoreConfigSkeleton::ItemDouble::ItemDouble( const QString &_group, const QString &_key,
                                     double &reference, double defaultValue )
   : KConfigSkeletonGenericItem<double>( _group, _key, reference, defaultValue )
-  ,mHasMin(false), mHasMax(false)
+  , mHasMin(false), mHasMax(false)
 {
 }
 

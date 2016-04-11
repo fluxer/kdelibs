@@ -66,7 +66,6 @@
 int main (int argc, char *argv[])
 {
   struct stat   st;
-  struct group* p;
   gid_t         gid;
   uid_t         uid;
   mode_t        mod;
@@ -156,18 +155,21 @@ int main (int argc, char *argv[])
     if (memcmp(pty,"/dev/pty",8))
     {
       fprintf(stderr,"%s: determined a strange pty name '%s'.\n",argv[0],pty);
+      free(pty);
       return 1; /* FAIL */
     }
 
     tty = malloc(strlen(pty) + 1);
     strcpy(tty,"/dev/tty");
     strcat(tty,pty+8);
+    free(pty);
   }
 
   /* Check that the returned slave pseudo terminal is a character device.  */
   if (stat(tty, &st) < 0 || !S_ISCHR(st.st_mode))
   {
     fprintf(stderr,"%s: found '%s' not to be a character device.\n",argv[0],tty);
+    free(tty);
     return 1; /* FAIL */
   }
 
@@ -176,7 +178,7 @@ int main (int argc, char *argv[])
   if (!strcmp(argv[1],"--grant"))
   {
     uid = getuid();
-    p = getgrnam(TTY_GROUP);
+    struct group* p = getgrnam(TTY_GROUP);
     if (!p)
       p = getgrnam("wheel");
     gid = p ? p->gr_gid : getgid ();
@@ -194,14 +196,17 @@ int main (int argc, char *argv[])
   if (chown(tty, uid, gid) < 0)
   {
     fprintf(stderr,"%s: cannot chown %s: %s\n",argv[0],tty,strerror(errno));
+    free(tty);
     return 1; /* FAIL */
   }
 
   if (chmod(tty, mod) < 0)
   {
     fprintf(stderr,"%s: cannot chmod %s: %s\n",argv[0],tty,strerror(errno));
+    free(tty);
     return 1; /* FAIL */
   }
 
+  free(tty);
   return 0; /* OK */
 }

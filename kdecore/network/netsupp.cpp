@@ -134,7 +134,7 @@ make_unix(const char *name, const char *serv)
   struct sockaddr_un *_sun;
   int len;
 
-  p = (addrinfo*)malloc(sizeof(*p));
+  p = static_cast<addrinfo*>(malloc(sizeof(*p)));
   if (p == NULL)
     return NULL;
   memset(p, 0, sizeof(*p));
@@ -149,7 +149,7 @@ make_unix(const char *name, const char *serv)
   if (*buf != '/')
     len += 5;			// strlen("/tmp/");
 
-  _sun = (sockaddr_un*)malloc(len);
+  _sun = static_cast<sockaddr_un*>(malloc(len));
   if (_sun == NULL)
     {
       // Oops
@@ -240,7 +240,7 @@ int kde_getaddrinfo(const char *name, const char *service,
 #endif
 
   // allocate memory for results
-  res = (kde_addrinfo*)malloc(sizeof(*res));
+  res = static_cast<kde_addrinfo*>(malloc(sizeof(*res)));
   if (res == NULL)
     return EAI_MEMORY;
   res->data = NULL;
@@ -425,7 +425,7 @@ static int inet_lookup(const char *name, int portnum, int protonum,
 	}
     }
 
-  q = (addrinfo*)malloc(sizeof(*q));
+  q = static_cast<addrinfo*>(malloc(sizeof(*q)));
   if (q == NULL)
     {
       freeaddrinfo(p);
@@ -502,7 +502,7 @@ static int inet_lookup(const char *name, int portnum, int protonum,
   // cycle through the rest of the hosts;
   for (psa = (sockaddr**)h->h_addr_list + 1; *psa; psa++)
     {
-      q = (addrinfo*)malloc(sizeof(*q));
+      q = static_cast<addrinfo*>(malloc(sizeof(*q)));
       if (q == NULL)
 	{
 	  freeaddrinfo(p);
@@ -510,7 +510,7 @@ static int inet_lookup(const char *name, int portnum, int protonum,
 	}
       memcpy(q, p, sizeof(*q));
 
-      q->ai_addr = (sockaddr*)malloc(h->h_length);
+      q->ai_addr = static_cast<sockaddr*>(malloc(h->h_length));
       if (q->ai_addr == NULL)
 	{
 	  freeaddrinfo(p);
@@ -644,14 +644,14 @@ static int make_inet(const char *name, int portnum, int protonum, struct addrinf
 		  break;	// not a numeric host, do lookup
 		}
 
-	      sin = (sockaddr_in*)malloc(sizeof(*sin));
+	      sin = static_cast<sockaddr_in*>(malloc(sizeof(*sin)));
 	      if (sin == NULL)
 		{
 		  freeaddrinfo(p);
 		  return EAI_MEMORY;
 		}
 
-	      q = (addrinfo*)malloc(sizeof(*q));
+	      q = static_cast<addrinfo*>(malloc(sizeof(*q)));
 	      if (q == NULL)
 		{
 		  freeaddrinfo(p);
@@ -702,7 +702,7 @@ static int make_inet(const char *name, int portnum, int protonum, struct addrinf
 	    }
 
 	  // Do IPv4 first
-	  q = (addrinfo*)malloc(sizeof(*q));
+	  q = static_cast<addrinfo*>(malloc(sizeof(*q)));
 	  if (q == NULL)
 	    {
 	      free(sin);
@@ -930,7 +930,7 @@ static void findport(unsigned short port, char *serv, size_t servlen, int flags)
   if ((flags & NI_NUMERICSERV) == 0)
     {
       struct servent *sent;
-      sent = getservbyport(ntohs(port), flags & NI_DGRAM ? "udp" : "tcp");
+      sent = getservbyport(ntohs(port), (flags & NI_DGRAM) ? "udp" : "tcp");
       if (sent != NULL && servlen > strlen(sent->s_name))
 	{
 	  strcpy(serv, sent->s_name);

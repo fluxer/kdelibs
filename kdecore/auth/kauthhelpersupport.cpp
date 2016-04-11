@@ -46,25 +46,17 @@ void helperDebugHandler(QtMsgType type, const char *msg);
 
 static bool remote_dbg = false;
 
-#ifdef Q_OS_UNIX
-static void fixEnvironment()
-{
-    //try correct HOME
-    const char *home = "HOME";
-    if(getenv(home)==NULL)
-    {
-        struct passwd *pw = getpwuid(getuid());
-        int overwrite = 0;
-
-        if (pw!=NULL) setenv(home, pw->pw_dir, overwrite);
-    }
-}
-#endif
-
 int HelperSupport::helperMain(int argc, char **argv, const char *id, QObject *responder)
 {
 #ifdef Q_OS_UNIX
-    fixEnvironment();
+    //try correct HOME
+    const char *home = "HOME";
+    if(getenv(home)==NULL) {
+        struct passwd *pw = getpwuid(getuid());
+        if (pw!=NULL) {
+            setenv(home, pw->pw_dir, 0 /* overwrite */);
+        }
+    }
 #endif
 
     openlog(id, 0, LOG_USER);

@@ -30,7 +30,9 @@ using namespace KTextEditor;
 
 
 DocumentAdaptor::DocumentAdaptor(Document *document):
-  QDBusAbstractAdaptor(document),m_document(document) {
+  QDBusAbstractAdaptor(document),
+  m_document(document)
+{
 }
 
 DocumentAdaptor::~DocumentAdaptor() {}
