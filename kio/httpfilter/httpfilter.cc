@@ -85,7 +85,8 @@ HTTPFilterMD5::HTTPFilterMD5()
 QString
 HTTPFilterMD5::md5()
 {
-    return QString::fromLatin1(context->result().toHex());
+    // it's either base64 or quoted md5
+    return QString::fromLatin1(context->result().toBase64());
 }
 
 void
