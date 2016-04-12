@@ -172,28 +172,29 @@ void KRunUnitTest::testProcessDesktopExecNoFile_data()
         QVERIFY(!kmailservice.isEmpty());
     }
 
+    // NOTE: using QString() for concats to avoid QStringBuilder metatype, which is not valid
     QTest::newRow("%U l0") << "kdeinit4 %U" << l0 << false << kdeinit;
-    QTest::newRow("%U l1") << "kdeinit4 %U" << l1 << false << kdeinit + " /tmp";
-    QTest::newRow("%U l2") << "kdeinit4 %U" << l2 << false << kdeinit + " http://localhost/foo";
-    QTest::newRow("%U l3") << "kdeinit4 %U" << l3 << false << kdeinit + " /local/file http://remotehost.org/bar";
+    QTest::newRow("%U l1") << "kdeinit4 %U" << l1 << false << QString(kdeinit + " /tmp");
+    QTest::newRow("%U l2") << "kdeinit4 %U" << l2 << false << QString(kdeinit + " http://localhost/foo");
+    QTest::newRow("%U l3") << "kdeinit4 %U" << l3 << false << QString(kdeinit + " /local/file http://remotehost.org/bar");
 
     //QTest::newRow("%u l0") << "kdeinit4 %u" << l0 << false << kdeinit; // gives runtime warning
-    QTest::newRow("%u l1") << "kdeinit4 %u" << l1 << false << kdeinit + " /tmp";
-    QTest::newRow("%u l2") << "kdeinit4 %u" << l2 << false << kdeinit + " http://localhost/foo";
+    QTest::newRow("%u l1") << "kdeinit4 %u" << l1 << false << QString(kdeinit + " /tmp");
+    QTest::newRow("%u l2") << "kdeinit4 %u" << l2 << false << QString(kdeinit + " http://localhost/foo");
     //QTest::newRow("%u l3") << "kdeinit4 %u" << l3 << false << kdeinit; // gives runtime warning
 
     QTest::newRow("%F l0") << "kdeinit4 %F" << l0 << false << kdeinit;
-    QTest::newRow("%F l1") << "kdeinit4 %F" << l1 << false << kdeinit + " /tmp";
-    QTest::newRow("%F l2") << "kdeinit4 %F" << l2 << false << kioexec + " 'kdeinit4 %F' http://localhost/foo";
-    QTest::newRow("%F l3") << "kdeinit4 %F" << l3 << false << kioexec + " 'kdeinit4 %F' file:///local/file http://remotehost.org/bar";
+    QTest::newRow("%F l1") << "kdeinit4 %F" << l1 << false << QString(kdeinit + " /tmp");
+    QTest::newRow("%F l2") << "kdeinit4 %F" << l2 << false << QString(kioexec + " 'kdeinit4 %F' http://localhost/foo");
+    QTest::newRow("%F l3") << "kdeinit4 %F" << l3 << false << QString(kioexec + " 'kdeinit4 %F' file:///local/file http://remotehost.org/bar");
 
-    QTest::newRow("%F l1 tempfile") << "kdeinit4 %F" << l1 << true << kioexec + " --tempfiles 'kdeinit4 %F' file:///tmp";
+    QTest::newRow("%F l1 tempfile") << "kdeinit4 %F" << l1 << true << QString(kioexec + " --tempfiles 'kdeinit4 %F' file:///tmp");
 
     QTest::newRow("sh -c kdeinit4 %F") << "sh -c \"kdeinit4 \"'\\\"'\"%F\"'\\\"'"
-                                   << l1 << false << m_sh + " -c 'kdeinit4 \\\"/tmp\\\"'";
+                                   << l1 << false << QString(m_sh + " -c 'kdeinit4 \\\"/tmp\\\"'");
 
-    QTest::newRow("kmailservice %u l1") << "kmailservice %u" << l1 << false << kmailservice + " /tmp";
-    QTest::newRow("kmailservice %u l4") << "kmailservice %u" << l4 << false << kmailservice + " http://login:password@www.kde.org";
+    QTest::newRow("kmailservice %u l1") << "kmailservice %u" << l1 << false << QString(kmailservice + " /tmp");
+    QTest::newRow("kmailservice %u l4") << "kmailservice %u" << l4 << false << QString(kmailservice + " http://login:password@www.kde.org");
 }
 
 void KRunUnitTest::testProcessDesktopExecNoFile()

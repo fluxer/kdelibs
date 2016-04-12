@@ -19,7 +19,6 @@
 #ifndef QTEST_KDE_H
 #define QTEST_KDE_H
 
-#include <QtTest/QtTest>
 #include <stdlib.h>
 #include <assert.h>
 #include <kaboutdata.h>
@@ -30,6 +29,7 @@
 #include <QtGui/QApplication>
 #include <QtCore/QEventLoop>
 #include <QtTest/QSignalSpy>
+#include <QtTest/QtTest>
 #include <QTimer>
 #include <QtCore/qfile.h>
 #include <QtCore/qdir.h>

@@ -68,6 +68,7 @@ void KGlobalShortcutTest::setupTest(QString id)
 
     // Ensure that the previous test did cleanup correctly
     KGlobalAccel *kga = KGlobalAccel::self();
+    Q_UNUSED(kga);
 
     m_actionA = new KAction("Text For Action A", this);
     m_actionA->setObjectName("Action A:" + id);
@@ -235,6 +236,7 @@ void KGlobalShortcutTest::testListActions()
 
     // As in kdebase/workspace/kcontrol/keys/globalshortcuts.cpp
     KGlobalAccel *kga = KGlobalAccel::self();
+    Q_UNUSED(kga);
 
 }
 
@@ -366,6 +368,7 @@ void KGlobalShortcutTest::testForgetGlobalShortcut()
     sleep(1);
 
     KGlobalAccel *kga = KGlobalAccel::self();
+    Q_UNUSED(kga);
 }
 
 
