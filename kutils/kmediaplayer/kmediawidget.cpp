@@ -233,8 +233,7 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
 
 void KMediaWidget::_updateControls(bool visible)
 {
-    if (visible != m_visible) {
-        m_visible = visible;
+    if (visible != d->w_frame->isVisible()) {
         d->w_frame->setVisible(visible);
         emit controlsHidden(visible);
     }
