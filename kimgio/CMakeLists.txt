@@ -2,15 +2,15 @@ project(kimgio)
 
 macro_optional_find_package(Jasper)
 set_package_properties(Jasper PROPERTIES
-    DESCRIPTION "Support for JPEG-2000 images"
     URL "http://www.ece.uvic.ca/~mdadams/jasper"
+    PURPOSE "Support for JPEG-2000 images"
     TYPE OPTIONAL
 )
 
 macro_optional_find_package(OpenEXR)
 set_package_properties(OpenEXR PROPERTIES
-    DESCRIPTION "Support for OpenEXR images"
     URL "http://www.openexr.com"
+    PURPOSE "Support for OpenEXR images"
     TYPE OPTIONAL
 )
 
@@ -22,8 +22,6 @@ set_package_properties(WebP PROPERTIES
 )
 
 include_directories(${KDE4_KDEUI_INCLUDES})
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 ##################################
 
@@ -52,6 +50,7 @@ endif(JASPER_FOUND)
 if(OPENEXR_FOUND)
     include_directories(${CMAKE_SOURCE_DIR}/kio ${OPENEXR_INCLUDE_DIR})
     add_definitions(${OPENEXR_DEFINITIONS})
+    set_source_files_properties(exr.cpp PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}")
     set(kimg_exr_LIB_SRCS exr.cpp)
     kde4_add_plugin(kimg_exr ${kimg_exr_LIB_SRCS})
     target_link_libraries(kimg_exr
