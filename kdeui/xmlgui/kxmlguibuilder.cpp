@@ -35,6 +35,7 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
+#include <kicon.h>
 #include <QtXml/qdom.h>
 #include <QtGui/QMenuBar>
 

@@ -39,7 +39,6 @@
 
 #include <kdebug.h>
 
-#include "kguiitem.h"
 #include "kicon.h"
 
 //---------------------------------------------------------------------

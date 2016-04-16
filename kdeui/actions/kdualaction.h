@@ -22,6 +22,7 @@
 
 #include <kdeui_export.h>
 #include <kaction.h>
+#include <kguiitem.h>
 
 class KDualActionPrivate;
 

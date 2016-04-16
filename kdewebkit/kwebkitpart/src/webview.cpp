@@ -39,6 +39,7 @@
 #include <kio/accessmanager.h>
 #include <kstringhandler.h>
 #include <kdebug.h>
+#include <kicon.h>
 
 #include <QLabel>
 #include <QNetworkRequest>

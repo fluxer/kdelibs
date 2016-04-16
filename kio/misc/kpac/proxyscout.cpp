@@ -129,7 +129,7 @@ namespace KPAC
         KUrl url(checkUrl);
 
         if (m_suspendTime) {
-            if ( std::time( 0 ) - m_suspendTime < 300 ) {
+            if ( (std::time( 0 ) - m_suspendTime) < 300 ) {
                 return QLatin1String("DIRECT");
             }
             m_suspendTime = 0;

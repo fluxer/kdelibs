@@ -236,6 +236,7 @@ cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 cmake_policy(SET CMP0000 OLD)
 # CMP0003: add the link paths to the link command as with cmake 2.4
 cmake_policy(SET CMP0003 OLD)
+# TODO: get rid of this and adjust to new behaviour
 # CMP0005: keep escaping behaviour for definitions added via add_definitions()
 cmake_policy(SET CMP0005 OLD)
 
@@ -253,10 +254,7 @@ set(CMAKE_MODULE_PATH ${kde_cmake_module_dir} ${CMAKE_MODULE_PATH} )
 
 # if the minimum Qt requirement is changed, change all occurrence in the
 # following lines
-if(NOT QT_MIN_VERSION )
-    set(QT_MIN_VERSION "4.8.2")
-endif()
-if(${QT_MIN_VERSION} VERSION_LESS "4.8.2")
+if(NOT QT_MIN_VERSION OR QT_MIN_VERSION VERSION_LESS "4.8.2")
     set(QT_MIN_VERSION "4.8.2")
 endif()
 

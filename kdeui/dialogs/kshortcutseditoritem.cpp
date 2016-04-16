@@ -29,6 +29,8 @@
 #include <kdebug.h>
 #include <kstringhandler.h>
 #include <klocale.h>
+#include <kicon.h>
+#include <kglobal.h>
 
 #include <QtGui/qtreewidget.h>
 

@@ -24,6 +24,7 @@
 
 #include "kdeui_export.h"
 #include "kaction.h"
+#include "kglobal.h"
 #include "kglobalshortcutinfo.h"
 
 class QWidget;

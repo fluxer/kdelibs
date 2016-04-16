@@ -27,10 +27,10 @@ if(MUSICBRAINZ5_FOUND)
     )
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
-else(MUSICBRAINZ5_FOUND)
+else()
     set(HAVE_MUSICBRAINZ5 0)
     set(libmusicbrainz_SRCS)
-endif(MUSICBRAINZ5_FOUND)
+endif()
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config-musicbrainz.h.cmake
@@ -40,5 +40,5 @@ configure_file(
 if(ENABLE_TESTING)
     add_subdirectory(test)
 endif()
-add_subdirectory(kcmcddb )
+add_subdirectory(kcmcddb)
 add_subdirectory(libkcddb)
