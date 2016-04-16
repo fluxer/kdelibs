@@ -449,10 +449,6 @@ public:
         **/
         KeepAbove    = 1<<6,
         /**
-        @deprecated This is an obsolete name for KeepAbove.
-        **/
-        StaysOnTop   = KeepAbove,	// NOT STANDARD
-        /**
         indicates that a window should not be included on a pager.
         **/
         SkipPager    = 1<<7,

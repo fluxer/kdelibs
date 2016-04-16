@@ -145,9 +145,6 @@ static Atom net_wm_action_fullscreen  = 0;
 static Atom net_wm_action_change_desk = 0;
 static Atom net_wm_action_close       = 0;
 
-// KDE extension that's not in the specs - Replaced by state_above now?
-static Atom net_wm_state_stays_on_top = 0;
-
 // used to determine whether application window is managed or not
 static Atom xa_wm_state = 0;
 
@@ -254,105 +251,103 @@ static int wcmp(const void *a, const void *b) {
 }
 
 
-static const int netAtomCount = 86;
+static const int netAtomCount = 85;
 static void create_netwm_atoms(Display *d) {
     static const char * const names[netAtomCount] =
     {
-	"UTF8_STRING",
-	    "_NET_SUPPORTED",
-	    "_NET_SUPPORTING_WM_CHECK",
-	    "_NET_CLIENT_LIST",
-	    "_NET_CLIENT_LIST_STACKING",
-	    "_NET_NUMBER_OF_DESKTOPS",
-	    "_NET_DESKTOP_GEOMETRY",
-	    "_NET_DESKTOP_VIEWPORT",
-	    "_NET_CURRENT_DESKTOP",
-	    "_NET_DESKTOP_NAMES",
-	    "_NET_ACTIVE_WINDOW",
-	    "_NET_WORKAREA",
-	    "_NET_VIRTUAL_ROOTS",
-            "_NET_DESKTOP_LAYOUT",
-            "_NET_SHOWING_DESKTOP",
-	    "_NET_CLOSE_WINDOW",
-            "_NET_RESTACK_WINDOW",
+        "UTF8_STRING",
+        "_NET_SUPPORTED",
+        "_NET_SUPPORTING_WM_CHECK",
+        "_NET_CLIENT_LIST",
+        "_NET_CLIENT_LIST_STACKING",
+        "_NET_NUMBER_OF_DESKTOPS",
+        "_NET_DESKTOP_GEOMETRY",
+        "_NET_DESKTOP_VIEWPORT",
+        "_NET_CURRENT_DESKTOP",
+        "_NET_DESKTOP_NAMES",
+        "_NET_ACTIVE_WINDOW",
+        "_NET_WORKAREA",
+        "_NET_VIRTUAL_ROOTS",
+        "_NET_DESKTOP_LAYOUT",
+        "_NET_SHOWING_DESKTOP",
+        "_NET_CLOSE_WINDOW",
+        "_NET_RESTACK_WINDOW",
 
-	    "_NET_WM_MOVERESIZE",
-            "_NET_MOVERESIZE_WINDOW",
-	    "_NET_WM_NAME",
-	    "_NET_WM_VISIBLE_NAME",
-	    "_NET_WM_ICON_NAME",
-	    "_NET_WM_VISIBLE_ICON_NAME",
-	    "_NET_WM_DESKTOP",
-	    "_NET_WM_WINDOW_TYPE",
-	    "_NET_WM_STATE",
-	    "_NET_WM_STRUT",
-            "_NET_WM_STRUT_PARTIAL",
-	    "_NET_WM_ICON_GEOMETRY",
-	    "_NET_WM_ICON",
-	    "_NET_WM_PID",
-	    "_NET_WM_USER_TIME",
-	    "_NET_WM_HANDLED_ICONS",
-            "_NET_STARTUP_ID",
-            "_NET_WM_ALLOWED_ACTIONS",
-	    "_NET_WM_PING",
-            "_NET_WM_TAKE_ACTIVITY",
-            "WM_WINDOW_ROLE",
-            "_NET_FRAME_EXTENTS",
-            "_NET_WM_WINDOW_OPACITY",
-            "_NET_WM_FULLSCREEN_MONITORS",
+        "_NET_WM_MOVERESIZE",
+        "_NET_MOVERESIZE_WINDOW",
+        "_NET_WM_NAME",
+        "_NET_WM_VISIBLE_NAME",
+        "_NET_WM_ICON_NAME",
+        "_NET_WM_VISIBLE_ICON_NAME",
+        "_NET_WM_DESKTOP",
+        "_NET_WM_WINDOW_TYPE",
+        "_NET_WM_STATE",
+        "_NET_WM_STRUT",
+        "_NET_WM_STRUT_PARTIAL",
+        "_NET_WM_ICON_GEOMETRY",
+        "_NET_WM_ICON",
+        "_NET_WM_PID",
+        "_NET_WM_USER_TIME",
+        "_NET_WM_HANDLED_ICONS",
+        "_NET_STARTUP_ID",
+        "_NET_WM_ALLOWED_ACTIONS",
+        "_NET_WM_PING",
+        "_NET_WM_TAKE_ACTIVITY",
+        "WM_WINDOW_ROLE",
+        "_NET_FRAME_EXTENTS",
+        "_NET_WM_WINDOW_OPACITY",
+        "_NET_WM_FULLSCREEN_MONITORS",
 
-	    "_NET_WM_WINDOW_TYPE_NORMAL",
-	    "_NET_WM_WINDOW_TYPE_DESKTOP",
-	    "_NET_WM_WINDOW_TYPE_DOCK",
-	    "_NET_WM_WINDOW_TYPE_TOOLBAR",
-	    "_NET_WM_WINDOW_TYPE_MENU",
-	    "_NET_WM_WINDOW_TYPE_DIALOG",
-	    "_NET_WM_WINDOW_TYPE_UTILITY",
-	    "_NET_WM_WINDOW_TYPE_SPLASH",
-	    "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU",
-	    "_NET_WM_WINDOW_TYPE_POPUP_MENU",
-	    "_NET_WM_WINDOW_TYPE_TOOLTIP",
-	    "_NET_WM_WINDOW_TYPE_NOTIFICATION",
-	    "_NET_WM_WINDOW_TYPE_COMBOBOX",
-	    "_NET_WM_WINDOW_TYPE_DND",
+        "_NET_WM_WINDOW_TYPE_NORMAL",
+        "_NET_WM_WINDOW_TYPE_DESKTOP",
+        "_NET_WM_WINDOW_TYPE_DOCK",
+        "_NET_WM_WINDOW_TYPE_TOOLBAR",
+        "_NET_WM_WINDOW_TYPE_MENU",
+        "_NET_WM_WINDOW_TYPE_DIALOG",
+        "_NET_WM_WINDOW_TYPE_UTILITY",
+        "_NET_WM_WINDOW_TYPE_SPLASH",
+        "_NET_WM_WINDOW_TYPE_DROPDOWN_MENU",
+        "_NET_WM_WINDOW_TYPE_POPUP_MENU",
+        "_NET_WM_WINDOW_TYPE_TOOLTIP",
+        "_NET_WM_WINDOW_TYPE_NOTIFICATION",
+        "_NET_WM_WINDOW_TYPE_COMBOBOX",
+        "_NET_WM_WINDOW_TYPE_DND",
 
-	    "_NET_WM_STATE_MODAL",
-	    "_NET_WM_STATE_STICKY",
-	    "_NET_WM_STATE_MAXIMIZED_VERT",
-	    "_NET_WM_STATE_MAXIMIZED_HORZ",
-	    "_NET_WM_STATE_SHADED",
-	    "_NET_WM_STATE_SKIP_TASKBAR",
-	    "_NET_WM_STATE_SKIP_PAGER",
-	    "_NET_WM_STATE_HIDDEN",
-	    "_NET_WM_STATE_FULLSCREEN",
-	    "_NET_WM_STATE_ABOVE",
-	    "_NET_WM_STATE_BELOW",
-	    "_NET_WM_STATE_DEMANDS_ATTENTION",
+        "_NET_WM_STATE_MODAL",
+        "_NET_WM_STATE_STICKY",
+        "_NET_WM_STATE_MAXIMIZED_VERT",
+        "_NET_WM_STATE_MAXIMIZED_HORZ",
+        "_NET_WM_STATE_SHADED",
+        "_NET_WM_STATE_SKIP_TASKBAR",
+        "_NET_WM_STATE_SKIP_PAGER",
+        "_NET_WM_STATE_HIDDEN",
+        "_NET_WM_STATE_FULLSCREEN",
+        "_NET_WM_STATE_ABOVE",
+        "_NET_WM_STATE_BELOW",
+        "_NET_WM_STATE_DEMANDS_ATTENTION",
 
-            "_NET_WM_ACTION_MOVE",
-            "_NET_WM_ACTION_RESIZE",
-            "_NET_WM_ACTION_MINIMIZE",
-            "_NET_WM_ACTION_SHADE",
-            "_NET_WM_ACTION_STICK",
-            "_NET_WM_ACTION_MAXIMIZE_VERT",
-            "_NET_WM_ACTION_MAXIMIZE_HORZ",
-            "_NET_WM_ACTION_FULLSCREEN",
-            "_NET_WM_ACTION_CHANGE_DESKTOP",
-            "_NET_WM_ACTION_CLOSE",
+        "_NET_WM_ACTION_MOVE",
+        "_NET_WM_ACTION_RESIZE",
+        "_NET_WM_ACTION_MINIMIZE",
+        "_NET_WM_ACTION_SHADE",
+        "_NET_WM_ACTION_STICK",
+        "_NET_WM_ACTION_MAXIMIZE_VERT",
+        "_NET_WM_ACTION_MAXIMIZE_HORZ",
+        "_NET_WM_ACTION_FULLSCREEN",
+        "_NET_WM_ACTION_CHANGE_DESKTOP",
+        "_NET_WM_ACTION_CLOSE",
 
-	    "_NET_WM_STATE_STAYS_ON_TOP",
+        "_KDE_NET_WM_FRAME_STRUT",
+        "_KDE_NET_WM_TEMPORARY_RULES",
+        "_NET_WM_FRAME_OVERLAP",
 
-	    "_KDE_NET_WM_FRAME_STRUT",
-            "_KDE_NET_WM_TEMPORARY_RULES",
-            "_NET_WM_FRAME_OVERLAP",
+        "WM_STATE",
+        "WM_PROTOCOLS",
 
-	    "WM_STATE",
-	    "WM_PROTOCOLS",
-
-            "_NET_WM_FULL_PLACEMENT",
-            "_KDE_NET_WM_BLOCK_COMPOSITING",
-            "_KDE_NET_WM_SHADOW"
-	    };
+        "_NET_WM_FULL_PLACEMENT",
+        "_KDE_NET_WM_BLOCK_COMPOSITING",
+        "_KDE_NET_WM_SHADOW"
+    };
 
     Atom atoms[netAtomCount], *atomsp[netAtomCount] =
     {
@@ -437,8 +432,6 @@ static void create_netwm_atoms(Display *d) {
         &net_wm_action_fullscreen,
         &net_wm_action_change_desk,
         &net_wm_action_close,
-
-        &net_wm_state_stays_on_top,
 
         &kde_net_wm_frame_strut,
         &kde_net_wm_temporary_rules,
@@ -820,7 +813,7 @@ void NETRootInfo::setDefaultProperties()
     p->properties[ WINDOW_TYPES ] = NormalMask | DesktopMask | DockMask
         | ToolbarMask | MenuMask | DialogMask;
     p->properties[ STATES ] = Modal | Sticky | MaxVert | MaxHoriz | Shaded
-        | SkipTaskbar | StaysOnTop;
+        | SkipTaskbar | KeepAbove;
     p->properties[ PROTOCOLS2 ] = 0;
     p->properties[ ACTIONS ] = 0;
     p->client_properties[ PROTOCOLS ] = 0;
@@ -1207,9 +1200,6 @@ void NETRootInfo::setSupported() {
             atoms[pnum++] = net_wm_state_below;
         if (p->properties[ STATES ] & DemandsAttention)
             atoms[pnum++] = net_wm_state_demands_attention;
-
-        if (p->properties[ STATES ] & StaysOnTop)
-            atoms[pnum++] = net_wm_state_stays_on_top;
     }
 
     if (p->properties[ PROTOCOLS ] & WMStrut)
@@ -1446,9 +1436,6 @@ void NETRootInfo::updateSupportedProperties( Atom atom )
         p->properties[ STATES ] |= KeepBelow;
     else if( atom == net_wm_state_demands_attention )
         p->properties[ STATES ] |= DemandsAttention;
-
-    else if( atom == net_wm_state_stays_on_top )
-        p->properties[ STATES ] |= StaysOnTop;
 
     else if( atom == net_wm_strut )
         p->properties[ PROTOCOLS ] |= WMStrut;
@@ -3134,7 +3121,7 @@ void NETWinInfo::setState(unsigned long state, unsigned long mask) {
 	}
 
         if ((mask & SkipPager) &&
-	    ((p->state & SkipPager) != (state & SkipPager))) {
+            ((p->state & SkipPager) != (state & SkipPager))) {
             e.xclient.data.l[0] = (state & SkipPager) ? 1 : 0;
             e.xclient.data.l[1] = net_wm_state_skip_pager;
             e.xclient.data.l[2] = 0l;
@@ -3143,7 +3130,7 @@ void NETWinInfo::setState(unsigned long state, unsigned long mask) {
         }
 
         if ((mask & Hidden) &&
-	    ((p->state & Hidden) != (state & Hidden))) {
+            ((p->state & Hidden) != (state & Hidden))) {
             e.xclient.data.l[0] = (state & Hidden) ? 1 : 0;
             e.xclient.data.l[1] = net_wm_state_hidden;
             e.xclient.data.l[2] = 0l;
@@ -3152,7 +3139,7 @@ void NETWinInfo::setState(unsigned long state, unsigned long mask) {
         }
 
         if ((mask & FullScreen) &&
-	    ((p->state & FullScreen) != (state & FullScreen))) {
+            ((p->state & FullScreen) != (state & FullScreen))) {
             e.xclient.data.l[0] = (state & FullScreen) ? 1 : 0;
             e.xclient.data.l[1] = net_wm_state_fullscreen;
             e.xclient.data.l[2] = 0l;
@@ -3161,7 +3148,7 @@ void NETWinInfo::setState(unsigned long state, unsigned long mask) {
         }
 
         if ((mask & KeepAbove) &&
-	    ((p->state & KeepAbove) != (state & KeepAbove))) {
+            ((p->state & KeepAbove) != (state & KeepAbove))) {
             e.xclient.data.l[0] = (state & KeepAbove) ? 1 : 0;
             e.xclient.data.l[1] = net_wm_state_above;
             e.xclient.data.l[2] = 0l;
@@ -3170,7 +3157,7 @@ void NETWinInfo::setState(unsigned long state, unsigned long mask) {
         }
 
         if ((mask & KeepBelow) &&
-	    ((p->state & KeepBelow) != (state & KeepBelow))) {
+            ((p->state & KeepBelow) != (state & KeepBelow))) {
             e.xclient.data.l[0] = (state & KeepBelow) ? 1 : 0;
             e.xclient.data.l[1] = net_wm_state_below;
             e.xclient.data.l[2] = 0l;
@@ -3178,16 +3165,8 @@ void NETWinInfo::setState(unsigned long state, unsigned long mask) {
             XSendEvent(p->display, p->root, False, netwm_sendevent_mask, &e);
         }
 
-	if ((mask & StaysOnTop) && ((p->state & StaysOnTop) != (state & StaysOnTop))) {
-	    e.xclient.data.l[0] = (state & StaysOnTop) ? 1 : 0;
-	    e.xclient.data.l[1] = net_wm_state_stays_on_top;
-	    e.xclient.data.l[2] = 0l;
-
-	    XSendEvent(p->display, p->root, False, netwm_sendevent_mask, &e);
-	}
-
         if ((mask & DemandsAttention) &&
-	    ((p->state & DemandsAttention) != (state & DemandsAttention))) {
+            ((p->state & DemandsAttention) != (state & DemandsAttention))) {
             e.xclient.data.l[0] = (state & DemandsAttention) ? 1 : 0;
             e.xclient.data.l[1] = net_wm_state_demands_attention;
             e.xclient.data.l[2] = 0l;
@@ -3214,7 +3193,6 @@ void NETWinInfo::setState(unsigned long state, unsigned long mask) {
 	// policy
 	if (p->state & KeepAbove) data[count++] = net_wm_state_above;
 	if (p->state & KeepBelow) data[count++] = net_wm_state_below;
-	if (p->state & StaysOnTop) data[count++] = net_wm_state_stays_on_top;
 	if (p->state & Sticky) data[count++] = net_wm_state_sticky;
 	if (p->state & SkipTaskbar) data[count++] = net_wm_state_skip_taskbar;
 	if (p->state & SkipPager) data[count++] = net_wm_state_skip_pager;
@@ -3708,8 +3686,6 @@ void NETWinInfo::event(XEvent *event, unsigned long* properties, int properties_
 		    mask |= KeepBelow;
                 else if ((Atom) event->xclient.data.l[i] == net_wm_state_demands_attention)
 		    mask |= DemandsAttention;
-		else if ((Atom) event->xclient.data.l[i] == net_wm_state_stays_on_top)
-		    mask |= StaysOnTop;
 	    }
 
 	    // when removing, we just leave newstate == 0
@@ -3984,8 +3960,6 @@ void NETWinInfo::update(const unsigned long dirty_props[]) {
 			p->state |= KeepBelow;
 		    else if ((Atom) states[count] == net_wm_state_demands_attention)
 			p->state |= DemandsAttention;
-		    else if ((Atom) states[count] == net_wm_state_stays_on_top)
-			p->state |= StaysOnTop;
 		}
 	    }
 	    if ( data_ret )
