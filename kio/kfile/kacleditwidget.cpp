@@ -41,7 +41,6 @@
 #include <kfileitem.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <kvbox.h>
 #include <khbox.h>
 
 #ifdef HAVE_ACL_LIBACL_H

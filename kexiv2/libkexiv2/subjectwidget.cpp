@@ -44,7 +44,6 @@
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <kglobal.h>
-#include <khbox.h>
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klistwidget.h>

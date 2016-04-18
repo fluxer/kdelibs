@@ -33,6 +33,7 @@
 #include <kprotocolinfo.h>
 #include <kstringhandler.h>
 #include <kurlrequester.h>
+#include <kconfiggroup.h>
 
 #include <QtCore/QMimeData>
 #include <QtGui/QApplication>
@@ -47,9 +48,6 @@
 #include <QtGui/QStyle>
 
 #include <unistd.h>
-#include <kvbox.h>
-#include <kconfiggroup.h>
-
 
 bool KFilePlaceEditDialog::getInformation(bool allowGlobal, KUrl& url,
                                           QString& label, QString& icon,

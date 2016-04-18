@@ -30,7 +30,6 @@
 
 #include <kauthorized.h>
 #include <kguiitem.h>
-#include <khbox.h>
 #include <kicon.h>
 #include <klocale.h>
 #include <kpagewidgetmodel.h>

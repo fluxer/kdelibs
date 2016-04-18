@@ -29,7 +29,6 @@
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <khbox.h>
 #include <kdebug.h>
 #include <kconfiggroup.h>
 #include <ktitlewidget.h>
