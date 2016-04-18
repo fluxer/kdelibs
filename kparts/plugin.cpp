@@ -20,7 +20,6 @@
 
 #include <kparts/plugin.h>
 #include <kparts/part.h>
-#include <kparts/componentfactory.h>
 
 #include <assert.h>
 
@@ -35,6 +34,8 @@
 #include <klocale.h>
 #include <kdesktopfile.h>
 #include <kconfiggroup.h>
+#include <kpluginfactory.h>
+#include <kpluginloader.h>
 
 using namespace KParts;
 

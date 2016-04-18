@@ -516,7 +516,6 @@ install(
     KParts/BrowserHostExtension
     KParts/BrowserInterface
     KParts/BrowserRun
-    KParts/ComponentFactory
     KParts/Event
     KParts/Factory
     KParts/FileInfoExtension

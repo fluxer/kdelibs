@@ -72,7 +72,6 @@ install(
     factory.h
     historyprovider.h
     browserinterface.h
-    componentfactory.h
     browserrun.h
     statusbarextension.h
     browseropenorsavequestion.h
