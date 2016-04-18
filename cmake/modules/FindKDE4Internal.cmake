@@ -273,7 +273,7 @@ endif()
 
 #this line includes FindQt4.cmake, which searches the Qt library and headers
 # TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
-option(WITH_KATIE "Build against Katie instead of Qt4" OFF)
+option(WITH_KATIE "Build against Katie instead of Qt4" ON)
 
 # TODO: once Katie goes stable make it required from const in KDEConfig if
 # kdelibs is build against it, this file may go away due to order issues
