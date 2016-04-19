@@ -279,7 +279,7 @@ option(WITH_KATIE "Build against Katie instead of Qt4" ON)
 # kdelibs is build against it, this file may go away due to order issues
 # and be merged into KDEConfig.
 if(WITH_KATIE)
-    find_package(Katie ${_REQ_STRING_KDE4})
+    find_package(Katie)
 endif()
 if(NOT KATIE_FOUND)
     # avoid the need to check WITH_KATIE in addition to KATIE_FOUND

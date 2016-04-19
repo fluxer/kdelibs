@@ -65,6 +65,8 @@ make_directory(${CMAKE_CURRENT_BINARY_DIR}/backends/udev)
 # enable -fvisibility=hidden for C sources
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${KDE4_C_FLAGS}")
 
+set(solid_OPTIONAL_LIBS)
+
 set(solid_LIB_SRCS
     networking.cpp
     solidnamespace.cpp
@@ -170,6 +172,8 @@ if(HUPNP_FOUND)
         backends/upnp/upnpinternetgateway.cpp
         backends/upnp/upnpcontrolpoint.cpp
     )
+
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
 endif()
 
 
@@ -267,6 +271,8 @@ if(UDEV_FOUND)
                     Runtime-only dependency of the udev solid backend.
                     Support for m-p-i is included even if not found during build"
                     )
+
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${UDEV_LIBS})
 endif(UDEV_FOUND)
 
 
@@ -344,17 +350,7 @@ qt4_add_dbus_interface(solid_LIB_SRCS
     org_kde_solid_networking_client
 )
 
-set(solid_OPTIONAL_LIBS)
-
 add_library(solid ${LIBRARY_TYPE} ${solid_LIB_SRCS})
-
-if(HUPNP_FOUND)
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
-endif()
-
-if(UDEV_FOUND)
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${UDEV_LIBS})
-endif()
 
 target_link_libraries(solid
     ${QT_QTCORE_LIBRARY}
@@ -434,40 +430,3 @@ install(
     DESTINATION ${INCLUDE_INSTALL_DIR}/solid
     COMPONENT Devel
 )
-
-########### parser build ###############
-
-set(lexer_FILE predicate_lexer)
-set(parser_FILE predicate_parser)
-
-find_package(FLEX)
-set_package_properties(FLEX PROPERTIES
-    DESCRIPTION "Allows the Solid predicate parser to be updated"
-    URL "http://flex.sourceforge.net"
-    PURPOSE "Required by the UpdateSolidPredicateParser target (mainly useful for developers)"
-    TYPE OPTIONAL
-)
-
-find_package(BISON)
-set_package_properties(BISON PROPERTIES
-    DESCRIPTION "Allows the Solid predicate parser to be updated"
-    URL "http://www.gnu.org/software/bison"
-    PURPOSE "Required by the UpdateSolidPredicateParser target (mainly useful for developers)"
-    TYPE OPTIONAL
-)
-
-if(FLEX_FOUND AND BISON_FOUND)
-    add_custom_target(UpdateSolidPredicateParser
-        COMMAND ${FLEX_EXECUTABLE} -P Solid -o${lexer_FILE}.c ${lexer_FILE}.l
-        COMMAND ${BISON_EXECUTABLE} -p Solid -d -b ${parser_FILE} ${parser_FILE}.y
-        COMMAND ${CMAKE_COMMAND} -E copy ${parser_FILE}.tab.c ${CMAKE_CURRENT_SOURCE_DIR}/${parser_FILE}.c
-        COMMAND ${CMAKE_COMMAND} -E copy ${parser_FILE}.tab.h ${CMAKE_CURRENT_SOURCE_DIR}/${parser_FILE}.h
-        COMMAND ${CMAKE_COMMAND} -E remove ${parser_FILE}.tab.c ${parser_FILE}.tab.h
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-else()
-   add_custom_target(UpdateSolidPredicateParser
-        COMMAND echo "flex and/or bison not found, so target UpdateSolidPredicateParser inactive"
-    )
-endif()
-

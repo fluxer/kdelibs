@@ -52,15 +52,6 @@
 #include "kcmdlineargs.h"
 #include <unistd.h> // umask
 
-#ifndef NDEBUG
-#define MYASSERT(x) if (!x) \
-   qFatal("Fatal error: you need to have a KComponentData object before\n" \
-         "you do anything that requires it! Examples of this are config\n" \
-         "objects, standard directories or translations.");
-#else
-#define MYASSERT(x) /* nope */
-#endif
-
 // ~KConfig needs qrand(). qrand() depends on a Q_GLOBAL_STATIC. With this Q_CONSTRUCTOR_FUNCTION we
 // try to make qrand() live longer than any KConfig object.
 Q_CONSTRUCTOR_FUNCTION(qrand)
@@ -178,7 +169,11 @@ KLocale *KGlobal::locale()
         // (gdb) run
         // And now it will stop at the first i18n call or more generally at the first construction of the KLocale object,
         // type bt or go up to find the guilty i18n call.
-        if (d->locale != 0) qWarning("KGlobal::locale(): Warning your global KLocale is being recreated with a valid main component instead of a fake component, this usually means you tried to call i18n related functions before your main component was created. You should not do that since it most likely will not work");
+        if (d->locale != 0) {
+            qWarning("KGlobal::locale(): Warning your global KLocale is being recreated with a valid main component"
+                     " instead of a fake component, this usually means you tried to call i18n related functions before"
+                     " your main component was created. You should not do that since it most likely will not work");
+        }
         delete d->locale;
         d->locale = 0;
         d->locale = new KLocale(mainComponent().catalogName());
@@ -188,13 +183,15 @@ KLocale *KGlobal::locale()
         QCoreApplication* coreApp = QCoreApplication::instance();
         if (coreApp) { // testcase: kwrite --help: no qcore app
             if (coreApp->thread() != QThread::currentThread()) {
-                qFatal("KGlobal::locale() must be called from the main thread before using i18n() in threads. KApplication takes care of this. If not using KApplication, call KGlobal::locale() during initialization.");
+                qFatal("KGlobal::locale() must be called from the main thread before using i18n() in threads. KApplication"
+                       " takes care of this. If not using KApplication, call KGlobal::locale() during initialization.");
             } else {
                 QCoreApplication::installTranslator(new KDETranslator(coreApp));
             }
         }
-        foreach(const QString &catalog, d->catalogsToInsert)
+        foreach(const QString &catalog, d->catalogsToInsert) {
             d->locale->insertCatalog(catalog);
+        }
         d->catalogsToInsert.clear();
     }
     return d->locale;
@@ -221,14 +218,21 @@ KCharsets *KGlobal::charsets()
 
 mode_t KGlobal::umask()
 {
-    // Don't use PRIVATE_DATA here. This is called by ~KGlobalPrivate -> ~KConfig -> sync -> KSaveFile, so there's no KGlobalPrivate anymore.
+    // Don't use PRIVATE_DATA here. This is called by ~KGlobalPrivate -> ~KConfig -> sync -> KSaveFile,
+    // so there's no KGlobalPrivate anymore.
     return s_umsk;
 }
 
 KComponentData KGlobal::activeComponent()
 {
     PRIVATE_DATA;
-    MYASSERT(d->activeComponent.isValid());
+#ifndef NDEBUG
+    if (!d->activeComponent.isValid()) {
+        qFatal("Fatal error: you need to have a KComponentData object before\n"
+               "you do anything that requires it! Examples of this are config\n"
+               "objects, standard directories or translations.");
+    }
+#endif
     return d->activeComponent;
 }
 
