@@ -27,7 +27,7 @@
 
 
 KDialogButtonBox::KDialogButtonBox(QWidget *parent, Qt::Orientation _orientation)
-  :  QDialogButtonBox(_orientation, parent) , d(0)
+  :  QDialogButtonBox(_orientation, parent)
 {
 }
 

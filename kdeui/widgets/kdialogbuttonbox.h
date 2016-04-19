@@ -29,7 +29,6 @@ class QPushButton;
 class KPushButton;
 class KGuiItem;
 
-class KDialogButtonBoxPrivate;
 /**
  * Container widget for buttons.
  *
@@ -92,9 +91,6 @@ public:
   KPushButton *addButton(const KGuiItem& guiitem,ButtonRole role, QObject * receiver=0, const char * slot=0);
 
   using QDialogButtonBox::addButton;
-
-private:
-  KDialogButtonBoxPrivate* const d;
 };
 
 #endif

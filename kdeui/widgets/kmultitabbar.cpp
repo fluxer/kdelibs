@@ -143,7 +143,7 @@ void KMultiTabBarInternal::setPosition(enum KMultiTabBar::KMultiTabBarPosition p
 
 KMultiTabBarButton::KMultiTabBarButton(const QPixmap& pic, const QString& text,
                                        int id, QWidget *parent)
-	: QPushButton(QIcon(pic), text, parent), m_id(id), d(0)
+	: QPushButton(QIcon(pic), text, parent), m_id(id)
 {
 	connect(this,SIGNAL(clicked()),this,SLOT(slotClicked()));
 

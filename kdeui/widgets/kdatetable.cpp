@@ -200,21 +200,7 @@ KPopupFrame::KPopupFramePrivate::~KPopupFramePrivate()
 }
 
 
-class KDateValidator::KDateValidatorPrivate
-{
-public:
-    KDateValidatorPrivate( KDateValidator *q ): q( q )
-    {
-    }
-
-    ~KDateValidatorPrivate()
-    {
-    }
-
-    KDateValidator *q;
-};
-
-KDateValidator::KDateValidator( QWidget *parent ) : QValidator( parent ), d( 0 )
+KDateValidator::KDateValidator( QWidget *parent ) : QValidator( parent )
 {
 }
 

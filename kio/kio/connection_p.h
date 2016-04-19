@@ -70,7 +70,6 @@ namespace KIO {
         };
         long len;
         int cmd;
-        int port;
         bool signalEmitted;
         quint8 mode;
 

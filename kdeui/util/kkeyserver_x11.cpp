@@ -94,32 +94,6 @@ static X11ModInfo g_rgX11ModInfo[4] =
     { Qt::META,    X11_ONLY(Mod4Mask) }
 };
 
-// Special Names List
-static const SymName g_rgSymNames[] = {
-    { XK_ISO_Left_Tab, "Backtab" },
-    { XK_BackSpace,    I18N_NOOP("Backspace") },
-    { XK_Sys_Req,      I18N_NOOP("SysReq") },
-    { XK_Caps_Lock,    I18N_NOOP("CapsLock") },
-    { XK_Num_Lock,     I18N_NOOP("NumLock") },
-    { XK_Scroll_Lock,  I18N_NOOP("ScrollLock") },
-    { XK_Prior,        I18N_NOOP("PageUp") },
-    { XK_Next,         I18N_NOOP("PageDown") },
-#ifdef sun
-    { XK_F11,          I18N_NOOP("Stop") },
-    { XK_F12,          I18N_NOOP("Again") },
-    { XK_F13,          I18N_NOOP("Props") },
-    { XK_F14,          I18N_NOOP("Undo") },
-    { XK_F15,          I18N_NOOP("Front") },
-    { XK_F16,          I18N_NOOP("Copy") },
-    { XK_F17,          I18N_NOOP("Open") },
-    { XK_F18,          I18N_NOOP("Paste") },
-    { XK_F19,          I18N_NOOP("Find") },
-    { XK_F20,          I18N_NOOP("Cut") },
-    { XK_F22,          I18N_NOOP("Print") },
-#endif
-    { 0, 0 }
-};
-
 // These are the X equivalents to the Qt keycodes 0x1000 - 0x1026
 static const TransKey g_rgQtToSymX[] =
 {

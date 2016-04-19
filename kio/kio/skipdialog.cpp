@@ -32,7 +32,7 @@
 using namespace KIO;
 
 SkipDialog::SkipDialog(QWidget *parent, bool _multi, const QString& _error_text )
-  : KDialog ( parent ), d( 0 )
+  : KDialog ( parent )
 {
   setCaption( i18n( "Information" ) );
 

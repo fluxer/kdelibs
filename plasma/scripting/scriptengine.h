@@ -43,7 +43,6 @@ class RunnerScript;
 class Wallpaper;
 class WallpaperScript;
 class Package;
-class ScriptEnginePrivate;
 
 /**
  * @class ScriptEngine plasma/scripting/scriptengine.h <Plasma/Scripting/ScriptEngine>
@@ -88,9 +87,6 @@ protected:
      *         interface files.
      */
     virtual const Package *package() const;
-
-private:
-    ScriptEnginePrivate *const d;
 };
 
 /**

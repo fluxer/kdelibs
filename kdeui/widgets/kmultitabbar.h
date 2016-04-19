@@ -39,7 +39,6 @@ class QStyleOptionToolButton;
 
 class KMultiTabBarPrivate;
 class KMultiTabBarTabPrivate;
-class KMultiTabBarButtonPrivate;
 class KMultiTabBarInternal;
 
 /**
@@ -183,7 +182,6 @@ private:
     friend class KMultiTabBar;
 
     int m_id;
-    KMultiTabBarButtonPrivate * const d;
 };
 
 /**

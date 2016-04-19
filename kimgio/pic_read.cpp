@@ -125,23 +125,6 @@ inline static void pic2RGBA(unsigned char *src_pixel, unsigned char *target_pixe
 }
 
 /**
- * Counts the number of channels in the PICChannel header
- * @param channels The header
- * @return The number of used channels
- */
-inline static unsigned getNumChannels(PICChannel *channels) {
-    unsigned result = 0;
-    for (unsigned i = 0; i < 8; i++) {
-        if (channels[i].channel != 0) {
-            result++;
-        } else {
-            return result;
-        }
-    }
-    return result;
-}
-
-/**
  * Decodes a Run-lenght encoded chunk
  * @param dev The device to read from
  * @param row The row pointer to write to

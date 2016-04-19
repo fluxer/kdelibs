@@ -38,8 +38,7 @@ namespace Plasma
 {
 
 ScriptEngine::ScriptEngine(QObject *parent)
-    : QObject(parent),
-      d(0)
+    : QObject(parent)
 {
 }
 
