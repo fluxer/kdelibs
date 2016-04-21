@@ -28,12 +28,12 @@
 #include "kexiv2_p.h"
 
 // C ANSI includes
-
 extern "C"
 {
-#include <sys/stat.h>
 #include <utime.h>
 }
+
+#include <kde_file.h>
 
 namespace KExiv2Iface
 {
@@ -281,9 +281,9 @@ bool KExiv2::Private::saveOperations(const QFileInfo& finfo, Exiv2::Image::AutoP
         if (!updateFileTimeStamp)
         {
             // Don't touch access and modification timestamp of file.
-            struct stat    st;
+            KDE_struct_stat    st;
             struct utimbuf ut;
-            int ret = ::stat(QFile::encodeName(filePath), &st);
+            int ret = KDE_stat(QFile::encodeName(filePath), &st);
 
             if (ret == 0)
             {

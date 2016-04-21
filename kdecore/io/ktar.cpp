@@ -338,8 +338,8 @@ bool KTar::openArchive( QIODevice::OpenMode mode ) {
 
     // We'll use the permission and user/group of d->rootDir
     // for any directory we emulate (see findOrCreate)
-    //struct stat buf;
-    //stat( fileName(), &buf );
+    //KDE_struct_stat buf;
+    //KDE_stat( fileName(), &buf );
 
     d->dirList.clear();
     QIODevice* dev = device();

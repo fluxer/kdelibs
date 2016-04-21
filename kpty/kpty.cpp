@@ -451,8 +451,8 @@ void KPty::close()
         // don't bother resetting unix98 pty, it will go away after closing master anyway.
         if (memcmp(d->ttyName.data(), "/dev/pts/", 9)) {
             if (!geteuid()) {
-                struct stat st;
-                if (!stat(d->ttyName.data(), &st)) {
+                KDE_struct_stat st;
+                if (!KDE_stat(d->ttyName.data(), &st)) {
                     chown(d->ttyName.data(), 0, st.st_gid == getgid() ? 0 : -1);
                     chmod(d->ttyName.data(), S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
                 }
