@@ -365,7 +365,10 @@ KDEDModule *Kded::loadModule(const KService::Ptr& s, bool onDemand)
         KPluginLoader loader(libname);
 
         KPluginFactory *factory = loader.factory();
-        KDEDModule *module = factory->create<KDEDModule>(this);
+        KDEDModule *module = 0;
+        if (factory) {
+            module = factory->create<KDEDModule>(this);
+        }
         if (module) {
             module->setModuleName(obj);
             m_modules.insert(obj, module);
