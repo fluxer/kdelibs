@@ -219,9 +219,8 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 
 #define COMMON_DESTRUCTOR \
     kDebug() << i18n("destroying player"); \
-    if (m_handle) { \
-        mpv_terminate_destroy(m_handle); \
-    } \
+    m_stopprocessing = true; \
+    mpv_terminate_destroy(m_handle); \
     if (m_settings) { \
         delete m_settings; \
     }
@@ -255,7 +254,7 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     }
 
 #define COMMMON_EVENT_HANDLER \
-    while (m_handle) { \
+    while (!m_stopprocessing) { \
         mpv_event *event = mpv_wait_event(m_handle, 0); \
         if (event->event_id == MPV_EVENT_NONE) { \
             break; \

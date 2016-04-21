@@ -270,6 +270,7 @@ private:
 #endif // MAKE_KMEDIAPLAYER_LIB
     QString m_appname;
     QSettings *m_settings;
+    bool m_stopprocessing;
 };
 
 
@@ -336,6 +337,7 @@ private:
 #endif // MAKE_KMEDIAPLAYER_LIB
     QString m_appname;
     QSettings *m_settings;
+    bool m_stopprocessing;
 };
 
 #endif // KMEDIAPLAYER_H
