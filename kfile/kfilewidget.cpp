@@ -2042,39 +2042,6 @@ void KFileWidgetPrivate::_k_slotIconSizeSliderMoved(int _value)
     QApplication::sendEvent(iconSizeSlider, &toolTipEvent);
 }
 
-static QString getExtensionFromPatternList(const QStringList &patternList)
-{
-//     kDebug(kfile_area);
-
-    QString ret;
-//     kDebug (kfile_area) << "\tgetExtension " << patternList;
-
-    QStringList::ConstIterator patternListEnd = patternList.end();
-    for (QStringList::ConstIterator it = patternList.begin();
-         it != patternListEnd;
-         ++it)
-    {
-//         kDebug (kfile_area) << "\t\ttry: \'" << (*it) << "\'";
-
-        // is this pattern like "*.BMP" rather than useless things like:
-        //
-        // README
-        // *.
-        // *.*
-        // *.JP*G
-        // *.JP?
-        if ((*it).startsWith (QLatin1String("*.")) &&
-            (*it).length() > 2 &&
-            (*it).indexOf('*', 2) < 0 && (*it).indexOf ('?', 2) < 0)
-        {
-            ret = (*it).mid (1);
-            break;
-        }
-    }
-
-    return ret;
-}
-
 static QString stripUndisplayable (const QString &string)
 {
     QString ret = string;
@@ -2132,7 +2099,21 @@ void KFileWidgetPrivate::updateAutoSelectExtension()
             if (filter.indexOf ('/') < 0)
             {
                 extensionList = filter.split(' ', QString::SkipEmptyParts);
-                defaultExtension = getExtensionFromPatternList(extensionList);
+                foreach (const QString it, extensionList) {
+                    // is this pattern like "*.BMP" rather than useless things like:
+                    //
+                    // README
+                    // *.
+                    // *.*
+                    // *.JP*G
+                    // *.JP?
+                    if (it.startsWith(QLatin1String("*.")) &&
+                        it.length() > 2 &&
+                        it.indexOf('*', 2) < 0 && it.indexOf('?', 2) < 0) {
+                        defaultExtension = it.mid(1);
+                        break;
+                    }
+                }
             }
             // e.g. "text/html"
             else
