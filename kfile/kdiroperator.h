@@ -686,8 +686,6 @@ protected:
      */
     virtual void activatedMenu(const KFileItem &item, const QPoint &pos);
 
-    virtual void changeEvent(QEvent *event);
-
     virtual bool eventFilter(QObject *watched, QEvent *event);
 
 public Q_SLOTS:

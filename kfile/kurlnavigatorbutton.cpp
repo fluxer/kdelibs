@@ -22,7 +22,6 @@
 
 #include "kurlnavigator.h"
 #include "kurlnavigatormenu_p.h"
-#include "kdirsortfilterproxymodel.h"
 
 #include <kio/job.h>
 #include <kio/jobclasses.h>

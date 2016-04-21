@@ -200,13 +200,10 @@ public:
 
     // private methods
     bool checkPreviewInternal() const;
-    void checkPath(const QString &txt, bool takeFiles = false);
     bool openUrl(const KUrl &url, KDirLister::OpenUrlFlags flags = KDirLister::NoFlags);
     int sortColumn() const;
     Qt::SortOrder sortOrder() const;
     void updateSorting(QDir::SortFlags sort);
-
-    static bool isReadable(const KUrl &url);
 
     KFile::FileView allViews();
 
@@ -959,59 +956,6 @@ void KDirOperator::close()
     d->dirLister->stop();
 }
 
-void KDirOperator::Private::checkPath(const QString &, bool /*takeFiles*/) // SLOT
-{
-#if 0
-    // copy the argument in a temporary string
-    QString text = _txt;
-    // it's unlikely to happen, that at the beginning are spaces, but
-    // for the end, it happens quite often, I guess.
-    text = text.trimmed();
-    // if the argument is no URL (the check is quite fragil) and it's
-    // no absolute path, we add the current directory to get a correct url
-    if (text.find(':') < 0 && text[0] != '/')
-        text.insert(0, d->currUrl);
-
-    // in case we have a selection defined and someone patched the file-
-    // name, we check, if the end of the new name is changed.
-    if (!selection.isNull()) {
-        int position = text.lastIndexOf('/');
-        ASSERT(position >= 0); // we already inserted the current d->dirLister in case
-        QString filename = text.mid(position + 1, text.length());
-        if (filename != selection)
-            selection.clear();
-    }
-
-    KUrl u(text); // I have to take care of entered URLs
-    bool filenameEntered = false;
-
-    if (u.isLocalFile()) {
-        // the empty path is kind of a hack
-        KFileItem i("", u.toLocalFile());
-        if (i.isDir())
-            setUrl(text, true);
-        else {
-            if (takeFiles)
-                if (acceptOnlyExisting && !i.isFile())
-                    warning("you entered an invalid URL");
-                else
-                    filenameEntered = true;
-        }
-    } else
-        setUrl(text, true);
-
-    if (filenameEntered) {
-        filename_ = u.url();
-        emit fileSelected(filename_);
-
-        QApplication::restoreOverrideCursor();
-
-        accept();
-    }
-#endif
-    kDebug(kfile_area) << "TODO KDirOperator::checkPath()";
-}
-
 void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
 {
     KUrl newurl;
@@ -1027,21 +971,20 @@ void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
     if (newurl.equals(d->currUrl, KUrl::CompareWithoutTrailingSlash))
         return;
 
-    if (!Private::isReadable(newurl)) {
+    QDir urldir(newurl.prettyUrl());
+    if (!newurl.isLocalFile() || !urldir.isReadable()) {
         // maybe newurl is a file? check its parent directory
         newurl.setPath(newurl.directory(KUrl::ObeyTrailingSlash));
         if (newurl.equals(d->currUrl, KUrl::CompareWithoutTrailingSlash))
             return; // parent is current dir, nothing to do (fixes #173454, too)
-        KIO::UDSEntry entry;
-        bool res = KIO::NetAccess::stat(newurl, entry, this);
-        KFileItem i(entry, newurl);
-        if ((!res || !Private::isReadable(newurl)) && i.isDir()) {
+        urldir.setPath(newurl.prettyUrl());
+        if ((!newurl.isLocalFile() || !urldir.isReadable()) && urldir.exists()) {
             resetCursor();
             KMessageBox::error(d->itemView,
                                i18n("The specified folder does not exist "
                                     "or was not readable."));
             return;
-        } else if (!i.isDir()) {
+        } else if (!urldir.exists()) {
             return;
         }
     }
@@ -1173,7 +1116,8 @@ void KDirOperator::pathChanged()
     // when KIO::Job emits finished, the slot will restore the cursor
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    if (!Private::isReadable(d->currUrl)) {
+    QDir urldir(d->currUrl.prettyUrl());
+    if (!d->currUrl.isLocalFile() || urldir.isReadable()) {
         KMessageBox::error(d->itemView,
                            i18n("The specified folder does not exist "
                                 "or was not readable."));
@@ -1303,11 +1247,6 @@ void KDirOperator::activatedMenu(const KFileItem &item, const QPoint &pos)
     emit contextMenuAboutToShow( item, d->actionMenu->menu() );
 
     d->actionMenu->menu()->exec(pos);
-}
-
-void KDirOperator::changeEvent(QEvent *event)
-{
-    QWidget::changeEvent(event);
 }
 
 bool KDirOperator::eventFilter(QObject *watched, QEvent *event)
@@ -2599,26 +2538,6 @@ void KDirOperator::setDecorationPosition(QStyleOptionViewItem::Position position
     const bool decorationAtLeft = d->decorationPosition == QStyleOptionViewItem::Left;
     d->actionCollection->action("decorationAtLeft")->setChecked(decorationAtLeft);
     d->actionCollection->action("decorationAtTop")->setChecked(!decorationAtLeft);
-}
-
-// ### temporary code
-#include <dirent.h>
-bool KDirOperator::Private::isReadable(const KUrl& url)
-{
-    if (!url.isLocalFile())
-        return true; // what else can we say?
-
-    KDE_struct_stat buf;
-    QString ts = url.path(KUrl::AddTrailingSlash);
-    bool readable = (KDE::stat(ts, &buf) == 0);
-    if (readable) { // further checks
-        DIR *test;
-        test = opendir(QFile::encodeName(ts));    // we do it just to test here
-        readable = (test != 0);
-        if (test)
-            closedir(test);
-    }
-    return readable;
 }
 
 void KDirOperator::Private::_k_slotDirectoryCreated(const KUrl& url)
