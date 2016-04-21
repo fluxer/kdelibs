@@ -21,6 +21,7 @@
 #define KFILESHAREDIALOG_H
 
 #include <kpropertiesdialog.h>
+#include <QProcess>
 class QRadioButton;
 class QPushButton;
 
@@ -48,7 +49,7 @@ public:
 
 protected Q_SLOTS:
     void slotConfigureFileSharing();
-    void slotConfigureFileSharingDone();
+    void slotConfigureFileSharingDone(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     void init();

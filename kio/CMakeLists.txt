@@ -210,7 +210,6 @@ set(kfile_STAT_SRCS
     kfile/kurlrequesterdialog.cpp
     kfile/kfilemetadataprovider.cpp
     kfile/kfilesharedialog.cpp
-    kfile/kfsprocess.cpp
 )
 
 if(NOT KIO_NO_SOLID)

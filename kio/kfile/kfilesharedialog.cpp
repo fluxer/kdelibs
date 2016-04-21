@@ -18,7 +18,6 @@
 */
 
 #include "kfilesharedialog.h"
-#include "kfsprocess.h"
 #include <kvbox.h>
 #include <QtGui/QLabel>
 #include <QtCore/QDir>
@@ -27,6 +26,7 @@
 #include <QtGui/QLayout>
 #include <klocale.h>
 #include <kstandarddirs.h>
+#include <kprocess.h>
 #include <kdebug.h>
 #include <kio/kfileshare.h>
 #include <kseparator.h>
@@ -37,7 +37,7 @@ class KFileSharePropsPlugin::Private
 {
 public:
     KVBox *m_vBox;
-    KfsProcess *m_configProc;
+    KProcess *m_configProc;
     bool m_bAllShared;
     bool m_bAllUnshared;
     QWidget *m_widget;
@@ -60,8 +60,6 @@ KFileSharePropsPlugin::KFileSharePropsPlugin( KPropertiesDialog *_props )
 
 KFileSharePropsPlugin::~KFileSharePropsPlugin()
 {
-    if (d->m_configProc)
-        d->m_configProc->detach(); // Detach to prevent that we kill the process
     delete d;
 }
 
@@ -200,21 +198,24 @@ void KFileSharePropsPlugin::slotConfigureFileSharing()
 {
     if (d->m_configProc) return;
 
-    d->m_configProc = new KfsProcess(this);
+    d->m_configProc = new KProcess(this);
     (*d->m_configProc) << KStandardDirs::findExe("kdesu") << "kcmshell4" << "fileshare";
-    if (!d->m_configProc->start())
+    if (!d->m_configProc->startDetached())
     {
        delete d->m_configProc;
        d->m_configProc = 0;
        return;
     }
-    connect(d->m_configProc, SIGNAL(processExited()),
-            this, SLOT(slotConfigureFileSharingDone()));
+    connect(d->m_configProc, SIGNAL(processExited(int,QProcess::ExitStatus)),
+            this, SLOT(slotConfigureFileSharingDone(int,QProcess::ExitStatus)));
     d->m_pbConfig->setEnabled(false);
 }
 
-void KFileSharePropsPlugin::slotConfigureFileSharingDone()
+void KFileSharePropsPlugin::slotConfigureFileSharingDone(int exitCode, QProcess::ExitStatus exitStatus)
 {
+    Q_UNUSED(exitCode);
+    Q_UNUSED(exitStatus);
+
     delete d->m_configProc;
     d->m_configProc = 0;
     KFileShare::readConfig();
