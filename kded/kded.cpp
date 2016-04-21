@@ -361,25 +361,11 @@ KDEDModule *Kded::loadModule(const KService::Ptr& s, bool onDemand)
             }
         }
 
-        KDEDModule *module = 0;
         QString libname = "kded_"+s->library();
         KPluginLoader loader(libname);
 
         KPluginFactory *factory = loader.factory();
-        if (!factory) {
-            // kde3 compat
-            QString factoryName = s->property("X-KDE-FactoryName", QVariant::String).toString();
-            if (factoryName.isEmpty())
-                factoryName = s->library();
-            factoryName = "create_" + factoryName;
-            if (!module) {
-                kWarning() << "Could not load library" << libname << ". ["
-                           << loader.errorString() << "]";
-            }
-        } else {
-            // create the module
-            module = factory->create<KDEDModule>(this);
-        }
+        KDEDModule *module = factory->create<KDEDModule>(this);
         if (module) {
             module->setModuleName(obj);
             m_modules.insert(obj, module);

@@ -52,7 +52,7 @@ namespace KCModuleLoader
       None = 0,
       /**
        * the error report is shown instead of the
-       * KCModule that should have * been loaded
+       * KCModule that should have been loaded
        */
       Inline = 1,
       /**

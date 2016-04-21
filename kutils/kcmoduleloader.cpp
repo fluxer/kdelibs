@@ -89,25 +89,6 @@ KCModule* KCModuleLoader::loadModule(const KCModuleInfo& mod, ErrorReporting rep
         if (module) {
             return module;
         }
-//#ifndef NDEBUG
-        {
-            // get the create_ function
-            QLibrary lib(mod.library());
-            if (lib.load()) {
-                KCModule *(*create)(QWidget *, const char *);
-                QByteArray factorymethod("create_");
-                factorymethod += mod.handle().toLatin1();
-                create = reinterpret_cast<KCModule *(*)(QWidget *, const char*)>(lib.resolve(factorymethod));
-                if (create) {
-                    return create(parent, mod.handle().toLatin1());
-                    kFatal(1208) << "This module still uses a custom factory method (" << factorymethod << "). This is not supported anymore. Please fix the module.";
-                } else {
-                    kWarning(1208) << "This module has no valid entry symbol at all. The reason could be that it's still using K_EXPORT_COMPONENT_FACTORY with a custom X-KDE-FactoryName which is not supported anymore";
-                }
-                lib.unload();
-            }
-        }
-//#endif // NDEBUG
         return reportError(report, error, QString(), parent);
   }
 

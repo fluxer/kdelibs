@@ -142,8 +142,7 @@ public:
   QString library() const;
 
   /**
-   * @return a handle (the contents of the X-KDE-FactoryName field if it exists,
-   * else the same as the library name)
+   * @return a handle, same as the library name
    */
   QString handle() const;
 

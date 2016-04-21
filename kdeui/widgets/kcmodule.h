@@ -68,10 +68,8 @@ namespace KAuth {
  * \endcode
  *
  * The optional parameter "name_of_the_po_file" has to correspond with the messages target
- * that containst the strings to be translated. Instead of using the library name for
- * \p yourLibName you can also use another name which you specify in the desktop
- * file with \p X-KDE-FactoryName. This is useful to have more than one factory
- * in one lib.
+ * that containst the strings to be translated. You should use the library name for
+ * \p yourLibName.
  *
  * The constructor of the KCModule then looks like this:
  * \code

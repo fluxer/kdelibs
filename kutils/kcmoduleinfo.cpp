@@ -131,8 +131,7 @@ void KCModuleInfo::Private::loadAll()
   weight = tmp.isValid() ? tmp.toInt() : 100;
 
   // factory handle
-  tmp = service->property("X-KDE-FactoryName", QVariant::String);
-  handle = tmp.isValid() ? tmp.toString() : lib;
+  handle = lib;
 
 }
 
