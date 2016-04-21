@@ -236,7 +236,6 @@ void KMimeTypeTest::testFindByPathUsingFileName_data()
     QTest::newRow("case-sensitive-only match") << "Core" << "application/octet-stream"; // #198477
 
     QTest::newRow("desktop file") << "foo.desktop" << "application/x-desktop";
-    QTest::newRow("old kdelnk file is x-desktop too") << "foo.kdelnk" << "application/x-desktop";
     QTest::newRow("double-extension file") << "foo.tar.bz2" << "application/x-bzip-compressed-tar";
     QTest::newRow("single-extension file") << "foo.bz2" << "application/x-bzip";
     QTest::newRow(".doc should assume msword") << "somefile.doc" << "application/msword"; // #204139

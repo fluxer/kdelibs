@@ -633,9 +633,6 @@ KService::Ptr KService::serviceByStorageId( const QString& _storageId )
     if (tmp.endsWith(QLatin1String(".desktop")))
         tmp.truncate(tmp.length()-8);
 
-    if (tmp.endsWith(QLatin1String(".kdelnk")))
-        tmp.truncate(tmp.length()-7);
-
     service = KService::serviceByDesktopName(tmp);
 
     return service;

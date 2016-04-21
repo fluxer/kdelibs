@@ -596,11 +596,8 @@ void KNewFileMenuPrivate::fillMenu()
     {
         KNewFileMenuSingleton::Entry& entry = *templ;
         if (entry.entryType != KNewFileMenuSingleton::Separator) {
-            // There might be a .desktop for that one already, if it's a kdelnk
-            // This assumes we read .desktop files before .kdelnk files ...
-
-            // In fact, we skip any second item that has the same text as another one.
-            // Duplicates in a menu look bad in any case.
+            // There might be a .desktop for that one already. In fact, we skip any second item
+            // that has the same text as another one. Duplicates in a menu look bad in any case.
 
             const bool bSkip = seenTexts.contains(entry.text);
             if (bSkip) {
