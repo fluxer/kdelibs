@@ -216,7 +216,6 @@ set(kfile_STAT_SRCS
 if(NOT KIO_NO_SOLID)
     set(kfile_STAT_SRCS
         ${kfile_STAT_SRCS}
-        kfile/kdiskfreespace.cpp
         kfile/kdevicelistitem.cpp
         kfile/kdevicelistmodel.cpp
     )
