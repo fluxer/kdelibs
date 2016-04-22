@@ -46,6 +46,7 @@
 #endif
 #include <errno.h>
 
+#include <qplatformdefs.h>
 #include <qwindowdefs.h>
 #include <kglobal.h>
 #include <kcomponentdata.h>
@@ -639,7 +640,7 @@ static int read_socket(int sock, char *buffer, int len)
 
 static int openSocket()
 {
-  kde_socklen_t socklen;
+  QT_SOCKLEN_T socklen;
   int s;
   struct sockaddr_un server;
 #define MAX_SOCK_FILE 255

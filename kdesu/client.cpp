@@ -25,8 +25,8 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
-#include <sys/stat.h>
 
+#include <qplatformdefs.h>
 #include <QtCore/qglobal.h>
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
@@ -49,7 +49,7 @@ public:
 };
 
 #ifndef SUN_LEN
-#define SUN_LEN(ptr) ((socklen_t) (((struct sockaddr_un *) 0)->sun_path) \
+#define SUN_LEN(ptr) ((QT_SOCKLEN_T) (((struct sockaddr_un *) 0)->sun_path) \
                     + strlen ((ptr)->sun_path))
 #endif
 
@@ -156,7 +156,7 @@ int KDEsuClient::connect()
 # endif
 #else
     struct ucred cred;
-    socklen_t siz = sizeof(cred);
+    QT_SOCKLEN_T siz = sizeof(cred);
 
     // Security: if socket exists, we must own it
     if (getsockopt(d->sockfd, SOL_SOCKET, SO_PEERCRED, &cred, &siz) == 0)
@@ -415,8 +415,8 @@ bool KDEsuClient::isServerSGID()
     if (d->daemon.isEmpty())
        return false;
 
-    KDE_struct_stat sbuf;
-    if (KDE::stat(d->daemon, &sbuf) < 0)
+    QT_STATBUF sbuf;
+    if (QT_STAT(QFile::encodeName(d->daemon), &sbuf) < 0)
     {
         kWarning(kdesuDebugArea()) << "stat():" << perror;
         return false;

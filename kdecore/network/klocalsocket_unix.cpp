@@ -29,7 +29,8 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "klocale.h"
+#include <qplatformdefs.h>
+#include <klocale.h>
 
 static inline int kSocket(int af, int socketype, int proto)
 {
@@ -71,7 +72,7 @@ static inline int kAccept(int fd)
 {
     int ret;
     sockaddr sa;
-    socklen_t len = sizeof(sa);
+    QT_SOCKLEN_T len = sizeof(sa);
     do {
         ret = ::accept(fd, &sa, &len);
     } while (ret == -1 && errno == EINTR);

@@ -290,7 +290,7 @@ namespace KDE
   extern KDECORE_EXPORT void freeaddrinfo(struct addrinfo* ai);
   /** \internal */
   extern KDECORE_EXPORT int getnameinfo(const struct sockaddr *sa,
-			 kde_socklen_t salen,
+			 QT_SOCKLEN_T salen,
 			 char *host, size_t hostlen,
 			 char *serv, size_t servlen,
 			 int flags);

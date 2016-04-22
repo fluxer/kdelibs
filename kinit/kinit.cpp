@@ -46,10 +46,11 @@
 #include <unistd.h>
 #include <locale.h>
 
+#include <qplatformdefs.h>
 #include <QtCore/QLibrary>
 #include <QtCore/QString>
 #include <QtCore/QFile>
-#include <QtCore/qdatetime.h>
+#include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 #include <QtCore/QRegExp>
 #include <QtGui/QFont>
@@ -775,7 +776,7 @@ static void init_signals()
 static void init_kdeinit_socket()
 {
   struct sockaddr_un sa;
-  kde_socklen_t socklen;
+  QT_SOCKLEN_T socklen;
   long options;
   const QByteArray home_dir = qgetenv("HOME");
   int max_tries = 10;
@@ -1283,7 +1284,7 @@ static void handle_requests(pid_t waitForPid)
       if (d.wrapper >= 0 && FD_ISSET(d.wrapper, &rd_set))
       {
          struct sockaddr_un client;
-         kde_socklen_t sClient = sizeof(client);
+         QT_SOCKLEN_T sClient = sizeof(client);
          int sock = accept(d.wrapper, (struct sockaddr *)&client, &sClient);
          if (sock >= 0)
          {

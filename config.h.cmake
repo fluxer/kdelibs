@@ -6,8 +6,6 @@
 
 /****************************/
 
-#define kde_socklen_t socklen_t
-
 #define KDELIBSUFF "${KDELIBSUFF}"
 
 /****************************/

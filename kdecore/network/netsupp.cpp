@@ -941,7 +941,7 @@ static void findport(unsigned short port, char *serv, size_t servlen, int flags)
   qsnprintf(serv, servlen, "%u", ntohs(port));
 }
 
-int getnameinfo(const struct sockaddr *sa, kde_socklen_t salen,
+int getnameinfo(const struct sockaddr *sa, QT_SOCKLEN_T salen,
 		char *host, size_t hostlen, char *serv, size_t servlen,
 		int flags)
 {

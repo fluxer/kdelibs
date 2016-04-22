@@ -130,7 +130,7 @@ static int read_socket(int sock, char *buffer, int len)
 
 static int openSocket()
 {
-  kde_socklen_t socklen;
+  socklen_t socklen;
   int s;
   struct sockaddr_un server;
 #define MAX_SOCK_FILE 255
