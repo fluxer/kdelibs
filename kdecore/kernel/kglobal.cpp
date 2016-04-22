@@ -52,10 +52,6 @@
 #include "kcmdlineargs.h"
 #include <unistd.h> // umask
 
-// ~KConfig needs qrand(). qrand() depends on a Q_GLOBAL_STATIC. With this Q_CONSTRUCTOR_FUNCTION we
-// try to make qrand() live longer than any KConfig object.
-Q_CONSTRUCTOR_FUNCTION(qrand)
-
 typedef QSet<QString> KStringDict;
 mode_t s_umsk;
 
