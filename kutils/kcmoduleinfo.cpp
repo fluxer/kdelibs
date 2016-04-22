@@ -129,10 +129,6 @@ void KCModuleInfo::Private::loadAll()
   // read weight
   QVariant tmp = service->property( "X-KDE-Weight", QVariant::Int );
   weight = tmp.isValid() ? tmp.toInt() : 100;
-
-  // factory handle
-  handle = lib;
-
 }
 
 QString KCModuleInfo::fileName() const
@@ -176,14 +172,6 @@ QString KCModuleInfo::docPath() const
     d->loadAll();
 
   return d->doc;
-}
-
-QString KCModuleInfo::handle() const
-{
-  if (!d->allLoaded)
-    d->loadAll();
-
-  return d->handle;
 }
 
 int KCModuleInfo::weight() const

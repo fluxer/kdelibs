@@ -142,11 +142,6 @@ public:
   QString library() const;
 
   /**
-   * @return a handle, same as the library name
-   */
-  QString handle() const;
-
-  /**
    * @return the weight of the module which determines the order of the pages in
    * the KCMultiDialog. It's set by the X-KDE-Weight field.
    */

@@ -80,7 +80,7 @@ void KCModuleProxyPrivate::loadModule()
 		topLayout = new QVBoxLayout( parent );
 		topLayout->setMargin( 0 );
 
-		QString name = modInfo.handle();
+		QString name = modInfo.library();
 		name.replace("-", "_"); //hyphen is not allowed in dbus, only [A-Z][a-z][0-9]_
 		dbusPath = QLatin1String("/internal/KSettingsWidget/") + name;
 		dbusService = QLatin1String("org.kde.internal.KSettingsWidget_") + name;
@@ -89,7 +89,7 @@ void KCModuleProxyPrivate::loadModule()
 	if( QDBusConnection::sessionBus().registerService( dbusService ) || bogusOccupier )
 	{ /* We got the name we requested, because no one was before us,
 	   * or, it was an random application which had picked that name */
-		kDebug(711) << "Module not already loaded, loading module " << modInfo.moduleName() << " from library " << modInfo.library() << " using symbol " << modInfo.handle();
+		kDebug(711) << "Module not already loaded, loading module " << modInfo.moduleName() << " from library " << modInfo.library();
 
 		kcm = KCModuleLoader::loadModule( modInfo, KCModuleLoader::Inline, parent, args );
 
@@ -102,7 +102,7 @@ void KCModuleProxyPrivate::loadModule()
 			kcm->layout()->setMargin( 0 );
 		}
 		topLayout->addWidget( kcm );
-		if( !modInfo.handle().isEmpty() )
+		if( !modInfo.library().isEmpty() )
 			QDBusConnection::sessionBus().registerObject(dbusPath, new KSettingsWidgetAdaptor(parent), QDBusConnection::ExportAllSlots);
 
 		if ( !rootInfo && /* If it's not already done */
