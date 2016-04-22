@@ -199,6 +199,7 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 */
 #define COMMON_CONSTRUCTOR \
     kDebug() << i18n("initializing player"); \
+    m_stopprocessing = false; \
     setlocale(LC_NUMERIC, "C"); \
     m_handle = mpv_create(); \
     if (m_handle) { \

@@ -30,7 +30,7 @@ typedef struct mpv_handle mpv_handle;
 #endif
 
 /*!
-    Base class for KAudioPlayer and KMediaPlayer
+    Base class for @p KAudioPlayer and @p KMediaPlayer
     @since 4.19
 */
 class KMEDIAPLAYER_EXPORT KAbstractPlayer
@@ -42,10 +42,10 @@ public:
     //@{
     /**
         Low-level methods that you should most likely not use, if you do and the API has to change
-        (e.g. from MPV to a fork of MPV, who knows) then you will be on your own! It is available
-        in case the convenience methods bellow those are not enough for your use case, but it is
-        better to let us know your requirements instead of using them. They may serve you as
-        temporary solution, for testing purposes, etc. but beware there be dragons!
+        (e.g. from MPV to a fork of MPV, who knows) then you will be on your own! They are
+        available in case the convenience methods bellow those are not enough for your use case,
+        but it is better to let us know your requirements instead of using them. They may serve you
+        as temporary solution, for testing purposes, etc. but beware there be dragons!
     **/
     //! @brief A low-level player command sender
     virtual void command(const QVariant& params) const = 0;
@@ -67,9 +67,9 @@ public:
     */
     void load(QString path);
     /*!
-        @brief Start playing from data
+        @brief Start playing from @p data
         @param data the raw data that should be played
-        @warning Use only when you absolutely have to, when possible use load(QString)
+        @warning Use only when you absolutely have to, when possible use @p load(QString)
         @overload
     */
     void load(QByteArray data);
@@ -96,11 +96,11 @@ public:
     */
     void stop();
     /*!
-        @brief Current path
+        @brief Gets you the current loaded path, empty if nothing is loaded
     */
     QString path();
     /*!
-        @brief current loaded path title
+        @brief Gets you the current loaded path title
     */
     QString title();
     /*!
@@ -119,7 +119,7 @@ public:
     */
     float totalTime();
     /*!
-        @return currently set volume level, usually from 0-100
+        @return current volume level, usually in range of 0-100
         @see setVolume
     */
     float volume();
@@ -133,6 +133,7 @@ public:
     */
     QStringList protocols();
     /*!
+        @brief Gets you the device used to output audio
         @return Audio output
     */
     QString audiooutput();
@@ -197,24 +198,28 @@ public:
     */
     void setMute(bool mute);
     /*!
+        @note If the output is not valid the player will fallback to automatic detection, you can
+        obtain a list of valid outputs via @p audiooutputs()
         @param output audio output
+        @see audiooutputs
     */
     void setAudioOutput(QString output);
     /*!
         @param fullscreen wheather it should take all screen space
         @warning This will most likely fail and the property will be set but MPV will do nothing
-        because it is embeded, you will have to call QWidget::showFullscreen() on the parent wiget!
+        because it is embeded, you will have to call @p QWidget::showFullscreen() on the parent
+        widget!
     */
     void setFullscreen(bool fullscreen);
 };
 
 /*!
-    The KAudioPlayer class provides an object that can be used to playback from various media
+    The @p KAudioPlayer class provides an object that can be used to playback from various media
     sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray, SMB,
     file-descriptor, raw data, you name it. It supports per-application state too, this
     includes audio output device, volume and mute state currently.
 
-    For an extended version of this class check out KMediaPlayer and KMediaWidget.
+    For an extended version of this class check out @p KMediaPlayer and @p KMediaWidget.
 
     @warning The API is not stable yet and it may break in the future!
     @since 4.19
@@ -251,7 +256,7 @@ signals:
     void position(double seconds);
     /*!
         @brief Signals that the playing state was finished
-        @warning It is not guaranteed that the playing was successfull, for an example if a stream
+        @note It is not guaranteed that the playing was successfull, for an example if a stream
         was interrupted and the player cannot continue it may emit the signal
     */
     void finished();
@@ -275,12 +280,12 @@ private:
 
 
 /*!
-    The KMediaPlayer class provides an embedable widget that can be used to playback from various
-    media sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
-    SMB, file-descriptor, raw data, you name it. It supports per-application state too, this
-    includes audio output device, volume and mute state currently.
+    The @p KMediaPlayer class provides an embedable widget that can be used to playback from
+    various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
+    Blue-Ray, SMB, file-descriptor, raw data, you name it. It supports per-application state too,
+    this includes audio output device, volume and mute state currently.
 
-    For an extended version of this class check out KMediaWidget.
+    For an extended version of this class check out @p KMediaWidget.
 
     @note Constructing it with parent widget will layer in top of it.
     @warning The API is not stable yet and it may break in the future!
@@ -318,7 +323,7 @@ signals:
     void position(double seconds);
     /*!
         @brief Signals that the playing state was finished
-        @warning It is not guaranteed that the playing was successfull, for an example if a stream
+        @note It is not guaranteed that the playing was successfull, for an example if a stream
         was interrupted and the player cannot continue it may emit the signal
     */
     void finished();

@@ -26,14 +26,14 @@
 #include <kmediaplayer.h>
 
 /*!
-    The KMediaWidget class provides an embedable widget that can be used to playback from various
-    media sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
-    SMB, file-descriptor, raw data, you name it. Unlike KMediaPlayer it provides interactive media
-    controls to play/pause, seek to position and set volume. It is ment to be a simple player but
-    supports drag-n-drop actions, fullscreen support and can automatically hide the media controls
-    optionally.
+    The @p KMediaWidget class provides an embedable widget that can be used to playback from
+    various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
+    Blue-Ray, file-descriptor, raw data, you name it. Unlike @p KMediaPlayer it provides
+    interactive media controls to play/pause, seek to position and set volume. It is ment to be a
+    simple player but supports drag-n-drop actions, fullscreen support and can automatically hide
+    the media controls optionally.
 
-    For a simpler version of this class check out KMediaPlayer.
+    For a simpler version of this class check out @p KMediaPlayer.
 
     @code
     KMediaWidget *player = new KMediaWidget(this);
@@ -80,7 +80,7 @@ public:
     KMediaPlayer* player();
     /*!
         @brief Open a path
-        @long Aside from loading the path it will also setup the play/pause button state and enable
+        @long Aside from loading @p path it will also setup the play/pause button state and enable
         the position seeking slider if the path supports seeking. It is recommended to use this
         method when a path must be loaded.
         @param path a path to load

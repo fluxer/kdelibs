@@ -24,13 +24,13 @@
 #include <kmediaplayer.h>
 
 /*!
-    The KAudioWidget class provides an embedable widget that can be used to playback from various
-    media sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
-    SMB, file-descriptor, raw data, you name it. Unlike KAudioPlayer it provides interactive media
-    controls to play/pause, seek to position and set volume. It is ment to be a simple player but
-    supports drag-n-drop optionally.
+    The @p KAudioWidget class provides an embedable widget that can be used to playback from
+    various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
+    Blue-Ray, file-descriptor, raw data, you name it. Unlike @p KAudioPlayer it provides
+    interactive media controls to play/pause, seek to position and set volume. It is ment to be a
+    simple player but supports drag-n-drop optionally.
 
-    For a simpler version of this class check out KMediaPlayer.
+    For a simpler version of this class check out @p KMediaPlayer.
 
     @code
     KAudioWidget *player = new KAudioWidget(this);
@@ -69,7 +69,7 @@ public:
     KAudioPlayer* player();
     /*!
         @brief Open a path
-        @long Aside from loading the path it will also setup the play/pause button state and enable
+        @long Aside from loading @p path it will also setup the play/pause button state and enable
         the position seeking slider if the path supports seeking. It is recommended to use this
         method when a path must be loaded.
         @param path a path to load
