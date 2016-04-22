@@ -972,13 +972,13 @@ void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
         return;
 
     QDir urldir(newurl.prettyUrl());
-    if (!newurl.isLocalFile() || !urldir.isReadable()) {
+    if (!urldir.isReadable()) {
         // maybe newurl is a file? check its parent directory
         newurl.setPath(newurl.directory(KUrl::ObeyTrailingSlash));
         if (newurl.equals(d->currUrl, KUrl::CompareWithoutTrailingSlash))
             return; // parent is current dir, nothing to do (fixes #173454, too)
         urldir.setPath(newurl.prettyUrl());
-        if ((!newurl.isLocalFile() || !urldir.isReadable()) && urldir.exists()) {
+        if (!urldir.isReadable() && urldir.exists()) {
             resetCursor();
             KMessageBox::error(d->itemView,
                                i18n("The specified folder does not exist "
@@ -1117,7 +1117,7 @@ void KDirOperator::pathChanged()
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
     QDir urldir(d->currUrl.prettyUrl());
-    if (!d->currUrl.isLocalFile() || urldir.isReadable()) {
+    if (!urldir.isReadable()) {
         KMessageBox::error(d->itemView,
                            i18n("The specified folder does not exist "
                                 "or was not readable."));

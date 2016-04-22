@@ -21,34 +21,6 @@
 
 #include "krandom.h"
 
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <time.h>
-#include <sys/time.h>
-#include <fcntl.h>
-#include <kde_file.h>
-
-int KRandom::random()
-{
-   static bool init = false;
-   if (!init)
-   {
-      unsigned int seed;
-      init = true;
-      int fd = KDE_open("/dev/urandom", O_RDONLY);
-      if (fd < 0 || ::read(fd, &seed, sizeof(seed)) != sizeof(seed))
-      {
-            // No /dev/urandom... try something else.
-            srand(getpid());
-            seed = rand()+time(0);
-      }
-      if (fd >= 0) close(fd);
-      srand(seed);
-   }
-   return rand();
-}
-
 QString KRandom::randomString(int length)
 {
    if (length <=0 ) return QString();

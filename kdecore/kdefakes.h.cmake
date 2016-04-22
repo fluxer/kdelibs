@@ -70,28 +70,6 @@ char *strcasestr(const char *str1, const char *str2);
 #endif
 #endif
 
-#cmakedefine HAVE_RANDOM_PROTO 1
-#if !defined(HAVE_RANDOM_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-long int random(void);
-#ifdef __cplusplus
-}
-#endif
-#endif
-
-#cmakedefine HAVE_SRANDOM_PROTO 1
-#if !defined(HAVE_SRANDOM_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-void srandom(unsigned int);
-#ifdef __cplusplus
-}
-#endif
-#endif
-
 #cmakedefine HAVE_SETENV_PROTO 1
 #if !defined(HAVE_SETENV_PROTO)
 #ifdef __cplusplus

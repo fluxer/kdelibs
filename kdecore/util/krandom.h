@@ -39,7 +39,7 @@ namespace KRandom {
      * @return A random number in the range [0, RAND_MAX). The RNG is seeded
      *   on first use.
      */
-    KDECORE_EXPORT int random();
+    inline int random() { return qrand(); };
 
     /**
      * Generates a random string.  It operates in the range [A-Za-z0-9]

@@ -167,18 +167,6 @@ void usleep(unsigned int usec) {
 
 #endif /* !HAVE_USLEEP */
 
-#ifndef HAVE_RANDOM
-long int random()
-{
-    return lrand48();
-}
-
-void srandom(unsigned int seed)
-{
-    srand48(seed);
-}
-#endif /* !HAVE_RANDOM */
-
 #ifndef HAVE_SETEUID
 int seteuid(uid_t euid)
 {

@@ -205,7 +205,6 @@ check_function_exists(initgroups HAVE_INITGROUPS)        # kde3support/k3process
 check_function_exists(mkstemps   HAVE_MKSTEMPS)          # dcop, kdecore/fakes.c
 check_function_exists(mkstemp    HAVE_MKSTEMP)           # kdecore/fakes.c
 check_function_exists(mkdtemp    HAVE_MKDTEMP)           # kdecore/fakes.c
-check_function_exists(random     HAVE_RANDOM)            # kdecore/fakes.c
 check_function_exists(strlcpy    HAVE_STRLCPY)           # kdecore/fakes.c
 check_function_exists(strlcat    HAVE_STRLCAT)           # kdecore/fakes.c
 check_cxx_symbol_exists(__CORRECT_ISO_CPP_STRING_H_PROTO "string.h" HAVE_STRCASESTR_OVERLOAD) # glibc-2.9 strangeness
@@ -230,7 +229,6 @@ check_prototype_exists(mkdtemp "stdlib.h;unistd.h"  HAVE_MKDTEMP_PROTO)
 check_prototype_exists(mkstemp "stdlib.h;unistd.h"  HAVE_MKSTEMP_PROTO)
 check_prototype_exists(strlcat string.h             HAVE_STRLCAT_PROTO)
 check_prototype_exists(strlcpy string.h             HAVE_STRLCPY_PROTO)
-check_prototype_exists(random stdlib.h              HAVE_RANDOM_PROTO)
 check_prototype_exists(res_init "sys/types.h;netinet/in.h;arpa/nameser.h;resolv.h" HAVE_RES_INIT_PROTO)
 check_prototype_exists(setenv stdlib.h              HAVE_SETENV_PROTO)
 check_prototype_exists(srandom stdlib.h             HAVE_SRANDOM_PROTO)
