@@ -74,7 +74,6 @@
 #cmakedefine   HAVE_SETENV 1
 #cmakedefine   HAVE_SETEUID 1
 #cmakedefine   HAVE_SETMNTENT 1
-#cmakedefine   HAVE_SRANDOM 1
 #cmakedefine   HAVE_STRCMP 1
 #cmakedefine   HAVE_STRLCPY 1
 #cmakedefine   HAVE_STRLCAT 1

@@ -21,8 +21,6 @@
 
 #include "kstringhandler.h"
 
-#include <stdlib.h>		// random()
-
 #include <kglobal.h>
 
 #include <QtCore/QRegExp>            // for the word ranges

@@ -38,7 +38,7 @@ check_include_files(malloc.h      HAVE_MALLOC_H)                       # unused?
 check_include_files(sys/time.h    TIME_WITH_SYS_TIME)                  # kdecore, kioslave
 check_include_files(crt_externs.h HAVE_CRT_EXTERNS_H)                  # kinit, config.h
 
-check_include_files(alloca.h      HAVE_ALLOCA_H)                       # kdecore, khtml
+check_include_files(alloca.h      HAVE_ALLOCA_H)                       # kdecore
 check_include_files(fstab.h       HAVE_FSTAB_H)                        # kio, kdecore
 check_include_files(limits.h      HAVE_LIMITS_H)                       # various
 check_include_files(mntent.h      HAVE_MNTENT_H)                       # solid, kio, kdecore
@@ -81,10 +81,9 @@ check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST
 
 check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore, kio
 check_function_exists(fdatasync     HAVE_FDATASYNC)                # kdecore, kate
-check_function_exists(mmap             HAVE_MMAP)                     # kdecore, khtml
+check_function_exists(mmap             HAVE_MMAP)                     # kdecore
 
 check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave
-check_function_exists(srandom         HAVE_SRANDOM)                   # config.h
 check_function_exists(_NSGetEnviron   HAVE_NSGETENVIRON)              # kinit, config.h
 check_function_exists(gettimeofday    HAVE_GETTIMEOFDAY)              # kpty, kdeui, some tests
 check_function_exists(getgrouplist    HAVE_GETGROUPLIST)              # kio
@@ -231,7 +230,6 @@ check_prototype_exists(strlcat string.h             HAVE_STRLCAT_PROTO)
 check_prototype_exists(strlcpy string.h             HAVE_STRLCPY_PROTO)
 check_prototype_exists(res_init "sys/types.h;netinet/in.h;arpa/nameser.h;resolv.h" HAVE_RES_INIT_PROTO)
 check_prototype_exists(setenv stdlib.h              HAVE_SETENV_PROTO)
-check_prototype_exists(srandom stdlib.h             HAVE_SRANDOM_PROTO)
 check_prototype_exists(unsetenv stdlib.h            HAVE_UNSETENV_PROTO)
 check_prototype_exists(usleep unistd.h              HAVE_USLEEP_PROTO)
 check_prototype_exists(initgroups "unistd.h;sys/types.h;unistd.h;grp.h" HAVE_INITGROUPS_PROTO)
