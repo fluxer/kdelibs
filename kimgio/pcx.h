@@ -46,7 +46,7 @@ class RGB
       return c;
     }
 
-} KDE_PACKED;
+} Q_PACKED;
 
 class Palette
 {
@@ -65,7 +65,7 @@ class Palette
     }
 
     class RGB rgb[ 16 ];
-} KDE_PACKED;
+} Q_PACKED;
 
 class PCXHEADER
 {
@@ -108,7 +108,7 @@ class PCXHEADER
                               // found only in PB IV/IV Plus
     quint16 VScreenSize;     // Vertical screen size in pixels. New field
                               // found only in PB IV/IV Plus
-} KDE_PACKED;
+} Q_PACKED;
 
 #endif // PCX_H
 

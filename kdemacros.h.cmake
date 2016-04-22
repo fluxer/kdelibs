@@ -80,20 +80,6 @@
 #endif
 
 /**
- * @def KDE_PACKED
- * @ingroup KDEMacros
- *
- * The KDE_PACKED macro can be used to hint the compiler that a particular
- * structure or class should not contain unnecessary paddings.
- */
-
-#ifdef __GNUC__
-#define KDE_PACKED __attribute__((__packed__))
-#else
-#define KDE_PACKED
-#endif
-
-/**
  * @def KDE_DEPRECATED
  * @ingroup KDEMacros
  *
@@ -202,73 +188,5 @@
  * have been compiled out.
  */
 #cmakedefine KDE_NO_DEPRECATED
-
-/**
- * @def KDE_ISLIKELY
- * @ingroup KDEMacros
- *
- * The KDE_ISLIKELY macro tags a boolean expression as likely to evaluate to
- * @c true. When used in an <tt>if ( )</tt> statement, it gives a hint to the compiler
- * that the following codeblock is likely to get executed. Providing this
- * information helps the compiler to optimize the code for better performance.
- * Using the macro has an insignificant code size or runtime memory footprint impact.
- * The code semantics is not affected.
- *
- * Example:
- *
- * \code
- * if ( KDE_ISLIKELY( testsomething() ) )
- *     abort();     // assume its likely that the application aborts
- * \endcode
- *
- * \note
- * Providing wrong information ( like marking a condition that almost never
- * passes as 'likely' ) will cause a significant runtime slowdown. Therefore only
- * use it for cases where you can be sure about the odds of the expression to pass
- * in all cases ( independent from e.g. user configuration ).
- *
- * \note
- * Do NOT use ( !KDE_ISLIKELY(foo) ) as an replacement for KDE_ISUNLIKELY() !
- *
- * @sa KDE_ISUNLIKELY
- */
-
-/**
- * @def KDE_ISUNLIKELY
- * @ingroup KDEMacros
- *
- * The KDE_ISUNLIKELY macro tags a boolean expression as likely to evaluate to
- * @c false. When used in an <tt>if ( )</tt> statement, it gives a hint to the compiler
- * that the following codeblock is unlikely to get executed. Providing this
- * information helps the compiler to optimize the code for better performance.
- * Using the macro has an insignificant code size or runtime memory footprint impact.
- * The code semantics is not affected.
- *
- * Example:
- *
- * \code
- * if ( KDE_ISUNLIKELY( testsomething() ) )
- *     abort();     // assume its unlikely that the application aborts
- * \endcode
- *
- * \note
- * Providing wrong information ( like marking a condition that almost never
- * passes as 'unlikely' ) will cause a significant runtime slowdown. Therefore only
- * use it for cases where you can be sure about the odds of the expression to pass
- * in all cases ( independent from e.g. user configuration ).
- *
- * \note
- * Do NOT use ( !KDE_ISUNLIKELY(foo) ) as an replacement for KDE_ISLIKELY() !
- *
- * @sa KDE_ISLIKELY
- */
-
-#if defined(__GNUC__) && __GNUC__ >= 3
-# define KDE_ISLIKELY( x )    __builtin_expect(!!(x),1)
-# define KDE_ISUNLIKELY( x )  __builtin_expect(!!(x),0)
-#else
-# define KDE_ISLIKELY( x )   ( x )
-# define KDE_ISUNLIKELY( x )  ( x )
-#endif
 
 #endif /* _KDE_MACROS_H_ */
