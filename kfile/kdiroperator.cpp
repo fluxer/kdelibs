@@ -971,20 +971,18 @@ void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
     if (newurl.equals(d->currUrl, KUrl::CompareWithoutTrailingSlash))
         return;
 
-    QDir urldir(newurl.prettyUrl());
+    QDir urldir(newurl.toLocalFile());
     if (!urldir.isReadable()) {
         // maybe newurl is a file? check its parent directory
         newurl.setPath(newurl.directory(KUrl::ObeyTrailingSlash));
         if (newurl.equals(d->currUrl, KUrl::CompareWithoutTrailingSlash))
             return; // parent is current dir, nothing to do (fixes #173454, too)
-        urldir.setPath(newurl.prettyUrl());
-        if (!urldir.isReadable() && urldir.exists()) {
+        urldir.setPath(newurl.toLocalFile());
+        if (!urldir.isReadable()) {
             resetCursor();
             KMessageBox::error(d->itemView,
                                i18n("The specified folder does not exist "
                                     "or was not readable."));
-            return;
-        } else if (!urldir.exists()) {
             return;
         }
     }
@@ -1116,7 +1114,7 @@ void KDirOperator::pathChanged()
     // when KIO::Job emits finished, the slot will restore the cursor
     QApplication::setOverrideCursor(Qt::WaitCursor);
 
-    QDir urldir(d->currUrl.prettyUrl());
+    QDir urldir(d->currUrl.toLocalFile());
     if (!urldir.isReadable()) {
         KMessageBox::error(d->itemView,
                            i18n("The specified folder does not exist "
