@@ -11,7 +11,6 @@ set(ThreadWeaver_LIB_SRCS
     WeaverInterface.cpp
     ThreadWeaver.cpp
     WeaverImpl.cpp
-    DebuggingAids.cpp
     Thread.cpp
     Job.cpp
     State.cpp
@@ -31,7 +30,7 @@ set(ThreadWeaver_LIB_SRCS
 
 add_library(threadweaver ${LIBRARY_TYPE} ${ThreadWeaver_LIB_SRCS})
 
-target_link_libraries(threadweaver ${QT_QTCORE_LIBRARY})
+target_link_libraries(threadweaver ${KDE4_KDECORE_LIBS})
 
 set_target_properties(threadweaver PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
@@ -47,7 +46,6 @@ install(
     FILES
     WeaverInterface.h
     ThreadWeaver.h
-    DebuggingAids.h
     Thread.h
     Job.h
     State.h

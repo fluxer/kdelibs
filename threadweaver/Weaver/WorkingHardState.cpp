@@ -28,13 +28,12 @@ $Id: WorkingHardState.cpp 30 2005-08-16 16:16:04Z mirko $
 
 #include "WorkingHardState.h"
 
-#include <QtCore/qbytearray.h>
+#include <kdebug.h>
 
 #include "Job.h"
 #include "Thread.h"
 #include "WeaverImpl.h"
 #include "ThreadWeaver.h"
-#include "DebuggingAids.h"
 
 
 using namespace ThreadWeaver;
@@ -55,16 +54,13 @@ void WorkingHardState::resume()
 
 Job* WorkingHardState::applyForWork(Thread *th,  Job* previous)
 {   // beware: this code is executed in the applying thread!
-    debug ( 2, "WorkingHardState::applyForWork: thread %i applies for work "
-            "in %s state.\n", th->id(),
-            qPrintable ( weaver()->state().stateName() ) );
+    kDebug() << "thread" << th->id() << "applies for work in state" << weaver()->state().stateName();
 
     Job *next = weaver()->takeFirstAvailableJob(previous);
     if ( next ) {
         return next;
     } else {
-        debug ( 2, "WorkingHardState::applyForWork: no work for thread %i, "
-                "blocking it.\n", th->id() );
+        kDebug() << "no work for thread" << th->id() << ", blocking it.";
         weaver()->waitForAvailableJob( th );
         // this is no infinite recursion: the state may have changed
         // meanwhile, or jobs may have become available:

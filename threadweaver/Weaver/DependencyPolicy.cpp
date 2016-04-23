@@ -23,16 +23,14 @@ http://creative-destruction.me $
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-$Id: DebuggingAids.cpp 20 2005-08-08 21:02:51Z mirko $
+$Id: DependencyPolicy.cpp 20 2005-08-08 21:02:51Z mirko $
 */
 
-#include "DependencyPolicy.h"
-
 #include <QtCore/QMutex>
-#include <QtCore/QDebug>
+#include <kdebug.h>
 
 #include "Job.h"
-#include "DebuggingAids.h"
+#include "DependencyPolicy.h"
 
 using namespace ThreadWeaver;
 
@@ -74,19 +72,19 @@ DependencyPolicy::~DependencyPolicy()
 void DependencyPolicy::addDependency( Job* jobA, Job* jobB )
 {
     // jobA depends on jobB
-    REQUIRE ( jobA != 0 && jobB != 0 && jobA != jobB );
+    Q_ASSERT ( jobA != 0 && jobB != 0 && jobA != jobB );
 
     jobA->assignQueuePolicy( this );
     jobB->assignQueuePolicy( this );
     QMutexLocker l( & d->mutex() );
     d->dependencies().insert( jobA, jobB );
 
-    ENSURE ( d->dependencies().contains (jobA));
+    Q_ASSERT ( d->dependencies().contains (jobA));
 }
 
 bool DependencyPolicy::removeDependency( Job* jobA, Job* jobB )
 {
-    REQUIRE (jobA != 0 && jobB != 0);
+    Q_ASSERT (jobA != 0 && jobB != 0);
     bool result = false;
     QMutexLocker l( & d->mutex() );
 
@@ -103,7 +101,7 @@ bool DependencyPolicy::removeDependency( Job* jobA, Job* jobB )
         }
     }
 
-    ENSURE ( ! d->dependencies().keys(jobB).contains(jobA) );
+    Q_ASSERT ( ! d->dependencies().keys(jobB).contains(jobA) );
     return result;
 }
 
@@ -127,7 +125,7 @@ void DependencyPolicy::resolveDependencies( Job* job )
 
 QList<Job*> DependencyPolicy::getDependencies( Job* job ) const
 {
-    REQUIRE (job != 0);
+    Q_ASSERT (job != 0);
     QList<Job*> result;
     // basicly JobMultiMap
     QMapIterator<ThreadWeaver::Job*, ThreadWeaver::Job*> it(d->dependencies());
@@ -146,7 +144,7 @@ QList<Job*> DependencyPolicy::getDependencies( Job* job ) const
 
 bool DependencyPolicy::hasUnresolvedDependencies( Job* job ) const
 {
-    REQUIRE (job != 0);
+    Q_ASSERT (job != 0);
     QMutexLocker l( & d->mutex() );
     return d->dependencies().contains( job );
 }
@@ -159,32 +157,31 @@ DependencyPolicy& DependencyPolicy::instance ()
 
 bool DependencyPolicy::canRun( Job* job )
 {
-    REQUIRE (job != 0);
+    Q_ASSERT (job != 0);
     return ! hasUnresolvedDependencies( job );
 }
 
 void DependencyPolicy::free( Job* job )
 {
-    REQUIRE (job != 0);
+    Q_ASSERT (job != 0);
     if ( job->success() )
     {
         resolveDependencies( job );
-        debug( 3, "DependencyPolicy::free: dependencies resolved for job %p.\n", (void*)job);
+        kDebug() << "dependencies resolved for job" << (void*)job;
     } else {
-        debug( 3, "DependencyPolicy::free: not resolving dependencies for %p (execution not successful).\n",
-               (void*)job);
+        kDebug() << "not resolving dependencies (execution not successful) for" << (void*)job;
     }
-    ENSURE ( ( ! hasUnresolvedDependencies( job ) && job->success() ) || ! job->success() );
+    Q_ASSERT ( ( ! hasUnresolvedDependencies( job ) && job->success() ) || ! job->success() );
 }
 
 void DependencyPolicy::release( Job* job )
 {
-    REQUIRE (job != 0); Q_UNUSED(job)
+    Q_ASSERT (job != 0); Q_UNUSED(job)
 }
 
 void DependencyPolicy::destructed( Job* job )
 {
-    REQUIRE (job != 0);
+    Q_ASSERT (job != 0);
     resolveDependencies ( job );
 }
 
@@ -194,18 +191,15 @@ void DependencyPolicy::dumpJobDependencies()
     // basicly JobMultiMap
     QMapIterator<ThreadWeaver::Job*, ThreadWeaver::Job*> it(d->dependencies());
 
-    debug ( 0, "Job Dependencies (left depends on right side):\n" );
+    kDebug ( "Job Dependencies (left depends on right side):" );
     while ( it.hasNext() )
     {
         it.next();
-        debug( 0, "  : %p (%s%s) <-- %p (%s%s)\n",
-               (void*)it.key(),
-               it.key()->objectName().isEmpty() ? "" : qPrintable ( QString(it.key()->objectName() + QObject::tr ( " of type " )) ),
-               it.key()->metaObject()->className(),
-               (void*)it.value(),
-               it.value()->objectName().isEmpty() ? "" : qPrintable ( QString(it.value()->objectName() + QObject::tr ( " of type " )) ),
-               it.value()->metaObject()->className() );
+        kDebug() << "  : ("
+               << (void*)it.key() << it.key()->objectName() << it.key()->metaObject()->className()
+               << "<--"
+               << (void*)it.value() << it.value()->objectName() << it.value()->metaObject()->className();
     }
-    debug ( 0, "-----------------\n" );
+    kDebug ( "-----------------" );
 }
 

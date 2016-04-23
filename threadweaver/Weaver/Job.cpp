@@ -26,9 +26,6 @@ http://creative-destruction.me $
 $Id: Job.cpp 20 2005-08-08 21:02:51Z mirko $
 */
 
-#include "Job.h"
-#include "Job_p.h"
-
 #include <QtCore/QSet>
 #include <QtCore/QList>
 #include <QtCore/QMutex>
@@ -36,9 +33,11 @@ $Id: Job.cpp 20 2005-08-08 21:02:51Z mirko $
 #include <QtCore/QMap>
 #include <QtCore/qobjectdefs.h>
 #include <QtCore/QWaitCondition>
-#include <DebuggingAids.h>
-#include <Thread.h>
+#include <kdebug.h>
 
+#include "Job.h"
+#include "Job_p.h"
+#include "Thread.h"
 #include "QueuePolicy.h"
 #include "DependencyPolicy.h"
 
@@ -96,7 +95,7 @@ ThreadWeaver::JobRunHelper::JobRunHelper()
 
 void ThreadWeaver::JobRunHelper::runTheJob ( Thread* th, Job* job )
 {
-    P_ASSERT ( th == thread() );
+    Q_ASSERT ( th == thread() );
     job->d->mutex->lock();
     job->d->thread = th;
     job->d->mutex->unlock();
@@ -121,7 +120,7 @@ void ThreadWeaver::JobRunHelper::runTheJob ( Thread* th, Job* job )
 
 void Job::execute(Thread *th)
 {
-//    P_ASSERT (sm_dep()->values(this).isEmpty());
+//    Q_ASSERT (sm_dep()->values(this).isEmpty());
     JobRunHelper helper;
     connect ( &helper,  SIGNAL (started(ThreadWeaver::Job*)),
               SIGNAL (started(ThreadWeaver::Job*)) );
@@ -130,10 +129,11 @@ void Job::execute(Thread *th)
     connect ( &helper, SIGNAL(failed(ThreadWeaver::Job*)),
               SIGNAL(failed(ThreadWeaver::Job*)) );
 
-    debug(3, "Job::execute: executing job of type %s %s in thread %i.\n",
-          metaObject()->className(), objectName().isEmpty() ? "" : qPrintable( objectName() ), th->id());
+    kDebug() << "executing job of type"
+        << metaObject()->className() << objectName()
+        << "in thread" << th->id();
     helper.runTheJob( th, this );
-    debug(3, "Job::execute: finished execution of job in thread %i.\n", th->id());
+    kDebug() << "finished execution of job in thread" << th->id();
 }
 
 int Job::priority () const
@@ -170,8 +170,8 @@ bool Job::canBeExecuted()
 
     if ( d->queuePolicies->size() > 0 )
     {
-        debug( 4, "Job::canBeExecuted: acquiring permission from %i queue %s.\n",
-               d->queuePolicies->size(), d->queuePolicies->size()==1 ? "policy" : "policies" );
+        kDebug() << "acquiring permission from" << d->queuePolicies->size()
+                 << "queue policies";
         for ( int index = 0; index < d->queuePolicies->size(); ++index )
         {
             if ( d->queuePolicies->at( index )->canRun( this ) )
@@ -183,8 +183,7 @@ bool Job::canBeExecuted()
             }
         }
 
-        debug( 4, "Job::canBeExecuted: queue policies returned %s.\n", success ? "true" : "false" );
-
+        kDebug() << "queue policies returned" << success;
         if ( ! success )
         {
 
@@ -194,7 +193,7 @@ bool Job::canBeExecuted()
             }
         }
     } else {
-        debug( 4, "Job::canBeExecuted: no queue policies, this job can be executed.\n" );
+        kDebug( "no queue policies, this job can be executed." );
     }
 
     return success;

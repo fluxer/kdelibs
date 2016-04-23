@@ -23,12 +23,11 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-   $Id: DebuggingAids.h 30 2005-08-16 16:16:04Z mirko $
+   $Id: JobSequence.cpp 30 2005-08-16 16:16:04Z mirko $
 */
 
 #include "JobSequence.h"
 #include "WeaverInterface.h"
-#include "DebuggingAids.h"
 #include "DependencyPolicy.h"
 
 using namespace ThreadWeaver;
@@ -40,7 +39,7 @@ JobSequence::JobSequence ( QObject *parent )
 
 void JobSequence::aboutToBeQueued ( WeaverInterface *weaver )
 {
-    REQUIRE (weaver != 0);
+    Q_ASSERT (weaver != 0);
 
     if ( jobListLength() > 1 )
     {
@@ -49,8 +48,8 @@ void JobSequence::aboutToBeQueued ( WeaverInterface *weaver )
         {
             Job* jobA = jobAt(i);
             Job* jobB = jobAt(i-1);
-            P_ASSERT ( jobA != 0 );
-            P_ASSERT ( jobB != 0 );
+            Q_ASSERT ( jobA != 0 );
+            Q_ASSERT ( jobB != 0 );
             DependencyPolicy::instance().addDependency ( jobA, jobB );
         }
     }
@@ -60,14 +59,14 @@ void JobSequence::aboutToBeQueued ( WeaverInterface *weaver )
 
 void JobSequence::internalJobDone( Job* job)
 {
-    REQUIRE ( job != 0 );
+    Q_ASSERT ( job != 0 );
     
-	if ( !job->success() )
+    if ( !job->success() )
     {
         stop( job );
     }
 
-	JobCollection::internalJobDone(job);
+    JobCollection::internalJobDone(job);
 }
 
 #include "moc_JobSequence.cpp"

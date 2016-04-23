@@ -31,12 +31,11 @@
 #include "Thread.h"
 
 #include <QtCore/QMutex>
-#include <QtCore/QDebug>
+#include <kdebug.h>
 
 #include "ThreadWeaver.h"
 #include "WeaverImpl.h"
 #include "Job.h"
-#include "DebuggingAids.h"
 
 using namespace ThreadWeaver;
 
@@ -84,11 +83,11 @@ unsigned int Thread::id()
 
 void Thread::run()
 {
-    debug(3, "Thread::run [%u]: running.\n", id());
+    kDebug() << id() << "running.";
     emit(started ( this));
 
     while (true) {
-        debug(3, "Thread::run [%u]: trying to execute the next job.\n", id());
+        kDebug() << id() << "trying to execute the next job.";
         Job* oldJob = 0;
         {
             QMutexLocker l(&d->mutex); Q_UNUSED(l);
@@ -109,7 +108,7 @@ void Thread::run()
             emit(jobDone(newJob));
         }
     }
-    debug ( 3, "Thread::run [%u]: exiting.\n", id() );
+    kDebug() << id() << "exiting.";
 }
 
 void Thread::msleep(unsigned long msec)

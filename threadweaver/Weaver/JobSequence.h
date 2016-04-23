@@ -23,7 +23,7 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-   $Id: DebuggingAids.h 30 2005-08-16 16:16:04Z mirko $
+   $Id: JobSequence.h 30 2005-08-16 16:16:04Z mirko $
 */
 
 #ifndef JOBSEQUENCE_H

@@ -4,10 +4,10 @@ if(ENABLE_TESTING)
     add_subdirectory(Tests)
 endif()
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=950)
+
 add_subdirectory(Weaver)
 # disabled for default kdelibs build:
-# add_subdirectory(WeaverGui)
-# add_subdirectory(Experimental)
 # add_subdirectory(Examples)
 
 install(

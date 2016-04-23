@@ -30,8 +30,7 @@
 
 #include <QtCore/QList>
 #include <QtCore/QMutex>
-
-#include "DebuggingAids.h"
+#include <kdebug.h>
 
 using namespace ThreadWeaver;
 
@@ -89,7 +88,7 @@ void ResourceRestrictionPolicy::free ( Job* job )
 
     if (position != -1)
     {
-        debug ( 4, "ResourceRestrictionPolicy::free: job %p done.\n", (void*)job );
+        kDebug() << "job" << (void*)job << "done.";
         d->customers.removeAt (position);
     }
 }

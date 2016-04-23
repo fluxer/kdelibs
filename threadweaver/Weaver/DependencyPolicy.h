@@ -23,7 +23,7 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 
-   $Id: DebuggingAids.cpp 20 2005-08-08 21:02:51Z mirko $
+   $Id: DependencyPolicy.cpp 20 2005-08-08 21:02:51Z mirko $
 */
 
 #ifndef DEPENDENCYPOLICY_H

@@ -26,16 +26,15 @@ http://creative-destruction.me $
 $Id: DebuggingAids.h 30 2005-08-16 16:16:04Z mirko $
 */
 
-#include "JobCollection.h"
-#include "JobCollection_p.h"
-
-#include "WeaverInterface.h"
-#include "DebuggingAids.h"
-
 #include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
+#include <QtCore/QMutex>
+#include <kdebug.h>
 
+#include "JobCollection.h"
+#include "JobCollection_p.h"
+#include "WeaverInterface.h"
 #include "DependencyPolicy.h"
 
 using namespace ThreadWeaver;
@@ -82,7 +81,7 @@ void JobCollectionJobRunner::execute ( Thread *t )
         m_payload->execute ( t );
 		m_collection->internalJobDone ( m_payload);
     } else {
-        debug ( 1, "JobCollection: job in collection has been deleted." );
+        kDebug ( "job in collection has been deleted." );
     }
     Job::execute ( t );
 }
@@ -144,12 +143,12 @@ JobCollection::~JobCollection()
 
 void JobCollection::addJob ( Job *job )
 {
-    REQUIRE( d->weaver == 0 );
-    REQUIRE( job != 0);
+    Q_ASSERT( d->weaver == 0 );
+    Q_ASSERT( job != 0);
 
-	JobCollectionJobRunner* runner = new JobCollectionJobRunner( this, job, this );
+    JobCollectionJobRunner* runner = new JobCollectionJobRunner( this, job, this );
     d->elements->append ( runner );
-	connect( runner , SIGNAL(done(ThreadWeaver::Job*)) , this , SLOT(jobRunnerDone()) );
+    connect( runner , SIGNAL(done(ThreadWeaver::Job*)) , this , SLOT(jobRunnerDone()) );
 }
 
 void JobCollection::stop( Job *job )
@@ -158,15 +157,15 @@ void JobCollection::stop( Job *job )
     Q_UNUSED( job );
     if ( d->weaver != 0 )
     {
-        debug( 4, "JobCollection::stop: dequeueing %p.\n", (void*)this);
+        kDebug() << "dequeueing" << (void*)this;
         d->weaver->dequeue( this );
     }
-    // FIXME ENSURE ( d->weaver == 0 ); // verify that aboutToBeDequeued has been called
+    // FIXME Q_ASSERT ( d->weaver == 0 ); // verify that aboutToBeDequeued has been called
 }
 
 void JobCollection::aboutToBeQueued ( WeaverInterface *weaver )
 {
-    REQUIRE ( d->weaver == 0 ); // never queue twice
+    Q_ASSERT ( d->weaver == 0 ); // never queue twice
 
     d->weaver = weaver;
 
@@ -175,7 +174,7 @@ void JobCollection::aboutToBeQueued ( WeaverInterface *weaver )
         d->elements->at( 0 )->aboutToBeQueued( weaver );
     }
 
-    ENSURE(d->weaver != 0);
+    Q_ASSERT(d->weaver != 0);
 }
 
 void JobCollection::aboutToBeDequeued( WeaverInterface* weaver )
@@ -194,12 +193,12 @@ void JobCollection::aboutToBeDequeued( WeaverInterface* weaver )
     }
 
     d->weaver = 0;
-    ENSURE ( d->weaver == 0 );
+    Q_ASSERT ( d->weaver == 0 );
 }
 
 void JobCollection::execute ( Thread *t )
 {
-    REQUIRE ( d->weaver != 0);
+    Q_ASSERT ( d->weaver != 0);
 
     // this is async,
     // JobTests::JobSignalsAreEmittedAsynchronouslyTest() proves it
@@ -239,7 +238,7 @@ void JobCollection::execute ( Thread *t )
 Job* JobCollection::jobAt( int i )
 {
     QMutexLocker l( &d->mutex );
-    REQUIRE ( i >= 0 && i < d->elements->size() );
+    Q_ASSERT ( i >= 0 && i < d->elements->size() );
     return d->elements->at( i )->payload();
 }
 
@@ -282,7 +281,7 @@ void JobCollection::jobRunnerDone()
 
 		--d->jobCounter;
 
-		ENSURE (d->jobCounter >= 0);
+		Q_ASSERT (d->jobCounter >= 0);
 
 		if (d->jobCounter == 0)
 		{
@@ -301,7 +300,7 @@ void JobCollection::jobRunnerDone()
 }
 void JobCollection::internalJobDone ( Job* job )
 {
-	REQUIRE( job != 0 );
+    Q_ASSERT( job != 0 );
     Q_UNUSED (job);
 }
 
@@ -330,12 +329,10 @@ void JobCollection::dequeueElements()
 			{
 				if ( d->elements->at( index ) && ! d->elements->at( index )->isFinished() ) // ... a QPointer
 				{
-					debug( 4, "JobCollection::dequeueElements: dequeueing %p.\n",
-							(void*)d->elements->at( index ) );
+					kDebug() << "dequeueing" << (void*)d->elements->at( index );
 					d->weaver->dequeue ( d->elements->at( index ) );
 				} else {
-					debug( 4, "JobCollection::dequeueElements: not dequeueing %p, already finished.\n",
-							(void*)d->elements->at( index ) );
+					kDebug() << "not dequeueing" << d->elements->at( index ) << ", already finished";
 				}
 			}
 
