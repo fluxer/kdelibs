@@ -960,7 +960,7 @@ void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
 {
     KUrl newurl;
 
-    if (!_newurl.isValid())
+    if (!_newurl.isValid() || newurl.toLocalFile().isEmpty())
         newurl = QUrl::fromLocalFile(QDir::homePath());
     else
         newurl = _newurl;
