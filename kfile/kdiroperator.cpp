@@ -381,15 +381,12 @@ KDirOperator::KDirOperator(const KUrl& _url, QWidget *parent) :
     d->viewKind = KFile::Simple;
 
     if (_url.isEmpty()) { // no dir specified -> current dir
-        QString strPath = QDir::currentPath();
-        strPath.append(QChar('/'));
-        d->currUrl = QUrl::fromLocalFile(strPath);
+        d->currUrl = QUrl::fromLocalFile(QDir::currentPath());
     } else {
         d->currUrl = _url;
-        if (d->currUrl.protocol().isEmpty())
+        if (d->currUrl.protocol().isEmpty()) {
             d->currUrl.setProtocol(QLatin1String("file"));
-
-        d->currUrl.addPath("/"); // make sure we have a trailing slash!
+        }
     }
 
     // We set the direction of this widget to LTR, since even on RTL desktops
@@ -958,34 +955,43 @@ void KDirOperator::close()
 
 void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
 {
-    KUrl newurl;
+    KUrl newurl(_newurl);
 
-    if (!_newurl.isValid() || _newurl.toLocalFile().isEmpty())
+    if (!newurl.isValid()) {
         newurl = QUrl::fromLocalFile(QDir::homePath());
-    else
-        newurl = _newurl;
-
-    newurl.adjustPath( KUrl::AddTrailingSlash );
+    }
+    newurl.adjustPath(KUrl::RemoveTrailingSlash);
 
     // already set
-    if (newurl.equals(d->currUrl, KUrl::CompareWithoutTrailingSlash))
+    if (newurl.equals(d->currUrl)) {
         return;
+    }
+
+    // TODO: something is trying to set relative file path, that is ugly
+    // workaround for it and the caller should set the full path
+    if (newurl.isRelative()) {
+        newurl.setPath(d->currUrl.prettyUrl() + "/" + newurl.prettyUrl());
+    }
 
     QDir urldir(newurl.toLocalFile());
-    if (!urldir.isReadable()) {
+    if (!urldir.exists() || !urldir.isReadable()) {
         // maybe newurl is a file? check its parent directory
-        newurl.setPath(newurl.directory(KUrl::ObeyTrailingSlash));
-        if (newurl.equals(d->currUrl, KUrl::CompareWithoutTrailingSlash))
-            return; // parent is current dir, nothing to do (fixes #173454, too)
-        urldir.setPath(newurl.toLocalFile());
-        if (!urldir.isReadable()) {
-            resetCursor();
-            KMessageBox::error(d->itemView,
-                               i18n("The specified folder does not exist "
-                                    "or was not readable."));
+        newurl.setPath(newurl.directory());
+        // parent is current
+        if (newurl.equals(d->currUrl)) {
             return;
         }
+
+        urldir.setPath(newurl.toLocalFile());
+        if (!urldir.exists() || !urldir.isReadable()) {
+            resetCursor();
+            KMessageBox::error(d->itemView,
+                i18n("The specified folder does not exist or was not readable."));
+            return;
+        }
+        newurl.setPath(urldir.path());
     }
+    newurl.adjustPath(KUrl::RemoveTrailingSlash);
 
     if (clearforward) {
         // autodelete should remove this one
@@ -994,7 +1000,7 @@ void KDirOperator::setUrl(const KUrl& _newurl, bool clearforward)
         d->forwardStack.clear();
     }
 
-    d->lastURL = d->currUrl.url(KUrl::RemoveTrailingSlash);
+    d->lastURL = d->currUrl.url();
     d->currUrl = newurl;
 
     pathChanged();
@@ -1117,8 +1123,7 @@ void KDirOperator::pathChanged()
     QDir urldir(d->currUrl.toLocalFile());
     if (!urldir.isReadable()) {
         KMessageBox::error(d->itemView,
-                           i18n("The specified folder does not exist "
-                                "or was not readable."));
+            i18n("The specified folder does not exist or was not readable."));
         if (d->backStack.isEmpty())
             home();
         else
