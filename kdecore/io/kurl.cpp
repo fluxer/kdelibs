@@ -538,56 +538,6 @@ bool KUrl::equals( const KUrl &_u, const EqualsOptions& options ) const
   return ( *this == _u );
 }
 
-QString KUrl::protocol() const
-{
-    return scheme().toLower();
-}
-
-void KUrl::setProtocol( const QString& proto )
-{
-    setScheme( proto );
-}
-
-QString KUrl::user() const
-{
-    return userName();
-}
-
-void KUrl::setUser( const QString& user )
-{
-    setUserName( user );
-}
-
-bool KUrl::hasUser() const
-{
-    return !userName().isEmpty();
-}
-
-QString KUrl::pass() const
-{
-    return password();
-}
-
-void KUrl::setPass( const QString& pass )
-{
-    setPassword( pass );
-}
-
-bool KUrl::hasPass() const
-{
-    return !password().isEmpty();
-}
-
-bool KUrl::hasHost() const
-{
-    return !host().isEmpty();
-}
-
-bool KUrl::hasPath() const
-{
-    return !path().isEmpty();
-}
-
 KUrl KUrl::fromPath( const QString& text )
 {
     KUrl u;

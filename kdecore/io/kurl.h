@@ -360,68 +360,6 @@ public:
   KUrl( const KUrl& _baseurl, const QString& _rel_url );
 
   /**
-   * Returns the protocol for the URL (i.e., file, http, etc.), lowercased.
-   * @see QUrl::scheme
-   */
-  QString protocol() const;
-
-  /**
-   * Sets the protocol for the URL (i.e., file, http, etc.)
-   * @param proto the new protocol of the URL (without colon)
-   */
-  void setProtocol( const QString& proto );
-
-  /**
-   * Returns the decoded user name (login, user id, ...) included in the URL.
-   * @return the user name or QString() if there is no user name
-   */
-  QString user() const;
-
-  /**
-   * Sets the user name (login, user id, ...) included in the URL.
-   *
-   * Special characters in the user name will appear encoded in the URL.
-   * @param user the name of the user or QString() to remove the user
-   */
-  void setUser( const QString& user );
-
-  /**
-   * Test to see if this URL has a user name included in it.
-   * @return true if the URL has an non-empty user name
-   */
-  bool hasUser() const;
-
-  /**
-   * Returns the decoded password (corresponding to user()) included in the URL.
-   * @return the password or QString() if it does not exist
-   **/
-  QString pass() const;
-
-  /**
-   * Sets the password (corresponding to user()) included in the URL.
-   *
-   * Special characters in the password will appear encoded in the URL.
-   * Note that a password can only appear in a URL string if you also set
-   * a user.
-   * @param pass the password to set or QString() to remove the password
-   * @see setUser
-   * @see hasUser
-   **/
-  void setPass( const QString& pass );
-
-  /**
-   * Test to see if this URL has a password included in it.
-   * @return true if there is a non-empty password set
-   **/
-  bool hasPass() const;
-
-  /**
-   * Test to see if this URL has a hostname included in it.
-   * @return true if the URL has a host
-   **/
-  bool hasHost() const;
-
-  /**
    * @param trailing use to add or remove a trailing slash to/from the path. see adjustPath
 
    * @return The current decoded path. This does not include the query. Can
@@ -439,12 +377,6 @@ public:
 
   /// \reimp so that KUrl u; u.setPath(path); implies "file" protocol.
   void setPath( const QString& path );
-
-  /**
-   * Test to see if this URL has a path is included in it.
-   * @return true if there is a path
-   **/
-  bool hasPath() const;
 
   /**
    * Options to be used in cleanPath
@@ -1051,6 +983,20 @@ public:
    * whether @p path has @p base_dir is a parent dir.
    */
   static QString relativePath(const QString &base_dir, const QString &path, bool *isParent=0);
+
+  /**
+   * Compatibility methods, do not use
+  */
+  inline QString protocol() const { return scheme().toLower(); };
+  inline void setProtocol( const QString& proto ) { setScheme( proto ); };
+  inline QString user() const { return userName(); };
+  inline void setUser( const QString& user ) { setUserName( user ); };
+  inline bool hasUser() const { return !userName().isEmpty(); };
+  inline QString pass() const { return password(); };
+  inline void setPass( const QString& pass ) { setPassword( pass ); };
+  inline bool hasPass() const { return !password().isEmpty(); };
+  inline bool hasHost() const { return !host().isEmpty(); };
+  inline bool hasPath() const { return !path().isEmpty(); };
 
 private:
   void _setQuery( const QString& query );
