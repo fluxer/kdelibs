@@ -1460,7 +1460,7 @@ QString KUrl::relativeUrl(const KUrl &base_url, const KUrl &url)
 
 void KUrl::setPath( const QString& _path )
 {
-    if ( scheme().isEmpty() )
+    if ( scheme().isEmpty() && !_path.startsWith( QLatin1String("file:/") ) )
         setScheme( QLatin1String( "file" ) );
     QString path = KShell::tildeExpand( _path );
     if (path.isEmpty())
