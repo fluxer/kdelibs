@@ -63,15 +63,6 @@ set_package_properties(ZLIB PROPERTIES
     PURPOSE "Required by the core KDE libraries and some critical kioslaves"
 )
 
-find_package(Strigi 0.6.3)
-set_package_properties(Strigi PROPERTIES
-    DESCRIPTION "Desktop indexing and search support"
-    URL "http://strigi.sourceforge.net"
-    TYPE REQUIRED
-    PURPOSE "Required by some critical kioslaves"
-)
-
-# for KDE 4.7 we require at least version 0.60
 find_package(SharedMimeInfo 0.60)
 set_package_properties(SharedMimeInfo PROPERTIES
     DESCRIPTION "Shared Mime Info"
@@ -122,6 +113,14 @@ set_package_properties(DBusMenuQt PROPERTIES
     DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
     URL "https://launchpad.net/libdbusmenu-qt"
     TYPE RECOMMENDED
+)
+
+macro_optional_find_package(Strigi 0.6.3)
+set_package_properties(Strigi PROPERTIES
+    DESCRIPTION "Desktop indexing and search support"
+    URL "http://strigi.sourceforge.net"
+    TYPE RECOMMENDED
+    PURPOSE "Required by some critical kioslaves"
 )
 
 macro_optional_find_package(FAM)
