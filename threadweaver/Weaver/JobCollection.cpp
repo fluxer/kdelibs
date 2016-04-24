@@ -157,7 +157,7 @@ void JobCollection::stop( Job *job )
     Q_UNUSED( job );
     if ( d->weaver != 0 )
     {
-        kDebug() << "dequeueing" << (void*)this;
+        kDebug() << "dequeueing" << this;
         d->weaver->dequeue( this );
     }
     // FIXME Q_ASSERT ( d->weaver == 0 ); // verify that aboutToBeDequeued has been called
@@ -329,7 +329,7 @@ void JobCollection::dequeueElements()
 			{
 				if ( d->elements->at( index ) && ! d->elements->at( index )->isFinished() ) // ... a QPointer
 				{
-					kDebug() << "dequeueing" << (void*)d->elements->at( index );
+					kDebug() << "dequeueing" << d->elements->at( index );
 					d->weaver->dequeue ( d->elements->at( index ) );
 				} else {
 					kDebug() << "not dequeueing" << d->elements->at( index ) << ", already finished";

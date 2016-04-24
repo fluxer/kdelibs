@@ -67,10 +67,6 @@ WeaverImpl::WeaverImpl( QObject* parent )
     m_states[ShuttingDown] = new ShuttingDownState( this );
     m_states[Destructed] = new DestructedState( this );
 
-    // FIXME (0.7) this is supposedly unnecessary
-    connect ( this, SIGNAL (asyncThreadSuspended(ThreadWeaver::Thread*)),
-              SIGNAL (threadSuspended(ThreadWeaver::Thread*)),
-              Qt::QueuedConnection );
     setState(  WorkingHard );
 }
 
@@ -180,7 +176,7 @@ void WeaverImpl::enqueue(Job* job)
 {
     if (job) {
         adjustInventory ( 1 );
-        kDebug() << "queueing job" << (void*)job << "of type " << job->metaObject()->className();
+        kDebug() << "queueing job" << job << "of type " << job->metaObject()->className();
         QMutexLocker l (m_mutex); Q_UNUSED(l);
         job->aboutToBeQueued ( this );
         // find position for insertion:;
@@ -243,9 +239,9 @@ bool WeaverImpl::dequeue ( Job* job )
 
             m_assignments.removeAt( i );
             result = true;
-            kDebug() << "job" << (void*)job << "dequeued," << m_assignments.size() << "jobs left.";
+            kDebug() << "job" << job << "dequeued," << m_assignments.size() << "jobs left.";
         } else {
-            kDebug() << "job" << (void*)job << "not found in queue.";
+            kDebug() << "job" << job << "not found in queue.";
             result = false;
         }
     }
@@ -357,7 +353,7 @@ void WeaverImpl::waitForAvailableJob(Thread* th)
 void WeaverImpl::blockThreadUntilJobsAreBeingAssigned ( Thread *th )
 {   // th is the thread that calls this method:
     kDebug() << "thread"<< th->id() << "blocked.";
-    emit asyncThreadSuspended ( th );
+    emit threadSuspended ( th );
     QMutexLocker l( m_jobAvailableMutex );
     m_jobAvailable.wait( m_jobAvailableMutex );
     kDebug() << "thread"<< th->id() << "resumed.";
@@ -409,7 +405,7 @@ void WeaverImpl::dumpJobs()
     for ( int index = 0; index < m_assignments.size(); ++index ) {
         kDebug() << "-->"
                  << index << ":"
-                 << (void*)m_assignments.at( index )
+                 << m_assignments.at( index )
                  << m_assignments.at( index )->metaObject()->className()
                  << "(priority" << m_assignments.at(index)->priority()
                  << ", can be executed:" << m_assignments.at(index)->canBeExecuted() << ")";

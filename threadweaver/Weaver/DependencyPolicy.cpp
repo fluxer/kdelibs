@@ -126,20 +126,8 @@ void DependencyPolicy::resolveDependencies( Job* job )
 QList<Job*> DependencyPolicy::getDependencies( Job* job ) const
 {
     Q_ASSERT (job != 0);
-    QList<Job*> result;
-    // basicly JobMultiMap
-    QMapIterator<ThreadWeaver::Job*, ThreadWeaver::Job*> it(d->dependencies());
     QMutexLocker l( & d->mutex() );
-
-    while ( it.hasNext() )
-    {
-        it.next();
-        if ( it.key() == job )
-        {
-            result.append( it.value() );
-        }
-    }
-    return result;
+    return d->dependencies().values( job );
 }
 
 bool DependencyPolicy::hasUnresolvedDependencies( Job* job ) const
@@ -167,16 +155,17 @@ void DependencyPolicy::free( Job* job )
     if ( job->success() )
     {
         resolveDependencies( job );
-        kDebug() << "dependencies resolved for job" << (void*)job;
+        kDebug() << "dependencies resolved for job" << job;
     } else {
-        kDebug() << "not resolving dependencies (execution not successful) for" << (void*)job;
+        kDebug() << "not resolving dependencies (execution not successful) for" << job;
     }
     Q_ASSERT ( ( ! hasUnresolvedDependencies( job ) && job->success() ) || ! job->success() );
 }
 
 void DependencyPolicy::release( Job* job )
 {
-    Q_ASSERT (job != 0); Q_UNUSED(job)
+    Q_ASSERT (job != 0);
+    Q_UNUSED (job);
 }
 
 void DependencyPolicy::destructed( Job* job )
@@ -195,10 +184,10 @@ void DependencyPolicy::dumpJobDependencies()
     while ( it.hasNext() )
     {
         it.next();
-        kDebug() << "  : ("
-               << (void*)it.key() << it.key()->objectName() << it.key()->metaObject()->className()
+        kDebug() << "  :"
+               << it.key() << it.key()->objectName() << it.key()->metaObject()->className()
                << "<--"
-               << (void*)it.value() << it.value()->objectName() << it.value()->metaObject()->className();
+               << it.value() << it.value()->objectName() << it.value()->metaObject()->className();
     }
     kDebug ( "-----------------" );
 }

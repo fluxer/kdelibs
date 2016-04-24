@@ -88,7 +88,7 @@ void ResourceRestrictionPolicy::free ( Job* job )
 
     if (position != -1)
     {
-        kDebug() << "job" << (void*)job << "done.";
+        kDebug() << "job" << job << "done.";
         d->customers.removeAt (position);
     }
 }
