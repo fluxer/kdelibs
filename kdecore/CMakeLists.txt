@@ -388,7 +388,7 @@ install(
     FILES
     localization/entry.desktop
     ${CMAKE_CURRENT_BINARY_DIR}/all_languages
-    DESTINATION ${LOCALE_INSTALL_DIR}/en_US
+    DESTINATION ${LOCALE_INSTALL_DIR}
 )
 
 install(
