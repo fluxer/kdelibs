@@ -5,6 +5,7 @@ if(ENABLE_TESTING)
 endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=950)
+include_directories(${KDE4_KDECORE_INCLUDES})
 
 add_subdirectory(Weaver)
 # disabled for default kdelibs build:
