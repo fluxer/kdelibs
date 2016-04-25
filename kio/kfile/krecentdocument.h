@@ -80,15 +80,6 @@ public:
     static void add(const KUrl& url, const QString& desktopEntryName);
 
     /**
-     *
-     * Add a new item to the Recent Document menu. Calls add( url ).
-     *
-     * @param documentStr The full path to the document or URL to add.
-     * @param isURL Set to @p true if @p documentStr is an URL and not a local file path.
-     */
-    static void add(const QString &documentStr, bool isURL = false);
-
-    /**
      * Clear the recent document menu of all entries.
      */
     static void clear();

@@ -62,24 +62,22 @@ QStringList KRecentDocument::recentDocuments()
     const QStringList list = d.entryList();
     QStringList fullList;
 
-    for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it) {
-       QString fileName = *it ;
-       QString pathDesktop;
-       if (fileName.startsWith(":")) {
-       // FIXME: Remove when Qt will be fixed
-       // http://bugreports.qt.nokia.com/browse/QTBUG-11223
-           pathDesktop = KRecentDocument::recentDocumentDirectory() + *it ;
-       }
-       else {
-           pathDesktop = d.absoluteFilePath( *it );
-       }
-       KDesktopFile tmpDesktopFile( pathDesktop );
-       KUrl urlDesktopFile(tmpDesktopFile.desktopGroup().readPathEntry("URL", QString()));
-       if (urlDesktopFile.isLocalFile() && !QFile(urlDesktopFile.toLocalFile()).exists()) {
-           d.remove(pathDesktop);
-       } else {
-           fullList.append( pathDesktop );
-       }
+    foreach (const QString it, list) {
+        QString pathDesktop;
+        if (it.startsWith(":")) {
+            // FIXME: Remove when Qt will be fixed
+            // http://bugreports.qt.nokia.com/browse/QTBUG-11223
+            pathDesktop = KRecentDocument::recentDocumentDirectory() + it;
+        } else {
+           pathDesktop = d.absoluteFilePath( it );
+        }
+        KDesktopFile tmpDesktopFile( pathDesktop );
+        KUrl urlDesktopFile(tmpDesktopFile.desktopGroup().readPathEntry("URL", QString()));
+        if (urlDesktopFile.isLocalFile() && !QFile(urlDesktopFile.toLocalFile()).exists()) {
+            d.remove(pathDesktop);
+        } else {
+            fullList.append( pathDesktop );
+        }
     }
 
     return fullList;
@@ -154,23 +152,13 @@ void KRecentDocument::add(const KUrl& url, const QString& desktopEntryName)
     conf.writeEntry( "Icon", KMimeType::iconNameForUrl( url ) );
 }
 
-void KRecentDocument::add(const QString &openStr, bool isUrl)
-{
-    if( isUrl ) {
-        add( KUrl( openStr ) );
-    } else {
-        KUrl url;
-        url.setPath( openStr );
-        add( url );
-    }
-}
-
 void KRecentDocument::clear()
 {
-  const QStringList list = recentDocuments();
-  QDir dir;
-  for(QStringList::ConstIterator it = list.begin(); it != list.end() ; ++it)
-    dir.remove(*it);
+    const QStringList list = recentDocuments();
+    QDir dir;
+    foreach(const QString it, list) {
+        dir.remove(it);
+    }
 }
 
 int KRecentDocument::maximumItems()
@@ -178,5 +166,3 @@ int KRecentDocument::maximumItems()
     KConfigGroup cg(KGlobal::config(), QLatin1String("RecentDocuments"));
     return cg.readEntry(QLatin1String("MaxEntries"), 10);
 }
-
-
