@@ -49,8 +49,6 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #define TTL 300
 
-static int dummyHostInfoMetaType = qRegisterMetaType<QHostInfo>("QHostInfo");
-
 namespace KIO
 {
     class HostInfoAgentPrivate : public QObject
@@ -309,7 +307,9 @@ HostInfoAgentPrivate::HostInfoAgentPrivate(int cacheSize)
       dnsCache(cacheSize),
       resolvConfMTime(0),
       ttl(TTL)
-{}
+{
+    qRegisterMetaType<QHostInfo>("QHostInfo");
+}
 
 void HostInfoAgentPrivate::lookupHost(const QString& hostName,
     QObject* receiver, const char* member)
