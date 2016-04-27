@@ -1,4 +1,7 @@
-include_directories(${KDE4_KPARTS_INCLUDES})
+include_directories(
+    ${KDE4_KPARTS_INCLUDES}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 ########### next target ###############
 
