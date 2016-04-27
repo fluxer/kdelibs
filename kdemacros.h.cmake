@@ -28,6 +28,8 @@
 #ifndef _KDE_MACROS_H_
 #define _KDE_MACROS_H_
 
+#include <QtCore/qglobal.h>
+
 #cmakedefine __KDE_HAVE_GCC_VISIBILITY
 
 /**
@@ -139,15 +141,8 @@
  * use KDE_CONSTRUCTOR_DEPRECATED instead.
  */
 
-#ifdef __cplusplus
-# include <QtCore/qglobal.h>
-# ifndef KDE_DEPRECATED
-#  ifdef KDE_DEPRECATED_WARNINGS
-#   define KDE_DEPRECATED Q_DECL_DEPRECATED
-#  else
-#   define KDE_DEPRECATED
-#  endif
-# endif
+#ifndef KDE_DEPRECATED
+# define KDE_DEPRECATED Q_DECL_DEPRECATED
 #endif
 
 /**

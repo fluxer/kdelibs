@@ -133,23 +133,6 @@ add_subdirectory(network/kssld)
 
 ########### next target ###############
 
-add_library(kdefakes ${LIBRARY_TYPE} fakes.c)
-set_target_properties(kdefakes PROPERTIES
-    VERSION ${KDE_NON_GENERIC_LIB_VERSION}
-    SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION}
-)
-if(NOT HAVE_TRUNC)
-    target_link_libraries(kdefakes  m )
-endif()
-
-install(
-    TARGETS kdefakes
-    EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
-)
-
-########### next target ###############
-
 set(kdecore_LIB_SRCS
     compression/kgzipfilter.cpp
     compression/kfilterbase.cpp
@@ -295,7 +278,7 @@ set(kdecore_LIB_SRCS
     util/kshell_unix.cpp
     util/kuser_unix.cpp
     util/kmacroexpander_unix.cpp
-    fakes.c
+    fakes.cpp
 
     ${kdecore_OPTIONAL_SRCS}
     ${KAUTH_BACKEND_SRCS}
@@ -321,6 +304,10 @@ if(FAM_FOUND)
    include_directories(${FAM_INCLUDE_DIR})
    target_link_libraries(kdecore PRIVATE ${FAM_LIBRARIES})
 endif(FAM_FOUND)
+
+if(NOT HAVE_TRUNC)
+    target_link_libraries(kdecore PRIVATE m)
+endif()
 
 target_link_libraries(kdecore PUBLIC
     ${QT_QTDBUS_LIBRARY}
@@ -378,9 +365,6 @@ add_executable(kde4-config kde-config.cpp )
 target_link_libraries(kde4-config ${KDE4_KDECORE_LIBS})
 
 install(TARGETS kde4-config ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-
-########### next target ###############
 
 ########### install files ###############
 

@@ -408,7 +408,6 @@ set(_kde_libraries
     kdcraw
     kdeclarative
     kdecore
-    kdefakes
     kdesu
     kdeui
     kdewebkit
