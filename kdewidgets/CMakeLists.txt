@@ -45,7 +45,10 @@ if(QT_QTDESIGNER_FOUND)
     )
 
     if(QT_QTWEBKIT_FOUND)
-        include_directories(${CMAKE_SOURCE_DIR}/kdewebkit)
+        include_directories(
+            ${CMAKE_SOURCE_DIR}/kdewebkit
+            ${CMAKE_BINARY_DIR}/kdewebkit
+        )
 
         kde4_add_widget(kdewebkitwidgets_SRCS kdewebkit.widgets)
 
