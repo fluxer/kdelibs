@@ -6,6 +6,7 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/kdewebkit
     ${CMAKE_SOURCE_DIR}/kutils
     ${CMAKE_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}/kdewebkit
 )
 
 set(kwebkit_LIB_SRCS
@@ -22,7 +23,6 @@ set(kwebkit_LIB_SRCS
     settings/webkit_filter.cpp
     ui/searchbar.cpp
     ui/passwordbar.cpp
-    ui/searchbar.ui
 )
 
 ########################### kwebkitpart #############################

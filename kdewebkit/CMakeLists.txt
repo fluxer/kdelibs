@@ -1,7 +1,5 @@
 project(kdewebkit)
 
-add_subdirectory( kwebkitpart )
-
 add_feature_info(QtWebkit QT_QTWEBKIT_FOUND "Needed for building kdelibs" "http://trac.webkit.org/wiki/QtWebKit")
 
 if(NOT QT_QTWEBKIT_FOUND)
@@ -11,8 +9,13 @@ endif()
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}
+    ${KDE4_KPARTS_INCLUDES}
     ${KDE4_KIO_INCLUDES}
+    # for the export headers
+    ${CMAKE_BINARY_DIR}/kutils
 )
+
+add_subdirectory(kwebkitpart)
 
 set(kdewebkit_LIB_SRCS
     kwebwallet.cpp
@@ -25,8 +28,8 @@ set(kdewebkit_LIB_SRCS
 add_library(kdewebkit ${LIBRARY_TYPE} ${kdewebkit_LIB_SRCS})
 
 target_link_libraries(kdewebkit
-    ${KDE4_KPARTS_LIBS}
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KPARTS_LIBS}
     ${KDE4_KIO_LIBS}
     ${QT_QTWEBKIT_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
