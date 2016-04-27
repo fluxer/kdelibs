@@ -23,7 +23,6 @@
 
 #include <QtGui/QSyntaxHighlighter>
 #include <QtCore/QStringList>
-#include <kdemacros.h>
 #include <kdeui_export.h>
 
 class QTextEdit;

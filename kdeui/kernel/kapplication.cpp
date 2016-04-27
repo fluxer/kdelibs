@@ -397,15 +397,12 @@ void KApplicationPrivate::preqapplicationhack()
     KGlobal::config(); // initialize qt plugin path (see KComponentDataPrivate::lazyInit)
 }
 
+#ifdef Q_WS_X11
 int KApplication::xioErrhandler( Display* dpy )
 {
     if(kapp)
     {
-#ifdef Q_WS_X11
         d->oldXIOErrorHandler( dpy );
-#else
-        Q_UNUSED(dpy);
-#endif
     }
     exit( 1 );
     return 0;
@@ -413,7 +410,6 @@ int KApplication::xioErrhandler( Display* dpy )
 
 int KApplication::xErrhandler( Display* dpy, void* err_ )
 { // no idea how to make forward decl. for XErrorEvent
-#ifdef Q_WS_X11
     XErrorEvent* err = static_cast< XErrorEvent* >( err_ );
     if(kapp)
     {
@@ -424,7 +420,6 @@ int KApplication::xErrhandler( Display* dpy, void* err_ )
     if (!fatalXError.isEmpty()) {
         abort();
     }
-#endif
     return 0;
 }
 
@@ -432,12 +427,11 @@ void KApplication::iceIOErrorHandler( _IceConn *conn )
 {
     emit aboutToQuit();
 
-#ifdef Q_WS_X11
     if ( d->oldIceIOErrorHandler != NULL )
       (*d->oldIceIOErrorHandler)( conn );
-#endif
     exit( 1 );
 }
+#endif // Q_WS_X11
 
 void KApplicationPrivate::init(bool GUIenabled)
 {

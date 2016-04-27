@@ -26,9 +26,11 @@ install(
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
+generate_export_header(kpty)
+
 install(
     FILES
-    kpty_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kpty_export.h
     kpty.h
     kptydevice.h
     kptyprocess.h

@@ -40,9 +40,11 @@ install(
 
 ########### install files ###############
 
+generate_export_header(knotifyconfig)
+
 install(
     FILES
-    knotifyconfig_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/knotifyconfig_export.h
     knotifyconfigwidget.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel

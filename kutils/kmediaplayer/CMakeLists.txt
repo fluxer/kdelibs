@@ -27,9 +27,11 @@ set_target_properties(kmediaplayer PROPERTIES
     SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION}
 )
 
+generate_export_header(kmediaplayer)
+
 install(
     FILES
-    kmediaplayer_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kmediaplayer_export.h
     kmediaplayer.h
     kmediawidget.h
     DESTINATION ${INCLUDE_INSTALL_DIR}

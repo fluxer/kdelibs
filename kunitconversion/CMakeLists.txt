@@ -89,13 +89,15 @@ install(
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
+generate_export_header(kunitconversion)
+
 install(
     FILES
     converter.h
     value.h
     unit.h
     unitcategory.h
-    kunitconversion_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kunitconversion_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/kunitconversion
     COMPONENT Devel
 )

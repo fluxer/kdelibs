@@ -29,11 +29,12 @@
 //#include <QtGui/QAction>
 //#include <QtCore/QUrl>
 
-#include <kdemacros.h>
 //#include "errorinterface.h"
 //#include "childreninterface.h"
 
-#define KROSSQTSPLUGIN_EXPORT KDE_EXPORT
+#include <kross_export.h>
+
+#define KROSSQTSPLUGIN_EXPORT KROSS_EXPORT
 
 namespace Kross {
 

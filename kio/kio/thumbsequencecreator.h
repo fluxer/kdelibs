@@ -22,6 +22,8 @@
 
 #include "thumbcreator.h"
 
+#include <qglobal.h>
+
 /**
  * @see ThumbCreator
  *

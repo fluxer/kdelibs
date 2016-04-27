@@ -34,9 +34,11 @@ install(
     DESTINATION ${SERVICETYPES_INSTALL_DIR}
 )
 
+generate_export_header(kemoticons)
+
 install(
     FILES
-    kemoticons_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kemoticons_export.h
     kemoticons/kemoticons.h
     kemoticons/kemoticonstheme.h
     kemoticons/kemoticonsprovider.h
@@ -106,9 +108,11 @@ set_target_properties(kidletime PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
+generate_export_header(kidletime)
+
 install(
     FILES
-    kidletime_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kidletime_export.h
     kidletime/kidletime.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel

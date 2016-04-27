@@ -141,8 +141,6 @@
 #
 # The following user adjustable options are provided:
 #
-#  KDE4_ENABLE_FPIE  - enable it to use gcc Position Independent Executables feature
-#
 #  KDE4_ADD_KCFG_FILES (SRCS_VAR [GENERATE_MOC] [USE_RELATIVE_PATH] file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
 #    Use optional GENERATE_MOC to generate moc if you use signals in your kcfg files.
@@ -644,7 +642,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
     # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common -Werror=return-type -fvisibility-inlines-hidden")
 
     if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
         # This should not be needed, as it is also part of _KDE4_PLATFORM_DEFINITIONS below.
@@ -660,123 +658,22 @@ if(CMAKE_COMPILER_IS_GNUCXX)
         set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
     endif()
 
-    check_cxx_compiler_flag(-fPIE HAVE_FPIE_SUPPORT)
-    if(KDE4_ENABLE_FPIE)
-        if(HAVE_FPIE_SUPPORT)
-            set (KDE4_CXX_FPIE_FLAGS "-fPIE")
-            set (KDE4_PIE_LDFLAGS "-pie")
-        else(HAVE_FPIE_SUPPORT)
-            message(STATUS "Your compiler doesn't support the PIE flag")
-        endif(HAVE_FPIE_SUPPORT)
-    endif()
-
     check_cxx_compiler_flag(-Woverloaded-virtual __KDE_HAVE_W_OVERLOADED_VIRTUAL)
     if(__KDE_HAVE_W_OVERLOADED_VIRTUAL)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Woverloaded-virtual")
     endif()
 
-    # visibility support
-    check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_GCC_VISIBILITY)
-    set(__KDE_HAVE_GCC_VISIBILITY ${__KDE_HAVE_GCC_VISIBILITY} CACHE BOOL "GCC support for hidden visibility")
-
-        # get the gcc version
-        execute_process(
-            COMMAND ${CMAKE_C_COMPILER} --version
-            ERROR_QUIET
-            OUTPUT_VARIABLE _gcc_version_info
-        )
-
-    string (REGEX MATCH "[345]\\.[0-9]\\.[0-9]" _gcc_version "${_gcc_version_info}")
-    # gcc on mac just reports: "gcc (GCC) 3.3 20030304 ..." without the patch level, handle this here:
-    if (NOT _gcc_version)
-        string (REGEX MATCH ".*\\(GCC\\).* ([34]\\.[0-9]) .*" "\\1.0" _gcc_version "${gcc_on_macos}")
-        if (gcc_on_macos)
-            string (REGEX REPLACE ".*\\(GCC\\).* ([34]\\.[0-9]) .*" "\\1.0" _gcc_version "${_gcc_version_info}")
-        endif (gcc_on_macos)
-    endif (NOT _gcc_version)
-
-    if(_gcc_version)
-        if(NOT "${_gcc_version}" VERSION_LESS "4.1.0")
-            set(GCC_IS_NEWER_THAN_4_1 TRUE)
-            if(NOT "${_gcc_version}" VERSION_LESS "4.2.0")
-                set(GCC_IS_NEWER_THAN_4_2 TRUE)
-                if(NOT "${_gcc_version}" VERSION_LESS "4.3.0")
-                    set(GCC_IS_NEWER_THAN_4_3 TRUE)
-                endif()
-            endif()
-        endif()
-    endif()
-
-    # save a little by making local statics not threadsafe
-    # ### do not enable it for older compilers, see
-    # ### http://gcc.gnu.org/bugzilla/show_bug.cgi?id=31806
-    if (GCC_IS_NEWER_THAN_4_3)
-        set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-threadsafe-statics")
-    endif (GCC_IS_NEWER_THAN_4_3)
-
-    set(_GCC_COMPILED_WITH_BAD_ALLOCATOR FALSE)
-    if (GCC_IS_NEWER_THAN_4_1)
-        execute_process(
-            COMMAND ${CMAKE_C_COMPILER} -v
-            ERROR_QUIET
-            OUTPUT_VARIABLE _gcc_alloc_info
-        )
-        string(REGEX MATCH "(--enable-libstdcxx-allocator=mt)" _GCC_COMPILED_WITH_BAD_ALLOCATOR "${_gcc_alloc_info}")
-    endif()
-
-    if (__KDE_HAVE_GCC_VISIBILITY
-        AND GCC_IS_NEWER_THAN_4_1
-        AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR
-        AND NOT WIN32)
-        set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
-
-        # first check if we can compile a Qt application
-        set(_source "#include <QtCore/qglobal.h>\n int main() \n {\n return 0; \n } \n")
-        set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_application.cpp)
-        file(WRITE "${_source_file}" "${_source}")
-
-        try_compile(_basic_compile_result
-            ${CMAKE_BINARY_DIR} ${_source_file}
-            CMAKE_FLAGS "${_include_dirs}"
-            OUTPUT_VARIABLE _compile_output_var
-        )
-
-        if(_basic_compile_result)
-            # now ready to check for visibility=hidden
-            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-            set (KDE4_C_FLAGS "-fvisibility=hidden")
-            # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
-            # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
-            set(_source "#include <QtCore/qglobal.h>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
-            set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
-            file(WRITE "${_source_file}" "${_source}")
-
-            try_compile(_compile_result
-                ${CMAKE_BINARY_DIR}
-                ${_source_file}
-                CMAKE_FLAGS "${_include_dirs}"
-                OUTPUT_VARIABLE _compile_output_var
-            )
-
-            if(NOT _compile_result)
-                message("${_compile_output_var}")
-                message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
-            endif(NOT _compile_result)
-        else()
-            message("${_compile_output_var}")
-            message(FATAL_ERROR "Unable to compile a basic Qt application. Qt has not been found correctly.")
-        endif()
-
-        if(GCC_IS_NEWER_THAN_4_2)
-            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type -fvisibility-inlines-hidden")
-        endif()
-    else(__KDE_HAVE_GCC_VISIBILITY
-        AND GCC_IS_NEWER_THAN_4_1
-        AND NOT _GCC_COMPILED_WITH_BAD_ALLOCATOR
-        AND NOT WIN32)
-        set(__KDE_HAVE_GCC_VISIBILITY 0)
-    endif()
-
+    # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
+    # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
+    set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
+    set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
+    file(WRITE "${_source_file}" "${_source}")
+    set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
+    try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
+    if(NOT _compile_result)
+        message("${_compile_output_var}")
+        message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
+    endif(NOT _compile_result)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -802,21 +699,15 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-common -fvisibility=hidden -Werror=return-type -fvisibility-inlines-hidden")
-    set(KDE4_C_FLAGS    "-fvisibility=hidden")
 
     # At least kdepim exports one function with C linkage that returns a
     # QString in a plugin, but clang does not like that.
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-return-type-c-linkage")
 
-    set(KDE4_CXX_FPIE_FLAGS "-fPIE")
-    set(KDE4_PIE_LDFLAGS    "-pie")
-
     if(CMAKE_SYSTEM_NAME STREQUAL GNU)
         set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
         set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -pthread")
     endif (CMAKE_SYSTEM_NAME STREQUAL GNU)
-
-    set(__KDE_HAVE_GCC_VISIBILITY TRUE)
 
     # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
     # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
@@ -844,13 +735,6 @@ if(CMAKE_C_COMPILER MATCHES "icc")
 
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -ansi -Wall -w1 -Wpointer-arith -fno-common")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi -Wall -w1 -Wpointer-arith -fno-exceptions -fno-common")
-
-    # visibility support
-    set(__KDE_HAVE_ICC_VISIBILITY)
-    #   check_cxx_compiler_flag(-fvisibility=hidden __KDE_HAVE_ICC_VISIBILITY)
-    #   if (__KDE_HAVE_ICC_VISIBILITY)
-    #      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden")
-    #   endif (__KDE_HAVE_ICC_VISIBILITY)
 endif()
 
 ###########    end of platform specific stuff  ##########################

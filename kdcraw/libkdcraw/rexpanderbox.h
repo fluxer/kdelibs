@@ -45,12 +45,12 @@
 
 // Local includes
 
-#include "libkdcraw_export.h"
+#include "kdcraw_export.h"
 
 namespace KDcrawIface
 {
 
-class LIBKDCRAW_EXPORT RClickLabel : public QLabel
+class KDCRAW_EXPORT RClickLabel : public QLabel
 {
     Q_OBJECT
 
@@ -76,7 +76,7 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class LIBKDCRAW_EXPORT RSqueezedClickLabel : public KSqueezedTextLabel
+class KDCRAW_EXPORT RSqueezedClickLabel : public KSqueezedTextLabel
 {
     Q_OBJECT
 
@@ -100,7 +100,7 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class LIBKDCRAW_EXPORT RArrowClickLabel : public QWidget
+class KDCRAW_EXPORT RArrowClickLabel : public QWidget
 {
     Q_OBJECT
 
@@ -133,7 +133,7 @@ protected:
 
 // -------------------------------------------------------------------------
 
-class LIBKDCRAW_EXPORT RLabelExpander : public QWidget
+class KDCRAW_EXPORT RLabelExpander : public QWidget
 {
     Q_OBJECT
 
@@ -187,7 +187,7 @@ private:
 
 // -------------------------------------------------------------------------
 
-class LIBKDCRAW_EXPORT RExpanderBox : public QScrollArea
+class KDCRAW_EXPORT RExpanderBox : public QScrollArea
 {
     Q_OBJECT
 
@@ -272,7 +272,7 @@ private:
 
 // -------------------------------------------------------------------------
 
-class LIBKDCRAW_EXPORT RExpanderBoxExclusive : public RExpanderBox
+class KDCRAW_EXPORT RExpanderBoxExclusive : public RExpanderBox
 {
     Q_OBJECT
 

@@ -64,9 +64,11 @@ install(TARGETS kdesu_stub DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 ########### install files ###############
 
+generate_export_header(kdesu)
+
 install(
     FILES
-    kdesu_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdesu_export.h
     client.h
     process.h
     su.h

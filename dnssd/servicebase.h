@@ -24,7 +24,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QString>
 #include <ksharedptr.h>
-#include <dnssd/dnssd_export.h>
+#include <dnssd/kdnssd_export.h>
 
 namespace DNSSD
 {

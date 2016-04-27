@@ -25,12 +25,6 @@
 
 class KConfig;
 
-
-typedef unsigned long Atom;
-#if !defined(Q_WS_X11)
-typedef void Display;
-#endif
-
 #include <QtGui/QApplication>
 #include <kcomponentdata.h>
 #include <kglobal.h>
@@ -275,7 +269,7 @@ public:
    */
   void updateRemoteUserTimestamp( const QString& service, int time = 0 );
 
-
+#ifdef Q_WS_X11
   /**
       @internal
     */
@@ -295,6 +289,7 @@ public:
    * @internal
    */
   void iceIOErrorHandler( _IceConn *conn );
+#endif // Q_WS_X11
 
   /**
    * @internal

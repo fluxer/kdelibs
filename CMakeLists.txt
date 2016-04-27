@@ -34,6 +34,7 @@ set(KDE_NO_DEPRECATED TRUE CACHE BOOL "Whether deprecated functionality is desir
 find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
+include(GenerateExportHeader)
 
 if(UNIX AND Q_WS_X11)
     #X11 Session Management (SM) is required
@@ -174,6 +175,7 @@ set(KDE4_KDECORE_INCLUDES
     ${CMAKE_SOURCE_DIR}/kdecore/text
     ${CMAKE_SOURCE_DIR}/kdecore/util
     ${CMAKE_SOURCE_DIR}/kdecore/sonnet
+    ${CMAKE_BINARY_DIR}/kdecore
     ${QT_INCLUDES}
     ${_KDE4_PLATFORM_INCLUDE_DIRS}
 )
@@ -200,6 +202,7 @@ set(KDE4_KDEUI_INCLUDES
     ${CMAKE_SOURCE_DIR}/kdeui/widgets
     ${CMAKE_SOURCE_DIR}/kdeui/windowmanagement
     ${CMAKE_SOURCE_DIR}/kdeui/xmlgui
+    ${CMAKE_BINARY_DIR}/kdeui
     ${KDE4_KDECORE_INCLUDES}
 )
 
@@ -209,18 +212,21 @@ set(KDE4_KIO_INCLUDES
     ${CMAKE_SOURCE_DIR}/kio/bookmarks
     ${CMAKE_SOURCE_DIR}/kio/kio
     ${CMAKE_SOURCE_DIR}/kio/kfile
+    ${CMAKE_BINARY_DIR}/kio
     ${KDE4_KDEUI_INCLUDES}
 )
 
 # kpty
 set(KDE4_KPTY_INCLUDES
     ${CMAKE_SOURCE_DIR}/kpty
+    ${CMAKE_BINARY_DIR}/kpty
     ${KDE4_KIO_INCLUDES}
 )
 
 # kparts depends on kio
 set(KDE4_KPARTS_INCLUDES
     ${CMAKE_SOURCE_DIR}/kparts
+    ${CMAKE_BINARY_DIR}/kparts
     ${KDE4_KIO_INCLUDES}
 )
 

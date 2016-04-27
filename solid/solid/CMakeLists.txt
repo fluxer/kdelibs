@@ -7,11 +7,6 @@ include_directories(
     ${QT_QTGUI_INCLUDE_DIR}
 )
 
-configure_file(
-    solid_export.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/solid_export.h
-)
-
 include (CheckCXXSourceCompiles)
 check_cxx_source_compiles("
 #ifdef __SUNPRO_CC
@@ -395,6 +390,8 @@ if(ENABLE_TESTING)
 endif()
 
 ########### install files ###############
+
+generate_export_header(solid)
 
 install(
     FILES

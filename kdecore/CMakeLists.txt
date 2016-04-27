@@ -368,6 +368,8 @@ install(TARGETS kde4-config ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 
+generate_export_header(kdecore)
+
 install(
     FILES
     localization/entry.desktop
@@ -384,7 +386,7 @@ install(
 
 install(
     FILES
-    kdecore_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdecore_export.h
     compression/kfilterbase.h
     compression/kfilterdev.h
     config/kconfig.h

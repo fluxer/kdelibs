@@ -60,9 +60,11 @@ install(
     DESTINATION ${SERVICETYPES_INSTALL_DIR}
 )
 
+generate_export_header(kparts)
+
 install(
     FILES
-    kparts_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kparts_export.h
     part.h
     plugin.h
     partmanager.h

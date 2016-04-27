@@ -34,9 +34,11 @@ install(
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
+generate_export_header(krosscore BASE_NAME KROSS)
+
 install(
     FILES
-    kross_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kross_export.h
     krossconfig.h
     errorinterface.h
     childreninterface.h

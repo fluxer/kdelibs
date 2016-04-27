@@ -49,10 +49,12 @@ if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
 
+generate_export_header(kdeclarative)
+
 install(
     FILES
     kdeclarative.h
-    kdeclarative_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdeclarative_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )

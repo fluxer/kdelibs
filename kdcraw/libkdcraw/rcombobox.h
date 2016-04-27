@@ -34,12 +34,12 @@
 
 // Local includes
 
-#include "libkdcraw_export.h"
+#include "kdcraw_export.h"
 
 namespace KDcrawIface
 {
 
-class LIBKDCRAW_EXPORT RComboBox : public KHBox
+class KDCRAW_EXPORT RComboBox : public KHBox
 {
 
     Q_OBJECT

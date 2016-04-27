@@ -76,7 +76,7 @@ install(TARGETS kshell4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_executable(lnusertemp lnusertemp.c)
 
-target_link_libraries(lnusertemp kdefakes)
+target_link_libraries(lnusertemp ${KDE4_KDECORE_LIBS})
 
 install(TARGETS lnusertemp DESTINATION ${LIBEXEC_INSTALL_DIR})
 

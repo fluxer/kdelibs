@@ -10,8 +10,6 @@
 #ifndef PCX_H
 #define PCX_H
 
-
-#include <kdemacros.h>
 #include <QtGui/qimageiohandler.h>
 #include <QtCore/QDataStream>
 #include <QtGui/QColor>

@@ -22,7 +22,7 @@
 #define DNSSDSERVICEMODEL_H
 
 #include <QtCore/QAbstractItemModel>
-#include <dnssd/dnssd_export.h>
+#include <dnssd/kdnssd_export.h>
 #include <dnssd/remoteservice.h>
 
 namespace DNSSD

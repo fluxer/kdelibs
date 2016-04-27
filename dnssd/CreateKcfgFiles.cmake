@@ -16,7 +16,7 @@ NameSpace=DNSSD
 SetUserTexts=false
 Singleton=true
 Visibility=KDNSSD_EXPORT
-IncludeFiles=dnssd/dnssd_export.h
+IncludeFiles=dnssd/kdnssd_export.h
 ")
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/kcm_kdnssd.kcfg

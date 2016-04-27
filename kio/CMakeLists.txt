@@ -306,9 +306,11 @@ install(
     DESTINATION ${SERVICETYPES_INSTALL_DIR}
 )
 
+generate_export_header(kio)
+
 install(
     FILES
-    kio/kio_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kio_export.h
     kio/accessmanager.h
     kio/connection.h
     kio/slaveinterface.h

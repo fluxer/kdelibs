@@ -64,6 +64,8 @@ install(
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
+generate_export_header(kfile)
+
 install(
     FILES
     kdiroperator.h
@@ -78,7 +80,7 @@ install(
     kurlnavigator.h
     knewfilemenu.h
     knameandurlinputdialog.h
-    kfile_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kfile_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )

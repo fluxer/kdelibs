@@ -35,12 +35,12 @@
 
 // Local includes
 
-#include "libkdcraw_export.h"
+#include "kdcraw_export.h"
 
 namespace KDcrawIface
 {
 
-class LIBKDCRAW_EXPORT RIntNumInput : public KHBox
+class KDCRAW_EXPORT RIntNumInput : public KHBox
 {
     Q_OBJECT
 
@@ -81,7 +81,7 @@ private:
 
 // ---------------------------------------------------------
 
-class LIBKDCRAW_EXPORT RDoubleNumInput : public KHBox
+class KDCRAW_EXPORT RDoubleNumInput : public KHBox
 {
     Q_OBJECT
 

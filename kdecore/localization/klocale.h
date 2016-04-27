@@ -753,7 +753,7 @@ public:
      *
      * @return If nouns are declined
      */
-    KDE_DEPRECATED bool nounDeclension() const;
+    KDECORE_DEPRECATED bool nounDeclension() const;
 
     //KDE5 move to KDateTime namespace
     /**
@@ -1113,7 +1113,7 @@ public:
      * @see calendarSystem()
      * @return the name of the calendar system
      */
-    KDE_DEPRECATED QString calendarType() const;
+    KDECORE_DEPRECATED QString calendarType() const;
 
     /**
      * @since 4.6
@@ -1136,7 +1136,7 @@ public:
      * @see setCalendarSystem()
      * @param calendarType the name of the calendar type
      */
-    KDE_DEPRECATED void setCalendar(const QString & calendarType);
+    KDECORE_DEPRECATED void setCalendar(const QString & calendarType);
 
     /**
      * @since 4.6

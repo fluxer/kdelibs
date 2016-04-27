@@ -30,3 +30,5 @@ install(TARGETS kio_file DESTINATION ${PLUGIN_INSTALL_DIR})
 ########### install files ###############
 
 install(FILES file.protocol DESTINATION ${SERVICES_INSTALL_DIR})
+
+generate_export_header(kio_file)

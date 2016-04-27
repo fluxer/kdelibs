@@ -29,7 +29,6 @@
 
 #include <QtCore/qsharedpointer.h>
 #include <QtCore/qatomic.h>
-#include <kdemacros.h>
 
 /**
  * \class KSharedPtr ksharedptr.h <KSharedPtr>

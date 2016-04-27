@@ -130,7 +130,7 @@ public:
      * @since 4.8.2
      * @deprecated
      */
-    KDE_DEPRECATED QWidget* window() const;
+    KIO_DEPRECATED QWidget* window() const;
 
     /**
      * Sets the top level window used as a parent when displaying
@@ -139,7 +139,7 @@ public:
      * @since 4.8.2
      * @deprecated
      */
-    KDE_DEPRECATED void setWindow(QWidget* window);
+    KIO_DEPRECATED void setWindow(QWidget* window);
 
 Q_SIGNALS:
     ///////////

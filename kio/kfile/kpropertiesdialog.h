@@ -26,7 +26,6 @@
 
 #include <QtCore/QString>
 
-#include <kdemacros.h>
 #include <kurl.h>
 #include <kfileitem.h>
 #include <kpagedialog.h>

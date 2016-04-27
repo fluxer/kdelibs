@@ -42,12 +42,12 @@
 
 // Local includes
 
-#include "libkdcraw_export.h"
+#include "kdcraw_export.h"
 
 namespace KDcrawIface
 {
 
-class LIBKDCRAW_EXPORT RawDecodingSettings
+class KDCRAW_EXPORT RawDecodingSettings
 {
 
 public:
@@ -365,7 +365,7 @@ public:
 };
 
 //! kDebug() stream operator. Writes settings @a s to the debug output in a nicely formatted way.
-LIBKDCRAW_EXPORT QDebug operator<<(QDebug dbg, const RawDecodingSettings& s);
+KDCRAW_EXPORT QDebug operator<<(QDebug dbg, const RawDecodingSettings& s);
 
 }  // namespace KDcrawIface
 

@@ -30,8 +30,6 @@
 
 #include <QtCore/qglobal.h>
 
-#cmakedefine __KDE_HAVE_GCC_VISIBILITY
-
 /**
  * @def KDE_NO_EXPORT
  * @ingroup KDEMacros
@@ -71,14 +69,16 @@
  * @ingroup KDEMacros
  */
 
-#ifdef __KDE_HAVE_GCC_VISIBILITY
-#define KDE_NO_EXPORT __attribute__ ((visibility("hidden")))
-#define KDE_EXPORT __attribute__ ((visibility("default")))
-#define KDE_IMPORT __attribute__ ((visibility("default")))
-#else
-#define KDE_NO_EXPORT
-#define KDE_EXPORT
-#define KDE_IMPORT
+#ifndef KDE_NO_EXPORT
+# define KDE_NO_EXPORT Q_DECL_HIDDEN
+#endif
+
+#ifndef KDE_EXPORT
+#define KDE_EXPORT Q_DECL_EXPORT
+#endif
+
+#ifndef KDE_IMPORT
+#define KDE_IMPORT Q_DECL_IMPORT
 #endif
 
 /**

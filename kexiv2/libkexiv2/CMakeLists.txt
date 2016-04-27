@@ -79,17 +79,19 @@ install(
     DESTINATION ${DATA_INSTALL_DIR}/libkexiv2/data
 )
 
+generate_export_header(kexiv2)
+
 install(
     FILES
     kexiv2.h
     kexiv2data.h
     kexiv2previews.h
-    libkexiv2_export.h
     msgtextedit.h
     subjectwidget.h
     altlangstredit.h
     countryselector.h
     rotationmatrix.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kexiv2_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/libkexiv2
     COMPONENT Devel

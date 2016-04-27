@@ -55,7 +55,6 @@
 #include <QtCore/QRegExp>
 #include <QtGui/QFont>
 #include <kcomponentdata.h>
-#include <kdemacros.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
 #include <kconfig.h>

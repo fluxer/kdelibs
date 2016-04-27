@@ -151,7 +151,7 @@ class KDEUI_EXPORT KStringListValidator : public QValidator
  * @deprecated
  * @author Marc Mutz <mutz@kde.org>
  **/
-class KDEUI_EXPORT_DEPRECATED KMimeTypeValidator : public QValidator
+class KDEUI_DEPRECATED_EXPORT KMimeTypeValidator : public QValidator
 {
   Q_OBJECT
 

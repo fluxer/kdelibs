@@ -226,6 +226,8 @@ install(
 
 ########### install files ###############
 
+generate_export_header(plasma)
+
 install(
     FILES
     packagemetadata.h
@@ -255,7 +257,6 @@ install(
     windoweffects.h
     framesvg.h
     plasma.h
-    plasma_export.h
     popupapplet.h
     querymatch.h
     runnercontext.h
@@ -267,6 +268,7 @@ install(
     theme.h
     tooltipcontent.h
     tooltipmanager.h
+    ${CMAKE_CURRENT_BINARY_DIR}/plasma_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
     view.h
     wallpaper.h

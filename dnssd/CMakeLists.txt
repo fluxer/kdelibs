@@ -116,9 +116,12 @@ install(
 )
 
 ########### install files ###############
+
+generate_export_header(kdnssd)
+
 install(
     FILES
-    dnssd_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdnssd_export.h
     domainbrowser.h
     remoteservice.h
     servicetypebrowser.h

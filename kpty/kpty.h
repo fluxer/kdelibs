@@ -23,6 +23,8 @@
 
 #include "kpty_export.h"
 
+#include <qglobal.h>
+
 class KPtyPrivate;
 struct termios;
 

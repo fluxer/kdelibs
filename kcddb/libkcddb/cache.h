@@ -22,12 +22,11 @@
 #ifndef KCDDB_CACHE_H
 #define KCDDB_CACHE_H
 
-#include <qpair.h>
+#include <QPair>
 #include <QString>
 
 #include "kcddb.h"
 #include "cdinfo.h"
-#include <kdemacros.h>
 
 namespace KCDDB
 {

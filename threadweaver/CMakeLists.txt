@@ -11,9 +11,11 @@ add_subdirectory(Weaver)
 # disabled for default kdelibs build:
 # add_subdirectory(Examples)
 
+generate_export_header(threadweaver)
+
 install(
     FILES
-    threadweaver_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/threadweaver_export.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/threadweaver
     COMPONENT Devel
 )

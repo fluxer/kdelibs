@@ -43,7 +43,7 @@
 
 // Local includes
 
-#include "libkdcraw_export.h"
+#include "kdcraw_export.h"
 #include "rawdecodingsettings.h"
 #include "dcrawinfocontainer.h"
 
@@ -52,7 +52,7 @@
 namespace KDcrawIface
 {
 
-class LIBKDCRAW_EXPORT KDcraw : public QObject
+class KDCRAW_EXPORT KDcraw : public QObject
 {
     Q_OBJECT
 

@@ -26,7 +26,6 @@ set(ktexteditor_LIB_SRCS
     movingrange.cpp
     movingrangefeedback.cpp
     messageinterface.cpp
-    editorchooser_ui.ui 
 )
 
 add_library(ktexteditor ${LIBRARY_TYPE} ${ktexteditor_LIB_SRCS})
@@ -48,9 +47,12 @@ install(
 )
 
 ########### install files ###############
+
+generate_export_header(ktexteditor)
+
 install(
     FILES
-    ktexteditor_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/ktexteditor_export.h
     factory.h
     editor.h
     document.h

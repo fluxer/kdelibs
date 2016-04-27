@@ -23,6 +23,7 @@
 #define KCRASH_H
 
 #include <kdeui_export.h>
+#include <qglobal.h>
 
 class QString;
 

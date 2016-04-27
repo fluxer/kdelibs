@@ -26,8 +26,6 @@ set(kcddb_LIB_SRCS ${libmusicbrainz_SRCS}
     genres.cpp
     cdinfodialog.cpp
     cdinfoencodingwidget.cpp
-    cdinfodialog.ui
-    cdinfoencodingwidget.ui
 )
 
 kde4_add_kcfg_files(kcddb_LIB_SRCS configbase.kcfgc)
@@ -46,6 +44,8 @@ set_target_properties(kcddb PROPERTIES
 
 ########### install files ###############
 
+generate_export_header(kcddb)
+
 install(
     FILES
     cdinfo.h
@@ -54,7 +54,7 @@ install(
     genres.h
     kcddbconfig.h
     kcddb.h
-    kcddb_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kcddb_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/configbase.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/libkcddb
     COMPONENT Devel

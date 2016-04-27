@@ -35,12 +35,12 @@
 
 // Local includes
 
-#include "libkdcraw_export.h"
+#include "kdcraw_export.h"
 
 namespace KDcrawIface
 {
 
-class LIBKDCRAW_EXPORT DcrawInfoContainer
+class KDCRAW_EXPORT DcrawInfoContainer
 {
 
 public:
@@ -151,7 +151,7 @@ public:
 };
 
 //! kDebug() stream operator. Writes container @a c to the debug output in a nicely formatted way.
-LIBKDCRAW_EXPORT QDebug operator<<(QDebug dbg, const DcrawInfoContainer& c);
+KDCRAW_EXPORT QDebug operator<<(QDebug dbg, const DcrawInfoContainer& c);
 
 } // namespace KDcrawIface
 

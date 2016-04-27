@@ -415,6 +415,8 @@ set_target_properties(kdeui PROPERTIES
 
 ########### install files ###############
 
+generate_export_header(kdeui)
+
 install(
     TARGETS kdeui
     EXPORT kdelibsLibraryTargets
@@ -447,7 +449,7 @@ install(
 
 install(
     FILES
-    kdeui_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kdeui_export.h
     actions/kactioncollection.h
     actions/kactioncategory.h
     actions/kaction.h
