@@ -17,6 +17,9 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/kdeclarative
     ${CMAKE_BINARY_DIR}/kdeclarative
     ${CMAKE_SOURCE_DIR}/plasma/extenders
+    # for the export headers
+    ${CMAKE_BINARY_DIR}/kutils
+    ${CMAKE_BINARY_DIR}/kdewebkit
 )
 
 if(NOT PLASMA_NO_KIO)

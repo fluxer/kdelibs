@@ -20,7 +20,7 @@
 #ifndef KSETTINGS_DIALOG_H
 #define KSETTINGS_DIALOG_H
 
-#include "../kcmutils_export.h"
+#include "kcmutils_export.h"
 #include "../kcmultidialog.h"
 
 #include <kservice.h>

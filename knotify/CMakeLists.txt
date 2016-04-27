@@ -3,6 +3,8 @@ project(knotify)
 include_directories(
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kutils/kmediaplayer
+    # for the export header
+    ${CMAKE_BINARY_DIR}/kutils/kmediaplayer
 )
 
 if(ENABLE_TESTING)

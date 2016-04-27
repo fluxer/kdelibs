@@ -9,6 +9,8 @@ add_subdirectory(pics)
 include_directories(
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kutils/kmediaplayer
+    # for the export header
+    ${CMAKE_BINARY_DIR}/kutils/kmediaplayer
 )
 
 ########### next target ###############
@@ -61,11 +63,7 @@ if(QT_QTDESIGNER_FOUND)
 
         kde4_add_plugin(kdewebkitwidgets ${kdewebkitwidgets_SRCS})
 
-        target_link_libraries(kdewebkitwidgets
-            ${KDE4_KDEUI_LIBS}
-            ${KDE4_KDEWEBKIT_LIBS}
-            ${QT_QTWEBKIT_LIBRARY}
-        )
+        target_link_libraries(kdewebkitwidgets ${KDE4_KDEWEBKIT_LIBS})
 
         install(
             TARGETS kdewebkitwidgets
