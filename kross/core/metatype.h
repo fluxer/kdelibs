@@ -135,7 +135,7 @@ namespace Kross {
      *
      * \since 4.2
      */
-    class KROSSCORE_EXPORT MetaTypeHandler
+    class KROSS_EXPORT MetaTypeHandler
     {
         public:
             typedef QVariant (FunctionPtr) (void*);

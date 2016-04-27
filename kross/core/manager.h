@@ -46,7 +46,7 @@ namespace Kross {
      * interpreter like python or ruby. While \a Action implements
      * a flexible abstract container to deal with single script files.
      */
-    class KROSSCORE_EXPORT Manager
+    class KROSS_EXPORT Manager
         : public QObject
         , public QScriptable
         , public ChildrenInterface

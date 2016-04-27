@@ -66,7 +66,7 @@ namespace Kross {
      *
      * \since 4.1
      */
-    class KROSSCORE_EXPORT Object : public QSharedData, public ErrorInterface
+    class KROSS_EXPORT Object : public QSharedData, public ErrorInterface
     {
         public:
 

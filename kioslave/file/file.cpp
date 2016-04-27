@@ -95,7 +95,7 @@ static void appendACLAtoms( const QByteArray & path, UDSEntry& entry,
                             mode_t type, bool withACL );
 #endif
 
-extern "C" int KDE_EXPORT kdemain( int argc, char **argv )
+extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
 {
   QCoreApplication app( argc, argv ); // needed for QSocketNotifier
   KComponentData componentData( "kio_file", "kdelibs4" );

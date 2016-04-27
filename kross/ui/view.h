@@ -62,7 +62,7 @@ namespace Kross {
     * d.exec();
     * \endcode
     */
-    class KROSSUI_EXPORT ActionCollectionEditor : public QWidget
+    class KROSS_EXPORT ActionCollectionEditor : public QWidget
     {
         public:
 
@@ -160,7 +160,7 @@ namespace Kross {
     * d.exec();
     * \endcode
     */
-    class KROSSUI_EXPORT ActionCollectionView : public QTreeView
+    class KROSS_EXPORT ActionCollectionView : public QTreeView
     {
             Q_OBJECT
         public:

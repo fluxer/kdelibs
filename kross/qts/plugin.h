@@ -32,7 +32,7 @@
 //#include "errorinterface.h"
 //#include "childreninterface.h"
 
-#include <kross_export.h>
+#include <core/kross_export.h>
 
 #define KROSSQTSPLUGIN_EXPORT KROSS_EXPORT
 

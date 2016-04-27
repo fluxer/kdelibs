@@ -274,7 +274,7 @@ public:
      * @return the prefix inserted between the base path and content entries
      * @deprecated use contentsPrefixPaths() instead.
      */
-    KDE_DEPRECATED QString contentsPrefix() const;
+    PLASMA_DEPRECATED QString contentsPrefix() const;
 
     /**
      * @return the prefix paths inserted between the base path and content entries, in order of priority.

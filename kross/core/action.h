@@ -91,7 +91,7 @@ namespace Kross {
      * QVariant result = action->callFunction("myfunction", QVariantList()<<"Arg");
      * \endcode
      */
-    class KROSSCORE_EXPORT Action
+    class KROSS_EXPORT Action
         : public QAction
         , public QScriptable
         , public ChildrenInterface

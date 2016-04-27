@@ -17,6 +17,7 @@
  * Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
+#include "core/kross_export.h"
 #include "form.h"
 
 #include <QtCore/qbytearray.h>
@@ -64,7 +65,7 @@
 
 extern "C"
 {
-    KDE_EXPORT QObject* krossmodule()
+    KROSS_EXPORT QObject* krossmodule()
     {
         return new Kross::FormModule();
     }

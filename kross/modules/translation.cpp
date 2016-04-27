@@ -17,6 +17,7 @@
  * Boston, MA 02110-1301, USA.
  ***************************************************************************/
 
+#include "core/kross_export.h"
 #include "translation.h"
 
 #include <QString>
@@ -31,7 +32,7 @@
 
 extern "C"
 {
-    KDE_EXPORT QObject* krossmodule()
+    KROSS_EXPORT QObject* krossmodule()
     {
         return new Kross::TranslationModule();
     }

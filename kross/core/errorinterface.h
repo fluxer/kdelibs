@@ -29,7 +29,7 @@ namespace Kross {
     /**
      * Interface for error-handling.
      */
-    class KROSSCORE_EXPORT ErrorInterface
+    class KROSS_EXPORT ErrorInterface
     {
         public:
 

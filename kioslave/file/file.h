@@ -43,7 +43,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
-class KIOSLAVE_FILE_EXPORT FileProtocol : public QObject, public KIO::SlaveBase
+class KIO_FILE_EXPORT FileProtocol : public QObject, public KIO::SlaveBase
 {
   Q_OBJECT
 public:

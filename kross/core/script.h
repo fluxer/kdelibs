@@ -40,7 +40,7 @@ namespace Kross {
      * that implements the \a Script functionality for the
      * defined \a Interpreter .
      */
-    class KROSSCORE_EXPORT Script : public QObject, public ErrorInterface
+    class KROSS_EXPORT Script : public QObject, public ErrorInterface
     {
             Q_OBJECT
         public:

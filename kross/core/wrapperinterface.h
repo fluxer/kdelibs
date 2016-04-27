@@ -70,7 +70,7 @@ namespace Kross {
      *
      * \since 4.2
      */
-    class KROSSCORE_EXPORT WrapperInterface
+    class KROSS_EXPORT WrapperInterface
     {
         public:
 

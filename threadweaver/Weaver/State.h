@@ -29,9 +29,9 @@
 #ifndef THREADWEAVER_STATE_H
 #define THREADWEAVER_STATE_H
 
-
-
 #include <threadweaver/threadweaver_export.h>
+
+class QString;
 
 namespace ThreadWeaver {
 

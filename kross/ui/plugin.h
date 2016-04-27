@@ -57,7 +57,7 @@ namespace Kross
  *
  * You may create multiple instances of ScriptingPlugin by using alternative c'tor.
   */
-class KROSSUI_EXPORT ScriptingPlugin : public KParts::Plugin
+class KROSS_EXPORT ScriptingPlugin : public KParts::Plugin
 {
     Q_OBJECT
 public:

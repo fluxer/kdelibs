@@ -153,9 +153,11 @@ set_target_properties(kcmutils PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
+generate_export_header(kcmutils)
+
 install(
     FILES
-    kcmutils_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kcmutils_export.h
     kcmoduleinfo.h
     kcmoduleloader.h
     kcmultidialog.h
@@ -194,9 +196,11 @@ set_target_properties(kprintutils PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
+generate_export_header(kprintutils)
+
 install(
     FILES
-    kprintutils_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/kprintutils_export.h
     kprintpreview.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel

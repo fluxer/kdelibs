@@ -35,7 +35,7 @@ namespace Kross {
      * to allow to attach QObject to a global or a local context related
      * instances that should be published to the scripting code.
      */
-    class KROSSCORE_EXPORT ChildrenInterface
+    class KROSS_EXPORT ChildrenInterface
     {
         public:
 

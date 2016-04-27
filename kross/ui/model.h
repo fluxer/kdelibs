@@ -43,7 +43,7 @@ namespace Kross {
      * \li This model lists actions before collections.
      * \li The internalPointer() of QModelIndex is used to hold a pointer to the parent collection.
      */
-    class KROSSUI_EXPORT ActionCollectionModel : public QAbstractItemModel
+    class KROSS_EXPORT ActionCollectionModel : public QAbstractItemModel
     {
             Q_OBJECT
         public:
@@ -125,7 +125,7 @@ namespace Kross {
      * The ActionCollectionProxyModel class implements a QSortFilterProxyModel 
      * for a \a ActionCollectionModel instance.
      */
-    class KROSSUI_EXPORT ActionCollectionProxyModel : public QSortFilterProxyModel
+    class KROSS_EXPORT ActionCollectionProxyModel : public QSortFilterProxyModel
     {
         public:
             explicit ActionCollectionProxyModel(QObject* parent, ActionCollectionModel* model = 0);

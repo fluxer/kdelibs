@@ -4,6 +4,7 @@ include_directories(
     ${KDE4_KDEUI_INCLUDES}
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kross
+    ${CMAKE_BINARY_DIR}/kross
 )
 
 ########### next target ###############

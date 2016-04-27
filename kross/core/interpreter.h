@@ -40,7 +40,7 @@ namespace Kross {
      * a \a Interpreter before the interpreter-backend itself is
      * loaded.
      */
-    class KROSSCORE_EXPORT InterpreterInfo
+    class KROSS_EXPORT InterpreterInfo
     {
         public:
 
@@ -174,7 +174,7 @@ namespace Kross {
      * class and does provide a factory method to create
      * \a Script implementations.
      */
-    class KROSSCORE_EXPORT Interpreter : public QObject, public ErrorInterface
+    class KROSS_EXPORT Interpreter : public QObject, public ErrorInterface
     {
             Q_OBJECT
         public:

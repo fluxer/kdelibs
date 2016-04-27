@@ -42,7 +42,7 @@ namespace Kross {
      * To remove a collection call setParentCollection(0).
      * NOTE: Do not use setParent().
      */
-    class KROSSCORE_EXPORT ActionCollection : public QObject
+    class KROSS_EXPORT ActionCollection : public QObject
     {
             Q_OBJECT
 
