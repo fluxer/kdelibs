@@ -444,11 +444,6 @@ if(ENABLE_TESTING)
     enable_testing()
 endif()
 
-# Position-Independent-Executable is a feature of Binutils, Libc, and GCC that creates an executable
-# which is something between a shared library and a normal executable.
-# Programs compiled with these features appear as ?shared object? with the file command.
-option(KDE4_ENABLE_FPIE  "Enable platform supports PIE linking")
-
 #####################  some more settings   ##########################################
 
 # If we are building ! kdelibs, check where kdelibs are installed.
@@ -558,21 +553,7 @@ endif()
 
 set(_KDE4_PLATFORM_INCLUDE_DIRS)
 
-# add our LIB_INSTALL_DIR to the RPATH (but only when it is not one of the
-# standard system link directories listed in
-# CMAKE_{PLATFORM,C,CXX}_IMPLICIT_LINK_DIRECTORIES) and use the RPATH figured
-# out by cmake when compiling
-
-list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemPlatformLibDir)
-list(FIND CMAKE_C_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCLibDir)
-list(FIND CMAKE_CXX_IMPLICIT_LINK_DIRECTORIES "${LIB_INSTALL_DIR}" _isSystemCxxLibDir)
-if("${_isSystemPlatformLibDir}" STREQUAL "-1"
-    AND "${_isSystemCLibDir}" STREQUAL "-1"
-    AND "${_isSystemCxxLibDir}" STREQUAL "-1")
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${LIB_INSTALL_DIR}")
-endif()
-
-# add our LIB_INSTALL_DIR to the RPATH, also skip re-linking during install
+# skip re-linking during install
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -584,7 +565,7 @@ if(Q_WS_X11)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
-    if(CMAKE_COMPILER_IS_GNUCXX OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    if(CMAKE_CXX_COMPILER_ID MATCHES "(GNU|Clang)")
         set(_KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE)
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
         set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
@@ -592,15 +573,7 @@ if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_SHARED_LINKER_FLAGS}")
         set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_MODULE_LINKER_FLAGS}")
         set(CMAKE_EXE_LINKER_FLAGS "-Wl,--enable-new-dtags ${CMAKE_EXE_LINKER_FLAGS}")
-
-        # we profile...
-        if(CMAKE_BUILD_TYPE_TOLOWER MATCHES profile)
-            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-            set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -fprofile-arcs -ftest-coverage")
-        endif()
-    endif()
-
-    if(CMAKE_C_COMPILER MATCHES "icc")
+    elseif(CMAKE_C_COMPILER_ID MATCHES "Intel")
         set(_KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE)
         set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_SHARED_LINKER_FLAGS}")
         set(CMAKE_MODULE_LINKER_FLAGS "-Wl,--fatal-warnings -Wl,--no-undefined -lc ${CMAKE_MODULE_LINKER_FLAGS}")
@@ -630,28 +603,17 @@ endif()
 # compiler specific settings
 ############################################################
 
-if(CMAKE_COMPILER_IS_GNUCXX)
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
     set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
     # Select flags.
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
     set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
     set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
     set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
-
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-    # As of Qt 4.6.x we need to override the new exception macros if we want compile with -fno-exceptions
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -fno-exceptions -DQT_NO_EXCEPTIONS -fno-check-new -fno-common -Werror=return-type -fvisibility-inlines-hidden")
-
-    if(CMAKE_SYSTEM_NAME MATCHES Linux OR CMAKE_SYSTEM_NAME STREQUAL GNU)
-        # This should not be needed, as it is also part of _KDE4_PLATFORM_DEFINITIONS below.
-        # It is kept here nonetheless both for backwards compatibility in case
-        # one does not use add_definitions(${KDE4_DEFINITIONS}) and also
-        # because it is/was needed by glibc for snprintf to be available when
-        # building C files.See commit 4a44862b2d178c1d2e1eb4da90010d19a1e4a42c.
-        add_definitions(-D_DEFAULT_SOURCE -D_BSD_SOURCE)
-    endif()
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wall -Werror=format -Wformat-security -Wundef")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror=format -Wformat-security -Wundef -fno-exceptions -DQT_NO_EXCEPTIONS -fvisibility-inlines-hidden")
 
     if(CMAKE_SYSTEM_NAME STREQUAL GNU)
         set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -pthread")
@@ -674,31 +636,17 @@ if(CMAKE_COMPILER_IS_GNUCXX)
         message("${_compile_output_var}")
         message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
     endif(NOT _compile_result)
-endif(CMAKE_COMPILER_IS_GNUCXX)
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    # Note that exceptions are enabled by default when building with clang. That
-    # is, -fno-exceptions is not set in CMAKE_CXX_FLAGS below. This is because a
-    # lot of code in different KDE modules ends up including code that throws
-    # exceptions. Most (or all) of the occurrences are in template code that
-    # never gets instantiated. Contrary to GCC, ICC and MSVC, clang (most likely
-    # rightfully) complains about that. Trying to work around the issue by
-    # passing -fdelayed-template-parsing brings other problems, as noted in
-    # http://lists.kde.org/?l=kde-core-devel&m=138157459706783&w=2.
-    # The generated code will be slightly bigger, but there is no way to avoid
-    # it.
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-
     # Select flags.
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
-    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
-    set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-inline")
     set(CMAKE_C_FLAGS_RELWITHDEBINFO   "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
     set(CMAKE_C_FLAGS_RELEASE          "-O2 -DNDEBUG -DQT_NO_DEBUG")
-    set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-inline")
-
-    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -W -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wno-long-long -Wundef -Wcast-align -Wchar-subscripts -Wall -W -Wpointer-arith -Wformat-security -Woverloaded-virtual -fno-common -fvisibility=hidden -Werror=return-type -fvisibility-inlines-hidden")
+    set(CMAKE_C_FLAGS_DEBUG            "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_RELEASE        "-O2 -DNDEBUG -DQT_NO_DEBUG")
+    set(CMAKE_CXX_FLAGS_DEBUG          "-g -O2 -fno-reorder-blocks -fno-schedule-insns -fno-inline")
+    set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wall -Werror=format -Wformat-security -Wundef")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Werror=format -Wformat-security -Wundef -fno-exceptions -DQT_NO_EXCEPTIONS -fvisibility-inlines-hidden")
 
     # At least kdepim exports one function with C linkage that returns a
     # QString in a plugin, but clang does not like that.
@@ -720,10 +668,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         message("${_compile_output_var}")
         message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
     endif(NOT _compile_result)
-endif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-
-
-if(CMAKE_C_COMPILER MATCHES "icc")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "Intel")
     set(KDE4_ENABLE_EXCEPTIONS "-fexceptions")
     # Select flags.
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
@@ -815,7 +760,6 @@ set(KDE4_DEFINITIONS
     -DQT_USE_FAST_CONCATENATION
     -DQT_USE_FAST_OPERATOR_PLUS
     -D_REENTRANT
-    -DKDE_DEPRECATED_WARNINGS
     -DKDE4_CMAKE_TOPLEVEL_DIR_LENGTH=${_KDE4_CMAKE_TOPLEVEL_DIR_LENGTH}
 )
 
