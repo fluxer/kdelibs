@@ -488,7 +488,7 @@ class PLASMA_EXPORT AbstractRunner : public QObject
 #define K_EXPORT_PLASMA_RUNNER( libname, classname )     \
 K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
 K_EXPORT_PLUGIN(factory("plasma_runner_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(PLASMA_VERSION)
+K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
 
 /**
  * These plugins are Used by the plugin selector dialog to show
