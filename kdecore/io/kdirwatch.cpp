@@ -88,17 +88,8 @@ static KDirWatchPrivate* createPrivate() {
 static KDirWatch::Method methodFromString(const QString& method) {
   if (method == QLatin1String("Fam")) {
     return KDirWatch::FAM;
-  } else if (method == QLatin1String("Stat")) {
-    return KDirWatch::Stat;
-  } else if (method == QLatin1String("QFSWatch")) {
-    return KDirWatch::QFSWatch;
   } else {
-#ifdef Q_OS_LINUX
-    // inotify supports delete+recreate+modify, which QFSWatch doesn't support
-    return KDirWatch::INotify;
-#else
     return KDirWatch::QFSWatch;
-#endif
   }
 }
 
@@ -108,10 +99,6 @@ static const char* methodToString(KDirWatch::Method method)
     switch (method) {
     case KDirWatch::FAM:
         return "Fam";
-    case KDirWatch::INotify:
-        return "INotify";
-    case KDirWatch::Stat:
-        return "Stat";
     case KDirWatch::QFSWatch:
         return "QFSWatch";
     default:
@@ -164,7 +151,7 @@ KDirWatchPrivate::KDirWatchPrivate()
   m_nfsPollInterval = config.readEntry("NFSPollInterval", 5000);
   m_PollInterval = config.readEntry("PollInterval", 500);
 
-  QString method = config.readEntry("PreferredMethod", "inotify");
+  QString method = config.readEntry("PreferredMethod", "QFSWatch");
   m_preferredMethod = methodFromString(method);
 
   // The nfs method defaults to the normal (local) method
@@ -172,9 +159,7 @@ KDirWatchPrivate::KDirWatchPrivate()
 
   QList<QByteArray> availableMethods;
 
-  availableMethods << "Stat";
-
-  // used for FAM and inotify
+  // used for FAM
   rescan_timer.setObjectName(QString::fromLatin1("KDirWatchPrivate::rescan_timer"));
   rescan_timer.setSingleShot( true );
   connect(&rescan_timer, SIGNAL(timeout()), this, SLOT(slotRescan()));
@@ -195,50 +180,11 @@ KDirWatchPrivate::KDirWatchPrivate()
   }
 #endif
 
-#ifdef HAVE_SYS_INOTIFY_H
-  supports_inotify = true;
-
-  m_inotify_fd = inotify_init();
-
-  if ( m_inotify_fd <= 0 ) {
-    kDebug(7001) << "Can't use Inotify, kernel doesn't support it";
-    supports_inotify = false;
-  }
-
-  {
-    struct utsname uts;
-    int major, minor, patch;
-    if (uname(&uts) < 0) {
-      supports_inotify = false;
-      kDebug(7001) << "Unable to get uname";
-    } else if (sscanf(uts.release, "%d.%d", &major, &minor) != 2) {
-      supports_inotify = false;
-      kDebug(7001) << "The version is malformed: " << uts.release;
-    } else if(major == 2 && minor == 6) { // If it is 2.6 check further...
-      if (sscanf(uts.release, "%d.%d.%d", &major, &minor, &patch) != 3) {
-        supports_inotify = false;
-        kDebug() << "Detected 2.6 kernel but can't know more: " << uts.release;
-      } else if (major * 1000000 + minor * 1000 + patch < 2006014 ){
-        supports_inotify = false;
-        kDebug(7001) << "Can't use INotify, Linux kernel too old " << uts.release;
-      }
-    }
-  }
-
-  kDebug(7001) << "INotify available: " << supports_inotify;
-  if ( supports_inotify ) {
-    availableMethods << "INotify";
-    (void)fcntl(m_inotify_fd, F_SETFD, FD_CLOEXEC);
-
-    mSn = new QSocketNotifier( m_inotify_fd, QSocketNotifier::Read, this );
-    connect( mSn, SIGNAL(activated(int)),
-             this, SLOT(inotifyEventReceived()) );
-  }
-#endif
 #ifndef QT_NO_FILESYSTEMWATCHER
   availableMethods << "QFileSystemWatcher";
   fsWatcher = 0;
 #endif
+
 #ifndef NDEBUG
   kDebug(7001) << "Available methods: " << availableMethods << "preferred=" << methodToString(m_preferredMethod);
 #endif
@@ -257,190 +203,8 @@ KDirWatchPrivate::~KDirWatchPrivate()
     FAMClose(&fc);
   }
 #endif
-#ifdef HAVE_SYS_INOTIFY_H
-  if ( supports_inotify )
-    ::close( m_inotify_fd );
-#endif
 #ifndef QT_NO_FILESYSTEMWATCHER
   delete fsWatcher;
-#endif
-}
-
-void KDirWatchPrivate::inotifyEventReceived()
-{
-  //kDebug(7001);
-#ifdef HAVE_SYS_INOTIFY_H
-  if ( !supports_inotify )
-    return;
-
-  int pending = -1;
-  int offsetStartRead = 0; // where we read into buffer
-  char buf[8192];
-  assert( m_inotify_fd > -1 );
-  ioctl( m_inotify_fd, FIONREAD, &pending );
-
-  while ( pending > 0 ) {
-
-    const int bytesToRead = qMin( pending, (int)sizeof( buf ) - offsetStartRead );
-
-    int bytesAvailable = read( m_inotify_fd, &buf[offsetStartRead], bytesToRead );
-    pending -= bytesAvailable;
-    bytesAvailable += offsetStartRead;
-    offsetStartRead = 0;
-
-    int offsetCurrent = 0;
-    while ( bytesAvailable >= (int)sizeof( struct inotify_event ) ) {
-      const struct inotify_event * const event = (struct inotify_event *) &buf[offsetCurrent];
-      const int eventSize = sizeof( struct inotify_event ) + event->len;
-      if ( bytesAvailable < eventSize ) {
-          break;
-      }
-
-      bytesAvailable -= eventSize;
-      offsetCurrent += eventSize;
-
-      QString path;
-      QByteArray cpath(event->name, event->len);
-      if(event->len)
-        path = QFile::decodeName ( cpath );
-
-      if ( path.length() && isNoisyFile( cpath ) )
-        continue;
-
-      // Is set to true if the new event is a directory, false otherwise. This prevents a stat call in clientsForFileOrDir
-      const bool isDir = (event->mask & (IN_ISDIR));
-
-      // now we're in deep trouble of finding the
-      // associated entries
-      // for now, we suck and iterate
-      for ( EntryMap::Iterator it = m_mapEntries.begin();
-            it != m_mapEntries.end();  ) {
-
-        Entry* e = &( *it );
-        ++it;
-        if ( e->wd == event->wd ) {
-          const bool wasDirty = e->dirty;
-          e->dirty = true;
-
-          const QString tpath = e->path + QLatin1Char('/') + path;
-
-          //if (s_verboseDebug) {
-          //  kDebug(7001) << "got event" << "0x"+QString::number(event->mask, 16) << "for" << e->path;
-          //}
-
-          if( event->mask & IN_DELETE_SELF) {
-            if (s_verboseDebug) {
-              kDebug(7001) << "-->got deleteself signal for" << e->path;
-            }
-            e->m_status = NonExistent;
-            e->wd = -1;
-            e->m_ctime = invalid_ctime;
-            emitEvent(e, Deleted, e->path);
-            // If the parent dir was already watched, tell it something changed
-            Entry* parentEntry = entry(e->parentDirectory());
-            if (parentEntry)
-                parentEntry->dirty = true;
-            // Add entry to parent dir to notice if the entry gets recreated
-            addEntry(0, e->parentDirectory(), e, true /*isDir*/);
-          }
-          if ( event->mask & IN_IGNORED ) {
-            // Causes bug #207361 with kernels 2.6.31 and 2.6.32!
-            //e->wd = -1;
-          }
-          if ( event->mask & (IN_CREATE|IN_MOVED_TO) ) {
-            Entry* sub_entry = e->findSubEntry(tpath);
-
-            if (s_verboseDebug) {
-              kDebug(7001) << "-->got CREATE signal for" << (tpath) << "sub_entry=" << sub_entry;
-              kDebug(7001) << *e;
-            }
-
-            // The code below is very similar to the one in checkFAMEvent...
-            if (sub_entry) {
-              // We were waiting for this new file/dir to be created
-              sub_entry->dirty = true;
-              rescan_timer.start(0); // process this asap, to start watching that dir
-            } else if (e->isDir && !e->m_clients.empty()) {
-              const QList<Client *> clients = e->inotifyClientsForFileOrDir(isDir);
-              Q_FOREACH(Client *client, clients) {
-                // See discussion in addEntry for why we don't addEntry for individual
-                // files in WatchFiles mode with inotify.
-                if (isDir) {
-                  addEntry(client->instance, tpath, 0, isDir,
-                           isDir ? client->m_watchModes : KDirWatch::WatchDirOnly);
-                }
-              }
-              if (!clients.isEmpty()) {
-                emitEvent(e, Created, tpath);
-                kDebug(7001).nospace() << clients.count() << " instance(s) monitoring the new "
-                                       << (isDir ? "dir " : "file ") << tpath;
-              }
-              e->m_pendingFileChanges.append(e->path);
-              if (!rescan_timer.isActive())
-                  rescan_timer.start(m_PollInterval); // singleshot
-            }
-          }
-          if (event->mask & (IN_DELETE|IN_MOVED_FROM)) {
-            if (s_verboseDebug) {
-              kDebug(7001) << "-->got DELETE signal for" << tpath;
-            }
-            if ((e->isDir) && (!e->m_clients.empty())) {
-              Client* client = 0;
-              // A file in this directory has been removed.  It wasn't an explicitly
-              // watched file as it would have its own watch descriptor, so
-              // no addEntry/ removeEntry bookkeeping should be required.  Emit
-              // the event immediately if any clients are interested.
-              KDirWatch::WatchModes flag = isDir ? KDirWatch::WatchSubDirs : KDirWatch::WatchFiles;
-              int counter = 0;
-              Q_FOREACH(client, e->m_clients) { // krazy:exclude=foreach
-                  if (client->m_watchModes & flag) {
-                        counter++;
-                  }
-              }
-              if (counter != 0) {
-                  emitEvent(e, Deleted, tpath);
-              }
-            }
-          }
-          if (event->mask & (IN_MODIFY|IN_ATTRIB)) {
-            if ((e->isDir) && (!e->m_clients.empty())) {
-              if (s_verboseDebug) {
-                kDebug(7001) << "-->got MODIFY signal for" << (tpath);
-              }
-              // A file in this directory has been changed.  No
-              // addEntry/ removeEntry bookkeeping should be required.
-              // Add the path to the list of pending file changes if
-              // there are any interested clients.
-              //KDE_struct_stat stat_buf;
-              //QByteArray tpath = QFile::encodeName(e->path+'/'+path);
-              //KDE_stat(tpath, &stat_buf);
-              //bool isDir = S_ISDIR(stat_buf.st_mode);
-
-              // The API doc is somewhat vague as to whether we should emit
-              // dirty() for implicitly watched files when WatchFiles has
-              // not been specified - we'll assume they are always interested,
-              // regardless.
-              // Don't worry about duplicates for the time
-              // being; this is handled in slotRescan.
-              e->m_pendingFileChanges.append(tpath);
-              // Avoid stat'ing the directory if only an entry inside it changed.
-              e->dirty = (wasDirty || (path.isEmpty() && (event->mask & IN_ATTRIB)));
-            }
-          }
-
-          if (!rescan_timer.isActive())
-            rescan_timer.start(m_PollInterval); // singleshot
-
-          break;
-        }
-      }
-    }
-    if (bytesAvailable > 0) {
-        // copy partial event to beginning of buffer
-        memmove(buf, &buf[offsetCurrent], bytesAvailable);
-        offsetStartRead = bytesAvailable;
-    }
-  }
 #endif
 }
 
@@ -542,33 +306,13 @@ QList<KDirWatchPrivate::Client *> KDirWatchPrivate::Entry::clientsForFileOrDir(c
   return ret;
 }
 
-// inotify specific function that doesn't call KDE::stat to figure out if we have a file or folder.
-// isDir is determined through inotify's "IN_ISDIR" flag in KDirWatchPrivate::inotifyEventReceived
-QList<KDirWatchPrivate::Client *> KDirWatchPrivate::Entry::inotifyClientsForFileOrDir(bool isDir) const
-{
-  QList<Client *> ret;
-  const KDirWatch::WatchModes flag = isDir ? KDirWatch::WatchSubDirs : KDirWatch::WatchFiles;
-  Q_FOREACH(Client *client, this->m_clients) {
-    if (client->m_watchModes & flag) {
-      ret.append(client);
-    }
-  }
-  return ret;
-}
-
 QDebug operator<<(QDebug debug, const KDirWatchPrivate::Entry &entry)
 {
   debug.nospace() << "[ Entry for " << entry.path << ", " << (entry.isDir ? "dir" : "file");
   if (entry.m_status == KDirWatchPrivate::NonExistent)
     debug << ", non-existent";
   debug << ", using " << ((entry.m_mode == KDirWatchPrivate::FAMMode) ? "FAM" :
-                       (entry.m_mode == KDirWatchPrivate::INotifyMode) ? "INotify" :
-                       (entry.m_mode == KDirWatchPrivate::QFSWatchMode) ? "QFSWatch" :
-                       (entry.m_mode == KDirWatchPrivate::StatMode) ? "Stat" : "Unknown Method");
-#ifdef HAVE_SYS_INOTIFY_H
-  if (entry.m_mode == KDirWatchPrivate::INotifyMode)
-    debug << " inotify_wd=" << entry.wd;
-#endif
+                       (entry.m_mode == KDirWatchPrivate::QFSWatchMode) ? "QFSWatch" : "Unknown Method");
   debug << ", has " << entry.m_clients.count() << " clients";
   debug.space();
   if (!entry.m_entries.isEmpty()) {
@@ -672,40 +416,6 @@ bool KDirWatchPrivate::useFAM(Entry* e)
 }
 #endif
 
-#ifdef HAVE_SYS_INOTIFY_H
-// setup INotify notification, returns false if not possible
-bool KDirWatchPrivate::useINotify( Entry* e )
-{
-  //kDebug (7001) << "trying to use inotify for monitoring";
-
-  e->wd = -1;
-  e->dirty = false;
-
-  if (!supports_inotify) return false;
-
-  e->m_mode = INotifyMode;
-
-  if ( e->m_status == NonExistent ) {
-    addEntry(0, e->parentDirectory(), e, true);
-    return true;
-  }
-
-  // May as well register for almost everything - it's free!
-  int mask = IN_DELETE|IN_DELETE_SELF|IN_CREATE|IN_MOVE|IN_MOVE_SELF|IN_DONT_FOLLOW|IN_MOVED_FROM|IN_MODIFY|IN_ATTRIB;
-
-  if ( ( e->wd = inotify_add_watch( m_inotify_fd,
-                                    QFile::encodeName( e->path ), mask) ) >= 0)
-  {
-    if (s_verboseDebug) {
-      kDebug(7001) << "inotify successfully used for monitoring" << e->path << "wd=" << e->wd;
-    }
-    return true;
-  }
-
-   kDebug(7001) << "inotify failed for monitoring" << e->path << ":" << strerror(errno);
-  return false;
-}
-#endif
 #ifndef QT_NO_FILESYSTEMWATCHER
 bool KDirWatchPrivate::useQFSWatch(Entry* e)
 {
@@ -727,30 +437,6 @@ bool KDirWatchPrivate::useQFSWatch(Entry* e)
   return true;
 }
 #endif
-
-bool KDirWatchPrivate::useStat(Entry* e)
-{
-  if (KFileSystemType::fileSystemType(e->path) == KFileSystemType::Nfs) // TODO: or Smbfs?
-    useFreq(e, m_nfsPollInterval);
-  else
-    useFreq(e, m_PollInterval);
-
-  if (e->m_mode != StatMode) {
-    e->m_mode = StatMode;
-    statEntries++;
-
-    if ( statEntries == 1 ) {
-      // if this was first STAT entry (=timer was stopped)
-      timer.start(freq);      // then start the timer
-      kDebug(7001) << " Started Polling Timer, freq " << freq;
-    }
-  }
-
-  kDebug(7001) << " Setup Stat (freq " << e->freq << ") for " << e->path;
-
-  return true;
-}
-
 
 /* If <instance> !=0, this KDirWatch instance wants to watch at <_path>,
  * providing in <isDir> the type of the entry to be watched.
@@ -780,21 +466,6 @@ void KDirWatchPrivate::addEntry(KDirWatch* instance, const QString& _path,
          kDebug(7001) << "Added already watched Entry" << path
                       << "(for" << sub_entry->path << ")";
        }
-#ifdef HAVE_SYS_INOTIFY_H
-       Entry* e = &(*it);
-       if( (e->m_mode == INotifyMode) && (e->wd >= 0) ) {
-         int mask = IN_DELETE|IN_DELETE_SELF|IN_CREATE|IN_MOVE|IN_MOVE_SELF|IN_DONT_FOLLOW;
-         if(!e->isDir)
-           mask |= IN_MODIFY|IN_ATTRIB;
-         else
-           mask |= IN_ONLYDIR;
-
-         inotify_rm_watch (m_inotify_fd, e->wd);
-         e->wd = inotify_add_watch( m_inotify_fd, QFile::encodeName( e->path ),
-                                    mask);
-         //Q_ASSERT(e->wd >= 0); // fails in KDirListerTest::testDeleteCurrentDir
-       }
-#endif
     }
     else {
        (*it).addClient(instance, watchModes);
@@ -879,17 +550,6 @@ void KDirWatchPrivate::addEntry(KDirWatch* instance, const QString& _path,
       filters |= QDir::Files;
     }
 
-#if defined(HAVE_SYS_INOTIFY_H)
-    if (e->m_mode == INotifyMode || (e->m_mode == UnknownMode && m_preferredMethod == KDirWatch::INotify)  )
-    {
-        //kDebug(7001) << "Ignoring WatchFiles directive - this is implicit with inotify";
-        // Placing a watch on individual files is redundant with inotify
-        // (inotify gives us WatchFiles functionality "for free") and indeed
-        // actively harmful, so prevent it.  WatchSubDirs is necessary, though.
-        filters &= ~QDir::Files;
-    }
-#endif
-
     QDir basedir (e->path);
     const QFileInfoList contents = basedir.entryInfoList(filters);
     foreach(const QFileInfo iter, contents)
@@ -912,8 +572,8 @@ void KDirWatchPrivate::addWatch(Entry* e)
   // default, otherwise use preferredMethod as the default, if the methods are
   // the same we can skip the mountpoint check
 
-  // This allows to configure a different method for NFS mounts, since inotify
-  // cannot detect changes made by other machines. However as a default inotify
+  // This allows to configure a different method for NFS mounts, since QFSWatch
+  // cannot detect changes made by other machines. However as a default QFSWatch
   // is fine, since the most common case is a NFS-mounted home, where all changes
   // are made locally. #177892.
   KDirWatch::Method preferredMethod = m_preferredMethod;
@@ -929,28 +589,20 @@ void KDirWatchPrivate::addWatch(Entry* e)
 #if defined(HAVE_FAM)
     case KDirWatch::FAM: entryAdded = useFAM(e); break;
 #endif
-#if defined(HAVE_SYS_INOTIFY_H)
-    case KDirWatch::INotify: entryAdded = useINotify(e); break;
-#endif
 #ifndef QT_NO_FILESYSTEMWATCHER
     case KDirWatch::QFSWatch: entryAdded = useQFSWatch(e); break;
 #endif
-    case KDirWatch::Stat: entryAdded = useStat(e); break;
     default: break;
   }
 
-  // Failing that try in order INotify, FAM, QFSWatch, Stat
+  // Failing that try in order FAM, QFSWatch
   if (!entryAdded) {
-#if defined(HAVE_SYS_INOTIFY_H)
-    if (useINotify(e)) return;
-#endif
 #if defined(HAVE_FAM)
     if (useFAM(e)) return;
 #endif
 #ifndef QT_NO_FILESYSTEMWATCHER
     if (useQFSWatch(e)) return;
 #endif
-    useStat(e);
   }
 }
 
@@ -961,15 +613,6 @@ void KDirWatchPrivate::removeWatch(Entry* e)
         FAMCancelMonitor(&fc, &(e->fr) );
         kDebug(7001).nospace()  << "Cancelled FAM (Req " << FAMREQUEST_GETREQNUM(&(e->fr))
                                 << ") for " << e->path;
-    }
-#endif
-#ifdef HAVE_SYS_INOTIFY_H
-    if (e->m_mode == INotifyMode) {
-        (void) inotify_rm_watch( m_inotify_fd, e->wd );
-        if (s_verboseDebug) {
-            kDebug(7001).nospace() << "Cancelled INotify (fd " << m_inotify_fd << ", "
-                                   << e->wd << ") for " << e->path;
-        }
     }
 #endif
 #ifndef QT_NO_FILESYSTEMWATCHER
@@ -1027,14 +670,6 @@ void KDirWatchPrivate::removeEntry(KDirWatch* instance,
             removeEntry(0, QFileInfo(e->path).absolutePath(), e);
     }
 
-  if (e->m_mode == StatMode) {
-    statEntries--;
-    if ( statEntries == 0 ) {
-      timer.stop(); // stop timer if lists are empty
-      kDebug(7001) << " Stopped Polling Timer";
-    }
-  }
-
   if (s_verboseDebug) {
     kDebug(7001).nospace() << "Removed " << (e->isDir ? "Dir ":"File ") << e->path
                            << " for " << (sub_entry ? sub_entry->path : QString())
@@ -1066,8 +701,6 @@ void KDirWatchPrivate::removeEntries( KDirWatch* instance )
       c->count = 1; // forces deletion of instance as client
       pathList.append((*it).path);
     }
-    else if ( (*it).m_mode == StatMode && (*it).freq < minfreq )
-      minfreq = (*it).freq;
   }
 
   foreach(const QString &path, pathList)
@@ -1098,10 +731,8 @@ bool KDirWatchPrivate::stopEntryScan( KDirWatch* instance, Entry* e)
 
   if (stillWatching == 0) {
     // if nobody is interested, we don't watch
-    if ( e->m_mode != INotifyMode ) {
-      e->m_ctime = invalid_ctime; // invalid
-      e->m_status = NonExistent;
-    }
+    e->m_ctime = invalid_ctime; // invalid
+    e->m_status = NonExistent;
     //    e->m_status = Normal;
   }
   return true;
@@ -1206,20 +837,10 @@ int KDirWatchPrivate::scanEntry(Entry* e)
   // Shouldn't happen: Ignore "unknown" notification method
   if (e->m_mode == UnknownMode) return NoChange;
 
-  if (e->m_mode == FAMMode || e->m_mode == INotifyMode) {
+  if (e->m_mode == FAMMode) {
     // we know nothing has changed, no need to stat
     if(!e->dirty) return NoChange;
     e->dirty = false;
-  }
-
-  if (e->m_mode == StatMode) {
-    // only scan if timeout on entry timer happens;
-    // e.g. when using 500msec global timer, a entry
-    // with freq=5000 is only watched every 10th time
-
-    e->msecLeft -= freq;
-    if (e->msecLeft>0) return NoChange;
-    e->msecLeft += e->freq;
   }
 
   KDE_struct_stat stat_buf;
@@ -1355,7 +976,7 @@ void KDirWatchPrivate::slotRemoveDelayed()
 {
   delayRemove = false;
   // Removing an entry could also take care of removing its parent
-  // (e.g. in FAM or inotify mode), which would remove other entries in removeList,
+  // (e.g. in FAM  mode), which would remove other entries in removeList,
   // so don't use foreach or iterators here...
   while (!removeList.isEmpty()) {
     Entry* entry = *removeList.begin();
@@ -1364,7 +985,7 @@ void KDirWatchPrivate::slotRemoveDelayed()
 }
 
 /* Scan all entries to be watched for changes. This is done regularly
- * when polling. FAM and inotify use a single-shot timer to call this slot delayed.
+ * when polling. FAM use a single-shot timer to call this slot delayed.
  */
 void KDirWatchPrivate::slotRescan()
 {
@@ -1399,13 +1020,9 @@ void KDirWatchPrivate::slotRescan()
     // progate dirty flag to dependant entries (e.g. file watches)
     it = m_mapEntries.begin();
     for( ; it != m_mapEntries.end(); ++it )
-      if (((*it).m_mode == INotifyMode || (*it).m_mode == QFSWatchMode) && (*it).dirty )
+      if ((*it).m_mode == QFSWatchMode && (*it).dirty )
         (*it).propagate_dirty();
   }
-
-#ifdef HAVE_SYS_INOTIFY_H
-  QList<Entry*> cList;
-#endif
 
   it = m_mapEntries.begin();
   for( ; it != m_mapEntries.end(); ++it ) {
@@ -1418,22 +1035,6 @@ void KDirWatchPrivate::slotRescan()
       kDebug(7001) << "scanEntry for" << entry->path << "says" << ev;
 
     switch(entry->m_mode) {
-#ifdef HAVE_SYS_INOTIFY_H
-    case INotifyMode:
-      if ( ev == Deleted ) {
-        if (s_verboseDebug)
-          kDebug(7001) << "scanEntry says" << entry->path << "was deleted";
-        addEntry(0, entry->parentDirectory(), entry, true);
-      } else if (ev == Created) {
-        if (s_verboseDebug)
-          kDebug(7001) << "scanEntry says" << entry->path << "was created. wd=" << entry->wd;
-        if (entry->wd < 0) {
-          cList.append(entry);
-          addWatch(entry);
-        }
-      }
-      break;
-#endif
     case FAMMode:
     case QFSWatchMode:
       if (ev == Created) {
@@ -1445,24 +1046,6 @@ void KDirWatchPrivate::slotRescan()
       break;
     }
 
-#ifdef HAVE_SYS_INOTIFY_H
-    if (entry->isDir) {
-      // Report and clear the the list of files that have changed in this directory.
-      // Remove duplicates by changing to set and back again:
-      // we don't really care about preserving the order of the
-      // original changes.
-      QStringList pendingFileChanges = entry->m_pendingFileChanges;
-      pendingFileChanges.removeDuplicates();
-      Q_FOREACH(const QString &changedFilename, pendingFileChanges) {
-        if (s_verboseDebug) {
-          kDebug(7001) << "processing pending file change for" << changedFilename;
-        }
-        emitEvent(entry, Changed, changedFilename);
-      }
-      entry->m_pendingFileChanges.clear();
-    }
-#endif
-
     if ( ev != NoChange ) {
       emitEvent(entry, ev);
     }
@@ -1470,12 +1053,6 @@ void KDirWatchPrivate::slotRescan()
 
   if ( timerRunning )
     timer.start(freq);
-
-#ifdef HAVE_SYS_INOTIFY_H
-  // Remove watch of parent of new created directories
-  Q_FOREACH(Entry* e, cList)
-    removeEntry(0, e->parentDirectory(), e);
-#endif
 
   QTimer::singleShot(0, this, SLOT(slotRemoveDelayed()));
 }
@@ -1509,7 +1086,7 @@ void KDirWatchPrivate::famEventReceived()
       use_fam = false;
       delete sn; sn = 0;
 
-      // Replace all FAMMode entries with INotify/Stat
+      // Replace all FAMMode entries with QFSWatch
       EntryMap::Iterator it = m_mapEntries.begin();
       for( ; it != m_mapEntries.end(); ++it )
         if ((*it).m_mode == FAMMode && (*it).m_clients.count()>0) {
@@ -1598,7 +1175,6 @@ void KDirWatchPrivate::checkFAMEvent(FAMEvent* fe)
           addEntry(0, e->parentDirectory(), e, true /*isDir*/);
         } else {
             // A file in this directory has been removed, and wasn't explicitly watched.
-            // We could still inform clients, like inotify does? But stat can't.
             // For now we just marked e dirty and slotRescan will emit the dir as dirty.
             //kDebug(7001) << "Got FAMDeleted for" << QFile::decodeName(fe->filename) << "in" << e->path << ". Absolute path -> NOOP!";
         }
@@ -1608,7 +1184,6 @@ void KDirWatchPrivate::checkFAMEvent(FAMEvent* fe)
           // check for creation of a directory we have to watch
         QString tpath(e->path + QLatin1Char('/') + QFile::decodeName(fe->filename));
 
-        // This code is very similar to the one in inotifyEventReceived...
         Entry* sub_entry = e->findSubEntry(tpath);
         if (sub_entry /*&& sub_entry->isDir*/) {
           // We were waiting for this new file/dir to be created

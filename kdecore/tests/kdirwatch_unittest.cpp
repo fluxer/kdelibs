@@ -41,10 +41,6 @@ static const char* methodToString(KDirWatch::Method method)
     switch (method) {
     case KDirWatch::FAM:
         return "Fam";
-    case KDirWatch::INotify:
-        return "INotify";
-    case KDirWatch::Stat:
-        return "Stat";
     case KDirWatch::QFSWatch:
         return "QFSWatch";
     default:
@@ -72,7 +68,7 @@ public:
         config.writeEntry("PollInterval", 50);
 
         KDirWatch foo;
-        m_slow = (foo.internalMethod() == KDirWatch::FAM || foo.internalMethod() == KDirWatch::Stat);
+        m_slow = (foo.internalMethod() == KDirWatch::FAM);
         kDebug() << "Using method" << methodToString(foo.internalMethod());
     }
 
@@ -277,7 +273,7 @@ bool KDirWatch_UnitTest::waitForOneSignal(KDirWatch& watch, const char* sig, con
         if (got == expectedPath)
             return true;
         if (got.startsWith(expectedPath + '/')) {
-            kDebug() << "Ignoring (inotify) notification of" << sig << '(' << got << ')';
+            kDebug() << "Ignoring notification of" << sig << '(' << got << ')';
             continue;
         }
         kWarning() << "Expected" << sig << '(' << removeTrailingSlash(path) << ')' << "but got" << sig << '(' << got << ')';
@@ -344,13 +340,8 @@ void KDirWatch_UnitTest::touch1000Files()
     }
 
     QList<QVariantList> spy = waitForDirtySignal(watch, fileCount);
-    if (watch.internalMethod() == KDirWatch::INotify) {
-        QVERIFY(spy.count() >= fileCount);
-        qDebug() << spy.count();
-    } else {
-        // More stupid backends just see one mtime change on the directory
-        QVERIFY(spy.count() >= 1);
-    }
+    // More stupid backends just see one mtime change on the directory
+    QVERIFY(spy.count() >= 1);
 
     for (int i = 0; i < fileCount; ++i) {
         removeFile(i);
@@ -382,8 +373,7 @@ void KDirWatch_UnitTest::removeAndReAdd()
     // Just like KDirLister does: remove the watch, then re-add it.
     watch.removeDir(m_path);
     watch.addDir(m_path);
-    if (watch.internalMethod() != KDirWatch::INotify)
-        waitUntilMTimeChange(m_path); // necessary for FAM and QFSWatcher
+    waitUntilMTimeChange(m_path); // necessary for FAM and QFSWatcher
     const QString file1 = createFile(1);
     //kDebug() << "created" << file1;
     QVERIFY(waitForOneSignal(watch, SIGNAL(dirty(QString)), m_path));
@@ -442,9 +432,9 @@ void KDirWatch_UnitTest::watchNonExistentWithSingleton()
     const QString file = "/root/.ssh/authorized_keys";
     KDirWatch::self()->addFile(file);
     // When running this test in KDIRWATCHTEST_METHOD=QFSWatch, or when FAM is not available
-    // and we fallback to qfswatch when inotify fails above, we end up creating the fsWatch
-    // in the kdirwatch singleton. Bug 261541 discovered that Qt hanged when deleting fsWatch
-    // once QCoreApp was gone, this is what this test is about.
+    // and we fallback to qfswatch, we end up creating the fsWatch in the kdirwatch singleton.
+    // Bug 261541 discovered that Qt hanged when deleting fsWatch once QCoreApp was gone,
+    // this is what this test is about.
 }
 
 void KDirWatch_UnitTest::testDelete()
@@ -490,18 +480,16 @@ void KDirWatch_UnitTest::testDeleteAndRecreateFile() // Useful for /etc/localtim
     createFile(file1);
 
     // gamin does not signal the change in this case; probably because it uses polling internally...
-    if (watch.internalMethod() == KDirWatch::FAM || watch.internalMethod() == KDirWatch::Stat) {
-        QSKIP("Deleting and recreating a file is not detected by FAM (at least with gamin) or Stat", SkipAll);
+    if (watch.internalMethod() == KDirWatch::FAM) {
+        QSKIP("Deleting and recreating a file is not detected by FAM (at least with gamin)", SkipAll);
     }
     //QCOMPARE(KDE::stat(QFile::encodeName(file1), &stat_buf), 0);
     //kDebug() << "new inode" << stat_buf.st_ino; // same!
 
-    if (watch.internalMethod() == KDirWatch::INotify) {
-        QVERIFY(waitForOneSignal(watch, SIGNAL(deleted(QString)), file1));
-        QVERIFY(waitForOneSignal(watch, SIGNAL(created(QString)), file1));
-    } else {
-        QVERIFY(waitForOneSignal(watch, SIGNAL(dirty(QString)), file1));
-    }
+    // NOTE: QFSWatch does not emit these
+    // QVERIFY(waitForOneSignal(watch, SIGNAL(deleted(QString)), file1));
+    // QVERIFY(waitForOneSignal(watch, SIGNAL(created(QString)), file1));
+    QVERIFY(waitForOneSignal(watch, SIGNAL(dirty(QString)), file1));
 
     // QFileSystemWatcher, as documented, stops watching when the file is deleted
     // so the appendToFile below will fail. Or further changes to /etc/localtime...
@@ -539,7 +527,7 @@ void KDirWatch_UnitTest::testMoveTo()
 {
     // This reproduces the famous digikam crash, #222974
     // A watched file was being rewritten (overwritten by ksavefile),
-    // which gives inotify notifications "moved_to" followed by "delete_self"
+    // which gives notifications "moved_to" followed by "delete_self"
     //
     // What happened then was that the delayed slotRescan
     // would adjust things, making it status==Normal but the entry was
@@ -555,8 +543,7 @@ void KDirWatch_UnitTest::testMoveTo()
     watch.addFile(file1);
     watch.startScan();
 
-    if (watch.internalMethod() != KDirWatch::INotify)
-        waitUntilMTimeChange(m_path);
+    waitUntilMTimeChange(m_path);
 
     // Atomic rename of "temp" to "file1", much like KAutoSave would do when saving file1 again
     const QString filetemp = m_path + "temp";
@@ -566,12 +553,6 @@ void KDirWatch_UnitTest::testMoveTo()
 
     QSignalSpy spyCreated(&watch, SIGNAL(created(QString)));
     QVERIFY(waitForOneSignal(watch, SIGNAL(dirty(QString)), m_path));
-
-    // Getting created() on an unwatched file is an inotify bonus, it's not part of the requirements.
-    if (watch.internalMethod() == KDirWatch::INotify) {
-        QCOMPARE(spyCreated.count(), 1);
-        QCOMPARE(spyCreated[0][0].toString(), file1);
-    }
 
     // make sure we're still watching it
     appendToFile(file1);
@@ -643,7 +624,6 @@ void KDirWatch_UnitTest::testHardlinkChange()
     // described on kde-core-devel (2009-07-03).
     // It shows that watching a specific file doesn't inform us that the file is
     // being recreated. Better watch the directory, for that.
-    // Well, it works with inotify (and fam - which uses inotify I guess?)
 
     const QString existingFile = m_path + "ExistingFile";
     KDirWatch watch;
@@ -659,7 +639,7 @@ void KDirWatch_UnitTest::testHardlinkChange()
 
     QVERIFY(QFile::exists(existingFile));
     //QVERIFY(waitForOneSignal(watch, SIGNAL(deleted(QString)), existingFile));
-    if (watch.internalMethod() == KDirWatch::INotify || watch.internalMethod() == KDirWatch::FAM)
+    if (watch.internalMethod() == KDirWatch::FAM)
         QVERIFY(waitForOneSignal(watch, SIGNAL(created(QString)), existingFile));
     else
         QVERIFY(waitForOneSignal(watch, SIGNAL(dirty(QString)), existingFile));

@@ -49,14 +49,14 @@ class KDirWatchPrivate;
   * and restarted. The whole class can be stopped and restarted.
   * Directories and files can be added/removed from the list in any state.
   *
-  * The implementation uses the INOTIFY functionality on LINUX.
+  * The implementation uses the QFileSystemWatch functionality on most systems.
   * Otherwise the FAM service is used, when available.
   * As a last resort, a regular polling for change of modification times
   * is done; the polling interval is a global config option:
   * DirWatch/PollInterval and DirWatch/NFSPollInterval for NFS mounted
   * directories.
   * The choice of implementation can be adjusted by the user, with the key
-  * [DirWatch] PreferredMethod={Fam|Stat|QFSWatch|inotify}
+  * [DirWatch] PreferredMethod={Fam|QFSWatch}
   *
   * @see self()
   * @author Sven Radej (in 1998)
@@ -220,7 +220,7 @@ class KDECORE_EXPORT KDirWatch : public QObject
     */
    static void statistics(); // TODO implement a QDebug operator for KDirWatch instead.
 
-   enum Method { FAM, INotify, Stat, QFSWatch };
+   enum Method { FAM, QFSWatch };
    /**
     * Returns the preferred internal method to
     * watch for changes.

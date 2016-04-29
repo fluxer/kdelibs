@@ -43,21 +43,6 @@ class QSocketNotifier;
 #include <fam.h>
 #endif
 
-#ifdef HAVE_SYS_INOTIFY_H
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/inotify.h>
-
-#ifndef IN_DONT_FOLLOW
-#define IN_DONT_FOLLOW 0x02000000
-#endif
-
-#ifndef IN_ONLYDIR
-#define IN_ONLYDIR 0x01000000
-#endif
-
-#endif
-
 #include <sys/time.h>
 #include <sys/param.h> // ino_t
 #include <sys/stat.h> // ino_t
@@ -81,7 +66,7 @@ class KDirWatchPrivate : public QObject
 public:
 
   enum entryStatus { Normal = 0, NonExistent };
-  enum entryMode { UnknownMode = 0, StatMode, INotifyMode, FAMMode, QFSWatchMode };
+  enum entryMode { UnknownMode = 0, FAMMode, QFSWatchMode };
   enum { NoChange=0, Changed=1, Created=2, Deleted=4 };
 
 
@@ -133,20 +118,9 @@ public:
     void propagate_dirty();
 
     QList<Client *> clientsForFileOrDir(const QString& tpath, bool* isDir) const;
-    QList<Client *> inotifyClientsForFileOrDir(bool isDir) const;
 
 #ifdef HAVE_FAM
     FAMRequest fr;
-#endif
-
-#ifdef HAVE_SYS_INOTIFY_H
-    int wd;
-    // Creation and Deletion of files happens infrequently, so
-    // can safely be reported as they occur.  File changes i.e. those that emity "dirty()" can
-    // happen many times per second, though, so maintain a list of files in this directory
-    // that can be emitted and flushed at the next slotRescan(...).
-    // This will be unused if the Entry is not a directory.
-    QList<QString> m_pendingFileChanges;
 #endif
   };
 
@@ -184,7 +158,6 @@ public:
 public Q_SLOTS:
   void slotRescan();
   void famEventReceived(); // for FAM
-  void inotifyEventReceived(); // for inotify
   void slotRemoveDelayed();
   void fswEventReceived(const QString &path);  // for QFileSystemWatcher
 
@@ -197,7 +170,6 @@ public:
   int statEntries;
   int m_nfsPollInterval, m_PollInterval;
   int m_ref;
-  bool useStat(Entry*);
 
   // removeList is allowed to contain any entry at most once
   QSet<Entry *> removeList;
@@ -215,13 +187,6 @@ public:
   bool useFAM(Entry*);
 #endif
 
-#ifdef HAVE_SYS_INOTIFY_H
-  QSocketNotifier *mSn;
-  bool supports_inotify;
-  int m_inotify_fd;
-
-  bool useINotify(Entry*);
-#endif
 #ifndef QT_NO_FILESYSTEMWATCHER
   KFileSystemWatcher *fsWatcher;
   bool useQFSWatch(Entry* e);

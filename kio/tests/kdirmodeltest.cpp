@@ -76,7 +76,7 @@ void KDirModelTest::recreateTestData()
     if (m_tempDir) {
         kDebug() << "Deleting old tempdir" << m_tempDir->name();
         delete m_tempDir;
-        qApp->processEvents(); // process inotify events so they don't pollute us later on
+        qApp->processEvents(); // process events so they don't pollute us later on
     }
 
 

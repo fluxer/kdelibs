@@ -21,9 +21,6 @@ configure_file(
 # Configure checks for kdirwatch
 macro_bool_to_01(FAM_FOUND HAVE_FAM)
 
-check_include_files(sys/inotify.h SYS_INOTIFY_H_FOUND)
-macro_bool_to_01(SYS_INOTIFY_H_FOUND HAVE_SYS_INOTIFY_H)
-
 # Generate io/config-kdirwatch.h
 configure_file(
     io/config-kdirwatch.h.cmake

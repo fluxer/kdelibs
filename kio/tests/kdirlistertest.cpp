@@ -32,8 +32,6 @@ QTEST_KDEMAIN( KDirListerTest, NoGUI )
 #include <kio/job.h>
 #include <kio/copyjob.h>
 
-#define WORKAROUND_BROKEN_INOTIFY 0
-
 void MyDirLister::handleError(KIO::Job* job)
 {
     // Currently we don't expect any errors.
@@ -278,9 +276,6 @@ void KDirListerTest::testNewItemsInSymlink() // #213799
     const QString fileName = "toplevelfile_newinlink";
     createSimpleFile(path + fileName);
 
-#if WORKAROUND_BROKEN_INOTIFY
-    org::kde::KDirNotify::emitFilesAdded(path);
-#endif
     int numTries = 0;
     // Give time for KDirWatch to notify us
     while (m_items2.count() == origItemCount) {
@@ -505,9 +500,6 @@ void KDirListerTest::testRenameAndOverwrite() // has to be run after testRenameI
     const QString dirPath = m_tempDir.name();
     const QString path = dirPath+"toplevelfile_2";
     createTestFile(path);
-#if WORKAROUND_BROKEN_INOTIFY
-    org::kde::KDirNotify::emitFilesAdded(dirPath);
-#endif
     KFileItem existingItem;
     while (existingItem.isNull()) {
         QTest::qWait(100);
