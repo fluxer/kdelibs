@@ -23,10 +23,10 @@
 
 #include <kmimetype.h>
 #include <kplugininfo.h>
+#include <kdeversion.h>
 
 #include <plasma/plasma.h>
 #include <plasma/packagestructure.h>
-#include <plasma/version.h>
 
 namespace Plasma
 {
@@ -583,6 +583,6 @@ class PLASMA_EXPORT Wallpaper : public QObject
 #define K_EXPORT_PLASMA_WALLPAPER(libname, classname) \
 K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
 K_EXPORT_PLUGIN(factory("plasma_wallpaper_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(PLASMA_VERSION)
+K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
 
 #endif // multiple inclusion guard

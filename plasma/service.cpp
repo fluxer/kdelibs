@@ -36,7 +36,6 @@
 #include <dnssd/servicebrowser.h>
 
 #include "configloader.h"
-#include "version.h"
 #include "private/configloader_p.h"
 #include "pluginloader.h"
 

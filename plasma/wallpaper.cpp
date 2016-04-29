@@ -44,8 +44,7 @@
 #include <kio/job.h>
 #endif
 
-#include <version.h>
-
+#include "plasma/plasma.h"
 #include "plasma/package.h"
 #include "plasma/private/dataengineconsumer_p.h"
 #include "plasma/private/packages_p.h"

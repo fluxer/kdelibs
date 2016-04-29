@@ -25,8 +25,8 @@
 #include <QtCore/QStringList>
 
 #include <kservice.h>
+#include <kdeversion.h>
 
-#include <plasma/version.h>
 #include <plasma/plasma.h>
 #include <plasma/service.h>
 
@@ -516,7 +516,7 @@ NoAlignment) const;
 #define K_EXPORT_PLASMA_DATAENGINE(libname, classname) \
 K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
 K_EXPORT_PLUGIN(factory("plasma_engine_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(PLASMA_VERSION)
+K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
 
 Q_DECLARE_METATYPE(Plasma::DataEngine*)
 

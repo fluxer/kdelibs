@@ -37,7 +37,7 @@
 #include <kservicetypetrader.h>
 #include <kstandarddirs.h>
 
-#include <version.h>
+#include <plasma.h>
 
 namespace Plasma
 {

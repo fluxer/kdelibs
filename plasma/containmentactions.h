@@ -23,10 +23,10 @@
 #include <QList>
 
 #include <kplugininfo.h>
+#include <kdeversion.h>
 
 #include <plasma/plasma.h>
 #include <plasma/packagestructure.h>
-#include <plasma/version.h>
 
 class QAction;
 
@@ -273,6 +273,6 @@ class PLASMA_EXPORT ContainmentActions : public QObject
 #define K_EXPORT_PLASMA_CONTAINMENTACTIONS(libname, classname) \
 K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
 K_EXPORT_PLUGIN(factory("plasma_containmentactions_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(PLASMA_VERSION)
+K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
 
 #endif // PLASMA_CONTAINMENTACTIONS_H

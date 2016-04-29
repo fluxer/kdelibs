@@ -48,12 +48,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-plasma.h
 )
 
-configure_file(
-    version.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
-    @ONLY
-)
-
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
@@ -148,7 +142,6 @@ set(plasma_LIB_SRCS
     theme.cpp
     tooltipcontent.cpp
     tooltipmanager.cpp
-    version.cpp
     view.cpp
     wallpaper.cpp
     windoweffects.cpp
@@ -272,7 +265,6 @@ install(
     tooltipcontent.h
     tooltipmanager.h
     ${CMAKE_CURRENT_BINARY_DIR}/plasma_export.h
-    ${CMAKE_CURRENT_BINARY_DIR}/version.h
     view.h
     wallpaper.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/plasma

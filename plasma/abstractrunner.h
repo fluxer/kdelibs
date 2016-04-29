@@ -26,12 +26,12 @@
 
 #include <kconfiggroup.h>
 #include <kservice.h>
+#include <kdeversion.h>
 
 #include <plasma/plasma_export.h>
 #include <plasma/querymatch.h>
 #include <plasma/runnercontext.h>
 #include <plasma/runnersyntax.h>
-#include <plasma/version.h>
 
 class QAction;
 class QMimeData;
@@ -498,6 +498,6 @@ K_EXPORT_PLUGIN_VERSION(PLASMA_VERSION)
 #define K_EXPORT_RUNNER_CONFIG( name, classname )     \
 K_PLUGIN_FACTORY(ConfigFactory, registerPlugin<classname>();) \
 K_EXPORT_PLUGIN(ConfigFactory("kcm_krunner_" #name)) \
-K_EXPORT_PLUGIN_VERSION(PLASMA_VERSION)
+K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
 
 #endif
