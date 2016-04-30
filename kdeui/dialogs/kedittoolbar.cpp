@@ -1533,7 +1533,7 @@ void KEditToolBarWidgetPrivate::slotChangeIcon()
   kdialogArgs << "Toolbar";
   kdialogArgs << "Actions";
   m_kdialogProcess->setReadChannel(QProcess::StandardOutput);
-  m_kdialogProcess->start(kdialogExe, kdialogArgs);
+  m_kdialogProcess->start(kdialogExe, kdialogArgs, QIODevice::ReadOnly | QIODevice::Text);
   if ( !m_kdialogProcess->waitForStarted() ) {
     kError(240) << "Can't run " << kdialogExe << endl;
     delete m_kdialogProcess;
