@@ -550,7 +550,7 @@ Value Currency::convert(const Value& value, UnitPtr to)
             */
             kDebug() << "Removed previous cache:" << QFile::remove(m_cache);
 #ifndef KUNITCONVERSION_NO_KIO
-            if (QProcess::execute(QStringList() << "kioclient" << "copy" << "--noninteractive" << URL << m_cache) == 0) {
+            if (QProcess::execute("kioclient", QStringList() << "copy" << "--noninteractive" << URL << m_cache) == 0) {
                 m_update = true;
             }
 #else
