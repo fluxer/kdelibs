@@ -73,13 +73,6 @@ KDECORE_EXPORT QDebug kDebugStream(QtMsgType level, int area, const char *file =
 KDECORE_EXPORT QDebug kDebugDevNull();
 
 /**
- * @internal
- * The actual backtrace.
- */
-KDECORE_EXPORT QString kRealBacktrace(int);
-
-
-/**
  * \relates KGlobal
  * Returns a backtrace.
  * Note: Hidden symbol visibility may negatively affect the information provided
@@ -89,9 +82,9 @@ KDECORE_EXPORT QString kRealBacktrace(int);
  * @return a backtrace
  */
 #if !defined(KDE_NO_DEBUG_OUTPUT)
-inline QString kBacktrace(int levels=-1) { return kRealBacktrace(levels); }
+KDECORE_EXPORT QString kBacktrace(int levels=-1);
 #else
-static inline QString kBacktrace(int=-1) { return QString(); }
+inline QString kBacktrace(int=-1) { return QString(); };
 #endif
 
 /**

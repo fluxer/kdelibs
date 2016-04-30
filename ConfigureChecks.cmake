@@ -80,7 +80,7 @@ check_symbol_exists(posix_madvise   "sys/mman.h"               HAVE_MADVISE)    
 check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST)# kdecore/fakes.c
 
 check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore, kio
-check_function_exists(fdatasync     HAVE_FDATASYNC)                # kdecore, kate
+check_function_exists(fdatasync        HAVE_FDATASYNC)                # kdecore, kate
 check_function_exists(mmap             HAVE_MMAP)                     # kdecore
 
 check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave

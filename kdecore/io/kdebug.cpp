@@ -696,14 +696,14 @@ static QString maybeDemangledName(char *name)
 }
 #endif
 
-QString kRealBacktrace(int levels)
+QString kBacktrace(int levels)
 {
     QString s;
 #ifdef HAVE_BACKTRACE
     void* trace[256];
     int n = backtrace(trace, 256);
     if (!n)
-	return s;
+        return s;
     char** strings = backtrace_symbols (trace, n);
 
     if ( levels != -1 )
