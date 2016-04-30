@@ -256,18 +256,12 @@ public:
      * @p cmd must be a shell command. You must not append "&"
      * to it, since the function will do that for you.
      * @param window The top-level widget of the app that invoked this object.
+     * @param workingDirectory a working directory, so that a command like
+     *                         "kwrite file.txt" finds file.txt from the right place.
      *
      * @return @c true on success, @c false on error
      */
-    static bool runCommand(const QString &cmd, QWidget* window);
-
-    /**
-     * Overload that also takes a working directory, so that a command like
-     * "kwrite file.txt" finds file.txt from the right place.
-     * @since 4.4
-     */
-    static bool runCommand(const QString &cmd, QWidget* window, const QString& workingDirectory);
-    // TODO KDE5: merge the above with 2-args runCommand, using QString()
+    static bool runCommand(const QString &cmd, QWidget* window, const QString& workingDirectory = QString());
 
     /**
      * Same as the other runCommand(), but it also takes the name of the
@@ -279,22 +273,13 @@ public:
      * @param icon icon for app starting notification
      * @param window The top-level widget of the app that invoked this object.
      * @param asn Application startup notification id, if any (otherwise "").
-     * @return @c true on success, @c false on error
-     */
-    static bool runCommand(const QString& cmd, const QString & execName,
-                           const QString & icon, QWidget* window, const QByteArray& asn = QByteArray());
-
-    /**
-     * Overload that also takes a working directory, so that a command like
-     * "kwrite file.txt" finds file.txt from the right place.
      * @param workingDirectory the working directory for the started process. The default
      *                         (if passing an empty string) is the user's document path.
-     * @since 4.4
+     * @return @c true on success, @c false on error
      */
-    static bool runCommand(const QString& cmd, const QString & execName,
-                           const QString & icon, QWidget* window,
-                           const QByteArray& asn, const QString& workingDirectory);
-    // TODO KDE5: merge the above with 5-args runCommand, using QString()
+    static bool runCommand(const QString& cmd, const QString& execName,
+                           const QString& icon, QWidget* window, const QByteArray& asn = QByteArray(),
+                           const QString& workingDirectory = QString());
 
     /**
      * Display the Open-With dialog for those URLs, and run the chosen application.
