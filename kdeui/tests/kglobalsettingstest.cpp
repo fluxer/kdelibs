@@ -25,7 +25,7 @@ QTEST_KDEMAIN( KGlobalSettingsTest, GUI )
 
 #include <kglobalsettings.h>
 #include <kdebug.h>
-#include <kprocess.h>
+#include <QtCore/QProcess>
 #include <QtCore/QEventLoop>
 #include <QtDBus/QtDBus>
 
@@ -36,7 +36,6 @@ QTEST_KDEMAIN( KGlobalSettingsTest, GUI )
  * and we check that the corresponding signals are emitted, i.e. that our process
  * got the dbus signal.
  *
- * As a nice side-effect we automatically test a bit of KProcess as well :)
  */
 
 void KGlobalSettingsTest::initTestCase()
@@ -62,13 +61,9 @@ void KGlobalSettingsTest::initTestCase()
     QSignalSpy appearance_spy( settings, SIGNAL(appearanceChanged()) )
 
 static void callClient( const QString& opt, const char* signalToWaitFor ) {
-    KProcess proc;
+    QProcess proc;
     QVERIFY(QFile::exists("./kdeui-kglobalsettingsclient"));
-    proc << "./kdeui-kglobalsettingsclient";
-    proc << opt;
-//     kDebug() << proc.args();
-    int ok = proc.execute();
-    QVERIFY(ok == 0);
+    QVERIFY(proc.execute("./kdeui-kglobalsettingsclient", QStringList(opt)));
 
     QVERIFY(QTest::kWaitForSignal(KGlobalSettings::self(), signalToWaitFor, 5000));
 }

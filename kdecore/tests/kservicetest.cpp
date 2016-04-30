@@ -31,7 +31,6 @@
 
 #include <kprotocolinfo.h>
 #include <kdebug.h>
-#include <kprocess.h>
 #include <kservicegroup.h>
 #include <kservicetypetrader.h>
 #include <kservicetype.h>
@@ -129,11 +128,9 @@ void KServiceTest::cleanupTestCase()
         const QString fakeService = KStandardDirs::locateLocal("services", service);
         QFile::remove(fakeService);
     }
-    //QProcess::execute( KGlobal::dirs()->findExe(KBUILDSYCOCA_EXENAME) );
-    KProcess proc;
-    proc << KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
-    proc.setOutputChannelMode(KProcess::MergedChannels); // silence kbuildsycoca output
-    proc.execute();
+    QProcess proc;
+    proc.setOutputChannelMode(QProcess::MergedChannels); // silence kbuildsycoca output
+    proc.execute(KStandardDirs::findExe(KBUILDSYCOCA_EXENAME));
 }
 
 void KServiceTest::testByName()

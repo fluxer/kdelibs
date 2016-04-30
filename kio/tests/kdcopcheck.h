@@ -21,7 +21,7 @@ public Q_SLOTS:
 protected:
     int result;
     QString m_exec;
-    KProcess proc;
+    QProcess proc;
 };
 
 #endif

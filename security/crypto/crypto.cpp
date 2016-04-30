@@ -58,7 +58,6 @@
 #include <kmessagebox.h>
 #include <kpassworddialog.h>
 #include <knewpassworddialog.h>
-#include <kprocess.h>
 #include <kpushbutton.h>
 #include <kseparator.h>
 #include <kstandarddirs.h>

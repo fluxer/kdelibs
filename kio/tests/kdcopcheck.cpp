@@ -5,7 +5,7 @@
 #include <kstandarddirs.h>
 #include <kservicegroup.h>
 #include <kprotocolinfo.h>
-#include <kprocess.h>
+#include <QtCore/QProcess>
 #include <QtCore/QTimer>
 #include <kcmdlineargs.h>
 #include "kdcopcheck.h"
@@ -34,9 +34,8 @@ void debug(const char *format, const char *txt)
 TestService::TestService(const QString &exec)
 {
    m_exec = exec;
-   proc << exec;
 
-   proc.start();
+   proc.start(exec);
 
    connect(KApplication::dcopClient(), SIGNAL(applicationRegistered(QByteArray)),
            this, SLOT(newApp(QByteArray)));

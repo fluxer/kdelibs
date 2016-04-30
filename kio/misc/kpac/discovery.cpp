@@ -46,25 +46,24 @@
 #include <sys/utsname.h>
 
 #include <QtCore/QTimer>
+#include <QtCore/QProcess>
 #include <QtNetwork/QHostInfo>
 
 #include <klocale.h>
 #include <kurl.h>
 #include <kstandarddirs.h>
-#include <kprocess.h>
 #include "moc_discovery.cpp"
 
 namespace KPAC
 {
     Discovery::Discovery( QObject* parent )
         : Downloader( parent ),
-          m_helper( new KProcess(this) )
+          m_helper( new QProcess(this) )
     {
-        m_helper->setOutputChannelMode(KProcess::SeparateChannels);
+        m_helper->setProcessChannelMode(QProcess::SeparateChannels);
         connect( m_helper, SIGNAL(readyReadStandardOutput()), SLOT(helperOutput()) );
         connect( m_helper, SIGNAL(finished(int,QProcess::ExitStatus)), SLOT(failed()) );
-        *m_helper << KStandardDirs::findExe("kpac_dhcp_helper");
-        m_helper->start();
+        m_helper->start(KStandardDirs::findExe("kpac_dhcp_helper"));
         if ( !m_helper->waitForStarted() )
             QTimer::singleShot( 0, this, SLOT(failed()) );
     }

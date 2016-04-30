@@ -37,7 +37,6 @@
 #include <QtDBus/QDBusConnectionInterface>
 
 #include <kservice.h>
-#include <kprocess.h>
 #include <kurl.h>
 #include <kio/connection.h>
 

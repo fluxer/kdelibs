@@ -23,7 +23,6 @@
 #include <config.h>
 #include <kdefakes.h>
 #include <kde_file.h>
-#include <kprocess.h>
 #include <kmimetype.h>
 #include <ksycoca.h>
 #include <kglobal.h>
@@ -44,6 +43,7 @@
 #include <QtCore/qbuffer.h>
 #include <QtCore/qfuture.h>
 #include <QtCore/qtconcurrentrun.h>
+#include <QtCore/qprocess.h>
 
 void KMimeTypeTest::initTestCase()
 {
@@ -155,11 +155,9 @@ void KMimeTypeTest::cleanupTestCase()
     QFile::remove(fakePlugin);
     QFile::remove(m_kdeApp);
     QFile::remove(m_nonKdeApp);
-    //QProcess::execute( KGlobal::dirs()->findExe(KBUILDSYCOCA_EXENAME) );
-    KProcess proc;
-    proc << KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
-    proc.setOutputChannelMode(KProcess::MergedChannels); // silence kbuildsycoca output
-    proc.execute();
+    QProcess proc;
+    proc.setOutputChannelMode(QProcess::MergedChannels); // silence kbuildsycoca output
+    proc.execute(KStandardDirs::findExe(KBUILDSYCOCA_EXENAME));
 }
 
 static void checkIcon( const KUrl& url, const QString& expectedIcon )

@@ -23,16 +23,17 @@
 
 
 #include <QtXml/qdom.h>
-#include <QtGui/QLayout>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QHeaderView>
+#include <QtCore/QProcess>
+#include <QtCore/QMimeData>
+#include <QtGui/QHeaderView>
 #include <QtGui/QToolButton>
 #include <QtGui/QLabel>
 #include <QtGui/QApplication>
 #include <QtGui/QGridLayout>
 #include <QtGui/QCheckBox>
-#include <QMimeData>
+#include <QtGui/QLayout>
 
 #include <kstandarddirs.h>
 #include <klistwidgetsearchline.h>
@@ -46,7 +47,6 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kpushbutton.h>
-#include <kprocess.h>
 #include <ktoolbar.h>
 #include <kdeversion.h>
 #include <kcombobox.h>
@@ -486,7 +486,7 @@ public:
     QLabel * m_helpArea;
     KPushButton* m_changeIcon;
     KPushButton* m_changeIconText;
-    KProcess* m_kdialogProcess;
+    QProcess* m_kdialogProcess;
     bool m_isPart : 1;
     bool m_hasKDialog : 1;
     bool m_loadedOnce : 1;
@@ -1522,19 +1522,18 @@ void KEditToolBarWidgetPrivate::slotChangeIcon()
   m_currentXmlData->dump();
   Q_ASSERT( m_currentXmlData->type() != XmlData::Merged );
 
-  m_kdialogProcess = new KProcess;
+  m_kdialogProcess = new QProcess();
   QString kdialogExe = KStandardDirs::findExe(QLatin1String("kdialog"));
-  (*m_kdialogProcess) << kdialogExe;
-  (*m_kdialogProcess) << "--caption";
-  (*m_kdialogProcess) << i18n( "Change Icon" );
-  (*m_kdialogProcess) << "--embed";
-  (*m_kdialogProcess) << QString::number( (quintptr)m_widget->window()->winId() );
-  (*m_kdialogProcess) << "--geticon";
-  (*m_kdialogProcess) << "Toolbar";
-  (*m_kdialogProcess) << "Actions";
-  m_kdialogProcess->setOutputChannelMode(KProcess::OnlyStdoutChannel);
-  m_kdialogProcess->setNextOpenMode( QIODevice::ReadOnly | QIODevice::Text );
-  m_kdialogProcess->start();
+  QStringList kdialogArgs;
+  kdialogArgs << "--caption";
+  kdialogArgs << i18n( "Change Icon" );
+  kdialogArgs << "--embed";
+  kdialogArgs << QString::number( (quintptr)m_widget->window()->winId() );
+  kdialogArgs << "--geticon";
+  kdialogArgs << "Toolbar";
+  kdialogArgs << "Actions";
+  m_kdialogProcess->setReadChannel(QProcess::StandardOutput);
+  m_kdialogProcess->start(kdialogExe, kdialogArgs);
   if ( !m_kdialogProcess->waitForStarted() ) {
     kError(240) << "Can't run " << kdialogExe << endl;
     delete m_kdialogProcess;

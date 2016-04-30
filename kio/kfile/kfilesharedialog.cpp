@@ -18,26 +18,26 @@
 */
 
 #include "kfilesharedialog.h"
-#include <kvbox.h>
-#include <QtGui/QLabel>
 #include <QtCore/QDir>
+#include <QtCore/QProcess>
+#include <QtGui/QLabel>
 #include <QtGui/QRadioButton>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 #include <klocale.h>
 #include <kstandarddirs.h>
-#include <kprocess.h>
 #include <kdebug.h>
 #include <kio/kfileshare.h>
 #include <kseparator.h>
-#include <QtGui/QPushButton>
 #include <kmessagebox.h>
+#include <kvbox.h>
 
 class KFileSharePropsPlugin::Private
 {
 public:
     KVBox *m_vBox;
-    KProcess *m_configProc;
+    QProcess *m_configProc;
     bool m_bAllShared;
     bool m_bAllUnshared;
     QWidget *m_widget;
@@ -198,9 +198,8 @@ void KFileSharePropsPlugin::slotConfigureFileSharing()
 {
     if (d->m_configProc) return;
 
-    d->m_configProc = new KProcess(this);
-    (*d->m_configProc) << KStandardDirs::findExe("kdesu") << "kcmshell4" << "fileshare";
-    if (!d->m_configProc->startDetached())
+    d->m_configProc = new QProcess(this);
+    if (!d->m_configProc->startDetached(KStandardDirs::findExe("kdesu"), QStringList() << "kcmshell4" << "fileshare"))
     {
        delete d->m_configProc;
        d->m_configProc = 0;

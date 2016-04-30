@@ -29,7 +29,6 @@
 #include <config-kio.h>
 
 class KFileItemList;
-class KProcess;
 class KUrl;
 class QWidget;
 

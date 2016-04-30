@@ -17,10 +17,10 @@
 */
 #include "kbuildsycocaprogressdialog.h"
 #include <ksycoca.h>
-#include <kprocess.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
-#include <QtDBus/QtDBus>
+#include <QtCore/QProcess>
+#include <QtDBus/QDBusInterface>
 
 class KBuildSycocaProgressDialogPrivate
 {
@@ -51,9 +51,8 @@ void KBuildSycocaProgressDialog::rebuildKSycoca(QWidget *parent)
   } else {
       // kded not running, e.g. when using keditfiletype out of a KDE session
       QObject::connect(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), &dlg, SLOT(_k_slotFinished()));
-      KProcess* proc = new KProcess(&dlg);
-      (*proc) << KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
-      proc->start();
+      QProcess* proc = new QProcess(&dlg);
+      proc->start(KStandardDirs::findExe(KBUILDSYCOCA_EXENAME));
   }
   dlg.exec();
 }
