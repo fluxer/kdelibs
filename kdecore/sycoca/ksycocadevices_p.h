@@ -45,26 +45,6 @@ private:
     QDataStream* m_stream;
 };
 
-#ifdef HAVE_MMAP
-// Reading from a mmap'ed file
-class KSycocaMmapDevice : public KSycocaAbstractDevice
-{
-public:
-    KSycocaMmapDevice(const char* sycoca_mmap, size_t sycoca_size) {
-        m_buffer = new QBuffer;
-        m_buffer->setData(QByteArray::fromRawData(sycoca_mmap, sycoca_size));
-    }
-    ~KSycocaMmapDevice() {
-        delete m_buffer;
-    }
-    virtual QIODevice* device() {
-        return m_buffer;
-    }
-private:
-    QBuffer* m_buffer;
-};
-#endif
-
 // Reading from a QFile
 class KSycocaFileDevice : public KSycocaAbstractDevice
 {

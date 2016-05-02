@@ -42,7 +42,6 @@ public:
     bool checkDatabase(BehaviorsIfNotFound ifNotFound);
     void closeDatabase();
     void setStrategyFromString(const QString& strategy);
-    bool tryMmap();
 
     KSycocaAbstractDevice* device();
     QDataStream*& stream();
@@ -55,7 +54,7 @@ public:
     bool readError;
 
     quint32 timeStamp;
-    enum { StrategyMmap, StrategyMemFile, StrategyFile, StrategyDummyBuffer } m_sycocaStrategy;
+    enum { StrategyMemFile, StrategyFile, StrategyDummyBuffer } m_sycocaStrategy;
     QString m_databasePath;
     QStringList changeList;
     QString language;
@@ -70,8 +69,6 @@ public:
 private:
     KSycocaFactoryList m_factories;
     size_t sycoca_size;
-    const char *sycoca_mmap;
-    QFile* m_mmapFile;
     KSycocaAbstractDevice* m_device;
 };
 

@@ -24,13 +24,12 @@
 #include "ksycocafactory.h"
 #include "ktoolinvocation.h"
 #include "kglobal.h"
-#include "kmemfile.h"
 #include "kde_file.h"
 #include "kconfiggroup.h"
 #include "ksharedconfig.h"
-
 #include "kdebug.h"
 #include "kstandarddirs.h"
+#include "kmemfile.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QCoreApplication>
@@ -47,7 +46,6 @@
 
 #include "ksycocadevices_p.h"
 
-// TODO: remove mmap() from kdewin32 and use QFile::mmap() when needed
 /**
  * Sycoca file version number.
  * If the existing file is outdated, it will not get read
@@ -59,14 +57,6 @@
  * Sycoca file name, used internally (by kbuildsycoca)
  */
 #define KSYCOCA_FILENAME "ksycoca4"
-
-#if HAVE_MADVISE
-#include <sys/mman.h> // This #include was checked when looking for posix_madvise
-#endif
-
-#ifndef MAP_FAILED
-#define MAP_FAILED ((void *) -1)
-#endif
 
 static bool s_autoRebuild = true;
 
@@ -88,53 +78,20 @@ KSycocaPrivate::KSycocaPrivate()
       m_databasePath(),
       updateSig( 0 ),
       sycoca_size(0),
-      sycoca_mmap(0),
-      m_mmapFile(0),
       m_device(0)
 {
-    m_sycocaStrategy = StrategyMmap;
+    m_sycocaStrategy = StrategyMemFile;
     KConfigGroup config(KGlobal::config(), "KSycoca");
     setStrategyFromString(config.readEntry("strategy"));
 }
 
 void KSycocaPrivate::setStrategyFromString(const QString& strategy) {
-    if (strategy == QLatin1String("mmap"))
-        m_sycocaStrategy = StrategyMmap;
-    else if (strategy == QLatin1String("file"))
+    if (strategy == QLatin1String("file"))
         m_sycocaStrategy = StrategyFile;
     else if (strategy == QLatin1String("sharedmem"))
         m_sycocaStrategy = StrategyMemFile;
     else if (!strategy.isEmpty())
         kWarning(7011) << "Unknown sycoca strategy:" << strategy;
-}
-
-bool KSycocaPrivate::tryMmap()
-{
-#ifdef HAVE_MMAP
-    Q_ASSERT(!m_databasePath.isEmpty());
-    m_mmapFile = new QFile(m_databasePath);
-    const bool canRead = m_mmapFile->open(QIODevice::ReadOnly);
-    Q_ASSERT(canRead);
-    Q_UNUSED(canRead); // no compiler warning in release builds.
-    fcntl(m_mmapFile->handle(), F_SETFD, FD_CLOEXEC);
-    sycoca_size = m_mmapFile->size();
-    sycoca_mmap = (const char *) mmap(0, sycoca_size,
-                                      PROT_READ, MAP_SHARED,
-                                      m_mmapFile->handle(), 0);
-    /* POSIX mandates only MAP_FAILED, but we are paranoid so check for
-       null pointer too.  */
-    if (sycoca_mmap == (const char*) MAP_FAILED || sycoca_mmap == 0) {
-        kDebug(7011) << "mmap failed. (length = " << sycoca_size << ")";
-        sycoca_mmap = 0;
-        return false;
-    } else {
-#ifdef HAVE_MADVISE
-        (void) posix_madvise((void*)sycoca_mmap, sycoca_size, POSIX_MADV_WILLNEED);
-#endif // HAVE_MADVISE
-        return true;
-    }
-#endif // HAVE_MMAP
-    return false;
 }
 
 int KSycoca::version()
@@ -228,15 +185,6 @@ KSycocaAbstractDevice* KSycocaPrivate::device()
         device = new KSycocaBufferDevice;
         device->device()->open(QIODevice::ReadOnly); // can't fail
     } else {
-#ifdef HAVE_MMAP
-        if (m_sycocaStrategy == StrategyMmap && tryMmap()) {
-            device = new KSycocaMmapDevice(sycoca_mmap,
-                                           sycoca_size);
-            if (!device->device()->open(QIODevice::ReadOnly)) {
-                delete device; device = 0;
-            }
-        }
-#endif
 #ifndef QT_NO_SHAREDMEMORY
         if (!device && m_sycocaStrategy == StrategyMemFile) {
             device = new KSycocaMemFileDevice(m_databasePath);
@@ -312,17 +260,6 @@ void KSycocaPrivate::closeDatabase()
     // refcounted, and deleted when the last thread is done with them
     qDeleteAll(m_factories);
     m_factories.clear();
-#ifdef HAVE_MMAP
-    if (sycoca_mmap) {
-        //QBuffer *buf = static_cast<QBuffer*>(device);
-        //buf->buffer().clear();
-        // Solaris has munmap(char*, size_t) and everything else should
-        // be happy with a char* for munmap(void*, size_t)
-        munmap(const_cast<char*>(sycoca_mmap), sycoca_size);
-        sycoca_mmap = 0;
-    }
-    delete m_mmapFile; m_mmapFile = 0;
-#endif
 
     databaseStatus = DatabaseNotOpen;
     timeStamp = 0;

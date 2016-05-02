@@ -76,12 +76,10 @@ check_symbol_exists(strrchr         "string.h"                 HAVE_STRRCHR)    
 check_symbol_exists(strtoll         "stdlib.h"                 HAVE_STRTOLL)     # kioslave
 check_symbol_exists(S_ISSOCK        "sys/stat.h"               HAVE_S_ISSOCK)    # config.h
 check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)   # config.h
-check_symbol_exists(posix_madvise   "sys/mman.h"               HAVE_MADVISE)     # kdecore, kdeui
 check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST)# kdecore/fakes.c
 
 check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore, kio
 check_function_exists(fdatasync        HAVE_FDATASYNC)                # kdecore, kate
-check_function_exists(mmap             HAVE_MMAP)                     # kdecore
 
 check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave
 check_function_exists(_NSGetEnviron   HAVE_NSGETENVIRON)              # kinit, config.h

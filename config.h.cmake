@@ -65,8 +65,6 @@
 #cmakedefine   HAVE_GETMNTINFO 1
 #cmakedefine   HAVE_INITGROUPS 1
 #cmakedefine   HAVE_FDATASYNC 1
-#cmakedefine   HAVE_MADVISE 1
-#cmakedefine   HAVE_MMAP 1
 #cmakedefine   HAVE_MKSTEMPS 1
 #cmakedefine   HAVE_MKSTEMP 1
 #cmakedefine   HAVE_MKDTEMP 1
