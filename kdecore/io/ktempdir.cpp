@@ -37,9 +37,6 @@
 #ifdef HAVE_TEST
 #include <test.h>
 #endif
-#ifdef HAVE_PATHS_H
-#include <paths.h>
-#endif
 
 #include <QtCore/QDir>
 

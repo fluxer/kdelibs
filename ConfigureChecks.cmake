@@ -34,17 +34,13 @@ check_include_files(stdio.h       HAVE_STDIO_H)                        # various
 check_include_files(stdlib.h      HAVE_STDLIB_H)                       # various
 check_include_files(string.h      HAVE_STRING_H)                       # various
 check_include_files(strings.h     HAVE_STRINGS_H)                      # various
-check_include_files(malloc.h      HAVE_MALLOC_H)                       # unused?
 check_include_files(sys/time.h    TIME_WITH_SYS_TIME)                  # kdecore, kioslave
-check_include_files(crt_externs.h HAVE_CRT_EXTERNS_H)                  # kinit, config.h
 
-check_include_files(alloca.h      HAVE_ALLOCA_H)                       # kdecore
 check_include_files(fstab.h       HAVE_FSTAB_H)                        # kio, kdecore
 check_include_files(limits.h      HAVE_LIMITS_H)                       # various
 check_include_files(mntent.h      HAVE_MNTENT_H)                       # solid, kio, kdecore
 check_include_files(sysent.h      HAVE_SYSENT_H)                       # kdecore
 check_include_files(sys/stat.h    HAVE_SYS_STAT_H)                     # various
-check_include_files(sys/ucred.h   HAVE_SYS_UCRED_H)                    # kio
 check_include_files(sys/types.h   HAVE_SYS_TYPES_H)                    # various
 check_include_files(sys/select.h  HAVE_SYS_SELECT_H)                   # various
 check_include_files(sys/param.h   HAVE_SYS_PARAM_H)                    # various
@@ -53,7 +49,6 @@ check_include_files(sys/mntent.h  HAVE_SYS_MNTENT_H)                   # solid, 
 check_include_files("sys/param.h;sys/mount.h"  HAVE_SYS_MOUNT_H)       # kio, kdecore
 check_include_files(unistd.h      HAVE_UNISTD_H)                       # various
 check_include_files(stdint.h      HAVE_STDINT_H)                       # various
-check_include_files(paths.h       HAVE_PATHS_H)                        # kdecore, kio
 
 check_include_files(errno.h       HAVE_ERRNO_H)                        # various
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
@@ -71,8 +66,6 @@ macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)                       # kio
 # macro.  Note that some symbols require multiple includes in a
 # specific order.  Refer to the man page for each symbol for which a
 # check is to be added to get the proper set of headers.
-check_symbol_exists(strcmp          "string.h"                 HAVE_STRCMP)      # libltdl
-check_symbol_exists(strrchr         "string.h"                 HAVE_STRRCHR)     # libltdl
 check_symbol_exists(strtoll         "stdlib.h"                 HAVE_STRTOLL)     # kioslave
 check_symbol_exists(S_ISSOCK        "sys/stat.h"               HAVE_S_ISSOCK)    # config.h
 check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)   # config.h
@@ -189,14 +182,6 @@ if (UNIX)
   check_function_exists(tcsetattr  HAVE_TCSETATTR)
 endif (UNIX)
 
-# it seems this isn't used anywhere
-#find_library(ICE_LIB NAMES ICE PATHS /usr/X11/lib)
-#check_library_exists(${ICE_LIB} _IceTransNoListen "" HAVE__ICETRANSNOLISTEN)
-
-#set(CMAKE_REQUIRED_LIBRARIES crypt)
-#check_function_exists(crypt "" HAVE_CRYPT)
-#set(CMAKE_REQUIRED_LIBRARIES)
-
 check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore, kio
 check_function_exists(initgroups HAVE_INITGROUPS)        # kde3support/k3process, kdesu
 check_function_exists(mkstemps   HAVE_MKSTEMPS)          # dcop, kdecore/fakes.c
@@ -247,8 +232,4 @@ check_cxx_source_compiles("
 " GETMNTINFO_USES_STATVFS )
 
 check_struct_member(dirent d_type dirent.h HAVE_DIRENT_D_TYPE) # kdecore, kioslave/file
-
-# TODO: for the more capable cmake authors: we need at least gcc's and MSVC's version in here
-set (KDE_COMPILER_VERSION ${CMAKE_C_COMPILER})
-string(REGEX REPLACE ^.*/ "" KDE_COMPILER_VERSION ${KDE_COMPILER_VERSION})
 

@@ -47,9 +47,6 @@
 
 #ifndef HAVE_SETENV
 
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
@@ -80,9 +77,6 @@ KDECORE_EXPORT int setenv(const char *name, const char *value, int overwrite) {
 
 #ifndef HAVE_UNSETENV
 
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#endif
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif

@@ -22,9 +22,6 @@
 /* Define to 1 if you have strings.h */
 #cmakedefine   HAVE_STRINGS_H 1
 
-/* Define to 1 if you have malloc.h */
-#cmakedefine   HAVE_MALLOC_H 1
-
 /* define if message translations are enabled */
 #cmakedefine ENABLE_NLS 1
 
@@ -42,12 +39,9 @@
 #cmakedefine HAVE_SYS_MNTENT_H 1
 #cmakedefine HAVE_SYS_MOUNT_H 1
 
-#cmakedefine HAVE_ALLOCA_H 1
-#cmakedefine HAVE_CRT_EXTERNS_H 1
 #cmakedefine HAVE_FSTAB_H 1
 #cmakedefine HAVE_LIMITS_H 1
 #cmakedefine HAVE_MNTENT_H 1
-#cmakedefine HAVE_PATHS_H 1
 #cmakedefine HAVE_UNISTD_H 1
 
 #cmakedefine HAVE_XTEST 1
@@ -72,11 +66,9 @@
 #cmakedefine   HAVE_SETENV 1
 #cmakedefine   HAVE_SETEUID 1
 #cmakedefine   HAVE_SETMNTENT 1
-#cmakedefine   HAVE_STRCMP 1
 #cmakedefine   HAVE_STRLCPY 1
 #cmakedefine   HAVE_STRLCAT 1
 #cmakedefine   HAVE_STRCASESTR 1
-#cmakedefine   HAVE_STRRCHR 1
 #cmakedefine   HAVE_STRTOLL 1
 #cmakedefine   HAVE_UNSETENV 1
 #cmakedefine   HAVE_USLEEP 1

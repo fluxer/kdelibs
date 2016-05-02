@@ -76,10 +76,6 @@
 #include <netwm.h>
 #endif
 
-#ifdef HAVE_PATHS_H
-#include <paths.h>
-#endif
-
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>

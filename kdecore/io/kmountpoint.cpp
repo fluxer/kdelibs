@@ -31,9 +31,6 @@
 
 static Qt::CaseSensitivity cs = Qt::CaseSensitive;
 
-#ifdef HAVE_VOLMGT
-#include <volmgt.h>
-#endif
 #ifdef HAVE_SYS_MNTTAB_H
 #include <sys/mnttab.h>
 #endif
