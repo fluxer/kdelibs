@@ -50,7 +50,8 @@ public:
         DatabaseNotOpen, // openDatabase must be called
         NoDatabase, // not found, so we opened a dummy one instead
         BadVersion, // it's opened, but it's not useable
-        DatabaseOK } databaseStatus;
+        DatabaseOK
+    } databaseStatus;
     bool readError;
 
     quint32 timeStamp;
@@ -68,7 +69,6 @@ public:
 
 private:
     KSycocaFactoryList m_factories;
-    size_t sycoca_size;
     KSycocaAbstractDevice* m_device;
 };
 

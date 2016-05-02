@@ -77,7 +77,6 @@ KSycocaPrivate::KSycocaPrivate()
       timeStamp( 0 ),
       m_databasePath(),
       updateSig( 0 ),
-      sycoca_size(0),
       m_device(0)
 {
     m_sycocaStrategy = StrategyMemFile;
