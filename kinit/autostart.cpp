@@ -37,9 +37,9 @@ AutoStart::AutoStart()
   : m_phase(-1), m_phasedone(false)
 {
   m_startList = new AutoStartList;
-  KGlobal::dirs()->addResourceType("xdgconf-autostart", NULL, "autostart/"); // xdg ones
-  KGlobal::dirs()->addResourceType("autostart", "xdgconf-autostart", "/"); // merge them
-  KGlobal::dirs()->addResourceType("autostart", 0, "share/autostart"); // KDE ones are higher priority
+  KGlobal::dirs()->addResourceType("xdgconf-autostart", NULL, QLatin1String("autostart/")); // xdg ones
+  KGlobal::dirs()->addResourceType("autostart", "xdgconf-autostart", QLatin1String("/")); // merge them
+  KGlobal::dirs()->addResourceType("autostart", 0, QLatin1String("share/autostart")); // KDE ones are higher priority
 }
 
 AutoStart::~AutoStart()
