@@ -249,13 +249,6 @@ public:
     bool addResourceType( const char *type, const char *basetype,
                           const QString& relativename, bool priority = true );
 
-    /// @internal - just to avoid unwanted overload
-    bool addResourceType( const char *type, const char *basetype,
-                          const char* relativename, bool priority = true )
-    {
-        return addResourceType(type, basetype, QLatin1String(relativename), priority);
-    }
-
     /**
      * Adds absolute path at the beginning of the search path for
      * particular types (for example in case of icons where

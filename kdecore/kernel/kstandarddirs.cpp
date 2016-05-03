@@ -1369,7 +1369,7 @@ static QString readEnvPath(const char *env)
     return QDir::fromNativeSeparators(QFile::decodeName(c_path));
 }
 
-#ifdef __linux__
+#ifdef Q_OS_LINUX
 static QString executablePrefix()
 {
     char path_buffer[MAXPATHLEN + 1];
@@ -1433,7 +1433,7 @@ void KStandardDirs::addKDEDefaults()
     QString execPrefix(QFile::decodeName(EXEC_INSTALL_PREFIX));
     if (!execPrefix.isEmpty() && !kdedirList.contains(execPrefix, case_sensitivity))
         kdedirList.append(execPrefix);
-#ifdef __linux__
+#ifdef Q_OS_LINUX
     const QString linuxExecPrefix = executablePrefix();
     if ( !linuxExecPrefix.isEmpty() )
         kdedirList.append( linuxExecPrefix );
@@ -1453,18 +1453,13 @@ void KStandardDirs::addKDEDefaults()
         localKdeDir =  QDir::homePath() + QLatin1Char('/') + QString::fromLatin1(KDE_DEFAULT_HOME) + QLatin1Char('/');
     }
 
-    if (localKdeDir != QLatin1String("-/"))
-    {
+    if (localKdeDir != QLatin1String("-/")) {
         localKdeDir = KShell::tildeExpand(localKdeDir);
         addPrefix(localKdeDir);
     }
 
-
-    QStringList::ConstIterator end(kdedirList.end());
-    for (QStringList::ConstIterator it = kdedirList.constBegin();
-         it != kdedirList.constEnd(); ++it)
-    {
-        const QString dir = KShell::tildeExpand(*it);
+    foreach (const QString it, kdedirList) {
+        const QString dir = KShell::tildeExpand(it);
         addPrefix(dir);
     }
     // end KDEDIRS
@@ -1504,12 +1499,12 @@ void KStandardDirs::addKDEDefaults()
 
     // begin XDG_DATA_XXX
     QStringList kdedirDataDirs;
-    for (QStringList::ConstIterator it = kdedirList.constBegin();
-         it != kdedirList.constEnd(); ++it) {
-        QString dir = *it;
-        if (!dir.endsWith(QLatin1Char('/')))
-            dir += QLatin1Char('/');
-        kdedirDataDirs.append(dir + QLatin1String("share/"));
+    foreach (const QString it, kdedirList) {
+        if (!it.endsWith(QLatin1Char('/'))) {
+            kdedirDataDirs.append(it + QLatin1String("/share/"));
+        } else {
+            kdedirDataDirs.append(it + QLatin1String("share/"));
+        }
     }
 
     xdgdirs = readEnvPath("XDG_DATA_DIRS");
@@ -1552,21 +1547,22 @@ void KStandardDirs::addKDEDefaults()
     // end XDG_DATA_XXX
 
 
-    addResourceType("lib", 0, "lib" KDELIBSUFF "/");
+    addResourceType("lib", 0, QLatin1String("lib" KDELIBSUFF "/"));
 
-    addResourceType("qtplugins", "lib", "plugins");
+    addResourceType("qtplugins", "lib", QLatin1String("plugins"));
 
     uint index = 0;
     while (types_indices[index] != -1) {
-        addResourceType(types_string + types_indices[index], 0, types_string + types_indices[index+1], true);
+        addResourceType(types_string + types_indices[index], 0,
+            QLatin1String(types_string + types_indices[index+1]), true);
         index+=2;
     }
-    addResourceType("exe", "lib", "kde4/libexec", true );
+    addResourceType("exe", "lib", QLatin1String("kde4/libexec"), true );
 
     addResourceDir("home", QDir::homePath(), false);
 
-    addResourceType("autostart", "xdgconf-autostart", "/"); // merge them, start with xdg autostart
-    addResourceType("autostart", NULL, "share/autostart"); // KDE ones are higher priority
+    addResourceType("autostart", "xdgconf-autostart", QLatin1String("/")); // merge them, start with xdg autostart
+    addResourceType("autostart", NULL, QLatin1String("share/autostart")); // KDE ones are higher priority
 }
 
 static QStringList lookupProfiles(const QString &mapFile)
@@ -1691,11 +1687,10 @@ bool KStandardDirs::addCustomized(KConfig *config)
     {
         KConfigGroup cg(config, group);
         const QStringList list = cg.readEntry("prefixes", QStringList());
-        for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it)
-        {
-            addPrefix(*it, priority);
-            addXdgConfigPrefix(*it + QLatin1String("/etc/xdg"), priority);
-            addXdgDataPrefix(*it + QLatin1String("/share"), priority);
+        foreach (const QString it, list) {
+            addPrefix(it, priority);
+            addXdgConfigPrefix(it + QLatin1String("/etc/xdg"), priority);
+            addXdgDataPrefix(it + QLatin1String("/share"), priority);
         }
         // If there are no prefixes defined, check if there is a directory
         // for this profile under <profileDirsPrefix>
