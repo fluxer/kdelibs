@@ -52,6 +52,8 @@ ADD_DEFINITIONS(
 )
 
 INCLUDE_DIRECTORIES(
+    # for the export header
+    ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw
     ${QDBUS_INCLUDE_DIRS} 
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KIO_INCLUDES}

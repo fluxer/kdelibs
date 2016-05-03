@@ -3,9 +3,9 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QMutex>
+#include <kdebug.h>
 
 #include <Job.h>
-#include <DebuggingAids.h>
 
 // define in test binary:
 
@@ -33,9 +33,7 @@ public:
     {
         QMutexLocker locker ( &s_GlobalMutex );
         m_stringref->append( m_c );
-        using namespace ThreadWeaver;
-        debug( 3, "AppendCharacterJob::run: %c appended, result is %s.\n",
-               m_c.toLatin1(), qPrintable( *m_stringref ) );
+        kDebug() << m_c.toLatin1() << "appended, result is " << qPrintable( *m_stringref );
     }
 
 protected:

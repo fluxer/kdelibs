@@ -10,10 +10,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-kunitconversion.h
 )
 
-if(ENABLE_TESTING)
-    add_subdirectory(tests)
-endif()
-
 set(kunitconversion_LIB_SRCS
     converter.cpp
     value.cpp
@@ -67,6 +63,8 @@ endif()
 
 include_directories(
     ${CMAKE_SOURCE_DIR}
+    # for the export header
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}
 )
@@ -101,3 +99,7 @@ install(
     DESTINATION ${INCLUDE_INSTALL_DIR}/kunitconversion
     COMPONENT Devel
 )
+
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()

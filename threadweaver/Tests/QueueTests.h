@@ -69,8 +69,6 @@ private:
 
 private Q_SLOTS:
 
-    void initTestCase ();
-
     void SimpleQueuePrioritiesTest();
     void WeaverInitializationTest();
     void QueueFromSecondThreadTest();

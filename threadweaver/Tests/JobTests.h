@@ -15,8 +15,6 @@ class JobTests : public QObject
 
 private Q_SLOTS:
 
-    void initTestCase ();
-
     // call finish() before leave a test to make sure the queue is empty
 
     void WeaverLazyThreadCreationTest();

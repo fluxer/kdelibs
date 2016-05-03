@@ -156,7 +156,7 @@ void KMimeTypeTest::cleanupTestCase()
     QFile::remove(m_kdeApp);
     QFile::remove(m_nonKdeApp);
     QProcess proc;
-    proc.setOutputChannelMode(QProcess::MergedChannels); // silence kbuildsycoca output
+    proc.setProcessChannelMode(QProcess::MergedChannels); // silence kbuildsycoca output
     proc.execute(KStandardDirs::findExe(KBUILDSYCOCA_EXENAME));
 }
 

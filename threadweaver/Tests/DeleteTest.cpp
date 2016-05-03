@@ -12,7 +12,6 @@
 #include <QueuePolicy.h>
 #include <JobSequence.h>
 #include <JobCollection.h>
-#include <DebuggingAids.h>
 #include <WeaverObserver.h>
 #include <DependencyPolicy.h>
 #include <ResourceRestrictionPolicy.h>
@@ -31,8 +30,6 @@ int main(int argc, char **argv)
 DeleteTest::DeleteTest(int argc, char **argv)
   : QCoreApplication(argc, argv)
 {
-  ThreadWeaver::setDebugLevel ( true,  1 );
-
   ThreadWeaver::Weaver::instance()->setMaximumNumberOfThreads(4);
 
   m_finishCount = 100;

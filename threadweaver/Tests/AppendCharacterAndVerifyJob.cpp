@@ -17,8 +17,7 @@ void AppendCharacterAndVerifyJob::run()
     QMutexLocker locker ( &s_GlobalMutex );
     stringRef()->append( c() );
     if (m_expected.mid(0, stringRef()->length()) != *stringRef()) {
-        debug(3, "It broke!");
+        kDebug() << "It broke!";
     }
-    debug( 3, "AppendCharacterJob::run: %c appended, result is %s.\n",
-           c().toLatin1(), qPrintable( *stringRef() ) );
+    kDebug() << c().toLatin1() << "appended, result is" << qPrintable( *stringRef() );
 }

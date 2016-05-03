@@ -8,18 +8,12 @@
 
 #include <JobSequence.h>
 #include <ThreadWeaver.h>
-#include <DebuggingAids.h>
 #include <JobCollection.h>
 #include <ResourceRestrictionPolicy.h>
 
 #include "AppendCharacterJob.h"
 #include "AppendCharacterAndVerifyJob.h"
 QMutex s_GlobalMutex;
-
-void JobTests::initTestCase ()
-{
-    ThreadWeaver::setDebugLevel ( true, 1 );
-}
 
 // call finish() before leave a test to make sure the queue is empty
 

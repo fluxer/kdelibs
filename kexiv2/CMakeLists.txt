@@ -33,6 +33,8 @@ include_directories(
     ${QDBUS_INCLUDE_DIRS}
     ${CMAKE_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}
+    # for the export header
+    ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}
 )

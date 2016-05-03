@@ -267,7 +267,7 @@ void KDebugTest::testNoMainComponentData()
     procenv.insert("KDE_DEBUG_NOPROCESSINFO", "1");
     procenv.insert("KDE_DEBUG_TIMESTAMP", "0");
     proc.setProcessEnvironment(procenv);
-    proc.setProcessChannelMode(QProcess::OnlyStderrChannel);
+    proc.setReadChannel(QProcess::StandardError);
     QVERIFY(QFile::exists(KDEBINDIR "/kdecore-kdebug_qcoreapptest"));
     QVERIFY(proc.execute(KDEBINDIR "/kdecore-kdebug_qcoreapptest"));
     const QByteArray allOutput = proc.readAllStandardError();

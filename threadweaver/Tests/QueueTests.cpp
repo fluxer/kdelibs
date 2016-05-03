@@ -14,7 +14,6 @@
 #include <QueuePolicy.h>
 #include <JobSequence.h>
 #include <JobCollection.h>
-#include <DebuggingAids.h>
 #include <WeaverObserver.h>
 #include <DependencyPolicy.h>
 #include <ResourceRestrictionPolicy.h>
@@ -67,11 +66,6 @@ QueueTests::QueueTests( QObject* parent )
     : QObject( parent )
     , autoDeleteJob ( 0 )
 {
-}
-
-void QueueTests::initTestCase ()
-{
-    ThreadWeaver::setDebugLevel ( true,  1 );
 }
 
 void QueueTests::SimpleQueuePrioritiesTest() {
