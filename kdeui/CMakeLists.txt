@@ -250,7 +250,6 @@ set(kdeui_LIB_SRCS
     widgets/kshortcutwidget.cpp
     widgets/ksqueezedtextlabel.cpp
     widgets/kstatusbar.cpp
-    widgets/kstringvalidator.cpp
     widgets/ktabbar.cpp
     widgets/ktabwidget.cpp
     widgets/ktextbrowser.cpp
@@ -621,7 +620,6 @@ install(
     widgets/krichtextwidget.h
     widgets/kseparator.h
     widgets/ksqueezedtextlabel.h
-    widgets/kstringvalidator.h
     widgets/ktextbrowser.h
     widgets/ktextedit.h
     widgets/ktimecombobox.h

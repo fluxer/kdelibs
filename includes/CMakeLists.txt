@@ -209,7 +209,6 @@ install(
     KMimeTypeChooser
     KMimeTypeChooserDialog
     KMimeTypeTrader
-    KMimeTypeValidator
     KModelIndexProxyMapper
     KMozillaBookmarkImporterImpl
     KModifierKeyInfo
@@ -321,7 +320,6 @@ install(
     KStatusBarOfflineIndicator
     KStatusNotifierItem
     KStringHandler
-    KStringListValidator
     KStyle
     KStyleFactory
     KSycoca

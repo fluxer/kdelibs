@@ -23,7 +23,6 @@
 #include <knuminput.h>
 #include <kcombobox.h>
 #include <klineedit.h>
-#include <kstringvalidator.h>
 #include <kdebug.h>
 
 #include <QtGui/QLabel>
@@ -59,7 +58,7 @@ public:
 
   bool      : QCheckBox
   int       : QSpinBox
-  QString   : KComboBox if the validator is a KStringListValidator, else lineedit
+  QString   : KLineEdit
   QDateTime : QDateTimeEdit
 
 */
@@ -276,21 +275,6 @@ QWidget* KFileMetaInfoWidget::makeDoubleWidget()
 
 QWidget* KFileMetaInfoWidget::makeStringWidget()
 {
-    if (KStringListValidator* val = qobject_cast<KStringListValidator*>(d->m_validator)) {
-        KComboBox* b = new KComboBox(true, this);
-        b->addItems(val->stringList());
-        int i = b->findText(d->m_item.value().toString());
-        if (i != -1)
-            b->setCurrentIndex(i);
-        else
-            b->setEditText(d->m_item.value().toString());
-        connect(b, SIGNAL(activated(QString)), this, SLOT(slotComboChanged(QString)));
-        b->setValidator(val);
-        reparentValidator(b, val);
-        return b;
-    }
-
-
     KLineEdit* e = new KLineEdit(d->m_item.value().toString(), this);
     if (d->m_validator) {
         e->setValidator(d->m_validator);
@@ -349,14 +333,6 @@ void KFileMetaInfoWidget::slotChanged(int value)
 void KFileMetaInfoWidget::slotChanged(double value)
 {
     Q_ASSERT(qobject_cast<KDoubleNumInput*>(d->m_widget));
-    d->m_value = QVariant(value);
-    emit valueChanged(d->m_value);
-    d->m_dirty = true;
-}
-
-void KFileMetaInfoWidget::slotComboChanged(const QString &value)
-{
-    Q_ASSERT(qobject_cast<KComboBox*>(d->m_widget));
     d->m_value = QVariant(value);
     emit valueChanged(d->m_value);
     d->m_dirty = true;
