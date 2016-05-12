@@ -32,7 +32,7 @@ class KService;
 namespace Sonnet
 {
     class Settings;
-    class SpellerPlugin;
+    class QSpellEnchantDict;
 
     /**
      * \internal
@@ -74,7 +74,7 @@ namespace Sonnet
          *               reliability value is returned.
          *
          */
-        SpellerPlugin *createSpeller(
+        QSpellEnchantDict *createSpeller(
             const QString& language = QString(),
             const QString& client = QString()) const;
 
@@ -114,9 +114,6 @@ namespace Sonnet
     protected:
         friend class Settings;
         void changed();
-    private:
-        void loadPlugins();
-        void loadPlugin(const KSharedPtr<KService>&);
     private:
         class Private;
         Private *const d;

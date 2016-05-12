@@ -18,21 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301  USA
  */
+#include "config-sonnet.h"
 #include "loader_p.h"
 #include "settings_p.h"
-#include "client_p.h"
-#include "spellerplugin_p.h"
+#include "enchantclient_p.h"
 
 #include <klocale.h>
-#include <kservicetypetrader.h>
-
 #include <kconfig.h>
 #include <kdebug.h>
-
-#include <QtCore/QHash>
-#include <QtCore/QMap>
-
-#define DEFAULT_CONFIG_FILE   "sonnetrc"
+#include <kglobal.h>
 
 namespace Sonnet
 {
@@ -40,11 +34,10 @@ namespace Sonnet
 class Loader::Private
 {
 public:
-    KService::List plugins;
     Settings *settings;
 
     // <language, Clients with that language >
-    QMap<QString, QList<Client*> > languageClients;
+    QMap<QString, QList<QSpellEnchantClient*> > languageClients;
     QStringList clients;
 
     QStringList languagesNameCache;
@@ -65,20 +58,34 @@ Loader::Loader()
     :d(new Private)
 {
     d->settings = new Settings(this);
-    KConfig config(QString::fromLatin1(DEFAULT_CONFIG_FILE));
+    KConfig config(QString::fromLatin1("sonnetrc"));
     d->settings->restore(&config);
-    loadPlugins();
+
+#ifdef HAVE_ENCHANT
+    QSpellEnchantClient *client = new QSpellEnchantClient(this);
+    const QStringList languages = client->languages();
+    d->clients.append(client->name());
+
+    for (QStringList::const_iterator itr = languages.begin();
+            itr != languages.end(); ++itr) {
+        if (!d->languageClients[*itr].isEmpty() &&
+            client->reliability() <
+            d->languageClients[*itr].first()->reliability())
+            d->languageClients[*itr].append(client);
+        else
+            d->languageClients[*itr].prepend(client);
+    }
+#endif // HAVE_ENCHANT
 }
 
 Loader::~Loader()
 {
     //kDebug()<<"Removing loader : "<< this;
-    d->plugins.clear();
     delete d->settings; d->settings = 0;
     delete d;
 }
 
-SpellerPlugin *Loader::createSpeller(const QString& language,
+QSpellEnchantDict *Loader::createSpeller(const QString& language,
                                      const QString& clientName) const
 {
     QString pclient = clientName;
@@ -88,7 +95,7 @@ SpellerPlugin *Loader::createSpeller(const QString& language,
         plang = d->settings->defaultLanguage();
     }
 
-    const QList<Client*> lClients = d->languageClients[plang];
+    const QList<QSpellEnchantClient*> lClients = d->languageClients[plang];
 
     if (lClients.isEmpty()) {
         kError()<<"No language dictionaries for the language : "
@@ -96,18 +103,18 @@ SpellerPlugin *Loader::createSpeller(const QString& language,
         return 0;
     }
 
-    QListIterator<Client*> itr(lClients);
+    QListIterator<QSpellEnchantClient*> itr(lClients);
     while (itr.hasNext()) {
-        Client* item = itr.next();
+        QSpellEnchantClient* item = itr.next();
         if (!pclient.isEmpty()) {
             if (pclient == item->name()) {
-                SpellerPlugin *dict = item->createSpeller(plang);
+                QSpellEnchantDict *dict = item->createSpeller(plang);
                 return dict;
             }
         } else {
             //the first one is the one with the highest
             //reliability
-            SpellerPlugin *dict = item->createSpeller(plang);
+            QSpellEnchantDict *dict = item->createSpeller(plang);
             return dict;
         }
     }
@@ -245,44 +252,6 @@ QStringList Loader::languageNames() const
 Settings* Loader::settings() const
 {
     return d->settings;
-}
-
-void Loader::loadPlugins()
-{
-    d->plugins = KServiceTypeTrader::self()->query(QString::fromLatin1("Sonnet/SpellClient"));
-
-    for (KService::List::const_iterator itr = d->plugins.constBegin();
-         itr != d->plugins.constEnd(); ++itr ) {
-        loadPlugin((*itr));
-    }
-}
-
-void Loader::loadPlugin(const KSharedPtr<KService> &service)
-{
-    QString error;
-
-    Client *client = service->createInstance<Client>(this,
-                                                      QVariantList(),
-                                                      &error);
-
-    if (client) {
-        const QStringList languages = client->languages();
-        d->clients.append(client->name());
-
-        for (QStringList::const_iterator itr = languages.begin();
-             itr != languages.end(); ++itr) {
-            if (!d->languageClients[*itr].isEmpty() &&
-                client->reliability() <
-                d->languageClients[*itr].first()->reliability())
-                d->languageClients[*itr].append(client);
-            else
-                d->languageClients[*itr].prepend(client);
-        }
-
-        //kDebug() << "Successfully loaded plugin:" << service->entryPath();
-    } else {
-        kDebug() << error;
-    }
 }
 
 void Loader::changed()

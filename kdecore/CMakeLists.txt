@@ -73,6 +73,13 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-util.h
 )
 
+# Configure checks for sonnet
+include(sonnet/ConfigureChecks.cmake)
+configure_file(
+    sonnet/config-sonnet.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/sonnet/config-sonnet.h
+)
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/sonnet)
 
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
@@ -115,6 +122,20 @@ endif(LIBLZMA_FOUND)
 if(LIBINTL_FOUND)
     include_directories(${LIBINTL_INCLUDE_DIR})
     set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBINTL_LIBRARIES})
+endif()
+
+# compiler Enchant if available
+if(ENCHANT_FOUND)
+    include_directories(
+        ${ENCHANT_INCLUDE_DIR}
+        "${ENCHANT_INCLUDE_DIR}/.."
+    )
+    set(kdecore_OPTIONAL_SRCS
+        ${kdecore_OPTIONAL_SRCS}
+        sonnet/enchantclient.cpp
+        sonnet/enchantdict.cpp
+    )
+    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${ENCHANT_LIBRARIES})
 endif()
 
 if(HAVE_RESOLV_LIBRARY)
@@ -222,8 +243,6 @@ set(kdecore_LIB_SRCS
     services/lex.c
     services/kplugininfo.cpp
     sonnet/loader.cpp
-    sonnet/client.cpp
-    sonnet/spellerplugin.cpp
     sonnet/speller.cpp
     sonnet/filter.cpp
     sonnet/settings.cpp
@@ -487,7 +506,6 @@ install(
 install(
     FILES
     services/kplugininfo.desktop
-    sonnet/sonnetspeller.desktop
     DESTINATION ${SERVICETYPES_INSTALL_DIR}
 )
 

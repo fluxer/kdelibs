@@ -17,20 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301  USA
  */
-#include "enchantdict.h"
-#include "enchantclient.h"
+#include "enchantdict_p.h"
+#include "enchantclient_p.h"
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QDebug>
 
-using namespace Sonnet;
+namespace Sonnet
+{
 
 QSpellEnchantDict::QSpellEnchantDict(QSpellEnchantClient *client, 
                                      EnchantBroker *broker,
                                      EnchantDict *dict,
                                      const QString &language)
-    : SpellerPlugin(language),
-      m_broker(broker),
+    : m_broker(broker),
       m_dict(dict),
       m_client(client)
 {
@@ -71,6 +71,15 @@ QStringList QSpellEnchantDict::suggest(const QString &word) const
     return qsug;
 }
 
+bool QSpellEnchantDict::checkAndSuggest(const QString &word,
+                                    QStringList &suggestions) const
+{
+    bool c = isCorrect(word);
+    if (!c)
+        suggestions = suggest(word);
+    return c;
+}
+
 bool QSpellEnchantDict::storeReplacement(const QString &bad,
                                   const QString &good)
 {
@@ -92,4 +101,11 @@ bool QSpellEnchantDict::addToSession(const QString &word)
     enchant_dict_add_to_session(m_dict, word.toUtf8(),
                                 word.toUtf8().length());
     return true;
+}
+
+QString QSpellEnchantDict::language() const
+{
+    return m_language;
+}
+
 }

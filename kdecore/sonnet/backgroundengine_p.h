@@ -31,7 +31,6 @@ namespace Sonnet
 {
     class Filter;
     class Loader;
-    class SpellerPlugin;
     class BackgroundEngine : public QObject
     {
         Q_OBJECT

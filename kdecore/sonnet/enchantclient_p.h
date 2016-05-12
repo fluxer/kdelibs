@@ -1,6 +1,5 @@
 // -*- Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil; -*-
 /**
- *
  * Copyright 2006  Zack Rusin <zack@kde.org>
  *
  * This library is free software; you can redistribute it and/or
@@ -18,45 +17,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301  USA
  */
-#include "spellerplugin_p.h"
+#ifndef QSPELL_ENCHANTCLIENT_H
+#define QSPELL_ENCHANTCLIENT_H
+
+#include <QtCore/QSet>
+#include <QtCore/qvariant.h>
+#include <enchant.h>
 
 namespace Sonnet
 {
+    class QSpellEnchantDict;
 
-class SpellerPlugin::Private
-{
-public:
-    QString language;
-};
+    class QSpellEnchantClient: public QObject
+    {
+        Q_OBJECT
+    public:
+        QSpellEnchantClient(QObject *parent);
+        ~QSpellEnchantClient();
 
-SpellerPlugin::SpellerPlugin(const QString &lang)
-    : d(new Private)
-{
-    d->language = lang;
+        virtual int reliability() const {
+            return 30;
+        }
+
+        virtual QSpellEnchantDict *createSpeller(const QString &language);
+
+        virtual QStringList languages() const;
+
+        virtual QString name() const {
+            return QString::fromLatin1("Enchant");
+        }
+
+        void addLanguage(const QString &lang);
+
+        void removeDictRef(EnchantDict *dict);
+
+    private:
+        EnchantBroker *m_broker;
+        QSet<QString>  m_languages;
+        QHash<EnchantDict*, int> m_dictRefs;
+    };
 }
 
-SpellerPlugin::~SpellerPlugin()
-{
-    delete d;
-}
-
-QString SpellerPlugin::language() const
-{
-    return d->language;
-}
-
-bool SpellerPlugin::isMisspelled(const QString &word) const
-{
-    return !isCorrect(word);
-}
-
-bool SpellerPlugin::checkAndSuggest(const QString &word,
-                                    QStringList &suggestions) const
-{
-    bool c = isCorrect(word);
-    if (!c)
-        suggestions = suggest(word);
-    return c;
-}
-
-}
+#endif

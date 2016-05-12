@@ -17,17 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301  USA
  */
-#include "enchantclient.h"
-#include "enchantdict.h"
+#include "enchantclient_p.h"
+#include "enchantdict_p.h"
 
-#include <kpluginfactory.h>
-#include <kpluginloader.h>
 #include <QtCore/QDebug>
 
-K_PLUGIN_FACTORY(EnchantClientFactory, registerPlugin<QSpellEnchantClient>();)
-K_EXPORT_PLUGIN(EnchantClientFactory("kspell_enchant"))
-
-using namespace Sonnet;
+namespace Sonnet
+{
 
 static void enchantDictDescribeFn(const char * const lang_tag,
                                   const char * const provider_name,
@@ -35,8 +31,7 @@ static void enchantDictDescribeFn(const char * const lang_tag,
                                   const char * const provider_file,
                                   void * user_data)
 {
-    QSpellEnchantClient *client =
-        reinterpret_cast<QSpellEnchantClient*>(user_data);
+    QSpellEnchantClient *client = reinterpret_cast<QSpellEnchantClient*>(user_data);
     //qDebug()<<lang_tag<<provider_name<<provider_desc<<provider_file;
     Q_UNUSED(provider_name);
     Q_UNUSED(provider_desc);
@@ -45,8 +40,8 @@ static void enchantDictDescribeFn(const char * const lang_tag,
 
 }
 
-QSpellEnchantClient::QSpellEnchantClient(QObject *parent, const QVariantList& /* args */)
-    : Client(parent)
+QSpellEnchantClient::QSpellEnchantClient(QObject *parent)
+    : QObject(parent)
 {
     m_broker = enchant_broker_init();
     enchant_broker_list_dicts(m_broker,
@@ -59,7 +54,7 @@ QSpellEnchantClient::~QSpellEnchantClient()
     enchant_broker_free(m_broker);
 }
 
-SpellerPlugin *QSpellEnchantClient::createSpeller(
+QSpellEnchantDict *QSpellEnchantClient::createSpeller(
     const QString &language)
 {
     EnchantDict *dict = enchant_broker_request_dict(m_broker,
@@ -101,4 +96,6 @@ void QSpellEnchantClient::removeDictRef(EnchantDict *dict)
     }
 }
 
-#include "moc_enchantclient.cpp"
+}
+
+#include "moc_enchantclient_p.cpp"

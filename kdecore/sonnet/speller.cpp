@@ -22,7 +22,8 @@
 
 #include "loader_p.h"
 #include "settings_p.h"
-#include "spellerplugin_p.h"
+#include "enchantclient_p.h"
+#include "enchantdict_p.h"
 
 #include <kconfig.h>
 #include <kglobal.h>
@@ -68,7 +69,7 @@ public:
         dict = Loader::openLoader()->createSpeller(language);
     }
 
-    SpellerPlugin *dict;
+    QSpellEnchantDict *dict;
     Settings      *settings;
 
     QString        language;
@@ -116,7 +117,7 @@ bool Speller::isMisspelled(const QString &word) const
 {
     if (!d->isValid())
         return false;
-    return d->dict->isMisspelled(word);
+    return !d->dict->isCorrect(word);
 }
 
 QStringList Speller::suggest(const QString &word) const
