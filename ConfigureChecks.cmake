@@ -9,7 +9,6 @@ include(CheckSymbolExists)
 include(CheckCXXSymbolExists)
 include(CheckFunctionExists)
 include(CheckLibraryExists)
-include(CheckPrototypeExists)
 include(CheckTypeSize)
 include(CheckStructMember)
 include(CheckCXXSourceCompiles)
@@ -189,15 +188,8 @@ check_function_exists(mkstemp    HAVE_MKSTEMP)           # kdecore/fakes.c
 check_function_exists(mkdtemp    HAVE_MKDTEMP)           # kdecore/fakes.c
 check_function_exists(strlcpy    HAVE_STRLCPY)           # kdecore/fakes.c
 check_function_exists(strlcat    HAVE_STRLCAT)           # kdecore/fakes.c
-check_cxx_symbol_exists(__CORRECT_ISO_CPP_STRING_H_PROTO "string.h" HAVE_STRCASESTR_OVERLOAD) # glibc-2.9 strangeness
-if (HAVE_STRCASESTR_OVERLOAD)
-  #message(STATUS "string.h defines __CORRECT_ISO_CPP_STRING_H_PROTO")
-  set(HAVE_STRCASESTR 1)
-  set(HAVE_STRCASESTR_PROTO 1)
-else()
-  check_function_exists(strcasestr HAVE_STRCASESTR)        # kdecore/fakes.c
-  check_prototype_exists(strcasestr string.h          HAVE_STRCASESTR_PROTO)
-endif()
+check_function_exists(strcasestr HAVE_STRCASESTR)        # kdecore/fakes.c
+check_symbol_exists(strcasestr string.h          HAVE_STRCASESTR_PROTO)
 check_function_exists(setenv     HAVE_SETENV)            # kdecore/fakes.c
 check_function_exists(seteuid    HAVE_SETEUID)           # kdecore/fakes.c
 check_function_exists(setmntent  HAVE_SETMNTENT)         # solid, kio, kdecore
@@ -206,18 +198,18 @@ check_function_exists(usleep     HAVE_USLEEP)            # kdecore/fakes.c, kdeu
 
 # check for prototypes [for functions provided by kdefakes when not available]
 
-check_prototype_exists(mkstemps "stdlib.h;unistd.h" HAVE_MKSTEMPS_PROTO)
-check_prototype_exists(mkdtemp "stdlib.h;unistd.h"  HAVE_MKDTEMP_PROTO)
-check_prototype_exists(mkstemp "stdlib.h;unistd.h"  HAVE_MKSTEMP_PROTO)
-check_prototype_exists(strlcat string.h             HAVE_STRLCAT_PROTO)
-check_prototype_exists(strlcpy string.h             HAVE_STRLCPY_PROTO)
-check_prototype_exists(res_init "sys/types.h;netinet/in.h;arpa/nameser.h;resolv.h" HAVE_RES_INIT_PROTO)
-check_prototype_exists(setenv stdlib.h              HAVE_SETENV_PROTO)
-check_prototype_exists(unsetenv stdlib.h            HAVE_UNSETENV_PROTO)
-check_prototype_exists(usleep unistd.h              HAVE_USLEEP_PROTO)
-check_prototype_exists(initgroups "unistd.h;sys/types.h;unistd.h;grp.h" HAVE_INITGROUPS_PROTO)
-check_prototype_exists(setreuid unistd.h            HAVE_SETREUID_PROTO)
-check_prototype_exists(trunc math.h                 HAVE_TRUNC)
+check_symbol_exists(mkstemps "stdlib.h;unistd.h" HAVE_MKSTEMPS_PROTO)
+check_symbol_exists(mkdtemp "stdlib.h;unistd.h"  HAVE_MKDTEMP_PROTO)
+check_symbol_exists(mkstemp "stdlib.h;unistd.h"  HAVE_MKSTEMP_PROTO)
+check_symbol_exists(strlcat string.h             HAVE_STRLCAT_PROTO)
+check_symbol_exists(strlcpy string.h             HAVE_STRLCPY_PROTO)
+check_symbol_exists(res_init "sys/types.h;netinet/in.h;arpa/nameser.h;resolv.h" HAVE_RES_INIT_PROTO)
+check_symbol_exists(setenv stdlib.h              HAVE_SETENV_PROTO)
+check_symbol_exists(unsetenv stdlib.h            HAVE_UNSETENV_PROTO)
+check_symbol_exists(usleep unistd.h              HAVE_USLEEP_PROTO)
+check_symbol_exists(initgroups "unistd.h;sys/types.h;unistd.h;grp.h" HAVE_INITGROUPS_PROTO)
+check_symbol_exists(setreuid unistd.h            HAVE_SETREUID_PROTO)
+check_symbol_exists(trunc math.h                 HAVE_TRUNC)
 
 # check for existing datatypes
 

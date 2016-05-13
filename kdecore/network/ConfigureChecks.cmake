@@ -1,10 +1,4 @@
 ####### checks for kdecore/network (and netsupp.cpp) ###############
-include(CheckIncludeFiles)
-include(CheckFunctionExists)
-include(CheckPrototypeExists)
-include(CheckSymbolExists)
-include(CheckTypeSize)
-include(CheckStructMember)
 
 # FIXME: the ssl check fails for some reason
 if(KATIE_FOUND)
@@ -46,7 +40,7 @@ check_function_exists(gethostbyname    HAVE_GETHOSTBYNAME)
 check_function_exists(gethostbyname_r  HAVE_GETHOSTBYNAME_R)
 check_function_exists(if_nametoindex  HAVE_IF_NAMETOINDEX)
 
-check_prototype_exists(getservbyname_r netdb.h      HAVE_GETSERVBYNAME_R_PROTO)
+check_symbol_exists(getservbyname_r netdb.h      HAVE_GETSERVBYNAME_R_PROTO)
 
 check_symbol_exists(freeaddrinfo    "sys/types.h;sys/socket.h;netdb.h"     HAVE_FREEADDRINFO)
 check_symbol_exists(getnameinfo     "sys/types.h;sys/socket.h;netdb.h"     HAVE_GETNAMEINFO)
@@ -59,7 +53,7 @@ check_struct_member("struct sockaddr" sa_len "sys/types.h;sys/socket.h" HAVE_STR
 
 # check if gai_strerror exists even if EAI_ADDRFAMILY is not defined
 set(CMAKE_EXTRA_INCLUDE_FILES "sys/socket.h;netdb.h")
-check_prototype_exists(gai_strerror netdb.h HAVE_GAI_STRERROR_PROTO)
+check_symbol_exists(gai_strerror netdb.h HAVE_GAI_STRERROR_PROTO)
 
 # check for existing datatypes
 set(CMAKE_EXTRA_INCLUDE_FILES "sys/socket.h;netdb.h")
