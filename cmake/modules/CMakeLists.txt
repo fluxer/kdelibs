@@ -19,7 +19,6 @@ set(cmakeFiles
     BasicFindPackageVersion.cmake.in
     check_installed_exports_file.cmake
     CheckPointerMember.cmake
-    CheckPrototypeExists.cmake
     CheckStructMember.cmake
     cmake-modules-styleguide.txt
     config-alsa.h.cmake
