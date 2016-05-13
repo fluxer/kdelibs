@@ -1322,7 +1322,7 @@ static void kdeinit_library_path()
    if (display.isEmpty())
    {
 #if defined(Q_WS_X11) || defined(Q_WS_QWS)
-     fprintf(stderr, "kdeinit4: Aborting. $"DISPLAY" is not set.\n");
+     fprintf(stderr, "kdeinit4: Aborting. $" DISPLAY " is not set.\n");
      exit(255);
 #endif
    }
