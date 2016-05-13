@@ -210,6 +210,11 @@ check_symbol_exists(usleep unistd.h              HAVE_USLEEP_PROTO)
 check_symbol_exists(initgroups "unistd.h;sys/types.h;unistd.h;grp.h" HAVE_INITGROUPS_PROTO)
 check_symbol_exists(setreuid unistd.h            HAVE_SETREUID_PROTO)
 check_symbol_exists(trunc math.h                 HAVE_TRUNC)
+if(NOT HAVE_TRUNC)
+    # check_symbol_exists() may fail with either undefined refence (in C mode) or with wrong type (in C++ mode)
+    check_prototype_definition(trunc "double trunc(double arg)" "0.0" "math.h" HAVE_TRUNC_PROTO)
+    set(HAVE_TRUNC ${HAVE_TRUNC_PROTO})
+endif()
 
 # check for existing datatypes
 
