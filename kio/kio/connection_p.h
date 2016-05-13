@@ -20,7 +20,8 @@
 #ifndef KIO_CONNECTION_P_H
 #define KIO_CONNECTION_P_H
 
-#include <klocalsocket.h>
+#include <QTcpSocket>
+#include <QTcpServer>
 
 class KUrl;
 
@@ -30,7 +31,7 @@ namespace KIO {
         QByteArray data;
     };
 
-    class AbstractConnectionBackend: public QObject
+    class SocketConnectionBackend: public QObject
     {
         Q_OBJECT
     public:
@@ -38,43 +39,17 @@ namespace KIO {
         QString errorString;
         enum { Idle, Listening, Connected } state;
 
-        explicit AbstractConnectionBackend(QObject *parent = 0);
-        ~AbstractConnectionBackend();
-
-        virtual void setSuspended(bool enable) = 0;
-        virtual bool connectToRemote(const KUrl &url) = 0;
-        virtual bool listenForRemote() = 0;
-        virtual bool waitForIncomingTask(int ms) = 0;
-        virtual bool sendCommand(const Task &task) = 0;
-        virtual AbstractConnectionBackend *nextPendingConnection() = 0;
-
-    Q_SIGNALS:
-        void disconnected();
-        void commandReceived(const Task &task);
-        void newConnection();
-    };
-
-    class SocketConnectionBackend: public AbstractConnectionBackend
-    {
-        Q_OBJECT
-    public:
-        enum Mode { LocalSocketMode, TcpSocketMode };
-
     private:
         enum { HeaderSize = 10, StandardBufferSize = 32*1024 };
 
         QTcpSocket *socket;
-        union {
-            KLocalSocketServer *localServer;
-            QTcpServer *tcpServer;
-        };
+        QTcpServer *tcpServer;
         long len;
         int cmd;
         bool signalEmitted;
-        quint8 mode;
 
     public:
-        explicit SocketConnectionBackend(Mode m, QObject *parent = 0);
+        explicit SocketConnectionBackend(QObject *parent = 0);
         ~SocketConnectionBackend();
 
         void setSuspended(bool enable);
@@ -82,10 +57,15 @@ namespace KIO {
         bool listenForRemote();
         bool waitForIncomingTask(int ms);
         bool sendCommand(const Task &task);
-        AbstractConnectionBackend *nextPendingConnection();
+        SocketConnectionBackend *nextPendingConnection();
     public slots:
         void socketReadyRead();
         void socketDisconnected();
+
+    Q_SIGNALS:
+        void disconnected();
+        void commandReceived(const Task &task);
+        void newConnection();
     };
 }
 

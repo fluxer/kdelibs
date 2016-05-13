@@ -26,7 +26,7 @@
 
 #include <QQueue>
 #include <QPointer>
-#include <QtCore/qdatetime.h>
+#include <QDateTime>
 
 #include <kdebug.h>
 #include <kcomponentdata.h>
@@ -48,11 +48,11 @@ public:
     void dequeue();
     void commandReceived(const Task &task);
     void disconnected();
-    void setBackend(AbstractConnectionBackend *b);
+    void setBackend(SocketConnectionBackend *b);
 
     QQueue<Task> outgoingTasks;
     QQueue<Task> incomingTasks;
-    AbstractConnectionBackend *backend;
+    SocketConnectionBackend *backend;
     Connection *q;
     bool suspended;
 };
@@ -65,7 +65,7 @@ public:
     { }
 
     ConnectionServer *q;
-    AbstractConnectionBackend *backend;
+    SocketConnectionBackend *backend;
 };
 
 void ConnectionPrivate::dequeue()
@@ -96,7 +96,7 @@ void ConnectionPrivate::disconnected()
     QMetaObject::invokeMethod(q, "readyRead", Qt::QueuedConnection);
 }
 
-void ConnectionPrivate::setBackend(AbstractConnectionBackend *b)
+void ConnectionPrivate::setBackend(SocketConnectionBackend *b)
 {
     backend = b;
     if (backend) {
@@ -106,28 +106,15 @@ void ConnectionPrivate::setBackend(AbstractConnectionBackend *b)
     }
 }
 
-AbstractConnectionBackend::AbstractConnectionBackend(QObject *parent)
-    : QObject(parent), state(Idle)
+SocketConnectionBackend::SocketConnectionBackend(QObject *parent)
+    : QObject(parent), state(Idle), socket(0), len(-1), cmd(0),
+      signalEmitted(false)
 {
-}
-
-AbstractConnectionBackend::~AbstractConnectionBackend()
-{
-}
-
-SocketConnectionBackend::SocketConnectionBackend(Mode m, QObject *parent)
-    : AbstractConnectionBackend(parent), socket(0), len(-1), cmd(0),
-      signalEmitted(false), mode(m)
-{
-    localServer = 0;
     //tcpServer = 0;
 }
 
 SocketConnectionBackend::~SocketConnectionBackend()
 {
-    if (mode == LocalSocketMode && localServer &&
-        localServer->localSocketType() == KLocalSocket::UnixSocket)
-        QFile::remove(localServer->localPath());
 }
 
 void SocketConnectionBackend::setSuspended(bool enable)
@@ -135,7 +122,7 @@ void SocketConnectionBackend::setSuspended(bool enable)
     if (state != Connected)
         return;
     Q_ASSERT(socket);
-    Q_ASSERT(!localServer);     // !tcpServer as well
+    Q_ASSERT(!tcpServer);
 
     if (enable) {
         //kDebug() << this << " suspending";
@@ -161,29 +148,17 @@ bool SocketConnectionBackend::connectToRemote(const KUrl &url)
 {
     Q_ASSERT(state == Idle);
     Q_ASSERT(!socket);
-    Q_ASSERT(!localServer);     // !tcpServer as well
+    Q_ASSERT(!tcpServer);
 
-    if (mode == LocalSocketMode) {
-        KLocalSocket *sock = new KLocalSocket(this);
-#if 0
-        // TODO: Activate once abstract socket support is implemented in Qt.
-        KLocalSocket::LocalSocketType type = KLocalSocket::UnixSocket;
+    socket = new QTcpSocket(this);
+    socket->connectToHost(url.host(),url.port());
 
-        if (url.queryItem(QLatin1String("abstract")) == QLatin1String("1"))
-            type = KLocalSocket::AbstractUnixSocket;
-#endif
-        sock->connectToPath(url.path());
-        socket = sock;
-    } else {
-        socket = new QTcpSocket(this);
-        socket->connectToHost(url.host(),url.port());
-
-        if (!socket->waitForConnected(1000)) {
-            state = Idle;
-            kDebug() << "could not connect to " << url;
-            return false;
-        }
+    if (!socket->waitForConnected(1000)) {
+        state = Idle;
+        kDebug() << "could not connect to " << url;
+        return false;
     }
+
     connect(socket, SIGNAL(readyRead()), SLOT(socketReadyRead()));
     connect(socket, SIGNAL(disconnected()), SLOT(socketDisconnected()));
     state = Connected;
@@ -200,48 +175,19 @@ bool SocketConnectionBackend::listenForRemote()
 {
     Q_ASSERT(state == Idle);
     Q_ASSERT(!socket);
-    Q_ASSERT(!localServer);     // !tcpServer as well
+    Q_ASSERT(!tcpServer);
 
-    if (mode == LocalSocketMode) {
-        QString prefix = KStandardDirs::locateLocal("socket", KGlobal::mainComponent().componentName());
-        KTemporaryFile *socketfile = new KTemporaryFile();
-        socketfile->setPrefix(prefix);
-        socketfile->setSuffix(QLatin1String(".slave-socket"));
-        if (!socketfile->open())
-        {
-            errorString = i18n("Unable to create io-slave: %1", strerror(errno));
-            delete socketfile;
-            return false;
-        }
-
-        QString sockname = socketfile->fileName();
-        KUrl addressUrl(sockname);
-        addressUrl.setProtocol("local");
-        address = addressUrl.url();
-        delete socketfile; // can't bind if there is such a file
-
-        localServer = new KLocalSocketServer(this);
-        if (!localServer->listen(sockname, KLocalSocket::UnixSocket)) {
-            errorString = localServer->errorString();
-            delete localServer;
-            localServer = 0;
-            return false;
-        }
-
-        connect(localServer, SIGNAL(newConnection()), SIGNAL(newConnection()));
-    } else {
-        tcpServer = new QTcpServer(this);
-        tcpServer->listen(QHostAddress::LocalHost);
-        if (!tcpServer->isListening()) {
-            errorString = tcpServer->errorString();
-            delete tcpServer;
-            tcpServer = 0;
-            return false;
-        }
-
-        address = "tcp://127.0.0.1:" + QString::number(tcpServer->serverPort());
-        connect(tcpServer, SIGNAL(newConnection()), SIGNAL(newConnection()));
+    tcpServer = new QTcpServer(this);
+    tcpServer->listen(QHostAddress::LocalHost);
+    if (!tcpServer->isListening()) {
+        errorString = tcpServer->errorString();
+        delete tcpServer;
+        tcpServer = 0;
+        return false;
     }
+
+    address = "tcp://127.0.0.1:" + QString::number(tcpServer->serverPort());
+    connect(tcpServer, SIGNAL(newConnection()), SIGNAL(newConnection()));
 
     state = Listening;
     return true;
@@ -299,23 +245,19 @@ bool SocketConnectionBackend::sendCommand(const Task &task)
     return socket->state() == QAbstractSocket::ConnectedState;
 }
 
-AbstractConnectionBackend *SocketConnectionBackend::nextPendingConnection()
+SocketConnectionBackend *SocketConnectionBackend::nextPendingConnection()
 {
     Q_ASSERT(state == Listening);
-    Q_ASSERT(localServer || tcpServer);
+    Q_ASSERT(tcpServer);
     Q_ASSERT(!socket);
 
     //kDebug() << "Got a new connection";
 
-    QTcpSocket *newSocket;
-    if (mode == LocalSocketMode)
-        newSocket = localServer->nextPendingConnection();
-    else
-        newSocket = tcpServer->nextPendingConnection();
+    QTcpSocket *newSocket = tcpServer->nextPendingConnection();
     if (!newSocket)
         return 0;               // there was no connection...
 
-    SocketConnectionBackend *result = new SocketConnectionBackend(Mode(mode));
+    SocketConnectionBackend *result = new SocketConnectionBackend();
     result->state = Connected;
     result->socket = newSocket;
     newSocket->setParent(result);
@@ -432,7 +374,7 @@ void Connection::close()
 
 bool Connection::isConnected() const
 {
-    return d->backend && d->backend->state == AbstractConnectionBackend::Connected;
+    return d->backend && d->backend->state == SocketConnectionBackend::Connected;
 }
 
 bool Connection::inited() const
@@ -451,10 +393,8 @@ void Connection::connectToRemote(const QString &address)
     KUrl url = address;
     QString scheme = url.protocol();
 
-    if (scheme == QLatin1String("local")) {
-        d->setBackend(new SocketConnectionBackend(SocketConnectionBackend::LocalSocketMode, this));
-    } else if (scheme == QLatin1String("tcp")) {
-        d->setBackend(new SocketConnectionBackend(SocketConnectionBackend::TcpSocketMode, this));
+    if (scheme == QLatin1String("tcp")) {
+        d->setBackend(new SocketConnectionBackend(this));
     } else {
         kWarning(7017) << "Unknown requested KIO::Connection protocol='" << scheme
                        << "' (" << address << ")";
@@ -556,7 +496,7 @@ ConnectionServer::~ConnectionServer()
 
 void ConnectionServer::listenForRemote()
 {
-    d->backend = new SocketConnectionBackend(SocketConnectionBackend::LocalSocketMode, this);
+    d->backend = new SocketConnectionBackend(this);
     if (!d->backend->listenForRemote()) {
         delete d->backend;
         d->backend = 0;
@@ -576,7 +516,7 @@ QString ConnectionServer::address() const
 
 bool ConnectionServer::isListening() const
 {
-    return d->backend && d->backend->state == AbstractConnectionBackend::Listening;
+    return d->backend && d->backend->state == SocketConnectionBackend::Listening;
 }
 
 void ConnectionServer::close()
@@ -590,7 +530,7 @@ Connection *ConnectionServer::nextPendingConnection()
     if (!isListening())
         return 0;
 
-    AbstractConnectionBackend *newBackend = d->backend->nextPendingConnection();
+    SocketConnectionBackend *newBackend = d->backend->nextPendingConnection();
     if (!newBackend)
         return 0;               // no new backend...
 
@@ -603,7 +543,7 @@ Connection *ConnectionServer::nextPendingConnection()
 
 void ConnectionServer::setNextPendingConnection(Connection *conn)
 {
-    AbstractConnectionBackend *newBackend = d->backend->nextPendingConnection();
+    SocketConnectionBackend *newBackend = d->backend->nextPendingConnection();
     Q_ASSERT(newBackend);
 
     conn->d->backend = newBackend;
