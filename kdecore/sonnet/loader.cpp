@@ -63,17 +63,16 @@ Loader::Loader()
 
 #ifdef HAVE_ENCHANT
     QSpellEnchantClient *client = new QSpellEnchantClient(this);
-    const QStringList languages = client->languages();
     d->clients.append(client->name());
 
-    for (QStringList::const_iterator itr = languages.begin();
-            itr != languages.end(); ++itr) {
-        if (!d->languageClients[*itr].isEmpty() &&
-            client->reliability() <
-            d->languageClients[*itr].first()->reliability())
-            d->languageClients[*itr].append(client);
-        else
-            d->languageClients[*itr].prepend(client);
+    foreach (const QString itr, client->languages()) {
+        const QList<QSpellEnchantClient*> langclient = d->languageClients[itr];
+        if (!langclient.isEmpty() &&
+            client->reliability() < langclient.first()->reliability()) {
+            d->languageClients[itr].append(client);
+        } else {
+            d->languageClients[itr].prepend(client);
+        }
     }
 #endif // HAVE_ENCHANT
 }

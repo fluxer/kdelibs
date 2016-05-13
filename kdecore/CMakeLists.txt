@@ -124,7 +124,7 @@ if(LIBINTL_FOUND)
     set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBINTL_LIBRARIES})
 endif()
 
-# compiler Enchant if available
+# compile Enchant if available
 if(ENCHANT_FOUND)
     include_directories(
         ${ENCHANT_INCLUDE_DIR}
