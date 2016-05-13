@@ -12,6 +12,7 @@ include(CheckLibraryExists)
 include(CheckTypeSize)
 include(CheckStructMember)
 include(CheckCXXSourceCompiles)
+include(CheckPrototypeDefinition)
 
 # The FindKDE4.cmake module sets _KDE4_PLATFORM_DEFINITIONS with
 # definitions like _GNU_SOURCE that are needed on each platform.
@@ -74,7 +75,6 @@ check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore,
 check_function_exists(fdatasync        HAVE_FDATASYNC)                # kdecore, kate
 
 check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave
-check_function_exists(_NSGetEnviron   HAVE_NSGETENVIRON)              # kinit, config.h
 check_function_exists(gettimeofday    HAVE_GETTIMEOFDAY)              # kpty, kdeui, some tests
 check_function_exists(getgrouplist    HAVE_GETGROUPLIST)              # kio
 

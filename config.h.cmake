@@ -73,7 +73,6 @@
 #cmakedefine   HAVE_UNSETENV 1
 #cmakedefine   HAVE_USLEEP 1
 #cmakedefine   HAVE_VSNPRINTF 1
-#cmakedefine   HAVE_NSGETENVIRON 1
 #cmakedefine   HAVE_GETTIMEOFDAY 1
 #cmakedefine   HAVE_GETGROUPLIST 1
 #cmakedefine   HAVE_TRUNC 1
@@ -108,12 +107,6 @@ int vsnprintf(char *str, size_t n, char const *fmt, va_list ap);
 extern "C"
 #endif
 int snprintf(char *str, size_t n, char const *fmt, ...);
-#endif
-
-#if defined(HAVE_NSGETENVIRON) && defined(HAVE_CRT_EXTERNS_H)
-# include <sys/time.h>
-# include <crt_externs.h>
-# define environ (*_NSGetEnviron())
 #endif
 
 #cmakedefine GETMNTINFO_USES_STATVFS 1
