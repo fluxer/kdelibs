@@ -23,8 +23,6 @@ if(git_revision)
     set(KDE_VERSION_STRING "${KDE_VERSION_STRING} (${git_revision})")
 endif()
 
-set(KDE_DISTRIBUTION_TEXT "compiled sources" CACHE STRING "Indicate the distribution in bug reports" )
-
 set(KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 
 set(KDE_NO_DEPRECATED TRUE CACHE BOOL "Whether deprecated functionality is desired")
@@ -252,7 +250,6 @@ include(ConfigureChecks.cmake)
 # now create config headers
 configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h)
-configure_file(config-compiler.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-compiler.h)
 configure_file(config-pty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-pty.h)
 configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h)
 
