@@ -248,38 +248,16 @@ void KToolInvocation::invokeHelp( const QString& anchor,
         url.addQueryItem(QString::fromLatin1("anchor"), anchor);
     }
 
-    // launch a browser for URIs not handled by khelpcenter
+#warning launch a KDE browser for URIs that require KIO slave support
+/*
+    // launch a KDE browser for URIs that require KIO slave support
     // (following KCMultiDialog::slotHelpClicked())
-    if (!(url.protocol() == QLatin1String("help") || url.protocol() == QLatin1String("man") || url.protocol() == QLatin1String("info"))) {
+    if (url.protocol() == QLatin1String("help") || url.protocol() == QLatin1String("man") || url.protocol() == QLatin1String("info")) {
         invokeBrowser(url.url());
         return;
     }
-
-    QDBusInterface *iface = new QDBusInterface(QLatin1String("org.kde.khelpcenter"),
-                                               QLatin1String("/KHelpCenter"),
-                                               QLatin1String("org.kde.khelpcenter.khelpcenter"),
-                                               QDBusConnection::sessionBus());
-    if ( !iface->isValid() )
-    {
-        QString error;
-        if (startServiceByDesktopName(QLatin1String("khelpcenter"), url.url(), &error, 0, 0, startup_id, false))
-        {
-            KMessage::message(KMessage::Error,
-                              i18n("Could not launch the KDE Help Center:\n\n%1", error),
-                              i18n("Could not Launch Help Center"));
-            delete iface;
-	    return;
-        }
-
-        delete iface;
-        iface = new QDBusInterface(QLatin1String("org.kde.khelpcenter"),
-                                   QLatin1String("/KHelpCenter"),
-                                   QLatin1String("org.kde.khelpcenter.khelpcenter"),
-                                   QDBusConnection::sessionBus());
-    }
-
-    iface->call(QString::fromLatin1("openUrl"), url.url(), startup_id );
-    delete iface;
+*/
+    invokeBrowser(url.url());
 }
 
 void KToolInvocation::invokeMailer(const QString &address, const QString &subject, const QByteArray& startup_id)
