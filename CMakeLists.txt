@@ -46,7 +46,7 @@ if(UNIX AND Q_WS_X11)
     endif(NOT XCB_FOUND)
 endif(UNIX AND Q_WS_X11)
 
-# required features:
+# required features
 find_package(Perl)
 set_package_properties(Perl PROPERTIES
     URL "http://www.perl.org"
@@ -70,14 +70,7 @@ set_package_properties(SharedMimeInfo PROPERTIES
     PURPOSE "Allows KDE applications to determine file types"
 )
 
-find_package(MPV)
-set_package_properties(MPV PROPERTIES
-    DESCRIPTION "A fork of mplayer2 and MPlayer"
-    URL "https://mpv.io/"
-    TYPE REQUIRED
-)
-
-#optional features
+# optional features
 if(X11_FOUND)
     #X11_Xrender discovery is done by FindX11
     add_feature_info("X Rendering Extension (libXrender)" X11_Xrender_FOUND "Support for compositing, rendering operations, and alpha-blending. STRONGLY RECOMMENDED")
@@ -120,6 +113,14 @@ set_package_properties(Strigi PROPERTIES
     URL "http://strigi.sourceforge.net"
     TYPE RECOMMENDED
     PURPOSE "Required by some critical kioslaves"
+)
+
+macro_optional_find_package(MPV)
+set_package_properties(MPV PROPERTIES
+    DESCRIPTION "A fork of mplayer2 and MPlayer"
+    URL "https://mpv.io/"
+    TYPE RECOMMENDED
+    PURPOSE "Media preview, sound notifications, etc."
 )
 
 macro_optional_find_package(FAM)

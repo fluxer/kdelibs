@@ -1,9 +1,11 @@
-include_directories(
-    ${MPV_INCLUDES}
-)
+set(kmediaplayer_OPTIONAL_LIBS)
+if(MPV_FOUND)
+    include_directories(${MPV_INCLUDES})
+    add_definitions(-DHAVE_MPV)
+    set(kmediaplayer_OPTIONAL_LIBS ${MPV_LIBRARIES})
+endif()
 
 add_definitions(
-    -DMAKE_KMEDIAPLAYER_LIB
     -DKDE_DEFAULT_DEBUG_AREA=940
 )
 
@@ -16,10 +18,10 @@ set(kmediaplayer_LIB_SRCS
 add_library(kmediaplayer ${LIBRARY_TYPE} ${kmediaplayer_LIB_SRCS})
 
 target_link_libraries(kmediaplayer
-    ${MPV_LIBRARIES}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KFILE_LIBS}
+    ${kmediaplayer_OPTIONAL_LIBS}
 )
 
 set_target_properties(kmediaplayer PROPERTIES

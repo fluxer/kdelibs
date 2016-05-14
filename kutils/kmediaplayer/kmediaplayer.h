@@ -25,7 +25,7 @@
 #include <kmimetype.h>
 #include <kmediaplayer_export.h>
 
-#ifdef MAKE_KMEDIAPLAYER_LIB
+#ifdef kmediaplayer_EXPORTS
 typedef struct mpv_handle mpv_handle;
 #endif
 
@@ -270,9 +270,9 @@ private slots:
     void _processHandleEvents();
 
 private:
-#ifdef MAKE_KMEDIAPLAYER_LIB
+#ifdef kmediaplayer_EXPORTS
     mpv_handle *m_handle;
-#endif // MAKE_KMEDIAPLAYER_LIB
+#endif // kmediaplayer_EXPORTS
     QString m_appname;
     QSettings *m_settings;
     bool m_stopprocessing;
@@ -337,9 +337,9 @@ private slots:
     void _processHandleEvents();
 
 private:
-#ifdef MAKE_KMEDIAPLAYER_LIB
+#ifdef kmediaplayer_EXPORTS
     mpv_handle *m_handle;
-#endif // MAKE_KMEDIAPLAYER_LIB
+#endif // kmediaplayer_EXPORTS
     QString m_appname;
     QSettings *m_settings;
     bool m_stopprocessing;

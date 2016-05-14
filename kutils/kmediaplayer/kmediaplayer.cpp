@@ -24,9 +24,13 @@
 #include <QDragEnterEvent>
 #endif
 #include "kmediaplayer.h"
+
+#ifdef HAVE_MPV
 #include <mpv/client.h>
 #include <mpv/qthelper.hpp>
-
+#else
+static bool s_fullscreen = false;
+#endif // HAVE_MPV
 
 void KAbstractPlayer::load(QString path)
 {
@@ -145,7 +149,11 @@ bool KAbstractPlayer::isSeekable()
 
 bool KAbstractPlayer::isFullscreen()
 {
+#ifdef HAVE_MPV
     return property("fullscreen").toBool();
+#else
+    return s_fullscreen;
+#endif // HAVE_MPV
 }
 
 bool KAbstractPlayer::isProtocolSupported(QString protocol)
@@ -189,9 +197,14 @@ void KAbstractPlayer::setAudioOutput(QString output)
 
 void KAbstractPlayer::setFullscreen(bool fullscreen)
 {
+#ifdef HAVE_MPV
     setProperty("fullscreen", fullscreen);
+#else
+    s_fullscreen = fullscreen;
+#endif // HAVE_MPV
 }
 
+#ifdef HAVE_MPV
 /*
     Since exposing mpv_handle is not desirable and sigals/slots cannot be virtual nor multiple
     QObject inheritance works here are some pre-processor definitions used to share the code as
@@ -487,5 +500,94 @@ bool KMediaPlayer::isMimeSupported(const QString mime) const
     return mime.startsWith("audio/") || mime.startsWith("video/")
         || mime == QLatin1String("application/octet-stream");
 }
+
+#else // HAVE_MPV
+/////
+KAudioPlayer::KAudioPlayer(QObject *parent)
+    : QObject(parent)
+{
+    kWarning() << i18n("KAudioPlayer is a stub");
+}
+
+KAudioPlayer::~KAudioPlayer()
+{
+}
+
+void KAudioPlayer::command(const QVariant& command) const
+{
+    Q_UNUSED(command);
+}
+
+void KAudioPlayer::setProperty(const QString& name, const QVariant& value) const
+{
+    Q_UNUSED(name);
+    Q_UNUSED(value);
+}
+
+QVariant KAudioPlayer::property(const QString& name) const
+{
+    Q_UNUSED(name);
+    return QVariant();
+}
+
+void KAudioPlayer::setOption(const QString& name, const QVariant& value) const
+{
+    Q_UNUSED(name);
+    Q_UNUSED(value);
+}
+
+void KAudioPlayer::_processHandleEvents()
+{
+}
+
+bool KAudioPlayer::isMimeSupported(const QString mime) const
+{
+    Q_UNUSED(mime);
+    return false;
+}
+
+/////
+KMediaPlayer::KMediaPlayer(QWidget *parent)
+    : QWidget(parent)
+{
+    kWarning() << i18n("KMediaPlayer is a stub");
+}
+
+KMediaPlayer::~KMediaPlayer()
+{
+}
+
+void KMediaPlayer::command(const QVariant& command) const
+{
+    Q_UNUSED(command);
+}
+
+void KMediaPlayer::setProperty(const QString& name, const QVariant& value) const
+{
+    Q_UNUSED(name);
+    Q_UNUSED(value);
+}
+
+QVariant KMediaPlayer::property(const QString& name) const
+{
+    Q_UNUSED(name);
+    return QVariant();
+}
+
+void KMediaPlayer::setOption(const QString& name, const QVariant& value) const
+{
+}
+
+void KMediaPlayer::_processHandleEvents()
+{
+}
+
+bool KMediaPlayer::isMimeSupported(const QString mime) const
+{
+    Q_UNUSED(mime);
+    return false;
+}
+
+#endif // HAVE_MPV
 
 #include "moc_kmediaplayer.cpp"
