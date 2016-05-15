@@ -440,8 +440,8 @@ QStringList KRun::processDesktopExec(const KService &_service, const KUrl::List&
      2 << split(term) << "-e"                                    << split(cmd)
      3 << split(term) << "-e"                                    << "sh" << "-c" << cmd
 
-     4                        << "kdesu" << "-u" << user << "-c" << cmd
-     5                        << "kdesu" << "-u" << user << "-c" << ("sh -c " + quote(cmd))
+     4                        << "kdesudo" << "-u" << user << "-c" << cmd
+     5                        << "kdesudo" << "-u" << user << "-c" << ("sh -c " + quote(cmd))
      6 << split(term) << "-e" << "su"            << user << "-c" << cmd
      7 << split(term) << "-e" << "su"            << user << "-c" << ("sh -c " + quote(cmd))
 
@@ -484,7 +484,7 @@ QStringList KRun::processDesktopExec(const KService &_service, const KUrl::List&
             result << "su";
         }
         else {
-            result << KStandardDirs::findExe("kdesu") << "-u";
+            result << KStandardDirs::findExe("kdesudo") << "-u";
         }
 
         result << _service.username() << "-c";

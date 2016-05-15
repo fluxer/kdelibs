@@ -46,7 +46,7 @@
  - Two Layout problems in runAsRoot:
  	* lblBusy doesn't show
  	* d->kcm/d->rootInfo doesn't get it right when the user
-		presses cancel in the kdesu dialog
+		presses cancel in the kdesudo dialog
 
  - Resizing horizontally is contrained; minimum size is set somewhere.
  	It appears to be somehow derived from the module's size.

@@ -69,7 +69,7 @@ macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)                       # kio
 check_symbol_exists(strtoll         "stdlib.h"                 HAVE_STRTOLL)     # kioslave
 check_symbol_exists(S_ISSOCK        "sys/stat.h"               HAVE_S_ISSOCK)    # config.h
 check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)   # config.h
-check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST)# kdecore/fakes.c
+check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST)# kdecore/fakes.cpp
 
 check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore, kio
 check_function_exists(fdatasync        HAVE_FDATASYNC)                # kdecore, kate
@@ -94,7 +94,7 @@ check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)
 
 if (UNIX)
 
-  # for kdecore (kpty) & kdesu
+  # for kpty
 
   check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)
   check_include_files(util.h       HAVE_UTIL_H)
@@ -182,19 +182,19 @@ if (UNIX)
 endif (UNIX)
 
 check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore, kio
-check_function_exists(initgroups HAVE_INITGROUPS)        # kde3support/k3process, kdesu
-check_function_exists(mkstemps   HAVE_MKSTEMPS)          # dcop, kdecore/fakes.c
-check_function_exists(mkstemp    HAVE_MKSTEMP)           # kdecore/fakes.c
-check_function_exists(mkdtemp    HAVE_MKDTEMP)           # kdecore/fakes.c
-check_function_exists(strlcpy    HAVE_STRLCPY)           # kdecore/fakes.c
-check_function_exists(strlcat    HAVE_STRLCAT)           # kdecore/fakes.c
-check_function_exists(strcasestr HAVE_STRCASESTR)        # kdecore/fakes.c
+check_function_exists(initgroups HAVE_INITGROUPS)        # kdecore/fakes.cpp
+check_function_exists(mkstemps   HAVE_MKSTEMPS)          # dcop, kdecore/fakes.cpp
+check_function_exists(mkstemp    HAVE_MKSTEMP)           # kdecore/fakes.cpp
+check_function_exists(mkdtemp    HAVE_MKDTEMP)           # kdecore/fakes.cpp
+check_function_exists(strlcpy    HAVE_STRLCPY)           # kdecore/fakes.cpp
+check_function_exists(strlcat    HAVE_STRLCAT)           # kdecore/fakes.cpp
+check_function_exists(strcasestr HAVE_STRCASESTR)        # kdecore/fakes.cpp
 check_symbol_exists(strcasestr string.h          HAVE_STRCASESTR_PROTO)
-check_function_exists(setenv     HAVE_SETENV)            # kdecore/fakes.c
-check_function_exists(seteuid    HAVE_SETEUID)           # kdecore/fakes.c
+check_function_exists(setenv     HAVE_SETENV)            # kdecore/fakes.cpp
+check_function_exists(seteuid    HAVE_SETEUID)           # kdecore/fakes.cpp
 check_function_exists(setmntent  HAVE_SETMNTENT)         # solid, kio, kdecore
-check_function_exists(unsetenv   HAVE_UNSETENV)          # kdecore/fakes.c
-check_function_exists(usleep     HAVE_USLEEP)            # kdecore/fakes.c, kdeui/qxembed
+check_function_exists(unsetenv   HAVE_UNSETENV)          # kdecore/fakes.cpp
+check_function_exists(usleep     HAVE_USLEEP)            # kdecore/fakes.cpp, kdeui/qxembed
 
 # check for prototypes [for functions provided by kdefakes when not available]
 

@@ -111,8 +111,8 @@ void KRunUnitTest::testProcessDesktopExec()
             "/bin/sh -c 'echo $PWD '", // 1
             "x-term -T ' - just_a_test' -e /bin/date -u", // 2
             "x-term -T ' - just_a_test' -e /bin/sh -c 'echo $PWD '", // 3
-            /* kdesu */ " -u sprallo -c '/bin/date -u'", // 4
-            /* kdesu */ " -u sprallo -c '/bin/sh -c '\\''echo $PWD '\\'''", // 5
+            /* kdesudo */ " -u sprallo -c '/bin/date -u'", // 4
+            /* kdesudo */ " -u sprallo -c '/bin/sh -c '\\''echo $PWD '\\'''", // 5
             "x-term -T ' - just_a_test' -e su sprallo -c '/bin/date -u'", // 6
             "x-term -T ' - just_a_test' -e su sprallo -c '/bin/sh -c '\\''echo $PWD '\\'''", // 7
         };
@@ -131,9 +131,9 @@ void KRunUnitTest::testProcessDesktopExec()
                 int pt = ex+te*2+su*4;
                 QString exe;
                 if (pt == 4 || pt == 5) {
-                    exe = KStandardDirs::findExe("kdesu");
+                    exe = KStandardDirs::findExe("kdesudo");
                     if (exe.isEmpty()) {
-                        qWarning() << "kdesu not found, skipping test";
+                        qWarning() << "kdesudo not found, skipping test";
                         continue;
                     }
                 }

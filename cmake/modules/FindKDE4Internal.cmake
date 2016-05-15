@@ -78,7 +78,6 @@
 #  KDE4_KPRINTUTILS_LIBS      - the kprintutils library and all depending libraries
 #  KDE4_KFILE_LIBS            - the kfile library and all depending libraries
 #  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
-#  KDE4_KDESU_LIBS            - the kdesu library and all depending libraries
 #  KDE4_KPTY_LIBS             - the kpty library and all depending libraries
 #  KDE4_THREADWEAVER_LIBS     - the threadweaver library and all depending libraries
 #  KDE4_SOLID_LIBS            - the solid library and all depending libraries
@@ -406,7 +405,6 @@ set(_kde_libraries
     kdcraw
     kdeclarative
     kdecore
-    kdesu
     kdeui
     kdewebkit
     kdnssd

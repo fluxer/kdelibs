@@ -1420,15 +1420,15 @@ static void setupX()
     XSetIOErrorHandler(kdeinit_xio_errhandler);
     XSetErrorHandler(kdeinit_x_errhandler);
 /*
-    Handle the tricky case of running via kdesu/su/sudo/etc. There the usual case
-    is that kdesu (etc.) creates a file with xauth information, sets XAUTHORITY,
+    Handle the tricky case of running via kdesudo/su/sudo/etc. There the usual case
+    is that kdesudo (etc.) creates a file with xauth information, sets XAUTHORITY,
     runs the command and removes the xauth file after the command finishes. However,
     dbus and kdeinit daemon currently don't clean up properly and keeping running.
-    Which means that running a KDE app via kdesu the second time talks to kdeinit
+    Which means that running a KDE app via kdesudo the second time talks to kdeinit
     with obsolete xauth information, which makes it unable to connect to X or launch
     any X11 applications.
     Even fixing the cleanup probably wouldn't be sufficient, since it'd be possible to
-    launch one kdesu session, another one, exit the first one and the app from the second
+    launch one kdesudo session, another one, exit the first one and the app from the second
     session would be using kdeinit from the first one.
     So the trick here is to duplicate the xauth file to another file in KDE's tmp
     location, make the file have a consistent name so that future sessions will use it

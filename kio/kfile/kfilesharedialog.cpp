@@ -199,7 +199,7 @@ void KFileSharePropsPlugin::slotConfigureFileSharing()
     if (d->m_configProc) return;
 
     d->m_configProc = new QProcess(this);
-    if (!d->m_configProc->startDetached(KStandardDirs::findExe("kdesu"), QStringList() << "kcmshell4" << "fileshare"))
+    if (!d->m_configProc->startDetached(KStandardDirs::findExe("kdesudo"), QStringList() << "kcmshell4" << "fileshare"))
     {
        delete d->m_configProc;
        d->m_configProc = 0;

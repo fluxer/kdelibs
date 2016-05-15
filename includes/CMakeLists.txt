@@ -419,14 +419,9 @@ install(
     KWebView
     KWebPluginFactory
     KWebWallet
-    KDEsuClient
     KPty
     KPtyDevice
     KPtyProcess
-    PtyProcess
-    SshProcess
-    StubProcess
-    SuProcess
     DESTINATION ${INCLUDE_INSTALL_DIR}/KDE
     COMPONENT Devel
 )

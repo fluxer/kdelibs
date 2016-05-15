@@ -350,6 +350,7 @@ void KCMultiDialog::slotHelpClicked()
     }
   }
 
+#warning this can make use of KToolInvocation::invokeHelp()
   KUrl docUrl( KUrl( "help:/" ), docPath );
   KToolInvocation::invokeBrowser( docUrl.url() );
 }
