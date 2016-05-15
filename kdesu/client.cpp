@@ -397,23 +397,13 @@ int KDEsuClient::stopServer()
     return command("STOP\n");
 }
 
-static QString findDaemon()
-{
-    const QString daemon = KStandardDirs::locate("exe", "kdesud");
-
-    if (daemon.isEmpty())
-    {
-        kWarning(kdesuDebugArea()) << "daemon not found.";
-    }
-    return daemon;
-}
-
 bool KDEsuClient::isServerSGID()
 {
-    if (d->daemon.isEmpty())
-       d->daemon = findDaemon();
-    if (d->daemon.isEmpty())
+    d->daemon = KStandardDirs::locate("exe", "kdesud");
+    if (d->daemon.isEmpty()) {
+       kWarning(kdesuDebugArea()) << "daemon not found.";
        return false;
+    }
 
     QT_STATBUF sbuf;
     if (QT_STAT(QFile::encodeName(d->daemon), &sbuf) < 0)
@@ -426,10 +416,11 @@ bool KDEsuClient::isServerSGID()
 
 int KDEsuClient::startServer()
 {
-    if (d->daemon.isEmpty())
-       d->daemon = findDaemon();
-    if (d->daemon.isEmpty())
+    d->daemon = KStandardDirs::locate("exe", "kdesud");
+    if (d->daemon.isEmpty()) {
+       kWarning(kdesuDebugArea()) << "daemon not found.";
        return -1;
+    }
 
     if (!isServerSGID()) {
         kWarning(kdesuDebugArea()) << "kdesud not setgid!";
