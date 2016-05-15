@@ -132,7 +132,7 @@ target_link_libraries(kdecore-kmimeglobsfileparsertest ${KDE4_KDECORE_LIBS} ${QT
 ########### kfiltertest ###############
 
 # compile httpfilter.cpp into the test since it's not part of kdelibs
-# (only par of kio_http and kmultipart)
+# (only part of kio_http)
 set(kfiltertest_SRCS kfiltertest.cpp ../../kio/httpfilter/httpfilter.cc)
 include_directories( ${CMAKE_SOURCE_DIR}/kio/httpfilter )
 kde4_add_test(kdecore-kfiltertest ${kfiltertest_SRCS})

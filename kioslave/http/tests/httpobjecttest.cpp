@@ -30,7 +30,7 @@ QTEST_KDEMAIN(HeaderObjectTest, NoGUI)
 
 static void runTest()
 {
-    TestHTTPProtocol protocol("http", QByteArray(), "local://");
+    TestHTTPProtocol protocol("http", QByteArray(), "tcp://");
 
     protocol.testParseContentDisposition(QLatin1String("inline; filename=\"foo.pdf\""));
 }

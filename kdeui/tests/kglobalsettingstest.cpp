@@ -61,8 +61,8 @@ void KGlobalSettingsTest::initTestCase()
     QSignalSpy appearance_spy( settings, SIGNAL(appearanceChanged()) )
 
 static void callClient( const QString& opt, const char* signalToWaitFor ) {
-    QVERIFY(QFile::exists("./kdeui-kglobalsettingsclient"));
-    QVERIFY(QProcess::execute("./kdeui-kglobalsettingsclient", QStringList(opt)));
+    QVERIFY(QFile::exists(KDEBINDIR "/kdeui-kglobalsettingsclient"));
+    QVERIFY(QProcess::execute(KDEBINDIR "/kdeui-kglobalsettingsclient", QStringList(opt)) == 0);
 
     QVERIFY(QTest::kWaitForSignal(KGlobalSettings::self(), signalToWaitFor, 5000));
 }

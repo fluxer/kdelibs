@@ -294,8 +294,6 @@ void KServiceTest::testServiceTypeTraderForReadOnlyPart()
 
     // Only test for parts provided by kdelibs, or better, by this unittest:
     QVERIFY( offerListHasService( offers, "fakepart.desktop" ) );
-
-    QVERIFY( offerListHasService( offers, "kmultipart.desktop" ) );
     QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) );
 
     // Check ordering according to InitialPreference
@@ -398,9 +396,8 @@ void KServiceTest::testWriteServiceTypeProfile()
     //foreach( KService::Ptr service, offers )
     //    qDebug( "%s %s", qPrintable( service->name() ), qPrintable( service->entryPath() ) );
 
-    QVERIFY( offers.count() >= 2 ); // at least 2, even
+    QVERIFY( offers.count() >= 1 ); // at least 1, even
     QCOMPARE( offers[0]->entryPath(), QString("fakepart.desktop") );
-    QVERIFY( offerListHasService( offers, "kmultipart.desktop" ) ); // should still be somewhere in there
     QVERIFY( !offerListHasService( offers, "kwebkitpart.desktop" ) ); // it got disabled above
 }
 
