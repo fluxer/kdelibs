@@ -4,6 +4,11 @@ add_feature_info("prctl-dumpable" HAVE_PR_SET_DUMPABLE "Used to disallow ptracin
 
 configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
+include_directories(
+    ${KDE4_KDECORE_INCLUDES}
+    ${KDE4_KDEUI_INCLUDES}
+)
+
 #  set(kt4_SRC app.cpp mainwindow.cpp core.cpp view.cpp viewmodel.cpp main.cpp)
 set(KDESUDO_SRC
     main.cpp
@@ -14,6 +19,7 @@ set(KDESUDO_SRC
 add_executable(kdesudo ${KDESUDO_SRC})
 
 target_link_libraries(kdesudo ${KDE4_KDEUI_LIBS})
+
 install(
     TARGETS kdesudo
     ${INSTALL_TARGETS_DEFAULT_ARGS}

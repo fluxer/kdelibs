@@ -32,16 +32,16 @@
 #include <QtCore/QTemporaryFile>
 #include <QtCore/QTextCodec>
 
-#include <KApplication>
-#include <KCmdLineArgs>
-#include <KDebug>
-#include <KLocale>
-#include <KMessageBox>
-#include <KPasswordDialog>
-#include <KPushButton>
-#include <KShell>
-#include <KStandardDirs>
-#include <KWindowSystem>
+#include <kapplication.h>
+#include <kcmdlineargs.h>
+#include <kdebug.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kpassworddialog.h>
+#include <kpushbutton.h>
+#include <kshell.h>
+#include <kstandarddirs.h>
+#include <kwindowsystem.h>
 
 #include <sys/stat.h>
 #include <sys/types.h>

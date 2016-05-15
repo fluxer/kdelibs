@@ -21,18 +21,17 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <KCmdLineArgs>
-#include <KAboutData>
-#include <KLocale>
-#include <KMessageBox>
-#include <KDesktopFile>
-#include <KIconLoader>
-#include <KIconTheme>
-#include <KGlobal>
-#include <KStandardDirs>
-#include <KProcess>
-#include <KDebug>
-#include <KApplication>
+#include <kcmdlineargs.h>
+#include <kaboutdata.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kdesktopfile.h>
+#include <kiconloader.h>
+#include <kicontheme.h>
+#include <kglobal.h>
+#include <kstandarddirs.h>
+#include <kdebug.h>
+#include <kapplication.h>
 
 #include <config.h>
 

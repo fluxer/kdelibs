@@ -25,11 +25,10 @@
 #include <config.h>
 #endif
 
+#include <QtCore/QProcess>
 #include <QtGui/QWidget>
-#include <QtCore/QString>
 
-#include <QProcess>
-#include <KPasswordDialog>
+#include <kpassworddialog.h>
 #include <knewpassworddialog.h>
 
 #include "kcookie.h"
