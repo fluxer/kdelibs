@@ -3,17 +3,31 @@ writing a new handler.
 
 Current formats include:
 
-JPEG	<read> <write>
-JPEG2000 <read> <write>
-XV	<read> <write>
-EPS	<read> <write>
-NETPBM	<incomplete>
-PNG	<read> <write, only with newer libraries>
-TIFF	<read>
-TGA	<read> <write>
-PCX	<read> <write>
-SGI	<read> <write>   (images/x-rgb: *.bw, *.rgb, *.rgba, *.sgi)
-DDS	<read>
-XCF	<read>
-RAS     <read> (images/x-sun-raster: *.ras, *.sun, *.im1, *.im8, *.im8g...)
-
+BMP     <read> <write>
+DDS     <read>
+EPS     <read> <write>
+EXR     <read>
+GIF     <read>
+HDR     <read>
+ICO     <read>
+JP2     <read> <write>
+JPEG    <read> <write>
+MNG     <read> <write>
+PBM     <read> <write>
+PCX     <read> <write>
+PGM     <read> <write>
+PIC     <read> <write>
+PNG     <read> <write, only with newer libraries\>
+PNM     <read>
+PPM     <read> <write>
+PSD     <read>
+RAS     <read>
+RGB     <read> <write>
+SVG     <read>
+TGA     <read> <write>
+TIFF    <read> <write>
+WEBP    <read> <write>
+XBM     <read> <write>
+XCF     <read>
+XPM     <read> <write>
+XV      <read> <write>
