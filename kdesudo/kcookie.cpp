@@ -16,8 +16,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
-#include <QtCore/QBool>
-#include <QtCore/Q_PID>
+#include <QtCore/QProcess>
 
 #include <kdebug.h>
 

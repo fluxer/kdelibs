@@ -11,7 +11,7 @@
 #ifndef __KCookie_h_Included__
 #define __KCookie_h_Included__
 
-#include <QtCore/QByteRef>
+#include <QtCore/QByteArray>
 
 
 namespace KDESu
