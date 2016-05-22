@@ -306,10 +306,7 @@ class KTEXTEDITOR_EXPORT Cursor
      * kDebug() stream operator.  Writes this cursor to the debug output in a nicely formatted way.
      */
     inline friend QDebug operator<< (QDebug s, const Cursor& cursor) {
-      if (&cursor)
-        s.nospace() << "(" << cursor.line() << ", " << cursor.column() << ")";
-      else
-        s.nospace() << "(null cursor)";
+      s.nospace() << "(" << cursor.line() << ", " << cursor.column() << ")";
       return s.space();
     }
 
