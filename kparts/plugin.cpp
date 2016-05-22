@@ -89,17 +89,13 @@ QList<Plugin::PluginInfo> Plugin::pluginInfos(const KComponentData &componentDat
 
   QList<PluginInfo> plugins;
 
-  // TODO KDE5: change * into *.rc and remove test for .desktop from the for loop below.
   const QStringList pluginDocs = componentData.dirs()->findAllResources(
-    "data", componentData.componentName()+"/kpartplugins/*", KStandardDirs::Recursive );
+    "data", componentData.componentName()+"/kpartplugins/*.rc", KStandardDirs::Recursive );
 
   QMap<QString,QStringList> sortedPlugins;
   const QStringList dummy;
   foreach ( const QString pIt, pluginDocs )
   {
-      if ( pIt.endsWith(QLatin1String( ".desktop" ) ) )
-          continue;
-
       QFileInfo fInfo( pIt );
       QMap<QString,QStringList>::Iterator mapIt = sortedPlugins.find( fInfo.fileName() );
       if ( mapIt == sortedPlugins.end() )
