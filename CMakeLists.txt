@@ -54,14 +54,6 @@ set_package_properties(Perl PROPERTIES
     PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts"
 )
 
-find_package(Sudo)
-set_package_properties(Sudo PROPERTIES
-    DESCRIPTION "Sudo allows a system administrator to delegate authority to give certain users"
-    URL "http://www.sudo.ws/"
-    TYPE RUNTIME
-    PURPOSE "Needed for kdesudo to operate"
-)
-
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES
     DESCRIPTION "Support for gzip compressed files and data streams"
@@ -274,7 +266,6 @@ add_subdirectory( kdcraw )
 add_subdirectory( kdeclarative )
 add_subdirectory( kdecore )
 add_subdirectory( kded )
-add_subdirectory( kdesudo )
 add_subdirectory( kdeui )
 if(QT_QTWEBKIT_FOUND)
     add_subdirectory( kdewebkit )
