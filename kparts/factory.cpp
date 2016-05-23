@@ -32,7 +32,7 @@
 using namespace KParts;
 
 Factory::Factory( QObject *parent )
-: KLibFactory( 0, 0, parent )
+: KPluginFactory( 0, 0, parent )
 {
 }
 
@@ -44,7 +44,7 @@ Part *Factory::createPart( QWidget *parentWidget, QObject *parent, const char *c
 {
     Part* part = createPartObject( parentWidget, parent, classname, args );
     if ( part )
-	emit objectCreated( part );
+        emit objectCreated( part );
     return part;
 }
 
@@ -57,7 +57,7 @@ KComponentData Factory::partComponentDataFromLibrary( const QString &libraryName
 {
     KPluginLoader loader( libraryName );
 
-    KLibFactory *factory = loader.factory();
+    KPluginFactory *factory = loader.factory();
     if ( !factory )
         return KComponentData();
     KParts::Factory *pfactory = dynamic_cast<KParts::Factory *>( factory );

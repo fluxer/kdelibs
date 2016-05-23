@@ -44,7 +44,7 @@ public:
      * @param autodelete if true, @p dev is deleted when the filter is deleted
      */
     void setDevice( QIODevice * dev, bool autodelete = false );
-    // Note that this isn't in the constructor, because of KLibFactory::create,
+    // Note that this isn't in the constructor, because of KPluginFactory::create,
     // but it should be called before using the filterbase !
 
     /**

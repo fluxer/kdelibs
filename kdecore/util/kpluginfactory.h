@@ -457,8 +457,6 @@ private:
     void registerPlugin(const QString &keyword, const QMetaObject *metaObject, CreateInstanceFunction instanceFunction);
 };
 
-typedef KPluginFactory KLibFactory;
-
 template<typename T>
 inline T *KPluginFactory::create(QObject *parent, const QVariantList &args)
 {
