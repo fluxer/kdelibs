@@ -45,14 +45,25 @@ bool XmppEmoticons::removeEmoticon(const QString &emo)
         return false;
 
     QDomNodeList nl = fce.childNodes();
-    for (uint i = 0; i < nl.length(); i++) {
+    // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for (int i = 0; i < nl.length(); i++ )
+#else
+    for (uint i = 0; i < nl.length(); i++ )
+#endif
+    {
         QDomElement de = nl.item(i).toElement();
         if (!de.isNull() && de.tagName() == "icon") {
             QDomNodeList snl = de.childNodes();
             QStringList sl;
             QStringList mime;
 
-            for (uint k = 0; k < snl.length(); k++) {
+#ifdef QT_KATIE
+            for (int k = 0; k < nl.length(); k++ )
+#else
+            for (uint k = 0; k < nl.length(); k++ )
+#endif
+            {
                 QDomElement sde = snl.item(k).toElement();
 
                 if (!sde.isNull() && sde.tagName() == "object" && sde.text() == emoticon) {
@@ -159,7 +170,13 @@ bool XmppEmoticons::loadTheme(const QString &path)
 
     clearEmoticonsMap();
 
-    for (uint i = 0; i < nl.length(); i++) {
+    // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for (int i = 0; i < nl.length(); i++ )
+#else
+    for (uint i = 0; i < nl.length(); i++ )
+#endif
+    {
         QDomElement de = nl.item(i).toElement();
 
         if (!de.isNull() && de.tagName() == "icon") {
@@ -169,7 +186,13 @@ bool XmppEmoticons::loadTheme(const QString &path)
             QStringList mime;
             mime << "image/png" << "image/gif" << "image/bmp" << "image/jpeg";
 
-            for (uint k = 0; k < snl.length(); k++) {
+                // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+            for (int k = 0; k < snl.length(); k++ )
+#else
+            for (uint k = 0; k < snl.length(); k++ )
+#endif
+            {
                 QDomElement sde = snl.item(k).toElement();
 
                 if (!sde.isNull() && sde.tagName() == "text") {

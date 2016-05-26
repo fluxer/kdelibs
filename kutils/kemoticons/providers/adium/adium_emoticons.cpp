@@ -45,7 +45,13 @@ bool AdiumEmoticons::removeEmoticon(const QString &emo)
     }
 
     QDomNodeList nl = fce.childNodes();
-    for (uint i = 0; i < nl.length(); i++) {
+    // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for (int i = 0; i < nl.length(); i++ )
+#else
+    for (uint i = 0; i < nl.length(); i++ )
+#endif
+    {
         QDomElement de = nl.item(i).toElement();
         if (!de.isNull() && de.tagName() == "key" && (de.text() == emoticon)) {
             QDomElement dict = de.nextSiblingElement();
@@ -165,7 +171,13 @@ bool AdiumEmoticons::loadTheme(const QString &path)
 
     clearEmoticonsMap();
     QString name;
-    for (uint i = 0; i < nl.length(); i++) {
+    // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for (int i = 0; i < nl.length(); i++ )
+#else
+    for (uint i = 0; i < nl.length(); i++ )
+#endif
+    {
         QDomElement de = nl.item(i).toElement();
 
         if (!de.isNull() && de.tagName() == "key") {
@@ -176,7 +188,12 @@ bool AdiumEmoticons::loadTheme(const QString &path)
             QDomNodeList snl = arr.childNodes();
             QStringList sl;
 
-            for (uint k = 0; k < snl.length(); k++) {
+#ifdef QT_KATIE
+            for (int k = 0; k < snl.length(); k++ )
+#else
+            for (uint k = 0; k < snl.length(); k++ )
+#endif
+            {
                 QDomElement sde = snl.item(k).toElement();
 
                 if (!sde.isNull() && sde.tagName() == "string") {

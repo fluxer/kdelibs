@@ -101,9 +101,13 @@ static ActionPropertiesMap extractActionProperties(const QDomDocument &doc)
       propIt = properties.insert( actionName, QMap<QString, QString>() );
 
     const QDomNamedNodeMap attributes = e.attributes();
-    const uint attributeslength = attributes.length();
 
-    for ( uint i = 0; i < attributeslength; ++i )
+      // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+      for (int i = 0; i < attributes.length(); i++ )
+#else
+      for (uint i = 0; i < attributes.length(); i++ )
+#endif
     {
       const QDomAttr attr = attributes.item( i ).toAttr();
 

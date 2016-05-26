@@ -589,7 +589,12 @@ void KXMLGUIFactoryPrivate::applyActionProperties( const QDomElement &actionProp
 void KXMLGUIFactoryPrivate::configureAction( QAction *action, const QDomNamedNodeMap &attributes,
         ShortcutOption shortcutOption )
 {
-    for ( uint i = 0; i < attributes.length(); i++ )
+      // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+      for (int i = 0; i < attributes.length(); i++ )
+#else
+      for (uint i = 0; i < attributes.length(); i++ )
+#endif
     {
         QDomAttr attr = attributes.item( i ).toAttr();
         if ( attr.isNull() )

@@ -45,7 +45,13 @@ bool KdeEmoticons::removeEmoticon(const QString &emo)
         return false;
 
     QDomNodeList nl = fce.childNodes();
-    for (uint i = 0; i < nl.length(); i++) {
+    // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for (int i = 0; i < nl.length(); i++ )
+#else
+    for (uint i = 0; i < nl.length(); i++ )
+#endif
+    {
         QDomElement de = nl.item(i).toElement();
         if (!de.isNull() && de.tagName() == "emoticon" && (de.attribute("file") == emoticon || de.attribute("file") == QFileInfo(emoticon).baseName())) {
             fce.removeChild(de);
@@ -138,14 +144,25 @@ bool KdeEmoticons::loadTheme(const QString &path)
 
     clearEmoticonsMap();
 
-    for (uint i = 0; i < nl.length(); i++) {
+    // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for (int i = 0; i < nl.length(); i++ )
+#else
+    for (uint i = 0; i < nl.length(); i++ )
+#endif
+    {
         QDomElement de = nl.item(i).toElement();
 
         if (!de.isNull() && de.tagName() == "emoticon") {
             QDomNodeList snl = de.childNodes();
             QStringList sl;
 
-            for (uint k = 0; k < snl.length(); k++) {
+#ifdef QT_KATIE
+            for (int k = 0; i < snl.length(); k++ )
+#else
+            for (uint k = 0; i < snl.length(); k++ )
+#endif
+            {
                 QDomElement sde = snl.item(k).toElement();
 
                 if (!sde.isNull() && sde.tagName() == "string") {
