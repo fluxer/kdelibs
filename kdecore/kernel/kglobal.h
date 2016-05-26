@@ -391,25 +391,6 @@ namespace KGlobal
      *
      * To be used inside functions(!) like:
      * @code
-     * static const QString &myString = KGlobal::staticQString("myText");
-     * @endcode
-     *
-     * @attention Do @b NOT use code such as:
-     * @code
-     * static QString myString = KGlobal::staticQString("myText");
-     * @endcode
-     * This creates a static object (instead of a static reference)
-     * and as you know static objects are EVIL.
-     * @param str the string to create
-     * @return the static string
-     */
-    KDECORE_EXPORT const QString& staticQString(const char *str); //krazy:exclude=constref (doesn't make sense otherwise)
-
-    /**
-     * Creates a static QString.
-     *
-     * To be used inside functions(!) like:
-     * @code
      * static const QString &myString = KGlobal::staticQString(i18n("My Text"));
      * @endcode
      *

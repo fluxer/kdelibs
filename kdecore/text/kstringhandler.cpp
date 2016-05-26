@@ -289,7 +289,7 @@ QString KStringHandler::from8Bit( const char *str )
   if (!str)
     return QString();
   if (!*str) {
-    static const QString &emptyString = KGlobal::staticQString("");
+    static const QString &emptyString = KGlobal::staticQString(QLatin1String(""));
     return emptyString;
   }
   return KStringHandler::isUtf8( str ) ?

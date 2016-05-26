@@ -264,17 +264,6 @@ void KGlobal::setLocale(KLocale *newLocale, CopyCatalogs copy)
  * Create a static QString
  *
  * To be used inside functions(!) like:
- * static const QString &myString = KGlobal::staticQString("myText");
- */
-const QString &KGlobal::staticQString(const char *str)
-{
-    return staticQString(QLatin1String(str));
-}
-
-/**
- * Create a static QString
- *
- * To be used inside functions(!) like:
  * static const QString &myString = KGlobal::staticQString(i18n("My Text"));
  */
 const QString &KGlobal::staticQString(const QString &str)
