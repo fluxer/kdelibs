@@ -822,7 +822,12 @@ bool KEditToolBarWidget::save()
 
     // Add noMerge="1" to all the menus since we are saving the merged data
     QDomNodeList menuNodes = (*it).domDocument().elementsByTagName( "Menu" );
+    // the lenght() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for (int i = 0; i < menuNodes.length(); ++i)
+#else
     for (uint i = 0; i < menuNodes.length(); ++i)
+#endif
     {
         QDomNode menuNode = menuNodes.item(i);
         QDomElement menuElement = menuNode.toElement();
