@@ -79,7 +79,7 @@ class KLocalizedStringPrivate
     int resolveInterpolation (const QString &trans, int pos,
                               const QString &lang,
                               const QString &ctry,
-                              const QString &final,
+                              const QString &finalstr,
                               QString &result,
                               bool &fallback) const;
     QVariant segmentToValue (const QString &arg) const;
@@ -269,11 +269,11 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
     }
 
     // Substitute placeholders in ordinary translation.
-    QString final = substituteSimple(trans);
+    QString finalstr = substituteSimple(trans);
     // Post-format ordinary translation.
-    final = postFormat(final, lang, QString::fromLatin1(ctxt));
+    finalstr = postFormat(finalstr, lang, QString::fromLatin1(ctxt));
 
-    return final;
+    return finalstr;
 }
 
 QString KLocalizedStringPrivate::selectForEnglish () const
@@ -367,26 +367,26 @@ QString KLocalizedStringPrivate::substituteSimple (const QString &trans,
     #endif
 
     // Assemble the final string from text segments and arguments.
-    QString final;
+    QString finalstr;
     for (int i = 0; i < plords.size(); i++)
     {
-        final.append(tsegs.at(i));
+        finalstr.append(tsegs.at(i));
         if (plords.at(i) >= args.size())
         // too little arguments
         {
             // put back the placeholder
-            final.append(QLatin1Char('%') + QString::number(plords.at(i) + 1));
+            finalstr.append(QLatin1Char('%') + QString::number(plords.at(i) + 1));
             #ifndef NDEBUG
             if (!partial)
                 // spoof the message
-                final.append(QLatin1String("(I18N_ARGUMENT_MISSING)"));
+                finalstr.append(QLatin1String("(I18N_ARGUMENT_MISSING)"));
             #endif
         }
         else
         // just fine
-            final.append(args.at(plords.at(i)));
+            finalstr.append(args.at(plords.at(i)));
     }
-    final.append(tsegs.last());
+    finalstr.append(tsegs.last());
 
     #ifndef NDEBUG
     if (!partial)
@@ -408,15 +408,15 @@ QString KLocalizedStringPrivate::substituteSimple (const QString &trans,
 
         // Some spoofs.
         if (gaps)
-            final.append(QLatin1String("(I18N_GAPS_IN_PLACEHOLDER_SEQUENCE)"));
+            finalstr.append(QLatin1String("(I18N_GAPS_IN_PLACEHOLDER_SEQUENCE)"));
         if (ords.size() < args.size())
-            final.append(QLatin1String("(I18N_EXCESS_ARGUMENTS_SUPPLIED)"));
+            finalstr.append(QLatin1String("(I18N_EXCESS_ARGUMENTS_SUPPLIED)"));
         if (!plural.isEmpty() && !numberSet)
-            final.append(QLatin1String("(I18N_PLURAL_ARGUMENT_MISSING)"));
+            finalstr.append(QLatin1String("(I18N_PLURAL_ARGUMENT_MISSING)"));
     }
     #endif
 
-    return final;
+    return finalstr;
 }
 
 QString KLocalizedStringPrivate::postFormat (const QString &text,
@@ -426,21 +426,21 @@ QString KLocalizedStringPrivate::postFormat (const QString &text,
     const KLocalizedStringPrivateStatics *s = staticsKLSP;
     QMutexLocker lock(kLocaleMutex());
 
-    QString final = text;
+    QString finalstr = text;
 
     // Transform any semantic markup into visual formatting.
     if (s->formatters.contains(lang)) {
-        final = s->formatters[lang]->format(final, ctxt);
+        finalstr = s->formatters[lang]->format(finalstr, ctxt);
     }
 
-    return final;
+    return finalstr;
 }
 
 int KLocalizedStringPrivate::resolveInterpolation (const QString &strans,
                                                    int pos,
                                                    const QString &lang,
                                                    const QString &ctry,
-                                                   const QString &final,
+                                                   const QString &finalstr,
                                                    QString &result,
                                                    bool &fallback) const
 {
@@ -513,7 +513,7 @@ int KLocalizedStringPrivate::resolveInterpolation (const QString &strans,
             else if (strans.mid(tpos, islen) == s->startInterp) { // sub-interpolation
                 QString resultLocal;
                 bool fallbackLocal;
-                tpos = resolveInterpolation(strans, tpos, lang, ctry, final,
+                tpos = resolveInterpolation(strans, tpos, lang, ctry, finalstr,
                                             resultLocal, fallbackLocal);
                 if (tpos < 0) { // unrecoverable problem in sub-interpolation
                     // Error reported in the subcall.
