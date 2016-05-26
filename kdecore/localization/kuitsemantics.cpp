@@ -1600,50 +1600,6 @@ QString KuitSemantics::format (const QString &text, const QString &ctxt) const
     return d->format(text, ctxt);
 }
 
-bool KuitSemantics::mightBeRichText (const QString &text)
-{
-    KuitSemanticsStaticData *s = semanticsStaticData;
-
-    // Check by appearance of a valid XML entity at first ampersand.
-    int p1 = text.indexOf(QLatin1Char('&'));
-    if (p1 >= 0) {
-        p1 += 1;
-        int p2 = text.indexOf(QLatin1Char(';'), p1);
-        return (p2 > p1 && s->xmlEntities.contains(text.mid(p1, p2 - p1)));
-    }
-
-    // Check by appearance of a valid Qt rich-text tag at first less-than.
-    int tlen = text.length();
-    p1 = text.indexOf(QLatin1Char('<'));
-    if (p1 >= 0) {
-        p1 += 1;
-        // Also allow first tag to be closing tag,
-        // e.g. in case the text is pieced up with list.join("</foo><foo>")
-        bool closing = false;
-        while (p1 < tlen && (text[p1].isSpace() || text[p1] == QLatin1Char('/'))) {
-            if (text[p1] == QLatin1Char('/')) {
-                if (!closing) {
-                    closing = true;
-                } else {
-                    return false;
-                }
-            }
-            ++p1;
-        }
-        for (int p2 = p1; p2 < tlen; ++p2) {
-            QChar c = text[p2];
-            if (c == QLatin1Char('>') || (!closing && c == QLatin1Char('/')) || c.isSpace()) {
-                return s->qtHtmlTagNames.contains(text.mid(p1, p2 - p1));
-            } else if (!c.isLetter()) {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    return false;
-}
-
 QString KuitSemantics::escape (const QString &text)
 {
     int tlen = text.length();

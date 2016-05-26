@@ -754,7 +754,7 @@ KLocalizedString KLocalizedString::subs (const QString &a, int fieldWidth,
                                          const QChar &fillChar) const
 {
     KLocalizedString kls(*this);
-    // if (!KuitSemantics::mightBeRichText(a)) { ...
+    // if (!Qt::mightBeRichText(a)) { ...
     // Do not try to auto-escape non-rich-text alike arguments;
     // breaks compatibility with 4.0. Perhaps for KDE 5?
     // Perhaps bad idea alltogether (too much surprise)?

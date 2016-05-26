@@ -65,11 +65,6 @@ class KuitSemantics
     ~KuitSemantics ();
 
     /**
-     * Poor man's version of Qt::mightBeRichText() (cannot link to QtGui).
-     */
-    static bool mightBeRichText (const QString &text);
-
-    /**
      * Convert &, ", ', <, > characters into XML entities
      * &amp;, &lt;, &gt;, &apos;, &quot;, respectively.
      */
