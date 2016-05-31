@@ -241,7 +241,7 @@ bool KArchive::addLocalFile( const QString& fileName, const QString& destName )
         }
 #endif
         if (symLinkTarget.isEmpty()) // Mac or Windows
-            symLinkTarget = fileInfo.symLinkTarget();
+            symLinkTarget = fileInfo.readLink();
         return writeSymLink(destName, symLinkTarget, fileInfo.owner(),
                             fileInfo.group(), fi.st_mode, fi.st_atime, fi.st_mtime,
                             fi.st_ctime);
