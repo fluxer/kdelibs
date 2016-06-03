@@ -19,7 +19,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <kdebug.h>
 #include <config.h>
 
 #include <stdlib.h>
@@ -30,10 +29,6 @@
 #include <QtCore/QString>
 #include <QtCore/QLibrary>
 #include <QtCore/QFile>
-
-/* These are to link libkio even if 'smart' linker is used */
-#include <kio/authinfo.h>
-extern "C" KIO::AuthInfo* _kioslave_init_kio() { return new KIO::AuthInfo(); }
 
 int main(int argc, char **argv)
 {

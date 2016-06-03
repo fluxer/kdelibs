@@ -85,7 +85,7 @@ install(TARGETS lnusertemp DESTINATION ${LIBEXEC_INSTALL_DIR})
 
 add_executable(kioslave kioslave.cpp)
 
-target_link_libraries(kioslave ${KDE4_KIO_LIBS})
+target_link_libraries(kioslave ${QT_QTCORE_LIBRARY})
 
 install(TARGETS kioslave DESTINATION ${LIBEXEC_INSTALL_DIR})
 
