@@ -321,8 +321,7 @@ static QStringList supportedProtocols(const KService& _service)
     QString exec = _service.exec();
     if (mx1.expandMacrosShellQuote(exec) && !mx1.hasUrls) {
         Q_ASSERT(supportedProtocols.isEmpty());   // huh? If you support protocols you need %u or %U...
-    }
-    else {
+    } else {
         if (supportedProtocols.isEmpty()) {
             // compat mode: assume KIO if not set and it's a KDE app (or a KDE service)
             const QStringList categories = _service.property("Categories").toStringList();
