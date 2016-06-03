@@ -439,11 +439,15 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         QVariant wid;
         if (parent) {
             // QVariant cannot be constructed from WId type
-            wid = static_cast<int64_t>(parent->winId());
+            wid = QVariant::fromValue(parent->winId());
         } else {
-            wid = static_cast<int64_t>(winId());
+            wid = QVariant::fromValue(winId());
         }
-        setOption("wid", wid);
+        if (wid.isValid()) {
+            setOption("wid", wid);
+        } else {
+            kWarning() << i18n("Could not get widget ID");
+        }
 
         QString globalaudio = m_settings->value("global/audiooutput", "auto").toString();
         int globalvolume = m_settings->value("global/volume", 90).toInt();
