@@ -439,9 +439,9 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         QVariant wid;
         if (parent) {
             // QVariant cannot be constructed from WId type
-            wid = QVariant::fromValue(parent->winId());
+            wid = QVariant::fromValue(static_cast<int64_t>(parent->winId()));
         } else {
-            wid = QVariant::fromValue(winId());
+            wid = QVariant::fromValue(static_cast<int64_t>(winId()));
         }
         if (wid.isValid()) {
             setOption("wid", wid);
