@@ -22,6 +22,7 @@
 
 #include <QStringList>
 #include <QFile>
+#include <QSet>
 #include <qendian.h>
 #include <QtConcurrentRun>
 
