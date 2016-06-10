@@ -128,6 +128,7 @@ set(cmakeFiles
     FindSqlite.cmake
     FindStrigi.cmake
     FindSubversionLibrary.cmake
+    FindSudo.cmake
     FindTaglib.cmake
     FindUDev.cmake
     FindUDisks2.cmake
