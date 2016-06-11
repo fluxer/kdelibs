@@ -404,46 +404,40 @@ KBookmark KBookmarkContextMenu::bookmark() const
 
 void KBookmarkMenu::slotBookmarksChanged( const QString & groupAddress )
 {
-  kDebug(7043)<<"KBookmarkMenu::slotBookmarksChanged( "<<groupAddress;
-  if ( groupAddress == m_parentAddress )
-  {
-    //kDebug(7043) << "KBookmarkMenu::slotBookmarksChanged -> setting m_bDirty on " << groupAddress;
-    m_bDirty = true;
-  }
-  else
-  {
-    // Iterate recursively into child menus
-    for ( QList<KBookmarkMenu *>::iterator it = m_lstSubMenus.begin(), end = m_lstSubMenus.end() ;
-          it != end ; ++it ) {
-      (*it)->slotBookmarksChanged( groupAddress );
+    kDebug(7043)<<"KBookmarkMenu::slotBookmarksChanged( "<<groupAddress;
+    if ( groupAddress == m_parentAddress ) {
+        //kDebug(7043) << "KBookmarkMenu::slotBookmarksChanged -> setting m_bDirty on " << groupAddress;
+        m_bDirty = true;
+    } else {
+        // Iterate recursively into child menus
+        foreach ( KBookmarkMenu *it, m_lstSubMenus ) {
+            it->slotBookmarksChanged( groupAddress );
+        }
     }
-  }
 }
 
 void KBookmarkMenu::clear()
 {
-  qDeleteAll( m_lstSubMenus );
-  m_lstSubMenus.clear();
+    qDeleteAll( m_lstSubMenus );
+    m_lstSubMenus.clear();
 
-  for ( QList<QAction *>::iterator it = m_actions.begin(), end = m_actions.end() ;
-        it != end ; ++it )
-  {
-        m_parentMenu->removeAction(*it);
-        delete *it;
-  }
+    foreach ( QAction *it, m_actions ) {
+        m_parentMenu->removeAction(it);
+        delete it;
+    }
 
-  m_parentMenu->clear();
-  m_actions.clear();
+    m_parentMenu->clear();
+    m_actions.clear();
 }
 
 void KBookmarkMenu::refill()
 {
-  //kDebug(7043) << "KBookmarkMenu::refill()";
-  if(m_bIsRoot)
-    addActions();
-  fillBookmarks();
-  if(!m_bIsRoot)
-    addActions();
+    //kDebug(7043) << "KBookmarkMenu::refill()";
+    if(m_bIsRoot)
+        addActions();
+    fillBookmarks();
+    if(!m_bIsRoot)
+        addActions();
 }
 
 void KBookmarkMenu::addOpenInTabs()
@@ -481,8 +475,8 @@ void KBookmarkMenu::addAddBookmarksList()
 
 void KBookmarkMenu::addAddBookmark()
 {
-  if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) )
-    return;
+    if( !m_pOwner || !m_pOwner->enableOption(KBookmarkOwner::ShowAddBookmark) )
+        return;
 
     if (d->addAddBookmark == 0) {
         d->addAddBookmark = m_actionCollection->addAction(
@@ -499,13 +493,13 @@ void KBookmarkMenu::addAddBookmark()
 
 void KBookmarkMenu::addEditBookmarks()
 {
-  if( ( m_pOwner && !m_pOwner->enableOption(KBookmarkOwner::ShowEditBookmark) ) )
-    return;
+    if( ( m_pOwner && !m_pOwner->enableOption(KBookmarkOwner::ShowEditBookmark) ) )
+        return;
 
-  KAction * m_paEditBookmarks = m_actionCollection->addAction(KStandardAction::EditBookmarks, "edit_bookmarks",
+    KAction * m_paEditBookmarks = m_actionCollection->addAction(KStandardAction::EditBookmarks, "edit_bookmarks",
                                                               m_pManager, SLOT(slotEditBookmarks()));
-  m_parentMenu->addAction(m_paEditBookmarks);
-  m_paEditBookmarks->setHelpText( i18n( "Edit your bookmark collection in a separate window" ) );
+    m_parentMenu->addAction(m_paEditBookmarks);
+    m_paEditBookmarks->setHelpText( i18n( "Edit your bookmark collection in a separate window" ) );
 }
 
 void KBookmarkMenu::addNewFolder()

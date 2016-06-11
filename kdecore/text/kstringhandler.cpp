@@ -261,8 +261,9 @@ bool KStringHandler::isUtf8( const char *buf )
       following = 4;
     } else if ((c & 0x02) == 0) {      /* 1111110x */
       following = 5;
-    } else
+    } else {
       return false;
+    }
 
       for (n = 0; n < following; ++n) {
         i++;

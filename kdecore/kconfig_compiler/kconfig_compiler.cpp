@@ -1211,7 +1211,7 @@ QString memberMutatorBody( CfgEntry *e, const CfgConfig &cfg )
       else
         out << enumName(e->param()) << "::enumToString[i]";
 
-        out << " )";
+    out << " )";
     }
     else
     {

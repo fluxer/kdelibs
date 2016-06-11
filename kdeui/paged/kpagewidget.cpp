@@ -116,18 +116,18 @@ void KPageWidget::removePage( KPageWidgetItem *item )
 void KPageWidget::setCurrentPage( KPageWidgetItem *item )
 {
     const QModelIndex index = d_func()->model()->index(item);
-  if ( !index.isValid() )
-    return;
+    if ( !index.isValid() )
+        return;
 
-  KPageView::setCurrentPage( index );
+    KPageView::setCurrentPage( index );
 }
 
 KPageWidgetItem* KPageWidget::currentPage() const
 {
-  const QModelIndex index = KPageView::currentPage();
+    const QModelIndex index = KPageView::currentPage();
 
-  if ( !index.isValid() )
-    return 0;
+    if ( !index.isValid() )
+        return 0;
 
     return d_func()->model()->item(index);
 }
