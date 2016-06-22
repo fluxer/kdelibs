@@ -32,6 +32,16 @@
 static bool s_fullscreen = false;
 #endif // HAVE_MPV
 
+// the video decoder may run into its own thread, make sure that does not cause trouble
+#if defined(HAVE_MPV) && defined(Q_WS_X11)
+#include <QApplication>
+static int kmp_x11_init_threads() {
+    QApplication::setAttribute(Qt::AA_X11InitThreads, true);
+    return 1;
+};
+Q_CONSTRUCTOR_FUNCTION(kmp_x11_init_threads)
+#endif
+
 void KAbstractPlayer::load(QString path)
 {
     command(QStringList() << "loadfile" << path);
