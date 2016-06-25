@@ -24,98 +24,70 @@ set(cmakeFiles
     config-alsa.h.cmake
     create_exe_symlink.cmake
     FindACL.cmake
-    FindAGG.cmake
-    FindAkode.cmake
     FindAlsa.cmake
     FindAvahi.cmake
-    FindBerkeleyDB.cmake
     FindBlueZ.cmake
     FindCanberra.cmake
-    FindCHM.cmake
-    FindCLucene.cmake
     FindDBus.cmake
     FindDBusMenuQt.cmake
     FindDjVuLibre.cmake
     FindDNSSD.cmake
     FindEigen2.cmake
     FindEigen3.cmake
-    FindEigen.cmake
     FindENCHANT.cmake
     FindEPub.cmake
     FindExiv2.cmake
     FindFAM.cmake
     FindFFmpeg.cmake
-    FindFlac.cmake
     FindFontconfig.cmake
     FindGettextPO.cmake
     FindGLIB2.cmake
     FindGMP.cmake
     FindGObject.cmake
     FindGpgme.cmake
-    FindGphoto2.cmake
     FindGSSAPI.cmake
-    FindGStreamer.cmake
     FindHUNSPELL.cmake
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
-    FindKdepim.cmake
-    FindKdepimLibs.cmake
-    FindKDevelop.cmake
-    FindKDevPlatform.cmake
     FindKipi.cmake
-    FindKopete.cmake
-    FindKorundum.cmake
     FindKSane.cmake
     FindLCMS2.cmake
-    FindLCMS.cmake
-    FindLibArt.cmake
     FindLibAttica.cmake
     FindLibGcrypt.cmake
     FindLibGPS.cmake
     FindLibintl.cmake
-    FindLibKasten.cmake
     FindLibKonq.cmake
     FindLibLZMA.cmake
     FindLibMms.cmake
     FindLibNXCL.cmake
-    FindLibOkteta.cmake
-    FindLibOktetaKasten.cmake
     FindLIBPARTED.cmake
-    FindLibPython.py
     FindLibSpectre.cmake
     FindLibSSH.cmake
     FindLibVNCServer.cmake
     FindLibXKlavier.cmake
     FindLibXslt.cmake
-    FindLinuxWirelesstools.cmake
     FindMPFR.cmake
     FindMtp.cmake
     FindMusicBrainz5.cmake
     FindMusicBrainz.cmake
     FindMySQL.cmake
     FindNetworkManager.cmake
-    FindOggVorbis.cmake
     FindOpenEXR.cmake
     FindOpenGLES.cmake
     FindPAM.cmake
     FindPCIUTILS.cmake
-    FindPCRE.cmake
     FindPoppler.cmake
     FindPopplerQt4.cmake
-    FindPostgreSQL.cmake
     FindPulseAudio.cmake
     FindPyKDE4.cmake
     FindPyKDE4.py
     FindPyQt4.cmake
     FindPyQt.py
-    FindPythonLibrary.cmake
     FindQalculate.cmake
     FindQCA2.cmake
     FindQImageBlitz.cmake
     FindQJSON.cmake
-    FindQNtrack.cmake
     FindRAW1394.cmake
-    FindRUBY.cmake
     FindSamba.cmake
     FindSane.cmake
     FindSasl2.cmake
@@ -140,7 +112,6 @@ set(cmakeFiles
     FindXine.cmake
     FindXKB.cmake
     FindXmms.cmake
-    HandleImportedTargetsInCMakeRequiredLibraries.cmake
     kde4_cmake_uninstall.cmake.in
     KDE4Defaults.cmake
     KDE4Macros.cmake
@@ -156,8 +127,6 @@ set(cmakeFiles
     MacroPushRequiredVars.cmake
     MacroWriteBasicCMakeVersionFile.cmake
     PkgConfigGetVar.cmake
-    PythonCompile.py
-    PythonMacros.cmake
     SIPMacros.cmake
     UnixAuth.cmake
 )
