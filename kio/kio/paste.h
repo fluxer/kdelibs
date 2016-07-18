@@ -23,7 +23,6 @@
 #include <kurl.h>
 
 class QWidget;
-class QMimeSource;
 
 namespace KIO {
     class Job;
