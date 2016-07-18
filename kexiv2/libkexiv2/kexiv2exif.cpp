@@ -890,7 +890,11 @@ QImage KExiv2::getExifThumbnail(bool fixOrientation) const
     {
         Exiv2::ExifThumbC thumb(d->exifMetadata());
         Exiv2::DataBuf const c1 = thumb.copy();
+#ifndef QT_KATIE
         thumbnail.loadFromData(c1.pData_, c1.size_);
+#else
+        thumbnail.loadFromData(reinterpret_cast<char*>(c1.pData_), c1.size_);
+#endif
 
         if (!thumbnail.isNull())
         {
