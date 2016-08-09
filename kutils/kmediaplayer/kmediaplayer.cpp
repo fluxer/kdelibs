@@ -42,6 +42,9 @@ static int kmp_x11_init_threads() {
 Q_CONSTRUCTOR_FUNCTION(kmp_x11_init_threads)
 #endif
 
+// QVariant cannot be constructed from WId type
+typedef quintptr WIdType;
+
 void KAbstractPlayer::load(QString path)
 {
     command(QStringList() << "loadfile" << path);
@@ -448,10 +451,9 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         mpv_set_wakeup_callback(m_handle, wakeup_media, this);
         QVariant wid;
         if (parent) {
-            // QVariant cannot be constructed from WId type
-            wid = QVariant::fromValue(static_cast<int64_t>(parent->winId()));
+            wid = QVariant::fromValue(static_cast<WIdType>(parent->winId()));
         } else {
-            wid = QVariant::fromValue(static_cast<int64_t>(winId()));
+            wid = QVariant::fromValue(static_cast<WIdType>(winId()));
         }
         if (wid.isValid()) {
             setOption("wid", wid);
