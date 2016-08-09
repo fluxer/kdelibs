@@ -36,7 +36,9 @@
     For a simpler version of this class check out @p KMediaPlayer.
 
     @code
-    KMediaWidget *player = new KMediaWidget(this);
+    QMainWindow *window = new QMainWindow();
+    window->show();
+    KMediaWidget *player = new KMediaWidget(window);
     player->open("http://video.webmfiles.org/big-buck-bunny_trailer.webm");
     @endcode
 

@@ -2,7 +2,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/..
 )
 
-foreach(mantest audio media)
+foreach(mantest media)
     kde4_add_manual_test(kmediaplayer-${mantest}
         k${mantest}widgettest.cpp
     )
