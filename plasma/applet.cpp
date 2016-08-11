@@ -2183,10 +2183,6 @@ void AppletPrivate::filterOffers(QList<KService::Ptr> &offers)
             QString reqValue;
             if (req.isValid()) {
                 reqValue = req.toString();
-            } else if (p->property("X-Plasma-API").toString().toLower() == "javascript") {
-                //TODO: be able to check whether or not a script engine provides "controled"
-                //bindings; for now we just give a pass to the qscript ones
-                reqValue = "Unused";
             }
 
             if (!(reqValue == "Optional" || reqValue == "Unused")) {
