@@ -73,14 +73,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-util.h
 )
 
-# Configure checks for sonnet
-include(sonnet/ConfigureChecks.cmake)
-configure_file(
-    sonnet/config-sonnet.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/sonnet/config-sonnet.h
-)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/sonnet)
-
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}

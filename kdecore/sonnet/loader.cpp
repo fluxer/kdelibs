@@ -18,7 +18,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
  * 02110-1301  USA
  */
-#include "config-sonnet.h"
 #include "loader_p.h"
 #include "settings_p.h"
 #include "enchantclient_p.h"
@@ -61,7 +60,6 @@ Loader::Loader()
     KConfig config(QString::fromLatin1("sonnetrc"));
     d->settings->restore(&config);
 
-#ifdef HAVE_ENCHANT
     QSpellEnchantClient *client = new QSpellEnchantClient(this);
     d->clients.append(client->name());
 
@@ -74,7 +72,6 @@ Loader::Loader()
             d->languageClients[itr].prepend(client);
         }
     }
-#endif // HAVE_ENCHANT
 }
 
 Loader::~Loader()

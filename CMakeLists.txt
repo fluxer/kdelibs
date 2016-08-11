@@ -70,6 +70,14 @@ set_package_properties(SharedMimeInfo PROPERTIES
     PURPOSE "Allows KDE applications to determine file types"
 )
 
+find_package(ENCHANT)
+set_package_properties(ENCHANT PROPERTIES
+    DESCRIPTION "Generic spell checking library"
+    URL "http://www.abisource.com/projects/enchant/"
+    TYPE REQUIRED
+    PURPOSE "Spell checking support via Enchant"
+)
+
 # optional features
 if(X11_FOUND)
     #X11_Xrender discovery is done by FindX11
