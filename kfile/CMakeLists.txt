@@ -49,10 +49,6 @@ target_link_libraries(kfile
     ${KDE4_KDECORE_LIBS}
 )
 
-if(X11_Xrender_FOUND)
-    target_link_libraries(kfile ${X11_Xrender_LIB})
-endif()
-
 set_target_properties(kfile PROPERTIES
     VERSION ${GENERIC_LIB_VERSION} 
     SOVERSION ${GENERIC_LIB_SOVERSION}
