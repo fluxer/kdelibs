@@ -108,7 +108,6 @@ set(cmakeFiles
     FindWebP.cmake
     FindX11.cmake
     FindX11_XCB.cmake
-    FindXCB.cmake
     FindXine.cmake
     FindXKB.cmake
     FindXmms.cmake
