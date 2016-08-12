@@ -318,7 +318,6 @@ if (Q_WS_X11 AND X11_Xkb_FOUND)
     include_directories (
         ${X11_Xkb_INCLUDE_PATH}
         ${X11_Xlib_INCLUDE_PATH}
-        ${XCB_INCLUDES}
     )
     set(kdeui_LIB_SRCS
         ${kdeui_LIB_SRCS}
@@ -401,10 +400,6 @@ endif()
 
 if(X11_Xrender_FOUND)
    target_link_libraries(kdeui PRIVATE ${X11_Xrender_LIB})
-endif()
-
-if(XCB_FOUND)
-   target_link_libraries(kdeui PRIVATE ${XCB_LIBRARIES})
 endif()
 
 set_target_properties(kdeui PROPERTIES

@@ -33,7 +33,6 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
-#include <xcb/xcb.h>
 #include <fixx11h.h>
 
 #include "netwm_def.h"
@@ -102,7 +101,7 @@ public:
 
        @param doActivate true to activate the window
     **/
-    NETRootInfo(Display *display, xcb_window_t supportWindow, const char *wmName,
+    NETRootInfo(Display *display, Window supportWindow, const char *wmName,
 		const unsigned long properties[], int properties_size,
                 int screen = -1, bool doActivate = true);
 
@@ -164,14 +163,14 @@ public:
 
        @return the id of the root window
     **/
-    xcb_window_t rootWindow() const;
+    Window rootWindow() const;
 
     /**
        Returns the Window id of the supportWindow.
 
        @return the id of the support window
     **/
-    xcb_window_t supportWindow() const;
+    Window supportWindow() const;
 
     /**
        Returns the name of the Window Manager.
@@ -268,7 +267,7 @@ public:
 
        @see clientListCount()
     **/
-    const xcb_window_t *clientList() const;
+    const Window *clientList() const;
 
     /**
        Returns the number of managed windows in clientList array.
@@ -287,7 +286,7 @@ public:
 
        @see clientListStackingCount()
     **/
-    const xcb_window_t *clientListStacking() const;
+    const Window *clientListStacking() const;
 
     /**
        Returns the number of managed windows in the clientListStacking array.
@@ -352,7 +351,7 @@ public:
 
        @see virtualRootsCount()
     **/
-    const xcb_window_t *virtualRoots( ) const;
+    const Window *virtualRoots( ) const;
 
     /**
        Returns the number of window in the virtualRoots array.
@@ -410,7 +409,7 @@ public:
 
        @return the id of the active window
     **/
-    xcb_window_t activeWindow() const;
+    Window activeWindow() const;
 
     /**
        Window Managers must call this after creating the NETRootInfo object, and
@@ -429,7 +428,7 @@ public:
 
        @param count The number of windows in the array
     **/
-    void setClientList(const xcb_window_t *windows, unsigned int count);
+    void setClientList(const Window *windows, unsigned int count);
 
     /**
        Sets the list of managed windows in stacking order on the Root/Desktop
@@ -439,7 +438,7 @@ public:
 
        @param count The number of windows in the array.
     **/
-    void setClientListStacking(const xcb_window_t *windows, unsigned int count);
+    void setClientListStacking(const Window *windows, unsigned int count);
 
     /**
        Sets the current desktop to the specified desktop.
@@ -516,8 +515,8 @@ public:
           caused the request
        @param active_window active window of the requesting application, if any
     **/
-    void setActiveWindow(xcb_window_t window, NET::RequestSource src,
-        xcb_timestamp_t timestamp, xcb_window_t active_window);
+    void setActiveWindow(Window window, NET::RequestSource src,
+        Time timestamp, Window active_window);
 
     /**
        Sets the active (focused) window the specified window. This should
@@ -525,7 +524,7 @@ public:
 
        @param window the if of the new active window
     **/
-    void setActiveWindow(xcb_window_t window);
+    void setActiveWindow(Window window);
 
     /**
        Sets the workarea for the specified desktop
@@ -543,7 +542,7 @@ public:
 
        @param count The number of windows in the array.
     **/
-    void setVirtualRoots(const xcb_window_t *windows, unsigned int count);
+    void setVirtualRoots(const Window *windows, unsigned int count);
 
     /**
        Sets the desktop layout. This is set by the pager. When setting, the pager must
@@ -574,7 +573,7 @@ public:
 
        @param window the id of the window to close
     **/
-    void closeWindowRequest(xcb_window_t window);
+    void closeWindowRequest(Window window);
 
     /**
        Clients (such as pagers/taskbars) that wish to start a WMMoveResize
@@ -591,7 +590,7 @@ public:
        @param direction One of NET::Direction (see base class documentation for
        a description of the different directions).
     **/
-    void moveResizeRequest(xcb_window_t window, int x_root, int y_root,
+    void moveResizeRequest(Window window, int x_root, int y_root,
 			   Direction direction);
 
     /**
@@ -607,18 +606,18 @@ public:
        @param width Requested width for the window
        @param height Requested height for the window
     **/
-    void moveResizeWindowRequest(xcb_window_t window, int flags, int x, int y, int width, int height );
+    void moveResizeWindowRequest(Window window, int flags, int x, int y, int width, int height );
 
     /**
        Sends the _NET_RESTACK_WINDOW request.
     **/
-    void restackRequest(xcb_window_t window, RequestSource source, xcb_window_t above, int detail, xcb_timestamp_t timestamp);
+    void restackRequest(Window window, RequestSource source, Window above, int detail, Time timestamp);
 
     /**
       Sends a ping with the given timestamp to the window, using
       the _NET_WM_PING protocol.
     */
-    void sendPing( xcb_window_t window, xcb_timestamp_t timestamp );
+    void sendPing( Window window, Time timestamp );
 
     /**
        Sends a take activity message with the given timestamp to the window, using
@@ -627,7 +626,7 @@ public:
        @param timestamp timestamp of the message
        @param flags arbitrary flags
     */
-    void takeActivity( xcb_window_t window, xcb_timestamp_t timestamp, long flags );
+    void takeActivity( Window window, Time timestamp, long flags );
 
     /**
        This function takes the passed XEvent and returns an OR'ed list of
@@ -666,7 +665,7 @@ protected:
 
        @param window the id of the window to add
     **/
-    virtual void addClient(xcb_window_t window) { Q_UNUSED(window); }
+    virtual void addClient(Window window) { Q_UNUSED(window); }
 
     /**
        A Client should subclass NETRootInfo and reimplement this function when
@@ -674,7 +673,7 @@ protected:
 
        @param window the id of the window to remove
     **/
-    virtual void removeClient(xcb_window_t window) { Q_UNUSED(window); }
+    virtual void removeClient(Window window) { Q_UNUSED(window); }
 
     /**
        A Window Manager should subclass NETRootInfo and reimplement this function
@@ -722,7 +721,7 @@ protected:
 
        @param window the id of the window to close
     **/
-    virtual void closeWindow(xcb_window_t window) { Q_UNUSED(window); }
+    virtual void closeWindow(Window window) { Q_UNUSED(window); }
 
     /**
        A Window Manager should subclass NETRootInfo and reimplement this function
@@ -737,7 +736,7 @@ protected:
        @param direction One of NET::Direction (see base class documentation for
        a description of the different directions).
     **/
-    virtual void moveResize(xcb_window_t window, int x_root, int y_root,
+    virtual void moveResize(Window window, int x_root, int y_root,
     			    unsigned long direction) { Q_UNUSED(window); Q_UNUSED(x_root); Q_UNUSED(y_root); Q_UNUSED(direction); }
 
     /**
@@ -746,7 +745,7 @@ protected:
        @param window the window from which the reply came
        @param timestamp timestamp of the ping
      */
-    virtual void gotPing( xcb_window_t window, xcb_timestamp_t timestamp ) { Q_UNUSED(window); Q_UNUSED(timestamp); }
+    virtual void gotPing( Window window, Time timestamp ) { Q_UNUSED(window); Q_UNUSED(timestamp); }
     /**
        A Window Manager should subclass NETRootInfo and reimplement this function
        when it wants to know when a Client made a request to change the active
@@ -757,8 +756,8 @@ protected:
        @param timestamp the timestamp of the user action causing this request
        @param active_window active window of the requesting application, if any
     **/
-    virtual void changeActiveWindow(xcb_window_t window,NET::RequestSource src,
-        xcb_timestamp_t timestamp, xcb_window_t active_window ) { Q_UNUSED(window); Q_UNUSED(src); Q_UNUSED(timestamp); Q_UNUSED(active_window);}
+    virtual void changeActiveWindow(Window window,NET::RequestSource src,
+        Time timestamp, Window active_window ) { Q_UNUSED(window); Q_UNUSED(src); Q_UNUSED(timestamp); Q_UNUSED(active_window);}
 
     /**
        A Window Manager should subclass NETRootInfo and reimplement this function
@@ -772,7 +771,7 @@ protected:
        @param width Requested width for the window
        @param height Requested height for the window
     **/
-    virtual void moveResizeWindow(xcb_window_t window, int flags, int x, int y, int width, int height) { Q_UNUSED(window); Q_UNUSED(flags); Q_UNUSED(x); Q_UNUSED(y); Q_UNUSED(width); Q_UNUSED(height); }
+    virtual void moveResizeWindow(Window window, int flags, int x, int y, int width, int height) { Q_UNUSED(window); Q_UNUSED(flags); Q_UNUSED(x); Q_UNUSED(y); Q_UNUSED(width); Q_UNUSED(height); }
 
     /**
        A Window Manager should subclass NETRootInfo and reimplement this function
@@ -785,8 +784,8 @@ protected:
        @param detail restack detail
        @param timestamp the timestamp of the request
     **/
-    virtual void restackWindow(xcb_window_t window, RequestSource source,
-           xcb_window_t above, int detail, xcb_timestamp_t timestamp) { Q_UNUSED(window); Q_UNUSED(source); Q_UNUSED(above); Q_UNUSED(detail); Q_UNUSED(timestamp); }
+    virtual void restackWindow(Window window, RequestSource source,
+           Window above, int detail, Time timestamp) { Q_UNUSED(window); Q_UNUSED(source); Q_UNUSED(above); Q_UNUSED(detail); Q_UNUSED(timestamp); }
     /**
        A Window Manager should subclass NETRootInfo and reimplement this function
        when it wants to receive replies to the _NET_WM_TAKE_ACTIVITY protocol.
@@ -794,7 +793,7 @@ protected:
        @param timestamp timestamp of the ping
        @param flags flags passed in the original message
      */
-    virtual void gotTakeActivity(xcb_window_t window, xcb_timestamp_t timestamp, long flags ) { Q_UNUSED(window); Q_UNUSED(timestamp); Q_UNUSED(flags); }
+    virtual void gotTakeActivity(Window window, Time timestamp, long flags ) { Q_UNUSED(window); Q_UNUSED(timestamp); Q_UNUSED(flags); }
 
     /**
        A Window Manager should subclass NETRootInfo and reimplement this function
@@ -858,7 +857,7 @@ public:
        @param role Select the application role.  If this argument is omitted,
        the role will default to Client.
     **/
-    NETWinInfo(Display *display, xcb_window_t window, xcb_window_t rootWindow,
+    NETWinInfo(Display *display, Window window, Window rootWindow,
                const unsigned long properties[], int properties_size,
 	       Role role = Client);
 
@@ -868,8 +867,8 @@ public:
         is equivalent to the first element of the properties array
         in the above constructor.
     **/
-    NETWinInfo(Display *display, xcb_window_t window,
-	       xcb_window_t rootWindow, unsigned long properties,
+    NETWinInfo(Display *display, Window window,
+	       Window rootWindow, unsigned long properties,
 	       Role role = Client);
 
     /**
@@ -1200,12 +1199,12 @@ public:
      * user action, it won't be activated after being shown, with the special
      * value 0 meaning not to activate the window after being shown.
      */
-    void setUserTime( xcb_timestamp_t time );
+    void setUserTime( Time time );
 
     /**
      * Returns the time of last user action on the window, or -1 if not set.
      */
-    xcb_timestamp_t userTime() const;
+    Time userTime() const;
 
     /**
      * Sets the startup notification id @p id on the window.
@@ -1241,12 +1240,12 @@ public:
      * Returns the WM_TRANSIENT_FOR property for the window, i.e. the mainwindow
      * for this window.
      */
-    xcb_window_t transientFor() const;
+    Window transientFor() const;
 
     /**
      * Returns the leader window for the group the window is in, if any.
      */
-    xcb_window_t groupLeader() const;
+    Window groupLeader() const;
 
     /**
      * Returns the class component of the window class for the window
