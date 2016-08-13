@@ -110,7 +110,6 @@ set(cmakeFiles
     FindX11_XCB.cmake
     FindXCB.cmake
     FindXine.cmake
-    FindXKB.cmake
     FindXmms.cmake
     kde4_cmake_uninstall.cmake.in
     KDE4Defaults.cmake
