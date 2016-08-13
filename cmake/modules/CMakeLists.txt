@@ -106,7 +106,6 @@ set(cmakeFiles
     FindUDisks2.cmake
     FindUSB.cmake
     FindWebP.cmake
-    FindX11.cmake
     FindX11_XCB.cmake
     FindXCB.cmake
     FindXine.cmake
