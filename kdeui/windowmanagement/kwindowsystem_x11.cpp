@@ -56,28 +56,28 @@ static Atom net_wm_cm;
 static void create_atoms( Display* dpy = QX11Info::display() );
 
 static unsigned long windows_properties[ 2 ] = { NET::ClientList | NET::ClientListStacking |
-                                     NET::Supported |
-				     NET::NumberOfDesktops |
-				     NET::DesktopGeometry |
-                                     NET::DesktopViewport |
-				     NET::CurrentDesktop |
-				     NET::DesktopNames |
-				     NET::ActiveWindow |
-				     NET::WorkArea, /**/
-                                     NET::WM2ShowingDesktop };
+                                    NET::Supported |
+                                    NET::NumberOfDesktops |
+                                    NET::DesktopGeometry |
+                                    NET::DesktopViewport |
+                                    NET::CurrentDesktop |
+                                    NET::DesktopNames |
+                                    NET::ActiveWindow |
+                                    NET::WorkArea, /**/
+                                    NET::WM2ShowingDesktop };
 
 // ClientList and ClientListStacking is not per-window information, but a desktop information,
 // so track it even with only INFO_BASIC
 static unsigned long desktop_properties[ 2 ] = { NET::ClientList | NET::ClientListStacking |
-                                     NET::Supported |
-				     NET::NumberOfDesktops |
-				     NET::DesktopGeometry |
-                                     NET::DesktopViewport |
-				     NET::CurrentDesktop |
-				     NET::DesktopNames |
-				     NET::ActiveWindow |
-				     NET::WorkArea, /**/
-                                     NET::WM2ShowingDesktop };
+                                    NET::Supported |
+                                    NET::NumberOfDesktops |
+                                    NET::DesktopGeometry |
+                                    NET::DesktopViewport |
+                                    NET::CurrentDesktop |
+                                    NET::DesktopNames |
+                                    NET::ActiveWindow |
+                                    NET::WorkArea, /**/
+                                    NET::WM2ShowingDesktop };
 
 class KWindowSystemPrivate
     : public QWidget, public NETRootInfo
@@ -187,59 +187,59 @@ bool KWindowSystemPrivate::x11Event( XEvent * ev )
         int old_number_of_desktops = numberOfDesktops();
         bool old_showing_desktop = showingDesktop();
         unsigned long m[ 5 ];
-	NETRootInfo::event( ev, m, 5 );
+        NETRootInfo::event( ev, m, 5 );
 
-	if (( m[ PROTOCOLS ] & CurrentDesktop ) && currentDesktop() != old_current_desktop )
-	    emit s_q->currentDesktopChanged( currentDesktop() );
-	if (( m[ PROTOCOLS ] & DesktopViewport ) && mapViewport() && currentDesktop() != old_current_desktop )
-	    emit s_q->currentDesktopChanged( currentDesktop() );
-	if (( m[ PROTOCOLS ] & ActiveWindow ) && activeWindow() != old_active_window )
-	    emit s_q->activeWindowChanged( activeWindow() );
-	if ( m[ PROTOCOLS ] & DesktopNames )
-	    emit s_q->desktopNamesChanged();
-	if (( m[ PROTOCOLS ] & NumberOfDesktops ) && numberOfDesktops() != old_number_of_desktops )
-	    emit s_q->numberOfDesktopsChanged( numberOfDesktops() );
-	if (( m[ PROTOCOLS ] & DesktopGeometry ) && mapViewport() && numberOfDesktops() != old_number_of_desktops )
-	    emit s_q->numberOfDesktopsChanged( numberOfDesktops() );
-	if ( m[ PROTOCOLS ] & WorkArea )
-	    emit s_q->workAreaChanged();
-	if ( m[ PROTOCOLS ] & ClientListStacking ) {
-	    updateStackingOrder();
-	    emit s_q->stackingOrderChanged();
-	}
+        if (( m[ PROTOCOLS ] & CurrentDesktop ) && currentDesktop() != old_current_desktop )
+            emit s_q->currentDesktopChanged( currentDesktop() );
+        if (( m[ PROTOCOLS ] & DesktopViewport ) && mapViewport() && currentDesktop() != old_current_desktop )
+            emit s_q->currentDesktopChanged( currentDesktop() );
+        if (( m[ PROTOCOLS ] & ActiveWindow ) && activeWindow() != old_active_window )
+            emit s_q->activeWindowChanged( activeWindow() );
+        if ( m[ PROTOCOLS ] & DesktopNames )
+            emit s_q->desktopNamesChanged();
+        if (( m[ PROTOCOLS ] & NumberOfDesktops ) && numberOfDesktops() != old_number_of_desktops )
+            emit s_q->numberOfDesktopsChanged( numberOfDesktops() );
+        if (( m[ PROTOCOLS ] & DesktopGeometry ) && mapViewport() && numberOfDesktops() != old_number_of_desktops )
+            emit s_q->numberOfDesktopsChanged( numberOfDesktops() );
+        if ( m[ PROTOCOLS ] & WorkArea )
+            emit s_q->workAreaChanged();
+        if ( m[ PROTOCOLS ] & ClientListStacking ) {
+            updateStackingOrder();
+            emit s_q->stackingOrderChanged();
+        }
         if(( m[ PROTOCOLS2 ] & WM2ShowingDesktop ) && showingDesktop() != old_showing_desktop ) {
-	    emit s_q->showingDesktopChanged( showingDesktop());
+            emit s_q->showingDesktopChanged( showingDesktop());
         }
     } else  if ( windows.contains( ev->xany.window ) ){
-	NETWinInfo ni( QX11Info::display(), ev->xany.window, QX11Info::appRootWindow(), 0 );
+        NETWinInfo ni( QX11Info::display(), ev->xany.window, QX11Info::appRootWindow(), 0 );
         unsigned long dirty[ 2 ];
-	ni.event( ev, dirty, 2 );
-	if ( ev->type ==PropertyNotify ) {
+        ni.event( ev, dirty, 2 );
+        if ( ev->type ==PropertyNotify ) {
             if( ev->xproperty.atom == XA_WM_HINTS )
-	        dirty[ NETWinInfo::PROTOCOLS ] |= NET::WMIcon; // support for old icons
+                dirty[ NETWinInfo::PROTOCOLS ] |= NET::WMIcon; // support for old icons
             else if( ev->xproperty.atom == XA_WM_NAME )
                 dirty[ NETWinInfo::PROTOCOLS ] |= NET::WMName; // support for old name
             else if( ev->xproperty.atom == XA_WM_ICON_NAME )
                 dirty[ NETWinInfo::PROTOCOLS ] |= NET::WMIconName; // support for old iconic name
         }
         if( mapViewport() && ( dirty[ NETWinInfo::PROTOCOLS ] & (NET::WMState | NET::WMGeometry) )) {
-	    /* geometry change -> possible viewport change
-	     * state change -> possible NET::Sticky change
-	     */
+            /* geometry change -> possible viewport change
+            * state change -> possible NET::Sticky change
+            */
             dirty[ NETWinInfo::PROTOCOLS ] |= NET::WMDesktop;
-	}
-	if ( (dirty[ NETWinInfo::PROTOCOLS ] & NET::WMStrut) != 0 ) {
+        }
+        if ( (dirty[ NETWinInfo::PROTOCOLS ] & NET::WMStrut) != 0 ) {
             removeStrutWindow( ev->xany.window );
             if ( !possibleStrutWindows.contains( ev->xany.window ) )
-        	possibleStrutWindows.append( ev->xany.window );
-	}
-	if ( dirty[ NETWinInfo::PROTOCOLS ] || dirty[ NETWinInfo::PROTOCOLS2 ] ) {
-	    emit s_q->windowChanged( ev->xany.window );
-	    emit s_q->windowChanged( ev->xany.window, dirty );
-	    emit s_q->windowChanged( ev->xany.window, dirty[ NETWinInfo::PROTOCOLS ] );
-	    if ( (dirty[ NETWinInfo::PROTOCOLS ] & NET::WMStrut) != 0 )
-		emit s_q->strutChanged();
-	}
+                possibleStrutWindows.append( ev->xany.window );
+        }
+        if ( dirty[ NETWinInfo::PROTOCOLS ] || dirty[ NETWinInfo::PROTOCOLS2 ] ) {
+            emit s_q->windowChanged( ev->xany.window );
+            emit s_q->windowChanged( ev->xany.window, dirty );
+            emit s_q->windowChanged( ev->xany.window, dirty[ NETWinInfo::PROTOCOLS ] );
+            if ( (dirty[ NETWinInfo::PROTOCOLS ] & NET::WMStrut) != 0 )
+                emit s_q->strutChanged();
+        }
     }
 
     return false;
@@ -261,7 +261,7 @@ void KWindowSystemPrivate::updateStackingOrder()
 {
     stackingOrder.clear();
     for ( int i = 0; i <  clientListStackingCount(); i++ )
-	stackingOrder.append( clientListStacking()[i] );
+        stackingOrder.append( clientListStacking()[i] );
 }
 
 void KWindowSystemPrivate::addClient(Window w)
@@ -330,14 +330,14 @@ static Atom kwm_utf8_string;
 
 static void create_atoms( Display* dpy ) {
     if (!atoms_created){
-	const int max = 20;
-	Atom* atoms[max];
-	const char* names[max];
-	Atom atoms_return[max];
-	int n = 0;
+        const int max = 20;
+        Atom* atoms[max];
+        const char* names[max];
+        Atom atoms_return[max];
+        int n = 0;
 
-	atoms[n] = &kde_wm_change_state;
-	names[n++] = "_KDE_WM_CHANGE_STATE";
+        atoms[n] = &kde_wm_change_state;
+        names[n++] = "_KDE_WM_CHANGE_STATE";
 
         atoms[n] = &_wm_protocols;
         names[n++] = "WM_PROTOCOLS";
@@ -350,29 +350,29 @@ static void create_atoms( Display* dpy ) {
         atoms[n] = &net_wm_cm;
         names[n++] = net_wm_cm_name;
 
-	// we need a const_cast for the shitty X API
-	XInternAtoms( dpy, const_cast<char**>(names), n, false, atoms_return );
-	for (int i = 0; i < n; i++ )
-	    *atoms[i] = atoms_return[i];
+        // we need a const_cast for the shitty X API
+        XInternAtoms( dpy, const_cast<char**>(names), n, false, atoms_return );
+        for (int i = 0; i < n; i++ )
+            *atoms[i] = atoms_return[i];
 
-	atoms_created = True;
+        atoms_created = True;
     }
 }
 
 static void sendClientMessageToRoot(Window w, Atom a, long x, long y = 0, long z = 0 ){
-  XEvent ev;
-  long mask;
+    XEvent ev;
+    long mask;
 
-  memset(&ev, 0, sizeof(ev));
-  ev.xclient.type = ClientMessage;
-  ev.xclient.window = w;
-  ev.xclient.message_type = a;
-  ev.xclient.format = 32;
-  ev.xclient.data.l[0] = x;
-  ev.xclient.data.l[1] = y;
-  ev.xclient.data.l[2] = z;
-  mask = SubstructureRedirectMask;
-  XSendEvent(QX11Info::display(), QX11Info::appRootWindow(), False, mask, &ev);
+    memset(&ev, 0, sizeof(ev));
+    ev.xclient.type = ClientMessage;
+    ev.xclient.window = w;
+    ev.xclient.message_type = a;
+    ev.xclient.format = 32;
+    ev.xclient.data.l[0] = x;
+    ev.xclient.data.l[1] = y;
+    ev.xclient.data.l[2] = z;
+    mask = SubstructureRedirectMask;
+    XSendEvent(QX11Info::display(), QX11Info::appRootWindow(), False, mask, &ev);
 }
 
 KWindowSystem* KWindowSystem::self()
@@ -523,10 +523,10 @@ void KWindowSystem::setOnAllDesktops( WId win, bool b )
     }
     NETWinInfo info( QX11Info::display(), win, QX11Info::appRootWindow(), NET::WMDesktop );
     if ( b )
-	info.setDesktop( NETWinInfo::OnAllDesktops, true );
+        info.setDesktop( NETWinInfo::OnAllDesktops, true );
     else if ( info.desktop( true )  == NETWinInfo::OnAllDesktops ) {
-	NETRootInfo rinfo( QX11Info::display(), NET::CurrentDesktop );
-	info.setDesktop( rinfo.currentDesktop( true ), true );
+        NETRootInfo rinfo( QX11Info::display(), NET::CurrentDesktop );
+        info.setDesktop( rinfo.currentDesktop( true ), true );
     }
 }
 
@@ -648,12 +648,12 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
         NETWinInfo info( QX11Info::display(), win, QX11Info::appRootWindow(), NET::WMIcon );
         NETIcon ni = info.icon( width, height );
         if ( ni.data && ni.size.width > 0 && ni.size.height > 0 ) {
-    	    QImage img( (uchar*) ni.data, (int) ni.size.width, (int) ni.size.height, QImage::Format_ARGB32 );
-	    if ( scale && width > 0 && height > 0 &&img.size() != QSize( width, height ) && !img.isNull() )
-	        img = img.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
-	    if ( !img.isNull() )
-	        result = QPixmap::fromImage( img );
-	    return result;
+            QImage img( (uchar*) ni.data, (int) ni.size.width, (int) ni.size.height, QImage::Format_ARGB32 );
+            if ( scale && width > 0 && height > 0 &&img.size() != QSize( width, height ) && !img.isNull() )
+                img = img.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
+            if ( !img.isNull() )
+                result = QPixmap::fromImage( img );
+            return result;
         }
     }
 
@@ -666,19 +666,19 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
     	    p = hints->icon_pixmap;
         }
         if (hints && (hints->flags & IconMaskHint)){
-	    p_mask = hints->icon_mask;
+            p_mask = hints->icon_mask;
         }
         if (hints)
-	    XFree((char*)hints);
+            XFree((char*)hints);
 
         if (p != None){
             QPixmap pm = KXUtils::createPixmapFromHandle( p, p_mask );
             if ( scale && width > 0 && height > 0 && !pm.isNull()
                  && ( pm.width() != width || pm.height() != height) ){
                 result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
-	    } else {
+            } else {
                 result = pm;
-	    }
+            }
         }
     }
 
@@ -698,20 +698,20 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
         // its own:
         if( result.isNull() ) {
 
-	    XClassHint	hint;
-	    if( XGetClassHint( QX11Info::display(), win, &hint ) ) {
-	        QString className = hint.res_class;
+            XClassHint	hint;
+            if( XGetClassHint( QX11Info::display(), win, &hint ) ) {
+                QString className = hint.res_class;
 
                 QPixmap pm = KIconLoader::global()->loadIcon( className.toLower(), KIconLoader::Small, iconWidth,
-                                                           KIconLoader::DefaultState, QStringList(), 0, true );
-	        if( scale && !pm.isNull() )
-		    result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
-	        else
-		    result = pm;
+                                                            KIconLoader::DefaultState, QStringList(), 0, true );
+                if( scale && !pm.isNull() )
+                    result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
+                else
+                    result = pm;
 
-	        XFree( hint.res_name );
-	        XFree( hint.res_class );
-	    }
+                XFree( hint.res_name );
+                XFree( hint.res_class );
+            }
         }
     }
 
@@ -721,10 +721,10 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
         if ( result.isNull() ) {
             QPixmap pm = KIconLoader::global()->loadIcon( "xorg", KIconLoader::Small, iconWidth,
                                                           KIconLoader::DefaultState, QStringList(), 0, true );
-	    if( scale && !pm.isNull() )
-		result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
-	    else
-		result = pm;
+            if( scale && !pm.isNull() )
+                result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
+            else
+                result = pm;
         }
     }
     return result;
@@ -733,7 +733,7 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
 void KWindowSystem::setIcons( WId win, const QPixmap& icon, const QPixmap& miniIcon )
 {
     if ( icon.isNull() )
-	return;
+        return;
     NETWinInfo info( QX11Info::display(), win, QX11Info::appRootWindow(), 0 );
     QImage img = icon.toImage().convertToFormat( QImage::Format_ARGB32 );
     NETIcon ni;
@@ -742,7 +742,7 @@ void KWindowSystem::setIcons( WId win, const QPixmap& icon, const QPixmap& miniI
     ni.data = (unsigned char *) img.bits();
     info.setIcon( ni, true );
     if ( miniIcon.isNull() )
-	return;
+        return;
     img = miniIcon.toImage().convertToFormat( QImage::Format_ARGB32 );
     if ( img.isNull() )
         return;
@@ -775,9 +775,9 @@ void KWindowSystem::minimizeWindow( WId win, bool animation)
     if ( !animation )
     {
         create_atoms();
-	sendClientMessageToRoot( win, kde_wm_change_state, IconicState, 1 );
+        sendClientMessageToRoot( win, kde_wm_change_state, IconicState, 1 );
     }
-	QX11Info inf;
+    QX11Info inf;
     XIconifyWindow( QX11Info::display(), win, inf.screen() );
 }
 
@@ -786,7 +786,7 @@ void KWindowSystem::unminimizeWindow( WId win, bool animation )
     if ( !animation )
     {
         create_atoms();
-	sendClientMessageToRoot( win, kde_wm_change_state, NormalState, 1 );
+        sendClientMessageToRoot( win, kde_wm_change_state, NormalState, 1 );
     }
     XMapWindow( QX11Info::display(), win );
 }
