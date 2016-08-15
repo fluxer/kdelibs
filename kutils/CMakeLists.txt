@@ -94,7 +94,7 @@ target_link_libraries(kidletime
 
 if (Q_WS_X11)
    if (HAVE_XSCREENSAVER)
-     target_link_libraries(kidletime ${X11_Xss_LIB})
+     target_link_libraries(kidletime ${X11_Xscreensaver_LIB})
    endif (HAVE_XSCREENSAVER)
 
    if (HAVE_XSYNC)
