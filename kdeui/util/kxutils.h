@@ -21,8 +21,7 @@
 #ifndef KXUTILS_H
 #define KXUTILS_H
 
-#include <QtGui/QWidget>
-#include <QtGui/QPixmap>
+#include <QtCore/qglobal.h>
 
 #ifdef Q_WS_X11
 
@@ -33,15 +32,6 @@
  */
 namespace KXUtils
 {
-
-/**
- * Creates a QPixmap that contains a copy of the pixmap given by the X handle @p pixmap
- * and optionally also mask given as another X handle @mask. This function tries to
- * also handle the case when the depth of the pixmap differs from the native QPixmap depth.
- * @since 4.0.2
- */
-KDEUI_EXPORT QPixmap createPixmapFromHandle( WId pixmap, WId mask = 0 );
-
 /**
  * Compares two X timestamps, taking into account wrapping and 64bit architectures.
  * Return value is like with strcmp(), 0 for equal, -1 for time1 < time2, 1 for time1 > time2.

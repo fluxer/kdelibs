@@ -659,20 +659,16 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
 
     if( flags & WMHints ) {
         Pixmap p = None;
-        Pixmap p_mask = None;
 
         XWMHints *hints = XGetWMHints(QX11Info::display(), win );
         if (hints && (hints->flags & IconPixmapHint)){
     	    p = hints->icon_pixmap;
         }
-        if (hints && (hints->flags & IconMaskHint)){
-            p_mask = hints->icon_mask;
-        }
         if (hints)
             XFree((char*)hints);
 
         if (p != None){
-            QPixmap pm = KXUtils::createPixmapFromHandle( p, p_mask );
+            QPixmap pm = QPixmap::fromX11Pixmap( p );
             if ( scale && width > 0 && height > 0 && !pm.isNull()
                  && ( pm.width() != width || pm.height() != height) ){
                 result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
