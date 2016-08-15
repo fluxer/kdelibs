@@ -106,8 +106,6 @@ qt4_generate_dbus_interface(klauncher_adaptor.h org.kde.KLauncher.xml)
 
 add_executable(klauncher ${klauncher_SRCS})
 
-set_target_properties(klauncher PROPERTIES DEFINE_SYMBOL MAKE_KLAUNCHER)
-
 target_link_libraries(klauncher ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
 
 install(TARGETS klauncher DESTINATION ${LIBEXEC_INSTALL_DIR})
