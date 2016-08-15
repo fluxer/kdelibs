@@ -25,7 +25,10 @@
 
 #ifndef   NETWM_DEF_H
 #define   NETWM_DEF_H
+
 #include <kdeui_export.h>
+#include <X11/X.h>
+#include <fixx11h.h>
 
 /**
   Simple point class for NET classes.
@@ -728,13 +731,13 @@ public:
      Return value is like with strcmp(), 0 for equal, -1 for time1 < time2, 1 for time1 > time2.
      @deprecated Moved to KXUtils namespace.
     */
-    static int timestampCompare( unsigned long time1, unsigned long time2 );
+    static Time timestampCompare( Time time1, Time time2 );
     /**
      Returns a difference of two X timestamps, time2 - time1, where time2 must be later than time1,
      as returned by timestampCompare().
      @deprecated Moved to KXUtils namespace.
     */
-    static int timestampDiff( unsigned long time1, unsigned long time2 );
+    static Time timestampDiff( Time time1, Time time2 );
 
 };
 

@@ -26,7 +26,6 @@
 #include <kdebug.h>
 #include <ksystemeventfilter.h>
 #include <kxerrorhandler.h>
-#include <kxutils.h>
 #include <netwm.h>
 #include <QtGui/QApplication>
 #include <QtGui/QBitmap>

@@ -202,7 +202,6 @@ set(kdeui_LIB_SRCS
     util/kwordwrap.cpp
     util/kxerrorhandler.cpp
     util/kxmessages.cpp
-    util/kxutils.cpp
     util/kundostack.cpp
     util/kpixmapsequence.cpp
     util/kpixmapsequenceoverlaypainter.cpp
@@ -571,7 +570,6 @@ install(
     util/kwallet.h
     util/kwordwrap.h
     util/kxerrorhandler.h
-    util/kxutils.h
     util/kxmessages.h
     util/kundostack.h
     util/kpixmapsequence.h

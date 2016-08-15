@@ -34,7 +34,6 @@
 #include <QtGui/qx11info_x11.h>
 
 #include <kwindowsystem.h>
-#include <kxutils.h>
 
 #include <string.h>
 #include <stdio.h>
@@ -4621,12 +4620,17 @@ NET::MappingState NETWinInfo::mappingState() const {
     return p->mapping_state;
 }
 
-int NET::timestampCompare( unsigned long time1, unsigned long time2 ) {
-    return KXUtils::timestampCompare( time1, time2 );
+Time NET::timestampCompare( Time time1, Time time2 ) // like strcmp()
+{
+    if( time1 == time2 )
+        return 0;
+    return ( time1 - time2 ) < 0x7fffffffU ? 1 : -1; // time1 > time2 -> 1, handle wrapping
 }
 
-int NET::timestampDiff( unsigned long time1, unsigned long time2 ) {
-    return KXUtils::timestampDiff( time1, time2 );
+Time NET::timestampDiff( Time time1, Time time2 )
+{
+    // no need to handle wrapping?
+    return time2 - time1;
 }
 
 #endif
