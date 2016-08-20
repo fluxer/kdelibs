@@ -19,9 +19,8 @@
 
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
-#include <QtGui/qevent.h>
+#include <QtCore/QEvent>
 
-#include <kcursor.h>
 #include <kcolorscheme.h>
 
 class KUrlLabel::Private

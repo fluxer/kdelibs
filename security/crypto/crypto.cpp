@@ -62,7 +62,6 @@
 #include <kseparator.h>
 #include <kstandarddirs.h>
 #include <ktabwidget.h>
-#include <ktextbrowser.h>
 #include <kurllabel.h>
 #include <kurlrequester.h>
 

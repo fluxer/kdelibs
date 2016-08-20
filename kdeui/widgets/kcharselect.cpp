@@ -30,13 +30,13 @@
 #include <QtGui/QSplitter>
 #include <QtGui/QPushButton>
 #include <QtGui/QToolButton>
+#include <QtGui/QTextBrowser>
 
 #include <kcombobox.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <klineedit.h>
-#include <ktextbrowser.h>
 #include <kfontcombobox.h>
 #include <kactioncollection.h>
 #include <kstandardaction.h>
@@ -93,7 +93,7 @@ public:
     QComboBox *sectionCombo;
     QComboBox *blockCombo;
     KCharSelectTable *charTable;
-    KTextBrowser *detailBrowser;
+    QTextBrowser *detailBrowser;
 
     bool searchMode; //a search is active
     bool historyEnabled;
@@ -438,7 +438,7 @@ void KCharSelect::init(const Controls controls, KActionCollection *collection)
 
     connect(d->charTable, SIGNAL(showCharRequested(QChar)), this, SLOT(setCurrentChar(QChar)));
 
-    d->detailBrowser = new KTextBrowser(this);
+    d->detailBrowser = new QTextBrowser(this);
     if (DetailBrowser & controls) {
         splitter->addWidget(d->detailBrowser);
     } else {

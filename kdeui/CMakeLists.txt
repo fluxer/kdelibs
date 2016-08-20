@@ -251,7 +251,6 @@ set(kdeui_LIB_SRCS
     widgets/kstatusbar.cpp
     widgets/ktabbar.cpp
     widgets/ktabwidget.cpp
-    widgets/ktextbrowser.cpp
     widgets/ktextedit.cpp
     widgets/ktimecombobox.cpp
     widgets/ktimezonewidget.cpp
@@ -613,7 +612,6 @@ install(
     widgets/krichtextwidget.h
     widgets/kseparator.h
     widgets/ksqueezedtextlabel.h
-    widgets/ktextbrowser.h
     widgets/ktextedit.h
     widgets/ktimecombobox.h
     widgets/ktimezonewidget.h

@@ -23,9 +23,9 @@
 #include <QMenu>
 #include <QPainter>
 #include <QScrollBar>
+#include <QTextBrowser>
 
 #include <kmimetype.h>
-#include <ktextbrowser.h>
 
 #include "svg.h"
 #include "theme.h"
@@ -48,7 +48,7 @@ public:
 
     void setFixedHeight()
     {
-        KTextBrowser *native = q->nativeWidget();
+        QTextBrowser *native = q->nativeWidget();
         if (native->document() &&
             q->sizePolicy().verticalPolicy() == QSizePolicy::Fixed &&
             native->verticalScrollBarPolicy() == Qt::ScrollBarAlwaysOff) {
@@ -68,7 +68,7 @@ public:
         }
     }
 
-    KTextBrowser *native;
+    QTextBrowser *native;
     Plasma::Style::Ptr style;
     int savedMinimumHeight;
     int savedMaximumHeight;
@@ -79,7 +79,7 @@ TextBrowser::TextBrowser(QGraphicsWidget *parent)
     : QGraphicsProxyWidget(parent),
       d(new TextBrowserPrivate(this))
 {
-    KTextBrowser *native = new KTextBrowser;
+    QTextBrowser *native = new QTextBrowser;
     native->setWindowFlags(native->windowFlags()|Qt::BypassGraphicsProxyWidget);
     connect(native, SIGNAL(textChanged()), this, SIGNAL(textChanged()));
     connect(native, SIGNAL(textChanged()), this, SLOT(setFixedHeight()));
@@ -104,12 +104,12 @@ TextBrowser::~TextBrowser()
 
 void TextBrowser::setText(const QString &text)
 {
-    static_cast<KTextBrowser*>(widget())->setText(text);
+    static_cast<QTextBrowser*>(widget())->setText(text);
 }
 
 QString TextBrowser::text() const
 {
-    return static_cast<KTextBrowser*>(widget())->toHtml();
+    return static_cast<QTextBrowser*>(widget())->toHtml();
 }
 
 void TextBrowser::setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy policy)
@@ -132,9 +132,9 @@ QString TextBrowser::styleSheet()
     return widget()->styleSheet();
 }
 
-KTextBrowser *TextBrowser::nativeWidget() const
+QTextBrowser *TextBrowser::nativeWidget() const
 {
-    return static_cast<KTextBrowser*>(widget());
+    return static_cast<QTextBrowser*>(widget());
 }
 
 void TextBrowser::append(const QString &text)
@@ -146,7 +146,7 @@ void TextBrowser::dataUpdated(const QString &sourceName, const Plasma::DataEngin
 {
     Q_UNUSED(sourceName)
 
-    KTextBrowser *te = nativeWidget();
+    QTextBrowser *te = nativeWidget();
     te->clear();
 
     foreach (const QVariant &v, data) {

@@ -21,8 +21,7 @@
 #define PLASMA_TEXTBROWSER_H
 
 #include <QtGui/QGraphicsProxyWidget>
-
-class KTextBrowser;
+#include <QtGui/QTextBrowser>
 
 #include <plasma/plasma_export.h>
 #include <plasma/dataengine.h>
@@ -35,7 +34,7 @@ class TextBrowserPrivate;
 /**
  * @class TextBrowser plasma/widgets/TextBrowser.h <Plasma/Widgets/TextBrowser>
  *
- * @short Provides a plasma-themed KTextBrowser.
+ * @short Provides a plasma-themed QTextBrowser.
  *
  * @since 4.3
  */
@@ -46,7 +45,7 @@ class PLASMA_EXPORT TextBrowser : public QGraphicsProxyWidget
     Q_PROPERTY(QGraphicsWidget *parentWidget READ parentWidget)
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
     Q_PROPERTY(QString styleSheet READ styleSheet WRITE setStyleSheet)
-    Q_PROPERTY(KTextBrowser *nativeWidget READ nativeWidget)
+    Q_PROPERTY(QTextBrowser *nativeWidget READ nativeWidget)
 
 public:
     explicit TextBrowser(QGraphicsWidget *parent = 0);
@@ -89,7 +88,7 @@ public:
     /**
      * @return the native widget wrapped by this TextBrowser
      */
-    KTextBrowser *nativeWidget() const;
+    QTextBrowser *nativeWidget() const;
 
 public Q_SLOTS:
     /**

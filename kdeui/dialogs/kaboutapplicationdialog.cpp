@@ -29,7 +29,6 @@
 #include "kdeui/icons/kiconloader.h"
 #include "kdeui/kernel/kapplication.h"
 #include "kdeui/kernel/kglobalsettings.h"
-#include "kdeui/widgets/ktextbrowser.h"
 #include "kdeui/widgets/ktitlewidget.h"
 
 #include <kdecore/kernel/kaboutdata.h>
@@ -41,6 +40,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QScrollBar>
 #include <QtGui/QTabWidget>
+#include <QtGui/QTextBrowser>
 
 #include <kdeversion.h>
 #include <kglobalsettings.h>
@@ -326,7 +326,7 @@ void KAboutApplicationDialog::Private::_k_showLicense( const QString &number )
     QFontMetrics metrics(font);
 
     const QString licenseText = aboutData->licenses().at(number.toInt()).text();
-    KTextBrowser *licenseBrowser = new KTextBrowser;
+    QTextBrowser *licenseBrowser = new QTextBrowser;
     licenseBrowser->setFont(font);
     licenseBrowser->setLineWrapMode(QTextEdit::NoWrap);
     licenseBrowser->setText(licenseText);

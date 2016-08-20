@@ -22,17 +22,17 @@
 #include <cmath>
 
 //Qt
-#include <QtGui/qgraphicssceneevent.h>
+#include <QGraphicsSceneEvent>
 #include <QGraphicsGridLayout>
 #include <QGraphicsScene>
 #include <QApplication>
-#include <QtGui/qevent.h>
+#include <QEvent>
 #include <QWidget>
 #include <QTimer>
-#include <QtCore/qdatetime.h>
+#include <QDateTime>
 #include <QPropertyAnimation>
 #include <QSequentialAnimationGroup>
-
+#include <QTextBrowser>
 #include <QLabel>
 
 //KDE
@@ -41,7 +41,6 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <ktextedit.h>
-#include <ktextbrowser.h>
 
 //Plasma
 #include <plasma/widgets/scrollbar.h>

@@ -28,19 +28,18 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QDialog>
-#include <QtGui/qevent.h>
-#include <QtGui/qevent.h>
+#include <QEvent>
 #include <QLayout>
 #include <QMenuBar>
 #include <QMetaObject>
 #include <QPushButton>
 #include <QTabBar>
-
 #include <QLabel>
 #include <QComboBox>
 #include <QGroupBox>
 #include <QClipboard>
 #include <QProcess>
+#include <QTextBrowser>
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -48,7 +47,6 @@
 #include <kcomponentdata.h>
 #include <klocale.h>
 #include <kshortcut.h>
-#include <ktextbrowser.h>
 
 #include "kacceleratormanager.h"
 #include <kconfiggroup.h>
@@ -209,7 +207,7 @@ void KCheckAccelerators::createDialog(QWidget *actWin, bool automatic)
     drklash->setWindowTitle( i18nc("@title:window", "Dr. Klash' Accelerator Diagnosis" ));
     drklash->resize( 500, 460 );
     QVBoxLayout* layout = new QVBoxLayout( drklash );
-    drklash_view = new KTextBrowser( drklash );
+    drklash_view = new QTextBrowser( drklash );
     layout->addWidget( drklash_view);
     QCheckBox* disableAutoCheck = NULL;
     if( automatic )  {

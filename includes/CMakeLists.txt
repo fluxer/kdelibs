@@ -334,7 +334,6 @@ install(
     KTar
     KTempDir
     KTemporaryFile
-    KTextBrowser
     KTextEdit
     KTimeComboBox
     KTimeZone
