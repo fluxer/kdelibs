@@ -28,10 +28,6 @@
 #include <QTimer>
 #include <QCache>
 #include <QBuffer>
-#ifdef Q_WS_X11
-#include <QtGui/qx11info_x11.h>
-#include "private/effectwatcher_p.h"
-#endif
 
 #include <kcolorscheme.h>
 #include <kcomponentdata.h>
@@ -88,7 +84,6 @@ public:
           cachesToDiscard(NoCache),
           locolor(false),
           compositingActive(KWindowSystem::self()->compositingActive()),
-          blurActive(false),
           isDefault(false),
           useGlobal(true),
           hasWallpapers(false),
@@ -113,14 +108,6 @@ public:
 
         if (QPixmap::defaultDepth() > 8) {
             QObject::connect(KWindowSystem::self(), SIGNAL(compositingChanged(bool)), q, SLOT(compositingChanged(bool)));
-#ifdef Q_WS_X11
-            //watch for blur effect property changes as well
-            if (!s_blurEffectWatcher) {
-                s_blurEffectWatcher = new EffectWatcher("_KDE_NET_WM_BLUR_BEHIND_REGION");
-            }
-
-            QObject::connect(s_blurEffectWatcher, SIGNAL(effectChanged(bool)), q, SLOT(blurBehindChanged(bool)));
-#endif
         }
     }
 
@@ -156,7 +143,6 @@ public:
     void scheduleThemeChangeNotification(CacheTypes caches);
     void notifyOfChanged();
     void colorsChanged();
-    void blurBehindChanged(bool blur);
     bool useCache();
     void settingsFileChanged(const QString &);
     void setThemeName(const QString &themeName, bool writeSettings);
@@ -170,9 +156,6 @@ public:
     static const char *systemColorsTheme;
     static const char *themeRcFile;
     static PackageStructure::Ptr packageStructure;
-#ifdef Q_WS_X11
-    static EffectWatcher *s_blurEffectWatcher;
-#endif
 
     Theme *q;
     QString themeName;
@@ -205,7 +188,6 @@ public:
 
     bool locolor : 1;
     bool compositingActive : 1;
-    bool blurActive : 1;
     bool isDefault : 1;
     bool useGlobal : 1;
     bool hasWallpapers : 1;
@@ -220,9 +202,6 @@ const char *ThemePrivate::themeRcFile = "plasmarc";
 // the system colors theme is used to cache unthemed svgs with colorization needs
 // these svgs do not follow the theme's colors, but rather the system colors
 const char *ThemePrivate::systemColorsTheme = "internal-system-colors";
-#ifdef Q_WS_X11
-EffectWatcher *ThemePrivate::s_blurEffectWatcher = 0;
-#endif
 
 bool ThemePrivate::useCache()
 {
@@ -364,14 +343,6 @@ void ThemePrivate::colorsChanged()
     buttonColorScheme = KColorScheme(QPalette::Active, KColorScheme::Button, colors);
     viewColorScheme = KColorScheme(QPalette::Active, KColorScheme::View, colors);
     scheduleThemeChangeNotification(PixmapCache);
-}
-
-void ThemePrivate::blurBehindChanged(bool blur)
-{
-    if (blurActive != blur) {
-        blurActive = blur;
-        scheduleThemeChangeNotification(PixmapCache | SvgElementsCache);
-    }
 }
 
 void ThemePrivate::scheduleThemeChangeNotification(CacheTypes caches)

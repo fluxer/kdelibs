@@ -627,9 +627,9 @@ Q_SIGNALS:
      * Note that this signal may be emitted before any compositing plugins
      * have been initialized in the window manager.
      *
-     * If you need to check if a specific compositing plugin such as the
-     * blur effect is enabled, you should track that separately rather
-     * than test for it in a slot connected to this signal.
+     * Since most KWin effect require compositor you can safely assume that
+     * when the compositor is not active effects like blur-behind are not
+     * possible too.
      *
      * @since 4.7.1
      */
