@@ -28,7 +28,8 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QDialog>
-#include <QEvent>
+#include <QMouseEvent>
+#include <QKeyEvent>
 #include <QLayout>
 #include <QMenuBar>
 #include <QMetaObject>
@@ -97,11 +98,11 @@ bool KCheckAccelerators::eventFilter(QObject* obj, QEvent* e)
     case QEvent::ShortcutOverride:
         if ( key && (static_cast<QKeyEvent*>(e)->key() == key) ) {
     	    block = true;
-	    checkAccelerators( false );
-	    block = false;
-	    e->accept();
-	    return true;
-	}
+            checkAccelerators( false );
+            block = false;
+            e->accept();
+            return true;
+        }
         break;
     case QEvent::ChildAdded:
     case QEvent::ChildRemoved:
@@ -170,7 +171,7 @@ bool KCheckAccelerators::eventFilter(QObject* obj, QEvent* e)
             return true;
 
             //kWarning()<<"MouseButtonDblClick"<<static_cast<QWidget*>(obj)->childAt(static_cast<QMouseEvent*>(e)->globalPos());
-	}
+        }
         return false;
     case QEvent::Timer:
     case QEvent::MouseMove:
