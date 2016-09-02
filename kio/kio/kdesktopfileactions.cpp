@@ -36,18 +36,6 @@
 #include <klocale.h>
 #include <kservice.h>
 
-#ifndef KIO_NO_SOLID
-//Solid
-#include <solid/devicenotifier.h>
-#include <solid/device.h>
-#include <solid/deviceinterface.h>
-#include <solid/predicate.h>
-#include <solid/storageaccess.h>
-#include <solid/opticaldrive.h>
-#include <solid/opticaldisc.h>
-#include <solid/block.h>
-#endif
-
 enum BuiltinServiceType { ST_MOUNT = 0x0E1B05B0, ST_UNMOUNT = 0x0E1B05B1 }; // random numbers
 
 static bool runFSDevice( const KUrl& _url, const KDesktopFile &cfg );
@@ -181,28 +169,6 @@ QList<KServiceAction> KDesktopFileActions::builtinServices( const KUrl& _url )
             offerMount = true;
         }
     }
-#ifndef KIO_NO_SOLID
-    else { // url to device
-        Solid::Predicate predicate(Solid::DeviceInterface::Block, "device", _url.toLocalFile());
-        const QList<Solid::Device> devList = Solid::Device::listFromQuery(predicate, QString());
-        if (devList.empty()) {
-            kDebug(7000) << "Device" << _url.toLocalFile() << "not found";
-            return result;
-        }
-        Solid::Device device = devList[0];
-        Solid::StorageAccess *access = device.as<Solid::StorageAccess>();
-        Solid::StorageDrive *drive = device.parent().as<Solid::StorageDrive>();
-        bool mounted = access && access->isAccessible();
-
-        if ((mounted || device.is<Solid::OpticalDisc>()) && drive && drive->isRemovable()) {
-            offerUnmount = true;
-        }
-
-        if (!mounted && ((drive && drive->isHotpluggable()) || device.is<Solid::OpticalDisc>())) {
-            offerMount = true;
-        }
-    }
-#endif
 
     if (offerMount) {
         KServiceAction mount("mount", i18n("Mount"), QString(), QString(), false);
@@ -327,38 +293,6 @@ void KDesktopFileActions::executeService( const KUrl::List& urls, const KService
                 (void)new KAutoUnmount( mp->mountPoint(), path );
             }
         }
-#ifndef KIO_NO_SOLID
-        else { // path to device
-            Solid::Predicate predicate(Solid::DeviceInterface::Block, "device", path);
-            const QList<Solid::Device> devList = Solid::Device::listFromQuery(predicate, QString());
-            if (!devList.empty()) {
-                Solid::Device device = devList[0];
-                if ( actionData == ST_MOUNT ) {
-                    if (device.is<Solid::StorageVolume>()) {
-                        Solid::StorageAccess *access = device.as<Solid::StorageAccess>();
-                        if (access) {
-                            access->setup();
-                        }
-                    }
-                } else if ( actionData == ST_UNMOUNT ) {
-                    if (device.is<Solid::OpticalDisc>()) {
-                        Solid::OpticalDrive *drive = device.parent().as<Solid::OpticalDrive>();
-                        if (drive != 0) {
-                            drive->eject();
-                        }
-                    } else if (device.is<Solid::StorageVolume>()) {
-                        Solid::StorageAccess *access = device.as<Solid::StorageAccess>();
-                        if (access && access->isAccessible()) {
-                            access->teardown();
-                        }
-                    }
-                }
-            }
-            else {
-                kDebug(7000) << "Device" << path << "not found";
-            }
-        }
-#endif
     } else {
         kDebug() << action.name() << "first url's path=" << urls.first().toLocalFile() << "exec=" << action.exec();
         KRun::run( action.exec(), urls, 0, action.text(), action.icon());

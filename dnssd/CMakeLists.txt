@@ -9,22 +9,14 @@ set_package_properties(Avahi PROPERTIES
     PURPOSE "Either Avahi or DNSSD is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
 )
 
-if(KDE_PLATFORM_FEATURE_BINARY_INCOMPATIBLE_FEATURE_REDUCTION)
-    include_directories( ${KDE4_KDECORE_INCLUDES} )
-    set(KDNSSD_BASE_LIBS ${KDE4_KDECORE_LIBS})
-else()
-    include_directories( ${KDE4_KDEUI_INCLUDES} )
-    set(KDNSSD_BASE_LIBS ${KDE4_KDEUI_LIBS})
-endif()
-
-include(CreateKcfgFiles.cmake)
+include_directories( ${KDE4_KDECORE_INCLUDES} )
 
 set(kdnssd_LIB_SRCS
     servicebase.cpp
     servicemodel.cpp
     domainmodel.cpp
 )
-kde4_add_kcfg_files(kdnssd_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/settings.kcfgc )
+kde4_add_kcfg_files(kdnssd_LIB_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/settings.kcfgc)
 
 if(HAVE_AVAHI) 
     include_directories( ${AVAHI_INCLUDE_DIR} )
@@ -88,16 +80,15 @@ endif(HAVE_AVAHI)
 
 add_library(kdnssd ${LIBRARY_TYPE} ${kdnssd_LIB_SRCS})
 
-# KDE 5: don't link against KDEUI_LIBS (when settings.kfgc is changed)
 if(HAVE_DNSSD)
     target_link_libraries(kdnssd PRIVATE
-        ${KDNSSD_BASE_LIBS}
+        ${KDE4_KDECORE_LIBS}
         ${DNSSD_LIBRARIES}
         ${QT_QTNETWORK_LIBRARY}
     )
 else(HAVE_DNSSD)
     target_link_libraries(kdnssd PRIVATE
-        ${KDNSSD_BASE_LIBS}
+        ${KDE4_KDECORE_LIBS}
         ${QT_QTNETWORK_LIBRARY}
     )
 endif(HAVE_DNSSD)

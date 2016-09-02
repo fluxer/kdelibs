@@ -1,9 +1,5 @@
 project(kio)
 
-if(KDE_PLATFORM_FEATURE_BINARY_INCOMPATIBLE_FEATURE_REDUCTION)
-    set(KIO_NO_SOLID TRUE)
-endif()
-
 if(NOT STRIGI_FOUND)
     set(KIO_NO_STRIGI TRUE)
 endif()
@@ -37,12 +33,6 @@ if(NOT KIO_NO_STRIGI)
         ${STRIGI_STREAMANALYZER_LIBRARY}
         ${STRIGI_STREAMS_LIBRARY}
     )
-endif()
-
-if(NOT KIO_NO_SOLID)
-    include_directories(${CMAKE_BINARY_DIR}/solid/)
-    include_directories(${CMAKE_SOURCE_DIR}/solid/)
-    set(KIO_EXTRA_LIBS ${KIO_EXTRA_LIBS} ${KDE4_SOLID_LIBS})
 endif()
 
 configure_file(
@@ -134,13 +124,6 @@ set(kiocore_STAT_SRCS
     kio/clipboardupdater.cpp
 )
 
-if(NOT KIO_NO_SOLID)
-    set(kiocore_STAT_SRCS
-        ${kiocore_STAT_SRCS}
-        kio/kstatusbarofflineindicator.cpp
-    )
-endif()
-
 qt4_add_dbus_adaptor(kiocore_STAT_SRCS
     kio/org.kde.kio.FileUndoManager.xml
     fileundomanager_p.h KIO::FileUndoManagerPrivate
@@ -211,14 +194,6 @@ set(kfile_STAT_SRCS
     kfile/kfilemetadataprovider.cpp
     kfile/kfilesharedialog.cpp
 )
-
-if(NOT KIO_NO_SOLID)
-    set(kfile_STAT_SRCS
-        ${kfile_STAT_SRCS}
-        kfile/kdevicelistitem.cpp
-        kfile/kdevicelistmodel.cpp
-    )
-endif()
 
 qt4_add_resources(kfile_STAT_SRCS kfile/kacleditwidget.qrc)
 
@@ -417,16 +392,6 @@ install(
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
-
-if(NOT KIO_NO_SOLID)
-    install(
-        FILES
-        kfile/kdevicelistmodel.h
-        kio/kstatusbarofflineindicator.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}
-        COMPONENT Devel
-    )
-endif()
 
 install(
     FILES

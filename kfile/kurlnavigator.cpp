@@ -1173,10 +1173,4 @@ QStringList KUrlNavigator::customProtocols() const
     return d->m_customProtocols;
 }
 
-
-
-
-
-
-
 #include "moc_kurlnavigator.cpp"
