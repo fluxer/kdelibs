@@ -2,11 +2,11 @@ MACRO(PLASMA_UNIT_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_test(plasma-${_testname} ${_testname}.cpp)
         target_link_libraries(plasma-${_testname}
-            ${QT_QTTEST_LIBRARY}
-            ${QT_QTDECLARATIVE_LIBRARY}
             ${KDE4_KIO_LIBS}
             ${KDE4_KDEUI_LIBS}
-            plasma
+            ${KDE4_PLASMA_LIBS}
+            ${QT_QTTEST_LIBRARY}
+            ${QT_QTDECLARATIVE_LIBRARY}
         )
         if(QT_QTOPENGL_FOUND)
             target_link_libraries(plasma-${_testname} ${QT_QTOPENGL_LIBRARY})
@@ -30,11 +30,11 @@ set(storatetest_SRCS
 
 kde4_add_test(plasma-storagetest ${storatetest_SRCS})
 target_link_libraries(plasma-storagetest
+    ${KDE4_KIO_LIBS}
+    ${KDE4_PLASMA_LIBS}
     ${QT_QTTEST_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
     ${QT_QTSQL_LIBRARY}
-    ${KDE4_KIO_LIBS}
-    plasma
 )
 
 if(QT_QTOPENGL_FOUND)

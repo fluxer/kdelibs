@@ -5,7 +5,7 @@ macro(KUNITCONVERSION_UNIT_TESTS)
         kde4_add_test(kunitconversion-${_testname} ${_testname}.cpp)
         target_link_libraries(kunitconversion-${_testname}
             ${KDE4_KDECORE_LIBS}
-            kunitconversion
+            ${KDE4_KUNITCONVERSION_LIBS}
             ${QT_QTTEST_LIBRARY}
             ${QT_QTGUI_LIBRARY}
         )

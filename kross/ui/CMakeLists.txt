@@ -14,10 +14,10 @@ set(krossui_LIB_SRCS
 
 add_library(krossui ${LIBRARY_TYPE} ${krossui_LIB_SRCS})
 target_link_libraries(krossui
-    krosscore
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KPARTS_LIBS}
     ${KDE4_KIO_LIBS}
+    krosscore
 )
 set_target_properties(krossui PROPERTIES
     VERSION ${GENERIC_LIB_VERSION} 

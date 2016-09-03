@@ -93,14 +93,14 @@ target_link_libraries(kidletime
 )
 
 if (Q_WS_X11)
-   if (HAVE_XSCREENSAVER)
-     target_link_libraries(kidletime ${X11_Xscreensaver_LIB})
-   endif (HAVE_XSCREENSAVER)
+    if(HAVE_XSCREENSAVER)
+        target_link_libraries(kidletime ${X11_Xscreensaver_LIB})
+    endif (HAVE_XSCREENSAVER)
 
-   if (HAVE_XSYNC)
-     target_link_libraries(kidletime ${X11_Xext_LIB})
-   endif (HAVE_XSYNC)
-   target_link_libraries(kidletime ${X11_LIBRARIES})
+    if(HAVE_XSYNC)
+        target_link_libraries(kidletime ${X11_Xext_LIB})
+    endif()
+    target_link_libraries(kidletime ${X11_LIBRARIES})
 endif (Q_WS_X11)
 
 set_target_properties(kidletime PROPERTIES
@@ -187,9 +187,11 @@ install(
 
 add_library(kprintutils ${LIBRARY_TYPE} kprintpreview.cpp)
 
-target_link_libraries(kprintutils PRIVATE ${KDE4_KPARTS_LIBS})
-
-target_link_libraries(kprintutils PUBLIC kdecore kdeui ${QT_QTGUI_LIBRARY})
+target_link_libraries(kprintutils
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KPARTS_LIBS}
+)
 
 set_target_properties(kprintutils PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}

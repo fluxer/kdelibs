@@ -1,13 +1,9 @@
-set(kmediaplayer_OPTIONAL_LIBS)
 if(MPV_FOUND)
     include_directories(${MPV_INCLUDES})
     add_definitions(-DHAVE_MPV)
-    set(kmediaplayer_OPTIONAL_LIBS ${MPV_LIBRARIES})
 endif()
 
-add_definitions(
-    -DKDE_DEFAULT_DEBUG_AREA=940
-)
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=940)
 
 set(kmediaplayer_LIB_SRCS
     kmediaplayer.cpp
@@ -19,8 +15,11 @@ add_library(kmediaplayer ${LIBRARY_TYPE} ${kmediaplayer_LIB_SRCS})
 target_link_libraries(kmediaplayer
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
-    ${kmediaplayer_OPTIONAL_LIBS}
 )
+
+if(MPV_FOUND)
+    target_link_libraries(kmediaplayer ${MPV_LIBRARIES})
+endif()
 
 set_target_properties(kmediaplayer PROPERTIES
     VERSION ${KDE_NON_GENERIC_LIB_VERSION}

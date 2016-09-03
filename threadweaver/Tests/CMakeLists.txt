@@ -17,8 +17,8 @@ set(JobTests_SRCS
 kde4_add_test(ThreadWeaverJobTests ${JobTests_SRCS})
 
 target_link_libraries(ThreadWeaverJobTests
+    ${KDE4_THREADWEAVER_LIBS}
     ${QT_QTTEST_LIBRARY}
-    threadweaver
 )
 
 ########### next target ###############
@@ -31,9 +31,9 @@ set(QueueTests_SRCS
 kde4_add_test(ThreadWeaverQueueTests ${QueueTests_SRCS})
 
 target_link_libraries(ThreadWeaverQueueTests
+    ${KDE4_THREADWEAVER_LIBS}
     ${QT_QTTEST_LIBRARY}
     ${QT_QTCORE_LIBRARY}
-    threadweaver
 )
 
 ########### next target ###############
@@ -46,7 +46,7 @@ set(DeleteTest_SRCS
 kde4_add_test(ThreadWeaverDeleteTest ${DeleteTest_SRCS})
 
 target_link_libraries(ThreadWeaverDeleteTest
+    ${KDE4_THREADWEAVER_LIBS}
     ${QT_QTTEST_LIBRARY}
     ${QT_QTCORE_LIBRARY}
-    threadweaver
 )

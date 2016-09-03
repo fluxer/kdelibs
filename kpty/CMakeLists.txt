@@ -42,7 +42,8 @@ install(
 
 if(NOT HAVE_OPENPTY)
     add_executable(kgrantpty kgrantpty.c)
-    target_link_libraries(kgrantpty kdefakes)
+    # it needs only some fakes but they are part of kdecore now
+    target_link_libraries(kgrantpty ${KDE4_KDECORE_LIBS})
     install(TARGETS kgrantpty DESTINATION ${LIBEXEC_INSTALL_DIR})
 endif()
 

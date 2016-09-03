@@ -8,8 +8,8 @@ include_directories(
 kde4_add_plugin(emoticonstheme_kde kde_emoticons.cpp)
 
 target_link_libraries(emoticonstheme_kde
-    kemoticons
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KEMOTICONS_LIBS}
     ${QT_QTXML_LIBRARY}
 )
 

@@ -21,18 +21,12 @@ set(SMIV_SRCS
     ComputeThumbNailJob.cpp
 )
 
-set( SMIV_SRCS_UI
-    SMIVBase.ui
-)
-
-qt4_wrap_ui(SMIV_SRCS ${SMIV_SRCS_UI})
-
 add_executable(SMIV ${SMIV_SRCS})
 
 target_link_libraries(SMIV
-    ${QT_QTGUI_LIBRARY}
     ${KDE4_KDECORE_LIBS}
-    threadweaver
+    ${KDE4_THREADWEAVER_LIBS}
+    ${QT_QTGUI_LIBRARY}
     ThreadWeaverExperimental
 )
 

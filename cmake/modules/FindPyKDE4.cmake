@@ -2,7 +2,6 @@
 #
 # Checks that Python and PyKDE4 are installed and defines a couple macros:
 #     * PYKDE4_INSTALL_PYTHON_FILES
-#     * PYKDE4_ADD_UI_FILES
 #     * PYKDE4_ADD_EXECUTABLE
 
 # By Simon Edwards <simon@simonzone.com>

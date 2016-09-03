@@ -12,11 +12,11 @@ include_directories(
 add_library(krossqtsplugin ${LIBRARY_TYPE} plugin.cpp)
 
 target_link_libraries(krossqtsplugin
-    ${QT_QTUITOOLS_LIBRARY}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
-    krosscore
     ${QT_QTSCRIPT_LIBRARY}
+    ${QT_QTUITOOLS_LIBRARY}
+    krosscore
 )
 
 set_target_properties(krossqtsplugin PROPERTIES

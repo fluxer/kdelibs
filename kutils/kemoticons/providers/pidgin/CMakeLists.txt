@@ -8,8 +8,8 @@ include_directories(
 kde4_add_plugin(emoticonstheme_pidgin pidgin_emoticons.cpp)
 
 target_link_libraries(emoticonstheme_pidgin
-    kemoticons
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KEMOTICONS_LIBS}
 )
 
 ########### install files ###############
