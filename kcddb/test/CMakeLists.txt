@@ -9,8 +9,8 @@ MACRO(KCDDB_EXECUTABLE_TESTS)
         kde4_add_manual_test(kcddb-${_testname} ${_testname}.cpp)
         target_link_libraries(kcddb-${_testname}
             ${KDE4_KDEUI_LIBS}
+            ${KDE4_KCDDB_LIBS}
             ${QT_QTTEST_LIBRARY}
-            kcddb
         )
     ENDFOREACH(_testname)
 ENDMACRO(KCDDB_EXECUTABLE_TESTS)
@@ -19,8 +19,8 @@ MACRO(KCDDB_UNIT_TESTS)
         kde4_add_test(kcddb-${_testname} ${_testname}.cpp)
         target_link_libraries(kcddb-${_testname}
             ${KDE4_KDEUI_LIBS}
+            ${KDE4_KCDDB_LIBS}
             ${QT_QTTEST_LIBRARY}
-            kcddb
         )
     ENDFOREACH(_testname)
 ENDMACRO(KCDDB_UNIT_TESTS)

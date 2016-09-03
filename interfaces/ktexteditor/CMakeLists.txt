@@ -34,11 +34,11 @@ set(ktexteditor_LIB_SRCS
 
 add_library(ktexteditor ${LIBRARY_TYPE} ${ktexteditor_LIB_SRCS})
 
-target_link_libraries(ktexteditor PRIVATE
+target_link_libraries(ktexteditor
     ${KDE4_KDECORE_LIBS}
+    ${KDE4_KPARTS_LIBS}
     ${QT_QTDBUS_LIBRARY}
 )
-target_link_libraries(ktexteditor PUBLIC ${KDE4_KPARTS_LIBS})
 
 set_target_properties(ktexteditor PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}

@@ -1,14 +1,18 @@
-PROJECT(krichtexteditor)
-FIND_PACKAGE(KDE4 REQUIRED)
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+project(krichtexteditor)
 
-SET(krichtexteditorSources
+find_package(KDE4 REQUIRED)
+include(KDE4Defaults)
+
+include_directories(${KDE4_INCLUDES})
+add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+
+set(krichtexteditorSources
     main.cpp
     krichtexteditor.cpp
 )
 
-KDE4_ADD_EXECUTABLE(krichtexteditor ${krichtexteditorSources})
-TARGET_LINK_LIBRARIES(krichtexteditor ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+add_executable(krichtexteditor ${krichtexteditorSources})
+target_link_libraries(krichtexteditor ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
 
 install(TARGETS krichtexteditor DESTINATION ${BIN_INSTALL_DIR})
 install(FILES krichtexteditorui.rc DESTINATION ${DATA_INSTALL_DIR}/krichtexteditor)

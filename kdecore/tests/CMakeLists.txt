@@ -120,14 +120,14 @@ target_link_libraries(kdecore-klimitediodevicetest ${KDE4_KDECORE_LIBS} ${QT_QTT
 # compile kmimemagicrule.cpp into the test since it's not exported and we call match().
 set(kmimetypetest_SRCS kmimetypetest.cpp ../services/kmimemagicrule.cpp)
 kde4_add_test(kdecore-kmimetypetest ${kmimetypetest_SRCS})
-target_link_libraries(kdecore-kmimetypetest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
+target_link_libraries(kdecore-kmimetypetest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
 ########### kmimeglobsfileparsertest ###############
 
 # compile kmimeglobsfileparser.cpp into the test since it's not exported
 set(kmimeglobsfileparsertest_SRCS kmimeglobsfileparsertest.cpp ../services/kmimeglobsfileparser.cpp)
 kde4_add_test(kdecore-kmimeglobsfileparsertest ${kmimeglobsfileparsertest_SRCS})
-target_link_libraries(kdecore-kmimeglobsfileparsertest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
+target_link_libraries(kdecore-kmimeglobsfileparsertest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
 ########### kfiltertest ###############
 
@@ -146,7 +146,10 @@ kde4_add_plugin(kdecore-klibloadertestmodule4 ${klibloadertestmodule4_PART_SRCS}
 
 target_link_libraries(kdecore-klibloadertestmodule4  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
-set_target_properties(kdecore-klibloadertestmodule4 PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
+set_target_properties(kdecore-klibloadertestmodule4 PROPERTIES
+    SKIP_BUILD_RPATH FALSE
+    BUILD_WITH_INSTALL_RPATH FALSE
+)
 
 ########### kcompositejobtest ###############
 

@@ -7,7 +7,7 @@ set(test_suggest_SRCS test.cpp)
 
 kde4_add_manual_test(test_suggest ${test_suggest_SRCS})
 
-target_link_libraries(test_suggest ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_suggest ${KDE4_KDECORE_LIBS})
 
 ########### unittests ###############
 

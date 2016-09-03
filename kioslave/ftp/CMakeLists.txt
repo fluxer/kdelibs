@@ -6,7 +6,7 @@ include_directories(${KDE4_KIO_INCLUDES})
 
 kde4_add_plugin(kio_ftp ftp.cpp)
 
-target_link_libraries(kio_ftp ${KDE4_KDECORE_LIBS} kio)
+target_link_libraries(kio_ftp ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
 
 install(TARGETS kio_ftp DESTINATION ${PLUGIN_INSTALL_DIR})
 

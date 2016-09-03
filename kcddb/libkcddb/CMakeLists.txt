@@ -30,7 +30,7 @@ set(kcddb_LIB_SRCS ${libmusicbrainz_SRCS}
 
 kde4_add_kcfg_files(kcddb_LIB_SRCS configbase.kcfgc)
 
-add_library(kcddb SHARED ${kcddb_LIB_SRCS})
+add_library(kcddb ${LIBRARY_TYPE} ${kcddb_LIB_SRCS})
 
 target_link_libraries(kcddb ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
 if(MUSICBRAINZ5_FOUND)

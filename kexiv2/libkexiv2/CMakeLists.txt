@@ -52,12 +52,11 @@ set(kexiv2_LIB_SRCS
     rotationmatrix.cpp
 )
 
-add_library(kexiv2 SHARED ${kexiv2_LIB_SRCS})
+add_library(kexiv2 ${LIBRARY_TYPE} ${kexiv2_LIB_SRCS})
 
 target_link_libraries(kexiv2
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KDECORE_LIBS}
-    ${QT_QTGUI_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${EXIV2_LIBRARIES}
 )

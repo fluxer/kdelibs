@@ -224,13 +224,12 @@ set(kio_LIB_PRIVATE_SRCS
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
 target_link_libraries(kio
+    ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${ZLIB_LIBRARY}
     ${QT_QTSVG_LIBRARY}
     ${X11_LIBRARIES}
     ${KIO_EXTRA_LIBS}
-    kdeui
-    kdecore
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}

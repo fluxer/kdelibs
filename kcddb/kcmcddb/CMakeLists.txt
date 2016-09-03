@@ -6,14 +6,13 @@ include_directories(
 set(kcm_cddb_PART_SRCS
     cddbconfigwidget.cpp
     kcmcddb.cpp
-    cddbconfigwidget.ui
 )
 
 kde4_add_plugin(kcm_cddb ${kcm_cddb_PART_SRCS})
 
 target_link_libraries(kcm_cddb
     ${KDE4_KIO_LIBS}
-    kcddb
+    ${KDE4_KCDDB_LIBS}
 )
 
 install(

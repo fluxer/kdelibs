@@ -42,27 +42,28 @@
 # The following variables point to the location of the KDE libraries,
 # but shouldn't be used directly:
 #
-#  KDE4_KDECORE_LIBRARY     - the kdecore library
-#  KDE4_KDEUI_LIBRARY       - the kdeui library
-#  KDE4_KIO_LIBRARY         - the kio library
-#  KDE4_KPARTS_LIBRARY      - the kparts library
-#  KDE4_KEMOTICONS_LIBRARY  - the kemoticons library
-#  KDE4_KIDLETIME_LIBRARY   - the kidletime library
-#  KDE4_KCMUTILS_LIBRARY    - the kcmutils library
-#  KDE4_KPRINTUTILS_LIBRARY - the kprintutils library
-#  KDE4_KFILE_LIBRARY       - the kfile library
-#  KDE4_KDNSSD_LIBRARY      - the kdnssd library
-#  KDE4_THREADWEAVER_LIBRARY- the threadweaver library
-#  KDE4_SOLID_LIBRARY       - the solid library
-#  KDE4_KNOTIFYCONFIG_LIBRARY- the knotifyconfig library
-#  KDE4_KROSSCORE_LIBRARY   - the krosscore library
-#  KDE4_KTEXTEDITOR_LIBRARY - the ktexteditor library
-#  KDE4_PLASMA_LIBRARY      - the plasma library
+#  KDE4_KDECORE_LIBRARY       - the kdecore library
+#  KDE4_KDEUI_LIBRARY         - the kdeui library
+#  KDE4_KIO_LIBRARY           - the kio library
+#  KDE4_KPARTS_LIBRARY        - the kparts library
+#  KDE4_KEMOTICONS_LIBRARY    - the kemoticons library
+#  KDE4_KIDLETIME_LIBRARY     - the kidletime library
+#  KDE4_KCMUTILS_LIBRARY      - the kcmutils library
+#  KDE4_KPRINTUTILS_LIBRARY   - the kprintutils library
+#  KDE4_KFILE_LIBRARY         - the kfile library
+#  KDE4_KDNSSD_LIBRARY        - the kdnssd library
+#  KDE4_THREADWEAVER_LIBRARY  - the threadweaver library
+#  KDE4_SOLID_LIBRARY         - the solid library
+#  KDE4_KNOTIFYCONFIG_LIBRARY - the knotifyconfig library
+#  KDE4_KROSSCORE_LIBRARY     - the krosscore library
+#  KDE4_KTEXTEDITOR_LIBRARY   - the ktexteditor library
+#  KDE4_PLASMA_LIBRARY        - the plasma library
 #  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
-#  KDE4_KDEWEBKIT_LIBRARY   - the kdewebkit library
-#  KDE4_KCDDB_LIBRARY       - the kcddb library
-#  KDE4_KDCRAW_LIBRARY       - the kdcraw library
-#  KDE4_KEXIV2_LIBRARY       - the kexiv2 library
+#  KDE4_KDEWEBKIT_LIBRARY     - the kdewebkit library
+#  KDE4_KCDDB_LIBRARY         - the kcddb library
+#  KDE4_KDCRAW_LIBRARY        - the kdcraw library
+#  KDE4_KEXIV2_LIBRARY        - the kexiv2 library
+#  KDE4_KMEDIAPLAYER_LIBRARY  - the kmediaplayer library
 #
 # Compared to the variables above, the following variables
 # also contain all of the depending libraries, so the variables below
@@ -91,6 +92,7 @@
 #  KDE4_KCDDB_LIBS            - the kcddb library and all depending libraries
 #  KDE4_KDCRAW_LIBS           - the kdcraw library and all depending libraries
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
+#  KDE4_KMEDIAPLAYER_LIBS     - the kmediaplayer library and all depending libraries
 #
 # This module defines also a bunch of variables used as locations for install directories
 # for files of the package which is using this module. These variables don't say
@@ -400,6 +402,7 @@ endif(_kdeBootStrapping)
 # In bootstrapping mode KDE4_TARGET_PREFIX is empty, so e.g. KDE4_KDECORE_LIBRARY
 # will be simply set to "kdecore".
 set(_kde_libraries
+    kmediaplayer
     kcddb
     kcmutils
     kdcraw
