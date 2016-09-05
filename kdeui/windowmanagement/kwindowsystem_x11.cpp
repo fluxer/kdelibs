@@ -670,7 +670,7 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
             QPixmap pm = QPixmap::fromX11Pixmap( p );
             if ( scale && width > 0 && height > 0 && !pm.isNull()
                  && ( pm.width() != width || pm.height() != height) ){
-                result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
+                result = pm.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
             } else {
                 result = pm;
             }
@@ -700,7 +700,7 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
                 QPixmap pm = KIconLoader::global()->loadIcon( className.toLower(), KIconLoader::Small, iconWidth,
                                                             KIconLoader::DefaultState, QStringList(), 0, true );
                 if( scale && !pm.isNull() )
-                    result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
+                    result = pm.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
                 else
                     result = pm;
 
@@ -717,7 +717,7 @@ QPixmap KWindowSystem::icon( WId win, int width, int height, bool scale, int fla
             QPixmap pm = KIconLoader::global()->loadIcon( "xorg", KIconLoader::Small, iconWidth,
                                                           KIconLoader::DefaultState, QStringList(), 0, true );
             if( scale && !pm.isNull() )
-                result = QPixmap::fromImage( pm.toImage().scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation ) );
+                result = pm.scaled( width, height, Qt::IgnoreAspectRatio, Qt::SmoothTransformation );
             else
                 result = pm;
         }
