@@ -45,13 +45,13 @@ private:
         { return static_cast<KSSLD *>(parent()); }
 
 public Q_SLOTS:
-    inline Q_NOREPLY void setRule(const KSslCertificateRule &rule)
+    inline void setRule(const KSslCertificateRule &rule)
         { return p()->setRule(rule); }
 
-    inline Q_NOREPLY void clearRule__rule(const KSslCertificateRule &rule)
+    inline void clearRule__rule(const KSslCertificateRule &rule)
         { return p()->clearRule(rule); }
 
-    inline Q_NOREPLY void clearRule__certHost(const QSslCertificate &cert, const QString &hostName)
+    inline void clearRule__certHost(const QSslCertificate &cert, const QString &hostName)
         { return p()->clearRule(cert, hostName); }
 
     inline KSslCertificateRule rule(const QSslCertificate &cert, const QString &hostName)

@@ -46,8 +46,8 @@ namespace KPAC
     public Q_SLOTS:
         Q_SCRIPTABLE QString proxyForUrl( const QString& checkUrl, const QDBusMessage & );
         Q_SCRIPTABLE QStringList proxiesForUrl( const QString& checkUrl, const QDBusMessage & );
-        Q_SCRIPTABLE Q_NOREPLY void blackListProxy( const QString& proxy );
-        Q_SCRIPTABLE Q_NOREPLY void reset();
+        Q_SCRIPTABLE void blackListProxy( const QString& proxy );
+        Q_SCRIPTABLE void reset();
 
     private Q_SLOTS:
         void disconnectNetwork();

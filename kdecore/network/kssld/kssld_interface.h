@@ -52,7 +52,7 @@ public:
     ~OrgKdeKSSLDInterface() {}
 
 public Q_SLOTS: // METHODS
-    Q_NOREPLY void setRule(const KSslCertificateRule &rule)
+    void setRule(const KSslCertificateRule &rule)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(rule);
@@ -60,7 +60,7 @@ public Q_SLOTS: // METHODS
                              argumentList);
     }
 
-    Q_NOREPLY void clearRule(const KSslCertificateRule &rule)
+    void clearRule(const KSslCertificateRule &rule)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(rule);
@@ -68,7 +68,7 @@ public Q_SLOTS: // METHODS
                              argumentList);
     }
 
-    Q_NOREPLY void clearRule(const QSslCertificate &cert, const QString &hostName)
+    void clearRule(const QSslCertificate &cert, const QString &hostName)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(cert) << qVariantFromValue(hostName);

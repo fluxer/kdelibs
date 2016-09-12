@@ -57,7 +57,7 @@ Q_SIGNALS:
     void teardownRequested(const QString &udi);
 
 public Q_SLOTS:
-    Q_SCRIPTABLE Q_NOREPLY void passphraseReply( const QString & passphrase );
+    Q_SCRIPTABLE void passphraseReply( const QString & passphrase );
 
 private Q_SLOTS:
     void slotChanged();
