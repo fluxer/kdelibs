@@ -217,7 +217,6 @@ void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (m_options & HiddenControls) {
-        _updateControls(true);
         m_timer.restart();
         event->ignore();
     }
@@ -227,6 +226,8 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
 {
     if (m_timer.elapsed() > 3000) {
         _updateControls(false);
+    } else {
+        _updateControls(true);
     }
     event->ignore();
 }
