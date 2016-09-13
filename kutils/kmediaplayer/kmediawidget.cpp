@@ -25,9 +25,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QTimer>
-#ifndef QT_KATIE
 #include <QMouseEvent>
-#endif
 
 #include "kmediaplayer.h"
 #include "kmediawidget.h"

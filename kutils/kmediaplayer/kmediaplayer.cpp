@@ -20,9 +20,7 @@
 #include <klocale.h>
 #include <QCoreApplication>
 #include <QUrl>
-#ifndef QT_KATIE
 #include <QDragEnterEvent>
-#endif
 #include "kmediaplayer.h"
 
 #ifdef HAVE_MPV

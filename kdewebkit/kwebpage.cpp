@@ -254,9 +254,7 @@ KWebPage::KWebPage(QObject *parent, Integration flags)
     setActionIcon(action(Undo), KIcon("edit-undo"));
     setActionIcon(action(Redo), KIcon("edit-redo"));
     setActionIcon(action(SelectAll), KIcon("edit-select-all"));
-#ifndef QT_KATIE
     setActionIcon(action(InspectElement), KIcon("view-process-all"));
-#endif
     setActionIcon(action(OpenLinkInNewWindow), KIcon("window-new"));
     setActionIcon(action(OpenFrameInNewWindow), KIcon("window-new"));
     setActionIcon(action(OpenImageInNewWindow), KIcon("window-new"));

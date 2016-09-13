@@ -45,9 +45,7 @@
 #include <QNetworkRequest>
 #include <QWebFrame>
 #include <QWebElement>
-#ifndef QT_KATIE
 #include <QWebInspector>
-#endif
 #include <QToolTip>
 #include <QCoreApplication>
 
@@ -60,9 +58,7 @@ WebView::WebView(KWebKitPart* part, QWidget* parent)
         :KWebView(parent, false),
          m_actionCollection(new KActionCollection(this)),
          m_part(part),
-#ifndef QT_KATIE
          m_webInspector(0),
-#endif
          m_autoScrollTimerId(-1),
          m_verticalAutoScrollSpeed(0),
          m_horizontalAutoScrollSpeed(0),
@@ -483,7 +479,6 @@ void WebView::editableContentActionPopupMenu(KParts::BrowserExtension::ActionGro
         editableContentActions.append(action);
     }
 
-#ifndef QT_KATIE
     if (settings()->testAttribute(QWebSettings::DeveloperExtrasEnabled)) {
         if (!m_webInspector) {
             m_webInspector = new QWebInspector;
@@ -495,7 +490,6 @@ void WebView::editableContentActionPopupMenu(KParts::BrowserExtension::ActionGro
         editableContentActions.append(action);
         editableContentActions.append(pageAction(QWebPage::InspectElement));
     }
-#endif
 
     partGroupMap.insert("editactions" , editableContentActions);
 }
@@ -611,11 +605,7 @@ void WebView::partActionPopupMenu(KParts::BrowserExtension::ActionGroupMap& part
     const bool showDocSourceAction = (!m_result.linkUrl().isValid() &&
                                       !m_result.imageUrl().isValid() &&
                                       !m_result.isContentSelected());
-#ifndef QT_KATIE
     const bool showInspectorAction = settings()->testAttribute(QWebSettings::DeveloperExtrasEnabled);
-#else
-    const bool showInspectorAction = false;
-#endif
 
     if (showDocSourceAction || showInspectorAction) {
         KAction *separatorAction = new KAction(m_actionCollection);
@@ -626,7 +616,6 @@ void WebView::partActionPopupMenu(KParts::BrowserExtension::ActionGroupMap& part
     if (showDocSourceAction)
         partActions.append(m_part->actionCollection()->action("viewDocumentSource"));
 
-#ifndef QT_KATIE
     if (showInspectorAction) {
         if (!m_webInspector) {
             m_webInspector = new QWebInspector;
@@ -640,7 +629,6 @@ void WebView::partActionPopupMenu(KParts::BrowserExtension::ActionGroupMap& part
             m_webInspector = 0;
         }
     }
-#endif
 
     partGroupMap.insert("partactions", partActions);
 }

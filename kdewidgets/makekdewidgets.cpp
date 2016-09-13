@@ -21,11 +21,7 @@ static const char classHeader[] = 	"/**\n"
                                                 "*/\n"
                                 "#include <QtGui/qicon.h>\n"
                                 "#include <QtDesigner/container.h>\n"
-                                "#ifdef QT_KATIE\n"
-                                "#include <QtUiTools/customwidget.h>\n"
-                                "#else\n"
                                 "#include <QtDesigner/customwidget.h>\n"
-                                "#endif\n"
                                 "#include <QtCore/qplugin.h>\n"
                                 "#include <QtCore/qdebug.h>\n";
 
