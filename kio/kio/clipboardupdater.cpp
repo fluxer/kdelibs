@@ -23,7 +23,7 @@
 #include "deletejob.h"
 
 #include <QApplication>
-#include <QtGui/qmime.h>
+#include <QMimeData>
 #include <QClipboard>
 
 using namespace KIO;
