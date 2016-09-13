@@ -22,6 +22,7 @@
 
 #include <kdecore_export.h>
 #include <QtCore/qshareddata.h>
+#include <QtCore/qdatastream.h>
 
 class QVariant;
 class KServiceActionPrivate;
