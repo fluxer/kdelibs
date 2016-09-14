@@ -8,13 +8,13 @@ FOREACH(file ${files})
   MESSAGE(STATUS "Uninstalling \"${file}\"")
   IF(EXISTS "${file}")
     EXECUTE_PROCESS(
-      "@CMAKE_COMMAND@" -E remove \"${file}\""
+      COMMAND "@CMAKE_COMMAND@" -E remove \"${file}\"
       OUTPUT_VARIABLE rm_out
-      RETURN_VALUE rm_retval
-      )
+      RESULT_VARIABLE rm_retval
+    )
     IF("${rm_retval}" STREQUAL 0)
     ELSE("${rm_retval}" STREQUAL 0)
-      MESSAGE(FATAL_ERROR "Problem when removing \"${file}\"")
+      MESSAGE(FATAL_ERROR "Problem when removing \"${file}\": ${rm_out}")
     ENDIF("${rm_retval}" STREQUAL 0)
   ELSE(EXISTS "${file}")
     MESSAGE(STATUS "File \"${file}\" does not exist.")
