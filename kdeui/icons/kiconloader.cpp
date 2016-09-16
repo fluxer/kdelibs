@@ -1024,18 +1024,13 @@ QString KIconLoader::iconPath(const QString& _name, int group_or_size,
     QString path;
     if (group_or_size == KIconLoader::User)
     {
-        static const QString &png_ext = KGlobal::staticQString(".png");
-        static const QString &xpm_ext = KGlobal::staticQString(".xpm");
-        path = d->mpDirs->findResource("appicon", name + png_ext);
-
-        static const QString &svgz_ext = KGlobal::staticQString(".svgz");
-        static const QString &svg_ext = KGlobal::staticQString(".svg");
+        path = d->mpDirs->findResource("appicon", name + QLatin1String(".png"));
         if (path.isEmpty())
-            path = d->mpDirs->findResource("appicon", name + svgz_ext);
+            path = d->mpDirs->findResource("appicon", name + QLatin1String(".svgz"));
         if (path.isEmpty())
-            path = d->mpDirs->findResource("appicon", name + svg_ext);
+            path = d->mpDirs->findResource("appicon", name + QLatin1String(".svg"));
         if (path.isEmpty())
-            path = d->mpDirs->findResource("appicon", name + xpm_ext);
+            path = d->mpDirs->findResource("appicon", name + QLatin1String(".xpm"));
         return path;
     }
 
