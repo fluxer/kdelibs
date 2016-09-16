@@ -1,1 +1,1 @@
-#cmakedefine HAVE_XKB 
+#cmakedefine HAVE_XKB

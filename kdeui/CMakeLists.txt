@@ -35,8 +35,8 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/util/config-kwallet.h
 )
 
-if (X11_Xkb_FOUND)
-     SET(HAVE_XKB TRUE)
+if (X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
+     set(HAVE_XKB TRUE)
 endif()
 configure_file(
     util/config-kkeyserver.h.cmake
@@ -312,7 +312,7 @@ if(Q_WS_X11)
     )
 endif()
 
-if (Q_WS_X11 AND X11_Xkb_FOUND)
+if (Q_WS_X11 AND X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
     include_directories (
         ${X11_Xkb_INCLUDE_PATH}
         ${X11_Xlib_INCLUDE_PATH}
