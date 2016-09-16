@@ -26,7 +26,6 @@
 #include <kstandarddirs.h>
 #include <kglobal.h>
 #include <ksavefile.h>
-#include <kstringhandler.h>
 
 //BEGIN KColorCollectionPrivate
 class KColorCollectionPrivate

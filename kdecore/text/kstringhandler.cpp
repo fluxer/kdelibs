@@ -287,15 +287,11 @@ done:
 
 QString KStringHandler::from8Bit( const char *str )
 {
-  if (!str)
+  if (!str || !*str)
     return QString();
-  if (!*str) {
-    static const QString &emptyString = KGlobal::staticQString(QLatin1String(""));
-    return emptyString;
-  }
-  return KStringHandler::isUtf8( str ) ?
-             QString::fromUtf8( str ) :
-             QString::fromLocal8Bit( str );
+  if (KStringHandler::isUtf8( str ))
+    return QString::fromUtf8( str );
+  return QString::fromLocal8Bit( str );
 }
 
 int KStringHandler::naturalCompare(const QString &_a, const QString &_b, Qt::CaseSensitivity caseSensitivity)

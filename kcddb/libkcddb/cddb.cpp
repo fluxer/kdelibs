@@ -26,7 +26,6 @@
 #include <qstringlist.h>
 
 #include <kdebug.h>
-#include <kstringhandler.h>
 #include <klocale.h>
 
 namespace KCDDB

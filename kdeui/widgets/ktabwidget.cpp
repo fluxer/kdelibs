@@ -23,21 +23,16 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/qevent.h>
-#include <QtGui/qevent.h>
-#include <QtGui/qevent.h>
 #include <QtGui/QStyle>
 #include <QtGui/QStyleOption>
 #include <QtGui/QTextDocument>
-#include <QtGui/qevent.h>
 #include <QtCore/QList>
 
 #include <ksharedconfig.h>
 #include <kiconloader.h>
 #include <kstringhandler.h>
 #include <kdebug.h>
-
 #include <ktabbar.h>
-
 #include <kconfiggroup.h>
 
 class KTabWidget::Private

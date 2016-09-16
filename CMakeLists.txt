@@ -237,14 +237,13 @@ set(KDE4_KPARTS_INCLUDES
 
 set(LIBRARY_TYPE SHARED)
 
-# ACL stuff (used in kio/ and kioslaves/)
 macro_optional_find_package(ACL)
 set_package_properties(ACL
     PROPERTIES
     DESCRIPTION "Support for manipulating access control lists"
     URL "ftp://oss.sgi.com/projects/xfs/cmd_tars"
     TYPE RECOMMENDED
-    PURPOSE "STRONGLY RECOMMENDED"
+    PURPOSE "KIO and KIO slaves"
 )
 
 macro_bool_to_01(ACL_FOUND HAVE_LIBACL HAVE_POSIX_ACL)

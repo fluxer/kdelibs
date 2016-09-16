@@ -21,7 +21,6 @@
 #include "kbookmarkimporter_ie.h"
 
 #include <kfiledialog.h>
-#include <kstringhandler.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <qtextcodec.h>

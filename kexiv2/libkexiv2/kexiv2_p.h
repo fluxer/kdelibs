@@ -58,7 +58,6 @@
 
 #include <ktemporaryfile.h>
 #include <kencodingdetector.h>
-#include <kstringhandler.h>
 #include <kdeversion.h>
 #include <kdebug.h>
 

@@ -27,7 +27,6 @@
 #include <kio/copyjob.h>
 #include <klocale.h>
 #include <kshell.h>
-#include <kstringhandler.h>
 #include <kmimetypetrader.h>
 #include <ktemporaryfile.h>
 #include <kdebug.h>

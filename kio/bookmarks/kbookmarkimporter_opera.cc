@@ -22,7 +22,6 @@
 #include "kbookmarkimporter_opera_p.h"
 
 #include <kfiledialog.h>
-#include <kstringhandler.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <qtextcodec.h>
