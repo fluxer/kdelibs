@@ -33,6 +33,7 @@ extern "C"
 #include <utime.h>
 }
 
+#include <kstringhandler.h>
 #include <kde_file.h>
 
 namespace KExiv2Iface
