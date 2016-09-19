@@ -41,6 +41,7 @@ class KMediaWidgetPrivate;
     QMainWindow *window = new QMainWindow();
     window->show();
     KMediaWidget *player = new KMediaWidget(window);
+    window->setCentralWidget(player);
     player->open("http://video.webmfiles.org/big-buck-bunny_trailer.webm");
     @endcode
 
