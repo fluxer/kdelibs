@@ -25,9 +25,7 @@
 #include <kmimetype.h>
 #include <kmediaplayer_export.h>
 
-#ifdef kmediaplayer_EXPORTS
-typedef struct mpv_handle mpv_handle;
-#endif
+class KAbstractPlayerPrivate;
 
 /*!
     Base class for @p KAudioPlayer and @p KMediaPlayer
@@ -270,12 +268,7 @@ private slots:
     void _processHandleEvents();
 
 private:
-#ifdef kmediaplayer_EXPORTS
-    mpv_handle *m_handle;
-#endif // kmediaplayer_EXPORTS
-    QString m_appname;
-    QSettings *m_settings;
-    bool m_stopprocessing;
+    KAbstractPlayerPrivate *d;
 };
 
 
@@ -337,12 +330,7 @@ private slots:
     void _processHandleEvents();
 
 private:
-#ifdef kmediaplayer_EXPORTS
-    mpv_handle *m_handle;
-#endif // kmediaplayer_EXPORTS
-    QString m_appname;
-    QSettings *m_settings;
-    bool m_stopprocessing;
+    KAbstractPlayerPrivate *d;
 };
 
 #endif // KMEDIAPLAYER_H

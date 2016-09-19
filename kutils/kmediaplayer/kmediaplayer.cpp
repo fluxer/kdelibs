@@ -23,7 +23,7 @@
 #include <QDragEnterEvent>
 #include "kmediaplayer.h"
 
-#ifdef HAVE_MPV
+#if defined(HAVE_MPV)
 #include <mpv/client.h>
 #include <mpv/qthelper.hpp>
 #else
@@ -39,6 +39,17 @@ static int kmp_x11_init_threads() {
 };
 Q_CONSTRUCTOR_FUNCTION(kmp_x11_init_threads)
 #endif
+
+class KAbstractPlayerPrivate
+{
+public:
+#if defined(HAVE_MPV)
+    mpv_handle *m_handle;
+#endif
+    QString m_appname;
+    QSettings *m_settings;
+    bool m_stopprocessing;
+};
 
 // QVariant cannot be constructed from WId type
 typedef quintptr WIdType;
@@ -160,7 +171,7 @@ bool KAbstractPlayer::isSeekable()
 
 bool KAbstractPlayer::isFullscreen()
 {
-#ifdef HAVE_MPV
+#if defined(HAVE_MPV)
     return property("fullscreen").toBool();
 #else
     return s_fullscreen;
@@ -208,14 +219,14 @@ void KAbstractPlayer::setAudioOutput(QString output)
 
 void KAbstractPlayer::setFullscreen(bool fullscreen)
 {
-#ifdef HAVE_MPV
+#if defined(HAVE_MPV)
     setProperty("fullscreen", fullscreen);
 #else
     s_fullscreen = fullscreen;
 #endif // HAVE_MPV
 }
 
-#ifdef HAVE_MPV
+#if defined(HAVE_MPV)
 /*
     Since exposing mpv_handle is not desirable and sigals/slots cannot be virtual nor multiple
     QObject inheritance works here are some pre-processor definitions used to share the code as
@@ -223,20 +234,20 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 */
 #define COMMON_CONSTRUCTOR \
     kDebug() << i18n("initializing player"); \
-    m_stopprocessing = false; \
+    d->m_stopprocessing = false; \
     setlocale(LC_NUMERIC, "C"); \
-    m_handle = mpv_create(); \
-    if (m_handle) { \
-        int rc = mpv_initialize(m_handle); \
+    d->m_handle = mpv_create(); \
+    if (d->m_handle) { \
+        int rc = mpv_initialize(d->m_handle); \
         if (rc < 0) { \
             kWarning() << mpv_error_string(rc); \
         } else {\
-            mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE); \
-            mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE); \
-            mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG); \
-            mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG); \
-            mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG); \
-            mpv_request_log_messages(m_handle, "info"); \
+            mpv_observe_property(d->m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE); \
+            mpv_observe_property(d->m_handle, 0, "loadfile", MPV_FORMAT_NONE); \
+            mpv_observe_property(d->m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG); \
+            mpv_observe_property(d->m_handle, 0, "seekable", MPV_FORMAT_FLAG); \
+            mpv_observe_property(d->m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG); \
+            mpv_request_log_messages(d->m_handle, "info"); \
         } \
     } else { \
         kWarning() << i18n("context creation failed"); \
@@ -244,16 +255,17 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 
 #define COMMON_DESTRUCTOR \
     kDebug() << i18n("destroying player"); \
-    m_stopprocessing = true; \
-    mpv_terminate_destroy(m_handle); \
-    if (m_settings) { \
-        delete m_settings; \
-    }
+    d->m_stopprocessing = true; \
+    mpv_terminate_destroy(d->m_handle); \
+    if (d->m_settings) { \
+        delete d->m_settings; \
+    } \
+    delete d;
 
 #define COMMMON_COMMAND_SENDER \
     kDebug() << i18n("sending command") << command; \
-    if (m_handle) { \
-        QVariant error = mpv::qt::command_variant(m_handle, command); \
+    if (d->m_handle) { \
+        QVariant error = mpv::qt::command_variant(d->m_handle, command); \
         if (!error.isNull()) { \
             kWarning() << error; \
         } \
@@ -261,26 +273,26 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 
 #define COMMON_PROPERTY_SETTER \
     kDebug() << i18n("setting property") << name << value; \
-    if (m_handle) { \
-        mpv::qt::set_property_variant(m_handle, name, value); \
+    if (d->m_handle) { \
+        mpv::qt::set_property_variant(d->m_handle, name, value); \
     }
 
 #define COMMON_PROPERTY_GETTER \
     kDebug() << i18n("getting property") << name; \
-    if (m_handle) { \
-        return mpv::qt::get_property_variant(m_handle, name); \
+    if (d->m_handle) { \
+        return mpv::qt::get_property_variant(d->m_handle, name); \
     } \
     return QVariant();
 
 #define COMMON_OPTION_SETTER \
     kDebug() << i18n("setting option") << name << value; \
-    if (m_handle) { \
-        mpv::qt::set_option_variant(m_handle, name, value); \
+    if (d->m_handle) { \
+        mpv::qt::set_option_variant(d->m_handle, name, value); \
     }
 
 #define COMMMON_EVENT_HANDLER \
-    while (!m_stopprocessing) { \
-        mpv_event *event = mpv_wait_event(m_handle, 0); \
+    while (!d->m_stopprocessing) { \
+        mpv_event *event = mpv_wait_event(d->m_handle, 0); \
         if (event->event_id == MPV_EVENT_NONE) { \
             break; \
         } \
@@ -364,36 +376,36 @@ static void wakeup_audio(void *ctx)
 }
 
 KAudioPlayer::KAudioPlayer(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), d(new KAbstractPlayerPrivate)
 {
     COMMON_CONSTRUCTOR
 
-    m_appname = QCoreApplication::applicationName();
-    m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
-    if (m_handle) {
-        mpv_set_wakeup_callback(m_handle, wakeup_audio, this);
+    d->m_appname = QCoreApplication::applicationName();
+    d->m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
+    if (d->m_handle) {
+        mpv_set_wakeup_callback(d->m_handle, wakeup_audio, this);
         // TODO: newer releases use vid, video is compat!
         // NOTE: the change is pre-2014
         setProperty("video", "no");
 
-        QString globalaudio = m_settings->value("global/audiooutput", "auto").toString();
-        int globalvolume = m_settings->value("global/volume", 90).toInt();
-        bool globalmute = m_settings->value("global/mute", false).toBool();
-        setAudioOutput(m_settings->value(m_appname + "/audiooutput", globalaudio).toString());
-        setVolume(m_settings->value(m_appname + "/volume", globalvolume).toInt());
-        setMute(m_settings->value(m_appname + "/mute", globalmute).toBool());
+        QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
+        int globalvolume = d->m_settings->value("global/volume", 90).toInt();
+        bool globalmute = d->m_settings->value("global/mute", false).toBool();
+        setAudioOutput(d->m_settings->value(d->m_appname + "/audiooutput", globalaudio).toString());
+        setVolume(d->m_settings->value(d->m_appname + "/volume", globalvolume).toInt());
+        setMute(d->m_settings->value(d->m_appname + "/mute", globalmute).toBool());
     }
 }
 
 KAudioPlayer::~KAudioPlayer()
 {
-    if (m_handle && m_settings && m_settings->isWritable()) {
-        m_settings->beginGroup(m_appname);
-        m_settings->setValue("audiooutput", audiooutput());
-        m_settings->setValue("volume", volume());
-        m_settings->setValue("mute", mute());
-        m_settings->endGroup();
-        m_settings->sync();
+    if (d->m_handle && d->m_settings && d->m_settings->isWritable()) {
+        d->m_settings->beginGroup(d->m_appname);
+        d->m_settings->setValue("audiooutput", audiooutput());
+        d->m_settings->setValue("volume", volume());
+        d->m_settings->setValue("mute", mute());
+        d->m_settings->endGroup();
+        d->m_settings->sync();
     } else {
         kWarning() << i18n("Could not save state");
     }
@@ -439,14 +451,14 @@ static void wakeup_media(void *ctx)
 }
 
 KMediaPlayer::KMediaPlayer(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), d(new KAbstractPlayerPrivate)
 {
     COMMON_CONSTRUCTOR
 
-    m_appname = QCoreApplication::applicationName();
-    m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
-    if (m_handle) {
-        mpv_set_wakeup_callback(m_handle, wakeup_media, this);
+    d->m_appname = QCoreApplication::applicationName();
+    d->m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
+    if (d->m_handle) {
+        mpv_set_wakeup_callback(d->m_handle, wakeup_media, this);
         QVariant wid;
         if (parent) {
             wid = QVariant::fromValue(static_cast<WIdType>(parent->winId()));
@@ -459,24 +471,24 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
             kWarning() << i18n("Could not get widget ID");
         }
 
-        QString globalaudio = m_settings->value("global/audiooutput", "auto").toString();
-        int globalvolume = m_settings->value("global/volume", 90).toInt();
-        bool globalmute = m_settings->value("global/mute", false).toBool();
-        setAudioOutput(m_settings->value(m_appname + "/audiooutput", globalaudio).toString());
-        setVolume(m_settings->value(m_appname + "/volume", globalvolume).toInt());
-        setMute(m_settings->value(m_appname + "/mute", globalmute).toBool());
+        QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
+        int globalvolume = d->m_settings->value("global/volume", 90).toInt();
+        bool globalmute = d->m_settings->value("global/mute", false).toBool();
+        setAudioOutput(d->m_settings->value(d->m_appname + "/audiooutput", globalaudio).toString());
+        setVolume(d->m_settings->value(d->m_appname + "/volume", globalvolume).toInt());
+        setMute(d->m_settings->value(d->m_appname + "/mute", globalmute).toBool());
     }
 }
 
 KMediaPlayer::~KMediaPlayer()
 {
-    if (m_handle && m_settings && m_settings->isWritable()) {
-        m_settings->beginGroup(m_appname);
-        m_settings->setValue("audiooutput", audiooutput());
-        m_settings->setValue("volume", volume());
-        m_settings->setValue("mute", mute());
-        m_settings->endGroup();
-        m_settings->sync();
+    if (d->m_handle && d->m_settings && d->m_settings->isWritable()) {
+        d->m_settings->beginGroup(d->m_appname);
+        d->m_settings->setValue("audiooutput", audiooutput());
+        d->m_settings->setValue("volume", volume());
+        d->m_settings->setValue("mute", mute());
+        d->m_settings->endGroup();
+        d->m_settings->sync();
     } else {
         kWarning() << i18n("Could not save state");
     }
