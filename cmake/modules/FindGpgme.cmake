@@ -123,8 +123,6 @@ if ( WIN32 )
         ${CMAKE_INSTALL_PREFIX}/lib
     )
 
-    set( GPGME_INCLUDES ${GPGME_INCLUDES} )
-
     if ( _gpgme_vanilla_library AND _gpg_error_library )
       set( GPGME_VANILLA_LIBRARIES ${_gpgme_vanilla_library} ${_gpg_error_library} )
       set( GPGME_VANILLA_FOUND     true )
@@ -293,13 +291,6 @@ else() # not WIN32
 
           endforeach( _flavour )
 
-          # ensure that they are cached
-          # This comment above doesn't make sense, the four following lines seem to do nothing. Alex
-          set( GPGME_INCLUDES          ${GPGME_INCLUDES} )
-          set( GPGME_VANILLA_LIBRARIES ${GPGME_VANILLA_LIBRARIES} )
-          set( GPGME_PTHREAD_LIBRARIES ${GPGME_PTHREAD_LIBRARIES} )
-          set( GPGME_PTH_LIBRARIES     ${GPGME_PTH_LIBRARIES} )
-
           if ( GPGME_VANILLA_FOUND OR GPGME_PTHREAD_FOUND OR GPGME_PTH_FOUND )
             set( GPGME_FOUND true )
           else()
@@ -382,3 +373,11 @@ else()
 endif()
 
 set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS_gpgme_saved ) 
+
+if( GPGME_VANILLA_LIBRARIES OR GPGME_PTH_LIBRARIES OR GPGME_PTH_PTHREAD )
+    set(GPGME_LIBRARIES ${GPGME_VANILLA_LIBRARIES} ${GPGME_PTH_LIBRARIES} ${GPGME_PTH_PTHREAD})
+endif()
+
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Gpgme DEFAULT_MSG GPGME_INCLUDES GPGME_LIBRARIES)
+mark_as_advanced(GPGME_INCLUDES GPGME_LIBRARIES)
