@@ -31,38 +31,52 @@
 #include "kmediawidget.h"
 #include "ui_kmediawidget.h"
 
-KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
-    : QWidget(parent)
+class KMediaWidgetPrivate
 {
-    d = new Ui_KMediaWidgetPrivate();
-    d->setupUi(this);
-    m_player = new KMediaPlayer(d->w_player);
-    m_options = options;
-    m_parent = parent;
+public:
+    KMediaPlayer *m_player;
+    KMediaWidget::KMediaOptions m_options;
+    QWidget *m_parent;
+    QMainWindow *m_parenthack;
+    QSize m_parentsizehack;
+    QElapsedTimer m_timer;
+    QString m_path;
+    bool m_replay;
+    Ui_KMediaWidgetPrivate *m_ui;
+};
 
-    d->w_play->setEnabled(false);
-    d->w_position->setEnabled(false);
-    d->w_volume->setValue(m_player->volume());
+KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
+    : QWidget(parent), d(new KMediaWidgetPrivate)
+{
+    d->m_ui = new Ui_KMediaWidgetPrivate();
+    d->m_ui->setupUi(this);
+    d->m_player = new KMediaPlayer(d->m_ui->w_player);
+    d->m_options = options;
+    d->m_parent = parent;
 
-    connect(d->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
-    connect(d->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
-    connect(d->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
-    connect(d->w_fullscreen, SIGNAL(clicked()), SLOT(setFullscreen()));
+    d->m_ui->w_play->setEnabled(false);
+    d->m_ui->w_position->setEnabled(false);
+    d->m_ui->w_volume->setValue(d->m_player->volume());
 
-    connect(m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
-    connect(m_player, SIGNAL(loaded()), this, SLOT(_updateLoaded()));
-    connect(m_player, SIGNAL(seekable(bool)), this, SLOT(_updateSeekable(bool)));
-    connect(m_player, SIGNAL(position(double)), this, SLOT(_updatePosition(double)));
-    connect(m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
-    connect(m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
+    connect(d->m_ui->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
+    connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
+    connect(d->m_ui->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
+    connect(d->m_ui->w_fullscreen, SIGNAL(clicked()), SLOT(setFullscreen()));
+
+    connect(d->m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
+    connect(d->m_player, SIGNAL(loaded()), this, SLOT(_updateLoaded()));
+    connect(d->m_player, SIGNAL(seekable(bool)), this, SLOT(_updateSeekable(bool)));
+    connect(d->m_player, SIGNAL(position(double)), this, SLOT(_updatePosition(double)));
+    connect(d->m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
+    connect(d->m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
 
     if (options & DragDrop) {
         setAcceptDrops(true);
-        m_player->setAcceptDrops(true);
+        d->m_player->setAcceptDrops(true);
     }
 
     if ((options & FullscreenVideo) == 0) {
-        d->w_fullscreen->setVisible(false);
+        d->m_ui->w_fullscreen->setVisible(false);
     }
 
     if (options & HiddenControls) {
@@ -72,70 +86,71 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
 
 KMediaWidget::~KMediaWidget()
 {
-    delete m_player;
+    delete d->m_player;
+    delete d->m_ui;
     delete d;
 }
 
 void KMediaWidget::open(QString path)
 {
     // m_path should be updated from _updateLoaded() but that may be too late
-    m_path = path;
-    m_replay = false;
+    d->m_path = path;
+    d->m_replay = false;
 
-    d->w_play->setEnabled(true);
-    d->w_position->setEnabled(true);
+    d->m_ui->w_play->setEnabled(true);
+    d->m_ui->w_position->setEnabled(true);
 
-    m_player->load(path);
+    d->m_player->load(path);
 
-    d->w_position->setEnabled(m_player->isSeekable());
+    d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
 
-    if (m_options & HiddenControls) {
+    if (d->m_options & HiddenControls) {
         startTimer(200);
-        m_timer.start();
+        d->m_timer.start();
     }
 }
 
 KMediaPlayer* KMediaWidget::player()
 {
-    return m_player;
+    return d->m_player;
 }
 
 void KMediaWidget::setPlay(int value)
 {
     // TODO: can we reliably store the position and restore it as well?
-    if (m_replay && !m_path.isEmpty()) {
-        open(m_path);
+    if (d->m_replay && !d->m_path.isEmpty()) {
+        open(d->m_path);
         return;
     }
 
     bool pause;
     if (value == -1) {
-        pause = m_player->isPlaying();
+        pause = d->m_player->isPlaying();
     } else {
         pause = bool(value);
     }
     if (pause) {
-        m_player->pause();
+        d->m_player->pause();
     } else {
-        m_player->play();
+        d->m_player->play();
     }
 }
 
 void KMediaWidget::setPosition(int value)
 {
-    m_player->seek(value);
+    d->m_player->seek(value);
 }
 
 void KMediaWidget::setVolume(int value)
 {
-    m_player->setVolume(value);
+    d->m_player->setVolume(value);
 }
 
 void KMediaWidget::setFullscreen(int value)
 {
     bool fullscreen;
     if (value == -1) {
-        fullscreen = !m_player->isFullscreen();
+        fullscreen = !d->m_player->isFullscreen();
     } else {
         fullscreen = bool(value);
     }
@@ -148,57 +163,57 @@ void KMediaWidget::setFullscreen(int value)
         and possible clients quering it, it does nothing when MPV is embed (as
         of the time of writing this).
     */
-    if (!m_parent && (parentWidget() == window()) && !m_parenthack) {
+    if (!d->m_parent && (parentWidget() == window()) && !d->m_parenthack) {
         kDebug() << i18n("using parent widget from parentWidget()");
-        m_parent = parentWidget();
-        m_parentsizehack = QSize(-1, -1);
-        m_parenthack = NULL;
-    } else if (!m_parent && parentWidget()) {
+        d->m_parent = parentWidget();
+        d->m_parentsizehack = QSize(-1, -1);
+        d->m_parenthack = NULL;
+    } else if (!d->m_parent && parentWidget()) {
         kWarning() << i18n("creating a parent, detaching widget, starting voodoo dance..");
-        m_parent = parentWidget();
-        m_parentsizehack = m_parent->size();
-        m_parenthack = new QMainWindow(m_parent);
+        d->m_parent = parentWidget();
+        d->m_parentsizehack = d->m_parent->size();
+        d->m_parenthack = new QMainWindow(d->m_parent);
     }
 
     if (fullscreen) {
-        if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
+        if (d->m_parenthack && d->m_parentsizehack.isValid() && d->m_parent) {
             kDebug() << i18n("using parent hack widget");
-            m_parenthack->setCentralWidget(this);
-            m_parenthack->showFullScreen();
-        } else if (m_parent) {
+            d->m_parenthack->setCentralWidget(this);
+            d->m_parenthack->showFullScreen();
+        } else if (d->m_parent) {
             kDebug() << i18n("using parent widget");
-            m_parent->showFullScreen();
+            d->m_parent->showFullScreen();
         } else {
             kWarning() << i18n("cannot set fullscreen state");
         }
-        m_player->setFullscreen(true);
+        d->m_player->setFullscreen(true);
     } else {
-        if (m_parenthack && m_parentsizehack.isValid() && m_parent) {
+        if (d->m_parenthack && d->m_parentsizehack.isValid() && d->m_parent) {
             kDebug() << i18n("restoring parent from hack widget");
-            setParent(m_parent);
-            resize(m_parentsizehack);
+            setParent(d->m_parent);
+            resize(d->m_parentsizehack);
             show();
-            delete m_parenthack;
-            m_parenthack = NULL;
-            m_parent = NULL;
-        } else if (m_parent) {
+            delete d->m_parenthack;
+            d->m_parenthack = NULL;
+            d->m_parent = NULL;
+        } else if (d->m_parent) {
             kDebug() << i18n("restoring from parent widget");
-            m_parent->showNormal();
+            d->m_parent->showNormal();
         } else {
             kWarning() << i18n("cannot restore to non-fullscreen state");
         }
-        m_player->setFullscreen(false);
+        d->m_player->setFullscreen(false);
     }
 }
 
 QSize KMediaWidget::sizeHint() const
 {
-    return d->w_player->sizeHint();
+    return d->m_ui->w_player->sizeHint();
 }
 
 QSize KMediaWidget::minimumSizeHint() const
 {
-    if (m_options & FullscreenVideo) {
+    if (d->m_options & FullscreenVideo) {
         return QSize(300, 233);
     }
     return QSize(180, 140);
@@ -206,7 +221,7 @@ QSize KMediaWidget::minimumSizeHint() const
 
 void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    if (m_options & FullscreenVideo) {
+    if (d->m_options & FullscreenVideo) {
         setFullscreen();
         event->ignore();
     }
@@ -214,15 +229,15 @@ void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 
 void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (m_options & HiddenControls) {
-        m_timer.restart();
+    if (d->m_options & HiddenControls) {
+        d->m_timer.restart();
         event->ignore();
     }
 }
 
 void KMediaWidget::timerEvent(QTimerEvent *event)
 {
-    if (m_timer.elapsed() > 3000) {
+    if (d->m_timer.elapsed() > 3000) {
         _updateControls(false);
     } else {
         _updateControls(true);
@@ -232,8 +247,8 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
 
 void KMediaWidget::_updateControls(bool visible)
 {
-    if (visible != d->w_frame->isVisible()) {
-        d->w_frame->setVisible(visible);
+    if (visible != d->m_ui->w_frame->isVisible()) {
+        d->m_ui->w_frame->setVisible(visible);
         emit controlsHidden(visible);
     }
 }
@@ -241,45 +256,45 @@ void KMediaWidget::_updateControls(bool visible)
 void KMediaWidget::_updatePlay(bool paused)
 {
     if (paused) {
-        d->w_play->setIcon(KIcon("media-playback-start"));
-        d->w_play->setText(i18n("Play"));
+        d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
+        d->m_ui->w_play->setText(i18n("Play"));
     } else {
-        d->w_play->setIcon(KIcon("media-playback-pause"));
-        d->w_play->setText(i18n("Pause"));
+        d->m_ui->w_play->setIcon(KIcon("media-playback-pause"));
+        d->m_ui->w_play->setText(i18n("Pause"));
     }
 }
 
 void KMediaWidget::_updateSeekable(bool seekable)
 {
-    d->w_position->setEnabled(seekable);
-    d->w_position->setMaximum(m_player->totalTime());
+    d->m_ui->w_position->setEnabled(seekable);
+    d->m_ui->w_position->setMaximum(d->m_player->totalTime());
 }
 
 void KMediaWidget::_updatePosition(double seconds)
 {
-    d->w_position->setValue(seconds);
+    d->m_ui->w_position->setValue(seconds);
 }
 
 void KMediaWidget::_updateLoaded()
 {
-    m_path = m_player->path();
-    QString title = m_player->title();
+    d->m_path = d->m_player->path();
+    QString title = d->m_player->title();
     if (!title.isEmpty()) {
         _updateStatus(title);
     }
-    _updatePlay(!m_player->isPlaying());
+    _updatePlay(!d->m_player->isPlaying());
 }
 
 void KMediaWidget::_updateStatus(QString string)
 {
-    if (m_options & FullscreenVideo) {
+    if (d->m_options & FullscreenVideo) {
         QWidget *windowwidget = window();
         KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
         if (kmainwindow) {
             kmainwindow->setCaption(string);
             KStatusBar *statusbar = kmainwindow->statusBar();
             if (statusbar) {
-                if (m_player->isPlaying()) {
+                if (d->m_player->isPlaying()) {
                     statusbar->showMessage(i18n("Now playing: %1", string));
                 } else {
                     statusbar->showMessage(string);
@@ -293,11 +308,11 @@ void KMediaWidget::_updateStatus(QString string)
 
 void KMediaWidget::_updateFinished()
 {
-    m_replay = true;
+    d->m_replay = true;
 
-    if (m_options & HiddenControls) {
+    if (d->m_options & HiddenControls) {
         // show the controls until the next open
-        m_timer.invalidate();
+        d->m_timer.invalidate();
         _updateControls(true);
     }
     _updatePlay(true);
@@ -307,14 +322,14 @@ void KMediaWidget::_updateError(QString error)
 {
     // since there are not many ways to indicate an error when
     // there are no extended controls use the play button to do so
-    if (m_options & FullscreenVideo) {
+    if (d->m_options & FullscreenVideo) {
         _updateStatus(error);
     } else {
-        d->w_play->setIcon(KIcon("dialog-error"));
-        d->w_play->setText(i18n("Error"));
+        d->m_ui->w_play->setIcon(KIcon("dialog-error"));
+        d->m_ui->w_play->setText(i18n("Error"));
     }
 
-    d->w_position->setEnabled(false);
+    d->m_ui->w_position->setEnabled(false);
 }
 
 void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
@@ -330,7 +345,7 @@ void KMediaWidget::dropEvent(QDropEvent *event)
     QStringList invalid;
     foreach (const QUrl url, urls) {
         QString urlstring = url.toString();
-        if (!m_player->isPathSupported(urlstring)) {
+        if (!d->m_player->isPathSupported(urlstring)) {
             kDebug() << i18n("ignoring unsupported:\n%1", urlstring);
             invalid.append(urlstring);
             continue;

@@ -40,8 +40,8 @@ public:
     //@{
     /**
         Low-level methods that you should most likely not use, if you do and the API has to change
-        (e.g. from MPV to a fork of MPV, who knows) then you will be on your own! They are
-        available in case the convenience methods bellow those are not enough for your use case,
+        (e.g. from MPV to a fork of MPV, VLC, something else) then you will be on your own! They
+        are available in case the convenience methods bellow those are not enough for your use case,
         but it is better to let us know your requirements instead of using them. They may serve you
         as temporary solution, for testing purposes, etc. but beware there be dragons!
     **/

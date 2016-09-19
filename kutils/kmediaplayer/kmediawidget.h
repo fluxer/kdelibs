@@ -25,6 +25,8 @@
 #include <kmediaplayer_export.h>
 #include <kmediaplayer.h>
 
+class KMediaWidgetPrivate;
+
 /*!
     The @p KMediaWidget class provides an embedable widget that can be used to playback from
     various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
@@ -50,8 +52,6 @@
     @see KMediaPlayer
     @todo keyboard shortcuts
 */
-
-class Ui_KMediaWidgetPrivate;
 
 class KMEDIAPLAYER_EXPORT KMediaWidget: public QWidget
 {
@@ -158,15 +158,7 @@ private slots:
     void _updateError(QString error);
 
 private:
-    KMediaPlayer *m_player;
-    KMediaOptions m_options;
-    QWidget *m_parent;
-    QMainWindow *m_parenthack;
-    QSize m_parentsizehack;
-    QElapsedTimer m_timer;
-    QString m_path;
-    bool m_replay;
-    Ui_KMediaWidgetPrivate *d;
+    KMediaWidgetPrivate *d;
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(KMediaWidget::KMediaOptions);
 
