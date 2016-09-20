@@ -22,6 +22,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QPushButton>
 #include <QtGui/QBoxLayout>
+#include <QtGui/QInputDialog>
 
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -93,14 +94,13 @@ int main(int argc, char **argv)
     KMessage_Test *mainWidget = new KMessage_Test;
     mainWidget->setAttribute( static_cast<Qt::WidgetAttribute>(Qt::WA_DeleteOnClose | Qt::WA_QuitOnClose) );
 
-    int i = QMessageBox::information(0, "Select", "Select type of MessageHandler",
-                                 "KMessageBox", "KPassivePopup", "Default (stderr)");
-    if(i == 0)
-    {
+    bool ok = false;
+    const QStringList choices = QStringList() << "KMessageBox" << "KPassivePopup" << "Default (stderr)";
+    QString result = QInputDialog::getItem(0, "Select", "Select type of MessageHandler", choices, 0, false, &ok);
+
+    if(ok && result == "KMessageBox") {
         KMessage::setMessageHandler( new KMessageBoxMessageHandler(mainWidget) );
-    }
-    else if(i == 1)
-    {
+    } else if(ok && result == "KPassivePopup") {
        KMessage::setMessageHandler( new KPassivePopupMessageHandler(mainWidget) );
     }
 

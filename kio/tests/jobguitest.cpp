@@ -24,8 +24,8 @@
 #include <kio/deletejob.h>
 #include "kiotesthelper.h" // createTestFile etc.
 
-#include <QCore/QMimeData>
-#include <QtGui/QClipboard>
+#include <QMimeData>
+#include <QClipboard>
 
 static QString otherTmpDir()
 {

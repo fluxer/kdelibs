@@ -26,16 +26,15 @@
 
 int main( int argc, char *argv[] )
 {
-	QApplication::setColorSpec( QApplication::CustomColor );
-	KAboutData about("KColorDialogTest", "kdelibs4", ki18n("KColorDialogTest"), "version");
-	KCmdLineArgs::init(argc, argv, &about);
-	//KApplication::disableAutoDcopRegistration();
+    KAboutData about("KColorDialogTest", "kdelibs4", ki18n("KColorDialogTest"), "version");
+    KCmdLineArgs::init(argc, argv, &about);
+    //KApplication::disableAutoDcopRegistration();
 
-	KApplication a;
+    KApplication a;
 
-	QColor color;
-	int nRet = KColorDialog::getColor( color, Qt::red /*testing default color*/ );
+    QColor color;
+    int nRet = KColorDialog::getColor( color, Qt::red /*testing default color*/ );
 
-	return nRet;
+    return nRet;
 }
 

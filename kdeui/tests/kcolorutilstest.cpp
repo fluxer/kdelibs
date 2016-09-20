@@ -4,6 +4,8 @@
 #include "../colors/kcolorspaces.h" // private header
 #include "../colors/kcolorspaces.cpp" // private implementation
 
+#include <stdio.h>
+
 void tst_KColorUtils::testOverlay()
 {
     QColor color1(10, 10, 100);

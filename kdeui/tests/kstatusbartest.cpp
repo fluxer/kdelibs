@@ -80,7 +80,7 @@ void testWindow::slotClick(int id)
       break;
 
     case 2:
-      QMessageBox::information(0, "Go to line", "Enter line number:", "where?");
+      QMessageBox::information(0, "Go to line", "Enter line number:");
       statusbar->changeItem("16543", 2);
       break;
    }

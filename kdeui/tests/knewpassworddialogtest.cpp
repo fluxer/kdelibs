@@ -26,15 +26,14 @@
 
 int main( int argc, char *argv[] )
 {
-	QApplication::setColorSpec( QApplication::CustomColor );
-	KAboutData about("KNewPasswordDialogTest", 0, ki18n("KNewPasswordDialogTest"), "1");
-	KCmdLineArgs::init(argc, argv, &about);
-	
+    KAboutData about("KNewPasswordDialogTest", 0, ki18n("KNewPasswordDialogTest"), "1");
+    KCmdLineArgs::init(argc, argv, &about);
+
     KApplication a;
 
-	KNewPasswordDialog dlg;
+    KNewPasswordDialog dlg;
     dlg.setPrompt(i18n("Enter a password for the test"));
-    
+
     if( dlg.exec() )
     {
         std::cout << "Entered password: " << (const char*)dlg.password().toLatin1() << std::endl;

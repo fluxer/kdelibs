@@ -26,10 +26,9 @@
 
 int main( int argc, char *argv[] )
 {
-	QApplication::setColorSpec( QApplication::CustomColor );
-	KAboutData about("KNewPasswordDialogTest", 0, ki18n("KNewPasswordDialogTest"), "1");
-	KCmdLineArgs::init(argc, argv, &about);
-	
+    KAboutData about("KNewPasswordDialogTest", 0, ki18n("KNewPasswordDialogTest"), "1");
+    KCmdLineArgs::init(argc, argv, &about);
+
     KApplication a;
 
     //step 1  simple password
