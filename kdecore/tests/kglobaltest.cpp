@@ -87,12 +87,6 @@ protected Q_SLOTS:
     void emitSigFoo()
     {
         emit sigFoo();
-        // Mac currently uses the unix event loop (not glib) which
-        // has issues and blocks in nested event loops such as the
-        // one triggered by the below. Since this is a limitation
-        // of Qt and working around it here doesn't invalidate the
-        // actual test case, let's do that.
-        QTest::qWait(10);
     }
 
 Q_SIGNALS:
