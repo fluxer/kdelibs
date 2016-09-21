@@ -80,7 +80,7 @@ public:
     /*!
         @return The player instance
     */
-    KMediaPlayer* player();
+    KMediaPlayer* player() const;
     /*!
         @brief Open a path
         @long Aside from loading @p path it will also setup the play/pause button state and enable

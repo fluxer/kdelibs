@@ -16,12 +16,12 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kdebug.h>
-#include <klocale.h>
+#include "kdebug.h"
+#include "klocale.h"
+#include "kmediaplayer.h"
 #include <QCoreApplication>
 #include <QUrl>
 #include <QDragEnterEvent>
-#include "kmediaplayer.h"
 
 #if defined(HAVE_MPV)
 #include <mpv/client.h>
@@ -89,42 +89,42 @@ void KAbstractPlayer::stop()
     command(QVariantList() << "stop");
 }
 
-QString KAbstractPlayer::path()
+QString KAbstractPlayer::path() const
 {
     return property("path").toString();
 }
 
-QString KAbstractPlayer::title()
+QString KAbstractPlayer::title() const
 {
     return property("media-title").toString();
 }
 
-float KAbstractPlayer::currentTime()
+float KAbstractPlayer::currentTime() const
 {
     return property("time-pos").toFloat();
 }
 
-float KAbstractPlayer::remainingTime()
+float KAbstractPlayer::remainingTime() const
 {
     return property("time-remaining").toFloat();
 }
 
-float KAbstractPlayer::totalTime()
+float KAbstractPlayer::totalTime() const
 {
     return property("duration").toFloat();
 }
 
-float KAbstractPlayer::volume()
+float KAbstractPlayer::volume() const
 {
     return property("volume").toFloat();
 }
 
-bool KAbstractPlayer::mute()
+bool KAbstractPlayer::mute() const
 {
     return property("mute").toBool();
 }
 
-QStringList KAbstractPlayer::protocols()
+QStringList KAbstractPlayer::protocols() const
 {
     static QStringList s_protocols;
     if (s_protocols.isEmpty()) {
@@ -133,16 +133,16 @@ QStringList KAbstractPlayer::protocols()
     return s_protocols;
 }
 
-QString KAbstractPlayer::audiooutput()
+QString KAbstractPlayer::audiooutput() const
 {
     return property("audio-device").toString();
 }
 
-QStringList KAbstractPlayer::audiooutputs()
+QStringList KAbstractPlayer::audiooutputs() const
 {
     const QVariantList value = property("audio-device-list").toList();
     QStringList stringlist;
-    foreach (QVariant variant, value) {
+    foreach (const QVariant variant, value) {
         QMapIterator<QString,QVariant> iter(variant.toMap());
         while (iter.hasNext()) {
             iter.next();
@@ -154,22 +154,22 @@ QStringList KAbstractPlayer::audiooutputs()
     return stringlist;
 }
 
-bool KAbstractPlayer::isPlaying()
+bool KAbstractPlayer::isPlaying() const
 {
     return !property("pause").toBool() && !property("path").isNull();
 }
 
-bool KAbstractPlayer::isBuffering()
+bool KAbstractPlayer::isBuffering() const
 {
     return property("paused-for-cache").toBool();
 }
 
-bool KAbstractPlayer::isSeekable()
+bool KAbstractPlayer::isSeekable() const
 {
     return property("seekable").toBool() || property("partially-seekable").toBool();
 }
 
-bool KAbstractPlayer::isFullscreen()
+bool KAbstractPlayer::isFullscreen() const
 {
 #if defined(HAVE_MPV)
     return property("fullscreen").toBool();
@@ -178,9 +178,9 @@ bool KAbstractPlayer::isFullscreen()
 #endif // HAVE_MPV
 }
 
-bool KAbstractPlayer::isProtocolSupported(QString protocol)
+bool KAbstractPlayer::isProtocolSupported(QString protocol) const
 {
-    foreach(QString proto, protocols()) {
+    foreach(const QString proto, protocols()) {
         if (protocol.startsWith(proto)) {
             return true;
         }
@@ -188,9 +188,9 @@ bool KAbstractPlayer::isProtocolSupported(QString protocol)
     return false;
 }
 
-bool KAbstractPlayer::isPathSupported(QString path)
+bool KAbstractPlayer::isPathSupported(QString path) const
 {
-    KMimeType::Ptr mime = KMimeType::findByPath(path);
+    const KMimeType::Ptr mime = KMimeType::findByPath(path);
     if (mime && isMimeSupported(mime->name())) {
         return true;
     }

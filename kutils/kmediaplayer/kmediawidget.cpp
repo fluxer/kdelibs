@@ -110,14 +110,14 @@ void KMediaWidget::open(QString path)
     }
 }
 
-KMediaPlayer* KMediaWidget::player()
+KMediaPlayer* KMediaWidget::player() const
 {
     return d->m_player;
 }
 
 void KMediaWidget::setPlay(int value)
 {
-    // TODO: can we reliably store the position and restore it as well?
+    // TODO: can the position be stored and restored reliably as well?
     if (d->m_replay && !d->m_path.isEmpty()) {
         open(d->m_path);
         return;
@@ -278,7 +278,7 @@ void KMediaWidget::_updatePosition(double seconds)
 void KMediaWidget::_updateLoaded()
 {
     d->m_path = d->m_player->path();
-    QString title = d->m_player->title();
+    const QString title = d->m_player->title();
     if (!title.isEmpty()) {
         _updateStatus(title);
     }
@@ -320,11 +320,11 @@ void KMediaWidget::_updateFinished()
 
 void KMediaWidget::_updateError(QString error)
 {
-    // since there are not many ways to indicate an error when
-    // there are no extended controls use the play button to do so
     if (d->m_options & FullscreenVideo) {
         _updateStatus(error);
     } else {
+        // since there are not many ways to indicate an error when
+        // there are no extended controls use the play button to do so
         d->m_ui->w_play->setIcon(KIcon("dialog-error"));
         d->m_ui->w_play->setText(i18n("Error"));
     }
@@ -341,7 +341,7 @@ void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
 
 void KMediaWidget::dropEvent(QDropEvent *event)
 {
-    QList<QUrl> urls = event->mimeData()->urls();
+    const QList<QUrl> urls = event->mimeData()->urls();
     QStringList invalid;
     foreach (const QUrl url, urls) {
         QString urlstring = url.toString();
@@ -355,8 +355,9 @@ void KMediaWidget::dropEvent(QDropEvent *event)
     if (!invalid.isEmpty()) {
         QMessageBox::warning(this, i18n("Invalid paths"),
             i18n("Some paths are invalid:\n%1", invalid.join("\n")));
+    } else {
+        event->acceptProposedAction();
     }
-    event->acceptProposedAction();
 }
 
 #include "moc_kmediawidget.cpp"

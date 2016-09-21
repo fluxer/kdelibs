@@ -19,11 +19,11 @@
 #ifndef KMEDIAPLAYER_H
 #define KMEDIAPLAYER_H
 
+#include "kmimetype.h"
+#include "kmediaplayer_export.h"
 #include <QWidget>
 #include <QEvent>
 #include <QSettings>
-#include <kmimetype.h>
-#include <kmediaplayer_export.h>
 
 class KAbstractPlayerPrivate;
 
@@ -96,66 +96,66 @@ public:
     /*!
         @brief Gets you the current loaded path, empty if nothing is loaded
     */
-    QString path();
+    QString path() const;
     /*!
         @brief Gets you the current loaded path title
     */
-    QString title();
+    QString title() const;
     /*!
         @brief Gets you the current play time, the time should be threated as seconds
         @return current play time, it may return 0 if not playing
     */
-    float currentTime();
+    float currentTime() const;
     /*!
         @brief Gets you the remaining play time, the time should be threated as seconds
         @return remaining play time, it may return 0 if not playing
     */
-    float remainingTime();
+    float remainingTime() const;
     /*!
         @brief Gets you the total play time, the time should be threated as seconds
         @return total play time, it may return 0 if not playing
     */
-    float totalTime();
+    float totalTime() const;
     /*!
         @return current volume level, usually in range of 0-100
         @see setVolume
     */
-    float volume();
+    float volume() const;
     /*!
         @return Whether the player is muted
     */
-    bool mute();
+    bool mute() const;
     /*!
         @return A list of valid protocols
         @see isProtocolSupported
     */
-    QStringList protocols();
+    QStringList protocols() const;
     /*!
         @brief Gets you the device used to output audio
         @return Audio output
     */
-    QString audiooutput();
+    QString audiooutput() const;
     /*!
         @return A list of available audio outputs
         @todo maybe that should return a QMap?
     */
-    QStringList audiooutputs();
+    QStringList audiooutputs() const;
     /*!
         @return Whether the current state is playing (not paused), does not mean it's not buffering
     */
-    bool isPlaying();
+    bool isPlaying() const;
     /*!
         @return Whether the current state is playing (not paused) and buffering at the same time
     */
-    bool isBuffering();
+    bool isBuffering() const;
     /*!
         @return Whether seek can be performed, maybe partitially
     */
-    bool isSeekable();
+    bool isSeekable() const;
     /*!
         @return Whether the current video is taking all screen space
     */
-    bool isFullscreen();
+    bool isFullscreen() const;
     /*!
         @param mime MIME type in the format \<category\>/\<format\>, e.g. "audio/aac" (without
         quotes)
@@ -170,7 +170,7 @@ public:
         @return Whether the protocol is supported
         @see KUrl
     */
-    bool isProtocolSupported(QString protocol);
+    bool isProtocolSupported(QString protocol) const;
     /*!
         @note This will check MIME and protocol type, possibly some other things too. The MIME will
         be obtained via KMimeType which may be slow
@@ -178,7 +178,7 @@ public:
         @return Whether the path is supported
         @see isMimeSupported, isProtocolSupported
     */
-    bool isPathSupported(QString path);
+    bool isPathSupported(QString path) const;
     /*!
         @param volume desired volume level
         @warning It does not do boundry check so you should be aware of the maximum volume value if
