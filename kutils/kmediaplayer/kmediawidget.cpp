@@ -54,12 +54,16 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_options = options;
     d->m_parent = parent;
 
+    d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
+    d->m_ui->w_play->setText(i18n("Play"));
     d->m_ui->w_play->setEnabled(false);
     d->m_ui->w_position->setEnabled(false);
     d->m_ui->w_volume->setValue(d->m_player->volume());
+    d->m_ui->w_fullscreen->setIcon(KIcon("view-fullscreen"));
 
     connect(d->m_ui->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
-    connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
+    // connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
+    connect(d->m_ui->w_position, SIGNAL(sliderReleased()), this, SLOT(_setPosition()));
     connect(d->m_ui->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
     connect(d->m_ui->w_fullscreen, SIGNAL(clicked()), SLOT(setFullscreen()));
 
@@ -237,7 +241,11 @@ void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
 
 void KMediaWidget::timerEvent(QTimerEvent *event)
 {
-    if (d->m_timer.elapsed() > 3000) {
+    if (d->m_timer.elapsed() > 3000
+        && !d->m_ui->w_play->isDown()
+        && !d->m_ui->w_position->isSliderDown()
+        && !d->m_ui->w_volume->isSliderDown()
+        && !d->m_ui->w_fullscreen->isDown()) {
         _updateControls(false);
     } else {
         _updateControls(true);
@@ -270,9 +278,17 @@ void KMediaWidget::_updateSeekable(bool seekable)
     d->m_ui->w_position->setMaximum(d->m_player->totalTime());
 }
 
+void KMediaWidget::_setPosition()
+{
+    d->m_player->seek(d->m_ui->w_position->value());
+}
+
 void KMediaWidget::_updatePosition(double seconds)
 {
-    d->m_ui->w_position->setValue(seconds);
+    // do not update the slider while it's dragged by the user
+    if (!d->m_ui->w_position->isSliderDown()) {
+        d->m_ui->w_position->setValue(seconds);
+    }
 }
 
 void KMediaWidget::_updateLoaded()

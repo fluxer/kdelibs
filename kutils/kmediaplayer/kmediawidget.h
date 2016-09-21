@@ -151,6 +151,7 @@ signals:
 private slots:
     void _updateControls(bool visible);
     void _updatePlay(bool paused);
+    void _setPosition();
     void _updateSeekable(bool seekable);
     void _updatePosition(double seconds);
     void _updateLoaded();
