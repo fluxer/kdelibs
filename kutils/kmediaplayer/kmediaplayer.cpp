@@ -258,7 +258,7 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     d->m_stopprocessing = true; \
     mpv_terminate_destroy(d->m_handle); \
     if (d->m_settings) { \
-        delete d->m_settings; \
+        d->m_settings->deleteLater(); \
     } \
     delete d;
 

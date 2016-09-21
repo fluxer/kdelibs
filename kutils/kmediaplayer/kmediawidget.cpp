@@ -90,7 +90,8 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
 
 KMediaWidget::~KMediaWidget()
 {
-    delete d->m_player;
+    d->m_player->stop();
+    d->m_player->deleteLater();
     delete d->m_ui;
     delete d;
 }
