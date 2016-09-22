@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Audio player
+Comment=Audio player service
+Type=Service
+X-KDE-ServiceTypes=KDEDModule
+X-KDE-Library=kaudioplayer
+X-KDE-DBus-ModuleName=kaudioplayer
+X-KDE-Kded-autoload=false
+X-KDE-Kded-load-on-demand=true
+OnlyShowIn=KDE;
