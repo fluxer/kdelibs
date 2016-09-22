@@ -767,7 +767,6 @@ Slave *heldSlaveForJob(SimpleJob *job)
 
 
 Scheduler::Scheduler()
- : removeMe(0)
 {
     setObjectName( "scheduler" );
 

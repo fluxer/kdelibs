@@ -298,7 +298,6 @@ namespace KIO {
         Q_PRIVATE_SLOT(d_func(), void slotUnregisterWindow(QObject *))
     private:
         friend class SchedulerPrivate;
-        SchedulerPrivate *const removeMe; // for BC only, KDE5: remove
         SchedulerPrivate *d_func();
 };
 
