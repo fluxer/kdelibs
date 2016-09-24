@@ -40,10 +40,10 @@ public:
     //@{
     /**
         Low-level methods that you should most likely not use, if you do and the API has to change
-        (e.g. from MPV to a fork of MPV, VLC, something else) then you will be on your own! They
-        are available in case the convenience methods bellow those are not enough for your use case,
-        but it is better to let us know your requirements instead of using them. They may serve you
-        as temporary solution, for testing purposes, etc. but beware there be dragons!
+        (e.g. for a backend switch) then you will be on your own! They are available in case the
+        convenience methods bellow those are not enough for your use case, but it is better to let
+        us know your requirements instead of using them. They may serve you as temporary solution,
+        for testing purposes, etc. but beware there be dragons!
     **/
     //! @brief A low-level player command sender
     virtual void command(const QVariant& params) const = 0;
@@ -63,14 +63,14 @@ public:
         such! That is choice of the vendors and you should be well aware of what yours is doing
         @link https://github.com/mpv-player/mpv/blob/master/DOCS/man/mpv.rst#protocols
     */
-    void load(QString path);
+    void load(const QString path);
     /*!
         @brief Start playing from @p data
         @param data the raw data that should be played
         @warning Use only when you absolutely have to, when possible use @p load(QString)
         @overload
     */
-    void load(QByteArray data);
+    void load(const QByteArray data);
    /*!
         @brief Send a play command to the player, it may do nothing if a path was not loaded first
     */
@@ -82,13 +82,14 @@ public:
     /*!
         @brief Send a seek command to the player
         @param position Position in seconds to seek to
+        @see isSeekable
     */
-    void seek(float position);
+    void seek(const float position);
     /*!
         @brief Some GUI controls cannot handle float thus the overload
         @overload
     */
-    void seek(int position);
+    void seek(const int position);
     /*!
         @brief Send a stop command to the player
     */
@@ -123,6 +124,7 @@ public:
     float volume() const;
     /*!
         @return Whether the player is muted
+        @see setMute
     */
     bool mute() const;
     /*!
@@ -170,7 +172,7 @@ public:
         @return Whether the protocol is supported
         @see KUrl
     */
-    bool isProtocolSupported(QString protocol) const;
+    bool isProtocolSupported(const QString protocol) const;
     /*!
         @note This will check MIME and protocol type, possibly some other things too. The MIME will
         be obtained via KMimeType which may be slow
@@ -178,42 +180,42 @@ public:
         @return Whether the path is supported
         @see isMimeSupported, isProtocolSupported
     */
-    bool isPathSupported(QString path) const;
+    bool isPathSupported(const QString path) const;
     /*!
         @param volume desired volume level
         @warning It does not do boundry check so you should be aware of the maximum volume value if
         you are going to set it to something above 100. While MPV itself allows for a value greater
         than 100 in recent versions it is discoraged for you to set it above 100
     */
-    void setVolume(float volume);
+    void setVolume(const float volume);
     /*!
         @brief Some GUI controls cannot handle float thus the overload
         @overload
     */
-    void setVolume(int volume);
+    void setVolume(const int volume);
     /*!
         @param mute mute state
     */
-    void setMute(bool mute);
+    void setMute(const bool mute);
     /*!
         @note If the output is not valid the player will fallback to automatic detection, you can
         obtain a list of valid outputs via @p audiooutputs()
         @param output audio output
         @see audiooutputs
     */
-    void setAudioOutput(QString output);
+    void setAudioOutput(const QString output);
     /*!
         @param fullscreen wheather it should take all screen space
         @warning This will most likely fail and the property will be set but MPV will do nothing
         because it is embeded, you will have to call @p QWidget::showFullscreen() on the parent
         widget!
     */
-    void setFullscreen(bool fullscreen);
+    void setFullscreen(const bool fullscreen);
 };
 
 /*!
     The @p KAudioPlayer class provides an object that can be used to playback from various media
-    sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray, SMB,
+    sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
     file-descriptor, raw data, you name it. It supports per-application state too, this
     includes audio output device, volume and mute state currently.
 
@@ -237,21 +239,21 @@ public:
 
     bool isMimeSupported(const QString mime) const;
 
-signals:
+Q_SIGNALS:
     //! @brief Signals that a path was loaded
     void loaded();
     //! @brief Signals that the playing state was paused/unpaused when buffering data
-    void buffering(bool buffering);
+    void buffering(const bool buffering);
     /*!
         @brief Signals that the playing state was paused/unpaused
         @note You still have to connect to the finished signal to update play/pause buttons (if
         any) when the path is done playing
     */
-    void paused(bool paused);
+    void paused(const bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
-    void seekable(bool seekable);
+    void seekable(const bool seekable);
     //! @brief Signals that the playing state was advanced at position in seconds
-    void position(double seconds);
+    void position(const double seconds);
     /*!
         @brief Signals that the playing state was finished
         @note It is not guaranteed that the playing was successfull, for an example if a stream
@@ -262,9 +264,9 @@ signals:
         @brief Signals that playback was finished with error
         @note You still have to connect to the finished signal
     */
-    void error(QString error);
+    void error(const QString error);
 
-private slots:
+private Q_SLOTS:
     void _processHandleEvents();
 
 private:
@@ -275,7 +277,7 @@ private:
 /*!
     The @p KMediaPlayer class provides an embedable widget that can be used to playback from
     various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
-    Blue-Ray, SMB, file-descriptor, raw data, you name it. It supports per-application state too,
+    Blue-Ray, file-descriptor, raw data, you name it. It supports per-application state too,
     this includes audio output device, volume and mute state currently.
 
     For an extended version of this class check out @p KMediaWidget.
@@ -299,21 +301,21 @@ public:
 
     bool isMimeSupported(const QString mime) const;
 
-signals:
+Q_SIGNALS:
     //! @brief Signals that a path was loaded
     void loaded();
     //! @brief Signals that the playing state was paused/unpaused when buffering data
-    void buffering(bool buffering);
+    void buffering(const bool buffering);
     /*!
         @brief Signals that the playing state was paused/unpaused
         @note You still have to connect to the finished signal to update play/pause buttons (if
         any) when the path is done playing
     */
-    void paused(bool paused);
+    void paused(const bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
-    void seekable(bool seekable);
+    void seekable(const bool seekable);
     //! @brief Signals that the playing state was advanced at position in seconds
-    void position(double seconds);
+    void position(const double seconds);
     /*!
         @brief Signals that the playing state was finished
         @note It is not guaranteed that the playing was successfull, for an example if a stream
@@ -324,9 +326,9 @@ signals:
         @brief Signals that playback was finished with error
         @note You still have to connect to the finished signal
     */
-    void error(QString error);
+    void error(const QString error);
 
-private slots:
+private Q_SLOTS:
     void _processHandleEvents();
 
 private:

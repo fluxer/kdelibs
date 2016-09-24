@@ -54,12 +54,12 @@ public:
 // QVariant cannot be constructed from WId type
 typedef quintptr WIdType;
 
-void KAbstractPlayer::load(QString path)
+void KAbstractPlayer::load(const QString path)
 {
     command(QStringList() << "loadfile" << path);
 }
 
-void KAbstractPlayer::load(QByteArray data)
+void KAbstractPlayer::load(const QByteArray data)
 {
     command(QStringList() << "loadfile" << QString("memory://%1").arg(data.data()));
 }
@@ -74,12 +74,12 @@ void KAbstractPlayer::pause()
     setProperty("pause", true);
 }
 
-void KAbstractPlayer::seek(float position)
+void KAbstractPlayer::seek(const float position)
 {
     command(QVariantList() << "seek" << position << "absolute");
 }
 
-void KAbstractPlayer::seek(int position)
+void KAbstractPlayer::seek(const int position)
 {
     command(QVariantList() << "seek" << position << "absolute");
 }
@@ -178,7 +178,7 @@ bool KAbstractPlayer::isFullscreen() const
 #endif // HAVE_MPV
 }
 
-bool KAbstractPlayer::isProtocolSupported(QString protocol) const
+bool KAbstractPlayer::isProtocolSupported(const QString protocol) const
 {
     foreach(const QString proto, protocols()) {
         if (protocol.startsWith(proto)) {
@@ -188,7 +188,7 @@ bool KAbstractPlayer::isProtocolSupported(QString protocol) const
     return false;
 }
 
-bool KAbstractPlayer::isPathSupported(QString path) const
+bool KAbstractPlayer::isPathSupported(const QString path) const
 {
     const KMimeType::Ptr mime = KMimeType::findByPath(path);
     if (mime && isMimeSupported(mime->name())) {
@@ -197,27 +197,27 @@ bool KAbstractPlayer::isPathSupported(QString path) const
     return isProtocolSupported(path);
 }
 
-void KAbstractPlayer::setVolume(float volume)
+void KAbstractPlayer::setVolume(const float volume)
 {
     setProperty("volume", volume);
 }
 
-void KAbstractPlayer::setVolume(int volume)
+void KAbstractPlayer::setVolume(const int volume)
 {
     setProperty("volume", volume);
 }
 
-void KAbstractPlayer::setMute(bool mute)
+void KAbstractPlayer::setMute(const bool mute)
 {
     setProperty("mute", mute);
 }
 
-void KAbstractPlayer::setAudioOutput(QString output)
+void KAbstractPlayer::setAudioOutput(const QString output)
 {
     setProperty("audio-device", output);
 }
 
-void KAbstractPlayer::setFullscreen(bool fullscreen)
+void KAbstractPlayer::setFullscreen(const bool fullscreen)
 {
 #if defined(HAVE_MPV)
     setProperty("fullscreen", fullscreen);
@@ -228,9 +228,10 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
 
 #if defined(HAVE_MPV)
 /*
-    Since exposing mpv_handle is not desirable and sigals/slots cannot be virtual nor multiple
-    QObject inheritance works here are some pre-processor definitions used to share the code as
-    much as possible making modifications easier
+    Since sigals/slots cannot be virtual nor multiple QObject inheritance works (KAbstractPlayer
+    cannot inherit from QObject if it is to be used in a class that inherits QWidget) here are
+    some pre-processor definitions used to share the code as much as possible making modification
+    easier.
 */
 #define COMMON_CONSTRUCTOR \
     kDebug() << i18n("initializing player"); \
@@ -238,7 +239,7 @@ void KAbstractPlayer::setFullscreen(bool fullscreen)
     setlocale(LC_NUMERIC, "C"); \
     d->m_handle = mpv_create(); \
     if (d->m_handle) { \
-        int rc = mpv_initialize(d->m_handle); \
+        const int rc = mpv_initialize(d->m_handle); \
         if (rc < 0) { \
             kWarning() << mpv_error_string(rc); \
         } else {\
