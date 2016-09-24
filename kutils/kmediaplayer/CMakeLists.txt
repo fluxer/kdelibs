@@ -2,6 +2,11 @@ if(MPV_FOUND)
     include_directories(${MPV_INCLUDES})
     add_definitions(-DHAVE_MPV)
 endif()
+# for the kded module
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=940)
 
