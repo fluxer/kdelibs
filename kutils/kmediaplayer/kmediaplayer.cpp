@@ -266,7 +266,7 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
 #define COMMMON_COMMAND_SENDER \
     kDebug() << i18n("sending command") << command; \
     if (d->m_handle) { \
-        QVariant error = mpv::qt::command_variant(d->m_handle, command); \
+        const QVariant error = mpv::qt::command_variant(d->m_handle, command); \
         if (!error.isNull()) { \
             kWarning() << error; \
         } \
@@ -389,9 +389,9 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
         // NOTE: the change is pre-2014
         setProperty("video", "no");
 
-        QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
-        int globalvolume = d->m_settings->value("global/volume", 90).toInt();
-        bool globalmute = d->m_settings->value("global/mute", false).toBool();
+        const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
+        const int globalvolume = d->m_settings->value("global/volume", 90).toInt();
+        const bool globalmute = d->m_settings->value("global/mute", false).toBool();
         setAudioOutput(d->m_settings->value(d->m_appname + "/audiooutput", globalaudio).toString());
         setVolume(d->m_settings->value(d->m_appname + "/volume", globalvolume).toInt());
         setMute(d->m_settings->value(d->m_appname + "/mute", globalmute).toBool());
@@ -472,9 +472,9 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
             kWarning() << i18n("Could not get widget ID");
         }
 
-        QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
-        int globalvolume = d->m_settings->value("global/volume", 90).toInt();
-        bool globalmute = d->m_settings->value("global/mute", false).toBool();
+        const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
+        const int globalvolume = d->m_settings->value("global/volume", 90).toInt();
+        const bool globalmute = d->m_settings->value("global/mute", false).toBool();
         setAudioOutput(d->m_settings->value(d->m_appname + "/audiooutput", globalaudio).toString());
         setVolume(d->m_settings->value(d->m_appname + "/volume", globalvolume).toInt());
         setMute(d->m_settings->value(d->m_appname + "/mute", globalmute).toBool());
