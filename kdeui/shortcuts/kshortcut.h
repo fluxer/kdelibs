@@ -250,8 +250,14 @@ inline uint qHash(const KShortcut &key)
 inline uint qHash(const QKeySequence &key)
 {
     uint hash = 0;
-    for(uint i = 0; i < key.count(); i++)
+    // the count() method had a TODO which is done in Katie
+#ifdef QT_KATIE
+    for(uint i = 0; i < key.count(); i++) {
+#else
+    for(int i = 0; i < key.count(); i++) {
+#endif
        hash += qHash(key[i]);
+    }
     return hash;
 }
 
