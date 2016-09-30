@@ -30,7 +30,7 @@
 
 #include "soliddefs_p.h"
 
-SOLID_GLOBAL_STATIC(Solid::DeviceManagerStorage, globalDeviceStorage)
+Q_GLOBAL_STATIC(Solid::DeviceManagerStorage, globalDeviceStorage)
 
 Solid::DeviceManagerPrivate::DeviceManagerPrivate()
     : m_nullDevice(new DevicePrivate(QString()))
@@ -65,7 +65,7 @@ Solid::DeviceManagerPrivate::~DeviceManagerPrivate()
 QList<Solid::Device> Solid::Device::allDevices()
 {
     QList<Device> list;
-    QList<QObject*> backends = globalDeviceStorage->managerBackends();
+    QList<QObject*> backends = globalDeviceStorage()->managerBackends();
 
     foreach (QObject *backendObj, backends) {
         Ifaces::DeviceManager *backend = qobject_cast<Ifaces::DeviceManager *>(backendObj);
@@ -101,7 +101,7 @@ QList<Solid::Device> Solid::Device::listFromType(const DeviceInterface::Type &ty
                                                  const QString &parentUdi)
 {
     QList<Device> list;
-    QList<QObject*> backends = globalDeviceStorage->managerBackends();
+    QList<QObject*> backends = globalDeviceStorage()->managerBackends();
 
     foreach (QObject *backendObj, backends) {
         Ifaces::DeviceManager *backend = qobject_cast<Ifaces::DeviceManager *>(backendObj);
@@ -123,7 +123,7 @@ QList<Solid::Device> Solid::Device::listFromQuery(const Predicate &predicate,
                                                   const QString &parentUdi)
 {
     QList<Device> list;
-    QList<QObject*> backends = globalDeviceStorage->managerBackends();
+    QList<QObject*> backends = globalDeviceStorage()->managerBackends();
     QSet<DeviceInterface::Type> usedTypes = predicate.usedTypes();
 
     foreach (QObject *backendObj, backends) {
@@ -169,7 +169,7 @@ QList<Solid::Device> Solid::Device::listFromQuery(const Predicate &predicate,
 
 Solid::DeviceNotifier *Solid::DeviceNotifier::instance()
 {
-    return globalDeviceStorage->notifier();
+    return globalDeviceStorage()->notifier();
 }
 
 void Solid::DeviceManagerPrivate::_k_deviceAdded(const QString &udi)
@@ -241,7 +241,7 @@ Solid::DevicePrivate *Solid::DeviceManagerPrivate::findRegisteredDevice(const QS
 
 Solid::Ifaces::Device *Solid::DeviceManagerPrivate::createBackendObject(const QString &udi)
 {
-    QList<QObject*> backends = globalDeviceStorage->managerBackends();
+    QList<QObject*> backends = globalDeviceStorage()->managerBackends();
 
     foreach (QObject *backendObj, backends) {
         Ifaces::DeviceManager *backend = qobject_cast<Ifaces::DeviceManager *>(backendObj);

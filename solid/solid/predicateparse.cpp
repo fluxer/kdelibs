@@ -51,12 +51,12 @@ struct ParsingData
 }
 }
 
-SOLID_GLOBAL_STATIC(QThreadStorage<Solid::PredicateParse::ParsingData *>, s_parsingData)
+Q_GLOBAL_STATIC(QThreadStorage<Solid::PredicateParse::ParsingData *>, s_parsingData)
 
 Solid::Predicate Solid::Predicate::fromString(const QString &predicate)
 {
     Solid::PredicateParse::ParsingData *data = new Solid::PredicateParse::ParsingData();
-    s_parsingData->setLocalData(data);
+    s_parsingData()->setLocalData(data);
     data->buffer = predicate.toLatin1();
     PredicateParse_mainParse(data->buffer.constData());
     Predicate result;
@@ -65,26 +65,26 @@ Solid::Predicate Solid::Predicate::fromString(const QString &predicate)
         result = Predicate(*data->result);
         delete data->result;
     }
-    s_parsingData->setLocalData(0);
+    s_parsingData()->setLocalData(0);
     return result;
 }
 
 
 void PredicateParse_setResult(void *result)
 {
-    Solid::PredicateParse::ParsingData *data = s_parsingData->localData();
+    Solid::PredicateParse::ParsingData *data = s_parsingData()->localData();
     data->result = (Solid::Predicate *) result;
 }
 
 void PredicateParse_errorDetected(const char* s)
 {
     qWarning("ERROR from solid predicate parser: %s", s);
-    s_parsingData->localData()->result = 0;
+    s_parsingData()->localData()->result = 0;
 }
 
 void PredicateParse_destroy(void *pred)
 {
-    Solid::PredicateParse::ParsingData *data = s_parsingData->localData();
+    Solid::PredicateParse::ParsingData *data = s_parsingData()->localData();
     Solid::Predicate *p = (Solid::Predicate *) pred;
     if (p != data->result) {
         delete p;
@@ -138,7 +138,7 @@ void *PredicateParse_newAnd(void *pred1, void *pred2)
 {
     Solid::Predicate *result = new Solid::Predicate();
 
-    Solid::PredicateParse::ParsingData *data = s_parsingData->localData();
+    Solid::PredicateParse::ParsingData *data = s_parsingData()->localData();
     Solid::Predicate *p1 = (Solid::Predicate *)pred1;
     Solid::Predicate *p2 = (Solid::Predicate *)pred2;
 
@@ -159,7 +159,7 @@ void *PredicateParse_newOr(void *pred1, void *pred2)
 {
     Solid::Predicate *result = new Solid::Predicate();
 
-    Solid::PredicateParse::ParsingData *data = s_parsingData->localData();
+    Solid::PredicateParse::ParsingData *data = s_parsingData()->localData();
     Solid::Predicate *p1 = (Solid::Predicate *)pred1;
     Solid::Predicate *p2 = (Solid::Predicate *)pred2;
 
@@ -239,5 +239,5 @@ void *PredicateParse_appendStringListValue(char *name, void *list)
 void PredicateLexer_unknownToken(const char* text)
 {
     qWarning("ERROR from solid predicate parser: unrecognized token '%s' in predicate '%s'\n",
-             text, s_parsingData->localData()->buffer.constData());
+             text, s_parsingData()->localData()->buffer.constData());
 }

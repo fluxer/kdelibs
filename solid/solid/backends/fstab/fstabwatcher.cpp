@@ -29,7 +29,7 @@
 
 using namespace Solid::Backends::Fstab;
 
-SOLID_GLOBAL_STATIC(FstabWatcher, globalFstabWatcher)
+Q_GLOBAL_STATIC(FstabWatcher, globalFstabWatcher)
 
 #define MTAB "/etc/mtab"
 #ifdef Q_OS_SOLARIS
@@ -71,7 +71,7 @@ FstabWatcher::~FstabWatcher()
     // effectively leaking it on purpose.
 
 #if 0
-    //qRemovePostRoutine(globalFstabWatcher.destroy);
+    //qRemovePostRoutine(globalFstabWatcher()->destroy);
 #else
     m_fileSystemWatcher->setParent(0);
 #endif
@@ -88,12 +88,12 @@ FstabWatcher *FstabWatcher::instance()
     FstabWatcher *fstabWatcher = globalFstabWatcher;
 
     if (fstabWatcher && !fstabWatcher->m_isRoutineInstalled) {
-        qAddPostRoutine(globalFstabWatcher.destroy);
+        qAddPostRoutine(globalFstabWatcher()->destroy);
         fstabWatcher->m_isRoutineInstalled = true;
     }
     return fstabWatcher;
 #else
-    return globalFstabWatcher;
+    return globalFstabWatcher();
 #endif
 }
 

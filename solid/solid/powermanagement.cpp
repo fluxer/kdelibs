@@ -26,7 +26,7 @@
 
 #include <QtCore/QCoreApplication>
 
-SOLID_GLOBAL_STATIC(Solid::PowerManagementPrivate, globalPowerManager)
+Q_GLOBAL_STATIC(Solid::PowerManagementPrivate, globalPowerManager)
 
 Solid::PowerManagementPrivate::PowerManagementPrivate()
     : managerIface(QLatin1String("org.freedesktop.PowerManagement"),
@@ -77,12 +77,12 @@ Solid::PowerManagement::Notifier::Notifier()
 
 bool Solid::PowerManagement::appShouldConserveResources()
 {
-    return globalPowerManager->powerSaveStatus;
+    return globalPowerManager()->powerSaveStatus;
 }
 
 QSet<Solid::PowerManagement::SleepState> Solid::PowerManagement::supportedSleepStates()
 {
-    return globalPowerManager->supportedSleepStates;
+    return globalPowerManager()->supportedSleepStates;
 }
 
 void Solid::PowerManagement::requestSleep(SleepState state, QObject *receiver, const char *member)
@@ -90,7 +90,7 @@ void Solid::PowerManagement::requestSleep(SleepState state, QObject *receiver, c
     Q_UNUSED(receiver)
     Q_UNUSED(member)
 
-    if (!globalPowerManager->supportedSleepStates.contains(state)) {
+    if (!globalPowerManager()->supportedSleepStates.contains(state)) {
         return;
     }
 
@@ -98,10 +98,10 @@ void Solid::PowerManagement::requestSleep(SleepState state, QObject *receiver, c
     {
     case StandbyState:
     case SuspendState:
-        globalPowerManager->managerIface.Suspend();
+        globalPowerManager()->managerIface.Suspend();
         break;
     case HibernateState:
-        globalPowerManager->managerIface.Hibernate();
+        globalPowerManager()->managerIface.Hibernate();
         break;
     }
 }
@@ -109,13 +109,13 @@ void Solid::PowerManagement::requestSleep(SleepState state, QObject *receiver, c
 int Solid::PowerManagement::beginSuppressingSleep(const QString &reason)
 {
     QDBusReply<uint> reply;
-    if (globalPowerManager->policyAgentIface.isValid()) {
-        reply = globalPowerManager->policyAgentIface.AddInhibition(
+    if (globalPowerManager()->policyAgentIface.isValid()) {
+        reply = globalPowerManager()->policyAgentIface.AddInhibition(
             (uint)PowerManagementPrivate::InterruptSession,
             QCoreApplication::applicationName(), reason);
     } else {
         // Fallback to the fd.o Inhibit interface
-        reply = globalPowerManager->inhibitIface.Inhibit(QCoreApplication::applicationName(), reason);
+        reply = globalPowerManager()->inhibitIface.Inhibit(QCoreApplication::applicationName(), reason);
     }
 
     if (reply.isValid())
@@ -126,18 +126,18 @@ int Solid::PowerManagement::beginSuppressingSleep(const QString &reason)
 
 bool Solid::PowerManagement::stopSuppressingSleep(int cookie)
 {
-    if (globalPowerManager->policyAgentIface.isValid()) {
-        return globalPowerManager->policyAgentIface.ReleaseInhibition(cookie).isValid();
+    if (globalPowerManager()->policyAgentIface.isValid()) {
+        return globalPowerManager()->policyAgentIface.ReleaseInhibition(cookie).isValid();
     } else {
         // Fallback to the fd.o Inhibit interface
-        return globalPowerManager->inhibitIface.UnInhibit(cookie).isValid();
+        return globalPowerManager()->inhibitIface.UnInhibit(cookie).isValid();
     }
 }
 
 int Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString& reason)
 {
-    if (globalPowerManager->policyAgentIface.isValid()) {
-        QDBusReply<uint> reply = globalPowerManager->policyAgentIface.AddInhibition(
+    if (globalPowerManager()->policyAgentIface.isValid()) {
+        QDBusReply<uint> reply = globalPowerManager()->policyAgentIface.AddInhibition(
             (uint)PowerManagementPrivate::ChangeScreenSettings,
             QCoreApplication::applicationName(), reason);
 
@@ -152,7 +152,7 @@ int Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString&
             QDBusPendingReply<uint> ssReply = QDBusConnection::sessionBus().asyncCall(message);
             ssReply.waitForFinished();
             if (ssReply.isValid()) {
-                globalPowerManager->screensaverCookiesForPowerDevilCookies.insert(reply, ssReply.value());
+                globalPowerManager()->screensaverCookiesForPowerDevilCookies.insert(reply, ssReply.value());
             }
 
             return reply;
@@ -167,15 +167,15 @@ int Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString&
 
 bool Solid::PowerManagement::stopSuppressingScreenPowerManagement(int cookie)
 {
-    if (globalPowerManager->policyAgentIface.isValid()) {
-        bool result = globalPowerManager->policyAgentIface.ReleaseInhibition(cookie).isValid();
+    if (globalPowerManager()->policyAgentIface.isValid()) {
+        bool result = globalPowerManager()->policyAgentIface.ReleaseInhibition(cookie).isValid();
 
-        if (globalPowerManager->screensaverCookiesForPowerDevilCookies.contains(cookie)) {
+        if (globalPowerManager()->screensaverCookiesForPowerDevilCookies.contains(cookie)) {
             QDBusMessage message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.ScreenSaver"),
                                                                   QLatin1String("/ScreenSaver"),
                                                                   QLatin1String("org.freedesktop.ScreenSaver"),
                                                                   QLatin1String("UnInhibit"));
-            message << globalPowerManager->screensaverCookiesForPowerDevilCookies.take(cookie);
+            message << globalPowerManager()->screensaverCookiesForPowerDevilCookies.take(cookie);
             QDBusConnection::sessionBus().asyncCall(message);
         }
 
@@ -188,7 +188,7 @@ bool Solid::PowerManagement::stopSuppressingScreenPowerManagement(int cookie)
 
 Solid::PowerManagement::Notifier *Solid::PowerManagement::notifier()
 {
-    return globalPowerManager;
+    return globalPowerManager();
 }
 
 void Solid::PowerManagementPrivate::slotCanSuspendChanged(bool newState)
