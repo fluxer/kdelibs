@@ -234,7 +234,7 @@ private:
 // Re-lift again from Qt whenever a proper replacement for pthread_once appears
 static void qt_ignore_sigpipe()
 {
-    static QBasicAtomicInt atom = Q_BASIC_ATOMIC_INITIALIZER(0);
+    static QAtomicInt atom = QAtomicInt(0);
     if (atom.testAndSetRelaxed(0, 1)) {
         struct sigaction noaction;
         memset(&noaction, 0, sizeof(noaction));

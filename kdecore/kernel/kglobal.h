@@ -243,7 +243,7 @@ class KCleanUpGlobalStatic
  * @ingroup KDEMacros
  */
 #define K_GLOBAL_STATIC_WITH_ARGS(TYPE, NAME, ARGS)                            \
-static QBasicAtomicPointer<TYPE > _k_static_##NAME = Q_BASIC_ATOMIC_INITIALIZER(0); \
+static QAtomicPointer<TYPE > _k_static_##NAME = QAtomicPointer<TYPE >(0); \
 static bool _k_static_##NAME##_destroyed;                                      \
 static struct K_GLOBAL_STATIC_STRUCT_NAME(NAME)                                \
 {                                                                              \

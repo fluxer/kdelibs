@@ -300,8 +300,8 @@ QString KGlobal::caption()
  * e.g. a file copy for a file manager, or 'compacting folders on exit' for a mail client,
  * the job progress widget with "keep open" checked, etc.
  */
-static QBasicAtomicInt s_allowQuit = Q_BASIC_ATOMIC_INITIALIZER(false); // this is used a bool
-static QBasicAtomicInt s_refCount = Q_BASIC_ATOMIC_INITIALIZER(0);
+static QAtomicInt s_allowQuit = QAtomicInt(false); // this is used a bool
+static QAtomicInt s_refCount = QAtomicInt(0);
 
 void KGlobal::ref()
 {
