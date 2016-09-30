@@ -71,7 +71,7 @@ QSpellEnchantDict *QSpellEnchantClient::createSpeller(
         int refs = m_dictRefs[dict];
         ++refs;
         m_dictRefs[dict] = refs;
-        return new QSpellEnchantDict(this, m_broker, dict, language);
+        return new QSpellEnchantDict(this, dict, language);
     }
 }
 

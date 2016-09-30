@@ -27,11 +27,9 @@ namespace Sonnet
 {
 
 QSpellEnchantDict::QSpellEnchantDict(QSpellEnchantClient *client, 
-                                     EnchantBroker *broker,
                                      EnchantDict *dict,
                                      const QString &language)
-    : m_broker(broker),
-      m_dict(dict),
+    : m_dict(dict),
       m_client(client)
 {
 }

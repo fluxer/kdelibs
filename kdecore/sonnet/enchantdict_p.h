@@ -49,12 +49,10 @@ namespace Sonnet
         friend class QSpellEnchantClient;
         QSpellEnchantDict(const QString &lang);
         QSpellEnchantDict(QSpellEnchantClient *client,
-                        EnchantBroker *broker,
                         EnchantDict *dict,
                         const QString &language);
 
     private:
-        EnchantBroker *m_broker;
         EnchantDict   *m_dict;
         QSpellEnchantClient *m_client;
         QString m_language;

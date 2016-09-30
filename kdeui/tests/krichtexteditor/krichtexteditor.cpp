@@ -128,8 +128,7 @@ void KRichTextEditor::openFile()
     }
 
     QString tmpFile;
-    if (KIO::NetAccess::download(fileNameFromDialog, tmpFile,
-                                 this)) {
+    if (KIO::NetAccess::download(fileNameFromDialog, tmpFile, this)) {
         QFile file(tmpFile);
         file.open(QIODevice::ReadOnly);
         textArea->setTextOrHtml(QTextStream(&file).readAll());
@@ -137,7 +136,6 @@ void KRichTextEditor::openFile()
 
         KIO::NetAccess::removeTempFile(tmpFile);
     } else {
-        KMessageBox::error(this,
-                           KIO::NetAccess::lastErrorString());
+        KMessageBox::error(this, KIO::NetAccess::lastErrorString());
     }
 }
