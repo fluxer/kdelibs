@@ -104,24 +104,6 @@ static Atom kde_xdnd_drop;
 static QByteArray* startup_id_tmp;
 #endif
 
-template class QList<KSessionManager*>;
-
-#ifdef Q_WS_X11
-extern "C" {
-static int kde_xio_errhandler( Display * dpy )
-{
-  return kapp->xioErrhandler( dpy );
-}
-
-static int kde_x_errhandler( Display *dpy, XErrorEvent *err )
-{
-  return kapp->xErrhandler( dpy, err );
-}
-
-}
-#endif
-
-
 /*
   Private data to make keeping binary compatibility easier
  */
@@ -134,11 +116,6 @@ public:
       , startup_id("0")
       , app_started_timer(0)
       , session_save(false)
-#ifdef Q_WS_X11
-      , oldIceIOErrorHandler(0)
-      , oldXErrorHandler(0)
-      , oldXIOErrorHandler(0)
-#endif
       , pSessionConfig( 0 )
       , bSessionManagement( true )
   {
@@ -150,11 +127,6 @@ public:
       , startup_id("0")
       , app_started_timer(0)
       , session_save(false)
-#ifdef Q_WS_X11
-      , oldIceIOErrorHandler(0)
-      , oldXErrorHandler(0)
-      , oldXIOErrorHandler(0)
-#endif
       , pSessionConfig( 0 )
       , bSessionManagement( true )
   {
@@ -166,11 +138,6 @@ public:
       , startup_id( "0" )
       , app_started_timer( 0 )
       , session_save( false )
-#ifdef Q_WS_X11
-      , oldIceIOErrorHandler( 0 )
-      , oldXErrorHandler( 0 )
-      , oldXIOErrorHandler( 0 )
-#endif
       , pSessionConfig( 0 )
       , bSessionManagement( true )
   {
@@ -198,12 +165,6 @@ public:
   QByteArray startup_id;
   QTimer* app_started_timer;
   bool session_save;
-
-#ifdef Q_WS_X11
-  IceIOErrorHandler oldIceIOErrorHandler;
-  int (*oldXErrorHandler)(Display*,XErrorEvent*);
-  int (*oldXIOErrorHandler)(Display*);
-#endif
 
   QString sessionKey;
   QString pSessionConfigFile;
@@ -393,42 +354,6 @@ void KApplicationPrivate::preqapplicationhack()
     KGlobal::config(); // initialize qt plugin path (see KComponentDataPrivate::lazyInit)
 }
 
-#ifdef Q_WS_X11
-int KApplication::xioErrhandler( Display* dpy )
-{
-    if(kapp)
-    {
-        d->oldXIOErrorHandler( dpy );
-    }
-    exit( 1 );
-    return 0;
-}
-
-int KApplication::xErrhandler( Display* dpy, void* err_ )
-{ // no idea how to make forward decl. for XErrorEvent
-    XErrorEvent* err = static_cast< XErrorEvent* >( err_ );
-    if(kapp)
-    {
-        // add KDE specific stuff here
-        d->oldXErrorHandler( dpy, err );
-    }
-    const QByteArray fatalXError = qgetenv("KDE_FATAL_X_ERROR");
-    if (!fatalXError.isEmpty()) {
-        abort();
-    }
-    return 0;
-}
-
-void KApplication::iceIOErrorHandler( _IceConn *conn )
-{
-    emit aboutToQuit();
-
-    if ( d->oldIceIOErrorHandler != NULL )
-      (*d->oldIceIOErrorHandler)( conn );
-    exit( 1 );
-}
-#endif // Q_WS_X11
-
 void KApplicationPrivate::init(bool GUIenabled)
 {
   if ((getuid() != geteuid()) ||
@@ -530,9 +455,6 @@ void KApplicationPrivate::init(bool GUIenabled)
 #ifdef Q_WS_X11
     // this is important since we fork() to launch the help (Matthias)
     fcntl(ConnectionNumber(QX11Info::display()), F_SETFD, FD_CLOEXEC);
-    // set up the fancy (=robust and error ignoring ) KDE xio error handlers (Matthias)
-    oldXErrorHandler = XSetErrorHandler( kde_x_errhandler );
-    oldXIOErrorHandler = XSetIOErrorHandler( kde_xio_errhandler );
 #endif
 
     // Trigger initial settings
@@ -847,15 +769,6 @@ extern void kDebugCleanup();
 
 KApplication::~KApplication()
 {
-#ifdef Q_WS_X11
-  if ( d->oldXErrorHandler != NULL )
-      XSetErrorHandler( d->oldXErrorHandler );
-  if ( d->oldXIOErrorHandler != NULL )
-      XSetIOErrorHandler( d->oldXIOErrorHandler );
-  if ( d->oldIceIOErrorHandler != NULL )
-      IceSetIOErrorHandler( d->oldIceIOErrorHandler );
-#endif
-
   delete d;
   KApp = 0;
 

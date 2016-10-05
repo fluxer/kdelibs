@@ -274,21 +274,6 @@ public:
       @internal
     */
   bool notify( QObject* receiver, QEvent* event );
-
-  /**
-      @internal
-    */
-  int xErrhandler( Display*, void* );
-
-  /**
-      @internal
-    */
-  int xioErrhandler( Display* );
-
-  /**
-   * @internal
-   */
-  void iceIOErrorHandler( _IceConn *conn );
 #endif // Q_WS_X11
 
   /**
