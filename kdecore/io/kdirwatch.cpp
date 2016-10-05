@@ -1155,8 +1155,8 @@ void KDirWatchPrivate::checkFAMEvent(FAMEvent* fe)
   if (!rescan_timer.isActive())
     rescan_timer.start(m_PollInterval); // singleshot
 
-    // needed FAM control actions on FAM events
-    switch (fe->code) {
+  // needed FAM control actions on FAM events
+  switch (fe->code) {
     case FAMDeleted:
         // fe->filename is an absolute path when a watched file-or-dir is deleted
         if (!QDir::isRelativePath(QFile::decodeName(fe->filename))) {
@@ -1209,7 +1209,7 @@ void KDirWatchPrivate::checkFAMEvent(FAMEvent* fe)
         break;
       default:
         break;
-    }
+  }
 }
 #else
 void KDirWatchPrivate::famEventReceived()
