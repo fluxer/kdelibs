@@ -104,7 +104,7 @@ set(cmakeFiles
     FindTaglib.cmake
     FindUDev.cmake
     FindUDisks2.cmake
-    FindUSB.cmake
+    FindLibUSB.cmake
     FindWebP.cmake
     FindX11_XCB.cmake
     FindXCB.cmake
