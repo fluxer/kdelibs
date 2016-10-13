@@ -379,9 +379,8 @@ public:
      * groups in the config file and apply them.
      *
      * @param config Config group to read the settings from.
-     * @param forceGlobal see the same argument in KToolBar::applySettings
      */
-    virtual void applyMainWindowSettings( const KConfigGroup &config, bool forceGlobal = false);
+    virtual void applyMainWindowSettings( const KConfigGroup &config);
 
     /**
      * Save settings for statusbar, menubar and toolbar to their respective

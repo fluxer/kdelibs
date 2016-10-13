@@ -286,16 +286,10 @@ public:
      */
     void setupToolbarMenuActions();
 
-    // KDE5 TODO: change it to "using KXMLGUIBuilder::finalizeGUI;"
     virtual void finalizeGUI( KXMLGUIClient *client );
 
-    /**
-     * @internal
-     */
-    void finalizeGUI( bool force );
-
     // reimplemented for internal reasons
-    virtual void applyMainWindowSettings(const KConfigGroup &config, bool force = false);
+    virtual void applyMainWindowSettings(const KConfigGroup &config);
 
 public Q_SLOTS:
     /**

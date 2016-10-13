@@ -132,7 +132,7 @@ public:
      */
     void saveSettings( KConfigGroup &cg );
 
-    void applySettings( const KConfigGroup &cg, bool forceGlobal = false );
+    void applySettings( const KConfigGroup &cg );
 
     /**
      * Adds an XML gui client that uses this toolbar

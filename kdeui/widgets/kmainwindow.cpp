@@ -734,7 +734,7 @@ bool KMainWindow::readPropertiesInternal( KConfig *config, int number )
     return true;
 }
 
-void KMainWindow::applyMainWindowSettings(const KConfigGroup &cg, bool force)
+void KMainWindow::applyMainWindowSettings(const KConfigGroup &cg)
 {
     K_D(KMainWindow);
     kDebug(200) << "KMainWindow::applyMainWindowSettings " << cg.name();
@@ -783,7 +783,7 @@ void KMainWindow::applyMainWindowSettings(const KConfigGroup &cg, bool force)
         group += (toolbar->objectName().isEmpty() ? QString::number(n) : QString(" ")+toolbar->objectName());
 
         KConfigGroup toolbarGroup(&cg, group);
-        toolbar->applySettings(toolbarGroup, force);
+        toolbar->applySettings(toolbarGroup);
         n++;
     }
 

@@ -33,7 +33,7 @@ find_library(LIBUSB_LIBRARIES
     NAMES
     usb-1.0
     HINTS
-    $ENV{FONTCONFIGDIR}/lib
+    $ENV{LIBUSBDIR}/lib
     ${PC_LIBUSB_LIBDIR}
     ${LIB_INSTALL_DIR}
 )

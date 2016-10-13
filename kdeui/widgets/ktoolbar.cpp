@@ -808,10 +808,6 @@ void KToolBar::saveSettings(KConfigGroup &cg)
 {
     Q_ASSERT(!cg.name().isEmpty());
 
-    if (cg.hasKey("Hidden")) {
-        cg.deleteEntry("Hidden"); // remove old key to avoid bugs from the compat code in applySettings. KDE5: remove.
-    }
-
     const int currentIconSize = iconSize().width();
     //kDebug() << objectName() << currentIconSize << d->iconSizeSettings.toString() << "defaultValue=" << d->iconSizeSettings.defaultValue();
     if (!cg.hasDefault("IconSize") && currentIconSize == d->iconSizeSettings.defaultValue()) {
@@ -997,22 +993,9 @@ void KToolBar::saveState(QDomElement &current) const
 }
 
 // called by KMainWindow::applyMainWindowSettings to read from the user settings
-void KToolBar::applySettings(const KConfigGroup &cg, bool forceGlobal)
+void KToolBar::applySettings(const KConfigGroup &cg)
 {
     Q_ASSERT(!cg.name().isEmpty());
-    Q_UNUSED(forceGlobal); // KDE5: remove
-
-    // a small leftover from kde3: separate bool for hidden/shown. But it's also part of saveMainWindowSettings,
-    // it is not really useful anymore, except in the unlikely case where someone would call this by hand.
-    // KDE5: remove the block below
-    if (cg.hasKey("Hidden")) {
-        const bool hidden = cg.readEntry("Hidden", false);
-        if (hidden)
-            hide();
-        else {
-            show();
-        }
-    }
 
     if (cg.hasKey("IconSize")) {
         d->iconSizeSettings[Level_UserSettings] = cg.readEntry("IconSize", 0);

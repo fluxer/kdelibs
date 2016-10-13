@@ -325,37 +325,29 @@ void KXmlGuiWindow::createStandardStatusBarAction(){
         d->showStatusBarAction->setChecked(sb->isHidden());
     } else {
         // If the language has changed, we'll need to grab the new text and whatsThis
-	KAction *tmpStatusBar = KStandardAction::showStatusbar(NULL, NULL, NULL);
+        KAction *tmpStatusBar = KStandardAction::showStatusbar(NULL, NULL, NULL);
         d->showStatusBarAction->setText(tmpStatusBar->text());
         d->showStatusBarAction->setWhatsThis(tmpStatusBar->whatsThis());
-	delete tmpStatusBar;
+        delete tmpStatusBar;
     }
 }
 
-void KXmlGuiWindow::finalizeGUI( bool /*force*/ )
+void KXmlGuiWindow::finalizeGUI( KXMLGUIClient *client )
 {
-    // FIXME: this really needs to be removed with a code more like the one we had on KDE3.
-    //        what we need to do here is to position correctly toolbars so they don't overlap.
-    //        Also, take in count plugins could provide their own toolbars and those also need to
-    //        be restored.
+    Q_UNUSED(client);
     if (autoSaveSettings() && autoSaveConfigGroup().isValid()) {
         applyMainWindowSettings(autoSaveConfigGroup());
     }
 }
 
-void KXmlGuiWindow::applyMainWindowSettings(const KConfigGroup &config, bool force)
+void KXmlGuiWindow::applyMainWindowSettings(const KConfigGroup &config)
 {
     K_D(KXmlGuiWindow);
-    KMainWindow::applyMainWindowSettings(config, force);
+    KMainWindow::applyMainWindowSettings(config);
     KStatusBar *sb = this->findChild<KStatusBar*>();
     if (sb && d->showStatusBarAction)
         d->showStatusBarAction->setChecked(!sb->isHidden());
 }
-
-// KDE5 TODO: change it to "using KXMLGUIBuilder::finalizeGUI;" in the header
-// and remove the reimplementation
-void KXmlGuiWindow::finalizeGUI( KXMLGUIClient *client )
-{ KXMLGUIBuilder::finalizeGUI( client ); }
 
 #include "moc_kxmlguiwindow.cpp"
 

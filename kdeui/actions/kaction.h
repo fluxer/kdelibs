@@ -292,8 +292,6 @@ public:
      * Of course you can also call setStatusTip, setToolTip and setWhatsThis
      * separately for more flexibility.
      *
-     * This method is also the easiest way to port from KDE3's KAction::setToolTip.
-     *
      * @since 4.3
      */
     void setHelpText(const QString& text);
