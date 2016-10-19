@@ -210,11 +210,6 @@ QStringList KDesktopFile::readActions() const
     return d->desktopGroup.readXdgListEntry("Actions");
 }
 
-KConfigGroup KDesktopFile::actionGroup(const QString &group) const
-{
-    return KConfigGroup(this, QLatin1String("Desktop Action ") + group);
-}
-
 const KConfigGroup KDesktopFile::actionGroup(const QString& group) const
 {
     return actionGroup(group);
