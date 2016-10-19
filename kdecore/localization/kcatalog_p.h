@@ -21,6 +21,7 @@
 #define KCATALOG_H
 
 #include <QtCore/QString>
+#include <QtCore/QDebug>
 
 class KCatalogPrivate;
 
