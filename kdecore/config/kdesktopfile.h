@@ -164,7 +164,7 @@ public:
    * Sets the desktop action group.
    * @param group the new action group
    */
-  KConfigGroup actionGroup(const QString &group);
+  KConfigGroup actionGroup(const QString &group) const;
 
   const KConfigGroup actionGroup(const QString &group) const;
 

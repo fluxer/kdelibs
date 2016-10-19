@@ -121,8 +121,7 @@ bool KDesktopFile::isAuthorizedDesktopFile(const QString& path)
      return true; // Relative paths are ok.
 
   KStandardDirs *dirs = KGlobal::dirs();
-  QStringList kdePrefixes;
-  kdePrefixes += dirs->resourceDirs("services");
+  QStringList kdePrefixes = dirs->resourceDirs("services");
   kdePrefixes += dirs->resourceDirs("xdgdata-apps");
   kdePrefixes += dirs->resourceDirs("autostart");
 
@@ -211,14 +210,14 @@ QStringList KDesktopFile::readActions() const
     return d->desktopGroup.readXdgListEntry("Actions");
 }
 
-KConfigGroup KDesktopFile::actionGroup(const QString &group)
+KConfigGroup KDesktopFile::actionGroup(const QString &group) const
 {
     return KConfigGroup(this, QLatin1String("Desktop Action ") + group);
 }
 
 const KConfigGroup KDesktopFile::actionGroup(const QString& group) const
 {
-    return const_cast<KDesktopFile*>(this)->actionGroup(group);
+    return actionGroup(group);
 }
 
 bool KDesktopFile::hasActionGroup(const QString &group) const
@@ -251,12 +250,10 @@ bool KDesktopFile::tryExec() const
   Q_D(const KDesktopFile);
   // Test for TryExec and "X-KDE-AuthorizeAction"
   // NOT readPathEntry (see readPath())
-  QString te = d->desktopGroup.readEntry("TryExec", QString());
+  const QString te = d->desktopGroup.readEntry("TryExec", QString());
 
-  if (!te.isEmpty()) {
-    if(KGlobal::dirs()->findExe(te).isEmpty()) {
-        return false;
-    }
+  if (!te.isEmpty() && KGlobal::dirs()->findExe(te).isEmpty()) {
+    return false;
   }
   const QStringList list = d->desktopGroup.readEntry("X-KDE-AuthorizeAction", QStringList());
   foreach (const QString it, list) {

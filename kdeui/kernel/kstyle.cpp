@@ -121,10 +121,6 @@ KStylePrivate::KStylePrivate() : m_componentData()
     } else
     {
         QString name(QApplication::applicationName());
-
-        if(name.isEmpty())
-            name=qAppName();
-
         if(name.isEmpty())
             name="KStyle";
 

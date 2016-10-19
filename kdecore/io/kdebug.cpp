@@ -230,7 +230,7 @@ struct KDebugPrivate
             areaData.name = KGlobal::mainComponent().componentName().toUtf8();
             m_seenMainComponent = true;
         } else {
-            areaData.name = qApp ? qAppName().toUtf8() : QByteArray("unnamed app");
+            areaData.name = qApp ? qApp->applicationName().toUtf8() : QByteArray("unnamed app");
             m_seenMainComponent = false;
         }
         //qDebug() << "loadAreaNames: area 0 has name" << areaData.name;
@@ -508,9 +508,8 @@ struct KDebugPrivate
         if (printProcessInfo) {
             programName = cache.value(0).name;
             if (programName.isEmpty()) {
-                if (QCoreApplication::instance())
-                    programName = QCoreApplication::instance()->applicationName().toLocal8Bit();
-                else
+                programName = QCoreApplication::applicationName().toLocal8Bit();
+                if (programName.isEmpty())
                     programName = "<unknown program name>";
             }
             s << programName.constData() << "(" << unsigned(getpid()) << ")";
