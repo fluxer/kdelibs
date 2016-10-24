@@ -27,7 +27,6 @@
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
 #include <klocale.h>
-#include "kdayperiod_p.h"
 #include <QtCore/QStringList>
 #include <QtTest/QTest>
 

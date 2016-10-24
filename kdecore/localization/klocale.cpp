@@ -34,7 +34,6 @@
 #include "kdebug.h"
 #include "kdatetime.h"
 #include "kcalendarsystem.h"
-#include "kdayperiod_p.h"
 #include "kcurrencycode.h"
 #include "kcatalogname_p.h"
 #include "common_helpers_p.h"

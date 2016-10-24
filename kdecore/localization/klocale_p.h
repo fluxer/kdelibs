@@ -22,11 +22,11 @@
 #define KLOCALE_P_H
 
 #include "klocale.h"
+#include "kdayperiod_p.h"
 
 class QMutex;
 
 class KCatalog;
-class KDayPeriod;
 
 // Used by both KLocale and KLocalizedString, since they call each other.
 QMutex* kLocaleMutex();

@@ -28,7 +28,6 @@
 #include "kdatetime.h"
 #include "ktimezone.h"
 #include "kcalendarsystem.h"
-#include "kdayperiod_p.h"
 #include "klocale_p.h"
 #include "kdebug.h"
 

@@ -57,17 +57,17 @@ private:
 };
 } // namespace
 
-QThreadStorage<KDBusConnectionPoolPrivate *> s_perThreadConnection;
+thread_local KDBusConnectionPoolPrivate* s_perThreadConnection;
 
 QDBusConnection KDBusConnectionPool::threadConnection()
 {
     if (QCoreApplication::instance()->thread() == QThread::currentThread()) {
         return QDBusConnection::sessionBus();
     }
-    if (!s_perThreadConnection.hasLocalData()) {
-        s_perThreadConnection.setLocalData(new KDBusConnectionPoolPrivate);
+    if (!s_perThreadConnection) {
+        s_perThreadConnection = new KDBusConnectionPoolPrivate;
     }
 
-    return s_perThreadConnection.localData()->connection();
+    return s_perThreadConnection->connection();
 }
 
