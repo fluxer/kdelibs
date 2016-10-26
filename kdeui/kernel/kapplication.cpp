@@ -404,8 +404,6 @@ void KApplicationPrivate::init(bool GUIenabled)
 
 
   // sanity checking, to make sure we've connected
-  extern void qDBusBindToApplication();
-  qDBusBindToApplication();
   QDBusConnectionInterface *bus = 0;
   if (!QDBusConnection::sessionBus().isConnected() || !(bus = QDBusConnection::sessionBus().interface())) {
       kFatal(240) << "Session bus not found" << endl <<
