@@ -399,8 +399,18 @@ void Connection::connectToRemote(const QString &address)
 
     kDebug(7017) << "Connection requested to " << address;
     KUrl url = address;
-    if (address.isEmpty() && d->backend)
+    if (Q_UNLIKELY(address.isEmpty() && d->backend)) {
+        kWarning(7017) << "address is empty, using address from backend";
         url = d->backend->address;
+    }
+
+    const QString scheme = url.protocol();
+    if (Q_UNLIKELY(scheme != QLatin1String("tcp"))) {
+        kWarning(7017) << "Unknown requested KIO::Connection protocol='" << scheme
+        << "' (" << url << ")";
+        Q_ASSERT(0);
+        return;
+    }
 
     // connection succeeded
     if (!d->backend->connectToRemote(url)) {
