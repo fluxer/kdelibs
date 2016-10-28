@@ -389,22 +389,22 @@ bool Connection::suspended() const
 
 void Connection::connectToRemote(const QString &address)
 {
-    //kDebug(7017) << "Connection requested to " << address;
-    KUrl url = address;
-    QString scheme = url.protocol();
+    /*
+        establish the server to get its address if address is empty
+        for compatibilty with local mode (which is no more, but it's
+        uses are still present)
+    */
+    d->setBackend(new SocketConnectionBackend(this));
+    d->backend->listenForRemote();
 
-    if (scheme == QLatin1String("tcp")) {
-        d->setBackend(new SocketConnectionBackend(this));
-    } else {
-        kWarning(7017) << "Unknown requested KIO::Connection protocol='" << scheme
-                       << "' (" << address << ")";
-        Q_ASSERT(0);
-        return;
-    }
+    kDebug(7017) << "Connection requested to " << address;
+    KUrl url = address;
+    if (address.isEmpty() && d->backend)
+        url = d->backend->address;
 
     // connection succeeded
     if (!d->backend->connectToRemote(url)) {
-        //kWarning(7017) << "could not connect to " << url << "using scheme" << scheme ;
+        kWarning(7017) << "could not connect to " << url;
         delete d->backend;
         d->backend = 0;
         return;
