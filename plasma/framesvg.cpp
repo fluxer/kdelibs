@@ -27,7 +27,6 @@
 #include <QPainter>
 #include <QRegion>
 #include <QSize>
-#include <QStringBuilder>
 #include <QTimer>
 
 #include <kdebug.h>
@@ -208,7 +207,7 @@ void FrameSvg::setElementPrefix(const QString &prefix)
 {
     const QString oldPrefix(d->prefix);
 
-    if (!hasElement(prefix % "-center")) {
+    if (!hasElement(prefix + "-center")) {
         d->prefix.clear();
     } else {
         d->prefix = prefix;
@@ -280,7 +279,7 @@ bool FrameSvg::hasElementPrefix(const QString & prefix) const
     if (prefix.isEmpty()) {
         return hasElement("center");
     } else {
-        return hasElement(prefix % "-center");
+        return hasElement(prefix + "-center");
     }
 }
 
@@ -599,7 +598,7 @@ QPixmap FrameSvgPrivate::alphaMask()
     FrameData *frame = frames[prefix];
     QString maskPrefix;
 
-    if (q->hasElement("mask-" % prefix % "center")) {
+    if (q->hasElement("mask-" + prefix + "center")) {
         maskPrefix = "mask-";
     }
 
@@ -617,7 +616,7 @@ QPixmap FrameSvgPrivate::alphaMask()
 
         // We are setting the prefix only temporary to generate
         // the needed mask image
-        prefix = maskPrefix % oldPrefix;
+        prefix = maskPrefix + oldPrefix;
 
         if (!frames.contains(prefix)) {
             const QString key = cacheId(frame, prefix);
@@ -671,13 +670,13 @@ void FrameSvgPrivate::generateBackground(FrameData *frame)
     Theme *theme = Theme::defaultTheme();
     bool frameCached = !frame->cachedBackground.isNull();
     bool overlayCached = false;
-    const bool overlayAvailable = !prefix.startsWith(QLatin1String("mask-")) && q->hasElement(prefix % "overlay");
+    const bool overlayAvailable = !prefix.startsWith(QLatin1String("mask-")) && q->hasElement(prefix + "overlay");
     QPixmap overlay;
     if (q->isUsingRenderingCache()) {
         frameCached = theme->findInCache(id, frame->cachedBackground) && !frame->cachedBackground.isNull();
 
         if (overlayAvailable) {
-            overlayCached = theme->findInCache("overlay_" % id, overlay) && !overlay.isNull();
+            overlayCached = theme->findInCache("overlay_" + id, overlay) && !overlay.isNull();
         }
     }
 
@@ -689,23 +688,23 @@ void FrameSvgPrivate::generateBackground(FrameData *frame)
     QSize overlaySize;
     QPoint actualOverlayPos = QPoint(0, 0);
     if (overlayAvailable && !overlayCached) {
-        overlaySize = q->elementSize(prefix % "overlay");
+        overlaySize = q->elementSize(prefix + "overlay");
 
         //Random pos, stretched and tiled are mutually exclusive
-        if (q->hasElement(prefix % "hint-overlay-random-pos")) {
+        if (q->hasElement(prefix + "hint-overlay-random-pos")) {
             actualOverlayPos = overlayPos;
-        } else if (q->hasElement(prefix % "hint-overlay-pos-right")) {
+        } else if (q->hasElement(prefix + "hint-overlay-pos-right")) {
             actualOverlayPos.setX(frame->frameSize.width() - overlaySize.width());
-        } else if (q->hasElement(prefix % "hint-overlay-pos-bottom")) {
+        } else if (q->hasElement(prefix + "hint-overlay-pos-bottom")) {
             actualOverlayPos.setY(frame->frameSize.height() - overlaySize.height());
         //Stretched or Tiled?
-        } else if (q->hasElement(prefix % "hint-overlay-stretch")) {
+        } else if (q->hasElement(prefix + "hint-overlay-stretch")) {
             overlaySize = frameSize(frame).toSize();
         } else {
-            if (q->hasElement(prefix % "hint-overlay-tile-horizontal")) {
+            if (q->hasElement(prefix + "hint-overlay-tile-horizontal")) {
                 overlaySize.setWidth(frameSize(frame).width());
             }
-            if (q->hasElement(prefix % "hint-overlay-tile-vertical")) {
+            if (q->hasElement(prefix + "hint-overlay-tile-vertical")) {
                 overlaySize.setHeight(frameSize(frame).height());
             }
         }
@@ -714,16 +713,16 @@ void FrameSvgPrivate::generateBackground(FrameData *frame)
         QPainter overlayPainter(&overlay);
         overlayPainter.setCompositionMode(QPainter::CompositionMode_SourceIn);
         //Tiling?
-        if (q->hasElement(prefix % "hint-overlay-tile-horizontal") ||
-            q->hasElement(prefix % "hint-overlay-tile-vertical")) {
+        if (q->hasElement(prefix + "hint-overlay-tile-horizontal") ||
+            q->hasElement(prefix + "hint-overlay-tile-vertical")) {
 
             QSize s = q->size();
-            q->resize(q->elementSize(prefix % "overlay"));
+            q->resize(q->elementSize(prefix + "overlay"));
 
-            overlayPainter.drawTiledPixmap(QRect(QPoint(0,0), overlaySize), q->pixmap(prefix % "overlay"));
+            overlayPainter.drawTiledPixmap(QRect(QPoint(0,0), overlaySize), q->pixmap(prefix + "overlay"));
             q->resize(s);
         } else {
-            q->paint(&overlayPainter, QRect(actualOverlayPos, overlaySize), prefix % "overlay");
+            q->paint(&overlayPainter, QRect(actualOverlayPos, overlaySize), prefix + "overlay");
         }
 
         overlayPainter.end();
@@ -744,8 +743,8 @@ void FrameSvgPrivate::generateFrameBackground(FrameData *frame)
 {
     //kDebug() << "generating background";
     const QSizeF size = frameSize(frame);
-    const int topWidth = q->elementSize(prefix % "top").width();
-    const int leftHeight = q->elementSize(prefix % "left").height();
+    const int topWidth = q->elementSize(prefix + "top").width();
+    const int leftHeight = q->elementSize(prefix + "left").height();
     const int topOffset = 0;
     const int leftOffset = 0;
 
@@ -776,15 +775,15 @@ void FrameSvgPrivate::generateFrameBackground(FrameData *frame)
     //CENTER
     if (frame->tileCenter) {
         if (contentHeight > 0 && contentWidth > 0) {
-            const int centerTileHeight = q->elementSize(prefix % "center").height();
-            const int centerTileWidth = q->elementSize(prefix % "center").width();
+            const int centerTileHeight = q->elementSize(prefix + "center").height();
+            const int centerTileWidth = q->elementSize(prefix + "center").width();
             QPixmap center(centerTileWidth, centerTileHeight);
             center.fill(Qt::transparent);
 
             {
                 QPainter centerPainter(&center);
                 centerPainter.setCompositionMode(QPainter::CompositionMode_Source);
-                q->paint(&centerPainter, QRect(QPoint(0, 0), q->elementSize(prefix % "center")), prefix % "center");
+                q->paint(&centerPainter, QRect(QPoint(0, 0), q->elementSize(prefix + "center")), prefix + "center");
             }
 
             if (frame->composeOverBorder) {
@@ -798,11 +797,11 @@ void FrameSvgPrivate::generateFrameBackground(FrameData *frame)
         if (contentHeight > 0 && contentWidth > 0) {
             if (frame->composeOverBorder) {
                 q->paint(&p, QRect(QPoint(0, 0), size.toSize()),
-                               prefix % "center");
+                               prefix + "center");
             } else {
                 q->paint(&p, QRect(frame->leftWidth, frame->topHeight,
                                 contentWidth, contentHeight),
-                                prefix % "center");
+                                prefix + "center");
             }
         }
     }
@@ -813,110 +812,110 @@ void FrameSvgPrivate::generateFrameBackground(FrameData *frame)
         p.setCompositionMode(QPainter::CompositionMode_SourceOver);
     }
 
-    if (frame->enabledBorders & FrameSvg::LeftBorder && q->hasElement(prefix % "left")) {
+    if (frame->enabledBorders & FrameSvg::LeftBorder && q->hasElement(prefix + "left")) {
         rightOffset += frame->leftWidth;
     }
 
     // Corners
-    if (frame->enabledBorders & FrameSvg::TopBorder && q->hasElement(prefix % "top")) {
+    if (frame->enabledBorders & FrameSvg::TopBorder && q->hasElement(prefix + "top")) {
         contentTop = frame->topHeight;
         bottomOffset += frame->topHeight;
 
-        if (q->hasElement(prefix % "topleft") && frame->enabledBorders & FrameSvg::LeftBorder) {
-            q->paint(&p, QRect(leftOffset, topOffset, frame->leftWidth, frame->topHeight), prefix % "topleft");
+        if (q->hasElement(prefix + "topleft") && frame->enabledBorders & FrameSvg::LeftBorder) {
+            q->paint(&p, QRect(leftOffset, topOffset, frame->leftWidth, frame->topHeight), prefix + "topleft");
 
             contentLeft = frame->leftWidth;
         }
 
-        if (q->hasElement(prefix % "topright") && frame->enabledBorders & FrameSvg::RightBorder) {
-            q->paint(&p, QRect(rightOffset, topOffset, frame->rightWidth, frame->topHeight), prefix % "topright");
+        if (q->hasElement(prefix + "topright") && frame->enabledBorders & FrameSvg::RightBorder) {
+            q->paint(&p, QRect(rightOffset, topOffset, frame->rightWidth, frame->topHeight), prefix + "topright");
         }
     }
 
-    if (frame->enabledBorders & FrameSvg::BottomBorder && q->hasElement(prefix % "bottom")) {
-        if (q->hasElement(prefix % "bottomleft") && frame->enabledBorders & FrameSvg::LeftBorder) {
-            q->paint(&p, QRect(leftOffset, bottomOffset, frame->leftWidth, frame->bottomHeight), prefix % "bottomleft");
+    if (frame->enabledBorders & FrameSvg::BottomBorder && q->hasElement(prefix + "bottom")) {
+        if (q->hasElement(prefix + "bottomleft") && frame->enabledBorders & FrameSvg::LeftBorder) {
+            q->paint(&p, QRect(leftOffset, bottomOffset, frame->leftWidth, frame->bottomHeight), prefix + "bottomleft");
 
             contentLeft = frame->leftWidth;
         }
 
-        if (frame->enabledBorders & FrameSvg::RightBorder && q->hasElement(prefix % "bottomright")) {
-            q->paint(&p, QRect(rightOffset, bottomOffset, frame->rightWidth, frame->bottomHeight), prefix % "bottomright");
+        if (frame->enabledBorders & FrameSvg::RightBorder && q->hasElement(prefix + "bottomright")) {
+            q->paint(&p, QRect(rightOffset, bottomOffset, frame->rightWidth, frame->bottomHeight), prefix + "bottomright");
         }
     }
 
     // Sides
     if (frame->stretchBorders) {
         if (frame->enabledBorders & FrameSvg::LeftBorder || frame->enabledBorders & FrameSvg::RightBorder) {
-            if (q->hasElement(prefix % "left") &&
+            if (q->hasElement(prefix + "left") &&
                 frame->enabledBorders & FrameSvg::LeftBorder &&
                 contentHeight > 0) {
-                q->paint(&p, QRect(leftOffset, contentTop, frame->leftWidth, contentHeight), prefix % "left");
+                q->paint(&p, QRect(leftOffset, contentTop, frame->leftWidth, contentHeight), prefix + "left");
             }
 
-            if (q->hasElement(prefix % "right") &&
+            if (q->hasElement(prefix + "right") &&
                 frame->enabledBorders & FrameSvg::RightBorder &&
                 contentHeight > 0) {
-                q->paint(&p, QRect(rightOffset, contentTop, frame->rightWidth, contentHeight), prefix % "right");
+                q->paint(&p, QRect(rightOffset, contentTop, frame->rightWidth, contentHeight), prefix + "right");
             }
         }
 
         if (frame->enabledBorders & FrameSvg::TopBorder || frame->enabledBorders & FrameSvg::BottomBorder) {
-            if (frame->enabledBorders & FrameSvg::TopBorder && q->hasElement(prefix % "top") &&
+            if (frame->enabledBorders & FrameSvg::TopBorder && q->hasElement(prefix + "top") &&
                 contentWidth > 0) {
-                q->paint(&p, QRect(contentLeft, topOffset, contentWidth, frame->topHeight), prefix % "top");
+                q->paint(&p, QRect(contentLeft, topOffset, contentWidth, frame->topHeight), prefix + "top");
             }
 
-            if (frame->enabledBorders & FrameSvg::BottomBorder && q->hasElement(prefix % "bottom") &&
+            if (frame->enabledBorders & FrameSvg::BottomBorder && q->hasElement(prefix + "bottom") &&
                 contentWidth > 0) {
-                q->paint(&p, QRect(contentLeft, bottomOffset, contentWidth, frame->bottomHeight), prefix % "bottom");
+                q->paint(&p, QRect(contentLeft, bottomOffset, contentWidth, frame->bottomHeight), prefix + "bottom");
             }
         }
     } else {
-        if (frame->enabledBorders & FrameSvg::LeftBorder && q->hasElement(prefix % "left")
+        if (frame->enabledBorders & FrameSvg::LeftBorder && q->hasElement(prefix + "left")
                 && leftHeight > 0 && frame->leftWidth > 0) {
             QPixmap left(frame->leftWidth, leftHeight);
             left.fill(Qt::transparent);
 
             QPainter sidePainter(&left);
             sidePainter.setCompositionMode(QPainter::CompositionMode_Source);
-            q->paint(&sidePainter, QRect(QPoint(0, 0), left.size()), prefix % "left");
+            q->paint(&sidePainter, QRect(QPoint(0, 0), left.size()), prefix + "left");
 
             p.drawTiledPixmap(QRect(leftOffset, contentTop, frame->leftWidth, contentHeight), left);
         }
 
-        if (frame->enabledBorders & FrameSvg::RightBorder && q->hasElement(prefix % "right") &&
+        if (frame->enabledBorders & FrameSvg::RightBorder && q->hasElement(prefix + "right") &&
                 leftHeight > 0 && frame->rightWidth > 0) {
             QPixmap right(frame->rightWidth, leftHeight);
             right.fill(Qt::transparent);
 
             QPainter sidePainter(&right);
             sidePainter.setCompositionMode(QPainter::CompositionMode_Source);
-            q->paint(&sidePainter, QRect(QPoint(0, 0), right.size()), prefix % "right");
+            q->paint(&sidePainter, QRect(QPoint(0, 0), right.size()), prefix + "right");
 
             p.drawTiledPixmap(QRect(rightOffset, contentTop, frame->rightWidth, contentHeight), right);
         }
 
-        if (frame->enabledBorders & FrameSvg::TopBorder && q->hasElement(prefix % "top")
+        if (frame->enabledBorders & FrameSvg::TopBorder && q->hasElement(prefix + "top")
                 && topWidth > 0 && frame->topHeight > 0) {
             QPixmap top(topWidth, frame->topHeight);
             top.fill(Qt::transparent);
 
             QPainter sidePainter(&top);
             sidePainter.setCompositionMode(QPainter::CompositionMode_Source);
-            q->paint(&sidePainter, QRect(QPoint(0, 0), top.size()), prefix % "top");
+            q->paint(&sidePainter, QRect(QPoint(0, 0), top.size()), prefix + "top");
 
             p.drawTiledPixmap(QRect(contentLeft, topOffset, contentWidth, frame->topHeight), top);
         }
 
-        if (frame->enabledBorders & FrameSvg::BottomBorder && q->hasElement(prefix % "bottom")
+        if (frame->enabledBorders & FrameSvg::BottomBorder && q->hasElement(prefix + "bottom")
                 && topWidth > 0 && frame->bottomHeight > 0) {
             QPixmap bottom(topWidth, frame->bottomHeight);
             bottom.fill(Qt::transparent);
 
             QPainter sidePainter(&bottom);
             sidePainter.setCompositionMode(QPainter::CompositionMode_Source);
-            q->paint(&sidePainter, QRect(QPoint(0, 0), bottom.size()), prefix % "bottom");
+            q->paint(&sidePainter, QRect(QPoint(0, 0), bottom.size()), prefix + "bottom");
 
             p.drawTiledPixmap(QRect(contentLeft, bottomOffset, contentWidth, frame->bottomHeight), bottom);
         }
@@ -928,7 +927,7 @@ QString FrameSvgPrivate::cacheId(FrameData *frame, const QString &prefixToSave) 
 {
     const QSize size = frameSize(frame).toSize();
     const QLatin1Char s('_');
-    return QString::number(frame->enabledBorders) % s % QString::number(size.width()) % s % QString::number(size.height()) % s % prefixToSave % s % q->imagePath(); 
+    return QString::number(frame->enabledBorders) + s + QString::number(size.width()) + s + QString::number(size.height()) + s + prefixToSave + s + q->imagePath(); 
 }
 
 void FrameSvgPrivate::cacheFrame(const QString &prefixToSave, const QPixmap &background, const QPixmap &overlay)
@@ -948,11 +947,11 @@ void FrameSvgPrivate::cacheFrame(const QString &prefixToSave, const QPixmap &bac
 
     //kDebug()<<"Saving to cache frame"<<id;
 
-    Theme::defaultTheme()->insertIntoCache(id, background, QString::number((qint64)q, 16) % prefixToSave);
+    Theme::defaultTheme()->insertIntoCache(id, background, QString::number((qint64)q, 16) + prefixToSave);
 
     if (!overlay.isNull()) {
         //insert overlay
-        Theme::defaultTheme()->insertIntoCache("overlay_" % id, overlay, QString::number((qint64)q, 16) % prefixToSave % "overlay");
+        Theme::defaultTheme()->insertIntoCache("overlay_" + id, overlay, QString::number((qint64)q, 16) + prefixToSave + "overlay");
     }
 }
 
@@ -967,10 +966,10 @@ void FrameSvgPrivate::updateSizes() const
     frame->cachedBackground = QPixmap();
 
     if (frame->enabledBorders & FrameSvg::TopBorder) {
-        frame->topHeight = q->elementSize(prefix % "top").height();
+        frame->topHeight = q->elementSize(prefix + "top").height();
 
-        if (q->hasElement(prefix % "hint-top-margin")) {
-            frame->topMargin = q->elementSize(prefix % "hint-top-margin").height();
+        if (q->hasElement(prefix + "hint-top-margin")) {
+            frame->topMargin = q->elementSize(prefix + "hint-top-margin").height();
         } else {
             frame->topMargin = frame->topHeight;
         }
@@ -979,10 +978,10 @@ void FrameSvgPrivate::updateSizes() const
     }
 
     if (frame->enabledBorders & FrameSvg::LeftBorder) {
-        frame->leftWidth = q->elementSize(prefix % "left").width();
+        frame->leftWidth = q->elementSize(prefix + "left").width();
 
-        if (q->hasElement(prefix % "hint-left-margin")) {
-            frame->leftMargin = q->elementSize(prefix % "hint-left-margin").width();
+        if (q->hasElement(prefix + "hint-left-margin")) {
+            frame->leftMargin = q->elementSize(prefix + "hint-left-margin").width();
         } else {
             frame->leftMargin = frame->leftWidth;
         }
@@ -991,10 +990,10 @@ void FrameSvgPrivate::updateSizes() const
     }
 
     if (frame->enabledBorders & FrameSvg::RightBorder) {
-        frame->rightWidth = q->elementSize(prefix % "right").width();
+        frame->rightWidth = q->elementSize(prefix + "right").width();
 
-        if (q->hasElement(prefix % "hint-right-margin")) {
-            frame->rightMargin = q->elementSize(prefix % "hint-right-margin").width();
+        if (q->hasElement(prefix + "hint-right-margin")) {
+            frame->rightMargin = q->elementSize(prefix + "hint-right-margin").width();
         } else {
             frame->rightMargin = frame->rightWidth;
         }
@@ -1003,10 +1002,10 @@ void FrameSvgPrivate::updateSizes() const
     }
 
     if (frame->enabledBorders & FrameSvg::BottomBorder) {
-        frame->bottomHeight = q->elementSize(prefix % "bottom").height();
+        frame->bottomHeight = q->elementSize(prefix + "bottom").height();
 
-        if (q->hasElement(prefix % "hint-bottom-margin")) {
-            frame->bottomMargin = q->elementSize(prefix % "hint-bottom-margin").height();
+        if (q->hasElement(prefix + "hint-bottom-margin")) {
+            frame->bottomMargin = q->elementSize(prefix + "hint-bottom-margin").height();
         } else {
             frame->bottomMargin = frame->bottomHeight;
         }
@@ -1014,14 +1013,14 @@ void FrameSvgPrivate::updateSizes() const
         frame->bottomMargin = frame->bottomHeight = 0;
     }
 
-    frame->composeOverBorder = (q->hasElement(prefix % "hint-compose-over-border") &&
-                                q->hasElement("mask-" % prefix % "center"));
+    frame->composeOverBorder = (q->hasElement(prefix + "hint-compose-over-border") &&
+                                q->hasElement("mask-" + prefix + "center"));
 
     //since it's rectangular, topWidth and bottomWidth must be the same
     //the ones that don't have a prefix is for retrocompatibility
-    frame->tileCenter = (q->hasElement("hint-tile-center") || q->hasElement(prefix % "hint-tile-center"));
-    frame->noBorderPadding = (q->hasElement("hint-no-border-padding") || q->hasElement(prefix % "hint-no-border-padding"));
-    frame->stretchBorders = (q->hasElement("hint-stretch-borders") || q->hasElement(prefix % "hint-stretch-borders"));
+    frame->tileCenter = (q->hasElement("hint-tile-center") || q->hasElement(prefix + "hint-tile-center"));
+    frame->noBorderPadding = (q->hasElement("hint-no-border-padding") || q->hasElement(prefix + "hint-no-border-padding"));
+    frame->stretchBorders = (q->hasElement("hint-stretch-borders") || q->hasElement(prefix + "hint-stretch-borders"));
     q->resize(s);
 }
 

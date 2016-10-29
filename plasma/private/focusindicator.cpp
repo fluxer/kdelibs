@@ -21,7 +21,6 @@
 
 #include <QtGui/qgraphicssceneevent.h>
 #include <QPainter>
-#include <QStringBuilder>
 #include <QtGui/qstyleoption.h>
 
 #include <plasma/theme.h>
@@ -107,9 +106,9 @@ void FocusIndicator::setCustomPrefix(const QString &prefix)
         m_prefix.prepend(m_customPrefix);
     }
 
-    m_testPrefix = m_customPrefix % "hover";
+    m_testPrefix = m_customPrefix + "hover";
     if (m_prefix.isEmpty()) {
-        m_prefix = m_customPrefix % "shadow";
+        m_prefix = m_customPrefix + "shadow";
     }
 
     if (m_prefix == was) {
@@ -136,17 +135,17 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
     switch (event->type()) {
         case QEvent::GraphicsSceneHoverEnter:
             if (!m_parent->hasFocus()) {
-                m_prefix = m_customPrefix % "hover";
+                m_prefix = m_customPrefix + "hover";
                 syncGeometry();
                 m_hoverAnimation->stop();
                 if (m_background->hasElementPrefix(m_testPrefix)) {
-                    m_background->setElementPrefix(m_customPrefix % "shadow");
+                    m_background->setElementPrefix(m_customPrefix + "shadow");
                     m_hoverAnimation->setProperty("startPixmap", m_background->framePixmap());
-                    m_background->setElementPrefix(m_customPrefix % "hover");
+                    m_background->setElementPrefix(m_customPrefix + "hover");
                     m_hoverAnimation->setProperty("targetPixmap", m_background->framePixmap());
                 } else if (m_background->hasElement(m_testPrefix)) {
-                    m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix % "shadow"));
-                    m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix % "hover"));
+                    m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix + "shadow"));
+                    m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix + "hover"));
                 }
 
                 m_hoverAnimation->start();
@@ -155,18 +154,18 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
 
         case QEvent::GraphicsSceneHoverLeave:
             if (!m_parent->hasFocus()) {
-                m_prefix = m_customPrefix % "shadow";
+                m_prefix = m_customPrefix + "shadow";
                 syncGeometry();
                 m_hoverAnimation->stop();
 
                 if (m_background->hasElementPrefix(m_testPrefix)) {
-                    m_background->setElementPrefix(m_customPrefix % "hover");
+                    m_background->setElementPrefix(m_customPrefix + "hover");
                     m_hoverAnimation->setProperty("startPixmap", m_background->framePixmap());
-                    m_background->setElementPrefix(m_customPrefix % "shadow");
+                    m_background->setElementPrefix(m_customPrefix + "shadow");
                     m_hoverAnimation->setProperty("targetPixmap", m_background->framePixmap());
                 } else if (m_background->hasElement(m_testPrefix)) {
-                    m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix % "hover"));
-                    m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix % "shadow"));
+                    m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix + "hover"));
+                    m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix + "shadow"));
                 }
                 m_hoverAnimation->start();
             }
@@ -177,18 +176,18 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
         break;
 
         case QEvent::FocusIn:
-            m_prefix = m_customPrefix % "focus";
+            m_prefix = m_customPrefix + "focus";
             syncGeometry();
             m_hoverAnimation->stop();
 
-            if (m_background->hasElementPrefix(m_customPrefix % "focus")) {
-                //m_background->setElementPrefix(m_customPrefix % "shadow");
+            if (m_background->hasElementPrefix(m_customPrefix + "focus")) {
+                //m_background->setElementPrefix(m_customPrefix + "shadow");
                 m_hoverAnimation->setProperty("startPixmap", m_background->framePixmap());
-                m_background->setElementPrefix(m_customPrefix % "focus");
+                m_background->setElementPrefix(m_customPrefix + "focus");
                 m_hoverAnimation->setProperty("targetPixmap", m_background->framePixmap());
-            } else if (m_background->hasElement(m_customPrefix % "focus")) {
-                //m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix % "shadow"));
-                m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix % "focus"));
+            } else if (m_background->hasElement(m_customPrefix + "focus")) {
+                //m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix + "shadow"));
+                m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix + "focus"));
             }
 
             m_hoverAnimation->start();
@@ -196,18 +195,18 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
 
         case QEvent::FocusOut:
             if (!m_isUnderMouse) {
-                m_prefix = m_customPrefix % "shadow";
+                m_prefix = m_customPrefix + "shadow";
                 syncGeometry();
                 m_hoverAnimation->stop();
 
-                if (m_background->hasElementPrefix(m_customPrefix % "focus")) {
+                if (m_background->hasElementPrefix(m_customPrefix + "focus")) {
                     m_background->setElementPrefix("focus");
                     m_hoverAnimation->setProperty("startPixmap", m_background->framePixmap());
                     m_background->setElementPrefix("shadow");
                     m_hoverAnimation->setProperty("targetPixmap", m_background->framePixmap());
-                } else if (m_background->hasElement(m_customPrefix % "focus")) {
-                    m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix % "focus"));
-                    m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix % "shadow"));
+                } else if (m_background->hasElement(m_customPrefix + "focus")) {
+                    m_hoverAnimation->setProperty("startPixmap", m_background->pixmap(m_customPrefix + "focus"));
+                    m_hoverAnimation->setProperty("targetPixmap", m_background->pixmap(m_customPrefix + "shadow"));
                 }
 
                 m_hoverAnimation->start();
@@ -223,18 +222,18 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
 
 void FocusIndicator::resizeEvent(QGraphicsSceneResizeEvent *)
 {
-    if (m_background->hasElementPrefix(m_customPrefix % "shadow")) {
-        m_background->setElementPrefix(m_customPrefix % "shadow");
+    if (m_background->hasElementPrefix(m_customPrefix + "shadow")) {
+        m_background->setElementPrefix(m_customPrefix + "shadow");
         m_background->resizeFrame(size());
     }
 
-    if (m_background->hasElementPrefix(m_customPrefix % "hover")) { 
-        m_background->setElementPrefix(m_customPrefix % "hover");
+    if (m_background->hasElementPrefix(m_customPrefix + "hover")) { 
+        m_background->setElementPrefix(m_customPrefix + "hover");
         m_background->resizeFrame(size());
     }
 
-    if (m_background->hasElementPrefix(m_customPrefix % "focus")) { 
-        m_background->setElementPrefix(m_customPrefix % "focus");
+    if (m_background->hasElementPrefix(m_customPrefix + "focus")) { 
+        m_background->setElementPrefix(m_customPrefix + "focus");
         m_background->resizeFrame(size());
     }
 

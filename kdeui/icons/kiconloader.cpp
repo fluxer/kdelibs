@@ -36,7 +36,6 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QDataStream>
 #include <QtCore/QByteArray>
-#include <QtCore/QStringBuilder> // % operator for QString
 #include <QtGui/QIcon>
 #include <QtGui/QImage>
 #include <QtGui/QMovie>
@@ -747,18 +746,17 @@ void KIconLoaderPrivate::normalizeIconMetadata(KIconLoader::Group &group, int &s
 QString KIconLoaderPrivate::makeCacheKey(const QString &name, KIconLoader::Group group,
                                          const QStringList &overlays, int size, int state) const
 {
-    // The icon cache is shared so add some namespacing. The following code
-    // uses QStringBuilder (new in Qt 4.6)
+    // The icon cache is shared so add some namespacing.
 
     return (group == KIconLoader::User
                   ? QLatin1Literal("$kicou_")
                   : QLatin1Literal("$kico_"))
-           % name
-           % QLatin1Char('_')
-           % QString::number(size)
-           % QLatin1Char('_')
-           % overlays.join("_")
-           % ( group >= 0 ? mpEffect.fingerprint(group, state)
+           + name
+           + QLatin1Char('_')
+           + QString::number(size)
+           + QLatin1Char('_')
+           + overlays.join("_")
+           + ( group >= 0 ? mpEffect.fingerprint(group, state)
                           : *NULL_EFFECT_FINGERPRINT);
 }
 

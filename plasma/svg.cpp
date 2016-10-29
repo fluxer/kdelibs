@@ -27,7 +27,6 @@
 #include <QtXml/qdom.h>
 #include <QMatrix>
 #include <QPainter>
-#include <QStringBuilder>
 
 #include <kcolorscheme.h>
 #include <kconfiggroup.h>
@@ -131,8 +130,8 @@ bool SharedSvgRenderer::load(
 }
 
 #define QLSEP QLatin1Char('_')
-#define CACHE_ID_WITH_SIZE(size, id) QString::number(int(size.width())) % QLSEP % QString::number(int(size.height())) % QLSEP % id
-#define CACHE_ID_NATURAL_SIZE(id) QLatin1Literal("Natural") % QLSEP % id
+#define CACHE_ID_WITH_SIZE(size, id) QString::number(int(size.width())) + QLSEP + QString::number(int(size.height())) + QLSEP + id
+#define CACHE_ID_NATURAL_SIZE(id) QLatin1Literal("Natural") + QLSEP + id
 
 SvgPrivate::SvgPrivate(Svg *svg)
     : q(svg),
@@ -300,8 +299,8 @@ QPixmap SvgPrivate::findInCache(const QString &elementId, const QSizeF &s)
             }
 
             if (bestFit.isValid()) {
-                actualElementId = QString::number(bestFit.width()) % "-" %
-                                  QString::number(bestFit.height()) % "-" % elementId;
+                actualElementId = QString::number(bestFit.width()) + "-" +
+                                  QString::number(bestFit.height()) + "-" + elementId;
             }
         }
     }
@@ -366,7 +365,7 @@ QPixmap SvgPrivate::findInCache(const QString &elementId, const QSizeF &s)
     }
 
     if (cacheRendering) {
-        cacheAndColorsTheme()->insertIntoCache(id, p, QString::number((qint64)q, 16) % QLSEP % actualElementId);
+        cacheAndColorsTheme()->insertIntoCache(id, p, QString::number((qint64)q, 16) + QLSEP + actualElementId);
     }
 
     return p;

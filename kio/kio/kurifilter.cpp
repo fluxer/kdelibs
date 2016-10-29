@@ -29,7 +29,6 @@
 #include <kstandarddirs.h>
 
 #include <QtCore/qhash.h>
-#include <QtCore/QStringBuilder>
 #include <QtNetwork/QHostInfo>
 #include <QtNetwork/QHostAddress>
 
@@ -376,7 +375,7 @@ QString KUriFilterData::queryForPreferredSearchProvider(const QString& provider)
 {
     const KUriFilterSearchProvider* searchProvider = d->searchProviderMap.value(provider);
     if (searchProvider)
-        return (searchProvider->defaultKey() % searchTermSeparator() % searchTerm());
+        return (searchProvider->defaultKey() + searchTermSeparator() + searchTerm());
     return QString();
 }
 

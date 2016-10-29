@@ -22,7 +22,6 @@
 #define PLASMA_FRAMESVG_P_H
 
 #include <QHash>
-#include <QStringBuilder>
 
 #include <kdebug.h>
 
