@@ -65,7 +65,6 @@ set(cmakeFiles
     FindLibSSH.cmake
     FindLibVNCServer.cmake
     FindLibXKlavier.cmake
-    FindLibXslt.cmake
     FindMPFR.cmake
     FindMtp.cmake
     FindMusicBrainz5.cmake
@@ -86,7 +85,6 @@ set(cmakeFiles
     FindRAW1394.cmake
     FindSamba.cmake
     FindSane.cmake
-    FindSasl2.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
     FindSLP.cmake
@@ -101,7 +99,6 @@ set(cmakeFiles
     FindWebP.cmake
     FindX11_XCB.cmake
     FindXCB.cmake
-    FindXine.cmake
     FindXmms.cmake
     kde4_cmake_uninstall.cmake.in
     KDE4Defaults.cmake
