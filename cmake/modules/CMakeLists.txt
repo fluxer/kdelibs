@@ -79,10 +79,6 @@ set(cmakeFiles
     FindPoppler.cmake
     FindPopplerQt4.cmake
     FindPulseAudio.cmake
-    FindPyKDE4.cmake
-    FindPyKDE4.py
-    FindPyQt4.cmake
-    FindPyQt.py
     FindQalculate.cmake
     FindQCA2.cmake
     FindQImageBlitz.cmake
@@ -93,12 +89,9 @@ set(cmakeFiles
     FindSasl2.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
-    FindSIP.cmake
-    FindSIP.py
     FindSLP.cmake
     FindSpeechd.cmake
     FindSqlite.cmake
-    FindStrigi.cmake
     FindSubversionLibrary.cmake
     FindSudo.cmake
     FindTaglib.cmake
@@ -125,7 +118,6 @@ set(cmakeFiles
     MacroPushRequiredVars.cmake
     MacroWriteBasicCMakeVersionFile.cmake
     PkgConfigGetVar.cmake
-    SIPMacros.cmake
     UnixAuth.cmake
 )
 
