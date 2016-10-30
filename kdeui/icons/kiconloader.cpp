@@ -749,8 +749,8 @@ QString KIconLoaderPrivate::makeCacheKey(const QString &name, KIconLoader::Group
     // The icon cache is shared so add some namespacing.
 
     return (group == KIconLoader::User
-                  ? QLatin1Literal("$kicou_")
-                  : QLatin1Literal("$kico_"))
+                  ? QLatin1String("$kicou_")
+                  : QLatin1String("$kico_"))
            + name
            + QLatin1Char('_')
            + QString::number(size)

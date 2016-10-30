@@ -131,7 +131,7 @@ bool SharedSvgRenderer::load(
 
 #define QLSEP QLatin1Char('_')
 #define CACHE_ID_WITH_SIZE(size, id) QString::number(int(size.width())) + QLSEP + QString::number(int(size.height())) + QLSEP + id
-#define CACHE_ID_NATURAL_SIZE(id) QLatin1Literal("Natural") + QLSEP + id
+#define CACHE_ID_NATURAL_SIZE(id) QLatin1String("Natural") + QLSEP + id
 
 SvgPrivate::SvgPrivate(Svg *svg)
     : q(svg),
