@@ -1628,6 +1628,7 @@ public:
                                    const QStyleOption *opt) const;
     bool eventFilter(QObject *, QEvent *);
 
+#ifndef QT_KATIE
 protected Q_SLOTS:
     int layoutSpacingImplementation(QSizePolicy::ControlType control1,
                     QSizePolicy::ControlType control2, Qt::Orientation orientation,
@@ -1635,6 +1636,14 @@ protected Q_SLOTS:
 
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option = 0,
                                      const QWidget *widget = 0) const;
+#else
+    int layoutSpacing(QSizePolicy::ControlType control1,
+                    QSizePolicy::ControlType control2, Qt::Orientation orientation,
+                    const QStyleOption *option, const QWidget *widget) const;
+
+    QIcon standardIcon(StandardPixmap standardIcon, const QStyleOption *option = 0,
+                                     const QWidget *widget = 0) const;
+#endif
 //@}
 private:
     KStylePrivate * const d;

@@ -444,7 +444,12 @@ QPalette KStyle::standardPalette() const
         KSharedConfig::openConfig(d->m_componentData));
 }
 
-QIcon KStyle::standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
+#ifndef QT_KATIE
+QIcon KStyle::standardIconImplementation(
+#else
+QIcon KStyle::standardIcon(
+#endif
+                                         StandardPixmap standardIcon, const QStyleOption *option,
                                          const QWidget *widget) const
 {
     switch (standardIcon) {
@@ -561,7 +566,11 @@ QIcon KStyle::standardIconImplementation(StandardPixmap standardIcon, const QSty
             return KIcon("audio-volume-muted");
 
         default:
+#ifndef QT_KATIE
             return QStyle::standardIconImplementation(standardIcon, option, widget);
+#else
+            return QStyle::standardIcon(standardIcon, option, widget);
+#endif
     }
 }
 
@@ -2817,7 +2826,13 @@ int KStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QW
     return QCommonStyle::pixelMetric(metric, option, widget);
 }
 
-int KStyle::layoutSpacingImplementation(QSizePolicy::ControlType control1, QSizePolicy::ControlType control2, Qt::Orientation orientation, const QStyleOption *option, const QWidget *widget) const
+#ifndef QT_KATIE
+int KStyle::layoutSpacingImplementation(
+#else
+int KStyle::layoutSpacing(
+#endif
+    QSizePolicy::ControlType control1, QSizePolicy::ControlType control2,
+    Qt::Orientation orientation, const QStyleOption *option, const QWidget *widget) const
 {
     Q_UNUSED(control1); Q_UNUSED(control2); Q_UNUSED(orientation);
 
