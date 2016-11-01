@@ -944,7 +944,7 @@ Containment *CoronaPrivate::addContainment(const QString &name, const QVariantLi
             q->removeItem(applet);
             delete applet;
         }
-        applet = containment = new Containment(0, 0, id);
+        applet = containment = new Containment(0, QString(), id);
 
         if (loadingNull) {
             containment->setDrawWallpaper(false);

@@ -262,7 +262,7 @@ bool KConfigDialogManager::parseChildren(const QWidget *widget, bool trackChange
             if ( childWidget->metaObject()->superClass() )
               changedIt = s_changedMap->constFind(childWidget->metaObject()->superClass()->className());
             else
-              changedIt = s_changedMap->constFind(0);
+              changedIt = s_changedMap->constFind(QString());
           }
 
           if (changedIt == s_changedMap->constEnd())

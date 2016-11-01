@@ -41,7 +41,6 @@ public:
 
    static bool s_nofork;
    static bool s_multipleInstances;
-   static bool s_handleAutoStarted;
 };
 
 class KUniqueApplicationAdaptor: public QDBusAbstractAdaptor

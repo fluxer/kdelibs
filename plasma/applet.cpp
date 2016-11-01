@@ -1857,7 +1857,7 @@ void Applet::showConfigurationInterface()
         KDesktopFile df(d->package->path() + "/metadata.desktop");
         const QStringList kcmPlugins = df.desktopGroup().readEntry("X-Plasma-ConfigPlugins", QStringList());
         if (!uiFile.isEmpty() || !kcmPlugins.isEmpty()) {
-            KConfigSkeleton *configLoader = d->configLoader ? d->configLoader : new KConfigSkeleton(0);
+            KConfigSkeleton *configLoader = d->configLoader ? d->configLoader : new KConfigSkeleton();
             dialog = new AppletConfigDialog(0, d->configDialogId(), configLoader);
 
             if (!d->configLoader) {
@@ -1990,7 +1990,7 @@ QSet<QString> AppletPrivate::knownCategories()
 
 KConfigDialog *AppletPrivate::generateGenericConfigDialog()
 {
-    KConfigSkeleton *nullManager = new KConfigSkeleton(0);
+    KConfigSkeleton *nullManager = new KConfigSkeleton();
     KConfigDialog *dialog = new AppletConfigDialog(0, configDialogId(), nullManager);
     nullManager->setParent(dialog);
     dialog->setFaceType(KPageDialog::Auto);

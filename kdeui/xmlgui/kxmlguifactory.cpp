@@ -57,7 +57,7 @@ public:
         static const QString &actionList = KGlobal::staticQString( "actionlist" );
         static const QString &name = KGlobal::staticQString( "name" );
 
-        m_rootNode = new ContainerNode( 0L, QString(), 0L );
+        m_rootNode = new ContainerNode( 0L, QString(), QString() );
         m_defaultMergingName = defaultMergingName;
         tagActionList = actionList;
         attrName = name;
