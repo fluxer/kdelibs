@@ -25,6 +25,7 @@
 #include <QPainter>
 #include <QTimeLine>
 #include <QPropertyAnimation>
+#include <QPen>
 
 #include <kdebug.h>
 #include <kglobalsettings.h>

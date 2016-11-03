@@ -33,6 +33,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/qevent.h>
 #include <QtGui/QStyleOption>
+#include <QtGui/QPen>
 
 namespace KDEPrivate
 {

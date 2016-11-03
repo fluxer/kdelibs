@@ -29,9 +29,10 @@
 #include <QApplication>
 #include <QFontMetrics>
 #include <QIcon>
-#include <QtCore/qabstractitemmodel.h>
+#include <QAbstractItemModel>
 #include <QPainter>
-#include <QtGui/qstyleoption.h>
+#include <QStyleOption>
+#include <QPen>
 
 // KDE
 #include <kcolorutils.h>

@@ -32,6 +32,7 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QPainterPath>
 #include <QtGui/QPolygon>
+#include <QtGui/QPen>
 
 #include <kdebug.h>
 #include <kglobal.h>
