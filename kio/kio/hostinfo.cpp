@@ -30,10 +30,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QList>
 #include <QtCore/QPair>
 #include <QtCore/QThread>
-#include <QtCore/QFutureWatcher>
 #include <QtCore/QSemaphore>
 #include <QtCore/QSharedPointer>
-#include <QtCore/QtConcurrentRun>
 #include <QtNetwork/QHostInfo>
 #include "kdebug.h"
 
@@ -87,15 +85,13 @@ namespace KIO
     {
         Q_OBJECT
     public:
-        Query(): m_watcher(), m_hostName()
+        Query(): m_hostName()
         {
-            connect(&m_watcher, SIGNAL(finished()), this, SLOT(relayFinished()));
         }
         void start(const QString& hostName)
         {
             m_hostName = hostName;
-            QFuture<QHostInfo> future = QtConcurrent::run(&QHostInfo::fromName, hostName);
-            m_watcher.setFuture(future);
+	    QHostInfo::lookupHost(hostName, this, SLOT(relayFinished(QHostInfo)));
         }
         QString hostName() const
         {
@@ -104,12 +100,11 @@ namespace KIO
     signals:
         void result(QHostInfo);
     private slots:
-        void relayFinished()
+        void relayFinished(const QHostInfo &hostinfo)
         {
-            emit result(m_watcher.result());
+            emit result(hostinfo);
         }
     private:
-        QFutureWatcher<QHostInfo> m_watcher;
         QString m_hostName;
     };
 
