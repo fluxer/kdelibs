@@ -48,6 +48,9 @@ public:
 #endif
     QString m_appname;
     QSettings *m_settings;
+    // the handle pointer is not NULL-ed once mpv_terminate_destroy() has been
+    // called, doing it manually is a race because _processHandleEvents() is
+    // called asynchronous
     bool m_stopprocessing;
 };
 
@@ -330,12 +333,16 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
                     double value = 0; \
                     if (prop->format == MPV_FORMAT_DOUBLE) { \
                         value = *(double *)prop->data; \
+                    } else { \
+                        Q_ASSERT_X(false, "KMediaPlayer", "the time-pos format has changed"); \
                     } \
                     emit position(value); \
                 } else if (strcmp(prop->name, "seekable") == 0) { \
                     bool value = false; \
                     if (prop->format == MPV_FORMAT_FLAG) { \
                         value = *(bool *)prop->data; \
+                    } else { \
+                        Q_ASSERT_X(false, "KMediaPlayer", "the seekable format has changed"); \
                     } \
                     emit seekable(value); \
                 } else if (strcmp(prop->name, "partially-seekable") == 0) { \
@@ -343,6 +350,8 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
                         bool value = false; \
                         if (prop->format == MPV_FORMAT_FLAG) { \
                             value = *(bool *)prop->data; \
+                        } else { \
+                            Q_ASSERT_X(false, "KMediaPlayer", "the partially-seekable format has changed"); \
                         } \
                         emit seekable(value); \
                     } \
@@ -350,6 +359,8 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
                     bool value = false; \
                     if (prop->format == MPV_FORMAT_FLAG) { \
                         value = *(bool *)prop->data; \
+                    } else { \
+                        Q_ASSERT_X(false, "KMediaPlayer", "the paused-for-cache format has changed"); \
                     } \
                     emit buffering(value); \
                 } \
