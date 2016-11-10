@@ -136,6 +136,10 @@ void KDeclarative::initialize()
 
     d->scriptEngine.data()->setGlobalObject(newGlobalObject);
 
+#ifdef QT_KATIE
+    KCmdLineArgs::init(KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), Q_NULLPTR);
+#endif
+
     d->initialized = true;
 }
 
@@ -172,6 +176,20 @@ void KDeclarative::setupBindings()
 
     // setup ImageProvider for KDE icons
     d->declarativeEngine.data()->addImageProvider(QString("icon"), new KIconProvider);
+
+#ifdef QT_KATIE
+    if (KCmdLineArgs::parsedArgs("kde")->isSet("qmljsdebugger")) {
+        QScriptEngine *engine = scriptEngine();
+        if (!engine) {
+            kWarning() << "Failed to get the script engine";
+            return;
+        }
+
+        QScriptEngineDebugger *debugger = new QScriptEngineDebugger;
+        debugger->attachTo(engine);
+        debugger->standardWindow()->show();
+    }
+#endif
 }
 
 QScriptEngine *KDeclarative::scriptEngine() const
@@ -184,18 +202,6 @@ void KDeclarative::setupQmlJsDebugger()
 #ifndef QT_KATIE
     if (KCmdLineArgs::parsedArgs("qt")->isSet("qmljsdebugger")) {
         QDeclarativeDebuggingEnabler enabler;
-    }
-#else
-    if (KCmdLineArgs::parsedArgs("kde")->isSet("qmljsdebugger")) {
-        QScriptEngine *engine = scriptEngine();
-        if (!engine) {
-            kWarning() << "Failed to get the script engine";
-            return;
-        }
-
-        QScriptEngineDebugger *debugger = new QScriptEngineDebugger;
-        debugger->attachTo(engine);
-        debugger->standardWindow()->show();
     }
 #endif
 }
