@@ -69,6 +69,7 @@ void KRestrictedLine::keyPressEvent( QKeyEvent *e )
     }
 }
 
+#ifndef QT_KATIE
 void KRestrictedLine::inputMethodEvent(QInputMethodEvent *e)
 {
     const QString str = e->commitString();
@@ -90,6 +91,7 @@ void KRestrictedLine::inputMethodEvent(QInputMethodEvent *e)
 
     KLineEdit::inputMethodEvent(e);
 }
+#endif
 
 void KRestrictedLine::setValidChars( const QString& valid)
 {
