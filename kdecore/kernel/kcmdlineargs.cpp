@@ -74,8 +74,6 @@
 
 #ifdef Q_WS_X11
 #define DISPLAY "DISPLAY"
-#elif defined(Q_WS_QWS)
-#define DISPLAY "QWS_DISPLAY"
 #else
 #define DISPLAY "NODISPLAY"
 #endif
@@ -272,9 +270,6 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     //FIXME: Check if other options are specific to Qt/X11
 #ifdef Q_WS_X11
     qt_options.add("display <displayname>", ki18n("Use the X-server display 'displayname'"));
-#elif defined(Q_WS_QWS)
-    qt_options.add("display <displayname>", ki18n("Use the QWS display 'displayname'"));
-#else
 #endif
     qt_options.add("session <sessionId>", ki18n("Restore the application for the given 'sessionId'"));
     qt_options.add("cmap", ki18n("Causes the application to install a private color\nmap on an 8-bit display"));
@@ -295,13 +290,15 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("testability", ki18n("load the testability framework"));
 #ifdef Q_WS_X11
     qt_options.add("visual TrueColor", ki18n("forces the application to use a TrueColor visual on\nan 8-bit display"));
-    qt_options.add("inputstyle <inputstyle>", ki18n("sets XIM (X Input Method) input style. Possible\nvalues are onthespot, overthespot, offthespot and\nroot"));
+// TODO: maybe issue a warning that the options have no effect instead of making them unavailable
+#ifndef QT_NO_IM
     qt_options.add("im <XIM server>", ki18n("set XIM server"));
+#endif
+#ifndef QT_NO_XIM
+    qt_options.add("inputstyle <inputstyle>", ki18n("sets XIM (X Input Method) input style. Possible\nvalues are onthespot, overthespot, offthespot and\nroot"));
     qt_options.add("noxim", ki18n("disable XIM"));
 #endif
-#ifdef Q_WS_QWS
-    qt_options.add("qws", ki18n("forces the application to run as QWS Server"));
-#endif
+#endif // Q_WS_X11
     qt_options.add("reverse", ki18n("mirrors the whole layout of widgets"));
     qt_options.add("stylesheet <file.qss>", ki18n("applies the Qt stylesheet to the application widgets"));
     qt_options.add("graphicssystem <system>", ki18n("use a different graphics system instead of the default one, options are raster and opengl (experimental)"));
@@ -1412,7 +1409,7 @@ KCmdLineArgsPrivate::setOption(const QByteArray &opt, const QByteArray &value)
           addArgument(value);
       }
 
-#if defined(Q_WS_X11) || defined(Q_WS_QWS)
+#if defined(Q_WS_X11)
       // Hack coming up!
       if (argString == "-display")
       {
