@@ -8,9 +8,6 @@ MACRO(PLASMA_UNIT_TESTS)
             ${QT_QTTEST_LIBRARY}
             ${QT_QTDECLARATIVE_LIBRARY}
         )
-        if(QT_QTOPENGL_FOUND)
-            target_link_libraries(plasma-${_testname} ${QT_QTOPENGL_LIBRARY})
-        endif()
     ENDFOREACH(_testname)
 ENDMACRO(PLASMA_UNIT_TESTS)
 
@@ -36,7 +33,3 @@ target_link_libraries(plasma-storagetest
     ${QT_QTDECLARATIVE_LIBRARY}
     ${QT_QTSQL_LIBRARY}
 )
-
-if(QT_QTOPENGL_FOUND)
-    target_link_libraries(plasma-storagetest ${QT_QTOPENGL_LIBRARY})
-endif()
