@@ -198,6 +198,7 @@ bool KWidgetItemDelegateEventListener::eventFilter(QObject *watched, QEvent *eve
                     QApplication::sendEvent(viewport, &evt);
                 }
                 break;
+#ifndef QT_NO_TABLET
             case QEvent::TabletMove:
             case QEvent::TabletPress:
             case QEvent::TabletRelease:
@@ -212,6 +213,7 @@ bool KWidgetItemDelegateEventListener::eventFilter(QObject *watched, QEvent *eve
                     QApplication::sendEvent(viewport, &evt);
                 }
                 break;
+#endif // QT_NO_TABLET
             default:
                 QApplication::sendEvent(viewport, event);
                 break;
