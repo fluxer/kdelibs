@@ -1,4 +1,5 @@
 [Desktop Entry]
+Icon=audio-x-generic
 Name=Audio player
 Comment=Audio player service
 Type=Service
@@ -7,4 +8,5 @@ X-KDE-Library=kaudioplayer
 X-KDE-DBus-ModuleName=kaudioplayer
 X-KDE-Kded-autoload=false
 X-KDE-Kded-load-on-demand=true
+X-KDE-MediaPlayer=true
 OnlyShowIn=KDE;
