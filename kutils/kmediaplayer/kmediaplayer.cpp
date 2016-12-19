@@ -414,7 +414,7 @@ KAudioPlayer::~KAudioPlayer()
     if (d->m_handle && d->m_settings && d->m_settings->isWritable()) {
         d->m_settings->beginGroup(d->m_appname);
         d->m_settings->setValue("audiooutput", audiooutput());
-        d->m_settings->setValue("volume", volume());
+        d->m_settings->setValue("volume", int(volume()));
         d->m_settings->setValue("mute", mute());
         d->m_settings->endGroup();
         d->m_settings->sync();
@@ -497,7 +497,7 @@ KMediaPlayer::~KMediaPlayer()
     if (d->m_handle && d->m_settings && d->m_settings->isWritable()) {
         d->m_settings->beginGroup(d->m_appname);
         d->m_settings->setValue("audiooutput", audiooutput());
-        d->m_settings->setValue("volume", volume());
+        d->m_settings->setValue("volume", int(volume()));
         d->m_settings->setValue("mute", mute());
         d->m_settings->endGroup();
         d->m_settings->sync();
