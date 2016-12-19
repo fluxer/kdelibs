@@ -45,7 +45,7 @@ class KMediaWidgetPrivate;
     player->open("http://video.webmfiles.org/big-buck-bunny_trailer.webm");
     @endcode
 
-    @note You should construct it with parent widget, preferably a QMainWindow so that it can be
+    @note You should construct it with parent widget, preferably a QMainWindow, so that it can be
     layered on top of it. Otherwise when a video is played the widget will be floating. Ensuring
     that the widget has parent is a key to the fullscreen support as it will ask the parent to
     maximize itself when that needs to happen to ensure that the media controls are visible.
@@ -89,7 +89,7 @@ public:
         @param path a path to load
         @see KMediaPlayer::load
     */
-    void open(QString path);
+    void open(const QString path);
 
     //! @brief Reimplementation to provide more accurate size hint
     virtual QSize sizeHint() const;
@@ -108,7 +108,7 @@ protected:
     //! @brief Reimplementation to support Drag-n-Drop
     virtual void dropEvent(QDropEvent *event);
 
-public slots:
+public Q_SLOTS:
     /*!
         @brief Set the state to play (unpaused) or paused
         @param value A tristate value for the play state, if "-1" the state will be automatically
@@ -116,21 +116,21 @@ public slots:
         to pause (paused). Whenever called it updates the play/pause button state.
         @see KMediaPlayer::play, KMediaPlayer::pause
     */
-    void setPlay(int value = -1);
+    void setPlay(const int value = -1);
     /*!
         @brief Set the position of the path currently loaded
         @param value A value in seconds
         @note The value is integer because the slider itself uses integer
         @see KMediaPlayer::currentTime, KMediaPlayer::remainingTime, KMediaPlayer::totalTime
     */
-    void setPosition(int value);
+    void setPosition(const int value);
     /*!
         @brief Set the volume of the path currently loaded
         @param value A value between 0-100 usually
         @note The value is integer because the dial itself uses integer
         @see KMediaPlayer::setVolume
     */
-    void setVolume(int value);
+    void setVolume(const int value);
     /*!
         @brief Set the fullscreen state
         @param value A tristate value for the fullscreen state, if "-1" the state will be
@@ -138,26 +138,26 @@ public slots:
         will set it non-fullscreen.
         @see KMediaPlayer::isFullscreen, KMediaPlayer::setFullscreen
     */
-    void setFullscreen(int value = -1);
+    void setFullscreen(const int value = -1);
 
-signals:
+Q_SIGNALS:
     /*!
         @brief Signals that controls were hidden/unhidden
         @long This signal can be used to show/hide parent widget elements, such as menubar, when
         the media controls of this widget are hidden/unhidden
     */
-    void controlsHidden(bool hidden);
+    void controlsHidden(const bool hidden);
 
-private slots:
-    void _updateControls(bool visible);
-    void _updatePlay(bool paused);
+private Q_SLOTS:
+    void _updateControls(const bool visible);
+    void _updatePlay(const bool paused);
     void _setPosition();
-    void _updateSeekable(bool seekable);
-    void _updatePosition(double seconds);
+    void _updateSeekable(const bool seekable);
+    void _updatePosition(const double seconds);
     void _updateLoaded();
-    void _updateStatus(QString string);
+    void _updateStatus(const QString string);
     void _updateFinished();
-    void _updateError(QString error);
+    void _updateError(const QString error);
 
 private:
     KMediaWidgetPrivate *d;

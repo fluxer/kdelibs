@@ -56,8 +56,8 @@ public:
     //@}
 
     /*!
-        @brief Start playing from a path
-        @param path a path to load, it can start with "file://", "dvd://", "http://" and other
+        @brief Start playing from @p path
+        @param path path to load, it can start with "file://", "dvd://", "http://" and other
         valid MPV protocols
         @warning Some protocols may not be supported if MPV itself was not build with support for
         such! That is choice of the vendors and you should be well aware of what yours is doing
@@ -66,7 +66,7 @@ public:
     void load(const QString path);
     /*!
         @brief Start playing from @p data
-        @param data the raw data that should be played
+        @param data raw data to play
         @warning Use only when you absolutely have to, when possible use @p load(QString)
         @overload
     */
@@ -81,7 +81,7 @@ public:
     void pause();
     /*!
         @brief Send a seek command to the player
-        @param position Position in seconds to seek to
+        @param position position in seconds to seek to
         @see isSeekable
     */
     void seek(const float position);
@@ -217,7 +217,9 @@ public:
     The @p KAudioPlayer class provides an object that can be used to playback from various media
     sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
     file-descriptor, raw data, you name it. It supports per-application state too, this
-    includes audio output device, volume and mute state currently.
+    includes audio output device, volume and mute state currently. That feature requires a
+    special entry in the application .desktop file - "X-KDE-MediaPlayer=true" - which indicates
+    that it uses the class and makes it appear in the K Control Module (KCM) for multimedia.
 
     For an extended version of this class check out @p KMediaPlayer and @p KMediaWidget.
 
@@ -278,11 +280,13 @@ private:
     The @p KMediaPlayer class provides an embedable widget that can be used to playback from
     various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
     Blue-Ray, file-descriptor, raw data, you name it. It supports per-application state too,
-    this includes audio output device, volume and mute state currently.
+    this includes audio output device, volume and mute state currently. That feature requires a
+    special entry in the application .desktop file - "X-KDE-MediaPlayer=true" - which indicates
+    that it uses the class and makes it appear in the K Control Module (KCM) for multimedia.
 
     For an extended version of this class check out @p KMediaWidget.
 
-    @note Constructing it with parent widget will layer in top of it.
+    @note Constructing it with parent widget will layer it on top of it.
     @warning The API is not stable yet and it may break in the future!
     @since 4.19
     @see KMediaWidget

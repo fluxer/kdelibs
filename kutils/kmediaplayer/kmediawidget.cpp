@@ -96,7 +96,7 @@ KMediaWidget::~KMediaWidget()
     delete d;
 }
 
-void KMediaWidget::open(QString path)
+void KMediaWidget::open(const QString path)
 {
     // m_path should be updated from _updateLoaded() but that may be too late
     d->m_path = path;
@@ -120,7 +120,7 @@ KMediaPlayer* KMediaWidget::player() const
     return d->m_player;
 }
 
-void KMediaWidget::setPlay(int value)
+void KMediaWidget::setPlay(const int value)
 {
     // TODO: can the position be stored and restored reliably as well?
     if (d->m_replay && !d->m_path.isEmpty()) {
@@ -141,17 +141,17 @@ void KMediaWidget::setPlay(int value)
     }
 }
 
-void KMediaWidget::setPosition(int value)
+void KMediaWidget::setPosition(const int value)
 {
     d->m_player->seek(value);
 }
 
-void KMediaWidget::setVolume(int value)
+void KMediaWidget::setVolume(const int value)
 {
     d->m_player->setVolume(value);
 }
 
-void KMediaWidget::setFullscreen(int value)
+void KMediaWidget::setFullscreen(const int value)
 {
     bool fullscreen;
     if (value == -1) {
@@ -254,7 +254,7 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
     event->ignore();
 }
 
-void KMediaWidget::_updateControls(bool visible)
+void KMediaWidget::_updateControls(const bool visible)
 {
     if (visible != d->m_ui->w_frame->isVisible()) {
         d->m_ui->w_frame->setVisible(visible);
@@ -262,7 +262,7 @@ void KMediaWidget::_updateControls(bool visible)
     }
 }
 
-void KMediaWidget::_updatePlay(bool paused)
+void KMediaWidget::_updatePlay(const bool paused)
 {
     if (paused) {
         d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
@@ -273,7 +273,7 @@ void KMediaWidget::_updatePlay(bool paused)
     }
 }
 
-void KMediaWidget::_updateSeekable(bool seekable)
+void KMediaWidget::_updateSeekable(const bool seekable)
 {
     d->m_ui->w_position->setEnabled(seekable);
     d->m_ui->w_position->setMaximum(d->m_player->totalTime());
@@ -284,7 +284,7 @@ void KMediaWidget::_setPosition()
     d->m_player->seek(d->m_ui->w_position->value());
 }
 
-void KMediaWidget::_updatePosition(double seconds)
+void KMediaWidget::_updatePosition(const double seconds)
 {
     // do not update the slider while it's dragged by the user
     if (!d->m_ui->w_position->isSliderDown()) {
@@ -302,7 +302,7 @@ void KMediaWidget::_updateLoaded()
     _updatePlay(!d->m_player->isPlaying());
 }
 
-void KMediaWidget::_updateStatus(QString string)
+void KMediaWidget::_updateStatus(const QString string)
 {
     if (d->m_options & FullscreenVideo) {
         QWidget *windowwidget = window();
@@ -335,7 +335,7 @@ void KMediaWidget::_updateFinished()
     _updatePlay(true);
 }
 
-void KMediaWidget::_updateError(QString error)
+void KMediaWidget::_updateError(const QString error)
 {
     if (d->m_options & FullscreenVideo) {
         _updateStatus(error);
