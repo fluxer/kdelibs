@@ -28,10 +28,6 @@
 #endif
 
 #include "kdebug.h"
-#include <QThreadStorage>
-
-#include <unistd.h>
-#include <stdio.h>
 
 #ifdef NDEBUG
 #undef kDebug
@@ -40,28 +36,24 @@
 
 #include <config.h>
 
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#ifdef HAVE_TIME_H
-#include <time.h>
-#endif
-
 #include "kglobal.h"
 #include "kstandarddirs.h"
 #include "kdatetime.h"
 #include "kcmdlineargs.h"
-
 #include <kmessage.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
 #include <kurl.h>
+#include <kconfig.h>
+#include "kcomponentdata.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QChar>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QThreadStorage>
+#include <QtCore/QMutex>
 
 #include <stdlib.h>	// abort
 #include <unistd.h>	// getpid
@@ -70,8 +62,14 @@
 #include <syslog.h>
 #include <errno.h>
 #include <string.h>
-#include <kconfig.h>
-#include "kcomponentdata.h"
+#include <stdio.h>
+
+#ifdef HAVE_SYS_TIME_H
+#include <sys/time.h>
+#endif
+#ifdef HAVE_TIME_H
+#include <time.h>
+#endif
 
 #ifdef Q_OS_SOLARIS
 // For the purposes of KDebug Solaris has a GNU-libc-compatible
@@ -89,8 +87,6 @@
 #include <cxxabi.h>
 #endif
 #endif
-
-#include <QMutex>
 
 
 class KNoDebugStream: public QIODevice
@@ -151,7 +147,7 @@ public:
         {
             if (len) {
                 // Since we are in kdecore here, we cannot use KMsgBox
-                QString msg = QString::fromLatin1(data, len);
+                const QString msg = QString::fromLatin1(data, len);
                 KMessage::message(KMessage::Information, msg, m_caption);
             }
             return len;
@@ -167,7 +163,7 @@ class KLineEndStrippingDebugStream: public KNoDebugStream
 public:
     qint64 writeData(const char *data, qint64 len)
         {
-            QByteArray buf = QByteArray::fromRawData(data, len);
+            const QByteArray buf = QByteArray::fromRawData(data, len);
             qt_message_output(QtDebugMsg, buf.trimmed().constData());
             return len;
         }
