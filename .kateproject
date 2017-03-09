@@ -1,4 +1,4 @@
 {
 	"name": "kdelibs" ,
 	"files": [ { "git": 1 } ]
-};
+}
