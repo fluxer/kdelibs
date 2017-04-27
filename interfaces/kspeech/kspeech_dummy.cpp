@@ -1,0 +1,1 @@
+enum { LibraryNeedsAtLeastOneSourceFile =  0 };

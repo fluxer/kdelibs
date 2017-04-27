@@ -1,6 +1,5 @@
 # dummy library for generate_export_header()
-include_directories(${QT_INCLUDES})
-add_library(kspeech kspeech.h)
+add_library(kspeech kspeech_dummy.cpp)
 
 generate_export_header(kspeech)
 
