@@ -27,6 +27,7 @@
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, Allen Winter, <winter@kde.org>
 # Copyright (c) 2009, Sebastian Trueg, <trueg@kde.org>
+# Copyright (c) 2017, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -92,18 +93,19 @@ MACRO(MACRO_LOG_FEATURE _var _package _description _url ) # _required _minvers _
 
    FILE(APPEND "${_LOGFILENAME}" "${_logtext}\n")
 
-   IF(COMMAND SET_PACKAGE_INFO)  # in FeatureSummary.cmake since CMake 2.8.3
-     SET_PACKAGE_INFO("${_package}" "\"${_description}\"" "${_url}" "\"${_comments}\"")
-   ENDIF(COMMAND SET_PACKAGE_INFO)
+   # in FeatureSummary.cmake since CMake 2.8.3
+   SET_PACKAGE_PROPERTIES("${_package}" PROPERTIES
+     DESCRIPTION "\"${_description}\""
+     URL "${_url}"
+     PURPOSE "\"${_comments}\""
+   )
 
 ENDMACRO(MACRO_LOG_FEATURE)
 
 
 MACRO(MACRO_DISPLAY_FEATURE_LOG)
-   IF(COMMAND FEATURE_SUMMARY) # in FeatureSummary.cmake since CMake 2.8.3
-      FEATURE_SUMMARY(FILENAME ${CMAKE_CURRENT_BINARY_DIR}/FindPackageLog.txt
-                      WHAT ALL)
-   ENDIF(COMMAND FEATURE_SUMMARY)
+   # in FeatureSummary.cmake since CMake 2.8.3
+   FEATURE_SUMMARY(FILENAME ${CMAKE_CURRENT_BINARY_DIR}/FindPackageLog.txt WHAT ALL)
 
    SET(_missingFile ${CMAKE_BINARY_DIR}/MissingRequirements.txt)
    SET(_enabledFile ${CMAKE_BINARY_DIR}/EnabledFeatures.txt)
