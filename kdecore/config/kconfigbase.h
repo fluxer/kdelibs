@@ -28,9 +28,7 @@
 
 #include <QtCore/qstringlist.h>
 
-class QStringList;
 class KConfigGroup;
-class KConfigBasePrivate;
 
 /**
  * \class KConfigBase kconfigbase.h <KConfigBase>
