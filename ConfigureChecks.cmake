@@ -188,8 +188,6 @@ check_function_exists(mkstemp    HAVE_MKSTEMP)           # kdecore/fakes.cpp
 check_function_exists(mkdtemp    HAVE_MKDTEMP)           # kdecore/fakes.cpp
 check_function_exists(strlcpy    HAVE_STRLCPY)           # kdecore/fakes.cpp
 check_function_exists(strlcat    HAVE_STRLCAT)           # kdecore/fakes.cpp
-check_function_exists(strcasestr HAVE_STRCASESTR)        # kdecore/fakes.cpp
-check_symbol_exists(strcasestr string.h          HAVE_STRCASESTR_PROTO)
 check_function_exists(setenv     HAVE_SETENV)            # kdecore/fakes.cpp
 check_function_exists(seteuid    HAVE_SETEUID)           # kdecore/fakes.cpp
 check_function_exists(setmntent  HAVE_SETMNTENT)         # solid, kio, kdecore

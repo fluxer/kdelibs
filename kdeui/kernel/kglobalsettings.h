@@ -21,7 +21,13 @@
 #include <kdeui_export.h>
 #include <ksharedconfig.h>
 #include <QtCore/QObject>
+#include <QtCore/QPoint>
+#include <QtCore/QRect>
 #include <QtGui/QPalette>
+#include <QtGui/QColor>
+#include <QtGui/QFont>
+#include <QtGui/QWidget>
+
 
 #define KDE_DEFAULT_SINGLECLICK true
 #define KDE_DEFAULT_SMOOTHSCROLL true
@@ -59,12 +65,6 @@
 #define BUG_REPORT_EMAIL "xakepa10@gmail.com"
 
 class KUrl;
-
-class QColor;
-class QFont;
-class QPoint;
-class QRect;
-class QWidget;
 
 /**
  * Access the KDE global configuration.

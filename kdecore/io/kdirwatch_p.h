@@ -35,9 +35,6 @@
 #include <QtCore/qobject.h>
 #include <QtCore/qtimer.h>
 
-class QFileSystemWatcher;
-class QSocketNotifier;
-
 #ifdef HAVE_FAM
 #include <limits.h>
 #include <fam.h>
@@ -53,8 +50,6 @@ class QSocketNotifier;
 
 #ifndef QT_NO_FILESYSTEMWATCHER
 #include <QtCore/qfilesystemwatcher.h>
-
-typedef QFileSystemWatcher KFileSystemWatcher;
 #endif
 
 /* KDirWatchPrivate is a singleton and does the watching
@@ -188,7 +183,7 @@ public:
 #endif
 
 #ifndef QT_NO_FILESYSTEMWATCHER
-  KFileSystemWatcher *fsWatcher;
+  QFileSystemWatcher *fsWatcher;
   bool useQFSWatch(Entry* e);
 #endif
 

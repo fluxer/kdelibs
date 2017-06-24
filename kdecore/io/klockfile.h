@@ -23,7 +23,7 @@
 #include <ksharedptr.h>
 #include <kglobal.h>
 
-class QString;
+#include <QString>
 
 /**
  * \class KLockFile klockfile.h <KLockFile>

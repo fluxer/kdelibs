@@ -28,8 +28,8 @@
 #include <klocale.h>
 #include <kglobalsettings.h>
 
-template <class T> class QList;
-class QVariant;
+#include <QVariant>
+
 class KAboutData;
 
 /**

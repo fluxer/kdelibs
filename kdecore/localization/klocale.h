@@ -24,16 +24,13 @@
 #include <klocalizedstring.h>
 #include <ksharedconfig.h>
 
-class QStringList;
-class QTextCodec;
-class QDate;
-class QTime;
-class QDateTime;
+#include <QStringList>
+#include <QTextCodec>
+#include <QDateTime>
 
 class KDateTime;
 class KCalendarSystem;
 class KCurrencyCode;
-
 class KLocalePrivate;
 
 /**

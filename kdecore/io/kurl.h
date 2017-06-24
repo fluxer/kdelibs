@@ -26,9 +26,8 @@
 
 #include <QtCore/qvariant.h>
 #include <QtCore/qurl.h>
-
-class QStringList;
-class QMimeData;
+#include <QtCore/qstringlist.h>
+#include <QtCore/qmimedata.h>
 
 class KUrlPrivate;
 

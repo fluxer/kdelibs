@@ -23,8 +23,9 @@
 
 #include "ksycocafactory.h"
 #include <QStringList>
-class QFile;
-class QDataStream;
+#include <QFile>
+#include <QDataStream>
+
 class KSycocaAbstractDevice;
 
 class KSycocaPrivate

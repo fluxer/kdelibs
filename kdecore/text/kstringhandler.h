@@ -23,12 +23,9 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/qnamespace.h>
-
-class QChar;
-class QRegExp;
-class QString;
-class QStringList;
+#include <QChar>
+#include <QRegExp>
+#include <QStringList>
 
 /**
  * This namespace contains utility functions for handling strings.

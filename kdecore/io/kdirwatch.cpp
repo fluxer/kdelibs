@@ -429,7 +429,7 @@ bool KDirWatchPrivate::useQFSWatch(Entry* e)
 
   kDebug(7001) << "fsWatcher->addPath" << e->path;
   if (!fsWatcher) {
-      fsWatcher = new KFileSystemWatcher();
+      fsWatcher = new QFileSystemWatcher();
       connect(fsWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(fswEventReceived(QString)));
       connect(fsWatcher, SIGNAL(fileChanged(QString)),      this, SLOT(fswEventReceived(QString)));
   }

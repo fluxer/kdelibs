@@ -27,10 +27,8 @@
    You should include this file in any .cpp file that uses any one of these 
    functions:
      strlcat, strlcpy, 
-     strcasestr,
      setenv, unsetenv, 
      usleep, initgroups, 
-     random, srandom  (this is for KRandom itself, prefer using KRandom in any other code)
      mkdtemp (this is for KTempDir itself, prefer using KTempDir everywhere else)
      mkstemp, mkstemps (prefer to use QTemporaryfile instead)
      trunc
@@ -39,136 +37,59 @@
 
 #cmakedefine HAVE_STRLCAT_PROTO 1
 #if !defined(HAVE_STRLCAT_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-unsigned long strlcat(char*, const char*, unsigned long);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" unsigned long strlcat(char*, const char*, unsigned long);
 #endif
 
 #cmakedefine HAVE_STRLCPY_PROTO 1
 #if !defined(HAVE_STRLCPY_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-unsigned long strlcpy(char*, const char*, unsigned long);
-#ifdef __cplusplus
-}
-#endif
-#endif
-
-#cmakedefine HAVE_STRCASESTR_PROTO 1
-#if !defined(HAVE_STRCASESTR_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-char *strcasestr(const char *str1, const char *str2);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" unsigned long strlcpy(char*, const char*, unsigned long);
 #endif
 
 #cmakedefine HAVE_SETENV_PROTO 1
 #if !defined(HAVE_SETENV_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-int setenv (const char *, const char *, int);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" int setenv (const char *, const char *, int);
 #endif
 
 #cmakedefine HAVE_UNSETENV_PROTO 1
 #if !defined(HAVE_UNSETENV_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-int unsetenv (const char *);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" int unsetenv (const char *);
 #endif
 
 #cmakedefine HAVE_USLEEP_PROTO 1
 #if !defined(HAVE_USLEEP_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-int usleep (unsigned int);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" int usleep (unsigned int);
 #endif
 
 #cmakedefine HAVE_INITGROUPS_PROTO 1
 #if !defined(HAVE_INITGROUPS_PROTO)
 #include <unistd.h>
-#ifdef __cplusplus
-extern "C" {
-#endif
-int initgroups(const char *, gid_t);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" int initgroups(const char *, gid_t);
 #endif
 
 #cmakedefine HAVE_MKDTEMP_PROTO 1
 #if !defined(HAVE_MKDTEMP_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-char *mkdtemp(char *);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" char *mkdtemp(char *);
 #endif
 
 #cmakedefine HAVE_MKSTEMPS_PROTO 1
 #if !defined(HAVE_MKSTEMPS_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-int mkstemps(char *, int);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" int mkstemps(char *, int);
 #endif
 
 #cmakedefine HAVE_MKSTEMP_PROTO 1
 #if !defined(HAVE_MKSTEMP_PROTO)
-#ifdef __cplusplus
-extern "C" {
-#endif
-int mkstemp(char *);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" int mkstemp(char *);
 #endif
 
 #cmakedefine HAVE_TRUNC 1
 #if !defined(HAVE_TRUNC)
-#ifdef __cplusplus
-extern "C" {
-#endif
-double trunc(double);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" double trunc(double);
 #endif
 
 #cmakedefine HAVE_GETGROUPLIST 1
 #if !defined(HAVE_GETGROUPLIST)
 #include <sys/types.h> /* for gid_t */
-#ifdef __cplusplus
-extern "C" {
-#endif
-int getgrouplist(const char *, gid_t , gid_t *, int *);
-#ifdef __cplusplus
-}
-#endif
+extern "C++" int getgrouplist(const char *, gid_t , gid_t *, int *);
 #endif
 
 

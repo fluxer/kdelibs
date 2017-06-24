@@ -21,13 +21,10 @@
 
 #include <klocale.h>
 
-template <class T> class QList;
-class QString;
-class QStringList;
-class QByteArray;
-class QDataStream;
-class KUrl;
+#include <QStringList>
+#include <QDataStream>
 
+class KUrl;
 class KCmdLineArgs;
 class KCmdLineArgsPrivate;
 class KCmdLineArgsStatic;

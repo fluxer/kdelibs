@@ -21,7 +21,6 @@
 #include <kdecore_export.h>
 #include <QtCore/qfile.h>
 
-class QFile;
 class KFilterBase;
 
 /**

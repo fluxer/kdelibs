@@ -24,8 +24,6 @@
 
 #include <QtCore/qiodevice.h>
 
-class QIODevice;
-
 /**
  * This is the base class for compression filters
  * such as gzip and bzip2. It's pretty much internal.

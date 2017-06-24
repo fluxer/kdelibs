@@ -32,8 +32,6 @@ void KTraderParse_mainParse( const char *_code );
 #include <stdlib.h>
 #include <kdebug.h>
 
-#include <QtCore/QThreadStorage>
-
 namespace KTraderParse
 {
 

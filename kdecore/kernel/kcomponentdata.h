@@ -21,8 +21,6 @@
 
 #include <ksharedconfig.h>
 
-class QByteArray;
-class QString;
 class KAboutData;
 class KStandardDirs;
 class KComponentDataPrivate;

@@ -33,12 +33,13 @@
 #include <kstandarddirs.h>
 #include <kurl.h>
 
-#include <QtCore/QFile>
-#include <QtDBus/QtDBus>
-#include <QtCore/QHash>
-#include <QBuffer>
+#include <QtCore/qfile.h>
+#include <QtCore/qhash.h>
+#include <QtCore/qbuffer.h>
 #include <QtCore/qstack.h>
 #include <QtCore/qxmlstream.h>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 
 extern int servicesDebugArea();
 
