@@ -30,6 +30,7 @@ class KAbstractPlayerPrivate;
 /*!
     Base class for @p KAudioPlayer and @p KMediaPlayer
     @since 4.19
+    @todo implement path position saving/restoration?
 */
 class KMEDIAPLAYER_EXPORT KAbstractPlayer
 {

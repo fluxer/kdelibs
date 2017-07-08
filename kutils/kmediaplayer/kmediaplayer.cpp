@@ -1,5 +1,5 @@
 /*  This file is part of the KDE libraries
-    Copyright (C) 2016 Ivailo Monev <xakepa10@gmail.com>
+    Copyright (C) 2016-2017 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -64,6 +64,7 @@ void KAbstractPlayer::load(const QString path)
 
 void KAbstractPlayer::load(const QByteArray data)
 {
+    // SECURITY: this is dangerous but some applications/libraries (like KHTML) require it
     command(QStringList() << "loadfile" << QString("memory://%1").arg(data.data()));
 }
 
@@ -131,7 +132,7 @@ QStringList KAbstractPlayer::protocols() const
 {
     static QStringList s_protocols;
     if (s_protocols.isEmpty()) {
-        s_protocols << property("protocol-list").toStringList();
+        s_protocols = property("protocol-list").toStringList();
     }
     return s_protocols;
 }
@@ -396,8 +397,9 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
     d->m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
     if (d->m_handle) {
         mpv_set_wakeup_callback(d->m_handle, wakeup_audio, this);
-        // TODO: newer releases use vid, video is compat!
-        // NOTE: the change is pre-2014
+
+        // NOTE: newer releases use vid, video is compat! the change is pre-2014 but yeah..
+        setProperty("vid", "no");
         setProperty("video", "no");
 
         const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
@@ -471,6 +473,7 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
     d->m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
     if (d->m_handle) {
         mpv_set_wakeup_callback(d->m_handle, wakeup_media, this);
+
         QVariant wid;
         if (parent) {
             wid = QVariant::fromValue(static_cast<WIdType>(parent->winId()));
