@@ -21,7 +21,6 @@
 #include "kmimetypetest.h"
 
 #include <config.h>
-#include <kdefakes.h>
 #include <kde_file.h>
 #include <kmimetype.h>
 #include <ksycoca.h>

@@ -112,5 +112,3 @@ int snprintf(char *str, size_t n, char const *fmt, ...);
 
 /* Defined to 1 if you have a d_type member in struct dirent */
 #cmakedefine HAVE_DIRENT_D_TYPE 1
-
-#include "kdecore/kdefakes.h"

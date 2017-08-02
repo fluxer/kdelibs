@@ -6,12 +6,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-kstandarddirs.h
 )
 
-# Generate kdefakes.h
-configure_file(
-    kdefakes.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/kdefakes.h
-)
-
 # Generate kdeversion.h
 configure_file(
     util/kdeversion.h.cmake
@@ -286,7 +280,6 @@ set(kdecore_LIB_SRCS
     util/kshell_unix.cpp
     util/kuser_unix.cpp
     util/kmacroexpander_unix.cpp
-    fakes.cpp
 
     ${kdecore_OPTIONAL_SRCS}
     ${KAUTH_BACKEND_SRCS}
@@ -480,7 +473,6 @@ install(
     util/ksortablelist.h
     util/kuser.h
     util/qtest_kde.h
-    ${CMAKE_CURRENT_BINARY_DIR}/kdefakes.h
     ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
     DESTINATION ${INCLUDE_INSTALL_DIR}
     COMPONENT Devel

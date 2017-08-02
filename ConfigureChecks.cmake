@@ -22,14 +22,6 @@ set( KDELIBSUFF ${LIB_SUFFIX} )
 
 macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore
 
-# now check for dlfcn.h using the cmake supplied CHECK_INCLUDE_FILES() macro
-# If definitions like -D_GNU_SOURCE are needed for these checks they
-# should be added to _KDE4_PLATFORM_DEFINITIONS when it is originally
-# defined outside this file.  Here we include these definitions in
-# CMAKE_REQUIRED_DEFINITIONS so they will be included in the build of
-# checks below.
-set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
-
 check_include_files(stdio.h       HAVE_STDIO_H)                        # various
 check_include_files(stdlib.h      HAVE_STDLIB_H)                       # various
 check_include_files(string.h      HAVE_STRING_H)                       # various
@@ -182,37 +174,9 @@ if (UNIX)
 endif (UNIX)
 
 check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore, kio
-check_function_exists(initgroups HAVE_INITGROUPS)        # kdecore/fakes.cpp
-check_function_exists(mkstemps   HAVE_MKSTEMPS)          # dcop, kdecore/fakes.cpp
-check_function_exists(mkstemp    HAVE_MKSTEMP)           # kdecore/fakes.cpp
-check_function_exists(mkdtemp    HAVE_MKDTEMP)           # kdecore/fakes.cpp
-check_function_exists(strlcpy    HAVE_STRLCPY)           # kdecore/fakes.cpp
-check_function_exists(strlcat    HAVE_STRLCAT)           # kdecore/fakes.cpp
-check_function_exists(setenv     HAVE_SETENV)            # kdecore/fakes.cpp
-check_function_exists(seteuid    HAVE_SETEUID)           # kdecore/fakes.cpp
 check_function_exists(setmntent  HAVE_SETMNTENT)         # solid, kio, kdecore
-check_function_exists(unsetenv   HAVE_UNSETENV)          # kdecore/fakes.cpp
-check_function_exists(usleep     HAVE_USLEEP)            # kdecore/fakes.cpp, kdeui/qxembed
 
-# check for prototypes [for functions provided by kdefakes when not available]
-
-check_symbol_exists(mkstemps "stdlib.h;unistd.h" HAVE_MKSTEMPS_PROTO)
-check_symbol_exists(mkdtemp "stdlib.h;unistd.h"  HAVE_MKDTEMP_PROTO)
-check_symbol_exists(mkstemp "stdlib.h;unistd.h"  HAVE_MKSTEMP_PROTO)
-check_symbol_exists(strlcat string.h             HAVE_STRLCAT_PROTO)
-check_symbol_exists(strlcpy string.h             HAVE_STRLCPY_PROTO)
 check_symbol_exists(res_init "sys/types.h;netinet/in.h;arpa/nameser.h;resolv.h" HAVE_RES_INIT_PROTO)
-check_symbol_exists(setenv stdlib.h              HAVE_SETENV_PROTO)
-check_symbol_exists(unsetenv stdlib.h            HAVE_UNSETENV_PROTO)
-check_symbol_exists(usleep unistd.h              HAVE_USLEEP_PROTO)
-check_symbol_exists(initgroups "unistd.h;sys/types.h;unistd.h;grp.h" HAVE_INITGROUPS_PROTO)
-check_symbol_exists(setreuid unistd.h            HAVE_SETREUID_PROTO)
-check_symbol_exists(trunc math.h                 HAVE_TRUNC)
-if(NOT HAVE_TRUNC)
-    # check_symbol_exists() may fail with either undefined refence (in C mode) or with wrong type (in C++ mode)
-    check_prototype_definition(trunc "double trunc(double arg)" "0.0" "math.h" HAVE_TRUNC_PROTO)
-    set(HAVE_TRUNC ${HAVE_TRUNC_PROTO})
-endif()
 
 # check for existing datatypes
 
