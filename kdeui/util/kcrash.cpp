@@ -398,7 +398,7 @@ KCrash::defaultCrashHandler (int sig)
         char sidtxt[256];
         if ( kapp && !kapp->startupId().isNull()) {
             argv[i++] = "--startupid";
-            strlcpy(sidtxt, kapp->startupId().constData(), sizeof(sidtxt));
+            strncpy(sidtxt, kapp->startupId().constData(), sizeof(sidtxt));
             argv[i++] = sidtxt;
         }
 
@@ -558,6 +558,7 @@ static char *getDisplay()
    char *screen;
    char *colon;
    char *i;
+
 /*
  don't test for a value from qglobal.h but instead distinguish
  Qt/X11 from Qt/Embedded by the fact that Qt/E apps have -DQWS
@@ -565,7 +566,7 @@ static char *getDisplay()
  but we don't want to include that here) (Simon)
 #ifdef Q_WS_X11
  */
-#ifdef NO_DISPLAY
+#if defined(NO_DISPLAY)
    display = "NODISPLAY";
 #elif !defined(QWS)
    display = getenv("DISPLAY");
@@ -640,7 +641,7 @@ static int read_socket(int sock, char *buffer, int len)
 
 static int openSocket()
 {
-  QT_SOCKLEN_T socklen;
+  socklen_t socklen;
   int s;
   struct sockaddr_un server;
 #define MAX_SOCK_FILE 255
@@ -669,15 +670,15 @@ static int openSocket()
         return -1;
      }
      kde_home++;
-     strlcpy(sock_file, home_dir, MAX_SOCK_FILE);
+     strncpy(sock_file, home_dir, MAX_SOCK_FILE);
   }
-  strlcat(sock_file, kde_home, MAX_SOCK_FILE);
+  strncat(sock_file, kde_home, MAX_SOCK_FILE - strlen(sock_file));
 
   /** Strip trailing '/' **/
   if ( sock_file[strlen(sock_file)-1] == '/')
      sock_file[strlen(sock_file)-1] = 0;
-
-  strlcat(sock_file, "/socket-", MAX_SOCK_FILE);
+  
+  strncat(sock_file, "/socket-", MAX_SOCK_FILE - strlen(sock_file));
   if (gethostname(sock_file+strlen(sock_file), MAX_SOCK_FILE - strlen(sock_file) - 1) != 0)
   {
      perror("Warning: Could not determine hostname: ");
@@ -687,21 +688,25 @@ static int openSocket()
 
   /* append $DISPLAY */
   display = getDisplay();
+#if !defined (NO_DISPLAY)
   if (display == NULL)
   {
      fprintf(stderr, "Error: Could not determine display.\n");
      return -1;
   }
+#endif
 
   if (strlen(sock_file)+strlen(display)+strlen("/kdeinit4_")+2 > MAX_SOCK_FILE)
   {
      fprintf(stderr, "Warning: Socket name will be too long.\n");
-     free(display);
+     free (display);
      return -1;
   }
   strcat(sock_file, "/kdeinit4_");
+#if !defined (NO_DISPLAY)
   strcat(sock_file, display);
   free(display);
+#endif
 
   if (strlen(sock_file) >= sizeof(server.sun_path))
   {
