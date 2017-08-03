@@ -106,7 +106,7 @@ class KUrlPrivate;
  * context.
  *
  */
-class KDECORE_EXPORT KUrl : public QUrl // krazy:exclude=dpointer,qclasses (krazy can't deal with embedded classes)
+class KDECORE_EXPORT KUrl : public QUrl
 {
 public:
   typedef QMap<QString, QString> MetaDataMap;
@@ -1002,8 +1002,6 @@ private:
   void _setEncodedUrl(const QByteArray& url);
   QString toString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
   operator QString() const; // forbidden, use url(), prettyUrl(), or pathOrUrl() instead.
-private:
-  KUrlPrivate* const d; // Don't ever use this, it would break clear() (which is in QUrl)
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KUrl::EncodedPathAndQueryOptions)

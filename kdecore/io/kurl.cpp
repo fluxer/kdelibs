@@ -336,7 +336,7 @@ KUrl::List::operator QList<QUrl>() const
 ///
 
 KUrl::KUrl()
-    : QUrl(), d(0)
+    : QUrl()
 {
 }
 
@@ -346,7 +346,7 @@ KUrl::~KUrl()
 
 
 KUrl::KUrl( const QString &str )
-  : QUrl(), d(0)
+  : QUrl()
 {
   if ( !str.isEmpty() ) {
     if ( str[0] == QLatin1Char('/') || str[0] == QLatin1Char('~') )
@@ -358,7 +358,7 @@ KUrl::KUrl( const QString &str )
 }
 
 KUrl::KUrl( const char * str )
-  : QUrl(), d(0)
+  : QUrl()
 {
   if ( str && str[0] ) {
     if ( str[0] == '/' || str[0] == '~' )
@@ -369,7 +369,7 @@ KUrl::KUrl( const char * str )
 }
 
 KUrl::KUrl( const QByteArray& str )
-   : QUrl(), d(0)
+   : QUrl()
 {
   if ( !str.isEmpty() ) {
     if ( str[0] == '/' || str[0] == '~' )
@@ -380,17 +380,17 @@ KUrl::KUrl( const QByteArray& str )
 }
 
 KUrl::KUrl( const KUrl& _u )
-    : QUrl( _u ), d(0)
+    : QUrl( _u )
 {
 }
 
 KUrl::KUrl( const QUrl &u )
-    : QUrl( u ), d(0)
+    : QUrl( u )
 {
 }
 
 KUrl::KUrl( const KUrl& _u, const QString& _rel_url )
-   : QUrl(), d(0)
+   : QUrl()
 {
 #if 0
   if (_u.hasSubUrl()) // Operate on the last suburl, not the first
@@ -695,14 +695,12 @@ QString KUrl::toLocalFile( AdjustPathOption trailing ) const
     return trailingSlash(trailing, QUrl::toLocalFile());
 }
 
-inline static bool hasSubUrl( const QUrl& url );
-
-static inline bool isLocalFile( const QUrl& url )
+bool KUrl::isLocalFile() const
 {
-  if ( url.scheme().compare(QLatin1String("file"), Qt::CaseInsensitive) != 0 || hasSubUrl( url ) )
+  if ( scheme().compare(QLatin1String("file"), Qt::CaseInsensitive) != 0 || hasSubUrl() )
      return false;
 
-  if (url.host().isEmpty() || (url.host() == QLatin1String("localhost")))
+  if (host().isEmpty() || (host() == QLatin1String("localhost")))
      return true;
 
   char hostname[ 256 ];
@@ -713,12 +711,7 @@ static inline bool isLocalFile( const QUrl& url )
   for(char *p = hostname; *p; p++)
      *p = tolower(*p);
 
-  return (url.host() == QString::fromLatin1( hostname ));
-}
-
-bool KUrl::isLocalFile() const
-{
-  return ::isLocalFile( *this );
+  return (host() == QString::fromLatin1( hostname ));
 }
 
 void KUrl::setFileEncoding(const QString &encoding)
@@ -773,14 +766,14 @@ QString KUrl::fileEncoding() const
   return QString();
 }
 
-inline static bool hasSubUrl( const QUrl& url )
+bool KUrl::hasSubUrl() const
 {
   // The isValid call triggers QUrlPrivate::validate which needs the full encoded url,
   // all this takes too much time for isLocalFile()
-  const QString scheme = url.scheme();
-  if ( scheme.isEmpty() /*|| !isValid()*/ )
+  const QString uscheme = scheme();
+  if ( uscheme.isEmpty() /*|| !isValid()*/ )
     return false;
-  const QString ref( url.fragment() );
+  const QString ref( fragment() );
   if (ref.isEmpty())
      return false;
   switch ( ref.at(0).unicode() ) {
@@ -815,14 +808,9 @@ inline static bool hasSubUrl( const QUrl& url )
   default:
     break;
   }
-  if ( scheme == QLatin1String("error") ) // anything that starts with error: has suburls
+  if ( uscheme == QLatin1String("error") ) // anything that starts with error: has suburls
      return true;
   return false;
-}
-
-bool KUrl::hasSubUrl() const
-{
-  return ::hasSubUrl( *this );
 }
 
 QString KUrl::url( AdjustPathOption trailing ) const
