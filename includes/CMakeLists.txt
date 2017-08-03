@@ -87,7 +87,6 @@ install(
     KCursor
     KDBusServiceStarter
     KDebug
-    KDeviceListModel
     KDEDModule
     KDEPrintDialog
     KDataTool
@@ -317,7 +316,6 @@ install(
     KStartupInfoId
     KStatusBar
     KStatusBarJobTracker
-    KStatusBarOfflineIndicator
     KStatusNotifierItem
     KStringHandler
     KStyle
