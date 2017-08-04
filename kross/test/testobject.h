@@ -28,19 +28,19 @@
 #include <QtCore/QUrl>
 #include <QtCore/QThread>
 
-class QSize;
-class QSizeF;
-class QPoint;
-class QPointF;
-class QRect;
-class QRectF;
+#include <QSize>
+#include <QSizeF>
+#include <QPoint>
+#include <QPointF>
+#include <QRect>
+#include <QRectF>
 
-class QColor;
-class QFont;
-class QBrush;
-class QDate;
-class QTime;
-class QDateTime;
+#include <QColor>
+#include <QFont>
+#include <QBrush>
+#include <QDate>
+#include <QTime>
+#include <QDateTime>
 
 #include <kurl.h>
 #include <kdebug.h>

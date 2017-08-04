@@ -26,7 +26,7 @@
 
 #include <QtCore/qshareddata.h>
 
-class QString;
+#include <QString>
 
 /**
  * This class contains the emoticons theme

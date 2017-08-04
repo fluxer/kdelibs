@@ -26,7 +26,7 @@
 #include <QtCore/QSharedData>
 
 class KFileWritePlugin;
-class QVariant;
+#include <QVariant>
 class PredicateProperties;
 class KUrl;
 

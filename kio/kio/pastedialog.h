@@ -23,7 +23,7 @@
 
 class KComboBox;
 class KLineEdit;
-class QLabel;
+#include <QLabel>
 
 namespace KIO {
 

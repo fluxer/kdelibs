@@ -4,7 +4,7 @@
 #include <QtGui/QScrollArea>
 #include <QtGui/QImage>
 
-class QLabel;
+#include <QLabel>
 
 class KIconEffectTestWidget : public QScrollArea
 {

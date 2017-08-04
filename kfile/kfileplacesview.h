@@ -25,8 +25,8 @@
 
 #include <kurl.h>
 
-class QResizeEvent;
-class QContextMenuEvent;
+#include <QResizeEvent>
+#include <QContextMenuEvent>
 
 /**
  * This class allows to display a KFilePlacesModel.

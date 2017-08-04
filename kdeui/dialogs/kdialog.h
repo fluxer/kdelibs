@@ -25,7 +25,7 @@
 #define KDIALOG_H
 
 class KPushButton;
-class QMenu;
+#include <QMenu>
 class KDialogPrivate;
 
 #include <kdeui_export.h>

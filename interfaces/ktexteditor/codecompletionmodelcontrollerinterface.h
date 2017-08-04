@@ -25,7 +25,7 @@
 #include <ktexteditor/cursor.h>
 #include "codecompletionmodel.h"
 
-class QModelIndex;
+#include <QModelIndex>
 
 namespace KTextEditor {
 class View;

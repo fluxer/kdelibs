@@ -23,8 +23,8 @@
 #include <QCache>
 #include <QPixmap>
 
-class QRect;
-class QPainter;
+#include <QRect>
+#include <QPainter>
 
 namespace Plasma {
 

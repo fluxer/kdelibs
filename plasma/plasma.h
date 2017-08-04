@@ -27,9 +27,9 @@
 
 #include <plasma/plasma_export.h>
 
-class QAction;
-class QMenu;
-class QGraphicsView;
+#include <QAction>
+#include <QMenu>
+#include <QGraphicsView>
 
 /**
  * Namespace for everything in libplasma

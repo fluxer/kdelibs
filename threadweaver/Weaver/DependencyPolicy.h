@@ -29,7 +29,7 @@
 #ifndef DEPENDENCYPOLICY_H
 #define DEPENDENCYPOLICY_H
 
-template <typename T> class QList;
+#include <QList>
 
 #include "QueuePolicy.h"
 

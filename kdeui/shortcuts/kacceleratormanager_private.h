@@ -24,7 +24,7 @@
 #include <QtCore/qstring.h>
 #include <QtCore/qobject.h>
 
-class QStackedWidget;
+#include <QStackedWidget>
 
 /**
  * A string class handling accelerators.

@@ -4,12 +4,12 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtGui/QWidget>
-class QVBoxLayout;
-class QHBoxLayout;
-class QGroupBox;
-class QLabel;
-class QListWidget;
-class QPushButton;
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QGroupBox>
+#include <QLabel>
+#include <QListWidget>
+#include <QPushButton>
 
 class KHistoryComboBox;
 class KLineEdit;

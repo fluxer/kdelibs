@@ -26,11 +26,11 @@
 #include <QtCore/QSize>
 #include <QtCore/QHash>
 
-class QBoxLayout;
+#include <QBoxLayout>
 class KPushButton;
 class KUrlLabel;
 class KSeparator;
-class QDialogButtonBox;
+#include <QDialogButtonBox>
 
 class KDialogPrivate
 {

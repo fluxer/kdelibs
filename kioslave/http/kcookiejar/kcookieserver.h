@@ -32,7 +32,7 @@
 class KHttpCookieList;
 class KCookieJar;
 class KHttpCookie;
-class QTimer;
+#include <QTimer>
 class RequestList;
 class KConfig;
 

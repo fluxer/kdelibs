@@ -21,9 +21,9 @@
 
 #include <QtCore/QObject>
 
-class QItemSelectionModel;
-class QStandardItemModel;
-class QSortFilterProxyModel;
+#include <QItemSelectionModel>
+#include <QStandardItemModel>
+#include <QSortFilterProxyModel>
 
 class KLinkItemSelectionModel;
 

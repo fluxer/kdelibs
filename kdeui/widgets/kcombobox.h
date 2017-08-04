@@ -26,8 +26,8 @@
 
 #include <kcompletion.h>
 
-class QLineEdit;
-class QMenu;
+#include <QLineEdit>
+#include <QMenu>
 
 class KCompletionBox;
 class KUrl;

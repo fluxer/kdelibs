@@ -25,7 +25,7 @@
 
 #include <kurl.h>
 
-class QDBusArgument;
+#include <QDBusArgument>
 
 namespace KIO {
 

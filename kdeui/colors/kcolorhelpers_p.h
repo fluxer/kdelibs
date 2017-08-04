@@ -30,9 +30,9 @@ static inline qreal normalize(qreal a)
     return (a < 1.0 ? (a > 0.0 ? a : 0.0) : 1.0);
 }
 
-class QPainter;
-class QRect;
-class QBrush;
+#include <QPainter>
+#include <QRect>
+#include <QBrush>
 
 namespace KDEPrivate {
 

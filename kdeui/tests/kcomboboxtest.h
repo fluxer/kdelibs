@@ -3,9 +3,9 @@
 
 #include <QtGui/QWidget>
 
-class QTimer;
-class QComboBox;
-class QPushButton;
+#include <QTimer>
+#include <QComboBox>
+#include <QPushButton>
 
 class KComboBox;
 

@@ -22,10 +22,10 @@
 
 #include <QObject>
 
-class QRectF;
-class QString;
-class QPainter;
-class QPropertyAnimation;
+#include <QRectF>
+#include <QString>
+#include <QPainter>
+#include <QPropertyAnimation>
 
 namespace Plasma {
 

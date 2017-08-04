@@ -26,11 +26,11 @@
 #include <QtGui/QTextOption>
 #include <kio/global.h>
 
-class QAbstractItemModel;
-class QAbstractItemView;
-class QHelpEvent;
-class QModelIndex;
-class QPainter;
+#include <QAbstractItemModel>
+#include <QAbstractItemView>
+#include <QHelpEvent>
+#include <QModelIndex>
+#include <QPainter>
 
 
 /**

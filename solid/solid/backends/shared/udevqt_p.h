@@ -27,8 +27,8 @@ extern "C"
 #include <libudev.h>
 }
 
-class QByteArray;
-class QSocketNotifier;
+#include <QByteArray>
+#include <QSocketNotifier>
 
 namespace UdevQt
 {

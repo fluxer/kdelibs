@@ -35,6 +35,8 @@
 #include <QtCore/qdir.h>
 #include <QtCore/qtextstream.h>
 
+QT_BEGIN_NAMESPACE
+
 namespace QTest
 {
     /**
@@ -48,6 +50,8 @@ namespace QTest
      */
     KDECORE_EXPORT bool kWaitForSignal(QObject *obj, const char *signal, int timeout = 0);
 } // namespace QTest
+
+QT_END_NAMESPACE
 
 // By default, unit tests get no gui.
 // Pass GUI if you use any GUI classes

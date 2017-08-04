@@ -29,8 +29,8 @@
 
 #include <plasma/plasma_export.h>
 
-class QTextDocument;
-class QGraphicsWidget;
+#include <QTextDocument>
+#include <QGraphicsWidget>
 
 /**
  * This provides the content for a tooltip.

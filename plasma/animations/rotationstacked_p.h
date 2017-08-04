@@ -27,7 +27,7 @@
 
 #include <QGraphicsLayoutItem>
 
-class QGraphicsRotation;
+#include <QGraphicsRotation>
 class StackedLayout;
 
 namespace Plasma {

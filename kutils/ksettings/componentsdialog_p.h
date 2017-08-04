@@ -25,9 +25,9 @@
 
 #include <QtCore/QList>
 
-class QString;
+#include <QString>
 class KPluginInfo;
-class QTreeWidgetItem;
+#include <QTreeWidgetItem>
 
 namespace KSettings
 {

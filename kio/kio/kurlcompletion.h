@@ -26,7 +26,7 @@
 #include <kcompletion.h>
 #include <kio/jobclasses.h>
 
-class QStringList;
+#include <QStringList>
 class KUrl;
 class KUrlCompletionPrivate;
 

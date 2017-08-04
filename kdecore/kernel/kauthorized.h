@@ -24,8 +24,8 @@
 #include <kdecore_export.h>
 
 class KUrl;
-class QString;
-class QStringList;
+#include <QString>
+#include <QStringList>
 
 /**
 * Extracted from kapplication (3.x). Kiosk authorization framework

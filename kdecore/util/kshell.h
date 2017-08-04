@@ -24,8 +24,8 @@
 #include <kdecore_export.h>
 #include <qglobal.h>
 
-class QStringList;
-class QString;
+#include <QStringList>
+#include <QString>
 
 /**
  * \namespace KShell

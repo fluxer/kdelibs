@@ -30,7 +30,7 @@
 #include <plasma/plasma_export.h>
 #include "abstractrunner.h"
 
-class QAction;
+#include <QAction>
 class KConfigGroup;
 
 namespace Plasma

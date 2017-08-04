@@ -28,11 +28,11 @@
 
 class KPageModel;
 
-class QAbstractItemDelegate;
-class QAbstractItemView;
-class QModelIndex;
+#include <QAbstractItemDelegate>
+#include <QAbstractItemView>
+#include <QModelIndex>
 class KPageViewPrivate;
-class QAbstractItemModel;
+#include <QAbstractItemModel>
 
 /**
  * @short A base class which can handle multiple pages.

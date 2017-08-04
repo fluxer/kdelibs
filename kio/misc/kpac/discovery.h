@@ -23,7 +23,7 @@
 
 #include "downloader.h"
 
-class QProcess;
+#include <QProcess>
 
 namespace KPAC
 {

@@ -30,7 +30,7 @@
 
 #include <kio/slavebase.h>
 
-class QIODevice;
+#include <QIODevice>
 
 namespace KIO {
 

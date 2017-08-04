@@ -25,14 +25,14 @@
 
 #include <plasma/plasma_export.h>
 
-class QPainter;
-class QPoint;
-class QPointF;
-class QRect;
-class QRectF;
-class QSize;
-class QSizeF;
-class QMatrix;
+#include <QPainter>
+#include <QPoint>
+#include <QPointF>
+#include <QRect>
+#include <QRectF>
+#include <QSize>
+#include <QSizeF>
+#include <QMatrix>
 
 namespace Plasma
 {

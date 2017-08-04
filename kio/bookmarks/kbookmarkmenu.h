@@ -38,11 +38,11 @@
 #include "kbookmark.h"
 #include "kbookmarkmanager.h"
 
-class QString;
-class QMenu;
+#include <QString>
+#include <QMenu>
 class KBookmark;
 class KAction;
-class QAction;
+#include <QAction>
 class KActionMenu;
 class KActionCollection;
 class KBookmarkOwner;

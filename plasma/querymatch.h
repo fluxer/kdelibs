@@ -25,11 +25,11 @@
 
 #include <plasma/plasma_export.h>
 
-class QAction;
-class QIcon;
-class QString;
-class QVariant;
-class QWidget;
+#include <QAction>
+#include <QIcon>
+#include <QString>
+#include <QVariant>
+#include <QWidget>
 
 namespace Plasma
 {

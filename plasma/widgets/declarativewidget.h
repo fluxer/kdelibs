@@ -24,9 +24,9 @@
 
 #include <plasma/plasma_export.h>
 
-class QDeclarativeEngine;
-class QDeclarativeComponent;
-class QScriptEngine;
+#include <QDeclarativeEngine>
+#include <QDeclarativeComponent>
+#include <QScriptEngine>
 
 namespace Plasma
 {

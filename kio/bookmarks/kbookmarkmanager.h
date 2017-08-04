@@ -31,11 +31,11 @@
 #include "kbookmark.h"
 
 class KBookmarkGroup;
-class QDBusMessage;
+#include <QDBusMessage>
 
-class QTreeWidgetItem;
-class QLabel;
-class QTreeWidget;
+#include <QTreeWidgetItem>
+#include <QLabel>
+#include <QTreeWidget>
 class KLineEdit;
 class KMenu;
 class KBookmarkDialog;

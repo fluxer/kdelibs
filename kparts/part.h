@@ -37,9 +37,9 @@
 
 class KIconLoader;
 class KComponentData;
-class QWidget;
-class QEvent;
-class QPoint;
+#include <QWidget>
+#include <QEvent>
+#include <QPoint>
 struct QUnknownInterface;
 
 class KJob;

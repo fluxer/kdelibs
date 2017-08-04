@@ -28,7 +28,7 @@
 #include <kdeui_export.h>
 #include <QtGui/QWidget>
 
-class QAction;
+#include <QAction>
 class KLocale;
 class KLanguageButtonPrivate;
 

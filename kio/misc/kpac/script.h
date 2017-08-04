@@ -25,7 +25,7 @@
 #include <QtCore/QString>
 
 class KUrl;
-class QScriptEngine;
+#include <QScriptEngine>
 
 namespace KPAC
 {

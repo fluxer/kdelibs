@@ -29,10 +29,10 @@
 #include <kurl.h>
 #include <kio/jobclasses.h> // for KIO::JobFlags
 
-class QStringList;
-class QWidget;
+#include <QStringList>
+#include <QWidget>
 
-template<typename T, typename K> class QMap;
+#include <QMap>
 
 class KJob;
 namespace KIO {

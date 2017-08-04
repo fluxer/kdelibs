@@ -22,7 +22,7 @@
 
 #include <QtGui/QGraphicsProxyWidget>
 
-class QGroupBox;
+#include <QGroupBox>
 
 #include <plasma/plasma_export.h>
 

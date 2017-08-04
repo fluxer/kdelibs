@@ -27,12 +27,12 @@
 
 #include "kdeui_export.h"
 
-class QAbstractItemView;
-class QItemSelectionModel;
-class QAbstractItemModel;
-class QAbstractScrollArea;
-class QModelIndex;
-class QStringList;
+#include <QAbstractItemView>
+#include <QItemSelectionModel>
+#include <QAbstractItemModel>
+#include <QAbstractScrollArea>
+#include <QModelIndex>
+#include <QStringList>
 
 class KConfigGroup;
 

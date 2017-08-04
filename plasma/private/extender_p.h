@@ -25,9 +25,9 @@
 #include <QtCore/qpoint.h>
 #include "plasma/extenders/extender.h"
 
-class QGraphicsGridLayout;
-class QGraphicsLinearLayout;
-class QGraphicsWidget;
+#include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
+#include <QGraphicsWidget>
 
 namespace Plasma
 {

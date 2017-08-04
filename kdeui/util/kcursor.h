@@ -23,8 +23,8 @@
 #include <kdeui_export.h>
 #include <QtGui/QCursor>
 
-class QEvent;
-class QWidget;
+#include <QEvent>
+#include <QWidget>
 
 /**
  * The KCursor class extends QCursor with the ability to create an arbitrary

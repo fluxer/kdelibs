@@ -27,7 +27,7 @@
 #include <kfileitem.h>
 #include <kio/job.h>
 
-class QPixmap;
+#include <QPixmap>
 
 namespace KIO {
     class PreviewJobPrivate;

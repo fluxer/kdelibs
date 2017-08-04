@@ -22,7 +22,7 @@
 
 #include <QtGui/QDialog>
 
-class QTextBrowser;
+#include <QTextBrowser>
 
 class KDirWatchTest_GUI : public QWidget
 {

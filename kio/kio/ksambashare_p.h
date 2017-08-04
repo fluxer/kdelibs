@@ -24,7 +24,7 @@
 #include <QtCore/qmap.h>
 #include "ksambasharedata.h"
 
-class QString;
+#include <QString>
 class KSambaShare;
 
 class KSambaSharePrivate

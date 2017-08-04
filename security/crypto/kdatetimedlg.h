@@ -26,9 +26,9 @@
 class KDatePicker;
 class KIntNumInput;
 class KPushButton;
-class QDate;
-class QTime;
-class QDateTime;
+#include <QDate>
+#include <QTime>
+#include <QDateTime>
 
 class KDateTimeDlgPrivate;
 

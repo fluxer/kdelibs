@@ -4,9 +4,9 @@
 #include <QWidget>
 
 class KPixmapSequenceOverlayPainter;
-class QComboBox;
-class QSpinBox;
-class QEvent;
+#include <QComboBox>
+#include <QSpinBox>
+#include <QEvent>
 
 class TestWidget : public QWidget
 {

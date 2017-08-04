@@ -24,8 +24,8 @@
 
 #include <kstandardguiitem.h>
 
-class QDrag;
-class QMenu;
+#include <QDrag>
+#include <QMenu>
 class KIcon;
 
 namespace KAuth {

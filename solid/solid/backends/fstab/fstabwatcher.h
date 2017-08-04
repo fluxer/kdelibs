@@ -23,9 +23,9 @@
 
 #include <QObject>
 
-class QFileSystemWatcher;
-class QFile;
-class QSocketNotifier;
+#include <QFileSystemWatcher>
+#include <QFile>
+#include <QSocketNotifier>
 
 namespace Solid
 {

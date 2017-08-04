@@ -25,9 +25,9 @@
 #include <kio/kio_export.h>
 #include <QtCore/QObject>
 
-class QAction;
-class QMenu;
-class QWidget;
+#include <QAction>
+#include <QMenu>
+#include <QWidget>
 class KFileItemListProperties;
 
 /**

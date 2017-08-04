@@ -30,9 +30,9 @@
 #include <plasma/plasma.h>
 #include "packagemetadata.h"
 
-class QGraphicsObject;
-class QIODevice;
-class QWidget;
+#include <QGraphicsObject>
+#include <QIODevice>
+#include <QWidget>
 
 namespace Plasma
 {

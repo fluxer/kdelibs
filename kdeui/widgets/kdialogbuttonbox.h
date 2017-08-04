@@ -25,7 +25,7 @@
 
 #include <QtGui/QDialogButtonBox>
 
-class QPushButton;
+#include <QPushButton>
 class KPushButton;
 class KGuiItem;
 

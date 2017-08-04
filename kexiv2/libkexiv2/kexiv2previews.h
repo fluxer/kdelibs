@@ -38,7 +38,7 @@
 
 #include "kexiv2_export.h"
 
-class QImage;
+#include <QImage>
 
 namespace KExiv2Iface
 {

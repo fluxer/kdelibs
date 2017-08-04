@@ -36,8 +36,8 @@
 
 class KPushButton;
 class KSqueezedTextLabel;
-class QLabel;
-class QProgressBar;
+#include <QLabel>
+#include <QProgressBar>
 
 class KWidgetJobTracker::Private
     : public KAbstractWidgetJobTracker::Private

@@ -28,7 +28,7 @@
 #include <QtCore/QList>
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
-template <class T> class QStack;
+#include <QStack>
 #endif
 
 class KAction;

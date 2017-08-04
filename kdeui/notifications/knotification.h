@@ -27,8 +27,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QPair>
 
-class QWidget;
-class QDBusError;
+#include <QWidget>
+#include <QDBusError>
 
 /**
  * KNotification is used to notify the user of an event.

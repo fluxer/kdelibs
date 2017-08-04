@@ -5,7 +5,7 @@
 #include <kxmlguiwindow.h>
 #include <QMenuBar>
 
-class QTextEdit;
+#include <QTextEdit>
 
 class testWindow  : public KXmlGuiWindow
 {

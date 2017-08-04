@@ -27,7 +27,7 @@
 
 #include "plasma/plasma_export.h"
 
-class QAction;
+#include <QAction>
 
 class KConfigGroup;
 

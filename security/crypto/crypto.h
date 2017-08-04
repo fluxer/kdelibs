@@ -31,10 +31,10 @@
 #include <kcmodule.h>
 #include <kconfig.h>
 
-class QGridLayout;
-class QRadioButton;
-class QGroupBox;
-class QButtonGroup;
+#include <QGridLayout>
+#include <QRadioButton>
+#include <QGroupBox>
+#include <QButtonGroup>
 
 class KComboBox;
 class KCryptoConfig;

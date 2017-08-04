@@ -242,6 +242,7 @@ bool KDateTime::Spec::equivalentTo(const Spec &other) const
     }
 }
 
+QT_BEGIN_NAMESPACE
 QDataStream & operator<<(QDataStream &s, const KDateTime::Spec &spec)
 {
     // The specification type is encoded in order to insulate from changes
@@ -303,6 +304,7 @@ QDataStream & operator>>(QDataStream &s, KDateTime::Spec &spec)
     }
     return s;
 }
+QT_END_NAMESPACE
 
 
 /*----------------------------------------------------------------------------*/
@@ -2434,6 +2436,7 @@ KDateTime KDateTime::realCurrentLocalDateTime()
 #endif
 }
 
+QT_BEGIN_NAMESPACE
 QDataStream & operator<<(QDataStream &s, const KDateTime &dt)
 {
     s << dt.date() << dt.time() << dt.timeSpec() << quint8(dt.isDateOnly() ? 0x01 : 0x00);
@@ -2453,6 +2456,7 @@ QDataStream & operator>>(QDataStream &s, KDateTime &kdt)
         kdt = KDateTime(d, t, spec);
     return s;
 }
+QT_END_NAMESPACE
 
 
 /*

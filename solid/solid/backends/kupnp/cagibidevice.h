@@ -25,8 +25,8 @@
 #include <QtCore/qsharedpointer.h>
 
 namespace Cagibi { class Device; }
-class QString;
-class QDBusArgument;
+#include <QString>
+#include <QDBusArgument>
 extern QDBusArgument& operator<<( QDBusArgument& argument,
                                   const Cagibi::Device& device );
 extern const QDBusArgument& operator>>( const QDBusArgument& argument,

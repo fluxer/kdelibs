@@ -27,7 +27,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QPixmap>
 
-class QCursor;
+#include <QCursor>
 
 /**
  * @short A drop-in replacement for QLabel that displays hyperlinks.

@@ -22,10 +22,10 @@
 #include <kdeui_export.h>
 #include <QtCore/qnamespace.h>
 
-class QFontMetrics;
-class QRect;
-class QString;
-class QPainter;
+#include <QFontMetrics>
+#include <QRect>
+#include <QString>
+#include <QPainter>
 
 /**
  * Word-wrap algorithm that takes into account beautifulness ;)

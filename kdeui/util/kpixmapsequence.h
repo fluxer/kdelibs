@@ -27,7 +27,7 @@
 #include "kdeui_export.h"
 #include <kiconloader.h>
 
-class QPixmap;
+#include <QPixmap>
 
 /**
  * \class KPixmapSequence kpixmapsequence.h KPixmapSequence

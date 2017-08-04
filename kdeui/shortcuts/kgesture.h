@@ -22,8 +22,9 @@
 
 #include <kdeui_export.h>
 
-#include <QtCore/QString>
-#include <QtGui/QPolygon>
+#include <QString>
+#include <QHash>
+#include <QPolygon>
 
 /*
  kinds of gestures:
@@ -141,7 +142,6 @@ private:
     KShapeGesturePrivate * const d;
 };
 
-uint qHash(int);
 inline uint qHash(const KShapeGesture &key)
 {
     return qHash(key.hashable());

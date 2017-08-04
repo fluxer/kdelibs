@@ -29,8 +29,8 @@
 
 class KActionCollection;
 class KMenu;
-class QWidget;
-class QAction;
+#include <QWidget>
+#include <QAction>
 
 class KAboutData;
 class KHelpMenuPrivate;

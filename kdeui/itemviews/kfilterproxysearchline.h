@@ -25,7 +25,7 @@
 #include <QtGui/QWidget>
 
 class KLineEdit;
-class QSortFilterProxyModel;
+#include <QSortFilterProxyModel>
 
 /**
  * @class KFilterProxySearchLine

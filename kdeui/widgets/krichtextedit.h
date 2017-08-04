@@ -26,8 +26,8 @@
 
 #include <ktextedit.h>
 
-class QMouseEvent;
-class QKeyEvent;
+#include <QMouseEvent>
+#include <QKeyEvent>
 
 class KRichTextEditPrivate;
 

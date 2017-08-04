@@ -23,8 +23,8 @@
 #include <kio/kio_export.h>
 #include <kpagedialog.h>
 
-class QByteArray;
-class QImage;
+#include <QByteArray>
+#include <QImage>
 
 /**
  * This is a base class for scanning dialogs. You can derive from this class

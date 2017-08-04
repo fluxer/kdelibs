@@ -26,7 +26,7 @@
 #include <kxmlguiwindow.h>
 
 class KAction;
-class QWidget;
+#include <QWidget>
 
 class TestMainWindow : public KXmlGuiWindow
 {

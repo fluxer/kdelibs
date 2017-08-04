@@ -32,7 +32,7 @@
 class KAction;
 struct KActionCategoryPrivate;
 
-class QAction;
+#include <QAction>
 
 
 

@@ -27,8 +27,8 @@
 
 class KActionCollection;
 class KSystemTrayIconPrivate;
-class QAction;
-class QMovie;
+#include <QAction>
+#include <QMovie>
 
 /**
  * \brief %KDE System Tray Window class

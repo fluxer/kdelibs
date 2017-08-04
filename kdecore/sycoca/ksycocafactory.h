@@ -21,11 +21,11 @@
 
 #include <ksycocaentry.h>
 
-class QString;
+#include <QString>
 class KSycocaDict;
 class KSycocaResourceList;
-template <typename T> class QList;
-template <typename KT, typename VT> class QHash;
+#include <QList>
+#include <QHash>
 
 typedef QHash<QString, KSycocaEntry::Ptr> KSycocaEntryDict;
 

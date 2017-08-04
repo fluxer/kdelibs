@@ -29,7 +29,7 @@ namespace Kross {
     class ActionCollection;
 }
 
-class QWidget;
+#include <QWidget>
 
 namespace Kross
 {

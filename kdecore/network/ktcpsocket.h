@@ -138,7 +138,7 @@ private:
 //TODO protocol (or maybe even application?) dependent automatic proxy choice
 
 class KTcpSocketPrivate;
-class QHostAddress;
+#include <QHostAddress>
 class KUrl;
 
 class KDECORE_EXPORT KTcpSocket: public QIODevice

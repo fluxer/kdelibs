@@ -21,8 +21,8 @@
 
 #include <QtScript/QScriptValue>
 
-class QScriptContext;
-class QScriptEngine;
+#include <QScriptContext>
+#include <QScriptEngine>
 
 QScriptValue jsi18n(QScriptContext *context, QScriptEngine *engine);
 QScriptValue jsi18nc(QScriptContext *context, QScriptEngine *engine);

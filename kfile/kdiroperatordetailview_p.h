@@ -23,7 +23,7 @@
 
 #include <kfile.h>
 
-class QAbstractItemModel;
+#include <QAbstractItemModel>
 
 /**
  * Default detail view for KDirOperator using

@@ -25,11 +25,11 @@
 #include <QRect>
 #include <QString>
 
-class QGraphicsItem;
-class QGraphicsWidget;
-class QGraphicsLinearLayout;
-class QGraphicsView;
-class QTimer;
+#include <QGraphicsItem>
+#include <QGraphicsWidget>
+#include <QGraphicsLinearLayout>
+#include <QGraphicsView>
+#include <QTimer>
 
 namespace Plasma
 {

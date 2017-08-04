@@ -28,7 +28,7 @@
 
 #include "jobclasses.h"
 
-class QTimer;
+#include <QTimer>
 
 namespace KIO {
 

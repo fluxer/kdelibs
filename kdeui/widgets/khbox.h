@@ -23,7 +23,7 @@
 
 #include <QtGui/QFrame>
 
-class QChildEvent;
+#include <QChildEvent>
 
 /**
  * A container widget which arranges its children horizontally.

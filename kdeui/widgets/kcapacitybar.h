@@ -25,7 +25,7 @@
 
 #include <kdeui_export.h>
 
-class QPaintEvent;
+#include <QPaintEvent>
 
 /**
   * @brief This widget shows a bar which is filled to show the level of usage of

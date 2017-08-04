@@ -26,9 +26,9 @@
 #include <QtCore/QObject>
 #include <QtGui/qevent.h>
 
-class QPainter;
-class QModelIndex;
-class QStyleOption;
+#include <QPainter>
+#include <QModelIndex>
+#include <QStyleOption>
 
 class KCategorizedView;
 

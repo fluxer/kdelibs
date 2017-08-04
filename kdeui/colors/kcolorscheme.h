@@ -25,8 +25,8 @@
 
 #include <QtGui/QPalette>
 
-class QColor;
-class QBrush;
+#include <QColor>
+#include <QBrush>
 
 class KColorSchemePrivate;
 

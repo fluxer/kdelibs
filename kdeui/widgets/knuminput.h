@@ -27,9 +27,9 @@
 #include <QtGui/QWidget>
 #include <QtGui/QSpinBox>
 
-class QSlider;
-class QSpinBox;
-class QValidator;
+#include <QSlider>
+#include <QSpinBox>
+#include <QValidator>
 
 class KIntSpinBox;
 class KNumInputPrivate;

@@ -26,7 +26,7 @@
 #include <kjobtrackerinterface.h>
 
 class KJob;
-class QWidget;
+#include <QWidget>
 
 /**
  * The base class for widget based job trackers.

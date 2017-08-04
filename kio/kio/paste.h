@@ -22,7 +22,7 @@
 #include <kio/kio_export.h>
 #include <kurl.h>
 
-class QWidget;
+#include <QWidget>
 
 namespace KIO {
     class Job;

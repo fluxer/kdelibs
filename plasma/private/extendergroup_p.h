@@ -20,7 +20,7 @@
 #ifndef PLASMA_EXTENDERGROUPPRIVATE_H
 #define PLASMA_EXTENDERGROUPPRIVATE_H
 
-class QTimer;
+#include <QTimer>
 
 namespace Plasma 
 {

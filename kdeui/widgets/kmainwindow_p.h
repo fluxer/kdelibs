@@ -34,8 +34,8 @@
 
 #define K_D(Class) Class##Private * const d = k_func()
 
-class QObject;
-class QTimer;
+#include <QObject>
+#include <QTimer>
 class KHelpMenu;
 
 class KMainWindowPrivate

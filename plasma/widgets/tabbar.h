@@ -26,8 +26,8 @@
 
 #include <plasma/plasma_export.h>
 
-class QString;
-class QIcon;
+#include <QString>
+#include <QIcon>
 
 namespace Plasma
 {

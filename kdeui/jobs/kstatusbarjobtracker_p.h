@@ -31,10 +31,10 @@
 #include <kurl.h>
 
 class KPushButton;
-class QCheckBox;
+#include <QCheckBox>
 class KLineEdit;
-class QLabel;
-class QProgressBar;
+#include <QLabel>
+#include <QProgressBar>
 
 
 class KStatusBarJobTracker::Private

@@ -28,8 +28,8 @@
 #include <QtCore/QRect>
 #include <QtCore/qsize.h>
 
-class QPainter;
-class QStyleOptionGraphicsItem;
+#include <QPainter>
+#include <QStyleOptionGraphicsItem>
 
 namespace Plasma
 {

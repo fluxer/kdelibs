@@ -273,7 +273,9 @@ namespace KIO
     typedef QList<UDSEntry> UDSEntryList;
 } // end namespace
 
+QT_BEGIN_NAMESPACE
 KIO_EXPORT QDataStream & operator<< ( QDataStream & s, const KIO::UDSEntry & a );
 KIO_EXPORT QDataStream & operator>> ( QDataStream & s, KIO::UDSEntry & a );
+QT_END_NAMESPACE
 
 #endif /*UDSENTRY_H*/

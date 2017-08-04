@@ -25,7 +25,7 @@
 #include <QtCore/QStringList>
 #include <kdeui_export.h>
 
-class QTextEdit;
+#include <QTextEdit>
 
 namespace Sonnet
 {

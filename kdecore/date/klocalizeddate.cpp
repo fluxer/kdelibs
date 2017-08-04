@@ -587,6 +587,7 @@ bool KLocalizedDate::operator>=(const QDate &rhs) const
     return (date() >= rhs);
 }
 
+QT_BEGIN_NAMESPACE
 QDataStream &operator<<(QDataStream &out, const KLocalizedDate &date)
 {
     return out << (quint32)(date.toJulianDay()) << date.calendar()->calendarSystem();
@@ -614,3 +615,4 @@ QDebug operator<<(QDebug dbg, const KLocalizedDate &date)
     }
     return dbg.space();
 }
+QT_END_NAMESPACE

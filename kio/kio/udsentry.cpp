@@ -48,7 +48,9 @@ public:
     static void save(QDataStream &, const UDSEntry &);
     static void load(QDataStream &, UDSEntry &);
 };
+QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(KIO::UDSEntryPrivate::Field, Q_MOVABLE_TYPE);
+QT_END_NAMESPACE
 
 UDSEntry::UDSEntry()
     : d(new UDSEntryPrivate())
@@ -130,6 +132,7 @@ void UDSEntry::clear()
     d->fields.clear();
 }
 
+QT_BEGIN_NAMESPACE
 QDataStream & operator<<(QDataStream &s, const UDSEntry &a)
 {
     UDSEntryPrivate::save(s, a);
@@ -141,6 +144,7 @@ QDataStream & operator>>(QDataStream &s, UDSEntry &a)
     UDSEntryPrivate::load(s, a);
     return s;
 }
+QT_END_NAMESPACE
 
 void UDSEntryPrivate::save(QDataStream &s, const UDSEntry &a)
 {

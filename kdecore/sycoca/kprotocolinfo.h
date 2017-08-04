@@ -23,7 +23,7 @@
 #include <ksycocaentry.h>
 #include <kservice.h>
 
-class QDataStream;
+#include <QDataStream>
 class KProtocolInfoPrivate;
 
 /**
@@ -370,7 +370,9 @@ private:
 
 };
 
+QT_BEGIN_NAMESPACE
 KDECORE_EXPORT QDataStream& operator>>( QDataStream& s, KProtocolInfo::ExtraField& field );
 KDECORE_EXPORT QDataStream& operator<<( QDataStream& s, const KProtocolInfo::ExtraField& field );
+QT_END_NAMESPACE
 
 #endif

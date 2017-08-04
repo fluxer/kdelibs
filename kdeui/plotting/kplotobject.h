@@ -26,10 +26,10 @@
 #include <QtCore/qstring.h>
 #include <QtGui/qcolor.h>
 
-class QBrush;
-class QPainter;
-class QPen;
-class QPointF;
+#include <QBrush>
+#include <QPainter>
+#include <QPen>
+#include <QPointF>
 class KPlotWidget;
 class KPlotPoint;
 

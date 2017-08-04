@@ -26,8 +26,8 @@
 #include <kdecore_export.h>
 #include <QtCore/qstring.h>
 
-class QTextCodec;
-class QTextDecoder;
+#include <QTextCodec>
+#include <QTextDecoder>
 class KEncodingDetectorPrivate;
 
 /**

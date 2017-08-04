@@ -26,8 +26,8 @@
 
 class KAbstractViewAdapter;
 class KDirModel;
-class QAbstractItemView;
-class QAbstractProxyModel;
+#include <QAbstractItemView>
+#include <QAbstractProxyModel>
 
 /**
  * @brief Generates previews for files of an item view.

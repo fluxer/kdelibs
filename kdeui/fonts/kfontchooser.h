@@ -27,8 +27,8 @@
 #include <kdeui_export.h>
 #include <QtGui/QWidget>
 
-class QFont;
-class QStringList;
+#include <QFont>
+#include <QStringList>
 
 /**
  * @short A font selection widget.

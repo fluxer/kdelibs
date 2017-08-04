@@ -24,11 +24,11 @@
 #include <QtCore/QMap>
 #include <QtCore/QStringList>
 
-class QDomDocument;
-class QDomElement;
-class QWidget;
+#include <QDomDocument>
+#include <QDomElement>
+#include <QWidget>
 
-class QAction;
+#include <QAction>
 class KActionCollection;
 class KComponentData;
 class KXMLGUIClientPrivate;

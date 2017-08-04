@@ -23,7 +23,7 @@
 #include <QList>
 #include <QString>
 
-class QIODevice;
+#include <QIODevice>
 
 /**
  * @internal

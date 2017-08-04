@@ -32,7 +32,7 @@ namespace DNSSD
 
 class ServiceBrowserPrivate : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 public:
 	ServiceBrowserPrivate(ServiceBrowser* parent) : QObject(), m_running(false), m_browser(0), m_parent(parent)
 	{}

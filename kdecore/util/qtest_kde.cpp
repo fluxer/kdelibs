@@ -54,10 +54,14 @@ private:
 
 // Unit test for this code: tests/kglobaltest.cpp
 
+QT_BEGIN_NAMESPACE
+
 bool QTest::kWaitForSignal(QObject *obj, const char *signal, int timeout )
 {
     KDESignalSpy spy(obj, signal, timeout);
     return spy.signalEmitted();
 }
+
+QT_END_NAMESPACE
 
 #include "qtest_kde.moc"

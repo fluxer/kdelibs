@@ -24,7 +24,7 @@
 #include "klocalsocket.h"
 #define MIN_SOCKADDR_UN_LEN	(sizeof(quint16) + sizeof(char))
 
-class QSocketNotifier;
+#include <QSocketNotifier>
 
 class KLocalSocketPrivate
 {

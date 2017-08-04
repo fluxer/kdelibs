@@ -524,7 +524,6 @@ private:
 
 Q_DECLARE_METATYPE(KFileItem)
 
-Q_CORE_EXPORT uint qHash(const QString &key);
 inline uint qHash(const KFileItem& item){ return qHash(item.url().url()); }
 
 /**

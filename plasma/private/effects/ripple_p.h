@@ -20,8 +20,8 @@
 
 #include <QtGui/QGraphicsEffect>
 
-class QObject;
-class QPainter;
+#include <QObject>
+#include <QPainter>
 
 namespace Plasma
 {

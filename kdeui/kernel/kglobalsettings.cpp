@@ -739,6 +739,12 @@ int KGlobalSettings::buttonLayout()
     return g.readEntry("ButtonLayout", KDE_DEFAULT_BUTTON_LAYOUT);
 }
 
+#ifdef Q_WS_X11
+QT_BEGIN_NAMESPACE
+extern void qt_x11_apply_settings_in_all_apps();
+QT_END_NAMESPACE
+#endif
+
 void KGlobalSettings::emitChange(ChangeType changeType, int arg)
 {
     QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings", "org.kde.KGlobalSettings", "notifyChange" );
@@ -750,7 +756,6 @@ void KGlobalSettings::emitChange(ChangeType changeType, int arg)
 #ifdef Q_WS_X11
     if (qApp && qApp->type() != QApplication::Tty) {
         //notify non-kde qt applications of the change
-        extern void qt_x11_apply_settings_in_all_apps();
         qt_x11_apply_settings_in_all_apps();
     }
 #endif

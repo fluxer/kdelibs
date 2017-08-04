@@ -27,8 +27,8 @@
 #include <kguiitem.h>
 #include <kstandardguiitem.h>
 
-class QWidget;
-class QStringList;
+#include <QWidget>
+#include <QStringList>
 class KConfig;
 class KDialog;
 

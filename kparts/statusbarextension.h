@@ -28,7 +28,7 @@
 
 class KStatusBar;
 class KMainWindow;
-class QEvent;
+#include <QEvent>
 
 namespace KParts
 {

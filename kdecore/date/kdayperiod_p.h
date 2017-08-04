@@ -25,9 +25,9 @@
 #include "klocale.h"
 #include <kdecore_export.h>
 
-class QDate;
-class QString;
-class QTime;
+#include <QDate>
+#include <QString>
+#include <QTime>
 
 class KDayPeriodPrivate;
 

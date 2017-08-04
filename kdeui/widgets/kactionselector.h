@@ -22,11 +22,11 @@
 #include <kdeui_export.h>
 #include <QtGui/QWidget>
 
-class QListWidget;
-class QListWidgetItem;
-class QKeyEvent;
-class QEvent;
-class QIcon;
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QKeyEvent>
+#include <QEvent>
+#include <QIcon>
 
 class KActionSelectorPrivate;
 

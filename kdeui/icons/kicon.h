@@ -24,7 +24,7 @@
 #include <QtGui/QIcon>
 
 class KIconLoader;
-class QStringList;
+#include <QStringList>
 
 /**
  * \short A wrapper around QIcon that provides KDE icon features

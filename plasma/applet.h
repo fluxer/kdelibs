@@ -37,10 +37,10 @@
 #include <plasma/animator.h>
 #include <plasma/framesvg.h>
 
-class QWidget;
+#include <QWidget>
 
 class KConfigDialog;
-class QGraphicsView;
+#include <QGraphicsView>
 class KActionCollection;
 
 namespace Plasma

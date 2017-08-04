@@ -26,7 +26,7 @@
 
 #include <QtCore/QObject>
 
-class QString;
+#include <QString>
 
 namespace KTextEditor {
 

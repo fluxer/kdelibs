@@ -29,7 +29,7 @@
 class KCoreConfigSkeleton;
 class KConfigSkeleton;
 class KConfigSkeletonItem;
-class QWidget;
+#include <QWidget>
 
 /**
  * @short Provides a means of automatically retrieving,

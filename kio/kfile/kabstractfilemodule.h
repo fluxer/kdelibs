@@ -23,7 +23,7 @@
 #include <kio/kio_export.h>
 #include <QtCore/QObject>
 #include <kurl.h>
-class QWidget;
+#include <QWidget>
 
 /**
  * Interface to the module that contains the file widget.

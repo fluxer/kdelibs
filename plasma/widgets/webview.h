@@ -27,11 +27,11 @@
 
 class QWebPage;
 class QWebFrame;
-class QKeyEvent;
-class QGraphicsSceneDragDropEvent;
-class QGraphicsSceneMouseEvent;
-class QGraphicsSceneWheelEvent;
-class QRect;
+#include <QKeyEvent>
+#include <QGraphicsSceneDragDropEvent>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsSceneWheelEvent>
+#include <QRect>
 
 namespace Plasma
 {

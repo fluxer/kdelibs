@@ -30,7 +30,7 @@
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkCookieJar>
 
-class QWidget;
+#include <QWidget>
 
 namespace KIO {
 

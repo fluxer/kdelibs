@@ -2,7 +2,7 @@
 #define KHBOXTEST_H
 
 #include "khbox.h"
-class QPushButton;
+#include <QPushButton>
 
 class KHBoxTest : public KHBox {
     Q_OBJECT

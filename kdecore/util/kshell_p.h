@@ -22,7 +22,7 @@
 #ifndef KSHELL_P_H
 #define KSHELL_P_H
 
-class QString;
+#include <QString>
 
 namespace KShell {
 

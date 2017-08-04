@@ -27,8 +27,8 @@
 #include <kdialog.h>
 #include <kfontchooser.h>
 
-class QFont;
-class QStringList;
+#include <QFont>
+#include <QStringList>
 
 /**
  * @short A font selection dialog.

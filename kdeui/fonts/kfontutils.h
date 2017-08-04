@@ -26,9 +26,9 @@
 #include "kdeui_export.h"
 #include <qglobal.h>
 
-class QPainter;
-class QSizeF;
-class QString;
+#include <QPainter>
+#include <QSizeF>
+#include <QString>
 
 namespace KFontUtils
 {

@@ -25,7 +25,7 @@
 #include <kdeui_export.h>
 #include <QtGui/QGroupBox>
 
-class QAbstractButton;
+#include <QAbstractButton>
 
 /**
  * @short Group box with index of the selected button

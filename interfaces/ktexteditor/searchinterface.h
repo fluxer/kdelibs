@@ -24,7 +24,7 @@
 #include <ktexteditor/ktexteditor_export.h>
 #include <ktexteditor/range.h>
 
-class QString;
+#include <QString>
 
 namespace KTextEditor
 {

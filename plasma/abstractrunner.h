@@ -33,8 +33,8 @@
 #include <plasma/runnercontext.h>
 #include <plasma/runnersyntax.h>
 
-class QAction;
-class QMimeData;
+#include <QAction>
+#include <QMimeData>
 
 class KCompletion;
 

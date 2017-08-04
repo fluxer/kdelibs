@@ -4,10 +4,10 @@
 #include <QtGui/QWidget>
 #include <QtCore/QPointer>
 
-class QLabel;
+#include <QLabel>
 class KRestrictedLine;
-class QString;
-class QPushButton;
+#include <QString>
+#include <QPushButton>
 
 class KLineEdit;
 

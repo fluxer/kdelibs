@@ -25,8 +25,8 @@
 #include <QtCore/QString>
 #include <QtCore/QMultiHash>
 
-class QProcess;
-class QObject;
+#include <QProcess>
+#include <QObject>
 
 namespace Solid
 {

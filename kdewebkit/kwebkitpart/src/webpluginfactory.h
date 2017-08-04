@@ -27,7 +27,7 @@
 #include <QPointer>
 
 class KWebKitPart;
-class QPoint;
+#include <QPoint>
 
 class FakePluginWidget : public QWidget
 {

@@ -30,8 +30,8 @@
 #include <kurl.h>
 
 class KJob;
-class QDropEvent;
-class QPaintEvent;
+#include <QDropEvent>
+#include <QPaintEvent>
 
 namespace KIO
 {

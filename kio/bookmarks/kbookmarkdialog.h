@@ -25,12 +25,12 @@
 #include <kurl.h>
 
 class KBookmarkManager;
-class QWidget;
-class QLabel;
-class QTreeWidget;
+#include <QWidget>
+#include <QLabel>
+#include <QTreeWidget>
 class KLineEdit;
-class QTreeWidgetItem;
-class QGridLayout;
+#include <QTreeWidgetItem>
+#include <QGridLayout>
 
 /**
  * This class provides a Dialog for editing properties, adding Bookmarks and creating new folders.

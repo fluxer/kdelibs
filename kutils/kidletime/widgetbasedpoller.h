@@ -21,8 +21,8 @@
 
 #include "abstractsystempoller.h"
 
-class QTimer;
-class QEvent;
+#include <QTimer>
+#include <QEvent>
 
 class WidgetBasedPoller : public AbstractSystemPoller
 {

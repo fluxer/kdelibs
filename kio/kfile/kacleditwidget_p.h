@@ -35,11 +35,11 @@
 #include <kfileitem.h>
 
 class KACLListViewItem;
-class QButtonGroup;
+#include <QButtonGroup>
 class KACLListView;
-class QStackedWidget;
-class QCheckBox;
-class QAbstractButton;
+#include <QStackedWidget>
+#include <QCheckBox>
+#include <QAbstractButton>
 class QColorGroup;
 
 /**

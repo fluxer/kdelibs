@@ -25,9 +25,9 @@
 #include <kdecore_export.h>
 #include <QtCore/QChar>
 
-class QString;
-class QStringList;
-template <typename KT, typename VT> class QHash;
+#include <QString>
+#include <QStringList>
+#include <QHash>
 class KMacroExpanderBasePrivate;
 
 /**

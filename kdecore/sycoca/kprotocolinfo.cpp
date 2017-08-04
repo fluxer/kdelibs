@@ -473,6 +473,7 @@ bool KProtocolInfo::isKnownProtocol( const QString &protocol )
   return prot || isHelperProtocol(protocol);
 }
 
+QT_BEGIN_NAMESPACE
 QDataStream& operator>>( QDataStream& s, KProtocolInfo::ExtraField& field )  {
   s >> field.name;
   int type;
@@ -486,3 +487,4 @@ QDataStream& operator<<( QDataStream& s, const KProtocolInfo::ExtraField& field 
   s << static_cast<int>( field.type );
   return s;
 }
+QT_END_NAMESPACE

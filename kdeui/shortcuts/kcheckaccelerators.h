@@ -27,9 +27,8 @@
 #include <QObject>
 #include <QPointer>
 #include <QTimer>
-
-class QDialog;
-class QTextBrowser;
+#include <QDialog>
+#include <QTextBrowser>
 
 /**
  @internal

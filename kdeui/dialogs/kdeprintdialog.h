@@ -25,9 +25,9 @@
 
 #include <QtCore/QList>
 
-class QPrintDialog;
-class QPrinter;
-class QWidget;
+#include <QPrintDialog>
+#include <QPrinter>
+#include <QWidget>
 
 /**
  * Namespace for the KDE printing system

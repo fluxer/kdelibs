@@ -29,7 +29,7 @@
 // widget
 #include <QtGui/QWidget>
 
-class QMenu;
+#include <QMenu>
 
 namespace KTextEditor
 {

@@ -26,7 +26,7 @@
 #include <kdialog.h>
 #include <kurl.h>
 
-class QAbstractItemView;
+#include <QAbstractItemView>
 
 /**
  * A pretty dialog for a KDirSelect control for selecting directories.

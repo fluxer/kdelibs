@@ -32,11 +32,11 @@
 
 #include <QtCore/QObject>
 
-class QAction;
+#include <QAction>
 class KXMLGUIClient;
 
-class QActionGroup;
-class QString;
+#include <QActionGroup>
+#include <QString>
 
 /**
  * \short A container for a set of QAction objects.

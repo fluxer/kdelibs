@@ -29,9 +29,9 @@
 
 #include <kio/global.h>
 
-class QScrollArea;
-class QLabel;
-class QPixmap;
+#include <QScrollArea>
+#include <QLabel>
+#include <QPixmap>
 class KFileItem;
 
 namespace KIO

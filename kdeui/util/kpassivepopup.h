@@ -27,7 +27,7 @@
 #include <QtGui/QFrame>
 
 class KVBox;
-class QSystemTrayIcon;
+#include <QSystemTrayIcon>
 
 /**
  * @short A dialog-like popup that displays messages without interrupting the user.

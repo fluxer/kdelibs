@@ -25,10 +25,9 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>
-
-class QPixmap;
-class QPoint;
-class QMenu;
+#include <QtCore/QPoint>
+#include <QtGui/QPixmap>
+#include <QtGui/QMenu>
 
 namespace KTextEditor
 {

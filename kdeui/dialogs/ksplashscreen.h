@@ -24,7 +24,7 @@
 
 #include <QtGui/QSplashScreen>
 
-class QPixmap;
+#include <QPixmap>
 
 /**
  *  @short %KDE splash screen

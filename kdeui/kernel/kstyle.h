@@ -43,8 +43,8 @@
 
 #include <typeinfo>
 
-class QStyleOptionProgressBar;
-class QStyleOptionTab;
+#include <QStyleOptionProgressBar>
+#include <QStyleOptionTab>
 
 class KStylePrivate;
 /**

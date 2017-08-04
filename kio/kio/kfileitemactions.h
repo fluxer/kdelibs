@@ -27,7 +27,7 @@
 
 class KFileItemListProperties;
 class KAction;
-class QMenu;
+#include <QMenu>
 class KFileItemActionsPrivate;
 
 /**

@@ -31,6 +31,7 @@ Q_DECLARE_METATYPE(QList<QSslCertificate>)
 Q_DECLARE_METATYPE(KSslError::Error)
 Q_DECLARE_METATYPE(QList<KSslError::Error>)
 
+QT_BEGIN_NAMESPACE
 
 QDBusArgument &operator<<(QDBusArgument &argument, const QSslCertificate &cert)
 {
@@ -102,6 +103,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KSslError::Error 
     return argument;
 }
 
+QT_END_NAMESPACE
 
 static void registerMetaTypesForKSSLD()
 {

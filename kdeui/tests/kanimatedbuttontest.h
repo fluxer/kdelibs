@@ -24,8 +24,8 @@
 
 #include "kmainwindow.h"
 
-class QLineEdit;
-class QSpinBox;
+#include <QLineEdit>
+#include <QSpinBox>
 class KAnimatedButton;
 
 class AnimationGroup : public QGroupBox

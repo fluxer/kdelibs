@@ -35,7 +35,7 @@
 #include <kservice.h>
 #include <kplugininfo.h>
 
-class QCheckBox;
+#include <QCheckBox>
 
 namespace KSettings
 {

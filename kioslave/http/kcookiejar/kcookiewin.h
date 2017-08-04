@@ -32,7 +32,7 @@
 #include "kcookiejar.h"
 
 class KLineEdit;
-class QPushButton;
+#include <QPushButton>
 
 class KCookieDetail : public QGroupBox
 {

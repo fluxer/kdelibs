@@ -34,6 +34,7 @@
 #include <QtCore/qmap.h>
 #include <QtCore/qobject.h>
 #include <QtCore/qtimer.h>
+#include <QtCore/qsocketnotifier.h>
 
 #ifdef HAVE_FAM
 #include <limits.h>

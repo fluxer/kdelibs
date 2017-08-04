@@ -22,8 +22,8 @@
 
 #include <kpropertiesdialog.h>
 #include <QProcess>
-class QRadioButton;
-class QPushButton;
+#include <QRadioButton>
+#include <QPushButton>
 
 /**
  * This plugin provides a page to KProperiessDialog, showing the "file sharing" options

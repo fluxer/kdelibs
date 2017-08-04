@@ -25,8 +25,8 @@
 
 #include "klocale.h"
 
-class QString;
-class QDate;
+#include <QString>
+#include <QDate>
 
 class KCalendarSystem;
 

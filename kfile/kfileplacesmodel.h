@@ -29,8 +29,8 @@
 
 #include <solid/device.h>
 
-class QMimeData;
-class QAction;
+#include <QMimeData>
+#include <QAction>
 
 /**
  * This class is a list view model. Each entry represents a "place"

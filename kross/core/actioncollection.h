@@ -26,8 +26,8 @@
 #include <QtCore/QObject>
 #include <QtCore/QDir>
 
-class QDomElement;
-class QIODevice;
+#include <QDomElement>
+#include <QIODevice>
 
 namespace Kross {
 

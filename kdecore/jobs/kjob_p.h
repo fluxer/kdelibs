@@ -26,8 +26,8 @@
 #include <QtCore/qmap.h>
 
 class KJobUiDelegate;
-class QTimer;
-class QEventLoop;
+#include <QTimer>
+#include <QEventLoop>
 
 // This is a private class, but it's exported for
 // KIO::Job's usage. Other Job classes in kdelibs may

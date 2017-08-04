@@ -20,8 +20,8 @@
 
 #include <kmainwindow.h>
 
-class QComboBox;
-class QVBoxLayout;
+#include <QComboBox>
+#include <QVBoxLayout>
 class KPlotWidget;
 class KPlotObject;
 

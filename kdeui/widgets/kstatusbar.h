@@ -25,8 +25,8 @@
 #include <kdeui_export.h>
 #include <QtGui/QStatusBar>
 
-class QObject;
-class QEvent;
+#include <QObject>
+#include <QEvent>
 class KStatusBarPrivate;
 
 /**

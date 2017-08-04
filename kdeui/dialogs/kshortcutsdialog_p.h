@@ -35,10 +35,10 @@
 #include <QtCore/QList>
 #include <QGroupBox>
 
-class QLabel;
-class QTreeWidget;
-class QTreeWidgetItem;
-class QRadioButton;
+#include <QLabel>
+#include <QTreeWidget>
+#include <QTreeWidgetItem>
+#include <QRadioButton>
 class KAction;
 class KActionCollection;
 class KPushButton;

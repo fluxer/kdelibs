@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-class QWidget;
+#include <QWidget>
 /**
  * @brief This is a convenience KMessageHandler that uses KPassivePopup.
  *

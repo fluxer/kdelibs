@@ -192,7 +192,7 @@ KDECORE_EXPORT QDebug perror(QDebug, KDebugTag);
 // operators for KDE types
 class KUrl;
 class KDateTime;
-class QObject;
+#include <QObject>
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KUrl &url);
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
 

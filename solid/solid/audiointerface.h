@@ -25,7 +25,7 @@
 
 #include <solid/deviceinterface.h>
 
-class QVariant;
+#include <QVariant>
 namespace Solid
 {
     class AudioInterfacePrivate;

@@ -27,7 +27,7 @@
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QBasicTimer>
 
-class QTimer;
+#include <QTimer>
 
 namespace Plasma
 {

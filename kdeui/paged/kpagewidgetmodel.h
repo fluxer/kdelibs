@@ -24,7 +24,7 @@
 
 #include "kpagemodel.h"
 
-class QWidget;
+#include <QWidget>
 
 class KIcon;
 

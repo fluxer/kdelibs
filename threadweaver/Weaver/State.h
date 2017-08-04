@@ -31,7 +31,7 @@
 
 #include <threadweaver/threadweaver_export.h>
 
-class QString;
+#include <QString>
 
 namespace ThreadWeaver {
 

@@ -27,7 +27,7 @@
 
 #include <kdialog.h>
 
-class QWidget;
+#include <QWidget>
 
 
 /**

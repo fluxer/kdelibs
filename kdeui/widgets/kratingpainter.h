@@ -25,11 +25,11 @@
 
 #include <QtCore/qnamespace.h>
 
-class QIcon;
-class QPixmap;
-class QPainter;
-class QPoint;
-class QRect;
+#include <QIcon>
+#include <QPixmap>
+#include <QPainter>
+#include <QPoint>
+#include <QRect>
 
 
 /**

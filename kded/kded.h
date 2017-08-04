@@ -34,7 +34,7 @@
 #include <kdedmodule.h>
 #include <kservice.h>
 
-class QDBusServiceWatcher;
+#include <QDBusServiceWatcher>
 class KDirWatch;
 
 // No need for this in libkio - apps only get readonly access

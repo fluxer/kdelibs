@@ -28,8 +28,8 @@
 
 class KSSLDPrivate;
 class KSslCertificateRule;
-class QSslCertificate;
-class QString;
+#include <QSslCertificate>
+#include <QString>
 
 class KSSLD : public KDEDModule
 {

@@ -26,7 +26,7 @@
 #include <QtCore/QTimer>
 #include <QtGui/QCursor>
 
-class QWidget;
+#include <QWidget>
 
 /**
  * I don't want the eventFilter to be in KCursor, so we have another class

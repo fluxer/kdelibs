@@ -25,7 +25,7 @@
 
 #include <QtCore/qstring.h>
 
-class QPointF;
+#include <QPointF>
 
 /**
  * @class KPlotPoint

@@ -29,8 +29,8 @@
 
 class KActionCollection;
 
-class QFont;
-class QUrl;
+#include <QFont>
+#include <QUrl>
 
 /**
  * @short Character selection widget

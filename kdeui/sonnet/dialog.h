@@ -25,8 +25,8 @@
 
 #include <kdialog.h>
 
-class QListWidgetItem;
-class QModelIndex;
+#include <QListWidgetItem>
+#include <QModelIndex>
 
 namespace Sonnet
 {

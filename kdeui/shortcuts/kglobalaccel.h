@@ -22,12 +22,13 @@
 #ifndef _KGLOBALACCEL_H_
 #define _KGLOBALACCEL_H_
 
+#include <QWidget>
+
 #include "kdeui_export.h"
 #include "kaction.h"
 #include "kglobal.h"
 #include "kglobalshortcutinfo.h"
 
-class QWidget;
 class KShortcut;
 class KComponentData;
 class OrgKdeKglobalaccelComponentInterface;

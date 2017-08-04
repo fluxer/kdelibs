@@ -23,8 +23,8 @@
 #include <knotification.h>
 
 class KNotification;
-class QPixmap;
-class QStringList;
+#include <QPixmap>
+#include <QStringList>
 
 /**
  * @internal

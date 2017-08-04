@@ -21,7 +21,7 @@
 #define KSETTINGSWIDGETADAPTOR_H
 
 #include <QtCore/QObject>
-class QString;
+#include <QString>
 
 /*
  * Simple D-Bus object to return the KGlobal::caption()

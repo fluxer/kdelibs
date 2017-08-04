@@ -26,7 +26,7 @@
 #include "filter_p.h"
 #include <QTextEdit>
 
-class QContextMenuEvent;
+#include <QContextMenuEvent>
 class TestSpell : public QTextEdit
 {
     Q_OBJECT

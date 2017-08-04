@@ -23,8 +23,8 @@
 #include <kdebug.h>
 #include <QtCore/QHash>
 
-class QIODevice;
-class QString;
+#include <QIODevice>
+#include <QString>
 
 /**
  * @internal

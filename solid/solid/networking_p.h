@@ -27,8 +27,8 @@
 #include "networking.h"
 
 class OrgKdeSolidNetworkingClientInterface;
-class QAbstractSocket;
-class QTimer;
+#include <QAbstractSocket>
+#include <QTimer>
 
 
 namespace Solid

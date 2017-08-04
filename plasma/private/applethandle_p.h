@@ -31,7 +31,7 @@
 #include "animator.h"
 #include "svg.h"
 
-class QGraphicsView;
+#include <QGraphicsView>
 
 namespace Plasma
 {

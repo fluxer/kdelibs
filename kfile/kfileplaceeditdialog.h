@@ -26,7 +26,7 @@
 #include <kdialog.h>
 #include <kurl.h>
 
-class QCheckBox;
+#include <QCheckBox>
 class KIconButton;
 class KLineEdit;
 class KUrlRequester;

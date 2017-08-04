@@ -28,9 +28,9 @@
 
 #include <plasma/plasma_export.h>
 
-class QGraphicsItem;
-class QGraphicsWidget;
-class QTimeLine;
+#include <QGraphicsItem>
+#include <QGraphicsWidget>
+#include <QTimeLine>
 
 namespace Plasma
 {

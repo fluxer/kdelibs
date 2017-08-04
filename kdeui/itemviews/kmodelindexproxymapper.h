@@ -26,9 +26,9 @@
 
 #include "kdeui_export.h"
 
-class QAbstractItemModel;
-class QModelIndex;
-class QItemSelection;
+#include <QAbstractItemModel>
+#include <QModelIndex>
+#include <QItemSelection>
 class KModelIndexProxyMapperPrivate;
 
 /**

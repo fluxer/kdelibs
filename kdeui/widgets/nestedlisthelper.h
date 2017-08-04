@@ -24,13 +24,13 @@
 
 //@cond PRIVATE
 
-class QTextEdit;
+#include <QTextEdit>
 
-class QKeyEvent;
-class QDropEvent;
-class QTextCursor;
-class QTextList;
-class QTextBlock;
+#include <QKeyEvent>
+#include <QDropEvent>
+#include <QTextCursor>
+#include <QTextList>
+#include <QTextBlock>
 
 /**
  *

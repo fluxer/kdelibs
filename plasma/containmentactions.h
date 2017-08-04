@@ -28,7 +28,7 @@
 #include <plasma/plasma.h>
 #include <plasma/packagestructure.h>
 
-class QAction;
+#include <QAction>
 
 namespace Plasma
 {

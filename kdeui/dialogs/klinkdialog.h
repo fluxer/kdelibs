@@ -27,7 +27,7 @@
 #include <kdialog.h>
 
 class KLinkDialogPrivate;
-class QString;
+#include <QString>
 
 /**
     @short Dialog to allow user to configure a hyperlink.

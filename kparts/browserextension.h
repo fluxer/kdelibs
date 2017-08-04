@@ -28,17 +28,17 @@
 
 #include <QtCore/qshareddata.h>
 
-template <class T1, class T2> struct QPair;
+#include <QPair>
 template<typename T> class Q3PtrList;
-template <class Key, class T> class QMap;
-template<typename T> class QList;
+#include <QMap>
+#include <QList>
 
 class KFileItem;
 class KFileItemList;
-class QDataStream;
-class QPoint;
-class QString;
-class QStringList;
+#include <QDataStream>
+#include <QPoint>
+#include <QString>
+#include <QStringList>
 
 namespace KParts {
 

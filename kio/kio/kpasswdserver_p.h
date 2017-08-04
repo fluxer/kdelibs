@@ -24,7 +24,7 @@
 
 #include <qglobal.h>
 
-class QString;
+#include <QString>
 class OrgKdeKPasswdServerInterface;
 
 namespace KIO

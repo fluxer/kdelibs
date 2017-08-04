@@ -23,9 +23,9 @@
 #include <kstandardshortcut.h>
 #include <QtCore/QList>
 
-class QObject;
-class QStringList;
-class QWidget;
+#include <QObject>
+#include <QStringList>
+#include <QWidget>
 class KAction;
 class KRecentFilesAction;
 class KDualAction;

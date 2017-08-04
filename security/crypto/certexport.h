@@ -24,8 +24,8 @@
 #include <kdialog.h>
 
 class KLineEdit;
-class QRadioButton;
-class QPushButton;
+#include <QRadioButton>
+#include <QPushButton>
 class KSSLCertificate;
 
 

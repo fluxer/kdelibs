@@ -22,9 +22,9 @@
 #define DNSSDDOMAINBROWSER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 #include <dnssd/remoteservice.h>
 
-class QStringList;
 namespace DNSSD
 {
 class DomainBrowserPrivate;

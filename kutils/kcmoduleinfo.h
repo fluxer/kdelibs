@@ -27,8 +27,8 @@
 #include <kcmutils_export.h>
 #include <kservice.h>
 
-class QString;
-class QStringList;
+#include <QString>
+#include <QStringList>
 
 /**
  * A class that provides information about a KCModule

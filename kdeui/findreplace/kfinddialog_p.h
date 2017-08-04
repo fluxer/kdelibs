@@ -28,11 +28,11 @@
 
 class KHistoryComboBox;
 
-class QCheckBox;
-class QGridLayout;
-class QGroupBox;
-class QMenu;
-class QPushButton;
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QMenu>
+#include <QPushButton>
 
 class KFindDialog::KFindDialogPrivate
 {

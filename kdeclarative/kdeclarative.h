@@ -24,8 +24,8 @@
 
 #include <QStringList>
 
-class QDeclarativeEngine;
-class QScriptEngine;
+#include <QDeclarativeEngine>
+#include <QScriptEngine>
 
 class KDeclarativePrivate;
 

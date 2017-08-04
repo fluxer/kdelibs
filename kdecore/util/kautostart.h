@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-class QStringList;
+#include <QStringList>
 
 /**
  * KAutostart provides a programmatic means to control the state of

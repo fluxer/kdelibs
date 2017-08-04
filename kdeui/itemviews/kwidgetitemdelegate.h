@@ -29,12 +29,12 @@
 
 #include <kdeui_export.h>
 
-class QObject;
-class QPainter;
-class QStyleOption;
-class QStyleOptionViewItem;
-class QAbstractItemView;
-class QItemSelection;
+#include <QObject>
+#include <QPainter>
+#include <QStyleOption>
+#include <QStyleOptionViewItem>
+#include <QAbstractItemView>
+#include <QItemSelection>
 
 class KWidgetItemDelegatePrivate;
 class KWidgetItemDelegatePool;

@@ -25,8 +25,8 @@
 #include <ktexteditor/ktexteditor_export.h>
 #include <ktexteditor/range.h>
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 
-class QStringList;
 class KCompletion;
 
 namespace KTextEditor

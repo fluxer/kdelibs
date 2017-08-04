@@ -27,7 +27,7 @@ namespace Plasma
     class ConfigLoader;
 }
 
-class QFile;
+#include <QFile>
 
 class ConfigLoaderTest : public QObject
 {

@@ -25,7 +25,7 @@
 #include <kdeui_export.h>
 #include <qglobal.h>
 
-class QString;
+#include <QString>
 
 /**
  * This namespace contains functions to handle crashes.

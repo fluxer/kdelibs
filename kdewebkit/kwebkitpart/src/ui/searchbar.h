@@ -29,7 +29,7 @@
 
 #include "ui_searchbar.h"
 
-class QEvent;
+#include <QEvent>
 
 /**
  * This is the widget that shows up when the search is initiated.

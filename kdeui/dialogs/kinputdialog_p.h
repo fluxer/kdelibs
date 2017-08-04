@@ -20,11 +20,11 @@
 #ifndef KINPUTDIALOG_P_H
 #define KINPUTDIALOG_P_H
 
-class QLabel;
-class QValidator;
+#include <QLabel>
+#include <QValidator>
 
 class KComboBox;
-class QDoubleSpinBox;
+#include <QDoubleSpinBox>
 class KIntSpinBox;
 class KLineEdit;
 class KListWidget;

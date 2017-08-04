@@ -31,8 +31,8 @@ class KFileDialog;
 class KLineEdit;
 class KUrlCompletion;
 
-class QString;
-class QEvent;
+#include <QString>
+#include <QEvent>
 
 /**
  * This class is a widget showing a lineedit and a button, which invokes a

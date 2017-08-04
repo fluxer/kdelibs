@@ -23,7 +23,7 @@
 #include <QObject>
 #include <QtCore/qvariant.h>
 
-class QString;
+#include <QString>
 
 class KLocalizedString;
 

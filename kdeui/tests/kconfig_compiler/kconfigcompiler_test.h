@@ -20,7 +20,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QObject>
 
-class QString;
+#include <QString>
 
 class KConfigCompiler_Test : public QObject
 {

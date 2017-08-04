@@ -23,10 +23,10 @@
 
 #include <kdeui_export.h>
 
-class QColor;
-class QDrag;
-class QMimeData;
-class QWidget;
+#include <QColor>
+#include <QDrag>
+#include <QMimeData>
+#include <QWidget>
 
 /**
  * Drag-and-drop and clipboard mimedata manipulation for QColor objects. The according MIME type

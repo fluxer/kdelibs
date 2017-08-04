@@ -25,7 +25,7 @@
 
 #include <klistwidget.h>
 
-class QEvent;
+#include <QEvent>
 
 /**
  * @short A helper widget for "completion-widgets" (KLineEdit, KComboBox))

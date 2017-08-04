@@ -34,7 +34,7 @@
  * in-process on the client side.
  */
 
-class QByteArray;
+#include <QByteArray>
 
 class KUrl;
 

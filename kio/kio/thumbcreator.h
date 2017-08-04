@@ -22,9 +22,9 @@
 
 #include <kio/kio_export.h>
 
-class QString;
-class QImage;
-class QWidget;
+#include <QString>
+#include <QImage>
+#include <QWidget>
 
 /**
  * This is the baseclass for "thumbnail-plugins" in KDE. Using the class

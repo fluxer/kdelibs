@@ -29,14 +29,14 @@
 #include <plasma/plasma.h>
 #include <plasma/svg.h>
 
-class QPainter;
-class QPoint;
-class QPointF;
-class QRect;
-class QRectF;
-class QSize;
-class QSizeF;
-class QMatrix;
+#include <QPainter>
+#include <QPoint>
+#include <QPointF>
+#include <QRect>
+#include <QRectF>
+#include <QSize>
+#include <QSizeF>
+#include <QMatrix>
 
 namespace Plasma
 {

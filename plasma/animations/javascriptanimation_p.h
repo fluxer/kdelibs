@@ -26,8 +26,8 @@
 #include "easinganimation_p.h"
 #include "plasma_export.h"
 
-class QString;
-class QScriptEngine;
+#include <QString>
+#include <QScriptEngine>
 
 //#define PLASMA_JSANIM_FPS
 

@@ -22,7 +22,7 @@
 #include <kio/kio_export.h>
 #include <kdialog.h>
 
-class QWidget;
+#include <QWidget>
 
 namespace KIO {
 

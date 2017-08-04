@@ -27,7 +27,7 @@
 #include <QtNetwork/QSslError>
 #include <QtCore/qdatetime.h>
 
-class QSslCertificate;
+#include <QSslCertificate>
 class KSslCertificateRulePrivate;
 class KSslCertificateManagerPrivate;
 

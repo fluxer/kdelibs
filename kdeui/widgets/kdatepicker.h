@@ -29,7 +29,7 @@
 
 #include <klocale.h>
 
-class QLineEdit;
+#include <QLineEdit>
 class KDateTable;
 class KCalendarSystem;
 

@@ -28,9 +28,9 @@
 
 #include <ktimezone.h>
 
-#include <QtCore/qmetatype.h>
+#include <QMetaType>
+#include <QDataStream>
 
-class QDataStream;
 class KDateTimePrivate;
 class KDateTimeSpecPrivate;
 
@@ -1626,6 +1626,7 @@ class KDECORE_EXPORT KDateTime //krazy:exclude=dpointer (implicitly shared)
 Q_DECLARE_METATYPE(KDateTime)
 Q_DECLARE_METATYPE(KDateTime::Spec)
 
+QT_BEGIN_NAMESPACE
 /** Write @p spec to the datastream @p out, in binary format. */
 QDataStream KDECORE_EXPORT &operator<<(QDataStream &out, const KDateTime::Spec &spec);
 /** Read a KDateTime::Spec object into @p spec from @p in, in binary format. */
@@ -1635,5 +1636,6 @@ QDataStream KDECORE_EXPORT &operator>>(QDataStream &in, KDateTime::Spec &spec);
 QDataStream KDECORE_EXPORT &operator<<(QDataStream &out, const KDateTime &dateTime);
 /** Read a KDateTime object into @p dateTime from @p in, in binary format. */
 QDataStream KDECORE_EXPORT &operator>>(QDataStream &in, KDateTime &dateTime);
+QT_END_NAMESPACE
 
 #endif

@@ -28,7 +28,7 @@
 #include <QtCore/QMap>
 #include <QtDBus/QDBusMessage>
 
-class QFileSystemWatcher;
+#include <QFileSystemWatcher>
 
 namespace KPAC
 {

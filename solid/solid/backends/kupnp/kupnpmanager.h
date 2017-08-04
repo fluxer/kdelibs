@@ -31,7 +31,7 @@
 #include <QtCore/QVector>
 #include <QtCore/QHash>
 
-class QDBusInterface;
+#include <QDBusInterface>
 
 typedef QHash<QString,QString> DeviceTypeMap;
 Q_DECLARE_METATYPE( DeviceTypeMap )

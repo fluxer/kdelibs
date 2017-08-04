@@ -24,7 +24,7 @@
 
 #include <plasma/plasma_export.h>
 
-class QFrame;
+#include <QFrame>
 
 namespace Plasma
 {

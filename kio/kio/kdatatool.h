@@ -28,8 +28,8 @@
 #include <kcomponentdata.h>
 
 class KDataTool;
-class QPixmap;
-class QStringList;
+#include <QPixmap>
+#include <QStringList>
 class KActionCollection;
 
 // If you're only looking at implementing a data-tool, skip directly to the last

@@ -26,7 +26,7 @@
 
 #include <kdeui_export.h>
 
-class QItemSelection;
+#include <QItemSelection>
 
 
 /**

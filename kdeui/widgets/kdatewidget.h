@@ -28,7 +28,7 @@
 
 class KCalendarSystem;
 
-class QDate;
+#include <QDate>
 
 /**
  * @short A date selection widget.

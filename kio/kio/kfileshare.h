@@ -22,7 +22,7 @@
 
 #include <kio/kio_export.h>
 
-class QString;
+#include <QString>
 
 /**
  * Common functionality for the file sharing

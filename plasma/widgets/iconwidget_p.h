@@ -35,10 +35,10 @@
 #include "private/actionwidgetinterface_p.h"
 #include "theme.h"
 
-class QAction;
-class QPainter;
-class QTextLayout;
-class QPropertyAnimation;
+#include <QAction>
+#include <QPainter>
+#include <QTextLayout>
+#include <QPropertyAnimation>
 
 namespace Plasma
 {

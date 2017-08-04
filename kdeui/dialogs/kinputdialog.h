@@ -27,7 +27,7 @@
 #include <limits.h>
 #include <float.h>
 
-class QValidator;
+#include <QValidator>
 
 /**
  * The KInputDialog namespace provides simple dialogs to get a single value

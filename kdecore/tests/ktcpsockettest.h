@@ -47,8 +47,8 @@ public Q_SLOTS: //auxiliary slots to check signal emission from the socket
 };
 
 
-class QTcpServer;
-class QTcpSocket;
+#include <QTcpServer>
+#include <QTcpSocket>
 
 class Server : public QObject
 {

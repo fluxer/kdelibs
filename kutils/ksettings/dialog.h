@@ -26,7 +26,7 @@
 #include <kservice.h>
 #include <kplugininfo.h>
 
-template<class T> class QList;
+#include <QList>
 class KPluginInfo;
 class KCModuleInfo;
 

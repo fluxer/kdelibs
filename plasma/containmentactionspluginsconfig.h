@@ -24,8 +24,8 @@
 
 #include <QtCore/qnamespace.h>
 
-class QString;
-class QEvent;
+#include <QString>
+#include <QEvent>
 
 namespace Plasma
 {

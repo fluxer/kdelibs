@@ -28,7 +28,7 @@
 
 #include <kdeui_export.h>
 
-class QDBusError;
+#include <QDBusError>
 
 namespace KWallet {
 

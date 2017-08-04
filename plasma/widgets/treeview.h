@@ -24,8 +24,8 @@
 
 #include <plasma/plasma_export.h>
 
-class QTreeView;
-class QAbstractItemModel;
+#include <QTreeView>
+#include <QAbstractItemModel>
 
 namespace Plasma
 {

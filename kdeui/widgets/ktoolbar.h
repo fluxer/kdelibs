@@ -29,7 +29,7 @@
 
 #include <QtGui/QToolBar>
 
-class QDomElement;
+#include <QDomElement>
 
 class KConfigGroup;
 class KConfig;

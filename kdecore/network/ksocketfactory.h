@@ -26,10 +26,10 @@
 #include <QtNetwork/QNetworkProxy>
 #include <QtNetwork/QHostAddress>
 
-class QTcpSocket;
-class QTcpServer;
-class QUdpSocket;
-class QUrl;
+#include <QTcpSocket>
+#include <QTcpServer>
+#include <QUdpSocket>
+#include <QUrl>
 
 /**
  * @namespace KSocketFactory

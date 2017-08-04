@@ -24,7 +24,7 @@
 #include "klocale.h"
 #include "kdayperiod_p.h"
 
-class QMutex;
+#include <QMutex>
 
 class KCatalog;
 

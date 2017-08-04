@@ -24,7 +24,7 @@
 #include <QListWidget>
 
 class KLineEdit;
-class QCheckBox;
+#include <QCheckBox>
 
 namespace KDEPrivate {
 

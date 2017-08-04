@@ -29,7 +29,7 @@
 
 
 class KKeySequenceWidgetPrivate;
-class QAction;
+#include <QAction>
 class KAction;
 class KActionCollection;
 

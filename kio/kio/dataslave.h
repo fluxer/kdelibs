@@ -25,7 +25,7 @@
 #include "global.h"
 #include "slave.h"
 
-class QTimer;
+#include <QTimer>
 
 // don't forget to sync DISPATCH_IMPL in dataslave.h
 #define DISPATCH_DECL(type) \

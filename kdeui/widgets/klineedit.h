@@ -34,8 +34,8 @@
 
 #include <kcompletion.h>
 
-class QAction;
-class QMenu;
+#include <QAction>
+#include <QMenu>
 class KCompletionBox;
 class KUrl;
 class KLineEditPrivate;

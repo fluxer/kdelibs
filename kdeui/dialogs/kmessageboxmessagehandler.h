@@ -24,7 +24,7 @@
 
 #include <QtCore/QObject>
 
-class QWidget;
+#include <QWidget>
 class KMessageBoxMessageHandlerPrivate;
 /**
  * @brief This is a convience KMessageHandler that use KMessageBox.

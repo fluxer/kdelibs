@@ -24,7 +24,7 @@
 #include <QtCore/QObject>
 #include <QtGui/QClipboard>
 
-class QMimeData;
+#include <QMimeData>
 
 /**
  * This class is only for internal use.

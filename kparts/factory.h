@@ -23,7 +23,7 @@
 #include <kpluginfactory.h>
 #include <kparts/kparts_export.h>
 
-class QWidget;
+#include <QWidget>
 
 namespace KParts
 {

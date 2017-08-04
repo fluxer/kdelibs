@@ -25,7 +25,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QPair>
 
-class QString;
+#include <QString>
 class KEmoticonsProviderPrivate;
 struct Emoticon;
 

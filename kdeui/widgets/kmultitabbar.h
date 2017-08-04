@@ -32,10 +32,10 @@
 
 #include <kdeui_export.h>
 
-class QPixmap;
-class QPainter;
-class QMenu;
-class QStyleOptionToolButton;
+#include <QPixmap>
+#include <QPainter>
+#include <QMenu>
+#include <QStyleOptionToolButton>
 
 class KMultiTabBarPrivate;
 class KMultiTabBarTabPrivate;

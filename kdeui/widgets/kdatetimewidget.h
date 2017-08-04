@@ -23,7 +23,7 @@
 
 #include <QtGui/QWidget>
 
-class QDateTime;
+#include <QDateTime>
 
 /**
  * @short A combination of a date and a time selection widget.

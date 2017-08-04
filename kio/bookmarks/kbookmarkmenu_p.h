@@ -37,8 +37,8 @@
 #include "kbookmarkimporter.h"
 #include "kbookmarkmanager.h"
 
-class QString;
-class QPushButton;
+#include <QString>
+#include <QPushButton>
 class KLineEdit;
 class KBookmark;
 class KBookmarkGroup;

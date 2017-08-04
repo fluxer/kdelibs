@@ -26,7 +26,7 @@
 
 #include <kaction.h>
 
-class QWidget;
+#include <QWidget>
 class KXMLGUIClient;
 class KXMLGUIBuilder;
 

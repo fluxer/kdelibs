@@ -3,7 +3,7 @@
 
 #include <QtGui/QWidget>
 
-class QPushButton;
+#include <QPushButton>
 class KColorCombo;
 
 class KColorComboTest : public QWidget

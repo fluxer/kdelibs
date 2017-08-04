@@ -29,10 +29,10 @@
 #include <kurl.h>
 #include <kio/slavebase.h>
 
-class QTcpServer;
-class QTcpSocket;
-class QNetworkProxy;
-class QAuthenticator;
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QNetworkProxy>
+#include <QAuthenticator>
 
 struct FtpEntry
 {

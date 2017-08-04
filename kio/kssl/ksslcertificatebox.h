@@ -25,7 +25,7 @@
 
 #include <QtGui/QWidget>
 
-class QSslCertificate;
+#include <QSslCertificate>
 
 class KSslCertificateBoxPrivate;
 

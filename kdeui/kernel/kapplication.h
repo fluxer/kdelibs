@@ -34,7 +34,7 @@ class KConfig;
 #endif
 
 struct _IceConn;
-class QPixmap;
+#include <QPixmap>
 
 #define kapp KApplication::kApplication()
 

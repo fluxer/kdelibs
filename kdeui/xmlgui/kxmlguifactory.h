@@ -25,17 +25,17 @@
 
 #include <QtCore/QObject>
 
-class QAction;
+#include <QAction>
 class KXMLGUIFactoryPrivate;
 class KXMLGUIClient;
 class KXMLGUIBuilder;
 class KComponentData;
 
-class QDomAttr;
-class QDomDocument;
-class QDomElement;
-class QDomNode;
-class QDomNamedNodeMap;
+#include <QDomAttr>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QDomNode>
+#include <QDomNamedNodeMap>
 
 namespace KXMLGUI
 {

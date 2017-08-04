@@ -21,10 +21,11 @@
 #define KSERVICEACTION_H
 
 #include <kdecore_export.h>
+
 #include <QtCore/qshareddata.h>
 #include <QtCore/qdatastream.h>
+#include <QtCore/qvariant.h>
 
-class QVariant;
 class KServiceActionPrivate;
 
 /**
@@ -115,6 +116,7 @@ private:
     friend KDECORE_EXPORT QDataStream& operator<<( QDataStream& str, const KServiceAction& act );
 };
 
+// FIXME: namespace the operators via QT_BEGIN_NAMEPSACE/QT_END_NAMESPACE
 KDECORE_EXPORT QDataStream& operator>>( QDataStream& str, KServiceAction& act );
 KDECORE_EXPORT QDataStream& operator<<( QDataStream& str, const KServiceAction& act );
 

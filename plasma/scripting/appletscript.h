@@ -30,9 +30,9 @@
 #include <plasma/plasma_export.h>
 #include <plasma/scripting/scriptengine.h>
 
-class QAction;
-class QPainter;
-class QStyleOptionGraphicsItem;
+#include <QAction>
+#include <QPainter>
+#include <QStyleOptionGraphicsItem>
 class KConfigDialog;
 
 namespace Plasma

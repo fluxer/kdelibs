@@ -25,9 +25,9 @@
 #include <QtCore/qshareddata.h>
 #include <QtCore/qdatetime.h>
 
-class QDate;
-class QStringList;
-class QFileInfo;
+#include <QDate>
+#include <QStringList>
+#include <QFileInfo>
 
 class KCurrencyCodePrivate;
 

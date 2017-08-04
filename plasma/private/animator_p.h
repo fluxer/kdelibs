@@ -27,7 +27,7 @@
 #include <QtCore/qdatetime.h>
 #include <QTimeLine>
 
-class QGraphicsItem;
+#include <QGraphicsItem>
 
 namespace Plasma
 {

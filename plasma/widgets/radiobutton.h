@@ -22,7 +22,7 @@
 
 #include <QtGui/QGraphicsProxyWidget>
 
-class QRadioButton;
+#include <QRadioButton>
 
 #include <plasma/plasma_export.h>
 

@@ -24,7 +24,7 @@
 //#include <solid/networking.h>
 #include <QtCore/QObject>
 
-class QTimer;
+#include <QTimer>
 
 class TestNetworkingService;
 

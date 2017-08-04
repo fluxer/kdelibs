@@ -22,8 +22,8 @@
 #define DNSSDPUBLICSERVICE_H
 
 #include <QtCore/QObject>
-#include <dnssd/servicebase.h>
 #include <QtCore/QStringList>
+#include <dnssd/servicebase.h>
 
 namespace DNSSD
 {

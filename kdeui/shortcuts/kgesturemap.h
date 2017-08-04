@@ -20,15 +20,15 @@
 #ifndef KGESTUREMAP_H
 #define KGESTUREMAP_H
 
-#include <QtCore/QObject>
-#include <QtCore/QHash>
+#include <QObject>
+#include <QHash>
 #include <QTimer>
+#include <QEvent>
 
 #include "kgesture.h"
 
 class KApplication;
 class KAction;
-class QEvent;
 
 class KGestureMap : public QObject
 {

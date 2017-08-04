@@ -30,7 +30,7 @@
 
 class KFilePlacesModel;
 class KUrlComboBox;
-class QMouseEvent;
+#include <QMouseEvent>
 
 /**
  * @brief Widget that allows to navigate through the paths of an URL.

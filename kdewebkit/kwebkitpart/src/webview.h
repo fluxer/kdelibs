@@ -32,7 +32,7 @@ class KUrl;
 class KWebKitPart;
 class QWebHitTestResult;
 class QWebInspector;
-class QLabel;
+#include <QLabel>
 
 class WebView : public KWebView
 {

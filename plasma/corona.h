@@ -28,8 +28,8 @@
 #include <plasma/plasma.h>
 #include <plasma/plasma_export.h>
 
-class QGraphicsGridLayout;
-class QAction;
+#include <QGraphicsGridLayout>
+#include <QAction>
 
 class KAction;
 

@@ -24,7 +24,7 @@
 #include "unit.h"
 #include "kunitconversion_export.h"
 
-class QVariant;
+#include <QVariant>
 
 namespace KUnitConversion
 {

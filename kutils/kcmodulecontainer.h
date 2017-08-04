@@ -23,7 +23,7 @@
 #include <kcmodule.h>
 #include <kcmoduleloader.h>
 
-class QWidget;
+#include <QWidget>
 
 class KCModuleProxy;
 

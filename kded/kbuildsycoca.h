@@ -33,7 +33,7 @@
 
 #include "vfolder_menu.h"
 
-class QDataStream;
+#include <QDataStream>
 
 // No need for this in libkio - apps only get readonly access
 class KBuildSycoca : public KSycoca, public KBuildSycocaInterface

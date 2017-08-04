@@ -20,7 +20,7 @@
 
 #include <QEasingCurve>
 #include <QtCore/qsharedpointer.h>
-class QAbstractAnimation;
+#include <QAbstractAnimation>
 
 namespace Plasma
 {

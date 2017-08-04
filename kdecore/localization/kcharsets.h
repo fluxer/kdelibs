@@ -25,10 +25,10 @@
 class KCharsets;
 class KCharsetsPrivate;
 
-class QChar;
-class QString;
-class QStringList;
-class QTextCodec;
+#include <QChar>
+#include <QString>
+#include <QStringList>
+#include <QTextCodec>
 
 namespace KGlobal
 {

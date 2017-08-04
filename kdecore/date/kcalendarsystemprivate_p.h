@@ -20,9 +20,9 @@
 #ifndef KCALENDARSYSTEMPRIVATE_H
 #define KCALENDARSYSTEMPRIVATE_H
 
-class QChar;
-class QString;
-class QDate;
+#include <QChar>
+#include <QString>
+#include <QDate>
 
 class KCalendarSystem;
 class KCalendarEra;

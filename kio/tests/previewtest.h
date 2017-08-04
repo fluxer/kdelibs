@@ -3,7 +3,7 @@
 #include <kio/job.h>
 
 class KLineEdit;
-class QLabel;
+#include <QLabel>
 class KFileItem;
 
 class PreviewTest : public QWidget

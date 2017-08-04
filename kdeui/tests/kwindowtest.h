@@ -7,7 +7,7 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
-class QTextEdit;
+#include <QTextEdit>
 
 class TestWindow  : public KXmlGuiWindow
 {

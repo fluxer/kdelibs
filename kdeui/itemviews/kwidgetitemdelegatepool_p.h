@@ -26,8 +26,8 @@
 #include <QtCore/QHash>
 #include <QtCore/QList>
 
-class QWidget;
-class QStyleOptionViewItem;
+#include <QWidget>
+#include <QStyleOptionViewItem>
 class KWidgetItemDelegate;
 class KWidgetItemDelegatePoolPrivate;
 

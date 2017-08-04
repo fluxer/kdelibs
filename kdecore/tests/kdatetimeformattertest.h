@@ -24,8 +24,8 @@
 
 #include "kdatetimeformatter_p.h"
 
-class QString;
-class QDate;
+#include <QString>
+#include <QDate>
 
 class KCalendarSystem;
 

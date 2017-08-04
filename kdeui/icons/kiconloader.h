@@ -28,9 +28,9 @@
 #include <kglobal.h>
 #include <kdeui_export.h>
 
-class QIcon;
-class QMovie;
-class QPixmap;
+#include <QIcon>
+#include <QMovie>
+#include <QPixmap>
 
 class KComponentData;
 class KIconLoaderPrivate;

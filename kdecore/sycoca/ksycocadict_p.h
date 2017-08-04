@@ -24,8 +24,8 @@
 
 #include <QList>
 
-class QString;
-class QDataStream;
+#include <QString>
+#include <QDataStream>
 
 /**
  * @internal

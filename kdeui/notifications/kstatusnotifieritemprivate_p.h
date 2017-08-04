@@ -35,8 +35,8 @@
 class KActionCollection;
 class KSystemTrayIcon;
 class KMenu;
-class QMovie;
-class QAction;
+#include <QMovie>
+#include <QAction>
 
 
 // this class is needed because we can't just put an event filter on it:

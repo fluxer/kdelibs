@@ -26,7 +26,7 @@
 #include <kparts/part.h>
 
 class KAboutData;
-class QTextEdit;
+#include <QTextEdit>
 
 /**
  * Who said writing a part should be complex ? :-)

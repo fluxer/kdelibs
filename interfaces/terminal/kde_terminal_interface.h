@@ -21,7 +21,7 @@
 
 #include <QtCore/QObject>
 
-class QStringList;
+#include <QStringList>
 
 /**
  * TerminalInterface is an interface implemented by KonsolePart to

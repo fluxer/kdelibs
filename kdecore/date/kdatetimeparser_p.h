@@ -23,10 +23,10 @@
 #include "klocale.h"
 #include "kglobal.h"
 
-class QChar;
-class QString;
-class QDate;
-class QTime;
+#include <QChar>
+#include <QString>
+#include <QDate>
+#include <QTime>
 
 class KDateTime;
 class KCalendarSystem;

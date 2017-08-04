@@ -25,7 +25,7 @@
 
 #include <plasma/animations/easinganimation_p.h>
 
-class QGraphicsRotation;
+#include <QGraphicsRotation>
 
 namespace Plasma {
 /**

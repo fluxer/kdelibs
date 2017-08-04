@@ -28,9 +28,9 @@
 #include <QtCore/QVariant>
 
 class KUserGroup;
-class QString;
-class QStringList;
-template <class T> class QList;
+#include <QString>
+#include <QStringList>
+#include <QList>
 
 #include <sys/types.h>
 typedef uid_t K_UID;

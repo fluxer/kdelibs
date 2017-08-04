@@ -178,7 +178,9 @@ private:
     Q_DECLARE_PRIVATE(KServiceType)
 };
 
+//QT_BEGIN_NAMESPACE
 //QDataStream& operator>>( QDataStream& _str, KServiceType& s );
 //QDataStream& operator<<( QDataStream& _str, KServiceType& s );
+//QT_END_NAMESPACE
 
 #endif

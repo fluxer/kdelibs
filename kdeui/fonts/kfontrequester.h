@@ -26,8 +26,8 @@
 
 #include <kdeui_export.h>
 
-class QLabel;
-class QPushButton;
+#include <QLabel>
+#include <QPushButton>
 
 /**
  * This class provides a widget with a lineedit and a button, which invokes

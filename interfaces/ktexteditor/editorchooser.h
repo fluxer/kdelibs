@@ -23,10 +23,10 @@
 #include <ktexteditor/document.h>
 #include <ktexteditor/editor.h>
 
+#include <QtCore/QString>
 #include <QtGui/QWidget>
 
 class KConfig;
-class QString;
 
 namespace KTextEditor
 {

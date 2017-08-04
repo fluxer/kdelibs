@@ -23,7 +23,7 @@
 #include <kio/global.h>
 #include "kabstractviewadapter_p.h"
 
-class QAbstractItemView;
+#include <QAbstractItemView>
 
 namespace KIO
 {

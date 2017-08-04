@@ -22,7 +22,7 @@
 
 #include <QtGui/QGraphicsProxyWidget>
 
-class QToolButton;
+#include <QToolButton>
 
 #include <plasma/plasma_export.h>
 

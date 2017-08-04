@@ -26,10 +26,10 @@
 #include <kwidgetitemdelegate.h>
 #include <kcategorizedsortfilterproxymodel.h>
 
-class QLabel;
-class QCheckBox;
-class QPushButton;
-class QAbstractItemView;
+#include <QLabel>
+#include <QCheckBox>
+#include <QPushButton>
+#include <QAbstractItemView>
 
 class KLineEdit;
 class KCategorizedView;

@@ -27,10 +27,11 @@
 #include <ksycocaentry.h>
 #include <klocale.h>
 
+#include <QDataStream>
+#include <QWidget>
+
 class KServiceType;
-class QDataStream;
 class KDesktopFile;
-class QWidget;
 
 class KServicePrivate;
 

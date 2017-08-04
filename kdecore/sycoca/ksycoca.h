@@ -26,7 +26,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 
-class QDataStream;
+#include <QDataStream>
 class KSycocaFactory;
 class KSycocaFactoryList;
 class KSycocaPrivate;

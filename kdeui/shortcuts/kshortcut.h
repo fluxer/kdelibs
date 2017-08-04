@@ -30,6 +30,7 @@
 #include <kdeui_export.h>
 
 #include <QtCore/QMetaType>
+#include <QtCore/QHash>
 #include <QtGui/QKeySequence>
 
 class KShortcutPrivate;
@@ -241,7 +242,6 @@ private:
     class KShortcutPrivate *const d;
 };
 
-uint qHash(int);
 inline uint qHash(const KShortcut &key)
 {
     return qHash(key.primary()[0]) + qHash(key.primary()[1]);

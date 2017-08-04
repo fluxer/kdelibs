@@ -23,7 +23,7 @@
 
 #include <QtCore/QSharedData>
 
-class QString;
+#include <QString>
 
 class KSambaShareDataPrivate : public QSharedData
 {

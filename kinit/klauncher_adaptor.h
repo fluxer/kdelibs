@@ -27,10 +27,10 @@
 #include <QtDBus/QDBusAbstractAdaptor>
 #include <QtDBus/QDBusMessage>
 
-template<class T> class QList;
-template<class Key, class Value> class QMap;
-class QString;
-class QStringList;
+#include <QList>
+#include <QMap>
+#include <QString>
+#include <QStringList>
 
 /*
  * Adaptor class for interface org.kde.KLauncher

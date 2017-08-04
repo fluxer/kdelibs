@@ -29,7 +29,7 @@
 
 class KActionCollection;
 class KMenu;
-class QMovie;
+#include <QMovie>
 
 
 class KStatusNotifierItemPrivate;

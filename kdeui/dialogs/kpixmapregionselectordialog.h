@@ -24,7 +24,7 @@
 
 class KPixmapRegionSelectorWidget;
 
-class QImage;
+#include <QImage>
 
 /**
  * A dialog that uses a KPixmapRegionSelectorWidget to allow the user

@@ -42,9 +42,9 @@
 #include "kio/http.h"
 
 
-class QDomNodeList;
-class QFile;
-class QIODevice;
+#include <QDomNodeList>
+#include <QFile>
+#include <QIODevice>
 
 namespace KIO {
     class AuthInfo;

@@ -25,7 +25,7 @@
 #include <plasma/plasma_export.h>
 #include <plasma/dataengine.h>
 
-class QLabel;
+#include <QLabel>
 
 namespace Plasma
 {

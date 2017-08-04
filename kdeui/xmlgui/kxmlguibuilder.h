@@ -26,10 +26,10 @@ class KComponentData;
 class KXMLGUIBuilderPrivate;
 class KXMLGUIClient;
 
-class QAction;
-class QDomElement;
-class QStringList;
-class QWidget;
+#include <QAction>
+#include <QDomElement>
+#include <QStringList>
+#include <QWidget>
 
 /**
  * Implements the creation of the GUI (menubar, menus and toolbars)

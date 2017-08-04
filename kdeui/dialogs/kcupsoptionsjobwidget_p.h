@@ -26,8 +26,8 @@
 #include "kcupsoptionswidget_p.h"
 #include "ui_kcupsoptionsjobwidget.h"
 
-class QString;
-class QTime;
+#include <QString>
+#include <QTime>
 
 /**
  * A widget to add to QPrintDialog to enable extra CUPS options

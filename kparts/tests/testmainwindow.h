@@ -26,7 +26,7 @@
 
 namespace KParts { class PartManager; }
 class KAction;
-class QWidget;
+#include <QWidget>
 
 class TestMainWindow : public KParts::MainWindow
 {

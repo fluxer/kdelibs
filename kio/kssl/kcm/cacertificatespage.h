@@ -23,7 +23,7 @@
 #include "ui_cacertificates.h"
 
 #include <QWidget>
-class QTreeWidgetItem;
+#include <QTreeWidgetItem>
 class KSslCaCertificate;
 
 class CaCertificatesPage : public QWidget

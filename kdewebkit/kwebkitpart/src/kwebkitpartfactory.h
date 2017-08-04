@@ -23,7 +23,7 @@
 
 #include <kpluginfactory.h>
 
-class QWidget;
+#include <QWidget>
 
 class KWebKitFactory : public KPluginFactory
 {

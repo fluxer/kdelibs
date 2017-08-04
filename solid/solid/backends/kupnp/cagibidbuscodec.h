@@ -27,7 +27,7 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QVector>
 
-class QDBusArgument;
+#include <QDBusArgument>
 QDBusArgument& operator<<( QDBusArgument& argument,
                            const Cagibi::Device& device );
 const QDBusArgument& operator>>( const QDBusArgument& argument,

@@ -25,7 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QObject>
 #include "kio_export.h"
 
-class QHostInfo;
+#include <QHostInfo>
 
 namespace KIO
 {

@@ -26,9 +26,9 @@
 #include "kdeui_export.h"
 
 class KPixmapSequence;
-class QWidget;
-class QEvent;
-class QRect;
+#include <QWidget>
+#include <QEvent>
+#include <QRect>
 
 /**
  * \class KPixmapSequenceOverlayPainter kpixmapsequenceoverlaypainter.h KPixmapSequenceOverlayPainter

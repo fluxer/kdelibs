@@ -26,8 +26,8 @@
 
 #include <kdialog.h>
 
-class QStandardItemModel;
-class QModelIndex;
+#include <QStandardItemModel>
+#include <QModelIndex>
 
 namespace KCDDB
 {

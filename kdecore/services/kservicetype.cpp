@@ -31,9 +31,6 @@
 
 extern int servicesDebugArea();
 
-template QDataStream& operator>> <QString, QVariant>(QDataStream&, QMap<QString, QVariant>&);
-template QDataStream& operator<< <QString, QVariant>(QDataStream&, const QMap<QString, QVariant>&);
-
 KServiceType::KServiceType( KServiceTypePrivate &dd, const QString& _name,
                             const QString& _comment )
     : KSycocaEntry(dd)

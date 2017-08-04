@@ -24,7 +24,7 @@
 #include <QtCore/qsharedpointer.h>
 #include <kio/kio_export.h>
 
-class QString;
+#include <QString>
 class KSambaShare;
 class KSambaSharePrivate;
 class KSambaShareDataPrivate;

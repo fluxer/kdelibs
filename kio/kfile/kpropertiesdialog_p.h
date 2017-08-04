@@ -32,10 +32,9 @@
 
 #include "kpropertiesdialog.h"
 
-class KComboBox;
-class QComboBox;
+#include <QComboBox>
 
-class Ui_KPropertiesDesktopBase;
+class KComboBox;
 
 namespace KDEPrivate
 {

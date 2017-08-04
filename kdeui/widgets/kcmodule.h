@@ -32,7 +32,7 @@
 #include <fixx11h.h>
 #endif
 
-class QStringList;
+#include <QStringList>
 class KAboutData;
 class KConfigDialogManager;
 class KCoreConfigSkeleton;

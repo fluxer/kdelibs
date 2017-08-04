@@ -37,8 +37,8 @@
 
 #include <kio/global.h>
 
-class QImage;
-class QColor;
+#include <QImage>
+#include <QColor>
 namespace KIO {
 
 class KIO_EXPORT ImageFilter

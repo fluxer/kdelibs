@@ -30,7 +30,7 @@
 class KDEDModulePrivate;
 class Kded;
 
-class QDBusObjectPath;
+#include <QDBusObjectPath>
 
 /**
  * \class KDEDModule kdedmodule.h <KDEDModule>

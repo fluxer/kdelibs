@@ -23,7 +23,7 @@
 #include <ktexteditor/ktexteditor_export.h>
 #include <ktexteditor/smartrange.h>
 
-class QMutex;
+#include <QMutex>
 
 namespace KTextEditor
 {

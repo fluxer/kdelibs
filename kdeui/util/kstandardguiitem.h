@@ -25,7 +25,7 @@
 
 #include <kguiitem.h>
 
-class QString;
+#include <QString>
 
 /**
  * @short Provides a set of standardized KGuiItems.

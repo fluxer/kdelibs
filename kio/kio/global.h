@@ -35,7 +35,7 @@
 class KUrl;
 class KJobTrackerInterface;
 
-class QTime;
+#include <QTime>
 
 /**
  * @short A namespace for KIO globals

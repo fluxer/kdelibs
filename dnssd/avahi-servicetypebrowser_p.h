@@ -31,7 +31,7 @@ namespace DNSSD
 
 class ServiceTypeBrowserPrivate : public QObject 
 {   
-Q_OBJECT
+    Q_OBJECT
 public: 
     ServiceTypeBrowserPrivate(ServiceTypeBrowser* parent) : m_browser(0), m_parent(parent),m_started(false) {}
     ~ServiceTypeBrowserPrivate() {  if (m_browser) m_browser->Free(); }

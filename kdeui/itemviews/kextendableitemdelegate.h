@@ -46,7 +46,7 @@
   * @since 4.1
   */
 
-class QAbstractItemView;
+#include <QAbstractItemView>
 
 class KDEUI_EXPORT KExtendableItemDelegate : public QStyledItemDelegate {
     Q_OBJECT

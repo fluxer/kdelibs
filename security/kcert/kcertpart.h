@@ -27,8 +27,8 @@
 #include <QtCore/qvariant.h>
 
 class KSslCertificateBox;
-class QFrame;
-class QLabel;
+#include <QFrame>
+#include <QLabel>
 class KCertPartPrivate;
 class KComboBox;
 class KSSLSigners;
@@ -37,8 +37,8 @@ class KSSLCertificate;
 class KTabWidget;
 class KTextEdit;
 class KAboutData;
-class QGridLayout;
-class QPushButton;
+#include <QGridLayout>
+#include <QPushButton>
 
 
 class KX509Item : public QTreeWidgetItem {

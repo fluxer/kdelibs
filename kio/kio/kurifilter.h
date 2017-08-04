@@ -35,7 +35,7 @@
 class KUriFilterPrivate;
 class KUriFilterDataPrivate;
 class KCModule;
-class QHostInfo;
+#include <QHostInfo>
 
 /**
  * Class that holds information about a search provider.

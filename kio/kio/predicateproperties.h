@@ -24,7 +24,7 @@
 #include <QtCore/QSharedData>
 #include <QtCore/QVariant>
 
-class QValidator;
+#include <QValidator>
 
 /**
  * A predicate is part of the RDF trinity: subject, predicate, object.

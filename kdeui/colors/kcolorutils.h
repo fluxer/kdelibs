@@ -25,7 +25,7 @@
 #include <kdeui_export.h>
 #include <QtGui/QPainter>
 
-class QColor;
+#include <QColor>
 
 /**
  * A set of methods used to work with colors.

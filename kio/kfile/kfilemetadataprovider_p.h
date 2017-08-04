@@ -30,7 +30,7 @@
 
 class KFileItemList;
 class KUrl;
-class QWidget;
+#include <QWidget>
 
 /**
  * @brief Provides the data for the KMetaDataWidget.

@@ -27,7 +27,7 @@
 
 #include "kiconloader.h"
 
-class QAction;
+#include <QAction>
 class KIconThemeDir;
 class K3Icon;
 

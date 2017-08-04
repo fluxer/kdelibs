@@ -23,7 +23,7 @@
 
 #include <solid/ifaces/devicemanager.h>
 
-class QDomElement;
+#include <QDomElement>
 
 using namespace Solid::Ifaces;
 

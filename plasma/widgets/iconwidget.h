@@ -33,8 +33,8 @@
 #include <plasma/animator.h>
 #include <plasma/plasma_export.h>
 
-class QAction;
-class QPropertyAnimation;
+#include <QAction>
+#include <QPropertyAnimation>
 
 /**
  * @class IconWidget plasma/widgets/iconwidget.h <Plasma/Widgets/IconWidget>

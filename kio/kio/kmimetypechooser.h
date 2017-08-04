@@ -23,7 +23,7 @@
 #include <kdialog.h>
 #include <kvbox.h>
 
-class QTreeWidgetItem;
+#include <QTreeWidgetItem>
 
 /**
  * This widget provides a checkable list of all available mimetypes,

@@ -24,7 +24,7 @@
 
 #include <QtCore/qglobal.h>
 
-class QColor;
+#include <QColor>
 
 namespace KDEPrivate {
 

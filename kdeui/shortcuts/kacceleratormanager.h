@@ -23,8 +23,8 @@
 
 #include <kdeui_export.h>
 
-class QWidget;
-class QString;
+#include <QWidget>
+#include <QString>
 
 /**
  * KDE Accelerator manager.

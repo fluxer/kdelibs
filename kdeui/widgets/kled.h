@@ -24,7 +24,7 @@
 
 #include <QtGui/QWidget>
 
-class QColor;
+#include <QColor>
 
 /**
  * @short An LED widget.

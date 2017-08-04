@@ -32,8 +32,8 @@
 #include <kdialog.h>
 
 class KLineEdit;
-class QComboBox;
-class QItemSelection;
+#include <QComboBox>
+#include <QItemSelection>
 class KActionCollection;
 class KUrlRequester;
 

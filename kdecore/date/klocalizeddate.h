@@ -1157,6 +1157,7 @@ private:
 
 Q_DECLARE_METATYPE(KLocalizedDate)
 
+QT_BEGIN_NAMESPACE
 /**
  * Data stream output operator
  *
@@ -1180,5 +1181,6 @@ QDataStream KDECORE_EXPORT &operator>>(QDataStream &in, KLocalizedDate &date);
  * @param date the date to write to the stream
  */
 QDebug KDECORE_EXPORT operator<<(QDebug debug, const KLocalizedDate &date);
+QT_END_NAMESPACE
 
 #endif // KLOCALIZEDDATE_H

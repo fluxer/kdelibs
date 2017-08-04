@@ -23,7 +23,7 @@
 
 #include <kdeui_export.h>
 
-class QWidget;
+#include <QWidget>
 
 /**
  * Members of this namespace allow installing and removing global event-filters

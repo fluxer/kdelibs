@@ -22,11 +22,11 @@
 
 #include <QObject>
 
-class QAbstractItemModel;
-class QModelIndex;
-class QPalette;
-class QRect;
-class QSize;
+#include <QAbstractItemModel>
+#include <QModelIndex>
+#include <QPalette>
+#include <QRect>
+#include <QSize>
 
 /*
  * Interface used by KFilePreviewGenerator to generate previews

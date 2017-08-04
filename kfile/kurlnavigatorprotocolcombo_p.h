@@ -25,7 +25,7 @@
 
 #include <QtCore/QHash>
 
-class QMenu;
+#include <QMenu>
 
 namespace KDEPrivate
 {

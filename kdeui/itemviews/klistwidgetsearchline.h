@@ -23,9 +23,9 @@
 
 #include <klineedit.h>
 
-class QListWidget;
-class QListWidgetItem;
-class QModelIndex;
+#include <QListWidget>
+#include <QListWidgetItem>
+#include <QModelIndex>
 
 /**
  * This class makes it easy to add a search line for filtering the items in a

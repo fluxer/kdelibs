@@ -45,6 +45,7 @@ static const char* undoStateToString(UndoState state) {
     return s_undoStateToString[state];
 }
 
+QT_BEGIN_NAMESPACE
 static QDataStream &operator<<(QDataStream &stream, const KIO::BasicOperation &op)
 {
     stream << op.m_valid << (qint8)op.m_type << op.m_renamed
@@ -75,6 +76,7 @@ static QDataStream &operator>>(QDataStream &stream, UndoCommand &cmd)
     cmd.m_type = static_cast<FileUndoManager::CommandType>(type);
     return stream;
 }
+QT_END_NAMESPACE
 
 /**
  * checklist:

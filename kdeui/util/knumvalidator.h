@@ -26,8 +26,8 @@
 
 #include <QtGui/QValidator>
 
-class QWidget;
-class QString;
+#include <QWidget>
+#include <QString>
 
 /**
  * QValidator for integers.

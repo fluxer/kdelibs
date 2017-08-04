@@ -28,8 +28,8 @@
 
 class KLineEdit;
 class KComboBox;
-class QListView;
-class QPushButton;
+#include <QListView>
+#include <QPushButton>
 
 class KEditListWidgetPrivate;
 /**

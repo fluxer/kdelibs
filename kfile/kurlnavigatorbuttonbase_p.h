@@ -25,7 +25,7 @@
 #include <QtGui/qpushbutton.h>
 
 class KUrl;
-class QEvent;
+#include <QEvent>
 
 namespace KDEPrivate
 {

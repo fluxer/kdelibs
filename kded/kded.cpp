@@ -65,11 +65,13 @@ static bool bCheckSycoca;
 static bool bCheckUpdates;
 static bool bCheckHostname;
 
+QT_BEGIN_NAMESPACE
 #ifdef Q_DBUS_EXPORT
 extern Q_DBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
 #else
 extern QDBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
 #endif
+QT_END_NAMESPACE
 
 static void runBuildSycoca(QObject *callBackObj=0, const char *callBackSlot=0, const char *callBackErrorSlot=0)
 {

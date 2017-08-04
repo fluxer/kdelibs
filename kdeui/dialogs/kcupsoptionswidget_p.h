@@ -23,10 +23,10 @@
 
 #include <qwidget.h>
 
-class QString;
-class QStringList;
-class QPrinter;
-class QPrintDialog;
+#include <QString>
+#include <QStringList>
+#include <QPrinter>
+#include <QPrintDialog>
 
 /**
  * A widget to add to QPrintDialog to enable extra CUPS options

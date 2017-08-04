@@ -31,9 +31,9 @@
 #include <kfile.h>
 #include <kfile_export.h>
 
-class QAbstractItemView;
-class QModelIndex;
-class QProgressBar;
+#include <QAbstractItemView>
+#include <QModelIndex>
+#include <QProgressBar>
 
 class KAction;
 class KActionCollection;

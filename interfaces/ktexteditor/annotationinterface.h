@@ -24,8 +24,7 @@
 #include <ktexteditor/ktexteditor_export.h>
 
 #include <QtCore/QObject>
-
-class QMenu;
+#include <QtGui/QMenu>
 
 namespace KTextEditor
 {

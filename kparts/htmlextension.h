@@ -385,7 +385,9 @@ inline void qSwap( KParts::SelectorInterface::Element & lhs, KParts::SelectorInt
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KParts::SelectorInterface::QueryMethods)
 
+QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(KParts::SelectorInterface::Element, Q_MOVABLE_TYPE);
+QT_END_NAMESPACE
 
 Q_DECLARE_INTERFACE(KParts::SelectorInterface,
                     "org.kde.KParts.SelectorInterface")
