@@ -66,7 +66,7 @@ set_package_properties(SharedMimeInfo PROPERTIES
     PURPOSE "Allows KDE applications to determine file types"
 )
 
-find_package(ENCHANT)
+find_package(ENCHANT 1.4.0)
 set_package_properties(ENCHANT PROPERTIES
     DESCRIPTION "Generic spell checking library"
     URL "http://www.abisource.com/projects/enchant/"
