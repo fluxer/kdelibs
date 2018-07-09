@@ -43,7 +43,7 @@ class KDECORE_EXPORT KMacroExpanderBase {
 public:
     /**
      * Constructor.
-     * @param c escape char indicating start of macros, or QChar::null for none
+     * @param c escape char indicating start of macros, or null QChar for none
      */
     explicit KMacroExpanderBase( QChar c = QLatin1Char('%') );
 
@@ -117,20 +117,20 @@ public:
 
     /**
      * Set the macro escape character.
-     * @param c escape char indicating start of macros, or QChar::null if none
+     * @param c escape char indicating start of macros, or null QChar if none
      */
     void setEscapeChar( QChar c );
 
     /**
      * Obtain the macro escape character.
-     * @return escape char indicating start of macros, or QChar::null if none
+     * @return escape char indicating start of macros, or null QChar if none
      */
     QChar escapeChar() const;
 
 protected:
     /**
      * This function is called for every single char within the string if
-     * the escape char is QChar::null. It should determine whether the
+     * the escape char is null QChar. It should determine whether the
      * string starting at @p pos within @p str is a valid macro and return
      * the substitution value for it if so.
      * @param str the input string
@@ -145,7 +145,7 @@ protected:
 
     /**
      * This function is called every time the escape char is found if it is
-     * not QChar::null. It should determine whether the
+     * not null QChar. It should determine whether the
      * string starting at @p pos witin @p str is a valid macro and return
      * the substitution value for it if so.
      * @param str the input string
@@ -219,7 +219,7 @@ class KDECORE_EXPORT KWordMacroExpander : public KMacroExpanderBase {
 public:
     /**
      * Constructor.
-     * @param c escape char indicating start of macros, or QChar::null for none
+     * @param c escape char indicating start of macros, or null QChar for none
      */
     explicit KWordMacroExpander( QChar c = QLatin1Char('%') ) : KMacroExpanderBase( c ) {}
 
@@ -255,7 +255,7 @@ class KDECORE_EXPORT KCharMacroExpander : public KMacroExpanderBase {
 public:
     /**
      * Constructor.
-     * @param c escape char indicating start of macros, or QChar::null for none
+     * @param c escape char indicating start of macros, or null QChar for none
      */
     explicit KCharMacroExpander( QChar c = QLatin1Char('%') ) : KMacroExpanderBase( c ) {}
 
@@ -287,7 +287,7 @@ namespace KMacroExpander {
      *
      * @param str The string to expand
      * @param map map with substitutions
-     * @param c escape char indicating start of macro, or QChar::null if none
+     * @param c escape char indicating start of macro, or null QChar if none
      * @return the string with all valid macros expanded
      *
      * \code
@@ -310,7 +310,7 @@ namespace KMacroExpander {
      *
      * @param str The string to expand
      * @param map map with substitutions
-     * @param c escape char indicating start of macro, or QChar::null if none
+     * @param c escape char indicating start of macro, or null QChar if none
      * @return the string with all valid macros expanded, or a null string
      *  if a shell syntax error was detected in the command
      *
@@ -338,7 +338,7 @@ namespace KMacroExpander {
      *
      * @param str The string to expand
      * @param map map with substitutions
-     * @param c escape char indicating start of macro, or QChar::null if none
+     * @param c escape char indicating start of macro, or null QChar if none
      * @return the string with all valid macros expanded
      *
      * \code
@@ -366,7 +366,7 @@ namespace KMacroExpander {
      *
      * @param str The string to expand
      * @param map map with substitutions
-     * @param c escape char indicating start of macro, or QChar::null if none
+     * @param c escape char indicating start of macro, or null QChar if none
      * @return the string with all valid macros expanded, or a null string
      *  if a shell syntax error was detected in the command
      *

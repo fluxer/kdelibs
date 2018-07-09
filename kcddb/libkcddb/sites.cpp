@@ -42,7 +42,7 @@ namespace KCDDB
     url.setPort( 80 );
     url.setPath( QLatin1String( "/~cddb/cddb.cgi" ) );
 
-    url.setQuery( QString::null );	//krazy:exclude=nullstrassign for old broken gcc
+    url.setQuery( QString() );
 
     QString hello = QString::fromLatin1("%1 %2 %3 %4")
         .arg(QLatin1String( "libkcddb-user" ), QLatin1String( "localHost" ), CDDB::clientName(), CDDB::clientVersion());

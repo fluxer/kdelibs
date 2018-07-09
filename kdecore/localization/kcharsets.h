@@ -87,7 +87,7 @@ public:
      * The string must contain only the
      * entity without the trailing ';'.
      * @param str the entity
-     * @return QChar::Null if the entity could not be decoded.
+     * @return null QChar if the entity could not be decoded.
      */
     static QChar fromEntity(const QString &str);
 
@@ -97,7 +97,7 @@ public:
      * @param str the string containing entified
      * @param len is a return value, that gives the length of the decoded
      * entity.
-     * @return a decoded entity if one could be found, QChar::null
+     * @return a decoded entity if one could be found, null QChar
      * otherwise
      */
     static QChar fromEntity(const QString &str, int &len);

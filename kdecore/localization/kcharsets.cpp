@@ -495,10 +495,10 @@ KCharsets::~KCharsets()
 
 QChar KCharsets::fromEntity(const QString &str)
 {
-    QChar res = QChar::Null;
+    QChar res;
 
     if ( str.isEmpty() )
-        return QChar::Null;
+        return res;
 
     int pos = 0;
     if(str[pos] == QLatin1Char('&')) pos++;
@@ -520,7 +520,7 @@ QChar KCharsets::fromEntity(const QString &str)
         if ( ok )
             return res;
         else
-            return QChar::Null;
+            return QChar();
     }
 
     const QByteArray raw ( str.toLatin1() );
@@ -529,7 +529,7 @@ QChar KCharsets::fromEntity(const QString &str)
     if(!e)
     {
         //kDebug( 0 ) << "unknown entity " << str <<", len = " << str.length();
-        return QChar::Null;
+        return QChar();
     }
     //kDebug() << "got entity " << str << " = " << e->code;
 
@@ -545,10 +545,10 @@ QChar KCharsets::fromEntity(const QString &str, int &len)
     {
         QString tmp = str.left(len);
         QChar res = fromEntity(tmp);
-        if( res != QChar::Null ) return res;
+        if( !res.isNull() ) return res;
         len--;
     }
-    return QChar::Null;
+    return QChar();
 }
 
 
