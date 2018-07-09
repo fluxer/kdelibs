@@ -795,7 +795,10 @@ void KFontChooser::Private::_k_displaySample( const QFont& font )
     sampleEdit->setFont(font);
     //sampleEdit->setCursorPosition(0);
 
+#ifndef QT_KATIE
+    // Katie has no support for raw X11 fonts
     xlfdEdit->setText(font.rawName());
+#endif
     xlfdEdit->setCursorPosition(0);
 
     //QFontInfo a = QFontInfo(font);
