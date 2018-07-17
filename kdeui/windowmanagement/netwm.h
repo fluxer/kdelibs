@@ -926,7 +926,6 @@ public:
     NETExtendedStrut extendedStrut() const;
 
     /**
-       @deprecated use strutPartial()
        Returns the strut specified by this client.
 
        @return the strut of the window

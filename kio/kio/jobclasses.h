@@ -161,17 +161,6 @@ namespace KIO {
                                          int method = -1) const;
 
         /**
-         * Display a dialog box to inform the user of the error given by
-         * this job.
-         * Only call if error is not 0, and only in the slot connected
-         * to result.
-         * @param parent the parent widget for the dialog box, can be 0 for
-         *        top-level
-         * @deprecated you should use job->ui()->setWindow(parent)
-         *             and job->ui()->showErrorMessage() instead
-         */
-
-        /**
          * Returns whether the user should be asked about things when the job
          * is unsure, like whether to overwrite existing files etc.
          * @return true if user interactions are enabled (true by default),
@@ -577,23 +566,6 @@ namespace KIO {
          * Sending an empty block indicates end of data.
          */
         void sendAsyncData(const QByteArray &data);
-
-        /**
-         * When enabled, the job reports the amount of data that has been sent,
-         * instead of the amount of data that that has been received.
-         * @see slotProcessedSize
-         * @see slotSpeed
-         * @deprecated not needed, this is false for KIO::get and true for KIO::put,
-         *             automatically since KDE-4.2.1
-         */
-
-        /**
-         *  Returns whether the job reports the amount of data that has been
-         *  sent (true), or whether the job reports the amount of data that
-         * has been received (false)
-         * @deprecated not needed, this is false for KIO::get and true for KIO::put,
-         *             automatically since KDE-4.2.1 (and not useful as public API)
-         */
 
         /**
          * Call this in the slot connected to result,

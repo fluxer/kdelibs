@@ -163,12 +163,6 @@ public:
   QString loginName() const;
 
   /**
-   * The full name of the user.
-   * @return the full name of the user or QString() if user is invalid
-   * @deprecated use property(KUser::FullName) instead
-   */
-
-  /**
    * The path to the user's home directory.
    * @return the home directory of the user or QString() if the
    *         user is invalid

@@ -25,13 +25,13 @@
 #define KDIALOG_H
 
 class KPushButton;
-#include <QMenu>
 class KDialogPrivate;
 
 #include <kdeui_export.h>
 #include <kconfiggroup.h>
 #include <kguiitem.h>
 
+#include <QtGui/QMenu>
 #include <QtGui/QDialog>
 
 /**

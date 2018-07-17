@@ -37,7 +37,7 @@
 #include <ksslcertificatebox.h>
 #include <ksslpemcallback.h>
 #include <kfiledialog.h>
-#include <QtCore/Q_PID>
+#include <QtCore/QProcess>
 #include <kseparator.h>
 #include <QtGui/QTreeWidget>
 #include <QtCore/QRegExp>

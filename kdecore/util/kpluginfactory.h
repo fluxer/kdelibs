@@ -321,14 +321,6 @@ public:
     template<typename T>
     T *create(QWidget *parentWidget, QObject *parent, const QString &keyword = QString(), const QVariantList &args = QVariantList());
 
-    /**
-     * @deprecated
-     */
-
-    /**
-     * @deprecated
-     */
-
 Q_SIGNALS:
     void objectCreated(QObject *object);
 

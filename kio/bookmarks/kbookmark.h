@@ -71,16 +71,6 @@ public:
          * Extract a list of bookmarks from the contents of @p mimeData.
          * Decoding will fail if @p mimeData does not contain any bookmarks.
          * @param mimeData the mime data to extract from; cannot be 0
-         * @return the list of bookmarks
-         * @note those bookmarks are valid QDomElements, but their parent QDomDocument
-         * is already deleted, do not use ownerDocument()
-         * @deprecated use fromMimeData(mimeData, doc), to avoid crashes
-         */
-
-        /**
-         * Extract a list of bookmarks from the contents of @p mimeData.
-         * Decoding will fail if @p mimeData does not contain any bookmarks.
-         * @param mimeData the mime data to extract from; cannot be 0
          * @param parentDocument pass an empty QDomDocument here, it will be used as
          * container for the bookmarks. You just need to make sure it stays alive longer
          * (or just as long) as the returned bookmarks.

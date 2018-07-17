@@ -83,7 +83,7 @@ public:
     KMediaPlayer* player() const;
     /*!
         @brief Open a path
-        @long Aside from loading @p path it will also setup the play/pause button state and enable
+        @note Aside from loading @p path it will also setup the play/pause button state and enable
         the position seeking slider if the path supports seeking. It is recommended to use this
         method when a path must be loaded.
         @param path a path to load
@@ -91,7 +91,7 @@ public:
     */
     void open(const QString path);
 
-    //! @brief Reimplementation to provide more accurate size hint
+    //! @brief Reimplementation to provide reasonable size hint
     virtual QSize sizeHint() const;
     //! @brief Reimplementation to provide reasonable minimum size
     virtual QSize minimumSizeHint() const;
@@ -143,7 +143,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     /*!
         @brief Signals that controls were hidden/unhidden
-        @long This signal can be used to show/hide parent widget elements, such as menubar, when
+        @note This signal can be used to show/hide parent widget elements, such as menubar, when
         the media controls of this widget are hidden/unhidden
     */
     void controlsHidden(const bool hidden);

@@ -2,7 +2,8 @@ project(tetest)
  
 find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
-include_directories(${KDE4_INCLUDES})
+include_directories(${QT_INCLUDES} ${KDE4_INCLUDES})
+add_definitions(${QT_DEFINITIONS} ${KDE_DEFINITIONS})
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR})
 

@@ -169,10 +169,8 @@ KDirWatchPrivate::KDirWatchPrivate()
   if (FAMOpen(&fc) ==0) {
     availableMethods << "FAM";
     use_fam=true;
-    sn = new QSocketNotifier( FAMCONNECTION_GETFD(&fc),
-			      QSocketNotifier::Read, this);
-    connect( sn, SIGNAL(activated(int)),
- 	     this, SLOT(famEventReceived()) );
+    sn = new QSocketNotifier( FAMCONNECTION_GETFD(&fc), QSocketNotifier::Read, this);
+    connect( sn, SIGNAL(activated(int)), this, SLOT(famEventReceived()) );
   }
   else {
     kDebug(7001) << "Can't use FAM (fam daemon not running?)";

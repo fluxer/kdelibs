@@ -109,25 +109,6 @@ Q_SIGNALS:
      *
      * Uri filters are applied to the selection clipboard to generate @p url.
      *
-     * If the content in the selection clipboard is not a valid url and a
-     * default search engine is configured, @p url will be set to a query
-     * to the default search engine.
-     *
-     * @param url   url generated from the selection clipboard content
-     *
-     * @deprecated  use selectionClipboardUrlPasted(KUrl, bool) instead
-     * @see QClipboard
-     */
-
-    /**
-     * Emitted when a URL from the selection clipboard is pasted on this view.
-     *
-     * This is triggered when the user clicks on the page with the middle
-     * mouse button when there is something in the global mouse selection
-     * clipboard. This is typically only possible on X11.
-     *
-     * Uri filters are applied to the selection clipboard to generate @p url.
-     *
      * If the content in the selection clipboard is not a valid URL and a
      * default search engine is configured, @p searchText will be set to the
      * content of the clipboard (250 characters maximum) and @p url will be

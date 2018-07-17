@@ -23,12 +23,15 @@
 #include <config.h>
 
 #include <kparts/part.h>
-#include <QtGui/QTreeWidget>
-#include <QtCore/qvariant.h>
-
-class KSslCertificateBox;
+#include <QTreeWidget>
+#include <QVariant>
 #include <QFrame>
 #include <QLabel>
+#include <QGridLayout>
+#include <QPushButton>
+
+class KSslCertificateBox;
+
 class KCertPartPrivate;
 class KComboBox;
 class KSSLSigners;
@@ -37,8 +40,6 @@ class KSSLCertificate;
 class KTabWidget;
 class KTextEdit;
 class KAboutData;
-#include <QGridLayout>
-#include <QPushButton>
 
 
 class KX509Item : public QTreeWidgetItem {
