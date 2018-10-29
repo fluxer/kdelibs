@@ -23,13 +23,11 @@
 
 #include <QtCore/QMap>
 #include <QtNetwork/qnetworkconfigmanager.h>
+#include <QTimer>
 
 #include "networking.h"
 
 class OrgKdeSolidNetworkingClientInterface;
-#include <QAbstractSocket>
-#include <QTimer>
-
 
 namespace Solid
 {
