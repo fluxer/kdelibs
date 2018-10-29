@@ -20,7 +20,6 @@
  */
 
 #include "kdbusconnectionpool.h"
-#include <QThreadStorage>
 #include <QCoreApplication>
 #include <QThread>
 

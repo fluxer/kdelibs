@@ -26,13 +26,13 @@
 #define KCOOKIESERVER_H
 
 #include <QtCore/QStringList>
-#include <kdedmodule.h>
+#include <QtCore/QTimer>
 #include <QtDBus/QDBusContext>
+#include <kdedmodule.h>
 
 class KHttpCookieList;
 class KCookieJar;
 class KHttpCookie;
-#include <QTimer>
 class RequestList;
 class KConfig;
 

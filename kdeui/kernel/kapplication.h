@@ -33,9 +33,6 @@ class KConfig;
 #include <QtGui/qx11info_x11.h>
 #endif
 
-struct _IceConn;
-#include <QPixmap>
-
 #define kapp KApplication::kApplication()
 
 class KApplicationPrivate;
