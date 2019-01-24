@@ -261,6 +261,7 @@ public:
     int NRThreshold;
 
     /** Turn on chromatic aberrations correction
+     *  @deprecated does not work with libraw>=0.19
      */
     bool enableCACorrection;
 
@@ -268,6 +269,7 @@ public:
      *  - caMultiplier[0] = amount of correction on red-green axis.
      *  - caMultiplier[1] = amount of correction on blue-yellow axis.
      *  - Both values set to 0.0 = automatic CA correction.
+     *  @deprecated does not work with libraw>=0.19
      */
     double caMultiplier[2];
 
@@ -344,7 +346,8 @@ public:
     int esMedPasses;
 
     /** For IMPULSENR Noise reduction. Set the amount of Chrominance impulse denoise.
-        Null value disable NR. Range is between 100 and 1000.
+     *  Null value disable NR. Range is between 100 and 1000.
+     *  @deprecated does not work with libraw>=0.19
      */
     int NRChroThreshold;
 

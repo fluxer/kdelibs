@@ -22,10 +22,7 @@
 #
 # ============================================================
 
-if("${LibRaw_VERSION_STRING}" VERSION_LESS "0.17.0")
-    message(STATUS "Building kdcraw with exceptions.")
-    add_definitions(${KDE4_ENABLE_EXCEPTIONS})
-endif()
+add_definitions(${KDE4_ENABLE_EXCEPTIONS})
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake
