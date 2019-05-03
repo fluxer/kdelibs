@@ -32,43 +32,32 @@ if(NOT Exiv2_FIND_VERSION)
   set(Exiv2_FIND_VERSION "0.12")
 endif(NOT Exiv2_FIND_VERSION)
 
-
-if (NOT WIN32)
-   # use pkg-config to get the directories and then use these values
-   # in the FIND_PATH() and FIND_LIBRARY() calls
-   find_package(PkgConfig)
-   pkg_check_modules(PC_EXIV2 QUIET exiv2)
-   set(EXIV2_DEFINITIONS ${PC_EXIV2_CFLAGS_OTHER})
-endif (NOT WIN32)
-
-
-find_path(EXIV2_INCLUDE_DIR NAMES exiv2/exif.hpp
-          HINTS
-          ${PC_EXIV2_INCLUDEDIR}
-          ${PC_EXIV2_INCLUDE_DIRS}
-        )
-
-find_library(EXIV2_LIBRARY NAMES exiv2 libexiv2
-             HINTS
-             ${PC_EXIV2_LIBDIR}
-             ${PC_EXIV2_LIBRARY_DIRS}
-            )
+if(NOT WIN32)
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    find_package(PkgConfig)
+    pkg_check_modules(PC_EXIV2 QUIET exiv2)
+    set(EXIV2_DEFINITIONS ${PC_EXIV2_CFLAGS_OTHER})
+    set(EXIV2_VERSION ${PC_EXIV2_VERSION})
+endif()
 
 
-# Get the version number from exiv2/version.hpp and store it in the cache:
-if(EXIV2_INCLUDE_DIR  AND NOT  EXIV2_VERSION)
-  file(READ ${EXIV2_INCLUDE_DIR}/exiv2/version.hpp EXIV2_VERSION_CONTENT)
-  string(REGEX MATCH "#define EXIV2_MAJOR_VERSION +\\( *([0-9]+) *\\)"  _dummy "${EXIV2_VERSION_CONTENT}")
-  set(EXIV2_VERSION_MAJOR "${CMAKE_MATCH_1}")
+find_path(EXIV2_INCLUDE_DIR
+    NAMES
+    exiv2/exif.hpp
+    HINTS
+    ${PC_EXIV2_INCLUDEDIR}
+    ${PC_EXIV2_INCLUDE_DIRS}
+)
 
-  string(REGEX MATCH "#define EXIV2_MINOR_VERSION +\\( *([0-9]+) *\\)"  _dummy "${EXIV2_VERSION_CONTENT}")
-  set(EXIV2_VERSION_MINOR "${CMAKE_MATCH_1}")
-
-  string(REGEX MATCH "#define EXIV2_PATCH_VERSION +\\( *([0-9]+) *\\)"  _dummy "${EXIV2_VERSION_CONTENT}")
-  set(EXIV2_VERSION_PATCH "${CMAKE_MATCH_1}")
-
-  set(EXIV2_VERSION "${EXIV2_VERSION_MAJOR}.${EXIV2_VERSION_MINOR}.${EXIV2_VERSION_PATCH}" CACHE STRING "Version number of Exiv2" FORCE)
-endif(EXIV2_INCLUDE_DIR  AND NOT  EXIV2_VERSION)
+find_library(EXIV2_LIBRARY
+    NAMES
+    exiv2
+    libexiv2
+    HINTS
+    ${PC_EXIV2_LIBDIR}
+    ${PC_EXIV2_LIBRARY_DIRS}
+)
 
 set(EXIV2_LIBRARIES "${EXIV2_LIBRARY}")
 
