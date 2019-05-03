@@ -63,9 +63,6 @@
 
 // Exiv2 includes -------------------------------------------------------
 
-// NOTE: All Exiv2 header must be stay there to not expose external source code to Exiv2 API
-//       and reduce Exiv2 dependency to client code.
-
 // The pragmas are required to be able to catch exceptions thrown by libexiv2:
 // See http://gcc.gnu.org/wiki/Visibility, the section about c++ exceptions.
 // They are needed for all libexiv2 versions that do not care about visibility.
@@ -73,17 +70,7 @@
 #pragma GCC visibility push(default)
 #endif
 
-#include <exiv2/exv_conf.h>
-#include <exiv2/error.hpp>
-#include <exiv2/image.hpp>
-#include <exiv2/jpgimage.hpp>
-#include <exiv2/datasets.hpp>
-#include <exiv2/tags.hpp>
-#include <exiv2/preview.hpp>
-#include <exiv2/properties.hpp>
-#include <exiv2/types.hpp>
-#include <exiv2/exif.hpp>
-#include <exiv2/xmpsidecar.hpp>
+#include <exiv2/exiv2.hpp>
 
 // Check if Exiv2 support XMP
 
