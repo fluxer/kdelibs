@@ -34,6 +34,11 @@ class KConfig;
 #endif
 
 #define kapp KApplication::kApplication()
+#ifdef QT_KATIE
+#define KAPPLICATION_GUI_TYPE KApplication::Gui
+#else
+#define KAPPLICATION_GUI_TYPE KApplication::GuiClient
+#endif
 
 class KApplicationPrivate;
 
@@ -68,7 +73,6 @@ public:
    * This constructor is the one you should use.
    * It takes aboutData and command line arguments from KCmdLineArgs.
    *
-   * @param GUIenabled Set to false to disable all GUI stuff.
    * Note that for a non-GUI daemon, you might want to use QCoreApplication
    * and a KComponentData instance instead. You'll save an unnecessary dependency
    * to kdeui. The main difference is that you will have to do a number of things yourself:
@@ -77,7 +81,7 @@ public:
    *  <li>Call KGlobal::locale(), if using multiple threads.</li>
    * </ul>
    */
-  explicit KApplication(bool GUIenabled = true);
+  explicit KApplication();
 
 #ifdef Q_WS_X11
   /**
@@ -114,8 +118,7 @@ public:
    *
    * @param GUIenabled Set to false to disable all GUI stuff.
    */
-  KApplication(Display *display, int& argc, char** argv, const QByteArray& rAppName,
-               bool GUIenabled=true);
+  KApplication(Display *display, int& argc, char** argv, const QByteArray& rAppName);
 #endif
 
   virtual ~KApplication();
@@ -324,7 +327,7 @@ protected:
   /**
    * @internal Used by KUniqueApplication
    */
-  KApplication(bool GUIenabled, const KComponentData &cData);
+  KApplication(const KComponentData &cData);
 
 #ifdef Q_WS_X11
   /**
@@ -345,10 +348,6 @@ protected:
 private:
   KApplication(const KApplication&);
   KApplication& operator=(const KApplication&);
-
-private:
-  //### KDE4: This is to catch invalid implicit conversions, may want to reconsider
-  KApplication(bool, bool);
 
   friend class KApplicationPrivate;
   KApplicationPrivate* const d;

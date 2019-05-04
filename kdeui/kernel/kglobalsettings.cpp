@@ -21,15 +21,14 @@
 #include <config.h>
 
 #include <kconfig.h>
-
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kprotocolinfo.h>
 #include <kcolorscheme.h>
-
 #include <kstyle.h>
+#include <kapplication.h>
 
 #include <QtGui/QColor>
 #include <QtGui/QCursor>
@@ -46,8 +45,6 @@
 #include <QtGui/QStyleFactory>
 #include <QDesktopServices>
 #include "qplatformdefs.h"
-
-// next two needed so we can set their palettes
 #include <QtGui/QToolTip>
 #include <QtGui/QWhatsThis>
 
@@ -968,7 +965,7 @@ void KGlobalSettings::Private::kdisplaySetPalette()
         return;
     }
 
-    if (qApp->type() == QApplication::GuiClient) {
+    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
         QApplication::setPalette( q->createApplicationPalette() );
     }
     emit q->kdisplayPaletteChanged();
@@ -984,7 +981,7 @@ void KGlobalSettings::Private::kdisplaySetFont()
         return;
     }
 
-    if (qApp->type() == QApplication::GuiClient) {
+    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
         KGlobalSettingsData* data = KGlobalSettingsData::self();
 
         QApplication::setFont( data->font(KGlobalSettingsData::GeneralFont) );
@@ -1002,7 +999,7 @@ void KGlobalSettings::Private::kdisplaySetFont()
 
 void KGlobalSettings::Private::kdisplaySetStyle()
 {
-    if (qApp->type() == QApplication::GuiClient) {
+    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
         applyGUIStyle();
 
         // Reread palette from config file.

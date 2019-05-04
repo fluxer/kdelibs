@@ -117,7 +117,7 @@ int main(int argc, char **argv)
     }
 
     // Create KApplication instance.
-    app = new KApplication( /* GUIenabled */ true );
+    app = new KApplication();
 
     // Each argument is a scriptfile to open
     for(int i = 0; i < args->count(); i++) {

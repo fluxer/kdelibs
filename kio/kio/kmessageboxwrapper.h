@@ -19,7 +19,7 @@
 #ifndef KMESSAGEBOXWRAPPER_H
 #define KMESSAGEBOXWRAPPER_H
 
-#include <QtGui/qapplication.h>
+#include <kapplication.h>
 #include <kmessagebox.h>
 #include <kdebug.h>
 
@@ -35,7 +35,7 @@ public:
                     const QString &text, 
                     const QString &caption = QString())
     {
-        if (qApp && qApp->type() == QApplication::GuiClient) {
+        if (qApp && qApp->type() == KAPPLICATION_GUI_TYPE) {
             KMessageBox::error( parent, text, caption );
         } else 
             kWarning() << text;
@@ -45,7 +45,7 @@ public:
                     const QString &text,
                     const QString &caption = QString())
     {
-        if (qApp && qApp->type() == QApplication::GuiClient) {
+        if (qApp && qApp->type() == KAPPLICATION_GUI_TYPE) {
             KMessageBox::sorry( parent, text, caption );
         } else
             kWarning() << text;

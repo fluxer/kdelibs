@@ -2533,8 +2533,10 @@ int KStyle::styleHint (StyleHint hint, const QStyleOption* option, const QWidget
             return cm.color(option ? option->palette : qApp->palette()).rgba();
         }
 
+#ifndef QT_KATIE
         case SH_DialogButtonLayout:
             return QDialogButtonBox::KdeLayout;
+#endif
 
         case SH_ScrollBar_MiddleClickAbsolutePosition:
             return true;

@@ -154,7 +154,7 @@ public:
   void _k_slot_KToolInvocation_hook(QStringList&, QByteArray&);
 
   QString sessionConfigName() const;
-  void init(bool GUIenabled=true);
+  void init();
   void parseCommandLine( ); // Handle KDE arguments (Using KCmdLineArgs)
   static void preqapplicationhack();
   static void preread_app_startup_id();
@@ -284,15 +284,15 @@ static SmcConn mySmcConnection = 0;
 // Possibly "steal" XFree86's libSM?
 #endif
 
-KApplication::KApplication(bool GUIenabled)
-    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv(), GUIenabled),
+KApplication::KApplication()
+    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv(), KAPPLICATION_GUI_TYPE),
     d(new KApplicationPrivate(this))
 {
     d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
     installSigpipeHandler();
-    d->init(GUIenabled);
+    d->init();
 }
 
 #ifdef Q_WS_X11
@@ -319,24 +319,22 @@ KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap,
 }
 #endif
 
-KApplication::KApplication(bool GUIenabled, const KComponentData &cData)
-    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv(), GUIenabled),
+KApplication::KApplication(const KComponentData &cData)
+    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv(), KAPPLICATION_GUI_TYPE),
     d (new KApplicationPrivate(this, cData))
 {
     d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
     installSigpipeHandler();
-    d->init(GUIenabled);
+    d->init();
 }
 
 #ifdef Q_WS_X11
-KApplication::KApplication(Display *display, int& argc, char** argv, const QByteArray& rAppName,
-        bool GUIenabled)
+KApplication::KApplication(Display *display, int& argc, char** argv, const QByteArray& rAppName)
     : QApplication((KApplicationPrivate::preqapplicationhack(),display)),
     d(new KApplicationPrivate(this, rAppName))
 {
-    Q_UNUSED(GUIenabled);
     d->read_app_startup_id();
     setApplicationName(QLatin1String(rAppName));
     installSigpipeHandler();
@@ -354,7 +352,7 @@ void KApplicationPrivate::preqapplicationhack()
     KGlobal::config(); // initialize qt plugin path (see KComponentDataPrivate::lazyInit)
 }
 
-void KApplicationPrivate::init(bool GUIenabled)
+void KApplicationPrivate::init()
 {
   if ((getuid() != geteuid()) ||
       (getgid() != getegid()))
@@ -367,39 +365,35 @@ void KApplicationPrivate::init(bool GUIenabled)
   KApplication::KApp = q;
 
   // make sure the clipboard is created before setting the window icon (bug 209263)
-  if(GUIenabled)
-    (void) QApplication::clipboard();
+  (void) QApplication::clipboard();
 
   parseCommandLine();
 
-  if(GUIenabled)
-    (void) KClipboardSynchronizer::self();
+  (void) KClipboardSynchronizer::self();
 
   QApplication::setDesktopSettingsAware( false );
 
 #ifdef Q_WS_X11
   // create all required atoms in _one_ roundtrip to the X server
-  if ( q->type() == KApplication::GuiClient ) {
-      const int max = 20;
-      Atom* atoms[max];
-      char* names[max];
-      Atom atoms_return[max];
-      int n = 0;
+  const int max = 20;
+  Atom* atoms[max];
+  char* names[max];
+  Atom atoms_return[max];
+  int n = 0;
 
-      atoms[n] = &atom_DesktopWindow;
-      names[n++] = (char *) "KDE_DESKTOP_WINDOW";
+  atoms[n] = &atom_DesktopWindow;
+  names[n++] = (char *) "KDE_DESKTOP_WINDOW";
 
-      atoms[n] = &atom_NetSupported;
-      names[n++] = (char *) "_NET_SUPPORTED";
+  atoms[n] = &atom_NetSupported;
+  names[n++] = (char *) "_NET_SUPPORTED";
 
-      atoms[n] = &kde_xdnd_drop;
-      names[n++] = (char *) "XdndDrop";
+  atoms[n] = &kde_xdnd_drop;
+  names[n++] = (char *) "XdndDrop";
 
-      XInternAtoms( QX11Info::display(), names, n, false, atoms_return );
+  XInternAtoms( QX11Info::display(), names, n, false, atoms_return );
 
-      for (int i = 0; i < n; i++ )
-        *atoms[i] = atoms_return[i];
-  }
+  for (int i = 0; i < n; i++ )
+    *atoms[i] = atoms_return[i];
 #endif
 
 
@@ -448,7 +442,7 @@ void KApplicationPrivate::init(bool GUIenabled)
        config->isConfigWritable(true);
   }
 
-  if (q->type() == KApplication::GuiClient)
+  if (q->type() == KAPPLICATION_GUI_TYPE)
   {
 #ifdef Q_WS_X11
     // this is important since we fork() to launch the help (Matthias)

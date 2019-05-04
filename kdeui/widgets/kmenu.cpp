@@ -228,7 +228,6 @@ void KMenu::keyPressEvent(QKeyEvent* e)
         return;
     }
 
-    QAction* a = 0L;
     bool firstpass = true;
     QString keyString = e->text();
 
@@ -281,11 +280,6 @@ void KMenu::keyPressEvent(QKeyEvent* e)
 
             // clear active item
             setActiveAction(0L);
-
-        } else {
-            // the key sequence is not a null string
-            // therefore the lastHitAction is valid
-            a = d->lastHitAction;
         }
 
     } else if (key == Qt::Key_Backspace && menuAction()) {

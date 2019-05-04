@@ -16,11 +16,12 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <kapplication.h>
 #include <ktoolinvocation.h>
 #include <klocale.h>
 #include <kcmdlineargs.h>
 #include <kurl.h>
+
+#include <QCoreApplication>
 
 int main( int argc, char **argv )
 {
@@ -30,14 +31,14 @@ int main( int argc, char **argv )
     KCmdLineArgs::init( argc, argv, "kmailservice", "kdelibs4", ki18n("KMailService"), "unknown", ki18n("Mail service") );
     KCmdLineArgs::addCmdLineOptions( options );
 
-    KApplication a( false );
+    QCoreApplication app(argc, argv);
 
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     if ( args->count() != 1 )
         return 1;
 
-    KToolInvocation::invokeMailer(KUrl(args->arg(0)), a.startupId(), true);
+    KToolInvocation::invokeMailer(KUrl(args->arg(0)), QByteArray(), true);
 
     return 0;
 }

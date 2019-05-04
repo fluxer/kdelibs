@@ -273,8 +273,8 @@ KUniqueApplication::start(StartFlags flags)
 }
 
 
-KUniqueApplication::KUniqueApplication(bool GUIenabled, bool configUnique)
-  : KApplication( GUIenabled, Private::initHack( configUnique )),
+KUniqueApplication::KUniqueApplication(bool configUnique)
+  : KApplication( Private::initHack( configUnique )),
     d(new Private(this))
 {
   d->processingRequest = false;

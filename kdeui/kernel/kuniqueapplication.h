@@ -59,14 +59,11 @@ public:
   /**
    * Constructor. Takes command line arguments from KCmdLineArgs
    *
-   * @param GUIenabled Set to false to disable all GUI stuff. This implies
-   * no styles either.
    * @param configUnique If true, the uniqueness of the application will
    *                 depend on the value of the "MultipleInstances"
    *                 key in the "KDE" group of the application config file.
    */
-  explicit KUniqueApplication( bool GUIenabled=true,
-                               bool configUnique=false);
+  explicit KUniqueApplication( bool configUnique=false);
 
 #ifdef Q_WS_X11
   /**
