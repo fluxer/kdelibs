@@ -146,7 +146,7 @@ void BusyWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option
     if (!d->running && d->svg->hasElement("paused")) {
         d->svg->paint(painter, spinnerRect, "paused");
     } else {
-        if (!d->frames[intRotation]) {
+        if (d->frames[intRotation].isNull()) {
             QPointF translatedPos(spinnerRect.width()/2, spinnerRect.height()/2);
 
             d->frames[intRotation] = QPixmap(spinnerRect.size().toSize());

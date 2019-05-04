@@ -298,7 +298,7 @@ void KMenu::keyPressEvent(QKeyEvent* e)
     d->keySeq += keyString;
     const int seqLen = d->keySeq.length();
 
-    foreach (a, actions()) {
+    foreach (QAction *a, actions()) {
         // don't search disabled entries
         if (!a->isEnabled())
             continue;

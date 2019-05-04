@@ -178,24 +178,21 @@ KCModule::~KCModule()
 
 void KCModule::load()
 {
-    KConfigDialogManager* manager;
-    Q_FOREACH( manager , d->managers )
+    Q_FOREACH(KConfigDialogManager *manager , d->managers )
         manager->updateWidgets();
     emit( changed( false ));
 }
 
 void KCModule::save()
 {
-    KConfigDialogManager* manager;
-    Q_FOREACH( manager , d->managers )
+    Q_FOREACH(KConfigDialogManager *manager , d->managers )
         manager->updateSettings();
     emit( changed( false ));
 }
 
 void KCModule::defaults()
 {
-    KConfigDialogManager* manager;
-    Q_FOREACH( manager , d->managers )
+    Q_FOREACH(KConfigDialogManager *manager , d->managers )
         manager->updateWidgetsDefault();
 }
 
@@ -206,8 +203,7 @@ void KCModule::widgetChanged()
 
 bool KCModule::managedWidgetChangeState() const
 {
-    KConfigDialogManager* manager;
-    Q_FOREACH( manager , d->managers )
+    Q_FOREACH(KConfigDialogManager *manager , d->managers )
     {
         if ( manager->hasChanged() )
             return true;
