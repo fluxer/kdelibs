@@ -57,18 +57,12 @@ KDECORE_UNIT_TESTS(
     kprocesstest
     kconfigafterkglobaltest1
     kconfigafterkglobaltest2
-    ktcpsockettest
     ksycocathreadtest
     kdebug_unittest
     kencodingdetectortest
     qcoreapptest
     kdebug_qcoreapptest
     kmimetype_nomimetypes
-)
-
-KDECORE_UNIT_TESTS(
-    klocalsockettest
-    klocalsocketservertest
 )
 
 KDECORE_EXECUTABLE_TESTS(

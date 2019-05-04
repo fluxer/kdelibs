@@ -34,14 +34,12 @@
 #include <kglobal.h>
 #include <klocale.h>
 
-#include "ktcpsocket.h"
-
 
 class KSslInfoDialog::KSslInfoDialogPrivate
 {
 public:
     QList<QSslCertificate> certificateChain;
-    QList<QList<KSslError::Error> > certificateErrors;
+    QList<QList<QSslError::SslError> > certificateErrors;
 
     bool isMainPartEncrypted;
     bool auxPartsEncrypted;
@@ -144,7 +142,7 @@ void KSslInfoDialog::setSslInfo(const QList<QSslCertificate> &certificateChain,
                                 const QString &ip, const QString &host,
                                 const QString &sslProtocol, const QString &cipher,
                                 int usedBits, int bits,
-                                const QList<QList<KSslError::Error> > &validationErrors) {
+                                const QList<QList<QSslError::SslError> > &validationErrors) {
 
     d->certificateChain = certificateChain;
     d->certificateErrors = validationErrors;
@@ -199,10 +197,10 @@ void KSslInfoDialog::displayFromChain(int i)
     QString trusted;
     if (!d->certificateErrors[i].isEmpty()) {
         trusted = i18nc("The certificate is not trusted", "NO, there were errors:");
-        foreach (KSslError::Error e, d->certificateErrors[i]) {
-            KSslError classError(e);
+        foreach (QSslError::SslError e, d->certificateErrors[i]) {
+            QSslError errorclass = QSslError(e);
             trusted.append('\n');
-            trusted.append(classError.errorString());
+            trusted.append(errorclass.errorString());
         }
     } else {
         trusted = i18nc("The certificate is trusted", "Yes");
@@ -224,16 +222,16 @@ void KSslInfoDialog::displayFromChain(int i)
 
 
 //static
-QList<QList<KSslError::Error> > KSslInfoDialog::errorsFromString(const QString &es)
+QList<QList<QSslError::SslError> > KSslInfoDialog::errorsFromString(const QString &es)
 {
     QStringList sl = es.split('\n', QString::KeepEmptyParts);
-    QList<QList<KSslError::Error> > ret;
+    QList<QList<QSslError::SslError> > ret;
     foreach (const QString &s, sl) {
-        QList<KSslError::Error> certErrors;
+        QList<QSslError::SslError> certErrors;
         QStringList sl2 = s.split('\t', QString::SkipEmptyParts);
         foreach (const QString &s2, sl2) {
             bool didConvert;
-            KSslError::Error error = static_cast<KSslError::Error>(s2.toInt(&didConvert));
+            QSslError::SslError error = static_cast<QSslError::SslError>(s2.toInt(&didConvert));
             if (didConvert) {
                 certErrors.append(error);
             }

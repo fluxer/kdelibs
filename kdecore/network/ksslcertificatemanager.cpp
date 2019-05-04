@@ -21,8 +21,6 @@
 #include "ksslcertificatemanager.h"
 #include "ksslcertificatemanager_p.h"
 
-#include "ktcpsocket.h"
-#include "ktcpsocket_p.h"
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -34,6 +32,7 @@
 #include <QtDBus/QtDBus>
 #include <QtCore/qfile.h>
 #include <QtCore/qdir.h>
+#include <QSslSocket>
 
 #include "kssld/kssld_interface.h"
 
@@ -64,7 +63,7 @@ public:
     QString hostName;
     bool isRejected;
     QDateTime expiryDateTime;
-    QList<KSslError::Error> ignoredErrors;
+    QList<QSslError::SslError> ignoredErrors;
 };
 
 
@@ -133,9 +132,9 @@ bool KSslCertificateRule::isRejected() const
 }
 
 
-bool KSslCertificateRule::isErrorIgnored(KSslError::Error error) const
+bool KSslCertificateRule::isErrorIgnored(QSslError::SslError error) const
 {
-    foreach (KSslError::Error ignoredError, d->ignoredErrors)
+    foreach (QSslError::SslError ignoredError, d->ignoredErrors)
         if (error == ignoredError)
             return true;
 
@@ -143,35 +142,35 @@ bool KSslCertificateRule::isErrorIgnored(KSslError::Error error) const
 }
 
 
-void KSslCertificateRule::setIgnoredErrors(const QList<KSslError::Error> &errors)
+void KSslCertificateRule::setIgnoredErrors(const QList<QSslError::SslError> &errors)
 {
     d->ignoredErrors.clear();
     //### Quadratic runtime, woohoo! Use a QSet if that should ever be an issue.
-    foreach(KSslError::Error e, errors)
+    foreach(QSslError::SslError e, errors)
         if (!isErrorIgnored(e))
             d->ignoredErrors.append(e);
 }
 
 
-void KSslCertificateRule::setIgnoredErrors(const QList<KSslError> &errors)
+void KSslCertificateRule::setIgnoredErrors(const QList<QSslError> &errors)
 {
-    QList<KSslError::Error> el;
-    foreach(const KSslError &e, errors)
+    QList<QSslError::SslError> el;
+    foreach(const QSslError &e, errors)
         el.append(e.error());
     setIgnoredErrors(el);
 }
 
 
-QList<KSslError::Error> KSslCertificateRule::ignoredErrors() const
+QList<QSslError::SslError> KSslCertificateRule::ignoredErrors() const
 {
     return d->ignoredErrors;
 }
 
 
-QList<KSslError::Error> KSslCertificateRule::filterErrors(const QList<KSslError::Error> &errors) const
+QList<QSslError::SslError> KSslCertificateRule::filterErrors(const QList<QSslError::SslError> &errors) const
 {
-    QList<KSslError::Error> ret;
-    foreach (KSslError::Error error, errors) {
+    QList<QSslError::SslError> ret;
+    foreach (QSslError::SslError error, errors) {
         if (!isErrorIgnored(error))
             ret.append(error);
     }
@@ -179,10 +178,10 @@ QList<KSslError::Error> KSslCertificateRule::filterErrors(const QList<KSslError:
 }
 
 
-QList<KSslError> KSslCertificateRule::filterErrors(const QList<KSslError> &errors) const
+QList<QSslError> KSslCertificateRule::filterErrors(const QList<QSslError> &errors) const
 {
-    QList<KSslError> ret;
-    foreach (const KSslError &error, errors) {
+    QList<QSslError> ret;
+    foreach (const QSslError &error, errors) {
         if (!isErrorIgnored(error.error()))
             ret.append(error);
     }
@@ -507,17 +506,17 @@ QList<QSslCertificate> KSslCertificateManager::caCertificates() const
 
 
 //static
-QList<KSslError> KSslCertificateManager::nonIgnorableErrors(const QList<KSslError> &/*e*/)
+QList<QSslError> KSslCertificateManager::nonIgnorableErrors(const QList<QSslError> &/*e*/)
 {
-    QList<KSslError> ret;
+    QList<QSslError> ret;
     // ### add filtering here...
     return ret;
 }
 
 //static
-QList<KSslError::Error> KSslCertificateManager::nonIgnorableErrors(const QList<KSslError::Error> &/*e*/)
+QList<QSslError::SslError> KSslCertificateManager::nonIgnorableErrors(const QList<QSslError::SslError> &/*e*/)
 {
-    QList<KSslError::Error> ret;
+    QList<QSslError::SslError> ret;
     // ### add filtering here...
     return ret;
 }

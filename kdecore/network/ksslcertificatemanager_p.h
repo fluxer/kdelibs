@@ -22,6 +22,7 @@
 #define KSSLCERTIFICATEMANAGER_P_H
 
 #include <QMutex>
+#include <QSet>
 
 #include "kconfig.h"
 
@@ -82,8 +83,8 @@ public:
 
     KConfig config;
     org::kde::KSSLDInterface *iface;
-    QHash<QString, KSslError::Error> stringToSslError;
-    QHash<KSslError::Error, QString> sslErrorToString;
+    QHash<QString, QSslError::SslError> stringToSslError;
+    QHash<QSslError::SslError, QString> sslErrorToString;
 
     QList<QSslCertificate> defaultCaCertificates;
 

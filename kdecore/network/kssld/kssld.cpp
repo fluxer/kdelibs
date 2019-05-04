@@ -46,36 +46,36 @@ public:
     {
         struct strErr {
             const char *str;
-            KSslError::Error err;
+            QSslError::SslError err;
         };
 
         //hmmm, looks like these are all of the errors where it is possible to continue.
         const static strErr strError[] = {
-            {"NoError", KSslError::NoError},
-            {"UnknownError", KSslError::UnknownError},
-            {"InvalidCertificateAuthority", KSslError::InvalidCertificateAuthorityCertificate},
-            {"InvalidCertificate", KSslError::InvalidCertificate},
-            {"CertificateSignatureFailed", KSslError::CertificateSignatureFailed},
-            {"SelfSignedCertificate", KSslError::SelfSignedCertificate},
-            {"RevokedCertificate", KSslError::RevokedCertificate},
-            {"InvalidCertificatePurpose", KSslError::InvalidCertificatePurpose},
-            {"RejectedCertificate", KSslError::RejectedCertificate},
-            {"UntrustedCertificate", KSslError::UntrustedCertificate},
-            {"ExpiredCertificate", KSslError::ExpiredCertificate},
-            {"HostNameMismatch", KSslError::HostNameMismatch}
+            {"NoError", QSslError::NoError},
+            {"UnspecifiedError", QSslError::UnspecifiedError},
+            {"UnableToGetLocalIssuerCertificate", QSslError::UnableToGetLocalIssuerCertificate},
+            {"InvalidCaCertificate", QSslError::InvalidCaCertificate},
+            {"CertificateSignatureFailed", QSslError::CertificateSignatureFailed},
+            {"SelfSignedCertificate", QSslError::SelfSignedCertificate},
+            {"RevokedCertificate", QSslError::CertificateRevoked},
+            {"InvalidPurpose", QSslError::InvalidPurpose},
+            {"CertificateRejected", QSslError::CertificateRejected},
+            {"CertificateUntrusted", QSslError::CertificateUntrusted},
+            {"CertificateExpired", QSslError::CertificateExpired},
+            {"HostNameMismatch", QSslError::HostNameMismatch}
         };
 
         for (int i = 0; i < int(sizeof(strError)/sizeof(strErr)); i++) {
             QString s = QString::fromLatin1(strError[i].str);
-            KSslError::Error e = strError[i].err;
+            QSslError::SslError e = strError[i].err;
             stringToSslError.insert(s, e);
             sslErrorToString.insert(e, s);
         }
     }
 
     KConfig config;
-    QHash<QString, KSslError::Error> stringToSslError;
-    QHash<KSslError::Error, QString> sslErrorToString;
+    QHash<QString, QSslError::SslError> stringToSslError;
+    QHash<QSslError::SslError, QString> sslErrorToString;
 };
 
 
@@ -111,7 +111,7 @@ void KSSLD::setRule(const KSslCertificateRule &rule)
     if (rule.isRejected()) {
         sl.append(QString::fromLatin1("Reject"));
     } else {
-        foreach (KSslError::Error e, rule.ignoredErrors())
+        foreach (QSslError::SslError e, rule.ignoredErrors())
             sl.append(d->sslErrorToString.value(e));
     }
 
@@ -254,7 +254,7 @@ KSslCertificateRule KSSLD::rule(const QSslCertificate &cert, const QString &host
         return ret;
     }
 
-    QList<KSslError::Error> ignoredErrors;
+    QList<QSslError::SslError> ignoredErrors;
     bool isRejected = false;
     foreach (const QString &s, sl) {
         if (s == QLatin1String("Reject")) {

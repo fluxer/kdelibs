@@ -20,9 +20,9 @@
 #ifndef KDIRWATCHTEST_GUI_H
 #define KDIRWATCHTEST_GUI_H
 
-#include <QtGui/QDialog>
-
+#include <QDialog>
 #include <QTextBrowser>
+#include <QLineEdit>
 
 class KDirWatchTest_GUI : public QWidget
 {
@@ -40,12 +40,12 @@ protected Q_SLOTS:
     void slotDeleted(const QString&);
 
 private:
-    class QLineEdit *d;
+    QLineEdit *d;
     QString file, dir;
     class KDirWatch *w1;
     class KDirWatch *w2;
     class KDirWatch *w3;
-    class QLineEdit *l1, *l2, *l3;
+    QLineEdit *l1, *l2, *l3;
     QTextBrowser* m_eventBrowser;
 };
 

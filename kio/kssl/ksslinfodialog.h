@@ -25,7 +25,8 @@
 #include <kio/kio_export.h>
 #include <kdialog.h>
 
-#include "ktcpsocket.h"
+#include <QSslCertificate>
+#include <QSslError>
 
 /**
  * KDE SSL Information Dialog
@@ -80,12 +81,12 @@ public:
 			        const QString &ip, const QString &host,
 			        const QString &sslProtocol, const QString &cipher,
                     int usedBits, int bits,
-			        const QList<QList<KSslError::Error> > &validationErrors);
+			        const QList<QList<QSslError::SslError> > &validationErrors);
 
     void setMainPartEncrypted(bool);
     void setAuxiliaryPartsEncrypted(bool);
 
-    static QList<QList<KSslError::Error> > errorsFromString(const QString &s);
+    static QList<QList<QSslError::SslError> > errorsFromString(const QString &s);
 
 private:
     void updateWhichPartsEncrypted();

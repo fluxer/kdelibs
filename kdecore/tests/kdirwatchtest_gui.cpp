@@ -28,9 +28,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
-#include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
-#include <QtGui/QTextBrowser>
 
 int main(int argc, char **argv)
 {

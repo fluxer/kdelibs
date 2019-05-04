@@ -25,24 +25,86 @@
 #include <kmessagebox.h>
 #include <ksslcertificatemanager.h>
 #include <ksslinfodialog.h>
-#include <ktcpsocket_p.h>
+#include <QSslCipher>
+#include <QHostAddress>
+
+namespace KIO {
+namespace SslUi {
+
+// TODO: remove private data class
+class KSslErrorUiData::Private
+{
+public:
+    static const KSslErrorUiData::Private *get(const KSslErrorUiData *uiData)
+    { return uiData->d; }
+
+    QList<QSslCertificate> certificateChain;
+    QList<QSslError> sslErrors;   // parallel list to certificateChain
+    QString ip;
+    QString host;
+    QString sslProtocol;
+    QString cipher;
+    int usedBits;
+    int bits;
+};
 
 
-bool KIO::SslUi::askIgnoreSslErrors(const KTcpSocket *socket, RulesStorage storedRules)
+KSslErrorUiData::KSslErrorUiData()
+ : d(new Private())
+{
+    d->usedBits = 0;
+    d->bits = 0;
+}
+
+KSslErrorUiData::KSslErrorUiData(const QSslSocket *socket)
+ : d(new Private())
+{
+    d->certificateChain = socket->peerCertificateChain();
+
+    d->sslErrors = socket->sslErrors();
+
+    d->ip = socket->peerAddress().toString();
+    d->host = socket->peerName();
+    if (socket->isEncrypted()) {
+        d->sslProtocol = socket->sessionCipher().protocolString();
+    }
+    d->cipher = socket->sessionCipher().name();
+    d->usedBits = socket->sessionCipher().usedBits();
+    d->bits = socket->sessionCipher().supportedBits();
+}
+
+
+KSslErrorUiData::KSslErrorUiData(const KSslErrorUiData &other)
+ : d(new Private(*other.d))
+{}
+
+KSslErrorUiData::~KSslErrorUiData()
+{
+    delete d;
+}
+
+KSslErrorUiData &KSslErrorUiData::operator=(const KSslErrorUiData &other)
+{
+    *d = *other.d;
+    return *this;
+}
+
+
+bool askIgnoreSslErrors(const QSslSocket *socket, RulesStorage storedRules)
 {
     KSslErrorUiData uiData(socket);
     return askIgnoreSslErrors(uiData, storedRules);
 }
 
 
-bool KIO::SslUi::askIgnoreSslErrors(const KSslErrorUiData &uiData, RulesStorage storedRules)
+bool askIgnoreSslErrors(const KSslErrorUiData &uiData, RulesStorage storedRules)
 {
     const KSslErrorUiData::Private *ud = KSslErrorUiData::Private::get(&uiData);
     if (ud->sslErrors.isEmpty()) {
         return true;
     }
 
-    QList<KSslError> fatalErrors = KSslCertificateManager::nonIgnorableErrors(ud->sslErrors);
+    QList<QSslError> fatalErrors = KSslCertificateManager::nonIgnorableErrors(ud->sslErrors);
     if (!fatalErrors.isEmpty()) {
         //TODO message "sorry, fatal error, you can't override it"
         return false;
@@ -59,7 +121,7 @@ bool KIO::SslUi::askIgnoreSslErrors(const KSslErrorUiData &uiData, RulesStorage 
     if (storedRules & RecallRules) {
         rule = cm->rule(ud->certificateChain.first(), ud->host);
         // remove previously seen and acknowledged errors
-        QList<KSslError> remainingErrors = rule.filterErrors(ud->sslErrors);
+        QList<QSslError> remainingErrors = rule.filterErrors(ud->sslErrors);
         if (remainingErrors.isEmpty()) {
             kDebug(7029) << "Error list empty after removing errors to be ignored. Continuing.";
             return true;
@@ -69,7 +131,7 @@ bool KIO::SslUi::askIgnoreSslErrors(const KSslErrorUiData &uiData, RulesStorage 
     //### We don't ask to permanently reject the certificate
 
     QString message = i18n("The server failed the authenticity check (%1).\n\n", ud->host);
-    foreach (const KSslError &err, ud->sslErrors) {
+    foreach (const QSslError &err, ud->sslErrors) {
         message.append(err.errorString());
         message.append('\n');
     }
@@ -84,11 +146,11 @@ bool KIO::SslUi::askIgnoreSslErrors(const KSslErrorUiData &uiData, RulesStorage 
             //Details was chosen - show the certificate and error details
 
 
-            QList<QList<KSslError::Error> > meh;    // parallel list to cert list :/
+            QList<QList<QSslError::SslError> > meh;    // parallel list to cert list :/
 
             foreach (const QSslCertificate &cert, ud->certificateChain) {
-                QList<KSslError::Error> errors;
-                foreach(const KSslError &error, ud->sslErrors) {
+                QList<QSslError::SslError> errors;
+                foreach(const QSslError &error, ud->sslErrors) {
                     if (error.certificate() == cert) {
                         // we keep only the error code enum here
                         errors.append(error.error());
@@ -139,3 +201,5 @@ bool KIO::SslUi::askIgnoreSslErrors(const KSslErrorUiData &uiData, RulesStorage 
     return true;
 }
 
+}
+}

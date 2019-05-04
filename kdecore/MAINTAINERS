@@ -101,12 +101,8 @@ network/                          Thiago Macieira <thiago@kde.org>
   k3socks.cpp
   k3sockssocketdevice.cpp
   k3streamsocket.cpp
-  klocalsocket.cpp
-  klocalsocket_unix.cpp
-  klocalsocket_win.cpp
   ksocketfactory.cpp
   ksslcertificatemanager.cpp
-  ktcpsocket.cpp
   netsupp.cpp
 network/kssld/
   kssld.cpp

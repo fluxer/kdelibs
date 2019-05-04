@@ -22,10 +22,41 @@
 #define KSSLUI_H
 
 #include <kio/kio_export.h>
-#include <ktcpsocket.h>
+#include <QSslSocket>
 
 namespace KIO {
 namespace SslUi {
+
+/**
+ * This class can hold all the necessary data from a KTcpSocket to ask the user
+ * to continue connecting in the face of SSL errors.
+ * It can be used to carry the data for the UI over time or over thread boundaries.
+ *
+ * @see: KSslCertificateManager::askIgnoreSslErrors()
+ */
+class KIO_EXPORT KSslErrorUiData
+{
+public:
+    /**
+     * Default construct an instance with no useful data.
+     */
+    KSslErrorUiData();
+    /**
+     * Create an instance and initialize it with SSL error data from @p socket.
+     */
+    KSslErrorUiData(const QSslSocket *socket);
+    KSslErrorUiData(const KSslErrorUiData &other);
+    KSslErrorUiData &operator=(const KSslErrorUiData &);
+    /**
+     * Destructor
+     * @since 4.7
+     */
+    ~KSslErrorUiData();
+    class Private;
+private:
+    friend class Private;
+    Private *const d;
+};
 
 enum RulesStorage {
     RecallRules = 1, ///< apply stored certificate rules (typically ignored errors)
@@ -33,7 +64,7 @@ enum RulesStorage {
     RecallAndStoreRules = 3 ///< apply stored rules and store new rules
 };
 
-bool KIO_EXPORT askIgnoreSslErrors(const KTcpSocket *socket,
+bool KIO_EXPORT askIgnoreSslErrors(const QSslSocket *socket,
                                    RulesStorage storedRules = RecallAndStoreRules);
 bool KIO_EXPORT askIgnoreSslErrors(const KSslErrorUiData &uiData,
                                    RulesStorage storedRules = RecallAndStoreRules);

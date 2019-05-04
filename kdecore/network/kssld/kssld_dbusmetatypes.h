@@ -28,8 +28,8 @@
 Q_DECLARE_METATYPE(QSslCertificate)
 Q_DECLARE_METATYPE(KSslCertificateRule)
 Q_DECLARE_METATYPE(QList<QSslCertificate>)
-Q_DECLARE_METATYPE(KSslError::Error)
-Q_DECLARE_METATYPE(QList<KSslError::Error>)
+Q_DECLARE_METATYPE(QSslError::SslError)
+Q_DECLARE_METATYPE(QList<QSslError::SslError>)
 
 QT_BEGIN_NAMESPACE
 
@@ -70,7 +70,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KSslCertificateRu
     QString hostName;
     bool isRejected;
     QString expiryStr;
-    QList<KSslError::Error> ignoredErrors;
+    QList<QSslError::SslError> ignoredErrors;
     argument.beginStructure();
     argument >> cert >> hostName >> isRejected >> expiryStr >> ignoredErrors;
     argument.endStructure();
@@ -84,7 +84,7 @@ const QDBusArgument &operator>>(const QDBusArgument &argument, KSslCertificateRu
 }
 
 
-QDBusArgument &operator<<(QDBusArgument &argument, const KSslError::Error &error)
+QDBusArgument &operator<<(QDBusArgument &argument, const QSslError::SslError &error)
 {
     argument.beginStructure();  //overhead ho!
     argument << static_cast<int>(error);
@@ -93,13 +93,13 @@ QDBusArgument &operator<<(QDBusArgument &argument, const KSslError::Error &error
 }
 
 
-const QDBusArgument &operator>>(const QDBusArgument &argument, KSslError::Error &error)
+const QDBusArgument &operator>>(const QDBusArgument &argument, QSslError::SslError &error)
 {
     int data;
     argument.beginStructure();
     argument >> data;
     argument.endStructure();
-    error = static_cast<KSslError::Error>(data);
+    error = static_cast<QSslError::SslError>(data);
     return argument;
 }
 
@@ -110,8 +110,8 @@ static void registerMetaTypesForKSSLD()
     qDBusRegisterMetaType<QSslCertificate>();
     qDBusRegisterMetaType<KSslCertificateRule>();
     qDBusRegisterMetaType<QList<QSslCertificate> >();
-    qDBusRegisterMetaType<KSslError::Error>();
-    qDBusRegisterMetaType<QList<KSslError::Error> >();
+    qDBusRegisterMetaType<QSslError::SslError>();
+    qDBusRegisterMetaType<QList<QSslError::SslError> >();
 }
 
 #endif //KSSLD_DBUSMETATYPES_H

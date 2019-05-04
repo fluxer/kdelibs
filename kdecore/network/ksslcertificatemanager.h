@@ -21,13 +21,13 @@
 #ifndef INCLUDE_KSSLCERTIFICATEMANAGER_H
 #define INCLUDE_KSSLCERTIFICATEMANAGER_H
 
-#include "ktcpsocket.h"
+#include "kdecore_export.h"
 
 #include <QtNetwork/QSslCertificate>
 #include <QtNetwork/QSslError>
 #include <QtCore/qdatetime.h>
-
 #include <QSslCertificate>
+
 class KSslCertificateRulePrivate;
 class KSslCertificateManagerPrivate;
 
@@ -47,12 +47,12 @@ public:
     QDateTime expiryDateTime() const;
     void setRejected(bool rejected);
     bool isRejected() const;
-    bool isErrorIgnored(KSslError::Error error) const;
-    void setIgnoredErrors(const QList<KSslError::Error> &errors);
-    void setIgnoredErrors(const QList<KSslError> &errors);
-    QList<KSslError::Error> ignoredErrors() const;
-    QList<KSslError::Error> filterErrors(const QList<KSslError::Error> &errors) const;
-    QList<KSslError> filterErrors(const QList<KSslError> &errors) const;
+    bool isErrorIgnored(QSslError::SslError error) const;
+    void setIgnoredErrors(const QList<QSslError::SslError> &errors);
+    void setIgnoredErrors(const QList<QSslError> &errors);
+    QList<QSslError::SslError> ignoredErrors() const;
+    QList<QSslError::SslError> filterErrors(const QList<QSslError::SslError> &errors) const;
+    QList<QSslError> filterErrors(const QList<QSslError> &errors) const;
 private:
     KSslCertificateRulePrivate *const d;
 };
@@ -70,8 +70,8 @@ public:
 
     QList<QSslCertificate> caCertificates() const;
 
-    static QList<KSslError> nonIgnorableErrors(const QList<KSslError> &);
-    static QList<KSslError::Error> nonIgnorableErrors(const QList<KSslError::Error> &);
+    static QList<QSslError> nonIgnorableErrors(const QList<QSslError> &);
+    static QList<QSslError::SslError> nonIgnorableErrors(const QList<QSslError::SslError> &);
 
 private:
     friend class KSslCertificateManagerContainer;
