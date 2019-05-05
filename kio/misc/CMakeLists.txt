@@ -10,7 +10,7 @@ add_subdirectory(kntlm)
 
 add_executable(kmailservice kmailservice.cpp)
 
-target_link_libraries(kmailservice ${KDE4_KDEUI_LIBS})
+target_link_libraries(kmailservice ${KDE4_KDECORE_LIBS})
 
 install(
     TARGETS kmailservice
