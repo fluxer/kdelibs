@@ -449,7 +449,7 @@ void KUrlNavigatorButton::slotMenuActionClicked(QAction* action)
     const int result = action->data().toInt();
     KUrl url = m_url;
     url.addPath(m_subDirs.at(result).first);
-    emit clicked(url, Qt::MidButton);
+    emit clicked(url, Qt::MiddleButton);
 }
 
 void KUrlNavigatorButton::statFinished(KJob* job)

@@ -426,7 +426,7 @@ void KMenu::mousePressEvent(QMouseEvent* e)
         d->ctxMenu->hide();
     }
 
-    if( e->button() == Qt::MidButton)
+    if( e->button() == Qt::MiddleButton)
       return;
 
     QMenu::mousePressEvent(e);
@@ -438,7 +438,7 @@ void KMenu::mouseReleaseEvent(QMouseEvent* e)
     d->keyboardModifiers = e->modifiers();
     d->mouseButtons = e->buttons();
 
-    if ( e->button() == Qt::MidButton) {
+    if ( e->button() == Qt::MiddleButton) {
       if(activeAction() ) {
         const QMetaObject *metaObject = activeAction()->metaObject();
         const int index = metaObject->indexOfMethod("triggered(Qt::MouseButtons,Qt::KeyboardModifiers)");

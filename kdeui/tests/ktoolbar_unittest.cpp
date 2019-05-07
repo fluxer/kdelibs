@@ -606,14 +606,14 @@ void tst_KToolBar::testClickingToolButton_data() {
     QTest::newRow("Control+Alt+LMB") << Qt::LeftButton << (Qt::ControlModifier | Qt::AltModifier);
     QTest::newRow("Shift+Control+Alt+LMB") << Qt::LeftButton << (Qt::ShiftModifier | Qt::ControlModifier | Qt::AltModifier);
 
-    QTest::newRow("MMB") << Qt::MidButton << Qt::KeyboardModifiers(Qt::NoModifier);
-    QTest::newRow("Shift+MMB") << Qt::MidButton << Qt::KeyboardModifiers(Qt::ShiftModifier);
-    QTest::newRow("Ctrl+MMB") << Qt::MidButton << Qt::KeyboardModifiers(Qt::ControlModifier);
-    QTest::newRow("Alt+MMB") << Qt::MidButton << Qt::KeyboardModifiers(Qt::AltModifier);
-    QTest::newRow("Shift+Control+MMB") << Qt::MidButton << (Qt::ShiftModifier | Qt::ControlModifier);
-    QTest::newRow("Shift+Alt+MMB") << Qt::MidButton << (Qt::ShiftModifier | Qt::AltModifier);
-    QTest::newRow("Control+Alt+MMB") << Qt::MidButton << (Qt::ControlModifier | Qt::AltModifier);
-    QTest::newRow("Shift+Control+Alt+MMB") << Qt::MidButton << (Qt::ShiftModifier | Qt::ControlModifier | Qt::AltModifier);
+    QTest::newRow("MMB") << Qt::MiddleButton << Qt::KeyboardModifiers(Qt::NoModifier);
+    QTest::newRow("Shift+MMB") << Qt::MiddleButton << Qt::KeyboardModifiers(Qt::ShiftModifier);
+    QTest::newRow("Ctrl+MMB") << Qt::MiddleButton << Qt::KeyboardModifiers(Qt::ControlModifier);
+    QTest::newRow("Alt+MMB") << Qt::MiddleButton << Qt::KeyboardModifiers(Qt::AltModifier);
+    QTest::newRow("Shift+Control+MMB") << Qt::MiddleButton << (Qt::ShiftModifier | Qt::ControlModifier);
+    QTest::newRow("Shift+Alt+MMB") << Qt::MiddleButton << (Qt::ShiftModifier | Qt::AltModifier);
+    QTest::newRow("Control+Alt+MMB") << Qt::MiddleButton << (Qt::ControlModifier | Qt::AltModifier);
+    QTest::newRow("Shift+Control+Alt+MMB") << Qt::MiddleButton << (Qt::ShiftModifier | Qt::ControlModifier | Qt::AltModifier);
 }
 
 void tst_KToolBar::testClickingToolButton() {

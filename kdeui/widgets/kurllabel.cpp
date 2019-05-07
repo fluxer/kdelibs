@@ -120,7 +120,7 @@ void KUrlLabel::mouseReleaseEvent( QMouseEvent* event )
       emit leftClickedUrl( d->url );
       break;
 
-    case Qt::MidButton:
+    case Qt::MiddleButton:
       emit middleClickedUrl();
       emit middleClickedUrl( d->url );
       break;

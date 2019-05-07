@@ -175,15 +175,15 @@ void KTabWidget_UnitTest::testMiddleClickTabReordering()
     QPoint pos1 = tabWidget.getTabBar()->tabRect(1).center();
 
     // Press MMB
-    QTest::mousePress(tabWidget.getTabBar(), Qt::MidButton, Qt::NoModifier, pos0);
+    QTest::mousePress(tabWidget.getTabBar(), Qt::MiddleButton, Qt::NoModifier, pos0);
 
     // We need a first move event on tab 0 to initialize tab moving
-    QMouseEvent moveEvent(QEvent::MouseMove, pos0, Qt::NoButton, Qt::MidButton, Qt::NoModifier);
+    QMouseEvent moveEvent(QEvent::MouseMove, pos0, Qt::NoButton, Qt::MiddleButton, Qt::NoModifier);
     bool moveEventReceived = qApp->notify(tabWidget.getTabBar(), &moveEvent);
     QVERIFY(moveEventReceived);
 
     // Move tab 0 to tab 1
-    moveEvent = QMouseEvent(QEvent::MouseMove, pos1, Qt::NoButton, Qt::MidButton, Qt::NoModifier);
+    moveEvent = QMouseEvent(QEvent::MouseMove, pos1, Qt::NoButton, Qt::MiddleButton, Qt::NoModifier);
     moveEventReceived = qApp->notify(tabWidget.getTabBar(), &moveEvent);
     QVERIFY(moveEventReceived);
 
@@ -192,7 +192,7 @@ void KTabWidget_UnitTest::testMiddleClickTabReordering()
     QCOMPARE(tabWidget.widget(0), w1);
     QCOMPARE(tabWidget.widget(1), w0);
 
-    QTest::mouseRelease(tabWidget.getTabBar(), Qt::MidButton, Qt::NoModifier, pos1);
+    QTest::mouseRelease(tabWidget.getTabBar(), Qt::MiddleButton, Qt::NoModifier, pos1);
 }
 
 void KTabWidget_UnitTest::testTabMoved()

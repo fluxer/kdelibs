@@ -410,7 +410,7 @@ void KUrlNavigator::Private::slotNavigatorButtonClicked(const KUrl& url, Qt::Mou
 {
     if (button & Qt::LeftButton) {
         q->setLocationUrl(url);
-    } else if (button & Qt::MidButton) {
+    } else if (button & Qt::MiddleButton) {
         emit q->tabRequested(url);
     }
 }
@@ -1092,7 +1092,7 @@ void KUrlNavigator::keyReleaseEvent(QKeyEvent* event)
 
 void KUrlNavigator::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::MidButton) {
+    if (event->button() == Qt::MiddleButton) {
         const QRect bounds = d->m_toggleEditableMode->geometry();
         if (bounds.contains(event->pos())) {
             // The middle mouse button has been clicked above the

@@ -85,7 +85,7 @@ public:
         const QUrl url = hitTest.linkUrl();
 
         if (!url.isEmpty()) {
-            if ((pressedButtons & Qt::MidButton) ||
+            if ((pressedButtons & Qt::MiddleButton) ||
                 ((pressedButtons & Qt::LeftButton) && (keyboardModifiers & Qt::ControlModifier))) {
                 emit q->linkMiddleOrCtrlClicked(url);
                 return true;
@@ -103,7 +103,7 @@ public:
     bool handleUrlPasteFromClipboard(QEvent* event)
     {
         QWebPage *page = q->page();
-        if ((pressedButtons & Qt::MidButton) && page) {
+        if ((pressedButtons & Qt::MiddleButton) && page) {
 
             // WORKAROUND: Let the page handle the event first so that middle clicking
             // on scroll bars does not cause navigation to a url that might have been

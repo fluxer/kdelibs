@@ -108,7 +108,7 @@ void KButtonGroupTest::testClicks()
     // QRadioButton's react only to LMB click events
     QTest::mouseClick(buttons[5], Qt::RightButton, 0, QPoint(), 10);
     QCOMPARE(kbuttongroup->selected(), 1);
-    QTest::mouseClick(buttons[5], Qt::MidButton, 0, QPoint(), 10);
+    QTest::mouseClick(buttons[5], Qt::MiddleButton, 0, QPoint(), 10);
     QCOMPARE(kbuttongroup->selected(), 1);
 }
 
