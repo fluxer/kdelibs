@@ -507,6 +507,7 @@ bool PreviewJobPrivate::statResultThumbnail()
     QImage thumb;
     if ( !thumb.load( thumbPath + thumbName ) ) return false;
 
+#ifndef QT_NO_IMAGE_TEXT
     if ( thumb.text( QLatin1String("Thumb::URI") ) != origName ||
          thumb.text( QLatin1String("Thumb::MTime") ).toInt() != tOrig ) return false;
 
@@ -533,6 +534,7 @@ bool PreviewJobPrivate::statResultThumbnail()
             return false;
         }
     }
+#endif // QT_NO_IMAGE_TEXT
 
     // Found it, use it
     emitPreview( thumb );
@@ -659,6 +661,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
     bool savedCorrectly = false;
     if (save)
     {
+#ifndef QT_NO_IMAGE_TEXT
         thumb.setText("Thumb::URI", origName);
         thumb.setText("Thumb::MTime", QString::number(tOrig));
         thumb.setText("Thumb::Size", number(currentItem.item.size()));
@@ -669,6 +672,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
             signature.append(" (v"+thumbnailerVersion+')');
         }
         thumb.setText("Software", signature);
+#endif
         KTemporaryFile temp;
         temp.setPrefix(thumbPath + "kde-tmp-");
         temp.setSuffix(".png");

@@ -206,6 +206,7 @@ bool XCFImageFormat::loadImageProperties(QDataStream& xcf_io, XCFImage& xcf_imag
 				property >> xcf_image.tattoo;
 				break;
 
+#ifndef QT_NO_IMAGE_TEXT
 			case PROP_PARASITES:
 				while (!property.atEnd()) {
 					char* tag;
@@ -224,6 +225,7 @@ bool XCFImageFormat::loadImageProperties(QDataStream& xcf_io, XCFImage& xcf_imag
 					delete[] data;
 				}
 				break;
+#endif // QT_NO_IMAGE_TEXT
 
 				case PROP_UNIT:
 					property >> xcf_image.unit;
