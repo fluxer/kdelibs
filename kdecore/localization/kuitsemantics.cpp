@@ -25,7 +25,7 @@
 #include <QSet>
 #include <QRegExp>
 #include <QStack>
-#include <QtCore/qxmlstream.h>
+#include <QXmlStreamReader>
 #include <QDir>
 
 #include <kdebug.h>
