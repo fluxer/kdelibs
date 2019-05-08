@@ -21,16 +21,15 @@
 #ifndef PLASMA_ANIMATOR_H
 #define PLASMA_ANIMATOR_H
 
-#include <QtGui/QImage>
-#include <QtCore/QObject>
-#include <QtCore/QAbstractAnimation>
-#include <QtCore/QEasingCurve>
-
-#include <plasma/plasma_export.h>
-
+#include <QImage>
+#include <QObject>
+#include <QAbstractAnimation>
+#include <QEasingCurve>
 #include <QGraphicsItem>
 #include <QGraphicsWidget>
 #include <QTimeLine>
+
+#include <plasma/plasma_export.h>
 
 namespace Plasma
 {

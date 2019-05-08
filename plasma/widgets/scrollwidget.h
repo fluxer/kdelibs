@@ -20,8 +20,8 @@
 #ifndef PLASMA_SCROLLWIDGET_H
 #define PLASMA_SCROLLWIDGET_H
 
-#include <QtCore/QAbstractAnimation>
-#include <QtGui/QGraphicsWidget>
+#include <QAbstractAnimation>
+#include <QGraphicsWidget>
 
 #include <plasma/plasma_export.h>
 

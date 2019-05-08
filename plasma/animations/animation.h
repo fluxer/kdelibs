@@ -25,11 +25,11 @@
 #ifndef PLASMA_ANIMATION_H
 #define PLASMA_ANIMATION_H
 
-#include <QtGui/QGraphicsWidget>
-#include <QtCore/QObject>
-#include <QtCore/QPropertyAnimation>
-#include <QtCore/QAbstractAnimation>
-#include <QtCore/QEasingCurve>
+#include <QGraphicsWidget>
+#include <QObject>
+#include <QPropertyAnimation>
+#include <QAbstractAnimation>
+#include <QEasingCurve>
 
 #include <plasma/plasma_export.h>
 #include <plasma/plasma.h>
