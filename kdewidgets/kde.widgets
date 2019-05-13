@@ -1,6 +1,6 @@
 [Global]
 PluginName=KDEWidgets
-Includes=kcomponentdata.h,classpreviews.h,ktimezone.h
+Includes=kcomponentdata.h,ktimezone.h
 Init=new KComponentData("kdewidgets");
 
 [KActionSelector]
@@ -101,9 +101,9 @@ ToolTip=Date preview (KDE)
 Group=Date/Time (KDE)
 
 [KDialog]
-IsContainer=true
-ImplClass=KDialogPreview
+IncludeFile=kdialog.h
 ToolTip=Class for simple Dialogs (KDE)
+IsContainer=true
 Group=Container (KDE)
 
 [KDialogButtonBox]

@@ -1,6 +1,6 @@
 [Global]
 PluginName=KDEWebKitWidgets
-Includes=kcomponentdata.h,classpreviews.h
+Includes=kcomponentdata.h
 Init=new KComponentData("kdewidgets");
 
 [KWebView]

@@ -30,11 +30,6 @@ install(
 if(QT_QTDESIGNER_FOUND)
     kde4_add_widget(kdewidgets_SRCS kde.widgets)
 
-    set(kdewidgets_SRCS
-        ${kdewidgets_SRCS}
-        classpreviews.cpp
-    )
-
     qt4_add_resources(kdewidgets_SRCS kdewidgets.qrc)
 
     kde4_add_plugin(kdewidgets ${kdewidgets_SRCS})
@@ -53,11 +48,6 @@ if(QT_QTDESIGNER_FOUND)
         )
 
         kde4_add_widget(kdewebkitwidgets_SRCS kdewebkit.widgets)
-
-        set(kdewebkitwidgets_SRCS
-            ${kdewebkitwidgets_SRCS}
-            classpreviews.cpp
-        )
 
         qt4_add_resources(kdewebkitwidgets_SRCS kdewebkitwidgets.qrc)
 
