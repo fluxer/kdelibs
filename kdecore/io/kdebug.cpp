@@ -212,6 +212,23 @@ struct KDebugPrivate
     ~KDebugPrivate()
     {
         delete config;
+
+        if (m_indentString) {
+            delete m_indentString;
+            m_indentString = 0;
+        }
+        if (syslogwriter) {
+            delete syslogwriter;
+            syslogwriter = 0;
+        }
+        if (filewriter) {
+            delete filewriter;
+            filewriter = 0;
+        }
+        if (messageboxwriter) {
+            delete messageboxwriter;
+            messageboxwriter = 0;
+        }
     }
 
     void loadAreaNames()
@@ -402,18 +419,18 @@ struct KDebugPrivate
 
     QDebug setupFileWriter(const QString &fileName)
     {
-        if (!filewriter.hasLocalData())
-            filewriter.setLocalData(new KFileDebugStream);
-        filewriter.localData()->setFileName(fileName);
-        QDebug result(filewriter.localData());
+        if (!filewriter)
+            filewriter = new KFileDebugStream();
+        filewriter->setFileName(fileName);
+        QDebug result(filewriter);
         return result;
     }
 
     QDebug setupMessageBoxWriter(QtMsgType type, const QByteArray &areaName)
     {
-        if (!messageboxwriter.hasLocalData())
-            messageboxwriter.setLocalData(new KMessageBoxDebugStream);
-        QDebug result(messageboxwriter.localData());
+        if (!messageboxwriter)
+            messageboxwriter = new KMessageBoxDebugStream();
+        QDebug result(messageboxwriter);
         QByteArray header;
 
         switch (type) {
@@ -434,15 +451,15 @@ struct KDebugPrivate
 
         header += areaName;
         header += ')';
-        messageboxwriter.localData()->setCaption(QString::fromLatin1(header));
+        messageboxwriter->setCaption(QString::fromLatin1(header));
         return result;
     }
 
     QDebug setupSyslogWriter(QtMsgType type)
     {
-        if (!syslogwriter.hasLocalData())
-            syslogwriter.setLocalData(new KSyslogDebugStream);
-        QDebug result(syslogwriter.localData());
+        if (!syslogwriter)
+            syslogwriter = new KSyslogDebugStream();
+        QDebug result(syslogwriter);
         int level = 0;
 
         switch (type) {
@@ -460,7 +477,7 @@ struct KDebugPrivate
             level = LOG_ERR;
             break;
         }
-        syslogwriter.localData()->setPriority(level);
+        syslogwriter->setPriority(level);
         return result;
     }
 
@@ -516,8 +533,8 @@ struct KDebugPrivate
             s << areaName.constData();
         }
 
-        if (m_indentString.hasLocalData()) {
-            s << m_indentString.localData()->toLatin1().constData();
+        if (m_indentString) {
+            s << m_indentString->toLatin1().constData();
         }
 
         if (printFileLine) {
@@ -652,12 +669,17 @@ struct KDebugPrivate
     int m_nullOutputYesNoCache[8];
 
     KNoDebugStream devnull;
-    QThreadStorage<QString*> m_indentString;
-    QThreadStorage<KSyslogDebugStream*> syslogwriter;
-    QThreadStorage<KFileDebugStream*> filewriter;
-    QThreadStorage<KMessageBoxDebugStream*> messageboxwriter;
+    static thread_local QString* m_indentString;
+    static thread_local KSyslogDebugStream* syslogwriter;
+    static thread_local KFileDebugStream* filewriter;
+    static thread_local KMessageBoxDebugStream* messageboxwriter;
     KLineEndStrippingDebugStream lineendstrippingwriter;
 };
+
+thread_local QString* KDebugPrivate::m_indentString = 0;
+thread_local KSyslogDebugStream* KDebugPrivate::syslogwriter = 0;
+thread_local KFileDebugStream* KDebugPrivate::filewriter = 0;
+thread_local KMessageBoxDebugStream* KDebugPrivate::messageboxwriter = 0;
 
 K_GLOBAL_STATIC(KDebugPrivate, kDebug_data)
 
@@ -850,11 +872,10 @@ KDebug::Block::Block(const char* label, int area)
         kDebug(area) << "BEGIN:" << label;
 
         // The indent string is per thread
-        QThreadStorage<QString*> & indentString = kDebug_data->m_indentString;
-        if (!indentString.hasLocalData()) {
-            indentString.setLocalData(new QString);
+        if (!kDebug_data->m_indentString) {
+            kDebug_data->m_indentString = new QString();
         }
-        *(indentString.localData()) += QLatin1String("  ");
+        kDebug_data->m_indentString->append(QLatin1String("  "));
     }
 }
 
@@ -862,8 +883,7 @@ KDebug::Block::~Block()
 {
     if (d) {
         const double duration = m_startTime.elapsed() / 1000.0;
-        QThreadStorage<QString*> & indentString = kDebug_data->m_indentString;
-        indentString.localData()->chop(2);
+        kDebug_data->m_indentString->chop(2);
 
         // Print timing information, and a special message (DELAY) if the method took longer than 5s
         if (duration < 5.0) {

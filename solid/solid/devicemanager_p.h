@@ -28,7 +28,6 @@
 #include <QtCore/QMap>
 #include <QtCore/qsharedpointer.h>
 #include <QtCore/QSharedData>
-#include <QtCore/QThreadStorage>
 
 namespace Solid
 {
@@ -65,6 +64,7 @@ namespace Solid
     {
     public:
         DeviceManagerStorage();
+        ~DeviceManagerStorage();
 
         QList<QObject*> managerBackends();
         DeviceNotifier *notifier();
@@ -72,7 +72,7 @@ namespace Solid
     private:
         void ensureManagerCreated();
 
-        QThreadStorage<DeviceManagerPrivate*> m_storage;
+        static thread_local DeviceManagerPrivate* m_storage;
     };
 }
 

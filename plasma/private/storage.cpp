@@ -28,7 +28,6 @@
 #include <QSqlField>
 #include <QSqlQuery>
 #include <QSqlRecord>
-#include <QThreadStorage>
 
 //KDE
 #include <kdebug.h>

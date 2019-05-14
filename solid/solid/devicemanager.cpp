@@ -32,6 +32,8 @@
 
 Q_GLOBAL_STATIC(Solid::DeviceManagerStorage, globalDeviceStorage)
 
+thread_local Solid::DeviceManagerPrivate* Solid::DeviceManagerStorage::m_storage = 0;
+
 Solid::DeviceManagerPrivate::DeviceManagerPrivate()
     : m_nullDevice(new DevicePrivate(QString()))
 {
@@ -269,22 +271,30 @@ Solid::DeviceManagerStorage::DeviceManagerStorage()
 
 }
 
+Solid::DeviceManagerStorage::~DeviceManagerStorage()
+{
+    if (m_storage) {
+        delete m_storage;
+        m_storage = 0;
+    }
+}
+
 QList<QObject*> Solid::DeviceManagerStorage::managerBackends()
 {
     ensureManagerCreated();
-    return m_storage.localData()->managerBackends();
+    return m_storage->managerBackends();
 }
 
 Solid::DeviceNotifier *Solid::DeviceManagerStorage::notifier()
 {
     ensureManagerCreated();
-    return m_storage.localData();
+    return m_storage;
 }
 
 void Solid::DeviceManagerStorage::ensureManagerCreated()
 {
-    if (!m_storage.hasLocalData()) {
-        m_storage.setLocalData(new DeviceManagerPrivate());
+    if (!m_storage) {
+        m_storage = new DeviceManagerPrivate();
     }
 }
 

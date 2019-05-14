@@ -102,23 +102,30 @@ class KSycocaSingleton
 {
 public:
     KSycocaSingleton() { }
-    ~KSycocaSingleton() { }
+    ~KSycocaSingleton()
+    {
+        if (m_threadSycocas) {
+            delete m_threadSycocas;
+            m_threadSycocas = 0;
+        }
+    }
 
     bool hasSycoca() const {
-        return m_threadSycocas.hasLocalData();
+        return (m_threadSycocas != 0);
     }
     KSycoca* sycoca() {
-        if (!m_threadSycocas.hasLocalData())
-            m_threadSycocas.setLocalData(new KSycoca);
-        return m_threadSycocas.localData();
+        if (!m_threadSycocas)
+            m_threadSycocas = new KSycoca();
+        return m_threadSycocas;
     }
     void setSycoca(KSycoca* s) {
-        m_threadSycocas.setLocalData(s);
+        m_threadSycocas = s;
     }
 
 private:
-    QThreadStorage<KSycoca*> m_threadSycocas;
+    static thread_local KSycoca* m_threadSycocas;
 };
+thread_local KSycoca* KSycocaSingleton::m_threadSycocas = 0;
 
 K_GLOBAL_STATIC(KSycocaSingleton, ksycocaInstance)
 
