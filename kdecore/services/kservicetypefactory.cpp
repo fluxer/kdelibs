@@ -25,12 +25,12 @@
 #include <kdebug.h>
 #include <assert.h>
 
-K_GLOBAL_STATIC(KSycocaFactorySingleton<KServiceTypeFactory>, kServiceTypeFactoryInstance)
+thread_local KServiceTypeFactory* kServiceTypeFactoryInstance = 0;
 
 KServiceTypeFactory::KServiceTypeFactory()
     : KSycocaFactory( KST_KServiceTypeFactory )
 {
-    kServiceTypeFactoryInstance->instanceCreated(this);
+    kServiceTypeFactoryInstance = this;
     if (!KSycoca::self()->isBuilding()) {
         QDataStream* str = stream();
         Q_ASSERT(str);
@@ -56,13 +56,16 @@ KServiceTypeFactory::KServiceTypeFactory()
 KServiceTypeFactory::~KServiceTypeFactory()
 {
     KServiceTypeProfile::clearCache();
-    if (kServiceTypeFactoryInstance.exists())
-        kServiceTypeFactoryInstance->instanceDestroyed(this);
+    if (kServiceTypeFactoryInstance) {
+        kServiceTypeFactoryInstance = 0;
+    }
 }
 
 KServiceTypeFactory * KServiceTypeFactory::self()
 {
-    return kServiceTypeFactoryInstance->self();
+    if (!kServiceTypeFactoryInstance)
+        kServiceTypeFactoryInstance = new KServiceTypeFactory();
+    return kServiceTypeFactoryInstance;
 }
 
 KServiceType::Ptr KServiceTypeFactory::findServiceTypeByName(const QString &_name)

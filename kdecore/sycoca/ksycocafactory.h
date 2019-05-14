@@ -22,10 +22,11 @@
 #include <ksycocaentry.h>
 
 #include <QString>
-class KSycocaDict;
-class KSycocaResourceList;
 #include <QList>
 #include <QHash>
+
+class KSycocaDict;
+class KSycocaResourceList;
 
 typedef QHash<QString, KSycocaEntry::Ptr> KSycocaEntryDict;
 
@@ -134,70 +135,6 @@ private:
     class Private;
     Private* const d;
 };
-
-/**
- * This, instead of a typedef, allows to declare "class ..." in header files.
- * @internal
- */
-class KDECORE_EXPORT KSycocaFactoryList : public QList<KSycocaFactory*> //krazy:exclude=dpointer (acts as a typedef)
-{
-public:
-    KSycocaFactoryList() { }
-};
-
-#include <QThreadStorage>
-/**
- * Workaround for the lack of QThreadStorage::setAutoDelete(false).
- * Container for KSycocaFactory that doesn't delete it when it is deleted.
- */
-template <typename F> class KSycocaFactoryContainer
-{
-public:
-    KSycocaFactoryContainer(F* factory) : m_factory(factory) {}
-    F* factory() { return m_factory; }
-private:
-    F* m_factory;
-};
-
-/**
- * Template for making it easier to define a threadsafe singleton
- * for each factory, with support for kbuildsycoca providing a
- * subclass of the factory.
- *
- * @since 4.3
- * @internal
- */
-template <typename F> class KSycocaFactorySingleton
-{
-public:
-    typedef KSycocaFactoryContainer<F> C;
-    KSycocaFactorySingleton() {
-    }
-    ~KSycocaFactorySingleton() {
-        // Do not delete the factory here.
-        // All factories are owned by KSycoca, and deleted by it.
-    }
-    void instanceCreated(F* newFactory) {
-        // This can also register a subclass created by kbuildsycoca
-        Q_ASSERT(!m_factories.hasLocalData());
-        Q_ASSERT(newFactory);
-        m_factories.setLocalData(new C(newFactory));
-    }
-    void instanceDestroyed(F* factory) {
-        if (m_factories.hasLocalData()) { // could be false on thread exit
-            Q_ASSERT(m_factories.localData()->factory() == factory); Q_UNUSED(factory)
-            m_factories.setLocalData(0);
-        }
-    }
-    F* self() {
-        if (!m_factories.hasLocalData()) {
-            new F; // calls instanceCreated, which calls setLocalData
-            Q_ASSERT(m_factories.hasLocalData());
-        }
-        return m_factories.localData()->factory();
-    }
-private:
-    QThreadStorage<C*> m_factories;
-};
+typedef QList<KSycocaFactory*> KSycocaFactoryList;
 
 #endif

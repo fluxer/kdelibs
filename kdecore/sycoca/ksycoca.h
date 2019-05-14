@@ -22,13 +22,12 @@
 
 #include <kdecore_export.h>
 #include <ksycocatype.h>
+#include <ksycocafactory.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
+#include <QtCore/QDataStream>
 
-#include <QDataStream>
-class KSycocaFactory;
-class KSycocaFactoryList;
 class KSycocaPrivate;
 
 /**

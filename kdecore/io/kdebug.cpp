@@ -52,7 +52,6 @@
 #include <QtCore/QObject>
 #include <QtCore/QChar>
 #include <QtCore/QCoreApplication>
-#include <QtCore/QThreadStorage>
 #include <QtCore/QMutex>
 
 #include <stdlib.h>	// abort

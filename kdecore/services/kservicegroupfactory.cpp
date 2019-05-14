@@ -29,12 +29,12 @@
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
-K_GLOBAL_STATIC(KSycocaFactorySingleton<KServiceGroupFactory>, kServiceGroupFactoryInstance)
+thread_local KServiceGroupFactory* kServiceGroupFactoryInstance = 0;
 
 KServiceGroupFactory::KServiceGroupFactory()
     : KSycocaFactory( KST_KServiceGroupFactory )
 {
-    kServiceGroupFactoryInstance->instanceCreated(this);
+    kServiceGroupFactoryInstance = this;
     m_baseGroupDictOffset = 0;
     if (!KSycoca::self()->isBuilding()) {
         QDataStream* str = stream();
@@ -53,13 +53,16 @@ KServiceGroupFactory::KServiceGroupFactory()
 KServiceGroupFactory::~KServiceGroupFactory()
 {
     delete m_baseGroupDict;
-    if (kServiceGroupFactoryInstance.exists())
-        kServiceGroupFactoryInstance->instanceDestroyed(this);
+    if (kServiceGroupFactoryInstance) {
+        kServiceGroupFactoryInstance = 0;
+    }
 }
 
 KServiceGroupFactory * KServiceGroupFactory::self()
 {
-    return kServiceGroupFactoryInstance->self();
+    if (!kServiceGroupFactoryInstance)
+        kServiceGroupFactoryInstance = new KServiceGroupFactory();
+    return kServiceGroupFactoryInstance;
 }
 
 KServiceGroup::Ptr KServiceGroupFactory::findGroupByDesktopPath(const QString &_name, bool deep)

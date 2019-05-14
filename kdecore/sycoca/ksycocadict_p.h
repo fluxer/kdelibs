@@ -23,7 +23,6 @@
 #include "ksycocaentry.h"
 
 #include <QList>
-
 #include <QString>
 #include <QDataStream>
 

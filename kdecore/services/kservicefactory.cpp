@@ -29,7 +29,7 @@
 
 extern int servicesDebugArea();
 
-K_GLOBAL_STATIC(KSycocaFactorySingleton<KServiceFactory>, kServiceFactoryInstance)
+thread_local KServiceFactory* kServiceFactoryInstance = 0;
 
 KServiceFactory::KServiceFactory()
     : KSycocaFactory( KST_KServiceFactory ),
@@ -37,7 +37,7 @@ KServiceFactory::KServiceFactory()
     m_relNameDict(0),
     m_menuIdDict(0)
 {
-    kServiceFactoryInstance->instanceCreated(this);
+    kServiceFactoryInstance = this;
     m_offerListOffset = 0;
     m_nameDictOffset = 0;
     m_relNameDictOffset = 0;
@@ -71,8 +71,9 @@ KServiceFactory::KServiceFactory()
 
 KServiceFactory::~KServiceFactory()
 {
-    if (kServiceFactoryInstance.exists())
-        kServiceFactoryInstance->instanceDestroyed(this);
+    if (kServiceFactoryInstance) {
+        kServiceFactoryInstance = 0;
+    }
     delete m_nameDict;
     delete m_relNameDict;
     delete m_menuIdDict;
@@ -80,7 +81,9 @@ KServiceFactory::~KServiceFactory()
 
 KServiceFactory * KServiceFactory::self()
 {
-    return kServiceFactoryInstance->self();
+    if (!kServiceFactoryInstance)
+        kServiceFactoryInstance = new KServiceFactory();
+    return kServiceFactoryInstance;
 }
 
 KService::Ptr KServiceFactory::findServiceByName(const QString &_name)
