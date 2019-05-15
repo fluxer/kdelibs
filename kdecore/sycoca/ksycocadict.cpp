@@ -360,7 +360,7 @@ KSycocaDict::save(QDataStream &str)
    // use "almost prime" number for sz (to calculate diversity) and later
    // for the table size of big tables
    // int sz = d->stringlist->count()*5-1;
-   register unsigned int sz = count()*4 + 1;
+   unsigned int sz = count()*4 + 1;
    while(!(((sz % 3) && (sz % 5) && (sz % 7) && (sz % 11) && (sz % 13))))
       sz+=2;
 
