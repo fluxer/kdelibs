@@ -22,13 +22,13 @@
 
 #include <kdecore_export.h>
 #include <ksycocatype.h>
-#include <ksycocafactory.h>
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtCore/QDataStream>
 
 class KSycocaPrivate;
+class KSycocaFactory;
 
 /**
  * Executable name of the kbuildsycoca program
@@ -174,7 +174,7 @@ Q_SIGNALS:
 
 protected:
     // @internal used by kbuildsycoca
-    KSycocaFactoryList* factories();
+    QList<KSycocaFactory*>* factories();
 
     // @internal was for kbuildsycoca
     // @internal used by factories and kbuildsycoca
