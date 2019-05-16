@@ -87,7 +87,7 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
     } else if (buf.f_type == MSDOS_SUPER_MAGIC) {
         return KFileSystemType::Fat;
     } else if (buf.f_type == RAMFS_MAGIC) {
-            return KFileSystemType::Ramfs;
+        return KFileSystemType::Ramfs;
     }
     return KFileSystemType::Other;
 }
