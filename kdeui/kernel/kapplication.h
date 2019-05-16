@@ -115,10 +115,8 @@ public:
    * @param rAppName application name. Will be used for finding the
    * associated message files and icon files, and as the default
    * registration name for DCOP. This is a mandatory parameter.
-   *
-   * @param GUIenabled Set to false to disable all GUI stuff.
    */
-  KApplication(Display *display, int& argc, char** argv, const QByteArray& rAppName);
+  explicit KApplication(Display *display, int& argc, char** argv, const QByteArray& rAppName);
 #endif
 
   virtual ~KApplication();
