@@ -20,8 +20,8 @@
 #ifndef KPRINTPREVIEW_H
 #define KPRINTPREVIEW_H
 
+#include <QPrinter>
 #include <kprintutils_export.h>
-
 #include <kdialog.h>
 
 class KPrintPreviewPrivate;

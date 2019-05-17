@@ -24,6 +24,7 @@
 #ifndef LIBS_PLASMA_DIALOG_P_H
 #define LIBS_PLASMA_DIALOG_P_H
 
+#include <QTimer>
 #include "plasma/dialog.h"
 
 namespace Plasma {

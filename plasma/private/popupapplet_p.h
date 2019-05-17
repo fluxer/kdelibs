@@ -20,6 +20,7 @@
 #ifndef POPUPAPPLET_P_H
 #define POPUPAPPLET_P_H
 
+#include <QTimer>
 #include <QBasicTimer>
 #include <QtCore/qsharedpointer.h>
 

@@ -25,13 +25,14 @@
 #include "kurlnavigatormenu_p.h"
 
 #include <QtCore/qpointer.h>
+#include <QDropEvent>
+#include <QPaintEvent>
+#include <QTimer>
 #include <kio/global.h>
 #include <kio/udsentry.h>
 #include <kurl.h>
 
 class KJob;
-#include <QDropEvent>
-#include <QPaintEvent>
 
 namespace KIO
 {

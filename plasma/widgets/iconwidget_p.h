@@ -22,6 +22,7 @@
 #ifndef PLASMA_ICONWIDGET_P_H
 #define PLASMA_ICONWIDGET_P_H
 
+#include <QtCore/QTimer>
 #include <QtCore/QEvent>
 #include <QtCore/qsharedpointer.h>
 #include <QtGui/QApplication>
