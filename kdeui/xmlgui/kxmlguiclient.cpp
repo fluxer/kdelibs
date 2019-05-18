@@ -51,6 +51,12 @@ public:
   }
   ~KXMLGUIClientPrivate()
   {
+    if (m_actionCollection) {
+      m_actionCollection->deleteLater();
+    }
+    if (m_builder) {
+      delete m_builder;
+    }
   }
 
   bool mergeXML( QDomElement &base, QDomElement &additive,
@@ -108,7 +114,6 @@ KXMLGUIClient::~KXMLGUIClient()
       client->d->m_parent = 0;
   }
 
-  delete d->m_actionCollection;
   delete d;
 }
 

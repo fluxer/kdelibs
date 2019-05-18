@@ -41,16 +41,6 @@
 #include <X11/extensions/Xfixes.h>
 #endif
 
-class KWindowSystemStaticContainer {
-public:
-    KWindowSystemStaticContainer() : d(0) {}
-    KWindowSystem kwm;
-    KWindowSystemPrivate* d;
-};
-
-
-K_GLOBAL_STATIC(KWindowSystemStaticContainer, g_kwmInstanceContainer)
-
 static Atom net_wm_cm;
 static void create_atoms( Display* dpy = QX11Info::display() );
 
@@ -113,6 +103,17 @@ public:
     void updateStackingOrder();
     bool removeStrutWindow( WId );
 };
+
+class KWindowSystemStaticContainer {
+public:
+    KWindowSystemStaticContainer() : d(0) {}
+    ~KWindowSystemStaticContainer() { if (d) d->deleteLater(); }
+    KWindowSystem kwm;
+    KWindowSystemPrivate* d;
+};
+
+
+K_GLOBAL_STATIC(KWindowSystemStaticContainer, g_kwmInstanceContainer)
 
 KWindowSystemPrivate::KWindowSystemPrivate(int _what)
     : QWidget(0),
