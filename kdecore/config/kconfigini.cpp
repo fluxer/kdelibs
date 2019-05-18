@@ -57,6 +57,7 @@ QString KConfigIniBackend::warningProlog(const QFile &file, int line)
 }
 
 KConfigIniBackend::KConfigIniBackend()
+    : QObject(), QSharedData()
 {
 }
 

@@ -411,6 +411,7 @@ void KConfig::sync()
             if (d->configState == ReadWrite && !tmp->lock(componentData())) {
                 qWarning() << "couldn't lock global file";
                 d->bDirty = true;
+                tmp->deleteLater();
                 return;
             }
             if (!tmp->writeConfig(utf8Locale, d->entryMap, KConfigIniBackend::WriteGlobal, d->componentData)) {
@@ -421,6 +422,7 @@ void KConfig::sync()
             if (tmp->isLocked()) {
                 tmp->unlock();
             }
+            tmp->deleteLater();
         }
 
         if (writeLocals) {
@@ -577,8 +579,11 @@ void KConfigPrivate::parseGlobalFiles()
 
         KConfigIniBackend *backend = new KConfigIniBackend();
         backend->setFilePath(file);
-        if ( backend->parseConfig( utf8Locale, entryMap, parseOpts) == KConfigIniBackend::ParseImmutable)
+        if ( backend->parseConfig( utf8Locale, entryMap, parseOpts) == KConfigIniBackend::ParseImmutable) {
+            backend->deleteLater();
             break;
+        }
+        backend->deleteLater();
     }
 }
 
@@ -625,6 +630,7 @@ void KConfigPrivate::parseConfigFiles()
                 bFileImmutable = (backend->parseConfig(utf8Locale, entryMap,
                                         KConfigIniBackend::ParseDefaults|KConfigIniBackend::ParseExpansions)
                                   == KConfigIniBackend::ParseImmutable);
+                backend->deleteLater();
             }
 
             if (bFileImmutable)
