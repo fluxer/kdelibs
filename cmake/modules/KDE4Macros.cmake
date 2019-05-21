@@ -144,14 +144,6 @@ macro(KDE4_CREATE_MANPAGE _docbook _section)
 endmacro(KDE4_CREATE_MANPAGE)
 
 
-# a "map" of short type names to the directories
-# unknown names should give empty results
-# KDE 3 compatibility
-set(_KDE4_ICON_GROUP_mime       "mimetypes")
-set(_KDE4_ICON_GROUP_filesys    "places")
-set(_KDE4_ICON_GROUP_device     "devices")
-set(_KDE4_ICON_GROUP_app        "apps")
-set(_KDE4_ICON_GROUP_action     "actions")
 # KDE 4 / icon naming specification compatibility
 set(_KDE4_ICON_GROUP_mimetypes  "mimetypes")
 set(_KDE4_ICON_GROUP_places     "places")
