@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.5.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.5"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -981,6 +981,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
       case N:                               \
         yyformat = S;                       \
       break
+    default: /* Avoid compiler warnings. */
       YYCASE_(0, YY_("syntax error"));
       YYCASE_(1, YY_("syntax error, unexpected %s"));
       YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
@@ -1045,57 +1046,57 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, void *_scanner)
   switch (yytype)
     {
           case 37: /* bool_or  */
-#line 68 "yacc.y" /* yacc.c:1257  */
+#line 68 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1051 "yacc.c" /* yacc.c:1257  */
+#line 1052 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 38: /* bool_and  */
-#line 69 "yacc.y" /* yacc.c:1257  */
+#line 69 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1057 "yacc.c" /* yacc.c:1257  */
+#line 1058 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 39: /* bool_compare  */
-#line 70 "yacc.y" /* yacc.c:1257  */
+#line 70 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1063 "yacc.c" /* yacc.c:1257  */
+#line 1064 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 40: /* expr_in  */
-#line 71 "yacc.y" /* yacc.c:1257  */
+#line 71 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1069 "yacc.c" /* yacc.c:1257  */
+#line 1070 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 41: /* expr_twiddle  */
-#line 72 "yacc.y" /* yacc.c:1257  */
+#line 72 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1075 "yacc.c" /* yacc.c:1257  */
+#line 1076 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 42: /* expr  */
-#line 73 "yacc.y" /* yacc.c:1257  */
+#line 73 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1081 "yacc.c" /* yacc.c:1257  */
+#line 1082 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 43: /* term  */
-#line 74 "yacc.y" /* yacc.c:1257  */
+#line 74 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1087 "yacc.c" /* yacc.c:1257  */
+#line 1088 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 44: /* factor_non  */
-#line 75 "yacc.y" /* yacc.c:1257  */
+#line 75 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1093 "yacc.c" /* yacc.c:1257  */
+#line 1094 "yacc.c" /* yacc.c:1258  */
         break;
 
     case 45: /* factor  */
-#line 76 "yacc.y" /* yacc.c:1257  */
+#line 76 "yacc.y" /* yacc.c:1258  */
       { KTraderParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1099 "yacc.c" /* yacc.c:1257  */
+#line 1100 "yacc.c" /* yacc.c:1258  */
         break;
 
 
@@ -1361,253 +1362,253 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 84 "yacc.y" /* yacc.c:1646  */
+#line 84 "yacc.y" /* yacc.c:1648  */
     { KTraderParse_setParseTree( 0L ); }
-#line 1367 "yacc.c" /* yacc.c:1646  */
+#line 1368 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 3:
-#line 85 "yacc.y" /* yacc.c:1646  */
+#line 85 "yacc.y" /* yacc.c:1648  */
     { KTraderParse_setParseTree( (yyvsp[0].ptr) ); }
-#line 1373 "yacc.c" /* yacc.c:1646  */
+#line 1374 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 4:
-#line 88 "yacc.y" /* yacc.c:1646  */
+#line 88 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1379 "yacc.c" /* yacc.c:1646  */
+#line 1380 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 5:
-#line 91 "yacc.y" /* yacc.c:1646  */
+#line 91 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newOR( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1385 "yacc.c" /* yacc.c:1646  */
+#line 1386 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 6:
-#line 92 "yacc.y" /* yacc.c:1646  */
+#line 92 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1391 "yacc.c" /* yacc.c:1646  */
+#line 1392 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 7:
-#line 95 "yacc.y" /* yacc.c:1646  */
+#line 95 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newAND( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1397 "yacc.c" /* yacc.c:1646  */
+#line 1398 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 8:
-#line 96 "yacc.y" /* yacc.c:1646  */
+#line 96 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1403 "yacc.c" /* yacc.c:1646  */
+#line 1404 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 9:
-#line 99 "yacc.y" /* yacc.c:1646  */
+#line 99 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 1 ); }
-#line 1409 "yacc.c" /* yacc.c:1646  */
+#line 1410 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 10:
-#line 100 "yacc.y" /* yacc.c:1646  */
+#line 100 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 7 ); }
-#line 1415 "yacc.c" /* yacc.c:1646  */
+#line 1416 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 11:
-#line 101 "yacc.y" /* yacc.c:1646  */
+#line 101 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 2 ); }
-#line 1421 "yacc.c" /* yacc.c:1646  */
+#line 1422 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 12:
-#line 102 "yacc.y" /* yacc.c:1646  */
+#line 102 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 8 ); }
-#line 1427 "yacc.c" /* yacc.c:1646  */
+#line 1428 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 13:
-#line 103 "yacc.y" /* yacc.c:1646  */
+#line 103 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 3 ); }
-#line 1433 "yacc.c" /* yacc.c:1646  */
+#line 1434 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 14:
-#line 104 "yacc.y" /* yacc.c:1646  */
+#line 104 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 4 ); }
-#line 1439 "yacc.c" /* yacc.c:1646  */
+#line 1440 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 15:
-#line 105 "yacc.y" /* yacc.c:1646  */
+#line 105 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 5 ); }
-#line 1445 "yacc.c" /* yacc.c:1646  */
+#line 1446 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 16:
-#line 106 "yacc.y" /* yacc.c:1646  */
+#line 106 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCMP( (yyvsp[-2].ptr), (yyvsp[0].ptr), 6 ); }
-#line 1451 "yacc.c" /* yacc.c:1646  */
+#line 1452 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 17:
-#line 107 "yacc.y" /* yacc.c:1646  */
+#line 107 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1457 "yacc.c" /* yacc.c:1646  */
+#line 1458 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 18:
-#line 110 "yacc.y" /* yacc.c:1646  */
+#line 110 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newIN( (yyvsp[-2].ptr), KTraderParse_newID( (yyvsp[0].name) ), 1 ); }
-#line 1463 "yacc.c" /* yacc.c:1646  */
+#line 1464 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 19:
-#line 111 "yacc.y" /* yacc.c:1646  */
+#line 111 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newIN( (yyvsp[-2].ptr), KTraderParse_newID( (yyvsp[0].name) ), 0 ); }
-#line 1469 "yacc.c" /* yacc.c:1646  */
+#line 1470 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 20:
-#line 112 "yacc.y" /* yacc.c:1646  */
+#line 112 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newSubstringIN( (yyvsp[-2].ptr), KTraderParse_newID( (yyvsp[0].name) ), 1 ); }
-#line 1475 "yacc.c" /* yacc.c:1646  */
+#line 1476 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 21:
-#line 113 "yacc.y" /* yacc.c:1646  */
+#line 113 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newSubstringIN( (yyvsp[-2].ptr), KTraderParse_newID( (yyvsp[0].name) ), 0 ); }
-#line 1481 "yacc.c" /* yacc.c:1646  */
+#line 1482 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 22:
-#line 114 "yacc.y" /* yacc.c:1646  */
+#line 114 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1487 "yacc.c" /* yacc.c:1646  */
+#line 1488 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 23:
-#line 117 "yacc.y" /* yacc.c:1646  */
+#line 117 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newMATCH( (yyvsp[-2].ptr), (yyvsp[0].ptr), 1 ); }
-#line 1493 "yacc.c" /* yacc.c:1646  */
+#line 1494 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 24:
-#line 118 "yacc.y" /* yacc.c:1646  */
+#line 118 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newMATCH( (yyvsp[-2].ptr), (yyvsp[0].ptr), 0 ); }
-#line 1499 "yacc.c" /* yacc.c:1646  */
+#line 1500 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 25:
-#line 119 "yacc.y" /* yacc.c:1646  */
+#line 119 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1505 "yacc.c" /* yacc.c:1646  */
+#line 1506 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 26:
-#line 122 "yacc.y" /* yacc.c:1646  */
+#line 122 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCALC( (yyvsp[-2].ptr), (yyvsp[0].ptr), 1 ); }
-#line 1511 "yacc.c" /* yacc.c:1646  */
+#line 1512 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 27:
-#line 123 "yacc.y" /* yacc.c:1646  */
+#line 123 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCALC( (yyvsp[-2].ptr), (yyvsp[0].ptr), 2 ); }
-#line 1517 "yacc.c" /* yacc.c:1646  */
+#line 1518 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 28:
-#line 124 "yacc.y" /* yacc.c:1646  */
+#line 124 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1523 "yacc.c" /* yacc.c:1646  */
+#line 1524 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 29:
-#line 127 "yacc.y" /* yacc.c:1646  */
+#line 127 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCALC( (yyvsp[-2].ptr), (yyvsp[0].ptr), 3 ); }
-#line 1529 "yacc.c" /* yacc.c:1646  */
+#line 1530 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 30:
-#line 128 "yacc.y" /* yacc.c:1646  */
+#line 128 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newCALC( (yyvsp[-2].ptr), (yyvsp[0].ptr), 4 ); }
-#line 1535 "yacc.c" /* yacc.c:1646  */
+#line 1536 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 31:
-#line 129 "yacc.y" /* yacc.c:1646  */
+#line 129 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1541 "yacc.c" /* yacc.c:1646  */
+#line 1542 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 32:
-#line 132 "yacc.y" /* yacc.c:1646  */
+#line 132 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newNOT( (yyvsp[0].ptr) ); }
-#line 1547 "yacc.c" /* yacc.c:1646  */
+#line 1548 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 33:
-#line 133 "yacc.y" /* yacc.c:1646  */
+#line 133 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1553 "yacc.c" /* yacc.c:1646  */
+#line 1554 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 34:
-#line 136 "yacc.y" /* yacc.c:1646  */
+#line 136 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newBRACKETS( (yyvsp[-1].ptr) ); }
-#line 1559 "yacc.c" /* yacc.c:1646  */
+#line 1560 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 35:
-#line 137 "yacc.y" /* yacc.c:1646  */
+#line 137 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newEXIST( (yyvsp[0].name) ); }
-#line 1565 "yacc.c" /* yacc.c:1646  */
+#line 1566 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 36:
-#line 138 "yacc.y" /* yacc.c:1646  */
+#line 138 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newID( (yyvsp[0].name) ); }
-#line 1571 "yacc.c" /* yacc.c:1646  */
+#line 1572 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 37:
-#line 139 "yacc.y" /* yacc.c:1646  */
+#line 139 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newNUM( (yyvsp[0].vali) ); }
-#line 1577 "yacc.c" /* yacc.c:1646  */
+#line 1578 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 38:
-#line 140 "yacc.y" /* yacc.c:1646  */
+#line 140 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newFLOAT( (yyvsp[0].vald) ); }
-#line 1583 "yacc.c" /* yacc.c:1646  */
+#line 1584 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 39:
-#line 141 "yacc.y" /* yacc.c:1646  */
+#line 141 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newSTRING( (yyvsp[0].name) ); }
-#line 1589 "yacc.c" /* yacc.c:1646  */
+#line 1590 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 40:
-#line 142 "yacc.y" /* yacc.c:1646  */
+#line 142 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newBOOL( (yyvsp[0].valb) ); }
-#line 1595 "yacc.c" /* yacc.c:1646  */
+#line 1596 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 41:
-#line 143 "yacc.y" /* yacc.c:1646  */
+#line 143 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newMAX2( (yyvsp[0].name) ); }
-#line 1601 "yacc.c" /* yacc.c:1646  */
+#line 1602 "yacc.c" /* yacc.c:1648  */
     break;
 
   case 42:
-#line 144 "yacc.y" /* yacc.c:1646  */
+#line 144 "yacc.y" /* yacc.c:1648  */
     { (yyval.ptr) = KTraderParse_newMIN2( (yyvsp[0].name) ); }
-#line 1607 "yacc.c" /* yacc.c:1646  */
+#line 1608 "yacc.c" /* yacc.c:1648  */
     break;
 
 
-#line 1611 "yacc.c" /* yacc.c:1646  */
+#line 1612 "yacc.c" /* yacc.c:1648  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1835,7 +1836,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 149 "yacc.y" /* yacc.c:1906  */
+#line 149 "yacc.y" /* yacc.c:1907  */
 
 
 void yyerror ( void *_scanner, const char *s )  /* Called by yyparse on error */

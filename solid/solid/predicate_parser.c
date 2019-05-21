@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.5.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.5"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -934,6 +934,7 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
       case N:                               \
         yyformat = S;                       \
       break
+    default: /* Avoid compiler warnings. */
       YYCASE_(0, YY_("syntax error"));
       YYCASE_(1, YY_("syntax error, unexpected %s"));
       YYCASE_(2, YY_("syntax error, unexpected %s, expecting %s"));
@@ -998,27 +999,27 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, void *_scanner)
   switch (yytype)
     {
           case 20: /* predicate  */
-#line 54 "predicate_parser.y" /* yacc.c:1257  */
+#line 54 "predicate_parser.y" /* yacc.c:1258  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1004 "predicate_parser.c" /* yacc.c:1257  */
+#line 1005 "predicate_parser.c" /* yacc.c:1258  */
         break;
 
     case 21: /* predicate_atom  */
-#line 55 "predicate_parser.y" /* yacc.c:1257  */
+#line 55 "predicate_parser.y" /* yacc.c:1258  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1010 "predicate_parser.c" /* yacc.c:1257  */
+#line 1011 "predicate_parser.c" /* yacc.c:1258  */
         break;
 
     case 22: /* predicate_or  */
-#line 56 "predicate_parser.y" /* yacc.c:1257  */
+#line 56 "predicate_parser.y" /* yacc.c:1258  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1016 "predicate_parser.c" /* yacc.c:1257  */
+#line 1017 "predicate_parser.c" /* yacc.c:1258  */
         break;
 
     case 23: /* predicate_and  */
-#line 57 "predicate_parser.y" /* yacc.c:1257  */
+#line 57 "predicate_parser.y" /* yacc.c:1258  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1022 "predicate_parser.c" /* yacc.c:1257  */
+#line 1023 "predicate_parser.c" /* yacc.c:1258  */
         break;
 
 
@@ -1284,109 +1285,109 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 63 "predicate_parser.y" /* yacc.c:1646  */
+#line 63 "predicate_parser.y" /* yacc.c:1648  */
     { PredicateParse_setResult( (yyvsp[0].ptr) ); (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1290 "predicate_parser.c" /* yacc.c:1646  */
+#line 1291 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 3:
-#line 64 "predicate_parser.y" /* yacc.c:1646  */
+#line 64 "predicate_parser.y" /* yacc.c:1648  */
     { PredicateParse_setResult( (yyvsp[-1].ptr) ); (yyval.ptr) = (yyvsp[-1].ptr); }
-#line 1296 "predicate_parser.c" /* yacc.c:1646  */
+#line 1297 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 4:
-#line 65 "predicate_parser.y" /* yacc.c:1646  */
+#line 65 "predicate_parser.y" /* yacc.c:1648  */
     { PredicateParse_setResult( (yyvsp[-1].ptr) ); (yyval.ptr) = (yyvsp[-1].ptr); }
-#line 1302 "predicate_parser.c" /* yacc.c:1646  */
+#line 1303 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 5:
-#line 67 "predicate_parser.y" /* yacc.c:1646  */
+#line 67 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newAtom( (yyvsp[-4].name), (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1308 "predicate_parser.c" /* yacc.c:1646  */
+#line 1309 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 6:
-#line 68 "predicate_parser.y" /* yacc.c:1646  */
+#line 68 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newMaskAtom( (yyvsp[-4].name), (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1314 "predicate_parser.c" /* yacc.c:1646  */
+#line 1315 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 7:
-#line 69 "predicate_parser.y" /* yacc.c:1646  */
+#line 69 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newIsAtom( (yyvsp[0].name) ); }
-#line 1320 "predicate_parser.c" /* yacc.c:1646  */
+#line 1321 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 8:
-#line 71 "predicate_parser.y" /* yacc.c:1646  */
+#line 71 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newOr( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1326 "predicate_parser.c" /* yacc.c:1646  */
+#line 1327 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 9:
-#line 73 "predicate_parser.y" /* yacc.c:1646  */
+#line 73 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newAnd( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1332 "predicate_parser.c" /* yacc.c:1646  */
+#line 1333 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 10:
-#line 75 "predicate_parser.y" /* yacc.c:1646  */
+#line 75 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newStringValue( (yyvsp[0].name) ); }
-#line 1338 "predicate_parser.c" /* yacc.c:1646  */
+#line 1339 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 11:
-#line 76 "predicate_parser.y" /* yacc.c:1646  */
+#line 76 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newBoolValue( (yyvsp[0].valb) ); }
-#line 1344 "predicate_parser.c" /* yacc.c:1646  */
+#line 1345 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 12:
-#line 77 "predicate_parser.y" /* yacc.c:1646  */
+#line 77 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newNumValue( (yyvsp[0].vali) ); }
-#line 1350 "predicate_parser.c" /* yacc.c:1646  */
+#line 1351 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 13:
-#line 78 "predicate_parser.y" /* yacc.c:1646  */
+#line 78 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newDoubleValue( (yyvsp[0].vald) ); }
-#line 1356 "predicate_parser.c" /* yacc.c:1646  */
+#line 1357 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 14:
-#line 79 "predicate_parser.y" /* yacc.c:1646  */
+#line 79 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1362 "predicate_parser.c" /* yacc.c:1646  */
+#line 1363 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 15:
-#line 81 "predicate_parser.y" /* yacc.c:1646  */
+#line 81 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = (yyvsp[-2].ptr); }
-#line 1368 "predicate_parser.c" /* yacc.c:1646  */
+#line 1369 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 16:
-#line 83 "predicate_parser.y" /* yacc.c:1646  */
+#line 83 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newEmptyStringListValue(); }
-#line 1374 "predicate_parser.c" /* yacc.c:1646  */
+#line 1375 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 17:
-#line 84 "predicate_parser.y" /* yacc.c:1646  */
+#line 84 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_newStringListValue( (yyvsp[0].ptr) ); }
-#line 1380 "predicate_parser.c" /* yacc.c:1646  */
+#line 1381 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
   case 18:
-#line 85 "predicate_parser.y" /* yacc.c:1646  */
+#line 85 "predicate_parser.y" /* yacc.c:1648  */
     { (yyval.ptr) = PredicateParse_appendStringListValue( (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1386 "predicate_parser.c" /* yacc.c:1646  */
+#line 1387 "predicate_parser.c" /* yacc.c:1648  */
     break;
 
 
-#line 1390 "predicate_parser.c" /* yacc.c:1646  */
+#line 1391 "predicate_parser.c" /* yacc.c:1648  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1614,7 +1615,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 87 "predicate_parser.y" /* yacc.c:1906  */
+#line 87 "predicate_parser.y" /* yacc.c:1907  */
 
 
 void Soliderror ( void *_scanner, const char *s )  /* Called by Solidparse on error */
