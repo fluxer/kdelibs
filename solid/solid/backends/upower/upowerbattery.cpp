@@ -20,6 +20,7 @@
 */
 
 #include "upowerbattery.h"
+#include <qmath.h>
 
 using namespace Solid::Backends::UPower;
 
