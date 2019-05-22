@@ -47,13 +47,13 @@ public:
         for testing purposes, etc. but beware there be dragons!
     **/
     //! @brief A low-level player command sender
-    virtual void command(const QVariant& params) const = 0;
+    virtual void command(const QVariant &params) const = 0;
     //! @brief A low-level player property setter
-    virtual void setProperty(const QString& name, const QVariant& value) const = 0;
+    virtual void setProperty(const QString &name, const QVariant &value) const = 0;
     //! @brief A low-level player property getter
-    virtual QVariant property(const QString& name) const = 0;
+    virtual QVariant property(const QString &name) const = 0;
     //! @brief A low-level player option setter
-    virtual void setOption(const QString& name, const QVariant& value) const = 0;
+    virtual void setOption(const QString &name, const QVariant &value) const = 0;
     //@}
 
     /*!
@@ -64,14 +64,14 @@ public:
         such! That is choice of the vendors and you should be well aware of what yours is doing
         @link https://github.com/mpv-player/mpv/blob/master/DOCS/man/mpv.rst#protocols
     */
-    void load(const QString path);
+    void load(const QString &path);
     /*!
         @brief Start playing from @p data
         @param data raw data to play
         @warning Use only when you absolutely have to, when possible use @p load(QString)
         @overload
     */
-    void load(const QByteArray data);
+    void load(const QByteArray &data);
    /*!
         @brief Send a play command to the player, it may do nothing if a path was not loaded first
     */
@@ -164,7 +164,7 @@ public:
         quotes)
         @return Whether the MIME type is supported
     */
-    virtual bool isMimeSupported(const QString mime) const = 0;
+    virtual bool isMimeSupported(const QString &mime) const = 0;
     /*!
         @note You can obtain the scheme, which is the same as the meaning of protocol here, from a 
         KUrl/QUrl via url.scheme(). If you pass "http://" instead of just "http" the protocol will
@@ -173,7 +173,7 @@ public:
         @return Whether the protocol is supported
         @see KUrl
     */
-    bool isProtocolSupported(const QString protocol) const;
+    bool isProtocolSupported(const QString &protocol) const;
     /*!
         @note This will check MIME and protocol type, possibly some other things too. The MIME will
         be obtained via KMimeType which may be slow
@@ -181,7 +181,7 @@ public:
         @return Whether the path is supported
         @see isMimeSupported, isProtocolSupported
     */
-    bool isPathSupported(const QString path) const;
+    bool isPathSupported(const QString &path) const;
     /*!
         @param volume desired volume level
         @warning It does not do boundry check so you should be aware of the maximum volume value if
@@ -204,7 +204,7 @@ public:
         @param output audio output
         @see audiooutputs
     */
-    void setAudioOutput(const QString output);
+    void setAudioOutput(const QString &output);
     /*!
         @param fullscreen wheather it should take all screen space
         @warning This will most likely fail and the property will be set but MPV will do nothing
@@ -235,12 +235,12 @@ public:
     KAudioPlayer(QObject *parent = 0);
     ~KAudioPlayer();
 
-    void command(const QVariant& command) const;
-    void setProperty(const QString& name, const QVariant& value) const;
-    QVariant property(const QString& name) const;
-    void setOption(const QString& name, const QVariant& value) const;
+    void command(const QVariant &command) const;
+    void setProperty(const QString &name, const QVariant& value) const;
+    QVariant property(const QString &name) const;
+    void setOption(const QString &name, const QVariant& value) const;
 
-    bool isMimeSupported(const QString mime) const;
+    bool isMimeSupported(const QString &mime) const;
 
 Q_SIGNALS:
     //! @brief Signals that a path was loaded
@@ -287,7 +287,8 @@ private:
 
     For an extended version of this class check out @p KMediaWidget.
 
-    @note Constructing it with parent widget will layer it on top of it.
+    @note You should construct it with parent widget, preferably a QMainWindow, so that it can be
+    layered on top of it. Otherwise when a video is played the widget will be floating.
     @warning The API is not stable yet and it may break in the future!
     @since 4.19
     @see KMediaWidget
@@ -299,12 +300,12 @@ public:
     KMediaPlayer(QWidget *parent = 0);
     ~KMediaPlayer();
 
-    void command(const QVariant& command) const;
-    void setProperty(const QString& name, const QVariant& value) const;
-    QVariant property(const QString& name) const;
-    void setOption(const QString& name, const QVariant& value) const;
+    void command(const QVariant &command) const;
+    void setProperty(const QString &name, const QVariant &value) const;
+    QVariant property(const QString &name) const;
+    void setOption(const QString &name, const QVariant &value) const;
 
-    bool isMimeSupported(const QString mime) const;
+    bool isMimeSupported(const QString &mime) const;
 
 Q_SIGNALS:
     //! @brief Signals that a path was loaded

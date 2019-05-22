@@ -19,7 +19,7 @@
 #include "kdebug.h"
 #include "klocale.h"
 #include "kmediaplayer.h"
-#include <QCoreApplication>
+#include <QApplication>
 #include <QUrl>
 #include <QDragEnterEvent>
 
@@ -32,7 +32,6 @@ static bool s_fullscreen = false;
 
 // the video decoder may run into its own thread, make sure that does not cause trouble
 #if defined(HAVE_MPV) && defined(Q_WS_X11)
-#include <QApplication>
 static int kmp_x11_init_threads() {
     QApplication::setAttribute(Qt::AA_X11InitThreads, true);
     return 1;
@@ -57,12 +56,13 @@ public:
 // QVariant cannot be constructed from WId type
 typedef quintptr WIdType;
 
-void KAbstractPlayer::load(const QString path)
+
+void KAbstractPlayer::load(const QString &path)
 {
     command(QStringList() << "loadfile" << path);
 }
 
-void KAbstractPlayer::load(const QByteArray data)
+void KAbstractPlayer::load(const QByteArray &data)
 {
     // SECURITY: this is dangerous but some applications/libraries (like KHTML) require it
     command(QStringList() << "loadfile" << QString("memory://%1").arg(data.data()));
@@ -182,7 +182,7 @@ bool KAbstractPlayer::isFullscreen() const
 #endif // HAVE_MPV
 }
 
-bool KAbstractPlayer::isProtocolSupported(const QString protocol) const
+bool KAbstractPlayer::isProtocolSupported(const QString &protocol) const
 {
     foreach(const QString proto, protocols()) {
         if (protocol.startsWith(proto)) {
@@ -192,7 +192,7 @@ bool KAbstractPlayer::isProtocolSupported(const QString protocol) const
     return false;
 }
 
-bool KAbstractPlayer::isPathSupported(const QString path) const
+bool KAbstractPlayer::isPathSupported(const QString &path) const
 {
     const KMimeType::Ptr mime = KMimeType::findByPath(path);
     if (mime && isMimeSupported(mime->name())) {
@@ -216,7 +216,7 @@ void KAbstractPlayer::setMute(const bool mute)
     setProperty("mute", mute);
 }
 
-void KAbstractPlayer::setAudioOutput(const QString output)
+void KAbstractPlayer::setAudioOutput(const QString &output)
 {
     setProperty("audio-device", output);
 }
@@ -233,8 +233,8 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
 #if defined(HAVE_MPV)
 /*
     Since sigals/slots cannot be virtual nor multiple QObject inheritance works (KAbstractPlayer
-    cannot inherit from QObject if it is to be used in a class that inherits QWidget) here are
-    some pre-processor definitions used to share the code as much as possible making modification
+    cannot inherit from QObject if it is to be used in a class that inherits QWidget), these
+    pre-processor definitions are used to share the code as much as possible making modification
     easier.
 */
 #define COMMON_CONSTRUCTOR \
@@ -296,6 +296,7 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
     }
 
 #define COMMMON_EVENT_HANDLER \
+    kDebug() << i18n("processing events"); \
     while (!d->m_stopprocessing) { \
         mpv_event *event = mpv_wait_event(d->m_handle, 0); \
         if (event->event_id == MPV_EVENT_NONE) { \
@@ -303,33 +304,40 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
         } \
         switch (event->event_id) { \
             case MPV_EVENT_FILE_LOADED: { \
+                kDebug() << i18n("playback loaded"); \
                 emit loaded(); \
                 break; \
             } \
             case MPV_EVENT_PAUSE: { \
+                kDebug() << i18n("playback paused"); \
                 emit paused(true); \
                 break; \
             } \
             case MPV_EVENT_UNPAUSE: { \
+                kDebug() << i18n("playback unpaused"); \
                 emit paused(false); \
                 break; \
             } \
             case MPV_EVENT_END_FILE: { \
-                mpv_event_end_file *prop = (mpv_event_end_file *)event->data; \
+                mpv_event_end_file *prop = static_cast<mpv_event_end_file *>(event->data); \
                 if (prop->reason == MPV_END_FILE_REASON_ERROR) { \
+                    QString mpverror = QString(mpv_error_string(prop->error)); \
+                    kDebug() << i18n("playback finished with error") << mpverror; \
                     emit finished(); \
-                    emit error(QString(mpv_error_string(prop->error))); \
+                    emit error(mpverror); \
                 } else if (prop->reason == MPV_END_FILE_REASON_EOF \
                     || prop->reason == MPV_END_FILE_REASON_STOP \
                     || prop->reason == MPV_END_FILE_REASON_QUIT) { \
                     if (property("path").isNull()) { \
+                        kDebug() << i18n("playback finished"); \
                         emit finished(); \
                     } \
                 } \
                 break; \
             } \
             case MPV_EVENT_PROPERTY_CHANGE: { \
-                mpv_event_property *prop = (mpv_event_property *)event->data; \
+                kDebug() << i18n("property changed"); \
+                mpv_event_property *prop = static_cast<mpv_event_property *>(event->data); \
                 if (strcmp(prop->name, "time-pos") == 0) { \
                     double value = 0; \
                     if (prop->format == MPV_FORMAT_DOUBLE) { \
@@ -368,8 +376,8 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
                 break; \
             } \
             case MPV_EVENT_LOG_MESSAGE: { \
-                mpv_event_log_message *msg = (mpv_event_log_message *)event->data; \
-                kDebug() << msg->text; \
+                mpv_event_log_message *msg = static_cast<mpv_event_log_message *>(event->data); \
+                kDebug() << msg->prefix << msg->text; \
                 break; \
             } \
             case MPV_EVENT_QUEUE_OVERFLOW: { \
@@ -393,7 +401,7 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
 {
     COMMON_CONSTRUCTOR
 
-    d->m_appname = QCoreApplication::applicationName();
+    d->m_appname = QApplication::applicationName();
     d->m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
     if (d->m_handle) {
         mpv_set_wakeup_callback(d->m_handle, wakeup_audio, this);
@@ -427,22 +435,22 @@ KAudioPlayer::~KAudioPlayer()
     COMMON_DESTRUCTOR
 }
 
-void KAudioPlayer::command(const QVariant& command) const
+void KAudioPlayer::command(const QVariant &command) const
 {
     COMMMON_COMMAND_SENDER
 }
 
-void KAudioPlayer::setProperty(const QString& name, const QVariant& value) const
+void KAudioPlayer::setProperty(const QString &name, const QVariant &value) const
 {
     COMMON_PROPERTY_SETTER
 }
 
-QVariant KAudioPlayer::property(const QString& name) const
+QVariant KAudioPlayer::property(const QString &name) const
 {
     COMMON_PROPERTY_GETTER
 }
 
-void KAudioPlayer::setOption(const QString& name, const QVariant& value) const
+void KAudioPlayer::setOption(const QString &name, const QVariant &value) const
 {
     COMMON_OPTION_SETTER
 }
@@ -452,7 +460,7 @@ void KAudioPlayer::_processHandleEvents()
     COMMMON_EVENT_HANDLER
 }
 
-bool KAudioPlayer::isMimeSupported(const QString mime) const
+bool KAudioPlayer::isMimeSupported(const QString &mime) const
 {
     return mime.startsWith("audio/") || mime == QLatin1String("application/octet-stream");
 }
@@ -469,7 +477,7 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
 {
     COMMON_CONSTRUCTOR
 
-    d->m_appname = QCoreApplication::applicationName();
+    d->m_appname = QApplication::applicationName();
     d->m_settings = new QSettings("KMediaPlayer", "kmediaplayer");
     if (d->m_handle) {
         mpv_set_wakeup_callback(d->m_handle, wakeup_media, this);
@@ -511,22 +519,22 @@ KMediaPlayer::~KMediaPlayer()
     COMMON_DESTRUCTOR
 }
 
-void KMediaPlayer::command(const QVariant& command) const
+void KMediaPlayer::command(const QVariant &command) const
 {
     COMMMON_COMMAND_SENDER
 }
 
-void KMediaPlayer::setProperty(const QString& name, const QVariant& value) const
+void KMediaPlayer::setProperty(const QString &name, const QVariant &value) const
 {
     COMMON_PROPERTY_SETTER
 }
 
-QVariant KMediaPlayer::property(const QString& name) const
+QVariant KMediaPlayer::property(const QString &name) const
 {
     COMMON_PROPERTY_GETTER
 }
 
-void KMediaPlayer::setOption(const QString& name, const QVariant& value) const
+void KMediaPlayer::setOption(const QString &name, const QVariant &value) const
 {
     COMMON_OPTION_SETTER
 }
@@ -536,7 +544,7 @@ void KMediaPlayer::_processHandleEvents()
     COMMMON_EVENT_HANDLER
 }
 
-bool KMediaPlayer::isMimeSupported(const QString mime) const
+bool KMediaPlayer::isMimeSupported(const QString &mime) const
 {
     return mime.startsWith("audio/") || mime.startsWith("video/")
         || mime == QLatin1String("application/octet-stream");
@@ -554,24 +562,24 @@ KAudioPlayer::~KAudioPlayer()
 {
 }
 
-void KAudioPlayer::command(const QVariant& command) const
+void KAudioPlayer::command(const QVariant &command) const
 {
     Q_UNUSED(command);
 }
 
-void KAudioPlayer::setProperty(const QString& name, const QVariant& value) const
+void KAudioPlayer::setProperty(const QString &name, const QVariant &value) const
 {
     Q_UNUSED(name);
     Q_UNUSED(value);
 }
 
-QVariant KAudioPlayer::property(const QString& name) const
+QVariant KAudioPlayer::property(const QString &name) const
 {
     Q_UNUSED(name);
     return QVariant();
 }
 
-void KAudioPlayer::setOption(const QString& name, const QVariant& value) const
+void KAudioPlayer::setOption(const QString &name, const QVariant &value) const
 {
     Q_UNUSED(name);
     Q_UNUSED(value);
@@ -581,7 +589,7 @@ void KAudioPlayer::_processHandleEvents()
 {
 }
 
-bool KAudioPlayer::isMimeSupported(const QString mime) const
+bool KAudioPlayer::isMimeSupported(const QString &mime) const
 {
     Q_UNUSED(mime);
     return false;
@@ -598,24 +606,24 @@ KMediaPlayer::~KMediaPlayer()
 {
 }
 
-void KMediaPlayer::command(const QVariant& command) const
+void KMediaPlayer::command(const QVariant &command) const
 {
     Q_UNUSED(command);
 }
 
-void KMediaPlayer::setProperty(const QString& name, const QVariant& value) const
+void KMediaPlayer::setProperty(const QString &name, const QVariant &value) const
 {
     Q_UNUSED(name);
     Q_UNUSED(value);
 }
 
-QVariant KMediaPlayer::property(const QString& name) const
+QVariant KMediaPlayer::property(const QString &name) const
 {
     Q_UNUSED(name);
     return QVariant();
 }
 
-void KMediaPlayer::setOption(const QString& name, const QVariant& value) const
+void KMediaPlayer::setOption(const QString &name, const QVariant &value) const
 {
 }
 
@@ -623,7 +631,7 @@ void KMediaPlayer::_processHandleEvents()
 {
 }
 
-bool KMediaPlayer::isMimeSupported(const QString mime) const
+bool KMediaPlayer::isMimeSupported(const QString &mime) const
 {
     Q_UNUSED(mime);
     return false;
