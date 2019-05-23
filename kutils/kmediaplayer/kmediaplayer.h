@@ -45,14 +45,17 @@ public:
         convenience methods bellow those are not enough for your use case, but it is better to let
         us know your requirements instead of using them. They may serve you as temporary solution,
         for testing purposes, etc. but beware there be dragons!
+
+        @note Because @p QObject and @p QWidget have property system the methods are named option
+        but in fact they set and get properties of the underlaying player, not options. There is
+        a difference between them in MPV so make sure you are using the methods for properties if
+        you rely on @p option and @p setOption.
     **/
     //! @brief A low-level player command sender
     virtual void command(const QVariant &params) const = 0;
-    //! @brief A low-level player property setter
-    virtual void setProperty(const QString &name, const QVariant &value) const = 0;
     //! @brief A low-level player property getter
-    virtual QVariant property(const QString &name) const = 0;
-    //! @brief A low-level player option setter
+    virtual QVariant option(const QString &name) const = 0;
+    //! @brief A low-level player property setter
     virtual void setOption(const QString &name, const QVariant &value) const = 0;
     //@}
 
@@ -236,8 +239,7 @@ public:
     ~KAudioPlayer();
 
     void command(const QVariant &command) const;
-    void setProperty(const QString &name, const QVariant& value) const;
-    QVariant property(const QString &name) const;
+    QVariant option(const QString &name) const;
     void setOption(const QString &name, const QVariant& value) const;
 
     bool isMimeSupported(const QString &mime) const;
@@ -301,8 +303,7 @@ public:
     ~KMediaPlayer();
 
     void command(const QVariant &command) const;
-    void setProperty(const QString &name, const QVariant &value) const;
-    QVariant property(const QString &name) const;
+    QVariant option(const QString &name) const;
     void setOption(const QString &name, const QVariant &value) const;
 
     bool isMimeSupported(const QString &mime) const;

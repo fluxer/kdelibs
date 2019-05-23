@@ -59,23 +59,23 @@ typedef quintptr WIdType;
 
 void KAbstractPlayer::load(const QString &path)
 {
-    command(QStringList() << "loadfile" << path);
+    command(QVariantList() << "loadfile" << path);
 }
 
 void KAbstractPlayer::load(const QByteArray &data)
 {
     // SECURITY: this is dangerous but some applications/libraries (like KHTML) require it
-    command(QStringList() << "loadfile" << QString("memory://%1").arg(data.data()));
+    command(QVariantList() << "loadfile" << QString("memory://%1").arg(data.data()));
 }
 
 void KAbstractPlayer::play()
 {
-    setProperty("pause", false);
+    setOption("pause", false);
 }
 
 void KAbstractPlayer::pause()
 {
-    setProperty("pause", true);
+    setOption("pause", true);
 }
 
 void KAbstractPlayer::seek(const float position)
@@ -95,56 +95,56 @@ void KAbstractPlayer::stop()
 
 QString KAbstractPlayer::path() const
 {
-    return property("path").toString();
+    return option("path").toString();
 }
 
 QString KAbstractPlayer::title() const
 {
-    return property("media-title").toString();
+    return option("media-title").toString();
 }
 
 float KAbstractPlayer::currentTime() const
 {
-    return property("time-pos").toFloat();
+    return option("time-pos").toFloat();
 }
 
 float KAbstractPlayer::remainingTime() const
 {
-    return property("time-remaining").toFloat();
+    return option("time-remaining").toFloat();
 }
 
 float KAbstractPlayer::totalTime() const
 {
-    return property("duration").toFloat();
+    return option("duration").toFloat();
 }
 
 float KAbstractPlayer::volume() const
 {
-    return property("volume").toFloat();
+    return option("volume").toFloat();
 }
 
 bool KAbstractPlayer::mute() const
 {
-    return property("mute").toBool();
+    return option("mute").toBool();
 }
 
 QStringList KAbstractPlayer::protocols() const
 {
     static QStringList s_protocols;
     if (s_protocols.isEmpty()) {
-        s_protocols = property("protocol-list").toStringList();
+        s_protocols = option("protocol-list").toStringList();
     }
     return s_protocols;
 }
 
 QString KAbstractPlayer::audiooutput() const
 {
-    return property("audio-device").toString();
+    return option("audio-device").toString();
 }
 
 QStringList KAbstractPlayer::audiooutputs() const
 {
-    const QVariantList value = property("audio-device-list").toList();
+    const QVariantList value = option("audio-device-list").toList();
     QStringList stringlist;
     foreach (const QVariant variant, value) {
         QMapIterator<QString,QVariant> iter(variant.toMap());
@@ -160,23 +160,23 @@ QStringList KAbstractPlayer::audiooutputs() const
 
 bool KAbstractPlayer::isPlaying() const
 {
-    return !property("pause").toBool() && !property("path").isNull();
+    return !option("pause").toBool() && !option("path").isNull();
 }
 
 bool KAbstractPlayer::isBuffering() const
 {
-    return property("paused-for-cache").toBool();
+    return option("paused-for-cache").toBool();
 }
 
 bool KAbstractPlayer::isSeekable() const
 {
-    return property("seekable").toBool() || property("partially-seekable").toBool();
+    return option("seekable").toBool() || option("partially-seekable").toBool();
 }
 
 bool KAbstractPlayer::isFullscreen() const
 {
 #if defined(HAVE_MPV)
-    return property("fullscreen").toBool();
+    return option("fullscreen").toBool();
 #else
     return s_fullscreen;
 #endif // HAVE_MPV
@@ -203,28 +203,28 @@ bool KAbstractPlayer::isPathSupported(const QString &path) const
 
 void KAbstractPlayer::setVolume(const float volume)
 {
-    setProperty("volume", volume);
+    setOption("volume", volume);
 }
 
 void KAbstractPlayer::setVolume(const int volume)
 {
-    setProperty("volume", volume);
+    setOption("volume", volume);
 }
 
 void KAbstractPlayer::setMute(const bool mute)
 {
-    setProperty("mute", mute);
+    setOption("mute", mute);
 }
 
 void KAbstractPlayer::setAudioOutput(const QString &output)
 {
-    setProperty("audio-device", output);
+    setOption("audio-device", output);
 }
 
 void KAbstractPlayer::setFullscreen(const bool fullscreen)
 {
 #if defined(HAVE_MPV)
-    setProperty("fullscreen", fullscreen);
+    setOption("fullscreen", fullscreen);
 #else
     s_fullscreen = fullscreen;
 #endif // HAVE_MPV
@@ -270,33 +270,34 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
 #define COMMMON_COMMAND_SENDER \
     kDebug() << i18n("sending command") << command; \
     if (d->m_handle) { \
-        const QVariant error = mpv::qt::command_variant(d->m_handle, command); \
-        if (!error.isNull()) { \
-            kWarning() << error; \
+        const QVariant result = mpv::qt::command(d->m_handle, command); \
+        if (mpv::qt::is_error(result)) { \
+            kWarning() << mpv_error_string(mpv::qt::get_error(result)); \
         } \
     }
 
-#define COMMON_PROPERTY_SETTER \
-    kDebug() << i18n("setting property") << name << value; \
+#define COMMON_OPTION_GETTER \
+    kDebug() << i18n("getting option") << name; \
     if (d->m_handle) { \
-        mpv::qt::set_property_variant(d->m_handle, name, value); \
-    }
-
-#define COMMON_PROPERTY_GETTER \
-    kDebug() << i18n("getting property") << name; \
-    if (d->m_handle) { \
-        return mpv::qt::get_property_variant(d->m_handle, name); \
+        const QVariant result = mpv::qt::get_property(d->m_handle, name); \
+        if (mpv::qt::is_error(result)) { \
+            kWarning() << mpv_error_string(mpv::qt::get_error(result)); \
+            return QVariant(); \
+        } \
+        return result; \
     } \
     return QVariant();
 
 #define COMMON_OPTION_SETTER \
     kDebug() << i18n("setting option") << name << value; \
     if (d->m_handle) { \
-        mpv::qt::set_option_variant(d->m_handle, name, value); \
+        const QVariant result = mpv::qt::set_property(d->m_handle, name, value); \
+        if (mpv::qt::is_error(result)) { \
+            kWarning() << mpv_error_string(mpv::qt::get_error(result)); \
+        } \
     }
 
 #define COMMMON_EVENT_HANDLER \
-    kDebug() << i18n("processing events"); \
     while (!d->m_stopprocessing) { \
         mpv_event *event = mpv_wait_event(d->m_handle, 0); \
         if (event->event_id == MPV_EVENT_NONE) { \
@@ -321,14 +322,14 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
             case MPV_EVENT_END_FILE: { \
                 mpv_event_end_file *prop = static_cast<mpv_event_end_file *>(event->data); \
                 if (prop->reason == MPV_END_FILE_REASON_ERROR) { \
-                    QString mpverror = QString(mpv_error_string(prop->error)); \
+                    QString mpverror = QString::fromLatin1(mpv_error_string(prop->error)); \
                     kDebug() << i18n("playback finished with error") << mpverror; \
                     emit finished(); \
                     emit error(mpverror); \
                 } else if (prop->reason == MPV_END_FILE_REASON_EOF \
                     || prop->reason == MPV_END_FILE_REASON_STOP \
                     || prop->reason == MPV_END_FILE_REASON_QUIT) { \
-                    if (property("path").isNull()) { \
+                    if (option("path").isNull()) { \
                         kDebug() << i18n("playback finished"); \
                         emit finished(); \
                     } \
@@ -336,8 +337,8 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
                 break; \
             } \
             case MPV_EVENT_PROPERTY_CHANGE: { \
-                kDebug() << i18n("property changed"); \
                 mpv_event_property *prop = static_cast<mpv_event_property *>(event->data); \
+                kDebug() << i18n("property changed") << QString::fromLatin1(prop->name); \
                 if (strcmp(prop->name, "time-pos") == 0) { \
                     double value = 0; \
                     if (prop->format == MPV_FORMAT_DOUBLE) { \
@@ -355,7 +356,7 @@ void KAbstractPlayer::setFullscreen(const bool fullscreen)
                     } \
                     emit seekable(value); \
                 } else if (strcmp(prop->name, "partially-seekable") == 0) { \
-                    if (property("seekable").toBool() == false) { \
+                    if (option("seekable").toBool() == false) { \
                         bool value = false; \
                         if (prop->format == MPV_FORMAT_FLAG) { \
                             value = *(bool *)prop->data; \
@@ -407,8 +408,8 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
         mpv_set_wakeup_callback(d->m_handle, wakeup_audio, this);
 
         // NOTE: newer releases use vid, video is compat! the change is pre-2014 but yeah..
-        setProperty("vid", "no");
-        setProperty("video", "no");
+        setOption("vid", "no");
+        setOption("video", "no");
 
         const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
         const int globalvolume = d->m_settings->value("global/volume", 90).toInt();
@@ -440,14 +441,9 @@ void KAudioPlayer::command(const QVariant &command) const
     COMMMON_COMMAND_SENDER
 }
 
-void KAudioPlayer::setProperty(const QString &name, const QVariant &value) const
+QVariant KAudioPlayer::option(const QString &name) const
 {
-    COMMON_PROPERTY_SETTER
-}
-
-QVariant KAudioPlayer::property(const QString &name) const
-{
-    COMMON_PROPERTY_GETTER
+    COMMON_OPTION_GETTER
 }
 
 void KAudioPlayer::setOption(const QString &name, const QVariant &value) const
@@ -524,14 +520,9 @@ void KMediaPlayer::command(const QVariant &command) const
     COMMMON_COMMAND_SENDER
 }
 
-void KMediaPlayer::setProperty(const QString &name, const QVariant &value) const
+QVariant KMediaPlayer::option(const QString &name) const
 {
-    COMMON_PROPERTY_SETTER
-}
-
-QVariant KMediaPlayer::property(const QString &name) const
-{
-    COMMON_PROPERTY_GETTER
+    COMMON_OPTION_GETTER
 }
 
 void KMediaPlayer::setOption(const QString &name, const QVariant &value) const
@@ -567,13 +558,7 @@ void KAudioPlayer::command(const QVariant &command) const
     Q_UNUSED(command);
 }
 
-void KAudioPlayer::setProperty(const QString &name, const QVariant &value) const
-{
-    Q_UNUSED(name);
-    Q_UNUSED(value);
-}
-
-QVariant KAudioPlayer::property(const QString &name) const
+QVariant KAudioPlayer::option(const QString &name) const
 {
     Q_UNUSED(name);
     return QVariant();
@@ -611,13 +596,7 @@ void KMediaPlayer::command(const QVariant &command) const
     Q_UNUSED(command);
 }
 
-void KMediaPlayer::setProperty(const QString &name, const QVariant &value) const
-{
-    Q_UNUSED(name);
-    Q_UNUSED(value);
-}
-
-QVariant KMediaPlayer::property(const QString &name) const
+QVariant KMediaPlayer::option(const QString &name) const
 {
     Q_UNUSED(name);
     return QVariant();
