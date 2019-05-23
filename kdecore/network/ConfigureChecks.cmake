@@ -1,28 +1,24 @@
 ####### checks for kdecore/network (and netsupp.cpp) ###############
 
-# FIXME: the ssl check fails for some reason
-if(KATIE_FOUND)
-    set(HAVE_QSSLSOCKET TRUE)
-else()
-    macro_push_required_vars()
-    set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
-    if (QT_USE_FRAMEWORKS)
-        set(CMAKE_REQUIRED_FLAGS "-F${QT_LIBRARY_DIR} ")
-    endif (QT_USE_FRAMEWORKS)
-    check_cxx_source_compiles(
+macro_push_required_vars()
+set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
+set(CMAKE_REQUIRED_DEFINITIONS "${CMAKE_REQUIRED_DEFINITIONS} ${QT_DEFINITIONS}")
+if (QT_USE_FRAMEWORKS)
+    set(CMAKE_REQUIRED_FLAGS "-F${QT_LIBRARY_DIR} ")
+endif (QT_USE_FRAMEWORKS)
+check_cxx_source_compiles(
 "#include <QtNetwork/QSslSocket>
 int main()
 {
     QSslSocket *socket;
     return 0;
 }" HAVE_QSSLSOCKET
-    )
+)
 
-    if (NOT HAVE_QSSLSOCKET)
-        message(SEND_ERROR "KDE Requires Qt to be built with SSL support")
-    endif()
-    macro_pop_required_vars()
-endif(KATIE_FOUND)
+if (NOT HAVE_QSSLSOCKET)
+    message(SEND_ERROR "KDE Requires Qt to be built with SSL support")
+endif()
+macro_pop_required_vars()
 
 check_include_files("sys/types.h;sys/socket.h;net/if.h" HAVE_NET_IF_H)
 check_include_files("sys/filio.h" HAVE_SYS_FILIO_H)
