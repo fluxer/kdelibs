@@ -474,7 +474,7 @@ void NativeTabBar::startAnimation()
 
 void NativeTabBar::setOnValueChanged(QRectF value)
 {
-    if (value == d->anim.data()->endValue()) {
+    if (QVariant(value) == d->anim.data()->endValue()) {
         d->animProgress = 1;
         animationFinished();
         return;
