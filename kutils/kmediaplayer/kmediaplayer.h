@@ -1,5 +1,5 @@
 /*  This file is part of the KDE libraries
-    Copyright (C) 2016 Ivailo Monev <xakepa10@gmail.com>
+    Copyright (C) 2016-2019 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -46,10 +46,10 @@ public:
         us know your requirements instead of using them. They may serve you as temporary solution,
         for testing purposes, etc. but beware there be dragons!
 
-        @note Because @p QObject and @p QWidget have property system the methods are named option
+        @note Because QObject and QWidget have property system the methods are named option
         but in fact they set and get properties of the underlaying player, not options. There is
         a difference between them in MPV so make sure you are using the methods for properties if
-        you rely on @p option and @p setOption.
+        you rely on them.
     **/
     //! @brief A low-level player command sender
     virtual void command(const QVariant &params) const = 0;
@@ -99,30 +99,27 @@ public:
     */
     void stop();
     /*!
-        @brief Gets you the current loaded path, empty if nothing is loaded
+        @return Current loaded path, empty if nothing is loaded
     */
     QString path() const;
     /*!
-        @brief Gets you the current loaded path title
+        @return Current loaded path title
     */
     QString title() const;
     /*!
-        @brief Gets you the current play time, the time should be threated as seconds
-        @return current play time, it may return 0 if not playing
+        @return Current play time in seconds, it may return 0 if not playing
     */
     float currentTime() const;
     /*!
-        @brief Gets you the remaining play time, the time should be threated as seconds
-        @return remaining play time, it may return 0 if not playing
+        @return Remaining play time in seconds, it may return 0 if not playing
     */
     float remainingTime() const;
     /*!
-        @brief Gets you the total play time, the time should be threated as seconds
-        @return total play time, it may return 0 if not playing
+        @return Total play time in seconds, it may return 0 if not playing
     */
     float totalTime() const;
     /*!
-        @return current volume level, usually in range of 0-100
+        @return Current volume level, usually in range of 0-100
         @see setVolume
     */
     float volume() const;
@@ -143,7 +140,6 @@ public:
     QString audiooutput() const;
     /*!
         @return A list of available audio outputs
-        @todo maybe that should return a QMap?
     */
     QStringList audiooutputs() const;
     /*!
@@ -170,7 +166,7 @@ public:
     virtual bool isMimeSupported(const QString &mime) const = 0;
     /*!
         @note You can obtain the scheme, which is the same as the meaning of protocol here, from a 
-        KUrl/QUrl via url.scheme(). If you pass "http://" instead of just "http" the protocol will
+        KUrl / QUrl via url.scheme(). If you pass "http://" instead of just "http" the protocol will
         be considered valid too.
         @param protocol protocol type in the format \<protocol\>, e.g. "file" (without quotes)
         @return Whether the protocol is supported
@@ -249,11 +245,7 @@ Q_SIGNALS:
     void loaded();
     //! @brief Signals that the playing state was paused/unpaused when buffering data
     void buffering(const bool buffering);
-    /*!
-        @brief Signals that the playing state was paused/unpaused
-        @note You still have to connect to the finished signal to update play/pause buttons (if
-        any) when the path is done playing
-    */
+    //! @brief Signals that the playing state was paused/unpaused
     void paused(const bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
     void seekable(const bool seekable);
@@ -313,11 +305,7 @@ Q_SIGNALS:
     void loaded();
     //! @brief Signals that the playing state was paused/unpaused when buffering data
     void buffering(const bool buffering);
-    /*!
-        @brief Signals that the playing state was paused/unpaused
-        @note You still have to connect to the finished signal to update play/pause buttons (if
-        any) when the path is done playing
-    */
+    //! @brief Signals that the playing state was paused/unpaused
     void paused(const bool paused);
     //! @brief Signals that the playing state can advance at position, maybe partitially
     void seekable(const bool seekable);

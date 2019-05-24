@@ -24,13 +24,13 @@
 
 int main(int argc, char **argv)
 {
-    QApplication *app = new QApplication(argc, argv);
-    QMainWindow *window = new QMainWindow();
-    window->show();
+    QApplication app(argc, argv);
+    QMainWindow window;
+    window.show();
 
-    KMediaWidget *widget = new KMediaWidget(window, KMediaWidget::AllOptions);
-    window->setCentralWidget(widget);
-    widget->open("http://video.webmfiles.org/big-buck-bunny_trailer.webm");
+    KMediaWidget widget(&window, KMediaWidget::AllOptions);
+    window.setCentralWidget(&widget);
+    widget.open("http://dl5.webmfiles.org/big-buck-bunny_trailer.webm");
 
-    return app->exec();
+    return app.exec();
 }
