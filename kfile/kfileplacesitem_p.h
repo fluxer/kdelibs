@@ -78,7 +78,6 @@ private:
     QVariant bookmarkData(int role) const;
     QVariant deviceData(int role) const;
 
-    bool hasFullIcon(const KBookmark &bookmark) const;
     QString iconNameForBookmark(const KBookmark &bookmark) const;
 
     static QString generateNewId();
@@ -86,7 +85,6 @@ private:
     KBookmarkManager *m_manager;
     KBookmark m_bookmark;
     KDirLister *m_lister;
-    bool m_folderIsEmpty;
     bool m_isCdrom;
     bool m_isAccessible;
     QString m_text;

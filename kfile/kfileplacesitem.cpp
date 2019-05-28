@@ -22,6 +22,7 @@
 
 #include <QtCore/QDateTime>
 
+#include <kconfiggroup.h>
 #include <kbookmarkmanager.h>
 #include <kiconloader.h>
 #include <kdirlister.h>
@@ -38,23 +39,21 @@
 KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
                                  const QString &address,
                                  const QString &udi)
-    : m_manager(manager), m_lister(0), m_folderIsEmpty(true), m_isCdrom(false),
+    : m_manager(manager), m_lister(0), m_isCdrom(false),
       m_isAccessible(false), m_device(udi)
 {
     setBookmark(m_manager->findByAddress(address));
 
     if (udi.isEmpty() && m_bookmark.metaDataItem("ID").isEmpty()) {
         m_bookmark.setMetaDataItem("ID", generateNewId());
-    } else if (udi.isEmpty()) {
-        if (hasFullIcon(m_bookmark)) {
-            // TODO if this is only for the trash, it would be much faster to just read trashrc
-            m_lister = new KDirLister(this);
-            m_lister->setAutoErrorHandlingEnabled(false, 0); // don't bother the user if trash:/ doesn't exist
-            m_lister->setDelayedMimeTypes(true); // we don't need the mimetypes, so don't penalize other KDirLister users
-            connect(m_lister, SIGNAL(completed()),
-                    this, SLOT(onListerCompleted()));
-            m_lister->openUrl(m_bookmark.url());
-        }
+    } else if (udi.isEmpty() && m_bookmark.url() == KUrl("trash:/")) {
+        // TODO if this is only for the trash, it would be much faster to just read trashrc
+        m_lister = new KDirLister(this);
+        m_lister->setAutoErrorHandlingEnabled(false, 0); // don't bother the user if trash:/ doesn't exist
+        m_lister->setDelayedMimeTypes(true); // we don't need the mimetypes, so don't penalize other KDirLister users
+        connect(m_lister, SIGNAL(completed()),
+                this, SLOT(onListerCompleted()));
+        m_lister->openUrl(m_bookmark.url());
     } else if (!udi.isEmpty() && m_device.isValid()) {
         m_access = m_device.as<Solid::StorageAccess>();
         m_volume = m_device.as<Solid::StorageVolume>();
@@ -241,7 +240,7 @@ KBookmark KFilePlacesItem::createBookmark(KBookmarkManager *manager,
     if (root.isNull())
         return KBookmark();
     QString empty_icon = iconName;
-    if (url==KUrl("trash:/")) {
+    if (url == KUrl("trash:/")) {
         if (empty_icon.endsWith(QLatin1String("-full"))) {
             empty_icon.chop(5);
         } else if (empty_icon.isEmpty()) {
@@ -309,15 +308,17 @@ void KFilePlacesItem::onAccessibilityChanged(bool isAccessible)
     emit itemChanged(id());
 }
 
-bool KFilePlacesItem::hasFullIcon(const KBookmark &bookmark) const
-{
-    return bookmark.url()==KUrl("trash:/");
-}
-
 QString KFilePlacesItem::iconNameForBookmark(const KBookmark &bookmark) const
 {
-    if (!m_folderIsEmpty && hasFullIcon(bookmark)) {
-        return bookmark.icon()+"-full";
+    // handle trash explicitly since the default icon for the protocol is "user-trash-full"
+    if (bookmark.url() == KUrl("trash:/")) {
+        KConfig trashConfig("trashrc", KConfig::SimpleConfig);
+        QString trashicon = bookmark.icon();
+        bool trashempty = trashConfig.group("Status").readEntry("Empty", true);
+        if (trashempty) {
+            trashicon = "user-trash";
+        }
+        return trashicon;
     } else {
         return bookmark.icon();
     }
@@ -325,7 +326,6 @@ QString KFilePlacesItem::iconNameForBookmark(const KBookmark &bookmark) const
 
 void KFilePlacesItem::onListerCompleted()
 {
-    m_folderIsEmpty = m_lister->items().isEmpty();
     emit itemChanged(id());
 }
 
