@@ -33,9 +33,6 @@
 #include <QtCore/QCache>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QBuffer>
-#include <QtCore/QDataStream>
-#include <QtCore/QByteArray>
 #include <QtGui/QIcon>
 #include <QtGui/QImage>
 #include <QtGui/QMovie>
@@ -156,7 +153,6 @@ public:
     KIconLoaderPrivate(KIconLoader *q)
         : q(q)
         , mpGroups(0)
-        , mIconCache(0)
     {
     }
 
@@ -166,7 +162,6 @@ public:
         deleted when the elements of d->links are deleted */
         qDeleteAll(links);
         delete[] mpGroups;
-        delete mIconCache;
     }
 
     /**
@@ -280,16 +275,13 @@ public:
     KIconEffect mpEffect;
     QList<KIconThemeNode *> links;
 
-    // This shares the icons across all processes
-    QSharedPointer<QCache<QString, QByteArray> >* mIconCache;
-
     // This caches rendered QPixmaps in just this process.
     QCache<QString, PixmapWithPath> mPixmapCache;
 
-    bool extraDesktopIconsLoaded :1;
+    bool extraDesktopIconsLoaded;
     // lazy loading: initIconThemes() is only needed when the "links" list is needed
     // mIconThemeInited is used inside initIconThemes() to init only once
-    bool mIconThemeInited :1;
+    bool mIconThemeInited;
     QString appname;
 
     void drawOverlays(const KIconLoader *loader, KIconLoader::Group group, int state, QPixmap& pix, const QStringList& overlays);
@@ -441,7 +433,6 @@ KIconLoader::KIconLoader(const KComponentData &componentData, QObject* parent)
 
 void KIconLoader::reconfigure( const QString& _appname, KStandardDirs *_dirs )
 {
-    d->mIconCache->clear();
     delete d;
     d = new KIconLoaderPrivate(this);
     d->init( _appname, _dirs );
@@ -463,8 +454,6 @@ void KIconLoaderPrivate::init( const QString& _appname, KStandardDirs *_dirs )
         appname = KGlobal::mainComponent().componentName();
 
     // Initialize icon cache
-    mIconCache = new QSharedPointer<QCache<QString, QByteArray> >(new QCache<QString, QByteArray>());
-    mIconCache->data()->setMaxCost(10240);
     mPixmapCache.setMaxCost(10240);
 
     // These have to match the order in kicontheme.h
@@ -803,29 +792,12 @@ void KIconLoaderPrivate::insertCachedPixmapWithPath(
         return;
     }
 
+    if (mPixmapCache.contains(key)) {
+        return;
+    }
     // Even if the pixmap is null, we add it to the caches so that we record
     // the fact that whatever icon led to us getting a null pixmap doesn't
     // exist.
-
-    QBuffer output;
-    output.open(QIODevice::WriteOnly);
-
-    QDataStream outputStream(&output);
-    outputStream.setVersion(QDataStream::Qt_4_6);
-
-    outputStream << path;
-
-    // Convert the QPixmap to PNG. This is actually done by Qt's own operator.
-    outputStream << data;
-
-    output.close();
-
-    // The byte array contained in the QBuffer is what we want in the cache
-    // and we do not want a reference to the buffer so hard-copy it.
-    mIconCache->data()->insert(key, new QByteArray(output.buffer()));
-
-    // Also insert the object into our process-local cache for even more
-    // speed.
     PixmapWithPath *pixmapPath = new PixmapWithPath;
     pixmapPath->pixmap = data;
     pixmapPath->path = path;
@@ -843,43 +815,6 @@ bool KIconLoaderPrivate::findCachedPixmapWithPath(const QString &key, QPixmap &d
         data = pixmapPath->pixmap;
 
         return true;
-    }
-
-    // Otherwise try to find it in our shared memory cache since that will
-    // be quicker than the disk, especially for SVGs.
-    QByteArray *result = mIconCache->data()->object(key);
-
-    if (!result || result->isEmpty()) {
-        return false;
-    }
-
-    QBuffer buffer;
-    buffer.setBuffer(result);
-    buffer.open(QIODevice::ReadOnly);
-
-    QDataStream inputStream(&buffer);
-    inputStream.setVersion(QDataStream::Qt_4_6);
-
-    QString tempPath;
-    inputStream >> tempPath;
-
-    if (inputStream.status() == QDataStream::Ok) {
-        QPixmap tempPixmap;
-        inputStream >> tempPixmap;
-
-        if (inputStream.status() == QDataStream::Ok) {
-            data = tempPixmap;
-            path = tempPath;
-
-            // Since we're here we didn't have a QPixmap cache entry, add one now.
-            PixmapWithPath *newPixmapWithPath = new PixmapWithPath;
-            newPixmapWithPath->pixmap = data;
-            newPixmapWithPath->path = path;
-
-            mPixmapCache.insert(key, newPixmapWithPath, data.width() * data.height() + 1);
-
-            return true;
-        }
     }
 
     return false;
