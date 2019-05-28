@@ -455,6 +455,7 @@ void KIconLoaderPrivate::init( const QString& _appname, KStandardDirs *_dirs )
 
     // Initialize icon cache
     mPixmapCache.setMaxCost(10240);
+    mPixmapCache.clear();
 
     // These have to match the order in kicontheme.h
     static const char * const groups[] = { "Desktop", "Toolbar", "MainToolbar", "Small", "Panel", "Dialog", 0L };
@@ -795,6 +796,7 @@ void KIconLoaderPrivate::insertCachedPixmapWithPath(
     if (mPixmapCache.contains(key)) {
         return;
     }
+
     // Even if the pixmap is null, we add it to the caches so that we record
     // the fact that whatever icon led to us getting a null pixmap doesn't
     // exist.
