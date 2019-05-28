@@ -793,14 +793,17 @@ void KIconLoaderPrivate::insertCachedPixmapWithPath(
         return;
     }
 
-    if (mPixmapCache.contains(key)) {
+    PixmapWithPath *pixmapPath = mPixmapCache.object(key);
+    if (pixmapPath
+        && pixmapPath->pixmap.cacheKey() == data.cacheKey()
+        && pixmapPath->path == path) {
         return;
     }
 
     // Even if the pixmap is null, we add it to the caches so that we record
     // the fact that whatever icon led to us getting a null pixmap doesn't
     // exist.
-    PixmapWithPath *pixmapPath = new PixmapWithPath;
+    pixmapPath = new PixmapWithPath;
     pixmapPath->pixmap = data;
     pixmapPath->path = path;
 
