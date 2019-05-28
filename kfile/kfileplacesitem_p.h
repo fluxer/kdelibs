@@ -28,7 +28,6 @@
 #include <kbookmark.h>
 #include <solid/device.h>
 
-class KDirLister;
 namespace Solid
 {
 class StorageAccess;
@@ -72,7 +71,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void onAccessibilityChanged(bool);
-    void onListerCompleted();
+    void trashConfigChanged(const QString &config);
 
 private:
     QVariant bookmarkData(int role) const;
@@ -84,9 +83,9 @@ private:
 
     KBookmarkManager *m_manager;
     KBookmark m_bookmark;
-    KDirLister *m_lister;
     bool m_isCdrom;
     bool m_isAccessible;
+    bool m_trashIsEmpty;
     QString m_text;
     mutable Solid::Device m_device;
     mutable QPointer<Solid::StorageAccess> m_access;

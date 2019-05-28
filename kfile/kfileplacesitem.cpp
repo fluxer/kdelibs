@@ -23,9 +23,10 @@
 #include <QtCore/QDateTime>
 
 #include <kconfiggroup.h>
+#include <kstandarddirs.h>
+#include <kdirwatch.h>
 #include <kbookmarkmanager.h>
 #include <kiconloader.h>
-#include <kdirlister.h>
 #include <klocale.h>
 #include <solid/block.h>
 #include <solid/opticaldisc.h>
@@ -39,21 +40,23 @@
 KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
                                  const QString &address,
                                  const QString &udi)
-    : m_manager(manager), m_lister(0), m_isCdrom(false),
-      m_isAccessible(false), m_device(udi)
+    : m_manager(manager), m_isCdrom(false),
+      m_isAccessible(false), m_trashIsEmpty(false), m_device(udi)
 {
     setBookmark(m_manager->findByAddress(address));
 
     if (udi.isEmpty() && m_bookmark.metaDataItem("ID").isEmpty()) {
         m_bookmark.setMetaDataItem("ID", generateNewId());
     } else if (udi.isEmpty() && m_bookmark.url() == KUrl("trash:/")) {
-        // TODO if this is only for the trash, it would be much faster to just read trashrc
-        m_lister = new KDirLister(this);
-        m_lister->setAutoErrorHandlingEnabled(false, 0); // don't bother the user if trash:/ doesn't exist
-        m_lister->setDelayedMimeTypes(true); // we don't need the mimetypes, so don't penalize other KDirLister users
-        connect(m_lister, SIGNAL(completed()),
-                this, SLOT(onListerCompleted()));
-        m_lister->openUrl(m_bookmark.url());
+        KDirWatch::self()->addFile(KStandardDirs::locateLocal("config", "trashrc"));
+        KConfig trashConfig("trashrc", KConfig::SimpleConfig);
+        m_trashIsEmpty = trashConfig.group("Status").readEntry("Empty", true);
+        QObject::connect(KDirWatch::self(), SIGNAL(created(QString)),
+                         this, SLOT(trashConfigChanged(QString)),
+                         Qt::UniqueConnection);
+        QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
+                         this, SLOT(trashConfigChanged(QString)),
+                         Qt::UniqueConnection);
     } else if (!udi.isEmpty() && m_device.isValid()) {
         m_access = m_device.as<Solid::StorageAccess>();
         m_volume = m_device.as<Solid::StorageVolume>();
@@ -312,20 +315,20 @@ QString KFilePlacesItem::iconNameForBookmark(const KBookmark &bookmark) const
 {
     // handle trash explicitly since the default icon for the protocol is "user-trash-full"
     if (bookmark.url() == KUrl("trash:/")) {
-        KConfig trashConfig("trashrc", KConfig::SimpleConfig);
-        QString trashicon = bookmark.icon();
-        bool trashempty = trashConfig.group("Status").readEntry("Empty", true);
-        if (trashempty) {
-            trashicon = "user-trash";
+        if (m_trashIsEmpty) {
+            return QString::fromLatin1("user-trash");
         }
-        return trashicon;
+        return bookmark.icon();
     } else {
         return bookmark.icon();
     }
 }
 
-void KFilePlacesItem::onListerCompleted()
+void KFilePlacesItem::trashConfigChanged(const QString &config)
 {
+    Q_UNUSED(config);
+    KConfig trashConfig("trashrc", KConfig::SimpleConfig);
+    m_trashIsEmpty = trashConfig.group("Status").readEntry("Empty", true);
     emit itemChanged(id());
 }
 
