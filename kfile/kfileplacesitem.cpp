@@ -51,12 +51,10 @@ KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
         KDirWatch::self()->addFile(KStandardDirs::locateLocal("config", "trashrc"));
         KConfig trashConfig("trashrc", KConfig::SimpleConfig);
         m_trashIsEmpty = trashConfig.group("Status").readEntry("Empty", true);
-        QObject::connect(KDirWatch::self(), SIGNAL(created(QString)),
-                         this, SLOT(trashConfigChanged(QString)),
-                         Qt::UniqueConnection);
-        QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
-                         this, SLOT(trashConfigChanged(QString)),
-                         Qt::UniqueConnection);
+        connect(KDirWatch::self(), SIGNAL(created(QString)),
+                         this, SLOT(trashConfigChanged(QString)));
+        connect(KDirWatch::self(), SIGNAL(dirty(QString)),
+                         this, SLOT(trashConfigChanged(QString)));
     } else if (!udi.isEmpty() && m_device.isValid()) {
         m_access = m_device.as<Solid::StorageAccess>();
         m_volume = m_device.as<Solid::StorageVolume>();

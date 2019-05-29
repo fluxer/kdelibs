@@ -272,7 +272,7 @@ void KCursorPrivateAutoHideEventFilter::unhideCursor()
     QWidget* w = mouseWidget();
 
     if ( w->cursor().shape() != Qt::BlankCursor ) // someone messed with the cursor already
-	return;
+        return;
 
     if ( m_isOwnCursor )
         w->setCursor( m_oldCursor );

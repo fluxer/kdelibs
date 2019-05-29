@@ -85,13 +85,13 @@ static QString qtFilter(const QStringList& _filters)
             new_name = current.mid(p+1);
         }
 	//Qt filters assume anything in () is the file extension list
-	new_name = new_name.replace('(', '[').replace(')',']').trimmed();
+        new_name = new_name.replace('(', '[').replace(')',']').trimmed();
 
         //convert everything to lower case and remove dupes (doesn't matter on win32)
         QStringList allfiltersUnique;
         const QStringList origList( new_f.split(' ', QString::SkipEmptyParts) );
         foreach (const QString& origFilter, origList) {
-	if (!allfiltersUnique.contains(origFilter, Qt::CaseInsensitive))
+        if (!allfiltersUnique.contains(origFilter, Qt::CaseInsensitive))
                 allfiltersUnique += origFilter.toLower();
         }
 
