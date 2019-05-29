@@ -30,7 +30,7 @@ class KDirWatchPrivate;
   * @short Class for watching directory and file changes.
   *
   * Watch directories and files for changes.
-  * The watched directories or files don't have to exist yet.
+  * The watched directories or files has to exist.
   *
   * When a watched directory is changed, i.e. when files therein are
   * created or deleted, KDirWatch will emit the signal dirty().
@@ -42,21 +42,16 @@ class KDirWatchPrivate;
   * signal deleted(). The directory is still watched for new
   * creation.
   *
+  * Both created() and deleted() and for kep for compatibility and you
+  * should not rely on them. Instead you can use KDirNotify or
+  * KDirLister which provide a lot more functionality than KDirWatch.
+  *
   * When a watched file is changed, i.e. attributes changed or written
   * to, KDirWatch will emit the signal dirty().
   *
-  * Scanning of particular directories or files can be stopped temporarily
-  * and restarted. The whole class can be stopped and restarted.
-  * Directories and files can be added/removed from the list in any state.
-  *
-  * The implementation uses the QFileSystemWatch functionality on most systems.
-  * Otherwise the FAM service is used, when available.
-  * As a last resort, a regular polling for change of modification times
-  * is done; the polling interval is a global config option:
-  * DirWatch/PollInterval and DirWatch/NFSPollInterval for NFS mounted
-  * directories.
-  * The choice of implementation can be adjusted by the user, with the key
-  * [DirWatch] PreferredMethod={Fam|QFSWatch}
+  * The implementation uses the QFileSystemWatch functionality which may
+  * uses platform dependant notification API and as last resort
+  * stat-based poller.
   *
   * @see self()
   * @author Sven Radej (in 1998)
