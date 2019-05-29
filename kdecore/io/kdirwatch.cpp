@@ -50,15 +50,11 @@ KDirWatch::KDirWatch (QObject* parent)
 {
     connect(d->watcher, SIGNAL(directoryChanged(QString)), this, SLOT(emitChanged(QString)));
     connect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
-    connect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
-    connect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
 }
 
 KDirWatch::~KDirWatch()
 {
     disconnect(d->watcher, SIGNAL(directoryChanged(QString)), this, SLOT(emitChanged(QString)));
-    disconnect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
-    disconnect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
     disconnect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
     delete d;
 }
