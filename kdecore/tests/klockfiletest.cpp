@@ -27,6 +27,7 @@
 // TODO test locking from two different threads
 //#include <qtconcurrentrun.h>
 
+QT_BEGIN_NAMESPACE
 namespace QTest {
 template<>
 char* toString(const KLockFile::LockResult &result)
@@ -37,6 +38,7 @@ char* toString(const KLockFile::LockResult &result)
         return qstrdup(strings[result]);
     }
 }
+QT_END_NAMESPACE
 
 // Here's how to test file locking on a FAT filesystem, on linux:
 // cd /tmp

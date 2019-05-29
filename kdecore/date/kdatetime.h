@@ -1616,9 +1616,6 @@ class KDECORE_EXPORT KDateTime //krazy:exclude=dpointer (implicitly shared)
      */
     static KDateTime realCurrentLocalDateTime();
 
-    friend QDataStream KDECORE_EXPORT &operator<<(QDataStream &out, const KDateTime &dateTime);
-    friend QDataStream KDECORE_EXPORT &operator>>(QDataStream &in, KDateTime &dateTime);
-
   private:
     QSharedDataPointer<KDateTimePrivate> d;
 };
