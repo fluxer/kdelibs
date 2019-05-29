@@ -63,11 +63,13 @@ void KDirWatch::addDir(const QString& path, WatchModes watchModes)
 {
     if (path.isEmpty() || path.startsWith(QLatin1String("/dev")))
         return; // Don't even go there.
-    if (watchModes & WatchDirOnly) {
+    if (watchModes & WatchDirOnly || watchModes == WatchDirOnly) {
         d->watcher->addPath(path);
         return;
     }
-    QDir::Filters filters;
+
+    kDebug(7001) << "listing" << path << watchModes;
+    QDir::Filters filters = QDir::NoDotAndDotDot;
     if (watchModes & WatchFiles) {
         filters |= QDir::Files;
     }
@@ -75,7 +77,10 @@ void KDirWatch::addDir(const QString& path, WatchModes watchModes)
         filters |= QDir::Dirs;
     }
     QDir dir(path);
-    d->watcher->addPaths(dir.entryList(filters));
+    QStringList entrylist = dir.entryList(filters);
+    if (!entrylist.isEmpty()) {
+        d->watcher->addPaths(entrylist);
+    }
 }
 
 void KDirWatch::addFile(const QString& path)
