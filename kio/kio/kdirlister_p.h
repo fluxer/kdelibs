@@ -243,8 +243,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
   void slotFileDirty( const QString &_file );
-  void slotFileCreated( const QString &_file );
-  void slotFileDeleted( const QString &_file );
 
   void slotEntries( KIO::Job *job, const KIO::UDSEntryList &entries );
   void slotResult( KJob *j );
@@ -324,7 +322,7 @@ private:
     {
       if ( autoUpdates )
       {
-        if ( KDirWatch::exists() && url.isLocalFile() )
+        if ( KDirWatch::self() && url.isLocalFile() )
             KDirWatch::self()->removeDir(m_canonicalPath);
         sendSignal( false, url );
       }

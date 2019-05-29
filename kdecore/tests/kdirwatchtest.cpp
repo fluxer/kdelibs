@@ -65,21 +65,7 @@ int main (int argc, char **argv)
   kDebug() << "Watching: (but skipped) " << test;
   dirwatch1->addDir(test);
 
-  dirwatch1->startScan();
-  dirwatch2->startScan();
-
-  if(!dirwatch1->stopDirScan(home))
-      kDebug() << "stopDirscan: " << home << " error!";
-  if(!dirwatch1->restartDirScan(home))
-      kDebug() << "restartDirScan: " << home << "error!";
-  if (!dirwatch1->stopDirScan(test))
-     kDebug() << "stopDirScan: error";
-
-  KDirWatch::statistics();
-
   delete dirwatch2;
-
-  KDirWatch::statistics();
 
   return a.exec();
 }

@@ -12,15 +12,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
 )
 
-# Configure checks for kdirwatch
-macro_bool_to_01(FAM_FOUND HAVE_FAM)
-
-# Generate io/config-kdirwatch.h
-configure_file(
-    io/config-kdirwatch.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/io/config-kdirwatch.h
-)
-
 # Configure checks for network/ but also for netsupp.*
 include(network/ConfigureChecks.cmake)
 configure_file(

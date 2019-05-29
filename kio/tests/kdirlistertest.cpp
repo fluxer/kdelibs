@@ -440,8 +440,6 @@ void KDirListerTest::testDeleteItem()
 
     //kDebug() << "Removing " << path+"toplevelfile_1";
     QFile::remove(path+"toplevelfile_1");
-    // the remove() doesn't always trigger kdirwatch in stat mode, if this all happens in the same second
-    KDirWatch::self()->setDirty(path);
     if (m_dirLister.spyItemsDeleted.count() == 0) {
         qDebug("waiting for itemsDeleted");
         enterLoop();
@@ -1069,7 +1067,6 @@ void KDirListerTest::testRemoveWatchedDirectory()
 
     // Watch the subfolder for changes, independently.
     // This is what triggers the bug.
-    // (Technically, this could become a KDirWatch unittest, but if one day we use QFSW, good to have the tests here)
     KDirWatch watcher;
     watcher.addDir(subDirPath);
 

@@ -273,10 +273,6 @@ KBookmarkManager::KBookmarkManager(const QString & bookmarksFile)
     d->m_kDirWatch->addFile(d->m_bookmarksFile);
     QObject::connect( d->m_kDirWatch, SIGNAL(dirty(const QString&)),
             this, SLOT(slotFileChanged(const QString&)));
-    QObject::connect( d->m_kDirWatch, SIGNAL(created(const QString&)),
-            this, SLOT(slotFileChanged(const QString&)));
-    QObject::connect( d->m_kDirWatch, SIGNAL(deleted(const QString&)),
-            this, SLOT(slotFileChanged(const QString&)));
     kDebug(7043) << "starting KDirWatch for " << d->m_bookmarksFile;
 }
 

@@ -442,10 +442,6 @@ void Kded::updateDirWatch()
 
   QObject::connect( m_pDirWatch, SIGNAL(dirty(QString)),
            this, SLOT(update(QString)));
-  QObject::connect( m_pDirWatch, SIGNAL(created(QString)),
-           this, SLOT(update(QString)));
-  QObject::connect( m_pDirWatch, SIGNAL(deleted(QString)),
-           this, SLOT(update(QString)));
 
   foreach(const QString it, m_allResourceDirs) {
      readDirectory( it );

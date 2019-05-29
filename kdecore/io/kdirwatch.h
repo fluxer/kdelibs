@@ -122,13 +122,6 @@ class KDECORE_EXPORT KDirWatch : public QObject
    void addFile(const QString& file);
 
    /**
-    * Returns the time the directory/file was last changed.
-    * @param path the file to check
-    * @return the date of the last modification
-    */
-   QDateTime ctime(const QString& path) const;
-
-   /**
     * Removes a directory from the list of scanned directories.
     *
     * If specified path is not in the list this does nothing.
@@ -145,87 +138,11 @@ class KDECORE_EXPORT KDirWatch : public QObject
    void removeFile(const QString& file);
 
    /**
-    * Stops scanning the specified path.
-    *
-    * The @p path is not deleted from the internal list, it is just skipped.
-    * Call this function when you perform an huge operation
-    * on this directory (copy/move big files or many files). When finished,
-    * call restartDirScan(path).
-    *
-    * @param path the path to skip
-    * @return true if the @p path is being watched, otherwise false
-    * @see restartDirScanning()
-    */
-   bool stopDirScan(const QString& path);
-
-   /**
-    * Restarts scanning for specified path.
-    *
-    * It doesn't notify about the changes (by emitting a signal).
-    * The ctime value is reset.
-    *
-    * Call it when you are finished with big operations on that path,
-    * @em and when @em you have refreshed that path.
-    *
-    * @param path the path to restart scanning
-    * @return true if the @p path is being watched, otherwise false
-    * @see stopDirScanning()
-    */
-   bool restartDirScan(const QString& path);
-
-   /**
-    * Starts scanning of all dirs in list.
-    *
-    * @param notify If true, all changed directories (since
-    * stopScan() call) will be notified for refresh. If notify is
-    * false, all ctimes will be reset (except those who are stopped,
-    * but only if @p skippedToo is false) and changed dirs won't be
-    * notified. You can start scanning even if the list is
-    * empty. First call should be called with @p false or else all
-    * directories
-    * in list will be notified.
-    * @param skippedToo if true, the skipped directoris (scanning of which was
-    * stopped with stopDirScan() ) will be reset and notified
-    * for change. Otherwise, stopped directories will continue to be
-    * unnotified.
-    */
-   void startScan( bool notify=false, bool skippedToo=false );
-
-   /**
-    * Stops scanning of all directories in internal list.
-    *
-    * The timer is stopped, but the list is not cleared.
-    */
-   void stopScan();
-
-   /**
-    * Is scanning stopped?
-    * After creation of a KDirWatch instance, this is false.
-    * @return true when scanning stopped
-    */
-   bool isStopped();
-
-   /**
     * Check if a directory is being watched by this KDirWatch instance
     * @param path the directory to check
     * @return true if the directory is being watched
     */
-   bool contains( const QString& path ) const;
-
-   void deleteQFSWatcher();
-
-   /**
-    * Dump statistic information about the KDirWatch::self() instance.
-    * This checks for consistency, too.
-    */
-   static void statistics(); // TODO implement a QDebug operator for KDirWatch instead.
-
-   enum Method { FAM, QFSWatch };
-   /**
-    * Returns the preferred internal method to
-    * watch for changes.
-    */
-   Method internalMethod(); // TODO KDE5: make const
+   bool contains( const QString& path) const;
 
    /**
     * The KDirWatch instance usually globally used in an application.
@@ -240,12 +157,6 @@ class KDECORE_EXPORT KDirWatch : public QObject
     * @return a KDirWatch instance
     */
    static KDirWatch* self();
-   /**
-    * Returns true if there is an instance of KDirWatch.
-    * @return true if there is an instance of KDirWatch.
-    * @see KDirWatch::self()
-    */
-   static bool exists();
 
 public Q_SLOTS:
 
@@ -298,8 +209,12 @@ public Q_SLOTS:
     */
    void deleted(const QString &path);
 
+private Q_SLOTS:
+   void emitChanged(const QString &path);
+
  private:
-   KDirWatchPrivate *const d;
+
+    KDirWatchPrivate* d;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KDirWatch::WatchModes)

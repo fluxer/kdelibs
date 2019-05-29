@@ -808,10 +808,6 @@ void KNewFileMenuPrivate::_k_slotFillTemplates()
         }
         QObject::connect(s->dirWatch, SIGNAL(dirty(QString)),
                          q, SLOT(_k_slotFillTemplates()));
-        QObject::connect(s->dirWatch, SIGNAL(created(QString)),
-                         q, SLOT(_k_slotFillTemplates()));
-        QObject::connect(s->dirWatch, SIGNAL(deleted(QString)),
-                         q, SLOT(_k_slotFillTemplates()));
         // Ok, this doesn't cope with new dirs in KDEDIRS, but that's another story
     }
     ++s->templatesVersion;

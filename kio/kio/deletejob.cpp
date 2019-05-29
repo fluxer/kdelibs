@@ -259,12 +259,6 @@ void DeleteJobPrivate::finishedStatPhase()
 {
     m_totalFilesDirs = files.count() + symlinks.count() + dirs.count();
     slotReport();
-    // Now we know which dirs hold the files we're going to delete.
-    // To speed things up and prevent double-notification, we disable KDirWatch
-    // on those dirs temporarily (using KDirWatch::self, that's the instance
-    // used by e.g. kdirlister).;
-    foreach ( const QString it, m_parentDirs )
-        KDirWatch::self()->stopDirScan( it );
     state = DELETEJOB_STATE_DELETING_FILES;
     deleteNextFile();
 }
@@ -356,12 +350,6 @@ void DeleteJobPrivate::deleteNextDir()
         } while ( !dirs.isEmpty() );
     }
 
-    // Re-enable watching on the dirs that held the deleted files
-    const QSet<QString>::const_iterator itEnd = m_parentDirs.constEnd();
-    for (QSet<QString>::const_iterator it = m_parentDirs.constBegin() ; it != itEnd ; ++it) {
-        KDirWatch::self()->restartDirScan( *it );
-    }
-
     // Finished - tell the world
     if ( !m_srcList.isEmpty() )
     {
@@ -380,12 +368,6 @@ void DeleteJobPrivate::currentSourceStated(bool isDir, bool isLink)
     if (isDir && !isLink) {
         // Add toplevel dir in list of dirs
         dirs.append( url );
-        if (url.isLocalFile()) {
-            // We are about to delete this dir, no need to watch it
-            // Maybe we should ask kdirwatch to remove all watches recursively?
-            // But then there would be no feedback (things disappearing progressively) during huge deletions
-            KDirWatch::self()->stopDirScan(url.toLocalFile(KUrl::RemoveTrailingSlash));
-        }
         if (!KProtocolManager::canDeleteRecursive(url)) {
             //kDebug(7007) << url << "is a directory, let's list it";
             ListJob *newjob = KIO::listRecursive(url, KIO::HideProgressInfo);

@@ -21,7 +21,6 @@ KDECORE_UNIT_TESTS(
     # FIXME: due to issues with kgzipfilter the test bellow is disabled as it
     # causes a hang
     # karchivetest
-    kdirwatch_unittest
     klocaletimeformattest
     klocalizedstringtest
     kmountpointtest
@@ -66,7 +65,6 @@ KDECORE_UNIT_TESTS(
 )
 
 KDECORE_EXECUTABLE_TESTS(
-    kdirwatchtest
     krandomsequencetest
     ktartest
     kziptest
@@ -98,11 +96,6 @@ target_link_libraries(kdecore-klocaletest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRA
 set(kdatetimeformattertest_SRCS kdatetimeformattertest.cpp ../date/kdatetimeformatter.cpp ../date/kdayperiod.cpp)
 kde4_add_test(kdecore-kdatetimeformattertest ${kdatetimeformattertest_SRCS})
 target_link_libraries(kdecore-kdatetimeformattertest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
-
-########### kdirwatchtest_gui ###############
-
-add_executable(kdecore-kdirwatchtest_gui kdirwatchtest_gui.cpp)
-target_link_libraries(kdecore-kdirwatchtest_gui ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${QT_QTTEST_LIBRARY})
 
 ########### klimitediodevicetest ###############
 

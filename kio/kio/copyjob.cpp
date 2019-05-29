@@ -831,7 +831,6 @@ void CopyJobPrivate::startRenameJob( const KUrl& slave_url )
     if (m_currentSrcURL.isLocalFile()) {
         const QString parentDir = m_currentSrcURL.directory(KUrl::ObeyTrailingSlash);
         if (!m_parentDirs.contains(parentDir)) {
-            KDirWatch::self()->stopDirScan(parentDir);
             m_parentDirs.insert(parentDir);
         }
     }
@@ -1204,15 +1203,6 @@ void CopyJobPrivate::createNextDir()
     else // we have finished creating dirs
     {
         q->setProcessedAmount( KJob::Directories, m_processedDirs ); // make sure final number appears
-
-        if (m_mode == CopyJob::Move) {
-            // Now we know which dirs hold the files we're going to delete.
-            // To speed things up and prevent double-notification, we disable KDirWatch
-            // on those dirs temporarily (using KDirWatch::self, that's the instanced
-            // used by e.g. kdirlister).
-            foreach ( const QString it, m_parentDirs )
-                KDirWatch::self()->stopDirScan( it );
-        }
 
         state = STATE_COPYING_FILES;
         m_processedFiles++; // Ralf wants it to start at 1, not 0
@@ -1763,11 +1753,6 @@ void CopyJob::emitResult()
         }
     }
 
-    // Re-enable watching on the dirs that held the deleted/moved files
-    if (d->m_mode == CopyJob::Move) {
-        foreach (const QString it, d->m_parentDirs)
-            KDirWatch::self()->restartDirScan( it );
-    }
     Job::emitResult();
 }
 

@@ -27,171 +27,21 @@
 #ifndef KDIRWATCH_P_H
 #define KDIRWATCH_P_H
 
-#include <io/config-kdirwatch.h>
 #include "kdirwatch.h"
-
-#include <QtCore/qset.h>
-#include <QtCore/qmap.h>
-#include <QtCore/qobject.h>
-#include <QtCore/qtimer.h>
-#include <QtCore/qsocketnotifier.h>
-
-#ifdef HAVE_FAM
-#include <limits.h>
-#include <fam.h>
-#endif
-
-#include <sys/time.h>
-#include <sys/param.h> // ino_t
-#include <sys/stat.h> // ino_t
-#include <ctime>
-
-
-#define invalid_ctime ((time_t)-1)
-
-#ifndef QT_NO_FILESYSTEMWATCHER
 #include <QtCore/qfilesystemwatcher.h>
-#endif
 
 /* KDirWatchPrivate is a singleton and does the watching
  * for every KDirWatch instance in the application.
  */
-class KDirWatchPrivate : public QObject
+class KDirWatchPrivate
 {
-  Q_OBJECT
 public:
-
-  enum entryStatus { Normal = 0, NonExistent };
-  enum entryMode { UnknownMode = 0, FAMMode, QFSWatchMode };
-  enum { NoChange=0, Changed=1, Created=2, Deleted=4 };
-
-
-  struct Client {
-    KDirWatch* instance;
-    int count;
-    // did the instance stop watching
-    bool watchingStopped;
-    // events blocked when stopped
-    int pending;
-    KDirWatch::WatchModes m_watchModes;
-  };
-
-  class Entry
-  {
-  public:
-    // the last observed modification time
-    time_t m_ctime;
-    // the last observed link count
-    int m_nlink;
-    // last observed inode
-    ino_t m_ino;
-    entryStatus m_status;
-    entryMode m_mode;
-    bool isDir;
-    // instances interested in events
-    QList<Client *> m_clients;
-    // nonexistent entries of this directory
-    QList<Entry *> m_entries;
-    QString path;
-
-    int msecLeft, freq;
-
-    QString parentDirectory() const;
-    void addClient(KDirWatch*, KDirWatch::WatchModes);
-    void removeClient(KDirWatch*);
-    int clientCount() const;
-    bool isValid() { return m_clients.count() || m_entries.count(); }
-
-    Entry* findSubEntry(const QString& path) const {
-        Q_FOREACH(Entry* sub_entry, m_entries) {
-            if (sub_entry->path == path)
-                return sub_entry;
-        }
-        return 0;
-    }
-
-    bool dirty;
-    void propagate_dirty();
-
-    QList<Client *> clientsForFileOrDir(const QString& tpath, bool* isDir) const;
-
-#ifdef HAVE_FAM
-    FAMRequest fr;
-#endif
-  };
-
-  typedef QMap<QString,Entry> EntryMap;
-
-  KDirWatchPrivate();
-  ~KDirWatchPrivate();
-
-  void resetList (KDirWatch*,bool);
-  void useFreq(Entry* e, int newFreq);
-  void addEntry(KDirWatch* instance,const QString& _path, Entry* sub_entry,
-        bool isDir, KDirWatch::WatchModes watchModes = KDirWatch::WatchDirOnly);
-  bool removeEntry(KDirWatch*,const QString&, Entry* sub_entry);
-  void removeEntry(KDirWatch*,Entry* e, Entry* sub_entry);
-  bool stopEntryScan(KDirWatch*, Entry*);
-  bool restartEntryScan(KDirWatch*, Entry*, bool );
-  void stopScan(KDirWatch*);
-  void startScan(KDirWatch*, bool, bool);
-
-  void removeEntries(KDirWatch*);
-  void statistics();
-
-  void addWatch(Entry* entry);
-  void removeWatch(Entry* entry);
-  Entry* entry(const QString&);
-  int scanEntry(Entry* e);
-  void emitEvent(const Entry* e, int event, const QString &fileName = QString());
-
-  // Memory management - delete when last KDirWatch gets deleted
-  void ref() { m_ref++; }
-  bool deref() { return ( --m_ref == 0 ); }
-
- static bool isNoisyFile( const char *filename );
-
-public Q_SLOTS:
-  void slotRescan();
-  void famEventReceived(); // for FAM
-  void slotRemoveDelayed();
-  void fswEventReceived(const QString &path);  // for QFileSystemWatcher
+    KDirWatchPrivate();
+    ~KDirWatchPrivate();
 
 public:
-  QTimer timer;
-  EntryMap m_mapEntries;
-
-  KDirWatch::Method m_preferredMethod, m_nfsPreferredMethod;
-  int freq;
-  int statEntries;
-  int m_nfsPollInterval, m_PollInterval;
-  int m_ref;
-
-  // removeList is allowed to contain any entry at most once
-  QSet<Entry *> removeList;
-  bool delayRemove;
-
-  bool rescan_all;
-  QTimer rescan_timer;
-
-#ifdef HAVE_FAM
-  QSocketNotifier *sn;
-  FAMConnection fc;
-  bool use_fam;
-
-  void checkFAMEvent(FAMEvent*);
-  bool useFAM(Entry*);
-#endif
-
-#ifndef QT_NO_FILESYSTEMWATCHER
-  QFileSystemWatcher *fsWatcher;
-  bool useQFSWatch(Entry* e);
-#endif
-
-  bool _isStopped;
+    QFileSystemWatcher *watcher;
 };
-
-QDebug operator<<(QDebug debug, const KDirWatchPrivate::Entry &entry);
 
 #endif // KDIRWATCH_P_H
 

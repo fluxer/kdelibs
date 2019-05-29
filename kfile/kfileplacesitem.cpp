@@ -51,8 +51,6 @@ KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
         KDirWatch::self()->addFile(KStandardDirs::locateLocal("config", "trashrc"));
         KConfig trashConfig("trashrc", KConfig::SimpleConfig);
         m_trashIsEmpty = trashConfig.group("Status").readEntry("Empty", true);
-        connect(KDirWatch::self(), SIGNAL(created(QString)),
-                         this, SLOT(trashConfigChanged(QString)));
         connect(KDirWatch::self(), SIGNAL(dirty(QString)),
                          this, SLOT(trashConfigChanged(QString)));
     } else if (!udi.isEmpty() && m_device.isValid()) {

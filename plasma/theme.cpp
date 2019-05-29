@@ -218,9 +218,6 @@ bool ThemePrivate::useCache()
         if (isRegularTheme && !themeMetadataPath.isEmpty()) {
             // watch the metadata file for changes at runtime
             KDirWatch::self()->addFile(themeMetadataPath);
-            QObject::connect(KDirWatch::self(), SIGNAL(created(QString)),
-                                q, SLOT(settingsFileChanged(QString)),
-                                Qt::UniqueConnection);
             QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
                                 q, SLOT(settingsFileChanged(QString)),
                                 Qt::UniqueConnection);
@@ -447,9 +444,6 @@ public:
 
         //FIXME: if/when kconfig gets change notification, this will be unnecessary
         KDirWatch::self()->addFile(KStandardDirs::locateLocal("config", ThemePrivate::themeRcFile));
-        QObject::connect(KDirWatch::self(), SIGNAL(created(QString)),
-                         &self, SLOT(settingsFileChanged(QString)),
-                         Qt::UniqueConnection);
         QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
                          &self, SLOT(settingsFileChanged(QString)),
                          Qt::UniqueConnection);

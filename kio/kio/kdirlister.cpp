@@ -58,10 +58,6 @@ KDirListerCache::KDirListerCache()
 
   connect( KDirWatch::self(), SIGNAL(dirty(QString)),
            this, SLOT(slotFileDirty(QString)) );
-  connect( KDirWatch::self(), SIGNAL(created(QString)),
-           this, SLOT(slotFileCreated(QString)) );
-  connect( KDirWatch::self(), SIGNAL(deleted(QString)),
-           this, SLOT(slotFileDeleted(QString)) );
 
   kdirnotify = new org::kde::KDirNotify(QString(), QString(), QDBusConnection::sessionBus(), this);
   connect(kdirnotify, SIGNAL(FileRenamed(QString,QString)), SLOT(slotFileRenamed(QString,QString)));
@@ -84,8 +80,7 @@ KDirListerCache::~KDirListerCache()
     itemsCached.clear();
     directoryData.clear();
 
-    if ( KDirWatch::exists() )
-        KDirWatch::self()->disconnect( this );
+    KDirWatch::self()->disconnect( this );
 }
 
 // setting _reload to true will emit the old files and
@@ -1156,27 +1151,6 @@ void KDirListerCache::handleFileDirty(const KUrl& url)
             }
         }
     }
-}
-
-void KDirListerCache::slotFileCreated( const QString& path ) // from KDirWatch
-{
-    kDebug(7004) << path;
-    // XXX: how to avoid a complete rescan here?
-    // We'd need to stat that one file separately and refresh the item(s) for it.
-    KUrl fileUrl(path);
-    slotFilesAdded(fileUrl.directory());
-}
-
-void KDirListerCache::slotFileDeleted( const QString& path ) // from KDirWatch
-{
-    kDebug(7004) << path;
-    KUrl u( path );
-    QStringList fileUrls;
-    Q_FOREACH(KUrl url, directoriesForCanonicalPath(u.directory())) {
-        url.addPath(u.fileName());
-        fileUrls << url.url();
-    }
-    slotFilesRemoved(fileUrls);
 }
 
 void KDirListerCache::slotEntries( KIO::Job *job, const KIO::UDSEntryList &entries )

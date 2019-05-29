@@ -402,12 +402,7 @@ void KDirModelTest::testModifyFile()
     // "Touch" the file
     setTimeStamp(file, s_referenceTimeStamp.addSecs(20) );
 
-    // In stat mode, kdirwatch doesn't notice file changes; we need to trigger it
-    // by creating a file.
-    //createTestFile(m_tempDir->name() + "toplevelfile_5");
-    KDirWatch::self()->setDirty(m_tempDir->name());
-
-    // Wait for KDirWatch to notify the change (especially when using Stat)
+    // Wait for KDirWatch to notify the change
     enterLoop();
 
     // If we come here, then dataChanged() was emitted - all good.
@@ -1294,7 +1289,7 @@ void KDirModelTest::testDeleteDirectory()
     connect( m_dirModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
              &m_eventLoop, SLOT(exitLoop()) );
 
-    QSignalSpy spyDirWatchDeleted(KDirWatch::self(), SIGNAL(deleted(QString)));
+    QSignalSpy spyDirWatchDeleted(KDirWatch::self(), SIGNAL(dirty(QString)));
 
     KIO::DeleteJob* job = KIO::del(url, KIO::HideProgressInfo);
     QVERIFY(job->exec());
@@ -1312,8 +1307,7 @@ void KDirModelTest::testDeleteDirectory()
     QModelIndex dirIndex = m_dirModel->indexForUrl(KUrl(path + "subdir"));
     QVERIFY(dirIndex.isValid());
 
-    // TODO!!! Bug in KDirWatch? ###
-    // QCOMPARE(spyDirWatchDeleted.count(), 1);
+    QCOMPARE(spyDirWatchDeleted.count(), 1);
 }
 
 void KDirModelTest::testDeleteCurrentDirectory()
@@ -1325,9 +1319,6 @@ void KDirModelTest::testDeleteCurrentDirectory()
     QSignalSpy spyRowsRemoved(m_dirModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
     connect( m_dirModel, SIGNAL(rowsRemoved(QModelIndex,int,int)),
              &m_eventLoop, SLOT(exitLoop()) );
-
-
-    KDirWatch::self()->statistics();
 
     KIO::DeleteJob* job = KIO::del(url, KIO::HideProgressInfo);
     QVERIFY(job->exec());
