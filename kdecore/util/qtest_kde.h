@@ -84,9 +84,8 @@ int main(int argc, char *argv[]) \
     unsetenv("KDE_COLOR_DEBUG"); \
     QFile::remove(QDir::homePath() + QString::fromLatin1("/.kde-unit-test/share/config/qttestrc"));  \
     KAboutData aboutData( QByteArray(componentName), QByteArray(), ki18n("KDE Test Program"), QByteArray("version") );  \
-    KDEMainFlags mainFlags = flags;                         \
     KComponentData cData(&aboutData); \
-    QApplication app( argc, argv, (mainFlags & GUI) != 0 ); \
+    QApplication app( argc, argv ); \
     app.setApplicationName( QLatin1String("qttest") ); \
     qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
     qRegisterMetaType<KUrl::List>(); \
