@@ -42,9 +42,10 @@ class KDirWatchPrivate;
   * signal deleted(). The directory is still watched for new
   * creation.
   *
-  * Both created() and deleted() and for kep for compatibility and you
-  * should not rely on them. Instead you can use KDirNotify or
-  * KDirLister which provide a lot more functionality than KDirWatch.
+  * Both created() and deleted() are kept for compatibility and you
+  * should not rely on them as they are used as proxy for other
+  * classes. Instead you can use KDirNotify or KDirLister which
+  * provide a lot more functionality than KDirWatch.
   *
   * When a watched file is changed, i.e. attributes changed or written
   * to, KDirWatch will emit the signal dirty().
