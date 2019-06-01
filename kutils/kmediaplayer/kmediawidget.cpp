@@ -85,7 +85,7 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
 
     if (options & HiddenControls) {
         d->m_visible = true;
-        setMouseTracking(true);
+        setMouseTracking(false);
     }
 }
 
@@ -118,6 +118,7 @@ void KMediaWidget::open(const QString path)
             killTimer(d->m_timerid);
         }
         d->m_timerid = startTimer(3000);
+        setMouseTracking(true);
     }
 }
 
@@ -370,6 +371,7 @@ void KMediaWidget::_updateFinished()
             killTimer(d->m_timerid);
         }
         _updateControls(true);
+        setMouseTracking(false);
     }
     _updatePlay(true);
 }
