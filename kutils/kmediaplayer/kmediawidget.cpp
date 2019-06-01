@@ -100,7 +100,7 @@ KMediaWidget::~KMediaWidget()
     delete d;
 }
 
-void KMediaWidget::open(const QString path)
+void KMediaWidget::open(const QString &path)
 {
     // m_path should be updated from _updateLoaded() but that may be too late
     d->m_path = path;

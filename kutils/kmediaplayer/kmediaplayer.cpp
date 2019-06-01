@@ -314,6 +314,7 @@ QStringList KAbstractPlayer::protocols() const
     if (s_protocols.isEmpty()) {
         s_protocols = option("protocol-list").toStringList();
         s_protocols.removeDuplicates();
+        qSort(s_protocols);
     }
     return s_protocols;
 }

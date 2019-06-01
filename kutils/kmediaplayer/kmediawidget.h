@@ -29,11 +29,11 @@ class KMediaWidgetPrivate;
 
 /*!
     The @p KMediaWidget class provides an embedable widget that can be used to playback from
-    various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
-    Blue-Ray, file-descriptor, raw data, you name it. Unlike @p KMediaPlayer it provides
-    interactive media controls to play/pause, seek to position and set volume. It is ment to be a
-    simple player but supports drag-n-drop actions, fullscreen support and can automatically hide
-    the media controls optionally.
+    various media sources including Hard-Drives, Internet streams, CD, DVD, Blue-Ray,
+    file-descriptor, raw data, you name it. Unlike @p KMediaPlayer it provides interactive media
+    controls to play/pause, seek to position and set volume. It is ment to be a simple player but
+    supports drag-n-drop actions, fullscreen support and can automatically hide the media controls
+    optionally.
 
     For a simpler version of this class check out @p KMediaPlayer.
 
@@ -88,7 +88,7 @@ public:
         @param path a path to load
         @see KMediaPlayer::load
     */
-    void open(const QString path);
+    void open(const QString &path);
 
     //! @brief Reimplementation to provide reasonable size hint
     virtual QSize sizeHint() const;

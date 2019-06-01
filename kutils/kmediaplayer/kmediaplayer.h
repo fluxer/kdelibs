@@ -215,11 +215,11 @@ public:
 
 /*!
     The @p KAudioPlayer class provides an object that can be used to playback from various media
-    sources including Hard-Drives (local and remote), Internet streams, CD, DVD, Blue-Ray,
-    file-descriptor, raw data, you name it. It supports per-application state too, this
-    includes audio output device, volume and mute state currently. That feature requires a
-    special entry in the application .desktop file - "X-KDE-MediaPlayer=true" - which indicates
-    that it uses the class and makes it appear in the K Control Module (KCM) for multimedia.
+    sources including Hard-Drives, Internet streams, CD, DVD, Blue-Ray, file-descriptor, raw data,
+    you name it. It supports per-application state too, this includes audio output device, volume
+    and mute state currently. That feature requires a special entry in the application .desktop
+    file - "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear
+    in the K Control Module (KCM) for multimedia.
 
     For an extended version of this class check out @p KMediaPlayer and @p KMediaWidget.
 
@@ -271,12 +271,12 @@ private:
 
 
 /*!
-    The @p KMediaPlayer class provides an embedable widget that can be used to playback from
-    various media sources including Hard-Drives (local and remote), Internet streams, CD, DVD,
-    Blue-Ray, file-descriptor, raw data, you name it. It supports per-application state too,
-    this includes audio output device, volume and mute state currently. That feature requires a
-    special entry in the application .desktop file - "X-KDE-MediaPlayer=true" - which indicates
-    that it uses the class and makes it appear in the K Control Module (KCM) for multimedia.
+    The @p KMediaPlayer class provides an object that can be used to playback from various media
+    sources including Hard-Drives, Internet streams, CD, DVD, Blue-Ray, file-descriptor, raw data,
+    you name it. It supports per-application state too, this includes audio output device, volume
+    and mute state currently. That feature requires a special entry in the application .desktop
+    file - "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear
+    in the K Control Module (KCM) for multimedia.
 
     For an extended version of this class check out @p KMediaWidget.
 
