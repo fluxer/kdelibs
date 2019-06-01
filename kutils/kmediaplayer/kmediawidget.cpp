@@ -25,7 +25,6 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QTimer>
-#include <QMouseEvent>
 
 #include "kmediaplayer.h"
 #include "kmediawidget.h"
@@ -39,9 +38,10 @@ public:
     QWidget *m_parent;
     QMainWindow *m_parenthack;
     QSize m_parentsizehack;
-    QElapsedTimer m_timer;
+    int m_timerid;
     QString m_path;
     bool m_replay;
+    bool m_visible;
     Ui_KMediaWidgetPrivate *m_ui;
 };
 
@@ -84,12 +84,16 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     }
 
     if (options & HiddenControls) {
+        d->m_visible = true;
         setMouseTracking(true);
     }
 }
 
 KMediaWidget::~KMediaWidget()
 {
+    if (d->m_timerid >= 0) {
+        killTimer(d->m_timerid);
+    }
     d->m_player->stop();
     d->m_player->deleteLater();
     delete d->m_ui;
@@ -110,8 +114,10 @@ void KMediaWidget::open(const QString path)
     d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
 
     if (d->m_options & HiddenControls) {
-        startTimer(200);
-        d->m_timer.start();
+        if (d->m_timerid >= 0) {
+            killTimer(d->m_timerid);
+        }
+        d->m_timerid = startTimer(3000);
     }
 }
 
@@ -235,30 +241,61 @@ void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (d->m_options & HiddenControls) {
-        d->m_timer.restart();
+        if (d->m_timerid >= 0) {
+            killTimer(d->m_timerid);
+        }
+        d->m_timerid = startTimer(3000);
+        _updateControls(true);
         event->ignore();
     }
 }
 
 void KMediaWidget::timerEvent(QTimerEvent *event)
 {
-    if (d->m_timer.elapsed() > 3000
+    if (event->timerId() == d->m_timerid
         && !d->m_ui->w_play->isDown()
         && !d->m_ui->w_position->isSliderDown()
         && !d->m_ui->w_volume->isSliderDown()
         && !d->m_ui->w_fullscreen->isDown()) {
         _updateControls(false);
-    } else {
-        _updateControls(true);
     }
     event->ignore();
 }
 
+void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
+{
+    if (event->mimeData()->hasUrls()) {
+        event->acceptProposedAction();
+    }
+}
+
+void KMediaWidget::dropEvent(QDropEvent *event)
+{
+    const QList<QUrl> urls = event->mimeData()->urls();
+    QStringList invalid;
+    foreach (const QUrl url, urls) {
+        QString urlstring = url.toString();
+        if (!d->m_player->isPathSupported(urlstring)) {
+            kDebug() << i18n("ignoring unsupported:\n%1", urlstring);
+            invalid.append(urlstring);
+            continue;
+        }
+        open(urlstring);
+    }
+    if (!invalid.isEmpty()) {
+        QMessageBox::warning(this, i18n("Invalid paths"),
+            i18n("Some paths are invalid:\n%1", invalid.join("\n")));
+    } else {
+        event->acceptProposedAction();
+    }
+}
+
 void KMediaWidget::_updateControls(const bool visible)
 {
-    if (visible != d->m_ui->w_frame->isVisible()) {
+    if (visible != d->m_visible) {
         d->m_ui->w_frame->setVisible(visible);
         emit controlsHidden(visible);
+        d->m_visible = visible;
     }
 }
 
@@ -329,7 +366,9 @@ void KMediaWidget::_updateFinished()
 
     if (d->m_options & HiddenControls) {
         // show the controls until the next open
-        d->m_timer.invalidate();
+        if (d->m_timerid >= 0) {
+            killTimer(d->m_timerid);
+        }
         _updateControls(true);
     }
     _updatePlay(true);
@@ -349,32 +388,5 @@ void KMediaWidget::_updateError(const QString error)
     d->m_ui->w_position->setEnabled(false);
 }
 
-void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
-{
-    if (event->mimeData()->hasUrls()) {
-        event->acceptProposedAction();
-    }
-}
-
-void KMediaWidget::dropEvent(QDropEvent *event)
-{
-    const QList<QUrl> urls = event->mimeData()->urls();
-    QStringList invalid;
-    foreach (const QUrl url, urls) {
-        QString urlstring = url.toString();
-        if (!d->m_player->isPathSupported(urlstring)) {
-            kDebug() << i18n("ignoring unsupported:\n%1", urlstring);
-            invalid.append(urlstring);
-            continue;
-        }
-        open(urlstring);
-    }
-    if (!invalid.isEmpty()) {
-        QMessageBox::warning(this, i18n("Invalid paths"),
-            i18n("Some paths are invalid:\n%1", invalid.join("\n")));
-    } else {
-        event->acceptProposedAction();
-    }
-}
 
 #include "moc_kmediawidget.cpp"

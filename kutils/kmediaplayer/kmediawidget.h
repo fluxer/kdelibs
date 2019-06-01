@@ -21,7 +21,7 @@
 
 #include <QWidget>
 #include <QMainWindow>
-#include <QElapsedTimer>
+#include <QMouseEvent>
 #include <kmediaplayer_export.h>
 #include <kmediaplayer.h>
 
@@ -49,7 +49,6 @@ class KMediaWidgetPrivate;
     layered on top of it. Otherwise when a video is played the widget will be floating. Ensuring
     that the widget has parent is a key to the fullscreen support as it will ask the parent to
     maximize itself when that needs to happen to ensure that the media controls are visible.
-    @warning The API is not stable yet and it may break in the future!
     @see KMediaPlayer
     @todo keyboard shortcuts
 */

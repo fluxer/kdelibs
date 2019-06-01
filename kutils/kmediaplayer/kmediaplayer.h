@@ -223,7 +223,6 @@ public:
 
     For an extended version of this class check out @p KMediaPlayer and @p KMediaWidget.
 
-    @warning The API is not stable yet and it may break in the future!
     @since 4.19
     @see KMediaPlayer, KMediaWidget
 */
@@ -283,7 +282,6 @@ private:
 
     @note You should construct it with parent widget, preferably a QMainWindow, so that it can be
     layered on top of it. Otherwise when a video is played the widget will be floating.
-    @warning The API is not stable yet and it may break in the future!
     @since 4.19
     @see KMediaWidget
 */
