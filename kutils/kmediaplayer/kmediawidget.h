@@ -38,11 +38,11 @@ class KMediaWidgetPrivate;
     For a simpler version of this class check out @p KMediaPlayer.
 
     @code
-    QMainWindow *window = new QMainWindow();
-    window->show();
-    KMediaWidget *player = new KMediaWidget(window);
-    window->setCentralWidget(player);
-    player->open("http://video.webmfiles.org/big-buck-bunny_trailer.webm");
+    QMainWindow window ;
+    window.show();
+    KMediaWidget player(window);
+    window.setCentralWidget(player);
+    player.open("http://dl5.webmfiles.org/big-buck-bunny_trailer.webm");
     @endcode
 
     @note You should construct it with parent widget, preferably a QMainWindow, so that it can be
@@ -138,12 +138,19 @@ public Q_SLOTS:
         @see KMediaPlayer::isFullscreen, KMediaPlayer::setFullscreen
     */
     void setFullscreen(const int value = -1);
+    /*!
+        @brief Reset internal media controls hide/unhide timer, simulating user interactivity
+    */
+    void resetControlsTimer();
 
 Q_SIGNALS:
     /*!
         @brief Signals that controls were hidden/unhidden
         @note This signal can be used to show/hide parent widget elements, such as menubar, when
-        the media controls of this widget are hidden/unhidden
+        the media controls of this widget are hidden/unhidden. You will have to setup mouse
+        tracking for the widgets connected (directly or indirectly) and call
+        @p resetControlsTimer() to ensure that this signal is not emited while the widgets
+        are beeing interacted with, hidding them without reason.
     */
     void controlsHidden(const bool hidden);
 

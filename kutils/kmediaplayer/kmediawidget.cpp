@@ -114,10 +114,7 @@ void KMediaWidget::open(const QString path)
     d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
 
     if (d->m_options & HiddenControls) {
-        if (d->m_timerid >= 0) {
-            killTimer(d->m_timerid);
-        }
-        d->m_timerid = startTimer(3000);
+        resetControlsTimer();
         setMouseTracking(true);
     }
 }
@@ -218,6 +215,14 @@ void KMediaWidget::setFullscreen(const int value)
     }
 }
 
+void KMediaWidget::resetControlsTimer()
+{
+    if (d->m_timerid >= 0) {
+        killTimer(d->m_timerid);
+    }
+    d->m_timerid = startTimer(3000);
+}
+
 QSize KMediaWidget::sizeHint() const
 {
     return d->m_ui->w_player->sizeHint();
@@ -242,10 +247,7 @@ void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (d->m_options & HiddenControls) {
-        if (d->m_timerid >= 0) {
-            killTimer(d->m_timerid);
-        }
-        d->m_timerid = startTimer(3000);
+        resetControlsTimer();
         _updateControls(true);
         event->ignore();
     }
