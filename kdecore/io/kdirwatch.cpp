@@ -61,8 +61,10 @@ KDirWatch::~KDirWatch()
 
 void KDirWatch::addDir(const QString& path, WatchModes watchModes)
 {
-    if (path.isEmpty() || path.startsWith(QLatin1String("/dev")))
+    if (path.isEmpty() || path.startsWith(QLatin1String("/dev"))) {
         return; // Don't even go there.
+    }
+
     if (watchModes & WatchDirOnly || watchModes == WatchDirOnly) {
         d->watcher->addPath(path);
         return;
@@ -77,9 +79,18 @@ void KDirWatch::addDir(const QString& path, WatchModes watchModes)
         filters |= QDir::Dirs;
     }
     QDir dir(path);
-    QStringList entrylist = dir.entryList(filters);
-    if (!entrylist.isEmpty()) {
-        d->watcher->addPaths(entrylist);
+    if (!dir.exists()) {
+        // try to watch the parent directory
+        dir.cdUp();
+    }
+
+    foreach(const QFileInfo info, dir.entryInfoList(filters)) {
+        const QString fullpath = path + QDir::separator() + info.filePath();
+        if (info.isDir()) {
+            addDir(fullpath, watchModes);
+        } else {
+            d->watcher->addPath(fullpath);
+        }
     }
 }
 
@@ -87,6 +98,13 @@ void KDirWatch::addFile(const QString& path)
 {
     if (path.isEmpty() || path.startsWith(QLatin1String("/dev")))
         return; // Don't even go there.
+
+    QFileInfo info(path);
+    if (!info.exists()) {
+        // try to watch the parent directory
+        d->watcher->addPath(info.path());
+        return;
+    }
     d->watcher->addPath(path);
 }
 
