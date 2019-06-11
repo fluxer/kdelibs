@@ -218,9 +218,6 @@ bool ThemePrivate::useCache()
         if (isRegularTheme && !themeMetadataPath.isEmpty()) {
             // watch the metadata file for changes at runtime
             KDirWatch::self()->addFile(themeMetadataPath);
-            QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
-                                q, SLOT(settingsFileChanged(QString)),
-                                Qt::UniqueConnection);
         }
 
         // TODO: discardCache(PixmapCache | SvgElementsCache); ?
@@ -445,8 +442,7 @@ public:
         //FIXME: if/when kconfig gets change notification, this will be unnecessary
         KDirWatch::self()->addFile(KStandardDirs::locateLocal("config", ThemePrivate::themeRcFile));
         QObject::connect(KDirWatch::self(), SIGNAL(dirty(QString)),
-                         &self, SLOT(settingsFileChanged(QString)),
-                         Qt::UniqueConnection);
+                         &self, SLOT(settingsFileChanged(QString)));
     }
 
    Theme self;
@@ -518,15 +514,15 @@ KPluginInfo::List Theme::listThemeInfo()
 
 void ThemePrivate::settingsFileChanged(const QString &file)
 {
-    if (file == themeMetadataPath) {
+    Q_UNUSED(file);
+    if (!themeMetadataPath.isEmpty()) {
         const KPluginInfo pluginInfo(themeMetadataPath);
         if (themeVersion != pluginInfo.version()) {
             scheduleThemeChangeNotification(SvgElementsCache);
         }
-    } else if (file.endsWith(themeRcFile)) {
-        config().config()->reparseConfiguration();
-        q->settingsChanged();
     }
+    config().config()->reparseConfiguration();
+    q->settingsChanged();
 }
 
 void Theme::settingsChanged()
@@ -673,7 +669,7 @@ void ThemePrivate::setThemeName(const QString &tempThemeName, bool writeSettings
     if (colorsFile.isEmpty()) {
         colors = 0;
         QObject::connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-                         q, SLOT(colorsChanged()), Qt::UniqueConnection);
+                         q, SLOT(colorsChanged()));
     } else {
         QObject::disconnect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
                             q, SLOT(colorsChanged()));
