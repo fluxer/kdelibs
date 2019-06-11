@@ -96,11 +96,12 @@ void KDirWatch::addDir(const QString& path, WatchModes watchModes)
 
 void KDirWatch::addFile(const QString& path)
 {
-    if (path.isEmpty() || path.startsWith(QLatin1String("/dev")))
+    if (path.isEmpty() || path.startsWith(QLatin1String("/dev"))) {
         return; // Don't even go there.
+    }
 
     QFileInfo info(path);
-    if (!info.exists()) {
+    if (!info.exists() && !info.isDir()) {
         // try to watch the parent directory
         d->watcher->addPath(info.path());
         return;
