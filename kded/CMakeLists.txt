@@ -4,7 +4,7 @@ if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
 
-include_directories( ${KDE4_KIO_INCLUDES} )
+include_directories(${KDE4_KIO_INCLUDES})
 
 if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
     set(KBUILDSYCOCA_NO_KCRASH TRUE)

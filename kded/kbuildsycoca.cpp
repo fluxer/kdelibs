@@ -406,7 +406,7 @@ bool KBuildSycoca::recreate()
   }
 
   QDataStream* str = new QDataStream(&database);
-  str->setVersion(QDataStream::Qt_4_0);
+  str->setVersion(QDataStream::Qt_4_8);
 
   kDebug(7021).nospace() << "Recreating ksycoca file (" << path << ", version " << KSycoca::version() << ")";
 
@@ -449,7 +449,7 @@ bool KBuildSycoca::recreate()
     QFile ksycocastamp(stamppath);
     ksycocastamp.open( QIODevice::WriteOnly );
     QDataStream str( &ksycocastamp );
-    str.setVersion(QDataStream::Qt_4_0);
+    str.setVersion(QDataStream::Qt_4_8);
     str << newTimestamp;
     str << existingResourceDirs();
     if (g_vfolder)
@@ -712,7 +712,7 @@ int main(int argc, char **argv)
        if( ksycocastamp.open( QIODevice::ReadOnly ))
        {
            QDataStream str( &ksycocastamp );
-           str.setVersion(QDataStream::Qt_4_0);
+           str.setVersion(QDataStream::Qt_4_8);
 
            if (!str.atEnd())
                str >> filestamp;
