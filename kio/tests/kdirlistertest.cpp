@@ -499,7 +499,9 @@ void KDirListerTest::testRenameAndOverwrite() // has to be run after testRenameI
     const QString path = dirPath+"toplevelfile_2";
     createTestFile(path);
     KFileItem existingItem;
+    int numTries = 0;
     while (existingItem.isNull()) {
+        QVERIFY(++numTries < 20);
         QTest::qWait(100);
         existingItem = m_dirLister.findByUrl(KUrl(path));
     };
