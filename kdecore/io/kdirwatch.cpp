@@ -148,6 +148,5 @@ void KDirWatch::emitChanged(const QString &path)
 }
 
 #include "moc_kdirwatch.cpp"
-#include "moc_kdirwatch_p.cpp"
 
 //sven

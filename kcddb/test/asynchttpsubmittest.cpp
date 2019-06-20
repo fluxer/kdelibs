@@ -77,7 +77,7 @@ int main(int argc, char ** argv)
 {
   KCmdLineArgs::init(argc, argv, "libkcddb_test", 0, KLocalizedString(), "");
 
-  KApplication app(false);
+  KApplication app;
 
   new AsyncHTTPSubmitTest;
 

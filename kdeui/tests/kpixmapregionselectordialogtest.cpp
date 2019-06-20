@@ -12,7 +12,7 @@ int main(int argc, char**argv)
 
   KCmdLineArgs::init(argc, argv, "test", 0, ki18n("test"), "1.0", ki18n("test"));
   KCmdLineArgs::addCmdLineOptions( options );
-  KApplication app("test");
+  KApplication app;
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
   if (args->count()!=1)

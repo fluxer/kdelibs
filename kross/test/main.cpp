@@ -168,7 +168,7 @@ int main(int argc, char **argv)
     }
 
     // init
-    app = new KApplication(true);
+    app = new KApplication();
     TestObject* testobj1 = new TestObject(0, "TestObject1");
     TestObject* testobj2 = new TestObject(0, "TestObject2");
     Kross::Manager::self().addObject( testobj1 );

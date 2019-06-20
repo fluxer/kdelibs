@@ -55,7 +55,7 @@ private Q_SLOTS:
         // Reported with patch - mjansen
         QKeySequence unknown_key(Qt::Key_unknown);
         // The keycode falls into the unicode handling
-        QString p = QChar(QChar::highSurrogate(Qt::Key_unknown)) + QChar(QChar::lowSurrogate(Qt::Key_unknown));
+        QString p = QString(QChar::highSurrogate(Qt::Key_unknown)) + QString(QChar::lowSurrogate(Qt::Key_unknown));
 
         QCOMPARE(unknown_key.toString(), p); // What happens
         QEXPECT_FAIL("", "Qt::Key_unknown not handled", Continue);
@@ -70,7 +70,7 @@ private Q_SLOTS:
         QKeySequence invalid_key(-1);
         // The keycode falls into the unicode handling too
         int k = int(-1) & ~(Qt::ShiftModifier | Qt::ControlModifier | Qt::AltModifier | Qt::MetaModifier);
-        QString p1 = QChar(QChar::highSurrogate(k)) + QChar(QChar::lowSurrogate(k));
+        QString p1 = QString(QChar::highSurrogate(k)) + QString(QChar::lowSurrogate(k));
 
         QCOMPARE(invalid_key.toString(), QString("Meta+Ctrl+Alt+Shift+"+p1)); // What happens
         QEXPECT_FAIL("", "-1 not handled", Continue);

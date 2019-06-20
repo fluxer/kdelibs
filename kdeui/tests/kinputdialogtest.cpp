@@ -36,7 +36,7 @@ int main( int argc, char *argv[] )
   kDebug() << "value2: " << svalue << ", ok: " << ok;
 
   svalue = KInputDialog::getText( "_caption", "_label:", "_value", &ok, 0L, 0L,
-    0L, "900.900.900.900" );
+    QString(), "900.900.900.900" );
   kDebug() << "value1: " << svalue << ", ok: " << ok;
 
   ivalue = KInputDialog::getInteger( "_caption", "_label:", 64, 0, 255,

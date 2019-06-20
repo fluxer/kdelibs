@@ -2,6 +2,7 @@
 #define KTREEWIDGETSEARCHLINETEST_H
 
 #include <kdialog.h>
+#include <QTreeWidget>
 
 class KTreeWidgetSearchLineTest : public KDialog
 {
@@ -21,7 +22,7 @@ protected:
 
 private:
     class KTreeWidgetSearchLine* m_searchLine;
-    class QTreeWidget* tw;
+    QTreeWidget* tw;
 };
 
 #endif
