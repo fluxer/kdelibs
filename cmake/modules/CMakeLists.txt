@@ -37,7 +37,6 @@ set(cmakeFiles
     FindENCHANT.cmake
     FindEPub.cmake
     FindExiv2.cmake
-    FindFAM.cmake
     FindFFmpeg.cmake
     FindFontconfig.cmake
     FindGettextPO.cmake
