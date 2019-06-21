@@ -34,9 +34,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <QtCore/qdatetime.h>
-#include <QtCore/QFile>
+#include <QDateTime>
+#include <QFile>
 #include <QTextStream>
+#include <QHostInfo>
 
 #include "kdebug.h"
 #include "krandom.h"
@@ -170,11 +171,7 @@ void KLockFile::Private::writeIntoLockFile(QFile& file, const KComponentData& co
 {
   file.setPermissions(QFile::ReadUser|QFile::WriteUser|QFile::ReadGroup|QFile::ReadOther);
 
-  char hostname[256];
-  hostname[0] = 0;
-  gethostname(hostname, 255);
-  hostname[255] = 0;
-  m_hostname = QString::fromLocal8Bit(hostname);
+  m_hostname = QHostInfo::localHostName();
   m_componentName = componentData.componentName();
 
   QTextStream stream(&file);
@@ -427,12 +424,7 @@ KLockFile::LockResult KLockFile::lock(LockFlags options)
         if ((d->m_pid > 0) && !d->m_hostname.isEmpty())
         {
            // Check if hostname is us
-           char hostname[256];
-           hostname[0] = 0;
-           gethostname(hostname, 255);
-           hostname[255] = 0;
-
-           if (d->m_hostname == QLatin1String(hostname))
+           if (d->m_hostname == QHostInfo::localHostName())
            {
               // Check if pid still exists
               int res = ::kill(d->m_pid, 0);

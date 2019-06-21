@@ -30,32 +30,25 @@ DEALINGS IN THE SOFTWARE.
 #endif
 #endif
 
-#include "kstartupinfo.h"
-
-#include <QtGui/QWidget>
-#include <QtCore/qglobal.h>
-
 #include <config.h>
-
-// need to resolve INT32(qglobal.h)<>INT32(Xlibint.h) conflict
-#ifndef QT_CLEAN_NAMESPACE
-#define QT_CLEAN_NAMESPACE
-#endif
-
-#include <unistd.h>
-#include <sys/time.h>
-#include <stdlib.h>
-#include <QtCore/QTimer>
-#include <QtGui/qevent.h>
-#ifdef Q_WS_X11
-#include <qx11info_x11.h>
-#include <netwm.h>
-#endif
+#include "kstartupinfo.h"
 #include <kdebug.h>
 #include <kapplication.h>
 #include <signal.h>
 #include <kstandarddirs.h>
+
+#include <QtGui/QWidget>
+#include <QtNetwork/QHostInfo>
+#include <QtCore/QTimer>
+#include <QtGui/qevent.h>
+
+#include <sys/time.h>
+#include <stdlib.h>
+#include <unistd.h>
+
 #ifdef Q_WS_X11
+#include <qx11info_x11.h>
+#include <netwm.h>
 #include <kwindowsystem.h>
 #include <kxmessages.h>
 #endif
@@ -1014,10 +1007,7 @@ QByteArray KStartupInfo::createNewStartupId()
     // Also append the user timestamp (for focus stealing prevention).
     struct timeval tm;
     gettimeofday( &tm, NULL );
-    char hostname[ 256 ];
-    hostname[ 0 ] = '\0';
-    if (!gethostname( hostname, 255 ))
-	hostname[sizeof(hostname)-1] = '\0';
+    QString hostname = QHostInfo::localHostName();
 #ifdef Q_WS_X11
     unsigned long qt_x_user_time = QX11Info::appUserTime();
 #else
@@ -1313,7 +1303,7 @@ void KStartupInfoData::update( const KStartupInfoData& data_P )
          ++it )
         addPid( *it );
     if( data_P.silent() != Unknown )
-	d->silent = data_P.silent();
+        d->silent = data_P.silent();
     if( data_P.timestamp() != ~0U && timestamp() == ~0U ) // don't overwrite
         d->timestamp = data_P.timestamp();
     if( data_P.screen() != -1 )
@@ -1429,11 +1419,7 @@ void KStartupInfoData::setHostname( const QByteArray& hostname_P )
         d->hostname = hostname_P;
     else
         {
-        char tmp[ 256 ];
-        tmp[ 0 ] = '\0';
-        if (!gethostname( tmp, 255 ))
-	    tmp[sizeof(tmp)-1] = '\0';
-        d->hostname = tmp;
+        d->hostname = QHostInfo::localHostName().toUtf8();
         }
     }
 

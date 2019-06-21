@@ -19,16 +19,18 @@
 #include "templateinterface.h"
 #include "document.h"
 #include "view.h"
-#include <QString>
-#include <QDateTime>
-#include <QRegExp>
-#include <QLibrary>
+
 #include <klocale.h>
 #include <kglobal.h>
 #include <kmessagebox.h>
 #include <kcalendarsystem.h>
 #include <kdebug.h>
-#include <unistd.h>
+
+#include <QString>
+#include <QDateTime>
+#include <QRegExp>
+#include <QLibrary>
+#include <QHostInfo>
 
 #define DUMMY_VALUE "!KTE:TEMPLATEHANDLER_DUMMY_VALUE!"
 
@@ -95,11 +97,7 @@ bool TemplateInterface::expandMacros( QMap<QString, QString> &map, QWidget *pare
       }
       else if ( placeholder == "hostname" )
       {
-        char hostname[ 256 ];
-        hostname[ 0 ] = 0;
-        gethostname( hostname, 255 );
-        hostname[ 255 ] = 0;
-        map[ placeholder ] = QString::fromLocal8Bit( hostname );
+        map[ placeholder ] = QHostInfo::localHostName();
       }
       else if ( placeholder == "cursor" )
       {

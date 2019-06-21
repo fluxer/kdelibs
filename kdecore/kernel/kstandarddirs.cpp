@@ -59,6 +59,7 @@
 #include <QtCore/QCache>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtNetwork/QHostInfo>
 
 #define case_sensitivity Qt::CaseSensitive
 #define max_file_info 10000
@@ -875,11 +876,8 @@ KStandardDirs::realFilePath(const QString &filename)
 
 void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type)
 {
-    char hostname[256];
-    hostname[0] = 0;
-    gethostname(hostname, 255);
     const QString localkdedir = m_prefixes.first();
-    QString dir = localkdedir + QString::fromLatin1(type) + QLatin1Char('-') + QString::fromLocal8Bit(hostname);
+    QString dir = localkdedir + QString::fromLatin1(type) + QLatin1Char('-') + QHostInfo::localHostName();
     char link[1024];
     link[1023] = 0;
     int result = readlink(QFile::encodeName(dir).constData(), link, 1023);
@@ -1655,13 +1653,8 @@ bool KStandardDirs::addCustomized(KConfig *config)
         QString host = kioskAdmin.mid(i+1);
 
         KUser thisUser;
-        char hostname[ 256 ];
-        hostname[ 0 ] = '\0';
-        if (!gethostname( hostname, 255 ))
-            hostname[sizeof(hostname)-1] = '\0';
-
         if ((user == thisUser.loginName()) &&
-            (host.isEmpty() || (host == QLatin1String(hostname))))
+            (host.isEmpty() || (host == QHostInfo::localHostName())))
         {
             kde_kiosk_admin = true;
         }

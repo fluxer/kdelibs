@@ -38,10 +38,11 @@
 #include <unistd.h>
 
 #include <QtCore/QDir>
-#include <QtCore/qstringlist.h>
+#include <QtCore/QStringList>
 #include <QtCore/QRegExp>
 #include <QtCore/QMimeData>
 #include <QtCore/QTextCodec>
+#include <QtNetwork/QHostInfo>
 
 #ifdef DEBUG_KURL
 static int kurlDebugArea() { static int s_area = KDebug::registerArea("kdecore (KUrl)"); return s_area; }
@@ -703,15 +704,7 @@ bool KUrl::isLocalFile() const
   if (host().isEmpty() || (host() == QLatin1String("localhost")))
      return true;
 
-  char hostname[ 256 ];
-  hostname[ 0 ] = '\0';
-  if (!gethostname( hostname, 255 ))
-     hostname[sizeof(hostname)-1] = '\0';
-
-  for(char *p = hostname; *p; p++)
-     *p = tolower(*p);
-
-  return (host() == QString::fromLatin1( hostname ));
+  return (host() == QHostInfo::localHostName().toLower());
 }
 
 void KUrl::setFileEncoding(const QString &encoding)
@@ -959,10 +952,9 @@ QString KUrl::toMimeDataString() const // don't fold this into populateMimeData,
     const QString s = url( 0, KGlobal::locale()->fileEncodingMib() );
     if( !s.startsWith( QLatin1String ( "file://" ) ))
     {
-        char hostname[257];
-        if ( gethostname( hostname, 255 ) == 0 )
+        QString hostname = QHostInfo::localHostName();
+        if ( !hostname.isEmpty() )
         {
-            hostname[256] = '\0';
             return QString( "file://" ) + hostname + s.mid( 5 );
         }
     }

@@ -24,12 +24,6 @@
 
 #include <kcrash.h>
 #include <kdeversion.h>
-
-#include <unistd.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <time.h>
-
 #include <kuniqueapplication.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -45,6 +39,13 @@
 #include <ktoolinvocation.h>
 #include <kde_file.h>
 #include "klauncher_iface.h"
+
+#include <QHostInfo>
+
+#include <unistd.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <time.h>
 
 #ifdef Q_WS_X11
 #include <qx11info_x11.h>
@@ -651,21 +652,18 @@ KHostnameD::~KHostnameD()
 
 void KHostnameD::checkHostname()
 {
-    char buf[1024+1];
-    if (gethostname(buf, 1024) != 0)
-       return;
-    buf[sizeof(buf)-1] = '\0';
+    QByteArray newHostname = QHostInfo::localHostName().toUtf8();
+    if (newHostname.isEmpty())
+        return;
 
     if (m_hostname.isEmpty())
     {
-       m_hostname = buf;
+       m_hostname = newHostname;
        return;
     }
 
-    if (m_hostname == buf)
+    if (m_hostname == newHostname)
        return;
-
-    QByteArray newHostname = buf;
 
     runDontChangeHostname(m_hostname, newHostname);
     m_hostname = newHostname;

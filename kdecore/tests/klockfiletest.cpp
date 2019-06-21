@@ -22,7 +22,8 @@
 #include <kdebug.h>
 #include <unistd.h>
 
-#include <QtCore/qprocess.h>
+#include <QProcess>
+#include <QHostInfo>
 
 // TODO test locking from two different threads
 //#include <qtconcurrentrun.h>
@@ -111,9 +112,7 @@ Test_KLockFile::testStale()
     QString host, app;
     if (lf.getLockInfo(pid, host, app)) {
         QCOMPARE(pid, ::getpid());
-        char hostname[256];
-        if (::gethostname(hostname, sizeof(hostname)) == 0)
-            QCOMPARE(host, QLatin1String(hostname));
+        QCOMPARE(host, QHostInfo::localHostName());
         QCOMPARE(app, QLatin1String("qttest")); // this is our KComponentData name
     }
 }
@@ -130,13 +129,10 @@ Test_KLockFile::testUnlock()
 void
 Test_KLockFile::testStaleNoBlockFlag()
 {
-    char hostname[256];
-    ::gethostname(hostname, sizeof(hostname));
-
     QFile f(lockName);
     f.open(QIODevice::WriteOnly);
     QTextStream stream(&f);
-    stream << QString::number(111222) << endl << QLatin1String("qttest") << endl << hostname << endl;
+    stream << QString::number(111222) << endl << QLatin1String("qttest") << endl << QHostInfo::localHostName() << endl;
     stream.flush();
     f.close();
 

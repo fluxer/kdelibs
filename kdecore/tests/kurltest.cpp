@@ -34,13 +34,13 @@ QTEST_KDEMAIN_CORE( KUrlTest )
 #include <kglobal.h>
 #include <kcharsets.h>
 #include <kuser.h>
-#include <QtCore/qtextcodec.h>
-#include <QtCore/qdatastream.h>
-#include <QtCore/qmimedata.h>
-#include <QtCore/QMap>
+#include <qtextcodec.h>
+#include <qdatastream.h>
+#include <qmimedata.h>
+#include <qmap.h>
+#include <qhostinfo.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h> // gethostname
 #include <ctype.h>
 
 //QCOMPARE cannot be used to strictly check for empty or null QString as it treats QString("") == QString()
@@ -208,16 +208,8 @@ void KUrlTest::testIsLocalFile()
   QVERIFY( !local_file_2.isLocalFile() );
 
   // exactly like in kurl.cpp, getenv("HOSTNAME") can be different...
-  char hostname[ 256 ];
-  hostname[ 0 ] = '\0';
-  if (!gethostname( hostname, 255 ))
-     hostname[sizeof(hostname)-1] = '\0';
-
-  for(char *p = hostname; *p; p++)
-     *p = tolower(*p);
-
   KUrl local_file_3;
-  local_file_3.setHost(QString::fromLatin1(hostname));
+  local_file_3.setHost(QHostInfo::localHostName().toLower());
   local_file_3.setPath("/my/file");
   //qDebug("URL=%s\n", qPrintable( local_file_3.url() ));
   QVERIFY( local_file_3.isLocalFile() );
