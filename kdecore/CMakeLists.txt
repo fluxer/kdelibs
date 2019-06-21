@@ -289,11 +289,6 @@ target_link_libraries(kdecore PRIVATE
     ${kdecore_OPTIONAL_LIBS}
 )
 
-if(FAM_FOUND)
-   include_directories(${FAM_INCLUDE_DIR})
-   target_link_libraries(kdecore PRIVATE ${FAM_LIBRARIES})
-endif(FAM_FOUND)
-
 if(NOT HAVE_TRUNC)
     target_link_libraries(kdecore PRIVATE m)
 endif()

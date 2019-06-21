@@ -127,14 +127,6 @@ set_package_properties(MPV PROPERTIES
     PURPOSE "Media preview, sound notifications, etc."
 )
 
-macro_optional_find_package(FAM)
-set_package_properties(FAM PROPERTIES
-    DESCRIPTION "File alteration notification support via a separate service"
-    URL "http://oss.sgi.com/projects/fam"
-    TYPE OPTIONAL
-    PURPOSE "Provides file alteration notification facilities using a separate service."
-)
-
 ################# Disallow in-source build #################
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
