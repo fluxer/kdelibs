@@ -17,7 +17,6 @@
  *  Boston, MA 02110-1301, USA.
  */
 
-#include <QRect>
 #include <QFontMetrics>
 #include <QtGui/qx11info_x11.h>
 #include <qtest_kde.h>
