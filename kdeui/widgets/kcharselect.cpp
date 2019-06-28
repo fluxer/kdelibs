@@ -307,6 +307,7 @@ KCharSelect::KCharSelect(
         ,const Controls controls)
     : QWidget(parent), d(new KCharSelectPrivate(this))
 {
+    qRegisterMetaType<QList<QChar> >();
     init(controls, collection);
 }
 

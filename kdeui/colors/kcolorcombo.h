@@ -111,4 +111,6 @@ private:
         Q_PRIVATE_SLOT(d, void _k_slotHighlighted(int))
 };
 
+Q_DECLARE_METATYPE(QList<QColor>)
+
 #endif	// KCOLORCOMBO_H

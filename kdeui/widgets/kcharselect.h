@@ -23,6 +23,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
+#include <QtCore/QMetaType>
 #include <QtGui/QWidget>
 #include <kglobal.h>
 #include <kdeui_export.h>
@@ -212,5 +213,6 @@ private:
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KCharSelect::Controls)
+Q_DECLARE_METATYPE(QList<QChar>)
 
 #endif

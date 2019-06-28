@@ -226,6 +226,8 @@ void KColorComboPrivate::setCustomColor(const QColor &color, bool lookupInPreset
 KColorCombo::KColorCombo( QWidget *parent )
     : QComboBox(parent), d(new KColorComboPrivate(this))
 {
+    qRegisterMetaType<QList<QColor> >();
+
     setItemDelegate(new KColorComboDelegate(this));
     d->addColors();
 
