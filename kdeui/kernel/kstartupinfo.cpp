@@ -150,23 +150,23 @@ class KStartupInfo::Private
         KStartupInfo *q;
         unsigned int timeout;
         QMap< KStartupInfoId, KStartupInfo::Data > startups;
-	// contains silenced ASN's only if !AnnounceSilencedChanges
+        // contains silenced ASN's only if !AnnounceSilencedChanges
         QMap< KStartupInfoId, KStartupInfo::Data > silent_startups;
         // contains ASN's that had change: but no new: yet
         QMap< KStartupInfoId, KStartupInfo::Data > uninited_startups;
 #ifdef Q_WS_X11
         KXMessages msgs;
 #endif
-	QTimer* cleanup;
-	int flags;
+        QTimer* cleanup;
+        int flags;
 
-	Private( int flags_P, KStartupInfo *q )
-    	    : q( q ),
+        Private( int flags_P, KStartupInfo *q )
+            : q( q ),
             timeout( 60 ),
 #ifdef Q_WS_X11
-	    msgs( NET_STARTUP_MSG, NULL, false ),
+            msgs( NET_STARTUP_MSG, NULL, false ),
 #endif
-	      flags( flags_P )
+            flags( flags_P )
         {
         }
 
@@ -183,7 +183,7 @@ class KStartupInfo::Private
                 QObject::connect( KWindowSystem::self(), SIGNAL(windowAdded(WId)), q, SLOT(slot_window_added(WId)));
 #ifdef __GNUC__
 #warning "systemTrayWindowAdded signal was remove from KWindowSystem class"
-#endif		
+#endif
                 //QObject::connect( KWindowSystem::self(), SIGNAL(systemTrayWindowAdded(WId)), q, SLOT(slot_window_added(WId)));
             }
             QObject::connect( &msgs, SIGNAL(gotMessage(QString)), q, SLOT(got_message(QString)));
@@ -240,14 +240,14 @@ class DelayedWindowEvent
     : public QEvent
     {
     public:
-	DelayedWindowEvent( WId w_P )
-	    : QEvent( uniqueType() ), w( w_P ) {}
+        DelayedWindowEvent( WId w_P )
+            : QEvent( uniqueType() ), w( w_P ) {}
 #ifdef Q_WS_X11
-	Window w;
+        Window w;
 #else
-	WId w;
+        WId w;
 #endif
-	static Type uniqueType() { return Type(QEvent::User+15); }
+        static Type uniqueType() { return Type(QEvent::User+15); }
     };
 }
 
@@ -260,10 +260,10 @@ void KStartupInfo::customEvent( QEvent* e_P )
     {
 #ifdef Q_WS_X11
     if( e_P->type() == DelayedWindowEvent::uniqueType() )
-	d->window_added( static_cast< DelayedWindowEvent* >( e_P )->w );
+        d->window_added( static_cast< DelayedWindowEvent* >( e_P )->w );
     else
 #endif
-	QObject::customEvent( e_P );
+        QObject::customEvent( e_P );
     }
 
 void KStartupInfo::Private::window_added( WId w_P )
@@ -347,19 +347,19 @@ void KStartupInfo::Private::new_startup_info_internal( const KStartupInfoId& id_
     if( update_P ) // change: without any new: first
         {
         kDebug( 172 ) << "adding uninited";
-	uninited_startups.insert( id_P, data_P );
+        uninited_startups.insert( id_P, data_P );
         }
     else if( data_P.silent() != Data::Yes || flags & AnnounceSilenceChanges )
-	{
+        {
         kDebug( 172 ) << "adding";
         startups.insert( id_P, data_P );
-	emit q->gotNewStartup( id_P, data_P );
-	}
+        emit q->gotNewStartup( id_P, data_P );
+        }
     else // new silenced, and silent shouldn't be announced
-	{
+        {
         kDebug( 172 ) << "adding silent";
-	silent_startups.insert( id_P, data_P );
-	}
+        silent_startups.insert( id_P, data_P );
+        }
     cleanup->start( 1000 ); // 1 sec
     }
 
@@ -420,19 +420,19 @@ void KStartupInfo::Private::remove_startup_pids( const KStartupInfoId& id_P,
     kFatal( data_P.pids().count() == 0, 172 );
     Data* data = NULL;
     if( startups.contains( id_P ))
-	data = &startups[ id_P ];
+        data = &startups[ id_P ];
     else if( silent_startups.contains( id_P ))
-	data = &silent_startups[ id_P ];
+        data = &silent_startups[ id_P ];
     else if( uninited_startups.contains( id_P ))
         data = &uninited_startups[ id_P ];
     else
-	return;
+        return;
     for( QList< pid_t >::ConstIterator it2 = data_P.pids().constBegin();
          it2 != data_P.pids().constEnd();
          ++it2 )
-	data->d->remove_pid( *it2 ); // remove all pids from the info
+        data->d->remove_pid( *it2 ); // remove all pids from the info
     if( data->pids().count() == 0 ) // all pids removed -> remove info
-    	remove_startup_info_internal( id_P );
+        remove_startup_info_internal( id_P );
     }
 
 bool KStartupInfo::sendStartup( const KStartupInfoId& id_P, const KStartupInfoData& data_P )
@@ -443,7 +443,7 @@ bool KStartupInfo::sendStartup( const KStartupInfoId& id_P, const KStartupInfoDa
     KXMessages msgs;
     QString msg = QString::fromLatin1( "new: %1 %2" )
         .arg( id_P.d->to_text()).arg( data_P.d->to_text());
-	QX11Info inf;
+    QX11Info inf;
     msg = Private::check_required_startup_fields( msg, data_P, inf.screen());
     kDebug( 172 ) << "sending " << msg;
     msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1, false );
@@ -738,13 +738,13 @@ KStartupInfo::startup_t KStartupInfo::Private::check_startup_internal( WId w_P, 
         && type != NET::Dialog
         && type != NET::Utility )
 //        && type != NET::Dock ) why did I put this here?
-	return NoMatch;
+        return NoMatch;
     // lets see if this is a transient
     Window transient_for;
     if( XGetTransientForHint( QX11Info::display(), static_cast< Window >( w_P ), &transient_for )
         && static_cast< WId >( transient_for ) != QX11Info::appRootWindow()
         && transient_for != None )
-	return NoMatch;
+        return NoMatch;
 #endif
     kDebug( 172 ) << "check_startup:cantdetect";
     return CantDetect;
@@ -829,10 +829,10 @@ static QByteArray read_startup_id_property( WId w_P )
     unsigned long nitems_ret = 0, after_ret = 0;
     if( XGetWindowProperty( QX11Info::display(), w_P, net_startup_atom, 0l, 4096,
             False, utf8_string_atom, &type_ret, &format_ret, &nitems_ret, &after_ret, &name_ret )
-	    == Success )
+            == Success )
         {
-	if( type_ret == utf8_string_atom && format_ret == 8 && name_ret != NULL )
-  	    ret = reinterpret_cast< char* >( name_ret );
+        if( type_ret == utf8_string_atom && format_ret == 8 && name_ret != NULL )
+            ret = reinterpret_cast< char* >( name_ret );
         if ( name_ret != NULL )
             XFree( name_ret );
         }
@@ -930,9 +930,9 @@ void KStartupInfo::Private::startups_cleanup_internal( bool age_P )
         {
         if( age_P )
             ( *it ).age++;
-	unsigned int tout = timeout;
-	if( ( *it ).silent() == Data::Yes ) // TODO
-	    tout *= 20;
+        unsigned int tout = timeout;
+        if( ( *it ).silent() == Data::Yes ) // TODO
+            tout *= 20;
         if( ( *it ).age >= tout )
             {
             const KStartupInfoId& key = it.key();
@@ -949,9 +949,9 @@ void KStartupInfo::Private::startups_cleanup_internal( bool age_P )
         {
         if( age_P )
             ( *it ).age++;
-	unsigned int tout = timeout;
-	if( ( *it ).silent() == Data::Yes ) // TODO
-	    tout *= 20;
+        unsigned int tout = timeout;
+        if( ( *it ).silent() == Data::Yes ) // TODO
+            tout *= 20;
         if( ( *it ).age >= tout )
             {
             const KStartupInfoId& key = it.key();
@@ -968,9 +968,9 @@ void KStartupInfo::Private::startups_cleanup_internal( bool age_P )
         {
         if( age_P )
             ( *it ).age++;
-	unsigned int tout = timeout;
-	if( ( *it ).silent() == Data::Yes ) // TODO
-	    tout *= 20;
+        unsigned int tout = timeout;
+        if( ( *it ).silent() == Data::Yes ) // TODO
+            tout *= 20;
         if( ( *it ).age >= tout )
             {
             const KStartupInfoId& key = it.key();
@@ -1198,7 +1198,7 @@ QString KStartupInfoData::Private::to_text() const
          ++it )
         ret += QString::fromLatin1( " PID=%1" ).arg( *it );
     if( silent != KStartupInfoData::Unknown )
-	ret += QString::fromLatin1( " SILENT=%1" ).arg( silent == KStartupInfoData::Yes ? 1 : 0 );
+        ret += QString::fromLatin1( " SILENT=%1" ).arg( silent == KStartupInfoData::Yes ? 1 : 0 );
     if( timestamp != ~0U )
         ret += QString::fromLatin1( " TIMESTAMP=%1" ).arg( timestamp );
     if( screen != -1 )
