@@ -34,7 +34,9 @@ class KMediaWidgetPrivate
 {
 public:
     KMediaPlayer *m_player;
-    KMediaWidget::KMediaOptions m_options;
+    bool m_dragdrop;
+    bool m_fullscreen;
+    bool m_hiddencontrols;
     QWidget *m_parent;
     QMainWindow *m_parenthack;
     QSize m_parentsizehack;
@@ -51,7 +53,9 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_ui = new Ui_KMediaWidgetPrivate();
     d->m_ui->setupUi(this);
     d->m_player = new KMediaPlayer(d->m_ui->w_player);
-    d->m_options = options;
+    d->m_dragdrop = (options & DragDrop) != options;
+    d->m_fullscreen = (options & FullscreenVideo) != options;
+    d->m_hiddencontrols = (options & HiddenControls) != options;
     d->m_parent = parent;
 
     d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
@@ -74,16 +78,16 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     connect(d->m_player, SIGNAL(finished()), this, SLOT(_updateFinished()));
     connect(d->m_player, SIGNAL(error(QString)), this, SLOT(_updateError(QString)));
 
-    if (options & DragDrop) {
+    if (d->m_dragdrop) {
         setAcceptDrops(true);
         d->m_player->setAcceptDrops(true);
     }
 
-    if ((options & FullscreenVideo) == 0) {
+    if (!d->m_fullscreen) {
         d->m_ui->w_fullscreen->setVisible(false);
     }
 
-    if (options & HiddenControls) {
+    if (d->m_hiddencontrols) {
         d->m_visible = true;
         setMouseTracking(false);
     }
@@ -113,7 +117,7 @@ void KMediaWidget::open(const QString &path)
 
     d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
 
-    if (d->m_options & HiddenControls) {
+    if (d->m_hiddencontrols) {
         resetControlsTimer();
         setMouseTracking(true);
     }
@@ -230,7 +234,7 @@ QSize KMediaWidget::sizeHint() const
 
 QSize KMediaWidget::minimumSizeHint() const
 {
-    if (d->m_options & FullscreenVideo) {
+    if (d->m_fullscreen) {
         return QSize(300, 233);
     }
     return QSize(180, 140);
@@ -238,7 +242,7 @@ QSize KMediaWidget::minimumSizeHint() const
 
 void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
-    if (d->m_options & FullscreenVideo) {
+    if (d->m_fullscreen) {
         setFullscreen();
         event->ignore();
     }
@@ -246,7 +250,7 @@ void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 
 void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    if (d->m_options & HiddenControls) {
+    if (d->m_hiddencontrols) {
         resetControlsTimer();
         _updateControls(true);
         event->ignore();
@@ -344,7 +348,7 @@ void KMediaWidget::_updateLoaded()
 
 void KMediaWidget::_updateStatus(const QString string)
 {
-    if (d->m_options & FullscreenVideo) {
+    if (d->m_fullscreen) {
         QWidget *windowwidget = window();
         KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
         if (kmainwindow) {
@@ -367,7 +371,7 @@ void KMediaWidget::_updateFinished()
 {
     d->m_replay = true;
 
-    if (d->m_options & HiddenControls) {
+    if (d->m_hiddencontrols) {
         // show the controls until the next open
         if (d->m_timerid >= 0) {
             killTimer(d->m_timerid);
@@ -380,7 +384,7 @@ void KMediaWidget::_updateFinished()
 
 void KMediaWidget::_updateError(const QString error)
 {
-    if (d->m_options & FullscreenVideo) {
+    if (d->m_fullscreen) {
         _updateStatus(error);
     } else {
         // since there are not many ways to indicate an error when
