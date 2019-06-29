@@ -299,7 +299,7 @@ void KMediaWidget::dropEvent(QDropEvent *event)
 
 void KMediaWidget::_updateControls(const bool visible)
 {
-    if (visible != d->m_visible) {
+    if (d->m_hiddencontrols && visible != d->m_visible) {
         d->m_ui->w_frame->setVisible(visible);
         emit controlsHidden(visible);
         d->m_visible = visible;
