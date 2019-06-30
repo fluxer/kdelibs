@@ -69,7 +69,7 @@ class KFileItemDelegate::Private
     public:
         enum MarginType { ItemMargin = 0, TextMargin, IconMargin, NMargins };
 
-        Private(KFileItemDelegate *parent);
+        Private();
         ~Private() {}
 
         QSize decorationSizeHint(const QStyleOptionViewItemV4 &option, const QModelIndex &index) const;
@@ -121,17 +121,16 @@ class KFileItemDelegate::Private
         KIcon downArrowIcon;
 
     private:
-        KFileItemDelegate * const q;
         Margin verticalMargin[NMargins];
         Margin horizontalMargin[NMargins];
         Margin *activeMargins;
 };
 
 
-KFileItemDelegate::Private::Private(KFileItemDelegate *parent)
+KFileItemDelegate::Private::Private()
      : shadowColor(Qt::transparent), shadowOffset(1, 1), shadowBlur(2), maximumSize(0, 0),
        showToolTipWhenElided(true), wrapMode( QTextOption::WrapAtWordBoundaryOrAnywhere ), jobTransfersVisible(false),
-       q(parent), activeMargins(0)
+       activeMargins(0)
 {
 }
 
@@ -778,7 +777,7 @@ void KFileItemDelegate::Private::initStyleOption(QStyleOptionViewItemV4 *option,
 
 
 KFileItemDelegate::KFileItemDelegate(QObject *parent)
-    : QAbstractItemDelegate(parent), d(new Private(this))
+    : QAbstractItemDelegate(parent), d(new Private())
 {
     int focusHMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin);
     int focusVMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameVMargin);
