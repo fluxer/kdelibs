@@ -65,8 +65,6 @@ public:
    qlonglong windowId;
 };
 
-template class  QList<CookieRequest*>;
-
 class RequestList : public QList<CookieRequest*>
 {
 public:

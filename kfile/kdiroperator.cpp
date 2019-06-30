@@ -82,9 +82,6 @@
 #include <kconfiggroup.h>
 #include <kdeversion.h>
 
-
-template class QHash<QString, KFileItem>;
-
 // QDir::SortByMask is not only undocumented, it also omits QDir::Type which  is another
 // sorting mode.
 static const int QDirSortMask = QDir::SortByMask | QDir::Type;
