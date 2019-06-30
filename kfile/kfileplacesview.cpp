@@ -85,7 +85,6 @@ public:
     qreal contentsOpacity(const QModelIndex &index) const;
 
 private:
-    KFilePlacesView *m_view;
     int m_iconSize;
 
     QList<QPersistentModelIndex> m_appearingItems;
@@ -104,7 +103,6 @@ private:
 
 KFilePlacesViewDelegate::KFilePlacesViewDelegate(KFilePlacesView *parent) :
     QAbstractItemDelegate(parent),
-    m_view(parent),
     m_iconSize(48),
     m_appearingIconSize(0),
     m_appearingOpacity(0.0),
