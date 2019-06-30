@@ -268,7 +268,6 @@ protected:
    QString mSlaveDebug;
    QString mSlaveValgrind;
    QString mSlaveValgrindSkin;
-   bool dontBlockReading;
 #ifdef Q_WS_X11
    Display *mCached_dpy;
 #endif
