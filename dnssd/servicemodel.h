@@ -71,7 +71,7 @@ public:
 
 	/** The additional data roles provided by this model */
 	enum AdditionalRoles {
-		ServicePtrRole = 0xA06519DE  ///< gets a RemoteService::Ptr for the service
+		ServicePtrRole = Qt::UserRole + 1 ///< gets a RemoteService::Ptr for the service
 	};
 
 	/**
