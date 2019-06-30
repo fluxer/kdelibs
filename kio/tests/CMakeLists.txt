@@ -30,7 +30,6 @@ KIO_UNIT_TESTS(
     kdirmodeltest
     kdirlistertest
     fileundomanagertest
-    kfilemetainfotest
     dataprotocoltest
     clipboardupdatertest
     globaltest
@@ -65,4 +64,11 @@ KIO_EXECUTABLE_TESTS(
 set(kfstest_SRCS kfstest.cpp kfdtest.cpp)
 kde4_add_manual_test(kfstest ${kfstest_SRCS})
 target_link_libraries(kfstest ${KDE4_KIO_LIBS})
+
+########### kfilemetainfotest ###############
+
+if(STRIGI_FOUND)
+    kde4_add_test(kio-kfilemetainfotest kfilemetainfotest.cpp)
+    target_link_libraries(kio-kfilemetainfotest ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY})
+endif()
 
