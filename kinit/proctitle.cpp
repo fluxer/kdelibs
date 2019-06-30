@@ -87,7 +87,7 @@ static char *cleanUpTo = NULL;
  * Set up the memory space for setting the proctitle
  */
 void proctitle_init(int argc, char *argv[], char *envp[]) {
-    register int i, envpsize;
+    int i, envpsize;
     char **p;
 
     /* Move the environment so proctitle_set can use the space. */
