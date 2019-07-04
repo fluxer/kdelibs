@@ -554,7 +554,7 @@ void Kded::update(const QString& )
   }
 }
 
-void Kded::recreate(const QDBusMessage &msg)
+void Kded::recreate(QDBusMessage msg)
 {
    if (!m_recreateBusy)
    {
@@ -675,7 +675,7 @@ KBuildsycocaAdaptor::KBuildsycocaAdaptor(QObject *parent)
 {
 }
 
-void KBuildsycocaAdaptor::recreate(const QDBusMessage &msg)
+void KBuildsycocaAdaptor::recreate(QDBusMessage msg)
 {
    Kded::self()->recreate(msg);
 }

@@ -754,7 +754,7 @@ KLauncher::start_service_by_desktop_name(const QString &serviceName, const QStri
 bool
 KLauncher::start_service(KService::Ptr service, const QStringList &_urls,
                          const QStringList &envs, const QByteArray &startup_id,
-                         bool blind, bool autoStart, const QDBusMessage &msg)
+                         bool blind, bool autoStart, QDBusMessage msg)
 {
    QStringList urls = _urls;
    bool runPermitted = KDesktopFile::isAuthorizedDesktopFile(service->entryPath());
@@ -934,7 +934,7 @@ KLauncher::cancel_service_startup_info( KLaunchRequest* request, const QByteArra
 bool
 KLauncher::kdeinit_exec(const QString &app, const QStringList &args,
                         const QString& workdir, const QStringList &envs,
-                        const QString &startup_id, bool wait, const QDBusMessage &msg)
+                        const QString &startup_id, bool wait, QDBusMessage msg)
 {
    KLaunchRequest *request = new KLaunchRequest;
    request->autoStart = false;
@@ -1161,7 +1161,7 @@ bool KLauncher::checkForHeldSlave(const QString &url)
 }
 
 void
-KLauncher::waitForSlave(int pid, const QDBusMessage &msg)
+KLauncher::waitForSlave(int pid, QDBusMessage msg)
 {
     foreach (IdleSlave *slave, mSlaveList)
     {

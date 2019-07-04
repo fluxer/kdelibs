@@ -70,7 +70,7 @@ public:
     */
    void unregisterWindowId(qlonglong windowId, const QString &sender);
    //@}
-   void recreate(const QDBusMessage&);
+   void recreate(QDBusMessage);
    void recreate(bool initial);
    void loadSecondPhase();
 
@@ -219,7 +219,7 @@ public:
    KBuildsycocaAdaptor(QObject *parent);
 
 public Q_SLOTS:
-   void recreate(const QDBusMessage&);
+   void recreate(QDBusMessage);
 };
 
 

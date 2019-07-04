@@ -39,7 +39,7 @@ public:
 
     int masterFd;
     int slaveFd;
-    bool ownMaster:1;
+    bool ownMaster;
 
     QByteArray ttyName;
 

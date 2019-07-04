@@ -95,7 +95,7 @@ namespace KPAC
         delete m_script;
     }
 
-    QStringList ProxyScout::proxiesForUrl( const QString& checkUrl, const QDBusMessage &msg )
+    QStringList ProxyScout::proxiesForUrl( const QString& checkUrl, QDBusMessage msg )
     {
         KUrl url(checkUrl);
 
@@ -124,7 +124,7 @@ namespace KPAC
         return QStringList(QLatin1String("DIRECT"));
     }
 
-    QString ProxyScout::proxyForUrl( const QString& checkUrl, const QDBusMessage &msg )
+    QString ProxyScout::proxyForUrl( const QString& checkUrl, QDBusMessage msg )
     {
         KUrl url(checkUrl);
 

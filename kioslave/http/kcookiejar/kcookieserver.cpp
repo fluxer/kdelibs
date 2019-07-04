@@ -336,8 +336,9 @@ QString KCookieServer::findCookies(const QString &url, qlonglong windowId)
    if (cookiesPending(url))
    {
       CookieRequest *request = new CookieRequest;
-      message().setDelayedReply(true);
+      // message().setDelayedReply(true);
       request->reply = message();
+      request->reply.setDelayedReply(true);
       request->url = url;
       request->DOM = false;
       request->windowId = windowId;

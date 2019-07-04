@@ -130,7 +130,7 @@ protected:
 
    bool start_service(KService::Ptr service, const QStringList &urls,
        const QStringList &envs, const QByteArray &startup_id,
-       bool blind, bool autoStart, const QDBusMessage &msg );
+       bool blind, bool autoStart, QDBusMessage msg );
 
    void createArgs( KLaunchRequest *request, const KService::Ptr service,
                     const QStringList &url);
@@ -163,7 +163,7 @@ public: // remote methods, called by KLauncherAdaptor
 
     bool kdeinit_exec(const QString &app, const QStringList &args,
                       const QString& workdir, const QStringList &envs,
-                      const QString &startup_id, bool wait, const QDBusMessage &msg);
+                      const QString &startup_id, bool wait, QDBusMessage msg);
 
     void reparseConfiguration();
     void setLaunchEnv(const QString &name, const QString &value);
@@ -237,7 +237,7 @@ public: // remote methods, called by KLauncherAdaptor
      * @since 4.7
      */
     bool checkForHeldSlave(const QString &url);
-    void waitForSlave(int pid, const QDBusMessage &msg);
+    void waitForSlave(int pid, QDBusMessage msg);
     void terminate_kdeinit();
 
 public Q_SLOTS:
