@@ -38,6 +38,7 @@ set(cmakeFiles
     FindEPub.cmake
     FindExiv2.cmake
     FindFFmpeg.cmake
+    FindFLAC++.cmake
     FindFontconfig.cmake
     FindGettextPO.cmake
     FindGLIB2.cmake
