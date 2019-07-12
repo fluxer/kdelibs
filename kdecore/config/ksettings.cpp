@@ -23,6 +23,7 @@
 
 #include <QApplication>
 #include <QFile>
+#include <QStringList>
 
 class KSettingsPrivate {
 public:

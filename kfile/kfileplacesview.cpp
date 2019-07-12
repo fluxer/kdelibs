@@ -37,6 +37,7 @@
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <ksettings.h>
 #include <kmessagebox.h>
 #include <knotification.h>
 #include <kio/job.h>
@@ -575,8 +576,8 @@ void KFilePlacesView::contextMenuEvent(QContextMenuEvent *event)
         if (!placesModel->isDevice(index)) {
             if (placesModel->url(index) == KUrl("trash:/")) {
                 emptyTrash = menu.addAction(KIcon("trash-empty"), i18nc("@action:inmenu", "Empty Trash"));
-                KConfig trashConfig("trashrc", KConfig::SimpleConfig);
-                emptyTrash->setEnabled(!trashConfig.group("Status").readEntry("Empty", true));
+                KSettings trashConfig("trashrc", KSettings::SimpleConfig);
+                emptyTrash->setEnabled(!trashConfig.value("Status/Empty", true).toBool());
                 menu.addSeparator();
             }
             add = menu.addAction(KIcon("document-new"), i18n("Add Entry..."));

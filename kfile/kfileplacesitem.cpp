@@ -19,15 +19,13 @@
 
 #include "kfileplacesitem_p.h"
 #include "kfileplacesmodel.h"
-
-#include <QtCore/QDateTime>
-
 #include <kconfiggroup.h>
 #include <kstandarddirs.h>
 #include <kdirwatch.h>
 #include <kbookmarkmanager.h>
 #include <kiconloader.h>
 #include <klocale.h>
+#include <ksettings.h>
 #include <solid/block.h>
 #include <solid/opticaldisc.h>
 #include <solid/opticaldrive.h>
@@ -36,6 +34,7 @@
 #include <solid/storagedrive.h>
 #include <solid/portablemediaplayer.h>
 
+#include <QtCore/QDateTime>
 
 KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
                                  const QString &address,
@@ -49,8 +48,8 @@ KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
         m_bookmark.setMetaDataItem("ID", generateNewId());
     } else if (udi.isEmpty() && m_bookmark.url() == KUrl("trash:/")) {
         KDirWatch::self()->addFile(KStandardDirs::locateLocal("config", "trashrc"));
-        KConfig trashConfig("trashrc", KConfig::SimpleConfig);
-        m_trashIsEmpty = trashConfig.group("Status").readEntry("Empty", true);
+        KSettings trashConfig("trashrc", KSettings::SimpleConfig);
+        m_trashIsEmpty = trashConfig.value("Status/Empty", true).toBool();
         connect(KDirWatch::self(), SIGNAL(dirty(QString)),
                          this, SLOT(trashConfigChanged(QString)));
     } else if (!udi.isEmpty() && m_device.isValid()) {
@@ -315,16 +314,15 @@ QString KFilePlacesItem::iconNameForBookmark(const KBookmark &bookmark) const
             return QString::fromLatin1("user-trash");
         }
         return bookmark.icon();
-    } else {
-        return bookmark.icon();
     }
+    return bookmark.icon();
 }
 
 void KFilePlacesItem::trashConfigChanged(const QString &config)
 {
     Q_UNUSED(config);
-    KConfig trashConfig("trashrc", KConfig::SimpleConfig);
-    m_trashIsEmpty = trashConfig.group("Status").readEntry("Empty", true);
+    KSettings trashConfig("trashrc", KSettings::SimpleConfig);
+    m_trashIsEmpty = trashConfig.value("Status/Empty", true).toBool();
     emit itemChanged(id());
 }
 

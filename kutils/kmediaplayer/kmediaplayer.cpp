@@ -201,7 +201,7 @@ public:
 
 KAbstractPlayerPrivate::KAbstractPlayerPrivate()
     : m_appname(QApplication::applicationName()),
-    m_settings(new KSettings())
+    m_settings(new KSettings("kmediaplayer"))
 {
     kDebug() << i18n("initializing player");
     m_stopprocessing = false;
