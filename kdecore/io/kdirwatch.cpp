@@ -98,6 +98,8 @@ void KDirWatch::addFile(const QString& path)
 {
     if (path.isEmpty() || path.startsWith(QLatin1String("/dev"))) {
         return; // Don't even go there.
+    } else if (d->watcher->files().contains(path)) {
+        return;
     }
 
     QFileInfo info(path);
