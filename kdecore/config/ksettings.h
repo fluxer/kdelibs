@@ -24,7 +24,6 @@
 #include "kdecore_export.h"
 
 #include <QSettings>
-#include <QStringList>
 
 class KSettingsPrivate;
 
@@ -41,9 +40,9 @@ public:
      * Determines how the system-wide and user's global settings will affect
      * the reading of the configuration.
      *
-     * IncludeGlobals does the same, but with the global settings sources.
+     * IncludeGlobals if specified, global settings will be merged.
      *
-     * Note that the main configuration source overrides the global sources,
+     * Note that the main configuration source overrides all other sources
      */
     enum OpenFlag {
         SimpleConfig    = 0x00, ///< Just a single config file.
@@ -60,7 +59,7 @@ public:
      *                     is provided, the file will be looked for in the standard config
      *                     directory. If path is empty the application name is used instead.
      *
-     * @param mode         determines whether the user or global settings will be allowed
+     * @param mode         determines whether the user, global or both settings will be allowed
      *                     to influence the values returned by this object.  See OpenFlags for
      *                     more details.
      */
@@ -73,7 +72,7 @@ public:
      *
      * Currently only files are accepted as configuration sources.
      *
-     * Ssource will be merged into the current stack not overriding from the
+     * Source will be merged into the current stack not overriding the
      * current settings stack thus order is important.
      *
      * @param source Extra config source.
