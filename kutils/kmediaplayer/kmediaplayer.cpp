@@ -18,6 +18,7 @@
 
 #include "kdebug.h"
 #include "klocale.h"
+#include "ksettings.h"
 #include "kmediaplayer.h"
 #include <QApplication>
 
@@ -191,7 +192,7 @@ public:
     mpv_handle *m_handle;
 #endif
     QString m_appname;
-    QSettings *m_settings;
+    KSettings *m_settings;
     // the handle pointer is not NULL-ed once mpv_terminate_destroy() has been
     // called, doing it manually is a race because _processHandleEvents() is
     // called asynchronous
@@ -200,7 +201,7 @@ public:
 
 KAbstractPlayerPrivate::KAbstractPlayerPrivate()
     : m_appname(QApplication::applicationName()),
-    m_settings(new QSettings("KMediaPlayer", "kmediaplayer"))
+    m_settings(new KSettings())
 {
     kDebug() << i18n("initializing player");
     m_stopprocessing = false;

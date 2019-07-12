@@ -140,6 +140,7 @@ set(kdecore_LIB_SRCS
     config/kdesktopfile.cpp
     config/ksharedconfig.cpp
     config/kcoreconfigskeleton.cpp
+    config/ksettings.cpp
     date/kcalendarera.cpp
     date/kcalendarsystem.cpp
     date/kcalendarsystemcoptic.cpp
@@ -379,6 +380,7 @@ install(
     config/kdesktopfile.h
     config/ksharedconfig.h
     config/kcoreconfigskeleton.h
+    config/ksettings.h
     date/kcalendarsystem.h
     date/kdatetime.h
     date/klocalizeddate.h
