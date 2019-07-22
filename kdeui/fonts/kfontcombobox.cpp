@@ -103,13 +103,14 @@ void KFontFamilyDelegate::paint (QPainter *painter,
     QString trFontFamily = index.data(Qt::DisplayRole).toString();
     QString fontFamily = fontFamilyTrMap[trFontFamily];
 
+    bool canShowLanguageSample = true;
+#ifndef QT_KATIE
     // Writing systems provided by the font.
     QList<QFontDatabase::WritingSystem> availableSystems = QFontDatabase().writingSystems(fontFamily);
 
     // Intersect font's writing systems with that specified for
     // the language's sample text, to see if the sample can be shown.
     // If the font reports no writing systems, assume it can show the sample.
-    bool canShowLanguageSample = true;
     if (availableSystems.count() > 0) {
         canShowLanguageSample = false;
         QString scriptsSpec = i18nc("Numeric IDs of scripts for font previews",
@@ -130,6 +131,7 @@ void KFontFamilyDelegate::paint (QPainter *painter,
             }
         }
     }
+#endif
 
     // Choose and paint an icon according to the font type, scalable or bitmat.
     const QIcon *icon = &bitmap;
@@ -164,6 +166,7 @@ void KFontFamilyDelegate::paint (QPainter *painter,
     QString sample;
     if (canShowLanguageSample) {
         sample = alphabetSample();
+#ifndef QT_KATIE
     } else {
         foreach (const QFontDatabase::WritingSystem &ws, availableSystems) {
             sample += QFontDatabase::writingSystemSample(ws) + "  ";
@@ -172,6 +175,7 @@ void KFontFamilyDelegate::paint (QPainter *painter,
             }
         }
         sample = sample.trimmed();
+#endif
     }
     QFont sampleFont;
     sampleFont.setFamily(fontFamily);
