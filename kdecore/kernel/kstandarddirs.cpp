@@ -521,16 +521,15 @@ QStringList KStandardDirs::findDirs( const char *type,
 }
 
 QString KStandardDirs::findResourceDir( const char *type,
-                                        const QString& _filename) const
+                                        const QString& filename) const
 {
 #ifndef NDEBUG
-    if (_filename.isEmpty()) {
+    if (filename.isEmpty()) {
         kWarning() << "filename for type " << type << " in KStandardDirs::findResourceDir is not supposed to be empty!!";
         return QString();
     }
 #endif
 
-    QString filename(_filename);
     const QStringList candidates = d->resourceDirs(type, filename);
 
     for (QStringList::ConstIterator it = candidates.begin();
