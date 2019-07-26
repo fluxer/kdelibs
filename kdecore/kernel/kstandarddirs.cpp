@@ -554,10 +554,8 @@ bool KStandardDirs::exists(const QString &fullPath) const
 
 bool KStandardDirs::KStandardDirsPrivate::exists(const QString &fullPath)
 {
-    QFileInfo *fileinfo;
-    if(m_infocache.contains(fullPath)) {
-        fileinfo = m_infocache.object(fullPath);
-    } else {
+    QFileInfo *fileinfo = m_infocache.object(fullPath);
+    if (!fileinfo) {
         fileinfo = new QFileInfo(fullPath);
         m_infocache.insert(fullPath, fileinfo);
     }
