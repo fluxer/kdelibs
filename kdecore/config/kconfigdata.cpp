@@ -100,7 +100,7 @@ bool KEntryMap::setEntry(const QByteArray& group, const QByteArray& key, const Q
             return false;
         }
 
-        it.value() = e;
+        insert(it.key(), e);
         return true;
     }
 
@@ -159,7 +159,7 @@ bool KEntryMap::setEntry(const QByteArray& group, const QByteArray& key, const Q
         if(it.value() != e)
         {
             //qDebug() << "changing" << k << "from" << e.mValue << "to" << value;
-            it.value() = e;
+            insert(it.key(), e);
             if(k.bDefault)
             {
                 KEntryKey nonDefaultKey(k);
