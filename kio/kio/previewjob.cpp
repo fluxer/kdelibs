@@ -596,13 +596,13 @@ void PreviewJobPrivate::createThumbnail( const QString &pixPath )
     q->connect(job, SIGNAL(data(KIO::Job*,QByteArray)), SLOT(slotThumbData(KIO::Job*,QByteArray)));
     bool save = bSave && currentItem.plugin->property("CacheThumbnail").toBool() && !sequenceIndex;
     job->addMetaData("mimeType", currentItem.item.mimetype());
-    job->addMetaData("width", QString().setNum(save ? cacheWidth : width));
-    job->addMetaData("height", QString().setNum(save ? cacheHeight : height));
-    job->addMetaData("iconSize", QString().setNum(save ? 64 : iconSize));
-    job->addMetaData("iconAlpha", QString().setNum(iconAlpha));
+    job->addMetaData("width", QString::number(save ? cacheWidth : width));
+    job->addMetaData("height", QString::number(save ? cacheHeight : height));
+    job->addMetaData("iconSize", QString::number(save ? 64 : iconSize));
+    job->addMetaData("iconAlpha", QString::number(iconAlpha));
     job->addMetaData("plugin", currentItem.plugin->library());
     if(sequenceIndex)
-        job->addMetaData("sequence-index", QString().setNum(sequenceIndex));
+        job->addMetaData("sequence-index", QString::number(sequenceIndex));
 
 #ifdef Q_OS_UNIX
     if (shmid == -1)
@@ -626,7 +626,7 @@ void PreviewJobPrivate::createThumbnail( const QString &pixPath )
             shmaddr = 0;
     }
     if (shmid != -1)
-        job->addMetaData("shmid", QString().setNum(shmid));
+        job->addMetaData("shmid", QString::number(shmid));
 #endif
 }
 
