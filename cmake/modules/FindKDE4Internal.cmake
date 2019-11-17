@@ -238,6 +238,9 @@ cmake_policy(SET CMP0003 OLD)
 # TODO: get rid of this and adjust to new behaviour
 # CMP0005: keep escaping behaviour for definitions added via add_definitions()
 cmake_policy(SET CMP0005 OLD)
+if(NOT CMAKE_VERSION VERSION_LESS "3.10.0")
+    cmake_policy(SET CMP0071 OLD)
+endif()
 
 # Only do something if it hasn't been found yet
 if(NOT KDE4_FOUND)
