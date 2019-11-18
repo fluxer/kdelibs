@@ -375,20 +375,6 @@ install(
     DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
 )
 
-########### static lib for tests  ###############
-
-if(ENABLE_TESTING)
-    add_library(solid_static STATIC ${solid_LIB_SRCS})
-
-    target_link_libraries(solid_static
-        ${QT_QTCORE_LIBRARY}
-        ${QT_QTDBUS_LIBRARY}
-        ${QT_QTXML_LIBRARY}
-        ${QT_QTGUI_LIBRARY}
-        ${solid_OPTIONAL_LIBS}
-    )
-endif()
-
 ########### install files ###############
 
 generate_export_header(solid)
