@@ -37,433 +37,22 @@
 #include <assert.h>
 #include <QHash>
 
-/*
- * ### FIXME KDE4: the name of the encodings should mostly be uppercase
- * The names of this list are user-visible
- * Generate with generate_string_table.pl, input data:
-ISO 8859-1
-i18n:Western European
-ISO 8859-15
-i18n:Western European
-ISO 8859-14
-i18n:Western European
-cp 1252
-i18n:Western European
-IBM850
-i18n:Western European
-ISO 8859-2
-i18n:Central European
-ISO 8859-3
-i18n:Central European
-ISO 8859-4
-i18n:Baltic
-ISO 8859-13
-i18n:Baltic
-ISO 8859-16
-i18n:South-Eastern Europe
-cp 1250
-i18n:Central European
-cp 1254
-i18n:Turkish
-cp 1257
-i18n:Baltic
-KOI8-R
-i18n:Cyrillic
-ISO 8859-5
-i18n:Cyrillic
-cp 1251
-i18n:Cyrillic
-KOI8-U
-i18n:Cyrillic
-IBM866
-i18n:Cyrillic
-Big5
-i18n:Chinese Traditional
-Big5-HKSCS
-i18n:Chinese Traditional
-GB18030
-i18n:Chinese Simplified
-GBK
-i18n:Chinese Simplified
-GB2312
-i18n:Chinese Simplified
-EUC-KR
-i18n:Korean
-cp 949
-i18n:Korean
-sjis
-i18n:Japanese
-jis7
-i18n:Japanese
-EUC-JP
-i18n:Japanese
-ISO 8859-7
-i18n:Greek
-cp 1253
-i18n:Greek
-ISO 8859-6
-i18n:Arabic
-cp 1256
-i18n:Arabic
-ISO 8859-8
-i18n:Hebrew
-ISO 8859-8-I
-i18n:Hebrew
-cp 1255
-i18n:Hebrew
-ISO 8859-9
-i18n:Turkish
-TIS620
-i18n:Thai
-ISO 8859-11
-i18n:Thai
-UTF-8
-i18n:Unicode
-UTF-16
-i18n:Unicode
-utf7
-i18n:Unicode
-ucs2
-i18n:Unicode
-ISO 10646-UCS-2
-i18n:Unicode
-winsami2
-i18n:Northern Saami
-windows-1258
-i18n:Other
-IBM874
-i18n:Other
-TSCII
-i18n:Other
- */
-/*
- * Notes about the table:
- *
- * - The following entries were disabled and removed from the table:
-ibm852
-i18n:Central European
-pt 154
-i18n:Cyrillic              // ### TODO "PT 154" seems to have been removed from Qt
- *
- * - ISO 8559-11 is the deprecated name of TIS-620
- * - utf7 is not in Qt
- * - UTF-16 is duplicated as "ucs2" and "ISO 10646-UCS-2"
- * - windows-1258: TODO
- * - IBM874: TODO
- * - TSCII: TODO
- */
-static const char language_for_encoding_string[] =
-    "ISO 8859-1\0"
-    I18N_NOOP2("@item Text character set", "Western European")"\0"
-    "ISO 8859-15\0"
-    "ISO 8859-14\0"
-    "cp 1252\0"
-    "IBM850\0"
-    "ISO 8859-2\0"
-    I18N_NOOP2("@item Text character set", "Central European")"\0"
-    "ISO 8859-3\0"
-    "ISO 8859-4\0"
-    I18N_NOOP2("@item Text character set", "Baltic")"\0"
-    "ISO 8859-13\0"
-    "ISO 8859-16\0"
-    I18N_NOOP2("@item Text character set", "South-Eastern Europe")"\0"
-    "cp 1250\0"
-    "cp 1254\0"
-    I18N_NOOP2("@item Text character set", "Turkish")"\0"
-    "cp 1257\0"
-    "KOI8-R\0"
-    I18N_NOOP2("@item Text character set", "Cyrillic")"\0"
-    "ISO 8859-5\0"
-    "cp 1251\0"
-    "KOI8-U\0"
-    "IBM866\0"
-    "Big5\0"
-    I18N_NOOP2("@item Text character set", "Chinese Traditional")"\0"
-    "Big5-HKSCS\0"
-    "GB18030\0"
-    I18N_NOOP2("@item Text character set", "Chinese Simplified")"\0"
-    "GBK\0"
-    "GB2312\0"
-    "EUC-KR\0"
-    I18N_NOOP2("@item Text character set", "Korean")"\0"
-    "cp 949\0"
-    "sjis\0"
-    I18N_NOOP2("@item Text character set", "Japanese")"\0"
-    "jis7\0"
-    "EUC-JP\0"
-    "ISO 8859-7\0"
-    I18N_NOOP2("@item Text character set", "Greek")"\0"
-    "cp 1253\0"
-    "ISO 8859-6\0"
-    I18N_NOOP2("@item Text character set", "Arabic")"\0"
-    "cp 1256\0"
-    "ISO 8859-8\0"
-    I18N_NOOP2("@item Text character set", "Hebrew")"\0"
-    "ISO 8859-8-I\0"
-    "cp 1255\0"
-    "ISO 8859-9\0"
-    "TIS620\0"
-    I18N_NOOP2("@item Text character set", "Thai")"\0"
-    "ISO 8859-11\0"
-    "UTF-8\0"
-    I18N_NOOP2("@item Text character set", "Unicode")"\0"
-    "UTF-16\0"
-    "utf7\0"
-    "ucs2\0"
-    "ISO 10646-UCS-2\0"
-    "winsami2\0"
-    I18N_NOOP2("@item Text character set", "Northern Saami")"\0"
-    "windows-1258\0"
-    I18N_NOOP2("@item Text character set", "Other")"\0"
-    "IBM874\0"
-    "TSCII\0"
-    "\0";
+static const QLatin1String kOtherEncoding = QLatin1String("Other");
 
-static const int language_for_encoding_indices[] = {
-       0,   11,   28,   11,   40,   11,   52,   11,
-      60,   11,   67,   78,   95,   78,  106,  117,
-     124,  117,  136,  148,  169,   78,  177,  185,
-     193,  117,  201,  208,  217,  208,  228,  208,
-     236,  208,  243,  208,  250,  255,  275,  255,
-     286,  294,  313,  294,  317,  294,  324,  331,
-     338,  331,  345,  350,  359,  350,  364,  350,
-     371,  382,  388,  382,  396,  407,  414,  407,
-     422,  433,  440,  433,  453,  433,  461,  185,
-     472,  479,  484,  479,  496,  502,  510,  502,
-     517,  502,  522,  502,  527,  502,  543,  552,
-     567,  580,  586,  580,  593,  580,   -1
-};
-
-/*
- * defines some different names for codecs that are built into Qt.
- * The names in this list must be lower-case.
- * input data for generate_string_table.pl:
-iso-ir-111
-koi8-r
-koi unified
-koi8-r
-us-ascii
-iso 8859-1
-usascii
-iso 8859-1
-ascii
-iso 8859-1
-unicode-1-1-utf-7
-utf-7
-ucs2
-iso-10646-ucs-2
-iso10646-1
-iso-10646-ucs-2
-gb18030.2000-1
-gb18030
-gb18030.2000-0
-gb18030
-gbk-0
-gbk
-gb2312
-gbk
-gb2312.1980-0
-gbk
-big5-0
-big5
-euc-kr
-euckr
-cp949
-cp 949
-euc-jp
-eucjp
-jisx0201.1976-0
-eucjp
-jisx0208.1983-0
-eucjp
-jisx0208.1990-0
-eucjp
-jisx0208.1997-0
-eucjp
-jisx0212.1990-0
-eucjp
-jisx0213.2000-1
-eucjp
-jisx0213.2000-2
-eucjp
-shift_jis
-sjis
-shift-jis
-sjis
-sjis
-sjis
-iso-2022-jp
-jis7
-windows850
-ibm850
-windows866
-ibm866
-windows-850
-ibm850
-windows-866
-ibm866
-cp-10000
-apple roman
-thai-tis620
-iso 8859-11
-windows-874
-ibm874
-windows874
-ibm874
-cp-874
-ibm874
-ksc5601.1987-0
-euckr
-ks_c_5601-1987
-euckr
-mac-roman
-apple roman
-macintosh
-apple roman
-mac
-apple roman
-csiso2022jp
-iso-2022-jp
-*/
-/*
- * Notes about the table:
- * - using ISO-8859-1 for ASCII is only an approximation (as you cannot test if a character is part of the set)
- * - utf7 is not in Qt
- * - UTF-16 is duplicated as "ucs2" and "ISO 10646-UCS-2"
- * - sjis: appears on the table for x-sjis
- * - jis7: ISO-2022-JP is now the default name in Qt4
- * - cp-874: is it really needed?
- * - mac-roman: appears on the table for x-mac-roman
- * - csiso2022jp: See bug #77243
- */
-static const char builtin_string[] =
-    "iso-ir-111\0"
-    "koi8-r\0"
-    "koi unified\0"
-    "us-ascii\0"
-    "iso 8859-1\0"
-    "usascii\0"
-    "ascii\0"
-    "unicode-1-1-utf-7\0"
-    "utf-7\0"
-    "ucs2\0"
-    "iso-10646-ucs-2\0"
-    "iso10646-1\0"
-    "gb18030.2000-1\0"
-    "gb18030\0"
-    "gb18030.2000-0\0"
-    "gbk-0\0"
-    "gbk\0"
-    "gb2312\0"
-    "gb2312.1980-0\0"
-    "big5-0\0"
-    "big5\0"
-    "euc-kr\0"
-    "euckr\0"
-    "cp949\0"
-    "cp 949\0"
-    "euc-jp\0"
-    "eucjp\0"
-    "jisx0201.1976-0\0"
-    "jisx0208.1983-0\0"
-    "jisx0208.1990-0\0"
-    "jisx0208.1997-0\0"
-    "jisx0212.1990-0\0"
-    "jisx0213.2000-1\0"
-    "jisx0213.2000-2\0"
-    "shift_jis\0"
-    "sjis\0"
-    "shift-jis\0"
-    "iso-2022-jp\0"
-    "jis7\0"
-    "windows850\0"
-    "ibm850\0"
-    "windows866\0"
-    "ibm866\0"
-    "windows-850\0"
-    "windows-866\0"
-    "cp-10000\0"
-    "apple roman\0"
-    "thai-tis620\0"
-    "iso 8859-11\0"
-    "windows-874\0"
-    "ibm874\0"
-    "windows874\0"
-    "cp-874\0"
-    "ksc5601.1987-0\0"
-    "ks_c_5601-1987\0"
-    "mac-roman\0"
-    "macintosh\0"
-    "mac\0"
-    "csiso2022jp\0"
-    "\0";
-
-static const int builtin_indices[] = {
-       0,   11,   18,   11,   30,   39,   50,   39,
-      58,   39,   64,   82,   88,   93,  109,   93,
-     120,  135,  143,  135,  158,  164,  168,  164,
-     175,  164,  189,  196,  201,  208,  214,  220,
-     227,  234,  240,  234,  256,  234,  272,  234,
-     288,  234,  304,  234,  320,  234,  336,  234,
-     352,  362,  367,  362,  362,  362,  377,  389,
-     394,  405,  412,  423,  430,  405,  442,  423,
-     454,  463,  475,  487,  499,  511,  518,  511,
-     529,  511,  536,  208,  551,  208,  566,  463,
-     576,  463,  586,  463,  590,  377,   -1
-};
-
-/*
- * some last resort hints in case the charmap file couldn't be found.
- * This gives at least a partial conversion and helps making things readable.
- *
- * the name used as input here is already converted to the more canonical
- * name as defined in the aliases array.
- *
- * Input data:
-cp1250
-iso-8859-2
-koi8-r
-iso-8859-5
-koi8-u
-koi8-r
-pt 154
-windows-1251
-paratype-154
-windows-1251
-pt-154
-windows-1251
- */
-/* Notes:
- * - KDE had always "CP 1251" as best fallback to PT 154. As Qt does not offer this encoding anymore, the codepage 1251 is used as fallback.
- */
-static const char conversion_hints_string[] =
-    "cp1250\0"
-    "iso-8859-2\0"
-    "koi8-r\0"
-    "iso-8859-5\0"
-    "koi8-u\0"
-    "pt 154\0"
-    "windows-1251\0"
-    "paratype-154\0"
-    "pt-154\0"
-    "\0";
-
-static const int conversion_hints_indices[] = {
-       0,    7,   18,   25,   36,   18,   43,   50,
-      63,   50,   76,   50,   -1
-};
-
-// search an array of items index/data, find first matching index
-// and return data, or return 0
-static inline
-const char *kcharsets_array_search(const char *start, const int *indices, const char *entry)
-{
-    for (int i = 0; indices[i] != -1; i += 2)
-        if (qstrcmp(start + indices[i], entry) == 0)
-            return start + indices[i + 1];
-    return 0;
+static void splitEncoding(const QByteArray &encoding, QString &group, QString &set) {
+    const int spaceindex = encoding.indexOf(' ');
+    const int dashindex = encoding.indexOf('-');
+    if (spaceindex > 1 && dashindex > 1) {
+        group = QString::fromLatin1(encoding.mid(0, spaceindex));
+        set = QString::fromLatin1(encoding.mid(spaceindex + 1, encoding.size() - spaceindex - 1));
+    } else if (dashindex > 1) {
+        group = QString::fromLatin1(encoding.mid(0, dashindex));
+        set = QString::fromLatin1(encoding.mid(dashindex + 1, encoding.size() - dashindex - 1));
+    } else {
+        group = kOtherEncoding;
+        set = QString::fromLatin1(encoding);
+    }
 }
-
 
 class KCharsetsPrivate
 {
@@ -608,8 +197,9 @@ QString KCharsets::resolveEntities( const QString &input )
 QStringList KCharsets::availableEncodingNames() const
 {
     QStringList available;
-    for ( const int *p = language_for_encoding_indices; *p != -1; p += 2)
-        available.append( QString::fromUtf8( language_for_encoding_string + *p ) );
+    foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
+        available.append( QString::fromLatin1( encoding ) );
+    }
     available.sort();
     return available;
 }
@@ -617,14 +207,14 @@ QStringList KCharsets::availableEncodingNames() const
 
 QString KCharsets::descriptionForEncoding( const QString& encoding ) const
 {
-    const char* lang = kcharsets_array_search( language_for_encoding_string,
-                                               language_for_encoding_indices,
-                                               encoding.toUtf8() );
-    if ( lang )
-        return i18nc( "@item %1 character set, %2 encoding", "%1 ( %2 )",
-                      i18nc( "@item Text character set", lang ), encoding );
-    else
-        return i18nc( "@item", "Other encoding (%1)", encoding );
+    QString group;
+    QString set;
+    splitEncoding(encoding.toUtf8(), group, set);
+
+    if ( group != kOtherEncoding )
+        return i18nc( "@item %1 character set, %2 encoding",
+            "%1 ( %2 )", group, set );
+    return i18nc( "@item", "Other encoding (%1)", encoding );
 }
 
 QString KCharsets::encodingForName( const QString &descriptiveName ) const
@@ -647,11 +237,13 @@ QString KCharsets::encodingForName( const QString &descriptiveName ) const
 QStringList KCharsets::descriptiveEncodingNames() const
 {
     QStringList encodings;
-    for ( const int *p = language_for_encoding_indices; *p != -1; p += 2) {
-        const QString name = QString::fromUtf8( language_for_encoding_string + p[0] );
-        const QString description = i18nc( "@item Text character set", language_for_encoding_string + p[1] );
-        encodings.append( i18nc( "@item Text encoding: %1 character set, %2 encoding", "%1 ( %2 )",
-                                 description, name ) );
+    foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
+        QString group;
+        QString set;
+        splitEncoding(encoding, group, set);
+
+        encodings.append( i18nc( "@item Text encoding: %1 character set, %2 encoding",
+            "%1 ( %2 )", group, set ) );
     }
     encodings.sort();
     return encodings;
@@ -661,22 +253,24 @@ QList<QStringList> KCharsets::encodingsByScript() const
 {
     if (!d->encodingsByScript.isEmpty())
         return d->encodingsByScript;
-    int i;
-    for ( const int *p = language_for_encoding_indices; *p != -1; p += 2) {
-        const QString name = QString::fromUtf8( language_for_encoding_string + p[0] );
-        const QString description = i18nc("@item Text character set", language_for_encoding_string + p[1] );
 
-        for (i=0; i<d->encodingsByScript.size(); ++i) {
-            if (d->encodingsByScript.at(i).at(0) == description) {
-                d->encodingsByScript[i].append(name);
+    int i = 0;
+    foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
+        QString group;
+        QString set;
+        splitEncoding(encoding, group, set);
+
+        const QString encodingstring = QString::fromLatin1(encoding);
+        for (i = 0; i < d->encodingsByScript.size(); i++) {
+            if (d->encodingsByScript.at(i).at(0) == group) {
+                d->encodingsByScript[i].append(encodingstring);
                 break;
             }
         }
 
-        if (i==d->encodingsByScript.size()) {
-            d->encodingsByScript.append(QStringList() << description << name);
+        if (i == d->encodingsByScript.size()) {
+            d->encodingsByScript.append(QStringList() << group << encodingstring);
         }
-
     }
     return d->encodingsByScript;
 }
@@ -760,31 +354,6 @@ QTextCodec *KCharsets::codecForNameOrNull( const QByteArray& n ) const
     // We only need to check changed names.
     if ( changed ) {
         codec = QTextCodec::codecForName(name);
-        if (codec) {
-            d->codecForNameDict.insert( n, codec );
-            return codec;
-        }
-    }
-
-    // these codecs are built into Qt, but the name given for the codec is different,
-    // so QTextCodec did not recognize it.
-    QByteArray cname = kcharsets_array_search( builtin_string, builtin_indices, name);
-
-    if(!cname.isEmpty())
-        codec = QTextCodec::codecForName(cname);
-
-    if (codec)
-    {
-        d->codecForNameDict.insert( n, codec );
-        return codec;
-    }
-
-    // this also failed, the last resort is now to take some compatibility charmap
-    // ### TODO: while emergency conversions might be useful at read, it is not sure if they should be done if the application plans to write.
-    cname = kcharsets_array_search( conversion_hints_string, conversion_hints_indices, name );
-
-    if (!cname.isEmpty()) {
-        codec = QTextCodec::codecForName(cname);
         if (codec) {
             d->codecForNameDict.insert( n, codec );
             return codec;
