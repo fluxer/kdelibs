@@ -40,14 +40,17 @@
 static const QLatin1String kOtherEncoding = QLatin1String("Other");
 
 static void splitEncoding(const QByteArray &encoding, QString &group, QString &set) {
-    const int spaceindex = encoding.indexOf(' ');
-    const int dashindex = encoding.indexOf('-');
-    if (spaceindex > 1 && dashindex > 1) {
-        group = QString::fromLatin1(encoding.mid(0, spaceindex));
-        set = QString::fromLatin1(encoding.mid(spaceindex + 1, encoding.size() - spaceindex - 1));
-    } else if (dashindex > 1) {
-        group = QString::fromLatin1(encoding.mid(0, dashindex));
-        set = QString::fromLatin1(encoding.mid(dashindex + 1, encoding.size() - dashindex - 1));
+    int separatorindex = 0;
+    const char *data = encoding.constData();
+    for (int i = 0; i < encoding.size(); i++) {
+        if (data[i] == ' ' || data[i] == '-' || data[i] == '_') {
+            separatorindex = i;
+            break;
+        }
+    }
+    if (separatorindex > 1) {
+        group = QString::fromLatin1(encoding.mid(0, separatorindex));
+        set = QString::fromLatin1(encoding.mid(separatorindex + 1, encoding.size() - separatorindex - 1));
     } else {
         group = kOtherEncoding;
         set = QString::fromLatin1(encoding);
@@ -254,24 +257,43 @@ QList<QStringList> KCharsets::encodingsByScript() const
     if (!d->encodingsByScript.isEmpty())
         return d->encodingsByScript;
 
-    int i = 0;
     foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
         QString group;
         QString set;
         splitEncoding(encoding, group, set);
 
+        int i = 0;
         const QString encodingstring = QString::fromLatin1(encoding);
         for (i = 0; i < d->encodingsByScript.size(); i++) {
-            if (d->encodingsByScript.at(i).at(0) == group) {
+            if (d->encodingsByScript.at(i).at(0).toLower() == group.toLower()) {
                 d->encodingsByScript[i].append(encodingstring);
                 break;
             }
         }
-
         if (i == d->encodingsByScript.size()) {
             d->encodingsByScript.append(QStringList() << group << encodingstring);
         }
     }
+
+    // remove groups with only one entry and move their entry to Other group
+    foreach (const QStringList &list, d->encodingsByScript) {
+        if (list.size() == 2) {
+            int i = 0;
+            const QString encoding = list.at(1);
+            d->encodingsByScript.removeAll(list);
+
+            for (i = 0; i < d->encodingsByScript.size(); i++) {
+                if (d->encodingsByScript.at(i).at(0) == kOtherEncoding) {
+                    d->encodingsByScript[i].append(encoding);
+                    break;
+                }
+            }
+            if (i == d->encodingsByScript.size()) {
+                d->encodingsByScript.append(QStringList() << kOtherEncoding << encoding);
+            }
+        }
+    }
+
     return d->encodingsByScript;
 }
 
