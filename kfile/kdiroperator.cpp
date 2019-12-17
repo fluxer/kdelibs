@@ -1585,7 +1585,7 @@ void KDirOperator::setDirLister(KDirLister *lister)
     d->dirLister->setAutoUpdate(true);
     d->dirLister->setDelayedMimeTypes(true);
 
-    QWidget* mainWidget = topLevelWidget();
+    QWidget* mainWidget = window();
     d->dirLister->setMainWindow(mainWidget);
     kDebug(kfile_area) << "mainWidget=" << mainWidget;
 

@@ -529,7 +529,7 @@ bool ReadOnlyPart::openUrl( const KUrl &url )
         // Maybe we can use a "local path", to avoid a temp copy?
         KIO::JobFlags flags = d->m_showProgressInfo ? KIO::DefaultFlags : KIO::HideProgressInfo;
         d->m_statJob = KIO::mostLocalUrl(d->m_url, flags);
-        d->m_statJob->ui()->setWindow( widget() ? widget()->topLevelWidget() : 0 );
+        d->m_statJob->ui()->setWindow( widget() ? widget()->window() : 0 );
         connect(d->m_statJob, SIGNAL(result(KJob*)), this, SLOT(_k_slotStatJobFinished(KJob*)));
         return true;
     } else {
@@ -592,7 +592,7 @@ void ReadOnlyPartPrivate::openRemoteFile()
     KIO::JobFlags flags = m_showProgressInfo ? KIO::DefaultFlags : KIO::HideProgressInfo;
     flags |= KIO::Overwrite;
     m_job = KIO::file_copy(m_url, destURL, 0600, flags);
-    m_job->ui()->setWindow(q->widget() ? q->widget()->topLevelWidget() : 0);
+    m_job->ui()->setWindow(q->widget() ? q->widget()->window() : 0);
     emit q->started(m_job);
     QObject::connect(m_job, SIGNAL(result(KJob*)), q, SLOT(_k_slotJobFinished(KJob*)));
     QObject::connect(m_job, SIGNAL(mimetype(KIO::Job*,QString)),
@@ -949,7 +949,7 @@ bool ReadWritePart::saveToUrl()
             return false;
         }
         d->m_uploadJob = KIO::file_move( uploadUrl, d->m_url, -1, KIO::Overwrite );
-        d->m_uploadJob->ui()->setWindow( widget() ? widget()->topLevelWidget() : 0 );
+        d->m_uploadJob->ui()->setWindow( widget() ? widget()->window() : 0 );
         connect( d->m_uploadJob, SIGNAL(result(KJob*)), this, SLOT(_k_slotUploadFinished(KJob*)) );
         return true;
     }

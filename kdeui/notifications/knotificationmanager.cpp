@@ -108,7 +108,7 @@ bool KNotificationManager::notify( KNotification* n, const QPixmap &pix,
                                            const KNotification::ContextList & contexts,
                                            const QString &appname)
 {
-    WId winId=n->widget() ? n->widget()->topLevelWidget()->winId()  : 0;
+    WId winId=n->widget() ? n->widget()->window()->winId()  : 0;
 
     QByteArray pixmapData;
     QBuffer buffer(&pixmapData);

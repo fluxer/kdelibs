@@ -215,7 +215,7 @@ bool PartManager::eventFilter( QObject *obj, QEvent *ev )
     {
         QPoint pos;
 
-        if ( !d->m_managedTopLevelWidgets.contains( w->topLevelWidget() ) )
+        if ( !d->m_managedTopLevelWidgets.contains( w->window() ) )
             return false;
 
         if ( d->m_bIgnoreScrollBars && ::qobject_cast<QScrollBar *>(w) )

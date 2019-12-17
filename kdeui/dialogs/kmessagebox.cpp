@@ -322,7 +322,7 @@ int KMessageBox::createKMessageBox(KDialog *dialog, const QIcon &icon,
     }
 
     if ((options & KMessageBox::Notify)) {
-        sendNotification(text, strlist, notifyType, dialog->topLevelWidget()->winId());
+        sendNotification(text, strlist, notifyType, dialog->window()->winId());
     }
 
     if (KMessageBox_queue) {

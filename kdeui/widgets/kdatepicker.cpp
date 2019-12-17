@@ -655,8 +655,7 @@ void KDatePicker::setCloseButton( bool enable )
         d->navigationLayout->addWidget( d->closeButton );
         d->closeButton->setToolTip( i18nc( "@action:button", "Close" ) );
         d->closeButton->setIcon( SmallIcon( "window-close" ) );
-        connect( d->closeButton, SIGNAL(clicked()),
-                 topLevelWidget(), SLOT(close()) );
+        connect( d->closeButton, SIGNAL(clicked()), window(), SLOT(close()) );
     } else {
         delete d->closeButton;
         d->closeButton = 0L;

@@ -525,7 +525,7 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
                                const QByteArray& asn)
 {
     if (window != NULL) {
-        window = window->topLevelWidget();
+        window = window->window();
     }
     if (service && !service->entryPath().isEmpty()
             && !KDesktopFile::isAuthorizedDesktopFile(service->entryPath()))

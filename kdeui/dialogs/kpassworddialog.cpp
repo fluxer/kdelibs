@@ -127,7 +127,7 @@ void KPasswordDialog::KPasswordDialogPrivate::init()
 
     updateFields();
 
-    QRect desktop = KGlobalSettings::desktopGeometry(q->topLevelWidget());
+    QRect desktop = KGlobalSettings::desktopGeometry(q->window());
     q->setMinimumWidth(qMin(1000, qMax(q->sizeHint().width(), desktop.width() / 4)));
     q->setPixmap(KIcon("dialog-password").pixmap(KIconLoader::SizeHuge));
 }
