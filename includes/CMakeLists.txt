@@ -49,7 +49,6 @@ install(
     KIdleTime
     KCalendarSystem
     KCharMacroExpander
-    KCharSelect
     KCharsets
     KCheckableProxyModel
     KCmdLineArgs

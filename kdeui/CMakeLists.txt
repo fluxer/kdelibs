@@ -211,8 +211,6 @@ set(kdeui_LIB_SRCS
     widgets/kdialogbuttonbox.cpp
     widgets/kbuttongroup.cpp
     widgets/kcapacitybar.cpp
-    widgets/kcharselect.cpp
-    widgets/kcharselectdata.cpp
     widgets/kcmodule.cpp
     widgets/kcombobox.cpp
     widgets/kcompletionbox.cpp
@@ -421,11 +419,6 @@ install(
 )
 
 install(
-    FILES widgets/kcharselect-data
-    DESTINATION ${DATA_INSTALL_DIR}/kcharselect
-)
-
-install(
     FILES
     xmlgui/ui_standards.rc
     DESTINATION
@@ -576,7 +569,6 @@ install(
     widgets/kcombobox.h
     widgets/kcompletionbox.h
     widgets/kbuttongroup.h
-    widgets/kcharselect.h
     widgets/kdatetable.h
     widgets/kdatetimeedit.h
     widgets/kdatetimewidget.h

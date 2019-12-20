@@ -31,12 +31,6 @@ ToolTip=Categorized Item View (KDE)
 WhatsThis=Item view for listing items in a categorized fashion optionally.
 Group=Views (KDE)
 
-[KCharSelect]
-ToolTip=Character Selection Widget (KDE)
-WhatsThis=A widget that allows selection a character out ot a table
-Group=Graphics (KDE)
-ConstructorArgs=(parent, 0)
-
 [KColorButton]
 ToolTip=Color Chooser Button (KDE)
 WhatsThis=A button that allows selecting a color

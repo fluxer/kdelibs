@@ -25,7 +25,6 @@ install(
     kgradientselector.png
     kdualcolorbutton.png
     kpushbutton.png
-    kcharselect.png
     kdatepicker.png
     kdialog.png
     keditlistbox.png

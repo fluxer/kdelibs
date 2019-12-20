@@ -8,11 +8,6 @@ ToolTip=Active Label (KDE)
 WhatsThis=A label with support for selection and clickable links
 Group=Display (KDE)
 
-[KCharSelect]
-ToolTip=Character Selection Widget (KDE)
-WhatsThis=A widget that allows selection a character out ot a table
-Group=Graphics (KDE)
-
 [KColorButton]
 ToolTip=Color Chooser Button (KDE)
 WhatsThis=A button that allows selecting a color
