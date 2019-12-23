@@ -25,6 +25,8 @@
 #include <QFile>
 #include <QStringList>
 
+static const QSettings::Format defaultformat = QSettings::IniFormat;
+
 class KSettingsPrivate {
 public:
     KSettings::OpenFlags m_mode;
@@ -41,7 +43,7 @@ static QString getSettingsPath(const QString &filename)
 }
 
 KSettings::KSettings(const QString& file, const OpenFlags mode)
-    : d_ptr(new KSettingsPrivate()), QSettings(getSettingsPath(file), QSettings::NativeFormat)
+    : d_ptr(new KSettingsPrivate()), QSettings(getSettingsPath(file), defaultformat)
 {
     d_ptr->m_mode = mode;
     if ((mode & IncludeGlobals) != mode) {
@@ -56,8 +58,12 @@ KSettings::~KSettings()
 
 void KSettings::addSource(const QString &source)
 {
-    QSettings settings(source, QSettings::NativeFormat);
+    QSettings settings(source, defaultformat);
+#ifndef QT_KATIE
     foreach (const QString &key, settings.allKeys()) {
+#else
+    foreach (const QString &key, settings.keys()) {
+#endif
         if (!QSettings::contains(key)) {
             QSettings::setValue(key, settings.value(key));
         }

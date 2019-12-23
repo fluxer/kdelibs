@@ -37,11 +37,9 @@ static bool s_fullscreen = false;
 */
 #define COMMON_STATE_SAVE \
     if (d->m_handle && d->m_settings && d->m_settings->isWritable()) { \
-        d->m_settings->beginGroup(d->m_appname); \
-        d->m_settings->setValue("audiooutput", audiooutput()); \
-        d->m_settings->setValue("volume", int(volume())); \
-        d->m_settings->setValue("mute", mute()); \
-        d->m_settings->endGroup(); \
+        d->m_settings->setValue(d->m_appname + "/audiooutput", audiooutput()); \
+        d->m_settings->setValue(d->m_appname + "/volume", int(volume())); \
+        d->m_settings->setValue(d->m_appname + "/mute", mute()); \
         d->m_settings->sync(); \
     } else { \
         kWarning() << i18n("Could not save state"); \

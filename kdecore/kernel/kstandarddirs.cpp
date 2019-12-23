@@ -1398,14 +1398,18 @@ void KStandardDirs::addResourcesFrom_krcdirs()
         return;
 
     QSettings iniFile(localFile, QSettings::IniFormat);
-    iniFile.beginGroup(QString::fromLatin1("KStandardDirs"));
+#ifndef QT_KATIE
     const QStringList resources = iniFile.allKeys();
-    foreach(const QString &key, resources)
+#else
+    const QStringList resources = iniFile.keys();
+#endif
+    foreach(QString key, resources)
     {
         QDir path(iniFile.value(key).toString());
         if (!path.exists())
             continue;
 
+        key.replace(QLatin1String("KStandardDirs/"), QLatin1String(""));
         if(path.makeAbsolute())
             addResourceDir(key.toLatin1(), path.path(), false);
     }
