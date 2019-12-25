@@ -63,7 +63,7 @@ public:
      *                     to influence the values returned by this object.  See OpenFlags for
      *                     more details.
      */
-    explicit KSettings(const QString& file = QString(), const OpenFlags mode = FullConfig);
+    KSettings(const QString& file = QString(), const OpenFlags mode = FullConfig);
 
     ~KSettings();
 
