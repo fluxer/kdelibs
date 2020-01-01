@@ -57,13 +57,13 @@ public:
      * @param file         If an absolute path is specified for @p file, that file will be used
      *                     as the store for the configuration settings.  If a non-absolute path
      *                     is provided, the file will be looked for in the standard config
-     *                     directory. If path is empty the application name is used instead.
+     *                     directory.
      *
      * @param mode         determines whether the user, global or both settings will be allowed
      *                     to influence the values returned by this object.  See OpenFlags for
      *                     more details.
      */
-    KSettings(const QString& file = QString(), const OpenFlags mode = FullConfig);
+    KSettings(const QString &file, const OpenFlags mode);
 
     ~KSettings();
 

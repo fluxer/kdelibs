@@ -34,9 +34,7 @@ public:
 
 static QString getSettingsPath(const QString &filename)
 {
-    if (filename.isEmpty()) {
-        return KStandardDirs::locateLocal("config", QApplication::applicationName());
-    } else if (QFile::exists(filename)) {
+    if (QFile::exists(filename)) {
         return filename;
     }
     return KStandardDirs::locateLocal("config", filename);
