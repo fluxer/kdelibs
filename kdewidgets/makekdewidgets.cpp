@@ -137,20 +137,14 @@ void buildFile( QTextStream &ts, const QString& group, const QString& fileName, 
     QStringList classes;
 #ifndef QT_KATIE
     foreach (const QString &key, input.allKeys()) {
-        const QString &klass = key.split('/').at(0);
-        if (classes.contains(klass))
-            continue;
-        classes.append(klass);
-    }
 #else
     foreach (const QString &key, input.keys()) {
+#endif
         const QString klass = key.split('/').at(0);
-        if (classes.contains(klass))
+        if (classes.contains(klass) || klass == QLatin1String("Global"))
             continue;
         classes.append(klass);
     }
-#endif
-    classes.removeAll( "Global" );
 
     foreach ( const QString &myInclude, classes ) {
         includes += buildWidgetInclude( myInclude, input );
