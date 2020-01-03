@@ -22,6 +22,7 @@
 #include <stdlib.h> // strtol
 #include <time.h> // time()
 #include <assert.h>
+#include <sys/stat.h> // S_IFDIR
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>

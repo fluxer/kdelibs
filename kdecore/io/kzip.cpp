@@ -32,6 +32,7 @@
 #include <zlib.h>
 #include <time.h>
 #include <string.h>
+#include <sys/stat.h>
 
 const int max_path_len = 4095;	// maximum number of character a path may contain
 

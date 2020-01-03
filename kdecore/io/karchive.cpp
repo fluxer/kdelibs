@@ -41,7 +41,6 @@
 #include <grp.h>
 #include <pwd.h>
 #include <assert.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 #ifdef Q_OS_UNIX
 #include <limits.h>  // PATH_MAX
