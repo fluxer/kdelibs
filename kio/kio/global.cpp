@@ -34,7 +34,7 @@
 #include <QtCore/qdatetime.h>
 #include <QtGui/QTextDocument>
 
-#include <sys/types.h>
+#include <sys/stat.h>  // S_ISDIR
 #include <sys/wait.h>
 #include <sys/uio.h>
 

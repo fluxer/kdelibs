@@ -29,6 +29,8 @@
 #include <QtCore/QHash>
 #include <QtCore/QList>
 
+#include <sys/stat.h>  // S_ISDIR
+
 using namespace KIO;
 
 /* ---------- UDSEntry ------------ */

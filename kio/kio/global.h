@@ -27,7 +27,6 @@
 #include <kiconloader.h>
 #include <QtGui/QPixmap> // for pixmapForUrl
 
-#include <sys/stat.h>  // S_ISDIR
 #include <sys/types.h> // mode_t
 
 #include <kjob.h>
