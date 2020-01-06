@@ -27,11 +27,6 @@
 
 static const QSettings::Format defaultformat = QSettings::IniFormat;
 
-class KSettingsPrivate {
-public:
-    KSettings::OpenFlags m_mode;
-};
-
 static QString getSettingsPath(const QString &filename)
 {
     if (QFile::exists(filename)) {
@@ -40,10 +35,9 @@ static QString getSettingsPath(const QString &filename)
     return KStandardDirs::locateLocal("config", filename);
 }
 
-KSettings::KSettings(const QString& file, const OpenFlags mode)
-    : d_ptr(new KSettingsPrivate()), QSettings(getSettingsPath(file), defaultformat)
+KSettings::KSettings(const QString& file, const OpenFlags mode, QObject *parent)
+    : QSettings(getSettingsPath(file), defaultformat, parent)
 {
-    d_ptr->m_mode = mode;
     if ((mode & IncludeGlobals) != mode) {
         addSource(KStandardDirs::locateLocal("config", QLatin1String("kdeglobals")));
     }
@@ -51,7 +45,6 @@ KSettings::KSettings(const QString& file, const OpenFlags mode)
 
 KSettings::~KSettings()
 {
-    delete d_ptr;
 }
 
 void KSettings::addSource(const QString &source)

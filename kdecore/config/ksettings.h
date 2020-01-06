@@ -25,8 +25,6 @@
 
 #include <QSettings>
 
-class KSettingsPrivate;
-
 /**
  * \class KSettings ksettings.h <KSettings>
  *
@@ -63,7 +61,7 @@ public:
      *                     to influence the values returned by this object.  See OpenFlags for
      *                     more details.
      */
-    KSettings(const QString &file, const OpenFlags mode);
+    KSettings(const QString &file, const OpenFlags mode, QObject *parent = Q_NULLPTR);
 
     ~KSettings();
 
@@ -80,10 +78,7 @@ public:
     void addSource(const QString &source);
 
 private:
-    KSettingsPrivate *d_ptr;
-
     Q_DISABLE_COPY(KSettings)
-    Q_DECLARE_PRIVATE(KSettings)
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(KSettings::OpenFlags)
 
