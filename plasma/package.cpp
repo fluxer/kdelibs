@@ -163,7 +163,8 @@ bool PackagePrivate::isValid()
         bool failed = true;
         foreach (const QString &path, structure->searchPath(dir)) {
             foreach (const QString &prefix, prefixes) {
-                if (QFile::exists(structure->path() + prefix + path)) {
+                QDir prefixdir(structure->path() + prefix + path);
+                if (prefixdir.exists()) {
                     failed = false;
                     break;
                 }
