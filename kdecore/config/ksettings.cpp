@@ -22,14 +22,15 @@
 #include "kstandarddirs.h"
 
 #include <QApplication>
-#include <QFile>
+#include <QFileInfo>
 #include <QStringList>
 
 static const QSettings::Format defaultformat = QSettings::IniFormat;
 
 static QString getSettingsPath(const QString &filename)
 {
-    if (QFile::exists(filename)) {
+    QFileInfo info(filename);
+    if (info.isAbsolute()) {
         return filename;
     }
     return KStandardDirs::locateLocal("config", filename);
