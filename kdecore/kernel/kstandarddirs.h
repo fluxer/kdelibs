@@ -655,7 +655,6 @@ public:
 
     /**
      * Checks for existence and accessability of a file or directory.
-     * Faster than creating a QFileInfo first.
      * @param fullPath the path to check. IMPORTANT: must end with a slash if expected to be a directory
      *                 (and no slash for a file, obviously).
      * @return @c true if the directory exists, @c false otherwise

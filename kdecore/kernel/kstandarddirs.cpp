@@ -62,7 +62,6 @@
 #include <QtNetwork/QHostInfo>
 
 #define case_sensitivity Qt::CaseSensitive
-#define max_file_info 10000
 
 class KStandardDirs::KStandardDirsPrivate
 {
@@ -72,7 +71,7 @@ public:
           m_checkRestrictions(true),
           m_cacheMutex(QMutex::Recursive), // resourceDirs is recursive
           q(qq)
-    { m_infocache.setMaxCost(max_file_info); }
+    { }
 
     bool hasDataRestrictions(const QString &relPath) const;
     QStringList resourceDirs(const char* type, const QString& subdirForRestrictions);
@@ -96,7 +95,6 @@ public:
     // Caches (protected by mutex in const methods, cf ctor docu)
     QMap<QByteArray, QStringList> m_dircache;
     QMap<QByteArray, QString> m_savelocations;
-    QCache<QString, QFileInfo> m_infocache;
     QMutex m_cacheMutex;
 
     KStandardDirs* q;
@@ -554,18 +552,13 @@ bool KStandardDirs::exists(const QString &fullPath) const
 
 bool KStandardDirs::KStandardDirsPrivate::exists(const QString &fullPath)
 {
-    QFileInfo *fileinfo = m_infocache.object(fullPath);
-    if (!fileinfo) {
-        fileinfo = new QFileInfo(fullPath);
-        m_infocache.insert(fullPath, fileinfo);
-    }
-
-    if (!fileinfo->isReadable()) {
+    QFileInfo fileinfo(fullPath);
+    if (!fileinfo.isReadable()) {
         return false;
     } else if (!fullPath.endsWith(QLatin1Char('/'))) {
-        return !fileinfo->isDir() && fileinfo->exists();
+        return !fileinfo.isDir() && fileinfo.exists();
     } else {
-        return fileinfo->isDir() && fileinfo->exists();
+        return fileinfo.isDir() && fileinfo.exists();
     }
 }
 
