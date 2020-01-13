@@ -144,7 +144,7 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
         icnlibs = KGlobal::dirs()->resourceDirs("data");
         for (it=icnlibs.constBegin(); it!=icnlibs.constEnd(); ++it) {
             const QString cDir = *it + appName + "/icons/" + name;
-            if (QFile::exists( cDir )) {
+            if (QDir( cDir ).exists()) {
                 themeDirs += cDir + '/';
             }
         }
