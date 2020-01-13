@@ -116,6 +116,8 @@ void KXmlGuiWindow::setupToolbarMenuActions()
 KXmlGuiWindow::~KXmlGuiWindow()
 {
     K_D(KXmlGuiWindow);
+    if (d->toolBarHandler)
+        d->toolBarHandler->deleteLater();
     delete d->factory;
 }
 
