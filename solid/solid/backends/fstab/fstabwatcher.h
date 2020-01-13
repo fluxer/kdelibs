@@ -48,10 +48,8 @@ namespace Fstab
 
     private Q_SLOTS:
         void onFileChanged(const QString &path);
-        void orphanFileSystemWatcher();
 
     private:
-        bool m_isRoutineInstalled;
         QFileSystemWatcher *m_fileSystemWatcher;
         QSocketNotifier *m_mtabSocketNotifier;
         QFile *m_mtabFile;

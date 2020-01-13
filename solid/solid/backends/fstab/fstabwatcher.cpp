@@ -39,13 +39,8 @@ Q_GLOBAL_STATIC(FstabWatcher, globalFstabWatcher)
 #endif
 
 FstabWatcher::FstabWatcher()
-    : m_isRoutineInstalled(false)
-    , m_fileSystemWatcher(new QFileSystemWatcher(this))
+    : m_fileSystemWatcher(new QFileSystemWatcher(this))
 {
-    if (qApp) {
-        connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(orphanFileSystemWatcher()));
-    }
-
     m_mtabFile = new QFile(MTAB, this);
     if (m_mtabFile && m_mtabFile->readLink().startsWith("/proc/")
         && m_mtabFile->open(QIODevice::ReadOnly) ) {
@@ -64,37 +59,12 @@ FstabWatcher::FstabWatcher()
 
 FstabWatcher::~FstabWatcher()
 {
-    // The QFileSystemWatcher doesn't work correctly in a singleton
-    // The solution so far was to destroy the QFileSystemWatcher when the application quits
-    // But we have some crash with this solution.
-    // For the moment to workaround the problem, we detach the QFileSystemWatcher from the parent
-    // effectively leaking it on purpose.
-
-#if 0
-    //qRemovePostRoutine(globalFstabWatcher()->destroy);
-#else
-    m_fileSystemWatcher->setParent(0);
-#endif
-}
-
-void FstabWatcher::orphanFileSystemWatcher()
-{
-    m_fileSystemWatcher->setParent(0);
+    m_fileSystemWatcher->deleteLater();
 }
 
 FstabWatcher *FstabWatcher::instance()
 {
-#if 0
-    FstabWatcher *fstabWatcher = globalFstabWatcher;
-
-    if (fstabWatcher && !fstabWatcher->m_isRoutineInstalled) {
-        qAddPostRoutine(globalFstabWatcher()->destroy);
-        fstabWatcher->m_isRoutineInstalled = true;
-    }
-    return fstabWatcher;
-#else
     return globalFstabWatcher();
-#endif
 }
 
 
