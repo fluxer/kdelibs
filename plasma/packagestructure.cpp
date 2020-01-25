@@ -439,11 +439,11 @@ void PackageStructure::setPath(const QString &path)
     KUrl url(path);
     QDir dir(url.toLocalFile());
     QString basePath = dir.canonicalPath();
-    bool valid = QFileInfo(basePath).exists();
+    QFileInfo baseInfo(basePath);
+    bool valid = baseInfo.exists();
 
     if (valid) {
-        QFileInfo info(basePath);
-        if (info.isDir() && !basePath.endsWith('/')) {
+        if (baseInfo.isDir() && !basePath.endsWith('/')) {
             basePath.append('/');
         }
         //kDebug() << "basePath is" << basePath;
