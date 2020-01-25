@@ -168,9 +168,6 @@ static bool s_fullscreen = false;
         } \
     }
 
-// QVariant cannot be constructed from WId type
-typedef quintptr WIdType;
-
 // the video decoder may run into its own thread, make sure that does not cause trouble
 #if defined(HAVE_MPV) && defined(Q_WS_X11)
 static int kmp_x11_init_threads() {
@@ -509,11 +506,12 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
     if (d->m_handle) {
         mpv_set_wakeup_callback(d->m_handle, wakeup_media, this);
 
+        // QVariant cannot be constructed from WId type and the actual WId type is ulong
         QVariant wid;
         if (parent) {
-            wid = QVariant::fromValue(static_cast<WIdType>(parent->winId()));
+            wid = QVariant::fromValue(qlonglong(quintptr(parent->winId())));
         } else {
-            wid = QVariant::fromValue(static_cast<WIdType>(winId()));
+            wid = QVariant::fromValue(qlonglong(quintptr(winId())));
         }
         if (wid.isValid()) {
             setOption("wid", wid);
