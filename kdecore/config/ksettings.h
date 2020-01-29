@@ -61,7 +61,7 @@ public:
      *                     to influence the values returned by this object.  See OpenFlags for
      *                     more details.
      */
-    KSettings(const QString &file, const OpenFlags mode, QObject *parent = Q_NULLPTR);
+    KSettings(const QString &file, const OpenFlags mode, QObject *parent = 0);
 
     ~KSettings();
 
