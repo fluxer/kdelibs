@@ -25,19 +25,25 @@
 include(FindPackageHandleStandardArgs)
 
 find_package(PkgConfig)
-pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
-
+set(DBUSMENU_QT_NAMES dbusmenu-qt dbusmenu-qtd)
+if(WITH_KATIE)
+    pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-katie)
+    set(DBUSMENU_QT_NAMES dbusmenu-katie ${DBUSMENU_QT_NAMES})
+endif()
+if(NOT PC_DBUSMENUQT_FOUND)
+    pkg_check_modules(PC_DBUSMENUQT QUIET dbusmenu-qt)
+endif()
 
 set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
 
 find_library(DBUSMENUQT_LIBRARIES
-    NAMES dbusmenu-qt dbusmenu-qtd
+    NAMES ${DBUSMENU_QT_NAMES}
     HINTS ${PC_DBUSMENUQT_LIBDIR} ${PC_DBUSMENUQT_LIBRARY_DIRS}
     )
 
 find_path(DBUSMENUQT_INCLUDE_DIR dbusmenuexporter.h
     HINTS ${PC_DBUSMENUQT_INCLUDEDIR} ${PC_DBUSMENUQT_INCLUDE_DIRS}
-    PATH_SUFFIXES dbusmenu-qt
+    PATH_SUFFIXES ${DBUSMENU_QT_NAMES}
     )
 
 
