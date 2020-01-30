@@ -179,7 +179,6 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
         return;
     }
     Q_PRIVATE_SLOT(d,void slotDataChangeStarted())
-    Q_PRIVATE_SLOT(d,void slotDataChangeFinished())
     d->m_urls.clear();
     foreach (const KFileItem& item, items) {
         const KUrl url = item.url();
@@ -188,6 +187,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
         }
     }
     d->readMetadata();
+    Q_PRIVATE_SLOT(d,void slotDataChangeFinished())
 }
 
 QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
