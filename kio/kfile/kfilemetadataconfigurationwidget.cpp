@@ -82,9 +82,9 @@ KFileMetaDataConfigurationWidget::Private::~Private()
 
 void KFileMetaDataConfigurationWidget::Private::loadMetaData()
 {
-    m_provider->setItems(m_fileItems);
     connect(m_provider, SIGNAL(loadingFinished()),
             q, SLOT(slotLoadingFinished()));
+    m_provider->setItems(m_fileItems);
 }
 
 void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
