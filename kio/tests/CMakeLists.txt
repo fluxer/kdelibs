@@ -67,7 +67,7 @@ target_link_libraries(kfstest ${KDE4_KIO_LIBS})
 
 ########### kfilemetainfotest ###############
 
-if(STRIGI_FOUND)
+if(NOT KIO_NO_STRIGI)
     kde4_add_test(kio-kfilemetainfotest kfilemetainfotest.cpp)
     target_link_libraries(kio-kfilemetainfotest ${KDE4_KIO_LIBS} ${QT_QTTEST_LIBRARY})
 endif()

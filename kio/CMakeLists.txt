@@ -1,6 +1,6 @@
 project(kio)
 
-if(NOT STRIGI_FOUND)
+if(NOT Strigi_FOUND)
     set(KIO_NO_STRIGI TRUE)
 endif()
 
@@ -45,9 +45,9 @@ add_subdirectory(misc)
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
-if(STRIGI_FOUND)
+if(NOT KIO_NO_STRIGI)
     add_subdirectory(kio/dummyanalyzers)
-endif(STRIGI_FOUND)
+endif()
 
 set(kiocore_STAT_SRCS
     kio/accessmanager.cpp
