@@ -204,6 +204,9 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
     const QList<KUrl> keys = sortedKeys(data);
     foreach (const KUrl& key, keys) {
         const QVariant value = data[key];
+        if (value.toString().isEmpty()) {
+            continue;
+        }
         QString itemLabel = m_provider->label(key);
         itemLabel.append(QLatin1Char(':'));
 
