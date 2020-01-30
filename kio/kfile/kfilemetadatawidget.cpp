@@ -96,6 +96,7 @@ KFileMetaDataWidget::Private::Private(KFileMetaDataWidget* parent) :
 
 KFileMetaDataWidget::Private::~Private()
 {
+    deleteRows();
 }
 
 void KFileMetaDataWidget::Private::initMetaInfoSettings()
