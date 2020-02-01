@@ -15,6 +15,8 @@ include_directories(
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kio
     ${KDE4_KDEUI_INCLUDES}
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 set(kdeclarative_LIB_SRCS

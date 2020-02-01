@@ -22,7 +22,7 @@
 #include <QDeclarativeContext>
 #include <QScriptEngine>
 
-#include <kdeclarative.h>
+#include "kdeclarative.h"
 
 #include "testobject_p.h"
 

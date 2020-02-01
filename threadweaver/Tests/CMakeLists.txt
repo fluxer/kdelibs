@@ -3,6 +3,7 @@ include_directories(
     ${QT_QTCORE_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${KDE4_KDECORE_INCLUDES}
     ../Weaver
 )
 

@@ -25,6 +25,7 @@ include_directories(
     widgets
     windowmanagement
     xmlgui
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/util
 )
 

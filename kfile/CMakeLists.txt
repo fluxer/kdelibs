@@ -4,6 +4,7 @@ include_directories(
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_SOURCE_DIR}/solid
     ${CMAKE_BINARY_DIR}/solid
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 if(ENABLE_TESTING)
