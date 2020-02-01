@@ -31,6 +31,8 @@
 
 #include "kioslavetest.h"
 
+#include <sys/stat.h>
+
 using namespace KIO;
 
 KioslaveTest::KioslaveTest( QString src, QString dest, uint op, uint pr )
