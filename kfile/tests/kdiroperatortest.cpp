@@ -84,10 +84,12 @@ private Q_SLOTS:
 
         KDirOperator dirOp(kFileDirUrl);
         dirOp.setView(KFile::DetailTree);
-        QTest::kWaitForSignal(dirOp.dirLister(), SIGNAL(completed()));
+        QTest::qWait(3000);
+        QVERIFY(dirOp.dirLister()->isFinished());
         dirOp.setCurrentItem("file:///");
         dirOp.setCurrentItem(KDESRCDIR "kdiroperatortest.cpp");
-        QTest::kWaitForSignal(dirOp.dirLister(), SIGNAL(completed()));
+        QTest::qWait(3000);
+        QVERIFY(dirOp.dirLister()->isFinished());
     }
 };
 
