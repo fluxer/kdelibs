@@ -538,7 +538,7 @@ void KLocalePrivate::initFormat()
 
     //Grammatical
     //Precedence here is l10n / i18n / config file
-    KConfig langCfg(KStandardDirs::locate("locale", QString::fromLatin1("%1/entry.desktop").arg(m_language)));
+    KConfig langCfg(KStandardDirs::locate("locale", QString::fromLatin1("l10n/%1/entry.desktop").arg(m_language)));
     KConfigGroup lang(&langCfg, "KCM Locale");
 #define read3ConfigBoolEntry(key, default, save) \
         save = entry.readEntry(key, default); \
@@ -2897,7 +2897,7 @@ QStringList KLocalePrivate::allLanguagesList()
 QStringList KLocalePrivate::installedLanguages()
 {
     QStringList languages;
-    QStringList paths = KGlobal::dirs()->findAllResources("locale", QLatin1String("*/entry.desktop"));
+    QStringList paths = KGlobal::dirs()->findAllResources("locale", QLatin1String("l10n/*/entry.desktop"));
     foreach (const QString &path, paths) {
         QString part = path.left(path.length() - 14);
         languages.append(part.mid(part.lastIndexOf(QLatin1Char('/')) + 1));

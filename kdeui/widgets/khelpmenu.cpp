@@ -154,7 +154,7 @@ void KHelpMenuPrivate::createActions(KHelpMenu* q)
         mReportBugAction = KStandardAction::reportBug(q, SLOT(reportBug()), q);
     }
 
-    if((KGlobal::dirs()->findAllResources("locale", QString::fromLatin1("*/entry.desktop"))).count() > 0) {
+    if((KGlobal::dirs()->findAllResources("locale", QString::fromLatin1("l10n/*/entry.desktop"))).count() > 0) {
         mSwitchApplicationLanguageAction = KStandardAction::create(KStandardAction::SwitchApplicationLanguage, q, SLOT(switchApplicationLanguage()), q);
     }
 

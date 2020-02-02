@@ -165,7 +165,7 @@ void KLanguageButton::insertSeparator( int index )
 void KLanguageButton::loadAllLanguages()
 {
   QStringList langlist = KGlobal::dirs()->findAllResources("locale",
-                                  QString::fromLatin1("*/entry.desktop"));
+                                  QString::fromLatin1("l10n/*/entry.desktop"));
   langlist.sort();
   for (int i = 0, count = langlist.count(); i < count; ++i)
   {
