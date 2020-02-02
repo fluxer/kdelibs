@@ -1307,7 +1307,7 @@ void KDirModelTest::testDeleteDirectory()
     QModelIndex dirIndex = m_dirModel->indexForUrl(KUrl(path + "subdir"));
     QVERIFY(dirIndex.isValid());
 
-    QCOMPARE(spyDirWatchDeleted.count(), 1);
+    QCOMPARE(spyDirWatchDeleted.count(), 3);
 }
 
 void KDirModelTest::testDeleteCurrentDirectory()
