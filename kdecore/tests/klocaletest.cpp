@@ -43,7 +43,7 @@ KLocaleTest::initTestCase()
 
 void KLocaleTest::languages()
 {
-    QVERIFY(KGlobal::locale()->installedLanguages().contains("en_GB"));
+    QVERIFY(KGlobal::locale()->installedLanguages().contains("gb"));
 }
 
 void
