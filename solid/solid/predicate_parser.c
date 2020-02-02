@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.5.  */
+/* A Bison parser, made by GNU Bison 3.3.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -40,11 +41,14 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
+
 /* Identify Bison output.  */
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.5"
+#define YYBISON_VERSION "3.3.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -67,8 +71,8 @@
 #define yynerrs         Solidnerrs
 
 
-/* Copy the first part of user declarations.  */
-#line 1 "predicate_parser.y" /* yacc.c:339  */
+/* First part of user prologue.  */
+#line 1 "predicate_parser.y" /* yacc.c:337  */
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -88,13 +92,16 @@ void PredicateParse_initLexer( const char *s, yyscan_t scanner );
 void PredicateParse_mainParse( const char *_code );
 
 
-#line 92 "predicate_parser.c" /* yacc.c:339  */
-
+#line 96 "predicate_parser.c" /* yacc.c:337  */
 # ifndef YY_NULLPTR
-#  if defined __cplusplus && 201103L <= __cplusplus
-#   define YY_NULLPTR nullptr
+#  if defined __cplusplus
+#   if 201103L <= __cplusplus
+#    define YY_NULLPTR nullptr
+#   else
+#    define YY_NULLPTR 0
+#   endif
 #  else
-#   define YY_NULLPTR 0
+#   define YY_NULLPTR ((void*)0)
 #  endif
 # endif
 
@@ -141,7 +148,7 @@ extern int Soliddebug;
 
 union YYSTYPE
 {
-#line 22 "predicate_parser.y" /* yacc.c:355  */
+#line 22 "predicate_parser.y" /* yacc.c:352  */
 
      char valb;
      int vali;
@@ -149,7 +156,7 @@ union YYSTYPE
      char *name;
      void *ptr;
 
-#line 153 "predicate_parser.c" /* yacc.c:355  */
+#line 160 "predicate_parser.c" /* yacc.c:352  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -163,9 +170,7 @@ int Solidparse (void *_scanner);
 
 #endif /* !YY_SOLID_PREDICATE_PARSER_H_INCLUDED  */
 
-/* Copy the second part of user declarations.  */
 
-#line 169 "predicate_parser.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -186,13 +191,13 @@ typedef signed char yytype_int8;
 #ifdef YYTYPE_UINT16
 typedef YYTYPE_UINT16 yytype_uint16;
 #else
-typedef unsigned short int yytype_uint16;
+typedef unsigned short yytype_uint16;
 #endif
 
 #ifdef YYTYPE_INT16
 typedef YYTYPE_INT16 yytype_int16;
 #else
-typedef short int yytype_int16;
+typedef short yytype_int16;
 #endif
 
 #ifndef YYSIZE_T
@@ -204,7 +209,7 @@ typedef short int yytype_int16;
 #  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYSIZE_T size_t
 # else
-#  define YYSIZE_T unsigned int
+#  define YYSIZE_T unsigned
 # endif
 #endif
 
@@ -240,15 +245,6 @@ typedef short int yytype_int16;
 # define YY_ATTRIBUTE_UNUSED YY_ATTRIBUTE ((__unused__))
 #endif
 
-#if !defined _Noreturn \
-     && (!defined __STDC_VERSION__ || __STDC_VERSION__ < 201112)
-# if defined _MSC_VER && 1200 <= _MSC_VER
-#  define _Noreturn __declspec (noreturn)
-# else
-#  define _Noreturn YY_ATTRIBUTE ((__noreturn__))
-# endif
-#endif
-
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
 # define YYUSE(E) ((void) (E))
@@ -256,7 +252,7 @@ typedef short int yytype_int16;
 # define YYUSE(E) /* empty */
 #endif
 
-#if defined __GNUC__ && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
+#if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
 /* Suppress an incorrect diagnostic about yylval being uninitialized.  */
 # define YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN \
     _Pragma ("GCC diagnostic push") \
@@ -418,16 +414,16 @@ union yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  34
 
-/* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
-   by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
 #define YYMAXUTOK   267
 
+/* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
+   as returned by yylex, with out-of-bounds checking.  */
 #define YYTRANSLATE(YYX)                                                \
-  ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
+  ((unsigned) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
-   as returned by yylex, without out-of-bounds checking.  */
+   as returned by yylex.  */
 static const yytype_uint8 yytranslate[] =
 {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -588,22 +584,22 @@ static const yytype_uint8 yyr2[] =
 
 #define YYRECOVERING()  (!!yyerrstatus)
 
-#define YYBACKUP(Token, Value)                                  \
-do                                                              \
-  if (yychar == YYEMPTY)                                        \
-    {                                                           \
-      yychar = (Token);                                         \
-      yylval = (Value);                                         \
-      YYPOPSTACK (yylen);                                       \
-      yystate = *yyssp;                                         \
-      goto yybackup;                                            \
-    }                                                           \
-  else                                                          \
-    {                                                           \
-      yyerror (_scanner, YY_("syntax error: cannot back up")); \
-      YYERROR;                                                  \
-    }                                                           \
-while (0)
+#define YYBACKUP(Token, Value)                                    \
+  do                                                              \
+    if (yychar == YYEMPTY)                                        \
+      {                                                           \
+        yychar = (Token);                                         \
+        yylval = (Value);                                         \
+        YYPOPSTACK (yylen);                                       \
+        yystate = *yyssp;                                         \
+        goto yybackup;                                            \
+      }                                                           \
+    else                                                          \
+      {                                                           \
+        yyerror (_scanner, YY_("syntax error: cannot back up")); \
+        YYERROR;                                                  \
+      }                                                           \
+  while (0)
 
 /* Error token number */
 #define YYTERROR        1
@@ -643,38 +639,38 @@ do {                                                                      \
 } while (0)
 
 
-/*----------------------------------------.
-| Print this symbol's value on YYOUTPUT.  |
-`----------------------------------------*/
+/*-----------------------------------.
+| Print this symbol's value on YYO.  |
+`-----------------------------------*/
 
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, void *_scanner)
+yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, void *_scanner)
 {
-  FILE *yyo = yyoutput;
-  YYUSE (yyo);
+  FILE *yyoutput = yyo;
+  YYUSE (yyoutput);
   YYUSE (_scanner);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
-    YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
+    YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
 # endif
   YYUSE (yytype);
 }
 
 
-/*--------------------------------.
-| Print this symbol on YYOUTPUT.  |
-`--------------------------------*/
+/*---------------------------.
+| Print this symbol on YYO.  |
+`---------------------------*/
 
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, void *_scanner)
+yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, void *_scanner)
 {
-  YYFPRINTF (yyoutput, "%s %s (",
+  YYFPRINTF (yyo, "%s %s (",
              yytype < YYNTOKENS ? "token" : "nterm", yytname[yytype]);
 
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep, _scanner);
-  YYFPRINTF (yyoutput, ")");
+  yy_symbol_value_print (yyo, yytype, yyvaluep, _scanner);
+  YYFPRINTF (yyo, ")");
 }
 
 /*------------------------------------------------------------------.
@@ -708,7 +704,7 @@ do {                                                            \
 static void
 yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, void *_scanner)
 {
-  unsigned long int yylno = yyrline[yyrule];
+  unsigned long yylno = yyrline[yyrule];
   int yynrhs = yyr2[yyrule];
   int yyi;
   YYFPRINTF (stderr, "Reducing stack by rule %d (line %lu):\n",
@@ -719,7 +715,7 @@ yy_reduce_print (yytype_int16 *yyssp, YYSTYPE *yyvsp, int yyrule, void *_scanner
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr,
                        yystos[yyssp[yyi + 1 - yynrhs]],
-                       &(yyvsp[(yyi + 1) - (yynrhs)])
+                       &yyvsp[(yyi + 1) - (yynrhs)]
                                               , _scanner);
       YYFPRINTF (stderr, "\n");
     }
@@ -823,7 +819,10 @@ yytnamerr (char *yyres, const char *yystr)
           case '\\':
             if (*++yyp != '\\')
               goto do_not_strip_quotes;
-            /* Fall through.  */
+            else
+              goto append;
+
+          append:
           default:
             if (yyres)
               yyres[yyn] = *yyp;
@@ -841,7 +840,7 @@ yytnamerr (char *yyres, const char *yystr)
   if (! yyres)
     return yystrlen (yystr);
 
-  return yystpcpy (yyres, yystr) - yyres;
+  return (YYSIZE_T) (yystpcpy (yyres, yystr) - yyres);
 }
 # endif
 
@@ -919,10 +918,10 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
                 yyarg[yycount++] = yytname[yyx];
                 {
                   YYSIZE_T yysize1 = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
-                  if (! (yysize <= yysize1
-                         && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+                  if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+                    yysize = yysize1;
+                  else
                     return 2;
-                  yysize = yysize1;
                 }
               }
         }
@@ -946,9 +945,10 @@ yysyntax_error (YYSIZE_T *yymsg_alloc, char **yymsg,
 
   {
     YYSIZE_T yysize1 = yysize + yystrlen (yyformat);
-    if (! (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM))
+    if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
+      yysize = yysize1;
+    else
       return 2;
-    yysize = yysize1;
   }
 
   if (*yymsg_alloc < yysize)
@@ -998,30 +998,29 @@ yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, void *_scanner)
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   switch (yytype)
     {
-          case 20: /* predicate  */
-#line 54 "predicate_parser.y" /* yacc.c:1258  */
+    case 20: /* predicate  */
+#line 54 "predicate_parser.y" /* yacc.c:1257  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1005 "predicate_parser.c" /* yacc.c:1258  */
+#line 1005 "predicate_parser.c" /* yacc.c:1257  */
         break;
 
     case 21: /* predicate_atom  */
-#line 55 "predicate_parser.y" /* yacc.c:1258  */
+#line 55 "predicate_parser.y" /* yacc.c:1257  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1011 "predicate_parser.c" /* yacc.c:1258  */
+#line 1011 "predicate_parser.c" /* yacc.c:1257  */
         break;
 
     case 22: /* predicate_or  */
-#line 56 "predicate_parser.y" /* yacc.c:1258  */
+#line 56 "predicate_parser.y" /* yacc.c:1257  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1017 "predicate_parser.c" /* yacc.c:1258  */
+#line 1017 "predicate_parser.c" /* yacc.c:1257  */
         break;
 
     case 23: /* predicate_and  */
-#line 57 "predicate_parser.y" /* yacc.c:1258  */
+#line 57 "predicate_parser.y" /* yacc.c:1257  */
       { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 1023 "predicate_parser.c" /* yacc.c:1258  */
+#line 1023 "predicate_parser.c" /* yacc.c:1257  */
         break;
-
 
       default:
         break;
@@ -1108,23 +1107,31 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
   yychar = YYEMPTY; /* Cause a token to be read.  */
   goto yysetstate;
 
+
 /*------------------------------------------------------------.
-| yynewstate -- Push a new state, which is found in yystate.  |
+| yynewstate -- push a new state, which is found in yystate.  |
 `------------------------------------------------------------*/
- yynewstate:
+yynewstate:
   /* In all cases, when you get here, the value and location stacks
      have just been pushed.  So pushing a state here evens the stacks.  */
   yyssp++;
 
- yysetstate:
-  *yyssp = yystate;
+
+/*--------------------------------------------------------------------.
+| yynewstate -- set current state (the top of the stack) to yystate.  |
+`--------------------------------------------------------------------*/
+yysetstate:
+  *yyssp = (yytype_int16) yystate;
 
   if (yyss + yystacksize - 1 <= yyssp)
+#if !defined yyoverflow && !defined YYSTACK_RELOCATE
+    goto yyexhaustedlab;
+#else
     {
       /* Get the current used size of the three stacks, in elements.  */
-      YYSIZE_T yysize = yyssp - yyss + 1;
+      YYSIZE_T yysize = (YYSIZE_T) (yyssp - yyss + 1);
 
-#ifdef yyoverflow
+# if defined yyoverflow
       {
         /* Give user a chance to reallocate the stack.  Use copies of
            these so that the &'s don't force the real ones into
@@ -1140,14 +1147,10 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
                     &yyss1, yysize * sizeof (*yyssp),
                     &yyvs1, yysize * sizeof (*yyvsp),
                     &yystacksize);
-
         yyss = yyss1;
         yyvs = yyvs1;
       }
-#else /* no yyoverflow */
-# ifndef YYSTACK_RELOCATE
-      goto yyexhaustedlab;
-# else
+# else /* defined YYSTACK_RELOCATE */
       /* Extend the stack our own way.  */
       if (YYMAXDEPTH <= yystacksize)
         goto yyexhaustedlab;
@@ -1163,22 +1166,22 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
           goto yyexhaustedlab;
         YYSTACK_RELOCATE (yyss_alloc, yyss);
         YYSTACK_RELOCATE (yyvs_alloc, yyvs);
-#  undef YYSTACK_RELOCATE
+# undef YYSTACK_RELOCATE
         if (yyss1 != yyssa)
           YYSTACK_FREE (yyss1);
       }
 # endif
-#endif /* no yyoverflow */
 
       yyssp = yyss + yysize - 1;
       yyvsp = yyvs + yysize - 1;
 
       YYDPRINTF ((stderr, "Stack size increased to %lu\n",
-                  (unsigned long int) yystacksize));
+                  (unsigned long) yystacksize));
 
       if (yyss + yystacksize - 1 <= yyssp)
         YYABORT;
     }
+#endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
 
   YYDPRINTF ((stderr, "Entering state %d\n", yystate));
 
@@ -1187,11 +1190,11 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
 
   goto yybackup;
 
+
 /*-----------.
 | yybackup.  |
 `-----------*/
 yybackup:
-
   /* Do appropriate processing given the current state.  Read a
      lookahead token if we need one and don't already have one.  */
 
@@ -1264,7 +1267,7 @@ yydefault:
 
 
 /*-----------------------------.
-| yyreduce -- Do a reduction.  |
+| yyreduce -- do a reduction.  |
 `-----------------------------*/
 yyreduce:
   /* yyn is the number of a rule to reduce with.  */
@@ -1285,109 +1288,109 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 63 "predicate_parser.y" /* yacc.c:1648  */
+#line 63 "predicate_parser.y" /* yacc.c:1652  */
     { PredicateParse_setResult( (yyvsp[0].ptr) ); (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1291 "predicate_parser.c" /* yacc.c:1648  */
+#line 1294 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 3:
-#line 64 "predicate_parser.y" /* yacc.c:1648  */
+#line 64 "predicate_parser.y" /* yacc.c:1652  */
     { PredicateParse_setResult( (yyvsp[-1].ptr) ); (yyval.ptr) = (yyvsp[-1].ptr); }
-#line 1297 "predicate_parser.c" /* yacc.c:1648  */
+#line 1300 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 4:
-#line 65 "predicate_parser.y" /* yacc.c:1648  */
+#line 65 "predicate_parser.y" /* yacc.c:1652  */
     { PredicateParse_setResult( (yyvsp[-1].ptr) ); (yyval.ptr) = (yyvsp[-1].ptr); }
-#line 1303 "predicate_parser.c" /* yacc.c:1648  */
+#line 1306 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 5:
-#line 67 "predicate_parser.y" /* yacc.c:1648  */
+#line 67 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newAtom( (yyvsp[-4].name), (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1309 "predicate_parser.c" /* yacc.c:1648  */
+#line 1312 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 6:
-#line 68 "predicate_parser.y" /* yacc.c:1648  */
+#line 68 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newMaskAtom( (yyvsp[-4].name), (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1315 "predicate_parser.c" /* yacc.c:1648  */
+#line 1318 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 7:
-#line 69 "predicate_parser.y" /* yacc.c:1648  */
+#line 69 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newIsAtom( (yyvsp[0].name) ); }
-#line 1321 "predicate_parser.c" /* yacc.c:1648  */
+#line 1324 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 8:
-#line 71 "predicate_parser.y" /* yacc.c:1648  */
+#line 71 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newOr( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1327 "predicate_parser.c" /* yacc.c:1648  */
+#line 1330 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 9:
-#line 73 "predicate_parser.y" /* yacc.c:1648  */
+#line 73 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newAnd( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1333 "predicate_parser.c" /* yacc.c:1648  */
+#line 1336 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 10:
-#line 75 "predicate_parser.y" /* yacc.c:1648  */
+#line 75 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newStringValue( (yyvsp[0].name) ); }
-#line 1339 "predicate_parser.c" /* yacc.c:1648  */
+#line 1342 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 11:
-#line 76 "predicate_parser.y" /* yacc.c:1648  */
+#line 76 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newBoolValue( (yyvsp[0].valb) ); }
-#line 1345 "predicate_parser.c" /* yacc.c:1648  */
+#line 1348 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 12:
-#line 77 "predicate_parser.y" /* yacc.c:1648  */
+#line 77 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newNumValue( (yyvsp[0].vali) ); }
-#line 1351 "predicate_parser.c" /* yacc.c:1648  */
+#line 1354 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 13:
-#line 78 "predicate_parser.y" /* yacc.c:1648  */
+#line 78 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newDoubleValue( (yyvsp[0].vald) ); }
-#line 1357 "predicate_parser.c" /* yacc.c:1648  */
+#line 1360 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 14:
-#line 79 "predicate_parser.y" /* yacc.c:1648  */
+#line 79 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1363 "predicate_parser.c" /* yacc.c:1648  */
+#line 1366 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 15:
-#line 81 "predicate_parser.y" /* yacc.c:1648  */
+#line 81 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = (yyvsp[-2].ptr); }
-#line 1369 "predicate_parser.c" /* yacc.c:1648  */
+#line 1372 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 16:
-#line 83 "predicate_parser.y" /* yacc.c:1648  */
+#line 83 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newEmptyStringListValue(); }
-#line 1375 "predicate_parser.c" /* yacc.c:1648  */
+#line 1378 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 17:
-#line 84 "predicate_parser.y" /* yacc.c:1648  */
+#line 84 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_newStringListValue( (yyvsp[0].ptr) ); }
-#line 1381 "predicate_parser.c" /* yacc.c:1648  */
+#line 1384 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
   case 18:
-#line 85 "predicate_parser.y" /* yacc.c:1648  */
+#line 85 "predicate_parser.y" /* yacc.c:1652  */
     { (yyval.ptr) = PredicateParse_appendStringListValue( (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1387 "predicate_parser.c" /* yacc.c:1648  */
+#line 1390 "predicate_parser.c" /* yacc.c:1652  */
     break;
 
 
-#line 1391 "predicate_parser.c" /* yacc.c:1648  */
+#line 1394 "predicate_parser.c" /* yacc.c:1652  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1412,14 +1415,13 @@ yyreduce:
   /* Now 'shift' the result of the reduction.  Determine what state
      that goes to, based on the state we popped back to and the rule
      number reduced by.  */
-
-  yyn = yyr1[yyn];
-
-  yystate = yypgoto[yyn - YYNTOKENS] + *yyssp;
-  if (0 <= yystate && yystate <= YYLAST && yycheck[yystate] == *yyssp)
-    yystate = yytable[yystate];
-  else
-    yystate = yydefgoto[yyn - YYNTOKENS];
+  {
+    const int yylhs = yyr1[yyn] - YYNTOKENS;
+    const int yyi = yypgoto[yylhs] + *yyssp;
+    yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyssp
+               ? yytable[yyi]
+               : yydefgoto[yylhs]);
+  }
 
   goto yynewstate;
 
@@ -1502,12 +1504,10 @@ yyerrlab:
 | yyerrorlab -- error raised explicitly by YYERROR.  |
 `---------------------------------------------------*/
 yyerrorlab:
-
-  /* Pacify compilers like GCC when the user code never invokes
-     YYERROR and the label yyerrorlab therefore never appears in user
-     code.  */
-  if (/*CONSTCOND*/ 0)
-     goto yyerrorlab;
+  /* Pacify compilers when the user code never invokes YYERROR and the
+     label yyerrorlab therefore never appears in user code.  */
+  if (0)
+    YYERROR;
 
   /* Do not reclaim the symbols of the rule whose action triggered
      this YYERROR.  */
@@ -1569,12 +1569,14 @@ yyacceptlab:
   yyresult = 0;
   goto yyreturn;
 
+
 /*-----------------------------------.
 | yyabortlab -- YYABORT comes here.  |
 `-----------------------------------*/
 yyabortlab:
   yyresult = 1;
   goto yyreturn;
+
 
 #if !defined yyoverflow || YYERROR_VERBOSE
 /*-------------------------------------------------.
@@ -1586,6 +1588,10 @@ yyexhaustedlab:
   /* Fall through.  */
 #endif
 
+
+/*-----------------------------------------------------.
+| yyreturn -- parsing is finished, return the result.  |
+`-----------------------------------------------------*/
 yyreturn:
   if (yychar != YYEMPTY)
     {
@@ -1615,7 +1621,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 87 "predicate_parser.y" /* yacc.c:1907  */
+#line 87 "predicate_parser.y" /* yacc.c:1918  */
 
 
 void Soliderror ( void *_scanner, const char *s )  /* Called by Solidparse on error */

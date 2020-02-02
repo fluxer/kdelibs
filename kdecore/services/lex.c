@@ -1,6 +1,6 @@
-#line 1 "lex.c"
+#line 2 "lex.c"
 
-#line 3 "lex.c"
+#line 4 "lex.c"
 
 #define  YY_INT_ALIGNED short int
 
@@ -725,9 +725,9 @@ int yywrap();
 int kiotraderlex(YYSTYPE * yylval, yyscan_t scanner);
 void KTraderParse_initFlex( const char *_code, yyscan_t _scanner );
 
-#line 728 "lex.c"
+#line 729 "lex.c"
 #define YY_NO_INPUT 1
-#line 730 "lex.c"
+#line 731 "lex.c"
 
 #define INITIAL 0
 
@@ -1002,7 +1002,7 @@ YY_DECL
 #line 29 "lex.l"
 
 
-#line 1005 "lex.c"
+#line 1006 "lex.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -1212,7 +1212,7 @@ YY_RULE_SETUP
 #line 71 "lex.l"
 ECHO;
 	YY_BREAK
-#line 1215 "lex.c"
+#line 1216 "lex.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

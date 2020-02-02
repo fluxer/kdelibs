@@ -1,8 +1,9 @@
-/* A Bison parser, made by GNU Bison 3.0.5.  */
+/* A Bison parser, made by GNU Bison 3.3.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2019 Free Software Foundation,
+   Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,6 +30,9 @@
 
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
+
+/* Undocumented macros, especially those whose name start with YY_,
+   are private implementation details.  Do not rely on them.  */
 
 #ifndef YY_KIOTRADER_YACC_H_INCLUDED
 # define YY_KIOTRADER_YACC_H_INCLUDED
@@ -77,7 +81,7 @@ extern int kiotraderdebug;
 
 union YYSTYPE
 {
-#line 20 "yacc.y" /* yacc.c:1910  */
+#line 20 "yacc.y" /* yacc.c:1921  */
 
      char valb;
      int vali;
@@ -85,7 +89,7 @@ union YYSTYPE
      char *name;
      void *ptr;
 
-#line 89 "yacc.h" /* yacc.c:1910  */
+#line 93 "yacc.h" /* yacc.c:1921  */
 };
 
 typedef union YYSTYPE YYSTYPE;
