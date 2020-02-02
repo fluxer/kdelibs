@@ -107,10 +107,9 @@ void ConnectionPrivate::setBackend(SocketConnectionBackend *b)
 }
 
 SocketConnectionBackend::SocketConnectionBackend(QObject *parent)
-    : QObject(parent), state(Idle), socket(0), len(-1), cmd(0),
-      signalEmitted(false)
+    : QObject(parent), state(Idle), socket(0), tcpServer(0), len(-1),
+    cmd(0), signalEmitted(false)
 {
-    //tcpServer = 0;
 }
 
 SocketConnectionBackend::~SocketConnectionBackend()
