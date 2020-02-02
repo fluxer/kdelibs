@@ -269,10 +269,12 @@ void KDebugTest::testNoMainComponentData()
     proc.setProcessEnvironment(procenv);
     proc.setReadChannel(QProcess::StandardError);
     QVERIFY(QFile::exists(KDEBINDIR "/kdecore-kdebug_qcoreapptest"));
-    QVERIFY(proc.execute(KDEBINDIR "/kdecore-kdebug_qcoreapptest") == 0);
+    proc.start(KDEBINDIR "/kdecore-kdebug_qcoreapptest");
+    proc.waitForFinished();
+    QVERIFY(proc.exitCode() == 0);
     const QByteArray allOutput = proc.readAllStandardError();
     const QList<QByteArray> receivedLines = allOutput.split('\n');
-    //qDebug() << receivedLines;
+    // qDebug() << receivedLines;
     QList<QByteArray> expectedLines;
     expectedLines << "qcoreapp_myarea main: Test debug using qcoreapp_myarea 1";
     expectedLines << "kdecore-kdebug_qcoreapptest main: Debug in area 100";
