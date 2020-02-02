@@ -55,9 +55,7 @@ QT_END_NAMESPACE
 
 // By default, unit tests get no gui.
 // Pass GUI if you use any GUI classes
-enum KDEMainFlag { NoGUI = 0, GUI = 1 }; // bitfield, next item is 2!
-Q_DECLARE_FLAGS(KDEMainFlags, KDEMainFlag)
-Q_DECLARE_OPERATORS_FOR_FLAGS(KDEMainFlags)
+enum KDEMainFlag { NoGUI = 0, GUI = 1 }; // next item is 2!
 /**
  * \short QTEST_KDEMAIN variant with additional argument for the main component name
  *
@@ -67,7 +65,7 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(KDEMainFlags)
  * This variant should not be needed in kdelibs's own unit tests.
  *
  * \param TestObject The class you use for testing.
- * \param flags one of KDEMainFlag. This is passed to the QApplication constructor.
+ * \param flags one of KDEMainFlag.
  * \param componentName the name that will be given to the main component data.
  *
  * \see KDEMainFlag
@@ -85,8 +83,8 @@ int main(int argc, char *argv[]) \
     QFile::remove(QDir::homePath() + QString::fromLatin1("/.kde-unit-test/share/config/qttestrc"));  \
     KAboutData aboutData( QByteArray(componentName), QByteArray(), ki18n("KDE Test Program"), QByteArray("version") );  \
     KComponentData cData(&aboutData); \
-    QApplication app( argc, argv ); \
-    app.setApplicationName( QLatin1String("qttest") ); \
+    QApplication app( argc, argv, static_cast<QApplication::Type>(flags)); \
+    qApp->setApplicationName( QLatin1String("qttest") ); \
     qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
     qRegisterMetaType<KUrl::List>(); \
     TestObject tc; \
