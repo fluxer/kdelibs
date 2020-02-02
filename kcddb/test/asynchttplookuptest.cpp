@@ -64,7 +64,7 @@ void AsyncHTTPLookupTest::testLookup()
 
   // If revision doesn't match, test probably needs to be updated
   // See: http://www.freedb.org/freedb/jazz/a1107d0a for updated data
-  QCOMPARE(m_info.get("revision").toInt(), 7);
+  QCOMPARE(m_info.get("revision").toInt(), 8);
 
   QCOMPARE(m_info.get(Artist).toString(),QString("Kruder & Dorfmeister"));
   QCOMPARE(m_info.get(Title).toString(),QString("The K&D Sessions (Part One)"));
