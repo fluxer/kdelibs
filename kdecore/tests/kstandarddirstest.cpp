@@ -372,7 +372,7 @@ void KStandarddirsTest::testRestrictedResources()
     // Ensure we have a local share/apps/qttest dir
     const QString localDataDir = KStandardDirs::locateLocal("data", "qttest/");
     QVERIFY(!localDataDir.isEmpty());
-    QVERIFY(QFile::exists(localDataDir));
+    QVERIFY(QDir(localDataDir).exists());
     const QString localOtherDataDir = KStandardDirs::locateLocal("data", "other/");
     QVERIFY(!localOtherDataDir.isEmpty());
 

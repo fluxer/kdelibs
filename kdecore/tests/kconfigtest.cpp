@@ -1573,21 +1573,22 @@ void KConfigTest::testNoKdeHome()
     const QString kdeHome = QDir::homePath() + "/.kde-unit-test-does-not-exist";
     setenv("KDEHOME", QFile::encodeName( kdeHome ), 1);
     KTempDir::removeDir(kdeHome);
-    QVERIFY(!QFile::exists(kdeHome));
+    QDir kdeDir(kdeHome);
+    QVERIFY(!kdeDir.exists());
 
     // Do what kde4-config does, and ensure kdehome doesn't get created (#233892)
     KComponentData componentData("KConfigTest");
-    QVERIFY(!QFile::exists(kdeHome));
+    QVERIFY(!kdeDir.exists());
     componentData.dirs();
-    QVERIFY(!QFile::exists(kdeHome));
+    QVERIFY(!kdeDir.exists());
     componentData.config();
-    QVERIFY(!QFile::exists(kdeHome));
+    QVERIFY(!kdeDir.exists());
 
     // Now try to actually save something, see if it works.
     KConfigGroup group(componentData.config(), "Group");
     group.writeEntry("Key", "Value");
     group.sync();
-    QVERIFY(QFile::exists(kdeHome));
+    QVERIFY(kdeDir.exists());
     QVERIFY(QFile::exists(kdeHome + "/share/config/KConfigTestrc"));
 
     // Cleanup
