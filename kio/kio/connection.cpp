@@ -145,9 +145,8 @@ void SocketConnectionBackend::setSuspended(bool enable)
 
 bool SocketConnectionBackend::connectToRemote(const KUrl &url)
 {
-    Q_ASSERT(state == Idle);
+    Q_ASSERT(state == Idle || state == Listening);
     Q_ASSERT(!socket);
-    Q_ASSERT(!tcpServer);
 
     socket = new QTcpSocket(this);
     socket->connectToHost(url.host(),url.port());
@@ -388,18 +387,18 @@ bool Connection::suspended() const
 
 void Connection::connectToRemote(const QString &address)
 {
-    /*
-        establish the server to get its address if address is empty
-        for compatibilty with local mode (which is no more, but it's
-        uses are still present)
-    */
     d->setBackend(new SocketConnectionBackend(this));
-    d->backend->listenForRemote();
 
     kDebug(7017) << "Connection requested to " << address;
-    KUrl url = address;
-    if (Q_UNLIKELY(address.isEmpty() && d->backend)) {
-        kWarning(7017) << "address is empty, using address from backend";
+    KUrl url(address);
+    if (Q_UNLIKELY(url.host().isEmpty() && d->backend)) {
+        kWarning(7017) << "host address is empty, using address from backend";
+        /*
+            establish the server to get its address if address is empty
+            for compatibilty with local mode (which is no more, but its
+            uses are still present)
+        */
+        d->backend->listenForRemote();
         url = d->backend->address;
     }
 
