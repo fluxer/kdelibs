@@ -388,17 +388,17 @@ bool Connection::suspended() const
 void Connection::connectToRemote(const QString &address)
 {
     d->setBackend(new SocketConnectionBackend(this));
+    /*
+        establish the server to get its address if address is empty
+        and for compatibilty with local mode (which is no more, but its
+        uses are still present)
+    */
+    d->backend->listenForRemote();
 
     kDebug(7017) << "Connection requested to " << address;
     KUrl url(address);
     if (Q_UNLIKELY(url.host().isEmpty() && d->backend)) {
         kWarning(7017) << "host address is empty, using address from backend";
-        /*
-            establish the server to get its address if address is empty
-            for compatibilty with local mode (which is no more, but its
-            uses are still present)
-        */
-        d->backend->listenForRemote();
         url = d->backend->address;
     }
 
