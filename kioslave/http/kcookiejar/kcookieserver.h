@@ -93,7 +93,6 @@ private:
   KConfig *mConfig;
 
 private:
-  virtual int newInstance(QList<QByteArray>) { return 0; }
   bool cookieMatches(const KHttpCookie&, const QString&, const QString&, const QString&, const QString&);
   void putCookie(QStringList&, const KHttpCookie&, const QList<int>&);
   void saveCookieJar();
