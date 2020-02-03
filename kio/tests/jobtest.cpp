@@ -275,18 +275,18 @@ void JobTest::copyLocalDirectory( const QString& src, const QString& _dest, int 
     KUrl d;
     d.setPath( dest );
     if ( flags & AlreadyExists )
-        QVERIFY( QFile::exists( dest ) );
+        QVERIFY( QDir( dest ).exists() );
     else
-        QVERIFY( !QFile::exists( dest ) );
+        QVERIFY( !QDir( dest ).exists() );
 
     KIO::Job* job = KIO::copy(u, d, KIO::HideProgressInfo);
     job->setUiDelegate(0);
     bool ok = KIO::NetAccess::synchronousRun(job, 0);
     QVERIFY( ok );
-    QVERIFY( QFile::exists( dest ) );
+    QVERIFY( QDir( dest ).exists() );
     QVERIFY( QFileInfo( dest ).isDir() );
     QVERIFY( QFileInfo( dest + "/testfile" ).isFile() );
-    QVERIFY( QFile::exists( src ) ); // still there
+    QVERIFY( QDir( src ).exists() ); // still there
 
     if ( flags & AlreadyExists ) {
         dest += '/' + u.fileName();
@@ -419,7 +419,7 @@ static void moveLocalSymlink( const QString& src, const QString& dest )
 void JobTest::moveLocalDirectory( const QString& src, const QString& dest )
 {
     kDebug() << src << " " << dest;
-    QVERIFY( QFile::exists( src ) );
+    QVERIFY( QDir( src ).exists() );
     QVERIFY( QFileInfo( src ).isDir() );
     QVERIFY( QFileInfo( src + "/testfile" ).isFile() );
     QVERIFY( QFileInfo( src + "/testlink" ).isSymLink() );
@@ -432,10 +432,10 @@ void JobTest::moveLocalDirectory( const QString& src, const QString& dest )
     job->setUiDelegate( 0 );
     bool ok = KIO::NetAccess::synchronousRun(job, 0);
     QVERIFY( ok );
-    QVERIFY( QFile::exists( dest ) );
+    QVERIFY( QDir( dest).exists() );
     QVERIFY( QFileInfo( dest ).isDir() );
     QVERIFY( QFileInfo( dest + "/testfile" ).isFile() );
-    QVERIFY( !QFile::exists( src ) ); // not there anymore
+    QVERIFY( !QDir( src ).exists() ); // not there anymore
     QVERIFY( QFileInfo( dest + "/testlink" ).isSymLink() );
 }
 
@@ -516,11 +516,11 @@ void JobTest::moveDirectoryNoPermissions()
 
     // All of /etc is a bit much, so try to find something smaller:
     QString src = "/etc/fonts";
-    if ( !QFile::exists( src ) )
+    if ( !QDir( src ).exists() )
         src = "/etc";
 
     const QString dest = homeTmpDir() + "mdnp";
-    QVERIFY( QFile::exists( src ) );
+    QVERIFY( QDir( src ).exists() );
     QVERIFY( QFileInfo( src ).isDir() );
     KUrl u;
     u.setPath( src );
@@ -533,8 +533,8 @@ void JobTest::moveDirectoryNoPermissions()
     bool ok = KIO::NetAccess::synchronousRun( job, 0, 0, 0, &metaData );
     QVERIFY( !ok );
     QCOMPARE( KIO::NetAccess::lastError(), (int)KIO::ERR_ACCESS_DENIED );
-    //QVERIFY( QFile::exists( dest ) ); // see moveFileNoPermissions
-    QVERIFY( QFile::exists( src ) );
+    //QVERIFY( QDir( dest ).exists() ); // see moveFileNoPermissions
+    QVERIFY( QDir( src ).exists() );
 }
 
 void JobTest::listRecursive()
@@ -1137,20 +1137,20 @@ void JobTest::deleteSymlink(bool using_fast_path)
 
     const QString src = homeTmpDir() + "dirFromHome";
     createTestDirectory(src);
-    QVERIFY(QFile::exists(src));
+    QVERIFY(QDir(src).exists());
     const QString dest = homeTmpDir() + "/dirFromHome_link";
-    if (!QFile::exists(dest)) {
+    if (!QDir(dest).exists()) {
         // Add a symlink to a dir, to make sure we don't recurse into those
         bool symlinkOk = symlink(QFile::encodeName(src), QFile::encodeName(dest)) == 0;
         QVERIFY( symlinkOk );
-        QVERIFY(QFile::exists(dest));
+        QVERIFY(QDir(dest).exists());
     }
     KIO::Job* job = KIO::del(KUrl(dest), KIO::HideProgressInfo);
     job->setUiDelegate(0);
     bool ok = KIO::NetAccess::synchronousRun(job, 0);
     QVERIFY(ok);
-    QVERIFY(!QFile::exists(dest));
-    QVERIFY(QFile::exists(src));
+    QVERIFY(!QDir(dest).exists());
+    QVERIFY(QDir(src).exists());
 
     kio_resolve_local_urls = true;
 }
@@ -1261,10 +1261,10 @@ void JobTest::rmdirEmpty()
 {
     const QString dir = homeTmpDir() + "dir";
     QDir().mkdir(dir);
-    QVERIFY(QFile::exists(dir));
+    QVERIFY(QDir(dir).exists());
     KIO::Job* job = KIO::rmdir(dir);
     QVERIFY(job->exec());
-    QVERIFY(!QFile::exists(dir));
+    QVERIFY(!QDir(dir).exists());
 }
 
 void JobTest::rmdirNotEmpty()
@@ -1274,7 +1274,7 @@ void JobTest::rmdirNotEmpty()
     createTestDirectory(dir + "/subdir");
     KIO::Job* job = KIO::rmdir(dir);
     QVERIFY(!job->exec());
-    QVERIFY(QFile::exists(dir));
+    QVERIFY(QDir(dir).exists());
 }
 
 void JobTest::stat()
@@ -1404,7 +1404,7 @@ void JobTest::moveDestAlreadyExistsAutoRename()
         // cleanup
         KIO::Job* job = KIO::del(dir, KIO::HideProgressInfo);
         QVERIFY(job->exec());
-        QVERIFY(!QFile::exists(dir));
+        QVERIFY(!QDir(dir).exists());
     }
 }
 
@@ -1435,14 +1435,14 @@ void JobTest::moveDestAlreadyExistsAutoRename(const QString& destDir, bool moveD
 
     kDebug() << QDir(destDir).entryList();
     QVERIFY(ok);
-    QVERIFY(!QFile::exists(file1)); // it was moved
-    QVERIFY(!QFile::exists(file2)); // it was moved
-    QVERIFY(QFile::exists(existingDest1));
-    QVERIFY(QFile::exists(existingDest2));
+    QVERIFY(!QFileInfo(file1).exists()); // it was moved
+    QVERIFY(!QFileInfo(file2).exists()); // it was moved
+    QVERIFY(QFileInfo(existingDest1).exists());
+    QVERIFY(QFileInfo(existingDest2).exists());
     const QString file3 = destDir + prefix + "3";
     const QString file4 = destDir + prefix + "4";
-    QVERIFY(QFile::exists(file3));
-    QVERIFY(QFile::exists(file4));
+    QVERIFY(QFileInfo(file3).exists());
+    QVERIFY(QFileInfo(file4).exists());
     if (moveDirs) {
         QDir().rmdir(file1);
         QDir().rmdir(file2);

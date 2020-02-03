@@ -32,7 +32,7 @@
 QString homeTmpDir()
 {
     const QString dir(QFile::decodeName(getenv("KDEHOME")) + "/kiotests/");
-    if (!QFile::exists(dir)) {
+    if (!QDir(dir).exists()) {
         const bool ok = QDir().mkdir(dir);
         if ( !ok )
             kFatal() << "Couldn't create " << dir;

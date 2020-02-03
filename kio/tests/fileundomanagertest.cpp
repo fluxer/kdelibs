@@ -374,12 +374,12 @@ void FileUndoManagerTest::testRenameDir()
     bool ok = KIO::NetAccess::synchronousRun( job, 0 );
     QVERIFY( ok );
 
-    QVERIFY( !QFile::exists( srcSubDir() ) );
+    QVERIFY( !QDir( srcSubDir() ).exists() );
     QVERIFY( QFileInfo( newUrl.toLocalFile() ).isDir() );
 
     doUndo();
 
-    QVERIFY( QFile::exists( srcSubDir() ) );
+    QVERIFY( QDir( srcSubDir() ).exists() );
     QVERIFY( !QFileInfo( newUrl.toLocalFile() ).isDir() );
 }
 
@@ -387,14 +387,14 @@ void FileUndoManagerTest::testCreateDir()
 {
     const KUrl url( srcSubDir() + ".mkdir" );
     const QString path = url.toLocalFile();
-    QVERIFY( !QFile::exists(path) );
+    QVERIFY( !QDir(path).exists() );
 
     KIO::SimpleJob* job = KIO::mkdir(url);
     job->setUiDelegate( 0 );
     FileUndoManager::self()->recordJob( FileUndoManager::Mkdir, KUrl(), url, job );
     bool ok = KIO::NetAccess::synchronousRun( job, 0 );
     QVERIFY( ok );
-    QVERIFY( QFile::exists(path) );
+    QVERIFY( QDir(path).exists() );
     QVERIFY( QFileInfo(path).isDir() );
 
     m_uiInterface->clear();
@@ -402,7 +402,7 @@ void FileUndoManagerTest::testCreateDir()
     FileUndoManager::self()->undo();
     QCOMPARE( m_uiInterface->files().count(), 1 ); // confirmDeletion was called
     QCOMPARE( m_uiInterface->files()[0].url(), url.url() );
-    QVERIFY( QFile::exists(path) ); // nothing happened yet
+    QVERIFY( QDir(path).exists() ); // nothing happened yet
 
     // OK, now do it
     m_uiInterface->clear();
@@ -430,7 +430,7 @@ void FileUndoManagerTest::testTrashFiles()
     // Check that things got removed
     QVERIFY( !QFile::exists( srcFile() ) );
     QVERIFY( !QFileInfo( srcLink() ).isSymLink() );
-    QVERIFY( !QFile::exists( srcSubDir() ) );
+    QVERIFY( !QDir( srcSubDir() ).exists() );
 
     // check trash?
     // Let's just check that it's not empty. kio_trash has its own unit tests anyway.
@@ -442,7 +442,7 @@ void FileUndoManagerTest::testTrashFiles()
 
     QVERIFY( QFile::exists( srcFile() ) );
     QVERIFY( QFileInfo( srcLink() ).isSymLink() );
-    QVERIFY( QFile::exists( srcSubDir() ) );
+    QVERIFY( QDir( srcSubDir() ).exists() );
 
     // We can't check that the trash is empty; other partitions might have their own trash
 }
