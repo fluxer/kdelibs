@@ -51,13 +51,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-localization.h
 )
 
-# Configure checks for util
-include(util/ConfigureChecks.cmake)
-configure_file(
-    util/config-util.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/config-util.h
-)
-
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}

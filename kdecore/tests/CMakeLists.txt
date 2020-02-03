@@ -70,7 +70,6 @@ KDECORE_EXECUTABLE_TESTS(
     kziptest
     kdebugtest
     kcmdlineargstest
-    kmemtest
     dbuscalltest
     startserviceby
     klockfile_testlock # helper for klockfiletest
