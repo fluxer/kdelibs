@@ -608,15 +608,15 @@ void KApplication::saveState( QSessionManager& sm )
 
     if ( !d->bSessionManagement ) {
         sm.setRestartHint( QSessionManager::RestartNever );
-    d->session_save = false;
+        d->session_save = false;
         return;
+    } else {
+        sm.setRestartHint( QSessionManager::RestartIfRunning );
     }
-    else
-    sm.setRestartHint( QSessionManager::RestartIfRunning );
 
     if ( firstTime ) {
         firstTime = false;
-    d->session_save = false;
+        d->session_save = false;
         return; // no need to save the state.
     }
 
@@ -669,7 +669,7 @@ void KApplication::saveState( QSessionManager& sm )
         discard  << QLatin1String("rm") << KStandardDirs::locateLocal("config", d->sessionConfigName());
         sm.setDiscardCommand( discard );
     } else {
-    sm.setDiscardCommand( QStringList( QLatin1String("") ) );
+        sm.setDiscardCommand( QStringList( QLatin1String("") ) );
     }
 
     if ( canceled )
