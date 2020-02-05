@@ -68,7 +68,6 @@ set(cmakeFiles
     FindMPFR.cmake
     FindMtp.cmake
     FindMusicBrainz5.cmake
-    FindMusicBrainz.cmake
     FindMySQL.cmake
     FindNetworkManager.cmake
     FindOpenEXR.cmake
