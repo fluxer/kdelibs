@@ -14,65 +14,76 @@
 
 if(GSSAPI_LIBS AND GSSAPI_FLAVOR)
 
-  # in cache already
-  set(GSSAPI_FOUND TRUE)
+    # in cache already
+    set(GSSAPI_FOUND TRUE)
 
 else(GSSAPI_LIBS AND GSSAPI_FLAVOR)
 
-  find_program(KRB5_CONFIG NAMES krb5-config PATHS
-     /opt/local/bin
-     ONLY_CMAKE_FIND_ROOT_PATH               # this is required when cross compiling with cmake 2.6 and ignored with cmake 2.4, Alex
-  )
-  mark_as_advanced(KRB5_CONFIG)
-  
-  #reset vars
-  set(GSSAPI_INCS)
-  set(GSSAPI_LIBS)
-  set(GSSAPI_FLAVOR)
-  
-  if(KRB5_CONFIG)
-  
-    set(HAVE_KRB5_GSSAPI TRUE)
-    exec_program(${KRB5_CONFIG} ARGS --libs gssapi RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GSSAPI_LIBS)
-    if(_return_VALUE)
-      message(STATUS "GSSAPI configure check failed.")
-      set(HAVE_KRB5_GSSAPI FALSE)
-    endif(_return_VALUE)
-  
-    exec_program(${KRB5_CONFIG} ARGS --cflags gssapi RETURN_VALUE _return_VALUE OUTPUT_VARIABLE GSSAPI_INCS)
-    string(REGEX REPLACE "(\r?\n)+$" "" GSSAPI_INCS "${GSSAPI_INCS}")
-    string(REGEX REPLACE " *-I" ";" GSSAPI_INCS "${GSSAPI_INCS}")
+    find_program(KRB5_CONFIG
+        NAMES krb5-config krb5-config.mit
+        PATHS /opt/local/bin
+    )
+    mark_as_advanced(KRB5_CONFIG)
 
-    exec_program(${KRB5_CONFIG} ARGS --vendor RETURN_VALUE _return_VALUE OUTPUT_VARIABLE gssapi_flavor_tmp)
-    set(GSSAPI_FLAVOR_MIT)
-    if(gssapi_flavor_tmp MATCHES ".*Massachusetts.*")
-      set(GSSAPI_FLAVOR "MIT")
-    else(gssapi_flavor_tmp MATCHES ".*Massachusetts.*")
-      set(GSSAPI_FLAVOR "HEIMDAL")
-    endif(gssapi_flavor_tmp MATCHES ".*Massachusetts.*")
+    #reset vars
+    set(GSSAPI_INCS)
+    set(GSSAPI_LIBS)
+    set(GSSAPI_FLAVOR)
   
-    if(NOT HAVE_KRB5_GSSAPI)
-      if (gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
-         message(STATUS "Solaris Kerberos does not have GSSAPI; this is normal.")
-         set(GSSAPI_LIBS)
-         set(GSSAPI_INCS)
-      else(gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
-         message(WARNING "${KRB5_CONFIG} failed unexpectedly.")
-      endif(gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
-    endif(NOT HAVE_KRB5_GSSAPI)
-
-    if(GSSAPI_LIBS) # GSSAPI_INCS can be also empty, so don't rely on that
-      set(GSSAPI_FOUND TRUE)
-      message(STATUS "Found GSSAPI: ${GSSAPI_LIBS}")
-
-      set(GSSAPI_INCS ${GSSAPI_INCS})
-      set(GSSAPI_LIBS ${GSSAPI_LIBS})
-      set(GSSAPI_FLAVOR ${GSSAPI_FLAVOR})
-
-      mark_as_advanced(GSSAPI_INCS GSSAPI_LIBS GSSAPI_FLAVOR)
-
-    endif(GSSAPI_LIBS)
+    if(KRB5_CONFIG)
   
-  endif(KRB5_CONFIG)
+        set(HAVE_KRB5_GSSAPI TRUE)
+        execute_process(
+            COMMAND ${KRB5_CONFIG} --libs gssapi
+            RESULT_VARIABLE _return_VALUE
+            OUTPUT_VARIABLE GSSAPI_LIBS
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        if(_return_VALUE)
+            message(STATUS "GSSAPI configure check failed.")
+            set(HAVE_KRB5_GSSAPI FALSE)
+        endif(_return_VALUE)
+  
+        execute_process(
+            COMMAND ${KRB5_CONFIG} --cflags gssapi
+            RESULT_VARIABLE _return_VALUE
+            OUTPUT_VARIABLE GSSAPI_INCS
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        string(REGEX REPLACE "-I" "" GSSAPI_INCS "${GSSAPI_INCS}")
+        string(REGEX REPLACE "-isystem" "" GSSAPI_INCS "${GSSAPI_INCS}")
+
+        execute_process(
+            COMMAND ${KRB5_CONFIG} --vendor
+            RESULT_VARIABLE _return_VALUE
+            OUTPUT_VARIABLE gssapi_flavor_tmp
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(GSSAPI_FLAVOR_MIT)
+        if(gssapi_flavor_tmp MATCHES ".*Massachusetts.*")
+            set(GSSAPI_FLAVOR "MIT")
+        else(gssapi_flavor_tmp MATCHES ".*Massachusetts.*")
+            set(GSSAPI_FLAVOR "HEIMDAL")
+        endif(gssapi_flavor_tmp MATCHES ".*Massachusetts.*")
+  
+        if(NOT HAVE_KRB5_GSSAPI)
+            if (gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
+                message(STATUS "Solaris Kerberos does not have GSSAPI; this is normal.")
+                set(GSSAPI_LIBS)
+                set(GSSAPI_INCS)
+            else(gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
+                message(WARNING "${KRB5_CONFIG} failed unexpectedly.")
+            endif(gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
+        endif(NOT HAVE_KRB5_GSSAPI)
+
+        if(GSSAPI_LIBS) # GSSAPI_INCS can be also empty, so don't rely on that
+            set(GSSAPI_FOUND TRUE)
+            message(STATUS "Found GSSAPI: ${GSSAPI_LIBS}")
+
+            mark_as_advanced(GSSAPI_INCS GSSAPI_LIBS GSSAPI_FLAVOR)
+
+        endif(GSSAPI_LIBS)
+  
+    endif(KRB5_CONFIG)
 
 endif(GSSAPI_LIBS AND GSSAPI_FLAVOR)
