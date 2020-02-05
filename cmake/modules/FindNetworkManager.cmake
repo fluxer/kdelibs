@@ -16,30 +16,43 @@
 
 
 IF (NETWORKMANAGER_INCLUDE_DIRS AND NM-UTIL_INCLUDE_DIRS AND NM-GLIB_INCLUDE_DIRS)
-   # in cache already
-   SET(NetworkManager_FIND_QUIETLY TRUE)
+    # in cache already
+    SET(NetworkManager_FIND_QUIETLY TRUE)
 ENDIF ()
 
-IF (NOT WIN32)
-   # use pkg-config to get the directories and then use these values
-   # in the FIND_PATH() and FIND_LIBRARY() calls
-   find_package(PkgConfig)
-   PKG_SEARCH_MODULE( NETWORKMANAGER NetworkManager )
-   PKG_SEARCH_MODULE( NM-UTIL libnm-util )
-   PKG_SEARCH_MODULE( NM-GLIB libnm-glib )
-ENDIF (NOT WIN32)
+PKG_SEARCH_MODULE(NETWORKMANAGER libnm)
+IF(NETWORKMANAGER_FOUND)
+    PKG_SEARCH_MODULE(GLIB2 glib-2.0)
 
-IF (NETWORKMANAGER_FOUND AND NM-UTIL_FOUND AND NM-GLIB_FOUND)
-   IF (NOT NetworkManager_FIND_QUIETLY)
-      MESSAGE(STATUS "Found NetworkManager ${NETWORKMANAGER_VERSION}: ${NETWORKMANAGER_LIBRARY_DIRS}")
-      MESSAGE(STATUS "Found libnm-util: ${NM-UTIL_LIBRARY_DIRS}")
-      MESSAGE(STATUS "Found libnm-glib: ${NM-GLIB_LIBRARY_DIRS}")
-   ENDIF (NOT NetworkManager_FIND_QUIETLY)
-ELSE ()
-   IF (NetworkManager_FIND_REQUIRED)
-      MESSAGE(FATAL_ERROR "Could NOT find NetworkManager, libnm-util or libnm-glib, check FindPkgConfig output above!")
-   ENDIF (NetworkManager_FIND_REQUIRED)
-ENDIF ()
+    SET(NM-UTIL_FOUND TRUE)
+    SET(NM-GLIB_FOUND TRUE)
+    SET(NETWORKMANAGER_INCLUDE_DIRS ${NETWORKMANAGER_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS})
+    SET(NM-UTIL_INCLUDE_DIRS ${NETWORKMANAGER_INCLUDE_DIRS})
+    SET(NM-GLIB_INCLUDE_DIRS ${NETWORKMANAGER_INCLUDE_DIRS})
+
+    IF (NOT NetworkManager_FIND_QUIETLY)
+        MESSAGE(STATUS "Found NetworkManager ${NETWORKMANAGER_VERSION}: ${NETWORKMANAGER_INCLUDE_DIRS}")
+    ENDIF()
+ELSE()
+    # use pkg-config to get the directories and then use these values
+    # in the FIND_PATH() and FIND_LIBRARY() calls
+    find_package(PkgConfig)
+    PKG_SEARCH_MODULE( NETWORKMANAGER NetworkManager )
+    PKG_SEARCH_MODULE( NM-UTIL libnm-util )
+    PKG_SEARCH_MODULE( NM-GLIB libnm-glib )
+
+    IF(NETWORKMANAGER_FOUND AND NM-UTIL_FOUND AND NM-GLIB_FOUND)
+        IF (NOT NetworkManager_FIND_QUIETLY)
+            MESSAGE(STATUS "Found NetworkManager ${NETWORKMANAGER_VERSION}: ${NETWORKMANAGER_LIBRARY_DIRS}")
+            MESSAGE(STATUS "Found libnm-util: ${NM-UTIL_LIBRARY_DIRS}")
+            MESSAGE(STATUS "Found libnm-glib: ${NM-GLIB_LIBRARY_DIRS}")
+        ENDIF()
+    ELSE()
+        IF (NetworkManager_FIND_REQUIRED)
+            MESSAGE(FATAL_ERROR "Could NOT find NetworkManager, libnm-util or libnm-glib, check FindPkgConfig output above!")
+        ENDIF (NetworkManager_FIND_REQUIRED)
+    ENDIF()
+ENDIF()
 
 MARK_AS_ADVANCED(NETWORKMANAGER_INCLUDE_DIRS NM-UTIL_INCLUDE_DIRS NM-GLIB_INCLUDE_DIRS)
 
