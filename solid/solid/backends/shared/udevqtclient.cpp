@@ -111,7 +111,11 @@ void ClientPrivate::_uq_monitorReadyRead(int fd)
         emit q->deviceOnlined(device);
     } else  if (action == "offline") {
         emit q->deviceOfflined(device);
-    } else {
+    /*
+        bind/unbind are driver changing for device type of event, on some systems it appears to be
+        broken and doing it all the time thus ignore the actions
+    */
+    } else if (action != "bind" && action != "unbind") {
         qWarning("UdevQt: unhandled device action \"%s\"", action.constData());
     }
 }
