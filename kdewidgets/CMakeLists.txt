@@ -40,25 +40,5 @@ if(QT_QTDESIGNER_FOUND)
         TARGETS kdewidgets
         DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/designer
     )
-
-    if(QT_QTWEBKIT_FOUND)
-        include_directories(
-            ${CMAKE_SOURCE_DIR}/kdewebkit
-            ${CMAKE_BINARY_DIR}/kdewebkit
-        )
-
-        kde4_add_widget(kdewebkitwidgets_SRCS kdewebkit.widgets)
-
-        qt4_add_resources(kdewebkitwidgets_SRCS kdewebkitwidgets.qrc)
-
-        kde4_add_plugin(kdewebkitwidgets ${kdewebkitwidgets_SRCS})
-
-        target_link_libraries(kdewebkitwidgets ${KDE4_KDEWEBKIT_LIBS})
-
-        install(
-            TARGETS kdewebkitwidgets
-            DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/designer
-        )
-    endif()
 endif(QT_QTDESIGNER_FOUND)
 

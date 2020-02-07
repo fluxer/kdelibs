@@ -79,8 +79,6 @@ set(cmakeFiles
     FindPulseAudio.cmake
     FindQalculate.cmake
     FindQCA2.cmake
-    FindQImageBlitz.cmake
-    FindQJSON.cmake
     FindRAW1394.cmake
     FindSamba.cmake
     FindSane.cmake

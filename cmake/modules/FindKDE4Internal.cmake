@@ -59,7 +59,6 @@
 #  KDE4_KTEXTEDITOR_LIBRARY   - the ktexteditor library
 #  KDE4_PLASMA_LIBRARY        - the plasma library
 #  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
-#  KDE4_KDEWEBKIT_LIBRARY     - the kdewebkit library
 #  KDE4_KCDDB_LIBRARY         - the kcddb library
 #  KDE4_KDCRAW_LIBRARY        - the kdcraw library
 #  KDE4_KEXIV2_LIBRARY        - the kexiv2 library
@@ -88,7 +87,6 @@
 #  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 #  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
 #  KDE4_KUNITCONVERSION_LIBS  - the kunitconversion library and all depending libraries
-#  KDE4_KDEWEBKIT_LIBS        - the kdewebkit library and all depending libraries
 #  KDE4_KCDDB_LIBS            - the kcddb library and all depending libraries
 #  KDE4_KDCRAW_LIBS           - the kdcraw library and all depending libraries
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
@@ -273,22 +271,7 @@ if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
     set(_REQ_STRING_KDE4 REQUIRED)
 endif()
 
-#this line includes FindQt4.cmake, which searches the Qt library and headers
-# TODO: we should check here that all necessary modules of Qt have been found, e.g. QtDBus
-option(WITH_KATIE "Build against Katie instead of Qt4" ON)
-
-# TODO: once Katie goes stable make it required from const in KDEConfig if
-# kdelibs is build against it, this file may go away due to order issues
-# and be merged into KDEConfig.
-if(WITH_KATIE)
-    find_package(Katie)
-endif()
-if(NOT KATIE_FOUND)
-    # avoid the need to check WITH_KATIE in addition to KATIE_FOUND
-    set(KATIE_FOUND FALSE)
-
-    find_package(Qt4 ${_REQ_STRING_KDE4})
-endif()
+find_package(Katie ${_REQ_STRING_KDE4})
 
 # restore the original CMAKE_MODULE_PATH
 set(CMAKE_MODULE_PATH ${_kde_cmake_module_path_back})
@@ -412,7 +395,6 @@ set(_kde_libraries
     kdeclarative
     kdecore
     kdeui
-    kdewebkit
     kdnssd
     kemoticons
     kexiv2

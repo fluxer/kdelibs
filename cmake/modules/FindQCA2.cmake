@@ -10,35 +10,37 @@
 # in the FIND_PATH() and FIND_LIBRARY() calls
 
 # Copyright (c) 2006, Michael Larouche, <michael.larouche@kdemail.net>
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
+set(QCA2_NAMES qca2-katie qca2)
 
-  # in cache already
-  set(QCA2_FOUND TRUE)
+find_package(PkgConfig)
+foreach(name ${QCA2_NAMES})
+    if(NOT PC_QCA2_FOUND)
+        pkg_check_modules(PC_QCA2 QUIET ${name})
+    endif()
+endforeach()
 
-else (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
+set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS_OTHER})
 
-  if (NOT WIN32)
-    find_package(PkgConfig)
-    pkg_check_modules(PC_QCA2 QUIET qca2 qca2-katie)
-    set(QCA2_DEFINITIONS ${PC_QCA2_qca2_CFLAGS_OTHER} ${PC_QCA2_qca2-katie_CFLAGS_OTHER})
-  endif (NOT WIN32)
+find_path(QCA2_INCLUDE_DIR
+    NAMES QtCrypto
+    HINTS ${PC_QCA2_INCLUDEDIR}
+    PATH_SUFFIXES Qca-katie/QtCrypto Qca/QtCrypto QtCrypto
+)
 
-  find_library(QCA2_LIBRARIES
-                NAMES qca qca-katie
-                HINTS ${PC_QCA2_qca2_LIBDIR} ${PC_QCA2_qca2-katie_LIBRARY_DIRS}
-                )
+find_library(QCA2_LIBRARIES
+    NAMES qca-katie qca
+    HINTS ${PC_QCA2_LIBDIR}
+)
 
-  find_path(QCA2_INCLUDE_DIR QtCrypto
-            HINTS ${PC_QCA2_qca2_INCLUDEDIR} ${PC_QCA2_qca2-katie_INCLUDE_DIRS}
-            PATH_SUFFIXES QtCrypto Qca-katie/QtCrypto)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(QCA2
+    REQUIRED_VARS QCA2_LIBRARIES QCA2_INCLUDE_DIR
+    VERSION_VAR PC_QCA2_VERSION
+)
 
-  include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(QCA2  DEFAULT_MSG  QCA2_LIBRARIES QCA2_INCLUDE_DIR)
-
-  mark_as_advanced(QCA2_INCLUDE_DIR QCA2_LIBRARIES)
-
-endif (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES) 
+mark_as_advanced(QCA2_INCLUDE_DIR QCA2_LIBRARIES)

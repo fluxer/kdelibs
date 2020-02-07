@@ -407,14 +407,9 @@ install(
     KPixmapSequence
     KPixmapSequenceWidget
     KPixmapSequenceOverlayPainter
-    KGraphicsWebView
     KAudioPlayer
     KMediaPlayer
     KMediaWidget
-    KWebPage
-    KWebView
-    KWebPluginFactory
-    KWebWallet
     KPty
     KPtyDevice
     KPtyProcess
@@ -772,7 +767,6 @@ install(
     Plasma/View
     Plasma/Wallpaper
     Plasma/WallpaperScript
-    Plasma/WebView
     Plasma/WindowEffects
     DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Plasma
     COMPONENT Devel

@@ -1,13 +1,8 @@
 if(KDE_PLATFORM_FEATURE_BINARY_COMPATIBLE_FEATURE_REDUCTION)
-    set(PLASMA_NO_KDEWEBKIT TRUE)
     set(PLASMA_NO_SOLID TRUE)
     set(PLASMA_NO_KIO TRUE)
     set(PLASMA_NO_KUTILS TRUE)
     set(PLASMA_NO_GLOBAL_SHORTCUTS TRUE)
-endif()
-
-if(NOT QT_QTWEBKIT_FOUND)
-    set(PLASMA_NO_KDEWEBKIT TRUE)
 endif()
 
 include_directories(
@@ -19,17 +14,11 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/plasma/extenders
     # for the export headers
     ${CMAKE_BINARY_DIR}/kutils
-    ${CMAKE_BINARY_DIR}/kdewebkit
 )
 
 if(NOT PLASMA_NO_KIO)
    include_directories(${KDE4_KIO_INCLUDES})
    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KIO_LIBS})
-endif()
-
-if(NOT PLASMA_NO_KDEWEBKIT)
-    include_directories(${CMAKE_SOURCE_DIR}/kdewebkit/)
-    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KDEWEBKIT_LIBS})
 endif()
 
 if(NOT PLASMA_NO_SOLID)
@@ -172,15 +161,6 @@ set(plasma_LIB_SRCS
     widgets/textedit.cpp
 )
 
-if(QT_QTWEBKIT_FOUND)
-    set(plasma_LIB_SRCS
-        ${plasma_LIB_SRCS}
-        private/animablegraphicswebview.cpp
-        private/animablegraphicswebview_p.h
-        widgets/webview.cpp
-    )
-endif()
-
 kde4_add_kcfg_files(plasma_LIB_SRCS
     data/kconfigxt/libplasma-theme-global.kcfgc
 )
@@ -298,7 +278,6 @@ install(
     widgets/textbrowser.h
     widgets/treeview.h
     widgets/textedit.h
-    widgets/webview.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/widgets
     COMPONENT Devel
 )
