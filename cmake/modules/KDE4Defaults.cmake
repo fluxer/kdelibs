@@ -1,15 +1,3 @@
-# support for Dart: https://open.cdash.org/
-if(EXISTS ${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
-    include(${CMAKE_SOURCE_DIR}/CTestConfig.cmake)
-    include(CTest)
-endif()
-
-# support for easy packaging
-if(EXISTS ${CMAKE_SOURCE_DIR}/CPackConfig.cmake)
-    include(${CMAKE_SOURCE_DIR}/CPackConfig.cmake)
-    include(CPack)
-endif()
-
 # let cmake handle mocking and UI compiling
 # since cmake 2.8.6
 set(CMAKE_AUTOMOC ON)

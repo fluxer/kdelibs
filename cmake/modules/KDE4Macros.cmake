@@ -349,7 +349,7 @@ endmacro(KDE4_ADD_WIDGET)
 # system bus, and a service file for letting the helper being automatically
 # activated by the system bus.
 #
-# *WARNING* You have to install the helper in ${LIBEXEC_INSTALL_DIR} to make
+# *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to make
 # sure everything will work.
 function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
     if (_kdeBootStrapping)
@@ -361,12 +361,12 @@ function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
     configure_file(${_stubFilesDir}/dbus_policy.stub
                     ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf
-            DESTINATION ${SYSCONF_INSTALL_DIR}/dbus-1/system.d/)
+            DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/dbus-1/system.d/)
 
     configure_file(${_stubFilesDir}/dbus_service.stub
                     ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
-            DESTINATION ${DBUS_SYSTEM_SERVICES_INSTALL_DIR})
+            DESTINATION ${KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR})
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
 
 
@@ -377,7 +377,7 @@ macro(KDE4_INSTALL_TS_FILES _lang _sdir)
             get_filename_component(_subpath ${_current_TS_FILES} PATH)
             install(
                 FILES ${_current_TS_FILES}
-                DESTINATION ${LOCALE_INSTALL_DIR}/${_lang}/LC_SCRIPTS/${_subpath}
+                DESTINATION ${KDE4_LOCALE_INSTALL_DIR}/${_lang}/LC_SCRIPTS/${_subpath}
             )
         endif()
     endforeach()

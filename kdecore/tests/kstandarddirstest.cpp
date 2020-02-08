@@ -87,7 +87,7 @@ void KStandarddirsTest::testFindResource()
         QSKIP( "kdelibs not installed", SkipAll );
 
 #define EXT ""
-#define KIOSLAVE "kde4/libexec/kioslave"
+#define KIOSLAVE "/kioslave"
     const QString bin = KGlobal::dirs()->findResource( "exe", "kioslave" EXT );
     QVERIFY( !bin.isEmpty() );
     QVERIFY( bin.endsWith( KIOSLAVE ) );
@@ -232,11 +232,11 @@ void KStandarddirsTest::testFindExe()
     // findExe with a result in libexec
     const QString lnusertemp = KGlobal::dirs()->findExe( "lnusertemp" );
     QVERIFY( !lnusertemp.isEmpty() );
-    QVERIFY( lnusertemp.endsWith( "lib" KDELIBSUFF "/kde4/libexec/lnusertemp" EXT, PATH_SENSITIVITY ) );
+    QVERIFY( lnusertemp.endsWith("/lnusertemp" EXT, PATH_SENSITIVITY ) );
 
     // locate("exe") with a result in libexec
     const QString locateExeResult = KGlobal::dirs()->locate("exe", "lnusertemp");
-    QVERIFY(locateExeResult.endsWith("lib" KDELIBSUFF "/kde4/libexec/lnusertemp" EXT, PATH_SENSITIVITY));
+    QVERIFY(locateExeResult.endsWith("/lnusertemp" EXT, PATH_SENSITIVITY));
 
     // findExe with relative path
     const QString pwd = QDir::currentPath();

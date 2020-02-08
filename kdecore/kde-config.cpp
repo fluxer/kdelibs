@@ -74,7 +74,6 @@ int main(int argc, char **argv)
     options.add("expandvars",  ki18n("Left for legacy support"));
     options.add("prefix",      ki18n("Compiled in prefix for KDE libraries"));
     options.add("exec-prefix", ki18n("Compiled in exec_prefix for KDE libraries"));
-    options.add("libsuffix",   ki18n("Compiled in library path suffix"));
     options.add("localprefix", ki18n("Prefix in $HOME used to write files"));
     options.add("kde-version", ki18n("Compiled in version string for KDE libraries"));
     options.add("types",       ki18n("Available KDE resource types"));
@@ -104,14 +103,6 @@ int main(int argc, char **argv)
     if (args->isSet("exec-prefix"))
     {
         printResult(QFile::decodeName(EXEC_INSTALL_PREFIX));
-        return 0;
-    }
-
-    if (args->isSet("libsuffix"))
-    {
-        QString tmp(QFile::decodeName(KDELIBSUFF));
-        tmp.remove(QLatin1Char('"'));
-        printResult(tmp);
         return 0;
     }
 

@@ -6,10 +6,6 @@
 
 /****************************/
 
-#define KDELIBSUFF "${KDELIBSUFF}"
-
-/****************************/
-
 /* Define to 1 if you have stdio.h */
 #cmakedefine   HAVE_STDIO_H 1
 

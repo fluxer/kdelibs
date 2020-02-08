@@ -18,8 +18,6 @@ include(CheckPrototypeDefinition)
 # definitions like _GNU_SOURCE that are needed on each platform.
 set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 
-set( KDELIBSUFF ${LIB_SUFFIX} )
-
 macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore
 
 check_include_files(stdio.h       HAVE_STDIO_H)                        # various

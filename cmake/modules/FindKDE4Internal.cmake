@@ -432,35 +432,25 @@ endif()
 
 #####################  some more settings   ##########################################
 
-# If we are building ! kdelibs, check where kdelibs are installed.
-# If they are installed in a directory which contains "lib64", we default to "64" for LIB_SUFFIX,
-# so the current project will by default also go into lib64.
-# The same for lib32. Alex
-set(_Init_LIB_SUFFIX "")
-if ("${KDE4_LIB_DIR}" MATCHES lib64)
-   set(_Init_LIB_SUFFIX 64)
-endif ("${KDE4_LIB_DIR}" MATCHES lib64)
-if ("${KDE4_LIB_DIR}" MATCHES lib32)
-   set(_Init_LIB_SUFFIX 32)
-endif ("${KDE4_LIB_DIR}" MATCHES lib32)
-
 # FIXME: this should not be needed
 macro(_set_fancy variable value)
     set(${variable} "${value}")
     set(${variable} "${value}" CACHE PATH "KDE standard path variable")
+    set(KDE4_${variable} "${value}")
+    set(KDE4_${variable} "${value}" CACHE PATH "KDE standard path variable")
 endmacro()
-
-set(LIB_SUFFIX "${_Init_LIB_SUFFIX}" CACHE STRING "Define suffix of directory name (32/64)")
 
 # if bootstrap set the variablse now, otherwise they will be set by KDE4Config
 if(_kdeBootStrapping)
+    include(GNUInstallDirs)
+
     _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}")
-    _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}/share")
-    _set_fancy(BIN_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/bin")
-    _set_fancy(SBIN_INSTALL_DIR     "${EXEC_INSTALL_PREFIX}/sbin")
-    _set_fancy(LIB_INSTALL_DIR      "${EXEC_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
-    _set_fancy(LIBEXEC_INSTALL_DIR  "${LIB_INSTALL_DIR}/kde4/libexec")
-    _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_PREFIX}/include")
+    _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_FULL_DATADIR}")
+    _set_fancy(BIN_INSTALL_DIR      "${CMAKE_INSTALL_FULL_BINDIR}")
+    _set_fancy(SBIN_INSTALL_DIR     "${CMAKE_INSTALL_FULL_SBINDIR}")
+    _set_fancy(LIB_INSTALL_DIR      "${CMAKE_INSTALL_FULL_LIBDIR}")
+    _set_fancy(LIBEXEC_INSTALL_DIR  "${CMAKE_INSTALL_FULL_LIBEXECDIR}/kde4")
+    _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
 
     _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}")
     _set_fancy(IMPORTS_INSTALL_DIR      "${PLUGIN_INSTALL_DIR}/kde4/imports")
@@ -468,7 +458,7 @@ if(_kdeBootStrapping)
     _set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps")
     _set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons")
     _set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg")
-    _set_fancy(LOCALE_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/locale")
+    _set_fancy(LOCALE_INSTALL_DIR       "${CMAKE_INSTALL_FULL_LOCALEDIR}")
     _set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk")
     _set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services")
     _set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes")
@@ -481,9 +471,9 @@ if(_kdeBootStrapping)
     _set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories")
     _set_fancy(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages")
 
-    _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_PREFIX}/etc")
-    _set_fancy(MAN_INSTALL_DIR          "${SHARE_INSTALL_PREFIX}/man")
-    _set_fancy(INFO_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/info")
+    _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_FULL_SYSCONFDIR}")
+    _set_fancy(MAN_INSTALL_DIR          "${CMAKE_INSTALL_FULL_MANDIR}")
+    _set_fancy(INFO_INSTALL_DIR         "${CMAKE_INSTALL_FULL_INFODIR}")
     _set_fancy(DBUS_INTERFACES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces")
     _set_fancy(DBUS_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/services")
     _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/system-services")
@@ -502,9 +492,9 @@ endif()
 #   -everything except the development files: cmake -DCOMPONENT=Unspecified -P cmake_install.cmake
 # This can then also be used for packaging with cpack.
 set(INSTALL_TARGETS_DEFAULT_ARGS
-    RUNTIME DESTINATION "${BIN_INSTALL_DIR}"
-    LIBRARY DESTINATION "${LIB_INSTALL_DIR}"
-    ARCHIVE DESTINATION "${LIB_INSTALL_DIR}"
+    RUNTIME DESTINATION "${KDE4_BIN_INSTALL_DIR}"
+    LIBRARY DESTINATION "${KDE4_LIB_INSTALL_DIR}"
+    ARCHIVE DESTINATION "${KDE4_LIB_INSTALL_DIR}"
     COMPONENT Devel
 )
 

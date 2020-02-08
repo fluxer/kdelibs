@@ -1538,8 +1538,8 @@ void KStandardDirs::addKDEDefaults()
     }
     // end XDG_DATA_XXX
 
-
-    addResourceType("lib", 0, QLatin1String("lib" KDELIBSUFF "/"));
+    addResourceDir("lib", QLatin1String(LIB_INSTALL_DIR "/"), true);
+    addResourceDir("exe", QLatin1String(LIBEXEC_INSTALL_DIR), true );
 
     addResourceType("qtplugins", "lib", QLatin1String("plugins"));
 
@@ -1549,7 +1549,6 @@ void KStandardDirs::addKDEDefaults()
             QLatin1String(types_string + types_indices[index+1]), true);
         index+=2;
     }
-    addResourceType("exe", "lib", QLatin1String("kde4/libexec"), true );
 
     addResourceDir("home", QDir::homePath(), false);
 
