@@ -284,7 +284,6 @@ add_subdirectory( threadweaver )
 
 ################# write kdelibs package config files which will be installed #################
 
-macro_bool_to_01(HAVE_UTEMPTER KDE4_KPTY_BUILT_WITH_UTEMPTER)
 configure_file(KDE4Config.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake @ONLY)
 configure_file(KDE4Version.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake @ONLY)
 
