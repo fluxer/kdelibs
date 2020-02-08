@@ -27,7 +27,6 @@ set(cmakeFiles
     FindAvahi.cmake
     FindBlueZ.cmake
     FindCanberra.cmake
-    FindDBus.cmake
     FindDBusMenuQt.cmake
     FindDjVuLibre.cmake
     FindDNSSD.cmake
@@ -67,7 +66,6 @@ set(cmakeFiles
     FindMPFR.cmake
     FindMtp.cmake
     FindMusicBrainz5.cmake
-    FindMySQL.cmake
     FindNetworkManager.cmake
     FindOpenEXR.cmake
     FindOpenGLES.cmake
