@@ -21,7 +21,6 @@ set(cmakeFiles
     CheckPointerMember.cmake
     CheckStructMember.cmake
     cmake-modules-styleguide.txt
-    config-alsa.h.cmake
     FindACL.cmake
     FindAlsa.cmake
     FindAvahi.cmake
