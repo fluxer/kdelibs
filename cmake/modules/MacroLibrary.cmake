@@ -7,10 +7,7 @@
 
 INCLUDE(MacroOptionalFindPackage)
 INCLUDE(MacroOptionalAddSubdirectory)
-INCLUDE(MacroAdditionalCleanFiles)
 INCLUDE(MacroAddFileDependencies)
-INCLUDE(MacroAddLinkFlags)
-INCLUDE(MacroAppendIf)
 INCLUDE(MacroBoolTo01)
 INCLUDE(MacroPushRequiredVars)
 INCLUDE(MacroLogFeature)

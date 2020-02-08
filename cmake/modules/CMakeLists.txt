@@ -22,7 +22,6 @@ set(cmakeFiles
     CheckStructMember.cmake
     cmake-modules-styleguide.txt
     config-alsa.h.cmake
-    create_exe_symlink.cmake
     FindACL.cmake
     FindAlsa.cmake
     FindAvahi.cmake
@@ -100,9 +99,6 @@ set(cmakeFiles
     kde4_cmake_uninstall.cmake.in
     KDE4Defaults.cmake
     KDE4Macros.cmake
-    MacroAdditionalCleanFiles.cmake
-    MacroAddLinkFlags.cmake
-    MacroAppendIf.cmake
     MacroBoolTo01.cmake
     MacroDBusAddActivationService.cmake
     MacroLibrary.cmake
