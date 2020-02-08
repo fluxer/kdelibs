@@ -3,48 +3,42 @@
 #
 #  SQLITE_FOUND - system has Sqlite
 #  SQLITE_INCLUDE_DIR - the Sqlite include directory
-#  SQLITE_LIBRARIES - Link these to use Sqlite
-#  SQLITE_DEFINITIONS - Compiler switches required for using Sqlite
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+#  SQLITE_LIBRARIES - The libraries needed to use Sqlite
 #
-
-
-# Copyright (c) 2008, Gilles Caulier, <caulier.gilles@gmail.com>
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if ( SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES )
-   # in cache already
-   SET(Sqlite_FIND_QUIETLY TRUE)
-endif ( SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES )
+if(SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES)
+    set(SQLITE_FIND_QUIETLY TRUE)
+endif()
 
-# use pkg-config to get the directories and then use these values
-# in the FIND_PATH() and FIND_LIBRARY() calls
-if( NOT WIN32 )
-  find_package(PkgConfig)
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_SQLITE QUIET sqlite3)
+endif()
 
-  pkg_check_modules(PC_SQLITE QUIET sqlite3)
-
-  set(SQLITE_DEFINITIONS ${PC_SQLITE_CFLAGS_OTHER})
-endif( NOT WIN32 )
-
-find_path(SQLITE_INCLUDE_DIR NAMES sqlite3.h
-  PATHS
-  ${PC_SQLITE_INCLUDEDIR}
-  ${PC_SQLITE_INCLUDE_DIRS}
+find_path(SQLITE_INCLUDE_DIR
+    NAMES
+    sqlite3.h
+    HINTS
+    $ENV{SQLITEDIR}/include
+    ${PC_SQLITE_INCLUDEDIR}
+    ${INCLUDE_INSTALL_DIR}
 )
 
-find_library(SQLITE_LIBRARIES NAMES sqlite3
-  PATHS
-  ${PC_SQLITE_LIBDIR}
-  ${PC_SQLITE_LIBRARY_DIRS}
+find_library(SQLITE_LIBRARIES
+    sqlite3
+    HINTS
+    $ENV{SQLITEDIR}/lib
+    ${PC_SQLITE_LIBDIR}
+    ${LIB_INSTALL_DIR}
 )
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Sqlite DEFAULT_MSG SQLITE_INCLUDE_DIR SQLITE_LIBRARIES )
+find_package_handle_standard_args(Sqlite
+    VERSION_VAR PC_SQLITE_VERSION
+    REQUIRED_VARS SQLITE_LIBRARIES SQLITE_INCLUDE_DIR
+)
 
-# show the SQLITE_INCLUDE_DIR and SQLITE_LIBRARIES variables only in the advanced view
-mark_as_advanced(SQLITE_INCLUDE_DIR SQLITE_LIBRARIES )
-
+mark_as_advanced(SQLITE_INCLUDE_DIR SQLITE_LIBRARIES)

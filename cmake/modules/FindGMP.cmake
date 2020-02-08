@@ -1,23 +1,38 @@
-# Try to find the GMP librairies
-#  GMP_FOUND - system has GMP lib
+# - Try to find GMP
+# Once done this will define
+#
+#  GMP_FOUND - system has GMP
 #  GMP_INCLUDE_DIR - the GMP include directory
-#  GMP_LIBRARIES - Libraries needed to use GMP
-
-# Copyright (c) 2006, Laurent Montel, <montel@kde.org>
+#  GMP_LIBRARIES - The libraries needed to use GMP
+#
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+if(GMP_INCLUDE_DIR AND GMP_LIBRARIES)
+    set(GMP_FIND_QUIETLY TRUE)
+endif()
 
-if (GMP_INCLUDE_DIR AND GMP_LIBRARIES)
-  # Already in cache, be silent
-  set(GMP_FIND_QUIETLY TRUE)
-endif (GMP_INCLUDE_DIR AND GMP_LIBRARIES)
+find_path(GMP_INCLUDE_DIR
+    NAMES
+    gmp.h
+    HINTS
+    $ENV{GMPDIR}/include
+    ${PC_GMP_INCLUDEDIR}
+    ${INCLUDE_INSTALL_DIR}
+)
 
-find_path(GMP_INCLUDE_DIR NAMES gmp.h )
-find_library(GMP_LIBRARIES NAMES gmp libgmp)
+find_library(GMP_LIBRARIES
+    gmp
+    HINTS
+    $ENV{GMPDIR}/lib
+    ${PC_GMP_LIBDIR}
+    ${LIB_INSTALL_DIR}
+)
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(GMP DEFAULT_MSG GMP_INCLUDE_DIR GMP_LIBRARIES)
+find_package_handle_standard_args(GMP
+    REQUIRED_VARS GMP_LIBRARIES GMP_INCLUDE_DIR
+)
 
 mark_as_advanced(GMP_INCLUDE_DIR GMP_LIBRARIES)
