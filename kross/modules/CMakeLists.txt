@@ -20,7 +20,6 @@ if(QT_QTDESIGNER_FOUND)
         ${KDE4_KPARTS_LIBS}
         ${KDE4_KFILE_LIBS}
         krosscore
-        krossui
     )
     install(TARGETS krossmoduleforms DESTINATION ${PLUGIN_INSTALL_DIR})
 endif()

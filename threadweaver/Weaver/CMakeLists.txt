@@ -30,7 +30,9 @@ set(ThreadWeaver_LIB_SRCS
 
 add_library(threadweaver ${LIBRARY_TYPE} ${ThreadWeaver_LIB_SRCS})
 
-target_link_libraries(threadweaver ${KDE4_KDECORE_LIBS})
+target_link_libraries(threadweaver PUBLIC
+    ${KDE4_KDECORE_LIBS}
+)
 
 set_target_properties(threadweaver PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}

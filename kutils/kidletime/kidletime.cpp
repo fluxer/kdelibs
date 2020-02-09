@@ -18,7 +18,7 @@
 
 #include "kidletime.h"
 
-#include <config-kidletime.h>
+#include "config.h"
 
 #ifdef Q_WS_X11
 #ifdef HAVE_XSCREENSAVER

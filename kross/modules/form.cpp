@@ -33,7 +33,6 @@
 #include <QtGui/QSizePolicy>
 #include <QtGui/QApplication>
 #include <QtGui/QProgressBar>
-//#include <QtGui/QProgressDialog>
 #include <QtGui/QTextBrowser>
 #include <QUiLoader>
 #include <QTextCursor>
@@ -44,9 +43,6 @@
 #include <klocale.h>
 #include <kurl.h>
 #include <kpushbutton.h>
-//#include <kurlcombobox.h>
-//#include <kdiroperator.h>
-//#include <kshell.h>
 #include <kicon.h>
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -54,10 +50,6 @@
 #include <kpluginloader.h>
 #include <kpluginfactory.h>
 #include <kparts/part.h>
-//#include <kio/netaccess.h>
-//#include <klocale.h>
-//#include <kmimetype.h>
-//#include <kstandarddirs.h>
 #include <kfilewidget.h>
 #include <kurlcombobox.h>
 #include <kshell.h>

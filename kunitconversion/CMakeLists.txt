@@ -71,7 +71,7 @@ include_directories(
 
 add_library(kunitconversion ${LIBRARY_TYPE} ${kunitconversion_LIB_SRCS})
 
-target_link_libraries(kunitconversion
+target_link_libraries(kunitconversion PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KUNITCONVERSION_EXTRA_LIBS}
 )

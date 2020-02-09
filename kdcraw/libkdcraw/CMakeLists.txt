@@ -43,10 +43,13 @@ set(kdcraw_LIB_SRCS
 
 add_library(kdcraw ${LIBRARY_TYPE} ${kdcraw_LIB_SRCS})
 
-target_link_libraries(kdcraw
+target_link_libraries(kdcraw PRIVATE
+    ${LibRaw_r_LIBRARIES}
+)
+
+target_link_libraries(kdcraw PUBLIC
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}
-    ${LibRaw_r_LIBRARIES}
 )
 
 set_target_properties(kdcraw PROPERTIES

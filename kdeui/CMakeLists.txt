@@ -366,30 +366,29 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
 
 add_library(kdeui ${LIBRARY_TYPE} ${kdeui_LIB_SRCS})
 
-target_link_libraries(kdeui
+target_link_libraries(kdeui PRIVATE
+    ${X11_LIBRARIES}
+    ${KDEUI_EXTRA_LIBS}
+)
+
+target_link_libraries(kdeui PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTSVG_LIBRARY}
-    ${X11_LIBRARIES}
-    ${KDEUI_EXTRA_LIBS}
 )
 
 if(X11_XTest_FOUND)
-   target_link_libraries(kdeui ${X11_XTest_LIB})
+   target_link_libraries(kdeui PRIVATE ${X11_XTest_LIB})
 endif()
 
 if(X11_Xcursor_FOUND)
-   target_link_libraries(kdeui ${X11_Xcursor_LIB})
+   target_link_libraries(kdeui PRIVATE ${X11_Xcursor_LIB})
 endif()
 
 if(X11_Xfixes_FOUND)
-   target_link_libraries(kdeui ${X11_Xfixes_LIB})
-endif()
-
-if(X11_Xrender_FOUND)
-   target_link_libraries(kdeui ${X11_Xrender_LIB})
+   target_link_libraries(kdeui PRIVATE ${X11_Xfixes_LIB})
 endif()
 
 set_target_properties(kdeui PROPERTIES

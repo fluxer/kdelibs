@@ -167,7 +167,7 @@ kde4_add_kcfg_files(plasma_LIB_SRCS
 
 add_library(plasma ${LIBRARY_TYPE} ${plasma_LIB_SRCS})
 
-target_link_libraries(plasma
+target_link_libraries(plasma PUBLIC
     ${QT_QTUITOOLS_LIBRARY}
     ${QT_QTSCRIPT_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
@@ -181,11 +181,11 @@ target_link_libraries(plasma
 )
 
 if(X11_FOUND)
-   target_link_libraries(plasma ${X11_LIBRARIES})
+   target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
 endif(X11_FOUND)
 
 if(DL_LIBRARY)
-    target_link_libraries(plasma ${DL_LIBRARY})
+    target_link_libraries(plasma PRIVATE ${DL_LIBRARY})
 endif(DL_LIBRARY)
 
 set_target_properties(plasma PROPERTIES

@@ -17,13 +17,13 @@ set(kmediaplayer_LIB_SRCS
 
 add_library(kmediaplayer ${LIBRARY_TYPE} ${kmediaplayer_LIB_SRCS})
 
-target_link_libraries(kmediaplayer
+target_link_libraries(kmediaplayer PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
 )
 
 if(MPV_FOUND)
-    target_link_libraries(kmediaplayer ${MPV_LIBRARIES})
+    target_link_libraries(kmediaplayer PRIVATE ${MPV_LIBRARIES})
 endif()
 
 set_target_properties(kmediaplayer PROPERTIES

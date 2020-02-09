@@ -22,7 +22,6 @@
 
 #include <QString>
 #include <QVariant>
-#include <QtCore/qvariant.h>
 
 #include <kdebug.h>
 #include <klocale.h>

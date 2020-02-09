@@ -1,6 +1,7 @@
 ########### next target ###############
 
-set(kcddb_LIB_SRCS ${libmusicbrainz_SRCS}
+set(kcddb_LIB_SRCS
+    ${libmusicbrainz_SRCS}
     cache.cpp
     cdinfo.cpp
     kcddbconfig.cpp
@@ -32,9 +33,13 @@ kde4_add_kcfg_files(kcddb_LIB_SRCS configbase.kcfgc)
 
 add_library(kcddb ${LIBRARY_TYPE} ${kcddb_LIB_SRCS})
 
-target_link_libraries(kcddb ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kcddb PUBLIC
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
+)
+
 if(MUSICBRAINZ5_FOUND)
-    target_link_libraries(kcddb ${MUSICBRAINZ5_LIBRARIES})
+    target_link_libraries(kcddb PRIVATE ${MUSICBRAINZ5_LIBRARIES})
 endif()
 
 set_target_properties(kcddb PROPERTIES

@@ -22,21 +22,11 @@
 #include "kfadewidgeteffect.h"
 #include "kfadewidgeteffect_p.h"
 
-#include <config.h> // for HAVE_XRENDER
-
 #include <QtCore/QEvent>
 #include <QtGui/QPaintEngine>
 #include <QtGui/QPainter>
 
 #include <kglobalsettings.h>
-
-#if defined(Q_WS_X11) && defined(HAVE_XRENDER)
-#  include <X11/Xlib.h>
-#  include <X11/extensions/Xrender.h>
-#  include <QtGui/qx11info_x11.h>
-#  undef KeyPress
-#  undef FocusOut
-#endif
 
 KFadeWidgetEffectPrivate::KFadeWidgetEffectPrivate(QWidget *_destWidget)
     : destWidget(_destWidget), disabled(false)

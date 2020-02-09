@@ -36,7 +36,7 @@ set_target_properties(kdeclarative PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-target_link_libraries(kdeclarative
+target_link_libraries(kdeclarative PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QT_QTSCRIPT_LIBRARY}

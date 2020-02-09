@@ -26,7 +26,6 @@
 
 #include <kpagedialog.h>
 #include <kassistantdialog.h>
-//#include <kfilewidget.h>
 
 namespace Kross {
 

@@ -223,24 +223,23 @@ set(kio_LIB_PRIVATE_SRCS
 
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
-target_link_libraries(kio
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
+target_link_libraries(kio PRIVATE
     ${ZLIB_LIBRARY}
-    ${QT_QTSVG_LIBRARY}
     ${X11_LIBRARIES}
     ${KIO_EXTRA_LIBS}
+)
+
+target_link_libraries(kio PUBLIC
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    ${QT_QTSVG_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}
 )
 
 if(ACL_FOUND)
-    target_link_libraries(kio ${ACL_LIBS})
-endif()
-
-if(X11_Xrender_FOUND)
-   target_link_libraries(kio ${X11_Xrender_LIB})
+    target_link_libraries(kio PRIVATE ${ACL_LIBS})
 endif()
 
 set_target_properties(kio PROPERTIES

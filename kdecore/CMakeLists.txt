@@ -275,9 +275,6 @@ endif()
 add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 
 target_link_libraries(kdecore PRIVATE
-    ${QT_QTCORE_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
-    ${QT_QTXML_LIBRARY}
     ${ZLIB_LIBRARY}
     ${CMAKE_THREAD_LIBS_INIT}
     ${kdecore_OPTIONAL_LIBS}
@@ -288,8 +285,10 @@ if(NOT HAVE_TRUNC)
 endif()
 
 target_link_libraries(kdecore PUBLIC
-    ${QT_QTDBUS_LIBRARY}
     ${QT_QTCORE_LIBRARY}
+    ${QT_QTNETWORK_LIBRARY}
+    ${QT_QTXML_LIBRARY}
+    ${QT_QTDBUS_LIBRARY}
 )
 
 set_target_properties(kdecore PROPERTIES

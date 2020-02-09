@@ -40,6 +40,8 @@
 #cmakedefine HAVE_MNTENT_H 1
 #cmakedefine HAVE_UNISTD_H 1
 
+
+/* Define to 1 if you have the Xtest extension */
 #cmakedefine HAVE_XTEST 1
 
 /* Define to 1 if you have the Xcursor library */
@@ -48,8 +50,11 @@
 /* Define to 1 if you have the Xfixes library */
 #cmakedefine HAVE_XFIXES 1
 
-/* Define to 1 if you have the Xrender library */
-#cmakedefine HAVE_XRENDER 1
+/* Define to 1 if you have the Xscreensaver extension */
+#cmakedefine HAVE_XSCREENSAVER 1
+
+/* Define to 1 if you have the XSync extension */
+#cmakedefine HAVE_XSYNC 1
 
 #cmakedefine   HAVE_BACKTRACE 1
 #cmakedefine   HAVE_GETMNTINFO 1

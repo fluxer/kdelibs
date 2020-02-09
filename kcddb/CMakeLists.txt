@@ -19,7 +19,7 @@ set_package_properties(MusicBrainz5 PROPERTIES
 
 if(MUSICBRAINZ5_FOUND)
     set(HAVE_MUSICBRAINZ5 1)
-    include_directories(${MUSICBRAINZ5_INCLUDE_DIRS})
+    include_directories(${MUSICBRAINZ5_INCLUDE_DIR})
 
     set(libmusicbrainz_SRCS
         musicbrainz/musicbrainzlookup.cpp

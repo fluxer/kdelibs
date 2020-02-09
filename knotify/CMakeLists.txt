@@ -25,7 +25,7 @@ set(knotifyconfig_LIB_SRCS
 add_library(knotifyconfig ${LIBRARY_TYPE} ${knotifyconfig_LIB_SRCS})
 
 # Needs KIO for KUrlRequester
-target_link_libraries(knotifyconfig
+target_link_libraries(knotifyconfig PUBLIC
     ${KDE4_KIO_LIBS}
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KMEDIAPLAYER_LIBS}

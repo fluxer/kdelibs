@@ -41,7 +41,7 @@ set(kfile_LIB_SRCS
 
 add_library(kfile ${LIBRARY_TYPE} ${kfile_LIB_SRCS})
 
-target_link_libraries(kfile
+target_link_libraries(kfile PUBLIC
     ${KDE4_SOLID_LIBS}
     ${KDE4_KIO_LIBS}
     ${KDE4_KDEUI_LIBS}

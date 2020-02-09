@@ -21,7 +21,11 @@ set(kemoticons_LIB_SRCS
 
 add_library(kemoticons ${LIBRARY_TYPE} ${kemoticons_LIB_SRCS})
 
-target_link_libraries(kemoticons ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kemoticons PUBLIC
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
+)
 
 set_target_properties(kemoticons PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
@@ -54,11 +58,6 @@ install(
 
 ######## kidletime ####################
 
-configure_file(
-    kidletime/config-kidletime.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/config-kidletime.h
-)
-
 set(kidletime_LIB_SRCS
     kidletime/kidletime.cpp
     kidletime/abstractsystempoller.cpp
@@ -86,7 +85,7 @@ endif(Q_WS_X11)
 
 add_library(kidletime ${LIBRARY_TYPE} ${kidletime_LIB_SRCS})
 
-target_link_libraries(kidletime
+target_link_libraries(kidletime PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QT_QTGUI_LIBRARY}
@@ -94,13 +93,13 @@ target_link_libraries(kidletime
 
 if (Q_WS_X11)
     if(HAVE_XSCREENSAVER)
-        target_link_libraries(kidletime ${X11_Xscreensaver_LIB})
-    endif (HAVE_XSCREENSAVER)
+        target_link_libraries(kidletime PRIVATE ${X11_Xscreensaver_LIB})
+    endif()
 
     if(HAVE_XSYNC)
-        target_link_libraries(kidletime ${X11_Xext_LIB})
+        target_link_libraries(kidletime PRIVATE ${X11_Xext_LIB})
     endif()
-    target_link_libraries(kidletime ${X11_LIBRARIES})
+    target_link_libraries(kidletime PRIVATE ${X11_LIBRARIES})
 endif (Q_WS_X11)
 
 set_target_properties(kidletime PROPERTIES
@@ -142,7 +141,7 @@ set(kcmutils_LIB_SRCS
 
 add_library(kcmutils ${LIBRARY_TYPE} ${kcmutils_LIB_SRCS})
 
-target_link_libraries(kcmutils
+target_link_libraries(kcmutils PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${QT_QTGUI_LIBRARY}
@@ -187,7 +186,7 @@ install(
 
 add_library(kprintutils ${LIBRARY_TYPE} kprintpreview.cpp)
 
-target_link_libraries(kprintutils
+target_link_libraries(kprintutils PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KPARTS_LIBS}

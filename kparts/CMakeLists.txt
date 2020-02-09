@@ -30,7 +30,7 @@ set(kparts_LIB_SRCS
 
 add_library(kparts ${LIBRARY_TYPE} ${kparts_LIB_SRCS})
 
-target_link_libraries(kparts
+target_link_libraries(kparts PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
     ${KDE4_KIO_LIBS}

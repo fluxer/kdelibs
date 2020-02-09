@@ -10,10 +10,13 @@ set(kpty_LIB_SRCS
 
 add_library(kpty ${LIBRARY_TYPE} ${kpty_LIB_SRCS})
 
-target_link_libraries(kpty
-    ${KDE4_KDECORE_LIBS}
+target_link_libraries(kpty PRIVATE
     ${UTIL_LIBRARY}
     ${UTEMPTER_LIBRARY}
+)
+
+target_link_libraries(kpty PUBLIC
+    ${KDE4_KDECORE_LIBS}
 )
 
 set_target_properties(kpty PROPERTIES

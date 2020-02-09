@@ -76,12 +76,17 @@ set_package_properties(ENCHANT PROPERTIES
 
 # optional features
 if(X11_FOUND)
-    #X11_Xrender discovery is done by FindX11
-    add_feature_info("X Rendering Extension (libXrender)" X11_Xrender_FOUND "Support for compositing, rendering operations, and alpha-blending. STRONGLY RECOMMENDED")
+    macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
+    macro_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)
+    macro_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)
     macro_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)
     macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)
+
+    add_feature_info("X Test Extension (libXTest)" HAVE_XTEST "Support for notfication restriction")
+    add_feature_info("X Cursor Extension (Xcursor)" HAVE_XTEST "Support for loading cursors depending on theme")
+    add_feature_info("X Fixes Extension (libXfixes)" HAVE_XFIXES "Support for damage/fixes cursor and window management")
     add_feature_info("X Screensaver Extension (libXss)" HAVE_XSCREENSAVER "Support for KIdleTime (fallback mode)")
-    add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime. STRONGLY RECOMMENDED")
+    add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime")
 
     if(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
         message(FATAL_ERROR "\nNeither the XSync (libXext) nor XScreensaver (libXss) development package was found.\nPlease install one of them (XSync is recommended)\n")

@@ -44,10 +44,12 @@ check_include_files(errno.h       HAVE_ERRNO_H)                        # various
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
 check_include_files(langinfo.h    HAVE_LANGINFO_H)                     # kdecore
 
+# TODO: separate to config-x11.h
 macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)                           # kdecore
 macro_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)                       # kdeui
 macro_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)                         # kdeui
-macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)                       # kio
+macro_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)             # kidletime
+macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)                           # kidletime
 
 
 # Use check_symbol_exists to check for symbols in a reliable

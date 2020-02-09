@@ -24,7 +24,7 @@
 #include <kdebug.h>
 #include <kapplication.h>
 
-#include <config-kidletime.h>
+#include "config.h"
 
 #include <X11/Xlib.h>
 #include <X11/extensions/sync.h>

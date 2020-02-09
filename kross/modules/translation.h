@@ -21,8 +21,7 @@
 #define KROSS_TRANSLATION_H
 
 #include <QObject>
-#include <QtCore/qvariant.h>
-
+#include <QVariant>
 #include <QString>
 
 class KLocalizedString;

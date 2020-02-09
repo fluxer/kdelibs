@@ -347,13 +347,15 @@ qt4_add_dbus_interface(solid_LIB_SRCS
 
 add_library(solid ${LIBRARY_TYPE} ${solid_LIB_SRCS})
 
-target_link_libraries(solid
+target_link_libraries(solid PRIVATE
+    ${solid_OPTIONAL_LIBS}
+)
+
+target_link_libraries(solid PUBLIC
     ${QT_QTCORE_LIBRARY}
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}
-    ${QT_CORE_LIBRARY}
-    ${solid_OPTIONAL_LIBS}
 )
 
 set_target_properties(solid PROPERTIES
