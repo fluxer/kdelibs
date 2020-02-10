@@ -80,7 +80,6 @@ set(cmakeFiles
     FindSane.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
-    FindSLP.cmake
     FindSpeechd.cmake
     FindSqlite.cmake
     FindSubversionLibrary.cmake
