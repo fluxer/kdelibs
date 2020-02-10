@@ -1,4 +1,5 @@
 # - Try to find MusicBrainz
+#
 # Once done this will define
 #
 #  MUSICBRAINZ5_FOUND - system has MusicBrainz
@@ -15,25 +16,26 @@ endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)
-    pkg_check_modules(PC_MUSICBRAINZ5 QUIET libmusicbrainz5)
+    pkg_check_modules(PC_MUSICBRAINZ5 QUIET libmusicbrainz5cc)
+    if(NOT PC_MUSICBRAINZ5_FOUND)
+        pkg_check_modules(PC_MUSICBRAINZ5 QUIET libmusicbrainz5)
+    endif()
+
+    set(MUSICBRAINZ5_INCLUDE_DIR ${PC_MUSICBRAINZ5_INCLUDE_DIRS})
+    set(MUSICBRAINZ5_LIBRARIES ${PC_MUSICBRAINZ5_LIBRARIES})
 endif()
 
-find_path(MUSICBRAINZ5_INCLUDE_DIR
-    NAMES
-    musicbrainz5/Disc.h
-    HINTS
-    $ENV{MUSICBRAINZ5DIR}/include
-    ${PC_MUSICBRAINZ5_INCLUDEDIR}
-    ${INCLUDE_INSTALL_DIR}
-)
+if(NOT MUSICBRAINZ5_INCLUDE_DIR OR NOT MUSICBRAINZ5_LIBRARIES)
+    find_path(MUSICBRAINZ5_INCLUDE_DIR
+        NAMES musicbrainz5/Disc.h
+        HINTS $ENV{MUSICBRAINZ5DIR}/include
+    )
 
-find_library(MUSICBRAINZ5_LIBRARIES
-    musicbrainz5cc musicbrainz5
-    HINTS
-    $ENV{MUSICBRAINZ5DIR}/lib
-    ${PC_MUSICBRAINZ5_LIBDIR}
-    ${LIB_INSTALL_DIR}
-)
+    find_library(MUSICBRAINZ5_LIBRARIES
+        NAMES musicbrainz5cc musicbrainz5
+        HINTS $ENV{MUSICBRAINZ5DIR}/lib
+    )
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MusicBrainz5

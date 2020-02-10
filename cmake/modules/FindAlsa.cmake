@@ -1,4 +1,5 @@
 # - Try to find ALSA
+#
 # Once done this will define
 #
 #  ALSA_FOUND - system has ALSA
@@ -16,24 +17,22 @@ endif()
 if(NOT WIN32)
     include(FindPkgConfig)
     pkg_check_modules(PC_ALSA QUIET alsa)
+
+    set(ALSA_INCLUDES ${PC_ALSA_INCLUDE_DIRS})
+    set(ALSA_LIBRARIES ${PC_ALSA_LIBRARIES})
 endif()
 
-find_path(ALSA_INCLUDES
-    NAMES
-    alsa/version.h
-    HINTS
-    $ENV{ALSADIR}/include
-    ${PC_ALSA_INCLUDEDIR}
-    ${INCLUDE_INSTALL_DIR}
-)
+if(NOT ALSA_INCLUDES OR NOT ALSA_LIBRARIES)
+    find_path(ALSA_INCLUDES
+        NAMES alsa/version.h
+        HINTS $ENV{ALSADIR}/include
+    )
 
-find_library(ALSA_LIBRARIES
-    asound2 asound
-    HINTS
-    $ENV{ALSADIR}/lib
-    ${PC_ALSA_LIBDIR}
-    ${LIB_INSTALL_DIR}
-)
+    find_library(ALSA_LIBRARIES
+        NAMES asound2 asound
+        HINTS $ENV{ALSADIR}/lib
+    )
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Alsa

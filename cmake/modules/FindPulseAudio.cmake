@@ -1,4 +1,5 @@
 # - Try to find PulseAudio
+#
 # Once done this will define
 #
 #  PULSEAUDIO_FOUND - system has PulseAudio
@@ -9,8 +10,9 @@
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY)
+if(PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY AND PULSEAUDIO_MAINLOOP_LIBRARY)
     set(PULSEAUDIO_FIND_QUIETLY TRUE)
 endif()
 
@@ -22,24 +24,22 @@ if(NOT WIN32)
     set(PULSEAUDIO_INCLUDE_DIR ${PC_PULSEAUDIO_INCLUDE_DIRS} ${PC_PULSEAUDIO_MAINLOOP_INCLUDE_DIRS})
     set(PULSEAUDIO_LIBRARY ${PC_PULSEAUDIO_LIBRARIES})
     set(PULSEAUDIO_MAINLOOP_LIBRARY ${PC_PULSEAUDIO_MAINLOOP_LIBRARIES})
-else()
+endif()
+
+if(NOT PULSEAUDIO_INCLUDE_DIR OR NOT PULSEAUDIO_LIBRARY OR NOT PULSEAUDIO_MAINLOOP_LIBRARY)
     find_path(PULSEAUDIO_INCLUDE_DIR
-        NAMES
-        pulse/pulseaudio.h
-        HINTS
-        $ENV{PULSEAUDIODIR}/include
+        NAMES pulse/pulseaudio.h
+        HINTS $ENV{PULSEAUDIODIR}/include
     )
 
     find_library(PULSEAUDIO_LIBRARY
-        pulse
-        HINTS
-        $ENV{PULSEAUDIODIR}/lib
+        NAMES pulse
+        HINTS $ENV{PULSEAUDIODIR}/lib
     )
 
     find_library(PULSEAUDIO_MAINLOOP_LIBRARY
-        pulse-mainloop pulse-mainloop-glib
-        HINTS
-        $ENV{PULSEAUDIODIR}/lib
+        NAMES pulse-mainloop pulse-mainloop-glib
+        HINTS $ENV{PULSEAUDIODIR}/lib
     )
 
     # PulseAudio requires Glib2

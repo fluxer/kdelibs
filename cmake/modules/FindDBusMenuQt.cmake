@@ -1,4 +1,5 @@
 # - Try to find DBusMenuQt library
+#
 # Once done this will define
 #
 #  DBUSMENUQT_FOUND - system has DBusMenuQt
@@ -13,30 +14,37 @@
 
 set(DBUSMENU_QT_NAMES dbusmenu-katie dbusmenu-qt dbusmenu-qtd)
 
-find_package(PkgConfig)
-foreach(name ${DBUSMENU_QT_NAMES})
-    if(NOT PC_DBUSMENUQT_FOUND)
-        pkg_check_modules(PC_DBUSMENUQT QUIET ${name})
-    endif()
-endforeach()
+if(NOT WIN32)
+    find_package(PkgConfig)
+    foreach(name ${DBUSMENU_QT_NAMES})
+        if(NOT PC_DBUSMENUQT_FOUND)
+            pkg_check_modules(PC_DBUSMENUQT QUIET ${name})
+
+            set(DBUSMENUQT_INCLUDE_DIR ${PC_DBUSMENUQT_INCLUDE_DIRS})
+            set(DBUSMENUQT_LIBRARIES ${PC_DBUSMENUQT_LIBRARIES})
+        endif()
+    endforeach()
+endif()
 
 set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})
 
-find_path(DBUSMENUQT_INCLUDE_DIR
-    NAMES dbusmenuexporter.h
-    HINTS ${PC_DBUSMENUQT_INCLUDEDIR}
-    PATH_SUFFIXES ${DBUSMENU_QT_NAMES}
-)
+if(NOT DBUSMENUQT_INCLUDE_DIR OR NOT DBUSMENUQT_LIBRARIES)
+    find_path(DBUSMENUQT_INCLUDE_DIR
+        NAMES dbusmenuexporter.h
+        PATH_SUFFIXES ${DBUSMENU_QT_NAMES}
+        HINTS $ENV{DBUSMENUQTDIR}/include
+    )
 
-find_library(DBUSMENUQT_LIBRARIES
-    NAMES ${DBUSMENU_QT_NAMES}
-    HINTS ${PC_DBUSMENUQT_LIBDIR}
-)
+    find_library(DBUSMENUQT_LIBRARIES
+        NAMES ${DBUSMENU_QT_NAMES}
+        HINTS $ENV{DBUSMENUQTDIR}/lib
+    )
+endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(DBusMenuQt
-    REQUIRED_VARS DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR
     VERSION_VAR PC_DBUSMENUQT_VERSION
+    REQUIRED_VARS DBUSMENUQT_LIBRARIES DBUSMENUQT_INCLUDE_DIR
 )
 
 mark_as_advanced(DBUSMENUQT_INCLUDE_DIR DBUSMENUQT_LIBRARIES)

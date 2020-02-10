@@ -14,20 +14,13 @@ if(GMP_INCLUDE_DIR AND GMP_LIBRARIES)
 endif()
 
 find_path(GMP_INCLUDE_DIR
-    NAMES
-    gmp.h
-    HINTS
-    $ENV{GMPDIR}/include
-    ${PC_GMP_INCLUDEDIR}
-    ${INCLUDE_INSTALL_DIR}
+    NAMES gmp.h
+    HINTS $ENV{GMPDIR}/include
 )
 
 find_library(GMP_LIBRARIES
-    gmp
-    HINTS
-    $ENV{GMPDIR}/lib
-    ${PC_GMP_LIBDIR}
-    ${LIB_INSTALL_DIR}
+    NAMES gmp
+    HINTS $ENV{GMPDIR}/lib
 )
 
 include(FindPackageHandleStandardArgs)
