@@ -139,19 +139,6 @@ bool Highlighter::spellCheckerFound() const
     return d->spellCheckerFound;
 }
 
-// Since figuring out spell correction suggestions is extremely costly,
-// we keep track of whether the user actually wants some, and only offer them
-// in that case
-void Highlighter::connectNotify(const char* signal)
-{
-    QSyntaxHighlighter::connectNotify(signal);
-}
-
-void Highlighter::disconnectNotify(const char* signal)
-{
-    QSyntaxHighlighter::disconnectNotify(signal);
-}
-
 void Highlighter::slotRehighlight()
 {
     kDebug(0) << "Highlighter::slotRehighlight()";
