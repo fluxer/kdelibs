@@ -330,61 +330,61 @@ bool Highlighter::eventFilter( QObject *o, QEvent *e)
     if (!d->spellCheckerFound)
         return false;
     if (o == d->edit  && (e->type() == QEvent::KeyPress)) {
-	QKeyEvent *k = static_cast<QKeyEvent *>(e);
-	//d->autoReady = true;
-	if (d->rehighlightRequest->isActive()) // try to stay out of the users way
-	    d->rehighlightRequest->start( 500 );
-	if ( k->key() == Qt::Key_Enter ||
-	     k->key() == Qt::Key_Return ||
-	     k->key() == Qt::Key_Up ||
-	     k->key() == Qt::Key_Down ||
-	     k->key() == Qt::Key_Left ||
-	     k->key() == Qt::Key_Right ||
-	     k->key() == Qt::Key_PageUp ||
-	     k->key() == Qt::Key_PageDown ||
-	     k->key() == Qt::Key_Home ||
-	     k->key() == Qt::Key_End ||
-	     (( k->modifiers()== Qt::ControlModifier ) &&
-	      ((k->key() == Qt::Key_A) ||
-	       (k->key() == Qt::Key_B) ||
-	       (k->key() == Qt::Key_E) ||
-	       (k->key() == Qt::Key_N) ||
-	       (k->key() == Qt::Key_P))) ) {
-	    if ( intraWordEditing() ) {
-		setIntraWordEditing( false );
-		d->completeRehighlightRequired = true;
-		d->rehighlightRequest->setInterval(500);
+        QKeyEvent *k = static_cast<QKeyEvent *>(e);
+        //d->autoReady = true;
+        if (d->rehighlightRequest->isActive()) // try to stay out of the users way
+            d->rehighlightRequest->start( 500 );
+        if ( k->key() == Qt::Key_Enter ||
+            k->key() == Qt::Key_Return ||
+            k->key() == Qt::Key_Up ||
+            k->key() == Qt::Key_Down ||
+            k->key() == Qt::Key_Left ||
+            k->key() == Qt::Key_Right ||
+            k->key() == Qt::Key_PageUp ||
+            k->key() == Qt::Key_PageDown ||
+            k->key() == Qt::Key_Home ||
+            k->key() == Qt::Key_End ||
+            (( k->modifiers()== Qt::ControlModifier ) &&
+            ((k->key() == Qt::Key_A) ||
+            (k->key() == Qt::Key_B) ||
+            (k->key() == Qt::Key_E) ||
+            (k->key() == Qt::Key_N) ||
+            (k->key() == Qt::Key_P))) ) {
+            if ( intraWordEditing() ) {
+                setIntraWordEditing( false );
+                d->completeRehighlightRequired = true;
+                d->rehighlightRequest->setInterval(500);
                 d->rehighlightRequest->setSingleShot(true);
                 d->rehighlightRequest->start();
 	    }
 #if 0
-	    if (d->checksDone != d->checksRequested) {
-		// Handle possible change of paragraph while
-		// words are pending spell checking
-		d->completeRehighlightRequired = true;
-		d->rehighlightRequest->start( 500, true );
-	    }
+            if (d->checksDone != d->checksRequested) {
+                // Handle possible change of paragraph while
+                // words are pending spell checking
+                d->completeRehighlightRequired = true;
+                d->rehighlightRequest->start( 500, true );
+            }
 #endif
-	} else {
-	    setIntraWordEditing( true );
-	}
-	if ( k->key() == Qt::Key_Space ||
-	     k->key() == Qt::Key_Enter ||
-	     k->key() == Qt::Key_Return ) {
-	    QTimer::singleShot( 0, this, SLOT(slotAutoDetection()));
-	}
+        } else {
+            setIntraWordEditing( true );
+        }
+        if ( k->key() == Qt::Key_Space ||
+            k->key() == Qt::Key_Enter ||
+            k->key() == Qt::Key_Return ) {
+            QTimer::singleShot( 0, this, SLOT(slotAutoDetection()));
+        }
     }
 
     else if ( o == d->edit->viewport() &&
-              ( e->type() == QEvent::MouseButtonPress )) {
-	//d->autoReady = true;
-	if ( intraWordEditing() ) {
-	    setIntraWordEditing( false );
-	    d->completeRehighlightRequired = true;
-	    d->rehighlightRequest->setInterval(0);
+        ( e->type() == QEvent::MouseButtonPress )) {
+        //d->autoReady = true;
+        if ( intraWordEditing() ) {
+            setIntraWordEditing( false );
+            d->completeRehighlightRequired = true;
+            d->rehighlightRequest->setInterval(0);
             d->rehighlightRequest->setSingleShot(true);
             d->rehighlightRequest->start();
-	}
+        }
     }
     return false;
 }
