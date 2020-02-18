@@ -83,7 +83,6 @@ set(cmakeFiles
     FindSCIM.cmake
     FindSpeechd.cmake
     FindSqlite.cmake
-    FindSubversionLibrary.cmake
     FindSudo.cmake
     FindTaglib.cmake
     FindUDev.cmake
