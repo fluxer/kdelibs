@@ -23,6 +23,8 @@ if(NOT WIN32)
     set(UDISKS2_LIBRARIES ${PC_UDISKS2_LIBRARIES})
 endif()
 
+set(UDISKS2_VERSION ${PC_UDISKS2_VERSION})
+
 if(NOT UDISKS2_INCLUDE_DIR OR NOT UDISKS2_LIBRARIES)
     find_path(UDISKS2_INCLUDE_DIR
         NAMES udisks2/udisks/udisks.h
@@ -37,7 +39,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(UDisks2
-    VERSION_VAR PC_UDISKS2_VERSION
+    VERSION_VAR UDISKS2_VERSION
     REQUIRED_VARS UDISKS2_LIBRARIES UDISKS2_INCLUDE_DIR
 )
 

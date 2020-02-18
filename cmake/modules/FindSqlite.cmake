@@ -23,6 +23,8 @@ if(NOT WIN32)
     set(SQLITE_LIBRARIES ${PC_SQLITE_LIBRARIES})
 endif()
 
+set(SQLITE_VERSION ${PC_SQLITE_VERSION})
+
 if(NOT SQLITE_INCLUDE_DIR OR NOT SQLITE_LIBRARIES)
     find_path(SQLITE_INCLUDE_DIR
         NAMES sqlite3.h
@@ -37,7 +39,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Sqlite
-    VERSION_VAR PC_SQLITE_VERSION
+    VERSION_VAR SQLITE_VERSION
     REQUIRED_VARS SQLITE_LIBRARIES SQLITE_INCLUDE_DIR
 )
 

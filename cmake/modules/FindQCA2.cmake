@@ -26,6 +26,7 @@ if(NOT WIN32)
     endforeach()
 endif()
 
+set(QCA2_VERSION ${PC_QCA2_VERSION})
 set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS_OTHER})
 
 if(NOT QCA2_INCLUDE_DIR OR NOT QCA2_LIBRARIES)
@@ -43,7 +44,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(QCA2
-    VERSION_VAR PC_QCA2_VERSION
+    VERSION_VAR QCA2_VERSION
     REQUIRED_VARS QCA2_LIBRARIES QCA2_INCLUDE_DIR
 )
 

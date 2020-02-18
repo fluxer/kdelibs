@@ -22,6 +22,8 @@ if(NOT WIN32)
     set(LIBUSB_LIBRARIES ${PC_LIBUSB_LIBRARIES})
 endif()
 
+set(LIBUSB_VERSION ${PC_LIBUSB_VERSION})
+
 if(NOT LIBUSB_INCLUDES OR NOT LIBUSB_LIBRARIES)
     find_path(LIBUSB_INCLUDES
         NAMES libusb.h
@@ -37,7 +39,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LibUSB
-    VERSION_VAR PC_LIBUSB_VERSION
+    VERSION_VAR LIBUSB_VERSION
     REQUIRED_VARS LIBUSB_LIBRARIES LIBUSB_INCLUDES
 )
 

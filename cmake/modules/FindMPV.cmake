@@ -23,6 +23,8 @@ if(NOT WIN32)
     set(MPV_LIBRARIES ${PC_MPV_LIBRARIES})
 endif()
 
+set(MPV_VERSION ${PC_MPV_VERSION})
+
 if(NOT MPV_INCLUDES OR NOT MPV_LIBRARIES)
     find_path(MPV_INCLUDES
         NAMES client.h
@@ -38,7 +40,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MPV
-    VERSION_VAR PC_MPV_VERSION
+    VERSION_VAR MPV_VERSION
     REQUIRED_VARS MPV_LIBRARIES MPV_INCLUDES
 )
 

@@ -22,6 +22,8 @@ if(NOT WIN32)
     set(MPFR_LIBRARIES ${PC_MPFR_LIBRARIES})
 endif()
 
+set(MPFR_VERSION ${PC_MPFR_VERSION})
+
 if(NOT MPFR_INCLUDE_DIR OR NOT MPFR_LIBRARIES)
     find_path(MPFR_INCLUDE_DIR
         NAMES mpfr.h
@@ -36,7 +38,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(MPFR
-    VERSION_VAR PC_MPFR_VERSION
+    VERSION_VAR MPFR_VERSION
     REQUIRED_VARS MPFR_LIBRARIES MPFR_INCLUDE_DIR
 )
 

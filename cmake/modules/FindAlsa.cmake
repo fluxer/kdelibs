@@ -22,6 +22,8 @@ if(NOT WIN32)
     set(ALSA_LIBRARIES ${PC_ALSA_LIBRARIES})
 endif()
 
+set(ALSA_VERSION ${PC_ALSA_VERSION})
+
 if(NOT ALSA_INCLUDES OR NOT ALSA_LIBRARIES)
     find_path(ALSA_INCLUDES
         NAMES alsa/version.h
@@ -36,7 +38,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(Alsa
-    VERSION_VAR PC_ALSA_VERSION
+    VERSION_VAR ALSA_VERSION
     REQUIRED_VARS ALSA_LIBRARIES ALSA_INCLUDES
 )
 

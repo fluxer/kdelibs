@@ -23,6 +23,8 @@ if(NOT WIN32)
     set(WEBP_LIBRARIES ${PC_WEBP_LIBRARIES})
 endif()
 
+set(WEBP_VERSION ${PC_WEBP_VERSION})
+
 if(NOT WEBP_INCLUDES OR NOT WEBP_LIBRARIES)
     find_path(WEBP_INCLUDES
         NAMES encode.h decode.h
@@ -38,7 +40,7 @@ endif()
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(WebP
-    VERSION_VAR PC_WEBP_VERSION
+    VERSION_VAR WEBP_VERSION
     REQUIRED_VARS WEBP_LIBRARIES WEBP_INCLUDES
 )
 
