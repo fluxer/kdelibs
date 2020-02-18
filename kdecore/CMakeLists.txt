@@ -12,13 +12,8 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
 )
 
-# Configure checks for network/ but also for netsupp.*
+# Configure checks for network/
 include(network/ConfigureChecks.cmake)
-configure_file(
-    network/config-network.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/network/config-network.h
-)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/network)
 
 # Configure checks for date/
 include(date/ConfigureChecks.cmake)
@@ -106,10 +101,6 @@ if(ENCHANT_FOUND)
         sonnet/enchantdict.cpp
     )
     set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${ENCHANT_LIBRARIES})
-endif()
-
-if(HAVE_RESOLV_LIBRARY)
-    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} resolv)
 endif()
 
 add_subdirectory(kconfig_compiler)
@@ -257,7 +248,6 @@ set(kdecore_LIB_SRCS
     kernel/ktoolinvocation_x11.cpp
     kernel/kstandarddirs_unix.cpp
     localization/klocale_unix.cpp
-    network/netsupp.cpp
     io/klockfile_unix.cpp
     util/kshell_unix.cpp
     util/kuser_unix.cpp
