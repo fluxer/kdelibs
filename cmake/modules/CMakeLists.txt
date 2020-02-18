@@ -90,7 +90,6 @@ set(cmakeFiles
     FindWebP.cmake
     FindX11_XCB.cmake
     FindXCB.cmake
-    FindXmms.cmake
     kde4_cmake_uninstall.cmake.in
     KDE4Defaults.cmake
     KDE4Macros.cmake
