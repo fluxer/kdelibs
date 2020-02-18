@@ -548,37 +548,7 @@ endif()
 # compiler specific settings
 ############################################################
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-
-    # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
-    # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
-    set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
-    set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
-    file(WRITE "${_source_file}" "${_source}")
-    set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
-    try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
-    if(NOT _compile_result)
-        message("${_compile_output_var}")
-        message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
-    endif(NOT _compile_result)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-
-    # check that Qt defines Q_DECL_EXPORT as __attribute__ ((visibility("default")))
-    # if it doesn't and KDE compiles with hidden default visibiltiy plugins will break
-    set(_source "#include <QtCore/QtGlobal>\n int main()\n {\n #ifndef QT_VISIBILITY_AVAILABLE \n #error QT_VISIBILITY_AVAILABLE is not available\n #endif \n }\n")
-    set(_source_file ${CMAKE_BINARY_DIR}/CMakeTmp/check_qt_visibility.cpp)
-    file(WRITE "${_source_file}" "${_source}")
-    set(_include_dirs "-DINCLUDE_DIRECTORIES:STRING=${QT_INCLUDES}")
-    try_compile(_compile_result ${CMAKE_BINARY_DIR} ${_source_file} CMAKE_FLAGS "${_include_dirs}" OUTPUT_VARIABLE _compile_output_var)
-    if(NOT _compile_result)
-        message("${_compile_output_var}")
-        message(FATAL_ERROR "Qt compiled without support for -fvisibility=hidden. This will break plugins and linking of some applications. Please fix your Qt installation (try passing --reduce-exports to configure).")
-    endif(NOT _compile_result)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "Intel")
-    set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
-endif()
+set(KDE4_ENABLE_EXCEPTIONS "-fexceptions -UQT_NO_EXCEPTIONS")
 
 ###########    end of platform specific stuff  ##########################
 
