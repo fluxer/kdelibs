@@ -246,23 +246,6 @@ if(NOT KDE4_FOUND)
 # get the directory of the current file, used later on in the file
 get_filename_component(kde_cmake_module_dir ${CMAKE_CURRENT_LIST_FILE} PATH)
 
-# Store CMAKE_MODULE_PATH and then append the current dir to it, so we are sure
-# we get the FindQt4.cmake located next to us and not a different one.
-# The original CMAKE_MODULE_PATH is restored later on.
-set(_kde_cmake_module_path_back ${CMAKE_MODULE_PATH})
-set(CMAKE_MODULE_PATH ${kde_cmake_module_dir} ${CMAKE_MODULE_PATH} )
-
-# if the minimum Qt requirement is changed, change all occurrence in the
-# following lines
-if(NOT QT_MIN_VERSION OR QT_MIN_VERSION VERSION_LESS "4.8.2")
-    set(QT_MIN_VERSION "4.8.2")
-endif()
-
-# Tell FindQt4.cmake to point the QT_QTFOO_LIBRARY targets at the imported targets
-# for the Qt libraries, so we get full handling of release and debug versions of the
-# Qt libs and are flexible regarding the install location of Qt under Windows:
-set(QT_USE_IMPORTED_TARGETS TRUE)
-
 # We may only search for other packages with "REQUIRED" if we are required ourselves.
 # This file can be processed either (usually) included in FindKDE4.cmake or
 # (when building kdelibs) directly via FIND_PACKAGE(KDE4Internal), that's why
@@ -271,10 +254,7 @@ if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
     set(_REQ_STRING_KDE4 REQUIRED)
 endif()
 
-find_package(Katie ${_REQ_STRING_KDE4})
-
-# restore the original CMAKE_MODULE_PATH
-set(CMAKE_MODULE_PATH ${_kde_cmake_module_path_back})
+find_package(Katie ${_REQ_STRING_KDE4} 4.9.0)
 
 # Check that we really found everything.
 # If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something
@@ -282,10 +262,10 @@ set(CMAKE_MODULE_PATH ${_kde_cmake_module_path_back})
 # searched without REQUIRED and something in the FIND_PACKAGE() calls above
 # wasn't found,then we get here and must check that everything has actually
 # been found. If something is missing, we must not fail with FATAL_ERROR, but only not set KDE4_FOUND.
-if(NOT QT4_FOUND)
-    message(STATUS "KDE4 not found, because Qt4 was not found")
+if(NOT Katie_FOUND)
+    message(STATUS "KDE4 not found, because Katie was not found")
     return()
-endif(NOT QT4_FOUND)
+endif()
 
 # now we are sure we have everything we need
 include(MacroLibrary)
