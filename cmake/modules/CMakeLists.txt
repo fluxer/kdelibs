@@ -103,7 +103,6 @@ set(cmakeFiles
     MacroOptionalFindPackage.cmake
     MacroPushRequiredVars.cmake
     MacroWriteBasicCMakeVersionFile.cmake
-    PkgConfigGetVar.cmake
     UnixAuth.cmake
 )
 
