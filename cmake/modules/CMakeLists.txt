@@ -38,12 +38,14 @@ set(cmakeFiles
     FindFLAC++.cmake
     FindFontconfig.cmake
     FindGettextPO.cmake
+    FindGIO.cmake
     FindGLIB2.cmake
     FindGMP.cmake
     FindGObject.cmake
     FindGpgme.cmake
     FindGSSAPI.cmake
     FindHUNSPELL.cmake
+    FindIBus.cmake
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
     FindKipi.cmake
@@ -79,6 +81,7 @@ set(cmakeFiles
     FindSane.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
+    FindSCIM.cmake
     FindSpeechd.cmake
     FindSqlite.cmake
     FindSubversionLibrary.cmake
