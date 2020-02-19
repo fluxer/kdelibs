@@ -4,17 +4,13 @@
 #
 #  PULSEAUDIO_FOUND - system has PulseAudio
 #  PULSEAUDIO_INCLUDE_DIR - the PulseAudio include directory
-#  PULSEAUDIO_LIBRARY - The libraries needed to use PulseAudio
-#  PULSEAUDIO_MAINLOOP_LIBRARY - The mainloop libraries needed to use PulseAudio
+#  PULSEAUDIO_LIBRARY - the libraries needed to use PulseAudio
+#  PULSEAUDIO_MAINLOOP_LIBRARY - the mainloop libraries needed to use PulseAudio
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-if(PULSEAUDIO_INCLUDE_DIR AND PULSEAUDIO_LIBRARY AND PULSEAUDIO_MAINLOOP_LIBRARY)
-    set(PULSEAUDIO_FIND_QUIETLY TRUE)
-endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)

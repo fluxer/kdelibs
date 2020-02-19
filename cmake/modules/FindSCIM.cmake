@@ -1,19 +1,15 @@
 # - Try to find the SCIM
 # Once done this will define
 #
-#  SCIM_FOUND - system has Fontconfig
-#  SCIM_INCLUDE_DIR - The include directory to use for the fontconfig headers
-#  SCIM_LIBRARIES - Link these to use SCIM
-#  SCIM_DEFINITIONS - Compiler switches required for using SCIM
+#  SCIM_FOUND - system has SCIM
+#  SCIM_INCLUDE_DIR - the SCIM include directory
+#  SCIM_LIBRARIES - the libraries needed to use SCIM
+#  SCIM_DEFINITIONS - compiler switches required for using SCIM
 
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-if(SCIM_INCLUDE_DIR AND SCIM_LIBRARIES)
-    set(SCIM_FIND_QUIETLY TRUE)
-endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)

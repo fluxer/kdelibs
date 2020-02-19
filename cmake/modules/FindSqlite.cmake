@@ -4,16 +4,12 @@
 #
 #  SQLITE_FOUND - system has Sqlite
 #  SQLITE_INCLUDE_DIR - the Sqlite include directory
-#  SQLITE_LIBRARIES - The libraries needed to use Sqlite
+#  SQLITE_LIBRARIES - the libraries needed to use Sqlite
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-if(SQLITE_INCLUDE_DIR AND SQLITE_LIBRARIES)
-    set(SQLITE_FIND_QUIETLY TRUE)
-endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)

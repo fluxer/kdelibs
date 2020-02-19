@@ -4,8 +4,8 @@
 #
 #  POPPLER_QT4_FOUND - system has poppler-qt4
 #  POPPLER_QT4_INCLUDE_DIR - the poppler-qt4 include directory
-#  POPPLER_QT4_LIBRARIES - Link these to use poppler-qt4
-#  POPPLER_QT4_DEFINITIONS - Compiler switches required for using poppler-qt4
+#  POPPLER_QT4_LIBRARIES - the libraries needed to use poppler-qt4
+#  POPPLER_QT4_DEFINITIONS - compiler switches required for using poppler-qt4
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #

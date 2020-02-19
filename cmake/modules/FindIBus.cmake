@@ -2,18 +2,14 @@
 # Once done this will define
 #
 #  IBUS_FOUND - system has IBUS
-#  IBUS_INCLUDE_DIR - The include directory to use for the fontconfig headers
-#  IBUS_LIBRARIES - Link these to use IBUS
-#  IBUS_DEFINITIONS - Compiler switches required for using IBUS
+#  IBUS_INCLUDE_DIR - the IBUS include directory
+#  IBUS_LIBRARIES -  the libraries needed to use IBUS
+#  IBUS_DEFINITIONS - compiler switches required for using IBUS
 
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-if(IBUS_INCLUDE_DIR AND IBUS_LIBRARIES)
-    set(IBUS_FIND_QUIETLY TRUE)
-endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)

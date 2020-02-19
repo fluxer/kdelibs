@@ -4,16 +4,12 @@
 #
 #  MPV_FOUND - system has MPV
 #  MPV_INCLUDES - the MPV include directory
-#  MPV_LIBRARIES - The libraries needed to use MPV
+#  MPV_LIBRARIES - the libraries needed to use MPV
 #
 # Copyright (c) 2015-2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-if(MPV_INCLUDES AND MPV_LIBRARIES)
-    set(MPV_FIND_QUIETLY TRUE)
-endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)

@@ -5,7 +5,7 @@
 #  QCA2_FOUND - system has QCA2
 #  QCA2_INCLUDE_DIR - the QCA2 include directory
 #  QCA2_LIBRARIES - the libraries needed to use QCA2
-#  QCA2_DEFINITIONS - Compiler switches required for using QCA2
+#  QCA2_DEFINITIONS - compiler switches required for using QCA2
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #

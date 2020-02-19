@@ -4,16 +4,12 @@
 #
 #  WEBP_FOUND - system has libwebp
 #  WEBP_INCLUDES - the libwebp include directory
-#  WEBP_LIBRARIES - The libraries needed to use libwebp
+#  WEBP_LIBRARIES - the libraries needed to use libwebp
 #
 # Copyright (c) 2015-2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-if(WEBP_INCLUDES AND WEBP_LIBRARIES)
-    set(WEBP_FIND_QUIETLY TRUE)
-endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)

@@ -4,15 +4,12 @@
 #
 #  MUSICBRAINZ5_FOUND - system has MusicBrainz
 #  MUSICBRAINZ5_INCLUDE_DIR - the MusicBrainz include directory
-#  MUSICBRAINZ5_LIBRARIES - The libraries needed to use MusicBrainz
+#  MUSICBRAINZ5_LIBRARIES - the libraries needed to use MusicBrainz
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
-
-if(MUSICBRAINZ5_INCLUDE_DIR AND MUSICBRAINZ5_LIBRARIES)
-    set(MUSICBRAINZ5_FIND_QUIETLY TRUE)
-endif()
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 if(NOT WIN32)
     include(FindPkgConfig)

@@ -4,15 +4,12 @@
 #
 #  ALSA_FOUND - system has ALSA
 #  ALSA_INCLUDES - the ALSA include directory
-#  ALSA_LIBRARIES - The libraries needed to use ALSA
+#  ALSA_LIBRARIES - the libraries needed to use ALSA
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
-
-if(ALSA_INCLUDES AND ALSA_LIBRARIES)
-    set(ALSA_FIND_QUIETLY TRUE)
-endif()
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 if(NOT WIN32)
     include(FindPkgConfig)

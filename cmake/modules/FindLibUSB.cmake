@@ -4,15 +4,12 @@
 #
 #  LIBUSB_FOUND - system has libusb
 #  LIBUSB_INCLUDES - the libusb include directory
-#  LIBUSB_LIBRARIES - The libraries needed to use libusb
+#  LIBUSB_LIBRARIES - the libraries needed to use libusb
 #
 # Copyright (c) 2016-2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
-
-if(LIBUSB_INCLUDES AND LIBUSB_LIBRARIES)
-    set(LIBUSB_FIND_QUIETLY TRUE)
-endif()
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 if(NOT WIN32)
     include(FindPkgConfig)

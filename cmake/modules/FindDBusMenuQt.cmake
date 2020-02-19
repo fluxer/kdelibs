@@ -5,7 +5,7 @@
 #  DBUSMENUQT_FOUND - system has DBusMenuQt
 #  DBUSMENUQT_INCLUDE_DIR - the DBusMenuQt include directory
 #  DBUSMENUQT_LIBRARIES - the libraries needed to use DBusMenuQt
-#  DBUSMENUQT_DEFINITIONS - Compiler switches required for using DBusMenuQt
+#  DBUSMENUQT_DEFINITIONS - compiler switches required for using DBusMenuQt
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #

@@ -4,16 +4,12 @@
 #
 #  UDISKS2_FOUND - system has UDisks2
 #  UDISKS2_INCLUDE_DIR - the UDisks2 include directory
-#  UDISKS2_LIBRARIES - The libraries needed to use UDisks2
+#  UDISKS2_LIBRARIES - the libraries needed to use UDisks2
 #
 # Copyright (c) 2014-2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-if(UDISKS2_INCLUDE_DIR AND UDISKS2_LIBRARIES)
-    set(UDISKS2_FIND_QUIETLY TRUE)
-endif()
 
 if(NOT WIN32)
     include(FindPkgConfig)

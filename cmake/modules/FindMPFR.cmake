@@ -4,15 +4,12 @@
 #
 #  MPFR_FOUND - system has MPFR
 #  MPFR_INCLUDE_DIR - the MPFR include directory
-#  MPFR_LIBRARIES - The libraries needed to use MPFR
+#  MPFR_LIBRARIES - the libraries needed to use MPFR
 #
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
-
-if(MPFR_INCLUDE_DIR AND MPFR_LIBRARIES)
-    set(MPFR_FIND_QUIETLY TRUE)
-endif()
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 if(NOT WIN32)
     include(FindPkgConfig)

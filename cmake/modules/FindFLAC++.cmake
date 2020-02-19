@@ -3,9 +3,9 @@
 # Once done this will define
 #
 #  FLAC_FOUND - system has FLAC++
-#  FLAC_INCLUDES - the FLAC++ include directory
-#  FLAC_LIBRARIES - Link these to use FLAC++
-#  FLAC_DEFINITIONS - Compiler switches required for using FLAC++
+#  FLAC_INCLUDES - the FLAC++ include directories
+#  FLAC_LIBRARIES - the libraries needed to use FLAC++
+#  FLAC_DEFINITIONS - compiler switches required for using FLAC++
 #
 # Copyright (c) 2019-2020, Ivailo Monev, <xakepa10@gmail.com>
 #
@@ -23,7 +23,7 @@ endif()
 set(FLAC_VERSION ${PC_FLAC_VERSION})
 set(FLAC_DEFINITIONS ${PC_FLAC_CFLAGS_OTHER})
 
-if(NOT FLAC_LIBRARIES OR NOT FLAC_INCLUDES)
+if(NOT FLAC_INCLUDES OR NOT FLAC_LIBRARIES)
     find_path(FLAC_INCLUDES
         NAMES FLAC++/metadata.h
         HINTS $ENV{FLACPPDIR}/include
