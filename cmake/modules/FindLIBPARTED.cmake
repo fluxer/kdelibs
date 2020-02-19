@@ -45,10 +45,6 @@ else (LIBPARTED_FS_RESIZE_LIBRARY)
   set(LIBPARTED_LIBS ${LIBPARTED_LIBRARY})
 endif (LIBPARTED_FS_RESIZE_LIBRARY)
 
-# KDE adds -ansi to the C make flags, parted headers use GNU extensions, so 
-# undo that
-unset(CMAKE_C_FLAGS)
-
 set(CMAKE_REQUIRED_INCLUDES ${LIBPARTED_INCLUDE_DIR})
 set(CMAKE_REQUIRED_LIBRARIES ${LIBPARTED_LIBS})
 
