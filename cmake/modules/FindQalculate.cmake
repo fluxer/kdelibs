@@ -1,51 +1,47 @@
-# - Try to find libqalculate
-# Input variables
-#
-#  QALCULATE_MIN_VERSION - minimal version of libqalculate
-#  QALCULATE_FIND_REQUIRED - fail if can't find libqalculate
+# - Try to find Qalculate
 #
 # Once done this will define
 #
-#  QALCULATE_FOUND - system has libqalculate
-#  QALCULATE_CFLAGS - libqalculate cflags
-#  QALCULATE_LIBRARIES - libqalculate libraries
+#  QALCULATE_FOUND - system has Qalculate
+#  QALCULATE_INCLUDE_DIR - Qalculate include directory
+#  QALCULATE_LIBRARIES - Qalculate libraries
 #
-# Copyright (c) 2007, Vladimir Kuznetsov, <ks.vladimir@gmail.com>
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(QALCULATE_CFLAGS AND QALCULATE_LIBRARIES)
+if(QALCULATE_INCLUDE_DIR AND QALCULATE_LIBRARIES)
+    set(QALCULATE_FIND_QUIETLY TRUE)
+endif()
 
-  # in cache already
-  set(QALCULATE_FOUND TRUE)
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_QALCULATE QUIET libqalculate)
 
-else(QALCULATE_CFLAGS AND QALCULATE_LIBRARIES)
-  if(NOT WIN32)
-    include(UsePkgConfig)
+    set(QALCULATE_INCLUDE_DIR ${PC_QALCULATE_INCLUDE_DIRS})
+    set(QALCULATE_LIBRARIES ${PC_QALCULATE_LIBRARIES})
+endif()
 
-    if(QALCULATE_MIN_VERSION)
-      exec_program(${PKGCONFIG_EXECUTABLE} ARGS libqalculate --atleast-version=${QALCULATE_MIN_VERSION} RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull)
-    else(QALCULATE_MIN_VERSION)
-      exec_program(${PKGCONFIG_EXECUTABLE} ARGS libqalculate --exists RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull)
-    endif(QALCULATE_MIN_VERSION)
+set(QALCULATE_VERSION ${PC_QALCULATE_VERSION})
 
-    if(_return_VALUE STREQUAL "0")
-      exec_program(${PKGCONFIG_EXECUTABLE} ARGS libqalculate --libs OUTPUT_VARIABLE QALCULATE_LIBRARIES)
-      exec_program(${PKGCONFIG_EXECUTABLE} ARGS libqalculate --cflags OUTPUT_VARIABLE QALCULATE_CFLAGS)
-      set(QALCULATE_FOUND TRUE)
-    endif(_return_VALUE STREQUAL "0")
+if(NOT QALCULATE_INCLUDE_DIR OR NOT QALCULATE_LIBRARIES)
+    find_path(QALCULATE_INCLUDE_DIR
+        NAMES qalculate.h
+        PATH_SUFFIXES libqalculate
+        HINTS $ENV{QALCULATEDIR}/include
+    )
 
-  else(NOT WIN32)
-    # XXX: currently no libqalculate on windows
-    set(QALCULATE_FOUND FALSE)
+    find_library(QALCULATE_LIBRARIES
+        NAMES qalculate
+        HINTS $ENV{QALCULATEDIR}/lib
+    )
+endif()
 
-  endif(NOT WIN32)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Qalculate
+    VERSION_VAR QALCULATE_VERSION
+    REQUIRED_VARS QALCULATE_LIBRARIES QALCULATE_INCLUDE_DIR
+)
 
-  include(FindPackageHandleStandardArgs)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(Qalculate DEFAULT_MSG QALCULATE_LIBRARIES )
-
-  mark_as_advanced(QALCULATE_CFLAGS QALCULATE_LIBRARIES)
-
-endif(QALCULATE_CFLAGS AND QALCULATE_LIBRARIES)
-
+mark_as_advanced(QALCULATE_INCLUDE_DIR QALCULATE_LIBRARIES)
