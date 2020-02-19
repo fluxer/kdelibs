@@ -86,14 +86,14 @@ KComboBoxTest::KComboBoxTest(QWidget* widget)
   // Read-write combobox that is a replica of code in konqueror...
   hbox = new KHBox(this);
   hbox->setSpacing (-1);
-  lbl = new QLabel( "&Konq's Combo:", hbox);
+  lbl = new QLabel( "&Completion Combo:", hbox);
   lbl->setSizePolicy (QSizePolicy::Maximum, QSizePolicy::Preferred);
 
-  m_konqc = new KComboBox( true, hbox );
-  m_konqc->setObjectName( "KonqyCombo" );
-  lbl->setBuddy (m_konqc);
-  m_konqc->setMaxCount( 10 );
-  connectComboSignals(m_konqc);
+  m_comp = new KComboBox( true, hbox );
+  m_comp->setObjectName( "CompletionCombo" );
+  lbl->setBuddy (m_comp);
+  m_comp->setMaxCount( 10 );
+  connectComboSignals(m_comp);
   vbox->addWidget (hbox);
 
   // Create an exit button
@@ -128,18 +128,18 @@ KComboBoxTest::KComboBoxTest(QWidget* widget)
   m_hc->addItems( list );
   m_hc->completionObject()->setItems( list + QStringList() << "One" << "Two" << "Three" );
 
-  // Setup konq's combobox
-  KConfig historyConfig( "konq_history", KConfig::SimpleConfig );
-  KConfigGroup cg(&historyConfig, "Location Bar" );
+  // Setup completion combobox
+  QStringList urls;
+  urls << "https://www.google.com/" << "https://github.com/" << "https://www.youtube.com/";
   KCompletion * s_pCompletion = new KCompletion;
   s_pCompletion->setOrder( KCompletion::Weighted );
-  s_pCompletion->setItems( cg.readEntry( "ComboContents", QStringList() ) );
+  s_pCompletion->setItems( urls );
   s_pCompletion->setCompletionMode( KGlobalSettings::completionMode() );
-  m_konqc->setCompletionObject( s_pCompletion );
+  m_comp->setCompletionObject( s_pCompletion );
 
   QPixmap pix = SmallIcon("www");
-  m_konqc->addItem( pix, "http://www.kde.org" );
-  m_konqc->setCurrentIndex( m_konqc->count()-1 );
+  m_comp->addItem( pix, "http://www.kde.org" );
+  m_comp->setCurrentIndex( m_comp->count()-1 );
 
   m_timer = new QTimer (this);
   connect (m_timer, SIGNAL (timeout()), SLOT (slotTimeout()));
@@ -185,7 +185,7 @@ void KComboBoxTest::slotTimeout ()
   m_ro->setEnabled (!enabled);
   m_rw->setEnabled (!enabled);
   m_hc->setEnabled (!enabled);
-  m_konqc->setEnabled (!enabled);
+  m_comp->setEnabled (!enabled);
 
   m_btnEnable->setEnabled (!m_btnEnable->isEnabled());
 }

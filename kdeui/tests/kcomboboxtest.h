@@ -37,7 +37,7 @@ private:
   KComboBox* m_ro;
   KComboBox* m_rw;
   KComboBox* m_hc;
-  KComboBox* m_konqc;
+  KComboBox* m_comp;
 
 
   QPushButton* m_btnExit;
