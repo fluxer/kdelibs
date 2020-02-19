@@ -100,7 +100,6 @@ set(cmakeFiles
     MacroLogFeature.cmake
     MacroOptionalAddSubdirectory.cmake
     MacroOptionalFindPackage.cmake
-    MacroPushRequiredVars.cmake
     MacroWriteBasicCMakeVersionFile.cmake
     UnixAuth.cmake
 )

@@ -1,6 +1,8 @@
 ####### checks for kdecore/network ###############
 
-macro_push_required_vars()
+include(CMakePushCheckState)
+
+cmake_reset_check_state()
 set(CMAKE_REQUIRED_INCLUDES "${CMAKE_REQUIRED_INCLUDES};${QT_INCLUDE_DIR}")
 set(CMAKE_REQUIRED_DEFINITIONS "${CMAKE_REQUIRED_DEFINITIONS} ${QT_DEFINITIONS}")
 if (QT_USE_FRAMEWORKS)
@@ -18,4 +20,4 @@ int main()
 if (NOT HAVE_QSSLSOCKET)
     message(SEND_ERROR "KDE Requires Katie to be built with SSL support")
 endif()
-macro_pop_required_vars()
+cmake_pop_check_state()
