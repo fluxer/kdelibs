@@ -27,6 +27,8 @@ set(KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 
 set(KDE_NO_DEPRECATED TRUE CACHE BOOL "Whether deprecated functionality is desired")
 
+set(LIBRARY_TYPE SHARED)
+
 ################# now find all used packages #################
 
 find_package(KDE4Internal REQUIRED)
@@ -132,6 +134,26 @@ set_package_properties(MPV PROPERTIES
     PURPOSE "Media preview, sound notifications, etc."
 )
 
+macro_optional_find_package(ACL)
+set_package_properties(ACL
+    PROPERTIES
+    DESCRIPTION "Support for manipulating access control lists"
+    URL "ftp://oss.sgi.com/projects/xfs/cmd_tars"
+    TYPE RECOMMENDED
+    PURPOSE "KIO and KIO slaves"
+)
+
+################# configure checks and create the configured files #################
+
+include(ConfigureChecks.cmake)
+
+# now create config headers
+configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+configure_file(config-acl.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-acl.h)
+configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h)
+configure_file(config-pty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-pty.h)
+configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h)
+
 ################# Disallow in-source build #################
 
 if("${CMAKE_SOURCE_DIR}" STREQUAL "${CMAKE_BINARY_DIR}")
@@ -229,30 +251,6 @@ set(KDE4_KPARTS_INCLUDES
     ${CMAKE_BINARY_DIR}/kparts
     ${KDE4_KIO_INCLUDES}
 )
-
-################# configure checks and create the configured files #################
-
-set(LIBRARY_TYPE SHARED)
-
-macro_optional_find_package(ACL)
-set_package_properties(ACL
-    PROPERTIES
-    DESCRIPTION "Support for manipulating access control lists"
-    URL "ftp://oss.sgi.com/projects/xfs/cmd_tars"
-    TYPE RECOMMENDED
-    PURPOSE "KIO and KIO slaves"
-)
-
-macro_bool_to_01(ACL_FOUND HAVE_LIBACL HAVE_POSIX_ACL)
-configure_file(config-acl.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-acl.h)
-
-include(ConfigureChecks.cmake)
-
-# now create config headers
-configure_file(config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
-configure_file(config-prefix.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-prefix.h)
-configure_file(config-pty.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-pty.h)
-configure_file(kdemacros.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h)
 
 ################# list the subdirectories #################
 

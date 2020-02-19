@@ -18,7 +18,9 @@ include(CheckPrototypeDefinition)
 # definitions like _GNU_SOURCE that are needed on each platform.
 set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 
+
 macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore
+macro_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)              # kio
 
 check_include_files(stdio.h       HAVE_STDIO_H)                        # various
 check_include_files(stdlib.h      HAVE_STDLIB_H)                       # various
