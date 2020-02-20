@@ -5,7 +5,7 @@
 #  SCIM_INCLUDE_DIR - the SCIM include directory
 #  SCIM_LIBRARIES - the libraries needed to use SCIM
 #  SCIM_DEFINITIONS - compiler switches required for using SCIM
-
+#
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.

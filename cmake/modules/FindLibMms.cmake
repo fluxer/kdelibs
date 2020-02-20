@@ -3,60 +3,40 @@
 #
 #  LIBMMS_FOUND - system has libmms
 #  LIBMMS_INCLUDE_DIR - the libmms include directory
-#  LIBMMS_LIBRARIES - Link these to use libmms
-
-# Copyright (c) 2007 Joris Guisson <joris.guisson@gmail.com>
-# Copyright (c) 2007 Charles Connell <charles@connells.org> (This was based upon FindKopete.cmake)
+#  LIBMMS_LIBRARIES - the libraries needed to use libmms
+#
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(LIBMMS_INCLUDE_DIR AND LIBMMS_LIBRARIES)
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_LIBMMS QUIET libmms)
 
-  # read from cache
-  set(LIBMMS_FOUND TRUE)
+    set(LIBMMS_INCLUDE_DIR ${PC_LIBMMS_INCLUDE_DIRS})
+    set(LIBMMS_LIBRARIES ${PC_LIBMMS_LIBRARIES})
+endif()
 
-else(LIBMMS_INCLUDE_DIR AND LIBMMS_LIBRARIES)
+set(LIBMMS_VERSION ${PC_LIBMMS_VERSION})
 
-  FIND_PATH(LIBMMS_INCLUDE_DIR 
-    NAMES
-    mmsx.h
-    PATHS
-    ${INCLUDE_INSTALL_DIR}
-    PATH_SUFFIXES
-    libmms
+if(NOT LIBMMS_INCLUDE_DIR OR NOT LIBMMS_LIBRARIES)
+    find_path(LIBMMS_INCLUDE_DIR
+        NAMES mmsx.h
+        PATH_SUFFIXES libmms
+        HINTS $ENV{LIBMMSDIR}/include
     )
-  
-  FIND_LIBRARY(LIBMMS_LIBRARIES 
-    NAMES
-    mms
-    PATHS
-    ${LIB_INSTALL_DIR}
+
+    find_library(LIBMMS_LIBRARIES
+        NAMES mms
+        HINTS $ENV{LIBMMSDIR}/lib
     )
-  if(LIBMMS_INCLUDE_DIR AND LIBMMS_LIBRARIES)
-    set(LIBMMS_FOUND TRUE)
-  endif(LIBMMS_INCLUDE_DIR AND LIBMMS_LIBRARIES)
+endif()
 
-  if(LIBMMS_FOUND)
-    if(NOT LIBKTORRENT_FIND_QUIETLY)
-      message(STATUS "Found libmms: ${LIBMMS_LIBRARIES} ")
-    endif(NOT LIBKTORRENT_FIND_QUIETLY)
-  else(LIBMMS_FOUND)
-    if(LIBKTORRENT_FIND_REQUIRED)
-      if(NOT LIBMMS_INCLUDE_DIR)
-    message(FATAL_ERROR "Could not find libmms includes.")
-      endif(NOT LIBMMS_INCLUDE_DIR)
-      if(NOT LIBMMS_LIBRARIES)
-    message(FATAL_ERROR "Could not find libmms library.")
-      endif(NOT LIBMMS_LIBRARIES)
-    else(LIBKTORRENT_FIND_REQUIRED)
-      if(NOT LIBMMS_INCLUDE_DIR)
-        message(STATUS "Could not find libmms includes.")
-      endif(NOT LIBMMS_INCLUDE_DIR)
-      if(NOT LIBMMS_LIBRARIES)
-        message(STATUS "Could not find libmms library.")
-      endif(NOT LIBMMS_LIBRARIES)
-    endif(LIBKTORRENT_FIND_REQUIRED)
-  endif(LIBMMS_FOUND)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(LibMms
+    VERSION_VAR LIBMMS_VERSION
+    REQUIRED_VARS LIBMMS_LIBRARIES LIBMMS_INCLUDE_DIR
+)
 
-endif(LIBMMS_INCLUDE_DIR AND LIBMMS_LIBRARIES)
+mark_as_advanced(LIBMMS_INCLUDE_DIR LIBMMS_LIBRARIES)
