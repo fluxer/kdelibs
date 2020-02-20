@@ -97,7 +97,6 @@ set(cmakeFiles
     MacroBoolTo01.cmake
     MacroDBusAddActivationService.cmake
     MacroLibrary.cmake
-    MacroLogFeature.cmake
     MacroOptionalAddSubdirectory.cmake
     MacroOptionalFindPackage.cmake
     MacroWriteBasicCMakeVersionFile.cmake
