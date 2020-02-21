@@ -11,12 +11,18 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+set(LIBATTICA_NAMES libattica-katie libattica)
+
 if(NOT WIN32)
     include(FindPkgConfig)
-    pkg_check_modules(PC_LIBATTICA QUIET libattica)
+    foreach(name ${LIBATTICA_NAMES})
+        if(NOT PC_LIBATTICA_FOUND)
+            pkg_check_modules(PC_LIBATTICA QUIET ${name})
 
-    set(LIBATTICA_INCLUDE_DIR ${PC_LIBATTICA_INCLUDE_DIRS})
-    set(LIBATTICA_LIBRARIES ${PC_LIBATTICA_LIBRARIES})
+            set(LIBATTICA_INCLUDE_DIR ${PC_LIBATTICA_INCLUDE_DIRS})
+            set(LIBATTICA_LIBRARIES ${PC_LIBATTICA_LIBRARIES})
+        endif()
+    endforeach()
 endif()
 
 set(LIBATTICA_VERSION ${PC_LIBATTICA_VERSION})
@@ -24,12 +30,12 @@ set(LIBATTICA_VERSION ${PC_LIBATTICA_VERSION})
 if(NOT LIBATTICA_INCLUDE_DIR OR NOT LIBATTICA_LIBRARIES)
     find_path(LIBATTICA_INCLUDE_DIR
         NAMES attica/provider.h
-        PATH_SUFFIXES attica
+        PATH_SUFFIXES attica-katie attica
         HINTS $ENV{LIBATTICADIR}/include
     )
 
     find_library(LIBATTICA_LIBRARIES
-        NAMES attica
+        NAMES attica-katie attica
         HINTS $ENV{LIBATTICADIR}/lib
     )
 endif()
