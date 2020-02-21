@@ -130,7 +130,8 @@ void KServiceTest::cleanupTestCase()
     }
     QProcess proc;
     proc.setProcessChannelMode(QProcess::MergedChannels); // silence kbuildsycoca output
-    proc.execute(KStandardDirs::findExe(KBUILDSYCOCA_EXENAME));
+    proc.start(KStandardDirs::findExe(KBUILDSYCOCA_EXENAME));
+    proc.waitForFinished();
 }
 
 void KServiceTest::testByName()
