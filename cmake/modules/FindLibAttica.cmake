@@ -1,63 +1,43 @@
 # Try to find the Attica library
+#
 # Once done this will define
 #
-#   LIBATTICA_FOUND          Indicates that Attica was found
-#   LIBATTICA_LIBRARIES      Libraries needed to use Attica
-#   LIBATTICA_LIBRARY_DIRS   Paths needed for linking against Attica
-#   LIBATTICA_INCLUDE_DIR    Path needed for finding Attica include files
+#  LIBATTICA_FOUND - system has Attica
+#  LIBATTICA_LIBRARIES - the Attica include directory
+#  LIBATTICA_INCLUDE_DIR - the libraries needed to use Attica
 #
-# The minimum required version of LibAttica can be specified using the
-# standard syntax, e.g. find_package(LibAttica 0.20)
-
-# Copyright (c) 2009 Frederik Gladhorn <gladhorn@kde.org>
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-# Support LIBATTICA_MIN_VERSION for compatibility:
-IF(NOT LibAttica_FIND_VERSION)
-  SET(LibAttica_FIND_VERSION "${LIBATTICA_MIN_VERSION}")
-ENDIF(NOT LibAttica_FIND_VERSION)
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_LIBATTICA QUIET libattica)
 
-# the minimum version of LibAttica we require
-IF(NOT LibAttica_FIND_VERSION)
-  SET(LibAttica_FIND_VERSION "0.1.0")
-ENDIF(NOT LibAttica_FIND_VERSION)
+    set(LIBATTICA_INCLUDE_DIR ${PC_LIBATTICA_INCLUDE_DIRS})
+    set(LIBATTICA_LIBRARIES ${PC_LIBATTICA_LIBRARIES})
+endif()
 
+set(LIBATTICA_VERSION ${PC_LIBATTICA_VERSION})
 
-IF (NOT WIN32)
-   # use pkg-config to get the directories and then use these values
-   # in the FIND_PATH() and FIND_LIBRARY() calls
-   FIND_PACKAGE(PkgConfig)
-   PKG_CHECK_MODULES(PC_LIBATTICA QUIET libattica)
-   SET(LIBATTICA_DEFINITIONS ${PC_ATTICA_CFLAGS_OTHER})
-ENDIF (NOT WIN32)
+if(NOT LIBATTICA_INCLUDE_DIR OR NOT LIBATTICA_LIBRARIES)
+    find_path(LIBATTICA_INCLUDE_DIR
+        NAMES attica/provider.h
+        PATH_SUFFIXES attica
+        HINTS $ENV{LIBATTICADIR}/include
+    )
 
-FIND_PATH(LIBATTICA_INCLUDE_DIR attica/provider.h
-   HINTS
-   ${PC_LIBATTICA_INCLUDEDIR}
-   ${PC_LIBATTICA_INCLUDE_DIRS}
-   PATH_SUFFIXES attica
-   )
+    find_library(LIBATTICA_LIBRARIES
+        NAMES attica
+        HINTS $ENV{LIBATTICADIR}/lib
+    )
+endif()
 
-# Store the version number in the cache, so we don't have to search every time:
-IF(LIBATTICA_INCLUDE_DIR  AND NOT  LIBATTICA_VERSION)
-  FILE(READ ${LIBATTICA_INCLUDE_DIR}/attica/version.h LIBATTICA_VERSION_CONTENT)
-  STRING (REGEX MATCH "LIBATTICA_VERSION_STRING \".*\"\n" LIBATTICA_VERSION_MATCH "${LIBATTICA_VERSION_CONTENT}")
-  IF(LIBATTICA_VERSION_MATCH)
-    STRING(REGEX REPLACE "LIBATTICA_VERSION_STRING \"(.*)\"\n" "\\1" _LIBATTICA_VERSION ${LIBATTICA_VERSION_MATCH})
-  ENDIF(LIBATTICA_VERSION_MATCH)
-  SET(LIBATTICA_VERSION "${_LIBATTICA_VERSION}" CACHE STRING "Version number of LibAttica" FORCE)
-ENDIF(LIBATTICA_INCLUDE_DIR  AND NOT  LIBATTICA_VERSION)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(LibAttica
+    VERSION_VAR LIBATTICA_VERSION
+    REQUIRED_VARS LIBATTICA_LIBRARIES LIBATTICA_INCLUDE_DIR
+)
 
-
-FIND_LIBRARY(LIBATTICA_LIBRARIES NAMES attica libattica
-   HINTS
-   ${PC_LIBATTICA_LIBDIR}
-   ${PC_LIBATTICA_LIBRARY_DIRS}
-   )
-
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(LibAttica  REQUIRED_VARS LIBATTICA_LIBRARIES LIBATTICA_INCLUDE_DIR
-                                             VERSION_VAR LIBATTICA_VERSION)
-
-MARK_AS_ADVANCED(LIBATTICA_INCLUDE_DIR LIBATTICA_LIBRARIES)
+mark_as_advanced(LIBATTICA_INCLUDE_DIR LIBATTICA_LIBRARIES)

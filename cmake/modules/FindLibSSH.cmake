@@ -1,80 +1,44 @@
 # - Try to find LibSSH
+#
 # Once done this will define
 #
 #  LIBSSH_FOUND - system has LibSSH
 #  LIBSSH_INCLUDE_DIRS - the LibSSH include directory
-#  LIBSSH_LIBRARIES - Link these to use LibSSH
-#  LIBSSH_DEFINITIONS - Compiler switches required for using LibSSH
+#  LIBSSH_LIBRARIES - the libraries needed to use LibSSH
+#  LIBSSH_DEFINITIONS - compiler switches required for using LibSSH
 #
-#  Copyright (c) 2009-2014 Andreas Schneider <asn@cryptomilk.org>
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
-#  Redistribution and use is allowed according to the terms of the New
-#  BSD license.
-#  For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-find_path(LIBSSH_INCLUDE_DIR
-  NAMES
-    libssh/libssh.h
-  PATHS
-    /usr/include
-    /usr/local/include
-    /opt/local/include
-    /sw/include
-    ${CMAKE_INCLUDE_PATH}
-    ${CMAKE_INSTALL_PREFIX}/include
-)
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_LIBSSH QUIET libssh)
 
-find_library(SSH_LIBRARY
-  NAMES
-    ssh
-    libssh
-  PATHS
-    /usr/lib
-    /usr/local/lib
-    /opt/local/lib
-    /sw/lib
-    ${CMAKE_LIBRARY_PATH}
-    ${CMAKE_INSTALL_PREFIX}/lib
-)
+    set(LIBSSH_INCLUDE_DIR ${PC_LIBSSH_INCLUDE_DIRS})
+    set(LIBSSH_LIBRARIES ${PC_LIBSSH_LIBRARIES})
+endif()
 
-set(LIBSSH_LIBRARIES
-    ${LIBSSH_LIBRARIES}
-    ${SSH_LIBRARY}
-)
+set(LIBSSH_VERSION ${PC_LIBSSH_VERSION})
+set(LIBSSH_DEFINITIONS ${PC_LIBSSH_CFLAGS_OTHER})
 
-if (LIBSSH_INCLUDE_DIR AND LibSSH_FIND_VERSION)
-  file(STRINGS ${LIBSSH_INCLUDE_DIR}/libssh/libssh.h LIBSSH_VERSION_MAJOR
-    REGEX "#define[ ]+LIBSSH_VERSION_MAJOR[ ]+[0-9]+")
+if(NOT LIBSSH_INCLUDE_DIR OR NOT LIBSSH_LIBRARIES)
+    find_path(LIBSSH_INCLUDE_DIR
+        NAMES libssh/libssh.h
+        HINTS $ENV{LIBSSHDIR}/include
+    )
 
-  # Older versions of libssh like libssh-0.2 have LIBSSH_VERSION but not LIBSSH_VERSION_MAJOR
-  if (LIBSSH_VERSION_MAJOR)
-    string(REGEX MATCH "[0-9]+" LIBSSH_VERSION_MAJOR ${LIBSSH_VERSION_MAJOR})
-    file(STRINGS ${LIBSSH_INCLUDE_DIR}/libssh/libssh.h LIBSSH_VERSION_MINOR
-      REGEX "#define[ ]+LIBSSH_VERSION_MINOR[ ]+[0-9]+")
-    string(REGEX MATCH "[0-9]+" LIBSSH_VERSION_MINOR ${LIBSSH_VERSION_MINOR})
-    file(STRINGS ${LIBSSH_INCLUDE_DIR}/libssh/libssh.h LIBSSH_VERSION_PATCH
-      REGEX "#define[ ]+LIBSSH_VERSION_MICRO[ ]+[0-9]+")
-    string(REGEX MATCH "[0-9]+" LIBSSH_VERSION_PATCH ${LIBSSH_VERSION_PATCH})
+    find_library(LIBSSH_LIBRARIES
+        NAMES ssh
+        HINTS $ENV{LIBSSHDIR}/lib
+    )
+endif()
 
-    set(LIBSSH_VERSION ${LIBSSH_VERSION_MAJOR}.${LIBSSH_VERSION_MINOR}.${LIBSSH_VERSION_PATCH})
-
-  else (LIBSSH_VERSION_MAJOR)
-    message(STATUS "LIBSSH_VERSION_MAJOR not found in ${LIBSSH_INCLUDE_DIR}/libssh/libssh.h, assuming libssh is too old")
-    set(LIBSSH_FOUND FALSE)
-  endif (LIBSSH_VERSION_MAJOR)
-endif (LIBSSH_INCLUDE_DIR AND LibSSH_FIND_VERSION)
-
-# If the version is too old, but libs and includes are set,
-# find_package_handle_standard_args will set LIBSSH_FOUND to TRUE again,
-# so we need this if() here.
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(LibSSH
-                                  REQUIRED_VARS
-                                    LIBSSH_LIBRARIES
-                                    LIBSSH_INCLUDE_DIR
-                                  VERSION_VAR
-                                    LIBSSH_VERSION)
+    VERSION_VAR LIBSSH_VERSION
+    REQUIRED_VARS LIBSSH_LIBRARIES LIBSSH_INCLUDE_DIR
+)
 
-# show the LIBSSH_INCLUDE_DIRS and LIBSSH_LIBRARIES variables only in the advanced view
 mark_as_advanced(LIBSSH_INCLUDE_DIR LIBSSH_LIBRARIES)

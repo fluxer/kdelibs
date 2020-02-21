@@ -1,45 +1,42 @@
-# - Find LibLZMA
-# Find LibLZMA headers and library
+# - Try to find the LibLZMA
 #
-#  LIBLZMA_FOUND             - True if liblzma is found.
-#  LIBLZMA_INCLUDE_DIRS      - Directory where liblzma headers are located.
-#  LIBLZMA_LIBRARIES         - Lzma libraries to link against.
-#  LIBLZMA_HAS_AUTO_DECODER  - True if lzma_auto_decoder() is found (required).
-#  LIBLZMA_HAS_EASY_ENCODER  - True if lzma_easy_encoder() is found (required).
-#  LIBLZMA_HAS_LZMA_PRESET   - True if lzma_lzma_preset() is found (required).
-
-
-# Copyright (c) 2008, Per Øyvind Karlsen, <peroyvind@mandriva.org>
-# Copyright (c) 2009, Alexander Neundorf, <neundorf@kde.org>
-# Copyright (c) 2009, Helio Chissini de Castro, <helio@kde.org>
+# Once done this will define
+#
+#  LIBLZMA_FOUND - system has LibLZMA
+#  LIBLZMA_INCLUDE_DIRS - the LibLZMA include directory
+#  LIBLZMA_LIBRARIES - the libraries needed to use LibLZMA
+#
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_LIBLZMA QUIET liblzma)
 
-FIND_PATH(LIBLZMA_INCLUDE_DIR lzma.h )
-FIND_LIBRARY(LIBLZMA_LIBRARY lzma)
+    set(LIBLZMA_INCLUDE_DIR ${PC_LIBLZMA_INCLUDE_DIRS})
+    set(LIBLZMA_LIBRARIES ${PC_LIBLZMA_LIBRARIES})
+endif()
 
-SET(LIBLZMA_LIBRARIES ${LIBLZMA_LIBRARY})
-SET(LIBLZMA_INCLUDE_DIRS ${LIBLZMA_INCLUDE_DIR})
+set(LIBLZMA_VERSION ${PC_LIBLZMA_VERSION})
 
+if(NOT LIBLZMA_INCLUDE_DIR OR NOT LIBLZMA_LIBRARIES)
+    find_path(LIBLZMA_INCLUDE_DIR
+        NAMES lzma.h
+        HINTS $ENV{LIBLZMADIR}/include
+    )
 
-# We're using new code known now as XZ, even library still been called LZMA
-# it can be found in http://tukaani.org/xz/
-# Avoid using old codebase
-IF (LIBLZMA_LIBRARIES)
-   INCLUDE(CheckLibraryExists)
-   CHECK_LIBRARY_EXISTS(${LIBLZMA_LIBRARIES} lzma_auto_decoder "" LIBLZMA_HAS_AUTO_DECODER)
-   CHECK_LIBRARY_EXISTS(${LIBLZMA_LIBRARIES} lzma_easy_encoder "" LIBLZMA_HAS_EASY_ENCODER)
-   CHECK_LIBRARY_EXISTS(${LIBLZMA_LIBRARIES} lzma_lzma_preset "" LIBLZMA_HAS_LZMA_PRESET)
-ENDIF (LIBLZMA_LIBRARIES)
+    find_library(LIBLZMA_LIBRARIES
+        NAMES lzma
+        HINTS $ENV{LIBLZMADIR}/lib
+    )
+endif()
 
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(LIBLZMA  DEFAULT_MSG  LIBLZMA_INCLUDE_DIR 
-                                                        LIBLZMA_LIBRARY
-                                                        LIBLZMA_HAS_AUTO_DECODER
-                                                        LIBLZMA_HAS_EASY_ENCODER
-                                                        LIBLZMA_HAS_LZMA_PRESET
-                                 )
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(LibLZMA
+    VERSION_VAR LIBLZMA_VERSION
+    REQUIRED_VARS LIBLZMA_LIBRARIES LIBLZMA_INCLUDE_DIR
+)
 
-MARK_AS_ADVANCED( LIBLZMA_INCLUDE_DIR LIBLZMA_LIBRARY )
+mark_as_advanced(LIBLZMA_INCLUDE_DIR LIBLZMA_LIBRARIES)

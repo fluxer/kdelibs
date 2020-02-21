@@ -1,20 +1,42 @@
-# - Try to find the raw1394 directory library
+# - Try to find the raw1394
+#
 # Once done this will define
 #
-#  RAW1394_FOUND - system has RAW1394
-#  RAW1394_INCLUDE_DIR - the RAW1394 include directory
-#  RAW1394_LIBRARIES - The libraries needed to use FAM
+#  RAW1394_FOUND - system has raw1394
+#  RAW1394_INCLUDE_DIR - the raw1394 include directory
+#  RAW1394_LIBRARIES - the libraries needed to use raw1394
+#
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(RAW1394_INCLUDE_DIR AND RAW1394_LIBRARIES)
-   set(RAW1394_FIND_QUIETLY TRUE)
-endif(RAW1394_INCLUDE_DIR AND RAW1394_LIBRARIES)
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_RAW1394 QUIET libraw1394)
 
-FIND_PATH(RAW1394_INCLUDE_DIR libraw1394/raw1394.h)
+    set(RAW1394_INCLUDE_DIR ${PC_RAW1394_INCLUDE_DIRS})
+    set(RAW1394_LIBRARIES ${PC_RAW1394_LIBRARIES})
+endif()
 
-FIND_LIBRARY(RAW1394_LIBRARIES NAMES raw1394 )
+set(RAW1394_VERSION ${PC_RAW1394_VERSION})
+
+if(NOT RAW1394_INCLUDE_DIR OR NOT RAW1394_LIBRARIES)
+    find_path(RAW1394_INCLUDE_DIR
+        NAMES libraw1394/raw1394.h
+        HINTS $ENV{RAW1394DIR}/include
+    )
+
+    find_library(RAW1394_LIBRARIES
+        NAMES raw1394
+        HINTS $ENV{RAW1394DIR}/lib
+    )
+endif()
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(RAW1394 DEFAULT_MSG RAW1394_LIBRARIES RAW1394_INCLUDE_DIR)
+find_package_handle_standard_args(RAW1394
+    VERSION_VAR RAW1394_VERSION
+    REQUIRED_VARS RAW1394_LIBRARIES RAW1394_INCLUDE_DIR
+)
 
-MARK_AS_ADVANCED(RAW1394_INCLUDE_DIR RAW1394_LIBRARIES)
-
+mark_as_advanced(RAW1394_INCLUDE_DIR RAW1394_LIBRARIES)
