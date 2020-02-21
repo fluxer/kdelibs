@@ -68,8 +68,7 @@ bool KXzFilter::init( int mode )
 
     d->zStream.next_in = 0;
     d->zStream.avail_in = 0;
-    if ( mode == QIODevice::ReadOnly )
-    {
+    if ( mode == QIODevice::ReadOnly ) {
         /* We set the memlimit for decompression to 100MiB which should be
          * more than enough to be sufficient for level 9 which requires 65 MiB.
         */
@@ -150,8 +149,7 @@ KXzFilter::Result KXzFilter::uncompress()
 {
     //kDebug(7131) << "Calling lzma_code with avail_in=" << inBufferAvailable() << " avail_out =" << outBufferAvailable();
     lzma_ret result = lzma_code(&d->zStream, LZMA_RUN);
-    if ( result != LZMA_OK )
-    {
+    if ( result != LZMA_OK ) {
         kDebug(7131) << "lzma_code returned " << result;
         kDebug(7131) << "KXzFilter::uncompress " << ( result == LZMA_STREAM_END ? KFilterBase::End : KFilterBase::Error );
     }
@@ -174,15 +172,12 @@ KXzFilter::Result KXzFilter::compress( bool finish )
     switch (result) {
         case LZMA_OK:
                 return KFilterBase::Ok;
-                break;
         case LZMA_STREAM_END:
                 kDebug(7131) << "  lzma_code returned " << result;
                 return KFilterBase::End;
-		break;
         default:
                 kDebug(7131) << "  lzma_code returned " << result;
                 return KFilterBase::Error;
-                break;
     }
 }
 
