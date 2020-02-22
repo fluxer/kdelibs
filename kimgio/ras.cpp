@@ -322,6 +322,4 @@ QImageIOHandler *RASPlugin::create(QIODevice *device, const QByteArray &format) 
     return handler;
 }
 
-
-Q_EXPORT_STATIC_PLUGIN(RASPlugin)
 Q_EXPORT_PLUGIN2(ras, RASPlugin)

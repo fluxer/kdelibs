@@ -255,5 +255,4 @@ QImageIOHandler *XVPlugin::create(QIODevice *device, const QByteArray &format) c
     return handler;
 }
 
-Q_EXPORT_STATIC_PLUGIN(XVPlugin)
 Q_EXPORT_PLUGIN2(xv, XVPlugin)

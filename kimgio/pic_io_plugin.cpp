@@ -50,6 +50,5 @@ QImageIOHandler * SoftimagePICPlugin::create(QIODevice *device, const QByteArray
     return handler;
 }
 
-Q_EXPORT_STATIC_PLUGIN(SoftimagePICPlugin)
 Q_EXPORT_PLUGIN2(softimagePICPlugin, SoftimagePICPlugin)
 

@@ -358,5 +358,4 @@ QImageIOHandler *PSDPlugin::create(QIODevice *device, const QByteArray &format) 
     return handler;
 }
 
-Q_EXPORT_STATIC_PLUGIN(PSDPlugin)
 Q_EXPORT_PLUGIN2(psd, PSDPlugin)

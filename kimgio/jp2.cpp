@@ -506,7 +506,6 @@ QImageIOHandler *JP2Plugin::create(QIODevice *device, const QByteArray &format) 
     return handler;
 }
 
-Q_EXPORT_STATIC_PLUGIN(JP2Plugin)
 Q_EXPORT_PLUGIN2(jp2, JP2Plugin)
 
 

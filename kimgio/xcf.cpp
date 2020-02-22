@@ -2464,5 +2464,4 @@ QImageIOHandler *XCFPlugin::create(QIODevice *device, const QByteArray &format) 
     return handler;
 }
 
-Q_EXPORT_STATIC_PLUGIN(XCFPlugin)
 Q_EXPORT_PLUGIN2(xcf,XCFPlugin)
