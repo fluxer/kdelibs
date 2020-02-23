@@ -92,7 +92,6 @@ if (UNIX)
 
   check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)
   check_include_files(util.h       HAVE_UTIL_H)
-  check_include_files(termios.h    HAVE_TERMIOS_H)
   check_include_files(termio.h     HAVE_TERMIO_H)
   check_include_files(pty.h        HAVE_PTY_H)
   check_include_files(sys/stropts.h HAVE_SYS_STROPTS_H)
