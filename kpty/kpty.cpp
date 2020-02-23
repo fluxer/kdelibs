@@ -231,8 +231,6 @@ bool KPty::open()
 
 #ifdef HAVE_POSIX_OPENPT
   d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
-#elif defined(HAVE_GETPT)
-  d->masterFd = ::getpt();
 #elif defined(PTM_DEVICE)
   d->masterFd = KDE_open(PTM_DEVICE, O_RDWR|O_NOCTTY);
 #else
