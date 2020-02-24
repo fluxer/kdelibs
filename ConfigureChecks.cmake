@@ -156,7 +156,6 @@ if (UNIX)
     message(STATUS "PTY multiplexer: ${PTM_DEVICE}")
 
     check_function_exists(revoke     HAVE_REVOKE)
-    check_function_exists(_getpty    HAVE__GETPTY)
     check_function_exists(grantpt    HAVE_GRANTPT)
     check_function_exists(unlockpt   HAVE_UNLOCKPT)
     check_function_exists(posix_openpt HAVE_POSIX_OPENPT)

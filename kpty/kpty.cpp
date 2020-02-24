@@ -219,15 +219,7 @@ bool KPty::open()
 
 #else
 
-#ifdef HAVE__GETPTY // irix
-
-  char *ptsn = _getpty(&d->masterFd, O_RDWR|O_NOCTTY, S_IRUSR|S_IWUSR, 0);
-  if (ptsn) {
-    d->ttyName = ptsn;
-    goto grantedpt;
-  }
-
-#elif defined(HAVE_PTSNAME) || defined(TIOCGPTN)
+#if defined(HAVE_PTSNAME) || defined(TIOCGPTN)
 
 #ifdef HAVE_POSIX_OPENPT
   d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);

@@ -7,7 +7,6 @@
 #cmakedefine HAVE_PTSNAME 1
 #cmakedefine HAVE_REVOKE 1
 #cmakedefine HAVE_UNLOCKPT 1
-#cmakedefine HAVE__GETPTY 1
 #cmakedefine HAVE_TCGETATTR
 #cmakedefine HAVE_TCSETATTR
 
