@@ -270,10 +270,6 @@ target_link_libraries(kdecore PRIVATE
     ${kdecore_OPTIONAL_LIBS}
 )
 
-if(NOT HAVE_TRUNC)
-    target_link_libraries(kdecore PRIVATE m)
-endif()
-
 target_link_libraries(kdecore PUBLIC
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}

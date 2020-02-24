@@ -6,40 +6,39 @@
 
 /****************************/
 
-/* Define to 1 if you have stdio.h */
-#cmakedefine   HAVE_STDIO_H 1
-
-/* Define to 1 if you have stdlib.h */
-#cmakedefine   HAVE_STDLIB_H 1
-
-/* Define to 1 if you have string.h */
-#cmakedefine   HAVE_STRING_H 1
-
-/* Define to 1 if you have strings.h */
-#cmakedefine   HAVE_STRINGS_H 1
-
-/* define if message translations are enabled */
-#cmakedefine ENABLE_NLS 1
-
-#cmakedefine HAVE_VOLMGT 1
-
-#cmakedefine HAVE_ERRNO_H 1
 #cmakedefine HAVE_STDINT_H 1
 #cmakedefine HAVE_SYS_STAT_H 1
 #cmakedefine HAVE_SYS_TYPES_H 1
 #cmakedefine HAVE_SYS_PARAM_H 1
 #cmakedefine HAVE_SYS_TIME_H 1
 #cmakedefine HAVE_SYS_SELECT_H 1
-#cmakedefine HAVE_SYSENT_H 1
 #cmakedefine HAVE_SYS_MNTTAB_H 1
 #cmakedefine HAVE_SYS_MNTENT_H 1
 #cmakedefine HAVE_SYS_MOUNT_H 1
-
 #cmakedefine HAVE_FSTAB_H 1
 #cmakedefine HAVE_LIMITS_H 1
 #cmakedefine HAVE_MNTENT_H 1
 #cmakedefine HAVE_UNISTD_H 1
 
+#cmakedefine HAVE_BACKTRACE 1
+#cmakedefine HAVE_GETMNTINFO 1
+#cmakedefine HAVE_FDATASYNC 1
+#cmakedefine HAVE_SENDFILE 1
+#cmakedefine HAVE_SETMNTENT 1
+#cmakedefine HAVE_STRTOLL 1
+#cmakedefine HAVE_VSNPRINTF 1
+#cmakedefine HAVE_GETGROUPLIST 1
+#cmakedefine HAVE_VOLMGT 1
+
+#cmakedefine HAVE_S_ISSOCK 1
+
+#cmakedefine TIME_WITH_SYS_TIME 1
+
+/* Define to 1 if you have string.h */
+#cmakedefine HAVE_STRING_H 1
+
+/* define if message translations are enabled */
+#cmakedefine ENABLE_NLS 1
 
 /* Define to 1 if you have the Xtest extension */
 #cmakedefine HAVE_XTEST 1
@@ -55,31 +54,6 @@
 
 /* Define to 1 if you have the XSync extension */
 #cmakedefine HAVE_XSYNC 1
-
-#cmakedefine   HAVE_BACKTRACE 1
-#cmakedefine   HAVE_GETMNTINFO 1
-#cmakedefine   HAVE_INITGROUPS 1
-#cmakedefine   HAVE_FDATASYNC 1
-#cmakedefine   HAVE_MKSTEMPS 1
-#cmakedefine   HAVE_MKSTEMP 1
-#cmakedefine   HAVE_MKDTEMP 1
-#cmakedefine   HAVE_SENDFILE 1
-#cmakedefine   HAVE_SETENV 1
-#cmakedefine   HAVE_SETEUID 1
-#cmakedefine   HAVE_SETMNTENT 1
-#cmakedefine   HAVE_STRLCPY 1
-#cmakedefine   HAVE_STRLCAT 1
-#cmakedefine   HAVE_STRTOLL 1
-#cmakedefine   HAVE_UNSETENV 1
-#cmakedefine   HAVE_USLEEP 1
-#cmakedefine   HAVE_VSNPRINTF 1
-#cmakedefine   HAVE_GETTIMEOFDAY 1
-#cmakedefine   HAVE_GETGROUPLIST 1
-#cmakedefine   HAVE_TRUNC 1
-
-#cmakedefine HAVE_S_ISSOCK 1
-
-#cmakedefine TIME_WITH_SYS_TIME 1
 
 /*********************/
 

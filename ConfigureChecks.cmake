@@ -22,16 +22,12 @@ set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore
 macro_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)              # kio
 
-check_include_files(stdio.h       HAVE_STDIO_H)                        # various
-check_include_files(stdlib.h      HAVE_STDLIB_H)                       # various
 check_include_files(string.h      HAVE_STRING_H)                       # various
-check_include_files(strings.h     HAVE_STRINGS_H)                      # various
 check_include_files(sys/time.h    TIME_WITH_SYS_TIME)                  # kdecore, kioslave
 
 check_include_files(fstab.h       HAVE_FSTAB_H)                        # kio, kdecore
 check_include_files(limits.h      HAVE_LIMITS_H)                       # various
 check_include_files(mntent.h      HAVE_MNTENT_H)                       # solid, kio, kdecore
-check_include_files(sysent.h      HAVE_SYSENT_H)                       # kdecore
 check_include_files(sys/stat.h    HAVE_SYS_STAT_H)                     # various
 check_include_files(sys/types.h   HAVE_SYS_TYPES_H)                    # various
 check_include_files(sys/select.h  HAVE_SYS_SELECT_H)                   # various
@@ -42,7 +38,6 @@ check_include_files("sys/param.h;sys/mount.h"  HAVE_SYS_MOUNT_H)       # kio, kd
 check_include_files(unistd.h      HAVE_UNISTD_H)                       # various
 check_include_files(stdint.h      HAVE_STDINT_H)                       # various
 
-check_include_files(errno.h       HAVE_ERRNO_H)                        # various
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
 check_include_files(langinfo.h    HAVE_LANGINFO_H)                     # kdecore
 
@@ -69,7 +64,6 @@ check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore,
 check_function_exists(fdatasync        HAVE_FDATASYNC)                # kdecore, kate
 
 check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave
-check_function_exists(gettimeofday    HAVE_GETTIMEOFDAY)              # kpty, kdeui, some tests
 check_function_exists(getgrouplist    HAVE_GETGROUPLIST)              # kio
 
 check_library_exists(volmgt volmgt_running "" HAVE_VOLMGT)            # various
