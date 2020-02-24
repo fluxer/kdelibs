@@ -444,7 +444,7 @@ class KDECORE_EXPORT KDateTime //krazy:exclude=dpointer (implicitly shared)
                      *   with, if not local time, the UTC offset appended. The
                      *   time may be omitted to indicate a date-only value.
                      */
-        LocalDate,  /**< Same format as Qt::LocalDate (i.e. locale dependent)
+        LocalDate,  /**< Same format as Qt::SystemLocaleShortDate (i.e. locale dependent)
                      *   with, if not local time, the UTC offset appended. The
                      *   time may be omitted to indicate a date-only value.
                      */

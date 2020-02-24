@@ -1756,7 +1756,7 @@ QString KDateTime::toString(TimeFormat format) const
         case QtTextDate:
         case LocalDate:
         {
-            Qt::DateFormat qtfmt = (format == QtTextDate) ? Qt::TextDate : Qt::LocalDate;
+            Qt::DateFormat qtfmt = (format == QtTextDate) ? Qt::TextDate : Qt::SystemLocaleShortDate;
             if (d->dateOnly())
                 result = d->date().toString(qtfmt);
             else
