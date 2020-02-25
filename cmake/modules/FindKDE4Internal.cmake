@@ -11,6 +11,7 @@
 #                             and other platform specific include directories
 #  KDE4_LIB_DIR             - the directory where the KDE libraries are installed,
 #                             intended to be used with LINK_DIRECTORIES(). In general, this is not necessary.
+#  KDE4_LIB_INSTALL_DIR     - the directory where libraries from kdelibs are installed
 #  KDE4_LIBEXEC_INSTALL_DIR - the directory where libexec executables from kdelibs are installed
 #  KDE4_BIN_INSTALL_DIR     - the directory where executables from kdelibs are installed
 #  KDE4_SBIN_INSTALL_DIR    - the directory where system executables from kdelibs are installed
@@ -27,11 +28,15 @@
 #  KDE4_AUTOSTART_INSTALL_DIR     - the directory where autostart from kdelibs are installed
 #  KDE4_XDG_APPS_INSTALL_DIR      - the XDG apps dir from kdelibs
 #  KDE4_XDG_DIRECTORY_INSTALL_DIR - the XDG directory from kdelibs
+#  KDE4_XDG_MIME_INSTALL_DIR      - the XDG mimetypes install dir from kdelibs
 #  KDE4_SYSCONF_INSTALL_DIR       - the directory where sysconfig files from kdelibs are installed
 #  KDE4_MAN_INSTALL_DIR           - the directory where man pages from kdelibs are installed
 #  KDE4_INFO_INSTALL_DIR          - the directory where info files from kdelibs are installed
+#  KDE4_SERVICES_INSTALL_DIR      - the directory where service (desktop, protocol, ...) files from kdelibs are installed
+#  KDE4_SERVICETYPES_INSTALL_DIR  - the directory where servicestypes desktop files from kdelibs are installed
 #  KDE4_DBUS_INTERFACES_DIR       - the directory where dbus interfaces from kdelibs are installed
-#  KDE4_DBUS_SERVICES_DIR         - the directory where dbus service files from kdelibs are installed
+#  KDE4_DBUS_SERVICES_INSTALL_DIR        - the directory where dbus service files from kdelibs are installed
+#  KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR - the directory where dbus system services from kdelibs are installed
 #
 # The following variables are defined for the various tools required to
 # compile KDE software:
@@ -91,38 +96,6 @@
 #  KDE4_KDCRAW_LIBS           - the kdcraw library and all depending libraries
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
 #  KDE4_KMEDIAPLAYER_LIBS     - the kmediaplayer library and all depending libraries
-#
-# This module defines also a bunch of variables used as locations for install directories
-# for files of the package which is using this module. These variables don't say
-# anything about the location of the installed KDE.
-# They can be relative (to CMAKE_INSTALL_PREFIX) or absolute.
-#
-#  BIN_INSTALL_DIR          - the directory where executables will be installed (default is prefix/bin)
-#  SBIN_INSTALL_DIR         - the directory where system executables will be installed (default is prefix/sbin)
-#  LIB_INSTALL_DIR          - the directory where libraries will be installed (default is prefix/lib)
-#  CONFIG_INSTALL_DIR       - the directory where config files will be installed
-#  DATA_INSTALL_DIR         - the parent directory where applications can install their data
-#  ICON_INSTALL_DIR         - the directory where the icons will be installed (default prefix/share/icons/)
-#  INFO_INSTALL_DIR         - the directory where info files will be installed (default prefix/info)
-#  KCFG_INSTALL_DIR         - the directory where kconfig files will be installed
-#  LOCALE_INSTALL_DIR       - the directory where translations will be installed
-#  MAN_INSTALL_DIR          - the directory where man pages will be installed (default prefix/man/)
-#  MIME_INSTALL_DIR         - the directory where mimetype desktop files will be installed
-#  PLUGIN_INSTALL_DIR       - the subdirectory relative to the install prefix where plugins will be installed (default is ${KDE4_LIB_INSTALL_DIR})
-#  IMPORTS_INSTALL_DIR      - the subdirectory relative to the install prefix where imports will be installed
-#  SERVICES_INSTALL_DIR     - the directory where service (desktop, protocol, ...) files will be installed
-#  SERVICETYPES_INSTALL_DIR - the directory where servicestypes desktop files will be installed
-#  SOUND_INSTALL_DIR        - the directory where sound files will be installed
-#  TEMPLATES_INSTALL_DIR    - the directory where templates (Create new file...) will be installed
-#  WALLPAPER_INSTALL_DIR    - the directory where wallpapers will be installed
-#  AUTOSTART_INSTALL_DIR    - the directory where autostart files will be installed
-#  SYSCONF_INSTALL_DIR      - the directory where sysconfig files will be installed (default /usr/etc)
-#  XDG_APPS_INSTALL_DIR     - the XDG apps dir
-#  XDG_DIRECTORY_INSTALL_DIR- the XDG directory
-#  XDG_MIME_INSTALL_DIR     - the XDG mimetypes install dir
-#  DBUS_INTERFACES_INSTALL_DIR - the directory where dbus interfaces will be installed (default is prefix/share/dbus-1/interfaces)
-#  DBUS_SERVICES_INSTALL_DIR        - the directory where dbus services will be installed (default is prefix/share/dbus-1/services )
-#  DBUS_SYSTEM_SERVICES_INSTALL_DIR        - the directory where dbus system services will be installed (default is prefix/share/dbus-1/system-services )
 #
 # The variable INSTALL_TARGETS_DEFAULT_ARGS can be used when installing libraries
 # or executables into the default locations.
