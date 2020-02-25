@@ -16,7 +16,6 @@ set(cmakeFilesDontInstall
 # so become part of the public interface of kdelibs which has to be kept
 # compatible).
 set(cmakeFiles
-    BasicFindPackageVersion.cmake.in
     check_installed_exports_file.cmake
     CheckPointerMember.cmake
     CheckStructMember.cmake
@@ -99,7 +98,6 @@ set(cmakeFiles
     MacroLibrary.cmake
     MacroOptionalAddSubdirectory.cmake
     MacroOptionalFindPackage.cmake
-    MacroWriteBasicCMakeVersionFile.cmake
     UnixAuth.cmake
 )
 
