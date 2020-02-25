@@ -324,7 +324,7 @@ QStringList KAbstractPlayer::audiooutputs() const
 {
     const QVariantList value = option("audio-device-list").toList();
     QStringList stringlist;
-    foreach (const QVariant variant, value) {
+    foreach (const QVariant &variant, value) {
         QMapIterator<QString,QVariant> iter(variant.toMap());
         while (iter.hasNext()) {
             iter.next();
@@ -362,7 +362,7 @@ bool KAbstractPlayer::isFullscreen() const
 
 bool KAbstractPlayer::isProtocolSupported(const QString &protocol) const
 {
-    foreach(const QString proto, protocols()) {
+    foreach(const QString &proto, protocols()) {
         if (protocol.startsWith(proto)) {
             return true;
         }
