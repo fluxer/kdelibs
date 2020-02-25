@@ -1,11 +1,12 @@
 # - Try to find IBUS
+#
 # Once done this will define
 #
 #  IBUS_FOUND - system has IBUS
 #  IBUS_INCLUDE_DIR - the IBUS include directory
 #  IBUS_LIBRARIES -  the libraries needed to use IBUS
 #  IBUS_DEFINITIONS - compiler switches required for using IBUS
-
+#
 # Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
