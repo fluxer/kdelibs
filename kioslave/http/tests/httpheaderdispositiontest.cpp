@@ -167,15 +167,9 @@ void HeaderDispositionTest::runAllTests_data()
     QTest::newRow("greenbytes-attabspath") << "attachment; filename=\"/foo.html\"" <<
                    QByteArray("type\tattachment\n"
                               "filename\tfoo.html");
-#ifdef Q_OS_WINDOWS
-    QTest::newRow("greenbytes-attabspath") << "attachment; filename=\"\\\\foo.html\"" <<
-                   QByteArray("type\tattachment\n"
-                              "filename\tfoo.html");
-#else // Q_OS_WINDOWS
     QTest::newRow("greenbytes-attabspath") << "attachment; filename=\"\\\\foo.html\"" <<
                    QByteArray("type\tattachment\n"
                               "filename\t\\foo.html");
-#endif // Q_OS_WINDOWS
     QTest::newRow("greenbytes-") << "attachment; creation-date=\"Wed, 12 Feb 1997 16:29:51 -0500\"" <<
                    QByteArray("type\tattachment\n"
                               "creation-date\tWed, 12 Feb 1997 16:29:51 -0500");
@@ -210,15 +204,9 @@ void HeaderDispositionTest::runAllTests_data()
     QTest::newRow("greenbytes-attwithfn2231dpct") << "attachment; filename*=UTF-8''A-%2541.html" <<
                    QByteArray("type\tattachment\n"
                               "filename\tA-%41.html");
-#ifdef Q_OS_WINDOWS
-    QTest::newRow("greenbytes-attwithfn2231abspathdisguised") << "attachment; filename*=UTF-8''%5cfoo.html" <<
-                   QByteArray("type\tattachment\n"
-                              "filename\tfoo.html");
-#else // Q_OS_WINDOWS
     QTest::newRow("greenbytes-attwithfn2231abspathdisguised") << "attachment; filename*=UTF-8''%5cfoo.html" <<
                    QByteArray("type\tattachment\n"
                               "filename\t\\foo.html");
-#endif // Q_OS_WINDOWS
     QTest::newRow("greenbytes-attfncont") << "attachment; filename*0=\"foo.\"; filename*1=\"html\"" <<
                    QByteArray("type\tattachment\n"
                               "filename\tfoo.html");

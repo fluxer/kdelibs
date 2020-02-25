@@ -53,16 +53,11 @@ protected:
 
 inline QString makeLibName( const QString &libname )
 {
-#if defined(Q_OS_WIN) || defined(Q_OS_CYGWIN)
-    if (!libname.endsWith(QLatin1String(".dll")))
-        return libname + QLatin1String(".dll");
-    return libname;
-#else
     int pos = libname.lastIndexOf(QLatin1Char('/'));
     if (pos < 0)
-      pos = 0;
+        pos = 0;
     if (libname.indexOf(QLatin1Char('.'), pos) < 0) {
-        const char* const extList[] = { ".so", ".dylib", ".bundle", ".sl" };
+        const char* const extList[] = { ".so", ".sl" };
         for (uint i = 0; i < sizeof(extList) / sizeof(*extList); ++i) {
             const QString lib = libname + QString::fromLatin1(extList[i]);
             if (QLibrary::isLibrary(lib))
@@ -70,7 +65,6 @@ inline QString makeLibName( const QString &libname )
         }
     }
     return libname;
-#endif
 }
 
 

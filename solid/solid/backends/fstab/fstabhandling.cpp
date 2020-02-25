@@ -261,7 +261,7 @@ void Solid::Backends::Fstab::FstabHandling::_k_updateMtabMountPointsCache()
 
     for (int i=0;i< num_fs;i++)
     {
-#ifdef __osf__
+#ifdef Q_OS_OSF
         QString type = QFile::decodeName(mnt_names[mounted[i].f_type]);
 #else
         QString type = QFile::decodeName(mounted[i].f_fstypename);
@@ -273,7 +273,7 @@ void Solid::Backends::Fstab::FstabHandling::_k_updateMtabMountPointsCache()
         }
     }
 
-#elif defined(_AIX)
+#elif defined(Q_OS_AIX)
 
     struct vmount *mntctl_buffer;
     struct vmount *vm;

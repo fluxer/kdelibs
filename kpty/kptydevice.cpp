@@ -275,11 +275,7 @@ bool KPtyDevicePrivate::_k_canRead()
     Q_Q(KPtyDevice);
     qint64 readBytes = 0;
 
-#ifdef Q_OS_IRIX // this should use a config define, but how to check it?
-    size_t available;
-#else
     int available;
-#endif
     if (!::ioctl(q->masterFd(), PTY_BYTES_AVAILABLE, (char *) &available)) {
 #ifdef Q_OS_SOLARIS
         // A Pty is a STREAMS module, and those can be activated

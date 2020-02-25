@@ -26,16 +26,12 @@
 
 #include <config.h>
 
-#ifdef __sgi
-#define __svr4__
-#endif
-
-#ifdef __osf__
+#ifdef Q_OS_OSF
 #define _OSF_SOURCE
 #include <float.h>
 #endif
 
-#ifdef _AIX
+#ifdef Q_OS_AIX
 #define _ALL_SOURCE
 #endif
 
@@ -336,7 +332,7 @@ bool KPty::open()
     return false;
   }
 
-#if (defined(__svr4__) || defined(__sgi__) || defined(Q_OS_SOLARIS))
+#if (defined(Q_OS_UNIXWARE) || defined(Q_OS_SOLARIS))
   // Solaris uses STREAMS for terminal handling. It is possible
   // for the pty handling modules to be left off the stream; in that
   // case push them on. ioctl(fd, I_FIND, ...) is documented to return
@@ -471,13 +467,13 @@ void KPty::setCTty()
 #ifdef TIOCSCTTY
     ioctl(d->slaveFd, TIOCSCTTY, 0);
 #else
-    // __svr4__ hack: the first tty opened after setsid() becomes controlling tty
+    // Q_OS_UNIXWARE hack: the first tty opened after setsid() becomes controlling tty
     ::close(KDE_open(d->ttyName, O_WRONLY, 0));
 #endif
 
     // make our new process group the foreground group on the pty
     int pgrp = getpid();
-#if defined(_POSIX_VERSION) || defined(__svr4__)
+#if defined(_POSIX_VERSION) || defined(Q_OS_UNIXWARE)
     tcsetpgrp(d->slaveFd, pgrp);
 #elif defined(TIOCSPGRP)
     ioctl(d->slaveFd, TIOCSPGRP, (char *)&pgrp);

@@ -54,7 +54,7 @@ static Qt::CaseSensitivity cs = Qt::CaseSensitive;
 #ifdef HAVE_FSTAB_H
 #include <fstab.h>
 #endif
-#if defined(_AIX)
+#if defined(Q_OS_AIX)
 #include <sys/mntctl.h>
 #include <sys/vmount.h>
 #include <sys/vfs.h>
@@ -298,7 +298,7 @@ KMountPoint::List KMountPoint::currentMountPoints(DetailsNeededFlags infoNeeded)
       mp->d->mountedFrom = QFile::decodeName(mounted[i].f_mntfromname);
       mp->d->mountPoint = QFile::decodeName(mounted[i].f_mntonname);
 
-#ifdef __osf__
+#ifdef Q_OS_OSF
       mp->d->mountType = QFile::decodeName(mnt_names[mounted[i].f_type]);
 #else
       mp->d->mountType = QFile::decodeName(mounted[i].f_fstypename);
@@ -320,7 +320,7 @@ KMountPoint::List KMountPoint::currentMountPoints(DetailsNeededFlags infoNeeded)
       result.append(mp);
    }
 
-#elif defined(_AIX)
+#elif defined(Q_OS_AIX)
 
     struct vmount *mntctl_buffer;
     struct vmount *vm;

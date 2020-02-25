@@ -343,17 +343,10 @@ static const char DefaultFont[] =    "Sans Serif";
 
 static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
 {
-#if   defined(Q_WS_MAEMO_5) || defined(MEEGO_EDITION_HARMATTAN)
-    { GeneralId, "font",        DefaultFont, 16, -1, QFont::SansSerif },
-    { GeneralId, "fixed",       "Monospace", 16, -1, QFont::TypeWriter },
-    { GeneralId, "toolBarFont", DefaultFont, 16, -1, QFont::SansSerif },
-    { GeneralId, "menuFont",    DefaultFont, 16, -1, QFont::SansSerif },
-#else
     { GeneralId, "font",        DefaultFont, 9, -1, QFont::SansSerif },
     { GeneralId, "fixed",       "Monospace", 9, -1, QFont::TypeWriter },
     { GeneralId, "toolBarFont", DefaultFont,  8, -1, QFont::SansSerif },
     { GeneralId, "menuFont",    DefaultFont, 9, -1, QFont::SansSerif },
-#endif
     { "WM",      "activeFont",           DefaultFont,  8, -1, QFont::SansSerif },
     { GeneralId, "taskbarFont",          DefaultFont, 9, -1, QFont::SansSerif },
     { GeneralId, "smallestReadableFont", DefaultFont,  8, -1, QFont::SansSerif }
@@ -960,7 +953,6 @@ QPalette KGlobalSettings::Private::createNewApplicationPalette(const KSharedConf
 
 void KGlobalSettings::Private::kdisplaySetPalette()
 {
-#if !defined(Q_WS_MAEMO_5) && !defined(Q_OS_WINCE) && !defined(MEEGO_EDITION_HARMATTAN)
     if (!kdeFullSession) {
         return;
     }
@@ -970,13 +962,11 @@ void KGlobalSettings::Private::kdisplaySetPalette()
     }
     emit q->kdisplayPaletteChanged();
     emit q->appearanceChanged();
-#endif    
 }
 
 
 void KGlobalSettings::Private::kdisplaySetFont()
 {
-#if !defined(Q_WS_MAEMO_5) && !defined(Q_OS_WINCE) && !defined(MEEGO_EDITION_HARMATTAN)
     if (!kdeFullSession) {
         return;
     }
@@ -993,7 +983,6 @@ void KGlobalSettings::Private::kdisplaySetFont()
     }
     emit q->kdisplayFontChanged();
     emit q->appearanceChanged();
-#endif
 }
 
 

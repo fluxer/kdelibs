@@ -295,20 +295,14 @@ KCrash::defaultCrashHandler (int sig)
         crashRecursionCounter++;
     }
 
-    // On Apple OS X, closing all FDs now will cause a second (SIGILL) crash,
-    // ending with "Unable to start Dr. Konqi". This is because the libdispatch
-    // library, which can manage multi-threading, has some FDs of its own.
-    //
     // Note: KCrash closes FDs unconditionally later on if it forks to Dr Konqi
     //       and this program's FDs do not matter if kdeinit starts Dr Konqi.
-#if !defined(Q_OS_WIN) and !defined(Q_OS_MAC)
     if (!(s_flags & KeepFDs))
         closeAllFDs();
 # if defined(Q_WS_X11)
     else if (QX11Info::display())
         close(ConnectionNumber(QX11Info::display()));
 # endif
-#endif
 
     if (crashRecursionCounter < 3)
     {
