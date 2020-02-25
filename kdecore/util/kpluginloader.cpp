@@ -68,7 +68,7 @@ inline QString makeLibName( const QString &libname )
 }
 
 
-QString findLibraryInternal(const QString &name, const KComponentData &cData)
+static QString findLibraryInternal(const QString &name, const KComponentData &cData)
 {
     // Convert name to a valid platform libname
     QString libname = makeLibName(name);
@@ -82,11 +82,8 @@ QString findLibraryInternal(const QString &name, const KComponentData &cData)
     if (!QDir::isRelativePath(libname))
         return libname;
 
-    // Start looking
-    QString libfile;
-
     // Check for kde modules/plugins?
-    libfile = cData.dirs()->findResource("module", libname);
+    QString libfile = cData.dirs()->findResource("module", libname);
     if (!libfile.isEmpty())
         return libfile;
 
