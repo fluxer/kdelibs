@@ -1,22 +1,27 @@
 # - Try to find konqueror library
+#
 # Once done this will define
 #
-#  LIBKONQ_FOUND - system has libkonq library
-#  LIBKONQ_INCLUDE_DIR - the LIBKONQ include directory
-#  LIBKONQ_LIBRARY - the libkonq library
-
-#  Original file: FindMarbleWidget.cmake (found in digikam-0.10.0-beta2)
-#  copyright 2008 by Patrick Spendrin <ps_ml@gmx.de>
-#  Copyright (c) 2009, Alexander Neundorf, <neundorf@kde.org>
-#  use this file as you like
+#  LIBKONQ_FOUND - system has konqueror library
+#  LIBKONQ_INCLUDE_DIR - the konqueror library include directory
+#  LIBKONQ_LIBRARY - the konqueror library
 #
-#  Modifications to find libkonq by Joachim Eibl 2008
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-find_path(LIBKONQ_INCLUDE_DIR konq_popupmenuplugin.h )
+find_path(LIBKONQ_INCLUDE_DIR
+    NAMES konq_popupmenuplugin.h
+    HINTS $ENV{LIBKONQDIR}/include
+)
 
-find_library(LIBKONQ_LIBRARY konq)
+find_library(LIBKONQ_LIBRARY
+    NAMES konq
+    HINTS $ENV{LIBKONQDIR}/lib
+)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LIBKONQ  DEFAULT_MSG  LIBKONQ_INCLUDE_DIR LIBKONQ_LIBRARY )
-
-mark_as_advanced(LIBKONQ_INCLUDE_DIR LIBKONQ_LIBRARY)
+find_package_handle_standard_args(LibKonq
+    REQUIRED_VARS LIBKONQ_LIBRARY LIBKONQ_INCLUDE_DIR
+)
