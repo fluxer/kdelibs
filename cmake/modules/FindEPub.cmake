@@ -1,35 +1,27 @@
-# - Find EPub
-# Find the EPub library.
+# - Try to find EPub library
 #
-# This module defines
-#  EPUB_FOUND - whether the EPub library was found
-#  EPUB_LIBRARIES - the EPub library
-#  EPUB_INCLUDE_DIR - the include path of the EPub library
-
-# Copyright (c) 2008, Pino Toscano, <pino@kde.org>
+# Once done this will define
+#
+#  EPUB_FOUND - system has EPub library
+#  EPUB_INCLUDE_DIR - the EPub library include directory
+#  EPUB_LIBRARIES - the libraries needed to use EPub library
+#
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-
-if (EPUB_INCLUDE_DIR AND EPUB_LIBRARIES)
-
-  # Already in cache
-  set (EPUB_FOUND TRUE)
-
-else (EPUB_INCLUDE_DIR AND EPUB_LIBRARIES)
-
-  find_library (EPUB_LIBRARIES
-    NAMES epub libepub
-  )
-
-  find_path (EPUB_INCLUDE_DIR
+find_path(EPUB_INCLUDE_DIR
     NAMES epub.h
-  )
+    HINTS $ENV{EPUBDIR}/include
+)
 
-  include (FindPackageHandleStandardArgs)
-  find_package_handle_standard_args (EPub DEFAULT_MSG EPUB_LIBRARIES EPUB_INCLUDE_DIR)
+find_library(EPUB_LIBRARIES
+    NAMES epub
+    HINTS $ENV{EPUBDIR}/lib
+)
 
-endif (EPUB_INCLUDE_DIR AND EPUB_LIBRARIES)
-
-mark_as_advanced(EPUB_INCLUDE_DIR EPUB_LIBRARIES)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(EPub
+    REQUIRED_VARS EPUB_LIBRARIES EPUB_INCLUDE_DIR
+)
