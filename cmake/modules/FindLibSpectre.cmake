@@ -11,7 +11,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-
 if(NOT WIN32)
     include(FindPkgConfig)
     pkg_check_modules(PC_LIBSPECTRE QUIET libspectre)

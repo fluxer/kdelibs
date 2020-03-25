@@ -1,47 +1,51 @@
 # - Try to find the Enchant spell checker
+#
 # Once done this will define
 #
 #  ENCHANT_FOUND - system has ENCHANT
 #  ENCHANT_INCLUDE_DIR - the ENCHANT include directory
-#  ENCHANT_LIBRARIES - Link these to use ENCHANT
-#  ENCHANT_DEFINITIONS - Compiler switches required for using ENCHANT
-
-# Copyright (c) 2006, Zack Rusin, <zack@kde.org>
+#  ENCHANT_LIBRARIES - the libraries needed to use ENCHANT
+#  ENCHANT_DEFINITIONS - compiler switches required for using ENCHANT
+#
+# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+set(ENCHANT_NAMES enchant-2 enchant)
 
-if (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
-
-  # in cache already
-  set(ENCHANT_FOUND TRUE)
-
-else (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
-  if (NOT WIN32)
-    # use pkg-config to get the directories and then use these values
-    # in the FIND_PATH() and FIND_LIBRARY() calls
+if(NOT WIN32)
     find_package(PkgConfig)
-    pkg_check_modules(PC_ENCHANT QUIET enchant-2)
-    if (NOT PC_ENCHANT_FOUND)
-        pkg_check_modules(PC_ENCHANT QUIET enchant)
-    endif()
-    set(ENCHANT_DEFINITIONS ${PC_ENCHANT_CFLAGS_OTHER})
-  endif (NOT WIN32)
+    foreach(name ${ENCHANT_NAMES})
+        if(NOT PC_ENCHANT_FOUND)
+            pkg_check_modules(PC_ENCHANT QUIET ${name})
 
-  find_path(ENCHANT_INCLUDE_DIR 
-            NAMES enchant++.h
-            HINTS ${PC_ENCHANT_INCLUDEDIR}
-                  ${PC_ENCHANT_INCLUDE_DIRS}
-            PATH_SUFFIXES enchant )
+            set(ENCHANT_INCLUDE_DIR ${PC_ENCHANT_INCLUDE_DIRS})
+            set(ENCHANT_LIBRARIES ${PC_ENCHANT_LIBRARIES})
+        endif()
+    endforeach()
+endif()
 
-  find_library(ENCHANT_LIBRARIES NAMES enchant-2 enchant
-               HINTS ${PC_ENCHANT_LIBDIR}
-                      ${PC_ENCHANT_LIBRARY_DIRS} )
+set(ENCHANT_VERSION ${PC_ENCHANT_VERSION})
+set(ENCHANT_DEFINITIONS ${PC_ENCHANT_CFLAGS_OTHER})
 
-  include(FindPackageHandleStandardArgs)
-  find_package_handle_standard_args(ENCHANT  DEFAULT_MSG  ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES )
+if(NOT ENCHANT_INCLUDE_DIR OR NOT ENCHANT_LIBRARIES)
+    find_path(ENCHANT_INCLUDE_DIR
+        NAMES enchant++.h
+        PATH_SUFFIXES ${ENCHANT_NAMES}
+        HINTS $ENV{ENCHANTDIR}/include
+    )
 
-  mark_as_advanced(ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES)
+    find_library(ENCHANT_LIBRARIES
+        NAMES ${ENCHANT_NAMES}
+        HINTS $ENV{ENCHANTDIR}/lib
+    )
+endif()
 
-endif (ENCHANT_INCLUDE_DIR AND ENCHANT_LIBRARIES)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(ENCHANT
+    VERSION_VAR ENCHANT_VERSION
+    REQUIRED_VARS ENCHANT_LIBRARIES ENCHANT_INCLUDE_DIR
+)
+
+mark_as_advanced(ENCHANT_INCLUDE_DIR ENCHANT_LIBRARIES)
