@@ -23,7 +23,6 @@ set(cmakeFiles
     FindACL.cmake
     FindAlsa.cmake
     FindAvahi.cmake
-    FindBlueZ.cmake
     FindCanberra.cmake
     FindDBusMenuQt.cmake
     FindDjVuLibre.cmake
