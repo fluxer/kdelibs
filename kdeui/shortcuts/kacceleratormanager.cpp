@@ -27,7 +27,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMenuBar>
-#include <QtGui/qmenudata.h>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/QObject>
 #include <QList>
