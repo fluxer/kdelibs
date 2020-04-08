@@ -494,8 +494,8 @@ bool ActionCollectionModel::dropMimeData(const QMimeData* data, Qt::DropAction a
 
 Qt::DropActions ActionCollectionModel::supportedDropActions() const
 {
-    return Qt::CopyAction | Qt::MoveAction | Qt::TargetMoveAction;
-    //return Qt::CopyAction | Qt::MoveAction | Qt::TargetMoveAction | Qt::LinkAction;
+    return Qt::CopyAction | Qt::MoveAction;
+    //return Qt::CopyAction | Qt::MoveAction | Qt::LinkAction;
 }
 
 /******************************************************************************
