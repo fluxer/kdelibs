@@ -262,12 +262,9 @@ void KJob::setErrorText( const QString &errorText )
 void KJob::setProcessedAmount(Unit unit, qulonglong amount)
 {
     Q_D(KJob);
-    bool should_emit = (d->processedAmount[unit] != amount);
-
-    d->processedAmount[unit] = amount;
-
-    if ( should_emit )
+    if ( d->processedAmount[unit] != amount )
     {
+        d->processedAmount[unit] = amount;
         emit processedAmount(this, unit, amount);
         if (unit==d->progressUnit) {
             emit processedSize(this, amount);
@@ -279,12 +276,9 @@ void KJob::setProcessedAmount(Unit unit, qulonglong amount)
 void KJob::setTotalAmount(Unit unit, qulonglong amount)
 {
     Q_D(KJob);
-    bool should_emit = (d->totalAmount[unit] != amount);
-
-    d->totalAmount[unit] = amount;
-
-    if ( should_emit )
+    if ( d->totalAmount[unit] != amount )
     {
+        d->totalAmount[unit] = amount;
         emit totalAmount(this, unit, amount);
         if (unit==d->progressUnit) {
             emit totalSize(this, amount);
@@ -296,7 +290,7 @@ void KJob::setTotalAmount(Unit unit, qulonglong amount)
 void KJob::setPercent( unsigned long percentage )
 {
     Q_D(KJob);
-    if ( d->percentage!=percentage )
+    if ( d->percentage != percentage )
     {
         d->percentage = percentage;
         emit percent( this, percentage );
