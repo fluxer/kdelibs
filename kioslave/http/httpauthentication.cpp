@@ -43,7 +43,7 @@
 #include <misc/kntlm/kntlm.h>
 
 #include <QtCore/QTextCodec>
-#include <QtCore/QCryptographicHash>
+#include <QCryptographicHash>
 
 static bool isWhiteSpace(char ch)
 {

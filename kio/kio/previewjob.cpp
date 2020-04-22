@@ -37,8 +37,8 @@
 #include <QtGui/QImage>
 #include <QtCore/QTimer>
 #include <QtCore/QRegExp>
-#include <QtCore/QCryptographicHash>
 #include <QtCore/QLinkedList>
+#include <QCryptographicHash>
 
 #include <kfileitem.h>
 #include <kde_file.h>

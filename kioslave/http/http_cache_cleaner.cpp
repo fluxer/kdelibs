@@ -36,8 +36,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <QtDBus/QtDBus>
 #include <QtNetwork/QLocalServer>
 #include <QtNetwork/QLocalSocket>
-#include <QtCore/qcoreapplication.h>
-#include <QtCore/qcryptographichash.h>
+#include <QCoreApplication>
+#include <QCryptographicHash>
 
 #include <kcmdlineargs.h>
 #include <kcomponentdata.h>

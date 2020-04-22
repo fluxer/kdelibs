@@ -23,9 +23,9 @@
 #ifndef QT_NO_SHAREDMEMORY
 
 #include <QtCore/QSharedMemory>
-#include <QtCore/QCryptographicHash>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QCryptographicHash>
 
 #include "klocalizedstring.h"
 

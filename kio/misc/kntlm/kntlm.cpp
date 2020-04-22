@@ -28,7 +28,7 @@
 
 #include <QtCore/qdatetime.h>
 #include <QtCore/qendian.h>
-#include <QtCore/QCryptographicHash>
+#include <QCryptographicHash>
 
 #include <krandom.h>
 #include <kdebug.h>
