@@ -12,12 +12,79 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-QString
-KImageIO::pattern(Mode mode)
+#include <QImageReader>
+#include <QImageWriter>
+
+// https://www.iana.org/assignments/media-types/media-types.xhtml#image
+static const struct ImageFormatTblData {
+    const char *mime;
+    const QLatin1String format;
+} ImageFormatTbl[] = {
+    { "image/png", QLatin1String("png") },
+    { "image/bmp", QLatin1String("bmp") },
+    { "image/x-portable-pixmap", QLatin1String("ppm") },
+    { "image/x-portable-graymap", QLatin1String("pgm") },
+    { "image/x-portable-bitmap", QLatin1String("pbm") },
+    { "image/x-xbitmap", QLatin1String("xbm") },
+    { "image/x-xpixmap", QLatin1String("xpm") },
+    { "video/x-mng", QLatin1String("mng") },
+    { "image/gif", QLatin1String("gif") },
+    { "image/vnd.microsoft.icon", QLatin1String("ico") },
+    { "image/jpeg", QLatin1String("jpeg") },
+    { "image/jpeg", QLatin1String("jpg") },
+    { "image/tiff", QLatin1String("tiff") },
+    { "image/tiff", QLatin1String("tif") },
+    { "image/x-tga", QLatin1String("tga") },
+    { "image/svg+xml", QLatin1String("svg") },
+    { "image/svg+xml-compressed", QLatin1String("svgz") },
+};
+static const qint16 ImageFormatTblSize = sizeof(ImageFormatTbl) / sizeof(ImageFormatTblData);
+
+static QStringList toolkitSupported(KImageIO::Mode mode) {
+    QStringList formats;
+    if (mode == KImageIO::Reading) {
+        foreach(const QByteArray &format, QImageReader::supportedImageFormats()) {
+            formats << QString::fromLatin1(format.constData());
+        }
+    } else {
+        foreach(const QByteArray &format, QImageWriter::supportedImageFormats()) {
+            formats << QString::fromLatin1(format.constData());
+        }
+    }
+    return formats;
+}
+
+static QStringList toolkitSupportedMimeTypes(KImageIO::Mode mode) {
+    QStringList mimeTypes;
+    foreach(const QString &format, toolkitSupported(mode)) {
+        for(int i = 0; i < ImageFormatTblSize; i++) {
+            if (ImageFormatTbl[i].format == format) {
+                mimeTypes << QString::fromLatin1(ImageFormatTbl[i].mime);
+            }
+        }
+    }
+
+    return mimeTypes;
+}
+
+QString KImageIO::pattern(Mode mode)
 {
     QStringList patterns;
     QString allPatterns;
     QString separator("|");
+
+    foreach(const QString &mimeType, toolkitSupportedMimeTypes(mode)) {
+        KMimeType::Ptr mime = KMimeType::mimeType( mimeType );
+        if (!mime) {
+            kWarning() << "unknown toolkit mimetype " << mimeType;
+        } else {
+            QString pattern = mime->patterns().join(" ");
+            patterns.append( pattern + separator + mime->comment() );
+            if (!allPatterns.isEmpty() )
+                allPatterns += ' ';
+            allPatterns += pattern;
+        }
+    }
 
     const KService::List services = KServiceTypeTrader::self()->query("QImageIOPlugins");
     foreach(const KService::Ptr &service, services)
@@ -44,8 +111,7 @@ KImageIO::pattern(Mode mode)
     patterns.sort();
     patterns.prepend(allPatterns);
 
-    QString pattern = patterns.join(QLatin1String("\n"));
-    return pattern;
+    return patterns.join(QLatin1String("\n"));
 }
 
 QStringList KImageIO::typeForMime(const QString& mimeType)
@@ -53,17 +119,24 @@ QStringList KImageIO::typeForMime(const QString& mimeType)
     if ( mimeType.isEmpty() )
         return QStringList();
 
+    foreach(const QString &mime, toolkitSupportedMimeTypes(Reading)) {
+        if (mimeType == mime) {
+            return QStringList(mime);
+        }
+    }
+
     const KService::List services = KServiceTypeTrader::self()->query("QImageIOPlugins");
     foreach(const KService::Ptr &service, services) {
         if ( mimeType == service->property("X-KDE-MimeType").toString() )
             return ( service->property("X-KDE-ImageFormat").toStringList() );
     }
+
     return QStringList();
 }
 
 QStringList KImageIO::mimeTypes( Mode mode )
 {
-    QStringList mimeList, allFormats;
+    QStringList mimeList = toolkitSupportedMimeTypes(mode);
 
     const KService::List services = KServiceTypeTrader::self()->query("QImageIOPlugins");
     foreach(const KService::Ptr &service, services) {
@@ -81,7 +154,8 @@ QStringList KImageIO::mimeTypes( Mode mode )
 
 QStringList KImageIO::types( Mode mode )
 {
-    QStringList imagetypes;
+    QStringList imagetypes = toolkitSupported(mode);
+
     const KService::List services = KServiceTypeTrader::self()->query("QImageIOPlugins");
     foreach(const KService::Ptr &service, services) {
         if ( (service->property("X-KDE-Read").toBool() && mode == Reading) ||
@@ -97,6 +171,12 @@ bool KImageIO::isSupported( const QString& mimeType, Mode mode )
 {
     if (mimeType.isEmpty() )
         return false;
+
+    foreach(const QString &mime, toolkitSupportedMimeTypes(mode)) {
+        if (mimeType == mime) {
+            return true;
+        }
+    }
 
     const KService::List services = KServiceTypeTrader::self()->query("QImageIOPlugins");
     foreach(const KService::Ptr &service, services) {

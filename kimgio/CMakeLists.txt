@@ -100,7 +100,6 @@ endif(WEBP_FOUND)
 set(imgioplugins
     eps
     pcx
-    tga
     ras
     rgb
     xcf
@@ -145,32 +144,16 @@ install(
 
 install(
     FILES
-    png.desktop
-    xpm.desktop
-    bmp.desktop
-    pbm.desktop
-    pgm.desktop
-    pnm.desktop
-    ppm.desktop
-    xbm.desktop
-    jpeg.desktop
     xv.desktop
     eps.desktop
-    ico.desktop
-    gif.desktop
     pcx.desktop
-    tga.desktop
     ras.desktop
     rgb.desktop
     xcf.desktop
     dds.desktop
-    mng.desktop
     psd.desktop
     hdr.desktop
-    tiff.desktop
     pic.desktop
-    svg+xml.desktop
-    svg+xml-compressed.desktop
     DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins
 )
 

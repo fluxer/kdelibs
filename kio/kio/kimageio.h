@@ -24,33 +24,19 @@
  * \b Formats:
  *
  * Currently supported formats include:
- * @li BMP     \<read\> \<write\>
  * @li DDS     \<read\>
  * @li EPS     \<read\> \<write\>
  * @li EXR     \<read\>
- * @li GIF     \<read\>
  * @li HDR     \<read\>
- * @li ICO     \<read\>
  * @li JP2     \<read\> \<write\>
- * @li JPEG    \<read\> \<write\>
- * @li MNG     \<read\> \<write\>
- * @li PBM     \<read\> \<write\>
  * @li PCX     \<read\> \<write\>
- * @li PGM     \<read\> \<write\>
  * @li PIC     \<read\> \<write\>
- * @li PNG     \<read\> \<write, only with newer libraries\>
  * @li PNM     \<read\>
- * @li PPM     \<read\> \<write\>
  * @li PSD     \<read\>
  * @li RAS     \<read\>
  * @li RGB     \<read\> \<write\>
- * @li SVG     \<read\>
- * @li TGA     \<read\> \<write\>
- * @li TIFF    \<read\> \<write\>
  * @li WEBP    \<read\> \<write\>
- * @li XBM     \<read\> \<write\>
  * @li XCF     \<read\>
- * @li XPM     \<read\> \<write\>
  * @li XV      \<read\> \<write\>
  *
  */
