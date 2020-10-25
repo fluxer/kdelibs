@@ -26,15 +26,6 @@
 
 #include <config.h>
 
-#ifdef Q_OS_OSF
-#define _OSF_SOURCE
-#include <float.h>
-#endif
-
-#ifdef Q_OS_AIX
-#define _ALL_SOURCE
-#endif
-
 // __USE_XOPEN isn't defined by default in ICC
 // (needed for ptsname(), grantpt() and unlockpt())
 #ifdef __INTEL_COMPILER
@@ -107,7 +98,7 @@ extern "C" {
 
 #if defined HAVE_TCGETATTR
 # define _tcgetattr(fd, ttmode) tcgetattr(fd, ttmode)
-#elif defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) || defined (__bsdi__) || defined(__APPLE__) || defined (__DragonFly__)
+#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(__DragonFly__)
 # define _tcgetattr(fd, ttmode) ioctl(fd, TIOCGETA, (char *)ttmode)
 #else
 # define _tcgetattr(fd, ttmode) ioctl(fd, TCGETS, (char *)ttmode)
@@ -115,7 +106,7 @@ extern "C" {
 
 #if defined HAVE_TCSETATTR
 # define _tcsetattr(fd, ttmode) tcsetattr(fd, TCSANOW, ttmode)
-#elif defined (__FreeBSD__) || defined (__NetBSD__) || defined (__OpenBSD__) || defined (__bsdi__) || defined(__APPLE__) || defined (__DragonFly__)
+#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(__DragonFly__)
 # define _tcsetattr(fd, ttmode) ioctl(fd, TIOCSETA, (char *)ttmode)
 #else
 # define _tcsetattr(fd, ttmode) ioctl(fd, TCSETS, (char *)ttmode)
@@ -332,7 +323,7 @@ bool KPty::open()
     return false;
   }
 
-#if (defined(Q_OS_UNIXWARE) || defined(Q_OS_SOLARIS))
+#if defined(Q_OS_SOLARIS)
   // Solaris uses STREAMS for terminal handling. It is possible
   // for the pty handling modules to be left off the stream; in that
   // case push them on. ioctl(fd, I_FIND, ...) is documented to return
@@ -467,13 +458,13 @@ void KPty::setCTty()
 #ifdef TIOCSCTTY
     ioctl(d->slaveFd, TIOCSCTTY, 0);
 #else
-    // Q_OS_UNIXWARE hack: the first tty opened after setsid() becomes controlling tty
+    // Q_OS_SOLARIS hack: the first tty opened after setsid() becomes controlling tty
     ::close(KDE_open(d->ttyName, O_WRONLY, 0));
 #endif
 
     // make our new process group the foreground group on the pty
     int pgrp = getpid();
-#if defined(_POSIX_VERSION) || defined(Q_OS_UNIXWARE)
+#if defined(_POSIX_VERSION)
     tcsetpgrp(d->slaveFd, pgrp);
 #elif defined(TIOCSPGRP)
     ioctl(d->slaveFd, TIOCSPGRP, (char *)&pgrp);

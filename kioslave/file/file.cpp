@@ -976,8 +976,7 @@ void FileProtocol::mount( bool _ro, const char *_fstype, const QString& _dev, co
                 buffer += readonly + ' ' + dev + ' ' + point;
             else
               // mount giving device + mountpoint + fstype
-#if defined(Q_OS_UNIXWARE) && defined(Q_OS_SOLARIS) // MARCO for Solaris 8 and I
-                // believe this is true for SVR4 in general
+#if defined(Q_OS_SOLARIS)
                 buffer += "-F " + fstype + ' ' + (_ro ? "-oro" : "") + ' ' + dev + ' ' + point;
 #else
                 buffer += readonly + " -t " + fstype + ' ' + dev + ' ' + point;
@@ -1032,7 +1031,6 @@ void FileProtocol::mount( bool _ro, const char *_fstype, const QString& _dev, co
         }
     }
 #endif /* ! HAVE_VOLMGT */
-
 }
 
 

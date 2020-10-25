@@ -26,14 +26,3 @@
 #cmakedefine HAVE_STRUCT_UTMP_UT_SESSION 1
 #cmakedefine HAVE_STRUCT_UTMP_UT_SYSLEN 1
 #cmakedefine HAVE_STRUCT_UTMP_UT_ID 1
-
-/*
- * Steven Schultz <sms at to.gd-es.com> tells us :
- * BSD/OS 4.2 doesn't have a prototype for openpty in its system header files
- */
-#ifdef __bsdi__
-__BEGIN_DECLS
-int openpty(int *, int *, char *, struct termios *, struct winsize *);
-__END_DECLS
-#endif
-

@@ -54,17 +54,6 @@ static Qt::CaseSensitivity cs = Qt::CaseSensitive;
 #ifdef HAVE_FSTAB_H
 #include <fstab.h>
 #endif
-#if defined(Q_OS_AIX)
-#include <sys/mntctl.h>
-#include <sys/vmount.h>
-#include <sys/vfs.h>
-/* AIX does not prototype mntctl anywhere that I can find */
-#ifndef mntctl
-extern "C" int mntctl(int command, int size, void* buffer);
-#endif
-extern "C" struct vfs_ent *getvfsbytype(int vfsType);
-extern "C" void endvfsent( );
-#endif
 
 
 #ifndef HAVE_GETMNTINFO
@@ -86,7 +75,7 @@ extern "C" void endvfsent( );
 #include "kdebug.h"
 
 
-#ifdef _OS_SOLARIS_
+#ifdef Q_OS_SOLARIS
 #define FSTAB "/etc/vfstab"
 #else
 #define FSTAB "/etc/fstab"
@@ -297,12 +286,7 @@ KMountPoint::List KMountPoint::currentMountPoints(DetailsNeededFlags infoNeeded)
       Ptr mp(new KMountPoint);
       mp->d->mountedFrom = QFile::decodeName(mounted[i].f_mntfromname);
       mp->d->mountPoint = QFile::decodeName(mounted[i].f_mntonname);
-
-#ifdef Q_OS_OSF
-      mp->d->mountType = QFile::decodeName(mnt_names[mounted[i].f_type]);
-#else
       mp->d->mountType = QFile::decodeName(mounted[i].f_fstypename);
-#endif
 
       if (infoNeeded & NeedMountOptions)
       {
@@ -320,72 +304,6 @@ KMountPoint::List KMountPoint::currentMountPoints(DetailsNeededFlags infoNeeded)
       result.append(mp);
    }
 
-#elif defined(Q_OS_AIX)
-
-    struct vmount *mntctl_buffer;
-    struct vmount *vm;
-    char *mountedfrom;
-    char *mountedto;
-    int fsname_len, num;
-    int buf_sz = 4096;
-
-    mntctl_buffer = (struct vmount*)malloc(buf_sz);
-    num = mntctl(MCTL_QUERY, buf_sz, mntctl_buffer);
-    if (num == 0)
-    {
-	buf_sz = *(int*)mntctl_buffer;
-	free(mntctl_buffer);
-	mntctl_buffer = (struct vmount*)malloc(buf_sz);
-	num = mntctl(MCTL_QUERY, buf_sz, mntctl_buffer);
-    }
-
-    if (num > 0)
-    {
-        /* iterate through items in the vmount structure: */
-        vm = (struct vmount *)mntctl_buffer;
-        for ( ; num > 0; --num )
-        {
-            /* get the name of the mounted file systems: */
-            fsname_len = vmt2datasize(vm, VMT_STUB);
-            mountedto     = (char*)malloc(fsname_len + 1);
-	    mountedto[fsname_len] = '\0';
-            strncpy(mountedto, (char *)vmt2dataptr(vm, VMT_STUB), fsname_len);
-
-            fsname_len = vmt2datasize(vm, VMT_OBJECT);
-            mountedfrom     = (char*)malloc(fsname_len + 1);
-	    mountedfrom[fsname_len] = '\0';
-            strncpy(mountedfrom, (char *)vmt2dataptr(vm, VMT_OBJECT), fsname_len);
-
-	    /* Look up the string for the file system type,
-             * as listed in /etc/vfs.
-             * ex.: nfs,jfs,afs,cdrfs,sfs,cachefs,nfs3,autofs
-             */
-            struct vfs_ent* ent = getvfsbytype(vm->vmt_gfstype);
-
-            KMountPoint *mp = new KMountPoint;
-            mp->d->mountedFrom = QFile::decodeName(mountedfrom);
-            mp->d->mountPoint = QFile::decodeName(mountedto);
-            mp->d->mountType = QFile::decodeName(ent->vfsent_name);
-
-            free(mountedfrom);
-            free(mountedto);
-
-            if (infoNeeded & NeedMountOptions)
-            {
-              // TODO
-            }
-
-            mp->d->finalizeCurrentMountPoint(infoNeeded);
-            result.append(mp);
-
-            /* goto the next vmount structure: */
-            vm = (struct vmount *)((char *)vm + vm->vmt_length);
-        }
-
-	endvfsent( );
-    }
-
-    free( mntctl_buffer );
 #else
    STRUCT_SETMNTENT mnttab;
    if ((mnttab = SETMNTENT(MNTTAB, "r")) == 0)

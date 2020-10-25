@@ -1441,9 +1441,6 @@ static void setupX()
         if((i = display.lastIndexOf('.')) > display.lastIndexOf(':') && i >= 0)
             display.truncate(i);
         display.replace(':','_');
-#ifdef __APPLE__
-        display.replace('/','_');
-#endif
         QString xauth = s_instance->dirs()->saveLocation( "tmp" ) + QLatin1String( "xauth-" )
             + QString::number( getuid()) + QLatin1String( "-" ) + QString::fromLocal8Bit( display );
         KSaveFile xauthfile( xauth );

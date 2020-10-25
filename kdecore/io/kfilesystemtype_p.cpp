@@ -92,9 +92,7 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
     return KFileSystemType::Other;
 }
 
-#elif defined(Q_OS_SOLARIS) || defined(Q_OS_AIX) || defined(Q_OS_HPUX) \
-    || defined(Q_OS_OSF) || defined(Q_OS_SCO) || defined(Q_OS_UNIXWARE) \
-    || defined(Q_OS_NETBSD)
+#elif defined(Q_OS_SOLARIS) || defined(Q_OS_NETBSD)
 # include <sys/statvfs.h>
 
 KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)

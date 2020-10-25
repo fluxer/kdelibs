@@ -66,7 +66,7 @@
  * On HP-UX, the declaration of vsnprintf() is needed every time !
  */
 
-#if !defined(HAVE_VSNPRINTF) || defined(hpux)
+#if !defined(HAVE_VSNPRINTF)
 #if __STDC__
 #include <stdarg.h>
 #include <stdlib.h>
