@@ -17,7 +17,6 @@ set(cmakeFilesDontInstall
 # compatible).
 set(cmakeFiles
     check_installed_exports_file.cmake
-    CheckStructMember.cmake
     cmake-modules-styleguide.txt
     FindACL.cmake
     FindAlsa.cmake

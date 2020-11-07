@@ -5,7 +5,7 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-include(CheckStructMember)
+include(CheckStructHasMember)
 
 IF (LIBNXCL_INCLUDE_DIR AND LIBNXCL_LIBRARIES)
     # Already in cache, be silent
@@ -18,8 +18,8 @@ FIND_LIBRARY(LIBNXCL_LIBRARIES NAMES nxcl libnxcl)
 IF (LIBNXCL_INCLUDE_DIR AND LIBNXCL_LIBRARIES)
    SET(CMAKE_REQUIRED_LIBRARIES "${LIBNXCL_LIBRARIES}" "${CMAKE_REQUIRED_LIBRARIES}")
    SET(CMAKE_REQUIRED_INCLUDES "${LIBNXCL_INCLUDE_DIR}" "${CMAKE_REQUIRED_INCLUDES}")
-   CHECK_STRUCT_MEMBER(nxcl::NXClientLib "getNXSSHProcess()" nxcl/nxclientlib.h LIBNXCL_NXSSHPROCESS_FOUND)
-   CHECK_STRUCT_MEMBER(nxcl::NXClientLib "getXID()" nxcl/nxclientlib.h LIBNXCL_XID_FOUND)
+   CHECK_STRUCT_HAS_MEMBER(nxcl::NXClientLib "getNXSSHProcess()" nxcl/nxclientlib.h LIBNXCL_NXSSHPROCESS_FOUND)
+   CHECK_STRUCT_HAS_MEMBER(nxcl::NXClientLib "getXID()" nxcl/nxclientlib.h LIBNXCL_XID_FOUND)
 ENDIF (LIBNXCL_INCLUDE_DIR AND LIBNXCL_LIBRARIES)
 
 IF (LIBNXCL_NXSSHPROCESS_FOUND AND LIBNXCL_XID_FOUND)
