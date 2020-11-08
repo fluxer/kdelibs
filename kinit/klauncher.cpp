@@ -521,9 +521,9 @@ KLauncher::slotAutoStart()
       if (service.isEmpty())
       {
          // Done
-	 if( !mAutoStart.phaseDone())
-	 {
-	    mAutoStart.setPhaseDone();
+        if( !mAutoStart.phaseDone())
+        {
+            mAutoStart.setPhaseDone();
             switch( mAutoStart.phase())
                 {
                 case 0:
