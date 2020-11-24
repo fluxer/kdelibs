@@ -43,7 +43,7 @@ inline KFileSystemType::Type kde_typeFromName(const char *name)
     return KFileSystemType::Other;
 }
 
-#if defined(Q_OS_BSD4) && !defined(Q_OS_NETBSD)
+#if defined(Q_OS_FREEBSD) || defined(Q_OS_OPENBSD)
 # include <sys/param.h>
 # include <sys/mount.h>
 
