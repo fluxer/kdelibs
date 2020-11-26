@@ -34,21 +34,18 @@ class KPluginLoaderPrivate
 {
 public:
     KPluginLoaderPrivate(const QString &libname)
-        : name(libname), pluginVersion(0), lib(0)
+        : name(libname), pluginVersion(0)
     {}
     ~KPluginLoaderPrivate()
     {
-        delete lib;
     }
 
     const QString name;
     quint32 pluginVersion;
     QString errorString;
-
-    QLibrary *lib;
 };
 
-inline QString makeLibName( const QString &libname )
+static inline QString makeLibName( const QString &libname )
 {
     int pos = libname.lastIndexOf(QLatin1Char('/'));
     if (pos < 0)
@@ -96,11 +93,6 @@ static QString findLibraryInternal(const QString &name, const KComponentData &cD
 
     // Nothing found
     return QString();
-}
-
-bool KPluginLoader::isLoaded() const
-{
-    return QPluginLoader::isLoaded() || d_ptr->lib;
 }
 
 KPluginLoader::KPluginLoader(const QString &plugin, const KComponentData &componentdata, QObject *parent)
@@ -185,10 +177,6 @@ bool KPluginLoader::load()
         return true;
 
     if (!QPluginLoader::load()) {
-        d->lib = new QLibrary(d->name);
-        if (d->lib->load())
-            return true;
-
         return false;
     }
 

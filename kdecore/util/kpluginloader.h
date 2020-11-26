@@ -135,8 +135,6 @@ public:
      */
     QString errorString() const;
 
-    bool isLoaded() const;
-
 protected:
     /**
      * Performs the loading of the plugin.
