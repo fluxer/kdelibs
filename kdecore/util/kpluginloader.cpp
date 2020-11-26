@@ -32,20 +32,17 @@
 
 class KPluginLoaderPrivate
 {
-    Q_DECLARE_PUBLIC(KPluginLoader)
-protected:
+public:
     KPluginLoaderPrivate(const QString &libname)
-        : name(libname), pluginVersion(0), verificationData(0), lib(0)
+        : name(libname), pluginVersion(0), lib(0)
     {}
     ~KPluginLoaderPrivate()
     {
         delete lib;
     }
 
-    KPluginLoader *q_ptr;
     const QString name;
     quint32 pluginVersion;
-    KDEPluginVerificationData *verificationData;
     QString errorString;
 
     QLibrary *lib;
@@ -109,7 +106,6 @@ bool KPluginLoader::isLoaded() const
 KPluginLoader::KPluginLoader(const QString &plugin, const KComponentData &componentdata, QObject *parent)
     : QPluginLoader(findLibraryInternal(plugin, componentdata), parent), d_ptr(new KPluginLoaderPrivate(plugin))
 {
-    d_ptr->q_ptr = this;
     Q_D(KPluginLoader);
 
     // No lib, no fun.
@@ -126,7 +122,6 @@ KPluginLoader::KPluginLoader(const QString &plugin, const KComponentData &compon
 KPluginLoader::KPluginLoader(const KService &service, const KComponentData &componentdata, QObject *parent)
 : QPluginLoader(findLibraryInternal(service.library(), componentdata), parent), d_ptr(new KPluginLoaderPrivate(service.library()))
 {
-    d_ptr->q_ptr = this;
     Q_D(KPluginLoader);
 
     // It's probably to late to check this because service.library() is used
@@ -173,7 +168,7 @@ KPluginFactory *KPluginLoader::factory()
 
     KPluginFactory *factory = qobject_cast<KPluginFactory *>(obj);
 
-    if (factory == 0) {
+    if (!factory) {
         kDebug() << "Expected a KPluginFactory, got a" << obj->metaObject()->className();
         delete obj;
         d->errorString = i18n("The library %1 does not offer a KDE 4 compatible factory." , d->name);
@@ -201,17 +196,18 @@ bool KPluginLoader::load()
     QLibrary lib(fileName());
     Q_ASSERT(lib.isLoaded()); // already loaded by QPluginLoader::load()
 
-    d->verificationData = (KDEPluginVerificationData *) lib.resolve("kde_plugin_verification_data");
-    if (d->verificationData) {
-        if (d->verificationData->dataVersion < KDEPluginVerificationData::PluginVerificationDataVersion
-            || ((d->verificationData->KDEVersion & 0xFFFF00) > (KDE_VERSION & 0xFFFF00))  // newer minor version
-            || (KDE_VERSION_MAJOR << 16 != (d->verificationData->KDEVersion & 0xFF0000))) // different major version
+    KDEPluginVerificationData *verificationData = (KDEPluginVerificationData *) lib.resolve("kde_plugin_verification_data");
+    if (verificationData) {
+        if (verificationData->dataVersion < KDEPluginVerificationData::PluginVerificationDataVersion
+            || ((verificationData->KDEVersion & 0xFFFF00) > (KDE_VERSION & 0xFFFF00))  // newer minor version
+            || (KDE_VERSION_MAJOR << 16 != (verificationData->KDEVersion & 0xFF0000))) // different major version
         {
-            d->errorString = i18n("The plugin '%1' uses an incompatible KDE library (%2).", d->name, QString::fromLatin1(d->verificationData->KDEVersionString));
+            d->errorString = i18n("The plugin '%1' uses an incompatible KDE library (%2).",
+                                  d->name, QString::fromLatin1(verificationData->KDEVersionString));
             unload();
             return false;
         }
-        d->pluginVersion = (d->verificationData->KDEVersion & 0xFFFF00);
+        d->pluginVersion = (verificationData->KDEVersion & 0xFFFF00);
     } else {
         kDebug() << "The plugin" << d->name << "doesn't contain a kde_plugin_verification_data structure";
         d->pluginVersion = 0;
