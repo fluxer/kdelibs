@@ -153,8 +153,7 @@ private:
  */
 #define K_EXPORT_PLASMA_TOOLBOX(libname, classname) \
 K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
-K_EXPORT_PLUGIN(factory("plasma_toolbox_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
+K_EXPORT_PLUGIN(factory("plasma_toolbox_" #libname))
 
 #endif // multiple inclusion guard
 

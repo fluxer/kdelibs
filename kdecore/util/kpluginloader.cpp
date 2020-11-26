@@ -35,7 +35,7 @@ class KPluginLoaderPrivate
     Q_DECLARE_PUBLIC(KPluginLoader)
 protected:
     KPluginLoaderPrivate(const QString &libname)
-        : name(libname), pluginVersion(~0U), verificationData(0), lib(0)
+        : name(libname), pluginVersion(0), verificationData(0), lib(0)
     {}
     ~KPluginLoaderPrivate()
     {
@@ -211,15 +211,11 @@ bool KPluginLoader::load()
             unload();
             return false;
         }
+        d->pluginVersion = (d->verificationData->KDEVersion & 0xFFFF00);
     } else {
         kDebug() << "The plugin" << d->name << "doesn't contain a kde_plugin_verification_data structure";
+        d->pluginVersion = 0;
     }
-
-    quint32 *version = (quint32 *) lib.resolve("kde_plugin_version");
-    if (version)
-        d->pluginVersion = *version;
-    else
-        d->pluginVersion = ~0U;
 
     return true;
 }

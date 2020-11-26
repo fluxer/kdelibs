@@ -333,8 +333,7 @@ Q_DECLARE_METATYPE(Plasma::Service *)
  */
 #define K_EXPORT_PLASMA_SERVICE(libname, classname) \
 K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
-K_EXPORT_PLUGIN(factory("plasma_service_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
+K_EXPORT_PLUGIN(factory("plasma_service_" #libname))
 
 #endif // multiple inclusion guard
 

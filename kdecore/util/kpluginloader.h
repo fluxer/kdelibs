@@ -125,7 +125,7 @@ public:
 
     /**
      * Queries the plugin version.
-     * \returns The version given to K_EXPORT_PLUGIN_VERSION or (quint32) -1 if not set.
+     * \returns The version defined as KDE_VERSION or (quint32) 0 if plugin is not valid KDE plugin.
      */
     quint32 pluginVersion() const;
 

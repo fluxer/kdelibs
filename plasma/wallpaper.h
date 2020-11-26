@@ -582,7 +582,6 @@ class PLASMA_EXPORT Wallpaper : public QObject
  */
 #define K_EXPORT_PLASMA_WALLPAPER(libname, classname) \
 K_PLUGIN_FACTORY(factory, registerPlugin<classname>();) \
-K_EXPORT_PLUGIN(factory("plasma_wallpaper_" #libname)) \
-K_EXPORT_PLUGIN_VERSION(KDE_VERSION)
+K_EXPORT_PLUGIN(factory("plasma_wallpaper_" #libname))
 
 #endif // multiple inclusion guard

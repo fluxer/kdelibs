@@ -36,7 +36,6 @@ struct KDEPluginVerificationData
     /**
      * \internal
      * The version of this structure. Do not ever delete or change a field.
-     * Increase it in the K_EXPORT_PLUGIN_VERSION macro whenever you
      * append a field to this structure.
      */
     quint8 dataVersion;
@@ -52,15 +51,6 @@ struct KDEPluginVerificationData
 #define K_PLUGIN_VERIFICATION_DATA \
 Q_EXTERN_C Q_DECL_EXPORT const KDEPluginVerificationData kde_plugin_verification_data = \
 { KDEPluginVerificationData::PluginVerificationDataVersion, KDE_VERSION, KDE_VERSION_STRING };
-
-/**
- * \relates KPluginLoader
- * Use this macro if you want to give your plugin a version number.
- * You can later access the version number with KPluginLoader::pluginVersion()
- */
-#define K_EXPORT_PLUGIN_VERSION(version) \
-Q_EXTERN_C Q_DECL_EXPORT const quint32 kde_plugin_version = version;
-
 
 /**
  * \relates KPluginLoader
