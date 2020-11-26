@@ -136,7 +136,7 @@ Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVari
 
     KPluginLoader plugin(*offer);
 
-    if (!Plasma::isPluginVersionCompatible(plugin.pluginVersion()) &&
+    if (!Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion()) &&
         (name != "internal:extender")) {
         return 0;
     }
@@ -178,7 +178,7 @@ DataEngine *PluginLoader::loadDataEngine(const QString &name)
         if (api.isEmpty()) {
             if (offers.first()) {
                 KPluginLoader plugin(*offers.first());
-                if (Plasma::isPluginVersionCompatible(plugin.pluginVersion())) {
+                if (Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
                     engine = offers.first()->createInstance<Plasma::DataEngine>(0, allArgs, &error);
                 }
             }
@@ -225,8 +225,9 @@ Service *PluginLoader::loadService(const QString &name, const QVariantList &args
 
     KService::Ptr offer = offers.first();
     QString error;
+    KPluginLoader plugin(*offer);
 
-    if (Plasma::isPluginVersionCompatible(KPluginLoader(*offer).pluginVersion())) {
+    if (Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
         service = offer->createInstance<Plasma::Service>(parent, args, &error);
     }
 

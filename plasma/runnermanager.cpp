@@ -238,7 +238,8 @@ public:
             if (api.isEmpty()) {
                 QVariantList args;
                 args << service->storageId();
-                if (Plasma::isPluginVersionCompatible(KPluginLoader(*service).pluginVersion())) {
+                KPluginLoader plugin(*service);
+                if (Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
                     QString error;
                     runner = service->createInstance<AbstractRunner>(q, args, &error);
                     if (!runner) {

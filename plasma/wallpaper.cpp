@@ -205,7 +205,7 @@ Wallpaper *Wallpaper::load(const QString &wallpaperName, const QVariantList &arg
 
     KPluginLoader plugin(*offer);
 
-    if (!Plasma::isPluginVersionCompatible(plugin.pluginVersion())) {
+    if (!Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
         return 0;
     }
 

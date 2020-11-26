@@ -95,7 +95,7 @@ ContainmentActions *ContainmentActions::load(Containment *parent, const QString 
     KService::Ptr offer = offers.first();
     KPluginLoader plugin(*offer);
 
-    if (!Plasma::isPluginVersionCompatible(plugin.pluginVersion())) {
+    if (!Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
         return 0;
     }
 

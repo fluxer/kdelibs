@@ -317,7 +317,7 @@ PLASMA_EXPORT QList<QAction*> actionsFromMenu(QMenu *menu,
 /**
  * Verifies that a plugin is compatible with plasma
  */
-PLASMA_EXPORT bool isPluginVersionCompatible(unsigned int version);
+PLASMA_EXPORT bool isPluginCompatible(const QString &plugin, unsigned int version);
 } // Plasma namespace
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Plasma::Constraints)
