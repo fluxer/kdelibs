@@ -145,20 +145,15 @@ QList<QAction*> actionsFromMenu(QMenu *menu, const QString &prefix, QObject *par
 
 bool isPluginCompatible(const QString &plugin, unsigned int version)
 {
-    if (version == quint32(-1)) {
+    if (!version) {
         // unversioned, just let it through
         kWarning() << "unversioned plugin" << plugin << "detected, may result in instability";
         return true;
     }
 
-    // we require KDE_VERSION_MAJOR and KDE_VERSION_MINOR
-    const quint32 minVersion = KDE_MAKE_VERSION(KDE_VERSION_MAJOR, 0, 0);
-    const quint32 maxVersion = KDE_MAKE_VERSION(KDE_VERSION_MAJOR, KDE_VERSION_MINOR, 60);
-
-    if (version < minVersion || version > maxVersion) {
-        kDebug() << "plugin" << plugin << "is compiled against incompatible Plasma version  " << version
-                 << "This build is compatible with" << KDE_VERSION_MAJOR << ".0.0 (" << minVersion
-                 << ") to" << KDE_VERSION_STRING << "(" << maxVersion << ")";
+    if (version < KDE_VERSION) {
+        kDebug() << "plugin" << plugin << "is compiled against incompatible Plasma version " << version
+                 << "This build is compatible with" << KDE_VERSION_STRING;
         return false;
     }
 
