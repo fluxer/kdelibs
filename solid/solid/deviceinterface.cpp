@@ -66,49 +66,49 @@ QString Solid::DeviceInterface::typeDescription(Type type)
     switch (type)
     {
     case Unknown:
-        return QObject::tr("Unknown", "Unknown device type");
+        return QObject::tr("Unknown");
     case GenericInterface:
-        return QObject::tr("Generic Interface", "Generic Interface device type");
+        return QObject::tr("Generic Interface");
     case Processor:
-        return QObject::tr("Processor", "Processor device type");
+        return QObject::tr("Processor");
     case Block:
-        return QObject::tr("Block", "Block device type");
+        return QObject::tr("Block");
     case StorageAccess:
-        return QObject::tr("Storage Access", "Storage Access device type");
+        return QObject::tr("Storage Access");
     case StorageDrive:
-        return QObject::tr("Storage Drive", "Storage Drive device type");
+        return QObject::tr("Storage Drive");
     case OpticalDrive:
-        return QObject::tr("Optical Drive", "Optical Drive device type");
+        return QObject::tr("Optical Drive");
     case StorageVolume:
-        return QObject::tr("Storage Volume", "Storage Volume device type");
+        return QObject::tr("Storage Volume");
     case OpticalDisc:
-        return QObject::tr("Optical Disc", "Optical Disc device type");
+        return QObject::tr("Optical Disc");
     case Camera:
-        return QObject::tr("Camera", "Camera device type");
+        return QObject::tr("Camera");
     case PortableMediaPlayer:
-        return QObject::tr("Portable Media Player", "Portable Media Player device type");
+        return QObject::tr("Portable Media Player");
     case NetworkInterface:
-        return QObject::tr("Network Interface", "Network Interface device type");
+        return QObject::tr("Network Interface");
     case AcAdapter:
-        return QObject::tr("Ac Adapter", "Ac Adapter device type");
+        return QObject::tr("Ac Adapter");
     case Battery:
-        return QObject::tr("Battery", "Battery device type");
+        return QObject::tr("Battery");
     case Button:
-        return QObject::tr("Button", "Button device type");
+        return QObject::tr("Button");
     case AudioInterface:
-        return QObject::tr("Audio Interface", "Audio Interface device type");
+        return QObject::tr("Audio Interface");
     case DvbInterface:
-        return QObject::tr("Dvb Interface", "Dvb Interface device type");
+        return QObject::tr("Dvb Interface");
     case Video:
-        return QObject::tr("Video", "Video device type");
+        return QObject::tr("Video");
     case SerialInterface:
-        return QObject::tr("Serial Interface", "Serial Interface device type");
+        return QObject::tr("Serial Interface");
     case SmartCardReader:
-        return QObject::tr("Smart Card Reader", "Smart Card Reader device type");
+        return QObject::tr("Smart Card Reader");
     case InternetGateway:
-        return QObject::tr("Internet Gateway Device", "Internet Gateway device type");
+        return QObject::tr("Internet Gateway Device");
     case NetworkShare:
-        return QObject::tr("Network Share", "Network Share device type");
+        return QObject::tr("Network Share");
     case Last:
         return QString();
     }

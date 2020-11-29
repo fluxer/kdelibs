@@ -106,7 +106,7 @@ QString UPowerDevice::description() const
     if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter))
         return QObject::tr("A/C Adapter");
     else if (queryDeviceInterface(Solid::DeviceInterface::Battery))
-        return QObject::tr("%1 Battery", "%1 is battery technology").arg(batteryTechnology());
+        return QObject::tr("%1 Battery").arg(batteryTechnology());
     else {
         QString result = prop("Model").toString();
         if (result.isEmpty()) {
@@ -122,19 +122,19 @@ QString UPowerDevice::batteryTechnology() const
     switch (tech)
     {
     case 1:
-        return QObject::tr("Lithium Ion", "battery technology");
+        return QObject::tr("Lithium Ion");
     case 2:
-        return QObject::tr("Lithium Polymer", "battery technology");
+        return QObject::tr("Lithium Polymer");
     case 3:
-        return QObject::tr("Lithium Iron Phosphate", "battery technology");
+        return QObject::tr("Lithium Iron Phosphate");
     case 4:
-        return QObject::tr("Lead Acid", "battery technology");
+        return QObject::tr("Lead Acid");
     case 5:
-        return QObject::tr("Nickel Cadmium", "battery technology");
+        return QObject::tr("Nickel Cadmium");
     case 6:
-        return QObject::tr("Nickel Metal Hydride", "battery technology");
+        return QObject::tr("Nickel Metal Hydride");
     default:
-        return QObject::tr("Unknown", "battery technology");
+        return QObject::tr("Unknown");
     }
 }
 

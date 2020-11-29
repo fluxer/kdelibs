@@ -32,10 +32,9 @@ namespace KGlobal
 
 #include "kglobal.h"
 #include "klocale.h"
-#undef QT_NO_TRANSLATION
 #include <QtCore/QTranslator>
-#define QT_NO_TRANSLATION
 
+#ifndef QT_NO_TRANSLATION
 class KDETranslator : public QTranslator
 {
 public:
@@ -44,10 +43,19 @@ public:
         setObjectName(QLatin1String("kdetranslator"));
     }
 
-    virtual QString translate(const char* context,
-                              const char *sourceText,
-                              const char* message) const
+    // provides virtuals for old and new method
+    virtual QString translate(const char *context,
+                              const char *sourceText) const
     {
+        return KGlobal::locale()->translateQt(context, sourceText, 0);
+    }
+
+    virtual QString translate(const char *context,
+                              const char *sourceText,
+                              const char *message,
+                              const char *disambiguation = 0) const
+    {
+        Q_UNUSED(disambiguation);
         return KGlobal::locale()->translateQt(context, sourceText, message);
     }
 
@@ -56,5 +64,6 @@ public:
         return false;
     }
 };
+#endif // QT_NO_TRANSLATION
 
 #endif // KGLOBAL_P_H

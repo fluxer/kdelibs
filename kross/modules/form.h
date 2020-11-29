@@ -550,12 +550,6 @@ namespace Kross {
             QString tr(const QString& str);
 
             /**
-             * \return i18n'ed version of the string, differentiated by the comment text (like '\@title:window')
-             */
-            QString tr(const QString& str,const QString& comment);
-
-
-            /**
              * Show a messagebox.
              *
              * \param dialogtype The type of the dialog which could be one

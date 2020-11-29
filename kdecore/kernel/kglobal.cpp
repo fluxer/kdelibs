@@ -179,8 +179,10 @@ KLocale *KGlobal::locale()
             if (coreApp->thread() != QThread::currentThread()) {
                 qFatal("KGlobal::locale() must be called from the main thread before using i18n() in threads. KApplication"
                        " takes care of this. If not using KApplication, call KGlobal::locale() during initialization.");
+#ifndef QT_NO_TRANSLATION
             } else {
                 QCoreApplication::installTranslator(new KDETranslator(coreApp));
+#endif
             }
         }
         foreach(const QString &catalog, d->catalogsToInsert) {
