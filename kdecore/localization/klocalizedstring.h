@@ -592,23 +592,6 @@ extern KLocalizedString KDECORE_EXPORT ki18np (const char *singular, const char 
 */
 extern KLocalizedString KDECORE_EXPORT ki18ncp (const char *ctxt, const char *singular, const char *plural);
 
-/**
- * Qt's uic generated translation calls go through numerous indirections
- * unnecessary in our case. So we use uic -tr tr2i18n to redirect them
- * to our i18n API.
-**/
-inline QString tr2i18n (const char *message, const char *comment = 0) {
-    if (comment && comment[0] && message && message[0]) {
-        return ki18nc(comment, message).toString();
-    }
-    else if (message && message[0]) {
-        return ki18n(message).toString();
-    }
-    else {
-        return QString();
-    }
-}
-
 #ifndef NDEBUG
 #define I18N_ERR_MSG String_literal_as_second_argument_to_i18n___Perhaps_you_need_i18nc_or_i18np
 template <typename T, int s> class I18nTypeCheck {public: static void I18N_ERR_MSG () {}};
