@@ -233,11 +233,6 @@ int main(int argc, char **argv)
         printResult( KGlobal::dirs()->installPath(type.toLocal8Bit()) );
     }
 
-    if (args->isSet("qt-prefix"))
-    {
-        printResult(QLibraryInfo::location(QLibraryInfo::PrefixPath));
-        return 0;
-    }
     if (args->isSet("qt-binaries"))
     {
         printResult(QLibraryInfo::location(QLibraryInfo::BinariesPath));
