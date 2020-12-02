@@ -1335,7 +1335,6 @@ KColorDialog::eventFilter(QObject *obj, QEvent *ev)
         case QEvent::DragMove:
         case QEvent::DragLeave:
         case QEvent::Drop:
-        case QEvent::DragResponse:
             qApp->sendEvent(d->patch, ev);
             return true;
         default:
