@@ -161,18 +161,12 @@ bool isShiftAsModifierAllowed( int keyQt )
         case Qt::Key_VolumeDown:
         case Qt::Key_VolumeMute:
         case Qt::Key_VolumeUp:
-        case Qt::Key_BassBoost:
-        case Qt::Key_BassUp:
-        case Qt::Key_BassDown:
-        case Qt::Key_TrebleUp:
-        case Qt::Key_TrebleDown:
         case Qt::Key_MediaPlay:
         case Qt::Key_MediaStop:
         case Qt::Key_MediaPrevious:
         case Qt::Key_MediaNext:
         case Qt::Key_MediaRecord:
         case Qt::Key_MediaPause:
-        case Qt::Key_MediaTogglePlayPause:
         case Qt::Key_LaunchMail:
         case Qt::Key_Calculator:
         case Qt::Key_Memo:
