@@ -96,8 +96,7 @@ bool Filter::atEnd() const
 
 // we don't want to spell check empty words, or single-char words of the form
 // '<', '=', etc.
-static bool
-isValidWord(const QString &str)
+static bool isValidWord(const QString &str)
 {
     if(str.isEmpty() || (str.length() == 1 && !str[0].isLetter())) {
       return false;
@@ -112,8 +111,7 @@ isValidWord(const QString &str)
     return false;
 }
 
-static bool
-finderNextWord(QTextBoundaryFinder &finder, QString &word, int &bufferStart)
+static bool finderNextWord(QTextBoundaryFinder &finder, QString &word, int &bufferStart)
 {
     QTextBoundaryFinder::BoundaryReasons boundary = finder.boundaryReasons();
     int start = finder.position();

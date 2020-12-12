@@ -54,8 +54,8 @@ namespace Sonnet
         void continueChecking();
         void stop();
 
-        bool        checkWord(const QString &word);
-        QStringList suggest(const QString &word);
+        bool        checkWord(const QString &word) const;
+        QStringList suggest(const QString &word) const;
         bool        addWord(const QString &word);
     Q_SIGNALS:
 

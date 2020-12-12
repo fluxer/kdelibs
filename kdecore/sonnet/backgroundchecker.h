@@ -73,7 +73,7 @@ namespace Sonnet
         Speller speller() const;
         void setSpeller(const Speller &speller);
 
-        bool checkWord(const QString &word);
+        bool checkWord(const QString &word) const;
         QStringList suggest(const QString &word) const;
         bool addWordToPersonal(const QString &word);
 

@@ -112,7 +112,7 @@ Speller BackgroundChecker::speller() const
     return d->engine->speller();
 }
 
-bool BackgroundChecker::checkWord(const QString &word)
+bool BackgroundChecker::checkWord(const QString &word) const
 {
     return d->engine->checkWord( word );
 }

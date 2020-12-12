@@ -28,9 +28,8 @@
 using namespace Sonnet;
 
 BackgroundEngine::BackgroundEngine(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), m_filter(Filter::defaultFilter())
 {
-    m_filter = Filter::defaultFilter();
 }
 
 BackgroundEngine::~BackgroundEngine()
@@ -100,7 +99,7 @@ void BackgroundEngine::checkNext()
         continueChecking();
 }
 
-bool BackgroundEngine::checkWord(const QString &word)
+bool BackgroundEngine::checkWord(const QString &word) const
 {
     return m_dict.isCorrect(word);
 }
@@ -110,7 +109,7 @@ bool BackgroundEngine::addWord(const QString &word)
     return m_dict.addToPersonal(word);
 }
 
-QStringList BackgroundEngine::suggest(const QString &word)
+QStringList BackgroundEngine::suggest(const QString &word) const
 {
     return m_dict.suggest(word);
 }
