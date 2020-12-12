@@ -44,9 +44,8 @@ QSpellEnchantDict::~QSpellEnchantDict()
 
 bool QSpellEnchantDict::isCorrect(const QString &word) const
 {
-    int wrong = enchant_dict_check(m_dict, word.toUtf8(),
-                                   word.toUtf8().length());
-    return !wrong;
+    QByteArray data = word.toUtf8();
+    return !enchant_dict_check(m_dict, data.constData(), data.length());
 }
 
 QStringList QSpellEnchantDict::suggest(const QString &word) const
@@ -54,9 +53,10 @@ QStringList QSpellEnchantDict::suggest(const QString &word) const
     /* Needed for Unicode conversion */
     QTextCodec *codec = QTextCodec::codecForName("utf8");
 
+    QByteArray data = word.toUtf8();
     size_t number = 0;
     char **suggestions =
-        enchant_dict_suggest(m_dict, word.toUtf8(), word.toUtf8().length(),
+        enchant_dict_suggest(m_dict, data.constData(), data.length(),
                              &number);
 
     QStringList qsug;
@@ -81,9 +81,11 @@ bool QSpellEnchantDict::checkAndSuggest(const QString &word,
 bool QSpellEnchantDict::storeReplacement(const QString &bad,
                                   const QString &good)
 {
+    QByteArray baddata = bad.toUtf8();
+    QByteArray gooddata = good.toUtf8();
     enchant_dict_store_replacement(m_dict,
-                                   bad.toUtf8(), bad.toUtf8().length(),
-                                   good.toUtf8(), good.toUtf8().length());
+                                   baddata.constData(), baddata.length(),
+                                   gooddata.constData(), gooddata.length());
     return true;
 }
 
