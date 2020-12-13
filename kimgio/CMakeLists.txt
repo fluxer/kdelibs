@@ -1,6 +1,6 @@
 project(kimgio)
 
-macro_optional_find_package(Jasper)
+macro_optional_find_package(Jasper 2.0.20)
 set_package_properties(Jasper PROPERTIES
     URL "http://www.ece.uvic.ca/~mdadams/jasper"
     PURPOSE "Support for JPEG-2000 images"

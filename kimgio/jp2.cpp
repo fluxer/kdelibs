@@ -103,13 +103,13 @@ static void jas_stream_initbuf(jas_stream_t *stream, int bufmode, char *buf,
         stream->bufmode_ |= bufmode & JAS_STREAM_BUFMODEMASK;
 }
 
-static int qiodevice_read(jas_stream_obj_t *obj, char *buf, int cnt)
+static int qiodevice_read(jas_stream_obj_t *obj, char *buf, unsigned cnt)
 {
         QIODevice *io = (QIODevice*) obj;
         return io->read(buf, cnt);
 }
 
-static int qiodevice_write(jas_stream_obj_t *obj, char *buf, int cnt)
+static int qiodevice_write(jas_stream_obj_t *obj, const char *buf, unsigned cnt)
 {
         QIODevice *io = (QIODevice*) obj;
         return io->write(buf, cnt);
