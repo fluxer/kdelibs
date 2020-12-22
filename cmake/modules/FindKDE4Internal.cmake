@@ -519,6 +519,9 @@ if(NOT _OFFT_IS_64BIT)
     set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
 endif()
 
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -DNDEBUG")
+endif()
 
 ############################################################
 # compiler specific settings
