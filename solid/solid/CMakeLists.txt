@@ -269,7 +269,7 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
                     )
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${UDEV_LIBS})
-endif(UDEV_FOUND)
+endif(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
 
 
 message(STATUS "Building Solid UPower backend." )
