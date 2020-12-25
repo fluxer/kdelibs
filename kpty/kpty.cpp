@@ -65,9 +65,10 @@ extern "C" {
 # include <utempter.h>
 }
 #else
-# include <utmp.h>
 # ifdef HAVE_UTMPX
 #  include <utmpx.h>
+# else
+#  include <utmp.h>
 # endif
 # if !defined(_PATH_UTMPX) && defined(_UTMPX_FILE)
 #  define _PATH_UTMPX _UTMPX_FILE
