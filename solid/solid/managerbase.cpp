@@ -36,7 +36,7 @@
 #include "backends/upnp/upnpdevicemanager.h"
 #endif
 
-#if defined (UDEV_FOUND)
+#if defined (UDEV_FOUND) && defined(Q_OS_LINUX)
 #include "backends/udev/udevmanager.h"
 #endif
 
@@ -59,7 +59,7 @@ void Solid::ManagerBasePrivate::loadBackends()
     if (!solidFakeXml.isEmpty()) {
         m_backends << new Solid::Backends::Fake::FakeManager(0, solidFakeXml);
     } else {
-#       if defined(UDEV_FOUND)
+#       if defined(UDEV_FOUND) && defined(Q_OS_LINUX)
             m_backends << new Solid::Backends::UDev::UDevManager(0);
 #       endif
 #       if defined(WITH_SOLID_UDISKS2)
