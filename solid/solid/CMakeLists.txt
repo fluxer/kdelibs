@@ -215,7 +215,8 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h
 )
 
-if(UDEV_FOUND)
+# FIXME: this should may work on BSD with some adjustments
+if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
     message(STATUS "Building Solid UDev backend." )
     set(solid_LIB_SRCS ${solid_LIB_SRCS}
         backends/udev/utils.cpp
