@@ -179,7 +179,7 @@ void UDisksStorageAccess::slotDBusReply( const QDBusMessage & reply )
                 QString program = "cdio";
                 QStringList args;
                 args << "-f" << devnode << "eject";
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD)
+#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_DRAGONFLY)
                 devnode.remove("/dev/").replace("([0-9]).", "\\1");
                 QString program = "cdcontrol";
                 QStringList args;

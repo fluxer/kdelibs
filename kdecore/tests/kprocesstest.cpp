@@ -77,8 +77,7 @@ void KProcessTest::test_channels()
 
 void KProcessTest::test_setShellCommand()
 {
-// Condition copied from kprocess.cpp
-#if !defined(__linux__) && !defined(__FreeBSD__) && !defined(__NetBSD__) && !defined(__OpenBSD__) && !defined(__DragonFly__) && !defined(__GNU__)
+#if !defined(Q_OS_UNIX)
     QSKIP("This test needs a free UNIX system", SkipSingle);
 #else
     KProcess p;

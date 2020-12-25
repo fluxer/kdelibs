@@ -98,7 +98,7 @@ extern "C" {
 
 #if defined HAVE_TCGETATTR
 # define _tcgetattr(fd, ttmode) tcgetattr(fd, ttmode)
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(__DragonFly__)
+#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(Q_OS_DRAGONFLY)
 # define _tcgetattr(fd, ttmode) ioctl(fd, TIOCGETA, (char *)ttmode)
 #else
 # define _tcgetattr(fd, ttmode) ioctl(fd, TCGETS, (char *)ttmode)
@@ -106,7 +106,7 @@ extern "C" {
 
 #if defined HAVE_TCSETATTR
 # define _tcsetattr(fd, ttmode) tcsetattr(fd, TCSANOW, ttmode)
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(__DragonFly__)
+#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(Q_OS_DRAGONFLY)
 # define _tcsetattr(fd, ttmode) ioctl(fd, TIOCSETA, (char *)ttmode)
 #else
 # define _tcsetattr(fd, ttmode) ioctl(fd, TCSETS, (char *)ttmode)

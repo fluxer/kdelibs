@@ -1847,7 +1847,7 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
 static bool fileSystemSupportsACL( const QByteArray& path )
 {
     bool fileSystemSupportsACLs = false;
-#ifdef Q_OS_FREEBSD
+#if defined(Q_OS_FREEBSD) || defined(Q_OS_DRAGONFLY)
     struct statfs buf;
     fileSystemSupportsACLs = ( statfs( path.data(), &buf ) == 0 ) && ( buf.f_flags & MNT_ACLS );
 #else
