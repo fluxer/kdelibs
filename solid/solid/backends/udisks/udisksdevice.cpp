@@ -242,55 +242,55 @@ QString UDisksDevice::storageDescription() const
         QString first;
         QString second;
 
-        first = QObject::tr("CD-ROM", "First item of %1%2 Drive sentence");
+        first = QObject::tr("CD-ROM");
         if (mediumTypes & Solid::OpticalDrive::Cdr)
-            first = QObject::tr("CD-R", "First item of %1%2 Drive sentence");
+            first = QObject::tr("CD-R");
         if (mediumTypes & Solid::OpticalDrive::Cdrw)
-            first = QObject::tr("CD-RW", "First item of %1%2 Drive sentence");
+            first = QObject::tr("CD-RW");
 
         if (mediumTypes & Solid::OpticalDrive::Dvd)
-            second = QObject::tr("/DVD-ROM", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/DVD-ROM");
         if (mediumTypes & Solid::OpticalDrive::Dvdplusr)
-            second = QObject::tr("/DVD+R", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/DVD+R");
         if (mediumTypes & Solid::OpticalDrive::Dvdplusrw)
-            second = QObject::tr("/DVD+RW", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/DVD+RW");
         if (mediumTypes & Solid::OpticalDrive::Dvdr)
-            second = QObject::tr("/DVD-R", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/DVD-R");
         if (mediumTypes & Solid::OpticalDrive::Dvdrw)
-            second = QObject::tr("/DVD-RW", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/DVD-RW");
         if (mediumTypes & Solid::OpticalDrive::Dvdram)
-            second = QObject::tr("/DVD-RAM", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/DVD-RAM");
         if ((mediumTypes & Solid::OpticalDrive::Dvdr) && (mediumTypes & Solid::OpticalDrive::Dvdplusr))
         {
             if(mediumTypes & Solid::OpticalDrive::Dvdplusdl)
-                second = QObject::tr("/DVD±R DL", "Second item of %1%2 Drive sentence");
+                second = QObject::tr("/DVD±R DL");
             else
-                second = QObject::tr("/DVD±R", "Second item of %1%2 Drive sentence");
+                second = QObject::tr("/DVD±R");
         }
         if ((mediumTypes & Solid::OpticalDrive::Dvdrw) && (mediumTypes & Solid::OpticalDrive::Dvdplusrw))
         {
             if((mediumTypes & Solid::OpticalDrive::Dvdplusdl) || (mediumTypes & Solid::OpticalDrive::Dvdplusdlrw))
-                second = QObject::tr("/DVD±RW DL", "Second item of %1%2 Drive sentence");
+                second = QObject::tr("/DVD±RW DL");
             else
-                second = QObject::tr("/DVD±RW", "Second item of %1%2 Drive sentence");
+                second = QObject::tr("/DVD±RW");
         }
         if (mediumTypes & Solid::OpticalDrive::Bd)
-            second = QObject::tr("/BD-ROM", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/BD-ROM");
         if (mediumTypes & Solid::OpticalDrive::Bdr)
-            second = QObject::tr("/BD-R", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/BD-R");
         if (mediumTypes & Solid::OpticalDrive::Bdre)
-            second = QObject::tr("/BD-RE", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/BD-RE");
         if (mediumTypes & Solid::OpticalDrive::HdDvd)
-            second = QObject::tr("/HD DVD-ROM", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/HD DVD-ROM");
         if (mediumTypes & Solid::OpticalDrive::HdDvdr)
-            second = QObject::tr("/HD DVD-R", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/HD DVD-R");
         if (mediumTypes & Solid::OpticalDrive::HdDvdrw)
-            second = QObject::tr("/HD DVD-RW", "Second item of %1%2 Drive sentence");
+            second = QObject::tr("/HD DVD-RW");
 
         if (drive_is_hotpluggable)
-            description = QObject::tr("External %1%2 Drive", "%1 is CD-ROM/CD-R/etc; %2 is '/DVD-ROM'/'/DVD-R'/etc (with leading slash)").arg(first).arg(second);
+            description = QObject::tr("External %1%2 Drive").arg(first).arg(second);
         else
-            description = QObject::tr("%1%2 Drive", "%1 is CD-ROM/CD-R/etc; %2 is '/DVD-ROM'/'/DVD-R'/etc (with leading slash)").arg(first).arg(second);
+            description = QObject::tr("%1%2 Drive").arg(first).arg(second);
 
         return description;
     }
@@ -313,9 +313,9 @@ QString UDisksDevice::storageDescription() const
         if (!size_str.isEmpty())
         {
             if (drive_is_hotpluggable)
-                description = QObject::tr("%1 External Hard Drive", "%1 is the size").arg(size_str);
+                description = QObject::tr("%1 External Hard Drive").arg(size_str);
             else
-                description = QObject::tr("%1 Hard Drive", "%1 is the size").arg(size_str);
+                description = QObject::tr("%1 Hard Drive").arg(size_str);
         } else {
             if (drive_is_hotpluggable)
                 description = QObject::tr("External Hard Drive");
@@ -348,7 +348,7 @@ QString UDisksDevice::storageDescription() const
             }
             else
             {
-                vendormodel_str = QObject::tr("%1 %2", "%1 is the vendor, %2 is the model of the device").arg(vendor_str).arg(model);
+                vendormodel_str = QObject::tr("%1 %2").arg(vendor_str).arg(model);
             }
         }
     }
@@ -504,7 +504,7 @@ QString UDisksDevice::volumeDescription() const
     if (drive_is_encrypted_container)
     {
         if (!size_str.isEmpty())
-            description = QObject::tr("%1 Encrypted Container", "%1 is the size").arg(size_str);
+            description = QObject::tr("%1 Encrypted Container").arg(size_str);
         else
             description = QObject::tr("Encrypted Container");
     }
@@ -513,9 +513,9 @@ QString UDisksDevice::volumeDescription() const
         if (!size_str.isEmpty())
         {
             if (drive_is_hotpluggable)
-                description = QObject::tr("%1 External Hard Drive", "%1 is the size").arg(size_str);
+                description = QObject::tr("%1 External Hard Drive").arg(size_str);
             else
-                description = QObject::tr("%1 Hard Drive", "%1 is the size").arg(size_str);
+                description = QObject::tr("%1 Hard Drive").arg(size_str);
         }
         else
         {
@@ -528,9 +528,9 @@ QString UDisksDevice::volumeDescription() const
     else
     {
         if (drive_is_removable)
-            description = QObject::tr("%1 Removable Media", "%1 is the size").arg(size_str);
+            description = QObject::tr("%1 Removable Media").arg(size_str);
         else
-            description = QObject::tr("%1 Media", "%1 is the size").arg(size_str);
+            description = QObject::tr("%1 Media").arg(size_str);
     }
 
     return description;
