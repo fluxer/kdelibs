@@ -57,9 +57,6 @@ configure_file(
 make_directory(${CMAKE_CURRENT_BINARY_DIR}/backends/fakehw)
 make_directory(${CMAKE_CURRENT_BINARY_DIR}/backends/udev)
 
-# enable -fvisibility=hidden for C sources
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${KDE4_C_FLAGS}")
-
 set(solid_OPTIONAL_LIBS)
 
 set(solid_LIB_SRCS
