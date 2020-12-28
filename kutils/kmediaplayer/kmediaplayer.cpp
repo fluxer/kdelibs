@@ -24,7 +24,7 @@
 
 #if defined(HAVE_MPV)
 #include <mpv/client.h>
-#include <mpv/qthelper.hpp>
+#include "qthelper.hpp"
 #else
 static bool s_fullscreen = false;
 #endif // HAVE_MPV
