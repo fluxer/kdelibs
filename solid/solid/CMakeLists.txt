@@ -298,6 +298,8 @@ if(WITH_SOLID_UDISKS2)
         backends/udisks2/udisksgenericinterface.cpp
         backends/udisks2/dbus/manager.cpp
     )
+    # for the localizations
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS})
 else(WITH_SOLID_UDISKS2)
     message(STATUS "Building Solid UDisks backend." )
     set(solid_LIB_SRCS
