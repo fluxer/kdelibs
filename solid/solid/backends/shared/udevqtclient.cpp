@@ -40,13 +40,6 @@ ClientPrivate::~ClientPrivate()
         udev_monitor_unref(monitor);
 }
 
-void ClientPrivate::init(const QStringList &subsystemList, ListenToWhat what)
-{
-    if (what != ListenToNone) {
-        setWatchedSubsystems(subsystemList);
-    }
-}
-
 void ClientPrivate::setWatchedSubsystems(const QStringList &subsystemList)
 {
     // create a listener
@@ -145,14 +138,13 @@ Client::Client(QObject *parent)
     : QObject(parent)
     , d(new ClientPrivate(this))
 {
-    d->init(QStringList(), ClientPrivate::ListenToNone);
 }
 
 Client::Client(const QStringList& subsystemList, QObject *parent)
     : QObject(parent)
     , d(new ClientPrivate(this))
 {
-    d->init(subsystemList, ClientPrivate::ListenToList);
+    setWatchedSubsystems(subsystemList);
 }
 
 Client::~Client()

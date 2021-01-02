@@ -49,12 +49,9 @@ class DevicePrivate
 class ClientPrivate
 {
     public:
-        enum ListenToWhat { ListenToList, ListenToNone };
-
         ClientPrivate(Client *q_);
         ~ClientPrivate();
 
-        void init(const QStringList &subsystemList, ListenToWhat what);
         void setWatchedSubsystems(const QStringList &subsystemList);
         void _uq_monitorReadyRead(int fd);
         DeviceList deviceListFromEnumerate(struct udev_enumerate *en);
