@@ -79,11 +79,10 @@ Device::Device()
 }
 
 Device::Device(const Device &other)
+    : d(0)
 {
     if (other.d) {
         d = new DevicePrivate(other.d->udev);
-    } else {
-        d = 0;
     }
 }
 

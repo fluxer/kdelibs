@@ -27,7 +27,7 @@
 namespace UdevQt {
 
 ClientPrivate::ClientPrivate(Client *q_)
-    : udev(0), monitor(0), q(q_), monitorNotifier(0)
+    : udev(udev_new()), monitor(0), q(q_), monitorNotifier(0)
 {
 }
 
@@ -42,8 +42,6 @@ ClientPrivate::~ClientPrivate()
 
 void ClientPrivate::init(const QStringList &subsystemList, ListenToWhat what)
 {
-    udev = udev_new();
-
     if (what != ListenToNone) {
         setWatchedSubsystems(subsystemList);
     }
