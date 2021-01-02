@@ -50,7 +50,7 @@ static bool s_fullscreen = false;
     if (d->m_handle) { \
         const QVariant result = mpv::qt::command(d->m_handle, command); \
         if (mpv::qt::is_error(result)) { \
-            kWarning() << mpv_error_string(mpv::qt::get_error(result)); \
+            kWarning() << command << mpv_error_string(mpv::qt::get_error(result)); \
         } \
     }
 
@@ -59,7 +59,7 @@ static bool s_fullscreen = false;
     if (d->m_handle) { \
         const QVariant result = mpv::qt::get_property(d->m_handle, name); \
         if (mpv::qt::is_error(result)) { \
-            kWarning() << mpv_error_string(mpv::qt::get_error(result)); \
+            kWarning() << name << mpv_error_string(mpv::qt::get_error(result)); \
             return QVariant(); \
         } \
         return result; \
@@ -70,7 +70,7 @@ static bool s_fullscreen = false;
     if (d->m_handle) { \
         const QVariant result = mpv::qt::set_property(d->m_handle, name, value); \
         if (mpv::qt::is_error(result)) { \
-            kWarning() << mpv_error_string(mpv::qt::get_error(result)); \
+            kWarning() << name << mpv_error_string(mpv::qt::get_error(result)); \
         } \
     }
 
@@ -121,7 +121,7 @@ static bool s_fullscreen = false;
                     if (prop->format == MPV_FORMAT_DOUBLE) { \
                         value = *(double *)prop->data; \
                     } else { \
-                        Q_ASSERT_X(false, "KMediaPlayer", "the time-pos format has changed"); \
+                        kWarning() << i18n("the time-pos format has changed"); \
                     } \
                     emit position(value); \
                 } else if (strcmp(prop->name, "seekable") == 0) { \
@@ -129,7 +129,7 @@ static bool s_fullscreen = false;
                     if (prop->format == MPV_FORMAT_FLAG) { \
                         value = *(bool *)prop->data; \
                     } else { \
-                        Q_ASSERT_X(false, "KMediaPlayer", "the seekable format has changed"); \
+                        kWarning() << i18n("the seekable format has changed"); \
                     } \
                     emit seekable(value); \
                 } else if (strcmp(prop->name, "partially-seekable") == 0) { \
@@ -138,7 +138,7 @@ static bool s_fullscreen = false;
                         if (prop->format == MPV_FORMAT_FLAG) { \
                             value = *(bool *)prop->data; \
                         } else { \
-                            Q_ASSERT_X(false, "KMediaPlayer", "the partially-seekable format has changed"); \
+                            kWarning() << i18n("the partially-seekable format has changed"); \
                         } \
                         emit seekable(value); \
                     } \
@@ -147,7 +147,7 @@ static bool s_fullscreen = false;
                     if (prop->format == MPV_FORMAT_FLAG) { \
                         value = *(bool *)prop->data; \
                     } else { \
-                        Q_ASSERT_X(false, "KMediaPlayer", "the paused-for-cache format has changed"); \
+                        kWarning() << i18n("the paused-for-cache format has changed"); \
                     } \
                     emit buffering(value); \
                 } \
@@ -161,9 +161,6 @@ static bool s_fullscreen = false;
             case MPV_EVENT_QUEUE_OVERFLOW: { \
                 kWarning() << i18n("event queue overflow"); \
                 break; \
-            } \
-            default: { \
-                /* ignore uninteresting or unknown events */ \
             } \
         } \
     }
