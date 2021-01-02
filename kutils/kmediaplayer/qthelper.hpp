@@ -237,7 +237,8 @@ struct node_autofree {
 static inline QVariant get_property_variant(mpv_handle *ctx, const QString &name)
 {
     mpv_node node;
-    if (mpv_get_property(ctx, name.toUtf8().data(), MPV_FORMAT_NODE, &node) < 0)
+    QByteArray nameref = name.toUtf8();
+    if (mpv_get_property(ctx, nameref.constData(), MPV_FORMAT_NODE, &node) < 0)
         return QVariant();
     node_autofree f(&node);
     return node_to_variant(&node);
@@ -252,7 +253,8 @@ static inline int set_property_variant(mpv_handle *ctx, const QString &name,
                                        const QVariant &v)
 {
     node_builder node(v);
-    return mpv_set_property(ctx, name.toUtf8().data(), MPV_FORMAT_NODE, node.node());
+    QByteArray nameref = name.toUtf8();
+    return mpv_set_property(ctx, nameref.constData(), MPV_FORMAT_NODE, node.node());
 }
 
 /**
@@ -264,7 +266,8 @@ static inline int set_option_variant(mpv_handle *ctx, const QString &name,
                                      const QVariant &v)
 {
     node_builder node(v);
-    return mpv_set_option(ctx, name.toUtf8().data(), MPV_FORMAT_NODE, node.node());
+    QByteArray nameref = name.toUtf8();
+    return mpv_set_option(ctx, nameref.constData(), MPV_FORMAT_NODE, node.node());
 }
 
 /**
@@ -332,7 +335,8 @@ static inline bool is_error(const QVariant &v)
 static inline QVariant get_property(mpv_handle *ctx, const QString &name)
 {
     mpv_node node;
-    int err = mpv_get_property(ctx, name.toUtf8().data(), MPV_FORMAT_NODE, &node);
+    QByteArray nameref = name.toUtf8();
+    int err = mpv_get_property(ctx, nameref.constData(), MPV_FORMAT_NODE, &node);
     if (err < 0)
         return QVariant::fromValue(ErrorReturn(err));
     node_autofree f(&node);
@@ -348,7 +352,8 @@ static inline int set_property(mpv_handle *ctx, const QString &name,
                                        const QVariant &v)
 {
     node_builder node(v);
-    return mpv_set_property(ctx, name.toUtf8().data(), MPV_FORMAT_NODE, node.node());
+    QByteArray nameref = name.toUtf8();
+    return mpv_set_property(ctx, nameref.constData(), MPV_FORMAT_NODE, node.node());
 }
 
 /**
