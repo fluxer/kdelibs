@@ -151,7 +151,7 @@ bool SocketConnectionBackend::connectToRemote(const KUrl &url)
     socket = new QTcpSocket(this);
     socket->connectToHost(url.host(),url.port());
 
-    if (!socket->waitForConnected(1000)) {
+    if (!socket->waitForConnected()) {
         state = Idle;
         kDebug() << "could not connect to " << url;
         return false;
