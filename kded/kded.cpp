@@ -457,8 +457,7 @@ void Kded::updateResourceList()
 
   if (delayedCheck) return;
 
-  const QStringList dirs = KSycoca::self()->allResourceDirs();
-  foreach(const QString it, dirs) {
+  foreach(const QString &it, KSycoca::self()->allResourceDirs()) {
      if (!m_allResourceDirs.contains(it))
      {
         m_allResourceDirs.append(it);
