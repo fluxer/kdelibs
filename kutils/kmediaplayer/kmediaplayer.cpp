@@ -116,12 +116,12 @@ static bool s_fullscreen = false;
             case MPV_EVENT_PROPERTY_CHANGE: { \
                 mpv_event_property *prop = static_cast<mpv_event_property *>(event->data); \
                 kDebug() << i18n("property changed") << QString::fromLatin1(prop->name); \
-                if (strcmp(prop->name, "time-pos") == 0) { \
+                if (strcmp(prop->name, "=time-pos") == 0 || strcmp(prop->name, "time-pos") == 0) { \
                     double value = 0; \
                     if (prop->format == MPV_FORMAT_DOUBLE) { \
                         value = *(double *)prop->data; \
                     } else { \
-                        kWarning() << i18n("the time-pos format has changed"); \
+                        kWarning() << i18n("the time-pos format has changed") << prop->format; \
                     } \
                     emit position(value); \
                 } else if (strcmp(prop->name, "seekable") == 0) { \
@@ -129,7 +129,7 @@ static bool s_fullscreen = false;
                     if (prop->format == MPV_FORMAT_FLAG) { \
                         value = *(bool *)prop->data; \
                     } else { \
-                        kWarning() << i18n("the seekable format has changed"); \
+                        kWarning() << i18n("the seekable format has changed") << prop->format; \
                     } \
                     emit seekable(value); \
                 } else if (strcmp(prop->name, "partially-seekable") == 0) { \
@@ -138,7 +138,7 @@ static bool s_fullscreen = false;
                         if (prop->format == MPV_FORMAT_FLAG) { \
                             value = *(bool *)prop->data; \
                         } else { \
-                            kWarning() << i18n("the partially-seekable format has changed"); \
+                            kWarning() << i18n("the partially-seekable format has changed") << prop->format; \
                         } \
                         emit seekable(value); \
                     } \
@@ -147,7 +147,7 @@ static bool s_fullscreen = false;
                     if (prop->format == MPV_FORMAT_FLAG) { \
                         value = *(bool *)prop->data; \
                     } else { \
-                        kWarning() << i18n("the paused-for-cache format has changed"); \
+                        kWarning() << i18n("the paused-for-cache format has changed") << prop->format; \
                     } \
                     emit buffering(value); \
                 } \
