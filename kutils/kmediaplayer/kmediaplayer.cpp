@@ -78,10 +78,15 @@ static bool s_fullscreen = false;
 #define COMMMON_EVENT_HANDLER \
     while (!d->m_stopprocessing) { \
         mpv_event *event = mpv_wait_event(d->m_handle, 0); \
-        if (event->event_id == MPV_EVENT_NONE) { \
-            break; \
-        } \
         switch (event->event_id) { \
+            case MPV_EVENT_NONE: { \
+                return; \
+                break; \
+            } \
+            case MPV_EVENT_SHUTDOWN: { \
+                d->m_stopprocessing = true; \
+                break; \
+            } \
             case MPV_EVENT_FILE_LOADED: { \
                 kDebug() << i18n("playback loaded"); \
                 emit loaded(); \
@@ -194,10 +199,10 @@ public:
 
 KAbstractPlayerPrivate::KAbstractPlayerPrivate()
     : m_appname(QApplication::applicationName()),
-    m_settings(new KSettings("kmediaplayer", KSettings::FullConfig))
+    m_settings(new KSettings("kmediaplayer", KSettings::FullConfig)),
+    m_stopprocessing(false)
 {
     kDebug() << i18n("initializing player");
-    m_stopprocessing = false;
 #if defined(HAVE_MPV)
     setlocale(LC_NUMERIC, "C");
     m_handle = mpv_create();
