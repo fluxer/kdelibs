@@ -23,6 +23,7 @@
 #include <QApplication>
 
 #if defined(HAVE_MPV)
+#include <locale.h>
 #include <mpv/client.h>
 #include "qthelper.hpp"
 #else
