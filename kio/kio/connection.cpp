@@ -184,7 +184,7 @@ bool SocketConnectionBackend::listenForRemote()
         return false;
     }
 
-    address = "tcp://127.0.0.1:" + QString::number(tcpServer->serverPort());
+    address = QLatin1String("tcp://") + tcpServer->serverAddress().toString() + ":" + QString::number(tcpServer->serverPort());
     connect(tcpServer, SIGNAL(newConnection()), SIGNAL(newConnection()));
 
     state = Listening;
