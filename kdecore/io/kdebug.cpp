@@ -611,7 +611,6 @@ struct KDebugPrivate
         Cache::Iterator it = areaData(type, area);
         OutputMode mode = it->mode[level(type)];
         Q_ASSERT(mode != Unknown);
-        QString file = it->logFileName[level(type)];
         QByteArray areaName = it->name;
 
         if (areaName.isEmpty())
@@ -621,25 +620,31 @@ struct KDebugPrivate
 
         QDebug s(&devnull);
         switch (mode) {
-        case FileOutput:
-            s = setupFileWriter(file);
-            break;
-        case MessageBoxOutput:
-            s = setupMessageBoxWriter(type, areaName);
-            break;
-        case SyslogOutput:
-            s = setupSyslogWriter(type);
-            break;
-        case NoOutput:
-            s = QDebug(&devnull);
-            return s; //no need to take the time to "print header" if we don't want to output anyway
-            break;
-        case Unknown: // should not happen
-        default:                // QtOutput
-            s = setupQtWriter(type);
-            //only color if the debug goes to a tty, unless env_colors_on_any_fd is set too.
-            colored = env_colored && (env_colors_on_any_fd || isatty(fileno(stderr)));
-            break;
+            case FileOutput: {
+                QString file = it->logFileName[level(type)];
+                s = setupFileWriter(file);
+                break;
+            }
+            case MessageBoxOutput: {
+                s = setupMessageBoxWriter(type, areaName);
+                break;
+            }
+            case SyslogOutput: {
+                s = setupSyslogWriter(type);
+                break;
+            }
+            case NoOutput: {
+                //no need to take the time to "print header" if we don't want to output anyway
+                return QDebug(&devnull);
+            }
+            case Unknown: // should not happen
+            default: {
+                // QtOutput
+                s = setupQtWriter(type);
+                //only color if the debug goes to a tty, unless env_colors_on_any_fd is set too.
+                colored = env_colored && (env_colors_on_any_fd || isatty(fileno(stderr)));
+                break;
+            }
         }
 
         return printHeader(s, areaName, debugFile, line, funcinfo, type, colored);
