@@ -456,10 +456,10 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
 
     org::kde::KLauncher* klauncher = KToolInvocation::klauncher();
     QString errorStr;
-    QDBusReply<int> reply = klauncher->requestSlave(protocol, url.host(), slaveAddress, errorStr);
+    QDBusReply<qint64> reply = klauncher->requestSlave(protocol, url.host(), slaveAddress, errorStr);
     if (!reply.isValid()) {
-	error_text = i18n("Cannot talk to klauncher: %1", klauncher->lastError().message() );
-	error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
+        error_text = i18n("Cannot talk to klauncher: %1", klauncher->lastError().message() );
+        error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
         delete slave;
         return 0;
     }
@@ -484,7 +484,7 @@ Slave* Slave::holdSlave( const QString &protocol, const KUrl& url )
         return 0;
     Slave *slave = new Slave(protocol);
     QString slaveAddress = slave->d_func()->slaveconnserver->address();
-    QDBusReply<int> reply = KToolInvocation::klauncher()->requestHoldSlave(url.url(), slaveAddress);
+    QDBusReply<qint64> reply = KToolInvocation::klauncher()->requestHoldSlave(url.url(), slaveAddress);
     if (!reply.isValid()) {
         delete slave;
         return 0;

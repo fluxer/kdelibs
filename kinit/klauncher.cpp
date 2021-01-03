@@ -1161,17 +1161,17 @@ bool KLauncher::checkForHeldSlave(const QString &url)
 }
 
 void
-KLauncher::waitForSlave(int pid, QDBusMessage msg)
+KLauncher::waitForSlave(pid_t pid, QDBusMessage msg)
 {
     foreach (IdleSlave *slave, mSlaveList)
     {
-        if (slave->pid() == static_cast<pid_t>(pid))
+        if (slave->pid() == pid)
            return; // Already here.
     }
     SlaveWaitRequest *waitRequest = new SlaveWaitRequest;
     msg.setDelayedReply(true);
     waitRequest->transaction = msg;
-    waitRequest->pid = static_cast<pid_t>(pid);
+    waitRequest->pid = pid;
     mSlaveWaitRequest.append(waitRequest);
 }
 

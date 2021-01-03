@@ -237,7 +237,7 @@ public: // remote methods, called by KLauncherAdaptor
      * @since 4.7
      */
     bool checkForHeldSlave(const QString &url);
-    void waitForSlave(int pid, QDBusMessage msg);
+    void waitForSlave(pid_t pid, QDBusMessage msg);
     void terminate_kdeinit();
 
 public Q_SLOTS:

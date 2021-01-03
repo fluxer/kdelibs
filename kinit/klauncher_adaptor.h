@@ -48,19 +48,19 @@ public Q_SLOTS: // METHODS
     void autoStart(int phase = 1);
     void exec_blind(const QString &name, const QStringList &arg_list);
     void exec_blind(const QString &name, const QStringList &arg_list, const QStringList &envs, const QString &startup_id);
-    int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, int &pid);
-    int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, int &pid);
-    int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, int &pid);
+    int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
+    int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
+    int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     void reparseConfiguration();
-    int requestHoldSlave(const QString &url, const QString &app_socket);
-    int requestSlave(const QString &protocol, const QString &host, const QString &app_socket, QString &error);
+    qint64 requestHoldSlave(const QString &url, const QString &app_socket);
+    qint64 requestSlave(const QString &protocol, const QString &host, const QString &app_socket, QString &error);
     bool checkForHeldSlave (const QString &url);
     void setLaunchEnv(const QString &name, const QString &value);
-    int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, int &pid);
-    int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, int &pid);
+    int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
+    int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     // Deprecated, to be removed in KDE5.
-    int start_service_by_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, int &pid);
-    void waitForSlave(int pid, const QDBusMessage &msg);
+    int start_service_by_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
+    void waitForSlave(qint64 pid, const QDBusMessage &msg);
     void terminate_kdeinit();
 Q_SIGNALS: // SIGNALS
     void autoStart0Done();

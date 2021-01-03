@@ -75,7 +75,7 @@ public Q_SLOTS: // METHODS
         return callWithArgumentList(QDBus::Block, QLatin1String("exec_blind"), argumentList);
     }
 
-    inline QDBusReply<int> kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString &startup_id, QString &dbusServiceName, QString &error, int &pid)
+    inline QDBusReply<int> kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString &startup_id, QString &dbusServiceName, QString &error, qint64 &pid)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(app) << qVariantFromValue(args) << qVariantFromValue(env) << qVariantFromValue(startup_id);
@@ -83,12 +83,12 @@ public Q_SLOTS: // METHODS
         if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 4) {
             dbusServiceName = qdbus_cast<QString>(reply.arguments().at(1));
             error = qdbus_cast<QString>(reply.arguments().at(2));
-            pid = qdbus_cast<int>(reply.arguments().at(3));
+            pid = qdbus_cast<qint64>(reply.arguments().at(3));
         }
         return reply;
     }
 
-    inline QDBusReply<int> kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString &startup_id, QString &dbusServiceName, QString &error, int &pid)
+    inline QDBusReply<int> kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString &startup_id, QString &dbusServiceName, QString &error, qint64 &pid)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(app) << qVariantFromValue(args) << qVariantFromValue(env) << qVariantFromValue(startup_id);
@@ -96,7 +96,7 @@ public Q_SLOTS: // METHODS
         if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 4) {
             dbusServiceName = qdbus_cast<QString>(reply.arguments().at(1));
             error = qdbus_cast<QString>(reply.arguments().at(2));
-            pid = qdbus_cast<int>(reply.arguments().at(3));
+            pid = qdbus_cast<qint64>(reply.arguments().at(3));
         }
         return reply;
     }
@@ -107,14 +107,14 @@ public Q_SLOTS: // METHODS
         return callWithArgumentList(QDBus::Block, QLatin1String("reparseConfiguration"), argumentList);
     }
 
-    inline QDBusReply<int> requestHoldSlave(const QString &url, const QString &app_socket)
+    inline QDBusReply<qint64> requestHoldSlave(const QString &url, const QString &app_socket)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(url) << qVariantFromValue(app_socket);
         return callWithArgumentList(QDBus::Block, QLatin1String("requestHoldSlave"), argumentList);
     }
 
-    inline QDBusReply<int> requestSlave(const QString &protocol, const QString &host, const QString &app_socket, QString &error)
+    inline QDBusReply<qint64> requestSlave(const QString &protocol, const QString &host, const QString &app_socket, QString &error)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(protocol) << qVariantFromValue(host) << qVariantFromValue(app_socket);
@@ -132,7 +132,7 @@ public Q_SLOTS: // METHODS
         return callWithArgumentList(QDBus::Block, QLatin1String("setLaunchEnv"), argumentList);
     }
 
-    inline QDBusReply<int> start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, QString &dbusServiceName, QString &error, int &pid)
+    inline QDBusReply<int> start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, QString &dbusServiceName, QString &error, qint64 &pid)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(serviceName) << qVariantFromValue(urls) << qVariantFromValue(envs) << qVariantFromValue(startup_id) << qVariantFromValue(blind);
@@ -140,12 +140,12 @@ public Q_SLOTS: // METHODS
         if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 4) {
             dbusServiceName = qdbus_cast<QString>(reply.arguments().at(1));
             error = qdbus_cast<QString>(reply.arguments().at(2));
-            pid = qdbus_cast<int>(reply.arguments().at(3));
+            pid = qdbus_cast<qint64>(reply.arguments().at(3));
         }
         return reply;
     }
 
-    inline QDBusReply<int> start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, QString &dbusServiceName, QString &error, int &pid)
+    inline QDBusReply<int> start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, QString &dbusServiceName, QString &error, qint64 &pid)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(serviceName) << qVariantFromValue(urls) << qVariantFromValue(envs) << qVariantFromValue(startup_id) << qVariantFromValue(blind);
@@ -153,12 +153,12 @@ public Q_SLOTS: // METHODS
         if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 4) {
             dbusServiceName = qdbus_cast<QString>(reply.arguments().at(1));
             error = qdbus_cast<QString>(reply.arguments().at(2));
-            pid = qdbus_cast<int>(reply.arguments().at(3));
+            pid = qdbus_cast<qint64>(reply.arguments().at(3));
         }
         return reply;
     }
 
-    inline QDBusReply<int> start_service_by_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, QString &dbusServiceName, QString &error, int &pid)
+    inline QDBusReply<int> start_service_by_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, QString &dbusServiceName, QString &error, qint64 &pid)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(serviceName) << qVariantFromValue(urls) << qVariantFromValue(envs) << qVariantFromValue(startup_id) << qVariantFromValue(blind);
@@ -166,7 +166,7 @@ public Q_SLOTS: // METHODS
         if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 4) {
             dbusServiceName = qdbus_cast<QString>(reply.arguments().at(1));
             error = qdbus_cast<QString>(reply.arguments().at(2));
-            pid = qdbus_cast<int>(reply.arguments().at(3));
+            pid = qdbus_cast<qint64>(reply.arguments().at(3));
         }
         return reply;
     }
