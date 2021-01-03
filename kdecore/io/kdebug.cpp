@@ -81,10 +81,6 @@
 
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>
-#ifdef __GNUC__
-#define HAVE_BACKTRACE_DEMANGLE
-#include <cxxabi.h>
-#endif
 #endif
 
 
@@ -687,36 +683,6 @@ thread_local KMessageBoxDebugStream* KDebugPrivate::messageboxwriter = 0;
 
 K_GLOBAL_STATIC(KDebugPrivate, kDebug_data)
 
-#ifdef HAVE_BACKTRACE
-static QString maybeDemangledName(char *name)
-{
-#ifdef HAVE_BACKTRACE_DEMANGLE
-    const int len = strlen(name);
-    QByteArray in = QByteArray::fromRawData(name, len);
-    const int mangledNameStart = in.indexOf("(_");
-    if (mangledNameStart >= 0) {
-        const int mangledNameEnd = in.indexOf('+', mangledNameStart + 2);
-        if (mangledNameEnd >= 0) {
-            int status;
-            // if we forget about this line and the one that undoes its effect we don't change the
-            // internal data of the QByteArray::fromRawData() ;)
-            name[mangledNameEnd] = 0;
-            char *demangled = abi::__cxa_demangle(name + mangledNameStart + 1, 0, 0, &status);
-            name[mangledNameEnd] = '+';
-            if (demangled) {
-                QString ret = QString::fromLatin1(name, mangledNameStart + 1) +
-                              QString::fromLatin1(demangled) +
-                              QString::fromLatin1(name + mangledNameEnd, len - mangledNameEnd);
-                free(demangled);
-                return ret;
-            }
-        }
-    }
-#endif
-    return QString::fromLatin1(name);
-}
-#endif
-
 QString kBacktrace(int levels)
 {
     QString s;
@@ -733,7 +699,7 @@ QString kBacktrace(int levels)
 
     for (int i = 0; i < n; ++i)
         s += QString::number(i) + QLatin1String(": ") +
-             maybeDemangledName(strings[i]) + QLatin1Char('\n');
+             QString::fromLatin1(strings[i]) + QLatin1Char('\n');
     s += QLatin1String("]\n");
     if (strings)
         free (strings);
