@@ -158,9 +158,9 @@ bool KdeEmoticons::loadTheme(const QString &path)
             QStringList sl;
 
 #ifdef QT_KATIE
-            for (int k = 0; i < snl.length(); k++ )
+            for (int k = 0; k < snl.length(); k++ )
 #else
-            for (uint k = 0; i < snl.length(); k++ )
+            for (uint k = 0; k < snl.length(); k++ )
 #endif
             {
                 QDomElement sde = snl.item(k).toElement();
