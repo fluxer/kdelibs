@@ -70,13 +70,6 @@ macro(KDE4_ADD_KCFG_FILES _sources )
                 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH})
             endif()
 
-            # if (CMAKE_CROSSCOMPILING)
-            #     set(IMPORT_KCONFIG_COMPILER_EXECUTABLE "${KDE_HOST_TOOLS_PATH}/ImportKConfigCompilerExecutable.cmake"
-            #         CACHE FILEPATH "Point it to the export file of kconfig_compiler from a native build")
-            #     include(${IMPORT_KCONFIG_COMPILER_EXECUTABLE})
-            #     set(KDE4_KCFGC_EXECUTABLE kconfig_compiler)
-            # endif()
-
             # the command for creating the source file from the kcfg file
             add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
                 COMMAND ${KDE4_KCFGC_EXECUTABLE}
