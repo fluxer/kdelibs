@@ -132,11 +132,6 @@ kde4_add_plugin(kdecore-klibloadertestmodule4 ${klibloadertestmodule4_PART_SRCS}
 
 target_link_libraries(kdecore-klibloadertestmodule4  ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
-set_target_properties(kdecore-klibloadertestmodule4 PROPERTIES
-    SKIP_BUILD_RPATH FALSE
-    BUILD_WITH_INSTALL_RPATH FALSE
-)
-
 ########### kcompositejobtest ###############
 
 set(kcompositejobtest_SRCS kcompositejobtest.cpp)
