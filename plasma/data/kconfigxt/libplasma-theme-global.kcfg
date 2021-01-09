@@ -6,12 +6,12 @@
   <kcfgfile name="plasmarc" />
     <group name="CachePolicies">
         <entry key="CacheTheme" type="Bool">
-            <label>Whether or not to create an on-disk cache for the theme.</label>
+            <label>Whether or not cache for the theme pixmaps.</label>
             <default>true</default>
         </entry>
 
         <entry key="ThemeCacheKb" type="Int">
-            <label>The maximum size of the on-disk Theme cache in kilobytes. Note that these files are sparse files, so the maximum size may not be used. Setting a larger size is therefore often quite safe.</label>
+            <label>The maximum size of the Theme cache in kilobytes. Note that the cache is stored in memory, setting a larger size is therefore not quite safe.</label>
             <default>81920</default>
         </entry>
     </group>
