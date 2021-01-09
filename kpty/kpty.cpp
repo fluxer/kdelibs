@@ -26,21 +26,12 @@
 
 #include <config.h>
 
-// __USE_XOPEN isn't defined by default in ICC
-// (needed for ptsname(), grantpt() and unlockpt())
-#ifdef __INTEL_COMPILER
-#  ifndef __USE_XOPEN
-#    define __USE_XOPEN
-#  endif
-#endif
-
 #include <sys/types.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/param.h>
-
 #include <errno.h>
 #include <fcntl.h>
 #include <time.h>

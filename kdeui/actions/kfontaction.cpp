@@ -113,9 +113,7 @@ QString KFontAction::font() const
 QWidget* KFontAction::createWidget(QWidget* parent)
 {
     kDebug(129) << "KFontAction::createWidget()";
-#ifdef __GNUC__
 #warning FIXME: items need to be converted
-#endif
     // This is the visual element on the screen.  This method overrides
     // the KSelectAction one, preventing KSelectAction from creating its
     // regular KComboBox.

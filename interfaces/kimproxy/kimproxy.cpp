@@ -544,9 +544,7 @@ bool KIMProxy::imAppsAvailable()
 
 bool KIMProxy::startPreferredApp()
 {
-#ifdef __GNUC__
 # warning "unused variable: preferences"
-#endif
 	QString preferences = QString("[X-DBUS-ServiceName] = '%1'").arg( preferredApp() );
 	// start/find an instance of DBUS/InstantMessenger
 	QString error;
@@ -594,9 +592,7 @@ void KIMProxy::pollApp( const QString & appId )
 		ContactPresenceListCurrent current = d->presence_map[ *it ];
 		AppPresenceCurrent ap;
 		ap.appId = appId;
-#ifdef __GNUC__
 # warning "KIMProxy::pollApp( const QString & appId ).presenceStatus() function doesn't exist Need to fix it"
-#endif
 		//ap.presence = appStub->presenceStatus( *it );
 		current.append( ap );
 
@@ -618,9 +614,7 @@ OrgKdeKIMInterface * KIMProxy::stubForUid( const QString &uid )
 OrgKdeKIMInterface * KIMProxy::stubForProtocol( const QString &protocol)
 {
     Q_UNUSED(protocol)
-#ifdef __GNUC__
 # warning "KIMProxy::stubForProtocol( const QString &protocol) code disabled: protocols() function doesn't exist. Need to fix it"
-#endif
 #if 0
 	OrgKdeKIMInterface * app;
 	// see if the preferred client supports this protocol

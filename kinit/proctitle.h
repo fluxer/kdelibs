@@ -40,7 +40,7 @@ void proctitle_init(int argc, char *argv[], char *envp[]);
  * printf for a description of the format string.
  */
 void proctitle_set(const char *fmt, ...)
-#ifdef __GNUC__
+#if !defined(__INSURE__)
     __attribute__ (( format ( printf, 1, 2 ) ) )
 #endif
 ;

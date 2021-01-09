@@ -158,9 +158,7 @@ KRuler::KRuler(Qt::Orientation orient, int widgetWidth,
 
 void KRuler::init(Qt::Orientation orientation)
 {
-#ifdef __GNUC__
   #warning FIXME setFrameStyle(WinPanel | Raised);
-#endif
 
   d->showpointer = INIT_SHOW_POINTER;
   d->showEndL = INIT_SHOW_END_LABEL;
@@ -338,9 +336,7 @@ KRuler::showPointer() const
 void
 KRuler::setFrameStyle(int)
 {
-#ifdef __GNUC__
-	#warning implement me (jowenn)
-#endif
+#warning implement me (jowenn)
 }
 
 void

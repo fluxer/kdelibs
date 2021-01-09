@@ -110,18 +110,13 @@ TestNetworkingService::~TestNetworkingService()
 
 uint TestNetworkingService::requestConnection()
 {
+#warning "Fix return values"
     qDebug( "TestNetworkingService::requestConnection()" );
     if ( mStatus == Solid::Networking::Unconnected )
     {
         setStatus( Solid::Networking::Connecting );
-#ifdef __GNUC__
-#warning "Fix return value"
-#endif
         return 1;//Solid::Networking::Accepted;
     }
-#ifdef __GNUC__
-#warning "Fix return value"
-#endif
     return 2;//Solid::Networking::AlreadyConnected;
 }
 

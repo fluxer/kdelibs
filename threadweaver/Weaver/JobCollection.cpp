@@ -242,7 +242,7 @@ Job* JobCollection::jobAt( int i )
     return d->elements->at( i )->payload();
 }
 
-const int JobCollection::jobListLength() // const qualifier is possibly BiC?
+const int JobCollection::jobListLength() const
 {
     QMutexLocker l( &d->mutex );
     return d->elements->size();

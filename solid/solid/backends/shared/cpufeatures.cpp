@@ -25,7 +25,7 @@
 #include <csetjmp>
 #include <config-processor.h>
 
-#if defined(__GNUC__) || defined(__INTEL_COMPILER)
+#if defined(Q_CC_GNU) || defined(Q_CC_CLANG)
 #  define HAVE_GNU_INLINE_ASM
 #endif
 
