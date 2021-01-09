@@ -67,6 +67,20 @@ static QStringList toolkitSupportedMimeTypes(KImageIO::Mode mode) {
     return mimeTypes;
 }
 
+static QStringList toolkitSupportedTypes(const QString &mimeType) {
+    QStringList types;
+    const QByteArray latinMimeType = mimeType.toLatin1();
+    foreach(const QString &format, toolkitSupported(KImageIO::Reading)) {
+        for(int i = 0; i < ImageFormatTblSize; i++) {
+            if (ImageFormatTbl[i].mime == latinMimeType) {
+                types << ImageFormatTbl[i].format;
+            }
+        }
+    }
+
+    return types;
+}
+
 QString KImageIO::pattern(Mode mode)
 {
     QStringList patterns;
@@ -119,10 +133,9 @@ QStringList KImageIO::typeForMime(const QString& mimeType)
     if ( mimeType.isEmpty() )
         return QStringList();
 
-    foreach(const QString &mime, toolkitSupportedMimeTypes(Reading)) {
-        if (mimeType == mime) {
-            return QStringList(mime);
-        }
+    QStringList toolkitTypes = toolkitSupportedTypes(mimeType);
+    if (!toolkitTypes.isEmpty()) {
+        return toolkitTypes;
     }
 
     const KService::List services = KServiceTypeTrader::self()->query("QImageIOPlugins");
