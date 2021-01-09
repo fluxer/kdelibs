@@ -93,13 +93,7 @@ public:
         cacheTheme = config.cacheTheme();
 
         pixmapCache = new QSharedPointer<QCache<QString, QPixmap> >(new QCache<QString, QPixmap>());
-#ifndef QT_KATIE
         pixmapCache->data()->setMaxCost(config.themeCacheKb() * 1024);
-#else
-        // max cost is number of elements QCache can hold in Katie's implementation
-        const int reasonable = qMax(config.themeCacheKb() / 4, 100);
-        pixmapCache->data()->setMaxCost(reasonable);
-#endif
 
         saveTimer = new QTimer(q);
         saveTimer->setSingleShot(true);
