@@ -197,11 +197,6 @@ struct KDebugPrivate
     {
         Q_ASSERT(int(QtDebugMsg) == 0);
         Q_ASSERT(int(QtFatalMsg) == 3);
-
-        for (int i = 0; i < 8; i++) {
-            m_nullOutputYesNoCache[i] = -1;
-        }
-
     }
 
     ~KDebugPrivate()
@@ -242,10 +237,6 @@ struct KDebugPrivate
             m_seenMainComponent = false;
         }
         //qDebug() << "loadAreaNames: area 0 has name" << areaData.name;
-
-        for (int i = 0; i < 8; i++) {
-            m_nullOutputYesNoCache[i] = -1;
-        }
 
         QString filename(KStandardDirs::locate("config", QLatin1String("kdebug.areas")));
         if (filename.isEmpty()) {
@@ -666,7 +657,6 @@ struct KDebugPrivate
     Cache cache;
     bool m_disableAll;
     bool m_seenMainComponent; // false: area zero still contains qAppName
-    int m_nullOutputYesNoCache[8];
 
     KNoDebugStream devnull;
     static thread_local QString* m_indentString;
@@ -760,10 +750,6 @@ void kClearDebugConfig()
                                   end = d->cache.end();
     for ( ; it != end; ++it)
         it->clear();
-
-    for (int i = 0; i < 8; i++) {
-        d->m_nullOutputYesNoCache[i] = -1;
-    }
 }
 
 int KDebug::registerArea(const QByteArray& areaName, bool enabled)
