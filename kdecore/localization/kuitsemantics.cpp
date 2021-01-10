@@ -1314,7 +1314,7 @@ KuitSemanticsPrivate::parseOpenEl (const QXmlStreamReader &xml,
         oel.handling = OpenEl::Ignored;
         if (!s->qtHtmlTagNames.contains(oel.name)) {
             kDebug(173) << QString::fromLatin1("Tag '%1' is neither semantic nor HTML in "
-                                   "message {%3}.")
+                                   "message {%2}.")
                                   .arg(oel.name, shorten(text));
         }
     }
