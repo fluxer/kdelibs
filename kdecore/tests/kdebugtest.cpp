@@ -78,27 +78,6 @@ public:
     uglypmf func_uglypmf(uglypmf = 0) { kDebug(); return 0; }
     QMap<QString, uglypmf> func_uglypmf2() { kDebug(); return QMap<QString, uglypmf>(); }
 
-    void testBlock()
-    {
-        KDEBUG_BLOCK
-        func_int();
-        testNestedBlock();
-    }
-
-    void testNestedBlock()
-    {
-        KDEBUG_BLOCK
-        func_void();
-        deprecatedMethod();
-    }
-
-    void testCharStarBlock()
-    {
-        KDebug::Block myBlock(qPrintable(QString::fromLatin1("Block"))); // the char* goes out of scope
-        func_void();
-        deprecatedMethod();
-    }
-
     void deprecatedMethod()
     {
         KWARNING_DEPRECATED
@@ -301,10 +280,6 @@ void testKDebug()
         using namespace N;
         func6();
     }
-
-    TestClass1 c1;
-    c1.testBlock();
-    c1.testCharStarBlock();
 }
 
 // Concurrency testing, based on code from bug 133026

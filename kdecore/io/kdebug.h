@@ -25,7 +25,6 @@
 #include <kdecore_export.h>
 
 #include <QtCore/qdebug.h>
-#include <QtCore/qelapsedtimer.h>
 
 /**
  * \addtogroup kdebug Debug message generators
@@ -280,65 +279,6 @@ public:
 # define kWarning    KDebug(QtWarningMsg, __FILE__, __LINE__, Q_FUNC_INFO)
 #else
 # define kWarning    while (false) kWarning
-#endif
-
-#ifndef KDE_NO_DEBUG_OUTPUT
-
-/**
- * @class KDebug::Block
- * @short Use this to label sections of your code
- * @since 4.6
- *
- * Usage:
- * <code>
- *     void function()
- *     {
- *         KDebug::Block myBlock( "section" );
- *
- *         debug() << "output1" << endl;
- *         debug() << "output2" << endl;
- *     }
- * </code>
- *
- * Will output:
- *
- *     app: BEGIN: section
- *     app:  [prefix] output1
- *     app:  [prefix] output2
- *     app: END: section - Took 0.1s
- *
- * Alternatively, use the KDEBUG_BLOCK macro, for automatic naming.
- */
-class KDECORE_EXPORT KDebug::Block
-{
-public:
-    Block(const char* label, int area = KDE_DEFAULT_DEBUG_AREA);
-    ~Block();
-
-private:
-    QElapsedTimer m_startTime;
-    const char *m_label; // KDE5 TODO: REMOVE
-    int m_area;
-    class Private;
-    Private* d;
-};
-
-/**
- * Convenience macro for making a standard KDebug::Block
- */
-#define KDEBUG_BLOCK KDebug::Block _kDebugBlock(Q_FUNC_INFO);
-
-#else
-
-class KDECORE_EXPORT KDebug::Block
-{
-public:
-    Block(const char*, int = KDE_DEFAULT_DEBUG_AREA) {}
-    ~Block() {}
-};
-
-#define KDEBUG_BLOCK
-
 #endif
 
 /**

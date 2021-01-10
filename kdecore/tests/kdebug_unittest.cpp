@@ -102,7 +102,7 @@ void KDebugTest::compareLines(const QList<QByteArray>& expectedLines, const char
             line.truncate(pos);
             line.append("[...]\n");
         }
-        //qDebug() << "line" << i << ":" << line << expectedLines[i];
+        // qDebug() << "line" << i << ":" << line << expectedLines[i];
         QVERIFY(line.endsWith(expectedLines[i]));
     }
 }
@@ -139,25 +139,15 @@ void KDebugTest::testDebugToFile()
     kDebug(0) << "TEST DEBUG with newline" << endl << "newline";
     TestClass tc;
     kDebug(0) << "Re-entrance test" << tc << "[ok]";
-    {
-        KDebug::Block block("block 1");
-        {
-            KDebug::Block block("block 2");
-        }
-    }
     QVERIFY(QFile::exists("kdebug.dbg"));
     QList<QByteArray> expected;
-    expected << "/kdecore (kdelibs) KDebugTest::testDebugToFile: TEST DEBUG 180\n";
+    expected << "KDebugTest::testDebugToFile: TEST DEBUG 180\n";
     expected << "KDebugTest::testDebugToFile: TEST DEBUG 0\n";
     expected << "KDebugTest::testDebugToFile: TEST WARNING 0\n";
     expected << "KDebugTest::testDebugToFile: TEST DEBUG with newline\n";
     expected << "newline\n";
-    expected << "/kdecore (kdelibs) TestClass::getSomething: Nested kDebug call\n";
+    expected << "TestClass::getSomething: Nested kDebug call\n";
     expected << "Re-entrance test \"TestClass\" after the call [ok]\n";
-    expected << "BEGIN: block 1\n";
-    expected << "BEGIN: block 2\n";
-    expected << "END__: block 2 [...]\n";
-    expected << "END__: block 1 [...]\n";
     compareLines(expected);
 }
 
@@ -171,10 +161,6 @@ void KDebugTest::testDisableArea()
     kClearDebugConfig();
     kDebug(180) << "TEST DEBUG 180 - SHOULD NOT APPEAR";
     kDebug(0) << "TEST DEBUG 0 - SHOULD NOT APPEAR";
-    {
-        KDebug::Block block("SHOULD NOT APPEAR");
-        kDebug(0) << "msg inside the block, should not appear";
-    }
     QVERIFY(!QFile::exists("kdebug.dbg"));
 
     // Re-enable debug, for further tests
@@ -240,7 +226,7 @@ void KDebugTest::testHasNullOutput()
     // When compiling in release mode:
     QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 0, false), false); // controlled by "InfoOutput" key
     QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 180, false), false); // controlled by "InfoOutput" key
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 293, false), true); // no config -> the default is being used
+    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 293, false), false); // no config -> the default is being used
     QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 4242, false), false); // unknown area -> area 0 is being used
 
     // And if we really have no config for area 0 (the app name)
@@ -277,9 +263,11 @@ void KDebugTest::testNoMainComponentData()
     // qDebug() << receivedLines;
     QList<QByteArray> expectedLines;
     expectedLines << "qcoreapp_myarea main: Test debug using qcoreapp_myarea 1";
-    expectedLines << "kdecore-kdebug_qcoreapptest main: Debug in area 100";
-    expectedLines << "kdecore-kdebug_qcoreapptest main: Simple debug";
+    expectedLines << "main: Debug in area 264, off by default, no output";
+    expectedLines << "main: Debug in area 100";
+    expectedLines << "main: Simple debug";
     expectedLines << "kdebug_qcoreapptest_mainData main: This should appear, under the kdebug_qcoreapptest_mainData area";
+    expectedLines << "kdebug_qcoreapptest_mainData main: Debug in area 264, still off by default";
     expectedLines << "kdebug_qcoreapptest_mainData main: Debug in area 100";
     expectedLines << ""; // artefact of split, I guess?
     for (int i = 0; i < qMin(expectedLines.count(), receivedLines.count()); ++i)
@@ -296,7 +284,6 @@ class KDebugThreadTester
 public:
     void doDebugs()
     {
-        KDEBUG_BLOCK
         for (int i = 0; i < 10; ++i)
             kDebug() << "A kdebug statement in a thread:" << i;
     }
