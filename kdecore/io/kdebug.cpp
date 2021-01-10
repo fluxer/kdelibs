@@ -766,45 +766,6 @@ void kClearDebugConfig()
     }
 }
 
-// static
-bool KDebug::hasNullOutput(QtMsgType type,
-                           bool condition,
-                           int area,
-                           bool enableByDefault)
-{
-    if (!condition) {
-        return true;
-    }
-    if (kDebug_data.isDestroyed()) {
-         // kDebugStream() will generate a warning anyway, so we don't.
-        return false;
-    }
-    KDebugPrivate *const d = kDebug_data;
-    QMutexLocker locker(&d->mutex);
-
-    if (type == QtDebugMsg) {
-        int *entries = d->m_nullOutputYesNoCache;
-        for (int i = 0; i < 8; i += 2) {
-            if (entries[i] == area) {
-                return entries[i + 1];
-            }
-        }
-    }
-
-    KDebugPrivate::Cache::Iterator it = d->areaData(type, area, enableByDefault);
-    const bool ret = it->mode[d->level(type)] == KDebugPrivate::NoOutput;
-
-    // cache result for next time...
-    if (type == QtDebugMsg) {
-        int *entries = d->m_nullOutputYesNoCache;
-        int idx = (qrand() % 4) * 2;
-        entries[idx] = area;
-        entries[idx + 1] = ret;
-    }
-
-    return ret;
-}
-
 int KDebug::registerArea(const QByteArray& areaName, bool enabled)
 {
     // TODO for optimization: static int s_lastAreaNumber = 1;

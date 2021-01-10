@@ -220,19 +220,6 @@ public:
     inline QDebug operator()(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
         { if (cond) return operator()(area); return kDebugDevNull(); }
 
-    /// @internal
-    static KDECORE_EXPORT bool hasNullOutput(QtMsgType type,
-                                             bool condition,
-                                             int area,
-                                             bool enableByDefault);
-
-    /// @internal
-    static inline bool hasNullOutputQtDebugMsg(int area = KDE_DEFAULT_DEBUG_AREA)
-        { return hasNullOutput(QtDebugMsg, true, area, KDE_DEBUG_ENABLED_BY_DEFAULT); }
-    /// @internal
-    static inline bool hasNullOutputQtDebugMsg(bool condition, int area = KDE_DEFAULT_DEBUG_AREA)
-        { return hasNullOutput(QtDebugMsg, condition, area, KDE_DEBUG_ENABLED_BY_DEFAULT); }
-
     /**
      * @since 4.4
      * Register a debug area dynamically.
@@ -264,14 +251,7 @@ public:
 
 
 #if !defined(KDE_NO_DEBUG_OUTPUT)
-/* __VA_ARGS__ should work with any supported GCC version and MSVC > 2005 */
-# if defined(Q_CC_GNU)
-#  define kDebug(...) for (bool _k_kDebugDoOutput_ = !KDebug::hasNullOutputQtDebugMsg(__VA_ARGS__); \
-                           Q_UNLIKELY(_k_kDebugDoOutput_); _k_kDebugDoOutput_ = false) \
-                           KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)(__VA_ARGS__)
-# else
-#  define kDebug     KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-# endif
+# define kDebug     KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)
 #else
 # define kDebug      while (false) kDebug
 #endif

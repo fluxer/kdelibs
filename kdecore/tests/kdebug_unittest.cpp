@@ -50,13 +50,9 @@ void KDebugTest::initTestCase()
     config.group("qttest").writeEntry("WarnOutput", 0 /*FileOutput*/);
     config.sync();
 
-    //QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 0, false), false);
-
     // Test for crash that used to happen when using an unknown area after only dynamic areas
     KDebug::registerArea("somearea"); // gets number 1
     KDebug::registerArea("someotherarea"); // gets number 2
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 4242, false), false); // unknown area -> area 0 is being used
-
     kClearDebugConfig();
 }
 
@@ -211,38 +207,6 @@ void KDebugTest::testDisableAll()
     QVERIFY(!QFile::exists("kdebug.dbg"));
     // Repair
     disableAll(false);
-}
-
-void KDebugTest::testHasNullOutput()
-{
-    // When compiling in debug mode:
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 0, true), false);
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 180, true), false);
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 293, true), false);
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 4242, true), false);
-
-    kClearDebugConfig(); // force dropping the cache
-
-    // When compiling in release mode:
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 0, false), false); // controlled by "InfoOutput" key
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 180, false), false); // controlled by "InfoOutput" key
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 293, false), false); // no config -> the default is being used
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 4242, false), false); // unknown area -> area 0 is being used
-
-    // And if we really have no config for area 0 (the app name)
-    KConfig config("kdebugrc");
-    config.deleteGroup("qttest");
-    config.sync();
-    kClearDebugConfig();
-
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 0, false), true);
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 293, false), true);
-    QCOMPARE(KDebug::hasNullOutput(QtDebugMsg, true, 4242, false), true);
-
-    // Restore to normal for future tests
-    config.group("qttest").writeEntry("InfoOutput", 0 /*FileOutput*/);
-    config.sync();
-    kClearDebugConfig();
 }
 
 void KDebugTest::testNoMainComponentData()
