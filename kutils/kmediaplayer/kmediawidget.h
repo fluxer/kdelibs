@@ -59,13 +59,13 @@ class KMEDIAPLAYER_EXPORT KMediaWidget: public QWidget
 public:
     enum KMediaOption {
         //! @brief No options at all
-        NoOptions = 0,
+        NoOptions = 0x0,
         //! @brief When URL is dragged to the widget it will be opened
-        DragDrop = 1,
+        DragDrop = 0x1,
         //! @brief Provide fullscreen option, it is such because it will ask the parent to do it
-        FullscreenVideo = 2,
+        FullscreenVideo = 0x2,
         //! @brief After a certain amount of time the controls will hide and show again when needed
-        HiddenControls = 3,
+        HiddenControls = 0x4,
         //! @brief All available options
         AllOptions = DragDrop | FullscreenVideo | HiddenControls,
         //! @brief Default options
