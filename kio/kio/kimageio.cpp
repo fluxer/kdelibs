@@ -63,18 +63,19 @@ static QStringList toolkitSupportedMimeTypes(KImageIO::Mode mode) {
             }
         }
     }
-
     return mimeTypes;
 }
 
 static QStringList toolkitSupportedTypes(const QString &mimeType) {
     QStringList types;
+    const QStringList supportedMimeTypes = toolkitSupportedMimeTypes(KImageIO::Reading);
+    if (!supportedMimeTypes.contains(mimeType)) {
+        return types;
+    }
     const QByteArray latinMimeType = mimeType.toLatin1();
-    foreach(const QString &format, toolkitSupported(KImageIO::Reading)) {
-        for(int i = 0; i < ImageFormatTblSize; i++) {
-            if (ImageFormatTbl[i].mime == latinMimeType) {
-                types << ImageFormatTbl[i].format;
-            }
+    for(int i = 0; i < ImageFormatTblSize; i++) {
+        if (ImageFormatTbl[i].mime == latinMimeType) {
+            types << ImageFormatTbl[i].format;
         }
     }
 

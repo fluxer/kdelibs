@@ -35,10 +35,6 @@ public:
   struct sharedInfoData {
     int  shmCounter;
     qint64 shmDataSize;
-
-    sharedInfoData() {
-      memset ( this, 0, sizeof ( *this ) );
-    }
   };
   Private ( KMemFile *_parent ) : readWritePos ( 0 ), shmDataSize ( 0 ), parent ( _parent ) {}
 
@@ -172,8 +168,8 @@ bool KMemFile::open ( OpenMode mode )
     d->shmInfo.lock();
     // no -> create it
     infoPtr = static_cast<Private::sharedInfoData*> ( d->shmInfo.data() );
-    memset ( infoPtr, 0, sizeof ( Private::sharedInfoData ) );
     infoPtr->shmCounter = 1;
+    infoPtr->shmDataSize = 0;
     if ( !d->loadContentsFromFile() ) {
       d->shmInfo.unlock();
       d->shmInfo.detach();
