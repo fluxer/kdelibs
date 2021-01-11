@@ -203,10 +203,6 @@ struct KDebugPrivate
     {
         delete config;
 
-        if (m_indentString) {
-            delete m_indentString;
-            m_indentString = 0;
-        }
         if (syslogwriter) {
             delete syslogwriter;
             syslogwriter = 0;
@@ -519,10 +515,6 @@ struct KDebugPrivate
             s << areaName.constData();
         }
 
-        if (m_indentString) {
-            s << m_indentString->toLatin1().constData();
-        }
-
         if (printFileLine) {
             s << ' ' << file << ':' << line << ' ';
         }
@@ -659,14 +651,12 @@ struct KDebugPrivate
     bool m_seenMainComponent; // false: area zero still contains qAppName
 
     KNoDebugStream devnull;
-    static thread_local QString* m_indentString;
     static thread_local KSyslogDebugStream* syslogwriter;
     static thread_local KFileDebugStream* filewriter;
     static thread_local KMessageBoxDebugStream* messageboxwriter;
     KLineEndStrippingDebugStream lineendstrippingwriter;
 };
 
-thread_local QString* KDebugPrivate::m_indentString = 0;
 thread_local KSyslogDebugStream* KDebugPrivate::syslogwriter = 0;
 thread_local KFileDebugStream* KDebugPrivate::filewriter = 0;
 thread_local KMessageBoxDebugStream* KDebugPrivate::messageboxwriter = 0;
