@@ -210,12 +210,6 @@ void KSaveFile::abort()
     }
 }
 
-#ifdef HAVE_FDATASYNC
-#  define FDATASYNC fdatasync
-#else
-#  define FDATASYNC fsync
-#endif
-
 bool KSaveFile::finalize()
 {
     if (!d->needFinalize) {
@@ -230,7 +224,11 @@ bool KSaveFile::finalize()
     if (extraSync) {
         if (flush()) {
             forever {
-                if (!FDATASYNC(handle()))
+#ifdef HAVE_FDATASYNC
+                if (!fdatasync(handle()))
+#else
+                if (!fsync(handle()))
+#endif
                     break;
                 if (errno != EINTR) {
                     d->error = QFile::WriteError;
@@ -269,8 +267,6 @@ bool KSaveFile::finalize()
 
     return success;
 }
-
-#undef FDATASYNC
 
 void KSaveFile::setDirectWriteFallback(bool enabled)
 {
