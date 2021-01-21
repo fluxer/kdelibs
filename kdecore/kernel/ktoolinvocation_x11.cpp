@@ -322,7 +322,7 @@ void KToolInvocation::invokeBrowser( const QString &url, const QByteArray& start
                     entryPath.remove(entryPath.length()-13, 5);
                 }
                 QString error;
-                int pid = 0;
+                qint64 pid = 0;
                 int err = startServiceByDesktopPath(entryPath, url, &error, 0, &pid, startup_id);
                 if (err != 0) {
                     KMessage::message(KMessage::Error,

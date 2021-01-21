@@ -214,13 +214,6 @@ set(kio_LIB_SRCS
    ${kssl_STAT_SRCS}
 )
 
-set(kio_LIB_PRIVATE_SRCS
-    kio/kfileshare_p.h
-    kio/krun_p.h
-    kio/connection_p.h
-    kio/slaveinterface_p.h
-)
-
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
 target_link_libraries(kio PRIVATE

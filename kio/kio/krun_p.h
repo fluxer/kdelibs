@@ -41,14 +41,14 @@ class KProcessRunner : public QObject
   public:
 
 #ifndef Q_WS_X11
-    static int run(KProcess *, const QString & executable);
+    static qint64 run(KProcess *, const QString & executable);
 #else
-    static int run(KProcess *, const QString & executable, const KStartupInfoId& id);
+    static qint64 run(KProcess *, const QString & executable, const KStartupInfoId& id);
 #endif
 
     virtual ~KProcessRunner();
 
-    int pid() const;
+    qint64 pid() const;
 
   protected Q_SLOTS:
 
@@ -63,10 +63,10 @@ class KProcessRunner : public QObject
 
     void terminateStartupNotification();
 
-    KProcess *process;
+    KProcess *m_process;
     QString m_executable; // can be a full path
-    KStartupInfoId id;
-    int m_pid;
+    KStartupInfoId m_id;
+    qint64 m_pid;
 
     Q_DISABLE_COPY(KProcessRunner)
 };

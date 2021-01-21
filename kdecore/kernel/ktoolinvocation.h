@@ -201,7 +201,7 @@ public:
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopPath( const QString& _name, const QString &URL,
-                QString *error=0, QString *serviceName=0, int *pid = 0,
+                QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                 const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
   /**
@@ -224,7 +224,7 @@ public:
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopPath( const QString& _name, const QStringList &URLs=QStringList(),
-                QString *error=0, QString *serviceName=0, int *pid = 0,
+                QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                 const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
   /**
@@ -248,7 +248,7 @@ public:
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopName( const QString& _name, const QString &URL,
-                                        QString *error=0, QString *serviceName=0, int *pid = 0,
+                                        QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                                         const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
   /**
@@ -272,7 +272,7 @@ public:
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopName( const QString& _name, const QStringList &URLs=QStringList(),
-                                        QString *error=0, QString *serviceName=0, int *pid = 0,
+                                        QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                                         const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
   /**
@@ -293,7 +293,7 @@ public:
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int kdeinitExec( const QString& name, const QStringList &args=QStringList(),
-                QString *error=0, int *pid = 0, const QByteArray& startup_id = QByteArray() );
+                QString *error=0, qint64 *pid = 0, const QByteArray& startup_id = QByteArray() );
 
   /**
    * Starts a program via kdeinit and wait for it to finish.
@@ -313,7 +313,7 @@ public:
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int kdeinitExecWait( const QString& name, const QStringList &args=QStringList(),
-                QString *error=0, int *pid = 0, const QByteArray& startup_id = QByteArray() );
+                QString *error=0, qint64 *pid = 0, const QByteArray& startup_id = QByteArray() );
 
 Q_SIGNALS:
   /**
@@ -330,7 +330,7 @@ private:
 
   int startServiceInternal(const char *_function,
                            const QString& _name, const QStringList &URLs,
-                           QString *error, QString *serviceName, int *pid,
+                           QString *error, QString *serviceName, qint64 *pid,
                            const QByteArray& startup_id, bool noWait,
                            const QString& workdir = QString());
   static bool isMainThreadActive(QString* error = 0);

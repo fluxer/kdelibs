@@ -85,7 +85,7 @@ bool KToolInvocation::isMainThreadActive(QString* error)
 
 int KToolInvocation::startServiceInternal(const char *_function,
                                           const QString& _name, const QStringList &URLs,
-                                          QString *error, QString *serviceName, int *pid,
+                                          QString *error, QString *serviceName, qint64 *pid,
                                           const QByteArray& startup_id, bool noWait,
                                           const QString& workdir)
 {
@@ -135,7 +135,7 @@ int KToolInvocation::startServiceInternal(const char *_function,
     if (error)
         *error = reply.arguments().at(2).toString();
     if (pid)
-        *pid = reply.arguments().at(3).toInt();
+        *pid = reply.arguments().at(3).toLongLong();
     return reply.arguments().at(0).toInt();
 }
 
@@ -144,7 +144,7 @@ int KToolInvocation::startServiceInternal(const char *_function,
 int
 KToolInvocation::startServiceByDesktopPath( const QString& _name, const QString &URL,
                                             QString *error, QString *serviceName,
-                                            int *pid, const QByteArray& startup_id, bool noWait )
+                                            qint64 *pid, const QByteArray& startup_id, bool noWait )
 {
     if (!isMainThreadActive(error))
         return EINVAL;
@@ -158,7 +158,7 @@ KToolInvocation::startServiceByDesktopPath( const QString& _name, const QString 
 
 int
 KToolInvocation::startServiceByDesktopPath( const QString& _name, const QStringList &URLs,
-                                            QString *error, QString *serviceName, int *pid,
+                                            QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
     if (!isMainThreadActive(error))
@@ -170,7 +170,7 @@ KToolInvocation::startServiceByDesktopPath( const QString& _name, const QStringL
 
 int
 KToolInvocation::startServiceByDesktopName( const QString& _name, const QString &URL,
-                                            QString *error, QString *serviceName, int *pid,
+                                            QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
     if (!isMainThreadActive(error))
@@ -185,7 +185,7 @@ KToolInvocation::startServiceByDesktopName( const QString& _name, const QString 
 
 int
 KToolInvocation::startServiceByDesktopName( const QString& _name, const QStringList &URLs,
-                                            QString *error, QString *serviceName, int *pid,
+                                            QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
     if (!isMainThreadActive(error))
@@ -197,7 +197,7 @@ KToolInvocation::startServiceByDesktopName( const QString& _name, const QStringL
 
 int
 KToolInvocation::kdeinitExec( const QString& name, const QStringList &args,
-                              QString *error, int *pid, const QByteArray& startup_id )
+                              QString *error, qint64 *pid, const QByteArray& startup_id )
 {
     if (!isMainThreadActive(error))
         return EINVAL;
@@ -209,7 +209,7 @@ KToolInvocation::kdeinitExec( const QString& name, const QStringList &args,
 
 int
 KToolInvocation::kdeinitExecWait( const QString& name, const QStringList &args,
-                                  QString *error, int *pid, const QByteArray& startup_id )
+                                  QString *error, qint64 *pid, const QByteArray& startup_id )
 {
     if (!isMainThreadActive(error))
         return EINVAL;

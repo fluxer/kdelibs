@@ -575,7 +575,7 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
             data.setApplicationId(service->entryPath());
         KStartupInfo::sendStartup(id, data);
     }
-    int pid = KProcessRunner::run(proc, executable, id);
+    qint64 pid = KProcessRunner::run(proc, executable, id);
     if (startup_notify && pid) {
         KStartupInfoData data;
         data.addPid(pid);
@@ -951,7 +951,7 @@ bool KRun::run(const KService& _service, const KUrl::List& _urls, QWidget* windo
     const KUrl::List urls = resolveURLs(_urls, _service);
 
     QString error;
-    int pid = 0;
+    qint64 pid = 0;
 
     QByteArray myasn = asn;
     // startServiceByDesktopPath() doesn't take QWidget*, add it to the startup info now
@@ -1298,8 +1298,7 @@ void KRun::slotStatResult(KJob * job)
 
         // will emit the error and autodelete this
         d->startTimer();
-    }
-    else {
+    } else {
         kDebug(7010) << "Finished";
 
         KIO::StatJob* statJob = qobject_cast<KIO::StatJob*>(job);
@@ -1571,16 +1570,10 @@ KIO::Job* KRun::job()
     return d->m_job;
 }
 
-
-
-
-
 bool KRun::isDirectory() const
 {
     return d->m_bIsDirectory;
 }
-
-
 
 void KRun::setIsLocalFile(bool isLocalFile)
 {
@@ -1605,12 +1598,12 @@ mode_t KRun::mode() const
 /****************/
 
 #ifndef Q_WS_X11
-int KProcessRunner::run(KProcess * p, const QString & executable)
+qint64 KProcessRunner::run(KProcess * p, const QString & executable)
 {
     return (new KProcessRunner(p, executable))->pid();
 }
 #else
-int KProcessRunner::run(KProcess * p, const QString & executable, const KStartupInfoId& id)
+qint64 KProcessRunner::run(KProcess * p, const QString & executable, const KStartupInfoId& id)
 {
     return (new KProcessRunner(p, executable, id))->pid();
 }
@@ -1619,36 +1612,37 @@ int KProcessRunner::run(KProcess * p, const QString & executable, const KStartup
 #ifndef Q_WS_X11
 KProcessRunner::KProcessRunner(KProcess * p, const QString & executable)
 #else
-KProcessRunner::KProcessRunner(KProcess * p, const QString & executable, const KStartupInfoId& _id) :
-        id(_id)
+KProcessRunner::KProcessRunner(KProcess * p, const QString & executable, const KStartupInfoId& id)
 #endif
+    : m_process(p),
+    m_executable(executable),
+#ifdef Q_WS_X11
+    m_id(id),
+#endif
+    m_pid(0)
 {
-    m_pid = 0;
-    process = p;
-    m_executable = executable;
-    connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
+    connect(m_process, SIGNAL(finished(int,QProcess::ExitStatus)),
             this, SLOT(slotProcessExited(int,QProcess::ExitStatus)));
 
-    process->start();
-    if (!process->waitForStarted()) {
+    m_process->start();
+    if (!m_process->waitForStarted()) {
         //kDebug() << "wait for started failed, exitCode=" << process->exitCode()
         //         << "exitStatus=" << process->exitStatus();
         // Note that exitCode is 255 here (the first time), and 0 later on (bug?).
-        slotProcessExited(255, process->exitStatus());
-    }
-    else {
+        slotProcessExited(255, m_process->exitStatus());
+    } else {
 #ifdef Q_WS_X11
-        m_pid = process->pid();
+        m_pid = m_process->pid();
 #endif
     }
 }
 
 KProcessRunner::~KProcessRunner()
 {
-    delete process;
+    delete m_process;
 }
 
-int KProcessRunner::pid() const
+qint64 KProcessRunner::pid() const
 {
     return m_pid;
 }
@@ -1656,11 +1650,11 @@ int KProcessRunner::pid() const
 void KProcessRunner::terminateStartupNotification()
 {
 #ifdef Q_WS_X11
-    if (!id.none()) {
+    if (!m_id.none()) {
         KStartupInfoData data;
         data.addPid(m_pid); // announce this pid for the startup notification has finished
         data.setHostname();
-        KStartupInfo::sendFinish(id, data);
+        KStartupInfo::sendFinish(m_id, data);
     }
 #endif
 
@@ -1684,9 +1678,8 @@ KProcessRunner::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus)
             KGlobal::ref();
             KMessageBox::sorry(0L, i18n("Could not find the program '%1'", m_executable));
             KGlobal::deref();
-        }
-        else {
-            kDebug() << process->readAllStandardError();
+        } else {
+            kDebug() << m_process->readAllStandardError();
         }
     }
     deleteLater();
