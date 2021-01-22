@@ -201,12 +201,6 @@ set_package_properties(UDisks2 PROPERTIES
     TYPE OPTIONAL
 )
 
-if(UDISKS2_FOUND )
-    set(WITH_SOLID_UDISKS2 ON)
-else()
-    set(WITH_SOLID_UDISKS2 OFF)
-endif()
-
 configure_file(
     config-solid.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h
@@ -280,9 +274,8 @@ set(solid_LIB_SRCS ${solid_LIB_SRCS}
 )
 
 # FIXME: this should work on more Unix systems
-if(WITH_SOLID_UDISKS2)
+if(UDISKS2_FOUND)
     message(STATUS "Building Solid UDisks2 backend." )
-    add_definitions(-DWITH_SOLID_UDISKS2)
     set(solid_LIB_SRCS
         ${solid_LIB_SRCS}
         backends/udisks2/udisksmanager.cpp
@@ -300,22 +293,7 @@ if(WITH_SOLID_UDISKS2)
     )
     # for the localizations
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS})
-else(WITH_SOLID_UDISKS2)
-    message(STATUS "Building Solid UDisks backend." )
-    set(solid_LIB_SRCS
-        ${solid_LIB_SRCS}
-        backends/udisks/udisksmanager.cpp
-        backends/udisks/udisksdevice.cpp
-        backends/udisks/udisksblock.cpp
-        backends/udisks/udisksstoragevolume.cpp
-        backends/udisks/udisksdeviceinterface.cpp
-        backends/udisks/udisksopticaldisc.cpp
-        backends/udisks/udisksopticaldrive.cpp
-        backends/udisks/udisksstoragedrive.cpp
-        backends/udisks/udisksstorageaccess.cpp
-        backends/udisks/udisksgenericinterface.cpp
-    )
-endif(WITH_SOLID_UDISKS2)
+endif(UDISKS2_FOUND)
 
 message(STATUS "Building Solid fstab backend." )
 set(solid_LIB_SRCS

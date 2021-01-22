@@ -24,24 +24,20 @@
 #include <config-solid.h>
 
 #include "backends/fakehw/fakemanager.h"
-
-#if defined (WITH_SOLID_UDISKS2)
-#include "backends/udisks2/udisksmanager.h"
-#else
-#include "backends/udisks/udisksmanager.h"
-#endif
+#include "backends/fstab/fstabmanager.h"
 #include "backends/upower/upowermanager.h"
-
-#if defined (HUPNP_FOUND)
-#include "backends/upnp/upnpdevicemanager.h"
-#endif
 
 #if defined (UDEV_FOUND) && defined(Q_OS_LINUX)
 #include "backends/udev/udevmanager.h"
 #endif
 
-#include "backends/fstab/fstabmanager.h"
+#if defined (UDISKS2_FOUND)
+#include "backends/udisks2/udisksmanager.h"
+#endif
 
+#if defined (HUPNP_FOUND)
+#include "backends/upnp/upnpdevicemanager.h"
+#endif
 
 Solid::ManagerBasePrivate::ManagerBasePrivate()
 {
@@ -59,16 +55,16 @@ void Solid::ManagerBasePrivate::loadBackends()
     if (!solidFakeXml.isEmpty()) {
         m_backends << new Solid::Backends::Fake::FakeManager(0, solidFakeXml);
     } else {
+        m_backends << new Solid::Backends::Fstab::FstabManager(0);
+        m_backends << new Solid::Backends::UPower::UPowerManager(0);
+
 #       if defined(UDEV_FOUND) && defined(Q_OS_LINUX)
             m_backends << new Solid::Backends::UDev::UDevManager(0);
 #       endif
-#       if defined(WITH_SOLID_UDISKS2)
-            m_backends << new Solid::Backends::UDisks2::Manager(0)
-#       else
-            m_backends << new Solid::Backends::UDisks::UDisksManager(0)
+
+#       if defined(UDISKS2_FOUND)
+            m_backends << new Solid::Backends::UDisks2::Manager(0);
 #       endif
-            << new Solid::Backends::UPower::UPowerManager(0)
-            << new Solid::Backends::Fstab::FstabManager(0);
 
 #        if defined (HUPNP_FOUND)
             m_backends << new Solid::Backends::UPnP::UPnPDeviceManager(0);
