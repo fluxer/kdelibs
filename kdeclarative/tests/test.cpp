@@ -23,12 +23,17 @@
 #include <QScriptEngine>
 
 #include "kdeclarative.h"
+#include "kaboutdata.h"
+#include "kcmdlineargs.h"
 
 #include "testobject_p.h"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    KAboutData about("kdeclarative-test", QByteArray(), ki18n("kdeclarative-test"), "1.0");
+    KCmdLineArgs::init(argc, argv, &about);
 
     QDeclarativeView view;
     QDeclarativeContext *context = view.rootContext();
@@ -49,7 +54,6 @@ int main(int argc, char *argv[])
     QScriptValue global = scriptEngine->globalObject();
     TestObject *testObject = new TestObject();
     QScriptValue testValue = scriptEngine->newQObject(testObject);
-    testValue.setScope(global);
     global.setProperty("testObject", testValue);
 
     view.setSource(QUrl::fromLocalFile(KDESRCDIR "test.qml"));

@@ -42,7 +42,7 @@ main(int argc, char *argv[])
 
    QString error;
    QString dbusService;
-   int pid;
+   qint64 pid;
    KToolInvocation::startServiceByDesktopPath( serviceId, url, &error, &dbusService, &pid );
    kDebug() << "Started. error=" << error << " dbusService=" << dbusService << " pid=" << pid;
 
