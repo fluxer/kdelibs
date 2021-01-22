@@ -92,7 +92,6 @@ set(solid_LIB_SRCS
     video.cpp
     smartcardreader.cpp
     internetgateway.cpp
-    xdgbasedirs.cpp
 
     ifaces/acadapter.cpp
     ifaces/audiointerface.cpp
