@@ -35,10 +35,7 @@ SET_PACKAGE_PROPERTIES(LibRaw PROPERTIES
     PURPOSE "Required to build libkdcraw"
 )
 
-# Check LibRaw config header.
-MESSAGE(STATUS "LibRaw version: ${LibRaw_VERSION_STRING}")
-
-IF(EXISTS "${LibRaw_INCLUDE_DIR}/libraw_config.h")
+IF(EXISTS "${LIBRAW_INCLUDE_DIR}/libraw_config.h")
     ADD_DEFINITIONS(-DLIBRAW_HAS_CONFIG)
     MESSAGE(STATUS "LibRaw config file exists: yes")
 ELSE()
@@ -47,8 +44,7 @@ ENDIF()
 
 ADD_DEFINITIONS(
     ${QT_QTDBUS_DEFINITIONS}
-    ${LibRaw_DEFINITIONS}
-    ${LibRaw_r_DEFINITIONS}
+    ${LIBRAW_DEFINITIONS}
     -DKDE_DEFAULT_DEBUG_AREA=51002
 )
 
@@ -58,7 +54,7 @@ INCLUDE_DIRECTORIES(
     ${QDBUS_INCLUDE_DIRS} 
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KIO_INCLUDES}
-    ${LibRaw_INCLUDE_DIR}
+    ${LIBRAW_INCLUDE_DIR}
 )
 
 # ==================================================================================================
@@ -87,4 +83,3 @@ INSTALL(
     ${CMAKE_CURRENT_BINARY_DIR}/libkdcraw.pc
     DESTINATION ${LIB_INSTALL_DIR}/pkgconfig
 )
-
