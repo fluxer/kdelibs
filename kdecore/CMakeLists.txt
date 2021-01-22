@@ -231,7 +231,6 @@ set(kdecore_LIB_SRCS
     sycoca/ksycocafactory.cpp
     sycoca/kprotocolinfo.cpp
     sycoca/kprotocolinfofactory.cpp
-    sycoca/kmemfile.cpp
     text/kstringhandler.cpp
     util/kautostart.cpp
     util/kdedmodule.cpp

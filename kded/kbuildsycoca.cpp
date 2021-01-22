@@ -53,7 +53,6 @@
 #ifndef KBUILDSYCOCA_NO_KCRASH
 #include <kcrash.h>
 #endif
-#include <kmemfile.h>
 
 #include <stdlib.h>
 #include <unistd.h>
@@ -455,8 +454,6 @@ bool KBuildSycoca::recreate()
     if (g_vfolder)
         str << g_vfolder->allDirectories(); // Extra resource dirs
   }
-  if (d->m_sycocaStrategy == KSycocaPrivate::StrategyMemFile)
-     KMemFile::fileContentsChanged(path);
 
   return true;
 }

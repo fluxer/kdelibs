@@ -29,7 +29,6 @@
 #include "ksharedconfig.h"
 #include "kdebug.h"
 #include "kstandarddirs.h"
-#include "kmemfile.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QCoreApplication>
@@ -79,7 +78,7 @@ KSycocaPrivate::KSycocaPrivate()
       updateSig( 0 ),
       m_device(0)
 {
-    m_sycocaStrategy = StrategyMemFile;
+    m_sycocaStrategy = StrategyFile;
     KConfigGroup config(KGlobal::config(), "KSycoca");
     setStrategyFromString(config.readEntry("strategy"));
 }
@@ -87,8 +86,6 @@ KSycocaPrivate::KSycocaPrivate()
 void KSycocaPrivate::setStrategyFromString(const QString& strategy) {
     if (strategy == QLatin1String("file"))
         m_sycocaStrategy = StrategyFile;
-    else if (strategy == QLatin1String("sharedmem"))
-        m_sycocaStrategy = StrategyMemFile;
     else if (!strategy.isEmpty())
         kWarning(7011) << "Unknown sycoca strategy:" << strategy;
 }
@@ -191,14 +188,6 @@ KSycocaAbstractDevice* KSycocaPrivate::device()
         device = new KSycocaBufferDevice;
         device->device()->open(QIODevice::ReadOnly); // can't fail
     } else {
-#ifndef QT_NO_SHAREDMEMORY
-        if (!device && m_sycocaStrategy == StrategyMemFile) {
-            device = new KSycocaMemFileDevice(m_databasePath);
-            if (!device->device()->open(QIODevice::ReadOnly)) {
-                delete device; device = 0;
-            }
-        }
-#endif
         if (!device) {
             device = new KSycocaFileDevice(m_databasePath);
             if (!device->device()->open(QIODevice::ReadOnly)) {

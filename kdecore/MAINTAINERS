@@ -139,7 +139,6 @@ sonnet/
   spellerplugin.cpp
 
 sycoca/
-  kmemfile.cpp
   kprotocolinfo.cpp               David Faure <faure@kde.org>
   kprotocolinfofactory.cpp        David Faure <faure@kde.org>
   ksycoca.cpp                     David Faure <faure@kde.org>

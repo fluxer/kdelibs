@@ -63,25 +63,6 @@ private:
     QFile* m_database;
 };
 
-#ifndef QT_NO_SHAREDMEMORY
-// Reading from a KMemFile
-class KSycocaMemFileDevice : public KSycocaAbstractDevice
-{
-public:
-    KSycocaMemFileDevice(const QString& path) {
-        m_database = new KMemFile(path);
-    }
-    ~KSycocaMemFileDevice() {
-        delete m_database;
-    }
-    virtual QIODevice* device() {
-        return m_database;
-    }
-private:
-    KMemFile* m_database;
-};
-#endif
-
 // Reading from a dummy memory buffer
 class KSycocaBufferDevice : public KSycocaAbstractDevice
 {
