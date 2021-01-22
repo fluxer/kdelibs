@@ -28,7 +28,7 @@ else (found_getspnam)
             set(SHADOW_LIBRARIES gen)
         endif (found_getspnam_gen)
     endif (found_getspnam_shadow)
-    cmake_pop_check_state()
+    cmake_reset_check_state()
 endif (found_getspnam)
 
 set(CRYPT_LIBRARIES)

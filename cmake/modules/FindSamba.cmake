@@ -36,7 +36,7 @@ if(SAMBA_INCLUDE_DIR AND SAMBA_LIBRARIES)
    set(CMAKE_REQUIRED_INCLUDES ${CMAKE_REQUIRED_INCLUDES} ${SAMBA_INCLUDE_DIR})
    check_symbol_exists(smbc_set_context "libsmbclient.h" SAMBA_HAVE_SMBC_SET_CONTEXT)
    check_symbol_exists(smbc_option_set "libsmbclient.h" SAMBA_HAVE_SMBC_OPTION_SET)
-   cmake_pop_check_state()
+   cmake_reset_check_state()
    # fail if smbc_set_context() was required but hasn't been found
    if (SAMBA_REQUIRE_SMBC_SET_CONTEXT AND NOT SAMBA_HAVE_SMBC_SET_CONTEXT)
       set(SAMBA_FOUND FALSE)
