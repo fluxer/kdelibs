@@ -508,23 +508,23 @@ void KPty::login(const char *user, const char *remotehost)
     l_struct.ut_time = time(0);
 # endif
 
-# ifdef HAVE_LOGIN
-#  ifdef HAVE_LOGINX
-    ::loginx(&l_struct);
-#  else
-    ::login(&l_struct);
-#  endif
-# else
-#  ifdef HAVE_STRUCT_UTMP_UT_TYPE
+    // on Linux login() fills these, atleast on NetBSD that is not the case and
+    // the utmp/utmpx struct values must be filled before calling
+    // loginx()/login()
+# ifdef HAVE_STRUCT_UTMP_UT_TYPE
     l_struct.ut_type = USER_PROCESS;
-#  endif
-#  ifdef HAVE_STRUCT_UTMP_UT_PID
+# endif
+# ifdef HAVE_STRUCT_UTMP_UT_PID
     l_struct.ut_pid = getpid();
-#   ifdef HAVE_STRUCT_UTMP_UT_SESSION
+# ifdef HAVE_STRUCT_UTMP_UT_SESSION
     l_struct.ut_session = getsid(0);
-#   endif
-#  endif
-#  ifdef HAVE_UTMPX
+# endif
+
+# if defined(HAVE_LOGINX)
+    ::loginx(&l_struct);
+# elif defined(HAVE_LOGIN)
+    ::login(&l_struct);
+# elif defined(HAVE_UTMPX)
     utmpxname(_PATH_UTMPX);
     setutxent();
     pututxline(&l_struct);
