@@ -560,12 +560,10 @@ void KPty::logout()
             str_ptr = sl_ptr + 1;
     }
 # endif
-# ifdef HAVE_LOGIN
-#  ifdef HAVE_LOGINX
+# if defined(HAVE_LOGINX)
     ::logoutx(str_ptr, 0, DEAD_PROCESS);
-#  else
+# elif defined(HAVE_LOGIN)
     ::logout(str_ptr);
-#  endif
 # else
 #  ifdef HAVE_UTMPX
     struct utmpx l_struct, *ut;
