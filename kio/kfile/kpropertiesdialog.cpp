@@ -3258,7 +3258,7 @@ void KDesktopPropsPlugin::slotAdvanced()
 
     if (preferredTerminal == "konsole")
     {
-        terminalCloseBool = (d->m_terminalOptionStr.contains( "--noclose" ) > 0);
+        terminalCloseBool = d->m_terminalOptionStr.contains( "--noclose" );
         w.terminalCloseCheck->setChecked(terminalCloseBool);
         d->m_terminalOptionStr.remove( "--noclose");
     }
