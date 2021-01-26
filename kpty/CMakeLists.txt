@@ -12,7 +12,6 @@ add_library(kpty ${LIBRARY_TYPE} ${kpty_LIB_SRCS})
 
 target_link_libraries(kpty PRIVATE
     ${UTIL_LIBRARY}
-    ${UTEMPTER_LIBRARY}
 )
 
 target_link_libraries(kpty PUBLIC

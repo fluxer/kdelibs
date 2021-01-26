@@ -17,7 +17,6 @@
 #cmakedefine HAVE_SYS_STROPTS_H 1
 #cmakedefine HAVE_SYS_FILIO_H 1
 
-#cmakedefine HAVE_UTEMPTER 1
 #cmakedefine HAVE_LOGIN 1
 #cmakedefine HAVE_UTMPX 1
 #cmakedefine HAVE_LOGINX 1
