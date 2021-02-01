@@ -46,10 +46,6 @@
 #include <pwd.h>
 #include <stdlib.h>
 
-#if defined(HAVE_LIMITS_H)
-#include <limits.h>  // PATH_MAX
-#endif
-
 //sendfile has different semantics in different platforms
 #if defined HAVE_SENDFILE && defined Q_OS_LINUX
 #define USE_SENDFILE 1

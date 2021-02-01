@@ -42,9 +42,7 @@
 #include <pwd.h>
 #include <assert.h>
 #include <sys/stat.h>
-#ifdef Q_OS_UNIX
 #include <limits.h>  // PATH_MAX
-#endif
 
 class KArchivePrivate
 {

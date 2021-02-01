@@ -63,6 +63,10 @@
 
 #define case_sensitivity Qt::CaseSensitive
 
+#ifndef PATH_MAX
+# define PATH_MAX _POSIX_PATH_MAX
+#endif
+
 class KStandardDirs::KStandardDirsPrivate
 {
 public:
@@ -796,8 +800,8 @@ KStandardDirs::KStandardDirsPrivate::realPath(const QString &dirname)
         return dirname;
     }
 
-    char realpath_buffer[MAXPATHLEN + 1];
-    memset(realpath_buffer, 0, MAXPATHLEN + 1);
+    char realpath_buffer[PATH_MAX + 1];
+    memset(realpath_buffer, 0, PATH_MAX + 1);
 
     /* If the path contains symlinks, get the real name */
     if (realpath( QFile::encodeName(dirname).constData(), realpath_buffer) != 0) {
@@ -846,8 +850,8 @@ KStandardDirs::realPath(const QString &dirname) const
 QString
 KStandardDirs::realFilePath(const QString &filename)
 {
-    char realpath_buffer[MAXPATHLEN + 1];
-    memset(realpath_buffer, 0, MAXPATHLEN + 1);
+    char realpath_buffer[PATH_MAX + 1];
+    memset(realpath_buffer, 0, PATH_MAX + 1);
 
     /* If the path contains symlinks, get the real name */
     if (realpath( QFile::encodeName(filename).constData(), realpath_buffer) != 0) {
@@ -1355,9 +1359,9 @@ static QString readEnvPath(const char *env)
 #ifdef Q_OS_LINUX
 static QString executablePrefix()
 {
-    char path_buffer[MAXPATHLEN + 1];
-    path_buffer[MAXPATHLEN] = 0;
-    int length = readlink ("/proc/self/exe", path_buffer, MAXPATHLEN);
+    char path_buffer[PATH_MAX + 1];
+    path_buffer[PATH_MAX] = 0;
+    int length = readlink ("/proc/self/exe", path_buffer, PATH_MAX);
     if (length == -1)
         return QString();
 
