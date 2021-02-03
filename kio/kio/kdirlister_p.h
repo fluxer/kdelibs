@@ -433,6 +433,7 @@ private:
     // this is why we need to remember those files here.
     QSet<KFileItem*> pendingRemoteUpdates;
 
+    KDirWatch *dirwatch;
     // the KDirNotify signals
     OrgKdeKDirNotifyInterface *kdirnotify;
 
