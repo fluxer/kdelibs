@@ -464,7 +464,7 @@ void KPty::login(const char *user, const char *remotehost)
     // note: strncpy without terminators _is_ correct here. man 4 utmp
 
     if (user)
-      strncpy(l_struct.ut_user, user, sizeof(l_struct.ut_user));
+      strncpy(l_struct.ut_name, user, sizeof(l_struct.ut_name));
 
     if (remotehost) {
       strncpy(l_struct.ut_host, remotehost, sizeof(l_struct.ut_host));
@@ -487,15 +487,14 @@ void KPty::login(const char *user, const char *remotehost)
 #endif
 
 #ifdef HAVE_UTMPX
-    // due to binary hacks ut_tv members must be set explicitly
-    struct timeval tod;
-    gettimeofday(&tod, 0);
-    l_struct.ut_tv.tv_sec = tod.tv_sec;
-    l_struct.ut_tv.tv_usec = tod.tv_usec;
+    gettimeofday(&l_struct.ut_tv, 0);
 #else
     l_struct.ut_time = time(0);
 #endif
 
+    // on Linux login() fills these, atleast on NetBSD that is not the case and
+    // the utmp/utmpx struct values must be filled before calling
+    // loginx()/login()
 #ifdef HAVE_STRUCT_UTMP_UT_TYPE
     l_struct.ut_type = USER_PROCESS;
 #endif
@@ -506,16 +505,16 @@ void KPty::login(const char *user, const char *remotehost)
     l_struct.ut_session = getsid(0);
 #endif
 
-#ifdef HAVE_UTMPX
-# ifdef _PATH_UTMPX
+#if defined(HAVE_LOGINX)
+    ::loginx(&l_struct);
+#elif defined(HAVE_LOGIN)
+    ::login(&l_struct);
+#elif defined(HAVE_UTMPX)
     utmpxname(_PATH_UTMPX);
-# endif
     setutxent();
     pututxline(&l_struct);
     endutxent();
-# ifdef _PATH_WTMPX
     updwtmpx(_PATH_WTMPX, &l_struct);
-# endif
 #else
     utmpname(_PATH_UTMP);
     setutent();
@@ -539,48 +538,48 @@ void KPty::logout()
             str_ptr = sl_ptr + 1;
     }
 #endif
-#ifdef HAVE_UTMPX
-    struct utmpx l_struct, *ut;
+#if defined(HAVE_LOGINX)
+    ::logoutx(str_ptr, 0, DEAD_PROCESS);
+#elif defined(HAVE_LOGIN)
+    ::logout(str_ptr);
 #else
+# ifdef HAVE_UTMPX
+    struct utmpx l_struct, *ut;
+# else
     struct utmp l_struct, *ut;
-#endif
+# endif
     memset(&l_struct, 0, sizeof(l_struct));
 
     strncpy(l_struct.ut_line, str_ptr, sizeof(l_struct.ut_line));
 
-#ifdef HAVE_UTMPX
-# ifdef _PATH_UTMPX
+# ifdef HAVE_UTMPX
     utmpxname(_PATH_UTMPX);
-# endif
     setutxent();
     if ((ut = getutxline(&l_struct))) {
-#else
+# else
     utmpname(_PATH_UTMP);
     setutent();
     if ((ut = getutline(&l_struct))) {
-#endif
-        memset(ut->ut_user, 0, sizeof(*ut->ut_user));
+# endif
+        memset(ut->ut_name, 0, sizeof(*ut->ut_name));
         memset(ut->ut_host, 0, sizeof(*ut->ut_host));
-#ifdef HAVE_STRUCT_UTMP_UT_SYSLEN
+# ifdef HAVE_STRUCT_UTMP_UT_SYSLEN
         ut->ut_syslen = 0;
-#endif
-#ifdef HAVE_STRUCT_UTMP_UT_TYPE
+# endif
+# ifdef HAVE_STRUCT_UTMP_UT_TYPE
         ut->ut_type = DEAD_PROCESS;
-#endif
-#ifdef HAVE_UTMPX
-        // due to binary hacks ut_tv members must be set explicitly
-        struct timeval tod;
-        gettimeofday(&tod, 0);
-        ut->ut_tv.tv_sec = tod.tv_sec;
-        ut->ut_tv.tv_usec = tod.tv_usec;
+# endif
+# ifdef HAVE_UTMPX
+        gettimeofday(&(ut->ut_tv), 0);
         pututxline(ut);
     }
     endutxent();
-#else
+# else
         ut->ut_time = time(0);
         pututline(ut);
     }
     endutent();
+# endif
 #endif
 }
 
