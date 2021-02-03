@@ -27,8 +27,9 @@
 #include <QtCore/QPointer>
 #include <QtNetwork/QHostInfo>
 
-static const unsigned int max_nums = 8;
+#include <sys/time.h>
 
+static const unsigned int max_nums = 8;
 
 class KIO::SlaveInterfacePrivate
 {
