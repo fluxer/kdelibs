@@ -39,10 +39,10 @@
 KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
                                  const QString &address,
                                  const QString &udi)
-    : m_manager(manager), m_isCdrom(false),
-      m_isAccessible(false), m_trashIsEmpty(false), m_device(udi)
+    : m_isCdrom(false), m_isAccessible(false),
+    m_trashIsEmpty(false), m_device(udi)
 {
-    setBookmark(m_manager->findByAddress(address));
+    setBookmark(manager->findByAddress(address));
 
     if (udi.isEmpty() && m_bookmark.metaDataItem("ID").isEmpty()) {
         m_bookmark.setMetaDataItem("ID", generateNewId());

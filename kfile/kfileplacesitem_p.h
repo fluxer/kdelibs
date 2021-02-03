@@ -81,7 +81,6 @@ private:
 
     static QString generateNewId();
 
-    KBookmarkManager *m_manager;
     KBookmark m_bookmark;
     bool m_isCdrom;
     bool m_isAccessible;
