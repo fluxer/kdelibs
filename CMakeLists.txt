@@ -306,16 +306,6 @@ install(
     DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
 )
 
-# run a script before installing the exports files which deletes previously
-# installed configuration specific export files, if the main exports file has
-# changed this makes sure it doesn't include older and different configuration
-# specific exports files, which might have a different set of targets or
-# targets with different names.
-install(
-    CODE "set(EXPORT_FILES KDELibs4LibraryTargets.cmake KDELibs4ToolsTargets.cmake)"
-    CODE "set(EXPORT_INSTALL_DIR \"${DATA_INSTALL_DIR}/cmake/modules\")"
-    SCRIPT "${CMAKE_SOURCE_DIR}/cmake/modules/check_installed_exports_file.cmake"
-)
 install(
     EXPORT kdelibsLibraryTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
