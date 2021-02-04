@@ -13,7 +13,7 @@
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
 # Copyright (c) 2007 Matthias Kretz <kretz@kde.org>
-# Copyright (c) 2015-2021 Ivailo Monev <xakepa10@gmail.com>
+# Copyright (c) 2015 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

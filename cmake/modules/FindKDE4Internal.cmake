@@ -140,12 +140,6 @@
 #    Installs all png and svgz files in the current directory to the icon
 #    directory given in path, in the subdirectory for the given icon theme.
 #
-#  KDE4_CREATE_MANPAGE ( docbookfile section )
-#   Create the manpage for the specified section from the docbookfile
-#   The resulting manpage will be installed to <installdest> when using
-#   INSTALL_DESTINATION <installdest>, or to <installdest>/<subdir> if
-#   SUBDIR <subdir> is specified.
-#
 #  KDE4_INSTALL_AUTH_HELPER_FILES ( HELPER_TARGET HELPER_ID HELPER_USER )
 #   This macro adds the needed files for an helper executable meant to be used by applications using KAuth.
 #   It accepts the helper target, the helper ID (the DBUS name) and the user under which the helper will run on.
