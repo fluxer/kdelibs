@@ -514,17 +514,25 @@ void KPty::login(const char *user, const char *remotehost)
 #elif defined(HAVE_LOGIN)
     ::login(&l_struct);
 #elif defined(HAVE_UTMPX)
+# ifdef _PATH_UTMPX
     utmpxname(_PATH_UTMPX);
+# endif
     setutxent();
     pututxline(&l_struct);
     endutxent();
+# ifdef _PATH_WTMPX
     updwtmpx(_PATH_WTMPX, &l_struct);
+# endif
 #else
+# ifdef _PATH_UTMP
     utmpname(_PATH_UTMP);
+# endif
     setutent();
     pututline(&l_struct);
     endutent();
+# ifdef _PATH_WTMP
     updwtmp(_PATH_WTMP, &l_struct);
+# endif
 #endif
 }
 
@@ -557,11 +565,15 @@ void KPty::logout()
     strncpy(l_struct.ut_line, str_ptr, sizeof(l_struct.ut_line));
 
 # ifdef HAVE_UTMPX
+#  ifdef _PATH_UTMPX
     utmpxname(_PATH_UTMPX);
+#  endif
     setutxent();
     if ((ut = getutxline(&l_struct))) {
 # else
+#  ifdef _PATH_UTMP
     utmpname(_PATH_UTMP);
+#  endif
     setutent();
     if ((ut = getutline(&l_struct))) {
 # endif
