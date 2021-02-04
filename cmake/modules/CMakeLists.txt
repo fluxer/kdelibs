@@ -16,7 +16,6 @@ set(cmakeFilesDontInstall
 # so become part of the public interface of kdelibs which has to be kept
 # compatible).
 set(cmakeFiles
-    check_installed_exports_file.cmake
     cmake-modules-styleguide.txt
     FindACL.cmake
     FindAlsa.cmake
