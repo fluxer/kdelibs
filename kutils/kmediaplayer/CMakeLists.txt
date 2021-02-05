@@ -27,8 +27,8 @@ if(MPV_FOUND)
 endif()
 
 set_target_properties(kmediaplayer PROPERTIES
-    VERSION ${KDE_NON_GENERIC_LIB_VERSION}
-    SOVERSION ${KDE_NON_GENERIC_LIB_SOVERSION}
+    VERSION ${GENERIC_LIB_VERSION}
+    SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
 generate_export_header(kmediaplayer)
