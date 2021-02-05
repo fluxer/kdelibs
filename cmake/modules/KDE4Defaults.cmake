@@ -15,11 +15,11 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # since cmake 2.4.1
 set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
 
-# do not duplicate interface includes as system from projects providing CMake
-# config in case the include directories are already included explicitly
-# (via include_directories() which always uses non-system style), reduces the
-# command-line arguments that have to be passed to the compiler and most likely
-# the build times
+# do not duplicate interface includes as system from projects providing
+# imported targets in case the include directories are already included
+# explicitly (via include_directories() which always uses non-system style),
+# reduces the command-line arguments that have to be passed to the compiler and
+# most likely the build times
 set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
 
 # define the generic version of the libraries here, this makes it easy to
@@ -27,8 +27,3 @@ set(CMAKE_NO_SYSTEM_FROM_IMPORTED ON)
 # libraries
 set(GENERIC_LIB_VERSION "4.20")
 set(GENERIC_LIB_SOVERSION "4")
-
-# use this version number for libraries which are experimental
-set(KDE_NON_GENERIC_LIB_VERSION "5.16")
-set(KDE_NON_GENERIC_LIB_SOVERSION "5")
-
