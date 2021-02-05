@@ -49,15 +49,14 @@
 K_GLOBAL_STATIC(KDirListerCache, kDirListerCache)
 
 KDirListerCache::KDirListerCache()
-    : itemsCached( 10 ), // keep the last 10 directories around
-    dirwatch(new KDirWatch(this))
+    : itemsCached( 10 ) // keep the last 10 directories around
 {
     //kDebug(7004);
 
   connect( &pendingUpdateTimer, SIGNAL(timeout()), this, SLOT(processPendingUpdates()) );
   pendingUpdateTimer.setSingleShot( true );
 
-  connect( dirwatch, SIGNAL(dirty(QString)),
+  connect( KDirWatch::self(), SIGNAL(dirty(QString)),
            this, SLOT(slotFileDirty(QString)) );
 
   kdirnotify = new org::kde::KDirNotify(QString(), QString(), QDBusConnection::sessionBus(), this);
@@ -81,7 +80,7 @@ KDirListerCache::~KDirListerCache()
     itemsCached.clear();
     directoryData.clear();
 
-    delete dirwatch;
+    KDirWatch::self()->disconnect( this );
 }
 
 // setting _reload to true will emit the old files and
