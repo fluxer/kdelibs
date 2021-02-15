@@ -26,6 +26,10 @@ if(HAVE_SOCKET_LIBRARY)
     set(KINIT_SOCKET_LIBRARY socket)
 endif()
 
+if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
+    add_definitions(-DNO_DISPLAY)
+endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
+
 ########### kdeinit4 ###############
 
 set(kdeinit_SRCS
@@ -57,12 +61,15 @@ add_executable(kdeinit4_wrapper wrapper.c)
 
 target_link_libraries(kdeinit4_wrapper ${KINIT_SOCKET_LIBRARY})
 
-if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
-    add_definitions(-DNO_DISPLAY)
-endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
-
 install(TARGETS kdeinit4_wrapper ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(TARGETS kdeinit4_wrapper ${INSTALL_TARGETS_DEFAULT_ARGS} RENAME kdeinit4_shutdown)
+
+########### kdeinit4_shutdown ###############
+
+add_executable(kdeinit4_shutdown wrapper.c)
+
+target_link_libraries(kdeinit4_shutdown ${KINIT_SOCKET_LIBRARY})
+
+install(TARGETS kdeinit4_shutdown ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### kshell4 ###############
 
