@@ -24,7 +24,6 @@ set(cmakeFiles
     FindDBusMenuQt.cmake
     FindDjVuLibre.cmake
     FindDNSSD.cmake
-    FindEigen3.cmake
     FindENCHANT.cmake
     FindEPub.cmake
     FindExiv2.cmake
