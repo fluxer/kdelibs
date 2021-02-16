@@ -1168,6 +1168,27 @@ QString KStandardDirs::findExe( const QString& appname,
     return QString();
 }
 
+QString KStandardDirs::findRootExe( const QString& appname,
+                                    const QString& pstr,
+                                    SearchOptions options )
+{
+    QStringList exePaths = systemPaths( pstr );
+    static const QStringList rootPaths = QStringList()
+        << QLatin1String("/sbin")
+        << QLatin1String("/usr/sbin")
+        << QLatin1String("/usr/local/sbin")
+        << QLatin1String("/usr/pkg/sbin"); // NetBSD
+
+    foreach (const QString &rootPath, rootPaths) {
+        if (exePaths.contains(rootPath) || !QDir(rootPath).exists()) {
+            continue;
+        }
+        exePaths << rootPath;
+    }
+
+    return findExe(appname, exePaths.join(QString(QLatin1Char(KPATH_SEPARATOR))), options);
+}
+
 int KStandardDirs::findAllExe( QStringList& list, const QString& appname,
                                const QString& pstr, SearchOptions options )
 {

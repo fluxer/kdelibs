@@ -949,11 +949,7 @@ void FileProtocol::mount( bool _ro, const char *_fstype, const QString& _dev, co
     bool fstype_empty = !_fstype || !*_fstype;
     QByteArray fstype = KShell::quoteArg(QString::fromLatin1(_fstype)).toLatin1(); // good guess
     QByteArray readonly = _ro ? "-r" : "";
-    QString epath = QString::fromLocal8Bit(qgetenv("PATH"));
-    QString path = QLatin1String("/sbin:/bin");
-    if(!epath.isEmpty())
-        path += QLatin1String(":") + epath;
-    QByteArray mountProg = KGlobal::dirs()->findExe(QLatin1String("mount"), path).toLocal8Bit();
+    QByteArray mountProg = KGlobal::dirs()->findRootExe(QLatin1String("mount")).toLocal8Bit();
     if (mountProg.isEmpty()){
       error( KIO::ERR_COULD_NOT_MOUNT, i18n("Could not find program \"mount\""));
       return;
@@ -1096,8 +1092,15 @@ void FileProtocol::unmount( const QString& _point )
 		 */
 		ptr = strrchr( devname, '/' );
 		*ptr = '\0';
+
+                QByteArray ejectProg = KGlobal::dirs()->findRootExe(QLatin1String("eject")).toLocal8Bit();
+
+                if (ejectProg.isEmpty()) {
+                    error( KIO::ERR_COULD_NOT_UNMOUNT, i18n("Could not find program \"eject\""));
+                    return;
+                }
                 QByteArray qdevname(QFile::encodeName(KShell::quoteArg(QFile::decodeName(QByteArray(devname)))).data());
-		buffer = "/usr/bin/eject " + qdevname + " 2>" + tmpFileName;
+		buffer = ejectProg + " " + qdevname + " 2>" + tmpFileName;
 		kDebug(7101) << "VOLMGT: eject " << qdevname;
 
 		/*
@@ -1127,11 +1130,7 @@ void FileProtocol::unmount( const QString& _point )
 		return;
 	}
 #else
-    QString epath = QString::fromLocal8Bit(qgetenv("PATH"));
-    QString path = QLatin1String("/sbin:/bin");
-    if (!epath.isEmpty())
-       path += QLatin1Char(':') + epath;
-    QByteArray umountProg = KGlobal::dirs()->findExe(QLatin1String("umount"), path).toLocal8Bit();
+    QByteArray umountProg = KGlobal::dirs()->findRootExe(QLatin1String("umount")).toLocal8Bit();
 
     if (umountProg.isEmpty()) {
         error( KIO::ERR_COULD_NOT_UNMOUNT, i18n("Could not find program \"umount\""));
@@ -1156,11 +1155,7 @@ void FileProtocol::unmount( const QString& _point )
 
 bool FileProtocol::pmount(const QString &dev)
 {
-    QString epath = QString::fromLocal8Bit(qgetenv("PATH"));
-    QString path = QLatin1String("/sbin:/bin");
-    if (!epath.isEmpty())
-        path += QLatin1Char(':') + epath;
-    QString pmountProg = KGlobal::dirs()->findExe(QLatin1String("pmount"), path);
+    QString pmountProg = KGlobal::dirs()->findRootExe(QLatin1String("pmount"));
 
     if (pmountProg.isEmpty())
         return false;
@@ -1181,11 +1176,7 @@ bool FileProtocol::pumount(const QString &point)
     QString dev = mp->realDeviceName();
     if (dev.isEmpty()) return false;
 
-    QString epath = QString::fromLocal8Bit(qgetenv("PATH"));
-    QString path = QLatin1String("/sbin:/bin");
-    if (!epath.isEmpty())
-        path += QLatin1Char(':') + epath;
-    QString pumountProg = KGlobal::dirs()->findExe(QLatin1String("pumount"), path);
+    QString pumountProg = KGlobal::dirs()->findRootExe(QLatin1String("pumount"));
 
     if (pumountProg.isEmpty())
         return false;

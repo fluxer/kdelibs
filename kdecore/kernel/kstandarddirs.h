@@ -471,6 +471,30 @@ public:
                             SearchOptions options = NoSearchOptions );
 
     /**
+     * Finds the executable in the system or root path.
+     *
+     * A valid executable must
+     * be a file and have its executable bit set.
+     *
+     * @param appname The name of the executable file for which to search.
+     *                if this contains a path separator, it will be resolved
+     *                according to the current working directory
+     *                (shell-like behaviour).
+     * @param pathstr The path which will be searched. If this is
+     *                null (default), the @c $PATH environment variable will
+     *                be searched and in addition some root-only system paths.
+     * @param options if the flags passed include IgnoreExecBit the path returned
+     *                may not have the executable bit set.
+     *
+     * @return The path of the executable. If it was not found,
+     *         it will return QString().
+     * @see findAllExe()
+     */
+    static QString findRootExe( const QString& appname,
+                                const QString& pathstr = QString(),
+                                SearchOptions options = NoSearchOptions );
+
+    /**
      * Finds all occurrences of an executable in the system path.
      *
      * @param list will be filled with the pathnames of all the

@@ -26,6 +26,7 @@
 #include <QtCore/QProcess>
 #include <QtCore/QTextStream>
 #include <QtCore/qdatetime.h>
+#include <kstandarddirs.h>
 
 #include <solid/soliddefs_p.h>
 
@@ -216,16 +217,17 @@ QProcess *Solid::Backends::Fstab::FstabHandling::callSystemCommand(const QString
                                                                  const QStringList &args,
                                                                  QObject *obj, const char *slot)
 {
-    QStringList env = QProcess::systemEnvironment();
-    env.replaceInStrings(QRegExp("^PATH=(.*)", Qt::CaseInsensitive), "PATH=/sbin:/bin:/usr/sbin/:/usr/bin");
+    QString commandExe = KGlobal::dirs()->findRootExe(commandName);
+    if (commandExe.isEmpty()) {
+        return 0;
+    }
 
     QProcess *process = new QProcess(obj);
 
     QObject::connect(process, SIGNAL(finished(int,QProcess::ExitStatus)),
                      obj, slot);
 
-    process->setEnvironment(env);
-    process->start(commandName, args);
+    process->start(commandExe, args);
 
     if (process->waitForStarted()) {
         return process;
