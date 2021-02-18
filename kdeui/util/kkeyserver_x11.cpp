@@ -38,7 +38,6 @@
 #endif
 # include <X11/keysymdef.h>
 # include <X11/XF86keysym.h>
-# define X11_ONLY(arg) arg, //allows to omit an argument
 
 // #define KKEYSERVER_DEBUG 1
 
@@ -89,10 +88,10 @@ struct TransKey {
 
 static X11ModInfo g_rgX11ModInfo[4] =
 {
-    { Qt::SHIFT,   X11_ONLY(ShiftMask) },
-    { Qt::CTRL,    X11_ONLY(ControlMask) },
-    { Qt::ALT,     X11_ONLY(Mod1Mask) },
-    { Qt::META,    X11_ONLY(Mod4Mask) }
+    { Qt::SHIFT,   ShiftMask },
+    { Qt::CTRL,    ControlMask },
+    { Qt::ALT,     Mod1Mask },
+    { Qt::META,    Mod4Mask }
 };
 
 // These are the X equivalents to the Qt keycodes 0x1000 - 0x1026
@@ -107,7 +106,7 @@ static const TransKey g_rgQtToSymX[] =
     { Qt::Key_Insert,     XK_Insert },
     { Qt::Key_Delete,     XK_Delete },
     { Qt::Key_Pause,      XK_Pause },
-#ifdef sun
+#ifdef Q_OS_SOLARIS
     { Qt::Key_Print,      XK_F22 },
 #else
     { Qt::Key_Print,      XK_Print },
@@ -197,8 +196,6 @@ static const TransKey g_rgQtToSymX[] =
     { Qt::Key_MediaNext,  XF86XK_AudioNext },
     { Qt::Key_MediaRecord, XF86XK_AudioRecord },
     { Qt::Key_LaunchMail, XF86XK_Mail },
-    { Qt::Key_Launch0,    XF86XK_MyComputer },
-    { Qt::Key_Launch1,    XF86XK_Calculator },
     { Qt::Key_Memo,    XF86XK_Memo },
     { Qt::Key_ToDoList,    XF86XK_ToDoList },
     { Qt::Key_Calendar,    XF86XK_Calendar },
@@ -293,23 +290,24 @@ static const TransKey g_rgQtToSymX[] =
     { Qt::Key_Select,  XF86XK_Select },
     { Qt::Key_View,  XF86XK_View },
     { Qt::Key_TopMenu,  XF86XK_TopMenu },
-    { Qt::Key_Bluetooth,  XF86XK_Bluetooth },
     { Qt::Key_Suspend,  XF86XK_Suspend },
     { Qt::Key_Hibernate,  XF86XK_Hibernate },
-    { Qt::Key_Launch2,    XF86XK_Launch0 },
-    { Qt::Key_Launch3,    XF86XK_Launch1 },
-    { Qt::Key_Launch4,    XF86XK_Launch2 },
-    { Qt::Key_Launch5,    XF86XK_Launch3 },
-    { Qt::Key_Launch6,    XF86XK_Launch4 },
-    { Qt::Key_Launch7,    XF86XK_Launch5 },
-    { Qt::Key_Launch8,    XF86XK_Launch6 },
-    { Qt::Key_Launch9,    XF86XK_Launch7 },
-    { Qt::Key_LaunchA,    XF86XK_Launch8 },
-    { Qt::Key_LaunchB,    XF86XK_Launch9 },
-    { Qt::Key_LaunchC,    XF86XK_LaunchA },
-    { Qt::Key_LaunchD,    XF86XK_LaunchB },
-    { Qt::Key_LaunchE,    XF86XK_LaunchC },
-    { Qt::Key_LaunchF,    XF86XK_LaunchD },
+    { Qt::Key_Launch0,    XF86XK_Launch0 },
+    { Qt::Key_Launch1,    XF86XK_Launch1 },
+    { Qt::Key_Launch2,    XF86XK_Launch2 },
+    { Qt::Key_Launch3,    XF86XK_Launch3 },
+    { Qt::Key_Launch4,    XF86XK_Launch4 },
+    { Qt::Key_Launch5,    XF86XK_Launch5 },
+    { Qt::Key_Launch6,    XF86XK_Launch6 },
+    { Qt::Key_Launch7,    XF86XK_Launch7 },
+    { Qt::Key_Launch8,    XF86XK_Launch8 },
+    { Qt::Key_Launch9,    XF86XK_Launch9 },
+    { Qt::Key_LaunchA,    XF86XK_LaunchA },
+    { Qt::Key_LaunchB,    XF86XK_LaunchB },
+    { Qt::Key_LaunchC,    XF86XK_LaunchC },
+    { Qt::Key_LaunchD,    XF86XK_LaunchD },
+    { Qt::Key_LaunchE,    XF86XK_LaunchE },
+    { Qt::Key_LaunchF,    XF86XK_LaunchF },
 };
 
 //---------------------------------------------------------------------
