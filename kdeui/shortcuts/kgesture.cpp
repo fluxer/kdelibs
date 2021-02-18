@@ -445,12 +445,6 @@ KRockerGesture::KRockerGesture(const QString &description)
         case 'M':
             *current = Qt::MiddleButton;
             break;
-        case '1':
-            *current = Qt::XButton1;
-            break;
-        case '2':
-            *current = Qt::XButton2;
-            break;
         default:
             return;
         }
@@ -487,8 +481,6 @@ void KRockerGesture::setButtons(Qt::MouseButton hold, Qt::MouseButton thenPush)
         case Qt::LeftButton:
         case Qt::RightButton:
         case Qt::MiddleButton:
-        case Qt::XButton1:
-        case Qt::XButton2:
             break;
         default:
             d->m_hold = Qt::NoButton;
@@ -564,12 +556,6 @@ QString KRockerGesture::toString() const
             break;
         case Qt::MiddleButton:
             desc = 'M';
-            break;
-        case Qt::XButton1:
-            desc = '1';
-            break;
-        case Qt::XButton2:
-            desc = '2';
             break;
         default:
             return QString();

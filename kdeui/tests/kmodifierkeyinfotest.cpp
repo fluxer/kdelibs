@@ -89,8 +89,6 @@ TestWidget::TestWidget() : QWidget(0), m_lock(this)
     buttons.insert(Qt::LeftButton, "Left Button");
     buttons.insert(Qt::RightButton, "Right Button");
     buttons.insert(Qt::MiddleButton, "Middle Button");
-    buttons.insert(Qt::XButton1, "First X Button");
-    buttons.insert(Qt::XButton2, "Second X Button");
 
     QVBoxLayout *layout = new QVBoxLayout(this);
     
