@@ -32,11 +32,12 @@
 
 #include <utime.h>
 #include <qplatformdefs.h>
+#include <qfile.h>
 #include <kdecore_export.h>
 
 /* added not for Solaris and OpenSolaris platforms */
 
-#if (defined _LFS64_LARGEFILE) && (defined _LARGEFILE64_SOURCE) && (!defined _GNU_SOURCE) && (!defined __sun)
+#if defined(_LFS64_LARGEFILE) && defined(_LARGEFILE64_SOURCE) && !defined(_GNU_SOURCE) && !defined(Q_OS_SOLARIS)
 /*
  * This section provides portable defines for large file support.
  * To use this you must compile your code with _LARGEFILE64_SOURCE
@@ -85,8 +86,6 @@
 #define KDE_mkdir           ::mkdir
 #define KDE_fdopen          ::fdopen
 #define KDE_signal          ::signal
-
-#include <QtCore/QFile>
 
 namespace KDE
 {

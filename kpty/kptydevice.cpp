@@ -391,17 +391,17 @@ bool KPtyDevicePrivate::_k_canWrite()
 bool KPtyDevicePrivate::doWait(int msecs, bool reading)
 {
     Q_Q(KPtyDevice);
-#ifndef __linux__
+#ifndef Q_OS_LINUX
     struct timeval etv;
 #endif
     struct timeval tv, *tvp;
 
-    if (msecs < 0)
+    if (msecs < 0) {
         tvp = 0;
-    else {
+    } else {
         tv.tv_sec = msecs / 1000;
         tv.tv_usec = (msecs % 1000) * 1000;
-#ifndef __linux__
+#ifndef Q_OS_LINUX
         gettimeofday(&etv, 0);
         timeradd(&tv, &etv, &etv);
 #endif
@@ -420,7 +420,7 @@ bool KPtyDevicePrivate::doWait(int msecs, bool reading)
         if (!writeBuffer.isEmpty())
             FD_SET(q->masterFd(), &wfds);
 
-#ifndef __linux__
+#ifndef Q_OS_LINUX
         if (tvp) {
             gettimeofday(&tv, 0);
             timersub(&etv, &tv, &tv);
