@@ -56,20 +56,12 @@
  */
 #define KDE_sendfile            ::sendfile64
 
-#ifdef _LFS64_STDIO
-#define KDE_freopen             ::freopen64
-#endif /* _LFS64_STDIO */
-
 #else /* !_LFS64_LARGEFILE */
 
 /*
  * This section defines portable defines for standard file support.
  */
 #define KDE_sendfile            ::sendfile
-
-#ifdef _LFS64_STDIO
-#define KDE_freopen             ::freopen
-#endif /* _LFS64_STDIO */
 
 #endif /* !_LFS64_LARGEFILE */
 
