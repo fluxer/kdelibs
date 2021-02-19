@@ -30,6 +30,9 @@ if (PAM_INCLUDE_DIR AND PAM_LIBRARY)
 
     if (NOT DEFINED PAM_MESSAGE_CONST)
         include(CheckCXXSourceCompiles)
+        include(CMakePushCheckState)
+        cmake_reset_check_state()
+        set(CMAKE_REQUIRED_INCLUDES "${PAM_INCLUDE_DIR}")
         # XXX does this work with plain c?
         check_cxx_source_compiles("
 #if ${HAVE_PAM_PAM_APPL_H}+0
@@ -57,6 +60,7 @@ int main(void)
     return 0;
 }
 " PAM_MESSAGE_CONST)
+        cmake_reset_check_state()
     endif (NOT DEFINED PAM_MESSAGE_CONST)
     set(PAM_MESSAGE_CONST ${PAM_MESSAGE_CONST} CACHE BOOL "PAM expects a conversation function with const pam_message")
 
