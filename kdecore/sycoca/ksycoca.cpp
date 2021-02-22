@@ -448,11 +448,7 @@ QString KSycoca::absoluteFilePath(DatabaseType type)
         return path;
     }
 
-    const QByteArray ksycoca_env = qgetenv("KDESYCOCA");
-    if (ksycoca_env.isEmpty())
-        return KGlobal::dirs()->saveLocation("cache") + QString::fromLatin1(KSYCOCA_FILENAME);
-    else
-        return QFile::decodeName(ksycoca_env);
+    return KGlobal::dirs()->saveLocation("cache") + QString::fromLatin1(KSYCOCA_FILENAME);
 }
 
 QString KSycoca::language()

@@ -552,10 +552,6 @@ static pid_t launch(int argc, const char *_name, const char *args,
         exitWithErrorMsg(errorMsg);
      }
 
-
-     if ( !qgetenv("KDE_IS_PRELINKED").isEmpty() && !execpath.isEmpty())
-         libpath.truncate(0);
-
      QLibrary l(libpath);
 
      if ( !libpath.isEmpty() )
