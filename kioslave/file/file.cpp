@@ -274,10 +274,10 @@ void FileProtocol::get( const KUrl& url )
 {
     if (!url.isLocalFile()) {
         KUrl redir(url);
-	redir.setProtocol(config()->readEntry("DefaultRemoteProtocol", "smb"));
-	redirection(redir);
-	finished();
-	return;
+        redir.setProtocol(config()->readEntry("DefaultRemoteProtocol", "smb"));
+        redirection(redir);
+        finished();
+        return;
     }
 
     const QString path(url.toLocalFile());
@@ -859,38 +859,35 @@ void FileProtocol::special( const QByteArray &data)
 
     stream >> tmp;
     switch (tmp) {
-    case 1:
-      {
-	QString fstype, dev, point;
-	qint8 iRo;
+        case 1: {
+            QString fstype, dev, point;
+            qint8 iRo;
 
-	stream >> iRo >> fstype >> dev >> point;
+            stream >> iRo >> fstype >> dev >> point;
 
-	bool ro = ( iRo != 0 );
+            bool ro = ( iRo != 0 );
 
-	kDebug(7101) << "MOUNTING fstype=" << fstype << " dev=" << dev << " point=" << point << " ro=" << ro;
-	bool ok = pmount( dev );
-	if (ok)
-	    finished();
-	else
-	    mount( ro, fstype.toLatin1(), dev, point );
+            kDebug(7101) << "MOUNTING fstype=" << fstype << " dev=" << dev << " point=" << point << " ro=" << ro;
+            bool ok = pmount( dev );
+            if (ok)
+                finished();
+            else
+                mount( ro, fstype.toLatin1(), dev, point );
+            break;
+        }
+        case 2: {
+            QString point;
+            stream >> point;
+            bool ok = pumount( point );
+            if (ok)
+                finished();
+            else
+                unmount( point );
+            break;
+        }
 
-      }
-      break;
-    case 2:
-      {
-	QString point;
-	stream >> point;
-	bool ok = pumount( point );
-	if (ok)
-	    finished();
-	else
-	    unmount( point );
-      }
-      break;
-
-    default:
-      break;
+        default:
+            break;
     }
 }
 

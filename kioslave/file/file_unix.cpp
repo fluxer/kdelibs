@@ -90,16 +90,16 @@ void FileProtocol::copy( const KUrl &srcUrl, const KUrl &destUrl,
            error(KIO::ERR_ACCESS_DENIED, src);
         else
            error(KIO::ERR_DOES_NOT_EXIST, src);
-	return;
+        return;
     }
 
     if ( S_ISDIR( buff_src.st_mode ) ) {
-	error(KIO::ERR_IS_DIRECTORY, src);
-	return;
+        error(KIO::ERR_IS_DIRECTORY, src);
+        return;
     }
     if ( S_ISFIFO( buff_src.st_mode ) || S_ISSOCK ( buff_src.st_mode ) ) {
-	error(KIO::ERR_CANNOT_OPEN_FOR_READING, src);
-	return;
+        error(KIO::ERR_CANNOT_OPEN_FOR_READING, src);
+        return;
     }
 
     KDE_struct_stat buff_dest;
@@ -136,8 +136,8 @@ void FileProtocol::copy( const KUrl &srcUrl, const KUrl &destUrl,
 
     int src_fd = KDE_open( _src.data(), O_RDONLY);
     if ( src_fd < 0 ) {
-	error(KIO::ERR_CANNOT_OPEN_FOR_READING, src);
-	return;
+        error(KIO::ERR_CANNOT_OPEN_FOR_READING, src);
+        return;
     }
 
 #if HAVE_FADVISE
@@ -153,7 +153,7 @@ void FileProtocol::copy( const KUrl &srcUrl, const KUrl &destUrl,
 
     int dest_fd = KDE_open(_dest.data(), O_CREAT | O_TRUNC | O_WRONLY, initialMode);
     if ( dest_fd < 0 ) {
-	kDebug(7101) << "###### COULD NOT WRITE " << dest;
+        kDebug(7101) << "###### COULD NOT WRITE " << dest;
         if ( errno == EACCES ) {
             error(KIO::ERR_WRITE_ACCESS_DENIED, dest);
         } else {
@@ -324,16 +324,15 @@ void FileProtocol::listDir( const KUrl& url)
             error(KIO::ERR_IS_FILE, path);
             break;
 #ifdef ENOMEDIUM
-	case ENOMEDIUM:
-            error(ERR_SLAVE_DEFINED,
-                  i18n("No media in device for %1", path));
+        case ENOMEDIUM:
+            error(ERR_SLAVE_DEFINED, i18n("No media in device for %1", path));
             break;
 #endif
         default:
             error(KIO::ERR_CANNOT_ENTER_DIRECTORY, path);
             break;
         }
-	return;
+        return;
     }
 
     /* set the current dir to the path to speed up
@@ -523,37 +522,37 @@ void FileProtocol::del(const KUrl& url, bool isfile)
      *****/
 
     if (isfile) {
-	kDebug(7101) << "Deleting file "<< url;
+        kDebug(7101) << "Deleting file "<< url;
 
-	if ( unlink( _path.data() ) == -1 ) {
+        if ( unlink( _path.data() ) == -1 ) {
             if ((errno == EACCES) || (errno == EPERM))
                error(KIO::ERR_ACCESS_DENIED, path);
             else if (errno == EISDIR)
                error(KIO::ERR_IS_DIRECTORY, path);
             else
                error(KIO::ERR_CANNOT_DELETE, path);
-	    return;
-	}
+            return;
+        }
     } else {
 
       /*****
        * Delete empty directory
        *****/
 
-      kDebug( 7101 ) << "Deleting directory " << url.url();
-      if (metaData(QLatin1String("recurse")) == QLatin1String("true")) {
-          if (!deleteRecursive(path))
-              return;
-      }
-      if ( ::rmdir( _path.data() ) == -1 ) {
-	if ((errno == EACCES) || (errno == EPERM))
-	  error(KIO::ERR_ACCESS_DENIED, path);
-	else {
-	  kDebug( 7101 ) << "could not rmdir " << perror;
-	  error(KIO::ERR_COULD_NOT_RMDIR, path);
-	  return;
-	}
-      }
+        kDebug( 7101 ) << "Deleting directory " << url.url();
+        if (metaData(QLatin1String("recurse")) == QLatin1String("true")) {
+            if (!deleteRecursive(path))
+                return;
+        }
+        if ( ::rmdir( _path.data() ) == -1 ) {
+            if ((errno == EACCES) || (errno == EPERM)) {
+                error(KIO::ERR_ACCESS_DENIED, path);
+            } else {
+                kDebug( 7101 ) << "could not rmdir " << perror;
+                error(KIO::ERR_COULD_NOT_RMDIR, path);
+                return;
+            }
+        }
     }
 
     finished();
@@ -612,11 +611,11 @@ void FileProtocol::stat( const KUrl & url )
 {
     if (!url.isLocalFile()) {
         KUrl redir(url);
-	redir.setProtocol(config()->readEntry("DefaultRemoteProtocol", "smb"));
-	redirection(redir);
-	kDebug(7101) << "redirecting to " << redir.url();
-	finished();
-	return;
+        redir.setProtocol(config()->readEntry("DefaultRemoteProtocol", "smb"));
+        redirection(redir);
+        kDebug(7101) << "redirecting to " << redir.url();
+        finished();
+        return;
     }
 
     /* directories may not have a slash at the end if
