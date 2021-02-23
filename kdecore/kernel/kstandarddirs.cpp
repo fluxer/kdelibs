@@ -1177,7 +1177,7 @@ QString KStandardDirs::findRootExe( const QString& appname,
         << QLatin1String("/sbin")
         << QLatin1String("/usr/sbin")
         << QLatin1String("/usr/local/sbin")
-        << QLatin1String("/usr/pkg/sbin"); // NetBSD
+        << QLatin1String(KDEDIR "/sbin");
 
     foreach (const QString &rootPath, rootPaths) {
         if (exePaths.contains(rootPath) || !QDir(rootPath).exists()) {
