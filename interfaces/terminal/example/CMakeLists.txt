@@ -16,7 +16,7 @@ target_link_libraries(tetest ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KPAR
 
 
 ########### install files ###############
-install(TARGETS tetest DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS tetest DESTINATION ${KDE4_BIN_INSTALL_DIR})
 
 
 
