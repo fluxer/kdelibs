@@ -45,10 +45,12 @@
 # include <pty.h>
 #endif
 
-#ifdef HAVE_LIBUTIL_H
-# include <libutil.h>
-#elif defined(HAVE_UTIL_H)
+#if defined(HAVE_UTIL_LOGINX) || defined(HAVE_UTIL_LOGIN)
 # include <util.h>
+#endif
+
+#if defined(HAVE_LIBUTIL_H)
+# include <libutil.h>
 #endif
 
 #ifdef HAVE_UTMPX
@@ -491,7 +493,11 @@ void KPty::login(const char *user, const char *remotehost)
 #endif
 
 #ifdef HAVE_UTMPX
-    gettimeofday(&l_struct.ut_tv, 0);
+    // due to binary hacks ut_tv members must be set explicitly
+    struct timeval tod;
+    gettimeofday(&tod, 0);
+    l_struct.ut_tv.tv_sec = tod.tv_sec;
+    l_struct.ut_tv.tv_usec = tod.tv_usec;
 #else
     l_struct.ut_time = time(0);
 #endif
@@ -509,9 +515,9 @@ void KPty::login(const char *user, const char *remotehost)
     l_struct.ut_session = getsid(0);
 #endif
 
-#if defined(HAVE_LOGINX)
+#if defined(HAVE_UTIL_LOGINX)
     ::loginx(&l_struct);
-#elif defined(HAVE_LOGIN)
+#elif defined(HAVE_LOGIN) || defined(HAVE_UTIL_LOGIN)
     ::login(&l_struct);
 #elif defined(HAVE_UTMPX)
 # ifdef _PATH_UTMPX
@@ -550,9 +556,9 @@ void KPty::logout()
             str_ptr = sl_ptr + 1;
     }
 #endif
-#if defined(HAVE_LOGINX)
+#if defined(HAVE_UTIL_LOGINX)
     ::logoutx(str_ptr, 0, DEAD_PROCESS);
-#elif defined(HAVE_LOGIN)
+#elif defined(HAVE_LOGIN) || defined(HAVE_UTIL_LOGIN)
     ::logout(str_ptr);
 #else
 # ifdef HAVE_UTMPX
@@ -590,7 +596,11 @@ void KPty::logout()
         ut->ut_type = DEAD_PROCESS;
 # endif
 # ifdef HAVE_UTMPX
-        gettimeofday(&(ut->ut_tv), 0);
+        // due to binary hacks ut_tv members must be set explicitly
+        struct timeval tod;
+        gettimeofday(&tod, 0);
+        ut->ut_tv.tv_sec = tod.tv_sec;
+        ut->ut_tv.tv_usec = tod.tv_usec;
         pututxline(ut);
     }
     endutxent();

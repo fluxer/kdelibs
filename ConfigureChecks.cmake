@@ -13,6 +13,7 @@ include(CheckTypeSize)
 include(CheckStructHasMember)
 include(CheckCXXSourceCompiles)
 include(CheckPrototypeDefinition)
+include(CMakePushCheckState)
 
 # The FindKDE4.cmake module sets _KDE4_PLATFORM_DEFINITIONS with
 # definitions like _GNU_SOURCE that are needed on each platform.
@@ -81,11 +82,8 @@ check_library_exists(nsl gethostbyname "" HAVE_NSL_LIBRARY)
 check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)
 
 if (UNIX)
-
   # for kpty
-
   check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)
-  check_include_files(util.h       HAVE_UTIL_H)
   check_include_files(termio.h     HAVE_TERMIO_H)
   check_include_files(pty.h        HAVE_PTY_H)
   check_include_files(sys/stropts.h HAVE_SYS_STROPTS_H)
@@ -93,27 +91,29 @@ if (UNIX)
 
   set(UTIL_LIBRARY)
 
-  check_function_exists(login login_in_libc)
-  if (NOT login_in_libc)
-    check_library_exists(util login "" login_in_libutil)
-    if (login_in_libutil)
-      set(UTIL_LIBRARY util)
-    endif (login_in_libutil)
-  endif (NOT login_in_libc)
-  check_function_exists(setutxent HAVE_UTMPX)
+  check_symbol_exists(setutxent "utmpx.h" HAVE_UTMPX)
   if (HAVE_UTMPX)
     set(utmp utmpx)
-    if (login_in_libutil)
-      check_library_exists(util loginx "" HAVE_LOGINX)
-    endif (login_in_libutil)
-  else (HAVE_UTMPX)
+  else ()
     set(utmp utmp)
-  endif (HAVE_UTMPX)
-  if (login_in_libc OR login_in_libutil)
-    set(HAVE_LOGIN 1)
-  else (login_in_libc OR login_in_libutil)
-    set(HAVE_LOGIN)
-  endif (login_in_libc OR login_in_libutil)
+  endif ()
+
+  cmake_reset_check_state()
+  set(CMAKE_REQUIRED_LIBRARIES "util")
+  check_symbol_exists(loginx "util.h" HAVE_UTIL_LOGINX)
+  cmake_reset_check_state()
+  check_symbol_exists(login "${utmp}.h" HAVE_LOGIN)
+  if (NOT HAVE_LOGIN)
+    cmake_reset_check_state()
+    set(CMAKE_REQUIRED_LIBRARIES "util")
+    check_symbol_exists(login "util.h" HAVE_UTIL_LOGIN)
+    cmake_reset_check_state()
+  endif ()
+
+  if (HAVE_UTIL_LOGINX OR HAVE_UTIL_LOGIN)
+    set(UTIL_LIBRARY "util")
+  endif ()
+
   check_struct_has_member("struct ${utmp}" "ut_user" "${utmp}.h" HAVE_STRUCT_UTMP_UT_USER)
   check_struct_has_member("struct ${utmp}" "ut_type" "${utmp}.h" HAVE_STRUCT_UTMP_UT_TYPE)
   check_struct_has_member("struct ${utmp}" "ut_pid" "${utmp}.h" HAVE_STRUCT_UTMP_UT_PID)
@@ -131,7 +131,7 @@ if (UNIX)
   if (openpty_in_libc OR openpty_in_libutil)
     set(HAVE_OPENPTY 1)
   else (openpty_in_libc OR openpty_in_libutil)
-    set(HAVE_OPENPTY)
+    set(HAVE_OPENPTY 0)
 
     execute_process(
       COMMAND sh -c "
