@@ -128,6 +128,20 @@ set(solid_LIB_SRCS
 
     backends/shared/rootdevice.cpp
     backends/shared/cpufeatures.cpp
+
+    backends/fstab/fstabmanager.cpp
+    backends/fstab/fstabdevice.cpp
+    backends/fstab/fstabnetworkshare.cpp
+    backends/fstab/fstabstorageaccess.cpp
+    backends/fstab/fstabhandling.cpp
+    backends/fstab/fstabwatcher.cpp
+
+    backends/upower/upowermanager.cpp
+    backends/upower/upowerdevice.cpp
+    backends/upower/upowerbattery.cpp
+    backends/upower/upoweracadapter.cpp
+    backends/upower/upowerdeviceinterface.cpp
+    backends/upower/upowergenericinterface.cpp
 )
 
 macro_optional_find_package(HUpnp)
@@ -135,6 +149,27 @@ set_package_properties(HUpnp PROPERTIES
     URL "http://www.herqq.org"
     PURPOSE "Allows Solid to provide information about UPnP devices on the network"
     TYPE OPTIONAL
+)
+
+macro_optional_find_package(UDev)
+set_package_properties(UDev PROPERTIES
+    DESCRIPTION "UDev support for Solid"
+    URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
+    PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
+    TYPE OPTIONAL
+)
+
+macro_optional_find_package(UDisks2)
+set_package_properties(UDisks2 PROPERTIES
+    DESCRIPTION "UDisks2 support for Solid"
+    URL "http://www.freedesktop.org/wiki/Software/udisks/"
+    PURPOSE "Allows Solid to use UDisks2 to provide information about devices on Linux"
+    TYPE OPTIONAL
+)
+
+configure_file(
+    config-solid.h.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h
 )
 
 if(HUPNP_FOUND)
@@ -151,44 +186,6 @@ if(HUPNP_FOUND)
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
 endif()
-
-
-# message(STATUS "Building Solid KUPnP backend." )
-# set(solid_LIB_SRCS ${solid_LIB_SRCS}
-#   backends/kupnp/cagibidbuscodec.cpp
-#   backends/kupnp/cagibidevice.cpp
-#   backends/kupnp/kupnpstorageaccess.cpp
-#   backends/kupnp/kupnpdeviceinterface.cpp
-#   backends/kupnp/mediaserver1.cpp
-#   backends/kupnp/mediaserver2.cpp
-#   backends/kupnp/mediaserver3.cpp
-#   backends/kupnp/internetgatewaydevice1.cpp
-#   backends/kupnp/kupnpdevice.cpp
-#   backends/kupnp/kupnprootdevice.cpp
-#   backends/kupnp/kupnpmanager.cpp
-# )
-
-macro_optional_find_package(UDev)
-set_package_properties(UDev PROPERTIES
-    DESCRIPTION "UDev support for Solid"
-    URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
-    PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
-    TYPE OPTIONAL
-)
-
-############### prefer udisks2 over udisks
-macro_optional_find_package(UDisks2)
-set_package_properties(UDisks2 PROPERTIES
-    DESCRIPTION "UDisks2 support for Solid"
-    URL "http://www.freedesktop.org/wiki/Software/udisks/"
-    PURPOSE "Allows Solid to use UDisks2 to provide information about devices on Linux"
-    TYPE OPTIONAL
-)
-
-configure_file(
-    config-solid.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h
-)
 
 # FIXME: this should may work on BSD with some adjustments
 if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
@@ -246,17 +243,6 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${UDEV_LIBS})
 endif(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
 
-
-message(STATUS "Building Solid UPower backend." )
-set(solid_LIB_SRCS ${solid_LIB_SRCS}
-    backends/upower/upowermanager.cpp
-    backends/upower/upowerdevice.cpp
-    backends/upower/upowerbattery.cpp
-    backends/upower/upoweracadapter.cpp
-    backends/upower/upowerdeviceinterface.cpp
-    backends/upower/upowergenericinterface.cpp
-)
-
 # FIXME: this should work on more Unix systems
 if(UDISKS2_FOUND)
     message(STATUS "Building Solid UDisks2 backend." )
@@ -278,17 +264,6 @@ if(UDISKS2_FOUND)
     # for the localizations
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS})
 endif(UDISKS2_FOUND)
-
-message(STATUS "Building Solid fstab backend." )
-set(solid_LIB_SRCS
-    ${solid_LIB_SRCS}
-    backends/fstab/fstabmanager.cpp
-    backends/fstab/fstabdevice.cpp
-    backends/fstab/fstabnetworkshare.cpp
-    backends/fstab/fstabstorageaccess.cpp
-    backends/fstab/fstabhandling.cpp
-    backends/fstab/fstabwatcher.cpp
-)
 
 set_source_files_properties(
     org.freedesktop.PowerManagement.xml
