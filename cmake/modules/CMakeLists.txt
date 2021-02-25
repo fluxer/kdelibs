@@ -44,6 +44,7 @@ set(cmakeFiles
     FindKDE4Workspace.cmake
     FindKipi.cmake
     FindKSane.cmake
+    FindLibATASmart.cmake
     FindLibAttica.cmake
     FindLibDRM.cmake
     FindLibGcrypt.cmake
