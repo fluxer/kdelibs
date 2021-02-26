@@ -21,9 +21,7 @@ set(kparts_LIB_SRCS
     browserrun.cpp
     browseropenorsavequestion.cpp
     statusbarextension.cpp
-    scriptableextension.cpp
     textextension.cpp
-    htmlextension.cpp
     fileinfoextension.cpp
     listingextension.cpp
 )
@@ -75,9 +73,7 @@ install(
     browserrun.h
     statusbarextension.h
     browseropenorsavequestion.h
-    scriptableextension.h
     textextension.h
-    htmlextension.h
     fileinfoextension.h
     listingextension.h
     DESTINATION ${INCLUDE_INSTALL_DIR}/kparts

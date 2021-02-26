@@ -505,7 +505,6 @@ install(
     KParts/FileInfoExtension
     KParts/GUIActivateEvent
     KParts/HistoryProvider
-    KParts/HtmlExtension
     KParts/LiveConnectExtension
     KParts/ListingExtension
     KParts/MainWindow
