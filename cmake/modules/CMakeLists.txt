@@ -68,7 +68,6 @@ set(cmakeFiles
     FindPCIUTILS.cmake
     FindPolkitQt-1.cmake
     FindPopplerQt4.cmake
-    FindPulseAudio.cmake
     FindQalculate.cmake
     FindQCA2.cmake
     FindRAW1394.cmake
