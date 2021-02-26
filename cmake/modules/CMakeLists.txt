@@ -34,7 +34,6 @@ set(cmakeFiles
     FindGIO.cmake
     FindGLIB2.cmake
     FindGMP.cmake
-    FindGObject.cmake
     FindGpgme.cmake
     FindGSSAPI.cmake
     FindHUNSPELL.cmake
