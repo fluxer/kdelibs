@@ -61,7 +61,6 @@ set(cmakeFiles
     FindLibXKlavier.cmake
     FindMPFR.cmake
     FindMtp.cmake
-    FindMusicBrainz5.cmake
     FindNetworkManager.cmake
     FindOpenEXR.cmake
     FindOpenGLES.cmake

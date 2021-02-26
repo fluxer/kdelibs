@@ -64,7 +64,6 @@
 #  KDE4_KTEXTEDITOR_LIBRARY   - the ktexteditor library
 #  KDE4_PLASMA_LIBRARY        - the plasma library
 #  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
-#  KDE4_KCDDB_LIBRARY         - the kcddb library
 #  KDE4_KDCRAW_LIBRARY        - the kdcraw library
 #  KDE4_KEXIV2_LIBRARY        - the kexiv2 library
 #  KDE4_KMEDIAPLAYER_LIBRARY  - the kmediaplayer library
@@ -92,7 +91,6 @@
 #  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 #  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
 #  KDE4_KUNITCONVERSION_LIBS  - the kunitconversion library and all depending libraries
-#  KDE4_KCDDB_LIBS            - the kcddb library and all depending libraries
 #  KDE4_KDCRAW_LIBS           - the kdcraw library and all depending libraries
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
 #  KDE4_KMEDIAPLAYER_LIBS     - the kmediaplayer library and all depending libraries
@@ -339,7 +337,6 @@ endif(_kdeBootStrapping)
 # will be simply set to "kdecore".
 set(_kde_libraries
     kmediaplayer
-    kcddb
     kcmutils
     kdcraw
     kdeclarative
