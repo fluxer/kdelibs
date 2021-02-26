@@ -20,6 +20,7 @@
 #include "klocale.h"
 #include "ksettings.h"
 #include "kmediaplayer.h"
+
 #include <QApplication>
 
 #if defined(HAVE_MPV)
@@ -36,11 +37,20 @@ static bool s_fullscreen = false;
     pre-processor definitions are used to share the code as much as possible making modification
     easier.
 */
+#define COMMON_STATE_LOAD \
+    d->m_settings->sync(); \
+    const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString(); \
+    const int globalvolume = d->m_settings->value("global/volume", 90).toInt(); \
+    const bool globalmute = d->m_settings->value("global/mute", false).toBool(); \
+    setAudioOutput(d->m_settings->value(d->m_playerid + "/audiooutput", globalaudio).toString()); \
+    setVolume(d->m_settings->value(d->m_playerid + "/volume", globalvolume).toInt()); \
+    setMute(d->m_settings->value(d->m_playerid + "/mute", globalmute).toBool());
+
 #define COMMON_STATE_SAVE \
     if (d->m_handle && d->m_settings && d->m_settings->isWritable()) { \
-        d->m_settings->setValue(d->m_appname + "/audiooutput", audiooutput()); \
-        d->m_settings->setValue(d->m_appname + "/volume", int(volume())); \
-        d->m_settings->setValue(d->m_appname + "/mute", mute()); \
+        d->m_settings->setValue(d->m_playerid + "/audiooutput", audiooutput()); \
+        d->m_settings->setValue(d->m_playerid + "/volume", int(volume())); \
+        d->m_settings->setValue(d->m_playerid + "/mute", mute()); \
         d->m_settings->sync(); \
     } else { \
         kWarning() << i18n("Could not save state"); \
@@ -189,7 +199,7 @@ public:
 #if defined(HAVE_MPV)
     mpv_handle *m_handle;
 #endif
-    QString m_appname;
+    QString m_playerid;
     KSettings *m_settings;
     // the handle pointer is not NULL-ed once mpv_terminate_destroy() has been
     // called, doing it manually is a race because _processHandleEvents() is
@@ -198,7 +208,7 @@ public:
 };
 
 KAbstractPlayerPrivate::KAbstractPlayerPrivate()
-    : m_appname(QApplication::applicationName()),
+    : m_playerid(QApplication::applicationName()),
     m_settings(new KSettings("kmediaplayer", KSettings::FullConfig)),
     m_stopprocessing(false)
 {
@@ -418,7 +428,7 @@ static void wakeup_audio(void *ctx)
 }
 
 KAudioPlayer::KAudioPlayer(QObject *parent)
-    : QObject(parent), d(new KAbstractPlayerPrivate)
+    : QObject(parent), d(new KAbstractPlayerPrivate())
 {
 #if defined(HAVE_MPV)
     if (d->m_handle) {
@@ -428,12 +438,7 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
         setOption("vid", "no");
         setOption("video", "no");
 
-        const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
-        const int globalvolume = d->m_settings->value("global/volume", 90).toInt();
-        const bool globalmute = d->m_settings->value("global/mute", false).toBool();
-        setAudioOutput(d->m_settings->value(d->m_appname + "/audiooutput", globalaudio).toString());
-        setVolume(d->m_settings->value(d->m_appname + "/volume", globalvolume).toInt());
-        setMute(d->m_settings->value(d->m_appname + "/mute", globalmute).toBool());
+        COMMON_STATE_LOAD
     }
 #else
     kWarning() << i18n("KAudioPlayer is a stub");
@@ -485,6 +490,14 @@ void KAudioPlayer::_processHandleEvents()
 #endif
 }
 
+void KAudioPlayer::setPlayerID(const QString &id)
+{
+    d->m_playerid = id;
+#if defined(HAVE_MPV)
+    COMMON_STATE_LOAD
+#endif
+}
+
 bool KAudioPlayer::isMimeSupported(const QString &mime) const
 {
 #if defined(HAVE_MPV)
@@ -522,12 +535,7 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
             kWarning() << i18n("Could not get widget ID");
         }
 
-        const QString globalaudio = d->m_settings->value("global/audiooutput", "auto").toString();
-        const int globalvolume = d->m_settings->value("global/volume", 90).toInt();
-        const bool globalmute = d->m_settings->value("global/mute", false).toBool();
-        setAudioOutput(d->m_settings->value(d->m_appname + "/audiooutput", globalaudio).toString());
-        setVolume(d->m_settings->value(d->m_appname + "/volume", globalvolume).toInt());
-        setMute(d->m_settings->value(d->m_appname + "/mute", globalmute).toBool());
+        COMMON_STATE_LOAD
     }
 #else
     kWarning() << i18n("KMediaPlayer is a stub");
@@ -576,6 +584,14 @@ void KMediaPlayer::_processHandleEvents()
 {
 #if defined(HAVE_MPV)
     COMMMON_EVENT_HANDLER
+#endif
+}
+
+void KMediaPlayer::setPlayerID(const QString &id)
+{
+    d->m_playerid = id;
+#if defined(HAVE_MPV)
+    COMMON_STATE_LOAD
 #endif
 }
 

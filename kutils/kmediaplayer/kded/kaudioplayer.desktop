@@ -8,5 +8,5 @@ X-KDE-Library=kaudioplayer
 X-KDE-DBus-ModuleName=kaudioplayer
 X-KDE-Kded-autoload=false
 X-KDE-Kded-load-on-demand=true
-X-KDE-MediaPlayer=true
+X-KDE-MediaPlayer=kded_kaudioplayer
 OnlyShowIn=KDE;

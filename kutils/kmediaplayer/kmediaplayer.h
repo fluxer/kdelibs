@@ -21,6 +21,7 @@
 
 #include "kmimetype.h"
 #include "kmediaplayer_export.h"
+
 #include <QWidget>
 #include <QEvent>
 #include <QSettings>
@@ -59,6 +60,13 @@ public:
     virtual void setOption(const QString &name, const QVariant &value) const = 0;
     //@}
 
+    /*!
+        @brief Sets the player ID to @p id and reloads the saved state
+        @note The ID, which is @p QApplication::applicationName() by default, must be one of the
+        strings in the "X-KDE-MediaPlayer" entry of the .desktop file
+        @param id player ID that identifies feature
+    */
+    virtual void setPlayerID(const QString &id) = 0;
     /*!
         @brief Start playing from @p path
         @param path path to load, it can start with "file://", "dvd://", "http://" and other
@@ -216,10 +224,14 @@ public:
 /*!
     The @p KAudioPlayer class provides an object that can be used to playback from various media
     sources including Hard-Drives, Internet streams, CD, DVD, Blue-Ray, file-descriptor, raw data,
-    you name it. It supports per-application state too, this includes audio output device, volume
-    and mute state currently. That feature requires a special entry in the application .desktop
-    file - "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear
-    in the K Control Module (KCM) for multimedia.
+    you name it.
+
+    It supports per-application state too, this includes audio output device, volume and mute state
+    currently. That feature requires a special entry in the application .desktop file -
+    "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear in the
+    K Control Module (KCM) for multimedia. If the player is not used in application but in @p KPart
+    or plugin which may create multiple instances for different purposes you may want to set its ID
+    via @p setPlayerID().
 
     For an extended version of this class check out @p KMediaPlayer and @p KMediaWidget.
 
@@ -237,6 +249,7 @@ public:
     QVariant option(const QString &name) const;
     void setOption(const QString &name, const QVariant& value) const;
 
+    void setPlayerID(const QString &id);
     bool isMimeSupported(const QString &mime) const;
 
 Q_SIGNALS:
@@ -273,10 +286,14 @@ private:
 /*!
     The @p KMediaPlayer class provides an object that can be used to playback from various media
     sources including Hard-Drives, Internet streams, CD, DVD, Blue-Ray, file-descriptor, raw data,
-    you name it. It supports per-application state too, this includes audio output device, volume
-    and mute state currently. That feature requires a special entry in the application .desktop
-    file - "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear
-    in the K Control Module (KCM) for multimedia.
+    you name it.
+
+    It supports per-application state too, this includes audio output device, volume and mute state
+    currently. That feature requires a special entry in the application .desktop file -
+    "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear in the
+    K Control Module (KCM) for multimedia. If the player is not used in application but in @p KPart
+    or plugin which may create multiple instances for different purposes you may want to set its ID
+    via @p setPlayerID().
 
     For an extended version of this class check out @p KMediaWidget.
 
@@ -296,6 +313,7 @@ public:
     QVariant option(const QString &name) const;
     void setOption(const QString &name, const QVariant &value) const;
 
+    void setPlayerID(const QString &id);
     bool isMimeSupported(const QString &mime) const;
 
 Q_SIGNALS:
