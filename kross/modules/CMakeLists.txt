@@ -21,7 +21,7 @@ if(QT_QTDESIGNER_FOUND)
         ${KDE4_KFILE_LIBS}
         krosscore
     )
-    install(TARGETS krossmoduleforms DESTINATION ${PLUGIN_INSTALL_DIR})
+    install(TARGETS krossmoduleforms DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 endif()
 
 ############################################
@@ -34,4 +34,4 @@ target_link_libraries(krossmodulekdetranslation
     ${KDE4_CORE_LIBS}
     krosscore
 )
-install(TARGETS krossmodulekdetranslation DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS krossmodulekdetranslation DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})

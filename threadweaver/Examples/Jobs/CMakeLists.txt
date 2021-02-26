@@ -25,4 +25,4 @@ target_link_libraries(Jobs
     ThreadWeaverGui
 )
 
-install(TARGETS Jobs DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS Jobs DESTINATION ${KDE4_BIN_INSTALL_DIR})

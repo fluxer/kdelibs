@@ -53,7 +53,7 @@ install(
     krop.desktop
     krwp.desktop
     browserview.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
 generate_export_header(kparts)
@@ -76,6 +76,6 @@ install(
     textextension.h
     fileinfoextension.h
     listingextension.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kparts
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kparts
     COMPONENT Devel
 )

@@ -296,9 +296,9 @@ kde4_add_plugin(kauth_backend_plugin ${KAUTH_BACKEND_SRCS})
 target_link_libraries(kauth_backend_plugin ${KAUTH_BACKEND_LIBS})
 install(
     TARGETS kauth_backend_plugin
-    LIBRARY DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-    ARCHIVE DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
-    RUNTIME DESTINATION ${KAUTH_BACKEND_PLUGIN_DIR}
+    LIBRARY DESTINATION ${KDE4_KAUTH_BACKEND_PLUGIN_DIR}
+    ARCHIVE DESTINATION ${KDE4_KAUTH_BACKEND_PLUGIN_DIR}
+    RUNTIME DESTINATION ${KDE4_KAUTH_BACKEND_PLUGIN_DIR}
 )
 
 ########### next target ###############
@@ -309,9 +309,9 @@ kde4_add_plugin(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_SRCS} auth/HelperProx
 target_link_libraries(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_LIBS})
 install(
     TARGETS kauth_helper_plugin
-    LIBRARY DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-    ARCHIVE DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
-    RUNTIME DESTINATION ${KAUTH_HELPER_PLUGIN_DIR}
+    LIBRARY DESTINATION ${KDE4_KAUTH_HELPER_PLUGIN_DIR}
+    ARCHIVE DESTINATION ${KDE4_KAUTH_HELPER_PLUGIN_DIR}
+    RUNTIME DESTINATION ${KDE4_KAUTH_HELPER_PLUGIN_DIR}
 )
 
 ########### next target ###############
@@ -336,14 +336,14 @@ install(
     FILES
     localization/entry.desktop
     ${CMAKE_CURRENT_BINARY_DIR}/all_languages
-    DESTINATION ${LOCALE_INSTALL_DIR}
+    DESTINATION ${KDE4_LOCALE_INSTALL_DIR}
 )
 
 install(
     FILES
     kdebug.areas
     kdebugrc
-    DESTINATION ${CONFIG_INSTALL_DIR}
+    DESTINATION ${KDE4_CONFIG_INSTALL_DIR}
 )
 
 install(
@@ -434,7 +434,7 @@ install(
     util/kuser.h
     util/qtest_kde.h
     ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
@@ -443,13 +443,13 @@ install(
     sonnet/backgroundchecker.h
     sonnet/speller.h
     sonnet/globals.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/sonnet
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/sonnet
     COMPONENT Devel
 )
 
 install(
     FILES
     services/kplugininfo.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 

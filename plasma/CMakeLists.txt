@@ -29,7 +29,7 @@ endif()
 
 if(NOT PLASMA_NO_KUTILS)
     include_directories(${CMAKE_SOURCE_DIR}/kutils)
-    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KCMUTILS_LIBRARY})
+    set(PLASMA_EXTRA_LIBS ${PLASMA_EXTRA_LIBS} ${KDE4_KCMUTILS_LIBS})
 endif()
 
 configure_file(
@@ -246,7 +246,7 @@ install(
     ${CMAKE_CURRENT_BINARY_DIR}/plasma_export.h
     view.h
     wallpaper.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma
     COMPONENT Devel
 )
 
@@ -278,7 +278,7 @@ install(
     widgets/textbrowser.h
     widgets/treeview.h
     widgets/textedit.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/widgets
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/widgets
     COMPONENT Devel
 )
 
@@ -289,14 +289,14 @@ install(
     scripting/runnerscript.h
     scripting/wallpaperscript.h
     scripting/scriptengine.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/scripting
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/scripting
     COMPONENT Devel
 )
 
 install(
     FILES
     animations/animation.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/plasma/animations
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/animations
     COMPONENT Devel
 )
 
@@ -315,13 +315,13 @@ install(
     data/servicetypes/plasma-service.desktop
     data/servicetypes/plasma-toolbox.desktop
     data/servicetypes/plasma-wallpaper.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
 install(
     FILES
     data/services/plasma-applet-extenderapplet.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )
 
 install(
@@ -329,6 +329,6 @@ install(
     data/operations/dataengineservice.operations
     data/operations/plasmoidservice.operations
     data/operations/storage.operations
-    DESTINATION ${DATA_INSTALL_DIR}/plasma/services
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/plasma/services
 )
 

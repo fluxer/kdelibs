@@ -21,7 +21,7 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kntlm_export.h
     kntlm.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kio
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kio
     COMPONENT Devel
 )
 

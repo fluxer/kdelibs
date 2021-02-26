@@ -100,14 +100,14 @@ install(
     movingrangefeedback.h
     recoveryinterface.h
     messageinterface.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/ktexteditor
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/ktexteditor
     COMPONENT Devel
 )
 
 install(
     FILES
     kcm_ktexteditor.desktop
-    DESTINATION ${DATA_INSTALL_DIR}/kcm_componentchooser
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kcm_componentchooser
 )
 
 install(
@@ -115,5 +115,5 @@ install(
     ktexteditor.desktop
     ktexteditorplugin.desktop
     ktexteditor_loadsavefiltercheckplugin.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )

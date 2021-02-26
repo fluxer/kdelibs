@@ -28,7 +28,7 @@ endif()
 
 if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
     add_definitions(-DNO_DISPLAY)
-endif (NOT Q_WS_X11 AND NOT Q_WS_QWS)
+endif()
 
 ########### kdeinit4 ###############
 
@@ -43,7 +43,7 @@ add_executable(kdeinit4 ${kdeinit_SRCS})
 target_link_libraries(kdeinit4 ${KDE4_KDEUI_LIBS} ${KINIT_SOCKET_LIBRARY})
 if (Q_WS_X11)
     target_link_libraries(kdeinit4 ${X11_X11_LIB})
-endif(Q_WS_X11)
+endif()
 
 install(TARGETS kdeinit4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -85,7 +85,7 @@ add_executable(lnusertemp lnusertemp.c)
 
 target_link_libraries(lnusertemp ${KDE4_KDECORE_LIBS})
 
-install(TARGETS lnusertemp DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS lnusertemp DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 
 
 ########### kioslave ###############
@@ -94,7 +94,7 @@ add_executable(kioslave kioslave.cpp)
 
 target_link_libraries(kioslave ${QT_QTCORE_LIBRARY})
 
-install(TARGETS kioslave DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS kioslave DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 
 
 ########### klauncher ###############
@@ -115,14 +115,14 @@ add_executable(klauncher ${klauncher_SRCS})
 
 target_link_libraries(klauncher ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
 
-install(TARGETS klauncher DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS klauncher DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 
 ########### install files ###############
 
 install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KLauncher.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 ########### config-kdeinit.h ############

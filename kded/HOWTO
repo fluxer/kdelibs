@@ -45,4 +45,4 @@ Further it should contain:
 Which means that kded_foo.so is the name of the library that contains
 the module. Note that the name of the library always starts with kded_.
 
-The .desktop file should be installed to ${SERVICES_INSTALL_DIR}/kded
+The .desktop file should be installed to ${KDE4_SERVICES_INSTALL_DIR}/kded

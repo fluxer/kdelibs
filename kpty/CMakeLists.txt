@@ -36,7 +36,7 @@ install(
     kpty.h
     kptydevice.h
     kptyprocess.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
@@ -45,7 +45,7 @@ install(
 if(NOT HAVE_OPENPTY)
     add_executable(kgrantpty kgrantpty.c)
     target_link_libraries(kgrantpty ${KDE4_KDECORE_LIBS})
-    install(TARGETS kgrantpty DESTINATION ${LIBEXEC_INSTALL_DIR})
+    install(TARGETS kgrantpty DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 endif()
 
 if(ENABLE_TESTING)

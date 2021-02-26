@@ -11,4 +11,4 @@ add_executable(Construction Construction.cpp)
 
 target_link_libraries(Construction ${KDE4_THREADWEAVER_LIBS})
 
-install(TARGETS Construction DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS Construction DESTINATION ${KDE4_BIN_INSTALL_DIR})

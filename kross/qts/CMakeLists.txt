@@ -24,16 +24,16 @@ set_target_properties(krossqtsplugin PROPERTIES
     SOVERSION ${GENERIC_LIB_SOVERSION}
 )
 
-install(TARGETS krossqtsplugin DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/script)
+install(TARGETS krossqtsplugin DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/script)
 
 ########### next target ###############
 
 # add_executable(krossqtstest main.cpp)
 # target_link_libraries(krossqtstest ${KDE4_KDEUI_LIBS} krossqtsplugin ${QT_QTSCRIPT_LIBRARY})
 # set(krossqtsplugintest_SRCS main.cpp)
-# target_link_libraries(krossqtsplugintest ${KDE4_KDECORE_LIBS} )
+# target_link_libraries(krossqtsplugintest ${KDE4_KDECORE_LIBS})
 # add_executable(krossqtsplugintest ${krossqtsplugintest_SRCS})
-# #install(TARGETS krossqtsplugintest DESTINATION ${BIN_INSTALL_DIR})
+# #install(TARGETS krossqtsplugintest DESTINATION ${KDE4_BIN_INSTALL_DIR})
 
 ########### next target ###############
 
@@ -48,4 +48,4 @@ target_link_libraries(krossqts
     ${QT_QTSCRIPT_LIBRARY}
 )
 
-install(TARGETS krossqts DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS krossqts DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})

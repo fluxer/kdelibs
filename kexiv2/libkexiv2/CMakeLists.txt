@@ -78,7 +78,7 @@ install(
 install(
     FILES
     topicset.iptc-subjectcode.xml
-    DESTINATION ${DATA_INSTALL_DIR}/libkexiv2/data
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/libkexiv2/data
 )
 
 generate_export_header(kexiv2)
@@ -95,6 +95,6 @@ install(
     rotationmatrix.h
     ${CMAKE_CURRENT_BINARY_DIR}/kexiv2_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/libkexiv2
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/libkexiv2
     COMPONENT Devel
 )

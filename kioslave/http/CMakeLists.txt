@@ -50,7 +50,7 @@ target_link_libraries(kio_http_cache_cleaner
     ${ZLIB_LIBRARY}
 )
 
-install(TARGETS kio_http_cache_cleaner DESTINATION ${LIBEXEC_INSTALL_DIR})
+install(TARGETS kio_http_cache_cleaner DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 
 ########### next target ###############
 
@@ -73,7 +73,7 @@ if(GSSAPI_FOUND)
     target_link_libraries(kio_http ${GSSAPI_LIBS})
 endif()
 
-install(TARGETS kio_http DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS kio_http DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
@@ -84,5 +84,5 @@ install(
     https.protocol
     webdav.protocol
     webdavs.protocol
-    DESTINATION ${SERVICES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )

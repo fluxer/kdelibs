@@ -70,7 +70,7 @@
  *  <em>$KDEDIR/share/apps/appname/appname.notifyrc</em>
  *
  * You can do this with the following CMake command:
- * install( FILES appname.notifyrc  DESTINATION ${DATA_INSTALL_DIR}/appname))
+ * install( FILES appname.notifyrc  DESTINATION ${KDE4_DATA_INSTALL_DIR}/appname))
  *
  *  This file contains  mainly 3 parts
  *   <ol><li>\ref global "Global information"</li>

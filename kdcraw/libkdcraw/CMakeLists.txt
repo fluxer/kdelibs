@@ -78,6 +78,6 @@ install(
     rawfiles.h
     ${CMAKE_CURRENT_BINARY_DIR}/kdcraw_export.h
     ${CMAKE_CURRENT_BINARY_DIR}/version.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/libkdcraw
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/libkdcraw
     COMPONENT Devel
 )

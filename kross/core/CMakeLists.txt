@@ -51,6 +51,6 @@ install(
     actioncollection.h
     manager.h
     object.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kross/core
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kross/core
     COMPONENT Devel
 )

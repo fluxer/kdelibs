@@ -330,7 +330,7 @@ endif()
 set(kwallet_xml util/org.kde.KWallet.xml)
 install(
     FILES ${kwallet_xml}
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${kwallet_xml} kwallet_interface )
@@ -354,12 +354,12 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS
 set(kglobalaccel_xml shortcuts/org.kde.KGlobalAccel.xml)
 set_source_files_properties(${kglobalaccel_xml} PROPERTIES INCLUDE "kglobalshortcutinfo_p.h")
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${kglobalaccel_xml} kglobalaccel_interface )
-install(FILES ${kglobalaccel_xml} DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
+install(FILES ${kglobalaccel_xml} DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR})
 
 set(kglobalaccel_component_xml shortcuts/org.kde.kglobalaccel.Component.xml)
 set_source_files_properties(${kglobalaccel_component_xml} PROPERTIES INCLUDE "kglobalshortcutinfo_p.h")
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${kglobalaccel_component_xml} kglobalaccel_component_interface )
-install(FILES ${kglobalaccel_component_xml} DESTINATION ${DBUS_INTERFACES_INSTALL_DIR})
+install(FILES ${kglobalaccel_component_xml} DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR})
 
 set(knotify_xml notifications/org.kde.KNotify.xml)
 qt4_add_dbus_interface(kdeui_LIB_SRCS ${knotify_xml} knotify_interface)
@@ -415,14 +415,14 @@ install(
     dialogs/kdeprint_nupother.png
     dialogs/ktip-bulb.png
     dialogs/thumb_frame.png
-    DESTINATION ${DATA_INSTALL_DIR}/kdeui/pics
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui/pics
 )
 
 install(
     FILES
     xmlgui/ui_standards.rc
     DESTINATION
-    ${CONFIG_INSTALL_DIR}/ui
+    ${KDE4_CONFIG_INSTALL_DIR}/ui
 )
 
 install(
@@ -621,7 +621,7 @@ install(
     xmlgui/kxmlguifactory.h
     util/fixx11h.h
     util/kkeyserver_x11.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
@@ -630,7 +630,7 @@ install(
     FILES
     widgets/kratingpainter.h
     widgets/kratingwidget.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/nepomuk
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/nepomuk
     COMPONENT Devel
 )
 
@@ -641,13 +641,13 @@ install(
     sonnet/configdialog.h
     sonnet/configwidget.h
     sonnet/dictionarycombobox.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/sonnet
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/sonnet
     COMPONENT Devel
 )
 
 install(
     PROGRAMS preparetips
-    DESTINATION ${BIN_INSTALL_DIR}
+    DESTINATION ${KDE4_BIN_INSTALL_DIR}
 )
 
 install(
@@ -657,7 +657,7 @@ install(
     colors/Web.colors
     colors/Royal.colors
     colors/Rainbow.colors
-    DESTINATION ${CONFIG_INSTALL_DIR}/colors
+    DESTINATION ${KDE4_CONFIG_INSTALL_DIR}/colors
 )
 
 install(
@@ -667,7 +667,7 @@ install(
     jobs/org.kde.JobViewV2.xml
     notifications/org.kde.StatusNotifierItem.xml
     notifications/org.kde.StatusNotifierWatcher.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 if(NOT Q_WS_X11)
@@ -675,7 +675,7 @@ if(NOT Q_WS_X11)
     install(
         FILES
         colors/rgb.txt
-        DESTINATION ${DATA_INSTALL_DIR}/kdeui
+        DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui
     )
 endif()
 
@@ -706,5 +706,5 @@ install(
     about/box-center.png
     about/kde_infopage.css
     about/kde_infopage_rtl.css
-    DESTINATION ${DATA_INSTALL_DIR}/kdeui/about
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui/about
 )

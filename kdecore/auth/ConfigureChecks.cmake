@@ -31,14 +31,14 @@ if(KAUTH_BACKEND STREQUAL "DBus")
     install(
         FILES
         auth/backends/dbus/org.kde.auth.conf
-        DESTINATION ${SYSCONF_INSTALL_DIR}/dbus-1/system.d
+        DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/dbus-1/system.d
     )
 
     install(
         FILES
         auth/backends/dbus/dbus_policy.stub
         auth/backends/dbus/dbus_service.stub
-        DESTINATION ${DATA_INSTALL_DIR}/kauth
+        DESTINATION ${KDE4_DATA_INSTALL_DIR}/kauth
         COMPONENT Devel
     )
 endif()

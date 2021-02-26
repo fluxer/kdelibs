@@ -34,7 +34,7 @@ install(TARGETS kded4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 qt4_generate_dbus_interface(kdedadaptor.h org.kde.kded.xml)
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kded.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 ########### next target ###############
@@ -70,13 +70,13 @@ install(TARGETS kbuildsycoca4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(
     FILES applications.menu
-    DESTINATION ${SYSCONF_INSTALL_DIR}/xdg/menus
+    DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/xdg/menus
 )
 
 install(
     FILES
     kdedmodule.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
 

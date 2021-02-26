@@ -38,6 +38,6 @@ install(
     model.h
     view.h
     plugin.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kross/ui
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kross/ui
     COMPONENT Devel
 )

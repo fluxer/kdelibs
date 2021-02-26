@@ -16,9 +16,9 @@ target_link_libraries(emoticonstheme_pidgin
 
 install(
     TARGETS emoticonstheme_pidgin
-    DESTINATION ${PLUGIN_INSTALL_DIR}
+    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
 )
 install(
     FILES emoticonstheme_pidgin.desktop
-    DESTINATION  ${SERVICES_INSTALL_DIR}
+    DESTINATION  ${KDE4_SERVICES_INSTALL_DIR}
 )

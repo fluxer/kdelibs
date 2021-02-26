@@ -30,8 +30,6 @@
 #  KDE4_XDG_DIRECTORY_INSTALL_DIR - the XDG directory from kdelibs
 #  KDE4_XDG_MIME_INSTALL_DIR      - the XDG mimetypes install dir from kdelibs
 #  KDE4_SYSCONF_INSTALL_DIR       - the directory where sysconfig files from kdelibs are installed
-#  KDE4_MAN_INSTALL_DIR           - the directory where man pages from kdelibs are installed
-#  KDE4_INFO_INSTALL_DIR          - the directory where info files from kdelibs are installed
 #  KDE4_SERVICES_INSTALL_DIR      - the directory where service (desktop, protocol, ...) files from kdelibs are installed
 #  KDE4_SERVICETYPES_INSTALL_DIR  - the directory where servicestypes desktop files from kdelibs are installed
 #  KDE4_DBUS_INTERFACES_DIR       - the directory where dbus interfaces from kdelibs are installed
@@ -44,33 +42,7 @@
 #  KDE4_KCFGC_EXECUTABLE    - the kconfig_compiler executable
 #  KDE4_MAKEKDEWIDGETS_EXECUTABLE - the makekdewidgets executable
 #
-# The following variables point to the location of the KDE libraries,
-# but shouldn't be used directly:
-#
-#  KDE4_KDECORE_LIBRARY       - the kdecore library
-#  KDE4_KDEUI_LIBRARY         - the kdeui library
-#  KDE4_KIO_LIBRARY           - the kio library
-#  KDE4_KPARTS_LIBRARY        - the kparts library
-#  KDE4_KEMOTICONS_LIBRARY    - the kemoticons library
-#  KDE4_KIDLETIME_LIBRARY     - the kidletime library
-#  KDE4_KCMUTILS_LIBRARY      - the kcmutils library
-#  KDE4_KPRINTUTILS_LIBRARY   - the kprintutils library
-#  KDE4_KFILE_LIBRARY         - the kfile library
-#  KDE4_KDNSSD_LIBRARY        - the kdnssd library
-#  KDE4_THREADWEAVER_LIBRARY  - the threadweaver library
-#  KDE4_SOLID_LIBRARY         - the solid library
-#  KDE4_KNOTIFYCONFIG_LIBRARY - the knotifyconfig library
-#  KDE4_KROSSCORE_LIBRARY     - the krosscore library
-#  KDE4_KTEXTEDITOR_LIBRARY   - the ktexteditor library
-#  KDE4_PLASMA_LIBRARY        - the plasma library
-#  KDE4_KUNITCONVERSION_LIBRARY - the kunitconversion library
-#  KDE4_KDCRAW_LIBRARY        - the kdcraw library
-#  KDE4_KEXIV2_LIBRARY        - the kexiv2 library
-#  KDE4_KMEDIAPLAYER_LIBRARY  - the kmediaplayer library
-#
-# Compared to the variables above, the following variables
-# also contain all of the depending libraries, so the variables below
-# should be used instead of the ones above:
+# The following variables contain all of the depending libraries:
 #
 #  KDE4_KDECORE_LIBS          - the kdecore library and all depending libraries
 #  KDE4_KDEUI_LIBS            - the kdeui library and all depending libraries
@@ -144,30 +116,7 @@
 #   This macro takes care of generate the needed files, and install them in the right location. This boils down
 #   to a DBus policy to let the helper register on the system bus, and a service file for letting the helper
 #   being automatically activated by the system bus.
-#   *WARNING* You have to install the helper in ${LIBEXEC_INSTALL_DIR} to make sure everything will work.
-#
-#
-#
-#  A note on the possible values for CMAKE_BUILD_TYPE and how KDE handles
-#  the flags for those buildtypes. FindKDE4Internal supports the values
-#  Release, RelWithDebInfo and Debug:
-#
-#  Release
-#          optimised for speed, qDebug/kDebug turned off, no debug symbols, no asserts
-#  RelWithDebInfo (Release with debug info)
-#          similar to Release, optimised for speed, but with debugging symbols on (-g)
-#  Debug
-#          optimised but debuggable, debugging on (-g)
-#          (-fno-reorder-blocks -fno-schedule-insns -fno-inline)
-#  MinSizeRel:
-#          optimization for smallest size, no debugging information
-#
-#
-#  The default buildtype is RelWithDebInfo.
-#  It is expected that the "Debug" build type be still debuggable with gdb
-#  without going all over the place, but still produce better performance.
-#  It's also important to note that gcc cannot detect all warning conditions
-#  unless the optimiser is active.
+#   *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to make sure everything will work.
 #
 #
 #  This module allows to depend on a particular minimum version of kdelibs.
@@ -325,15 +274,15 @@ else(_kdeBootStrapping)
     # KDE4_TARGET_PREFIX, which is set in KDELibsDependencies.cmake .
     # This export-file is generated and installed by the toplevel CMakeLists.txt of kdelibs.
     # Include it to "import" the libraries from kdelibs into the current projects as targets.
-    # This makes setting the _LIBRARY and _LIBS variables actually a bit superfluos, since e.g.
-    # the kdeui library could now also be used just as "KDE4::kdeui" and still have all their
-    # dependent libraries handled correctly. But to keep compatibility and not to change
-    # behaviour we set all these variables anyway as seen below. Alex
+    # This makes setting the _LIBS variables actually a bit superfluos, since e.g. the kdeui
+    # library could now also be used just as "KDE4::kdeui" and still have all their dependent
+    # libraries handled correctly. But to keep compatibility and not to change behaviour we
+    # set all these variables anyway as seen below. Alex
     include(${kde_cmake_module_dir}/KDELibs4LibraryTargets.cmake)
 endif(_kdeBootStrapping)
 
-# Set the various KDE4_FOO_LIBRARY/LIBS variables.
-# In bootstrapping mode KDE4_TARGET_PREFIX is empty, so e.g. KDE4_KDECORE_LIBRARY
+# Set the various KDE4_FOO_LIBS variables.
+# In bootstrapping mode KDE4_TARGET_PREFIX is empty, so e.g. KDE4_KDECORE_LIBS
 # will be simply set to "kdecore".
 set(_kde_libraries
     kmediaplayer
@@ -363,11 +312,9 @@ set(_kde_libraries
 foreach(_lib ${_kde_libraries})
     string(TOUPPER ${_lib} _upperlib)
     if(_kdeBootStrapping)
-        set(KDE4_${_upperlib}_LIBRARY ${_lib})
-        set(KDE4_${_upperlib}_LIBS    ${_lib})
+        set(KDE4_${_upperlib}_LIBS ${_lib})
     else()
-        set(KDE4_${_upperlib}_LIBRARY ${KDE4_TARGET_PREFIX}${_lib})
-        set(KDE4_${_upperlib}_LIBS    ${KDE4_TARGET_PREFIX}${_lib})
+        set(KDE4_${_upperlib}_LIBS ${KDE4_TARGET_PREFIX}${_lib})
     endif()
 endforeach()
 
@@ -379,58 +326,47 @@ endif()
 
 #####################  some more settings   ##########################################
 
-# FIXME: this should not be needed
-macro(_set_fancy variable value)
-    set(${variable} "${value}")
-    set(${variable} "${value}" CACHE PATH "KDE standard path variable")
-    set(KDE4_${variable} "${value}")
-    set(KDE4_${variable} "${value}" CACHE PATH "KDE standard path variable")
-endmacro()
-
 # if bootstrap set the variablse now, otherwise they will be set by KDE4Config
 if(_kdeBootStrapping)
     include(GNUInstallDirs)
 
-    _set_fancy(EXEC_INSTALL_PREFIX  "${CMAKE_INSTALL_PREFIX}")
-    _set_fancy(SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_FULL_DATADIR}")
-    _set_fancy(BIN_INSTALL_DIR      "${CMAKE_INSTALL_FULL_BINDIR}")
-    _set_fancy(SBIN_INSTALL_DIR     "${CMAKE_INSTALL_FULL_SBINDIR}")
-    _set_fancy(LIB_INSTALL_DIR      "${CMAKE_INSTALL_FULL_LIBDIR}")
-    _set_fancy(LIBEXEC_INSTALL_DIR  "${CMAKE_INSTALL_FULL_LIBEXECDIR}/kde4")
-    _set_fancy(INCLUDE_INSTALL_DIR  "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+    set(KDE4_EXEC_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}" CACHE PATH "KDE installation prefix")
+    set(KDE4_SHARE_INSTALL_PREFIX "${CMAKE_INSTALL_FULL_DATADIR}" CACHE PATH "KDE shared data installation prefix")
+    set(KDE4_BIN_INSTALL_DIR "${CMAKE_INSTALL_FULL_BINDIR}" CACHE PATH "KDE binaries installation directory")
+    set(KDE4_SBIN_INSTALL_DIR "${CMAKE_INSTALL_FULL_SBINDIR}" CACHE PATH "KDE system binaries installation directory")
+    set(KDE4_LIB_INSTALL_DIR "${CMAKE_INSTALL_FULL_LIBDIR}" CACHE PATH "KDE libraries installation directory")
+    set(KDE4_LIBEXEC_INSTALL_DIR "${CMAKE_INSTALL_FULL_LIBEXECDIR}/kde4" CACHE PATH "KDE libraries executables installation directory")
+    set(KDE4_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_FULL_INCLUDEDIR}" CACHE PATH "KDE headers installation directory")
 
-    _set_fancy(PLUGIN_INSTALL_DIR       "${LIB_INSTALL_DIR}")
-    _set_fancy(IMPORTS_INSTALL_DIR      "${PLUGIN_INSTALL_DIR}/kde4/imports")
-    _set_fancy(CONFIG_INSTALL_DIR       "${SHARE_INSTALL_PREFIX}/config")
-    _set_fancy(DATA_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/apps")
-    _set_fancy(ICON_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/icons")
-    _set_fancy(KCFG_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/config.kcfg")
-    _set_fancy(LOCALE_INSTALL_DIR       "${CMAKE_INSTALL_FULL_LOCALEDIR}")
-    _set_fancy(MIME_INSTALL_DIR         "${SHARE_INSTALL_PREFIX}/mimelnk")
-    _set_fancy(SERVICES_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/kde4/services")
-    _set_fancy(SERVICETYPES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/kde4/servicetypes")
-    _set_fancy(SOUND_INSTALL_DIR        "${SHARE_INSTALL_PREFIX}/sounds")
-    _set_fancy(TEMPLATES_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/templates")
-    _set_fancy(WALLPAPER_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/wallpapers")
-    _set_fancy(AUTOSTART_INSTALL_DIR    "${SHARE_INSTALL_PREFIX}/autostart")
+    set(KDE4_PLUGIN_INSTALL_DIR "${KDE4_LIB_INSTALL_DIR}" CACHE PATH "KDE plugins installation directory")
+    set(KDE4_IMPORTS_INSTALL_DIR "${KDE4_PLUGIN_INSTALL_DIR}/kde4/imports" CACHE PATH "KDE imports installation directory")
+    set(KDE4_CONFIG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config" CACHE PATH "KDE config installation directory")
+    set(KDE4_DATA_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/apps" CACHE PATH "KDE data installation directory")
+    set(KDE4_ICON_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/icons" CACHE PATH "KDE icon installation directory")
+    set(KDE4_KCFG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config.kcfg" CACHE PATH "KDE kcfg installation directory")
+    set(KDE4_LOCALE_INSTALL_DIR "${CMAKE_INSTALL_FULL_LOCALEDIR}" CACHE PATH "KDE locale installation directory")
+    set(KDE4_MIME_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/mimelnk" CACHE PATH "KDE mime installation directory")
+    set(KDE4_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/services" CACHE PATH "KDE services installation directory")
+    set(KDE4_SERVICETYPES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/servicetypes" CACHE PATH "KDE service types installation directory")
+    set(KDE4_SOUND_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/sounds" CACHE PATH "KDE sounds installation directory")
+    set(KDE4_TEMPLATES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/templates" CACHE PATH "KDE templates installation directory")
+    set(KDE4_WALLPAPER_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/wallpapers" CACHE PATH "KDE wallpapers installation directory")
+    set(KDE4_AUTOSTART_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/autostart" CACHE PATH "KDE autostart installation directory")
 
-    _set_fancy(XDG_APPS_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/applications/kde4")
-    _set_fancy(XDG_DIRECTORY_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/desktop-directories")
-    _set_fancy(XDG_MIME_INSTALL_DIR     "${SHARE_INSTALL_PREFIX}/mime/packages")
+    set(KDE4_XDG_APPS_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/applications/kde4" CACHE PATH "KDE XDG applications installation directory")
+    set(KDE4_XDG_DIRECTORY_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/desktop-directories" CACHE PATH "KDE XDG directories installation directory")
+    set(KDE4_XDG_MIME_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/mime/packages" CACHE PATH "KDE XDG MIME packages installation directory")
 
-    _set_fancy(SYSCONF_INSTALL_DIR      "${CMAKE_INSTALL_FULL_SYSCONFDIR}")
-    _set_fancy(MAN_INSTALL_DIR          "${CMAKE_INSTALL_FULL_MANDIR}")
-    _set_fancy(INFO_INSTALL_DIR         "${CMAKE_INSTALL_FULL_INFODIR}")
-    _set_fancy(DBUS_INTERFACES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/interfaces")
-    _set_fancy(DBUS_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/services")
-    _set_fancy(DBUS_SYSTEM_SERVICES_INSTALL_DIR "${SHARE_INSTALL_PREFIX}/dbus-1/system-services")
+    set(KDE4_SYSCONF_INSTALL_DIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}" CACHE PATH "KDE system config installation directory")
+    set(KDE4_DBUS_INTERFACES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/interfaces" CACHE PATH "KDE dbus interfaces installation directory")
+    set(KDE4_DBUS_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/services" CACHE PATH "KDE D-Bus services installation directory")
+    set(KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/system-services" CACHE PATH "KDE D-Bus system services installation directory")
 
-    _set_fancy(KAUTH_HELPER_PLUGIN_DIR  "${PLUGIN_INSTALL_DIR}/kde4/plugins/kauth/helper")
-    _set_fancy(KAUTH_BACKEND_PLUGIN_DIR "${PLUGIN_INSTALL_DIR}/kde4/plugins/kauth/backend")
+    set(KDE4_KAUTH_HELPER_PLUGIN_DIR "${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/kauth/helper" CACHE PATH "KDE authorization helper installation directory")
+    set(KDE4_KAUTH_BACKEND_PLUGIN_DIR "${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/kauth/backend" CACHE PATH "KDE authorization backend installation directory")
 endif()
 
 # For more documentation see above.
-# Later on it will be possible to extend this for installing OSX frameworks
 # The COMPONENT Devel argument has the effect that static libraries belong to the
 # "Devel" install component. If we use this also for all install() commands
 # for header files, it will be possible to install

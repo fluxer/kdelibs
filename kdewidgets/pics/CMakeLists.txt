@@ -39,5 +39,5 @@ install(
     kactionselector.png
     kdatetable.png
     kdatetimewidget.png
-    DESTINATION ${DATA_INSTALL_DIR}/kdewidgets/pics
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdewidgets/pics
 )

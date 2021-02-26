@@ -23,7 +23,7 @@ if ( NOT PolkitQt-1_FIND_VERSION AND POLKITQT-1_MIN_VERSION )
 endif ( NOT PolkitQt-1_FIND_VERSION AND POLKITQT-1_MIN_VERSION )
 
 set( _PolkitQt-1_FIND_QUIETLY  ${PolkitQt-1_FIND_QUIETLY} )
-find_package( PolkitQt-1 ${PolkitQt-1_FIND_VERSION} QUIET NO_MODULE PATHS ${LIB_INSTALL_DIR}/PolkitQt-1/cmake )
+find_package( PolkitQt-1 ${PolkitQt-1_FIND_VERSION} QUIET NO_MODULE PATHS ${KDE4_LIB_INSTALL_DIR}/PolkitQt-1/cmake )
 set( PolkitQt-1_FIND_QUIETLY ${_PolkitQt-1_FIND_QUIETLY} )
 
 include( FindPackageHandleStandardArgs )

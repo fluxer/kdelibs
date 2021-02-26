@@ -44,7 +44,7 @@ endif()
 
 install(
     TARGETS kded_proxyscout
-    DESTINATION ${PLUGIN_INSTALL_DIR}
+    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
 )
 
 ########### next target ###############
@@ -62,7 +62,7 @@ endif()
 
 install(
     TARGETS kpac_dhcp_helper
-    DESTINATION ${LIBEXEC_INSTALL_DIR}
+    DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR}
 )
 
 ########### install files ###############
@@ -70,11 +70,11 @@ install(
 install(
     FILES
     proxyscout.notifyrc
-    DESTINATION ${DATA_INSTALL_DIR}/proxyscout
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/proxyscout
 )
 install(
     FILES
     proxyscout.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kded
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/kded
 )
 

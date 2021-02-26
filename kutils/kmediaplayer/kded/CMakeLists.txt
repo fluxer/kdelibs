@@ -12,17 +12,17 @@ target_link_libraries(kded_kaudioplayer ${KDE4_KMEDIAPLAYER_LIBS})
 
 install(
     TARGETS kded_kaudioplayer
-    DESTINATION ${PLUGIN_INSTALL_DIR}
+    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
 )
 
 install(
     FILES kaudioplayer.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/kded
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/kded
 )
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kaudioplayer.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 

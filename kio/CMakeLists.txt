@@ -252,7 +252,7 @@ install(
 install(
     FILES
     data.protocol
-    DESTINATION ${SERVICES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )
 
 install(
@@ -269,7 +269,7 @@ install(
     kio/kfilewrite.desktop
     kio/kfileitemactionplugin.desktop
     kfile/kiofilemodule.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
 generate_export_header(kio)
@@ -312,7 +312,7 @@ install(
     kio/skipdialog.h
     kio/udsentry.h
     kssl/sslui.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kio
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kio
     COMPONENT Devel
 )
 
@@ -380,7 +380,7 @@ install(
     bookmarks/kbookmarkdombuilder.h
     bookmarks/konqbookmarkmenu.h
     bookmarks/kbookmarkdialog.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
@@ -389,12 +389,12 @@ install(
     kio/org.kde.KDirNotify.xml
     kio/org.kde.kio.FileUndoManager.xml
     kio/org.kde.KPasswdServer.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 
 install(
     FILES
     kio/accept-languages.codes
-    DESTINATION ${CONFIG_INSTALL_DIR}
+    DESTINATION ${KDE4_CONFIG_INSTALL_DIR}
 )

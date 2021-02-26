@@ -37,23 +37,23 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kimproxy_export.h
     kimproxy.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
 install(
     FILES
     dbusinstantmessenger.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 install(
     FILES
     kcm_instantmessenger.desktop
-    DESTINATION ${DATA_INSTALL_DIR}/kcm_componentchooser
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kcm_componentchooser
 )
 
 install(
     FILES
     org.kde.KIMIface.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )

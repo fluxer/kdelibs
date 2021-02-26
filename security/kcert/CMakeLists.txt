@@ -14,15 +14,15 @@ target_link_libraries(kcertpart ${KDE4_KPARTS_LIBS})
 
 install(
     TARGETS kcertpart
-    DESTINATION ${PLUGIN_INSTALL_DIR}
+    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
 )
 
 install(
     FILES kcertpart.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )
 
 install(
     FILES kcertpart.rc
-    DESTINATION ${DATA_INSTALL_DIR}/kcertpart
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kcertpart
 )

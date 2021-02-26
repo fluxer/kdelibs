@@ -24,4 +24,4 @@ target_link_libraries(QProcessJob
     ${QT_QTGUI_LIBRARY}
 )
 
-install(TARGETS QProcessJob DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS QProcessJob DESTINATION ${KDE4_BIN_INSTALL_DIR})

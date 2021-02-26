@@ -57,6 +57,6 @@ install(
     DependencyPolicy.h
     ResourceRestrictionPolicy.h
     QueuePolicy.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/threadweaver
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/threadweaver
     COMPONENT Devel
 )

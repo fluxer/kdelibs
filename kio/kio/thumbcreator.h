@@ -64,8 +64,8 @@
  * kde4_add_plugin(filetypethumbnail ${filetypethumbnail_SRCS})
  * target_link_libraries(filetypethumbnail ${KDE4_KIO_LIBS})
  *
- * install(TARGETS filetypethumbnail DESTINATION ${PLUGIN_INSTALL_DIR})
- * install(FILES filetypethumbcreator.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+ * install(TARGETS filetypethumbnail DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
+ * install(FILES filetypethumbcreator.desktop DESTINATION ${KDE4_SERVICES_INSTALL_DIR})
  *
  * \endcode
  *

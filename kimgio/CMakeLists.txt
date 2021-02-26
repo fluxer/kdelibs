@@ -36,12 +36,12 @@ if(JASPER_FOUND)
 
     install(
         TARGETS kimg_jp2
-        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
     install(
         FILES
         jp2.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
     )
 endif(JASPER_FOUND)
 
@@ -61,11 +61,11 @@ if(OPENEXR_FOUND)
 
     install(
         TARGETS kimg_exr
-        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
     install(
         FILES exr.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
     )
 endif(OPENEXR_FOUND)
 
@@ -82,17 +82,17 @@ if(WEBP_FOUND)
 
     install(
         TARGETS kimg_webp
-        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
     install(
         FILES
         webp.desktop
         x-webp.desktop
-        DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
     )
 
-    install(FILES webp.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
-    update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+    install(FILES webp.xml DESTINATION ${KDE4_XDG_MIME_INSTALL_DIR})
+    update_xdg_mimetypes(${KDE4_XDG_MIME_INSTALL_DIR})
 endif(WEBP_FOUND)
 
 ##################################
@@ -116,7 +116,7 @@ foreach(plugin ${imgioplugins})
     )
     install(
         TARGETS kimg_${plugin}
-        DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
 endforeach()
 
@@ -137,7 +137,7 @@ target_link_libraries(kimg_pic
 
 install(
     TARGETS kimg_pic
-    DESTINATION ${PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
+    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
 )
 
 ########### install files ###############
@@ -154,12 +154,12 @@ install(
     psd.desktop
     hdr.desktop
     pic.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}/qimageioplugins
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
 )
 
 install(
     FILES qimageio_plugin.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
 

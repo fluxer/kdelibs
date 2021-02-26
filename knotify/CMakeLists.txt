@@ -50,6 +50,6 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/knotifyconfig_export.h
     knotifyconfigwidget.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )

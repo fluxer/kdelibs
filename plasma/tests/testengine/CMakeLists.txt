@@ -16,5 +16,5 @@ target_link_libraries(plasma_engine_testengine
     ${KDE4_PLASMA_LIBS}
 )
 
-install(TARGETS plasma_engine_testengine DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES plasma-dataengine-testengine.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+install(TARGETS plasma_engine_testengine DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
+install(FILES plasma-dataengine-testengine.desktop DESTINATION ${KDE4_SERVICES_INSTALL_DIR})

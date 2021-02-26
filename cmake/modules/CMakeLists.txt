@@ -1,6 +1,6 @@
 ## install the cmake files
 
-set(module_install_dir ${DATA_INSTALL_DIR}/cmake/modules)
+set(module_install_dir ${CMAKE_DATA_INSTALL_DIR}/cmake/modules)
 
 # maybe FindHUNSPELL.cmake doesn't have to be installed ?
 # This variable doesn't actually do anything, but it's probably a good idea
@@ -26,7 +26,6 @@ set(cmakeFiles
     FindENCHANT.cmake
     FindEPub.cmake
     FindExiv2.cmake
-    FindFFmpeg.cmake
     FindFFmpegThumbnailer.cmake
     FindFLAC++.cmake
     FindFontconfig.cmake

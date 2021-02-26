@@ -54,7 +54,7 @@ install(
     FILES
     kdeclarative.h
     ${CMAKE_CURRENT_BINARY_DIR}/kdeclarative_export.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 

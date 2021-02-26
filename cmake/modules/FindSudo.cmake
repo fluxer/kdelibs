@@ -6,7 +6,7 @@
 #
 
 find_program(SUDO_EXECUTABLE NAMES sudo
-    HINTS ${BIN_INSTALL_DIR}
+    HINTS ${KDE4_BIN_INSTALL_DIR}
     DOC "sudo -- execute a command as another user"
 )
 

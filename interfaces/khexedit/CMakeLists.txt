@@ -7,11 +7,11 @@ install(
     charcolumninterface.h
     zoominterface.h
     clipboardinterface.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/khexedit
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/khexedit
 )
 
 install(
     FILES
     kbytesedit.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )

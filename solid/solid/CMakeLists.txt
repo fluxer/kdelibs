@@ -311,7 +311,7 @@ install(
     org.kde.Solid.PowerManagement.PolicyAgent.xml
     org.freedesktop.PowerManagement.xml
     org.freedesktop.PowerManagement.Inhibit.xml
-    DESTINATION ${DBUS_INTERFACES_INSTALL_DIR}
+    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
 ########### install files ###############
@@ -349,6 +349,6 @@ install(
     smartcardreader.h
     internetgateway.h
     networkshare.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/solid
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid
     COMPONENT Devel
 )

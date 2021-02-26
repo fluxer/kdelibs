@@ -42,7 +42,7 @@ kde4_add_plugin(spellcheckplugin plugin_spellcheck.cpp)
 
 target_link_libraries(spellcheckplugin ${KDE4_KPARTS_LIBS})
 
-install(TARGETS spellcheckplugin DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS spellcheckplugin DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 
 ########### next target ###############
 
@@ -52,7 +52,7 @@ target_link_libraries(notepadpart ${KDE4_KPARTS_LIBS})
 
 target_compile_definitions(notepadpart PRIVATE -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/")
 
-install(TARGETS notepadpart DESTINATION ${PLUGIN_INSTALL_DIR})
+install(TARGETS notepadpart DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 
 ########### unit tests ###############
 
@@ -77,10 +77,10 @@ KPARTS_UNIT_TESTS(
 ########### install files ###############
 
 # Normally this would be needed. For the test programs we can avoid that, see addResourceDir.
-#install( FILES notepadpart.rc  DESTINATION  ${DATA_INSTALL_DIR}/notepadpart )
-#install( FILES partviewer_shell.rc  DESTINATION  ${DATA_INSTALL_DIR}/partviewer )
-#install( FILES kpartstest_shell.rc  DESTINATION  ${DATA_INSTALL_DIR}/kpartstest )
-#install( FILES kpartstest_part1.rc  DESTINATION  ${DATA_INSTALL_DIR}/kpartstestpart )
+#install( FILES notepadpart.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/notepadpart )
+#install( FILES partviewer_shell.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/partviewer )
+#install( FILES kpartstest_shell.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/kpartstest )
+#install( FILES kpartstest_part1.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/kpartstestpart )
 
 # To test plugins without installing them, try "ln -s kpartplugins <srcdir>"
-#install( FILES plugin_foobar.rc plugin_spellcheck.rc  DESTINATION  ${DATA_INSTALL_DIR}/notepadpart/kpartplugins )
+#install( FILES plugin_foobar.rc plugin_spellcheck.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/notepadpart/kpartplugins )

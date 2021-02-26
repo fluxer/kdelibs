@@ -35,7 +35,7 @@ set_target_properties(kemoticons PROPERTIES
 install(
     FILES
     kemoticons/kemoticonsTheme.desktop
-    DESTINATION ${SERVICETYPES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
 generate_export_header(kemoticons)
@@ -46,7 +46,7 @@ install(
     kemoticons/kemoticons.h
     kemoticons/kemoticonstheme.h
     kemoticons/kemoticonsprovider.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
@@ -113,7 +113,7 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kidletime_export.h
     kidletime/kidletime.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
@@ -163,7 +163,7 @@ install(
     kcmoduleproxy.h
     kpluginselector.h
     kcmodulecontainer.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 
@@ -172,7 +172,7 @@ install(
     ksettings/dispatcher.h
     ksettings/dialog.h
     ksettings/pluginpage.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/ksettings
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/ksettings
     COMPONENT Devel
 )
 
@@ -203,7 +203,7 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kprintutils_export.h
     kprintpreview.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
 

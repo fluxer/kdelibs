@@ -413,7 +413,7 @@ install(
     KPty
     KPtyDevice
     KPtyProcess
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE
     COMPONENT Devel
 )
 
@@ -428,7 +428,7 @@ install(
     DNSSD/ServiceBrowser
     DNSSD/ServiceModel
     DNSSD/ServiceTypeBrowser
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/DNSSD
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/DNSSD
     COMPONENT Devel
 )
 
@@ -436,7 +436,7 @@ install(
     FILES
     KAccelGen/Deref
     KAccelGen/Deref_Key
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KAccelGen
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KAccelGen
     COMPONENT Devel
 )
 
@@ -446,7 +446,7 @@ install( FILES
     KHE/ClipboardInterface
     KHE/ValueColumnInterface
     KHE/ZoomInterface
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KHE
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KHE
     COMPONENT Devel
 )
 
@@ -490,7 +490,7 @@ install(
     KIO/TCPSlaveBase
     KIO/Task
     KIO/TransferJob
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KIO
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KIO
     COMPONENT Devel
 )
 
@@ -520,7 +520,7 @@ install(
     KParts/StatusBarExtension
     KParts/TextExtension
     KParts/WindowArgs
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KParts
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KParts
     COMPONENT Devel
 )
 
@@ -548,7 +548,7 @@ install(
     Kross/Script
     Kross/ScriptingPlugin
     Kross/WrapperInterface
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Kross
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Kross
     COMPONENT Devel
 )
 
@@ -558,7 +558,7 @@ install(
     KSettings/Dialog
     KSettings/Dispatcher
     KSettings/PluginPage
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KSettings
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KSettings
     COMPONENT Devel
 )
 
@@ -569,7 +569,7 @@ install(
 #    Sonnet/UnicodeData
 #    Sonnet/TextBreaks
 #    Sonnet/Spell
-#    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Sonnet
+#    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Sonnet
 #    COMPONENT Devel
 #)
 
@@ -614,7 +614,7 @@ install(
     KTextEditor/TextHintInterface
     KTextEditor/VariableInterface
     KTextEditor/View
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KTextEditor
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KTextEditor
     COMPONENT Devel
 )
 
@@ -622,7 +622,7 @@ install(
 install(
     FILES
     KWallet/Wallet
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KWallet
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KWallet
     COMPONENT Devel
 )
 
@@ -652,7 +652,7 @@ install(
     Solid/StorageAccess
     Solid/StorageDrive
     Solid/StorageVolume
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Solid
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Solid
     COMPONENT Devel
 )
 
@@ -664,7 +664,7 @@ install(
     Sonnet/Dialog
     Sonnet/DictionaryComboBox
     Sonnet/Highlighter
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Sonnet
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Sonnet
     COMPONENT Devel
 )
 
@@ -674,7 +674,7 @@ install(
     KAuth/ActionReply
     KAuth/ActionWatcher
     KAuth/HelperSupport
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KAuth
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KAuth
     COMPONENT Devel
 )
 
@@ -691,7 +691,7 @@ install(
     ThreadWeaver/Weaver
     ThreadWeaver/WeaverInterface
     ThreadWeaver/WeaverObserver
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/ThreadWeaver
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/ThreadWeaver
     COMPONENT Devel
 )
 
@@ -767,7 +767,7 @@ install(
     Plasma/Wallpaper
     Plasma/WallpaperScript
     Plasma/WindowEffects
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/Plasma
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Plasma
     COMPONENT Devel
 )
 
@@ -778,6 +778,6 @@ install(
     KUnitConversion/Unit
     KUnitConversion/UnitCategory
     KUnitConversion/Value
-    DESTINATION ${INCLUDE_INSTALL_DIR}/KDE/KUnitConversion
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KUnitConversion
     COMPONENT Devel
 )

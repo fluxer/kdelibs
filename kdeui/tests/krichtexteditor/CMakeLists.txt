@@ -14,8 +14,8 @@ set(krichtexteditorSources
 add_executable(krichtexteditor ${krichtexteditorSources})
 target_link_libraries(krichtexteditor ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS})
 
-install(TARGETS krichtexteditor DESTINATION ${BIN_INSTALL_DIR})
-install(FILES krichtexteditorui.rc DESTINATION ${DATA_INSTALL_DIR}/krichtexteditor)
+install(TARGETS krichtexteditor DESTINATION ${KDE4_BIN_INSTALL_DIR})
+install(FILES krichtexteditorui.rc DESTINATION ${KDE4_DATA_INSTALL_DIR}/krichtexteditor)
 
 
 

@@ -122,7 +122,7 @@ install(
     servicemodel.h
     domainmodel.h
     ${CMAKE_CURRENT_BINARY_DIR}/settings.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/dnssd
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/dnssd
     COMPONENT Devel
 )
 

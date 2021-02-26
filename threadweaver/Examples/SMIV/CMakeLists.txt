@@ -30,4 +30,4 @@ target_link_libraries(SMIV
     ThreadWeaverExperimental
 )
 
-install(TARGETS SMIV DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS SMIV DESTINATION ${KDE4_BIN_INSTALL_DIR})

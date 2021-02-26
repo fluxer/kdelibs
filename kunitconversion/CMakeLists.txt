@@ -96,7 +96,7 @@ install(
     unit.h
     unitcategory.h
     ${CMAKE_CURRENT_BINARY_DIR}/kunitconversion_export.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kunitconversion
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kunitconversion
     COMPONENT Devel
 )
 

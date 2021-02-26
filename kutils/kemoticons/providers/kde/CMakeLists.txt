@@ -17,10 +17,10 @@ target_link_libraries(emoticonstheme_kde
 
 install(
     TARGETS emoticonstheme_kde
-    DESTINATION ${PLUGIN_INSTALL_DIR}
+    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
 )
 
 install(
     FILES emoticonstheme_kde.desktop
-    DESTINATION ${SERVICES_INSTALL_DIR}
+    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )

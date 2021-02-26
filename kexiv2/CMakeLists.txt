@@ -68,6 +68,6 @@ configure_file(
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc
-    DESTINATION ${LIB_INSTALL_DIR}/pkgconfig
+    DESTINATION ${KDE4_LIB_INSTALL_DIR}/pkgconfig
 )
 

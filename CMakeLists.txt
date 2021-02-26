@@ -293,7 +293,7 @@ configure_file(KDE4Version.cmake ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake @
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/kdemacros.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
 )
 
 # the following will be the correct locations once cmake has the improved
@@ -302,20 +302,20 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/KDE4Version.cmake
-    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/modules
 )
 
 install(
     EXPORT kdelibsLibraryTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4LibraryTargets.cmake
-    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/modules
 )
 install(
     EXPORT kdelibsToolsTargets
     NAMESPACE ${KDE4_TARGET_PREFIX}
     FILE KDELibs4ToolsTargets.cmake
-    DESTINATION ${DATA_INSTALL_DIR}/cmake/modules
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/cmake/modules
 )
 
 feature_summary(WHAT ALL

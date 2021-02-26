@@ -27,5 +27,5 @@ FILE(GLOB icmfiles *.icm *.icc)
 INSTALL(
     FILES
     ${icmfiles}
-    DESTINATION ${DATA_INSTALL_DIR}/libkdcraw/profiles
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/libkdcraw/profiles
 )

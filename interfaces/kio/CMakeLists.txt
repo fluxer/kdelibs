@@ -1,5 +1,5 @@
 install(
     FILES
     http.h
-    DESTINATION ${INCLUDE_INSTALL_DIR}/kio
+    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kio
 )
