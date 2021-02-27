@@ -280,7 +280,6 @@ add_subdirectory( kutils )
 add_subdirectory( licenses )
 add_subdirectory( mimetypes )
 add_subdirectory( plasma )
-add_subdirectory( security )
 add_subdirectory( solid )
 add_subdirectory( threadweaver )
 

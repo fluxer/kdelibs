@@ -4,11 +4,6 @@ if(NOT Strigi_FOUND)
     set(KIO_NO_STRIGI TRUE)
 endif()
 
-if(OPENSSL_FOUND)
-    set(KSSL_HAVE_SSL 1)
-    include_directories(${OPENSSL_INCLUDE_DIR})
-endif()
-
 # This applies to all subdirs; let's put kio's dependencies (and own dirs) here, once and for all
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/bookmarks
