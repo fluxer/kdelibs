@@ -29,9 +29,10 @@
 
 #include <stdlib.h>
 #include <locale.h>
-#include "gettext.h"
 
-// not defined on win32 :(
+#ifdef HAVE_LIBINTL
+#  include <libintl.h>
+#endif
 
 static char *langenv = 0;
 static const int langenvMaxlen = 42;
@@ -43,13 +44,16 @@ class KCatalogPrivate
 {
 public:
     KCatalogPrivate()
+#ifdef HAVE_LIBINTL
         : bindDone(false)
+#endif
     {}
 
   QByteArray language;
   QByteArray name;
   QByteArray localeDir;
 
+#ifdef HAVE_LIBINTL
   QByteArray systemLanguage;
   bool bindDone;
 
@@ -57,6 +61,7 @@ public:
 
   void setupGettextEnv ();
   void resetSystemLanguage ();
+#endif
 };
 
 QDebug operator<<(QDebug debug, const KCatalog &c)
@@ -64,7 +69,9 @@ QDebug operator<<(QDebug debug, const KCatalog &c)
   return debug << c.d->language << " " << c.d->name << " " << c.d->localeDir;
 }
 
+#ifdef HAVE_LIBINTL
 QByteArray KCatalogPrivate::currentLanguage;
+#endif
 
 KCatalog::KCatalog(const QString & name, const QString & language )
   : d( new KCatalogPrivate )
@@ -78,6 +85,7 @@ KCatalog::KCatalog(const QString & name, const QString & language )
   d->name = QFile::encodeName( name );
   d->localeDir = QFile::encodeName( localeDir );
 
+#ifdef HAVE_LIBINTL
   // Always get translations in UTF-8, regardless of user's environment.
   bind_textdomain_codeset( d->name, "UTF-8" );
 
@@ -92,6 +100,7 @@ KCatalog::KCatalog(const QString & name, const QString & language )
     snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", lang.constData());
     putenv(langenv);
   }
+#endif
 }
 
 KCatalog::KCatalog(const KCatalog & rhs)
@@ -135,7 +144,7 @@ QString KCatalog::localeDir() const
   return QFile::decodeName(d->localeDir);
 }
 
-
+#ifdef HAVE_LIBINTL
 void KCatalogPrivate::setupGettextEnv ()
 {
   // Point Gettext to current language, recording system value for recovery.
@@ -173,80 +182,125 @@ void KCatalogPrivate::resetSystemLanguage ()
     snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", systemLanguage.constData());
   }
 }
+#endif
 
 QString KCatalog::translate(const char * msgid) const
 {
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
   const char *msgstr = dgettext(d->name, msgid);
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
+#else
+  return QString::fromUtf8(msgid);
+#endif
 }
 
 QString KCatalog::translate(const char * msgctxt, const char * msgid) const
 {
+  Q_UNUSED(msgctxt);
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dpgettext_expr(d->name, msgctxt, msgid);
+  const char *msgstr = dgettext(d->name, msgid);
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
+#else
+  return QString::fromUtf8(msgid);
+#endif
 }
 
 QString KCatalog::translate(const char * msgid, const char * msgid_plural,
                             unsigned long n) const
 {
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
   const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
+#else
+  return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
+#endif
 }
 
 QString KCatalog::translate(const char * msgctxt, const char * msgid,
                             const char * msgid_plural, unsigned long n) const
 {
+  Q_UNUSED(msgctxt);
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dnpgettext_expr(d->name, msgctxt, msgid, msgid_plural, n);
+  const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
+#else
+  return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
+#endif
 }
 
 QString KCatalog::translateStrict(const char * msgid) const
 {
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
   const char *msgstr = dgettext(d->name, msgid);
   d->resetSystemLanguage();
   return msgstr != msgid ? QString::fromUtf8(msgstr) : QString();
+#else
+  Q_UNUSED(msgid);
+  return QString();
+#endif
 }
 
 QString KCatalog::translateStrict(const char * msgctxt, const char * msgid) const
 {
+  Q_UNUSED(msgctxt);
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dpgettext_expr(d->name, msgctxt, msgid);
+  const char *msgstr = dgettext(d->name, msgid);
   d->resetSystemLanguage();
   return msgstr != msgid ? QString::fromUtf8(msgstr) : QString();
+#else
+  Q_UNUSED(msgid);
+  return QString();
+#endif
 }
 
 QString KCatalog::translateStrict(const char * msgid, const char * msgid_plural,
                                   unsigned long n) const
 {
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
   const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
   d->resetSystemLanguage();
   return msgstr != msgid && msgstr != msgid_plural ? QString::fromUtf8(msgstr) : QString();
+#else
+  Q_UNUSED(msgid);
+  Q_UNUSED(msgid_plural);
+  Q_UNUSED(n);
+  return QString();
+#endif
 }
 
 QString KCatalog::translateStrict(const char * msgctxt, const char * msgid,
                                   const char * msgid_plural, unsigned long n) const
 {
+  Q_UNUSED(msgctxt);
+#ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dnpgettext_expr(d->name, msgctxt, msgid, msgid_plural, n);
+  const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
   d->resetSystemLanguage();
   return msgstr != msgid && msgstr != msgid_plural ? QString::fromUtf8(msgstr) : QString();
+#else
+  Q_UNUSED(msgid);
+  Q_UNUSED(msgid_plural);
+  Q_UNUSED(n);
+  return QString();
+#endif
 }
 

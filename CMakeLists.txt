@@ -110,6 +110,7 @@ set_package_properties(Libintl PROPERTIES
     TYPE RECOMMENDED
     PURPOSE "Enables KDE to be available in many different languages"
 )
+macro_bool_to_01(Libintl_FOUND HAVE_LIBINTL)
 
 macro_optional_find_package(DBusMenuQt)
 set_package_properties(DBusMenuQt PROPERTIES
