@@ -248,15 +248,6 @@ void KToolInvocation::invokeHelp( const QString& anchor,
         url.addQueryItem(QString::fromLatin1("anchor"), anchor);
     }
 
-#warning launch a KDE browser for URIs that require KIO slave support
-/*
-    // launch a KDE browser for URIs that require KIO slave support
-    // (following KCMultiDialog::slotHelpClicked())
-    if (url.protocol() == QLatin1String("help") || url.protocol() == QLatin1String("man") || url.protocol() == QLatin1String("info")) {
-        invokeBrowser(url.url());
-        return;
-    }
-*/
     invokeBrowser(url.url());
 }
 

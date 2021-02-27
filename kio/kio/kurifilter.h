@@ -172,7 +172,6 @@ public:
      * @li LocalFile    - A local file whose executable flag is not set
      * @li LocalDir     - A local directory
      * @li Executable   - A local file whose executable flag is set
-     * @li Help         - A man or info page
      * @li Shell        - A shell executable (ex: echo "Test..." >> ~/testfile)
      * @li Blocked      - A URI that should be blocked/filtered (ex: ad filtering)
      * @li Error        - An incorrect URI (ex: "~johndoe" when user johndoe
@@ -180,7 +179,7 @@ public:
      * @li Unknown      - A URI that is not identified. Default value when
      *                    a KUriFilterData is first created.
      */
-    enum UriTypes { NetProtocol=0, LocalFile, LocalDir, Executable, Help, Shell, Blocked, Error, Unknown };
+    enum UriTypes { NetProtocol=0, LocalFile, LocalDir, Executable, Shell, Blocked, Error, Unknown };
 
     /**
       * This enum describes the search filtering options to be used.

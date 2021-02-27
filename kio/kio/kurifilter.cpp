@@ -71,11 +71,6 @@ static QString lookupIconNameFor(const KUrl &url, KUriFilterData::UriTypes type)
                 iconName = QLatin1String("system-run");
             break;
         }
-        case KUriFilterData::Help:
-        {
-            iconName = QLatin1String("khelpcenter");
-            break;
-        }
         case KUriFilterData::Shell:
         {
             iconName = QLatin1String("konsole");
