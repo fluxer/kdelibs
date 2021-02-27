@@ -30,15 +30,9 @@ inline KFileSystemType::Type kde_typeFromName(const char *name)
         || qstrncmp(name, "fuse.sshfs", 10) == 0
         || qstrncmp(name, "xtreemfs@", 9) == 0) // #178678
         return KFileSystemType::Nfs;
-    if (qstrncmp(name, "fat", 3) == 0
-        || qstrncmp(name, "vfat", 4) == 0
-        || qstrncmp(name, "msdos", 5) == 0)
-        return KFileSystemType::Fat;
     if (qstrncmp(name, "cifs", 4) == 0
         || qstrncmp(name, "smbfs", 5) == 0)
         return KFileSystemType::Smb;
-    if (qstrncmp(name, "ramfs", 5) == 0)
-        return KFileSystemType::Ramfs;
 
     return KFileSystemType::Other;
 }
@@ -51,7 +45,7 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
 {
     struct statfs buf;
     if (statfs(path.constData(), &buf) != 0)
-        return KFileSystemType::Unknown;
+        return KFileSystemType::Other;
     return kde_typeFromName(buf.f_fstypename);
 }
 
@@ -69,17 +63,11 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
 # ifndef AUTOFS_SUPER_MAGIC
 #  define AUTOFS_SUPER_MAGIC    0x00000187
 # endif
-# ifndef MSDOS_SUPER_MAGIC
-#  define MSDOS_SUPER_MAGIC     0x00004d44
-# endif
 # ifndef SMB_SUPER_MAGIC
 #  define SMB_SUPER_MAGIC       0x0000517B
 #endif
 # ifndef FUSE_SUPER_MAGIC
 #  define FUSE_SUPER_MAGIC     0x65735546
-# endif
-# ifndef RAMFS_MAGIC
-#  define RAMFS_MAGIC          0x858458F6
 # endif
 
 // Reverse-engineering without C++ code:
@@ -90,7 +78,7 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
     struct statfs buf;
     if (statfs(path.constData(), &buf) != 0) {
         //kDebug() << path << errno << strerror(errno);
-        return KFileSystemType::Unknown;
+        return KFileSystemType::Other;
     }
 
     // TODO could be anything. Need to use statfs() to find out more.
@@ -98,10 +86,6 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
         return KFileSystemType::Nfs;
     } else if (buf.f_type == SMB_SUPER_MAGIC) {
         return KFileSystemType::Smb;
-    } else if (buf.f_type == MSDOS_SUPER_MAGIC) {
-        return KFileSystemType::Fat;
-    } else if (buf.f_type == RAMFS_MAGIC) {
-        return KFileSystemType::Ramfs;
     }
     return KFileSystemType::Other;
 }
@@ -113,7 +97,7 @@ KFileSystemType::Type determineFileSystemTypeImpl(const QByteArray& path)
 {
     struct statvfs buf;
     if (statvfs(path.constData(), &buf) != 0)
-        return KFileSystemType::Unknown;
+        return KFileSystemType::Other;
 #if defined(Q_OS_NETBSD)
     return kde_typeFromName(buf.f_fstypename);
 #else
