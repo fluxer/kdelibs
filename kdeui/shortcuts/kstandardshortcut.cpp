@@ -319,9 +319,7 @@ StandardShortcut find(const char *keyName)
 
 KShortcut hardcodedDefaultShortcut(StandardShortcut id)
 {
-    KShortcut cut;
     KStandardShortcutInfo *info = guardedStandardShortcutInfo(id);
-
     return KShortcut(info->cutDefault, info->cutDefault2);
 }
 
