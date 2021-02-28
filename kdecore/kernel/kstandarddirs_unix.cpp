@@ -30,8 +30,8 @@ QString KStandardDirs::installPath(const char *type)
     switch (type[0]) {
         case 'a':
             if (strcmp("apps", type) == 0)
-                kDebug() << "obsolete apps directory query";
-            // FALLTROUGH
+                kWarning() << "obsolete apps directory query";
+            break;
         case 'c':
             if (strcmp("config", type) == 0)
                 return QFile::decodeName(CONFIG_INSTALL_DIR "/");
