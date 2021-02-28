@@ -326,7 +326,7 @@ endif()
 
 #####################  some more settings   ##########################################
 
-# if bootstrap set the variablse now, otherwise they will be set by KDE4Config
+# if bootstrap set the variables now, otherwise they will be set by KDE4Config
 if(_kdeBootStrapping)
     include(GNUInstallDirs)
 
@@ -345,7 +345,6 @@ if(_kdeBootStrapping)
     set(KDE4_ICON_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/icons" CACHE PATH "KDE icon installation directory")
     set(KDE4_KCFG_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/config.kcfg" CACHE PATH "KDE kcfg installation directory")
     set(KDE4_LOCALE_INSTALL_DIR "${CMAKE_INSTALL_FULL_LOCALEDIR}" CACHE PATH "KDE locale installation directory")
-    set(KDE4_MIME_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/mimelnk" CACHE PATH "KDE mime installation directory")
     set(KDE4_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/services" CACHE PATH "KDE services installation directory")
     set(KDE4_SERVICETYPES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/kde4/servicetypes" CACHE PATH "KDE service types installation directory")
     set(KDE4_SOUND_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/sounds" CACHE PATH "KDE sounds installation directory")
@@ -358,7 +357,7 @@ if(_kdeBootStrapping)
     set(KDE4_XDG_MIME_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/mime/packages" CACHE PATH "KDE XDG MIME packages installation directory")
 
     set(KDE4_SYSCONF_INSTALL_DIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}" CACHE PATH "KDE system config installation directory")
-    set(KDE4_DBUS_INTERFACES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/interfaces" CACHE PATH "KDE dbus interfaces installation directory")
+    set(KDE4_DBUS_INTERFACES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/interfaces" CACHE PATH "KDE D-Bus interfaces installation directory")
     set(KDE4_DBUS_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/services" CACHE PATH "KDE D-Bus services installation directory")
     set(KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR "${KDE4_SHARE_INSTALL_PREFIX}/dbus-1/system-services" CACHE PATH "KDE D-Bus system services installation directory")
 

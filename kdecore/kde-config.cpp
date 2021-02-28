@@ -125,7 +125,6 @@ int main(int argc, char **argv)
         const char *helptexts[] = {
             "autostart", I18N_NOOP("Autostart directories"),
             "cache", I18N_NOOP("Cached information (e.g. favicons, web-pages)"),
-            "cgi", I18N_NOOP("CGIs to run from kdehelp"),
             "config", I18N_NOOP("Configuration files"),
             "data", I18N_NOOP("Where applications store data"),
             "emoticons", I18N_NOOP("Emoticons"),
@@ -136,7 +135,6 @@ int main(int argc, char **argv)
             "lib", I18N_NOOP("Libraries"),
             "include", I18N_NOOP("Includes/Headers"),
             "locale", I18N_NOOP("Translation files for KLocale"),
-            "mime", I18N_NOOP("Mime types"),
             "module", I18N_NOOP("Loadable modules"),
             "pixmap", I18N_NOOP("Legacy pixmaps"),
             "qtplugins", I18N_NOOP("Qt plugins"),
