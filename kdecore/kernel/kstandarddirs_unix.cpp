@@ -95,6 +95,8 @@ QString KStandardDirs::installPath(const char *type)
                 return QFile::decodeName(XDG_APPS_INSTALL_DIR "/");
             if (strcmp("xdgdata-dirs", type) == 0)
                 return QFile::decodeName(XDG_DIRECTORY_INSTALL_DIR "/");
+            if (strcmp("xdgdata-mime", type) == 0)
+                return QFile::decodeName(XDG_MIME_INSTALL_DIR "/");
             break;
     }
     return QString();
