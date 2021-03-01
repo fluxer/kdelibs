@@ -268,7 +268,7 @@ void KJob::setProcessedAmount(Unit unit, qulonglong amount)
         emit processedAmount(this, unit, amount);
         if (unit==d->progressUnit) {
             emit processedSize(this, amount);
-            emitPercent(d->processedAmount[unit], d->totalAmount[unit]);
+            emitPercent(amount, d->totalAmount[unit]);
         }
     }
 }
@@ -282,7 +282,7 @@ void KJob::setTotalAmount(Unit unit, qulonglong amount)
         emit totalAmount(this, unit, amount);
         if (unit==d->progressUnit) {
             emit totalSize(this, amount);
-            emitPercent(d->processedAmount[unit], d->totalAmount[unit]);
+            emitPercent(d->processedAmount[unit], amount);
         }
     }
 }
