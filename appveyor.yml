@@ -29,16 +29,6 @@ build_script:
 
     cd build
 
-    cmake ../ -Wno-dev -DENABLE_TESTING=ON
+    cmake ../ -Wno-dev
 
     make -j $(nproc || echo 1)
-
-test_script:
-- sh: >-
-    Xvfb :123 &
-
-    export DISPLAY=:123
-
-    cd build
-
-    ctest -V
