@@ -257,9 +257,9 @@ public:
 CopyJob::CopyJob(CopyJobPrivate &dd)
     : Job(dd)
 {
+    qRegisterMetaType<KIO::UDSEntry>("KIO::UDSEntry");
     setProperty("destUrl", d_func()->m_dest.url());
     QTimer::singleShot(0, this, SLOT(slotStart()));
-    qRegisterMetaType<KIO::UDSEntry>("KIO::UDSEntry");
 }
 
 CopyJob::~CopyJob()
