@@ -65,7 +65,7 @@ KIO_EXPORT QString KIO::number( KIO::filesize_t size )
 {
     char charbuf[256];
     sprintf(charbuf, "%lld", size);
-    return QLatin1String(charbuf);
+    return QString::fromLatin1(charbuf);
 }
 
 KIO_EXPORT unsigned int KIO::calculateRemainingSeconds( KIO::filesize_t totalSize,
