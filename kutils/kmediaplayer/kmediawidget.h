@@ -22,6 +22,7 @@
 #include <QWidget>
 #include <QMainWindow>
 #include <QMouseEvent>
+
 #include <kmediaplayer_export.h>
 #include <kmediaplayer.h>
 

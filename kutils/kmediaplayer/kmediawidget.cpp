@@ -16,16 +16,16 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kicon.h>
-#include <kmainwindow.h>
-#include <kstatusbar.h>
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QTimer>
 
+#include "kdebug.h"
+#include "klocale.h"
+#include "kicon.h"
+#include "kmainwindow.h"
+#include "kstatusbar.h"
 #include "kmediaplayer.h"
 #include "kmediawidget.h"
 #include "ui_kmediawidget.h"

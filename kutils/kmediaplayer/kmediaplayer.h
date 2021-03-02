@@ -19,12 +19,11 @@
 #ifndef KMEDIAPLAYER_H
 #define KMEDIAPLAYER_H
 
-#include "kmimetype.h"
-#include "kmediaplayer_export.h"
-
 #include <QWidget>
 #include <QEvent>
-#include <QSettings>
+
+#include <kmimetype.h>
+#include <kmediaplayer_export.h>
 
 class KAbstractPlayerPrivate;
 
