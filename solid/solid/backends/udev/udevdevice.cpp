@@ -184,8 +184,8 @@ QString UDevDevice::description() const
          * HACK: As Media player is very generic return the device product instead
          *       until we can return the Name.
          */
-        const PortableMediaPlayer *player = new PortableMediaPlayer(const_cast<UDevDevice *>(this));
-        if (player->supportedProtocols().contains("mtp")) {
+        const PortableMediaPlayer player(const_cast<UDevDevice *>(this));
+        if (player.supportedProtocols().contains("mtp")) {
             return product();
         } else {
             // TODO: check out special cases like iPod
