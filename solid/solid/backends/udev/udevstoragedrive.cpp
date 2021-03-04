@@ -62,7 +62,7 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
         return Solid::StorageDrive::CdromDrive;
     } else if (m_device->property("ID_DRIVE_FLOPPY").toInt() == 1) {
         return Solid::StorageDrive::Floppy;
-    // TODO: other types and remove this generic one
+    // TODO: other types and remove this generic check
     } else if (idbus == "usb") {
         return Solid::StorageDrive::CompactFlash;
 #if 0
