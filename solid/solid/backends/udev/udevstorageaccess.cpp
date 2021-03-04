@@ -20,6 +20,7 @@
 
 #include "udevstorageaccess.h"
 #include "kstandarddirs.h"
+#include "kmountpoint.h"
 
 #include <QProcess>
 #include <QCoreApplication>
@@ -47,56 +48,17 @@ StorageAccess::~StorageAccess()
 
 bool StorageAccess::isAccessible() const
 {
-    QFile mounts("/proc/mounts");
-    if (!mounts.open(QFile::ReadOnly)) {
-        qWarning() << "cannot open /proc/mounts";
-        return false;
-    }
-
-    const QString devpath = m_device->property("DEVNAME").toString();
-    const QString uuidpath = QLatin1String("/dev/disk/by-uuid/") + m_device->property("ID_FS_UUID").toString();
-    const QString labelpath = QLatin1String("/dev/disk/by-label/") + m_device->property("ID_FS_LABEL").toString();
-
-    while (true) {
-        const QString line = mounts.readLine();
-        const QString deviceentry = line.split(" ").at(0);
-
-        if (deviceentry == devpath || deviceentry == uuidpath || deviceentry == labelpath) {
-            return true;
-        }
-
-        if (mounts.atEnd()) {
-            break;
-        }
-    }
-
-    return false;
+    return !filePath().isEmpty();
 }
 
 QString StorageAccess::filePath() const
 {
-    QFile mounts("/proc/mounts");
-    if (!mounts.open(QFile::ReadOnly)) {
-        qWarning() << "cannot open /proc/mounts";
-        return QString();
-    }
-
     const QString devpath = m_device->property("DEVNAME").toString();
-    const QString uuidpath = QLatin1String("/dev/disk/by-uuid/") + m_device->property("ID_FS_UUID").toString();
-    const QString labelpath = QLatin1String("/dev/disk/by-label/") + m_device->property("ID_FS_LABEL").toString();
+    const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
 
-    while (true) {
-        const QString line = mounts.readLine();
-        const QStringList splitline = line.split(" ");
-        const QString deviceentry = splitline.at(0);
-
-        if (deviceentry == devpath || deviceentry == uuidpath || deviceentry == labelpath) {
-            return splitline.at(1);
-        }
-
-        if (mounts.atEnd()) {
-            break;
-        }
+    KMountPoint::Ptr found = mountpoints.findByDevice(devpath);
+    if (found) {
+        return found->mountPoint();
     }
 
     return QString();
