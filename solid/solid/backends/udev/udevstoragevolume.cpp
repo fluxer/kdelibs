@@ -66,17 +66,14 @@ Solid::StorageVolume::UsageType StorageVolume::usage() const
 
     if (idfsusage == "crypto") {
         return Solid::StorageVolume::Encrypted;
-    } else if (idfsusage == "swap") {
+    } else if (idfsusage == "other") {
         return Solid::StorageVolume::Other;
+    } else if (idfsusage == "raid") {
+        return Solid::StorageVolume::Raid;
     } else if (devtype == "partition") {
         return Solid::StorageVolume::FileSystem;
     } else if (devtype == "disk") {
         return Solid::StorageVolume::PartitionTable;
-    // TODO: how to detect it?
-#if 0
-    } else if (devtype == "raid") {
-        return Solid::StorageVolume::Raid;
-#endif
     } else {
         return Solid::StorageVolume::Unused;
     }
