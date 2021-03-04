@@ -136,7 +136,7 @@ bool StorageAccess::setup()
     }
 
     if (mountproc.exitCode() == 0) {
-        m_device->broadcastActionDone("setup", Solid::NoError, m_device->udi());
+        m_device->broadcastActionDone("setup", Solid::NoError, QString());
         emit accessibilityChanged(true, m_device->udi());
     } else {
         QString mounterror = mountproc.readAllStandardError();
@@ -168,7 +168,7 @@ bool StorageAccess::teardown()
     }
 
     if (umountproc.exitCode() == 0) {
-        m_device->broadcastActionDone("teardown", Solid::NoError, m_device->udi());
+        m_device->broadcastActionDone("teardown", Solid::NoError, QString());
         emit accessibilityChanged(false, m_device->udi());
     } else {
         QString umounterror = umountproc.readAllStandardError();
@@ -176,7 +176,7 @@ bool StorageAccess::teardown()
             umounterror = umountproc.readAllStandardOutput();
         }
         qWarning() << umounterror;
-        m_device->broadcastActionDone("teardown", Solid::UnauthorizedOperation, m_device->udi());
+        m_device->broadcastActionDone("teardown", Solid::UnauthorizedOperation, umounterror);
     }
 
     return (umountproc.exitCode() == 0);
