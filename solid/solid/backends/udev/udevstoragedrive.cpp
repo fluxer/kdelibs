@@ -60,12 +60,12 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
 
     if (idtype == "cd") {
         return Solid::StorageDrive::CdromDrive;
+    } else if (m_device->property("ID_DRIVE_FLOPPY").toInt() == 1) {
+        return Solid::StorageDrive::Floppy;
     // TODO: other types and remove this generic one
     } else if (idbus == "usb") {
         return Solid::StorageDrive::CompactFlash;
 #if 0
-    } else if (idtype == "floppy") {
-        return Solid::StorageDrive::Floppy;
     } else if (idtype == "flash_cf") {
         return Solid::StorageDrive::CompactFlash;
     } else if (idtype == "flash_ms") {

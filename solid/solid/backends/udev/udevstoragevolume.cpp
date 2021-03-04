@@ -74,7 +74,7 @@ Solid::StorageVolume::UsageType StorageVolume::usage() const
         return Solid::StorageVolume::PartitionTable;
     // TODO: how to detect it?
 #if 0
-    } else if (usage == "raid") {
+    } else if (devtype == "raid") {
         return Solid::StorageVolume::Raid;
 #endif
     } else {
