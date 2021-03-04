@@ -58,7 +58,7 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
     const QString idtype = m_device->property("ID_TYPE").toString();
     const QString idbus = m_device->property("ID_BUS").toString();
 
-    if (idtype == "cd") {
+    if (idtype == "cd" || m_device->property("ID_CDROM_MEDIA_CD").toInt() == 1) {
         return Solid::StorageDrive::CdromDrive;
     } else if (m_device->property("ID_DRIVE_FLOPPY").toInt() == 1) {
         return Solid::StorageDrive::Floppy;
