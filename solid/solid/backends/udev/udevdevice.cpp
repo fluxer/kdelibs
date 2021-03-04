@@ -21,6 +21,9 @@
 #include "udevdevice.h"
 
 #include "udevgenericinterface.h"
+#include "udevstoragedrive.h"
+#include "udevstoragevolume.h"
+#include "udevstorageaccess.h"
 #include "udevprocessor.h"
 #include "udevcamera.h"
 #include "udevvideo.h"
@@ -32,6 +35,8 @@
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
 #include "cpuinfo.h"
+#include "kglobal.h"
+#include "klocale.h"
 
 #include <sys/socket.h>
 #include <linux/if_arp.h>
@@ -127,9 +132,32 @@ QString UDevDevice::icon() const
 {
     if (parentUdi().isEmpty()) {
         return QLatin1String("computer");
-    }
+    } else if (queryDeviceInterface(Solid::DeviceInterface::StorageDrive)) {
+        const StorageDrive storageIface(const_cast<UDevDevice *>(this));
+        Solid::StorageDrive::DriveType drivetype = storageIface.driveType();
 
-    if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
+        if (drivetype == Solid::StorageDrive::HardDisk) {
+            return QLatin1String("drive-harddisk");
+        } else if (drivetype == Solid::StorageDrive::CdromDrive) {
+            return QLatin1String("drive-optical");
+        } else if (drivetype == Solid::StorageDrive::Floppy) {
+            return QLatin1String("media-floppy");
+        } else if (drivetype == Solid::StorageDrive::Tape) {
+            return QLatin1String("media-tape");
+        } else if (drivetype == Solid::StorageDrive::CompactFlash) {
+            return QLatin1String("drive-removable-media");
+        } else if (drivetype == Solid::StorageDrive::MemoryStick) {
+            return QLatin1String("media-flash-memory-stick");
+        } else if (drivetype == Solid::StorageDrive::SmartMedia) {
+            return QLatin1String("media-flash-smart-media");
+        } else if (drivetype == Solid::StorageDrive::SdMmc) {
+            return QLatin1String("media-flash-sd-mmc");
+        } else if (drivetype == Solid::StorageDrive::Xd) {
+            return QLatin1String("drive-removable-media");
+        }
+    } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
+        return QLatin1String("drive-harddisk");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QLatin1String("cpu");
     } else if (queryDeviceInterface(Solid::DeviceInterface::PortableMediaPlayer)) {
         // TODO: check out special cases like iPod
@@ -168,7 +196,18 @@ QString UDevDevice::icon() const
 
 QStringList UDevDevice::emblems() const
 {
-    return QStringList();
+    QStringList res;
+
+    if (queryDeviceInterface(Solid::DeviceInterface::StorageAccess)) {
+        const StorageAccess accessIface(const_cast<UDevDevice *>(this));
+        if (accessIface.isAccessible()) {
+            res << "emblem-mounted";
+        } else {
+            res << "emblem-unmounted";
+        }
+    }
+
+    return res;
 }
 
 QString UDevDevice::description() const
@@ -177,7 +216,41 @@ QString UDevDevice::description() const
         return QObject::tr("Computer");
     }
 
-    if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
+    if (queryDeviceInterface(Solid::DeviceInterface::StorageDrive)) {
+        const StorageDrive storageIface(const_cast<UDevDevice *>(this));
+        Solid::StorageDrive::DriveType drivetype = storageIface.driveType();
+        const QString storagesize = KGlobal::locale()->formatByteSize(storageIface.size());
+
+        if (drivetype == Solid::StorageDrive::HardDisk) {
+            return i18n("%1 Hard Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::CdromDrive) {
+            return i18n("%1 CD-ROM Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::Floppy) {
+            return i18n("%1 Floppy Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::Tape) {
+            return i18n("%1 Tape Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::CompactFlash) {
+            return i18n("%1 Compact Flash Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::MemoryStick) {
+            return i18n("%1 Memory Stick Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::SmartMedia) {
+            return i18n("%1 Smart Media Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::SdMmc) {
+            return i18n("%1 SD/MMC Drive", storagesize);
+        } else if (drivetype == Solid::StorageDrive::Xd) {
+            return i18n("%1 Xd Drive", storagesize);
+        }
+    } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
+        const StorageVolume storageIface(const_cast<UDevDevice *>(this));
+        QString desc = storageIface.label();
+        if (desc.isEmpty()) {
+            desc = storageIface.uuid();
+        }
+        if (desc.isEmpty()) {
+            desc = storageIface.property("DEVNAME").toString();
+        }
+        return desc;
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QObject::tr("Processor");
     } else if (queryDeviceInterface(Solid::DeviceInterface::PortableMediaPlayer)) {
         /*
@@ -213,6 +286,11 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     switch (type) {
     case Solid::DeviceInterface::GenericInterface:
         return true;
+
+    case Solid::DeviceInterface::StorageAccess:
+    case Solid::DeviceInterface::StorageDrive:
+    case Solid::DeviceInterface::StorageVolume:
+        return m_device.subsystem() == QLatin1String("block");
 
     case Solid::DeviceInterface::Processor:
         return property("DRIVER").toString() == "processor";
@@ -258,6 +336,15 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     switch (type) {
     case Solid::DeviceInterface::GenericInterface:
         return new GenericInterface(this);
+
+    case Solid::DeviceInterface::StorageAccess:
+        return new StorageAccess(this);
+
+    case Solid::DeviceInterface::StorageDrive:
+        return new StorageDrive(this);
+
+    case Solid::DeviceInterface::StorageVolume:
+        return new StorageVolume(this);
 
     case Solid::DeviceInterface::Processor:
         return new Processor(this);

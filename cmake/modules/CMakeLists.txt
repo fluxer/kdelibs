@@ -63,7 +63,6 @@ set(cmakeFiles
     FindOpenGLES.cmake
     FindPAM.cmake
     FindPCIUTILS.cmake
-    FindPolkitQt-1.cmake
     FindPopplerQt4.cmake
     FindQalculate.cmake
     FindQCA2.cmake
@@ -78,7 +77,6 @@ set(cmakeFiles
     FindSudo.cmake
     FindTaglib.cmake
     FindUDev.cmake
-    FindUDisks2.cmake
     FindLibUSB.cmake
     FindWebP.cmake
     FindX11_XCB.cmake

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Michael Zanetti <mzanetti@kde.org>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,18 +18,18 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDISKS2STORAGEVOLUME_H
-#define UDISKS2STORAGEVOLUME_H
+#ifndef UDEVSTORAGEVOLUME_H
+#define UDEVSTORAGEVOLUME_H
 
 #include <ifaces/storagevolume.h>
-#include "udisksblock.h"
+#include "udevblock.h"
 
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UDisks2
+namespace UDev
 {
 
 class StorageVolume: public Block, virtual public Solid::Ifaces::StorageVolume
@@ -38,7 +38,7 @@ class StorageVolume: public Block, virtual public Solid::Ifaces::StorageVolume
     Q_INTERFACES(Solid::Ifaces::StorageVolume)
 
 public:
-    StorageVolume(Device *device);
+    StorageVolume(UDevDevice *device);
     virtual ~StorageVolume();
 
     virtual QString encryptedContainerUdi() const;
@@ -54,4 +54,4 @@ public:
 }
 }
 
-#endif // UDISKS2STORAGEVOLUME_H
+#endif // UDEVSTORAGEVOLUME_H

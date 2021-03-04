@@ -1,6 +1,5 @@
 /*
-    Copyright 2010 Michael Zanetti <mzanetti@kde.org>
-    Copyright 2010-2012 Lukáš Tinkl <ltinkl@redhat.com>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,12 +18,13 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udisksstoragevolume.h"
-#include "udisks2.h"
+#include "udevstoragevolume.h"
+#include "udevdevice.h"
+#include "qdebug.h"
 
-using namespace Solid::Backends::UDisks2;
+using namespace Solid::Backends::UDev;
 
-StorageVolume::StorageVolume(Device *device)
+StorageVolume::StorageVolume(UDevDevice *device)
     : Block(device)
 {
 }
@@ -35,71 +35,55 @@ StorageVolume::~StorageVolume()
 
 QString StorageVolume::encryptedContainerUdi() const
 {
-    const QString path = m_device->prop("CryptoBackingDevice").value<QDBusObjectPath>().path();
-    if ( path.isEmpty() || path == "/")
-        return QString();
-    else
-        return path;
+    // encrypted devices are not support
+    return QString();
 }
 
 qulonglong StorageVolume::size() const
 {
-    return m_device->prop("Size").toULongLong();
+    return (m_device->property("ID_PART_ENTRY_SIZE").toULongLong() / 2 * 1024);
 }
 
 QString StorageVolume::uuid() const
 {
-    return m_device->prop("IdUUID").toString();
+    return m_device->property("ID_FS_UUID").toString();
 }
 
 QString StorageVolume::label() const
 {
-    QString label = m_device->prop("HintName").toString();
-    if (label.isEmpty())
-        label = m_device->prop("IdLabel").toString();
-    if (label.isEmpty())
-        label = m_device->prop("Name").toString();
-    return label;
+    return m_device->property("ID_FS_LABEL").toString();
 }
 
 QString StorageVolume::fsType() const
 {
-    return m_device->prop("IdType").toString();
+    return m_device->property("ID_FS_TYPE").toString();
 }
 
 Solid::StorageVolume::UsageType StorageVolume::usage() const
 {
-    const QString usage = m_device->prop("IdUsage").toString();
+    const QString devtype = m_device->property("DEVTYPE").toString();
+    const QString idfsusage = m_device->property("ID_FS_USAGE").toString();
 
-    if (m_device->hasInterface(UD2_DBUS_INTERFACE_FILESYSTEM))
-    {
-        return Solid::StorageVolume::FileSystem;
-    }
-    else if (m_device->isPartitionTable())
-    {
-        return Solid::StorageVolume::PartitionTable;
-    }
-    else if (usage == "raid")
-    {
-        return Solid::StorageVolume::Raid;
-    }
-    else if (m_device->isEncryptedContainer())
-    {
+    if (idfsusage == "crypto") {
         return Solid::StorageVolume::Encrypted;
-    }
-    else if (usage == "unused" || usage.isEmpty())
-    {
-        return Solid::StorageVolume::Unused;
-    }
-    else
-    {
+    } else if (idfsusage == "swap") {
         return Solid::StorageVolume::Other;
+    } else if (devtype == "partition") {
+        return Solid::StorageVolume::FileSystem;
+    } else if (devtype == "disk") {
+        return Solid::StorageVolume::PartitionTable;
+    // TODO: how to detect it?
+#if 0
+    } else if (usage == "raid") {
+        return Solid::StorageVolume::Raid;
+#endif
+    } else {
+        return Solid::StorageVolume::Unused;
     }
 }
 
 bool StorageVolume::isIgnored() const
 {
     const Solid::StorageVolume::UsageType usg = usage();
-    return m_device->prop("HintIgnore").toBool() || m_device->isSwap() ||
-            ((usg == Solid::StorageVolume::Unused || usg == Solid::StorageVolume::Other || usg == Solid::StorageVolume::PartitionTable) && !m_device->isOpticalDisc());
+    return (usg != Solid::StorageVolume::FileSystem);
 }

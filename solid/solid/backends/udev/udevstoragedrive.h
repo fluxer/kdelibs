@@ -1,6 +1,5 @@
 /*
-    Copyright 2009 Pino Toscano <pino@kde.org>
-    Copyright 2012 Lukáš Tinkl <ltinkl@redhat.com>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,35 +18,40 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udisksgenericinterface.h"
+#ifndef UDEVSTORAGEDRIVE_H
+#define UDEVSTORAGEDRIVE_H
 
-#include "udisksdevice.h"
+#include <ifaces/storagedrive.h>
 
-using namespace Solid::Backends::UDisks2;
+#include "../shared/udevqt.h"
 
-GenericInterface::GenericInterface(Device *device)
-    : DeviceInterface(device)
+#include "udevblock.h"
+
+namespace Solid
 {
-    connect(device, SIGNAL(propertyChanged(QMap<QString,int>)),
-            this, SIGNAL(propertyChanged(QMap<QString,int>)));
+namespace Backends
+{
+namespace UDev
+{
+
+class StorageDrive: public Block, virtual public Solid::Ifaces::StorageDrive
+{
+    Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::StorageDrive)
+
+public:
+    StorageDrive(UDevDevice *device);
+    virtual ~StorageDrive();
+
+    virtual qulonglong size() const;
+    virtual bool isHotpluggable() const;
+    virtual bool isRemovable() const;
+    virtual Solid::StorageDrive::DriveType driveType() const;
+    virtual Solid::StorageDrive::Bus bus() const;
+};
+
+}
+}
 }
 
-GenericInterface::~GenericInterface()
-{
-}
-
-QVariant GenericInterface::property(const QString &key) const
-{
-    return m_device->prop(key);
-}
-
-QVariantMap GenericInterface::allProperties() const
-{
-    return m_device->allProperties();
-}
-
-bool GenericInterface::propertyExists(const QString &key) const
-{
-    return m_device->propertyExists(key);
-}
-
+#endif // UDEVSTORAGEDRIVE_H

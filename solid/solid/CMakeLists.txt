@@ -159,14 +159,6 @@ set_package_properties(UDev PROPERTIES
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(UDisks2)
-set_package_properties(UDisks2 PROPERTIES
-    DESCRIPTION "UDisks2 support for Solid"
-    URL "http://www.freedesktop.org/wiki/Software/udisks/"
-    PURPOSE "Allows Solid to use UDisks2 to provide information about devices on Linux"
-    TYPE OPTIONAL
-)
-
 configure_file(
     config-solid.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h
@@ -208,6 +200,9 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
         backends/udev/udevdvbinterface.cpp
         backends/udev/udevblock.cpp
         backends/udev/udevbutton.cpp
+        backends/udev/udevstorageaccess.cpp
+        backends/udev/udevstoragevolume.cpp
+        backends/udev/udevstoragedrive.cpp
         backends/shared/udevqtclient.cpp
         backends/shared/udevqtdevice.cpp
     )
@@ -240,30 +235,8 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
                     Support for m-p-i is included even if not found during build"
                     )
 
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${UDEV_LIBS})
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${UDEV_LIBS})
 endif(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
-
-# FIXME: this should work on more Unix systems
-if(UDISKS2_FOUND)
-    message(STATUS "Building Solid UDisks2 backend." )
-    set(solid_LIB_SRCS
-        ${solid_LIB_SRCS}
-        backends/udisks2/udisksmanager.cpp
-        backends/udisks2/udisksdevice.cpp
-        backends/udisks2/udisksdevicebackend.cpp
-        backends/udisks2/udisksblock.cpp
-        backends/udisks2/udisksstoragevolume.cpp
-        backends/udisks2/udisksdeviceinterface.cpp
-        backends/udisks2/udisksopticaldisc.cpp
-        backends/udisks2/udisksopticaldrive.cpp
-        backends/udisks2/udisksstoragedrive.cpp
-        backends/udisks2/udisksstorageaccess.cpp
-        backends/udisks2/udisksgenericinterface.cpp
-        backends/udisks2/dbus/manager.cpp
-    )
-    # for the localizations
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS})
-endif(UDISKS2_FOUND)
 
 set_source_files_properties(
     org.freedesktop.PowerManagement.xml

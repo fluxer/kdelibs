@@ -21,4 +21,3 @@
 #cmakedefine UDEV_FOUND
 #cmakedefine01 UDEV_HAVE_GET_SYSATTR_LIST_ENTRY
 #cmakedefine HUPNP_FOUND
-#cmakedefine UDISKS2_FOUND

@@ -53,6 +53,7 @@ public:
 UDevManager::Private::Private()
 {
     QStringList subsystems;
+    subsystems << "block";
     subsystems << "processor";
     subsystems << "cpu";
     subsystems << "sound";
@@ -97,6 +98,10 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
     qDebug() << "Subsystem:" << device.subsystem();
     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 #endif
+    if (device.subsystem() == QLatin1String("block")) {
+        return !device.deviceProperty("ID_FS_TYPE").toString().isEmpty();
+    }
+
     if (device.driver() == QLatin1String("processor")) {
         // Linux ACPI reports processor slots, rather than processors.
         // Empty slots will not have a system device associated with them.
@@ -180,7 +185,10 @@ UDevManager::UDevManager(QObject *parent)
                              << Solid::DeviceInterface::DvbInterface
                              << Solid::DeviceInterface::Block
                              << Solid::DeviceInterface::Video
-                             << Solid::DeviceInterface::Button;
+                             << Solid::DeviceInterface::Button
+                             << Solid::DeviceInterface::StorageAccess
+                             << Solid::DeviceInterface::StorageDrive
+                             << Solid::DeviceInterface::StorageVolume;
 }
 
 UDevManager::~UDevManager()
