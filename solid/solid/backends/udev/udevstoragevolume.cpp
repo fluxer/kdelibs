@@ -35,7 +35,8 @@ StorageVolume::~StorageVolume()
 
 QString StorageVolume::encryptedContainerUdi() const
 {
-    // encrypted devices are not support
+    // encrypted devices are not support, even getmntent() (used by
+    // KMountPoint) ignores these
     return QString();
 }
 
