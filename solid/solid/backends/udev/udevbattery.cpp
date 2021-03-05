@@ -159,4 +159,5 @@ void Battery::slotEmitSignals(const UdevQt::Device &device)
         }
     }
 }
+
 #include "moc_udevbattery.cpp"

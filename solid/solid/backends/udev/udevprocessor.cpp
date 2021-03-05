@@ -22,7 +22,6 @@
 
 #include "udevdevice.h"
 #include "cpuinfo.h"
-#include "../shared/cpufeatures.h"
 
 #include <QtCore/QFile>
 
@@ -33,7 +32,6 @@ Processor::Processor(UDevDevice *device)
       m_canChangeFrequency(NotChecked),
       m_maxSpeed(-1)
 {
-
 }
 
 Processor::~Processor()
@@ -91,9 +89,35 @@ bool Processor::canChangeFrequency() const
 
 Solid::Processor::InstructionSets Processor::instructionSets() const
 {
-    static Solid::Processor::InstructionSets cpuextensions = Solid::Backends::Shared::cpuFeatures();
+    static QStringList cpuflags = extractCpuInfoLine(m_device->deviceNumber(), "flags\\s+:\\s+(\\S.+)").split(" ");
 
-    return cpuextensions;
+    // for reference:
+    // arch/x86/include/asm/cpufeatures.h
+    // arch/powerpc/kernel/prom.c
+    Solid::Processor::InstructionSets cpuinstructions = Solid::Processor::NoExtensions;
+    if (cpuflags.contains("mmx")) {
+        cpuinstructions |= Solid::Processor::IntelMmx;
+    }
+    if (cpuflags.contains("sse")) {
+        cpuinstructions |= Solid::Processor::IntelSse;
+    }
+    if (cpuflags.contains("sse2")) {
+        cpuinstructions |= Solid::Processor::IntelSse2;
+    }
+    if (cpuflags.contains("pni") || cpuflags.contains("ssse3")) {
+        cpuinstructions |= Solid::Processor::IntelSse3;
+    }
+    if (cpuflags.contains("sse4") || cpuflags.contains("sse4_1") || cpuflags.contains("sse4_2")) {
+        cpuinstructions |= Solid::Processor::IntelSse4;
+    }
+    if (cpuflags.contains("3dnow") || cpuflags.contains("3dnowext")) {
+        cpuinstructions |= Solid::Processor::Amd3DNow;
+    }
+    if (cpuflags.contains("altivec")) {
+        cpuinstructions |= Solid::Processor::AltiVec;
+    }
+
+    return cpuinstructions;
 }
 
 QString Processor::prefix() const

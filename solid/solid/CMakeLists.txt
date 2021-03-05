@@ -7,36 +7,6 @@ include_directories(
     ${QT_QTGUI_INCLUDE_DIR}
 )
 
-include (CheckCXXSourceCompiles)
-check_cxx_source_compiles("
-int main() { __asm__(\"pxor %mm0, %mm0\") ; }"
-    HAVE_X86_MMX
-)
-
-check_cxx_source_compiles("
-int main() { __asm__(\"xorps %xmm0, %xmm0\"); }"
-    HAVE_X86_SSE
-)
-
-check_cxx_source_compiles("
-int main() { __asm__(\"xorpd %xmm0, %xmm0\"); }"
-    HAVE_X86_SSE2
-)
-
-check_cxx_source_compiles("
-int main() { __asm__(\"femms\"); }"
-    HAVE_X86_3DNOW
-)
-check_cxx_source_compiles("
-int main() { __asm__(\"mtspr 256, %0; vand %%v0, %%v0, %%v0\" : : \"r\"(-1) ); }"
-    HAVE_PPC_ALTIVEC
-)
-
-configure_file(
-    config-processor.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/config-processor.h
-)
-
 ########### next target ###############
 
 make_directory(${CMAKE_CURRENT_BINARY_DIR}/backends/fakehw)
@@ -127,7 +97,6 @@ set(solid_LIB_SRCS
     backends/fakehw/fakesmartcardreader.cpp
 
     backends/shared/rootdevice.cpp
-    backends/shared/cpufeatures.cpp
 
     backends/fstab/fstabmanager.cpp
     backends/fstab/fstabdevice.cpp
