@@ -27,22 +27,22 @@ using namespace Solid::Backends::UDev;
 // linux/drivers/power/supply/power_supply_sysfs.c
 // include/linux/power_supply.h
 
-static const QStringList powerSupplySubSystems = QStringList() << QLatin1String("power_suply");
+static const QStringList powersupplysubsystems = QStringList() << QLatin1String("power_suply");
 
 Battery::Battery(UDevDevice *device)
     : DeviceInterface(device),
-    m_client(new UdevQt::Client(powerSupplySubSystems)),
-    m_chargePercent(0),
+    m_client(new UdevQt::Client(powersupplysubsystems)),
+    m_chargepercent(0),
     m_capacity(0),
-    m_chargeState(Solid::Battery::NoCharge),
-    m_isPowerSupply(false),
-    m_isPlugged(false)
+    m_chargestate(Solid::Battery::NoCharge),
+    m_ispowersupply(false),
+    m_isplugged(false)
 {
-    m_chargePercent = chargePercent();
+    m_chargepercent = chargePercent();
     m_capacity = capacity();
-    m_chargeState = chargeState();
-    m_isPlugged = isPlugged();
-    m_isPowerSupply = isPowerSupply();
+    m_chargestate = chargeState();
+    m_ispowersupply = isPowerSupply();
+    m_isplugged = isPlugged();
 
     QObject::connect(m_client, SIGNAL(deviceChanged(UdevQt::Device)),
         this, SLOT(slotEmitSignals(UdevQt::Device)));
@@ -128,34 +128,34 @@ Solid::Battery::ChargeState Battery::chargeState() const
 void Battery::slotEmitSignals(const UdevQt::Device &device)
 {
     if (device.sysfsPath() == m_device->deviceName()) {
-        const int previousChargePercent = m_chargePercent;
-        m_chargePercent = chargePercent();
-        if (previousChargePercent != m_chargePercent) {
-            emit chargePercentChanged(m_chargePercent, m_device->udi());
+        const int previouschargepercent = m_chargepercent;
+        m_chargepercent = chargePercent();
+        if (previouschargepercent != m_chargepercent) {
+            emit chargePercentChanged(m_chargepercent, m_device->udi());
         }
 
-        const int previousCapacity = m_capacity;
+        const int previouscapacity = m_capacity;
         m_capacity = capacity();
-        if (previousCapacity != m_capacity) {
+        if (previouscapacity != m_capacity) {
             emit capacityChanged(m_capacity, m_device->udi());
         }
 
-        const Solid::Battery::ChargeState previousChargeState = m_chargeState;
-        m_chargeState = chargeState();
-        if (previousChargeState != m_chargeState) {
-            emit chargeStateChanged(m_chargeState, m_device->udi());
+        const Solid::Battery::ChargeState previouschargestate = m_chargestate;
+        m_chargestate = chargeState();
+        if (previouschargestate != m_chargestate) {
+            emit chargeStateChanged(m_chargestate, m_device->udi());
         }
 
-        const bool previousPlugged = m_isPlugged;
-        m_isPlugged = isPlugged();
-        if (previousPlugged != m_isPlugged) {
-            emit plugStateChanged(m_isPlugged, m_device->udi());
+        const bool previousispowersupply = m_ispowersupply;
+        m_ispowersupply = isPowerSupply();
+        if (previousispowersupply != m_ispowersupply) {
+            emit powerSupplyStateChanged(m_ispowersupply, m_device->udi());
         }
 
-        const bool previousPowerSupply = m_isPowerSupply;
-        m_isPowerSupply = isPowerSupply();
-        if (previousPowerSupply != m_isPowerSupply) {
-            emit powerSupplyStateChanged(m_isPowerSupply, m_device->udi());
+        const bool previousplugged = m_isplugged;
+        m_isplugged = isPlugged();
+        if (previousplugged != m_isplugged) {
+            emit plugStateChanged(m_isplugged, m_device->udi());
         }
     }
 }

@@ -62,11 +62,11 @@ private Q_SLOTS:
 
 private:
     UdevQt::Client *m_client;
-    int m_chargePercent;
+    int m_chargepercent;
     int m_capacity;
-    Solid::Battery::ChargeState m_chargeState;
-    bool m_isPowerSupply;
-    bool m_isPlugged;
+    Solid::Battery::ChargeState m_chargestate;
+    bool m_ispowersupply;
+    bool m_isplugged;
 };
 }
 }

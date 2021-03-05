@@ -50,7 +50,7 @@ private Q_SLOTS:
 
 private:
     UdevQt::Client *m_client;
-    bool m_isPlugged;
+    bool m_isplugged;
 };
 }
 }

@@ -22,14 +22,14 @@
 
 using namespace Solid::Backends::UDev;
 
-static const QStringList powerSupplySubSystems = QStringList() << QLatin1String("power_suply");
+static const QStringList powersupplysubsystems = QStringList() << QLatin1String("power_suply");
 
 AcAdapter::AcAdapter(UDevDevice *device)
     : DeviceInterface(device),
-    m_client(new UdevQt::Client(powerSupplySubSystems)),
-    m_isPlugged(false)
+    m_client(new UdevQt::Client(powersupplysubsystems)),
+    m_isplugged(false)
 {
-    m_isPlugged = isPlugged();
+    m_isplugged = isPlugged();
 
     QObject::connect(m_client, SIGNAL(deviceChanged(UdevQt::Device)),
         this, SLOT(slotEmitSignals(UdevQt::Device)));
@@ -48,10 +48,10 @@ bool AcAdapter::isPlugged() const
 void AcAdapter::slotEmitSignals(const UdevQt::Device &device)
 {
     if (device.sysfsPath() == m_device->deviceName()) {
-        bool wasPlugged = m_isPlugged;
-        m_isPlugged = isPlugged();
-        if (wasPlugged != m_isPlugged) {
-            emit plugStateChanged(m_isPlugged, m_device->udi());
+        bool previousplugged = m_isplugged;
+        m_isplugged = isPlugged();
+        if (previousplugged != m_isplugged) {
+            emit plugStateChanged(m_isplugged, m_device->udi());
         }
     }
 }
