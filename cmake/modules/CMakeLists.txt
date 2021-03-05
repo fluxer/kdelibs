@@ -71,6 +71,7 @@ set(cmakeFiles
     FindSane.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
+    FindStrigi.cmake
     FindSCIM.cmake
     FindSpeechd.cmake
     FindSqlite.cmake
