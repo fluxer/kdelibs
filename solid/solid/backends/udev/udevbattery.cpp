@@ -44,6 +44,7 @@ Battery::Battery(UDevDevice *device)
 
 Battery::~Battery()
 {
+    m_client->deleteLater();
 }
 
 bool Battery::isPlugged() const
