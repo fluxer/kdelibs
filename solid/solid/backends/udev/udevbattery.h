@@ -1,6 +1,5 @@
 /*
-    Copyright 2009 Pino Toscano <pino@kde.org>
-    Copyright 2010 Lukas Tinkl <ltinkl@redhat.com>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,17 +18,17 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UPOWER_BATTERY_H
-#define SOLID_BACKENDS_UPOWER_BATTERY_H
+#ifndef UDEVBATTERY_H
+#define UDEVBATTERY_H
 
 #include <solid/ifaces/battery.h>
-#include "upowerdeviceinterface.h"
+#include "udevdeviceinterface.h"
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UPower
+namespace UDev
 {
 class Battery : public DeviceInterface, virtual public Solid::Ifaces::Battery
 {
@@ -37,7 +36,7 @@ class Battery : public DeviceInterface, virtual public Solid::Ifaces::Battery
     Q_INTERFACES(Solid::Ifaces::Battery)
 
 public:
-    Battery(UPowerDevice *device);
+    Battery(UDevDevice *device);
     virtual ~Battery();
 
     virtual bool isPlugged() const;
@@ -51,8 +50,6 @@ public:
 
     virtual Solid::Battery::ChargeState chargeState() const;
 
-    // TODO report stuff like technology, time-to-full, time-to-empty, energy rates, vendor, etc.
-
 Q_SIGNALS:
     void chargePercentChanged(int value, const QString &udi);
     void capacityChanged(int value, const QString &udi);
@@ -61,19 +58,18 @@ Q_SIGNALS:
     void powerSupplyStateChanged(bool newState, const QString &udi);
 
 private Q_SLOTS:
-    void slotChanged();
+    void slotEmitSignals(const UdevQt::Device &device);
 
 private:
-    void updateCache();
-
-    bool m_isPlugged;
+    UdevQt::Client *m_client;
     int m_chargePercent;
     int m_capacity;
     Solid::Battery::ChargeState m_chargeState;
     bool m_isPowerSupply;
+    bool m_isPlugged;
 };
 }
 }
 }
 
-#endif // SOLID_BACKENDS_UPOWER_BATTERY_H
+#endif // UDEVBATTERY_H

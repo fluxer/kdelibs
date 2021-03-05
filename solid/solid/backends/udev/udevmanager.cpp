@@ -52,17 +52,18 @@ public:
 
 UDevManager::Private::Private()
 {
-    QStringList subsystems;
-    subsystems << "block";
-    subsystems << "processor";
-    subsystems << "cpu";
-    subsystems << "sound";
-    subsystems << "tty";
-    subsystems << "dvb";
-    subsystems << "video4linux";
-    subsystems << "net";
-    subsystems << "usb";
-    subsystems << "input";
+    static const QStringList subsystems = QStringList()
+        << "block"
+        << "power_supply"
+        << "processor"
+        << "cpu"
+        << "sound"
+        << "tty"
+        << "dvb"
+        << "video4linux"
+        << "net"
+        << "usb"
+        << "input";
     m_client = new UdevQt::Client(subsystems);
 }
 
@@ -100,6 +101,10 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
 #endif
     if (device.subsystem() == QLatin1String("block")) {
         return !device.deviceProperty("ID_FS_TYPE").toString().isEmpty();
+    }
+
+    if (device.subsystem() == QLatin1String("power_supply")) {
+        return true;
     }
 
     if (device.driver() == QLatin1String("processor")) {
@@ -176,6 +181,11 @@ UDevManager::UDevManager(QObject *parent)
     connect(d->m_client, SIGNAL(deviceRemoved(UdevQt::Device)), this, SLOT(slotDeviceRemoved(UdevQt::Device)));
 
     d->m_supportedInterfaces << Solid::DeviceInterface::GenericInterface
+                             << Solid::DeviceInterface::StorageAccess
+                             << Solid::DeviceInterface::StorageDrive
+                             << Solid::DeviceInterface::StorageVolume
+                             << Solid::DeviceInterface::AcAdapter
+                             << Solid::DeviceInterface::Battery
                              << Solid::DeviceInterface::Processor
                              << Solid::DeviceInterface::AudioInterface
                              << Solid::DeviceInterface::NetworkInterface
@@ -185,10 +195,7 @@ UDevManager::UDevManager(QObject *parent)
                              << Solid::DeviceInterface::DvbInterface
                              << Solid::DeviceInterface::Block
                              << Solid::DeviceInterface::Video
-                             << Solid::DeviceInterface::Button
-                             << Solid::DeviceInterface::StorageAccess
-                             << Solid::DeviceInterface::StorageDrive
-                             << Solid::DeviceInterface::StorageVolume;
+                             << Solid::DeviceInterface::Button;
 }
 
 UDevManager::~UDevManager()

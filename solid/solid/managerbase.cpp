@@ -25,7 +25,6 @@
 
 #include "backends/fakehw/fakemanager.h"
 #include "backends/fstab/fstabmanager.h"
-#include "backends/upower/upowermanager.h"
 
 #if defined (UDEV_FOUND) && defined(Q_OS_LINUX)
 #include "backends/udev/udevmanager.h"
@@ -52,7 +51,6 @@ void Solid::ManagerBasePrivate::loadBackends()
         m_backends << new Solid::Backends::Fake::FakeManager(0, solidFakeXml);
     } else {
         m_backends << new Solid::Backends::Fstab::FstabManager(0);
-        m_backends << new Solid::Backends::UPower::UPowerManager(0);
 
 #       if defined(UDEV_FOUND) && defined(Q_OS_LINUX)
             m_backends << new Solid::Backends::UDev::UDevManager(0);

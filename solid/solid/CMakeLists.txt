@@ -135,13 +135,6 @@ set(solid_LIB_SRCS
     backends/fstab/fstabstorageaccess.cpp
     backends/fstab/fstabhandling.cpp
     backends/fstab/fstabwatcher.cpp
-
-    backends/upower/upowermanager.cpp
-    backends/upower/upowerdevice.cpp
-    backends/upower/upowerbattery.cpp
-    backends/upower/upoweracadapter.cpp
-    backends/upower/upowerdeviceinterface.cpp
-    backends/upower/upowergenericinterface.cpp
 )
 
 macro_optional_find_package(HUpnp)
@@ -179,7 +172,7 @@ if(HUPNP_FOUND)
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
 endif()
 
-# FIXME: this should may work on BSD with some adjustments
+# FIXME: this may work on BSD with some adjustments
 if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
     message(STATUS "Building Solid UDev backend." )
     set(solid_LIB_SRCS ${solid_LIB_SRCS}
@@ -203,6 +196,8 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
         backends/udev/udevstorageaccess.cpp
         backends/udev/udevstoragevolume.cpp
         backends/udev/udevstoragedrive.cpp
+        backends/udev/udevbattery.cpp
+        backends/udev/udevacadapter.cpp
         backends/shared/udevqtclient.cpp
         backends/shared/udevqtdevice.cpp
     )

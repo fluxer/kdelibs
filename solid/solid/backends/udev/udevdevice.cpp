@@ -25,6 +25,8 @@
 #include "udevstoragevolume.h"
 #include "udevstorageaccess.h"
 #include "udevprocessor.h"
+#include "udevacadapter.h"
+#include "udevbattery.h"
 #include "udevcamera.h"
 #include "udevvideo.h"
 #include "udevportablemediaplayer.h"
@@ -157,6 +159,10 @@ QString UDevDevice::icon() const
         }
     } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
         return QLatin1String("drive-harddisk");
+    } if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
+        return QLatin1String("preferences-system-power-management");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Battery)) {
+        return QLatin1String("battery");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QLatin1String("cpu");
     } else if (queryDeviceInterface(Solid::DeviceInterface::PortableMediaPlayer)) {
@@ -250,6 +256,24 @@ QString UDevDevice::description() const
             desc = storageIface.property("DEVNAME").toString();
         }
         return desc;
+    } else if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
+        return QObject::tr("A/C Adapter");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Battery)) {
+        const QString powersupplytechnology = property("POWER_SUPPLY_TECHNOLOGY").toString();
+        if (powersupplytechnology == QLatin1String("NiMH")) {
+            return QObject::tr("Nickel Metal Hydride Battery");
+        } else if (powersupplytechnology == QLatin1String("Li-ion")) {
+            return QObject::tr("Lithium Ion Battery");
+        } else if (powersupplytechnology == QLatin1String("Li-poly")) {
+            return QObject::tr("Lithium Polymer Battery");
+        } else if (powersupplytechnology == QLatin1String("LiFe")) {
+            return QObject::tr("Lithium Iron Disulfide Battery");
+        } else if (powersupplytechnology == QLatin1String("NiCd")) {
+            return QObject::tr("Nickel Cadmium Battery");
+        } else if (powersupplytechnology == QLatin1String("LiMn")) {
+            return QObject::tr("Lithium Manganese Dioxide Battery");
+        }
+        return QObject::tr("Unknown Battery");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QObject::tr("Processor");
     } else if (queryDeviceInterface(Solid::DeviceInterface::PortableMediaPlayer)) {
@@ -291,6 +315,10 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::StorageDrive:
     case Solid::DeviceInterface::StorageVolume:
         return m_device.subsystem() == QLatin1String("block");
+
+    case Solid::DeviceInterface::AcAdapter:
+    case Solid::DeviceInterface::Battery:
+        return m_device.subsystem() == QLatin1String("power_supply");
 
     case Solid::DeviceInterface::Processor:
         return property("DRIVER").toString() == "processor";
@@ -345,6 +373,12 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
 
     case Solid::DeviceInterface::StorageVolume:
         return new StorageVolume(this);
+
+    case Solid::DeviceInterface::AcAdapter:
+        return new AcAdapter(this);
+
+    case Solid::DeviceInterface::Battery:
+        return new Battery(this);
 
     case Solid::DeviceInterface::Processor:
         return new Processor(this);

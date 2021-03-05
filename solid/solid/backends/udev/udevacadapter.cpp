@@ -1,6 +1,5 @@
 /*
-    Copyright 2009 Pino Toscano <pino@kde.org>
-    Copyright 2010 Lukas Tinkl <ltinkl@redhat.com>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,43 +18,40 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "upoweracadapter.h"
+#include "udevacadapter.h"
 
-using namespace Solid::Backends::UPower;
+using namespace Solid::Backends::UDev;
 
-AcAdapter::AcAdapter(UPowerDevice *device)
-    : DeviceInterface(device)
+static const QStringList powerSupplySubSystems = QStringList() << QLatin1String("power_suply");
+
+AcAdapter::AcAdapter(UDevDevice *device)
+    : DeviceInterface(device),
+    m_client(new UdevQt::Client(powerSupplySubSystems)),
+    m_isPlugged(false)
 {
-    connect(device, SIGNAL(changed()), this, SLOT(slotChanged()));
-
-    updateCache();
+    QObject::connect(m_client, SIGNAL(deviceChanged(UdevQt::Device)),
+        this, SLOT(slotEmitSignals(UdevQt::Device)));
 }
 
 AcAdapter::~AcAdapter()
 {
+    m_client->deleteLater();
 }
 
 bool AcAdapter::isPlugged() const
 {
-    return m_device.data()->prop("Online").toBool();
+    return (m_device->property("POWER_SUPPLY_ONLINE").toInt() == 1);
 }
 
-void AcAdapter::slotChanged()
+void AcAdapter::slotEmitSignals(const UdevQt::Device &device)
 {
-    if (m_device) {
-        const bool old_isPlugged = m_isPlugged;
-        updateCache();
-
-        if (old_isPlugged != m_isPlugged)
-        {
-            emit plugStateChanged(m_isPlugged, m_device.data()->udi());
+    if (device.sysfsPath() == m_device->deviceName()) {
+        bool wasPlugged = m_isPlugged;
+        m_isPlugged = isPlugged();
+        if (wasPlugged != m_isPlugged) {
+            emit plugStateChanged(m_isPlugged, m_device->udi());
         }
     }
 }
 
-void AcAdapter::updateCache()
-{
-    m_isPlugged = isPlugged();
-}
-
-#include "backends/upower/moc_upoweracadapter.cpp"
+#include "moc_udevacadapter.cpp"

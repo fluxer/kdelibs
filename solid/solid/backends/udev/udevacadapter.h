@@ -1,6 +1,5 @@
 /*
-    Copyright 2009 Pino Toscano <pino@kde.org>
-    Copyright 2010 Lukas Tinkl <ltinkl@redhat.com>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -19,17 +18,18 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UPOWER_ACADAPTER_H
-#define SOLID_BACKENDS_UPOWER_ACADAPTER_H
+#ifndef UDEVACADAPTER_H
+#define UDEVACADAPTER_H
 
 #include <solid/ifaces/acadapter.h>
-#include "upowerdeviceinterface.h"
+#include "udevdeviceinterface.h"
+#include "../shared/udevqt.h"
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UPower
+namespace UDev
 {
 class AcAdapter : public DeviceInterface, virtual public Solid::Ifaces::AcAdapter
 {
@@ -37,7 +37,7 @@ class AcAdapter : public DeviceInterface, virtual public Solid::Ifaces::AcAdapte
     Q_INTERFACES(Solid::Ifaces::AcAdapter)
 
 public:
-    AcAdapter(UPowerDevice *device);
+    AcAdapter(UDevDevice *device);
     virtual ~AcAdapter();
 
     virtual bool isPlugged() const;
@@ -46,15 +46,14 @@ Q_SIGNALS:
     void plugStateChanged(bool newState, const QString &udi);
 
 private Q_SLOTS:
-    void slotChanged();
+    void slotEmitSignals(const UdevQt::Device &device);
 
 private:
-    void updateCache();
-
+    UdevQt::Client *m_client;
     bool m_isPlugged;
 };
 }
 }
 }
 
-#endif // SOLID_BACKENDS_UPOWER_ACADAPTER_H
+#endif // UDEVACADAPTER_H
