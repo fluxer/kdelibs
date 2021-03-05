@@ -38,6 +38,12 @@ Battery::Battery(UDevDevice *device)
     m_isPowerSupply(false),
     m_isPlugged(false)
 {
+    m_chargePercent = chargePercent();
+    m_capacity = capacity();
+    m_chargeState = chargeState();
+    m_isPlugged = isPlugged();
+    m_isPowerSupply = isPowerSupply();
+
     QObject::connect(m_client, SIGNAL(deviceChanged(UdevQt::Device)),
         this, SLOT(slotEmitSignals(UdevQt::Device)));
 }

@@ -29,6 +29,8 @@ AcAdapter::AcAdapter(UDevDevice *device)
     m_client(new UdevQt::Client(powerSupplySubSystems)),
     m_isPlugged(false)
 {
+    m_isPlugged = isPlugged();
+
     QObject::connect(m_client, SIGNAL(deviceChanged(UdevQt::Device)),
         this, SLOT(slotEmitSignals(UdevQt::Device)));
 }
