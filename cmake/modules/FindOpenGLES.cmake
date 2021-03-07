@@ -1,5 +1,4 @@
-# - Try to find OpenGLES
-# Once done this will define
+# Try to find OpenGLES, once done this will define:
 #  
 #  OPENGLES_FOUND           - system has OpenGLES and EGL
 #  OPENGL_EGL_FOUND         - system has EGL
@@ -9,44 +8,41 @@
 #  OPENGLES_EGL_LIBRARY	    - the EGL library
 #  OPENGLES_LIBRARIES       - all libraries needed for OpenGLES
 #  OPENGLES_INCLUDES        - all includes needed for OpenGLES
+#
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-FIND_PATH(OPENGLES_INCLUDE_DIR GLES2/gl2.h
-  /usr/openwin/share/include
-  /opt/graphics/OpenGL/include /usr/X11R6/include
-  /usr/include
+find_path(OPENGLES_INCLUDE_DIR
+    NAMES GLES2/gl2.h
+    HINTS /usr/X11R7/include /usr/X11R6/include
 )
 
-FIND_LIBRARY(OPENGLES_LIBRARY
-  NAMES GLESv2
-  PATHS /opt/graphics/OpenGL/lib
-        /usr/openwin/lib
-        /usr/shlib /usr/X11R6/lib
-        /usr/lib
+find_library(OPENGLES_LIBRARY
+    NAMES GLESv2
+    HINTS /usr/X11R7/lib /usr/X11R6/lib
 )
 
-FIND_PATH(OPENGLES_EGL_INCLUDE_DIR EGL/egl.h
-  /usr/openwin/share/include
-  /opt/graphics/OpenGL/include /usr/X11R6/include
-  /usr/include
+find_path(OPENGLES_EGL_INCLUDE_DIR
+    NAMES EGL/egl.h
+    HINTS /usr/X11R7/include /usr/X11R6/include
 )
 
-FIND_LIBRARY(OPENGLES_EGL_LIBRARY
+find_library(OPENGLES_EGL_LIBRARY
     NAMES EGL
-    PATHS /usr/shlib /usr/X11R6/lib
-          /usr/lib
+    HINTS /usr/X11R7/lib /usr/X11R6/lib
 )
 
-SET(OPENGL_EGL_FOUND "NO")
-IF(OPENGLES_EGL_LIBRARY AND OPENGLES_EGL_INCLUDE_DIR)
-    SET(OPENGL_EGL_FOUND "YES")
-ENDIF()
+set(OPENGL_EGL_FOUND "NO")
+if(OPENGLES_EGL_LIBRARY AND OPENGLES_EGL_INCLUDE_DIR)
+    set(OPENGL_EGL_FOUND "YES")
+endif()
 
-SET(OPENGLES_FOUND "NO")
-IF(OPENGLES_LIBRARY AND OPENGLES_INCLUDE_DIR AND
-   OPENGLES_EGL_LIBRARY AND OPENGLES_EGL_INCLUDE_DIR)
-    SET(OPENGLES_LIBRARIES ${OPENGLES_LIBRARY} ${OPENGLES_LIBRARIES}
-                           ${OPENGLES_EGL_LIBRARY})
-    SET(OPENGLES_INCLUDES ${OPENGLES_INCLUDE_DIR} ${OPENGLES_EGL_INCLUDE_DIR})
-    SET(OPENGLES_FOUND "YES")
-ENDIF()
+set(OPENGLES_FOUND "NO")
+if(OPENGLES_LIBRARY AND OPENGLES_INCLUDE_DIR AND OPENGLES_EGL_LIBRARY AND OPENGLES_EGL_INCLUDE_DIR)
+    set(OPENGLES_LIBRARIES ${OPENGLES_LIBRARY} ${OPENGLES_EGL_LIBRARY})
+    set(OPENGLES_INCLUDES ${OPENGLES_INCLUDE_DIR} ${OPENGLES_EGL_INCLUDE_DIR})
+    set(OPENGLES_FOUND "YES")
+endif()
 

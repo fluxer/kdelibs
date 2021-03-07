@@ -1,12 +1,10 @@
-# - Try to find Sqlite
-#
-# Once done this will define
+# Try to find Sqlite, once done this will define:
 #
 #  SQLITE_FOUND - system has Sqlite
 #  SQLITE_INCLUDE_DIR - the Sqlite include directory
 #  SQLITE_LIBRARIES - the libraries needed to use Sqlite
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

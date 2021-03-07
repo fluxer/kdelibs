@@ -1,5 +1,4 @@
-# - Try to find DNSSD
-# Once done this will define
+# Try to find DNSSD, once done this will define:
 #
 #  DNSSD_FOUND - system has DNSSD
 #  DNSSD_INCLUDE_DIR - the DNSSD include directory
@@ -15,36 +14,33 @@
 
 include(CMakePushCheckState)
 
-FIND_PATH(DNSSD_INCLUDE_DIR dns_sd.h
-  /usr/include/avahi-compat-libdns_sd/
+find_path(DNSSD_INCLUDE_DIR
+    NAMES dns_sd.h
+    HINTS /usr/include/avahi-compat-libdns_sd/
 )
 
-if (DNSSD_INCLUDE_DIR)
-  if (APPLE)
-    set(DNSSD_LIBRARIES "/usr/lib/libSystem.dylib")
-  else (APPLE)
-    FIND_LIBRARY(DNSSD_LIBRARIES NAMES dns_sd )
-  endif (APPLE)
+if(DNSSD_INCLUDE_DIR)
+    find_library(DNSSD_LIBRARIES NAMES dns_sd)
 
-  cmake_reset_check_state()
-  set(CMAKE_REQUIRED_INCLUDES ${DNSSD_INCLUDE_DIR})
-  set(CMAKE_REQUIRED_LIBRARIES ${DNSSD_LIBRARIES})
-  CHECK_FUNCTION_EXISTS(DNSServiceRefDeallocate DNSSD_FUNCTION_FOUND)
-  cmake_reset_check_state()
+    cmake_reset_check_state()
+    set(CMAKE_REQUIRED_INCLUDES ${DNSSD_INCLUDE_DIR})
+    set(CMAKE_REQUIRED_LIBRARIES ${DNSSD_LIBRARIES})
+    CHECK_FUNCTION_EXISTS(DNSServiceRefDeallocate DNSSD_FUNCTION_FOUND)
+    cmake_reset_check_state()
 
-  if (DNSSD_INCLUDE_DIR AND DNSSD_LIBRARIES AND DNSSD_FUNCTION_FOUND)
-     set(DNSSD_FOUND TRUE)
-  endif (DNSSD_INCLUDE_DIR AND DNSSD_LIBRARIES AND DNSSD_FUNCTION_FOUND)
-endif (DNSSD_INCLUDE_DIR)
+    if(DNSSD_INCLUDE_DIR AND DNSSD_LIBRARIES AND DNSSD_FUNCTION_FOUND)
+        set(DNSSD_FOUND TRUE)
+    endif()
+endif()
 
-if (DNSSD_FOUND)
-  if (NOT DNSSD_FIND_QUIETLY)
-    message(STATUS "Found DNSSD: ${DNSSD_LIBRARIES}")
-  endif (NOT DNSSD_FIND_QUIETLY)
-else (DNSSD_FOUND)
-  if (DNSSD_FIND_REQUIRED)
-    message(FATAL_ERROR "Could NOT find DNSSD")
-  endif (DNSSD_FIND_REQUIRED)
-endif (DNSSD_FOUND)
+if(DNSSD_FOUND)
+    if (NOT DNSSD_FIND_QUIETLY)
+        message(STATUS "Found DNSSD: ${DNSSD_LIBRARIES}")
+    endif()
+else()
+    if(DNSSD_FIND_REQUIRED)
+        message(FATAL_ERROR "Could NOT find DNSSD")
+    endif()
+endif()
 
 MARK_AS_ADVANCED(DNSSD_INCLUDE_DIR DNSSD_LIBRARIES)

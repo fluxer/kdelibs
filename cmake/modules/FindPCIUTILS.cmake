@@ -1,12 +1,10 @@
-# - Try to find the pciutils directory library
-#
-# Once done this will define
+# Try to find the pciutils directory library, once done this will define:
 #
 #  PCIUTILS_FOUND - system has PCIUtils
 #  PCIUTILS_INCLUDE_DIR - the PCIUTILS include directory
 #  PCIUTILS_LIBRARIES - the libraries needed to use PCIUtils
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

@@ -1,12 +1,10 @@
-# - Try to find FFmpegthumbnailer library
-#
-# Once done this will define
+# Try to find FFmpegthumbnailer library, once done this will define:
 #
 #  FFMPEGTHUMBNAILER_FOUND - system has FFmpegthumbnailer
 #  FFMPEGTHUMBNAILER_INCLUDES - the FFmpegthumbnailer include directory
 #  FFMPEGTHUMBNAILER_LIBRARIES - the libraries needed to use FFmpegthumbnailer
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

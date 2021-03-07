@@ -1,13 +1,11 @@
-# - Try to find DBusMenuQt library
-#
-# Once done this will define
+# Try to find the DBusMenuQt library, once done this will define:
 #
 #  DBUSMENUQT_FOUND - system has DBusMenuQt
 #  DBUSMENUQT_INCLUDE_DIR - the DBusMenuQt include directory
 #  DBUSMENUQT_LIBRARIES - the libraries needed to use DBusMenuQt
 #  DBUSMENUQT_DEFINITIONS - compiler switches required for using DBusMenuQt
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

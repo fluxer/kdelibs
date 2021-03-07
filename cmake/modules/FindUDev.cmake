@@ -1,5 +1,4 @@
-# - Try to find UDev
-# Once done this will define
+# Try to find UDev, once done this will define:
 #
 #  UDEV_FOUND - system has UDev
 #  UDEV_INCLUDE_DIR - the libudev include directory

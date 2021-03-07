@@ -1,5 +1,4 @@
-# - Try to find the samba directory library
-# Once done this will define
+# Try to find the samba directory library, once done this will define:
 #
 #  SAMBA_FOUND - system has SAMBA
 #  SAMBA_INCLUDE_DIR - the SAMBA include directory

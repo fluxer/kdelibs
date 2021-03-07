@@ -1,13 +1,11 @@
-# - Try to find Fontconfig
-#
-# Once done this will define
+# Try to find Fontconfig, once done this will define:
 #
 #  FONTCONFIG_FOUND - system has Fontconfig
 #  FONTCONFIG_INCLUDE_DIR -the Fontconfig include directory
 #  FONTCONFIG_LIBRARIES - the libraries needed to use Fontconfig
 #  FONTCONFIG_DEFINITIONS - compiler switches required for using Fontconfig
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

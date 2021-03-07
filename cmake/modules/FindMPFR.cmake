@@ -1,12 +1,10 @@
-# - Try to find MPFR
-#
-# Once done this will define
+# Try to find MPFR, once done this will define:
 #
 #  MPFR_FOUND - system has MPFR
 #  MPFR_INCLUDE_DIR - the MPFR include directory
 #  MPFR_LIBRARIES - the libraries needed to use MPFR
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

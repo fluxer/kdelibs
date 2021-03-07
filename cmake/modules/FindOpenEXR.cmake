@@ -1,5 +1,4 @@
-# Try to find the OpenEXR libraries
-# This check defines:
+# Try to find the OpenEXR libraries, once done this will define:
 #
 #  OPENEXR_FOUND - system has OpenEXR
 #  OPENEXR_INCLUDE_DIR - OpenEXR include directory

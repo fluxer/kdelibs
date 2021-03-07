@@ -1,6 +1,4 @@
-# - Try to find speech-dispatcher
-#
-# Once done this will define
+# Try to find speech-dispatcher, once done this will define:
 #
 #  SPEECHD_FOUND - system has speech-dispatcher
 #  SPEECHD_INCLUDE_DIR - the speech-dispatcher include directory

@@ -1,13 +1,11 @@
-# - Try to find LibSSH
-#
-# Once done this will define
+# Try to find LibSSH, once done this will define:
 #
 #  LIBSSH_FOUND - system has LibSSH
 #  LIBSSH_INCLUDE_DIRS - the LibSSH include directory
 #  LIBSSH_LIBRARIES - the libraries needed to use LibSSH
 #  LIBSSH_DEFINITIONS - compiler switches required for using LibSSH
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

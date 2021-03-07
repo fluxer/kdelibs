@@ -1,12 +1,10 @@
-# - Try to find Qalculate
-#
-# Once done this will define
+# Try to find Qalculate, once done this will define:
 #
 #  QALCULATE_FOUND - system has Qalculate
 #  QALCULATE_INCLUDE_DIR - the Qalculate include directory
 #  QALCULATE_LIBRARIES - the Qalculate libraries
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

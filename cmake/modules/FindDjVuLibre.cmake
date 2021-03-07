@@ -1,39 +1,37 @@
-# - Try to find the DjVuLibre library
-# Once done this will define
+# Try to find the DjVuLibre library, once done this will define:
 #
 #  DJVULIBRE_FOUND - system has the DjVuLibre library
 #  DJVULIBRE_INCLUDE_DIR - the DjVuLibre include directory
 #  DJVULIBRE_LIBRARY - Link this to use the DjVuLibre library
+#
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
+#
+# Redistribution and use is allowed according to the terms of the BSD license.
+# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (DJVULIBRE_INCLUDE_DIR AND DJVULIBRE_LIBRARY)
+if(NOT WIN32)
+    find_package(PkgConfig)
+    pkg_check_modules(PC_DJVULIBRE ddjvuapi)
+endif()
 
-  # in cache already
-  set(DJVULIBRE_FOUND TRUE)
+set(DJVULIBRE_VERSION ${PC_DJVULIBRE_VERSION})
 
-else (DJVULIBRE_INCLUDE_DIR AND DJVULIBRE_LIBRARY)
-  IF (NOT WIN32)
-        find_package(PkgConfig)
-
-        pkg_check_modules(PC_DJVULIBRE ddjvuapi)
-  endif(NOT WIN32)
-
-    find_path(DJVULIBRE_INCLUDE_DIR libdjvu/ddjvuapi.h
-      PATHS
-      ${PC_DJVULIBRE_INCLUDEDIR}
-      ${PC_DJVULIBRE_INCLUDE_DIRS}
-      ${GNUWIN32_DIR}/include
+if(NOT DJVULIBRE_INCLUDE_DIR OR NOT DJVULIBRE_LIBRARY)
+    find_path(DJVULIBRE_INCLUDE_DIR
+        NAMES libdjvu/ddjvuapi.h
+        HINTS $ENV{DJVULIBREDIR}/include
     )
 
-    find_library(DJVULIBRE_LIBRARY NAMES djvulibre
-      PATHS
-      ${PC_DJVULIBRE_LIBDIR}
-      ${PC_DJVULIBRE_LIBRARY_DIRS}
-      ${GNUWIN32_DIR}/lib
+    find_library(DJVULIBRE_LIBRARY
+        NAMES djvulibre
+        HINTS $ENV{DJVULIBREDIR}/lib
     )
+endif()
 
-  include(FindPackageHandleStandardArgs)
-  FIND_PACKAGE_HANDLE_STANDARD_ARGS(DjVuLibre DEFAULT_MSG DJVULIBRE_INCLUDE_DIR DJVULIBRE_LIBRARY )
-  
-  mark_as_advanced(DJVULIBRE_INCLUDE_DIR DJVULIBRE_LIBRARY)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(DjVuLibre
+    VERSION_VAR DJVULIBRE_VERSION
+    REQUIRED_VARS DJVULIBRE_LIBRARY DJVULIBRE_INCLUDE_DIR
+)
 
-endif (DJVULIBRE_INCLUDE_DIR AND DJVULIBRE_LIBRARY)
+mark_as_advanced(DJVULIBRE_INCLUDE_DIR DJVULIBRE_LIBRARY)

@@ -1,21 +1,28 @@
-# cmake macro to test if we use sane
+# Try to find SANE, once done this will define:
 #
 #  SANE_FOUND - system has SANE libs
 #  SANE_INCLUDE_DIR - the SANE include directory
 #  SANE_LIBRARIES - The libraries needed to use SANE
-
-# Copyright (c) 2006, Marcus Hufgard <hufgardm@hufgard.de> 2006
+#
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-FIND_PATH(SANE_INCLUDE_DIR sane/sane.h)
-
-FIND_LIBRARY(SANE_LIBRARY NAMES  sane libsane
-   PATH_SUFFIXES sane
+find_path(SANE_INCLUDE_DIR
+    NAMES sane/sane.h
+    HINTS $ENV{SANEDIR}/include
 )
 
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Sane  DEFAULT_MSG  SANE_LIBRARY SANE_INCLUDE_DIR )
+find_library(SANE_LIBRARY
+    NAMES sane
+    PATH_SUFFIXES sane
+    HINTS $ENV{SANEDIR}/lib
+)
 
-MARK_AS_ADVANCED(SANE_INCLUDE_DIR SANE_LIBRARY)
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(Sane
+    REQUIRED_VARS SANE_LIBRARY SANE_INCLUDE_DIR
+)
+
+mark_as_advanced(SANE_INCLUDE_DIR SANE_LIBRARY)

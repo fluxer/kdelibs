@@ -1,12 +1,10 @@
-# - Try to find ATA library
-#
-# Once done this will define
+# Try to find ATA library, once done this will define:
 #
 #  LIBATASMART_FOUND - system has ATA library
 #  LIBATASMART_INCLUDES - the ATA library include directory
 #  LIBATASMART_LIBRARIES - the libraries needed to use ATA library
 #
-# Copyright (c) 2021, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

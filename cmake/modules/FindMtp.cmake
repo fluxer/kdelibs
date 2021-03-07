@@ -1,13 +1,11 @@
-# - Try to find the libmtp library
-#
-# Once done this will define
+# Try to find the libmtp library, once done this will define:
 #
 #  MTP_FOUND - system has libmtp
 #  MTP_INCLUDE_DIR - the libmtp include directory
 #  MTP_LIBRARIES - the libraries needed to use libmtp
 #  MTP_DEFINITIONS - compiler switches required for using libmtp
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

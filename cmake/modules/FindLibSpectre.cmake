@@ -1,12 +1,10 @@
-# - Try to find the libspectre PS library
-#
-# Once done this will define
+# Try to find the libspectre PS library, once done this will define:
 #
 #  LIBSPECTRE_FOUND - system has libspectre
 #  LIBSPECTRE_INCLUDE_DIR - the libspectre include directory
 #  LIBSPECTRE_LIBRARY - Link this to use libspectre
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

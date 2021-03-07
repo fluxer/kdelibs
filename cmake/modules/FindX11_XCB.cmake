@@ -1,5 +1,4 @@
-# - Try to find libX11-xcb
-# Once done this will define
+# Try to find libX11-xcb, once done this will define:
 #
 #  X11_XCB_FOUND       - system has libX11-xcb
 #  X11_XCB_LIBRARIES   - Link these to use libX11-xcb

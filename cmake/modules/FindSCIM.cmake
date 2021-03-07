@@ -1,12 +1,11 @@
-# - Try to find the SCIM
-# Once done this will define
+# Try to find the SCIM, once done this will define:
 #
 #  SCIM_FOUND - system has SCIM
 #  SCIM_INCLUDE_DIR - the SCIM include directory
 #  SCIM_LIBRARIES - the libraries needed to use SCIM
 #  SCIM_DEFINITIONS - compiler switches required for using SCIM
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

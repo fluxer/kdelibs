@@ -1,13 +1,11 @@
-# - Try to find the FLAC++ library
-#
-# Once done this will define
+# Try to find the FLAC++ library, once done this will define:
 #
 #  FLAC_FOUND - system has FLAC++
 #  FLAC_INCLUDES - the FLAC++ include directories
 #  FLAC_LIBRARIES - the libraries needed to use FLAC++
 #  FLAC_DEFINITIONS - compiler switches required for using FLAC++
 #
-# Copyright (c) 2019-2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2019 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

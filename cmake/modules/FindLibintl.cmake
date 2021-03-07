@@ -1,5 +1,4 @@
-# Try to find Libintl functionality
-# Once done this will define
+# Try to find Libintl functionality, once done this will define:
 #
 #  LIBINTL_FOUND - system has Libintl
 #  LIBINTL_INCLUDE_DIR - Libintl include directory

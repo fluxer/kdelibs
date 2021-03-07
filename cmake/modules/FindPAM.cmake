@@ -1,12 +1,11 @@
-# - Try to find the PAM libraries
-# Once done this will define
+# Try to find the PAM libraries, once done this will define:
 #
 #  PAM_FOUND - system has pam
 #  PAM_INCLUDE_DIR - the pam include directory
 #  PAM_LIBRARIES - libpam library
 #  PAM_MESSAGE_CONST - libpam pam_message struct is const
 #
-# Copyright (c) 2021, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

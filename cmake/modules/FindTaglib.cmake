@@ -1,12 +1,10 @@
-# - Try to find the Taglib
-#
-# Once done this will define
+# Try to find the Taglib, once done this will define:
 #
 #  TAGLIB_FOUND - system has Taglib
 #  TAGLIB_LIBRARIES - the libraries needed to use Taglib
 #  TAGLIB_CFLAGS - the Taglib C flags
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

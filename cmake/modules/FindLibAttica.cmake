@@ -1,12 +1,10 @@
-# Try to find the Attica library
-#
-# Once done this will define
+# Try to find the Attica library, once done this will define:
 #
 #  LIBATTICA_FOUND - system has Attica
 #  LIBATTICA_LIBRARIES - the Attica include directory
 #  LIBATTICA_INCLUDE_DIR - the libraries needed to use Attica
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

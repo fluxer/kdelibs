@@ -1,13 +1,11 @@
-# - Try to find the Enchant spell checker
-#
-# Once done this will define
+# Try to find the Enchant spell checker, once done this will define:
 #
 #  ENCHANT_FOUND - system has ENCHANT
 #  ENCHANT_INCLUDE_DIR - the ENCHANT include directory
 #  ENCHANT_LIBRARIES - the libraries needed to use ENCHANT
 #  ENCHANT_DEFINITIONS - compiler switches required for using ENCHANT
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

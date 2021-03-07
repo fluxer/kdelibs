@@ -1,5 +1,4 @@
-# - Try to find NetworkManager
-# Once done this will define
+# Try to find NetworkManager, once done this will define:
 #
 #  NETWORKMANAGER_FOUND - system has NetworkManager
 #  NETWORKMANAGER_INCLUDE_DIRS - the NetworkManager include directories
@@ -9,7 +8,7 @@
 
 # Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2007, Will Stephenson, <wstephenson@kde.org>
-# Copyright (c) 2015, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2015 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

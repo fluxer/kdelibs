@@ -1,5 +1,4 @@
-# - Try to find HUPnP library
-#  Once done this will define
+# Try to find HUPnP library, once done this will define:
 #
 #  HUPNP_FOUND - system has HUPnP
 #  HUPNP_INCLUDE_DIR - the LIBHUpnp include directory

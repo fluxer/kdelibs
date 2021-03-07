@@ -1,13 +1,11 @@
-# - Try to find Exiv2 library
-#
-# Once done this will define
+# Try to find Exiv2 library, once done this will define:
 #
 #  EXIV2_FOUND - system has Exiv2
 #  EXIV2_INCLUDE_DIR - the Exiv2 include directory
 #  EXIV2_LIBRARIES - the libraries needed to use Exiv2
 #  EXIV2_DEFINITIONS - compiler switches required for using Exiv2
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

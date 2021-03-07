@@ -1,12 +1,10 @@
-# - Try to find the raw1394
-#
-# Once done this will define
+# Try to find the raw1394, once done this will define:
 #
 #  RAW1394_FOUND - system has raw1394
 #  RAW1394_INCLUDE_DIR - the raw1394 include directory
 #  RAW1394_LIBRARIES - the libraries needed to use raw1394
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

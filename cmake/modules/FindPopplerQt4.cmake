@@ -1,13 +1,11 @@
-# - Try to find the Qt4 binding of the Poppler library
-#
-# Once done this will define
+# Try to find the Qt4 binding of the Poppler library, once done this will define:
 #
 #  POPPLER_QT4_FOUND - system has poppler-qt4
 #  POPPLER_QT4_INCLUDE_DIR - the poppler-qt4 include directory
 #  POPPLER_QT4_LIBRARIES - the libraries needed to use poppler-qt4
 #  POPPLER_QT4_DEFINITIONS - compiler switches required for using poppler-qt4
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

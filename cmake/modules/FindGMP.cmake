@@ -1,11 +1,10 @@
-# - Try to find GMP
-# Once done this will define
+# Try to find GMP, once done this will define:
 #
 #  GMP_FOUND - system has GMP
 #  GMP_INCLUDE_DIR - the GMP include directory
 #  GMP_LIBRARIES - the libraries needed to use GMP
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

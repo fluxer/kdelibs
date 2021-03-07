@@ -1,11 +1,10 @@
-# - Try to find the libmms library
-# Once done this will define
+# Try to find the libmms library, once done this will define:
 #
 #  LIBMMS_FOUND - system has libmms
 #  LIBMMS_INCLUDE_DIR - the libmms include directory
 #  LIBMMS_LIBRARIES - the libraries needed to use libmms
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

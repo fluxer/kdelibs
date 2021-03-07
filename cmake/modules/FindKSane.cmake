@@ -1,4 +1,4 @@
-# cmake macro to test if libksane is installed
+# Try to find KSane, once done this will define:
 #
 #  KSANE_FOUND - system has KSANE libs
 #  KSANE_INCLUDE_DIR - the KSANE include directory

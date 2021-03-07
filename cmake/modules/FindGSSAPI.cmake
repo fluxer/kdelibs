@@ -1,12 +1,11 @@
-# - Try to detect the GSSAPI support
-# Once done this will define
+# Try to detect the GSSAPI support, once done this will define:
 #
 #  GSSAPI_FOUND - system supports GSSAPI
 #  GSSAPI_INCS - the GSSAPI include directory
 #  GSSAPI_LIBS - the libraries needed to use GSSAPI
 #  GSSAPI_FLAVOR - the type of API - MIT or HEIMDAL
 
-# Copyright (c) 2006, Pino Toscano, <toscano.pino@tiscali.it>
+# Copyright (c) 2006 Pino Toscano <toscano.pino@tiscali.it>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

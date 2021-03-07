@@ -1,13 +1,11 @@
-# - Try to find Strigi
-#
-# Once done this will define
+# Try to find Strigi, once done this will define:
 #
 #  STRIGI_FOUND - system has Strigi
 #  STRIGI_INCLUDE_DIR - the Strigi include directory
 #  STRIGI_STREAMS_LIBRARY - the libraries needed to use Strigi streams
 #  STRIGI_STREAMANALYZER_LIBRARY - the libraries needed to use Strigi stream analyzer
 #
-# Copyright (c) 2021, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -39,6 +37,8 @@ if(NOT STRIGI_INCLUDE_DIR OR NOT STRIGI_STREAMS_LIBRARY OR NOT STRIGI_STREAMANAL
         NAMES streamanalyzer
         HINTS $ENV{STRIGIDIR}/lib
     )
+else()
+    link_directories(${PC_LIBSTREAMS_LIBDIR} ${PC_LIBSTREAMANALYZER_LIBDIR})
 endif()
 
 include(FindPackageHandleStandardArgs)

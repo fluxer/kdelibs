@@ -1,12 +1,10 @@
-# - Try to find konqueror library
-#
-# Once done this will define
+# Try to find konqueror library, once done this will define:
 #
 #  LIBKONQ_FOUND - system has konqueror library
 #  LIBKONQ_INCLUDE_DIR - the konqueror library include directory
 #  LIBKONQ_LIBRARY - the konqueror library
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.

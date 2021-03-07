@@ -1,12 +1,10 @@
-# - Try to find libdrm library
-#
-# Once done this will define
+# Try to find libdrm library, once done this will define:
 #
 #  LIBDRM_FOUND - system has libdrm
 #  LIBDRM_INCLUDE_DIR - the libdrm include directory
 #  LIBDRM_LIBRARIES - the libraries needed to use libdrm
 #
-# Copyright (c) 2021, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
