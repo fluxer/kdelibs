@@ -18,11 +18,6 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-# Support SHARED_MIME_INFO_MINIMUM_VERSION for compatibility:
-if(NOT SharedMimeInfo_FIND_VERSION)
-    set(SharedMimeInfo_FIND_VERSION "${SHARED_MIME_INFO_MINIMUM_VERSION}")
-endif()
-
 # the minimum version of shared-mime-database we require
 if(NOT SharedMimeInfo_FIND_VERSION)
     set(SharedMimeInfo_FIND_VERSION "0.18")
