@@ -37,8 +37,6 @@ if(NOT STRIGI_INCLUDE_DIR OR NOT STRIGI_STREAMS_LIBRARY OR NOT STRIGI_STREAMANAL
         NAMES streamanalyzer
         HINTS $ENV{STRIGIDIR}/lib
     )
-else()
-    link_directories(${PC_LIBSTREAMS_LIBDIR} ${PC_LIBSTREAMANALYZER_LIBDIR})
 endif()
 
 include(FindPackageHandleStandardArgs)
