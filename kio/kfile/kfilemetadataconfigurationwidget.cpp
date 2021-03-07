@@ -118,7 +118,7 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     KConfigGroup settings = config.group("Show");
 
     const QString label = (m_provider == 0)
-                          ? KNfoTranslator::instance().translation(uri)
+                          ? KNfoTranslator::translation(uri)
                           : m_provider->label(uri);
 
     QListWidgetItem* item = new QListWidgetItem(label, m_metaDataList);

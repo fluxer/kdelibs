@@ -192,7 +192,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
 
 QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
 {
-    return KNfoTranslator::instance().translation(metaDataUri.url());
+    return KNfoTranslator::translation(metaDataUri.url());
 }
 
 QString KFileMetaDataProvider::group(const KUrl& metaDataUri) const

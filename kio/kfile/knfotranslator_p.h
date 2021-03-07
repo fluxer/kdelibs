@@ -20,7 +20,6 @@
 #ifndef KNFOTRANSLATOR_H
 #define KNFOTRANSLATOR_H
 
-#include <QHash>
 #include <QString>
 
 class KUrl;
@@ -33,16 +32,7 @@ class KUrl;
 class KNfoTranslator
 {
 public:
-    static KNfoTranslator& instance();
-    QString translation(const KUrl& uri) const;
-
-protected:
-    KNfoTranslator();
-    virtual ~KNfoTranslator();
-    friend class KNfoTranslatorSingleton;
-
-private:
-    QHash<QString, QString> m_hash;
+    static QString translation(const KUrl& uri);
 };
 
 #endif // KNFO_TRANSLATOR_H
