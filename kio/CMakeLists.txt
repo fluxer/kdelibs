@@ -40,9 +40,6 @@ add_subdirectory(misc)
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
-if(NOT KIO_NO_STRIGI)
-    add_subdirectory(kio/dummyanalyzers)
-endif()
 
 set(kiocore_STAT_SRCS
     kio/accessmanager.cpp
