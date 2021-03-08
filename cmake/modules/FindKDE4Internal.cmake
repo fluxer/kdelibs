@@ -400,6 +400,10 @@ set(CMAKE_SYSTEM_LIBRARY_PATH
     "${KDE4_LIB_INSTALL_DIR}"
 )
 
+# mostly for compilers (e.g. Clang) and linkers (e.g. LLDB) with no clue what
+# default search path is
+include_directories(${KDE4_INCLUDE_INSTALL_DIR})
+link_directories(${KDE4_LIB_INSTALL_DIR})
 
 ######################################################
 #  and now the platform specific stuff
