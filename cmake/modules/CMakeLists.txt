@@ -74,7 +74,6 @@ set(cmakeFiles
     FindStrigi.cmake
     FindSCIM.cmake
     FindSpeechd.cmake
-    FindSqlite.cmake
     FindSudo.cmake
     FindTaglib.cmake
     FindUDev.cmake
