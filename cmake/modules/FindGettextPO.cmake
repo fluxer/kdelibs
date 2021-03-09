@@ -1,8 +1,8 @@
 # Try to find GettextPO, once done this will define:
 #
-#  GETTEXTPO_FOUND - System has GETTEXTPO
-#  GETTEXTPO_INCLUDE_DIR - The GETTEXTPO include directory
-#  GETTEXTPO_LIBRARY - The library needed to use GETTEXTPO
+#  GETTEXTPO_FOUND - System has GettextPO
+#  GETTEXTPO_INCLUDE_DIR - The GettextPO include directory
+#  GETTEXTPO_LIBRARY - The library needed to use GettextPO
 #
 # Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #

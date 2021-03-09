@@ -9,20 +9,19 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-FIND_PATH(SENSORS_INCLUDE_DIR
+find_path(SENSORS_INCLUDE_DIR
     NAMES sensors/sensors.h
     HINTS $ENV{SENSORSDIR}/include
 )
 
-FIND_LIBRARY(SENSORS_LIBRARIES
+find_library(SENSORS_LIBRARIES
     NAMES sensors
     HINTS $ENV{SENSORSDIR}/lib
 )
 
 include(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(Sensors
+find_package_handle_standard_args(Sensors
     REQUIRED_VARS SENSORS_LIBRARIES SENSORS_INCLUDE_DIR
 )
 
-MARK_AS_ADVANCED(SENSORS_INCLUDE_DIR SENSORS_LIBRARIES)
-
+mark_as_advanced(SENSORS_INCLUDE_DIR SENSORS_LIBRARIES)

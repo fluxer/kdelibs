@@ -55,7 +55,6 @@ set(cmakeFiles
     FindLibSpectre.cmake
     FindLibSSH.cmake
     FindLibVNCServer.cmake
-    FindLibXKlavier.cmake
     FindMPFR.cmake
     FindMtp.cmake
     FindNetworkManager.cmake
