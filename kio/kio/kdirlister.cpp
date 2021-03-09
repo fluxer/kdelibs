@@ -1709,6 +1709,7 @@ void KDirListerCache::slotUpdateResult( KJob * j )
         printDebug();
 #endif
         Q_ASSERT(dir);
+        return;
     } else {
         dir->complete = true;
     }
