@@ -93,8 +93,8 @@
 2001        kregexpeditor
 2002        kfloppy
 2003        ksim
-2100	    kgpg
-2200	    kdf
+2100        kgpg
+2200        kdf
 
 # kdeaccessibility
 2400        kttsd (daemon)
