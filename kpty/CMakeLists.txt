@@ -44,7 +44,7 @@ install(
 
 if(NOT HAVE_OPENPTY)
     add_executable(kgrantpty kgrantpty.c)
-    target_link_libraries(kgrantpty ${KDE4_KDECORE_LIBS})
+    target_link_libraries(kgrantpty)
     install(TARGETS kgrantpty DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 endif()
 
