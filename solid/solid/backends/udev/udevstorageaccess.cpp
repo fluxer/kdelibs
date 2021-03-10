@@ -76,8 +76,8 @@ QString StorageAccess::filePath() const
 
 bool StorageAccess::isIgnored() const
 {
-    const QString devtype = m_device->property("DEVTYPE").toString();
-    return (devtype != "partition");
+    const QString devtype = m_device->property("ID_FS_USAGE").toString();
+    return (devtype != "filesystem");
 }
 
 bool StorageAccess::setup()
