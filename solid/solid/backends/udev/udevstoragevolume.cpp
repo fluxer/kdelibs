@@ -35,8 +35,7 @@ StorageVolume::~StorageVolume()
 
 QString StorageVolume::encryptedContainerUdi() const
 {
-    // encrypted devices are not support, even getmntent() (used by
-    // KMountPoint) ignores these
+    // encrypted devices are not support
     return QString();
 }
 
@@ -71,9 +70,9 @@ Solid::StorageVolume::UsageType StorageVolume::usage() const
         return Solid::StorageVolume::Other;
     } else if (idfsusage == "raid") {
         return Solid::StorageVolume::Raid;
-    } else if (devtype == "partition") {
+    } else if (idfsusage == "filesystem") {
         return Solid::StorageVolume::FileSystem;
-    } else if (devtype == "disk") {
+    } else if (devtype == "partition") {
         return Solid::StorageVolume::PartitionTable;
     } else {
         return Solid::StorageVolume::Unused;
