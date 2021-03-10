@@ -66,6 +66,8 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
     } else if (idbus == "usb") {
         return Solid::StorageDrive::CompactFlash;
 #if 0
+    } else if (idtype == "tape") {
+        return Solid::StorageDrive::Tape;
     } else if (idtype == "flash_cf") {
         return Solid::StorageDrive::CompactFlash;
     } else if (idtype == "flash_ms") {
@@ -74,6 +76,8 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
         return Solid::StorageDrive::SmartMedia;
     } else if (idtype == "flash_sd" || idtype == "flash_mmc") {
         return Solid::StorageDrive::SdMmc;
+    } else if (idtype == "flash_xd") {
+        return Solid::StorageDrive::Xd;
 #endif
     } else {
         return Solid::StorageDrive::HardDisk;
