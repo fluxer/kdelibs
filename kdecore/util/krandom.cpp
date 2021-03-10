@@ -23,18 +23,14 @@
 
 QString KRandom::randomString(int length)
 {
-   if (length <=0 ) return QString();
+    if (length <= 0)
+        return QString();
 
-   QString str; str.resize( length );
-   int i = 0;
-   while (length--)
-   {
-      int r=random() % 62;
-      r+=48;
-      if (r>57) r+=7;
-      if (r>90) r+=6;
-      str[i++] =  char(r);
-      // so what if I work backwards?
-   }
+    QString str(length, Qt::Uninitialized);
+    static const char rndstrchars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (int i = 0; i < length; i++) {
+        str[i] = rndstrchars[random() % 62];
+    }
+
    return str;
 }
