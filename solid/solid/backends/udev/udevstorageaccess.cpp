@@ -56,9 +56,19 @@ QString StorageAccess::filePath() const
     const QString devpath = m_device->property("DEVNAME").toString();
     const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
 
-    KMountPoint::Ptr found = mountpoints.findByDevice(devpath);
-    if (found) {
-        return found->mountPoint();
+    foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
+        if (mountpoint->mountedFrom() == devpath || mountpoint->realDeviceName() == devpath) {
+            return mountpoint->mountPoint();
+        }
+    }
+
+    const QStringList devlinks = m_device->property("DEVLINKS").toString().split(" ");
+    foreach (const QString &link, devlinks) {
+        foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
+            if (mountpoint->mountedFrom() == link || mountpoint->realDeviceName() == link) {
+                return mountpoint->mountPoint();
+            }
+        }
     }
 
     return QString();
