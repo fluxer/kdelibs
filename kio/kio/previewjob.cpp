@@ -148,7 +148,8 @@ PreviewJob::PreviewJob(const KFileItemList &items,
         d->enabledPlugins = globalConfig.readEntry("Plugins", QStringList()
                                                               << "directorythumbnail"
                                                               << "imagethumbnail"
-                                                              << "jpegthumbnail");
+                                                              << "jpegthumbnail"
+                                                              << "svgthumbnail");
     }
     d->width = size.width();
     d->height = size.height();
