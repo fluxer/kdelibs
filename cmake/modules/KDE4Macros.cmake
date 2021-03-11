@@ -163,30 +163,6 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
         endif( _theme_GROUP)
     endforeach(_current_ICON)
 
-    # mng icons
-    file(GLOB _icons *.mng)
-    foreach(_current_ICON ${_icons} )
-        string(
-            REGEX MATCH "^.*/([a-zA-Z]+)([0-9]+)\\-([a-z]+)\\-(.+\\.mng)$"
-            _dummy  "${_current_ICON}"
-        )
-        set(_type  "${CMAKE_MATCH_1}")
-        set(_size  "${CMAKE_MATCH_2}")
-        set(_group "${CMAKE_MATCH_3}")
-        set(_name  "${CMAKE_MATCH_4}")
-
-        set(_theme_GROUP ${_KDE4_ICON_THEME_${_type}})
-        if(_theme_GROUP)
-            _KDE4_ADD_ICON_INSTALL_RULE(
-                ${_defaultpath}/${_theme_GROUP}/${_size}x${_size}
-                ${_group}
-                ${_current_ICON}
-                ${_name}
-                ${_l10n_SUBDIR}
-            )
-        endif()
-    endforeach()
-
     # and now the svg icons
     file(GLOB _icons *.svgz)
     foreach(_current_ICON ${_icons})
