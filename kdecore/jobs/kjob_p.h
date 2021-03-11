@@ -23,11 +23,13 @@
 #define KJOB_P_H
 
 #include "kjob.h"
-#include <QtCore/qmap.h>
 
-class KJobUiDelegate;
 #include <QTimer>
 #include <QEventLoop>
+
+#include <array>
+
+class KJobUiDelegate;
 
 // This is a private class, but it's exported for
 // KIO::Job's usage. Other Job classes in kdelibs may
@@ -44,8 +46,8 @@ public:
     int error;
     QString errorText;
     KJob::Unit progressUnit;
-    QMap<KJob::Unit, qulonglong> processedAmount;
-    QMap<KJob::Unit, qulonglong> totalAmount;
+    std::array<qulonglong, 3> processedAmount;
+    std::array<qulonglong, 3> totalAmount;
     unsigned long percentage;
     bool suspended;
     KJob::Capabilities capabilities;
@@ -54,8 +56,6 @@ public:
     QEventLoop *eventLoop;
 
     void _k_speedTimeout();
-
-    static bool _k_kjobUnitEnumRegistered;
 
     bool isFinished;
 

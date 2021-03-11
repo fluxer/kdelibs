@@ -88,11 +88,17 @@ class KDECORE_EXPORT KJob : public QObject
     Q_FLAGS( Capabilities )
 
 public:
-    enum Unit { Bytes, Files, Directories };
+    enum Unit {
+        Bytes = 0x0000,
+        Files = 0x0001,
+        Directories= 0x0002
+    };
 
-    enum Capability { NoCapabilities = 0x0000,
-                      Killable       = 0x0001,
-                      Suspendable    = 0x0002 };
+    enum Capability {
+        NoCapabilities = 0x0000,
+        Killable       = 0x0001,
+        Suspendable    = 0x0002
+    };
 
     Q_DECLARE_FLAGS( Capabilities, Capability )
 
