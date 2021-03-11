@@ -224,7 +224,10 @@ void KMediaWidget::resetControlsTimer()
     if (d->m_timerid >= 0) {
         killTimer(d->m_timerid);
     }
-    d->m_timerid = startTimer(3000);
+    // do not hide the controls if path is not loaded
+    if (!d->m_player->path().isEmpty()) {
+        d->m_timerid = startTimer(3000);
+    }
 }
 
 QSize KMediaWidget::sizeHint() const
@@ -265,8 +268,8 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
         && !d->m_ui->w_volume->isSliderDown()
         && !d->m_ui->w_fullscreen->isDown()) {
         _updateControls(false);
+        event->ignore();
     }
-    event->ignore();
 }
 
 void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
@@ -373,9 +376,6 @@ void KMediaWidget::_updateFinished()
 
     if (d->m_hiddencontrols) {
         // show the controls until the next open
-        if (d->m_timerid >= 0) {
-            killTimer(d->m_timerid);
-        }
         _updateControls(true);
         setMouseTracking(false);
     }
