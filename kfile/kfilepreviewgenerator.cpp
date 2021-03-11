@@ -28,6 +28,7 @@
 #include <kdirlister.h>
 #include <kdirmodel.h>
 #include <ksharedconfig.h>
+#include <kservicetypetrader.h>
 
 #include <QApplication>
 #include <QAbstractItemView>
@@ -475,12 +476,17 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
     connect(m_changedItemsTimer, SIGNAL(timeout()),
             q, SLOT(delayedIconUpdate()));
 
+    QStringList enabledByDefault;
+    const KService::List plugins = KServiceTypeTrader::self()->query(QLatin1String("ThumbCreator"));
+    foreach (const KSharedPtr<KService>& service, plugins) {
+        const bool enabled = service->property("X-KDE-PluginInfo-EnabledByDefault", QVariant::Bool).toBool();
+        if (enabled) {
+            enabledByDefault << service->desktopEntryName();
+        }
+    }
+
     KConfigGroup globalConfig(KGlobal::config(), "PreviewSettings");
-    m_enabledPlugins = globalConfig.readEntry("Plugins", QStringList()
-                                                         << "directorythumbnail"
-                                                         << "imagethumbnail"
-                                                         << "jpegthumbnail"
-                                                         << "svgthumbnail");
+    m_enabledPlugins = globalConfig.readEntry("Plugins", enabledByDefault);
 }
 
 KFilePreviewGenerator::Private::~Private()

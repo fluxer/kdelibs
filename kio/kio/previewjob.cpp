@@ -144,12 +144,17 @@ PreviewJob::PreviewJob(const KFileItemList &items,
     if (enabledPlugins) {
         d->enabledPlugins = *enabledPlugins;
     } else {
+        QStringList enabledByDefault;
+        const KService::List plugins = KServiceTypeTrader::self()->query(QLatin1String("ThumbCreator"));
+        foreach (const KSharedPtr<KService>& service, plugins) {
+            const bool enabled = service->property("X-KDE-PluginInfo-EnabledByDefault", QVariant::Bool).toBool();
+            if (enabled) {
+                enabledByDefault << service->desktopEntryName();
+            }
+        }
+
         const KConfigGroup globalConfig(KGlobal::config(), "PreviewSettings");
-        d->enabledPlugins = globalConfig.readEntry("Plugins", QStringList()
-                                                              << "directorythumbnail"
-                                                              << "imagethumbnail"
-                                                              << "jpegthumbnail"
-                                                              << "svgthumbnail");
+        d->enabledPlugins = globalConfig.readEntry("Plugins", enabledByDefault);
     }
     d->width = size.width();
     d->height = size.height();
