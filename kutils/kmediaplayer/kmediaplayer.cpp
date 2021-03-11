@@ -65,12 +65,14 @@ static bool s_fullscreen = false;
         } \
     }
 
+// certain properties are not available when not playing for an example thus do not issue warning
+// in case of error
 #define COMMON_OPTION_GETTER \
     kDebug() << i18n("getting option") << name; \
     if (d->m_handle) { \
         const QVariant result = mpv::qt::get_property(d->m_handle, name); \
         if (mpv::qt::is_error(result)) { \
-            kWarning() << name << mpv_error_string(mpv::qt::get_error(result)); \
+            kDebug() << name << mpv_error_string(mpv::qt::get_error(result)); \
             return QVariant(); \
         } \
         return result; \
@@ -201,9 +203,8 @@ public:
 #endif
     QString m_playerid;
     KSettings *m_settings;
-    // the handle pointer is not NULL-ed once mpv_terminate_destroy() has been
-    // called, doing it manually is a race because _processHandleEvents() is
-    // called asynchronous
+    // the handle pointer is not NULL-ed once mpv_terminate_destroy() has been called, doing it
+    // manually is a race because _processHandleEvents() is called asynchronous
     bool m_stopprocessing;
 };
 
