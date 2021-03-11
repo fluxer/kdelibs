@@ -422,28 +422,6 @@ if(Q_WS_X11)
    set(_KDE4_PLATFORM_INCLUDE_DIRS ${_KDE4_PLATFORM_INCLUDE_DIRS} ${X11_INCLUDE_DIR} )
 endif()
 
-if(CMAKE_SYSTEM_NAME MATCHES "(Linux|GNU)")
-    set(_KDE4_PLATFORM_DEFINITIONS -D_XOPEN_SOURCE=500 -D_DEFAULT_SOURCE -D_BSD_SOURCE -D_GNU_SOURCE)
-endif()
-
-set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_LARGEFILE64_SOURCE")
-
-check_cxx_source_compiles("
-#include <sys/types.h>
- /* Check that off_t can represent 2**63 - 1 correctly.
-    We can't simply define LARGE_OFF_T to be 9223372036854775807,
-    since some C++ compilers masquerading as C compilers
-    incorrectly reject 9223372036854775807.  */
-#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
-
-  int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721 && LARGE_OFF_T % 2147483647 == 1) ? 1 : -1];
-  int main() { return 0; }
-" _OFFT_IS_64BIT)
-
-if(NOT _OFFT_IS_64BIT)
-    set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -D_FILE_OFFSET_BITS=64")
-endif()
-
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
     set(_KDE4_PLATFORM_DEFINITIONS "${_KDE4_PLATFORM_DEFINITIONS} -DNDEBUG")
 endif()
@@ -528,7 +506,6 @@ set(KDE4_DEFINITIONS
     ${_KDE4_PLATFORM_DEFINITIONS}
     -DQT_NO_CAST_TO_ASCII
     -DQT_DEPRECATED_WARNINGS
-    -D_REENTRANT
     -DKDE4_CMAKE_TOPLEVEL_DIR_LENGTH=${_KDE4_CMAKE_TOPLEVEL_DIR_LENGTH}
 )
 
