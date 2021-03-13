@@ -53,9 +53,9 @@ bool StorageAccess::isAccessible() const
 
 QString StorageAccess::filePath() const
 {
-    const QString devpath = m_device->property("DEVNAME").toString();
     const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
 
+    const QString devpath = m_device->property("DEVNAME").toString();
     foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
         if (mountpoint->mountedFrom() == devpath || mountpoint->realDeviceName() == devpath) {
             return mountpoint->mountPoint();

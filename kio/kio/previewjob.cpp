@@ -511,36 +511,8 @@ bool PreviewJobPrivate::statResultThumbnail()
     thumbName = QFile::encodeName( md5.toHex() ) + ".png";
 
     QImage thumb;
-    if ( !thumb.load( thumbPath + thumbName ) ) return false;
-
-#ifndef QT_NO_IMAGE_TEXT
-    if ( thumb.text( QLatin1String("Thumb::URI") ) != origName ||
-         thumb.text( QLatin1String("Thumb::MTime") ).toInt() != tOrig ) return false;
-
-    QString thumbnailerVersion = currentItem.plugin->property("ThumbnailerVersion", QVariant::String).toString();
-
-    if (!thumbnailerVersion.isEmpty() && thumb.text(QLatin1String("Software")).startsWith("KDE Thumbnail Generator")) {
-        //Check if the version matches
-        //The software string should read "KDE Thumbnail Generator pluginName (vX)"
-        QString softwareString = thumb.text(QLatin1String("Software")).remove("KDE Thumbnail Generator").trimmed();
-        if (softwareString.isEmpty()) {
-            // The thumbnail has been created with an older version, recreating
-            return false;
-        }
-        int versionIndex = softwareString.lastIndexOf("(v");
-        if (versionIndex < 0) {
-            return false;
-        }
-
-        QString cachedVersion = softwareString.remove(0, versionIndex+2);
-        cachedVersion.chop(1);
-        uint thumbnailerMajor = thumbnailerVersion.toInt();
-        uint cachedMajor = cachedVersion.toInt();
-        if (thumbnailerMajor > cachedMajor) {
-            return false;
-        }
-    }
-#endif // QT_NO_IMAGE_TEXT
+    if ( !thumb.load( thumbPath + thumbName ) )
+        return false;
 
     // Found it, use it
     emitPreview( thumb );
@@ -665,20 +637,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
 
     QString tempFileName;
     bool savedCorrectly = false;
-    if (save)
-    {
-#ifndef QT_NO_IMAGE_TEXT
-        thumb.setText("Thumb::URI", origName);
-        thumb.setText("Thumb::MTime", QString::number(tOrig));
-        thumb.setText("Thumb::Size", number(currentItem.item.size()));
-        thumb.setText("Thumb::Mimetype", currentItem.item.mimetype());
-        QString thumbnailerVersion = currentItem.plugin->property("ThumbnailerVersion", QVariant::String).toString();
-        QString signature = QString("KDE Thumbnail Generator "+currentItem.plugin->name());
-        if (!thumbnailerVersion.isEmpty()) {
-            signature.append(" (v"+thumbnailerVersion+')');
-        }
-        thumb.setText("Software", signature);
-#endif
+    if (save) {
         KTemporaryFile temp;
         temp.setPrefix(thumbPath + "kde-tmp-");
         temp.setSuffix(".png");
@@ -689,8 +648,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
             savedCorrectly = thumb.save(tempFileName, "PNG");
         }
     }
-    if(savedCorrectly)
-    {
+    if (savedCorrectly) {
         Q_ASSERT(!tempFileName.isEmpty());
         KDE::rename(tempFileName, thumbPath + thumbName);
     }

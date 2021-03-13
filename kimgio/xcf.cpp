@@ -179,83 +179,62 @@ kDebug() << tag << " " << xcf_image.width << " " << xcf_image.height << " " <<  
  */
 bool XCFImageFormat::loadImageProperties(QDataStream& xcf_io, XCFImage& xcf_image)
 {
-	while (true) {
-		PropType type;
-		QByteArray bytes;
+    while (true) {
+        PropType type;
+        QByteArray bytes;
 
-		if (!loadProperty(xcf_io, type, bytes)) {
-			kDebug(399) << "XCF: error loading global image properties";
-			return false;
-		}
+        if (!loadProperty(xcf_io, type, bytes)) {
+            kDebug(399) << "XCF: error loading global image properties";
+            return false;
+        }
 
-		QDataStream property(bytes);
+        QDataStream property(bytes);
 
-		switch (type) {
-			case PROP_END:
-				return true;
+        switch (type) {
+            case PROP_END:
+                return true;
 
-			case PROP_COMPRESSION:
-				property >> xcf_image.compression;
-				break;
+            case PROP_COMPRESSION:
+                property >> xcf_image.compression;
+                break;
 
-			case PROP_RESOLUTION:
-				property >> xcf_image.x_resolution >> xcf_image.y_resolution;
-				break;
+            case PROP_RESOLUTION:
+                property >> xcf_image.x_resolution >> xcf_image.y_resolution;
+                break;
 
-			case PROP_TATTOO:
-				property >> xcf_image.tattoo;
-				break;
+            case PROP_TATTOO:
+                property >> xcf_image.tattoo;
+                break;
 
-#ifndef QT_NO_IMAGE_TEXT
-			case PROP_PARASITES:
-				while (!property.atEnd()) {
-					char* tag;
-					quint32 size;
+            case PROP_UNIT:
+                property >> xcf_image.unit;
+                break;
 
-					property.readBytes(tag, size);
+            case PROP_COLORMAP:
+                property >> xcf_image.num_colors;
+                if(xcf_image.num_colors < 0 || xcf_image.num_colors > 65535)
+                    return false;
 
-					quint32 flags;
-					char* data=0;
-					property >> flags >> data;
+                xcf_image.palette.reserve(xcf_image.num_colors);
 
-					if (tag && strncmp(tag, "gimp-comment", strlen("gimp-comment")) == 0)
-						xcf_image.image.setText("Comment", data);
+                for (int i = 0; i < xcf_image.num_colors; i++) {
+                    uchar r, g, b;
+                    property >> r >> g >> b;
+                    xcf_image.palette.push_back( qRgb(r,g,b) );
+                }
+                break;
 
-					delete[] tag;
-					delete[] data;
-				}
-				break;
-#endif // QT_NO_IMAGE_TEXT
+            // These properties are ignored.
+            case PROP_PATHS:
+            case PROP_USER_UNIT:
+            case PROP_PARASITES:
+                break;
 
-				case PROP_UNIT:
-					property >> xcf_image.unit;
-					break;
-
-				case PROP_PATHS:	// This property is ignored.
-					break;
-
-				case PROP_USER_UNIT:	// This property is ignored.
-					break;
-
-				case PROP_COLORMAP:
-					property >> xcf_image.num_colors;
-                                        if(xcf_image.num_colors < 0 || xcf_image.num_colors > 65535)
-                                            return false;
-
-					xcf_image.palette.reserve(xcf_image.num_colors);
-
-					for (int i = 0; i < xcf_image.num_colors; i++) {
-						uchar r, g, b;
-						property >> r >> g >> b;
-						xcf_image.palette.push_back( qRgb(r,g,b) );
-					}
-					break;
-
-				default:
-					kDebug(399) << "XCF: unimplemented image property" << type
-							<< ", size " << bytes.size() << endl;
-		}
-	}
+            default:
+                kDebug(399) << "XCF: unimplemented image property" << type
+                                << ", size " << bytes.size() << endl;
+        }
+    }
 }
 
 
