@@ -507,8 +507,9 @@ bool PreviewJobPrivate::statResultThumbnail()
     url.setPass(QString());
     origName = url.url();
 
-    QByteArray md5 = QCryptographicHash::hash( QFile::encodeName( origName ), QCryptographicHash::Md5 );
-    thumbName = QFile::encodeName( md5.toHex() ) + ".png";
+    // NOTE: make sure the algorithm matches the one used in kde-workspace/kioslave/thumbnail/thumbnail.cpp
+    const QByteArray hash = QCryptographicHash::hash( QFile::encodeName( origName ), QCryptographicHash::Sha1 );
+    thumbName = QFile::encodeName( hash.toHex() ) + ".png";
 
     QImage thumb;
     if ( !thumb.load( thumbPath + thumbName ) )
