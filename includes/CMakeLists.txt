@@ -504,7 +504,6 @@ install(
     KParts/Factory
     KParts/FileInfoExtension
     KParts/GUIActivateEvent
-    KParts/HistoryProvider
     KParts/LiveConnectExtension
     KParts/ListingExtension
     KParts/MainWindow
@@ -518,7 +517,6 @@ install(
     KParts/ReadOnlyPart
     KParts/ReadWritePart
     KParts/StatusBarExtension
-    KParts/TextExtension
     KParts/WindowArgs
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KParts
     COMPONENT Devel

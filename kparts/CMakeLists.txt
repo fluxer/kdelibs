@@ -16,12 +16,10 @@ set(kparts_LIB_SRCS
     event.cpp
     browserextension.cpp
     factory.cpp
-    historyprovider.cpp
     browserinterface.cpp
     browserrun.cpp
     browseropenorsavequestion.cpp
     statusbarextension.cpp
-    textextension.cpp
     fileinfoextension.cpp
     listingextension.cpp
 )
@@ -68,12 +66,10 @@ install(
     event.h
     browserextension.h
     factory.h
-    historyprovider.h
     browserinterface.h
     browserrun.h
     statusbarextension.h
     browseropenorsavequestion.h
-    textextension.h
     fileinfoextension.h
     listingextension.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kparts
