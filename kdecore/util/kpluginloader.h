@@ -79,7 +79,6 @@ class KPluginLoaderPrivate;
 class KDECORE_EXPORT KPluginLoader : public QPluginLoader
 {
     Q_OBJECT
-    Q_PROPERTY(QString fileName READ fileName) // KDE5: REMOVE?
     Q_PROPERTY(QString pluginName READ pluginName) // KDE5: REMOVE?
 public:
     /**
@@ -138,8 +137,6 @@ public:
 private:
     Q_DECLARE_PRIVATE(KPluginLoader)
     Q_DISABLE_COPY(KPluginLoader)
-
-    using QPluginLoader::setFileName;
 
     KPluginLoaderPrivate *const d_ptr;
 };
