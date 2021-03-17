@@ -69,8 +69,6 @@ public:
     void slotDataChangeStarted();
     void slotDataChangeFinished();
 
-    QList<KUrl> sortedKeys(const QHash<KUrl, QVariant>& data) const;
-
     QList<Row> m_rows;
     KFileMetaDataProvider* m_provider;
     QGridLayout* m_gridLayout;
@@ -201,9 +199,9 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
     // Iterate through all remaining items embed the label
     // and the value as new row in the widget
     int rowIndex = 0;
-    const QList<KUrl> keys = sortedKeys(data);
+    const QList<KUrl> keys = data.keys();
     foreach (const KUrl& key, keys) {
-        const QVariant value = data[key];
+        const QVariant value = data.value(key);
         if (value.toString().isEmpty()) {
             continue;
         }
@@ -256,20 +254,6 @@ void KFileMetaDataWidget::Private::slotDataChangeStarted()
 void KFileMetaDataWidget::Private::slotDataChangeFinished()
 {
     q->setEnabled(true);
-}
-
-QList<KUrl> KFileMetaDataWidget::Private::sortedKeys(const QHash<KUrl, QVariant>& data) const
-{
-    // Apply the URIs to the list that will get returned.
-    // The list will then be alphabetically ordered by the translated labels of the URIs.
-    QList<KUrl> list;
-    QHashIterator<KUrl, QVariant> hashIt(data);
-    while (hashIt.hasNext()) {
-        hashIt.next();
-        list.append(hashIt.key());
-    }
-
-    return list;
 }
 
 KFileMetaDataWidget::KFileMetaDataWidget(QWidget* parent) :
