@@ -228,23 +228,23 @@ QString UDevDevice::description() const
         const QString storagesize = KGlobal::locale()->formatByteSize(storageIface.size());
 
         if (drivetype == Solid::StorageDrive::HardDisk) {
-            return i18n("%1 Hard Drive", storagesize);
+            return QObject::tr("%1 Hard Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::CdromDrive) {
-            return i18n("%1 CD-ROM Drive", storagesize);
+            return QObject::tr("%1 CD-ROM Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::Floppy) {
-            return i18n("%1 Floppy Drive", storagesize);
+            return QObject::tr("%1 Floppy Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::Tape) {
-            return i18n("%1 Tape Drive", storagesize);
+            return QObject::tr("%1 Tape Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::CompactFlash) {
-            return i18n("%1 Compact Flash Drive", storagesize);
+            return QObject::tr("%1 Compact Flash Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::MemoryStick) {
-            return i18n("%1 Memory Stick Drive", storagesize);
+            return QObject::tr("%1 Memory Stick Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::SmartMedia) {
-            return i18n("%1 Smart Media Drive", storagesize);
+            return QObject::tr("%1 Smart Media Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::SdMmc) {
-            return i18n("%1 SD/MMC Drive", storagesize);
+            return QObject::tr("%1 SD/MMC Drive").arg(storagesize);
         } else if (drivetype == Solid::StorageDrive::Xd) {
-            return i18n("%1 Xd Drive", storagesize);
+            return QObject::tr("%1 Xd Drive").arg(storagesize);
         }
     } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
         const StorageVolume storageIface(const_cast<UDevDevice *>(this));
