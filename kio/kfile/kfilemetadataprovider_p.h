@@ -109,9 +109,6 @@ Q_SIGNALS:
 
     void urlActivated(const KUrl& url);
 
-    void dataChangeStarted();
-    void dataChangeFinished();
-
 private:
     class Private;
     Private* const d;

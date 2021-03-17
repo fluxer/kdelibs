@@ -132,9 +132,6 @@ void KFileMetaDataProvider::Private::slotLinkActivated(const QString& link)
 
 void KFileMetaDataProvider::Private::startChangeDataJob(KJob* job)
 {
-    connect(job, SIGNAL(result(KJob*)),
-            q, SIGNAL(dataChangeFinished()));
-    emit q->dataChangeStarted();
     job->start();
 }
 
@@ -178,7 +175,6 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
     if (items.isEmpty()) {
         return;
     }
-    Q_PRIVATE_SLOT(d,void slotDataChangeStarted())
     d->m_urls.clear();
     foreach (const KFileItem& item, items) {
         const KUrl url = item.url();
@@ -187,7 +183,6 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
         }
     }
     d->readMetadata();
-    Q_PRIVATE_SLOT(d,void slotDataChangeFinished())
 }
 
 QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
