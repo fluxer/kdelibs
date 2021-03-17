@@ -250,7 +250,7 @@ WallpaperPackage::WallpaperPackage(Wallpaper *paper, QObject *parent)
       m_resizeMethod(Wallpaper::ScaledResize)
 {
     QStringList mimetypes;
-    mimetypes << "image/svg" << "image/png" << "image/jpeg" << "image/jpg";
+    mimetypes << "image/svg" << "image/png" << "image/jpeg";
     setDefaultMimetypes(mimetypes);
 
     addDirectoryDefinition("images", "images/", i18n("Images"));
