@@ -135,11 +135,6 @@ public:
      */
     QString errorString() const;
 
-protected:
-    /**
-     * Performs the loading of the plugin.
-     */
-    bool load();
 private:
     Q_DECLARE_PRIVATE(KPluginLoader)
     Q_DISABLE_COPY(KPluginLoader)
