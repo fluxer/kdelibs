@@ -622,7 +622,7 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
             const QString name = xml.attributes().value(QLatin1String("type")).toString();
             if (name.isEmpty())
                 continue;
-            if (name != m_strName) {
+            if (name.toLower() != m_strName) {
                 kWarning() << "Got name" << name << "in file" << file << "expected" << m_strName;
             }
 

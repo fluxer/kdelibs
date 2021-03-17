@@ -63,7 +63,7 @@ KMimeType::Ptr KMimeTypeRepository::findMimeTypeByName(const QString &_name, KMi
         name = canonicalName(name);
     }
 
-    const QString filename = name + QLatin1String(".xml");
+    const QString filename = name.toLower() + QLatin1String(".xml");
 
     if (KStandardDirs::locate("xdgdata-mime", filename).isEmpty()) {
         return KMimeType::Ptr(); // Not found
