@@ -33,7 +33,6 @@ namespace Plasma
 {
 
 class AnimationDriver;
-class KineticScrolling;
 
 struct AnimationState
 {
@@ -130,8 +129,6 @@ class AnimatorPrivate
         QSet<MovementState *> movingItemsToDelete;
         QSet<ElementAnimationState *> animatedElementsToDelete;
         QSet<CustomAnimationState *> customAnimsToDelete;
-
-        QHash<QGraphicsWidget *, KineticScrolling *> scrollingManagers;
 
         static void mapAnimation(Animator::Animation from, Animator::Animation to);
         static void mapAnimation(Animator::Animation from, const QString &to);

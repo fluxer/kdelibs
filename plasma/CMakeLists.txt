@@ -111,7 +111,6 @@ set(plasma_LIB_SRCS
     private/themedwidgetinterface.cpp
     private/tooltip.cpp
     private/windowpreview.cpp
-    private/kineticscroll.cpp
     private/declarative/declarativenetworkaccessmanagerfactory.cpp
     private/effects/halopainter.cpp
     private/effects/ripple.cpp
