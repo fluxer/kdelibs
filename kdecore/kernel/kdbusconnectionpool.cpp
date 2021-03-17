@@ -56,7 +56,7 @@ private:
 };
 } // namespace
 
-thread_local KDBusConnectionPoolPrivate* s_perThreadConnection;
+thread_local KDBusConnectionPoolPrivate* s_perThreadConnection = 0;
 
 QDBusConnection KDBusConnectionPool::threadConnection()
 {

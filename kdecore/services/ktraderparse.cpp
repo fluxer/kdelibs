@@ -45,7 +45,7 @@ struct ParsingData
 
 using namespace KTraderParse;
 
-thread_local ParsingData* s_parsingData;
+thread_local ParsingData* s_parsingData = 0;
 
 ParseTreeBase::Ptr KTraderParse::parseConstraints( const QString& _constr )
 {
