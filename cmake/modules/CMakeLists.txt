@@ -42,7 +42,6 @@ set(cmakeFiles
     FindKipi.cmake
     FindKSane.cmake
     FindLibATASmart.cmake
-    FindLibAttica.cmake
     FindLibDRM.cmake
     FindLibGcrypt.cmake
     FindLibGPS.cmake
