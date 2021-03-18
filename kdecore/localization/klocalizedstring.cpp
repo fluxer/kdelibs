@@ -629,7 +629,7 @@ static QString wrapNum (const QString &tag, const QString &numstr,
 {
     QString optag;
     if (fieldWidth != 0) {
-        QString fillString = KuitSemantics::escape(fillChar);
+        QString fillString = Qt::escape(fillChar);
         optag = QString::fromLatin1("<%1 width='%2' fill='%3'>")
                        .arg(tag, QString::number(fieldWidth), fillString);
     } else {

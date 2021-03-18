@@ -64,12 +64,6 @@ class KuitSemantics
      */
     ~KuitSemantics ();
 
-    /**
-     * Convert &, ", ', <, > characters into XML entities
-     * &amp;, &lt;, &gt;, &apos;, &quot;, respectively.
-     */
-    static QString escape (const QString &text);
-
     private:
 
     KuitSemantics (const KuitSemantics &t);
