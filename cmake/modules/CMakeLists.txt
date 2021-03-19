@@ -63,7 +63,6 @@ set(cmakeFiles
     FindPCIUTILS.cmake
     FindPopplerQt4.cmake
     FindQalculate.cmake
-    FindQCA2.cmake
     FindRAW1394.cmake
     FindSamba.cmake
     FindSane.cmake
