@@ -205,9 +205,6 @@ public Q_SLOTS:
     */
    void deleted(const QString &path);
 
-private Q_SLOTS:
-   void emitChanged(const QString &path);
-
  private:
 
     KDirWatchPrivate* d;

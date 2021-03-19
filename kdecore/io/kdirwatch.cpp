@@ -48,14 +48,14 @@ KDirWatch* KDirWatch::self()
 KDirWatch::KDirWatch (QObject* parent)
   : QObject(parent), d(new KDirWatchPrivate())
 {
-    connect(d->watcher, SIGNAL(directoryChanged(QString)), this, SLOT(emitChanged(QString)));
-    connect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
+    connect(d->watcher, SIGNAL(directoryChanged(QString)), this, SLOT(setDirty(QString)));
+    connect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(setDirty(QString)));
 }
 
 KDirWatch::~KDirWatch()
 {
-    disconnect(d->watcher, SIGNAL(directoryChanged(QString)), this, SLOT(emitChanged(QString)));
-    disconnect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(emitChanged(QString)));
+    disconnect(d->watcher, SIGNAL(directoryChanged(QString)), this, SLOT(setDirty(QString)));
+    disconnect(d->watcher, SIGNAL(fileChanged(QString)), this, SLOT(setDirty(QString)));
     delete d;
 }
 
@@ -142,11 +142,6 @@ void KDirWatch::setDeleted(const QString &file)
 {
     kDebug(7001) << objectName() << "emitting deleted" << file;
     emit deleted(file);
-}
-
-void KDirWatch::emitChanged(const QString &path)
-{
-    setDirty(path);
 }
 
 #include "moc_kdirwatch.cpp"
