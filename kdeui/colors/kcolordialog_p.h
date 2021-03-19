@@ -53,7 +53,6 @@ private:
   Q_PRIVATE_SLOT(d, void slotColorCellDoubleClicked( int index , const QColor& ))
   Q_PRIVATE_SLOT(d, void slotColorTextSelected( const QString &colorText ))
   Q_PRIVATE_SLOT(d, void slotSetColors( const QString &_collectionName ))
-  Q_PRIVATE_SLOT(d, void slotShowNamedColorReadError( void ))
 
   void readNamedColor( void );
 

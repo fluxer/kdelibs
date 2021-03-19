@@ -543,7 +543,6 @@ public:
     void slotColorCellDoubleClicked(int index , const QColor&);
     void slotColorTextSelected(const QString &colorText);
     void slotSetColors(const QString &_collectionName);
-    void slotShowNamedColorReadError(void);
 
     KColorTable *q;
     QString i18n_namedColors;
@@ -619,43 +618,6 @@ KColorTable::name() const
     return d->combo->currentText();
 }
 
-
-static const char * const *namedColorFilePath(void)
-{
-    //
-    // 2000-02-05 Espen Sand.
-    // Add missing filepaths here. Make sure the last entry is 0, 0!
-    //
-    // 2009-06-16 Pino Toscano
-    //
-    // You can specify either absolute paths or relative locations
-    // wrt KStandardDirs resources. In either way, there should be two
-    // "strings" for each path.
-    // - absolute path: specify it directly, then add 0 as second item
-    //   * example: "/usr/share/X11/rgb.txt", 0,
-    // - KStandardDirs location: specify the filename as first item,
-    //   then add the resource as second
-    //   * example: "kdeui/rgb.txt", "data",
-    //
-    static const char * const path[] = {
-#ifdef Q_WS_X11
-#ifdef X11_RGBFILE
-        X11_RGBFILE, 0,
-#endif
-        "/usr/share/X11/rgb.txt", 0,
-        "/usr/X11R6/lib/X11/rgb.txt", 0,
-        "/usr/openwin/lib/X11/rgb.txt", 0, // for Solaris.
-#else /* systems without X11 */
-        "kdeui/rgb.txt", "data",
-#endif
-        0, 0
-    };
-    return path;
-}
-
-
-
-
 void
 KColorTable::readNamedColor(void)
 {
@@ -663,104 +625,16 @@ KColorTable::readNamedColor(void)
         return; // Strings already present
     }
 
-    KGlobal::locale()->insertCatalog("kdelibs_colors4");
-
-    //
-    // Code somewhat inspired by KColorCollection.
-    //
-
-    const char * const *path = namedColorFilePath();
-    for (int i = 0; path[i]; i += 2) {
-        QString file;
-        if (path[i + 1]) {
-            file = KStandardDirs::locate(path[i + 1], QString::fromLatin1(path[i]));
-            if (file.isEmpty()) {
-                continue;
-            }
-        } else {
-            file = QString::fromLatin1(path[i]);
-        }
-
-        QFile paletteFile(file);
-        if (!paletteFile.open(QIODevice::ReadOnly)) {
-            continue;
-        }
-
-        QByteArray line;
-        QStringList list;
-        while (!paletteFile.atEnd()) {
-            line = paletteFile.readLine();
-
-            int red, green, blue;
-            int pos = 0;
-
-            if (sscanf(line, "%d %d %d%n", &red, &green, &blue, &pos) == 3) {
-                //
-                // Remove duplicates. Every name with a space and every name
-                // that start with "gray".
-                //
-                QString name = line.mid(pos).trimmed();
-                QByteArray s1 = line.mid(pos);
-                if (name.isNull() || name.indexOf(' ') != -1 ||
-                        name.indexOf("gray") != -1 ||  name.indexOf("grey") != -1) {
-                    continue;
-                }
-
-                const QColor color(red, green, blue);
-                if (color.isValid()) {
-                    const QString colorName(i18nc("color", name.toLatin1().data()));
-                    list.append(colorName);
-                    d->m_namedColorMap[ colorName ] = color;
-                }
-            }
-        }
-
-        list.sort();
-        d->mNamedColorList->addItems(list);
-        break;
+    QStringList list;
+    foreach (const QString &colorName, QColor::colorNames()) {
+        const QColor color(colorName);
+        list.append(colorName);
+        d->m_namedColorMap[ colorName ] = color;
     }
 
-    if (d->mNamedColorList->count() == 0) {
-        //
-        // Give the error dialog box a chance to center above the
-        // widget (or dialog). If we had displayed it now we could get a
-        // situation where the (modal) error dialog box pops up first
-        // preventing the real dialog to become visible until the
-        // error dialog box is removed (== bad UI).
-        //
-        QTimer::singleShot(10, this, SLOT(slotShowNamedColorReadError()));
-    }
+    list.sort();
+    d->mNamedColorList->addItems(list);
 }
-
-
-void
-KColorTable::KColorTablePrivate::slotShowNamedColorReadError(void)
-{
-    if (mNamedColorList->count() == 0) {
-        QString pathMsg;
-        int pathCount = 0;
-
-        const char * const *path = namedColorFilePath();
-        for (int i = 0; path[i]; i += 2, ++pathCount) {
-            if (path[i + 1]) {
-                pathMsg += QLatin1String(path[i + 1]) + ", " + QString::fromLatin1(path[i]);
-            } else {
-                pathMsg += QLatin1String(path[i]);
-            }
-            pathMsg += '\n';
-        }
-
-        QString finalMsg  = i18ncp("%1 is the number of paths, %2 is the list of paths (with newlines between them)",
-                                   "Unable to read X11 RGB color strings. The following "
-                                   "file location was examined:\n%2",
-                                   "Unable to read X11 RGB color strings. The following "
-                                   "file locations were examined:\n%2",
-                                   pathCount, pathMsg );
-
-        KMessageBox::sorry(q, finalMsg);
-    }
-}
-
 
 //
 // 2000-02-12 Espen Sand
