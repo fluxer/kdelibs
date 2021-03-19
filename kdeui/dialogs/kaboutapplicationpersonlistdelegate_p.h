@@ -56,15 +56,13 @@ private:
     enum DelegateWidgets
     {
         TextLabel = 0,
-        MainLinks,
-        SocialLinks
+        MainLinks
     };
 
     enum MainLinkActions
     {
         EmailAction = 0,
-        HomepageAction,
-        VisitProfileAction
+        HomepageAction
     };
 };
 

@@ -33,10 +33,7 @@
 namespace KDEPrivate
 {
 
-static const int AVATAR_HEIGHT = 50;
-static const int AVATAR_WIDTH = 50;
 static const int MAIN_LINKS_HEIGHT = 32;
-static const int SOCIAL_LINKS_HEIGHT = 26;
 static const int MAX_SOCIAL_LINKS = 9;
 
 KAboutApplicationPersonListDelegate::KAboutApplicationPersonListDelegate(
@@ -66,25 +63,10 @@ QList< QWidget *> KAboutApplicationPersonListDelegate::createItemWidgets() const
                                            mainLinks );
     homepageAction->setVisible( false );
     mainLinks->addAction( homepageAction );
-    KAction *visitProfileAction = new KAction( KIcon( "get-hot-new-stuff" ), "", mainLinks );
-    visitProfileAction->setVisible( false );
-    mainLinks->addAction( visitProfileAction );
 
     list.append( mainLinks );
 
-
-    KToolBar *socialLinks = new KToolBar( itemView(), false, false );
-    for( int i = 0; i < MAX_SOCIAL_LINKS; ++i ) {
-        KAction *action = new KAction( KIcon( "applications-internet" ), "", socialLinks );
-        action->setVisible( false );
-        socialLinks->addAction( action );
-    }
-
-    list.append( socialLinks );
-
     connect( mainLinks, SIGNAL(actionTriggered(QAction*)),
-             this, SLOT(launchUrl(QAction*)) );
-    connect( socialLinks, SIGNAL(actionTriggered(QAction*)),
              this, SLOT(launchUrl(QAction*)) );
 
     return list;
@@ -115,7 +97,7 @@ void KAboutApplicationPersonListDelegate::updateItemWidgets( const QList<QWidget
 
     label->setText( text );
 
-    //And now we fill in the main links (email + homepage + OCS profile)...
+    //And now we fill in the main links (email + homepage)...
     KToolBar *mainLinks = qobject_cast< KToolBar * >( widgets.at( MainLinks ) );
     mainLinks->setIconSize( QSize( 22, 22 ) );
     mainLinks->setContentsMargins( 0, 0, 0, 0 );
@@ -134,60 +116,9 @@ void KAboutApplicationPersonListDelegate::updateItemWidgets( const QList<QWidget
         action->setData( profile.homepage().url() );
         action->setVisible( true );
     }
-    if( !profile.ocsProfileUrl().isEmpty() ) {
-        action = qobject_cast< KAction * >( mainLinks->actions().at( VisitProfileAction ) );
-        KAboutApplicationPersonModel *model = qobject_cast< KAboutApplicationPersonModel * >( itemView()->model() );
-        action->setToolTip( i18n( "Visit contributor's profile on %1\n%2",
-                                  model->providerName(),
-                                  profile.ocsProfileUrl() ) );
-        action->setData( profile.ocsProfileUrl() );
-        action->setVisible( true );
-    }
+
     mainLinks->resize( QSize( mainLinks->sizeHint().width(), MAIN_LINKS_HEIGHT ) );
     mainLinks->move( wRect.left(), wRect.top() + label->height() );
-
-    //Finally, the social links...
-    KToolBar *socialLinks = qobject_cast< KToolBar * >( widgets.at( SocialLinks ) );
-    socialLinks->setIconSize( QSize( 16, 16 ) );
-    socialLinks->setContentsMargins( 0, 0, 0, 0 );
-    socialLinks->setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
-
-    int currentSocialLinkAction = 0;
-    foreach( const KAboutApplicationPersonProfileOcsLink &link, profile.ocsLinks() ) {
-        if( !profile.homepage().isEmpty() && profile.homepage() == link.url() )
-            continue;   //We skip it if it's the same as the homepage from KAboutData
-
-        action = qobject_cast< KAction * >( socialLinks->actions().at( currentSocialLinkAction ) );
-        if( link.type() == KAboutApplicationPersonProfileOcsLink::Other ) {
-            action->setToolTip( i18n( "Visit contributor's page\n%1",
-                                      link.url().url() ) );
-        }
-        else if( link.type() == KAboutApplicationPersonProfileOcsLink::Blog ) {
-            action->setToolTip( i18n( "Visit contributor's blog\n%1",
-                                      link.url().url() ) );
-        }
-        else if( link.type() == KAboutApplicationPersonProfileOcsLink::Homepage ) {
-            action->setToolTip( i18n( "Visit contributor's homepage\n%1",
-                                      link.url().url() ) );
-        }
-        else {
-            action->setToolTip( i18n( "Visit contributor's profile on %1\n%2",
-                                      link.prettyType(),
-                                      link.url().url() ) );
-        }
-        action->setIcon( link.icon() );
-        action->setData( link.url().url() );
-        action->setVisible( true );
-
-        ++currentSocialLinkAction;
-        if( currentSocialLinkAction > MAX_SOCIAL_LINKS - 1 )
-            break;
-    }
-
-    socialLinks->resize( QSize( socialLinks->sizeHint().width(), SOCIAL_LINKS_HEIGHT ) );
-    socialLinks->move( wRect.left() + mainLinks->width(),
-                       wRect.top() + label->height() +
-                       ( MAIN_LINKS_HEIGHT - SOCIAL_LINKS_HEIGHT ) / 2 );
 
     itemView()->reset();
 }
@@ -195,17 +126,9 @@ void KAboutApplicationPersonListDelegate::updateItemWidgets( const QList<QWidget
 QSize KAboutApplicationPersonListDelegate::sizeHint( const QStyleOptionViewItem &option,
                                                      const QModelIndex &index ) const
 {
-    KAboutApplicationPersonProfile profile = index.data().value< KAboutApplicationPersonProfile >();
-    bool hasAvatar = !profile.avatar().isNull();
+    int height = widgetsRect( option, index ).height();
 
-    int margin = option.fontMetrics.height() / 2;
-
-    int height = hasAvatar ? qMax( widgetsRect( option, index ).height(),
-                                   AVATAR_HEIGHT + 2*margin )
-                           : widgetsRect( option, index ).height();
-
-    QSize metrics( option.fontMetrics.height() * 7, height );
-    return metrics;
+    return QSize( option.fontMetrics.height() * 7, height );
 }
 
 void KAboutApplicationPersonListDelegate::paint( QPainter *painter,
@@ -216,28 +139,6 @@ void KAboutApplicationPersonListDelegate::paint( QPainter *painter,
 
     QStyle *style = QApplication::style();
     style->drawPrimitive(QStyle::PE_Widget, &option, painter, 0);
-
-    const KAboutApplicationPersonModel * model = qobject_cast< const KAboutApplicationPersonModel * >(index.model());
-
-    if ( model->hasAvatarPixmaps() ) {
-        int height = qMax( widgetsRect( option, index ).height(), AVATAR_HEIGHT + 2*margin );
-        QPoint point( option.rect.left() + 2 * margin,
-                      option.rect.top() + ( (height - AVATAR_HEIGHT) / 2) );
-
-        KAboutApplicationPersonProfile profile = index.data().value< KAboutApplicationPersonProfile >();
-
-        if( !profile.avatar().isNull() ) {
-            QPixmap pixmap = profile.avatar();
-
-            point.setX( ( AVATAR_WIDTH - pixmap.width() ) / 2 + 5 );
-            point.setY( option.rect.top() + ( ( height - pixmap.height() ) / 2 ) );
-            painter->drawPixmap( point, pixmap );
-
-            QPoint framePoint( point.x() - 5, point.y() - 5 );
-            QPixmap framePixmap = QPixmap( KStandardDirs::locate( "data", "kdeui/pics/thumb_frame.png" ) );
-            painter->drawPixmap( framePoint, framePixmap.scaled( pixmap.width() + 10, pixmap.height() + 10 ) );
-        }
-    }
 }
 
 void KAboutApplicationPersonListDelegate::launchUrl( QAction *action ) const
@@ -274,10 +175,6 @@ QString KAboutApplicationPersonListDelegate::buildTextForProfile( const KAboutAp
         text += QLatin1String("</i>");
     }
 
-    if( !profile.location().isEmpty() ) {
-        text += QLatin1String("\n<br>");
-        text += profile.location();
-    }
     return text;
 }
 
@@ -287,19 +184,10 @@ QRect KAboutApplicationPersonListDelegate::widgetsRect( const QStyleOptionViewIt
     KAboutApplicationPersonProfile profile = index.data().value< KAboutApplicationPersonProfile >();
     int margin = option.fontMetrics.height() / 2;
 
-    QRect widgetsRect;
-    if( qobject_cast< const KAboutApplicationPersonModel * >( index.model() )->hasAvatarPixmaps() ) {
-        widgetsRect = QRect( option.rect.left() + AVATAR_WIDTH + 3 * margin,
-                             margin/2,
-                             option.rect.width() - AVATAR_WIDTH - 4 * margin,
-                             0 );
-    }
-    else {
-        widgetsRect = QRect( option.rect.left() + margin,
-                             margin/2,
-                             option.rect.width() - 2*margin,
-                             0 );
-    }
+    QRect widgetsRect = QRect( option.rect.left() + margin,
+                               margin/2,
+                               option.rect.width() - 2*margin,
+                               0 );
 
     int textHeight = heightForString( buildTextForProfile( profile ), widgetsRect.width() - margin, option );
     widgetsRect.setHeight( textHeight + MAIN_LINKS_HEIGHT + 1.5*margin );

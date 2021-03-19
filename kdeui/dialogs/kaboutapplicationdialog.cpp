@@ -209,7 +209,6 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
 
         KDEPrivate::KAboutApplicationPersonModel *authorModel =
                 new KDEPrivate::KAboutApplicationPersonModel( aboutData->authors(),
-                                                              aboutData->ocsProviderUrl(),
                                                               authorWidget );
 
         KDEPrivate::KAboutApplicationPersonListView *authorView =
@@ -236,7 +235,6 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
 
         KDEPrivate::KAboutApplicationPersonModel *creditModel =
                 new KDEPrivate::KAboutApplicationPersonModel( aboutData->credits(),
-                                                              aboutData->ocsProviderUrl(),
                                                               creditWidget );
 
         KDEPrivate::KAboutApplicationPersonListView *creditView =
@@ -263,7 +261,6 @@ void KAboutApplicationDialog::Private::init( const KAboutData *ad, Options opt )
 
             KDEPrivate::KAboutApplicationPersonModel *translatorModel =
                     new KDEPrivate::KAboutApplicationPersonModel( aboutData->translators(),
-                                                                  aboutData->ocsProviderUrl(),
                                                                   translatorWidget );
 
             KDEPrivate::KAboutApplicationPersonListView *translatorView =

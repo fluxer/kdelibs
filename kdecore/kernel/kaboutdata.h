@@ -84,25 +84,6 @@ public:
                            const QByteArray &webAddress = QByteArray() );
 
     /**
-     * Convenience constructor with Open Collaboration Services data
-     *
-     * @param name The name of the person.
-     *
-     * @param task The task of this person.
-     *
-     * @param emailAddress The email address of the person.
-     *
-     * @param webAddress Home page of the person.
-     *
-     * @param ocsUsername Open Collaboration Services username of the person.
-     */
-    explicit KAboutPerson( const KLocalizedString &name,
-                           const KLocalizedString &task,
-                           const QByteArray &emailAddress,
-                           const QByteArray &webAddress,
-                           const QByteArray &ocsUsername ); //KDE5: merge into main ctor
-
-    /**
      * Copy constructor.  Performs a deep copy.
      * @param other object to copy
      */
@@ -144,13 +125,6 @@ public:
      *           constructed with an empty home page)
      */
     QString webAddress() const;
-
-    /**
-     * The person's Open Collaboration Services username
-     * @return the persons OCS username (can be QString(), if it has been
-     *           constructed with an empty username)
-     */
-    QString ocsUsername() const;
 
 private:
     /**
@@ -314,37 +288,6 @@ class KDECORE_EXPORT KAboutData
                            const QByteArray &webAddress = QByteArray() );
 
     /**
-     * Defines an author.
-     *
-     * You can call this function as many times as you need. Each entry is
-     * appended to a list. The person in the first entry is assumed to be
-     * the leader of the project.
-     *
-     * @param name The developer's name. It should be marked for translation
-     *             like this: ki18n("Developer Name")
-     *
-     * @param task What the person is responsible for. This text can contain
-     *             newlines. It should be marked for translation like this:
-     *             ki18n("Task description..."). Can be left empty.
-     *
-     * @param emailAddress An Email address where the person can be reached.
-     *                     Can be left empty.
-     *
-     * @param webAddress The person's homepage or a relevant link.
-     *        Start the address with "http://". "http://some.domain" is
-     *        correct, "some.domain" is not. Can be left empty.
-     *
-     * @param ocsUsername The person's Open Collaboration Services username.
-     *        The provider can be optionally specified with @see setOcsProvider.
-     *
-     */
-    KAboutData &addAuthor( const KLocalizedString &name,
-                           const KLocalizedString &task,
-                           const QByteArray &emailAddress,
-                           const QByteArray &webAddress,
-                           const QByteArray &ocsUsername ); //KDE5: merge with addAuthor
-
-    /**
      * Defines a person that deserves credit.
      *
      * You can call this function as many times as you need. Each entry
@@ -370,37 +313,6 @@ class KDECORE_EXPORT KAboutData
                            const KLocalizedString &task = KLocalizedString(),
                            const QByteArray &emailAddress = QByteArray(),
                            const QByteArray &webAddress = QByteArray() );
-
-    /**
-     * Defines a person that deserves credit.
-     *
-     * You can call this function as many times as you need. Each entry
-     * is appended to a list.
-     *
-     * @param name The person's name. It should be marked for translation
-     *             like this: ki18n("Contributor Name")
-     *
-     * @param task What the person has done to deserve the honor. The
-     *        text can contain newlines. It should be marked for
-     *        translation like this: ki18n("Task description...")
-     *        Can be left empty.
-     *
-     * @param emailAddress An email address when the person can be reached.
-     *        Can be left empty.
-     *
-     * @param webAddress The person's homepage or a relevant link.
-     *        Start the address with "http://". "http://some.domain" is
-     *        is correct, "some.domain" is not. Can be left empty.
-     *
-     * @param ocsUsername The person's Open Collaboration Services username.
-     *        The provider can be optionally specified with @see setOcsProvider.
-     *
-     */
-    KAboutData &addCredit( const KLocalizedString &name,
-                           const KLocalizedString &task,
-                           const QByteArray &emailAddress,
-                           const QByteArray &webAddress,
-                           const QByteArray &ocsUsername ); //KDE5: merge with addCredit
 
     /**
      * @brief Sets the name(s) of the translator(s) of the GUI.
@@ -518,20 +430,6 @@ class KDECORE_EXPORT KAboutData
      * @see programLogo()
     */
     KAboutData &setProgramLogo(const QVariant& image);
-
-    /**
-     * Specifies an Open Collaboration Services provider by URL.
-     * A provider file must be available for the chosen provider.
-     *
-     * Use this if you need to override the default provider.
-     *
-     * If this method is not used, all the KAboutPerson OCS usernames
-     * will be used with the openDesktop.org entry from the default
-     * provider file.
-     *
-     * @param providerUrl The provider URL as defined in the provider file.
-     */
-    KAboutData &setOcsProvider( const QByteArray &providerUrl );
 
     /**
      * Defines the program version string.
@@ -684,12 +582,6 @@ class KDECORE_EXPORT KAboutData
      *         no custom application logo defined.
      */
     QVariant programLogo() const;
-
-    /**
-     * Returns the chosen Open Collaboration Services provider URL.
-     * @return the provider URL.
-     */
-    QString ocsProviderUrl() const;
 
     /**
      * Returns the program's version.

@@ -60,7 +60,6 @@ public:
    KLocalizedString _task;
    QString _emailAddress;
    QString _webAddress;
-   QString _ocsUsername;
 
    QString _nameNoop;
 };
@@ -75,20 +74,6 @@ KAboutPerson::KAboutPerson( const KLocalizedString &_name,
    d->_task = _task;
    d->_emailAddress = QString::fromUtf8(_emailAddress);
    d->_webAddress = QString::fromUtf8(_webAddress);
-}
-
-KAboutPerson::KAboutPerson( const KLocalizedString &_name,
-                            const KLocalizedString &_task,
-                            const QByteArray &_emailAddress,
-                            const QByteArray &_webAddress,
-                            const QByteArray &_ocsUsername )
-  : d(new Private)
-{
-   d->_name = _name;
-   d->_task = _task;
-   d->_emailAddress = QString::fromUtf8(_emailAddress);
-   d->_webAddress = QString::fromUtf8(_webAddress);
-   d->_ocsUsername = QString::fromUtf8( _ocsUsername );
 }
 
 KAboutPerson::KAboutPerson( const QString &_name, const QString &_email )
@@ -131,11 +116,6 @@ QString KAboutPerson::emailAddress() const
 QString KAboutPerson::webAddress() const
 {
    return d->_webAddress;
-}
-
-QString KAboutPerson::ocsUsername() const
-{
-    return d->_ocsUsername;
 }
 
 KAboutPerson &KAboutPerson::operator=(const KAboutPerson& other)
@@ -413,7 +393,6 @@ public:
     bool customAuthorTextEnabled;
 
     QString organizationDomain;
-    QByteArray _ocsProviderUrl;
 
     // Everything dr.konqi needs, we store as utf-8, so we
     // can just give it a pointer, w/o any allocations.
@@ -510,32 +489,12 @@ KAboutData &KAboutData::addAuthor( const KLocalizedString &name,
   return *this;
 }
 
-KAboutData &KAboutData::addAuthor( const KLocalizedString &name,
-                                   const KLocalizedString &task,
-                                   const QByteArray &emailAddress,
-                                   const QByteArray &webAddress,
-                                   const QByteArray &ocsUsername )
-{
-  d->_authorList.append(KAboutPerson(name,task,emailAddress,webAddress,ocsUsername));
-  return *this;
-}
-
 KAboutData &KAboutData::addCredit( const KLocalizedString &name,
                                    const KLocalizedString &task,
                                    const QByteArray &emailAddress,
                                    const QByteArray &webAddress )
 {
   d->_creditList.append(KAboutPerson(name,task,emailAddress,webAddress));
-  return *this;
-}
-
-KAboutData &KAboutData::addCredit( const KLocalizedString &name,
-                                   const KLocalizedString &task,
-                                   const QByteArray &emailAddress,
-                                   const QByteArray &webAddress,
-                                   const QByteArray &ocsUsername )
-{
-  d->_creditList.append(KAboutPerson(name,task,emailAddress,webAddress,ocsUsername));
   return *this;
 }
 
@@ -594,12 +553,6 @@ KAboutData &KAboutData::setProgramName( const KLocalizedString &_programName )
   d->_programName = _programName;
   translateInternalProgramName();
   return *this;
-}
-
-KAboutData &KAboutData::setOcsProvider(const QByteArray &_ocsProviderUrl )
-{
-    d->_ocsProviderUrl = _ocsProviderUrl;
-    return *this;
 }
 
 KAboutData &KAboutData::setVersion( const QByteArray &_version )
@@ -719,13 +672,6 @@ KAboutData &KAboutData::setProgramLogo(const QVariant& image)
 {
     d->programLogo = image ;
     return *this;
-}
-
-QString KAboutData::ocsProviderUrl() const
-{
-    if( !d->_ocsProviderUrl.isEmpty() )
-        return QString::fromUtf8( d->_ocsProviderUrl );
-    return QString();
 }
 
 QString KAboutData::version() const
