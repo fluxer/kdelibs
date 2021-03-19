@@ -34,7 +34,6 @@ namespace KDEPrivate
 {
 
 static const int MAIN_LINKS_HEIGHT = 32;
-static const int MAX_SOCIAL_LINKS = 9;
 
 KAboutApplicationPersonListDelegate::KAboutApplicationPersonListDelegate(
         QAbstractItemView *itemView,
