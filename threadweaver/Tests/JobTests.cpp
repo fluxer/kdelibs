@@ -238,11 +238,10 @@ void JobTests::MassiveJobSequenceTest() {
     QString sequence;
     QString in;
 
-    srand ( 1 );
     in.reserve( NoOfChars );
     sequence.reserve ( NoOfChars );
     for ( int i = 0; i<NoOfChars; ++i ) {
-        const int position = static_cast<int> ( SizeOfAlphabet * ( ( 1.0 * rand() ) / RAND_MAX ) );
+        const int position = static_cast<int> ( SizeOfAlphabet * ( ( 1.0 * qrand() ) / RAND_MAX ) );
         Q_ASSERT ( 0 <= position && position < SizeOfAlphabet );
         QChar c( Alphabet[position] );
         in.append ( c );
