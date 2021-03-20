@@ -16,4 +16,3 @@ RAS     <read>
 RGB     <read> <write>
 WEBP    <read> <write>
 XCF     <read>
-XV      <read> <write>

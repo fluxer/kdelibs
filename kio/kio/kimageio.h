@@ -37,7 +37,6 @@
  * @li RGB     \<read\> \<write\>
  * @li WEBP    \<read\> \<write\>
  * @li XCF     \<read\>
- * @li XV      \<read\> \<write\>
  *
  */
 namespace KImageIO

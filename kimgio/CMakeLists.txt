@@ -105,7 +105,6 @@ set(imgioplugins
     xcf
     dds
     psd
-    xview
 )
 
 foreach(plugin ${imgioplugins})
@@ -144,7 +143,6 @@ install(
 
 install(
     FILES
-    xv.desktop
     eps.desktop
     pcx.desktop
     ras.desktop

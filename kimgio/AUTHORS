@@ -1,6 +1,5 @@
 Sirtaj Singh Kang <taj@kde.org> -- kimgio and krl readers
 Dirk Schoenberger <> -- eps, netpbm readers
-Torben Weis <weis@kde.org> -- XV format reader/writer
 Antonio Larossa	<larossa@kde.org> -- initial version of KRL reader
 Sven Wiegand <SWiegand@tfh-berlin.de> -- eps output filter (from KSnapshot)
 Nadeem Hasan <nhasan@kde.org> -- PCX format read/write support
