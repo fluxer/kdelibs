@@ -221,9 +221,7 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
 
         // Add the label and value-widget to grid layout
         m_gridLayout->addWidget(label, rowIndex, 0, Qt::AlignRight);
-        const int spacerWidth = QFontMetrics(q->font()).size(Qt::TextSingleLine, " ").width();
-        m_gridLayout->addItem(new QSpacerItem(spacerWidth, 1), rowIndex, 1);
-        m_gridLayout->addWidget(valueWidget, rowIndex, 2, Qt::AlignLeft);
+        m_gridLayout->addWidget(valueWidget, rowIndex, 1, Qt::AlignLeft);
 
         // Remember the label and value-widget as row
         Row row;
