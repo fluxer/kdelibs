@@ -247,8 +247,8 @@ void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
 {
     if (d->m_fullscreen) {
         setFullscreen();
-        event->ignore();
     }
+    event->ignore();
 }
 
 void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
@@ -256,8 +256,8 @@ void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
     if (d->m_hiddencontrols) {
         resetControlsTimer();
         _updateControls(true);
-        event->ignore();
     }
+    event->ignore();
 }
 
 void KMediaWidget::timerEvent(QTimerEvent *event)
@@ -268,6 +268,8 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
         && !d->m_ui->w_volume->isSliderDown()
         && !d->m_ui->w_fullscreen->isDown()) {
         _updateControls(false);
+        event->accept();
+    } else {
         event->ignore();
     }
 }
