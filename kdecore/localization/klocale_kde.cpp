@@ -24,8 +24,6 @@
 
 #include "klocale_p.h"
 
-#include "config-localization.h"
-
 #include <math.h>
 #include <locale.h>
 
@@ -34,9 +32,6 @@
 #endif
 #ifdef HAVE_TIME_H
 #include <time.h>
-#endif
-#if HAVE_LANGINFO_H
-#include <langinfo.h>
 #endif
 
 #include <QtCore/QTextCodec>
@@ -2604,17 +2599,7 @@ void KLocalePrivate::initEncoding()
     m_codecForEncoding = 0;
 
     // This all made more sense when we still had the EncodingEnum config key.
-
-    QByteArray codeset = systemCodeset();
-
-    if (!codeset.isEmpty()) {
-        QTextCodec* codec = QTextCodec::codecForName(codeset);
-        if (codec) {
-            setEncoding(codec->mibEnum());
-        }
-    } else {
-        setEncoding(QTextCodec::codecForLocale()->mibEnum());
-    }
+    setEncoding(QTextCodec::codecForLocale()->mibEnum());
 
     if (!m_codecForEncoding) {
         kWarning() << "Cannot resolve system encoding, defaulting to ISO 8859-1.";
@@ -2623,25 +2608,6 @@ void KLocalePrivate::initEncoding()
     }
 
     Q_ASSERT(m_codecForEncoding);
-}
-
-QByteArray KLocalePrivate::systemCodeset() const
-{
-    QByteArray codeset;
-#if HAVE_LANGINFO_H
-    // Qt since 4.2 always returns 'System' as codecForLocale and KDE (for example
-    // KEncodingFileDialog) expects real encoding name. So on systems that have langinfo.h use
-    // nl_langinfo instead, just like Qt compiled without iconv does. Windows already has its own
-    // workaround
-
-    codeset = nl_langinfo(CODESET);
-
-    if ((codeset == "ANSI_X3.4-1968") || (codeset == "US-ASCII")) {
-        // means ascii, "C"; QTextCodec doesn't know, so avoid warning
-        codeset = "ISO-8859-1";
-    }
-#endif
-    return codeset;
 }
 
 void KLocalePrivate::initFileNameEncoding()
@@ -2656,10 +2622,10 @@ void KLocalePrivate::initFileNameEncoding()
             return;
         }
         QByteArray lang = qgetenv("LC_ALL");
-        if (lang.isEmpty() || lang == "C") {
+        if (lang.isEmpty()) {
             lang = qgetenv("LC_CTYPE");
         }
-        if (lang.isEmpty() || lang == "C") {
+        if (lang.isEmpty()) {
             lang = qgetenv("LANG");
         }
         if (lang.endsWith("UTF-8")) {

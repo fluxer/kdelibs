@@ -1056,11 +1056,6 @@ protected:
      */
     virtual void initFileNameEncoding();
 
-    /**
-     * @internal Returns the system codeset.
-     */
-    virtual QByteArray systemCodeset() const;
-
 public:
 
     /**

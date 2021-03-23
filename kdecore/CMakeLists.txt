@@ -40,12 +40,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/BackendsConfig.h
 )
 
-# Configure checks for localization
-configure_file(
-    localization/config-localization.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/config-localization.h
-)
-
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}

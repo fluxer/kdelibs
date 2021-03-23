@@ -40,7 +40,6 @@ check_include_files(unistd.h      HAVE_UNISTD_H)                       # various
 check_include_files(stdint.h      HAVE_STDINT_H)                       # various
 
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
-check_include_files(langinfo.h    HAVE_LANGINFO_H)                     # kdecore
 
 # TODO: separate to config-x11.h
 macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)                           # kdecore
