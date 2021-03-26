@@ -1,30 +1,40 @@
 # Try to find UDev, once done this will define:
 #
 #  UDEV_FOUND - system has UDev
-#  UDEV_INCLUDE_DIR - the libudev include directory
-#  UDEV_LIBS - The libudev libraries
-
-# Copyright (c) 2010, Rafael Fernández López, <ereslibre@kde.org>
+#  UDEV_INCLUDES - the UDev include directory
+#  UDEV_LIBRARIES - the libraries needed to use UDev
+#
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-find_package(PkgConfig)
-if(PKG_CONFIG_FOUND)
-    pkg_check_modules(PC_LIBUDEV libudev)
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_UDEV QUIET libudev)
+
+    set(UDEV_INCLUDES ${PC_UDEV_INCLUDE_DIRS})
+    set(UDEV_LIBRARIES ${PC_UDEV_LIBRARIES})
 endif()
 
-find_path(UDEV_INCLUDE_DIR
-    NAMES libudev.h
-    HINTS ${PC_LIBUDEV_INCLUDEDIR} ${PC_LIBUDEV_INCLUDE_DIRS}
-)
+set(UDEV_VERSION ${PC_UDEV_VERSION})
 
-find_library(UDEV_LIBS
-    NAMES udev
-    HINTS ${PC_LIBUDEV_LIBDIR} ${PC_LIBUDEV_LIBRARY_DIRS}
-)
+if(NOT UDEV_INCLUDES OR NOT UDEV_LIBRARIES)
+    find_path(UDEV_INCLUDES
+        NAMES libudev.h
+        HINTS $ENV{UDEVDIR}/include
+    )
+
+    find_library(UDEV_LIBRARIES
+        NAMES udev
+        HINTS $ENV{UDEVDIR}/lib
+    )
+endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(UDev DEFAULT_MSG UDEV_INCLUDE_DIR UDEV_LIBS)
+find_package_handle_standard_args(UDev
+    VERSION_VAR UDEV_VERSION
+    REQUIRED_VARS UDEV_LIBRARIES UDEV_INCLUDES
+)
 
-mark_as_advanced(UDEV_INCLUDE_DIR UDEV_LIBS)
+mark_as_advanced(UDEV_INCLUDES UDEV_LIBRARIES)

@@ -113,7 +113,8 @@ set_package_properties(HUpnp PROPERTIES
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(UDev)
+# v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
+macro_optional_find_package(UDev 143)
 set_package_properties(UDev PROPERTIES
     DESCRIPTION "UDev support for Solid"
     URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
@@ -127,8 +128,8 @@ configure_file(
 )
 
 if(HUPNP_FOUND)
-    include_directories( ${HUPNP_INCLUDE_DIR} )
-    message(STATUS "Building Solid UPnP backend." )
+    include_directories(${HUPNP_INCLUDE_DIR})
+    message(STATUS "Building Solid UPnP backend.")
     set(solid_LIB_SRCS ${solid_LIB_SRCS}
         backends/upnp/upnpdevice.cpp
         backends/upnp/upnpdevicemanager.cpp
@@ -143,7 +144,8 @@ endif()
 
 # FIXME: this may work on BSD with some adjustments
 if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
-    message(STATUS "Building Solid UDev backend." )
+    include_directories(${UDEV_INCLUDES})
+    message(STATUS "Building Solid UDev backend.")
     set(solid_LIB_SRCS ${solid_LIB_SRCS}
         backends/udev/utils.cpp
         backends/udev/udevdevice.cpp
@@ -199,7 +201,7 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
                     Support for m-p-i is included even if not found during build"
                     )
 
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${UDEV_LIBS})
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${UDEV_LIBRARIES})
 endif(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
 
 set_source_files_properties(
