@@ -1,13 +1,5 @@
 project(kioslave-http)
 
-macro_optional_find_package(GSSAPI)
-set_package_properties(GSSAPI PROPERTIES
-    DESCRIPTION "Allows KIO to make use of certain HTTP authentication services"
-    URL "http://web.mit.edu/kerberos/www"
-    TYPE OPTIONAL
-    PURPOSE "A MIT or HEIMDAL flavor of GSSAPI can be used"
-)
-
 if(GSSAPI_FOUND)
     set(HAVE_LIBGSSAPI 1)
     if(GSSAPI_FLAVOR STREQUAL "MIT")

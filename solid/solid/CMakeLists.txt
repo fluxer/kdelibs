@@ -106,22 +106,6 @@ set(solid_LIB_SRCS
     backends/fstab/fstabwatcher.cpp
 )
 
-macro_optional_find_package(HUpnp)
-set_package_properties(HUpnp PROPERTIES
-    URL "http://www.herqq.org"
-    PURPOSE "Allows Solid to provide information about UPnP devices on the network"
-    TYPE OPTIONAL
-)
-
-# v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
-macro_optional_find_package(UDev 143)
-set_package_properties(UDev PROPERTIES
-    DESCRIPTION "UDev support for Solid"
-    URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
-    PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
-    TYPE OPTIONAL
-)
-
 configure_file(
     config-solid.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h

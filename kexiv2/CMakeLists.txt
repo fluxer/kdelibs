@@ -39,13 +39,6 @@ include_directories(
     ${KDE4_KDEUI_INCLUDES}
 )
 
-find_package(Exiv2 REQUIRED VERSION "0.21")
-set_package_properties(Exiv2 PROPERTIES
-    DESCRIPTION "Image metadata library and tools"
-    URL "http://www.exiv2.org"
-    PURPOSE "Required to build libkexiv2"
-)
-
 # =======================================================
 # Set env. variables accordinly.
 

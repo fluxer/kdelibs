@@ -76,6 +76,25 @@ set_package_properties(ENCHANT PROPERTIES
     PURPOSE "Spell checking support via Enchant"
 )
 
+find_package(Exiv2 0.21)
+set_package_properties(Exiv2 PROPERTIES
+    DESCRIPTION "Image metadata library and tools"
+    URL "http://www.exiv2.org"
+    TYPE REQUIRED
+    PURPOSE "Required to build libkexiv2"
+)
+
+# NOTE: Libraw 0.16.x is prefered version to use because it's ported to Cmake
+# with full features supported. Until libraw 0.16.0 is release (ends of 2013),
+# we will support previous version (with limited support)
+find_package(LibRaw 0.15)
+set_package_properties(LibRaw PROPERTIES
+    DESCRIPTION "library that provides image Raw file demosaicing"
+    URL "http://www.libraw.org"
+    TYPE REQUIRED
+    PURPOSE "Required to build libkdcraw"
+)
+
 # optional features
 if(X11_FOUND)
     macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
@@ -142,6 +161,81 @@ set_package_properties(ACL
     URL "ftp://oss.sgi.com/projects/xfs/cmd_tars"
     TYPE RECOMMENDED
     PURPOSE "KIO and KIO slaves"
+)
+
+macro_optional_find_package(Avahi)
+set_package_properties(Avahi PROPERTIES
+    DESCRIPTION "Facilities for service discovery on a local network (DNSSD)"
+    URL "http://avahi.org"
+    TYPE OPTIONAL
+    PURPOSE "Either Avahi or DNSSD is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
+)
+
+macro_optional_find_package(DNSSD)
+set_package_properties(DNSSD PROPERTIES
+    DESCRIPTION "Facilities for service discovery on a local network"
+    URL "http://avahi.org"
+    TYPE OPTIONAL
+    PURPOSE "Either Avahi or DNSSD is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
+)
+
+macro_optional_find_package(BZip2)
+set_package_properties(BZip2 PROPERTIES
+    DESCRIPTION "Support for BZip2 compressed files and data streams"
+    URL "http://www.bzip.org"
+    TYPE RECOMMENDED
+)
+
+macro_optional_find_package(LibLZMA)
+set_package_properties(LibLZMA PROPERTIES
+    DESCRIPTION "Support for xz compressed files and data streams"
+    URL "http://tukaani.org/xz/"
+    TYPE OPTIONAL
+)
+
+macro_optional_find_package(Jasper 2.0.20)
+set_package_properties(Jasper PROPERTIES
+    URL "http://www.ece.uvic.ca/~mdadams/jasper"
+    PURPOSE "Support for JPEG-2000 images"
+    TYPE OPTIONAL
+)
+
+macro_optional_find_package(OpenEXR)
+set_package_properties(OpenEXR PROPERTIES
+    URL "http://www.openexr.com"
+    PURPOSE "Support for OpenEXR images"
+    TYPE OPTIONAL
+)
+
+macro_optional_find_package(WebP)
+set_package_properties(WebP PROPERTIES
+    DESCRIPTION "A new image format for the Web"
+    URL "https://developers.google.com/speed/webp"
+    TYPE OPTIONAL
+)
+
+macro_optional_find_package(GSSAPI)
+set_package_properties(GSSAPI PROPERTIES
+    DESCRIPTION "Allows KIO to make use of certain HTTP authentication services"
+    URL "http://web.mit.edu/kerberos/www"
+    TYPE OPTIONAL
+    PURPOSE "A MIT or HEIMDAL flavor of GSSAPI can be used"
+)
+
+macro_optional_find_package(HUpnp)
+set_package_properties(HUpnp PROPERTIES
+    URL "http://www.herqq.org"
+    PURPOSE "Allows Solid to provide information about UPnP devices on the network"
+    TYPE OPTIONAL
+)
+
+# v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
+macro_optional_find_package(UDev 143)
+set_package_properties(UDev PROPERTIES
+    DESCRIPTION "UDev support for Solid"
+    URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
+    PURPOSE "Allows Solid to use UDev to provide information about devices on Linux"
+    TYPE OPTIONAL
 )
 
 ################# configure checks and create the configured files #################
@@ -296,8 +390,8 @@ install(
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
 )
 
-# the following will be the correct locations once cmake has the improved
-# FIND_PACKAGE(): ${SHARE_INSTALL_PREFIX}/cmake/KDE4)
+# the path bellow will be the correct locations once FindKDE4Internal is no longer required:
+# ${KDE4_SHARE_INSTALL_PREFIX}/cmake/KDE4
 install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/KDE4Config.cmake
