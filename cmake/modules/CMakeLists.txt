@@ -7,7 +7,10 @@ set(module_install_dir ${KDE4_DATA_INSTALL_DIR}/cmake/modules)
 # to have it around, so there is a place where the modules which are not installed
 # are listed explicitly:
 set(cmakeFilesDontInstall
+    FindLibRaw.cmake
     FindHUpnp.cmake
+    FindMPV.cmake
+    FindUDev.cmake
 )
 
 # Explicitly list all files which will be installed.
@@ -73,7 +76,6 @@ set(cmakeFiles
     FindSpeechd.cmake
     FindSudo.cmake
     FindTaglib.cmake
-    FindUDev.cmake
     FindLibUSB.cmake
     FindWebP.cmake
     FindX11_XCB.cmake
