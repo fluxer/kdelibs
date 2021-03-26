@@ -98,18 +98,35 @@ QDebug operator<<(QDebug debug, const KCatalogName &cn)
     return debug << cn.name << cn.loadCount;
 }
 
-KLocalePrivate::KLocalePrivate(KLocale *q_ptr)
-               : q(q_ptr),
-                 m_config(KSharedConfig::Ptr()),
-                 m_country(QString()),
-                 m_language(QString()),
-                 m_languages(0),
-                 m_catalogName(QString()),
-                 m_calendar(0),
-                 m_currency(0),
-                 m_codecForEncoding(0)
+KLocalePrivate::KLocalePrivate(KLocale *q_ptr, const QString &catalogName, KSharedConfig::Ptr config)
+    : q(q_ptr),
+    m_config(KSharedConfig::Ptr()),
+    m_country(QString()),
+    m_language(QString()),
+    m_languages(0),
+    m_catalogName(QString()),
+    m_calendar(0),
+    m_currency(0),
+    m_codecForEncoding(0)
 {
+    init(catalogName, QString(), QString(), config, 0);
 }
+
+KLocalePrivate::KLocalePrivate(KLocale *q_ptr, const QString& catalogName,
+                               const QString &language,const QString &country, KConfig *config)
+    : q(q_ptr),
+    m_config(KSharedConfig::Ptr()),
+    m_country(QString()),
+    m_language(QString()),
+    m_languages(0),
+    m_catalogName(QString()),
+    m_calendar(0),
+    m_currency(0),
+    m_codecForEncoding(0)
+{
+    init(catalogName, language, country, KSharedConfig::Ptr(), config);
+}
+
 
 KLocalePrivate::KLocalePrivate(const KLocalePrivate &rhs)
 {

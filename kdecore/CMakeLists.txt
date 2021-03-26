@@ -240,7 +240,6 @@ set(kdecore_LIB_SRCS
 
     kernel/ktoolinvocation_x11.cpp
     kernel/kstandarddirs_unix.cpp
-    localization/klocale_unix.cpp
     io/klockfile_unix.cpp
     util/kshell_unix.cpp
     util/kuser_unix.cpp
