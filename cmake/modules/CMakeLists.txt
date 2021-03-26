@@ -11,6 +11,10 @@ set(cmakeFilesDontInstall
     FindHUpnp.cmake
     FindMPV.cmake
     FindUDev.cmake
+    FindAvahi.cmake
+    FindDNSSD.cmake
+    FindENCHANT.cmake
+    FindACL.cmake
 )
 
 # Explicitly list all files which will be installed.
@@ -20,13 +24,9 @@ set(cmakeFilesDontInstall
 # compatible).
 set(cmakeFiles
     cmake-modules-styleguide.txt
-    FindACL.cmake
     FindAlsa.cmake
-    FindAvahi.cmake
     FindDBusMenuQt.cmake
     FindDjVuLibre.cmake
-    FindDNSSD.cmake
-    FindENCHANT.cmake
     FindEPub.cmake
     FindExiv2.cmake
     FindFFmpegThumbnailer.cmake
