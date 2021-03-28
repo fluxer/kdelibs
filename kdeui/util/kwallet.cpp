@@ -21,7 +21,6 @@
  */
 
 #include "kwallet.h"
-#include "config-kwallet.h"
 
 #include <QtGui/QApplication>
 #include <QtCore/QPointer>

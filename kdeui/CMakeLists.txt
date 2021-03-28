@@ -31,11 +31,6 @@ include_directories(
 
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/widgets)
 
-configure_file(
-    util/config-kwallet.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/util/config-kwallet.h
-)
-
 if (X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
      set(HAVE_XKB TRUE)
 endif()
