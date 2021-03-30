@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.6.4.  */
+/* A Bison parser, made by GNU Bison 3.7.6.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
+   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2021 Free Software Foundation,
    Inc.
 
    This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
    GNU General Public License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.  */
 
 /* As a special exception, you may create a larger work that contains
    part or all of the Bison parser skeleton and distribute that work
@@ -45,11 +45,11 @@
    define necessary library symbols; they are noted "INFRINGES ON
    USER NAME SPACE" below.  */
 
-/* Identify Bison output.  */
-#define YYBISON 1
+/* Identify Bison output, and Bison version.  */
+#define YYBISON 30706
 
-/* Bison version.  */
-#define YYBISON_VERSION "3.6.4"
+/* Bison version string.  */
+#define YYBISON_VERSION "3.7.6"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -115,66 +115,7 @@ void PredicateParse_mainParse( const char *_code );
 #  endif
 # endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_SOLID_PREDICATE_PARSER_H_INCLUDED
-# define YY_SOLID_PREDICATE_PARSER_H_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int Soliddebug;
-#endif
-
-/* Token kinds.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    YYEMPTY = -2,
-    YYEOF = 0,                     /* "end of file"  */
-    YYerror = 256,                 /* error  */
-    YYUNDEF = 257,                 /* "invalid token"  */
-    EQ = 258,                      /* EQ  */
-    MASK = 259,                    /* MASK  */
-    AND = 260,                     /* AND  */
-    OR = 261,                      /* OR  */
-    IS = 262,                      /* IS  */
-    VAL_BOOL = 263,                /* VAL_BOOL  */
-    VAL_STRING = 264,              /* VAL_STRING  */
-    VAL_ID = 265,                  /* VAL_ID  */
-    VAL_NUM = 266,                 /* VAL_NUM  */
-    VAL_FLOAT = 267                /* VAL_FLOAT  */
-  };
-  typedef enum yytokentype yytoken_kind_t;
-#endif
-
-/* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 22 "predicate_parser.y"
-
-     char valb;
-     int vali;
-     double vald;
-     char *name;
-     void *ptr;
-
-#line 166 "predicate_parser.c"
-
-};
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
-#endif
-
-
-
-int Solidparse (void *_scanner);
-
-#endif /* !YY_SOLID_PREDICATE_PARSER_H_INCLUDED  */
+#include "predicate_parser.h"
 /* Symbol kind.  */
 enum yysymbol_kind_t
 {
@@ -247,6 +188,18 @@ typedef __INT_LEAST16_TYPE__ yytype_int16;
 typedef int_least16_t yytype_int16;
 #else
 typedef short yytype_int16;
+#endif
+
+/* Work around bug in HP-UX 11.23, which defines these macros
+   incorrectly for preprocessor constants.  This workaround can likely
+   be removed in 2023, as HPE has promised support for HP-UX 11.23
+   (aka HP-UX 11i v2) only through the end of 2022; see Table 2 of
+   <https://h20195.www2.hpe.com/V2/getpdf.aspx/4AA4-7673ENW.pdf>.  */
+#ifdef __hpux
+# undef UINT_LEAST8_MAX
+# undef UINT_LEAST16_MAX
+# define UINT_LEAST8_MAX 255
+# define UINT_LEAST16_MAX 65535
 #endif
 
 #if defined __UINT_LEAST8_MAX__ && __UINT_LEAST8_MAX__ <= __INT_MAX__
@@ -346,9 +299,9 @@ typedef int yy_state_fast_t;
 
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
-# define YYUSE(E) ((void) (E))
+# define YY_USE(E) ((void) (E))
 #else
-# define YYUSE(E) /* empty */
+# define YY_USE(E) /* empty */
 #endif
 
 #if defined __GNUC__ && ! defined __ICC && 407 <= __GNUC__ * 100 + __GNUC_MINOR__
@@ -526,6 +479,7 @@ union yyalloc
 /* YYNSTATES -- Number of states.  */
 #define YYNSTATES  34
 
+/* YYMAXUTOK -- Last valid token kind.  */
 #define YYMAXUTOK   267
 
 
@@ -654,7 +608,7 @@ static const yytype_int8 yypgoto[] =
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     4,     5,     9,    10,    26,    27,    30
+       0,     4,     5,     9,    10,    26,    27,    30
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -774,8 +728,8 @@ yy_symbol_value_print (FILE *yyo,
                        yysymbol_kind_t yykind, YYSTYPE const * const yyvaluep, void *_scanner)
 {
   FILE *yyoutput = yyo;
-  YYUSE (yyoutput);
-  YYUSE (_scanner);
+  YY_USE (yyoutput);
+  YY_USE (_scanner);
   if (!yyvaluep)
     return;
 # ifdef YYPRINT
@@ -783,7 +737,7 @@ yy_symbol_value_print (FILE *yyo,
     YYPRINT (yyo, yytoknum[yykind], *yyvaluep);
 # endif
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (yykind);
+  YY_USE (yykind);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
 }
 
@@ -897,8 +851,8 @@ static void
 yydestruct (const char *yymsg,
             yysymbol_kind_t yykind, YYSTYPE *yyvaluep, void *_scanner)
 {
-  YYUSE (yyvaluep);
-  YYUSE (_scanner);
+  YY_USE (yyvaluep);
+  YY_USE (_scanner);
   if (!yymsg)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yykind, yyvaluep, yylocationp);
@@ -906,28 +860,28 @@ yydestruct (const char *yymsg,
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   switch (yykind)
     {
-    case 20: /* predicate  */
+    case YYSYMBOL_predicate: /* predicate  */
 #line 54 "predicate_parser.y"
             { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 913 "predicate_parser.c"
+#line 867 "predicate_parser.c"
         break;
 
-    case 21: /* predicate_atom  */
+    case YYSYMBOL_predicate_atom: /* predicate_atom  */
 #line 55 "predicate_parser.y"
             { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 919 "predicate_parser.c"
+#line 873 "predicate_parser.c"
         break;
 
-    case 22: /* predicate_or  */
+    case YYSYMBOL_predicate_or: /* predicate_or  */
 #line 56 "predicate_parser.y"
             { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 925 "predicate_parser.c"
+#line 879 "predicate_parser.c"
         break;
 
-    case 23: /* predicate_and  */
+    case YYSYMBOL_predicate_and: /* predicate_and  */
 #line 57 "predicate_parser.y"
             { PredicateParse_destroy( ((*yyvaluep).ptr) ); }
-#line 931 "predicate_parser.c"
+#line 885 "predicate_parser.c"
         break;
 
       default:
@@ -948,7 +902,7 @@ yydestruct (const char *yymsg,
 int
 yyparse (void *_scanner)
 {
-/* The lookahead symbol.  */
+/* Lookahead token kind.  */
 int yychar;
 
 
@@ -959,36 +913,32 @@ YY_INITIAL_VALUE (static YYSTYPE yyval_default;)
 YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
 
     /* Number of syntax errors so far.  */
-    int yynerrs;
+    int yynerrs = 0;
 
-    yy_state_fast_t yystate;
+    yy_state_fast_t yystate = 0;
     /* Number of tokens to shift before error messages enabled.  */
-    int yyerrstatus;
+    int yyerrstatus = 0;
 
-    /* The stacks and their tools:
-       'yyss': related to states.
-       'yyvs': related to semantic values.
-
-       Refer to the stacks through separate pointers, to allow yyoverflow
+    /* Refer to the stacks through separate pointers, to allow yyoverflow
        to reallocate them elsewhere.  */
 
     /* Their size.  */
-    YYPTRDIFF_T yystacksize;
+    YYPTRDIFF_T yystacksize = YYINITDEPTH;
 
-    /* The state stack.  */
+    /* The state stack: array, bottom, top.  */
     yy_state_t yyssa[YYINITDEPTH];
-    yy_state_t *yyss;
-    yy_state_t *yyssp;
+    yy_state_t *yyss = yyssa;
+    yy_state_t *yyssp = yyss;
 
-    /* The semantic value stack.  */
+    /* The semantic value stack: array, bottom, top.  */
     YYSTYPE yyvsa[YYINITDEPTH];
-    YYSTYPE *yyvs;
-    YYSTYPE *yyvsp;
+    YYSTYPE *yyvs = yyvsa;
+    YYSTYPE *yyvsp = yyvs;
 
   int yyn;
   /* The return value of yyparse.  */
   int yyresult;
-  /* Lookahead token as an internal (translated) token number.  */
+  /* Lookahead symbol kind.  */
   yysymbol_kind_t yytoken = YYSYMBOL_YYEMPTY;
   /* The variables used to return semantic value and location from the
      action routines.  */
@@ -1001,15 +951,6 @@ YYSTYPE yylval YY_INITIAL_VALUE (= yyval_default);
   /* The number of symbols on the RHS of the reduced rule.
      Keep to zero when no symbol should be popped.  */
   int yylen = 0;
-
-  yynerrs = 0;
-  yystate = 0;
-  yyerrstatus = 0;
-
-  yystacksize = YYINITDEPTH;
-  yyssp = yyss = yyssa;
-  yyvsp = yyvs = yyvsa;
-
 
   YYDPRINTF ((stderr, "Starting parse\n"));
 
@@ -1211,110 +1152,110 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 2:
+  case 2: /* predicate: predicate_atom  */
 #line 63 "predicate_parser.y"
                           { PredicateParse_setResult( (yyvsp[0].ptr) ); (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1218 "predicate_parser.c"
+#line 1159 "predicate_parser.c"
     break;
 
-  case 3:
+  case 3: /* predicate: '[' predicate_or ']'  */
 #line 64 "predicate_parser.y"
                                 { PredicateParse_setResult( (yyvsp[-1].ptr) ); (yyval.ptr) = (yyvsp[-1].ptr); }
-#line 1224 "predicate_parser.c"
+#line 1165 "predicate_parser.c"
     break;
 
-  case 4:
+  case 4: /* predicate: '[' predicate_and ']'  */
 #line 65 "predicate_parser.y"
                                  { PredicateParse_setResult( (yyvsp[-1].ptr) ); (yyval.ptr) = (yyvsp[-1].ptr); }
-#line 1230 "predicate_parser.c"
+#line 1171 "predicate_parser.c"
     break;
 
-  case 5:
+  case 5: /* predicate_atom: VAL_ID '.' VAL_ID EQ value  */
 #line 67 "predicate_parser.y"
                                            { (yyval.ptr) = PredicateParse_newAtom( (yyvsp[-4].name), (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1236 "predicate_parser.c"
+#line 1177 "predicate_parser.c"
     break;
 
-  case 6:
+  case 6: /* predicate_atom: VAL_ID '.' VAL_ID MASK value  */
 #line 68 "predicate_parser.y"
                                              { (yyval.ptr) = PredicateParse_newMaskAtom( (yyvsp[-4].name), (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1242 "predicate_parser.c"
+#line 1183 "predicate_parser.c"
     break;
 
-  case 7:
+  case 7: /* predicate_atom: IS VAL_ID  */
 #line 69 "predicate_parser.y"
                           { (yyval.ptr) = PredicateParse_newIsAtom( (yyvsp[0].name) ); }
-#line 1248 "predicate_parser.c"
+#line 1189 "predicate_parser.c"
     break;
 
-  case 8:
+  case 8: /* predicate_or: predicate OR predicate  */
 #line 71 "predicate_parser.y"
                                      { (yyval.ptr) = PredicateParse_newOr( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1254 "predicate_parser.c"
+#line 1195 "predicate_parser.c"
     break;
 
-  case 9:
+  case 9: /* predicate_and: predicate AND predicate  */
 #line 73 "predicate_parser.y"
                                        { (yyval.ptr) = PredicateParse_newAnd( (yyvsp[-2].ptr), (yyvsp[0].ptr) ); }
-#line 1260 "predicate_parser.c"
+#line 1201 "predicate_parser.c"
     break;
 
-  case 10:
+  case 10: /* value: VAL_STRING  */
 #line 75 "predicate_parser.y"
                   { (yyval.ptr) = PredicateParse_newStringValue( (yyvsp[0].name) ); }
-#line 1266 "predicate_parser.c"
+#line 1207 "predicate_parser.c"
     break;
 
-  case 11:
+  case 11: /* value: VAL_BOOL  */
 #line 76 "predicate_parser.y"
                 { (yyval.ptr) = PredicateParse_newBoolValue( (yyvsp[0].valb) ); }
-#line 1272 "predicate_parser.c"
+#line 1213 "predicate_parser.c"
     break;
 
-  case 12:
+  case 12: /* value: VAL_NUM  */
 #line 77 "predicate_parser.y"
                { (yyval.ptr) = PredicateParse_newNumValue( (yyvsp[0].vali) ); }
-#line 1278 "predicate_parser.c"
+#line 1219 "predicate_parser.c"
     break;
 
-  case 13:
+  case 13: /* value: VAL_FLOAT  */
 #line 78 "predicate_parser.y"
                  { (yyval.ptr) = PredicateParse_newDoubleValue( (yyvsp[0].vald) ); }
-#line 1284 "predicate_parser.c"
+#line 1225 "predicate_parser.c"
     break;
 
-  case 14:
+  case 14: /* value: string_list  */
 #line 79 "predicate_parser.y"
                    { (yyval.ptr) = (yyvsp[0].ptr); }
-#line 1290 "predicate_parser.c"
+#line 1231 "predicate_parser.c"
     break;
 
-  case 15:
+  case 15: /* string_list: '{' string_list_rec '}'  */
 #line 81 "predicate_parser.y"
                                      { (yyval.ptr) = (yyvsp[-2].ptr); }
-#line 1296 "predicate_parser.c"
+#line 1237 "predicate_parser.c"
     break;
 
-  case 16:
+  case 16: /* string_list_rec: %empty  */
 #line 83 "predicate_parser.y"
                              { (yyval.ptr) = PredicateParse_newEmptyStringListValue(); }
-#line 1302 "predicate_parser.c"
+#line 1243 "predicate_parser.c"
     break;
 
-  case 17:
+  case 17: /* string_list_rec: VAL_STRING  */
 #line 84 "predicate_parser.y"
                             { (yyval.ptr) = PredicateParse_newStringListValue( (yyvsp[0].ptr) ); }
-#line 1308 "predicate_parser.c"
+#line 1249 "predicate_parser.c"
     break;
 
-  case 18:
+  case 18: /* string_list_rec: VAL_STRING ',' string_list_rec  */
 #line 85 "predicate_parser.y"
                                                 { (yyval.ptr) = PredicateParse_appendStringListValue( (yyvsp[-2].name), (yyvsp[0].ptr) ); }
-#line 1314 "predicate_parser.c"
+#line 1255 "predicate_parser.c"
     break;
 
 
-#line 1318 "predicate_parser.c"
+#line 1259 "predicate_parser.c"
 
       default: break;
     }
@@ -1474,13 +1415,13 @@ yyabortlab:
 yyexhaustedlab:
   yyerror (_scanner, YY_("memory exhausted"));
   yyresult = 2;
-  /* Fall through.  */
+  goto yyreturn;
 #endif
 
 
-/*-----------------------------------------------------.
-| yyreturn -- parsing is finished, return the result.  |
-`-----------------------------------------------------*/
+/*-------------------------------------------------------.
+| yyreturn -- parsing is finished, clean up and return.  |
+`-------------------------------------------------------*/
 yyreturn:
   if (yychar != YYEMPTY)
     {
