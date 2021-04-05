@@ -65,7 +65,7 @@ void SlaveInterface::setConnection( Connection* connection )
 
 Connection *SlaveInterface::connection() const
 {
-    const Q_D(SlaveInterface);
+    Q_D(const SlaveInterface);
     return d->connection;
 }
 
@@ -349,7 +349,7 @@ void SlaveInterface::setOffset( KIO::filesize_t o)
 
 KIO::filesize_t SlaveInterface::offset() const
 {
-    const Q_D(SlaveInterface);
+    Q_D(const SlaveInterface);
     return d->offset;
 }
 
@@ -443,7 +443,7 @@ void SlaveInterface::setWindow (QWidget* window)
 
 QWidget* SlaveInterface::window() const
 {
-    const Q_D(SlaveInterface);
+    Q_D(const SlaveInterface);
     return d->parentWindow;
 }
 
