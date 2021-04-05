@@ -20,10 +20,12 @@
 
 #include "ksettings.h"
 #include "kstandarddirs.h"
+#include "kdebug.h"
 
-#include <QApplication>
 #include <QFileInfo>
 #include <QStringList>
+#include <QMetaProperty>
+#include <QWidget>
 
 static const QSettings::Format defaultformat = QSettings::IniFormat;
 
@@ -62,3 +64,87 @@ void KSettings::addSource(const QString &source)
     }
 }
 
+
+bool KSettings::save(const QObject *object)
+{
+    const QWidget* widget = qobject_cast<const QWidget*>(object);
+    if (!widget) {
+        kWarning() << "object is not widget";
+        return false;
+    }
+
+    const QString objectname = widget->objectName();
+    if (objectname.isEmpty()) {
+        kWarning() << "object name of widget is empty";
+        return false;
+    }
+
+    QSettings::sync();
+
+    const QMetaObject* metaobject = widget->metaObject();
+    for (int i = 0; i < metaobject->propertyCount(); i++) {
+        const QMetaProperty property = metaobject->property(i);
+        const QString propertyname = QString::fromLatin1(property.name());
+        if (!property.isWritable()) {
+            kDebug() << "skipping non-writable property" << propertyname << "of" << objectname;
+            continue;
+        }
+        const QVariant propertyvalue = property.read(widget);
+        if (propertyvalue.isValid()) {
+            kDebug() << "saving property" << propertyname << "with value" << propertyvalue << "of" << objectname;
+            QSettings::setValue(objectname + QLatin1Char('/') + propertyname, propertyvalue);
+        } else {
+            kWarning() << "invalid property value" << propertyname << propertyvalue;
+        }
+    }
+
+    QSettings::sync();
+
+    return (QSettings::status() == QSettings::NoError);
+}
+
+bool KSettings::restore(QObject *object)
+{
+    QWidget* widget = qobject_cast<QWidget*>(object);
+    if (!widget) {
+        kWarning() << "object is not widget";
+        return false;
+    }
+
+    const QString objectname = widget->objectName();
+    if (objectname.isEmpty()) {
+        kWarning() << "object name of widget is empty";
+        return false;
+    }
+
+    QSettings::sync();
+
+    const QMetaObject* metaobject = widget->metaObject();
+    for (int i = 0; i < metaobject->propertyCount(); i++) {
+        const QMetaProperty property = metaobject->property(i);
+        const QString propertyname = QString::fromLatin1(property.name());
+        if (!property.isWritable()) {
+            kDebug() << "skipping non-writable property" << propertyname << "of" << objectname;
+            continue;
+        }
+        const QVariant propertyvalue = QSettings::value(objectname + QLatin1Char('/') + propertyname, property.read(widget));
+        if (propertyvalue.isValid()) {
+            kDebug() << "restoring property" << propertyname << "with value" << propertyvalue << "of" << objectname;
+            bool success = false;
+            if (property.isEnumType() || property.isFlagType()) {
+                success = property.write(widget, propertyvalue.toInt());
+            } else {
+                success = property.write(widget, propertyvalue);
+            }
+            if (!success) {
+                kWarning() << "could not set property" << propertyname << propertyvalue;
+            }
+        } else {
+            kWarning() << "invalid property value" << propertyname << propertyvalue;
+        }
+    }
+
+    QSettings::sync();
+
+    return (QSettings::status() == QSettings::NoError);
+}

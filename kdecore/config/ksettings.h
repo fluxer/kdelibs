@@ -29,6 +29,11 @@
  * \class KSettings ksettings.h <KSettings>
  *
  * \brief The preferred class of the KDE configuration data system.
+ *
+ * The @p KSettings class provides alternative to QSettings with file placement
+ * in the KDE directory for configuration files. It can also be used to save
+ * and restore state of widgets via two methods. They should be (usually)
+ * called from the constructor and destructor of the widget.
  */
 class KDECORE_EXPORT KSettings : public QSettings
 {
@@ -76,6 +81,17 @@ public:
      * @param source Extra config source.
      */
     void addSource(const QString &source);
+
+
+    /**
+     * Saves all properties of given @p object to the settings files
+     */
+    bool save(const QObject *object);
+
+    /**
+     * Restores all properties of given @p object from the settings files
+     */
+    bool restore(QObject *object);
 
 private:
     Q_DISABLE_COPY(KSettings)
