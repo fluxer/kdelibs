@@ -76,12 +76,7 @@ namespace Kross {
     // dynamically during runtime. Comment out to disable compiling of
     // the interpreter-plugin or to hardcode the location of the lib
     // like I did at the following line.
-    //#define KROSS_PYTHON_LIBRARY "/home/kde4/koffice/_build/lib/krosspython.la"
-    #define KROSS_PYTHON_LIBRARY "krosspython"
-    #define KROSS_RUBY_LIBRARY "krossruby"
-    #define KROSS_FALCON_LIBRARY "krossfalcon"
     #define KROSS_QTSCRIPT_LIBRARY "krossqts"
-    #define KROSS_LUA_LIBRARY "kloss"
 
 }
 

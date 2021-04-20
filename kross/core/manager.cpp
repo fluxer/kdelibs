@@ -128,47 +128,6 @@ Manager::Manager()
     setObjectName("Kross");
     d->collection = new ActionCollection("main");
 
-#ifdef KROSS_PYTHON_LIBRARY
-    if( void* funcPtr = loadLibrary(KROSS_PYTHON_LIBRARY, "krossinterpreter") ) {
-        d->interpreterinfos.insert("python",
-            new InterpreterInfo("python",
-                funcPtr, // library
-                "*.py", // file filter-wildcard
-                QStringList() << "text/x-python" // mimetypes
-            )
-        );
-    }
-#endif
-
-#ifdef KROSS_RUBY_LIBRARY
-    if( void* funcPtr = loadLibrary(KROSS_RUBY_LIBRARY, "krossinterpreter") ) {
-        InterpreterInfo::Option::Map options;
-        options.insert("safelevel", new InterpreterInfo::Option(
-            i18n("Level of safety of the Ruby interpreter"),
-            QVariant(0) )); // 0 -> unsafe, 4 -> very safe
-        d->interpreterinfos.insert("ruby",
-            new InterpreterInfo("ruby",
-                funcPtr, // library
-                "*.rb", // file filter-wildcard
-                QStringList() << /* "text/x-ruby" << */ "application/x-ruby", // mimetypes
-                options // options
-            )
-        );
-    }
-#endif
-
-#ifdef KROSS_FALCON_LIBRARY
-    if( void* funcPtr = loadLibrary(KROSS_FALCON_LIBRARY, "krossinterpreter") ) {
-        d->interpreterinfos.insert("falcon",
-            new InterpreterInfo("falcon",
-                funcPtr, // library
-                "*.fal", // file filter-wildcard
-                QStringList() << "application/x-falcon" // mimetypes
-            )
-        );
-    }
-#endif
-
 #ifdef KROSS_QTSCRIPT_LIBRARY
     if( void* funcPtr = loadLibrary(KROSS_QTSCRIPT_LIBRARY, "krossinterpreter") ) {
         d->interpreterinfos.insert("qtscript",
@@ -185,18 +144,6 @@ Manager::Manager()
                 funcPtr, // library
                 "*.js", // file filter-wildcard
                 QStringList() << "application/javascript" // mimetypes
-            )
-        );
-    }
-#endif
-
-#ifdef KROSS_LUA_LIBRARY
-    if( void* funcPtr = loadLibrary(KROSS_LUA_LIBRARY, "krossinterpreter") ) {
-        d->interpreterinfos.insert("lua",
-            new InterpreterInfo("lua",
-                funcPtr, // library
-                "*.lua *.luac", // file filter-wildcard
-                QStringList() << "application/x-lua" // mimetypes
             )
         );
     }
