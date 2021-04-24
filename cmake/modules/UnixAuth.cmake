@@ -20,13 +20,6 @@ else (found_getspnam)
         set(HAVE_GETSPNAM 1)
         set(SHADOW_LIBRARIES shadow)
         check_function_exists(pw_encrypt HAVE_PW_ENCRYPT) # ancient Linux shadow
-    else (found_getspnam_shadow)
-        set(CMAKE_REQUIRED_LIBRARIES -lgen) # UnixWare
-        check_function_exists(getspnam found_getspnam_gen)
-        if (found_getspnam_gen)
-            set(HAVE_GETSPNAM 1)
-            set(SHADOW_LIBRARIES gen)
-        endif (found_getspnam_gen)
     endif (found_getspnam_shadow)
     cmake_reset_check_state()
 endif (found_getspnam)
