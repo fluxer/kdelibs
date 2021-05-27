@@ -104,7 +104,7 @@ if(X11_FOUND)
     macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)
 
     add_feature_info("X Test Extension (libXTest)" HAVE_XTEST "Support for notfication restriction")
-    add_feature_info("X Cursor Extension (Xcursor)" HAVE_XTEST "Support for loading cursors depending on theme")
+    add_feature_info("X Cursor Extension (Xcursor)" HAVE_XCURSOR "Support for loading cursors depending on theme")
     add_feature_info("X Fixes Extension (libXfixes)" HAVE_XFIXES "Support for damage/fixes cursor and window management")
     add_feature_info("X Screensaver Extension (libXss)" HAVE_XSCREENSAVER "Support for KIdleTime (fallback mode)")
     add_feature_info("X Sync Extension (libXext)" HAVE_XSYNC "Efficient operation of KIdleTime")
