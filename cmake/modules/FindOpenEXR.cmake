@@ -1,102 +1,55 @@
-# Try to find the OpenEXR libraries, once done this will define:
+# Try to find OpenEXR, once done this will define:
 #
 #  OPENEXR_FOUND - system has OpenEXR
-#  OPENEXR_INCLUDE_DIR - OpenEXR include directory
-#  OPENEXR_LIBRARIES - Libraries needed to use OpenEXR
-#  OPENEXR_DEFINITIONS - definitions required to use OpenEXR
-
-# Copyright (c) 2006, Alexander Neundorf, <neundorf@kde.org>
+#  OPENEXR_INCLUDE_DIR - the OpenEXR include directory
+#  OPENEXR_LIBRARIES - the libraries needed to use OpenEXR
+#  OPENEXR_DEFINITIONS - compiler switches required for using OpenEXR
+#
+# Copyright (c) 2021 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
+if(NOT WIN32)
+    include(FindPkgConfig)
+    pkg_check_modules(PC_OPENEXR QUIET OpenEXR)
 
-if (OPENEXR_INCLUDE_DIR AND OPENEXR_LIBRARIES)
-  # in cache already
-  set(OPENEXR_FOUND TRUE)
+    set(OPENEXR_INCLUDE_DIR ${PC_OPENEXR_INCLUDE_DIRS})
+    set(OPENEXR_LIBRARIES ${PC_OPENEXR_LIBRARIES})
+endif()
 
-else (OPENEXR_INCLUDE_DIR AND OPENEXR_LIBRARIES)
+set(OPENEXR_VERSION ${PC_OPENEXR_VERSION})
+set(OPENEXR_DEFINITIONS ${PC_OPENEXR_CFLAGS_OTHER})
 
-  # use pkg-config to get the directories and then use these values
-  # in the FIND_PATH() and FIND_LIBRARY() calls
-  find_package(PkgConfig)
-  pkg_check_modules(PC_OPENEXR QUIET OpenEXR) 
+if(NOT OPENEXR_INCLUDE_DIR OR NOT OPENEXR_LIBRARIES)
+    find_path(OPENEXR_INCLUDE_DIR
+        NAMES ImfRgbaFile.h
+        PATH_SUFFIXES OpenEXR
+        HINTS $ENV{OPENEXRDIR}/include
+    )
 
-  FIND_PATH(OPENEXR_INCLUDE_DIR ImfRgbaFile.h
-     HINTS
-     ${PC_OPENEXR_INCLUDEDIR}
-     ${PC_OPENEXR_INCLUDE_DIRS}
-     PATH_SUFFIXES OpenEXR
-  )
+    find_library(OPENEXR_LIBRARIES
+        NAMES OpenEXR
+        HINTS $ENV{OPENEXRDIR}/lib
+    )
 
-  FIND_LIBRARY(OPENEXR_HALF_LIBRARY NAMES Half
-    HINTS
-    ${PC_OPENEXR_LIBDIR}
-    ${PC_OPENEXR_LIBRARY_DIRS}
-  )
+    # fallback for versions older than 3.0
+    if(NOT OPENEXR_LIBRARIES)
+        set(OPENEXR_NAMES Imath IlmImf Half Iex IlmThread)
+        foreach(lib ${OPENEXR_NAMES})
+            find_library(OPENEXR_${lib}_PATH
+                NAMES ${lib}
+                HINTS $ENV{OPENEXRDIR}/lib
+            )
+            set(OPENEXR_LIBRARIES ${OPENEXR_LIBRARIES} ${OPENEXR_${lib}_PATH})
+        endforeach()
+    endif()
+endif()
 
+include(FindPackageHandleStandardArgs)
+find_package_handle_standard_args(OpenEXR
+    VERSION_VAR OPENEXR_VERSION
+    REQUIRED_VARS OPENEXR_LIBRARIES OPENEXR_INCLUDE_DIR
+)
 
-  FIND_LIBRARY(OPENEXR_IEX_LIBRARY NAMES Iex
-    PATHS
-    ${PC_OPENEXR_LIBDIR}
-    ${PC_OPENEXR_LIBRARY_DIRS}
-  )
-
-  FIND_LIBRARY(OPENEXR_IMATH_LIBRARY NAMES Imath
-    HINTS
-    ${PC_OPENEXR_LIBDIR}
-    ${PC_OPENEXR_LIBRARY_DIRS}
-  )
-
-  FIND_LIBRARY(OPENEXR_ILMIMF_LIBRARY NAMES IlmImf 
-    HINTS
-    ${PC_OPENEXR_LIBDIR}
-    ${PC_OPENEXR_LIBRARY_DIRS}
-  )
-  
-  FIND_LIBRARY(OPENEXR_ILMTHREAD_LIBRARY NAMES IlmThread
-    HINTS
-    ${PC_OPENEXR_LIBDIR}
-    ${PC_OPENEXR_LIBRARY_DIRS}
-  )
-
-  if (OPENEXR_INCLUDE_DIR AND OPENEXR_IMATH_LIBRARY AND OPENEXR_ILMIMF_LIBRARY AND OPENEXR_IEX_LIBRARY AND OPENEXR_HALF_LIBRARY)
-     set(OPENEXR_FOUND TRUE)
-     if (OPENEXR_ILMTHREAD_LIBRARY)
-         set(OPENEXR_LIBRARIES ${OPENEXR_IMATH_LIBRARY} ${OPENEXR_ILMIMF_LIBRARY} ${OPENEXR_IEX_LIBRARY} ${OPENEXR_HALF_LIBRARY} ${OPENEXR_ILMTHREAD_LIBRARY} )
-     else (OPENEXR_ILMTHREAD_LIBRARY)
-         set(OPENEXR_LIBRARIES ${OPENEXR_IMATH_LIBRARY} ${OPENEXR_ILMIMF_LIBRARY} ${OPENEXR_IEX_LIBRARY} ${OPENEXR_HALF_LIBRARY} )
-     endif (OPENEXR_ILMTHREAD_LIBRARY)
-
-     if (WIN32)
-        set(_OPENEXR_DEFINITIONS -DOPENEXR_DLL)
-     else (WIN32)
-        set(_OPENEXR_DEFINITIONS)
-     endif (WIN32)
-
-     set(OPENEXR_DEFINITIONS ${_OPENEXR_DEFINITIONS})
-
-  endif (OPENEXR_INCLUDE_DIR AND OPENEXR_IMATH_LIBRARY AND OPENEXR_ILMIMF_LIBRARY AND OPENEXR_IEX_LIBRARY AND OPENEXR_HALF_LIBRARY)
-  
-  
-  if (OPENEXR_FOUND)
-    if (NOT OpenEXR_FIND_QUIETLY)
-      message(STATUS "Found OPENEXR: ${OPENEXR_LIBRARIES}")
-    endif (NOT OpenEXR_FIND_QUIETLY)
-  else (OPENEXR_FOUND)
-    if (OpenEXR_FIND_REQUIRED)
-      message(FATAL_ERROR "Could NOT find OPENEXR")
-    endif (OpenEXR_FIND_REQUIRED)
-  endif (OPENEXR_FOUND)
-  
-  mark_as_advanced(
-     OPENEXR_INCLUDE_DIR 
-     OPENEXR_LIBRARIES 
-     OPENEXR_ILMIMF_LIBRARY 
-     OPENEXR_ILMTHREAD_LIBRARY
-     OPENEXR_IMATH_LIBRARY 
-     OPENEXR_IEX_LIBRARY 
-     OPENEXR_HALF_LIBRARY
-     OPENEXR_DEFINITIONS )
-  
-endif (OPENEXR_INCLUDE_DIR AND OPENEXR_LIBRARIES)
+mark_as_advanced(OPENEXR_INCLUDE_DIR OPENEXR_LIBRARIES)

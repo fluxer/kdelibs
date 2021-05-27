@@ -28,6 +28,7 @@
 #include <ImfConvert.h>
 #include <ImfVersion.h>
 #include <IexThrowErrnoExc.h>
+#include <OpenEXRConfig.h>
 
 #include <iostream>
 
@@ -38,6 +39,12 @@
 #include <QDataStream>
 #include <QtGui/qimageiohandler.h>
 
+#if defined(OPENEXR_VERSION_MAJOR) && OPENEXR_VERSION_MAJOR >= 3
+#  define K_OE_INT_TYPE uint64_t
+#else
+#  define K_OE_INT_TYPE Imf::Int64
+#endif
+
 class K_IStream: public Imf::IStream
 {
 public:
@@ -46,8 +53,8 @@ public:
 	{}
 
 	virtual bool  read( char c[], int n );
-	virtual Imf::Int64 tellg( );
-	virtual void seekg( Imf::Int64 pos );
+	virtual K_OE_INT_TYPE tellg( );
+	virtual void seekg( K_OE_INT_TYPE pos );
 	virtual void clear( );
 
 private:
@@ -66,12 +73,12 @@ bool K_IStream::read( char c[], int n )
 	return false;
 }
 
-Imf::Int64 K_IStream::tellg( )
+K_OE_INT_TYPE K_IStream::tellg( )
 {
 	return m_dev->pos();
 }
 
-void K_IStream::seekg( Imf::Int64 pos )
+void K_IStream::seekg( K_OE_INT_TYPE pos )
 {
 	m_dev->seek( pos );
 }
