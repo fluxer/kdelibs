@@ -48,10 +48,6 @@ install(TARGETS kded_kcookiejar DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 ########### install files ###############
 
 install(
-    FILES domain_info
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kwebkitpart
-)
-install(
     FILES
     kcookiejar.desktop
     DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/kded

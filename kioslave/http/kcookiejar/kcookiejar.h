@@ -347,8 +347,7 @@ public:
      * The list is sorted with the FQDN listed first and the top-most
      * domain listed last
      */
-    void extractDomains(const QString &_fqdn,
-                        QStringList &_domainList) const;
+    static void extractDomains(const QString &_fqdn, QStringList &_domainList);
 
     static QString adviceToStr(KCookieAdvice _advice);
     static KCookieAdvice strToAdvice(const QString &_str);
@@ -383,8 +382,6 @@ protected:
     QStringList m_domainList;    
     KCookieAdvice m_globalAdvice;
     QHash<QString, KHttpCookieList*> m_cookieDomains;
-    QSet<QString> m_twoLevelTLD;
-    QSet<QString> m_gTLDs;
 
     bool m_configChanged;
     bool m_cookiesChanged;

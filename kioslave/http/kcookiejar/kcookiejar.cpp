@@ -293,11 +293,6 @@ KCookieJar::KCookieJar()
     m_globalAdvice = KCookieDunno;
     m_configChanged = false;
     m_cookiesChanged = false;
-
-    KConfig cfg( "khtml/domain_info", KConfig::NoGlobals, "data" );
-    KConfigGroup group( &cfg, QString() );
-    m_gTLDs = QSet<QString>::fromList(group.readEntry("gTLDs", QStringList()));
-    m_twoLevelTLD = QSet<QString>::fromList(group.readEntry("twoLevelTLD", QStringList()));
 }
 
 //
@@ -588,10 +583,64 @@ bool KCookieJar::parseUrl(const QString &_url, QString &_fqdn, QString &_path, i
     return true;
 }
 
-// not static because it uses m_twoLevelTLD
-void KCookieJar::extractDomains(const QString &_fqdn,
-                                QStringList &_domains) const
+void KCookieJar::extractDomains(const QString &_fqdn, QStringList &_domains)
 {
+    static const QStringList s_twoLevelTLD = QStringList()
+        << "name"
+        << "ai"
+        << "au"
+        << "bd"
+        << "bh"
+        << "ck"
+        << "eg"
+        << "et"
+        << "fk"
+        << "il"
+        << "in"
+        << "kh"
+        << "kr"
+        << "mk"
+        << "mt"
+        << "na"
+        << "np"
+        << "nz"
+        << "pg"
+        << "pk"
+        << "qa"
+        << "sa"
+        << "sb"
+        << "sg"
+        << "sv"
+        << "ua"
+        << "ug"
+        << "uk"
+        << "uy"
+        << "vn"
+        << "za"
+        << "zw";
+
+    static const QStringList s_gTLDs = QStringList()
+        << "com"
+        << "edu"
+        << "gov"
+        << "int"
+        << "mil"
+        << "net"
+        << "org"
+        << "biz"
+        << "info"
+        << "name"
+        << "pro"
+        << "aero"
+        << "coop"
+        << "museum"
+        << "asia"
+        << "cat"
+        << "jobs"
+        << "mobi"
+        << "tel"
+        << "travel";
+
     if (_fqdn.isEmpty()) {
        _domains.append( QL1S("localhost") );
        return;
@@ -626,7 +675,7 @@ void KCookieJar::extractDomains(const QString &_fqdn,
        if (partList.count() == 1)
          break; // We only have a TLD left.
 
-       if ((partList.count() == 2) && m_twoLevelTLD.contains(partList[1].toLower()))
+       if ((partList.count() == 2) && s_twoLevelTLD.contains(partList[1].toLower()))
        {
           // This domain uses two-level TLDs in the form xxxx.yy
           break;
@@ -641,7 +690,7 @@ void KCookieJar::extractDomains(const QString &_fqdn,
 
           // Catch some TLDs that we miss with the previous check
           // e.g. com.au, org.uk, mil.co
-          if (m_gTLDs.contains(partList[0].toLower()))
+          if (s_gTLDs.contains(partList[0].toLower()))
               break;
        }
 
