@@ -184,9 +184,6 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
         return new KDEPrivate::AccessManagerReply(op, req, QNetworkReply::ContentAccessDenied, i18n("Blocked request."), this);
     }
 
-    // Check if the internal ignore content disposition header is set.
-    const bool ignoreContentDisposition = req.hasRawHeader("x-kdewebkit-ignore-disposition");
-
     // Retrieve the KIO meta data...
     KIO::MetaData metaData;
     d->setMetaDataForRequest(req, metaData);
@@ -335,11 +332,6 @@ QNetworkReply *AccessManager::createRequest(Operation op, const QNetworkRequest 
         // Create the reply...
         reply = new KDEPrivate::AccessManagerReply(op, req, kioJob, d->emitReadyReadOnMetaDataChange, this);
         //kDebug(7044) << reply << reqUrl;
-    }
-
-    if (ignoreContentDisposition && reply) {
-        //kDebug(7044) << "Content-Disposition WILL BE IGNORED!";
-        reply->setIgnoreContentDisposition(ignoreContentDisposition);
     }
 
     return reply;
