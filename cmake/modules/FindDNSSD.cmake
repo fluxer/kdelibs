@@ -16,7 +16,7 @@ include(CMakePushCheckState)
 
 find_path(DNSSD_INCLUDE_DIR
     NAMES dns_sd.h
-    HINTS /usr/include/avahi-compat-libdns_sd/
+    PATH_SUFFIXES avahi-compat-libdns_sd
 )
 
 if(DNSSD_INCLUDE_DIR)
