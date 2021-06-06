@@ -29,7 +29,7 @@ QString KNfoTranslator::translation(const KUrl& uri)
 {
     typedef std::map<QString,QString> TranslationMap;
 
-    // TODO: a lot of NFOs are missing yet
+    // TODO: a lot of NFOs are missing
     static const TranslationMap s_translations = {
         { "kfileitem#modified", i18nc("@label", "Modified") },
         { "kfileitem#owner", i18nc("@label", "Owner") },
@@ -127,24 +127,9 @@ QString KNfoTranslator::translation(const KUrl& uri)
     }
 
     // fallback if the URI is not translated
-    QString label;
     const int index = key.indexOf(QChar('#'));
     if (index >= 0) {
-        label = key.right(key.size() - index - 1);
+        return key.right(key.size() - index - 1);
     }
-    QString tunedLabel;
-    const int labelLength = label.length();
-    if (labelLength > 0) {
-        tunedLabel.reserve(labelLength);
-        tunedLabel = label[0].toUpper();
-        for (int i = 1; i < labelLength; ++i) {
-            if (label[i].isUpper() && !label[i - 1].isSpace() && !label[i - 1].isUpper()) {
-                tunedLabel += ' ';
-                tunedLabel += label[i].toLower();
-            } else {
-                tunedLabel += label[i];
-            }
-        }
-    }
-    return tunedLabel;
+    return key;
 }
