@@ -525,34 +525,6 @@ install(
 
 install(
     FILES
-    Kross/Action
-    Kross/ActionCollection
-    Kross/ActionCollectionEditor
-    Kross/ActionCollectionModel
-    Kross/ActionCollectionProxyModel
-    Kross/ActionCollectionView
-    Kross/ChildrenInterface
-    Kross/ErrorInterface
-    Kross/Interpreter
-    Kross/InterpreterInfo
-    Kross/Manager
-    Kross/MetaFunction
-    Kross/MetaType
-    Kross/MetaTypeHandler
-    Kross/MetaTypeImpl
-    Kross/MetaTypeVariant
-    Kross/MetaTypeVoidStar
-    Kross/Object
-    Kross/Script
-    Kross/ScriptingPlugin
-    Kross/WrapperInterface
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Kross
-    COMPONENT Devel
-)
-
-
-install(
-    FILES
     KSettings/Dialog
     KSettings/Dispatcher
     KSettings/PluginPage

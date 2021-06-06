@@ -35,7 +35,6 @@
 297        kdeui (KNotificationRestrictions)
 299        kdeui (KNotification)
 399        kimgio
-410        kross (kdelibs)
 500        kdeprint
 700        kutils (KSettings::Dialog)
 701        kutils (KSettings::Dispatcher)
