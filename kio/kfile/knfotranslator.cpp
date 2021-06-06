@@ -114,6 +114,10 @@ QString KNfoTranslator::translation(const KUrl& uri)
         { "translation.translated", i18nc("@label Number of translated strings", "Translated") },
         { "translation.translation_date", i18nc("@label", "Translation Date") },
         { "translation.untranslated", i18nc("@label Number of untranslated strings" , "Untranslated") },
+        { "font.weight", i18nc("@label", "Font Weight") },
+        { "font.slant", i18nc("@label", "Font Slant") },
+        { "font.width", i18nc("@label", "Font Width") },
+        { "font.spacing", i18nc("@label", "Font Spacing") },
     };
 
     const QString key = uri.url();
