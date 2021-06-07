@@ -49,7 +49,7 @@ find_package(Perl)
 set_package_properties(Perl PROPERTIES
     URL "http://www.perl.org"
     TYPE RUNTIME
-    PURPOSE "Needed for KIO fileshareset and KDEUI preparetips scripts"
+    PURPOSE "Needed for KDEUI preparetips script"
 )
 
 find_package(ZLIB)

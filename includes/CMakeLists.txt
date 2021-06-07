@@ -137,8 +137,6 @@ install(
     KFileMetaInfoGroup
     KFileMetaInfoItem
     KFilePlacesModel
-    KFileShare
-    KFileSharePropsPlugin
     KFileTreeView
     KFilterBase
     KFilterDev

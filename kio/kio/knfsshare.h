@@ -24,9 +24,7 @@
 #include <kio/kio_export.h>
 
 /**
- * Similar functionality like KFileShare, 
- * but works only for NFS and do not need 
- * any suid script.
+ * Similar functionality like KSambaShare but works only for NFS.
  * It parses the /etc/exports file to get its information.
  * Singleton class, call instance() to get an instance.
  */

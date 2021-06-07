@@ -79,7 +79,6 @@ set(kiocore_STAT_SRCS
     kio/kfileitemdelegate.cpp
     kio/kfilemetainfo.cpp
     kio/kfilemetainfoitem.cpp
-    kio/kfileshare.cpp
     kio/kfilewriteplugin.cpp
     kio/kimageio.cpp
     kio/kmimetypechooser.cpp
@@ -114,6 +113,10 @@ set(kiocore_STAT_SRCS
     kio/kpasswdserverloop.cpp
     kio/usernotificationhandler.cpp
     kio/clipboardupdater.cpp
+    kio/kautomount.cpp
+    kio/knfsshare.cpp
+    kio/ksambashare.cpp
+    kio/ksambasharedata.cpp
 )
 
 qt4_add_dbus_adaptor(kiocore_STAT_SRCS
@@ -135,15 +138,6 @@ qt4_add_dbus_interface(kiocore_STAT_SRCS
     kio/org.kde.KPasswdServer.xml
     kpasswdserver_interface
 )
-
-if(UNIX)
-   set(kiocore_STAT_SRCS ${kiocore_STAT_SRCS}
-       kio/kautomount.cpp
-       kio/knfsshare.cpp
-       kio/ksambashare.cpp
-       kio/ksambasharedata.cpp
-   )
-endif(UNIX)
 
 set(kbookmarks_STAT_SRCS
     bookmarks/kbookmark.cc
@@ -184,7 +178,6 @@ set(kfile_STAT_SRCS
     kfile/kurlrequester.cpp
     kfile/kurlrequesterdialog.cpp
     kfile/kfilemetadataprovider.cpp
-    kfile/kfilesharedialog.cpp
 )
 
 qt4_add_resources(kfile_STAT_SRCS kfile/kacleditwidget.qrc)
@@ -327,7 +320,6 @@ install(
     kio/kfileitemdelegate.h
     kio/kfilemetainfo.h
     kio/kfilemetainfoitem.h
-    kio/kfileshare.h
     kio/kfilewriteplugin.h
     kio/kimageio.h
     kio/kmimetypechooser.h
@@ -360,7 +352,6 @@ install(
     kfile/kurlcombobox.h
     kfile/kurlrequester.h
     kfile/kurlrequesterdialog.h
-    kfile/kfilesharedialog.h
     bookmarks/kbookmark.h
     bookmarks/kbookmarkexporter.h
     bookmarks/kbookmarkimporter.h

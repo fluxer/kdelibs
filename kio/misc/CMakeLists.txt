@@ -49,22 +49,3 @@ install(
     rtspu.protocol
     DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )
-
-install(
-    PROGRAMS fileshareset
-    DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR}
-)
-
-install(CODE "
-    set(FILESHARESET_PATH \"\$ENV{DESTDIR}${KDE4_LIBEXEC_INSTALL_DIR}/fileshareset\")
-    EXECUTE_PROCESS(COMMAND sh -c \"chown 0 '\${FILESHARESET_PATH}' && chmod u+s '\${FILESHARESET_PATH}'\")
-")
-
-# write a cmake script file which creates the symlink
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/make_fileshare_symlink.cmake
-    "EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E create_symlink ${KDE4_LIBEXEC_INSTALL_DIR}/fileshareset \"\$ENV{DESTDIR}${KDE4_LIBEXEC_INSTALL_DIR}/filesharelist\")\n"
-)
-# and add it as post-install script for fileshareset
-set_target_properties(ktelnetservice PROPERTIES
-    POST_INSTALL_SCRIPT ${CMAKE_CURRENT_BINARY_DIR}/make_fileshare_symlink.cmake
-)

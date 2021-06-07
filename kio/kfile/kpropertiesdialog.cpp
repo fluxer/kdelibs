@@ -122,8 +122,6 @@ extern "C" {
 #include <kcapacitybar.h>
 #include <kfileitemlistproperties.h>
 
-#include "kfilesharedialog.h"
-
 #include "ui_kpropertiesdesktopbase.h"
 #include "ui_kpropertiesdesktopadvbase.h"
 #ifdef HAVE_POSIX_ACL
