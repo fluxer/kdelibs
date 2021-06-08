@@ -23,10 +23,9 @@
 
 #include <solid/ifaces/opticaldisc.h>
 
-#include "../shared/udevqt.h"
-
 #include "udevstoragevolume.h"
-#include "udevdevice.h"
+
+#include <cdio/cdio.h>
 
 namespace Solid
 {
@@ -50,6 +49,9 @@ public:
     virtual bool isAppendable() const;
     virtual Solid::OpticalDisc::DiscType discType() const;
     virtual Solid::OpticalDisc::ContentTypes availableContent() const;
+
+private:
+    CdIo_t *p_cdio;
 };
 
 }

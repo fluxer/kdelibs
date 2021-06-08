@@ -18,17 +18,28 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <QDebug>
+
 #include "udevopticaldisc.h"
 
 using namespace Solid::Backends::UDev;
 
 OpticalDisc::OpticalDisc(UDevDevice *device)
-    : StorageVolume(device)
+    : StorageVolume(device),
+    p_cdio(Q_NULLPTR)
 {
+    const QByteArray devicename = m_device->deviceName().toLocal8Bit();
+    p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);
+    if (!p_cdio) {
+        qWarning() << "Could not open" << devicename;
+    }
 }
 
 OpticalDisc::~OpticalDisc()
 {
+    if (p_cdio) {
+        cdio_destroy(p_cdio);
+    }
 }
 
 qulonglong OpticalDisc::capacity() const
@@ -38,7 +49,18 @@ qulonglong OpticalDisc::capacity() const
 
 bool OpticalDisc::isRewritable() const
 {
-    return false; // TODO:
+    switch (discType()) {
+        case Solid::OpticalDisc::CdRewritable:
+        case Solid::OpticalDisc::BluRayRewritable:
+        case Solid::OpticalDisc::HdDvdRewritable:
+        case Solid::OpticalDisc::DvdRewritable:
+        case Solid::OpticalDisc::DvdPlusRewritable:
+        case Solid::OpticalDisc::DvdPlusRewritableDuallayer:
+            return true;
+        default:
+            return false;
+    }
+    Q_UNREACHABLE();
 }
 
 bool OpticalDisc::isBlank() const
@@ -53,7 +75,67 @@ bool OpticalDisc::isAppendable() const
 
 Solid::OpticalDisc::DiscType OpticalDisc::discType() const
 {
-    return Solid::OpticalDisc::UnknownDiscType; // TODO:
+    if (!p_cdio) {
+        return Solid::OpticalDisc::UnknownDiscType;
+    }
+
+    /*
+        libcdio does not support blue-ray, maybe it will some day
+        BluRayRom, BluRayRecordable, BluRayRewritable
+    */
+    /*
+        TODO: not implemented by libcdio/needs rw query on CDIO_DISC_MODE_CD_*?
+        CdRecordable, CdRewritable, HdDvdRewritable
+    */
+
+    const discmode_t discmode = cdio_get_discmode(p_cdio);
+    switch(discmode) {
+        case CDIO_DISC_MODE_CD_DA:    // falltrough
+        case CDIO_DISC_MODE_CD_DATA:  // falltrough
+        case CDIO_DISC_MODE_CD_XA:    // falltrough
+        case CDIO_DISC_MODE_CD_MIXED: // falltrough
+            return Solid::OpticalDisc::CdRom;
+        case CDIO_DISC_MODE_DVD_ROM:  // falltrough
+        case CDIO_DISC_MODE_DVD_RAM:
+            return Solid::OpticalDisc::DvdRom;
+        case CDIO_DISC_MODE_DVD_R:
+            return Solid::OpticalDisc::DvdRecordable;
+        case CDIO_DISC_MODE_DVD_RW:
+            return Solid::OpticalDisc::DvdRewritable;
+        case CDIO_DISC_MODE_HD_DVD_ROM:
+            return Solid::OpticalDisc::HdDvdRom;
+        case CDIO_DISC_MODE_HD_DVD_RAM:
+            return Solid::OpticalDisc::DvdRam;
+        case CDIO_DISC_MODE_HD_DVD_R:
+            return Solid::OpticalDisc::HdDvdRecordable;
+        case CDIO_DISC_MODE_DVD_PR:
+            return Solid::OpticalDisc::DvdPlusRecordable;
+        case CDIO_DISC_MODE_DVD_PRW:
+            return Solid::OpticalDisc::DvdPlusRewritable;
+        case CDIO_DISC_MODE_DVD_PRW_DL:
+            return Solid::OpticalDisc::DvdPlusRewritableDuallayer;
+        case CDIO_DISC_MODE_DVD_PR_DL:
+            return Solid::OpticalDisc::DvdPlusRecordableDuallayer;
+        case CDIO_DISC_MODE_DVD_OTHER:
+        case CDIO_DISC_MODE_CD_I: {
+            qWarning() << "Unhandled disc mode" << discmode;
+            return Solid::OpticalDisc::UnknownDiscType;
+        }
+        case CDIO_DISC_MODE_NO_INFO: {
+            qDebug() << "No information about disc mode";
+            return Solid::OpticalDisc::UnknownDiscType;
+        }
+        case CDIO_DISC_MODE_ERROR: {
+            qWarning() << "Disc mode error";
+            return Solid::OpticalDisc::UnknownDiscType;
+        }
+        default: {
+            qWarning() << "Uknown disc mode" << discmode;
+            return Solid::OpticalDisc::UnknownDiscType;
+        }
+    }
+
+    Q_UNREACHABLE();
 }
 
 Solid::OpticalDisc::ContentTypes OpticalDisc::availableContent() const

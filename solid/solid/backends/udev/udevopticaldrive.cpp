@@ -50,7 +50,7 @@ bool OpticalDrive::eject()
     }
 
     /*
-        TODO: check result and emit broadcastActionDone with one of:
+        TODO: check result and call broadcastActionDone with one of:
         UnauthorizedOperation
         DeviceBusy
         OperationFailed
@@ -60,7 +60,6 @@ bool OpticalDrive::eject()
     */
     const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
     m_device->broadcastActionDone("eject", Solid::UnauthorizedOperation, ejecterror);
-
     return false;
 }
 
