@@ -19,7 +19,7 @@ build_script:
         libavahi-common-dev krb5-multidev perl-base libwebp-dev \
         libudev-dev liblzma-dev libexiv2-dev libilmbase-dev libjpeg-dev \
         libbz2-dev libattr1-dev libacl1-dev libxcb-render-util0-dev \
-        libxcb-keysyms1-dev libxcb-image0-dev strigi \
+        libxcb-keysyms1-dev libxcb-image0-dev libcdio-dev strigi \
         libdbusmenu-katie media-player-info krb5-config \
         shared-mime-info media-player-info xdg-utils ccache
 
