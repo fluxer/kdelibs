@@ -414,7 +414,6 @@ void FileProtocol::listDir( const KUrl& url)
 void FileProtocol::rename( const KUrl &srcUrl, const KUrl &destUrl,
                            KIO::JobFlags _flags )
 {
-    char off_t_should_be_64_bits[sizeof(off_t) >= 8 ? 1 : -1]; (void) off_t_should_be_64_bits;
     const QString src = srcUrl.toLocalFile();
     const QString dest = destUrl.toLocalFile();
     const QByteArray _src(QFile::encodeName(src));
