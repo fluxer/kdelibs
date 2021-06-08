@@ -22,7 +22,10 @@
 #define UDEVOPTICALDRIVE_H
 
 #include <solid/ifaces/opticaldrive.h>
+
 #include "udevstoragedrive.h"
+
+#include <cdio/cdio.h>
 
 namespace Solid
 {
@@ -55,6 +58,9 @@ public:
 private Q_SLOTS:
     void slotEjectRequested();
     void slotEjectDone(int error, const QString &errorString);
+
+private:
+    CdIo_t *p_cdio;
 };
 
 }
