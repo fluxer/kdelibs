@@ -20,7 +20,11 @@
 
 #include "udevopticaldrive.h"
 
+#include <cdio/cdio.h>
+
 using namespace Solid::Backends::UDev;
+
+// TODO: Q_CONSTRUCTOR_FUNCTION() for cdio_init()? cdio_open() is supposed to call it
 
 OpticalDrive::OpticalDrive(UDevDevice *device)
     : StorageDrive(device)
@@ -38,25 +42,26 @@ bool OpticalDrive::eject()
 {
     m_device->broadcastActionRequested("eject");
 
-#if 0
-    Solid::DeviceBusy
-    Solid::OperationFailed
-    Solid::UserCanceled
-    Solid::InvalidOption
-    Solid::MissingDriver
-    Solid::UnauthorizedOperation
-
-    if (true) {
+    const QByteArray devicename = m_device->deviceName().toLocal8Bit();
+    const driver_return_code_t result = cdio_eject_media_drive(devicename.constData());
+    if (result == DRIVER_OP_SUCCESS) {
         m_device->broadcastActionDone("setup", Solid::NoError, QString());
-    } else {
-        const QString ejecterror;
-        m_device->broadcastActionDone("eject", Solid::UnauthorizedOperation, ejecterror);
+        return true;
     }
-#endif
 
-    const QString ejecterror;
+    /*
+        TODO: check result and emit broadcastActionDone with one of:
+        UnauthorizedOperation
+        DeviceBusy
+        OperationFailed
+        UserCanceled
+        InvalidOption
+        MissingDriver
+    */
+    const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
     m_device->broadcastActionDone("eject", Solid::UnauthorizedOperation, ejecterror);
-    return false; // TODO:
+
+    return false;
 }
 
 QList<int> OpticalDrive::writeSpeeds() const

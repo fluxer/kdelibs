@@ -163,6 +163,8 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
             backends/udev/udevopticaldrive.cpp
         )
         add_definitions(-DUDEV_CDIO)
+        include_directories(${LIBCDIO_INCLUDES})
+        set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${LIBCDIO_LIBRARIES})
     endif()
 
     set(UDEV_DETAILED_OUTPUT OFF CACHE BOOL "provide extended output regarding udev events")
