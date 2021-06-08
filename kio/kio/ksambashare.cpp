@@ -331,7 +331,7 @@ KSambaShareData::UserShareError KSambaSharePrivate::add(const KSambaShareData &s
     args << QLatin1String("usershare") << QLatin1String("add") << shareData.name()
          << shareData.path() << shareData.comment() << shareData.acl() << guestok;
 
-    int ret = runProcess(QLatin1String("net"), args, stdOut, stdErr);
+    const int result = runProcess(QLatin1String("net"), args, stdOut, stdErr);
 
     //TODO: parse and process error messages.
     if (!stdErr.isEmpty()) {
@@ -341,10 +341,14 @@ KSambaShareData::UserShareError KSambaSharePrivate::add(const KSambaShareData &s
         kWarning() << stdErr;
     }
 
-    return (ret == 0) ? KSambaShareData::UserShareOk : KSambaShareData::UserShareSystemError;
+    if (result == 0) {
+        return KSambaShareData::UserShareOk;
+    }
+    data.remove(shareData.name());
+    return KSambaShareData::UserShareSystemError;
 }
 
-KSambaShareData::UserShareError KSambaSharePrivate::remove(const KSambaShareData &shareData) const
+KSambaShareData::UserShareError KSambaSharePrivate::remove(const KSambaShareData &shareData)
 {
     if (!isSambaInstalled()) {
         return KSambaShareData::UserShareSystemError;
@@ -358,8 +362,13 @@ KSambaShareData::UserShareError KSambaSharePrivate::remove(const KSambaShareData
 
     args << QLatin1String("usershare") << QLatin1String("delete") << shareData.name();
 
-    int result = QProcess::execute(QLatin1String("net"), args);
-    return (result == 0) ? KSambaShareData::UserShareOk : KSambaShareData::UserShareSystemError;
+    const int result = QProcess::execute(QLatin1String("net"), args);
+
+    if (result == 0) {
+        data.remove(shareData.name());
+        return KSambaShareData::UserShareOk;
+    }
+    return KSambaShareData::UserShareSystemError;
 }
 
 bool KSambaSharePrivate::sync()
