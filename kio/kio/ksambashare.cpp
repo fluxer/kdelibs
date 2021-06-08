@@ -37,30 +37,13 @@
 #include <kuser.h>
 #include <kstandarddirs.h>
 
-// Default smb.conf locations
-// sorted by priority, most priority first
-static const char * const DefaultSambaConfigFilePathList[] =
-{
-  "/etc/samba/smb.conf",
-  "/etc/smb.conf",
-  "/usr/local/etc/smb.conf",
-  "/usr/local/samba/lib/smb.conf",
-  "/usr/samba/lib/smb.conf",
-  "/usr/lib/smb.conf",
-  "/usr/local/lib/smb.conf"
-};
-static const int DefaultSambaConfigFilePathListSize = sizeof(DefaultSambaConfigFilePathList)
-        / sizeof(char*);
-
 KSambaSharePrivate::KSambaSharePrivate(KSambaShare *parent)
     : q_ptr(parent)
     , data()
-    , smbConf()
     , userSharePath()
     , skipUserShare(false)
 {
     setUserSharePath();
-    findSmbConf();
     sync();
 }
 
@@ -76,23 +59,6 @@ bool KSambaSharePrivate::isSambaInstalled()
     }
 
     kDebug() << "Samba is not installed!";
-
-    return false;
-}
-
-// Try to find the samba config file path
-// in several well-known paths
-bool KSambaSharePrivate::findSmbConf()
-{
-    for (int i = 0; i < DefaultSambaConfigFilePathListSize; ++i) {
-        const QString filePath(DefaultSambaConfigFilePathList[i]);
-        if (QFile::exists(filePath)) {
-            smbConf = filePath;
-            return true;
-        }
-    }
-
-    kWarning() << "KSambaShare: Could not find smb.conf!";
 
     return false;
 }
@@ -459,12 +425,6 @@ KSambaShare::~KSambaShare()
         KDirWatch::self()->removeDir(d->userSharePath);
     }
     delete d_ptr;
-}
-
-QString KSambaShare::smbConfPath() const
-{
-    Q_D(const KSambaShare);
-    return d->smbConf;
 }
 
 bool KSambaShare::isDirectoryShared(const QString &path) const

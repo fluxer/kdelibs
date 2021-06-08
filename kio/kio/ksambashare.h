@@ -104,16 +104,6 @@ public:
 
     virtual ~KSambaShare();
 
-    /**
-     * Returns the path to the used smb.conf file
-     * or empty string if no file was found
-     *
-     * @return @c the path to the smb.conf file
-     *
-     * @deprecated
-     */
-    KIO_DEPRECATED QString smbConfPath() const;
-
 Q_SIGNALS:
     /**
      * Emitted when a share is updated, added or removed
