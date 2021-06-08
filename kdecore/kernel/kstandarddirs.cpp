@@ -1116,8 +1116,7 @@ QString KStandardDirs::findExe( const QString& appname,
     if (appname.contains(QDir::separator()))
     {
         //kDebug(180) << "findExe(): absolute path given";
-        QString path = checkExecutable(appname, options & IgnoreExecBit);
-        return path;
+        return checkExecutable(appname, options & IgnoreExecBit);
     }
 
     //kDebug(180) << "findExe(): relative path given";
@@ -1130,11 +1129,9 @@ QString KStandardDirs::findExe( const QString& appname,
     }
 
     //kDebug(180) << "findExe(): checking system paths";
-    const QStringList exePaths = systemPaths( pstr );
-    for (QStringList::ConstIterator it = exePaths.begin(); it != exePaths.end(); ++it)
+    foreach (const QString &it, systemPaths( pstr ))
     {
-        p = (*it) + QLatin1Char('/');
-        p += appname;
+        p = it + QLatin1Char('/') + appname;
 
         // Check for executable in this tokenized path
         result = checkExecutable(p, options & IgnoreExecBit);
@@ -1145,8 +1142,7 @@ QString KStandardDirs::findExe( const QString& appname,
     }
 
     // Not found in PATH, look into the KDE-specific bin dir ("exe" resource)
-    p = installPath("exe");
-    p += appname;
+    p = installPath("exe") + appname;
     result = checkExecutable(p, options & IgnoreExecBit);
     if (!result.isEmpty()) {
         //kDebug(180) << "findExe(): returning " << result;
