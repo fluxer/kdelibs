@@ -156,6 +156,15 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
         backends/shared/udevqtclient.cpp
         backends/shared/udevqtdevice.cpp
     )
+
+    if(LIBCDIO_FOUND)
+        set(solid_LIB_SRCS ${solid_LIB_SRCS}
+            backends/udev/udevopticaldisc.cpp
+            backends/udev/udevopticaldrive.cpp
+        )
+        add_definitions(-DUDEV_CDIO)
+    endif()
+
     set(UDEV_DETAILED_OUTPUT OFF CACHE BOOL "provide extended output regarding udev events")
     if(UDEV_DETAILED_OUTPUT)
         add_definitions(-DUDEV_DETAILED_OUTPUT)

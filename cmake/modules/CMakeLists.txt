@@ -15,6 +15,7 @@ set(cmakeFilesDontInstall
     FindDNSSD.cmake
     FindENCHANT.cmake
     FindACL.cmake
+    FindLibCDIO.cmake
 )
 
 # Explicitly list all files which will be installed.

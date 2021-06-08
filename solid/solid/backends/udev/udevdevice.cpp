@@ -40,6 +40,11 @@
 #include "kglobal.h"
 #include "klocale.h"
 
+#ifdef UDEV_CDIO
+#include "udevopticaldisc.h"
+#include "udevopticaldrive.h"
+#endif
+
 #include <sys/socket.h>
 #include <linux/if_arp.h>
 
@@ -165,6 +170,40 @@ QString UDevDevice::icon() const
         return QLatin1String("battery");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QLatin1String("cpu");
+#ifdef UDEV_CDIO
+    // TODO: if removable should return "drive-removable-media-usb"
+    } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
+        return QLatin1String("drive-removable-media");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDisc)) {
+        bool isWritable = property("OpticalBlank").toBool(); // TODO:
+        const QString media; // TODO:
+
+        const OpticalDisc disc(const_cast<UDevDevice*>(this));
+        Solid::OpticalDisc::ContentTypes availContent = disc.availableContent();
+
+        if (availContent & Solid::OpticalDisc::VideoDvd) { // Video DVD
+            return QLatin1String("media-optical-dvd-video");
+        } else if ((availContent & Solid::OpticalDisc::VideoCd) || (availContent & Solid::OpticalDisc::SuperVideoCd)) { // Video CD
+            return QLatin1String("media-optical-video");
+        } else if ((availContent & Solid::OpticalDisc::Data) && (availContent & Solid::OpticalDisc::Audio)) { // Mixed CD
+            return QLatin1String("media-optical-mixed-cd");
+        } else if (availContent & Solid::OpticalDisc::Audio) { // Audio CD
+            return QLatin1String("media-optical-audio");
+        } else if (availContent & Solid::OpticalDisc::Data) { // Data CD
+            return QLatin1String("media-optical-data");
+        } else if ( isWritable ) {
+            return QLatin1String("media-optical-recordable");
+        } else {
+            if ( media.startsWith( "optical_dvd" ) || media.startsWith( "optical_hddvd" ) ) { // DVD
+                return QLatin1String("media-optical-dvd");
+            } else if ( media.startsWith( "optical_bd" ) ) { // BluRay
+                return QLatin1String("media-optical-blu-ray");
+            }
+        }
+
+        // fallback for every other optical disc
+        return QLatin1String("media-optical");
+#endif
     } else if (queryDeviceInterface(Solid::DeviceInterface::PortableMediaPlayer)) {
         // TODO: check out special cases like iPod
         return QLatin1String("multimedia-player");
@@ -288,6 +327,69 @@ QString UDevDevice::description() const
             // TODO: check out special cases like iPod
             return QObject::tr("Portable Media Player");
         }
+#ifdef UDEV_CDIO
+    } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
+        const OpticalDrive opticalDrive(const_cast<UDevDevice*>(this));
+        Solid::OpticalDrive::MediumTypes mediumTypes = opticalDrive.supportedMedia();
+        QString first;
+        QString second;
+        bool drive_is_hotpluggable = false; // TODO:
+
+        first = QObject::tr("CD-ROM");
+        if (mediumTypes & Solid::OpticalDrive::Cdr)
+            first = QObject::tr("CD-R");
+        if (mediumTypes & Solid::OpticalDrive::Cdrw)
+            first = QObject::tr("CD-RW");
+
+        if (mediumTypes & Solid::OpticalDrive::Dvd)
+            second = QObject::tr("/DVD-ROM");
+        if (mediumTypes & Solid::OpticalDrive::Dvdplusr)
+            second = QObject::tr("/DVD+R");
+        if (mediumTypes & Solid::OpticalDrive::Dvdplusrw)
+            second = QObject::tr("/DVD+RW");
+        if (mediumTypes & Solid::OpticalDrive::Dvdr)
+            second = QObject::tr("/DVD-R");
+        if (mediumTypes & Solid::OpticalDrive::Dvdrw)
+            second = QObject::tr("/DVD-RW");
+        if (mediumTypes & Solid::OpticalDrive::Dvdram)
+            second = QObject::tr("/DVD-RAM");
+        if ((mediumTypes & Solid::OpticalDrive::Dvdr) && (mediumTypes & Solid::OpticalDrive::Dvdplusr)) {
+            if (mediumTypes & Solid::OpticalDrive::Dvdplusdl) {
+                second = QObject::tr("/DVD켙 DL");
+            } else {
+                second = QObject::tr("/DVD켙");
+            }
+        }
+        if ((mediumTypes & Solid::OpticalDrive::Dvdrw) && (mediumTypes & Solid::OpticalDrive::Dvdplusrw)) {
+            if((mediumTypes & Solid::OpticalDrive::Dvdplusdl) || (mediumTypes & Solid::OpticalDrive::Dvdplusdlrw)) {
+                second = QObject::tr("/DVD켙W DL");
+            } else {
+                second = QObject::tr("/DVD켙W");
+            }
+        }
+        if (mediumTypes & Solid::OpticalDrive::Bd)
+            second = QObject::tr("/BD-ROM");
+        if (mediumTypes & Solid::OpticalDrive::Bdr)
+            second = QObject::tr("/BD-R");
+        if (mediumTypes & Solid::OpticalDrive::Bdre)
+            second = QObject::tr("/BD-RE");
+        if (mediumTypes & Solid::OpticalDrive::HdDvd)
+            second = QObject::tr("/HD DVD-ROM");
+        if (mediumTypes & Solid::OpticalDrive::HdDvdr)
+            second = QObject::tr("/HD DVD-R");
+        if (mediumTypes & Solid::OpticalDrive::HdDvdrw)
+            second = QObject::tr("/HD DVD-RW");
+
+        QString description;
+        if (drive_is_hotpluggable) {
+            description = QObject::tr("External %1%2 Drive");
+        } else {
+            description = QObject::tr("%1%2 Drive");
+        }
+        description = description.arg(first, second);
+
+        return description;
+#endif // UDEV_CDIO
     } else if (queryDeviceInterface(Solid::DeviceInterface::Camera)) {
         return QObject::tr("Camera");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Video)) {
@@ -322,6 +424,13 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 
     case Solid::DeviceInterface::Processor:
         return property("DRIVER").toString() == "processor";
+
+#ifdef UDEV_CDIO
+    case Solid::DeviceInterface::OpticalDrive:
+        return (property("ID_TYPE").toString() == "cd" || property("ID_CDROM_MEDIA_CD").toInt() == 1);
+    case Solid::DeviceInterface::OpticalDisc:
+        return false; // TODO:
+#endif
 
     case Solid::DeviceInterface::Camera:
         return property("ID_GPHOTO2").toInt() == 1;
@@ -382,6 +491,13 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
 
     case Solid::DeviceInterface::Processor:
         return new Processor(this);
+
+#ifdef UDEV_CDIO
+    case Solid::DeviceInterface::OpticalDrive:
+        return new OpticalDrive(this);
+    case Solid::DeviceInterface::OpticalDisc:
+        return new OpticalDisc(this);
+#endif
 
     case Solid::DeviceInterface::Camera:
         return new Camera(this);

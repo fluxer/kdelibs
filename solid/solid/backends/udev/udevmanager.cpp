@@ -187,6 +187,10 @@ UDevManager::UDevManager(QObject *parent)
                              << Solid::DeviceInterface::AcAdapter
                              << Solid::DeviceInterface::Battery
                              << Solid::DeviceInterface::Processor
+#ifdef UDEV_CDIO
+                             << Solid::DeviceInterface::OpticalDrive
+                             << Solid::DeviceInterface::OpticalDisc
+#endif
                              << Solid::DeviceInterface::AudioInterface
                              << Solid::DeviceInterface::NetworkInterface
                              << Solid::DeviceInterface::SerialInterface

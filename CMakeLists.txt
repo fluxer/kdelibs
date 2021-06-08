@@ -238,6 +238,14 @@ set_package_properties(UDev PROPERTIES
     TYPE OPTIONAL
 )
 
+macro_optional_find_package(LibCDIO)
+set_package_properties(LibCDIO PROPERTIES
+    DESCRIPTION "GNU Compact Disc Input and Control Library"
+    URL "https://www.gnu.org/software/libcdio/"
+    PURPOSE "Allows Solid to use libcdio to provide information about CD-ROM devices on Linux"
+    TYPE OPTIONAL
+)
+
 ################# configure checks and create the configured files #################
 
 include(ConfigureChecks.cmake)
