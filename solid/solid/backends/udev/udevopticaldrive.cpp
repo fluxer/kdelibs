@@ -22,6 +22,16 @@
 
 #include "udevopticaldrive.h"
 
+#include <cdio/mmc.h>
+#include <cdio/mmc_cmds.h>
+
+// magic bits taken from libcdio examples
+enum LibCDIOMagic {
+    ReadSpeed = 14,
+    MaximumWriteSpeed = 18,
+    CurrentWriteSpeed = 28,
+};
+
 using namespace Solid::Backends::UDev;
 
 // TODO: Q_CONSTRUCTOR_FUNCTION() for cdio_init()? cdio_open() is supposed to call it
@@ -75,17 +85,58 @@ bool OpticalDrive::eject()
 
 QList<int> OpticalDrive::writeSpeeds() const
 {
-    return QList<int>(); // TODO:
+    QList<int> result;
+
+    // TODO: obtain minimum and maximum, calculate from the results?
+    result << writeSpeed();
+
+    return result;
 }
 
 int OpticalDrive::writeSpeed() const
 {
-    return 0; // TODO:
+    int result = 0;
+    if (!p_cdio) {
+        return result;
+    }
+
+    uint8_t cdiobuf[30];
+    ::memset(cdiobuf, 0, sizeof(cdiobuf) * sizeof(uint8_t));
+    driver_return_code_t mmcresult = mmc_mode_sense_6(p_cdio, cdiobuf, sizeof(cdiobuf), CDIO_MMC_CAPABILITIES_PAGE);
+    if (mmcresult != DRIVER_OP_SUCCESS) {
+        mmcresult = mmc_mode_sense_10(p_cdio, cdiobuf, sizeof(cdiobuf), CDIO_MMC_CAPABILITIES_PAGE);
+        if (mmcresult != DRIVER_OP_SUCCESS) {
+            qWarning() << "Could not obtain mode sense data";
+            return result;
+        }
+    }
+
+    result = CDIO_MMC_GETPOS_LEN16(cdiobuf, LibCDIOMagic::CurrentWriteSpeed);
+
+    return result;
 }
 
 int OpticalDrive::readSpeed() const
 {
-    return 0; // TODO:
+    int result = 0;
+    if (!p_cdio) {
+        return result;
+    }
+
+    uint8_t cdiobuf[30];
+    ::memset(cdiobuf, 0, sizeof(cdiobuf) * sizeof(uint8_t));
+    driver_return_code_t mmcresult = mmc_mode_sense_6(p_cdio, cdiobuf, sizeof(cdiobuf), CDIO_MMC_CAPABILITIES_PAGE);
+    if (mmcresult != DRIVER_OP_SUCCESS) {
+        mmcresult = mmc_mode_sense_10(p_cdio, cdiobuf, sizeof(cdiobuf), CDIO_MMC_CAPABILITIES_PAGE);
+        if (mmcresult != DRIVER_OP_SUCCESS) {
+            qWarning() << "Could not obtain mode sense data";
+            return result;
+        }
+    }
+
+    result = CDIO_MMC_GETPOS_LEN16(cdiobuf, LibCDIOMagic::ReadSpeed);
+
+    return result;
 }
 
 Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
@@ -99,7 +150,7 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
     cdio_drive_write_cap_t writecap;
     cdio_drive_misc_cap_t  misccap;
     cdio_get_drive_cap(p_cdio, &reacap, &writecap, &misccap);
-    // ignoring read capabilities on purpose
+    // ignoring read and misc capabilities on purpose
     Q_UNUSED(reacap);
     Q_UNUSED(misccap);
 
@@ -107,7 +158,6 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
         TODO: not supported by libcdio:
         Dvdplusr, Dvdplusdl, Dvdplusdlrw, Bd, Bdr, Bdre, HdDvd, HdDvdr, HdDvdrw
     */
-
     if (writecap == CDIO_DRIVE_CAP_ERROR) {
         qWarning() << "Could not obtain write capabilities";
     } else {
@@ -128,9 +178,6 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
         }
         if (writecap & CDIO_DRIVE_CAP_WRITE_DVD_RAM) {
             result |= Solid::OpticalDrive::Dvdram;
-        }
-        if (writecap & CDIO_DRIVE_CAP_WRITE_DVD_RPW) {
-            result |= Solid::OpticalDrive::Dvdplusrw;
         }
         if (writecap & CDIO_DRIVE_CAP_WRITE_DVD_RPW) {
             result |= Solid::OpticalDrive::Dvdplusrw;
