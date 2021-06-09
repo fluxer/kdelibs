@@ -25,6 +25,9 @@
 #include <cdio/mmc.h>
 #include <cdio/mmc_cmds.h>
 
+// for reference:
+// https://www.t10.org/ftp/t10/document.97/97-108r0.pdf
+
 // magic bits taken from libcdio examples
 enum LibCDIOMagic {
     ReadSpeed = 14,
@@ -62,7 +65,6 @@ bool OpticalDrive::eject()
 
     const QByteArray devicename = m_device->property("DEVNAME").toString().toLocal8Bit();
     const driver_return_code_t result = cdio_eject_media_drive(devicename.constData());
-
     // not supported by libcdio: UserCanceled
     switch(result) {
         case DRIVER_OP_SUCCESS: {
@@ -117,6 +119,7 @@ int OpticalDrive::writeSpeed() const
         return result;
     }
 
+    // should be atleast 18
     uint8_t cdiobuf[30];
     ::memset(cdiobuf, 0, sizeof(cdiobuf) * sizeof(uint8_t));
     driver_return_code_t mmcresult = mmc_mode_sense_6(p_cdio, cdiobuf, sizeof(cdiobuf), CDIO_MMC_CAPABILITIES_PAGE);

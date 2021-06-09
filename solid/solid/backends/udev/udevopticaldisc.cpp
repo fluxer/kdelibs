@@ -46,7 +46,8 @@ OpticalDisc::~OpticalDisc()
 
 qulonglong OpticalDisc::capacity() const
 {
-    return 0; // TODO:
+    // TODO: implement
+    return 0;
 }
 
 bool OpticalDisc::isRewritable() const
