@@ -79,6 +79,7 @@ public:
     void _k_initDeviceList();
     void _k_deviceAdded(const QString &udi);
     void _k_deviceRemoved(const QString &udi);
+    void _k_contentChanged(const QString &udi, const bool hascontent);
     void _k_itemChanged(const QString &udi);
     void _k_reloadBookmarks();
     void _k_storageSetupDone(Solid::ErrorType error, QVariant errorData);
@@ -304,6 +305,8 @@ void KFilePlacesModel::Private::_k_initDeviceList()
             q, SLOT(_k_deviceAdded(QString)));
     connect(notifier, SIGNAL(deviceRemoved(QString)),
             q, SLOT(_k_deviceRemoved(QString)));
+    connect(notifier, SIGNAL(contentChanged(QString,bool)),
+            q, SLOT(_k_contentChanged(QString,bool)));
 
     const QList<Solid::Device> &deviceList = Solid::Device::listFromQuery(predicate);
 
@@ -329,6 +332,15 @@ void KFilePlacesModel::Private::_k_deviceRemoved(const QString &udi)
     if (availableDevices.contains(udi)) {
         availableDevices.remove(udi);
         _k_reloadBookmarks();
+    }
+}
+
+void KFilePlacesModel::Private::_k_contentChanged(const QString &udi, const bool hascontent)
+{
+    if (hascontent) {
+        _k_deviceAdded(udi);
+    } else {
+        _k_deviceRemoved(udi);
     }
 }
 

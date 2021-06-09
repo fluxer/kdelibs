@@ -179,6 +179,7 @@ UDevManager::UDevManager(QObject *parent)
 {
     connect(d->m_client, SIGNAL(deviceAdded(UdevQt::Device)), this, SLOT(slotDeviceAdded(UdevQt::Device)));
     connect(d->m_client, SIGNAL(deviceRemoved(UdevQt::Device)), this, SLOT(slotDeviceRemoved(UdevQt::Device)));
+    connect(d->m_client, SIGNAL(deviceChanged(UdevQt::Device)), this, SLOT(slotDeviceChanged(UdevQt::Device)));
 
     d->m_supportedInterfaces << Solid::DeviceInterface::GenericInterface
                              << Solid::DeviceInterface::StorageAccess
@@ -290,5 +291,15 @@ void UDevManager::slotDeviceRemoved(const UdevQt::Device &device)
     if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
         emit deviceRemoved(udiPrefix() + device.sysfsPath());
         d->m_devicesOfInterest.removeAll(udiPrefix() + device.sysfsPath());
+    }
+}
+
+void UDevManager::slotDeviceChanged(const UdevQt::Device &device)
+{
+    if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
+        if (device.subsystem() == "block") {
+            const QString idfsusage = device.deviceProperty("ID_FS_USAGE").toString();
+            emit contentChanged(udiPrefix() + device.sysfsPath(), (idfsusage == "filesystem"));
+        }
     }
 }

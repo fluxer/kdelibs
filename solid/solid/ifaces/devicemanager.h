@@ -108,6 +108,14 @@ namespace Ifaces
          * @param udi the old device identifier
          */
         void deviceRemoved(const QString &udi);
+
+        /**
+         * This signal is emitted when a device content changes, e.g. CD-ROM eject.
+         *
+         * @param udi the device UDI
+         * @param hasContent the device has/does not have content
+         */
+        void contentChanged(const QString &udi, const bool hasContent);
     };
 }
 }

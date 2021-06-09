@@ -50,6 +50,7 @@ namespace Solid
     private Q_SLOTS:
         void _k_deviceAdded(const QString &udi);
         void _k_deviceRemoved(const QString &udi);
+        void _k_contentChanged(const QString &udi, const bool hasContent);
         void _k_destroyed(QObject *object);
 
     private:

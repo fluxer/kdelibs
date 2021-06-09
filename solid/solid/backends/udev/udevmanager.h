@@ -52,6 +52,7 @@ public:
 private Q_SLOTS:
     void slotDeviceAdded(const UdevQt::Device &device);
     void slotDeviceRemoved(const UdevQt::Device &device);
+    void slotDeviceChanged(const UdevQt::Device &device);
 
 private:
     class Private;

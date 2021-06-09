@@ -45,6 +45,8 @@ Solid::DeviceManagerPrivate::DeviceManagerPrivate()
                 this, SLOT(_k_deviceAdded(QString)));
         connect(backend, SIGNAL(deviceRemoved(QString)),
                 this, SLOT(_k_deviceRemoved(QString)));
+        connect(backend, SIGNAL(contentChanged(QString,bool)),
+                this, SLOT(_k_contentChanged(QString,bool)));
     }
 }
 
@@ -207,6 +209,11 @@ void Solid::DeviceManagerPrivate::_k_deviceRemoved(const QString &udi)
     }
 
     emit deviceRemoved(udi);
+}
+
+void Solid::DeviceManagerPrivate::_k_contentChanged(const QString &udi, const bool hascontent)
+{
+    emit contentChanged(udi, hascontent);
 }
 
 void Solid::DeviceManagerPrivate::_k_destroyed(QObject *object)
