@@ -171,34 +171,46 @@ QString UDevDevice::icon() const
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QLatin1String("cpu");
 #ifdef UDEV_CDIO
-    // TODO: if removable should return "drive-removable-media-usb"
+    // TODO: if hot-pluggable should return "drive-removable-media-usb"
     } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
         return QLatin1String("drive-removable-media");
     } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDisc)) {
-        bool isWritable = property("OpticalBlank").toBool(); // TODO:
-        const QString media; // TODO:
-
         const OpticalDisc disc(const_cast<UDevDevice*>(this));
-        Solid::OpticalDisc::ContentTypes availContent = disc.availableContent();
+        Solid::OpticalDisc::ContentTypes availcontent = disc.availableContent();
 
-        if (availContent & Solid::OpticalDisc::VideoDvd) { // Video DVD
+        if (availcontent & Solid::OpticalDisc::VideoDvd) { // Video DVD
             return QLatin1String("media-optical-dvd-video");
-        } else if ((availContent & Solid::OpticalDisc::VideoCd) || (availContent & Solid::OpticalDisc::SuperVideoCd)) { // Video CD
+        } else if ((availcontent & Solid::OpticalDisc::VideoCd) || (availcontent & Solid::OpticalDisc::SuperVideoCd)) { // Video CD
             return QLatin1String("media-optical-video");
-        } else if ((availContent & Solid::OpticalDisc::Data) && (availContent & Solid::OpticalDisc::Audio)) { // Mixed CD
+        } else if ((availcontent & Solid::OpticalDisc::Data) && (availcontent & Solid::OpticalDisc::Audio)) { // Mixed CD
             return QLatin1String("media-optical-mixed-cd");
-        } else if (availContent & Solid::OpticalDisc::Audio) { // Audio CD
+        } else if (availcontent & Solid::OpticalDisc::Audio) { // Audio CD
             return QLatin1String("media-optical-audio");
-        } else if (availContent & Solid::OpticalDisc::Data) { // Data CD
+        } else if (availcontent & Solid::OpticalDisc::Data) { // Data CD
             return QLatin1String("media-optical-data");
-        } else if ( isWritable ) {
+        } else if ( disc.isRewritable() ) {
             return QLatin1String("media-optical-recordable");
-        } else {
-            if ( media.startsWith( "optical_dvd" ) || media.startsWith( "optical_hddvd" ) ) { // DVD
+        }
+
+        switch (disc.discType()) {
+            // DVD
+            case Solid::OpticalDisc::DiscType::DvdRom:
+            case Solid::OpticalDisc::DiscType::DvdRam:
+            case Solid::OpticalDisc::DiscType::DvdRecordable:
+            case Solid::OpticalDisc::DiscType::DvdRewritable:
+            case Solid::OpticalDisc::DiscType::DvdPlusRecordable:
+            case Solid::OpticalDisc::DiscType::DvdPlusRewritable:
+            case Solid::OpticalDisc::DiscType::DvdPlusRecordableDuallayer:
+            case Solid::OpticalDisc::DiscType::DvdPlusRewritableDuallayer:
+            case Solid::OpticalDisc::DiscType::HdDvdRom:
+            case Solid::OpticalDisc::DiscType::HdDvdRecordable:
+            case Solid::OpticalDisc::DiscType::HdDvdRewritable:
                 return QLatin1String("media-optical-dvd");
-            } else if ( media.startsWith( "optical_bd" ) ) { // BluRay
+             // BluRay
+            case Solid::OpticalDisc::DiscType::BluRayRom:
+            case Solid::OpticalDisc::DiscType::BluRayRecordable:
+            case Solid::OpticalDisc::DiscType::BluRayRewritable:
                 return QLatin1String("media-optical-blu-ray");
-            }
         }
 
         // fallback for every other optical disc
