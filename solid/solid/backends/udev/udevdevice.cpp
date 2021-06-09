@@ -355,16 +355,16 @@ QString UDevDevice::description() const
             second = QObject::tr("/DVD-RAM");
         if ((mediumTypes & Solid::OpticalDrive::Dvdr) && (mediumTypes & Solid::OpticalDrive::Dvdplusr)) {
             if (mediumTypes & Solid::OpticalDrive::Dvdplusdl) {
-                second = QObject::tr("/DVD±R DL");
+                second = QObject::tr("/DVDÂ±R DL");
             } else {
-                second = QObject::tr("/DVD±R");
+                second = QObject::tr("/DVDÂ±R");
             }
         }
         if ((mediumTypes & Solid::OpticalDrive::Dvdrw) && (mediumTypes & Solid::OpticalDrive::Dvdplusrw)) {
             if((mediumTypes & Solid::OpticalDrive::Dvdplusdl) || (mediumTypes & Solid::OpticalDrive::Dvdplusdlrw)) {
-                second = QObject::tr("/DVD±RW DL");
+                second = QObject::tr("/DVDÂ±RW DL");
             } else {
-                second = QObject::tr("/DVD±RW");
+                second = QObject::tr("/DVDÂ±RW");
             }
         }
         if (mediumTypes & Solid::OpticalDrive::Bd)
