@@ -77,7 +77,8 @@ QString StorageAccess::filePath() const
 bool StorageAccess::isIgnored() const
 {
     const QString idfsusage = m_device->property("ID_FS_USAGE").toString();
-    return (idfsusage != "filesystem");
+    const QString devtype = m_device->property("DEVTYPE").toString();
+    return (idfsusage != "filesystem" || devtype == "disk");
 }
 
 bool StorageAccess::setup()

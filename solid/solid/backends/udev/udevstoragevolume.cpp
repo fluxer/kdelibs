@@ -82,5 +82,6 @@ Solid::StorageVolume::UsageType StorageVolume::usage() const
 bool StorageVolume::isIgnored() const
 {
     const Solid::StorageVolume::UsageType usg = usage();
-    return (usg != Solid::StorageVolume::FileSystem);
+    const QString devtype = m_device->property("DEVTYPE").toString();
+    return (usg != Solid::StorageVolume::FileSystem || devtype == "disk");
 }
