@@ -81,7 +81,8 @@ Solid::StorageVolume::UsageType StorageVolume::usage() const
 
 bool StorageVolume::isIgnored() const
 {
-    const Solid::StorageVolume::UsageType usg = usage();
+    const QString idfsusage = m_device->property("ID_FS_USAGE").toString();
     const QString devtype = m_device->property("DEVTYPE").toString();
-    return (usg != Solid::StorageVolume::FileSystem || devtype == "disk");
+    const int idcdrom = m_device->property("ID_CDROM").toInt();
+    return (idfsusage != "filesystem" || (devtype == "disk" && idcdrom != 1));
 }

@@ -78,9 +78,8 @@ QString UDevDevice::parentUdi() const
     if (subsystem == QLatin1String("block")) {
         return devicePath();
     }
-    const QString idtype = m_device.deviceProperty("ID_TYPE").toString();
-    const int idcdrommediacd = m_device.deviceProperty("ID_CDROM_MEDIA_CD").toInt();
-    if (idtype == "cd" || idcdrommediacd == 1) {
+    const int idcdrom = m_device.deviceProperty("ID_CDROM").toInt();
+    if (idcdrom == 1) {
         return devicePath();
     }
 
@@ -447,8 +446,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::StorageVolume: {
         // block and optical devices have many properties in common. OpticalDrive and OpticalDisc
         // also inherit Block class (indirectly) and inherit block device properties
-        return (m_device.subsystem() == QLatin1String("block")
-            || property("ID_TYPE").toString() == "cd" || property("ID_CDROM_MEDIA_CD").toInt() == 1);
+        return (m_device.subsystem() == QLatin1String("block") || property("ID_CDROM").toInt() == 1);
     }
 
     case Solid::DeviceInterface::AcAdapter:
@@ -461,7 +459,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 #ifdef UDEV_CDIO
     case Solid::DeviceInterface::OpticalDrive:
     case Solid::DeviceInterface::OpticalDisc:
-        return (property("ID_TYPE").toString() == "cd" || property("ID_CDROM_MEDIA_CD").toInt() == 1);
+        return (property("ID_CDROM").toInt() == 1);
 #endif
 
     case Solid::DeviceInterface::Camera:
