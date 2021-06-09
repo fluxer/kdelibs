@@ -70,6 +70,20 @@ QString UDevDevice::udi() const
 
 QString UDevDevice::parentUdi() const
 {
+#warning FIXME: block devices workaround for optical and storage drives
+    // code in e.g. dolphin and plasma casts the parent instead of the actual device to either
+    // Solid::StorageDrive or Solid::OpticalDrive which is wrong but was expected to work with the
+    // UDisks backends, has to be fixed and verified to work in several places at some point
+    const QString subsystem = m_device.deviceProperty("SUBSYSTEM").toString();
+    if (subsystem == QLatin1String("block")) {
+        return devicePath();
+    }
+    const QString idtype = m_device.deviceProperty("ID_TYPE").toString();
+    const int idcdrommediacd = m_device.deviceProperty("ID_CDROM_MEDIA_CD").toInt();
+    if (idtype == "cd" || idcdrommediacd == 1) {
+        return devicePath();
+    }
+
     return UDEV_UDI_PREFIX;
 }
 
@@ -171,8 +185,11 @@ QString UDevDevice::icon() const
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QLatin1String("cpu");
 #ifdef UDEV_CDIO
-    // TODO: if hot-pluggable should return "drive-removable-media-usb"
     } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
+        const OpticalDrive drive(const_cast<UDevDevice*>(this));
+        if (drive.isHotpluggable()) {
+            return QLatin1String("drive-removable-media-usb");
+        }
         return QLatin1String("drive-removable-media");
     } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDisc)) {
         const OpticalDisc disc(const_cast<UDevDevice*>(this));
