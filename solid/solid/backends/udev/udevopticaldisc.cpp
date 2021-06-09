@@ -145,26 +145,29 @@ Solid::OpticalDisc::ContentTypes OpticalDisc::availableContent() const
     }
 
     // not implemented by libcdio: VideoDvd, VideoBluRay
-    // TODO: analyze all tracks
-    cdio_iso_analysis_t analysis;
-    ::memset(&analysis, 0, sizeof(analysis));
-    const cdio_fs_anal_t guessresult = cdio_guess_cd_type(p_cdio, 0, 0, &analysis);
-    switch(CDIO_FSTYPE(guessresult)) {
-        case CDIO_FS_AUDIO: {
-            result |= Solid::OpticalDisc::Audio;
-            break;
-        }
-        case CDIO_FS_ANAL_VIDEOCD: {
-            result |= Solid::OpticalDisc::VideoCd;
-            break;
-        }
-        case CDIO_FS_ANAL_SVCD: {
-            result |= Solid::OpticalDisc::SuperVideoCd;
-            break;
-        }
-        default: {
-            result |= Solid::OpticalDisc::Data;
-            break;
+    const track_t firsttrack = cdio_get_first_track_num(p_cdio);
+    const track_t totaltracks = cdio_get_num_tracks(p_cdio);
+    for (track_t tcount = firsttrack; tcount < totaltracks; tcount++) {
+        cdio_iso_analysis_t analysis;
+        ::memset(&analysis, 0, sizeof(analysis));
+        const cdio_fs_anal_t guessresult = cdio_guess_cd_type(p_cdio, 0, tcount, &analysis);
+        switch(CDIO_FSTYPE(guessresult)) {
+            case CDIO_FS_AUDIO: {
+                result |= Solid::OpticalDisc::Audio;
+                break;
+            }
+            case CDIO_FS_ANAL_VIDEOCD: {
+                result |= Solid::OpticalDisc::VideoCd;
+                break;
+            }
+            case CDIO_FS_ANAL_SVCD: {
+                result |= Solid::OpticalDisc::SuperVideoCd;
+                break;
+            }
+            default: {
+                result |= Solid::OpticalDisc::Data;
+                break;
+            }
         }
     }
 
