@@ -60,11 +60,8 @@ bool OpticalDrive::eject()
 {
     m_device->broadcastActionRequested("eject");
 
-    const QByteArray devicename = m_device->deviceName().toLocal8Bit();
+    const QByteArray devicename = m_device->property("DEVNAME").toString().toLocal8Bit();
     const driver_return_code_t result = cdio_eject_media_drive(devicename.constData());
-    if (result == DRIVER_OP_SUCCESS) {
-
-    }
 
     // not supported by libcdio: UserCanceled
     switch(result) {
@@ -77,7 +74,7 @@ bool OpticalDrive::eject()
             m_device->broadcastActionDone("eject", Solid::UnauthorizedOperation, ejecterror);
             return false;
         }
-        case DRIVER_OP_BAD_PARAMETER: // falltrough
+        case DRIVER_OP_BAD_PARAMETER:
         case DRIVER_OP_BAD_POINTER: {
             const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
             m_device->broadcastActionDone("eject", Solid::InvalidOption, ejecterror);

@@ -99,12 +99,12 @@ Solid::OpticalDisc::DiscType OpticalDisc::discType() const
 
     const discmode_t discmode = cdio_get_discmode(p_cdio);
     switch(discmode) {
-        case CDIO_DISC_MODE_CD_DA:    // falltrough
-        case CDIO_DISC_MODE_CD_DATA:  // falltrough
-        case CDIO_DISC_MODE_CD_XA:    // falltrough
-        case CDIO_DISC_MODE_CD_MIXED: // falltrough
+        case CDIO_DISC_MODE_CD_DA:
+        case CDIO_DISC_MODE_CD_DATA:
+        case CDIO_DISC_MODE_CD_XA:
+        case CDIO_DISC_MODE_CD_MIXED:
             return Solid::OpticalDisc::CdRom;
-        case CDIO_DISC_MODE_DVD_ROM:  // falltrough
+        case CDIO_DISC_MODE_DVD_ROM:
         case CDIO_DISC_MODE_DVD_RAM:
             return Solid::OpticalDisc::DvdRom;
         case CDIO_DISC_MODE_DVD_R:
