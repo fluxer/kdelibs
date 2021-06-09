@@ -72,7 +72,17 @@ bool OpticalDisc::isBlank() const
 
 bool OpticalDisc::isAppendable() const
 {
-    return false; // TODO:
+    switch (discType()) {
+        case Solid::OpticalDisc::HdDvdRewritable:
+        case Solid::OpticalDisc::DvdPlusRecordable:
+        case Solid::OpticalDisc::DvdPlusRewritable:
+        case Solid::OpticalDisc::DvdPlusRewritableDuallayer:
+        case Solid::OpticalDisc::DvdPlusRecordableDuallayer:
+            return true;
+        default:
+            return false;
+    }
+    Q_UNREACHABLE();
 }
 
 Solid::OpticalDisc::DiscType OpticalDisc::discType() const
