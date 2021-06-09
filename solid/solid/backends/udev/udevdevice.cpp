@@ -361,7 +361,6 @@ QString UDevDevice::description() const
         Solid::OpticalDrive::MediumTypes mediumTypes = opticalDrive.supportedMedia();
         QString first;
         QString second;
-        bool drive_is_hotpluggable = false; // TODO:
 
         first = QObject::tr("CD-ROM");
         if (mediumTypes & Solid::OpticalDrive::Cdr)
@@ -409,7 +408,7 @@ QString UDevDevice::description() const
             second = QObject::tr("/HD DVD-RW");
 
         QString description;
-        if (drive_is_hotpluggable) {
+        if (opticalDrive.isHotpluggable()) {
             description = QObject::tr("External %1%2 Drive");
         } else {
             description = QObject::tr("%1%2 Drive");
