@@ -723,10 +723,6 @@ QAction *KFilePlacesModel::teardownActionForIndex(const QModelIndex &index) cons
 
         Solid::StorageDrive *drive = device.as<Solid::StorageDrive>();
 
-        if (drive==0) {
-            drive = device.parent().as<Solid::StorageDrive>();
-        }
-
         bool hotpluggable = false;
         bool removable = false;
 
@@ -791,7 +787,7 @@ void KFilePlacesModel::requestEject(const QModelIndex &index)
 {
     Solid::Device device = deviceForIndex(index);
 
-    Solid::OpticalDrive *drive = device.parent().as<Solid::OpticalDrive>();
+    Solid::OpticalDrive *drive = device.as<Solid::OpticalDrive>();
 
     if (drive!=0) {
         connect(drive, SIGNAL(ejectDone(Solid::ErrorType,QVariant,QString)),

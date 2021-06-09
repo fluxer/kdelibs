@@ -444,8 +444,12 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 
     case Solid::DeviceInterface::StorageAccess:
     case Solid::DeviceInterface::StorageDrive:
-    case Solid::DeviceInterface::StorageVolume:
-        return m_device.subsystem() == QLatin1String("block");
+    case Solid::DeviceInterface::StorageVolume: {
+        // block and optical devices have many properties in common. OpticalDrive and OpticalDisc
+        // also inherit Block class (indirectly) and inherit block device properties
+        return (m_device.subsystem() == QLatin1String("block")
+            || property("ID_TYPE").toString() == "cd" || property("ID_CDROM_MEDIA_CD").toInt() == 1);
+    }
 
     case Solid::DeviceInterface::AcAdapter:
     case Solid::DeviceInterface::Battery:

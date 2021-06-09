@@ -205,12 +205,7 @@ QVariant KFilePlacesItem::deviceData(int role) const
 
         case KFilePlacesModel::FixedDeviceRole:
             {
-                Solid::StorageDrive *drive = 0;
-                Solid::Device parentDevice = m_device;
-                while (parentDevice.isValid() && !drive) {
-                    drive = parentDevice.as<Solid::StorageDrive>();
-                    parentDevice = parentDevice.parent();
-                }
+                Solid::StorageDrive *drive = m_device.as<Solid::StorageDrive>();
                 if (drive!=0) {
                     return !drive->isHotpluggable() && !drive->isRemovable();
                 }
@@ -300,7 +295,7 @@ QString KFilePlacesItem::generateNewId()
 void KFilePlacesItem::onAccessibilityChanged(bool isAccessible)
 {
     m_isAccessible = isAccessible;
-    m_isCdrom = m_device.is<Solid::OpticalDrive>() || m_device.parent().is<Solid::OpticalDrive>();
+    m_isCdrom = m_device.is<Solid::OpticalDrive>();
     m_emblems = m_device.emblems();
 
     emit itemChanged(id());
