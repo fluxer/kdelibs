@@ -22,6 +22,8 @@
 
 #include "udevopticaldisc.h"
 
+#include <cdio/cd_types.h>
+
 using namespace Solid::Backends::UDev;
 
 OpticalDisc::OpticalDisc(UDevDevice *device)
@@ -65,7 +67,7 @@ bool OpticalDisc::isRewritable() const
 
 bool OpticalDisc::isBlank() const
 {
-    return false; // TODO:
+    return (availableContent() == Solid::OpticalDisc::NoContent);
 }
 
 bool OpticalDisc::isAppendable() const
@@ -130,7 +132,7 @@ Solid::OpticalDisc::DiscType OpticalDisc::discType() const
             return Solid::OpticalDisc::UnknownDiscType;
         }
         default: {
-            qWarning() << "Uknown disc mode" << discmode;
+            qWarning() << "Unknown disc mode" << discmode;
             return Solid::OpticalDisc::UnknownDiscType;
         }
     }
@@ -140,7 +142,41 @@ Solid::OpticalDisc::DiscType OpticalDisc::discType() const
 
 Solid::OpticalDisc::ContentTypes OpticalDisc::availableContent() const
 {
-    return 0; // TODO:
+    Solid::OpticalDisc::ContentTypes result = Solid::OpticalDisc::NoContent;
+    if (!p_cdio) {
+        return result;
+    }
+
+    /*
+        TODO: not implemented by libcdio:
+        VideoDvd, VideoBluRay
+    */
+    /*
+        TODO: analyze all tracks
+    */
+    cdio_iso_analysis_t analysis;
+    ::memset(&analysis, 0, sizeof(analysis));
+    const cdio_fs_anal_t guessresult = cdio_guess_cd_type(p_cdio, 0, 0, &analysis);
+    switch(CDIO_FSTYPE(guessresult)) {
+        case CDIO_FS_AUDIO: {
+            result |= Solid::OpticalDisc::Audio;
+            break;
+        }
+        case CDIO_FS_ANAL_VIDEOCD: {
+            result |= Solid::OpticalDisc::VideoCd;
+            break;
+        }
+        case CDIO_FS_ANAL_SVCD: {
+            result |= Solid::OpticalDisc::SuperVideoCd;
+            break;
+        }
+        default: {
+            result |= Solid::OpticalDisc::Data;
+            break;
+        }
+    }
+
+    return result;
 }
 
 #include "moc_udevopticaldisc.cpp"

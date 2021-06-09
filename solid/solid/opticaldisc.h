@@ -58,6 +58,7 @@ namespace Solid
          * - VideoCd : A Video Compact Disc (VCD)
          * - SuperVideoCd : A Super Video Compact Disc (SVCD)
          * - VideoDvd : A Video Digital Versatile Disc (DVD-Video)
+         * - VideoBluRay : A Video Blue-ray Disc (BD)
          */
         enum ContentType {
             NoContent = 0x00,

@@ -34,8 +34,6 @@ enum LibCDIOMagic {
 
 using namespace Solid::Backends::UDev;
 
-// TODO: Q_CONSTRUCTOR_FUNCTION() for cdio_init()? cdio_open() is supposed to call it
-
 OpticalDrive::OpticalDrive(UDevDevice *device)
     : StorageDrive(device),
     p_cdio(Q_NULLPTR)
