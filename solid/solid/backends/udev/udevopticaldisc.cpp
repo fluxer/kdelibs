@@ -35,6 +35,8 @@ OpticalDisc::OpticalDisc(UDevDevice *device)
     if (!p_cdio) {
         qWarning() << "Could not open" << devicename;
     }
+
+    // qDebug() << "OpticalDisc" << devicename << capacity() << isRewritable() << isAppendable() << discType() << availableContent();
 }
 
 OpticalDisc::~OpticalDisc()
@@ -156,9 +158,8 @@ Solid::OpticalDisc::ContentTypes OpticalDisc::availableContent() const
     }
 
     // not implemented by libcdio: VideoDvd, VideoBluRay
-    const track_t firsttrack = cdio_get_first_track_num(p_cdio);
     const track_t totaltracks = cdio_get_num_tracks(p_cdio);
-    for (track_t tcount = firsttrack; tcount < totaltracks; tcount++) {
+    for (track_t tcount = 0; tcount < totaltracks; tcount++) {
         cdio_iso_analysis_t analysis;
         ::memset(&analysis, 0, sizeof(analysis));
         const cdio_fs_anal_t guessresult = cdio_guess_cd_type(p_cdio, 0, tcount, &analysis);
