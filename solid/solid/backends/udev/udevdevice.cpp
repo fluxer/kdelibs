@@ -427,9 +427,8 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 
 #ifdef UDEV_CDIO
     case Solid::DeviceInterface::OpticalDrive:
-        return (property("ID_TYPE").toString() == "cd" || property("ID_CDROM_MEDIA_CD").toInt() == 1);
     case Solid::DeviceInterface::OpticalDisc:
-        return false; // TODO:
+        return (property("ID_TYPE").toString() == "cd" || property("ID_CDROM_MEDIA_CD").toInt() == 1);
 #endif
 
     case Solid::DeviceInterface::Camera:

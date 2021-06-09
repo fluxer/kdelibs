@@ -30,7 +30,7 @@ OpticalDisc::OpticalDisc(UDevDevice *device)
     : StorageVolume(device),
     p_cdio(Q_NULLPTR)
 {
-    const QByteArray devicename = m_device->deviceName().toLocal8Bit();
+    const QByteArray devicename = m_device->property("DEVNAME").toString().toLocal8Bit();
     p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);
     if (!p_cdio) {
         qWarning() << "Could not open" << devicename;
@@ -81,10 +81,7 @@ Solid::OpticalDisc::DiscType OpticalDisc::discType() const
         return Solid::OpticalDisc::UnknownDiscType;
     }
 
-    /*
-        libcdio does not support blue-ray, maybe it will some day
-        BluRayRom, BluRayRecordable, BluRayRewritable
-    */
+    // not supported by libcdio: BluRayRom, BluRayRecordable, BluRayRewritable
     /*
         TODO: not implemented by libcdio/needs rw query on CDIO_DISC_MODE_CD_*?
         CdRecordable, CdRewritable, HdDvdRewritable
@@ -147,13 +144,8 @@ Solid::OpticalDisc::ContentTypes OpticalDisc::availableContent() const
         return result;
     }
 
-    /*
-        TODO: not implemented by libcdio:
-        VideoDvd, VideoBluRay
-    */
-    /*
-        TODO: analyze all tracks
-    */
+    // not implemented by libcdio: VideoDvd, VideoBluRay
+    // TODO: analyze all tracks
     cdio_iso_analysis_t analysis;
     ::memset(&analysis, 0, sizeof(analysis));
     const cdio_fs_anal_t guessresult = cdio_guess_cd_type(p_cdio, 0, 0, &analysis);

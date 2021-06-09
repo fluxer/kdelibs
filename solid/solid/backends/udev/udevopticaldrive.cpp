@@ -38,7 +38,7 @@ OpticalDrive::OpticalDrive(UDevDevice *device)
     : StorageDrive(device),
     p_cdio(Q_NULLPTR)
 {
-    const QByteArray devicename = m_device->deviceName().toLocal8Bit();
+    const QByteArray devicename = m_device->property("DEVNAME").toString().toLocal8Bit();
     p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);
     if (!p_cdio) {
         qWarning() << "Could not open" << devicename;
@@ -63,22 +63,44 @@ bool OpticalDrive::eject()
     const QByteArray devicename = m_device->deviceName().toLocal8Bit();
     const driver_return_code_t result = cdio_eject_media_drive(devicename.constData());
     if (result == DRIVER_OP_SUCCESS) {
-        m_device->broadcastActionDone("setup", Solid::NoError, QString());
-        return true;
+
     }
 
-    /*
-        TODO: check result and call broadcastActionDone with one of:
-        UnauthorizedOperation
-        DeviceBusy
-        OperationFailed
-        UserCanceled
-        InvalidOption
-        MissingDriver
-    */
-    const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
-    m_device->broadcastActionDone("eject", Solid::UnauthorizedOperation, ejecterror);
-    return false;
+    // not supported by libcdio: UserCanceled
+    switch(result) {
+        case DRIVER_OP_SUCCESS: {
+            m_device->broadcastActionDone("setup", Solid::NoError, QString());
+            return true;
+        }
+        case DRIVER_OP_NOT_PERMITTED: {
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
+            m_device->broadcastActionDone("eject", Solid::UnauthorizedOperation, ejecterror);
+            return false;
+        }
+        case DRIVER_OP_BAD_PARAMETER: // falltrough
+        case DRIVER_OP_BAD_POINTER: {
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
+            m_device->broadcastActionDone("eject", Solid::InvalidOption, ejecterror);
+            return false;
+        }
+        case DRIVER_OP_NO_DRIVER: {
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
+            m_device->broadcastActionDone("eject", Solid::MissingDriver, ejecterror);
+            return false;
+        }
+        case DRIVER_OP_UNINIT: {
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
+            m_device->broadcastActionDone("eject", Solid::DeviceBusy, ejecterror);
+            return false;
+        }
+        default: {
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
+            m_device->broadcastActionDone("eject", Solid::OperationFailed, ejecterror);
+            return false;
+        }
+    }
+
+    Q_UNREACHABLE();
 }
 
 QList<int> OpticalDrive::writeSpeeds() const
@@ -152,10 +174,7 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
     Q_UNUSED(reacap);
     Q_UNUSED(misccap);
 
-    /*
-        TODO: not supported by libcdio:
-        Dvdplusr, Dvdplusdl, Dvdplusdlrw, Bd, Bdr, Bdre, HdDvd, HdDvdr, HdDvdrw
-    */
+    // not supported by libcdio: Dvdplusr, Dvdplusdl, Dvdplusdlrw, Bd, Bdr, Bdre, HdDvd, HdDvdr, HdDvdrw
     if (writecap == CDIO_DRIVE_CAP_ERROR) {
         qWarning() << "Could not obtain write capabilities";
     } else {
