@@ -504,7 +504,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
         return m_device.subsystem() == QLatin1String("tty");
 
     case Solid::DeviceInterface::Button:
-        return m_device.subsystem() == QLatin1String("input");
+        return property("ID_INPUT_KEY").toInt() == 1;
 
     default:
         return false;

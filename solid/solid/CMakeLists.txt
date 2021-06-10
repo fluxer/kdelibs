@@ -131,7 +131,6 @@ if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
     include_directories(${UDEV_INCLUDES})
     message(STATUS "Building Solid UDev backend.")
     set(solid_LIB_SRCS ${solid_LIB_SRCS}
-        backends/udev/utils.cpp
         backends/udev/udevdevice.cpp
         backends/udev/udevmanager.cpp
         backends/udev/udevdeviceinterface.cpp

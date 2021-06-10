@@ -18,21 +18,17 @@
  *************************************************************************************/
 
 #include "udevbutton.h"
-#include "utils.h"
 
 using namespace Solid::Backends::UDev;
 
 Button::Button(UDevDevice* device)
- : DeviceInterface(device)
+    : DeviceInterface(device),
+    m_type(Solid::Button::UnknownButtonType)
 {
     if (m_device->propertyExists("KEY")) {
         m_type = Solid::Button::PowerButton;
-        return;
-    }
-
-    if (m_device->propertyExists("SW")) {
+    } else if (m_device->propertyExists("SW")) {
         m_type = Solid::Button::LidButton;
-        return;
     }
 }
 

@@ -19,7 +19,6 @@
 */
 
 #include "udevmanager.h"
-#include "utils.h"
 
 #include "udev.h"
 #include "udevdevice.h"
@@ -42,8 +41,6 @@ public:
 
     bool isOfInterest(const QString &udi, const UdevQt::Device &device);
     bool checkOfInterest(const UdevQt::Device &device);
-    bool isPowerBubtton(const UdevQt::Device &device);
-    bool isLidBubtton(const UdevQt::Device &device);
 
     UdevQt::Client *m_client;
     QStringList m_devicesOfInterest;
@@ -130,12 +127,8 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
     }
 
     if (device.subsystem() == QLatin1String("input")) {
-        if (device.deviceProperties().contains("KEY")) {
-            return isPowerBubtton(device);
-        }
-        if (device.deviceProperties().contains("SW")) {
-            return isLidBubtton(device);
-        }
+        const QStringList deviceProperties = device.deviceProperties();
+        return (device.deviceProperty("ID_INPUT_KEY").toInt() == 1 && (deviceProperties.contains("KEY") || deviceProperties.contains("SW")));
     }
 
     return device.subsystem() == QLatin1String("dvb") ||
@@ -143,34 +136,6 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
            device.subsystem() == QLatin1String("net") ||
            device.deviceProperty("ID_MEDIA_PLAYER").toString().isEmpty() == false || // media-player-info recognized devices
            (device.deviceProperty("ID_GPHOTO2").toInt() == 1 && device.parent().deviceProperty("ID_GPHOTO2").toInt() != 1); // GPhoto2 cameras
-}
-
-bool UDevManager::Private::isLidBubtton(const UdevQt::Device& device)
-{
-    long bitmask[NBITS(SW_MAX)];
-    int nbits = input_str_to_bitmask(device.deviceProperty("SW").toByteArray(), bitmask, sizeof(bitmask), NBITS(SW_MAX));
-    if (nbits == 1) {
-        if (test_bit (SW_LID, bitmask)) {
-//             qDebug() << "Lid button detected";
-            return true;
-        }
-    }
-
-    return false;
-}
-
-bool UDevManager::Private::isPowerBubtton(const UdevQt::Device& device)
-{
-    long bitmask[NBITS(KEY_MAX)];
-    int nbits = input_str_to_bitmask(device.deviceProperty("KEY").toByteArray(), bitmask, sizeof(bitmask), NBITS(KEY_MAX));
-    if (nbits == 1) {
-        if (test_bit (KEY_POWER, bitmask)) {
-//             qDebug() << "Power button detected";
-            return true;
-        }
-    }
-
-    return false;
 }
 
 UDevManager::UDevManager(QObject *parent)
