@@ -48,8 +48,37 @@ OpticalDisc::~OpticalDisc()
 
 qulonglong OpticalDisc::capacity() const
 {
-    // TODO: implement
-    return 0;
+    switch (discType()) {
+        case Solid::OpticalDisc::CdRom:
+        case Solid::OpticalDisc::CdRecordable:
+        case Solid::OpticalDisc::CdRewritable:
+            return (qulonglong(700) * 1024 * 1024);
+        // for reference:
+        // https://www.blue-ray.com/aboutBlu-ray.html
+        case Solid::OpticalDisc::DvdRom:
+        case Solid::OpticalDisc::DvdRam:
+        case Solid::OpticalDisc::DvdRecordable:
+        case Solid::OpticalDisc::DvdRewritable:
+        case Solid::OpticalDisc::DvdPlusRecordable:
+        case Solid::OpticalDisc::DvdPlusRewritable:
+            return (qulonglong(4700) * 1024 * 1024);
+        case Solid::OpticalDisc::DvdPlusRecordableDuallayer:
+        case Solid::OpticalDisc::DvdPlusRewritableDuallayer:
+            return (qulonglong(9400) * 1024 * 1024);
+        case Solid::OpticalDisc::HdDvdRom:
+        case Solid::OpticalDisc::HdDvdRecordable:
+        case Solid::OpticalDisc::HdDvdRewritable:
+            return (qulonglong(15000) * 1024 * 1024);
+        // no dual layer enums
+        case Solid::OpticalDisc::BluRayRom:
+        case Solid::OpticalDisc::BluRayRecordable:
+        case Solid::OpticalDisc::BluRayRewritable:
+            return (qulonglong(25000) * 1024 * 1024);
+        // no dual/tripple/quadruple layer enums
+        default:
+            return 0;
+    }
+    Q_UNREACHABLE();
 }
 
 bool OpticalDisc::isRewritable() const
