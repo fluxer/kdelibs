@@ -188,7 +188,7 @@ void FileProtocol::copy( const KUrl &srcUrl, const KUrl &destUrl,
 #ifdef USE_SENDFILE
        if (use_sendfile) {
             off_t sf = processed_size;
-            n = KDE_sendfile( dest_fd, src_fd, &sf, MAX_IPC_SIZE );
+            n = ::sendfile( dest_fd, src_fd, &sf, MAX_IPC_SIZE );
             processed_size = sf;
             if ( n == -1 && ( errno == EINVAL || errno == ENOSYS ) ) { //not all filesystems support sendfile()
                 kDebug(7101) << "sendfile() not supported, falling back ";
