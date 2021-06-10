@@ -176,7 +176,7 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
     Q_UNUSED(reacap);
     Q_UNUSED(misccap);
 
-    // not supported by libcdio: Dvdplusr, Dvdplusdl, Dvdplusdlrw, Bd, Bdr, Bdre, HdDvd, HdDvdr, HdDvdrw
+    // not supported by libcdio: Dvdplusdl, Dvdplusdlrw, Bd, Bdr, Bdre, HdDvd, HdDvdr, HdDvdrw
     if (writecap == CDIO_DRIVE_CAP_ERROR) {
         qWarning() << "Could not obtain write capabilities";
     } else {
@@ -188,9 +188,10 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
         }
         if (writecap & CDIO_DRIVE_CAP_WRITE_DVD_R) {
             result |= Solid::OpticalDrive::Dvd;
+            result |= Solid::OpticalDrive::Dvdr;
         }
         if (writecap & CDIO_DRIVE_CAP_WRITE_DVD_PR) {
-            result |= Solid::OpticalDrive::Dvdr;
+            result |= Solid::OpticalDrive::Dvdplusr;
         }
         if (writecap & CDIO_DRIVE_CAP_WRITE_DVD_RW) {
             result |= Solid::OpticalDrive::Dvdrw;
