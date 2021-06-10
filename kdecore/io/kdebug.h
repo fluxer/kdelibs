@@ -206,7 +206,6 @@ class KDebug                    //krazy= ?
     int line;
     QtMsgType level;
 public:
-    class Block;
     explicit inline KDebug(QtMsgType type, const char *f = 0, int l = -1, const char *info = 0)
         : file(f), funcinfo(info), line(l), level(type)
         {
