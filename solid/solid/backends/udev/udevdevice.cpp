@@ -263,6 +263,8 @@ QString UDevDevice::icon() const
         // TODO - a serial device can be a modem, or just
         // a COM port - need a new icon?
         return QLatin1String("modem");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Button)) {
+        return QLatin1String("insert-button");
     }
 
     return QString();
@@ -432,6 +434,21 @@ QString UDevDevice::description() const
             return QObject::tr("WLAN Interface");
         }
         return QObject::tr("Networking Interface");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Button)) {
+        const Button buttonIface(const_cast<UDevDevice *>(this));
+        switch (buttonIface.type()) {
+            case Solid::Button::LidButton:
+                return QObject::tr("Lid Switch");
+            case Solid::Button::PowerButton:
+                return QObject::tr("Power Button");
+            case Solid::Button::SleepButton:
+                return QObject::tr("Sleep Button");
+            case Solid::Button::TabletButton:
+                return QObject::tr("Tablet Button");
+            case Solid::Button::UnknownButtonType:
+                return QObject::tr("Unknown Button");
+        }
+        return QString();
     }
 
     return QString();
