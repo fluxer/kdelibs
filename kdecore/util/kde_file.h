@@ -35,37 +35,6 @@
 #include <qfile.h>
 #include <kdecore_export.h>
 
-/* added not for Solaris and OpenSolaris platforms */
-
-#if defined(_LFS64_LARGEFILE) && defined(_LARGEFILE64_SOURCE) && !defined(_GNU_SOURCE) && !defined(Q_OS_SOLARIS)
-/*
- * This section provides portable defines for large file support.
- * To use this you must compile your code with _LARGEFILE64_SOURCE
- * defined and use the KDE_xxx defines instead of the normal
- * C functions and structures.
- *
- * Please note that not every platform supports 64 bit file structures,
- * in that case the normal 32 bit functions will be used.
- *
- * @see http://www.suse.de/~aj/linux_lfs.html
- * @see http://ftp.sas.com/standards/large.file/xopen/x_open.05Mar96.html
- *
- * KDE makes use of the "Transitional Extensions" since we can not ensure
- * that all modules and libraries used by KDE will be compiled with
- * 64-bit support.
- * (A.3.2.3 Mixed API and Compile Environments within a Single Process)
- */
-#define KDE_sendfile            ::sendfile64
-
-#else /* !_LFS64_LARGEFILE */
-
-/*
- * This section defines portable defines for standard file support.
- */
-#define KDE_sendfile            ::sendfile
-
-#endif /* !_LFS64_LARGEFILE */
-
 /* definitions that are for compatibility, will be removed in the future */
 #define KDE_stat                QT_STAT
 #define KDE_lstat               QT_LSTAT
