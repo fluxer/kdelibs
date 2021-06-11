@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) \
     QFile::remove(QDir::homePath() + QString::fromLatin1("/.kde-unit-test/share/config/qttestrc"));  \
     KAboutData aboutData( QByteArray(componentName), QByteArray(), ki18n("KDE Test Program"), QByteArray("version") );  \
     KComponentData cData(&aboutData); \
-    QApplication app( argc, argv, static_cast<QApplication::Type>(flags)); \
+    QApplication app( argc, argv); \
     qApp->setApplicationName( QLatin1String("qttest") ); \
     qRegisterMetaType<KUrl>(); /*as done by kapplication*/ \
     qRegisterMetaType<KUrl::List>(); \

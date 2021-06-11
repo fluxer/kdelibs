@@ -285,7 +285,11 @@ static SmcConn mySmcConnection = 0;
 #endif
 
 KApplication::KApplication()
+#if QT_VERSION >= 0x041000
+    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv()),
+#else
     : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv(), KAPPLICATION_GUI_TYPE),
+#endif
     d(new KApplicationPrivate(this))
 {
     d->read_app_startup_id();
@@ -320,7 +324,11 @@ KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap,
 #endif
 
 KApplication::KApplication(const KComponentData &cData)
+#if QT_VERSION >= 0x041000
+    : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv()),
+#else
     : QApplication((KApplicationPrivate::preqapplicationhack(),KCmdLineArgs::qtArgc()), KCmdLineArgs::qtArgv(), KAPPLICATION_GUI_TYPE),
+#endif
     d (new KApplicationPrivate(this, cData))
 {
     d->read_app_startup_id();

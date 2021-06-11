@@ -34,11 +34,7 @@ class KConfig;
 #endif
 
 #define kapp KApplication::kApplication()
-#ifdef QT_KATIE
 #define KAPPLICATION_GUI_TYPE KApplication::Gui
-#else
-#define KAPPLICATION_GUI_TYPE KApplication::GuiClient
-#endif
 
 class KApplicationPrivate;
 
