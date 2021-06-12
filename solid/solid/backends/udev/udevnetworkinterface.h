@@ -44,6 +44,7 @@ public:
 
     virtual QString ifaceName() const;
     virtual bool isWireless() const;
+    virtual bool isLoopback() const;
     virtual QString hwAddress() const;
     virtual qulonglong macAddress() const;
 

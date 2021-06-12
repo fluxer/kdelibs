@@ -33,6 +33,7 @@
 #include <QFileInfo>
 #include <QtCore/QStringList>
 #include <QDebug>
+
 using namespace Solid::Backends::UDev;
 
 NetworkInterface::NetworkInterface(UDevDevice *device)
@@ -58,6 +59,7 @@ bool NetworkInterface::isWireless() const
         qDebug() << "UdevNetworkInterface: typeFile can't be opened";
         return false;
     }
+
     int mediaType = typeFile.readAll().trimmed().toInt();
     if (mediaType == ARPHRD_ETHER) {
         struct iwreq iwr;
@@ -73,7 +75,20 @@ bool NetworkInterface::isWireless() const
         }
         close(ioctl_fd);
     }
+
     return false;
+}
+
+bool NetworkInterface::isLoopback() const
+{
+    QFile typeFile(m_device->deviceName() + "/type");
+    if (!typeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "UdevNetworkInterface: typeFile can't be opened";
+        return false;
+    }
+
+    int mediaType = typeFile.readAll().trimmed().toInt();
+    return (mediaType == ARPHRD_LOOPBACK);
 }
 
 QString NetworkInterface::hwAddress() const

@@ -38,7 +38,6 @@ namespace Ifaces
          */
         virtual ~NetworkInterface();
 
-
         /* TODO for KDE 5 - rename ifaceName() to interfaceName() */
         /**
          * Retrieves the name of the interface in the system.
@@ -56,6 +55,12 @@ namespace Ifaces
          */
         virtual bool isWireless() const = 0;
 
+        /**
+         * Indicates if this interface is loopback.
+         *
+         * @return true if the interface is loopback, false otherwise
+         */
+        virtual bool isLoopback() const = 0;
 
         /**
          * Retrieves the hardware address of the interface.

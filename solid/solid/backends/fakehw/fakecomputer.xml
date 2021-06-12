@@ -546,9 +546,22 @@
                     <property key="parent">/org/kde/solid/fakehw/pci_3452_7890</property>
                     <property key="ifaceName">wlan0</property>
                     <property key="wireless">true</property>
+                    <property key="loopback">false</property>
                     <property key="hwAddress">00:1A:EB:C9:64:16</property>
                     <property key="macAddress">0x001AEBC96416</property>
                 </device>
+
+            <!-- Loopback network interface -->
+            <device udi="/org/kde/solid/fakehw/net_01_1c_eb_c9_64_15">
+                <property key="name">Loopback Interface</property>
+                <property key="interfaces">NetworkInterface</property>
+                <property key="parent">/org/kde/solid/fakehw/computer</property>
+                <property key="ifaceName">lo</property>
+                <property key="wireless">false</property>
+                <property key="loopback">true</property>
+                <property key="hwAddress">01:1C:EB:C9:64:15</property>
+                <property key="macAddress">0x001CEBC96415</property>
+            </device>
 
             <!-- PCI device #2 -->
             <device udi="/org/kde/solid/fakehw/pci_8904_5e21">

@@ -45,9 +45,6 @@
 #include "udevopticaldrive.h"
 #endif
 
-#include <sys/socket.h>
-#include <linux/if_arp.h>
-
 #include <QFile>
 #include <QDebug>
 
@@ -123,14 +120,11 @@ QString UDevDevice::product() const
             const AudioInterface audioIface(const_cast<UDevDevice *>(this));
             product = audioIface.name();
         }  else if(queryDeviceInterface(Solid::DeviceInterface::NetworkInterface)) {
-            QFile typeFile(deviceName() + "/type");
-            if (typeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-                int mediaType = typeFile.readAll().trimmed().toInt();
-                if (mediaType == ARPHRD_LOOPBACK) {
-                    product = QLatin1String("Loopback device Interface");
-                } else  {
-                    product = m_device.deviceProperty("ID_MODEL_FROM_DATABASE");
-                }
+            const NetworkInterface netIface(const_cast<UDevDevice *>(this));
+            if (netIface.isLoopback()) {
+                product = QLatin1String("Loopback device Interface");
+            } else  {
+                product = m_device.deviceProperty("ID_MODEL_FROM_DATABASE");
             }
         } else if(queryDeviceInterface(Solid::DeviceInterface::SerialInterface)) {
             const SerialInterface serialIface(const_cast<UDevDevice *>(this));

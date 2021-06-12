@@ -46,6 +46,12 @@ bool Solid::NetworkInterface::isWireless() const
     return_SOLID_CALL(Ifaces::NetworkInterface *, d->backendObject(), false, isWireless());
 }
 
+bool Solid::NetworkInterface::isLoopback() const
+{
+    Q_D(const NetworkInterface);
+    return_SOLID_CALL(Ifaces::NetworkInterface *, d->backendObject(), false, isLoopback());
+}
+
 QString Solid::NetworkInterface::hwAddress() const
 {
     Q_D(const NetworkInterface);

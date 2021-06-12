@@ -42,6 +42,11 @@ bool FakeNetworkInterface::isWireless() const
     return fakeDevice()->property("wireless").toBool();
 }
 
+bool FakeNetworkInterface::isLoopback() const
+{
+    return fakeDevice()->property("loopback").toBool();
+}
+
 QString FakeNetworkInterface::hwAddress() const
 {
     return fakeDevice()->property("hwAddress").toString();

@@ -38,6 +38,7 @@ namespace Solid
         Q_OBJECT
         Q_PROPERTY(QString ifaceName READ ifaceName)
         Q_PROPERTY(bool wireless READ isWireless)
+        Q_PROPERTY(bool loopback READ isLoopback)
         Q_PROPERTY(QString hwAddress READ hwAddress)
         Q_PROPERTY(qulonglong macAddress READ macAddress)
         Q_DECLARE_PRIVATE(NetworkInterface)
@@ -69,7 +70,6 @@ namespace Solid
          */
         static Type deviceInterfaceType() { return DeviceInterface::NetworkInterface; }
 
-
         /**
          * Retrieves the name of the interface in the system.
          * This name is system dependent, it allows to identify the interface
@@ -86,6 +86,12 @@ namespace Solid
          */
         bool isWireless() const;
 
+        /**
+         * Indicates if this interface is loopback.
+         *
+         * @return true if the interface is loopback, false otherwise
+         */
+        bool isLoopback() const;
 
         /**
          * Retrieves the hardware address of the interface.
