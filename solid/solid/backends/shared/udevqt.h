@@ -50,9 +50,8 @@ class Device
         QStringList deviceProperties() const;
         Device parent() const;
 
-        // ### should this really be a QVariant? as far as udev knows, everything is a string...
-        QVariant deviceProperty(const QString &name) const;
-        QVariant sysfsProperty(const QString &name) const;
+        QString deviceProperty(const QString &name) const;
+        QString sysfsProperty(const QString &name) const;
 
     private:
         Device(DevicePrivate *devPrivate);

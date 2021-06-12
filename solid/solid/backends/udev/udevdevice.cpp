@@ -74,7 +74,7 @@ QString UDevDevice::parentUdi() const
     // code in e.g. dolphin and plasma casts the parent instead of the actual device to either
     // Solid::StorageDrive or Solid::OpticalDrive which is wrong but was expected to work with the
     // UDisks backends, has to be fixed and verified to work in several places at some point
-    const QString subsystem = m_device.deviceProperty("SUBSYSTEM").toString();
+    const QString subsystem = m_device.deviceProperty("SUBSYSTEM");
     if (subsystem == QLatin1String("block")) {
         return devicePath();
     }
@@ -88,23 +88,23 @@ QString UDevDevice::parentUdi() const
 
 QString UDevDevice::vendor() const
 {
-    QString vendor = m_device.sysfsProperty("manufacturer").toString();
+    QString vendor = m_device.sysfsProperty("manufacturer");
     if (vendor.isEmpty()) {
          if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
              // sysfs doesn't have anything useful here
             vendor = extractCpuInfoLine(deviceNumber(), "vendor_id\\s+:\\s+(\\S.+)");
          } else if (queryDeviceInterface(Solid::DeviceInterface::Video)) {
-             vendor = m_device.deviceProperty("ID_VENDOR").toString().replace('_', " ");
+             vendor = m_device.deviceProperty("ID_VENDOR").replace('_', " ");
          }  else if (queryDeviceInterface(Solid::DeviceInterface::NetworkInterface)) {
-             vendor = m_device.deviceProperty("ID_VENDOR_FROM_DATABASE").toString();
+             vendor = m_device.deviceProperty("ID_VENDOR_FROM_DATABASE");
          } else if (queryDeviceInterface(Solid::DeviceInterface::AudioInterface)) {
              if (m_device.parent().isValid()) {
-                 vendor = m_device.parent().deviceProperty("ID_VENDOR_FROM_DATABASE").toString();
+                 vendor = m_device.parent().deviceProperty("ID_VENDOR_FROM_DATABASE");
              }
          }
 
          if (vendor.isEmpty()) {
-             vendor = m_device.deviceProperty("ID_VENDOR").toString().replace('_', ' ');
+             vendor = m_device.deviceProperty("ID_VENDOR").replace('_', ' ');
          }
     }
     return vendor;
@@ -112,13 +112,13 @@ QString UDevDevice::vendor() const
 
 QString UDevDevice::product() const
 {
-    QString product = m_device.sysfsProperty("product").toString();
+    QString product = m_device.sysfsProperty("product");
     if (product.isEmpty()) {
         if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
             // sysfs doesn't have anything useful here
             product = extractCpuInfoLine(deviceNumber(), "model name\\s+:\\s+(\\S.+)");
         } else if(queryDeviceInterface(Solid::DeviceInterface::Video)) {
-            product = m_device.deviceProperty("ID_V4L_PRODUCT").toString();
+            product = m_device.deviceProperty("ID_V4L_PRODUCT");
         } else if(queryDeviceInterface(Solid::DeviceInterface::AudioInterface)) {
             const AudioInterface audioIface(const_cast<UDevDevice *>(this));
             product = audioIface.name();
@@ -129,7 +129,7 @@ QString UDevDevice::product() const
                 if (mediaType == ARPHRD_LOOPBACK) {
                     product = QLatin1String("Loopback device Interface");
                 } else  {
-                    product = m_device.deviceProperty("ID_MODEL_FROM_DATABASE").toString();
+                    product = m_device.deviceProperty("ID_MODEL_FROM_DATABASE");
                 }
             }
         } else if(queryDeviceInterface(Solid::DeviceInterface::SerialInterface)) {
@@ -142,7 +142,7 @@ QString UDevDevice::product() const
         }
 
         if (product.isEmpty()) {
-            product = m_device.deviceProperty("ID_MODEL").toString().replace('_', ' ');
+            product = m_device.deviceProperty("ID_MODEL").replace('_', ' ');
         }
     }
     return product;
@@ -586,11 +586,11 @@ QString UDevDevice::device() const
 
 QVariant UDevDevice::property(const QString &key) const
 {
-    const QVariant res = m_device.deviceProperty(key);
+    const QVariant res = QVariant::fromValue(m_device.deviceProperty(key));
     if (res.isValid()) {
         return res;
     }
-    return m_device.sysfsProperty(key);
+    return QVariant::fromValue(m_device.sysfsProperty(key));
 }
 
 QMap<QString, QVariant> UDevDevice::allProperties() const
@@ -609,7 +609,7 @@ bool UDevDevice::propertyExists(const QString &key) const
 
 QString UDevDevice::systemAttribute(const char *attribute) const
 {
-    return m_device.sysfsProperty(attribute).toString();
+    return m_device.sysfsProperty(attribute);
 }
 
 QString UDevDevice::deviceName() const

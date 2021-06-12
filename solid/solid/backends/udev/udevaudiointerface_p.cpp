@@ -87,7 +87,7 @@ Solid::AudioInterface::SoundcardType UdevAudioInterfacePrivate::soundcardType()
 
     if (parentDevice.isValid()) {
 
-        QString productName = parentDevice.sysfsProperty("product").toString();
+        QString productName = parentDevice.sysfsProperty("product");
         QString deviceName = m_name;
         if (productName.contains("headset", Qt::CaseInsensitive) ||
                 productName.contains("headphone", Qt::CaseInsensitive) ||

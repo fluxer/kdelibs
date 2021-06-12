@@ -90,14 +90,14 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
     qDebug() << "Path:" << device.sysfsPath();
     qDebug() << "Properties:" << device.deviceProperties();
     Q_FOREACH (const QString &key, device.deviceProperties()) {
-        qDebug() << "\t" << key << ":" << device.deviceProperty(key).toString();
+        qDebug() << "\t" << key << ":" << device.deviceProperty(key);
     }
     qDebug() << "Driver:" << device.driver();
     qDebug() << "Subsystem:" << device.subsystem();
     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 #endif
     if (device.subsystem() == QLatin1String("block")) {
-        return !device.deviceProperty("ID_FS_TYPE").toString().isEmpty();
+        return !device.deviceProperty("ID_FS_TYPE").isEmpty();
     }
 
     if (device.subsystem() == QLatin1String("power_supply")) {
@@ -111,12 +111,12 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
         return (sysfsDir.exists("sysdev") || sysfsDir.exists("cpufreq") || sysfsDir.exists("topology/core_id"));
     }
     if (device.subsystem() == QLatin1String("sound") &&
-            device.deviceProperty("SOUND_FORM_FACTOR").toString() != "internal") {
+            device.deviceProperty("SOUND_FORM_FACTOR") != "internal") {
         return true;
     }
 
     if (device.subsystem() == QLatin1String("tty")) {
-        QString path = device.deviceProperty("DEVPATH").toString();
+        QString path = device.deviceProperty("DEVPATH");
 
         int lastSlash = path.length() - path.lastIndexOf(QLatin1String("/")) -1;
         QByteArray lastElement = path.right(lastSlash).toLatin1();
@@ -134,7 +134,7 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
     return device.subsystem() == QLatin1String("dvb") ||
            device.subsystem() == QLatin1String("video4linux") ||
            device.subsystem() == QLatin1String("net") ||
-           device.deviceProperty("ID_MEDIA_PLAYER").toString().isEmpty() == false || // media-player-info recognized devices
+           device.deviceProperty("ID_MEDIA_PLAYER").isEmpty() == false || // media-player-info recognized devices
            (device.deviceProperty("ID_GPHOTO2").toInt() == 1 && device.parent().deviceProperty("ID_GPHOTO2").toInt() != 1); // GPhoto2 cameras
 }
 
@@ -263,7 +263,7 @@ void UDevManager::slotDeviceChanged(const UdevQt::Device &device)
 {
     if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
         if (device.subsystem() == "block") {
-            const QString idfsusage = device.deviceProperty("ID_FS_USAGE").toString();
+            const QString idfsusage = device.deviceProperty("ID_FS_USAGE");
             emit contentChanged(udiPrefix() + device.sysfsPath(), (idfsusage == "filesystem"));
         }
     }
