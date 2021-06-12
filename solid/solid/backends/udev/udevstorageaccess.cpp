@@ -62,7 +62,7 @@ QString StorageAccess::filePath() const
         }
     }
 
-    const QStringList devlinks = m_device->property("DEVLINKS").toString().split(" ");
+    const QStringList devlinks = m_device->udevDevice().alternateDeviceSymlinks();
     foreach (const QString &link, devlinks) {
         foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
             if (mountpoint->mountedFrom() == link || mountpoint->realDeviceName() == link) {

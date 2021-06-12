@@ -151,6 +151,14 @@ QString Device::primaryDeviceFile() const
     return QString::fromLatin1(udev_device_get_devnode(d->udev));
 }
 
+QStringList Device::alternateDeviceSymlinks() const
+{
+    if (!d)
+        return QStringList();
+
+    return listFromListEntry(udev_device_get_devlinks_list_entry(d->udev));
+}
+
 QStringList Device::deviceProperties() const
 {
     if (!d)

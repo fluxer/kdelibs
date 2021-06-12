@@ -47,6 +47,7 @@ class Device
         int sysfsNumber() const;
         QString driver() const;
         QString primaryDeviceFile() const;
+        QStringList alternateDeviceSymlinks() const;
         QStringList deviceProperties() const;
         Device parent() const;
 
