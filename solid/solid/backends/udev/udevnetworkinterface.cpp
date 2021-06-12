@@ -26,12 +26,15 @@
 #include <sys/ioctl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+
+#ifdef Q_OS_LINUX
 #include <linux/if_arp.h>
 #include <linux/wireless.h>
+#endif
 
 #include <QFile>
 #include <QFileInfo>
-#include <QtCore/QStringList>
+#include <QStringList>
 #include <QDebug>
 
 using namespace Solid::Backends::UDev;
@@ -54,6 +57,7 @@ QString NetworkInterface::ifaceName() const
 
 bool NetworkInterface::isWireless() const
 {
+#ifdef Q_OS_LINUX
     QFile typeFile(m_device->deviceName() + "/type");
     if (!typeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "UdevNetworkInterface: typeFile can't be opened";
@@ -75,12 +79,16 @@ bool NetworkInterface::isWireless() const
         }
         close(ioctl_fd);
     }
+#else
+#warning Not implemented for non-Linux platforms
+#endif // Q_OS_LINUX
 
     return false;
 }
 
 bool NetworkInterface::isLoopback() const
 {
+#ifdef Q_OS_LINUX
     QFile typeFile(m_device->deviceName() + "/type");
     if (!typeFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "UdevNetworkInterface: typeFile can't be opened";
@@ -89,6 +97,10 @@ bool NetworkInterface::isLoopback() const
 
     int mediaType = typeFile.readAll().trimmed().toInt();
     return (mediaType == ARPHRD_LOOPBACK);
+#else
+#warning Not implemented for non-Linux platforms
+    return false;
+#endif
 }
 
 QString NetworkInterface::hwAddress() const

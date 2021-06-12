@@ -126,8 +126,7 @@ if(HUPNP_FOUND)
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
 endif()
 
-# FIXME: this may work on BSD with some adjustments
-if(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
+if(UDEV_FOUND)
     include_directories(${UDEV_INCLUDES})
     message(STATUS "Building Solid UDev backend.")
     set(solid_LIB_SRCS ${solid_LIB_SRCS}

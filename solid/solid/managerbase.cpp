@@ -26,7 +26,7 @@
 #include "backends/fakehw/fakemanager.h"
 #include "backends/fstab/fstabmanager.h"
 
-#if defined (UDEV_FOUND) && defined(Q_OS_LINUX)
+#if defined (UDEV_FOUND)
 #include "backends/udev/udevmanager.h"
 #endif
 
@@ -52,7 +52,7 @@ void Solid::ManagerBasePrivate::loadBackends()
     } else {
         m_backends << new Solid::Backends::Fstab::FstabManager(0);
 
-#       if defined(UDEV_FOUND) && defined(Q_OS_LINUX)
+#       if defined(UDEV_FOUND)
             m_backends << new Solid::Backends::UDev::UDevManager(0);
 #       endif
 
