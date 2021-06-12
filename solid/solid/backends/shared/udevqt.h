@@ -47,16 +47,12 @@ class Device
         int sysfsNumber() const;
         QString driver() const;
         QString primaryDeviceFile() const;
-        QStringList alternateDeviceSymlinks() const;
         QStringList deviceProperties() const;
         Device parent() const;
 
         // ### should this really be a QVariant? as far as udev knows, everything is a string...
-        // see also Client::devicesByProperty
         QVariant deviceProperty(const QString &name) const;
-        QString decodedDeviceProperty(const QString &name) const;
         QVariant sysfsProperty(const QString &name) const;
-        Device ancestorOfType(const QString &subsys, const QString &devtype) const;
 
     private:
         Device(DevicePrivate *devPrivate);
@@ -84,11 +80,7 @@ class Client : public QObject
         void setWatchedSubsystems(const QStringList &subsystemList);
 
         DeviceList allDevices();
-        DeviceList devicesByProperty(const QString &property, const QVariant &value);
-        DeviceList devicesBySubsystem(const QString &subsystem);
-        Device deviceByDeviceFile(const QString &deviceFile);
         Device deviceBySysfsPath(const QString &sysfsPath);
-        Device deviceBySubsystemAndName(const QString &subsystem, const QString &name);
 
     signals:
         void deviceAdded(const UdevQt::Device &dev);

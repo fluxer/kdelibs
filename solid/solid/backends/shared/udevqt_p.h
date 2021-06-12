@@ -40,8 +40,6 @@ class DevicePrivate
         ~DevicePrivate();
         DevicePrivate &operator=(const DevicePrivate& other);
 
-        QString decodePropertyValue(const QByteArray &encoded) const;
-
         struct udev_device *udev;
 };
 

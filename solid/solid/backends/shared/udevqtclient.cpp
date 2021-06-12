@@ -176,68 +176,15 @@ void Client::setWatchedSubsystems(const QStringList &subsystemList)
     d->setWatchedSubsystems(subsystemList);
 }
 
-DeviceList Client::devicesByProperty(const QString &property, const QVariant &value)
-{
-    struct udev_enumerate *en = udev_enumerate_new(d->udev);
-
-    if (value.isValid()) {
-        udev_enumerate_add_match_property(en, property.toLatin1().constData(), value.toString().toLatin1().constData());
-    } else {
-        udev_enumerate_add_match_property(en, property.toLatin1().constData(), NULL);
-    }
-
-    return d->deviceListFromEnumerate(en);
-}
-
 DeviceList Client::allDevices()
 {
     struct udev_enumerate *en = udev_enumerate_new(d->udev);
     return d->deviceListFromEnumerate(en);
 }
 
-DeviceList Client::devicesBySubsystem(const QString &subsystem)
-{
-    struct udev_enumerate *en = udev_enumerate_new(d->udev);
-
-    udev_enumerate_add_match_subsystem(en, subsystem.toLatin1().constData());
-    return d->deviceListFromEnumerate(en);
-}
-
-Device Client::deviceByDeviceFile(const QString &deviceFile)
-{
-    QT_STATBUF sb;
-
-    if (QT_STAT(deviceFile.toLatin1().constData(), &sb) != 0)
-        return Device();
-
-    struct udev_device *ud = 0;
-
-    if (S_ISBLK(sb.st_mode))
-        ud = udev_device_new_from_devnum(d->udev, 'b', sb.st_rdev);
-    else if (S_ISCHR(sb.st_mode))
-        ud = udev_device_new_from_devnum(d->udev, 'c', sb.st_rdev);
-
-    if (!ud)
-        return Device();
-
-    return Device(new DevicePrivate(ud, false));
-}
-
 Device Client::deviceBySysfsPath(const QString &sysfsPath)
 {
     struct udev_device *ud = udev_device_new_from_syspath(d->udev, sysfsPath.toLatin1().constData());
-
-    if (!ud)
-        return Device();
-
-    return Device(new DevicePrivate(ud, false));
-}
-
-Device Client::deviceBySubsystemAndName(const QString &subsystem, const QString &name)
-{
-    struct udev_device *ud = udev_device_new_from_subsystem_sysname(d->udev,
-                                    subsystem.toLatin1().constData(),
-                                    name.toLatin1().constData());
 
     if (!ud)
         return Device();

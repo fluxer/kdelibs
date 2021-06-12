@@ -44,35 +44,6 @@ DevicePrivate &DevicePrivate::operator=(const DevicePrivate &other)
     return *this;
 }
 
-QString DevicePrivate::decodePropertyValue(const QByteArray &encoded) const
-{
-    QByteArray decoded;
-    const int len = encoded.length();
-
-    for (int i = 0; i < len; i++) {
-        quint8 ch = encoded.at(i);
-
-        if (ch == '\\') {
-            if (i + 1 < len && encoded.at(i + 1) == '\\') {
-                decoded.append('\\');
-                i++;
-                continue;
-            } else if (i + 3 < len && encoded.at(i + 1) == 'x') {
-                QByteArray hex = encoded.mid(i + 2, 2);
-                bool ok;
-                int code = hex.toInt(&ok, 16);
-                if (ok)
-                    decoded.append(char(code));
-                i += 3;
-                continue;
-            }
-        } else {
-            decoded.append(ch);
-        }
-    }
-    return QString::fromUtf8(decoded);
-}
-
 Device::Device()
     : d(0)
 {
@@ -180,14 +151,6 @@ QString Device::primaryDeviceFile() const
     return QString::fromLatin1(udev_device_get_devnode(d->udev));
 }
 
-QStringList Device::alternateDeviceSymlinks() const
-{
-    if (!d)
-        return QStringList();
-
-    return listFromListEntry(udev_device_get_devlinks_list_entry(d->udev));
-}
-
 QStringList Device::deviceProperties() const
 {
     if (!d)
@@ -222,15 +185,6 @@ QVariant Device::deviceProperty(const QString &name) const
     return QVariant();
 }
 
-QString Device::decodedDeviceProperty(const QString &name) const
-{
-    if (!d)
-        return QString();
-
-    QByteArray propName = name.toLatin1();
-    return d->decodePropertyValue(udev_device_get_property_value(d->udev, propName.constData()));
-}
-
 QVariant Device::sysfsProperty(const QString &name) const
 {
     if (!d)
@@ -242,20 +196,6 @@ QVariant Device::sysfsProperty(const QString &name) const
         return QVariant::fromValue(propValue);
     }
     return QVariant();
-}
-
-Device Device::ancestorOfType(const QString &subsys, const QString &devtype) const
-{
-    if (!d)
-        return Device();
-
-    struct udev_device *p = udev_device_get_parent_with_subsystem_devtype(d->udev,
-                                subsys.toLatin1().constData(), devtype.toLatin1().constData());
-
-    if (!p)
-        return Device();
-
-    return Device(new DevicePrivate(p));
 }
 
 }
