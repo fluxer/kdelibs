@@ -471,7 +471,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
         return m_device.subsystem() == QLatin1String("power_supply");
 
     case Solid::DeviceInterface::Processor:
-        return property("DRIVER").toString() == "processor";
+        return m_device.driver() == QLatin1String("processor");
 
 #ifdef UDEV_CDIO
     case Solid::DeviceInterface::OpticalDrive:
