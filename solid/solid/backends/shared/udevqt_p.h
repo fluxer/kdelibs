@@ -47,25 +47,21 @@ class DevicePrivate
 class ClientPrivate
 {
     public:
-        ClientPrivate(Client *q_);
+        ClientPrivate(Client *q_, const QStringList &subsystemList);
         ~ClientPrivate();
 
-        void setWatchedSubsystems(const QStringList &subsystemList);
         void _uq_monitorReadyRead(int fd);
-        DeviceList deviceListFromEnumerate(struct udev_enumerate *en);
 
         struct udev *udev;
         struct udev_monitor *monitor;
         Client *q;
         QSocketNotifier *monitorNotifier;
-        QStringList watchedSubsystems;
 };
 
 inline QStringList listFromListEntry(struct udev_list_entry *list)
 {
     QStringList ret;
     struct udev_list_entry *entry;
-
     udev_list_entry_foreach(entry, list) {
         ret << QString::fromLatin1(udev_list_entry_get_name(entry));
     }

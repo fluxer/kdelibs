@@ -69,15 +69,9 @@ class Client : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(QStringList watchedSubsystems READ watchedSubsystems WRITE setWatchedSubsystems)
-
     public:
-        Client(QObject *parent = 0);
         Client(const QStringList &subsystemList, QObject *parent = 0);
         ~Client();
-
-        QStringList watchedSubsystems() const;
-        void setWatchedSubsystems(const QStringList &subsystemList);
 
         DeviceList allDevices();
         Device deviceBySysfsPath(const QString &sysfsPath);
