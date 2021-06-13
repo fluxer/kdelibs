@@ -31,7 +31,6 @@
 #include <ktemporaryfile.h>
 #include <kdebug.h>
 #include <kde_file.h>
-#include <kstandarddirs.h>
 #include <kdatetime.h>
 #include "browseropenorsavequestion.h"
 #include <kprotocolmanager.h>
@@ -369,46 +368,6 @@ void BrowserRun::simpleSave( const KUrl & url, const QString & suggestedFileName
 void KParts::BrowserRun::saveUrl(const KUrl & url, const QString & suggestedFileName,
                                  QWidget* window, const KParts::OpenUrlArguments& args)
 {
-    // DownloadManager <-> konqueror integration
-    // find if the integration is enabled
-    // the empty key  means no integration
-    // only use the downloadmanager for non-local urls
-    if ( !url.isLocalFile() )
-    {
-        KConfigGroup cfg = KSharedConfig::openConfig("konquerorrc", KConfig::NoGlobals)->group("HTML Settings");
-        QString downloadManger = cfg.readPathEntry("DownloadManager", QString());
-        if (!downloadManger.isEmpty())
-        {
-            // then find the download manager location
-            kDebug(1000) << "Using: " << downloadManger << " as Download Manager";
-            QString cmd=KStandardDirs::findExe(downloadManger);
-            if (cmd.isEmpty())
-            {
-                QString errMsg=i18n("The Download Manager (%1) could not be found in your $PATH ", downloadManger);
-                QString errMsgEx= i18n("Try to reinstall it  \n\nThe integration with Konqueror will be disabled.");
-                KMessageBox::detailedSorry(0,errMsg,errMsgEx);
-                cfg.writePathEntry("DownloadManager",QString());
-                cfg.sync ();
-            }
-            else
-            {
-                // ### suggestedFileName not taken into account. Fix this (and
-                // the duplicated code) with shiny new KDownload class for 3.2 (pfeiffer)
-                // Until the shiny new class comes about, send the suggestedFileName
-                // along with the actual URL to download. (DA)
-                cmd += ' ' + KShell::quoteArg(url.url());
-                if ( !suggestedFileName.isEmpty() )
-                    cmd += ' ' + KShell::quoteArg(suggestedFileName);
-
-                kDebug(1000) << "Calling command" << cmd;
-                // slave is already on hold (slotBrowserMimetype())
-                KIO::Scheduler::publishSlaveOnHold();
-                KRun::runCommand(cmd, window);
-                return;
-            }
-        }
-    }
-
     // no download manager available, let's do it ourself
     KFileDialog *dlg = new KFileDialog( QString(), QString() /*all files*/,
                                         window);
