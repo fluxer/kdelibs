@@ -195,7 +195,7 @@ if(UDEV_FOUND)
                     )
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${UDEV_LIBRARIES})
-endif(UDEV_FOUND AND CMAKE_SYSTEM_NAME MATCHES Linux)
+endif(UDEV_FOUND)
 
 set_source_files_properties(
     org.freedesktop.PowerManagement.xml
