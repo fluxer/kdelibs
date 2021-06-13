@@ -69,7 +69,8 @@ bool KExiv2::clearComments() const
 
 QByteArray KExiv2::getComments() const
 {
-    return QByteArray(d->imageComments().data(), d->imageComments().size());
+    const std::string& comments = d->imageComments();
+    return QByteArray(comments.data(), comments.size());
 }
 
 QString KExiv2::getCommentsDecoded() const

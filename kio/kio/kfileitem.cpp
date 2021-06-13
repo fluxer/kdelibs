@@ -749,7 +749,7 @@ KMimeType::Ptr KFileItem::determineMimeType() const
 
     if ( !d->m_pMimeType || !d->m_bMimeTypeKnown )
     {
-        bool isLocalUrl;
+        bool isLocalUrl = false;
         KUrl url = mostLocalUrl(isLocalUrl);
 
         d->m_pMimeType = KMimeType::findByUrl( url, d->m_fileMode, isLocalUrl );
@@ -797,7 +797,7 @@ QString KFileItem::mimeComment() const
 
     KMimeType::Ptr mType = determineMimeType();
 
-    bool isLocalUrl;
+    bool isLocalUrl = false;
     KUrl url = mostLocalUrl(isLocalUrl);
 
     KMimeType::Ptr mime = mimeTypePtr();
@@ -857,7 +857,7 @@ QString KFileItem::iconName() const
         return d->m_iconName;
     }
 
-    bool isLocalUrl;
+    bool isLocalUrl = false;
     KUrl url = mostLocalUrl(isLocalUrl);
 
     KMimeType::Ptr mime;
@@ -897,7 +897,7 @@ QString KFileItem::iconName() const
 static bool checkDesktopFile(const KFileItem& item, bool _determineMimeType)
 {
     // only local files
-    bool isLocal;
+    bool isLocal = false;
     const KUrl url = item.mostLocalUrl(isLocal);
     if (!isLocal)
         return false;
@@ -1025,8 +1025,7 @@ QPixmap KFileItem::pixmap( int _size, int _state ) const
         mime = KMimeType::findByUrl( sf, 0, d->m_bIsLocalUrl );
     }
 
-    bool isLocalUrl;
-    KUrl url = mostLocalUrl(isLocalUrl);
+    KUrl url = mostLocalUrl();
 
     QPixmap p = KIconLoader::global()->loadMimeTypeIcon( mime->iconName( url ), KIconLoader::Desktop, _size, _state );
     //kDebug() << "finding pixmap for " << url.url() << " : " << mime->name();
@@ -1244,8 +1243,7 @@ KFileMetaInfo KFileItem::metaInfo(bool autoget, int what) const
 
     if ((isRegularFile() || isDir()) && autoget && !d->m_metaInfo.isValid())
     {
-        bool isLocalUrl;
-        KUrl url(mostLocalUrl(isLocalUrl));
+        KUrl url(mostLocalUrl());
         d->m_metaInfo = KFileMetaInfo(url.toLocalFile(), (KFileMetaInfo::What)what);
     }
     return d->m_metaInfo;
@@ -1418,7 +1416,7 @@ KMimeType::Ptr KFileItem::mimeTypePtr() const
     if (!d->m_pMimeType) {
         // On-demand fast (but not always accurate) mimetype determination
         Q_ASSERT(!d->m_url.isEmpty());
-        bool isLocalUrl;
+        bool isLocalUrl = false;
         KUrl url = mostLocalUrl(isLocalUrl);
         int accuracy;
         d->m_pMimeType = KMimeType::findByUrl( url, d->m_fileMode, isLocalUrl,
