@@ -831,7 +831,6 @@ QPixmap IconWidgetPrivate::decoration(const QStyleOptionGraphicsItem *option, bo
         }
         result = iconSvgPixmap;
     } else {
-        QSize size(iconSize.toSize());
         //the QIcon isn't filled with available sizes, return a near standard size for small pixmaps
         if (!icon.availableSizes().isEmpty()) {
             finalSize = icon.actualSize(iconSize.toSize(), mode, state);

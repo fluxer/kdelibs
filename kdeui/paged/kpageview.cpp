@@ -186,11 +186,11 @@ void KPageViewPrivate::_k_modelChanged()
    * If the face type is Auto, we rebuild the GUI whenever the layout
    * of the model changes.
    */
-    if (faceType == KPageView::Auto) {
-        _k_rebuildGui();
-        // If you discover some crashes use the line below instead...
-        //QTimer::singleShot(0, q, SLOT(_k_rebuildGui()));
-    }
+  if (faceType == KPageView::Auto) {
+    _k_rebuildGui();
+    // If you discover some crashes use the line below instead...
+    //QTimer::singleShot(0, q, SLOT(_k_rebuildGui()));
+  }
 
   /**
    * Set the stack to the minimum size of the largest widget.
