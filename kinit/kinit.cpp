@@ -1616,17 +1616,7 @@ int main(int argc, char **argv, char **envp)
    X11fd = initXconnection();
 #endif
 
-   {
-      QFont::initialize();
-#ifdef Q_WS_X11
-      if (XSupportsLocale ())
-      {
-         // Similar to QApplication::create_xim()
-	 // but we need to use our own display
-	 XOpenIM (X11display, 0, 0, 0);
-      }
-#endif
-   }
+   QFont::initialize();
 
    if (launch_kded)
    {
