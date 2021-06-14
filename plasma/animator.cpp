@@ -31,7 +31,6 @@
 #include "animations/geometry_p.h"
 #include "animations/zoom_p.h"
 #include "animations/pixmaptransition_p.h"
-#include "animations/water_p.h"
 #include "animations/pendulumcurve_p.h"
 #include "animations/javascriptanimation_p.h"
 #include "theme.h"
@@ -130,13 +129,6 @@ Plasma::Animation* Animator::create(Animator::Animation type, QObject *parent)
         result = create("PixmapTransitionAnimation", parent);
         if (!result) {
             result = new Plasma::PixmapTransition(parent);
-        }
-        break;
-
-    case WaterAnimation:
-        result = create("WaterAnimation", parent);
-        if (!result) {
-            result = new Plasma::WaterAnimation(parent);
         }
         break;
 

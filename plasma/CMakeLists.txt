@@ -67,7 +67,6 @@ set(plasma_LIB_SRCS
     animations/slide.cpp
     animations/stackedlayout.cpp
     animations/geometry.cpp
-    animations/water.cpp
     animations/widgetsnapshot.cpp
     animations/zoom.cpp
     applet.cpp
@@ -113,7 +112,6 @@ set(plasma_LIB_SRCS
     private/windowpreview.cpp
     private/declarative/declarativenetworkaccessmanagerfactory.cpp
     private/effects/halopainter.cpp
-    private/effects/ripple.cpp
     querymatch.cpp
     runnercontext.cpp
     runnermanager.cpp
