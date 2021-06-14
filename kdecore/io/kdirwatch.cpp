@@ -136,6 +136,11 @@ void KDirWatch::setDirty(const QString &file)
 {
     kDebug(7001) << objectName() << "emitting dirty" << file;
     emit dirty(file);
+    // a simple solution for a complex problem - KConfig requires proper created/deleted events
+    // notification because INI backend uses KSaveFile which moves (renames) backup to original
+    // file but currently there is not. the proper solution is to watch exisiting configuration
+    // directories for changes (and future creation of such) and emit signals for file events
+    addFile(file);
 }
 
 void KDirWatch::setDeleted(const QString &file)
