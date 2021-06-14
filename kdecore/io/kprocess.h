@@ -282,7 +282,7 @@ public:
      *
      * @return the PID of the started process or 0 on error
      */
-    int startDetached();
+    qint64 startDetached();
 
     /**
      * @overload
@@ -292,7 +292,7 @@ public:
      *   one per list element
      * @return the PID of the started process or 0 on error
      */
-    static int startDetached(const QString &exe, const QStringList &args = QStringList());
+    static qint64 startDetached(const QString &exe, const QStringList &args = QStringList());
 
     /**
      * @overload
@@ -301,19 +301,7 @@ public:
      *   for the program, one per list element
      * @return the PID of the started process or 0 on error
      */
-    static int startDetached(const QStringList &argv);
-
-    /**
-     * Obtain the process' ID as known to the system.
-     *
-     * Unlike with QProcess::pid(), this is a real PID also on Windows.
-     *
-     * This function can be called only while the process is running.
-     * It cannot be applied to detached processes.
-     *
-     * @return the process ID
-     */
-    int pid() const;
+    static qint64 startDetached(const QStringList &argv);
 
 protected:
     /**
