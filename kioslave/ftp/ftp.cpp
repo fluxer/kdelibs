@@ -1782,7 +1782,12 @@ bool Ftp::ftpReadDir(FtpEntry& de)
 
       // First get current time - we need the current month and year
       time_t currentTime = time( 0L );
+#ifdef _POSIX_THREAD_SAFE_FUNCTIONS
+      struct tm tmpres;
+      struct tm * tmptr = gmtime_r(&currentTime, &tmpres);
+#else
       struct tm * tmptr = gmtime( &currentTime );
+#endif
       int currentMonth = tmptr->tm_mon;
       //kDebug(7102) << "Current time :" << asctime( tmptr );
       // Reset time fields
