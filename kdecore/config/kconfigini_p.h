@@ -75,7 +75,7 @@ public:
                           ParseOptions options,
                           bool merging);
     bool writeConfig(const QByteArray& locale, KEntryMap& entryMap,
-                     WriteOptions options, const KComponentData &data);
+                     WriteOptions options);
 
     bool isWritable() const;
     QString nonWritableErrorMessage() const;

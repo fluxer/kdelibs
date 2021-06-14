@@ -414,7 +414,7 @@ void KConfig::sync()
                 tmp->deleteLater();
                 return;
             }
-            if (!tmp->writeConfig(utf8Locale, d->entryMap, KConfigIniBackend::WriteGlobal, d->componentData)) {
+            if (!tmp->writeConfig(utf8Locale, d->entryMap, KConfigIniBackend::WriteGlobal)) {
                 d->bDirty = true;
                 // TODO KDE5: return false? (to tell the app that writing wasn't possible, e.g.
                 // config file is immutable or disk full)
@@ -426,7 +426,7 @@ void KConfig::sync()
         }
 
         if (writeLocals) {
-            if (!d->mBackend->writeConfig(utf8Locale, d->entryMap, KConfigIniBackend::WriteOptions(), d->componentData)) {
+            if (!d->mBackend->writeConfig(utf8Locale, d->entryMap, KConfigIniBackend::WriteOptions())) {
                 d->bDirty = true;
                 // TODO KDE5: return false? (to tell the app that writing wasn't possible, e.g.
                 // config file is immutable or disk full)

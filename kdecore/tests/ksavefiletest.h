@@ -32,9 +32,7 @@ private Q_SLOTS:
     void transactionalWriteNoPermissionsOnDir_data();
     void transactionalWriteNoPermissionsOnDir();
 
-    void test_numberedBackupFile();
-    void test_rcsBackupFile();
-    void test_simpleBackupFile();
+    void test_backupFile();
     void cleanupTestCase();
     
 private:

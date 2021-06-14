@@ -378,7 +378,7 @@ void KConfigIniBackend::writeEntries(const QByteArray& locale, QFile& file, cons
 }
 
 bool KConfigIniBackend::writeConfig(const QByteArray& locale, KEntryMap& entryMap,
-                                    WriteOptions options, const KComponentData &data)
+                                    WriteOptions options)
 {
     Q_ASSERT(!filePath().isEmpty());
 
@@ -448,7 +448,7 @@ bool KConfigIniBackend::writeConfig(const QByteArray& locale, KEntryMap& entryMa
     }
 
     if (createNew) {
-        KSaveFile file( filePath(), data );
+        KSaveFile file( filePath() );
         if (!file.open()) {
             return false;
         }

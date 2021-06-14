@@ -435,7 +435,6 @@ bool KBookmarkManager::saveAs( const QString & filename, bool toolbarCache ) con
     KSaveFile file( filename );
     if ( file.open() )
     {
-        file.simpleBackupFile( file.fileName(), QString(), ".bak" );
         QTextStream stream(&file);
         stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
         stream << internalDocument().toString();
