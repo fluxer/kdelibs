@@ -1,4 +1,4 @@
-/* C++ code produced by gperf version 3.0.4 */
+/* C++ code produced by gperf version 3.1 */
 /* Command-line: gperf -a -o -t -k '*' -D -Wwordlist_Entity -s 2 kentities.gperf  */
 
 #if !((' ' == 32) && ('!' == 33) && ('"' == 34) && ('#' == 35) \
@@ -25,10 +25,8 @@
       && ('w' == 119) && ('x' == 120) && ('y' == 121) && ('z' == 122) \
       && ('{' == 123) && ('|' == 124) && ('}' == 125) && ('~' == 126))
 /* The character set is not based on ISO-646.  */
-#error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gnu-gperf@gnu.org>."
+#error "gperf generated tables don't work with this execution character set. Please report a bug to <bug-gperf@gnu.org>."
 #endif
-
-#include <string.h>
 
 #line 1 "kentities.gperf"
 
@@ -68,13 +66,13 @@ struct entity {
 class EntitiesHash
 {
 private:
-  static inline unsigned int hash_Entity (const char *str, unsigned int len);
+  static inline unsigned int hash_Entity (const char *str, size_t len);
 public:
-  static const struct entity *kde_findEntity (const char *str, unsigned int len);
+  static const struct entity *kde_findEntity (const char *str, size_t len);
 };
 
 inline unsigned int
-EntitiesHash::hash_Entity (const char *str, unsigned int len)
+EntitiesHash::hash_Entity (const char *str, size_t len)
 {
   static const unsigned short asso_values[] =
     {
@@ -105,40 +103,40 @@ EntitiesHash::hash_Entity (const char *str, unsigned int len)
       1142, 1142, 1142, 1142, 1142, 1142, 1142, 1142, 1142, 1142,
       1142, 1142, 1142, 1142, 1142, 1142, 1142
     };
-  int hval = len;
+  unsigned int hval = len;
 
   switch (hval)
     {
       default:
-        hval += asso_values[(unsigned char)str[7]];
+        hval += asso_values[static_cast<unsigned char>(str[7])];
       /*FALLTHROUGH*/
       case 7:
-        hval += asso_values[(unsigned char)str[6]];
+        hval += asso_values[static_cast<unsigned char>(str[6])];
       /*FALLTHROUGH*/
       case 6:
-        hval += asso_values[(unsigned char)str[5]];
+        hval += asso_values[static_cast<unsigned char>(str[5])];
       /*FALLTHROUGH*/
       case 5:
-        hval += asso_values[(unsigned char)str[4]];
+        hval += asso_values[static_cast<unsigned char>(str[4])];
       /*FALLTHROUGH*/
       case 4:
-        hval += asso_values[(unsigned char)str[3]];
+        hval += asso_values[static_cast<unsigned char>(str[3])];
       /*FALLTHROUGH*/
       case 3:
-        hval += asso_values[(unsigned char)str[2]];
+        hval += asso_values[static_cast<unsigned char>(str[2])];
       /*FALLTHROUGH*/
       case 2:
-        hval += asso_values[(unsigned char)str[1]+1];
+        hval += asso_values[static_cast<unsigned char>(str[1]+1)];
       /*FALLTHROUGH*/
       case 1:
-        hval += asso_values[(unsigned char)str[0]];
+        hval += asso_values[static_cast<unsigned char>(str[0])];
         break;
     }
   return hval;
 }
 
 const struct entity *
-EntitiesHash::kde_findEntity (const char *str, unsigned int len)
+EntitiesHash::kde_findEntity (const char *str, size_t len)
 {
   enum
     {
@@ -836,9 +834,9 @@ EntitiesHash::kde_findEntity (const char *str, unsigned int len)
 
   if (len <= MAX_WORD_LENGTH && len >= MIN_WORD_LENGTH)
     {
-      int key = hash_Entity (str, len);
+      unsigned int key = hash_Entity (str, len);
 
-      if (key <= MAX_HASH_VALUE && key >= 0)
+      if (key <= MAX_HASH_VALUE)
         {
           int index = lookup[key];
 
