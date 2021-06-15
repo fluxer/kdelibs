@@ -358,18 +358,6 @@ void KServiceTest::testHasServiceType2() // with services coming from ksycoca
     QVERIFY( !faketextPlugin->hasServiceType( "KParts/ReadOnlyPart" ) );
 }
 
-void KServiceTest::testDefaultOffers()
-{
-    // Let's see if defaultOffers indeed gives us the default ordering.
-    const QString serviceType = "KParts/ReadOnlyPart";
-    KService::List offers = KServiceTypeTrader::self()->defaultOffers( serviceType );
-    QVERIFY( offers.count() > 0 ); // not empty
-    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) );
-    if ( m_firstOffer.isEmpty() )
-        QSKIP( "testServiceTypeTraderForReadOnlyPart not run", SkipAll );
-    QCOMPARE( offers[0]->entryPath(), m_firstOffer );
-}
-
 void KServiceTest::testActionsAndDataStream()
 {
     const QString servicePath = KStandardDirs::locate( "services", "ScreenSavers/krandom.desktop" );

@@ -105,8 +105,8 @@ static KServiceOfferList weightedOffers( const QString& serviceType )
     return offers;
 }
 
-KService::List KServiceTypeTrader::defaultOffers( const QString& serviceType,
-                                                  const QString& constraint ) const
+KService::List KServiceTypeTrader::query( const QString& serviceType,
+                                          const QString& constraint ) const
 {
     KServiceType::Ptr servTypePtr = KServiceTypeFactory::self()->findServiceTypeByName( serviceType );
     if ( !servTypePtr ) {
@@ -124,12 +124,6 @@ KService::List KServiceTypeTrader::defaultOffers( const QString& serviceType,
     //kDebug(7014) << "query for serviceType " << serviceType << constraint
     //             << " : returning " << lst.count() << " offers" << endl;
     return lst;
-}
-
-KService::List KServiceTypeTrader::query( const QString& serviceType,
-                                          const QString& constraint ) const
-{
-    return defaultOffers( serviceType, constraint );
 }
 
 KService::Ptr KServiceTypeTrader::preferredService( const QString & serviceType ) const

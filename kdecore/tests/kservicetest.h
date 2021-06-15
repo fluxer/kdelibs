@@ -37,7 +37,6 @@ private Q_SLOTS:
     void testTraderConstraints();
     void testHasServiceType1();
     void testHasServiceType2();
-    void testDefaultOffers();
     void testDBUSStartupType();
     void testByStorageId();
     void testActionsAndDataStream();
