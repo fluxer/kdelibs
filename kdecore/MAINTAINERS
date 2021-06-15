@@ -122,7 +122,6 @@ services/                         David Faure <faure@kde.org>
   kserviceoffer.cpp
   kservicetype.cpp
   kservicetypefactory.cpp
-  kservicetypeprofile.cpp
   kservicetypetrader.cpp
   ktraderparse.cpp
   ktraderparsetree.cpp

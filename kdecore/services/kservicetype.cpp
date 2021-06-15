@@ -23,7 +23,6 @@
 #include "kservice.h"
 #include "kservicetypefactory.h"
 #include "kservicefactory.h"
-#include "kservicetypeprofile.h"
 #include <assert.h>
 #include <kdebug.h>
 #include <kdesktopfile.h>

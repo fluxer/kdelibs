@@ -156,7 +156,7 @@ void KBuildServiceFactory::collectInheritedServices()
     Q_FOREACH(const QString& mimeType, allMimeTypes) {
         collectInheritedServices(mimeType, visitedMimes);
     }
-    // TODO do the same for all/all and all/allfiles, if (!KServiceTypeProfile::configurationMode())
+    // TODO do the same for all/all and all/allfiles
 }
 
 void KBuildServiceFactory::collectInheritedServices(const QString& mimeTypeName, QSet<QString>& visitedMimes)

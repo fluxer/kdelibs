@@ -33,7 +33,6 @@
 
 #include <kdebug.h>
 #include <kservicetype.h>
-#include <kservicetypeprofile.h>
 
 #include <QtCore/qprocess.h>
 #include <QtCore/qthread.h>

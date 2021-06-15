@@ -191,7 +191,6 @@ set(kdecore_LIB_SRCS
     services/kserviceoffer.cpp
     services/kservicetype.cpp
     services/kservicetypefactory.cpp
-    services/kservicetypeprofile.cpp
     services/kservicetypetrader.cpp
     services/ktraderparse.cpp
     services/ktraderparsetree.cpp
@@ -397,7 +396,6 @@ install(
     #services/kservicefactory.h: do not install, internal API
     services/kservicetype.h
     #services/kservicetypefactory.h: do not install, internal API
-    services/kservicetypeprofile.h
     services/kservicetypetrader.h
     #services/kserviceoffer.h: do not install, internal API
     services/kplugininfo.h

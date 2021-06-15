@@ -20,7 +20,6 @@
 #include "kservicetypetrader.h"
 
 #include "ktraderparsetree_p.h"
-#include <kservicetypeprofile.h>
 #include <kdebug.h>
 #include "kservicetype.h"
 #include "kservicetypefactory.h"
@@ -29,10 +28,6 @@
 using namespace KTraderParse;
 
 // --------------------------------------------------
-
-namespace KServiceTypeProfile {
-    KServiceOfferList sortServiceTypeOffers( const KServiceOfferList& list, const QString& servicetype );
-}
 
 KServiceTypeTrader* KServiceTypeTrader::self()
 {
@@ -98,10 +93,10 @@ static KServiceOfferList weightedOffers( const QString& serviceType )
         return KServiceOfferList();
 
     // First, get all offers known to ksycoca.
-    const KServiceOfferList services = KServiceFactory::self()->offers( servTypePtr->offset(), servTypePtr->serviceOffersOffset() );
+    KServiceOfferList offers = KServiceFactory::self()->offers( servTypePtr->offset(), servTypePtr->serviceOffersOffset() );
 
-    const KServiceOfferList offers = KServiceTypeProfile::sortServiceTypeOffers( services, serviceType );
-    //kDebug(7014) << "Found profile: " << offers.count() << " offers";
+    qStableSort( offers );
+    //kDebug(7014) << "Found offers: " << offers.count() << " offers";
 
 #if 0
     dumpOfferList( offers );
@@ -134,27 +129,7 @@ KService::List KServiceTypeTrader::defaultOffers( const QString& serviceType,
 KService::List KServiceTypeTrader::query( const QString& serviceType,
                                           const QString& constraint ) const
 {
-    if ( !KServiceTypeProfile::hasProfile( serviceType ) )
-    {
-        // Fast path: skip the profile stuff if there's none (to avoid kservice->serviceoffer->kservice)
-        // The ordering according to initial preferences is done by kbuildsycoca
-        return defaultOffers( serviceType, constraint );
-    }
-
-    KService::List lst;
-    // Get all services of this service type.
-    const KServiceOfferList offers = weightedOffers( serviceType );
-
-    // Now extract only the services; the weighting was only used for sorting.
-    KServiceOfferList::const_iterator itOff = offers.begin();
-    for( ; itOff != offers.end(); ++itOff )
-        lst.append( (*itOff).service() );
-
-    applyConstraints( lst, constraint );
-
-    //kDebug(7014) << "query for serviceType " << serviceType << constraint
-    //             << " : returning " << lst.count() << " offers" << endl;
-    return lst;
+    return defaultOffers( serviceType, constraint );
 }
 
 KService::Ptr KServiceTypeTrader::preferredService( const QString & serviceType ) const

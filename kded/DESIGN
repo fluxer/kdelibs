@@ -75,8 +75,6 @@ Offer list
 | * mimetype offset, service offset
 | * 0
 This allows to quickly find services associated with a servicetype.
-It does NOT reflect the user profile, which is stored in profilerc and
-implemented in KServiceTypeProfile.
 
 Mimetype patterns
 | Fast patterns (fixed size)

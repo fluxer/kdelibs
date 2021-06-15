@@ -34,23 +34,11 @@
 #include <kservicegroup.h>
 #include <kservicetypetrader.h>
 #include <kservicetype.h>
-#include <kservicetypeprofile.h>
 
 #include <QtCore/qprocess.h>
 #include <QtCore/qthread.h>
 
 QTEST_KDEMAIN_CORE( KServiceTest )
-
-static void eraseProfiles()
-{
-    QString profilerc = KStandardDirs::locateLocal( "config", "profilerc" );
-    if ( !profilerc.isEmpty() )
-        QFile::remove( profilerc );
-
-    profilerc = KStandardDirs::locateLocal( "config", "servicetype_profilerc" );
-    if ( !profilerc.isEmpty() )
-        QFile::remove( profilerc );
-}
 
 void KServiceTest::initTestCase()
 {
@@ -65,7 +53,6 @@ void KServiceTest::initTestCase()
     }
 
     m_hasKde4Konsole = false;
-    eraseProfiles();
 
     // Create some fake services for the tests below, and ensure they are in ksycoca.
 
@@ -371,58 +358,13 @@ void KServiceTest::testHasServiceType2() // with services coming from ksycoca
     QVERIFY( !faketextPlugin->hasServiceType( "KParts/ReadOnlyPart" ) );
 }
 
-void KServiceTest::testWriteServiceTypeProfile()
-{
-    const QString serviceType = "KParts/ReadOnlyPart";
-    KService::List services, disabledServices;
-    services.append(KService::serviceByDesktopPath("fakepart.desktop"));
-    disabledServices.append(KService::serviceByDesktopPath("kwebkitpart.desktop"));
-
-    KService::List::ConstIterator servit = services.constBegin();
-    for( ; servit != services.constEnd(); ++servit) {
-        QVERIFY(!servit->isNull());
-    }
-
-
-    KServiceTypeProfile::writeServiceTypeProfile( serviceType, services, disabledServices );
-
-    // Check that the file got written
-    QString profilerc = KStandardDirs::locateLocal( "config", "servicetype_profilerc" );
-    QVERIFY(!profilerc.isEmpty());
-    QVERIFY(QFile::exists(profilerc));
-
-    KService::List offers = KServiceTypeTrader::self()->query( serviceType );
-    QVERIFY( offers.count() > 0 ); // not empty
-
-    //foreach( KService::Ptr service, offers )
-    //    qDebug( "%s %s", qPrintable( service->name() ), qPrintable( service->entryPath() ) );
-
-    QVERIFY( offers.count() >= 1 ); // at least 1, even
-    QCOMPARE( offers[0]->entryPath(), QString("fakepart.desktop") );
-    QVERIFY( !offerListHasService( offers, "kwebkitpart.desktop" ) ); // it got disabled above
-}
-
 void KServiceTest::testDefaultOffers()
 {
-    // Now that we have a user-profile, let's see if defaultOffers indeed gives us the default ordering.
+    // Let's see if defaultOffers indeed gives us the default ordering.
     const QString serviceType = "KParts/ReadOnlyPart";
     KService::List offers = KServiceTypeTrader::self()->defaultOffers( serviceType );
     QVERIFY( offers.count() > 0 ); // not empty
-    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) ); // it's here even though it's disabled in the profile
-    if ( m_firstOffer.isEmpty() )
-        QSKIP( "testServiceTypeTraderForReadOnlyPart not run", SkipAll );
-    QCOMPARE( offers[0]->entryPath(), m_firstOffer );
-}
-
-void KServiceTest::testDeleteServiceTypeProfile()
-{
-    const QString serviceType = "KParts/ReadOnlyPart";
-    KServiceTypeProfile::deleteServiceTypeProfile( serviceType );
-
-    KService::List offers = KServiceTypeTrader::self()->query( serviceType );
-    QVERIFY( offers.count() > 0 ); // not empty
-    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) ); // it's back
-
+    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) );
     if ( m_firstOffer.isEmpty() )
         QSKIP( "testServiceTypeTraderForReadOnlyPart not run", SkipAll );
     QCOMPARE( offers[0]->entryPath(), m_firstOffer );

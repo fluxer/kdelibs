@@ -20,7 +20,6 @@
 #include "ksycoca.h"
 #include "ksycocatype.h"
 #include "ksycocadict_p.h"
-#include "kservicetypeprofile.h"
 
 #include <kdebug.h>
 #include <assert.h>
@@ -55,7 +54,6 @@ KServiceTypeFactory::KServiceTypeFactory()
 
 KServiceTypeFactory::~KServiceTypeFactory()
 {
-    KServiceTypeProfile::clearCache();
     if (kServiceTypeFactoryInstance) {
         kServiceTypeFactoryInstance = 0;
     }

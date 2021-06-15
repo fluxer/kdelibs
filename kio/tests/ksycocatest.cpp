@@ -26,7 +26,6 @@
 #include <kservicegroup.h>
 #include <kstandarddirs.h>
 #include <kmimetypetrader.h>
-#include <kservicetypeprofile.h>
 
 #include <assert.h>
 #include <stdio.h>

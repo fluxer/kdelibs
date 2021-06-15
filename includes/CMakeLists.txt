@@ -288,7 +288,6 @@ install(
     KServiceAction
     KServiceGroup
     KServiceType
-    KServiceTypeProfile
     KServiceTypeTrader
     KSessionManager
     KSharedConfig

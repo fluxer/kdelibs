@@ -19,7 +19,6 @@
 
 #include "kmimetypetrader.h"
 
-#include "kservicetypeprofile.h"
 #include "kservicetype.h"
 #include "kservicetypetrader.h"
 #include "kmimetype.h"
