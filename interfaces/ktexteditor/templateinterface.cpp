@@ -29,7 +29,6 @@
 #include <QString>
 #include <QDateTime>
 #include <QRegExp>
-#include <QLibrary>
 #include <QHostInfo>
 
 #define DUMMY_VALUE "!KTE:TEMPLATEHANDLER_DUMMY_VALUE!"
@@ -41,11 +40,9 @@ bool TemplateInterface::expandMacros( QMap<QString, QString> &map, QWidget *pare
   QDateTime datetime = QDateTime::currentDateTime();
   QDate date = datetime.date();
   QTime time = datetime.time();
-  typedef QString (*kabcbridgecalltype)(const QString&,QWidget *,bool *ok);
-  kabcbridgecalltype kabcbridgecall=0;
 
-  QStringList kabcitems;
-  kabcitems<<"firstname"<<"lastname"<<"fullname"<<"email";
+  QStringList personalitems;
+  personalitems<<"firstname"<<"lastname"<<"fullname"<<"email";
 
   QMap<QString,QString>::Iterator it;
   for ( it = map.begin(); it != map.end(); ++it )
@@ -56,24 +53,20 @@ bool TemplateInterface::expandMacros( QMap<QString, QString> &map, QWidget *pare
       if ( placeholder == "index" ) map[ placeholder ] = "i";
       else if ( placeholder == "loginname" )
       {}
-      else if (kabcitems.contains(placeholder))
+      else if (personalitems.contains(placeholder))
       {
-        if (kabcbridgecall==0)
-        {
-          QLibrary lib(QLatin1String("ktexteditorkabcbridge"));
-          kabcbridgecall=(kabcbridgecalltype)lib.resolve("ktexteditorkabcbridge");
-          if (kabcbridgecall == 0)
-          {
-            KMessageBox::sorry(parentWindow,i18n("The template needs information about you, which is stored in your address book.\nHowever, the required plugin could not be loaded.\n\nPlease install the KDEPIM/Kontact package for your system."));
-            return false;
-          }
-        }
-        bool ok;
-        map[ placeholder ] = kabcbridgecall(placeholder,parentWindow,&ok);
-        if (!ok)
-        {
-          return false;
-        }
+#warning FIXME: implement first and last name info via KEMailSettings, KUser or other class
+#if 0
+        KEMailSettings mailsettings;
+        map[ "firstname" ] = mailsettings.getSetting(KEMailSettings::TODO);
+        map[ "lastname" ] = mailsettings.getSetting(KEMailSettings::TODO);
+        map[ "fullname" ] = mailsettings.getSetting(KEMailSettings::RealName);
+        map[ "email" ] = mailsettings.getSetting(KEMailSettings::EmailAddresss);
+#else
+        // TODO: use this message when the info is missing (not set yet)
+        KMessageBox::sorry(parentWindow,i18n("The template needs information about you but it is not available.\n The information can be set set from system settings."));
+        return false;
+#endif
       }
       else if ( placeholder == "date" )
       {
