@@ -112,7 +112,7 @@ void KServiceTest::initTestCase()
 
     if ( mustUpdateKSycoca ) {
         // Update ksycoca in ~/.kde-unit-test after creating the above
-        QProcess::execute( KGlobal::dirs()->findExe(KBUILDSYCOCA_EXENAME), QStringList() << "--noincremental" );
+        QProcess::execute( KStandardDirs::findExe(KBUILDSYCOCA_EXENAME), QStringList() << "--noincremental" );
         kDebug() << "waiting for signal";
         QVERIFY(QTest::kWaitForSignal(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), 10000));
         kDebug() << "got signal";
@@ -498,7 +498,7 @@ void KServiceTest::testKSycocaUpdate()
     QVERIFY(spy.isValid());
     QFile::remove(servPath);
     kDebug() << QThread::currentThread() << "executing kbuildsycoca";
-    QProcess::execute( KGlobal::dirs()->findExe(KBUILDSYCOCA_EXENAME) );
+    QProcess::execute( KStandardDirs::findExe(KBUILDSYCOCA_EXENAME) );
     kDebug() << QThread::currentThread() << "done";
     while (spy.isEmpty())
         QTest::qWait(50);
@@ -515,7 +515,7 @@ void KServiceTest::testKSycocaUpdate()
     createFakeService();
     QVERIFY(QFile::exists(servPath));
     kDebug() << QThread::currentThread() << "executing kbuildsycoca (2)";
-    QProcess::execute( KGlobal::dirs()->findExe(KBUILDSYCOCA_EXENAME) );
+    QProcess::execute( KStandardDirs::findExe(KBUILDSYCOCA_EXENAME) );
     kDebug() << QThread::currentThread() << "done (2)";
     while (spy.isEmpty())
         QTest::qWait(50);

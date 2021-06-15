@@ -217,7 +217,7 @@ QProcess *Solid::Backends::Fstab::FstabHandling::callSystemCommand(const QString
                                                                  const QStringList &args,
                                                                  QObject *obj, const char *slot)
 {
-    QString commandExe = KGlobal::dirs()->findRootExe(commandName);
+    QString commandExe = KStandardDirs::findRootExe(commandName);
     if (commandExe.isEmpty()) {
         return 0;
     }

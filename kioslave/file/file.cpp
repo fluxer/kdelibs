@@ -946,7 +946,7 @@ void FileProtocol::mount( bool _ro, const char *_fstype, const QString& _dev, co
     bool fstype_empty = !_fstype || !*_fstype;
     QByteArray fstype = KShell::quoteArg(QString::fromLatin1(_fstype)).toLatin1(); // good guess
     QByteArray readonly = _ro ? "-r" : "";
-    QByteArray mountProg = KGlobal::dirs()->findRootExe(QLatin1String("mount")).toLocal8Bit();
+    QByteArray mountProg = KStandardDirs::findRootExe(QLatin1String("mount")).toLocal8Bit();
     if (mountProg.isEmpty()){
       error( KIO::ERR_COULD_NOT_MOUNT, i18n("Could not find program \"mount\""));
       return;
@@ -1090,7 +1090,7 @@ void FileProtocol::unmount( const QString& _point )
 		ptr = strrchr( devname, '/' );
 		*ptr = '\0';
 
-                QByteArray ejectProg = KGlobal::dirs()->findRootExe(QLatin1String("eject")).toLocal8Bit();
+                QByteArray ejectProg = KStandardDirs::findRootExe(QLatin1String("eject")).toLocal8Bit();
 
                 if (ejectProg.isEmpty()) {
                     error( KIO::ERR_COULD_NOT_UNMOUNT, i18n("Could not find program \"eject\""));
@@ -1127,7 +1127,7 @@ void FileProtocol::unmount( const QString& _point )
 		return;
 	}
 #else
-    QByteArray umountProg = KGlobal::dirs()->findRootExe(QLatin1String("umount")).toLocal8Bit();
+    QByteArray umountProg = KStandardDirs::findRootExe(QLatin1String("umount")).toLocal8Bit();
 
     if (umountProg.isEmpty()) {
         error( KIO::ERR_COULD_NOT_UNMOUNT, i18n("Could not find program \"umount\""));
@@ -1152,7 +1152,7 @@ void FileProtocol::unmount( const QString& _point )
 
 bool FileProtocol::pmount(const QString &dev)
 {
-    QString pmountProg = KGlobal::dirs()->findRootExe(QLatin1String("pmount"));
+    QString pmountProg = KStandardDirs::findRootExe(QLatin1String("pmount"));
 
     if (pmountProg.isEmpty())
         return false;
@@ -1173,7 +1173,7 @@ bool FileProtocol::pumount(const QString &point)
     QString dev = mp->realDeviceName();
     if (dev.isEmpty()) return false;
 
-    QString pumountProg = KGlobal::dirs()->findRootExe(QLatin1String("pumount"));
+    QString pumountProg = KStandardDirs::findRootExe(QLatin1String("pumount"));
 
     if (pumountProg.isEmpty())
         return false;

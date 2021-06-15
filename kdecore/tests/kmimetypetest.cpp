@@ -131,7 +131,7 @@ void KMimeTypeTest::initTestCase()
 
     if ( mustUpdateKSycoca ) {
         // Update ksycoca in ~/.kde-unit-test after creating the above
-        QProcess::execute( KGlobal::dirs()->findExe(KBUILDSYCOCA_EXENAME) );
+        QProcess::execute( KStandardDirs::findExe(KBUILDSYCOCA_EXENAME) );
     }
 
     QVERIFY(KService::serviceByStorageId("fake_nonkde_application.desktop"));
