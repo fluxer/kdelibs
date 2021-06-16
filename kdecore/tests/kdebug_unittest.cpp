@@ -227,11 +227,11 @@ void KDebugTest::testNoMainComponentData()
     // qDebug() << receivedLines;
     QList<QByteArray> expectedLines;
     expectedLines << "qcoreapp_myarea main: Test debug using qcoreapp_myarea 1";
-    expectedLines << "main: Debug in area 264, off by default, no output";
-    expectedLines << "main: Debug in area 100";
-    expectedLines << "main: Simple debug";
+//     expectedLines << "kdecore-kdebug_qcoreapptest main: Debug in area 264, off by default, no output";
+    expectedLines << "kdecore-kdebug_qcoreapptest main: Debug in area 100";
+    expectedLines << "kdecore-kdebug_qcoreapptest main: Simple debug";
     expectedLines << "kdebug_qcoreapptest_mainData main: This should appear, under the kdebug_qcoreapptest_mainData area";
-    expectedLines << "kdebug_qcoreapptest_mainData main: Debug in area 264, still off by default";
+//     expectedLines << "kdebug_qcoreapptest_mainData main: Debug in area 264, still off by default";
     expectedLines << "kdebug_qcoreapptest_mainData main: Debug in area 100";
     expectedLines << ""; // artefact of split, I guess?
     for (int i = 0; i < qMin(expectedLines.count(), receivedLines.count()); ++i)
