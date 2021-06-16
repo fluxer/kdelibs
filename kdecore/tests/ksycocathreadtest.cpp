@@ -29,6 +29,7 @@
 #include <kdesktopfile.h>
 #include <ksycoca.h>
 #include <kglobal.h>
+#include <kservicetypetrader.h>
 #include <kstandarddirs.h>
 
 #include <kdebug.h>
