@@ -84,22 +84,6 @@ extern "C" {
 # define _NEW_TTY_CTRL
 #endif
 
-#if defined HAVE_TCGETATTR
-# define _tcgetattr(fd, ttmode) tcgetattr(fd, ttmode)
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(Q_OS_DRAGONFLY)
-# define _tcgetattr(fd, ttmode) ioctl(fd, TIOCGETA, (char *)ttmode)
-#else
-# define _tcgetattr(fd, ttmode) ioctl(fd, TCGETS, (char *)ttmode)
-#endif
-
-#if defined HAVE_TCSETATTR
-# define _tcsetattr(fd, ttmode) tcsetattr(fd, TCSANOW, ttmode)
-#elif defined(Q_OS_FREEBSD) || defined(Q_OS_NETBSD) || defined(Q_OS_OPENBSD) || defined(Q_OS_DRAGONFLY)
-# define _tcsetattr(fd, ttmode) ioctl(fd, TIOCSETA, (char *)ttmode)
-#else
-# define _tcsetattr(fd, ttmode) ioctl(fd, TCSETS, (char *)ttmode)
-#endif
-
 #include <kdebug.h>
 #include <kstandarddirs.h>	// findExe
 #include <kde_file.h>
@@ -608,9 +592,9 @@ bool KPty::tcGetAttr(struct ::termios *ttmode) const
     Q_D(const KPty);
 
 #ifdef Q_OS_SOLARIS
-    if (_tcgetattr(d->slaveFd, ttmode) == 0) return true;
+    if (::tcgetattr(d->slaveFd, ttmode) == 0) return true;
 #endif
-    return _tcgetattr(d->masterFd, ttmode) == 0;
+    return ::tcgetattr(d->masterFd, ttmode) == 0;
 }
 
 bool KPty::tcSetAttr(struct ::termios *ttmode)
@@ -618,9 +602,9 @@ bool KPty::tcSetAttr(struct ::termios *ttmode)
     Q_D(KPty);
 
 #ifdef Q_OS_SOLARIS
-    if (_tcsetattr(d->slaveFd, ttmode) == 0) return true;
+    if (::tcsetattr(d->slaveFd, TCSANOW, ttmode) == 0) return true;
 #endif
-    return _tcsetattr(d->masterFd, ttmode) == 0;
+    return ::tcsetattr(d->masterFd, TCSANOW, ttmode) == 0;
 }
 
 bool KPty::setWinSize(int lines, int columns)

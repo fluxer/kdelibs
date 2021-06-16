@@ -151,8 +151,6 @@ if (UNIX)
   endif (openpty_in_libc OR openpty_in_libutil)
 
   check_function_exists(ptsname_r  HAVE_PTSNAME_R)
-  check_function_exists(tcgetattr  HAVE_TCGETATTR)
-  check_function_exists(tcsetattr  HAVE_TCSETATTR)
 endif (UNIX)
 
 check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore, kio
