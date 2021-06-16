@@ -282,7 +282,6 @@ void KServiceTest::testServiceTypeTraderForReadOnlyPart()
 
     // Only test for parts provided by kdelibs, or better, by this unittest:
     QVERIFY( offerListHasService( offers, "fakepart.desktop" ) );
-    QVERIFY( offerListHasService( offers, "kwebkitpart.desktop" ) );
 
     // Check ordering according to InitialPreference
     int lastPreference = -1;
