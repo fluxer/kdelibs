@@ -69,10 +69,9 @@ int main (int argc, char *argv[])
   gid_t         gid;
   uid_t         uid;
   mode_t        mod;
-  char*         tty;
+  char*         tty = 0;
   int           fd;
-#if !defined(HAVE_PTSNAME) && defined(TIOCGPTN)
-  int           ptyno;
+#if defined(HAVE_PTSNAME_R)
   char          ttyb[32];
 #endif
 
@@ -96,14 +95,14 @@ int main (int argc, char *argv[])
   fd = atoi(argv[2]);
 
   /* get slave pty name from master pty file handle *********/
-#ifdef HAVE_PTSNAME
+#ifdef HAVE_PTSNAME_R
+  ::memset(ttyb, '\0', sizeof(ttyb) * sizeof(char));
+  if (ptsname_r(fd, ttyb, sizeof(ttyb)) == 0) {
+     tty = ttyb;
+  if (!tty)
+#else
   tty = ptsname(fd);
   if (!tty)
-#elif defined(TIOCGPTN)
-  if (!ioctl(fd, TIOCGPTN, &ptyno)) {
-    sprintf(ttyb, "/dev/pts/%d", ptyno);
-    tty = ttyb;
-  } else
 #endif
   {
     /* Check that fd is a valid master pseudo terminal.  */

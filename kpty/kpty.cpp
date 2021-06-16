@@ -190,8 +190,6 @@ bool KPty::open()
 
 #else
 
-#if defined(HAVE_PTSNAME) || defined(TIOCGPTN)
-
 #ifdef HAVE_POSIX_OPENPT
   d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
 #elif defined(PTM_DEVICE)
@@ -201,16 +199,15 @@ bool KPty::open()
 #endif
   if (d->masterFd >= 0)
   {
-#ifdef HAVE_PTSNAME
+#ifdef HAVE_PTSNAME_R
+    char ptsn[32];
+    ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
+    if (ptsname_r(fd, ptsn, sizeof(ptsn)) == 0) {
+        d->ttyName = ptsn;
+#else
     char *ptsn = ptsname(d->masterFd);
     if (ptsn) {
         d->ttyName = ptsn;
-#else
-    int ptyno;
-    if (!ioctl(d->masterFd, TIOCGPTN, &ptyno)) {
-        char buf[32];
-        sprintf(buf, "/dev/pts/%d", ptyno);
-        d->ttyName = buf;
 #endif
 #ifdef HAVE_GRANTPT
         if (!grantpt(d->masterFd))
@@ -222,7 +219,6 @@ bool KPty::open()
     ::close(d->masterFd);
     d->masterFd = -1;
   }
-#endif // HAVE_PTSNAME || TIOCGPTN
 
   // Linux device names, FIXME: Trouble on other systems?
   for (const char* s3 = "pqrstuvwxyzabcde"; *s3; s3++)
@@ -332,10 +328,6 @@ bool KPty::open()
 
 bool KPty::open(int fd)
 {
-#if !defined(HAVE_PTSNAME) && !defined(TIOCGPTN)
-    kWarning(175) << "Unsupported attempt to open pty with fd" << fd;
-    return false;
-#else
     Q_D(KPty);
 
     if (d->masterFd >= 0) {
@@ -345,16 +337,15 @@ bool KPty::open(int fd)
 
     d->ownMaster = false;
 
-# ifdef HAVE_PTSNAME
+# ifdef HAVE_PTSNAME_R
+    char ptsn[32];
+    ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
+    if (ptsname_r(fd, ptsn, sizeof(ptsn)) == 0) {
+        d->ttyName = ptsn;
+# else
     char *ptsn = ptsname(fd);
     if (ptsn) {
         d->ttyName = ptsn;
-# else
-    int ptyno;
-    if (!ioctl(fd, TIOCGPTN, &ptyno)) {
-        char buf[32];
-        sprintf(buf, "/dev/pts/%d", ptyno);
-        d->ttyName = buf;
 # endif
     } else {
         kWarning(175) << "Failed to determine pty slave device for fd" << fd;
@@ -368,7 +359,6 @@ bool KPty::open(int fd)
     }
 
     return true;
-#endif
 }
 
 void KPty::closeSlave()

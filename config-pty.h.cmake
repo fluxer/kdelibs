@@ -5,7 +5,7 @@
 #cmakedefine HAVE_POSIX_OPENPT 1
 #cmakedefine HAVE_GRANTPT 1
 #cmakedefine HAVE_OPENPTY 1
-#cmakedefine HAVE_PTSNAME 1
+#cmakedefine HAVE_PTSNAME_R 1
 #cmakedefine HAVE_REVOKE 1
 #cmakedefine HAVE_UNLOCKPT 1
 #cmakedefine HAVE_TCGETATTR
