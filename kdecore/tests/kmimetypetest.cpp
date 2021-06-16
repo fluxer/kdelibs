@@ -369,21 +369,6 @@ void KMimeTypeTest::testFindByUrl()
 
     mime = KMimeType::findByUrl(KUrl("http://foo/s0/"));
     QCOMPARE( mime->name(), QString::fromLatin1( "application/octet-stream" ) ); // HTTP can't know before downloading
-
-    if ( !KProtocolInfo::isKnownProtocol(KUrl("man:/")) )
-        QSKIP( "man protocol not installed", SkipSingle );
-
-    mime = KMimeType::findByUrl( KUrl("man:/ls") );
-    QVERIFY( mime );
-    QCOMPARE( mime->name(), QString::fromLatin1("text/html") );
-
-    mime = KMimeType::findByUrl( KUrl("man:/ls/") );
-    QVERIFY( mime );
-    QCOMPARE( mime->name(), QString::fromLatin1("text/html") );
-
-    mime = KMimeType::findByUrl(KUrl("fish://host/test1")); // like fish does, to test for known extensions
-    QVERIFY(mime);
-    QCOMPARE(mime->name(), QString::fromLatin1("application/octet-stream"));
 }
 
 void KMimeTypeTest::testFindByNameAndContent()
