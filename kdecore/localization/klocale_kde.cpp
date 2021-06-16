@@ -2836,7 +2836,7 @@ bool KLocalePrivate::useTranscript() const
     return m_useTranscript;
 }
 
-const QByteArray KLocalePrivate::encoding()
+const QByteArray KLocalePrivate::encoding() const
 {
     return codecForEncoding()->name();
 }
@@ -3023,7 +3023,7 @@ void KLocalePrivate::setWeekNumberSystem(KLocale::WeekNumberSystem weekNumberSys
     m_weekNumberSystem = weekNumberSystem;
 }
 
-KLocale::WeekNumberSystem KLocalePrivate::weekNumberSystem()
+KLocale::WeekNumberSystem KLocalePrivate::weekNumberSystem() const
 {
     return m_weekNumberSystem;
 }

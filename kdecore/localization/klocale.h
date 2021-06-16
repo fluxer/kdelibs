@@ -1156,18 +1156,6 @@ public:
      */
     void setWeekNumberSystem(KLocale::WeekNumberSystem weekNumberSystem);
 
-    //KDE5 remove in favour of const version
-    /**
-     * @since 4.6
-     *
-     * Returns the type of Week Number System used in this Locale
-     *
-     * @see Klocale::WeekNumberSystem
-     * @see setWeekNumberSystem()
-     * @returns the Week Number System used
-     */
-    KLocale::WeekNumberSystem weekNumberSystem();
-
     /**
      * @since 4.7
      *

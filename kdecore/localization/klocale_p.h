@@ -383,7 +383,7 @@ public:
      * @internal Returns the Week Number System used
      * The worker of the same-name KLocale API function.
      */
-    KLocale::WeekNumberSystem weekNumberSystem();
+    KLocale::WeekNumberSystem weekNumberSystem() const;
 
     /**
      * @internal Changes how KLocale defines the first day in week.
@@ -1067,7 +1067,7 @@ public:
      * @internal Returns the user's preferred encoding.
      * The worker of the same-name KLocale API function.
      */
-    const QByteArray encoding();
+    const QByteArray encoding() const;
 
     /**
      * @internal Returns the user's preferred encoding.

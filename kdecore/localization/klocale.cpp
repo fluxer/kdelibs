@@ -683,11 +683,6 @@ void KLocale::setWeekNumberSystem(KLocale::WeekNumberSystem weekNumberSystem)
     d->setWeekNumberSystem(weekNumberSystem);
 }
 
-KLocale::WeekNumberSystem KLocale::weekNumberSystem()
-{
-    return d->weekNumberSystem();
-}
-
 KLocale::WeekNumberSystem KLocale::weekNumberSystem() const
 {
     return d->weekNumberSystem();
