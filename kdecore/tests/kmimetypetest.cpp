@@ -250,10 +250,10 @@ void KMimeTypeTest::testFindByPathUsingFileName_data()
     QTest::newRow("doesn't exist but has known extension") << "IDontExist.txt" << "text/plain";
 
     // Can't use KIconLoader since this is a "without GUI" test.
-    if (KStandardDirs::locate("icon", "oxygen/").isEmpty()) {
-        kWarning() << "oxygen not found";
+    if (KStandardDirs::locate("icon", "ariya/").isEmpty()) {
+        kWarning() << "ariya not found";
     } else {
-        QString fh = KStandardDirs::locate( "icon", "oxygen/22x22/places/folder.png" );
+        QString fh = KStandardDirs::locate( "icon", "ariya/22x22/places/folder.png" );
         QVERIFY( !fh.isEmpty() ); // if the file doesn't exist, please fix the above to point to an existing icon
         QTest::newRow("png image") << fh << "image/png";
     }
