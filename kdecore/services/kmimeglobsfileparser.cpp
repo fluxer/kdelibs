@@ -73,9 +73,6 @@ bool KMimeGlobsFileParser::parseGlobFile(QIODevice* file, Format format, AllGlob
     if (!file->open(QIODevice::ReadOnly))
         return false;
 
-    // If we're not going to get the "cs" flag because smi is too old, then we need to emulate it for *.C at least.
-    const bool caseSensitiveHackNeeded = (KMimeType::sharedMimeInfoVersion() <= KDE_MAKE_VERSION(0, 60, 0));
-
     QTextStream stream(file);
     //stream.setCodec("UTF-8"); // should be all latin1
     QString lastMime, lastPattern;
@@ -119,9 +116,6 @@ bool KMimeGlobsFileParser::parseGlobFile(QIODevice* file, Format format, AllGlob
         }
 
         bool caseSensitive = flagList.contains(QLatin1String("cs"));
-
-        if (caseSensitiveHackNeeded && (pattern == QLatin1String("*.C") || pattern == QLatin1String("*.c") || pattern == QLatin1String("core")))
-            caseSensitive = true;
 
         if (pattern == QLatin1String("__NOGLOBS__")) {
             //kDebug() << "removing" << mimeTypeName;

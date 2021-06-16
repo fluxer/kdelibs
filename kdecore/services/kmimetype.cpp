@@ -685,16 +685,10 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
     }
     m_strComment = comment;
 
-    const bool globsInXml = (KMimeType::sharedMimeInfoVersion() >= KDE_MAKE_VERSION(0, 70, 0));
-    if (globsInXml) {
-        if (!mainPattern.isEmpty() && m_lstPatterns.first() != mainPattern) {
-            // ensure it's first in the list of patterns
-            m_lstPatterns.removeAll(mainPattern);
-            m_lstPatterns.prepend(mainPattern);
-        }
-    } else {
-        // Fallback: get the patterns from the globs file
-        m_lstPatterns = KMimeTypeRepository::self()->patternsForMimetype(m_strName);
+    if (!mainPattern.isEmpty() && m_lstPatterns.first() != mainPattern) {
+        // ensure it's first in the list of patterns
+        m_lstPatterns.removeAll(mainPattern);
+        m_lstPatterns.prepend(mainPattern);
     }
 }
 
@@ -713,21 +707,6 @@ int KMimeType::sharedMimeInfoVersion()
 QString KMimeType::mainExtension() const
 {
     Q_D(const KMimeType);
-
-#if 1 // HACK START - can be removed once shared-mime-info >= 0.70 is used/required.
-    // The idea was: first usable pattern from m_lstPatterns.
-    // But update-mime-database makes a mess of the order of the patterns,
-    // because it uses a hash internally.
-    static const struct { const char* mime; const char* extension; } s_hardcodedMimes[] = {
-        { "text/plain", ".txt" } };
-    if (d->m_lstPatterns.count() > 1) {
-        const QByteArray me = name().toLatin1();
-        for (uint i = 0; i < sizeof(s_hardcodedMimes)/sizeof(*s_hardcodedMimes); ++i) {
-            if (me == s_hardcodedMimes[i].mime)
-                return QString::fromLatin1(s_hardcodedMimes[i].extension);
-        }
-    }
-#endif // HACK END
 
      Q_FOREACH(const QString& pattern, patterns()) {
         // Skip if if looks like: README or *. or *.*

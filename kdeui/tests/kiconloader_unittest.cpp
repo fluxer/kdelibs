@@ -214,9 +214,7 @@ private Q_SLOTS:
         QTest::newRow("#184852") << "audio/x-tuxguitar" << "audio-x-generic.png";
         QTest::newRow("#178847") << "image/x-compressed-xcf" << "image-x-generic.png";
 
-        if (sharedMimeInfoVersion >= KDE_MAKE_VERSION(0, 40, 0)) {
-            QTest::newRow("mimetype generic icon") << "application-x-fluid" << "x-office-document.png";
-        }
+        QTest::newRow("mimetype generic icon") << "application-x-fluid" << "x-office-document.png";
     }
 
     void testLoadMimeTypeIcon()
