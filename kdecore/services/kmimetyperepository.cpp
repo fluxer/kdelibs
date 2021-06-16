@@ -30,6 +30,8 @@
 #include <QProcess>
 #include <QtCore/qendian.h>
 
+#include "config-prefix.h"
+
 extern int servicesDebugArea();
 
 KMimeTypeRepository * KMimeTypeRepository::self()
@@ -716,14 +718,18 @@ static int mimeDataBaseVersion()
     }
 
     // Add platform specific hard-coded default paths to the list...
-    paths << QLatin1String("/usr/share/pkgconfig");
-    paths << QLatin1String("/usr/lib/pkgconfig");
-    paths << QLatin1String("/usr/lib32/pkgconfig");
-    paths << QLatin1String("/usr/lib64/pkgconfig");
     paths << QLatin1String("/share/pkgconfig");
     paths << QLatin1String("/lib/pkgconfig");
     paths << QLatin1String("/lib32/pkgconfig");
     paths << QLatin1String("/lib64/pkgconfig");
+    paths << QLatin1String("/usr/share/pkgconfig");
+    paths << QLatin1String("/usr/lib/pkgconfig");
+    paths << QLatin1String("/usr/lib32/pkgconfig");
+    paths << QLatin1String("/usr/lib64/pkgconfig");
+    paths << QLatin1String(KDEDIR "/share/pkgconfig");
+    paths << QLatin1String(KDEDIR "/lib/pkgconfig");
+    paths << QLatin1String(KDEDIR "/lib32/pkgconfig");
+    paths << QLatin1String(KDEDIR "/lib64/pkgconfig");
 
     Q_FOREACH(const QString& path, paths) {
         const QString fileName = path + QLatin1String("/shared-mime-info.pc");
