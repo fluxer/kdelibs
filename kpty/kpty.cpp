@@ -186,7 +186,7 @@ bool KPty::open()
 #ifdef HAVE_PTSNAME_R
     char ptsn[32];
     ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
-    if (ptsname_r(fd, ptsn, sizeof(ptsn)) == 0) {
+    if (ptsname_r(d->masterFd, ptsn, sizeof(ptsn)) == 0) {
         d->ttyName = ptsn;
 #else
     char *ptsn = ptsname(d->masterFd);
