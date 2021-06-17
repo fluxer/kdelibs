@@ -87,6 +87,11 @@
  * changes, we would instead call abort() to cancel all the I/O without
  * affecting the target file.
  *
+ * @warning It is uknown what will happen if, for example, a large file is open,
+ * written to and the finalization process is interrupted by a power failure
+ * (while the original file is being replaced by the backup file or even while
+ * its content is being flushed to the disk).
+ *
  * @see QFile
  *
  * @author Jaison Lee <lee.jaison@gmail.com>
