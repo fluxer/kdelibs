@@ -29,6 +29,7 @@
 #cmakedefine HAVE_VSNPRINTF 1
 #cmakedefine HAVE_GETGROUPLIST 1
 #cmakedefine HAVE_VOLMGT 1
+#cmakedefine HAVE_TTYNAME_R 1
 
 #cmakedefine HAVE_S_ISSOCK 1
 

@@ -49,12 +49,13 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/ioctl.h>
+#include <sys/param.h>
 #include <unistd.h>
+
 #ifdef HAVE_PTY_H
 #  include <pty.h>
 #endif
 
-#include <sys/param.h>
 
 #define TTY_GROUP "tty"
 
@@ -90,7 +91,7 @@ int main (int argc, char *argv[])
   fd = atoi(argv[2]);
 
   /* get slave pty name from master pty file handle *********/
-#ifdef HAVE_PTSNAME_R
+#if defined(HAVE_PTSNAME_R)
   ::memset(ttyb, '\0', sizeof(ttyb) * sizeof(char));
   if (ptsname_r(fd, ttyb, sizeof(ttyb)) == 0) {
      tty = ttyb;
@@ -101,9 +102,14 @@ int main (int argc, char *argv[])
 #endif
   {
     /* Check that fd is a valid master pseudo terminal.  */
+#if defined(HAVE_TTYNAME_R)
+    char pty[32];
+    ::memset(pty, '\0', sizeof(pty) * sizeof(char));
+    if (ttyname_r(fd, pty, sizeof(pty)) != 0)
+#else
     char *pty = ttyname(fd);
-
     if (pty == NULL)
+#endif
     {
       fprintf(stderr,"%s: cannot determine pty name.\n",argv[0]);
       return 1; /* FAIL */

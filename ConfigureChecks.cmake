@@ -55,18 +55,20 @@ macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)                           # kidleti
 # macro.  Note that some symbols require multiple includes in a
 # specific order.  Refer to the man page for each symbol for which a
 # check is to be added to get the proper set of headers.
-check_symbol_exists(strtoll         "stdlib.h"                 HAVE_STRTOLL)     # kioslave
-check_symbol_exists(S_ISSOCK        "sys/stat.h"               HAVE_S_ISSOCK)    # config.h
-check_symbol_exists(vsnprintf       "stdio.h"                  HAVE_VSNPRINTF)   # config.h
-check_symbol_exists(getgrouplist    "unistd.h;grp.h"           HAVE_GETGROUPLIST)# kdecore/fakes.cpp
+check_symbol_exists(strtoll         "stdlib.h"           HAVE_STRTOLL)      # kioslave
+check_symbol_exists(S_ISSOCK        "sys/stat.h"         HAVE_S_ISSOCK)     # config.h
+check_symbol_exists(vsnprintf       "stdio.h"            HAVE_VSNPRINTF)    # config.h
+check_symbol_exists(getgrouplist    "unistd.h;grp.h"     HAVE_GETGROUPLIST) # kdecore/fakes.cpp
 
-check_function_exists(backtrace        HAVE_BACKTRACE)                # kdecore, kio
-check_function_exists(fdatasync        HAVE_FDATASYNC)                # kdecore, kate
+check_function_exists(backtrace     HAVE_BACKTRACE)                         # kdecore, kio
+check_function_exists(fdatasync     HAVE_FDATASYNC)                         # kdecore, kate
 
-check_function_exists(sendfile        HAVE_SENDFILE)                  # kioslave
-check_function_exists(getgrouplist    HAVE_GETGROUPLIST)              # kio
+check_function_exists(sendfile      HAVE_SENDFILE)                          # kioslave
+check_function_exists(getgrouplist  HAVE_GETGROUPLIST)                      # kio
 
-check_library_exists(volmgt volmgt_running "" HAVE_VOLMGT)            # various
+check_library_exists(volmgt volmgt_running ""            HAVE_VOLMGT)       # various
+
+check_symbol_exists(ttyname_r        "unistd.h"          HAVE_TTYNAME_R)    # kinit, kpty
 
 # Check for libresolv
 # e.g. on slackware 9.1 res_init() is only a define for __res_init, so we check both, Alex

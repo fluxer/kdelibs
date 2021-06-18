@@ -337,7 +337,12 @@ int main(int argc, char **argv)
    klauncher_header header;
    char *start, *p, *buffer;
    char cwd[8192];
+#if defined(HAVE_TTYNAME_R)
+   char tty[32];
+   memset(tty, '\0', sizeof(tty) * sizeof(char));
+#else
    const char *tty = NULL;
+#endif
    long avoid_loops = 0;
    const char* startup_id = NULL;
    int sock;
@@ -444,9 +449,14 @@ int main(int argc, char **argv)
 
       if( kwrapper )
       {
+#if defined(HAVE_TTYNAME_R)
+          if (ttyname_r(1, tty, sizeof(tty)) != 0 || !isatty(2))
+             memset(tty, '\0', sizeof(tty) * sizeof(char));
+#else
           tty = ttyname(1);
           if (!tty || !isatty(2))
              tty = "";
+#endif
           size += strlen(tty)+1;
       }
    }
