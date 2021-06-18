@@ -168,18 +168,17 @@ KBzip2Filter::Result KBzip2Filter::uncompress()
 {
     //qDebug() << "Calling bzDecompress with avail_in=" << inBufferAvailable() << " avail_out=" << outBufferAvailable();
     int result = bzDecompress(&d->zStream);
-    if ( result < BZ_OK )
-    {
+    if ( result < BZ_OK ) {
         kWarning(7118) << "bzDecompress returned" << result;
     }
 
     switch (result) {
         case BZ_OK:
-                return KFilterBase::Ok;
+            return KFilterBase::Ok;
         case BZ_STREAM_END:
-                return KFilterBase::End;
+            return KFilterBase::End;
         default:
-                return KFilterBase::Error;
+            return KFilterBase::Error;
     }
 }
 
@@ -193,16 +192,16 @@ KBzip2Filter::Result KBzip2Filter::compress( bool finish )
         case BZ_FLUSH_OK:
         case BZ_RUN_OK:
         case BZ_FINISH_OK:
-                return KFilterBase::Ok;
-                break;
+            return KFilterBase::Ok;
+            break;
         case BZ_STREAM_END:
-                //qDebug() << "  bzCompress returned " << result;
-                return KFilterBase::End;
-                break;
+            //qDebug() << "  bzCompress returned " << result;
+            return KFilterBase::End;
+            break;
         default:
-                //qDebug() << "  bzCompress returned " << result;
-                return KFilterBase::Error;
-                break;
+            //qDebug() << "  bzCompress returned " << result;
+            return KFilterBase::Error;
+            break;
     }
 }
 
