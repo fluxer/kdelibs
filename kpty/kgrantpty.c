@@ -55,11 +55,6 @@
 #endif
 
 #include <sys/param.h>
-#if defined(__FreeBSD__)
-#  define BSD_PTY_HACK
-#  include <paths.h>
-#  include <dirent.h>
-#endif
 
 #define TTY_GROUP "tty"
 
@@ -107,42 +102,6 @@ int main (int argc, char *argv[])
   {
     /* Check that fd is a valid master pseudo terminal.  */
     char *pty = ttyname(fd);
-
-#ifdef BSD_PTY_HACK
-    if (pty == NULL)
-    {
-    /*
-      Hack to make kgrantpty work on some versions of FreeBSD (and possibly
-      other systems): ttyname(3) does not work with a file descriptor opened
-      on a /dev/pty?? device.
-
-      Instead, this code looks through all the devices in /dev for a device
-      which has the same inode as our PTY_FILENO descriptor... if found, we
-      have the name for our pty.
-    */
-
-      struct dirent *dirp;
-      DIR *dp;
-      struct stat dsb;
-
-      if (fstat(fd, &dsb) != -1) {
-        if ((dp = opendir(_PATH_DEV)) != NULL) {
-          while ((dirp = readdir(dp))) {
-            if (dirp->d_fileno != dsb.st_ino)
-              continue;
-            pty = malloc(sizeof(_PATH_DEV) + strlen(dirp->d_name));
-            if (pty) {
-              strcpy(pty, _PATH_DEV);
-              strcat(pty, dirp->d_name);
-            }
-            break;
-          }
-
-          (void) closedir(dp);
-        }
-      }
-    }
-#endif
 
     if (pty == NULL)
     {
