@@ -83,11 +83,6 @@ Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVari
         return 0;
     }
 
-    Applet *applet = internalLoadApplet(name, appletId, args);
-    if (applet) {
-        return applet;
-    }
-
     const QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(name);
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/Applet", constraint);
 
@@ -142,6 +137,8 @@ Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVari
     }
 
 
+
+    Applet *applet = 0;
     QString error;
     if (name == "internal:extender") {
         applet = new ExtenderApplet(0, allArgs);
@@ -158,17 +155,13 @@ Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVari
 
 DataEngine *PluginLoader::loadDataEngine(const QString &name)
 { 
-    DataEngine *engine = internalLoadDataEngine(name);
-    if (engine) {
-        return engine;
-    }
-
     // load the engine, add it to the engines
     QString constraint = QString("[X-KDE-PluginInfo-Name] == '%1'").arg(name);
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/DataEngine",
                                                               constraint);
-    QString error;
 
+    DataEngine *engine = 0;
+    QString error;
     if (offers.isEmpty()) {
         kDebug() << "offers are empty for " << name << " with constraint " << constraint;
     } else {
@@ -198,16 +191,11 @@ AbstractRunner *PluginLoader::loadRunner(const QString &name)
 {
     // FIXME: RunnerManager is all wrapped around runner loading; that should be sorted out
     // and the actual plugin loading added here
-    return internalLoadRunner(name);
+    return 0;
 }
 
 Service *PluginLoader::loadService(const QString &name, const QVariantList &args, QObject *parent)
 { 
-    Service *service = internalLoadService(name, args, parent);
-    if (service) {
-        return service;
-    }
-
     //TODO: scripting API support
     if (name.isEmpty()) {
         return new NullService(QString(), parent);
@@ -223,10 +211,10 @@ Service *PluginLoader::loadService(const QString &name, const QVariantList &args
         return new NullService(name, parent);
     }
 
-    KService::Ptr offer = offers.first();
+    Service *service = 0;
     QString error;
+    KService::Ptr offer = offers.first();
     KPluginLoader plugin(*offer);
-
     if (Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
         service = offer->createInstance<Plasma::Service>(parent, args, &error);
     }
@@ -245,12 +233,6 @@ Service *PluginLoader::loadService(const QString &name, const QVariantList &args
 
 KPluginInfo::List PluginLoader::listAppletInfo(const QString &category, const QString &parentApp)
 {
-    KPluginInfo::List list;
-
-    if (parentApp.isEmpty() || parentApp == KGlobal::mainComponent().componentName()) {
-        list = internalAppletInfo(category);
-    }
-
     QString constraint = AppletPrivate::parentAppConstraint(parentApp);
 
     //note: constraint guaranteed non-empty from here down
@@ -279,12 +261,6 @@ KPluginInfo::List PluginLoader::listAppletInfo(const QString &category, const QS
 
 KPluginInfo::List PluginLoader::listDataEngineInfo(const QString &parentApp)
 {
-    KPluginInfo::List list;
-
-    if (parentApp.isEmpty() || parentApp == KGlobal::mainComponent().componentName()) {
-        list = internalDataEngineInfo();
-    }
-
     QString constraint;
     if (parentApp.isEmpty()) {
         constraint.append("not exist [X-KDE-ParentApp]");
@@ -293,17 +269,11 @@ KPluginInfo::List PluginLoader::listDataEngineInfo(const QString &parentApp)
     }
 
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/DataEngine", constraint);
-    return list + KPluginInfo::fromServices(offers);
+    return KPluginInfo::fromServices(offers);
 }
 
 KPluginInfo::List PluginLoader::listRunnerInfo(const QString &parentApp)
 {
-    KPluginInfo::List list;
-
-    if (parentApp.isEmpty() || parentApp == KGlobal::mainComponent().componentName()) {
-        list = internalRunnerInfo();
-    }
-
     QString constraint;
     if (parentApp.isEmpty()) {
         constraint.append("not exist [X-KDE-ParentApp]");
@@ -312,98 +282,7 @@ KPluginInfo::List PluginLoader::listRunnerInfo(const QString &parentApp)
     }
 
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/Runner", constraint);
-    return list + KPluginInfo::fromServices(offers);
-}
-
-Applet* PluginLoader::internalLoadApplet(const QString &name, uint appletId, const QVariantList &args)
-{ 
-    Q_UNUSED(name)
-    Q_UNUSED(appletId)
-    Q_UNUSED(args)
-    return 0;
-}
-
-DataEngine* PluginLoader::internalLoadDataEngine(const QString &name)
-{
-    Q_UNUSED(name)
-    return 0;
-}
-
-AbstractRunner* PluginLoader::internalLoadRunner(const QString &name)
-{
-    Q_UNUSED(name)
-    return 0;
-}
-
-Service* PluginLoader::internalLoadService(const QString &name, const QVariantList &args, QObject *parent)
-{ 
-    Q_UNUSED(name)
-    Q_UNUSED(args)
-    Q_UNUSED(parent)
-    return 0;
-}
-
-KPluginInfo::List PluginLoader::internalAppletInfo(const QString &category) const
-{
-    Q_UNUSED(category)
-    return KPluginInfo::List();
-}
-
-KPluginInfo::List PluginLoader::internalDataEngineInfo() const
-{
-    return KPluginInfo::List();
-}
-
-KPluginInfo::List PluginLoader::internalRunnerInfo() const
-{
-    return KPluginInfo::List();
-}
-
-KPluginInfo::List PluginLoader::internalServiceInfo() const
-{
-    return KPluginInfo::List();
-}
-
-static KPluginInfo::List standardInternalInfo(const QString &type, const QString &category = QString())
-{
-    QStringList files = KGlobal::dirs()->findAllResources("appdata",
-                                                          "plasma/internal/" + type + "/*.desktop",
-                                                          KStandardDirs::NoDuplicates);
-
-    KPluginInfo::List allInfo = KPluginInfo::fromFiles(files);
-
-    if (category.isEmpty() || allInfo.isEmpty()) {
-        return allInfo;
-    }
-
-    KPluginInfo::List matchingInfo;
-    foreach (const KPluginInfo &info, allInfo) {
-        if (info.category().compare(category, Qt::CaseInsensitive) == 0) {
-            matchingInfo << info;
-        }
-    }
-
-    return matchingInfo;
-}
-
-KPluginInfo::List PluginLoader::standardInternalAppletInfo(const QString &category) const
-{
-    return standardInternalInfo("applets", category);
-}
-
-KPluginInfo::List PluginLoader::standardInternalDataEngineInfo() const
-{
-    return standardInternalInfo("dataengines");
-}
-
-KPluginInfo::List PluginLoader::standardInternalRunnerInfo() const
-{
-    return standardInternalInfo("runners");
-}
-
-KPluginInfo::List PluginLoader::standardInternalServiceInfo() const
-{
-    return standardInternalInfo("services");
+    return KPluginInfo::fromServices(offers);
 }
 
 } // Plasma Namespace
