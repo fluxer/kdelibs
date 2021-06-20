@@ -225,7 +225,7 @@ QString KCharsets::encodingForName( const QString &descriptiveName ) const
     const int left = descriptiveName.lastIndexOf( QLatin1Char('(') );
 
     if (left<0) // No parenthesis, so assume it is a normal encoding name
-	return descriptiveName.trimmed();
+        return descriptiveName.trimmed();
 
     QString name(descriptiveName.mid(left+1));
 
