@@ -30,7 +30,6 @@
 #include <QtNetwork/QNetworkInterface>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
-#include <QtScript/QScriptProgram>
 #include <QtScript/QScriptContextInfo>
 
 #include <kurl.h>
@@ -727,8 +726,7 @@ namespace KPAC
         m_engine = new QScriptEngine;
         registerFunctions(m_engine);
 
-        QScriptProgram program (code);
-        const QScriptValue result = m_engine->evaluate(program);
+        const QScriptValue result = m_engine->evaluate(code);
         if (m_engine->hasUncaughtException() || result.isError())
             throw Error(m_engine->uncaughtException().toString());
     }
