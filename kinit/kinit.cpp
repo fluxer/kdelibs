@@ -584,10 +584,8 @@ static pid_t launch(int argc, const char *_name, const char *args,
 
         setup_tty( tty );
 
-        QByteArray executable = execpath;
-
-        if (!executable.isEmpty())
-           execvp(executable, d.argv);
+        if (!execpath.isEmpty())
+           execvp(execpath.constData(), d.argv);
 
         d.result = 1; // Error
         write(d.fd[1], &d.result, 1);
