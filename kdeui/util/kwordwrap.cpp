@@ -34,7 +34,7 @@ public:
 };
 
 KWordWrap::KWordWrap(const QRect & r)
-:	d(new KWordWrapPrivate)
+: d(new KWordWrapPrivate)
 {
     d->m_constrainingRect = r;
 }
@@ -187,7 +187,7 @@ QString KWordWrap::truncatedString( bool dots ) const
 static QColor mixColors(double p1, QColor c1, QColor c2) {
   return QColor(int(c1.red() * p1 + c2.red() * (1.0-p1)),
                 int(c1.green() * p1 + c2.green() * (1.0-p1)),
-		int(c1.blue() * p1 + c2.blue() * (1.0-p1)));
+                int(c1.blue() * p1 + c2.blue() * (1.0-p1)));
 }
 
 void KWordWrap::drawFadeoutText(QPainter *p, int x, int y, int maxW,
@@ -260,8 +260,8 @@ void KWordWrap::drawText( QPainter *painter, int textX, int textY, int flags ) c
     {
         // if this is the last line, leave the loop
         if ( (d->m_constrainingRect.height() >= 0) &&
-	     ((y + 2 * height) > d->m_constrainingRect.height()) )
-	    break;
+            ((y + 2 * height) > d->m_constrainingRect.height()) )
+            break;
         end = d->m_breakPositions.at(i);
         lwidth = d->m_lineWidths.at(i);
         int x = textX;
@@ -282,20 +282,20 @@ void KWordWrap::drawText( QPainter *painter, int textX, int textY, int flags ) c
     else if ( flags & Qt::AlignRight )
         x += maxwidth - lwidth;
     if ( (d->m_constrainingRect.height() < 0) ||
-         ((y + height) <= d->m_constrainingRect.height()) ) {
-	if ( i == d->m_breakPositions.count() )
+        ((y + height) <= d->m_constrainingRect.height()) ) {
+        if ( i == d->m_breakPositions.count() )
             painter->drawText( x, textY + y + ascent, d->m_text.mid( start ) );
-	else if (flags & FadeOut)
-	    drawFadeoutText( painter, textX, textY + y + ascent,
-	                     d->m_constrainingRect.width(),
-			     d->m_text.mid( start ) );
+        else if (flags & FadeOut)
+            drawFadeoutText( painter, textX, textY + y + ascent,
+                             d->m_constrainingRect.width(),
+                             d->m_text.mid( start ) );
         else if (flags & Truncate)
             drawTruncateText( painter, textX, textY + y + ascent,
                               d->m_constrainingRect.width(),
-			      d->m_text.mid( start ) );
-	else
+                              d->m_text.mid( start ) );
+        else
             painter->drawText( x, textY + y + ascent,
-	                       d->m_text.mid( start ) );
+                               d->m_text.mid( start ) );
     }
 }
 
