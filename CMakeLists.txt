@@ -45,13 +45,6 @@ if(UNIX AND Q_WS_X11)
 endif(UNIX AND Q_WS_X11)
 
 # required features
-find_package(Perl)
-set_package_properties(Perl PROPERTIES
-    URL "http://www.perl.org"
-    TYPE RUNTIME
-    PURPOSE "Needed for KDEUI preparetips script"
-)
-
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES
     DESCRIPTION "Support for gzip compressed files and data streams"

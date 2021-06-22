@@ -20,7 +20,7 @@ build_script:
 
     sudo apt-get install -qq cmake katie-dev libenchant-dev \
         libopenexr-dev libmpv-dev libraw-dev xorg-dev mesa-common-dev \
-        libavahi-common-dev krb5-multidev perl-base libwebp-dev \
+        libavahi-common-dev krb5-multidev libwebp-dev \
         libudev-dev liblzma-dev libexiv2-dev libilmbase-dev libjpeg-dev \
         libbz2-dev libattr1-dev libacl1-dev libxcb-render-util0-dev \
         libxcb-keysyms1-dev libxcb-image0-dev libcdio-dev strigi \
