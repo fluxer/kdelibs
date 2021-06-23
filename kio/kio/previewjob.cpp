@@ -619,7 +619,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
 #ifdef Q_OS_UNIX
     if (shmaddr)
     {
-        // Keep this in sync with kdebase/kioslave/thumbnail.cpp
+        // Keep this in sync with kde-workspace/kioslave/thumbnail/thumbnail.cpp
         QDataStream str(data);
         int width, height;
         quint8 iFormat;
