@@ -23,13 +23,15 @@
 
 #include <QApplication>
 
-#if defined(HAVE_MPV)
-#include <locale.h>
-#include <mpv/client.h>
-#include "qthelper.hpp"
+#if defined(HAVE_VLC)
+#include <vlc/libvlc.h>
+#include <vlc/libvlc_renderer_discoverer.h>
+#include <vlc/libvlc_media.h>
+#include <vlc/libvlc_media_player.h>
+#include <vlc/libvlc_events.h>
 #else
 static bool s_fullscreen = false;
-#endif // HAVE_MPV
+#endif // HAVE_VLC
 
 /*
     Since sigals/slots cannot be virtual nor multiple QObject inheritance works (KAbstractPlayer
@@ -47,7 +49,7 @@ static bool s_fullscreen = false;
     setMute(d->m_settings->value(d->m_playerid + "/mute", globalmute).toBool());
 
 #define COMMON_STATE_SAVE \
-    if (d->m_handle && d->m_settings && d->m_settings->isWritable()) { \
+    if (d->vlcMediaPlayer && d->m_settings && d->m_settings->isWritable()) { \
         d->m_settings->setValue(d->m_playerid + "/audiooutput", audiooutput()); \
         d->m_settings->setValue(d->m_playerid + "/volume", int(volume())); \
         d->m_settings->setValue(d->m_playerid + "/mute", mute()); \
@@ -56,139 +58,157 @@ static bool s_fullscreen = false;
         kWarning() << i18n("Could not save state"); \
     }
 
-#define COMMMON_COMMAND_SENDER \
-    kDebug() << i18n("sending command") << command; \
-    if (d->m_handle) { \
-        const QVariant result = mpv::qt::command(d->m_handle, command); \
-        if (mpv::qt::is_error(result)) { \
-            kWarning() << command << mpv_error_string(mpv::qt::get_error(result)); \
-        } \
-    }
 
-// certain properties are not available when not playing for an example thus do not issue warning
-// in case of error
+// TODO: path is always empty
+// TODO: time-remaining, protocol-list, audio-device-list(QStringList) -> libvlc_audio_output_list_get()
+// TODO: libvlc_media_get_duration() for duration?
 #define COMMON_OPTION_GETTER \
     kDebug() << i18n("getting option") << name; \
-    if (d->m_handle) { \
-        const QVariant result = mpv::qt::get_property(d->m_handle, name); \
-        if (mpv::qt::is_error(result)) { \
-            kDebug() << name << mpv_error_string(mpv::qt::get_error(result)); \
+    if (!d->vlcMediaPlayer) { \
+        return QVariant(); \
+    } else if (name == QLatin1String("volume")) { \
+        return QVariant(libvlc_audio_get_volume(d->vlcMediaPlayer)); \
+    } else if (name == QLatin1String("duration")) { \
+        return QVariant(qint64(libvlc_media_player_get_length(d->vlcMediaPlayer))); \
+    } else if (name == QLatin1String("time-pos")) { \
+        return QVariant(qint64(libvlc_media_player_get_time(d->vlcMediaPlayer))); \
+    } else if (name == QLatin1String("media-title")) { \
+        return QVariant(libvlc_media_player_get_title(d->vlcMediaPlayer)); \
+    } else if (name == QLatin1String("pause")) { \
+        return QVariant(bool(!libvlc_media_player_is_playing(d->vlcMediaPlayer))); \
+    } else if (name == QLatin1String("seekable")) { \
+        return QVariant(bool(libvlc_media_player_is_seekable(d->vlcMediaPlayer))); \
+    } else if (name == QLatin1String("fullscreen")) { \
+        return QVariant(bool(libvlc_get_fullscreen(d->vlcMediaPlayer))); \
+    } else if (name == QLatin1String("audio-device")) { \
+        return QVariant(libvlc_audio_output_device_get(d->vlcMediaPlayer)); \
+    } else if (name == QLatin1String("mute")) { \
+        return QVariant(bool(libvlc_audio_get_mute(d->vlcMediaPlayer))); \
+    } else if (name == QLatin1String("buffering")) { \
+        libvlc_media_t* media = libvlc_media_player_get_media(d->vlcMediaPlayer); \
+        if (!media) { \
             return QVariant(); \
         } \
-        return result; \
+        return QVariant(bool(libvlc_media_get_state(media) == libvlc_Buffering)); \
+    } else if (name == QLatin1String("path")) { \
+        libvlc_media_t* media = libvlc_media_player_get_media(d->vlcMediaPlayer); \
+        if (!media) { \
+            return QVariant(); \
+        } \
+        QByteArray url = libvlc_media_get_meta(media, libvlc_meta_URL); \
+        if (url.isEmpty() && libvlc_media_player_is_playing(d->vlcMediaPlayer)) { \
+            qDebug() << "falling back"; \
+            url = "Unknown"; \
+        } \
+        return QVariant(url); \
+    } else { \
+        kWarning() << "unimplemented option" << name; \
     }
 
 #define COMMON_OPTION_SETTER \
     kDebug() << i18n("setting option") << name << value; \
-    if (d->m_handle) { \
-        const QVariant result = mpv::qt::set_property(d->m_handle, name, value); \
-        if (mpv::qt::is_error(result)) { \
-            kWarning() << name << mpv_error_string(mpv::qt::get_error(result)); \
+    if (!d->vlcMediaPlayer) { \
+        return; \
+    } else if (name == QLatin1String("loadfile")) { \
+        QByteArray utf8path = value.toByteArray(); \
+        if (utf8path.startsWith("/")) { \
+            utf8path.prepend("file://"); \
         } \
+        qDebug() << "loadfile" << utf8path; \
+        libvlc_media_t *vlcMedia = libvlc_media_new_location(d->vlcInstance, utf8path.constData()); \
+        if (!vlcMedia) { \
+            libvlc_media_player_stop(d->vlcMediaPlayer); \
+            kWarning() << "Cannot create media" << utf8path; \
+            return; \
+        } \
+        libvlc_media_player_set_media(d->vlcMediaPlayer, vlcMedia); \
+        libvlc_media_release(vlcMedia); \
+        if (libvlc_media_player_play(d->vlcMediaPlayer) != 0) { \
+            kWarning() << "Cannot play media" << utf8path; \
+        } \
+    } else if (name == QLatin1String("pause")) { \
+        const bool pause = value.toBool(); \
+        qDebug() << "pausing" << pause; \
+        libvlc_media_player_set_pause(d->vlcMediaPlayer, pause); \
+    } else if (name == QLatin1String("seek")) { \
+        const float seek = value.toFloat(); \
+        qDebug() << "seeking" << seek; \
+        libvlc_media_player_set_time(d->vlcMediaPlayer, seek); \
+    } else if (name == QLatin1String("volume")) { \
+        const float volume = value.toFloat(); \
+        qDebug() << "volume" << volume; \
+        libvlc_audio_set_volume(d->vlcMediaPlayer, volume); \
+    } else if (name == QLatin1String("fullscreen")) { \
+        const bool fullscreen = value.toBool(); \
+        qDebug() << "fullscreen" << fullscreen; \
+        libvlc_set_fullscreen(d->vlcMediaPlayer, fullscreen); \
+    } else if (name == QLatin1String("stop")) { \
+        qDebug() << "stop"; \
+        libvlc_media_player_stop(d->vlcMediaPlayer); \
     }
 
-#define COMMMON_EVENT_HANDLER \
-    while (!d->m_stopprocessing) { \
-        mpv_event *event = mpv_wait_event(d->m_handle, 0); \
-        switch (event->event_id) { \
-            case MPV_EVENT_NONE: { \
-                return; \
-                break; \
-            } \
-            case MPV_EVENT_SHUTDOWN: { \
-                d->m_stopprocessing = true; \
-                break; \
-            } \
-            case MPV_EVENT_FILE_LOADED: { \
-                kDebug() << i18n("playback loaded"); \
-                emit loaded(); \
-                break; \
-            } \
-            case MPV_EVENT_PAUSE: { \
-                kDebug() << i18n("playback paused"); \
-                emit paused(true); \
-                break; \
-            } \
-            case MPV_EVENT_UNPAUSE: { \
-                kDebug() << i18n("playback unpaused"); \
+// TODO: not working properly?
+#if 0
+    } else if (name == QLatin1String("mute")) {
+        const bool mute = value.toBool();
+        qDebug() << "mute" << mute;
+        libvlc_audio_set_mute(d->vlcMediaPlayer, mute);
+    } else if (name == QLatin1String("audio-device")) {
+        QByteArray utf8output = value.toByteArray();
+        qDebug() << "audio-device" << utf8output;
+        libvlc_audio_output_set(d->vlcMediaPlayer, utf8output.constData());
+#endif
+
+#define COMMON_EVENT_HANDLER \
+    switch (event->type) { \
+        case libvlc_MediaPlayerOpening: { \
+            qDebug() << "loaded"; \
+            emit loaded(); \
+            break; \
+        } \
+        case libvlc_MediaPlayerEncounteredError: { \
+            kWarning() << "Media player encountered error"; \
+            emit error(QString(libvlc_errmsg())); \
+            break; \
+        } \
+        case libvlc_MediaPlayerEndReached: { \
+            qDebug() << "finished"; \
+            emit finished(); \
+            break; \
+        } \
+        case libvlc_MediaPlayerBuffering: { \
+            qDebug() << "buffering" << event->u.media_player_buffering.new_cache; \
+            emit buffering(event->u.media_player_buffering.new_cache != 100.0); \
+            break; \
+        } \
+        case libvlc_MediaPlayerSeekableChanged: { \
+            qDebug() << "seekable" << event->u.media_player_seekable_changed.new_seekable; \
+            emit seekable(event->u.media_player_seekable_changed.new_seekable); \
+            break; \
+        } \
+        case libvlc_MediaPlayerPaused: { \
+            qDebug() << "paused" << event->u.media_state_changed.new_state; \
+            int state = event->u.media_state_changed.new_state; \
+            if (state == libvlc_Playing) { \
                 emit paused(false); \
-                break; \
+            } else if (state == libvlc_Paused) { \
+                emit paused(true); \
             } \
-            case MPV_EVENT_END_FILE: { \
-                mpv_event_end_file *prop = static_cast<mpv_event_end_file *>(event->data); \
-                if (prop->reason == MPV_END_FILE_REASON_ERROR) { \
-                    const QString mpverror = QString::fromLatin1(mpv_error_string(prop->error)); \
-                    kWarning() << i18n("playback finished with error") << mpverror; \
-                    emit finished(); \
-                    emit error(mpverror); \
-                } else if (prop->reason == MPV_END_FILE_REASON_EOF \
-                    || prop->reason == MPV_END_FILE_REASON_STOP \
-                    || prop->reason == MPV_END_FILE_REASON_QUIT) { \
-                    if (option("path").isNull()) { \
-                        kDebug() << i18n("playback finished"); \
-                        emit finished(); \
-                    } \
-                } \
-                break; \
-            } \
-            case MPV_EVENT_PROPERTY_CHANGE: { \
-                mpv_event_property *prop = static_cast<mpv_event_property *>(event->data); \
-                kDebug() << i18n("property changed") << QString::fromLatin1(prop->name); \
-                if (strcmp(prop->name, "=time-pos") == 0 || strcmp(prop->name, "time-pos") == 0) { \
-                    if (prop->format == MPV_FORMAT_NONE) { \
-                        kDebug() << i18n("the time-pos property is not valid"); \
-                    } else if (prop->format == MPV_FORMAT_DOUBLE) { \
-                        const double value = *(double *)prop->data; \
-                        emit position(value); \
-                    } else { \
-                        kWarning() << i18n("the time-pos format has changed") << prop->format; \
-                    } \
-                } else if (strcmp(prop->name, "seekable") == 0) { \
-                    if (prop->format == MPV_FORMAT_NONE) { \
-                        kDebug() << i18n("the seekable property is not valid"); \
-                    } else if (prop->format == MPV_FORMAT_FLAG) { \
-                        const bool value = *(bool *)prop->data; \
-                        emit seekable(value); \
-                    } else { \
-                        kWarning() << i18n("the seekable format has changed") << prop->format; \
-                    } \
-                } else if (strcmp(prop->name, "partially-seekable") == 0) { \
-                    if (option("seekable").toBool() == false) { \
-                        if (prop->format == MPV_FORMAT_NONE) { \
-                            kDebug() << i18n("the partially-seekable property is not valid"); \
-                        } else if (prop->format == MPV_FORMAT_FLAG) { \
-                            const bool value = *(bool *)prop->data; \
-                            emit seekable(value); \
-                        } else { \
-                            kWarning() << i18n("the partially-seekable format has changed") << prop->format; \
-                        } \
-                    } \
-                } else if (strcmp(prop->name, "paused-for-cache") == 0) { \
-                    if (prop->format == MPV_FORMAT_NONE) { \
-                        kDebug() << i18n("the paused-for-cache property is not valid"); \
-                    } else if (prop->format == MPV_FORMAT_FLAG) { \
-                        const bool value = *(bool *)prop->data; \
-                        emit buffering(value); \
-                    } else { \
-                        kWarning() << i18n("the paused-for-cache format has changed") << prop->format; \
-                    } \
-                } \
-                break; \
-            } \
-            case MPV_EVENT_LOG_MESSAGE: { \
-                mpv_event_log_message *msg = static_cast<mpv_event_log_message *>(event->data); \
-                kDebug() << msg->prefix << msg->text; \
-                break; \
-            } \
-            case MPV_EVENT_QUEUE_OVERFLOW: { \
-                kWarning() << i18n("event queue overflow"); \
-                break; \
-            } \
+            break; \
+        } \
+        case libvlc_MediaPlayerTimeChanged: { \
+            kDebug() << "time changed" << event->u.media_player_length_changed.new_length; \
+            emit position(event->u.media_player_length_changed.new_length); \
+            break; \
+        } \
+        default: { \
+            kWarning() << "unknown event" << event->type; \
+            break; \
         } \
     }
 
 // the video decoder may run into its own thread, make sure that does not cause trouble
-#if defined(HAVE_MPV) && defined(Q_WS_X11)
+#if defined(HAVE_VLC) && defined(Q_WS_X11)
 static int kmp_x11_init_threads() {
     QApplication::setAttribute(Qt::AA_X11InitThreads, true);
     return 1;
@@ -196,45 +216,39 @@ static int kmp_x11_init_threads() {
 Q_CONSTRUCTOR_FUNCTION(kmp_x11_init_threads)
 #endif
 
+
 class KAbstractPlayerPrivate
 {
 public:
     KAbstractPlayerPrivate();
     ~KAbstractPlayerPrivate();
 
-#if defined(HAVE_MPV)
-    mpv_handle *m_handle;
+#if defined(HAVE_VLC)
+    libvlc_instance_t *vlcInstance;
+    libvlc_media_player_t *vlcMediaPlayer;
 #endif
     QString m_playerid;
     KSettings *m_settings;
-    // the handle pointer is not NULL-ed once mpv_terminate_destroy() has been called, doing it
-    // manually is a race because _processHandleEvents() is called asynchronous
-    bool m_stopprocessing;
 };
 
 KAbstractPlayerPrivate::KAbstractPlayerPrivate()
-    : m_playerid(QApplication::applicationName()),
-    m_settings(new KSettings("kmediaplayer", KSettings::FullConfig)),
-    m_stopprocessing(false)
+    : vlcInstance(Q_NULLPTR),
+    vlcMediaPlayer(Q_NULLPTR),
+    m_playerid(QApplication::applicationName()),
+    m_settings(new KSettings("kmediaplayer", KSettings::FullConfig))
 {
     kDebug() << i18n("initializing player");
-#if defined(HAVE_MPV)
-    setlocale(LC_NUMERIC, "C");
-    m_handle = mpv_create();
-    if (m_handle) {
-        const int rc = mpv_initialize(m_handle);
-        if (rc < 0) {
-            kWarning() << mpv_error_string(rc);
-        } else {
-            mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE);
-            mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE);
-            mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG);
-            mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG);
-            mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG);
-            mpv_request_log_messages(m_handle, "info");
-        }
-    } else {
-        kWarning() << i18n("context creation failed");
+#if defined(HAVE_VLC)
+    static const char *arguments[] = { "--no-video-title-show" };
+    vlcInstance = libvlc_new(sizeof(arguments) / sizeof(arguments[0]), arguments);
+    if (!vlcInstance) {
+        kWarning() << i18n("instance creation failed") << libvlc_errmsg();
+        return;
+    }
+    vlcMediaPlayer = libvlc_media_player_new(vlcInstance);
+    if (!vlcMediaPlayer) {
+        kWarning() << i18n("media player creation failed") << libvlc_errmsg();
+        return;
     }
 #endif
 }
@@ -242,9 +256,14 @@ KAbstractPlayerPrivate::KAbstractPlayerPrivate()
 KAbstractPlayerPrivate::~KAbstractPlayerPrivate()
 {
     kDebug() << i18n("destroying player");
-    m_stopprocessing = true;
-#if defined(HAVE_MPV)
-    mpv_terminate_destroy(m_handle);
+#if defined(HAVE_VLC)
+    if (vlcMediaPlayer) {
+        libvlc_media_player_release(vlcMediaPlayer);
+    }
+
+    if (vlcInstance) {
+        libvlc_release(vlcInstance);
+    }
 #endif
     if (m_settings) {
         m_settings->deleteLater();
@@ -253,13 +272,13 @@ KAbstractPlayerPrivate::~KAbstractPlayerPrivate()
 
 void KAbstractPlayer::load(const QString &path)
 {
-    command(QVariantList() << "loadfile" << path);
+    setOption("loadfile", path);
 }
 
 void KAbstractPlayer::load(const QByteArray &data)
 {
     // SECURITY: this is dangerous but some applications/libraries (like KHTML) require it
-    command(QVariantList() << "loadfile" << QString("memory://%1").arg(data.data()));
+    setOption("loadfile", QString("memory://%1").arg(data.data()));
 }
 
 void KAbstractPlayer::play()
@@ -274,17 +293,17 @@ void KAbstractPlayer::pause()
 
 void KAbstractPlayer::seek(const float position)
 {
-    command(QVariantList() << "seek" << position << "absolute");
+    setOption("seek", position);
 }
 
 void KAbstractPlayer::seek(const int position)
 {
-    command(QVariantList() << "seek" << position << "absolute");
+    setOption("seek", position);
 }
 
 void KAbstractPlayer::stop()
 {
-    command(QVariantList() << "stop");
+    setOption("stop", QVariant());
 }
 
 QString KAbstractPlayer::path() const
@@ -361,21 +380,21 @@ bool KAbstractPlayer::isPlaying() const
 
 bool KAbstractPlayer::isBuffering() const
 {
-    return option("paused-for-cache").toBool();
+    return option("bufferring").toBool();
 }
 
 bool KAbstractPlayer::isSeekable() const
 {
-    return option("seekable").toBool() || option("partially-seekable").toBool();
+    return option("seekable").toBool();
 }
 
 bool KAbstractPlayer::isFullscreen() const
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     return option("fullscreen").toBool();
 #else
     return s_fullscreen;
-#endif // HAVE_MPV
+#endif // HAVE_VLC
 }
 
 bool KAbstractPlayer::isProtocolSupported(const QString &protocol) const
@@ -419,29 +438,43 @@ void KAbstractPlayer::setAudioOutput(const QString &output)
 
 void KAbstractPlayer::setFullscreen(const bool fullscreen)
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     setOption("fullscreen", fullscreen);
 #else
     s_fullscreen = fullscreen;
-#endif // HAVE_MPV
+#endif // HAVE_VLC
 }
 
-static void wakeup_audio(void *ctx)
+static void wakeup_audio(const libvlc_event_t *event, void *instance)
 {
-    KAudioPlayer *pctx = static_cast<KAudioPlayer*>(ctx);
-    QMetaObject::invokeMethod(pctx, "_processHandleEvents", Qt::QueuedConnection);
+    KAudioPlayer *pctx = static_cast<KAudioPlayer*>(instance);
+    pctx->_processHandleEvents(event);
 }
 
 KAudioPlayer::KAudioPlayer(QObject *parent)
     : QObject(parent), d(new KAbstractPlayerPrivate())
 {
-#if defined(HAVE_MPV)
-    if (d->m_handle) {
-        mpv_set_wakeup_callback(d->m_handle, wakeup_audio, this);
+#if defined(HAVE_VLC)
+    if (d->vlcMediaPlayer) {
+        libvlc_event_manager_t *eventManager = libvlc_media_player_event_manager(d->vlcMediaPlayer);
+        libvlc_event_e eventTypes[] = {
+            libvlc_MediaPlayerOpening,
+            libvlc_MediaPlayerEncounteredError,
+            libvlc_MediaPlayerEndReached,
+            libvlc_MediaPlayerBuffering,
+            libvlc_MediaPlayerSeekableChanged,
+            libvlc_MediaPlayerPaused,
+            libvlc_MediaPlayerTimeChanged
+        };
 
-        // newer releases use vid, video is compat! the change is pre-2014 but yeah..
-        setOption("vid", "no");
-        setOption("video", "no");
+        for (uint i = 0; i < (sizeof(eventTypes) / sizeof(eventTypes[0])); ++i) {
+            if (libvlc_event_attach(eventManager, eventTypes[i], wakeup_audio, this) != 0) {
+                kWarning() << "Cannot attach event handler" << eventTypes[i];
+                break;
+            }
+        }
+
+        // TODO: disable video
 
         COMMON_STATE_LOAD
     }
@@ -452,25 +485,16 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
 
 KAudioPlayer::~KAudioPlayer()
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_STATE_SAVE
 #endif
 
     delete d;
 }
 
-void KAudioPlayer::command(const QVariant &command) const
-{
-#if defined(HAVE_MPV)
-    COMMMON_COMMAND_SENDER
-#else
-    Q_UNUSED(command);
-#endif
-}
-
 QVariant KAudioPlayer::option(const QString &name) const
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_OPTION_GETTER
 #else
     Q_UNUSED(name);
@@ -480,7 +504,7 @@ QVariant KAudioPlayer::option(const QString &name) const
 
 void KAudioPlayer::setOption(const QString &name, const QVariant &value) const
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_OPTION_SETTER
 #else
     Q_UNUSED(name);
@@ -488,24 +512,24 @@ void KAudioPlayer::setOption(const QString &name, const QVariant &value) const
 #endif
 }
 
-void KAudioPlayer::_processHandleEvents()
+void KAudioPlayer::_processHandleEvents(const libvlc_event_t *event)
 {
-#if defined(HAVE_MPV)
-    COMMMON_EVENT_HANDLER
+#if defined(HAVE_VLC)
+    COMMON_EVENT_HANDLER
 #endif
 }
 
 void KAudioPlayer::setPlayerID(const QString &id)
 {
     d->m_playerid = id;
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_STATE_LOAD
 #endif
 }
 
 bool KAudioPlayer::isMimeSupported(const QString &mime) const
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     return mime.startsWith("audio/") || mime == QLatin1String("application/octet-stream");
 #else
     Q_UNUSED(mime);
@@ -514,31 +538,42 @@ bool KAudioPlayer::isMimeSupported(const QString &mime) const
 }
 
 /////
-static void wakeup_media(void *ctx)
+static void wakeup_media(const libvlc_event_t *event, void *instance)
 {
-    KMediaPlayer *pctx = static_cast<KMediaPlayer*>(ctx);
-    QMetaObject::invokeMethod(pctx, "_processHandleEvents", Qt::QueuedConnection);
+    KMediaPlayer *pctx = static_cast<KMediaPlayer*>(instance);
+    pctx->_processHandleEvents(event);
 }
 
 KMediaPlayer::KMediaPlayer(QWidget *parent)
     : QWidget(parent), d(new KAbstractPlayerPrivate)
 {
-#if defined(HAVE_MPV)
-    if (d->m_handle) {
-        mpv_set_wakeup_callback(d->m_handle, wakeup_media, this);
+#if defined(HAVE_VLC)
+    if (d->vlcMediaPlayer) {
+        libvlc_event_manager_t *eventManager = libvlc_media_player_event_manager(d->vlcMediaPlayer);
+        libvlc_event_e eventTypes[] = {
+            libvlc_MediaPlayerOpening,
+            libvlc_MediaPlayerEncounteredError,
+            libvlc_MediaPlayerEndReached,
+            libvlc_MediaPlayerBuffering,
+            libvlc_MediaPlayerSeekableChanged,
+            libvlc_MediaPlayerPaused,
+            libvlc_MediaPlayerTimeChanged
+        };
 
-        // QVariant cannot be constructed from WId type and the actual WId type is ulong
-        QVariant wid;
+        for (uint i = 0; i < (sizeof(eventTypes) / sizeof(eventTypes[0])); ++i) {
+            if (libvlc_event_attach(eventManager, eventTypes[i], wakeup_media, this) != 0) {
+                kWarning() << "Cannot attach event handler" << eventTypes[i];
+                break;
+            }
+        }
+
+        WId wid;
         if (parent) {
-            wid = QVariant::fromValue(qlonglong(quintptr(parent->winId())));
+            wid = parent->winId();
         } else {
-            wid = QVariant::fromValue(qlonglong(quintptr(winId())));
+            wid = winId();
         }
-        if (wid.isValid()) {
-            setOption("wid", wid);
-        } else {
-            kWarning() << i18n("Could not get widget ID");
-        }
+        libvlc_media_player_set_xwindow(d->vlcMediaPlayer, wid);
 
         COMMON_STATE_LOAD
     }
@@ -549,25 +584,16 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
 
 KMediaPlayer::~KMediaPlayer()
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_STATE_SAVE
 #endif
 
     delete d;
 }
 
-void KMediaPlayer::command(const QVariant &command) const
-{
-#if defined(HAVE_MPV)
-    COMMMON_COMMAND_SENDER
-#else
-    Q_UNUSED(command);
-#endif
-}
-
 QVariant KMediaPlayer::option(const QString &name) const
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_OPTION_GETTER
 #else
     Q_UNUSED(name);
@@ -577,7 +603,7 @@ QVariant KMediaPlayer::option(const QString &name) const
 
 void KMediaPlayer::setOption(const QString &name, const QVariant &value) const
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_OPTION_SETTER
 #else
     Q_UNUSED(name);
@@ -585,24 +611,24 @@ void KMediaPlayer::setOption(const QString &name, const QVariant &value) const
 #endif
 }
 
-void KMediaPlayer::_processHandleEvents()
+void KMediaPlayer::_processHandleEvents(const libvlc_event_t *event)
 {
-#if defined(HAVE_MPV)
-    COMMMON_EVENT_HANDLER
+#if defined(HAVE_VLC)
+    COMMON_EVENT_HANDLER
 #endif
 }
 
 void KMediaPlayer::setPlayerID(const QString &id)
 {
     d->m_playerid = id;
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     COMMON_STATE_LOAD
 #endif
 }
 
 bool KMediaPlayer::isMimeSupported(const QString &mime) const
 {
-#if defined(HAVE_MPV)
+#if defined(HAVE_VLC)
     return mime.startsWith("audio/") || mime.startsWith("video/")
         || mime == QLatin1String("application/octet-stream");
 #else

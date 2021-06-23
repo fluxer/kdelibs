@@ -1,6 +1,6 @@
-if(MPV_FOUND)
-    include_directories(${MPV_INCLUDES})
-    add_definitions(-DHAVE_MPV)
+if(VLC_FOUND)
+    include_directories(${VLC_INCLUDES})
+    add_definitions(-DHAVE_VLC)
 endif()
 # for the kded module
 include_directories(
@@ -22,8 +22,8 @@ target_link_libraries(kmediaplayer PUBLIC
     ${KDE4_KDEUI_LIBS}
 )
 
-if(MPV_FOUND)
-    target_link_libraries(kmediaplayer PRIVATE ${MPV_LIBRARIES})
+if(VLC_FOUND)
+    target_link_libraries(kmediaplayer PRIVATE ${VLC_LIBRARIES})
 endif()
 
 set_target_properties(kmediaplayer PROPERTIES

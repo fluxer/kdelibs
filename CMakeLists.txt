@@ -139,10 +139,10 @@ set_package_properties(Strigi PROPERTIES
     PURPOSE "Required by some critical kioslaves"
 )
 
-macro_optional_find_package(MPV 0.23.0)
-set_package_properties(MPV PROPERTIES
-    DESCRIPTION "A fork of mplayer2 and MPlayer"
-    URL "https://mpv.io/"
+macro_optional_find_package(VLC 0.23.0)
+set_package_properties(VLC PROPERTIES
+    DESCRIPTION "VLC media player"
+    URL "https://www.videolan.org/vlc/"
     TYPE RECOMMENDED
     PURPOSE "Media preview, sound notifications, etc."
 )

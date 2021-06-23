@@ -172,8 +172,8 @@ void KMediaWidget::setFullscreen(const int value)
         because showFullScreen() requires the parent of the widget to be a
         window (QMainWindow) thus the hack bellow. Asking the parent widget to
         go fullscreen is required to preserve the media controls visible and
-        interactive. Note that setting the MPV property is just for consistency
-        and possible clients quering it, it does nothing when MPV is embed (as
+        interactive. Note that setting the VLC property is just for consistency
+        and possible clients quering it, it does nothing when VLC is embed (as
         of the time of writing this).
     */
     if (!d->m_parent && (parentWidget() == window()) && !d->m_parenthack) {

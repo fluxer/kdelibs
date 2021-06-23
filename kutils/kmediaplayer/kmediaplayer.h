@@ -25,6 +25,7 @@
 #include <kmimetype.h>
 #include <kmediaplayer_export.h>
 
+struct libvlc_event_t;
 class KAbstractPlayerPrivate;
 
 /*!
@@ -45,14 +46,7 @@ public:
         convenience methods bellow those are not enough for your use case, but it is better to let
         us know your requirements instead of using them. They may serve you as temporary solution,
         for testing purposes, etc. but beware there be dragons!
-
-        @note Because QObject and QWidget have property system the methods are named option
-        but in fact they set and get properties of the underlaying player, not options. There is
-        a difference between them in MPV so make sure you are using the methods for properties if
-        you rely on them.
     **/
-    //! @brief A low-level player command sender
-    virtual void command(const QVariant &params) const = 0;
     //! @brief A low-level player property getter
     virtual QVariant option(const QString &name) const = 0;
     //! @brief A low-level player property setter
@@ -69,10 +63,9 @@ public:
     /*!
         @brief Start playing from @p path
         @param path path to load, it can start with "file://", "dvd://", "http://" and other
-        valid MPV protocols
-        @warning Some protocols may not be supported if MPV itself was not build with support for
+        valid VLC protocols
+        @warning Some protocols may not be supported if VLC itself was not build with support for
         such! That is choice of the vendors and you should be well aware of what yours is doing
-        @link https://github.com/mpv-player/mpv/blob/master/DOCS/man/mpv.rst#protocols
     */
     void load(const QString &path);
     /*!
@@ -191,8 +184,8 @@ public:
     /*!
         @param volume desired volume level
         @warning It does not do boundry check so you should be aware of the maximum volume value if
-        you are going to set it to something above 100. While MPV itself allows for a value greater
-        than 100 in recent versions it is discoraged for you to set it above 100
+        you are going to set it to something above 100. While VLC itself may allow for a value
+        greater than 100 in recent versions it is discoraged for you to set it above 100
     */
     void setVolume(const float volume);
     /*!
@@ -213,7 +206,7 @@ public:
     void setAudioOutput(const QString &output);
     /*!
         @param fullscreen wheather it should take all screen space
-        @warning This will most likely fail and the property will be set but MPV will do nothing
+        @warning This will most likely fail and the property will be set but VLC will do nothing
         because it is embeded, you will have to call @p QWidget::showFullscreen() on the parent
         widget!
     */
@@ -244,7 +237,6 @@ public:
     KAudioPlayer(QObject *parent = 0);
     ~KAudioPlayer();
 
-    void command(const QVariant &command) const;
     QVariant option(const QString &name) const;
     void setOption(const QString &name, const QVariant& value) const;
 
@@ -274,8 +266,8 @@ Q_SIGNALS:
     */
     void error(const QString error);
 
-private Q_SLOTS:
-    void _processHandleEvents();
+public:
+    void _processHandleEvents(const libvlc_event_t *event);
 
 private:
     KAbstractPlayerPrivate *d;
@@ -308,7 +300,6 @@ public:
     KMediaPlayer(QWidget *parent = 0);
     ~KMediaPlayer();
 
-    void command(const QVariant &command) const;
     QVariant option(const QString &name) const;
     void setOption(const QString &name, const QVariant &value) const;
 
@@ -338,8 +329,8 @@ Q_SIGNALS:
     */
     void error(const QString error);
 
-private Q_SLOTS:
-    void _processHandleEvents();
+public:
+    void _processHandleEvents(const libvlc_event_t *event);
 
 private:
     KAbstractPlayerPrivate *d;
