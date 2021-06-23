@@ -28,210 +28,213 @@ typedef quint32 uint;
 typedef quint16 ushort;
 typedef quint8 uchar;
 
-namespace {	// Private.
+namespace { // Private.
 
-	enum ColorMode {
-		CM_BITMAP = 0,
-		CM_GRAYSCALE = 1,
-		CM_INDEXED = 2,
-		CM_RGB = 3,
-		CM_CMYK = 4,
-		CM_MULTICHANNEL = 7,
-		CM_DUOTONE = 8,
-		CM_LABCOLOR = 9
-	};
+    enum ColorMode {
+        CM_BITMAP = 0,
+        CM_GRAYSCALE = 1,
+        CM_INDEXED = 2,
+        CM_RGB = 3,
+        CM_CMYK = 4,
+        CM_MULTICHANNEL = 7,
+        CM_DUOTONE = 8,
+        CM_LABCOLOR = 9
+    };
 
-	struct PSDHeader {
-		uint signature;
-		ushort version;
-		uchar reserved[6];
-		ushort channel_count;
-		uint height;
-		uint width;
-		ushort depth;
-		ushort color_mode;
-	};
+    struct PSDHeader {
+        uint signature;
+        ushort version;
+        uchar reserved[6];
+        ushort channel_count;
+        uint height;
+        uint width;
+        ushort depth;
+        ushort color_mode;
+    };
 
-	static QDataStream & operator>> ( QDataStream & s, PSDHeader & header )
-	{
-		s >> header.signature;
-		s >> header.version;
-		for( int i = 0; i < 6; i++ ) {
-			s >> header.reserved[i];
-		}
-		s >> header.channel_count;
-		s >> header.height;
-		s >> header.width;
-		s >> header.depth;
-		s >> header.color_mode;
-		return s;
-	}
-        static bool seekBy(QDataStream& s, unsigned int bytes)
-        {
-                char buf[4096];
-                while (bytes) {
-                        unsigned int num= qMin(bytes,( unsigned int )sizeof(buf));
-                        unsigned int l = num;
-                        s.readRawData(buf, l);
-                        if(l != num)
-                          return false;
-                        bytes -= num;
-                }
-                return true;
+    static QDataStream & operator>> ( QDataStream & s, PSDHeader & header )
+    {
+        s >> header.signature;
+        s >> header.version;
+        for( int i = 0; i < 6; i++ ) {
+                s >> header.reserved[i];
+        }
+        s >> header.channel_count;
+        s >> header.height;
+        s >> header.width;
+        s >> header.depth;
+        s >> header.color_mode;
+        return s;
+    }
+
+    static bool seekBy(QDataStream& s, unsigned int bytes)
+    {
+        char buf[4096];
+        while (bytes) {
+            unsigned int num= qMin(bytes,( unsigned int )sizeof(buf));
+            unsigned int l = num;
+            s.readRawData(buf, l);
+            if (l != num) {
+                return false;
+            }
+            bytes -= num;
+        }
+        return true;
+    }
+
+    // Check that the header is a valid PSD.
+    static bool IsValid( const PSDHeader & header )
+    {
+        if( header.signature != 0x38425053 ) { // '8BPS'
+            return false;
+        }
+        return true;
+    }
+
+    // Check that the header is supported.
+    static bool IsSupported( const PSDHeader & header )
+    {
+        if( header.version != 1 ) {
+            return false;
+        }
+        if( header.channel_count > 16 ) {
+            return false;
+        }
+        if( header.depth != 8 ) {
+            return false;
+        }
+        if( header.color_mode != CM_RGB ) {
+            return false;
+        }
+        return true;
+    }
+
+    // Load the PSD image.
+    static bool LoadPSD( QDataStream & s, const PSDHeader & header, QImage & img )
+    {
+        // Create dst image.
+        img = QImage( header.width, header.height, QImage::Format_RGB32 );
+
+        uint tmp;
+
+        // Skip mode data.
+        s >> tmp;
+        s.device()->seek( s.device()->pos() + tmp );
+
+        // Skip image resources.
+        s >> tmp;
+        s.device()->seek( s.device()->pos() + tmp );
+
+        // Skip the reserved data.
+        s >> tmp;
+        s.device()->seek( s.device()->pos() + tmp );
+
+        // Find out if the data is compressed.
+        // Known values:
+        //   0: no compression
+        //   1: RLE compressed
+        ushort compression;
+        s >> compression;
+
+        if( compression > 1 ) {
+            // Unknown compression type.
+            return false;
         }
 
-	// Check that the header is a valid PSD.
-	static bool IsValid( const PSDHeader & header )
-	{
-		if( header.signature != 0x38425053 ) {	// '8BPS'
-			return false;
-		}
-		return true;
-	}
+        uint channel_num = header.channel_count;
 
-	// Check that the header is supported.
-	static bool IsSupported( const PSDHeader & header )
-	{
-		if( header.version != 1 ) {
-			return false;
-		}
-		if( header.channel_count > 16 ) {
-			return false;
-		}
-		if( header.depth != 8 ) {
-			return false;
-		}
-		if( header.color_mode != CM_RGB ) {
-			return false;
-		}
-		return true;
-	}
+        // Clear the image.
+        if( channel_num < 4 ) {
+            img.fill(qRgba(0, 0, 0, 0xFF));
+        } else {
+            // Enable alpha.
+            img = img.convertToFormat(QImage::Format_ARGB32);
 
-	// Load the PSD image.
-	static bool LoadPSD( QDataStream & s, const PSDHeader & header, QImage & img )
-	{
-		// Create dst image.
-		img = QImage( header.width, header.height, QImage::Format_RGB32 );
+            // Ignore the other channels.
+            channel_num = 4;
+        }
 
-		uint tmp;
+        const uint pixel_count = header.height * header.width;
 
-		// Skip mode data.
-		s >> tmp;
-		s.device()->seek( s.device()->pos() + tmp );
+        static const uint components[4] = {2, 1, 0, 3}; // @@ Is this endian dependant?
 
-		// Skip image resources.
-		s >> tmp;
-		s.device()->seek( s.device()->pos() + tmp );
+        if( compression ) {
 
-		// Skip the reserved data.
-		s >> tmp;
-		s.device()->seek( s.device()->pos() + tmp );
+            // Skip row lengths.
+            if(!seekBy(s, header.height*header.channel_count*sizeof(ushort))) {
+                return false;
+            }
 
-		// Find out if the data is compressed.
-		// Known values:
-		//   0: no compression
-		//   1: RLE compressed
-		ushort compression;
-		s >> compression;
+            // Read RLE data.
+            for(uint channel = 0; channel < channel_num; channel++) {
 
-		if( compression > 1 ) {
-			// Unknown compression type.
-			return false;
-		}
+                uchar * ptr = img.bits() + components[channel];
 
-		uint channel_num = header.channel_count;
+                uint count = 0;
+                while( count < pixel_count ) {
+                    uchar c;
+                    if(s.atEnd()) {
+                        return false;
+                    }
 
-		// Clear the image.
-		if( channel_num < 4 ) {
-			img.fill(qRgba(0, 0, 0, 0xFF));
-		}
-		else {
-			// Enable alpha.
-			img = img.convertToFormat(QImage::Format_ARGB32);
+                    s >> c;
+                    uint len = c;
 
-			// Ignore the other channels.
-			channel_num = 4;
-		}
+                    if( len < 128 ) {
+                        // Copy next len+1 bytes literally.
+                        len++;
+                        count += len;
+                        if ( count > pixel_count ) {
+                            return false;
+                        }
 
-		const uint pixel_count = header.height * header.width;
+                        while( len != 0 ) {
+                            s >> *ptr;
+                            ptr += 4;
+                            len--;
+                        }
+                    } else if( len > 128 ) {
+                        // Next -len+1 bytes in the dest are replicated from next source byte.
+                        // (Interpret len as a negative 8-bit int.)
+                        len ^= 0xFF;
+                        len += 2;
+                        count += len;
+                        if(s.atEnd() || count > pixel_count) {
+                            return false;
+                        }
+                        uchar val;
+                        s >> val;
+                        while( len != 0 ) {
+                            *ptr = val;
+                            ptr += 4;
+                            len--;
+                        }
+                    } else if( len == 128 ) {
+                        // No-op.
+                    }
+                }
+            }
+        } else {
+            // We're at the raw image data.  It's each channel in order (Red, Green, Blue, Alpha, ...)
+            // where each channel consists of an 8-bit value for each pixel in the image.
 
-		static const uint components[4] = {2, 1, 0, 3}; // @@ Is this endian dependant?
+            // Read the data by channel.
+            for(uint channel = 0; channel < channel_num; channel++) {
 
-		if( compression ) {
+                uchar * ptr = img.bits() + components[channel];
 
-			// Skip row lengths.
-                        if(!seekBy(s, header.height*header.channel_count*sizeof(ushort)))
-                                return false;
+                // Read the data.
+                uint count = pixel_count;
+                while( count != 0 ) {
+                    s >> *ptr;
+                    ptr += 4;
+                    count--;
+                }
+            }
+        }
 
-			// Read RLE data.
-			for(uint channel = 0; channel < channel_num; channel++) {
-
-				uchar * ptr = img.bits() + components[channel];
-
-				uint count = 0;
-				while( count < pixel_count ) {
-					uchar c;
-                                        if(s.atEnd())
-                                                return false;
-					s >> c;
-					uint len = c;
-
-					if( len < 128 ) {
-						// Copy next len+1 bytes literally.
-						len++;
-						count += len;
-                                                if ( count > pixel_count )
-                                                        return false;
-
-						while( len != 0 ) {
-							s >> *ptr;
-							ptr += 4;
-							len--;
-						}
-					}
-					else if( len > 128 ) {
-						// Next -len+1 bytes in the dest are replicated from next source byte.
-						// (Interpret len as a negative 8-bit int.)
-						len ^= 0xFF;
-						len += 2;
-						count += len;
-                                                if(s.atEnd() || count > pixel_count)
-                                                        return false;
-						uchar val;
-						s >> val;
-						while( len != 0 ) {
-							*ptr = val;
-							ptr += 4;
-							len--;
-						}
-					}
-					else if( len == 128 ) {
-						// No-op.
-					}
-				}
-			}
-		}
-		else {
-			// We're at the raw image data.  It's each channel in order (Red, Green, Blue, Alpha, ...)
-			// where each channel consists of an 8-bit value for each pixel in the image.
-
-			// Read the data by channel.
-			for(uint channel = 0; channel < channel_num; channel++) {
-
-				uchar * ptr = img.bits() + components[channel];
-
-				// Read the data.
-				uint count = pixel_count;
-				while( count != 0 ) {
-					s >> *ptr;
-					ptr += 4;
-					count--;
-				}
-			}
-		}
-
-		return true;
-	}
+        return true;
+    }
 
 } // Private
 
@@ -292,7 +295,7 @@ QByteArray PSDHandler::name() const
 
 bool PSDHandler::canRead(QIODevice *device)
 {
-       if (!device) {
+    if (!device) {
         qWarning("PSDHandler::canRead() called with no device");
         return false;
     }
@@ -312,8 +315,9 @@ bool PSDHandler::canRead(QIODevice *device)
     }
 
     if (device->isSequential()) {
-        while (readBytes > 0)
+        while (readBytes > 0) {
             device->ungetChar(head[readBytes-- - 1]);
+        }
     } else {
         device->seek(oldPos);
     }
@@ -337,16 +341,17 @@ QStringList PSDPlugin::keys() const
 
 QImageIOPlugin::Capabilities PSDPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == "psd" || format == "PSD")
+    if (format == "psd" || format == "PSD") {
         return Capabilities(CanRead);
-    if (!format.isEmpty())
+    }
+    if (!format.isEmpty() || !device->isOpen()) {
         return 0;
-    if (!device->isOpen())
-        return 0;
+    }
 
     Capabilities cap;
-    if (device->isReadable() && PSDHandler::canRead(device))
+    if (device->isReadable() && PSDHandler::canRead(device)) {
         cap |= CanRead;
+    }
     return cap;
 }
 
