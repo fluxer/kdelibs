@@ -33,6 +33,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 #include <QDateTime>
 #include <QFile>
@@ -46,9 +47,6 @@
 #include "ktemporaryfile.h"
 #include "kde_file.h"
 #include "kfilesystemtype_p.h"
-
-#include <unistd.h>
-#include <fcntl.h>
 
 // Related reading:
 // http://www.spinnaker.de/linux/nfs-locking.html
@@ -453,14 +451,7 @@ KLockFile::LockResult KLockFile::lock(LockFlags options)
             break;
         }
 
-        struct timeval tv;
-        tv.tv_sec = 0;
-        tv.tv_usec = n*((KRandom::random() % 200)+100);
-        if (n < 2000) {
-            n = n * 2;
-        }
-
-        select(0, 0, 0, 0, &tv);
+        ::usleep((KRandom::random() % 1000) + 200);
     }
     if (result == LockOK) {
         d->isLocked = true;
