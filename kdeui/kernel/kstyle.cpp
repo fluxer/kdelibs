@@ -3731,7 +3731,7 @@ QRect KStyle::subControlRect(ComplexControl control, const QStyleOptionComplex* 
                     if (space <= 0)
                         return groove;
 
-                    int pos = qRound(float(slOpt->sliderPosition - slOpt->minimum)/
+                    int pos = qRound(qreal(slOpt->sliderPosition - slOpt->minimum)/
                                             (slOpt->maximum - slOpt->minimum)*space);
                     if (option->state & State_Horizontal)
                         return handleRTL(option, QRect(groove.x() + pos, groove.y(), sliderSize, groove.height()));

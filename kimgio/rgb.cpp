@@ -510,7 +510,7 @@ bool SGIImage::writeImage(const QImage& image)
 
     _rlevector = _rlemap.vector();
 
-    ulong verbatim_size = _numrows * _xsize;
+    ulong verbatim_size = ulong(_numrows) * _xsize;
     ulong rle_size = _numrows * 2 * sizeof(quint32);
     for (int i = 0; i < _rlevector.size(); i++)
         rle_size += _rlevector[i]->size();

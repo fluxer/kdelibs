@@ -432,7 +432,13 @@ bool KDcraw::extractRAWData(const QString& filePath, QByteArray& rawData, DcrawI
 
     if (raw.imgdata.idata.filters == 0)
     {
-        rawData.resize((int)(raw.imgdata.sizes.iwidth * raw.imgdata.sizes.iheight  * raw.imgdata.idata.colors * sizeof(unsigned short)));
+        qulonglong overflowcheck = qulonglong(raw.imgdata.sizes.iwidth) * raw.imgdata.sizes.iheight  * raw.imgdata.idata.colors * sizeof(unsigned short);
+        if (overflowcheck > INT_MAX) {
+            kDebug() << "Raw data size overflow";
+            raw.recycle();
+            return false;
+        }
+        rawData.resize(int(overflowcheck));
 
         unsigned short* output = reinterpret_cast<unsigned short*>(rawData.data());
 
@@ -450,7 +456,13 @@ bool KDcraw::extractRAWData(const QString& filePath, QByteArray& rawData, DcrawI
     }
     else
     {
-        rawData.resize((int)(raw.imgdata.sizes.iwidth * raw.imgdata.sizes.iheight * sizeof(unsigned short)));
+        qulonglong overflowcheck = qulonglong(raw.imgdata.sizes.iwidth) * raw.imgdata.sizes.iheight * sizeof(unsigned short);
+        if (overflowcheck > INT_MAX) {
+            kDebug() << "Raw data size overflow";
+            raw.recycle();
+            return false;
+        }
+        rawData.resize(int(overflowcheck));
 
         unsigned short* output = reinterpret_cast<unsigned short*>(rawData.data());
 

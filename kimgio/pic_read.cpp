@@ -39,7 +39,7 @@
  * @return true on success
  */
 bool picReadHeader(QIODevice *dev, PICHeader *hdr, bool peek) {
-    int result = 0;
+    qint64 result = 0;
     if (peek) {
         result = dev->peek((char*) hdr, HEADER_SIZE);
     } else {
@@ -82,7 +82,7 @@ static bool readChannels(QIODevice *dev, PICChannel *channels, int &bpp) {
     int c = 0;
     memset(channels, 0, sizeof ( PICChannel) *8);
     do {
-        int result = dev->read((char*) & channels[c], CHANNEL_SIZE);
+        qint64 result = dev->read((char*) & channels[c], CHANNEL_SIZE);
         if (result != CHANNEL_SIZE) {
             return false;
         } else {
@@ -132,11 +132,11 @@ inline static void pic2RGBA(unsigned char *src_pixel, unsigned char *target_pixe
  * @param channels The channels header
  * @return The number of generated pixels
  */
-static int decodeRLE(QIODevice *dev, void *row, unsigned max, unsigned bpp, unsigned channels) {
+static int decodeRLE(QIODevice *dev, void *row, qint16 max, int bpp, unsigned channels) {
     unsigned char buf[512];
     unsigned *ptr = (unsigned *) row;
     unsigned char component_map[8];
-    unsigned len = 0;
+    int len = 0;
 
     makeComponentMap(channels, component_map);
 
@@ -150,7 +150,7 @@ static int decodeRLE(QIODevice *dev, void *row, unsigned max, unsigned bpp, unsi
         if (len > max) {
             return -1;
         }
-        unsigned count = dev->read((char*) buf, bpp);
+        qint64 count = dev->read((char*) buf, bpp);
         if (count != bpp) {
             return -1;
         }
@@ -159,7 +159,7 @@ static int decodeRLE(QIODevice *dev, void *row, unsigned max, unsigned bpp, unsi
         }
     }        /* If the value is exactly 10000000, it means that it is more than 127 repetitions */
     else if (buf[0] == 128) {
-        unsigned count = dev->read((char*) buf, bpp + 2);
+        qint64 count = dev->read((char*) buf, bpp + 2);
         if (count != bpp + 2) {
             return -1;
         }
@@ -176,8 +176,9 @@ static int decodeRLE(QIODevice *dev, void *row, unsigned max, unsigned bpp, unsi
         if (len > max) {
             return -1;
         }
-        unsigned count = dev->read((char*) buf, len * bpp);
-        if (count != len * bpp) {
+        const qint64 buflen = qint64(len) * bpp;
+        qint64 count = dev->read((char*) buf, buflen);
+        if (count != buflen) {
             return -1;
         }
         for (unsigned i = 0; i < len; i++) {
@@ -192,13 +193,12 @@ static int decodeRLE(QIODevice *dev, void *row, unsigned max, unsigned bpp, unsi
  * @param dev The device to read from
  * @param row The row pointer to write to
  * @param width The image width
- * @param bpp The bytes per pixel
  * @param channels The channels header info
  */
-static bool readRow(QIODevice *dev, unsigned *row, unsigned width, PICChannel *channels) {
+static bool readRow(QIODevice *dev, unsigned *row, qint16 width, PICChannel *channels) {
     for (int c = 0; channels[c].channel != 0; c++) {
-        unsigned remain = width;
-        unsigned bpp = channels2bpp(channels[c].channel);
+        qint16 remain = width;
+        int bpp = channels2bpp(channels[c].channel);
         if (channels[c].type == (int) RLE) {
             unsigned *rowpos = row;
             while (remain > 0) {
@@ -211,8 +211,9 @@ static bool readRow(QIODevice *dev, unsigned *row, unsigned width, PICChannel *c
             }
         } else {
             unsigned char component_map[8];
-            unsigned count = dev->read((char*) row, width * bpp);
-            if (count != width * bpp) {
+            const qint64 rowlen = qint64(width) * bpp;
+            qint64 count = dev->read((char*) row, rowlen);
+            if (count != rowlen) {
                 return false;
             }
 

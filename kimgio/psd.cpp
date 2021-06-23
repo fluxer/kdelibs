@@ -67,12 +67,12 @@ namespace { // Private.
         return s;
     }
 
-    static bool seekBy(QDataStream& s, unsigned int bytes)
+    static bool seekBy(QDataStream& s, uint bytes)
     {
         char buf[4096];
         while (bytes) {
-            unsigned int num= qMin(bytes,( unsigned int )sizeof(buf));
-            unsigned int l = num;
+            uint num= qMin(bytes, uint(sizeof(buf)));
+            uint l = num;
             s.readRawData(buf, l);
             if (l != num) {
                 return false;
@@ -160,8 +160,13 @@ namespace { // Private.
 
         if( compression ) {
 
+            qulonglong overflowcheck = qulonglong(header.height) * header.channel_count * sizeof(ushort);
+            if (overflowcheck > UINT_MAX) {
+                return false;
+            }
+
             // Skip row lengths.
-            if(!seekBy(s, header.height*header.channel_count*sizeof(ushort))) {
+            if(!seekBy(s, uint(overflowcheck))) {
                 return false;
             }
 
