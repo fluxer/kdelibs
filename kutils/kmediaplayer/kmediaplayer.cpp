@@ -87,7 +87,7 @@ static bool s_fullscreen = false;
         } \
     }
 
-#define COMMMON_EVENT_HANDLER \
+#define COMMON_EVENT_HANDLER \
     while (!d->m_stopprocessing) { \
         mpv_event *event = mpv_wait_event(d->m_handle, 0); \
         switch (event->event_id) { \
@@ -491,7 +491,7 @@ void KAudioPlayer::setOption(const QString &name, const QVariant &value) const
 void KAudioPlayer::_processHandleEvents()
 {
 #if defined(HAVE_MPV)
-    COMMMON_EVENT_HANDLER
+    COMMON_EVENT_HANDLER
 #endif
 }
 
@@ -588,7 +588,7 @@ void KMediaPlayer::setOption(const QString &name, const QVariant &value) const
 void KMediaPlayer::_processHandleEvents()
 {
 #if defined(HAVE_MPV)
-    COMMMON_EVENT_HANDLER
+    COMMON_EVENT_HANDLER
 #endif
 }
 
