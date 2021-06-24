@@ -115,13 +115,12 @@ QChar KCharsets::fromEntity(const QString &str)
     const QByteArray raw ( str.toLatin1() );
     const entity *e = EntitiesHash::kde_findEntity( raw, raw.length() );
 
-    if(!e)
-    {
+    if(!e) {
         //kDebug( 0 ) << "unknown entity " << str <<", len = " << str.length();
         return QChar();
     }
-    //kDebug() << "got entity " << str << " = " << e->code;
 
+    //kDebug() << "got entity " << str << " = " << e->code;
     return QChar(e->code);
 }
 
@@ -130,8 +129,7 @@ QChar KCharsets::fromEntity(const QString &str, int &len)
     // entities are never longer than 8 chars... we start from
     // that length and work backwards...
     len = 8;
-    while(len > 0)
-    {
+    while(len > 0) {
         QString tmp = str.left(len);
         QChar res = fromEntity(tmp);
         if( !res.isNull() ) return res;
@@ -217,19 +215,22 @@ QString KCharsets::descriptionForEncoding( const QString& encoding ) const
 
 QString KCharsets::encodingForName( const QString &descriptiveName ) const
 {
-    const int left = descriptiveName.lastIndexOf( QLatin1Char('(') );
+    QString name = descriptiveName.trimmed();
+    name.remove( QLatin1Char('&') ); // QAction shortcut, how does that even happen?
 
-    if (left<0) // No parenthesis, so assume it is a normal encoding name
-        return descriptiveName.trimmed();
+    const int left = name.lastIndexOf( QLatin1Char('(') );
 
-    QString name(descriptiveName.mid(left+1));
+    // No parenthesis, so assume it is a normal encoding name
+    if (left >= 0 ) {
+        name = name.mid(left+1);
+    }
 
     const int right = name.lastIndexOf( QLatin1Char(')') );
+    if (right >= 0) {
+        name = name.left(right);
+    }
 
-    if (right<0)
-        return name;
-
-    return name.left(right).trimmed();
+    return name;
 }
 
 QStringList KCharsets::descriptiveEncodingNames() const
@@ -290,31 +291,22 @@ QList<QStringList> KCharsets::encodingsByScript() const
 
 QTextCodec* KCharsets::codecForName(const QString &n) const
 {
-    if ( n == QLatin1String("gb2312") || n == QLatin1String("gbk") )
-        return QTextCodec::codecForName( "gb18030" );
     const QByteArray name( n.toLatin1() );
     QTextCodec* codec = codecForNameOrNull( name );
-    if ( codec )
+    if ( codec ) {
         return codec;
-    else
-        return QTextCodec::codecForName( "iso-8859-1" );
+    }
+    return QTextCodec::codecForName( "iso-8859-1" );
 }
 
 QTextCodec* KCharsets::codecForName(const QString &n, bool &ok) const
 {
-    if (n == QLatin1String("gb2312") || n == QLatin1String("gbk")) {
-        ok = true;
-        return QTextCodec::codecForName( "gb18030" );
-    }
     const QByteArray name( n.toLatin1() );
     QTextCodec* codec = codecForNameOrNull( name );
-    if ( codec )
-    {
+    if ( codec ) {
         ok = true;
         return codec;
-    }
-    else
-    {
+    } else {
         ok = false;
         return QTextCodec::codecForName( "iso-8859-1" );
     }
@@ -322,55 +314,29 @@ QTextCodec* KCharsets::codecForName(const QString &n, bool &ok) const
 
 QTextCodec *KCharsets::codecForNameOrNull( const QByteArray& n ) const
 {
-    QTextCodec* codec = 0;
-
     if (n.isEmpty()) {
         // No name, assume locale (KDE's, not Qt's)
         const QByteArray locale = "->locale<-";
         if ( d->codecForNameDict.contains( locale ) )
             return d->codecForNameDict.value( locale );
-        codec = KGlobal::locale()->codecForEncoding();
+        QTextCodec* codec = KGlobal::locale()->codecForEncoding();
         d->codecForNameDict.insert("->locale<-", codec);
         return codec;
     }
+
     // For a non-empty name, lookup the "dictionnary", in a case-sensitive way.
-    else if ( d->codecForNameDict.contains( n ) ) {
+    if ( d->codecForNameDict.contains( n ) ) {
         return d->codecForNameDict.value( n );
     }
 
+    const QByteArray dn = encodingForName( QString::fromLatin1( n.constData(), n.size()) ).toLatin1();
+
     // If the name is not in the hash table, call directly QTextCoded::codecForName.
     // We assume that QTextCodec is smarter and more maintained than this code.
-    codec = QTextCodec::codecForName( n );
+    QTextCodec* codec = QTextCodec::codecForName( dn );
     if ( codec ) {
-        d->codecForNameDict.insert( n, codec );
+        d->codecForNameDict.insert( dn, codec );
         return codec;
-    }
-
-    // We have had no luck with QTextCodec::codecForName, so we must now process the name, so that QTextCodec::codecForName could work with it.
-
-    QByteArray name = n.toLower();
-    bool changed = false;
-    if (name.endsWith("_charset")) { // krazy:exclude=strings
-       name.chop( 8 );
-       changed = true;
-    }
-    if ( name.startsWith( "x-" ) ) { // krazy:exclude=strings
-       name.remove( 0, 2 ); // remove x- at start
-       changed = true;
-    }
-
-    if (name.isEmpty()) {
-      // We have no name anymore, therefore the name is invalid.
-      return 0;
-    }
-
-    // We only need to check changed names.
-    if ( changed ) {
-        codec = QTextCodec::codecForName(name);
-        if (codec) {
-            d->codecForNameDict.insert( n, codec );
-            return codec;
-        }
     }
 
     // we could not assign a codec, therefore return NULL
