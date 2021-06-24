@@ -27,11 +27,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifdef Q_OS_UNIX
-#include <sys/ipc.h>
-#include <sys/shm.h>
-#endif
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtGui/QImage>
@@ -110,11 +105,6 @@ public:
     int iconSize;
     // the transparency of the blended mimetype icon
     int iconAlpha;
-    // Shared memory segment Id. The segment is allocated to a size
-    // of extent x extent x 4 (32 bit image) on first need.
-    int shmid;
-    // And the data area
-    uchar *shmaddr;
     // Root of thumbnail cache
     QString thumbRoot;
 
@@ -138,8 +128,6 @@ PreviewJob::PreviewJob(const KFileItemList &items,
 {
     Q_D(PreviewJob);
     d->tOrig = 0;
-    d->shmid = -1;
-    d->shmaddr = 0;
     d->initialItems = items;
     if (enabledPlugins) {
         d->enabledPlugins = *enabledPlugins;
@@ -177,13 +165,6 @@ PreviewJob::PreviewJob(const KFileItemList &items,
 
 PreviewJob::~PreviewJob()
 {
-#ifdef Q_OS_UNIX
-    Q_D(PreviewJob);
-    if (d->shmaddr) {
-        shmdt((char*)d->shmaddr);
-        shmctl(d->shmid, IPC_RMID, 0);
-    }
-#endif
 }
 
 void PreviewJob::setOverlayIconSize(int size)
@@ -582,32 +563,6 @@ void PreviewJobPrivate::createThumbnail( const QString &pixPath )
     job->addMetaData("plugin", currentItem.plugin->library());
     if(sequenceIndex)
         job->addMetaData("sequence-index", QString::number(sequenceIndex));
-
-#ifdef Q_OS_UNIX
-    if (shmid == -1)
-    {
-        if (shmaddr) {
-            shmdt((char*)shmaddr);
-            shmctl(shmid, IPC_RMID, 0);
-        }
-        const size_t shmsize = size_t(cacheWidth) * cacheHeight * 4;
-        shmid = shmget(IPC_PRIVATE, shmsize, IPC_CREAT|0600);
-        if (shmid != -1)
-        {
-            shmaddr = (uchar *)(shmat(shmid, 0, SHM_RDONLY));
-            if (shmaddr == (uchar *)-1)
-            {
-                shmctl(shmid, IPC_RMID, 0);
-                shmaddr = 0;
-                shmid = -1;
-            }
-        }
-        else
-            shmaddr = 0;
-    }
-    if (shmid != -1)
-        job->addMetaData("shmid", QString::number(shmid));
-#endif
 }
 
 void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
@@ -617,25 +572,8 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
                 (currentItem.item.url().protocol() != "file" ||
                  !currentItem.item.url().directory( KUrl::AppendTrailingSlash ).startsWith(thumbRoot)) && !sequenceIndex;
     QImage thumb;
-#ifdef Q_OS_UNIX
-    if (shmaddr)
-    {
-        // Keep this in sync with kde-workspace/kioslave/thumbnail/thumbnail.cpp
-        QDataStream str(data);
-        int width, height;
-        quint8 iFormat;
-        str >> width >> height >> iFormat;
-        QImage::Format format = static_cast<QImage::Format>( iFormat );
-        thumb = QImage(shmaddr, width, height, format ).copy();
-    }
-    else
-#endif
-        thumb.loadFromData(data);
-
-    if (thumb.isNull()) {
-        QDataStream s(data);
-        s >> thumb;
-    }
+    QDataStream s(data);
+    s >> thumb;
 
     QString tempFileName;
     bool savedCorrectly = false;
