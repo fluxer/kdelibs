@@ -197,7 +197,7 @@ QStringList KCharsets::availableEncodingNames() const
 {
     QStringList available;
     foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
-        available.append( QString::fromLatin1( encoding ) );
+        available.append( QString::fromLatin1( encoding.constData(), encoding.size() ) );
     }
     available.sort();
     return available;
@@ -221,7 +221,7 @@ QString KCharsets::encodingForName( const QString &descriptiveName ) const
 
     const int left = name.lastIndexOf( QLatin1Char('(') );
 
-    // No parenthesis, so assume it is a normal encoding name
+    // Parenthesis, remove text before it
     if (left >= 0 ) {
         name = name.mid(left+1);
     }
@@ -237,13 +237,35 @@ QString KCharsets::encodingForName( const QString &descriptiveName ) const
 QStringList KCharsets::descriptiveEncodingNames() const
 {
     QStringList encodings;
-    foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
-        QString group = encodingGroup(encoding);
 
-        encodings.append( i18nc( "@item Text encoding: %1 character set, %2 encoding",
-            "%1 ( %2 )", group, QString::fromLatin1(encoding.constData(), encoding.size()) ) );
+    QMap<QString, QStringList> encodingGroups;
+    foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
+        const QString group = encodingGroup(encoding);
+        encodingGroups[group].append( QString::fromLatin1(encoding.constData(), encoding.size()) );
     }
+
+    // remove groups with only one entry and move their entry to Other group
+    QMapIterator<QString, QStringList> iter(encodingGroups);
+    while (iter.hasNext()) {
+        iter.next();
+        const QStringList value(iter.value());
+        if (value.size() == 1) {
+            QString group(iter.key());
+            encodingGroups[kOtherGroup].append(iter.value().at(0));
+            encodingGroups.remove(group);
+        }
+    }
+
+    QMapIterator<QString, QStringList> iter2(encodingGroups);
+    while (iter2.hasNext()) {
+        iter2.next();
+        foreach (const QString &encoding, iter2.value()) {
+            encodings.append(i18nc( "@item %1 character set, %2 encoding", "%1 ( %2 )", iter2.key(), encoding ));
+        }
+    }
+
     encodings.sort();
+
     return encodings;
 }
 
@@ -256,7 +278,7 @@ QList<QStringList> KCharsets::encodingsByScript() const
         QString group = encodingGroup(encoding);
 
         int i = 0;
-        const QString encodingstring = QString::fromLatin1(encoding);
+        const QString encodingstring = QString::fromLatin1(encoding.constData(), encoding.size());
         for (i = 0; i < d->encodingsByScript.size(); i++) {
             if (d->encodingsByScript.at(i).at(0).toLower() == group.toLower()) {
                 d->encodingsByScript[i].append(encodingstring);
@@ -268,7 +290,7 @@ QList<QStringList> KCharsets::encodingsByScript() const
         }
     }
 
-    // remove groups with only one entry and move their entry to Other group
+    // almost the same kung-fu as in descriptiveEncodingNames()
     foreach (const QStringList &list, d->encodingsByScript) {
         if (list.size() == 2) {
             int i = 0;
