@@ -169,6 +169,7 @@ public:
         @param mime MIME type in the format \<category\>/\<format\>, e.g. "audio/aac" (without
         quotes)
         @return Whether the MIME type is supported
+        @see isProtocolSupported, isPathSupported
     */
     virtual bool isMimeSupported(const QString &mime) const = 0;
     /*!
@@ -177,7 +178,7 @@ public:
         be considered valid too.
         @param protocol protocol type in the format \<protocol\>, e.g. "file" (without quotes)
         @return Whether the protocol is supported
-        @see KUrl
+        @see KUrl, isMimeSupported, isPathSupported
     */
     bool isProtocolSupported(const QString &protocol) const;
     /*!
@@ -227,10 +228,10 @@ public:
 
     It supports per-application state too, this includes audio output device, volume and mute state
     currently. That feature requires a special entry in the application .desktop file -
-    "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear in the
-    K Control Module (KCM) for multimedia. If the player is not used in application but in @p KPart
-    or plugin which may create multiple instances for different purposes you may want to set its ID
-    via @p setPlayerID().
+    "X-KDE-MediaPlayer=<playerid>[,<playerid>,...]" - which indicates that it uses the class and
+    makes it appear in the K Control Module (KCM) for multimedia. If the player is not used in
+    application but in @p KPart or plugin which may create multiple instances for different
+    purposes you may want to set its ID via @p setPlayerID().
 
     For an extended version of this class check out @p KMediaPlayer and @p KMediaWidget.
 
@@ -289,10 +290,10 @@ private:
 
     It supports per-application state too, this includes audio output device, volume and mute state
     currently. That feature requires a special entry in the application .desktop file -
-    "X-KDE-MediaPlayer=true" - which indicates that it uses the class and makes it appear in the
-    K Control Module (KCM) for multimedia. If the player is not used in application but in @p KPart
-    or plugin which may create multiple instances for different purposes you may want to set its ID
-    via @p setPlayerID().
+    "X-KDE-MediaPlayer=<playerid>[,<playerid>,...]" - which indicates that it uses the class and
+    makes it appear in the K Control Module (KCM) for multimedia. If the player is not used in
+    application but in @p KPart or plugin which may create multiple instances for different
+    purposes you may want to set its ID via @p setPlayerID().
 
     For an extended version of this class check out @p KMediaWidget.
 
