@@ -37,7 +37,8 @@
 #include <assert.h>
 #include <QHash>
 
-static const QLatin1String kOtherEncoding = QLatin1String("Other");
+static const QLatin1String kOtherGroup = QLatin1String("Other");
+static const char* kSystemEncoding = "System";
 
 static QString encodingGroup(const QByteArray &encoding) {
     int separatorindex = 0;
@@ -51,7 +52,7 @@ static QString encodingGroup(const QByteArray &encoding) {
     if (separatorindex > 1) {
         return QString::fromLatin1(encoding.mid(0, separatorindex));
     }
-    return kOtherEncoding;
+    return kOtherGroup;
 }
 
 class KCharsetsPrivate
@@ -207,7 +208,7 @@ QString KCharsets::descriptionForEncoding( const QString& encoding ) const
 {
     QString group = encodingGroup(encoding.toUtf8());
 
-    if ( group != kOtherEncoding )
+    if ( group != kOtherGroup )
         return i18nc( "@item %1 character set, %2 encoding",
             "%1 ( %2 )", group, encoding );
     return i18nc( "@item", "Other encoding (%1)", encoding );
@@ -275,13 +276,13 @@ QList<QStringList> KCharsets::encodingsByScript() const
             d->encodingsByScript.removeAll(list);
 
             for (i = 0; i < d->encodingsByScript.size(); i++) {
-                if (d->encodingsByScript.at(i).at(0) == kOtherEncoding) {
+                if (d->encodingsByScript.at(i).at(0) == kOtherGroup) {
                     d->encodingsByScript[i].append(encoding);
                     break;
                 }
             }
             if (i == d->encodingsByScript.size()) {
-                d->encodingsByScript.append(QStringList() << kOtherEncoding << encoding);
+                d->encodingsByScript.append(QStringList() << kOtherGroup << encoding);
             }
         }
     }
@@ -314,13 +315,14 @@ QTextCodec* KCharsets::codecForName(const QString &n, bool &ok) const
 
 QTextCodec *KCharsets::codecForNameOrNull( const QByteArray& n ) const
 {
-    if (n.isEmpty()) {
+    const QByteArray dn = encodingForName( QString::fromLatin1( n.constData(), n.size()) ).toLatin1();
+
+    if (dn.isEmpty() || qstrnicmp(dn.constData(), kSystemEncoding, dn.size()) == 0) {
         // No name, assume locale (KDE's, not Qt's)
-        const QByteArray locale = "->locale<-";
-        if ( d->codecForNameDict.contains( locale ) )
-            return d->codecForNameDict.value( locale );
+        if ( d->codecForNameDict.contains( kSystemEncoding ) )
+            return d->codecForNameDict.value( kSystemEncoding );
         QTextCodec* codec = KGlobal::locale()->codecForEncoding();
-        d->codecForNameDict.insert("->locale<-", codec);
+        d->codecForNameDict.insert(kSystemEncoding, codec);
         return codec;
     }
 
@@ -328,8 +330,6 @@ QTextCodec *KCharsets::codecForNameOrNull( const QByteArray& n ) const
     if ( d->codecForNameDict.contains( n ) ) {
         return d->codecForNameDict.value( n );
     }
-
-    const QByteArray dn = encodingForName( QString::fromLatin1( n.constData(), n.size()) ).toLatin1();
 
     // If the name is not in the hash table, call directly QTextCoded::codecForName.
     // We assume that QTextCodec is smarter and more maintained than this code.
