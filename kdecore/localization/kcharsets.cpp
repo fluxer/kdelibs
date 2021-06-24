@@ -39,7 +39,7 @@
 
 static const QLatin1String kOtherEncoding = QLatin1String("Other");
 
-static void splitEncoding(const QByteArray &encoding, QString &group, QString &set) {
+static QString encodingGroup(const QByteArray &encoding) {
     int separatorindex = 0;
     const char *data = encoding.constData();
     for (int i = 0; i < encoding.size(); i++) {
@@ -49,12 +49,9 @@ static void splitEncoding(const QByteArray &encoding, QString &group, QString &s
         }
     }
     if (separatorindex > 1) {
-        group = QString::fromLatin1(encoding.mid(0, separatorindex));
-        set = QString::fromLatin1(encoding.mid(separatorindex + 1, encoding.size() - separatorindex - 1));
-    } else {
-        group = kOtherEncoding;
-        set = QString::fromLatin1(encoding);
+        return QString::fromLatin1(encoding.mid(0, separatorindex));
     }
+    return kOtherEncoding;
 }
 
 class KCharsetsPrivate
@@ -210,13 +207,11 @@ QStringList KCharsets::availableEncodingNames() const
 
 QString KCharsets::descriptionForEncoding( const QString& encoding ) const
 {
-    QString group;
-    QString set;
-    splitEncoding(encoding.toUtf8(), group, set);
+    QString group = encodingGroup(encoding.toUtf8());
 
     if ( group != kOtherEncoding )
         return i18nc( "@item %1 character set, %2 encoding",
-            "%1 ( %2 )", group, set );
+            "%1 ( %2 )", group, encoding );
     return i18nc( "@item", "Other encoding (%1)", encoding );
 }
 
@@ -241,12 +236,10 @@ QStringList KCharsets::descriptiveEncodingNames() const
 {
     QStringList encodings;
     foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
-        QString group;
-        QString set;
-        splitEncoding(encoding, group, set);
+        QString group = encodingGroup(encoding);
 
         encodings.append( i18nc( "@item Text encoding: %1 character set, %2 encoding",
-            "%1 ( %2 )", group, set ) );
+            "%1 ( %2 )", group, QString::fromLatin1(encoding.constData(), encoding.size()) ) );
     }
     encodings.sort();
     return encodings;
@@ -258,9 +251,7 @@ QList<QStringList> KCharsets::encodingsByScript() const
         return d->encodingsByScript;
 
     foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
-        QString group;
-        QString set;
-        splitEncoding(encoding, group, set);
+        QString group = encodingGroup(encoding);
 
         int i = 0;
         const QString encodingstring = QString::fromLatin1(encoding);
