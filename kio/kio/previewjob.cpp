@@ -590,7 +590,8 @@ void PreviewJobPrivate::createThumbnail( const QString &pixPath )
             shmdt((char*)shmaddr);
             shmctl(shmid, IPC_RMID, 0);
         }
-        shmid = shmget(IPC_PRIVATE, cacheWidth * cacheHeight * 4, IPC_CREAT|0600);
+        const size_t shmsize = size_t(cacheWidth) * cacheHeight * 4;
+        shmid = shmget(IPC_PRIVATE, shmsize, IPC_CREAT|0600);
         if (shmid != -1)
         {
             shmaddr = (uchar *)(shmat(shmid, 0, SHM_RDONLY));
