@@ -51,7 +51,8 @@ static void gaussianBlur(QImage &image, int radius)
         kernel[i] = kernel[i] / total;
 
     quint32 *buf = new quint32[image.width() * image.height()];
-    memset(buf, 0, image.width() * image.height() * sizeof(quint32));
+    const size_t bufsize = size_t(image.width()) * image.height() * sizeof(quint32);
+    memset(buf, 0, bufsize );
 
     // Blur the image horizontally
     for (int y = 0; y < image.height(); y++)
