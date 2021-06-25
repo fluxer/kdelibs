@@ -1,223 +1,102 @@
-/*
-Copyright 2008 Roland Harnau <tau@gmx.eu>
+/*  This file is part of the KDE libraries
+    Copyright (C) 2021 Ivailo Monev <xakepa10@gmail.com>
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) version 3, or any
-later version accepted by the membership of KDE e.V. (or its
-successor approved by the membership of KDE e.V.), which shall
-act as a proxy defined in Section 6 of version 3 of the license.
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2, as published by the Free Software Foundation.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-You should have received a copy of the GNU Lesser General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #include "hostinfo_p.h"
-
-#include <kglobal.h>
-#include <QtCore/QString>
-#include <QtCore/QHash>
-#include <QtCore/QCache>
-#include <QtCore/QMetaType>
-#include <QtCore/QDateTime>
-#include <QtCore/QTimer>
-#include <QtCore/QList>
-#include <QtCore/QPair>
-#include <QtCore/QThread>
-#include <QtCore/QSemaphore>
-#include <QtCore/QSharedPointer>
-#include <QtNetwork/QHostInfo>
+#include "kglobal.h"
 #include "kdebug.h"
 
-#define HOSTINFO_TTL 300
+#include <QtCore/QCache>
+#include <QtCore/QMetaType>
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QList>
+#include <QtCore/QPair>
+#include <QtCore/QTime>
+#include <QtCore/QMutex>
+#include <QtCore/QCoreApplication>
+
+#include <unistd.h>
+
+// 100 cached objects
 #define HOSTINFO_CACHE_SIZE 100
+// every 3sec check if object should be removed from the cache
+#define HOSTINFO_EXPIRE_CHECK 3000
+// any object being in the cache longer than 30sec will be removed
+#define HOSTINFO_EXPIRE_AFTER 30
+// if there is no QCoreApplication/QApplication sleep for 1sec instead of processing events
+#define HOSTINFO_SLEEP 1000
 
 namespace KIO
 {
-    class HostInfoAgentPrivate : public QObject
-    {
-        Q_OBJECT
-    public:
-        HostInfoAgentPrivate();
-        virtual ~HostInfoAgentPrivate() {};
-        QHostInfo lookupCachedHostInfoFor(const QString& hostName);
-        void cacheLookup(const QHostInfo&);
-    private:
-        class Result;
-        class Query;
 
-        QHash<QString, Query*> openQueries;
-        QCache<QString, QPair<QHostInfo, QTime> > dnsCache;
-    };
+typedef QPair<QHostInfo, QTime> HostInfoPair;
 
-    class HostInfoAgentPrivate::Result : public QObject
-    {
-        Q_OBJECT
-    signals:
-        void result(QHostInfo);
-    private:
-        friend class HostInfoAgentPrivate;
-    };
+class HostInfoAgentPrivate : public QObject
+{
+    Q_OBJECT
+public:
+    HostInfoAgentPrivate();
 
-    class HostInfoAgentPrivate::Query : public QObject
-    {
-        Q_OBJECT
-    public:
-        Query(): m_hostName()
-        {
-        }
-        void start(const QString& hostName)
-        {
-            m_hostName = hostName;
-            QHostInfo::lookupHost(hostName, this, SLOT(relayFinished(QHostInfo)));
-        }
-        QString hostName() const
-        {
-            return m_hostName;
-        }
-    signals:
-        void result(QHostInfo);
-    private slots:
-        void relayFinished(const QHostInfo &hostinfo)
-        {
-            emit result(hostinfo);
-        }
-    private:
-        QString m_hostName;
-    };
+    QHostInfo lookupHost(const QString &hostName, const unsigned long timeout);
+    QHostInfo lookupCachedHostInfoFor(const QString &hostName);
+    void cacheLookup(const QHostInfo &hostName);
 
-    class NameLookupThreadRequest
-    {
-    public:
-        NameLookupThreadRequest(const QString& hostName) : m_hostName(hostName)
-        {
-        }
+protected:
+    // reimplementation
+    void timerEvent(QTimerEvent *event) final;
 
-        QSemaphore *semaphore()
-        {
-            return &m_semaphore;
-        }
+private:
+    int m_expiretimerid;
+    QList<int> m_lookups;
+    QCache<QString, HostInfoPair> m_dnsCache;
+    QMutex m_mutex;
 
-        QHostInfo result() const
-        {
-            return m_hostInfo;
-        }
-
-        void setResult(const QHostInfo& hostInfo)
-        {
-            m_hostInfo = hostInfo;
-        }
-
-        QString hostName() const
-        {
-            return m_hostName;
-        }
-
-        int lookupId() const
-        {
-            return m_lookupId;
-        }
-
-        void setLookupId(int id)
-        {
-            m_lookupId = id;
-        }
-
-    private:
-        Q_DISABLE_COPY(NameLookupThreadRequest)
-        QString m_hostName;
-        QSemaphore m_semaphore;
-        QHostInfo m_hostInfo;
-        int m_lookupId;
-    };
-
-    class NameLookUpThreadWorker : public QObject
-    {
-        Q_OBJECT
-    public slots:
-        void lookupHost(const QSharedPointer<NameLookupThreadRequest>& request)
-        {
-            const QString hostName = request->hostName();
-            const int lookupId = QHostInfo::lookupHost(hostName, this, SLOT(lookupFinished(QHostInfo)));
-            request->setLookupId(lookupId);
-            m_lookups.insert(lookupId, request);
-        }
-
-        void abortLookup(const QSharedPointer<NameLookupThreadRequest>& request)
-        {
-            QHostInfo::abortHostLookup(request->lookupId());
-            m_lookups.remove(request->lookupId());
-        }
-
-        void lookupFinished(const QHostInfo &hostInfo)
-        {
-            QMap<int, QSharedPointer<NameLookupThreadRequest> >::iterator it = m_lookups.find(hostInfo.lookupId());
-            if (it != m_lookups.end()) {
-                (*it)->setResult(hostInfo);
-                (*it)->semaphore()->release();
-                m_lookups.erase(it);
-            }
-        }
-
-    private:
-        QMap<int, QSharedPointer<NameLookupThreadRequest> > m_lookups;
-    };
-
-    class NameLookUpThread : public QThread
-    {
-        Q_OBJECT
-    public:
-        NameLookUpThread () : m_worker(0)
-        {
-            qRegisterMetaType< QSharedPointer<NameLookupThreadRequest> > ("QSharedPointer<NameLookupThreadRequest>");
-            start();
-        }
-
-        ~NameLookUpThread ()
-        {
-            quit();
-            wait();
-        }
-
-        NameLookUpThreadWorker *worker()
-        {
-            return m_worker;
-        }
-
-        QSemaphore *semaphore()
-        {
-            return &m_semaphore;
-        }
-
-        void run()
-        {
-            NameLookUpThreadWorker worker;
-            m_worker = &worker;
-            m_semaphore.release();
-            exec();
-        }
-
-    private:
-        NameLookUpThreadWorker *m_worker;
-        QSemaphore m_semaphore;
-    };
-}
-
-using namespace KIO;
+private Q_SLOTS:
+    void lookupFinished(const QHostInfo &hostInfo);
+};
 
 K_GLOBAL_STATIC(HostInfoAgentPrivate, hostInfoAgentPrivate)
-K_GLOBAL_STATIC(NameLookUpThread, nameLookUpThread)
 
-QHostInfo HostInfo::lookupHost(const QString& hostName, unsigned long timeout)
+QHostInfo HostInfo::lookupHost(const QString &hostName, unsigned long timeout)
+{
+    return hostInfoAgentPrivate->lookupHost(hostName, timeout);
+}
+
+QHostInfo HostInfo::lookupCachedHostInfoFor(const QString& hostName)
+{
+    return hostInfoAgentPrivate->lookupCachedHostInfoFor(hostName);
+}
+
+void HostInfo::cacheLookup(const QHostInfo &info)
+{
+    hostInfoAgentPrivate->cacheLookup(info);
+}
+
+HostInfoAgentPrivate::HostInfoAgentPrivate()
+    : m_dnsCache(HOSTINFO_CACHE_SIZE)
+{
+    qRegisterMetaType<QHostInfo>("QHostInfo");
+    m_expiretimerid = startTimer(HOSTINFO_EXPIRE_CHECK);
+}
+
+QHostInfo HostInfoAgentPrivate::lookupHost(const QString &hostName, unsigned long timeout)
 {
     // Do not perform a reverse lookup here...
-    QHostAddress address (hostName);
+    QHostAddress address(hostName);
     QHostInfo hostInfo;
     if (!address.isNull()) {
         QList<QHostAddress> addressList;
@@ -226,64 +105,82 @@ QHostInfo HostInfo::lookupHost(const QString& hostName, unsigned long timeout)
         return hostInfo;
     }
 
-    // Look up the name in the KIO/KHTML DNS cache...
+    // Look up the name in the DNS cache...
     hostInfo = HostInfo::lookupCachedHostInfoFor(hostName);
     if (!hostInfo.hostName().isEmpty() && hostInfo.error() == QHostInfo::NoError) {
         return hostInfo;
     }
 
     // Failing all of the above, do the lookup...
-    QSharedPointer<NameLookupThreadRequest> request = QSharedPointer<NameLookupThreadRequest>(new NameLookupThreadRequest(hostName));
-    nameLookUpThread->semaphore()->acquire();
-    nameLookUpThread->semaphore()->release();
-    QMetaObject::invokeMethod(nameLookUpThread->worker(), "lookupHost", Qt::QueuedConnection, Q_ARG(QSharedPointer<NameLookupThreadRequest>, request));
-    if (request->semaphore()->tryAcquire(1, timeout)) {
-        hostInfo = request->result();
-        if (!hostInfo.hostName().isEmpty() && hostInfo.error() == QHostInfo::NoError) {
-            HostInfo::cacheLookup(hostInfo); // cache the look up...
+    kDebug() << "Name look up for" << hostName;
+    QMutexLocker lock(&m_mutex);
+    QElapsedTimer lookupTimer;
+    lookupTimer.start();
+    const int lookupId = QHostInfo::lookupHost(hostName, this, SLOT(lookupFinished(QHostInfo)));
+    m_lookups.append(lookupId);
+    while (m_lookups.contains(lookupId)) {
+        if (lookupTimer.elapsed() > timeout) {
+            kDebug() << "Name look up timed out for" << hostName;
+            m_lookups.removeAll(lookupId);
+            QHostInfo::abortHostLookup(lookupId);
+            return QHostInfo();
         }
-    } else {
-        QMetaObject::invokeMethod(nameLookUpThread->worker(), "abortLookup", Qt::QueuedConnection, Q_ARG(QSharedPointer<NameLookupThreadRequest>, request));
+
+        if (qApp) {
+            qApp->processEvents();
+        } else {
+            ::usleep(HOSTINFO_SLEEP);
+        }
     }
 
-    //kDebug(7022) << "Name look up succeeded for" << hostName;
-    return hostInfo;
+    kDebug() << "Name look up succeeded for" << hostName;
+    return m_dnsCache.object(hostName)->first;
 }
 
-QHostInfo HostInfo::lookupCachedHostInfoFor(const QString& hostName)
+void HostInfoAgentPrivate::cacheLookup(const QHostInfo &info)
 {
-    return hostInfoAgentPrivate->lookupCachedHostInfoFor(hostName);
-}
-
-void HostInfo::cacheLookup(const QHostInfo& info)
-{
-    hostInfoAgentPrivate->cacheLookup(info);
-}
-
-HostInfoAgentPrivate::HostInfoAgentPrivate()
-    : dnsCache(HOSTINFO_CACHE_SIZE)
-{
-    qRegisterMetaType<QHostInfo>("QHostInfo");
+    if (info.hostName().isEmpty() || info.error() != QHostInfo::NoError) {
+        return;
+    }
+    QTime expiration = QTime::currentTime();
+    expiration.addSecs(HOSTINFO_EXPIRE_AFTER);
+    m_dnsCache.insert(info.hostName(), new HostInfoPair(info, expiration));
 }
 
 QHostInfo HostInfoAgentPrivate::lookupCachedHostInfoFor(const QString& hostName)
 {
-    QPair<QHostInfo, QTime>* info = dnsCache.object(hostName);
-    if (info && info->second.addSecs(HOSTINFO_TTL) >= QTime::currentTime())
-        return info->first;
-
+    const HostInfoPair* pair = m_dnsCache.object(hostName);
+    if (pair) {
+        return pair->first;
+    }
     return QHostInfo();
 }
 
-void HostInfoAgentPrivate::cacheLookup(const QHostInfo& info)
+void HostInfoAgentPrivate::lookupFinished(const QHostInfo &hostInfo)
 {
-    if (info.hostName().isEmpty())
-        return;
-
-    if (info.error() != QHostInfo::NoError)
-        return;
-
-    dnsCache.insert(info.hostName(), new QPair<QHostInfo, QTime>(info, QTime::currentTime()));
+    m_lookups.removeAll(hostInfo.lookupId());
+    cacheLookup(hostInfo);
 }
+
+void HostInfoAgentPrivate::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == m_expiretimerid) {
+        kDebug() << "Checking cache for expired entries";
+        QMutexLocker lock(&m_mutex);
+        const QTime current = QTime::currentTime();
+        foreach (const QString &hostName, m_dnsCache.keys()) {
+            const HostInfoPair* pair = m_dnsCache.object(hostName);
+            if (pair && current >= pair->second) {
+                kDebug() << "Expiring look up for" << hostName;
+                m_dnsCache.remove(hostName);
+            }
+        }
+        event->accept();
+        return;
+    }
+    event->ignore();
+}
+
+} // namespace KIO
 
 #include "hostinfo.moc"
