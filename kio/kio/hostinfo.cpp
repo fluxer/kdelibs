@@ -25,7 +25,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtCore/QHash>
 #include <QtCore/QCache>
 #include <QtCore/QMetaType>
-#include <QtCore/qdatetime.h>
+#include <QtCore/QDateTime>
 #include <QtCore/QTimer>
 #include <QtCore/QList>
 #include <QtCore/QPair>
@@ -35,17 +35,8 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QtNetwork/QHostInfo>
 #include "kdebug.h"
 
-#ifdef Q_OS_UNIX
-# include <QtCore/QFileInfo>
-# include <netinet/in.h>
-# include <arpa/nameser.h>
-# include <resolv.h>            // for _PATH_RESCONF
-# ifndef _PATH_RESCONF
-#  define _PATH_RESCONF         "/etc/resolv.conf"
-# endif
-#endif
-
-#define TTL 300
+#define HOSTINFO_TTL 300
+#define HOSTINFO_CACHE_SIZE 100
 
 namespace KIO
 {
@@ -53,23 +44,16 @@ namespace KIO
     {
         Q_OBJECT
     public:
-        HostInfoAgentPrivate(int cacheSize = 100);
+        HostInfoAgentPrivate();
         virtual ~HostInfoAgentPrivate() {};
-        void lookupHost(const QString& hostName, QObject* receiver, const char* member);
         QHostInfo lookupCachedHostInfoFor(const QString& hostName);
         void cacheLookup(const QHostInfo&);
-        void setCacheSize(int s) { dnsCache.setMaxCost(s); }
-        void setTTL(int _ttl) { ttl = _ttl; }
-    private slots:
-        void queryFinished(const QHostInfo&);
     private:
         class Result;
         class Query;
 
         QHash<QString, Query*> openQueries;
         QCache<QString, QPair<QHostInfo, QTime> > dnsCache;
-        time_t resolvConfMTime;
-        int ttl;
     };
 
     class HostInfoAgentPrivate::Result : public QObject
@@ -91,7 +75,7 @@ namespace KIO
         void start(const QString& hostName)
         {
             m_hostName = hostName;
-	    QHostInfo::lookupHost(hostName, this, SLOT(relayFinished(QHostInfo)));
+            QHostInfo::lookupHost(hostName, this, SLOT(relayFinished(QHostInfo)));
         }
         QString hostName() const
         {
@@ -230,12 +214,6 @@ using namespace KIO;
 K_GLOBAL_STATIC(HostInfoAgentPrivate, hostInfoAgentPrivate)
 K_GLOBAL_STATIC(NameLookUpThread, nameLookUpThread)
 
-void HostInfo::lookupHost(const QString& hostName, QObject* receiver,
-    const char* member)
-{
-    hostInfoAgentPrivate->lookupHost(hostName, receiver, member);
-}
-
 QHostInfo HostInfo::lookupHost(const QString& hostName, unsigned long timeout)
 {
     // Do not perform a reverse lookup here...
@@ -282,76 +260,16 @@ void HostInfo::cacheLookup(const QHostInfo& info)
     hostInfoAgentPrivate->cacheLookup(info);
 }
 
-void HostInfo::prefetchHost(const QString& hostName)
-{
-    hostInfoAgentPrivate->lookupHost(hostName, 0, 0);
-}
-
-void HostInfo::setCacheSize(int s)
-{
-    hostInfoAgentPrivate->setCacheSize(s);
-}
-
-void HostInfo::setTTL(int ttl)
-{
-    hostInfoAgentPrivate->setTTL(ttl);
-}
-
-HostInfoAgentPrivate::HostInfoAgentPrivate(int cacheSize)
-    : openQueries(),
-      dnsCache(cacheSize),
-      resolvConfMTime(0),
-      ttl(TTL)
+HostInfoAgentPrivate::HostInfoAgentPrivate()
+    : dnsCache(HOSTINFO_CACHE_SIZE)
 {
     qRegisterMetaType<QHostInfo>("QHostInfo");
-}
-
-void HostInfoAgentPrivate::lookupHost(const QString& hostName,
-    QObject* receiver, const char* member)
-{
-#ifdef _PATH_RESCONF
-    QFileInfo resolvConf(QFile::decodeName(_PATH_RESCONF));
-    time_t currentMTime = resolvConf.lastModified().toTime_t();
-    if (resolvConf.exists() && currentMTime != resolvConfMTime) {
-        // /etc/resolv.conf has been modified
-        // clear our cache
-        resolvConfMTime = currentMTime;
-        dnsCache.clear();
-    }
-#endif
-
-    if (QPair<QHostInfo, QTime>* info = dnsCache.object(hostName)) {
-        if (QTime::currentTime() <= info->second.addSecs(ttl)) {
-            Result result;
-            if (receiver) {
-                QObject::connect(&result, SIGNAL(result(QHostInfo)),receiver, member);
-                emit result.result(info->first);
-            }
-            return;
-        }
-        dnsCache.remove(hostName);
-    }
-
-    if (Query* query = openQueries.value(hostName)) {
-        if (receiver) {
-            connect(query, SIGNAL(result(QHostInfo)), receiver, member);
-        }
-        return;
-    }
-
-    Query* query = new Query();
-    openQueries.insert(hostName, query);
-    connect(query, SIGNAL(result(QHostInfo)), this, SLOT(queryFinished(QHostInfo)));
-    if (receiver) {
-        connect(query, SIGNAL(result(QHostInfo)), receiver, member);
-    }
-    query->start(hostName);
 }
 
 QHostInfo HostInfoAgentPrivate::lookupCachedHostInfoFor(const QString& hostName)
 {
     QPair<QHostInfo, QTime>* info = dnsCache.object(hostName);
-    if (info && info->second.addSecs(ttl) >= QTime::currentTime())
+    if (info && info->second.addSecs(HOSTINFO_TTL) >= QTime::currentTime())
         return info->first;
 
     return QHostInfo();
@@ -366,17 +284,6 @@ void HostInfoAgentPrivate::cacheLookup(const QHostInfo& info)
         return;
 
     dnsCache.insert(info.hostName(), new QPair<QHostInfo, QTime>(info, QTime::currentTime()));
-}
-
-void HostInfoAgentPrivate::queryFinished(const QHostInfo& info)
-{
-    Query* query = static_cast<Query* >(sender());
-    openQueries.remove(query->hostName());
-    if (info.error() == QHostInfo::NoError) {
-        dnsCache.insert(query->hostName(),
-            new QPair<QHostInfo, QTime>(info, QTime::currentTime()));
-    }
-    query->deleteLater();
 }
 
 #include "hostinfo.moc"
