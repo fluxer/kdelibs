@@ -36,6 +36,8 @@
 
 #include <kurl.h>
 #include <kdebug.h>
+#include <kglobal.h>
+#include <klocale.h>
 
 #include <QFileInfo>
 #include <QDateTime>
@@ -152,7 +154,16 @@ public:
     void addValue(const Strigi::AnalysisResult* idx, const Strigi::RegisteredField* field,
             uint32_t value) {
         if (idx->writerData()) {
-            addValue(idx, field, QVariant((quint32)value));
+            std::string type(field->type());
+            if (qstrncmp(type.c_str(), Strigi::FieldRegister::datetimeType.c_str(), type.size()) == 0) {
+                QDateTime datetime = QDateTime::fromTime_t(value);
+                // same format as the one used for modification time in:
+                // kdelibs/kio/kfile/kfilemetadataprovider.cpp
+                QString datestring = KGlobal::locale()->formatDateTime(datetime, KLocale::FancyLongDate);
+                addValue(idx, field, QVariant(datestring));
+            } else {
+                addValue(idx, field, QVariant((qint32)value));
+            }
         }
     }
     void addValue(const Strigi::AnalysisResult* idx, const Strigi::RegisteredField* field,
@@ -170,8 +181,7 @@ public:
     void addValue(const Strigi::AnalysisResult* idx,
                   const Strigi::RegisteredField* field, const QVariant& value) {
         QHash<QString, KFileMetaInfoItem>* info
-            = static_cast<QHash<QString, KFileMetaInfoItem>*>(
-            idx->writerData());
+            = static_cast<QHash<QString, KFileMetaInfoItem>*>(idx->writerData());
         if (info) {
             std::string name(field->key());
             QString key = QString::fromUtf8(name.c_str(), name.size());
