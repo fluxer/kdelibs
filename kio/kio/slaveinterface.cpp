@@ -22,7 +22,6 @@
 
 #include "slavebase.h"
 #include "connection.h"
-#include "hostinfo_p.h"
 
 #include <errno.h>
 #include <stdlib.h>
@@ -331,7 +330,7 @@ bool SlaveInterface::dispatch(int _cmd, const QByteArray &rawdata)
     case MSG_HOST_INFO_REQ: {
         QString hostName;
         stream >> hostName;
-        HostInfo::lookupHost(hostName, this, SLOT(slotHostInfo(QHostInfo)));
+        QHostInfo::lookupHost(hostName, this, SLOT(slotHostInfo(QHostInfo)));
         break;
     }
     default:
