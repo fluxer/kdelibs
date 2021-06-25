@@ -251,7 +251,7 @@ QStringList KCharsets::descriptiveEncodingNames() const
         const QStringList value(iter.value());
         if (value.size() == 1) {
             QString group(iter.key());
-            encodingGroups[kOtherGroup].append(iter.value().at(0));
+            encodingGroups[kOtherGroup].append(value.at(0));
             encodingGroups.remove(group);
         }
     }
