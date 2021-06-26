@@ -76,13 +76,6 @@ class KLocalizedStringPrivate
     QString postFormat (const QString &text,
                         const QString &lang,
                         const QString &ctxt) const;
-    int resolveInterpolation (const QString &trans, int pos,
-                              const QString &lang,
-                              const QString &ctry,
-                              const QString &finalstr,
-                              QString &result,
-                              bool &fallback) const;
-    QVariant segmentToValue (const QString &arg) const;
 
     static void notifyCatalogsUpdated (const QStringList &languages,
                                        const QList<KCatalogName> &catalogs);
@@ -90,38 +83,13 @@ class KLocalizedStringPrivate
 
 class KLocalizedStringPrivateStatics
 {
-    public:
-
+public:
     const QString theFence;
-    const QString startInterp;
-    const QString endInterp;
-    const QChar scriptPlchar;
-    const QChar scriptVachar;
-
-    const QString scriptDir;
-    QHash<QString, QStringList> scriptModules;
-    QList<QStringList> scriptModulesToLoad;
 
     QHash<QString, KuitSemantics*> formatters;
 
-    KLocalizedStringPrivateStatics () :
-        theFence(QLatin1String("|/|")),
-        startInterp(QLatin1String("$[")),
-        endInterp(QLatin1String("]")),
-        scriptPlchar(QLatin1Char('%')),
-        scriptVachar(QLatin1Char('^')),
-
-        scriptDir(QLatin1String("LC_SCRIPTS")),
-        scriptModules(),
-        scriptModulesToLoad(),
-
-        formatters()
-    {}
-
     ~KLocalizedStringPrivateStatics ()
     {
-        // ktrs is handled by KLibLoader.
-        //delete ktrs;
         qDeleteAll(formatters);
     }
 };
@@ -242,34 +210,8 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
         rawtrans = selectForEnglish();
     }
 
-    // Set ordinary translation and possibly scripted translation.
-    QString trans, strans;
-    int cdpos = rawtrans.indexOf(s->theFence);
-    if (cdpos > 0)
-    {
-        // Script fence has been found, strip the scripted from the
-        // ordinary translation.
-        trans = rawtrans.left(cdpos);
-
-        // Scripted translation.
-        strans = rawtrans.mid(cdpos + s->theFence.length());
-    }
-    else if (cdpos < 0)
-    {
-        // No script fence, use translation as is.
-        trans = rawtrans;
-    }
-    else // cdpos == 0
-    {
-        // The msgstr starts with the script fence, no ordinary translation.
-        // This is not allowed, consider message not translated.
-        kDebug(173) << QString::fromLatin1("Scripted message {%1} without ordinary translation, discarded.")
-                               .arg(shortenMessage(trans)) ;
-        trans = selectForEnglish();
-    }
-
     // Substitute placeholders in ordinary translation.
-    QString finalstr = substituteSimple(trans);
+    QString finalstr = substituteSimple(rawtrans);
     // Post-format ordinary translation.
     finalstr = postFormat(finalstr, lang, QString::fromLatin1(ctxt));
 
@@ -434,194 +376,6 @@ QString KLocalizedStringPrivate::postFormat (const QString &text,
     }
 
     return finalstr;
-}
-
-int KLocalizedStringPrivate::resolveInterpolation (const QString &strans,
-                                                   int pos,
-                                                   const QString &lang,
-                                                   const QString &ctry,
-                                                   const QString &finalstr,
-                                                   QString &result,
-                                                   bool &fallback) const
-{
-    // pos is the position of opening character sequence.
-    // Returns the position of first character after closing sequence,
-    // or -1 in case of parsing error.
-    // result is set to result of Transcript evaluation.
-    // fallback is set to true if Transcript evaluation requested so.
-
-    KLocalizedStringPrivateStatics *s = staticsKLSP;
-    QMutexLocker lock(kLocaleMutex());
-
-    result.clear();
-    fallback = false;
-
-    // Split interpolation into arguments.
-    QList<QVariant> iargs;
-    int slen = strans.length();
-    int islen = s->startInterp.length();
-    int ielen = s->endInterp.length();
-    int tpos = pos + s->startInterp.length();
-    while (1)
-    {
-        // Skip whitespace.
-        while (tpos < slen && strans[tpos].isSpace()) {
-            ++tpos;
-        }
-        if (tpos == slen) {
-            kDebug(173) << QString::fromLatin1("Unclosed interpolation {%1} in message {%2}.")
-                                  .arg(strans.mid(pos, tpos - pos), shortenMessage(strans));
-            return -1;
-        }
-        if (strans.mid(tpos, ielen) == s->endInterp) {
-            break; // no more arguments
-        }
-
-        // Parse argument: may be concatenated from free and quoted text,
-        // and sub-interpolations.
-        // Free and quoted segments may contain placeholders, substitute them;
-        // recurse into sub-interpolations.
-        // Free segments may be value references, parse and record for
-        // consideration at the end.
-        // Mind backslash escapes throughout.
-        QStringList segs;
-        QVariant vref;
-        while (   !strans[tpos].isSpace()
-               && strans.mid(tpos, ielen) != s->endInterp)
-        {
-            if (strans[tpos] == QLatin1Char('\'')) { // quoted segment
-                QString seg;
-                ++tpos; // skip opening quote
-                // Find closing quote.
-                while (tpos < slen && strans[tpos] != QLatin1Char('\'')) {
-                    if (strans[tpos] == QLatin1Char('\\'))
-                        ++tpos; // escape next character
-                    seg.append(strans[tpos]);
-                    ++tpos;
-                }
-                if (tpos == slen) {
-                    kDebug(173) << QString::fromLatin1("Unclosed quote in interpolation {%1} in message {%2}.")
-                                        .arg(strans.mid(pos, tpos - pos), shortenMessage(strans));
-                    return -1;
-                }
-
-                // Append to list of segments, resolving placeholders.
-                segs.append(substituteSimple(seg, s->scriptPlchar, true));
-
-                ++tpos; // skip closing quote
-            }
-            else if (strans.mid(tpos, islen) == s->startInterp) { // sub-interpolation
-                QString resultLocal;
-                bool fallbackLocal;
-                tpos = resolveInterpolation(strans, tpos, lang, ctry, finalstr,
-                                            resultLocal, fallbackLocal);
-                if (tpos < 0) { // unrecoverable problem in sub-interpolation
-                    // Error reported in the subcall.
-                    return tpos;
-                }
-                if (fallbackLocal) { // sub-interpolation requested fallback
-                    fallback = true;
-                }
-                segs.append(resultLocal);
-            }
-            else { // free segment
-                QString seg;
-                // Find whitespace, quote, opening or closing sequence.
-                while (   tpos < slen
-                       && !strans[tpos].isSpace() && strans[tpos] != QLatin1Char('\'')
-                       && strans.mid(tpos, islen) != s->startInterp
-                       && strans.mid(tpos, ielen) != s->endInterp)
-                {
-                    if (strans[tpos] == QLatin1Char('\\'))
-                        ++tpos; // escape next character
-                    seg.append(strans[tpos]);
-                    ++tpos;
-                }
-                if (tpos == slen) {
-                    kDebug(173) << QString::fromLatin1("Non-terminated interpolation {%1} in message {%2}.")
-                                        .arg(strans.mid(pos, tpos - pos), shortenMessage(strans));
-                    return -1;
-                }
-
-                // The free segment may look like a value reference;
-                // in that case, record which value it would reference,
-                // and add verbatim to the segment list.
-                // Otherwise, do a normal substitution on the segment.
-                vref = segmentToValue(seg);
-                if (vref.isValid()) {
-                    segs.append(seg);
-                }
-                else {
-                    segs.append(substituteSimple(seg, s->scriptPlchar, true));
-                }
-            }
-        }
-
-        // Append this argument to rest of the arguments.
-        // If the there was a single text segment and it was a proper value
-        // reference, add it instead of the joined segments.
-        // Otherwise, add the joined segments.
-        if (segs.size() == 1 && vref.isValid()) {
-            iargs.append(vref);
-        }
-        else {
-            iargs.append(segs.join(QString()));
-        }
-    }
-    tpos += ielen; // skip to first character after closing sequence
-
-    // NOTE: Why not substitute placeholders (via substituteSimple) in one
-    // global pass, then handle interpolations in second pass? Because then
-    // there is the danger of substituted text or sub-interpolations producing
-    // quotes and escapes themselves, which would mess up the parsing.
-
-    // Evaluate interpolation.
-    QString msgctxt = QString::fromUtf8(ctxt);
-    QString msgid = QString::fromUtf8(msg);
-    QString scriptError;
-
-    // s->scriptModulesToLoad will be cleared during the call.
-
-    if (!scriptError.isEmpty()) { // problem with evaluation
-        fallback = true; // also signal fallback
-        if (!scriptError.isEmpty()) {
-            kDebug(173) << QString::fromLatin1("Interpolation {%1} in {%2} failed: %3")
-                                  .arg(strans.mid(pos, tpos - pos), shortenMessage(strans), scriptError);
-        }
-    }
-
-    return tpos;
-}
-
-QVariant KLocalizedStringPrivate::segmentToValue (const QString &seg) const
-{
-    const KLocalizedStringPrivateStatics *s = staticsKLSP;
-    QMutexLocker lock(kLocaleMutex());
-
-    // Return invalid variant if segment is either not a proper
-    // value reference, or the reference is out of bounds.
-
-    // Value reference must start with a special character.
-    if (seg.left(1) != s->scriptVachar) {
-        return QVariant();
-    }
-
-    // Reference number must start with 1-9.
-    // (If numstr is empty, toInt() will return 0.)
-    QString numstr = seg.mid(1);
-    if (numstr.left(1).toInt() < 1) {
-        return QVariant();
-    }
-
-    // Number must be valid and in bounds.
-    bool ok;
-    int index = numstr.toInt(&ok) - 1;
-    if (!ok || index >= vals.size()) {
-        return QVariant();
-    }
-
-    // Passed all hoops.
-    return vals.at(index);
 }
 
 static QString wrapNum (const QString &tag, const QString &numstr,
@@ -807,39 +561,6 @@ void KLocalizedStringPrivate::notifyCatalogsUpdated (const QStringList &language
     KLocalizedStringPrivateStatics *s = staticsKLSP;
     // Very important: do not the mutex here.
     //QMutexLocker lock(kLocaleMutex());
-
-    // Find script modules for all included language/catalogs that have them,
-    // and remember their paths.
-    // A more specific module may reference the calls from a less specific,
-    // and the catalog list is ordered from more to less specific. Therefore,
-    // work on reversed list of catalogs.
-    foreach (const QString &lang, languages) {
-        for (int i = catalogs.size() - 1; i >= 0; --i) {
-            const KCatalogName &cat(catalogs[i]);
-
-            // Assemble module's relative path.
-            QString modrpath =   lang + QLatin1Char('/') + s->scriptDir + QLatin1Char('/')
-                            + cat.name + QLatin1Char('/') + cat.name + QLatin1String(".js");
-
-            // Try to find this module.
-            QString modapath = KStandardDirs::locate("locale", modrpath);
-
-            // If the module exists and hasn't been already included.
-            if (   !modapath.isEmpty()
-                && !s->scriptModules[lang].contains(cat.name))
-            {
-                // Indicate that the module has been considered.
-                s->scriptModules[lang].append(cat.name);
-
-                // Store the absolute path and language of the module,
-                // to load on next script evaluation.
-                QStringList mod;
-                mod.append(modapath);
-                mod.append(lang);
-                s->scriptModulesToLoad.append(mod);
-            }
-        }
-    }
 
     // Create visual formatters for each new language.
     foreach (const QString &lang, languages) {

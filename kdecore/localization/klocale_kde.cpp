@@ -172,7 +172,6 @@ void KLocalePrivate::copy(const KLocalePrivate &rhs)
     m_catalogNames = rhs.m_catalogNames;
     m_catalogs = rhs.m_catalogs;
     m_numberOfSysCatalogs = rhs.m_numberOfSysCatalogs;
-    m_useTranscript = rhs.m_useTranscript;
 
     // Calendar settings
     m_calendarSystem = rhs.m_calendarSystem;
@@ -545,8 +544,6 @@ void KLocalePrivate::initFormat()
     QString calendarType;
     readConfigEntry("CalendarSystem", "gregorian", calendarType);
     setCalendar(calendarType);
-
-    readConfigEntry("Transcript", true, m_useTranscript);
 
     //Grammatical
     //Precedence here is l10n / i18n / config file
@@ -2829,11 +2826,6 @@ QString KLocalePrivate::defaultCountry()
 QString KLocalePrivate::defaultCurrencyCode()
 {
     return QString::fromLatin1("USD");
-}
-
-bool KLocalePrivate::useTranscript() const
-{
-    return m_useTranscript;
 }
 
 const QByteArray KLocalePrivate::encoding() const

@@ -249,12 +249,6 @@ public:
      */
     static QString langLookup(const QString &fname, const char *rtype = "html");
 
-    /**
-     * @internal Returns whether evaluation of translation scripts is enabled.
-     * The worker of the same-name KLocale API function.
-     */
-    bool useTranscript() const;
-
     /**************************
      **   Catalog settings   **
      **************************/
@@ -1153,7 +1147,6 @@ private:
     QList<KCatalogName> m_catalogNames;         // list of all catalogs (regardless of language)
     QList<KCatalog>     m_catalogs;             // list of all found catalogs, one instance per catalog name and language
     int                 m_numberOfSysCatalogs;  // number of catalogs that each app draws from
-    bool                m_useTranscript;        // indicates if scripted messages are to be executed
 
     // Calendar settings
     KLocale::CalendarSystem m_calendarSystem;

@@ -1933,13 +1933,6 @@ public:
     static QString defaultCurrencyCode();
 
     /**
-     * Reports whether evaluation of translation scripts is enabled.
-     *
-     * @return true if script evaluation is enabled, false otherwise.
-     */
-    bool useTranscript() const;
-
-    /**
      * Checks whether or not the active catalog is found for the given language.
      *
      * @param language language to check

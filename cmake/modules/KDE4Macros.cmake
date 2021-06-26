@@ -281,17 +281,3 @@ function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
             DESTINATION ${KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR})
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
-
-
-macro(KDE4_INSTALL_TS_FILES _lang _sdir)
-    file(GLOB_RECURSE _ts_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ${_sdir}/*)
-    foreach(_current_TS_FILES ${_ts_files})
-        if(NOT ${_current_TS_FILES} MATCHES ".git/")
-            get_filename_component(_subpath ${_current_TS_FILES} PATH)
-            install(
-                FILES ${_current_TS_FILES}
-                DESTINATION ${KDE4_LOCALE_INSTALL_DIR}/${_lang}/LC_SCRIPTS/${_subpath}
-            )
-        endif()
-    endforeach()
-endmacro(KDE4_INSTALL_TS_FILES)

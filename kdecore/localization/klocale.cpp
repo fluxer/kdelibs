@@ -598,11 +598,6 @@ QString KLocale::defaultCurrencyCode()
     return KLocalePrivate::defaultCurrencyCode();
 }
 
-bool KLocale::useTranscript() const
-{
-    return d->useTranscript();
-}
-
 const QByteArray KLocale::encoding() const
 {
     return d->encoding();
