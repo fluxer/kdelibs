@@ -2888,9 +2888,14 @@ QString KLocalePrivate::languageCodeToName(const QString &language)
     if (!entryFile.isEmpty()) {
         KConfig cfg(entryFile);
         KConfigGroup cg(&cfg, "KCM Locale");
-        languageName = cg.readEntry("Name");
+        return cg.readEntry("Name");
     }
-    return languageName;
+    // in case the language is not installed
+    if (!m_languages) {
+        m_languages = new KConfig(QLatin1String("all_languages"), KConfig::NoGlobals, "locale");
+     }
+    KConfigGroup cg(m_languages, language);
+    return cg.readEntry("Name");
 }
 
 QStringList KLocalePrivate::allCountriesList() const
