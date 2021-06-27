@@ -2872,7 +2872,7 @@ QStringList KLocalePrivate::allLanguagesList()
 QStringList KLocalePrivate::installedLanguages()
 {
     QStringList languages;
-    QStringList paths = KGlobal::dirs()->findAllResources("locale", QLatin1String("l10n/*/entry.desktop"));
+    QStringList paths = KGlobal::dirs()->findAllResources("locale", QLatin1String("*/entry.desktop"));
     foreach (const QString &path, paths) {
         QString part = path.left(path.length() - 14);
         languages.append(part.mid(part.lastIndexOf(QLatin1Char('/')) + 1));
@@ -2883,12 +2883,14 @@ QStringList KLocalePrivate::installedLanguages()
 
 QString KLocalePrivate::languageCodeToName(const QString &language)
 {
-    if (!m_languages) {
-        m_languages = new KConfig(QLatin1String("all_languages"), KConfig::NoGlobals, "locale");
+    QString languageName;
+    QString entryFile = KStandardDirs::locate("locale", language + QLatin1String("/entry.desktop"));
+    if (!entryFile.isEmpty()) {
+        KConfig cfg(entryFile);
+        KConfigGroup cg(&cfg, "KCM Locale");
+        languageName = cg.readEntry("Name");
     }
-
-    KConfigGroup cg(m_languages, language);
-    return cg.readEntry("Name");
+    return languageName;
 }
 
 QStringList KLocalePrivate::allCountriesList() const
