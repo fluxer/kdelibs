@@ -84,8 +84,6 @@ class KLocalizedStringPrivate
 class KLocalizedStringPrivateStatics
 {
 public:
-    const QString theFence;
-
     QHash<QString, KuitSemantics*> formatters;
 
     ~KLocalizedStringPrivateStatics ()
