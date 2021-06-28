@@ -113,7 +113,6 @@ QHostInfo HostInfoAgentPrivate::lookupHost(const QString &hostName, unsigned lon
 
     // Failing all of the above, do the lookup...
     kDebug() << "Name look up for" << hostName;
-    QMutexLocker lock(&m_mutex);
     QElapsedTimer lookupTimer;
     lookupTimer.start();
     const int lookupId = QHostInfo::lookupHost(hostName, this, SLOT(lookupFinished(QHostInfo)));
