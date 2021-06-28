@@ -460,11 +460,9 @@ static bool startProcessInternal(int argc, const char *argv[], bool waitAndExit,
             //if the process was started directly, use waitpid(), as it's a child...
             while(waitpid(-1, NULL, 0) != pid) {}
         } else {
-#ifdef Q_OS_LINUX
+            // PR_SET_PTRACER available since 3.4
+#if defined(Q_OS_LINUX)
             // Declare the process that will be debugging the crashed KDE app (#245529)
-#ifndef PR_SET_PTRACER
-# define PR_SET_PTRACER 0x59616d61
-#endif
             prctl(PR_SET_PTRACER, pid, 0, 0, 0);
 #endif
             //...else poll its status using kill()
