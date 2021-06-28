@@ -419,10 +419,6 @@ static QSsl::SslProtocol qSslProtocolFromString(const QString& str)
         return QSsl::SslV3;
     }
 
-    if (str.compare(QLatin1String("SSLv2"), Qt::CaseInsensitive) == 0) {
-        return QSsl::SslV2;
-    }
-
     if (str.compare(QLatin1String("TLSv1"), Qt::CaseInsensitive) == 0) {
         return QSsl::TlsV1;
     }

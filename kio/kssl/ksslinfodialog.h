@@ -71,7 +71,7 @@ public:
      *         authority to the peer.
 	 *  @param ip the ip of the remote host
 	 *  @param host the remote hostname
-     *  @param sslProtocol the version of SSL in use (SSLv2, SSLv3, TLSv1)
+     *  @param sslProtocol the version of SSL in use (SSLv3, TLSv1)
 	 *  @param cipher the cipher in use
 	 *  @param usedBits the used bits of the key
 	 *  @param bits the key size of the cipher in use
