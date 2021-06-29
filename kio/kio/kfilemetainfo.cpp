@@ -154,8 +154,13 @@ public:
     void addValue(const Strigi::AnalysisResult* idx, const Strigi::RegisteredField* field,
             uint32_t value) {
         if (idx->writerData()) {
-            std::string type(field->type());
-            if (qstrncmp(type.c_str(), Strigi::FieldRegister::datetimeType.c_str(), type.size()) == 0) {
+            const std::string type(field->type());
+            if (qstrncmp(type.c_str(), Strigi::FieldRegister::durationType.c_str(), type.size()) == 0) {
+                QTime time;
+                time = time.addSecs(value);
+                QString timestring = KGlobal::locale()->formatTime(time, true, true);
+                addValue(idx, field, QVariant(timestring));
+            } else if (qstrncmp(type.c_str(), Strigi::FieldRegister::datetimeType.c_str(), type.size()) == 0) {
                 QDateTime datetime = QDateTime::fromTime_t(value);
                 // same format as the one used for modification time in:
                 // kdelibs/kio/kfile/kfilemetadataprovider.cpp
