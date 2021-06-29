@@ -154,21 +154,16 @@ public:
     void addValue(const Strigi::AnalysisResult* idx, const Strigi::RegisteredField* field,
             uint32_t value) {
         if (idx->writerData()) {
-            const std::string type(field->type());
-            if (qstrncmp(type.c_str(), Strigi::FieldRegister::durationType.c_str(), type.size()) == 0) {
-                QTime time;
-                time = time.addSecs(value);
-                QString timestring = KGlobal::locale()->formatTime(time, true, true);
-                addValue(idx, field, QVariant(timestring));
-            } else if (qstrncmp(type.c_str(), Strigi::FieldRegister::datetimeType.c_str(), type.size()) == 0) {
-                QDateTime datetime = QDateTime::fromTime_t(value);
-                // same format as the one used for modification time in:
-                // kdelibs/kio/kfile/kfilemetadataprovider.cpp
-                QString datestring = KGlobal::locale()->formatDateTime(datetime, KLocale::FancyLongDate);
-                addValue(idx, field, QVariant(datestring));
-            } else {
-                addValue(idx, field, QVariant((qint32)value));
+            // the only duration field relevant to files
+            static const char* durationField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration";
+            const std::string name(field->key());
+            if (qstrncmp(name.c_str(), durationField, name.size()) == 0) {
+                const QString durationstring = KGlobal::locale()->prettyFormatDuration(value * 1000);
+                addValue(idx, field, QVariant(durationstring));
+                return;
             }
+
+            addValue(idx, field, QVariant((quint32)value));
         }
     }
     void addValue(const Strigi::AnalysisResult* idx, const Strigi::RegisteredField* field,
