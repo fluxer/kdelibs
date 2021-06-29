@@ -23,7 +23,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include <QtCore/qdatetime.h>
+#include <QtCore/QTimer>
+#include <QtCore/QDir>
+#include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 #include <QtGui/QCheckBox>
 #include <QtGui/QLabel>
@@ -33,7 +35,6 @@
 #include <QtGui/QScrollBar>
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
-#include <QtCore/QDir>
 
 #include <klineedit.h>
 #include <kmessagebox.h>
@@ -343,6 +344,8 @@ RenameDialog::RenameDialog(QWidget *parent, const QString & _caption,
     layout->addWidget(d->bCancel);
 
     resize(sizeHint());
+    // trigger preview generation and set minimum sizes of areas
+    resizePanels();
 }
 
 RenameDialog::~RenameDialog()
@@ -625,10 +628,8 @@ QScrollArea* RenameDialog::createContainerLayout(QWidget* parent, const KFileIte
     itemList << item;
 
     // widget
-    KFileMetaDataWidget* metaWidget =  new KFileMetaDataWidget(this);
-
+    KFileMetaDataWidget* metaWidget = new KFileMetaDataWidget(this);
     metaWidget->setItems(itemList);
-    connect(metaWidget, SIGNAL(metaDataRequestFinished(KFileItemList)), this, SLOT(resizePanels()));
 
     // Encapsulate the MetaDataWidgets inside a container with stretch at the bottom.
     // This prevents that the meta data widgets get vertically stretched
