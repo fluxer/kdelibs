@@ -56,6 +56,7 @@ QString KNfoTranslator::translation(const KUrl& uri)
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url", i18nc("@label file URL", "Location") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator", i18nc("@label", "Creator") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", i18nc("@label", "Average Bitrate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate", i18nc("@label", "Frame Rate") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", i18nc("@label", "Channels") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#characterCount", i18nc("@label number of characters", "Characters") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec",  i18nc("@label", "Codec") },
