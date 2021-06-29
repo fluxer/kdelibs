@@ -96,7 +96,6 @@ set(kiocore_STAT_SRCS
     kio/predicateproperties.cpp
     kio/previewjob.cpp
     kio/renamedialog.cpp
-    kio/renamedialogplugin.cpp
     kio/scheduler.cpp
     kio/sessiondata.cpp
     kio/skipdialog.cpp
@@ -249,7 +248,6 @@ install(
     kfileplugin.desktop
     kscan.desktop
     kurifilterplugin.desktop
-    renamedialogplugin.desktop
     kfile/kpropertiesdialogplugin.desktop
     kio/kfilewrite.desktop
     kio/kfileitemactionplugin.desktop
@@ -293,7 +291,6 @@ install(
     kio/davjob.h
     kio/directorysizejob.h
     kio/renamedialog.h
-    kio/renamedialogplugin.h
     kio/skipdialog.h
     kio/udsentry.h
     kssl/sslui.h

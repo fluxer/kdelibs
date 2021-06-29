@@ -23,7 +23,6 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include <QtCore/QTimer>
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
