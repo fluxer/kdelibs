@@ -16,11 +16,8 @@
 #include <kpluginfactory.h>
 #include <kimagefilepreview.h>
 
-bool KFileMetaPreview::s_tryAudioPreview = true;
-
 KFileMetaPreview::KFileMetaPreview( QWidget *parent )
-    : KPreviewWidgetBase( parent ),
-      haveAudioPreview( false )
+    : KPreviewWidgetBase( parent )
 {
     QHBoxLayout *layout = new QHBoxLayout( this );
     layout->setMargin( 0 );
@@ -99,36 +96,6 @@ KPreviewWidgetBase * KFileMetaPreview::previewProviderFor( const QString& mimeTy
     if (provider)
         return provider;
 
-//qDebug("#### didn't find anything for: %s", mimeType.toLatin1().constData());
-
-    if ( s_tryAudioPreview &&
-        !mimeType.startsWith(QLatin1String("text/")) &&
-        !mimeType.startsWith(QLatin1String("image/")) )
-    {
-        if ( !haveAudioPreview )
-        {
-            KPreviewWidgetBase *audioPreview = createAudioPreview( m_stack );
-            if ( audioPreview )
-            {
-                haveAudioPreview = true;
-                (void) m_stack->addWidget( audioPreview );
-                const QStringList mimeTypes = audioPreview->supportedMimeTypes();
-                QStringList::ConstIterator it = mimeTypes.begin();
-                for ( ; it != mimeTypes.end(); ++it )
-                {
-                    // only add non already handled mimetypes
-                    if ( m_previewProviders.constFind( *it ) == m_previewProviders.constEnd() )
-                        m_previewProviders.insert( *it, audioPreview );
-                }
-            }
-        }
-    }
-
-    // with the new mimetypes from the audio-preview, try again
-    provider = findExistingProvider(mimeType, mimeInfo);
-    if (provider)
-        return provider;
-
     // The logic in this code duplicates the logic in PreviewJob.
     // But why do we need multiple KPreviewWidgetBase instances anyway?
 
@@ -178,23 +145,6 @@ void KFileMetaPreview::clearPreviewProviders()
 	}
 	qDeleteAll(m_previewProviders);
     m_previewProviders.clear();
-}
-
-// static
-KPreviewWidgetBase * KFileMetaPreview::createAudioPreview( QWidget *parent )
-{
-    KPluginLoader loader( "kfileaudiopreview" );
-    KPluginFactory *factory = loader.factory();
-    if ( !factory )
-    {
-        kWarning() << "Couldn't load kfileaudiopreview" << loader.errorString();
-        s_tryAudioPreview = false;
-        return 0L;
-    }
-    KPreviewWidgetBase* w = factory->create<KPreviewWidgetBase>( parent );
-    if ( w )
-        w->setObjectName( "kfileaudiopreview" );
-    return w;
 }
 
 #include "moc_kfilemetapreview.cpp"
