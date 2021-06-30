@@ -22,7 +22,7 @@
 
 #include <kpropertiesdialog.h>
 
-class KFileMetaPreview;
+class KImageFilePreview;
 
 /*!
  * PreviewProps plugin
@@ -46,7 +46,7 @@ private Q_SLOTS:
   void currentPageChanged( KPageWidgetItem *, KPageWidgetItem * );
 
 private:
-  KFileMetaPreview* preview;
+  KImageFilePreview* preview;
   void createLayout();
 
   class KPreviewPropsPluginPrivate;

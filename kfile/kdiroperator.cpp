@@ -24,8 +24,7 @@
 #include "kdiroperatordetailview_p.h"
 #include "kdirsortfilterproxymodel.h"
 #include "kfileitem.h"
-#include "kfilemetapreview.h"
-#include "kpreviewwidgetbase.h"
+#include "kimagefilepreview.h"
 #include "knewfilemenu.h"
 
 #include <config-kfile.h>
@@ -619,7 +618,7 @@ void KDirOperator::Private::_k_togglePreview(bool on)
     if (on) {
         viewKind = viewKind | KFile::PreviewContents;
         if (preview == 0) {
-            preview = new KFileMetaPreview(parent);
+            preview = new KImageFilePreview(parent);
             actionCollection->action("preview")->setChecked(true);
             splitter->addWidget(preview);
         }
@@ -2079,7 +2078,7 @@ void KDirOperator::writeConfig(KConfigGroup& configGroup)
     // don't save the preview when an application specific preview is in use.
     bool appSpecificPreview = false;
     if (d->preview) {
-        KFileMetaPreview *tmp = dynamic_cast<KFileMetaPreview*>(d->preview);
+        KImageFilePreview *tmp = dynamic_cast<KImageFilePreview*>(d->preview);
         appSpecificPreview = (tmp == 0);
     }
 

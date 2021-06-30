@@ -22,7 +22,7 @@
 
 #include <QtGui/QLayout>
 
-#include <kfilemetapreview.h>
+#include <kimagefilepreview.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
 
@@ -53,7 +53,7 @@ void KPreviewPropsPlugin::createLayout()
     QVBoxLayout* tmp = new QVBoxLayout(topframe);
     tmp->setMargin(0);
 
-    preview = new KFileMetaPreview(topframe);
+    preview = new KImageFilePreview(topframe);
 
     tmp->addWidget(preview) ;
     connect( properties, SIGNAL(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)), SLOT(currentPageChanged(KPageWidgetItem*,KPageWidgetItem*)) );
@@ -75,7 +75,7 @@ bool KPreviewPropsPlugin::supports( const KFileItemList &_items )
     const QStringList supportedMimeTypes = KIO::PreviewJob::supportedMimeTypes();
     foreach(const QString& supportedMime, supportedMimeTypes) {
         if (mime->is(supportedMime))
-    return true;
+            return true;
     }
     return false;
 }
