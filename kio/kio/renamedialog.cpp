@@ -343,8 +343,10 @@ RenameDialog::RenameDialog(QWidget *parent, const QString & _caption,
     layout->addWidget(d->bCancel);
 
     resize(sizeHint());
-    // trigger preview generation and set minimum sizes of areas
-    resizePanels();
+    if (_mode & M_OVERWRITE) {
+        // trigger preview generation and set minimum sizes of areas
+        resizePanels();
+    }
 }
 
 RenameDialog::~RenameDialog()
