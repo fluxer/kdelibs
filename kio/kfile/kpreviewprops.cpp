@@ -71,11 +71,22 @@ bool KPreviewPropsPlugin::supports( const KFileItemList &_items )
     bool metaDataEnabled = KGlobalSettings::showFilePreview(_items.first().url());
     if (!metaDataEnabled)
         return false;
-    const KMimeType::Ptr mime = _items.first().mimeTypePtr();
-    const QStringList supportedMimeTypes = KIO::PreviewJob::supportedMimeTypes();
-    foreach(const QString& supportedMime, supportedMimeTypes) {
-        if (mime->is(supportedMime))
+    const KMimeType::Ptr itemMime = _items.first().mimeTypePtr();
+    foreach(const QString &it, KIO::PreviewJob::supportedMimeTypes()) {
+        if (itemMime->is(it)) {
             return true;
+        }
+
+        // glob match for certain thumbnailers, same matching is done in:
+        // kdelibs/kio/kio/previewjob.cpp
+        // kde-workspace/kioslave/thumbnail/thumbnail.cpp
+        if (it.endsWith('*')) {
+            const QString mimeGroup = it.left(it.length()-1);
+            const QString mimeName = itemMime->name();
+            if (mimeName.startsWith(mimeGroup)) {
+                return true;
+            }
+        }
     }
     return false;
 }

@@ -622,7 +622,7 @@ QStringList PreviewJob::supportedMimeTypes()
     QStringList result;
     const KService::List plugins = KServiceTypeTrader::self()->query("ThumbCreator");
     for (KService::List::ConstIterator it = plugins.begin(); it != plugins.end(); ++it)
-        result += (*it)->mimeTypes();
+        result += (*it)->serviceTypes();
     return result;
 }
 
