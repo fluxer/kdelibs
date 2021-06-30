@@ -156,10 +156,26 @@ public:
         if (idx->writerData()) {
             // the only duration field relevant to files
             static const char* durationField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration";
+            // these use different measures
+            static const char* avarageBitrateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate";
+            static const char* frameRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate";
+            static const char* sampleRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate";
             const std::string name(field->key());
             if (qstrncmp(name.c_str(), durationField, name.size()) == 0) {
                 const QString durationstring = KGlobal::locale()->prettyFormatDuration(value * 1000);
                 addValue(idx, field, QVariant(durationstring));
+                return;
+            } else if (qstrncmp(name.c_str(), avarageBitrateField, name.size()) == 0) {
+                const QString bitratestring = i18n("%1 per second").arg(KGlobal::locale()->formatByteSize(value));
+                addValue(idx, field, QVariant(bitratestring));
+                return;
+            } else if (qstrncmp(name.c_str(), frameRateField, name.size()) == 0) {
+                const QString bitratestring = i18n("%1 per second").arg(value);
+                addValue(idx, field, QVariant(bitratestring));
+                return;
+            } else if (qstrncmp(name.c_str(), sampleRateField, name.size()) == 0) {
+                const QString bitratestring = i18n("%1 kHz").arg(value / 1000);
+                addValue(idx, field, QVariant(bitratestring));
                 return;
             }
 
