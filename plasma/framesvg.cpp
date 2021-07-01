@@ -288,19 +288,14 @@ bool FrameSvg::hasElementPrefix(Plasma::Location location) const
     switch (location) {
         case TopEdge:
             return hasElementPrefix("north");
-            break;
         case BottomEdge:
             return hasElementPrefix("south");
-            break;
         case LeftEdge:
             return hasElementPrefix("west");
-            break;
         case RightEdge:
             return hasElementPrefix("east");
-            break;
         default:
             return hasElementPrefix(QString());
-            break;
     }
 }
 
@@ -395,21 +390,15 @@ qreal FrameSvg::marginSize(const Plasma::MarginEdge edge) const
     switch (edge) {
     case Plasma::TopMargin:
         return frame->topMargin;
-    break;
-
     case Plasma::LeftMargin:
         return frame->leftMargin;
-    break;
-
     case Plasma::RightMargin:
         return frame->rightMargin;
-    break;
-
-    //Plasma::BottomMargin
-    default:
+    case Plasma::BottomMargin:
         return frame->bottomMargin;
-    break;
     }
+
+    return .0;
 }
 
 void FrameSvg::getMargins(qreal &left, qreal &top, qreal &right, qreal &bottom) const
