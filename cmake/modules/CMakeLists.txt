@@ -25,7 +25,6 @@ set(cmakeFilesDontInstall
 # compatible).
 set(cmakeFiles
     cmake-modules-styleguide.txt
-    FindAlsa.cmake
     FindDBusMenuQt.cmake
     FindDjVuLibre.cmake
     FindEPub.cmake
