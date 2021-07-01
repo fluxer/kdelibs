@@ -32,6 +32,7 @@ public:
 
 public Q_SLOTS:
     Q_SCRIPTABLE void play(const QString &path);
+    Q_SCRIPTABLE void play(const QString &path, const QString &playerID);
 
 private Q_SLOTS:
     void _removeFinished();

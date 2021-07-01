@@ -34,6 +34,14 @@ void KAudioPlayerModule::play(const QString &path)
     newplayer->load(path);
 }
 
+void KAudioPlayerModule::play(const QString &path, const QString &playerID)
+{
+    KAudioPlayer* newplayer = new KAudioPlayer(this);
+    newplayer->setPlayerID(playerID);
+    connect(newplayer, SIGNAL(finished()), this, SLOT(_removeFinished()));
+    newplayer->load(path);
+}
+
 void KAudioPlayerModule::_removeFinished()
 {
     KAudioPlayer* player = qobject_cast<KAudioPlayer*>(sender());
