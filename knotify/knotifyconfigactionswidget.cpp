@@ -18,11 +18,13 @@
 #include "knotifyconfigactionswidget.h"
 #include "knotifyconfigelement.h"
 
+#include <QtDBus/QDBusInterface>
+
 #include <kstandarddirs.h>
 #include <kiconloader.h>
 
 KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
-	: QWidget(parent), m_sound_player(Q_NULLPTR)
+	: QWidget(parent)
 {
 	m_ui.setupUi(this);
 
@@ -62,9 +64,6 @@ KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
 
 KNotifyConfigActionsWidget::~KNotifyConfigActionsWidget()
 {
-	if (m_sound_player) {
-		m_sound_player->deleteLater();
-	}
 }
 
 void KNotifyConfigActionsWidget::setConfigElement( KNotifyConfigElement * config )
@@ -140,11 +139,9 @@ void KNotifyConfigActionsWidget::slotPlay(  )
 		if ( search.isEmpty() )*/
 		soundURL = KUrl::fromPath( KStandardDirs::locate( "sound", soundString ) );
 	}
-	// create the player if missing
-	if (!m_sound_player) {
-		m_sound_player = new QDBusInterface("org.kde.kded", "/modules/kaudioplayer", "org.kde.kaudioplayer");
-	}
-	m_sound_player->call("play", soundURL.prettyUrl());
+	// same ID as the one used in kde-workspace/knotify/notifybysound.cpp
+	QDBusInterface kaudioplayer("org.kde.kded", "/modules/kaudioplayer", "org.kde.kaudioplayer");
+	kaudioplayer.call("play", soundURL.prettyUrl(), QString::fromLatin1("knotify"));
 }
 
 void KNotifyConfigActionsWidget::slotKTTSComboChanged()
