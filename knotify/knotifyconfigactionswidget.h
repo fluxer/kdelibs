@@ -21,6 +21,8 @@
 #define KNOTIFYCONFIGACTIONSWIDGET_H
 
 #include <QtGui/QWidget>
+#include <QtDBus/QDBusInterface>
+
 #include "ui_knotifyconfigactionswidgetbase.h"
 
 class KNotifyConfigElement;
@@ -35,7 +37,7 @@ class KNotifyConfigActionsWidget : public QWidget
 	Q_OBJECT
 	public:
 		KNotifyConfigActionsWidget( QWidget *parent);
-		~KNotifyConfigActionsWidget() {}
+		~KNotifyConfigActionsWidget();
 
 		void setConfigElement( KNotifyConfigElement *config );
 		void save( KNotifyConfigElement *config );
@@ -46,6 +48,7 @@ class KNotifyConfigActionsWidget : public QWidget
 		void slotKTTSComboChanged();
 	private:
 		Ui::KNotifyConfigActionsWidgetBase m_ui;
+		QDBusInterface* m_sound_player;
 };
 
 #endif // KNOTIFYCONFIGACTIONSWIDGET_H

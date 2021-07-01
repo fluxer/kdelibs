@@ -20,10 +20,9 @@
 
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-#include <kmediaplayer.h>
 
 KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
-	: QWidget(parent)
+	: QWidget(parent), m_sound_player(Q_NULLPTR)
 {
 	m_ui.setupUi(this);
 
@@ -59,6 +58,13 @@ KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
 		m_ui.KTTS_combo->setVisible(false);
 	}
 	
+}
+
+KNotifyConfigActionsWidget::~KNotifyConfigActionsWidget()
+{
+	if (m_sound_player) {
+		m_sound_player->deleteLater();
+	}
 }
 
 void KNotifyConfigActionsWidget::setConfigElement( KNotifyConfigElement * config )
@@ -134,9 +140,11 @@ void KNotifyConfigActionsWidget::slotPlay(  )
 		if ( search.isEmpty() )*/
 		soundURL = KUrl::fromPath( KStandardDirs::locate( "sound", soundString ) );
 	}
-	KAudioPlayer* media = new KAudioPlayer(this);
-	media->load(soundURL.prettyUrl());
-	connect(media, SIGNAL(finished()), media, SLOT(deleteLater()));
+	// create the player if missing
+	if (!m_sound_player) {
+		m_sound_player = new QDBusInterface("org.kde.kded", "/modules/kaudioplayer", "org.kde.kaudioplayer");
+	}
+	m_sound_player->call("play", soundURL.prettyUrl());
 }
 
 void KNotifyConfigActionsWidget::slotKTTSComboChanged()

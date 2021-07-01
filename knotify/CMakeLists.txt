@@ -4,9 +4,6 @@ include_directories(
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
-    ${CMAKE_SOURCE_DIR}/kutils/kmediaplayer
-    # for the export header
-    ${CMAKE_BINARY_DIR}/kutils/kmediaplayer
 )
 
 if(ENABLE_TESTING)
@@ -28,8 +25,8 @@ add_library(knotifyconfig ${LIBRARY_TYPE} ${knotifyconfig_LIB_SRCS})
 target_link_libraries(knotifyconfig PUBLIC
     ${KDE4_KIO_LIBS}
     ${KDE4_KDECORE_LIBS}
-    ${KDE4_KMEDIAPLAYER_LIBS}
     ${QT_QTGUI_LIBRARY}
+    ${QT_QTDBUS_LIBRARY}
 )
 
 set_target_properties(knotifyconfig PROPERTIES
