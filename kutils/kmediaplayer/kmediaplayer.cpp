@@ -56,7 +56,7 @@ static bool s_fullscreen = false;
         kWarning() << i18n("Could not save state"); \
     }
 
-#define COMMMON_COMMAND_SENDER \
+#define COMMON_COMMAND_SENDER \
     kDebug() << i18n("sending command") << command; \
     if (d->m_handle) { \
         const QVariant result = mpv::qt::command(d->m_handle, command); \
@@ -462,7 +462,7 @@ KAudioPlayer::~KAudioPlayer()
 void KAudioPlayer::command(const QVariant &command) const
 {
 #if defined(HAVE_MPV)
-    COMMMON_COMMAND_SENDER
+    COMMON_COMMAND_SENDER
 #else
     Q_UNUSED(command);
 #endif
@@ -559,7 +559,7 @@ KMediaPlayer::~KMediaPlayer()
 void KMediaPlayer::command(const QVariant &command) const
 {
 #if defined(HAVE_MPV)
-    COMMMON_COMMAND_SENDER
+    COMMON_COMMAND_SENDER
 #else
     Q_UNUSED(command);
 #endif
