@@ -35,6 +35,8 @@
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
 #include "udevmanager.h"
+#include "../shared/pciidstables.h"
+#include "../shared/usbidstables.h"
 #include "cpuinfo.h"
 #include "kglobal.h"
 #include "klocale.h"
@@ -86,22 +88,31 @@ QString UDevDevice::vendor() const
 {
     QString vendor = m_device.sysfsProperty("manufacturer");
     if (vendor.isEmpty()) {
-         if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
-             // sysfs doesn't have anything useful here
+        if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
+            // sysfs doesn't have anything useful here
             vendor = extractCpuInfoLine(deviceNumber(), "vendor_id\\s+:\\s+(\\S.+)");
-         } else if (queryDeviceInterface(Solid::DeviceInterface::Video)) {
-             vendor = m_device.deviceProperty("ID_VENDOR").replace('_', " ");
-         }  else if (queryDeviceInterface(Solid::DeviceInterface::NetworkInterface)) {
-             vendor = m_device.deviceProperty("ID_VENDOR_FROM_DATABASE");
-         } else if (queryDeviceInterface(Solid::DeviceInterface::AudioInterface)) {
-             if (m_device.parent().isValid()) {
-                 vendor = m_device.parent().deviceProperty("ID_VENDOR_FROM_DATABASE");
-             }
-         }
+        } else if (queryDeviceInterface(Solid::DeviceInterface::AudioInterface)) {
+            const UdevQt::Device deviceparent(m_device.parent());
+            if (deviceparent.isValid()) {
+                vendor = deviceparent.deviceProperty("ID_VENDOR_FROM_DATABASE");
+            }
+        }
 
-         if (vendor.isEmpty()) {
-             vendor = m_device.deviceProperty("ID_VENDOR").replace('_', ' ');
-         }
+        if (vendor.isEmpty()) {
+            vendor = m_device.deviceProperty("ID_VENDOR_FROM_DATABASE");;
+        }
+
+        if (vendor.isEmpty()) {
+            const QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
+            if (!idvendorid.isEmpty()) {
+                const QString idbus(m_device.deviceProperty("ID_BUS"));
+                if (idbus == QLatin1String("pci")) {
+                    vendor = lookupPCIVendor(idvendorid.constData());
+                } else if (idbus == QLatin1String("usb")) {
+                    vendor = lookupUSBVendor(idvendorid.constData());
+                }
+            }
+        }
     }
     return vendor;
 }
@@ -122,20 +133,30 @@ QString UDevDevice::product() const
             const NetworkInterface netIface(const_cast<UDevDevice *>(this));
             if (netIface.isLoopback()) {
                 product = QLatin1String("Loopback device Interface");
-            } else  {
-                product = m_device.deviceProperty("ID_MODEL_FROM_DATABASE");
             }
         } else if(queryDeviceInterface(Solid::DeviceInterface::SerialInterface)) {
             const SerialInterface serialIface(const_cast<UDevDevice *>(this));
             if (serialIface.serialType() == Solid::SerialInterface::Platform) {
-                product.append(QLatin1String("Platform serial"));
+                product = QLatin1String("Platform serial");
             } else if (serialIface.serialType() == Solid::SerialInterface::Usb) {
-                product.append(QLatin1String("USB Serial Port"));
+                product = QLatin1String("USB Serial Port");
             }
         }
 
         if (product.isEmpty()) {
-            product = m_device.deviceProperty("ID_MODEL").replace('_', ' ');
+            product = m_device.deviceProperty("ID_MODEL_FROM_DATABASE");
+        }
+
+        if (product.isEmpty()) {
+            const QByteArray idmodelid(m_device.deviceProperty("ID_MODEL_ID").toLatin1());
+            if (!idmodelid.isEmpty()) {
+                const QString idbus(m_device.deviceProperty("ID_BUS"));
+                if (idbus == QLatin1String("pci")) {
+                    product = lookupPCIDevice(idmodelid.constData());
+                } else if (idbus == QLatin1String("usb")) {
+                    product = lookupUSBDevice(idmodelid.constData());
+                }
+            }
         }
     }
     return product;
