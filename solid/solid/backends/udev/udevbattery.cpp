@@ -19,7 +19,6 @@
 */
 
 #include "udevbattery.h"
-#include <qmath.h>
 
 using namespace Solid::Backends::UDev;
 

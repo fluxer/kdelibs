@@ -18,9 +18,9 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-
 #include "udevopticaldrive.h"
+
+#include <QDebug>
 
 #include <cdio/mmc.h>
 #include <cdio/mmc_cmds.h>

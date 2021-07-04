@@ -19,12 +19,11 @@
 */
 
 #include "udevserialinterface.h"
-
 #include "udevdevice.h"
 
-#include <stdio.h>
-
 #include <QString>
+
+#include <stdio.h>
 
 using namespace Solid::Backends::UDev;
 
@@ -41,9 +40,9 @@ SerialInterface::SerialInterface(UDevDevice *device)
 
     const char *lastElementAscii = lastElement.constData();
 
-    if (sscanf (lastElementAscii, "ttyS%d", &m_portnum) == 1) {
+    if (::sscanf(lastElementAscii, "ttyS%d", &m_portnum) == 1) {
         m_type = Solid::SerialInterface::Platform;
-    } else if (sscanf (lastElementAscii, "ttyUSB%d", &m_portnum) == 1) {
+    } else if (::sscanf(lastElementAscii, "ttyUSB%d", &m_portnum) == 1) {
         m_type = Solid::SerialInterface::Usb;
     }
 }

@@ -46,7 +46,6 @@
 #include "udevopticaldrive.h"
 #endif
 
-#include <QFile>
 #include <QDebug>
 
 using namespace Solid::Backends::UDev;

@@ -20,11 +20,9 @@
 */
 
 #include "udevaudiointerface.h"
-
 #include "udevaudiointerface_p.h"
 #include "udevdevice.h"
 
-#include <QFile>
 #include <QDebug>
 
 using namespace Solid::Backends::UDev;

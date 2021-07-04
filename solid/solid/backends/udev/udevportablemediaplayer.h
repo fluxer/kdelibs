@@ -21,8 +21,9 @@
 #ifndef SOLID_BACKENDS_UDEV_PORTABLEMEDIAPLAYER_H
 #define SOLID_BACKENDS_UDEV_PORTABLEMEDIAPLAYER_H
 
-#include <solid/ifaces/portablemediaplayer.h>
 #include "udevdeviceinterface.h"
+
+#include <solid/ifaces/portablemediaplayer.h>
 
 #include <QtCore/QStringList>
 

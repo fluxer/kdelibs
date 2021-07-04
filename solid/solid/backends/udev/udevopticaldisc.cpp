@@ -18,9 +18,9 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <QDebug>
-
 #include "udevopticaldisc.h"
+
+#include <QDebug>
 
 #include <cdio/cd_types.h>
 
