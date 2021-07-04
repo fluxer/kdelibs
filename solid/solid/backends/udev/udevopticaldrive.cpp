@@ -51,6 +51,8 @@ OpticalDrive::OpticalDrive(UDevDevice *device)
                              SLOT(slotEjectRequested()),
                              SLOT(slotEjectDone(int,QString)));
 
+    // TODO: implement ejectPressed() signal
+
     // qDebug() << "OpticalDrive" << devicename << writeSpeeds() << writeSpeed() << readSpeed() << supportedMedia();
 }
 

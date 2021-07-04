@@ -30,6 +30,7 @@ Button::Button(UDevDevice* device)
     } else if (m_device->devicePropertyExists("SW")) {
         m_type = Solid::Button::LidButton;
     }
+    // TODO: implement pressed() signal
 }
 
 Button::~Button()
