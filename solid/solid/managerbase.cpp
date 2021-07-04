@@ -52,6 +52,7 @@ void Solid::ManagerBasePrivate::loadBackends()
     QString solidFakeXml(QString::fromLocal8Bit(qgetenv("SOLID_FAKEHW")));
     if (!solidFakeXml.isEmpty()) {
         m_backends << new Solid::Backends::Fake::FakeManager(0, solidFakeXml);
+        return;
     }
 #endif
 
