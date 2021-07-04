@@ -112,6 +112,11 @@ QString UDevDevice::vendor() const
                 }
             }
         }
+
+        if (vendor.isEmpty()) {
+            // may not be visible to `udevadm info /dev/sdX` query but it may be there
+            vendor = m_device.deviceProperty("ID_VENDOR");
+        }
     }
     return vendor;
 }
@@ -156,6 +161,11 @@ QString UDevDevice::product() const
                     product = lookupUSBDevice(idmodelid.constData());
                 }
             }
+        }
+
+        if (product.isEmpty()) {
+            // may not be visible to `udevadm info /dev/sdX` query but it may be there
+            product = m_device.deviceProperty("ID_MODEL");
         }
     }
     return product;
