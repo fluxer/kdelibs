@@ -65,7 +65,6 @@ public:
     QMap<QString, QVariant> allProperties() const;
     bool propertyExists(const QString &key) const;
 
-    QString systemAttribute(const char *attribute) const;
     QString deviceName() const;
     QString devicePath() const;
     int deviceNumber() const;

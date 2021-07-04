@@ -602,11 +602,6 @@ bool UDevDevice::propertyExists(const QString &key) const
     return m_device.deviceProperties().contains(key);
 }
 
-QString UDevDevice::systemAttribute(const char *attribute) const
-{
-    return m_device.sysfsProperty(attribute);
-}
-
 QString UDevDevice::deviceName() const
 {
     return m_device.sysfsPath();
