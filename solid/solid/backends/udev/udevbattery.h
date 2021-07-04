@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVBATTERY_H
-#define UDEVBATTERY_H
+#ifndef SOLID_BACKENDS_UDEV_UDEVBATTERY_H
+#define SOLID_BACKENDS_UDEV_UDEVBATTERY_H
 
 #include <solid/ifaces/battery.h>
 #include "udevdeviceinterface.h"
@@ -72,4 +72,4 @@ private:
 }
 }
 
-#endif // UDEVBATTERY_H
+#endif // SOLID_BACKENDS_UDEV_UDEVBATTERY_H

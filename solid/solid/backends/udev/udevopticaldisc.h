@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVOPTICALDISC_H
-#define UDEVOPTICALDISC_H
+#ifndef SOLID_BACKENDS_UDEV_UDEVOPTICALDISC_H
+#define SOLID_BACKENDS_UDEV_UDEVOPTICALDISC_H
 
 #include <solid/ifaces/opticaldisc.h>
 
@@ -57,4 +57,5 @@ private:
 }
 }
 }
-#endif // UDEVOPTICALDISC_H
+
+#endif // SOLID_BACKENDS_UDEV_UDEVOPTICALDISC_H

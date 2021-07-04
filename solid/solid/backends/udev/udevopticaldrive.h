@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVOPTICALDRIVE_H
-#define UDEVOPTICALDRIVE_H
+#ifndef SOLID_BACKENDS_UDEV_UDEVOPTICALDRIVE_H
+#define SOLID_BACKENDS_UDEV_UDEVOPTICALDRIVE_H
 
 #include <solid/ifaces/opticaldrive.h>
 
@@ -67,4 +67,4 @@ private:
 }
 }
 
-#endif // UDEVOPTICALDRIVE_H
+#endif // SOLID_BACKENDS_UDEV_UDEVOPTICALDRIVE_H

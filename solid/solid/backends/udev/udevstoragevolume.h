@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVSTORAGEVOLUME_H
-#define UDEVSTORAGEVOLUME_H
+#ifndef SOLID_BACKENDS_UDEV_UDEVSTORAGEVOLUME_H
+#define SOLID_BACKENDS_UDEV_UDEVSTORAGEVOLUME_H
 
 #include <ifaces/storagevolume.h>
 #include "udevblock.h"
@@ -54,4 +54,4 @@ public:
 }
 }
 
-#endif // UDEVSTORAGEVOLUME_H
+#endif // SOLID_BACKENDS_UDEV_UDEVSTORAGEVOLUME_H

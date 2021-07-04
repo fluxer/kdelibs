@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVSTORAGEACCESS_H
-#define UDEVSTORAGEACCESS_H
+#ifndef SOLID_BACKENDS_UDEV_UDEVSTORAGEACCESS_H
+#define SOLID_BACKENDS_UDEV_UDEVSTORAGEACCESS_H
 
 #include <solid/ifaces/storageaccess.h>
 #include "udevdeviceinterface.h"
@@ -66,4 +66,4 @@ class StorageAccess : public DeviceInterface, virtual public Solid::Ifaces::Stor
 }
 }
 
-#endif // UDEVSTORAGEACCESS_H
+#endif // SOLID_BACKENDS_UDEV_UDEVSTORAGEACCESS_H

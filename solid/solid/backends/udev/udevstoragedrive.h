@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVSTORAGEDRIVE_H
-#define UDEVSTORAGEDRIVE_H
+#ifndef SOLID_BACKENDS_UDEV_UDEVSTORAGEDRIVE_H
+#define SOLID_BACKENDS_UDEV_UDEVSTORAGEDRIVE_H
 
 #include <ifaces/storagedrive.h>
 
@@ -54,4 +54,4 @@ public:
 }
 }
 
-#endif // UDEVSTORAGEDRIVE_H
+#endif // SOLID_BACKENDS_UDEV_UDEVSTORAGEDRIVE_H

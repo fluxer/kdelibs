@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef UDEVACADAPTER_H
-#define UDEVACADAPTER_H
+#ifndef SOLID_BACKENDS_UDEV_UDEVACADAPTER_H
+#define SOLID_BACKENDS_UDEV_UDEVACADAPTER_H
 
 #include <solid/ifaces/acadapter.h>
 #include "udevdeviceinterface.h"
@@ -56,4 +56,4 @@ private:
 }
 }
 
-#endif // UDEVACADAPTER_H
+#endif // SOLID_BACKENDS_UDEV_UDEVACADAPTER_H
