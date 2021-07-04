@@ -143,14 +143,6 @@ QString Device::driver() const
     return QString::fromLatin1(udev_device_get_driver(d->udev));
 }
 
-QString Device::primaryDeviceFile() const
-{
-    if (!d)
-        return QString();
-
-    return QString::fromLatin1(udev_device_get_devnode(d->udev));
-}
-
 QStringList Device::alternateDeviceSymlinks() const
 {
     if (!d)
