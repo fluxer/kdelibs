@@ -52,8 +52,8 @@ public:
     virtual QObject *createDeviceInterface(const Solid::DeviceInterface::Type &type);
 
     QString device() const;
-    QString deviceProperty(const QString &key) const;
-    bool devicePropertyExists(const QString &key) const;
+    QString deviceProperty(const QByteArray &key) const;
+    bool devicePropertyExists(const QByteArray &key) const;
     QString deviceName() const;
     QString devicePath() const;
     int deviceNumber() const;

@@ -601,7 +601,7 @@ QString UDevDevice::device() const
     return devicePath();
 }
 
-QString UDevDevice::deviceProperty(const QString &key) const
+QString UDevDevice::deviceProperty(const QByteArray &key) const
 {
     const QString res = m_device.deviceProperty(key);
     if (!res.isEmpty()) {
@@ -610,7 +610,7 @@ QString UDevDevice::deviceProperty(const QString &key) const
     return m_device.sysfsProperty(key);
 }
 
-bool UDevDevice::devicePropertyExists(const QString &key) const
+bool UDevDevice::devicePropertyExists(const QByteArray &key) const
 {
     return m_device.deviceProperties().contains(key);
 }

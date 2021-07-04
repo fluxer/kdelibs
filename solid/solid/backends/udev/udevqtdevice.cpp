@@ -151,22 +151,20 @@ Device Device::parent() const
     return Device(p);
 }
 
-QString Device::deviceProperty(const QString &name) const
+QString Device::deviceProperty(const QByteArray &name) const
 {
     if (!m_device) {
         return QString();
     }
-    const QByteArray propName(name.toLatin1());
-    return QString::fromLatin1(udev_device_get_property_value(m_device, propName.constData()));
+    return QString::fromLatin1(udev_device_get_property_value(m_device, name.constData()));
 }
 
-QString Device::sysfsProperty(const QString &name) const
+QString Device::sysfsProperty(const QByteArray &name) const
 {
     if (!m_device) {
         return QString();
     }
-    const QByteArray propName(name.toLatin1());
-    return QString::fromLatin1(udev_device_get_sysattr_value(m_device, propName.constData()));
+    return QString::fromLatin1(udev_device_get_sysattr_value(m_device, name.constData()));
 }
 
 }

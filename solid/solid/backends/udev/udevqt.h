@@ -57,8 +57,8 @@ public:
     QStringList deviceProperties() const;
     Device parent() const;
 
-    QString deviceProperty(const QString &name) const;
-    QString sysfsProperty(const QString &name) const;
+    QString deviceProperty(const QByteArray &name) const;
+    QString sysfsProperty(const QByteArray &name) const;
 
 private:
     struct udev_device *m_device;
