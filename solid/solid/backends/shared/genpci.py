@@ -1,4 +1,7 @@
-#!/usr/local/bin/python2
+#!/usr/bin/python2
+
+# pci.ids can be obtained from:
+# https://pci-ids.ucw.cz/v2.2/pci.ids
 
 import sys
 
@@ -13,7 +16,7 @@ def splitpciline(fromline):
 
 vendormap = {}
 devicemap = {}
-with open('/usr/local/share/pciids/pci.ids', 'rb') as f:
+with open('./pci.ids', 'rb') as f:
     ingroupsection = False
     for line in f.readlines():
         sline = line.strip()
@@ -45,7 +48,7 @@ print('''static const struct pciVendorTblData {
 for vendorid in vendormap.keys():
     print('    { "%s", "%s" },' % (vendorid, vendormap[vendorid]))
 print('};')
-print('static const size_t pciVendorTblSize = sizeof(pciVendorTb) / sizeof(pciVendorTbData);')
+print('static const size_t pciVendorTblSize = sizeof(pciVendorTbl) / sizeof(pciVendorTblData);')
 print('')
 print('''static const struct pciDeviceTblData {
     const char* const deviceid;

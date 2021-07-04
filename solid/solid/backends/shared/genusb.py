@@ -1,4 +1,7 @@
-#!/usr/local/bin/python2
+#!/usr/bin/python2
+
+# usb.ids can be obtained from:
+# http://www.linux-usb.org/usb.ids
 
 import sys
 
@@ -8,12 +11,12 @@ def splitusbline(fromline):
     linename = fromline[doublespaceindex+2:]
     linename = linename.replace('"', '\\"')
     # what is the question? (in 1183)
-    linename = linename.replace('???', 'Unknown')
+    linename = linename.replace('??', 'Unknown')
     return (lineid, linename)
 
 vendormap = {}
 devicemap = {}
-with open('/usr/local/share/usbids/usb.ids', 'rb') as f:
+with open('./usb.ids', 'rb') as f:
     ingroupsection = False
     for line in f.readlines():
         sline = line.strip()
