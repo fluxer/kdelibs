@@ -20,7 +20,8 @@
 
 #include "udevstoragevolume.h"
 #include "udevdevice.h"
-#include "qdebug.h"
+
+#include <QDebug>
 
 using namespace Solid::Backends::UDev;
 
@@ -63,7 +64,6 @@ Solid::StorageVolume::UsageType StorageVolume::usage() const
 {
     const QString devtype(m_device->deviceProperty("DEVTYPE"));
     const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
-
     if (idfsusage == "crypto") {
         return Solid::StorageVolume::Encrypted;
     } else if (idfsusage == "other") {

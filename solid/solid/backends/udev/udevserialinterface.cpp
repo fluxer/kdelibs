@@ -28,28 +28,22 @@
 using namespace Solid::Backends::UDev;
 
 SerialInterface::SerialInterface(UDevDevice *device)
-    : DeviceInterface(device)
+    : DeviceInterface(device),
+    m_portnum(-1),
+    m_type(Solid::SerialInterface::Unknown)
 {
-    m_portnum = -1;
-    m_type = Solid::SerialInterface::Unknown;
-
-    QString path = m_device->deviceName();
-
-    int lastSlash = path.length() - path.lastIndexOf(QLatin1String("/")) -1;
+    const QString path = m_device->deviceName();
+    const int lastSlash = path.length() - path.lastIndexOf(QLatin1String("/")) -1;
     QByteArray lastElement = path.right(lastSlash).toLatin1();
-
-    const char *lastElementAscii = lastElement.constData();
-
-    if (::sscanf(lastElementAscii, "ttyS%d", &m_portnum) == 1) {
+    if (::sscanf(lastElement.constData(), "ttyS%d", &m_portnum) == 1) {
         m_type = Solid::SerialInterface::Platform;
-    } else if (::sscanf(lastElementAscii, "ttyUSB%d", &m_portnum) == 1) {
+    } else if (::sscanf(lastElement.constData(), "ttyUSB%d", &m_portnum) == 1) {
         m_type = Solid::SerialInterface::Usb;
     }
 }
 
 SerialInterface::~SerialInterface()
 {
-
 }
 
 QVariant SerialInterface::driverHandle() const

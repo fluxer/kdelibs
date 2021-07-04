@@ -69,6 +69,7 @@ public:
     int deviceNumber() const;
 
     UdevQt::Device udevDevice();
+
 private:
     UdevQt::Device m_device;
 };

@@ -42,12 +42,10 @@ using namespace Solid::Backends::UDev;
 NetworkInterface::NetworkInterface(UDevDevice *device)
     : DeviceInterface(device)
 {
-    
 }
 
 NetworkInterface::~NetworkInterface()
 {
-
 }
 
 QString NetworkInterface::ifaceName() const

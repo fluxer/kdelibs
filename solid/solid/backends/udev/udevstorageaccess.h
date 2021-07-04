@@ -35,32 +35,28 @@ class StorageAccess : public DeviceInterface, virtual public Solid::Ifaces::Stor
     Q_OBJECT
     Q_INTERFACES(Solid::Ifaces::StorageAccess)
 
-    public:
-        explicit StorageAccess(UDevDevice *device);
-        virtual ~StorageAccess();
+public:
+    explicit StorageAccess(UDevDevice *device);
+    virtual ~StorageAccess();
 
-        virtual bool isAccessible() const;
-        virtual QString filePath() const;
-        virtual bool isIgnored() const;
-        virtual bool setup();
-        virtual bool teardown();
+    virtual bool isAccessible() const;
+    virtual QString filePath() const;
+    virtual bool isIgnored() const;
+    virtual bool setup();
+    virtual bool teardown();
 
-    Q_SIGNALS:
-        void accessibilityChanged(bool accessible, const QString &udi);
-        void setupDone(Solid::ErrorType error, QVariant data, const QString &udi);
-        void teardownDone(Solid::ErrorType error, QVariant data, const QString &udi);
-        void setupRequested(const QString &udi);
-        void teardownRequested(const QString &udi);
+Q_SIGNALS:
+    void accessibilityChanged(bool accessible, const QString &udi);
+    void setupDone(Solid::ErrorType error, QVariant data, const QString &udi);
+    void teardownDone(Solid::ErrorType error, QVariant data, const QString &udi);
+    void setupRequested(const QString &udi);
+    void teardownRequested(const QString &udi);
 
-    private Q_SLOTS:
-        void slotSetupRequested();
-        void slotSetupDone(int error, const QString &errorString);
-        void slotTeardownRequested();
-        void slotTeardownDone(int error, const QString &errorString);
-
-    private:
-        QString m_filePath;
-        bool m_isAccessible;
+private Q_SLOTS:
+    void slotSetupRequested();
+    void slotSetupDone(int error, const QString &errorString);
+    void slotTeardownRequested();
+    void slotTeardownDone(int error, const QString &errorString);
 };
 }
 }
