@@ -19,92 +19,45 @@
 */
 
 #include "udevqt.h"
-#include "udevqt_p.h"
-
-#include <QtCore/QSocketNotifier>
-#include <qplatformdefs.h>
 
 namespace UdevQt {
 
-ClientPrivate::ClientPrivate(Client *q_, const QStringList &subsystemList)
-    : udev(udev_new()), monitor(0), q(q_), monitorNotifier(0)
+Client::Client(const QStringList& subsystemList, QObject *parent)
+    : QObject(parent), m_udev(udev_new()), m_monitor(0), m_monitorNotifier(0)
 {
     // create a listener
-    monitor = udev_monitor_new_from_netlink(udev, "udev");
+    m_monitor = udev_monitor_new_from_netlink(m_udev, "udev");
 
-    if (!monitor) {
+    if (!m_monitor) {
         qWarning("UdevQt: unable to create udev monitor connection");
         return;
     }
 
     // apply subsystem filters
     foreach (const QString &subsysDevtype, subsystemList) {
-        udev_monitor_filter_add_match_subsystem_devtype(monitor, subsysDevtype.toLatin1().constData(), NULL);
+        udev_monitor_filter_add_match_subsystem_devtype(m_monitor, subsysDevtype.toLatin1().constData(), NULL);
     }
 
     // start the monitor receiving
-    udev_monitor_enable_receiving(monitor);
-    monitorNotifier = new QSocketNotifier(udev_monitor_get_fd(monitor), QSocketNotifier::Read);
-    QObject::connect(monitorNotifier, SIGNAL(activated(int)), q, SLOT(_uq_monitorReadyRead(int)));
-}
-
-ClientPrivate::~ClientPrivate()
-{
-    udev_unref(udev);
-    delete monitorNotifier;
-
-    if (monitor)
-        udev_monitor_unref(monitor);
-}
-
-void ClientPrivate::_uq_monitorReadyRead(int fd)
-{
-    Q_UNUSED(fd);
-    monitorNotifier->setEnabled(false);
-    struct udev_device *dev = udev_monitor_receive_device(monitor);
-    monitorNotifier->setEnabled(true);
-
-    if (!dev)
-        return;
-
-    Device device(new DevicePrivate(dev, false));
-
-    QByteArray action(udev_device_get_action(dev));
-    if (action == "add") {
-        emit q->deviceAdded(device);
-    } else if (action == "remove") {
-        emit q->deviceRemoved(device);
-    } else if (action == "change") {
-        emit q->deviceChanged(device);
-    } else if (action == "online") {
-        emit q->deviceOnlined(device);
-    } else  if (action == "offline") {
-        emit q->deviceOfflined(device);
-    /*
-        bind/unbind are driver changing for device type of event, on some systems it appears to be
-        broken and doing it all the time thus ignore the actions
-    */
-    } else if (action != "bind" && action != "unbind") {
-        qWarning("UdevQt: unhandled device action \"%s\"", action.constData());
-    }
-}
-
-Client::Client(const QStringList& subsystemList, QObject *parent)
-    : QObject(parent)
-    , d(new ClientPrivate(this, subsystemList))
-{
+    udev_monitor_enable_receiving(m_monitor);
+    m_monitorNotifier = new QSocketNotifier(udev_monitor_get_fd(m_monitor), QSocketNotifier::Read);
+    QObject::connect(m_monitorNotifier, SIGNAL(activated(int)), this, SLOT(monitorReadyRead(int)));
 }
 
 Client::~Client()
 {
-    delete d;
+    udev_unref(m_udev);
+    delete m_monitorNotifier;
+
+    if (m_monitor)
+        udev_monitor_unref(m_monitor);
 }
 
 DeviceList Client::allDevices()
 {
     DeviceList ret;
 
-    struct udev_enumerate *en = udev_enumerate_new(d->udev);
+    struct udev_enumerate *en = udev_enumerate_new(m_udev);
     udev_enumerate_scan_devices(en);
 
     struct udev_list_entry *entry;
@@ -116,7 +69,7 @@ DeviceList Client::allDevices()
         if (!ud)
             continue;
 
-        ret << Device(new DevicePrivate(ud, false));
+        ret << Device(ud, false);
     }
 
     udev_enumerate_unref(en);
@@ -126,12 +79,45 @@ DeviceList Client::allDevices()
 
 Device Client::deviceBySysfsPath(const QString &sysfsPath)
 {
-    struct udev_device *ud = udev_device_new_from_syspath(d->udev, sysfsPath.toLatin1().constData());
+    struct udev_device *ud = udev_device_new_from_syspath(m_udev, sysfsPath.toLatin1().constData());
 
     if (!ud)
         return Device();
 
-    return Device(new DevicePrivate(ud, false));
+    return Device(ud, false);
+}
+
+
+void Client::monitorReadyRead(int fd)
+{
+    Q_UNUSED(fd);
+    m_monitorNotifier->setEnabled(false);
+    struct udev_device *dev = udev_monitor_receive_device(m_monitor);
+    m_monitorNotifier->setEnabled(true);
+
+    if (!dev)
+        return;
+
+    Device device(dev, false);
+
+    QByteArray action(udev_device_get_action(dev));
+    if (action == "add") {
+        emit deviceAdded(device);
+    } else if (action == "remove") {
+        emit deviceRemoved(device);
+    } else if (action == "change") {
+        emit deviceChanged(device);
+    } else if (action == "online") {
+        emit deviceOnlined(device);
+    } else  if (action == "offline") {
+        emit deviceOfflined(device);
+    /*
+        bind/unbind are driver changing for device type of event, on some systems it appears to be
+        broken and doing it all the time thus ignore the actions
+    */
+    } else if (action != "bind" && action != "unbind") {
+        qWarning("UdevQt: unhandled device action \"%s\"", action.constData());
+    }
 }
 
 }

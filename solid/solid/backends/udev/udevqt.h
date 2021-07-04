@@ -26,67 +26,82 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
+#include <QtCore/QSocketNotifier>
+
+extern "C"
+{
+#define LIBUDEV_I_KNOW_THE_API_IS_SUBJECT_TO_CHANGE
+#include <libudev.h>
+}
 
 namespace UdevQt
 {
 
-class DevicePrivate;
 class Device
 {
-    public:
-        Device();
-        Device(const Device &other);
-        ~Device();
-        Device &operator= (const Device &other);
+public:
+    Device();
+    Device(struct udev_device *udev_, bool ref = true);
+    Device(const Device &other);
+    ~Device();
+    Device &operator= (const Device &other);
 
-        bool isValid() const;
-        QString subsystem() const;
-        QString devType() const;
-        QString name() const;
-        QString sysfsPath() const;
-        int sysfsNumber() const;
-        QString driver() const;
-        QStringList alternateDeviceSymlinks() const;
-        QStringList deviceProperties() const;
-        Device parent() const;
+    bool isValid() const;
+    QString subsystem() const;
+    QString devType() const;
+    QString name() const;
+    QString sysfsPath() const;
+    int sysfsNumber() const;
+    QString driver() const;
+    QStringList alternateDeviceSymlinks() const;
+    QStringList deviceProperties() const;
+    Device parent() const;
 
-        QString deviceProperty(const QString &name) const;
-        QString sysfsProperty(const QString &name) const;
+    QString deviceProperty(const QString &name) const;
+    QString sysfsProperty(const QString &name) const;
 
-    private:
-        Device(DevicePrivate *devPrivate);
-        friend class Client;
-        friend class ClientPrivate;
-
-        DevicePrivate *d;
+private:
+    struct udev_device *m_udev;
 };
 
 typedef QList<Device> DeviceList;
 
-class ClientPrivate;
 class Client : public QObject
 {
     Q_OBJECT
+public:
+    Client(const QStringList &subsystemList, QObject *parent = 0);
+    ~Client();
 
-    public:
-        Client(const QStringList &subsystemList, QObject *parent = 0);
-        ~Client();
+    DeviceList allDevices();
+    Device deviceBySysfsPath(const QString &sysfsPath);
 
-        DeviceList allDevices();
-        Device deviceBySysfsPath(const QString &sysfsPath);
+signals:
+    void deviceAdded(const UdevQt::Device &dev);
+    void deviceRemoved(const UdevQt::Device &dev);
+    void deviceChanged(const UdevQt::Device &dev);
+    void deviceOnlined(const UdevQt::Device &dev);
+    void deviceOfflined(const UdevQt::Device &dev);
 
-    signals:
-        void deviceAdded(const UdevQt::Device &dev);
-        void deviceRemoved(const UdevQt::Device &dev);
-        void deviceChanged(const UdevQt::Device &dev);
-        void deviceOnlined(const UdevQt::Device &dev);
-        void deviceOfflined(const UdevQt::Device &dev);
+private slots:
+    void monitorReadyRead(int fd);
 
-    private:
-        friend class ClientPrivate;
-        Q_PRIVATE_SLOT(d, void _uq_monitorReadyRead(int fd))
-        ClientPrivate *d;
+private:
+    struct udev *m_udev;
+    struct udev_monitor *m_monitor;
+    QSocketNotifier *m_monitorNotifier;
 };
+
+
+inline QStringList listFromListEntry(struct udev_list_entry *list)
+{
+    QStringList ret;
+    struct udev_list_entry *entry;
+    udev_list_entry_foreach(entry, list) {
+        ret << QString::fromLatin1(udev_list_entry_get_name(entry));
+    }
+    return ret;
+}
 
 }
 
