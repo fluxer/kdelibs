@@ -19,7 +19,6 @@
 */
 
 #include "udevprocessor.h"
-
 #include "udevdevice.h"
 #include "cpuinfo.h"
 
@@ -48,6 +47,7 @@ int Processor::number() const
     return m_device->deviceNumber();
 }
 
+// NOTE: do not parse /proc/cpuinfo for "cpu MHz", that may be current not maximum speed
 int Processor::maxSpeed() const
 {
     if (m_maxSpeed == -1) {
@@ -56,10 +56,6 @@ int Processor::maxSpeed() const
             QString value = cpuMaxFreqFile.readAll().trimmed();
             // cpuinfo_max_freq is in kHz
             m_maxSpeed = static_cast<int>(value.toLongLong() / 1000);
-        }
-        if (m_maxSpeed <= 0) {
-            // couldn't get the info from /sys, try /proc instead
-            m_maxSpeed = extractCpuInfoLine(number(), "cpu MHz\\s+:\\s+(\\d+).*").toInt();
         }
     }
     return m_maxSpeed;
@@ -122,7 +118,7 @@ Solid::Processor::InstructionSets Processor::instructionSets() const
 
 QString Processor::prefix() const
 {
-    QLatin1String sysPrefix("/sysdev");
+    const QLatin1String sysPrefix("/sysdev");
     if (QFile::exists(m_device->deviceName() + sysPrefix)) {
         return sysPrefix;
     }
