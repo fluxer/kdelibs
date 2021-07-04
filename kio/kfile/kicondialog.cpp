@@ -253,7 +253,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
 QString KIconCanvas::getCurrent() const
 {
     if (!currentItem())
-	return QString();
+        return QString();
     return currentItem()->data(Qt::UserRole).toString();
 }
 
