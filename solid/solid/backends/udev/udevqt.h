@@ -41,7 +41,7 @@ class Device
 {
 public:
     Device();
-    Device(struct udev_device *udev_, bool ref = true);
+    Device(struct udev_device *device, bool ref = true);
     Device(const Device &other);
     ~Device();
     Device &operator= (const Device &other);
@@ -61,7 +61,7 @@ public:
     QString sysfsProperty(const QString &name) const;
 
 private:
-    struct udev_device *m_udev;
+    struct udev_device *m_device;
 };
 
 typedef QList<Device> DeviceList;

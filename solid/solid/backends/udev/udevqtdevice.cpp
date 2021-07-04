@@ -25,88 +25,88 @@
 namespace UdevQt {
 
 Device::Device()
-    : m_udev(Q_NULLPTR)
+    : m_device(Q_NULLPTR)
 {
 }
 
-Device::Device(struct udev_device *udev_, bool ref)
-    : m_udev(udev_)
+Device::Device(struct udev_device *device, bool ref)
+    : m_device(device)
 {
-    if (m_udev && ref)
-        udev_device_ref(m_udev);
+    if (m_device && ref)
+        udev_device_ref(m_device);
 }
 
 Device::Device(const Device &other)
-    : m_udev(other.m_udev)
+    : m_device(other.m_device)
 {
-    if (other.m_udev) {
-        udev_device_ref(other.m_udev);
+    if (other.m_device) {
+        udev_device_ref(other.m_device);
     }
 }
 
 Device::~Device()
 {
-    if (m_udev) {
-        udev_device_unref(m_udev);
+    if (m_device) {
+        udev_device_unref(m_device);
     }
 }
 
 Device &Device::operator=(const Device &other)
 {
-    if (m_udev) {
-        udev_device_unref(m_udev);
+    if (m_device) {
+        udev_device_unref(m_device);
     }
-    if (other.m_udev) {
-        m_udev = udev_device_ref(other.m_udev);
+    if (other.m_device) {
+        m_device = udev_device_ref(other.m_device);
     } else {
-        m_udev = Q_NULLPTR;
+        m_device = Q_NULLPTR;
     }
     return *this;
 }
 
 bool Device::isValid() const
 {
-    return (m_udev != Q_NULLPTR);
+    return (m_device != Q_NULLPTR);
 }
 
 QString Device::subsystem() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_subsystem(m_udev));
+    return QString::fromLatin1(udev_device_get_subsystem(m_device));
 }
 
 QString Device::devType() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_devtype(m_udev));
+    return QString::fromLatin1(udev_device_get_devtype(m_device));
 }
 
 QString Device::name() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_sysname(m_udev));
+    return QString::fromLatin1(udev_device_get_sysname(m_device));
 }
 
 QString Device::sysfsPath() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_syspath(m_udev));
+    return QString::fromLatin1(udev_device_get_syspath(m_device));
 }
 
 int Device::sysfsNumber() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return -1;
     }
-    QString value = QString::fromLatin1(udev_device_get_sysnum(m_udev));
+    QString value = QString::fromLatin1(udev_device_get_sysnum(m_device));
     bool success = false;
     int number = value.toInt(&success);
     if (success) {
@@ -117,34 +117,34 @@ int Device::sysfsNumber() const
 
 QString Device::driver() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_driver(m_udev));
+    return QString::fromLatin1(udev_device_get_driver(m_device));
 }
 
 QStringList Device::alternateDeviceSymlinks() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QStringList();
     }
-    return listFromListEntry(udev_device_get_devlinks_list_entry(m_udev));
+    return listFromListEntry(udev_device_get_devlinks_list_entry(m_device));
 }
 
 QStringList Device::deviceProperties() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QStringList();
     }
-    return listFromListEntry(udev_device_get_properties_list_entry(m_udev));
+    return listFromListEntry(udev_device_get_properties_list_entry(m_device));
 }
 
 Device Device::parent() const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return Device();
     }
-    struct udev_device *p = udev_device_get_parent(m_udev);
+    struct udev_device *p = udev_device_get_parent(m_device);
     if (!p) {
         return Device();
     }
@@ -153,20 +153,20 @@ Device Device::parent() const
 
 QString Device::deviceProperty(const QString &name) const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QString();
     }
     const QByteArray propName(name.toLatin1());
-    return QString::fromLatin1(udev_device_get_property_value(m_udev, propName.constData()));
+    return QString::fromLatin1(udev_device_get_property_value(m_device, propName.constData()));
 }
 
 QString Device::sysfsProperty(const QString &name) const
 {
-    if (!m_udev) {
+    if (!m_device) {
         return QString();
     }
     const QByteArray propName(name.toLatin1());
-    return QString::fromLatin1(udev_device_get_sysattr_value(m_udev, propName.constData()));
+    return QString::fromLatin1(udev_device_get_sysattr_value(m_device, propName.constData()));
 }
 
 }

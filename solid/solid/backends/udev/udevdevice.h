@@ -42,32 +42,21 @@ public:
     virtual ~UDevDevice();
 
     virtual QString udi() const;
-
     virtual QString parentUdi() const;
-
     virtual QString vendor() const;
-
     virtual QString product() const;
-
     virtual QString icon() const;
-
     virtual QStringList emblems() const;
-
     virtual QString description() const;
-
     virtual bool queryDeviceInterface(const Solid::DeviceInterface::Type &type) const;
-
     virtual QObject *createDeviceInterface(const Solid::DeviceInterface::Type &type);
 
     QString device() const;
-
     QString deviceProperty(const QString &key) const;
     bool devicePropertyExists(const QString &key) const;
-
     QString deviceName() const;
     QString devicePath() const;
     int deviceNumber() const;
-
     UdevQt::Device udevDevice();
 
 private:
