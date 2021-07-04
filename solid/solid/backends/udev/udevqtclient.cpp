@@ -27,8 +27,7 @@ Client::Client(const QStringList& subsystems, QObject *parent)
 {
     // create a listener
     m_monitor = udev_monitor_new_from_netlink(m_udev, "udev");
-
-    if (!m_monitor) {
+    if (Q_UNLIKELY(!m_monitor)) {
         qWarning("UdevQt: unable to create udev monitor connection");
         return;
     }
@@ -46,11 +45,11 @@ Client::Client(const QStringList& subsystems, QObject *parent)
 
 Client::~Client()
 {
-    udev_unref(m_udev);
     delete m_monitorNotifier;
-
-    if (m_monitor)
+    if (m_monitor) {
         udev_monitor_unref(m_monitor);
+    }
+    udev_unref(m_udev);
 }
 
 DeviceList Client::allDevices()
@@ -66,9 +65,9 @@ DeviceList Client::allDevices()
         struct udev_device *ud = udev_device_new_from_syspath(udev_enumerate_get_udev(en),
                                         udev_list_entry_get_name(entry));
 
-        if (!ud)
+        if (!ud) {
             continue;
-
+        }
         ret << Device(ud, false);
     }
 
@@ -80,10 +79,9 @@ DeviceList Client::allDevices()
 Device Client::deviceBySysfsPath(const QString &sysfsPath)
 {
     struct udev_device *ud = udev_device_new_from_syspath(m_udev, sysfsPath.toLatin1().constData());
-
-    if (!ud)
+    if (!ud) {
         return Device();
-
+    }
     return Device(ud, false);
 }
 
@@ -95,9 +93,9 @@ void Client::monitorReadyRead(int fd)
     struct udev_device *dev = udev_monitor_receive_device(m_monitor);
     m_monitorNotifier->setEnabled(true);
 
-    if (!dev)
+    if (!dev) {
         return;
-
+    }
     Device device(dev, false);
 
     QByteArray action(udev_device_get_action(dev));
@@ -115,7 +113,7 @@ void Client::monitorReadyRead(int fd)
         bind/unbind are driver changing for device type of event, on some systems it appears to be
         broken and doing it all the time thus ignore the actions
     */
-    } else if (action != "bind" && action != "unbind") {
+    } else if (Q_UNLIKELY(action != "bind" && action != "unbind")) {
         qWarning("UdevQt: unhandled device action \"%s\"", action.constData());
     }
 }

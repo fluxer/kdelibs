@@ -35,7 +35,6 @@ Button::Button(UDevDevice* device)
 
 Button::~Button()
 {
-
 }
 
 bool Button::hasState() const

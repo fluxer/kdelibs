@@ -35,9 +35,10 @@
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
 #include "udevmanager.h"
+#include "cpuinfo.h"
 #include "../shared/pciidstables.h"
 #include "../shared/usbidstables.h"
-#include "cpuinfo.h"
+
 #include "kglobal.h"
 #include "klocale.h"
 
