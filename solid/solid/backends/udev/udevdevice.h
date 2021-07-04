@@ -61,9 +61,8 @@ public:
 
     QString device() const;
 
-    QVariant property(const QString &key) const;
-    QMap<QString, QVariant> allProperties() const;
-    bool propertyExists(const QString &key) const;
+    QString deviceProperty(const QString &key) const;
+    bool devicePropertyExists(const QString &key) const;
 
     QString deviceName() const;
     QString devicePath() const;

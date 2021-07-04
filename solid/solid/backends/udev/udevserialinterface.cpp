@@ -55,7 +55,7 @@ SerialInterface::~SerialInterface()
 
 QVariant SerialInterface::driverHandle() const
 {
-    return m_device->property("DEVNAME");
+    return m_device->deviceProperty("DEVNAME");
 }
 
 Solid::SerialInterface::SerialType SerialInterface::serialType() const

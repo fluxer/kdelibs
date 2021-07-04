@@ -36,7 +36,7 @@ StorageDrive::~StorageDrive()
 
 qulonglong StorageDrive::size() const
 {
-    return m_device->property("ID_PART_ENTRY_SIZE").toULongLong() / 2 * 1024;
+    return m_device->deviceProperty("ID_PART_ENTRY_SIZE").toULongLong() / 2 * 1024;
 }
 
 bool StorageDrive::isHotpluggable() const
@@ -53,10 +53,10 @@ bool StorageDrive::isRemovable() const
 
 Solid::StorageDrive::DriveType StorageDrive::driveType() const
 {
-    const QString idtype = m_device->property("ID_TYPE").toString();
-    const QString idbus = m_device->property("ID_BUS").toString();
-    const int idcdrom = m_device->property("ID_CDROM").toInt();
-    const int iddrivefloppy = m_device->property("ID_DRIVE_FLOPPY").toInt();
+    const QString idtype = m_device->deviceProperty("ID_TYPE");
+    const QString idbus = m_device->deviceProperty("ID_BUS");
+    const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
+    const int iddrivefloppy = m_device->deviceProperty("ID_DRIVE_FLOPPY").toInt();
 
     if (idcdrom == 1) {
         return Solid::StorageDrive::CdromDrive;
@@ -86,12 +86,12 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
 
 Solid::StorageDrive::Bus StorageDrive::bus() const
 {
-    const QString idbus = m_device->property("ID_BUS").toString();
+    const QString idbus = m_device->deviceProperty("ID_BUS");
 
     // qDebug() << "bus:" << idbus;
 
     if (idbus == "ata") {
-        if (m_device->property("ID_ATA_SATA").toInt() == 1) {
+        if (m_device->deviceProperty("ID_ATA_SATA").toInt() == 1) {
             // serial ATA
             return Solid::StorageDrive::Sata;
         } else {

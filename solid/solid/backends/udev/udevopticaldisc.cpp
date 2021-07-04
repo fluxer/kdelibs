@@ -30,7 +30,7 @@ OpticalDisc::OpticalDisc(UDevDevice *device)
     : StorageVolume(device),
     p_cdio(Q_NULLPTR)
 {
-    const QByteArray devicename = m_device->property("DEVNAME").toString().toLocal8Bit();
+    const QByteArray devicename = m_device->deviceProperty("DEVNAME").toLocal8Bit();
     p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);
     if (!p_cdio) {
         qWarning() << "Could not open" << devicename;

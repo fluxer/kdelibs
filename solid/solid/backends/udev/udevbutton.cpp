@@ -25,9 +25,9 @@ Button::Button(UDevDevice* device)
     : DeviceInterface(device),
     m_type(Solid::Button::UnknownButtonType)
 {
-    if (m_device->propertyExists("KEY")) {
+    if (m_device->devicePropertyExists("KEY")) {
         m_type = Solid::Button::PowerButton;
-    } else if (m_device->propertyExists("SW")) {
+    } else if (m_device->devicePropertyExists("SW")) {
         m_type = Solid::Button::LidButton;
     }
 }

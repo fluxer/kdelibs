@@ -52,7 +52,7 @@ NetworkInterface::~NetworkInterface()
 
 QString NetworkInterface::ifaceName() const
 {
-    return m_device->property("INTERFACE").toString();
+    return m_device->deviceProperty("INTERFACE");
 }
 
 bool NetworkInterface::isWireless() const

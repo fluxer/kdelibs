@@ -42,7 +42,7 @@ AcAdapter::~AcAdapter()
 
 bool AcAdapter::isPlugged() const
 {
-    return (m_device->property("POWER_SUPPLY_ONLINE").toInt() == 1);
+    return (m_device->deviceProperty("POWER_SUPPLY_ONLINE").toInt() == 1);
 }
 
 void AcAdapter::slotEmitSignals(const UdevQt::Device &device)

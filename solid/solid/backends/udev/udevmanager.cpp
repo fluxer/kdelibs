@@ -146,8 +146,7 @@ UDevManager::UDevManager(QObject *parent)
     connect(d->m_client, SIGNAL(deviceRemoved(UdevQt::Device)), this, SLOT(slotDeviceRemoved(UdevQt::Device)));
     connect(d->m_client, SIGNAL(deviceChanged(UdevQt::Device)), this, SLOT(slotDeviceChanged(UdevQt::Device)));
 
-    d->m_supportedInterfaces << Solid::DeviceInterface::GenericInterface
-                             << Solid::DeviceInterface::StorageAccess
+    d->m_supportedInterfaces << Solid::DeviceInterface::StorageAccess
                              << Solid::DeviceInterface::StorageDrive
                              << Solid::DeviceInterface::StorageVolume
                              << Solid::DeviceInterface::AcAdapter

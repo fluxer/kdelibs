@@ -89,7 +89,7 @@ QStringList PortableMediaPlayer::supportedProtocols() const
      *  * media-player-info sets it to a string that denotes a name of the .mpi file with
      *    additional info.
      */
-    if (m_device->property("ID_MEDIA_PLAYER").toInt() == 1) {
+    if (m_device->deviceProperty("ID_MEDIA_PLAYER").toInt() == 1) {
         return QStringList() << "mtp";
     }
 
@@ -116,7 +116,7 @@ QStringList PortableMediaPlayer::supportedDrivers(QString protocol) const
     if (!supportedProtocols().isEmpty()) {
         res << "usb";
     }
-    if (m_device->property("USBMUX_SUPPORTED").toBool() == true) {
+    if (m_device->deviceProperty("USBMUX_SUPPORTED").toInt() == 1) {
         res << "usbmux";
     }
     return res;
@@ -125,17 +125,17 @@ QStringList PortableMediaPlayer::supportedDrivers(QString protocol) const
 QVariant PortableMediaPlayer::driverHandle(const QString &driver) const
 {
     if (driver == "mtp" || driver == "usbmux")
-        return m_device->property("ID_SERIAL_SHORT");
+        return m_device->deviceProperty("ID_SERIAL_SHORT");
 
     return QVariant();
 }
 
 QString PortableMediaPlayer::mediaPlayerInfoFilePath() const
 {
-    QString relativeFilename = m_device->property("ID_MEDIA_PLAYER").toString();
+    QString relativeFilename = m_device->deviceProperty("ID_MEDIA_PLAYER");
     if (relativeFilename.isEmpty()) {
         qWarning() << "We attached PortableMediaPlayer interface to device" << m_device->udi()
-                   << "but m_device->property(\"ID_MEDIA_PLAYER\") is empty???";
+                   << "but m_device->deviceProperty(\"ID_MEDIA_PLAYER\") is empty???";
         return QString();
     }
     relativeFilename.prepend("media-player-info/");

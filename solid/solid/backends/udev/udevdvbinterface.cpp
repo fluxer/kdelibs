@@ -39,13 +39,13 @@ DvbInterface::~DvbInterface()
 
 QString DvbInterface::device() const
 {
-    return m_device->property("DEVNAME").toString();
+    return m_device->deviceProperty("DEVNAME");
 }
 
 int DvbInterface::deviceAdapter() const
 {
     bool ok;
-    int adapter = m_device->property("DVB_ADAPTER_NUM").toString().toInt(&ok, 10);
+    int adapter = m_device->deviceProperty("DVB_ADAPTER_NUM").toInt(&ok, 10);
     if (ok)
         return adapter;
     else
@@ -55,7 +55,7 @@ int DvbInterface::deviceAdapter() const
 Solid::DvbInterface::DeviceType DvbInterface::deviceType() const
 {
     Solid::DvbInterface::DeviceType type = Solid::DvbInterface::DvbUnknown;
-    const QString typeString = m_device->property("DVB_DEVICE_TYPE").toString();
+    const QString typeString = m_device->deviceProperty("DVB_DEVICE_TYPE");
 
     if (typeString == QLatin1String("audio")) {
         type = Solid::DvbInterface::DvbAudio;
@@ -83,7 +83,7 @@ Solid::DvbInterface::DeviceType DvbInterface::deviceType() const
 int DvbInterface::deviceIndex() const
 {
     bool ok;
-    int index = m_device->property("DVB_DEVICE_NUM").toString().toInt(&ok, 10);
+    int index = m_device->deviceProperty("DVB_DEVICE_NUM").toInt(&ok, 10);
     if (ok)
         return index;
     else

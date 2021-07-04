@@ -55,7 +55,7 @@ QString StorageAccess::filePath() const
 {
     const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
 
-    const QString devpath = m_device->property("DEVNAME").toString();
+    const QString devpath = m_device->deviceProperty("DEVNAME");
     foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
         if (mountpoint->mountedFrom() == devpath || mountpoint->realDeviceName() == devpath) {
             return mountpoint->mountPoint();
@@ -76,9 +76,9 @@ QString StorageAccess::filePath() const
 
 bool StorageAccess::isIgnored() const
 {
-    const QString idfsusage = m_device->property("ID_FS_USAGE").toString();
-    const QString devtype = m_device->property("DEVTYPE").toString();
-    const int idcdrom = m_device->property("ID_CDROM").toInt();
+    const QString idfsusage = m_device->deviceProperty("ID_FS_USAGE");
+    const QString devtype = m_device->deviceProperty("DEVTYPE");
+    const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
     return (idfsusage != "filesystem" || (devtype == "disk" && idcdrom != 1));
 }
 
@@ -91,7 +91,7 @@ bool StorageAccess::setup()
 
     // permission denied on /run/mount so.. using base directory that is writable
     const QString mountbase = KGlobal::dirs()->saveLocation("tmp");
-    const QString devuuid = m_device->property("ID_FS_UUID").toString();
+    const QString devuuid = m_device->deviceProperty("ID_FS_UUID");
     mountpoint = mountbase + QLatin1Char('/') + devuuid;
     QDir mountdir(mountbase);
     if (!mountdir.exists(devuuid) && !mountdir.mkdir(devuuid)) {
@@ -101,7 +101,7 @@ bool StorageAccess::setup()
 
     m_device->broadcastActionRequested("setup");
 
-    const QStringList mountargs = QStringList() << "mount" << m_device->property("DEVNAME").toString() << mountpoint;
+    const QStringList mountargs = QStringList() << "mount" << m_device->deviceProperty("DEVNAME") << mountpoint;
     QProcess mountproc;
     mountproc.start("kdesudo", mountargs);
     mountproc.waitForStarted();

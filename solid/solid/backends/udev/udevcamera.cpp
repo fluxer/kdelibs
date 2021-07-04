@@ -37,8 +37,7 @@ QStringList Camera::supportedProtocols() const
 {
     QStringList protocols;
 
-    QString method = m_device->property("GPHOTO2_DRIVER").toString();
-
+    QString method = m_device->deviceProperty("GPHOTO2_DRIVER");
     if (!method.isEmpty()) {
         protocols << method.toLower();
     }
@@ -59,12 +58,12 @@ QStringList Camera::supportedDrivers(QString /*protocol*/) const
 
 QVariant Camera::driverHandle(const QString &driver) const
 {
-    if (driver=="gphoto" && m_device->property("SUBSYSTEM").toString()=="usb") {
+    if (driver == "gphoto" && m_device->deviceProperty("SUBSYSTEM") == "usb") {
         QVariantList list;
 
         list << "usb"
-             << m_device->property("ID_VENDOR_ID")
-             << m_device->property("ID_MODEL_ID");
+             << m_device->deviceProperty("ID_VENDOR_ID")
+             << m_device->deviceProperty("ID_MODEL_ID");
 
         return list;
     }

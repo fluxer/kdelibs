@@ -55,12 +55,12 @@ Battery::~Battery()
 
 bool Battery::isPlugged() const
 {
-    return (m_device->property("POWER_SUPPLY_ONLINE").toInt() == 1);
+    return (m_device->deviceProperty("POWER_SUPPLY_ONLINE").toInt() == 1);
 }
 
 Solid::Battery::BatteryType Battery::type() const
 {
-    const QString powersupplytype = m_device->property("POWER_SUPPLY_TYPE").toString();
+    const QString powersupplytype = m_device->deviceProperty("POWER_SUPPLY_TYPE");
     // some of these are not even documented, wild-guessing
     if (powersupplytype == QLatin1String("battery") || powersupplytype == QLatin1String("mains")) {
         return Solid::Battery::PrimaryBattery;
@@ -85,19 +85,19 @@ Solid::Battery::BatteryType Battery::type() const
 
 int Battery::chargePercent() const
 {
-    return m_device->property("POWER_SUPPLY_CAPACITY").toInt();
+    return m_device->deviceProperty("POWER_SUPPLY_CAPACITY").toInt();
 }
 
 int Battery::capacity() const
 {
-    const int powersupplyvoltagemax = m_device->property("POWER_SUPPLY_VOLTAGE_MAX_DESIGN").toInt();
-    const int powersupplyvoltagenow = m_device->property("POWER_SUPPLY_VOLTAGE_NOW").toInt();
+    const int powersupplyvoltagemax = m_device->deviceProperty("POWER_SUPPLY_VOLTAGE_MAX_DESIGN").toInt();
+    const int powersupplyvoltagenow = m_device->deviceProperty("POWER_SUPPLY_VOLTAGE_NOW").toInt();
     return (powersupplyvoltagemax / powersupplyvoltagenow);
 }
 
 bool Battery::isRechargeable() const
 {
-    const QString powersupplytechnology = m_device->property("POWER_SUPPLY_TECHNOLOGY").toString();
+    const QString powersupplytechnology = m_device->deviceProperty("POWER_SUPPLY_TECHNOLOGY");
     if (powersupplytechnology == QLatin1String("NiMH")
         || powersupplytechnology == QLatin1String("Li-ion")
         || powersupplytechnology == QLatin1String("Li-poly")
@@ -110,12 +110,12 @@ bool Battery::isRechargeable() const
 
 bool Battery::isPowerSupply() const
 {
-    return (m_device->property("POWER_SUPPLY_CURRENT_NOW").toInt() == 1);
+    return (m_device->deviceProperty("POWER_SUPPLY_CURRENT_NOW").toInt() == 1);
 }
 
 Solid::Battery::ChargeState Battery::chargeState() const
 {
-    const QString powersupplystatus = m_device->property("POWER_SUPPLY_STATUS").toString();
+    const QString powersupplystatus = m_device->deviceProperty("POWER_SUPPLY_STATUS");
     if (powersupplystatus == QLatin1String("charging")) {
         return Solid::Battery::Charging;
     } else if (powersupplystatus == QLatin1String("discharging")) {

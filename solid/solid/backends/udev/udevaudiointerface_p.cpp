@@ -130,7 +130,7 @@ bool UdevAudioInterfacePrivate::isHardware(const char* lastElement)
     //in hal, so ATM just report it as unknown
     if (sscanf(lastElement, "card%d", &m_cardnum) == 1) {
         m_driver = Solid::AudioInterface::UnknownAudioDriver;
-        m_name = m_device->property("ID_MODEL_FROM_DATABASE").toString();
+        m_name = m_device->deviceProperty("ID_MODEL_FROM_DATABASE");
         m_type = Solid::AudioInterface::UnknownAudioInterfaceType;
         return true;
     }
@@ -140,7 +140,7 @@ bool UdevAudioInterfacePrivate::isHardware(const char* lastElement)
 bool UdevAudioInterfacePrivate::isAlsaControl(const char* lastElement)
 {
     if (sscanf (lastElement, "controlC%d", &m_cardnum) == 1) {
-        m_deviceFile = m_device->property("DEVNAME").toString();
+        m_deviceFile = m_device->deviceProperty("DEVNAME");
         m_name = cardNumberToName();
         m_driver = Solid::AudioInterface::Alsa;
         m_type = Solid::AudioInterface::AudioControl;
@@ -199,7 +199,7 @@ bool UdevAudioInterfacePrivate::isAlsaTimer(const char* lastElement)
         /* ALSA Global timer device */
         m_driver = Solid::AudioInterface::Alsa;
         m_name = QLatin1String("ALSA Timer Device");
-        m_deviceFile = m_device->property("DEVNAME").toString();
+        m_deviceFile = m_device->deviceProperty("DEVNAME");
         return true;
     }
     return false;
@@ -211,7 +211,7 @@ bool UdevAudioInterfacePrivate::isAlsaSequencer(const char* lastElement)
         /* ALSA global sequencer devices */
         m_driver = Solid::AudioInterface::Alsa;
         m_name = QLatin1String("ALSA Sequencer Device");
-        m_deviceFile = m_device->property("DEVNAME").toString();
+        m_deviceFile = m_device->deviceProperty("DEVNAME");
         return true;
     }
     return false;
@@ -223,7 +223,7 @@ bool UdevAudioInterfacePrivate::isOSSSequencer(const QByteArray& lastElement)
         /* OSS global sequencer devices */
         m_driver = Solid::AudioInterface::OpenSoundSystem;
         m_name = QLatin1String("OSS Sequencer Device");
-        m_deviceFile = m_device->property("DEVNAME").toString();
+        m_deviceFile = m_device->deviceProperty("DEVNAME");
         return true;
     }
     return false;
@@ -235,7 +235,7 @@ bool UdevAudioInterfacePrivate::isOSSDevice(const QByteArray& lastElement, const
     m_type = Solid::AudioInterface::UnknownAudioInterfaceType;
     m_cardnum = 0;
 
-    m_deviceFile = m_device->property("DEVNAME").toString();
+    m_deviceFile = m_device->deviceProperty("DEVNAME");
 
     if (lastElement.startsWith("dsp")) {
         m_driver = Solid::AudioInterface::OpenSoundSystem;

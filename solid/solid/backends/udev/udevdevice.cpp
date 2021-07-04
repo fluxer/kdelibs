@@ -19,8 +19,6 @@
 */
 
 #include "udevdevice.h"
-
-#include "udevgenericinterface.h"
 #include "udevstoragedrive.h"
 #include "udevstoragevolume.h"
 #include "udevstorageaccess.h"
@@ -382,13 +380,13 @@ QString UDevDevice::description() const
             desc = storageIface.uuid();
         }
         if (desc.isEmpty()) {
-            desc = storageIface.property("DEVNAME").toString();
+            desc = deviceProperty("DEVNAME");
         }
         return desc;
     } else if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
         return QObject::tr("A/C Adapter");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Battery)) {
-        const QString powersupplytechnology = property("POWER_SUPPLY_TECHNOLOGY").toString();
+        const QString powersupplytechnology = deviceProperty("POWER_SUPPLY_TECHNOLOGY");
         if (powersupplytechnology == QLatin1String("NiMH")) {
             return QObject::tr("Nickel Metal Hydride Battery");
         } else if (powersupplytechnology == QLatin1String("Li-ion")) {
@@ -452,9 +450,6 @@ QString UDevDevice::description() const
 bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) const
 {
     switch (type) {
-    case Solid::DeviceInterface::GenericInterface:
-        return true;
-
     case Solid::DeviceInterface::StorageAccess:
     case Solid::DeviceInterface::StorageDrive:
     case Solid::DeviceInterface::StorageVolume: {
@@ -471,20 +466,20 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 #ifdef UDEV_CDIO
     case Solid::DeviceInterface::OpticalDrive:
     case Solid::DeviceInterface::OpticalDisc:
-        return (property("ID_CDROM").toInt() == 1);
+        return (deviceProperty("ID_CDROM").toInt() == 1);
 #endif
 
     case Solid::DeviceInterface::Camera:
-        return property("ID_GPHOTO2").toInt() == 1;
+        return deviceProperty("ID_GPHOTO2").toInt() == 1;
 
     case Solid::DeviceInterface::PortableMediaPlayer:
-        return !property("ID_MEDIA_PLAYER").toString().isEmpty();
+        return !deviceProperty("ID_MEDIA_PLAYER").isEmpty();
 
     case Solid::DeviceInterface::DvbInterface:
         return m_device.subsystem() ==  QLatin1String("dvb");
 
     case Solid::DeviceInterface::Block:
-        return !property("MAJOR").toString().isEmpty();
+        return !deviceProperty("MAJOR").isEmpty();
 
     case Solid::DeviceInterface::Video:
         return m_device.subsystem() == QLatin1String("video4linux");
@@ -499,7 +494,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
         return m_device.subsystem() == QLatin1String("tty");
 
     case Solid::DeviceInterface::Button:
-        return property("ID_INPUT_KEY").toInt() == 1;
+        return deviceProperty("ID_INPUT_KEY").toInt() == 1;
 
     default:
         return false;
@@ -513,9 +508,6 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     }
 
     switch (type) {
-    case Solid::DeviceInterface::GenericInterface:
-        return new GenericInterface(this);
-
     case Solid::DeviceInterface::StorageAccess:
         return new StorageAccess(this);
 
@@ -579,25 +571,16 @@ QString UDevDevice::device() const
     return devicePath();
 }
 
-QVariant UDevDevice::property(const QString &key) const
+QString UDevDevice::deviceProperty(const QString &key) const
 {
-    const QVariant res = QVariant::fromValue(m_device.deviceProperty(key));
-    if (res.isValid()) {
+    const QString res = m_device.deviceProperty(key);
+    if (!res.isEmpty()) {
         return res;
     }
-    return QVariant::fromValue(m_device.sysfsProperty(key));
+    return m_device.sysfsProperty(key);
 }
 
-QMap<QString, QVariant> UDevDevice::allProperties() const
-{
-    QMap<QString, QVariant> res;
-    foreach (const QString &prop, m_device.deviceProperties()) {
-        res[prop] = property(prop);
-    }
-    return res;
-}
-
-bool UDevDevice::propertyExists(const QString &key) const
+bool UDevDevice::devicePropertyExists(const QString &key) const
 {
     return m_device.deviceProperties().contains(key);
 }
