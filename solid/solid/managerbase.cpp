@@ -23,14 +23,17 @@
 #include <stdlib.h>
 #include <config-solid.h>
 
-#include "backends/fakehw/fakemanager.h"
 #include "backends/fstab/fstabmanager.h"
 
-#if defined (UDEV_FOUND)
+#if defined(ENABLE_TESTING)
+#include "backends/fakehw/fakemanager.h"
+#endif
+
+#if defined(UDEV_FOUND)
 #include "backends/udev/udevmanager.h"
 #endif
 
-#if defined (HUPNP_FOUND)
+#if defined(HUPNP_FOUND)
 #include "backends/upnp/upnpdevicemanager.h"
 #endif
 
@@ -45,21 +48,22 @@ Solid::ManagerBasePrivate::~ManagerBasePrivate()
 
 void Solid::ManagerBasePrivate::loadBackends()
 {
+#if defined(ENABLE_TESTING)
     QString solidFakeXml(QString::fromLocal8Bit(qgetenv("SOLID_FAKEHW")));
-
     if (!solidFakeXml.isEmpty()) {
         m_backends << new Solid::Backends::Fake::FakeManager(0, solidFakeXml);
-    } else {
-        m_backends << new Solid::Backends::Fstab::FstabManager(0);
-
-#       if defined(UDEV_FOUND)
-            m_backends << new Solid::Backends::UDev::UDevManager(0);
-#       endif
-
-#        if defined (HUPNP_FOUND)
-            m_backends << new Solid::Backends::UPnP::UPnPDeviceManager(0);
-#        endif
     }
+#endif
+
+    m_backends << new Solid::Backends::Fstab::FstabManager(0);
+
+#if defined(UDEV_FOUND)
+    m_backends << new Solid::Backends::UDev::UDevManager(0);
+#endif
+
+#if defined(HUPNP_FOUND)
+    m_backends << new Solid::Backends::UPnP::UPnPDeviceManager(0);
+#endif
 }
 
 QList<QObject*> Solid::ManagerBasePrivate::managerBackends() const

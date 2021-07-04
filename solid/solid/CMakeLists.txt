@@ -73,31 +73,7 @@ set(solid_LIB_SRCS
     ifaces/smartcardreader.cpp
     ifaces/internetgateway.cpp
 
-    backends/fakehw/fakeacadapter.cpp
-    backends/fakehw/fakeaudiointerface.cpp
-    backends/fakehw/fakebattery.cpp
-    backends/fakehw/fakeblock.cpp
-    backends/fakehw/fakebutton.cpp
-    backends/fakehw/fakecamera.cpp
-    backends/fakehw/fakecdrom.cpp
-    backends/fakehw/fakedevice.cpp
-    backends/fakehw/fakedeviceinterface.cpp
-    backends/fakehw/fakedvbinterface.cpp
-    backends/fakehw/fakegenericinterface.cpp
-    backends/fakehw/fakemanager.cpp
-    backends/fakehw/fakenetworkshare.cpp
-    backends/fakehw/fakenetworkinterface.cpp
-    backends/fakehw/fakeopticaldisc.cpp
-    backends/fakehw/fakeportablemediaplayer.cpp
-    backends/fakehw/fakeprocessor.cpp
-    backends/fakehw/fakestorage.cpp
-    backends/fakehw/fakestorageaccess.cpp
-    backends/fakehw/fakevideo.cpp
-    backends/fakehw/fakevolume.cpp
-    backends/fakehw/fakesmartcardreader.cpp
-
     backends/shared/rootdevice.cpp
-
     backends/fstab/fstabmanager.cpp
     backends/fstab/fstabdevice.cpp
     backends/fstab/fstabnetworkshare.cpp
@@ -110,6 +86,34 @@ configure_file(
     config-solid.h.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/config-solid.h
 )
+
+if(ENABLE_TESTING)
+    message(STATUS "Building Solid fake backend.")
+    set(solid_LIB_SRCS ${solid_LIB_SRCS}
+        backends/fakehw/fakeacadapter.cpp
+        backends/fakehw/fakeaudiointerface.cpp
+        backends/fakehw/fakebattery.cpp
+        backends/fakehw/fakeblock.cpp
+        backends/fakehw/fakebutton.cpp
+        backends/fakehw/fakecamera.cpp
+        backends/fakehw/fakecdrom.cpp
+        backends/fakehw/fakedevice.cpp
+        backends/fakehw/fakedeviceinterface.cpp
+        backends/fakehw/fakedvbinterface.cpp
+        backends/fakehw/fakegenericinterface.cpp
+        backends/fakehw/fakemanager.cpp
+        backends/fakehw/fakenetworkshare.cpp
+        backends/fakehw/fakenetworkinterface.cpp
+        backends/fakehw/fakeopticaldisc.cpp
+        backends/fakehw/fakeportablemediaplayer.cpp
+        backends/fakehw/fakeprocessor.cpp
+        backends/fakehw/fakestorage.cpp
+        backends/fakehw/fakestorageaccess.cpp
+        backends/fakehw/fakevideo.cpp
+        backends/fakehw/fakevolume.cpp
+        backends/fakehw/fakesmartcardreader.cpp
+    )
+endif()
 
 if(HUPNP_FOUND)
     include_directories(${HUPNP_INCLUDE_DIR})
