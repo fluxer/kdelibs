@@ -132,7 +132,7 @@ QVariant PortableMediaPlayer::driverHandle(const QString &driver) const
 
 QString PortableMediaPlayer::mediaPlayerInfoFilePath() const
 {
-    QString relativeFilename = m_device->deviceProperty("ID_MEDIA_PLAYER");
+    QString relativeFilename(m_device->deviceProperty("ID_MEDIA_PLAYER"));
     if (relativeFilename.isEmpty()) {
         qWarning() << "We attached PortableMediaPlayer interface to device" << m_device->udi()
                    << "but m_device->deviceProperty(\"ID_MEDIA_PLAYER\") is empty???";

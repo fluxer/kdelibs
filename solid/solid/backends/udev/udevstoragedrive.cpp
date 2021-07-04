@@ -53,8 +53,8 @@ bool StorageDrive::isRemovable() const
 
 Solid::StorageDrive::DriveType StorageDrive::driveType() const
 {
-    const QString idtype = m_device->deviceProperty("ID_TYPE");
-    const QString idbus = m_device->deviceProperty("ID_BUS");
+    const QString idtype(m_device->deviceProperty("ID_TYPE"));
+    const QString idbus(m_device->deviceProperty("ID_BUS"));
     const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
     const int iddrivefloppy = m_device->deviceProperty("ID_DRIVE_FLOPPY").toInt();
 
@@ -86,7 +86,7 @@ Solid::StorageDrive::DriveType StorageDrive::driveType() const
 
 Solid::StorageDrive::Bus StorageDrive::bus() const
 {
-    const QString idbus = m_device->deviceProperty("ID_BUS");
+    const QString idbus(m_device->deviceProperty("ID_BUS"));
 
     // qDebug() << "bus:" << idbus;
 

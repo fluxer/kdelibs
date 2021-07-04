@@ -61,8 +61,8 @@ QString StorageVolume::fsType() const
 
 Solid::StorageVolume::UsageType StorageVolume::usage() const
 {
-    const QString devtype = m_device->deviceProperty("DEVTYPE");
-    const QString idfsusage = m_device->deviceProperty("ID_FS_USAGE");
+    const QString devtype(m_device->deviceProperty("DEVTYPE"));
+    const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
 
     if (idfsusage == "crypto") {
         return Solid::StorageVolume::Encrypted;
@@ -81,8 +81,8 @@ Solid::StorageVolume::UsageType StorageVolume::usage() const
 
 bool StorageVolume::isIgnored() const
 {
-    const QString idfsusage = m_device->deviceProperty("ID_FS_USAGE");
-    const QString devtype = m_device->deviceProperty("DEVTYPE");
+    const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
+    const QString devtype(m_device->deviceProperty("DEVTYPE"));
     const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
     return (idfsusage != "filesystem" || (devtype == "disk" && idcdrom != 1));
 }

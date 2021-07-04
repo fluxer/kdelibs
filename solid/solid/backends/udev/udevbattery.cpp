@@ -60,7 +60,7 @@ bool Battery::isPlugged() const
 
 Solid::Battery::BatteryType Battery::type() const
 {
-    const QString powersupplytype = m_device->deviceProperty("POWER_SUPPLY_TYPE");
+    const QString powersupplytype(m_device->deviceProperty("POWER_SUPPLY_TYPE"));
     // some of these are not even documented, wild-guessing
     if (powersupplytype == QLatin1String("battery") || powersupplytype == QLatin1String("mains")) {
         return Solid::Battery::PrimaryBattery;
@@ -97,7 +97,7 @@ int Battery::capacity() const
 
 bool Battery::isRechargeable() const
 {
-    const QString powersupplytechnology = m_device->deviceProperty("POWER_SUPPLY_TECHNOLOGY");
+    const QString powersupplytechnology(m_device->deviceProperty("POWER_SUPPLY_TECHNOLOGY"));
     if (powersupplytechnology == QLatin1String("NiMH")
         || powersupplytechnology == QLatin1String("Li-ion")
         || powersupplytechnology == QLatin1String("Li-poly")
@@ -115,7 +115,7 @@ bool Battery::isPowerSupply() const
 
 Solid::Battery::ChargeState Battery::chargeState() const
 {
-    const QString powersupplystatus = m_device->deviceProperty("POWER_SUPPLY_STATUS");
+    const QString powersupplystatus(m_device->deviceProperty("POWER_SUPPLY_STATUS"));
     if (powersupplystatus == QLatin1String("charging")) {
         return Solid::Battery::Charging;
     } else if (powersupplystatus == QLatin1String("discharging")) {

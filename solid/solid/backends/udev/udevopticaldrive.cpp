@@ -41,7 +41,7 @@ OpticalDrive::OpticalDrive(UDevDevice *device)
     : StorageDrive(device),
     p_cdio(Q_NULLPTR)
 {
-    const QByteArray devicename = m_device->deviceProperty("DEVNAME").toLocal8Bit();
+    const QByteArray devicename(m_device->deviceProperty("DEVNAME").toLocal8Bit());
     p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);
     if (!p_cdio) {
         qWarning() << "Could not open" << devicename;
@@ -65,7 +65,7 @@ bool OpticalDrive::eject()
 {
     m_device->broadcastActionRequested("eject");
 
-    const QByteArray devicename = m_device->deviceProperty("DEVNAME").toLocal8Bit();
+    const QByteArray devicename(m_device->deviceProperty("DEVNAME").toLocal8Bit());
     const driver_return_code_t result = cdio_eject_media_drive(devicename.constData());
     // not supported by libcdio: UserCanceled
     switch(result) {

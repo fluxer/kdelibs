@@ -55,7 +55,7 @@ int DvbInterface::deviceAdapter() const
 Solid::DvbInterface::DeviceType DvbInterface::deviceType() const
 {
     Solid::DvbInterface::DeviceType type = Solid::DvbInterface::DvbUnknown;
-    const QString typeString = m_device->deviceProperty("DVB_DEVICE_TYPE");
+    const QString typeString(m_device->deviceProperty("DVB_DEVICE_TYPE"));
 
     if (typeString == QLatin1String("audio")) {
         type = Solid::DvbInterface::DvbAudio;

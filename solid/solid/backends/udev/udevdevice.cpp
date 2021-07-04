@@ -72,8 +72,7 @@ QString UDevDevice::parentUdi() const
     // code in e.g. dolphin and plasma casts the parent instead of the actual device to either
     // Solid::StorageDrive or Solid::OpticalDrive which is wrong but was expected to work with the
     // UDisks backends, has to be fixed and verified to work in several places at some point
-    const QString subsystem = m_device.deviceProperty("SUBSYSTEM");
-    if (subsystem == QLatin1String("block")) {
+    if (m_device.subsystem() == QLatin1String("block")) {
         return devicePath();
     }
     const int idcdrom = m_device.deviceProperty("ID_CDROM").toInt();
@@ -407,7 +406,7 @@ QString UDevDevice::description() const
     } else if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
         return QObject::tr("A/C Adapter");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Battery)) {
-        const QString powersupplytechnology = deviceProperty("POWER_SUPPLY_TECHNOLOGY");
+        const QString powersupplytechnology(deviceProperty("POWER_SUPPLY_TECHNOLOGY"));
         if (powersupplytechnology == QLatin1String("NiMH")) {
             return QObject::tr("Nickel Metal Hydride Battery");
         } else if (powersupplytechnology == QLatin1String("Li-ion")) {

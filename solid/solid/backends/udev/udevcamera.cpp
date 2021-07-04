@@ -37,7 +37,7 @@ QStringList Camera::supportedProtocols() const
 {
     QStringList protocols;
 
-    QString method = m_device->deviceProperty("GPHOTO2_DRIVER");
+    const QString method(m_device->deviceProperty("GPHOTO2_DRIVER"));
     if (!method.isEmpty()) {
         protocols << method.toLower();
     }
