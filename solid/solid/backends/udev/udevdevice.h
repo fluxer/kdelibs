@@ -21,7 +21,7 @@
 #ifndef SOLID_BACKENDS_UDEV_UDEVDEVICE_H
 #define SOLID_BACKENDS_UDEV_UDEVDEVICE_H
 
-#include "udev.h"
+#include "udevqt.h"
 
 #include <solid/ifaces/device.h>
 #include <QtCore/QStringList>

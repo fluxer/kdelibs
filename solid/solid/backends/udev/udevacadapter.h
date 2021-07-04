@@ -23,7 +23,7 @@
 
 #include <solid/ifaces/acadapter.h>
 #include "udevdeviceinterface.h"
-#include "../shared/udevqt.h"
+#include "udevqt.h"
 
 namespace Solid
 {

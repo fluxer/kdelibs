@@ -151,8 +151,8 @@ if(UDEV_FOUND)
         backends/udev/udevstoragedrive.cpp
         backends/udev/udevbattery.cpp
         backends/udev/udevacadapter.cpp
-        backends/shared/udevqtclient.cpp
-        backends/shared/udevqtdevice.cpp
+        backends/udev/udevqtclient.cpp
+        backends/udev/udevqtdevice.cpp
     )
 
     if(LIBCDIO_FOUND)

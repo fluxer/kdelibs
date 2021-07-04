@@ -21,9 +21,11 @@
 #ifndef SOLID_BACKENDS_UDEV_UDEVMANAGER_H
 #define SOLID_BACKENDS_UDEV_UDEVMANAGER_H
 
+#define UDEV_UDI_PREFIX "/org/kde/solid/udev"
+
 #include <solid/ifaces/devicemanager.h>
 
-#include "../shared/udevqt.h"
+#include "udevqt.h"
 
 namespace Solid
 {

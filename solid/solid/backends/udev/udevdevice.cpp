@@ -36,6 +36,7 @@
 #include "udevserialinterface.h"
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
+#include "udevmanager.h"
 #include "cpuinfo.h"
 #include "kglobal.h"
 #include "klocale.h"

@@ -23,8 +23,7 @@
 
 #include <ifaces/storagedrive.h>
 
-#include "../shared/udevqt.h"
-
+#include "udevqt.h"
 #include "udevblock.h"
 
 namespace Solid

@@ -19,11 +19,9 @@
 */
 
 #include "udevstoragedrive.h"
-
-#include "../shared/udevqt.h"
+#include "udevqt.h"
 
 #include <QtCore/QDebug>
-#include <QtCore/QFile>
 
 using namespace Solid::Backends::UDev;
 

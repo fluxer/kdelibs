@@ -20,7 +20,7 @@
 
 #include "udevmanager.h"
 
-#include "udev.h"
+#include "udevqt.h"
 #include "udevdevice.h"
 #include "../shared/rootdevice.h"
 
