@@ -47,9 +47,6 @@ public:
     virtual bool isLoopback() const;
     virtual QString hwAddress() const;
     virtual qulonglong macAddress() const;
-
-private:
-    QString     m_hwAddress;
 };
 }
 }
