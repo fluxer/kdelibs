@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Paulo Romulo Alves Barros <paulo.romulo@kdemail.net>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,9 +18,38 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#cmakedefine ENABLE_TESTING
+#ifndef GEOMSTORAGEDRIVE_H
+#define GEOMSTORAGEDRIVE_H
 
-#cmakedefine UDEV_FOUND
-#cmakedefine DEVINFO_FOUND
-#cmakedefine GEOM_FOUND
-#cmakedefine LIBCDIO_FOUND
+#include <ifaces/storagedrive.h>
+
+#include "geomblock.h"
+
+namespace Solid
+{
+namespace Backends
+{
+namespace Geom
+{
+
+class StorageDrive: public Block, virtual public Solid::Ifaces::StorageDrive
+{
+    Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::StorageDrive)
+
+public:
+    StorageDrive(GeomDevice *device);
+    virtual ~StorageDrive();
+
+    virtual qulonglong size() const;
+    virtual bool isHotpluggable() const;
+    virtual bool isRemovable() const;
+    virtual Solid::StorageDrive::DriveType driveType() const;
+    virtual Solid::StorageDrive::Bus bus() const;
+};
+
+}
+}
+}
+
+#endif // GEOMSTORAGEDRIVE_H

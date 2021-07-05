@@ -224,6 +224,22 @@ set_package_properties(UDev PROPERTIES
     TYPE OPTIONAL
 )
 
+macro_optional_find_package(Devinfo)
+set_package_properties(Devinfo PROPERTIES
+    DESCRIPTION "Devinfo support for Solid"
+    URL "https://www.freebsd.org/cgi/man.cgi?query=devinfo&sektion=3"
+    PURPOSE "Allows Solid to use Devinfo to provide information about devices on FreeBSD"
+    TYPE OPTIONAL
+)
+
+macro_optional_find_package(Geom)
+set_package_properties(Geom PROPERTIES
+    DESCRIPTION "Geom support for Solid"
+    URL "https://www.freebsd.org/cgi/man.cgi?query=gctl_free"
+    PURPOSE "Allows Solid to use Geom to provide information about devices on FreeBSD"
+    TYPE OPTIONAL
+)
+
 macro_optional_find_package(LibCDIO)
 set_package_properties(LibCDIO PROPERTIES
     DESCRIPTION "GNU Compact Disc Input and Control Library"

@@ -184,6 +184,35 @@ if(UDEV_FOUND)
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${UDEV_LIBRARIES})
 endif(UDEV_FOUND)
 
+if(DEVINFO_FOUND)
+    include_directories(${DEVINFO_INCLUDES})
+    message(STATUS "Building Solid Devinfo backend.")
+    set(solid_LIB_SRCS ${solid_LIB_SRCS}
+        backends/devinfo/devinfodevice.cpp
+        backends/devinfo/devinfomanager.cpp
+        backends/devinfo/devinfodeviceinterface.cpp
+        backends/devinfo/devinfoprocessor.cpp
+        backends/devinfo/devinfonetworkinterface.cpp
+    )
+
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${DEVINFO_LIBRARIES})
+endif()
+
+if(GEOM_FOUND)
+    include_directories(${GEOM_INCLUDES})
+    message(STATUS "Building Solid Geom backend.")
+    set(solid_LIB_SRCS ${solid_LIB_SRCS}
+        backends/geom/geomdevice.cpp
+        backends/geom/geommanager.cpp
+        backends/geom/geomdeviceinterface.cpp
+        backends/geom/geomblock.cpp
+        backends/geom/geomstoragedrive.cpp
+        backends/geom/geomstoragevolume.cpp
+    )
+
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${GEOM_LIBRARIES})
+endif()
+
 set_source_files_properties(
     org.freedesktop.PowerManagement.xml
     org.freedesktop.PowerManagement.Inhibit.xml

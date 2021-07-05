@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Paulo Romulo Alves Barros <paulo.romulo@kdemail.net>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,9 +18,34 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#cmakedefine ENABLE_TESTING
+#ifndef SOLID_BACKENDS_GEOM_GEOMBLOCK_H
+#define SOLID_BACKENDS_GEOM_GEOMBLOCK_H
 
-#cmakedefine UDEV_FOUND
-#cmakedefine DEVINFO_FOUND
-#cmakedefine GEOM_FOUND
-#cmakedefine LIBCDIO_FOUND
+#include <solid/ifaces/block.h>
+
+#include "geomdeviceinterface.h"
+
+namespace Solid
+{
+namespace Backends
+{
+namespace Geom
+{
+class Block : public DeviceInterface, virtual public Solid::Ifaces::Block
+{
+    Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::Block)
+
+public:
+    Block(GeomDevice *device);
+    virtual ~Block();
+
+    virtual int deviceMajor() const;
+    virtual int deviceMinor() const;
+    virtual QString device() const;
+};
+}
+}
+}
+
+#endif // SOLID_BACKENDS_GEOM_GEOMBLOCK_H

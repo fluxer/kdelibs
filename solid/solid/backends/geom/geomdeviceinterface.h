@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Paulo Romulo Alves Barros <paulo.romulo@kdemail.net>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,9 +18,34 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#cmakedefine ENABLE_TESTING
+#ifndef SOLID_BACKENDS_GEOM_DEVICEINTERFACE_H
+#define SOLID_BACKENDS_GEOM_DEVICEINTERFACE_H
 
-#cmakedefine UDEV_FOUND
-#cmakedefine DEVINFO_FOUND
-#cmakedefine GEOM_FOUND
-#cmakedefine LIBCDIO_FOUND
+#include <solid/ifaces/deviceinterface.h>
+#include "geomdevice.h"
+
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
+
+namespace Solid
+{
+namespace Backends
+{
+namespace Geom
+{
+class DeviceInterface : public QObject, virtual public Solid::Ifaces::DeviceInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::DeviceInterface)
+public:
+    DeviceInterface(GeomDevice *device);
+    virtual ~DeviceInterface();
+
+protected:
+    GeomDevice *m_device;
+};
+}
+}
+}
+
+#endif

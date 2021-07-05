@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Paulo Romulo Alves Barros <paulo.romulo@kdemail.net>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,9 +18,17 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#cmakedefine ENABLE_TESTING
+#include "devinfodeviceinterface.h"
 
-#cmakedefine UDEV_FOUND
-#cmakedefine DEVINFO_FOUND
-#cmakedefine GEOM_FOUND
-#cmakedefine LIBCDIO_FOUND
+using namespace Solid::Backends::Devinfo;
+
+DeviceInterface::DeviceInterface(DevinfoDevice *device)
+    : QObject(device), m_device(device)
+{
+}
+
+DeviceInterface::~DeviceInterface()
+{
+}
+
+#include "backends/devinfo/moc_devinfodeviceinterface.cpp"

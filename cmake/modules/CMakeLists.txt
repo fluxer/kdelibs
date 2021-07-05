@@ -15,6 +15,8 @@ set(cmakeFilesDontInstall
     FindENCHANT.cmake
     FindACL.cmake
     FindLibCDIO.cmake
+    FindDevinfo.cmake
+    FindGeom.cmake
 )
 
 # Explicitly list all files which will be installed.

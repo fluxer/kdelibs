@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Paulo Romulo Alves Barros <paulo.romulo@kdemail.net>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,9 +18,40 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#cmakedefine ENABLE_TESTING
+#ifndef GEOMSTORAGEVOLUME_H
+#define GEOMSTORAGEVOLUME_H
 
-#cmakedefine UDEV_FOUND
-#cmakedefine DEVINFO_FOUND
-#cmakedefine GEOM_FOUND
-#cmakedefine LIBCDIO_FOUND
+#include <ifaces/storagevolume.h>
+
+#include "geomblock.h"
+
+namespace Solid
+{
+namespace Backends
+{
+namespace Geom
+{
+
+class StorageVolume: public Block, virtual public Solid::Ifaces::StorageVolume
+{
+    Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::StorageVolume)
+
+public:
+    StorageVolume(GeomDevice *device);
+    virtual ~StorageVolume();
+
+    virtual QString encryptedContainerUdi() const;
+    virtual qulonglong size() const;
+    virtual QString uuid() const;
+    virtual QString label() const;
+    virtual QString fsType() const;
+    virtual Solid::StorageVolume::UsageType usage() const;
+    virtual bool isIgnored() const;
+};
+
+}
+}
+}
+
+#endif // GEOMSTORAGEVOLUME_H
