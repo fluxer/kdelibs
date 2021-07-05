@@ -50,17 +50,17 @@ public:
     virtual QObject *createDeviceInterface(const Solid::DeviceInterface::Type &type);
 
 public:
-    // populated from geom providers
+    QString m_device;
+    // synthetized
+    QByteArray m_realdevice;
+    QByteArray m_parent;
+    // mostly populated from geom providers
     qulonglong m_size;
     QByteArray m_type;
     QByteArray m_label;
     QByteArray m_uuid;
     QByteArray m_class;
-    // synthetized
-    QString m_device;
-    QByteArray m_realdevice;
-    QByteArray m_parent;
-    int m_major;
+    int m_major; // this one is not
     int m_minor;
 };
 

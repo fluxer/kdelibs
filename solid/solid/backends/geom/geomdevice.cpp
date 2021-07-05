@@ -42,29 +42,27 @@ GeomDevice::GeomDevice(const QString &device)
     , m_minor(0)
 {
     m_realdevice = m_device.right(m_device.size() - qstrlen(GEOM_UDI_PREFIX) - 1).toLatin1();
-    // assume devices which are named like path do not have major/minor (e.g. gpt/swapfs or
-    // gptid/9d7008c3-990e-11eb-bf4c-002590ec5bf2)
-    if (!m_realdevice.contains('/')) {
-        int datapos = 0;
-        int majornumberpos = 0;
-        int minornumberpos = 0;
-        const char* devicedata = m_realdevice.constData();
-        while (*devicedata) {
-            if (::isdigit(*devicedata)) {
-                if (!majornumberpos) {
-                    majornumberpos = datapos;
-                } else {
-                    minornumberpos = datapos;
-                    break;
-                }
+    // devices which are named like path should not be listed by manager, e.g.
+    // gpt/swapfs or gptid/9d7008c3-990e-11eb-bf4c-002590ec5bf2
+    Q_ASSERT(!m_realdevice.contains('/'));
+    int datapos = 0;
+    int majornumberpos = 0;
+    int minornumberpos = 0;
+    const char* devicedata = m_realdevice.constData();
+    while (*devicedata) {
+        if (::isdigit(*devicedata)) {
+            if (!majornumberpos) {
+                majornumberpos = datapos;
+            } else {
+                minornumberpos = datapos;
+                break;
             }
-            devicedata++;
-            datapos++;
         }
-        m_parent = QByteArray(m_realdevice.constData(), majornumberpos);
-        m_major = QByteArray(m_realdevice.constData() + majornumberpos, minornumberpos - majornumberpos).toInt();
-        m_minor = QByteArray(m_realdevice.constData() + minornumberpos, m_realdevice.size() - majornumberpos).toInt();
+        devicedata++;
+        datapos++;
     }
+    m_parent = QByteArray(m_realdevice.constData(), majornumberpos);
+    m_major = QByteArray(m_realdevice.constData() + majornumberpos, minornumberpos - majornumberpos).toInt();
 
     struct gmesh tree;
     ::memset(&tree, 0, sizeof(gmesh));
@@ -80,10 +78,11 @@ GeomDevice::GeomDevice(const QString &device)
                 if (qstrcmp(geomprovider->lg_name, m_realdevice.constData()) != 0) {
                     continue;
                 }
-                m_class = QByteArray(geomclass->lg_name).toLower();
                 LIST_FOREACH(geomconfig, &geomprovider->lg_config, lg_config) {
                     // qDebug() << geomprovider->lg_name << geomconfig->lg_name << geomconfig->lg_val;
-                    if (qstrcmp(geomconfig->lg_name, "length") == 0) {
+                    if (qstrcmp(geomconfig->lg_name, "index") == 0) {
+                        m_minor = QByteArray(geomconfig->lg_val).toInt();
+                    } else if (qstrcmp(geomconfig->lg_name, "length") == 0) {
                         m_size = QByteArray(geomconfig->lg_val).toULongLong();
                     } else if (qstrcmp(geomconfig->lg_name, "type") == 0) {
                         m_type = geomconfig->lg_val;
@@ -96,9 +95,9 @@ GeomDevice::GeomDevice(const QString &device)
             }
         }
     }
-    // re-iterate to assign class other than DEV if possible
+    // NOTE: keep in sync with kdelibs/solid/solid/backends/geom/geommanager.cpp
     LIST_FOREACH(geomclass, &tree.lg_class, lg_class) {
-        if (qstrcmp(geomclass->lg_name, "PART") != 0 && qstrcmp(geomclass->lg_name, "DISK") != 0
+        if (qstrcmp(geomclass->lg_name, "DISK") != 0 && qstrcmp(geomclass->lg_name, "PART") != 0
             && qstrcmp(geomclass->lg_name, "SWAP") != 0) {
             continue;
         }
@@ -108,13 +107,15 @@ GeomDevice::GeomDevice(const QString &device)
                     continue;
                 }
                 m_class = QByteArray(geomclass->lg_name).toLower();
-                // qDebug() << geomgeom->lg_name << m_class;
+                // qDebug() << m_realdevice << m_class;
+                break;
             }
         }
     }
     geom_deletetree(&tree);
 
     // qDebug() << Q_FUNC_INFO << m_device << m_realdevice << m_parent << m_major << m_minor;
+    // qDebug() << Q_FUNC_INFO << m_size << m_type << m_label << m_uuid << m_class;
 }
 
 GeomDevice::~GeomDevice()
@@ -136,6 +137,7 @@ QString GeomDevice::parentUdi() const
 
 QString GeomDevice::vendor() const
 {
+    // no information related to vendor/product from geom
     return QString();
 }
 
@@ -183,7 +185,6 @@ QString GeomDevice::icon() const
 QStringList GeomDevice::emblems() const
 {
     QStringList res;
-
     if (queryDeviceInterface(Solid::DeviceInterface::StorageAccess)) {
         const StorageAccess accessIface(const_cast<GeomDevice *>(this));
         if (accessIface.isAccessible()) {
@@ -192,7 +193,6 @@ QStringList GeomDevice::emblems() const
             res << "emblem-unmounted";
         }
     }
-
     return res;
 }
 
@@ -242,13 +242,15 @@ bool GeomDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 {
     switch (type) {
         case Solid::DeviceInterface::Block:
-            return (m_major != 0);
         case Solid::DeviceInterface::StorageDrive:
         case Solid::DeviceInterface::StorageVolume:
-        case Solid::DeviceInterface::StorageAccess:
+        case Solid::DeviceInterface::StorageAccess: {
+            Q_ASSERT(m_major != 0);
             return true;
-        default:
+        }
+        default: {
             return false;
+        }
     }
 }
 
@@ -270,8 +272,9 @@ QObject *GeomDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
         case Solid::DeviceInterface::StorageAccess: {
             return new StorageAccess(this);
         }
-        default:
+        default: {
             Q_ASSERT(false);
             return 0;
+        }
     }
 }

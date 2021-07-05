@@ -81,16 +81,19 @@ QStringList GeomManager::allDevices()
     struct gclass* geomclass = Q_NULLPTR;
     struct ggeom* geomgeom = Q_NULLPTR;
     struct gprovider* geomprovider = Q_NULLPTR;
-    struct gconfig* geomconfig = Q_NULLPTR;
+    // NOTE: keep in sync with kdelibs/solid/solid/backends/geom/geomdevice.cpp
     LIST_FOREACH(geomclass, &tree.lg_class, lg_class) {
-        // DEV class includes all devices of interest (e.g. swap, disk and partitions)
-        if (qstrcmp(geomclass->lg_name, "DEV") != 0) {
+        // not interested in devices made up by providers such as labels
+        if (qstrcmp(geomclass->lg_name, "DISK") != 0 && qstrcmp(geomclass->lg_name, "PART") != 0
+            && qstrcmp(geomclass->lg_name, "SWAP") != 0) {
             continue;
         }
         LIST_FOREACH(geomgeom, &geomclass->lg_geom, lg_geom) {
-            // qDebug() << geomclass->lg_name << geomgeom->lg_name;
-            const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, geomgeom->lg_name);
-            result << devudi;
+            LIST_FOREACH(geomprovider, &geomgeom->lg_provider, lg_provider) {
+                // qDebug() << geomclass->lg_name << geomgeom->lg_name << geomprovider->lg_name;
+                const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, geomprovider->lg_name);
+                result << devudi;
+            }
         }
     }
     geom_deletetree(&tree);

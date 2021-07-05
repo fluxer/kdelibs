@@ -54,16 +54,20 @@ QString StorageAccess::filePath() const
 {
     const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
 
+    // TODO: use providers instead
     const QString devname(QString::fromLatin1("/dev/%1").arg(m_device->m_realdevice.constData()));
     const QString devgptname(QString::fromLatin1("/dev/gpt/%1").arg(m_device->m_realdevice.constData()));
     const QString devlabel(QString::fromLatin1("/dev/%1").arg(m_device->m_label.constData()));
     const QString devgptlabel(QString::fromLatin1("/dev/gpt/%1").arg(m_device->m_label.constData()));
+    const QString devuuid(QString::fromLatin1("/dev/%1").arg(m_device->m_uuid.constData()));
+    const QString devgptuuid(QString::fromLatin1("/dev/gpt/%1").arg(m_device->m_uuid.constData()));
     foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
         // qDebug() << devname << devlabel << mountpoint->mountedFrom() << mountpoint->realDeviceName();
         if (mountpoint->mountedFrom() == devname || mountpoint->realDeviceName() == devname
             || mountpoint->mountedFrom() == devgptname || mountpoint->realDeviceName() == devgptname
             || mountpoint->mountedFrom() == devlabel || mountpoint->realDeviceName() == devlabel
-            || mountpoint->mountedFrom() == devgptlabel || mountpoint->realDeviceName() == devgptlabel) {
+            || mountpoint->mountedFrom() == devgptlabel || mountpoint->realDeviceName() == devgptlabel
+            || mountpoint->mountedFrom() == devuuid || mountpoint->realDeviceName() == devgptuuid) {
             return mountpoint->mountPoint();
         }
     }
@@ -73,7 +77,8 @@ QString StorageAccess::filePath() const
 
 bool StorageAccess::isIgnored() const
 {
-    return (m_device->m_type.isEmpty());
+    // freebsd-swap and freebsd-boot type filesystems cannot be accessed
+    return (m_device->m_type.isEmpty() || m_device->m_type == "freebsd-swap" || m_device->m_type == "freebsd-boot");
 }
 
 bool StorageAccess::setup()

@@ -63,7 +63,8 @@ QString StorageVolume::fsType() const
 Solid::StorageVolume::UsageType StorageVolume::usage() const
 {
     // TODO: not implemented: Encrypted, Raid
-    if (m_device->m_class == "swap" || m_device->m_type == "freebsd-swap") {
+    if (m_device->m_class == "swap" || m_device->m_type == "freebsd-swap"
+        || m_device->m_type == "freebsd-boot") {
         return Solid::StorageVolume::Other;
     } else if (!m_device->m_type.isEmpty()) {
         return Solid::StorageVolume::FileSystem;
