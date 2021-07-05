@@ -148,7 +148,6 @@ if(UDEV_FOUND)
             backends/udev/udevopticaldisc.cpp
             backends/udev/udevopticaldrive.cpp
         )
-        add_definitions(-DUDEV_CDIO)
         include_directories(${LIBCDIO_INCLUDES})
         set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${LIBCDIO_LIBRARIES})
     endif()

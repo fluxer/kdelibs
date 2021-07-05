@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-solid.h"
 #include "udevmanager.h"
-
 #include "udevqt.h"
 #include "udevdevice.h"
 #include "../shared/rootdevice.h"
@@ -152,7 +152,7 @@ UDevManager::UDevManager(QObject *parent)
                              << Solid::DeviceInterface::AcAdapter
                              << Solid::DeviceInterface::Battery
                              << Solid::DeviceInterface::Processor
-#ifdef UDEV_CDIO
+#if defined(LIBCDIO_FOUND)
                              << Solid::DeviceInterface::OpticalDrive
                              << Solid::DeviceInterface::OpticalDisc
 #endif

@@ -21,3 +21,4 @@
 #cmakedefine ENABLE_TESTING
 
 #cmakedefine UDEV_FOUND
+#cmakedefine LIBCDIO_FOUND

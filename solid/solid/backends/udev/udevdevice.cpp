@@ -18,6 +18,7 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config-solid.h"
 #include "udevdevice.h"
 #include "udevstoragedrive.h"
 #include "udevstoragevolume.h"
@@ -42,7 +43,7 @@
 #include "kglobal.h"
 #include "klocale.h"
 
-#ifdef UDEV_CDIO
+#if defined(LIBCDIO_FOUND)
 #include "udevopticaldisc.h"
 #include "udevopticaldrive.h"
 #endif
@@ -175,7 +176,7 @@ QString UDevDevice::icon() const
 {
     if (parentUdi().isEmpty()) {
         return QLatin1String("computer");
-#ifdef UDEV_CDIO
+#if defined(LIBCDIO_FOUND)
     // prioritize since it is a storage drive/disc too
     } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
         const OpticalDrive drive(const_cast<UDevDevice*>(this));
@@ -224,7 +225,7 @@ QString UDevDevice::icon() const
 
         // fallback for every other optical disc
         return QLatin1String("media-optical");
-#endif
+#endif // LIBCDIO_FOUND
     } else if (queryDeviceInterface(Solid::DeviceInterface::StorageDrive)) {
         const StorageDrive storageIface(const_cast<UDevDevice *>(this));
         Solid::StorageDrive::DriveType drivetype = storageIface.driveType();
@@ -315,7 +316,7 @@ QString UDevDevice::description() const
         return QObject::tr("Computer");
     }
 
-#ifdef UDEV_CDIO
+#if defined(LIBCDIO_FOUND)
     // prioritize since it is a storage drive/disc too
     if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
         const OpticalDrive opticalDrive(const_cast<UDevDevice*>(this));
@@ -378,7 +379,7 @@ QString UDevDevice::description() const
 
         return description;
     }
-#endif // UDEV_CDIO
+#endif // LIBCDIO_FOUND
     if (queryDeviceInterface(Solid::DeviceInterface::StorageDrive)) {
         const StorageDrive storageIface(const_cast<UDevDevice *>(this));
         Solid::StorageDrive::DriveType drivetype = storageIface.driveType();
@@ -493,7 +494,7 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::Processor:
         return m_device.driver() == QLatin1String("processor");
 
-#ifdef UDEV_CDIO
+#if defined(LIBCDIO_FOUND)
     case Solid::DeviceInterface::OpticalDrive:
     case Solid::DeviceInterface::OpticalDisc:
         return (deviceProperty("ID_CDROM").toInt() == 1);
@@ -556,7 +557,7 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     case Solid::DeviceInterface::Processor:
         return new Processor(this);
 
-#ifdef UDEV_CDIO
+#if defined(LIBCDIO_FOUND)
     case Solid::DeviceInterface::OpticalDrive:
         return new OpticalDrive(this);
     case Solid::DeviceInterface::OpticalDisc:
