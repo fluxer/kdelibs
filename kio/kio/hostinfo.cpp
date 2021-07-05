@@ -52,8 +52,6 @@ public:
     HostInfoAgentPrivate();
 
     QHostInfo lookupHost(const QString &hostName, const unsigned long timeout);
-    QHostInfo lookupCachedHostInfoFor(const QString &hostName);
-    void cacheLookup(const QHostInfo &hostName);
 
 protected:
     // reimplementation
@@ -76,16 +74,6 @@ QHostInfo HostInfo::lookupHost(const QString &hostName, unsigned long timeout)
     return hostInfoAgentPrivate->lookupHost(hostName, timeout);
 }
 
-QHostInfo HostInfo::lookupCachedHostInfoFor(const QString& hostName)
-{
-    return hostInfoAgentPrivate->lookupCachedHostInfoFor(hostName);
-}
-
-void HostInfo::cacheLookup(const QHostInfo &info)
-{
-    hostInfoAgentPrivate->cacheLookup(info);
-}
-
 HostInfoAgentPrivate::HostInfoAgentPrivate()
     : m_dnsCache(HOSTINFO_CACHE_SIZE)
 {
@@ -106,7 +94,10 @@ QHostInfo HostInfoAgentPrivate::lookupHost(const QString &hostName, unsigned lon
     }
 
     // Look up the name in the DNS cache...
-    hostInfo = HostInfo::lookupCachedHostInfoFor(hostName);
+    const HostInfoPair* pair = m_dnsCache.object(hostName);
+    if (pair) {
+        hostInfo = pair->first;
+    }
     if (!hostInfo.hostName().isEmpty() && hostInfo.error() == QHostInfo::NoError) {
         return hostInfo;
     }
@@ -136,29 +127,15 @@ QHostInfo HostInfoAgentPrivate::lookupHost(const QString &hostName, unsigned lon
     return m_dnsCache.object(hostName)->first;
 }
 
-void HostInfoAgentPrivate::cacheLookup(const QHostInfo &info)
+void HostInfoAgentPrivate::lookupFinished(const QHostInfo &hostInfo)
 {
-    if (info.hostName().isEmpty() || info.error() != QHostInfo::NoError) {
+    m_lookups.removeAll(hostInfo.lookupId());
+    if (hostInfo.hostName().isEmpty() || hostInfo.error() != QHostInfo::NoError) {
         return;
     }
     QTime expiration = QTime::currentTime();
     expiration.addSecs(HOSTINFO_EXPIRE_AFTER);
-    m_dnsCache.insert(info.hostName(), new HostInfoPair(info, expiration));
-}
-
-QHostInfo HostInfoAgentPrivate::lookupCachedHostInfoFor(const QString& hostName)
-{
-    const HostInfoPair* pair = m_dnsCache.object(hostName);
-    if (pair) {
-        return pair->first;
-    }
-    return QHostInfo();
-}
-
-void HostInfoAgentPrivate::lookupFinished(const QHostInfo &hostInfo)
-{
-    m_lookups.removeAll(hostInfo.lookupId());
-    cacheLookup(hostInfo);
+    m_dnsCache.insert(hostInfo.hostName(), new HostInfoPair(hostInfo, expiration));
 }
 
 void HostInfoAgentPrivate::timerEvent(QTimerEvent *event)
