@@ -309,23 +309,17 @@ QString UdevAudioInterfacePrivate::deviceName(char type)
 QByteArray UdevAudioInterfacePrivate::grepHelper(const QString& path, const QByteArray& grepValue)
 {
     QFile file(path);
-
-    if (file.exists()) {
-        if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            QByteArray line = file.readLine();
-            while(!line.isNull()) {
-                if (line.startsWith(grepValue)) {
-                    line.remove(0, grepValue.length());
-                    return line.trimmed();
-                }
-                line = file.readLine();
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QByteArray line = file.readLine();
+        while(!line.isNull()) {
+            if (line.startsWith(grepValue)) {
+                line.remove(0, grepValue.length());
+                return line.trimmed();
             }
-        } else {
-            qDebug() << "grepHelper: Cannot open file: " << path;
+            line = file.readLine();
         }
     } else {
-        qDebug() << "grepHelper: File does not exists: " << path;
+        qDebug() << "grepHelper: Cannot open file: " << path;
     }
-
     return QByteArray();
 }
