@@ -123,16 +123,20 @@ QString DevinfoDevice::parentUdi() const
 
 QString DevinfoDevice::vendor() const
 {
-    // TODO: lookup either PCI or USB table depending on bus type
     const QByteArray pnpvendor = devicePnP(DevinfoDevice::PnPVendor);
+    if (pnpvendor.size() < 2) {
+        return QString();
+    }
+
+    // TODO: lookup either PCI or USB table depending on bus type
     for (size_t i = 0; i < pciVendorTblSize; i++) {
-        if (pnpvendor == pciVendorTbl[i].vendorid) {
+        if (qstrcmp(pnpvendor.constData() + 2, pciVendorTbl[i].vendorid) == 0) {
             return QString::fromLatin1(pciVendorTbl[i].vendorname);
         }
     }
 
     for (size_t i = 0; i < usbVendorTblSize; i++) {
-        if (pnpvendor == usbVendorTbl[i].vendorid) {
+        if (qstrcmp(pnpvendor.constData() + 2, usbVendorTbl[i].vendorid) == 0) {
             return QString::fromLatin1(usbVendorTbl[i].vendorname);
         }
     }
@@ -151,16 +155,20 @@ QString DevinfoDevice::product() const
         }
     }
 
-    // TODO: lookup either PCI or USB table depending on bus type
     const QByteArray pnpdevice = devicePnP(DevinfoDevice::PnPDevice);
+    if (pnpdevice.size() < 2) {
+        return QString();
+    }
+
+    // TODO: lookup either PCI or USB table depending on bus type
     for (size_t i = 0; i < pciDeviceTblSize; i++) {
-        if (pnpdevice == pciDeviceTbl[i].deviceid) {
+        if (qstrcmp(pnpdevice.constData() + 2, pciDeviceTbl[i].deviceid) == 0) {
             return QString::fromLatin1(pciDeviceTbl[i].devicename);
         }
     }
 
     for (size_t i = 0; i < usbDeviceTblSize; i++) {
-        if (pnpdevice == usbDeviceTbl[i].deviceid) {
+        if (qstrcmp(pnpdevice.constData() + 2, usbDeviceTbl[i].deviceid) == 0) {
             return QString::fromLatin1(usbDeviceTbl[i].devicename);
         }
     }

@@ -231,7 +231,7 @@ QString GeomDevice::description() const
             desc = storageIface.uuid();
         }
         if (desc.isEmpty()) {
-            desc = this->m_realdevice;
+            desc = m_realdevice;
         }
         return desc;
     }
