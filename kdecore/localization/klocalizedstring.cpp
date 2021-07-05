@@ -76,9 +76,6 @@ class KLocalizedStringPrivate
     QString postFormat (const QString &text,
                         const QString &lang,
                         const QString &ctxt) const;
-
-    static void notifyCatalogsUpdated (const QStringList &languages,
-                                       const QList<KCatalogName> &catalogs);
 };
 
 class KLocalizedStringPrivateStatics
@@ -540,12 +537,6 @@ KLocalizedString ki18ncp (const char* ctxt,
 
 void KLocalizedString::notifyCatalogsUpdated (const QStringList &languages,
                                               const QList<KCatalogName> &catalogs)
-{
-    KLocalizedStringPrivate::notifyCatalogsUpdated(languages, catalogs);
-}
-
-void KLocalizedStringPrivate::notifyCatalogsUpdated (const QStringList &languages,
-                                                     const QList<KCatalogName> &catalogs)
 {
     if (staticsKLSP.isDestroyed()) {
         return;
