@@ -89,7 +89,7 @@ public:
     }
 };
 K_GLOBAL_STATIC(KLocalizedStringPrivateStatics, staticsKLSP)
-Q_GLOBAL_STATIC(QMutex, staticsKLSPLock)
+Q_GLOBAL_STATIC(QMutex, staticsKLSPMutex)
 
 KLocalizedString::KLocalizedString ()
 : d(new KLocalizedStringPrivate)
@@ -212,21 +212,13 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
 
 QString KLocalizedStringPrivate::selectForEnglish () const
 {
-    QString trans;
-
     if (!plural.isEmpty()) {
         if (number == 1) {
-            trans = QString::fromUtf8(msg);
+            return QString::fromUtf8(msg);
         }
-        else {
-            trans = QString::fromUtf8(plural);
-        }
+        return QString::fromUtf8(plural);
     }
-    else {
-        trans = QString::fromUtf8(msg);
-    }
-
-    return trans;
+    return QString::fromUtf8(msg);
 }
 
 QString KLocalizedStringPrivate::substituteSimple (const QString &trans,
@@ -357,7 +349,7 @@ QString KLocalizedStringPrivate::postFormat (const QString &text,
                                              const QString &lang,
                                              const QString &ctxt) const
 {
-    QMutexLocker lock(staticsKLSPLock());
+    QMutexLocker lock(staticsKLSPMutex());
     const KLocalizedStringPrivateStatics *s = staticsKLSP;
     // Transform any semantic markup into visual formatting.
     if (s->formatters.contains(lang)) {
@@ -537,7 +529,7 @@ KLocalizedString ki18ncp (const char* ctxt,
 void KLocalizedString::notifyCatalogsUpdated (const QStringList &languages,
                                               const QList<KCatalogName> &catalogs)
 {
-    QMutexLocker lock(staticsKLSPLock());
+    QMutexLocker lock(staticsKLSPMutex());
     if (staticsKLSP.isDestroyed()) {
         return;
     }
