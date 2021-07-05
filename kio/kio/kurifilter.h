@@ -722,9 +722,9 @@ protected:
     /**
      * Performs a DNS lookup for @p hostname and returns the result.
      *
-     * This function uses the KIO/KHTML DNS cache to speed up the
-     * lookup. It also avoids doing a reverse lookup if the given
-     * host name is already an ip address.
+     * This function uses the KIO DNS cache to speed up the lookup.
+     * It also avoids doing a reverse lookup if the givem host name
+     * is already an IP address.
      *
      * \note All uri filter plugins that need to perform a hostname
      * lookup should use this function.
@@ -735,7 +735,7 @@ protected:
      *
      * @since 4.7
      */
-    QHostInfo resolveName (const QString& hostname, unsigned long timeout) const;
+    QHostInfo resolveName(const QString& hostname, unsigned long timeout) const;
 
 private:
     class KUriFilterPluginPrivate * const d;

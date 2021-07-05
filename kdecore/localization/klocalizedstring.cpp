@@ -76,9 +76,6 @@ class KLocalizedStringPrivate
     QString postFormat (const QString &text,
                         const QString &lang,
                         const QString &ctxt) const;
-
-    static void notifyCatalogsUpdated (const QStringList &languages,
-                                       const QList<KCatalogName> &catalogs);
 };
 
 class KLocalizedStringPrivateStatics
@@ -92,6 +89,7 @@ public:
     }
 };
 K_GLOBAL_STATIC(KLocalizedStringPrivateStatics, staticsKLSP)
+Q_GLOBAL_STATIC(QMutex, staticsKLSPLock)
 
 KLocalizedString::KLocalizedString ()
 : d(new KLocalizedStringPrivate)
@@ -161,8 +159,6 @@ QString KLocalizedString::toString (const KLocale *locale,
 QString KLocalizedStringPrivate::toString (const KLocale *locale,
                                            const QString *catalogName) const
 {
-    const KLocalizedStringPrivateStatics *s = staticsKLSP;
-
     QMutexLocker lock(kLocaleMutex());
 
     // Assure the message has been supplied.
@@ -211,9 +207,7 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
     // Substitute placeholders in ordinary translation.
     QString finalstr = substituteSimple(rawtrans);
     // Post-format ordinary translation.
-    finalstr = postFormat(finalstr, lang, QString::fromLatin1(ctxt));
-
-    return finalstr;
+    return postFormat(finalstr, lang, QString::fromLatin1(ctxt));
 }
 
 QString KLocalizedStringPrivate::selectForEnglish () const
@@ -363,17 +357,13 @@ QString KLocalizedStringPrivate::postFormat (const QString &text,
                                              const QString &lang,
                                              const QString &ctxt) const
 {
+    QMutexLocker lock(staticsKLSPLock());
     const KLocalizedStringPrivateStatics *s = staticsKLSP;
-    QMutexLocker lock(kLocaleMutex());
-
-    QString finalstr = text;
-
     // Transform any semantic markup into visual formatting.
     if (s->formatters.contains(lang)) {
-        finalstr = s->formatters[lang]->format(finalstr, ctxt);
+        return s->formatters[lang]->format(text, ctxt);
     }
-
-    return finalstr;
+    return text;
 }
 
 static QString wrapNum (const QString &tag, const QString &numstr,
@@ -547,19 +537,11 @@ KLocalizedString ki18ncp (const char* ctxt,
 void KLocalizedString::notifyCatalogsUpdated (const QStringList &languages,
                                               const QList<KCatalogName> &catalogs)
 {
-    KLocalizedStringPrivate::notifyCatalogsUpdated(languages, catalogs);
-}
-
-void KLocalizedStringPrivate::notifyCatalogsUpdated (const QStringList &languages,
-                                                     const QList<KCatalogName> &catalogs)
-{
+    QMutexLocker lock(staticsKLSPLock());
     if (staticsKLSP.isDestroyed()) {
         return;
     }
     KLocalizedStringPrivateStatics *s = staticsKLSP;
-    // Very important: do not the mutex here.
-    //QMutexLocker lock(kLocaleMutex());
-
     // Create visual formatters for each new language.
     foreach (const QString &lang, languages) {
         if (!s->formatters.contains(lang)) {

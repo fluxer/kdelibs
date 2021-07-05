@@ -34,7 +34,6 @@
 
 #include <kurl.h>
 #include <klocalizedstring.h>
-#include <kio/hostinfo_p.h>
 
 namespace
 {
@@ -168,11 +167,7 @@ namespace
             // needless reverse lookup
             QHostAddress address ( host );
             if ( address.isNull() ) {
-                QHostInfo hostInfo = KIO::HostInfo::lookupCachedHostInfoFor(host);
-                if (hostInfo.hostName().isEmpty() || hostInfo.error() != QHostInfo::NoError) {
-                    hostInfo = QHostInfo::fromName(host);
-                    KIO::HostInfo::cacheLookup(hostInfo);
-                }
+                QHostInfo hostInfo = QHostInfo::fromName(host);
                 m_addressList = hostInfo.addresses();
             } else {
                 m_addressList.clear();

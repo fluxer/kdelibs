@@ -221,6 +221,8 @@ QString UDevDevice::icon() const
             case Solid::OpticalDisc::DiscType::BluRayRecordable:
             case Solid::OpticalDisc::DiscType::BluRayRewritable:
                 return QLatin1String("media-optical-blu-ray");
+            default:
+                break;
         }
 
         // fallback for every other optical disc

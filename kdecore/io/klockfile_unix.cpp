@@ -388,7 +388,6 @@ KLockFile::LockResult KLockFile::lock(LockFlags options)
 
     KLockFile::LockResult result;
     int hardErrors = 5;
-    int n = 5;
     while(true) {
         KDE_struct_stat st_buf;
         // Try to create the lock file
