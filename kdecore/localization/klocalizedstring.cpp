@@ -209,9 +209,7 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
     // Substitute placeholders in ordinary translation.
     QString finalstr = substituteSimple(rawtrans);
     // Post-format ordinary translation.
-    finalstr = postFormat(finalstr, lang, QString::fromLatin1(ctxt));
-
-    return finalstr;
+    return postFormat(finalstr, lang, QString::fromLatin1(ctxt));
 }
 
 QString KLocalizedStringPrivate::selectForEnglish () const
@@ -364,14 +362,12 @@ QString KLocalizedStringPrivate::postFormat (const QString &text,
     const KLocalizedStringPrivateStatics *s = staticsKLSP;
     QMutexLocker lock(kLocaleMutex());
 
-    QString finalstr = text;
-
     // Transform any semantic markup into visual formatting.
     if (s->formatters.contains(lang)) {
-        finalstr = s->formatters[lang]->format(finalstr, ctxt);
+        return s->formatters[lang]->format(text, ctxt);
     }
 
-    return finalstr;
+    return text;
 }
 
 static QString wrapNum (const QString &tag, const QString &numstr,
