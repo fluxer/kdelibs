@@ -23,6 +23,7 @@
 #include "cpuinfo.h"
 
 #include <QtCore/QFile>
+#include <QtCore/QDir>
 
 using namespace Solid::Backends::UDev;
 
@@ -118,7 +119,7 @@ Solid::Processor::InstructionSets Processor::instructionSets() const
 QString Processor::prefix() const
 {
     const QLatin1String sysPrefix("/sysdev");
-    if (QFile::exists(m_device->deviceName() + sysPrefix)) {
+    if (QDir(m_device->deviceName() + sysPrefix).exists()) {
         return sysPrefix;
     }
 
