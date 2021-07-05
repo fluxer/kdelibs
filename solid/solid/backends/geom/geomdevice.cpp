@@ -23,6 +23,7 @@
 #include "geomblock.h"
 #include "geomstoragedrive.h"
 #include "geomstoragevolume.h"
+#include "geomstorageaccess.h"
 #include "kglobal.h"
 #include "klocale.h"
 
@@ -181,7 +182,18 @@ QString GeomDevice::icon() const
 
 QStringList GeomDevice::emblems() const
 {
-    return QStringList();
+    QStringList res;
+
+    if (queryDeviceInterface(Solid::DeviceInterface::StorageAccess)) {
+        const StorageAccess accessIface(const_cast<GeomDevice *>(this));
+        if (accessIface.isAccessible()) {
+            res << "emblem-mounted";
+        } else {
+            res << "emblem-unmounted";
+        }
+    }
+
+    return res;
 }
 
 QString GeomDevice::description() const
@@ -233,6 +245,7 @@ bool GeomDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
             return (m_major != 0);
         case Solid::DeviceInterface::StorageDrive:
         case Solid::DeviceInterface::StorageVolume:
+        case Solid::DeviceInterface::StorageAccess:
             return true;
         default:
             return false;
@@ -253,6 +266,9 @@ QObject *GeomDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
         }
         case Solid::DeviceInterface::StorageVolume: {
             return new StorageVolume(this);
+        }
+        case Solid::DeviceInterface::StorageAccess: {
+            return new StorageAccess(this);
         }
         default:
             Q_ASSERT(false);

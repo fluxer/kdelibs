@@ -208,6 +208,7 @@ if(GEOM_FOUND)
         backends/geom/geomblock.cpp
         backends/geom/geomstoragedrive.cpp
         backends/geom/geomstoragevolume.cpp
+        backends/geom/geomstorageaccess.cpp
     )
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${GEOM_LIBRARIES})

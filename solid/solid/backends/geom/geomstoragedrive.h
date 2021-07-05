@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GEOMSTORAGEDRIVE_H
-#define GEOMSTORAGEDRIVE_H
+#ifndef SOLID_BACKENDS_GEOM_GEOMSTORAGEDRIVE_H
+#define SOLID_BACKENDS_GEOM_GEOMSTORAGEDRIVE_H
 
 #include <ifaces/storagedrive.h>
 
@@ -52,4 +52,4 @@ public:
 }
 }
 
-#endif // GEOMSTORAGEDRIVE_H
+#endif // SOLID_BACKENDS_GEOM_GEOMSTORAGEDRIVE_H

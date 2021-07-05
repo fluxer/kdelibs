@@ -18,8 +18,8 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef GEOMSTORAGEVOLUME_H
-#define GEOMSTORAGEVOLUME_H
+#ifndef SOLID_BACKENDS_GEOM_GEOMSTORAGEVOLUME_H
+#define SOLID_BACKENDS_GEOM_GEOMSTORAGEVOLUME_H
 
 #include <ifaces/storagevolume.h>
 
@@ -54,4 +54,4 @@ public:
 }
 }
 
-#endif // GEOMSTORAGEVOLUME_H
+#endif // SOLID_BACKENDS_GEOM_GEOMSTORAGEVOLUME_H

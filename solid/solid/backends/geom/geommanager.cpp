@@ -52,7 +52,8 @@ GeomManager::GeomManager(QObject *parent)
     d->m_supportedInterfaces
         << Solid::DeviceInterface::Block
         << Solid::DeviceInterface::StorageDrive
-        << Solid::DeviceInterface::StorageVolume;
+        << Solid::DeviceInterface::StorageVolume
+        << Solid::DeviceInterface::StorageAccess;
 }
 
 GeomManager::~GeomManager()
