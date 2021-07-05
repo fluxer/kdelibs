@@ -50,7 +50,7 @@ public:
 private:
     QString cardNumberToName();
     QString deviceName(char type);
-    QByteArray grepHelper(const QString &path, const QByteArray &grepValue);
+    static QByteArray grepHelper(const QString &path, const QByteArray &grepValue);
 
     bool isHardware(const char *lastElement);
     bool isAlsaControl(const char *lastElement);
