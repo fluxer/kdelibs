@@ -161,8 +161,6 @@ QString KLocalizedString::toString (const KLocale *locale,
 QString KLocalizedStringPrivate::toString (const KLocale *locale,
                                            const QString *catalogName) const
 {
-    const KLocalizedStringPrivateStatics *s = staticsKLSP;
-
     QMutexLocker lock(kLocaleMutex());
 
     // Assure the message has been supplied.
