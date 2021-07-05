@@ -8,7 +8,6 @@ set(module_install_dir ${KDE4_DATA_INSTALL_DIR}/cmake/modules)
 # are listed explicitly:
 set(cmakeFilesDontInstall
     FindLibRaw.cmake
-    FindHUpnp.cmake
     FindMPV.cmake
     FindUDev.cmake
     FindAvahi.cmake

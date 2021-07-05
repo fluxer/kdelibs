@@ -33,10 +33,6 @@
 #include "backends/udev/udevmanager.h"
 #endif
 
-#if defined(HUPNP_FOUND)
-#include "backends/upnp/upnpdevicemanager.h"
-#endif
-
 Solid::ManagerBasePrivate::ManagerBasePrivate()
 {
 }
@@ -60,10 +56,6 @@ void Solid::ManagerBasePrivate::loadBackends()
 
 #if defined(UDEV_FOUND)
     m_backends << new Solid::Backends::UDev::UDevManager(0);
-#endif
-
-#if defined(HUPNP_FOUND)
-    m_backends << new Solid::Backends::UPnP::UPnPDeviceManager(0);
 #endif
 }
 

@@ -21,4 +21,3 @@
 #cmakedefine ENABLE_TESTING
 
 #cmakedefine UDEV_FOUND
-#cmakedefine HUPNP_FOUND

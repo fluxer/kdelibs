@@ -115,21 +115,6 @@ if(ENABLE_TESTING)
     )
 endif()
 
-if(HUPNP_FOUND)
-    include_directories(${HUPNP_INCLUDE_DIR})
-    message(STATUS "Building Solid UPnP backend.")
-    set(solid_LIB_SRCS ${solid_LIB_SRCS}
-        backends/upnp/upnpdevice.cpp
-        backends/upnp/upnpdevicemanager.cpp
-        backends/upnp/upnpdeviceinterface.cpp
-        backends/upnp/upnpmediaserver.cpp
-        backends/upnp/upnpinternetgateway.cpp
-        backends/upnp/upnpcontrolpoint.cpp
-    )
-
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${HUPNP_LIBS})
-endif()
-
 if(UDEV_FOUND)
     include_directories(${UDEV_INCLUDES})
     message(STATUS "Building Solid UDev backend.")

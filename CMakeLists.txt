@@ -215,13 +215,6 @@ set_package_properties(GSSAPI PROPERTIES
     PURPOSE "A MIT or HEIMDAL flavor of GSSAPI can be used"
 )
 
-macro_optional_find_package(HUpnp)
-set_package_properties(HUpnp PROPERTIES
-    URL "http://www.herqq.org"
-    PURPOSE "Allows Solid to provide information about UPnP devices on the network"
-    TYPE OPTIONAL
-)
-
 # v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
 macro_optional_find_package(UDev 143)
 set_package_properties(UDev PROPERTIES

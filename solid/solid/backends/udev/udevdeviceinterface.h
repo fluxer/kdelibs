@@ -36,6 +36,7 @@ class DeviceInterface : public QObject, virtual public Solid::Ifaces::DeviceInte
 {
     Q_OBJECT
     Q_INTERFACES(Solid::Ifaces::DeviceInterface)
+
 public:
     DeviceInterface(UDevDevice *device);
     virtual ~DeviceInterface();
