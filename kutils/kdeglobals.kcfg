@@ -447,35 +447,15 @@
   <entry key="UseFileThumbnails" type="Bool" />
   <entry key="Plugins" type="StringList" />
   <entry key="ar" type="Bool" />
-  <entry key="audiocd" type="Bool" />
-  <entry key="devices" type="Bool" />
   <entry key="file" type="Bool" />
-  <entry key="fish" type="Bool" />
   <entry key="floppy" type="Bool" />
   <entry key="fonts" type="Bool" />
   <entry key="ftp" type="Bool" />
-  <entry key="imap" type="Bool" />
-  <entry key="imaps" type="Bool" />
-  <entry key="kdeapi" type="Bool" />
-  <entry key="lan" type="Bool" />
-  <entry key="mac" type="Bool" />
-  <entry key="man" type="Bool" />
   <entry key="nfs" type="Bool" />
-  <entry key="nntp" type="Bool" />
-  <entry key="perldoc" type="Bool" />
-  <entry key="pop3" type="Bool" />
-  <entry key="pop3s" type="Bool" />
-  <entry key="print" type="Bool" />
-  <entry key="printdb" type="Bool" />
-  <entry key="programs" type="Bool" />
-  <entry key="pydoc" type="Bool" />
-  <entry key="rlan" type="Bool" />
   <entry key="settings" type="Bool" />
   <entry key="sftp" type="Bool" />
-  <entry key="sieve" type="Bool" />
   <entry key="smb" type="Bool" />
-  <entry key="smtp" type="Bool" />
-  <entry key="smtps" type="Bool" />
+  <entry key="mtp" type="Bool" />
   <entry key="system" type="Bool" />
   <entry key="tar" type="Bool" />
   <entry key="webdav" type="Bool" />
