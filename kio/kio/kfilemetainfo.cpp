@@ -160,6 +160,8 @@ public:
             static const char* avarageBitrateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate";
             static const char* frameRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate";
             static const char* sampleRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate";
+            // datetime field
+            static const char* contentCreatedField = "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated";
             const std::string name(field->key());
             if (qstrncmp(name.c_str(), durationField, name.size()) == 0) {
                 const QString durationstring = KGlobal::locale()->prettyFormatDuration(value * 1000);
@@ -177,6 +179,11 @@ public:
                 const QString bitratestring = i18n("%1 kHz").arg(value / 1000);
                 addValue(idx, field, QVariant(bitratestring));
                 return;
+            } else if (qstrncmp(name.c_str(), contentCreatedField, name.size()) == 0) {
+                const QDateTime datetime = QDateTime::fromTime_t(value);
+                // NOTE: keep in sync with kdelibs/kio/kfile/kfilemetadataprovider.cpp
+                const QString datestring = KGlobal::locale()->formatDateTime(datetime, KLocale::FancyLongDate);
+                addValue(idx, field, QVariant(datestring));
             }
 
             addValue(idx, field, QVariant((quint32)value));
