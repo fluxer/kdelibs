@@ -136,26 +136,32 @@ QVariant KFilePlacesItem::bookmarkData(int role) const
 
     if (b.isNull()) return QVariant();
 
-    switch (role)
-    {
-    case Qt::DisplayRole:
-        return m_text;
-    case Qt::DecorationRole:
-        return KIcon(iconNameForBookmark(b));
-    case Qt::BackgroundRole:
-        if (b.metaDataItem("IsHidden")=="true") {
-            return Qt::lightGray;
-        } else {
+    switch (role) {
+        case Qt::DisplayRole: {
+            return m_text;
+        }
+        case Qt::DecorationRole: {
+            return KIcon(iconNameForBookmark(b));
+        }
+        case Qt::BackgroundRole: {
+            if (b.metaDataItem("IsHidden")=="true") {
+                return Qt::lightGray;
+            } else {
+                return QVariant();
+            }
+        }
+        case KFilePlacesModel::UrlRole: {
+            return QUrl(b.url());
+        }
+        case KFilePlacesModel::SetupNeededRole: {
+            return false;
+        }
+        case KFilePlacesModel::HiddenRole: {
+            return b.metaDataItem("IsHidden")=="true";
+        }
+        default: {
             return QVariant();
         }
-    case KFilePlacesModel::UrlRole:
-        return QUrl(b.url());
-    case KFilePlacesModel::SetupNeededRole:
-        return false;
-    case KFilePlacesModel::HiddenRole:
-        return b.metaDataItem("IsHidden")=="true";
-    default:
-        return QVariant();
     }
 }
 
@@ -164,45 +170,43 @@ QVariant KFilePlacesItem::deviceData(int role) const
     Solid::Device d = device();
 
     if (d.isValid()) {
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            return d.description();
-        case Qt::DecorationRole:
-            return KIcon(m_iconPath, 0, m_emblems);
-        case KFilePlacesModel::UrlRole:
-            if (m_access) {
-                return QUrl(KUrl(m_access->filePath()));
-            } else if (m_mtp) {
-                return QUrl(QString("mtp:udi=%1").arg(d.udi()));
-            } else {
+        switch (role) {
+            case Qt::DisplayRole: {
+                return d.description();
+            }
+            case Qt::DecorationRole: {
+                return KIcon(m_iconPath, 0, m_emblems);
+            }
+            case KFilePlacesModel::UrlRole: {
+                if (m_access) {
+                    return QUrl(KUrl(m_access->filePath()));
+                } else if (m_mtp) {
+                    return QUrl(QString("mtp:udi=%1").arg(d.udi()));
+                }
                 return QVariant();
             }
-        case KFilePlacesModel::SetupNeededRole:
-            if (m_access) {
-                return !m_isAccessible;
-            } else {
+            case KFilePlacesModel::SetupNeededRole: {
+                if (m_access) {
+                    return !m_isAccessible;
+                }
                 return QVariant();
             }
-
-        case KFilePlacesModel::FixedDeviceRole:
-            {
+            case KFilePlacesModel::FixedDeviceRole: {
                 Solid::StorageDrive *drive = m_device.as<Solid::StorageDrive>();
                 if (drive!=0) {
                     return !drive->isHotpluggable() && !drive->isRemovable();
                 }
                 return true;
             }
-
-        case KFilePlacesModel::CapacityBarRecommendedRole:
-        return m_isAccessible && !m_isCdrom;
-
-        default:
-            return QVariant();
+            case KFilePlacesModel::CapacityBarRecommendedRole: {
+                return m_isAccessible && !m_isCdrom;
+            }
+            default: {
+                return QVariant();
+            }
         }
-    } else {
-        return QVariant();
     }
+    return QVariant();
 }
 
 KBookmark KFilePlacesItem::createBookmark(KBookmarkManager *manager,
@@ -212,8 +216,9 @@ KBookmark KFilePlacesItem::createBookmark(KBookmarkManager *manager,
                                           KFilePlacesItem *after)
 {
     KBookmarkGroup root = manager->root();
-    if (root.isNull())
+    if (root.isNull()) {
         return KBookmark();
+    }
     QString empty_icon = iconName;
     if (url == KUrl("trash:/")) {
         if (empty_icon.endsWith(QLatin1String("-full"))) {
