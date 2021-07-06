@@ -160,7 +160,7 @@ public:
             static const char* avarageBitrateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate";
             static const char* frameRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate";
             static const char* sampleRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate";
-            // datetime field, not registered as such by strigi
+            // datetime field
             static const char* contentCreatedField = "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated";
             const std::string name(field->key());
             if (qstrncmp(name.c_str(), durationField, name.size()) == 0) {
