@@ -61,10 +61,10 @@ Kded *Kded::_self = 0;
 
 static bool checkStamps = true;
 static bool delayedCheck = false;
-static int HostnamePollInterval;
-static bool bCheckSycoca;
-static bool bCheckUpdates;
-static bool bCheckHostname;
+static int HostnamePollInterval = 5000;
+static bool bCheckSycoca = true;
+static bool bCheckUpdates = true;
+static bool bCheckHostname = true;
 
 QT_BEGIN_NAMESPACE
 #ifdef Q_DBUS_EXPORT
@@ -76,85 +76,84 @@ QT_END_NAMESPACE
 
 static void runBuildSycoca(QObject *callBackObj=0, const char *callBackSlot=0, const char *callBackErrorSlot=0)
 {
-   const QString exe = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
-   Q_ASSERT(!exe.isEmpty());
-   QStringList args;
-   args.append("--incremental");
-   if(checkStamps)
-      args.append("--checkstamps");
-   if(delayedCheck)
-      args.append("--nocheckfiles");
-   else
-      checkStamps = false; // useful only during kded startup
-   if (callBackObj)
-   {
-      QVariantList argList;
-      argList << exe << args << QStringList() << QString();
-      KToolInvocation::klauncher()->callWithCallback("kdeinit_exec_wait", argList, callBackObj, callBackSlot, callBackErrorSlot);
-   }
-   else
-   {
-      KToolInvocation::kdeinitExecWait( exe, args );
-   }
+    const QString exe = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
+    Q_ASSERT(!exe.isEmpty());
+    QStringList args;
+    args.append("--incremental");
+    if (checkStamps) {
+        args.append("--checkstamps");
+    }
+    if (delayedCheck) {
+        args.append("--nocheckfiles");
+    } else {
+        checkStamps = false; // useful only during kded startup
+    }
+    if (callBackObj) {
+        QVariantList argList;
+        argList << exe << args << QStringList() << QString();
+        KToolInvocation::klauncher()->callWithCallback("kdeinit_exec_wait", argList, callBackObj, callBackSlot, callBackErrorSlot);
+    } else {
+        KToolInvocation::kdeinitExecWait( exe, args );
+    }
 }
 
 static void runDontChangeHostname(const QByteArray &oldName, const QByteArray &newName)
 {
-   QStringList args;
-   args.append(QFile::decodeName(oldName));
-   args.append(QFile::decodeName(newName));
-   KToolInvocation::kdeinitExecWait( "kdontchangethehostname", args );
+    QStringList args;
+    args.append(QFile::decodeName(oldName));
+    args.append(QFile::decodeName(newName));
+    KToolInvocation::kdeinitExecWait("kdontchangethehostname", args);
 }
 
 Kded::Kded()
     : m_needDelayedCheck(false)
 {
-  _self = this;
+    _self = this;
 
-  m_serviceWatcher = new QDBusServiceWatcher(this);
-  m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
-  m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
-  QObject::connect(m_serviceWatcher, SIGNAL(serviceUnregistered(QString)),
-                   this, SLOT(slotApplicationRemoved(QString)));
+    m_serviceWatcher = new QDBusServiceWatcher(this);
+    m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
+    m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
+    QObject::connect(m_serviceWatcher, SIGNAL(serviceUnregistered(QString)),
+                     this, SLOT(slotApplicationRemoved(QString)));
 
-  new KBuildsycocaAdaptor(this);
-  new KdedAdaptor(this);
+    new KBuildsycocaAdaptor(this);
+    new KdedAdaptor(this);
 
-  QDBusConnection session = QDBusConnection::sessionBus();
-  session.registerObject("/kbuildsycoca", this);
-  session.registerObject("/kded", this);
+    QDBusConnection session = QDBusConnection::sessionBus();
+    session.registerObject("/kbuildsycoca", this);
+    session.registerObject("/kded", this);
 
-  qDBusAddSpyHook(messageFilter);
+    qDBusAddSpyHook(messageFilter);
 
-  m_pTimer = new QTimer(this);
-  m_pTimer->setSingleShot( true );
-  connect(m_pTimer, SIGNAL(timeout()), this, SLOT(recreate()));
+    m_pTimer = new QTimer(this);
+    m_pTimer->setSingleShot(true);
+    connect(m_pTimer, SIGNAL(timeout()), this, SLOT(recreate()));
 
-  m_pDirWatch = 0;
+    m_pDirWatch = 0;
 
-  m_recreateCount = 0;
-  m_recreateBusy = false;
+    m_recreateCount = 0;
+    m_recreateBusy = false;
 }
 
 Kded::~Kded()
 {
-  _self = 0;
-  m_pTimer->stop();
-  delete m_pTimer;
-  delete m_pDirWatch;
+    _self = 0;
+    m_pTimer->stop();
+    delete m_pTimer;
+    delete m_pDirWatch;
 
-  QHashIterator<QString,KDEDModule*> it(m_modules);
-  while (it.hasNext()) {
-      it.next();
-      KDEDModule* module(it.value());
+    QHashIterator<QString,KDEDModule*> it(m_modules);
+    while (it.hasNext()) {
+        it.next();
+        KDEDModule* module(it.value());
 
-      // first disconnect otherwise slotKDEDModuleRemoved() is called
-      // and changes m_modules while we're iterating over it
-      disconnect(module, SIGNAL(moduleDeleted(KDEDModule*)),
-                 this, SLOT(slotKDEDModuleRemoved(KDEDModule*)));
+        // first disconnect otherwise slotKDEDModuleRemoved() is called
+        // and changes m_modules while we're iterating over it
+        disconnect(module, SIGNAL(moduleDeleted(KDEDModule*)),
+                   this, SLOT(slotKDEDModuleRemoved(KDEDModule*)));
 
-      delete module;
-  }
+        delete module;
+    }
 }
 
 // on-demand module loading
@@ -162,56 +161,62 @@ Kded::~Kded()
 // calls are delivered to objects
 void Kded::messageFilter(const QDBusMessage &message)
 {
-  // This happens when kded goes down and some modules try to clean up.
-  if (!self())
-     return;
+    // This happens when kded goes down and some modules try to clean up.
+    if (!self()) {
+        return;
+    }
 
-  if (message.type() != QDBusMessage::MethodCallMessage)
-     return;
+    if (message.type() != QDBusMessage::MethodCallMessage) {
+        return;
+    }
 
-  QString obj = message.path();
-  if (!obj.startsWith(MODULES_PATH))
-     return;
+    QString obj = message.path();
+    if (!obj.startsWith(MODULES_PATH)) {
+        return;
+    }
 
-  // Remove the <MODULES_PATH> part
-  obj = obj.mid(strlen(MODULES_PATH));
+    // Remove the <MODULES_PATH> part
+    obj = obj.mid(strlen(MODULES_PATH));
 
-  // Remove the part after the modules name
-  int index = obj.indexOf('/');
-  if (index!=-1) {
-      obj = obj.left(index);
-  }
+    // Remove the part after the modules name
+    int index = obj.indexOf('/');
+    if (index != -1) {
+        obj = obj.left(index);
+    }
 
-  if (self()->m_dontLoad.value(obj, 0))
-     return;
+    if (self()->m_dontLoad.value(obj, 0)) {
+        return;
+    }
 
-  KDEDModule *module = self()->loadModule(obj, true);
-  if (!module) {
-      kDebug(7020) << "Failed to load module for " << obj;
-  }
-  Q_UNUSED(module);
+    KDEDModule *module = self()->loadModule(obj, true);
+    if (!module) {
+        kDebug(7020) << "Failed to load module for " << obj;
+    }
+    Q_UNUSED(module);
 }
 
 static int phaseForModule(const KService::Ptr& service)
 {
     const QVariant phasev = service->property("X-KDE-Kded-phase", QVariant::Int );
-    return phasev.isValid() ? phasev.toInt() : 2;
+    return (phasev.isValid() ? phasev.toInt() : 2);
 }
 
 void Kded::initModules()
 {
     m_dontLoad.clear();
-    bool kde_running = !qgetenv( "KDE_FULL_SESSION" ).isEmpty();
+    bool kde_running = !qgetenv("KDE_FULL_SESSION").isEmpty();
     if (kde_running) {
         // not the same user like the one running the session (most likely we're run via sudo or something)
-        const QByteArray sessionUID = qgetenv( "KDE_SESSION_UID" );
-        if( !sessionUID.isEmpty() && uid_t( sessionUID.toInt() ) != getuid())
+        const QByteArray sessionUID = qgetenv("KDE_SESSION_UID");
+        if (!sessionUID.isEmpty() && uid_t( sessionUID.toInt()) != ::getuid()) {
             kde_running = false;
+        }
 
         // not the same kde version as the current desktop
         const QByteArray kdeSession = qgetenv("KDE_SESSION_VERSION");
-        if (kdeSession.toInt() != KDE_VERSION_MAJOR)
+        if (kdeSession.toInt() != KDE_VERSION_MAJOR) {
             kde_running = false;
+        }
     }
 
     // There will be a "phase 2" only if we're in the KDE startup.
@@ -220,50 +225,54 @@ void Kded::initModules()
     // these modules now, if in a KDE session.
     const bool loadPhase2Now = (kde_running && qgetenv("KDED_STARTED_BY_KDEINIT").toInt() == 0);
 
-     // Preload kded modules.
-     const KService::List kdedModules = KServiceTypeTrader::self()->query("KDEDModule");
-     for(KService::List::ConstIterator it = kdedModules.begin(); it != kdedModules.end(); ++it)
-     {
-         KService::Ptr service = *it;
-         // Should the service load on startup?
-         const bool autoload = isModuleAutoloaded(service);
+    // Preload kded modules.
+    const KService::List kdedModules = KServiceTypeTrader::self()->query("KDEDModule");
+    foreach (KService::Ptr service, kdedModules) {
+        // Should the service load on startup?
+        const bool autoload = isModuleAutoloaded(service);
 
-         // see ksmserver's README for description of the phases
-         bool prevent_autoload = false;
-         switch( phaseForModule(service) )
-         {
-             case 0: // always autoload
-                 break;
-             case 1: // autoload only in KDE
-                 if (!kde_running) {
-                     prevent_autoload = true;
-                 }
-                 break;
-             case 2: // autoload delayed, only in KDE
-             default:
-                 if (!loadPhase2Now) {
-                     prevent_autoload = true;
-                 }
-                 break;
-         }
+        // see ksmserver's README for description of the phases
+        bool prevent_autoload = false;
+        switch( phaseForModule(service) ) {
+            case 0: {
+                // always autoload
+                break;
+            }
+            case 1: {
+                // autoload only in KDE
+                if (!kde_running) {
+                    prevent_autoload = true;
+                }
+                break;
+            }
+            case 2: // autoload delayed, only in KDE
+            default: {
+                if (!loadPhase2Now) {
+                    prevent_autoload = true;
+                }
+                break;
+            }
+        }
 
         // Load the module if necessary and allowed
-         if (autoload && !prevent_autoload) {
+        if (autoload && !prevent_autoload) {
             if (!loadModule(service, false)) {
                 continue;
             }
-         }
+        }
 
-         // Remember if the module is allowed to load on demand
-         bool loadOnDemand = isModuleLoadedOnDemand(service);
-         if (!loadOnDemand)
+        // Remember if the module is allowed to load on demand
+        bool loadOnDemand = isModuleLoadedOnDemand(service);
+        if (!loadOnDemand) {
             noDemandLoad(service->desktopEntryName());
+        }
 
-         // In case of reloading the configuration it is possible for a module
-         // to run even if it is now allowed to. Stop it then.
-         if (!loadOnDemand && !autoload)
+        // In case of reloading the configuration it is possible for a module
+        // to run even if it is now allowed to. Stop it then.
+        if (!loadOnDemand && !autoload) {
             unloadModule(service->desktopEntryName().toLatin1());
-     }
+        }
+    }
 }
 
 void Kded::loadSecondPhase()
@@ -271,11 +280,10 @@ void Kded::loadSecondPhase()
     kDebug(7020) << "Loading second phase autoload";
     KSharedConfig::Ptr config = KGlobal::config();
     KService::List kdedModules = KServiceTypeTrader::self()->query("KDEDModule");
-    for(KService::List::ConstIterator it = kdedModules.constBegin(); it != kdedModules.constEnd(); ++it) {
-        const KService::Ptr service = *it;
+    foreach (const KService::Ptr service, kdedModules) {
         const bool autoload = isModuleAutoloaded(service);
         if (autoload && phaseForModule(service) == 2) {
-            //kDebug(7020) << "2nd phase: loading" << service->desktopEntryName();
+            // kDebug(7020) << "2nd phase: loading" << service->desktopEntryName();
             loadModule(service, false);
         }
     }
@@ -283,16 +291,17 @@ void Kded::loadSecondPhase()
 
 void Kded::noDemandLoad(const QString &obj)
 {
-  m_dontLoad.insert(obj.toLatin1(), this);
+    m_dontLoad.insert(obj.toLatin1(), this);
 }
 
 void Kded::setModuleAutoloading(const QString &obj, bool autoload)
 {
     KSharedConfig::Ptr config = KGlobal::config();
     // Ensure the service exists.
-    KService::Ptr service = KService::serviceByDesktopPath("kded/"+obj+".desktop");
-    if (!service)
+    KService::Ptr service = KService::serviceByDesktopPath("kded/" + obj + ".desktop");
+    if (!service) {
         return;
+    }
     KConfigGroup cg(config, QString("Module-%1").arg(service->desktopEntryName()));
     cg.writeEntry("autoload", autoload);
     cg.sync();
@@ -300,9 +309,10 @@ void Kded::setModuleAutoloading(const QString &obj, bool autoload)
 
 bool Kded::isModuleAutoloaded(const QString &obj) const
 {
-    KService::Ptr s = KService::serviceByDesktopPath("kded/"+obj+".desktop");
-    if (!s)
+    KService::Ptr s = KService::serviceByDesktopPath("kded/" + obj + ".desktop");
+    if (!s) {
         return false;
+    }
     return isModuleAutoloaded(s);
 }
 
@@ -317,9 +327,10 @@ bool Kded::isModuleAutoloaded(const KService::Ptr &module) const
 
 bool Kded::isModuleLoadedOnDemand(const QString &obj) const
 {
-    KService::Ptr s = KService::serviceByDesktopPath("kded/"+obj+".desktop");
-    if (!s)
+    KService::Ptr s = KService::serviceByDesktopPath("kded/" + obj + ".desktop");
+    if (!s) {
         return false;
+    }
     return isModuleLoadedOnDemand(s);
 }
 
@@ -328,43 +339,43 @@ bool Kded::isModuleLoadedOnDemand(const KService::Ptr &module) const
     KSharedConfig::Ptr config = KGlobal::config();
     bool loadOnDemand = true;
     QVariant p = module->property("X-KDE-Kded-load-on-demand", QVariant::Bool);
-    if (p.isValid() && (p.toBool() == false))
+    if (p.isValid() && (p.toBool() == false)) {
         loadOnDemand = false;
+    }
     return loadOnDemand;
 }
 
 KDEDModule *Kded::loadModule(const QString &obj, bool onDemand)
 {
-  // Make sure this method is only called with valid module names.
-  Q_ASSERT(obj.indexOf('/')==-1);
+    // Make sure this method is only called with valid module names.
+    Q_ASSERT(obj.indexOf('/') == -1);
 
-  KDEDModule *module = m_modules.value(obj, 0);
-  if (module)
-     return module;
-  KService::Ptr s = KService::serviceByDesktopPath("kded/"+obj+".desktop");
-  return loadModule(s, onDemand);
+    KDEDModule *module = m_modules.value(obj, 0);
+    if (module) {
+        return module;
+    }
+    KService::Ptr s = KService::serviceByDesktopPath("kded/" + obj + ".desktop");
+    return loadModule(s, onDemand);
 }
 
 KDEDModule *Kded::loadModule(const KService::Ptr& s, bool onDemand)
 {
-    if (s && !s->library().isEmpty())
-    {
+    if (s && !s->library().isEmpty()) {
         QString obj = s->desktopEntryName();
         KDEDModule *oldModule = m_modules.value(obj, 0);
-        if (oldModule)
+        if (oldModule) {
             return oldModule;
+        }
 
-        if (onDemand)
-        {
+        if (onDemand) {
             QVariant p = s->property("X-KDE-Kded-load-on-demand", QVariant::Bool);
-            if (p.isValid() && (p.toBool() == false))
-            {
+            if (p.isValid() && (p.toBool() == false)) {
                 noDemandLoad(s->desktopEntryName());
                 return 0;
             }
         }
 
-        QString libname = "kded_"+s->library();
+        QString libname = "kded_" + s->library();
         KPluginLoader loader(libname);
 
         KPluginFactory *factory = loader.factory();
@@ -375,13 +386,13 @@ KDEDModule *Kded::loadModule(const KService::Ptr& s, bool onDemand)
         if (module) {
             module->setModuleName(obj);
             m_modules.insert(obj, module);
-            //m_libs.insert(obj, lib);
+            // m_libs.insert(obj, lib);
             connect(module, SIGNAL(moduleDeleted(KDEDModule*)), SLOT(slotKDEDModuleRemoved(KDEDModule*)));
             kDebug(7020) << "Successfully loaded module" << obj;
             return module;
         } else {
             kDebug(7020) << "Could not load module" << obj;
-            //loader.unload();
+            // loader.unload();
         }
     }
     return 0;
@@ -389,13 +400,14 @@ KDEDModule *Kded::loadModule(const KService::Ptr& s, bool onDemand)
 
 bool Kded::unloadModule(const QString &obj)
 {
-  KDEDModule *module = m_modules.value(obj, 0);
-  if (!module)
-     return false;
-  kDebug(7020) << "Unloading module" << obj;
-  m_modules.remove(obj);
-  delete module;
-  return true;
+    KDEDModule *module = m_modules.value(obj, 0);
+    if (!module) {
+        return false;
+    }
+    kDebug(7020) << "Unloading module" << obj;
+    m_modules.remove(obj);
+    delete module;
+    return true;
 }
 
 QStringList Kded::loadedModules()
@@ -405,236 +417,224 @@ QStringList Kded::loadedModules()
 
 void Kded::slotKDEDModuleRemoved(KDEDModule *module)
 {
-  m_modules.remove(module->moduleName());
-  //QLibrary *lib = m_libs.take(module->moduleName());
-  //if (lib)
-  //   lib->unload();
+    m_modules.remove(module->moduleName());
+    // QLibrary *lib = m_libs.take(module->moduleName());
+    // if (lib) {
+    //     lib->unload();
+    // }
 }
 
 void Kded::slotApplicationRemoved(const QString &name)
 {
 #if 0 // see kdedmodule.cpp (KDED_OBJECTS)
-  foreach( KDEDModule* module, m_modules )
-  {
-     module->removeAll(appId);
-  }
+    foreach (KDEDModule* module, m_modules) {
+        module->removeAll(appId);
+    }
 #endif
-  m_serviceWatcher->removeWatchedService(name);
-  const QList<qlonglong> windowIds = m_windowIdList.value(name);
-  for( QList<qlonglong>::ConstIterator it = windowIds.begin();
-       it != windowIds.end(); ++it)
-  {
-      qlonglong windowId = *it;
-      m_globalWindowIdList.remove(windowId);
-      foreach( KDEDModule* module, m_modules )
-      {
-          emit module->windowUnregistered(windowId);
-      }
-  }
-  m_windowIdList.remove(name);
+    m_serviceWatcher->removeWatchedService(name);
+    const QList<qlonglong> windowIds = m_windowIdList.value(name);
+    foreach(const qlonglong windowId, windowIds) {
+        m_globalWindowIdList.remove(windowId);
+        foreach(KDEDModule* module, m_modules) {
+            emit module->windowUnregistered(windowId);
+        }
+    }
+    m_windowIdList.remove(name);
 }
 
 void Kded::updateDirWatch()
 {
-  if (!bCheckUpdates) return;
+    if (!bCheckUpdates) {
+        return;
+    }
 
-  delete m_pDirWatch;
-  m_pDirWatch = new KDirWatch;
+    delete m_pDirWatch;
+    m_pDirWatch = new KDirWatch;
 
-  QObject::connect( m_pDirWatch, SIGNAL(dirty(QString)),
-           this, SLOT(update(QString)));
+    QObject::connect(m_pDirWatch, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
 
-  foreach(const QString it, m_allResourceDirs) {
-     readDirectory( it );
-  }
+    foreach(const QString it, m_allResourceDirs) {
+        readDirectory(it);
+    }
 }
 
 void Kded::updateResourceList()
 {
-  KSycoca::clearCaches();
+    KSycoca::clearCaches();
 
-  if (!bCheckUpdates) return;
+    if (!bCheckUpdates || delayedCheck) {
+        return;
+    }
 
-  if (delayedCheck) return;
-
-  foreach(const QString &it, KSycoca::self()->allResourceDirs()) {
-     if (!m_allResourceDirs.contains(it))
-     {
-        m_allResourceDirs.append(it);
-        readDirectory(it);
-     }
-  }
+    foreach(const QString &it, KSycoca::self()->allResourceDirs()) {
+        if (!m_allResourceDirs.contains(it)) {
+            m_allResourceDirs.append(it);
+            readDirectory(it);
+        }
+    }
 }
 
 void Kded::recreate()
 {
-   recreate(false);
+    recreate(false);
 }
 
 void Kded::runDelayedCheck()
 {
-   if( m_needDelayedCheck )
-      recreate(false);
-   m_needDelayedCheck = false;
+    if (m_needDelayedCheck) {
+        recreate(false);
+    }
+    m_needDelayedCheck = false;
 }
 
 void Kded::recreate(bool initial)
 {
-   m_recreateBusy = true;
-   // Using KLauncher here is difficult since we might not have a
-   // database
+    m_recreateBusy = true;
+    // Using KLauncher here is difficult since we might not have a
+    // database
 
-   if (!initial)
-   {
-      updateDirWatch(); // Update tree first, to be sure to miss nothing.
-      runBuildSycoca(this, SLOT(recreateDone()), SLOT(recreateFailed(QDBusError)));
-   }
-   else
-   {
-      if(!delayedCheck)
-         updateDirWatch(); // this would search all the directories
-      if (bCheckSycoca)
-         runBuildSycoca();
-      recreateDone();
-      if(delayedCheck)
-      {
-         // do a proper ksycoca check after a delay
-         QTimer::singleShot( 60000, this, SLOT(runDelayedCheck()));
-         m_needDelayedCheck = true;
-         delayedCheck = false;
-      }
-      else
-         m_needDelayedCheck = false;
-   }
+    if (!initial) {
+        updateDirWatch(); // Update tree first, to be sure to miss nothing.
+        runBuildSycoca(this, SLOT(recreateDone()), SLOT(recreateFailed(QDBusError)));
+    } else {
+        if(!delayedCheck) {
+            updateDirWatch(); // this would search all the directories
+        }
+        if (bCheckSycoca) {
+            runBuildSycoca();
+        }
+        recreateDone();
+        if (delayedCheck) {
+            // do a proper ksycoca check after a delay
+            QTimer::singleShot(60000, this, SLOT(runDelayedCheck()));
+            m_needDelayedCheck = true;
+            delayedCheck = false;
+        } else {
+            m_needDelayedCheck = false;
+        }
+    }
 }
 
 void Kded::recreateFailed(const QDBusError &error)
 {
     kWarning() << error;
-    for(; m_recreateCount; m_recreateCount--)
-    {
-       QDBusMessage msg = m_recreateRequests.takeFirst();
-       QDBusConnection::sessionBus().send(msg.createErrorReply(error));
+    for(; m_recreateCount; m_recreateCount--) {
+        QDBusMessage msg = m_recreateRequests.takeFirst();
+        QDBusConnection::sessionBus().send(msg.createErrorReply(error));
     }
     afterRecreateFinished();
 }
 
 void Kded::recreateDone()
 {
-   updateResourceList();
+    updateResourceList();
 
-   for(; m_recreateCount; m_recreateCount--)
-   {
-      QDBusMessage msg = m_recreateRequests.takeFirst();
-      QDBusConnection::sessionBus().send(msg.createReply());
-   }
-   afterRecreateFinished();
+    for(; m_recreateCount; m_recreateCount--) {
+        QDBusMessage msg = m_recreateRequests.takeFirst();
+        QDBusConnection::sessionBus().send(msg.createReply());
+    }
+    afterRecreateFinished();
 }
 
 void Kded::afterRecreateFinished()
 {
-   m_recreateBusy = false;
+    m_recreateBusy = false;
 
-   // Did a new request come in while building?
-   if (!m_recreateRequests.isEmpty())
-   {
-      m_pTimer->start(2000);
-      m_recreateCount = m_recreateRequests.count();
-   } else {
-       initModules();
-   }
+    // Did a new request come in while building?
+    if (!m_recreateRequests.isEmpty()) {
+        m_pTimer->start(2000);
+        m_recreateCount = m_recreateRequests.count();
+    } else {
+        initModules();
+    }
 }
 
 void Kded::update(const QString& )
 {
-  if (!m_recreateBusy)
-  {
-    m_pTimer->start( 10000 );
-  }
+    if (!m_recreateBusy) {
+        m_pTimer->start(10000);
+    }
 }
 
 void Kded::recreate(QDBusMessage msg)
 {
-   if (!m_recreateBusy)
-   {
-      if (m_recreateRequests.isEmpty())
-      {
-         m_pTimer->start(0);
-         m_recreateCount = 0;
-      }
-      m_recreateCount++;
-   }
-   msg.setDelayedReply(true);
-   m_recreateRequests.append(msg);
-   return;
+    if (!m_recreateBusy) {
+        if (m_recreateRequests.isEmpty()) {
+            m_pTimer->start(0);
+            m_recreateCount = 0;
+        }
+        m_recreateCount++;
+    }
+    msg.setDelayedReply(true);
+    m_recreateRequests.append(msg);
 }
 
 
-void Kded::readDirectory( const QString& _path )
+void Kded::readDirectory(const QString& _path)
 {
-  QString path( _path );
-  if ( !path.endsWith( '/' ) )
-    path += '/';
+    QString path(_path);
+    if (!path.endsWith('/')) {
+        path += '/';
+    }
 
-  if ( m_pDirWatch->contains( path ) ) // Already seen this one?
-     return;
+    // Already seen this one?
+    if (m_pDirWatch->contains(path)) {
+        return;
+    }
 
-  m_pDirWatch->addDir(path,KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
+    m_pDirWatch->addDir(path,KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
 }
 
-/*
+#if 0
 bool Kded::isWindowRegistered(long windowId) const
 {
-  return m_globalWindowIdList.contains(windowId);
-
+    return m_globalWindowIdList.contains(windowId);
 }
-*/
+#endif
 
 void Kded::registerWindowId(qlonglong windowId, const QString &sender)
 {
-  if (!m_windowIdList.contains(sender)) {
-      m_serviceWatcher->addWatchedService(sender);
-  }
+    if (!m_windowIdList.contains(sender)) {
+        m_serviceWatcher->addWatchedService(sender);
+    }
 
-  m_globalWindowIdList.insert(windowId);
-  QList<qlonglong> windowIds = m_windowIdList.value(sender);
-  windowIds.append(windowId);
-  m_windowIdList.insert(sender, windowIds);
+    m_globalWindowIdList.insert(windowId);
+    QList<qlonglong> windowIds = m_windowIdList.value(sender);
+    windowIds.append(windowId);
+    m_windowIdList.insert(sender, windowIds);
 
-  foreach( KDEDModule* module, m_modules )
-  {
-     //kDebug() << module->moduleName();
-     emit module->windowRegistered(windowId);
-  }
+    foreach (KDEDModule* module, m_modules) {
+        // kDebug() << module->moduleName();
+        emit module->windowRegistered(windowId);
+    }
 }
 
 void Kded::unregisterWindowId(qlonglong windowId, const QString &sender)
 {
-  m_globalWindowIdList.remove(windowId);
-  QList<qlonglong> windowIds = m_windowIdList.value(sender);
-  if (!windowIds.isEmpty())
-  {
-     windowIds.removeAll(windowId);
-     if (windowIds.isEmpty()) {
-        m_serviceWatcher->removeWatchedService(sender);
-        m_windowIdList.remove(sender);
-     } else {
-        m_windowIdList.insert(sender, windowIds);
-     }
-  }
+    m_globalWindowIdList.remove(windowId);
+    QList<qlonglong> windowIds = m_windowIdList.value(sender);
+    if (!windowIds.isEmpty()) {
+        windowIds.removeAll(windowId);
+        if (windowIds.isEmpty()) {
+            m_serviceWatcher->removeWatchedService(sender);
+            m_windowIdList.remove(sender);
+        } else {
+            m_windowIdList.insert(sender, windowIds);
+        }
+    }
 
-  foreach( KDEDModule* module, m_modules )
-  {
-    //kDebug() << module->moduleName();
-    emit module->windowUnregistered(windowId);
-  }
+    foreach (KDEDModule* module, m_modules) {
+        // kDebug() << module->moduleName();
+        emit module->windowUnregistered(windowId);
+    }
 }
 
 
 static void sighandler(int /*sig*/)
 {
-    if (qApp)
-       qApp->quit();
+    if (qApp) {
+        qApp->quit();
+    }
 }
 
 KHostnameD::KHostnameD(int pollInterval)
@@ -646,23 +646,23 @@ KHostnameD::KHostnameD(int pollInterval)
 
 KHostnameD::~KHostnameD()
 {
-    // Empty
 }
 
 void KHostnameD::checkHostname()
 {
-    QByteArray newHostname = QHostInfo::localHostName().toUtf8();
-    if (newHostname.isEmpty())
+    const QByteArray newHostname = QHostInfo::localHostName().toUtf8();
+    if (newHostname.isEmpty()) {
         return;
+    }
 
-    if (m_hostname.isEmpty())
-    {
+    if (m_hostname.isEmpty()) {
        m_hostname = newHostname;
        return;
     }
 
-    if (m_hostname == newHostname)
+    if (m_hostname == newHostname) {
        return;
+    }
 
     runDontChangeHostname(m_hostname, newHostname);
     m_hostname = newHostname;
@@ -676,123 +676,127 @@ KBuildsycocaAdaptor::KBuildsycocaAdaptor(QObject *parent)
 
 void KBuildsycocaAdaptor::recreate(QDBusMessage msg)
 {
-   Kded::self()->recreate(msg);
+    Kded::self()->recreate(msg);
 }
 
 class KDEDApplication : public KUniqueApplication
 {
 public:
-  KDEDApplication() : KUniqueApplication( )
-    {
-       startup = true;
-    }
+    KDEDApplication();
 
-  int newInstance()
-    {
-       if (startup) {
-          startup = false;
+    int newInstance();
 
-          // This long initialization has to be here, not in kdemain.
-          // If it was in main, it would cause a dbus timeout when
-          // our parent from KUniqueApplication tries to call our
-          // newInstance method.
+    bool startup;
+};
 
-          Kded *kded = Kded::self();
+KDEDApplication::KDEDApplication()
+    : KUniqueApplication()
+    , startup(true)
+{
+}
 
-          kded->recreate(true); // initial
+int KDEDApplication::newInstance()
+{
+    if (startup) {
+        startup = false;
+
+        // This long initialization has to be here, not in kdemain.
+        // If it was in main, it would cause a dbus timeout when
+        // our parent from KUniqueApplication tries to call our
+        // newInstance method.
+
+        Kded *kded = Kded::self();
+
+        kded->recreate(true); // initial
 
 #ifdef Q_WS_X11
-          XEvent e;
-          e.xclient.type = ClientMessage;
-          e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False );
-          e.xclient.display = QX11Info::display();
-          e.xclient.window = QX11Info::appRootWindow();
-          e.xclient.format = 8;
-          strcpy( e.xclient.data.b, "kded" );
-          XSendEvent( QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e );
+        XEvent e;
+        e.xclient.type = ClientMessage;
+        e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False);
+        e.xclient.display = QX11Info::display();
+        e.xclient.window = QX11Info::appRootWindow();
+        e.xclient.format = 8;
+        strcpy(e.xclient.data.b, "kded");
+        XSendEvent(QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e);
 #endif
 
-          if (bCheckHostname)
-             (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
-       } else
-          runBuildSycoca();
-
-       return 0;
+        if (bCheckHostname) {
+            (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
+        }
+    } else {
+        runBuildSycoca();
     }
-
-  bool startup;
-};
+    return 0;
+}
 
 int main(int argc, char *argv[])
 {
-     KAboutData aboutData( "kded" /*don't change this one to kded4! dbus registration should be org.kde.kded etc.*/,
+    KAboutData aboutData("kded" /*don't change this one to kded4! dbus registration should be org.kde.kded etc.*/,
         "kdelibs4", ki18n("KDE Daemon"),
         KDE_VERSION_STRING,
         ki18n("KDE Daemon - triggers Sycoca database updates when needed"));
 
-     KCmdLineOptions options;
-     options.add("check", ki18n("Check Sycoca database only once"));
+    KCmdLineOptions options;
+    options.add("check", ki18n("Check Sycoca database only once"));
 
-     KCmdLineArgs::init(argc, argv, &aboutData);
+    KCmdLineArgs::init(argc, argv, &aboutData);
 
-     KUniqueApplication::addCmdLineOptions();
+    KUniqueApplication::addCmdLineOptions();
 
-     KCmdLineArgs::addCmdLineOptions( options );
+    KCmdLineArgs::addCmdLineOptions(options);
 
-     // WABA: Make sure not to enable session management.
-     putenv(qstrdup("SESSION_MANAGER="));
+    // WABA: Make sure not to enable session management.
+    putenv(qstrdup("SESSION_MANAGER="));
 
-     // Parse command line before checking DCOP
-     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+    // Parse command line before checking DCOP
+    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-     KComponentData componentData(&aboutData);
-     KSharedConfig::Ptr config = componentData.config(); // Enable translations.
+    KComponentData componentData(&aboutData);
+    KSharedConfig::Ptr config = componentData.config(); // Enable translations.
 
-     KConfigGroup cg(config, "General");
-     if (args->isSet("check"))
-     {
+    KConfigGroup cg(config, "General");
+    if (args->isSet("check")) {
         // KUniqueApplication not wanted here.
         KApplication app;
         checkStamps = cg.readEntry("CheckFileStamps", true);
         runBuildSycoca();
         return 0;
-     }
+    }
 
-     if (!KUniqueApplication::start())
-     {
+    if (!KUniqueApplication::start()) {
         fprintf(stderr, "KDE Daemon (kded) already running.\n");
         return 0;
-     }
+    }
 
-     // Thiago: reenable if such a thing exists in QtDBus in the future
-     //KUniqueApplication::dcopClient()->setQtBridgeEnabled(false);
+    // Thiago: reenable if such a thing exists in QtDBus in the future
+    //KUniqueApplication::dcopClient()->setQtBridgeEnabled(false);
 
-     HostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
-     bCheckSycoca = cg.readEntry("CheckSycoca", true);
-     bCheckUpdates = cg.readEntry("CheckUpdates", true);
-     bCheckHostname = cg.readEntry("CheckHostname", true);
-     checkStamps = cg.readEntry("CheckFileStamps", true);
-     delayedCheck = cg.readEntry("DelayedCheck", false);
+    HostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
+    bCheckSycoca = cg.readEntry("CheckSycoca", true);
+    bCheckUpdates = cg.readEntry("CheckUpdates", true);
+    bCheckHostname = cg.readEntry("CheckHostname", true);
+    checkStamps = cg.readEntry("CheckFileStamps", true);
+    delayedCheck = cg.readEntry("DelayedCheck", false);
 
-     Kded *kded = new Kded(); // Build data base
+    Kded *kded = new Kded(); // Build data base
 
-     KDE_signal(SIGTERM, sighandler);
-     KDE_signal(SIGHUP, sighandler);
-     KDEDApplication k;
-     k.setQuitOnLastWindowClosed(false);
+    KDE_signal(SIGTERM, sighandler);
+    KDE_signal(SIGHUP, sighandler);
+    KDEDApplication k;
+    k.setQuitOnLastWindowClosed(false);
 
-     KCrash::setFlags(KCrash::AutoRestart);
+    KCrash::setFlags(KCrash::AutoRestart);
 
-     // Not sure why kded is created before KDEDApplication
-     // but if it has to be, then it needs to be moved to the main thread
-     // before it can use timers (DF)
-     kded->moveToThread( k.thread() );
+    // Not sure why kded is created before KDEDApplication
+    // but if it has to be, then it needs to be moved to the main thread
+    // before it can use timers (DF)
+    kded->moveToThread( k.thread() );
 
-     int result = k.exec(); // keep running
+    int result = k.exec(); // keep running
 
-     delete kded;
+    delete kded;
 
-     return result;
+    return result;
 }
 
 #include "moc_kded.cpp"
