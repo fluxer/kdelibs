@@ -193,9 +193,10 @@ void KMimeTypeRepository::findFromOtherPatternList(QStringList& matchingMimeType
 
 QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QString *pMatchingExtension)
 {
-    m_mutex.lockForWrite();
-    parseGlobs();
-    m_mutex.unlock();
+    {
+        QWriteLocker lock(&m_mutex);
+        parseGlobs();
+    }
 
     QReadLocker lock(&m_mutex);
     // First try the high weight matches (>50), if any.
@@ -246,12 +247,13 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
         }
     }
 
-    m_mutex.lockForWrite();
-    if (!m_magicFilesParsed) {
-        parseMagic();
-        m_magicFilesParsed = true;
+    {
+        QWriteLocker lock(&m_mutex);
+        if (!m_magicFilesParsed) {
+            parseMagic();
+            m_magicFilesParsed = true;
+        }
     }
-    m_mutex.unlock();
 
     // Apply magic rules
     {
@@ -682,13 +684,12 @@ bool KMimeTypeRepository::useFavIcons()
 {
     // this method will be called quite often, so better not read the config
     // again and again.
-    m_mutex.lockForWrite();
+    QWriteLocker lock(&m_mutex);
     if (!m_useFavIconsChecked) {
         m_useFavIconsChecked = true;
         KConfigGroup cg( KGlobal::config(), "HTML Settings" );
         m_useFavIcons = cg.readEntry("EnableFavicon", true);
     }
-    m_mutex.unlock();
     return m_useFavIcons;
 }
 
@@ -782,9 +783,8 @@ static int mimeDataBaseVersion()
 
 int KMimeTypeRepository::sharedMimeInfoVersion()
 {
-    m_mutex.lockForWrite();
+    QWriteLocker lock(&m_mutex);
     if (m_sharedMimeInfoVersion == 0)
         m_sharedMimeInfoVersion = mimeDataBaseVersion();
-    m_mutex.unlock();
     return m_sharedMimeInfoVersion;
 }
