@@ -245,7 +245,6 @@ bool GeomDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
         case Solid::DeviceInterface::StorageDrive:
         case Solid::DeviceInterface::StorageVolume:
         case Solid::DeviceInterface::StorageAccess: {
-            Q_ASSERT(m_major != 0);
             return true;
         }
         default: {
