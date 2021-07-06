@@ -27,10 +27,8 @@
 #include <klocale.h>
 #include <ksettings.h>
 #include <solid/block.h>
-#include <solid/opticaldisc.h>
 #include <solid/opticaldrive.h>
 #include <solid/storageaccess.h>
-#include <solid/storagevolume.h>
 #include <solid/storagedrive.h>
 #include <solid/portablemediaplayer.h>
 
@@ -54,8 +52,6 @@ KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
                          this, SLOT(trashConfigChanged(QString)));
     } else if (!udi.isEmpty() && m_device.isValid()) {
         m_access = m_device.as<Solid::StorageAccess>();
-        m_volume = m_device.as<Solid::StorageVolume>();
-        m_disc = m_device.as<Solid::OpticalDisc>();
         m_mtp = m_device.as<Solid::PortableMediaPlayer>();
         if (m_access) {
             connect(m_access, SIGNAL(accessibilityChanged(bool,QString)),
@@ -112,13 +108,9 @@ Solid::Device KFilePlacesItem::device() const
         m_device = Solid::Device(bookmark().metaDataItem("UDI"));
         if (m_device.isValid()) {
             m_access = m_device.as<Solid::StorageAccess>();
-            m_volume = m_device.as<Solid::StorageVolume>();
-            m_disc = m_device.as<Solid::OpticalDisc>();
             m_mtp = m_device.as<Solid::PortableMediaPlayer>();
         } else {
             m_access = 0;
-            m_volume = 0;
-            m_disc = 0;
             m_mtp = 0;
         }
     }
@@ -144,26 +136,32 @@ QVariant KFilePlacesItem::bookmarkData(int role) const
 
     if (b.isNull()) return QVariant();
 
-    switch (role)
-    {
-    case Qt::DisplayRole:
-        return m_text;
-    case Qt::DecorationRole:
-        return KIcon(iconNameForBookmark(b));
-    case Qt::BackgroundRole:
-        if (b.metaDataItem("IsHidden")=="true") {
-            return Qt::lightGray;
-        } else {
+    switch (role) {
+        case Qt::DisplayRole: {
+            return m_text;
+        }
+        case Qt::DecorationRole: {
+            return KIcon(iconNameForBookmark(b));
+        }
+        case Qt::BackgroundRole: {
+            if (b.metaDataItem("IsHidden")=="true") {
+                return Qt::lightGray;
+            } else {
+                return QVariant();
+            }
+        }
+        case KFilePlacesModel::UrlRole: {
+            return QUrl(b.url());
+        }
+        case KFilePlacesModel::SetupNeededRole: {
+            return false;
+        }
+        case KFilePlacesModel::HiddenRole: {
+            return b.metaDataItem("IsHidden")=="true";
+        }
+        default: {
             return QVariant();
         }
-    case KFilePlacesModel::UrlRole:
-        return QUrl(b.url());
-    case KFilePlacesModel::SetupNeededRole:
-        return false;
-    case KFilePlacesModel::HiddenRole:
-        return b.metaDataItem("IsHidden")=="true";
-    default:
-        return QVariant();
     }
 }
 
@@ -172,55 +170,43 @@ QVariant KFilePlacesItem::deviceData(int role) const
     Solid::Device d = device();
 
     if (d.isValid()) {
-        switch (role)
-        {
-        case Qt::DisplayRole:
-            return d.description();
-        case Qt::DecorationRole:
-            return KIcon(m_iconPath, 0, m_emblems);
-        case KFilePlacesModel::UrlRole:
-            if (m_access) {
-                return QUrl(KUrl(m_access->filePath()));
-            } else if (m_disc && (m_disc->availableContent() & Solid::OpticalDisc::Audio)!=0) {
-                Solid::Block *block = d.as<Solid::Block>();
-                if (block) {
-                    QString device = block->device();
-                    return QUrl(QString("audiocd:/?device=%1").arg(device));
+        switch (role) {
+            case Qt::DisplayRole: {
+                return d.description();
+            }
+            case Qt::DecorationRole: {
+                return KIcon(m_iconPath, 0, m_emblems);
+            }
+            case KFilePlacesModel::UrlRole: {
+                if (m_access) {
+                    return QUrl(KUrl(m_access->filePath()));
+                } else if (m_mtp) {
+                    return QUrl(QString("mtp:udi=%1").arg(d.udi()));
                 }
-                // We failed to get the block device. Assume audiocd:/ can
-                // figure it out, but cannot handle multiple disc drives.
-                // See https://bugs.kde.org/show_bug.cgi?id=314544#c40
-                return QUrl(QString("audiocd:/"));
-            } else if (m_mtp) {
-                return QUrl(QString("mtp:udi=%1").arg(d.udi()));
-            } else {
                 return QVariant();
             }
-        case KFilePlacesModel::SetupNeededRole:
-            if (m_access) {
-                return !m_isAccessible;
-            } else {
+            case KFilePlacesModel::SetupNeededRole: {
+                if (m_access) {
+                    return !m_isAccessible;
+                }
                 return QVariant();
             }
-
-        case KFilePlacesModel::FixedDeviceRole:
-            {
+            case KFilePlacesModel::FixedDeviceRole: {
                 Solid::StorageDrive *drive = m_device.as<Solid::StorageDrive>();
                 if (drive!=0) {
                     return !drive->isHotpluggable() && !drive->isRemovable();
                 }
                 return true;
             }
-
-        case KFilePlacesModel::CapacityBarRecommendedRole:
-        return m_isAccessible && !m_isCdrom;
-
-        default:
-            return QVariant();
+            case KFilePlacesModel::CapacityBarRecommendedRole: {
+                return m_isAccessible && !m_isCdrom;
+            }
+            default: {
+                return QVariant();
+            }
         }
-    } else {
-        return QVariant();
     }
+    return QVariant();
 }
 
 KBookmark KFilePlacesItem::createBookmark(KBookmarkManager *manager,
@@ -230,8 +216,9 @@ KBookmark KFilePlacesItem::createBookmark(KBookmarkManager *manager,
                                           KFilePlacesItem *after)
 {
     KBookmarkGroup root = manager->root();
-    if (root.isNull())
+    if (root.isNull()) {
         return KBookmark();
+    }
     QString empty_icon = iconName;
     if (url == KUrl("trash:/")) {
         if (empty_icon.endsWith(QLatin1String("-full"))) {
