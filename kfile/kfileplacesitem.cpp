@@ -27,10 +27,8 @@
 #include <klocale.h>
 #include <ksettings.h>
 #include <solid/block.h>
-#include <solid/opticaldisc.h>
 #include <solid/opticaldrive.h>
 #include <solid/storageaccess.h>
-#include <solid/storagevolume.h>
 #include <solid/storagedrive.h>
 #include <solid/portablemediaplayer.h>
 
@@ -54,8 +52,6 @@ KFilePlacesItem::KFilePlacesItem(KBookmarkManager *manager,
                          this, SLOT(trashConfigChanged(QString)));
     } else if (!udi.isEmpty() && m_device.isValid()) {
         m_access = m_device.as<Solid::StorageAccess>();
-        m_volume = m_device.as<Solid::StorageVolume>();
-        m_disc = m_device.as<Solid::OpticalDisc>();
         m_mtp = m_device.as<Solid::PortableMediaPlayer>();
         if (m_access) {
             connect(m_access, SIGNAL(accessibilityChanged(bool,QString)),
@@ -112,13 +108,9 @@ Solid::Device KFilePlacesItem::device() const
         m_device = Solid::Device(bookmark().metaDataItem("UDI"));
         if (m_device.isValid()) {
             m_access = m_device.as<Solid::StorageAccess>();
-            m_volume = m_device.as<Solid::StorageVolume>();
-            m_disc = m_device.as<Solid::OpticalDisc>();
             m_mtp = m_device.as<Solid::PortableMediaPlayer>();
         } else {
             m_access = 0;
-            m_volume = 0;
-            m_disc = 0;
             m_mtp = 0;
         }
     }
@@ -181,16 +173,6 @@ QVariant KFilePlacesItem::deviceData(int role) const
         case KFilePlacesModel::UrlRole:
             if (m_access) {
                 return QUrl(KUrl(m_access->filePath()));
-            } else if (m_disc && (m_disc->availableContent() & Solid::OpticalDisc::Audio)!=0) {
-                Solid::Block *block = d.as<Solid::Block>();
-                if (block) {
-                    QString device = block->device();
-                    return QUrl(QString("audiocd:/?device=%1").arg(device));
-                }
-                // We failed to get the block device. Assume audiocd:/ can
-                // figure it out, but cannot handle multiple disc drives.
-                // See https://bugs.kde.org/show_bug.cgi?id=314544#c40
-                return QUrl(QString("audiocd:/"));
             } else if (m_mtp) {
                 return QUrl(QString("mtp:udi=%1").arg(d.udi()));
             } else {

@@ -88,8 +88,6 @@ private:
     QString m_text;
     mutable Solid::Device m_device;
     mutable QPointer<Solid::StorageAccess> m_access;
-    mutable QPointer<Solid::StorageVolume> m_volume;
-    mutable QPointer<Solid::OpticalDisc> m_disc;
     mutable QPointer<Solid::PortableMediaPlayer> m_mtp;
     QString m_iconPath;
     QStringList m_emblems;
