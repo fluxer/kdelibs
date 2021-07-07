@@ -23,6 +23,7 @@
 
 #include "kdirwatch.h"
 #include "kdirwatch_p.h"
+#include "kde_file.h"
 
 #include <kdebug.h>
 #include <QStringList>
@@ -140,7 +141,8 @@ void KDirWatch::setDirty(const QString &file)
     // notification because INI backend uses KSaveFile which moves (renames) backup to original
     // file but currently there is not. the proper solution is to watch exisiting configuration
     // directories for changes (and future creation of such) and emit signals for file events
-    if (QFile::exists(file)) {
+    KDE_struct_stat statbuf;
+    if (KDE::stat(file, &statbuf) == 0 && S_ISREG(statbuf.st_mode)) {
         addFile(file);
     }
 }
