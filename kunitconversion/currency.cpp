@@ -529,7 +529,7 @@ Value Currency::convert(const Value& value, UnitPtr to)
 {
     static QMutex mutex;
 
-    mutex.lock();
+    QMutexLocker lock(&mutex);
     QFileInfo info(m_cache);
     if (!info.exists() || info.lastModified().secsTo(QDateTime::currentDateTime()) > 86400) {
 #ifndef KUNITCONVERSION_NO_SOLID
@@ -568,7 +568,7 @@ Value Currency::convert(const Value& value, UnitPtr to)
 #endif
         }
     }
-    mutex.unlock();
+    lock.unlock();
 
     if (m_update) {
         QFile file(m_cache);
