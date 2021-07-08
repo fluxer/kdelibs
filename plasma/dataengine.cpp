@@ -33,10 +33,7 @@
 #include <kstandarddirs.h>
 
 #include "datacontainer.h"
-#include "package.h"
 #include "service.h"
-#include "scripting/dataenginescript.h"
-
 #include "private/dataengineservice_p.h"
 #include "private/service_p.h"
 #include "private/storage_p.h"
@@ -64,22 +61,11 @@ DataEngine::~DataEngine()
 
 QStringList DataEngine::sources() const
 {
-    if (d->script) {
-        return d->script->sources();
-    } else {
-        return d->sources.keys();
-    }
+    return d->sources.keys();
 }
 
 Service *DataEngine::serviceForSource(const QString &source)
 {
-    if (d->script) {
-        Service * s = d->script->serviceForSource(source);
-        if (s) {
-            return s;
-        }
-    }
-
     return new NullService(source, this);
 }
 
@@ -149,33 +135,22 @@ DataEngine::Data DataEngine::query(const QString &source) const
 
 void DataEngine::init()
 {
-    if (d->script) {
-        d->setupScriptSupport();
-        d->script->init();
-    } else {
-        // kDebug() << "called";
-        // default implementation does nothing. this is for engines that have to
-        // start things in motion external to themselves before they can work
-    }
+    // kDebug() << "called";
+    // default implementation does nothing. this is for engines that have to
+    // start things in motion external to themselves before they can work
 }
 
 bool DataEngine::sourceRequestEvent(const QString &name)
 {
-    if (d->script) {
-        return d->script->sourceRequestEvent(name);
-    } else {
-        return false;
-    }
+    Q_UNUSED(name)
+    return false;
 }
 
 bool DataEngine::updateSourceEvent(const QString &source)
 {
-    if (d->script) {
-        return d->script->updateSourceEvent(source);
-    } else {
-        //kDebug() << source;
-        return false; //TODO: should this be true to trigger, even needless, updates on every tick?
-    }
+    Q_UNUSED(source)
+    //kDebug() << source;
+    return false; //TODO: should this be true to trigger, even needless, updates on every tick?
 }
 
 void DataEngine::setData(const QString &source, const QVariant &value)
@@ -438,11 +413,6 @@ Service* DataEngine::createDefaultService(QObject *parent)
     return Service::load(d->serviceName, args, parent);
 }
 
-const Package *DataEngine::package() const
-{
-    return d->package;
-}
-
 void DataEngine::scheduleSourcesUpdated()
 {
     if (d->checkSourcesTimerId) {
@@ -481,8 +451,6 @@ DataEnginePrivate::DataEnginePrivate(DataEngine *e, const KPluginInfo &info)
       minPollingInterval(-1),
       limit(0),
       valid(true),
-      script(0),
-      package(0),
       publishedService(0)
 {
     updateTimer.start();
@@ -498,35 +466,10 @@ DataEnginePrivate::DataEnginePrivate(DataEngine *e, const KPluginInfo &info)
     }
     e->setObjectName(engineName);
     icon = info.icon();
-
-    if (dataEngineDescription.isValid()) {
-        QString api = dataEngineDescription.property("X-Plasma-API").toString();
-
-        if (!api.isEmpty()) {
-            const QString path =
-                KStandardDirs::locate("data",
-                                      "plasma/dataengines/" + dataEngineDescription.pluginName() + '/');
-            PackageStructure::Ptr structure = Plasma::packageStructure(api, Plasma::DataEngineComponent);
-            structure->setPath(path);
-            package = new Package(path, structure);
-
-            script = Plasma::loadScriptEngine(api, q);
-            if (!script) {
-                kDebug() << "Could not create a" << api << "ScriptEngine for the"
-                        << dataEngineDescription.name() << "DataEngine.";
-                delete package;
-                package = 0;
-            }
-        }
-    }
 }
 
 DataEnginePrivate::~DataEnginePrivate()
 {
-    delete script;
-    script = 0;
-    delete package;
-    package = 0;
 }
 
 void DataEnginePrivate::internalUpdateSource(DataContainer *source)
@@ -690,29 +633,6 @@ void DataEnginePrivate::trimQueue()
         DataContainer *punted = sourceQueue.dequeue();
         q->removeSource(punted->objectName());
         queueCount = sourceQueue.count();
-    }
-}
-
-// put all setup routines for script here. at this point we can assume that
-// package exists and that we have a script engine
-void DataEnginePrivate::setupScriptSupport()
-{
-    if (!package) {
-        return;
-    }
-
-    /*
-    kDebug() << "sletting up script support, package is in" << package->path()
-             << "which is a" << package->structure()->type() << "package"
-             << ", main script is" << package->filePath("mainscript");
-    */
-
-    QString translationsPath = package->filePath("translations");
-    if (!translationsPath.isEmpty()) {
-        //FIXME: we should _probably_ use a KComponentData to segregate the applets
-        //       from each other; but I want to get the basics working first :)
-        KGlobal::dirs()->addResourceDir("locale", translationsPath);
-        KGlobal::locale()->insertCatalog(package->metadata().pluginName());
     }
 }
 

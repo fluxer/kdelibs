@@ -38,10 +38,7 @@ class AbstractRunner;
 class Applet;
 class AppletScript;
 class DataEngine;
-class DataEngineScript;
-class RunnerScript;
 class Wallpaper;
-class WallpaperScript;
 class Package;
 
 /**
@@ -105,36 +102,6 @@ PLASMA_EXPORT QStringList knownLanguages(ComponentTypes types);
  *         for the return object which will be parented to the Applet
  **/
 PLASMA_EXPORT AppletScript *loadScriptEngine(const QString &language, Applet *applet);
-
-/**
- * Loads an DataEngine script engine for the given language.
- *
- * @param language the language to load for
- * @param dataEngine the Plasma::DataEngine for this script;
- * @return pointer to the DataEngineScript or 0 on failure; the caller is responsible
- *         for the return object which will be parented to the DataEngine
- **/
-PLASMA_EXPORT DataEngineScript *loadScriptEngine(const QString &language, DataEngine *dataEngine);
-
-/**
- * Loads an Applet script engine for the given language.
- *
- * @param language the language to load for
- * @param runner the Plasma::AbstractRunner for this script
- * @return pointer to the RunnerScript or 0 on failure; the caller is responsible
- *         for the return object which will be parented to the AbstractRunner
- **/
-PLASMA_EXPORT RunnerScript *loadScriptEngine(const QString &language, AbstractRunner *runner);
-
-/**
- * Loads an Wallpaper script engine for the given language.
- *
- * @param language the language to load for
- * @param runner the Plasma::Wallpaper for this script
- * @return pointer to the RunnerScript or 0 on failure; the caller is responsible
- *         for the return object which will be parented to the Wallpaper
- **/
-PLASMA_EXPORT WallpaperScript *loadScriptEngine(const QString &language, Wallpaper *wallpaper);
 
 /**
  * Loads an appropriate PackageStructure for the given language and type

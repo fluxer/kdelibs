@@ -28,9 +28,6 @@
 #include "dataengine.h"
 #include "package.h"
 #include "scripting/appletscript.h"
-#include "scripting/dataenginescript.h"
-#include "scripting/runnerscript.h"
-#include "scripting/wallpaperscript.h"
 
 #include "private/packages_p.h"
 
@@ -68,38 +65,7 @@ QStringList knownLanguages(ComponentTypes types)
     QString constraint;
 
     if (types & AppletComponent) {
-        // currently this if statement is not needed, but this future proofs
-        // the code against someone initializing constraint to something
-        // before we get here.
-        if (!constraint.isEmpty()) {
-            constraint.append(" or ");
-        }
-
         constraint.append(constraintTemplate.arg("Applet"));
-    }
-
-    if (types & DataEngineComponent) {
-        if (!constraint.isEmpty()) {
-            constraint.append(" or ");
-        }
-
-        constraint.append(constraintTemplate.arg("DataEngine"));
-    }
-
-    if (types & RunnerComponent) {
-        if (!constraint.isEmpty()) {
-            constraint.append(" or ");
-        }
-
-        constraint.append(constraintTemplate.arg("Runner"));
-    }
-
-    if (types & WallpaperComponent) {
-        if (!constraint.isEmpty()) {
-            constraint.append(" or ");
-        }
-
-        constraint.append(constraintTemplate.arg("Wallpaper"));
     }
 
     KService::List offers = KServiceTypeTrader::self()->query("Plasma/ScriptEngine", constraint);
@@ -134,18 +100,8 @@ KService::List engineOffers(const QString &language, ComponentType type)
     case AppletComponent:
         component = "Applet";
         break;
-    case DataEngineComponent:
-        component = "DataEngine";
-        break;
-    case RunnerComponent:
-        component = "Runner";
-        break;
-    case WallpaperComponent:
-        component = "Wallpaper";
-        break;
     default:
         return KService::List();
-        break;
     }
 
     QString constraint = QString("[X-Plasma-API] == '%1' and "
@@ -173,18 +129,8 @@ ScriptEngine *loadEngine(const QString &language, ComponentType type, QObject *p
             case AppletComponent:
                 engine = service->createInstance<Plasma::AppletScript>(parent, args, &error);
                 break;
-            case DataEngineComponent:
-                engine = service->createInstance<Plasma::DataEngineScript>(parent, args, &error);
-                break;
-            case RunnerComponent:
-                engine = service->createInstance<Plasma::RunnerScript>(parent, args, &error);
-                break;
-            case WallpaperComponent:
-                engine = service->createInstance<Plasma::WallpaperScript>(parent, args, &error);
-                break;
             default:
                 return 0;
-                break;
         }
 
         if (engine) {
@@ -210,54 +156,12 @@ AppletScript *loadScriptEngine(const QString &language, Applet *applet)
     return engine;
 }
 
-DataEngineScript *loadScriptEngine(const QString &language, DataEngine *dataEngine)
-{
-    DataEngineScript *engine =
-        static_cast<DataEngineScript*>(loadEngine(language, DataEngineComponent, dataEngine));
-
-    if (engine) {
-        engine->setDataEngine(dataEngine);
-    }
-
-    return engine;
-}
-
-RunnerScript *loadScriptEngine(const QString &language, AbstractRunner *runner)
-{
-    RunnerScript *engine =
-        static_cast<RunnerScript*>(loadEngine(language, RunnerComponent, runner));
-
-    if (engine) {
-        engine->setRunner(runner);
-    }
-
-    return engine;
-}
-
-WallpaperScript *loadScriptEngine(const QString &language, Wallpaper *wallpaper)
-{
-    WallpaperScript *engine =
-        static_cast<WallpaperScript*>(loadEngine(language, WallpaperComponent, wallpaper));
-
-    if (engine) {
-        engine->setWallpaper(wallpaper);
-    }
-
-    return engine;
-}
-
 PackageStructure::Ptr defaultPackageStructure(ComponentType type)
 {
     switch (type) {
     case AppletComponent:
-    case WallpaperComponent:
-    case RunnerComponent:
     case GenericComponent:
         return PackageStructure::Ptr(new PlasmoidPackage());
-        break;
-    case DataEngineComponent:
-        return PackageStructure::Ptr(new DataEnginePackage());
-        break;
     default:
         // TODO: we don't have any special structures for other components yet
         break;

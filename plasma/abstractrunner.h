@@ -42,8 +42,6 @@ namespace Plasma
 {
 
 class DataEngine;
-class Package;
-class RunnerScript;
 class QueryMatch;
 class AbstractRunnerPrivate;
 
@@ -220,16 +218,6 @@ class PLASMA_EXPORT AbstractRunner : public QObject
         QIcon icon() const;
 
         /**
-         * Accessor for the associated Package object if any.
-         *
-         * Note that the returned pointer is only valid for the lifetime of
-         * the runner.
-         *
-         * @return the Package object, or 0 if none
-         **/
-        const Package *package() const;
-
-        /**
          * Signal runner to reload its configuration.
          */
         virtual void reloadConfiguration();
@@ -299,7 +287,6 @@ class PLASMA_EXPORT AbstractRunner : public QObject
         friend class RunnerManager;
         friend class RunnerManagerPrivate;
 
-        explicit AbstractRunner(QObject *parent = 0, const QString &path = QString());
         explicit AbstractRunner(const KService::Ptr service, QObject *parent = 0);
 
         AbstractRunner(QObject *parent, const QVariantList &args);
@@ -478,8 +465,6 @@ class PLASMA_EXPORT AbstractRunner : public QObject
         QMimeData * mimeDataForMatch(const Plasma::QueryMatch *match);
 
     private:
-        friend class RunnerScript;
-
         AbstractRunnerPrivate *const d;
 };
 

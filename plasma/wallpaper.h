@@ -160,13 +160,6 @@ class PLASMA_EXPORT Wallpaper : public QObject
         QString name() const;
 
         /**
-         * Accessor for the associated Package object if any.
-         *
-         * @return the Package object, or 0 if none
-         **/
-        const Package *package() const;
-
-        /**
          * Returns the plugin name for the wallpaper
          */
         QString pluginName() const;
@@ -565,8 +558,6 @@ class PLASMA_EXPORT Wallpaper : public QObject
         void setPreviewDuringConfiguration(const bool preview);
 
     private:
-        Q_PRIVATE_SLOT(d, void initScript())
-
         friend class WallpaperPackage;
         friend class WallpaperPrivate;
         friend class WallpaperScript;

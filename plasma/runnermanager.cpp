@@ -396,15 +396,6 @@ void RunnerManager::loadRunner(const KService::Ptr service)
     }
 }
 
-void RunnerManager::loadRunner(const QString &path)
-{
-    if (!d->runners.contains(path)) {
-        AbstractRunner *runner = new AbstractRunner(this, path);
-        connect(runner, SIGNAL(matchingSuspended(bool)), this, SLOT(runnerMatchingSuspended(bool)));
-        d->runners.insert(path, runner);
-    }
-}
-
 AbstractRunner* RunnerManager::runner(const QString &name) const
 {
     if (d->runners.isEmpty()) {
