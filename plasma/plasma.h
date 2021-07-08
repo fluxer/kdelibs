@@ -226,7 +226,7 @@ enum AspectRatioMode {
 enum ComponentType {
     AppletComponent = 1,      /**< Plasma::Applet based plugins **/
     DataEngineComponent = 2,  /**< Plasma::DataEngine based plugins **/
-    RunnerComponent = 4,      /**< Plasma::AbstractRunner based plugsin **/
+    RunnerComponent = 4,      /**< Plasma::AbstractRunner based plugins **/
     AnimatorComponent = 8,    /**< Plasma::Animator based plugins **/
     ContainmentComponent = 16,/**< Plasma::Containment based plugins **/
     WallpaperComponent = 32,   /**< Plasma::Wallpaper based plugins **/

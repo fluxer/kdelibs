@@ -83,22 +83,6 @@ void LoadImageThread::run()
     emit done(image);
 }
 
-class WallpaperWithPaint : public Wallpaper
-{
-public:
-    WallpaperWithPaint(QObject *parent, const QVariantList &args)
-        : Wallpaper(parent, args)
-    {
-    }
-
-    virtual void paint(QPainter *painter, const QRectF &exposedRect)
-    {
-        if (d->script) {
-            d->script->paint(painter, exposedRect);
-        }
-    }
-};
-
 PackageStructure::Ptr WallpaperPrivate::s_packageStructure(0);
 
 Wallpaper::Wallpaper(QObject * parentObject)
@@ -129,13 +113,9 @@ Wallpaper::~Wallpaper()
 
 void Wallpaper::addUrls(const KUrl::List &urls)
 {
-    if (d->script) {
-        d->script->setUrls(urls);
-    } else {
-        // provide compatibility with urlDropped
-        foreach (const KUrl &url, urls) {
-            emit urlDropped(url);
-        }
+    // provide compatibility with urlDropped
+    foreach (const KUrl &url, urls) {
+        emit urlDropped(url);
     }
 }
 
@@ -143,8 +123,6 @@ void Wallpaper::setUrls(const KUrl::List &urls)
 {
     if (!d->initialized) {
         d->pendingUrls = urls;
-    } else if (d->script) {
-        d->script->setUrls(urls);
     } else {
        QMetaObject::invokeMethod(this, "addUrls", Q_ARG(KUrl::List, urls));
     }
@@ -196,12 +174,6 @@ Wallpaper *Wallpaper::load(const QString &wallpaperName, const QVariantList &arg
     KService::Ptr offer = offers.first();
     QVariantList allArgs;
     allArgs << offer->storageId() << args;
-
-    if (!offer->property("X-Plasma-API").toString().isEmpty()) {
-        kDebug() << "we have a script using the"
-                 << offer->property("X-Plasma-API").toString() << "API";
-        return new WallpaperWithPaint(0, allArgs);
-    }
 
     KPluginLoader plugin(*offer);
 
@@ -333,54 +305,31 @@ void Wallpaper::restore(const KConfigGroup &config)
 
 void Wallpaper::init(const KConfigGroup &config)
 {
-    if (d->script) {
-        d->initScript();
-        d->script->initWallpaper(config);
-    }
 }
 
 void Wallpaper::save(KConfigGroup &config)
 {
-    if (d->script) {
-        d->script->save(config);
-    }
 }
 
 QWidget *Wallpaper::createConfigurationInterface(QWidget *parent)
 {
-    if (d->script) {
-        return d->script->createConfigurationInterface(parent);
-    } else {
-        return 0;
-    }
+    return 0;
 }
 
 void Wallpaper::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (d->script) {
-        return d->script->mouseMoveEvent(event);
-    }
 }
 
 void Wallpaper::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (d->script) {
-        return d->script->mousePressEvent(event);
-    }
 }
 
 void Wallpaper::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (d->script) {
-        return d->script->mouseReleaseEvent(event);
-    }
 }
 
 void Wallpaper::wheelEvent(QGraphicsSceneWheelEvent *event)
 {
-    if (d->script) {
-        return d->script->wheelEvent(event);
-    }
 }
 
 DataEngine *Wallpaper::dataEngine(const QString &name) const
@@ -619,37 +568,13 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
 WallpaperPrivate::WallpaperPrivate(KService::Ptr service, Wallpaper *wallpaper) :
     q(wallpaper),
     wallpaperDescription(service),
-    package(0),
-    renderToken(-1),
     lastResizeMethod(Wallpaper::ScaledResize),
-    script(0),
     cacheRendering(false),
     initialized(false),
     needsConfig(false),
-    scriptInitialized(false),
     previewing(false),
     needsPreviewDuringConfiguration(false)
 {
-    if (wallpaperDescription.isValid()) {
-        QString api = wallpaperDescription.property("X-Plasma-API").toString();
-
-        if (!api.isEmpty()) {
-            const QString path = KStandardDirs::locate("data",
-                    "plasma/wallpapers/" + wallpaperDescription.pluginName() + '/');
-            PackageStructure::Ptr structure =
-                Plasma::packageStructure(api, Plasma::WallpaperComponent);
-            structure->setPath(path);
-            package = new Package(path, structure);
-
-            script = Plasma::loadScriptEngine(api, q);
-            if (!script) {
-                kDebug() << "Could not create a" << api << "ScriptEngine for the"
-                        << wallpaperDescription.name() << "Wallpaper.";
-                delete package;
-                package = 0;
-            }
-       }
-    }
 }
 
 QString WallpaperPrivate::cacheKey(const QString &sourceImagePath, const QSize &size,
@@ -664,33 +589,6 @@ QString WallpaperPrivate::cacheKey(const QString &sourceImagePath, const QSize &
 QString WallpaperPrivate::cachePath(const QString &key) const
 {
     return KGlobal::dirs()->locateLocal("cache", "plasma-wallpapers/" + key + ".png");
-}
-
-// put all setup routines for script here. at this point we can assume that
-// package exists and that we have a script engine
-void WallpaperPrivate::setupScriptSupport()
-{
-    Q_ASSERT(package);
-    kDebug() << "setting up script support, package is in" << package->path()
-             << "which is a" << package->structure()->type() << "package"
-             << ", main script is" << package->filePath("mainscript");
-
-    QString translationsPath = package->filePath("translations");
-    if (!translationsPath.isEmpty()) {
-        //FIXME: we should _probably_ use a KComponentData to segregate the applets
-        //       from each other; but I want to get the basics working first :)
-        KGlobal::dirs()->addResourceDir("locale", translationsPath);
-        KGlobal::locale()->insertCatalog(package->metadata().pluginName());
-    }
-}
-
-void WallpaperPrivate::initScript()
-{
-    if (script && !scriptInitialized) {
-        setupScriptSupport();
-        script->init();
-        scriptInitialized = true;
-    }
 }
 
 bool WallpaperPrivate::findInCache(const QString &key, unsigned int lastModified)
@@ -785,11 +683,6 @@ bool Wallpaper::needsPreviewDuringConfiguration() const
 void Wallpaper::setPreviewDuringConfiguration(const bool preview)
 {
     d->needsPreviewDuringConfiguration = preview;
-}
-
-const Package *Wallpaper::package() const
-{
-    return d->package;
 }
 
 } // Plasma namespace

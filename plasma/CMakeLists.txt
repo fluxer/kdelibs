@@ -117,9 +117,6 @@ set(plasma_LIB_SRCS
     runnermanager.cpp
     runnersyntax.cpp
     scripting/appletscript.cpp
-    scripting/dataenginescript.cpp
-    scripting/runnerscript.cpp
-    scripting/wallpaperscript.cpp
     scripting/scriptengine.cpp
     service.cpp
     servicejob.cpp
@@ -282,9 +279,6 @@ install(
 install(
     FILES
     scripting/appletscript.h
-    scripting/dataenginescript.h
-    scripting/runnerscript.h
-    scripting/wallpaperscript.h
     scripting/scriptengine.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/plasma/scripting
     COMPONENT Devel

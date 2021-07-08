@@ -41,7 +41,6 @@ class DataEnginePrivate
         DataContainer *requestSource(const QString &sourceName, bool *newSource = 0);
         void trimQueue();
         void internalUpdateSource(DataContainer*);
-        void setupScriptSupport();
 
         /**
          * Reference counting method. Calling this method increases the count
@@ -96,10 +95,8 @@ class DataEnginePrivate
         QString icon;
         uint limit;
         bool valid;
-        DataEngineScript *script;
         QString engineName;
         QString serviceName;
-        Package *package;
         Service *publishedService;
         QString waitingSourceRequest;
 };

@@ -89,43 +89,6 @@ void PlasmoidPackage::pathChanged()
     }
 }
 
-DataEnginePackage::DataEnginePackage(QObject *parent)
-    : Plasma::PackageStructure(parent, QString("DataEngine"))
-{
-    setServicePrefix("plasma-dataengine-");
-    setDefaultPackageRoot("plasma/dataengine/");
-
-    addDirectoryDefinition("data", "data", i18n("Data Files"));
-
-    addDirectoryDefinition("scripts", "code", i18n("Executable Scripts"));
-    QStringList mimetypes;
-    mimetypes << "text/plain";
-    setMimetypes("scripts", mimetypes);
-
-    addDirectoryDefinition("services", "services/", i18n("Service Descriptions"));
-    setMimetypes("services", mimetypes);
-
-    addDirectoryDefinition("translations", "locale", i18n("Translations"));
-
-    addFileDefinition("mainscript", "code/main", i18n("Main Script File"));
-    setRequired("mainscript", true);
-}
-
-DataEnginePackage::~DataEnginePackage()
-{
-}
-
-void DataEnginePackage::pathChanged()
-{
-    KDesktopFile config(path() + "/metadata.desktop");
-    KConfigGroup cg = config.desktopGroup();
-    QString mainScript = cg.readEntry("X-Plasma-MainScript", QString());
-    if (!mainScript.isEmpty()) {
-        addFileDefinition("mainscript", mainScript, i18n("Main Script File"));
-        setRequired("mainscript", true);
-    }
-}
-
 ThemePackage::ThemePackage(QObject *parent)
     : Plasma::PackageStructure(parent, QString("Plasma Theme"))
 {

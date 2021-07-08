@@ -680,7 +680,6 @@ install(
     Plasma/DataContainer
     Plasma/DataEngine
     Plasma/DataEngineManager
-    Plasma/DataEngineScript
     Plasma/DeclarativeWidget
     Plasma/Delegate
     Plasma/Dialog
@@ -708,7 +707,6 @@ install(
     Plasma/RadioButton
     Plasma/RunnerContext
     Plasma/RunnerManager
-    Plasma/RunnerScript
     Plasma/ScriptEngine
     Plasma/ScrollBar
     Plasma/ScrollWidget
@@ -731,7 +729,6 @@ install(
     Plasma/Version
     Plasma/View
     Plasma/Wallpaper
-    Plasma/WallpaperScript
     Plasma/WindowEffects
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Plasma
     COMPONENT Devel

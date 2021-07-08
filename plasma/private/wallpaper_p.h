@@ -25,7 +25,6 @@
 #include <QtCore/QRunnable>
 #include <QtCore/qsharedpointer.h>
 
-#include "plasma/scripting/wallpaperscript.h"
 #include "plasma/private/dataengineconsumer_p.h"
 
 namespace Plasma
@@ -39,11 +38,9 @@ public:
     QString cachePath(const QString &key) const;
     QString cacheKey(const QString &sourceImagePath, const QSize &size,
                      int resizeMethod, const QColor &color) const;
-    void initScript();
 
     bool findInCache(const QString &key, unsigned int lastModified = 0);
 
-    void setupScriptSupport();
     void renderWallpaper(const QString &sourceImagePath, const QImage &image, const QSize &size,
                          Wallpaper::ResizeMethod resizeMethod, const QColor &color);
 
@@ -51,18 +48,14 @@ public:
 
     Wallpaper *q;
     KPluginInfo wallpaperDescription;
-    Package *package;
     QRectF boundingRect;
     KServiceAction mode;
-    int renderToken;
     Wallpaper::ResizeMethod lastResizeMethod;
     QSizeF targetSize;
-    WallpaperScript *script;
     QList<KUrl> pendingUrls;
     bool cacheRendering : 1;
     bool initialized : 1;
     bool needsConfig : 1;
-    bool scriptInitialized : 1;
     bool previewing : 1;
     bool needsPreviewDuringConfiguration : 1;
 };

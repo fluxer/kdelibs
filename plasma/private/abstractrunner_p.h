@@ -35,19 +35,14 @@ public:
     AbstractRunnerPrivate(AbstractRunner *r);
     ~AbstractRunnerPrivate();
     void init(const KService::Ptr service);
-    void init(const QString &path);
-    void prepScripting(const QString &path, QString api = QString());
-    void setupScriptSupport();
 
     AbstractRunner::Priority priority;
     AbstractRunner::Speed speed;
     RunnerContext::Types blackListed;
-    RunnerScript *script;
     KPluginInfo runnerDescription;
     AbstractRunner *runner;
     int fastRuns;
     QReadWriteLock speedLock;
-    Package *package;
     QHash<QString, QAction*> actions;
     QList<RunnerSyntax> syntaxes;
     RunnerSyntax *defaultSyntax;

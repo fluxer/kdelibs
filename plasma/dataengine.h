@@ -34,7 +34,6 @@ namespace Plasma
 {
 
 class DataContainer;
-class DataEngineScript;
 class Package;
 class Service;
 class DataEnginePrivate;
@@ -227,13 +226,6 @@ NoAlignment) const;
          *         is returned if there is no associated icon.
          **/
         QString icon() const;
-
-        /**
-         * Accessor for the associated Package object if any.
-         *
-         * @return the Package object, or 0 if none
-         **/
-        const Package *package() const;
 
         /**
          * @return the plugin name for the applet
@@ -497,7 +489,6 @@ NoAlignment) const;
 
     private:
         friend class DataEnginePrivate;
-        friend class DataEngineScript;
         friend class DataEngineManager;
         friend class PlasmoidServiceJob;
         friend class NullEngine;
