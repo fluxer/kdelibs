@@ -589,6 +589,5 @@ Value Currency::convert(const Value& value, UnitPtr to)
             }
         }
     }
-    Value v = UnitCategory::convert(value, to);
-    return v;
+    return UnitCategory::convert(value, to);
 }
