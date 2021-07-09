@@ -29,10 +29,6 @@
 
 #include <math.h> // sqrtf
 
-#ifndef __USE_ISOC99
-#define sqrtf(x) ((float)sqrt(x))
-#endif
-
 typedef quint32 uint;
 typedef quint16 ushort;
 typedef quint8 uchar;
