@@ -34,8 +34,9 @@ public:
     KColorCollectionPrivate(const QString&);
     KColorCollectionPrivate(const KColorCollectionPrivate&);
     ~KColorCollectionPrivate() {}
+
     struct ColorNode
-  {
+    {
         ColorNode(const QColor &c, const QString &n)
             : color(c), name(n) {}
         QColor color;
@@ -51,50 +52,53 @@ public:
 KColorCollectionPrivate::KColorCollectionPrivate(const QString &_name)
     : name(_name)
 {
-    if (name.isEmpty()) return;
+    if (name.isEmpty()) {
+        return;
+    }
 
-    QString filename = KStandardDirs::locate("config", "colors/"+name);
-  if (filename.isEmpty()) return;
+    QString filename = KStandardDirs::locate("config", "colors/" + name);
+    if (filename.isEmpty()) {
+        return;
+    }
 
-  QFile paletteFile(filename);
-  if (!paletteFile.exists()) return;
-  if (!paletteFile.open(QIODevice::ReadOnly)) return;
+    QFile paletteFile(filename);
+    if (!paletteFile.open(QIODevice::ReadOnly)) {
+        return;
+    }
 
-  // Read first line
-  // Expected "GIMP Palette"
-  QString line = QString::fromLocal8Bit(paletteFile.readLine());
-  if (line.indexOf(" Palette") == -1) return;
+    // Read first line
+    // Expected "GIMP Palette"
+    QString line = QString::fromLocal8Bit(paletteFile.readLine());
+    if (line.indexOf(" Palette") == -1) {
+        return;
+    }
 
-  while( !paletteFile.atEnd() )
-  {
-     line = QString::fromLocal8Bit(paletteFile.readLine());
-     if (line[0] == '#')
-     {
-        // This is a comment line
-        line = line.mid(1); // Strip '#'
-        line = line.trimmed(); // Strip remaining white space..
-        if (!line.isEmpty())
-        {
+    while(!paletteFile.atEnd()) {
+        line = QString::fromLocal8Bit(paletteFile.readLine());
+        if (line[0] == '#') {
+            // This is a comment line
+            line = line.mid(1); // Strip '#'
+            line = line.trimmed(); // Strip remaining white space..
+            if (!line.isEmpty()) {
                 desc += line+'\n'; // Add comment to description
-        }
-     }
-     else
-     {
-        // This is a color line, hopefully
-        line = line.trimmed();
-        if (line.isEmpty()) continue;
-        int r, g, b;
-        int pos = 0;
-        if (sscanf(line.toLatin1(), "%d %d %d%n", &r, &g, &b, &pos) >= 3)
-        {
-           r = qBound(0, r, 255);
-           g = qBound(0, g, 255);
-           b = qBound(0, b, 255);
-           QString name = line.mid(pos).trimmed();
+            }
+        } else {
+            // This is a color line, hopefully
+            line = line.trimmed();
+            if (line.isEmpty()) {
+                continue;
+            }
+            int r, g, b;
+            int pos = 0;
+            if (sscanf(line.toLatin1(), "%d %d %d%n", &r, &g, &b, &pos) >= 3) {
+                r = qBound(0, r, 255);
+                g = qBound(0, g, 255);
+                b = qBound(0, b, 255);
+                QString name = line.mid(pos).trimmed();
                 colorList.append(ColorNode(QColor(r, g, b), name));
+            }
         }
-     }
-  }
+    }
 }
 
 KColorCollectionPrivate::KColorCollectionPrivate(const KColorCollectionPrivate& p)
@@ -110,10 +114,7 @@ KColorCollection::installedCollections()
   KGlobal::dirs()->findAllResources("config", "colors/*", KStandardDirs::NoDuplicates, paletteList);
 
   int strip = strlen("colors/");
-  for(QStringList::Iterator it = paletteList.begin();
-      it != paletteList.end();
-      ++it)
-  {
+  for (QStringList::Iterator it = paletteList.begin(); it != paletteList.end(); ++it) {
       (*it) = (*it).mid(strip);
   }
 
@@ -132,33 +133,33 @@ KColorCollection::KColorCollection(const KColorCollection &p)
 
 KColorCollection::~KColorCollection()
 {
-  // Need auto-save?
+    // Need auto-save?
     delete d;
 }
 
-bool
-KColorCollection::save()
+bool KColorCollection::save()
 {
-   QString filename = KStandardDirs::locateLocal("config", "colors/" + d->name);
-   KSaveFile sf(filename);
-   if (!sf.open()) return false;
+    QString filename = KStandardDirs::locateLocal("config", "colors/" + d->name);
+    KSaveFile sf(filename);
+    if (!sf.open()) {
+        return false;
+    }
 
-   QTextStream str ( &sf );
+    QTextStream str(&sf);
 
-   QString description = d->desc.trimmed();
-   description = '#'+description.split( '\n', QString::KeepEmptyParts).join("\n#");
+    QString description = d->desc.trimmed();
+    description = '#' + description.split( '\n', QString::KeepEmptyParts).join("\n#");
 
-   str << "KDE RGB Palette\n";
-   str << description << "\n";
-   foreach (const KColorCollectionPrivate::ColorNode &node, d->colorList)
-   {
-       int r,g,b;
-       node.color.getRgb(&r, &g, &b);
-       str << r << " " << g << " " << b << " " << node.name << "\n";
-   }
+    str << "KDE RGB Palette\n";
+    str << description << "\n";
+    foreach (const KColorCollectionPrivate::ColorNode &node, d->colorList) {
+        int r,g,b;
+        node.color.getRgb(&r, &g, &b);
+        str << r << " " << g << " " << b << " " << node.name << "\n";
+    }
 
-   sf.flush();
-   return sf.finalize();
+    sf.flush();
+    return sf.finalize();
 }
 
 QString KColorCollection::description() const
@@ -193,47 +194,45 @@ void KColorCollection::setEditable(Editable editable)
 
 int KColorCollection::count() const
 {
-    return (int) d->colorList.count();
+    return d->colorList.count();
 }
 
-KColorCollection&
-KColorCollection::operator=( const KColorCollection &p)
+KColorCollection& KColorCollection::operator=( const KColorCollection &p)
 {
-  if (&p == this) return *this;
+    if (&p == this) {
+        return *this;
+    }
     d->colorList = p.d->colorList;
     d->name = p.d->name;
     d->desc = p.d->desc;
     d->editable = p.d->editable;
-  return *this;
+    return *this;
 }
 
-QColor
-KColorCollection::color(int index) const
+QColor KColorCollection::color(int index) const
 {
-    if ((index < 0) || (index >= count()))
-	return QColor();
-
+    if (index < 0 || index >= count()) {
+        return QColor();
+    }
     return d->colorList[index].color;
 }
 
-int
-KColorCollection::findColor(const QColor &color) const
+int KColorCollection::findColor(const QColor &color) const
 {
-    for (int i = 0; i < d->colorList.size(); ++i)
-  {
-        if (d->colorList[i].color == color)
-        return i;
-  }
-  return -1;
+    for (int i = 0; i < d->colorList.size(); ++i) {
+        if (d->colorList[i].color == color) {
+            return i;
+        }
+    }
+    return -1;
 }
 
-QString
-KColorCollection::name(int index) const
+QString KColorCollection::name(int index) const
 {
-  if ((index < 0) || (index >= count()))
-	return QString();
-
-  return d->colorList[index].name;
+    if (index < 0 || index >= count()) {
+        return QString();
+    }
+    return d->colorList[index].name;
 }
 
 QString KColorCollection::name(const QColor &color) const
@@ -241,32 +240,26 @@ QString KColorCollection::name(const QColor &color) const
     return name(findColor(color));
 }
 
-int
-KColorCollection::addColor(const QColor &newColor, const QString &newColorName)
+int KColorCollection::addColor(const QColor &newColor, const QString &newColorName)
 {
     d->colorList.append(KColorCollectionPrivate::ColorNode(newColor, newColorName));
     return count() - 1;
 }
 
-int
-KColorCollection::changeColor(int index,
-                      const QColor &newColor,
-                      const QString &newColorName)
+int KColorCollection::changeColor(int index, const QColor &newColor, const QString &newColorName)
 {
-    if ((index < 0) || (index >= count()))
-	return -1;
-
-  KColorCollectionPrivate::ColorNode& node = d->colorList[index];
-  node.color = newColor;
-  node.name  = newColorName;
-
-  return index;
+    if (index < 0 || index >= count()) {
+        return -1;
+    }
+    KColorCollectionPrivate::ColorNode& node = d->colorList[index];
+    node.color = newColor;
+    node.name  = newColorName;
+    return index;
 }
 
 int KColorCollection::changeColor(const QColor &oldColor,
                           const QColor &newColor,
                           const QString &newColorName)
 {
-    return changeColor( findColor(oldColor), newColor, newColorName);
+    return changeColor(findColor(oldColor), newColor, newColorName);
 }
-

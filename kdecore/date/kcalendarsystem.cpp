@@ -2095,7 +2095,7 @@ QString KCalendarSystem::formatDate(const QDate &date, KLocale::DateTimeComponen
             return d->stringFromInteger(week(date, weekNumberSystem, 0), 0, QLatin1Char('0'));
         }
     case KLocale::WeekYear: {
-        int weekYear;
+        int weekYear = 0;
         QDate yearDate;
         week(date, weekNumberSystem, &weekYear);
         setDate(yearDate, weekYear, 1, 1);
