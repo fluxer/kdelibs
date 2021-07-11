@@ -312,7 +312,7 @@ void KIconLoaderGlobalData::parseGenericIconsFiles(const QString& fileName)
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
-        stream.setCodec("ISO 8859-1");
+        stream.setCodec("ISO-8859-1");
         while (!stream.atEnd()) {
             const QString line = stream.readLine();
             if (line.isEmpty() || line[0] == '#')

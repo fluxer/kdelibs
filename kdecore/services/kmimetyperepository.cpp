@@ -310,7 +310,7 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
             //kDebug(7021) << "Now parsing" << fileName;
             if (qfile.open(QIODevice::ReadOnly)) {
                 QTextStream stream(&qfile);
-                stream.setCodec("ISO 8859-1");
+                stream.setCodec("ISO-8859-1");
                 while (!stream.atEnd()) {
                     const QString line = stream.readLine();
                     if (line.isEmpty() || line[0] == QLatin1Char('#'))
