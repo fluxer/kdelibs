@@ -184,7 +184,7 @@ class URLActionRule
 class KAuthorizedPrivate {
 public:
   KAuthorizedPrivate()
-    :   actionRestrictions( false ), blockEverything(false),mutex(QMutex::Recursive)
+    :   actionRestrictions( false ), blockEverything(false)
   {
     Q_ASSERT_X(QCoreApplication::instance(),"KAuthorizedPrivate()","There has to be an existing QCoreApplication::instance() pointer");
 
@@ -341,10 +341,10 @@ static void initUrlActionRestrictions()
 void KAuthorized::allowUrlAction(const QString &action, const KUrl &_baseURL, const KUrl &_destURL)
 {
   MY_D
-  QMutexLocker locker((&d->mutex));
   if (authorizeUrlAction(action, _baseURL, _destURL))
      return;
 
+  QMutexLocker locker(&d->mutex);
   d->urlActionRestrictions.append( URLActionRule
       ( action.toLatin1(), _baseURL.protocol(), _baseURL.host(), _baseURL.path(KUrl::RemoveTrailingSlash),
         _destURL.protocol(), _destURL.host(), _destURL.path(KUrl::RemoveTrailingSlash), true));
@@ -353,7 +353,7 @@ void KAuthorized::allowUrlAction(const QString &action, const KUrl &_baseURL, co
 bool KAuthorized::authorizeUrlAction(const QString &action, const KUrl &_baseURL, const KUrl &_destURL)
 {
   MY_D
-  QMutexLocker locker(&(d->mutex));
+  QMutexLocker locker(&d->mutex);
   if (d->blockEverything) return false;
 
   if (_destURL.isEmpty())
