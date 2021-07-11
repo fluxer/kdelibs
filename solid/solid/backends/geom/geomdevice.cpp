@@ -129,10 +129,15 @@ QString GeomDevice::udi() const
 
 QString GeomDevice::parentUdi() const
 {
+#warning TODO: compatibility bits, see warning in kdelibs/solid/solid/backends/udev/udevdevice.cpp
+#if 0
     if (m_parent.isEmpty()) {
         return QString(GEOM_ROOT_UDI);
     }
     return QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, m_parent.constData());
+#else
+    return QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, m_realdevice.constData());
+#endif
 }
 
 QString GeomDevice::vendor() const
