@@ -28,8 +28,7 @@ class KTextEditor::SmartInterfacePrivate
 {
 public:
   SmartInterfacePrivate()
-    : mutex(QMutex::Recursive)
-    , clearOnDocumentReload(true)
+    : clearOnDocumentReload(true)
   {}
 
   QMutex mutex;
@@ -53,13 +52,8 @@ bool SmartInterface::clearOnDocumentReload() const
 
 void SmartInterface::setClearOnDocumentReload(bool clearOnReload)
 {
-  QMutexLocker lock(smartMutex());
+  QMutexLocker lock(&d->mutex);
   d->clearOnDocumentReload = clearOnReload;
-}
-
-QMutex * SmartInterface::smartMutex() const
-{
-  return &d->mutex;
 }
 
 void SmartInterface::clearRevision()
