@@ -211,12 +211,15 @@ QString DevinfoDevice::description() const
 bool DevinfoDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) const
 {
     switch (type) {
-        case Solid::DeviceInterface::Processor:
+        case Solid::DeviceInterface::Processor: {
             return (m_device.indexOf("/cpu") >= 0);
-        case Solid::DeviceInterface::NetworkInterface:
+        }
+        case Solid::DeviceInterface::NetworkInterface: {
             return (m_device.indexOf("/em") >= 0 || m_device.indexOf("/wlan") >= 0);
-        default:
+        }
+        default: {
             return false;
+        }
     }
 }
 
@@ -228,12 +231,14 @@ QObject *DevinfoDevice::createDeviceInterface(const Solid::DeviceInterface::Type
     switch (type) {
         case Solid::DeviceInterface::Processor: {
             return new Processor(this);
-        case Solid::DeviceInterface::NetworkInterface:
+        }
+        case Solid::DeviceInterface::NetworkInterface: {
             return new NetworkInterface(this);
         }
-        default:
+        default: {
             Q_ASSERT(false);
             return 0;
+        }
     }
 }
 
