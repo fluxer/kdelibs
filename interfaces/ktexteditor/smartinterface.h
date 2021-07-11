@@ -103,16 +103,6 @@ class SmartCursor;
  * }
  * \endcode
  *
- * \section smartiface_threadsafety Thread safety
- * The smart interface is designed to be usable in multithreaded environments.
- * If you use the interface from threads other than the main thread, you must
- * lock the smartMutex() whenever you are making a non-const call to a smart object.
- * This allows the text editor to guarantee that the objects will not change
- * when it locks the mutex (for example, when performing layout or rendering).
- * The useRevision function has only effect for the thread calling it. It will
- * store the selected revision in a thread local storage to allow multiple threads
- * to have different views on the same document in respect to the smart interface.
- *
  * \author Hamish Rodda \<rodda@kde.org\>
  */
 class KTEXTEDITOR_EXPORT SmartInterface
@@ -122,14 +112,6 @@ class KTEXTEDITOR_EXPORT SmartInterface
   public:
     SmartInterface();
     virtual ~SmartInterface();
-
-    /**
-     * Provides access to the recursive mutex used to protect write access to
-     * smart interface objects (cursors + ranges and their associated properties).
-     * If you use this interface  from a thread other than the main thread,
-     * you must lock this mutex whenever you call a non-const function on a smart object.
-     */
-    QMutex* smartMutex() const;
 
     /**
      * Clears or deletes all instances of smart objects, ie:
