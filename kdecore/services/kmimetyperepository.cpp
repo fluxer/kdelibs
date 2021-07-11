@@ -193,10 +193,7 @@ void KMimeTypeRepository::findFromOtherPatternList(QStringList& matchingMimeType
 
 QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QString *pMatchingExtension)
 {
-    {
-        QWriteLocker lock(&m_mutex);
-        parseGlobs();
-    }
+    parseGlobs();
 
     QReadLocker lock(&m_mutex);
     // First try the high weight matches (>50), if any.
@@ -247,13 +244,7 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
         }
     }
 
-    {
-        QWriteLocker lock(&m_mutex);
-        if (!m_magicFilesParsed) {
-            parseMagic();
-            m_magicFilesParsed = true;
-        }
-    }
+    parseMagic();
 
     // Apply magic rules
     {
@@ -352,9 +343,14 @@ static bool mimeMagicRuleCompare(const KMimeMagicRule& lhs, const KMimeMagicRule
     return lhs.priority() > rhs.priority();
 }
 
-// Caller must hold m_mutex
 void KMimeTypeRepository::parseMagic()
 {
+    QWriteLocker lock(&m_mutex);
+    if (m_magicFilesParsed) {
+        return;
+    }
+    m_magicFilesParsed = true;
+
     const QStringList magicFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("magic"));
     //kDebug() << magicFiles;
     QListIterator<QString> magicIter( magicFiles );
@@ -554,35 +550,36 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
 const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
 {
     QWriteLocker lock(&m_mutex);
-    if (!m_aliasFilesParsed) {
-        m_aliasFilesParsed = true;
+    if (m_aliasFilesParsed) {
+        return m_aliases;
+    }
+    m_aliasFilesParsed = true;
 
-        const QStringList aliasFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("aliases"));
-        Q_FOREACH(const QString& fileName, aliasFiles) {
-            QFile qfile(fileName);
-            //kDebug(7021) << "Now parsing" << fileName;
-            if (qfile.open(QIODevice::ReadOnly)) {
-                QTextStream stream(&qfile);
-                stream.setCodec("ISO 8859-1");
-                while (!stream.atEnd()) {
-                    const QString line = stream.readLine();
-                    if (line.isEmpty() || line[0] == QLatin1Char('#'))
-                        continue;
-                    const int pos = line.indexOf(QLatin1Char(' '));
-                    if (pos == -1) // syntax error
-                        continue;
-                    const QString aliasTypeName = line.left(pos);
-                    const QString parentTypeName = line.mid(pos+1);
-                    Q_ASSERT(!aliasTypeName.isEmpty());
-                    Q_ASSERT(!parentTypeName.isEmpty());
+    const QStringList aliasFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("aliases"));
+    Q_FOREACH(const QString& fileName, aliasFiles) {
+        QFile qfile(fileName);
+        //kDebug(7021) << "Now parsing" << fileName;
+        if (qfile.open(QIODevice::ReadOnly)) {
+            QTextStream stream(&qfile);
+            stream.setCodec("ISO-8859-1");
+            while (!stream.atEnd()) {
+                const QString line = stream.readLine();
+                if (line.isEmpty() || line[0] == QLatin1Char('#'))
+                    continue;
+                const int pos = line.indexOf(QLatin1Char(' '));
+                if (pos == -1) // syntax error
+                    continue;
+                const QString aliasTypeName = line.left(pos);
+                const QString parentTypeName = line.mid(pos+1);
+                Q_ASSERT(!aliasTypeName.isEmpty());
+                Q_ASSERT(!parentTypeName.isEmpty());
 
-                    const KMimeType::Ptr realMimeType =
-                        findMimeTypeByName(aliasTypeName, KMimeType::DontResolveAlias);
-                    if (realMimeType) {
-                        //kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeName << "because also defined as a real mimetype";
-                    } else {
-                        m_aliases.insert(aliasTypeName, parentTypeName);
-                    }
+                const KMimeType::Ptr realMimeType =
+                    findMimeTypeByName(aliasTypeName, KMimeType::DontResolveAlias);
+                if (realMimeType) {
+                    //kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeName << "because also defined as a real mimetype";
+                } else {
+                    m_aliases.insert(aliasTypeName, parentTypeName);
                 }
             }
         }
@@ -590,22 +587,25 @@ const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
     return m_aliases;
 }
 
-// Caller must lock m_mutex for write
 void KMimeTypeRepository::parseGlobs()
 {
-    if (!m_globsFilesParsed) {
-        m_globsFilesParsed = true;
-        KMimeGlobsFileParser parser;
-        m_globs = parser.parseGlobs();
+    QWriteLocker lock(&m_mutex);
+    if (m_globsFilesParsed) {
+        return;
     }
+    m_globsFilesParsed = true;
+
+    KMimeGlobsFileParser parser;
+    m_globs = parser.parseGlobs();
 }
 
 QStringList KMimeTypeRepository::patternsForMimetype(const QString& mimeType)
 {
+    parseGlobs();
+
     QWriteLocker lock(&m_mutex);
     if (!m_patternsMapCalculated) {
         m_patternsMapCalculated = true;
-        parseGlobs();
         m_patterns = m_globs.patternsMap();
     }
     return m_patterns.value(mimeType);
@@ -620,9 +620,9 @@ static void errorMissingMimeTypes( const QStringList& _types )
 void KMimeTypeRepository::checkEssentialMimeTypes()
 {
     QWriteLocker lock(&m_mutex);
-    if (m_mimeTypesChecked) // already done
+    if (m_mimeTypesChecked) { // already done
         return;
-
+    }
     m_mimeTypesChecked = true; // must be done before building mimetypes
 
     // No Mime-Types installed ?
