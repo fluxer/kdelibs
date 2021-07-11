@@ -69,15 +69,12 @@ QString UDevDevice::udi() const
 
 QString UDevDevice::parentUdi() const
 {
-#warning FIXME: block devices workaround for optical and storage drives
-    // code in e.g. dolphin and plasma casts the parent instead of the actual device to either
-    // Solid::StorageDrive or Solid::OpticalDrive which is wrong but was expected to work with the
-    // UDisks backends, has to be fixed and verified to work in several places at some point
-    if (m_device.subsystem() == QLatin1String("block")) {
-        return devicePath();
-    }
     const int idcdrom = m_device.deviceProperty("ID_CDROM").toInt();
-    if (idcdrom == 1) {
+#warning FIXME: block devices workaround for optical and storage drives
+    // code in several places expects the parent to NOT be the actual parent (disk) device UDI even
+    // for partitions but another device UDI related to this device, has to be fixed and verified
+    // to work at some point
+    if (m_device.subsystem() == QLatin1String("block") || idcdrom == 1) {
         return devicePath();
     }
 
