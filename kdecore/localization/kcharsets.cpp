@@ -37,11 +37,31 @@
 #include <assert.h>
 #include <QHash>
 
-#warning TODO: translate other group
-static const QLatin1String kOtherGroup = QLatin1String("Other");
 static const char* kSystemEncoding = "System";
 
-static QString encodingGroup(const QByteArray &encoding) {
+class KCharsetsPrivate
+{
+public:
+    KCharsetsPrivate()
+    {
+        codecForNameDict.reserve( 43 );
+        kOtherGroup = i18nc( "@item", "Other");
+    }
+
+    // Hash for the encoding names (sensitive case)
+    QHash<QByteArray,QTextCodec*> codecForNameDict;
+
+    //Cache list so QStrings can be implicitly shared
+    QList<QStringList> encodingsByScript;
+
+    QString encodingGroup(const QByteArray &encoding) const;
+
+    QString kOtherGroup;
+};
+
+
+QString KCharsetsPrivate::encodingGroup(const QByteArray &encoding) const
+{
     int separatorindex = 0;
     const char *data = encoding.constData();
     for (int i = 0; i < encoding.size(); i++) {
@@ -56,26 +76,11 @@ static QString encodingGroup(const QByteArray &encoding) {
     return kOtherGroup;
 }
 
-class KCharsetsPrivate
-{
-public:
-    KCharsetsPrivate(KCharsets* _kc)
-    {
-        kc = _kc;
-        codecForNameDict.reserve( 43 );
-    }
-    // Hash for the encoding names (sensitive case)
-    QHash<QByteArray,QTextCodec*> codecForNameDict;
-    KCharsets* kc;
-
-    //Cache list so QStrings can be implicitly shared
-    QList<QStringList> encodingsByScript;
-};
 
 // --------------------------------------------------------------------------
 
 KCharsets::KCharsets()
-    :d(new KCharsetsPrivate(this))
+    :d(new KCharsetsPrivate())
 {
 }
 
@@ -207,7 +212,7 @@ QStringList KCharsets::availableEncodingNames() const
 
 QString KCharsets::descriptionForEncoding( const QString& encoding ) const
 {
-    const QString group = encodingGroup(encoding.toUtf8().trimmed());
+    const QString group = d->encodingGroup(encoding.toUtf8().trimmed());
     return i18nc( "@item %1 character set, %2 encoding", "%1 ( %2 )", group, encoding.trimmed() );
 }
 
@@ -237,7 +242,7 @@ QStringList KCharsets::descriptiveEncodingNames() const
 
     QMap<QString, QStringList> encodingGroups;
     foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
-        const QString group = encodingGroup(encoding);
+        const QString group = d->encodingGroup(encoding);
         encodingGroups[group].append( QString::fromLatin1(encoding.constData(), encoding.size()) );
     }
 
@@ -248,7 +253,7 @@ QStringList KCharsets::descriptiveEncodingNames() const
         const QStringList value(iter.value());
         if (value.size() == 1) {
             QString group(iter.key());
-            encodingGroups[kOtherGroup].append(value.at(0));
+            encodingGroups[d->kOtherGroup].append(value.at(0));
             encodingGroups.remove(group);
         }
     }
@@ -272,7 +277,7 @@ QList<QStringList> KCharsets::encodingsByScript() const
         return d->encodingsByScript;
 
     foreach (const QByteArray &encoding, QTextCodec::availableCodecs()) {
-        QString group = encodingGroup(encoding);
+        QString group = d->encodingGroup(encoding);
 
         int i = 0;
         const QString encodingstring = QString::fromLatin1(encoding.constData(), encoding.size());
@@ -295,13 +300,13 @@ QList<QStringList> KCharsets::encodingsByScript() const
             d->encodingsByScript.removeAll(list);
 
             for (i = 0; i < d->encodingsByScript.size(); i++) {
-                if (d->encodingsByScript.at(i).at(0) == kOtherGroup) {
+                if (d->encodingsByScript.at(i).at(0) == d->kOtherGroup) {
                     d->encodingsByScript[i].append(encoding);
                     break;
                 }
             }
             if (i == d->encodingsByScript.size()) {
-                d->encodingsByScript.append(QStringList() << kOtherGroup << encoding);
+                d->encodingsByScript.append(QStringList() << d->kOtherGroup << encoding);
             }
         }
     }
