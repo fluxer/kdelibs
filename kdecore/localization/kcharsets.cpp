@@ -207,7 +207,7 @@ QStringList KCharsets::availableEncodingNames() const
 
 QString KCharsets::descriptionForEncoding( const QString& encoding ) const
 {
-    const QString group = encodingGroup(encoding.toUtf8());
+    const QString group = encodingGroup(encoding.toUtf8().trimmed());
     return i18nc( "@item %1 character set, %2 encoding", "%1 ( %2 )", group, encoding.trimmed() );
 }
 
