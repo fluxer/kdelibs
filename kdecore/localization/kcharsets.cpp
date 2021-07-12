@@ -37,6 +37,7 @@
 #include <assert.h>
 #include <QHash>
 
+#warning TODO: translate other group
 static const QLatin1String kOtherGroup = QLatin1String("Other");
 static const char* kSystemEncoding = "System";
 
@@ -206,12 +207,8 @@ QStringList KCharsets::availableEncodingNames() const
 
 QString KCharsets::descriptionForEncoding( const QString& encoding ) const
 {
-    QString group = encodingGroup(encoding.toUtf8());
-
-    if ( group != kOtherGroup )
-        return i18nc( "@item %1 character set, %2 encoding",
-            "%1 ( %2 )", group, encoding );
-    return i18nc( "@item", "Other encoding (%1)", encoding );
+    const QString group = encodingGroup(encoding.toUtf8());
+    return i18nc( "@item %1 character set, %2 encoding", "%1 ( %2 )", group, encoding.trimmed() );
 }
 
 QString KCharsets::encodingForName( const QString &descriptiveName ) const
