@@ -53,9 +53,9 @@ int main(int argc, char **argv)
     KMessage::setMessageHandler(msgHandler);
 
     KMimeType::Ptr s0 = KMimeType::mimeType("application/x-zerosize");
-    Q_ASSERT(!s0); // should NOT be found, otherwise this test is bogus!
+    Q_ASSERT(!s0);
     if (s0) {
-        abort();
+        qFatal("application/x-zerosize should NOT be found, otherwise this test is bogus!");
         return 1;
     }
 
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     Q_ASSERT(mime);
     Q_ASSERT(mime->name() == "application/octet-stream");
     if (!mime) {
-        abort();
+        qFatal("application/octet-stream should be found, otherwise this test is bogus!");
         return 2;
     }
     qDebug() << mime->name();
