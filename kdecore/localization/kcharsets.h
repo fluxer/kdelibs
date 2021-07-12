@@ -132,7 +132,9 @@ public:
 
     /**
      * Lists the available encoding names grouped by script (or language that uses them).
-     * @returns the list of lists consisting of description followed by encoding names (i.e. encodingsByScript().at(i).at(0) is a description for encodingsByScript().at(i).at(k), k>0)
+     * @returns the list of lists consisting of description followed by encoding names
+     * (i.e. encodingsByScript().at(i).at(0) is a description for
+     * encodingsByScript().at(i).at(k), k>0)
      */
     QList<QStringList> encodingsByScript() const;
 
@@ -140,6 +142,10 @@ public:
      * @brief Returns a long description for an encoding name.
      * @param encoding the encoding for the language
      * @return the long description for the encoding
+     *
+     * @warning some encodings returned by @p descriptiveEncodingNames() and @p encodingsByScript()
+     * may be regrouped with different description, do not rely on the return value for comparison.
+     * compare the encoding name (as returned by @p encodingForName()) instead
      */
     QString descriptionForEncoding( const QString& encoding ) const;
 
