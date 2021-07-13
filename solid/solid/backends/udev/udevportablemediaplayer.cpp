@@ -82,17 +82,12 @@ PortableMediaPlayer::~PortableMediaPlayer()
 
 QStringList PortableMediaPlayer::supportedProtocols() const
 {
-    /* There are multiple packages that set ID_MEDIA_PLAYER:
-     *  * gphoto2 sets it to numeric 1 (for _some_ cameras it supports) and it hopefully
-     *    means MTP-compatible device.
-     *  * libmtp >= 1.0.4 sets it to numeric 1 and this always denotes MTP-compatible player.
-     *  * media-player-info sets it to a string that denotes a name of the .mpi file with
-     *    additional info.
-     */
-    if (m_device->deviceProperty("ID_MEDIA_PLAYER").toInt() == 1) {
+    // libmtp sets ID_MTP_DEVICE to numeric 1 and this always denotes MTP-compatible player
+    if (m_device->deviceProperty("ID_MTP_DEVICE").toInt() == 1) {
         return QStringList() << "mtp";
     }
 
+    // media-player-info sets it to a string that denotes a name of the .mpi file with additional info
     QString mpiFileName = mediaPlayerInfoFilePath();
     if (mpiFileName.isEmpty()) {
         return QStringList();
@@ -133,7 +128,10 @@ QVariant PortableMediaPlayer::driverHandle(const QString &driver) const
 QString PortableMediaPlayer::mediaPlayerInfoFilePath() const
 {
     QString relativeFilename(m_device->deviceProperty("ID_MEDIA_PLAYER"));
-    if (relativeFilename.isEmpty()) {
+    if (relativeFilename.toInt() == 1) {
+        // not set by media-player-info
+        return QString();
+    } else if (relativeFilename.isEmpty()) {
         qWarning() << "We attached PortableMediaPlayer interface to device" << m_device->udi()
                    << "but m_device->deviceProperty(\"ID_MEDIA_PLAYER\") is empty???";
         return QString();
