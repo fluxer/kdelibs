@@ -38,6 +38,7 @@ set(cmakeFiles
     FindGLIB2.cmake
     FindGMP.cmake
     FindGpgme.cmake
+    FindGphoto2.cmake
     FindGSSAPI.cmake
     FindHUNSPELL.cmake
     FindIBus.cmake
