@@ -40,6 +40,11 @@ KTemperaturePrivate::KTemperaturePrivate(const double number, const QString &uni
     } else if (unit == QString::fromUtf8("°F") || unit == QLatin1String("F") || unit == QLatin1String("Fahrenheit")) {
         m_tempunit = KTemperature::Fahrenheit;
         m_unit = QString::fromUtf8("°F");
+    // kelvin and kelvins are for KUnitConversion compatibility
+    } else if (unit == QLatin1String("K") || unit == QLatin1String("Kelvin")
+        || unit == QLatin1String("kelvin") || unit == QLatin1String("kelvins")) {
+        m_tempunit = KTemperature::Kelvin;
+        m_unit = QLatin1String("K");
     } else {
         kDebug() << "invalid unit" << unit;
         m_unit = QLatin1String("Unknown");
@@ -73,16 +78,29 @@ QString KTemperature::toString() const
 
 double KTemperature::convertTo(const KTempUnit unit) const
 {
-    static const double celsius_fahrenheit_ratio = 33.8;
-
     if (unit == d->m_tempunit) {
         return d->m_number;
     }
 
-    if (d->m_tempunit == KTemperature::Fahrenheit && unit == KTemperature::Celsius) {
-        return (d->m_number / celsius_fahrenheit_ratio);
-    } else if (d->m_tempunit == KTemperature::Celsius && unit == KTemperature::Fahrenheit) {
-        return (d->m_number * celsius_fahrenheit_ratio);
+    // for reference:
+    // https://www.rapidtables.com/convert/temperature/celsius-to-fahrenheit.html
+    // https://www.rapidtables.com/convert/temperature/celsius-to-kelvin.html
+    // https://www.rapidtables.com/convert/temperature/fahrenheit-to-celsius.html
+    // https://www.rapidtables.com/convert/temperature/fahrenheit-to-kelvin.html
+    // https://www.rapidtables.com/convert/temperature/kelvin-to-celsius.html
+    // https://www.rapidtables.com/convert/temperature/kelvin-to-fahrenheit.html
+    if (d->m_tempunit == KTemperature::Celsius && unit == KTemperature::Fahrenheit) {
+        return (d->m_number * 1.8 + 32);
+    } else if (d->m_tempunit == KTemperature::Celsius && unit == KTemperature::Kelvin) {
+        return (d->m_number + 273.15);
+    } else if (d->m_tempunit == KTemperature::Fahrenheit && unit == KTemperature::Celsius) {
+        return ((d->m_number - 32) / 1.8);
+    } else if (d->m_tempunit == KTemperature::Fahrenheit && unit == KTemperature::Kelvin) {
+        return ((d->m_number + 459.67) * 0.5);
+    } else if (d->m_tempunit == KTemperature::Kelvin && unit == KTemperature::Celsius) {
+        return (d->m_number - 273.15);
+    } else if (d->m_tempunit == KTemperature::Kelvin && unit == KTemperature::Fahrenheit) {
+        return (d->m_number * 1.8 - 459.67);
     }
     return 0.0;
 }

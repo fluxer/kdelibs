@@ -33,13 +33,14 @@ public:
     enum KTempUnit {
         Invalid,
         Celsius,
-        Fahrenheit
+        Fahrenheit,
+        Kelvin
     };
 
     /*!
         @brief Constructs convertor
         @param number value of the unit
-        @param unit string representation of the unit one of: "°C", "C", "Celsius", "°F", "F" or "Fahrenheit"
+        @param unit string representation of the unit one of: "°C", "C", "Celsius", "°F", "F", "Fahrenheit", "Kelvin" or "K"
     */
     KTemperature(const double number, const QString &unit);
     ~KTemperature();
@@ -49,11 +50,11 @@ public:
     */
     double number() const;
     /*!
-        @return Short string representing the unit passed to the constructor, e.g. "°C" or "°F"
+        @return Short string representing the unit passed to the constructor, e.g. "°C", "°F" or "K"
     */
     QString unit() const;
     /*!
-        @return Combination of the number and unit as string, e.g. "12 °C" or "123 °F"
+        @return Combination of the number and unit as string, e.g. "12 °C", "123 °F" or "123 K"
     */
     QString toString() const;
     /*!
