@@ -69,9 +69,6 @@ if(WEBP_FOUND)
         x-webp.desktop
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
     )
-
-    install(FILES webp.xml DESTINATION ${KDE4_XDG_MIME_INSTALL_DIR})
-    update_xdg_mimetypes(${KDE4_XDG_MIME_INSTALL_DIR})
 endif(WEBP_FOUND)
 
 ##################################
