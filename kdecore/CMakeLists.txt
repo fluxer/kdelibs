@@ -235,6 +235,7 @@ set(kdecore_LIB_SRCS
     util/kshell.cpp
     util/krandom.cpp
     util/krandomsequence.cpp
+    util/kunitconversion.cpp
     util/qtest_kde.cpp
 
     kernel/ktoolinvocation_x11.cpp
@@ -420,6 +421,7 @@ install(
     util/kshell.h
     util/krandom.h
     util/krandomsequence.h
+    util/kunitconversion.h
     util/ksharedptr.h
     util/ksortablelist.h
     util/kuser.h
