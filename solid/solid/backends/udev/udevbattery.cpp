@@ -59,7 +59,7 @@ bool Battery::isPlugged() const
 
 Solid::Battery::BatteryType Battery::type() const
 {
-    const QString powersupplytype(m_device->deviceProperty("POWER_SUPPLY_TYPE"));
+    const QString powersupplytype(m_device->deviceProperty("POWER_SUPPLY_TYPE").toLower());
     // some of these are not even documented, wild-guessing
     if (powersupplytype == QLatin1String("battery") || powersupplytype == QLatin1String("mains")) {
         return Solid::Battery::PrimaryBattery;
@@ -91,6 +91,9 @@ int Battery::capacity() const
 {
     const int powersupplyvoltagemax = m_device->deviceProperty("POWER_SUPPLY_VOLTAGE_MAX_DESIGN").toInt();
     const int powersupplyvoltagenow = m_device->deviceProperty("POWER_SUPPLY_VOLTAGE_NOW").toInt();
+    if (powersupplyvoltagemax <= 0 || powersupplyvoltagenow <= 0) {
+        return 0;
+    }
     return (powersupplyvoltagemax / powersupplyvoltagenow);
 }
 
@@ -114,7 +117,7 @@ bool Battery::isPowerSupply() const
 
 Solid::Battery::ChargeState Battery::chargeState() const
 {
-    const QString powersupplystatus(m_device->deviceProperty("POWER_SUPPLY_STATUS"));
+    const QString powersupplystatus(m_device->deviceProperty("POWER_SUPPLY_STATUS").toLower());
     if (powersupplystatus == QLatin1String("charging")) {
         return Solid::Battery::Charging;
     } else if (powersupplystatus == QLatin1String("discharging")) {
