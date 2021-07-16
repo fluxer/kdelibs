@@ -54,11 +54,21 @@ public:
     /*!
         @brief Constructs convertor
         @param number value of the unit
+        @param unit unit enum, one of: Invalid, Celsius, Fahrenheit or Kelvin
+    */
+    KTemperature(const double number, const KTempUnit unit);
+    /*!
+        @brief Constructs convertor
+        @param number value of the unit
         @param unit string representation of the unit, one of: "°C", "C", "Celsius", "°F", "F", "Fahrenheit", "Kelvin" or "K"
     */
     KTemperature(const double number, const QString &unit);
     ~KTemperature();
 
+    /*!
+        @return Whether or not the unit passed to the constructor is valid
+    */
+    bool isValid() const;
     /*!
         @return Same number as the value passed to the constructor
     */
@@ -95,9 +105,11 @@ public:
         Knot
     };
 
+    KVelocity(const double number, const KVeloUnit unit);
     KVelocity(const double number, const QString &unit);
     ~KVelocity();
 
+    bool isValid() const;
     double number() const;
     QString unit() const;
     QString toString() const;
@@ -122,9 +134,11 @@ public:
         InchesOfMercury
     };
 
+    KPressure(const double number, const KPresUnit unit);
     KPressure(const double number, const QString &unit);
     ~KPressure();
 
+    bool isValid() const;
     double number() const;
     QString unit() const;
     QString toString() const;
@@ -147,9 +161,11 @@ public:
         Kilometer
     };
 
+    KLength(const double number, const KLengUnit unit);
     KLength(const double number, const QString &unit);
     ~KLength();
 
+    bool isValid() const;
     double number() const;
     QString unit() const;
     QString toString() const;
