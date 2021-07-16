@@ -18,6 +18,7 @@
 
 #include "kunitconversion.h"
 #include "kdebug.h"
+#include "klocale.h"
 
 #include <qmath.h>
 
@@ -91,11 +92,6 @@ KTemperature::~KTemperature()
     delete d;
 }
 
-bool KTemperature::isValid() const
-{
-    return (d->m_unitenum != KTemperature::Invalid);
-}
-
 double KTemperature::number() const
 {
     return d->m_number;
@@ -104,6 +100,11 @@ double KTemperature::number() const
 QString KTemperature::unit() const
 {
     return d->m_unit;
+}
+
+KTemperature::KTempUnit KTemperature::unitEnum() const
+{
+    return d->m_unitenum;
 }
 
 QString KTemperature::toString() const
@@ -138,6 +139,27 @@ double KTemperature::convertTo(const KTempUnit unit) const
         return (d->m_number * 1.8 - 459.67);
     }
     return 0.0;
+}
+
+QString KTemperature::description()
+{
+    return i18n("Temperature");
+}
+
+QString KTemperature::unitDescription(const KTempUnit unit)
+{
+    switch (unit) {
+        case KTemperature::Celsius:
+            return i18n("Celsius (°C)");
+        case KTemperature::Fahrenheit:
+            return i18n("Fahrenheit (°F)");
+        case KTemperature::Kelvin:
+            return i18n("Kelvin (K)");
+        case KTemperature::Invalid:
+        case KTemperature::UnitCount:
+            break;
+    }
+    return i18n("Unknown");
 }
 
 
@@ -213,11 +235,6 @@ KVelocity::~KVelocity()
     delete d;
 }
 
-bool KVelocity::isValid() const
-{
-    return (d->m_unitenum != KVelocity::Invalid);
-}
-
 double KVelocity::number() const
 {
     return d->m_number;
@@ -226,6 +243,11 @@ double KVelocity::number() const
 QString KVelocity::unit() const
 {
     return d->m_unit;
+}
+
+KVelocity::KVeloUnit KVelocity::unitEnum() const
+{
+    return d->m_unitenum;
 }
 
 QString KVelocity::toString() const
@@ -278,6 +300,29 @@ double KVelocity::convertTo(const KVeloUnit unit) const
         return (d->m_number * 1.150779);
     }
     return 0.0;
+}
+
+QString KVelocity::description()
+{
+    return i18n("Velocity");
+}
+
+QString KVelocity::unitDescription(const KVeloUnit unit)
+{
+    switch (unit) {
+        case KVelocity::MeterPerSecond:
+            return i18n("Meter per second (m/s)");
+        case KVelocity::KilometerPerHour:
+            return i18n("Kilometer per hour (km/h)");
+        case KVelocity::MilePerHour:
+            return i18n("Mile per hour (mph)");
+        case KVelocity::Knot:
+            return i18n("Knot (kt)");
+        case KVelocity::Invalid:
+        case KVelocity::UnitCount:
+            break;
+    }
+    return i18n("Unknown");
 }
 
 
@@ -353,11 +398,6 @@ KPressure::~KPressure()
     delete d;
 }
 
-bool KPressure::isValid() const
-{
-    return (d->m_unitenum != KPressure::Invalid);
-}
-
 double KPressure::number() const
 {
     return d->m_number;
@@ -366,6 +406,11 @@ double KPressure::number() const
 QString KPressure::unit() const
 {
     return d->m_unit;
+}
+
+KPressure::KPresUnit KPressure::unitEnum() const
+{
+    return d->m_unitenum;
 }
 
 QString KPressure::toString() const
@@ -406,6 +451,29 @@ double KPressure::convertTo(const KPresUnit unit) const
     }
 
     return d->m_number;
+}
+
+QString KPressure::description()
+{
+    return i18n("Pressure");
+}
+
+QString KPressure::unitDescription(const KPresUnit unit)
+{
+    switch (unit) {
+        case KPressure::Kilopascal:
+            return i18n("Kilopascal (kPa)");
+        case KPressure::Hectopascal:
+            return i18n("Hectopascal (hPa)");
+        case KPressure::Millibar:
+            return i18n("Millibar (mbar)");
+        case KPressure::InchesOfMercury:
+            return i18n("Inch of mercury (inHg)");
+        case KPressure::Invalid:
+        case KPressure::UnitCount:
+            break;
+    }
+    return i18n("Unknown");
 }
 
 
@@ -467,11 +535,6 @@ KLength::~KLength()
     delete d;
 }
 
-bool KLength::isValid() const
-{
-    return (d->m_unitenum != KLength::Invalid);
-}
-
 double KLength::number() const
 {
     return d->m_number;
@@ -480,6 +543,11 @@ double KLength::number() const
 QString KLength::unit() const
 {
     return d->m_unit;
+}
+
+KLength::KLengUnit KLength::unitEnum() const
+{
+    return d->m_unitenum;
 }
 
 QString KLength::toString() const
@@ -502,4 +570,23 @@ double KLength::convertTo(const KLengUnit unit) const
         return (d->m_number / 1.609344);
     }
     return 0.0;
+}
+
+QString KLength::description()
+{
+    return i18n("Length");
+}
+
+QString KLength::unitDescription(const KLengUnit unit)
+{
+    switch (unit) {
+        case KLength::Mile:
+            return i18n("Mile (mi)");
+        case KLength::Kilometer:
+            return i18n("Kilometer (km)");
+        case KLength::Invalid:
+        case KLength::UnitCount:
+            break;
+    }
+    return i18n("Unknown");
 }

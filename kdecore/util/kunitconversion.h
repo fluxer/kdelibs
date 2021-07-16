@@ -45,10 +45,11 @@ public:
 class KTemperature : public KUnitConversion {
 public:
     enum KTempUnit {
-        Invalid,
-        Celsius,
-        Fahrenheit,
-        Kelvin
+        Invalid = -1,
+        Celsius = 0,
+        Fahrenheit = 1,
+        Kelvin = 2,
+        UnitCount = 3
     };
 
     /*!
@@ -66,25 +67,33 @@ public:
     ~KTemperature();
 
     /*!
-        @return Whether or not the unit passed to the constructor is valid
-    */
-    bool isValid() const;
-    /*!
         @return Same number as the value passed to the constructor
     */
     double number() const;
     /*!
-        @return Short string representing the unit passed to the constructor, e.g. "°C", "°F" or "K"
+        @return Short string representing the unit passed to the constructor, e.g. "Unknown" (for @p KTempUnit::Invalid), "°F" or "K"
     */
     QString unit() const;
     /*!
-        @return Combination of the number and unit as string, e.g. "12 °C", "123 °F" or "123 K"
+        @return Enum representing the unit passed to the constructor, e.g. "°C", "°F" or "K"
+    */
+    KTempUnit unitEnum() const;
+    /*!
+        @return Combination of the number and short unit as string, e.g. "12 °C", "123 °F" or "123 K"
     */
     QString toString() const;
     /*!
         @return Number converted to different unit
     */
     double convertTo(const KTempUnit unit) const;
+    /*!
+        @return Translated convertor description, e.g. "Температура"
+    */
+    static QString description();
+    /*!
+        @return Translated unit description, e.g. "Unknown" (for @p KTempUnit::Invalid), "Fahrenheitia (°F)" or "Келвин (K)"
+    */
+    static QString unitDescription(const KTempUnit unit);
 
 private:
     Q_DISABLE_COPY(KTemperature);
@@ -98,22 +107,25 @@ private:
 class KVelocity : public KUnitConversion {
 public:
     enum KVeloUnit {
-        Invalid,
-        MeterPerSecond,
-        KilometerPerHour,
-        MilePerHour,
-        Knot
+        Invalid = -1,
+        MeterPerSecond = 0,
+        KilometerPerHour = 1,
+        MilePerHour = 2,
+        Knot = 3,
+        UnitCount = 4
     };
 
     KVelocity(const double number, const KVeloUnit unit);
     KVelocity(const double number, const QString &unit);
     ~KVelocity();
 
-    bool isValid() const;
     double number() const;
     QString unit() const;
+    KVeloUnit unitEnum() const;
     QString toString() const;
     double convertTo(const KVeloUnit unit) const;
+    static QString description();
+    static QString unitDescription(const KVeloUnit unit);
 
 private:
     Q_DISABLE_COPY(KVelocity);
@@ -127,22 +139,25 @@ private:
 class KPressure : public KUnitConversion {
 public:
     enum KPresUnit {
-        Invalid,
-        Kilopascal,
-        Hectopascal,
-        Millibar,
-        InchesOfMercury
+        Invalid = -1,
+        Kilopascal = 0,
+        Hectopascal = 1,
+        Millibar = 2,
+        InchesOfMercury = 3,
+        UnitCount = 4
     };
 
     KPressure(const double number, const KPresUnit unit);
     KPressure(const double number, const QString &unit);
     ~KPressure();
 
-    bool isValid() const;
     double number() const;
     QString unit() const;
+    KPresUnit unitEnum() const;
     QString toString() const;
     double convertTo(const KPresUnit unit) const;
+    static QString description();
+    static QString unitDescription(const KPresUnit unit);
 
 private:
     Q_DISABLE_COPY(KPressure);
@@ -156,20 +171,23 @@ private:
 class KLength : public KUnitConversion {
 public:
     enum KLengUnit {
-        Invalid,
-        Mile,
-        Kilometer
+        Invalid = -1,
+        Mile = 0,
+        Kilometer = 1,
+        UnitCount = 2
     };
 
     KLength(const double number, const KLengUnit unit);
     KLength(const double number, const QString &unit);
     ~KLength();
 
-    bool isValid() const;
     double number() const;
     QString unit() const;
+    KLengUnit unitEnum() const;
     QString toString() const;
     double convertTo(const KLengUnit unit) const;
+    static QString description();
+    static QString unitDescription(const KLengUnit unit);
 
 private:
     Q_DISABLE_COPY(KLength);
