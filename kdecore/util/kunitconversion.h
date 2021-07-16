@@ -28,7 +28,9 @@ class KLengthPrivate;
 
 /*!
     Base class for all other conversion classes
+
     @since 4.20
+    @see KTemperature, KVelocity, KPressure, KLength
 */
 class KUnitConversion {
 public:
@@ -75,7 +77,7 @@ public:
     */
     QString unit() const;
     /*!
-        @return Enum representing the unit passed to the constructor, e.g. "°C", "°F" or "K"
+        @return Enum representing the unit passed to the constructor, e.g. @p KTempUnit::Invalid, @p KTempUnit::Fahrenheit or @p KTempUnit::Kelvin
     */
     KTempUnit unitEnum() const;
     /*!
