@@ -22,13 +22,27 @@
 #include <QString>
 
 class KTemperaturePrivate;
+class KVelocityPrivate;
+class KPressurePrivate;
+class KLengthPrivate;
+
+/*!
+    Base class for all other conversion classes
+    @since 4.20
+*/
+class KUnitConversion {
+public:
+    /*!
+        @return Rounded number up to number of decimal digits specified by @p digits
+    */
+    static double round(const double number, const uint digits);
+};
 
 /*!
     Temperature conversion class
     @since 4.20
-    @todo implement other classes to substitute KUnitConversion
 */
-class KTemperature {
+class KTemperature : public KUnitConversion {
 public:
     enum KTempUnit {
         Invalid,
@@ -40,7 +54,7 @@ public:
     /*!
         @brief Constructs convertor
         @param number value of the unit
-        @param unit string representation of the unit one of: "°C", "C", "Celsius", "°F", "F", "Fahrenheit", "Kelvin" or "K"
+        @param unit string representation of the unit, one of: "°C", "C", "Celsius", "°F", "F", "Fahrenheit", "Kelvin" or "K"
     */
     KTemperature(const double number, const QString &unit);
     ~KTemperature();
@@ -62,14 +76,88 @@ public:
     */
     double convertTo(const KTempUnit unit) const;
 
-    /*!
-        @return Rounded number up to number of decimal digits specified by @p digits
-    */
-    static double round(const double number, const uint digits);
-
 private:
     Q_DISABLE_COPY(KTemperature);
     KTemperaturePrivate * const d;
+};
+
+/*!
+    Velocity conversion class
+    @since 4.20
+*/
+class KVelocity : public KUnitConversion {
+public:
+    enum KVeloUnit {
+        Invalid,
+        MeterPerSecond,
+        KilometerPerHour,
+        MilePerHour,
+        Knot
+    };
+
+    KVelocity(const double number, const QString &unit);
+    ~KVelocity();
+
+    double number() const;
+    QString unit() const;
+    QString toString() const;
+    double convertTo(const KVeloUnit unit) const;
+
+private:
+    Q_DISABLE_COPY(KVelocity);
+    KVelocityPrivate * const d;
+};
+
+/*!
+    Pressure conversion class
+    @since 4.20
+*/
+class KPressure : public KUnitConversion {
+public:
+    enum KPresUnit {
+        Invalid,
+        Kilopascal,
+        Hectopascal,
+        Millibar,
+        InchesOfMercury
+    };
+
+    KPressure(const double number, const QString &unit);
+    ~KPressure();
+
+    double number() const;
+    QString unit() const;
+    QString toString() const;
+    double convertTo(const KPresUnit unit) const;
+
+private:
+    Q_DISABLE_COPY(KPressure);
+    KPressurePrivate * const d;
+};
+
+/*!
+    Length conversion class
+    @since 4.20
+*/
+class KLength : public KUnitConversion {
+public:
+    enum KLengUnit {
+        Invalid,
+        Mile,
+        Kilometer
+    };
+
+    KLength(const double number, const QString &unit);
+    ~KLength();
+
+    double number() const;
+    QString unit() const;
+    QString toString() const;
+    double convertTo(const KLengUnit unit) const;
+
+private:
+    Q_DISABLE_COPY(KLength);
+    KLengthPrivate * const d;
 };
 
 #endif
