@@ -68,10 +68,6 @@ bool isEffectAvailable(Effect effect)
     case BlurBehind:
         effectName = "_KDE_NET_WM_BLUR_BEHIND_REGION";
         break;
-    case Dashboard:
-        // TODO: Better namespacing for atoms
-        effectName = "_WM_EFFECT_KDE_DASHBOARD";
-        break;
     default:
         return false;
     }
@@ -320,18 +316,6 @@ void enableBlurBehind(WId window, bool enable, const QRegion &region)
     } else {
         XDeleteProperty(dpy, window, atom);
     }
-#endif
-}
-
-void markAsDashboard(WId window)
-{
-#ifdef Q_WS_X11
-    // avoid cast warning
-    char dash[] = "dashboard";
-    XClassHint classHint;
-    classHint.res_name = dash;
-    classHint.res_class = dash;
-    XSetClassHint(QX11Info::display(), window, &classHint);
 #endif
 }
 
