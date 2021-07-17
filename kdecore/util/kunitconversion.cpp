@@ -123,17 +123,17 @@ double KTemperature::convertTo(const KTempUnit unit) const
     // https://www.rapidtables.com/convert/temperature/kelvin-to-celsius.html
     // https://www.rapidtables.com/convert/temperature/kelvin-to-fahrenheit.html
     if (d->m_unitenum == KTemperature::Celsius && unit == KTemperature::Fahrenheit) {
-        return (d->m_number * 1.8 + 32);
+        return ((d->m_number * 1.8) + 32);
     } else if (d->m_unitenum == KTemperature::Celsius && unit == KTemperature::Kelvin) {
         return (d->m_number + 273.15);
     } else if (d->m_unitenum == KTemperature::Fahrenheit && unit == KTemperature::Celsius) {
         return ((d->m_number - 32) / 1.8);
     } else if (d->m_unitenum == KTemperature::Fahrenheit && unit == KTemperature::Kelvin) {
-        return ((d->m_number + 459.67) * 0.5);
+        return (((d->m_number + 459.67) * 5) / 9);
     } else if (d->m_unitenum == KTemperature::Kelvin && unit == KTemperature::Celsius) {
         return (d->m_number - 273.15);
     } else if (d->m_unitenum == KTemperature::Kelvin && unit == KTemperature::Fahrenheit) {
-        return (d->m_number * 1.8 - 459.67);
+        return ((d->m_number * 1.8) - 459.67);
     }
     return 0.0;
 }
