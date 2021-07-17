@@ -33,8 +33,7 @@ public:
     KTemperaturePrivate(const double number, const KTemperature::KTempUnit unit);
     KTemperaturePrivate(const double number, const QString &unit);
 
-    double m_number;
-    QString m_unit;
+    const double m_number;
     KTemperature::KTempUnit m_unitenum;
 };
 
@@ -42,15 +41,6 @@ KTemperaturePrivate::KTemperaturePrivate(const double number, const KTemperature
     : m_number(number),
     m_unitenum(unit)
 {
-    if (unit == KTemperature::Celsius) {
-        m_unit = QString::fromUtf8("°C");
-    } else if (unit == KTemperature::Fahrenheit) {
-        m_unit = QString::fromUtf8("°F");
-    } else if (unit == KTemperature::Kelvin) {
-        m_unit = QString::fromUtf8("K");
-    } else {
-        m_unit = QLatin1String("Unknown");
-    }
 }
 
 KTemperaturePrivate::KTemperaturePrivate(const double number, const QString &unit)
@@ -61,19 +51,15 @@ KTemperaturePrivate::KTemperaturePrivate(const double number, const QString &uni
     if (unit == QLatin1String("Celsius")
         || unit == QString::fromUtf8("°C") || unit == QLatin1String("C")) {
         m_unitenum = KTemperature::Celsius;
-        m_unit = QString::fromUtf8("°C");
     } else if (unit == QLatin1String("Fahrenheit")
         || unit == QString::fromUtf8("°F") || unit == QLatin1String("F")) {
         m_unitenum = KTemperature::Fahrenheit;
-        m_unit = QString::fromUtf8("°F");
     } else if (unit == QLatin1String("Kelvin")
         || unit == QLatin1String("K") || unit == QLatin1String("kelvin")
         || unit == QLatin1String("kelvins")) {
         m_unitenum = KTemperature::Kelvin;
-        m_unit = QLatin1String("K");
     } else {
         kDebug() << "invalid temperature unit" << unit;
-        m_unit = QLatin1String("Unknown");
     }
 }
 
@@ -99,7 +85,18 @@ double KTemperature::number() const
 
 QString KTemperature::unit() const
 {
-    return d->m_unit;
+    switch (d->m_unitenum) {
+        case KTemperature::Celsius:
+            return QString::fromUtf8("°C");
+        case KTemperature::Fahrenheit:
+            return QString::fromUtf8("°F");
+        case KTemperature::Kelvin:
+            return QString::fromUtf8("K");
+        case KTemperature::Invalid:
+        case KTemperature::UnitCount:
+            break;
+    }
+    return QLatin1String("Unknown");
 }
 
 KTemperature::KTempUnit KTemperature::unitEnum() const
@@ -109,7 +106,7 @@ KTemperature::KTempUnit KTemperature::unitEnum() const
 
 QString KTemperature::toString() const
 {
-    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), d->m_unit);
+    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), KTemperature::unit());
 }
 
 double KTemperature::convertTo(const KTempUnit unit) const
@@ -168,8 +165,7 @@ public:
     KVelocityPrivate(const double number, const KVelocity::KVeloUnit unit);
     KVelocityPrivate(const double number, const QString &unit);
 
-    double m_number;
-    QString m_unit;
+    const double m_number;
     KVelocity::KVeloUnit m_unitenum;
 };
 
@@ -177,17 +173,6 @@ KVelocityPrivate::KVelocityPrivate(const double number, const KVelocity::KVeloUn
     : m_number(number),
     m_unitenum(unit)
 {
-    if (unit == KVelocity::MeterPerSecond) {
-        m_unit = QLatin1String("m/s");
-    } else if (unit == KVelocity::KilometerPerHour) {
-        m_unit = QLatin1String("km/h");
-    } else if (unit == KVelocity::MilePerHour) {
-        m_unit = QLatin1String("mph");
-    } else if (unit == KVelocity::Knot) {
-        m_unit = QLatin1String("kt");
-    } else {
-        m_unit = QLatin1String("Unknown");
-    }
 }
 
 KVelocityPrivate::KVelocityPrivate(const double number, const QString &unit)
@@ -198,25 +183,20 @@ KVelocityPrivate::KVelocityPrivate(const double number, const QString &unit)
         || unit == QLatin1String("meter per second") || unit == QLatin1String("meters per second")
         || unit == QLatin1String("m/s") || unit == QLatin1String("ms")) {
         m_unitenum = KVelocity::MeterPerSecond;
-        m_unit = QLatin1String("m/s");
     } else if (unit == QLatin1String("KilometerPerHour")
         || unit == QLatin1String("kilometer per hour") || unit == QLatin1String("kilometers per hour")
         || unit == QLatin1String("km/h") || unit == QLatin1String("kmh")) {
         m_unitenum = KVelocity::KilometerPerHour;
-        m_unit = QLatin1String("km/h");
     } else if (unit == QLatin1String("MilePerHour")
         || unit == QLatin1String("mile per hour") || unit == QLatin1String("miles per hour")
         || unit == QLatin1String("mph")) {
         m_unitenum = KVelocity::MilePerHour;
-        m_unit = QLatin1String("mph");
     } else if (unit == QLatin1String("Knot")
         || unit == QLatin1String("knot") || unit == QLatin1String("knots")
         || unit == QLatin1String("kt") || unit == QLatin1String("nautical miles per hour")) {
         m_unitenum = KVelocity::Knot;
-        m_unit = QLatin1String("kt");
     } else {
         kDebug() << "invalid velocity unit" << unit;
-        m_unit = QLatin1String("Unknown");
     }
 }
 
@@ -242,7 +222,20 @@ double KVelocity::number() const
 
 QString KVelocity::unit() const
 {
-    return d->m_unit;
+    switch (d->m_unitenum) {
+        case KVelocity::MeterPerSecond:
+            return QLatin1String("m/s");
+        case KVelocity::KilometerPerHour:
+            return QLatin1String("km/h");
+        case KVelocity::MilePerHour:
+            return QLatin1String("mph");
+        case KVelocity::Knot:
+            return QLatin1String("kt");
+        case KVelocity::Invalid:
+        case KVelocity::UnitCount:
+            break;
+    }
+    return QLatin1String("Unknown");
 }
 
 KVelocity::KVeloUnit KVelocity::unitEnum() const
@@ -252,7 +245,7 @@ KVelocity::KVeloUnit KVelocity::unitEnum() const
 
 QString KVelocity::toString() const
 {
-    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), d->m_unit);
+    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), KVelocity::unit());
 }
 
 double KVelocity::convertTo(const KVeloUnit unit) const
@@ -331,8 +324,7 @@ public:
     KPressurePrivate(const double number, const KPressure::KPresUnit unit);
     KPressurePrivate(const double number, const QString &unit);
 
-    double m_number;
-    QString m_unit;
+    const double m_number;
     KPressure::KPresUnit m_unitenum;
 };
 
@@ -340,17 +332,6 @@ KPressurePrivate::KPressurePrivate(const double number, const KPressure::KPresUn
     : m_number(number),
     m_unitenum(unit)
 {
-    if (unit == KPressure::Kilopascal) {
-        m_unit = QLatin1String("kPa");
-    } else if (unit == KPressure::Hectopascal) {
-        m_unit = QLatin1String("hPa");
-    } else if (unit == KPressure::Millibar) {
-        m_unit = QLatin1String("mbar");
-    } else if (unit == KPressure::InchesOfMercury) {
-        m_unit = QLatin1String("inHg");
-    } else {
-        m_unit = QLatin1String("Unknown");
-    }
 }
 
 KPressurePrivate::KPressurePrivate(const double number, const QString &unit)
@@ -361,25 +342,20 @@ KPressurePrivate::KPressurePrivate(const double number, const QString &unit)
         || unit == QLatin1String("kilopascal") || unit == QLatin1String("kilopascals")
         || unit == QLatin1String("kPa")) {
         m_unitenum = KPressure::Kilopascal;
-        m_unit = QLatin1String("kPa");
     } else if (unit == QLatin1String("Hectopascal")
         || unit == QLatin1String("hectopascal") || unit == QLatin1String("hectopascals")
         || unit == QLatin1String("hPa")) {
         m_unitenum = KPressure::Hectopascal;
-        m_unit = QLatin1String("hPa");
     } else if (unit == QLatin1String("Millibar")
         || unit == QLatin1String("millibar") || unit == QLatin1String("millibars")
         || unit == QLatin1String("mbar") || unit == QLatin1String("mb")) {
         m_unitenum = KPressure::Millibar;
-        m_unit = QLatin1String("mbar");
     } else if (unit == QLatin1String("InchesOfMercury")
         || unit == QLatin1String("inch of mercury") || unit == QLatin1String("inches of mercury")
         || unit == QLatin1String("inHg")) {
         m_unitenum = KPressure::InchesOfMercury;
-        m_unit = QLatin1String("inHg");
     } else {
         kDebug() << "invalid pressure unit" << unit;
-        m_unit = QLatin1String("Unknown");
     }
 }
 
@@ -405,7 +381,20 @@ double KPressure::number() const
 
 QString KPressure::unit() const
 {
-    return d->m_unit;
+    switch (d->m_unitenum) {
+        case KPressure::Kilopascal:
+            return QLatin1String("kPa");
+        case KPressure::Hectopascal:
+            return QLatin1String("hPa");
+        case KPressure::Millibar:
+            return QLatin1String("mbar");
+        case KPressure::InchesOfMercury:
+            return QLatin1String("inHg");
+        case KPressure::Invalid:
+        case KPressure::UnitCount:
+            break;
+    }
+    return QLatin1String("Unknown");
 }
 
 KPressure::KPresUnit KPressure::unitEnum() const
@@ -415,7 +404,7 @@ KPressure::KPresUnit KPressure::unitEnum() const
 
 QString KPressure::toString() const
 {
-    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), d->m_unit);
+    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), KPressure::unit());
 }
 
 double KPressure::convertTo(const KPresUnit unit) const
@@ -482,8 +471,7 @@ public:
     KLengthPrivate(const double number, const KLength::KLengUnit unit);
     KLengthPrivate(const double number, const QString &unit);
 
-    double m_number;
-    QString m_unit;
+    const double m_number;
     KLength::KLengUnit m_unitenum;
 };
 
@@ -491,13 +479,6 @@ KLengthPrivate::KLengthPrivate(const double number, const KLength::KLengUnit uni
     : m_number(number),
     m_unitenum(unit)
 {
-    if (unit == KLength::Mile) {
-        m_unit = QLatin1String("mi");
-    } else if (unit == KLength::Kilometer) {
-        m_unit = QLatin1String("km");
-    } else {
-        m_unit = QLatin1String("Unknown");
-    }
 }
 
 KLengthPrivate::KLengthPrivate(const double number, const QString &unit)
@@ -508,15 +489,12 @@ KLengthPrivate::KLengthPrivate(const double number, const QString &unit)
         || unit == QLatin1String("mile") || unit == QLatin1String("miles")
         || unit == QLatin1String("mi")) {
         m_unitenum = KLength::Mile;
-        m_unit = QLatin1String("mi");
     } else if (unit == QLatin1String("Kilometer")
         || unit == QLatin1String("kilometer") || unit == QLatin1String("kilometers")
         || unit == QLatin1String("km")) {
         m_unitenum = KLength::Kilometer;
-        m_unit = QLatin1String("km");
     } else {
         kDebug() << "invalid length unit" << unit;
-        m_unit = QLatin1String("Unknown");
     }
 }
 
@@ -542,7 +520,16 @@ double KLength::number() const
 
 QString KLength::unit() const
 {
-    return d->m_unit;
+    switch (d->m_unitenum) {
+        case KLength::Mile:
+            return QLatin1String("mi");
+        case KLength::Kilometer:
+            return QLatin1String("km");
+        case KLength::Invalid:
+        case KLength::UnitCount:
+            break;
+    }
+    return QLatin1String("Unknown");
 }
 
 KLength::KLengUnit KLength::unitEnum() const
@@ -552,7 +539,7 @@ KLength::KLengUnit KLength::unitEnum() const
 
 QString KLength::toString() const
 {
-    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), d->m_unit);
+    return QString::fromLatin1("%1 %2").arg(QString::number(d->m_number), KLength::unit());
 }
 
 double KLength::convertTo(const KLengUnit unit) const
