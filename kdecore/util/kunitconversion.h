@@ -42,6 +42,7 @@ public:
 
 /*!
     Temperature conversion class
+
     @since 4.20
 */
 class KTemperature : public KUnitConversion {
@@ -63,7 +64,8 @@ public:
     /*!
         @brief Constructs convertor
         @param number value of the unit
-        @param unit string representation of the unit, one of: "°C", "C", "Celsius", "°F", "F", "Fahrenheit", "Kelvin" or "K"
+        @param unit string representation of the unit, one of: "°C", "C", "Celsius", "°F", "F",
+        "Fahrenheit", "Kelvin" or "K"
     */
     KTemperature(const double number, const QString &unit);
     ~KTemperature();
@@ -73,15 +75,18 @@ public:
     */
     double number() const;
     /*!
-        @return Short string representing the unit passed to the constructor, e.g. "Unknown" (for @p KTempUnit::Invalid), "°F" or "K"
+        @return Short string representing the unit passed to the constructor, e.g. "Unknown" (for
+        @p KTempUnit::Invalid), "°F" or "K"
     */
     QString unit() const;
     /*!
-        @return Enum representing the unit passed to the constructor, e.g. @p KTempUnit::Invalid, @p KTempUnit::Fahrenheit or @p KTempUnit::Kelvin
+        @return Enum representing the unit passed to the constructor, e.g. @p KTempUnit::Invalid,
+        @p KTempUnit::Fahrenheit or @p KTempUnit::Kelvin
     */
     KTempUnit unitEnum() const;
     /*!
-        @return Combination of the number and short unit as string, e.g. "12 °C", "123 °F" or "123 K"
+        @return Combination of the number and short unit as string, e.g. "12 °C", "123 °F" or
+        "123 K"
     */
     QString toString() const;
     /*!
@@ -93,7 +98,8 @@ public:
     */
     static QString description();
     /*!
-        @return Translated unit description, e.g. "Unknown" (for @p KTempUnit::Invalid), "Fahrenheitia (°F)" or "Келвин (K)"
+        @return Translated unit description, e.g. "Unknown" (for @p KTempUnit::Invalid),
+        "Fahrenheitia (°F)" or "Келвин (K)"
     */
     static QString unitDescription(const KTempUnit unit);
 
@@ -104,6 +110,7 @@ private:
 
 /*!
     Velocity conversion class
+
     @since 4.20
 */
 class KVelocity : public KUnitConversion {
@@ -136,6 +143,7 @@ private:
 
 /*!
     Pressure conversion class
+
     @since 4.20
 */
 class KPressure : public KUnitConversion {
@@ -168,6 +176,7 @@ private:
 
 /*!
     Length conversion class
+
     @since 4.20
 */
 class KLength : public KUnitConversion {
@@ -196,4 +205,4 @@ private:
     KLengthPrivate * const d;
 };
 
-#endif
+#endif // KUNITCONVERSION_H
