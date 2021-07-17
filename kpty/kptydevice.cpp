@@ -78,8 +78,7 @@ public:
     {
         buffers.clear();
         QByteArray tmp;
-        tmp.resize(CHUNKSIZE);
-        buffers << tmp;
+        buffers << QByteArray(CHUNKSIZE, Qt::Uninitialized);
         head = tail = 0;
         totalSize = 0;
     }
@@ -144,8 +143,7 @@ public:
             tail += bytes;
         } else {
             buffers.last().resize(tail);
-            QByteArray tmp;
-            tmp.resize(qMax(CHUNKSIZE, bytes));
+            QByteArray tmp(qMax(CHUNKSIZE, bytes), Qt::Uninitialized);
             ptr = tmp.data();
             buffers << tmp;
             tail = bytes;
