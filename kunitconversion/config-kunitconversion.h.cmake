@@ -1,3 +1,0 @@
-#cmakedefine KUNITCONVERSION_NO_SOLID
-#cmakedefine KUNITCONVERSION_NO_KIO
-

@@ -150,6 +150,7 @@ install(
     KFontRequester
     KFontSizeAction
     KFontUtils
+    KUnitConversion
     KGlobal
     KGlobalAccel
     KGlobalSettings
@@ -731,16 +732,5 @@ install(
     Plasma/Wallpaper
     Plasma/WindowEffects
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Plasma
-    COMPONENT Devel
-)
-
-
-install(
-    FILES
-    KUnitConversion/Converter
-    KUnitConversion/Unit
-    KUnitConversion/UnitCategory
-    KUnitConversion/Value
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KUnitConversion
     COMPONENT Devel
 )

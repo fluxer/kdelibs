@@ -60,7 +60,6 @@
 #  KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
 #  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
 #  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
-#  KDE4_KUNITCONVERSION_LIBS  - the kunitconversion library and all depending libraries
 #  KDE4_KDCRAW_LIBS           - the kdcraw library and all depending libraries
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
 #  KDE4_KMEDIAPLAYER_LIBS     - the kmediaplayer library and all depending libraries
@@ -300,7 +299,6 @@ set(_kde_libraries
     kprintutils
     kpty
     ktexteditor
-    kunitconversion
     plasma
     solid
     threadweaver
