@@ -153,4 +153,25 @@ void KUnitConversionTest::testPressure()
     QCOMPARE(KUnitConversion::round(inhgconverttopres.convertTo(KPressure::UnitCount), 1), 0.0);
 }
 
+void KUnitConversionTest::testLength()
+{
+    KLength invalidleng(12, "");
+    QCOMPARE(invalidleng.unitEnum(), KLength::Invalid);
+
+    KLength mileng(12, "mile");
+    QCOMPARE(mileng.unitEnum(), KLength::Mile);
+
+    KLength miconverttoleng(12.3, "mile");
+    QCOMPARE(KUnitConversion::round(miconverttoleng.convertTo(KLength::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(miconverttoleng.convertTo(KLength::Mile), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(miconverttoleng.convertTo(KLength::Kilometer), 1), 19.8);
+    QCOMPARE(KUnitConversion::round(miconverttoleng.convertTo(KLength::UnitCount), 1), 0.0);
+
+    KLength kmconverttopres(12.3, "kilometer");
+    QCOMPARE(KUnitConversion::round(kmconverttopres.convertTo(KLength::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(kmconverttopres.convertTo(KLength::Mile), 1), 7.6);
+    QCOMPARE(KUnitConversion::round(kmconverttopres.convertTo(KLength::Kilometer), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(kmconverttopres.convertTo(KLength::UnitCount), 1), 0.0);
+}
+
 #include "moc_kunitconversiontest.cpp"

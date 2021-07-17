@@ -31,6 +31,7 @@ private Q_SLOTS:
     void testTemperature();
     void testVelocity();
     void testPressure();
+    void testLength();
 };
 
 #endif // KUNITCONVERSIONTEST_H
