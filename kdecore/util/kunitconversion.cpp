@@ -91,7 +91,7 @@ QString KTemperature::unit() const
         case KTemperature::Fahrenheit:
             return QString::fromUtf8("°F");
         case KTemperature::Kelvin:
-            return QString::fromUtf8("K");
+            return QLatin1String("K");
         case KTemperature::Invalid:
         case KTemperature::UnitCount:
             break;
@@ -438,8 +438,7 @@ double KPressure::convertTo(const KPresUnit unit) const
     } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Millibar) {
         return (d->m_number * 33.8639);
     }
-
-    return d->m_number;
+    return 0.0;
 }
 
 QString KPressure::description()
