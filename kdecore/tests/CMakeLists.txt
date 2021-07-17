@@ -62,6 +62,7 @@ KDECORE_UNIT_TESTS(
     qcoreapptest
     kdebug_qcoreapptest
     kmimetype_nomimetypes
+    kunitconversiontest
 )
 
 KDECORE_EXECUTABLE_TESTS(
