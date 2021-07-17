@@ -418,25 +418,25 @@ double KPressure::convertTo(const KPresUnit unit) const
     } else if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::Millibar) {
         return (d->m_number * 10.0);
     } else if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::InchesOfMercury) {
-        return (d->m_number * 3.386398);
+        return (d->m_number / 3.386398);
     } else if (d->m_unitenum == KPressure::Hectopascal && unit == KPressure::Kilopascal) {
         return (d->m_number / 10.0);
     } else if (d->m_unitenum == KPressure::Hectopascal && unit == KPressure::Millibar) {
         return (d->m_number * 1.0);
     } else if (d->m_unitenum == KPressure::Hectopascal && unit == KPressure::InchesOfMercury) {
-        return (d->m_number / 3.386398);
+        return (d->m_number / 33.86398);
     } else if (d->m_unitenum == KPressure::Millibar && unit == KPressure::Kilopascal) {
-        return (d->m_number / 0.1);
+        return (d->m_number / 10.0);
     } else if (d->m_unitenum == KPressure::Millibar && unit == KPressure::Hectopascal) {
         return (d->m_number * 1.0);
     } else if (d->m_unitenum == KPressure::Millibar && unit == KPressure::InchesOfMercury) {
-        return (d->m_number / 33.8639);
+        return (d->m_number / 33.86398);
     } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Kilopascal) {
         return (d->m_number * 3.386398);
     } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Hectopascal) {
-        return (d->m_number * 33.8639);
+        return (d->m_number * 33.86398);
     } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Millibar) {
-        return (d->m_number * 33.8639);
+        return (d->m_number * 33.86398);
     }
     return 0.0;
 }
