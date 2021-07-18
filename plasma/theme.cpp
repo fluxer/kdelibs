@@ -266,9 +266,6 @@ QString ThemePrivate::findInTheme(const QString &image, const QString &theme, bo
     } else if (!compositingActive) {
         search = QLatin1String("desktoptheme/") + theme + QLatin1String("/opaque/") + image;
         search =  KStandardDirs::locate("data", search);
-    } else if (WindowEffects::isEffectAvailable(WindowEffects::BlurBehind)) {
-        search = QLatin1String("desktoptheme/") + theme + QLatin1String("/translucent/") + image;
-        search =  KStandardDirs::locate("data", search);
     }
 
     //not found or compositing enabled

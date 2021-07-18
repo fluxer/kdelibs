@@ -100,7 +100,6 @@ void DialogPrivate::themeChanged()
     // WA_NoSystemBackground is going to fail combined with sliding popups, but is needed
     // when we aren't compositing
     q->setAttribute(Qt::WA_NoSystemBackground, !translucency);
-    WindowEffects::overrideShadow(q->winId(), !DialogShadows::self()->enabled());
     updateMask();
     q->update();
 }
@@ -108,8 +107,6 @@ void DialogPrivate::themeChanged()
 void DialogPrivate::updateMask()
 {
     const bool translucency = Plasma::Theme::defaultTheme()->windowTranslucencyEnabled();
-    WindowEffects::enableBlurBehind(q->winId(), translucency,
-                                    translucency ? background->mask() : QRegion());
     if (translucency) {
         q->clearMask();
     } else {
@@ -393,7 +390,6 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f)
     QPalette pal = palette();
     pal.setColor(backgroundRole(), Qt::transparent);
     setPalette(pal);
-    WindowEffects::overrideShadow(winId(), !DialogShadows::self()->enabled());
 
     d->adjustViewTimer = new QTimer(this);
     d->adjustViewTimer->setSingleShot(true);
@@ -723,7 +719,6 @@ void Dialog::showEvent(QShowEvent * event)
     }
 
     emit dialogVisible(true);
-    WindowEffects::overrideShadow(winId(), !DialogShadows::self()->enabled());
     DialogShadows::self()->addWindow(this, d->background->enabledBorders());
 }
 

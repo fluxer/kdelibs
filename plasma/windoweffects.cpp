@@ -62,12 +62,6 @@ bool isEffectAvailable(Effect effect)
     case HighlightWindows:
         effectName = "_KDE_WINDOW_HIGHLIGHT";
         break;
-    case OverrideShadow:
-        effectName = "_KDE_SHADOW_OVERRIDE";
-        break;
-    case BlurBehind:
-        effectName = "_KDE_NET_WM_BLUR_BEHIND_REGION";
-        break;
     default:
         return false;
     }
@@ -278,43 +272,6 @@ void highlightWindows(WId controller, const QList<WId> &ids)
     if (!data.isEmpty()) {
         XChangeProperty(dpy, controller, atom, atom, 32, PropModeReplace,
                         reinterpret_cast<unsigned char *>(data.data()), data.size());
-    }
-#endif
-}
-
-void overrideShadow(WId window, bool override)
-{
-#ifdef Q_WS_X11
-    Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom( dpy, "_KDE_SHADOW_OVERRIDE", False );
-    if (!override) {
-        XDeleteProperty(dpy, window, atom);
-    } else {
-        QVarLengthArray<long, 1> data(1);
-        data[0] = 1;
-        XChangeProperty(dpy, window, atom, atom, 32, PropModeReplace,
-                        reinterpret_cast<unsigned char *>(data.data()), data.size());
-    }
-#endif
-}
-
-void enableBlurBehind(WId window, bool enable, const QRegion &region)
-{
-#ifdef Q_WS_X11
-    Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom(dpy, "_KDE_NET_WM_BLUR_BEHIND_REGION", False);
-
-    if (enable) {
-        QVector<QRect> rects = region.rects();
-        QVector<unsigned long> data;
-        foreach (const QRect &r, rects) {
-            data << r.x() << r.y() << r.width() << r.height();
-        }
-
-        XChangeProperty(dpy, window, atom, XA_CARDINAL, 32, PropModeReplace,
-                        reinterpret_cast<const unsigned char *>(data.constData()), data.size());
-    } else {
-        XDeleteProperty(dpy, window, atom);
     }
 #endif
 }
