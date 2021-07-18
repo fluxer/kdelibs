@@ -78,7 +78,7 @@ public:
      * All actions are created as children of the menu.
      * @param menu the QMenu where to add actions
      * @param traderConstraint this constraint allows to exclude the current application
-     * from the "open with" list. Example: "DesktopEntryName != 'kfmclient'".
+     * from the "open with" list. Example: "DesktopEntryName != 'dolphin'".
      * (Default value added in kdelibs-4.5, pass QString() explicitely for earlier versions).
      */
     void addOpenWithActionsTo(QMenu* menu, const QString& traderConstraint = QString());
@@ -86,7 +86,7 @@ public:
     /**
      * Returns an action for the preferred application only.
      * @param traderConstraint this constraint allows to exclude the current application
-     * from the "open with" list. Example: "DesktopEntryName != 'kfmclient'".
+     * from the "open with" list. Example: "DesktopEntryName != 'dolphin'".
      * @return the action - or 0 if no application was found.
      */
     KAction* preferredOpenWithAction(const QString& traderConstraint);
@@ -110,7 +110,7 @@ public:
      * Returns the applications associated with all the given mimetypes.
      * @param mimeTypeList the mimetypes
      * @param traderConstraint this optional constraint allows to exclude the current application
-     * from the "open with" list. Example: "DesktopEntryName != 'kfmclient'".
+     * from the "open with" list. Example: "DesktopEntryName != 'dolphin'".
      * @return the sorted list of services.
      * @since 4.4
      */

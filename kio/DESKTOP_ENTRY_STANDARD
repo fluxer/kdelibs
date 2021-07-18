@@ -173,7 +173,7 @@ Recognized desktop entry keys
    | NoDisplay              | application with mimetypes, so that it gets launched from a    | boolean      | NO   | NO    | 1-4  |
    |                        | file manager (or other apps), without having a menu entry for  |              |      |       |      |
    |                        | it (there are tons of good reasons for this, including e.g.    |              |      |       |      |
-   |                        | the netscape -remote, or kfmclient openURL kind of stuff).     |              |      |       |      |
+   |                        | the netscape -remote, or kioclient openURL kind of stuff).     |              |      |       |      |
    |------------------------+----------------------------------------------------------------+--------------+------+-------+------|
    | Comment                | Tooltip for the entry, for example "View sites on the          | localestring | NO   | YES   | 1-4  |
    |                        | Internet"; should not be redundant with Name or GenericName.   |              |      |       |      |
