@@ -73,15 +73,6 @@ void KUnitConversionTest::testVelocity()
     KVelocity invalidvelo(12, "");
     QCOMPARE(invalidvelo.unitEnum(), KVelocity::Invalid);
 
-    KVelocity msvelo(12.3, "m/s");
-    QCOMPARE(msvelo.unitEnum(), KVelocity::MeterPerSecond);
-    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::Invalid), 1), 0.0);
-    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::MeterPerSecond), 1), 12.3);
-    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::KilometerPerHour), 1), 44.3);
-    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::MilePerHour), 1), 27.5);
-    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::Knot), 1), 23.9);
-    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::UnitCount), 1), 0.0);
-
     KVelocity kmhvelo(12.3, "km/h");
     QCOMPARE(kmhvelo.unitEnum(), KVelocity::KilometerPerHour);
     QCOMPARE(KUnitConversion::round(kmhvelo.convertTo(KVelocity::Invalid), 1), 0.0);
@@ -91,15 +82,6 @@ void KUnitConversionTest::testVelocity()
     QCOMPARE(KUnitConversion::round(kmhvelo.convertTo(KVelocity::Knot), 1), 6.6);
     QCOMPARE(KUnitConversion::round(kmhvelo.convertTo(KVelocity::UnitCount), 1), 0.0);
 
-    KVelocity mphvelo(12.3, "mph");
-    QCOMPARE(mphvelo.unitEnum(), KVelocity::MilePerHour);
-    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::Invalid), 1), 0.0);
-    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::MeterPerSecond), 1), 5.5);
-    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::KilometerPerHour), 1), 19.8);
-    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::MilePerHour), 1), 12.3);
-    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::Knot), 1), 10.7);
-    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::UnitCount), 1), 0.0);
-
     KVelocity ktvelo(12.3, "kt");
     QCOMPARE(ktvelo.unitEnum(), KVelocity::Knot);
     QCOMPARE(KUnitConversion::round(ktvelo.convertTo(KVelocity::Invalid), 1), 0.0);
@@ -108,21 +90,30 @@ void KUnitConversionTest::testVelocity()
     QCOMPARE(KUnitConversion::round(ktvelo.convertTo(KVelocity::MilePerHour), 1), 14.2);
     QCOMPARE(KUnitConversion::round(ktvelo.convertTo(KVelocity::Knot), 1), 12.3);
     QCOMPARE(KUnitConversion::round(ktvelo.convertTo(KVelocity::UnitCount), 1), 0.0);
+
+    KVelocity msvelo(12.3, "m/s");
+    QCOMPARE(msvelo.unitEnum(), KVelocity::MeterPerSecond);
+    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::MeterPerSecond), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::KilometerPerHour), 1), 44.3);
+    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::MilePerHour), 1), 27.5);
+    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::Knot), 1), 23.9);
+    QCOMPARE(KUnitConversion::round(msvelo.convertTo(KVelocity::UnitCount), 1), 0.0);
+
+    KVelocity mphvelo(12.3, "mph");
+    QCOMPARE(mphvelo.unitEnum(), KVelocity::MilePerHour);
+    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::MeterPerSecond), 1), 5.5);
+    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::KilometerPerHour), 1), 19.8);
+    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::MilePerHour), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::Knot), 1), 10.7);
+    QCOMPARE(KUnitConversion::round(mphvelo.convertTo(KVelocity::UnitCount), 1), 0.0);
 }
 
 void KUnitConversionTest::testPressure()
 {
     KPressure invalidpres(12, "");
     QCOMPARE(invalidpres.unitEnum(), KPressure::Invalid);
-
-    KPressure kpapres(12.3, "kilopascal");
-    QCOMPARE(kpapres.unitEnum(), KPressure::Kilopascal);
-    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Invalid), 1), 0.0);
-    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Kilopascal), 1), 12.3);
-    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Hectopascal), 1), 123.0);
-    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Millibar), 1), 123.0);
-    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::InchesOfMercury), 1), 3.6);
-    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::UnitCount), 1), 0.0);
 
     KPressure hpapres(12.3, "hectopascal");
     QCOMPARE(hpapres.unitEnum(), KPressure::Hectopascal);
@@ -133,15 +124,6 @@ void KUnitConversionTest::testPressure()
     QCOMPARE(KUnitConversion::round(hpapres.convertTo(KPressure::InchesOfMercury), 1), 0.4);
     QCOMPARE(KUnitConversion::round(hpapres.convertTo(KPressure::UnitCount), 1), 0.0);
 
-    KPressure mbarpres(12.3, "millibar");
-    QCOMPARE(mbarpres.unitEnum(), KPressure::Millibar);
-    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Invalid), 1), 0.0);
-    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Kilopascal), 1), 1.2);
-    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Hectopascal), 1), 12.3);
-    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Millibar), 1), 12.3);
-    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::InchesOfMercury), 1), 0.4);
-    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::UnitCount), 1), 0.0);
-
     KPressure inhpres(12.3, "inch of mercury");
     QCOMPARE(inhpres.unitEnum(), KPressure::InchesOfMercury);
     QCOMPARE(KUnitConversion::round(inhpres.convertTo(KPressure::Invalid), 1), 0.0);
@@ -150,6 +132,24 @@ void KUnitConversionTest::testPressure()
     QCOMPARE(KUnitConversion::round(inhpres.convertTo(KPressure::Millibar), 1), 416.5);
     QCOMPARE(KUnitConversion::round(inhpres.convertTo(KPressure::InchesOfMercury), 1), 12.3);
     QCOMPARE(KUnitConversion::round(inhpres.convertTo(KPressure::UnitCount), 1), 0.0);
+
+    KPressure kpapres(12.3, "kilopascal");
+    QCOMPARE(kpapres.unitEnum(), KPressure::Kilopascal);
+    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Kilopascal), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Hectopascal), 1), 123.0);
+    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::Millibar), 1), 123.0);
+    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::InchesOfMercury), 1), 3.6);
+    QCOMPARE(KUnitConversion::round(kpapres.convertTo(KPressure::UnitCount), 1), 0.0);
+
+    KPressure mbarpres(12.3, "millibar");
+    QCOMPARE(mbarpres.unitEnum(), KPressure::Millibar);
+    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Kilopascal), 1), 1.2);
+    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Hectopascal), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::Millibar), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::InchesOfMercury), 1), 0.4);
+    QCOMPARE(KUnitConversion::round(mbarpres.convertTo(KPressure::UnitCount), 1), 0.0);
 }
 
 void KUnitConversionTest::testLength()
@@ -157,19 +157,19 @@ void KUnitConversionTest::testLength()
     KLength invalidleng(12, "");
     QCOMPARE(invalidleng.unitEnum(), KLength::Invalid);
 
-    KLength mileng(12.3, "mile");
-    QCOMPARE(mileng.unitEnum(), KLength::Mile);
-    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Invalid), 1), 0.0);
-    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Mile), 1), 12.3);
-    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Kilometer), 1), 19.8);
-    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::UnitCount), 1), 0.0);
-
     KLength kmleng(12.3, "kilometer");
     QCOMPARE(kmleng.unitEnum(), KLength::Kilometer);
     QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Invalid), 1), 0.0);
     QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Mile), 1), 7.6);
     QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Kilometer), 1), 12.3);
     QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::UnitCount), 1), 0.0);
+
+    KLength mileng(12.3, "mile");
+    QCOMPARE(mileng.unitEnum(), KLength::Mile);
+    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Mile), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Kilometer), 1), 19.8);
+    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::UnitCount), 1), 0.0);
 }
 
 #include "moc_kunitconversiontest.cpp"

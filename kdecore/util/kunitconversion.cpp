@@ -179,22 +179,22 @@ KVelocityPrivate::KVelocityPrivate(const double number, const QString &unit)
     : m_number(number),
     m_unitenum(KVelocity::Invalid)
 {
-    if (unit == QLatin1String("MeterPerSecond")
-        || unit == QLatin1String("meter per second") || unit == QLatin1String("meters per second")
-        || unit == QLatin1String("m/s") || unit == QLatin1String("ms")) {
-        m_unitenum = KVelocity::MeterPerSecond;
-    } else if (unit == QLatin1String("KilometerPerHour")
+    if (unit == QLatin1String("KilometerPerHour")
         || unit == QLatin1String("kilometer per hour") || unit == QLatin1String("kilometers per hour")
         || unit == QLatin1String("km/h") || unit == QLatin1String("kmh")) {
         m_unitenum = KVelocity::KilometerPerHour;
-    } else if (unit == QLatin1String("MilePerHour")
-        || unit == QLatin1String("mile per hour") || unit == QLatin1String("miles per hour")
-        || unit == QLatin1String("mph")) {
-        m_unitenum = KVelocity::MilePerHour;
     } else if (unit == QLatin1String("Knot")
         || unit == QLatin1String("knot") || unit == QLatin1String("knots")
         || unit == QLatin1String("kt") || unit == QLatin1String("nautical miles per hour")) {
         m_unitenum = KVelocity::Knot;
+    } else if (unit == QLatin1String("MeterPerSecond")
+        || unit == QLatin1String("meter per second") || unit == QLatin1String("meters per second")
+        || unit == QLatin1String("m/s") || unit == QLatin1String("ms")) {
+        m_unitenum = KVelocity::MeterPerSecond;
+    } else if (unit == QLatin1String("MilePerHour")
+        || unit == QLatin1String("mile per hour") || unit == QLatin1String("miles per hour")
+        || unit == QLatin1String("mph")) {
+        m_unitenum = KVelocity::MilePerHour;
     } else {
         kDebug() << "invalid velocity unit" << unit;
     }
@@ -223,14 +223,14 @@ double KVelocity::number() const
 QString KVelocity::unit() const
 {
     switch (d->m_unitenum) {
-        case KVelocity::MeterPerSecond:
-            return QLatin1String("m/s");
         case KVelocity::KilometerPerHour:
             return QLatin1String("km/h");
-        case KVelocity::MilePerHour:
-            return QLatin1String("mph");
         case KVelocity::Knot:
             return QLatin1String("kt");
+        case KVelocity::MeterPerSecond:
+            return QLatin1String("m/s");
+        case KVelocity::MilePerHour:
+            return QLatin1String("mph");
         case KVelocity::Invalid:
         case KVelocity::UnitCount:
             break;
@@ -255,42 +255,42 @@ double KVelocity::convertTo(const KVeloUnit unit) const
     }
 
     // for reference:
-    // https://www.metric-conversions.org/speed/meters-per-second-to-kilometers-per-hour.htm
-    // https://www.metric-conversions.org/speed/meters-per-second-to-miles-per-hour.htm
-    // https://www.metric-conversions.org/speed/meters-per-second-to-knots.htm
+    // https://www.metric-conversions.org/speed/kilometers-per-hour-to-knots.htm
     // https://www.metric-conversions.org/speed/kilometers-per-hour-to-meters-per-second.htm
     // https://www.metric-conversions.org/speed/kilometers-per-hour-to-miles-per-hour.htm
-    // https://www.metric-conversions.org/speed/kilometers-per-hour-to-knots.htm
-    // https://www.metric-conversions.org/speed/miles-per-hour-to-meters-per-second.htm
+    // https://www.metric-conversions.org/speed/knots-to-kilometers-per-hour.htm
+    // https://www.metric-conversions.org/speed/knots-to-meters-per-second.htm
+    // https://www.metric-conversions.org/speed/knots-to-miles-per-hour.htm
+    // https://www.metric-conversions.org/speed/meters-per-second-to-kilometers-per-hour.htm
+    // https://www.metric-conversions.org/speed/meters-per-second-to-knots.htm
+    // https://www.metric-conversions.org/speed/meters-per-second-to-miles-per-hour.htm
     // https://www.metric-conversions.org/speed/miles-per-hour-to-kilometers-per-hour.htm
     // https://www.metric-conversions.org/speed/miles-per-hour-to-knots.htm
-    // https://www.metric-conversions.org/speed/knots-to-meters-per-second.htm
-    // https://www.metric-conversions.org/speed/knots-to-kilometers-per-hour.htm
-    // https://www.metric-conversions.org/speed/knots-to-miles-per-hour.htm
-    if (d->m_unitenum == KVelocity::MeterPerSecond && unit == KVelocity::KilometerPerHour) {
-        return (d->m_number * 3.6);
-    } else if (d->m_unitenum == KVelocity::MeterPerSecond && unit == KVelocity::MilePerHour) {
-        return (d->m_number * 2.236936);
-    } else if (d->m_unitenum == KVelocity::MeterPerSecond && unit == KVelocity::Knot) {
-        return (d->m_number * 1.943844);
+    // https://www.metric-conversions.org/speed/miles-per-hour-to-meters-per-second.htm
+    if (d->m_unitenum == KVelocity::KilometerPerHour && unit == KVelocity::Knot) {
+        return d->m_number / 1.852;
     } else if (d->m_unitenum == KVelocity::KilometerPerHour && unit == KVelocity::MeterPerSecond) {
         return (d->m_number / 3.6);
     } else if (d->m_unitenum == KVelocity::KilometerPerHour && unit == KVelocity::MilePerHour) {
         return (d->m_number / 1.609344);
-    } else if (d->m_unitenum == KVelocity::KilometerPerHour && unit == KVelocity::Knot) {
-        return d->m_number / 1.852;
-    } else if (d->m_unitenum == KVelocity::MilePerHour && unit == KVelocity::MeterPerSecond) {
-        return (d->m_number / 2.236936);
+    } else if (d->m_unitenum == KVelocity::Knot && unit == KVelocity::KilometerPerHour) {
+        return (d->m_number * 1.852);
+    } else if (d->m_unitenum == KVelocity::Knot && unit == KVelocity::MeterPerSecond) {
+        return (d->m_number / 1.943844);
+    } else if (d->m_unitenum == KVelocity::Knot && unit == KVelocity::MilePerHour) {
+        return (d->m_number * 1.150779);
+    } else if (d->m_unitenum == KVelocity::MeterPerSecond && unit == KVelocity::KilometerPerHour) {
+        return (d->m_number * 3.6);
+    } else if (d->m_unitenum == KVelocity::MeterPerSecond && unit == KVelocity::Knot) {
+        return (d->m_number * 1.943844);
+    } else if (d->m_unitenum == KVelocity::MeterPerSecond && unit == KVelocity::MilePerHour) {
+        return (d->m_number * 2.236936);
     } else if (d->m_unitenum == KVelocity::MilePerHour && unit == KVelocity::KilometerPerHour) {
         return (d->m_number * 1.609344);
     } else if (d->m_unitenum == KVelocity::MilePerHour && unit == KVelocity::Knot) {
         return (d->m_number / 1.150779);
-    } else if (d->m_unitenum == KVelocity::Knot && unit == KVelocity::MeterPerSecond) {
-        return (d->m_number / 1.943844);
-    } else if (d->m_unitenum == KVelocity::Knot && unit == KVelocity::KilometerPerHour) {
-        return (d->m_number * 1.852);
-    } else if (d->m_unitenum == KVelocity::Knot && unit == KVelocity::MilePerHour) {
-        return (d->m_number * 1.150779);
+    } else if (d->m_unitenum == KVelocity::MilePerHour && unit == KVelocity::MeterPerSecond) {
+        return (d->m_number / 2.236936);
     }
     return 0.0;
 }
@@ -303,14 +303,14 @@ QString KVelocity::description()
 QString KVelocity::unitDescription(const KVeloUnit unit)
 {
     switch (unit) {
-        case KVelocity::MeterPerSecond:
-            return i18n("Meter per second (m/s)");
         case KVelocity::KilometerPerHour:
             return i18n("Kilometer per hour (km/h)");
-        case KVelocity::MilePerHour:
-            return i18n("Mile per hour (mph)");
         case KVelocity::Knot:
             return i18n("Knot (kt)");
+        case KVelocity::MeterPerSecond:
+            return i18n("Meter per second (m/s)");
+        case KVelocity::MilePerHour:
+            return i18n("Mile per hour (mph)");
         case KVelocity::Invalid:
         case KVelocity::UnitCount:
             break;
@@ -338,22 +338,22 @@ KPressurePrivate::KPressurePrivate(const double number, const QString &unit)
     : m_number(number),
     m_unitenum(KPressure::Invalid)
 {
-    if (unit == QLatin1String("Kilopascal")
-        || unit == QLatin1String("kilopascal") || unit == QLatin1String("kilopascals")
-        || unit == QLatin1String("kPa")) {
-        m_unitenum = KPressure::Kilopascal;
-    } else if (unit == QLatin1String("Hectopascal")
+    if (unit == QLatin1String("Hectopascal")
         || unit == QLatin1String("hectopascal") || unit == QLatin1String("hectopascals")
         || unit == QLatin1String("hPa")) {
         m_unitenum = KPressure::Hectopascal;
-    } else if (unit == QLatin1String("Millibar")
-        || unit == QLatin1String("millibar") || unit == QLatin1String("millibars")
-        || unit == QLatin1String("mbar") || unit == QLatin1String("mb")) {
-        m_unitenum = KPressure::Millibar;
     } else if (unit == QLatin1String("InchesOfMercury")
         || unit == QLatin1String("inch of mercury") || unit == QLatin1String("inches of mercury")
         || unit == QLatin1String("inHg")) {
         m_unitenum = KPressure::InchesOfMercury;
+    } else if (unit == QLatin1String("Kilopascal")
+        || unit == QLatin1String("kilopascal") || unit == QLatin1String("kilopascals")
+        || unit == QLatin1String("kPa")) {
+        m_unitenum = KPressure::Kilopascal;
+    } else if (unit == QLatin1String("Millibar")
+        || unit == QLatin1String("millibar") || unit == QLatin1String("millibars")
+        || unit == QLatin1String("mbar") || unit == QLatin1String("mb")) {
+        m_unitenum = KPressure::Millibar;
     } else {
         kDebug() << "invalid pressure unit" << unit;
     }
@@ -382,14 +382,14 @@ double KPressure::number() const
 QString KPressure::unit() const
 {
     switch (d->m_unitenum) {
-        case KPressure::Kilopascal:
-            return QLatin1String("kPa");
         case KPressure::Hectopascal:
             return QLatin1String("hPa");
-        case KPressure::Millibar:
-            return QLatin1String("mbar");
         case KPressure::InchesOfMercury:
             return QLatin1String("inHg");
+        case KPressure::Kilopascal:
+            return QLatin1String("kPa");
+        case KPressure::Millibar:
+            return QLatin1String("mbar");
         case KPressure::Invalid:
         case KPressure::UnitCount:
             break;
@@ -413,30 +413,30 @@ double KPressure::convertTo(const KPresUnit unit) const
         return d->m_number;
     }
 
-    if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::Hectopascal) {
-        return (d->m_number * 10.0);
-    } else if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::Millibar) {
-        return (d->m_number * 10.0);
-    } else if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::InchesOfMercury) {
-        return (d->m_number / 3.386398);
+    if (d->m_unitenum == KPressure::Hectopascal && unit == KPressure::InchesOfMercury) {
+        return (d->m_number / 33.86398);
     } else if (d->m_unitenum == KPressure::Hectopascal && unit == KPressure::Kilopascal) {
         return (d->m_number / 10.0);
     } else if (d->m_unitenum == KPressure::Hectopascal && unit == KPressure::Millibar) {
         return (d->m_number * 1.0);
-    } else if (d->m_unitenum == KPressure::Hectopascal && unit == KPressure::InchesOfMercury) {
-        return (d->m_number / 33.86398);
-    } else if (d->m_unitenum == KPressure::Millibar && unit == KPressure::Kilopascal) {
-        return (d->m_number / 10.0);
+    } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Hectopascal) {
+        return (d->m_number * 33.86398);
+    } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Kilopascal) {
+        return (d->m_number * 3.386398);
+    } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Millibar) {
+        return (d->m_number * 33.86398);
+    } else if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::Hectopascal) {
+        return (d->m_number * 10.0);
+    } else if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::InchesOfMercury) {
+        return (d->m_number / 3.386398);
+    } else if (d->m_unitenum == KPressure::Kilopascal && unit == KPressure::Millibar) {
+        return (d->m_number * 10.0);
     } else if (d->m_unitenum == KPressure::Millibar && unit == KPressure::Hectopascal) {
         return (d->m_number * 1.0);
     } else if (d->m_unitenum == KPressure::Millibar && unit == KPressure::InchesOfMercury) {
         return (d->m_number / 33.86398);
-    } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Kilopascal) {
-        return (d->m_number * 3.386398);
-    } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Hectopascal) {
-        return (d->m_number * 33.86398);
-    } else if (d->m_unitenum == KPressure::InchesOfMercury && unit == KPressure::Millibar) {
-        return (d->m_number * 33.86398);
+    } else if (d->m_unitenum == KPressure::Millibar && unit == KPressure::Kilopascal) {
+        return (d->m_number / 10.0);
     }
     return 0.0;
 }
@@ -449,14 +449,14 @@ QString KPressure::description()
 QString KPressure::unitDescription(const KPresUnit unit)
 {
     switch (unit) {
-        case KPressure::Kilopascal:
-            return i18n("Kilopascal (kPa)");
         case KPressure::Hectopascal:
             return i18n("Hectopascal (hPa)");
-        case KPressure::Millibar:
-            return i18n("Millibar (mbar)");
         case KPressure::InchesOfMercury:
             return i18n("Inch of mercury (inHg)");
+        case KPressure::Kilopascal:
+            return i18n("Kilopascal (kPa)");
+        case KPressure::Millibar:
+            return i18n("Millibar (mbar)");
         case KPressure::Invalid:
         case KPressure::UnitCount:
             break;
@@ -484,14 +484,14 @@ KLengthPrivate::KLengthPrivate(const double number, const QString &unit)
     : m_number(number),
     m_unitenum(KLength::Invalid)
 {
-    if (unit == QLatin1String("Mile")
-        || unit == QLatin1String("mile") || unit == QLatin1String("miles")
-        || unit == QLatin1String("mi")) {
-        m_unitenum = KLength::Mile;
-    } else if (unit == QLatin1String("Kilometer")
+    if (unit == QLatin1String("Kilometer")
         || unit == QLatin1String("kilometer") || unit == QLatin1String("kilometers")
         || unit == QLatin1String("km")) {
         m_unitenum = KLength::Kilometer;
+    } else if (unit == QLatin1String("Mile")
+        || unit == QLatin1String("mile") || unit == QLatin1String("miles")
+        || unit == QLatin1String("mi")) {
+        m_unitenum = KLength::Mile;
     } else {
         kDebug() << "invalid length unit" << unit;
     }
@@ -520,10 +520,10 @@ double KLength::number() const
 QString KLength::unit() const
 {
     switch (d->m_unitenum) {
-        case KLength::Mile:
-            return QLatin1String("mi");
         case KLength::Kilometer:
             return QLatin1String("km");
+        case KLength::Mile:
+            return QLatin1String("mi");
         case KLength::Invalid:
         case KLength::UnitCount:
             break;
@@ -548,12 +548,12 @@ double KLength::convertTo(const KLengUnit unit) const
     }
 
     // for reference:
-    // https://www.rapidtables.com/convert/length/mile-to-km.html
     // https://www.rapidtables.com/convert/length/km-to-mile.html
-    if (d->m_unitenum == KLength::Mile && unit == KLength::Kilometer) {
-        return (d->m_number * 1.609344);
-    } else if (d->m_unitenum == KLength::Kilometer && unit == KLength::Mile) {
+    // https://www.rapidtables.com/convert/length/mile-to-km.html
+    if (d->m_unitenum == KLength::Kilometer && unit == KLength::Mile) {
         return (d->m_number / 1.609344);
+    } else if (d->m_unitenum == KLength::Mile && unit == KLength::Kilometer) {
+        return (d->m_number * 1.609344);
     }
     return 0.0;
 }
@@ -566,10 +566,10 @@ QString KLength::description()
 QString KLength::unitDescription(const KLengUnit unit)
 {
     switch (unit) {
-        case KLength::Mile:
-            return i18n("Mile (mi)");
         case KLength::Kilometer:
             return i18n("Kilometer (km)");
+        case KLength::Mile:
+            return i18n("Mile (mi)");
         case KLength::Invalid:
         case KLength::UnitCount:
             break;

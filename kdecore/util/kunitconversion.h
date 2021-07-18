@@ -117,10 +117,10 @@ class KVelocity : public KUnitConversion {
 public:
     enum KVeloUnit {
         Invalid = -1,
-        MeterPerSecond = 0,
-        KilometerPerHour = 1,
-        MilePerHour = 2,
-        Knot = 3,
+        KilometerPerHour = 0,
+        Knot = 1,
+        MeterPerSecond = 2,
+        MilePerHour = 3,
         UnitCount = 4
     };
 
@@ -150,10 +150,10 @@ class KPressure : public KUnitConversion {
 public:
     enum KPresUnit {
         Invalid = -1,
-        Kilopascal = 0,
-        Hectopascal = 1,
-        Millibar = 2,
-        InchesOfMercury = 3,
+        Hectopascal = 0,
+        InchesOfMercury = 1,
+        Kilopascal = 2,
+        Millibar = 3,
         UnitCount = 4
     };
 
@@ -183,8 +183,8 @@ class KLength : public KUnitConversion {
 public:
     enum KLengUnit {
         Invalid = -1,
-        Mile = 0,
-        Kilometer = 1,
+        Kilometer = 0,
+        Mile = 1,
         UnitCount = 2
     };
 

@@ -26,7 +26,7 @@
 /**
  * @internal
  * Allows KIO classes to display dialog boxes with the correct
- * theme/style even in non-GUI apps like kded and kfmclient
+ * theme/style even in non-GUI apps like kded and kioclient
  */
 class KIO_EXPORT KMessageBoxWrapper : public KMessageBox
 {

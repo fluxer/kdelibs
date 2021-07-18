@@ -439,7 +439,7 @@ namespace KGlobal
      * will automatically be exited. Otherwise, the application will not exit automatically.
      *
      * This is used by KMainWindow to allow quitting after the first mainwindow is created,
-     * and is used by special applications like kfmclient, to allow quitting even though
+     * and is used by special applications like kioclient, to allow quitting even though
      * no mainwindow was created.
      *
      * However, don't try to call setAllowQuit(false) in applications, it doesn't make sense.
