@@ -252,7 +252,6 @@ void highlightWindows(WId controller, const QList<WId> &ids)
     Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
 
     if (numWindows == 0) {
-        Atom atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
         XDeleteProperty(dpy, controller, atom);
     }
 
