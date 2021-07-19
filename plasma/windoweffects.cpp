@@ -85,7 +85,7 @@ void slideWindow(WId id, Plasma::Location location, int offset)
 {
 #ifdef Q_WS_X11
     Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom( dpy, "_KDE_SLIDE", False );
+    Atom atom = XInternAtom(dpy, "_KDE_SLIDE", False);
     QVarLengthArray<long, 2> data(2);
 
     data[0] = offset;
@@ -117,35 +117,7 @@ void slideWindow(WId id, Plasma::Location location, int offset)
 
 void slideWindow(QWidget *widget, Plasma::Location location)
 {
-#ifdef Q_WS_X11
-    Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom( dpy, "_KDE_SLIDE", False );
-    QVarLengthArray<long, 2> data(2);
-    data[0] = -1;
-
-    switch (location) {
-    case LeftEdge:
-        data[1] = 0;
-        break;
-    case TopEdge:
-        data[1] = 1;
-        break;
-    case RightEdge:
-        data[1] = 2;
-        break;
-    case BottomEdge:
-        data[1] = 3;
-    default:
-        break;
-    }
-
-    if (location == Desktop || location == Floating) {
-        XDeleteProperty(dpy, widget->effectiveWinId(), atom);
-    } else {
-        XChangeProperty(dpy, widget->effectiveWinId(), atom, atom, 32, PropModeReplace,
-                        reinterpret_cast<unsigned char *>(data.data()), data.size());
-    }
-#endif
+    WindowEffects::slideWindow(widget->effectiveWinId(), location, -1);
 }
 
 QList<QSize> windowSizes(const QList<WId> &ids)
