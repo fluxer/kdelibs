@@ -670,9 +670,13 @@ void KTextEdit::contextMenuEvent(QContextMenuEvent *event)
     // Use standard context menu for already selected words, correctly spelled
     // words and words inside quotes.
     if (!wordIsMisspelled || selectedWordClicked || inQuote) {
-        QMetaObject::invokeMethod(this, "mousePopupMenuImplementation", Q_ARG(QPoint, event->globalPos()));
-    }
-    else {
+        QMenu *popup = mousePopupMenu();
+        if (popup) {
+            aboutToShowContextMenu(popup);
+            popup->exec(event->globalPos());
+            delete popup;
+        }
+    } else {
         QMenu menu; //don't use KMenu here we don't want auto management accelerator
 
         //Add the suggestions to the menu
@@ -1151,16 +1155,6 @@ void KTextEdit::paintEvent(QPaintEvent *ev)
 void KTextEdit::showAutoCorrectButton(bool show)
 {
     d->showAutoCorrectionButton = show;
-}
-
-void KTextEdit::mousePopupMenuImplementation(const QPoint& pos)
-{
-    QMenu *popup = mousePopupMenu();
-    if ( popup ) {
-       aboutToShowContextMenu(popup);
-       popup->exec( pos );
-       delete popup;
-    }
 }
 
 #include "moc_ktextedit.cpp"
