@@ -78,7 +78,7 @@ bool StorageAccess::isIgnored() const
     const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
     const QString devtype(m_device->deviceProperty("DEVTYPE"));
     const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
-    return (idfsusage != "filesystem" || (devtype == "disk" && idcdrom != 1));
+    return ((idfsusage != "filesystem" && idfsusage != "crypto") || (devtype == "disk" && idcdrom != 1));
 }
 
 bool StorageAccess::setup()
