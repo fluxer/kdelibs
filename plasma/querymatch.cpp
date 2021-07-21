@@ -21,14 +21,14 @@
 
 #include <QAction>
 #include <QIcon>
-#include <QMutex>
 #include <QSharedData>
 #include <QStringList>
 #include <QVariant>
-#include <QtCore/qsharedpointer.h>
+#include <QSharedPointer>
 
-#include <kdebug.h>
+#include <mutex>
 
+#include "kdebug.h"
 #include "abstractrunner.h"
 
 namespace Plasma
@@ -39,7 +39,6 @@ class QueryMatchPrivate : public QSharedData
     public:
         QueryMatchPrivate(AbstractRunner *r)
             : QSharedData(),
-              mutex(new QMutex(QMutex::Recursive)),
               runner(r),
               type(QueryMatch::ExactMatch),
               relevance(.7),
@@ -50,10 +49,9 @@ class QueryMatchPrivate : public QSharedData
         }
 
         QueryMatchPrivate(const QueryMatchPrivate &other)
-            : QSharedData(other),
-              mutex(new QMutex(QMutex::Recursive))
+            : QSharedData(other)
         {
-            QMutexLocker lock(other.mutex);
+            std::lock_guard<std::recursive_mutex> lock(other.mutex);
             runner = other.runner;
             type = other.type;
             relevance = other.relevance;
@@ -69,10 +67,9 @@ class QueryMatchPrivate : public QSharedData
 
         ~QueryMatchPrivate()
         {
-            delete mutex;
         }
 
-        QMutex *mutex;
+        mutable std::recursive_mutex mutex;
         QWeakPointer<AbstractRunner> runner;
         QueryMatch::Type type;
         QString id;
@@ -142,19 +139,19 @@ AbstractRunner* QueryMatch::runner() const
 
 void QueryMatch::setText(const QString &text)
 {
-    QMutexLocker locker(d->mutex);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->text = text;
 }
 
 void QueryMatch::setSubtext(const QString &subtext)
 {
-    QMutexLocker locker(d->mutex);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->subtext = subtext;
 }
 
 void QueryMatch::setData(const QVariant & data)
 {
-    QMutexLocker locker(d->mutex);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->data = data;
 
     if (d->id.isEmpty() || d->idSetByData) {
@@ -168,7 +165,7 @@ void QueryMatch::setData(const QVariant & data)
 
 void QueryMatch::setId(const QString &id)
 {
-    QMutexLocker locker(d->mutex);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     if (d->runner) {
         d->id = d->runner.data()->id();
     }
@@ -182,7 +179,7 @@ void QueryMatch::setId(const QString &id)
 
 void QueryMatch::setIcon(const QIcon &icon)
 {
-    QMutexLocker locker(d->mutex);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->icon = icon;
 }
 

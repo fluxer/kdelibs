@@ -24,12 +24,12 @@
 #include "klocale.h"
 #include "kdayperiod_p.h"
 
-#include <QMutex>
+#include <mutex>
 
 class KCatalog;
 
 // Used by both KLocale and KLocalizedString, since they call each other.
-QMutex* kLocaleMutex();
+std::recursive_mutex& kLocaleMutex();
 
 class KLocalePrivate
 {

@@ -41,8 +41,9 @@
 #include <QtCore/QRegExp>
 #include <QtCore/QLocale>
 #include <QtCore/QHash>
-#include <QtCore/QMutex>
 #include <QtCore/QStringList>
+
+#include <mutex>
 
 #include "kcatalog_p.h"
 #include "kglobal.h"
@@ -307,7 +308,7 @@ void KLocalePrivate::initConfig(KConfig *config)
 void KLocalePrivate::initMainCatalogs()
 {
     KLocaleStaticData *s = staticData;
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
 
     if (!s->maincatalog.isEmpty()) {
         // If setMainCatalog was called, then we use that
@@ -629,7 +630,7 @@ bool KLocalePrivate::setCountryDivisionCode(const QString &countryDivisionCode)
 
 bool KLocalePrivate::setLanguage(const QString &language, KConfig *config)
 {
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
     m_languageList.removeAll(language);
     m_languageList.prepend(language);   // let us consider this language to be the most important one
 
@@ -655,7 +656,7 @@ bool KLocalePrivate::setLanguage(const QString &language, KConfig *config)
 // config so this can be reparsed when required.
 bool KLocalePrivate::setLanguage(const QStringList &languages)
 {
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
     // This list might contain
     // 1) some empty strings that we have to eliminate
     // 2) duplicate entries like in de:fr:de, where we have to keep the first occurrence of a
@@ -806,7 +807,7 @@ QString KLocalePrivate::currencyCode() const
 
 void KLocalePrivate::insertCatalog(const QString &catalog)
 {
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
     int pos = m_catalogNames.indexOf(KCatalogName(catalog));
     if (pos != -1) {
         ++m_catalogNames[pos].loadCount;
@@ -855,7 +856,7 @@ void KLocalePrivate::updateCatalogs()
 
 void KLocalePrivate::removeCatalog(const QString &catalog)
 {
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
     int pos = m_catalogNames.indexOf(KCatalogName(catalog));
     if (pos == -1) {
         return;
@@ -872,7 +873,7 @@ void KLocalePrivate::removeCatalog(const QString &catalog)
 
 void KLocalePrivate::setActiveCatalog(const QString &catalog)
 {
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
     int pos = m_catalogNames.indexOf(KCatalogName(catalog));
     if (pos == -1) {
         return;
@@ -901,7 +902,7 @@ void KLocalePrivate::translateRawFrom(const char *catname, const char *msgctxt, 
         << "Fix the program" << endl;
     }
 
-    QMutexLocker locker(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
     // determine the fallback string
     QString fallback;
     if (msgid_plural == NULL) {
@@ -1702,7 +1703,7 @@ QString KLocalePrivate::formatByteSize(double size, int precision, KLocale::Bina
     if (dialect == m_binaryUnitDialect) {
         // Cache default units for speed
         if (m_byteSizeFmt.size() == 0) {
-            QMutexLocker lock(kLocaleMutex());
+            std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
 
             // We only cache the user's default dialect.
             m_byteSizeFmt = dialectUnitsList(m_binaryUnitDialect);
@@ -1756,7 +1757,7 @@ KLocale::BinaryUnitDialect KLocalePrivate::binaryUnitDialect() const
 void KLocalePrivate::setBinaryUnitDialect(KLocale::BinaryUnitDialect newDialect)
 {
     if (newDialect > KLocale::DefaultBinaryDialect && newDialect <= KLocale::LastBinaryDialect) {
-        QMutexLocker lock(kLocaleMutex());
+        std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
         m_binaryUnitDialect = newDialect;
         m_byteSizeFmt.clear(); // Reset cached translations.
     }
@@ -3029,7 +3030,7 @@ KLocale::WeekNumberSystem KLocalePrivate::weekNumberSystem() const
 
 void KLocalePrivate::copyCatalogsTo(KLocale *locale)
 {
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
     locale->d->m_catalogNames = m_catalogNames;
     locale->d->updateCatalogs();
 }
@@ -3102,9 +3103,9 @@ KLocale::DigitSet KLocalePrivate::dateTimeDigitSet() const
     return m_dateTimeDigitSet;
 }
 
-Q_GLOBAL_STATIC_WITH_ARGS(QMutex, s_kLocaleMutex, (QMutex::Recursive))
+static std::recursive_mutex s_kLocaleMutex;
 
-QMutex *kLocaleMutex()
+std::recursive_mutex& kLocaleMutex()
 {
-    return s_kLocaleMutex();
+    return s_kLocaleMutex;
 }

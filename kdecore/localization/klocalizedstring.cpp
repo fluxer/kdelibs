@@ -159,7 +159,7 @@ QString KLocalizedString::toString (const KLocale *locale,
 QString KLocalizedStringPrivate::toString (const KLocale *locale,
                                            const QString *catalogName) const
 {
-    QMutexLocker lock(kLocaleMutex());
+    std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
 
     // Assure the message has been supplied.
     if (msg.isEmpty())
