@@ -22,6 +22,8 @@
 #ifndef SOLID_SOLIDNAMESPACE_H
 #define SOLID_SOLIDNAMESPACE_H
 
+#include <QtCore/QMetaType>
+
 namespace Solid
 {
     enum ErrorType {
@@ -33,9 +35,9 @@ namespace Solid
         InvalidOption,
         MissingDriver
     };
-}
 
-#include <QtCore/QMetaType>
+    QString errorString(const ErrorType error);
+}
 
 Q_DECLARE_METATYPE(Solid::ErrorType)
 

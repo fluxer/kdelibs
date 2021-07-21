@@ -33,8 +33,6 @@ class KRichTextEditPrivate;
 
 #include <kdeui_export.h>
 
-#define HAVE_INSERTPLAINTEXT 1
-
 /**
  * The KRichTextEdit class provides a widget to edit and display rich text.
  *
@@ -343,13 +341,6 @@ public Q_SLOTS:
      * @param subscript If true, the text will be set to subscript
      */
     void setTextSubScript(bool subscript);
-
-    /**
-     * @since 4.10
-     * Because of binary compatibility constraints, insertPlainText
-     * is not virtual. Therefore it must dynamically detect and call this slot.  
-     */
-    void insertPlainTextImplementation();
 
 Q_SIGNALS:
 

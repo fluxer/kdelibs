@@ -29,7 +29,6 @@
 */
 
 
-#define  KIO_FTP_PRIVATE_INCLUDE
 #include "ftp.h"
 
 #ifdef HAVE_SYS_TIME_H

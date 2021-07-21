@@ -19,6 +19,7 @@
 */
 
 #include "solidnamespace.h"
+#include "klocale.h"
 
 static int registerSolidMetaTypes()
 {
@@ -26,9 +27,25 @@ static int registerSolidMetaTypes()
 
     return 0; // something
 }
-
-#ifdef Q_CONSTRUCTOR_FUNCTION
 Q_CONSTRUCTOR_FUNCTION(registerSolidMetaTypes)
-#else
-static const int _Solid_registerMetaTypes = registerSolidMetaTypes();
-#endif
+
+QString Solid::errorString(const ErrorType error)
+{
+    switch (error) {
+        case Solid::NoError:
+            return QString();
+        case Solid::UnauthorizedOperation:
+            return i18n("Unauthorized operation");
+        case Solid::DeviceBusy:
+            return i18n("Device is busy");
+        case Solid::OperationFailed:
+            return i18n("Operation failed");
+        case Solid::UserCanceled:
+            return i18n("Canceled by user");
+        case Solid::InvalidOption:
+            return i18n("Invalid option");
+        case Solid::MissingDriver:
+            return i18n("Missing driver");
+    }
+    return QString();
+}

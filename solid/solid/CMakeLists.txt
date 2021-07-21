@@ -181,7 +181,7 @@ if(UDEV_FOUND)
                     Support for m-p-i is included even if not found during build"
                     )
 
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${UDEV_LIBRARIES})
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${QT_QTDBUS_LIBRARY} ${UDEV_LIBRARIES})
 endif(UDEV_FOUND)
 
 if(DEVINFO_FOUND)

@@ -451,10 +451,10 @@ struct KDebugPrivate
         case QtWarningMsg:
             level = LOG_WARNING;
             break;
-        case QtFatalMsg:
+        case QtCriticalMsg:
             level = LOG_CRIT;
             break;
-        case QtCriticalMsg:
+        case QtFatalMsg:
         default:
             level = LOG_ERR;
             break;

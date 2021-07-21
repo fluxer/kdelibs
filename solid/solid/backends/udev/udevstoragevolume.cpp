@@ -19,8 +19,10 @@
 */
 
 #include "udevstoragevolume.h"
+#include "udevmanager.h"
 #include "udevdevice.h"
 
+#include <QDir>
 #include <QDebug>
 
 using namespace Solid::Backends::UDev;
@@ -36,7 +38,14 @@ StorageVolume::~StorageVolume()
 
 QString StorageVolume::encryptedContainerUdi() const
 {
-    // encrypted devices are not support
+    const QString dmname(m_device->deviceProperty("DM_NAME"));
+    if (!dmname.isEmpty()) {
+        const QDir slavesdir(m_device->deviceName() + "/slaves");
+        const QFileInfoList slavelinks(slavesdir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries));
+        if (!slavelinks.isEmpty()) {
+            return QString::fromLatin1("%1%2").arg(UDEV_UDI_PREFIX, slavelinks.first().canonicalFilePath());
+        }
+    }
     return QString();
 }
 
@@ -84,5 +93,5 @@ bool StorageVolume::isIgnored() const
     const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
     const QString devtype(m_device->deviceProperty("DEVTYPE"));
     const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
-    return (idfsusage != "filesystem" || (devtype == "disk" && idcdrom != 1));
+    return ((idfsusage != "filesystem" && idfsusage != "crypto") || (devtype == "disk" && idcdrom != 1));
 }

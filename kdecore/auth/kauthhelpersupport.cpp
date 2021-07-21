@@ -62,6 +62,8 @@ int HelperSupport::helperMain(int argc, char **argv, const char *id, QObject *re
     openlog(id, 0, LOG_USER);
     qInstallMsgHandler(&HelperSupport::helperDebugHandler);
 
+    QCoreApplication app(argc, argv);
+
     if (!BackendsManager::helperProxy()->initHelper(QString::fromLatin1(id))) {
         syslog(LOG_DEBUG, "Helper initialization failed");
         return -1;
@@ -72,7 +74,6 @@ int HelperSupport::helperMain(int argc, char **argv, const char *id, QObject *re
 
     BackendsManager::helperProxy()->setHelperResponder(responder);
 
-    QCoreApplication app(argc, argv);
     // Attach the timer
     QTimer *timer = new QTimer(0);
     responder->setProperty("__KAuth_Helper_Shutdown_Timer", QVariant::fromValue(timer));
@@ -96,6 +97,8 @@ void HelperSupport::helperDebugHandler(QtMsgType type, const char *msg)
             level = LOG_WARNING;
             break;
         case QtCriticalMsg:
+            level = LOG_CRIT;
+            break;
         case QtFatalMsg:
             level = LOG_ERR;
             break;
