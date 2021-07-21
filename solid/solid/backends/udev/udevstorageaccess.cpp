@@ -68,6 +68,18 @@ QString StorageAccess::filePath() const
         }
     }
 
+    const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
+    if (idfsusage == "crypto") {
+        // NOTE: keep in sync with kde-workspace/soliduiserver/soliduiserver.cpp
+        const QString idfsuuid(m_device->deviceProperty("ID_FS_UUID"));
+        const QString dmdevice = QLatin1String("/dev/mapper/") + idfsuuid;
+        foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
+            if (mountpoint->mountedFrom() == dmdevice || mountpoint->realDeviceName() == dmdevice) {
+                return mountpoint->mountPoint();
+            }
+        }
+    }
+
     return QString();
 }
 
