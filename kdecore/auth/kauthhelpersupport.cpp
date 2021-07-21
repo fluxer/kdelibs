@@ -97,6 +97,8 @@ void HelperSupport::helperDebugHandler(QtMsgType type, const char *msg)
             level = LOG_WARNING;
             break;
         case QtCriticalMsg:
+            level = LOG_CRIT;
+            break;
         case QtFatalMsg:
             level = LOG_ERR;
             break;
