@@ -211,23 +211,13 @@ void AbstractRunner::createRunOptions(QWidget *parent)
 
 AbstractRunner::Speed AbstractRunner::speed() const
 {
-    // the only time the read lock will fail is if we were slow are going to speed up
-    // or if we were fast and are going to slow down; so don't wait in this case, just
-    // say we're slow. we either will be soon or were just a moment ago and it doesn't
-    // hurt to do one more run the slow way
-    if (!d->speedLock.tryLockForRead()) {
-        return SlowSpeed;
-    }
-    Speed s = d->speed;
-    d->speedLock.unlock();
-    return s;
+    return d->speed;
 }
 
 void AbstractRunner::setSpeed(Speed speed)
 {
-    d->speedLock.lockForWrite();
+    QMutexLocker locker(&d->speedMutex);
     d->speed = speed;
-    d->speedLock.unlock();
 }
 
 AbstractRunner::Priority AbstractRunner::priority() const
