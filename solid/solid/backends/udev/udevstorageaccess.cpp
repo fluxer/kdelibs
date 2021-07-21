@@ -81,7 +81,7 @@ bool StorageAccess::isIgnored() const
 
 bool StorageAccess::setup()
 {
-    QString mountpoint = filePath();
+    const QString mountpoint = filePath();
     if (!mountpoint.isEmpty()) {
         return true;
     }
@@ -93,13 +93,11 @@ bool StorageAccess::setup()
 
     const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
     if (replyvalue == Solid::NoError) {
-        m_device->broadcastActionDone("setup", Solid::NoError, QString());
         emit accessibilityChanged(true, m_device->udi());
-        return true;
     }
 
     m_device->broadcastActionDone("setup", replyvalue, Solid::errorString(replyvalue));
-    return false;
+    return (replyvalue == Solid::NoError);
 }
 
 bool StorageAccess::teardown()
@@ -116,13 +114,11 @@ bool StorageAccess::teardown()
 
     const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
     if (replyvalue == Solid::NoError) {
-        m_device->broadcastActionDone("teardown", Solid::NoError, QString());
         emit accessibilityChanged(false, m_device->udi());
-        return true;
     }
 
     m_device->broadcastActionDone("teardown", replyvalue, Solid::errorString(replyvalue));
-    return false;
+    return (replyvalue == Solid::NoError);
 }
 
 void StorageAccess::slotSetupRequested()

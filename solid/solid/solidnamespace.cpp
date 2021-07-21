@@ -32,6 +32,8 @@ Q_CONSTRUCTOR_FUNCTION(registerSolidMetaTypes)
 QString Solid::errorString(const ErrorType error)
 {
     switch (error) {
+        case Solid::NoError:
+            return QString();
         case Solid::UnauthorizedOperation:
             return i18n("Unauthorized operation");
         case Solid::DeviceBusy:
