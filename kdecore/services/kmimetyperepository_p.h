@@ -24,7 +24,8 @@
 #include "kmimemagicrule_p.h"
 #include "kmimeglobsfileparser_p.h"
 #include "kmimetype.h"
-#include <QReadWriteLock>
+
+#include <QMutex>
 
 /**
  * @internal  - this header is not installed
@@ -172,7 +173,7 @@ private:
     QList<KMimeMagicRule> m_magicRules;
     KMimeGlobsFileParser::AllGlobs m_globs;
     KMimeType::Ptr m_defaultMimeType;
-    QReadWriteLock m_mutex;
+    QMutex m_mutex;
 };
 
 #endif /* KMIMETYPEREPOSITORY_H */
