@@ -43,7 +43,7 @@ int Block::deviceMinor() const
 
 QString Block::device() const
 {
-    return m_device->m_realdevice;
+    return QString::fromLatin1("/dev/%1").arg(m_device->m_realdevice.constData());
 }
 
 #include "backends/geom/moc_geomblock.cpp"
