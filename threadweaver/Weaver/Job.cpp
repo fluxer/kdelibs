@@ -51,7 +51,7 @@ public:
     Private ()
         : thread (0)
         , queuePolicies ( new QueuePolicyList )
-        , mutex (new QMutex (QMutex::NonRecursive) )
+        , mutex (new QMutex () )
         , finished (false)
     {}
 
