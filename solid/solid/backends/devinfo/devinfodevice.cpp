@@ -276,7 +276,7 @@ QByteArray DevinfoDevice::deviceCtl(const char* field) const
     ::memset(sysctlbuff, '\0', sysctlbuffsize * sizeof(char));
     const int sysctlresult = ::sysctlbyname(sysctldevicename.constData(), sysctlbuff, &sysctlbuffsize, NULL, 0);
     if (sysctlresult == -1) {
-        qWarning() << "sysctlbyname" << sysctldevicename << "failed for" << devicename;
+        // qWarning() << "sysctlbyname" << sysctldevicename << "failed for" << devicename;
         return QByteArray();
     }
     return QByteArray(sysctlbuff, sysctlbuffsize);
