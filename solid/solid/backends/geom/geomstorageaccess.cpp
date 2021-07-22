@@ -22,9 +22,8 @@
 #include "kstandarddirs.h"
 #include "kmountpoint.h"
 
-#include <QProcess>
-#include <QCoreApplication>
-#include <QDir>
+#include <QDBusInterface>
+#include <QDBusReply>
 #include <QDebug>
 
 using namespace Solid::Backends::Geom;
@@ -88,40 +87,18 @@ bool StorageAccess::setup()
         return true;
     }
 
-    // permission denied on /run/mount so.. using base directory that is writable
-    const QString mountbase = KGlobal::dirs()->saveLocation("tmp");
-    const QString idfsuuid(m_device->m_uuid);
-    mountpoint = mountbase + QLatin1Char('/') + idfsuuid;
-    QDir mountdir(mountbase);
-    if (!mountdir.exists(idfsuuid) && !mountdir.mkdir(idfsuuid)) {
-        qWarning() << "could not create" << mountpoint;
-        return false;
-    }
-
     m_device->broadcastActionRequested("setup");
 
-    const QString devname(QString::fromLatin1("/dev/%1").arg(m_device->m_realdevice.constData()));
-    const QStringList mountargs = QStringList() << "mount" << devname << mountpoint;
-    QProcess mountproc;
-    mountproc.start("kdesudo", mountargs);
-    mountproc.waitForStarted();
-    while (mountproc.state() == QProcess::Running) {
-        QCoreApplication::processEvents();
-    }
+    QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
+    QDBusReply<int> reply = soliduiserver.call("mountDevice", m_device->udi());
 
-    if (mountproc.exitCode() == 0) {
-        m_device->broadcastActionDone("setup", Solid::NoError, QString());
+    const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
+    if (replyvalue == Solid::NoError) {
         emit accessibilityChanged(true, m_device->udi());
-    } else {
-        QString mounterror = mountproc.readAllStandardError();
-        if (mounterror.isEmpty()) {
-            mounterror = mountproc.readAllStandardOutput();
-        }
-        qWarning() << "mount error" << mounterror;
-        m_device->broadcastActionDone("setup", Solid::UnauthorizedOperation, mounterror);
     }
 
-    return (mountproc.exitCode() == 0);
+    m_device->broadcastActionDone("setup", replyvalue, Solid::errorString(replyvalue));
+    return (replyvalue == Solid::NoError);
 }
 
 bool StorageAccess::teardown()
@@ -133,27 +110,16 @@ bool StorageAccess::teardown()
 
     m_device->broadcastActionRequested("teardown");
 
-    const QStringList umountargs = QStringList() << "umount" << mountpoint;
-    QProcess umountproc;
-    umountproc.start("kdesudo", umountargs);
-    umountproc.waitForStarted();
-    while (umountproc.state() == QProcess::Running) {
-        QCoreApplication::processEvents();
-    }
+    QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
+    QDBusReply<int> reply = soliduiserver.call("unmountDevice", m_device->udi());
 
-    if (umountproc.exitCode() == 0) {
-        m_device->broadcastActionDone("teardown", Solid::NoError, QString());
+    const Solid::ErrorType replyvalue = static_cast<Solid::ErrorType>(reply.value());
+    if (replyvalue == Solid::NoError) {
         emit accessibilityChanged(false, m_device->udi());
-    } else {
-        QString umounterror = umountproc.readAllStandardError();
-        if (umounterror.isEmpty()) {
-            umounterror = umountproc.readAllStandardOutput();
-        }
-        qWarning() << "unmount error" << umounterror;
-        m_device->broadcastActionDone("teardown", Solid::UnauthorizedOperation, umounterror);
     }
 
-    return (umountproc.exitCode() == 0);
+    m_device->broadcastActionDone("teardown", replyvalue, Solid::errorString(replyvalue));
+    return (replyvalue == Solid::NoError);
 }
 
 void StorageAccess::slotSetupRequested()

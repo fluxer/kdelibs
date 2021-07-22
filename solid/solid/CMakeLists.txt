@@ -211,7 +211,7 @@ if(GEOM_FOUND)
         backends/geom/geomstorageaccess.cpp
     )
 
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${GEOM_LIBRARIES})
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${QT_QTDBUS_LIBRARY} ${GEOM_LIBRARIES})
 endif()
 
 set_source_files_properties(
