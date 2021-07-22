@@ -53,13 +53,14 @@
 #include <pwd.h>
 #include <grp.h>
 
-#include <QtCore/QMutex>
 #include <QtCore/QRegExp>
 #include <QtCore/QDir>
 #include <QtCore/QCache>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtNetwork/QHostInfo>
+
+#include <mutex>
 
 #define case_sensitivity Qt::CaseSensitive
 
@@ -73,7 +74,6 @@ public:
     KStandardDirsPrivate(KStandardDirs* qq)
         : m_restrictionsActive(false),
           m_checkRestrictions(true),
-          m_cacheMutex(QMutex::Recursive), // resourceDirs is recursive
           q(qq)
     { }
 
@@ -99,7 +99,7 @@ public:
     // Caches (protected by mutex in const methods, cf ctor docu)
     QMap<QByteArray, QStringList> m_dircache;
     QMap<QByteArray, QString> m_savelocations;
-    QMutex m_cacheMutex;
+    std::recursive_mutex m_cacheMutex; // resourceDirs is recursive
 
     KStandardDirs* q;
 };
@@ -917,7 +917,7 @@ QStringList KStandardDirs::resourceDirs(const char *type) const
 
 QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, const QString& subdirForRestrictions)
 {
-    QMutexLocker lock(&m_cacheMutex);
+    std::lock_guard<std::recursive_mutex> lock(m_cacheMutex);
     const bool dataRestrictionActive = m_restrictionsActive
                                        && (strcmp(type, "data") == 0)
                                        && hasDataRestrictions(subdirForRestrictions);
@@ -1226,7 +1226,7 @@ QString KStandardDirs::saveLocation(const char *type,
                                     const QString& suffix,
                                     bool create) const
 {
-    QMutexLocker lock(&d->m_cacheMutex);
+    std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
     QString path = d->m_savelocations.value(type);
     if (path.isEmpty())
     {

@@ -21,14 +21,14 @@
 
 #include <QAction>
 #include <QIcon>
-#include <QReadWriteLock>
 #include <QSharedData>
 #include <QStringList>
 #include <QVariant>
-#include <QtCore/qsharedpointer.h>
+#include <QSharedPointer>
 
-#include <kdebug.h>
+#include <mutex>
 
+#include "kdebug.h"
 #include "abstractrunner.h"
 
 namespace Plasma
@@ -39,7 +39,6 @@ class QueryMatchPrivate : public QSharedData
     public:
         QueryMatchPrivate(AbstractRunner *r)
             : QSharedData(),
-              lock(new QReadWriteLock(QReadWriteLock::Recursive)),
               runner(r),
               type(QueryMatch::ExactMatch),
               relevance(.7),
@@ -50,10 +49,9 @@ class QueryMatchPrivate : public QSharedData
         }
 
         QueryMatchPrivate(const QueryMatchPrivate &other)
-            : QSharedData(other),
-              lock(new QReadWriteLock(QReadWriteLock::Recursive))
+            : QSharedData(other)
         {
-            QReadLocker lock(other.lock);
+            std::lock_guard<std::recursive_mutex> lock(other.mutex);
             runner = other.runner;
             type = other.type;
             relevance = other.relevance;
@@ -69,10 +67,9 @@ class QueryMatchPrivate : public QSharedData
 
         ~QueryMatchPrivate()
         {
-            delete lock;
         }
 
-        QReadWriteLock *lock;
+        mutable std::recursive_mutex mutex;
         QWeakPointer<AbstractRunner> runner;
         QueryMatch::Type type;
         QString id;
@@ -142,19 +139,19 @@ AbstractRunner* QueryMatch::runner() const
 
 void QueryMatch::setText(const QString &text)
 {
-    QWriteLocker locker(d->lock);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->text = text;
 }
 
 void QueryMatch::setSubtext(const QString &subtext)
 {
-    QWriteLocker locker(d->lock);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->subtext = subtext;
 }
 
 void QueryMatch::setData(const QVariant & data)
 {
-    QWriteLocker locker(d->lock);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->data = data;
 
     if (d->id.isEmpty() || d->idSetByData) {
@@ -168,7 +165,7 @@ void QueryMatch::setData(const QVariant & data)
 
 void QueryMatch::setId(const QString &id)
 {
-    QWriteLocker locker(d->lock);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     if (d->runner) {
         d->id = d->runner.data()->id();
     }
@@ -182,31 +179,27 @@ void QueryMatch::setId(const QString &id)
 
 void QueryMatch::setIcon(const QIcon &icon)
 {
-    QWriteLocker locker(d->lock);
+    std::lock_guard<std::recursive_mutex> locker(d->mutex);
     d->icon = icon;
 }
 
 QVariant QueryMatch::data() const
 {
-    QReadLocker locker(d->lock);
     return d->data;
 }
 
 QString QueryMatch::text() const
 {
-    QReadLocker locker(d->lock);
     return d->text;
 }
 
 QString QueryMatch::subtext() const
 {
-    QReadLocker locker(d->lock);
     return d->subtext;
 }
 
 QIcon QueryMatch::icon() const
 {
-    QReadLocker locker(d->lock);
     return d->icon;
 }
 
@@ -241,8 +234,6 @@ bool QueryMatch::operator<(const QueryMatch &other) const
             return d->relevance < other.d->relevance;
         }
 
-        QReadLocker locker(d->lock);
-        QReadLocker otherLocker(other.d->lock);
         // when resorting to sort by alpha, we want the
         // reverse sort order!
         return d->text > other.d->text;

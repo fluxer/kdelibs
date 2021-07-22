@@ -52,12 +52,11 @@ WeaverImpl::WeaverImpl( QObject* parent )
     : WeaverInterface(parent)
     , m_active(0)
     , m_inventoryMax( qMax(4, 2 * QThread::idealThreadCount() ) )
-    , m_mutex ( new QMutex( QMutex::Recursive ) )
     , m_finishMutex( new QMutex )
     , m_jobAvailableMutex ( new QMutex )
     , m_state (0)
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     // initialize state objects:
     m_states[InConstruction] = new InConstructionState( this );
     setState ( InConstruction );
@@ -89,7 +88,7 @@ WeaverImpl::~WeaverImpl()
     for (;;) {
         Thread* th = 0;
         {
-            QMutexLocker l(m_mutex); Q_UNUSED(l);
+            std::lock_guard<std::recursive_mutex> l(m_mutex);
             if (m_inventory.isEmpty()) break;
             th = m_inventory.takeFirst();
         }
@@ -112,12 +111,11 @@ WeaverImpl::~WeaverImpl()
     setState ( Destructed ); // m_state = Halted;
     // FIXME: delete state objects. what sense does DestructedState make then?
     // FIXME: make state objects static, since they are
-    delete m_mutex;
 }
 
 void WeaverImpl::setState ( StateId id )
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     if ( m_state==0 || m_state->stateId() != id )
     {
         m_state = m_states[id];
@@ -135,26 +133,26 @@ void WeaverImpl::setState ( StateId id )
 
 const State& WeaverImpl::state() const
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     return *m_state;
 }
 
 void WeaverImpl::setMaximumNumberOfThreads( int cap )
 {
     Q_ASSERT_X ( cap > 0, "Weaver Impl", "Thread inventory size has to be larger than zero." );
-    QMutexLocker l (m_mutex);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     m_inventoryMax = cap;
 }
 
 int WeaverImpl::maximumNumberOfThreads() const
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     return m_inventoryMax;
 }
 
 int WeaverImpl::currentNumberOfThreads () const
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     return m_inventory.count ();
 }
 
@@ -177,7 +175,7 @@ void WeaverImpl::enqueue(Job* job)
     if (job) {
         adjustInventory ( 1 );
         kDebug() << "queueing job" << job << "of type " << job->metaObject()->className();
-        QMutexLocker l (m_mutex); Q_UNUSED(l);
+        std::lock_guard<std::recursive_mutex> l(m_mutex);
         job->aboutToBeQueued ( this );
         // find position for insertion:;
         // FIXME (after 0.6) optimize: factor out queue management into own class,
@@ -196,7 +194,7 @@ void WeaverImpl::enqueue(Job* job)
 
 void WeaverImpl::adjustInventory ( int numberOfNewJobs )
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
 
     // no of threads that can be created:
     const int reserve = m_inventoryMax - m_inventory.count();
@@ -230,7 +228,7 @@ bool WeaverImpl::dequeue ( Job* job )
 {
     bool result;
     {
-        QMutexLocker l (m_mutex);
+        std::lock_guard<std::recursive_mutex> l(m_mutex);
 
         int i = m_assignments.indexOf ( job );
         if ( i != -1 )
@@ -255,7 +253,7 @@ bool WeaverImpl::dequeue ( Job* job )
 void WeaverImpl::dequeue ()
 {
     kDebug( "dequeueing all jobs." );
-    QMutexLocker l (m_mutex);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     for ( int index = 0; index < m_assignments.size(); ++index )
     {
         m_assignments.at( index )->aboutToBeDequeued( this );
@@ -282,7 +280,7 @@ void WeaverImpl::assignJobs()
 
 bool WeaverImpl::isEmpty() const
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     return  m_assignments.isEmpty();
 }
 
@@ -302,7 +300,7 @@ void WeaverImpl::decActiveThreadCount()
 
 void WeaverImpl::adjustActiveThreadCount( int diff )
 {
-    QMutexLocker l (m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     m_active += diff;
     kDebug() << m_active << "active threads (" << queueLength() <<  "in queue).";
 
@@ -315,13 +313,13 @@ void WeaverImpl::adjustActiveThreadCount( int diff )
 
 int WeaverImpl::activeThreadCount()
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     return m_active;
 }
 
 Job* WeaverImpl::takeFirstAvailableJob(Job *previous)
 {
-    QMutexLocker l (m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     if (previous) {
         // cleanup and send events:
         decActiveThreadCount();
@@ -361,13 +359,13 @@ void WeaverImpl::blockThreadUntilJobsAreBeingAssigned ( Thread *th )
 
 int WeaverImpl::queueLength() const
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     return m_assignments.count();
 }
 
 bool WeaverImpl::isIdle () const
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     return isEmpty() && m_active == 0;
 }
 
@@ -392,7 +390,7 @@ void WeaverImpl::finish()
 
 void WeaverImpl::requestAbort()
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     for ( int i = 0; i<m_inventory.size(); ++i ) {
         m_inventory[i]->requestAbort();
     }
@@ -400,7 +398,7 @@ void WeaverImpl::requestAbort()
 
 void WeaverImpl::dumpJobs()
 {
-    QMutexLocker l(m_mutex); Q_UNUSED(l);
+    std::lock_guard<std::recursive_mutex> l(m_mutex);
     kDebug( "current jobs:" );
     for ( int index = 0; index < m_assignments.size(); ++index ) {
         kDebug() << "-->"

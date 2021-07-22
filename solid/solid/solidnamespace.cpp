@@ -19,12 +19,10 @@
 */
 
 #include "solidnamespace.h"
-#include "klocale.h"
 
 static int registerSolidMetaTypes()
 {
     qRegisterMetaType<Solid::ErrorType>();
-
     return 0; // something
 }
 Q_CONSTRUCTOR_FUNCTION(registerSolidMetaTypes)
@@ -35,17 +33,17 @@ QString Solid::errorString(const ErrorType error)
         case Solid::NoError:
             return QString();
         case Solid::UnauthorizedOperation:
-            return i18n("Unauthorized operation");
+            return QObject::tr("Unauthorized operation");
         case Solid::DeviceBusy:
-            return i18n("Device is busy");
+            return QObject::tr("Device is busy");
         case Solid::OperationFailed:
-            return i18n("Operation failed");
+            return QObject::tr("Operation failed");
         case Solid::UserCanceled:
-            return i18n("Canceled by user");
+            return QObject::tr("Canceled by user");
         case Solid::InvalidOption:
-            return i18n("Invalid option");
+            return QObject::tr("Invalid option");
         case Solid::MissingDriver:
-            return i18n("Missing driver");
+            return QObject::tr("Missing driver");
     }
     return QString();
 }

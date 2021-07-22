@@ -20,7 +20,7 @@
 #ifndef ABSTRACTRUNNER_P_H
 #define ABSTRACTRUNNER_P_H
 
-#include <QReadWriteLock>
+#include <QMutex>
 
 #include "dataengineconsumer_p.h"
 
@@ -42,7 +42,7 @@ public:
     KPluginInfo runnerDescription;
     AbstractRunner *runner;
     int fastRuns;
-    QReadWriteLock speedLock;
+    QMutex speedMutex;
     QHash<QString, QAction*> actions;
     QList<RunnerSyntax> syntaxes;
     RunnerSyntax *defaultSyntax;

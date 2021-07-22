@@ -27,9 +27,9 @@
 #include <QtCore/QProcess>
 #include <QtCore/QRegExp>
 #include <QtCore/QTextStream>
-#include <QtCore/qreadwritelock.h>
-#include <QtCore/qtextcodec.h>
-#include <QtCore/qthread.h>
+#include <QtCore/QMutex>
+#include <QtCore/QTextCodec>
+#include <QtCore/QThread>
 #include <QtDBus/QtDBus>
 #include <QtGui/QApplication>
 
@@ -57,7 +57,7 @@ public:
         qDeleteAll( begin() , end() ); // auto-delete functionality
     }
 
-    QReadWriteLock lock;
+    QMutex mutex;
 };
 
 K_GLOBAL_STATIC(KBookmarkManagerList, s_pSelf)
@@ -162,17 +162,8 @@ static KBookmarkManager* lookupExisting(const QString& bookmarksFile)
 
 KBookmarkManager* KBookmarkManager::managerForFile( const QString& bookmarksFile, const QString& dbusObjectName )
 {
-    KBookmarkManager* mgr(0);
-    {
-        QReadLocker readLock(&s_pSelf->lock);
-        mgr = lookupExisting(bookmarksFile);
-        if (mgr) {
-            return mgr;
-        }
-    }
-
-    QWriteLocker writeLock(&s_pSelf->lock);
-    mgr = lookupExisting(bookmarksFile);
+    QMutexLocker lock(&s_pSelf->mutex);
+    KBookmarkManager* mgr = lookupExisting(bookmarksFile);
     if (mgr) {
         return mgr;
     }
@@ -184,17 +175,8 @@ KBookmarkManager* KBookmarkManager::managerForFile( const QString& bookmarksFile
 
 KBookmarkManager* KBookmarkManager::managerForExternalFile( const QString& bookmarksFile )
 {
-    KBookmarkManager* mgr(0);
-    {
-        QReadLocker readLock(&s_pSelf->lock);
-        mgr = lookupExisting(bookmarksFile);
-        if (mgr) {
-            return mgr;
-        }
-    }
-
-    QWriteLocker writeLock(&s_pSelf->lock);
-    mgr = lookupExisting(bookmarksFile);
+    QMutexLocker lock(&s_pSelf->mutex);
+    KBookmarkManager* mgr = lookupExisting(bookmarksFile);
     if (mgr) {
         return mgr;
     }

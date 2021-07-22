@@ -49,8 +49,7 @@ KMimeTypeRepository::KMimeTypeRepository()
       m_mimeTypesChecked(false),
       m_useFavIcons(true),
       m_useFavIconsChecked(false),
-      m_sharedMimeInfoVersion(0),
-      m_mutex(QReadWriteLock::Recursive)
+      m_sharedMimeInfoVersion(0)
 {
 }
 
@@ -195,7 +194,7 @@ QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QStri
 {
     parseGlobs();
 
-    QReadLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     // First try the high weight matches (>50), if any.
     QStringList matchingMimeTypes;
     QString foundExt;
@@ -248,7 +247,7 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
 
     // Apply magic rules
     {
-        QReadLocker lock(&m_mutex);
+        std::lock_guard<std::recursive_mutex> lock(m_mutex);
         Q_FOREACH ( const KMimeMagicRule& rule, m_magicRules ) {
             if (rule.match(device, deviceSize, beginning)) {
                 if (accuracy)
@@ -288,7 +287,7 @@ static QString fallbackParent(const QString& mimeTypeName)
 
 QStringList KMimeTypeRepository::parents(const QString& mime)
 {
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (!m_parentsMapLoaded) {
         m_parentsMapLoaded = true;
         Q_ASSERT(m_parents.isEmpty());
@@ -345,7 +344,7 @@ static bool mimeMagicRuleCompare(const KMimeMagicRule& lhs, const KMimeMagicRule
 
 void KMimeTypeRepository::parseMagic()
 {
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (m_magicFilesParsed) {
         return;
     }
@@ -549,7 +548,7 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
 
 const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
 {
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (m_aliasFilesParsed) {
         return m_aliases;
     }
@@ -589,7 +588,7 @@ const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
 
 void KMimeTypeRepository::parseGlobs()
 {
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (m_globsFilesParsed) {
         return;
     }
@@ -603,7 +602,7 @@ QStringList KMimeTypeRepository::patternsForMimetype(const QString& mimeType)
 {
     parseGlobs();
 
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (!m_patternsMapCalculated) {
         m_patternsMapCalculated = true;
         m_patterns = m_globs.patternsMap();
@@ -619,7 +618,7 @@ static void errorMissingMimeTypes( const QStringList& _types )
 
 void KMimeTypeRepository::checkEssentialMimeTypes()
 {
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (m_mimeTypesChecked) { // already done
         return;
     }
@@ -663,7 +662,7 @@ void KMimeTypeRepository::checkEssentialMimeTypes()
 
 KMimeType::Ptr KMimeTypeRepository::defaultMimeTypePtr()
 {
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (!m_defaultMimeType) {
         // Try to find the default type
         KMimeType::Ptr mime = findMimeTypeByName(KMimeType::defaultMimeType());
@@ -684,7 +683,7 @@ bool KMimeTypeRepository::useFavIcons()
 {
     // this method will be called quite often, so better not read the config
     // again and again.
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (!m_useFavIconsChecked) {
         m_useFavIconsChecked = true;
         KConfigGroup cg( KGlobal::config(), "HTML Settings" );
@@ -783,7 +782,7 @@ static int mimeDataBaseVersion()
 
 int KMimeTypeRepository::sharedMimeInfoVersion()
 {
-    QWriteLocker lock(&m_mutex);
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
     if (m_sharedMimeInfoVersion == 0)
         m_sharedMimeInfoVersion = mimeDataBaseVersion();
     return m_sharedMimeInfoVersion;

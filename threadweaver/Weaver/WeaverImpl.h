@@ -38,6 +38,8 @@ $Id: WeaverImpl.h 32 2005-08-17 08:38:01Z mirko $
 #include "State.h"
 #include "WeaverInterface.h"
 
+#include <mutex>
+
 namespace ThreadWeaver {
 
     class Job;
@@ -165,7 +167,7 @@ namespace ThreadWeaver {
 
     private:
 	/** Mutex to serialize operations. */
-	QMutex *m_mutex;
+	mutable std::recursive_mutex m_mutex;
 
     /** Non-recursive mutex to serialize calls to finish(). */
     QMutex* m_finishMutex;
