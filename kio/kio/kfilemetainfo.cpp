@@ -139,6 +139,54 @@ public:
     void addValue(const Strigi::AnalysisResult* idx, const Strigi::RegisteredField* field,
             const std::string& value) {
         if (idx->writerData()) {
+            const std::string name(field->key());
+            static const char* orientationfield = "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation";
+            if (qstrncmp(name.c_str(), orientationfield, name.size()) == 0) {
+                const QByteArray intbyte(value.c_str(), value.size());
+                QString orientationstring;
+                // for reference:
+                // https://exiv2.org/tags-xmp-tiff.html
+                switch (intbyte.toInt()) {
+                    case 1: {
+                        orientationstring = i18n("Row at top, column at left");
+                        break;
+                    }
+                    case 2: {
+                        orientationstring = i18n("Row at top, column at right");
+                        break;
+                    }
+                    case 3: {
+                        orientationstring = i18n("Row at bottom, column at right");
+                        break;
+                    }
+                    case 4: {
+                        orientationstring = i18n("Row at bottom, column at left");
+                        break;
+                    }
+                    case 5: {
+                        orientationstring = i18n("Row at left, column at top");
+                        break;
+                    }
+                    case 6: {
+                        orientationstring = i18n("Row at right, column at top");
+                        break;
+                    }
+                    case 7: {
+                        orientationstring = i18n("Row at right, column at bottom");
+                        break;
+                    }
+                    case 8: {
+                        orientationstring = i18n("Row at left, column at bottom");
+                        break;
+                    }
+                    default: {
+                        return;
+                    }
+                }
+                addValue(idx, field, QVariant(orientationstring));
+                return;
+            }
+
             QString val = QString::fromUtf8(value.c_str(), value.size());
             if( !val.startsWith(':') )
                 addValue(idx, field, val);
@@ -155,35 +203,36 @@ public:
             uint32_t value) {
         if (idx->writerData()) {
             // the only duration field relevant to files
-            static const char* durationField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration";
+            static const char* durationfield = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration";
             // these use different measures
-            static const char* avarageBitrateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate";
-            static const char* frameRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate";
-            static const char* sampleRateField = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate";
+            static const char* avaragebitratefield = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate";
+            static const char* frameratefield = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate";
+            static const char* sampleratefield = "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate";
             // datetime field
-            static const char* contentCreatedField = "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated";
+            static const char* contentcreatedfield = "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated";
             const std::string name(field->key());
-            if (qstrncmp(name.c_str(), durationField, name.size()) == 0) {
+            if (qstrncmp(name.c_str(), durationfield, name.size()) == 0) {
                 const QString durationstring = KGlobal::locale()->prettyFormatDuration(value * 1000);
                 addValue(idx, field, QVariant(durationstring));
                 return;
-            } else if (qstrncmp(name.c_str(), avarageBitrateField, name.size()) == 0) {
+            } else if (qstrncmp(name.c_str(), avaragebitratefield, name.size()) == 0) {
                 const QString bitratestring = i18n("%1 per second").arg(KGlobal::locale()->formatByteSize(value));
                 addValue(idx, field, QVariant(bitratestring));
                 return;
-            } else if (qstrncmp(name.c_str(), frameRateField, name.size()) == 0) {
+            } else if (qstrncmp(name.c_str(), frameratefield, name.size()) == 0) {
                 const QString bitratestring = i18n("%1 per second").arg(value);
                 addValue(idx, field, QVariant(bitratestring));
                 return;
-            } else if (qstrncmp(name.c_str(), sampleRateField, name.size()) == 0) {
+            } else if (qstrncmp(name.c_str(), sampleratefield, name.size()) == 0) {
                 const QString bitratestring = i18n("%1 kHz").arg(value / 1000);
                 addValue(idx, field, QVariant(bitratestring));
                 return;
-            } else if (qstrncmp(name.c_str(), contentCreatedField, name.size()) == 0) {
+            } else if (qstrncmp(name.c_str(), contentcreatedfield, name.size()) == 0) {
                 const QDateTime datetime = QDateTime::fromTime_t(value);
                 // NOTE: keep in sync with kdelibs/kio/kfile/kfilemetadataprovider.cpp
                 const QString datestring = KGlobal::locale()->formatDateTime(datetime, KLocale::FancyLongDate);
                 addValue(idx, field, QVariant(datestring));
+                return;
             }
 
             addValue(idx, field, QVariant((quint32)value));

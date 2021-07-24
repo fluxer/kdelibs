@@ -196,8 +196,9 @@ QStringList Wallet::walletList() {
 
 
 void Wallet::changePassword(const QString& name, WId w) {
-    if( w == 0 )
+    if( w == 0 ) {
         kDebug(285) << "Pass a valid window to KWallet::Wallet::changePassword().";
+    }
 
     // Make sure the password prompt window will be visible and activated
     KWindowSystem::allowExternalProcessWindowActivation();
@@ -248,59 +249,59 @@ int Wallet::deleteWallet(const QString& name) {
 }
 
 Wallet *Wallet::openWallet(const QString& name, WId w, OpenType ot) {
-    if( w == 0 )
+    if( w == 0 ) {
         kDebug(285) << "Pass a valid window to KWallet::Wallet::openWallet().";
+    }
 
-        Wallet *wallet = new Wallet(-1, name);
+    Wallet *wallet = new Wallet(-1, name);
 
-        // connect the daemon's opened signal to the slot filtering the
-        // signals we need
-        connect(&walletLauncher->getInterface(), SIGNAL(walletAsyncOpened(int,int)),
-                wallet, SLOT(walletAsyncOpened(int,int)));
+    // connect the daemon's opened signal to the slot filtering the
+    // signals we need
+    connect(&walletLauncher->getInterface(), SIGNAL(walletAsyncOpened(int,int)),
+            wallet, SLOT(walletAsyncOpened(int,int)));
 
-        // Make sure the password prompt window will be visible and activated
-        KWindowSystem::allowExternalProcessWindowActivation();
+    // Make sure the password prompt window will be visible and activated
+    KWindowSystem::allowExternalProcessWindowActivation();
 
-        // do the call
-        QDBusReply<int> r;
-        if (ot == Synchronous) {
-            r = walletLauncher->getInterface().open(name, (qlonglong)w, appid());
-            // after this call, r would contain a transaction id >0 if OK or -1 if NOK
-            // if OK, the slot walletAsyncOpened should have been received, but the transaction id
-            // will not match. We'll get that handle from the reply - see below
-        }
-        else if (ot == Asynchronous) {
-            r = walletLauncher->getInterface().openAsync(name, (qlonglong)w, appid(), true);
-        } else if (ot == Path) {
-            r = walletLauncher->getInterface().openPathAsync(name, (qlonglong)w, appid(), true);
+    // do the call
+    QDBusReply<int> r;
+    if (ot == Synchronous) {
+        r = walletLauncher->getInterface().open(name, (qlonglong)w, appid());
+        // after this call, r would contain a transaction id >0 if OK or -1 if NOK
+        // if OK, the slot walletAsyncOpened should have been received, but the transaction id
+        // will not match. We'll get that handle from the reply - see below
+    } else if (ot == Asynchronous) {
+        r = walletLauncher->getInterface().openAsync(name, (qlonglong)w, appid(), true);
+    } else if (ot == Path) {
+        r = walletLauncher->getInterface().openPathAsync(name, (qlonglong)w, appid(), true);
+    } else {
+        delete wallet;
+        return 0;
+    }
+    // error communicating with the daemon (maybe not running)
+    if (!r.isValid()) {
+        kDebug(285) << "Invalid DBus reply: " << r.error();
+        delete wallet;
+        return 0;
+    }
+    wallet->d->transactionId = r.value();
+
+    if (ot == Synchronous || ot == Path) {
+        // check for an immediate error
+        if (wallet->d->transactionId < 0) {
+            delete wallet;
+            wallet = 0;
         } else {
-            delete wallet;
-            return 0;
+            wallet->d->handle = r.value();
         }
-        // error communicating with the daemon (maybe not running)
-        if (!r.isValid()) {
-            kDebug(285) << "Invalid DBus reply: " << r.error();
-            delete wallet;
-            return 0;
+    } else if (ot == Asynchronous) {
+        if (wallet->d->transactionId < 0) {
+            QTimer::singleShot(0, wallet, SLOT(emitWalletAsyncOpenError()));
+            // client code is responsible for deleting the wallet
         }
-        wallet->d->transactionId = r.value();
+    }
 
-        if (ot == Synchronous || ot == Path) {
-            // check for an immediate error
-            if (wallet->d->transactionId < 0) {
-                delete wallet;
-                wallet = 0;
-            } else {
-                wallet->d->handle = r.value();
-            }
-        } else if (ot == Asynchronous) {
-            if (wallet->d->transactionId < 0) {
-                QTimer::singleShot(0, wallet, SLOT(emitWalletAsyncOpenError()));
-                // client code is responsible for deleting the wallet
-            }
-        }
-
-        return wallet;
+    return wallet;
 }
 
 void Wallet::slotCollectionDeleted()

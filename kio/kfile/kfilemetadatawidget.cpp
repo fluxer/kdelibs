@@ -114,7 +114,6 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
         static const char* enabledProperties[] = {
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#depends",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent",
             "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate",
             "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels",
@@ -136,6 +135,7 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
             "http://www.semanticdesktop.org/ontologies/2007/08/15/nao#numericRating",
             "kfileitem#owner",
             "kfileitem#permissions",
+            "kfileitem#mimetype",
             0 // mandatory last entry
         };
 
@@ -145,6 +145,7 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#lastModified",
             "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize",
+            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType",
             "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
             0 // mandatory last entry
         };

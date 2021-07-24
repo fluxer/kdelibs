@@ -51,6 +51,14 @@
 namespace KIO { struct PreviewItem; }
 using namespace KIO;
 
+// NOTE: keep in sync with:
+// kde-baseapps/dolphin/src/settings/general/previewssettingspage.cpp
+// kde-workspace/kioslave/thumbnail/thumbnail.h
+enum MaxPreviewSizes {
+    MaxLocalSize = 5, // 5 MB
+    MaxRemoteSize = 1 // 1 MB
+};
+
 struct KIO::PreviewItem
 {
     KFileItem item;
@@ -315,8 +323,8 @@ void PreviewJobPrivate::startPreview()
     }
 
     KConfigGroup cg( KGlobal::config(), "PreviewSettings" );
-    maximumLocalSize = cg.readEntry( "MaximumSize", 5*1024*1024LL /* 5MB */ );
-    maximumRemoteSize = cg.readEntry( "MaximumRemoteSize", 0 );
+    maximumLocalSize = cg.readEntry( "MaximumSize", MaxPreviewSizes::MaxLocalSize *1024 * 1024LL);
+    maximumRemoteSize = cg.readEntry( "MaximumRemoteSize", MaxPreviewSizes::MaxRemoteSize *1024 * 1024LL );
 
     if (bNeedCache)
     {

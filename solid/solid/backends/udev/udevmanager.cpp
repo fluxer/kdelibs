@@ -263,7 +263,8 @@ void UDevManager::slotDeviceChanged(const UdevQt::Device &device)
     if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
         if (device.subsystem() == "block") {
             const QString idfsusage = device.deviceProperty("ID_FS_USAGE");
-            emit contentChanged(udiPrefix() + device.sysfsPath(), (idfsusage == "filesystem"));
+            const bool hascontent = (idfsusage == "filesystem" || idfsusage == "crypto");
+            emit contentChanged(udiPrefix() + device.sysfsPath(), hascontent);
         }
     }
 }
