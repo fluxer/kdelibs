@@ -94,7 +94,7 @@ public:
      * The keys used in the query (Type, ServiceType, Exec) are all
      * fields found in the .desktop files.
      *
-     * @param servicetype A service type like 'KMyApp/Plugin' or 'KFilePlugin'.
+     * @param servicetype A service type like 'KMyApp/Plugin'.
      * @param constraint  A constraint to limit the choices returned, QString() to
      *                    get all services of the given @p servicetype
      *
