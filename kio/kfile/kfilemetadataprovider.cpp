@@ -111,6 +111,7 @@ void KFileMetaDataProvider::Private::readMetadata()
         m_data.insert(KUrl("kfileitem#modified"), KGlobal::locale()->formatDateTime(item.time(KFileItem::ModificationTime), KLocale::FancyLongDate));
         m_data.insert(KUrl("kfileitem#owner"), item.user());
         m_data.insert(KUrl("kfileitem#permissions"), item.permissionsString());
+        m_data.insert(KUrl("kfileitem#mimetype"), item.mimetype());
     } else if (m_fileItems.count() > 1) {
         // Calculate the size of all items
         quint64 totalSize = 0;
