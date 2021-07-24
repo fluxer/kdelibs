@@ -139,6 +139,54 @@ public:
     void addValue(const Strigi::AnalysisResult* idx, const Strigi::RegisteredField* field,
             const std::string& value) {
         if (idx->writerData()) {
+            const std::string name(field->key());
+            static const char* orientationfield = "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation";
+            if (qstrncmp(name.c_str(), orientationfield, name.size()) == 0) {
+                const QByteArray intbyte(value.c_str(), value.size());
+                QString orientationstring;
+                // for reference:
+                // https://exiv2.org/tags-xmp-tiff.html
+                switch (intbyte.toInt()) {
+                    case 1: {
+                        orientationstring = i18n("Row at top, column at left");
+                        break;
+                    }
+                    case 2: {
+                        orientationstring = i18n("Row at top, column at right");
+                        break;
+                    }
+                    case 3: {
+                        orientationstring = i18n("Row at bottom, column at right");
+                        break;
+                    }
+                    case 4: {
+                        orientationstring = i18n("Row at bottom, column at left");
+                        break;
+                    }
+                    case 5: {
+                        orientationstring = i18n("Row at left, column at top");
+                        break;
+                    }
+                    case 6: {
+                        orientationstring = i18n("Row at right, column at top");
+                        break;
+                    }
+                    case 7: {
+                        orientationstring = i18n("Row at right, column at bottom");
+                        break;
+                    }
+                    case 8: {
+                        orientationstring = i18n("Row at left, column at bottom");
+                        break;
+                    }
+                    default: {
+                        return;
+                    }
+                }
+                addValue(idx, field, QVariant(orientationstring));
+                return;
+            }
+
             QString val = QString::fromUtf8(value.c_str(), value.size());
             if( !val.startsWith(':') )
                 addValue(idx, field, val);
