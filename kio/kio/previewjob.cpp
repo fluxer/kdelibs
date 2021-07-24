@@ -51,7 +51,9 @@
 namespace KIO { struct PreviewItem; }
 using namespace KIO;
 
-// NOTE: keep in sync with kde-baseapps/dolphin/src/settings/general/previewssettingspage.cpp
+// NOTE: keep in sync with:
+// kde-baseapps/dolphin/src/settings/general/previewssettingspage.cpp
+// kde-workspace/kioslave/thumbnail/thumbnail.h
 enum MaxPreviewSizes {
     MaxLocalSize = 5, // 5 MB
     MaxRemoteSize = 1 // 1 MB
