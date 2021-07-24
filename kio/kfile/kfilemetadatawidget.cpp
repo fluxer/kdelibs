@@ -100,7 +100,7 @@ KFileMetaDataWidget::Private::~Private()
 void KFileMetaDataWidget::Private::initMetaInfoSettings()
 {
     // increase version, if the blacklist of disabled properties should be updated
-    static const int currentVersion = 6;
+    static const int currentVersion = 7;
 
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     if (config.group("Misc").readEntry("version", 0) < currentVersion) {
