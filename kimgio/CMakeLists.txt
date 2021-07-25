@@ -4,49 +4,32 @@ include_directories(${KDE4_KDEUI_INCLUDES})
 
 ##################################
 
-if(JASPER_FOUND)
-    include_directories(${JASPER_INCLUDE_DIR})
-    kde4_add_plugin(kimg_jp2 jp2.cpp)
-    target_link_libraries(kimg_jp2
+if(IMAGEMAGICK_FOUND)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
+    include_directories(${ImageMagick_INCLUDE_DIRS})
+    kde4_add_plugin(kimg_magick magick.cpp)
+    target_link_libraries(kimg_magick
         ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
-        ${JASPER_LIBRARIES}
+        ${ImageMagick_LIBRARIES}
     )
 
     install(
-        TARGETS kimg_jp2
+        TARGETS kimg_magick
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
     install(
         FILES
+        dds.desktop
+        eps.desktop
+        exr.desktop
         jp2.desktop
+        pcx.desktop
+        psd.desktop
+        xcf.desktop
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
     )
-endif(JASPER_FOUND)
-
-##################################
-
-if(OPENEXR_FOUND)
-    include_directories(${CMAKE_SOURCE_DIR}/kio ${OPENEXR_INCLUDE_DIR})
-    add_definitions(${OPENEXR_DEFINITIONS})
-    set_source_files_properties(exr.cpp PROPERTIES COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}")
-    set(kimg_exr_LIB_SRCS exr.cpp)
-    kde4_add_plugin(kimg_exr ${kimg_exr_LIB_SRCS})
-    target_link_libraries(kimg_exr
-        ${KDE4_KDECORE_LIBS}
-        ${QT_QTGUI_LIBRARY}
-        ${OPENEXR_LIBRARIES}
-    )
-
-    install(
-        TARGETS kimg_exr
-        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
-    )
-    install(
-        FILES exr.desktop
-        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
-    )
-endif(OPENEXR_FOUND)
+endif(IMAGEMAGICK_FOUND)
 
 ##################################
 
@@ -71,66 +54,7 @@ if(WEBP_FOUND)
     )
 endif(WEBP_FOUND)
 
-##################################
-
-set(imgioplugins
-    eps
-    pcx
-    ras
-    rgb
-    xcf
-    dds
-    psd
-    hdr
-)
-
-foreach(plugin ${imgioplugins})
-    kde4_add_plugin(kimg_${plugin} ${plugin}.cpp)
-    target_link_libraries(kimg_${plugin}
-        ${KDE4_KDECORE_LIBS}
-        ${QT_QTGUI_LIBRARY}
-    )
-    install(
-        TARGETS kimg_${plugin}
-        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
-    )
-endforeach()
-
-##################################
-
-set(kimg_pic_LIB_SRCS
-    pic_read.cpp
-    pic_write.cpp
-    pic_io_plugin.cpp
-    pic_io_handler.cpp
-)
-
-kde4_add_plugin(kimg_pic ${kimg_pic_LIB_SRCS})
-target_link_libraries(kimg_pic
-    ${KDE4_KDECORE_LIBS}
-    ${QT_QTGUI_LIBRARY}
-)
-
-install(
-    TARGETS kimg_pic
-    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
-)
-
 ########### install files ###############
-
-install(
-    FILES
-    eps.desktop
-    pcx.desktop
-    ras.desktop
-    rgb.desktop
-    xcf.desktop
-    dds.desktop
-    psd.desktop
-    hdr.desktop
-    pic.desktop
-    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
-)
 
 install(
     FILES qimageio_plugin.desktop
