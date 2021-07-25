@@ -280,7 +280,7 @@ struct KDebugPrivate
         file.close();
     }
 
-    inline int level(QtMsgType type)
+    inline int level(QtMsgType type) const
     { return int(type) - int(QtDebugMsg); }
 
     QString groupNameForArea(unsigned int area) const
