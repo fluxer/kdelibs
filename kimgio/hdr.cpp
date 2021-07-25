@@ -245,6 +245,8 @@ bool HDRHandler::canRead(QIODevice *device)
         return false;
     }
 
+    qint64 oldPos = device->pos();
+
     int len;
     char line[MAXLINE];
     bool validHeader = false;
@@ -265,7 +267,9 @@ bool HDRHandler::canRead(QIODevice *device)
         }
         linecount++;
     } while (linecount < 10);
-    
+
+    device->seek(oldPos);
+
     if (!validHeader || !validFormat) {
         kDebug(399) << "Unknown HDR format.";
         return false;
@@ -276,12 +280,12 @@ bool HDRHandler::canRead(QIODevice *device)
 
 QStringList HDRPlugin::keys() const
 {
-    return QStringList() << "hdr" << "HDR";
+    return QStringList() << "hdr";
 }
 
 QImageIOPlugin::Capabilities HDRPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == "hdr" || format == "HDR")
+    if (format == "hdr")
         return Capabilities(CanRead);
     if (!format.isEmpty())
         return 0;
