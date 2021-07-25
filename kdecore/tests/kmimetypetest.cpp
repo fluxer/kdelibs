@@ -259,10 +259,14 @@ void KMimeTypeTest::testFindByPathUsingFileName_data()
     }
 
     QString exePath = KStandardDirs::findExe( "kioexec" );
-    if ( exePath.isEmpty() )
+    if ( exePath.isEmpty() ) {
         kWarning() << "kioexec not found";
-    else {
-        const QString executableType = QString::fromLatin1( "application/x-executable" );
+    } else {
+        QString executableType = QString::fromLatin1( "application/x-executable" );
+        // https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/11
+        if (KMimeType::sharedMimeInfoVersion() <= KDE_MAKE_VERSION(2, 0, 0)) {
+            executableType = QString::fromLatin1( "application/x-sharedlib" );
+        }
         QTest::newRow("executable") << exePath << executableType;
     }
 }
