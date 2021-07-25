@@ -841,25 +841,25 @@ void KMimeTypeTest::testParseMagicFile_data()
     QTest::newRow("Second rule, two-level match") << "AB[C]" << "application/x-desktop";
     QTest::newRow("Second rule, failure at first level (mask)") << "AB[B]" << QString();
     QTest::newRow("Second rule, failure at second level") << "AB[CN" << QString();
-    QTest::newRow("Tnef magic, should pass") << "\x78\x9f\x3e\x22" << "application/vnd.ms-tnef";
-    QTest::newRow("Tnef magic, should fail") << "\x22\x3e\x9f\x78" << QString();
-    QTest::newRow("Powerpoint rule, for endianness check, should pass") << "\xd0\xcf\x11\xe0" << "application/vnd.ms-powerpoint";
-    QTest::newRow("Powerpoint rule, no swapping, should fail") << "\x11\xe0\xd0\xcf" << QString();
+    QTest::newRow("Tnef magic, should pass") << QString::fromLatin1("\x78\x9f\x3e\x22") << "application/vnd.ms-tnef";
+    QTest::newRow("Tnef magic, should fail") << QString::fromLatin1("\x22\x3e\x9f\x78") << QString();
+    QTest::newRow("Powerpoint rule, for endianness check, should pass") << QString::fromLatin1("\xd0\xcf\x11\xe0") << "application/vnd.ms-powerpoint";
+    QTest::newRow("Powerpoint rule, no swapping, should fail") << QString::fromLatin1("\x11\xe0\xd0\xcf") << QString();
 #if Q_BYTE_ORDER == Q_LITTLE_ENDIAN
-    QTest::newRow("Test mime, host16, wrong endianness") << "\x12\x34" << QString();
-    QTest::newRow("Test mime, host16, little endian, ok") << "\x34\x12" << "text/x-test-mime-host16";
-    QTest::newRow("Test mime, host32, wrong endianness") << "\x12\x34\x56\x78" << QString();
-    QTest::newRow("Test mime, host32, little endian, ok") << "\x78\x56\x34\x12" << "text/x-test-mime-host32";
+    QTest::newRow("Test mime, host16, wrong endianness") << QString::fromLatin1("\x12\x34") << QString();
+    QTest::newRow("Test mime, host16, little endian, ok") << QString::fromLatin1("\x34\x12") << "text/x-test-mime-host16";
+    QTest::newRow("Test mime, host32, wrong endianness") << QString::fromLatin1("\x12\x34\x56\x78") << QString();
+    QTest::newRow("Test mime, host32, little endian, ok") << QString::fromLatin1("\x78\x56\x34\x12") << "text/x-test-mime-host32";
 #else
-    QTest::newRow("Test mime, host16, big endian, ok") << "\x12\x34" << "text/x-test-mime-host16";
-    QTest::newRow("Test mime, host16, wrong endianness") << "\x34\x12" << QString();
-    QTest::newRow("Test mime, host32, big endian, ok") << "\x12\x34\x56\x78" << "text/x-test-mime-host32";
-    QTest::newRow("Test mime, host32, wrong endianness") << "\x78\x56\x34\x12" << QString();
+    QTest::newRow("Test mime, host16, big endian, ok") << QString::fromLatin1("\x12\x34") << "text/x-test-mime-host16";
+    QTest::newRow("Test mime, host16, wrong endianness") << QString::fromLatin1("\x34\x12") << QString();
+    QTest::newRow("Test mime, host32, big endian, ok") << QString::fromLatin1("\x12\x34\x56\x78") << "text/x-test-mime-host32";
+    QTest::newRow("Test mime, host32, wrong endianness") << QString::fromLatin1("\x78\x56\x34\x12") << QString();
 #endif
-    QTest::newRow("Test mime, little16, little endian, ok") << "\x78\x55" << "text/x-test-mime-little16";
-    QTest::newRow("Test mime, little16, wrong endianness") << "\x55\x78" << QString();
-    QTest::newRow("Test mime, big16, little endian, ok") << "\x12\x78" << "text/x-test-mime-big16";
-    QTest::newRow("Test mime, big16, wrong endianness") << "\x78\x12" << QString();
+    QTest::newRow("Test mime, little16, little endian, ok") << QString::fromLatin1("\x78\x55") << "text/x-test-mime-little16";
+    QTest::newRow("Test mime, little16, wrong endianness") << QString::fromLatin1("\x55\x78") << QString();
+    QTest::newRow("Test mime, big16, little endian, ok") << QString::fromLatin1("\x12\x78") << "text/x-test-mime-big16";
+    QTest::newRow("Test mime, big16, wrong endianness") << QString::fromLatin1("\x78\x12") << QString();
 
     QByteArray magicData;
     magicData.resize(sizeof(s_magicData) - 1 /*trailing nul*/);
