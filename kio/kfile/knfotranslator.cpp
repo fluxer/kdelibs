@@ -61,6 +61,7 @@ QString KNfoTranslator::translation(const KUrl& uri)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#characterCount", i18nc("@label number of characters", "Characters") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec",  i18nc("@label", "Codec") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#colorDepth", i18nc("@label", "Color Depth") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#colorCount", i18nc("@label", "Color Count") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", i18nc("@label", "Duration") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName", i18nc("@label", "Filename") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hasHash", i18nc("@label", "Hash") },
