@@ -81,6 +81,7 @@ set(imgioplugins
     xcf
     dds
     psd
+    hdr
 )
 
 foreach(plugin ${imgioplugins})

@@ -1,6 +1,7 @@
 /* This file is part of the KDE project
    Copyright (C) 2005 Christoph Hormann <chris_hormann@gmx.de>
    Copyright (C) 2005 Ignacio Castaño <castanyo@yahoo.es>
+   Copyright (C) 2021 Ivailo Monev <xakepa10@gmail.com>
 
    This program is free software; you can redistribute it and/or
    modify it under the terms of the Lesser GNU General Public
@@ -12,23 +13,22 @@
 
 #include <QtGui/QImage>
 #include <QtCore/QDataStream>
+#include <QtCore/QVarLengthArray>
 
 #include <kdebug.h>
 
-typedef Q_UINT8 uchar;
-
 namespace { // Private.
 
-#define MAXLINE		1024
-#define MINELEN		8       // minimum scanline length for encoding
-#define MAXELEN		0x7fff  // maximum scanline length for encoding
+#define MAXLINE 1024
+#define MINELEN 8       // minimum scanline length for encoding
+#define MAXELEN 0x7fff  // maximum scanline length for encoding
 
     static inline uchar ClipToByte(float value)
     {
         if (value > 255.0f) {
             return 255;
         }
-        //else if (value < 0.0f) return 0;	// we know value is positive.
+        // else if (value < 0.0f) return 0; // we know value is positive.
         return uchar(value);
     }
 
@@ -92,11 +92,13 @@ namespace { // Private.
         uchar val, code;
 
         // Create dst image.
-        if (!img.create(width, height, 32)) {
+        img = QImage(width, height, QImage::Format_RGB32);
+        if (img.isNull()) {
+            kDebug(399) << "Could not create image.";
             return false;
         }
 
-        QMemArray<uchar> image(width * 4);
+        QVarLengthArray<uchar> image(width * 4);
 
         for (int cline = 0; cline < height; cline++) {
             QRgb *scanline = (QRgb *)img.scanLine(cline);
@@ -115,7 +117,7 @@ namespace { // Private.
             }
 
             if (val != 2) {
-                s.device()->at(s.device()->at() - 1);
+                s.device()->seek(s.device()->pos() - 1);
                 Read_Old_Line(image.data(), width, s);
                 RGBE_To_QRgbLine(image.data(), scanline, width);
                 continue;
@@ -145,7 +147,7 @@ namespace { // Private.
                 for (int j = 0; j < width; ) {
                     s >> code;
                     if (s.atEnd()) {
-                            return false;
+                        return false;
                     }
                     if (code > 128) {
                         // run
@@ -175,61 +177,129 @@ namespace { // Private.
             
 } // namespace
 
+HDRHandler::HDRHandler()
+{
+}
 
-KDE_EXPORT void kimgio_hdr_read(QImageIO *io)
+bool HDRHandler::canRead() const
+{
+    if (canRead(device())) {
+        setFormat("hdr");
+        return true;
+    }
+    return false;
+}
+
+bool HDRHandler::read(QImage *image)
 {
     int len;
     char line[MAXLINE];
-    //bool validHeader = false;
-    bool validFormat = false;
-    
-    // Parse header	
-    do {
-        len = io->ioDevice()->readLine(line, MAXLINE);
 
-        /*if (strcmp(line, "#?RADIANCE\n") == 0 || strcmp(line, "#?RGBE\n") == 0) {
-            validHeader = true;
-        }*/
-        if (strcmp(line, "FORMAT=32-bit_rle_rgbe\n") == 0) {
-            validFormat = true;
-        }
-            
-    } while((len > 0) && (line[0] != '\n'));
-    
-    if (/*!validHeader ||*/ !validFormat) {
-        kDebug(399) << "Unknown HDR format.";
-        io->setImage(0);
-        io->setStatus(-1);
-        return;
-    }
-    
-    io->ioDevice()->readLine(line, MAXLINE);
-    
+    // Skip to size, parse it
     char s1[3], s2[3];
     int width, height;
-    // if(sscanf(line, "-Y %d +X %d", &height, &width) < 2) 
-    if (sscanf(line, "%2[+-XY] %d %2[+-XY] %d\n", s1, &height, s2, &width) != 4) {
+    bool validSize = false;
+    int linecount = 0;
+    do {
+        len = device()->readLine(line, MAXLINE);
+
+        if (sscanf(line, "%2[+-XY] %d %2[+-XY] %d", s1, &height, s2, &width) == 4) {
+            validSize = true;
+            break;
+        }
+        linecount++;
+    } while (linecount < 10);
+
+    if (!validSize) {
         kDebug(399) << "Invalid HDR file.";
-        io->setImage(0);
-        io->setStatus(-1);
-        return;
+        return false;
     }
-    
-    QDataStream s(io->ioDevice());
+
+    QDataStream s(device());
 
     QImage img;
     if (!LoadHDR(s, width, height, img)) {
         kDebug(399) << "Error loading HDR file.";
-        io->setImage(0);
-        io->setStatus(-1);
-        return;
+        return false;
     }
 
-    io->setImage(img);
-    io->setStatus(0);
+    *image = img;
+    return true;
 }
 
-KDE_EXPORT void kimgio_hdr_write(QImageIO *)
+bool HDRHandler::write(const QImage &image)
 {
     // intentionally not implemented (since writing low dynamic range data to a HDR file is nonsense.)
+    return false;
 }
+
+QByteArray HDRHandler::name() const
+{
+    return "hdr";
+}
+
+bool HDRHandler::canRead(QIODevice *device)
+{
+    if (!device) {
+        qWarning("HDRHandler::canRead() called with no device");
+        return false;
+    }
+
+    int len;
+    char line[MAXLINE];
+    bool validHeader = false;
+    bool validFormat = false;
+    int linecount = 0;
+    // Parse header
+    do {
+        len = device->readLine(line, MAXLINE);
+
+        if (qstrncmp(line, "#?RADIANCE", len) == 0 || qstrncmp(line, "#?RGBE", len) == 0) {
+            validHeader = true;
+        } else if (qstrncmp(line, "FORMAT=32-bit_rle_rgbe", len) == 0) {
+            validFormat = true;
+        }
+
+        if (validHeader && validFormat) {
+            break;
+        }
+        linecount++;
+    } while (linecount < 10);
+    
+    if (!validHeader || !validFormat) {
+        kDebug(399) << "Unknown HDR format.";
+        return false;
+    }
+
+    return true;
+}
+
+QStringList HDRPlugin::keys() const
+{
+    return QStringList() << "hdr" << "HDR";
+}
+
+QImageIOPlugin::Capabilities HDRPlugin::capabilities(QIODevice *device, const QByteArray &format) const
+{
+    if (format == "hdr" || format == "HDR")
+        return Capabilities(CanRead);
+    if (!format.isEmpty())
+        return 0;
+    if (!device->isOpen())
+        return 0;
+
+    Capabilities cap;
+    if (device->isReadable() && HDRHandler::canRead(device))
+        cap |= CanRead;
+    return cap;
+}
+
+QImageIOHandler *HDRPlugin::create(QIODevice *device, const QByteArray &format) const
+{
+    QImageIOHandler *handler = new HDRHandler;
+    handler->setDevice(device);
+    handler->setFormat(format);
+    return handler;
+}
+
+Q_EXPORT_PLUGIN2(hdr, HDRPlugin)
