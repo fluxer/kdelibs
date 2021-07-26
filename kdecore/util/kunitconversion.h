@@ -29,6 +29,33 @@ class KLengthPrivate;
 /*!
     Base class for all other conversion classes
 
+    Converting from one unit to other with any of the conversion classes is pretty simple:
+    @code
+    KTemperature temp(12.3, "°C");
+    qDebug() << temp.convertTo(KTemperature::Fahrenheit);
+    @endcode
+
+    Unlike the original KUnitConversion classes, @p KTemperature, @p KVelocity, @p KPressure and
+    @p KLength are thread-safe and much faster, albeit do not provide as many unit conversion
+    options (that may change). Being unable to copy the classes is design choice - storing the
+    unit (string or enum representation) however is absolutely possible and you can in fact
+    optimize it for use case if you have to store both the number and the unit by using struct:
+
+    @code
+    struct TempUnit {
+        double number;
+        KTemperature::KTempUnit unit;
+    };
+    @endcode
+
+    vs:
+    @code
+    struct TempUnit {
+        double number;
+        QString unit;
+    };
+    @endcode
+
     @since 4.20
     @see KTemperature, KVelocity, KPressure, KLength
 */
