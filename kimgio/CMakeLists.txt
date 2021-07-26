@@ -5,13 +5,15 @@ include_directories(${KDE4_KDEUI_INCLUDES})
 ##################################
 
 if(IMAGEMAGICK_FOUND)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
     include_directories(${ImageMagick_INCLUDE_DIRS})
     kde4_add_plugin(kimg_magick magick.cpp)
     target_link_libraries(kimg_magick
         ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
         ${ImageMagick_LIBRARIES}
+    )
+    set_target_properties(kimg_magick PROPERTIES
+        COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
     )
 
     install(
