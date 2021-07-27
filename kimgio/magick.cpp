@@ -28,9 +28,15 @@
 
 static const char* const magickpluginformat = "magick";
 
-MagickHandler::MagickHandler()
+int initMagick()
 {
     Magick::InitializeMagick(magickpluginformat);
+    return 0;
+}
+Q_CONSTRUCTOR_FUNCTION(initMagick);
+
+MagickHandler::MagickHandler()
+{
 }
 
 MagickHandler::~MagickHandler()
