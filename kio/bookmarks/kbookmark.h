@@ -324,10 +324,6 @@ protected:
 
 };
 
-#ifdef MAKE_KIO_LIB
-KDE_DUMMY_QHASH_FUNCTION(KBookmark)
-#endif
-
 /**
  * A group of bookmarks
  */
