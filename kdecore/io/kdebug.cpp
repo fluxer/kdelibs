@@ -280,7 +280,7 @@ struct KDebugPrivate
         file.close();
     }
 
-    inline int level(QtMsgType type)
+    inline int level(QtMsgType type) const
     { return int(type) - int(QtDebugMsg); }
 
     QString groupNameForArea(unsigned int area) const
@@ -466,12 +466,6 @@ struct KDebugPrivate
     QDebug setupQtWriter(QtMsgType type)
     {
         if (type != QtDebugMsg) {
-            if (type == QtWarningMsg) {
-                // KDE warnings are not the same thing as Qt warnings
-                // in Qt, warnings indicate bad code, which must be corrected before the release
-                // in KDE, it's just something that everyone sees (including users)
-                type = QtDebugMsg;
-            }
             return QDebug(type);
         }
         return QDebug(&lineendstrippingwriter);

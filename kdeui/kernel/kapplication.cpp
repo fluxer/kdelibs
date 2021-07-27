@@ -295,6 +295,7 @@ KApplication::KApplication()
     d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
+    setApplicationVersion(d->componentData.aboutData()->version());
     installSigpipeHandler();
     d->init();
 }
@@ -307,6 +308,7 @@ KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap)
     d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
+    setApplicationVersion(d->componentData.aboutData()->version());
     installSigpipeHandler();
     d->init();
 }
@@ -318,6 +320,7 @@ KApplication::KApplication(Display *dpy, Qt::HANDLE visual, Qt::HANDLE colormap,
     d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
+    setApplicationVersion(d->componentData.aboutData()->version());
     installSigpipeHandler();
     d->init();
 }
@@ -334,6 +337,7 @@ KApplication::KApplication(const KComponentData &cData)
     d->read_app_startup_id();
     setApplicationName(d->componentData.componentName());
     setOrganizationDomain(d->componentData.aboutData()->organizationDomain());
+    setApplicationVersion(d->componentData.aboutData()->version());
     installSigpipeHandler();
     d->init();
 }

@@ -442,9 +442,8 @@
   </entry>
  </group>
  <group name="PreviewSettings" >
-  <entry key="BoostSize" type="Bool" />
-  <entry key="MaximumSize" type="Bool" />
-  <entry key="UseFileThumbnails" type="Bool" />
+  <entry key="MaximumSize" type="Int" />
+  <entry key="MaximumRemoteSize" type="Int" />
   <entry key="Plugins" type="StringList" />
   <entry key="ar" type="Bool" />
   <entry key="file" type="Bool" />

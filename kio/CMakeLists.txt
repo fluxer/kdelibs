@@ -244,7 +244,6 @@ install(
     kcmodule.desktop
     kcmoduleinit.desktop
     kdatatool.desktop
-    kfileplugin.desktop
     kscan.desktop
     kurifilterplugin.desktop
     kfile/kpropertiesdialogplugin.desktop

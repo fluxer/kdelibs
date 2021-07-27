@@ -59,7 +59,7 @@ KTemperaturePrivate::KTemperaturePrivate(const double number, const QString &uni
         || unit == QLatin1String("kelvins")) {
         m_unitenum = KTemperature::Kelvin;
     } else {
-        kDebug() << "invalid temperature unit" << unit;
+        kDebug(930) << "invalid temperature unit" << unit;
     }
 }
 
@@ -196,7 +196,7 @@ KVelocityPrivate::KVelocityPrivate(const double number, const QString &unit)
         || unit == QLatin1String("mph")) {
         m_unitenum = KVelocity::MilePerHour;
     } else {
-        kDebug() << "invalid velocity unit" << unit;
+        kDebug(930) << "invalid velocity unit" << unit;
     }
 }
 
@@ -355,7 +355,7 @@ KPressurePrivate::KPressurePrivate(const double number, const QString &unit)
         || unit == QLatin1String("mbar") || unit == QLatin1String("mb")) {
         m_unitenum = KPressure::Millibar;
     } else {
-        kDebug() << "invalid pressure unit" << unit;
+        kDebug(930) << "invalid pressure unit" << unit;
     }
 }
 
@@ -493,7 +493,7 @@ KLengthPrivate::KLengthPrivate(const double number, const QString &unit)
         || unit == QLatin1String("mi")) {
         m_unitenum = KLength::Mile;
     } else {
-        kDebug() << "invalid length unit" << unit;
+        kDebug(930) << "invalid length unit" << unit;
     }
 }
 

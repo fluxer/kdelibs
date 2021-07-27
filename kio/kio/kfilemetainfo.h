@@ -60,24 +60,23 @@ public:
      * This is like a preset which can be customized by passing additional
      * parameters to constructors.
      */
-    enum What
-    {
-      Fastest       = 0x1,  /**< do the fastest possible read and omit all items
+    enum What {
+        Fastest       = 0x1,  /**< do the fastest possible read and omit all items
                                  that might need a significantly longer time
                                  than the others */
-      TechnicalInfo = 0x2,  /**< extract technical details about the file, like
+        TechnicalInfo = 0x2,  /**< extract technical details about the file, like
                                  e.g. play time, resolution or a compressioni
                                  type */
-      ContentInfo   = 0x4,  /**< read information about the content of the file
+        ContentInfo   = 0x4,  /**< read information about the content of the file
                                  like comments or id3 tags */
-      ExternalSources = 0x8, /**<read external metadata sources such as
+        ExternalSources = 0x8, /**<read external metadata sources such as
                                  filesystem based extended attributes if
                                  they are supported for the filesystem;
                                  RDF storages etc */
-      Thumbnail     = 0x10, /**< only read the file's thumbnail, if it contains
+        Thumbnail     = 0x10, /**< only read the file's thumbnail, if it contains
                                  one */
-      LinkedData    = 0x40, //< extract linked/related files like html links, source #include etc
-      Everything    = 0xffff ///< read everything, even if it might take a while
+        LinkedData    = 0x40, //< extract linked/related files like html links, source #include etc
+        Everything    = Fastest | TechnicalInfo | ContentInfo | ExternalSources | Thumbnail | LinkedData ///< read everything, even if it might take a while
 
     };
     Q_DECLARE_FLAGS(WhatFlags, What)
@@ -98,7 +97,7 @@ public:
      * the resource pointed to by @p url.
      * @note that c'tor is not thread-safe
      **/
-    KFileMetaInfo(const KUrl& url);
+    KFileMetaInfo(const KUrl& url, WhatFlags w = Everything);
     /**
      * @brief Construct an empty, invalid KFileMetaInfo instance.
      **/
@@ -128,7 +127,7 @@ public:
     bool isValid() const;
     QStringList preferredKeys() const;
     QStringList supportedKeys() const;
-    KIO_EXPORT friend QDataStream& operator >>(QDataStream& s, KFileMetaInfo& )
+    KIO_EXPORT friend QDataStream& operator >>(QDataStream& s, KFileMetaInfo&)
 ;
     KIO_EXPORT friend QDataStream& operator <<(QDataStream& s, const KFileMetaInfo&);
     KFileMetaInfoGroupList groups() const;

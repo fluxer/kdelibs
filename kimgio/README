@@ -1,18 +1,18 @@
-This directory contains Qt imageformat plugins. See Qt docs for
+This directory contains Katie imageformat plugins. See Katie docs for
 writing a new handler.
 
 Current formats include:
 
-DDS     <read>
-EPS     <read> <write>
-EXR     <read>
-HDR     <read>
-JP2     <read> <write>
-PCX     <read> <write>
-PIC     <read> <write>
-PNM     <read>
-PSD     <read>
-RAS     <read>
-RGB     <read> <write>
 WEBP    <read> <write>
+
+along with whatever ImageMagick supports but it is assumed that it supports
+reading atleast the following formats (even if they cannot be loaded) for
+compatibility:
+
+DDS     <read>
+EPS     <read>
+EXR     <read>
+JP2     <read>
+PCX     <read>
+PSD     <read>
 XCF     <read>

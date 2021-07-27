@@ -186,17 +186,10 @@ set_package_properties(LibLZMA PROPERTIES
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(Jasper 2.0.20)
-set_package_properties(Jasper PROPERTIES
-    URL "http://www.ece.uvic.ca/~mdadams/jasper"
-    PURPOSE "Support for JPEG-2000 images"
-    TYPE OPTIONAL
-)
-
-macro_optional_find_package(OpenEXR)
-set_package_properties(OpenEXR PROPERTIES
-    URL "http://www.openexr.com"
-    PURPOSE "Support for OpenEXR images"
+macro_optional_find_package(ImageMagick COMPONENTS Magick++)
+set_package_properties(ImageMagick PROPERTIES
+    URL "https://imagemagick.org/"
+    PURPOSE "Support for various image formats"
     TYPE OPTIONAL
 )
 

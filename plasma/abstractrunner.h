@@ -327,7 +327,7 @@ class PLASMA_EXPORT AbstractRunner : public QObject
          * a measure of safety for runners running their own threads. This should
          * be used instead of calling KServiceTypeTrader::query(..) directly.
          *
-         * @param serviceType a service type like "Plasma/Applet" or "KFilePlugin"
+         * @param serviceType a service type like "Plasma/Applet"
          * @param constraint a constraint to limit the choices returned.
          * @see KServiceTypeTrader::query(const QString&, const QString&)
          *

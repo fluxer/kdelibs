@@ -25,16 +25,10 @@
  *
  * Currently supported formats include:
  * @li DDS     \<read\>
- * @li EPS     \<read\> \<write\>
+ * @li EPS     \<read\>
  * @li EXR     \<read\>
- * @li HDR     \<read\>
- * @li JP2     \<read\> \<write\>
- * @li PCX     \<read\> \<write\>
- * @li PIC     \<read\> \<write\>
- * @li PNM     \<read\>
+ * @li JP2     \<read\>
  * @li PSD     \<read\>
- * @li RAS     \<read\>
- * @li RGB     \<read\> \<write\>
  * @li WEBP    \<read\> \<write\>
  * @li XCF     \<read\>
  *

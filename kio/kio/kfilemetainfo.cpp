@@ -297,7 +297,7 @@ public:
     QHash<QString, KFileMetaInfoItem> items;
     KUrl m_url;
 
-    void init ( QIODevice& stream, const KUrl& url, time_t mtime, KFileMetaInfo::WhatFlags w = KFileMetaInfo::Everything );
+    void init ( QIODevice& stream, const KUrl& url, time_t mtime, KFileMetaInfo::WhatFlags w );
     void initWriters ( const KUrl& /*file*/ );
     void operator= ( const KFileMetaInfoPrivate& k ) {
         items = k.items;
@@ -309,7 +309,7 @@ class KFileMetaInfoAnalysisConfiguration : public Strigi::AnalyzerConfiguration
 {
 public:
     KFileMetaInfoAnalysisConfiguration( KFileMetaInfo::WhatFlags indexDetail )
-    : m_indexDetail(indexDetail) {
+        : m_indexDetail(indexDetail) {
     }
 
     int64_t maximalStreamReadLength ( const Strigi::AnalysisResult& ar ) {
@@ -319,6 +319,12 @@ public:
             return -1;
         else
             return 65536; // do not read the whole file - this is used for on-the-fly analysis
+    }
+
+    bool useFactory(Strigi::StreamAnalyzerFactory* factory) const {
+        Q_UNUSED(factory);
+        // TODO: filter factories based on m_indexDetail
+        return true;
     }
 
 private:
@@ -370,13 +376,13 @@ KFileMetaInfo::KFileMetaInfo ( const QString& path, KFileMetaInfo::WhatFlags w )
     }
 }
 
-KFileMetaInfo::KFileMetaInfo ( const KUrl& url )
+KFileMetaInfo::KFileMetaInfo ( const KUrl& url, KFileMetaInfo::WhatFlags w )
         : d ( new KFileMetaInfoPrivate() )
 {
     QFileInfo fileinfo ( url.toLocalFile() );
     QFile file ( url.toLocalFile() );
     if ( file.open ( QIODevice::ReadOnly ) ) {
-        d->init ( file, url, fileinfo.lastModified().toTime_t() );
+        d->init ( file, url, fileinfo.lastModified().toTime_t(), w );
         if ( fileinfo.isWritable() ) {
             d->initWriters ( url );
         }

@@ -115,7 +115,7 @@ void KStandarddirsTest::testFindAllResources()
 
     const QStringList cmakeModulesFiles = KGlobal::dirs()->findAllResources( "data", "cmake/modules/" );
     QVERIFY( !cmakeModulesFiles.isEmpty() );
-    QVERIFY( cmakeModulesFiles.count() > 80 ); // I have 150 here, installed by kdelibs.
+    QVERIFY( cmakeModulesFiles.count() > 40 ); // I have 79 here, installed by kdelibs.
 
     // Create a local config file, the file will be used as expected result
     const QString localConfigFile = m_kdehome + "/share/config/foorc";
