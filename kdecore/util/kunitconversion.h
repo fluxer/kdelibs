@@ -19,6 +19,8 @@
 #ifndef KUNITCONVERSION_H
 #define KUNITCONVERSION_H
 
+#include <kdecore_export.h>
+
 #include <QString>
 
 class KTemperaturePrivate;
@@ -59,7 +61,7 @@ class KLengthPrivate;
     @since 4.20
     @see KTemperature, KVelocity, KPressure, KLength
 */
-class KUnitConversion {
+class KDECORE_EXPORT KUnitConversion {
 public:
     /*!
         @return Rounded number up to number of decimal digits specified by @p digits
@@ -72,7 +74,7 @@ public:
 
     @since 4.20
 */
-class KTemperature : public KUnitConversion {
+class KDECORE_EXPORT KTemperature : public KUnitConversion {
 public:
     enum KTempUnit {
         Invalid = -1,
@@ -140,7 +142,7 @@ private:
 
     @since 4.20
 */
-class KVelocity : public KUnitConversion {
+class KDECORE_EXPORT KVelocity : public KUnitConversion {
 public:
     enum KVeloUnit {
         Invalid = -1,
@@ -173,7 +175,7 @@ private:
 
     @since 4.20
 */
-class KPressure : public KUnitConversion {
+class KDECORE_EXPORT KPressure : public KUnitConversion {
 public:
     enum KPresUnit {
         Invalid = -1,
@@ -206,7 +208,7 @@ private:
 
     @since 4.20
 */
-class KLength : public KUnitConversion {
+class KDECORE_EXPORT KLength : public KUnitConversion {
 public:
     enum KLengUnit {
         Invalid = -1,
