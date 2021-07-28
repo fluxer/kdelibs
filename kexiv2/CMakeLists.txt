@@ -54,13 +54,3 @@ if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
 
-configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/libkexiv2.pc.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc
-)
-
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/libkexiv2.pc
-    DESTINATION ${KDE4_LIB_INSTALL_DIR}/pkgconfig
-)
-
