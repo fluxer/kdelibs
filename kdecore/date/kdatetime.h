@@ -1459,6 +1459,11 @@ class KDECORE_EXPORT KDateTime //krazy:exclude=dpointer (implicitly shared)
      */
     static void setFromStringDefault(const Spec &spec);
 
+    /**
+     * @return @c true if date represents night time of the day, @c false otherwise
+     * @since 4.20
+     */
+    bool isNightTime() const;
 
     /**
      * Checks whether the date/time returned by the last call to fromString()

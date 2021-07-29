@@ -824,10 +824,21 @@ KDateTime &KDateTime::operator=(const KDateTime &other)
     return *this;
 }
 
+inline static bool kIsNightTime(const QDateTime &datetime)
+{
+    const int month = datetime.date().month();
+    const int hour = datetime.time().hour();
+    if (month <= 3 || month >= 9) {
+        return (hour >= 18 || hour <= 8);
+    }
+    return (hour >= 20 || hour <= 6);
+}
+
 void      KDateTime::detach()                   { d.detach(); }
 bool      KDateTime::isNull() const             { return d->dt().isNull(); }
 bool      KDateTime::isValid() const            { return d->specType != Invalid  &&  d->dt().isValid(); }
 bool      KDateTime::outOfRange() const         { return d->status == stTooEarly; }
+bool      KDateTime::isNightTime() const        { return kIsNightTime(d->dt()); }
 bool      KDateTime::isDateOnly() const         { return d->dateOnly(); }
 bool      KDateTime::isLocalZone() const        { return d->specType == TimeZone  &&  d->specZone == KSystemTimeZones::local(); }
 bool      KDateTime::isClockTime() const        { return d->specType == ClockTime; }
