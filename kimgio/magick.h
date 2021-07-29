@@ -27,11 +27,11 @@ public:
     MagickHandler();
     ~MagickHandler();
 
-    bool canRead() const;
-    bool read(QImage *image);
-    bool write(const QImage &image);
+    bool canRead() const final;
+    bool read(QImage *image) final;
+    bool write(const QImage &image) final;
 
-    QByteArray name() const;
+    QByteArray name() const final;
 
     static bool canRead(QIODevice *device);
 };
@@ -39,9 +39,9 @@ public:
 class MagickPlugin : public QImageIOPlugin
 {
 public:
-    QStringList keys() const;
-    Capabilities capabilities(QIODevice *device, const QByteArray &format) const;
-    QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const;
+    QStringList keys() const final;
+    Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
+    QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;
 };
 
 #endif // KIMG_MAGICK_H
