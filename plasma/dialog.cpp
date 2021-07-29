@@ -363,13 +363,10 @@ int DialogPrivate::calculateWidthForHeightAndRatio(int height, qreal ratio)
     switch (aspectRatioMode) {
         case KeepAspectRatio:
             return qRound(height * ratio);
-            break;
         case Square:
             return height;
-            break;
         case ConstrainedSquare:
             return height;
-            break;
         default:
             return -1;
     }
@@ -440,7 +437,7 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
         qreal aspectRatio = (qreal)width() / (qreal)height();
 
         switch(d->resizeStartCorner) {
-            case Dialog::NorthEast:
+            case Dialog::NorthEast: {
                 newHeight = qMin(maximumHeight(), qMax(minimumHeight(), height() - event->y()));
                 newWidth = d->calculateWidthForHeightAndRatio(newHeight, aspectRatio);
                 if (newWidth == -1) {
@@ -448,7 +445,8 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
                 }
                 position = QPoint(x(), y() + height() - newHeight);
                 break;
-            case Dialog::NorthWest:
+            }
+            case Dialog::NorthWest: {
                 newHeight = qMin(maximumHeight(), qMax(minimumHeight(), height() - event->y()));
                 newWidth = d->calculateWidthForHeightAndRatio(newHeight, aspectRatio);
                 if (newWidth == -1) {
@@ -456,7 +454,8 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
                 }
                 position = QPoint(x() + width() - newWidth, y() + height() - newHeight);
                 break;
-            case Dialog::SouthWest:
+            }
+            case Dialog::SouthWest: {
                 newHeight = qMin(maximumHeight(), qMax(minimumHeight(), event->y()));
                 newWidth = d->calculateWidthForHeightAndRatio(newHeight, aspectRatio);
                 if (newWidth == -1) {
@@ -464,7 +463,8 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
                 }
                 position = QPoint(x() + width() - newWidth, y());
                 break;
-            case Dialog::SouthEast:
+            }
+            case Dialog::SouthEast: {
                 newHeight = qMin(maximumHeight(), qMax(minimumHeight(), event->y()));
                 newWidth = d->calculateWidthForHeightAndRatio(newHeight, aspectRatio);
                 if (newWidth == -1) {
@@ -472,7 +472,8 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
                 }
                 position = QPoint(x(), y());
                 break;
-             default:
+            }
+             default: {
                 newHeight = qMin(maximumHeight(), qMax(minimumHeight(), height()));
                 newWidth = d->calculateWidthForHeightAndRatio(newHeight, aspectRatio);
                 if (newWidth == -1) {
@@ -480,6 +481,7 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
                 }
                 position = QPoint(x(), y());
                 break;
+            }
         }
 
         QRect newGeom(position, QSize(newWidth, newHeight));
@@ -673,7 +675,7 @@ bool Dialog::eventFilter(QObject *watched, QEvent *event)
         d->adjustViewTimer->start(150);
     }
 
-    // when moving the cursor with a 45° angle from the outside
+    // when moving the cursor with a 45 angle from the outside
     // to the inside passing over a resize angle the cursor changes its
     // shape to a resize cursor. As a side effect this is the only case
     // when the cursor immediately enters the view without giving
@@ -801,20 +803,25 @@ void Dialog::animatedHide(Plasma::Direction direction)
 
     Location location = Desktop;
     switch (direction) {
-    case Down:
-        location = BottomEdge;
-        break;
-    case Right:
-        location = RightEdge;
-        break;
-    case Left:
-        location = LeftEdge;
-        break;
-    case Up:
-        location = TopEdge;
-        break;
-    default:
-        break;
+        case Down: {
+            location = BottomEdge;
+            break;
+        }
+        case Right: {
+            location = RightEdge;
+            break;
+        }
+        case Left: {
+            location = LeftEdge;
+            break;
+        }
+        case Up: {
+            location = TopEdge;
+            break;
+        }
+        default: {
+            break;
+        }
     }
 
     Plasma::WindowEffects::slideWindow(this, location);

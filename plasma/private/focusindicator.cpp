@@ -133,7 +133,7 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
     }
 
     switch (event->type()) {
-        case QEvent::GraphicsSceneHoverEnter:
+        case QEvent::GraphicsSceneHoverEnter: {
             if (!m_parent->hasFocus()) {
                 m_prefix = m_customPrefix + "hover";
                 syncGeometry();
@@ -151,8 +151,8 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
                 m_hoverAnimation->start();
             }
             break;
-
-        case QEvent::GraphicsSceneHoverLeave:
+        }
+        case QEvent::GraphicsSceneHoverLeave: {
             if (!m_parent->hasFocus()) {
                 m_prefix = m_customPrefix + "shadow";
                 syncGeometry();
@@ -170,12 +170,12 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
                 m_hoverAnimation->start();
             }
             break;
-
-        case QEvent::GraphicsSceneResize:
+        }
+        case QEvent::GraphicsSceneResize: {
             syncGeometry();
-        break;
-
-        case QEvent::FocusIn:
+            break;
+        }
+        case QEvent::FocusIn: {
             m_prefix = m_customPrefix + "focus";
             syncGeometry();
             m_hoverAnimation->stop();
@@ -192,8 +192,8 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
 
             m_hoverAnimation->start();
             break;
-
-        case QEvent::FocusOut:
+        }
+        case QEvent::FocusOut: {
             if (!m_isUnderMouse) {
                 m_prefix = m_customPrefix + "shadow";
                 syncGeometry();
@@ -212,9 +212,10 @@ bool FocusIndicator::eventFilter(QObject *watched, QEvent *event)
                 m_hoverAnimation->start();
             }
             break;
-
-        default:
+        }
+        default: {
             break;
+        }
     };
 
     return false;

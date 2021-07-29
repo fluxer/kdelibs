@@ -34,15 +34,12 @@ namespace Plasma
 qreal scalingFactor(ZoomLevel level)
 {
     switch (level) {
-    case DesktopZoom:
-        return 1;
-        break;
-    case GroupZoom:
-        return 0.5;
-        break;
-    case OverviewZoom:
-        return 0.2;
-        break;
+        case DesktopZoom:
+            return 1;
+        case GroupZoom:
+            return 0.5;
+        case OverviewZoom:
+            return 0.2;
     }
 
     // to make odd compilers not warn like silly beasts
@@ -52,19 +49,19 @@ qreal scalingFactor(ZoomLevel level)
 Direction locationToDirection(Location location)
 {
     switch (location) {
-    case Floating:
-    case Desktop:
-    case TopEdge:
-    case FullScreen:
-        //TODO: should we be smarter for floating and planer?
-        //      perhaps we should take a QRect and/or QPos as well?
-        return Down;
-    case BottomEdge:
-        return Up;
-    case LeftEdge:
-        return Right;
-    case RightEdge:
-        return Left;
+        case Floating:
+        case Desktop:
+        case TopEdge:
+        case FullScreen:
+            //TODO: should we be smarter for floating and planer?
+            //      perhaps we should take a QRect and/or QPos as well?
+            return Down;
+        case BottomEdge:
+            return Up;
+        case LeftEdge:
+            return Right;
+        case RightEdge:
+            return Left;
     }
 
     return Down;
@@ -73,19 +70,19 @@ Direction locationToDirection(Location location)
 Direction locationToInverseDirection(Location location)
 {
     switch (location) {
-    case Floating:
-    case Desktop:
-    case TopEdge:
-    case FullScreen:
-        //TODO: should we be smarter for floating and planer?
-        //      perhaps we should take a QRect and/or QPos as well?
-        return Up;
-    case BottomEdge:
-        return Down;
-    case LeftEdge:
-        return Left;
-    case RightEdge:
-        return Right;
+        case Floating:
+        case Desktop:
+        case TopEdge:
+        case FullScreen:
+            //TODO: should we be smarter for floating and planer?
+            //      perhaps we should take a QRect and/or QPos as well?
+            return Up;
+        case BottomEdge:
+            return Down;
+        case LeftEdge:
+            return Left;
+        case RightEdge:
+            return Right;
     }
 
     return Up;

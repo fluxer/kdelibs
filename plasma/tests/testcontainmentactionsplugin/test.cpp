@@ -36,14 +36,17 @@ ContextTest::ContextTest(QObject *parent, const QVariantList &args)
 void ContextTest::contextEvent(QEvent *event)
 {
     switch (event->type()) {
-        case QEvent::GraphicsSceneMousePress:
+        case QEvent::GraphicsSceneMousePress: {
             contextEvent(static_cast<QGraphicsSceneMouseEvent*>(event));
             break;
-        case QEvent::GraphicsSceneWheel:
+        }
+        case QEvent::GraphicsSceneWheel: {
             wheelEvent(static_cast<QGraphicsSceneWheelEvent*>(event));
             break;
-        default:
+        }
+        default: {
             break;
+        }
     }
 }
 

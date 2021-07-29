@@ -183,21 +183,26 @@ FrameSvg::EnabledBorders FrameSvg::enabledBorders() const
 void FrameSvg::setElementPrefix(Plasma::Location location)
 {
     switch (location) {
-        case TopEdge:
+        case TopEdge: {
             setElementPrefix("north");
             break;
-        case BottomEdge:
+        }
+        case BottomEdge: {
             setElementPrefix("south");
             break;
-        case LeftEdge:
+        }
+        case LeftEdge: {
             setElementPrefix("west");
             break;
-        case RightEdge:
+        }
+        case RightEdge: {
             setElementPrefix("east");
             break;
-        default:
+        }
+        default: {
             setElementPrefix(QString());
             break;
+        }
     }
 
     d->location = location;

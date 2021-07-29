@@ -69,72 +69,73 @@ Plasma::Animation* Animator::create(Animator::Animation type, QObject *parent)
     Plasma::Animation *result = 0;
 
     switch (type) {
-    case FadeAnimation:
-        result = create("FadeAnimation", parent);
-        if (!result) {
-            result = new Plasma::FadeAnimation(parent);
+        case FadeAnimation: {
+            result = create("FadeAnimation", parent);
+            if (!result) {
+                result = new Plasma::FadeAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case GrowAnimation:
-        result = create("GrowAnimation", parent);
-        if (!result) {
-            result = new Plasma::GrowAnimation(parent);
+        case GrowAnimation: {
+            result = create("GrowAnimation", parent);
+            if (!result) {
+                result = new Plasma::GrowAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case PulseAnimation:
-        result = create("PulseAnimation", parent);
-        if (!result) {
-            result = new Plasma::PulseAnimation(parent);
+        case PulseAnimation: {
+            result = create("PulseAnimation", parent);
+            if (!result) {
+                result = new Plasma::PulseAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case RotationAnimation:
-        result = create("RotationAnimation", parent);
-        if (!result) {
-            result = new Plasma::RotationAnimation(parent);
+        case RotationAnimation: {
+            result = create("RotationAnimation", parent);
+            if (!result) {
+                result = new Plasma::RotationAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case RotationStackedAnimation:
-        result = create("RotationStackedAnimation", parent);
-        if (!result) {
-            result = new Plasma::RotationStackedAnimation(parent);
+        case RotationStackedAnimation: {
+            result = create("RotationStackedAnimation", parent);
+            if (!result) {
+                result = new Plasma::RotationStackedAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case SlideAnimation:
-        result = create("SlideAnimation", parent);
-        if (!result) {
-            result = new Plasma::SlideAnimation(parent);
+        case SlideAnimation: {
+            result = create("SlideAnimation", parent);
+            if (!result) {
+                result = new Plasma::SlideAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case GeometryAnimation:
-        result = create("GeometryAnimation", parent);
-        if (!result) {
-            result = new Plasma::GeometryAnimation(parent);
+        case GeometryAnimation: {
+            result = create("GeometryAnimation", parent);
+            if (!result) {
+                result = new Plasma::GeometryAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case ZoomAnimation:
-        result = create("ZoomAnimation", parent);
-        if (!result) {
-            result = new Plasma::ZoomAnimation(parent);
+        case ZoomAnimation: {
+            result = create("ZoomAnimation", parent);
+            if (!result) {
+                result = new Plasma::ZoomAnimation(parent);
+            }
+            break;
         }
-        break;
-
-    case PixmapTransitionAnimation:
-        result = create("PixmapTransitionAnimation", parent);
-        if (!result) {
-            result = new Plasma::PixmapTransition(parent);
+        case PixmapTransitionAnimation: {
+            result = create("PixmapTransitionAnimation", parent);
+            if (!result) {
+                result = new Plasma::PixmapTransition(parent);
+            }
+            break;
         }
-        break;
-
-    default:
-        //kDebug() << "Unsupported animation type.";
-        break;
+        default: {
+            //kDebug() << "Unsupported animation type.";
+            break;
+        }
     }
 
     return result;
@@ -145,29 +146,30 @@ QEasingCurve Animator::create(Animator::CurveShape type)
     QEasingCurve result;
 
     switch (type) {
-    case EaseInCurve:
-        result.setType(QEasingCurve::InQuad);
-        break;
-
-    case EaseOutCurve:
-        result.setType(QEasingCurve::OutQuad);
-        break;
-
-    case EaseInOutCurve:
-        result.setType(QEasingCurve::InOutQuad);
-        break;
-
-    case LinearCurve:
-        result.setType(QEasingCurve::Linear);
-        break;
-
-    case PendularCurve:
-        result = PendulumCurve();
-        break;
-
-    default:
-        kDebug() << "Unsupported easing curve type.";
-        break;
+        case EaseInCurve: {
+            result.setType(QEasingCurve::InQuad);
+            break;
+        }
+        case EaseOutCurve: {
+            result.setType(QEasingCurve::OutQuad);
+            break;
+        }
+        case EaseInOutCurve: {
+            result.setType(QEasingCurve::InOutQuad);
+            break;
+        }
+        case LinearCurve: {
+            result.setType(QEasingCurve::Linear);
+            break;
+        }
+        case PendularCurve: {
+            result = PendulumCurve();
+            break;
+        }
+        default: {
+            kDebug() << "Unsupported easing curve type.";
+            break;
+        }
     }
 
     return result;

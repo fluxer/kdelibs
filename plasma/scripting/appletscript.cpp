@@ -192,8 +192,8 @@ Animation *AppletScript::loadAnimationFromPackage(const QString &name, QObject *
             foreach (const QString &possibleFile, animConf.keyList()) {
                 const QStringList anims = animConf.readEntry(possibleFile, QStringList());
                 if (anims.contains(name)) {
-                        file = possibleFile;
-                        break;
+                    file = possibleFile;
+                    break;
                 }
             }
 

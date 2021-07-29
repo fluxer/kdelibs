@@ -97,11 +97,13 @@ KService::List engineOffers(const QString &language, ComponentType type)
 
     QString component;
     switch (type) {
-    case AppletComponent:
-        component = "Applet";
-        break;
-    default:
-        return KService::List();
+        case AppletComponent: {
+            component = "Applet";
+            break;
+        }
+        default: {
+            return KService::List();
+        }
     }
 
     QString constraint = QString("[X-Plasma-API] == '%1' and "
@@ -126,11 +128,13 @@ ScriptEngine *loadEngine(const QString &language, ComponentType type, QObject *p
     ScriptEngine *engine = 0;
     foreach (const KService::Ptr &service, offers) {
         switch (type) {
-            case AppletComponent:
+            case AppletComponent: {
                 engine = service->createInstance<Plasma::AppletScript>(parent, args, &error);
                 break;
-            default:
+            }
+            default: {
                 return 0;
+            }
         }
 
         if (engine) {
@@ -159,12 +163,12 @@ AppletScript *loadScriptEngine(const QString &language, Applet *applet)
 PackageStructure::Ptr defaultPackageStructure(ComponentType type)
 {
     switch (type) {
-    case AppletComponent:
-    case GenericComponent:
-        return PackageStructure::Ptr(new PlasmoidPackage());
-    default:
-        // TODO: we don't have any special structures for other components yet
-        break;
+        case AppletComponent:
+        case GenericComponent:
+            return PackageStructure::Ptr(new PlasmoidPackage());
+        default:
+            // TODO: we don't have any special structures for other components yet
+            break;
     }
 
     return PackageStructure::Ptr(new PackageStructure());

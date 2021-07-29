@@ -47,23 +47,29 @@ bool isEffectAvailable(Effect effect)
     QString effectName;
 
     switch (effect) {
-    case Slide:
-        effectName = "_KDE_SLIDE";
-        break;
-    case WindowPreview:
-        effectName = "_KDE_WINDOW_PREVIEW";
-        break;
-    case PresentWindows:
-        effectName = "_KDE_PRESENT_WINDOWS_DESKTOP";
-        break;
-    case PresentWindowsGroup:
-        effectName = "_KDE_PRESENT_WINDOWS_GROUP";
-        break;
-    case HighlightWindows:
-        effectName = "_KDE_WINDOW_HIGHLIGHT";
-        break;
-    default:
-        return false;
+        case Slide: {
+            effectName = "_KDE_SLIDE";
+            break;
+        }
+        case WindowPreview: {
+            effectName = "_KDE_WINDOW_PREVIEW";
+            break;
+        }
+        case PresentWindows: {
+            effectName = "_KDE_PRESENT_WINDOWS_DESKTOP";
+            break;
+        }
+        case PresentWindowsGroup: {
+            effectName = "_KDE_PRESENT_WINDOWS_GROUP";
+            break;
+        }
+        case HighlightWindows: {
+            effectName = "_KDE_WINDOW_HIGHLIGHT";
+            break;
+        }
+        default: {
+            return false;
+        }
     }
 
     // hackish way to find out if KWin has the effect enabled,

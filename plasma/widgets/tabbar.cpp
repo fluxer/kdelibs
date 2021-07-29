@@ -185,35 +185,35 @@ void TabBarPrivate::shapeChanged(const QTabBar::Shape shape)
     //FIXME: QGraphicsLinearLayout doesn't have setDirection, so for now
     // North is equal to south and East is equal to West
     switch (shape) {
-    case QTabBar::RoundedWest:
-    case QTabBar::TriangularWest:
-
-    case QTabBar::RoundedEast:
-    case QTabBar::TriangularEast:
-        q->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
-        tabBarLayout->setOrientation(Qt::Vertical);
-        tabWidgetLayout->setOrientation(Qt::Horizontal);
-        tabWidgetLayout->itemAt(0)->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        if (tabWidgetLayout->count() > 1) {
-            tabWidgetLayout->itemAt(1)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        case QTabBar::RoundedWest:
+        case QTabBar::TriangularWest:
+        case QTabBar::RoundedEast:
+        case QTabBar::TriangularEast: {
+            q->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding);
+            tabBarLayout->setOrientation(Qt::Vertical);
+            tabWidgetLayout->setOrientation(Qt::Horizontal);
+            tabWidgetLayout->itemAt(0)->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+            if (tabWidgetLayout->count() > 1) {
+                tabWidgetLayout->itemAt(1)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+            }
+            tabProxy->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
+            break;
         }
-        tabProxy->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        break;
-
-    case QTabBar::RoundedSouth:
-    case QTabBar::TriangularSouth:
-
-    case QTabBar::RoundedNorth:
-    case QTabBar::TriangularNorth:
-    default:
-        q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        tabBarLayout->setOrientation(Qt::Horizontal);
-        tabWidgetLayout->setOrientation(Qt::Vertical);
-        tabWidgetLayout->itemAt(0)->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        if (tabWidgetLayout->count() > 1) {
-            tabWidgetLayout->itemAt(1)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+        case QTabBar::RoundedSouth:
+        case QTabBar::TriangularSouth:
+        case QTabBar::RoundedNorth:
+        case QTabBar::TriangularNorth:
+        default: {
+            q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+            tabBarLayout->setOrientation(Qt::Horizontal);
+            tabWidgetLayout->setOrientation(Qt::Vertical);
+            tabWidgetLayout->itemAt(0)->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+            if (tabWidgetLayout->count() > 1) {
+                tabWidgetLayout->itemAt(1)->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+            }
+            tabProxy->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+            break;
         }
-        tabProxy->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
     }
     tabProxy->setPreferredSize(tabProxy->native->sizeHint());
 }

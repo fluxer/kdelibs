@@ -189,7 +189,7 @@ QSize NativeTabBar::tabSizeHint(int index) const
         case RoundedSouth:
         case TriangularSouth:
         case RoundedNorth:
-        case TriangularNorth:
+        case TriangularNorth: {
             if (count() > 0) {
                 for (int i = count() - 1; i >= 0; i--) {
                     minwidth += tabSize(i).width();
@@ -200,10 +200,11 @@ QSize NativeTabBar::tabSizeHint(int index) const
                 }
             }
             break;
+        }
         case RoundedWest:
         case TriangularWest:
         case RoundedEast:
-        case TriangularEast:
+        case TriangularEast: {
             if (count() > 0) {
                 for (int i = count() - 1; i >= 0; i--) {
                     minheight += tabSize(i).height();
@@ -217,6 +218,7 @@ QSize NativeTabBar::tabSizeHint(int index) const
                 }
             }
             break;
+        }
     }
     return hint;
 }
@@ -504,7 +506,6 @@ bool NativeTabBar::isVertical() const
         case TriangularWest:
         case TriangularEast:
             return true;
-            break;
         default:
             break;
     }

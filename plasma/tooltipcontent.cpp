@@ -230,14 +230,17 @@ void ToolTipContent::registerResources(QTextDocument *document) const
         QTextDocument::ResourceType t = QTextDocument::ImageResource;
 
         switch (r.type) {
-            case ImageResource:
+            case ImageResource: {
                 break;
-            case HtmlResource:
+            }
+            case HtmlResource: {
                 t = QTextDocument::HtmlResource;
                 break;
-            case CssResource:
+            }
+            case CssResource: {
                 t = QTextDocument::StyleSheetResource;
                 break;
+            }
         }
 
         document->addResource(t, it.key(), r.data);

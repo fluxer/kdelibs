@@ -464,12 +464,12 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
     }
 
     // set render parameters according to resize mode
-    switch (resizeMethod)
-    {
-        case Wallpaper::ScaledResize:
+    switch (resizeMethod) {
+        case Wallpaper::ScaledResize: {
             scaledSize = size;
             break;
-        case Wallpaper::CenteredResize:
+        }
+        case Wallpaper::CenteredResize: {
             scaledSize = imgSize;
             pos = QPoint((size.width() - scaledSize.width()) / 2,
                          (size.height() - scaledSize.height()) / 2);
@@ -490,6 +490,7 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
             }
 
             break;
+        }
         case Wallpaper::MaxpectResize: {
             float xratio = (float) size.width() / imgSize.width();
             float yratio = (float) size.height() / imgSize.height();
@@ -523,16 +524,18 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
                          (size.height() - scaledSize.height()) / 2);
             break;
         }
-        case Wallpaper::TiledResize:
+        case Wallpaper::TiledResize: {
             scaledSize = imgSize;
             tiled = true;
             break;
-        case Wallpaper::CenterTiledResize:
+        }
+        case Wallpaper::CenterTiledResize: {
             scaledSize = imgSize;
             pos = QPoint(-scaledSize.width() + ((size.width() - scaledSize.width()) / 2) % scaledSize.width(),
                          -scaledSize.height() + ((size.height() - scaledSize.height()) / 2) % scaledSize.height());
             tiled = true;
             break;
+        }
     }
 
     QPainter p(&result);

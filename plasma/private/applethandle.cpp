@@ -324,25 +324,30 @@ void AppletHandle::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
     QPointF shiftM;
     QPointF shiftMx;
 
-    switch(m_pressedButton)
-    {
-    case ConfigureButton:
-        shiftC = QPointF(2, 2);
-        break;
-    case RemoveButton:
-        shiftD = QPointF(2, 2);
-        break;
-    case RotateButton:
-        shiftR = QPointF(2, 2);
-        break;
-    case ResizeButton:
-        shiftM = QPointF(2, 2);
-        break;
-    case MaximizeButton:
-        shiftMx = QPointF(2, 2);
-        break;
-    default:
-        break;
+    switch(m_pressedButton) {
+        case ConfigureButton: {
+            shiftC = QPointF(2, 2);
+            break;
+        }
+        case RemoveButton: {
+            shiftD = QPointF(2, 2);
+            break;
+        }
+        case RotateButton: {
+            shiftR = QPointF(2, 2);
+            break;
+        }
+        case ResizeButton: {
+            shiftM = QPointF(2, 2);
+            break;
+        }
+        case MaximizeButton: {
+            shiftMx = QPointF(2, 2);
+            break;
+        }
+        default: {
+            break;
+        }
     }
 
     QRectF sourceIconRect(QPointF(0, m_decorationRect.height() + 1), iconSize);
@@ -522,20 +527,21 @@ void AppletHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     if (m_applet && event->button() == Qt::LeftButton) {
         switch (m_pressedButton) {
-        case ConfigureButton:
-            //FIXME: Remove this call once the configuration management change was done
-            if (m_pressedButton == releasedAtButton) {
-                m_applet->showConfigurationInterface();
+            case ConfigureButton: {
+                //FIXME: Remove this call once the configuration management change was done
+                if (m_pressedButton == releasedAtButton) {
+                    m_applet->showConfigurationInterface();
+                }
+                break;
             }
-            break;
-        case RemoveButton:
-            if (m_pressedButton == releasedAtButton) {
-                forceDisappear();
-                m_applet->destroy();
+            case RemoveButton: {
+                if (m_pressedButton == releasedAtButton) {
+                    forceDisappear();
+                    m_applet->destroy();
+                }
+                break;
             }
-            break;
-        case MoveButton:
-        {
+            case MoveButton: {
                 // test for containment change
                 //kDebug() << "testing for containment change, sceneBoundingRect = "
                 //         << m_containment->sceneBoundingRect();
@@ -561,15 +567,17 @@ void AppletHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                         }
                     }
                 }
-            break;
-        }
-        case MaximizeButton:
-            if (m_applet) {
-                m_applet->runAssociatedApplication();
+                break;
             }
-            break;
-        default:
-            break;
+            case MaximizeButton: {
+                if (m_applet) {
+                    m_applet->runAssociatedApplication();
+                }
+                break;
+            }
+            default: {
+                break;
+            }
         }
     }
 
@@ -745,56 +753,56 @@ void AppletHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 bool AppletHandle::sceneEvent(QEvent *event)
 {
     switch (event->type()) {
-    case QEvent::TouchEnd: {
-        QTransform t = m_applet->transform();
-        QRectF geom = m_applet->geometry();
-        QPointF translation(t.m31(), t.m32());
-        QPointF center = geom.center();
-        geom.setWidth(geom.width()*qAbs(t.m11()));
-        geom.setHeight(geom.height()*qAbs(t.m22()));
-        geom.moveCenter(center);
-
-        m_applet->setGeometry(geom);
-        t.reset();
-        t.translate(m_applet->size().width()/2, m_applet->size().height()/2);
-        t.rotateRadians(m_angle);
-        t.translate(-m_applet->size().width()/2, -m_applet->size().height()/2);
-
-
-        m_applet->setTransform(t);
-        return true;
-    }
-    case QEvent::TouchBegin:
-    case QEvent::TouchUpdate:
-    {
-        QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
-        if (touchPoints.count() == 2) {
-            const QTouchEvent::TouchPoint &touchPoint0 = touchPoints.first();
-            const QTouchEvent::TouchPoint &touchPoint1 = touchPoints.last();
-
-            //rotation
-            QLineF line0(touchPoint0.lastScenePos(), touchPoint1.lastScenePos());
-            QLineF line1(touchPoint0.scenePos(), touchPoint1.scenePos());
-            m_angle = m_angle+(line1.angleTo(line0)*M_PI_2/90);
+        case QEvent::TouchEnd: {
             QTransform t = m_applet->transform();
+            QRectF geom = m_applet->geometry();
+            QPointF translation(t.m31(), t.m32());
+            QPointF center = geom.center();
+            geom.setWidth(geom.width()*qAbs(t.m11()));
+            geom.setHeight(geom.height()*qAbs(t.m22()));
+            geom.moveCenter(center);
+
+            m_applet->setGeometry(geom);
+            t.reset();
             t.translate(m_applet->size().width()/2, m_applet->size().height()/2);
-            t.rotate(line1.angleTo(line0));
-
-            //scaling
-            qreal scaleFactor = 1;
-            if (line0.length() > 0) {
-                scaleFactor = line1.length() / line0.length();
-            }
-
-            t.scale(scaleFactor, scaleFactor);
+            t.rotateRadians(m_angle);
             t.translate(-m_applet->size().width()/2, -m_applet->size().height()/2);
-            m_applet->setTransform(t);
 
+
+            m_applet->setTransform(t);
+            return true;
         }
-        return true;
-    }
-    default:
-        break;
+        case QEvent::TouchBegin:
+        case QEvent::TouchUpdate: {
+            QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
+            if (touchPoints.count() == 2) {
+                const QTouchEvent::TouchPoint &touchPoint0 = touchPoints.first();
+                const QTouchEvent::TouchPoint &touchPoint1 = touchPoints.last();
+
+                //rotation
+                QLineF line0(touchPoint0.lastScenePos(), touchPoint1.lastScenePos());
+                QLineF line1(touchPoint0.scenePos(), touchPoint1.scenePos());
+                m_angle = m_angle+(line1.angleTo(line0)*M_PI_2/90);
+                QTransform t = m_applet->transform();
+                t.translate(m_applet->size().width()/2, m_applet->size().height()/2);
+                t.rotate(line1.angleTo(line0));
+
+                //scaling
+                qreal scaleFactor = 1;
+                if (line0.length() > 0) {
+                    scaleFactor = line1.length() / line0.length();
+                }
+
+                t.scale(scaleFactor, scaleFactor);
+                t.translate(-m_applet->size().width()/2, -m_applet->size().height()/2);
+                m_applet->setTransform(t);
+
+            }
+            return true;
+        }
+        default: {
+            break;
+        }
     }
     return QGraphicsItem::sceneEvent(event);
 }
