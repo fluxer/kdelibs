@@ -829,9 +829,9 @@ inline static bool kIsNightTime(const QDateTime &datetime)
     const int month = datetime.date().month();
     const int hour = datetime.time().hour();
     if (month <= 3 || month >= 9) {
-        return (hour >= 18 || hour <= 8);
+        return (hour >= 19 || hour <= 6);
     }
-    return (hour >= 20 || hour <= 6);
+    return (hour >= 20 || hour <= 5);
 }
 
 void      KDateTime::detach()                   { d.detach(); }
