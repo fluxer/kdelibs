@@ -30,20 +30,29 @@ class WebPHandler : public QImageIOHandler
 public:
     WebPHandler();
 
-    virtual bool canRead() const;
-    virtual bool read(QImage *image);
-    virtual bool write(const QImage &image);
+    bool canRead() const final;
+    bool read(QImage *image) final;
+    bool write(const QImage &image) final;
 
-    virtual QByteArray format() const;
+    QByteArray name() const final;
 
-    virtual bool supportsOption(ImageOption option) const;
-    virtual QVariant option(ImageOption option) const;
-    virtual void setOption(ImageOption option, const QVariant &value);
+    bool supportsOption(ImageOption option) const final;
+    QVariant option(ImageOption option) const final;
+    void setOption(ImageOption option, const QVariant &value) final;
 
     static bool canRead(QIODevice *device);
 
 private:
     int quality;
+};
+
+
+class WebPPlugin : public QImageIOPlugin
+{
+public:
+    QStringList keys() const final;
+    Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
+    QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;
 };
 
 #endif
