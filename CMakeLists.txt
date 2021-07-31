@@ -77,17 +77,6 @@ set_package_properties(Exiv2 PROPERTIES
     PURPOSE "Required to build libkexiv2"
 )
 
-# NOTE: Libraw 0.16.x is prefered version to use because it's ported to Cmake
-# with full features supported. Until libraw 0.16.0 is release (ends of 2013),
-# we will support previous version (with limited support)
-find_package(LibRaw 0.15)
-set_package_properties(LibRaw PROPERTIES
-    DESCRIPTION "library that provides image Raw file demosaicing"
-    URL "http://www.libraw.org"
-    TYPE REQUIRED
-    PURPOSE "Required to build libkdcraw"
-)
-
 # optional features
 if(X11_FOUND)
     macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
@@ -341,7 +330,6 @@ add_subdirectory( cmake )
 add_subdirectory( dnssd )
 add_subdirectory( includes )
 add_subdirectory( interfaces )
-add_subdirectory( kdcraw )
 add_subdirectory( kdeclarative )
 add_subdirectory( kdecore )
 add_subdirectory( kded )
