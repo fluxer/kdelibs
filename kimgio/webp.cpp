@@ -29,14 +29,10 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QImage>
 #include <QVariant>
 
-//---------------------------------------------------------------------
-
 WebPHandler::WebPHandler()
-  : quality(75)
+    : quality(75)
 {
 }
-
-//---------------------------------------------------------------------
 
 bool WebPHandler::canRead() const
 {
@@ -47,38 +43,37 @@ bool WebPHandler::canRead() const
     return false;
 }
 
-//---------------------------------------------------------------------
-
 bool WebPHandler::read(QImage *retImage)
 {
     QByteArray data = device()->readAll();
 
     WebPBitstreamFeatures features;
-    VP8StatusCode ret = WebPGetFeatures(reinterpret_cast<const uint8_t*>(data.constData()), data.size(), &features);
-    if ( ret != VP8_STATUS_OK ) {
+    const VP8StatusCode ret = WebPGetFeatures(reinterpret_cast<const uint8_t*>(data.constData()),
+                                              data.size(), &features);
+    if (ret != VP8_STATUS_OK) {
         return false;
     }
 
-    if ( features.has_alpha ) {
+    if (features.has_alpha) {
         *retImage = QImage(features.width, features.height, QImage::Format_ARGB32);
     } else {
         *retImage = QImage(features.width, features.height, QImage::Format_RGB32);
     }
 
-    if ( retImage->isNull() ) {  // out of memory
+    if (retImage->isNull()) { // out of memory
         return false;
     }
 
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
-    if ( WebPDecodeARGBInto(reinterpret_cast<const uint8_t*>(data.constData()),
-                            data.size(), reinterpret_cast<uint8_t*>(retImage->bits()),
-                            retImage->byteCount(), retImage->bytesPerLine()) == 0 ) {
+    if (WebPDecodeARGBInto(reinterpret_cast<const uint8_t*>(data.constData()),
+                           data.size(), reinterpret_cast<uint8_t*>(retImage->bits()),
+                           retImage->byteCount(), retImage->bytesPerLine()) == 0) {
         return false;
     }
 #else
-    if ( WebPDecodeBGRAInto(reinterpret_cast<const uint8_t*>(data.constData()),
-                            data.size(), reinterpret_cast<uint8_t*>(retImage->bits()),
-                            retImage->byteCount(), retImage->bytesPerLine()) == 0 ) {
+    if (WebPDecodeBGRAInto(reinterpret_cast<const uint8_t*>(data.constData()),
+                           data.size(), reinterpret_cast<uint8_t*>(retImage->bits()),
+                           retImage->byteCount(), retImage->bytesPerLine()) == 0) {
         return false;
     }
 #endif
@@ -86,14 +81,13 @@ bool WebPHandler::read(QImage *retImage)
     return true;
 }
 
-//---------------------------------------------------------------------
-
 bool WebPHandler::write(const QImage &image)
 {
     // limitation in WebP
-    if ( (image.height() > 16383) || (image.height() == 0) ||
-         (image.width() > 16383)  || (image.width() == 0) )
+    if (image.height() > 16383 || image.height() == 0 ||
+        image.width() > 16383 || image.width() == 0) {
         return false;
+    }
 
     uint8_t *imageData = new uint8_t[image.width() * image.height() * (3 + image.hasAlphaChannel())];
 
@@ -105,7 +99,7 @@ bool WebPHandler::write(const QImage &image)
             imageData[idx++] = qGreen(scanline[x]);
             imageData[idx++] = qBlue(scanline[x]);
 
-            if ( image.hasAlphaChannel() ) {
+            if (image.hasAlphaChannel()) {
                 imageData[idx++] = qAlpha(scanline[x]);
             }
         }
@@ -113,14 +107,14 @@ bool WebPHandler::write(const QImage &image)
 
     uint8_t *output = 0;
     size_t size;
-    if ( image.hasAlphaChannel() ) {
+    if (image.hasAlphaChannel()) {
         size = WebPEncodeRGBA(imageData, image.width(), image.height(), image.width() * 4, quality, &output);
     } else {
-        size = WebPEncodeRGB(imageData, image.width(), image.height(), image.width() * 4, quality, &output);
+        size = WebPEncodeRGB(imageData, image.width(), image.height(), image.width() * 3, quality, &output);
     }
-    delete [] imageData;
+    delete []imageData;
 
-    if ( size == 0 ) {
+    if (size == 0) {
         WebPFree(output);
         return false;
     }
@@ -131,106 +125,83 @@ bool WebPHandler::write(const QImage &image)
     return true;
 }
 
-//---------------------------------------------------------------------
-
-QByteArray WebPHandler::format() const
+QByteArray WebPHandler::name() const
 {
     return "webp";
 }
-
-//---------------------------------------------------------------------
 
 bool WebPHandler::supportsOption(ImageOption option) const
 {
     return (option == Quality) || (option == Size);
 }
 
-//---------------------------------------------------------------------
-
 QVariant WebPHandler::option(ImageOption option) const
 {
-    switch ( option )
-    {
-        case Quality:
+    switch (option) {
+        case Quality: {
             return quality;
-
+        }
         case Size: {
-            QByteArray data = device()->peek(26);
-
+            const QByteArray data = device()->peek(26);
             int width = 0, height = 0;
-
-            if ( WebPGetInfo(reinterpret_cast<const uint8_t*>(data.constData()),
-                             data.size(), &width, &height) == 0 )
-                return QSize();  // header error
-
+            if (WebPGetInfo(reinterpret_cast<const uint8_t*>(data.constData()),
+                            data.size(), &width, &height) == 0) {
+                return QSize(); // header error
+            }
             return QSize(width, height);
         }
-
-        default: return QVariant();
+        default: {
+            return QVariant();
+        }
     }
+    Q_UNREACHABLE();
 }
-
-//---------------------------------------------------------------------
 
 void WebPHandler::setOption(ImageOption option, const QVariant &value)
 {
-    if (option == Quality)
+    if (option == Quality) {
         quality = qBound(0, value.toInt(), 100);
+    }
 }
-
-//---------------------------------------------------------------------
 
 bool WebPHandler::canRead(QIODevice *device)
 {
-    if (!device) {
+    if (Q_UNLIKELY(!device)) {
         qWarning("WebPHandler::canRead() called with no device");
         return false;
     }
 
     // WebP file header: 4 bytes "RIFF", 4 bytes length, 4 bytes "WEBP"
-    QByteArray header = device->peek(12);
-
+    const QByteArray header = device->peek(12);
     return (header.size() == 12) && header.startsWith("RIFF") && header.endsWith("WEBP");
 }
-
-//---------------------------------------------------------------------
-//---------------------------------------------------------------------
-
-class WebPPlugin : public QImageIOPlugin
-{
-public:
-    QStringList keys() const;
-    Capabilities capabilities(QIODevice *device, const QByteArray &format) const;
-    QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const;
-};
-
-//---------------------------------------------------------------------
 
 QStringList WebPPlugin::keys() const
 {
     return QStringList() << "webp";
 }
 
-//---------------------------------------------------------------------
-
 QImageIOPlugin::Capabilities WebPPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == "webp")
+    if (format == "webp") {
         return Capabilities(CanRead | CanWrite);
-    if (!format.isEmpty())
+    }
+    if (!format.isEmpty()) {
         return 0;
-    if (!device->isOpen())
+    }
+    if (!device->isOpen()) {
         return 0;
+    }
 
     Capabilities cap;
-    if (device->isReadable() && WebPHandler::canRead(device))
+    if (device->isReadable() && WebPHandler::canRead(device)) {
         cap |= CanRead;
-    if (device->isWritable())
+    }
+    if (device->isWritable()) {
         cap |= CanWrite;
+    }
     return cap;
 }
-
-//---------------------------------------------------------------------
 
 QImageIOHandler *WebPPlugin::create(QIODevice *device, const QByteArray &format) const
 {
