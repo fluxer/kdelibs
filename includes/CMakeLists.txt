@@ -164,7 +164,6 @@ install(
     KIEBookmarkExporterImpl
     KIEBookmarkImporter
     KIEBookmarkImporterImpl
-    KIMProxy
     KIcon
     KIconButton
     KIconCanvas
