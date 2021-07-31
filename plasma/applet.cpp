@@ -1742,14 +1742,14 @@ bool Applet::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
                         d->handle = handle;
                     }
                 }
-            break;
+                break;
 
             case QEvent::GraphicsSceneHoverMove:
                 if (d->handle && !d->handle.data()->shown() && immutability() == Mutable) {
                     QGraphicsSceneHoverEvent *he = static_cast<QGraphicsSceneHoverEvent*>(event);
                     d->handle.data()->setHoverPos(he->pos());
                 }
-            break;
+                break;
 
             case QEvent::GraphicsSceneMousePress: {
                 QGraphicsSceneMouseEvent *me = static_cast<QGraphicsSceneMouseEvent *>(event);
@@ -1757,11 +1757,11 @@ bool Applet::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
                     event->setAccepted(false);
                     return true;
                 }
-            break;
+                break;
             }
 
-        default:
-            break;
+            default:
+                break;
         }
 
     }
@@ -2332,39 +2332,39 @@ QVariant Applet::itemChange(GraphicsItemChange change, const QVariant &value)
 
     //kDebug() << change;
     switch (change) {
-    case ItemSceneHasChanged: {
-        Corona *newCorona = qobject_cast<Corona *>(qvariant_cast<QGraphicsScene*>(value));
-        if (newCorona && newCorona->immutability() != Mutable) {
-            updateConstraints(ImmutableConstraint);
+        case ItemSceneHasChanged: {
+            Corona *newCorona = qobject_cast<Corona *>(qvariant_cast<QGraphicsScene*>(value));
+            if (newCorona && newCorona->immutability() != Mutable) {
+                updateConstraints(ImmutableConstraint);
+            }
+            break;
         }
-    }
-        break;
-    case ItemParentChange:
-        if (!d->isContainment) {
-            Containment *c = containment();
-            if (d->mainConfig && !c) {
-                kWarning() << "Configuration object was requested prior to init(), which is too early. "
-                    "Please fix this item:" << parentItem() << value.value<QGraphicsItem *>()
-                    << name();
+        case ItemParentChange: {
+            if (!d->isContainment) {
+                Containment *c = containment();
+                if (d->mainConfig && !c) {
+                    kWarning() << "Configuration object was requested prior to init(), which is too early. "
+                        "Please fix this item:" << parentItem() << value.value<QGraphicsItem *>()
+                        << name();
 
-                Applet *newC = dynamic_cast<Applet*>(value.value<QGraphicsItem *>());
-                if (newC) {
-                    // if this is an applet, and we've just been assigned to our first containment,
-                    // but the applet did something stupid like ask for the config() object prior to
-                    // this happening (e.g. inits ctor) then let's repair that situation for them.
-                    KConfigGroup *old = d->mainConfig;
-                    KConfigGroup appletConfig = newC->config();
-                    appletConfig = KConfigGroup(&appletConfig, "Applets");
-                    d->mainConfig = new KConfigGroup(&appletConfig, QString::number(d->appletId));
-                    old->copyTo(d->mainConfig);
-                    old->deleteGroup();
-                    delete old;
+                    Applet *newC = dynamic_cast<Applet*>(value.value<QGraphicsItem *>());
+                    if (newC) {
+                        // if this is an applet, and we've just been assigned to our first containment,
+                        // but the applet did something stupid like ask for the config() object prior to
+                        // this happening (e.g. inits ctor) then let's repair that situation for them.
+                        KConfigGroup *old = d->mainConfig;
+                        KConfigGroup appletConfig = newC->config();
+                        appletConfig = KConfigGroup(&appletConfig, "Applets");
+                        d->mainConfig = new KConfigGroup(&appletConfig, QString::number(d->appletId));
+                        old->copyTo(d->mainConfig);
+                        old->deleteGroup();
+                        delete old;
+                    }
                 }
             }
+            break;
         }
-        break;
-    case ItemParentHasChanged:
-        {
+        case ItemParentHasChanged: {
             if (isContainment()) {
                 removeSceneEventFilter(this);
             } else {
@@ -2375,16 +2375,16 @@ QVariant Applet::itemChange(GraphicsItemChange change, const QVariant &value)
                     removeSceneEventFilter(this);
                 }
             }
+            break;
         }
-        break;
-    case ItemPositionHasChanged:
-        emit geometryChanged();
-        // fall through!
-    case ItemTransformHasChanged:
-        d->scheduleModificationNotification();
-        break;
-    default:
-        break;
+        case ItemPositionHasChanged:
+            emit geometryChanged();
+            // fall through!
+        case ItemTransformHasChanged:
+            d->scheduleModificationNotification();
+            break;
+        default:
+            break;
     };
 
     return ret;
@@ -2431,16 +2431,6 @@ QSizeF Applet::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
     }
 
     return hint;
-}
-
-void Applet::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    Q_UNUSED(event)
-}
-
-void Applet::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    Q_UNUSED(event)
 }
 
 void Applet::timerEvent(QTimerEvent *event)

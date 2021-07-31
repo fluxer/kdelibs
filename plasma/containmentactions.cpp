@@ -229,8 +229,7 @@ QString ContainmentActions::eventToString(QEvent *event)
 
     switch (event->type()) {
         case QEvent::MouseButtonPress:
-        case QEvent::MouseButtonRelease:
-        {
+        case QEvent::MouseButtonRelease: {
             QMouseEvent *e = static_cast<QMouseEvent*>(event);
             int m = QObject::staticQtMetaObject.indexOfEnumerator("MouseButtons");
             QMetaEnum mouse = QObject::staticQtMetaObject.enumerator(m);
@@ -240,8 +239,7 @@ QString ContainmentActions::eventToString(QEvent *event)
         }
         case QEvent::GraphicsSceneMousePress:
         case QEvent::GraphicsSceneMouseRelease:
-        case QEvent::GraphicsSceneMouseDoubleClick:
-        {
+        case QEvent::GraphicsSceneMouseDoubleClick: {
             QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
             int m = QObject::staticQtMetaObject.indexOfEnumerator("MouseButtons");
             QMetaEnum mouse = QObject::staticQtMetaObject.enumerator(m);
@@ -249,8 +247,7 @@ QString ContainmentActions::eventToString(QEvent *event)
             modifiers = e->modifiers();
             break;
         }
-        case QEvent::Wheel:
-        {
+        case QEvent::Wheel: {
             QWheelEvent *e = static_cast<QWheelEvent*>(event);
             int o = QObject::staticQtMetaObject.indexOfEnumerator("Orientations");
             QMetaEnum orient = QObject::staticQtMetaObject.enumerator(o);
@@ -259,8 +256,7 @@ QString ContainmentActions::eventToString(QEvent *event)
             modifiers = e->modifiers();
             break;
         }
-        case QEvent::GraphicsSceneWheel:
-        {
+        case QEvent::GraphicsSceneWheel: {
             QGraphicsSceneWheelEvent *e = static_cast<QGraphicsSceneWheelEvent*>(event);
             int o = QObject::staticQtMetaObject.indexOfEnumerator("Orientations");
             QMetaEnum orient = QObject::staticQtMetaObject.enumerator(o);
@@ -270,16 +266,16 @@ QString ContainmentActions::eventToString(QEvent *event)
             break;
         }
         case QEvent::GraphicsSceneContextMenu:
-        case QEvent::ContextMenu:
-        {
+        case QEvent::ContextMenu: {
             int m = QObject::staticQtMetaObject.indexOfEnumerator("MouseButtons");
             QMetaEnum mouse = QObject::staticQtMetaObject.enumerator(m);
             trigger = mouse.valueToKey(Qt::RightButton);
             modifiers = Qt::NoModifier;
             break;
         }
-        default:
+        default: {
             return QString();
+        }
     }
 
     int k = QObject::staticQtMetaObject.indexOfEnumerator("KeyboardModifiers");
@@ -305,13 +301,10 @@ QPoint screenPosFromEvent(QEvent *event)
         case QEvent::GraphicsSceneMouseRelease:
         case QEvent::GraphicsSceneMouseDoubleClick:
             return static_cast<QGraphicsSceneMouseEvent*>(event)->screenPos();
-            break;
         case QEvent::GraphicsSceneWheel:
             return static_cast<QGraphicsSceneWheelEvent*>(event)->screenPos();
-            break;
         case QEvent::GraphicsSceneContextMenu:
             return static_cast<QGraphicsSceneContextMenuEvent*>(event)->screenPos();
-            break;
         default:
             break;
     }
@@ -326,13 +319,10 @@ QPointF scenePosFromEvent(QEvent *event)
         case QEvent::GraphicsSceneMouseRelease:
         case QEvent::GraphicsSceneMouseDoubleClick:
             return static_cast<QGraphicsSceneMouseEvent*>(event)->scenePos();
-            break;
         case QEvent::GraphicsSceneWheel:
             return static_cast<QGraphicsSceneWheelEvent*>(event)->scenePos();
-            break;
         case QEvent::GraphicsSceneContextMenu:
             return static_cast<QGraphicsSceneContextMenuEvent*>(event)->scenePos();
-            break;
         default:
             break;
     }

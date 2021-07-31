@@ -521,43 +521,44 @@ QPoint Corona::popupPosition(const QGraphicsItem *item, const QSize &s, Qt::Alig
     }
 
     switch (loc) {
-    case BottomEdge:
-    case TopEdge: {
-        if (alignment == Qt::AlignCenter) {
-            pos.setX(pos.x() + actualItem->boundingRect().width()/2 - s.width()/2);
-        } else if (alignment == Qt::AlignRight) {
-            pos.setX(pos.x() + actualItem->boundingRect().width() - s.width());
-        }
+        case BottomEdge:
+        case TopEdge: {
+            if (alignment == Qt::AlignCenter) {
+                pos.setX(pos.x() + actualItem->boundingRect().width()/2 - s.width()/2);
+            } else if (alignment == Qt::AlignRight) {
+                pos.setX(pos.x() + actualItem->boundingRect().width() - s.width());
+            }
 
-        if (pos.x() + s.width() > v->geometry().x() + v->geometry().width()) {
-            pos.setX((v->geometry().x() + v->geometry().width()) - s.width());
-        } else {
-            pos.setX(qMax(pos.x(), v->geometry().left()));
+            if (pos.x() + s.width() > v->geometry().x() + v->geometry().width()) {
+                pos.setX((v->geometry().x() + v->geometry().width()) - s.width());
+            } else {
+                pos.setX(qMax(pos.x(), v->geometry().left()));
+            }
+            break;
         }
-        break;
-    }
-    case LeftEdge:
-    case RightEdge: {
-        if (alignment == Qt::AlignCenter) {
-            pos.setY(pos.y() + actualItem->boundingRect().height()/2 - s.height()/2);
-        } else if (alignment == Qt::AlignRight) {
-            pos.setY(pos.y() + actualItem->boundingRect().height() - s.height());
-        }
+        case LeftEdge:
+        case RightEdge: {
+            if (alignment == Qt::AlignCenter) {
+                pos.setY(pos.y() + actualItem->boundingRect().height()/2 - s.height()/2);
+            } else if (alignment == Qt::AlignRight) {
+                pos.setY(pos.y() + actualItem->boundingRect().height() - s.height());
+            }
 
-        if (pos.y() + s.height() > v->geometry().y() + v->geometry().height()) {
-            pos.setY((v->geometry().y() + v->geometry().height()) - s.height());
-        } else {
-            pos.setY(qMax(pos.y(), v->geometry().top()));
+            if (pos.y() + s.height() > v->geometry().y() + v->geometry().height()) {
+                pos.setY((v->geometry().y() + v->geometry().height()) - s.height());
+            } else {
+                pos.setY(qMax(pos.y(), v->geometry().top()));
+            }
+            break;
         }
-        break;
-    }
-    default:
-        if (alignment == Qt::AlignCenter) {
-            pos.setX(pos.x() + actualItem->boundingRect().width()/2 - s.width()/2);
-        } else if (alignment == Qt::AlignRight) {
-            pos.setX(pos.x() + actualItem->boundingRect().width() - s.width());
+        default: {
+            if (alignment == Qt::AlignCenter) {
+                pos.setX(pos.x() + actualItem->boundingRect().width()/2 - s.width()/2);
+            } else if (alignment == Qt::AlignRight) {
+                pos.setX(pos.x() + actualItem->boundingRect().width() - s.width());
+            }
+            break;
         }
-        break;
     }
 
 
@@ -576,23 +577,29 @@ QPoint Corona::popupPosition(const QGraphicsItem *item, const QSize &s, Qt::Alig
     QRect screenRect = screenGeometry(screen);
 
     switch (loc) {
-    case BottomEdge:
-        pos.setY(v->geometry().y() - s.height());
-        break;
-    case TopEdge:
-        pos.setY(v->geometry().y() + v->geometry().height());
-        break;
-    case LeftEdge:
-        pos.setX(v->geometry().x() + v->geometry().width());
-        break;
-    case RightEdge:
-        pos.setX(v->geometry().x() - s.width());
-        break;
-    default:
-        if (pos.y() - s.height() > screenRect.top()) {
-             pos.ry() = pos.y() - s.height();
-        } else {
-             pos.ry() = pos.y() + (int)actualItem->boundingRect().size().height() + 1;
+        case BottomEdge: {
+            pos.setY(v->geometry().y() - s.height());
+            break;
+        }
+        case TopEdge: {
+            pos.setY(v->geometry().y() + v->geometry().height());
+            break;
+        }
+        case LeftEdge: {
+            pos.setX(v->geometry().x() + v->geometry().width());
+            break;
+        }
+        case RightEdge: {
+            pos.setX(v->geometry().x() - s.width());
+            break;
+        }
+        default: {
+            if (pos.y() - s.height() > screenRect.top()) {
+                pos.ry() = pos.y() - s.height();
+            } else {
+                pos.ry() = pos.y() + (int)actualItem->boundingRect().size().height() + 1;
+            }
+            break;
         }
     }
 

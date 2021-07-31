@@ -1623,14 +1623,16 @@ QVariant Containment::itemChange(GraphicsItemChange change, const QVariant &valu
          change == QGraphicsItem::ItemPositionHasChanged)) {
         switch (d->type) {
             case PanelContainment:
-            case CustomPanelContainment:
+            case CustomPanelContainment: {
                 d->positionPanel();
                 break;
-            default:
+            }
+            default: {
                 if (corona()) {
                     QMetaObject::invokeMethod(corona(), "layoutContainments");
                 }
                 break;
+            }
         }
     }
 
@@ -1830,11 +1832,14 @@ void Containment::setContainmentActions(const QString &trigger, const QString &p
         }
     } else {
         switch (d->containmentActionsSource) {
-        case ContainmentPrivate::Local:
-            plugin = ContainmentActions::load(this, pluginName);
-            break;
-        default:
-            plugin = ContainmentActions::load(0, pluginName);
+            case ContainmentPrivate::Local: {
+                plugin = ContainmentActions::load(this, pluginName);
+                break;
+            }
+            default: {
+                plugin = ContainmentActions::load(0, pluginName);
+                break;
+            }
         }
         if (plugin) {
             cfg.writeEntry(trigger, pluginName);
@@ -2302,12 +2307,15 @@ KConfigGroup Containment::containmentActionsConfig()
 {
     KConfigGroup cfg;
     switch (d->containmentActionsSource) {
-    case ContainmentPrivate::Local:
-        cfg = config();
-        cfg = KConfigGroup(&cfg, "ActionPlugins");
-        break;
-    default:
-        cfg = KConfigGroup(corona()->config(), "ActionPlugins");
+        case ContainmentPrivate::Local: {
+            cfg = config();
+            cfg = KConfigGroup(&cfg, "ActionPlugins");
+            break;
+        }
+        default: {
+            cfg = KConfigGroup(corona()->config(), "ActionPlugins");
+            break;
+        }
     }
     return cfg;
 }

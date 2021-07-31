@@ -102,16 +102,19 @@ void Frame::setFrameShadow(Shadow shadow)
     d->shadow = shadow;
 
     switch (d->shadow) {
-    case Raised:
-        d->svg->setElementPrefix("raised");
-        break;
-    case Sunken:
-        d->svg->setElementPrefix("sunken");
-        break;
-    case Plain:
-    default:
-        d->svg->setElementPrefix("plain");
-        break;
+        case Raised: {
+            d->svg->setElementPrefix("raised");
+            break;
+        }
+        case Sunken: {
+            d->svg->setElementPrefix("sunken");
+            break;
+        }
+        case Plain:
+        default: {
+            d->svg->setElementPrefix("plain");
+            break;
+        }
     }
 
     d->syncBorders();

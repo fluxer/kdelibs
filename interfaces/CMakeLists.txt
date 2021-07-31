@@ -7,7 +7,6 @@ add_subdirectory( kregexpeditor )
 add_subdirectory( kio ) 
 add_subdirectory( terminal ) 
 add_subdirectory( khexedit ) 
-add_subdirectory( kimproxy ) 
 add_subdirectory( kspeech ) 
 
 ########### install files ###############

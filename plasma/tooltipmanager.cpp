@@ -279,14 +279,17 @@ void ToolTipManager::setState(ToolTipManager::State state)
     d->state = state;
 
     switch (state) {
-        case Activated:
+        case Activated: {
             break;
-        case Deactivated:
+        }
+        case Deactivated: {
             d->clearTips();
             //fallthrough
-        case Inhibited:
+        }
+        case Inhibited: {
             d->resetShownState();
             break;
+        }
     }
 }
 
@@ -460,7 +463,7 @@ bool ToolTipManager::eventFilter(QObject *watched, QEvent *event)
     }
 
     switch (event->type()) {
-        case QEvent::GraphicsSceneHoverMove:
+        case QEvent::GraphicsSceneHoverMove: {
             // If the tooltip isn't visible, run through showing the tooltip again
             // so that it only becomes visible after a stationary hover
             if (Plasma::ToolTipManager::self()->isVisible(widget)) {
@@ -470,16 +473,14 @@ bool ToolTipManager::eventFilter(QObject *watched, QEvent *event)
             // Don't restart the show timer on a mouse move event if there hasn't
             // been an enter event or the current widget has been cleared by a click
             // or wheel event.
-            {
-                QGraphicsSceneHoverEvent *me = static_cast<QGraphicsSceneHoverEvent *>(event);
-                //FIXME: seems that wheel events generate hovermoves as well, with 0 delta
-                if (!d->currentWidget || (me->pos() == me->lastPos())) {
-                    break;
+            QGraphicsSceneHoverEvent *me = static_cast<QGraphicsSceneHoverEvent *>(event);
+            //FIXME: seems that wheel events generate hovermoves as well, with 0 delta
+            if (!d->currentWidget || (me->pos() == me->lastPos())) {
+                break;
             }
-            }
-
-        case QEvent::GraphicsSceneHoverEnter:
-        {
+            // TODO: break?
+        }
+        case QEvent::GraphicsSceneHoverEnter: {
             // Check that there is a tooltip to show
             if (!d->tooltips.contains(widget)) {
                 break;
@@ -488,22 +489,22 @@ bool ToolTipManager::eventFilter(QObject *watched, QEvent *event)
             show(widget);
             break;
         }
-
-        case QEvent::GraphicsSceneHoverLeave:
+        case QEvent::GraphicsSceneHoverLeave: {
             if (d->currentWidget == widget) {
                 d->doDelayedHide();
             }
             break;
-
-        case QEvent::GraphicsSceneMousePress:
+        }
+        case QEvent::GraphicsSceneMousePress: {
             if (d->currentWidget == widget) {
                 hide(widget);
             }
             break;
-
+        }
         case QEvent::GraphicsSceneWheel:
-        default:
+        default: {
             break;
+        }
     }
 
     return QObject::eventFilter(watched, event);

@@ -226,16 +226,19 @@ void MeterPrivate::paintForeground(QPainter *p)
 void MeterPrivate::setSizePolicyAndPreferredSize()
     {
         switch (meterType) {
-            case Meter::BarMeterHorizontal:
+            case Meter::BarMeterHorizontal: {
                 meter->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
                 break;
-            case Meter::BarMeterVertical:
+            }
+            case Meter::BarMeterVertical: {
                 meter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
                 break;
+            }
             case Meter::AnalogMeter:
-            default:
+            default: {
                 meter->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
                 break;
+            }
         }
 
         if (image) {
@@ -493,61 +496,63 @@ void Meter::paint(QPainter *p,
 
     p->setRenderHint(QPainter::SmoothPixmapTransform);
     switch (d->meterType) {
-    case BarMeterHorizontal:
-    case BarMeterVertical:
-        d->paintBackground(p);
+        case BarMeterHorizontal:
+        case BarMeterVertical: {
+            d->paintBackground(p);
 
-        p->save();
-        clipRect = d->barRect();
-        if (clipRect.width() > clipRect.height()) {
-            clipRect.setWidth(clipRect.width() * percentage);
-        } else {
-            qreal bottom = clipRect.bottom();
-            clipRect.setHeight(clipRect.height() * percentage);
-            clipRect.moveBottom(bottom);
-        }
-        p->setClipRect(clipRect, Qt::IntersectClip);
-
-        //be retrocompatible
-        if (d->image->hasElement("bar-active-center")) {
-            d->paintBar(p, "bar-active");
-        } else {
-            d->paint(p, "bar");
-        }
-        p->restore();
-
-        d->paintForeground(p);
-        break;
-    case AnalogMeter:
-        d->paintBackground(p);
-
-        p->save();
-        if (d->image->hasElement("rotatecenter")) {
-            QRectF r = d->image->elementRect("rotatecenter");
-            rotateCenter = QPointF(r.left() + r.width() / 2,
-                                   r.top() + r.height() / 2);
-        } else {
-            rotateCenter = QPointF(rect.width() / 2, rect.height() / 2);
-        }
-        angle = percentage * (d->maxrotate - d->minrotate) + d->minrotate;
-
-        if (d->image->hasElement("pointer-shadow")) {
             p->save();
-            p->translate(rotateCenter+QPoint(2,3));
+            clipRect = d->barRect();
+            if (clipRect.width() > clipRect.height()) {
+                clipRect.setWidth(clipRect.width() * percentage);
+            } else {
+                qreal bottom = clipRect.bottom();
+                clipRect.setHeight(clipRect.height() * percentage);
+                clipRect.moveBottom(bottom);
+            }
+            p->setClipRect(clipRect, Qt::IntersectClip);
+
+            //be retrocompatible
+            if (d->image->hasElement("bar-active-center")) {
+                d->paintBar(p, "bar-active");
+            } else {
+                d->paint(p, "bar");
+            }
+            p->restore();
+
+            d->paintForeground(p);
+            break;
+        }
+        case AnalogMeter: {
+            d->paintBackground(p);
+
+            p->save();
+            if (d->image->hasElement("rotatecenter")) {
+                QRectF r = d->image->elementRect("rotatecenter");
+                rotateCenter = QPointF(r.left() + r.width() / 2,
+                                    r.top() + r.height() / 2);
+            } else {
+                rotateCenter = QPointF(rect.width() / 2, rect.height() / 2);
+            }
+            angle = percentage * (d->maxrotate - d->minrotate) + d->minrotate;
+
+            if (d->image->hasElement("pointer-shadow")) {
+                p->save();
+                p->translate(rotateCenter+QPoint(2,3));
+                p->rotate(angle);
+                p->translate(-1 * rotateCenter);
+                d->paint(p, "pointer-shadow");
+                p->restore();
+            }
+
+            p->translate(rotateCenter);
             p->rotate(angle);
             p->translate(-1 * rotateCenter);
-            d->paint(p, "pointer-shadow");
+            d->paint(p, "pointer");
             p->restore();
+
+            d->paintForeground(p);
+            break;
         }
-
-        p->translate(rotateCenter);
-        p->rotate(angle);
-        p->translate(-1 * rotateCenter);
-        d->paint(p, "pointer");
-        p->restore();
-
-        d->paintForeground(p);
-        break;
     }
 }
 

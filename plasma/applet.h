@@ -1066,19 +1066,9 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
         QSizeF sizeHint(Qt::SizeHint which, const QSizeF & constraint = QSizeF()) const;
 
         /**
-         * Reimplemented from QGraphicsLayoutItem
-         */
-        void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-
-        /**
-         * Reimplemented from QGraphicsLayoutItem
-         */
-        void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
-
-        /**
          * Reimplemented from QObject
          */
-        void timerEvent (QTimerEvent *event);
+        void timerEvent(QTimerEvent *event);
 
 
     private:

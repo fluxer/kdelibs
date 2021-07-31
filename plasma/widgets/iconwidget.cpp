@@ -277,47 +277,38 @@ bool IconAction::event(QEvent::Type type, const QPointF &pos)
     }
 
     switch (type) {
-    case QEvent::GraphicsSceneMousePress:
-    {
-        setSelected(m_rect.contains(pos));
-        return isSelected();
-    }
-    break;
-
-    case QEvent::GraphicsSceneMouseMove:
-    {
-        bool wasSelected = isSelected();
-        bool active = m_rect.contains(pos);
-        setSelected(wasSelected && active);
-        return (wasSelected != isSelected()) || active;
-    }
-    break;
-
-    case QEvent::GraphicsSceneMouseRelease:
-    {
-        // kDebug() << "IconAction::event got a QEvent::MouseButtonRelease, " << isSelected();
-        bool wasSelected = isSelected();
-        setSelected(false);
-        if (wasSelected) {
-            m_action->trigger();
+        case QEvent::GraphicsSceneMousePress: {
+            setSelected(m_rect.contains(pos));
+            return isSelected();
         }
-
-        return wasSelected;
-    }
-    break;
-
-    case QEvent::GraphicsSceneHoverEnter:
-        m_pressed = false;
-        m_hovered = true;
-        break;
-
-    case QEvent::GraphicsSceneHoverLeave:
-        m_pressed = false;
-        m_hovered = false;
-        break;
-
-    default:
-        break;
+        case QEvent::GraphicsSceneMouseMove: {
+            bool wasSelected = isSelected();
+            bool active = m_rect.contains(pos);
+            setSelected(wasSelected && active);
+            return (wasSelected != isSelected()) || active;
+        }
+        case QEvent::GraphicsSceneMouseRelease: {
+            // kDebug() << "IconAction::event got a QEvent::MouseButtonRelease, " << isSelected();
+            bool wasSelected = isSelected();
+            setSelected(false);
+            if (wasSelected) {
+                m_action->trigger();
+            }
+            return wasSelected;
+        }
+        case QEvent::GraphicsSceneHoverEnter: {
+            m_pressed = false;
+            m_hovered = true;
+            break;
+        }
+        case QEvent::GraphicsSceneHoverLeave: {
+            m_pressed = false;
+            m_hovered = false;
+            break;
+        }
+        default: {
+            break;
+        }
     }
 
     return false;

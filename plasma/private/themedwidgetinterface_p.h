@@ -89,19 +89,20 @@ public:
     void changeEvent(QEvent *event)
     {
         switch (event->type()) {
-            case QEvent::FontChange:
+            case QEvent::FontChange: {
                 customFont = q->font() != QApplication::font();
                 break;
-
-            case QEvent::PaletteChange:
+            }
+            case QEvent::PaletteChange: {
                 if (!internalPaletteChange &&
                     q->palette() != (buttonColorForText ?  PaletteHelper::self()->buttonPalette : PaletteHelper::self()->palette)) {
                     customPalette = true;
                 }
                 break;
-
-            default:
+            }
+            default: {
                 break;
+            }
         }
     }
 

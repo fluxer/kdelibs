@@ -876,20 +876,17 @@ void Theme::setFont(const QFont &font, FontRole role)
 QFont Theme::font(FontRole role) const
 {
     switch (role) {
-    case DesktopFont: {
-        KConfigGroup cg(KGlobal::config(), "General");
-        return cg.readEntry("desktopFont", d->generalFont);
+        case DesktopFont: {
+            KConfigGroup cg(KGlobal::config(), "General");
+            return cg.readEntry("desktopFont", d->generalFont);
         }
-        break;
-
-    case DefaultFont:
-    default:
-        return d->generalFont;
-        break;
-
-    case SmallestFont:
-        return KGlobalSettings::smallestReadableFont();
-        break;
+        case SmallestFont: {
+            return KGlobalSettings::smallestReadableFont();
+        }
+        case DefaultFont:
+        default: {
+            return d->generalFont;
+        }
     }
 
     return d->generalFont;

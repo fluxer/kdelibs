@@ -144,23 +144,28 @@ void StorageThread::save(QWeakPointer<StorageJob> wcaller, const QVariantMap &pa
         QString field;
         bool binary = false;
         switch (it.value().type()) {
-            case QVariant::String:
+            case QVariant::String: {
                 field = ":txt";
                 break;
-            case QVariant::Int:
+            }
+            case QVariant::Int: {
                 field = ":int";
                 break;
+            }
             case QVariant::Double:
-            case QVariant::Float:
+            case QVariant::Float: {
                 field = ":float";
                 break;
-            case QVariant::ByteArray:
+            }
+            case QVariant::ByteArray: {
                 binary = true;
                 field = ":binary";
                 break;
-            default:
+            }
+            default: {
                 continue;
                 break;
+            }
         }
 
         if (binary) {

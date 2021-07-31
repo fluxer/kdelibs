@@ -46,7 +46,7 @@ MagickHandler::~MagickHandler()
 
 bool MagickHandler::canRead() const
 {
-    if (canRead(device())) {
+    if (MagickHandler::canRead(device())) {
         setFormat(magickpluginformat);
         return true;
     }
@@ -59,7 +59,7 @@ bool MagickHandler::read(QImage *image)
 
     try {
         Magick::Blob magickinblob(data.constData(), data.size()); 
-        Magick::Image magickinimage; 
+        Magick::Image magickinimage;
         magickinimage.read(magickinblob);
 
         if (Q_UNLIKELY(!magickinimage.isValid())) {
@@ -111,10 +111,15 @@ bool MagickHandler::canRead(QIODevice *device)
         return false;
     }
 
-    qint64 oldPos = device->pos();
+    const qint64 oldpos = device->pos();
 
     bool isvalid = false;
     const QByteArray data = device->readAll();
+
+    if (Q_UNLIKELY(data.isEmpty())) {
+        device->seek(oldpos);
+        return false;
+    }
 
     try {
         Magick::Blob magickinblob(data.constData(), data.size()); 
@@ -130,7 +135,7 @@ bool MagickHandler::canRead(QIODevice *device)
         kWarning() << "exception raised";
     }
 
-    device->seek(oldPos);
+    device->seek(oldpos);
 
     return isvalid;
 }

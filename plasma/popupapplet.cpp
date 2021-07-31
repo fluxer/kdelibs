@@ -471,8 +471,9 @@ QSizeF PopupApplet::sizeHint(Qt::SizeHint which, const QSizeF & constraint) cons
             const int size = IconSize(KIconLoader::Panel);
             return QSizeF(size, size);
         }
-        default:
+        default: {
             break;
+        }
     }
 
     const int size = IconSize(KIconLoader::Desktop);
@@ -966,28 +967,31 @@ void PopupAppletPrivate::updateDialogPosition(bool move)
 
     Dialog::ResizeCorners resizeCorners = Dialog::NoCorner;
     switch (q->location()) {
-    case BottomEdge:
-        resizeCorners = Dialog::NorthEast | Dialog::NorthWest;
-        popupPlacement = reverse ? TopPosedLeftAlignedPopup : TopPosedRightAlignedPopup;
-        break;
-    case TopEdge:
-        resizeCorners = Dialog::SouthEast | Dialog::SouthWest;
-        popupPlacement = reverse ? Plasma::BottomPosedLeftAlignedPopup : Plasma::BottomPosedRightAlignedPopup;
-        break;
-    case LeftEdge:
-        resizeCorners = Dialog::SouthEast | Dialog::NorthEast;
-        popupPlacement = reverse ? RightPosedTopAlignedPopup : RightPosedBottomAlignedPopup;
-        break;
-
-    case RightEdge:
-        resizeCorners = Dialog::SouthWest | Dialog::NorthWest;
-        popupPlacement = reverse ? LeftPosedTopAlignedPopup : LeftPosedBottomAlignedPopup;
-        break;
-
-    default:
-        popupPlacement = FloatingPopup;
-        resizeCorners = Dialog::All;
-        break;
+        case BottomEdge: {
+            resizeCorners = Dialog::NorthEast | Dialog::NorthWest;
+            popupPlacement = reverse ? TopPosedLeftAlignedPopup : TopPosedRightAlignedPopup;
+            break;
+        }
+        case TopEdge: {
+            resizeCorners = Dialog::SouthEast | Dialog::SouthWest;
+            popupPlacement = reverse ? Plasma::BottomPosedLeftAlignedPopup : Plasma::BottomPosedRightAlignedPopup;
+            break;
+        }
+        case LeftEdge: {
+            resizeCorners = Dialog::SouthEast | Dialog::NorthEast;
+            popupPlacement = reverse ? RightPosedTopAlignedPopup : RightPosedBottomAlignedPopup;
+            break;
+        }
+        case RightEdge: {
+            resizeCorners = Dialog::SouthWest | Dialog::NorthWest;
+            popupPlacement = reverse ? LeftPosedTopAlignedPopup : LeftPosedBottomAlignedPopup;
+            break;
+        }
+        default: {
+            popupPlacement = FloatingPopup;
+            resizeCorners = Dialog::All;
+            break;
+        }
     }
 
     dialog->setResizeHandleCorners(resizeCorners);
