@@ -19,7 +19,7 @@ build_script:
     sudo apt-get update -qq
 
     sudo apt-get install -qq cmake katie-dev libenchant-dev \
-        libmagick++-dev libmpv-dev libraw-dev xorg-dev mesa-common-dev \
+        libmagick++-dev libmpv-dev xorg-dev mesa-common-dev \
         libavahi-common-dev krb5-multidev libwebp-dev \
         libudev-dev liblzma-dev libexiv2-dev libilmbase-dev libjpeg-dev \
         libbz2-dev libattr1-dev libacl1-dev libxcb-render-util0-dev \

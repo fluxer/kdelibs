@@ -31,6 +31,7 @@
  * @li PSD     \<read\>
  * @li WEBP    \<read\> \<write\>
  * @li XCF     \<read\>
+ * @li RAW     \<read\>
  *
  */
 namespace KImageIO

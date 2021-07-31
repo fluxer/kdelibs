@@ -29,6 +29,7 @@ if(IMAGEMAGICK_FOUND)
         pcx.desktop
         psd.desktop
         xcf.desktop
+        x-dcraw.desktop
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
     )
 endif(IMAGEMAGICK_FOUND)

@@ -239,9 +239,6 @@
 51000   KIPI (general)
 51001   KIPI (loading)
 
-# KDCRAW - KDE C++ wrapper for LibRaw
-51002   KDCRAW
-
 # KEXIV2 - KDE C++ wrapper for LibExiv2
 51003   KEXIV2
 

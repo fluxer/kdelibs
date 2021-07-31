@@ -121,12 +121,12 @@ bool WebPHandler::write(const QImage &image)
     delete [] imageData;
 
     if ( size == 0 ) {
-        free(output);
+        WebPFree(output);
         return false;
     }
 
     device()->write(reinterpret_cast<const char*>(output), size);
-    free(output);
+    WebPFree(output);
 
     return true;
 }
