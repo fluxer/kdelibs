@@ -48,7 +48,8 @@ bool WebPHandler::read(QImage *retImage)
     QByteArray data = device()->readAll();
 
     WebPBitstreamFeatures features;
-    const VP8StatusCode ret = WebPGetFeatures(reinterpret_cast<const uint8_t*>(data.constData()), data.size(), &features);
+    const VP8StatusCode ret = WebPGetFeatures(reinterpret_cast<const uint8_t*>(data.constData()),
+                                              data.size(), &features);
     if (ret != VP8_STATUS_OK) {
         return false;
     }
@@ -109,7 +110,7 @@ bool WebPHandler::write(const QImage &image)
     if (image.hasAlphaChannel()) {
         size = WebPEncodeRGBA(imageData, image.width(), image.height(), image.width() * 4, quality, &output);
     } else {
-        size = WebPEncodeRGB(imageData, image.width(), image.height(), image.width() * 4, quality, &output);
+        size = WebPEncodeRGB(imageData, image.width(), image.height(), image.width() * 3, quality, &output);
     }
     delete []imageData;
 
