@@ -69,14 +69,6 @@ set_package_properties(ENCHANT PROPERTIES
     PURPOSE "Spell checking support via Enchant"
 )
 
-find_package(Exiv2 0.21)
-set_package_properties(Exiv2 PROPERTIES
-    DESCRIPTION "Image metadata library and tools"
-    URL "http://www.exiv2.org"
-    TYPE REQUIRED
-    PURPOSE "Required to build libkexiv2"
-)
-
 # optional features
 if(X11_FOUND)
     macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
@@ -212,6 +204,14 @@ set_package_properties(LibCDIO PROPERTIES
     URL "https://www.gnu.org/software/libcdio/"
     PURPOSE "Allows Solid to use libcdio to provide information about CD-ROM devices on Linux"
     TYPE OPTIONAL
+)
+
+find_package(Exiv2 0.21)
+set_package_properties(Exiv2 PROPERTIES
+    DESCRIPTION "Image metadata library and tools"
+    URL "http://www.exiv2.org"
+    TYPE RECOMMENDED
+    PURPOSE "Exiv2 metadata extraction and image rotation based on the data"
 )
 
 ################# configure checks and create the configured files #################
