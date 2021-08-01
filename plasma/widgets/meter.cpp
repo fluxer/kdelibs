@@ -556,11 +556,6 @@ void Meter::paint(QPainter *p,
     }
 }
 
-QSizeF Meter::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
-{
-    return QGraphicsWidget::sizeHint(which, constraint);
-}
-
 } // End of namepace
 
 #include "moc_meter.cpp"

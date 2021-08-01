@@ -42,7 +42,6 @@ class PLASMA_EXPORT ItemBackground : public QGraphicsWidget
     Q_OBJECT
     Q_PROPERTY(QRectF target READ target WRITE setTarget)
     Q_PROPERTY(QGraphicsItem* targetItem READ targetItem WRITE setTargetItem)
-
     Q_PROPERTY(qreal animationUpdate READ animationUpdate WRITE setAnimationUpdate)
 
 public:

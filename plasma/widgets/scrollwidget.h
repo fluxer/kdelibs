@@ -264,9 +264,7 @@ Q_SIGNALS:
     void viewportGeometryChanged(const QRectF &geomety);
 
 protected:
-
     void resizeEvent(QGraphicsSceneResizeEvent *event);
-
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);

@@ -443,13 +443,6 @@ QVariant ToolButton::itemChange(GraphicsItemChange change, const QVariant &value
     return QGraphicsProxyWidget::itemChange(change, value);
 }
 
-QSizeF ToolButton::sizeHint(Qt::SizeHint which, const QSizeF & constraint) const
-{
-    QSizeF hint = QGraphicsProxyWidget::sizeHint(which, constraint);
-
-    return hint;
-}
-
 } // namespace Plasma
 
 #include "moc_toolbutton.cpp"

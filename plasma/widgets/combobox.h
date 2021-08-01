@@ -133,10 +133,7 @@ protected:
     void paint(QPainter *painter,
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
-    void focusInEvent(QFocusEvent *event);
     void focusOutEvent(QFocusEvent *event);
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void changeEvent(QEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
