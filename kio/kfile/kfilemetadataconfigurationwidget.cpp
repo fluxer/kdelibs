@@ -93,13 +93,13 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     // available from KFileItem as "fixed item" (see above)
     // should not be shown as second entry.
     static const char* const hiddenProperties[] = {
-        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment",         // = fixed item kfileitem#comment
-        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize",     // = fixed item kfileitem#size
-        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#lastModified",    // = fixed item kfileitem#modified
-        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent" // hide this property always
-        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType",        // = fixed item kfileitem#type
-        "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName",        // hide this property always
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",                          // = fixed item kfileitem#type
+        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment",          // = fixed item kfileitem#comment
+        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize",      // = fixed item kfileitem#size
+        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#lastModified",     // = fixed item kfileitem#modified
+        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent", // hide this property always
+        "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType",         // = fixed item kfileitem#mimetype
+        "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName",         // hide this property always
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",                           // = fixed item kfileitem#type
         0 // mandatory last entry
     };
 
