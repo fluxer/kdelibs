@@ -85,8 +85,8 @@ KExiv2Private::KExiv2Private(const QString &path)
         exiv2image->readMetadata();
 
         kDebug() << "mapping Exiv2 data for" << path;
-        const Exiv2::ExifData exivdata = exiv2image->exifData();
-        for (Exiv2::ExifData::const_iterator it = exivdata.begin(); it != exivdata.end(); it++) {
+        const Exiv2::ExifData exiv2data = exiv2image->exifData();
+        for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
             const std::string key = (*it).key();
 
             std::ostringstream os;
@@ -99,7 +99,7 @@ KExiv2Private::KExiv2Private(const QString &path)
         kDebug() << "obtaninig Exiv2 preview for" << path;
         Exiv2::PreviewManager exiv2previewmanager(*exiv2image);
         Exiv2::PreviewPropertiesList exiv2previewpropertieslist = exiv2previewmanager.getPreviewProperties();
-        // reverse iteration to get the largerst preview
+        // reverse iteration to get the largest preview
         for (size_t i = exiv2previewpropertieslist.size(); i > 0; i--) {
             const Exiv2::PreviewProperties exiv2previewproperties = exiv2previewpropertieslist.at(i - 1);
             Exiv2::PreviewImage exiv2previewimage = exiv2previewmanager.getPreviewImage(exiv2previewproperties);
@@ -109,7 +109,7 @@ KExiv2Private::KExiv2Private(const QString &path)
                 break;
             }
         }
-    } catch(Exiv2::Error& err) {
+    } catch(Exiv2::Error &err) {
         kWarning() << err.what() << err.code();
     } catch(std::exception &err) {
         kWarning() << err.what();
@@ -131,54 +131,58 @@ QImage KExiv2::preview() const
 
 bool KExiv2::rotateImage(QImage &image) const
 {
-    QMatrix matrix;
     // for reference:
     // https://exiv2.org/tags-xmp-tiff.html
     const int orientation = d->m_datamap.value("Exif.Image.Orientation").toInt();
     switch (orientation) {
-        case 0: {
-            // not documented, nothing to do I guess
-            break;
-        }
-        case 1: {
-            // TODO:
-            break;
+        case 0: // not documented, nothing to do I guess
+        case 1: { // normal orientation
+            return true;
         }
         case 2: {
-            // TODO:
-            break;
+            image = image.mirrored(true, false);
+            return true;
         }
         case 3: {
-            // TODO:
-            break;
+            image = image.mirrored(true, true);
+            return true;
         }
         case 4: {
-            // TODO:
-            break;
+            image = image.mirrored(false, true);
+            return true;
         }
         case 5: {
-            // TODO:
-            break;
+            QMatrix matrix;
+            matrix.rotate(90.0);
+            image = image.transformed(matrix);
+            image = image.mirrored(true, false);
+            return true;
         }
         case 6: {
-            // TODO:
-            break;
+            QMatrix matrix;
+            matrix.rotate(90.0);
+            image = image.transformed(matrix);
+            return true;
         }
         case 7: {
-            // TODO:
-            break;
+            QMatrix matrix;
+            matrix.rotate(-90.0);
+            image = image.transformed(matrix);
+            image = image.mirrored(true, false);
+            return true;
         }
         case 8: {
-            // TODO:
-            break;
+            QMatrix matrix;
+            matrix.rotate(-90.0);
+            image = image.transformed(matrix);
+            return true;
         }
         default: {
             kWarning() << "unknown orientation" << orientation;
             return false;
         }
     }
-    image = image.transformed(matrix);
-    return true;
+    Q_UNREACHABLE();
 }
 
 KExiv2::DataMap KExiv2::data() const

@@ -28,9 +28,10 @@
 class KExiv2Private;
 
 /*!
-    @brief Class to obtain Exiv2 metadata, preview and rotate images based on the metdata.
+    Class to obtain Exiv2 metadata, preview and rotate images based on the metadata.
 
     @note Initialization and cleanup of the Exiv2 library resources is automatic
+    @since 4.20
 */
 class KEXIV2_EXPORT KExiv2
 {
