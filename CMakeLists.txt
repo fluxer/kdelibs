@@ -69,14 +69,6 @@ set_package_properties(ENCHANT PROPERTIES
     PURPOSE "Spell checking support via Enchant"
 )
 
-find_package(Exiv2 0.21)
-set_package_properties(Exiv2 PROPERTIES
-    DESCRIPTION "Image metadata library and tools"
-    URL "http://www.exiv2.org"
-    TYPE REQUIRED
-    PURPOSE "Required to build libkexiv2"
-)
-
 # optional features
 if(X11_FOUND)
     macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
@@ -230,6 +222,14 @@ set_package_properties(LibCDIO PROPERTIES
     TYPE OPTIONAL
 )
 
+find_package(Exiv2 0.21)
+set_package_properties(Exiv2 PROPERTIES
+    DESCRIPTION "Image metadata library and tools"
+    URL "http://www.exiv2.org"
+    TYPE RECOMMENDED
+    PURPOSE "Exiv2 metadata extraction and image rotation based on the data"
+)
+
 ################# configure checks and create the configured files #################
 
 include(ConfigureChecks.cmake)
@@ -351,7 +351,6 @@ add_subdirectory( kdecore )
 add_subdirectory( kded )
 add_subdirectory( kdeui )
 add_subdirectory( kdewidgets )
-add_subdirectory( kexiv2 )
 add_subdirectory( kfile )
 add_subdirectory( kimgio )
 add_subdirectory( kinit )

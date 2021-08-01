@@ -305,15 +305,15 @@ void KStandarddirsTest::testAddResourceType()
     QString ret = KStandardDirs::locate( "dtd", "customization/catalog.xml" );
     QCOMPARE(ret, QString()); // normal, there's no "dtd" resource in kstandarddirs by default
 
-    KGlobal::dirs()->addResourceType("dtd", "data", "libkexiv2/");
-    ret = KStandardDirs::locate( "dtd", "data/topicset.iptc-subjectcode.xml" );
+    KGlobal::dirs()->addResourceType("dtd", "data", "kdewidgets/");
+    ret = KStandardDirs::locate( "dtd", "pics/kpushbutton.png" );
     QVERIFY(!ret.isEmpty());
 
-    ret = KStandardDirs::locate("dtd", "data/topicset.iptc-subjectcode.xml");
+    ret = KStandardDirs::locate("dtd", "pics/kruler.png");
     QVERIFY(!ret.isEmpty());
 
-    const QStringList files = KGlobal::dirs()->findAllResources("dtd", "data/*", KStandardDirs::NoDuplicates);
-    QVERIFY(files.count() >= 1);
+    const QStringList files = KGlobal::dirs()->findAllResources("dtd", "pics/*", KStandardDirs::NoDuplicates);
+    QVERIFY(files.count() >= 5);
 
     KGlobal::dirs()->addResourceType("xdgdata-ontology", 0, "ontology");
     const QStringList ontologyDirs = KGlobal::dirs()->resourceDirs("xdgdata-ontology");
