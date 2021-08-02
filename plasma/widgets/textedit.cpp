@@ -148,11 +148,6 @@ void TextEdit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     delete popup;
 }
 
-void TextEdit::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    QGraphicsProxyWidget::resizeEvent(event);
-}
-
 void TextEdit::changeEvent(QEvent *event)
 {
     d->changeEvent(event);

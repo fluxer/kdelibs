@@ -113,7 +113,6 @@ Q_SIGNALS:
     void textChanged();
 
 protected:
-    void resizeEvent(QGraphicsSceneResizeEvent *event);
     void changeEvent(QEvent *event);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);

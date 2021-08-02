@@ -322,8 +322,15 @@ public:
     }
 
     bool useFactory(Strigi::StreamAnalyzerFactory* factory) const {
-        Q_UNUSED(factory);
-        // TODO: filter factories based on m_indexDetail
+        if ((m_indexDetail & KFileMetaInfo::ContentInfo) == 0 && factory) {
+            if (qstrcmp(factory->name(), "CppLineAnalyzer") == 0) {
+                return false;
+            } else if (qstrcmp(factory->name(), "TxtLineAnalyzer") == 0) {
+                return false;
+            } else if (qstrcmp(factory->name(), "TextEndAnalyzer") == 0) {
+                return false;
+            }
+        }
         return true;
     }
 

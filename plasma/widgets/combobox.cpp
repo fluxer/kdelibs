@@ -42,8 +42,7 @@ class ComboBoxPrivate : public ThemedWidgetInterface<ComboBox>
 public:
     ComboBoxPrivate(ComboBox *comboBox)
          : ThemedWidgetInterface<ComboBox>(comboBox),
-           background(0),
-           underMouse(false)
+           background(0)
     {
     }
 
@@ -61,7 +60,6 @@ public:
     qreal opacity;
     QRectF activeRect;
     Style::Ptr style;
-    bool underMouse;
 };
 
 void ComboBoxPrivate::syncActiveRect()
@@ -267,11 +265,6 @@ void ComboBox::paint(QPainter *painter,
         QStyle::PE_IndicatorArrowDown, &comboOpt, painter, nativeWidget());
 }
 
-void ComboBox::focusInEvent(QFocusEvent *event)
-{
-    QGraphicsProxyWidget::focusInEvent(event);
-}
-
 void ComboBox::focusOutEvent(QFocusEvent *event)
 {
     QGraphicsWidget *widget = parentWidget();
@@ -298,18 +291,6 @@ void ComboBox::focusOutEvent(QFocusEvent *event)
     }
 
     QGraphicsProxyWidget::focusOutEvent(event);
-}
-
-void ComboBox::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    d->underMouse = true;
-    QGraphicsProxyWidget::hoverEnterEvent(event);
-}
-
-void ComboBox::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
-{
-    d->underMouse = false;
-    QGraphicsProxyWidget::hoverLeaveEvent(event);
 }
 
 void ComboBox::changeEvent(QEvent *event)
