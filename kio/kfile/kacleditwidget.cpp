@@ -279,25 +279,25 @@ void KACLListViewItem::repaint()
     switch ( type )
     {
       case KACLListView::User:
-          idx = KACLListView::OWNER_IDX;
+            idx = KACLListView::OWNER_IDX;
             break;
         case KACLListView::Group:
-          idx = KACLListView::GROUP_IDX;
+            idx = KACLListView::GROUP_IDX;
             break;
         case KACLListView::Others:
-          idx = KACLListView::OTHERS_IDX;
+            idx = KACLListView::OTHERS_IDX;
             break;
         case KACLListView::Mask:
-          idx = KACLListView::MASK_IDX;
+            idx = KACLListView::MASK_IDX;
             break;
         case KACLListView::NamedUser:
-          idx = KACLListView::NAMED_USER_IDX;
+            idx = KACLListView::NAMED_USER_IDX;
             break;
         case KACLListView::NamedGroup:
-          idx = KACLListView::NAMED_GROUP_IDX;
+            idx = KACLListView::NAMED_GROUP_IDX;
             break;
         default:
-          idx = KACLListView::OWNER_IDX;
+            idx = KACLListView::OWNER_IDX;
             break;
     }
     setText( 0, i18n(s_itemAttributes[idx].label) );
