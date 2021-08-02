@@ -44,7 +44,6 @@ set(cmakeFiles
     FindLibATASmart.cmake
     FindLibDRM.cmake
     FindLibGcrypt.cmake
-    FindLibGPS.cmake
     FindLibintl.cmake
     FindLibKonq.cmake
     FindLibLZMA.cmake
