@@ -95,14 +95,6 @@ enum Direction {
 };
 
 /**
- * The direction of a zoom action.
- */
-enum ZoomDirection {
-    ZoomIn = 0, /**< Zoom in one step */
-    ZoomOut = 1 /**< Zoom out one step */
-};
-
-/**
  * The Location enumeration describes where on screen an element, such as an
  * Applet or its managing container, is positioned on the screen.
  **/
