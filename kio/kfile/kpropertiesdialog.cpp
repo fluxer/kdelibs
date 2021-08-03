@@ -2795,12 +2795,12 @@ KDevicePropsPlugin::KDevicePropsPlugin( KPropertiesDialog *_props ) : KPropertie
 
     connect( d->device, SIGNAL(activated(int)),
              this, SIGNAL(changed()) );
-    connect( d->device, SIGNAL(textChanged(QString)),
+    connect( d->device, SIGNAL(editTextChanged(QString)),
              this, SIGNAL(changed()) );
     connect( d->readonly, SIGNAL(toggled(bool)),
              this, SIGNAL(changed()) );
 
-    connect( d->device, SIGNAL(textChanged(QString)),
+    connect( d->device, SIGNAL(editTextChanged(QString)),
              this, SLOT(slotDeviceChanged()) );
 }
 

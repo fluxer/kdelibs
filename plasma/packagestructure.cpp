@@ -353,14 +353,7 @@ void PackageStructure::removeDefinition(const char *key)
 
 QString PackageStructure::path(const char *key) const
 {
-    //kDebug() << "looking for" << key;
-    QMap<QByteArray, ContentStructure>::const_iterator it = d->contents.constFind(key);
-    if (it == d->contents.constEnd()) {
-        return QString();
-    }
-
-    //kDebug() << "found" << key << "and the value is" << it.value().paths.first();
-    return it.value().paths.first();
+    return searchPath(key).first();
 }
 
 QStringList PackageStructure::searchPath(const char *key) const
