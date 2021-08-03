@@ -84,16 +84,13 @@
 1511        kdessh (kdeutils)
 1512        kdepasswd
 1601        ark (kdeutils)
-1806        oktetakasten
 1901        kfind
 1902        kfind (KfindWindow::updateResults)
 1903        kfind (KfindTabDialog::createQuery)
 2000        kfind
 2001        kregexpeditor
 2002        kfloppy
-2003        ksim
 2100        kgpg
-2200        kdf
 
 # kdeaccessibility
 2400        kttsd (daemon)
@@ -125,17 +122,11 @@
 # kdenetwork, kdepim
 5001        kget
 5002        kppp
-5003        knode
-5005        knewsticker
 5007        kpf
 5009        filesharing
 5010        krdc
 5011        krdc (VNC backend)
 5012        krdc (RDP backend)
-5050        libkmime
-5051        libkmime (Codecs)
-5052        libkmime (Plugin Loader)
-5100        libkdenetwork
 
 # libkio
 7000        kio
@@ -217,41 +208,17 @@
 13050   Kate (Scripting)
 13060   Kate (Indentation)
 
-# KDB
-20000        KDB (core)
-20001        KDB (ui)
-20010        KDB (DBEngine)
-20011        KDB (Connection)
-20012        KDB (plugin)
-
 #kfilereplace
 23000        KFileReplace (kfilereplacepart)
 
-#klinkstatus
-23100        KLinkStatus
-
 # libkscan / kooka
 29000   libkscan
-
-# kdegraphics
-
-# KIPI - KDE Imaging Plugin Interface
-51000   KIPI (general)
-51001   KIPI (loading)
 
 # KEXIV2 - KDE C++ wrapper for LibExiv2
 51003   KEXIV2
 
 # KSANE - KDE C++ wrapper for LibSane
 51004   KSANE
-
-# Network Management
-51010   Network Management (internals)
-51011   Network Management (service)
-51012   Network Management (ui)
-51013   Network Management (KCModule)
-51014   knetworkmanager
-51020   Network Management (NetworkManager backend)
 
 # kdemultimedia
 67100   kmix
@@ -269,5 +236,3 @@
 90210   konq-plugins (rellinks)
 
 100200       kfs
-
-300000       kuassel
