@@ -49,8 +49,9 @@ Don't forget to add an icon to the pics directory.  Try to make it look similar 
 There are some global options that you can have.
 
 [Global]
+Includes=foo.h,bar.h
 Init=new InitCode();
-Destroy= delete object;
+Destroy=delete object;
 PluginName=MyPlugin
 
 PluginName overrides the passed in value at the command line and is optional.
