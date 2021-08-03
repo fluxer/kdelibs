@@ -98,14 +98,15 @@ void KServicePrivate::init( const KDesktopFile *config, KService* q )
     {
         /*kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath
           << " has no Type=... entry."
-          << " It should be \"Application\" or \"Service\"" << endl;
+          << " It should be \"Application\", \"Service\"" or \"FSDevice\" << endl;
           m_bValid = false;
           return;*/
         m_strType = QString::fromLatin1("Application");
-    } else if (m_strType != QLatin1String("Application") && m_strType != QLatin1String("Service")) {
+    } else if (m_strType != QLatin1String("Application") && m_strType != QLatin1String("Service")
+        && m_strType != QLatin1String("FSDevice")) {
         kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath
                        << " has Type=" << m_strType
-                       << " instead of \"Application\" or \"Service\"" << endl;
+                       << " instead of \"Application\", \"Service\" or \"FSDevice\"" << endl;
         m_bValid = false;
         return;
     }
