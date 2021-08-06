@@ -73,6 +73,7 @@ Notes:
     <comment xml:lang="zh_TW">RELAX NG</comment>
     <glob pattern="*.rng"/>
   </mime-type>
+
   <mime-type type="application/x-cda">
     <comment>CD audio</comment>
     <comment xml:lang="ar">صوت CD</comment>
@@ -133,6 +134,7 @@ Notes:
     <comment xml:lang="zh_TW">CD 音效</comment>
     <glob pattern="*.cda"/>
   </mime-type>
+
   <mime-type type="application/x-font-snf">
     <comment>SNF bitmap font</comment>
     <comment xml:lang="ar">خط SNF bitmap</comment>
@@ -193,6 +195,7 @@ Notes:
     <glob pattern="*.snf.Z"/>
     <glob pattern="*.snf.gz"/>
   </mime-type>
+
   <mime-type type="application/x-java-applet">
     <comment>Java applet</comment>
     <comment xml:lang="ar">بريمج جافا</comment>
@@ -252,6 +255,7 @@ Notes:
     <comment xml:lang="zh_CN">Java 小程序</comment>
     <comment xml:lang="zh_TW">Java applet</comment>
   </mime-type>
+
   <mime-type type="application/x-kcsrc">
     <comment>KDE color scheme</comment>
     <comment xml:lang="ar">مخطط ألوان كدي</comment>
@@ -313,6 +317,7 @@ Notes:
     <expanded-acronym>K Desktop Environment</expanded-acronym>
     <glob pattern="*.kcsrc"/>
   </mime-type>
+
   <mime-type type="application/x-kwallet"> <!-- fdo #6326 rejected, will stay KDE-specific -->
     <comment>KWallet wallet</comment>
     <comment xml:lang="ar">حافظة KWallet</comment>
@@ -375,6 +380,7 @@ Notes:
     </magic>
     <glob pattern="*.kwl"/>
   </mime-type>
+
   <mime-type type="application/x-plasma">
     <sub-class-of type="application/zip"/>
     <comment>plasmoid</comment>
@@ -435,6 +441,7 @@ Notes:
     <comment xml:lang="zh_TW">Plasma 小程式</comment>
     <glob pattern="*.plasmoid"/>
   </mime-type>
+
   <mime-type type="application/x-webarchive">
     <sub-class-of type="application/x-compressed-tar"/>
     <sub-class-of type="application/x-gzip"/> <!-- only necessary because x-compressed-tar is not specifying this sub-class-of (shared-mime-info 0.8) -->
@@ -496,6 +503,7 @@ Notes:
     <comment xml:lang="zh_TW">網頁歸檔</comment>
     <glob pattern="*.war"/>
   </mime-type>
+
   <mime-type type="application/xsd">
     <sub-class-of type="application/xml"/>
     <comment>W3C XML schema</comment>
@@ -554,6 +562,7 @@ Notes:
     <comment xml:lang="zh_TW">W3C XML 機制</comment>
     <glob pattern="*.xsd"/>
   </mime-type>
+
   <mime-type type="audio/x-pn-realaudio-plugin"> <!-- Not a type of file, so will not go to shared-mime-info -->
     <comment>RealAudio plugin file</comment>
     <comment xml:lang="ar">ملف ملحق RealAudio</comment>
@@ -611,6 +620,7 @@ Notes:
     <comment xml:lang="zh_CN">RealAudio 插件文件</comment>
     <comment xml:lang="zh_TW">RealAudio 外掛程式檔案</comment>
   </mime-type>
+
   <mime-type type="image/x-kde-raw">
     <sub-class-of type="image/x-dcraw"/>
     <comment>KDE raw image formats</comment>
@@ -679,9 +689,11 @@ Notes:
     <glob pattern="*.pnx"/>
     <glob pattern="*.rdc"/>
   </mime-type>
+
   <mime-type type="text/plain"> <!-- As discussed on xdg list, *.doc is needed here for disambiguation -->
     <glob pattern="*.doc"/>
   </mime-type>
+
   <mime-type type="text/x-hex">
     <sub-class-of type="text/plain"/>
     <comment>Intel® hexadecimal object file</comment>
@@ -743,121 +755,7 @@ Notes:
     <comment xml:lang="zh_TW">Intel® hexadecimal 物件檔</comment>
     <glob pattern="*.hex"/>
   </mime-type>
-  <mime-type type="text/x-katefilelist">
-    <sub-class-of type="text/plain"/>
-    <comment>Kate file list loader plugin list</comment>
-    <comment xml:lang="ar">قائمة ملحقات محملات قائمة ملفات لكيت</comment>
-    <comment xml:lang="ast">Llista de complementos de carga de llistes de ficheros de Kate</comment>
-    <comment xml:lang="bs">spisak Kateinog priključka za učitavanje datoteka</comment>
-    <comment xml:lang="ca">llista del connector carregador de llista de fitxers del Kate</comment>
-    <comment xml:lang="ca@valencia">llista del connector carregador de llista de fitxers del Kate</comment>
-    <comment xml:lang="da">Liste over plugins til fillisteindlæsning i Kate</comment>
-    <comment xml:lang="de">Kate-Dateilistenlade-Modulliste</comment>
-    <comment xml:lang="el">Λίστα αρχείου φόρτωσης λίστας πρόσθετων Kate</comment>
-    <comment xml:lang="en_GB">Kate file list loader plugin list</comment>
-    <comment xml:lang="es">Lista de complementos de carga de listas de archivos de Kate</comment>
-    <comment xml:lang="et">Kate failinimekirja avaja plugin</comment>
-    <comment xml:lang="eu">Kate fitxategi-zerrenda kargatzeko plugin zerrenda</comment>
-    <comment xml:lang="fi">Kate-tiedostoluettelolataajaliitännäisluettelo</comment>
-    <comment xml:lang="fr">Liste de modules externes pour le chargeur de liste de fichiers de Kate</comment>
-    <comment xml:lang="ga">Liosta de bhreiseáin luchtaithe liostaí comhad do Kate</comment>
-    <comment xml:lang="gl">Lista de complementos do cargador de lista de ficheiros de Kate</comment>
-    <comment xml:lang="hr">Kate lista od priključka učitavača liste datoteka</comment>
-    <comment xml:lang="hu">Kate-listafájl (fájllista vagy bővítménylista)</comment>
-    <comment xml:lang="ia">Kate: Lista de plugin de cargator de lista de file</comment>
-    <comment xml:lang="is">Kate skráahleðsluíforritalisti</comment>
-    <comment xml:lang="it">elenco delle estensioni del caricatore di elenchi di file di Kate</comment>
-    <comment xml:lang="ja">Kate ファイルリストローダプラグインリスト</comment>
-    <comment xml:lang="kk">Kate файлдар тізімін жүктеу плагин тізімі</comment>
-    <comment xml:lang="km">បញ្ជី​កម្មវិធី​ជំនួយ​របស់​កម្មវិធី​ផ្ទុក​បញ្ជី​ឯកសារ​របស់ Kate</comment>
-    <comment xml:lang="ko">Kate 파일 목록 로더 플러그인 목록</comment>
-    <comment xml:lang="lt">Kate failų sąrašo užkrovimo priedų sąrašas</comment>
-    <comment xml:lang="lv">Kate failu saraksta ielādētāja spraudņa saraksts</comment>
-    <comment xml:lang="ml">കേറ്റ് ഫയല്‍ പട്ടിക ലഭ്യമാക്കുന്നതിന്റെ സംയോജകങ്ങളുടെ പട്ടിക</comment>
-    <comment xml:lang="mr">केट फाईल यादी लोड करणाऱ्या प्लगइनची यादी</comment>
-    <comment xml:lang="nb">Liste over programtillegg for Kate fillistelasting</comment>
-    <comment xml:lang="nds">Dateilistlader-Moduullist för Kate</comment>
-    <comment xml:lang="nl">Kate bestandenlijstlader voor pluginlijst</comment>
-    <comment xml:lang="nn">Programtilleggliste for fillistelastar i Kate</comment>
-    <comment xml:lang="pa">ਕੇਟ ਫਾਇਲ ਲਿਸਟ ਲੋਡਰ ਪਲੱਗਇਨ ਲਿਸਟ</comment>
-    <comment xml:lang="pl">Lista wtyczki do wczytywania plików Kate</comment>
-    <comment xml:lang="pt">Lista de 'plugins' de carregamento de listas de ficheiros do Kate</comment>
-    <comment xml:lang="pt_BR">Lista de plugins de carregamento de listas de arquivos do Kate</comment>
-    <comment xml:lang="ro">listă de module pentru încărcarea liste de fișiere în Kate</comment>
-    <comment xml:lang="ru">список файлов Kate</comment>
-    <comment xml:lang="se">Kate-fiilalistoviežži lassemodulalistu</comment>
-    <comment xml:lang="sk">Zoznam modulov - načítanie zoznamu súborov Kate</comment>
-    <comment xml:lang="sl">Seznam vstavka nalagalnika seznamov datotek za Kate</comment>
-    <comment xml:lang="sr">списак Кејтиног прикључка за учитавање фајлова</comment>
-    <comment xml:lang="sr@ijekavian">списак Кејтиног прикључка за учитавање фајлова</comment>
-    <comment xml:lang="sr@ijekavianlatin">spisak Kateinog priključka za učitavanje fajlova</comment>
-    <comment xml:lang="sr@latin">spisak Kateinog priključka za učitavanje fajlova</comment>
-    <comment xml:lang="sv">Kate insticksprogramlista för laddning av fillistor</comment>
-    <comment xml:lang="tr">Kate dosya listesi yükleyici eklentisi listesi</comment>
-    <comment xml:lang="ug">Kate ھۆججەت تىزىمى يۈكلىگۈچ قىستۇرما تىزىمى</comment>
-    <comment xml:lang="uk">список файлів Kate</comment>
-    <comment xml:lang="zh_CN">Kate 文件列表装入器插件列表</comment>
-    <comment xml:lang="zh_TW">Kate 檔案清單載入器外掛程式清單</comment>
-    <glob pattern="*.katefl"/>
-  </mime-type>
-  <mime-type type="text/x-objchdr"> <!-- ??? Useless, without glob or magic. Remove? -->
-    <sub-class-of type="text/x-csrc"/>
-    <comment>Objective-C header</comment>
-    <comment xml:lang="ar">ترويسة Objective-C</comment>
-    <comment xml:lang="ast">Cabecera de Objective-C</comment>
-    <comment xml:lang="bs">Objective‑c zaglavlje</comment>
-    <comment xml:lang="ca">capçalera Objective-C</comment>
-    <comment xml:lang="ca@valencia">capçalera Objective-C</comment>
-    <comment xml:lang="cs">Objective-C hlavička</comment>
-    <comment xml:lang="da">Objective-C header-fil</comment>
-    <comment xml:lang="de">Objective-C-Header</comment>
-    <comment xml:lang="el">Κεφαλίδα Objective-C</comment>
-    <comment xml:lang="en_GB">Objective-C header</comment>
-    <comment xml:lang="es">Cabecera de Objective-C</comment>
-    <comment xml:lang="et">Objective-C päis</comment>
-    <comment xml:lang="eu">Objective-C goiburua</comment>
-    <comment xml:lang="fi">Objective C -otsake</comment>
-    <comment xml:lang="fr">En-tête « Objective-C »</comment>
-    <comment xml:lang="ga">Ceanntásc Objective-C</comment>
-    <comment xml:lang="gl">Cabeceira de Objective-C</comment>
-    <comment xml:lang="hr">Objective-C zaglavlje</comment>
-    <comment xml:lang="hu">Objective-C-fejlécfájl</comment>
-    <comment xml:lang="ia">Capite de Objective-C</comment>
-    <comment xml:lang="is">Objective-C haus</comment>
-    <comment xml:lang="it">intestazione Objective-C</comment>
-    <comment xml:lang="ja">Objective-C ヘッダ</comment>
-    <comment xml:lang="kk">Objective-C айдар файлы</comment>
-    <comment xml:lang="km">ក្បាល Objective-C</comment>
-    <comment xml:lang="ko">오브젝티브-C 헤더</comment>
-    <comment xml:lang="lt">Objektinio-C antraštė</comment>
-    <comment xml:lang="lv">Objective-C galvene</comment>
-    <comment xml:lang="ml">ഒബ്ജക്ടീവ്-സി ഹെഡര്‍</comment>
-    <comment xml:lang="mr">ओब्जेक्टिव्ह-सी हेडर</comment>
-    <comment xml:lang="nb">Objective-C hodefil</comment>
-    <comment xml:lang="nds">"Objective-C"-Koppdatei</comment>
-    <comment xml:lang="nl">Objective-C-header</comment>
-    <comment xml:lang="nn">Objective-C-deklarasjonsfil</comment>
-    <comment xml:lang="pa">Objective-C ਹੈੱਡਰ</comment>
-    <comment xml:lang="pl">Plik nagłówkowy Objective-C</comment>
-    <comment xml:lang="pt">Ficheiro de inclusão em Objective-C</comment>
-    <comment xml:lang="pt_BR">Cabeçalho em Objetive-C</comment>
-    <comment xml:lang="ro">antet Objective-C</comment>
-    <comment xml:lang="ru">заголовочный файл Objective-C</comment>
-    <comment xml:lang="se">Objective-C oaivefiila</comment>
-    <comment xml:lang="sk">Hlavičkový súbor Objektového C</comment>
-    <comment xml:lang="sl">Glava za Objective-C</comment>
-    <comment xml:lang="sr">објектив‑Ц заглавље</comment>
-    <comment xml:lang="sr@ijekavian">објектив‑Ц заглавље</comment>
-    <comment xml:lang="sr@ijekavianlatin">Objective‑c zaglavlje</comment>
-    <comment xml:lang="sr@latin">Objective‑c zaglavlje</comment>
-    <comment xml:lang="sv">Objective-C deklarationsfil</comment>
-    <comment xml:lang="th">แฟ้มส่วนหัวภาษา Objective-C</comment>
-    <comment xml:lang="tr">Objective-C başlığı</comment>
-    <comment xml:lang="ug">Objective-C باشى</comment>
-    <comment xml:lang="uk">файл заголовків Objective-C</comment>
-    <comment xml:lang="zh_CN">Objective-C 头文件</comment>
-    <comment xml:lang="zh_TW">Objective-C 標頭檔</comment>
-  </mime-type>
+
   <mime-type type="text/vnd.abc"> <!-- fdo #6578 -->
     <sub-class-of type="text/plain"/>
     <comment>abc musical notation file</comment>
@@ -918,6 +816,7 @@ Notes:
     </magic>
     <glob pattern="*.abc"/>
   </mime-type>
+
   <!-- all/ fake mime types -->
   <mime-type type="all/all">
     <comment>all files and folders</comment>
@@ -977,6 +876,7 @@ Notes:
     <comment xml:lang="zh_CN">全部文件和文件夹</comment>
     <comment xml:lang="zh_TW">所有檔案與資料夾</comment>
   </mime-type>
+
   <mime-type type="all/allfiles">
     <comment>all files</comment>
     <comment xml:lang="ar">كل الملفات</comment>
@@ -1155,6 +1055,7 @@ Notes:
     <comment xml:lang="zh_CN">Windows 服务器</comment>
     <comment xml:lang="zh_TW">Windows 伺服器</comment>
   </mime-type>
+
   <mime-type type="application/x-smb-workgroup"> <!-- KDE-specific -->
     <sub-class-of type="inode/directory"/>
     <comment>Windows workgroup</comment>
@@ -1214,6 +1115,7 @@ Notes:
     <comment xml:lang="zh_CN">Windows 工作组</comment>
     <comment xml:lang="zh_TW">Windows 工作群組</comment>
   </mime-type>
+
   <mime-type type="application/x-ksysguard">
     <!-- <sub-class-of type="application/xml"/> -->
     <comment>KDE system monitor</comment>
@@ -1273,66 +1175,6 @@ Notes:
     <comment xml:lang="zh_CN">KDE 系统监视器</comment>
     <comment xml:lang="zh_TW">KDE 系統監視器</comment>
     <glob pattern="*.sgrd"/>
-  </mime-type>
-  <mime-type type="application/x-ktheme">
-    <sub-class-of type="application/zip"/>
-    <comment>KDE theme</comment>
-    <comment xml:lang="ar">سمة كدي</comment>
-    <comment xml:lang="ast">Tema de KDE</comment>
-    <comment xml:lang="bg">Тема за KDE</comment>
-    <comment xml:lang="bs">KDE tema</comment>
-    <comment xml:lang="ca">tema del KDE</comment>
-    <comment xml:lang="ca@valencia">tema del KDE</comment>
-    <comment xml:lang="cs">Motiv KDE</comment>
-    <comment xml:lang="da">KDE-tema</comment>
-    <comment xml:lang="de">KDE-Design</comment>
-    <comment xml:lang="el">Θέμα του KDE</comment>
-    <comment xml:lang="en_GB">KDE theme</comment>
-    <comment xml:lang="es">Tema de KDE</comment>
-    <comment xml:lang="et">KDE teema</comment>
-    <comment xml:lang="eu">KDE tema</comment>
-    <comment xml:lang="fi">KDE-teema</comment>
-    <comment xml:lang="fr">Thème KDE</comment>
-    <comment xml:lang="ga">Téama KDE</comment>
-    <comment xml:lang="gl">Tema de KDE</comment>
-    <comment xml:lang="hr">KDE-ova tema</comment>
-    <comment xml:lang="hu">KDE-téma</comment>
-    <comment xml:lang="ia">Thema de KDE</comment>
-    <comment xml:lang="is">KDE þema</comment>
-    <comment xml:lang="it">tema di KDE</comment>
-    <comment xml:lang="ja">KDE テーマ</comment>
-    <comment xml:lang="kk">KDE нақышы</comment>
-    <comment xml:lang="km">ស្បែក​របស់ KDE</comment>
-    <comment xml:lang="ko">KDE 테마</comment>
-    <comment xml:lang="lt">KDE tema</comment>
-    <comment xml:lang="lv">KDE tēma</comment>
-    <comment xml:lang="ml">കെഡിഇ പ്രമേയം</comment>
-    <comment xml:lang="mr">केडीई शैली</comment>
-    <comment xml:lang="nb">KDE-tema</comment>
-    <comment xml:lang="nds">KDE-Muster</comment>
-    <comment xml:lang="nl">KDE-thema</comment>
-    <comment xml:lang="nn">KDE-tema</comment>
-    <comment xml:lang="pa">KDE ਥੀਮ</comment>
-    <comment xml:lang="pl">Motyw KDE</comment>
-    <comment xml:lang="pt">Tema do KDE</comment>
-    <comment xml:lang="pt_BR">Tema do KDE</comment>
-    <comment xml:lang="ro">Tematică KDE</comment>
-    <comment xml:lang="ru">оформление KDE</comment>
-    <comment xml:lang="se">KDE fáddá</comment>
-    <comment xml:lang="sk">Téma KDE</comment>
-    <comment xml:lang="sl">Tema KDE</comment>
-    <comment xml:lang="sr">КДЕ тема</comment>
-    <comment xml:lang="sr@ijekavian">КДЕ тема</comment>
-    <comment xml:lang="sr@ijekavianlatin">KDE tema</comment>
-    <comment xml:lang="sr@latin">KDE tema</comment>
-    <comment xml:lang="sv">KDE-tema</comment>
-    <comment xml:lang="th">ชุดตกแต่ง KDE</comment>
-    <comment xml:lang="tr">KDE teması</comment>
-    <comment xml:lang="ug">KDE ئۆرنىكى</comment>
-    <comment xml:lang="uk">тема KDE</comment>
-    <comment xml:lang="zh_CN">KDE 主题</comment>
-    <comment xml:lang="zh_TW">KDE 主題</comment>
-    <glob pattern="*.kth"/>
   </mime-type>
 
   <mime-type type="application/x-quanta">
@@ -1944,6 +1786,7 @@ Notes:
     <comment xml:lang="zh_TW">Turtle RDF 文件</comment>
     <sub-class-of type="text/plain" />
   </mime-type>
+
   <mime-type type="image/x-pic"> <!-- fdo #26038 -->
     <comment>Softimage PIC image</comment>
     <comment xml:lang="ar">صورة PIC</comment>
@@ -2037,6 +1880,7 @@ Notes:
     </magic>
     <glob pattern="*.zst"/>
   </mime-type>
+
   <mime-type type="application/x-zstd-compressed-tar">
     <comment>Tar archive (Zstandard-compressed)</comment>
     <comment xml:lang="bg">Архив — tar, компресиран със Zstandard</comment>

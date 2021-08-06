@@ -31,7 +31,7 @@ static const char collClassDef[] = "class %CollName : public QObject, public QDe
                                 "	Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)\n"
                                 "public:\n"
                                 "	%CollName(QObject *parent = 0);\n"
-                                "	virtual ~%CollName() {}\n"
+                                "	virtual ~%CollName();\n"
                                 "	QList<QDesignerCustomWidgetInterface*> customWidgets() const { return m_plugins; } \n"
                                 "	\n"
                                 "private:\n"
@@ -42,9 +42,15 @@ static const char collClassDef[] = "class %CollName : public QObject, public QDe
 static const char collClassImpl[] = "%CollName::%CollName(QObject *parent)\n"
                                 "	: QObject(parent)"
                                 "{\n"
-                                "	(void) new KComponentData(\"makekdewidgets\");\n"
+                                "	%CollInit\n"
+                                "	(void) new KComponentData(\"%CollName\");\n"
                                 "%CollectionAdd\n"
-                                "}\n\n";
+                                "}\n"
+                                "\n"
+                                "%CollName::~%CollName()\n"
+                                "{\n"
+                                "	%CollDestroy\n"
+                                "}\n";
 
 
 static const char classDef[] =  "class %PluginName : public QObject, public QDesignerCustomWidgetInterface\n"
@@ -128,11 +134,6 @@ int main( int argc, char **argv ) {
 void buildFile( QTextStream &ts, const QString& group, const QString& fileName, const QString& pluginName ) {
     KConfig input( fileName, KConfig::NoGlobals );
     KConfigGroup cg(&input, "Global" );
-    QHash<QString, QString> MainMap;
-    MainMap.insert( "PluginName", cg.readEntry( "PluginName", pluginName ) );
-    MainMap.insert( "PluginNameLower", cg.readEntry( "PluginName", pluginName ).toLower() );
-    MainMap.insert( "Init", cg.readEntry( "Init", "" ) );
-    MainMap.insert( "Destroy", cg.readEntry( "Destroy", "" ) );
     ts << classHeader << endl;
 
     QStringList includes = cg.readEntry( "Includes", QStringList() );
@@ -165,6 +166,8 @@ QString buildCollClass( KConfig &_input, const QStringList& classes ) {
     KConfigGroup input(&_input, "Global");
     QHash<QString, QString> defMap;
     defMap.insert( "CollName", input.readEntry( "PluginName" ) );
+    defMap.insert( "CollInit", input.readEntry( "Init", "" ) );
+    defMap.insert( "CollDestroy", input.readEntry( "Destroy", "" ) );
     QString genCode;
 
     foreach ( const QString &myClass, classes )

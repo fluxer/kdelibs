@@ -1,7 +1,6 @@
 [Global]
 PluginName=KDEWidgets
 Includes=kcomponentdata.h,ktimezone.h
-Init=new KComponentData("kdewidgets");
 
 [KActionSelector]
 IncludeFile=kactionselector.h

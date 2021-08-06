@@ -39,7 +39,7 @@ using namespace Solid::Backends::UDev;
 
 OpticalDrive::OpticalDrive(UDevDevice *device)
     : StorageDrive(device),
-    p_cdio(Q_NULLPTR)
+    p_cdio(nullptr)
 {
     const QByteArray devicename(m_device->deviceProperty("DEVNAME").toLocal8Bit());
     p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);

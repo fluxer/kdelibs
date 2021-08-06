@@ -41,7 +41,6 @@ set(cmakeFiles
     FindHUNSPELL.cmake
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
-    FindKipi.cmake
     FindKSane.cmake
     FindLibATASmart.cmake
     FindLibDRM.cmake
