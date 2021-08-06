@@ -137,7 +137,7 @@ void KDeclarative::initialize()
     d->scriptEngine.data()->setGlobalObject(newGlobalObject);
 
 #ifdef QT_KATIE
-    KCmdLineArgs::init(KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), Q_NULLPTR);
+    KCmdLineArgs::init(KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), nullptr);
 #endif
 
     d->initialized = true;

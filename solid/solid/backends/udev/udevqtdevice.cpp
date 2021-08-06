@@ -25,7 +25,7 @@
 namespace UdevQt {
 
 Device::Device()
-    : m_device(Q_NULLPTR)
+    : m_device(nullptr)
 {
 }
 
@@ -59,14 +59,14 @@ Device &Device::operator=(const Device &other)
     if (other.m_device) {
         m_device = udev_device_ref(other.m_device);
     } else {
-        m_device = Q_NULLPTR;
+        m_device = nullptr;
     }
     return *this;
 }
 
 bool Device::isValid() const
 {
-    return (m_device != Q_NULLPTR);
+    return (m_device != nullptr);
 }
 
 QString Device::subsystem() const
