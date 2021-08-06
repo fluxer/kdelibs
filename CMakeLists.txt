@@ -234,7 +234,6 @@ endif()
 #########################################################################
 
 add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-remove_definitions(-DQT3_SUPPORT_WARNINGS -DQT3_SUPPORT)
 
 ################# setup the include directories #################
 

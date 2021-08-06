@@ -1,6 +1,3 @@
-#define QT3_SUPPORT
-#define QT3_SUPPORT_WARNINGS
-
 #include <QtGui/QWidget>
 #include <QtGui/QMessageBox>
 #include <QtGui/QTextEdit>
