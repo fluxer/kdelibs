@@ -78,9 +78,9 @@ QStringList GeomManager::allDevices()
     struct gmesh tree;
     ::memset(&tree, 0, sizeof(gmesh));
     const int geomresult = geom_gettree(&tree);
-    struct gclass* geomclass = Q_NULLPTR;
-    struct ggeom* geomgeom = Q_NULLPTR;
-    struct gprovider* geomprovider = Q_NULLPTR;
+    struct gclass* geomclass = nullptr;
+    struct ggeom* geomgeom = nullptr;
+    struct gprovider* geomprovider = nullptr;
     // NOTE: keep in sync with kdelibs/solid/solid/backends/geom/geomdevice.cpp
     LIST_FOREACH(geomclass, &tree.lg_class, lg_class) {
         // not interested in devices made up by providers such as labels

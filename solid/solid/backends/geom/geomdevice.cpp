@@ -67,10 +67,10 @@ GeomDevice::GeomDevice(const QString &device)
     struct gmesh tree;
     ::memset(&tree, 0, sizeof(gmesh));
     const int geomresult = geom_gettree(&tree);
-    struct gclass* geomclass = Q_NULLPTR;
-    struct ggeom* geomgeom = Q_NULLPTR;
-    struct gprovider* geomprovider = Q_NULLPTR;
-    struct gconfig* geomconfig = Q_NULLPTR;
+    struct gclass* geomclass = nullptr;
+    struct ggeom* geomgeom = nullptr;
+    struct gprovider* geomprovider = nullptr;
+    struct gconfig* geomconfig = nullptr;
     LIST_FOREACH(geomclass, &tree.lg_class, lg_class) {
         LIST_FOREACH(geomgeom, &geomclass->lg_geom, lg_geom) {
             LIST_FOREACH(geomprovider, &geomgeom->lg_provider, lg_provider) {
