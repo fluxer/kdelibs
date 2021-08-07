@@ -20,7 +20,6 @@
 #include "kmimemagicrule_p.h"
 #include <QIODevice>
 #include <kdebug.h>
-#include <QByteArrayMatcher>
 
 /*
  * Historical note:
@@ -54,50 +53,6 @@ static bool testMatches(QIODevice* device, qint64 deviceSize, QByteArray& availa
     }
     return false;
 }
-
-// Taken from QByteArray::indexOf, but that one uses strncmp so it stops on '\0',
-// replaced with memcmp here...
-static int indexOf(const QByteArray& that, const QByteArray &ba)
-{
-    const int l = that.size();
-    const int ol = ba.size();
-    if (ol > l)
-        return -1;
-    if (ol == 0)
-        return 0;
-    if (ol == 1)
-        return that.indexOf(*ba.constData());
-
-    if (l > 500 && ol > 5)
-        return QByteArrayMatcher(ba).indexIn(that);
-
-    const char *needle = ba.data();
-    const char *haystack = that.data();
-    const char *end = that.data() + (l - ol);
-    const uint ol_minus_1 = ol - 1;
-    uint hashNeedle = 0, hashHaystack = 0;
-    int idx;
-    for (idx = 0; idx < ol; ++idx) {
-        hashNeedle = ((hashNeedle<<1) + needle[idx]);
-        hashHaystack = ((hashHaystack<<1) + haystack[idx]);
-    }
-    hashHaystack -= *(haystack + ol_minus_1);
-
-    while (haystack <= end) {
-        hashHaystack += *(haystack + ol_minus_1);
-        if (hashHaystack == hashNeedle  && *needle == *haystack
-             && memcmp(needle, haystack, ol) == 0)
-            return haystack - that.data();
-
-        if (ol_minus_1 < sizeof(uint) * 8 /*CHAR_BIT*/)
-            hashHaystack -= (*haystack) << ol_minus_1;
-        hashHaystack <<= 1;
-
-        ++haystack;
-    }
-    return -1;
-}
-
 
 bool KMimeMagicRule::match(QIODevice* device, qint64 deviceSize, QByteArray& availableData) const
 {
@@ -153,7 +108,7 @@ bool KMimeMagicMatch::match(QIODevice* device, qint64 deviceSize, QByteArray& av
     bool found = false;
     if (m_mask.isEmpty()) {
         //kDebug() << "m_data=" << m_data;
-        found = ::indexOf(readData, m_data) != -1;
+        found = readData.indexOf(m_data) != -1;
         //if (found)
         //    kDebug() << "Matched readData=" << readData << "with m_data=" << m_data << "so this is" << mimeType;
     } else {

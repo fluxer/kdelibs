@@ -525,15 +525,16 @@ void KIconEffect::semiTransparent(QImage &img)
         if(img.format() == QImage::Format_ARGB32_Premultiplied)
             img = img.convertToFormat(QImage::Format_ARGB32);
         int width  = img.width();
-	int height = img.height();
+        int height = img.height();
 
         if(painterSupportsAntialiasing()){
             unsigned char *line;
             for(y=0; y<height; ++y){
-                if(QSysInfo::ByteOrder == QSysInfo::BigEndian)
-                    line = img.scanLine(y);
-                else
-                    line = img.scanLine(y) + 3;
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+                line = img.scanLine(y);
+#else
+                line = img.scanLine(y) + 3;
+#endif
                 for(x=0; x<width; ++x){
                     *line >>= 1;
                     line += 4;
