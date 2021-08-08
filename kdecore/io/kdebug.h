@@ -177,7 +177,6 @@ static inline QDebug kFatal(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
 // operators for KDE types
 class KUrl;
 class KDateTime;
-#include <QObject>
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KUrl &url);
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
 
