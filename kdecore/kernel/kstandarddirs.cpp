@@ -40,6 +40,7 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 #include <errno.h>
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
@@ -595,7 +596,7 @@ static void lookupDirectory(const QString& path, const QString &relPart,
             {
                 KDE_struct_stat buff;
                 if ( KDE::stat( pathfn, &buff ) != 0 ) {
-                    kDebug(180) << "Error stat'ing " << pathfn << " : " << perror;
+                    kDebug(180) << "Error stat'ing " << pathfn << " : " << ::strerror(errno);
                     continue; // Couldn't stat (e.g. no read permissions)
                 }
                 isReg = S_ISREG (buff.st_mode);
@@ -701,7 +702,7 @@ static void lookupPrefix(const QString& prefix, const QString& relpath,
                 QString pathfn = path + fn;
                 KDE_struct_stat buff;
                 if ( KDE::stat( fn, &buff ) != 0 ) {
-                    kDebug(180) << "Error stat'ing " << fn << " : " << perror;
+                    kDebug(180) << "Error stat'ing " << fn << " : " << ::strerror(errno);
                     continue; // Couldn't stat (e.g. no read permissions)
                 }
                 isDir = S_ISDIR (buff.st_mode);

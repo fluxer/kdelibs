@@ -39,6 +39,7 @@
 #include <kmountpoint.h>
 
 #include <dirent.h>
+#include <string.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <grp.h>
@@ -547,7 +548,7 @@ void FileProtocol::del(const KUrl& url, bool isfile)
             if ((errno == EACCES) || (errno == EPERM)) {
                 error(KIO::ERR_ACCESS_DENIED, path);
             } else {
-                kDebug( 7101 ) << "could not rmdir " << perror;
+                kDebug( 7101 ) << "could not rmdir " << ::strerror(errno);
                 error(KIO::ERR_COULD_NOT_RMDIR, path);
                 return;
             }
