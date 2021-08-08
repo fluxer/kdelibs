@@ -217,7 +217,7 @@ void testKDebug()
     ch = '\r';
     kDebug() << "QChar \\r: " << ch;
     kDebug() << "error on this line";
-    kDebug(2 == 2) << "this is right " << perror;
+    kDebug(2 == 2) << "this is right";
     kDebug() << "Before instance creation";
     kDebug(1202) << "Before instance creation";
     KComponentData i("kdebugtest");

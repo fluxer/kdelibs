@@ -702,11 +702,6 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
     return kDebug_data->stream(level, area, file, line, funcinfo);
 }
 
-QDebug perror(QDebug s, KDebugTag)
-{
-    return s << QString::fromLocal8Bit(strerror(errno));
-}
-
 QDebug operator<<(QDebug s, const KDateTime &time)
 {
     if ( time.isDateOnly() )

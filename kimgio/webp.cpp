@@ -160,7 +160,13 @@ QVariant WebPHandler::option(ImageOption option) const
 void WebPHandler::setOption(ImageOption option, const QVariant &value)
 {
     if (option == Quality) {
-        quality = qBound(0, value.toInt(), 100);
+        const int newquality = value.toInt();
+        // -1 means default
+        if (newquality == -1) {
+            quality = 75;
+        } else {
+            quality = qBound(0, newquality, 100);
+        }
     }
 }
 

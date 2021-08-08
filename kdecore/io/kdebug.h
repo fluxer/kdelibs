@@ -174,20 +174,6 @@ static inline QDebug kFatal(int area = KDE_DEFAULT_DEBUG_AREA)
 static inline QDebug kFatal(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
 { return cond ? kFatal(area) : kDebugDevNull(); }
 
-struct KDebugTag { }; ///! @internal just a tag class
-typedef QDebug (*KDebugStreamFunction)(QDebug, KDebugTag); ///< @internal
-inline QDebug operator<<(QDebug s, KDebugStreamFunction f)
-{ return (*f)(s, KDebugTag()); }
-
-/**
- * \relates KGlobal
- * Print a message describing the last system error.
- * @param s the debug stream to write to
- * @return the debug stream (@p s)
- * @see perror(3)
- */
-KDECORE_EXPORT QDebug perror(QDebug, KDebugTag);
-
 // operators for KDE types
 class KUrl;
 class KDateTime;
