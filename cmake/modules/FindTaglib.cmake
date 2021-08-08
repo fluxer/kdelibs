@@ -13,7 +13,7 @@ if(NOT WIN32)
     include(FindPkgConfig)
     pkg_check_modules(PC_TAGLIB QUIET taglib)
 
-    set(TAGLIB_INCLUDE_DIR ${PC_TAGLIB_INCLUDE_DIRS})
+    set(TAGLIB_INCLUDES ${PC_TAGLIB_INCLUDE_DIRS})
     set(TAGLIB_LIBRARY ${PC_TAGLIB_LIBRARIES})
 endif()
 
