@@ -79,9 +79,9 @@ void JobCollectionJobRunner::execute ( Thread *t )
     if ( m_payload )
     {
         m_payload->execute ( t );
-		m_collection->internalJobDone ( m_payload);
+        m_collection->internalJobDone ( m_payload);
     } else {
-        kDebug ( "job in collection has been deleted." );
+        kDebug() << "job in collection has been deleted.";
     }
     Job::execute ( t );
 }

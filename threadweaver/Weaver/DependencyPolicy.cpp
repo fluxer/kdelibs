@@ -180,7 +180,7 @@ void DependencyPolicy::dumpJobDependencies()
     // basicly JobMultiMap
     QMapIterator<ThreadWeaver::Job*, ThreadWeaver::Job*> it(d->dependencies());
 
-    kDebug ( "Job Dependencies (left depends on right side):" );
+    kDebug() << "Job Dependencies (left depends on right side):";
     while ( it.hasNext() )
     {
         it.next();
@@ -189,6 +189,6 @@ void DependencyPolicy::dumpJobDependencies()
                << "<--"
                << it.value() << it.value()->objectName() << it.value()->metaObject()->className();
     }
-    kDebug ( "-----------------" );
+    kDebug() << "-----------------";
 }
 

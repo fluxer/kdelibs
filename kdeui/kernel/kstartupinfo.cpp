@@ -397,7 +397,8 @@ void KStartupInfo::Private::remove_startup_pids( const KStartupInfoData& data_P 
 void KStartupInfo::Private::remove_startup_pids( const KStartupInfoId& id_P,
     const KStartupInfoData& data_P )
 {
-    kFatal( data_P.pids().count() == 0, 172 );
+    if (data_P.pids().count() == 0)
+        kFatal( 172 ) << "data carries no PIDs";
     Data* data = NULL;
     if( startups.contains( id_P ))
         data = &startups[ id_P ];

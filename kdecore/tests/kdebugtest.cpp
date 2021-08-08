@@ -217,7 +217,6 @@ void testKDebug()
     ch = '\r';
     kDebug() << "QChar \\r: " << ch;
     kDebug() << "error on this line";
-    kDebug(2 == 2) << "this is right";
     kDebug() << "Before instance creation";
     kDebug(1202) << "Before instance creation";
     KComponentData i("kdebugtest");
@@ -225,7 +224,6 @@ void testKDebug()
     kDebug(1202) << "This number has a value of " << 5;
     // kDebug() << "This number should come out as appname " << 5 << " " << "test";
     kWarning() << "1+1 = " << 1+1+1;
-    kError(1+1 != 2) << "there is something really odd!";
     QString s = "mystring";
     kDebug() << s;
     kError(1202) << "Error !!!";

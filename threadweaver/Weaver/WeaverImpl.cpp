@@ -73,7 +73,7 @@ WeaverImpl::~WeaverImpl()
 {   // the constructor may only be called from the thread that owns this
     // object (everything else would be what we professionals call "insane")
     Q_ASSERT( QThread::currentThread() == thread() );
-    kDebug("destroying inventory.");
+    kDebug() << "destroying inventory.";
     setState ( ShuttingDown );
 
     m_jobAvailable.wakeAll();
@@ -107,7 +107,7 @@ WeaverImpl::~WeaverImpl()
     Q_ASSERT(m_inventory.isEmpty());
     delete m_finishMutex;
     delete m_jobAvailableMutex;
-    kDebug ( "done" );
+    kDebug() << "done";
     setState ( Destructed ); // m_state = Halted;
     // FIXME: delete state objects. what sense does DestructedState make then?
     // FIXME: make state objects static, since they are
@@ -252,7 +252,7 @@ bool WeaverImpl::dequeue ( Job* job )
 
 void WeaverImpl::dequeue ()
 {
-    kDebug( "dequeueing all jobs." );
+    kDebug() << "dequeueing all jobs.";
     std::lock_guard<std::recursive_mutex> l(m_mutex);
     for ( int index = 0; index < m_assignments.size(); ++index )
     {
@@ -378,14 +378,14 @@ void WeaverImpl::finish()
 #endif
     while ( !isIdle() ) {
         Q_ASSERT(state().stateId() == WorkingHard);
-        kDebug ( "not done, waiting." );
+        kDebug() << "not done, waiting.";
         QMutexLocker l( m_finishMutex );
         if ( m_jobFinished.wait( l.mutex(), MaxWaitMilliSeconds ) == false ) {
             kDebug() << "wait timed out," << queueLength() << "jobs left, waking threads.";
             m_jobAvailable.wakeAll();
         }
     }
-    kDebug ( "done.\n\n" );
+    kDebug() << "done.\n\n";
 }
 
 void WeaverImpl::requestAbort()
@@ -399,7 +399,7 @@ void WeaverImpl::requestAbort()
 void WeaverImpl::dumpJobs()
 {
     std::lock_guard<std::recursive_mutex> l(m_mutex);
-    kDebug( "current jobs:" );
+    kDebug() << "current jobs:";
     for ( int index = 0; index < m_assignments.size(); ++index ) {
         kDebug() << "-->"
                  << index << ":"
