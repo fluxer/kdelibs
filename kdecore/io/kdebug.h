@@ -127,12 +127,9 @@ KDECORE_EXPORT void kClearDebugConfig();
  */
 static inline QDebug kDebug(int area = KDE_DEFAULT_DEBUG_AREA)
 { return kDebugStream(QtDebugMsg, area); }
-static inline QDebug kDebug(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
-{ return cond ? kDebug(area) : kDebugDevNull(); }
 
 #else  // KDE_NO_DEBUG_OUTPUT
 static inline QDebug kDebug(int = KDE_DEFAULT_DEBUG_AREA) { return kDebugDevNull(); }
-static inline QDebug kDebug(bool, int = KDE_DEFAULT_DEBUG_AREA) { return kDebugDevNull(); }
 #endif
 
 #if !defined(KDE_NO_WARNING_OUTPUT)
@@ -144,12 +141,8 @@ static inline QDebug kDebug(bool, int = KDE_DEFAULT_DEBUG_AREA) { return kDebugD
  */
 static inline QDebug kWarning(int area = KDE_DEFAULT_DEBUG_AREA)
 { return kDebugStream(QtWarningMsg, area); }
-static inline QDebug kWarning(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
-{ return cond ? kWarning(area) : kDebugDevNull(); }
-
 #else  // KDE_NO_WARNING_OUTPUT
 static inline QDebug kWarning(int = KDE_DEFAULT_DEBUG_AREA) { return kDebugDevNull(); }
-static inline QDebug kWarning(bool, int = KDE_DEFAULT_DEBUG_AREA) { return kDebugDevNull(); }
 #endif
 
 /**
@@ -160,8 +153,6 @@ static inline QDebug kWarning(bool, int = KDE_DEFAULT_DEBUG_AREA) { return kDebu
  */
 static inline QDebug kError(int area = KDE_DEFAULT_DEBUG_AREA)
 { return kDebugStream(QtCriticalMsg, area); }
-static inline QDebug kError(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
-{ return cond ? kError(area) : kDebugDevNull(); }
 
 /**
  * \relates KGlobal
@@ -171,13 +162,10 @@ static inline QDebug kError(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
  */
 static inline QDebug kFatal(int area = KDE_DEFAULT_DEBUG_AREA)
 { return kDebugStream(QtFatalMsg, area); }
-static inline QDebug kFatal(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
-{ return cond ? kFatal(area) : kDebugDevNull(); }
 
 // operators for KDE types
 class KUrl;
 class KDateTime;
-#include <QObject>
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KUrl &url);
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
 
@@ -202,8 +190,6 @@ public:
 
     inline QDebug operator()(int area = KDE_DEFAULT_DEBUG_AREA)
         { return kDebugStream(level, area, file, line, funcinfo); }
-    inline QDebug operator()(bool cond, int area = KDE_DEFAULT_DEBUG_AREA)
-        { if (cond) return operator()(area); return kDebugDevNull(); }
 
     /**
      * @since 4.4

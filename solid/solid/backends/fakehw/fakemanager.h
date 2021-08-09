@@ -21,6 +21,7 @@
 #ifndef SOLID_BACKENDS_FAKEHW_FAKEMANAGER_H
 #define SOLID_BACKENDS_FAKEHW_FAKEMANAGER_H
 
+#include <solid/solid_export.h>
 #include <solid/ifaces/devicemanager.h>
 
 #include <QDomElement>
@@ -41,7 +42,7 @@ class FakeDevice;
  *
  * @author Michaël Larouche <michael.larouche@kdemail.net>
  */
-class FakeManager : public Solid::Ifaces::DeviceManager
+class SOLID_EXPORT FakeManager : public Solid::Ifaces::DeviceManager
 {
     Q_OBJECT
 public:

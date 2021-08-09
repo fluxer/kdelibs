@@ -193,7 +193,7 @@ bool Job::canBeExecuted()
             }
         }
     } else {
-        kDebug( "no queue policies, this job can be executed." );
+        kDebug() << "no queue policies, this job can be executed.";
     }
 
     return success;

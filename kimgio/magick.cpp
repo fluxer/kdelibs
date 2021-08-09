@@ -107,7 +107,7 @@ QByteArray MagickHandler::name() const
 bool MagickHandler::canRead(QIODevice *device)
 {
     if (Q_UNLIKELY(!device)) {
-        kWarning("MagickHandler::canRead() called with no device");
+        kWarning() << "MagickHandler::canRead() called with no device";
         return false;
     }
 

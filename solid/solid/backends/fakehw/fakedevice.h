@@ -20,6 +20,7 @@
 #ifndef SOLID_BACKENDS_FAKEHW_FAKEDEVICE_H
 #define SOLID_BACKENDS_FAKEHW_FAKEDEVICE_H
 
+#include <solid/solid_export.h>
 #include <solid/ifaces/device.h>
 
 #include <QtCore/QMap>
@@ -31,7 +32,7 @@ namespace Backends
 {
 namespace Fake
 {
-class FakeDevice : public Solid::Ifaces::Device
+class SOLID_EXPORT FakeDevice : public Solid::Ifaces::Device
 {
     Q_OBJECT
 public:

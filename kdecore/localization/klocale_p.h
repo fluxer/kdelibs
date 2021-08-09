@@ -21,17 +21,24 @@
 #ifndef KLOCALE_P_H
 #define KLOCALE_P_H
 
+#include "config.h"
 #include "klocale.h"
 #include "kdayperiod_p.h"
 
 #include <mutex>
+
+#ifdef ENABLE_TESTING
+#  define KLOCALEPRIVATE_EXPORT KDECORE_EXPORT
+#else
+#  define KLOCALEPRIVATE_EXPORT
+#endif
 
 class KCatalog;
 
 // Used by both KLocale and KLocalizedString, since they call each other.
 std::recursive_mutex& kLocaleMutex();
 
-class KLocalePrivate
+class KLOCALEPRIVATE_EXPORT KLocalePrivate
 {
 public:
     /**

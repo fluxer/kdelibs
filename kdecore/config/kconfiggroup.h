@@ -637,7 +637,7 @@ private:
 };
 
 #define KCONFIGGROUP_ENUMERATOR_ERROR(ENUM) \
-"The Qt MetaObject system does not seem to know about \"" ENUM \
+"The Katie MetaObject system does not seem to know about \"" ENUM \
 "\" please use Q_ENUMS or Q_FLAGS to register it."
 
 /**
@@ -651,46 +651,54 @@ private:
  * Note that those are global functions, NOT member functions of KConfigGroup.
  *
  */
-#define KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Class, Enum)                     \
+#define KCONFIGGROUP_DECLARE_ENUM_QOBJECT(Class, Enum)                         \
 inline Class::Enum readEntry(const KConfigGroup& group, const char* key, const Class::Enum& def) \
-{                                                                          \
-const QMetaObject* M_obj = &Class::staticMetaObject;                       \
-const int M_index = M_obj->indexOfEnumerator(#Enum);                       \
-kFatal(M_index == -1) << KCONFIGGROUP_ENUMERATOR_ERROR(#Enum) << endl;     \
-const QMetaEnum M_enum = M_obj->enumerator(M_index);                       \
-const QByteArray M_data = group.readEntry(key, QByteArray(M_enum.valueToKey(def)));\
-return static_cast<Class::Enum>(M_enum.keyToValue(M_data.constData()));    \
-}                                                                          \
+{                                                                              \
+const QMetaObject* M_obj = &Class::staticMetaObject;                           \
+    const int M_index = M_obj->indexOfEnumerator(#Enum);                       \
+    if (M_index == -1) {                                                       \
+        kFatal() << KCONFIGGROUP_ENUMERATOR_ERROR(#Enum) << endl;              \
+    }                                                                          \
+    const QMetaEnum M_enum = M_obj->enumerator(M_index);                       \
+    const QByteArray M_data = group.readEntry(key, QByteArray(M_enum.valueToKey(def))); \
+    return static_cast<Class::Enum>(M_enum.keyToValue(M_data.constData()));    \
+}                                                                              \
 inline void writeEntry(KConfigGroup& group, const char* key, const Class::Enum& value, KConfigBase::WriteConfigFlags flags = KConfigBase::Normal)\
-{                                                                          \
-const QMetaObject* M_obj = &Class::staticMetaObject;                       \
-const int M_index = M_obj->indexOfEnumerator(#Enum);                       \
-kFatal(M_index == -1) << KCONFIGGROUP_ENUMERATOR_ERROR(#Enum) << endl;     \
-const QMetaEnum M_enum = M_obj->enumerator(M_index);                       \
-group.writeEntry(key, QByteArray(M_enum.valueToKey(value)), flags);              \
+{                                                                              \
+    const QMetaObject* M_obj = &Class::staticMetaObject;                       \
+    const int M_index = M_obj->indexOfEnumerator(#Enum);                       \
+    if (M_index == -1) {                                                       \
+        kFatal() << KCONFIGGROUP_ENUMERATOR_ERROR(#Enum) << endl;              \
+    }                                                                          \
+    const QMetaEnum M_enum = M_obj->enumerator(M_index);                       \
+    group.writeEntry(key, QByteArray(M_enum.valueToKey(value)), flags);        \
 }
 
 /**
  * Similar to KCONFIGGROUP_DECLARE_ENUM_QOBJECT but for flags declared with Q_FLAGS()
  * (where multiple values can be set at the same time)
  */
-#define KCONFIGGROUP_DECLARE_FLAGS_QOBJECT(Class, Flags)                    \
+#define KCONFIGGROUP_DECLARE_FLAGS_QOBJECT(Class, Flags)                       \
 inline Class::Flags readEntry(const KConfigGroup& group, const char* key, const Class::Flags& def) \
-{                                                                           \
-const QMetaObject* M_obj = &Class::staticMetaObject;                        \
-const int M_index = M_obj->indexOfEnumerator(#Flags);                       \
-kFatal(M_index == -1) << KCONFIGGROUP_ENUMERATOR_ERROR(#Flags) << endl;     \
-const QMetaEnum M_enum = M_obj->enumerator(M_index);                        \
-const QByteArray M_data = group.readEntry(key, QByteArray(M_enum.valueToKeys(def)));\
-return static_cast<Class::Flags>(M_enum.keysToValue(M_data.constData()));   \
-}                                                                           \
-inline void writeEntry(KConfigGroup& group, const char* key, const Class::Flags& value, KConfigBase::WriteConfigFlags flags = KConfigBase::Normal)\
-{                                                                           \
-const QMetaObject* M_obj = &Class::staticMetaObject;                        \
-const int M_index = M_obj->indexOfEnumerator(#Flags);                       \
-kFatal(M_index == -1) << KCONFIGGROUP_ENUMERATOR_ERROR(#Flags) << endl;     \
-const QMetaEnum M_enum = M_obj->enumerator(M_index);                        \
-group.writeEntry(key, QByteArray(M_enum.valueToKeys(value)), flags);              \
+{                                                                              \
+    const QMetaObject* M_obj = &Class::staticMetaObject;                       \
+    const int M_index = M_obj->indexOfEnumerator(#Flags);                      \
+    if (M_index == -1) {                                                       \
+        kFatal() << KCONFIGGROUP_ENUMERATOR_ERROR(#Flags) << endl;             \
+    }                                                                          \
+    const QMetaEnum M_enum = M_obj->enumerator(M_index);                       \
+    const QByteArray M_data = group.readEntry(key, QByteArray(M_enum.valueToKeys(def))); \
+    return static_cast<Class::Flags>(M_enum.keysToValue(M_data.constData()));  \
+}                                                                              \
+inline void writeEntry(KConfigGroup& group, const char* key, const Class::Flags& value, KConfigBase::WriteConfigFlags flags = KConfigBase::Normal) \
+{                                                                              \
+    const QMetaObject* M_obj = &Class::staticMetaObject;                       \
+    const int M_index = M_obj->indexOfEnumerator(#Flags);                      \
+    if (M_index == -1) {                                                       \
+        kFatal() << KCONFIGGROUP_ENUMERATOR_ERROR(#Flags) << endl;             \
+    }                                                                          \
+    const QMetaEnum M_enum = M_obj->enumerator(M_index);                       \
+    group.writeEntry(key, QByteArray(M_enum.valueToKeys(value)), flags);       \
 }
 
 template <typename T>
