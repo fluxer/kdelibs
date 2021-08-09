@@ -18,10 +18,10 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
 #include "managerbase_p.h"
 
 #include <stdlib.h>
-#include <config-solid.h>
 
 #include "backends/fstab/fstabmanager.h"
 

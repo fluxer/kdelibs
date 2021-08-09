@@ -5,7 +5,6 @@ include_directories(
     ${KDE4_KDEUI_INCLUDES}
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw
-    ${CMAKE_CURRENT_BINARY_DIR}/../solid
 )
 
 

@@ -24,7 +24,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
-#include "config-solid.h"
+#include "config.h"
 #include "solid/solid_export.h"
 
 #ifdef ENABLE_TESTING

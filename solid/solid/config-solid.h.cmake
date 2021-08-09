@@ -18,7 +18,5 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#cmakedefine ENABLE_TESTING
-
 #cmakedefine UDEV_FOUND
 #cmakedefine LIBCDIO_FOUND
