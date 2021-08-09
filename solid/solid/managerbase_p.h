@@ -24,11 +24,18 @@
 #include <QtCore/QObject>
 #include <QtCore/QString>
 
+#include "config-solid.h"
 #include "solid/solid_export.h"
+
+#ifdef ENABLE_TESTING
+#  define MANAGERBASE_EXPORT SOLID_EXPORT
+#else
+#  define MANAGERBASE_EXPORT
+#endif
 
 namespace Solid
 {
-    class ManagerBasePrivate
+    class MANAGERBASE_EXPORT ManagerBasePrivate
     {
     public:
         ManagerBasePrivate();
