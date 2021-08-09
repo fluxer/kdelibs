@@ -23,13 +23,13 @@
 #include <ktempdir.h>
 #include <kdesktopfile.h>
 #include <kstandarddirs.h>
-#include "moc_kconfigtest.cpp"
-
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kconfiggroup.h>
 
-#include <QtNetwork/QHostInfo>
+#include <QHostInfo>
+#include <QThreadPool>
+#include <qtconcurrentrun.h>
 
 #ifdef Q_OS_UNIX
 #include <utime.h>
@@ -1591,9 +1591,6 @@ void KConfigTest::testNoKdeHome()
     KTempDir::removeDir(kdeHome);
 }
 
-#include <QThreadPool>
-#include <qtconcurrentrun.h>
-
 // To find multithreading bugs: valgrind --tool=helgrind --track-lockorders=no ./kconfigtest testThreads
 void KConfigTest::testThreads()
 {
@@ -1610,3 +1607,5 @@ void KConfigTest::testThreads()
     Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
         f.waitForFinished();
 }
+
+#include "moc_kconfigtest.cpp"
