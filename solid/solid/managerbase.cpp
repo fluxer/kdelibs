@@ -19,6 +19,7 @@
 */
 
 #include "config.h"
+#include "config-solid.h"
 #include "managerbase_p.h"
 
 #include <stdlib.h>
