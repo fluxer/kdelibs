@@ -432,11 +432,9 @@ private:
         // (The real KCM code simply does the refresh in a slot, asynchronously)
         QEventLoop loop;
         QObject::connect(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), &loop, SLOT(quit()));
-        QProcess proc;
         const QString kbuildsycoca = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
         QVERIFY(!kbuildsycoca.isEmpty());
-        proc.setProcessChannelMode(QProcess::MergedChannels); // silence kbuildsycoca output
-        proc.execute(kbuildsycoca);
+        QProcess::execute(kbuildsycoca);
         loop.exec();
     }
 
