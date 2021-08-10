@@ -25,7 +25,6 @@
 #include "kjob.h"
 
 #include <QTimer>
-#include <QEventLoop>
 
 #include <array>
 
@@ -53,7 +52,6 @@ public:
     KJob::Capabilities capabilities;
     QTimer *speedTimer;
     bool isAutoDelete;
-    QEventLoop *eventLoop;
 
     void _k_speedTimeout();
 
