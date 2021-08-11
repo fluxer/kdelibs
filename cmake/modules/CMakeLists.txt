@@ -50,6 +50,7 @@ set(cmakeFiles
     FindLIBPARTED.cmake
     FindLibSpectre.cmake
     FindLibSSH.cmake
+    FindLibTorrent.cmake
     FindLibVNCServer.cmake
     FindMPFR.cmake
     FindMtp.cmake
