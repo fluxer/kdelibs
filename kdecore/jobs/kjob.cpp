@@ -26,6 +26,7 @@
 
 #include <kglobal.h>
 #include <QEventLoop>
+#include <QCoreApplication>
 #include <QMap>
 #include <QMetaType>
 #include <QTimer>
@@ -34,7 +35,7 @@ KJobPrivate::KJobPrivate()
     : q_ptr(0), uiDelegate(0), error(KJob::NoError),
       progressUnit(KJob::Bytes), percentage(0),
       suspended(false), capabilities(KJob::NoCapabilities),
-      speedTimer(0), isAutoDelete(true), eventLoop(0), isFinished(false)
+      speedTimer(0), isAutoDelete(true), isFinished(false)
 {
     qRegisterMetaType<KJob::Unit>("KJob::Unit");
 
@@ -192,27 +193,10 @@ void KJob::setCapabilities( KJob::Capabilities capabilities )
 bool KJob::exec()
 {
     Q_D(KJob);
-    // Usually this job would delete itself, via deleteLater() just after
-    // emitting result() (unless configured otherwise). Since we use an event
-    // loop below, that event loop will process the deletion event and we'll
-    // have been deleted when exec() returns. This crashes, so temporarily
-    // suspend autodeletion and manually do it afterwards.
-    const bool wasAutoDelete = isAutoDelete();
-    setAutoDelete( false );
-
-    Q_ASSERT( ! d->eventLoop );
-
-    QEventLoop loop( this );
-    d->eventLoop = &loop;
 
     start();
-    if( !d->isFinished ) {
-        d->eventLoop->exec(QEventLoop::ExcludeUserInputEvents);
-    }
-    d->eventLoop = 0;
-
-    if ( wasAutoDelete ) {
-        deleteLater();
+    while( !d->isFinished ) {
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
     }
     return ( d->error == NoError );
 }
@@ -301,10 +285,6 @@ void KJob::emitResult()
 {
     Q_D(KJob);
     d->isFinished = true;
-
-    if ( d->eventLoop ) {
-        d->eventLoop->quit();
-    }
 
     // If we are displaying a progress dialog, remove it first.
     emit finished( this );
