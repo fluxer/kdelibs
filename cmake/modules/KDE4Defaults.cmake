@@ -34,5 +34,5 @@ set(CMAKE_CXX_VISIBILITY_PRESET "hidden")
 # define the generic version of the libraries here, this makes it easy to
 # advance it when the next KDE release comes. Use this version number for
 # libraries
-set(GENERIC_LIB_VERSION "4.20")
+set(GENERIC_LIB_VERSION "4.21")
 set(GENERIC_LIB_SOVERSION "4")
