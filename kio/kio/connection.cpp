@@ -22,8 +22,6 @@
 #include "connection.h"
 #include "connection_p.h"
 
-#include <errno.h>
-
 #include <QQueue>
 #include <QPointer>
 #include <QDateTime>

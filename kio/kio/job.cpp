@@ -28,7 +28,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-
 #include <signal.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,8 +47,8 @@ extern "C" {
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kde_file.h>
-
-#include <errno.h>
+#include <kdirnotify.h>
+#include <ktemporaryfile.h>
 
 #include "jobuidelegate.h"
 #include "kmimetype.h"
@@ -59,9 +58,6 @@ extern "C" {
 #include "kprotocolinfo.h"
 #include "kprotocolmanager.h"
 #include "filejob.h"
-
-#include <kdirnotify.h>
-#include <ktemporaryfile.h>
 
 using namespace KIO;
 
