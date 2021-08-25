@@ -38,6 +38,7 @@ check_include_files(sys/mntent.h  HAVE_SYS_MNTENT_H)                   # solid, 
 check_include_files("sys/param.h;sys/mount.h"  HAVE_SYS_MOUNT_H)       # kio, kdecore
 check_include_files(unistd.h      HAVE_UNISTD_H)                       # various
 check_include_files(stdint.h      HAVE_STDINT_H)                       # various
+check_include_files(paths.h       HAVE_PATHS_H)                        # kdecore
 
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
 
