@@ -655,8 +655,8 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
                 }
                 xml.skipCurrentElement();
             }
-#warning FIXME: BSD only crash workaround, investigate
-#ifdef Q_OS_LINUX
+#warning FIXME: non-glibc crash workaround, investigate
+#ifdef __GLIBC__
             if (xml.name() != "mime-type") {
                 kFatal() << "Programming error in KMimeType XML loading, please create a bug report on " << BUG_REPORT_URL << "including the file" << fullPath;
             }
