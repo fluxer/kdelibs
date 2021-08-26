@@ -31,6 +31,10 @@
 
 static Qt::CaseSensitivity cs = Qt::CaseSensitive;
 
+#ifdef HAVE_PATHS_H
+#include <paths.h> // for _PATH_MOUNTED
+#endif
+
 #ifdef HAVE_SYS_MNTTAB_H
 #include <sys/mnttab.h>
 #endif

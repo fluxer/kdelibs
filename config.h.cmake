@@ -19,6 +19,7 @@
 #cmakedefine HAVE_LIMITS_H 1
 #cmakedefine HAVE_MNTENT_H 1
 #cmakedefine HAVE_UNISTD_H 1
+#cmakedefine HAVE_PATHS_H 1
 
 #cmakedefine HAVE_BACKTRACE 1
 #cmakedefine HAVE_GETMNTINFO 1

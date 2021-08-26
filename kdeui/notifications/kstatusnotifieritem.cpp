@@ -165,7 +165,7 @@ QString KStatusNotifierItem::iconName() const
 
 void KStatusNotifierItem::setIconByPixmap(const QIcon &icon)
 {
-    if (d->iconName.isEmpty() && d->icon.cacheKey() == icon.cacheKey()) {
+    if (d->icon.cacheKey() == icon.cacheKey()) {
         return;
     }
 

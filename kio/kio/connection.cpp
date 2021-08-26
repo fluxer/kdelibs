@@ -22,8 +22,6 @@
 #include "connection.h"
 #include "connection_p.h"
 
-#include <errno.h>
-
 #include <QQueue>
 #include <QPointer>
 #include <QDateTime>
@@ -276,7 +274,7 @@ void SocketConnectionBackend::socketReadyRead()
         // kDebug() << this << "Got " << socket->bytesAvailable() << " bytes";
         if (len == -1) {
             // We have to read the header
-            static char buffer[HeaderSize];
+            char buffer[HeaderSize];
 
             if (socket->bytesAvailable() < HeaderSize) {
                 return;             // wait for more data

@@ -205,7 +205,6 @@ set(kdecore_LIB_SRCS
     sonnet/backgroundengine.cpp
     sonnet/globals.cpp
 
-    network/ksocketfactory.cpp
     network/ksslcertificatemanager.cpp
     localization/kcatalog.cpp
     localization/kcurrencycode.cpp
@@ -384,7 +383,6 @@ install(
     kernel/kcomponentdata.h
     kernel/kstandarddirs.h
     kernel/ktoolinvocation.h
-    network/ksocketfactory.h
     auth/kauthaction.h
     auth/kauthactionreply.h
     auth/kauthactionwatcher.h
