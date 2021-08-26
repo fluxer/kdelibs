@@ -48,8 +48,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
 #include <QtNetwork/QHostAddress>
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QTcpServer>
+#include <QtNetwork/QSslSocket>
 #include <QtNetwork/QAuthenticator>
 
 #include <kdebug.h>
@@ -60,7 +59,6 @@
 #include <kio/ioslave_defaults.h>
 #include <kio/slaveconfig.h>
 #include <kremoteencoding.h>
-#include <ksocketfactory.h>
 #include <kde_file.h>
 #include <kconfiggroup.h>
 
@@ -463,7 +461,9 @@ bool Ftp::ftpOpenControlConnection( const QString &host, int port )
   // now connect to the server and read the login message ...
   if (port == 0)
     port = 21;                  // default FTP port
-  m_control = KSocketFactory::synchronousConnectToHost(QLatin1String("ftp"), host, port, connectTimeout() * 1000);
+  m_control = new QSslSocket();
+  m_control->connectToHost(host, port);
+  m_control->waitForConnected(connectTimeout() * 1000);
   connect(m_control, SIGNAL(proxyAuthenticationRequired(QNetworkProxy,QAuthenticator*)),
           this, SLOT(proxyAuthentication(QNetworkProxy,QAuthenticator*)));
   int iErrorCode = m_control->state() == QAbstractSocket::ConnectedState ? 0 : ERR_COULD_NOT_CONNECT;
@@ -910,7 +910,9 @@ int Ftp::ftpOpenPASVDataConnection()
   // now connect the data socket ...
   quint16 port = i[4] << 8 | i[5];
   const QString host = (isSocksProxy() ? m_host : address.toString());
-  m_data = KSocketFactory::synchronousConnectToHost("ftp-data", host, port, connectTimeout() * 1000);
+  m_data = new QSslSocket();
+  m_data->connectToHost(host, port);
+  m_data->waitForConnected(connectTimeout() * 1000);
 
   return m_data->state() == QAbstractSocket::ConnectedState ? 0 : ERR_INTERNAL;
 }
@@ -946,7 +948,9 @@ int Ftp::ftpOpenEPSVDataConnection()
     return ERR_INTERNAL;
 
   const QString host = (isSocksProxy() ? m_host : address.toString());
-  m_data = KSocketFactory::synchronousConnectToHost("ftp-data", host, portnum, connectTimeout() * 1000);
+  m_data = new QSslSocket();
+  m_data->connectToHost(host, portnum);
+  m_data->waitForConnected(connectTimeout() * 1000);
   return m_data->isOpen() ? 0 : ERR_INTERNAL;
 }
 
@@ -1019,8 +1023,10 @@ int Ftp::ftpOpenPortDataConnection()
   if (m_extControl & eprtUnknown)
     return ERR_INTERNAL;
 
-  if (!m_server)
-    m_server = KSocketFactory::listen("ftp-data");
+  if (!m_server) {
+    m_server = new QTcpServer();
+    m_server->listen(QHostAddress::Any, 0);
+  }
 
   if (!m_server->isListening()) {
     delete m_server;
