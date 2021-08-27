@@ -173,8 +173,6 @@ void KSaveFile::setFileName(const QString &filename)
 
     // follow symbolic link, if any
     d->realFileName = KStandardDirs::realFilePath( d->realFileName );
-
-    return;
 }
 
 QFile::FileError KSaveFile::error() const
