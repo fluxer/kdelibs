@@ -192,7 +192,7 @@ public:
     /**
      * KStandardDirs' destructor.
      */
-    virtual ~KStandardDirs();
+    ~KStandardDirs();
 
     /**
      * Adds another search dir to front of the @p fsstnd list.
