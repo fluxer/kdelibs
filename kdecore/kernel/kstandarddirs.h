@@ -765,9 +765,7 @@ public:
     static bool checkAccess(const QString& pathname, int mode);
 
 private:
-    // Disallow assignment and copy-construction
-    KStandardDirs( const KStandardDirs& );
-    KStandardDirs& operator= ( const KStandardDirs& );
+    Q_DISABLE_COPY(KStandardDirs)
 
     class KStandardDirsPrivate;
     KStandardDirsPrivate* const d;
