@@ -25,8 +25,6 @@
 #include <solid/backends/fstab/fstabservice.h>
 #include <QtCore/QStringList>
 
-#include <QTimer>
-
 using namespace Solid::Backends::Fstab;
 
 FstabStorageAccess::FstabStorageAccess(Solid::Backends::Fstab::FstabDevice *device) :
@@ -44,23 +42,10 @@ FstabStorageAccess::FstabStorageAccess(Solid::Backends::Fstab::FstabDevice *devi
     }
 
     connect(device, SIGNAL(mtabChanged(QString)), this, SLOT(onMtabChanged(QString)));
-    QTimer::singleShot(0, this, SLOT(connectDBusSignals()));
 }
 
 FstabStorageAccess::~FstabStorageAccess()
 {
-}
-
-
-void FstabStorageAccess::connectDBusSignals()
-{
-    m_fstabDevice->registerAction("setup", this,
-                             SLOT(slotSetupRequested()),
-                             SLOT(slotSetupDone(int,QString)));
-
-    m_fstabDevice->registerAction("teardown", this,
-                             SLOT(slotTeardownRequested()),
-                             SLOT(slotTeardownDone(int,QString)));
 }
 
 const Solid::Backends::Fstab::FstabDevice *FstabStorageAccess::fstabDevice() const
@@ -88,16 +73,11 @@ bool FstabStorageAccess::setup()
     if (filePath().isEmpty()) {
         return false;
     }
-    m_fstabDevice->broadcastActionRequested("setup");
+    emit setupRequested(m_fstabDevice->udi());
     m_process = FstabHandling::callSystemCommand("mount", filePath(),
                                                  this, SLOT(slotSetupFinished(int,QProcess::ExitStatus)));
 
     return m_process!=0;
-}
-
-void FstabStorageAccess::slotSetupRequested()
-{
-    emit setupRequested(m_fstabDevice->udi());
 }
 
 bool FstabStorageAccess::teardown()
@@ -105,46 +85,31 @@ bool FstabStorageAccess::teardown()
     if (filePath().isEmpty()) {
         return false;
     }
-    m_fstabDevice->broadcastActionRequested("teardown");
+    emit teardownRequested(m_fstabDevice->udi());
     m_process = FstabHandling::callSystemCommand("umount", filePath(),
                                                  this, SLOT(slotTeardownFinished(int,QProcess::ExitStatus)));
 
     return m_process!=0;
 }
 
-void FstabStorageAccess::slotTeardownRequested()
-{
-    emit teardownRequested(m_fstabDevice->udi());
-}
-
 void FstabStorageAccess::slotSetupFinished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
     if (exitCode==0) {
-        m_fstabDevice->broadcastActionDone("setup", Solid::NoError, QString());
+        emit setupDone(Solid::NoError, QString(), m_fstabDevice->udi());
     } else {
-        m_fstabDevice->broadcastActionDone("setup", Solid::UnauthorizedOperation, m_process->readAllStandardError());
+        emit setupDone(Solid::UnauthorizedOperation, m_process->readAllStandardError(), m_fstabDevice->udi());
     }
     delete m_process;
-}
-
-void FstabStorageAccess::slotSetupDone(int error, const QString &errorString)
-{
-    emit setupDone(static_cast<Solid::ErrorType>(error), errorString, m_fstabDevice->udi());
 }
 
 void FstabStorageAccess::slotTeardownFinished(int exitCode, QProcess::ExitStatus /*exitStatus*/)
 {
     if (exitCode==0) {
-        m_fstabDevice->broadcastActionDone("teardown", Solid::NoError, QString());
+        emit teardownDone(Solid::NoError, QString(), m_fstabDevice->udi());
     } else {
-        m_fstabDevice->broadcastActionDone("teardown", Solid::UnauthorizedOperation, m_process->readAllStandardError());
+        emit teardownDone(Solid::UnauthorizedOperation, m_process->readAllStandardError(), m_fstabDevice->udi());
     }
     delete m_process;
-}
-
-void FstabStorageAccess::slotTeardownDone(int error, const QString &errorString)
-{
-    emit teardownDone(static_cast<Solid::ErrorType>(error), errorString, m_fstabDevice->udi());
 }
 
 void FstabStorageAccess::onMtabChanged(const QString& device)

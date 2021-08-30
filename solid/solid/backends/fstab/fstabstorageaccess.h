@@ -71,12 +71,6 @@ namespace Fstab
             void slotSetupFinished(int exitCode, QProcess::ExitStatus exitStatus);
             void slotTeardownFinished(int exitCode, QProcess::ExitStatus exitStatus);
             void onMtabChanged(const QString& device);
-            void connectDBusSignals();
-
-            void slotSetupRequested();
-            void slotSetupDone(int error, const QString &errorString);
-            void slotTeardownRequested();
-            void slotTeardownDone(int error, const QString &errorString);
 
         private:
             Solid::Backends::Fstab::FstabDevice *m_fstabDevice;
