@@ -55,10 +55,6 @@ public:
     virtual int readSpeed() const;
     virtual Solid::OpticalDrive::MediumTypes supportedMedia() const;
 
-private Q_SLOTS:
-    void slotEjectRequested();
-    void slotEjectDone(int error, const QString &errorString);
-
 private:
     CdIo_t *p_cdio;
 };

@@ -51,12 +51,6 @@ Q_SIGNALS:
     void teardownDone(Solid::ErrorType error, QVariant data, const QString &udi);
     void setupRequested(const QString &udi);
     void teardownRequested(const QString &udi);
-
-private Q_SLOTS:
-    void slotSetupRequested();
-    void slotSetupDone(int error, const QString &errorString);
-    void slotTeardownRequested();
-    void slotTeardownDone(int error, const QString &errorString);
 };
 }
 }

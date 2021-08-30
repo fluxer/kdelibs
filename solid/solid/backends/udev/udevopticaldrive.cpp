@@ -47,10 +47,6 @@ OpticalDrive::OpticalDrive(UDevDevice *device)
         qWarning() << "Could not open" << devicename;
     }
 
-    m_device->registerAction("eject", this,
-                             SLOT(slotEjectRequested()),
-                             SLOT(slotEjectDone(int,QString)));
-
     // TODO: implement ejectPressed() signal
 
     // qDebug() << "OpticalDrive" << devicename << writeSpeeds() << writeSpeed() << readSpeed() << supportedMedia();
@@ -65,40 +61,40 @@ OpticalDrive::~OpticalDrive()
 
 bool OpticalDrive::eject()
 {
-    m_device->broadcastActionRequested("eject");
+    emit ejectRequested(m_device->udi());
 
     const QByteArray devicename(m_device->deviceProperty("DEVNAME").toLocal8Bit());
     const driver_return_code_t result = cdio_eject_media_drive(devicename.constData());
     // not supported by libcdio: UserCanceled
     switch(result) {
         case DRIVER_OP_SUCCESS: {
-            m_device->broadcastActionDone("setup", Solid::NoError, QString());
+            emit ejectDone(Solid::NoError, QString(), m_device->udi());
             return true;
         }
         case DRIVER_OP_NOT_PERMITTED: {
-            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
-            m_device->broadcastActionDone("eject", Solid::UnauthorizedOperation, ejecterror);
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));
+            emit ejectDone(Solid::UnauthorizedOperation, ejecterror, m_device->udi());
             return false;
         }
         case DRIVER_OP_BAD_PARAMETER:
         case DRIVER_OP_BAD_POINTER: {
-            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
-            m_device->broadcastActionDone("eject", Solid::InvalidOption, ejecterror);
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));
+            emit ejectDone(Solid::InvalidOption, ejecterror, m_device->udi());
             return false;
         }
         case DRIVER_OP_NO_DRIVER: {
-            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
-            m_device->broadcastActionDone("eject", Solid::MissingDriver, ejecterror);
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));
+            emit ejectDone(Solid::MissingDriver, ejecterror, m_device->udi());
             return false;
         }
         case DRIVER_OP_UNINIT: {
-            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
-            m_device->broadcastActionDone("eject", Solid::DeviceBusy, ejecterror);
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));
+            emit ejectDone(Solid::DeviceBusy, ejecterror, m_device->udi());
             return false;
         }
         default: {
-            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));;
-            m_device->broadcastActionDone("eject", Solid::OperationFailed, ejecterror);
+            const QString ejecterror = QString::fromLatin1(cdio_driver_errmsg(result));
+            emit ejectDone(Solid::OperationFailed, ejecterror, m_device->udi());
             return false;
         }
     }
@@ -207,16 +203,6 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
     }
 
     return result;
-}
-
-void OpticalDrive::slotEjectRequested()
-{
-    emit ejectRequested(m_device->udi());
-}
-
-void OpticalDrive::slotEjectDone(int error, const QString &errorString)
-{
-    emit ejectDone(static_cast<Solid::ErrorType>(error), errorString, m_device->udi());
 }
 
 #include "moc_udevopticaldrive.cpp"
