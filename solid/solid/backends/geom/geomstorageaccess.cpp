@@ -31,13 +31,6 @@ using namespace Solid::Backends::Geom;
 StorageAccess::StorageAccess(GeomDevice *device)
     : DeviceInterface(device)
 {
-    m_device->registerAction("setup", this,
-                             SLOT(slotSetupRequested()),
-                             SLOT(slotSetupDone(int,QString)));
-
-    m_device->registerAction("teardown", this,
-                             SLOT(slotTeardownRequested()),
-                             SLOT(slotTeardownDone(int,QString)));
 }
 
 StorageAccess::~StorageAccess()
@@ -87,7 +80,7 @@ bool StorageAccess::setup()
         return true;
     }
 
-    m_device->broadcastActionRequested("setup");
+    emit setupRequested(m_device->udi());
 
     QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
     QDBusReply<int> reply = soliduiserver.call("mountDevice", m_device->udi());
@@ -97,7 +90,7 @@ bool StorageAccess::setup()
         emit accessibilityChanged(true, m_device->udi());
     }
 
-    m_device->broadcastActionDone("setup", replyvalue, Solid::errorString(replyvalue));
+    emit setupDone(replyvalue, Solid::errorString(replyvalue), m_device->udi());
     return (replyvalue == Solid::NoError);
 }
 
@@ -108,7 +101,7 @@ bool StorageAccess::teardown()
         return false;
     }
 
-    m_device->broadcastActionRequested("teardown");
+    emit teardownRequested(m_device->udi());
 
     QDBusInterface soliduiserver("org.kde.kded", "/modules/soliduiserver", "org.kde.SolidUiServer");
     QDBusReply<int> reply = soliduiserver.call("unmountDevice", m_device->udi());
@@ -118,26 +111,7 @@ bool StorageAccess::teardown()
         emit accessibilityChanged(false, m_device->udi());
     }
 
-    m_device->broadcastActionDone("teardown", replyvalue, Solid::errorString(replyvalue));
+    emit teardownDone(replyvalue, Solid::errorString(replyvalue), m_device->udi());
     return (replyvalue == Solid::NoError);
 }
 
-void StorageAccess::slotSetupRequested()
-{
-    emit setupRequested(m_device->udi());
-}
-
-void StorageAccess::slotSetupDone(int error, const QString &errorString)
-{
-    emit setupDone(static_cast<Solid::ErrorType>(error), errorString, m_device->udi());
-}
-
-void StorageAccess::slotTeardownRequested()
-{
-    emit teardownRequested(m_device->udi());
-}
-
-void StorageAccess::slotTeardownDone(int error, const QString &errorString)
-{
-    emit teardownDone(static_cast<Solid::ErrorType>(error), errorString, m_device->udi());
-}
