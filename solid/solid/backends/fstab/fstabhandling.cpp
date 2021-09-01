@@ -25,84 +25,12 @@
 #include <QtCore/QObject>
 #include <QtCore/QProcess>
 #include <QtCore/QTextStream>
-#include <QtCore/qdatetime.h>
 #include <kstandarddirs.h>
+#include <kmountpoint.h>
 
 #include <solid/soliddefs_p.h>
 
 #include <config.h>
-#include <stdlib.h>
-
-#ifdef HAVE_SYS_MNTTAB_H
-#include <sys/mnttab.h>
-#endif
-#ifdef HAVE_MNTENT_H
-#include <mntent.h>
-#elif defined(HAVE_SYS_MNTENT_H)
-#include <sys/mntent.h>
-#endif
-
-// This is the *BSD branch
-#ifdef HAVE_SYS_MOUNT_H
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_PARAM_H
-#include <sys/param.h>
-#endif
-#include <sys/mount.h>
-#endif
-
-#ifdef Q_OS_SOLARIS
-#define FSTAB "/etc/vfstab"
-#else
-#define FSTAB "/etc/fstab"
-#endif
-
-#ifndef HAVE_GETMNTINFO
-# ifdef _PATH_MOUNTED
-// On some Linux, MNTTAB points to /etc/fstab !
-#  undef MNTTAB
-#  define MNTTAB _PATH_MOUNTED
-# else
-#  ifndef MNTTAB
-#   ifdef MTAB_FILE
-#    define MNTTAB MTAB_FILE
-#   else
-#    define MNTTAB "/etc/mnttab"
-#   endif
-#  endif
-# endif
-#endif
-
-// There are (at least) four kind of APIs:
-// setmntent + getmntent + struct mntent (linux...)
-//             getmntent + struct mnttab
-// mntctl                + struct vmount (AIX)
-// getmntinfo + struct statfs&flags (BSD 4.4 and friends)
-// getfsent + char* (BSD 4.3 and friends)
-
-#ifdef HAVE_SETMNTENT
-#define SETMNTENT setmntent
-#define ENDMNTENT endmntent
-#define STRUCT_MNTENT struct mntent *
-#define STRUCT_SETMNTENT FILE *
-#define GETMNTENT(file, var) ((var = getmntent(file)) != 0)
-#define MOUNTPOINT(var) var->mnt_dir
-#define MOUNTTYPE(var) var->mnt_type
-#define MOUNTOPTIONS(var) var->mnt_opts
-#define FSNAME(var) var->mnt_fsname
-#else
-#define SETMNTENT fopen
-#define ENDMNTENT fclose
-#define STRUCT_MNTENT struct mnttab
-#define STRUCT_SETMNTENT FILE *
-#define GETMNTENT(file, var) (getmntent(file, &var) == 0)
-#define MOUNTPOINT(var) var.mnt_mountp
-#define MOUNTTYPE(var) var.mnt_fstype
-#define MOUNTOPTIONS(var) var.mnt_mntopts
-#define FSNAME(var) var.mnt_special
-#endif
 
 Q_GLOBAL_STATIC(Solid::Backends::Fstab::FstabHandling, globalFstabCache)
 
@@ -130,64 +58,14 @@ void Solid::Backends::Fstab::FstabHandling::_k_updateFstabMountPointsCache()
 
     globalFstabCache()->m_fstabCache.clear();
 
-#ifdef HAVE_SETMNTENT
-
-    FILE *fstab;
-    if ((fstab = setmntent(FSTAB, "r")) == 0) {
-        return;
-    }
-
-    struct mntent *fe;
-    while ((fe = getmntent(fstab)) != 0) {
-        if (_k_isFstabNetworkFileSystem(fe->mnt_type, fe->mnt_fsname)) {
-            const QString device = QFile::decodeName(fe->mnt_fsname);
-            const QString mountpoint = QFile::decodeName(fe->mnt_dir);
-
-            globalFstabCache()->m_fstabCache.insert(device, mountpoint);
+    const KMountPoint::List mountpoints = KMountPoint::possibleMountPoints();
+    foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
+        const QString device = mountpoint->mountedFrom();
+        if (_k_isFstabNetworkFileSystem(mountpoint->mountType(), device)) {
+            globalFstabCache()->m_fstabCache.insert(device, mountpoint->mountPoint());
         }
     }
 
-    endmntent(fstab);
-
-#else
-
-    QFile fstab(FSTAB);
-    if (!fstab.open(QIODevice::ReadOnly)) {
-        return;
-    }
-
-    QTextStream stream(&fstab);
-    QString line;
-
-    while (!stream.atEnd()) {
-        line = stream.readLine().simplified();
-        if (line.isEmpty() || line.startsWith('#')) {
-            continue;
-        }
-
-        // not empty or commented out by '#'
-        const QStringList items = line.split(' ');
-
-#ifdef Q_OS_SOLARIS
-        if (items.count() < 5) {
-            continue;
-        }
-#else
-        if (items.count() < 4) {
-            continue;
-        }
-#endif
-        //prevent accessing a blocking directory
-        if (_k_isFstabNetworkFileSystem(items.at(2), items.at(0))) {
-            const QString device = items.at(0);
-            const QString mountpoint = items.at(1);
-
-            globalFstabCache()->m_fstabCache.insert(device, mountpoint);
-        }
-    }
-
-    fstab.close();
-#endif
     globalFstabCache()->m_fstabCacheValid = true;
 }
 
@@ -251,43 +129,13 @@ void Solid::Backends::Fstab::FstabHandling::_k_updateMtabMountPointsCache()
 
     globalFstabCache()->m_mtabCache.clear();
 
-#ifdef HAVE_GETMNTINFO
-
-#ifdef GETMNTINFO_USES_STATVFS
-    struct statvfs *mounted;
-#else
-    struct statfs *mounted;
-#endif
-
-    int num_fs = getmntinfo(&mounted, MNT_NOWAIT);
-
-    for (int i=0;i< num_fs;i++)
-    {
-        QString type = QFile::decodeName(mounted[i].f_fstypename);
-        if (_k_isFstabNetworkFileSystem(type, QString())) {
-            const QString device = QFile::decodeName(mounted[i].f_mntfromname);
-            const QString mountpoint = QFile::decodeName(mounted[i].f_mntonname);
-            globalFstabCache()->m_mtabCache.insert(device, mountpoint);
+    const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
+    foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
+        const QString device = mountpoint->mountedFrom();
+        if (_k_isFstabNetworkFileSystem(mountpoint->mountType(), QString())) {
+            globalFstabCache()->m_fstabCache.insert(device, mountpoint->mountPoint());
         }
     }
-
-#else
-    STRUCT_SETMNTENT mnttab;
-    if ((mnttab = SETMNTENT(MNTTAB, "r")) == 0)
-        return;
-
-    STRUCT_MNTENT fe;
-    while (GETMNTENT(mnttab, fe))
-    {
-        QString type = QFile::decodeName(MOUNTTYPE(fe));
-        if (_k_isFstabNetworkFileSystem(type, QString())) {
-            const QString device = QFile::decodeName(FSNAME(fe));
-            const QString mountpoint = QFile::decodeName(MOUNTPOINT(fe));
-            globalFstabCache()->m_mtabCache.insert(device, mountpoint);
-        }
-    }
-    ENDMNTENT(mnttab);
-#endif
 
     globalFstabCache()->m_mtabCacheValid = true;
 }
