@@ -1,7 +1,7 @@
 #!/usr/bin/python2
 
 # pci.ids can be obtained from:
-# https://pci-ids.ucw.cz/v2.2/pci.ids
+# https://raw.githubusercontent.com/pciutils/pciids/master/pci.ids
 
 import sys
 
