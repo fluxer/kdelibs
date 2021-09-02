@@ -115,7 +115,7 @@ KDiskFreeSpaceInfo KDiskFreeSpaceInfo::freeSpaceInfo( const QString& path )
 
     // Prefer mountPoint if available, so that it even works with non-existing files.
     const QString pathArg = info.d->mountPoint.isEmpty() ? path : info.d->mountPoint;
-    if (!statvfs(QFile::encodeName(pathArg).constData(), &statvfs_buf)) {
+    if (statvfs(QFile::encodeName(pathArg).constData(), &statvfs_buf) == 0) {
         const quint64 blksize = quint64(statvfs_buf.f_frsize); // cast to avoid overflow
         info.d->available = statvfs_buf.f_bavail * blksize;
         info.d->size = statvfs_buf.f_blocks * blksize;

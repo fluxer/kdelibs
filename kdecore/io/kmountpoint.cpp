@@ -236,7 +236,7 @@ KMountPoint::List KMountPoint::possibleMountPoints(DetailsNeededFlags infoNeeded
       // not empty or commented out by '#'
       const QStringList item = s.split(QLatin1Char(' '));
 
-#ifdef _OS_SOLARIS_
+#ifdef Q_OS_SOLARIS
       if (item.count() < 5)
          continue;
 #else
@@ -248,7 +248,7 @@ KMountPoint::List KMountPoint::possibleMountPoints(DetailsNeededFlags infoNeeded
 
       int i = 0;
       mp->d->mountedFrom = item[i++];
-#ifdef _OS_SOLARIS_
+#ifdef Q_OS_SOLARIS
       //device to fsck
       i++;
 #endif
