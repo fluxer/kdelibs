@@ -37,10 +37,10 @@ namespace Solid
     class SOLID_EXPORT SerialInterface : public DeviceInterface
     {
         Q_OBJECT
-        Q_PROPERTY(QVariant driverHandle READ driverHandle)
-        Q_PROPERTY(QString serialType READ serialType)
-        Q_PROPERTY(int port READ port)
         Q_ENUMS(SerialType)
+        Q_PROPERTY(QVariant driverHandle READ driverHandle)
+        Q_PROPERTY(SerialType serialType READ serialType)
+        Q_PROPERTY(int port READ port)
         Q_DECLARE_PRIVATE(SerialInterface)
         friend class Device;
 
