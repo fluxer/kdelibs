@@ -65,8 +65,6 @@ check_function_exists(fdatasync     HAVE_FDATASYNC)                         # kd
 
 check_function_exists(sendfile      HAVE_SENDFILE)                          # kioslave
 
-check_library_exists(volmgt volmgt_running ""            HAVE_VOLMGT)       # various
-
 check_symbol_exists(ttyname_r        "unistd.h"          HAVE_TTYNAME_R)    # kinit, kpty
 
 # Check for libresolv

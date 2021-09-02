@@ -61,6 +61,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QRegExp>
 #include <QtCore/QFile>
+#include <QtCore/QProcess>
 
 #include <kdebug.h>
 #include <kurl.h>
@@ -73,12 +74,6 @@
 #include <kshell.h>
 #include <kmountpoint.h>
 #include <kstandarddirs.h>
-
-#ifdef HAVE_VOLMGT
-#include <volmgt.h>
-#include <sys/mnttab.h>
-#endif
-
 #include <kdirnotify.h>
 #include <kio/ioslave_defaults.h>
 #include <kde_file.h>
@@ -868,21 +863,15 @@ void FileProtocol::special( const QByteArray &data)
             bool ro = ( iRo != 0 );
 
             kDebug(7101) << "MOUNTING fstype=" << fstype << " dev=" << dev << " point=" << point << " ro=" << ro;
-            bool ok = pmount( dev );
-            if (ok)
-                finished();
-            else
-                mount( ro, fstype.toLatin1(), dev, point );
+            mount( ro, fstype.toLatin1(), dev, point );
             break;
         }
         case 2: {
             QString point;
             stream >> point;
-            bool ok = pumount( point );
-            if (ok)
-                finished();
-            else
-                unmount( point );
+
+            kDebug(7101) << "UNMOUNTING point=" << point;
+            unmount( point );
             break;
         }
 
@@ -891,300 +880,101 @@ void FileProtocol::special( const QByteArray &data)
     }
 }
 
+
+/*************************************
+ *
+ * mount/unmount handling
+ *
+ *************************************/
+
 void FileProtocol::mount( bool _ro, const char *_fstype, const QString& _dev, const QString& _point )
 {
-    kDebug(7101) << "fstype=" << _fstype;
+    const QString kdesudoProg = KStandardDirs::findExe(QLatin1String("kdesudo"));
+    if (kdesudoProg.isEmpty()) {
+        error( KIO::ERR_COULD_NOT_MOUNT, i18n("Could not find program \"kdesudo\""));
+        return;
+    }
 
-#ifdef HAVE_VOLMGT
-	/*
-	 *  support for Solaris volume management
-	 */
-	QString err;
-	QByteArray devname = QFile::encodeName( _dev );
+    const QString mountProg = KStandardDirs::findRootExe(QLatin1String("mount"));
+    if (mountProg.isEmpty()) {
+        error( KIO::ERR_COULD_NOT_MOUNT, i18n("Could not find program \"mount\""));
+        return;
+    }
 
-	if( volmgt_running() ) {
-//		kDebug(7101) << "VOLMGT: vold ok.";
-		if( volmgt_check( devname.data() ) == 0 ) {
-			kDebug(7101) << "VOLMGT: no media in "
-					<< devname.data();
-			err = i18n("No Media inserted or Media not recognized.");
-			error( KIO::ERR_COULD_NOT_MOUNT, err );
-			return;
-		} else {
-			kDebug(7101) << "VOLMGT: " << devname.data()
-				<< ": media ok";
-			finished();
-			return;
-		}
-	} else {
-		err = i18n("\"vold\" is not running.");
-		kDebug(7101) << "VOLMGT: " << err;
-		error( KIO::ERR_COULD_NOT_MOUNT, err );
-		return;
-	}
+    QProcess mountProc;
+    QStringList mountArgs = QStringList() << mountProg;
+    if (_ro) {
+#if defined(Q_OS_SOLARIS)
+        mountArgs << QLatin1String("-oro");
 #else
-
-
-    KTemporaryFile tmpFile;
-    tmpFile.setAutoRemove(false);
-    tmpFile.open();
-    QByteArray tmpFileName = QFile::encodeName(tmpFile.fileName());
-    QByteArray dev;
+        mountArgs << QLatin1String("-r");
+#endif
+    }
+    if (_fstype && *_fstype) {
+#if defined(Q_OS_SOLARIS)
+        mountArgs << QLatin1String("-F");
+#else
+        mountArgs << QLatin1String("-t");
+#endif
+        mountArgs << KShell::quoteArg(QString::fromLatin1(_fstype));
+    }
     if (_dev.startsWith(QLatin1String("LABEL="))) { // turn LABEL=foo into -L foo (#71430)
         QString labelName = _dev.mid( 6 );
-        dev = "-L ";
-        dev += QFile::encodeName( KShell::quoteArg( labelName ) ); // is it correct to assume same encoding as filesystem?
+        mountArgs << QLatin1String("-L");
+        mountArgs << KShell::quoteArg( labelName );
     } else if (_dev.startsWith(QLatin1String("UUID="))) { // and UUID=bar into -U bar
         QString uuidName = _dev.mid( 5 );
-        dev = "-U ";
-        dev += QFile::encodeName( KShell::quoteArg( uuidName ) );
+        mountArgs << QLatin1String("-U");
+        mountArgs << KShell::quoteArg( uuidName );
+    } else {
+        mountArgs << KShell::quoteArg(_dev);
     }
-    else
-        dev = QFile::encodeName( KShell::quoteArg(_dev) ); // get those ready to be given to a shell
-
-    QByteArray point = QFile::encodeName( KShell::quoteArg(_point) );
-    bool fstype_empty = !_fstype || !*_fstype;
-    QByteArray fstype = KShell::quoteArg(QString::fromLatin1(_fstype)).toLatin1(); // good guess
-    QByteArray readonly = _ro ? "-r" : "";
-    QByteArray mountProg = KStandardDirs::findRootExe(QLatin1String("mount")).toLocal8Bit();
-    if (mountProg.isEmpty()){
-      error( KIO::ERR_COULD_NOT_MOUNT, i18n("Could not find program \"mount\""));
-      return;
+    if (!_point.isEmpty()) {
+        mountArgs << KShell::quoteArg(_point);
     }
+    mountProc.start(kdesudoProg, mountArgs);
+    mountProc.waitForFinished();
 
-    // Two steps, in case mount doesn't like it when we pass all options
-    for ( int step = 0 ; step <= 1 ; step++ )
-    {
-        QByteArray buffer = mountProg + ' ';
-        // Mount using device only if no fstype nor mountpoint (KDE-1.x like)
-        if ( !dev.isEmpty() && _point.isEmpty() && fstype_empty )
-            buffer += dev;
-        else
-          // Mount using the mountpoint, if no fstype nor device (impossible in first step)
-          if ( !_point.isEmpty() && dev.isEmpty() && fstype_empty )
-              buffer += point;
-          else
-            // mount giving device + mountpoint but no fstype
-            if ( !_point.isEmpty() && !dev.isEmpty() && fstype_empty )
-                buffer += readonly + ' ' + dev + ' ' + point;
-            else
-              // mount giving device + mountpoint + fstype
-#if defined(Q_OS_SOLARIS)
-                buffer += "-F " + fstype + ' ' + (_ro ? "-oro" : "") + ' ' + dev + ' ' + point;
-#else
-                buffer += readonly + " -t " + fstype + ' ' + dev + ' ' + point;
-#endif
-        buffer += " 2>" + tmpFileName;
-        kDebug(7101) << buffer;
-
-        int mount_ret = system( buffer.constData() );
-
-        QString err = readLogFile( tmpFileName );
-        if ( err.isEmpty() && mount_ret == 0)
-        {
-            finished();
-            return;
+    if ( mountProc.exitCode() == 0 ) {
+        finished();
+    } else {
+        QByteArray erroroutput = mountProc.readAllStandardError();
+        if (erroroutput.isEmpty()) {
+            erroroutput = mountProc.readAllStandardOutput();
         }
-        else
-        {
-            // Didn't work - or maybe we just got a warning
-            KMountPoint::Ptr mp = KMountPoint::currentMountPoints().findByDevice( _dev );
-            // Is the device mounted ?
-            if ( mp && mount_ret == 0)
-            {
-                kDebug(7101) << "mount got a warning:" << err;
-                warning( err );
-                finished();
-                return;
-            }
-            else
-            {
-                if ( (step == 0) && !_point.isEmpty())
-                {
-                    kDebug(7101) << err;
-                    kDebug(7101) << "Mounting with those options didn't work, trying with only mountpoint";
-                    fstype = "";
-                    fstype_empty = true;
-                    dev = "";
-                    // The reason for trying with only mountpoint (instead of
-                    // only device) is that some people (hi Malte!) have the
-                    // same device associated with two mountpoints
-                    // for different fstypes, like /dev/fd0 /mnt/e2floppy and
-                    // /dev/fd0 /mnt/dosfloppy.
-                    // If the user has the same mountpoint associated with two
-                    // different devices, well they shouldn't specify the
-                    // mountpoint but just the device.
-                }
-                else
-                {
-                    error( KIO::ERR_COULD_NOT_MOUNT, err );
-                    return;
-                }
-            }
-        }
+        error( KIO::ERR_COULD_NOT_MOUNT, QString::fromLocal8Bit(erroroutput) );
     }
-#endif /* ! HAVE_VOLMGT */
 }
 
 
-void FileProtocol::unmount( const QString& _point )
+void FileProtocol::unmount( const QString& point )
 {
-    QByteArray buffer;
+    const QString kdesudoProg = KStandardDirs::findExe(QLatin1String("kdesudo"));
+    if (kdesudoProg.isEmpty()) {
+        error( KIO::ERR_COULD_NOT_UNMOUNT, i18n("Could not find program \"kdesudo\""));
+        return;
+    }
 
-    KTemporaryFile tmpFile;
-    tmpFile.setAutoRemove(false);
-    tmpFile.open();
-    QByteArray tmpFileName = QFile::encodeName(tmpFile.fileName());
-    QString err;
-
-#ifdef HAVE_VOLMGT
-	/*
-	 *  support for Solaris volume management
-	 */
-	char *devname;
-	char *ptr;
-	FILE *mnttab;
-	struct mnttab mnt;
-
-	if( volmgt_running() ) {
-		kDebug(7101) << "VOLMGT: looking for "
-			<< _point.toLocal8Bit();
-
-		if( (mnttab = KDE_fopen( MNTTAB, "r" )) == NULL ) {
-			err = QLatin1String("could not open mnttab");
-			kDebug(7101) << "VOLMGT: " << err;
-			error( KIO::ERR_COULD_NOT_UNMOUNT, err );
-			return;
-		}
-
-		/*
-		 *  since there's no way to derive the device name from
-		 *  the mount point through the volmgt library (and
-		 *  media_findname() won't work in this case), we have to
-		 *  look ourselves...
-		 */
-		devname = NULL;
-		rewind( mnttab );
-		while( getmntent( mnttab, &mnt ) == 0 ) {
-			if( strcmp( _point.toLocal8Bit(), mnt.mnt_mountp ) == 0 ){
-				devname = mnt.mnt_special;
-				break;
-			}
-		}
-		fclose( mnttab );
-
-		if( devname == NULL ) {
-			err = QLatin1String("not in mnttab");
-			kDebug(7101) << "VOLMGT: "
-				<< QFile::encodeName(_point).data()
-				<< ": " << err;
-			error( KIO::ERR_COULD_NOT_UNMOUNT, err );
-			return;
-		}
-
-		/*
-		 *  strip off the directory name (volume name)
-		 *  the eject(1) command will handle unmounting and
-		 *  physically eject the media (if possible)
-		 */
-		ptr = strrchr( devname, '/' );
-		*ptr = '\0';
-
-                QByteArray ejectProg = KStandardDirs::findRootExe(QLatin1String("eject")).toLocal8Bit();
-
-                if (ejectProg.isEmpty()) {
-                    error( KIO::ERR_COULD_NOT_UNMOUNT, i18n("Could not find program \"eject\""));
-                    return;
-                }
-                QByteArray qdevname(QFile::encodeName(KShell::quoteArg(QFile::decodeName(QByteArray(devname)))).data());
-		buffer = ejectProg + " " + qdevname + " 2>" + tmpFileName;
-		kDebug(7101) << "VOLMGT: eject " << qdevname;
-
-		/*
-		 *  from eject(1): exit status == 0 => need to manually eject
-		 *                 exit status == 4 => media was ejected
-		 */
-		if( WEXITSTATUS( system( buffer.constData() )) == 4 ) {
-			/*
-			 *  this is not an error, so skip "readLogFile()"
-			 *  to avoid wrong/confusing error popup. The
-			 *  temporary file is removed by KTemporaryFile's
-			 *  destructor, so don't do that manually.
-			 */
-			finished();
-			return;
-		}
-	} else {
-		/*
-		 *  eject(1) should do its job without vold(1M) running,
-		 *  so we probably could call eject anyway, but since the
-		 *  media is mounted now, vold must've died for some reason
-		 *  during the user's session, so it should be restarted...
-		 */
-		err = i18n("\"vold\" is not running.");
-		kDebug(7101) << "VOLMGT: " << err;
-		error( KIO::ERR_COULD_NOT_UNMOUNT, err );
-		return;
-	}
-#else
-    QByteArray umountProg = KStandardDirs::findRootExe(QLatin1String("umount")).toLocal8Bit();
-
+    const QString umountProg = KStandardDirs::findRootExe(QLatin1String("umount"));
     if (umountProg.isEmpty()) {
         error( KIO::ERR_COULD_NOT_UNMOUNT, i18n("Could not find program \"umount\""));
         return;
     }
-    buffer = umountProg + ' ' + QFile::encodeName(KShell::quoteArg(_point)) + " 2>" + tmpFileName;
-    system( buffer.constData() );
-#endif /* HAVE_VOLMGT */
 
-    err = readLogFile( tmpFileName );
-    if ( err.isEmpty() )
+    QProcess umountProc;
+    const QStringList umountArgs = QStringList() << umountProg << KShell::quoteArg(point);
+    umountProc.start(kdesudoProg, umountArgs);
+    umountProc.waitForFinished();
+
+    if ( umountProc.exitCode() == 0 ) {
         finished();
-    else
-        error( KIO::ERR_COULD_NOT_UNMOUNT, err );
-}
-
-/*************************************
- *
- * pmount handling
- *
- *************************************/
-
-bool FileProtocol::pmount(const QString &dev)
-{
-    QString pmountProg = KStandardDirs::findRootExe(QLatin1String("pmount"));
-
-    if (pmountProg.isEmpty())
-        return false;
-
-    QByteArray buffer = QFile::encodeName(pmountProg) + ' ' +
-                        QFile::encodeName(KShell::quoteArg(dev));
-
-    int res = system( buffer.constData() );
-
-    return res==0;
-}
-
-bool FileProtocol::pumount(const QString &point)
-{
-    KMountPoint::Ptr mp = KMountPoint::currentMountPoints(KMountPoint::NeedRealDeviceName).findByPath(point);
-    if (!mp)
-        return false;
-    QString dev = mp->realDeviceName();
-    if (dev.isEmpty()) return false;
-
-    QString pumountProg = KStandardDirs::findRootExe(QLatin1String("pumount"));
-
-    if (pumountProg.isEmpty())
-        return false;
-
-    QByteArray buffer = QFile::encodeName(pumountProg);
-    buffer += ' ';
-    buffer += QFile::encodeName(KShell::quoteArg(dev));
-
-    int res = system( buffer.data() );
-
-    return res==0;
+    } else {
+        QByteArray erroroutput = umountProc.readAllStandardError();
+        if (erroroutput.isEmpty()) {
+            erroroutput = umountProc.readAllStandardOutput();
+        }
+        error( KIO::ERR_COULD_NOT_UNMOUNT, QString::fromLocal8Bit(erroroutput) );
+    }
 }
 
 /*************************************

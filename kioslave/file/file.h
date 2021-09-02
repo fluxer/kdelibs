@@ -81,8 +81,6 @@ public:
   virtual void special( const QByteArray &data );
   void unmount( const QString& point );
   void mount( bool _ro, const char *_fstype, const QString& dev, const QString& point );
-  bool pumount( const QString &point );
-  bool pmount( const QString &dev );
 
 #ifdef HAVE_POSIX_ACL
   static bool isExtendedACL(acl_t acl);

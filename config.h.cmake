@@ -29,7 +29,6 @@
 #cmakedefine HAVE_STRTOLL 1
 #cmakedefine HAVE_VSNPRINTF 1
 #cmakedefine HAVE_GETGROUPLIST 1
-#cmakedefine HAVE_VOLMGT 1
 #cmakedefine HAVE_TTYNAME_R 1
 
 #cmakedefine TIME_WITH_SYS_TIME 1

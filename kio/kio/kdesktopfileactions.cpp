@@ -177,15 +177,7 @@ QList<KServiceAction> KDesktopFileActions::builtinServices( const KUrl& _url )
     }
 
     if (offerUnmount) {
-#ifdef HAVE_VOLMGT
-         /*
-          *  Solaris' volume management can only umount+eject
-          */
-        QString text = i18n("Eject");
-#else
-        QString text = i18n("Unmount");
-#endif
-        KServiceAction unmount("unmount", text, QString(), QString(), false);
+        KServiceAction unmount("unmount", i18n("Unmount"), QString(), QString(), false);
         unmount.setData(QVariant(ST_UNMOUNT));
         result.append(unmount);
     }
