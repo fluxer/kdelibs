@@ -26,7 +26,7 @@
 #endif
 
 #if defined(HAVE_EXIV2)
-void KExiv2MsgHandler(int level, const char* message)
+static void KExiv2MsgHandler(int level, const char* message)
 {
     switch (level) {
         case Exiv2::LogMsg::debug:
@@ -45,7 +45,7 @@ void KExiv2MsgHandler(int level, const char* message)
     }
 }
 
-int KExiv2Init()
+static int KExiv2Init()
 {
     if (Exiv2::XmpParser::initialize()) {
         Exiv2::LogMsg::setHandler(KExiv2MsgHandler);
