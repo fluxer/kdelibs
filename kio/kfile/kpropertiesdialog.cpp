@@ -75,9 +75,7 @@ extern "C" {
 #include <QtCore/qvarlengtharray.h>
 
 #ifdef HAVE_POSIX_ACL
-extern "C" {
-#  include <sys/xattr.h>
-}
+#include <sys/acl.h>
 #endif
 
 #include <kauthorized.h>
@@ -1846,13 +1844,12 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
 static bool fileSystemSupportsACL( const QByteArray& path )
 {
     bool fileSystemSupportsACLs = false;
-#if defined(Q_OS_FREEBSD) || defined(Q_OS_DRAGONFLY)
-    struct statfs buf;
-    fileSystemSupportsACLs = ( statfs( path.data(), &buf ) == 0 ) && ( buf.f_flags & MNT_ACLS );
-#else
-    fileSystemSupportsACLs =
-            getxattr( path.data(), "system.posix_acl_access", NULL, 0 ) >= 0 || errno == ENODATA;
-#endif
+    errno = 0;
+    acl_t aclresult = acl_get_file(path.constData(), ACL_TYPE_ACCESS);
+    if (aclresult) {
+        fileSystemSupportsACLs = (errno != ENOTSUP);
+        acl_free(aclresult);
+    }
     return fileSystemSupportsACLs;
 }
 #endif
