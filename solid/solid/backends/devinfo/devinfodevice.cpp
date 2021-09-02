@@ -76,18 +76,19 @@ DevinfoDevice::DevinfoDevice(const QString &device)
         return;
     }
 
-    const QByteArray devicename = m_device.right(m_device.size() - qstrlen(DEVINFO_UDI_PREFIX) - 1).toLatin1();
-    DeviceArgumentType* getDeviceArg = new DeviceArgumentType(devicename, m_properties);
-
     struct devinfo_dev *root = devinfo_handle_to_device(DEVINFO_ROOT_DEVICE);
     if (root) {
+        const QByteArray devicename = m_device.right(m_device.size() - qstrlen(DEVINFO_UDI_PREFIX) - 1).toLatin1();
+        DeviceArgumentType* getDeviceArg = new DeviceArgumentType(devicename, m_properties);
+
         devinfo_foreach_device_child(root, getDeviceProperties, getDeviceArg);
+
+        m_properties = getDeviceArg->second;
+        delete getDeviceArg;
     } else {
         qWarning() << "no root device";
         return;
     }
-    m_properties = getDeviceArg->second;
-    delete getDeviceArg;
 
     const QByteArray pnpinfo = m_properties[DevinfoDevice::DevicePnPInfo];
     m_pnpinfo[DevinfoDevice::PnPVendor] = getPnPInfo(pnpinfo, "vendor");
