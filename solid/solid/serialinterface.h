@@ -37,10 +37,10 @@ namespace Solid
     class SOLID_EXPORT SerialInterface : public DeviceInterface
     {
         Q_OBJECT
-        Q_PROPERTY(QVariant driverHandle READ driverHandle)
-        Q_PROPERTY(QString serialType READ serialType)
-        Q_PROPERTY(int port READ port)
         Q_ENUMS(SerialType)
+        Q_PROPERTY(QVariant driverHandle READ driverHandle)
+        Q_PROPERTY(SerialType serialType READ serialType)
+        Q_PROPERTY(int port READ port)
         Q_DECLARE_PRIVATE(SerialInterface)
         friend class Device;
 
@@ -89,11 +89,12 @@ namespace Solid
          *
          * - Unknown : The type could not be determined
          * - Platform : A built-in serial port
-         * - USB : A USB serial port
+         * - Usb : A USB serial port
+         * - Pci : A PCI serial port
          *
          * @since 4.3
          */
-        enum SerialType { Unknown = 0, Platform, Usb };
+        enum SerialType { Unknown = 0, Platform, Usb, Pci };
 
         /**
          * Retrieves the type of the serial device.

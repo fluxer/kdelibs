@@ -29,10 +29,7 @@
 #cmakedefine HAVE_STRTOLL 1
 #cmakedefine HAVE_VSNPRINTF 1
 #cmakedefine HAVE_GETGROUPLIST 1
-#cmakedefine HAVE_VOLMGT 1
 #cmakedefine HAVE_TTYNAME_R 1
-
-#cmakedefine HAVE_S_ISSOCK 1
 
 #cmakedefine TIME_WITH_SYS_TIME 1
 
@@ -61,11 +58,6 @@
 #cmakedefine HAVE_LIBINTL 1
 
 /*********************/
-
-#ifndef HAVE_S_ISSOCK
-#define HAVE_S_ISSOCK
-#define S_ISSOCK(mode) (1==0)
-#endif
 
 /*
  * On HP-UX, the declaration of vsnprintf() is needed every time !

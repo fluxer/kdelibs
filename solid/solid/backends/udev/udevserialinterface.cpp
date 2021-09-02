@@ -34,11 +34,21 @@ SerialInterface::SerialInterface(UDevDevice *device)
 {
     const QString path = m_device->deviceName();
     const int lastSlash = path.length() - path.lastIndexOf(QLatin1String("/")) -1;
-    QByteArray lastElement = path.right(lastSlash).toLatin1();
+    const QByteArray lastElement = path.right(lastSlash).toLatin1();
+
     if (::sscanf(lastElement.constData(), "ttyS%d", &m_portnum) == 1) {
-        m_type = Solid::SerialInterface::Platform;
+        ;
     } else if (::sscanf(lastElement.constData(), "ttyUSB%d", &m_portnum) == 1) {
+        ;
+    }
+
+    const QString idbus(m_device->deviceProperty("ID_BUS"));
+    if (idbus == "pci") {
+        m_type = Solid::SerialInterface::Pci;
+    } else if (idbus == "usb" || path.contains("ttyUSB")) {
         m_type = Solid::SerialInterface::Usb;
+    } else {
+        m_type = Solid::SerialInterface::Platform;
     }
 }
 
