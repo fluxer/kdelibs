@@ -89,11 +89,12 @@ namespace Solid
          *
          * - Unknown : The type could not be determined
          * - Platform : A built-in serial port
-         * - USB : A USB serial port
+         * - Usb : A USB serial port
+         * - Pci : A PCI serial port
          *
          * @since 4.3
          */
-        enum SerialType { Unknown = 0, Platform, Usb };
+        enum SerialType { Unknown = 0, Platform, Usb, Pci };
 
         /**
          * Retrieves the type of the serial device.
