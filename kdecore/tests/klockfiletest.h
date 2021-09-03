@@ -24,15 +24,16 @@
 
 class Test_KLockFile : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 
-	KLockFile *lockFile;
+    KLockFile *lockFile;
 private Q_SLOTS:
-	void initTestCase();
-	void testLock();
-	void testStale();
-	void testUnlock();
-        void testStaleNoBlockFlag();
+    void initTestCase();
+    void cleanupTestCase();
+    void testLock();
+    void testStale();
+    void testUnlock();
+    void testStaleNoBlockFlag();
 };
 
 #endif
