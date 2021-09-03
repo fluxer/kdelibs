@@ -56,6 +56,7 @@ Q_DESTRUCTOR_FUNCTION(KTraderParseDeinit);
 ParseTreeBase::Ptr KTraderParse::parseConstraints( const QString& _constr )
 {
     if (s_parsingData) {
+        s_parsingData->ptr.clear();
         delete s_parsingData;
     }
     s_parsingData = new ParsingData();
