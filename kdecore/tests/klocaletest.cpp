@@ -1051,6 +1051,7 @@ void KLocaleTest::testDayPeriods()
     QCOMPARE( locale.d->dayPeriodForTime( QTime( 1, 0, 0 ) ).periodName( KLocale::ShortName ), QString( "T1" ) );
     QCOMPARE( locale.d->dayPeriodForTime( QTime( 11, 0, 0 ) ).periodName( KLocale::ShortName ), QString( "T2" ) );
     QCOMPARE( locale.d->dayPeriodForTime( QTime( 21, 0, 0 ) ).periodName( KLocale::ShortName ), QString( "T3" ) );
+    delete testConfig;
 }
 
 void KLocaleTest::testCalendarSystemType()
