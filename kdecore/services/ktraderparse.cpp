@@ -45,15 +45,24 @@ struct ParsingData
 
 using namespace KTraderParse;
 
-thread_local ParsingData* s_parsingData = 0;
+thread_local ParsingData* s_parsingData = nullptr;
+
+static int KTraderParseDeinit() {
+    delete s_parsingData;
+    return 0;
+}
+Q_DESTRUCTOR_FUNCTION(KTraderParseDeinit);
 
 ParseTreeBase::Ptr KTraderParse::parseConstraints( const QString& _constr )
 {
+    if (s_parsingData) {
+        s_parsingData->ptr.clear();
+        delete s_parsingData;
+    }
     s_parsingData = new ParsingData();
     s_parsingData->buffer = _constr.toUtf8();
     KTraderParse_mainParse(s_parsingData->buffer.constData());
     ParseTreeBase::Ptr ret = s_parsingData->ptr;
-    s_parsingData = 0;
     return ret;
 }
 

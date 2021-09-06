@@ -385,6 +385,7 @@ void KFilterTest::test_pushData() // ### UNFINISHED
     QCOMPARE(inBuffer.data().size(), compressed.size());
     read += flt->readAll();
     qDebug() << QString::fromLatin1(read);
+    delete flt;
     // ### indeed, doesn't work currently. So we use HTTPFilter instead, for now.
 }
 

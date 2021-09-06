@@ -84,8 +84,6 @@ private:
     bool bSuppressGlobal:1;
 
    QString sGlobalFileName;
-   static bool mappingsRegistered;
-
 
     KEntryMap entryMap;
     QString backendType;

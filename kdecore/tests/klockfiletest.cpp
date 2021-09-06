@@ -70,6 +70,13 @@ Test_KLockFile::initTestCase()
     lockFile = new KLockFile(QLatin1String(lockName));
 }
 
+void
+Test_KLockFile::cleanupTestCase()
+{
+    delete lockFile;
+    lockFile = nullptr;
+}
+
 static KLockFile::LockResult testLockFromProcess(const QString& lockName)
 {
     const int ret = QProcess::execute(KDEBINDIR "/kdecore-klockfile_testlock", QStringList() << lockName);
@@ -136,14 +143,15 @@ Test_KLockFile::testStaleNoBlockFlag()
     stream.flush();
     f.close();
 
-    lockFile = new KLockFile(QLatin1String(lockName));
-    QVERIFY(!lockFile->isLocked());
-    QCOMPARE(lockFile->lock(KLockFile::NoBlockFlag), KLockFile::LockStale);
+    KLockFile* lockFile2 = new KLockFile(QLatin1String(lockName));
+    QVERIFY(!lockFile2->isLocked());
+    QCOMPARE(lockFile2->lock(KLockFile::NoBlockFlag), KLockFile::LockStale);
     QByteArray expectedMsg = QByteArray("WARNING: deleting stale lockfile ") + lockName;
     QTest::ignoreMessage(QtWarningMsg, expectedMsg);
-    QCOMPARE(lockFile->lock(KLockFile::NoBlockFlag|KLockFile::ForceFlag), KLockFile::LockOK);
+    QCOMPARE(lockFile2->lock(KLockFile::NoBlockFlag|KLockFile::ForceFlag), KLockFile::LockOK);
 
-    QVERIFY(lockFile->isLocked());
+    QVERIFY(lockFile2->isLocked());
+    delete lockFile2;
 }
 
 

@@ -41,11 +41,11 @@ void StorageTest::store()
     StorageJob *storageJob = qobject_cast<StorageJob *>(job);
 
     QVERIFY(storageJob);
-    if (storageJob) {
-        storageJob->setData(m_data);
-        QVERIFY(storageJob->exec());
-        QVERIFY(storageJob->result().toBool());
-    }
+    storageJob->setAutoDelete(false);
+    storageJob->setData(m_data);
+    QVERIFY(storageJob->exec());
+    QVERIFY(storageJob->result().toBool());
+    storageJob->deleteLater();
 }
 
 void StorageTest::retrieve()
@@ -57,11 +57,11 @@ void StorageTest::retrieve()
     StorageJob *storageJob = qobject_cast<StorageJob *>(job);
 
     QVERIFY(storageJob);
-    if (storageJob) {
-        QVERIFY(storageJob->exec());
-        QVERIFY(storageJob->result().type() != QVariant::Bool);
-        QCOMPARE(storageJob->data(), m_data);
-    }
+    storageJob->setAutoDelete(false);
+    QVERIFY(storageJob->exec());
+    QVERIFY(storageJob->result().type() != QVariant::Bool);
+    QCOMPARE(storageJob->data(), m_data);
+    storageJob->deleteLater();
 }
 
 void StorageTest::deleteEntry()
@@ -73,11 +73,11 @@ void StorageTest::deleteEntry()
     StorageJob *storageJob = qobject_cast<StorageJob *>(job);
 
     QVERIFY(storageJob);
-    if (storageJob) {
-        storageJob->setData(m_data);
-        QVERIFY(storageJob->exec());
-        QVERIFY(storageJob->result().toBool());
-    }
+    storageJob->setAutoDelete(false);
+    storageJob->setData(m_data);
+    QVERIFY(storageJob->exec());
+    QVERIFY(storageJob->result().toBool());
+    storageJob->deleteLater();
 
     op = storage.operationDescription("retrieve");
     op.writeEntry("group", "Test");
@@ -85,11 +85,11 @@ void StorageTest::deleteEntry()
     storageJob = qobject_cast<StorageJob *>(job);
 
     QVERIFY(storageJob);
-    if (storageJob) {
-        QVERIFY(storageJob->exec());
-        QVERIFY(storageJob->result().type() != QVariant::Bool);
-        QVERIFY(storageJob->data().isEmpty());
-    }
+    storageJob->setAutoDelete(false);
+    QVERIFY(storageJob->exec());
+    QVERIFY(storageJob->result().type() != QVariant::Bool);
+    QVERIFY(storageJob->data().isEmpty());
+    storageJob->deleteLater();
 }
 
 QTEST_KDEMAIN(StorageTest, NoGUI)

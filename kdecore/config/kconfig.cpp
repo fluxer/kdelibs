@@ -50,8 +50,6 @@
 #include <QtCore/QSet>
 #include <QtCore/QStack>
 
-bool KConfigPrivate::mappingsRegistered=false;
-
 KConfigPrivate::KConfigPrivate(const KComponentData &componentData_, KConfig::OpenFlags flags,
                                const char* resource)
     : openFlags(flags), resourceType(resource), mBackend(0),

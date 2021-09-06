@@ -55,7 +55,7 @@ static int KExiv2Init()
 }
 Q_CONSTRUCTOR_FUNCTION(KExiv2Init);
 
-int KExiv2Deinit()
+static int KExiv2Deinit()
 {
     Exiv2::XmpParser::terminate();
     return 0;
