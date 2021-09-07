@@ -724,7 +724,8 @@ static void sigsegv_handler(int sig)
     // Debug and printf should be avoided because they might
     // call malloc.. and get in a nice recursive malloc loop
     char buffer[120];
-    qsnprintf(buffer, sizeof(buffer), "kioslave: ####### CRASH ###### protocol = %s pid = %d signal = %d\n", s_protocol, getpid(), sig);
+    memset(buffer, '\0', sizeof(buffer) * sizeof(char));
+    snprintf(buffer, sizeof(buffer), "kioslave: ####### CRASH ###### protocol = %s pid = %d signal = %d\n", s_protocol, getpid(), sig);
     write(2, buffer, strlen(buffer));
 #ifndef NDEBUG
 #ifdef HAVE_BACKTRACE
