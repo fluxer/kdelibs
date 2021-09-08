@@ -257,9 +257,9 @@ protected:
         // we don't need to handle prepend here, right? ~user is always at pos 0
         assert(m_prepend.isEmpty());
         struct passwd* pw;
+        ::setpwent();
         while ((pw = ::getpwent()) && !terminationRequested())
             addMatch(tilde + QString::fromLocal8Bit(pw->pw_name));
-
         ::endpwent();
 
         addMatch(QString(tilde));

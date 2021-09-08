@@ -211,7 +211,8 @@ QList<KUser> KUser::allUsers()
 {
     QList<KUser> result;
 
-    passwd* p;
+    struct passwd* p;
+    setpwent();
     while ((p = getpwent())) {
         result.append(KUser(p));
     }
@@ -224,12 +225,13 @@ QStringList KUser::allUserNames()
 {
     QStringList result;
 
-    passwd* p;
+    struct passwd* p;
+    setpwent();
     while ((p = getpwent()))  {
         result.append(QString::fromLocal8Bit(p->pw_name));
     }
-
     endpwent();
+
     return result;
 }
 
@@ -341,7 +343,8 @@ QList<KUserGroup> KUserGroup::allGroups()
 {
     QList<KUserGroup> result;
 
-    ::group* g;
+    struct group* g;
+    setgrent();
     while ((g = getgrent())) {
         result.append(KUserGroup(g));
     }
@@ -354,7 +357,8 @@ QStringList KUserGroup::allGroupNames()
 {
     QStringList result;
 
-    ::group* g;
+    struct group* g;
+    setgrent();
     while ((g = getgrent()))  {
         result.append(QString::fromLocal8Bit(g->gr_name));
     }
