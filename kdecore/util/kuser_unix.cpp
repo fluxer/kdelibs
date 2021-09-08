@@ -41,7 +41,7 @@ public:
     Private() : uid(uid_t(-1)), gid(gid_t(-1)) {}
     Private(const char *name) : uid(uid_t(-1)), gid(gid_t(-1))
     {
-        fillPasswd(name ? ::getpwnam( name ) : 0);
+        fillPasswd(name ? ::getpwnam(name) : 0);
     }
     Private(const passwd *p) : uid(uid_t(-1)), gid(gid_t(-1))
     {
@@ -76,7 +76,7 @@ KUser::KUser(UIDMode mode)
 {
     uid_t _uid = ::getuid(), _euid;
     if (mode == UseEffectiveUID && (_euid = ::geteuid()) != _uid) {
-        d = new Private(::getpwuid(_euid ));
+        d = new Private(::getpwuid(_euid));
     } else {
         d = new Private(qgetenv("LOGNAME"));
         if (uid() != _uid) {
@@ -139,7 +139,8 @@ K_UID KUser::uid() const
     return d->uid;
 }
 
-K_GID KUser::gid() const {
+K_GID KUser::gid() const
+{
     return d->gid;
 }
 
@@ -249,14 +250,14 @@ public:
     Private() : gid(gid_t(-1)) {}
     Private(const char *_name) : gid(gid_t(-1))
     {
-        fillGroup(_name ? ::getgrnam( _name ) : 0);
+        fillGroup(_name ? ::getgrnam(_name) : 0);
     }
-    Private(const ::group *p) : gid(gid_t(-1))
+    Private(const struct group *p) : gid(gid_t(-1))
     {
         fillGroup(p);
     }
 
-    void fillGroup(const ::group *p) {
+    void fillGroup(const struct group *p) {
         if (p) {
             gid = p->gr_gid;
             name = QString::fromLocal8Bit(p->gr_name);
@@ -276,7 +277,7 @@ KUserGroup::KUserGroup(K_GID _gid)
 {
 }
 
-KUserGroup::KUserGroup(const QString& _name)
+KUserGroup::KUserGroup(const QString &_name)
     : d(new Private(_name.toLocal8Bit().data()))
 {
 }
@@ -286,17 +287,17 @@ KUserGroup::KUserGroup(const char *_name)
 {
 }
 
-KUserGroup::KUserGroup(const ::group *g)
+KUserGroup::KUserGroup(const group *g)
     : d(new Private(g))
 {
 }
 
-KUserGroup::KUserGroup(const KUserGroup & group)
+KUserGroup::KUserGroup(const KUserGroup &group)
     : d(group.d)
 {
 }
 
-KUserGroup& KUserGroup::operator =(const KUserGroup& group)
+KUserGroup& KUserGroup::operator =(const KUserGroup &group)
 {
     d = group.d;
     return *this;
