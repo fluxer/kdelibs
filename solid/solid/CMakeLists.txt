@@ -46,7 +46,6 @@ set(solid_LIB_SRCS
     powermanagement.cpp
     video.cpp
     smartcardreader.cpp
-    internetgateway.cpp
 
     ifaces/acadapter.cpp
     ifaces/audiointerface.cpp
@@ -71,7 +70,6 @@ set(solid_LIB_SRCS
     ifaces/storageaccess.cpp
     ifaces/video.cpp
     ifaces/smartcardreader.cpp
-    ifaces/internetgateway.cpp
 
     backends/shared/rootdevice.cpp
     backends/fstab/fstabmanager.cpp
@@ -296,7 +294,6 @@ install(
     video.h 
     serialinterface.h
     smartcardreader.h
-    internetgateway.h
     networkshare.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid
     COMPONENT Devel
