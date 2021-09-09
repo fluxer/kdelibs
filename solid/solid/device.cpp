@@ -68,8 +68,6 @@
 #include <solid/ifaces/serialinterface.h>
 #include <solid/smartcardreader.h>
 #include <solid/ifaces/smartcardreader.h>
-#include <solid/internetgateway.h>
-#include <solid/ifaces/internetgateway.h>
 
 
 Solid::Device::Device(const QString &udi)
@@ -236,9 +234,6 @@ const Solid::DeviceInterface *Solid::Device::asDeviceInterface(const DeviceInter
                 break;
             case DeviceInterface::SmartCardReader:
                 iface = deviceinterface_cast(Ifaces::SmartCardReader, SmartCardReader, dev_iface);
-                break;
-            case DeviceInterface::InternetGateway:
-                iface = deviceinterface_cast(Ifaces::InternetGateway, InternetGateway, dev_iface);
                 break;
             case DeviceInterface::NetworkShare:
                 iface = deviceinterface_cast(Ifaces::NetworkShare, NetworkShare, dev_iface);
