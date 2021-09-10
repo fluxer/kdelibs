@@ -155,7 +155,7 @@ QString DevinfoDevice::product() const
             return QLatin1String("Loopback device Interface");
         }
     }  else if(queryDeviceInterface(Solid::DeviceInterface::Processor)) {
-        QByteArray hwmodel = sysctlByName("hw.model");
+        const QByteArray hwmodel = DevinfoDevice::stringByName("hw.model");
         return QString::fromLatin1(hwmodel.constData());
     }
 
@@ -275,18 +275,30 @@ QByteArray DevinfoDevice::deviceCtl(const char* field) const
     sysctldevicename += '.';
     sysctldevicename += field;
 
-    return sysctlByName(sysctldevicename.constData());
+    return DevinfoDevice::stringByName(sysctldevicename.constData());
 }
 
-QByteArray DevinfoDevice::sysctlByName(const char* sysctlname) const
+QByteArray DevinfoDevice::stringByName(const char* sysctlname)
 {
-    size_t sysctlbuffsize = 200;
+    size_t sysctlbuffsize = 1024;
     char sysctlbuff[sysctlbuffsize];
     ::memset(sysctlbuff, '\0', sysctlbuffsize * sizeof(char));
     const int sysctlresult = ::sysctlbyname(sysctlname, sysctlbuff, &sysctlbuffsize, NULL, 0);
     if (sysctlresult == -1) {
-        // qWarning() << "sysctlbyname" << sysctldevicename << "failed for" << devicename;
+        // qWarning() << "sysctlbyname failed" << sysctlname;
         return QByteArray();
     }
     return QByteArray(sysctlbuff, sysctlbuffsize);
+}
+
+qlonglong DevinfoDevice::integerByName(const char* sysctlname)
+{
+    size_t sysctlbuffsize = sizeof(qlonglong);
+    qlonglong sysctlbuff = 0;
+    const int sysctlresult = ::sysctlbyname(sysctlname, &sysctlbuff, &sysctlbuffsize, NULL, 0);
+    if (sysctlresult == -1) {
+        // qWarning() << "sysctlbyname failed" << sysctlname;
+        return -1;
+    }
+    return sysctlbuff;
 }

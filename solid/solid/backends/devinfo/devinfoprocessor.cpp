@@ -55,8 +55,18 @@ bool Processor::canChangeFrequency() const
 
 Solid::Processor::InstructionSets Processor::instructionSets() const
 {
-    // TODO:
+    // TODO: IntelSse2, IntelSse3, IntelSse4, Amd3DNow, AltiVec
+
     Solid::Processor::InstructionSets cpuinstructions = Solid::Processor::NoExtensions;
+
+    const qlonglong instructionsse = DevinfoDevice::integerByName("hw.instruction_sse");
+    // qDebug() << Q_FUNC_INFO << instructionsse;
+    if (instructionsse == 1) {
+        // for reference: freebsd-src/sys/amd64/amd64/initcpu.c
+        cpuinstructions |= Solid::Processor::IntelMmx;
+        cpuinstructions |= Solid::Processor::IntelSse;
+    }
+
     return cpuinstructions;
 }
 
