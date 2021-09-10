@@ -68,6 +68,7 @@ public:
     QByteArray deviceProperty(const DeviceProperty property) const;
     QByteArray devicePnP(const PnPInfo pnp) const;
     QByteArray deviceCtl(const char* field) const;
+    QByteArray sysctlByName(const char* sysctlname) const;
 
 private:
     QString m_device;
