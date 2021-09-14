@@ -33,7 +33,6 @@
 #include <QtGui/QProgressBar>
 #include <QtGui/QPainter>
 #include <QtGui/QScrollBar>
-#include <QtSvg/QSvgRenderer>
 
 /**
  * Qt allocates very little horizontal space for the icon name,
@@ -191,24 +190,7 @@ void KIconCanvas::KIconCanvasPrivate::_k_slotLoadFiles()
         if (!m_bLoading) { // user clicked on a button that will load another set of icons
             break;
         }
-        QImage img;
-
-        // Use the extension as the format. Works for XPM and PNG, but not for SVG
-        QString path= *it;
-        QString ext = path.right(3).toUpper();
-
-        if (ext != "SVG" && ext != "VGZ") {
-            img.load(*it);
-        } else {
-            // Special stuff for SVG icons
-            img = QImage(canvasIconWidth, canvasIconHeight, QImage::Format_ARGB32_Premultiplied);
-            img.fill(0);
-            QSvgRenderer renderer(*it);
-            if (renderer.isValid()) {
-                QPainter p(&img);
-                renderer.render(&p);
-            }
-        }
+        QImage img(*it);
 
         if (img.isNull()) {
             continue;
