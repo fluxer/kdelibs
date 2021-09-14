@@ -27,7 +27,6 @@
 #cmakedefine HAVE_SENDFILE 1
 #cmakedefine HAVE_SETMNTENT 1
 #cmakedefine HAVE_STRTOLL 1
-#cmakedefine HAVE_VSNPRINTF 1
 #cmakedefine HAVE_GETGROUPLIST 1
 #cmakedefine HAVE_TTYNAME_R 1
 
@@ -57,29 +56,7 @@
 /* Define to 1 if you have libintl */
 #cmakedefine HAVE_LIBINTL 1
 
-/*********************/
-
-/*
- * On HP-UX, the declaration of vsnprintf() is needed every time !
- */
-
-#if !defined(HAVE_VSNPRINTF)
-#if __STDC__
-#include <stdarg.h>
-#include <stdlib.h>
-#else
-#include <varargs.h>
-#endif
-#ifdef __cplusplus
-extern "C"
-#endif
-int vsnprintf(char *str, size_t n, char const *fmt, va_list ap);
-#ifdef __cplusplus
-extern "C"
-#endif
-int snprintf(char *str, size_t n, char const *fmt, ...);
-#endif
-
+/* Define to 1 if getmntinfo() uses statvfs struct */
 #cmakedefine GETMNTINFO_USES_STATVFS 1
 
 /* Defined to 1 if you have a d_type member in struct dirent */
