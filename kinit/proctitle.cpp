@@ -141,7 +141,7 @@ void proctitle_init(int argc, char *argv[], char *envp[]) {
 
 void proctitle_set(const char *fmt, ...) {
     va_list msg;
-    static char statbuf[BUFSIZ];
+    char statbuf[BUFSIZ];
 
 #ifndef HAVE_SETPROCTITLE
 # if PF_ARGV_TYPE == PF_ARGV_PSTAT

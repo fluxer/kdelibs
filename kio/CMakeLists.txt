@@ -208,7 +208,6 @@ target_link_libraries(kio PRIVATE
 target_link_libraries(kio PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
-    ${QT_QTSVG_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}

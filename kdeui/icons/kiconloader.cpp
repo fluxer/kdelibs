@@ -39,7 +39,6 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QPixmapCache>
-#include <QtSvg/QSvgRenderer>
 
 // kdecore
 #include <kconfig.h>
@@ -247,9 +246,7 @@ public:
 
     /**
      * @internal
-     * Creates the QImage for @p path, using SVG rendering as appropriate.
-     * @p size is only used for scalable images, but if non-zero non-scalable
-     * images will be resized anyways.
+     * Creates the QImage for @p path. If @p size is not zero image will be scaled.
      */
     QImage createIconImage(const QString &path, int size = 0);
 
@@ -752,30 +749,10 @@ QString KIconLoaderPrivate::makeCacheKey(const QString &name, KIconLoader::Group
 
 QImage KIconLoaderPrivate::createIconImage(const QString &path, int size)
 {
-    // Use the extension as the format. Works for XPM and PNG, but not for SVG. The
-    // "VGZ" is the last 3 characters of "SVGZ"
-    QString ext = path.right(3).toUpper();
-    QImage img;
+    QImage img(path);
 
-    if (ext != "SVG" && ext != "VGZ")
-    {
-        // Not a SVG or SVGZ
-        img = QImage(path, ext.toLatin1());
-
-        if (size != 0 && !img.isNull()) {
-            img = img.scaled(size, size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        }
-    }
-    else
-    {
-        QSvgRenderer renderer(path, q);
-
-        if (renderer.isValid()) {
-            img = QImage(size, size, QImage::Format_ARGB32_Premultiplied);
-            img.fill(0);
-            QPainter p(&img);
-            renderer.render(&p);
-        }
+    if (size != 0 && !img.isNull()) {
+        img = img.scaled(size, size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     }
 
     return img;

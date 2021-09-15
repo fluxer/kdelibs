@@ -371,7 +371,6 @@ target_link_libraries(kdeui PUBLIC
     ${QT_QTGUI_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
-    ${QT_QTSVG_LIBRARY}
 )
 
 if(X11_XTest_FOUND)
