@@ -225,7 +225,7 @@ bool SocketConnectionBackend::sendCommand(const Task &task)
     Q_ASSERT(state == Connected);
     Q_ASSERT(socket);
 
-    static char buffer[HeaderSize + 2];
+    char buffer[HeaderSize + 2];
     sprintf(buffer, "%6x_%2x_", task.data.size(), task.cmd);
     socket->write(buffer, HeaderSize);
     socket->write(task.data);

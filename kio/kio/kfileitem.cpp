@@ -392,7 +392,7 @@ bool KFileItemPrivate::cmp( const KFileItemPrivate & item ) const
 inline //because it is used only in one place
 QString KFileItemPrivate::parsePermissions(mode_t perm) const
 {
-    static char buffer[ 12 ];
+    char buffer[ 12 ];
 
     char uxbit,gxbit,oxbit;
 
