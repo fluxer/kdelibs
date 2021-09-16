@@ -76,7 +76,6 @@ AppletHandle::AppletHandle(Containment *containment, Applet *applet, const QPoin
     setFlags(flags() | QGraphicsItem::ItemStacksBehindParent);
     KColorScheme colorScheme(QPalette::Active, KColorScheme::View,
                              Theme::defaultTheme()->colorScheme());
-    setAcceptTouchEvents(true);
     m_gradientColor = colorScheme.background(KColorScheme::NormalBackground).color();
     m_originalGeom = mapToScene(QRectF(QPoint(0,0), m_applet->size())).boundingRect();
     m_originalTransform = m_applet->transform();
@@ -748,63 +747,6 @@ void AppletHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     } else {
         QGraphicsItem::mouseMoveEvent(event);
     }
-}
-
-bool AppletHandle::sceneEvent(QEvent *event)
-{
-    switch (event->type()) {
-        case QEvent::TouchEnd: {
-            QTransform t = m_applet->transform();
-            QRectF geom = m_applet->geometry();
-            QPointF translation(t.m31(), t.m32());
-            QPointF center = geom.center();
-            geom.setWidth(geom.width()*qAbs(t.m11()));
-            geom.setHeight(geom.height()*qAbs(t.m22()));
-            geom.moveCenter(center);
-
-            m_applet->setGeometry(geom);
-            t.reset();
-            t.translate(m_applet->size().width()/2, m_applet->size().height()/2);
-            t.rotateRadians(m_angle);
-            t.translate(-m_applet->size().width()/2, -m_applet->size().height()/2);
-
-
-            m_applet->setTransform(t);
-            return true;
-        }
-        case QEvent::TouchBegin:
-        case QEvent::TouchUpdate: {
-            QList<QTouchEvent::TouchPoint> touchPoints = static_cast<QTouchEvent *>(event)->touchPoints();
-            if (touchPoints.count() == 2) {
-                const QTouchEvent::TouchPoint &touchPoint0 = touchPoints.first();
-                const QTouchEvent::TouchPoint &touchPoint1 = touchPoints.last();
-
-                //rotation
-                QLineF line0(touchPoint0.lastScenePos(), touchPoint1.lastScenePos());
-                QLineF line1(touchPoint0.scenePos(), touchPoint1.scenePos());
-                m_angle = m_angle+(line1.angleTo(line0)*M_PI_2/90);
-                QTransform t = m_applet->transform();
-                t.translate(m_applet->size().width()/2, m_applet->size().height()/2);
-                t.rotate(line1.angleTo(line0));
-
-                //scaling
-                qreal scaleFactor = 1;
-                if (line0.length() > 0) {
-                    scaleFactor = line1.length() / line0.length();
-                }
-
-                t.scale(scaleFactor, scaleFactor);
-                t.translate(-m_applet->size().width()/2, -m_applet->size().height()/2);
-                m_applet->setTransform(t);
-
-            }
-            return true;
-        }
-        default: {
-            break;
-        }
-    }
-    return QGraphicsItem::sceneEvent(event);
 }
 
 //pos relative to scene
