@@ -29,9 +29,8 @@
  *
  * @param argc argc, as passed to main()
  * @param argv argv, as passed to main()
- * @param envp envp, as passed to main()
  */
-void proctitle_init(int argc, char *argv[], char *envp[]);
+void proctitle_init(int argc, char *argv[]);
 
 /**
  * Change the process title.  It accepts a variable number

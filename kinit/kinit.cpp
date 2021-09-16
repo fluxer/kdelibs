@@ -1481,7 +1481,7 @@ static void secondary_child_handler(int)
 
 }
 
-int main(int argc, char **argv, char **envp)
+int main(int argc, char **argv)
 {
     setlocale (LC_ALL, "");
     setlocale (LC_NUMERIC, "C");
@@ -1570,7 +1570,7 @@ int main(int argc, char **argv, char **envp)
 
    /** Prepare to change process name **/
 #ifndef SKIP_PROCTITLE
-   proctitle_init(argc, argv, envp);
+   proctitle_init(argc, argv);
 #endif
 
    kdeinit_library_path();
