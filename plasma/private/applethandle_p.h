@@ -82,7 +82,6 @@ class AppletHandle : public QGraphicsObject
         void hoverMoveEvent(QGraphicsSceneHoverEvent *event);
         void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
         bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
-        bool sceneEvent(QEvent*);
 
     Q_SIGNALS:
        void disappearDone(AppletHandle *self);
