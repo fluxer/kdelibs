@@ -92,7 +92,7 @@ int main (int argc, char *argv[])
 
   /* get slave pty name from master pty file handle *********/
 #if defined(HAVE_PTSNAME_R)
-  ::memset(ttyb, '\0', sizeof(ttyb) * sizeof(char));
+  memset(ttyb, '\0', sizeof(ttyb) * sizeof(char));
   if (ptsname_r(fd, ttyb, sizeof(ttyb)) == 0) {
      tty = ttyb;
   if (!tty)
@@ -104,7 +104,7 @@ int main (int argc, char *argv[])
     /* Check that fd is a valid master pseudo terminal.  */
 #if defined(HAVE_TTYNAME_R)
     char pty[32];
-    ::memset(pty, '\0', sizeof(pty) * sizeof(char));
+    memset(pty, '\0', sizeof(pty) * sizeof(char));
     if (ttyname_r(fd, pty, sizeof(pty)) != 0)
 #else
     char *pty = ttyname(fd);
@@ -119,14 +119,18 @@ int main (int argc, char *argv[])
     if (memcmp(pty,"/dev/pty",8))
     {
       fprintf(stderr,"%s: determined a strange pty name '%s'.\n",argv[0],pty);
+#if !defined(HAVE_TTYNAME_R)
       free(pty);
+#endif
       return 1; /* FAIL */
     }
 
     tty = malloc(strlen(pty) + 1);
     strcpy(tty,"/dev/tty");
     strcat(tty,pty+8);
+#if !defined(HAVE_TTYNAME_R)
     free(pty);
+#endif
   }
 
   /* Check that the returned slave pseudo terminal is a character device.  */
