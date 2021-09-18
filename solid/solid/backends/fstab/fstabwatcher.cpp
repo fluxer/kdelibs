@@ -31,11 +31,12 @@ using namespace Solid::Backends::Fstab;
 
 Q_GLOBAL_STATIC(FstabWatcher, globalFstabWatcher)
 
-#define MTAB "/etc/mtab"
 #ifdef Q_OS_SOLARIS
 #define FSTAB "/etc/vfstab"
+#define MTAB "/etc/mnttab"
 #else
 #define FSTAB "/etc/fstab"
+#define MTAB "/etc/mtab"
 #endif
 
 FstabWatcher::FstabWatcher()
