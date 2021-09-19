@@ -31,17 +31,12 @@ else(GSSAPI_LIBS AND GSSAPI_FLAVOR)
   
     if(KRB5_CONFIG)
   
-        set(HAVE_KRB5_GSSAPI TRUE)
         execute_process(
             COMMAND ${KRB5_CONFIG} --libs gssapi
             RESULT_VARIABLE _return_VALUE
             OUTPUT_VARIABLE GSSAPI_LIBS
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
-        if(_return_VALUE)
-            message(STATUS "GSSAPI configure check failed.")
-            set(HAVE_KRB5_GSSAPI FALSE)
-        endif(_return_VALUE)
   
         execute_process(
             COMMAND ${KRB5_CONFIG} --cflags gssapi
@@ -65,15 +60,11 @@ else(GSSAPI_LIBS AND GSSAPI_FLAVOR)
             set(GSSAPI_FLAVOR "HEIMDAL")
         endif(gssapi_flavor_tmp MATCHES ".*Massachusetts.*")
   
-        if(NOT HAVE_KRB5_GSSAPI)
-            if (gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
-                message(STATUS "Solaris Kerberos does not have GSSAPI; this is normal.")
-                set(GSSAPI_LIBS)
-                set(GSSAPI_INCS)
-            else(gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
-                message(WARNING "${KRB5_CONFIG} failed unexpectedly.")
-            endif(gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
-        endif(NOT HAVE_KRB5_GSSAPI)
+        if (gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
+            message(STATUS "Solaris Kerberos does not have GSSAPI; this is normal.")
+            set(GSSAPI_LIBS)
+            set(GSSAPI_INCS)
+        endif(gssapi_flavor_tmp MATCHES "Sun Microsystems.*")
 
         if(GSSAPI_LIBS) # GSSAPI_INCS can be also empty, so don't rely on that
             set(GSSAPI_FOUND TRUE)

@@ -100,7 +100,7 @@ if (Q_WS_X11)
     if(HAVE_XSYNC)
         target_link_libraries(kidletime PRIVATE ${X11_Xext_LIB})
     endif()
-    target_link_libraries(kidletime PRIVATE ${X11_LIBRARIES})
+    target_link_libraries(kidletime PRIVATE ${X11_X11_LIB})
 endif (Q_WS_X11)
 
 set_target_properties(kidletime PROPERTIES
