@@ -48,7 +48,7 @@ int main(void)
     return 0;
 }
 " PAM_MESSAGE_CONST)
-        cmake_reset_check_state()
+    cmake_reset_check_state()
 endif()
 set(PAM_MESSAGE_CONST ${PAM_MESSAGE_CONST} CACHE BOOL "PAM expects a conversation function with const pam_message")
 
