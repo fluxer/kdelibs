@@ -18,13 +18,16 @@
 
 #include "magick.h"
 
-#include <QtGui/QImage>
-#include <QtCore/QDataStream>
+#include <QImage>
+#include <QDataStream>
+#include <QFile>
+#include <QFileInfo>
 #include <kdebug.h>
 
 #include <Magick++/Functions.h>
 #include <Magick++/Blob.h>
 #include <Magick++/Image.h>
+#include <Magick++/CoderInfo.h>
 
 static const char* const magickpluginformat = "magick";
 
@@ -107,8 +110,23 @@ QByteArray MagickHandler::name() const
 bool MagickHandler::canRead(QIODevice *device)
 {
     if (Q_UNLIKELY(!device)) {
-        kWarning() << "MagickHandler::canRead() called with no device";
+        kWarning() << "called with no device";
         return false;
+    }
+
+    const QFile *file = qobject_cast<QFile*>(device);
+    if (file) {
+        QFileInfo fileinfo(file->fileName());
+        const QByteArray filesuffix = fileinfo.suffix().toLatin1();
+        kDebug() << "Using QFile shortcut for" << file->fileName() << "with extension" << filesuffix;
+        if (!filesuffix.isEmpty()) {
+            const Magick::CoderInfo magickcoderinfo(std::string(filesuffix.constData()));
+            if (magickcoderinfo.isReadable() && (qstrnicmp(magickcoderinfo.name().c_str(), "png", 3) != 0)) {
+                kDebug() << "Shortcut says it is supported";
+                return true;
+            }
+            kDebug() << "Shortcut says it is not supported";
+        }
     }
 
     const qint64 oldpos = device->pos();
