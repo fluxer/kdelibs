@@ -221,7 +221,6 @@ void DataEngineManager::timerEvent(QTimerEvent *)
         foreach (DataContainer *dc, engine->containerDict()) {
             out << "                * " << dc->objectName() << endl;
             out << "                       Data count: " << dc->d->data.count() << endl;
-            out << "                       Stored: " << dc->isStorageEnabled() << ' ' << endl;
             const int directs = dc->receivers(SIGNAL(dataUpdated(QString,Plasma::DataEngine::Data)));
             if (directs > 0) {
                 out << "                       Direction Connections: " << directs << ' ' << endl;

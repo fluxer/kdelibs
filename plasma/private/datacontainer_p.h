@@ -21,7 +21,6 @@
 #define PLASMA_DATACONTAINER_P_H
 
 #include "servicejob.h"
-#include "storage_p.h"
 
 #include <QtCore/qcoreevent.h>
 #include <QtCore/QElapsedTimer>
@@ -39,12 +38,8 @@ class DataContainerPrivate
 public:
     DataContainerPrivate(DataContainer *container)
         : q(container),
-          storage(NULL),
-          storageCount(0),
           dirty(false),
-          cached(false),
-          enableStorage(false),
-          isStored(true)
+          cached(false)
     {
     }
 
@@ -54,34 +49,14 @@ public:
 
     bool hasUpdates();
 
-    /**
-     * Deletes the store member of DataContainerPrivate if 
-     * there are no more references to it.
-     */
-    void storeJobFinished(KJob *job);
-
-    /**
-     * Does the work of putting the data from disk into the DataContainer
-     * after retrieve() sets it up.
-     */
-    void populateFromStoredData(KJob *job);
-
-    void store();
-    void retrieve();
-
     DataContainer *q;
     DataEngine::Data data;
     QMap<QObject *, SignalRelay *> relayObjects;
     QMap<uint, SignalRelay *> relays;
     QElapsedTimer updateTimer;
-    Storage* storage;
-    QBasicTimer storageTimer;
     QBasicTimer checkUsageTimer;
-    int  storageCount;
     bool dirty : 1;
     bool cached : 1;
-    bool enableStorage : 1;
-    bool isStored : 1;
 };
 
 class SignalRelay : public QObject

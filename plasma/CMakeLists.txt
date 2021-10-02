@@ -104,8 +104,6 @@ set(plasma_LIB_SRCS
     private/packages.cpp
     private/plasmoidservice.cpp
     private/runnerjobs.cpp
-    private/storage.cpp
-    private/storagethread.cpp
     private/style.cpp
     private/themedwidgetinterface.cpp
     private/tooltip.cpp
@@ -166,7 +164,6 @@ target_link_libraries(plasma PUBLIC
     ${QT_QTSCRIPT_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
-    ${QT_QTSQL_LIBRARY}
     ${QT_QTSVG_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
     ${KDE4_KDECORE_LIBS}
@@ -320,7 +317,6 @@ install(
     FILES
     data/operations/dataengineservice.operations
     data/operations/plasmoidservice.operations
-    data/operations/storage.operations
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/plasma/services
 )
 
