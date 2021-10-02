@@ -646,23 +646,6 @@ install(
 
 install(
     FILES
-    ThreadWeaver/DependencyPolicy
-    ThreadWeaver/Job
-    ThreadWeaver/JobCollection
-    ThreadWeaver/JobSequence
-    ThreadWeaver/QueuePolicy
-    ThreadWeaver/ResourceRestrictionPolicy
-    ThreadWeaver/State
-    ThreadWeaver/Thread
-    ThreadWeaver/Weaver
-    ThreadWeaver/WeaverInterface
-    ThreadWeaver/WeaverObserver
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/ThreadWeaver
-    COMPONENT Devel
-)
-
-install(
-    FILES
     Plasma/AbstractDialogManager
     Plasma/AbstractRunner
     Plasma/AbstractToolBox

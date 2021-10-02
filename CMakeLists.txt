@@ -347,7 +347,6 @@ add_subdirectory( licenses )
 add_subdirectory( mimetypes )
 add_subdirectory( plasma )
 add_subdirectory( solid )
-add_subdirectory( threadweaver )
 
 ################# write kdelibs package config files which will be installed #################
 

@@ -55,7 +55,6 @@
 #  KDE4_KFILE_LIBS            - the kfile library and all depending libraries
 #  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 #  KDE4_KPTY_LIBS             - the kpty library and all depending libraries
-#  KDE4_THREADWEAVER_LIBS     - the threadweaver library and all depending libraries
 #  KDE4_SOLID_LIBS            - the solid library and all depending libraries
 #  KDE4_KNOTIFYCONFIG_LIBS    - the knotify config library and all depending libraries
 #  KDE4_KTEXTEDITOR_LIBS      - the ktexteditor library and all depending libraries
@@ -299,7 +298,6 @@ set(_kde_libraries
     ktexteditor
     plasma
     solid
-    threadweaver
 )
 foreach(_lib ${_kde_libraries})
     string(TOUPPER ${_lib} _upperlib)
