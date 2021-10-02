@@ -18,18 +18,3 @@ PLASMA_UNIT_TESTS(
     runnercontexttest
     configloadertest
 )
-
-set(storatetest_SRCS
-    storagetest.cpp
-    ../private/storage.cpp
-    ../private/storagethread.cpp
-)
-
-kde4_add_test(plasma-storagetest ${storatetest_SRCS})
-target_link_libraries(plasma-storagetest
-    ${KDE4_KIO_LIBS}
-    ${KDE4_PLASMA_LIBS}
-    ${QT_QTTEST_LIBRARY}
-    ${QT_QTDECLARATIVE_LIBRARY}
-    ${QT_QTSQL_LIBRARY}
-)

@@ -36,7 +36,6 @@
 #include "service.h"
 #include "private/dataengineservice_p.h"
 #include "private/service_p.h"
-#include "private/storage_p.h"
 
 namespace Plasma
 {
@@ -289,7 +288,6 @@ void DataEngine::removeSource(const QString &source)
             }
         }
 
-        s->d->store();
         s->disconnect(this);
         s->deleteLater();
         d->sources.erase(it);
@@ -431,14 +429,6 @@ void DataEngine::setName(const QString &name)
 {
     d->engineName = name;
     setObjectName(name);
-}
-
-void DataEngine::setStorageEnabled(const QString &source, bool store)
-{
-    DataContainer *s = d->source(source, false);
-    if (s) {
-        s->setStorageEnabled(store);
-    }
 }
 
 // Private class implementations

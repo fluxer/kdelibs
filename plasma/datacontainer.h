@@ -125,30 +125,6 @@ class PLASMA_EXPORT DataContainer : public QObject
                                   Plasma::IntervalAlignment alignment);
 
         /**
-         * sets this data container to be automatically stored.
-         * @param whether this data container should be stored
-         * @since 4.6
-         */
-        void setStorageEnabled(bool store);
-
-        /**
-         * @return true if the data container has been marked for storage
-         * @since 4.6
-         */
-        bool isStorageEnabled() const;
-
-        /**
-         * @return true if the data container has been updated, but not stored
-         */
-        bool needsToBeStored() const;
-
-        /**
-         * sets that the data container needs to be stored or not.
-         * @param whether the data container needs to be stored
-         */
-        void setNeedsToBeStored(bool store);
-
-        /**
          * @return the DataEngine that the DataContainer is
          * a child of.
          */
@@ -255,10 +231,6 @@ class PLASMA_EXPORT DataContainer : public QObject
         friend class DataContainerPrivate;
         friend class DataEngineManager;
         DataContainerPrivate *const d;
-
-        Q_PRIVATE_SLOT(d, void storeJobFinished(KJob *job))
-        Q_PRIVATE_SLOT(d, void populateFromStoredData(KJob *job))
-        Q_PRIVATE_SLOT(d, void retrieve())
 };
 
 } // Plasma namespace

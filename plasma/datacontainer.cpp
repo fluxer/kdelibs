@@ -18,7 +18,6 @@
  */
 #include "datacontainer.h"
 #include "private/datacontainer_p.h"
-#include "private/storage_p.h"
 
 #include <kdebug.h>
 #include <QDateTime>
@@ -54,16 +53,6 @@ void DataContainer::setData(const QString &key, const QVariant &value)
 
     d->dirty = true;
     d->updateTimer.start();
-
-    //check if storage is enabled and if storage is needed.
-    //If it is not set to be stored,then this is the first
-    //setData() since the last time it was stored. This
-    //gives us only one singleShot timer.
-    if (isStorageEnabled() || !needsToBeStored()) {
-        d->storageTimer.start(180000, this);
-    }
-
-    setNeedsToBeStored(true);
 }
 
 void DataContainer::removeAllData()
@@ -145,29 +134,6 @@ void DataContainer::connectVisualization(QObject *visualization, uint pollingInt
     }
 }
 
-void DataContainer::setStorageEnabled(bool store)
-{
-    d->enableStorage = store;
-    if (store) {
-        QTimer::singleShot(qrand() % (2000 + 1) , this, SLOT(retrieve()));
-    }
-}
-
-bool DataContainer::isStorageEnabled() const
-{
-    return d->enableStorage;
-}
-
-bool DataContainer::needsToBeStored() const
-{
-    return !d->isStored;
-}
-
-void DataContainer::setNeedsToBeStored(bool store)
-{
-    d->isStored = !store;
-}
-
 DataEngine* DataContainer::getDataEngine()
 {
     QObject *o = this;
@@ -181,83 +147,6 @@ DataEngine* DataContainer::getDataEngine()
         de = dynamic_cast<DataEngine *> (o);
     }
     return de;
-}
-
-void DataContainerPrivate::store()
-{
-    if (!q->needsToBeStored() || !q->isStorageEnabled()) {
-        return;
-    }
-
-    DataEngine* de = q->getDataEngine();
-    if (!de) {
-        return;
-    }
-
-    q->setNeedsToBeStored(false);
-
-    if (!storage) {
-        storage = new Storage(q);
-    }
-
-    KConfigGroup op = storage->operationDescription("save");
-    op.writeEntry("group", q->objectName());
-    StorageJob *job = static_cast<StorageJob *>(storage->startOperationCall(op));
-    job->setData(data);
-    storageCount++;
-    QObject::connect(job, SIGNAL(finished(KJob*)), q, SLOT(storeJobFinished(KJob*)));
-}
-
-void DataContainerPrivate::storeJobFinished(KJob* )
-{
-    --storageCount;
-    if (storageCount < 1) {
-        storage->deleteLater();
-        storage = 0;
-    }
-}
-
-void DataContainerPrivate::retrieve()
-{
-    DataEngine* de = q->getDataEngine();
-    if (de == NULL) {
-        return;
-    }
-
-    if (!storage) {
-        storage = new Storage(q);
-    }
-
-    KConfigGroup retrieveGroup = storage->operationDescription("retrieve");
-    retrieveGroup.writeEntry("group", q->objectName());
-    ServiceJob* retrieveJob = storage->startOperationCall(retrieveGroup);
-    QObject::connect(retrieveJob, SIGNAL(result(KJob*)), q,
-            SLOT(populateFromStoredData(KJob*)));
-}
-
-void DataContainerPrivate::populateFromStoredData(KJob *job)
-{
-    if (job->error()) {
-        return;
-    }
-
-    StorageJob *ret = dynamic_cast<StorageJob*>(job);
-    if (!ret) {
-        return;
-    }
-
-    // Only fill the source with old stored
-    // data if it is not already populated with new data.
-    if (data.isEmpty() && !ret->data().isEmpty()) {
-        data = ret->data();
-        dirty = true;
-        q->forceImmediateUpdate();
-    }
-
-    KConfigGroup expireGroup = storage->operationDescription("expire");
-    //expire things older than 4 days
-    expireGroup.writeEntry("age", 345600);
-    storage->startOperationCall(expireGroup);
 }
 
 void DataContainer::disconnectVisualization(QObject *visualization)
@@ -339,9 +228,6 @@ void DataContainer::timerEvent(QTimerEvent * event)
             emit becameUnused(objectName());
         }
         d->checkUsageTimer.stop();
-    } else if (event->timerId() == d->storageTimer.timerId()) {
-        d->store();
-        d->storageTimer.stop();
     }
 }
 
