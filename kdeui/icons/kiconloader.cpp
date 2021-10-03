@@ -1111,8 +1111,22 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
     if (favIconOverlay)
     {
         QImage favIcon(name, "PNG");
-        if (!favIcon.isNull()) // if favIcon not there yet, don't try to blend it
+        // if favIcon not there yet, don't try to blend it
+        if (!favIcon.isNull())
         {
+            // ensure it is format supported by QPainter first
+            switch (img.format()) {
+                case QImage::Format_Mono:
+                case QImage::Format_MonoLSB:
+                case QImage::Format_Indexed8: {
+                    img = img.convertToFormat(QImage::Format_ARGB32);
+                    break;
+                }
+                default:
+                    break;
+            }
+
+
             QPainter p(&img);
 
             // Align the favicon overlay
