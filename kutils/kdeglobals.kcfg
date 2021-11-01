@@ -461,17 +461,6 @@
   <entry key="webdavs" type="Bool" />
   <entry key="zip" type="Bool" />
  </group>
- <group name="Socks" >
-  <entry key="SOCKS_enable" type="Bool" >
-    <label>Enable SOCKS support</label>
-    <whatsthis>Whether SOCKS version 4 and 5 should be enabled in KDE's sub systems</whatsthis>
-    <default>false</default>
-  </entry>
-  <entry key="SOCKS_lib" type="Path" >
-    <label>Path to custom SOCKS library</label>
-  </entry>
-  <entry key="SOCKS_method" type="String" />
- </group>
  <group name="Toolbar style" >
   <entry key="Highlighting" type="Bool">
     <label>Highlight toolbar buttons on mouse over</label>
