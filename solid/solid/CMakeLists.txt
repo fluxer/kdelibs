@@ -269,6 +269,7 @@ install(
     serialinterface.h
     smartcardreader.h
     networkshare.h
+    graphic.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid
     COMPONENT Devel
 )
