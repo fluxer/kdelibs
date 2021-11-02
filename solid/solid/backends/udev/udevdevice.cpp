@@ -476,7 +476,7 @@ QString UDevDevice::description() const
         }
         return QString();
     } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
-        return QString("Video display");
+        return QObject::tr("Graphic display");
     }
 
     return QString();
