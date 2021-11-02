@@ -35,6 +35,7 @@
 #include "udevserialinterface.h"
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
+#include "udevgraphic.h"
 #include "udevmanager.h"
 #include "cpuinfo.h"
 #include "../shared/pciidstables.h"
@@ -288,6 +289,8 @@ QString UDevDevice::icon() const
         return QLatin1String("modem");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Button)) {
         return QLatin1String("insert-button");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
+        return QLatin1String("video-display");
     }
 
     return QString();
@@ -472,6 +475,8 @@ QString UDevDevice::description() const
                 return QObject::tr("Unknown Button");
         }
         return QString();
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
+        return QObject::tr("Graphic display");
     }
 
     return QString();
@@ -525,6 +530,9 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 
     case Solid::DeviceInterface::Button:
         return deviceProperty("ID_INPUT_KEY").toInt() == 1;
+
+    case Solid::DeviceInterface::Graphic:
+        return deviceProperty("PCI_CLASS").toInt() == 30000;
 
     default:
         return false;
@@ -589,6 +597,9 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
 
     case Solid::DeviceInterface::Button:
         return new Button(this);
+
+    case Solid::DeviceInterface::Graphic:
+        return new Graphic(this);
 
     default:
         qFatal("Shouldn't happen");

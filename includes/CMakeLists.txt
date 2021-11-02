@@ -618,6 +618,7 @@ install(
     Solid/StorageAccess
     Solid/StorageDrive
     Solid/StorageVolume
+    Solid/Graphic
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Solid
     COMPONENT Devel
 )

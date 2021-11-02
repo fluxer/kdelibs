@@ -46,6 +46,7 @@ set(solid_LIB_SRCS
     powermanagement.cpp
     video.cpp
     smartcardreader.cpp
+    graphic.cpp
 
     ifaces/acadapter.cpp
     ifaces/audiointerface.cpp
@@ -70,6 +71,7 @@ set(solid_LIB_SRCS
     ifaces/storageaccess.cpp
     ifaces/video.cpp
     ifaces/smartcardreader.cpp
+    ifaces/graphic.cpp
 
     backends/shared/rootdevice.cpp
     backends/fstab/fstabmanager.cpp
@@ -110,6 +112,7 @@ if(ENABLE_TESTING)
         backends/fakehw/fakevideo.cpp
         backends/fakehw/fakevolume.cpp
         backends/fakehw/fakesmartcardreader.cpp
+        backends/fakehw/fakegraphic.cpp
     )
 endif()
 
@@ -137,6 +140,7 @@ if(UDEV_FOUND)
         backends/udev/udevstoragedrive.cpp
         backends/udev/udevbattery.cpp
         backends/udev/udevacadapter.cpp
+        backends/udev/udevgraphic.cpp
         backends/udev/udevqtclient.cpp
         backends/udev/udevqtdevice.cpp
     )
@@ -295,6 +299,7 @@ install(
     serialinterface.h
     smartcardreader.h
     networkshare.h
+    graphic.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid
     COMPONENT Devel
 )
