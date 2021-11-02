@@ -195,6 +195,7 @@ if(DEVINFO_FOUND)
         backends/devinfo/devinfodeviceinterface.cpp
         backends/devinfo/devinfoprocessor.cpp
         backends/devinfo/devinfonetworkinterface.cpp
+        backends/devinfo/devinfographic.cpp
     )
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${DEVINFO_LIBRARIES})

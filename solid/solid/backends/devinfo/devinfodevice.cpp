@@ -22,6 +22,7 @@
 #include "devinfodevice.h"
 #include "devinfoprocessor.h"
 #include "devinfonetworkinterface.h"
+#include "devinfographic.h"
 #include "../shared/pciidstables.h"
 #include "../shared/usbidstables.h"
 
@@ -186,6 +187,8 @@ QString DevinfoDevice::icon() const
         return QString("computer");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QLatin1String("cpu");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
+        return QLatin1String("video-display");
     }
     return QString();
 }
@@ -208,6 +211,8 @@ QString DevinfoDevice::description() const
             return QObject::tr("WLAN Interface");
         }
         return QObject::tr("Networking Interface");
+    } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
+        return QObject::tr("Graphic display");
     }
     return deviceProperty(DevinfoDevice::DeviceDescription);
 }
@@ -220,6 +225,9 @@ bool DevinfoDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &typ
         }
         case Solid::DeviceInterface::NetworkInterface: {
             return (m_device.indexOf("/em") >= 0 || m_device.indexOf("/wlan") >= 0);
+        }
+        case Solid::DeviceInterface::Graphic: {
+            return (m_pnpinfo[DevinfoDevice::PnPClass] == "0x030000"); // VGA controller
         }
         default: {
             return false;
@@ -238,6 +246,9 @@ QObject *DevinfoDevice::createDeviceInterface(const Solid::DeviceInterface::Type
         }
         case Solid::DeviceInterface::NetworkInterface: {
             return new NetworkInterface(this);
+        }
+        case Solid::DeviceInterface::Graphic: {
+            return new Graphic(this);
         }
         default: {
             Q_ASSERT(false);
