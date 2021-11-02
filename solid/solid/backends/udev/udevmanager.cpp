@@ -90,7 +90,7 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
     qDebug() << "Path:" << device.sysfsPath();
     qDebug() << "Properties:" << device.deviceProperties();
     Q_FOREACH (const QString &key, device.deviceProperties()) {
-        qDebug() << "\t" << key << ":" << device.deviceProperty(key);
+        qDebug() << "\t" << key << ":" << device.deviceProperty(key.toLatin1());
     }
     qDebug() << "Driver:" << device.driver();
     qDebug() << "Subsystem:" << device.subsystem();
