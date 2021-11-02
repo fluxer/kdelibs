@@ -107,6 +107,8 @@ QString Solid::DeviceInterface::typeDescription(Type type)
         return QObject::tr("Smart Card Reader");
     case NetworkShare:
         return QObject::tr("Network Share");
+    case Graphic:
+        return QObject::tr("Graphic");
     case Last:
         return QString();
     }
