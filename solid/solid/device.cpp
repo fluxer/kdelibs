@@ -68,7 +68,8 @@
 #include <solid/ifaces/serialinterface.h>
 #include <solid/smartcardreader.h>
 #include <solid/ifaces/smartcardreader.h>
-
+#include <solid/graphic.h>
+#include <solid/ifaces/graphic.h>
 
 Solid::Device::Device(const QString &udi)
 {
@@ -237,6 +238,9 @@ const Solid::DeviceInterface *Solid::Device::asDeviceInterface(const DeviceInter
                 break;
             case DeviceInterface::NetworkShare:
                 iface = deviceinterface_cast(Ifaces::NetworkShare, NetworkShare, dev_iface);
+                break;
+            case DeviceInterface::Graphic:
+                iface = deviceinterface_cast(Ifaces::Graphic, Graphic, dev_iface);
                 break;
             case DeviceInterface::Unknown:
             case DeviceInterface::Last:

@@ -60,7 +60,8 @@ UDevManager::Private::Private()
         << "video4linux"
         << "net"
         << "usb"
-        << "input";
+        << "input"
+        << "pci";
     m_client = new UdevQt::Client(subsystems);
 }
 
@@ -111,7 +112,7 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
         return (sysfsDir.exists("sysdev") || sysfsDir.exists("cpufreq") || sysfsDir.exists("topology/core_id"));
     }
     if (device.subsystem() == QLatin1String("sound") &&
-            device.deviceProperty("SOUND_FORM_FACTOR") != "internal") {
+        device.deviceProperty("SOUND_FORM_FACTOR") != "internal") {
         return true;
     }
 
@@ -124,6 +125,11 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
         if (lastElement.startsWith("tty") && !path.startsWith("/devices/virtual")) {
             return true;
         }
+    }
+
+    if (device.subsystem() == QLatin1String("pci")) {
+        const QString pciclass = device.deviceProperty("PCI_CLASS");
+        return (pciclass == QLatin1String("30000")); // VGA controller
     }
 
     if (device.subsystem() == QLatin1String("input")) {
@@ -164,7 +170,8 @@ UDevManager::UDevManager(QObject *parent)
                              << Solid::DeviceInterface::DvbInterface
                              << Solid::DeviceInterface::Block
                              << Solid::DeviceInterface::Video
-                             << Solid::DeviceInterface::Button;
+                             << Solid::DeviceInterface::Button
+                             << Solid::DeviceInterface::Graphic;
 }
 
 UDevManager::~UDevManager()

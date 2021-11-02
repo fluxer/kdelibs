@@ -660,4 +660,12 @@
                 <property key="isMounted">true</property>
                 <property key="mountPoint">/media/nfs</property>
             </device>
+
+        <!-- Graphic -->
+        <device udi="/org/kde/solid/fakehw/pci_10de_0fc1_card0">
+            <property key="name">GK107 [GeForce GT 640]</property>
+            <property key="product">GK107 [GeForce GT 640]</property>
+            <property key="vendor">NVIDIA Corporation</property>
+            <property key="parent">/org/kde/solid/fakehw/computer</property>
+        </device>
 </machine>
