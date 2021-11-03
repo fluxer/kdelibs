@@ -142,13 +142,14 @@ QString UDevDevice::product() const
         }
 
         if (product.isEmpty()) {
+            const QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
             const QByteArray idmodelid(m_device.deviceProperty("ID_MODEL_ID").toLatin1());
-            if (!idmodelid.isEmpty()) {
+            if (!idvendorid.isEmpty() && !idmodelid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
-                    product = lookupPCIDevice(idmodelid.constData());
+                    product = lookupPCIDevice(idvendorid.constData(), idmodelid.constData());
                 } else if (idbus == QLatin1String("usb")) {
-                    product = lookupUSBDevice(idmodelid.constData());
+                    product = lookupUSBDevice(idvendorid.constData(), idmodelid.constData());
                 }
             }
         }
