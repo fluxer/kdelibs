@@ -34,4 +34,10 @@ Graphic::~Graphic()
 {
 }
 
+QString Graphic::driver() const
+{
+    const QByteArray pnpdriver = m_device->deviceProperty(DevinfoDevice::DeviceDriver);
+    return QString::fromLatin1(pnpdriver.constData(), pnpdriver.size());
+}
+
 #include "backends/devinfo/moc_devinfographic.cpp"

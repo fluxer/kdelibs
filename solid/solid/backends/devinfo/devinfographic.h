@@ -40,6 +40,8 @@ class Graphic : public DeviceInterface, virtual public Solid::Ifaces::Graphic
 public:
     Graphic(DevinfoDevice *device);
     virtual ~Graphic();
+
+    virtual QString driver() const;
 };
 }
 }
