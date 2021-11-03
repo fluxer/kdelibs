@@ -59,8 +59,6 @@ namespace Solid
          * - Camera : A digital camera
          * - PortableMediaPlayer: A portable media player
          * - NetworkInterface: A network interface
-         * - SerialInterface: A serial interface
-         * - SmartCardReader: A smart card reader interface
          * - NetworkShare: A network share interface
          * - Graphic: A graphic interface
          */
@@ -69,9 +67,8 @@ namespace Solid
                     OpticalDrive = 6, StorageVolume = 7, OpticalDisc = 8,
                     Camera = 9, PortableMediaPlayer = 10,
                     NetworkInterface = 11, AcAdapter = 12, Battery = 13,
-                    Button = 14, AudioInterface = 15, DvbInterface = 16, Video = 17,
-                    SerialInterface = 18, SmartCardReader = 19, NetworkShare = 20,
-                    Graphic = 21, Last = 0xffff  };
+                    Button = 14, AudioInterface = 15, Video = 16,
+                    NetworkShare = 17, Graphic = 18, Last = 0xffff  };
 
         /**
          * Destroys a DeviceInterface object.

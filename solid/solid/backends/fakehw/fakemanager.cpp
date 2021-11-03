@@ -68,10 +68,7 @@ FakeManager::FakeManager(QObject *parent, const QString &xmlFile)
                            << Solid::DeviceInterface::Battery
                            << Solid::DeviceInterface::Button
                            << Solid::DeviceInterface::AudioInterface
-                           << Solid::DeviceInterface::DvbInterface
                            << Solid::DeviceInterface::Video
-                           << Solid::DeviceInterface::SerialInterface
-                           << Solid::DeviceInterface::SmartCardReader
                            << Solid::DeviceInterface::NetworkShare
                            << Solid::DeviceInterface::Graphic;
 }

@@ -25,11 +25,15 @@ using namespace Solid::Backends::Fake;
 FakeGraphic::FakeGraphic(FakeDevice *device)
     : FakeDeviceInterface(device)
 {
-
 }
 
 FakeGraphic::~FakeGraphic()
 {
-
 }
+
+QString FakeGraphic::driver() const
+{
+    return fakeDevice()->property("driver").toString();
+}
+
 #include "backends/fakehw/moc_fakegraphic.cpp"

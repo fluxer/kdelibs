@@ -38,6 +38,9 @@ class FakeGraphic : public FakeDeviceInterface, virtual public Solid::Ifaces::Gr
 public:
     explicit FakeGraphic(FakeDevice *device);
     ~FakeGraphic();
+
+public Q_SLOTS:
+    virtual QString driver() const;
 };
 }
 }

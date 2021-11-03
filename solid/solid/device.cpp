@@ -60,14 +60,8 @@
 #include <solid/ifaces/button.h>
 #include <solid/audiointerface.h>
 #include <solid/ifaces/audiointerface.h>
-#include <solid/dvbinterface.h>
-#include <solid/ifaces/dvbinterface.h>
 #include <solid/video.h>
 #include <solid/ifaces/video.h>
-#include <solid/serialinterface.h>
-#include <solid/ifaces/serialinterface.h>
-#include <solid/smartcardreader.h>
-#include <solid/ifaces/smartcardreader.h>
 #include <solid/graphic.h>
 #include <solid/ifaces/graphic.h>
 
@@ -224,17 +218,8 @@ const Solid::DeviceInterface *Solid::Device::asDeviceInterface(const DeviceInter
             case DeviceInterface::AudioInterface:
                 iface = deviceinterface_cast(Ifaces::AudioInterface, AudioInterface, dev_iface);
                 break;
-            case DeviceInterface::DvbInterface:
-                iface = deviceinterface_cast(Ifaces::DvbInterface, DvbInterface, dev_iface);
-                break;
             case DeviceInterface::Video:
                 iface = deviceinterface_cast(Ifaces::Video, Video, dev_iface);
-                break;
-            case DeviceInterface::SerialInterface:
-                iface = deviceinterface_cast(Ifaces::SerialInterface, SerialInterface, dev_iface);
-                break;
-            case DeviceInterface::SmartCardReader:
-                iface = deviceinterface_cast(Ifaces::SmartCardReader, SmartCardReader, dev_iface);
                 break;
             case DeviceInterface::NetworkShare:
                 iface = deviceinterface_cast(Ifaces::NetworkShare, NetworkShare, dev_iface);
