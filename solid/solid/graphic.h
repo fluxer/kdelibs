@@ -38,6 +38,7 @@ namespace Solid
     class SOLID_EXPORT Graphic : public DeviceInterface
     {
         Q_OBJECT
+        Q_PROPERTY(QString driver READ driver)
         Q_DECLARE_PRIVATE(Graphic)
         friend class Device;
 
@@ -58,7 +59,6 @@ namespace Solid
          */
         virtual ~Graphic();
 
-
         /**
          * Get the Solid::DeviceInterface::Type of the Graphic device interface.
          *
@@ -66,6 +66,13 @@ namespace Solid
          * @see Solid::DeviceInterface::Type
          */
         static Type deviceInterfaceType() { return DeviceInterface::Graphic; }
+
+        /**
+         * Retrieves the driver used by the device.
+         *
+         * @return the driver name
+         */
+        QString driver() const;
     };
 }
 

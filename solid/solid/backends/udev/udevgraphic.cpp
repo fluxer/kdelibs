@@ -31,4 +31,9 @@ Graphic::~Graphic()
 {
 }
 
+QString Graphic::driver() const
+{
+    return m_device->udevDevice().driver();
+}
+
 #include "moc_udevgraphic.cpp"

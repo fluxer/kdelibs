@@ -31,8 +31,14 @@ Solid::Graphic::Graphic(QObject *backendObject)
 
 Solid::Graphic::~Graphic()
 {
-
 }
+
+QString Solid::Graphic::driver() const
+{
+    Q_D(const Graphic);
+    return_SOLID_CALL(Ifaces::Graphic *, d->backendObject(), QString(), driver());
+}
+
 
 #include "moc_graphic.cpp"
 
