@@ -55,8 +55,6 @@ UDevManager::Private::Private()
         << "processor"
         << "cpu"
         << "sound"
-        << "tty"
-        << "dvb"
         << "video4linux"
         << "net"
         << "usb"
@@ -116,17 +114,6 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
         return true;
     }
 
-    if (device.subsystem() == QLatin1String("tty")) {
-        QString path = device.deviceProperty("DEVPATH");
-
-        int lastSlash = path.length() - path.lastIndexOf(QLatin1String("/")) -1;
-        QByteArray lastElement = path.right(lastSlash).toLatin1();
-
-        if (lastElement.startsWith("tty") && !path.startsWith("/devices/virtual")) {
-            return true;
-        }
-    }
-
     if (device.subsystem() == QLatin1String("pci")) {
         const QString pciclass = device.deviceProperty("PCI_CLASS");
         return (pciclass == QLatin1String("30000")); // VGA controller
@@ -137,8 +124,7 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
         return (device.deviceProperty("ID_INPUT_KEY").toInt() == 1 && (deviceProperties.contains("KEY") || deviceProperties.contains("SW")));
     }
 
-    return device.subsystem() == QLatin1String("dvb") ||
-           device.subsystem() == QLatin1String("video4linux") ||
+    return device.subsystem() == QLatin1String("video4linux") ||
            device.subsystem() == QLatin1String("net") ||
            device.deviceProperty("ID_MEDIA_PLAYER").isEmpty() == false || // media-player-info recognized devices
            (device.deviceProperty("ID_GPHOTO2").toInt() == 1 && device.parent().deviceProperty("ID_GPHOTO2").toInt() != 1); // GPhoto2 cameras
@@ -164,10 +150,8 @@ UDevManager::UDevManager(QObject *parent)
 #endif
                              << Solid::DeviceInterface::AudioInterface
                              << Solid::DeviceInterface::NetworkInterface
-                             << Solid::DeviceInterface::SerialInterface
                              << Solid::DeviceInterface::Camera
                              << Solid::DeviceInterface::PortableMediaPlayer
-                             << Solid::DeviceInterface::DvbInterface
                              << Solid::DeviceInterface::Block
                              << Solid::DeviceInterface::Video
                              << Solid::DeviceInterface::Button

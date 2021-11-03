@@ -604,7 +604,6 @@ install(
     Solid/Device
     Solid/DeviceInterface
     Solid/DeviceNotifier
-    Solid/DvbInterface
     Solid/GenericInterface
     Solid/NetworkInterface
     Solid/NetworkShare

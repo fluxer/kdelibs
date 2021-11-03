@@ -97,14 +97,8 @@ QString Solid::DeviceInterface::typeDescription(Type type)
         return QObject::tr("Button");
     case AudioInterface:
         return QObject::tr("Audio Interface");
-    case DvbInterface:
-        return QObject::tr("Dvb Interface");
     case Video:
         return QObject::tr("Video");
-    case SerialInterface:
-        return QObject::tr("Serial Interface");
-    case SmartCardReader:
-        return QObject::tr("Smart Card Reader");
     case NetworkShare:
         return QObject::tr("Network Share");
     case Graphic:

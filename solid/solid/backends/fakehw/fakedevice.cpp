@@ -36,8 +36,7 @@
 #include "fakebattery.h"
 #include "fakebutton.h"
 #include "fakeaudiointerface.h"
-#include "fakedvbinterface.h"
-#include "fakesmartcardreader.h"
+#include "fakevideo.h"
 #include "fakegraphic.h"
 
 #include <QtCore/QStringList>
@@ -306,15 +305,11 @@ QObject *FakeDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     case Solid::DeviceInterface::AudioInterface:
         iface = new FakeAudioInterface(this);
         break;
-    case Solid::DeviceInterface::DvbInterface:
-        iface = new FakeDvbInterface(this);
-        break;
     case Solid::DeviceInterface::Video:
-        break;
-    case Solid::DeviceInterface::SmartCardReader:
-        iface = new FakeSmartCardReader(this);
-        break;
-    case Solid::DeviceInterface::SerialInterface:
+#warning TODO: Solid::Video tests
+#if 0
+        iface = new FakeVideo(this);
+#endif
         break;
     case Solid::DeviceInterface::NetworkShare:
         iface = new FakeNetworkShare(this);

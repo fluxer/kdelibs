@@ -33,19 +33,16 @@ set(solid_LIB_SRCS
     portablemediaplayer.cpp
     networkinterface.cpp
     networkshare.cpp
-    serialinterface.cpp
     acadapter.cpp
     battery.cpp
     button.cpp
     audiointerface.cpp
-    dvbinterface.cpp
     predicate.cpp
     predicateparse.cpp
     predicate_lexer.c
     predicate_parser.c
     powermanagement.cpp
     video.cpp
-    smartcardreader.cpp
     graphic.cpp
 
     ifaces/acadapter.cpp
@@ -58,11 +55,9 @@ set(solid_LIB_SRCS
     ifaces/device.cpp
     ifaces/deviceinterface.cpp
     ifaces/devicemanager.cpp
-    ifaces/dvbinterface.cpp
     ifaces/genericinterface.cpp
     ifaces/networkinterface.cpp
     ifaces/networkshare.cpp
-    ifaces/serialinterface.cpp
     ifaces/opticaldisc.cpp
     ifaces/portablemediaplayer.cpp
     ifaces/processor.cpp
@@ -70,7 +65,6 @@ set(solid_LIB_SRCS
     ifaces/storagevolume.cpp
     ifaces/storageaccess.cpp
     ifaces/video.cpp
-    ifaces/smartcardreader.cpp
     ifaces/graphic.cpp
 
     backends/shared/rootdevice.cpp
@@ -99,7 +93,6 @@ if(ENABLE_TESTING)
         backends/fakehw/fakecdrom.cpp
         backends/fakehw/fakedevice.cpp
         backends/fakehw/fakedeviceinterface.cpp
-        backends/fakehw/fakedvbinterface.cpp
         backends/fakehw/fakegenericinterface.cpp
         backends/fakehw/fakemanager.cpp
         backends/fakehw/fakenetworkshare.cpp
@@ -111,7 +104,6 @@ if(ENABLE_TESTING)
         backends/fakehw/fakestorageaccess.cpp
         backends/fakehw/fakevideo.cpp
         backends/fakehw/fakevolume.cpp
-        backends/fakehw/fakesmartcardreader.cpp
         backends/fakehw/fakegraphic.cpp
     )
 endif()
@@ -129,10 +121,8 @@ if(UDEV_FOUND)
         backends/udev/udevvideo.cpp
         backends/udev/udevaudiointerface.cpp
         backends/udev/udevnetworkinterface.cpp
-        backends/udev/udevserialinterface.cpp
         backends/udev/udevaudiointerface_p.cpp
         backends/udev/udevportablemediaplayer.cpp
-        backends/udev/udevdvbinterface.cpp
         backends/udev/udevblock.cpp
         backends/udev/udevbutton.cpp
         backends/udev/udevstorageaccess.cpp
@@ -261,13 +251,10 @@ install(
     battery.h
     button.h
     audiointerface.h
-    dvbinterface.h
     predicate.h
     powermanagement.h
     networking.h
     video.h 
-    serialinterface.h
-    smartcardreader.h
     networkshare.h
     graphic.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid

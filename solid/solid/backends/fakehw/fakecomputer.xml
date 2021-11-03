@@ -580,24 +580,6 @@
                     <property key="macAddress">0x001AEBC96415</property>
                 </device>
 
-            <!-- PCI device #3 -->
-            <device udi="/org/kde/solid/fakehw/pci_8843_6a11">
-                <property key="name">VisioTNT</property>
-                <property key="vendor">DigitalVid Ltd</property>
-                <property key="parent">/org/kde/solid/fakehw/pci_8086_2448</property>
-            </device>
-                <!-- Digital video broadcasting interface -->
-                <device udi="/org/kde/solid/fakehw/pci_8843_6a11_dvb1">
-                    <property key="name">DVB Interface</property>
-                    <property key="interfaces">DvbInterface</property>
-                    <property key="parent">/org/kde/solid/fakehw/pci_8843_6a11</property>
-                    <property key="device">/dev/broadcast0/demux</property>
-                    <property key="deviceAdapter">2</property>
-                    <property key="deviceType">demux</property>
-                    <property key="deviceIndex">1</property>
-                </device>
-
-
 
         <!-- Integrated Audio Controller -->
         <device udi="/org/kde/solid/fakehw/pci_8086_266e">

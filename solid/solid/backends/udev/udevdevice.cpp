@@ -29,10 +29,8 @@
 #include "udevcamera.h"
 #include "udevvideo.h"
 #include "udevportablemediaplayer.h"
-#include "udevdvbinterface.h"
 #include "udevblock.h"
 #include "udevaudiointerface.h"
-#include "udevserialinterface.h"
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
 #include "udevgraphic.h"
@@ -136,13 +134,6 @@ QString UDevDevice::product() const
             const NetworkInterface netIface(const_cast<UDevDevice *>(this));
             if (netIface.isLoopback()) {
                 product = QLatin1String("Loopback device Interface");
-            }
-        } else if(queryDeviceInterface(Solid::DeviceInterface::SerialInterface)) {
-            const SerialInterface serialIface(const_cast<UDevDevice *>(this));
-            if (serialIface.serialType() == Solid::SerialInterface::Platform) {
-                product = QLatin1String("Platform serial");
-            } else if (serialIface.serialType() == Solid::SerialInterface::Usb) {
-                product = QLatin1String("USB Serial Port");
             }
         }
 
@@ -283,10 +274,6 @@ QString UDevDevice::icon() const
         case Solid::AudioInterface::Modem:
             return QLatin1String("modem");
         }
-    } else if (queryDeviceInterface(Solid::DeviceInterface::SerialInterface)) {
-        // TODO - a serial device can be a modem, or just
-        // a COM port - need a new icon?
-        return QLatin1String("modem");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Button)) {
         return QLatin1String("insert-button");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Graphic)) {
@@ -510,9 +497,6 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::PortableMediaPlayer:
         return !deviceProperty("ID_MEDIA_PLAYER").isEmpty();
 
-    case Solid::DeviceInterface::DvbInterface:
-        return m_device.subsystem() ==  QLatin1String("dvb");
-
     case Solid::DeviceInterface::Block:
         return !deviceProperty("MAJOR").isEmpty();
 
@@ -524,9 +508,6 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
 
     case Solid::DeviceInterface::NetworkInterface:
         return m_device.subsystem() == QLatin1String("net");
-
-    case Solid::DeviceInterface::SerialInterface:
-        return m_device.subsystem() == QLatin1String("tty");
 
     case Solid::DeviceInterface::Button:
         return deviceProperty("ID_INPUT_KEY").toInt() == 1;
@@ -577,9 +558,6 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     case Solid::DeviceInterface::PortableMediaPlayer:
         return new PortableMediaPlayer(this);
 
-    case Solid::DeviceInterface::DvbInterface:
-        return new DvbInterface(this);
-
     case Solid::DeviceInterface::Block:
         return new Block(this);
 
@@ -591,9 +569,6 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
 
     case Solid::DeviceInterface::NetworkInterface:
         return new NetworkInterface(this);
-
-    case Solid::DeviceInterface::SerialInterface:
-        return new SerialInterface(this);
 
     case Solid::DeviceInterface::Button:
         return new Button(this);
