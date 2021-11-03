@@ -131,19 +131,12 @@ QString DevinfoDevice::vendor() const
     }
 
     // TODO: lookup either PCI or USB table depending on bus type
-    for (size_t i = 0; i < pciVendorTblSize; i++) {
-        if (qstrcmp(pnpvendor.constData() + 2, pciVendorTbl[i].vendorid) == 0) {
-            return QString::fromLatin1(pciVendorTbl[i].vendorname);
-        }
+    QString result = lookupPCIVendor(pnpvendor.constData() + 2);
+    if (result.isEmpty()) {
+        result = lookupUSBVendor(pnpvendor.constData() + 2);
     }
 
-    for (size_t i = 0; i < usbVendorTblSize; i++) {
-        if (qstrcmp(pnpvendor.constData() + 2, usbVendorTbl[i].vendorid) == 0) {
-            return QString::fromLatin1(usbVendorTbl[i].vendorname);
-        }
-    }
-
-    return QString();
+    return result;
 }
 
 QString DevinfoDevice::product() const
@@ -160,25 +153,19 @@ QString DevinfoDevice::product() const
         return QString::fromLatin1(hwmodel.constData());
     }
 
+    const QByteArray pnpvendor = devicePnP(DevinfoDevice::PnPVendor);
     const QByteArray pnpdevice = devicePnP(DevinfoDevice::PnPDevice);
-    if (pnpdevice.size() < 2) {
+    if (pnpvendor.size() < 2 || pnpdevice.size() < 2) {
         return QString();
     }
 
     // TODO: lookup either PCI or USB table depending on bus type
-    for (size_t i = 0; i < pciDeviceTblSize; i++) {
-        if (qstrcmp(pnpdevice.constData() + 2, pciDeviceTbl[i].deviceid) == 0) {
-            return QString::fromLatin1(pciDeviceTbl[i].devicename);
-        }
+    QString result = lookupPCIDevice(pnpvendor.constData() + 2, pnpdevice.constData() + 2);
+    if (result.isEmpty()) {
+        result = lookupUSBDevice(pnpvendor.constData() + 2, pnpdevice.constData() + 2);
     }
 
-    for (size_t i = 0; i < usbDeviceTblSize; i++) {
-        if (qstrcmp(pnpdevice.constData() + 2, usbDeviceTbl[i].deviceid) == 0) {
-            return QString::fromLatin1(usbDeviceTbl[i].devicename);
-        }
-    }
-
-    return QString();
+    return result;
 }
 
 QString DevinfoDevice::icon() const
@@ -227,7 +214,7 @@ bool DevinfoDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &typ
             return (m_device.indexOf("/em") >= 0 || m_device.indexOf("/wlan") >= 0);
         }
         case Solid::DeviceInterface::Graphic: {
-            return (m_pnpinfo[DevinfoDevice::PnPClass] == "0x030000"); // VGA controller
+            return (devicePnP(DevinfoDevice::PnPClass) == "0x030000"); // VGA controller
         }
         default: {
             return false;
