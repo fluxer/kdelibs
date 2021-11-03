@@ -93,7 +93,7 @@ private:
 };
 
 
-inline QStringList listFromListEntry(struct udev_list_entry *list)
+static inline QStringList listFromListEntry(struct udev_list_entry *list)
 {
     QStringList ret;
     struct udev_list_entry *entry;
