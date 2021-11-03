@@ -291,6 +291,7 @@ void SolidHwTest::testDeviceInterfaceIntrospection_data()
     QTest::newRow("DeviceInterface: Button") << "Button" << (int)Solid::DeviceInterface::Button;
     QTest::newRow("DeviceInterface: AudioInterface") << "AudioInterface" << (int)Solid::DeviceInterface::AudioInterface;
     QTest::newRow("DeviceInterface: Graphic") << "Graphic" << (int)Solid::DeviceInterface::Graphic;
+    QTest::newRow("DeviceInterface: Video") << "Video" << (int)Solid::DeviceInterface::Video;
 }
 
 void SolidHwTest::testDeviceInterfaceIntrospection()

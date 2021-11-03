@@ -26,11 +26,37 @@ using namespace Solid::Backends::Fake;
 FakeVideo::FakeVideo(FakeDevice *device)
     : FakeDeviceInterface(device)
 {
-
 }
 
 FakeVideo::~FakeVideo()
 {
-
 }
+
+QStringList FakeVideo::supportedProtocols() const
+{
+    QStringList res;
+
+    res << QLatin1String("video4linux");
+
+    return res;
+}
+
+QStringList FakeVideo::supportedDrivers(QString /*protocol*/) const
+{
+    QStringList res;
+
+    if (fakeDevice()->property("v4l2Support").toBool()) {
+        res << "video4linux2";
+    } else {
+        res << "video4linux1";
+    }
+
+    return res;
+}
+
+QVariant Solid::Backends::Fake::FakeVideo::driverHandle(const QString &driver) const
+{
+    return fakeDevice()->property("driverHandle").toString();
+}
+
 #include "backends/fakehw/moc_fakevideo.cpp"

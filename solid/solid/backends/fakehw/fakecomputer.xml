@@ -651,4 +651,23 @@
             <property key="parent">/org/kde/solid/fakehw/computer</property>
             <property key="driver">nouveau</property>
         </device>
+
+        <!-- Two Video devices -->
+        <device udi="/org/kde/solid/fakehw/pci_01ed_f0c1_video0">
+            <property key="name">Fake Video Device #1</property>
+            <property key="product">Fake Video Product</property>
+            <property key="vendor">Fake Video Vendor</property>
+            <property key="parent">/org/kde/solid/fakehw/computer</property>
+            <property key="v4l2Support">true</property>
+            <property key="driverHandle">/dev/video0</property>
+        </device>
+        <device udi="/org/kde/solid/fakehw/pci_ed01_c1f0_radio0">
+            <property key="name">Fake Video Device #2</property>
+            <property key="product">Fake Video Product 2</property>
+            <property key="vendor">Fake Video Vendor 2</property>
+            <property key="parent">/org/kde/solid/fakehw/computer</property>
+            <property key="v4l2Support">false</property>
+            <property key="driverHandle">/dev/radio0</property>
+        </device>
+
 </machine>
