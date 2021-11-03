@@ -39,6 +39,13 @@ namespace Ifaces
          * Destroys a Graphic object.
          */
         virtual ~Graphic();
+
+        /**
+         * Retrieves the driver used by the device.
+         *
+         * @return the driver name
+         */
+        virtual QString driver() const = 0;
     };
 }
 }
