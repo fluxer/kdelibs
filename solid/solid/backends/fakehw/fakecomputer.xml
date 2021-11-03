@@ -667,5 +667,6 @@
             <property key="product">GK107 [GeForce GT 640]</property>
             <property key="vendor">NVIDIA Corporation</property>
             <property key="parent">/org/kde/solid/fakehw/computer</property>
+            <property key="driver">nouveau</property>
         </device>
 </machine>
