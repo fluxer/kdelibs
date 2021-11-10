@@ -99,7 +99,8 @@ QString UDevDevice::vendor() const
         }
 
         if (vendor.isEmpty()) {
-            const QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
+            QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
+            idvendorid = normalizeID(idvendorid);
             if (!idvendorid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
@@ -142,8 +143,10 @@ QString UDevDevice::product() const
         }
 
         if (product.isEmpty()) {
-            const QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
-            const QByteArray idmodelid(m_device.deviceProperty("ID_MODEL_ID").toLatin1());
+            QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
+            idvendorid = normalizeID(idvendorid);
+            QByteArray idmodelid(m_device.deviceProperty("ID_MODEL_ID").toLatin1());
+            idmodelid = normalizeID(idmodelid);
             if (!idvendorid.isEmpty() && !idmodelid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
