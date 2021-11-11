@@ -174,13 +174,7 @@ bool KPty::open()
 
 #else
 
-#ifdef HAVE_POSIX_OPENPT
   d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
-#elif defined(PTM_DEVICE)
-  d->masterFd = KDE_open(PTM_DEVICE, O_RDWR|O_NOCTTY);
-#else
-# error No method to open a PTY master detected.
-#endif
   if (d->masterFd >= 0)
   {
 #ifdef HAVE_PTSNAME_R

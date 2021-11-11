@@ -130,18 +130,6 @@ if (UNIX)
   else (openpty_in_libc OR openpty_in_libutil)
     set(HAVE_OPENPTY 0)
 
-    execute_process(
-      COMMAND sh -c "
-        for ptm in ptc ptmx ptm ptym/clone; do
-          if test -c /dev/$ptm; then
-            echo /dev/$ptm
-            break
-          fi
-        done"
-      OUTPUT_VARIABLE PTM_DEVICE
-      OUTPUT_STRIP_TRAILING_WHITESPACE)
-    message(STATUS "PTY multiplexer: ${PTM_DEVICE}")
-
     check_function_exists(revoke     HAVE_REVOKE)
     check_function_exists(grantpt    HAVE_GRANTPT)
     check_function_exists(unlockpt   HAVE_UNLOCKPT)
