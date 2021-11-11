@@ -410,12 +410,7 @@ void KPty::setCTty()
 #endif
 
     // make our new process group the foreground group on the pty
-    int pgrp = getpid();
-#if defined(_POSIX_VERSION)
-    tcsetpgrp(d->slaveFd, pgrp);
-#elif defined(TIOCSPGRP)
-    ioctl(d->slaveFd, TIOCSPGRP, (char *)&pgrp);
-#endif
+    ::tcsetpgrp(d->slaveFd, ::getpid());
 }
 
 void KPty::login(const char *user, const char *remotehost)
@@ -472,7 +467,7 @@ void KPty::login(const char *user, const char *remotehost)
     l_struct.ut_type = USER_PROCESS;
 #endif
 #ifdef HAVE_STRUCT_UTMP_UT_PID
-    l_struct.ut_pid = getpid();
+    l_struct.ut_pid = ::getpid();
 #endif
 #ifdef HAVE_STRUCT_UTMP_UT_SESSION
     l_struct.ut_session = getsid(0);
