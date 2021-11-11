@@ -21,7 +21,6 @@
 */
 
 #include "kfileitemdelegate.h"
-#include "imagefilter_p.h"
 
 #include <QApplication>
 #include <QStyle>
@@ -696,7 +695,7 @@ void KFileItemDelegate::Private::drawTextItems(QPainter *painter, const QTextLay
         p.drawImage(padding, padding, pixmap.toImage());
         p.end();
 
-        KIO::ImageFilter::shadowBlur(image, blurFactor, shadowColor);
+        KIconEffect::shadowblur(image, blurFactor, shadowColor);
 
         painter->drawImage(boundingRect.topLeft() - QPoint(padding, padding) + shadowOffset.toPoint(), image);
         painter->drawPixmap(boundingRect.topLeft(), pixmap);

@@ -56,7 +56,6 @@ set(kiocore_STAT_SRCS
     kio/fileundomanager.cpp
     kio/forwardingslavebase.cpp
     kio/global.cpp
-    kio/imagefilter.cpp
     kio/job.cpp
     kio/jobuidelegate.cpp
     kio/joburlcache.cpp
