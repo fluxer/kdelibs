@@ -74,11 +74,6 @@ extern "C" {
 #endif
 }
 
-#if defined (_HPUX_SOURCE)
-# define _TERMIOS_INCLUDED
-# include <bsdtty.h>
-#endif
-
 #ifdef HAVE_SYS_STROPTS_H
 # include <sys/stropts.h>	// Defines I_PUSH
 # define _NEW_TTY_CTRL
