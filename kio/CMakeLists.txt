@@ -50,7 +50,6 @@ set(kiocore_STAT_SRCS
     kio/copyjob.cpp
     kio/dataprotocol.cpp
     kio/dataslave.cpp
-    kio/defaultviewadapter.cpp
     kio/deletejob.cpp
     kio/directorysizejob.cpp
     kio/filejob.cpp

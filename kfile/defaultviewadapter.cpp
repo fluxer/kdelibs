@@ -1,5 +1,5 @@
 /*******************************************************************************
- *   Copyright (C) 2008 by Fredrik Höglund <fredrik@kde.org>                   *
+ *   Copyright (C) 2008 by Peter Penz <peter.penz@gmx.at>                      *
  *                                                                             *
  *   This library is free software; you can redistribute it and/or             *
  *   modify it under the terms of the GNU Library General Public               *
@@ -17,37 +17,46 @@
  *   Boston, MA 02110-1301, USA.                                               *
  *******************************************************************************/
 
-#ifndef KABSTRACTVIEWADAPTER_H
-#define KABSTRACTVIEWADAPTER_H
+#include "defaultviewadapter_p.h"
 
-#include <QObject>
+#include <QAbstractItemView>
+#include <QScrollBar>
 
-#include <QAbstractItemModel>
-#include <QModelIndex>
-#include <QPalette>
-#include <QRect>
-#include <QSize>
-
-/*
- * Interface used by KFilePreviewGenerator to generate previews
- * for files. The interface allows KFilePreviewGenerator to be
- * independent from the view implementation.
- */
-class KAbstractViewAdapter : public QObject
+DefaultViewAdapter::DefaultViewAdapter(QAbstractItemView* view, QObject* parent) :
+    QObject(parent),
+    m_view(view)
 {
+}
 
-public:
-    enum Signal { ScrollBarValueChanged };
+QAbstractItemModel *DefaultViewAdapter::model() const
+{
+    return m_view->model();
+}
 
-    KAbstractViewAdapter(QObject *parent) : QObject(parent) {}
-    virtual ~KAbstractViewAdapter() {}
-    virtual QAbstractItemModel *model() const = 0;
-    virtual QSize iconSize() const = 0;
-    virtual QPalette palette() const = 0;
-    virtual QRect visibleArea() const = 0;
-    virtual QRect visualRect(const QModelIndex &index) const = 0;
-    virtual void connect(Signal signal, QObject *receiver, const char *slot) = 0;
-};
+QSize DefaultViewAdapter::iconSize() const
+{
+    return m_view->iconSize();
+}
 
-#endif
+QPalette DefaultViewAdapter::palette() const
+{
+    return m_view->palette();
+}
 
+QRect DefaultViewAdapter::visibleArea() const
+{
+    return m_view->viewport()->rect();
+}
+
+QRect DefaultViewAdapter::visualRect(const QModelIndex& index) const
+{
+    return m_view->visualRect(index);
+}
+
+void DefaultViewAdapter::connect(Signal signal, QObject* receiver, const char* slot)
+{
+    if (signal == ScrollBarValueChanged) {
+        QObject::connect(m_view->horizontalScrollBar(), SIGNAL(valueChanged(int)), receiver, slot);
+        QObject::connect(m_view->verticalScrollBar(), SIGNAL(valueChanged(int)), receiver, slot);
+    }
+}
