@@ -176,8 +176,7 @@ QSet<Solid::DeviceInterface::Type> UDevManager::supportedInterfaces() const
 QStringList UDevManager::allDevices()
 {
     QStringList res;
-    const UdevQt::DeviceList deviceList = d->m_client->allDevices();
-    foreach (const UdevQt::Device &device, deviceList) {
+    foreach (const UdevQt::Device &device, d->m_client->allDevices()) {
         if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
             res << udiPrefix() + device.sysfsPath();
         }
