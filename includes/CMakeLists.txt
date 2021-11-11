@@ -456,7 +456,6 @@ install(
     KIO/Connection
     KIO/CopyInfo
     KIO/CopyJob
-    KIO/DavJob
     KIO/DeleteJob
     KIO/FileCopyJob
     KIO/FileJob
