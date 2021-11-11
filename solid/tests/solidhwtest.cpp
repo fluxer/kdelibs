@@ -58,9 +58,9 @@ void SolidHwTest::testAllDevices()
 
     // Verify that the framework reported correctly the devices available
     // in the backend.
-    QSet<QString> expected_udis, received_udis;
+    QStringList expected_udis, received_udis;
 
-    expected_udis = QSet<QString>::fromList(fakeManager->allDevices());
+    expected_udis = fakeManager->allDevices();
 
     foreach (const Solid::Device &dev , devices)
     {

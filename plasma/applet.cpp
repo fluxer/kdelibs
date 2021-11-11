@@ -1959,11 +1959,11 @@ QString AppletPrivate::configWindowTitle() const
     return i18nc("@title:window", "%1 Settings", q->name());
 }
 
-QSet<QString> AppletPrivate::knownCategories()
+QStringList AppletPrivate::knownCategories()
 {
     // this is to trick the tranlsation tools into making the correct
     // strings for translation
-    QSet<QString> categories = s_customCategories;
+    QStringList categories = s_customCategories;
     categories << QString(I18N_NOOP("Accessibility")).toLower()
                << QString(I18N_NOOP("Application Launchers")).toLower()
                << QString(I18N_NOOP("Astronomy")).toLower()
@@ -2256,7 +2256,7 @@ QStringList Applet::listCategories(const QString &parentApp, bool visibleOnly)
     AppletPrivate::filterOffers(offers);
 
     QStringList categories;
-    QSet<QString> known = AppletPrivate::knownCategories();
+    QStringList known = AppletPrivate::knownCategories();
     foreach (const KService::Ptr &applet, offers) {
         QString appletCategory = applet->property("X-KDE-PluginInfo-Category").toString();
         if (visibleOnly && applet->noDisplay()) {
@@ -2286,12 +2286,12 @@ QStringList Applet::listCategories(const QString &parentApp, bool visibleOnly)
 
 void Applet::setCustomCategories(const QStringList &categories)
 {
-    AppletPrivate::s_customCategories = QSet<QString>::fromList(categories);
+    AppletPrivate::s_customCategories = categories;
 }
 
 QStringList Applet::customCategories()
 {
-    return AppletPrivate::s_customCategories.toList();
+    return AppletPrivate::s_customCategories;
 }
 
 Applet *Applet::loadPlasmoid(const QString &path, uint appletId, const QVariantList &args)
@@ -2878,7 +2878,7 @@ uint AppletPrivate::s_maxAppletId = 0;
 int AppletPrivate::s_maxZValue = 0;
 int AppletPrivate::s_minZValue = 0;
 PackageStructure::Ptr AppletPrivate::packageStructure(0);
-QSet<QString> AppletPrivate::s_customCategories;
+QStringList AppletPrivate::s_customCategories;
 
 AppletOverlayWidget::AppletOverlayWidget(QGraphicsWidget *parent)
     : QGraphicsWidget(parent),

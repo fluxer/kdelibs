@@ -134,7 +134,7 @@ QList<Solid::Device> Solid::Device::listFromQuery(const Predicate &predicate,
             continue;
         }
 
-        QSet<QString> udis;
+        QStringList udis;
         if (predicate.isValid()) {
             QSet<DeviceInterface::Type> supportedTypes = backend->supportedInterfaces();
             if (supportedTypes.intersect(usedTypes).isEmpty()) {
@@ -142,10 +142,10 @@ QList<Solid::Device> Solid::Device::listFromQuery(const Predicate &predicate,
             }
 
             foreach (DeviceInterface::Type type, supportedTypes) {
-                udis += QSet<QString>::fromList(backend->devicesFromQuery(parentUdi, type));
+                udis += backend->devicesFromQuery(parentUdi, type);
             }
         } else {
-            udis += QSet<QString>::fromList(backend->allDevices());
+            udis += backend->allDevices();
         }
 
         foreach (const QString &udi, udis) {

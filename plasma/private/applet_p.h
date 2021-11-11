@@ -134,7 +134,7 @@ public:
     void propagateConfigChanged();
 
     static KActionCollection* defaultActions(QObject *parent);
-    static QSet<QString> knownCategories();
+    static QStringList knownCategories();
     static void filterOffers(QList<KService::Ptr> &offers);
     static QString parentAppConstraint(const QString &parentApp = QString());
 
@@ -142,7 +142,7 @@ public:
     static int s_maxZValue;
     static int s_minZValue;
     static PackageStructure::Ptr packageStructure;
-    static QSet<QString> s_customCategories;
+    static QStringList s_customCategories;
 
     //TODO: examine the usage of memory here; there's a pretty large
     //      number of members at this point.
