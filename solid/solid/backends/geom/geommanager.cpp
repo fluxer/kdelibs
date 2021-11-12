@@ -31,24 +31,45 @@ using namespace Solid::Backends::Geom;
 class GeomManager::Private
 {
 public:
-    Private();
+    Private(GeomManager *parent);
     ~Private();
 
+    bool isOfInterest(const DevdQt::Device &device);
+
     QSet<Solid::DeviceInterface::Type> m_supportedInterfaces;
+    DevdQt::Client *m_client;
+    GeomManager *m_parent;
 };
 
-GeomManager::Private::Private()
+GeomManager::Private::Private(GeomManager *parent)
+    : m_client(new DevdQt::Client()),
+    m_parent(parent)
 {
 }
 
 GeomManager::Private::~Private()
 {
+    delete m_client;
+}
+
+bool GeomManager::Private::isOfInterest(const DevdQt::Device &device)
+{
+    const QByteArray devicename(device.device());
+    const QString devicestring = QString::fromLatin1(devicename.constData(), devicename.size());
+    const QString deviceudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devicestring);
+    const QStringList allDev = m_parent->allDevices();
+    // qDebug() << Q_FUNC_INFO << deviceudi << allDev;
+    return (allDev.contains(deviceudi));
 }
 
 GeomManager::GeomManager(QObject *parent)
     : Solid::Ifaces::DeviceManager(parent),
-      d(new Private)
+      d(new Private(this))
 {
+    connect(d->m_client, SIGNAL(deviceAdded(DevdQt::Device)), this, SLOT(slotDeviceAdded(DevdQt::Device)));
+    connect(d->m_client, SIGNAL(deviceRemoved(DevdQt::Device)), this, SLOT(slotDeviceRemoved(DevdQt::Device)));
+    connect(d->m_client, SIGNAL(deviceChanged(DevdQt::Device)), this, SLOT(slotDeviceChanged(DevdQt::Device)));
+
     d->m_supportedInterfaces
         << Solid::DeviceInterface::Block
         << Solid::DeviceInterface::StorageDrive
@@ -141,4 +162,28 @@ QObject *GeomManager::createDevice(const QString &udi)
 
     qWarning() << "cannot create device for UDI" << udi;
     return 0;
+}
+
+
+void GeomManager::slotDeviceAdded(const DevdQt::Device &device)
+{
+    if (d->isOfInterest(device)) {
+        emit deviceAdded(udiPrefix() + device.device());
+    }
+}
+
+void GeomManager::slotDeviceRemoved(const DevdQt::Device &device)
+{
+    if (d->isOfInterest(device)) {
+        emit deviceRemoved(udiPrefix() + device.device());
+    }
+}
+
+void GeomManager::slotDeviceChanged(const DevdQt::Device &device)
+{
+    if (d->isOfInterest(device)) {
+        // TODO: check if device has filesystem/content
+        bool hascontent = false;
+        emit contentChanged(udiPrefix() + device.device(), hascontent);
+    }
 }

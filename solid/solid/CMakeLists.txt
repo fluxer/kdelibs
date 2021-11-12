@@ -207,6 +207,13 @@ if(GEOM_FOUND)
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${QT_QTDBUS_LIBRARY} ${GEOM_LIBRARIES})
 endif()
 
+if (DEVINFO_FOUND OR GEOM_FOUND)
+    message(STATUS "Building device notification via devd.")
+    set(solid_LIB_SRCS ${solid_LIB_SRCS}
+        backends/shared/devdqt.cpp
+    )
+endif()
+
 set_source_files_properties(
     org.freedesktop.PowerManagement.xml
     org.freedesktop.PowerManagement.Inhibit.xml
