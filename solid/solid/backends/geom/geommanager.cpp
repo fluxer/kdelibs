@@ -34,7 +34,7 @@ public:
     Private(GeomManager *parent);
     ~Private();
 
-    bool isOfInterest(const DevdQt::Device &device);
+    bool isOfInterest(const QString &udi);
 
     QSet<Solid::DeviceInterface::Type> m_supportedInterfaces;
     DevdQt::Client *m_client;
@@ -52,14 +52,10 @@ GeomManager::Private::~Private()
     delete m_client;
 }
 
-bool GeomManager::Private::isOfInterest(const DevdQt::Device &device)
+bool GeomManager::Private::isOfInterest(const QString &udi)
 {
-    const QByteArray devicename(device.device());
-    const QString devicestring = QString::fromLatin1(devicename.constData(), devicename.size());
-    const QString deviceudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devicestring);
     const QStringList allDev = m_parent->allDevices();
-    // qDebug() << Q_FUNC_INFO << deviceudi << allDev;
-    return (allDev.contains(deviceudi));
+    return (allDev.contains(udi));
 }
 
 GeomManager::GeomManager(QObject *parent)
@@ -166,23 +162,32 @@ QObject *GeomManager::createDevice(const QString &udi)
 
 void GeomManager::slotDeviceAdded(const DevdQt::Device &device)
 {
-    if (d->isOfInterest(device)) {
-        emit deviceAdded(udiPrefix() + device.device());
+    const QByteArray devname(device.device());
+    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devtring);
+    if (d->isOfInterest(devudi)) {
+        emit deviceAdded(devudi);
     }
 }
 
 void GeomManager::slotDeviceRemoved(const DevdQt::Device &device)
 {
-    if (d->isOfInterest(device)) {
-        emit deviceRemoved(udiPrefix() + device.device());
+    const QByteArray devname(device.device());
+    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devtring);
+    if (d->isOfInterest(devudi)) {
+        emit deviceRemoved(devudi);
     }
 }
 
 void GeomManager::slotDeviceChanged(const DevdQt::Device &device)
 {
-    if (d->isOfInterest(device)) {
+    const QByteArray devname(device.device());
+    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devtring);
+    if (d->isOfInterest(devudi)) {
         // TODO: check if device has filesystem/content
         bool hascontent = false;
-        emit contentChanged(udiPrefix() + device.device(), hascontent);
+        emit contentChanged(devudi, hascontent);
     }
 }

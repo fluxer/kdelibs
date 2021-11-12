@@ -44,7 +44,7 @@ public:
     Private(DevinfoManager *parent);
     ~Private();
 
-    bool isOfInterest(const DevdQt::Device &device);
+    bool isOfInterest(const QString &udi);
 
     QSet<Solid::DeviceInterface::Type> m_supportedInterfaces;
     DevdQt::Client *m_client;
@@ -62,14 +62,10 @@ DevinfoManager::Private::~Private()
     delete m_client;
 }
 
-bool DevinfoManager::Private::isOfInterest(const DevdQt::Device &device)
+bool DevinfoManager::Private::isOfInterest(const QString &udi)
 {
-    const QByteArray devicename(device.device());
-    const QString devicestring = QString::fromLatin1(devicename.constData(), devicename.size());
-    const QString deviceudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devicestring);
     const QStringList allDev = m_parent->allDevices();
-    // qDebug() << Q_FUNC_INFO << deviceudi << allDev;
-    return (allDev.contains(deviceudi));
+    return (allDev.contains(udi));
 }
 
 DevinfoManager::DevinfoManager(QObject *parent)
@@ -161,14 +157,20 @@ QObject *DevinfoManager::createDevice(const QString &udi)
 
 void DevinfoManager::slotDeviceAdded(const DevdQt::Device &device)
 {
-    if (d->isOfInterest(device)) {
-        emit deviceAdded(udiPrefix() + device.device());
+    const QByteArray devname(device.device());
+    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devtring);
+    if (d->isOfInterest(devudi)) {
+        emit deviceAdded(devudi);
     }
 }
 
 void DevinfoManager::slotDeviceRemoved(const DevdQt::Device &device)
 {
-    if (d->isOfInterest(device)) {
-        emit deviceRemoved(udiPrefix() + device.device());
+    const QByteArray devname(device.device());
+    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devtring);
+    if (d->isOfInterest(devudi)) {
+        emit deviceRemoved(devudi);
     }
 }
