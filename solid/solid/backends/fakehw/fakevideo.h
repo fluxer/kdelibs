@@ -39,6 +39,11 @@ class FakeVideo : public FakeDeviceInterface, virtual public Solid::Ifaces::Vide
 public:
     explicit FakeVideo(FakeDevice *device);
     ~FakeVideo();
+
+public Q_SLOTS:
+    virtual QStringList supportedProtocols() const;
+    virtual QStringList supportedDrivers(QString protocol = QString()) const;
+    virtual QVariant driverHandle(const QString &driver) const;
 };
 }
 }

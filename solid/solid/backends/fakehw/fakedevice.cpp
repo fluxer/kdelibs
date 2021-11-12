@@ -306,10 +306,7 @@ QObject *FakeDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
         iface = new FakeAudioInterface(this);
         break;
     case Solid::DeviceInterface::Video:
-#warning TODO: Solid::Video tests
-#if 0
         iface = new FakeVideo(this);
-#endif
         break;
     case Solid::DeviceInterface::NetworkShare:
         iface = new FakeNetworkShare(this);

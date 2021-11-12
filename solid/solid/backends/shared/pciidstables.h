@@ -19033,6 +19033,16 @@ static const struct pciDeviceTblData {
 };
 static const size_t pciDeviceTblSize = sizeof(pciDeviceTbl) / sizeof(pciDeviceTblData);
 
+// some but not all device vendor/product properties (e.g. ID_VENDOR_ID and ID_MODEL_ID on network
+// devices on Linux) have "0x" prefix, get rid of that inconsistency
+static QByteArray normalizeID(const QByteArray &id)
+{
+    if (id.startsWith("0x")) {
+        return id.mid(2, id.size() - 2);
+    }
+    return id;
+}
+
 static QString lookupPCIVendor(const char* const vendor)
 {
     for (size_t i = 0; i < pciVendorTblSize; i++) {

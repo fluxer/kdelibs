@@ -20,7 +20,6 @@
 #include "kfilepreviewgenerator.h"
 
 #include "../kio/kio/defaultviewadapter_p.h" // KDE5 TODO: move this class here
-#include "../kio/kio/imagefilter_p.h"
 #include <kconfiggroup.h>
 #include <kfileitem.h>
 #include <kiconeffect.h>
@@ -110,7 +109,7 @@ public:
         p.fillRect(image.rect().adjusted(3, 3, -3, -3), Qt::black);
         p.end();
 
-        KIO::ImageFilter::shadowBlur(image, 3, Qt::black);
+        KIconEffect::shadowBlur(image, 3, Qt::black);
 
         QPixmap pixmap = QPixmap::fromImage(image);
         m_tiles[TopLeftCorner]     = pixmap.copy(0, 0, 8, 8);

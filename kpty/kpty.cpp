@@ -74,11 +74,6 @@ extern "C" {
 #endif
 }
 
-#if defined (_HPUX_SOURCE)
-# define _TERMIOS_INCLUDED
-# include <bsdtty.h>
-#endif
-
 #ifdef HAVE_SYS_STROPTS_H
 # include <sys/stropts.h>	// Defines I_PUSH
 # define _NEW_TTY_CTRL
@@ -174,13 +169,7 @@ bool KPty::open()
 
 #else
 
-#ifdef HAVE_POSIX_OPENPT
   d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
-#elif defined(PTM_DEVICE)
-  d->masterFd = KDE_open(PTM_DEVICE, O_RDWR|O_NOCTTY);
-#else
-# error No method to open a PTY master detected.
-#endif
   if (d->masterFd >= 0)
   {
 #ifdef HAVE_PTSNAME_R
@@ -421,12 +410,7 @@ void KPty::setCTty()
 #endif
 
     // make our new process group the foreground group on the pty
-    int pgrp = getpid();
-#if defined(_POSIX_VERSION)
-    tcsetpgrp(d->slaveFd, pgrp);
-#elif defined(TIOCSPGRP)
-    ioctl(d->slaveFd, TIOCSPGRP, (char *)&pgrp);
-#endif
+    ::tcsetpgrp(d->slaveFd, ::getpid());
 }
 
 void KPty::login(const char *user, const char *remotehost)
@@ -483,7 +467,7 @@ void KPty::login(const char *user, const char *remotehost)
     l_struct.ut_type = USER_PROCESS;
 #endif
 #ifdef HAVE_STRUCT_UTMP_UT_PID
-    l_struct.ut_pid = getpid();
+    l_struct.ut_pid = ::getpid();
 #endif
 #ifdef HAVE_STRUCT_UTMP_UT_SESSION
     l_struct.ut_session = getsid(0);

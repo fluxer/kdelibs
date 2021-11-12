@@ -213,6 +213,16 @@ public:
      */
     static void overlay(QImage &src, QImage &overlay);
 
+    /**
+     * Blurs the alpha channel of the image and recolors it to the specified color.
+     * The image must have transparent padding on all sides, or the shadow will be clipped.
+     *
+     * @param image The image
+     * @param radius The radius of the effect
+     * @param color The color with which the alpha parts of @p image are recolored
+     */
+    static void shadowBlur(QImage &image, float radius, const QColor &color);
+
 private:
     KIconEffectPrivate* const d;
 };

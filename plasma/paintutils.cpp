@@ -25,6 +25,7 @@
 #include <QPaintEngine>
 #include <QPixmap>
 
+#include "kiconeffect.h"
 #include "private/effects/blur.cpp"
 #include "private/effects/halopainter_p.h"
 #include "svg.h"
@@ -37,19 +38,11 @@ namespace PaintUtils
 
 void shadowBlur(QImage &image, int radius, const QColor &color)
 {
-    if (radius < 1) {
-        return;
-    }
-    if (image.isNull()) {
+    if (radius < 1 || image.isNull()) {
         return;
     }
 
-    expblur<16, 7>(image, radius);
-
-    QPainter p(&image);
-    p.setCompositionMode(QPainter::CompositionMode_SourceIn);
-    p.fillRect(image.rect(), color);
-    p.end();
+    KIconEffect::shadowBlur(image, float(radius), color);
 }
 
 //TODO: we should have shadowText methods that paint the results directly into a QPainter passed in

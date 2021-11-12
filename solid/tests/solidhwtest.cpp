@@ -28,6 +28,8 @@
 #include <solid/processor.h>
 #include <solid/storageaccess.h>
 #include <solid/storagevolume.h>
+#include <solid/video.h>
+#include <solid/graphic.h>
 #include <solid/predicate.h>
 #include "solid/managerbase_p.h"
 
@@ -56,9 +58,9 @@ void SolidHwTest::testAllDevices()
 
     // Verify that the framework reported correctly the devices available
     // in the backend.
-    QSet<QString> expected_udis, received_udis;
+    QStringList expected_udis, received_udis;
 
-    expected_udis = QSet<QString>::fromList(fakeManager->allDevices());
+    expected_udis = fakeManager->allDevices();
 
     foreach (const Solid::Device &dev , devices)
     {
@@ -291,6 +293,7 @@ void SolidHwTest::testDeviceInterfaceIntrospection_data()
     QTest::newRow("DeviceInterface: Button") << "Button" << (int)Solid::DeviceInterface::Button;
     QTest::newRow("DeviceInterface: AudioInterface") << "AudioInterface" << (int)Solid::DeviceInterface::AudioInterface;
     QTest::newRow("DeviceInterface: Graphic") << "Graphic" << (int)Solid::DeviceInterface::Graphic;
+    QTest::newRow("DeviceInterface: Video") << "Video" << (int)Solid::DeviceInterface::Video;
 }
 
 void SolidHwTest::testDeviceInterfaceIntrospection()
@@ -483,6 +486,54 @@ void SolidHwTest::slotPropertyChanged(const QMap<QString,int> &changes)
     m_changesList << changes;
 }
 
+#define SOLID_TEST_IFACE(UDI, DEVIFACE, SOLIFACE) \
+    { \
+        Solid::Device device(UDI); \
+        \
+        Solid::DeviceInterface *iface = device.asDeviceInterface(DEVIFACE); \
+        Solid::DeviceInterface *iface2 = device.as<SOLIFACE>(); \
+        \
+        QVERIFY(device.isDeviceInterface(DEVIFACE)); \
+        QVERIFY(iface != 0); \
+        QCOMPARE(iface, iface2); \
+        QCOMPARE(device.as<Solid::GenericInterface>(), device.as<Solid::GenericInterface>()); \
+        \
+        QPointer<SOLIFACE> p = device.as<SOLIFACE>(); \
+        QVERIFY(p != 0); \
+        fakeManager->unplug(UDI); \
+        QVERIFY(p == 0); \
+        fakeManager->plug(UDI); \
+    }
+
+// any interface that is not tested with the test cases above should be tested
+// with this method
+void SolidHwTest::testMisc()
+{
+    SOLID_TEST_IFACE("/org/kde/solid/fakehw/pci_10de_0fc1_card0", Solid::DeviceInterface::Graphic, Solid::Graphic);
+    {
+        Solid::Device device("/org/kde/solid/fakehw/pci_10de_0fc1_card0");
+        Solid::Graphic* deviceptr = device.as<Solid::Graphic>();
+        QCOMPARE(deviceptr->driver(), QString("nouveau"));
+    }
+
+    SOLID_TEST_IFACE("/org/kde/solid/fakehw/pci_01ed_f0c1_video0", Solid::DeviceInterface::Video, Solid::Video);
+    {
+        Solid::Device device("/org/kde/solid/fakehw/pci_01ed_f0c1_video0");
+        Solid::Video* deviceptr = device.as<Solid::Video>();
+        QCOMPARE(deviceptr->supportedProtocols(), QStringList() << QString("video4linux"));
+        QCOMPARE(deviceptr->supportedDrivers(), QStringList() << QString("video4linux2"));
+        QCOMPARE(deviceptr->driverHandle("foo"), QVariant("/dev/video0"));
+    }
+
+    SOLID_TEST_IFACE("/org/kde/solid/fakehw/pci_ed01_c1f0_radio0", Solid::DeviceInterface::Video, Solid::Video);
+    {
+        Solid::Device device("/org/kde/solid/fakehw/pci_ed01_c1f0_radio0");
+        Solid::Video* deviceptr = device.as<Solid::Video>();
+        QCOMPARE(deviceptr->supportedProtocols(), QStringList() << QString("video4linux"));
+        QCOMPARE(deviceptr->supportedDrivers(), QStringList() << QString("video4linux1"));
+        QCOMPARE(deviceptr->driverHandle("bar"), QVariant("/dev/radio0"));
+    }
+}
 
 #include "moc_solidhwtest.cpp"
 

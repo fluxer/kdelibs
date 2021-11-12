@@ -50,7 +50,6 @@ set(kiocore_STAT_SRCS
     kio/copyjob.cpp
     kio/dataprotocol.cpp
     kio/dataslave.cpp
-    kio/davjob.cpp
     kio/defaultviewadapter.cpp
     kio/deletejob.cpp
     kio/directorysizejob.cpp
@@ -58,7 +57,6 @@ set(kiocore_STAT_SRCS
     kio/fileundomanager.cpp
     kio/forwardingslavebase.cpp
     kio/global.cpp
-    kio/imagefilter.cpp
     kio/job.cpp
     kio/jobuidelegate.cpp
     kio/joburlcache.cpp
@@ -285,7 +283,6 @@ install(
     kio/thumbcreator.h
     kio/thumbsequencecreator.h
     kio/metainfojob.h
-    kio/davjob.h
     kio/directorysizejob.h
     kio/renamedialog.h
     kio/skipdialog.h
