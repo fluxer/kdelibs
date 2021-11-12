@@ -42,13 +42,9 @@ public:
     bool isValid() const;
 
     QByteArray device() const;
-    QByteArray subsystem() const;
 
 private:
     QByteArray m_device;
-    QByteArray m_subsystem;
-
-    friend class Client;
 };
 
 class Client : public QObject

@@ -164,7 +164,6 @@ QObject *GeomManager::createDevice(const QString &udi)
     return 0;
 }
 
-
 void GeomManager::slotDeviceAdded(const DevdQt::Device &device)
 {
     if (d->isOfInterest(device)) {

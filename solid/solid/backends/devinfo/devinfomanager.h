@@ -26,6 +26,8 @@
 
 #include <solid/ifaces/devicemanager.h>
 
+#include "../shared/devdqt.h"
+
 namespace Solid
 {
 namespace Backends
@@ -46,6 +48,10 @@ public:
     virtual QStringList devicesFromQuery(const QString &parentUdi,
                                          Solid::DeviceInterface::Type type);
     virtual QObject *createDevice(const QString &udi);
+
+private Q_SLOTS:
+    void slotDeviceAdded(const DevdQt::Device &device);
+    void slotDeviceRemoved(const DevdQt::Device &device);
 
 private:
     class Private;

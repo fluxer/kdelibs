@@ -41,24 +41,45 @@ int getDeviceList(struct devinfo_dev *dev, void *arg)
 class DevinfoManager::Private
 {
 public:
-    Private();
+    Private(DevinfoManager *parent);
     ~Private();
 
+    bool isOfInterest(const DevdQt::Device &device);
+
     QSet<Solid::DeviceInterface::Type> m_supportedInterfaces;
+    DevdQt::Client *m_client;
+    DevinfoManager *m_parent;
 };
 
-DevinfoManager::Private::Private()
+DevinfoManager::Private::Private(DevinfoManager *parent)
+    : m_client(new DevdQt::Client()),
+    m_parent(parent)
 {
 }
 
 DevinfoManager::Private::~Private()
 {
+    delete m_client;
+}
+
+bool DevinfoManager::Private::isOfInterest(const DevdQt::Device &device)
+{
+    const QByteArray devicename(device.device());
+    const QString devicestring = QString::fromLatin1(devicename.constData(), devicename.size());
+    const QString deviceudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devicestring);
+    const QStringList allDev = m_parent->allDevices();
+    // qDebug() << Q_FUNC_INFO << deviceudi << allDev;
+    return (allDev.contains(deviceudi));
 }
 
 DevinfoManager::DevinfoManager(QObject *parent)
     : Solid::Ifaces::DeviceManager(parent),
-      d(new Private)
+      d(new Private(this))
 {
+    connect(d->m_client, SIGNAL(deviceAdded(DevdQt::Device)), this, SLOT(slotDeviceAdded(DevdQt::Device)));
+    connect(d->m_client, SIGNAL(deviceRemoved(DevdQt::Device)), this, SLOT(slotDeviceRemoved(DevdQt::Device)));
+    // deviceChanged() is relevant only for block devices
+
     d->m_supportedInterfaces
         << Solid::DeviceInterface::Processor
         << Solid::DeviceInterface::NetworkInterface
@@ -136,4 +157,18 @@ QObject *DevinfoManager::createDevice(const QString &udi)
 
     qWarning() << "cannot create device for UDI" << udi;
     return 0;
+}
+
+void DevinfoManager::slotDeviceAdded(const DevdQt::Device &device)
+{
+    if (d->isOfInterest(device)) {
+        emit deviceAdded(udiPrefix() + device.device());
+    }
+}
+
+void DevinfoManager::slotDeviceRemoved(const DevdQt::Device &device)
+{
+    if (d->isOfInterest(device)) {
+        emit deviceRemoved(udiPrefix() + device.device());
+    }
 }

@@ -44,8 +44,7 @@ Device::Device(const QByteArray &device)
 }
 
 Device::Device(const Device &other)
-    : m_device(other.m_device),
-    m_subsystem(other.m_subsystem)
+    : m_device(other.m_device)
 {
 }
 
@@ -56,7 +55,6 @@ Device::~Device()
 Device &Device::operator=(const Device &other)
 {
     m_device = other.m_device;
-    m_subsystem = other.m_subsystem;
     return *this;
 }
 
@@ -69,12 +67,6 @@ QByteArray Device::device() const
 {
     return m_device;
 }
-
-QByteArray Device::subsystem() const
-{
-    return m_subsystem;
-}
-
 
 Client::Client(QObject *parent)
     : QObject(parent), m_socket(0), m_monitor(0)
@@ -115,7 +107,6 @@ void Client::monitorReadyRead(int fd)
 
     QByteArray eventdevice;
     QByteArray eventtype;
-    QByteArray eventsubsystem;
 
     const QString recvstring = QString::fromLatin1(recvbuf.constData(), recvbuf.size());
     const QStringList shellpairs = KShell::splitArgs(recvstring);
@@ -125,15 +116,11 @@ void Client::monitorReadyRead(int fd)
             eventdevice = shellpair.right(shellpair.size() - 7).toLatin1();
         } else if (shellpair.startsWith("type=")) {
             eventtype = shellpair.right(shellpair.size() - 5).toLatin1();
-        } else if (shellpair.startsWith("subsystem=")) {
-            eventsubsystem = shellpair.right(shellpair.size() - 10).toLatin1();
         }
     }
-    // qDebug() << Q_FUNC_INFO << eventdevice << eventtype << eventsubsystem;
+    // qDebug() << Q_FUNC_INFO << eventdevice << eventtype;
 
     Device device(eventdevice);
-    device.m_subsystem = eventsubsystem;
-
     if (eventtype == "create") {
         emit deviceAdded(device);
     } else if (eventtype == "destroy") {
