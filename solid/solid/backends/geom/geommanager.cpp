@@ -186,8 +186,8 @@ void GeomManager::slotDeviceChanged(const DevdQt::Device &device)
     const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
     const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devtring);
     if (d->isOfInterest(devudi)) {
-        // TODO: check if device has filesystem/content
-        bool hascontent = false;
+        const GeomDevice device(devudi);
+        bool hascontent = (!device.m_type.isEmpty());
         emit contentChanged(devudi, hascontent);
     }
 }
