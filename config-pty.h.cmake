@@ -2,7 +2,6 @@
 #cmakedefine PTM_DEVICE "${PTM_DEVICE}"
 
 #cmakedefine HAVE_LIBUTIL_H 1
-#cmakedefine HAVE_POSIX_OPENPT 1
 #cmakedefine HAVE_GRANTPT 1
 #cmakedefine HAVE_OPENPTY 1
 #cmakedefine HAVE_PTSNAME_R 1
