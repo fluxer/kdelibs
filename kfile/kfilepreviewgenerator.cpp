@@ -109,7 +109,7 @@ public:
         p.fillRect(image.rect().adjusted(3, 3, -3, -3), Qt::black);
         p.end();
 
-        KIconEffect::shadowblur(image, 3, Qt::black);
+        KIconEffect::shadowBlur(image, 3, Qt::black);
 
         QPixmap pixmap = QPixmap::fromImage(image);
         m_tiles[TopLeftCorner]     = pixmap.copy(0, 0, 8, 8);

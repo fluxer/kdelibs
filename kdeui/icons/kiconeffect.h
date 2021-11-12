@@ -221,7 +221,7 @@ public:
      * @param radius The radius of the effect
      * @param color The color with which the alpha parts of @p image are recolored
      */
-    static void shadowblur(QImage &image, float radius, const QColor &color);
+    static void shadowBlur(QImage &image, float radius, const QColor &color);
 
 private:
     KIconEffectPrivate* const d;

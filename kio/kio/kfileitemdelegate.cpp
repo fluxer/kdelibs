@@ -695,7 +695,7 @@ void KFileItemDelegate::Private::drawTextItems(QPainter *painter, const QTextLay
         p.drawImage(padding, padding, pixmap.toImage());
         p.end();
 
-        KIconEffect::shadowblur(image, blurFactor, shadowColor);
+        KIconEffect::shadowBlur(image, blurFactor, shadowColor);
 
         painter->drawImage(boundingRect.topLeft() - QPoint(padding, padding) + shadowOffset.toPoint(), image);
         painter->drawPixmap(boundingRect.topLeft(), pixmap);

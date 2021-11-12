@@ -1020,7 +1020,7 @@ static void stackBlur(QImage &image, float radius)
     delete [] stack;
 }
 
-void KIconEffect::shadowblur(QImage &image, float radius, const QColor &color)
+void KIconEffect::shadowBlur(QImage &image, float radius, const QColor &color)
 {
     if (radius < 0)
         return;
