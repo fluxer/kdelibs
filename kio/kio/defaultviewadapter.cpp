@@ -17,33 +17,52 @@
  *   Boston, MA 02110-1301, USA.                                               *
  *******************************************************************************/
 
-#ifndef DEFAULTVIEWADAPTER_H
-#define DEFAULTVIEWADAPTER_H
-
-#include "kfile_export.h"
+#include "defaultviewadapter_p.h"
 
 #include <QAbstractItemView>
+#include <QScrollBar>
 
-/*
- * Interface used by KFilePreviewGenerator to generate previews
- * for files. The interface allows KFilePreviewGenerator to be
- * independent from the view implementation.
- */
-class KFILE_EXPORT DefaultViewAdapter : public QObject
+namespace KIO
 {
-public:
-    enum Signal { ScrollBarValueChanged };
 
-    DefaultViewAdapter(QAbstractItemView* view, QObject* parent);
-    QAbstractItemModel* model() const;
-    QSize iconSize() const;
-    QPalette palette() const;
-    QRect visibleArea() const;
-    QRect visualRect(const QModelIndex& index) const;
-    void connect(Signal signal, QObject* receiver, const char* slot);
+DefaultViewAdapter::DefaultViewAdapter(QAbstractItemView* view, QObject* parent) :
+    KAbstractViewAdapter(parent),
+    m_view(view)
+{
+}
 
-private:
-    QAbstractItemView* m_view;
-};
+QAbstractItemModel *DefaultViewAdapter::model() const
+{
+    return m_view->model();
+}
 
-#endif
+QSize DefaultViewAdapter::iconSize() const
+{
+    return m_view->iconSize();
+}
+
+QPalette DefaultViewAdapter::palette() const
+{
+    return m_view->palette();
+}
+
+QRect DefaultViewAdapter::visibleArea() const
+{
+    return m_view->viewport()->rect();
+}
+
+QRect DefaultViewAdapter::visualRect(const QModelIndex& index) const
+{
+    return m_view->visualRect(index);
+}
+
+void DefaultViewAdapter::connect(Signal signal, QObject* receiver, const char* slot)
+{
+    if (signal == ScrollBarValueChanged) {
+        QObject::connect(m_view->horizontalScrollBar(), SIGNAL(valueChanged(int)), receiver, slot);
+        QObject::connect(m_view->verticalScrollBar(), SIGNAL(valueChanged(int)), receiver, slot);
+    }
+}
+
+}
+

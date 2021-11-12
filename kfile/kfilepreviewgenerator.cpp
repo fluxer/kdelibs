@@ -19,7 +19,7 @@
 
 #include "kfilepreviewgenerator.h"
 
-#include "defaultviewadapter_p.h"
+#include "../kio/kio/defaultviewadapter_p.h" // KDE5 TODO: move this class here
 #include <kconfiggroup.h>
 #include <kfileitem.h>
 #include <kiconeffect.h>
@@ -152,7 +152,7 @@ class KFilePreviewGenerator::Private
 {
 public:
     Private(KFilePreviewGenerator* parent,
-            DefaultViewAdapter* viewAdapter,
+            KAbstractViewAdapter* viewAdapter,
             QAbstractItemModel* model);
     ~Private();
 
@@ -347,7 +347,7 @@ public:
 
     int m_pendingVisibleIconUpdates;
 
-    DefaultViewAdapter* m_viewAdapter;
+    KAbstractViewAdapter* m_viewAdapter;
     QAbstractItemView* m_itemView;
     QTimer* m_iconUpdateTimer;
     QTimer* m_scrollAreaTimer;
@@ -399,7 +399,7 @@ private:
 };
 
 KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
-                                        DefaultViewAdapter* viewAdapter,
+                                        KAbstractViewAdapter* viewAdapter,
                                         QAbstractItemModel* model) :
     m_previewShown(true),
     m_clearItemQueues(true),
@@ -466,7 +466,7 @@ KFilePreviewGenerator::Private::Private(KFilePreviewGenerator* parent,
     m_scrollAreaTimer->setInterval(200);
     connect(m_scrollAreaTimer, SIGNAL(timeout()),
             q, SLOT(resumeIconUpdates()));
-    m_viewAdapter->connect(DefaultViewAdapter::ScrollBarValueChanged,
+    m_viewAdapter->connect(KAbstractViewAdapter::ScrollBarValueChanged,
                            q, SLOT(pauseIconUpdates()));
 
     m_changedItemsTimer = new QTimer(q);
@@ -1159,12 +1159,12 @@ void KFilePreviewGenerator::Private::rowsAboutToBeRemoved(const QModelIndex& par
 
 KFilePreviewGenerator::KFilePreviewGenerator(QAbstractItemView* parent) :
     QObject(parent),
-    d(new Private(this, new DefaultViewAdapter(parent, this), parent->model()))
+    d(new Private(this, new KIO::DefaultViewAdapter(parent, this), parent->model()))
 {
     d->m_itemView = parent;
 }
 
-KFilePreviewGenerator::KFilePreviewGenerator(DefaultViewAdapter* parent, QAbstractProxyModel* model) :
+KFilePreviewGenerator::KFilePreviewGenerator(KAbstractViewAdapter* parent, QAbstractProxyModel* model) :
     QObject(parent),
     d(new Private(this, parent, model))
 {
