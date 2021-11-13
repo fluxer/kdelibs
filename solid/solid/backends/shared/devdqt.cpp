@@ -114,7 +114,7 @@ void Client::monitorReadyRead(int fd)
     QByteArray eventdevice;
     QByteArray eventtype;
 
-    const QString recvstring = QString::fromLatin1(recvbuf.constData(), recvbuf.size());
+    const QString recvstring = QString::fromLatin1(recvbuf.constData(), recvresult);
     const QStringList shellpairs = KShell::splitArgs(recvstring);
     // qDebug() << Q_FUNC_INFO << shellpairs;
     foreach (const QString &shellpair, shellpairs) {
@@ -126,14 +126,15 @@ void Client::monitorReadyRead(int fd)
             eventtype = shellpair.right(shellpair.size() - 5).toLatin1();
         }
     }
-    // qDebug() << Q_FUNC_INFO << eventdevice << eventtype;
+    // qDebug() << Q_FUNC_INFO << eventdevice << eventtype << recvstring;
 
     Device device(eventdevice);
-    if (eventtype == "create") {
+    if (qstricmp(eventtype.constData(), "create") == 0) {
         emit deviceAdded(device);
-    } else if (eventtype == "destroy") {
+    } else if (qstricmp(eventtype.constData(), "destroy") == 0) {
         emit deviceRemoved(device);
-    } else if (eventtype == "mediachange" || eventtype == "sizechange") {
+    } else if (qstricmp(eventtype.constData(), "mediachange") == 0
+        || qstricmp(eventtype.constData(), "sizechange") == 0) {
         emit deviceChanged(device);
     }
 }
