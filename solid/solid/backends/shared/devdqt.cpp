@@ -85,7 +85,7 @@ Client::Client(QObject *parent)
     devdaddr.sun_family = AF_UNIX;
     ::strlcpy(devdaddr.sun_path, DEVD_PIPE, sizeof(devdaddr.sun_path));
     const int connectresult = ::connect(m_socket, reinterpret_cast<struct sockaddr*>(&devdaddr), sizeof(devdaddr));
-    if (Q_UNLIKELY(connectresult != 0)) {
+    if (Q_UNLIKELY(connectresult == -1)) {
         qWarning("DevdQt: unable to connect to socket");
         return;
     }
@@ -118,7 +118,9 @@ void Client::monitorReadyRead(int fd)
     const QStringList shellpairs = KShell::splitArgs(recvstring);
     // qDebug() << Q_FUNC_INFO << shellpairs;
     foreach (const QString &shellpair, shellpairs) {
-        if (shellpair.startsWith("device=")) {
+        if (shellpair.startsWith("cdev=")) {
+            eventdevice = shellpair.right(shellpair.size() - 5).toLatin1();
+        } else if (shellpair.startsWith("device=")) {
             eventdevice = shellpair.right(shellpair.size() - 7).toLatin1();
         } else if (shellpair.startsWith("type=")) {
             eventtype = shellpair.right(shellpair.size() - 5).toLatin1();
