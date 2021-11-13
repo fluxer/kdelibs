@@ -42,8 +42,6 @@ GeomDevice::GeomDevice(const QString &device)
     , m_minor(0)
 {
     m_realdevice = m_device.right(m_device.size() - qstrlen(GEOM_UDI_PREFIX) - 1).toLatin1();
-    // devices which are named like path should not be listed by manager, e.g.
-    // gpt/swapfs or gptid/9d7008c3-990e-11eb-bf4c-002590ec5bf2
     Q_ASSERT(!m_realdevice.contains('/'));
     int datapos = 0;
     int majornumberpos = 0;

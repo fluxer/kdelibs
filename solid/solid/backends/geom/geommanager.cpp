@@ -108,6 +108,15 @@ QStringList GeomManager::allDevices()
         LIST_FOREACH(geomgeom, &geomclass->lg_geom, lg_geom) {
             LIST_FOREACH(geomprovider, &geomgeom->lg_provider, lg_provider) {
                 // qDebug() << geomclass->lg_name << geomgeom->lg_name << geomprovider->lg_name;
+
+                // devices which are named like path should not be listed by manager, e.g.
+                // gpt/swapfs or gptid/9d7008c3-990e-11eb-bf4c-002590ec5bf2. some of these are
+                // label-like anyway (e.g. CD-ROM providers, they do not even have UUID) so filter
+                // them the hard way
+                if (::strchr(geomprovider->lg_name, '/') != NULL) {
+                    continue;
+                }
+
                 const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, geomprovider->lg_name);
                 result << devudi;
             }
