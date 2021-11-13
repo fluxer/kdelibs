@@ -158,8 +158,8 @@ QObject *DevinfoManager::createDevice(const QString &udi)
 void DevinfoManager::slotDeviceAdded(const DevdQt::Device &device)
 {
     const QByteArray devname(device.device());
-    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
-    const QString devudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devtring);
+    const QString devstring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devstring);
     if (d->isOfInterest(devudi)) {
         emit deviceAdded(devudi);
     }
@@ -168,8 +168,8 @@ void DevinfoManager::slotDeviceAdded(const DevdQt::Device &device)
 void DevinfoManager::slotDeviceRemoved(const DevdQt::Device &device)
 {
     const QByteArray devname(device.device());
-    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
-    const QString devudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devtring);
+    const QString devstring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, devstring);
     if (d->isOfInterest(devudi)) {
         emit deviceRemoved(devudi);
     }

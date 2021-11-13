@@ -163,8 +163,8 @@ QObject *GeomManager::createDevice(const QString &udi)
 void GeomManager::slotDeviceAdded(const DevdQt::Device &device)
 {
     const QByteArray devname(device.device());
-    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
-    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devtring);
+    const QString devstring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devstring);
     if (d->isOfInterest(devudi)) {
         emit deviceAdded(devudi);
     }
@@ -173,8 +173,8 @@ void GeomManager::slotDeviceAdded(const DevdQt::Device &device)
 void GeomManager::slotDeviceRemoved(const DevdQt::Device &device)
 {
     const QByteArray devname(device.device());
-    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
-    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devtring);
+    const QString devstring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devstring);
     if (d->isOfInterest(devudi)) {
         emit deviceRemoved(devudi);
     }
@@ -183,8 +183,8 @@ void GeomManager::slotDeviceRemoved(const DevdQt::Device &device)
 void GeomManager::slotDeviceChanged(const DevdQt::Device &device)
 {
     const QByteArray devname(device.device());
-    const QString devtring = QString::fromLatin1(devname.constData(), devname.size());
-    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devtring);
+    const QString devstring = QString::fromLatin1(devname.constData(), devname.size());
+    const QString devudi = QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, devstring);
     if (d->isOfInterest(devudi)) {
         const GeomDevice geomdevice(devudi);
         const bool hascontent = (!geomdevice.m_type.isEmpty());
