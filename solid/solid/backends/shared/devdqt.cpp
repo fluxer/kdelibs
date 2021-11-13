@@ -69,7 +69,9 @@ QByteArray Device::device() const
 }
 
 Client::Client(QObject *parent)
-    : QObject(parent), m_socket(0), m_monitor(0)
+    : QObject(parent),
+    m_socket(0),
+    m_monitor(0)
 {
     // open the clients pipe
     m_socket = ::socket(AF_UNIX, SOCK_SEQPACKET, 0);
@@ -78,11 +80,11 @@ Client::Client(QObject *parent)
         return;
     }
 
-    struct sockaddr_un sockaddr;
-    ::memset(&sockaddr, 0, sizeof(sockaddr_un));
-    sockaddr.sun_family = AF_UNIX;
-    ::strlcpy(sockaddr.sun_path, DEVD_PIPE, sizeof(sockaddr.sun_path));
-    const int connectresult = ::connect(m_socket, reinterpret_cast<struct sockaddr*>(&sockaddr), sizeof(struct sockaddr_un));
+    struct sockaddr_un devdaddr;
+    ::memset(&devdaddr, 0, sizeof(sockaddr_un));
+    devdaddr.sun_family = AF_UNIX;
+    ::strlcpy(devdaddr.sun_path, DEVD_PIPE, sizeof(devdaddr.sun_path));
+    const int connectresult = ::connect(m_socket, reinterpret_cast<struct sockaddr*>(&devdaddr), sizeof(devdaddr));
     if (Q_UNLIKELY(connectresult != 0)) {
         qWarning("DevdQt: unable to connect to socket");
         return;
