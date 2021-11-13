@@ -103,7 +103,11 @@ Client::~Client()
 void Client::monitorReadyRead(int fd)
 {
     QByteArray recvbuf(4086, Qt::Uninitialized);
-    const int recvresult = ::recv(m_socket, recvbuf.data(), recvbuf.size(), MSG_WAITALL);
+    const ssize_t recvresult = ::recv(m_socket, recvbuf.data(), recvbuf.size(), MSG_WAITALL);
+    if (Q_UNLIKELY(recvresult == -1)) {
+        qWarning("DevdQt: unable to read data from socket");
+        return;
+    }
 
     QByteArray eventdevice;
     QByteArray eventtype;
