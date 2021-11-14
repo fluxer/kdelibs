@@ -64,6 +64,8 @@ void KDirWatch::addDir(const QString& path, WatchModes watchModes)
 {
     if (path.isEmpty() || path.startsWith(QLatin1String("/dev"))) {
         return; // Don't even go there.
+    } else if (d->watcher->directories().contains(path)) {
+        return;
     }
 
     if (watchModes & WatchDirOnly || watchModes == WatchDirOnly) {
