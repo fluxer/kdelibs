@@ -70,7 +70,6 @@ public:
     */
    void unregisterWindowId(qlonglong windowId, const QString &sender);
    //@}
-   void recreate(QDBusMessage);
    void recreate(bool initial);
    void loadSecondPhase();
 
@@ -139,7 +138,7 @@ public Q_SLOTS:
     * Recreating finished
     */
    void recreateDone();
-   void recreateFailed(const QDBusError &error);
+   void recreateFailed();
 
    /**
     * Collect all directories to watch
@@ -192,8 +191,6 @@ private:
     */
    QTimer* m_pTimer;
 
-   QList<QDBusMessage> m_recreateRequests;
-   int m_recreateCount;
    bool m_recreateBusy;
 
    QHash<QString,KDEDModule *> m_modules;
@@ -219,7 +216,7 @@ public:
    KBuildsycocaAdaptor(QObject *parent);
 
 public Q_SLOTS:
-   void recreate(QDBusMessage);
+   void recreate();
 };
 
 

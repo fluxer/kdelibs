@@ -36,10 +36,10 @@
 #include <kdirwatch.h>
 #include <kstandarddirs.h>
 #include <kservicetypetrader.h>
-#include <ktoolinvocation.h>
 #include <kde_file.h>
 #include "klauncher_iface.h"
 
+#include <QProcess>
 #include <QHostInfo>
 
 #include <unistd.h>
@@ -74,7 +74,7 @@ extern QDBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
 #endif
 QT_END_NAMESPACE
 
-static void runBuildSycoca(QObject *callBackObj=0, const char *callBackSlot=0, const char *callBackErrorSlot=0)
+static bool runBuildSycoca()
 {
     const QString exe = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
     Q_ASSERT(!exe.isEmpty());
@@ -88,13 +88,7 @@ static void runBuildSycoca(QObject *callBackObj=0, const char *callBackSlot=0, c
     } else {
         checkStamps = false; // useful only during kded startup
     }
-    if (callBackObj) {
-        QVariantList argList;
-        argList << exe << args << QStringList() << QString();
-        KToolInvocation::klauncher()->callWithCallback("kdeinit_exec_wait", argList, callBackObj, callBackSlot, callBackErrorSlot);
-    } else {
-        KToolInvocation::kdeinitExecWait( exe, args );
-    }
+    return (QProcess::execute(exe, args) == 0);
 }
 
 static void runDontChangeHostname(const QByteArray &oldName, const QByteArray &newName)
@@ -102,7 +96,7 @@ static void runDontChangeHostname(const QByteArray &oldName, const QByteArray &n
     QStringList args;
     args.append(QFile::decodeName(oldName));
     args.append(QFile::decodeName(newName));
-    KToolInvocation::kdeinitExecWait("kdontchangethehostname", args);
+    QProcess::execute("kdontchangethehostname", args);
 }
 
 Kded::Kded()
@@ -131,7 +125,6 @@ Kded::Kded()
 
     m_pDirWatch = 0;
 
-    m_recreateCount = 0;
     m_recreateBusy = false;
 }
 
@@ -495,7 +488,11 @@ void Kded::recreate(bool initial)
 
     if (!initial) {
         updateDirWatch(); // Update tree first, to be sure to miss nothing.
-        runBuildSycoca(this, SLOT(recreateDone()), SLOT(recreateFailed(QDBusError)));
+        if (runBuildSycoca()) {
+            recreateDone();
+        } else {
+            recreateFailed();
+        }
     } else {
         if(!delayedCheck) {
             updateDirWatch(); // this would search all the directories
@@ -515,24 +512,14 @@ void Kded::recreate(bool initial)
     }
 }
 
-void Kded::recreateFailed(const QDBusError &error)
+void Kded::recreateFailed()
 {
-    kWarning() << error;
-    for(; m_recreateCount; m_recreateCount--) {
-        QDBusMessage msg = m_recreateRequests.takeFirst();
-        QDBusConnection::sessionBus().send(msg.createErrorReply(error));
-    }
     afterRecreateFinished();
 }
 
 void Kded::recreateDone()
 {
     updateResourceList();
-
-    for(; m_recreateCount; m_recreateCount--) {
-        QDBusMessage msg = m_recreateRequests.takeFirst();
-        QDBusConnection::sessionBus().send(msg.createReply());
-    }
     afterRecreateFinished();
 }
 
@@ -540,13 +527,7 @@ void Kded::afterRecreateFinished()
 {
     m_recreateBusy = false;
 
-    // Did a new request come in while building?
-    if (!m_recreateRequests.isEmpty()) {
-        m_pTimer->start(2000);
-        m_recreateCount = m_recreateRequests.count();
-    } else {
-        initModules();
-    }
+    initModules();
 }
 
 void Kded::update(const QString& )
@@ -555,20 +536,6 @@ void Kded::update(const QString& )
         m_pTimer->start(10000);
     }
 }
-
-void Kded::recreate(QDBusMessage msg)
-{
-    if (!m_recreateBusy) {
-        if (m_recreateRequests.isEmpty()) {
-            m_pTimer->start(0);
-            m_recreateCount = 0;
-        }
-        m_recreateCount++;
-    }
-    msg.setDelayedReply(true);
-    m_recreateRequests.append(msg);
-}
-
 
 void Kded::readDirectory(const QString& _path)
 {
@@ -674,9 +641,9 @@ KBuildsycocaAdaptor::KBuildsycocaAdaptor(QObject *parent)
 {
 }
 
-void KBuildsycocaAdaptor::recreate(QDBusMessage msg)
+void KBuildsycocaAdaptor::recreate()
 {
-    Kded::self()->recreate(msg);
+    Kded::self()->recreate();
 }
 
 class KDEDApplication : public KUniqueApplication
