@@ -107,7 +107,7 @@ DevinfoDevice::~DevinfoDevice()
 
 QString DevinfoDevice::udi() const
 {
-    return m_device;
+    return QString::fromLatin1("%1/%2").arg(DEVINFO_UDI_PREFIX, m_device);
 }
 
 QString DevinfoDevice::parentUdi() const

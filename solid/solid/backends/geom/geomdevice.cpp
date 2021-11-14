@@ -122,7 +122,7 @@ GeomDevice::~GeomDevice()
 
 QString GeomDevice::udi() const
 {
-    return m_device;
+    return QString::fromLatin1("%1/%2").arg(GEOM_UDI_PREFIX, m_device);
 }
 
 QString GeomDevice::parentUdi() const
