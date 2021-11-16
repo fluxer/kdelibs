@@ -33,7 +33,8 @@ namespace Solid
         OperationFailed,
         UserCanceled,
         InvalidOption,
-        MissingDriver
+        MissingDriver,
+        Insecure
     };
 
     QString errorString(const ErrorType error);

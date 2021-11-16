@@ -44,6 +44,8 @@ QString Solid::errorString(const ErrorType error)
             return QObject::tr("Invalid option");
         case Solid::MissingDriver:
             return QObject::tr("Missing driver");
+        case Solid::Insecure:
+            return QObject::tr("The filesystem type has been deemed insecure");
     }
     return QString();
 }
