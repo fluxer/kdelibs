@@ -208,7 +208,7 @@ bool DevinfoDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &typ
 {
     switch (type) {
         case Solid::DeviceInterface::Processor: {
-            return (m_device.indexOf("/cpu") >= 0);
+            return (m_device.indexOf("/cpu") >= 0 && m_device.indexOf("freq") == -1);
         }
         case Solid::DeviceInterface::NetworkInterface: {
             return (m_device.indexOf("/em") >= 0 || m_device.indexOf("/wlan") >= 0);
