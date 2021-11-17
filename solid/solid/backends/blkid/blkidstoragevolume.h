@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Paulo Romulo Alves Barros <paulo.romulo@kdemail.net>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,7 +18,40 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#cmakedefine UDEV_FOUND
-#cmakedefine DEVINFO_FOUND
-#cmakedefine LIBBLKID_FOUND
-#cmakedefine LIBCDIO_FOUND
+#ifndef SOLID_BACKENDS_BLKID_BLKIDSTORAGEVOLUME_H
+#define SOLID_BACKENDS_BLKID_BLKIDSTORAGEVOLUME_H
+
+#include <ifaces/storagevolume.h>
+#include "blkidblock.h"
+
+
+namespace Solid
+{
+namespace Backends
+{
+namespace Blkid
+{
+
+class StorageVolume: public Block, virtual public Solid::Ifaces::StorageVolume
+{
+    Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::StorageVolume)
+
+public:
+    StorageVolume(BlkidDevice *device);
+    virtual ~StorageVolume();
+
+    virtual QString encryptedContainerUdi() const;
+    virtual qulonglong size() const;
+    virtual QString uuid() const;
+    virtual QString label() const;
+    virtual QString fsType() const;
+    virtual Solid::StorageVolume::UsageType usage() const;
+    virtual bool isIgnored() const;
+};
+
+}
+}
+}
+
+#endif // SOLID_BACKENDS_BLKID_BLKIDSTORAGEVOLUME_H

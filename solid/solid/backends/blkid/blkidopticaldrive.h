@@ -18,12 +18,12 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UDEV_UDEVOPTICALDISC_H
-#define SOLID_BACKENDS_UDEV_UDEVOPTICALDISC_H
+#ifndef SOLID_BACKENDS_BLKID_BLKIDOPTICALDRIVE_H
+#define SOLID_BACKENDS_BLKID_BLKIDOPTICALDRIVE_H
 
-#include <solid/ifaces/opticaldisc.h>
+#include <solid/ifaces/opticaldrive.h>
 
-#include "udevstoragevolume.h"
+#include "blkidstoragedrive.h"
 
 #include <cdio/cdio.h>
 
@@ -31,24 +31,29 @@ namespace Solid
 {
 namespace Backends
 {
-namespace UDev
+namespace Blkid
 {
 
-class OpticalDisc: public StorageVolume, virtual public Solid::Ifaces::OpticalDisc
+class OpticalDrive: public StorageDrive, virtual public Solid::Ifaces::OpticalDrive
 {
     Q_OBJECT
-    Q_INTERFACES(Solid::Ifaces::OpticalDisc)
+    Q_INTERFACES(Solid::Ifaces::OpticalDrive)
 
 public:
-    OpticalDisc(UDevDevice *device);
-    virtual ~OpticalDisc();
+    OpticalDrive(BlkidDevice *device);
+    virtual ~OpticalDrive();
 
-    virtual qulonglong capacity() const;
-    virtual bool isRewritable() const;
-    virtual bool isBlank() const;
-    virtual bool isAppendable() const;
-    virtual Solid::OpticalDisc::DiscType discType() const;
-    virtual Solid::OpticalDisc::ContentTypes availableContent() const;
+Q_SIGNALS:
+    void ejectPressed(const QString &udi);
+    void ejectDone(Solid::ErrorType error, QVariant errorData, const QString &udi);
+    void ejectRequested(const QString &udi);
+
+public:
+    virtual bool eject();
+    virtual QList<int> writeSpeeds() const;
+    virtual int writeSpeed() const;
+    virtual int readSpeed() const;
+    virtual Solid::OpticalDrive::MediumTypes supportedMedia() const;
 
 private:
     CdIo_t *p_cdio;
@@ -58,4 +63,4 @@ private:
 }
 }
 
-#endif // SOLID_BACKENDS_UDEV_UDEVOPTICALDISC_H
+#endif // SOLID_BACKENDS_BLKID_BLKIDOPTICALDRIVE_H

@@ -18,16 +18,17 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udevstorageaccess.h"
+#include "blkidstorageaccess.h"
+#include "blkidstoragevolume.h"
 #include "kmountpoint.h"
 
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QDebug>
 
-using namespace Solid::Backends::UDev;
+using namespace Solid::Backends::Blkid;
 
-StorageAccess::StorageAccess(UDevDevice *device)
+StorageAccess::StorageAccess(BlkidDevice *device)
     : DeviceInterface(device)
 {
 }
@@ -45,8 +46,8 @@ QString StorageAccess::filePath() const
 {
     const KMountPoint::List mountpoints = KMountPoint::currentMountPoints();
 
-    const QString devname(m_device->deviceProperty("DEVNAME"));
-    const QString devlabel(m_device->deviceProperty("ID_FS_LABEL"));
+    const QString devname(m_device->deviceProperty(BlkidDevice::DeviceName));
+    const QString devlabel(m_device->deviceProperty(BlkidDevice::DeviceLabel));
     foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
         if (mountpoint->mountedFrom() == devname || mountpoint->realDeviceName() == devname
             || mountpoint->mountedFrom() == devlabel) {
@@ -54,7 +55,9 @@ QString StorageAccess::filePath() const
         }
     }
 
-    const QStringList devlinks = m_device->udevDevice().alternateDeviceSymlinks();
+#warning TODO: additional checks
+#if 0
+    const QStringList devlinks = m_device->blkidDevice().alternateDeviceSymlinks();
     foreach (const QString &link, devlinks) {
         foreach (const KMountPoint::Ptr mountpoint, mountpoints) {
             if (mountpoint->mountedFrom() == link || mountpoint->realDeviceName() == link) {
@@ -74,16 +77,18 @@ QString StorageAccess::filePath() const
             }
         }
     }
+#endif
 
     return QString();
 }
 
 bool StorageAccess::isIgnored() const
 {
-    const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
-    const QString devtype(m_device->deviceProperty("DEVTYPE"));
-    const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
-    return ((idfsusage != "filesystem" && idfsusage != "crypto") || (devtype == "disk" && idcdrom != 1));
+    const StorageVolume* volume(dynamic_cast<const StorageVolume*>(this));
+    if (volume) {
+        return volume->isIgnored();
+    }
+    return true;
 }
 
 bool StorageAccess::setup()

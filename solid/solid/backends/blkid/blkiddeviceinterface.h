@@ -18,39 +18,34 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UDEV_UDEVSTORAGEDRIVE_H
-#define SOLID_BACKENDS_UDEV_UDEVSTORAGEDRIVE_H
+#ifndef SOLID_BACKENDS_BLKID_DEVICEINTERFACE_H
+#define SOLID_BACKENDS_BLKID_DEVICEINTERFACE_H
 
-#include <ifaces/storagedrive.h>
+#include <solid/ifaces/deviceinterface.h>
+#include "blkiddevice.h"
 
-#include "udevqt.h"
-#include "udevblock.h"
+#include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UDev
+namespace Blkid
 {
-
-class StorageDrive: public Block, virtual public Solid::Ifaces::StorageDrive
+class DeviceInterface : public QObject, virtual public Solid::Ifaces::DeviceInterface
 {
     Q_OBJECT
-    Q_INTERFACES(Solid::Ifaces::StorageDrive)
-
+    Q_INTERFACES(Solid::Ifaces::DeviceInterface)
 public:
-    StorageDrive(UDevDevice *device);
-    virtual ~StorageDrive();
+    DeviceInterface(BlkidDevice *device);
+    virtual ~DeviceInterface();
 
-    virtual qulonglong size() const;
-    virtual bool isHotpluggable() const;
-    virtual bool isRemovable() const;
-    virtual Solid::StorageDrive::DriveType driveType() const;
-    virtual Solid::StorageDrive::Bus bus() const;
+protected:
+    BlkidDevice *m_device;
 };
-
 }
 }
 }
 
-#endif // SOLID_BACKENDS_UDEV_UDEVSTORAGEDRIVE_H
+#endif

@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Pino Toscano <pino@kde.org>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,32 +18,17 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udevblock.h"
+#include "blkiddeviceinterface.h"
 
-using namespace Solid::Backends::UDev;
+using namespace Solid::Backends::Blkid;
 
-Block::Block(UDevDevice *device)
-    : DeviceInterface(device)
+DeviceInterface::DeviceInterface(BlkidDevice *device)
+    : QObject(device), m_device(device)
 {
 }
 
-Block::~Block()
+DeviceInterface::~DeviceInterface()
 {
 }
 
-int Block::deviceMajor() const
-{
-    return m_device->deviceProperty("MAJOR").toInt();
-}
-
-int Block::deviceMinor() const
-{
-    return m_device->deviceProperty("MINOR").toInt();
-}
-
-QString Block::device() const
-{
-    return m_device->deviceProperty("DEVNAME");
-}
-
-#include "backends/udev/moc_udevblock.cpp"
+#include "backends/blkid/moc_blkiddeviceinterface.cpp"

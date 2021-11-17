@@ -18,14 +18,14 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udevstoragedrive.h"
-#include "udevqt.h"
+#include "blkidstoragedrive.h"
+#include "blkidstoragevolume.h"
 
 #include <QtCore/QDebug>
 
-using namespace Solid::Backends::UDev;
+using namespace Solid::Backends::Blkid;
 
-StorageDrive::StorageDrive(UDevDevice *device)
+StorageDrive::StorageDrive(BlkidDevice *device)
     : Block(device)
 {
 }
@@ -36,7 +36,11 @@ StorageDrive::~StorageDrive()
 
 qulonglong StorageDrive::size() const
 {
-    return m_device->deviceProperty("ID_PART_ENTRY_SIZE").toULongLong() / 2 * 1024;
+    const StorageVolume* volume(dynamic_cast<const StorageVolume*>(this));
+    if (volume) {
+        return volume->size();
+    }
+    return 0;
 }
 
 bool StorageDrive::isHotpluggable() const
@@ -53,58 +57,45 @@ bool StorageDrive::isRemovable() const
 
 Solid::StorageDrive::DriveType StorageDrive::driveType() const
 {
-    const QString idtype(m_device->deviceProperty("ID_TYPE"));
-    const QString idbus(m_device->deviceProperty("ID_BUS"));
-    const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
-    const int iddrivefloppy = m_device->deviceProperty("ID_DRIVE_FLOPPY").toInt();
-
-    if (idcdrom == 1) {
+#if defined(Q_OS_FREEBSD) || defined(Q_OS_DRAGONFLY)
+    // for reference:
+    // https://docs.freebsd.org/doc/6.0-RELEASE/usr/share/doc/handbook/disks-naming.html
+    // TODO: not implementd: MemoryStick, SmartMedia, SdMmc, Xd
+    if (m_device->m_device.startsWith("acd") || m_device->m_device.startsWith("cd")
+        || m_device->m_device.startsWith("mcd")) {
         return Solid::StorageDrive::CdromDrive;
-    } else if (iddrivefloppy == 1) {
+    } else if (m_device->m_device.startsWith("fd")) {
         return Solid::StorageDrive::Floppy;
-    // TODO: other types and remove this generic check
-    } else if (idbus == "usb") {
-        return Solid::StorageDrive::CompactFlash;
-#if 0
-    } else if (idtype == "tape") {
+    } else if (m_device->m_device.startsWith("sa") || m_device->m_device.startsWith("ast")) {
         return Solid::StorageDrive::Tape;
-    } else if (idtype == "flash_cf") {
+    } else if (m_device->m_device.startsWith("da") || m_device->m_device.startsWith("fla")) {
         return Solid::StorageDrive::CompactFlash;
-    } else if (idtype == "flash_ms") {
-        return Solid::StorageDrive::MemoryStick;
-    } else if (idtype == "flash_sm") {
-        return Solid::StorageDrive::SmartMedia;
-    } else if (idtype == "flash_sd" || idtype == "flash_mmc") {
-        return Solid::StorageDrive::SdMmc;
-    } else if (idtype == "flash_xd") {
-        return Solid::StorageDrive::Xd;
-#endif
     } else {
         return Solid::StorageDrive::HardDisk;
     }
+#else
+#warning TODO: implement
+    return Solid::StorageDrive::HardDisk;
+#endif
 }
 
 Solid::StorageDrive::Bus StorageDrive::bus() const
 {
-    const QString idbus(m_device->deviceProperty("ID_BUS"));
-
-    // qDebug() << "bus:" << idbus;
-
-    if (idbus == "ata") {
-        if (m_device->deviceProperty("ID_ATA_SATA").toInt() == 1) {
-            // serial ATA
-            return Solid::StorageDrive::Sata;
-        } else {
-            // parallel (classical) ATA
-            return Solid::StorageDrive::Ide;
-        }
-    } else if (idbus == "usb") {
+#if defined(Q_OS_FREEBSD) || defined(Q_OS_DRAGONFLY)
+    // TODO: not implemented: Sata, Ieee1394
+    if (m_device->m_device.startsWith("ad") || m_device->m_device.startsWith("acd")
+        || m_device->m_device.startsWith("ast")) {
+        return Solid::StorageDrive::Ide;
+    } else if (m_device->m_device.startsWith("fla")) {
         return Solid::StorageDrive::Usb;
-    } else if (idbus == "ieee1394") {
-        return Solid::StorageDrive::Ieee1394;
-    } else if (idbus == "scsi") {
+    } else if (m_device->m_device.startsWith("da") || m_device->m_device.startsWith("cd")
+        || m_device->m_device.startsWith("sa")) {
         return Solid::StorageDrive::Scsi;
     } else {
         return Solid::StorageDrive::Platform;
     }
+#else
+#warning TODO: implement
+    return Solid::StorageDrive::Platform;
+#endif
 }

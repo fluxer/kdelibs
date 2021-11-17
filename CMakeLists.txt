@@ -206,6 +206,14 @@ set_package_properties(Devinfo PROPERTIES
     TYPE OPTIONAL
 )
 
+macro_optional_find_package(LibBlkid)
+set_package_properties(LibBlkid PROPERTIES
+    DESCRIPTION "blkid library support for Solid"
+    URL "https://github.com/util-linux/util-linux"
+    PURPOSE "Allows Solid to use blkid library to provide information about devices"
+    TYPE OPTIONAL
+)
+
 macro_optional_find_package(LibCDIO)
 set_package_properties(LibCDIO PROPERTIES
     DESCRIPTION "GNU Compact Disc Input and Control Library"

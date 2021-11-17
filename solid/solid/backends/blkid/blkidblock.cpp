@@ -18,40 +18,32 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UDEV_UDEVSTORAGEVOLUME_H
-#define SOLID_BACKENDS_UDEV_UDEVSTORAGEVOLUME_H
+#include "blkidblock.h"
 
-#include <ifaces/storagevolume.h>
-#include "udevblock.h"
+using namespace Solid::Backends::Blkid;
 
-
-namespace Solid
+Block::Block(BlkidDevice *device)
+    : DeviceInterface(device)
 {
-namespace Backends
-{
-namespace UDev
-{
-
-class StorageVolume: public Block, virtual public Solid::Ifaces::StorageVolume
-{
-    Q_OBJECT
-    Q_INTERFACES(Solid::Ifaces::StorageVolume)
-
-public:
-    StorageVolume(UDevDevice *device);
-    virtual ~StorageVolume();
-
-    virtual QString encryptedContainerUdi() const;
-    virtual qulonglong size() const;
-    virtual QString uuid() const;
-    virtual QString label() const;
-    virtual QString fsType() const;
-    virtual Solid::StorageVolume::UsageType usage() const;
-    virtual bool isIgnored() const;
-};
-
-}
-}
 }
 
-#endif // SOLID_BACKENDS_UDEV_UDEVSTORAGEVOLUME_H
+Block::~Block()
+{
+}
+
+int Block::deviceMajor() const
+{
+    return m_device->m_major;
+}
+
+int Block::deviceMinor() const
+{
+    return m_device->m_minor;
+}
+
+QString Block::device() const
+{
+    return m_device->deviceProperty(BlkidDevice::DeviceName);
+}
+
+#include "backends/blkid/moc_blkidblock.cpp"

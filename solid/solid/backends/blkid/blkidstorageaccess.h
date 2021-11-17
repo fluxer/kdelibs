@@ -18,17 +18,17 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UDEV_UDEVSTORAGEACCESS_H
-#define SOLID_BACKENDS_UDEV_UDEVSTORAGEACCESS_H
+#ifndef SOLID_BACKENDS_BLKID_BLKIDSTORAGEACCESS_H
+#define SOLID_BACKENDS_BLKID_BLKIDSTORAGEACCESS_H
 
 #include <solid/ifaces/storageaccess.h>
-#include "udevdeviceinterface.h"
+#include "blkiddeviceinterface.h"
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UDev
+namespace Blkid
 {
 class StorageAccess : public DeviceInterface, virtual public Solid::Ifaces::StorageAccess
 {
@@ -36,7 +36,7 @@ class StorageAccess : public DeviceInterface, virtual public Solid::Ifaces::Stor
     Q_INTERFACES(Solid::Ifaces::StorageAccess)
 
 public:
-    explicit StorageAccess(UDevDevice *device);
+    explicit StorageAccess(BlkidDevice *device);
     virtual ~StorageAccess();
 
     virtual bool isAccessible() const;
@@ -56,4 +56,4 @@ Q_SIGNALS:
 }
 }
 
-#endif // SOLID_BACKENDS_UDEV_UDEVSTORAGEACCESS_H
+#endif // SOLID_BACKENDS_BLKID_BLKIDSTORAGEACCESS_H

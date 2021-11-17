@@ -18,7 +18,7 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udevopticaldrive.h"
+#include "blkidopticaldrive.h"
 
 #include <QDebug>
 
@@ -35,13 +35,13 @@ enum LibCDIOMagic {
     CurrentWriteSpeed = 28,
 };
 
-using namespace Solid::Backends::UDev;
+using namespace Solid::Backends::Blkid;
 
-OpticalDrive::OpticalDrive(UDevDevice *device)
+OpticalDrive::OpticalDrive(BlkidDevice *device)
     : StorageDrive(device),
     p_cdio(nullptr)
 {
-    const QByteArray devicename(m_device->deviceProperty("DEVNAME").toLocal8Bit());
+    const QByteArray devicename(m_device->deviceProperty(BlkidDevice::DeviceName));
     p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);
     if (!p_cdio) {
         qWarning() << "Could not open" << devicename;
@@ -63,7 +63,7 @@ bool OpticalDrive::eject()
 {
     emit ejectRequested(m_device->udi());
 
-    const QByteArray devicename(m_device->deviceProperty("DEVNAME").toLocal8Bit());
+    const QByteArray devicename(m_device->deviceProperty(BlkidDevice::DeviceName));
     const driver_return_code_t result = cdio_eject_media_drive(devicename.constData());
     // not supported by libcdio: UserCanceled
     switch(result) {
@@ -205,4 +205,4 @@ Solid::OpticalDrive::MediumTypes OpticalDrive::supportedMedia() const
     return result;
 }
 
-#include "moc_udevopticaldrive.cpp"
+#include "moc_blkidopticaldrive.cpp"

@@ -20,16 +20,12 @@
 
 #include "config-solid.h"
 #include "udevdevice.h"
-#include "udevstoragedrive.h"
-#include "udevstoragevolume.h"
-#include "udevstorageaccess.h"
 #include "udevprocessor.h"
 #include "udevacadapter.h"
 #include "udevbattery.h"
 #include "udevcamera.h"
 #include "udevvideo.h"
 #include "udevportablemediaplayer.h"
-#include "udevblock.h"
 #include "udevaudiointerface.h"
 #include "udevnetworkinterface.h"
 #include "udevbutton.h"
@@ -41,11 +37,6 @@
 
 #include "kglobal.h"
 #include "klocale.h"
-
-#if defined(LIBCDIO_FOUND)
-#include "udevopticaldisc.h"
-#include "udevopticaldrive.h"
-#endif
 
 #include <QDebug>
 
@@ -68,15 +59,6 @@ QString UDevDevice::udi() const
 
 QString UDevDevice::parentUdi() const
 {
-    const int idcdrom = m_device.deviceProperty("ID_CDROM").toInt();
-#warning FIXME: block devices workaround for optical and storage drives
-    // code in several places expects the parent to NOT be the actual parent (disk) device UDI even
-    // for partitions but another device UDI related to this device, has to be fixed and verified
-    // to work at some point
-    if (m_device.subsystem() == QLatin1String("block") || idcdrom == 1) {
-        return devicePath();
-    }
-
     return UDEV_UDI_PREFIX;
 }
 
@@ -169,84 +151,7 @@ QString UDevDevice::icon() const
 {
     if (parentUdi().isEmpty()) {
         return QLatin1String("computer");
-#if defined(LIBCDIO_FOUND)
-    // prioritize since it is a storage drive/disc too
-    } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
-        const OpticalDrive drive(const_cast<UDevDevice*>(this));
-        if (drive.isHotpluggable()) {
-            return QLatin1String("drive-removable-media-usb");
-        }
-        return QLatin1String("drive-removable-media");
-    } else if (queryDeviceInterface(Solid::DeviceInterface::OpticalDisc)) {
-        const OpticalDisc disc(const_cast<UDevDevice*>(this));
-        Solid::OpticalDisc::ContentTypes availcontent = disc.availableContent();
-
-        if (availcontent & Solid::OpticalDisc::VideoDvd) { // Video DVD
-            return QLatin1String("media-optical-dvd-video");
-        } else if ((availcontent & Solid::OpticalDisc::VideoCd) || (availcontent & Solid::OpticalDisc::SuperVideoCd)) { // Video CD
-            return QLatin1String("media-optical-video");
-        } else if ((availcontent & Solid::OpticalDisc::Data) && (availcontent & Solid::OpticalDisc::Audio)) { // Mixed CD
-            return QLatin1String("media-optical-mixed-cd");
-        } else if (availcontent & Solid::OpticalDisc::Audio) { // Audio CD
-            return QLatin1String("media-optical-audio");
-        } else if (availcontent & Solid::OpticalDisc::Data) { // Data CD
-            return QLatin1String("media-optical-data");
-        } else if ( disc.isRewritable() ) {
-            return QLatin1String("media-optical-recordable");
-        }
-
-        switch (disc.discType()) {
-            // DVD
-            case Solid::OpticalDisc::DiscType::DvdRom:
-            case Solid::OpticalDisc::DiscType::DvdRam:
-            case Solid::OpticalDisc::DiscType::DvdRecordable:
-            case Solid::OpticalDisc::DiscType::DvdRewritable:
-            case Solid::OpticalDisc::DiscType::DvdPlusRecordable:
-            case Solid::OpticalDisc::DiscType::DvdPlusRewritable:
-            case Solid::OpticalDisc::DiscType::DvdPlusRecordableDuallayer:
-            case Solid::OpticalDisc::DiscType::DvdPlusRewritableDuallayer:
-            case Solid::OpticalDisc::DiscType::HdDvdRom:
-            case Solid::OpticalDisc::DiscType::HdDvdRecordable:
-            case Solid::OpticalDisc::DiscType::HdDvdRewritable:
-                return QLatin1String("media-optical-dvd");
-             // BluRay
-            case Solid::OpticalDisc::DiscType::BluRayRom:
-            case Solid::OpticalDisc::DiscType::BluRayRecordable:
-            case Solid::OpticalDisc::DiscType::BluRayRewritable:
-                return QLatin1String("media-optical-blu-ray");
-            default:
-                break;
-        }
-
-        // fallback for every other optical disc
-        return QLatin1String("media-optical");
-#endif // LIBCDIO_FOUND
-    } else if (queryDeviceInterface(Solid::DeviceInterface::StorageDrive)) {
-        const StorageDrive storageIface(const_cast<UDevDevice *>(this));
-        Solid::StorageDrive::DriveType drivetype = storageIface.driveType();
-
-        if (drivetype == Solid::StorageDrive::HardDisk) {
-            return QLatin1String("drive-harddisk");
-        } else if (drivetype == Solid::StorageDrive::CdromDrive) {
-            return QLatin1String("drive-optical");
-        } else if (drivetype == Solid::StorageDrive::Floppy) {
-            return QLatin1String("media-floppy");
-        } else if (drivetype == Solid::StorageDrive::Tape) {
-            return QLatin1String("media-tape");
-        } else if (drivetype == Solid::StorageDrive::CompactFlash) {
-            return QLatin1String("drive-removable-media");
-        } else if (drivetype == Solid::StorageDrive::MemoryStick) {
-            return QLatin1String("media-flash-memory-stick");
-        } else if (drivetype == Solid::StorageDrive::SmartMedia) {
-            return QLatin1String("media-flash-smart-media");
-        } else if (drivetype == Solid::StorageDrive::SdMmc) {
-            return QLatin1String("media-flash-sd-mmc");
-        } else if (drivetype == Solid::StorageDrive::Xd) {
-            return QLatin1String("drive-removable-media");
-        }
-    } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
-        return QLatin1String("drive-harddisk");
-    } if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
+    } else if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
         return QLatin1String("preferences-system-power-management");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Battery)) {
         return QLatin1String("battery");
@@ -289,18 +194,7 @@ QString UDevDevice::icon() const
 
 QStringList UDevDevice::emblems() const
 {
-    QStringList res;
-
-    if (queryDeviceInterface(Solid::DeviceInterface::StorageAccess)) {
-        const StorageAccess accessIface(const_cast<UDevDevice *>(this));
-        if (accessIface.isAccessible()) {
-            res << "emblem-mounted";
-        } else {
-            res << "emblem-unmounted";
-        }
-    }
-
-    return res;
+    return QStringList();
 }
 
 QString UDevDevice::description() const
@@ -309,105 +203,7 @@ QString UDevDevice::description() const
         return QObject::tr("Computer");
     }
 
-#if defined(LIBCDIO_FOUND)
-    // prioritize since it is a storage drive/disc too
-    if (queryDeviceInterface(Solid::DeviceInterface::OpticalDrive)) {
-        const OpticalDrive opticalDrive(const_cast<UDevDevice*>(this));
-        Solid::OpticalDrive::MediumTypes mediumTypes = opticalDrive.supportedMedia();
-        QString first;
-        QString second;
-
-        first = QObject::tr("CD-ROM");
-        if (mediumTypes & Solid::OpticalDrive::Cdr)
-            first = QObject::tr("CD-R");
-        if (mediumTypes & Solid::OpticalDrive::Cdrw)
-            first = QObject::tr("CD-RW");
-
-        if (mediumTypes & Solid::OpticalDrive::Dvd)
-            second = QObject::tr("/DVD-ROM");
-        if (mediumTypes & Solid::OpticalDrive::Dvdplusr)
-            second = QObject::tr("/DVD+R");
-        if (mediumTypes & Solid::OpticalDrive::Dvdplusrw)
-            second = QObject::tr("/DVD+RW");
-        if (mediumTypes & Solid::OpticalDrive::Dvdr)
-            second = QObject::tr("/DVD-R");
-        if (mediumTypes & Solid::OpticalDrive::Dvdrw)
-            second = QObject::tr("/DVD-RW");
-        if (mediumTypes & Solid::OpticalDrive::Dvdram)
-            second = QObject::tr("/DVD-RAM");
-        if ((mediumTypes & Solid::OpticalDrive::Dvdr) && (mediumTypes & Solid::OpticalDrive::Dvdplusr)) {
-            if (mediumTypes & Solid::OpticalDrive::Dvdplusdl) {
-                second = QObject::tr("/DVD±R DL");
-            } else {
-                second = QObject::tr("/DVD±R");
-            }
-        }
-        if ((mediumTypes & Solid::OpticalDrive::Dvdrw) && (mediumTypes & Solid::OpticalDrive::Dvdplusrw)) {
-            if((mediumTypes & Solid::OpticalDrive::Dvdplusdl) || (mediumTypes & Solid::OpticalDrive::Dvdplusdlrw)) {
-                second = QObject::tr("/DVD±RW DL");
-            } else {
-                second = QObject::tr("/DVD±RW");
-            }
-        }
-        if (mediumTypes & Solid::OpticalDrive::Bd)
-            second = QObject::tr("/BD-ROM");
-        if (mediumTypes & Solid::OpticalDrive::Bdr)
-            second = QObject::tr("/BD-R");
-        if (mediumTypes & Solid::OpticalDrive::Bdre)
-            second = QObject::tr("/BD-RE");
-        if (mediumTypes & Solid::OpticalDrive::HdDvd)
-            second = QObject::tr("/HD DVD-ROM");
-        if (mediumTypes & Solid::OpticalDrive::HdDvdr)
-            second = QObject::tr("/HD DVD-R");
-        if (mediumTypes & Solid::OpticalDrive::HdDvdrw)
-            second = QObject::tr("/HD DVD-RW");
-
-        QString description;
-        if (opticalDrive.isHotpluggable()) {
-            description = QObject::tr("External %1%2 Drive");
-        } else {
-            description = QObject::tr("%1%2 Drive");
-        }
-        description = description.arg(first, second);
-
-        return description;
-    }
-#endif // LIBCDIO_FOUND
-    if (queryDeviceInterface(Solid::DeviceInterface::StorageDrive)) {
-        const StorageDrive storageIface(const_cast<UDevDevice *>(this));
-        Solid::StorageDrive::DriveType drivetype = storageIface.driveType();
-        const QString storagesize = KGlobal::locale()->formatByteSize(storageIface.size());
-
-        if (drivetype == Solid::StorageDrive::HardDisk) {
-            return QObject::tr("%1 Hard Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::CdromDrive) {
-            return QObject::tr("%1 CD-ROM Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::Floppy) {
-            return QObject::tr("%1 Floppy Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::Tape) {
-            return QObject::tr("%1 Tape Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::CompactFlash) {
-            return QObject::tr("%1 Compact Flash Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::MemoryStick) {
-            return QObject::tr("%1 Memory Stick Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::SmartMedia) {
-            return QObject::tr("%1 Smart Media Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::SdMmc) {
-            return QObject::tr("%1 SD/MMC Drive").arg(storagesize);
-        } else if (drivetype == Solid::StorageDrive::Xd) {
-            return QObject::tr("%1 Xd Drive").arg(storagesize);
-        }
-    } else if (queryDeviceInterface(Solid::DeviceInterface::StorageVolume)) {
-        const StorageVolume storageIface(const_cast<UDevDevice *>(this));
-        QString desc = storageIface.label();
-        if (desc.isEmpty()) {
-            desc = storageIface.uuid();
-        }
-        if (desc.isEmpty()) {
-            desc = deviceProperty("DEVNAME");
-        }
-        return desc;
-    } else if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
+    if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
         return QObject::tr("A/C Adapter");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Battery)) {
         const QString powersupplytechnology(deviceProperty("POWER_SUPPLY_TECHNOLOGY"));
@@ -476,12 +272,6 @@ QString UDevDevice::description() const
 bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) const
 {
     switch (type) {
-    case Solid::DeviceInterface::StorageAccess:
-    case Solid::DeviceInterface::StorageDrive:
-    case Solid::DeviceInterface::StorageVolume: {
-        return m_device.subsystem() == QLatin1String("block");
-    }
-
     case Solid::DeviceInterface::AcAdapter:
     case Solid::DeviceInterface::Battery:
         return m_device.subsystem() == QLatin1String("power_supply");
@@ -489,20 +279,11 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     case Solid::DeviceInterface::Processor:
         return m_device.driver() == QLatin1String("processor");
 
-#if defined(LIBCDIO_FOUND)
-    case Solid::DeviceInterface::OpticalDrive:
-    case Solid::DeviceInterface::OpticalDisc:
-        return (deviceProperty("ID_CDROM").toInt() == 1);
-#endif
-
     case Solid::DeviceInterface::Camera:
         return deviceProperty("ID_GPHOTO2").toInt() == 1;
 
     case Solid::DeviceInterface::PortableMediaPlayer:
         return !deviceProperty("ID_MEDIA_PLAYER").isEmpty();
-
-    case Solid::DeviceInterface::Block:
-        return !deviceProperty("MAJOR").isEmpty();
 
     case Solid::DeviceInterface::Video:
         return m_device.subsystem() == QLatin1String("video4linux");
@@ -531,15 +312,6 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     }
 
     switch (type) {
-    case Solid::DeviceInterface::StorageAccess:
-        return new StorageAccess(this);
-
-    case Solid::DeviceInterface::StorageDrive:
-        return new StorageDrive(this);
-
-    case Solid::DeviceInterface::StorageVolume:
-        return new StorageVolume(this);
-
     case Solid::DeviceInterface::AcAdapter:
         return new AcAdapter(this);
 
@@ -549,21 +321,11 @@ QObject *UDevDevice::createDeviceInterface(const Solid::DeviceInterface::Type &t
     case Solid::DeviceInterface::Processor:
         return new Processor(this);
 
-#if defined(LIBCDIO_FOUND)
-    case Solid::DeviceInterface::OpticalDrive:
-        return new OpticalDrive(this);
-    case Solid::DeviceInterface::OpticalDisc:
-        return new OpticalDisc(this);
-#endif
-
     case Solid::DeviceInterface::Camera:
         return new Camera(this);
 
     case Solid::DeviceInterface::PortableMediaPlayer:
         return new PortableMediaPlayer(this);
-
-    case Solid::DeviceInterface::Block:
-        return new Block(this);
 
     case Solid::DeviceInterface::Video:
         return new Video(this);

@@ -123,26 +123,13 @@ if(UDEV_FOUND)
         backends/udev/udevnetworkinterface.cpp
         backends/udev/udevaudiointerface_p.cpp
         backends/udev/udevportablemediaplayer.cpp
-        backends/udev/udevblock.cpp
         backends/udev/udevbutton.cpp
-        backends/udev/udevstorageaccess.cpp
-        backends/udev/udevstoragevolume.cpp
-        backends/udev/udevstoragedrive.cpp
         backends/udev/udevbattery.cpp
         backends/udev/udevacadapter.cpp
         backends/udev/udevgraphic.cpp
         backends/udev/udevqtclient.cpp
         backends/udev/udevqtdevice.cpp
     )
-
-    if(LIBCDIO_FOUND)
-        set(solid_LIB_SRCS ${solid_LIB_SRCS}
-            backends/udev/udevopticaldisc.cpp
-            backends/udev/udevopticaldrive.cpp
-        )
-        include_directories(${LIBCDIO_INCLUDES})
-        set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${LIBCDIO_LIBRARIES})
-    endif()
 
     set(UDEV_DETAILED_OUTPUT OFF CACHE BOOL "provide extended output regarding udev events")
     if(UDEV_DETAILED_OUTPUT)
@@ -174,6 +161,31 @@ if(UDEV_FOUND)
                     )
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${KDE4_KDECORE_LIBS} ${QT_QTDBUS_LIBRARY} ${UDEV_LIBRARIES})
+endif(UDEV_FOUND)
+
+if(LIBBLKID_FOUND)
+    include_directories(${LIBBLKID_INCLUDES})
+    message(STATUS "Building Solid blkid backend.")
+    set(solid_LIB_SRCS ${solid_LIB_SRCS}
+        backends/blkid/blkiddevice.cpp
+        backends/blkid/blkidmanager.cpp
+        backends/blkid/blkiddeviceinterface.cpp
+        backends/blkid/blkidblock.cpp
+        backends/blkid/blkidstorageaccess.cpp
+        backends/blkid/blkidstoragevolume.cpp
+        backends/blkid/blkidstoragedrive.cpp
+    )
+
+    if(LIBCDIO_FOUND)
+        set(solid_LIB_SRCS ${solid_LIB_SRCS}
+            backends/blkid/blkidopticaldisc.cpp
+            backends/blkid/blkidopticaldrive.cpp
+        )
+        include_directories(${LIBCDIO_INCLUDES})
+        set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${LIBCDIO_LIBRARIES})
+    endif()
+
+    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${QT_QTDBUS_LIBRARY} ${LIBBLKID_LIBRARIES})
 endif(UDEV_FOUND)
 
 if(DEVINFO_FOUND)

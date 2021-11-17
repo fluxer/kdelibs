@@ -18,49 +18,34 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UDEV_UDEVOPTICALDRIVE_H
-#define SOLID_BACKENDS_UDEV_UDEVOPTICALDRIVE_H
+#ifndef SOLID_BACKENDS_BLKID_BLKIDBLOCK_H
+#define SOLID_BACKENDS_BLKID_BLKIDBLOCK_H
 
-#include <solid/ifaces/opticaldrive.h>
+#include <solid/ifaces/block.h>
 
-#include "udevstoragedrive.h"
-
-#include <cdio/cdio.h>
+#include "blkiddeviceinterface.h"
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UDev
+namespace Blkid
 {
-
-class OpticalDrive: public StorageDrive, virtual public Solid::Ifaces::OpticalDrive
+class Block : public DeviceInterface, virtual public Solid::Ifaces::Block
 {
     Q_OBJECT
-    Q_INTERFACES(Solid::Ifaces::OpticalDrive)
+    Q_INTERFACES(Solid::Ifaces::Block)
 
 public:
-    OpticalDrive(UDevDevice *device);
-    virtual ~OpticalDrive();
+    Block(BlkidDevice *device);
+    virtual ~Block();
 
-Q_SIGNALS:
-    void ejectPressed(const QString &udi);
-    void ejectDone(Solid::ErrorType error, QVariant errorData, const QString &udi);
-    void ejectRequested(const QString &udi);
-
-public:
-    virtual bool eject();
-    virtual QList<int> writeSpeeds() const;
-    virtual int writeSpeed() const;
-    virtual int readSpeed() const;
-    virtual Solid::OpticalDrive::MediumTypes supportedMedia() const;
-
-private:
-    CdIo_t *p_cdio;
+    virtual int deviceMajor() const;
+    virtual int deviceMinor() const;
+    virtual QString device() const;
 };
-
 }
 }
 }
 
-#endif // SOLID_BACKENDS_UDEV_UDEVOPTICALDRIVE_H
+#endif // SOLID_BACKENDS_BLKID_BLKIDBLOCK_H

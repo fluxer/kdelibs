@@ -18,19 +18,19 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udevopticaldisc.h"
+#include "blkidopticaldisc.h"
 
 #include <QDebug>
 
 #include <cdio/cd_types.h>
 
-using namespace Solid::Backends::UDev;
+using namespace Solid::Backends::Blkid;
 
-OpticalDisc::OpticalDisc(UDevDevice *device)
+OpticalDisc::OpticalDisc(BlkidDevice *device)
     : StorageVolume(device),
     p_cdio(nullptr)
 {
-    const QByteArray devicename(m_device->deviceProperty("DEVNAME").toLocal8Bit());
+    const QByteArray devicename(m_device->deviceProperty(BlkidDevice::DeviceName));
     p_cdio = cdio_open(devicename.constData(), DRIVER_UNKNOWN);
     if (!p_cdio) {
         qWarning() << "Could not open" << devicename;
@@ -214,4 +214,4 @@ Solid::OpticalDisc::ContentTypes OpticalDisc::availableContent() const
     return result;
 }
 
-#include "moc_udevopticaldisc.cpp"
+#include "moc_blkidopticaldisc.cpp"

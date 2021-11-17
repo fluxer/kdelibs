@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Rafael Fernández López <ereslibre@kde.org>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,49 +18,44 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UDEV_UDEVMANAGER_H
-#define SOLID_BACKENDS_UDEV_UDEVMANAGER_H
+#ifndef SOLID_BACKENDS_BLKID_BLKIDOPTICALDISC_H
+#define SOLID_BACKENDS_BLKID_BLKIDOPTICALDISC_H
 
-#define UDEV_UDI_PREFIX "/org/kde/solid/udev"
+#include <solid/ifaces/opticaldisc.h>
 
-#include <solid/ifaces/devicemanager.h>
+#include "blkidstoragevolume.h"
 
-#include "udevqt.h"
+#include <cdio/cdio.h>
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UDev
+namespace Blkid
 {
-class UDevManager : public Solid::Ifaces::DeviceManager
+
+class OpticalDisc: public StorageVolume, virtual public Solid::Ifaces::OpticalDisc
 {
     Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::OpticalDisc)
 
 public:
-    UDevManager(QObject *parent);
-    virtual ~UDevManager();
+    OpticalDisc(BlkidDevice *device);
+    virtual ~OpticalDisc();
 
-    virtual QString udiPrefix() const;
-    virtual QSet<Solid::DeviceInterface::Type> supportedInterfaces() const;
-
-    virtual QStringList allDevices();
-
-    virtual QStringList devicesFromQuery(const QString &parentUdi,
-                                         Solid::DeviceInterface::Type type);
-
-    virtual QObject *createDevice(const QString &udi);
-
-private Q_SLOTS:
-    void slotDeviceAdded(const UdevQt::Device &device);
-    void slotDeviceRemoved(const UdevQt::Device &device);
+    virtual qulonglong capacity() const;
+    virtual bool isRewritable() const;
+    virtual bool isBlank() const;
+    virtual bool isAppendable() const;
+    virtual Solid::OpticalDisc::DiscType discType() const;
+    virtual Solid::OpticalDisc::ContentTypes availableContent() const;
 
 private:
-    class Private;
-    Private *const d;
+    CdIo_t *p_cdio;
 };
+
 }
 }
 }
 
-#endif // SOLID_BACKENDS_UDEV_UDEVMANAGER_H
+#endif // SOLID_BACKENDS_BLKID_BLKIDOPTICALDISC_H

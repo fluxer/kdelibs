@@ -34,6 +34,10 @@
 #include "backends/devinfo/devinfomanager.h"
 #endif
 
+#if defined (LIBBLKID_FOUND)
+#include "backends/blkid/blkidmanager.h"
+#endif
+
 #if defined(UDEV_FOUND)
 #include "backends/udev/udevmanager.h"
 #endif
@@ -65,6 +69,10 @@ void Solid::ManagerBasePrivate::loadBackends()
 
 #if defined(DEVINFO_FOUND)
     m_backends << new Solid::Backends::Devinfo::DevinfoManager(0);
+#endif
+
+#if defined(LIBBLKID_FOUND)
+    m_backends << new Solid::Backends::Blkid::BlkidManager(0);
 #endif
 }
 

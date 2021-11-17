@@ -18,16 +18,16 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "udevstoragevolume.h"
-#include "udevmanager.h"
-#include "udevdevice.h"
+#include "blkidstoragevolume.h"
+#include "blkidmanager.h"
+#include "blkiddevice.h"
 
 #include <QDir>
 #include <QDebug>
 
-using namespace Solid::Backends::UDev;
+using namespace Solid::Backends::Blkid;
 
-StorageVolume::StorageVolume(UDevDevice *device)
+StorageVolume::StorageVolume(BlkidDevice *device)
     : Block(device)
 {
 }
@@ -38,60 +38,57 @@ StorageVolume::~StorageVolume()
 
 QString StorageVolume::encryptedContainerUdi() const
 {
+#warning TODO: implement
+#if 0
     const QString dmname(m_device->deviceProperty("DM_NAME"));
     if (!dmname.isEmpty()) {
         const QDir slavesdir(m_device->deviceName() + "/slaves");
         const QFileInfoList slavelinks(slavesdir.entryInfoList(QDir::NoDotAndDotDot | QDir::AllEntries));
         if (!slavelinks.isEmpty()) {
-            return QString::fromLatin1("%1%2").arg(UDEV_UDI_PREFIX, slavelinks.first().canonicalFilePath());
+            return QString::fromLatin1("%1%2").arg(BLKID_UDI_PREFIX, slavelinks.first().canonicalFilePath());
         }
     }
+#endif
     return QString();
 }
 
 qulonglong StorageVolume::size() const
 {
-    return (m_device->deviceProperty("ID_PART_ENTRY_SIZE").toULongLong() / 2 * 1024);
+#warning TODO: implement
+#if 0
+    return m_device->deviceProperty("ID_PART_ENTRY_SIZE").toULongLong() / 2 * 1024;
+#endif
+    return 0;
 }
 
 QString StorageVolume::uuid() const
 {
-    return m_device->deviceProperty("ID_FS_UUID");
+    return m_device->deviceProperty(BlkidDevice::DeviceUUID);
 }
 
 QString StorageVolume::label() const
 {
-    return m_device->deviceProperty("ID_FS_LABEL");
+    return m_device->deviceProperty(BlkidDevice::DeviceLabel);
 }
 
 QString StorageVolume::fsType() const
 {
-    return m_device->deviceProperty("ID_FS_TYPE");
+    return m_device->deviceProperty(BlkidDevice::DeviceType);
 }
 
 Solid::StorageVolume::UsageType StorageVolume::usage() const
 {
-    const QString devtype(m_device->deviceProperty("DEVTYPE"));
-    const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
-    if (idfsusage == "crypto") {
-        return Solid::StorageVolume::Encrypted;
-    } else if (idfsusage == "other") {
-        return Solid::StorageVolume::Other;
-    } else if (idfsusage == "raid") {
-        return Solid::StorageVolume::Raid;
-    } else if (idfsusage == "filesystem") {
+    // TODO: Encrypted, Other, Raid
+    if (!m_device->deviceProperty(BlkidDevice::DeviceType).isEmpty()) {
         return Solid::StorageVolume::FileSystem;
-    } else if (devtype == "partition") {
+    } else if (m_device->m_minor != 0) {
         return Solid::StorageVolume::PartitionTable;
-    } else {
-        return Solid::StorageVolume::Unused;
     }
+    return Solid::StorageVolume::Unused;
 }
 
 bool StorageVolume::isIgnored() const
 {
-    const QString idfsusage(m_device->deviceProperty("ID_FS_USAGE"));
-    const QString devtype(m_device->deviceProperty("DEVTYPE"));
-    const int idcdrom = m_device->deviceProperty("ID_CDROM").toInt();
-    return ((idfsusage != "filesystem" && idfsusage != "crypto") || (devtype == "disk" && idcdrom != 1));
+    const Solid::StorageVolume::UsageType volumeusage(usage());
+    return (volumeusage != Solid::StorageVolume::FileSystem && volumeusage != Solid::StorageVolume::Encrypted);
 }

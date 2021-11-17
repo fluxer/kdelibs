@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Pino Toscano <pino@kde.org>
+    Copyright 2021 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,34 +18,44 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_UDEV_UDEVBLOCK_H
-#define SOLID_BACKENDS_UDEV_UDEVBLOCK_H
+#ifndef SOLID_BACKENDS_BLKID_BLKIDMANAGER_H
+#define SOLID_BACKENDS_BLKID_BLKIDMANAGER_H
 
-#include <solid/ifaces/block.h>
+#define BLKID_ROOT_UDI "/org/kde/blkid/pc"
+#define BLKID_UDI_PREFIX "/org/kde/blkid"
 
-#include "udevdeviceinterface.h"
+#include <solid/ifaces/devicemanager.h>
 
 namespace Solid
 {
 namespace Backends
 {
-namespace UDev
+namespace Blkid
 {
-class Block : public DeviceInterface, virtual public Solid::Ifaces::Block
+class BlkidManager : public Solid::Ifaces::DeviceManager
 {
     Q_OBJECT
-    Q_INTERFACES(Solid::Ifaces::Block)
 
 public:
-    Block(UDevDevice *device);
-    virtual ~Block();
+    BlkidManager(QObject *parent);
+    virtual ~BlkidManager();
 
-    virtual int deviceMajor() const;
-    virtual int deviceMinor() const;
-    virtual QString device() const;
+    virtual QString udiPrefix() const;
+    virtual QSet<Solid::DeviceInterface::Type> supportedInterfaces() const;
+
+    virtual QStringList allDevices();
+
+    virtual QStringList devicesFromQuery(const QString &parentUdi,
+                                         Solid::DeviceInterface::Type type);
+
+    virtual QObject *createDevice(const QString &udi);
+
+private:
+    class Private;
+    Private *const d;
 };
 }
 }
 }
 
-#endif // SOLID_BACKENDS_UDEV_UDEVBLOCK_H
+#endif // SOLID_BACKENDS_BLKID_BLKIDMANAGER_H

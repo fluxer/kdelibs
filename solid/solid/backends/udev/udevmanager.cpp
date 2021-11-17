@@ -50,7 +50,6 @@ public:
 UDevManager::Private::Private()
 {
     static const QStringList subsystems = QStringList()
-        << "block"
         << "power_supply"
         << "processor"
         << "cpu"
@@ -95,9 +94,6 @@ bool UDevManager::Private::checkOfInterest(const UdevQt::Device &device)
     qDebug() << "Subsystem:" << device.subsystem();
     qDebug() << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>";
 #endif
-    if (device.subsystem() == QLatin1String("block")) {
-        return !device.deviceProperty("ID_FS_TYPE").isEmpty();
-    }
 
     if (device.subsystem() == QLatin1String("power_supply")) {
         return true;
@@ -136,23 +132,14 @@ UDevManager::UDevManager(QObject *parent)
 {
     connect(d->m_client, SIGNAL(deviceAdded(UdevQt::Device)), this, SLOT(slotDeviceAdded(UdevQt::Device)));
     connect(d->m_client, SIGNAL(deviceRemoved(UdevQt::Device)), this, SLOT(slotDeviceRemoved(UdevQt::Device)));
-    connect(d->m_client, SIGNAL(deviceChanged(UdevQt::Device)), this, SLOT(slotDeviceChanged(UdevQt::Device)));
 
-    d->m_supportedInterfaces << Solid::DeviceInterface::StorageAccess
-                             << Solid::DeviceInterface::StorageDrive
-                             << Solid::DeviceInterface::StorageVolume
-                             << Solid::DeviceInterface::AcAdapter
+    d->m_supportedInterfaces << Solid::DeviceInterface::AcAdapter
                              << Solid::DeviceInterface::Battery
                              << Solid::DeviceInterface::Processor
-#if defined(LIBCDIO_FOUND)
-                             << Solid::DeviceInterface::OpticalDrive
-                             << Solid::DeviceInterface::OpticalDisc
-#endif
                              << Solid::DeviceInterface::AudioInterface
                              << Solid::DeviceInterface::NetworkInterface
                              << Solid::DeviceInterface::Camera
                              << Solid::DeviceInterface::PortableMediaPlayer
-                             << Solid::DeviceInterface::Block
                              << Solid::DeviceInterface::Video
                              << Solid::DeviceInterface::Button
                              << Solid::DeviceInterface::Graphic;
@@ -245,16 +232,5 @@ void UDevManager::slotDeviceRemoved(const UdevQt::Device &device)
     if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
         emit deviceRemoved(udiPrefix() + device.sysfsPath());
         d->m_devicesOfInterest.removeAll(udiPrefix() + device.sysfsPath());
-    }
-}
-
-void UDevManager::slotDeviceChanged(const UdevQt::Device &device)
-{
-    if (d->isOfInterest(udiPrefix() + device.sysfsPath(), device)) {
-        if (device.subsystem() == "block") {
-            const QString idfsusage = device.deviceProperty("ID_FS_USAGE");
-            const bool hascontent = (idfsusage == "filesystem" || idfsusage == "crypto");
-            emit contentChanged(udiPrefix() + device.sysfsPath(), hascontent);
-        }
     }
 }
