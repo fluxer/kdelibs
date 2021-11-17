@@ -34,10 +34,6 @@
 #include "backends/devinfo/devinfomanager.h"
 #endif
 
-#if defined (GEOM_FOUND)
-#include "backends/geom/geommanager.h"
-#endif
-
 #if defined(UDEV_FOUND)
 #include "backends/udev/udevmanager.h"
 #endif
@@ -69,10 +65,6 @@ void Solid::ManagerBasePrivate::loadBackends()
 
 #if defined(DEVINFO_FOUND)
     m_backends << new Solid::Backends::Devinfo::DevinfoManager(0);
-#endif
-
-#if defined(GEOM_FOUND)
-    m_backends << new Solid::Backends::Geom::GeomManager(0);
 #endif
 }
 

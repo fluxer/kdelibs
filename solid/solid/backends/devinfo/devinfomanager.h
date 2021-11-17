@@ -26,7 +26,7 @@
 
 #include <solid/ifaces/devicemanager.h>
 
-#include "../shared/devdqt.h"
+#include "devdqt.h"
 
 namespace Solid
 {

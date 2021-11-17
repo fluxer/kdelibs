@@ -20,5 +20,4 @@
 
 #cmakedefine UDEV_FOUND
 #cmakedefine DEVINFO_FOUND
-#cmakedefine GEOM_FOUND
 #cmakedefine LIBCDIO_FOUND

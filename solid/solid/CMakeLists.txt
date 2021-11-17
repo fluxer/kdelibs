@@ -186,32 +186,10 @@ if(DEVINFO_FOUND)
         backends/devinfo/devinfoprocessor.cpp
         backends/devinfo/devinfonetworkinterface.cpp
         backends/devinfo/devinfographic.cpp
+        backends/devinfo/devdqt.cpp
     )
 
     set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${DEVINFO_LIBRARIES})
-endif()
-
-if(GEOM_FOUND)
-    include_directories(${GEOM_INCLUDES})
-    message(STATUS "Building Solid Geom backend.")
-    set(solid_LIB_SRCS ${solid_LIB_SRCS}
-        backends/geom/geomdevice.cpp
-        backends/geom/geommanager.cpp
-        backends/geom/geomdeviceinterface.cpp
-        backends/geom/geomblock.cpp
-        backends/geom/geomstoragedrive.cpp
-        backends/geom/geomstoragevolume.cpp
-        backends/geom/geomstorageaccess.cpp
-    )
-
-    set(solid_OPTIONAL_LIBS ${solid_OPTIONAL_LIBS} ${QT_QTDBUS_LIBRARY} ${GEOM_LIBRARIES})
-endif()
-
-if (DEVINFO_FOUND OR GEOM_FOUND)
-    message(STATUS "Building device notification via devd.")
-    set(solid_LIB_SRCS ${solid_LIB_SRCS}
-        backends/shared/devdqt.cpp
-    )
 endif()
 
 set_source_files_properties(
