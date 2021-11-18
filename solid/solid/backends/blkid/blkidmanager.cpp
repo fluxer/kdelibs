@@ -85,8 +85,11 @@ QStringList BlkidManager::allDevices()
 
     blkid_cache blkidcache;
     if (blkid_get_cache(&blkidcache, NULL) != 0) {
-        qWarning() << "could not open blkid cache";
+        qWarning() << "could not get blkid cache";
         return res;
+    }
+    if (blkid_probe_all(blkidcache) != 0) {
+        qWarning() << "could probe blkid cache";
     }
     blkid_dev_iterate blkiddevit = blkid_dev_iterate_begin(blkidcache);
     blkid_dev blkiddev;
