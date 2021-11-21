@@ -139,7 +139,7 @@ QString PortableMediaPlayer::mediaPlayerInfoFilePath() const
     relativeFilename.prepend("media-player-info/");
     relativeFilename.append(".mpi");
 
-    QString filename = QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativeFilename);
+    QString filename = QStandardPaths::locate(QStandardPaths::DataLocation, relativeFilename);
     if (filename.isEmpty()) {
         qWarning() << "media player info file" << relativeFilename << "not found under user and"
                    << "system XDG data directories. Do you have media-player-info installed?";
