@@ -43,7 +43,7 @@
 #include <QApplication>
 #include <QtDBus/QtDBus>
 #include <QtGui/QStyleFactory>
-#include <QDesktopServices>
+#include <QtCore/QStandardPaths>
 #include "qplatformdefs.h"
 #include <QtGui/QToolTip>
 #include <QtGui/QWhatsThis>
@@ -538,7 +538,7 @@ void KGlobalSettingsData::dropMouseSettingsCache()
 
 QString KGlobalSettings::desktopPath()
 {
-    QString path = QDesktopServices::storageLocation( QDesktopServices::DesktopLocation );
+    QString path = QStandardPaths::writableLocation( QStandardPaths::DesktopLocation );
     return path.isEmpty() ? QDir::homePath() : path;
 }
 
@@ -558,47 +558,31 @@ QString KGlobalSettings::autostartPath()
 
 QString KGlobalSettings::documentPath()
 {
-    QString path = QDesktopServices::storageLocation( QDesktopServices::DocumentsLocation );
+    QString path = QStandardPaths::writableLocation( QStandardPaths::DocumentsLocation );
     return path.isEmpty() ? QDir::homePath() : path;
 }
 
 QString KGlobalSettings::downloadPath()
 {
-    // Qt 4.x does not have QDesktopServices::DownloadLocation, so we do our own xdg reading.
-    QString defaultDownloadPath = QDir::homePath() + "/Downloads";
-    QString downloadPath = defaultDownloadPath;
-    const QString xdgUserDirs = KGlobal::dirs()->localxdgconfdir() + QLatin1String( "user-dirs.dirs" );
-    if( QFile::exists( xdgUserDirs ) ) {
-        KConfig xdgUserConf( xdgUserDirs, KConfig::SimpleConfig );
-        KConfigGroup g( &xdgUserConf, "" );
-        downloadPath  = g.readPathEntry( "XDG_DOWNLOAD_DIR", downloadPath ).remove(  '"' );
-        if ( downloadPath.isEmpty() ) {
-            downloadPath = defaultDownloadPath;
-        }
-    }
-    downloadPath = QDir::cleanPath( downloadPath );
-    QDir().mkpath(downloadPath);
-    if ( !downloadPath.endsWith( '/' ) ) {
-        downloadPath.append( QLatin1Char(  '/' ) );
-    }
-    return downloadPath;
+    QString path = QStandardPaths::writableLocation( QStandardPaths::DownloadsLocation );
+    return path.isEmpty() ? QDir::homePath() + "/Downloads" : path;
 }
 
 QString KGlobalSettings::videosPath()
 {
-    QString path = QDesktopServices::storageLocation( QDesktopServices::MoviesLocation );
+    QString path = QStandardPaths::writableLocation( QStandardPaths::VideosLocation );
     return path.isEmpty() ? QDir::homePath() : path;
 }
 
 QString KGlobalSettings::picturesPath()
 {
-    QString path = QDesktopServices::storageLocation( QDesktopServices::PicturesLocation );
+    QString path = QStandardPaths::writableLocation( QStandardPaths::PicturesLocation );
     return path.isEmpty() ? QDir::homePath() :path;
 }
 
 QString KGlobalSettings::musicPath()
 {
-    QString path = QDesktopServices::storageLocation( QDesktopServices::MusicLocation );
+    QString path = QStandardPaths::writableLocation( QStandardPaths::MusicLocation );
     return path.isEmpty() ? QDir::homePath() : path;
 }
 

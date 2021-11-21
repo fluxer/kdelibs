@@ -31,7 +31,7 @@
 #include <krun.h>
 #else
 #include <QProcess>
-#include <QDesktopServices>
+#include <QStandardPaths>
 #endif
 
 #include "plasma/applet.h"
@@ -137,7 +137,7 @@ void AssociatedApplicationManager::run(Plasma::Applet *applet)
         KRun *krun = new KRun(d->urlLists.value(applet).first(), 0);
         krun->setAutoDelete(true);
 #else
-        QDesktopServices::openUrl(d->urlLists.value(applet).first());
+        QStandardPaths::openUrl(d->urlLists.value(applet).first());
 #endif
     }
 }

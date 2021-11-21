@@ -30,35 +30,27 @@
 #include <kglobal.h>
 #include <kconfig.h>
 #include <qdir.h>
-#include <stdio.h>
 #include <kaboutdata.h>
 #include <kdeversion.h>
 #include <QDir>
-#include <QtCore/QLibraryInfo>
-#include <QtCore/QCoreApplication>
-#include <QProcess>
+#include <QLibraryInfo>
+#include <QCoreApplication>
+#include <QStandardPaths>
 #include <config.h>
 #include <config-prefix.h>
 #include <kconfiggroup.h>
 #include <kde_file.h>
 
+#include <stdio.h>
+
 static void printResult(const QString &s)
 {
-    if (s.isEmpty())
+    if (s.isEmpty()) {
         printf("\n");
-	else {
-		QString path = QDir::toNativeSeparators( s );
+    } else {
+        QString path = QDir::toNativeSeparators( s );
         printf("%s\n", path.toLocal8Bit().constData());
-	}
-}
-
-static QString readXdg( const char* type )
-{
-    QProcess proc;
-    proc.start( QString::fromLatin1("xdg-user-dir"), QStringList() << QString::fromLatin1(type) );
-    if (!proc.waitForStarted() || !proc.waitForFinished())
-        return QString();
-    return QString::fromLocal8Bit( proc.readAll()).trimmed();
+    }
 }
 
 int main(int argc, char **argv)
@@ -190,8 +182,8 @@ int main(int argc, char **argv)
     {
         //code duplicated with KGlobalSettings::initPath()
         if (type == QLatin1String("desktop"))
-        { // QDesktopServices is QtGui :-/
-            QString path = readXdg( "DESKTOP" );
+        {
+            QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
             if (path.isEmpty())
                 path = QDir::homePath() + QLatin1String("/Desktop");
             path = QDir::cleanPath(path);
@@ -212,7 +204,7 @@ int main(int argc, char **argv)
         }
         else if (type == QLatin1String("document"))
         {
-            QString path = readXdg( "DOCUMENTS" );
+            QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
             if ( path.isEmpty())
                 path = QDir::homePath() + QLatin1String("/Documents");
             path = QDir::cleanPath( path );
