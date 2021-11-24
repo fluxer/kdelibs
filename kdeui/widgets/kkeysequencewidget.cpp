@@ -793,10 +793,6 @@ QKeySequence KKeySequenceWidgetPrivate::appendToSequence(const QKeySequence& seq
         return QKeySequence(keyQt);
     case 1:
         return QKeySequence(seq[0], keyQt);
-    case 2:
-        return QKeySequence(seq[0], seq[1], keyQt);
-    case 3:
-        return QKeySequence(seq[0], seq[1], seq[2], keyQt);
     default:
         return seq;
     }
