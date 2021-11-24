@@ -118,14 +118,22 @@ bool MagickHandler::canRead(QIODevice *device)
     if (file) {
         QFileInfo fileinfo(file->fileName());
         const QByteArray filesuffix = fileinfo.suffix().toLatin1();
-        kDebug() << "Using QFile shortcut for" << file->fileName() << "with extension" << filesuffix;
         if (!filesuffix.isEmpty()) {
-            const Magick::CoderInfo magickcoderinfo(std::string(filesuffix.constData()));
-            if (magickcoderinfo.isReadable() && (qstrnicmp(magickcoderinfo.name().c_str(), "png", 3) != 0)) {
-                kDebug() << "Shortcut says it is supported";
-                return true;
+            kDebug() << "Using QFile shortcut for" << file->fileName() << "with extension" << filesuffix;
+            try {
+                const Magick::CoderInfo magickcoderinfo(std::string(filesuffix.constData()));
+                if (magickcoderinfo.isReadable() && (qstrnicmp(magickcoderinfo.name().c_str(), "png", 3) != 0)) {
+                    kDebug() << "Shortcut says it is supported";
+                    return true;
+                }
+                kDebug() << "Shortcut says it is not supported";
+            } catch(Magick::Exception &err) {
+                kWarning() << err.what();
+            } catch(std::exception &err) {
+                kWarning() << err.what();
+            } catch (...) {
+                ;
             }
-            kDebug() << "Shortcut says it is not supported";
         }
     }
 
