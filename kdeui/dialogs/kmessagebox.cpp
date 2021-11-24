@@ -1060,7 +1060,6 @@ void KMessageBox::about(QWidget *parent, const QString &text,
     }
 
     createKMessageBox(dialog, qApp->windowIcon(), text, QStringList(), QString(), 0, options);
-    return;
 }
 
 int KMessageBox::messageBox( QWidget *parent, DialogType type, const QString &text,
