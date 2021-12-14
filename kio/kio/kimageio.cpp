@@ -21,20 +21,12 @@ static const struct ImageFormatTblData {
     const QLatin1String format;
 } ImageFormatTbl[] = {
     { "image/png", QLatin1String("png") },
-    { "image/bmp", QLatin1String("bmp") },
     { "image/x-portable-pixmap", QLatin1String("ppm") },
     { "image/x-portable-graymap", QLatin1String("pgm") },
     { "image/x-portable-bitmap", QLatin1String("pbm") },
     { "image/x-xbitmap", QLatin1String("xbm") },
     { "image/x-xpixmap", QLatin1String("xpm") },
-    { "video/x-mng", QLatin1String("mng") },
     { "image/gif", QLatin1String("gif") },
-    { "image/vnd.microsoft.icon", QLatin1String("ico") },
-    { "image/jpeg", QLatin1String("jpeg") },
-    { "image/jpeg", QLatin1String("jpg") },
-    { "image/tiff", QLatin1String("tiff") },
-    { "image/tiff", QLatin1String("tif") },
-    { "image/x-tga", QLatin1String("tga") },
     { "image/svg+xml", QLatin1String("svg") },
     { "image/svg+xml-compressed", QLatin1String("svgz") },
 };

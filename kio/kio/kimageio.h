@@ -24,6 +24,11 @@
  * \b Formats:
  *
  * Currently supported formats include:
+ * @li BMP     \<read\>
+ * @li ICO     \<read\>
+ * @li JPEG    \<read\>
+ * @li TGA     \<read\>
+ * @li TIFF    \<read\>
  * @li DDS     \<read\>
  * @li EPS     \<read\>
  * @li EXR     \<read\>

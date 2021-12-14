@@ -9,6 +9,11 @@ along with whatever ImageMagick supports but it is assumed that it supports
 reading atleast the following formats (even if they cannot be loaded) for
 compatibility:
 
+BMP     <read>
+ICO     <read>
+JPEG    <read>
+TGA     <read>
+TIFF    <read>
 DDS     <read>
 EPS     <read>
 EXR     <read>
