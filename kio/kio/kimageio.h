@@ -29,6 +29,7 @@
  * @li JPEG    \<read\>
  * @li TGA     \<read\>
  * @li TIFF    \<read\>
+ * @li GIF     \<read\>
  * @li DDS     \<read\>
  * @li EPS     \<read\>
  * @li EXR     \<read\>

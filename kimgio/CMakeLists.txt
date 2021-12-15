@@ -23,6 +23,7 @@ if(IMAGEMAGICK_FOUND)
     install(
         FILES
         bmp.desktop
+        gif.desktop
         ico.desktop
         jpg.desktop
         tga.desktop

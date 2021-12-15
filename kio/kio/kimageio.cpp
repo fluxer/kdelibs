@@ -26,7 +26,6 @@ static const struct ImageFormatTblData {
     { "image/x-portable-bitmap", QLatin1String("pbm") },
     { "image/x-xbitmap", QLatin1String("xbm") },
     { "image/x-xpixmap", QLatin1String("xpm") },
-    { "image/gif", QLatin1String("gif") },
     { "image/svg+xml", QLatin1String("svg") },
     { "image/svg+xml-compressed", QLatin1String("svgz") },
 };

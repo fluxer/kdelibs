@@ -14,6 +14,7 @@ ICO     <read>
 JPEG    <read>
 TGA     <read>
 TIFF    <read>
+GIF     <read>
 DDS     <read>
 EPS     <read>
 EXR     <read>
