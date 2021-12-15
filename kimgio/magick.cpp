@@ -26,8 +26,8 @@
 
 #include <Magick++/Functions.h>
 #include <Magick++/Blob.h>
-#include <Magick++/Image.h>
 #include <Magick++/CoderInfo.h>
+#include <Magick++/STL.h>
 
 static const char* const magickpluginformat = "magick";
 
@@ -39,6 +39,11 @@ int initMagick()
 Q_CONSTRUCTOR_FUNCTION(initMagick);
 
 MagickHandler::MagickHandler()
+    : m_loopcount(0),
+    m_imagecount(1),
+    m_imagedelay(0),
+    m_currentimage(0),
+    m_device(nullptr)
 {
 }
 
@@ -49,7 +54,14 @@ MagickHandler::~MagickHandler()
 
 bool MagickHandler::canRead() const
 {
+    // QMovie will probe on each frame
+    if (device() == m_device && m_magickimages.size() > 0) {
+        return true;
+    }
+
+    m_magickimages.clear();
     if (MagickHandler::canRead(device())) {
+        m_device = device();
         setFormat(magickpluginformat);
         return true;
     }
@@ -58,17 +70,27 @@ bool MagickHandler::canRead() const
 
 bool MagickHandler::read(QImage *image)
 {
-    const QByteArray data = device()->readAll();
-
     try {
-        Magick::Blob magickinblob(data.constData(), data.size()); 
-        Magick::Image magickinimage;
-        magickinimage.read(magickinblob);
+        // QMovie will continuously call read() to get each frame
+        if (m_magickimages.size() == 0) {
+            const QByteArray data = device()->readAll();
 
-        if (Q_UNLIKELY(!magickinimage.isValid())) {
+            Magick::Blob magickinblob(data.constData(), data.size());
+            Magick::readImages(&m_magickimages, magickinblob);
+        }
+
+        if (Q_UNLIKELY(m_magickimages.size() == 0)) {
             kWarning() << "image is not valid";
             return false;
+        } else if (Q_UNLIKELY(m_currentimage >= int(m_magickimages.size()))) {
+            kWarning() << "invalid image index";
+            return false;
         }
+
+        Magick::Image magickinimage = m_magickimages.at(m_currentimage);
+        m_loopcount = magickinimage.animationIterations();
+        m_imagecount = m_magickimages.size();
+        m_imagedelay = magickinimage.animationDelay();
 
         Magick::Blob magickoutblob;
         magickinimage.write(&magickoutblob, "PNG");
@@ -82,7 +104,19 @@ bool MagickHandler::read(QImage *image)
         }
 
         image->loadFromData(reinterpret_cast<const char*>(magickoutblob.data()), magickoutblob.length(), "png");
-        return !image->isNull();
+        const bool result = !image->isNull();
+        if (!result) {
+            m_loopcount = 0;
+            m_imagecount = 0;
+            m_imagedelay = 0;
+            m_currentimage = 0;
+        } else {
+            m_currentimage++;
+            if (m_currentimage >= m_imagecount) {
+                m_currentimage = 0;
+            }
+        }
+        return result;
     } catch(Magick::Exception &err) {
         kWarning() << err.what();
         return false;
@@ -148,7 +182,7 @@ bool MagickHandler::canRead(QIODevice *device)
     }
 
     try {
-        Magick::Blob magickinblob(data.constData(), data.size()); 
+        Magick::Blob magickinblob(data.constData(), data.size());
         Magick::Image magickimage; 
         magickimage.read(magickinblob);
          // PNG handler used by this plugin
@@ -164,6 +198,53 @@ bool MagickHandler::canRead(QIODevice *device)
     device->seek(oldpos);
 
     return isvalid;
+}
+
+bool MagickHandler::supportsOption(QImageIOHandler::ImageOption option) const
+{
+    return (option == QImageIOHandler::Animation);
+}
+
+QVariant MagickHandler::option(QImageIOHandler::ImageOption option) const
+{
+    if (option == QImageIOHandler::Animation) {
+        return QVariant(bool(m_imagecount > 1));
+    }
+    return QVariant(false);
+}
+
+bool MagickHandler::jumpToNextImage()
+{
+    return jumpToImage(m_currentimage + 1);
+}
+
+bool MagickHandler::jumpToImage(int imageNumber)
+{
+    if (imageNumber >= m_magickimages.size()) {
+        return false;
+    }
+    m_currentimage = imageNumber;
+    return true;
+}
+
+int MagickHandler::loopCount() const
+{
+    return m_loopcount;
+}
+
+int MagickHandler::imageCount() const
+{
+    return m_imagecount;
+}
+
+int MagickHandler::nextImageDelay() const
+{
+    return m_imagedelay;
+}
+
+int MagickHandler::currentImageNumber() const
+{
+    return m_currentimage;
 }
 
 QStringList MagickPlugin::keys() const

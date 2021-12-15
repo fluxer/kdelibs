@@ -21,6 +21,8 @@
 
 #include <QtGui/qimageiohandler.h>
 
+#include <Magick++/Image.h>
+
 class MagickHandler : public QImageIOHandler
 {
 public:
@@ -34,6 +36,24 @@ public:
     QByteArray name() const final;
 
     static bool canRead(QIODevice *device);
+
+    QVariant option(ImageOption option) const final;
+    bool supportsOption(QImageIOHandler::ImageOption option) const final;
+
+    bool jumpToNextImage() final;
+    bool jumpToImage(int imageNumber) final;
+    int loopCount() const final;
+    int imageCount() const final;
+    int nextImageDelay() const final;
+    int currentImageNumber() const final;
+
+private:
+    int m_loopcount;
+    int m_imagecount;
+    int m_imagedelay;
+    int m_currentimage;
+    mutable std::vector<Magick::Image> m_magickimages;
+    mutable QIODevice* m_device;
 };
 
 class MagickPlugin : public QImageIOPlugin
