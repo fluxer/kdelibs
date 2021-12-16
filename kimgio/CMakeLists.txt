@@ -22,6 +22,10 @@ if(IMAGEMAGICK_FOUND)
     )
     install(
         FILES
+        pbm.desktop
+        pgm.desktop
+        ppm.desktop
+        xbm.desktop
         bmp.desktop
         gif.desktop
         ico.desktop

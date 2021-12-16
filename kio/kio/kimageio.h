@@ -24,6 +24,10 @@
  * \b Formats:
  *
  * Currently supported formats include:
+ * @li PBM     \<read\>
+ * @li PGM     \<read\>
+ * @li PPM     \<read\>
+ * @li XBM     \<read\>
  * @li BMP     \<read\>
  * @li ICO     \<read\>
  * @li JPEG    \<read\>

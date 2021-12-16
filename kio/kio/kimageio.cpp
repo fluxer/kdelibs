@@ -21,10 +21,6 @@ static const struct ImageFormatTblData {
     const QLatin1String format;
 } ImageFormatTbl[] = {
     { "image/png", QLatin1String("png") },
-    { "image/x-portable-pixmap", QLatin1String("ppm") },
-    { "image/x-portable-graymap", QLatin1String("pgm") },
-    { "image/x-portable-bitmap", QLatin1String("pbm") },
-    { "image/x-xbitmap", QLatin1String("xbm") },
     { "image/x-xpixmap", QLatin1String("xpm") },
     { "image/svg+xml", QLatin1String("svg") },
     { "image/svg+xml-compressed", QLatin1String("svgz") },
