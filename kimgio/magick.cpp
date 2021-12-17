@@ -220,7 +220,7 @@ bool MagickHandler::jumpToNextImage()
 
 bool MagickHandler::jumpToImage(int imageNumber)
 {
-    if (imageNumber >= m_magickimages.size()) {
+    if (imageNumber >= int(m_magickimages.size())) {
         return false;
     }
     m_currentimage = imageNumber;
