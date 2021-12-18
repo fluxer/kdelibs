@@ -19,7 +19,6 @@
 #include "magick.h"
 
 #include <QImage>
-#include <QDataStream>
 #include <QFile>
 #include <QFileInfo>
 #include <kdebug.h>
@@ -80,10 +79,10 @@ bool MagickHandler::read(QImage *image)
         }
 
         if (Q_UNLIKELY(m_magickimages.size() == 0)) {
-            kWarning() << "image is not valid";
+            kWarning() << "Image is not valid";
             return false;
         } else if (Q_UNLIKELY(m_currentimage >= int(m_magickimages.size()))) {
-            kWarning() << "invalid image index";
+            kWarning() << "Invalid image index";
             return false;
         }
 
@@ -99,7 +98,7 @@ bool MagickHandler::read(QImage *image)
         const size_t magickwidth = magicksize.width();
         const size_t magickheight = magicksize.height();
         if (Q_UNLIKELY(magickwidth > INT_MAX || magickheight > INT_MAX)) {
-            kWarning() << "image is too big";
+            kWarning() << "Image is too big";
             return false;
         }
 
@@ -144,7 +143,7 @@ QByteArray MagickHandler::name() const
 bool MagickHandler::canRead(QIODevice *device)
 {
     if (Q_UNLIKELY(!device)) {
-        kWarning() << "called with no device";
+        kWarning() << "Called with no device";
         return false;
     }
 
@@ -192,7 +191,7 @@ bool MagickHandler::canRead(QIODevice *device)
     } catch(std::exception &err) {
         kWarning() << err.what();
     } catch (...) {
-        kWarning() << "exception raised";
+        kWarning() << "Exception raised";
     }
 
     device->seek(oldpos);
