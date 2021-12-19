@@ -295,15 +295,17 @@ void KLed::paintLed(Shape shape, Look look)
     fillGradient.setColorAt(0.5, fillColor.light(130));
     fillGradient.setColorAt(1.0, fillColor);
 
-    QConicalGradient borderGradient(center, look == Sunken ? 90 : -90);
-    QColor borderColor = palette().color(QPalette::Dark);
+    QRadialGradient borderGradient(center, smallestSize, QPointF(center.x(), size.height() / 1.5));
+    QColor colorDark = palette().color(QPalette::Dark);
+    QColor colorLight = palette().color(QPalette::Light);
+    QColor borderColor = (look == Sunken) ? colorLight : colorDark;
     if (d->state == On) {
         QColor glowOverlay = fillColor;
         glowOverlay.setAlpha(80);
         borderColor = KColorUtils::overlayColors(borderColor, glowOverlay);
     }
     borderGradient.setColorAt(0.2, borderColor);
-    borderGradient.setColorAt(0.5, palette().color(QPalette::Light));
+    borderGradient.setColorAt(0.5, (look == Sunken) ? colorDark : colorLight);
     borderGradient.setColorAt(0.8, borderColor);
 
     painter.begin(&image);
