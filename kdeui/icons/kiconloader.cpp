@@ -1116,9 +1116,11 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
         {
             // ensure it is format supported by QPainter first
             switch (img.format()) {
+#if QT_VERSION < 0x041200
+                case QImage::Format_Indexed8:
+#endif
                 case QImage::Format_Mono:
-                case QImage::Format_MonoLSB:
-                case QImage::Format_Indexed8: {
+                case QImage::Format_MonoLSB: {
                     img = img.convertToFormat(QImage::Format_ARGB32);
                     break;
                 }
