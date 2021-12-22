@@ -727,6 +727,7 @@ void KIconEffect::overlay(QImage &src, QImage &overlay)
 	return;
     }
 
+#if QT_VERSION < 0x041200
     // Overlay at 8 bpp doesn't use alpha blending
 
     if (src.depth() == 8)
@@ -774,6 +775,7 @@ void KIconEffect::overlay(QImage &src, QImage &overlay)
 	    }
 	}
     }
+#endif // QT_VERSION < 0x041200
 
     // Overlay at 32 bpp does use alpha blending
 
