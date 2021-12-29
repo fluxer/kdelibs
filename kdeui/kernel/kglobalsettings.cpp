@@ -334,7 +334,9 @@ struct KFontData
     const char* FontName;
     int Size;
     int Weight;
+#if QT_VERSION < 0x041200
     QFont::StyleHint StyleHint;
+#endif
 };
 
 // NOTE: keep in sync with kdebase/workspace/kcontrol/fonts/fonts.cpp
@@ -343,6 +345,7 @@ static const char DefaultFont[] =    "Sans Serif";
 
 static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
 {
+#if QT_VERSION < 0x041200
     { GeneralId, "font",        DefaultFont, 9, -1, QFont::SansSerif },
     { GeneralId, "fixed",       "Monospace", 9, -1, QFont::TypeWriter },
     { GeneralId, "toolBarFont", DefaultFont,  8, -1, QFont::SansSerif },
@@ -350,6 +353,15 @@ static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
     { "WM",      "activeFont",           DefaultFont,  8, -1, QFont::SansSerif },
     { GeneralId, "taskbarFont",          DefaultFont, 9, -1, QFont::SansSerif },
     { GeneralId, "smallestReadableFont", DefaultFont,  8, -1, QFont::SansSerif }
+#else
+    { GeneralId, "font",        DefaultFont, 9, -1 },
+    { GeneralId, "fixed",       "Monospace", 9, -1 },
+    { GeneralId, "toolBarFont", DefaultFont,  8, -1 },
+    { GeneralId, "menuFont",    DefaultFont, 9, -1 },
+    { "WM",      "activeFont",           DefaultFont,  8, -1 },
+    { GeneralId, "taskbarFont",          DefaultFont, 9, -1 },
+    { GeneralId, "smallestReadableFont", DefaultFont,  8, -1 }
+#endif
 };
 
 QFont KGlobalSettingsData::font( FontTypes fontType )
@@ -360,7 +372,9 @@ QFont KGlobalSettingsData::font( FontTypes fontType )
     {
         const KFontData& fontData = DefaultFontData[fontType];
         cachedFont = new QFont( fontData.FontName, fontData.Size, fontData.Weight );
+#if QT_VERSION < 0x041200
         cachedFont->setStyleHint( fontData.StyleHint );
+#endif
 
         const KConfigGroup configGroup( KGlobal::config(), fontData.ConfigGroupKey );
         *cachedFont = configGroup.readEntry( fontData.ConfigKey, *cachedFont );
