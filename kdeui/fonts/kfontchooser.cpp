@@ -652,18 +652,20 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
         }
     }
     styleListBox->setCurrentRow(listPos >= 0 ? listPos : 0);
-    QString currentStyle = qtStyles[styleListBox->currentItem()->text()];
+    QListWidgetItem* currentitem = styleListBox->currentItem();
+    if (currentitem) {
+        QString currentStyle = qtStyles[currentitem->text()];
 
-    // Recompute the size listbox for this family/style.
-    qreal currentSize = setupSizeListBox(currentFamily, currentStyle);
-    sizeOfFont->setValue(currentSize);
+        // Recompute the size listbox for this family/style.
+        qreal currentSize = setupSizeListBox(currentFamily, currentStyle);
+        sizeOfFont->setValue(currentSize);
 
-    selFont = dbase.font(currentFamily, currentStyle, int(currentSize));
-    if (dbase.isSmoothlyScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
-        selFont.setPointSizeF(currentSize);
+        selFont = dbase.font(currentFamily, currentStyle, int(currentSize));
+        if (dbase.isSmoothlyScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
+            selFont.setPointSizeF(currentSize);
+        }
+        emit q->fontSelected(selFont);
     }
-    emit q->fontSelected(selFont);
-
     signalsAllowed = true;
 }
 
