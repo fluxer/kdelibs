@@ -68,7 +68,7 @@ KWordWrap* KWordWrap::formatText( QFontMetrics &fm, const QRect & r, int /*flags
     for ( int i = 0 ; i < len; ++i )
     {
         const QChar c = inputString.at(i);
-        const int ww = fm.charWidth(inputString, i);
+        const int ww = fm.width(c);
 
         isParens = ( c == QLatin1Char('(') || c == QLatin1Char('[')
                      || c == QLatin1Char('{') );
@@ -96,7 +96,7 @@ KWordWrap* KWordWrap::formatText( QFontMetrics &fm, const QRect & r, int /*flags
             breakAt = lastBreak;
         if ( x + ww > w - 4 && lastBreak == -1 ) // time to break but found nowhere [-> break here]
             breakAt = i;
-        if (i == len - 2 && x + ww + fm.charWidth(inputString, i+1) > w) // don't leave the last char alone
+        if (i == len - 2 && x + ww + fm.width(inputString.at(i+1)) > w) // don't leave the last char alone
             breakAt = lastBreak == -1 ? i - 1 : lastBreak;
         if ( c == QLatin1Char('\n') ) // Forced break here
         {
@@ -200,7 +200,7 @@ void KWordWrap::drawFadeoutText(QPainter *p, int x, int y, int maxW,
         int tl = 0;
         int w = 0;
         while ( tl < t.length() ) {
-            w += fm.charWidth( t, tl );
+            w += fm.width( t.at(tl) );
             if ( w >= maxW )
                 break;
             tl++;
