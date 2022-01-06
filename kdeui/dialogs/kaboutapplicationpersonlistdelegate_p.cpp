@@ -154,7 +154,7 @@ int KAboutApplicationPersonListDelegate::heightForString( const QString &string,
                                                           const QStyleOptionViewItem &option) const
 {
     QFontMetrics fm = option.fontMetrics;
-    QRect boundingRect = fm.boundingRect( 0, 0, lineWidth, 9999, Qt::AlignLeft |
+    QRect boundingRect = fm.boundingRect(QRect(0, 0, lineWidth, 9999), Qt::AlignLeft |
                                           Qt::AlignBottom | Qt::TextWordWrap, string );
     return boundingRect.height();
 }
