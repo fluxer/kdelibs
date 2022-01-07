@@ -104,16 +104,6 @@ static bool s_fullscreen = false;
                 emit loaded(); \
                 break; \
             } \
-            case MPV_EVENT_PAUSE: { \
-                kDebug() << i18n("playback paused"); \
-                emit paused(true); \
-                break; \
-            } \
-            case MPV_EVENT_UNPAUSE: { \
-                kDebug() << i18n("playback unpaused"); \
-                emit paused(false); \
-                break; \
-            } \
             case MPV_EVENT_END_FILE: { \
                 mpv_event_end_file *prop = static_cast<mpv_event_end_file *>(event->data); \
                 if (prop->reason == MPV_END_FILE_REASON_ERROR) { \
@@ -172,6 +162,18 @@ static bool s_fullscreen = false;
                     } else { \
                         kWarning() << i18n("the paused-for-cache format has changed") << prop->format; \
                     } \
+                } else if (strcmp(prop->name, "core-idle") == 0) { \
+                    if (prop->format == MPV_FORMAT_NONE) { \
+                        kDebug() << i18n("the core-idle property is not valid"); \
+                    } else if (prop->format == MPV_FORMAT_FLAG) { \
+                        const bool value = *(bool *)prop->data; \
+                        if (!option("path").isNull()) { \
+                            kDebug() << i18n("playback paused") << value; \
+                            emit paused(value); \
+                        } \
+                    } else { \
+                        kWarning() << i18n("the core-idle format has changed") << prop->format; \
+                    } \
                 } \
                 break; \
             } \
@@ -229,6 +231,7 @@ KAbstractPlayerPrivate::KAbstractPlayerPrivate()
             mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE);
             mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE);
             mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG);
+            mpv_observe_property(m_handle, 0, "core-idle", MPV_FORMAT_FLAG);
             mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG);
             mpv_observe_property(m_handle, 0, "partially-seekable", MPV_FORMAT_FLAG);
             mpv_request_log_messages(m_handle, "info");
