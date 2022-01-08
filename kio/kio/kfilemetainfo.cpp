@@ -491,9 +491,10 @@ KFileMetaInfo::KFileMetaInfo ( const QString& path, KFileMetaInfo::WhatFlags w )
     Q_UNUSED(w);
 }
 
-KFileMetaInfo::KFileMetaInfo ( const KUrl& url )
+KFileMetaInfo::KFileMetaInfo ( const KUrl& url, KFileMetaInfo::WhatFlags w )
 {
     Q_UNUSED(url);
+    Q_UNUSED(w);
 }
 
 KFileMetaInfo::KFileMetaInfo()
