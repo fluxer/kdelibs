@@ -67,7 +67,7 @@ public:
     */
     virtual void setPlayerID(const QString &id) = 0;
     /*!
-        @brief Start playing from @p path
+        @brief Start playback from @p path
         @param path path to load, it can start with "file://", "dvd://", "http://" and other
         valid MPV protocols
         @warning Some protocols may not be supported if MPV itself was not build with support for
@@ -76,7 +76,7 @@ public:
     */
     void load(const QString &path);
     /*!
-        @brief Start playing from @p data
+        @brief Start playback from @p data
         @param data raw data to play
         @warning Use only when you absolutely have to, when possible use @p load(QString)
         @overload
@@ -141,12 +141,11 @@ public:
     */
     QStringList protocols() const;
     /*!
-        @brief Gets you the device used to output audio
-        @return Audio output
+        @return Device used to output audio
     */
     QString audiooutput() const;
     /*!
-        @return A list of available audio outputs
+        @return A list of devices that can be used as audio output
     */
     QStringList audiooutputs() const;
     /*!
@@ -255,18 +254,18 @@ public:
 Q_SIGNALS:
     //! @brief Signals that a path was loaded
     void loaded();
-    //! @brief Signals that the playing state was paused/unpaused when buffering data
+    //! @brief Signals that the playback was paused/unpaused when buffering data
     void buffering(const bool buffering);
-    //! @brief Signals that the playing state was paused/unpaused
+    //! @brief Signals that the playback was paused/unpaused
     void paused(const bool paused);
-    //! @brief Signals that the playing state can advance at position, maybe partitially
+    //! @brief Signals that the playback can advance at position, maybe partitially
     void seekable(const bool seekable);
-    //! @brief Signals that the playing state was advanced at position in seconds
+    //! @brief Signals that the playback was advanced at position in seconds
     void position(const double seconds);
     /*!
-        @brief Signals that the playing state was finished
-        @note It is not guaranteed that the playing was successfull, for an example if a stream
-        was interrupted and the player cannot continue it may emit the signal
+        @brief Signals that the playback was finished
+        @note The signal does not mean playback was successfull, for an example if a stream was
+        interrupted and the player cannot continue it may emit the signal
     */
     void finished();
     /*!
@@ -319,18 +318,18 @@ public:
 Q_SIGNALS:
     //! @brief Signals that a path was loaded
     void loaded();
-    //! @brief Signals that the playing state was paused/unpaused when buffering data
+    //! @brief Signals that the playback was paused/unpaused when buffering data
     void buffering(const bool buffering);
-    //! @brief Signals that the playing state was paused/unpaused
+    //! @brief Signals that the playback was paused/unpaused
     void paused(const bool paused);
-    //! @brief Signals that the playing state can advance at position, maybe partitially
+    //! @brief Signals that the playback can advance at position, maybe partitially
     void seekable(const bool seekable);
-    //! @brief Signals that the playing state was advanced at position in seconds
+    //! @brief Signals that the playback was advanced at position in seconds
     void position(const double seconds);
     /*!
-        @brief Signals that the playing state was finished
-        @note It is not guaranteed that the playing was successfull, for an example if a stream
-        was interrupted and the player cannot continue it may emit the signal
+        @brief Signals that the playback was finished
+        @note The signal does not mean playback was successfull, for an example if a stream was
+        interrupted and the player cannot continue it may emit the signal
     */
     void finished();
     /*!

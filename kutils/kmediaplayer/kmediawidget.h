@@ -93,7 +93,7 @@ public:
 
     //! @brief Reimplementation to provide reasonable size hint
     virtual QSize sizeHint() const;
-    //! @brief Reimplementation to provide reasonable minimum size
+    //! @brief Reimplementation to provide reasonable minimum size hint
     virtual QSize minimumSizeHint() const;
 
 protected:
@@ -118,14 +118,14 @@ public Q_SLOTS:
     */
     void setPlay(const int value = -1);
     /*!
-        @brief Set the position of the path currently loaded
+        @brief Set the position of the playback
         @param value A value in seconds
         @note The value is integer because the slider itself uses integer
         @see KMediaPlayer::currentTime, KMediaPlayer::remainingTime, KMediaPlayer::totalTime
     */
     void setPosition(const int value);
     /*!
-        @brief Set the volume of the path currently loaded
+        @brief Set the volume of the playback
         @param value A value between 0-100 usually
         @note The value is integer because the dial itself uses integer
         @see KMediaPlayer::setVolume
@@ -141,6 +141,7 @@ public Q_SLOTS:
     void setFullscreen(const int value = -1);
     /*!
         @brief Reset internal media controls hide/unhide timer, simulating user interactivity
+        @see controlsHidden
     */
     void resetControlsTimer();
 
@@ -152,6 +153,7 @@ Q_SIGNALS:
         tracking for the widgets connected (directly or indirectly) and call
         @p resetControlsTimer() to ensure that this signal is not emited while the widgets
         are beeing interacted with, hidding them without reason.
+        @see resetControlsTimer
     */
     void controlsHidden(const bool hidden);
 
