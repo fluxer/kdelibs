@@ -508,7 +508,7 @@ void KTextEdit::deleteWordBack()
 
 void KTextEdit::deleteWordForward()
 {
-  deleteWord(textCursor(), QTextCursor::WordRight);
+  deleteWord(textCursor(), QTextCursor::NextWord);
 }
 
 QMenu *KTextEdit::mousePopupMenu()
