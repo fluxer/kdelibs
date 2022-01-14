@@ -116,11 +116,6 @@ void KMediaWidget::open(const QString &path)
     d->m_player->load(path);
 
     d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
-
-    if (d->m_hiddencontrols) {
-        resetControlsTimer();
-        setMouseTracking(true);
-    }
 }
 
 KMediaPlayer* KMediaWidget::player() const
@@ -349,6 +344,12 @@ void KMediaWidget::_updateLoaded()
         _updateStatus(title);
     }
     _updatePlay(!d->m_player->isPlaying());
+
+    if (d->m_hiddencontrols) {
+        setMouseTracking(true);
+        resetControlsTimer();
+        _updateControls(true);
+    }
 }
 
 void KMediaWidget::_updateStatus(const QString string)
@@ -378,8 +379,11 @@ void KMediaWidget::_updateFinished()
 
     if (d->m_hiddencontrols) {
         // show the controls until the next open
-        _updateControls(true);
+        if (d->m_timerid >= 0) {
+            killTimer(d->m_timerid);
+        }
         setMouseTracking(false);
+        _updateControls(true);
     }
     _updatePlay(true);
 }
