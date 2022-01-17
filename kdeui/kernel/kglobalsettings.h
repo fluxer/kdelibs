@@ -42,8 +42,8 @@
 #define KDE_DEFAULT_SHADE_SORT_COLUMN true
 #define KDE_DEFAULT_ALLOW_DEFAULT_BACKGROUND_IMAGES true
 #define KDE_DEFAULT_NATURAL_SORTING true
-#define KDE_DEFAULT_FONT "Sans Serif"
-#define KDE_DEFAULT_FIXED_FONT "Monospace"
+#define KDE_DEFAULT_FONT "DejaVu Sans"
+#define KDE_DEFAULT_FIXED_FONT "DejaVu Sans Mono"
 
 // misc overrides
 #define BUG_REPORT_URL "https://github.com/fluxer/katana/issues"

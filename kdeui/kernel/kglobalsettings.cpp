@@ -423,14 +423,9 @@ QFont KGlobalSettingsData::largeFont( const QString& text )
     // most preferred last
     static const char* const PreferredFontNames[] =
     {
-        "Arial",
-        "Sans Serif",
-        "Verdana",
-        "Tahoma",
-        "Lucida Sans",
-        "Lucidux Sans",
-        "Nimbus Sans",
-        "Gothic I"
+        "DejaVu Sans",
+        "FreeSans",
+        "Liberation Sans",
     };
     static const unsigned int PreferredFontNamesCount = sizeof(PreferredFontNames)/sizeof(const char*);
     for( unsigned int i=0; i<PreferredFontNamesCount; ++i )

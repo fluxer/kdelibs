@@ -23,19 +23,17 @@
 #include "fonthelpers_p.h"
 
 #include "klocale.h"
+#include "kglobalsettings.h"
 
 #ifdef NEVERDEFINE // never true
 // Font names up for translation, listed for extraction.
 
-// i18n: Generic sans serif font presented in font choosers. When selected,
+// i18n: Generic non-fixed font presented in font choosers. When selected,
 // the system will choose a real font, mandated by distro settings.
-I18N_NOOP2("@item Font name", "Sans Serif")
-// i18n: Generic serif font presented in font choosers. When selected,
+I18N_NOOP2("@item Font name", KDE_DEFAULT_FONT)
+// i18n: Generic fixed font presented in font choosers. When selected,
 // the system will choose a real font, mandated by distro settings.
-I18N_NOOP2("@item Font name", "Serif")
-// i18n: Generic monospace font presented in font choosers. When selected,
-// the system will choose a real font, mandated by distro settings.
-I18N_NOOP2("@item Font name", "Monospace")
+I18N_NOOP2("@item Font name", KDE_DEFAULT_FIXED_FONT)
 
 #endif
 
@@ -98,9 +96,8 @@ QStringList translateFontNameList (const QStringList &names,
 {
     // Generic fonts, in the inverse of desired order.
     QStringList genericNames;
-    genericNames.append("Monospace");
-    genericNames.append("Serif");
-    genericNames.append("Sans Serif");
+    genericNames.append(KDE_DEFAULT_FIXED_FONT);
+    genericNames.append(KDE_DEFAULT_FONT);
 
     // Translate fonts, but do not add generics to the list right away.
     QStringList trNames;
