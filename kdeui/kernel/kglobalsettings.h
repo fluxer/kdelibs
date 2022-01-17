@@ -42,19 +42,8 @@
 #define KDE_DEFAULT_SHADE_SORT_COLUMN true
 #define KDE_DEFAULT_ALLOW_DEFAULT_BACKGROUND_IMAGES true
 #define KDE_DEFAULT_NATURAL_SORTING true
-
-// browser window color defaults, ripped from khtml
-#define HTML_DEFAULT_LNK_COLOR Qt::blue
-#define HTML_DEFAULT_TXT_COLOR Qt::black
-#define HTML_DEFAULT_VLNK_COLOR Qt::magenta
-#define HTML_DEFAULT_BASE_COLOR Qt::white
-#define HTML_DEFAULT_VIEW_FONT "Sans Serif"
-#define HTML_DEFAULT_VIEW_FIXED_FONT "Monospace"
-#define HTML_DEFAULT_VIEW_SERIF_FONT "Serif"
-#define HTML_DEFAULT_VIEW_SANSSERIF_FONT "Sans Serif"
-#define HTML_DEFAULT_VIEW_CURSIVE_FONT "Sans Serif"
-#define HTML_DEFAULT_VIEW_FANTASY_FONT "Sans Serif"
-#define HTML_DEFAULT_MIN_FONT_SIZE 7
+#define KDE_DEFAULT_FONT "Sans Serif"
+#define KDE_DEFAULT_FIXED_FONT "Monospace"
 
 // misc overrides
 #define BUG_REPORT_URL "https://github.com/fluxer/katana/issues"

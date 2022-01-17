@@ -341,26 +341,25 @@ struct KFontData
 
 // NOTE: keep in sync with kdebase/workspace/kcontrol/fonts/fonts.cpp
 static const char GeneralId[] =      "General";
-static const char DefaultFont[] =    "Sans Serif";
 
 static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
 {
 #if QT_VERSION < 0x041200
-    { GeneralId, "font",        DefaultFont, 9, -1, QFont::SansSerif },
-    { GeneralId, "fixed",       "Monospace", 9, -1, QFont::TypeWriter },
-    { GeneralId, "toolBarFont", DefaultFont,  8, -1, QFont::SansSerif },
-    { GeneralId, "menuFont",    DefaultFont, 9, -1, QFont::SansSerif },
-    { "WM",      "activeFont",           DefaultFont,  8, -1, QFont::SansSerif },
-    { GeneralId, "taskbarFont",          DefaultFont, 9, -1, QFont::SansSerif },
-    { GeneralId, "smallestReadableFont", DefaultFont,  8, -1, QFont::SansSerif }
+    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9, -1, QFont::SansSerif },
+    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9, -1, QFont::TypeWriter },
+    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8, -1, QFont::SansSerif },
+    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9, -1, QFont::SansSerif },
+    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8, -1, QFont::SansSerif },
+    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9, -1, QFont::SansSerif },
+    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8, -1, QFont::SansSerif }
 #else
-    { GeneralId, "font",        DefaultFont, 9, -1 },
-    { GeneralId, "fixed",       "Monospace", 9, -1 },
-    { GeneralId, "toolBarFont", DefaultFont,  8, -1 },
-    { GeneralId, "menuFont",    DefaultFont, 9, -1 },
-    { "WM",      "activeFont",           DefaultFont,  8, -1 },
-    { GeneralId, "taskbarFont",          DefaultFont, 9, -1 },
-    { GeneralId, "smallestReadableFont", DefaultFont,  8, -1 }
+    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9, -1 },
+    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9, -1 },
+    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8, -1 },
+    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9, -1 },
+    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8, -1 },
+    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9, -1 },
+    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8, -1 }
 #endif
 };
 
