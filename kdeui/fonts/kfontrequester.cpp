@@ -43,7 +43,7 @@ static QFont nearestExistingFont (const QFont &font)
 
     // Check if the family exists.
     const QStringList families = dbase.families();
-    if (!families.contains(family)) {
+    if (!dbase.hasFamily(family)) {
         // Chose another family.
         family = families.count() ? families[0] : "fixed";
         // TODO: Try to find nearest match?
