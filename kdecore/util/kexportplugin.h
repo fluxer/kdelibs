@@ -49,7 +49,7 @@ struct KDEPluginVerificationData
  * \see KDEPluginVerificationData
  */
 #define K_PLUGIN_VERIFICATION_DATA \
-Q_EXTERN_C Q_DECL_EXPORT const KDEPluginVerificationData kde_plugin_verification_data = \
+extern "C" Q_DECL_EXPORT const KDEPluginVerificationData kde_plugin_verification_data = \
 { KDEPluginVerificationData::PluginVerificationDataVersion, KDE_VERSION, KDE_VERSION_STRING };
 
 /**
