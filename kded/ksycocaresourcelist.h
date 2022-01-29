@@ -18,7 +18,7 @@
 #ifndef KSYCOCARESOURCELIST_H
 #define KSYCOCARESOURCELIST_H
 
-#include <QtCore/QLinkedList>
+#include <QtCore/QList>
 #include <QtCore/QString>
 
 struct KSycocaResource
@@ -27,7 +27,7 @@ struct KSycocaResource
    QString extension;
 };
 
-class KSycocaResourceList : public QLinkedList<KSycocaResource>
+class KSycocaResourceList : public QList<KSycocaResource>
 {
 public:
    KSycocaResourceList() { }

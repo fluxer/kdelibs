@@ -46,7 +46,7 @@
 #endif
 #include <assert.h>
 
-#include <QtCore/qlinkedlist.h>
+#include <QtCore/QList>
 #include <QtCore/QTimer>
 #include <QtCore/QFile>
 #include <sys/stat.h> // mode_t
@@ -146,8 +146,8 @@ public:
     bool m_bURLDirty;
     // Used after copying all the files into the dirs, to set mtime (TODO: and permissions?)
     // after the copy is done
-    QLinkedList<CopyInfo> m_directoriesCopied;
-    QLinkedList<CopyInfo>::const_iterator m_directoriesCopiedIterator;
+    QList<CopyInfo> m_directoriesCopied;
+    QList<CopyInfo>::const_iterator m_directoriesCopiedIterator;
 
     CopyJob::CopyMode m_mode;
     bool m_asMethod;
@@ -1704,7 +1704,7 @@ void CopyJobPrivate::setNextDirAttribute()
         // TODO: can be removed now. Or reintroduced as a fast path for local files
         // if launching even more jobs as done above is a performance problem.
         //
-        QLinkedList<CopyInfo>::const_iterator it = m_directoriesCopied.constBegin();
+        QList<CopyInfo>::const_iterator it = m_directoriesCopied.constBegin();
         for ( ; it != m_directoriesCopied.constEnd() ; ++it ) {
             const KUrl& url = (*it).uDest;
             if ( url.isLocalFile() && (*it).mtime != (time_t)-1 ) {

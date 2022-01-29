@@ -23,7 +23,7 @@
 #include "kdirlister.h"
 #include "kdirlister_p.h"
 
-#include <QtCore/qlinkedlist.h>
+#include <QtCore/QList>
 #include <QtCore/QRegExp>
 #include <QtCore/qcoreapplication.h>
 
@@ -1521,7 +1521,7 @@ void KDirListerCache::renameDir( const KUrl &oldUrl, const KUrl &newUrl )
     //DirItem *dir = itemsInUse.take( oldUrlStr );
     //emitRedirections( oldUrl, url );
 
-    QLinkedList<ItemInUseChange> itemsToChange;
+    QList<ItemInUseChange> itemsToChange;
     QSet<KDirLister *> listers;
 
     // Look at all dirs being listed/shown

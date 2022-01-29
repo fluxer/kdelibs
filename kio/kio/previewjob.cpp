@@ -32,7 +32,7 @@
 #include <QtGui/QImage>
 #include <QtCore/QTimer>
 #include <QtCore/QRegExp>
-#include <QtCore/QLinkedList>
+#include <QtCore/QList>
 #include <QCryptographicHash>
 
 #include <kfileitem.h>
@@ -79,8 +79,8 @@ public:
     // Some plugins support remote URLs, <protocol, mimetypes>
     QHash<QString, QStringList> m_remoteProtocolPlugins;
     // Our todo list :)
-    // We remove the first item at every step, so use QLinkedList
-    QLinkedList<PreviewItem> items;
+    // We remove the first item at every step, so use QList
+    QList<PreviewItem> items;
     // The current item
     PreviewItem currentItem;
     // The modification time of that URL
@@ -343,7 +343,7 @@ void PreviewJobPrivate::startPreview()
 void PreviewJob::removeItem( const KUrl& url )
 {
     Q_D(PreviewJob);
-    for (QLinkedList<PreviewItem>::Iterator it = d->items.begin(); it != d->items.end(); ++it)
+    for (QList<PreviewItem>::Iterator it = d->items.begin(); it != d->items.end(); ++it)
         if ((*it).item.url() == url)
         {
             d->items.erase(it);

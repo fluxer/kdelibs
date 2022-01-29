@@ -40,7 +40,7 @@
 #include <kurifilter.h>
 
 #include <QtCore/QDir>
-#include <QtCore/QLinkedList>
+#include <QtCore/QList>
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 #include <QtGui/QBoxLayout>
@@ -641,7 +641,7 @@ void KUrlNavigator::Private::updateButtonVisibility()
     bool isLastButton = true;
     bool hasHiddenButtons = false;
 
-    QLinkedList<KUrlNavigatorButton*> buttonsToShow;
+    QList<KUrlNavigatorButton*> buttonsToShow;
     while (it != itBegin) {
         --it;
         KUrlNavigatorButton* button = (*it);

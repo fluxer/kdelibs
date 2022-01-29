@@ -51,7 +51,7 @@ namespace
   {
     public:
       BarActionBuilder( KActionCollection *actionCollection, KXmlGuiWindow *mainWindow,
-                        QLinkedList<KToolBar*> &oldToolBarList )
+                        QList<KToolBar*> &oldToolBarList )
         : m_actionCollection( actionCollection ), m_mainWindow( mainWindow ), m_needsRebuild( false )
       {
         QList<KToolBar*> toolBars = m_mainWindow->findChildren<KToolBar*>();
@@ -106,7 +106,7 @@ namespace
         return actions;
       }
 
-      const QLinkedList<KToolBar*> &toolBars() const
+      const QList<KToolBar*> &toolBars() const
       {
         return m_toolBars;
       }
@@ -127,7 +127,7 @@ namespace
       KActionCollection *m_actionCollection;
       KXmlGuiWindow *m_mainWindow;
 
-      QLinkedList<KToolBar*> m_toolBars;
+      QList<KToolBar*> m_toolBars;
       QList<QAction*> m_toolBarActions;
 
       bool m_needsRebuild : 1;
@@ -158,7 +158,7 @@ class ToolBarHandler::Private
     ToolBarHandler *parent;
     QPointer<KXmlGuiWindow> mainWindow;
     QList<QAction*> actions;
-    QLinkedList<KToolBar*> toolBars;
+    QList<KToolBar*> toolBars;
 };
 
 void ToolBarHandler::Private::init( KXmlGuiWindow *mw )

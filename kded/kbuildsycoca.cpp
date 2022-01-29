@@ -173,7 +173,7 @@ KService::Ptr KBuildSycoca::createService(const QString &path)
 // returns false if the database is up to date, true if it needs to be saved
 bool KBuildSycoca::build()
 {
-  typedef QLinkedList<KBSEntryDict *> KBSEntryDictList;
+  typedef QList<KBSEntryDict *> KBSEntryDictList;
   KBSEntryDictList entryDictList;
   KBSEntryDict *serviceEntryDict = 0;
 
@@ -250,7 +250,7 @@ bool KBuildSycoca::build()
         g_currentFactory = (*it);
         // g_ctimeInfo gets created after the initial loop, so it has no entryDict.
         g_currentEntryDict = ed_it == ed_end ? 0 : *ed_it;
-	// For each resource the factory deals with
+        // For each resource the factory deals with
         const KSycocaResourceList *list = g_currentFactory->resourceList();
         if (!list) continue;
 

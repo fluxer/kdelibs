@@ -19,7 +19,7 @@
 #ifndef KTOOLBARHANDLER_H
 #define KTOOLBARHANDLER_H
 
-#include <QtCore/QLinkedList>
+#include <QtCore/QList>
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 

@@ -37,7 +37,7 @@ extern "C" {
 #include <pwd.h>
 #include <grp.h>
 }
-#include <QtCore/qlinkedlist.h>
+#include <QtCore/QList>
 #include <QtCore/QTimer>
 #include <QtCore/QFile>
 #include <QtCore/qbuffer.h>
@@ -2734,7 +2734,7 @@ public:
         inline bool operator==( const GetRequest& req ) const
             { return req.id == id; }
     };
-    typedef QLinkedList<GetRequest> RequestQueue;
+    typedef QList<GetRequest> RequestQueue;
 
     RequestQueue m_waitQueue;
     RequestQueue m_activeQueue;
@@ -2750,7 +2750,7 @@ public:
     virtual void start(Slave *slave);
 
     bool findCurrentEntry();
-    void flushQueue(QLinkedList<GetRequest> &queue);
+    void flushQueue(QList<GetRequest> &queue);
 
     Q_DECLARE_PUBLIC(MultiGetJob)
 

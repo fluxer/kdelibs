@@ -74,7 +74,7 @@ namespace KIO {
         int m_newGroup;
         bool m_recursive;
         KFileItemList m_lstItems;
-        QLinkedList<ChmodInfo> m_infos; // linkedlist since we keep removing the first item
+        QList<ChmodInfo> m_infos;
 
         void chmodNextFile();
         void _k_slotEntries( KIO::Job * , const KIO::UDSEntryList & );
