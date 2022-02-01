@@ -60,30 +60,14 @@ SharedSvgRenderer::SharedSvgRenderer(
         delete file;
         return;
     }
-    load(file->readAll(), styleSheet, interestingElements);
+    const QByteArray contents = file->readAll();
     delete file;
-}
 
-SharedSvgRenderer::SharedSvgRenderer(
-    const QByteArray &contents,
-    const QString &styleSheet,
-    QHash<QString, QRectF> &interestingElements,
-    QObject *parent)
-    : QSvgRenderer(parent)
-{
-    load(contents, styleSheet, interestingElements);
-}
-
-bool SharedSvgRenderer::load(
-    const QByteArray &contents,
-    const QString &styleSheet,
-    QHash<QString, QRectF> &interestingElements)
-{
     // Apply the style sheet.
     if (!styleSheet.isEmpty() && contents.contains("current-color-scheme")) {
         QDomDocument svg;
         if (!svg.setContent(contents)) {
-            return false;
+            return;
         }
 
         QDomNode defs = svg.elementsByTagName("defs").item(0);
@@ -103,10 +87,10 @@ bool SharedSvgRenderer::load(
             }
         }
         if (!QSvgRenderer::load(svg.toByteArray(-1))) {
-            return false;
+            return;
         }
     } else if (!QSvgRenderer::load(contents)) {
-        return false;
+        return;
     }
 
     // Search the SVG to find and store all ids that contain size hints.
@@ -125,8 +109,6 @@ bool SharedSvgRenderer::load(
 
         pos += idExpr.matchedLength();
     }
-
-    return true;
 }
 
 #define QLSEP QLatin1Char('_')

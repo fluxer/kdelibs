@@ -42,18 +42,6 @@ class SharedSvgRenderer : public QSvgRenderer, public QSharedData
             const QString &styleSheet,
             QHash<QString, QRectF> &interestingElements,
             QObject *parent = 0);
-
-        SharedSvgRenderer(
-            const QByteArray &contents,
-            const QString &styleSheet,
-            QHash<QString, QRectF> &interestingElements,
-            QObject *parent = 0);
-
-    private:
-        bool load(
-            const QByteArray &contents,
-            const QString &styleSheet,
-            QHash<QString, QRectF> &interestingElements);
 };
 
 class SvgPrivate
