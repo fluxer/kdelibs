@@ -39,7 +39,6 @@ class SharedSvgRenderer : public QSvgRenderer, public QSharedData
         SharedSvgRenderer(QObject *parent = 0);
         SharedSvgRenderer(
             const QString &filename,
-            const QString &styleSheet,
             QHash<QString, QRectF> &interestingElements,
             QObject *parent = 0);
 };
@@ -94,11 +93,8 @@ public:
     QString path;
     QSizeF size;
     QSizeF naturalSize;
-    QChar styleCrc;
     bool multipleImages : 1;
     bool themed : 1;
-    bool applyColors : 1;
-    bool usesColors : 1;
     bool cacheRendering : 1;
     bool themeFailed : 1;
 };
