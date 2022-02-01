@@ -32,7 +32,6 @@
 #include <QRunnable>
 #include <QThreadPool>
 #include <QPainter>
-#include <QSvgRenderer>
 #include <QDateTime>
 
 #include <kdebug.h>
@@ -442,7 +441,6 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
 
     QPoint pos(0, 0);
     //const float ratio = qMax(float(1), size.width() / float(size.height()));
-    const bool scalable = sourceImagePath.endsWith(QLatin1String("svg")) || sourceImagePath.endsWith(QLatin1String("svgz"));
     bool tiled = false;
     QSize scaledSize;
     QImage img;
@@ -453,9 +451,6 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
         img = image;
         kDebug() << "going to resize the img" << img.size();
         imgSize = imgSize.expandedTo(img.size());
-    } else if (scalable) {
-        // scalable: image can be of any size
-        imgSize = imgSize.expandedTo(size);
     } else {
         // otherwise, use the natural size of the loaded image
         img = QImage(sourceImagePath);
@@ -539,25 +534,19 @@ void WallpaperPrivate::renderWallpaper(const QString &sourceImagePath, const QIm
     }
 
     QPainter p(&result);
-    //kDebug() << token << scalable << scaledSize << imgSize;
-    if (scalable) {
-        // tiling is ignored for scalable wallpapers
-        QSvgRenderer svg(sourceImagePath);
-        svg.render(&p);
-    } else {
-        if (scaledSize != imgSize) {
-            img = img.scaled(scaledSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        }
+    // kDebug() << sourceImagePath << scalable << scaledSize << imgSize;
+    if (scaledSize != imgSize) {
+        img = img.scaled(scaledSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    }
 
-        if (tiled) {
-            for (int x = pos.x(); x < size.width(); x += scaledSize.width()) {
-                for (int y = pos.y(); y < size.height(); y += scaledSize.height()) {
-                    p.drawImage(QPoint(x, y), img);
-                }
+    if (tiled) {
+        for (int x = pos.x(); x < size.width(); x += scaledSize.width()) {
+            for (int y = pos.y(); y < size.height(); y += scaledSize.height()) {
+                p.drawImage(QPoint(x, y), img);
             }
-        } else {
-            p.drawImage(pos, img);
         }
+    } else {
+        p.drawImage(pos, img);
     }
 
     if (cacheRendering) {
