@@ -460,8 +460,8 @@ void SvgPrivate::checkColorHints()
 {
     // check to see if we are using colors, but the theme isn't being used or isn't providing
     // a colorscheme
-    QObject::disconnect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
-                        q, SLOT(colorsChanged()));
+    QObject::connect(KGlobalSettings::self(), SIGNAL(kdisplayPaletteChanged()),
+                     q, SLOT(colorsChanged()));
 }
 
 //Following two are utility functions to snap rendered elements to the pixel grid
