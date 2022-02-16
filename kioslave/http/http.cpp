@@ -21,6 +21,8 @@
 #include "kcomponentdata.h"
 
 #include <QCoreApplication>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -62,8 +64,7 @@ void HttpProtocol::setHost( const QString& host, quint16 port, const QString& us
     Q_UNUSED(user);
     Q_UNUSED(pass);
 
-    kDebug(7103);
-    error(KIO::ERR_UNSUPPORTED_ACTION, host);
+    kDebug(7103) << host << port;
 }
 
 void HttpProtocol::stat( const KUrl &url )
@@ -74,8 +75,22 @@ void HttpProtocol::stat( const KUrl &url )
 
 void HttpProtocol::get( const KUrl& url )
 {
-    kDebug(7103);
-    error(KIO::ERR_UNSUPPORTED_ACTION, url.prettyUrl());
+    kDebug(7103) << url.prettyUrl();
+
+    QNetworkAccessManager netmanager(this);
+    QNetworkReply* netreply = netmanager.get(QNetworkRequest(url));
+    while (!netreply->isFinished()) {
+        QCoreApplication::processEvents();
+    }
+
+    if (netreply->error() != QNetworkReply::NoError) {
+        kWarning(7103) << netreply->error();
+        error(KIO::ERR_COULD_NOT_CONNECT, url.prettyUrl());
+        return;
+    }
+
+    data(netreply->readAll());
+    finished();
 }
 
 void HttpProtocol::put( const KUrl& url, int permissions, KIO::JobFlags flags )
