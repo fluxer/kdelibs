@@ -27,6 +27,15 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+static inline QByteArray HTTPMIMEType(const QByteArray &contenttype)
+{
+    QList<QByteArray> splitcontenttype = contenttype.split(';');
+    if (splitcontenttype.isEmpty()) {
+        return "text/plain";
+    }
+    return splitcontenttype.at(0);
+}
+
 extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
 {
     QCoreApplication app(argc, argv);
@@ -60,7 +69,6 @@ HttpProtocol::~HttpProtocol()
 
 void HttpProtocol::setHost( const QString& host, quint16 port, const QString& user, const QString& pass )
 {
-    Q_UNUSED(port);
     Q_UNUSED(user);
     Q_UNUSED(pass);
 
@@ -89,6 +97,9 @@ void HttpProtocol::get( const KUrl& url )
         return;
     }
 
+    const QByteArray mimetype = HTTPMIMEType(netreply->rawHeader("content-type"));
+    kDebug(7103) << mimetype;
+    emit mimeType(mimetype);
     data(netreply->readAll());
     finished();
 }
