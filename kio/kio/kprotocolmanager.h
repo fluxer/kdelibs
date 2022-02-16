@@ -40,7 +40,7 @@ namespace KIO
  * by the end user.
  *
  * KProtocolManager has a heap of static functions that allows only read
- * access to KDE's IO related settings. These include proxy, cache, file
+ * access to KDE's IO related settings. These include proxy, file
  * transfer resumption, timeout and user-agent related settings.
  *
  * The information provided by this class is generic enough to be applicable
@@ -291,51 +291,6 @@ public:
    * @return the proxy configuration script
    */
   static QString proxyConfigScript();
-
-
-/*========================== CACHE CONFIG ===================================*/
-
-
-  /**
-   * Returns true/false to indicate whether a cache
-   * should be used
-   *
-   * @return true to use the cache, false otherwisea
-   */
-  static bool useCache();
-
-  /**
-   * Returns the maximum age in seconds cached files should be
-   * kept before they are deleted as necessary.
-   *
-   * @return the maximum cache age in seconds
-   */
-  static int maxCacheAge();
-
-  /**
-   * Returns the maximum size that can be used for caching.
-   *
-   * By default this function returns the DEFAULT_MAX_CACHE_SIZE
-   * value as defined in http_slave_defaults.h.  Not that the
-   * value returned is in bytes, hence a value of 5120 would mean
-   * 5 Kb.
-   *
-   * @return the maximum cache size in bytes
-   */
-  static int maxCacheSize(); // Maximum cache size in Kb.
-
-  /**
-   * The directory which contains the cache files.
-   * @return the directory that contains the cache files
-   */
-  static QString cacheDir();
-
-  /**
-   * Returns the Cache control directive to be used.
-   * @return the cache control value
-   */
-  static KIO::CacheControl cacheControl();
-
 
 /*============================ DOWNLOAD CONFIG ==============================*/
 

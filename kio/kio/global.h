@@ -320,38 +320,6 @@ namespace KIO
   KIO_EXPORT QString unsupportedActionErrorString(const QString &protocol, int cmd);
 
   /**
-   * Specifies how to use the cache.
-   * @see parseCacheControl()
-   * @see getCacheControlString()
-   */
-  enum CacheControl
-  {
-      CC_CacheOnly, ///< Fail request if not in cache
-      CC_Cache,     ///< Use cached entry if available
-      CC_Verify,    ///< Validate cached entry with remote site if expired
-      CC_Refresh,   ///< Always validate cached entry with remote site
-      CC_Reload     ///< Always fetch from remote site.
-  };
-
-  /**
-   * Parses the string representation of the cache control option.
-   *
-   * @param cacheControl the string representation
-   * @return the cache control value
-   * @see getCacheControlString()
-   */
-  KIO_EXPORT KIO::CacheControl parseCacheControl(const QString &cacheControl);
-
-  /**
-   * Returns a string representation of the given cache control method.
-   *
-   * @param cacheControl the cache control method
-   * @return the string representation
-   * @see parseCacheControl()
-   */
-  KIO_EXPORT QString getCacheControlString(KIO::CacheControl cacheControl);
-
-  /**
    * Convenience method to find the pixmap for a URL.
    *
    * Call this one when you don't know the mimetype.

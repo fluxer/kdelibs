@@ -121,7 +121,6 @@ public:
     bool shouldIgnoreProxyFor(const KUrl& url);
 
    KSharedConfig::Ptr config;
-   KSharedConfig::Ptr http_config;
    QString modifiers;
    QString useragent;
    QString noProxyFor;
@@ -227,9 +226,6 @@ KProtocolManagerPrivate *d = kProtocolManagerPrivate
 void KProtocolManager::reparseConfiguration()
 {
     PRIVATE_DATA;
-    if (d->http_config) {
-        d->http_config->reparseConfiguration();
-    }
     if (d->config) {
         d->config->reparseConfiguration();
     }
@@ -250,15 +246,6 @@ KSharedConfig::Ptr KProtocolManager::config()
      d->config = KSharedConfig::openConfig("kioslaverc", KConfig::NoGlobals);
   }
   return d->config;
-}
-
-static KConfigGroup http_config()
-{
-  PRIVATE_DATA;
-  if (!d->http_config) {
-     d->http_config = KSharedConfig::openConfig("kio_httprc", KConfig::NoGlobals);
-  }
-  return KConfigGroup(d->http_config, QString());
 }
 
 /*=============================== TIMEOUT SETTINGS ==========================*/
@@ -314,36 +301,6 @@ KProtocolManager::ProxyAuthMode KProtocolManager::proxyAuthMode()
 {
   KConfigGroup cg(config(), "Proxy Settings" );
   return static_cast<ProxyAuthMode>(cg.readEntry( "AuthMode" , 0));
-}
-
-/*========================== CACHING =====================================*/
-
-bool KProtocolManager::useCache()
-{
-  return http_config().readEntry( "UseCache", true );
-}
-
-KIO::CacheControl KProtocolManager::cacheControl()
-{
-  QString tmp = http_config().readEntry("cache");
-  if (tmp.isEmpty())
-    return DEFAULT_CACHE_CONTROL;
-  return KIO::parseCacheControl(tmp);
-}
-
-QString KProtocolManager::cacheDir()
-{
-  return http_config().readPathEntry("CacheDir", KGlobal::dirs()->saveLocation("cache","http"));
-}
-
-int KProtocolManager::maxCacheAge()
-{
-  return http_config().readEntry( "MaxCacheAge", DEFAULT_MAX_CACHE_AGE ); // 14 days
-}
-
-int KProtocolManager::maxCacheSize()
-{
-  return http_config().readEntry( "MaxCacheSize", DEFAULT_MAX_CACHE_SIZE ); // 5 MB
 }
 
 QString KProtocolManager::noProxyFor()

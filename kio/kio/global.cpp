@@ -1178,41 +1178,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
  *
  ***************************************************************/
 
-KIO::CacheControl KIO::parseCacheControl(const QString &cacheControl)
-{
-  QString tmp = cacheControl.toLower();
-
-  if (tmp == QLatin1String("cacheonly"))
-     return KIO::CC_CacheOnly;
-  if (tmp == QLatin1String("cache"))
-     return KIO::CC_Cache;
-  if (tmp == QLatin1String("verify"))
-     return KIO::CC_Verify;
-  if (tmp == QLatin1String("refresh"))
-     return KIO::CC_Refresh;
-  if (tmp == QLatin1String("reload"))
-     return KIO::CC_Reload;
-
-  kDebug() << "unrecognized Cache control option:"<<cacheControl;
-  return KIO::CC_Verify;
-}
-
-QString KIO::getCacheControlString(KIO::CacheControl cacheControl)
-{
-    if (cacheControl == KIO::CC_CacheOnly)
-	return "CacheOnly";
-    if (cacheControl == KIO::CC_Cache)
-	return "Cache";
-    if (cacheControl == KIO::CC_Verify)
-	return "Verify";
-    if (cacheControl == KIO::CC_Refresh)
-	return "Refresh";
-    if (cacheControl == KIO::CC_Reload)
-	return "Reload";
-    kDebug() << "unrecognized Cache control enum value:"<<cacheControl;
-    return QString();
-}
-
 QPixmap KIO::pixmapForUrl( const KUrl & _url, mode_t _mode, KIconLoader::Group _group,
                            int _force_size, int _state, QString * _path )
 {
