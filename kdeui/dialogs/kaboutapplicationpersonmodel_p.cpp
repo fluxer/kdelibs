@@ -21,9 +21,6 @@
 #include <kdebug.h>
 #include <kaboutdata.h>
 
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkRequest>
-
 namespace KDEPrivate
 {
 
