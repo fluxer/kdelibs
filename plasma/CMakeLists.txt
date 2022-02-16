@@ -108,7 +108,6 @@ set(plasma_LIB_SRCS
     private/themedwidgetinterface.cpp
     private/tooltip.cpp
     private/windowpreview.cpp
-    private/declarative/declarativenetworkaccessmanagerfactory.cpp
     private/effects/halopainter.cpp
     querymatch.cpp
     runnercontext.cpp

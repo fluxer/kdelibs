@@ -42,7 +42,7 @@ jobs:
         sudo apt-get install -qq wget
         sudo wget https://raw.githubusercontent.com/fluxer/katana-ubuntu/master/katana.list -O /etc/apt/sources.list.d/katana.list
         sudo apt-get update -qq
-        sudo apt-get install -qq cmake katie-dev libenchant-dev libmagick++-dev libmpv-dev xorg-dev mesa-common-dev libavahi-common-dev krb5-multidev libwebp-dev libudev-dev liblzma-dev libexiv2-dev libbz2-dev libattr1-dev libacl1-dev libcdio-dev strigi libdbusmenu-katie media-player-info krb5-config shared-mime-info media-player-info xdg-utils
+        sudo apt-get install -qq cmake katie-dev libenchant-dev libmagick++-dev libmpv-dev xorg-dev mesa-common-dev libavahi-common-dev libwebp-dev libudev-dev liblzma-dev libexiv2-dev libbz2-dev libattr1-dev libacl1-dev libcdio-dev strigi libdbusmenu-katie media-player-info shared-mime-info media-player-info xdg-utils
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL

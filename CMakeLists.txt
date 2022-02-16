@@ -181,14 +181,6 @@ set_package_properties(WebP PROPERTIES
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(GSSAPI)
-set_package_properties(GSSAPI PROPERTIES
-    DESCRIPTION "Allows KIO to make use of certain HTTP authentication services"
-    URL "http://web.mit.edu/kerberos/www"
-    TYPE OPTIONAL
-    PURPOSE "A MIT or HEIMDAL flavor of GSSAPI can be used"
-)
-
 # v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
 macro_optional_find_package(UDev 143)
 set_package_properties(UDev PROPERTIES

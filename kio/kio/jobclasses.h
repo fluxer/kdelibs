@@ -666,7 +666,6 @@ namespace KIO {
     private:
         Q_PRIVATE_SLOT(d_func(), void slotErrorPage())
         Q_PRIVATE_SLOT(d_func(), void slotCanResume( KIO::filesize_t offset ))
-        Q_PRIVATE_SLOT(d_func(), void slotPostRedirection())
         Q_PRIVATE_SLOT(d_func(), void slotNeedSubUrlData())
         Q_PRIVATE_SLOT(d_func(), void slotSubUrlData(KIO::Job*, const QByteArray &))
         Q_PRIVATE_SLOT(d_func(), void slotDataReqFromDevice())

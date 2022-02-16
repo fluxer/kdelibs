@@ -342,7 +342,6 @@ void Applet::restore(KConfigGroup &group)
     // local shortcut, if any
     //TODO: implement; the shortcut will need to be registered with the containment
     /*
-#include "accessmanager.h"
 #include "private/plasmoidservice_p.h"
 #include "authorizationmanager.h"
 #include "authorizationmanager.h"

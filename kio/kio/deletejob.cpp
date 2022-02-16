@@ -42,12 +42,6 @@
 
 extern bool kio_resolve_local_urls; // from copyjob.cpp, abused here to save a symbol.
 
-static bool isHttpProtocol(const QString& protocol)
-{
-    return (protocol.startsWith(QLatin1String("webdav"), Qt::CaseInsensitive) ||
-            protocol.startsWith(QLatin1String("http"), Qt::CaseInsensitive));
-}
-
 namespace KIO
 {
     enum DeleteJobState {
@@ -292,10 +286,7 @@ void DeleteJobPrivate::deleteNextFile()
             } else
             { // if remote - or if unlink() failed (we'll use the job's error handling in that case)
                 //kDebug(7007) << "calling file_delete on" << *it;
-                if (isHttpProtocol(it->protocol()))
-                  job = KIO::http_delete( *it, KIO::HideProgressInfo );
-                else
-                  job = KIO::file_delete( *it, KIO::HideProgressInfo );
+                job = KIO::file_delete( *it, KIO::HideProgressInfo );
                 Scheduler::setJobPriority(job, 1);
                 m_currentURL=(*it);
             }
@@ -332,15 +323,8 @@ void DeleteJobPrivate::deleteNextDir()
             } else {
                 // Call rmdir - works for kioslaves with canDeleteRecursive too,
                 // CMD_DEL will trigger the recursive deletion in the slave.
-                SimpleJob* job;
-                if (isHttpProtocol(it->protocol())) {
-                  KUrl url (*it);
-                  url.adjustPath(KUrl::AddTrailingSlash);
-                  job = KIO::http_delete(url, KIO::HideProgressInfo);
-                } else {
-                  job = KIO::rmdir(*it);
-                  job->addMetaData(QString::fromLatin1("recurse"), "true");
-                }
+                SimpleJob* job = KIO::rmdir(*it);
+                job->addMetaData(QString::fromLatin1("recurse"), "true");
                 Scheduler::setJobPriority(job, 1);
                 dirs.erase(it);
                 q->addSubjob( job );

@@ -42,8 +42,6 @@ if(ENABLE_TESTING)
 endif()
 
 set(kiocore_STAT_SRCS
-    kio/accessmanager.cpp
-    kio/accessmanagerreply_p.cpp
     kio/authinfo.cpp
     kio/chmodjob.cpp
     kio/connection.cpp
@@ -255,7 +253,6 @@ generate_export_header(kio)
 install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kio_export.h
-    kio/accessmanager.h
     kio/connection.h
     kio/slaveinterface.h
     kio/slave.h

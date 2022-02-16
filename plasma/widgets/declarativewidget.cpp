@@ -34,7 +34,6 @@
 #include <kglobal.h>
 #include <kstandarddirs.h>
 
-#include "private/declarative/declarativenetworkaccessmanagerfactory_p.h"
 #include "private/dataenginebindings_p.h"
 
 namespace Plasma
@@ -259,16 +258,12 @@ DeclarativeWidget::DeclarativeWidget(QGraphicsWidget *parent)
     setFlag(QGraphicsItem::ItemHasNoContents);
 
     d->engine = new QDeclarativeEngine(this);
-    d->engine->setNetworkAccessManagerFactory(new DeclarativeNetworkAccessManagerFactory);
 
     d->component = new QDeclarativeComponent(d->engine, this);
 }
 
 DeclarativeWidget::~DeclarativeWidget()
 {
-    QDeclarativeNetworkAccessManagerFactory *factory = d->engine->networkAccessManagerFactory();
-    d->engine->setNetworkAccessManagerFactory(0);
-    delete factory;
     delete d;
 }
 

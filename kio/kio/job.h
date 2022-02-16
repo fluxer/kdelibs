@@ -114,7 +114,7 @@ namespace KIO {
     /**
      * Execute any command that is specific to one slave (protocol).
      *
-     * Examples are : HTTP POST, mount and unmount (kio_file)
+     * Examples are : mount and unmount (kio_file)
      *
      * @param url The URL isn't passed to the slave, but is used to know
      *        which slave to send it to :-)
@@ -248,76 +248,6 @@ namespace KIO {
                                  JobFlags flags = DefaultFlags );
 
     /**
-     * HTTP POST (for form data).
-     *
-     * Example:
-     * \code
-     *    job = KIO::http_post( url, postData, KIO::HideProgressInfo);
-     *    job->addMetaData("content-type", contentType);
-     *    job->addMetaData("referrer", referrerURL);
-     * \endcode
-     *
-     * You MUST specify the "content-type" meta data. It is mandatory.
-     * It can be preceeded with the optional text "Content-Type:", e.g.
-     * "Content-Type: application/x-www-form-urlencoded".
-     *
-     * @p postData is usually an encoded ASCII string (without null-termination!)
-     * and can contain spaces, linefeeds and percent escaped characters such as %20,
-     * %0A and %25.
-     *
-     * @param url Where to write the data.
-     * @param postData Encoded data to post.
-     * @param flags Can be HideProgressInfo here
-     * @return the job handling the operation.
-     */
-    KIO_EXPORT TransferJob *http_post( const KUrl& url, const QByteArray &postData,
-                                       JobFlags flags = DefaultFlags );
-
-    /**
-     * HTTP POST.
-     *
-     * This function, unlike the one that accepts a QByteArray, accepts an IO device
-     * from which to read the encoded data to be posted to the server in order to
-     * to avoid holding the content of very large post requests, e.g. multimedia file
-     * uploads, in memory.
-     *
-     * Example:
-     * \code
-     *    job = KIO::http_post( url, device, device->size(), KIO::HideProgressInfo);
-     *    job->addMetaData("content-type", contentType);
-     *    job->addMetaData("referrer", referrerURL);
-     * \endcode
-     *
-     * You MUST specify the "content-type" meta data. It is mandatory.
-     * It can be preceeded with the optional text "Content-Type:", e.g.
-     * "Content-Type: application/x-www-form-urlencoded".
-     *
-     * @param url Where to write the data.
-     * @param device the QIODevice that provides the encoded post data.
-     * @param size Size of the encoded post data.
-     * @param flags Can be HideProgressInfo here
-     * @return the job handling the operation.
-     *
-     * @since 4.7
-     */
-    KIO_EXPORT TransferJob *http_post( const KUrl& url, QIODevice* device,
-                                       qint64 size = -1, JobFlags flags = DefaultFlags );
-
-    /**
-     * HTTP DELETE.
-     *
-     * Though this function servers the same purpose as KIO::file_delete, unlike
-     * file_delete it accomodates HTTP sepecific actions such as redirections.
-     *
-     * @param src url resource to delete.
-     * @param flags Can be HideProgressInfo here
-     * @return the job handling the operation.
-     *
-     * @since 4.7.3
-     */
-    KIO_EXPORT TransferJob *http_delete( const KUrl& url, JobFlags flags = DefaultFlags );
-
-    /**
      * Get (a.k.a. read), into a single QByteArray.
      * @see StoredTransferJob
      *
@@ -341,33 +271,6 @@ namespace KIO {
      */
     KIO_EXPORT StoredTransferJob *storedPut( const QByteArray& arr, const KUrl& url, int permissions,
                                              JobFlags flags = DefaultFlags );
-
-    /**
-     * HTTP POST (a.k.a. write) data from a single QByteArray.
-     * @see StoredTransferJob
-     *
-     * @param arr The data to write
-     * @param url Where to write data.
-     * @param flags Can be HideProgressInfo here.
-     * @return the job handling the operation.
-     * @since 4.2
-     */
-    KIO_EXPORT StoredTransferJob *storedHttpPost( const QByteArray& arr, const KUrl& url,
-                                                  JobFlags flags = DefaultFlags );
-    /**
-     * HTTP POST (a.k.a. write) data from the given IO device.
-     * @see StoredTransferJob
-     *
-     * @param device Device from which the encoded data to be posted is read.
-     * @param url Where to write data.
-     * @param size Size of the encoded data to be posted.
-     * @param flags Can be HideProgressInfo here.
-     * @return the job handling the operation.
-     *
-     * @since 4.7
-     */
-    KIO_EXPORT StoredTransferJob *storedHttpPost( QIODevice* device, const KUrl& url,
-                                                  qint64 size = -1, JobFlags flags = DefaultFlags );
 
     /**
      * Creates a new multiple get job.

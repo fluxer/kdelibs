@@ -309,7 +309,6 @@ namespace KIO {
 
         void slotErrorPage();
         void slotCanResume( KIO::filesize_t offset );
-        void slotPostRedirection();
         void slotNeedSubUrlData();
         void slotSubUrlData(KIO::Job*, const QByteArray &);
 
