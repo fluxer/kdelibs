@@ -450,7 +450,6 @@ install( FILES
 
 install(
     FILES
-    KIO/AccessManager
     KIO/AuthInfo
     KIO/ChmodJob
     KIO/Connection
