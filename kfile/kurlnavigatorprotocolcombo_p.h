@@ -73,7 +73,6 @@ private:
         CoreCategory,
         PlacesCategory,
         DevicesCategory,
-        SubversionCategory,
         OtherCategory,
         CategoryCount // mandatory last entry
     };

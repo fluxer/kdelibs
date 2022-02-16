@@ -169,12 +169,10 @@
 7101        kio_file
 7102        kio_ftp
 7103        kio_http
-7104        kcookiejar
 7106        kio_smb
 7109        kio_tar
 7110        kio_gzip
 7112        kio_smtp
-7113        kio_http_debug
 7115        kio_thumbnail
 7118        kio_bzip2
 7120        kio_sftp

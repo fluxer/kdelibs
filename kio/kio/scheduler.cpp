@@ -21,7 +21,6 @@
 #include "scheduler.h"
 #include "scheduler_p.h"
 
-#include "sessiondata.h"
 #include "slaveconfig.h"
 #include "authinfo.h"
 #include "slave.h"
@@ -31,13 +30,16 @@
 #include <kdebug.h>
 #include <kprotocolmanager.h>
 #include <kprotocolinfo.h>
-#include <assert.h>
+#include <kstandarddirs.h>
+
 
 #include <QtCore/qhash.h>
 #include <QtGui/qwidget.h>
 #include <QtDBus/QtDBus>
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qthread.h>
+
+#include <assert.h>
 
 // Slaves may be idle for a certain time (3 minutes) before they are killed.
 static const int s_idleSlaveLifetime = 3 * 60;
@@ -68,6 +70,47 @@ static void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protoc
 static Scheduler *scheduler();
 static Slave *heldSlaveForJob(SimpleJob *job);
 
+/********************************* SessionData ****************************/
+
+SessionData::SessionData()
+{
+    useCookie = true;
+    initDone = false;
+}
+
+SessionData::~SessionData()
+{
+}
+
+void SessionData::configDataFor( MetaData &configData, const QString &proto)
+{
+  if ( (proto.startsWith(QLatin1String("http"), Qt::CaseInsensitive)) )
+  {
+    if (!initDone)
+        reset();
+
+    // These might have already been set so check first
+    // to make sure that we do not trumpt settings sent
+    // by apps or end-user.
+    if ( configData["Languages"].isEmpty() )
+        configData["Languages"] = language;
+    if ( configData["Charsets"].isEmpty() )
+        configData["Charsets"] = charsets;
+    if ( configData["CacheDir"].isEmpty() )
+        configData["CacheDir"] = KGlobal::dirs()->saveLocation("cache", "http");
+    if ( configData["UserAgent"].isEmpty() )
+        configData["UserAgent"] = KProtocolManager::defaultUserAgent();
+  }
+}
+
+void SessionData::reset()
+{
+    initDone = true;
+
+    language = KProtocolManager::acceptLanguagesHeader();
+    charsets = QString::fromLatin1(QTextCodec::codecForLocale()->name()).toLower();
+    KProtocolManager::reparseConfiguration();
+}
 
 int SerialPicker::changedPrioritySerial(int oldSerial, int newPriority) const
 {
@@ -1047,7 +1090,7 @@ MetaData SchedulerPrivate::metaDataFor(const QString &protocol, const QStringLis
 {
     const QString host = url.host();
     MetaData configData = SlaveConfig::self()->configData(protocol, host);
-    sessionData.configDataFor( configData, protocol, host );
+    sessionData.configDataFor( configData, protocol );
     if (proxyList.isEmpty()) {
         configData.remove(QLatin1String("UseProxy"));
         configData.remove(QLatin1String("ProxyUrls"));

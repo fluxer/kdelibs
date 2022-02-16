@@ -173,10 +173,6 @@ void KUrlNavigatorProtocolCombo::updateMenu()
                 menu = m_menu->addMenu(i18nc("@item:inmenu", "Devices"));
                 break;
 
-            case SubversionCategory:
-                menu = m_menu->addMenu(i18nc("@item:inmenu", "Subversion"));
-                break;
-
             case OtherCategory:
                 menu = m_menu->addMenu(i18nc("@item:inmenu", "Other"));
                 break;
@@ -204,11 +200,9 @@ void KUrlNavigatorProtocolCombo::initializeCategories()
     if (m_categories.isEmpty()) {
         m_categories.insert("file", CoreCategory);
         m_categories.insert("ftp", CoreCategory);
-        m_categories.insert("fish", CoreCategory);
         m_categories.insert("nfs", CoreCategory);
         m_categories.insert("sftp", CoreCategory);
         m_categories.insert("smb", CoreCategory);
-        m_categories.insert("webdav", CoreCategory);
 
         m_categories.insert("desktop", PlacesCategory);
         m_categories.insert("fonts", PlacesCategory);
@@ -219,12 +213,6 @@ void KUrlNavigatorProtocolCombo::initializeCategories()
         m_categories.insert("floppy", DevicesCategory);
         m_categories.insert("camera", DevicesCategory);
         m_categories.insert("remote", DevicesCategory);
-
-        m_categories.insert("svn", SubversionCategory);
-        m_categories.insert("svn+file", SubversionCategory);
-        m_categories.insert("svn+http", SubversionCategory);
-        m_categories.insert("svn+https", SubversionCategory);
-        m_categories.insert("svn+ssh", SubversionCategory);
     }
 }
 

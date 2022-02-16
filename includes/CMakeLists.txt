@@ -472,7 +472,6 @@ install(
     KIO/PreviewJob
     KIO/RenameDialog
     KIO/Scheduler
-    KIO/SessionData
     KIO/SimpleJob
     KIO/SkipDialog
     KIO/Slave

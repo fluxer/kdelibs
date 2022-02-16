@@ -13,8 +13,6 @@ install(TARGETS kio_http DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 ########### install files ###############
 
 install(
-    FILES
-    http.protocol https.protocol
-    webdav.protocol webdavs.protocol
+    FILES http.protocol https.protocol
     DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )

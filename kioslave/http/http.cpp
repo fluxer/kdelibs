@@ -77,7 +77,7 @@ void HttpProtocol::setHost( const QString& host, quint16 port, const QString& us
 
 void HttpProtocol::stat( const KUrl &url )
 {
-    kDebug(7103);
+    kDebug(7103) << url.prettyUrl();
     error(KIO::ERR_UNSUPPORTED_ACTION, url.prettyUrl());
 }
 
@@ -109,6 +109,6 @@ void HttpProtocol::put( const KUrl& url, int permissions, KIO::JobFlags flags )
     Q_UNUSED(permissions);
     Q_UNUSED(flags);
 
-    kDebug(7103);
+    kDebug(7103) << url.prettyUrl();
     error(KIO::ERR_UNSUPPORTED_ACTION, url.prettyUrl());
 }

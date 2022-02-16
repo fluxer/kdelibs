@@ -24,6 +24,22 @@
 
 namespace KIO {
 
+class SessionData
+{
+public:
+    SessionData();
+    ~SessionData();
+
+    void configDataFor(KIO::MetaData &configData, const QString &proto);
+    void reset();
+
+private:
+    bool initDone;
+    bool useCookie;
+    QString charsets;
+    QString language;
+};
+
 class SlaveKeeper : public QObject
 {
     Q_OBJECT

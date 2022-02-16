@@ -93,7 +93,6 @@ set(kiocore_STAT_SRCS
     kio/previewjob.cpp
     kio/renamedialog.cpp
     kio/scheduler.cpp
-    kio/sessiondata.cpp
     kio/skipdialog.cpp
     kio/slave.cpp
     kio/slavebase.cpp
@@ -257,7 +256,6 @@ install(
     kio/slaveinterface.h
     kio/slave.h
     kio/slaveconfig.h
-    kio/sessiondata.h
     kio/global.h
     kio/netaccess.h
     kio/job.h

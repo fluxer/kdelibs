@@ -457,8 +457,6 @@
   <entry key="mtp" type="Bool" />
   <entry key="system" type="Bool" />
   <entry key="tar" type="Bool" />
-  <entry key="webdav" type="Bool" />
-  <entry key="webdavs" type="Bool" />
   <entry key="zip" type="Bool" />
  </group>
  <group name="Toolbar style" >

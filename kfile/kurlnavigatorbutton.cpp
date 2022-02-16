@@ -80,7 +80,7 @@ void KUrlNavigatorButton::setUrl(const KUrl& url)
         // is given where KIO::stat() should not be used:
         static QSet<QString> protocols;
         if (protocols.isEmpty()) {
-            protocols << "fish" << "ftp" << "nfs" << "sftp" << "smb" << "webdav";
+            protocols << "ftp" << "nfs" << "sftp" << "smb";
         }
         startTextResolving = !protocols.contains(m_url.protocol());
     }
