@@ -34,7 +34,6 @@ set(cmakeFiles
     FindGMP.cmake
     FindGpgme.cmake
     FindGphoto2.cmake
-    FindGSSAPI.cmake
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
     FindKSane.cmake
