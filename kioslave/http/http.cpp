@@ -31,7 +31,7 @@ static inline QByteArray HTTPMIMEType(const QByteArray &contenttype)
 {
     QList<QByteArray> splitcontenttype = contenttype.split(';');
     if (splitcontenttype.isEmpty()) {
-        return "text/plain";
+        return "application/octet-stream";
     }
     return splitcontenttype.at(0);
 }
