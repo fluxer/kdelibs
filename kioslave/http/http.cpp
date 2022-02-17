@@ -22,6 +22,7 @@
 
 #include <QCoreApplication>
 #include <QNetworkAccessManager>
+#include <QNetworkDiskCache>
 #include <QNetworkReply>
 
 #include <sys/types.h>
@@ -86,7 +87,26 @@ void HttpProtocol::get( const KUrl& url )
     kDebug(7103) << url.prettyUrl();
 
     QNetworkAccessManager netmanager(this);
-    QNetworkReply* netreply = netmanager.get(QNetworkRequest(url));
+    QNetworkDiskCache netcache(this);
+    QNetworkRequest netrequest(url);
+
+    // metadata from scheduler
+    kDebug(7103) << metaData("Languages") << metaData("Charsets") << metaData("CacheDir") << metaData("UserAgent");
+    if (hasMetaData("Languages")) {
+        netrequest.setRawHeader("Accept-Language", metaData("Languages").toAscii());
+    }
+    if (hasMetaData("Charsets")) {
+        netrequest.setRawHeader("Accept-Charset", metaData("Charsets").toAscii());
+    }
+    if (hasMetaData("CacheDir")) {
+        netcache.setCacheDirectory(metaData("CacheDir"));
+    }
+    if (hasMetaData("UserAgent")) {
+        netrequest.setRawHeader("User-Agent", metaData("UserAgent").toAscii());
+    }
+    netmanager.setCache(&netcache);
+
+    QNetworkReply* netreply = netmanager.get(netrequest);
     while (!netreply->isFinished()) {
         QCoreApplication::processEvents();
     }
