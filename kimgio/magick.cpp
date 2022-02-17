@@ -72,10 +72,17 @@ bool MagickHandler::read(QImage *image)
     try {
         // QMovie will continuously call read() to get each frame
         if (m_magickimages.size() == 0) {
-            const QByteArray data = device()->readAll();
-
-            Magick::Blob magickinblob(data.constData(), data.size());
-            Magick::readImages(&m_magickimages, magickinblob);
+            const QFile *file = qobject_cast<QFile*>(device());
+            if (file) {
+                // some ImageMagick coders fail to load from blob (e.g. icon), this workaround does
+                // not work for resource files tho
+                const std::string filename = file->fileName().toStdString();
+                Magick::readImages(&m_magickimages, filename);
+            } else {
+                const QByteArray data = device()->readAll();
+                Magick::Blob magickinblob(data.constData(), data.size());
+                Magick::readImages(&m_magickimages, magickinblob);
+            }
         }
 
         if (Q_UNLIKELY(m_magickimages.size() == 0)) {
