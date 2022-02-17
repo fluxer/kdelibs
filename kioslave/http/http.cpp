@@ -64,19 +64,18 @@ HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
 
 HttpProtocol::~HttpProtocol()
 {
-    kDebug(7103);
 }
 
 void HttpProtocol::get(const KUrl &url)
 {
-    kDebug(7103) << url.prettyUrl();
+    kDebug(7103) << "URL" << url.prettyUrl();
 
     QNetworkAccessManager netmanager(this);
     QNetworkDiskCache netcache(this);
     QNetworkRequest netrequest(url);
 
     // metadata from scheduler
-    kDebug(7103) << metaData("Languages") << metaData("Charsets") << metaData("CacheDir") << metaData("UserAgent");
+    kDebug(7103) << "Metadata" << metaData("Languages") << metaData("Charsets") << metaData("CacheDir") << metaData("UserAgent");
     if (hasMetaData("Languages")) {
         netrequest.setRawHeader("Accept-Language", metaData("Languages").toAscii());
     }
@@ -98,7 +97,7 @@ void HttpProtocol::get(const KUrl &url)
     }
 
     if (netreply->error() != QNetworkReply::NoError) {
-        kWarning(7103) << netreply->url() << netreply->error();
+        kWarning(7103) << "Error" << netreply->url() << netreply->error();
         error(KIO::ERR_COULD_NOT_CONNECT, url.prettyUrl());
         return;
     }
