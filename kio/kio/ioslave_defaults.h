@@ -51,4 +51,7 @@
 #define DEFAULT_PROXY_PORT                8080
 #define MAX_PORT_VALUE                   65535
 
+// DEFAULT USER AGENT KEY - ENABLES OS NAME
+#define DEFAULT_USER_AGENT_KEYS         "om"            // Show OS, Machine
+
 #endif

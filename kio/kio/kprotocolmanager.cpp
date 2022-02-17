@@ -47,7 +47,6 @@
 
 #include <kio/slaveconfig.h>
 #include <kio/ioslave_defaults.h>
-#include <kio/http_slave_defaults.h>
 
 #define QL1S(x)   QLatin1String(x)
 #define QL1C(x)   QLatin1Char(x)

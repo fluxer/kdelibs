@@ -336,12 +336,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case KIO::ERR_UPGRADE_REQUIRED:
       result = i18n( "%1 is required by the server, but is not available." , errorText);
       break;
-    case KIO::ERR_POST_DENIED:
-      result = i18n( "Access to restricted port in POST denied.");
-      break;
-    case KIO::ERR_POST_NO_SIZE:
-      result = i18n( "The required content size information was not provided for a POST operation.");
-      break;
     default:
       result = i18n( "Unknown error code %1\n%2\nPlease send a full bug report at %3.", errorCode , errorText, QString(BUG_REPORT_URL) );
       break;

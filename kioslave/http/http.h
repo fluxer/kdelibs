@@ -36,7 +36,6 @@ class HttpProtocol : public QObject, public KIO::SlaveBase
 
     virtual void stat( const KUrl &url );
     virtual void get( const KUrl& url );
-    virtual void put( const KUrl& url, int permissions, KIO::JobFlags flags );
 };
 
 #endif // KDELIBS_HTTP_H

@@ -103,12 +103,3 @@ void HttpProtocol::get( const KUrl& url )
     data(netreply->readAll());
     finished();
 }
-
-void HttpProtocol::put( const KUrl& url, int permissions, KIO::JobFlags flags )
-{
-    Q_UNUSED(permissions);
-    Q_UNUSED(flags);
-
-    kDebug(7103) << url.prettyUrl();
-    error(KIO::ERR_UNSUPPORTED_ACTION, url.prettyUrl());
-}
