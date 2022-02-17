@@ -28,14 +28,11 @@ class HttpProtocol : public QObject, public KIO::SlaveBase
 {
     Q_OBJECT
 
-    public:
-    HttpProtocol( const QByteArray &pool, const QByteArray &app );
+public:
+    HttpProtocol(const QByteArray &pool, const QByteArray &app);
     virtual ~HttpProtocol();
 
-    virtual void setHost( const QString& host, quint16 port, const QString& user, const QString& pass );
-
-    virtual void stat( const KUrl &url );
-    virtual void get( const KUrl& url );
+    virtual void get(const KUrl &url);
 };
 
 #endif // KDELIBS_HTTP_H

@@ -30,25 +30,24 @@
 
 static inline QByteArray HTTPMIMEType(const QByteArray &contenttype)
 {
-    QList<QByteArray> splitcontenttype = contenttype.split(';');
+    const QList<QByteArray> splitcontenttype = contenttype.split(';');
     if (splitcontenttype.isEmpty()) {
-        return "application/octet-stream";
+        return QByteArray("application/octet-stream");
     }
     return splitcontenttype.at(0);
 }
 
-extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
+extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
-    KComponentData componentData( "kio_http", "kdelibs4" );
-    ( void ) KGlobal::locale();
+    KComponentData componentData("kio_http", "kdelibs4");
+    (void)KGlobal::locale();
 
-    kDebug(7103) << "Starting " << getpid();
+    kDebug(7103) << "Starting " << ::getpid();
 
-    if (argc != 4)
-    {
-        fprintf(stderr, "Usage: kio_http protocol domain-socket1 domain-socket2\n");
-        exit(-1);
+    if (argc != 4) {
+        ::fprintf(stderr, "Usage: kio_http protocol domain-socket1 domain-socket2\n");
+        ::exit(-1);
     }
 
     HttpProtocol slave(argv[2], argv[3]);
@@ -58,8 +57,8 @@ extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
     return 0;
 }
 
-HttpProtocol::HttpProtocol( const QByteArray &pool, const QByteArray &app )
-    : SlaveBase( "http", pool, app )
+HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
+    : SlaveBase("http", pool, app)
 {
 }
 
@@ -68,21 +67,7 @@ HttpProtocol::~HttpProtocol()
     kDebug(7103);
 }
 
-void HttpProtocol::setHost( const QString& host, quint16 port, const QString& user, const QString& pass )
-{
-    Q_UNUSED(user);
-    Q_UNUSED(pass);
-
-    kDebug(7103) << host << port;
-}
-
-void HttpProtocol::stat( const KUrl &url )
-{
-    kDebug(7103) << url.prettyUrl();
-    error(KIO::ERR_UNSUPPORTED_ACTION, url.prettyUrl());
-}
-
-void HttpProtocol::get( const KUrl& url )
+void HttpProtocol::get(const KUrl &url)
 {
     kDebug(7103) << url.prettyUrl();
 
@@ -117,9 +102,21 @@ void HttpProtocol::get( const KUrl& url )
         return;
     }
 
-    const QByteArray mimetype = HTTPMIMEType(netreply->rawHeader("content-type"));
-    kDebug(7103) << mimetype;
-    emit mimeType(mimetype);
+    const QVariant netredirect = netreply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+    if (netredirect.isValid()) {
+        const QUrl netredirecturl = netreply->url().resolved(netredirect.toUrl());
+        kDebug(7103) << "Redirecting to" << netredirecturl;
+        redirection(netredirecturl);
+        finished();
+        return;
+    }
+
+    kDebug(7103) << "Headers" <<netreply->rawHeaderPairs();
+
+    const QByteArray httpmimetype = HTTPMIMEType(netreply->rawHeader("content-type"));
+    kDebug(7103) << "MIME type" << httpmimetype;
+    emit mimeType(httpmimetype);
     data(netreply->readAll());
+
     finished();
 }
