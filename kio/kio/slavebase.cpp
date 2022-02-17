@@ -550,12 +550,6 @@ void SlaveBase::position( KIO::filesize_t _pos )
     send( INF_POSITION, data );
 }
 
-void SlaveBase::processedPercent( float /* percent */ )
-{
-  kDebug(7019) << "STUB";
-}
-
-
 void SlaveBase::speed( unsigned long _bytes_per_second )
 {
     KIO_DATA << (quint32) _bytes_per_second;
