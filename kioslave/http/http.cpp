@@ -92,12 +92,13 @@ void HttpProtocol::get(const KUrl &url)
     netmanager.setCache(&netcache);
 
     QNetworkReply* netreply = netmanager.get(netrequest);
+    connect(netreply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(slotProgress(qint64,qint64)));
     while (!netreply->isFinished()) {
         QCoreApplication::processEvents();
     }
 
     if (netreply->error() != QNetworkReply::NoError) {
-        kWarning(7103) << netreply->error();
+        kWarning(7103) << netreply->url() << netreply->error();
         error(KIO::ERR_COULD_NOT_CONNECT, url.prettyUrl());
         return;
     }
@@ -111,12 +112,22 @@ void HttpProtocol::get(const KUrl &url)
         return;
     }
 
-    kDebug(7103) << "Headers" <<netreply->rawHeaderPairs();
+    kDebug(7103) << "Headers" << netreply->rawHeaderPairs();
 
     const QByteArray httpmimetype = HTTPMIMEType(netreply->rawHeader("content-type"));
     kDebug(7103) << "MIME type" << httpmimetype;
     emit mimeType(httpmimetype);
+
     data(netreply->readAll());
 
     finished();
 }
+
+void HttpProtocol::slotProgress(qint64 received, qint64 total)
+{
+    kDebug(7103) << "Received" << received << "from" << total;
+    emit processedSize(static_cast<KIO::filesize_t>(received));
+    emit totalSize(static_cast<KIO::filesize_t>(total));
+}
+
+#include "moc_http.cpp"

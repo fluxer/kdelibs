@@ -33,6 +33,9 @@ public:
     virtual ~HttpProtocol();
 
     virtual void get(const KUrl &url);
+
+private Q_SLOTS:
+    void slotProgress(qint64 received, qint64 total);
 };
 
 #endif // KDELIBS_HTTP_H
