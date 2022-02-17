@@ -118,10 +118,7 @@ target_link_libraries(kdecore-kmimeglobsfileparsertest ${KDE4_KDECORE_LIBS} ${QT
 
 ########### kfiltertest ###############
 
-# compile httpfilter.cpp into the test since it's not part of kdelibs
-# (only part of kio_http)
-set(kfiltertest_SRCS kfiltertest.cpp ../../kio/httpfilter/httpfilter.cc)
-include_directories( ${CMAKE_SOURCE_DIR}/kio/httpfilter )
+set(kfiltertest_SRCS kfiltertest.cpp)
 kde4_add_test(kdecore-kfiltertest ${kfiltertest_SRCS})
 target_link_libraries(kdecore-kfiltertest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${ZLIB_LIBRARIES})
 
@@ -137,4 +134,4 @@ target_link_libraries(kdecore-klibloadertestmodule4  ${KDE4_KDECORE_LIBS} ${QT_Q
 
 set(kcompositejobtest_SRCS kcompositejobtest.cpp)
 kde4_add_test(kdecore-kcompositejobtest ${kcompositejobtest_SRCS})
-target_link_libraries(kdecore-kcompositejobtest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
+target_link_libraries(kdecore-kcompositejobtest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})

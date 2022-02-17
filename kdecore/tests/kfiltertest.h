@@ -38,7 +38,6 @@ private Q_SLOTS:
     void test_findFilterByMimeType();
     void test_deflateWithZlibHeader();
     void test_pushData();
-    void test_httpFilterGzip();
 
 private:
     void test_block_write(const QString & fileName, const QByteArray& data);
