@@ -130,21 +130,22 @@ void KServiceTest::testByName()
     QVERIFY( s0 );
     QCOMPARE( s0->name(), QString::fromLatin1("KParts/ReadOnlyPart") );
 
-    KService::Ptr httpcache = KService::serviceByDesktopPath("http_cache_cleaner.desktop");
-    QCOMPARE( httpcache->name(), QString::fromLatin1("HTTP Cache Cleaner"));
+    KService::Ptr kfilemodule = KService::serviceByDesktopPath("kfilemodule.desktop");
+    QVERIFY(kfilemodule);
+    QCOMPARE( kfilemodule->name(), QString::fromLatin1("KFileModule"));
 }
 
 void KServiceTest::testProperty()
 {
-    KService::Ptr kdedkcookiejar = KService::serviceByDesktopPath("kded/kcookiejar.desktop");
-    QVERIFY(kdedkcookiejar);
-    QCOMPARE(kdedkcookiejar->entryPath(), QString("kded/kcookiejar.desktop"));
+    KService::Ptr kdedkaudioplayer = KService::serviceByDesktopPath("kded/kaudioplayer.desktop");
+    QVERIFY(kdedkaudioplayer);
+    QCOMPARE(kdedkaudioplayer->entryPath(), QString("kded/kaudioplayer.desktop"));
 
-    QCOMPARE(kdedkcookiejar->property("ServiceTypes").toStringList().join(","), QString("KDEDModule"));
-    QCOMPARE(kdedkcookiejar->property("X-KDE-Kded-autoload").toBool(), false);
-    QCOMPARE(kdedkcookiejar->property("X-KDE-Kded-load-on-demand").toBool(), true);
-    QVERIFY(!kdedkcookiejar->property("Name").toString().isEmpty());
-    QVERIFY(!kdedkcookiejar->property("Name[fr]", QVariant::String).isValid());
+    QCOMPARE(kdedkaudioplayer->property("ServiceTypes").toStringList().join(","), QString("KDEDModule"));
+    QCOMPARE(kdedkaudioplayer->property("X-KDE-Kded-autoload").toBool(), false);
+    QCOMPARE(kdedkaudioplayer->property("X-KDE-Kded-load-on-demand").toBool(), true);
+    QVERIFY(!kdedkaudioplayer->property("Name").toString().isEmpty());
+    QVERIFY(!kdedkaudioplayer->property("Name[fr]", QVariant::String).isValid());
 
     // Test property("X-KDE-Protocols"), which triggers the KServiceReadProperty code.
     KService::Ptr fakePart = KService::serviceByDesktopPath("fakepart.desktop");
