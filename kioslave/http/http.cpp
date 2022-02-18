@@ -21,6 +21,7 @@
 #include "kcomponentdata.h"
 
 #include <QCoreApplication>
+#include <QThread>
 #include <QNetworkAccessManager>
 #include <QNetworkDiskCache>
 #include <QNetworkReply>
@@ -108,6 +109,7 @@ void HttpProtocol::get(const KUrl &url)
     connect(netreply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(slotProgress(qint64,qint64)));
     while (!netreply->isFinished()) {
         QCoreApplication::processEvents();
+        QThread::msleep(400);
     }
 
     if (netreply->error() != QNetworkReply::NoError) {
