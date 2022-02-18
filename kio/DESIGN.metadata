@@ -27,7 +27,8 @@ Key             Value(s)        Description
 
 referrer        string          The URL from which the request originates. (read by http)
 
-modified        string          The modification date of the document (set by http and by kio before put)
+modified        string          The modification date of the document (set by http and by kio
+                                before put)
 
 accept          string          List of mimetypes to accept separated by a ", ". (read by http)
 
@@ -41,42 +42,54 @@ cache           "cache"         Use entry from cache if available.
 
 window-id       number          winId() of the window the request is associated with.
 
-resume          number          Try to get the file starting at the given offset (set by file_copy when finding a .part file,
-                                                                                  but can also be set by apps.)
+resume          number          Try to get the file starting at the given offset (set by file_copy
+                                when finding a .part file, but can also be set by apps.)
 
-charset         string          Charset of the current content as returned by a HTTP Header Response.
+charset         string          Charset of the current content as returned by a HTTP Header
+                                Response.
 
 Charsets        string          Charset(s) send in the "Accept-Charset:" HTTP Request Header.
 
 Languages       string          Language(s) send in the "Accept-Language:" HTTP Request Header.
 
 content-disposition-type        string Type of Content-Disposition from a HTTP Header Response.
-content-disposition-*           any other valid value sent in a Content-Disposition header (e.g. filename)
+content-disposition-*           any other valid value sent in a Content-Disposition header (e.g.
+                                filename)
 
 request-id      number          Sequence number to identify requests in a MultiGet command.
 
-errorPage       bool            Flag that indicates that an errorPage() is preferred over an error().                                      (default:true)
+errorPage       bool            Flag that indicates that an errorPage() is preferred over an
+                                error().  (default:true)
 
-no-auth         bool            Flag that indicates that no authentication (neither WWW nor proxy) attempts should be made.
-no-www-auth     bool            Flag that indicates that no HTTP WWW authentication attempts should be made.
-no-proxy-auth   bool            Flag that indicates that no HTTP proxy authentication attempts should be made.
-no-auth-prompt  bool            Flag that indicates that only cached authentication tokens should be used.
+no-auth         bool            Flag that indicates that no authentication (neither WWW nor proxy)
+                                attempts should be made.
+no-www-auth     bool            Flag that indicates that no HTTP WWW authentication attempts should
+                                be made.
+no-proxy-auth   bool            Flag that indicates that no HTTP proxy authentication attempts
+                                should be made.
+no-auth-prompt  bool            Flag that indicates that only cached authentication tokens should
+                                be used.
 
 PropagateHttpHeader  bool       Whether HTTP headers should be send back (read by http)
 
-HTTP-Headers    string          The HTTP headers, concatenated, \n delimited (set by http)
-                                Requires PropagateHttpHeader to be set.
+HTTP-Headers    string          The HTTP headers, concatenated, \n delimited. Requires
+                                 PropagateHttpHeader to be set. (set by http)
 
 UseProxy        string          URL representing the proxy settings (read by http)
-ProxyUrls       string          Comma separated list of proxy urls. The first url in this list matches one set in "UseProxy".
+ProxyUrls       string          Comma separated list of proxy urls. The first url in this list
+                                matches one set in "UseProxy".
 
-textmode        bool            When true, switches FTP up/downloads to ascii transfer mode (read by ftp)
+textmode        bool            When true, switches FTP up/downloads to ascii transfer mode (read
+                                by ftp)
 
-recurse         bool            When true, del() will be able to delete non-empty directories.  (read by file)
-                                Otherwise, del() is supposed to give an error on non-empty directories.
+recurse         bool            When true, del() will be able to delete non-empty directories.
+                                Otherwise, del() is supposed to give an error on non-empty
+                                directories. (read by file) 
 
-DefaultRemoteProtocol  string   Protocol to redirect file://<hostname>/ URLs to, default is "smb" (read by file)
-redirect-to-get bool            If "true", changes a redrirection request to a GET operation regardless of the original operation.
+DefaultRemoteProtocol  string   Protocol to redirect file://<hostname>/ URLs to, default is "smb"
+                                (read by file)
+redirect-to-get bool            If "true", changes a redrirection request to a GET operation
+                                regardless of the original operation.
 
 ** NOTE: Anything in quotes ("") under Value(s) indicates literal value.
 
