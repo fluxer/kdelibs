@@ -402,8 +402,6 @@ private:
     QString mimetypeInternal(const KUrl & url, QWidget* window = 0);
     void enter_loop();
 
-    friend class I_like_this_class;
-
 private Q_SLOTS:
     void slotResult( KJob * job );
     void slotMimetype( KIO::Job * job, const QString & type );
