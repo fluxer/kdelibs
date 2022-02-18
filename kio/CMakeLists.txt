@@ -61,7 +61,6 @@ set(kiocore_STAT_SRCS
     kio/kabstractfileitemactionplugin.cpp
     kio/kacl.cpp
     kio/kbuildsycocaprogressdialog.cpp
-    kio/kdatatool.cpp
     kio/kdbusservicestarter.cpp
     kio/kdesktopfileactions.cpp
     kio/kdirlister.cpp
@@ -236,7 +235,6 @@ install(
     application.desktop
     kcmodule.desktop
     kcmoduleinit.desktop
-    kdatatool.desktop
     kscan.desktop
     kurifilterplugin.desktop
     kfile/kpropertiesdialogplugin.desktop
@@ -290,7 +288,6 @@ install(
     kio/kacl.h
     kio/kautomount.h
     kio/kbuildsycocaprogressdialog.h
-    kio/kdatatool.h
     kio/kdbusservicestarter.h
     kio/kdesktopfileactions.h
     kio/kdirlister.h

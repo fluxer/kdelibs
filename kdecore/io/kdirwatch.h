@@ -78,7 +78,7 @@ class KDECORE_EXPORT KDirWatch : public QObject
     *
     * Scanning begins immediately when a dir/file watch
     * is added.
-    * @param parent the parent of the QObject (or 0 for parent-less KDataTools)
+    * @param parent the parent of the QObject (or 0 for parent-less KDirWatch)
     */
    KDirWatch(QObject* parent = 0);
 

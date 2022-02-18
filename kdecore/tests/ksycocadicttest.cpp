@@ -55,7 +55,6 @@ void KSycocaDictTest::testStandardDict()
     QByteArray buffer;
     QStringList mimeTypes;
     mimeTypes << "KUriFilter/Plugin"
-              << "KDataTool"
               << "KCModule"
               << "KScan/KScanDialog"
               << "Browser/View"

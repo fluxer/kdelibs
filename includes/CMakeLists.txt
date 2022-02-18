@@ -88,9 +88,6 @@ install(
     KDebug
     KDEDModule
     KDEPrintDialog
-    KDataTool
-    KDataToolAction
-    KDataToolInfo
     KDateComboBox
     KDatePicker
     KDateTable
