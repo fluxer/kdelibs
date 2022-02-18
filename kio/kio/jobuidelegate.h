@@ -143,8 +143,7 @@ public:
         WarningYesNo = 2,
         WarningContinueCancel = 3,
         WarningYesNoCancel = 4,
-        Information = 5,
-        SSLMessageBox = 6
+        Information = 5
     };
     /**
     * This function allows for the delegation user prompts from the ioslaves.
@@ -157,7 +156,6 @@ public:
     * @param iconYes the icon shown on the YES button.
     * @param iconNo the icon shown on the NO button.
     * @param dontAskAgainName the name used to store result from 'Do not ask again' checkbox.
-    * @param sslMetaData SSL information used by the SSLMessageBox.
     *
     * @since 4.11
     *
@@ -169,8 +167,7 @@ public:
                           const QString& buttonNo,
                           const QString& iconYes = QString(),
                           const QString& iconNo = QString(),
-                          const QString& dontAskAgainName = QString(),
-                          const KIO::MetaData& sslMetaData = KIO::MetaData());
+                          const QString& dontAskAgainName = QString());
 private:
     class Private;
     Private * const d;

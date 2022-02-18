@@ -550,14 +550,13 @@ void SimpleJobPrivate::restartAfterRedirection(KUrl *redirectionUrl)
 int SimpleJobPrivate::requestMessageBox(int _type, const QString& text, const QString& caption,
                                        const QString& buttonYes, const QString& buttonNo,
                                        const QString& iconYes, const QString& iconNo,
-                                       const QString& dontAskAgainName,
-                                       const KIO::MetaData& sslMetaData)
+                                       const QString& dontAskAgainName)
 {
     JobUiDelegate* delegate = ui();
     if (delegate) {
       const JobUiDelegate::MessageBoxType type = static_cast<JobUiDelegate::MessageBoxType>(_type);
       return delegate->requestMessageBox(type, text, caption, buttonYes, buttonNo,
-                                         iconYes, iconNo, dontAskAgainName, sslMetaData);
+                                         iconYes, iconNo, dontAskAgainName);
     }
     kWarning(7007) << "JobUiDelegate not set! Returing -1";
     return -1;
@@ -1000,12 +999,6 @@ void TransferJob::slotRedirection( const KUrl &url)
     {
        d->m_redirectionURL = url; // We'll remember that when the job finishes
        d->m_redirectionList.append(url);
-       QString sslInUse = queryMetaData(QLatin1String("ssl_in_use"));
-       if (!sslInUse.isNull()) { // the key is present
-           addMetaData(QLatin1String("ssl_was_in_use"), sslInUse);
-       } else {
-           addMetaData(QLatin1String("ssl_was_in_use"), QLatin1String("FALSE"));
-       }
        // Tell the user that we haven't finished yet
        emit redirection(this, d->m_redirectionURL);
     }

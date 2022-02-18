@@ -480,7 +480,6 @@ install(
     KIO/SlaveInterface
     KIO/StatJob
     KIO/StoredTransferJob
-    KIO/TCPSlaveBase
     KIO/Task
     KIO/TransferJob
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KIO

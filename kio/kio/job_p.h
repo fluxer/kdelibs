@@ -191,8 +191,7 @@ namespace KIO {
                               const QString& buttonNo,
                               const QString& iconYes = QString(),
                               const QString& iconNo = QString(),
-                              const QString& dontAskAgainName = QString(),
-                              const KIO::MetaData& sslMetaData = KIO::MetaData());
+                              const QString& dontAskAgainName = QString());
 
         Q_DECLARE_PUBLIC(SimpleJob)
 

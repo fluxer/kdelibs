@@ -98,7 +98,6 @@ set(kiocore_STAT_SRCS
     kio/slavebase.cpp
     kio/slaveconfig.cpp
     kio/slaveinterface.cpp
-    kio/tcpslavebase.cpp
     kio/thumbcreator.cpp
     kio/thumbsequencecreator.cpp
     kio/udsentry.cpp
@@ -268,7 +267,6 @@ install(
     kio/slavebase.h
     kio/filejob.h
     kio/fileundomanager.h
-    kio/tcpslavebase.h
     kio/forwardingslavebase.h
     kio/chmodjob.h
     kio/authinfo.h

@@ -86,8 +86,7 @@ void UserNotificationHandler::processRequest()
                                           r->data.value(MSG_NO_BUTTON_TEXT).toString(),
                                           r->data.value(MSG_YES_BUTTON_ICON).toString(),
                                           r->data.value(MSG_NO_BUTTON_ICON).toString(),
-                                          r->data.value(MSG_DONT_ASK_AGAIN).toString(),
-                                          r->data.value(MSG_META_DATA).toMap());
+                                          r->data.value(MSG_DONT_ASK_AGAIN).toString());
             m_cachedResults.insert(key, new int(result));
         }
     } else {

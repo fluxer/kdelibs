@@ -294,18 +294,6 @@ bool SlaveInterface::dispatch(int _cmd, const QByteArray &rawdata)
     case INF_META_DATA: {
         MetaData m;
         stream >> m;
-        if (m.contains(QLatin1String("ssl_in_use"))) {
-            const QLatin1String ssl_("ssl_");
-            const MetaData constM = m;
-            for (MetaData::ConstIterator it = constM.lowerBound(ssl_); it != constM.constEnd(); ++it) {
-                if (it.key().startsWith(ssl_)) {
-                    d->sslMetaData.insert(it.key(), it.value());
-                } else {
-                    // we're past the ssl_* entries; remember that QMap is ordered.
-                    break;
-                }
-            }
-        }
         emit metaData(m);
         break;
     }
@@ -425,10 +413,6 @@ void SlaveInterface::messageBox( int type, const QString &text, const QString &c
         data.insert(UserNotificationHandler::MSG_NO_BUTTON_ICON, QLatin1String("arrow-right"));
     } else if (buttonNo == i18n("&Current Session only")) {
         data.insert(UserNotificationHandler::MSG_NO_BUTTON_ICON, QLatin1String("chronometer"));
-    }
-
-    if (type == KIO::SlaveBase::SSLMessageBox) {
-        data.insert(UserNotificationHandler::MSG_META_DATA, d->sslMetaData.toVariant());
     }
 
     globalUserNotificationHandler()->requestMessageBox(this, type, data);

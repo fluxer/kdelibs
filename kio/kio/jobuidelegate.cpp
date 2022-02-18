@@ -201,8 +201,7 @@ int KIO::JobUiDelegate::requestMessageBox(KIO::JobUiDelegate::MessageBoxType typ
                                           const QString& text, const QString& caption,
                                           const QString& buttonYes, const QString& buttonNo,
                                           const QString& iconYes, const QString& iconNo,
-                                          const QString& dontAskAgainName,
-                                          const KIO::MetaData& sslMetaData)
+                                          const QString& dontAskAgainName)
 {
     int result = -1;
 
@@ -241,42 +240,6 @@ int KIO::JobUiDelegate::requestMessageBox(KIO::JobUiDelegate::MessageBoxType typ
         KMessageBox::information(window(), text, caption, dontAskAgainName, options);
         result = 1; // whatever
         break;
-    case SSLMessageBox:
-    {
-        QPointer<KSslInfoDialog> kid (new KSslInfoDialog(window()));
-        //### this is boilerplate code and appears in khtml_part.cpp almost unchanged!
-        const QStringList sl = sslMetaData.value(QLatin1String("ssl_peer_chain")).split('\x01', QString::SkipEmptyParts);
-        QList<QSslCertificate> certChain;
-        bool decodedOk = true;
-        foreach (const QString &s, sl) {
-            certChain.append(QSslCertificate(s.toLatin1())); //or is it toLocal8Bit or whatever?
-            if (certChain.last().isNull()) {
-                decodedOk = false;
-                break;
-            }
-        }
-
-        if (decodedOk) {
-            result = 1; // whatever
-            kid->setSslInfo(certChain,
-                            sslMetaData.value(QLatin1String("ssl_peer_ip")),
-                            text, // the URL
-                            sslMetaData.value(QLatin1String("ssl_protocol_version")),
-                            sslMetaData.value(QLatin1String("ssl_cipher")),
-                            sslMetaData.value(QLatin1String("ssl_cipher_used_bits")).toInt(),
-                            sslMetaData.value(QLatin1String("ssl_cipher_bits")).toInt(),
-                            KSslInfoDialog::errorsFromString(sslMetaData.value(QLatin1String("ssl_cert_errors"))));
-            kid->exec();
-        } else {
-            result = -1;
-            KMessageBox::information(window(),
-                                     i18n("The peer SSL certificate chain appears to be corrupt."),
-                                     i18n("SSL"), QString(), options);
-        }
-        // KSslInfoDialog deletes itself (Qt::WA_DeleteOnClose).
-        delete kid;
-        break;
-    }
     default:
         kWarning() << "Unknown type" << type;
         result = 0;

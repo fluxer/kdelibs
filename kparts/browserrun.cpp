@@ -141,15 +141,6 @@ void BrowserRun::scanFile()
     if ( d->m_part ) {
         const QString proto = d->m_part->url().protocol();
 
-      if (proto == "https") {
-            metaData.insert("main_frame_request", "TRUE" );
-            metaData.insert("ssl_was_in_use", "TRUE" );
-           // metaData.insert("ssl_activate_warnings", "TRUE" );
-      } else if (proto == "http") {
-           // metaData.insert("ssl_activate_warnings", "TRUE" );
-            metaData.insert("ssl_was_in_use", "FALSE" );
-      }
-
       // Set the PropagateHttpHeader meta-data if it has not already been set...
         if (!metaData.contains("PropagateHttpHeader"))
             metaData.insert("PropagateHttpHeader", "TRUE");

@@ -49,9 +49,6 @@ public:
     Connection *connection;
     QTimer speed_timer;
 
-    // We need some metadata here for our SSL code in messageBox() and for sslMetaData().
-    MetaData sslMetaData;
-
     KIO::filesize_t sizes[max_nums];
     long times[max_nums];
 

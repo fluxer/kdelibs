@@ -231,7 +231,7 @@ public:
      */
     void infoMessage( const QString &msg );
 
-    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3, WarningYesNoCancel = 4, Information = 5, SSLMessageBox = 6 };
+    enum MessageBoxType { QuestionYesNo = 1, WarningYesNo = 2, WarningContinueCancel = 3, WarningYesNoCancel = 4, Information = 5 };
 
     /**
      * Call this to show a message box from the slave
@@ -875,7 +875,7 @@ protected:
      * Name of the protocol supported by this slave
      */
     QByteArray mProtocol;
-    //Often used by TcpSlaveBase and unlikely to change
+    //Often used by slaves and unlikely to change
     MetaData mOutgoingMetaData;
     MetaData mIncomingMetaData;
 
