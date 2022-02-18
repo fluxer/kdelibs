@@ -40,7 +40,6 @@
 #include <ktoolinvocation.h>
 #include <klauncher_iface.h>
 
-#include "dataprotocol.h"
 #include "kservice.h"
 #include <kio/global.h>
 #include "kio/connection.h"
@@ -400,9 +399,6 @@ void Slave::setConfig(const MetaData &config)
 Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error, QString& error_text )
 {
     kDebug(7002) << "createSlave" << protocol << "for" << url;
-    // Firstly take into account all special slaves
-    if (protocol == "data")
-        return new DataProtocol();
     Slave *slave = new Slave(protocol);
     QString slaveAddress = slave->d_func()->slaveconnserver->address();
 

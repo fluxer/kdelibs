@@ -30,7 +30,6 @@ KIO_UNIT_TESTS(
     kdirmodeltest
     kdirlistertest
     fileundomanagertest
-    dataprotocoltest
     clipboardupdatertest
     globaltest
     udsentrytest

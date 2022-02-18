@@ -46,8 +46,6 @@ set(kiocore_STAT_SRCS
     kio/chmodjob.cpp
     kio/connection.cpp
     kio/copyjob.cpp
-    kio/dataprotocol.cpp
-    kio/dataslave.cpp
     kio/defaultviewadapter.cpp
     kio/deletejob.cpp
     kio/directorysizejob.cpp
@@ -222,12 +220,6 @@ install(
     TARGETS kio
     EXPORT kdelibsLibraryTargets
     ${INSTALL_TARGETS_DEFAULT_ARGS}
-)
-
-install(
-    FILES
-    data.protocol
-    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
 )
 
 install(
