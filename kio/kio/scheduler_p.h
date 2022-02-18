@@ -35,7 +35,6 @@ public:
 
 private:
     bool initDone;
-    bool useCookie;
     QString charsets;
     QString language;
 };

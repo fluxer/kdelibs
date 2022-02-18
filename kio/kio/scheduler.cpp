@@ -74,7 +74,6 @@ static Slave *heldSlaveForJob(SimpleJob *job);
 
 SessionData::SessionData()
 {
-    useCookie = true;
     initDone = false;
 }
 
