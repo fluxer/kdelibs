@@ -70,13 +70,6 @@ cache-creation-date  number     Date on which a cache entry has been created.
 
 http-refresh    string          Passes HTTP Refresh meta-data back to the application.
 
-cookies         "auto"          Use kcookiejar to lookup and collect cookies (default)
-                "manual"        Cookies set in "setcookies" are send, received cookies are reported
-                                via "setcookies".
-                "none"          No cookies are sent, received cookies are discarded.
-
-setcookies      string          Used to send/receive HTTP cookies when "cookies" is set to "manual".
-
 errorPage       bool            Flag that indicates that an errorPage() is preferred over an error().                                      (default:true)
 
 no-auth         bool            Flag that indicates that no authentication (neither WWW nor proxy) attempts should be made.
@@ -92,19 +85,8 @@ PropagateHttpHeader	bool	Whether HTTP headers should be send back (read by http)
 HTTP-Headers		string	The HTTP headers, concatenated, \n delimited (set by http)
                                 Requires PropagateHttpHeader to be set.
 
-customHTTPHeader	string	Custom HTTP headers to add to the request (read by http)
-
-CustomHTTPMethod        string  Overrides the method string sent by kio_http 
-                                without changing the behavior (read by http)
-
 UseProxy		string	URL representing the proxy settings (read by http)
 ProxyUrls               string  a comma separated list of proxy urls. The first url in this list matches one set in "UseProxy".
-
-PrivacyPolicy		stringlist  \n delimited URIs referring to P3P privacy
-                                policies presented by the HTTP server
-
-PrivacyCompactPolicy	stringlist  \n delimited P3P compact tag policies
-                                presented by the HTTP server
 
 textmode		bool	When true, switches FTP up/downloads to ascii transfer mode (read by ftp)
 
@@ -120,17 +102,6 @@ redirect-to-get         bool    If "true", changes a redrirection request to a G
 
 Examples:
 
-E.g. the following disables cookies:
+E.g. the following disables caching:
 job = KIO::get( KUrl("http://www.kde.org") );
-job->addMetaData("cookies", "none");
-
-If you want to handle cookies yourself, you can do:
-job = KIO::get( KUrl("http://www.kde.org") );
-job->addMetaData("cookies", "manual");
-job->addMetaData("setcookies", "Cookie: foo=bar; gnat=gnork");
-
-The above sends two cookies along with the request, any cookies send back by
-the server can be retrieved with job->queryMetaData("cookies") after
-receiving the mimetype() signal or when the job is finished.
-
-The cookiejar is not used in this case.
+job->addMetaData("cache", "reload");

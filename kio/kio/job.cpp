@@ -1023,7 +1023,6 @@ void TransferJob::slotFinished()
             const QString redirectToGet = queryMetaData(QLatin1String("redirect-to-get"));
             if (redirectToGet == QLatin1String("true")) {
                 d->m_command = CMD_GET;
-                d->m_outgoingMetaData.remove(QLatin1String("CustomHTTPMethod"));
                 d->m_outgoingMetaData.remove(QLatin1String("content-type"));
             }
             d->staticData.truncate(0);
