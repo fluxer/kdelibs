@@ -31,14 +31,7 @@ modified        string          The modification date of the document (set by ht
 
 accept          string          List of mimetypes to accept separated by a ", ". (read by http)
 
-responsecode    string          Original response code of the web server. (set by http)
-
-SendUserAgent   bool            Whether to send a User-Agent (read by http)
 UserAgent       string          The user agent name to send to remote host (read by http)
-
-content-type    string          The content type of the data to be uploaded (read and set by http)
-media-*         string          Media-Parameter attributes (e.g. media-boundary)
-media-*-kio-quoted  bool        The corresponding media- attribute's value was quoted. (set by http)
 
 cache           "cache"         Use entry from cache if available.
                 "cacheonly"     Do not do any remote lookups, fail if not in cache. (read by http)
@@ -51,8 +44,6 @@ window-id       number          winId() of the window the request is associated 
 resume          number          Try to get the file starting at the given offset (set by file_copy when finding a .part file,
                                                                                   but can also be set by apps.)
 
-resume_until    number          Try to get the file until at the given offset (not set in kdelibs; handled by kio_http).
-
 charset         string          Charset of the current content as returned by a HTTP Header Response.
 
 Charsets        string          Charset(s) send in the "Accept-Charset:" HTTP Request Header.
@@ -62,13 +53,7 @@ Languages       string          Language(s) send in the "Accept-Language:" HTTP 
 content-disposition-type        string Type of Content-Disposition from a HTTP Header Response.
 content-disposition-*           any other valid value sent in a Content-Disposition header (e.g. filename)
 
-request-id	number              Sequence number to identify requests in a MultiGet command.
-
-expire-date	number              Date on which a cache entry needs validation.
-
-cache-creation-date  number     Date on which a cache entry has been created.
-
-http-refresh    string          Passes HTTP Refresh meta-data back to the application.
+request-id      number          Sequence number to identify requests in a MultiGet command.
 
 errorPage       bool            Flag that indicates that an errorPage() is preferred over an error().                                      (default:true)
 
@@ -76,26 +61,22 @@ no-auth         bool            Flag that indicates that no authentication (neit
 no-www-auth     bool            Flag that indicates that no HTTP WWW authentication attempts should be made.
 no-proxy-auth   bool            Flag that indicates that no HTTP proxy authentication attempts should be made.
 no-auth-prompt  bool            Flag that indicates that only cached authentication tokens should be used.
-no-preemptive-auth-reuse  bool  Flag that indicates whether cached credentials should be preemptively sent to the server.
 
-HTTP-Version		string	The HTTP version in use for kio_http (set by http)
+PropagateHttpHeader  bool       Whether HTTP headers should be send back (read by http)
 
-PropagateHttpHeader	bool	Whether HTTP headers should be send back (read by http)
-
-HTTP-Headers		string	The HTTP headers, concatenated, \n delimited (set by http)
+HTTP-Headers    string          The HTTP headers, concatenated, \n delimited (set by http)
                                 Requires PropagateHttpHeader to be set.
 
-UseProxy		string	URL representing the proxy settings (read by http)
-ProxyUrls               string  a comma separated list of proxy urls. The first url in this list matches one set in "UseProxy".
+UseProxy        string          URL representing the proxy settings (read by http)
+ProxyUrls       string          Comma separated list of proxy urls. The first url in this list matches one set in "UseProxy".
 
-textmode		bool	When true, switches FTP up/downloads to ascii transfer mode (read by ftp)
+textmode        bool            When true, switches FTP up/downloads to ascii transfer mode (read by ftp)
 
-recurse                 bool    When true, del() will be able to delete non-empty directories.  (read by file)
+recurse         bool            When true, del() will be able to delete non-empty directories.  (read by file)
                                 Otherwise, del() is supposed to give an error on non-empty directories.
 
-DefaultRemoteProtocol	string	Protocol to redirect file://<hostname>/ URLs to, default is "smb" (read by file)
-no-spoof-check          bool    Flag to indicate whether a username spoofing check should be performed, default is FALSE.(read by http)
-redirect-to-get         bool    If "true", changes a redrirection request to a GET operation regardless of the original operation.
+DefaultRemoteProtocol  string   Protocol to redirect file://<hostname>/ URLs to, default is "smb" (read by file)
+redirect-to-get bool            If "true", changes a redrirection request to a GET operation regardless of the original operation.
 
 ** NOTE: Anything in quotes ("") under Value(s) indicates literal value.
 
