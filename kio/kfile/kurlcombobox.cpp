@@ -114,7 +114,7 @@ void KUrlComboBox::KUrlComboBoxPrivate::init( Mode mode )
 QStringList KUrlComboBox::urls() const
 {
     kDebug(250) << "::urls()";
-    //static const QString &fileProt = KGlobal::staticQString("file:");
+    //static const QString fileProt = QString::fromLatin1("file:");
     QStringList list;
     QString url;
     for ( int i = d->defaultList.count(); i < count(); i++ ) {

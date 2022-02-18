@@ -137,9 +137,9 @@ int KBookmarkGroup::indexOf(const KBookmark& child) const
 
 QDomElement KBookmarkGroup::nextKnownTag( const QDomElement &start, bool goNext ) const
 {
-    static const QString & bookmark = KGlobal::staticQString("bookmark");
-    static const QString & folder = KGlobal::staticQString("folder");
-    static const QString & separator = KGlobal::staticQString("separator");
+    static const QString bookmark = QString::fromLatin1("bookmark");
+    static const QString folder = QString::fromLatin1("folder");
+    static const QString separator = QString::fromLatin1("separator");
 
     for( QDomElement elem = start; !elem.isNull(); )
     {

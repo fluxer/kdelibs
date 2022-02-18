@@ -53,9 +53,9 @@ public:
 
     KXMLGUIFactoryPrivate()
     {
-        static const QString &defaultMergingName = KGlobal::staticQString( "<default>" );
-        static const QString &actionList = KGlobal::staticQString( "actionlist" );
-        static const QString &name = KGlobal::staticQString( "name" );
+        static const QString defaultMergingName = QString::fromLatin1( "<default>" );
+        static const QString actionList = QString::fromLatin1( "actionlist" );
+        static const QString name = QString::fromLatin1( "name" );
 
         m_rootNode = new ContainerNode( 0L, QString(), QString() );
         m_defaultMergingName = defaultMergingName;
@@ -607,7 +607,7 @@ void KXMLGUIFactoryPrivate::configureAction( QAction *action, const QDomNamedNod
 void KXMLGUIFactoryPrivate::configureAction( QAction *action, const QDomAttr &attribute,
         ShortcutOption shortcutOption )
 {
-    static const QString &attrShortcut = KGlobal::staticQString( "shortcut" );
+    static const QString attrShortcut = QString::fromLatin1( "shortcut" );
 
     QString attrName = attribute.name();
     // If the attribute is a deprecated "accel", change to "shortcut".
@@ -680,7 +680,7 @@ QDomDocument KXMLGUIFactoryPrivate::shortcutSchemeDoc(KXMLGUIClient *client)
 
 void KXMLGUIFactoryPrivate::applyShortcutScheme(KXMLGUIClient *client, const QList<QAction*> &actions, const QDomDocument& scheme)
 {
-    static const QString &actionPropElementName = KGlobal::staticQString( "ActionProperties" );
+    static const QString actionPropElementName = QString::fromLatin1( "ActionProperties" );
 
     KConfigGroup cg = KGlobal::config()->group( "Shortcut Schemes" );
     QString schemeName = cg.readEntry("Current Scheme", "Default");
@@ -764,8 +764,8 @@ QDomElement KXMLGUIFactory::actionPropertiesElement( QDomDocument& doc )
 
 QDomElement KXMLGUIFactory::findActionByName( QDomElement& elem, const QString& sName, bool create )
 {
-        static const QString& attrName = KGlobal::staticQString( "name" );
-	static const QString& tagAction = KGlobal::staticQString( "Action" );
+        static const QString attrName = QString::fromLatin1( "name" );
+	static const QString tagAction = QString::fromLatin1( "Action" );
 	for( QDomNode it = elem.firstChild(); !it.isNull(); it = it.nextSibling() ) {
 		QDomElement e = it.toElement();
 		if( e.attribute( attrName ) == sName )

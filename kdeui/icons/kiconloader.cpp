@@ -907,7 +907,7 @@ K3Icon KIconLoaderPrivate::findMatchingIcon(const QString& name, int size) const
 
 inline QString KIconLoaderPrivate::unknownIconPath( int size ) const
 {
-    static const QString &str_unknown = KGlobal::staticQString("unknown");
+    static const QString str_unknown = QString::fromLatin1("unknown");
 
     K3Icon icon = findMatchingIcon(str_unknown, size);
     if (!icon.isValid())

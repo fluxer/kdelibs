@@ -636,7 +636,7 @@ bool KProtocolManager::getSystemNameVersionAndMachine(
 
 QString KProtocolManager::acceptLanguagesHeader()
 {
-  static const QString &english = KGlobal::staticQString("en");
+  static const QString english = QString::fromLatin1("en");
 
   // User's desktop language preference.
   QStringList languageList = KGlobal::locale()->languageList();

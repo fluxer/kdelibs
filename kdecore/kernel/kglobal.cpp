@@ -52,15 +52,13 @@
 #include "kcmdlineargs.h"
 #include <unistd.h> // umask
 
-typedef QSet<QString> KStringDict;
 mode_t s_umsk;
 
 class KGlobalPrivate
 {
     public:
         inline KGlobalPrivate()
-            : stringDict(0),
-            locale(0),
+            : locale(0),
             charsets(0),
             localeIsFromFakeComponent(false)
         {
@@ -76,13 +74,10 @@ class KGlobalPrivate
             locale = 0;
             delete charsets;
             charsets = 0;
-            delete stringDict;
-            stringDict = 0;
         }
 
         KComponentData activeComponent;
         KComponentData mainComponent; // holds a refcount
-        KStringDict *stringDict;
         KLocale *locale;
         KCharsets *charsets;
         bool localeIsFromFakeComponent;
@@ -258,22 +253,6 @@ void KGlobal::setLocale(KLocale *newLocale, CopyCatalogs copy)
         locale()->copyCatalogsTo(newLocale);
     delete d->locale;
     d->locale = newLocale;
-}
-
-/**
- * Create a static QString
- *
- * To be used inside functions(!) like:
- * static const QString &myString = KGlobal::staticQString(i18n("My Text"));
- */
-const QString &KGlobal::staticQString(const QString &str)
-{
-    PRIVATE_DATA;
-    if (!d->stringDict) {
-        d->stringDict = new KStringDict;
-    }
-
-   return *d->stringDict->insert(str);
 }
 
 QString KGlobal::caption()

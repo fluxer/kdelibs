@@ -142,7 +142,7 @@ KActionCollection *KXMLGUIClient::actionCollection() const
 
 QAction *KXMLGUIClient::action( const QDomElement &element ) const
 {
-  static const QString &attrName = KGlobal::staticQString( "name" );
+  static const QString attrName = QString::fromLatin1( "name" );
   return actionCollection()->action( qPrintable(element.attribute( attrName )) );
 }
 
@@ -315,17 +315,17 @@ static bool equalstr(const QString& a, const QString& b) {
 
 bool KXMLGUIClientPrivate::mergeXML( QDomElement &base, QDomElement &additive, KActionCollection *actionCollection )
 {
-    static const QString &tagAction = KGlobal::staticQString( "Action" );
-    static const QString &tagMerge = KGlobal::staticQString( "Merge" );
-    static const QString &tagSeparator = KGlobal::staticQString( "Separator" );
-    static const QString &attrName = KGlobal::staticQString( "name" );
-    static const QString &attrAppend = KGlobal::staticQString( "append" );
-    static const QString &attrWeakSeparator = KGlobal::staticQString( "weakSeparator" );
-    static const QString &tagMergeLocal = KGlobal::staticQString( "MergeLocal" );
-    static const QString &tagText = KGlobal::staticQString( "text" );
-    static const QString &attrAlreadyVisited = KGlobal::staticQString( "alreadyVisited" );
-    static const QString &attrNoMerge = KGlobal::staticQString( "noMerge" );
-    static const QString &attrOne = KGlobal::staticQString( "1" );
+    static const QString tagAction = QString::fromLatin1( "Action" );
+    static const QString tagMerge = QString::fromLatin1( "Merge" );
+    static const QString tagSeparator = QString::fromLatin1( "Separator" );
+    static const QString attrName = QString::fromLatin1( "name" );
+    static const QString attrAppend = QString::fromLatin1( "append" );
+    static const QString attrWeakSeparator = QString::fromLatin1( "weakSeparator" );
+    static const QString tagMergeLocal = QString::fromLatin1( "MergeLocal" );
+    static const QString tagText = QString::fromLatin1( "text" );
+    static const QString attrAlreadyVisited = QString::fromLatin1( "alreadyVisited" );
+    static const QString attrNoMerge = QString::fromLatin1( "noMerge" );
+    static const QString attrOne = QString::fromLatin1( "1" );
 
     // there is a possibility that we don't want to merge in the
     // additive.. rather, we might want to *replace* the base with the
@@ -512,15 +512,15 @@ bool KXMLGUIClientPrivate::isEmptyContainer(const QDomElement& base, KActionColl
 
         const QString tag = e.tagName();
 
-        static const QString &tagAction = KGlobal::staticQString("Action");
-        static const QString &tagSeparator = KGlobal::staticQString("Separator");
-        static const QString &tagText = KGlobal::staticQString("text");
-        static const QString &tagMerge = KGlobal::staticQString("Merge");
+        static const QString tagAction = QString::fromLatin1("Action");
+        static const QString tagSeparator = QString::fromLatin1("Separator");
+        static const QString tagText = QString::fromLatin1("text");
+        static const QString tagMerge = QString::fromLatin1("Merge");
         if (equalstr(tag, tagAction)) {
             // if base contains an implemented action, then we must not get
             // deleted (note that the actionCollection contains both,
             // "global" and "local" actions)
-            static const QString &attrName = KGlobal::staticQString("name");
+            static const QString attrName = QString::fromLatin1("name");
             if (actionCollection->action(e.attribute(attrName))) {
                 return false;
             }
@@ -529,7 +529,7 @@ bool KXMLGUIClientPrivate::isEmptyContainer(const QDomElement& base, KActionColl
             // if we have a separator which has *not* the weak attribute
             // set, then it must be owned by the "local" tree in which case
             // we must not get deleted either
-            static const QString &attrWeakSeparator = KGlobal::staticQString("weakSeparator");
+            static const QString attrWeakSeparator = QString::fromLatin1("weakSeparator");
             const QString weakAttr = e.attribute(attrWeakSeparator);
             if (weakAttr.isEmpty() || weakAttr.toInt() != 1) {
                 return false;
@@ -559,9 +559,9 @@ bool KXMLGUIClientPrivate::isEmptyContainer(const QDomElement& base, KActionColl
 
 QDomElement KXMLGUIClientPrivate::findMatchingElement( const QDomElement &base, const QDomElement &additive )
 {
-  static const QString &tagAction = KGlobal::staticQString( "Action" );
-  static const QString &tagMergeLocal = KGlobal::staticQString( "MergeLocal" );
-  static const QString &attrName = KGlobal::staticQString( "name" );
+  static const QString tagAction = QString::fromLatin1( "Action" );
+  static const QString tagMergeLocal = QString::fromLatin1( "MergeLocal" );
+  static const QString attrName = QString::fromLatin1( "name" );
 
   QDomNode n = additive.firstChild();
   while ( !n.isNull() )

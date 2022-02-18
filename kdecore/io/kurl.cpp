@@ -62,10 +62,10 @@ static QString cleanpath( const QString &_path, bool cleanDirSeparator, bool dec
 
   if (decodeDots)
   {
-     static const QString &encodedDot = KGlobal::staticQString(QLatin1String("%2e"));
+     static const QString encodedDot = QString::fromLatin1("%2e");
      if (path.indexOf(encodedDot, 0, Qt::CaseInsensitive) != -1)
      {
-        static const QString &encodedDOT = KGlobal::staticQString(QLatin1String("%2E")); // Uppercase!
+        static const QString encodedDOT = QString::fromLatin1("%2E"); // Uppercase!
         path.replace(encodedDot, QString(QLatin1Char('.')));
         path.replace(encodedDOT, QString(QLatin1Char('.')));
         len = path.length();

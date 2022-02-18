@@ -387,25 +387,6 @@ namespace KGlobal
     KDECORE_EXPORT mode_t umask();
 
     /**
-     * Creates a static QString.
-     *
-     * To be used inside functions(!) like:
-     * @code
-     * static const QString &myString = KGlobal::staticQString(i18n("My Text"));
-     * @endcode
-     *
-     * @attention Do @b NOT use code such as:
-     * @code
-     * static QString myString = KGlobal::staticQString(i18n("myText"));
-     * @endcode
-     * This creates a static object (instead of a static reference)
-     * and as you know static objects are EVIL.
-     * @param str the string to create
-     * @return the static string
-     */
-    KDECORE_EXPORT const QString& staticQString(const QString &str); //krazy:exclude=constref (doesn't make sense otherwise)
-
-    /**
      * Tells KGlobal about one more operations that should be finished
      * before the application exits. The standard behavior is to exit on the
      * "last window closed" event, but some events should outlive the last window closed

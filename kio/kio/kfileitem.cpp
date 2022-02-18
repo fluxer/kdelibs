@@ -280,7 +280,7 @@ void KFileItemPrivate::readUDSEntry( bool _urlIsDirectory )
     m_hidden = hiddenVal == 1 ? Hidden : ( hiddenVal == 0 ? Shown : Auto );
 
     // avoid creating these QStrings again and again
-    static const QString& dot = KGlobal::staticQString(".");
+    static const QString dot = QString::fromLatin1(".");
     if ( _urlIsDirectory && !UDS_URL_seen && !m_strName.isEmpty() && m_strName != dot )
         m_url.addPath( m_strName );
 
@@ -993,17 +993,11 @@ QPixmap KFileItem::pixmap( int _size, int _state ) const
     if (!d->m_pMimeType) {
         // No mimetype determined yet, go for a fast default icon
         if (S_ISDIR(d->m_fileMode)) {
-            static const QString * defaultFolderIcon = 0;
-            if ( !defaultFolderIcon ) {
-                const KMimeType::Ptr mimeType = KMimeType::mimeType( "inode/directory" );
-                if ( mimeType )
-                    defaultFolderIcon = &KGlobal::staticQString( mimeType->iconName() );
-               else
-                    kWarning(7000) << "No mimetype for inode/directory could be found. Check your installation.";
-            }
-            if ( defaultFolderIcon )
-                return DesktopIcon( *defaultFolderIcon, _size, _state );
-
+            const KMimeType::Ptr mimeType = KMimeType::mimeType( "inode/directory" );
+            if ( mimeType )
+                return DesktopIcon( mimeType->iconName(), _size, _state );
+            else
+                kWarning(7000) << "No mimetype for inode/directory could be found. Check your installation.";
         }
         return DesktopIcon( "unknown", _size, _state );
     }

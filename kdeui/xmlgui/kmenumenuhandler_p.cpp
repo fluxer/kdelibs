@@ -158,9 +158,9 @@ void KMenuMenuHandler::slotAddToToolBar(int tb)
     document.setContent( KXMLGUIFactory::readConfigFile( client->xmlFile(), client->componentData() ) );
     QDomElement elem = document.documentElement().toElement();
 
-    static const QString &tagToolBar = KGlobal::staticQString( "ToolBar" );
-    static const QString &attrNoEdit = KGlobal::staticQString( "noEdit" );
-    static const QString &attrName     = KGlobal::staticQString( "name" );
+    static const QString tagToolBar = QString::fromLatin1( "ToolBar" );
+    static const QString attrNoEdit = QString::fromLatin1( "noEdit" );
+    static const QString attrName     = QString::fromLatin1( "name" );
 
     QDomElement toolbarElem;
     QDomNode n=elem.firstChild();

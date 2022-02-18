@@ -25,22 +25,10 @@
 
 #include <qtest_kde.h>
 
-static QString testMethod()
-{
-    static const QString & s_strDefaultMimeType =
-        KGlobal::staticQString( "application/octet-stream" );
-    return s_strDefaultMimeType;
-}
-
 class KGlobalTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void testStaticQString()
-    {
-        QCOMPARE(testMethod(), QString::fromLatin1("application/octet-stream"));
-    }
-
     void testFindDirectChild()
     {
         QTimer child(this);

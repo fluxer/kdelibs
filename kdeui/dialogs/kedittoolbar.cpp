@@ -70,9 +70,9 @@ namespace KDEPrivate {
  */
 static ToolBarList findToolBars(const QDomElement& start)
 {
-    static const QString &tagToolBar = KGlobal::staticQString( "ToolBar" );
-    static const QString &tagMenuBar = KGlobal::staticQString( "MenuBar" );
-    static const QString &attrNoEdit = KGlobal::staticQString( "noEdit" );
+    static const QString tagToolBar = QString::fromLatin1( "ToolBar" );
+    static const QString tagMenuBar = QString::fromLatin1( "MenuBar" );
+    static const QString attrNoEdit = QString::fromLatin1( "noEdit" );
     ToolBarList list;
 
     for( QDomElement elem = start; !elem.isNull(); elem = elem.nextSiblingElement() ) {
@@ -143,9 +143,9 @@ private:
 
 QString XmlData::toolBarText( const QDomElement& it ) const
 {
-    static const QString &tagText = KGlobal::staticQString( "text" );
-    static const QString &tagText2 = KGlobal::staticQString( "Text" );
-    static const QString &attrName = KGlobal::staticQString( "name" );
+    static const QString tagText = QString::fromLatin1( "text" );
+    static const QString tagText2 = QString::fromLatin1( "Text" );
+    static const QString attrName = QString::fromLatin1( "name" );
 
     QString name;
     QByteArray txt( it.namedItem( tagText ).toElement().text().toUtf8() );
@@ -424,7 +424,7 @@ public:
      */
     QDomElement findElementForToolBarItem( const ToolBarItem* item ) const
     {
-        static const QString &attrName    = KGlobal::staticQString( "name" );
+        static const QString attrName    = QString::fromLatin1( "name" );
         //kDebug(240) << "looking for name=" << item->internalName() << "and tag=" << item->internalTag();
         for(QDomNode n = m_currentToolBarElem.firstChild(); !n.isNull(); n = n.nextSibling())
         {
@@ -1330,10 +1330,10 @@ void KEditToolBarWidgetPrivate::insertActive(ToolBarItem *item, ToolBarItem *bef
   if (!item)
     return;
 
-  static const QString &tagAction    = KGlobal::staticQString( "Action" );
-  static const QString &tagSeparator = KGlobal::staticQString( "Separator" );
-  static const QString &attrName     = KGlobal::staticQString( "name" );
-  static const QString &attrNoMerge  = KGlobal::staticQString( "noMerge" );
+  static const QString tagAction    = QString::fromLatin1( "Action" );
+  static const QString tagSeparator = QString::fromLatin1( "Separator" );
+  static const QString attrName     = QString::fromLatin1( "name" );
+  static const QString attrNoMerge  = QString::fromLatin1( "noMerge" );
 
   QDomElement new_item;
   // let's handle the separator specially
@@ -1375,7 +1375,7 @@ void KEditToolBarWidgetPrivate::removeActive(ToolBarItem *item)
   if (!item)
     return;
 
-  static const QString &attrNoMerge = KGlobal::staticQString( "noMerge" );
+  static const QString attrNoMerge = QString::fromLatin1( "noMerge" );
 
   // we're modified, so let this change
   emit m_widget->enableOk(true);
@@ -1440,7 +1440,7 @@ void KEditToolBarWidgetPrivate::moveActive( ToolBarItem* item, ToolBarItem* befo
     m_currentToolBarElem.insertAfter(e, findElementForToolBarItem( (ToolBarItem*)before ));
 
   // and set this container as a noMerge
-  static const QString &attrNoMerge = KGlobal::staticQString( "noMerge" );
+  static const QString attrNoMerge = QString::fromLatin1( "noMerge" );
   m_currentToolBarElem.setAttribute( attrNoMerge, "1");
 
   // update the local doc
@@ -1471,7 +1471,7 @@ void KEditToolBarWidgetPrivate::slotDownButton()
 
 void KEditToolBarWidgetPrivate::updateLocal(QDomElement& elem)
 {
-  static const QString &attrName = KGlobal::staticQString( "name" );
+  static const QString attrName = QString::fromLatin1( "name" );
 
   XmlDataList::Iterator xit = m_xmlFiles.begin();
   for ( ; xit != m_xmlFiles.end(); ++xit)

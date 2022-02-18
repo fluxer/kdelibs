@@ -443,7 +443,7 @@ QString KMimeType::iconNameForUrl( const KUrl & _url, mode_t mode )
     if (!mt) {
         return QString();
     }
-    static const QString& unknown = KGlobal::staticQString(QLatin1String("unknown"));
+    static const QString unknown = QString::fromLatin1("unknown");
     const QString mimeTypeIcon = mt->iconName( _url );
     QString i = mimeTypeIcon;
 
@@ -566,9 +566,7 @@ QStringList KMimeType::allParentMimeTypes() const
 
 QString KMimeType::defaultMimeType()
 {
-    static const QString & s_strDefaultMimeType =
-        KGlobal::staticQString(QLatin1String("application/octet-stream"));
-    return s_strDefaultMimeType;
+    return QString::fromLatin1("application/octet-stream");
 }
 
 QString KMimeType::iconName( const KUrl& url) const

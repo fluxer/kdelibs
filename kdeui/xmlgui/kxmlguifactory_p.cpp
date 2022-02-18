@@ -237,7 +237,7 @@ void ContainerNode::plugActionList( BuildState &state )
 
 void ContainerNode::plugActionList( BuildState &state, const MergingIndexList::Iterator &mergingIdxIt )
 {
-    static const QString &tagActionList = KGlobal::staticQString( "actionlist" );
+    static const QString tagActionList = QString::fromLatin1( "actionlist" );
 
     MergingIndex mergingIdx = *mergingIdxIt;
 
@@ -278,7 +278,7 @@ void ContainerNode::unplugActionList( BuildState &state )
 
 void ContainerNode::unplugActionList( BuildState &state, const MergingIndexList::Iterator &mergingIdxIt )
 {
-    static const QString &tagActionList = KGlobal::staticQString( "actionlist" );
+    static const QString tagActionList = QString::fromLatin1( "actionlist" );
 
     MergingIndex mergingIdx = *mergingIdxIt;
 
@@ -379,7 +379,7 @@ void ContainerNode::destructChildren( const QDomElement &element, BuildState &st
 QDomElement ContainerNode::findElementForChild( const QDomElement &baseElement,
                                                 ContainerNode *childNode )
 {
-    static const QString &attrName = KGlobal::staticQString( "name" );
+    static const QString attrName = QString::fromLatin1( "name" );
 
     // ### slow
     for ( QDomNode n = baseElement.firstChild(); !n.isNull();
@@ -427,7 +427,7 @@ void ContainerNode::unplugActions( BuildState &state )
 
 void ContainerNode::unplugClient( ContainerClient *client )
 {
-    static const QString &tagActionList = KGlobal::staticQString( "actionlist" );
+    static const QString tagActionList = QString::fromLatin1( "actionlist" );
 
     assert( builder );
 
@@ -516,7 +516,7 @@ int ContainerNode::calcMergingIndex( const QString &mergingName,
 
 int BuildHelper::calcMergingIndex( const QDomElement &element, MergingIndexList::Iterator &it, QString &group )
 {
-    static const QString &attrGroup = KGlobal::staticQString( "group" );
+    static const QString attrGroup = QString::fromLatin1( "group" );
 
     bool haveGroup = false;
     group = element.attribute( attrGroup );
@@ -540,7 +540,7 @@ BuildHelper::BuildHelper( BuildState &state, ContainerNode *node )
     : containerClient( 0 ), ignoreDefaultMergingIndex( false ), m_state( state ),
       parentNode( node )
 {
-    static const QString &defaultMergingName = KGlobal::staticQString( "<default>" );
+    static const QString defaultMergingName = QString::fromLatin1( "<default>" );
 
     // create a list of supported container and custom tags
     customTags = m_state.builderCustomTags;
@@ -575,12 +575,12 @@ void BuildHelper::build( const QDomElement &element )
 void BuildHelper::processElement( const QDomElement &e )
 {
     // some often used QStrings
-    static const QString &tagAction = KGlobal::staticQString( "action" );
-    static const QString &tagMerge = KGlobal::staticQString( "merge" );
-    static const QString &tagState = KGlobal::staticQString( "state" );
-    static const QString &tagDefineGroup = KGlobal::staticQString( "definegroup" );
-    static const QString &tagActionList = KGlobal::staticQString( "actionlist" );
-    static const QString &attrName = KGlobal::staticQString( "name" );
+    static const QString tagAction = QString::fromLatin1( "action" );
+    static const QString tagMerge = QString::fromLatin1( "merge" );
+    static const QString tagState = QString::fromLatin1( "state" );
+    static const QString tagDefineGroup = QString::fromLatin1( "definegroup" );
+    static const QString tagActionList = QString::fromLatin1( "actionlist" );
+    static const QString attrName = QString::fromLatin1( "name" );
 
     QString tag( e.tagName().toLower() );
     QString currName( e.attribute( attrName ) );
@@ -693,10 +693,10 @@ void BuildHelper::processStateElement( const QDomElement &element )
 
 void BuildHelper::processMergeElement( const QString &tag, const QString &name, const QDomElement &e )
 {
-    static const QString &tagDefineGroup = KGlobal::staticQString( "definegroup" );
-    static const QString &tagActionList = KGlobal::staticQString( "actionlist" );
-    static const QString &defaultMergingName = KGlobal::staticQString( "<default>" );
-    static const QString &attrGroup = KGlobal::staticQString( "group" );
+    static const QString tagDefineGroup = QString::fromLatin1( "definegroup" );
+    static const QString tagActionList = QString::fromLatin1( "actionlist" );
+    static const QString defaultMergingName = QString::fromLatin1( "<default>" );
+    static const QString attrGroup = QString::fromLatin1( "group" );
 
     QString mergingName( name );
     if ( mergingName.isEmpty() )
@@ -757,7 +757,7 @@ void BuildHelper::processMergeElement( const QString &tag, const QString &name, 
 void BuildHelper::processContainerElement( const QDomElement &e, const QString &tag,
                                            const QString &name )
 {
-    static const QString &defaultMergingName = KGlobal::staticQString( "<default>" );
+    static const QString defaultMergingName = QString::fromLatin1( "<default>" );
 
     ContainerNode *containerNode = parentNode->findContainer( name, tag,
                                                               &containerList,
