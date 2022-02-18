@@ -74,8 +74,8 @@ void HttpProtocol::get(const KUrl &url)
     QNetworkDiskCache netcache(this);
     QNetworkRequest netrequest(url);
 
+    kDebug(7103) << "Metadata" << allMetaData();
     // metadata from scheduler
-    kDebug(7103) << "Metadata" << metaData("Languages") << metaData("Charsets") << metaData("CacheDir") << metaData("UserAgent");
     if (hasMetaData("Languages")) {
         netrequest.setRawHeader("Accept-Language", metaData("Languages").toAscii());
     }
@@ -89,6 +89,20 @@ void HttpProtocol::get(const KUrl &url)
         netrequest.setRawHeader("User-Agent", metaData("UserAgent").toAscii());
     }
     netmanager.setCache(&netcache);
+    // KIO metadata
+    if (hasMetaData("cache")) {
+        const QByteArray kiocache = metaData("cache").toAscii();
+        if (qstricmp(kiocache.constData(), "cache") == 0) {
+            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::PreferCache));
+        } else if (qstricmp(kiocache.constData(), "cacheonly") == 0) {
+            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::AlwaysCache));
+        } else if (qstricmp(kiocache.constData(), "verify") == 0 || qstricmp(kiocache.constData(), "refresh") == 0) {
+            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::PreferNetwork));
+        } else {
+            // reload or unknown
+            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::AlwaysNetwork));
+        }
+    }
 
     QNetworkReply* netreply = netmanager.get(netrequest);
     connect(netreply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(slotProgress(qint64,qint64)));

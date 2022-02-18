@@ -46,8 +46,6 @@ cache           "cache"         Use entry from cache if available.
                 "refresh"       Use entry from cache after verifying with remote server
                 "reload"        Do not do any cache lookups.
 
-no-cache        bool            Flag that indicates whether caching is enabled/disabled
-
 window-id       number          winId() of the window the request is associated with.
 
 resume          number          Try to get the file starting at the given offset (set by file_copy when finding a .part file,
