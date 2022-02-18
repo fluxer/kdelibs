@@ -434,17 +434,6 @@ install(
     COMPONENT Devel
 )
 
-
-install( FILES
-    KHE/CharColumnInterface
-    KHE/ClipboardInterface
-    KHE/ValueColumnInterface
-    KHE/ZoomInterface
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KHE
-    COMPONENT Devel
-)
-
-
 install(
     FILES
     KIO/AuthInfo
