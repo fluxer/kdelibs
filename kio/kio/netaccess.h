@@ -303,26 +303,6 @@ public:
     static bool mkdir( const KUrl & url, QWidget* window, int permissions = -1 );
 
     /**
-     * Executes a remote process via the fish ioslave in a synchronous way.
-     *
-     * @param url The remote machine where the command should be executed.
-     *            e.g. fish://someuser\@somehost:sshport/
-     *            some special cases exist.
-     *            fish://someuser\@localhost/
-     *            will use su instead of ssh to connect and execute the command.
-     *            fish://someuser\@localhost:port/
-     *            will use ssh to connect and execute the command.
-     * @param command The command to be executed.
-     * @param window main window associated with this job. This is used to
-     *               automatically cache and discard authentication information
-     *               as needed. If NULL, authentication information will be
-     *               cached only for a short duration after which the user will
-     *               again be prompted for passwords as needed.
-     * @return The resulting output of the @p command that is executed.
-     */
-    static QString fish_execute( const KUrl & url, const QString &command, QWidget* window );
-
-    /**
      * This function executes a job in a synchronous way.
      * If a job fetches some data, pass a QByteArray pointer as data parameter to this function
      * and after the function returns it will contain all the data fetched by this job.

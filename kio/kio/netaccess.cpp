@@ -235,12 +235,6 @@ bool NetAccess::mkdir( const KUrl & url, QWidget* window, int permissions )
   return kioNet.mkdirInternal( url, permissions, window );
 }
 
-QString NetAccess::fish_execute( const KUrl & url, const QString &command, QWidget* window )
-{
-  NetAccess kioNet;
-  return kioNet.fish_executeInternal( url, command, window );
-}
-
 bool NetAccess::synchronousRun( Job* job, QWidget* window, QByteArray* data,
                                 KUrl* finalURL, QMap<QString, QString>* metaData )
 {
@@ -371,56 +365,6 @@ QString NetAccess::mimetypeInternal( const KUrl & url, QWidget* window )
 void NetAccess::slotMimetype( KIO::Job *, const QString & type  )
 {
   d->m_mimetype = type;
-}
-
-QString NetAccess::fish_executeInternal(const KUrl & url, const QString &command, QWidget* window)
-{
-  QString target, remoteTempFileName, resultData;
-  KUrl tempPathUrl;
-  KTemporaryFile tmpFile;
-  tmpFile.open();
-
-  if( url.protocol() == "fish" )
-  {
-    // construct remote temp filename
-    tempPathUrl = url;
-    remoteTempFileName = tmpFile.fileName();
-    // only need the filename KTempFile adds some KDE specific dirs
-    // that probably does not exist on the remote side
-    int pos = remoteTempFileName.lastIndexOf('/');
-    remoteTempFileName = "/tmp/fishexec_" + remoteTempFileName.mid(pos + 1);
-    tempPathUrl.setPath( remoteTempFileName );
-    d->bJobOK = true; // success unless further error occurs
-    QByteArray packedArgs;
-    QDataStream stream( &packedArgs, QIODevice::WriteOnly );
-
-    stream << int('X') << tempPathUrl << command;
-
-    KIO::Job * job = KIO::special( tempPathUrl, packedArgs );
-    job->ui()->setWindow( window );
-    connect( job, SIGNAL(result(KJob*)),
-             this, SLOT(slotResult(KJob*)) );
-    enter_loop();
-
-    // since the KIO::special does not provide feedback we need to download the result
-    if( NetAccess::download( tempPathUrl, target, window ) )
-    {
-      QFile resultFile( target );
-
-      if (resultFile.open( QIODevice::ReadOnly ))
-      {
-        QTextStream ts( &resultFile ); // default encoding is Locale
-        resultData = ts.readAll();
-        resultFile.close();
-        NetAccess::del( tempPathUrl, window );
-      }
-    }
-  }
-  else
-  {
-    resultData = i18n( "ERROR: Unknown protocol '%1'", url.protocol() );
-  }
-  return resultData;
 }
 
 bool NetAccess::synchronousRunInternal( Job* job, QWidget* window, QByteArray* data,
