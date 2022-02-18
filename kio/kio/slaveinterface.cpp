@@ -251,8 +251,6 @@ bool SlaveInterface::dispatch(int _cmd, const QByteArray &rawdata)
         d->speed_timer.stop();
         emit speed( ul );
         break;
-    case INF_GETTING_FILE:
-        break;
     case INF_ERROR_PAGE:
         emit errorPage();
         break;

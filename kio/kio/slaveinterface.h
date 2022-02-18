@@ -51,8 +51,6 @@ class SlaveInterfacePrivate;
    INF_MIME_TYPE = 21,
    INF_ERROR_PAGE = 22,
    INF_WARNING = 23,
-   INF_GETTING_FILE, // Deprecated
-   INF_UNUSED = 25, // now unused
    INF_INFOMESSAGE,
    INF_META_DATA,
    INF_NETWORK_STATUS,
