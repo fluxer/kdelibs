@@ -41,6 +41,7 @@ public:
     void slotProgress(qint64 received, qint64 total);
 
     bool firstchunk;
+    QByteArray headerdata;
 private:
     CURL* m_curl;
 };

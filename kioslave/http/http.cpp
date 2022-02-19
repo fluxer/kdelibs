@@ -25,7 +25,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-// TODO: PropagateHttpHeader, charset, modified, accept and maybe caching
+// TODO: charset, modified, accept and maybe caching
 
 static inline QString HTTPMIMEType(const QString &contenttype)
 {
@@ -47,8 +47,8 @@ size_t curlWriteCallback(char *ptr, size_t size, size_t nmemb, void *userdata)
         httpprotocol->slotMIME();
         httpprotocol->firstchunk = false;
     }
-    // size is always 1
-    Q_UNUSED(size);
+    // size should always be 1
+    Q_ASSERT(size == 1);
     httpprotocol->slotData(ptr, nmemb);
     return nmemb;
 }
@@ -61,6 +61,18 @@ int curlProgressCallback(void *userdata, double dltotal, double dlnow, double ul
     }
     httpprotocol->slotProgress(dlnow, dltotal);
     return CURLE_OK;
+}
+
+int curlHeaderCallback(void *ptr, size_t size, size_t nmemb, void *userdata)
+{
+    HttpProtocol* httpprotocol = static_cast<HttpProtocol*>(userdata);
+    if (!httpprotocol) {
+        return 0;
+    }
+    // size should always be 1
+    Q_ASSERT(size == 1);
+    httpprotocol->headerdata.append(static_cast<char*>(ptr), nmemb);
+    return nmemb;
 }
 
 extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
@@ -100,6 +112,8 @@ HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
     curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the progress callback is not called
     curl_easy_setopt(m_curl, CURLOPT_PROGRESSDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_PROGRESSFUNCTION, curlProgressCallback);
+    curl_easy_setopt(m_curl, CURLOPT_HEADERDATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_HEADERFUNCTION, curlHeaderCallback);
 }
 
 HttpProtocol::~HttpProtocol()
@@ -125,17 +139,17 @@ void HttpProtocol::get(const KUrl &url)
     kDebug(7103) << "Metadata" << allMetaData();
     struct curl_slist *curllist = NULL;
     // metadata from scheduler
-    if (hasMetaData("Languages")) {
+    if (hasMetaData(QLatin1String("Languages"))) {
         curllist = curl_slist_append(curllist, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
     }
-    if (hasMetaData("Charsets")) {
+    if (hasMetaData(QLatin1String("Charsets"))) {
         curllist = curl_slist_append(curllist, QByteArray("Accept-Charset: ") + metaData("Charsets").toAscii());
     }
-    if (hasMetaData("UserAgent")) {
+    if (hasMetaData(QLatin1String("UserAgent"))) {
         const QByteArray useragentbytes = metaData("UserAgent").toAscii();
         curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
     }
-    if (hasMetaData("UseProxy")) {
+    if (hasMetaData(QLatin1String("UseProxy"))) {
         const QByteArray proxybytes = metaData("UseProxy").toAscii();
         curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
     }
@@ -153,6 +167,12 @@ void HttpProtocol::get(const KUrl &url)
         kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
         error(KIO::ERR_COULD_NOT_CONNECT, curl_easy_strerror(curlresult));
         return;
+    }
+
+    if (hasMetaData(QLatin1String("PropagateHttpHeader"))) {
+        const QString httpheaders = QString::fromAscii(headerdata.constData(), headerdata.size());
+        kDebug(7103) << "HTTP headers" << httpheaders;
+        setMetaData(QString::fromLatin1("HTTP-Headers"), httpheaders);
     }
 
     // added in v7.76.0
