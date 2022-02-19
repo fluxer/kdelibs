@@ -313,12 +313,6 @@ bool SlaveInterface::dispatch(int _cmd, const QByteArray &rawdata)
         emit needSubUrlData();
         break;
     }
-    case MSG_HOST_INFO_REQ: {
-        QString hostName;
-        stream >> hostName;
-        QHostInfo::lookupHost(hostName, this, SLOT(slotHostInfo(QHostInfo)));
-        break;
-    }
     default:
         kWarning(7007) << "Slave sends unknown command (" << _cmd << "), dropping slave";
         return false;
@@ -426,14 +420,6 @@ QWidget* SlaveInterface::window() const
 {
     Q_D(const SlaveInterface);
     return d->parentWindow;
-}
-
-void SlaveInterfacePrivate::slotHostInfo(const QHostInfo& info)
-{
-    QByteArray data;
-    QDataStream stream(&data, QIODevice::WriteOnly);
-    stream <<  info.hostName() << info.addresses() << info.error() << info.errorString();
-    connection->send(CMD_HOST_INFO, data);
 }
 
 #include "moc_slaveinterface.cpp"

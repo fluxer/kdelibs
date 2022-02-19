@@ -58,8 +58,6 @@ public:
     uint nums;
     bool slave_calcs_speed;
     QPointer<QWidget> parentWindow;
-
-    void slotHostInfo(const QHostInfo& info);
 };
 
 #endif

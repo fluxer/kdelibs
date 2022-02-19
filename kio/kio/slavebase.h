@@ -26,8 +26,6 @@
 #include <kio/jobclasses.h> // for KIO::JobFlags
 #include <klocale.h>
 
-#include <QtNetwork/QHostInfo>
-
 class KConfigGroup;
 class KRemoteEncoding;
 class KUrl;
@@ -859,16 +857,6 @@ public:
      * @internal
      */
     void setKillFlag();
-
-    /** Internally used
-      * @internal
-    */
-    void lookupHost(const QString& host);
-
-    /** Internally used
-      * @internal
-    */
-    int waitForHostInfo(QHostInfo& info);
 
 protected:
     /**

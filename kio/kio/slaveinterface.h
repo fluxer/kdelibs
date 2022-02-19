@@ -70,7 +70,6 @@ class SlaveInterfacePrivate;
    MSG_FINISHED,
    MSG_STAT_ENTRY, // 105
    MSG_LIST_ENTRIES,
-   MSG_RENAMED, // unused
    MSG_RESUME,
    MSG_SLAVE_STATUS,
    MSG_SLAVE_ACK, // 110
@@ -78,11 +77,8 @@ class SlaveInterfacePrivate;
    MSG_NET_DROP,
    MSG_NEED_SUBURL_DATA,
    MSG_CANRESUME,
-   MSG_AUTH_KEY, // 115 // deprecated.
-   MSG_DEL_AUTH_KEY, // deprecated.
    MSG_OPENED,
    MSG_WRITTEN,
-   MSG_HOST_INFO_REQ
    // add new ones here once a release is done, to avoid breaking binary compatibility
  };
 
@@ -199,8 +195,6 @@ protected Q_SLOTS:
 protected:
     SlaveInterfacePrivate* const d_ptr;
     Q_DECLARE_PRIVATE(SlaveInterface)
-private:
-    Q_PRIVATE_SLOT(d_func(), void slotHostInfo(QHostInfo))
 };
 
 }

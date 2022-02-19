@@ -1278,36 +1278,3 @@ void SlaveBase::send(int cmd, const QByteArray& arr )
        slaveWriteError = true;
    if (slaveWriteError) exit();
 }
-
-void SlaveBase::lookupHost(const QString& host)
-{
-    KIO_DATA << host;
-    send(MSG_HOST_INFO_REQ, data);
-}
-
-int SlaveBase::waitForHostInfo(QHostInfo& info)
-{
-    QByteArray data;
-    int result = waitForAnswer(CMD_HOST_INFO, 0, data);
-
-    if (result  == -1) {
-        info.setError(QHostInfo::UnknownError);
-        info.setErrorString(i18n("Unknown Error"));
-        return result;
-    }
-
-    QDataStream stream(data);
-    QString hostName;
-    QList<QHostAddress> addresses;
-    int error;
-    QString errorString;
-
-    stream >> hostName >> addresses >> error >> errorString;
-
-    info.setHostName(hostName);
-    info.setAddresses(addresses);
-    info.setError(QHostInfo::HostInfoError(error));
-    info.setErrorString(errorString);
-
-    return result;
-}
