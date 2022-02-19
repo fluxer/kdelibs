@@ -21,10 +21,11 @@
 #include "kcomponentdata.h"
 
 #include <QCoreApplication>
-#include <QThread>
 
 #include <sys/types.h>
 #include <unistd.h>
+
+// TODO: PropagateHttpHeader, charset, modified, accept and maybe caching
 
 static inline QByteArray HTTPMIMEType(const QByteArray &contenttype)
 {
@@ -134,6 +135,10 @@ void HttpProtocol::get(const KUrl &url)
         const QByteArray useragentbytes = metaData("UserAgent").toAscii();
         curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
     }
+    if (hasMetaData("UseProxy")) {
+        const QByteArray proxybytes = metaData("UseProxy").toAscii();
+        curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
+    }
     CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
@@ -150,6 +155,19 @@ void HttpProtocol::get(const KUrl &url)
         return;
     }
 
+    // added in v7.76.0
+#ifdef CURLINFO_REFERER
+    char *curlreferrer = nullptr;
+    curlresult = curl_easy_getinfo(m_curl, CURLINFO_REFERER, &curlreferrer);
+    if (curlresult == CURLE_OK) {
+        const QString httpreferrer = QString::fromAscii(curlreferrer);
+        kDebug(7103) << "Referrer" << httpreferrer;
+        setMetaData(QString::fromLatin1("referrer"), httpreferrer);
+    } else {
+        kWarning(7103) << "Could not get referrer info" << curl_easy_strerror(curlresult);
+    }
+#endif
+
     curl_slist_free_all(curllist);
     finished();
 }
@@ -165,7 +183,6 @@ void HttpProtocol::slotMIME()
     } else {
         kWarning(7103) << "Could not get info" << curl_easy_strerror(curlresult);
     }
-
 }
 
 void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
