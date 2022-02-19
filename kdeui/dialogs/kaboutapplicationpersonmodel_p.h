@@ -25,7 +25,6 @@
 
 #include <QtCore/qabstractitemmodel.h>
 #include <QtGui/QPixmap>
-#include <QtNetwork/QNetworkReply>
 
 namespace KDEPrivate
 {
