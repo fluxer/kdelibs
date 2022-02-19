@@ -133,6 +133,7 @@ void HttpProtocol::get(const KUrl &url)
     }
 
     firstchunk = true;
+    headerdata.clear();
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
     curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
 
