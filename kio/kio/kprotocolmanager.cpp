@@ -28,7 +28,6 @@
 #include <sys/utsname.h>
 
 #include <QtCore/QCoreApplication>
-#include <QtNetwork/QSslSocket>
 #include <QtNetwork/QHostAddress>
 #include <QtNetwork/QHostInfo>
 #include <QtDBus/QtDBus>

@@ -12,9 +12,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/kdeversion.h
 )
 
-# Configure checks for network/
-include(network/ConfigureChecks.cmake)
-
 # Configure checks for date/
 include(date/ConfigureChecks.cmake)
 configure_file(
@@ -102,7 +99,6 @@ if(ENABLE_TESTING)
     add_subdirectory(tests)
     add_subdirectory(sonnet/tests)
 endif()
-add_subdirectory(network/kssld)
 
 ########### next target ###############
 
@@ -205,7 +201,6 @@ set(kdecore_LIB_SRCS
     sonnet/backgroundengine.cpp
     sonnet/globals.cpp
 
-    network/ksslcertificatemanager.cpp
     localization/kcatalog.cpp
     localization/kcurrencycode.cpp
     localization/kcharsets.cpp

@@ -25,7 +25,6 @@
 #include <QPrintEngine>
 #include <QPrintDialog>
 #include <QFile>
-#include <QtNetwork/QTcpSocket>
 
 #include <kdebug.h>
 

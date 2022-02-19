@@ -34,8 +34,6 @@
 
 #include <QtDBus/QtDBus>
 #include <QtCore/QPointer>
-#include <QtNetwork/QSslCertificate>
-#include <QtNetwork/QSslError>
 
 using namespace KIO;
 

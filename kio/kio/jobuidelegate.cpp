@@ -27,7 +27,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ksharedconfig.h>
-#include <ksslinfodialog.h>
 #include <kmessage.h>
 
 #include <QPointer>

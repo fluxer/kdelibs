@@ -9,11 +9,9 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/bookmarks
     ${CMAKE_CURRENT_SOURCE_DIR}/kio
     ${CMAKE_CURRENT_SOURCE_DIR}/kfile
-    ${CMAKE_CURRENT_SOURCE_DIR}/kssl
     # for including kio/kio_export.h
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/kio
-    ${CMAKE_CURRENT_BINARY_DIR}/kssl
     # e.g. for observer_stub.h
     ${CMAKE_CURRENT_BINARY_DIR}
     ${KDE4_KDEUI_INCLUDES}
@@ -35,7 +33,6 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/kio/config-kio.h
 )
 
-add_subdirectory(kssl/kcm)
 add_subdirectory(misc)
 if(ENABLE_TESTING)
     add_subdirectory(tests)
@@ -171,21 +168,12 @@ set(kfile_STAT_SRCS
 
 qt4_add_resources(kfile_STAT_SRCS kfile/kacleditwidget.qrc)
 
-set(kssl_STAT_SRCS
-    kssl/sslui.cpp
-    # for sslui.cpp
-    kssl/ksslcertificatebox.cpp
-    kssl/ksslinfodialog.cpp
-    kssl/ksslsettings.cpp
-)
-
 ########### next target ###############
 
 set(kio_LIB_SRCS
    ${kiocore_STAT_SRCS}
    ${kbookmarks_STAT_SRCS}
    ${kfile_STAT_SRCS}
-   ${kssl_STAT_SRCS}
 )
 
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
@@ -269,7 +257,6 @@ install(
     kio/renamedialog.h
     kio/skipdialog.h
     kio/udsentry.h
-    kssl/sslui.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kio
     COMPONENT Devel
 )
