@@ -22,9 +22,6 @@
 
 #include <QCoreApplication>
 #include <QThread>
-#include <QNetworkAccessManager>
-#include <QNetworkDiskCache>
-#include <QNetworkReply>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -36,6 +33,33 @@ static inline QByteArray HTTPMIMEType(const QByteArray &contenttype)
         return QByteArray("application/octet-stream");
     }
     return splitcontenttype.at(0);
+}
+
+size_t curlWriteCallback(char *ptr, size_t size, size_t nmemb, void *userdata)
+{
+    HttpProtocol* httpprotocol = static_cast<HttpProtocol*>(userdata);
+    if (!httpprotocol) {
+        return 0;
+    }
+    // emit MIME before data
+    if (httpprotocol->firstchunk) {
+        httpprotocol->slotMIME();
+        httpprotocol->firstchunk = false;
+    }
+    // size is always 1
+    Q_UNUSED(size);
+    httpprotocol->slotData(ptr, nmemb);
+    return nmemb;
+}
+
+int curlProgressCallback(void *userdata, double dltotal, double dlnow, double ultotal, double ulnow)
+{
+    HttpProtocol* httpprotocol = static_cast<HttpProtocol*>(userdata);
+    if (!httpprotocol) {
+        return CURLE_BAD_FUNCTION_ARGUMENT;
+    }
+    httpprotocol->slotProgress(dlnow, dltotal);
+    return CURLE_OK;
 }
 
 extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
@@ -59,83 +83,94 @@ extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
 }
 
 HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
-    : SlaveBase("http", pool, app)
+    : SlaveBase("http", pool, app), firstchunk(true), m_curl(nullptr)
 {
+    m_curl = curl_easy_init();
+    if (!m_curl) {
+        kWarning(7103) << "Could not create context";
+        return;
+    }
+
+    curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 10L);
+    curl_easy_setopt(m_curl, CURLOPT_TIMEOUT, 30L);
+    curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
+    curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the progress callback is not called
+    curl_easy_setopt(m_curl, CURLOPT_PROGRESSDATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_PROGRESSFUNCTION, curlProgressCallback);
 }
 
 HttpProtocol::~HttpProtocol()
 {
+    if (m_curl) {
+        curl_easy_cleanup(m_curl);
+    }
 }
 
 void HttpProtocol::get(const KUrl &url)
 {
     kDebug(7103) << "URL" << url.prettyUrl();
 
-    QNetworkAccessManager netmanager(this);
-    QNetworkDiskCache netcache(this);
-    QNetworkRequest netrequest(url);
+    if (Q_UNLIKELY(!m_curl)) {
+        error(KIO::ERR_OUT_OF_MEMORY, QString::fromLatin1("Null context"));
+        return;
+    }
+
+    firstchunk = true;
+    const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
+    curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
 
     kDebug(7103) << "Metadata" << allMetaData();
+    struct curl_slist *curllist = NULL;
     // metadata from scheduler
     if (hasMetaData("Languages")) {
-        netrequest.setRawHeader("Accept-Language", metaData("Languages").toAscii());
+        curllist = curl_slist_append(curllist, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
     }
     if (hasMetaData("Charsets")) {
-        netrequest.setRawHeader("Accept-Charset", metaData("Charsets").toAscii());
-    }
-    if (hasMetaData("CacheDir")) {
-        netcache.setCacheDirectory(metaData("CacheDir"));
+        curllist = curl_slist_append(curllist, QByteArray("Accept-Charset: ") + metaData("Charsets").toAscii());
     }
     if (hasMetaData("UserAgent")) {
-        netrequest.setRawHeader("User-Agent", metaData("UserAgent").toAscii());
+        const QByteArray useragentbytes = metaData("UserAgent").toAscii();
+        curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
     }
-    netmanager.setCache(&netcache);
-    // KIO metadata
-    if (hasMetaData("cache")) {
-        const QByteArray kiocache = metaData("cache").toAscii();
-        if (qstricmp(kiocache.constData(), "cache") == 0) {
-            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::PreferCache));
-        } else if (qstricmp(kiocache.constData(), "cacheonly") == 0) {
-            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::AlwaysCache));
-        } else if (qstricmp(kiocache.constData(), "verify") == 0 || qstricmp(kiocache.constData(), "refresh") == 0) {
-            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::PreferNetwork));
-        } else {
-            // reload or unknown
-            netrequest.setAttribute(QNetworkRequest::CacheLoadControlAttribute, QVariant(QNetworkRequest::AlwaysNetwork));
-        }
-    }
-
-    QNetworkReply* netreply = netmanager.get(netrequest);
-    connect(netreply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(slotProgress(qint64,qint64)));
-    while (!netreply->isFinished()) {
-        QCoreApplication::processEvents();
-        QThread::msleep(400);
-    }
-
-    if (netreply->error() != QNetworkReply::NoError) {
-        kWarning(7103) << "Error" << netreply->url() << netreply->error();
-        error(KIO::ERR_COULD_NOT_CONNECT, url.prettyUrl());
+    CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
+    if (curlresult != CURLE_OK) {
+        curl_slist_free_all(curllist);
+        kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+        error(KIO::ERR_COULD_NOT_CONNECT, curl_easy_strerror(curlresult));
         return;
     }
 
-    const QVariant netredirect = netreply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-    if (netredirect.isValid()) {
-        const QUrl netredirecturl = netreply->url().resolved(netredirect.toUrl());
-        kDebug(7103) << "Redirecting to" << netredirecturl;
-        redirection(netredirecturl);
-        finished();
+    curlresult = curl_easy_perform(m_curl);
+    if (curlresult != CURLE_OK) {
+        curl_slist_free_all(curllist);
+        kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+        error(KIO::ERR_COULD_NOT_CONNECT, curl_easy_strerror(curlresult));
         return;
     }
 
-    kDebug(7103) << "Headers" << netreply->rawHeaderPairs();
-
-    const QByteArray httpmimetype = HTTPMIMEType(netreply->rawHeader("content-type"));
-    kDebug(7103) << "MIME type" << httpmimetype;
-    emit mimeType(httpmimetype);
-
-    data(netreply->readAll());
-
+    curl_slist_free_all(curllist);
     finished();
+}
+
+void HttpProtocol::slotMIME()
+{
+    char *curlcontenttype = nullptr;
+    CURLcode curlresult = curl_easy_getinfo(m_curl, CURLINFO_CONTENT_TYPE, &curlcontenttype);
+    if (curlresult == CURLE_OK) {
+        const QByteArray httpmimetype = HTTPMIMEType(QByteArray(curlcontenttype));
+        kDebug(7103) << "MIME type" << httpmimetype;
+        emit mimeType(httpmimetype);
+    } else {
+        kWarning(7103) << "Could not get info" << curl_easy_strerror(curlresult);
+    }
+
+}
+
+void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
+{
+    data(QByteArray::fromRawData(curldata, curldatasize));
 }
 
 void HttpProtocol::slotProgress(qint64 received, qint64 total)

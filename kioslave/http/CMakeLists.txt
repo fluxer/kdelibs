@@ -1,12 +1,19 @@
 project(kioslave-http)
 
-include_directories(${KDE4_KIO_INCLUDES})
+include_directories(
+    ${KDE4_KIO_INCLUDES}
+    ${CURL_INCLUDES}
+)
 
 ########### next target ###############
 
 kde4_add_plugin(kio_http http.cpp)
 
-target_link_libraries(kio_http ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS})
+target_link_libraries(kio_http
+    ${KDE4_KDECORE_LIBS}
+    ${KDE4_KIO_LIBS}
+    ${CURL_LIBRARIES}
+)
 
 install(TARGETS kio_http DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
 

@@ -24,6 +24,8 @@
 #include <kurl.h>
 #include <kio/slavebase.h>
 
+#include <curl/curl.h>
+
 class HttpProtocol : public QObject, public KIO::SlaveBase
 {
     Q_OBJECT
@@ -34,8 +36,13 @@ public:
 
     virtual void get(const KUrl &url);
 
-private Q_SLOTS:
+    void slotMIME();
+    void slotData(const char* curldata, const size_t curldatasize);
     void slotProgress(qint64 received, qint64 total);
+
+    bool firstchunk;
+private:
+    CURL* m_curl;
 };
 
 #endif // KDELIBS_HTTP_H

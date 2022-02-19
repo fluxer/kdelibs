@@ -69,6 +69,14 @@ set_package_properties(ENCHANT PROPERTIES
     PURPOSE "Spell checking support via Enchant"
 )
 
+find_package(Curl)
+set_package_properties(Curl PROPERTIES
+    DESCRIPTION "Command line tool and library for transferring data with URLs"
+    URL "https://curl.se/"
+    TYPE REQUIRED
+    PURPOSE "KIO HTTP(S) slave"
+)
+
 # optional features
 if(X11_FOUND)
     macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)
@@ -87,14 +95,6 @@ if(X11_FOUND)
         message(FATAL_ERROR "\nNeither the XSync (libXext) nor XScreensaver (libXss) development package was found.\nPlease install one of them (XSync is recommended)\n")
     endif(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
 endif(X11_FOUND)
-
-macro_optional_find_package(OpenSSL)
-set_package_properties(OpenSSL PROPERTIES
-    DESCRIPTION "Support for secure network communications (SSL and TLS)"
-    URL "http://openssl.org"
-    TYPE RECOMMENDED
-    PURPOSE "For the bulk of secure communications, including secure web browsing via HTTPS"
-)
 
 macro_optional_find_package(Libintl)
 set_package_properties(Libintl PROPERTIES
