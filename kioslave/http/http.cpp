@@ -27,11 +27,11 @@
 
 // TODO: PropagateHttpHeader, charset, modified, accept and maybe caching
 
-static inline QByteArray HTTPMIMEType(const QByteArray &contenttype)
+static inline QString HTTPMIMEType(const QString &contenttype)
 {
-    const QList<QByteArray> splitcontenttype = contenttype.split(';');
+    const QList<QString> splitcontenttype = contenttype.split(QLatin1Char(';'));
     if (splitcontenttype.isEmpty()) {
-        return QByteArray("application/octet-stream");
+        return QString::fromLatin1("application/octet-stream");
     }
     return splitcontenttype.at(0);
 }
@@ -177,7 +177,7 @@ void HttpProtocol::slotMIME()
     char *curlcontenttype = nullptr;
     CURLcode curlresult = curl_easy_getinfo(m_curl, CURLINFO_CONTENT_TYPE, &curlcontenttype);
     if (curlresult == CURLE_OK) {
-        const QByteArray httpmimetype = HTTPMIMEType(QByteArray(curlcontenttype));
+        const QString httpmimetype = HTTPMIMEType(QString::fromAscii(curlcontenttype));
         kDebug(7103) << "MIME type" << httpmimetype;
         emit mimeType(httpmimetype);
     } else {
