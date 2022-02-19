@@ -12,7 +12,7 @@
 
 if(NOT WIN32)
     include(FindPkgConfig)
-    pkg_check_modules(PC_CURL QUIET curl)
+    pkg_check_modules(PC_CURL QUIET libcurl)
 
     set(CURL_INCLUDE_DIR ${PC_CURL_INCLUDE_DIRS})
     set(CURL_LIBRARIES ${PC_CURL_LIBRARIES})
