@@ -26,8 +26,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-// TODO: maybe caching
-
 static inline QString HTTPMIMEType(const QString &contenttype)
 {
     const QList<QString> splitcontenttype = contenttype.split(QLatin1Char(';'));
