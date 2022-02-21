@@ -48,7 +48,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
 #include <QtNetwork/QHostAddress>
-#include <QtNetwork/QSslSocket>
 #include <QtNetwork/QAuthenticator>
 
 #include <kdebug.h>
@@ -461,7 +460,7 @@ bool Ftp::ftpOpenControlConnection( const QString &host, int port )
   // now connect to the server and read the login message ...
   if (port == 0)
     port = 21;                  // default FTP port
-  m_control = new QSslSocket();
+  m_control = new QTcpSocket();
   m_control->connectToHost(host, port);
   m_control->waitForConnected(connectTimeout() * 1000);
   connect(m_control, SIGNAL(proxyAuthenticationRequired(QNetworkProxy,QAuthenticator*)),
@@ -910,7 +909,7 @@ int Ftp::ftpOpenPASVDataConnection()
   // now connect the data socket ...
   quint16 port = i[4] << 8 | i[5];
   const QString host = (isSocksProxy() ? m_host : address.toString());
-  m_data = new QSslSocket();
+  m_data = new QTcpSocket();
   m_data->connectToHost(host, port);
   m_data->waitForConnected(connectTimeout() * 1000);
 
@@ -948,7 +947,7 @@ int Ftp::ftpOpenEPSVDataConnection()
     return ERR_INTERNAL;
 
   const QString host = (isSocksProxy() ? m_host : address.toString());
-  m_data = new QSslSocket();
+  m_data = new QTcpSocket();
   m_data->connectToHost(host, portnum);
   m_data->waitForConnected(connectTimeout() * 1000);
   return m_data->isOpen() ? 0 : ERR_INTERNAL;
