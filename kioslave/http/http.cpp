@@ -113,17 +113,6 @@ HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
         kWarning(7103) << "Could not create context";
         return;
     }
-
-    curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 10L);
-    curl_easy_setopt(m_curl, CURLOPT_TIMEOUT, 30L);
-    curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
-    curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
-    curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the progress callback is not called
-    curl_easy_setopt(m_curl, CURLOPT_PROGRESSDATA, this);
-    curl_easy_setopt(m_curl, CURLOPT_PROGRESSFUNCTION, curlProgressCallback);
-    curl_easy_setopt(m_curl, CURLOPT_HEADERDATA, this);
-    curl_easy_setopt(m_curl, CURLOPT_HEADERFUNCTION, curlHeaderCallback);
 }
 
 HttpProtocol::~HttpProtocol()
@@ -144,6 +133,17 @@ void HttpProtocol::get(const KUrl &url)
 
     firstchunk = true;
     headerdata.clear();
+    curl_easy_reset(m_curl);
+    curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, 1L);
+    curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 10L);
+    curl_easy_setopt(m_curl, CURLOPT_TIMEOUT, 30L);
+    curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
+    curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the progress callback is not called
+    curl_easy_setopt(m_curl, CURLOPT_PROGRESSDATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_PROGRESSFUNCTION, curlProgressCallback);
+    curl_easy_setopt(m_curl, CURLOPT_HEADERDATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_HEADERFUNCTION, curlHeaderCallback);
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
     curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
 
