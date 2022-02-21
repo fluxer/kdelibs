@@ -19,13 +19,14 @@
 #include "http.h"
 #include "kdebug.h"
 #include "kcomponentdata.h"
+#include "khttpheader.h"
 
 #include <QCoreApplication>
 
 #include <sys/types.h>
 #include <unistd.h>
 
-// TODO: charset, modified, accept and maybe caching
+// TODO: maybe caching
 
 static inline QString HTTPMIMEType(const QString &contenttype)
 {
@@ -34,6 +35,15 @@ static inline QString HTTPMIMEType(const QString &contenttype)
         return QString::fromLatin1("application/octet-stream");
     }
     return splitcontenttype.at(0);
+}
+
+static inline QString HTTPCharset(const QString &contenttype)
+{
+    const QList<QString> splitcontenttype = contenttype.split(QLatin1Char(';'));
+    if (splitcontenttype.isEmpty()) {
+        return QString();
+    }
+    return splitcontenttype.at(1);
 }
 
 size_t curlWriteCallback(char *ptr, size_t size, size_t nmemb, void *userdata)
@@ -154,6 +164,12 @@ void HttpProtocol::get(const KUrl &url)
         const QByteArray proxybytes = metaData("UseProxy").toAscii();
         curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
     }
+    if (hasMetaData(QLatin1String("referrer"))) {
+        curllist = curl_slist_append(curllist, QByteArray("Referrer: ") + metaData("referrer").toAscii());
+    }
+    if (hasMetaData(QLatin1String("accept"))) {
+        curllist = curl_slist_append(curllist, QByteArray("Accept: ") + metaData("accept").toAscii());
+    }
     CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
@@ -176,18 +192,9 @@ void HttpProtocol::get(const KUrl &url)
         setMetaData(QString::fromLatin1("HTTP-Headers"), httpheaders);
     }
 
-    // added in v7.76.0
-#ifdef CURLINFO_REFERER
-    char *curlreferrer = nullptr;
-    curlresult = curl_easy_getinfo(m_curl, CURLINFO_REFERER, &curlreferrer);
-    if (curlresult == CURLE_OK) {
-        const QString httpreferrer = QString::fromAscii(curlreferrer);
-        kDebug(7103) << "Referrer" << httpreferrer;
-        setMetaData(QString::fromLatin1("referrer"), httpreferrer);
-    } else {
-        kWarning(7103) << "Could not get referrer info" << curl_easy_strerror(curlresult);
-    }
-#endif
+    KHTTPHeader httpheader;
+    httpheader.parseHeader(headerdata);
+    setMetaData(QString::fromLatin1("modified"), httpheader.get(QLatin1String("Last-Modified")));
 
     curl_slist_free_all(curllist);
     finished();
@@ -200,7 +207,11 @@ void HttpProtocol::slotMIME()
     if (curlresult == CURLE_OK) {
         const QString httpmimetype = HTTPMIMEType(QString::fromAscii(curlcontenttype));
         kDebug(7103) << "MIME type" << httpmimetype;
-        emit mimeType(httpmimetype);
+        mimeType(httpmimetype);
+
+        const QString httpcharset = HTTPCharset(QString::fromAscii(curlcontenttype));
+        kDebug(7103) << "charset" << httpcharset;
+        setMetaData(QString::fromLatin1("charset"), httpcharset);
     } else {
         kWarning(7103) << "Could not get info" << curl_easy_strerror(curlresult);
     }

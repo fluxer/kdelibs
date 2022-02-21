@@ -7,7 +7,7 @@ include_directories(
 
 ########### next target ###############
 
-kde4_add_plugin(kio_http http.cpp)
+kde4_add_plugin(kio_http http.cpp khttpheader.cpp)
 
 target_link_libraries(kio_http
     ${KDE4_KDECORE_LIBS}
