@@ -4,7 +4,6 @@ include_directories(BEFORE ${CMAKE_SOURCE_DIR}/kio)
 
 # arpa/nameser.h
 add_subdirectory(kpac)
-add_subdirectory(kntlm)
 
 ########### next target ###############
 

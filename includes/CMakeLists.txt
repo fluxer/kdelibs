@@ -215,7 +215,6 @@ install(
     KNSBookmarkExporterImpl
     KNSBookmarkImporter
     KNSBookmarkImporterImpl
-    KNTLM
     KNewFileMenu
     KNewPasswordDialog
     KNotification
