@@ -125,6 +125,7 @@ public:
     QByteArray toGet(const HTTPVersion version = HTTP_1_0) const;
 
 private:
+    Q_DISABLE_COPY(KHTTPHeader);
     KHTTPHeaderPrivate *d;
 };
 
