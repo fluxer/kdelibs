@@ -143,7 +143,12 @@ void HttpProtocol::get(const KUrl &url)
     curl_easy_setopt(m_curl, CURLOPT_HEADERDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_HEADERFUNCTION, curlHeaderCallback);
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
-    curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
+    CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
+    if (curlresult != CURLE_OK) {
+        kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+        error(KIO::ERR_MALFORMED_URL, curl_easy_strerror(curlresult));
+        return;
+    }
 
     kDebug(7103) << "Metadata" << allMetaData();
     struct curl_slist *curllist = NULL;
@@ -156,11 +161,20 @@ void HttpProtocol::get(const KUrl &url)
     }
     if (hasMetaData(QLatin1String("UserAgent"))) {
         const QByteArray useragentbytes = metaData("UserAgent").toAscii();
-        curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
+        curlresult = curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
+        if (curlresult != CURLE_OK) {
+            kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+            return;
+        }
     }
     if (hasMetaData(QLatin1String("UseProxy"))) {
         const QByteArray proxybytes = metaData("UseProxy").toAscii();
-        curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
+        curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
+        if (curlresult != CURLE_OK) {
+            kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+            error(KIO::ERR_UNKNOWN_PROXY_HOST, curl_easy_strerror(curlresult));
+            return;
+        }
     }
     // optional user-supplied metadata
     if (hasMetaData(QLatin1String("referrer"))) {
@@ -169,7 +183,7 @@ void HttpProtocol::get(const KUrl &url)
     if (hasMetaData(QLatin1String("accept"))) {
         curllist = curl_slist_append(curllist, QByteArray("Accept: ") + metaData("accept").toAscii());
     }
-    CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
+    curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
         kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
