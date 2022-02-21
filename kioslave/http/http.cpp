@@ -164,7 +164,6 @@ void HttpProtocol::get(const KUrl &url)
         curlresult = curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
         if (curlresult != CURLE_OK) {
             kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
-            return;
         }
     }
     if (hasMetaData(QLatin1String("UseProxy"))) {
@@ -187,7 +186,7 @@ void HttpProtocol::get(const KUrl &url)
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
         kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
-        error(KIO::ERR_COULD_NOT_CONNECT, curl_easy_strerror(curlresult));
+        error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
         return;
     }
 
