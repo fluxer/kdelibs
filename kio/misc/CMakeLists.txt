@@ -2,9 +2,6 @@
 # for strange kio/foo.h includes
 include_directories(BEFORE ${CMAKE_SOURCE_DIR}/kio)
 
-# arpa/nameser.h
-add_subdirectory(kpac)
-
 ########### next target ###############
 
 add_executable(kmailservice kmailservice.cpp)

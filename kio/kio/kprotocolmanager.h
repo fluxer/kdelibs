@@ -158,16 +158,12 @@ public:
    * Types of proxy configuration
    * @li NoProxy     - No proxy is used
    * @li ManualProxy - Proxies are manually configured
-   * @li PACProxy    - A Proxy configuration URL has been given
-   * @li WPADProxy   - A proxy should be automatically discovered
    * @li EnvVarProxy - Use the proxy values set through environment variables.
    */
   enum ProxyType
   {
       NoProxy,
       ManualProxy,
-      PACProxy,
-      WPADProxy,
       EnvVarProxy
   };
 

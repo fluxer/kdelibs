@@ -66,18 +66,6 @@ check_function_exists(sendfile      HAVE_SENDFILE)                          # ki
 
 check_symbol_exists(ttyname_r        "unistd.h"          HAVE_TTYNAME_R)    # kinit, kpty
 
-# Check for libresolv
-# e.g. on slackware 9.1 res_init() is only a define for __res_init, so we check both, Alex
-set(HAVE_RESOLV_LIBRARY FALSE)                                        # kdecore, kdecore/network, kpac
-check_library_exists(resolv res_init "" HAVE_RES_INIT_IN_RESOLV_LIBRARY)
-check_library_exists(resolv __res_init "" HAVE___RES_INIT_IN_RESOLV_LIBRARY)
-if (HAVE___RES_INIT_IN_RESOLV_LIBRARY OR HAVE_RES_INIT_IN_RESOLV_LIBRARY)
-   set(HAVE_RESOLV_LIBRARY TRUE)
-endif (HAVE___RES_INIT_IN_RESOLV_LIBRARY OR HAVE_RES_INIT_IN_RESOLV_LIBRARY)
-
-check_library_exists(nsl gethostbyname "" HAVE_NSL_LIBRARY)
-check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)
-
 if (UNIX)
   # for kpty
   check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)

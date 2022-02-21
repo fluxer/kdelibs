@@ -375,22 +375,6 @@ QStringList KProtocolManager::proxiesForUrl( const KUrl &url )
   if (!d->shouldIgnoreProxyFor(url)) {
     switch (proxyType())
     {
-      case PACProxy:
-      case WPADProxy:
-      {
-        KUrl u (url);
-        const QString protocol = u.protocol().toLower();
-        u.setProtocol(protocol);
-
-        if (protocol.startsWith(QL1S("http")) || protocol.startsWith(QL1S("ftp"))) {
-          QDBusReply<QStringList> reply = QDBusInterface(QL1S("org.kde.kded"),
-                                                         QL1S("/modules/proxyscout"),
-                                                         QL1S("org.kde.KPAC.ProxyScout"))
-                                          .call(QL1S("proxiesForUrl"), u.url());
-          proxyList = reply;
-        }
-        break;
-      }
       case EnvVarProxy:
         proxyList = getSystemProxyFor( url );
         break;
@@ -407,8 +391,8 @@ QStringList KProtocolManager::proxiesForUrl( const KUrl &url )
           proxy = QL1S("socks://") + (index == -1 ? proxy : proxy.mid(index+3));
           proxyList << proxy;
         }
+        break;
       }
-      break;
       case NoProxy:
       default:
         break;
