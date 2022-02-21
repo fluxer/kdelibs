@@ -19,8 +19,6 @@
 #ifndef KHTTPHEADER_H
 #define KHTTPHEADER_H
 
-#include <kio/kio_export.h>
-
 #include <kurl.h>
 
 class KHTTPHeaderPrivate;

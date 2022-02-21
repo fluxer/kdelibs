@@ -40,7 +40,7 @@ static inline QString HTTPMIMEType(const QString &contenttype)
 static inline QString HTTPCharset(const QString &contenttype)
 {
     const QList<QString> splitcontenttype = contenttype.split(QLatin1Char(';'));
-    if (splitcontenttype.isEmpty()) {
+    if (splitcontenttype.size() < 2) {
         return QString();
     }
     return splitcontenttype.at(1);
@@ -91,7 +91,7 @@ extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
     KComponentData componentData("kio_http", "kdelibs4");
     (void)KGlobal::locale();
 
-    kDebug(7103) << "Starting " << ::getpid();
+    kDebug(7103) << "Starting" << ::getpid();
 
     if (argc != 4) {
         ::fprintf(stderr, "Usage: kio_http protocol domain-socket1 domain-socket2\n");
@@ -164,6 +164,7 @@ void HttpProtocol::get(const KUrl &url)
         const QByteArray proxybytes = metaData("UseProxy").toAscii();
         curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
     }
+    // optional user-supplied metadata
     if (hasMetaData(QLatin1String("referrer"))) {
         curllist = curl_slist_append(curllist, QByteArray("Referrer: ") + metaData("referrer").toAscii());
     }
