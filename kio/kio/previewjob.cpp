@@ -33,7 +33,6 @@
 #include <QtCore/QTimer>
 #include <QtCore/QRegExp>
 #include <QtCore/QList>
-#include <QCryptographicHash>
 
 #include <kfileitem.h>
 #include <kde_file.h>

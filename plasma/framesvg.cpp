@@ -23,7 +23,6 @@
 
 #include <QtCore/qatomic.h>
 #include <QBitmap>
-#include <QCryptographicHash>
 #include <QPainter>
 #include <QRegion>
 #include <QSize>
