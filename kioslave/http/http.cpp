@@ -67,7 +67,7 @@ int curlProgressCallback(void *userdata, double dltotal, double dlnow, double ul
     if (!httpprotocol) {
         return CURLE_BAD_FUNCTION_ARGUMENT;
     }
-    httpprotocol->slotProgress(dlnow, dltotal);
+    httpprotocol->slotProgress(qRound(dlnow), qRound(dltotal));
     return CURLE_OK;
 }
 
