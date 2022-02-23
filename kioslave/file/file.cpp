@@ -84,7 +84,6 @@ using namespace KIO;
 
 #define MAX_IPC_SIZE (1024*32)
 
-static QString readLogFile( const QByteArray&_filename );
 #ifdef HAVE_POSIX_ACL
 static void appendACLAtoms( const QByteArray & path, UDSEntry& entry,
                             mode_t type, bool withACL );
@@ -970,23 +969,6 @@ void FileProtocol::unmount( const QString& point )
         }
         error( KIO::ERR_COULD_NOT_UNMOUNT, QString::fromLocal8Bit(erroroutput) );
     }
-}
-
-/*************************************
- *
- * Utilities
- *
- *************************************/
-
-static QString readLogFile( const QByteArray& _filename )
-{
-    QString result;
-    QFile file(QFile::decodeName(_filename));
-    if (file.open(QIODevice::ReadOnly)) {
-        result = QString::fromLocal8Bit(file.readAll());
-    }
-    (void)file.remove();
-    return result;
 }
 
 /*************************************
