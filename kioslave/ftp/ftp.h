@@ -31,8 +31,11 @@
 
 #include <QTcpServer>
 #include <QTcpSocket>
-#include <QNetworkProxy>
-#include <QAuthenticator>
+
+#ifndef QT_NO_NETWORKPROXY
+#  include <QNetworkProxy>
+#  include <QAuthenticator>
+#endif
 
 struct FtpEntry
 {
@@ -351,9 +354,11 @@ private:
    */
   bool maybeEmitStatEntry(FtpEntry& ftpEnt, const QString& search, const QString& filename, bool isDir);
 
+#ifndef QT_NO_NETWORKPROXY
 private Q_SLOTS:
   void proxyAuthentication(const QNetworkProxy&, QAuthenticator*);
   void saveProxyAuthentication();
+#endif
 
 private: // data members
 
@@ -444,10 +449,12 @@ private: // data members
    */
   QTcpServer *m_server;
 
+#ifndef QT_NO_NETWORKPROXY
   /**
    * proxy server authenticator
    */
   QAuthenticator* m_socketProxyAuth;
+#endif
 };
 
 #endif // KDELIBS_FTP_H

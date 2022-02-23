@@ -47,8 +47,6 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
-#include <QtNetwork/QHostAddress>
-#include <QtNetwork/QAuthenticator>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -107,7 +105,11 @@ static bool supportedProxyScheme(const QString& scheme)
 
 static bool isSocksProxy()
 {
+#ifndef QT_NO_NETWORKPROXY
     return (QNetworkProxy::applicationProxy().type() == QNetworkProxy::Socks5Proxy);
+#else
+    return false;
+#endif
 }
 
 
@@ -200,7 +202,9 @@ Ftp::Ftp( const QByteArray &pool, const QByteArray &app )
 
   // init other members
   m_port = 0;
+#ifndef QT_NO_NETWORKPROXY
   m_socketProxyAuth = 0;
+#endif
 }
 
 
@@ -410,6 +414,7 @@ bool Ftp::ftpOpenConnection (LoginMode loginMode)
  */
 bool Ftp::ftpOpenControlConnection()
 {
+#ifndef QT_NO_NETWORKPROXY
   if (m_proxyUrls.isEmpty())
       return ftpOpenControlConnection(m_host, m_port);
 
@@ -449,6 +454,9 @@ bool Ftp::ftpOpenControlConnection()
   }
 
   return false;
+#else
+  return ftpOpenControlConnection(m_host, m_port);
+#endif // QT_NO_NETWORKPROXY
 }
 
 bool Ftp::ftpOpenControlConnection( const QString &host, int port )
@@ -463,8 +471,10 @@ bool Ftp::ftpOpenControlConnection( const QString &host, int port )
   m_control = new QTcpSocket();
   m_control->connectToHost(host, port);
   m_control->waitForConnected(connectTimeout() * 1000);
+#ifndef QT_NO_NETWORKPROXY
   connect(m_control, SIGNAL(proxyAuthenticationRequired(QNetworkProxy,QAuthenticator*)),
           this, SLOT(proxyAuthentication(QNetworkProxy,QAuthenticator*)));
+#endif
   int iErrorCode = m_control->state() == QAbstractSocket::ConnectedState ? 0 : ERR_COULD_NOT_CONNECT;
 
   // on connect success try to read the server message...
@@ -2625,6 +2635,7 @@ Ftp::StatusCode Ftp::ftpSendMimeType(int& iError, const KUrl& url)
   return statusSuccess;
 }
 
+#ifndef QT_NO_NETWORKPROXY
 void Ftp::proxyAuthentication(const QNetworkProxy& proxy, QAuthenticator* authenticator)
 {
     Q_UNUSED(proxy);
@@ -2692,6 +2703,7 @@ void Ftp::saveProxyAuthentication()
     delete m_socketProxyAuth;
     m_socketProxyAuth = 0;
 }
+#endif // QT_NO_NETWORKPROXY
 
 void Ftp::fixupEntryName(FtpEntry* e)
 {
