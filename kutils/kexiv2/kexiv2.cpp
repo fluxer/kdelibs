@@ -88,11 +88,8 @@ KExiv2Private::KExiv2Private(const QString &path)
         const Exiv2::ExifData exiv2data = exiv2image->exifData();
         for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
             const std::string key = (*it).key();
-
-            std::ostringstream os;
-            (*it).value().write(os);
-            const std::string value = os.str();
-
+            const std::string value = (*it).value().toString();
+            kDebug() << "key" << key.c_str() << "value" << value.c_str();
             m_datamap.insert(QByteArray(key.c_str(), key.size()), QString::fromUtf8(value.c_str(), value.size()));
         }
 
