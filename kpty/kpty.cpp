@@ -146,8 +146,6 @@ bool KPty::open()
 
   d->ownMaster = true;
 
-  QByteArray ptyName;
-
   // Find a master pty that we can open ////////////////////////////////
 
   // Because not all the pty animals are created equal, they want to
@@ -168,6 +166,8 @@ bool KPty::open()
   d->ttyName = ptsn;
 
 #else
+
+  QByteArray ptyName;
 
   d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
   if (d->masterFd >= 0)
