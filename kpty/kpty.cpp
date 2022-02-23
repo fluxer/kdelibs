@@ -156,6 +156,7 @@ bool KPty::open()
 #ifdef HAVE_OPENPTY
 
   char ptsn[PATH_MAX];
+  ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
   if (::openpty( &d->masterFd, &d->slaveFd, ptsn, 0, 0))
   {
     d->masterFd = -1;
