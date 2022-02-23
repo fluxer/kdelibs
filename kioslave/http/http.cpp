@@ -132,9 +132,10 @@ void HttpProtocol::get(const KUrl &url)
     firstchunk = true;
     headerdata.clear();
     curl_easy_reset(m_curl);
+    curl_easy_setopt(m_curl, CURLOPT_NOSIGNAL, 1L);
     curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 10L);
-    curl_easy_setopt(m_curl, CURLOPT_TIMEOUT, 30L);
+    curl_easy_setopt(m_curl, CURLOPT_TIMEOUT, SlaveBase::connectTimeout());
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
     curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the progress callback is not called
