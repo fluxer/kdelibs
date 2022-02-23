@@ -333,8 +333,6 @@ void FileProtocol::get( const KUrl& url )
     }
 
     char buffer[ MAX_IPC_SIZE ];
-    QByteArray array;
-
     while( 1 )
     {
        int n = ::read( fd, buffer, MAX_IPC_SIZE );
@@ -349,9 +347,7 @@ void FileProtocol::get( const KUrl& url )
        if (n == 0)
           break; // Finished
 
-       array = QByteArray::fromRawData(buffer, n);
-       data( array );
-       array.clear();
+       data( QByteArray::fromRawData(buffer, n) );
 
        processed_size += n;
        processedSize( processed_size );
@@ -462,8 +458,7 @@ void FileProtocol::read(KIO::filesize_t bytes)
         } while (res == -1 && errno == EINTR);
 
         if (res > 0) {
-            QByteArray array = QByteArray::fromRawData(buffer.data(), res);
-            data( array );
+            data( QByteArray::fromRawData(buffer.data(), res) );
             bytes -= res;
         } else {
             // empty array designates eof
