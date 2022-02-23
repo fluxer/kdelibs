@@ -166,7 +166,7 @@ bool KPty::open()
   }
   d->ttyName = ptsn;
 
-#else
+#else // HAVE_OPENPTY
 
   QByteArray ptyName;
 
@@ -178,17 +178,17 @@ bool KPty::open()
     ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
     if (ptsname_r(d->masterFd, ptsn, sizeof(ptsn)) == 0) {
         d->ttyName = ptsn;
-#else
+#else // HAVE_PTSNAME_R
     char *ptsn = ptsname(d->masterFd);
     if (ptsn) {
         d->ttyName = ptsn;
-#endif
+#endif // HAVE_PTSNAME_R
 #ifdef HAVE_GRANTPT
         if (!grantpt(d->masterFd))
            goto grantedpt;
-#else
+#else // HAVE_GRANTPT
         goto gotpty;
-#endif
+#endif // HAVE_GRANTPT
     }
     ::close(d->masterFd);
     d->masterFd = -1;
@@ -216,7 +216,7 @@ bool KPty::open()
           d->masterFd = -1;
           continue;
         }
-#endif /* Q_OS_SOLARIS */
+#endif /// Q_OS_SOLARIS
         if (!access(d->ttyName.data(),R_OK|W_OK)) // checks availability based on permission bits
         {
           if (!geteuid())
@@ -290,9 +290,9 @@ bool KPty::open()
     if (ioctl(d->slaveFd, I_FIND, ld) == 0)
       ioctl(d->slaveFd, I_PUSH, ld);
   }
-#endif
+#endif // Q_OS_SOLARIS
 
-#endif /* HAVE_OPENPTY */
+#endif // HAVE_OPENPTY
 
   fcntl(d->masterFd, F_SETFD, FD_CLOEXEC);
   fcntl(d->slaveFd, F_SETFD, FD_CLOEXEC);
