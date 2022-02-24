@@ -62,7 +62,7 @@ QStringList KRecentDocument::recentDocuments()
     const QStringList list = d.entryList();
     QStringList fullList;
 
-    foreach (const QString it, list) {
+    foreach (const QString &it, list) {
         QString pathDesktop;
         if (it.startsWith(":")) {
             // FIXME: Remove when Qt will be fixed
@@ -156,7 +156,7 @@ void KRecentDocument::clear()
 {
     const QStringList list = recentDocuments();
     QDir dir;
-    foreach(const QString it, list) {
+    foreach(const QString &it, list) {
         dir.remove(it);
     }
 }
