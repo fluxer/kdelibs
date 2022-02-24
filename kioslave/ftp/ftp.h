@@ -32,11 +32,6 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 
-#ifndef QT_NO_NETWORKPROXY
-#  include <QNetworkProxy>
-#  include <QAuthenticator>
-#endif
-
 struct FtpEntry
 {
   QString name;
@@ -354,12 +349,6 @@ private:
    */
   bool maybeEmitStatEntry(FtpEntry& ftpEnt, const QString& search, const QString& filename, bool isDir);
 
-#ifndef QT_NO_NETWORKPROXY
-private Q_SLOTS:
-  void proxyAuthentication(const QNetworkProxy&, QAuthenticator*);
-  void saveProxyAuthentication();
-#endif
-
 private: // data members
 
   QString m_host;
@@ -370,8 +359,6 @@ private: // data members
    * Where we end up after connecting
    */
   QString m_initialPath;
-  KUrl m_proxyURL;
-  QStringList m_proxyUrls;
 
  /**
    * the current working directory - see ftpFolder
@@ -448,13 +435,6 @@ private: // data members
    * active mode server socket
    */
   QTcpServer *m_server;
-
-#ifndef QT_NO_NETWORKPROXY
-  /**
-   * proxy server authenticator
-   */
-  QAuthenticator* m_socketProxyAuth;
-#endif
 };
 
 #endif // KDELIBS_FTP_H

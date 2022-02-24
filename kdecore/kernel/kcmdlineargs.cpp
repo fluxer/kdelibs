@@ -288,14 +288,6 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("testability", ki18n("load the testability framework"));
 #ifdef Q_WS_X11
     qt_options.add("visual TrueColor", ki18n("forces the application to use a TrueColor visual on\nan 8-bit display"));
-// TODO: maybe issue a warning that the options have no effect instead of making them unavailable
-#ifndef QT_NO_IM
-    qt_options.add("im <XIM server>", ki18n("set XIM server"));
-#endif
-#ifndef QT_NO_XIM
-    qt_options.add("inputstyle <inputstyle>", ki18n("sets XIM (X Input Method) input style. Possible\nvalues are onthespot, overthespot, offthespot and\nroot"));
-    qt_options.add("noxim", ki18n("disable XIM"));
-#endif
 #endif // Q_WS_X11
     qt_options.add("reverse", ki18n("mirrors the whole layout of widgets"));
     qt_options.add("stylesheet <file.qss>", ki18n("applies the Qt stylesheet to the application widgets"));
