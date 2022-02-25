@@ -83,9 +83,10 @@ bool WebPHandler::read(QImage *retImage)
 
 bool WebPHandler::write(const QImage &image)
 {
+    if (image.isNull()) {
+        return false;
     // limitation in WebP
-    if (image.height() > 16383 || image.height() == 0 ||
-        image.width() > 16383 || image.width() == 0) {
+    } else if (image.height() >= WEBP_MAX_DIMENSION || image.width() >= WEBP_MAX_DIMENSION) {
         return false;
     }
 
