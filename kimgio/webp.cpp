@@ -120,7 +120,10 @@ bool WebPHandler::write(const QImage &image)
         return false;
     }
 
-    device()->write(reinterpret_cast<const char*>(output), size);
+    if (device()->write(reinterpret_cast<const char*>(output), size) != size) {
+        WebPFree(output);
+        return false;
+    }
     WebPFree(output);
 
     return true;
