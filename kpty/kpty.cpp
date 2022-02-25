@@ -155,8 +155,6 @@ bool KPty::open()
 
 #else // HAVE_OPENPTY
 
-  QByteArray ptyName;
-
   d->masterFd = ::posix_openpt(O_RDWR|O_NOCTTY);
   if (d->masterFd >= 0)
   {
