@@ -80,12 +80,7 @@ extern "C" {
 #endif
 
 #include <kdebug.h>
-#include <kstandarddirs.h>	// findExe
 #include <kde_file.h>
-
-#include <QtCore/qprocess.h>
-
-#define TTY_GROUP "tty"
 
 #ifndef PATH_MAX
 # define PATH_MAX _POSIX_PATH_MAX
@@ -107,14 +102,6 @@ KPtyPrivate::KPtyPrivate(KPty* parent) :
 KPtyPrivate::~KPtyPrivate()
 {
 }
-
-#ifndef HAVE_OPENPTY
-bool KPtyPrivate::chownpty(bool grant)
-{
-    return !QProcess::execute(KStandardDirs::findExe("kgrantpty"),
-        QStringList() << (grant?"--grant":"--revoke") << QString::number(masterFd));
-}
-#endif
 
 /////////////////////////////
 // public member functions //
@@ -176,97 +163,29 @@ bool KPty::open()
 #ifdef HAVE_PTSNAME_R
     char ptsn[32];
     ::memset(ptsn, '\0', sizeof(ptsn) * sizeof(char));
-    if (ptsname_r(d->masterFd, ptsn, sizeof(ptsn)) == 0) {
+    if (::ptsname_r(d->masterFd, ptsn, sizeof(ptsn)) == 0) {
         d->ttyName = ptsn;
 #else // HAVE_PTSNAME_R
-    char *ptsn = ptsname(d->masterFd);
+    char *ptsn = ::ptsname(d->masterFd);
     if (ptsn) {
         d->ttyName = ptsn;
 #endif // HAVE_PTSNAME_R
-#ifdef HAVE_GRANTPT
-        if (!grantpt(d->masterFd))
+        if (::grantpt(d->masterFd) == 0)
            goto grantedpt;
-#else // HAVE_GRANTPT
-        goto gotpty;
-#endif // HAVE_GRANTPT
     }
     ::close(d->masterFd);
     d->masterFd = -1;
   }
 
-  // Linux device names, FIXME: Trouble on other systems?
-  for (const char* s3 = "pqrstuvwxyzabcde"; *s3; s3++)
-  {
-    for (const char* s4 = "0123456789abcdef"; *s4; s4++)
-    {
-      ptyName = QString().sprintf("/dev/pty%c%c", *s3, *s4).toLatin1();
-      d->ttyName = QString().sprintf("/dev/tty%c%c", *s3, *s4).toLatin1();
-
-      d->masterFd = KDE_open(ptyName.data(), O_RDWR);
-      if (d->masterFd >= 0)
-      {
-#ifdef Q_OS_SOLARIS
-        /* Need to check the process group of the pty.
-         * If it exists, then the slave pty is in use,
-         * and we need to get another one.
-         */
-        int pgrp_rtn;
-        if (ioctl(d->masterFd, TIOCGPGRP, &pgrp_rtn) == 0 || errno != EIO) {
-          ::close(d->masterFd);
-          d->masterFd = -1;
-          continue;
-        }
-#endif /// Q_OS_SOLARIS
-        if (!access(d->ttyName.data(),R_OK|W_OK)) // checks availability based on permission bits
-        {
-          if (!geteuid())
-          {
-            struct group* p = getgrnam(TTY_GROUP);
-            if (!p)
-              p = getgrnam("wheel");
-            gid_t gid = p ? p->gr_gid : getgid ();
-
-            chown(d->ttyName.data(), getuid(), gid);
-            chmod(d->ttyName.data(), S_IRUSR|S_IWUSR|S_IWGRP);
-          }
-          goto gotpty;
-        }
-        ::close(d->masterFd);
-        d->masterFd = -1;
-      }
-    }
-  }
-
   kWarning(175) << "Can't open a pseudo teletype";
   return false;
 
- gotpty:
-  KDE_struct_stat st;
-  if (KDE_stat(d->ttyName.data(), &st))
-    return false; // this just cannot happen ... *cough*  Yeah right, I just
-                  // had it happen when pty #349 was allocated.  I guess
-                  // there was some sort of leak?  I only had a few open.
-  if (((st.st_uid != getuid()) ||
-       (st.st_mode & (S_IRGRP|S_IXGRP|S_IROTH|S_IWOTH|S_IXOTH))) &&
-      !d->chownpty(true))
-  {
-    kWarning(175)
-      << "chownpty failed for device " << ptyName << "::" << d->ttyName
-      << "\nThis means the communication can be eavesdropped." << endl;
-  }
-
  grantedpt:
-
 #ifdef HAVE_REVOKE
   revoke(d->ttyName.data());
 #endif
 
-#ifdef HAVE_UNLOCKPT
   unlockpt(d->masterFd);
-#elif defined(TIOCSPTLCK)
-  int flag = 0;
-  ioctl(d->masterFd, TIOCSPTLCK, &flag);
-#endif
 
   d->slaveFd = KDE_open(d->ttyName.data(), O_RDWR | O_NOCTTY);
   if (d->slaveFd < 0)
@@ -375,15 +294,14 @@ void KPty::close()
 #ifndef HAVE_OPENPTY
         // don't bother resetting unix98 pty, it will go away after closing master anyway.
         if (memcmp(d->ttyName.data(), "/dev/pts/", 9)) {
-            if (!geteuid()) {
+            if (geteuid() == 0) {
                 KDE_struct_stat st;
-                if (!KDE_stat(d->ttyName.data(), &st)) {
+                if (KDE_stat(d->ttyName.data(), &st) == 0) {
                     chown(d->ttyName.data(), 0, st.st_gid == getgid() ? 0 : -1);
                     chmod(d->ttyName.data(), S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
                 }
             } else {
                 fcntl(d->masterFd, F_SETFD, 0);
-                d->chownpty(false);
             }
         }
 #endif

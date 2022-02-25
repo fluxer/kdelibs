@@ -119,8 +119,6 @@ if (UNIX)
     set(HAVE_OPENPTY 0)
 
     check_function_exists(revoke     HAVE_REVOKE)
-    check_function_exists(grantpt    HAVE_GRANTPT)
-    check_function_exists(unlockpt   HAVE_UNLOCKPT)
   endif (openpty_in_libc OR openpty_in_libutil)
 
   check_function_exists(ptsname_r  HAVE_PTSNAME_R)
