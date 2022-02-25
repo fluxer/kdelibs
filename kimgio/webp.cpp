@@ -90,28 +90,32 @@ bool WebPHandler::write(const QImage &image)
         return false;
     }
 
-    uint8_t *imageData = new uint8_t[image.width() * image.height() * (3 + image.hasAlphaChannel())];
+    QImage image32 = image;
+    if (image32.depth() != 32) {
+        image32 = image32.convertToFormat(QImage::Format_RGB32);
+    }
 
     size_t idx = 0;
-    for (int y = 0; y < image.height(); y++) {
-        const QRgb *scanline = reinterpret_cast<const QRgb*>(image.constScanLine(y));
-        for (int x = 0; x < image.width(); x++) {
+    uint8_t *imageData = new uint8_t[image32.width() * image32.height() * (3 + image32.hasAlphaChannel())];
+    for (int y = 0; y < image32.height(); y++) {
+        const QRgb *scanline = reinterpret_cast<const QRgb*>(image32.constScanLine(y));
+        for (int x = 0; x < image32.width(); x++) {
             imageData[idx++] = qRed(scanline[x]);
             imageData[idx++] = qGreen(scanline[x]);
             imageData[idx++] = qBlue(scanline[x]);
 
-            if (image.hasAlphaChannel()) {
+            if (image32.hasAlphaChannel()) {
                 imageData[idx++] = qAlpha(scanline[x]);
             }
         }
     }
 
-    uint8_t *output = 0;
-    size_t size;
-    if (image.hasAlphaChannel()) {
-        size = WebPEncodeRGBA(imageData, image.width(), image.height(), image.width() * 4, quality, &output);
+    size_t size = 0;
+    uint8_t *output = nullptr;
+    if (image32.hasAlphaChannel()) {
+        size = WebPEncodeRGBA(imageData, image32.width(), image32.height(), image32.width() * 4, quality, &output);
     } else {
-        size = WebPEncodeRGB(imageData, image.width(), image.height(), image.width() * 3, quality, &output);
+        size = WebPEncodeRGB(imageData, image32.width(), image32.height(), image32.width() * 3, quality, &output);
     }
     delete []imageData;
 
