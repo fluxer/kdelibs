@@ -160,10 +160,6 @@ public:
                 //Draw the selection (radiobutton-like) circle
                 painter->save();
                 painter->setRenderHint(QPainter::Antialiasing, true);
-#ifndef QT_NO_OPENGL
-                //The hint has effect only when OpenGL graphics system is available
-                painter->setRenderHint(QPainter::HighQualityAntialiasing, true);
-#endif
                 painter->setPen(QPen(color, 1.2, Qt::SolidLine));
                 painter->setBrush(QBrush());
                 painter->drawEllipse(opt.rect.adjusted(2,2,-2,-2));
