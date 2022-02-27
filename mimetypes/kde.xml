@@ -1914,4 +1914,48 @@ Notes:
     <glob pattern="*.tzst"/>
   </mime-type>
 
+  <mime-type type="image/katie">
+    <comment>Katie image</comment>
+    <comment xml:lang="af">Katie-beeld</comment>
+    <comment xml:lang="bg">Изображение — Katie</comment>
+    <comment xml:lang="ca">imatge Katie</comment>
+    <comment xml:lang="cs">obrázek Katie</comment>
+    <comment xml:lang="da">Katie-billede</comment>
+    <comment xml:lang="de">Katie-Bild</comment>
+    <comment xml:lang="el">Εικόνα Katie</comment>
+    <comment xml:lang="en-GB">Katie image</comment>
+    <comment xml:lang="es">imagen Katie</comment>
+    <comment xml:lang="eu">Katie irudia</comment>
+    <comment xml:lang="fi">Katie-kuva</comment>
+    <comment xml:lang="fr">image Katie</comment>
+    <comment xml:lang="fur">imagjin Katie</comment>
+    <comment xml:lang="ga">íomhá Katie</comment>
+    <comment xml:lang="gl">Imaxe Katie</comment>
+    <comment xml:lang="he">תמונת Katie</comment>
+    <comment xml:lang="hr">Katie slika</comment>
+    <comment xml:lang="hu">Katie kép</comment>
+    <comment xml:lang="ia">Imagine Katie</comment>
+    <comment xml:lang="id">Citra Katie</comment>
+    <comment xml:lang="it">Immagine Katie</comment>
+    <comment xml:lang="kk">Katie суреті</comment>
+    <comment xml:lang="ko">Katie 그림</comment>
+    <comment xml:lang="oc">imatge Katie</comment>
+    <comment xml:lang="pl">Obraz Katie</comment>
+    <comment xml:lang="pt">imagem Katie</comment>
+    <comment xml:lang="pt-BR">Imagem Katie</comment>
+    <comment xml:lang="ru">Изображение Katie</comment>
+    <comment xml:lang="sk">Obrázok Katie</comment>
+    <comment xml:lang="sl">Slika Katie</comment>
+    <comment xml:lang="sr">ВебП слика</comment>
+    <comment xml:lang="sv">Katie-bild</comment>
+    <comment xml:lang="tr">Katie görüntüsü</comment>
+    <comment xml:lang="uk">зображення Katie</comment>
+    <comment xml:lang="zh-CN">Katie 图像</comment>
+    <comment xml:lang="zh-TW">Katie 影像</comment>
+    <magic priority="50">
+      <match type="string" value="KATIE" offset="0"/>
+    </magic>
+    <glob pattern="*.kat"/>
+  </mime-type>
+
 </mime-info>

@@ -24,6 +24,7 @@ static const struct ImageFormatTblData {
     { "image/x-xpixmap", QLatin1String("xpm") },
     { "image/svg+xml", QLatin1String("svg") },
     { "image/svg+xml-compressed", QLatin1String("svgz") },
+    { "image/katie", QLatin1String("kat") },
 };
 static const qint16 ImageFormatTblSize = sizeof(ImageFormatTbl) / sizeof(ImageFormatTblData);
 
