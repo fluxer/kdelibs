@@ -37,7 +37,7 @@ public:
 
     static bool canRead(QIODevice *device);
 
-    QVariant option(ImageOption option) const final;
+    QVariant option(QImageIOHandler::ImageOption option) const final;
     bool supportsOption(QImageIOHandler::ImageOption option) const final;
 
     bool jumpToNextImage() final;

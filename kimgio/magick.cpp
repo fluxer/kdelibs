@@ -216,7 +216,7 @@ QVariant MagickHandler::option(QImageIOHandler::ImageOption option) const
     if (option == QImageIOHandler::Animation) {
         return QVariant(bool(m_imagecount > 1));
     }
-    return QVariant(false);
+    return QVariant();
 }
 
 bool MagickHandler::jumpToNextImage()

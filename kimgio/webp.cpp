@@ -30,7 +30,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <QVariant>
 
 WebPHandler::WebPHandler()
-    : quality(75)
+    : quality(100)
 {
 }
 
@@ -45,7 +45,7 @@ bool WebPHandler::canRead() const
 
 bool WebPHandler::read(QImage *retImage)
 {
-    QByteArray data = device()->readAll();
+    const QByteArray data = device()->readAll();
 
     WebPBitstreamFeatures features;
     const VP8StatusCode ret = WebPGetFeatures(reinterpret_cast<const uint8_t*>(data.constData()),
@@ -138,18 +138,18 @@ QByteArray WebPHandler::name() const
     return "webp";
 }
 
-bool WebPHandler::supportsOption(ImageOption option) const
+bool WebPHandler::supportsOption(QImageIOHandler::ImageOption option) const
 {
-    return (option == Quality) || (option == Size);
+    return (option == QImageIOHandler::Quality) || (option == QImageIOHandler::Size);
 }
 
-QVariant WebPHandler::option(ImageOption option) const
+QVariant WebPHandler::option(QImageIOHandler::ImageOption option) const
 {
     switch (option) {
-        case Quality: {
+        case QImageIOHandler::Quality: {
             return quality;
         }
-        case Size: {
+        case QImageIOHandler::Size: {
             const QByteArray data = device()->peek(26);
             int width = 0, height = 0;
             if (WebPGetInfo(reinterpret_cast<const uint8_t*>(data.constData()),
@@ -165,13 +165,13 @@ QVariant WebPHandler::option(ImageOption option) const
     Q_UNREACHABLE();
 }
 
-void WebPHandler::setOption(ImageOption option, const QVariant &value)
+void WebPHandler::setOption(QImageIOHandler::ImageOption option, const QVariant &value)
 {
-    if (option == Quality) {
+    if (option == QImageIOHandler::Quality) {
         const int newquality = value.toInt();
         // -1 means default
         if (newquality == -1) {
-            quality = 75;
+            quality = 100;
         } else {
             quality = qBound(0, newquality, 100);
         }
