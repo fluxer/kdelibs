@@ -33,6 +33,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QRegExp>
 #include <QtCore/QList>
+#include <QtGui/QImageWriter>
 
 #include <kfileitem.h>
 #include <kde_file.h>
@@ -495,9 +496,13 @@ bool PreviewJobPrivate::statResultThumbnail()
     url.setPass(QString());
     origName = url.url();
 
-    // NOTE: make sure the algorithm matches the one used in kde-workspace/kioslave/thumbnail/thumbnail.cpp
+    // NOTE: make sure the algorithm and name match those used in kde-workspace/kioslave/thumbnail/thumbnail.cpp
     const QByteArray hash = QFile::encodeName( origName ).toHex();
-    thumbName = hash + ".png";
+#if QT_VERSION >= 0x041200
+    thumbName = hash + QLatin1Char('.') + QImageWriter::defaultImageFormat();
+#else
+    thumbName = hash + QLatin1String(".png");
+#endif
 
     QImage thumb;
     if ( !thumb.load( thumbPath + thumbName ) )
