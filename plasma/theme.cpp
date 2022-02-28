@@ -27,6 +27,7 @@
 #include <QTimer>
 #include <QCache>
 #include <QBuffer>
+#include <QImageWriter>
 
 #include <kcolorscheme.h>
 #include <kcomponentdata.h>
@@ -937,8 +938,14 @@ bool Theme::findInCache(const QString &key, QPixmap &pix)
         if (temp && !temp->isNull()) {
             QBuffer buffer(this);
             buffer.open(QIODevice::WriteOnly);
+#if QT_VERSION >= 0x041200
+            static const QByteArray format = QImageWriter::defaultImageFormat();
+            temp->save(&buffer, format.constData());
+            pix.loadFromData(buffer.buffer(), format.constData());
+#else
             temp->save(&buffer, "PNG"); 
             pix.loadFromData(buffer.buffer(), "PNG");
+#endif
             return true;
         }
     }
