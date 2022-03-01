@@ -51,7 +51,6 @@
 #  KDE4_KEMOTICONS_LIBS       - the kemoticons library and all depending libraries
 #  KDE4_KIDLETIME_LIBS        - the kidletime library and all depending libraries
 #  KDE4_KCMUTILS_LIBS         - the kcmutils library and all depending libraries
-#  KDE4_KPRINTUTILS_LIBS      - the kprintutils library and all depending libraries
 #  KDE4_KFILE_LIBS            - the kfile library and all depending libraries
 #  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 #  KDE4_KPTY_LIBS             - the kpty library and all depending libraries
@@ -296,7 +295,6 @@ set(_kde_libraries
     kio
     knotifyconfig
     kparts
-    kprintutils
     kpty
     ktexteditor
     plasma

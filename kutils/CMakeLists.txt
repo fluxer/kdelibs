@@ -182,34 +182,3 @@ install(
     EXPORT kdelibsLibraryTargets
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
-
-########### kprintutils ###############
-
-add_library(kprintutils ${LIBRARY_TYPE} kprintpreview.cpp)
-
-target_link_libraries(kprintutils PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KPARTS_LIBS}
-)
-
-set_target_properties(kprintutils PROPERTIES
-    VERSION ${GENERIC_LIB_VERSION}
-    SOVERSION ${GENERIC_LIB_SOVERSION}
-)
-
-generate_export_header(kprintutils)
-
-install(
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/kprintutils_export.h
-    kprintpreview.h
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
-)
-
-install(
-    TARGETS kprintutils
-    EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
-)
