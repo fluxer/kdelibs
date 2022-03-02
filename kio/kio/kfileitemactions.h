@@ -94,7 +94,6 @@ public:
     /**
      * Helper method used internally, can also be used for similar GUIs that
      * show the list of associated applications.
-     * Used in KParts::BrowserOpenOrSaveQuestion for example.
      *
      * This is basically a KMimeTypeTrader::query, but it supports multiple mimetypes, and
      * also cleans up "apparent" duplicates, such as the kde3 and kde4 applications with the same name.

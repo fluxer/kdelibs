@@ -65,7 +65,7 @@ public:
      * keywords are AND, OR, NOT, IN, and EXIST, all used in an
      * almost spoken-word form.  An example is:
      * \code
-     * (Type == 'Service') and (('Browser/View' in ServiceTypes) and (exist Library))
+     * (Type == 'Service') and (exist Library)
      * \endcode
      *
      * The keys used in the query (Type, ServiceTypes, Library) are all

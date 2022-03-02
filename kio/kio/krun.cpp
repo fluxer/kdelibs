@@ -1067,7 +1067,7 @@ void KRun::init()
 {
     kDebug(7010) << "INIT called";
     if (!d->m_strURL.isValid()) {
-        // TODO KDE5: call virtual method on error (see BrowserRun::init)
+        // TODO KDE5: call virtual method on error
         d->m_showingDialog = true;
         KMessageBoxWrapper::error(d->m_window, i18n("Malformed URL\n%1", d->m_strURL.url()));
         d->m_showingDialog = false;

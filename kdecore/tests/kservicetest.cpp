@@ -77,7 +77,7 @@ void KServiceTest::initTestCase()
 	group.writeEntry("Type", "Service");
 	group.writeEntry("X-KDE-Library", "fakepart");
 	group.writeEntry("X-KDE-Protocols", "http,ftp");
-	group.writeEntry("X-KDE-ServiceTypes", "KParts/ReadOnlyPart,Browser/View,KParts/ReadWritePart");
+	group.writeEntry("X-KDE-ServiceTypes", "KParts/ReadOnlyPart,KParts/ReadWritePart");
 	group.writeEntry("MimeType", "text/plain;text/html;");
     }
 

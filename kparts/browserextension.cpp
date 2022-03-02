@@ -454,7 +454,6 @@ class BrowserExtension::BrowserExtensionPrivate
 public:
   BrowserExtensionPrivate( KParts::ReadOnlyPart *parent )
     : m_urlDropHandlingEnabled(false),
-      m_browserInterface(0),
       m_part( parent )
   {}
 
@@ -468,7 +467,6 @@ public:
   bool m_urlDropHandlingEnabled;
   KBitArray m_actionStatus;
   QMap<int, QString> m_actionText;
-  BrowserInterface *m_browserInterface;
 
   static void createActionSlotMap();
 
@@ -666,16 +664,6 @@ void BrowserExtension::slotEmitOpenUrlRequestDelayed()
     d->m_requests.pop_front();
     emit openUrlRequestDelayed( req.m_delayedURL, req.m_delayedArgs, req.m_delayedBrowserArgs );
     // tricky: do not do anything here! (no access to member variables, etc.)
-}
-
-void BrowserExtension::setBrowserInterface( BrowserInterface *impl )
-{
-    d->m_browserInterface = impl;
-}
-
-BrowserInterface *BrowserExtension::browserInterface() const
-{
-    return d->m_browserInterface;
 }
 
 void BrowserExtension::slotEnableAction( const char * name, bool enabled )

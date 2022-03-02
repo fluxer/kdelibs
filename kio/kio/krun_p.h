@@ -85,7 +85,7 @@ public:
     // This helper method makes debugging easier: a single breakpoint for all
     // the code paths that start the timer - at least from KRun itself.
     // TODO: add public method startTimer() and deprecate timer() accessor,
-    // starting is the only valid use of the timer in subclasses (BrowserRun, KHTMLRun and KonqRun)
+    // starting is the only valid use of the timer in subclasses
     void startTimer();
 
     bool runExecutable(const QString& _exec);

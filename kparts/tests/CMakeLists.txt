@@ -30,12 +30,6 @@ kde4_add_manual_test(kparts-partviewer partviewer.cpp)
 
 target_link_libraries(kparts-partviewer ${KDE4_KPARTS_LIBS})
 
-########### test prog for "open or save question" ###############
-
-kde4_add_manual_test(kparts-openorsavequestion openorsavequestion.cpp)
-
-target_link_libraries(kparts-openorsavequestion ${KDE4_KPARTS_LIBS})
-
 ########### next target ###############
 
 kde4_add_plugin(spellcheckplugin plugin_spellcheck.cpp)
@@ -71,7 +65,6 @@ ENDMACRO(KPARTS_EXECUTABLE_TESTS)
 
 KPARTS_UNIT_TESTS(
     parttest
-    openorsavequestion_unittest
 )
 
 ########### install files ###############

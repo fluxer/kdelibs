@@ -42,8 +42,6 @@ class KFileItemList;
 
 namespace KParts {
 
-class BrowserInterface;
-
 struct BrowserArgumentsPrivate;
 
 /**
@@ -416,9 +414,6 @@ public:
    * widget itself, not on child widgets.
    */
   void setURLDropHandlingEnabled( bool enable );
-
-  void setBrowserInterface( BrowserInterface *impl );
-  BrowserInterface *browserInterface() const;
 
   /**
    * @return the status (enabled/disabled) of an action.

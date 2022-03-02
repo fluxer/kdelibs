@@ -142,8 +142,7 @@ public:
      * its mimetype will have been found by KRun. IMPORTANT: the service is
      * only used if its configuration says it can handle this mimetype.
      * This is used for instance for the X-KDE-LastOpenedWith key in
-     * the recent documents list, or for the app selection in
-     * KParts::BrowserOpenOrSaveQuestion.
+     * the recent documents list.
      * @param desktopEntryName the desktopEntryName of the service, e.g. "kate".
      */
     void setPreferredService(const QString& desktopEntryName);

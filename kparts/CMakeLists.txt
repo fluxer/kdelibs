@@ -16,9 +16,6 @@ set(kparts_LIB_SRCS
     event.cpp
     browserextension.cpp
     factory.cpp
-    browserinterface.cpp
-    browserrun.cpp
-    browseropenorsavequestion.cpp
     statusbarextension.cpp
     fileinfoextension.cpp
     listingextension.cpp
@@ -50,7 +47,6 @@ install(
     kpart.desktop
     krop.desktop
     krwp.desktop
-    browserview.desktop
     DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
@@ -66,10 +62,7 @@ install(
     event.h
     browserextension.h
     factory.h
-    browserinterface.h
-    browserrun.h
     statusbarextension.h
-    browseropenorsavequestion.h
     fileinfoextension.h
     listingextension.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kparts
