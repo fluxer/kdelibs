@@ -51,6 +51,14 @@
 namespace KIO { struct PreviewItem; }
 using namespace KIO;
 
+#if QT_VERSION >= 0x041200
+static const QByteArray thumbFormat = QImageWriter::defaultImageFormat();
+static const QByteArray thumbExt = "." + thumbFormat;
+#else
+static const QByteArray thumbFormat = "png";
+static const QByteArray thumbExt = ".png";
+#endif
+
 // NOTE: keep in sync with:
 // kde-baseapps/dolphin/src/settings/general/previewssettingspage.cpp
 // kde-workspace/kioslave/thumbnail/thumbnail.h
@@ -498,11 +506,7 @@ bool PreviewJobPrivate::statResultThumbnail()
 
     // NOTE: make sure the algorithm and name match those used in kde-workspace/kioslave/thumbnail/thumbnail.cpp
     const QByteArray hash = QFile::encodeName( origName ).toHex();
-#if QT_VERSION >= 0x041200
-    thumbName = hash + QLatin1Char('.') + QImageWriter::defaultImageFormat();
-#else
-    thumbName = hash + QLatin1String(".png");
-#endif
+    thumbName = hash + thumbExt;
 
     QImage thumb;
     if ( !thumb.load( thumbPath + thumbName ) )
@@ -592,12 +596,12 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
     if (save) {
         KTemporaryFile temp;
         temp.setPrefix(thumbPath + "kde-tmp-");
-        temp.setSuffix(".png");
+        temp.setSuffix(thumbExt);
         temp.setAutoRemove(false);
         if (temp.open()) //Only try to write out the thumbnail if we
         {                //actually created the temp file.
             tempFileName = temp.fileName();
-            savedCorrectly = thumb.save(tempFileName, "PNG");
+            savedCorrectly = thumb.save(tempFileName, thumbFormat);
         }
     }
     if (savedCorrectly) {
