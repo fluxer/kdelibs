@@ -248,12 +248,6 @@ public:
    */
   static void badProxy( const QString & proxy );
 
-  /**
-   * Returns the URL of the script for automatic proxy configuration.
-   * @return the proxy configuration script
-   */
-  static QString proxyConfigScript();
-
 /*============================ DOWNLOAD CONFIG ==============================*/
 
   /**

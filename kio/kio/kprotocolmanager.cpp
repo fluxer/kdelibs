@@ -708,11 +708,6 @@ bool KProtocolManager::persistentProxyConnection()
   return config()->group(QByteArray()).readEntry( "PersistentProxyConnection", false );
 }
 
-QString KProtocolManager::proxyConfigScript()
-{
-  return config()->group("Proxy Settings").readEntry( "Proxy Config Script" );
-}
-
 /* =========================== PROTOCOL CAPABILITIES ============== */
 
 static KProtocolInfo::Ptr findProtocol(const KUrl &url)
