@@ -26,6 +26,35 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+static inline QByteArray curlProxyString(const QString &proxy)
+{
+    const KUrl proxyurl(proxy);
+    if (proxyurl.port() > 0) {
+        return QString::fromLatin1("%1:%2").arg(proxyurl.host()).arg(proxyurl.port()).toAscii();
+    }
+    return proxyurl.host().toAscii();
+}
+
+static inline curl_proxytype curlProxyType(const QString &proxy)
+{
+    const QString proxyprotocol = KUrl(proxy).protocol();
+
+    // added in 7.52.0
+#ifdef CURLPROXY_HTTPS
+    if (proxyprotocol.startsWith(QLatin1String("https"))) {
+        return CURLPROXY_HTTPS;
+    }
+#endif
+    if (proxyprotocol.startsWith(QLatin1String("socks4"))) {
+        return CURLPROXY_SOCKS4;
+    } else if (proxyprotocol.startsWith(QLatin1String("socks4a"))) {
+        return CURLPROXY_SOCKS4A;
+    } else if (proxyprotocol.startsWith(QLatin1String("socks5"))) {
+        return CURLPROXY_SOCKS5;
+    }
+    return CURLPROXY_HTTP;
+}
+
 static inline QString HTTPMIMEType(const QString &contenttype)
 {
     const QList<QString> splitcontenttype = contenttype.split(QLatin1Char(';'));
@@ -134,7 +163,7 @@ void HttpProtocol::get(const KUrl &url)
     curl_easy_reset(m_curl);
     curl_easy_setopt(m_curl, CURLOPT_NOSIGNAL, 1L);
     curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, 1L);
-    curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 10L);
+    curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 100L); // proxies apparently cause a lot of redirects
     curl_easy_setopt(m_curl, CURLOPT_TIMEOUT, SlaveBase::connectTimeout());
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
@@ -146,14 +175,13 @@ void HttpProtocol::get(const KUrl &url)
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
     CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+        kWarning(7103) << curl_easy_strerror(curlresult);
         error(KIO::ERR_MALFORMED_URL, curl_easy_strerror(curlresult));
         return;
     }
 
     kDebug(7103) << "Metadata" << allMetaData();
     struct curl_slist *curllist = NULL;
-    // metadata from scheduler
     if (hasMetaData(QLatin1String("Languages"))) {
         curllist = curl_slist_append(curllist, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
     }
@@ -164,19 +192,26 @@ void HttpProtocol::get(const KUrl &url)
         const QByteArray useragentbytes = metaData("UserAgent").toAscii();
         curlresult = curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+            kWarning(7103) << curl_easy_strerror(curlresult);
         }
     }
     if (hasMetaData(QLatin1String("UseProxy"))) {
-        const QByteArray proxybytes = metaData("UseProxy").toAscii();
+        const QString proxystring = metaData("UseProxy");
+        const QByteArray proxybytes = curlProxyString(proxystring);
+        const curl_proxytype curlproxytype = curlProxyType(proxystring);
+        kDebug(7103) << "Proxy" << proxybytes << curlproxytype;
         curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+            kWarning(7103) << curl_easy_strerror(curlresult);
             error(KIO::ERR_UNKNOWN_PROXY_HOST, curl_easy_strerror(curlresult));
             return;
         }
+        curl_easy_setopt(m_curl, CURLOPT_PROXYTYPE, curlproxytype);
+
+        const bool noproxyauth = (metaData("no-proxy-auth") == QLatin1String("yes") || metaData("no-auth") == QLatin1String("yes"));
+        kDebug(7103) << "Proxy auth" << noproxyauth;
+        curl_easy_setopt(m_curl, CURLOPT_PROXYAUTH, noproxyauth ? CURLAUTH_NONE : CURLAUTH_ANY);
     }
-    // optional user-supplied metadata
     if (hasMetaData(QLatin1String("referrer"))) {
         curllist = curl_slist_append(curllist, QByteArray("Referrer: ") + metaData("referrer").toAscii());
     }
@@ -186,7 +221,7 @@ void HttpProtocol::get(const KUrl &url)
     curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
-        kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+        kWarning(7103) << curl_easy_strerror(curlresult);
         error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
         return;
     }
@@ -194,7 +229,7 @@ void HttpProtocol::get(const KUrl &url)
     curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
-        kWarning(7103) << "Error" << curl_easy_strerror(curlresult);
+        kWarning(7103) << curl_easy_strerror(curlresult);
         error(KIO::ERR_COULD_NOT_CONNECT, curl_easy_strerror(curlresult));
         return;
     }
