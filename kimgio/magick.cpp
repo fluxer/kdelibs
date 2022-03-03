@@ -263,10 +263,12 @@ QList<QByteArray> MagickPlugin::mimeTypes() const
     static const QList<QByteArray> list = QList<QByteArray>()
         << "image/bmp"
         << "image/x-dds"
-        << "image/x-dds"
         << "image/x-eps"
         << "image/x-exr"
         << "image/gif"
+        << "image/vnd.microsoft.icon"
+        << "image/jp2"
+        << "image/jpeg"
         << "image/x-portable-bitmap"
         << "image/x-pcx"
         << "image/x-portable-graymap"
@@ -274,7 +276,7 @@ QList<QByteArray> MagickPlugin::mimeTypes() const
         << "image/x-psd"
         << "image/x-tga"
         << "image/tiff"
-        << "image/image/x-dcraw"
+        << "image/x-dcraw"
         << "image/x-xbitmap"
         << "image/x-xcf";
     return list;
