@@ -258,6 +258,28 @@ QStringList MagickPlugin::keys() const
     return QStringList() << magickpluginformat;
 }
 
+QList<QByteArray> MagickPlugin::mimeTypes() const
+{
+    static const QList<QByteArray> list = QList<QByteArray>()
+        << "image/bmp"
+        << "image/x-dds"
+        << "image/x-dds"
+        << "image/x-eps"
+        << "image/x-exr"
+        << "image/gif"
+        << "image/x-portable-bitmap"
+        << "image/x-pcx"
+        << "image/x-portable-graymap"
+        << "image/x-portable-pixmap"
+        << "image/x-psd"
+        << "image/x-tga"
+        << "image/tiff"
+        << "image/image/x-dcraw"
+        << "image/x-xbitmap"
+        << "image/x-xcf";
+    return list;
+}
+
 QImageIOPlugin::Capabilities MagickPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
     if (format == magickpluginformat)

@@ -195,6 +195,11 @@ QStringList WebPPlugin::keys() const
     return QStringList() << "webp";
 }
 
+QList<QByteArray> WebPPlugin::mimeTypes() const
+{
+    return QList<QByteArray>() << "image/webp";
+}
+
 QImageIOPlugin::Capabilities WebPPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
     if (format == "webp") {

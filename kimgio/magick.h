@@ -60,6 +60,7 @@ class MagickPlugin : public QImageIOPlugin
 {
 public:
     QStringList keys() const final;
+    QList<QByteArray> mimeTypes() const;
     Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
     QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;
 };
