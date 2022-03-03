@@ -86,7 +86,7 @@ namespace KImageIO
    * @param mode Tells whether to retrieve modes that can be read or written.
    * @return a list if MIME types of the supported formats
    */
-  KIO_EXPORT QStringList mimeTypes( Mode mode = Writing );
+  KIO_EXPORT QStringList mimeTypes(Mode mode = Writing);
 
   /**
    * Test to see whether a MIME type is supported to reading/writing.
@@ -94,7 +94,7 @@ namespace KImageIO
    * @param _mode Tells whether to check for reading or writing capabilities
    * @return true if the type is supported
    **/
-  KIO_EXPORT bool isSupported( const QString& mimeType, Mode mode = Writing );
+  KIO_EXPORT bool isSupported(const QString& mimeType, Mode mode = Writing);
 }
 
 
