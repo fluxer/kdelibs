@@ -473,7 +473,6 @@ install(
 install(
     FILES
     KParts/BrowserExtension
-    KParts/BrowserHostExtension
     KParts/Event
     KParts/Factory
     KParts/FileInfoExtension
@@ -491,7 +490,6 @@ install(
     KParts/ReadOnlyPart
     KParts/ReadWritePart
     KParts/StatusBarExtension
-    KParts/WindowArgs
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KParts
     COMPONENT Devel
 )

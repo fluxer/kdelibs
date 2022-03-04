@@ -180,63 +180,6 @@ private:
   BrowserArgumentsPrivate *d;
 };
 
-class WindowArgsPrivate;
-
-/**
- * The WindowArgs are used to specify arguments to the "create new window"
- * call (see the createNewWindow variant that uses WindowArgs).
- * The primary reason for this is the javascript window.open function.
- */
-class KPARTS_EXPORT WindowArgs
-{
-public:
-    WindowArgs();
-    ~WindowArgs();
-    WindowArgs( const WindowArgs &args );
-    WindowArgs &operator=( const WindowArgs &args );
-    WindowArgs( const QRect &_geometry, bool _fullscreen, bool _menuBarVisible,
-                bool _toolBarsVisible, bool _statusBarVisible, bool _resizable );
-    WindowArgs( int _x, int _y, int _width, int _height, bool _fullscreen,
-                bool _menuBarVisible, bool _toolBarsVisible,
-                bool _statusBarVisible, bool _resizable );
-
-    void setX(int x);
-    int x() const;
-
-    void setY(int y);
-    int y() const;
-
-    void setWidth(int w);
-    int width() const;
-
-    void setHeight(int h);
-    int height() const;
-
-    void setFullScreen(bool fs);
-    bool isFullScreen() const;
-
-    void setMenuBarVisible(bool visible);
-    bool isMenuBarVisible() const;
-
-    void setToolBarsVisible(bool visible);
-    bool toolBarsVisible() const;
-
-    void setStatusBarVisible(bool visible);
-    bool isStatusBarVisible() const;
-
-    void setResizable(bool resizable);
-    bool isResizable() const;
-
-    void setLowerWindow(bool lower);
-    bool lowerWindow() const;
-
-    void setScrollBarsVisible(bool visible);
-    bool scrollBarsVisible() const;
-
-private:
-    QSharedDataPointer<WindowArgsPrivate> d;
-};
-
 /**
  * The KParts::OpenUrlEvent event informs that a given part has opened a given URL.
  * Applications can use this event to send this information to interested plugins.
@@ -570,8 +513,7 @@ public:  // yes, those signals are public; don't tell moc, doxygen or kdevelop :
     void createNewWindow( const KUrl &url,
                           const KParts::OpenUrlArguments& arguments = KParts::OpenUrlArguments(),
                           const KParts::BrowserArguments &browserArguments = KParts::BrowserArguments(),
-                          const KParts::WindowArgs &windowArgs = KParts::WindowArgs(),
-                          KParts::ReadOnlyPart** part = 0 ); // TODO consider moving to BrowserHostExtension?
+                          KParts::ReadOnlyPart** part = 0 );
 
   /**
    * Since the part emits the jobid in the started() signal,
@@ -697,58 +639,6 @@ public:
 private:
   class BrowserExtensionPrivate;
   BrowserExtensionPrivate * const d;
-};
-
-/**
- * An extension class for container parts, i.e. parts that contain
- * other parts.
- * For instance a KWebKitPart hosts one part per frame.
- */
-class KPARTS_EXPORT BrowserHostExtension : public QObject
-{
-  Q_OBJECT
-public:
-  BrowserHostExtension( KParts::ReadOnlyPart *parent );
-
-  virtual ~BrowserHostExtension();
-
-  /**
-   * Returns a list of the names of all hosted child objects.
-   *
-   * Note that this method does not query the child objects recursively.
-   */
-  virtual QStringList frameNames() const;
-
-  /**
-   * Returns a list of pointers to all hosted child objects.
-   *
-   * Note that this method does not query the child objects recursively.
-   */
-  virtual const QList<KParts::ReadOnlyPart*> frames() const;
-
-  /**
-   * Returns the part that contains @p frame and that may be accessed
-   * by @p callingPart
-   */
-  virtual BrowserHostExtension *findFrameParent(KParts::ReadOnlyPart *callingPart, const QString &frame);
-
-  /**
-   * Opens the given url in a hosted child frame. The frame name is specified in the
-   * frameName variable in the @p browserArguments parameter (see KParts::BrowserArguments ) .
-   */
-  virtual bool openUrlInFrame( const KUrl &url,
-                               const KParts::OpenUrlArguments& arguments,
-                               const KParts::BrowserArguments &browserArguments );
-
-  /**
-   * Queries @p obj for a child object which inherits from this
-   * BrowserHostExtension class. Convenience method.
-   */
-  static BrowserHostExtension *childObject( QObject *obj );
-
-private:
-  class BrowserHostExtensionPrivate;
-  BrowserHostExtensionPrivate * const d;
 };
 
 /**
