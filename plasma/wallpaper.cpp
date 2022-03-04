@@ -617,7 +617,7 @@ void Wallpaper::insertIntoCache(const QString& key, const QImage &image)
             f.remove();
 #endif
         } else {
-            image.save(d->cachePath(key), imageFormat);
+            image.save(d->cachePath(key), imageFormat, 100);
         }
     }
 }
