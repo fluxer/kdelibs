@@ -21,6 +21,7 @@
 #include <QImage>
 #include <QFile>
 #include <QFileInfo>
+#include <ktemporaryfile.h>
 #include <kdebug.h>
 
 #include <Magick++/Functions.h>
@@ -29,6 +30,7 @@
 #include <Magick++/STL.h>
 
 static const char* const magickpluginformat = "magick";
+static const uchar icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
 
 int initMagick()
 {
@@ -72,14 +74,20 @@ bool MagickHandler::read(QImage *image)
     try {
         // QMovie will continuously call read() to get each frame
         if (m_magickimages.size() == 0) {
-            const QFile *file = qobject_cast<QFile*>(device());
-            if (file && !file->fileName().startsWith(QLatin1Char(':'))) {
-                // some ImageMagick coders fail to load from blob (e.g. icon), this workaround does
-                // not work for resource files tho
-                const std::string filename = file->fileName().toStdString();
-                Magick::readImages(&m_magickimages, filename);
+            const QByteArray data = device()->readAll();
+            // some ImageMagick coders fail to load from blob (e.g. icon)
+            if (qstrncmp(data.constData(), reinterpret_cast<const char*>(icoheader), 5) == 0) {
+                kDebug() << "ICO workaround";
+                KTemporaryFile tempblobfile;
+                tempblobfile.setFileTemplate("XXXXXXXXXX.ico");
+                if (!tempblobfile.open()) {
+                    kWarning() << "Could not open temporary file";
+                    return false;
+                }
+                tempblobfile.write(data.constData(), data.size());
+                const QByteArray tmpblob = tempblobfile.fileName().toLocal8Bit();
+                Magick::readImages(&m_magickimages, std::string(tmpblob.constData()));
             } else {
-                const QByteArray data = device()->readAll();
                 Magick::Blob magickinblob(data.constData(), data.size());
                 Magick::readImages(&m_magickimages, magickinblob);
             }
@@ -185,6 +193,12 @@ bool MagickHandler::canRead(QIODevice *device)
     if (Q_UNLIKELY(data.isEmpty())) {
         device->seek(oldpos);
         return false;
+    }
+
+    if (qstrncmp(data.constData(), reinterpret_cast<const char*>(icoheader), 5) == 0) {
+        device->seek(oldpos);
+        kDebug() << "ICO header detected";
+        return true;
     }
 
     try {
