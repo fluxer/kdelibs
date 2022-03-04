@@ -22,7 +22,6 @@
 #define PLASMA_WALLPAPERPRIVATE_H
 
 #include <QtCore/QQueue>
-#include <QtCore/QRunnable>
 #include <QtCore/qsharedpointer.h>
 
 #include "plasma/private/dataengineconsumer_p.h"
@@ -58,21 +57,6 @@ public:
     bool needsConfig : 1;
     bool previewing : 1;
     bool needsPreviewDuringConfiguration : 1;
-};
-
-class LoadImageThread : public QObject, public QRunnable
-{
-    Q_OBJECT
-
-public:
-    LoadImageThread(const QString &filePath);
-    void run();
-
-Q_SIGNALS:
-    void done(const QImage &pixmap);
-
-private:
-    QString m_filePath;
 };
 
 } // namespace Plasma

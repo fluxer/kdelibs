@@ -29,10 +29,9 @@
 #include <QAction>
 #include <QQueue>
 #include <QTimer>
-#include <QRunnable>
-#include <QThreadPool>
 #include <QPainter>
 #include <QDateTime>
+#include <QImageWriter>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -49,38 +48,14 @@
 #include "plasma/private/packages_p.h"
 #include "plasma/private/wallpaper_p.h"
 
+#if QT_VERSION >= 0x041200
+static const QByteArray imageFormat = QImageWriter::defaultImageFormat();
+#else
+static const QByteArray imageFormat = "png";
+#endif
+
 namespace Plasma
 {
-
-class SaveImageThread : public QRunnable
-{
-    QImage m_image;
-    QString m_filePath;
-
-    public:
-    SaveImageThread(const QImage &image, const QString &filePath)
-    {
-        m_image = image;
-        m_filePath = filePath;
-    }
-
-    void run()
-    {
-        m_image.save(m_filePath);
-    }
-};
-
-LoadImageThread::LoadImageThread(const QString &filePath)
-{
-    m_filePath = filePath;
-}
-
-void LoadImageThread::run()
-{
-    QImage image;
-    image.load(m_filePath);
-    emit done(image);
-}
 
 PackageStructure::Ptr WallpaperPrivate::s_packageStructure(0);
 
@@ -580,7 +555,7 @@ QString WallpaperPrivate::cacheKey(const QString &sourceImagePath, const QSize &
 
 QString WallpaperPrivate::cachePath(const QString &key) const
 {
-    return KGlobal::dirs()->locateLocal("cache", "plasma-wallpapers/" + key + ".png");
+    return KGlobal::dirs()->locateLocal("cache", "plasma-wallpapers/" + key + "." + imageFormat);
 }
 
 bool WallpaperPrivate::findInCache(const QString &key, unsigned int lastModified)
@@ -595,9 +570,9 @@ bool WallpaperPrivate::findInCache(const QString &key, unsigned int lastModified
                 }
             }
 
-            LoadImageThread *loadImageT = new LoadImageThread(cache);
-            q->connect(loadImageT, SIGNAL(done(QImage)), q, SIGNAL(renderCompleted(QImage)));
-            QThreadPool::globalInstance()->start(loadImageT);
+            QImage image;
+            image.load(cache, imageFormat);
+            emit q->renderCompleted(image);
 
             return true;
         }
@@ -642,7 +617,7 @@ void Wallpaper::insertIntoCache(const QString& key, const QImage &image)
             f.remove();
 #endif
         } else {
-            QThreadPool::globalInstance()->start(new SaveImageThread(image, d->cachePath(key)));
+            image.save(d->cachePath(key), imageFormat);
         }
     }
 }
