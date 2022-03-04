@@ -148,13 +148,14 @@ void KHTTPHeader::parseHeader(const QByteArray &header)
 
     bool isfirstline = true;
     foreach (const QByteArray &field, header.split('\n')) {
-        if (field.trimmed().isEmpty()) {
+        const QByteArray trimmedfield = field.trimmed();
+        if (trimmedfield.isEmpty()) {
             continue;
         }
-        if (isfirstline && field.contains("HTTP/")) {
-            const QList<QByteArray> statussplit = field.split(' ');
+        if (isfirstline) {
+            const QList<QByteArray> statussplit = trimmedfield.split(' ');
             if (statussplit.size() < 2) {
-                kWarning() << "Invalid status" << field;
+                kWarning() << "Invalid status" << trimmedfield;
                 continue;
             }
             d->m_status = statussplit.at(1).toInt();
@@ -162,13 +163,13 @@ void KHTTPHeader::parseHeader(const QByteArray &header)
             continue;
         }
         isfirstline = false;
-        const int valuesplitterindex = field.indexOf(':');
+        const int valuesplitterindex = trimmedfield.indexOf(':');
         if (valuesplitterindex < 0) {
-            kWarning() << "Invalid field" << field;
+            kWarning() << "Invalid field" << trimmedfield;
             continue;
         }
-        const QByteArray headerkey = field.mid(0, valuesplitterindex).trimmed();
-        const QByteArray headervalue = field.mid(valuesplitterindex + 1, field.size() - valuesplitterindex - 1).trimmed();
+        const QByteArray headerkey = trimmedfield.mid(0, valuesplitterindex).trimmed();
+        const QByteArray headervalue = trimmedfield.mid(valuesplitterindex + 1, trimmedfield.size() - valuesplitterindex - 1).trimmed();
         set(
             QString::fromAscii(headerkey.constData(), headerkey.size()),
             QString::fromAscii(headervalue.constData(), headervalue.size())
