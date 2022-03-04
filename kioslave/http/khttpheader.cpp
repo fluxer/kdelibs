@@ -151,9 +151,9 @@ void KHTTPHeader::parseHeader(const QByteArray &header)
         if (field.trimmed().isEmpty()) {
             continue;
         }
-        if (isfirstline && field.startsWith("HTTP/")) {
+        if (isfirstline && field.contains("HTTP/")) {
             const QList<QByteArray> statussplit = field.split(' ');
-            if (statussplit.size() < 3) {
+            if (statussplit.size() < 2) {
                 kWarning() << "Invalid status" << field;
                 continue;
             }
