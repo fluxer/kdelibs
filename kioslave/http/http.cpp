@@ -172,6 +172,7 @@ void HttpProtocol::get(const KUrl &url)
     curl_easy_setopt(m_curl, CURLOPT_PROGRESSFUNCTION, curlProgressCallback);
     curl_easy_setopt(m_curl, CURLOPT_HEADERDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_HEADERFUNCTION, curlHeaderCallback);
+
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
     CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
     if (curlresult != CURLE_OK) {
@@ -181,13 +182,7 @@ void HttpProtocol::get(const KUrl &url)
     }
 
     kDebug(7103) << "Metadata" << allMetaData();
-    struct curl_slist *curllist = NULL;
-    if (hasMetaData(QLatin1String("Languages"))) {
-        curllist = curl_slist_append(curllist, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
-    }
-    if (hasMetaData(QLatin1String("Charsets"))) {
-        curllist = curl_slist_append(curllist, QByteArray("Accept-Charset: ") + metaData("Charsets").toAscii());
-    }
+
     if (hasMetaData(QLatin1String("UserAgent"))) {
         const QByteArray useragentbytes = metaData("UserAgent").toAscii();
         curlresult = curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
@@ -195,6 +190,8 @@ void HttpProtocol::get(const KUrl &url)
             kWarning(7103) << curl_easy_strerror(curlresult);
         }
     }
+
+    const bool noauth = (metaData("no-auth") == QLatin1String("yes"));
     if (hasMetaData(QLatin1String("UseProxy"))) {
         const QString proxystring = metaData("UseProxy");
         const QByteArray proxybytes = curlProxyString(proxystring);
@@ -206,18 +203,42 @@ void HttpProtocol::get(const KUrl &url)
             error(KIO::ERR_UNKNOWN_PROXY_HOST, curl_easy_strerror(curlresult));
             return;
         }
-        curl_easy_setopt(m_curl, CURLOPT_PROXYTYPE, curlproxytype);
+        curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXYTYPE, curlproxytype);
+        if (curlresult != CURLE_OK) {
+            kWarning(7103) << curl_easy_strerror(curlresult);
+        }
 
-        const bool noproxyauth = (metaData("no-proxy-auth") == QLatin1String("yes") || metaData("no-auth") == QLatin1String("yes"));
+        const bool noproxyauth = (noauth || metaData("no-proxy-auth") == QLatin1String("yes"));
         kDebug(7103) << "Proxy auth" << noproxyauth;
-        curl_easy_setopt(m_curl, CURLOPT_PROXYAUTH, noproxyauth ? CURLAUTH_NONE : CURLAUTH_ANY);
+        curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXYAUTH, noproxyauth ? CURLAUTH_NONE : CURLAUTH_ANY);
+        if (curlresult != CURLE_OK) {
+            kWarning(7103) << curl_easy_strerror(curlresult);
+        }
     }
+
+    kDebug(7103) << "Auth" << noauth;
+    curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPAUTH, noauth ? CURLAUTH_NONE : CURLAUTH_ANY);
+    if (curlresult != CURLE_OK) {
+        kWarning(7103) << curl_easy_strerror(curlresult);
+    }
+
+    struct curl_slist *curllist = NULL;
+    if (hasMetaData(QLatin1String("Languages"))) {
+        curllist = curl_slist_append(curllist, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
+    }
+
+    if (hasMetaData(QLatin1String("Charsets"))) {
+        curllist = curl_slist_append(curllist, QByteArray("Accept-Charset: ") + metaData("Charsets").toAscii());
+    }
+
     if (hasMetaData(QLatin1String("referrer"))) {
         curllist = curl_slist_append(curllist, QByteArray("Referrer: ") + metaData("referrer").toAscii());
     }
+
     if (hasMetaData(QLatin1String("accept"))) {
         curllist = curl_slist_append(curllist, QByteArray("Accept: ") + metaData("accept").toAscii());
     }
+
     curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
