@@ -272,7 +272,7 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("session <sessionId>", ki18n("Restore the application for the given 'sessionId'"));
     qt_options.add("cmap", ki18n("Causes the application to install a private color\nmap on an 8-bit display"));
     qt_options.add("ncols <count>", ki18n("Limits the number of colors allocated in the color\ncube on an 8-bit display, if the application is\nusing the QApplication::ManyColor color\nspecification"));
-    qt_options.add("nograb", ki18n("tells Qt to never grab the mouse or the keyboard"));
+    qt_options.add("nograb", ki18n("tells Katie to never grab the mouse or the keyboard"));
     qt_options.add("dograb", ki18n("running under a debugger can cause an implicit\n-nograb, use -dograb to override"));
     qt_options.add("sync", ki18n("switches to synchronous mode for debugging"));
     qt_options.add("fn");
@@ -290,7 +290,7 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("visual TrueColor", ki18n("forces the application to use a TrueColor visual on\nan 8-bit display"));
 #endif // Q_WS_X11
     qt_options.add("reverse", ki18n("mirrors the whole layout of widgets"));
-    qt_options.add("stylesheet <file.qss>", ki18n("applies the Qt stylesheet to the application widgets"));
+    qt_options.add("stylesheet <file.qss>", ki18n("applies the Katie stylesheet to the application widgets"));
     qt_options.add("graphicssystem <system>", ki18n("use a different graphics system instead of the default one, options are raster and opengl (experimental)"));
 #ifndef QT_KATIE
     qt_options.add("qmljsdebugger <port>", ki18n("QML JS debugger information. Application must be\nbuilt with -DQT_DECLARATIVE_DEBUG for the debugger to be\nenabled"));
@@ -481,7 +481,7 @@ QString KCmdLineArgs::appName()
   */
 void KCmdLineArgs::addStdCmdLineOptions(StdCmdLineArgs stdargs) {
    if (stdargs & KCmdLineArgs::CmdLineArgQt) {
-       KCmdLineArgs::addCmdLineOptions(s->qt_options, ki18n("Qt"), "qt");
+       KCmdLineArgs::addCmdLineOptions(s->qt_options, ki18n("Katie"), "qt");
    }
    if (stdargs & KCmdLineArgs::CmdLineArgKDE) {
        KCmdLineArgs::addCmdLineOptions(s->kde_options, ki18n("KDE"), "kde");
@@ -867,7 +867,7 @@ KCmdLineArgsStatic::parseAllArgs()
             KCmdLineArgs::enable_i18n();
             s->printQ(i18nc("@info:shell message on appcmd --version; do not translate 'Development Platform'"
                             "%3 application name, other %n version strings",
-                            "Qt: %1\n"
+                            "Katie: %1\n"
                             "Katana Development Platform: %2\n"
                             "%3: %4\n",
                             QString::fromLatin1(qVersion()),
