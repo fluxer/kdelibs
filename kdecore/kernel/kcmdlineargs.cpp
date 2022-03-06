@@ -1256,7 +1256,7 @@ KCmdLineArgs::usage(const QByteArray &id)
                else
                {
                    s->printQ(optionFormatStringDef.arg(QString::fromLatin1(opt), -25)
-                            .arg(description, option.d->defaults[i]));
+                            .arg(description).arg(option.d->defaults[i]));
                }
                opt.clear();
             }
