@@ -22,7 +22,7 @@
 #include "kexiv2_export.h"
 
 #include <QMap>
-#include <QVariant>
+#include <QString>
 #include <QImage>
 
 class KExiv2Private;
@@ -36,7 +36,7 @@ class KExiv2Private;
 class KEXIV2_EXPORT KExiv2
 {
 public:
-    typedef QMap<QByteArray,QVariant> DataMap;
+    typedef QMap<QByteArray,QString> DataMap;
 
     /*!
         @brief Contructs object from @p path and obtains Exiv2 data if possible
