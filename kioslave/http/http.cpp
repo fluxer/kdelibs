@@ -165,6 +165,7 @@ void HttpProtocol::get(const KUrl &url)
     curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 100L); // proxies apparently cause a lot of redirects
     curl_easy_setopt(m_curl, CURLOPT_CONNECTTIMEOUT, SlaveBase::connectTimeout());
+    // curl_easy_setopt(m_curl, CURLOPT_IGNORE_CONTENT_LENGTH, 1L); // breaks progress, fixes transfer of chunked content
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
     curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the progress callback is not called
@@ -295,7 +296,9 @@ void HttpProtocol::slotProgress(qint64 received, qint64 total)
 {
     kDebug(7103) << "Received" << received << "from" << total;
     emit processedSize(static_cast<KIO::filesize_t>(received));
-    emit totalSize(static_cast<KIO::filesize_t>(total));
+    if (total > 0 && received != total) {
+        emit totalSize(static_cast<KIO::filesize_t>(total));
+    }
 }
 
 #include "moc_http.cpp"
