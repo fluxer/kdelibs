@@ -65,7 +65,6 @@ class KConfig;
  * @li @c cache - Cached information (e.g. favicons, web-pages)
  * @li @c config - Configuration files.
  * @li @c data - Where applications store data.
- * @li @c emoticons - Emoticons themes
  * @li @c exe - Executables in $prefix/bin. findExe() for a function that takes $PATH into account.
  * @li @c html - HTML documentation.
  * @li @c icon - Icons, see KIconLoader.
@@ -617,7 +616,6 @@ public:
      * @li @c module - @c lib[suffix]/kde4
      * @li @c qtplugins - @c lib[suffix]/kde4/plugins
      * @li @c kcfg - @c share/config.kcfg
-     * @li @c emoticons - @c share/emoticons
      * @li @c xdgdata-apps - @c applications
      * @li @c xdgdata-icon - @c icons
      * @li @c xdgdata-pixmap - @c pixmaps

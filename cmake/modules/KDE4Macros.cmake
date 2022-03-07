@@ -8,7 +8,6 @@
 # KDE4_INSTALL_ICONS
 # KDE4_INSTALL_AUTH_HELPER_FILES
 # KDE4_AUTH_INSTALL_ACTIONS
-# KDE4_INSTALL_TS_FILES
 
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>

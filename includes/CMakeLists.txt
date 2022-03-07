@@ -390,9 +390,6 @@ install(
     KCategorizedView
     KCategoryDrawer
     KCategorizedSortFilterProxyModel
-    KEmoticons
-    KEmoticonsProvider
-    KEmoticonsTheme
     KFilterProxySearchLine
     KWidgetItemDelegate
     KWidgetJobTracker

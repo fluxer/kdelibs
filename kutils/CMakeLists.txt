@@ -3,59 +3,12 @@ project(kutils)
 include_directories(
     ${KDE4_KDEUI_INCLUDES}
     ${KDE4_KPARTS_INCLUDES}
-    # keep it, required by kemoticons and others
+    # keep it, required by kidletime and others
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_subdirectory(kmediaplayer)
 add_subdirectory(kexiv2)
-
-########### kemoticons ################
-
-add_subdirectory(kemoticons)
-
-set(kemoticons_LIB_SRCS
-    kemoticons/kemoticons.cpp
-    kemoticons/kemoticonstheme.cpp
-    kemoticons/kemoticonsprovider.cpp
-)
-
-add_library(kemoticons ${LIBRARY_TYPE} ${kemoticons_LIB_SRCS})
-
-target_link_libraries(kemoticons PUBLIC
-    ${KDE4_KDECORE_LIBS}
-    ${KDE4_KDEUI_LIBS}
-    ${KDE4_KIO_LIBS}
-)
-
-set_target_properties(kemoticons PROPERTIES
-    VERSION ${GENERIC_LIB_VERSION}
-    SOVERSION ${GENERIC_LIB_SOVERSION}
-)
-
-install(
-    FILES
-    kemoticons/kemoticonsTheme.desktop
-    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
-)
-
-generate_export_header(kemoticons)
-
-install(
-    FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/kemoticons_export.h
-    kemoticons/kemoticons.h
-    kemoticons/kemoticonstheme.h
-    kemoticons/kemoticonsprovider.h
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
-    COMPONENT Devel
-)
-
-install(
-    TARGETS kemoticons
-    EXPORT kdelibsLibraryTargets
-    ${INSTALL_TARGETS_DEFAULT_ARGS}
-)
 
 ######## kidletime ####################
 

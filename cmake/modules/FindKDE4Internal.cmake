@@ -48,7 +48,6 @@
 #  KDE4_KDEUI_LIBS            - the kdeui library and all depending libraries
 #  KDE4_KIO_LIBS              - the kio library and all depending libraries
 #  KDE4_KPARTS_LIBS           - the kparts library and all depending libraries
-#  KDE4_KEMOTICONS_LIBS       - the kemoticons library and all depending libraries
 #  KDE4_KIDLETIME_LIBS        - the kidletime library and all depending libraries
 #  KDE4_KCMUTILS_LIBS         - the kcmutils library and all depending libraries
 #  KDE4_KFILE_LIBS            - the kfile library and all depending libraries
@@ -288,7 +287,6 @@ set(_kde_libraries
     kdecore
     kdeui
     kdnssd
-    kemoticons
     kexiv2
     kfile
     kidletime

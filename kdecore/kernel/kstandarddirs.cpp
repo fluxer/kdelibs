@@ -140,8 +140,6 @@ qtplugins
 %lib/kde4/plugins
 kcfg
 share/config.kcfg
-emoticons
-share/emoticons
 xdgdata-apps
 applications
 xdgdata-icon
@@ -189,8 +187,6 @@ static const char types_string[] =
     "%lib/kde4/plugins\0"
     "kcfg\0"
     "share/config.kcfg\0"
-    "emoticons\0"
-    "share/emoticons\0"
     "xdgdata-apps\0"
     "applications\0"
     "xdgdata-icon\0"
@@ -211,9 +207,9 @@ static const int types_indices[] = {
        0,    5,   16,   21,   36,   41,   53,   60,
       73,   80,   94,  100,  113,  120,  133,  142,
      162,  175,  199,  209,  226,  236,  252,  256,
-     260,  267,  277,  287,  305,  310,  328,  338,
-     354,  367,  380,  393,  399,  414,  422,  435,
-     455,  468,  473,  486,  492,  510,   -1
+     260,  267,  277,  287,  305,  310,  328,  341,
+     354,  367,  373,  388,  396,  409,  429,  442,
+     447,  460,  466,  484,   -1
 };
 
 static void tokenize(QStringList& token, const QString& str,

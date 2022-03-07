@@ -119,7 +119,6 @@ int main(int argc, char **argv)
             "cache", I18N_NOOP("Cached information (e.g. favicons, web-pages)"),
             "config", I18N_NOOP("Configuration files"),
             "data", I18N_NOOP("Where applications store data"),
-            "emoticons", I18N_NOOP("Emoticons"),
             "exe", I18N_NOOP("Executables in $prefix/bin"),
             "html", I18N_NOOP("HTML documentation"),
             "icon", I18N_NOOP("Icons"),
