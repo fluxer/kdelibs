@@ -24,8 +24,6 @@ macro_bool_to_01(LIBINTL_FOUND ENABLE_NLS)              # kdecore
 macro_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)              # kio
 
 check_include_files(string.h      HAVE_STRING_H)                       # various
-check_include_files(sys/time.h    TIME_WITH_SYS_TIME)                  # kdecore, kioslave
-
 check_include_files(fstab.h       HAVE_FSTAB_H)                        # kio, kdecore
 check_include_files(limits.h      HAVE_LIMITS_H)                       # various
 check_include_files(mntent.h      HAVE_MNTENT_H)                       # solid, kio, kdecore
@@ -37,10 +35,8 @@ check_include_files("stdio.h;sys/mnttab.h"  HAVE_SYS_MNTTAB_H)         # kio, kd
 check_include_files(sys/mntent.h  HAVE_SYS_MNTENT_H)                   # solid, kio, kdecore
 check_include_files("sys/param.h;sys/mount.h"  HAVE_SYS_MOUNT_H)       # kio, kdecore
 check_include_files(unistd.h      HAVE_UNISTD_H)                       # various
-check_include_files(stdint.h      HAVE_STDINT_H)                       # various
 check_include_files(paths.h       HAVE_PATHS_H)                        # kdecore
-
-check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # various
+check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # kioslave
 
 # TODO: separate to config-x11.h
 macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)                           # kdecore
@@ -58,21 +54,20 @@ macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)                           # kidleti
 # check is to be added to get the proper set of headers.
 check_symbol_exists(strtoll         "stdlib.h"           HAVE_STRTOLL)      # kioslave
 check_symbol_exists(getgrouplist    "unistd.h;grp.h"     HAVE_GETGROUPLIST) # kio
+check_symbol_exists(ttyname_r       "unistd.h"           HAVE_TTYNAME_R)    # kinit, kpty
 
 check_function_exists(backtrace     HAVE_BACKTRACE)                         # kdecore, kio
-check_function_exists(fdatasync     HAVE_FDATASYNC)                         # kdecore, kate
-
+check_function_exists(fdatasync     HAVE_FDATASYNC)                         # kdecore
 check_function_exists(sendfile      HAVE_SENDFILE)                          # kioslave
 
-check_symbol_exists(ttyname_r        "unistd.h"          HAVE_TTYNAME_R)    # kinit, kpty
 
 if (UNIX)
   # for kpty
   check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)
-  check_include_files(termio.h     HAVE_TERMIO_H)
-  check_include_files(pty.h        HAVE_PTY_H)
+  check_include_files(termio.h      HAVE_TERMIO_H)
+  check_include_files(pty.h         HAVE_PTY_H)
   check_include_files(sys/stropts.h HAVE_SYS_STROPTS_H)
-  check_include_files(sys/filio.h  HAVE_SYS_FILIO_H)
+  check_include_files(sys/filio.h   HAVE_SYS_FILIO_H)
 
   set(UTIL_LIBRARY)
 
@@ -99,12 +94,12 @@ if (UNIX)
     set(UTIL_LIBRARY "util")
   endif ()
 
-  check_struct_has_member("struct ${utmp}" "ut_user" "${utmp}.h" HAVE_STRUCT_UTMP_UT_USER)
-  check_struct_has_member("struct ${utmp}" "ut_type" "${utmp}.h" HAVE_STRUCT_UTMP_UT_TYPE)
-  check_struct_has_member("struct ${utmp}" "ut_pid" "${utmp}.h" HAVE_STRUCT_UTMP_UT_PID)
+  check_struct_has_member("struct ${utmp}" "ut_user" "${utmp}.h"    HAVE_STRUCT_UTMP_UT_USER)
+  check_struct_has_member("struct ${utmp}" "ut_type" "${utmp}.h"    HAVE_STRUCT_UTMP_UT_TYPE)
+  check_struct_has_member("struct ${utmp}" "ut_pid" "${utmp}.h"     HAVE_STRUCT_UTMP_UT_PID)
   check_struct_has_member("struct ${utmp}" "ut_session" "${utmp}.h" HAVE_STRUCT_UTMP_UT_SESSION)
-  check_struct_has_member("struct ${utmp}" "ut_syslen" "${utmp}.h" HAVE_STRUCT_UTMP_UT_SYSLEN)
-  check_struct_has_member("struct ${utmp}" "ut_id" "${utmp}.h" HAVE_STRUCT_UTMP_UT_ID)
+  check_struct_has_member("struct ${utmp}" "ut_syslen" "${utmp}.h"  HAVE_STRUCT_UTMP_UT_SYSLEN)
+  check_struct_has_member("struct ${utmp}" "ut_id" "${utmp}.h"      HAVE_STRUCT_UTMP_UT_ID)
 
   check_function_exists(openpty openpty_in_libc)
   if (NOT openpty_in_libc)
@@ -126,8 +121,6 @@ endif (UNIX)
 
 check_function_exists(getmntinfo HAVE_GETMNTINFO)        # kdecore, kio
 check_function_exists(setmntent  HAVE_SETMNTENT)         # solid, kio, kdecore
-
-check_symbol_exists(res_init "sys/types.h;netinet/in.h;arpa/nameser.h;resolv.h" HAVE_RES_INIT_PROTO)
 
 # check for existing datatypes
 

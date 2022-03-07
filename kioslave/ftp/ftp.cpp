@@ -33,9 +33,6 @@
 
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
-#endif
-
-#if TIME_WITH_SYS_TIME
 #include <ctime>
 #endif
 
