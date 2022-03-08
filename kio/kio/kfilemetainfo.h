@@ -43,8 +43,7 @@ public:
      */
     enum What {
         TechnicalInfo = 0x1,   /** extract technical details about the file, like
-                                 e.g. play time, resolution or a compressioni
-                                 type */
+                                 e.g. play time, resolution or a compression type */
         ContentInfo = 0x2,     /** read information about the content of the file
                                  like comments or id3 tags */
         ExternalSources = 0x4, /** read external metadata sources such as
