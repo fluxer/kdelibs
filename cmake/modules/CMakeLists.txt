@@ -13,6 +13,7 @@ set(cmakeFilesDontInstall
     FindENCHANT.cmake
     FindACL.cmake
     FindLibCDIO.cmake
+    FindLibExtractor.cmake
     FindDevinfo.cmake
     FindCurl.cmake
 )
@@ -65,7 +66,6 @@ set(cmakeFiles
     FindSane.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
-    FindStrigi.cmake
     FindSpeechd.cmake
     FindSudo.cmake
     FindTaglib.cmake

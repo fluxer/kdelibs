@@ -1,1 +1,1 @@
-#cmakedefine KIO_NO_STRIGI
+#cmakedefine KIO_NO_LIBEXTRACTOR

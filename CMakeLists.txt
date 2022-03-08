@@ -112,12 +112,12 @@ set_package_properties(DBusMenuQt PROPERTIES
     TYPE RECOMMENDED
 )
 
-macro_optional_find_package(Strigi 0.9.0)
-set_package_properties(Strigi PROPERTIES
-    DESCRIPTION "Desktop indexing and search support"
-    URL "http://strigi.sourceforge.net"
+macro_optional_find_package(LibExtractor)
+set_package_properties(LibExtractor PROPERTIES
+    DESCRIPTION "GNU Libextractor is a library used to extract meta data from files"
+    URL "https://www.gnu.org/software/libextractor/"
     TYPE RECOMMENDED
-    PURPOSE "Required by some critical kioslaves"
+    PURPOSE "Required by KIO"
 )
 
 macro_optional_find_package(MPV 0.23.0)

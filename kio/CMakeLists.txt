@@ -1,7 +1,7 @@
 project(kio)
 
-if(NOT Strigi_FOUND)
-    set(KIO_NO_STRIGI TRUE)
+if(NOT LibExtractor_FOUND)
+    set(KIO_NO_LIBEXTRACTOR TRUE)
 endif()
 
 # This applies to all subdirs; let's put kio's dependencies (and own dirs) here, once and for all
@@ -19,12 +19,11 @@ include_directories(
     ${ZLIB_INCLUDE_DIR}
 )
 
-if(NOT KIO_NO_STRIGI)
-    include_directories(${STRIGI_INCLUDE_DIR})
+if(NOT KIO_NO_LIBEXTRACTOR)
+    include_directories(${LIBEXTRACTOR_INCLUDES})
     set(KIO_EXTRA_LIBS
         ${KIO_EXTRA_LIBS}
-        ${STRIGI_STREAMANALYZER_LIBRARY}
-        ${STRIGI_STREAMS_LIBRARY}
+        ${LIBEXTRACTOR_LIBRARIES}
     )
 endif()
 
