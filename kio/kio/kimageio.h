@@ -18,7 +18,7 @@
  * image types without loading all the imageformat plugins.
  *
  * The image processing backends are written as image handlers compatible
- * with the QImageIOHandler format. The backends are Qt imageformat plugins. 
+ * with the QImageIOHandler format. The backends are Katie imageformat plugins.
  * Each format can be identified by a unique type id string.
  *
  * \b Formats:
@@ -43,6 +43,7 @@
  * @li XCF     \<read\>
  * @li RAW     \<read\>
  *
+ * @todo move to kdeui
  */
 namespace KImageIO
 {
