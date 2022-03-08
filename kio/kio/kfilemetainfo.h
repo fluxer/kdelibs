@@ -92,10 +92,6 @@ public:
      **/
     KFileMetaInfo& operator=(KFileMetaInfo const& kfmi);
     /**
-     * @brief Save the changes made to this KFileMetaInfo instance.
-     */
-    bool applyChanges();
-    /**
      * @brief Retrieve all the items.
      **/
     const QHash<QString, KFileMetaInfoItem>& items() const;

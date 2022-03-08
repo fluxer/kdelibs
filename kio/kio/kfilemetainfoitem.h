@@ -23,14 +23,14 @@
 #define KFILEMETAINFOITEM_H
 
 #include <kio/kio_export.h>
-#include <QSharedData>
+
+#include <QSharedDataPointer>
 #include <QVariant>
 
-class KFileWritePlugin;
-class KUrl;
 class KFileMetaInfoItemPrivate;
 
-class KIO_EXPORT KFileMetaInfoItem {
+class KIO_EXPORT KFileMetaInfoItem
+{
     friend class KFileMetaInfo;
     friend class KFileMetaInfoPrivate;
     friend class KMetaInfoWriter;
@@ -52,60 +52,29 @@ public:
      **/
     const KFileMetaInfoItem& operator=(const KFileMetaInfoItem& item);
     /**
-     * @brief Can this item be edited.
+     * @brief Retrieve the key of this item
      **/
-    bool isEditable() const;
+    const QString& key() const;
     /**
-     * @brief Has this value been removed, e.g with setValue(QVariant())
-     **/
-    bool isRemoved() const;
-    /**
-     * @brief Can this item be removed.
-     **/
-    bool isModified() const;
-    /**
-     * @brief Has this value been skipped by analyzer due to performance or other considerations.
-     **/
-    bool isSkipped() const;
-    /**
-     * @brief Retrieve the current value of this item
+     * @brief Retrieve the value of this item
      **/
     const QVariant& value() const;
-    /**
-     * @brief Set the value of this field.
-     **/
-    bool setValue(const QVariant& value);
-    /**
-     * @brief Append a value to the properties in this file.
-     **/
-    bool addValue(const QVariant&);
     /**
      * @brief Is this a valid item.
      **/
     bool isValid() const;
     /**
-     * Localized name of the predicate.
+     * @brief Returns localized name of the key
      **/
     const QString& name() const;
     /**
-     * This method returns a translated suffix to be displayed after the
-     * value. Think of the kbps in 128kbps
-     *
-     * @return the suffix
+     * @brief Returns string suitable for displaying the value of the item
      */
-    QString suffix() const;
-    /**
-     * This method returns a translated prefix to be displayed before the
-     * value.
-     *
-     * @return the prefix
-     */
-    QString prefix() const;
+    QString toString() const;
 private:
     QSharedDataPointer<KFileMetaInfoItemPrivate> d;
 
-    KFileMetaInfoItem(const QString& key,
-        const QVariant& v, KFileWritePlugin* w, bool e);
+    KFileMetaInfoItem(const QString& key, const QVariant& value);
 };
 
 #endif

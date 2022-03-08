@@ -22,21 +22,16 @@
 #define KFILEMETAINFOITEM_P_H
 
 #include "kurl.h"
-#include <config-kio.h>
 
 #include <QtCore/QSharedData>
 
-class KFileWritePlugin;
-
-class KFileMetaInfoItemPrivate : public QSharedData {
+class KFileMetaInfoItemPrivate : public QSharedData
+{
 public:
-    KFileMetaInfoItemPrivate() : writer(0) {}
+    KFileMetaInfoItemPrivate() {}
     QString name;
     QString key;
     QVariant value;
-    KFileWritePlugin* writer;
-    bool embedded;
-    bool modified;
 };
 
 #endif

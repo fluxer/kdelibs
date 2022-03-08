@@ -23,81 +23,56 @@
 #include "kfilemetainfoitem_p.h"
 #include "knfotranslator_p.h"
 
-KFileMetaInfoItem::KFileMetaInfoItem() : d(new KFileMetaInfoItemPrivate()) {
+KFileMetaInfoItem::KFileMetaInfoItem()
+    : d(new KFileMetaInfoItemPrivate())
+{
 }
 
-KFileMetaInfoItem::KFileMetaInfoItem(const KFileMetaInfoItem& item) : d(item.d) {
+KFileMetaInfoItem::KFileMetaInfoItem(const KFileMetaInfoItem& item)
+    : d(item.d)
+{
 }
-KFileMetaInfoItem::KFileMetaInfoItem(const QString& key,
-                                     const QVariant& v, KFileWritePlugin* w, bool e)
-    : d(new KFileMetaInfoItemPrivate()) {
-    d->value = v;
-    d->writer = w;
-    d->embedded = e;
-    d->modified = false;
+
+KFileMetaInfoItem::KFileMetaInfoItem(const QString& key, const QVariant& value)
+    : d(new KFileMetaInfoItemPrivate())
+{
+    d->value = value;
     d->key = key;
     d->name = KNfoTranslator::translation(KUrl(d->key));
 }
-KFileMetaInfoItem::~KFileMetaInfoItem() {
+
+KFileMetaInfoItem::~KFileMetaInfoItem()
+{
 }
 
-const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& item) {
+const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& item)
+{
     d = item.d;
     return item;
 }
 
-const QString& KFileMetaInfoItem::name() const {
+const QString& KFileMetaInfoItem::key() const
+{
+    return d->key;
+}
+
+const QString& KFileMetaInfoItem::name() const
+{
     return d->name;
 }
 
-const QVariant& KFileMetaInfoItem::value() const {
+const QVariant& KFileMetaInfoItem::value() const 
+{
     return d->value;
 }
 
-bool KFileMetaInfoItem::setValue(const QVariant& value) {
-    bool changed = d->value != value;
-    d->value = value;
-    d->modified |= changed;
-    return changed;
-}
-
-bool KFileMetaInfoItem::addValue(const QVariant& value) {
-    QVariant& v = d->value;
-    if (v.type() == QVariant::List) {
-        QVariantList vl = v.toList();
-        vl.append(value);
-        d->value = vl;
-    }
-    return false;
-}
-
-bool KFileMetaInfoItem::isModified() const {
-    return d->modified;
-}
-
-bool KFileMetaInfoItem::isRemoved() const {
-    return d->modified && d->value.isNull();
-}
-
-bool KFileMetaInfoItem::isValid() const {
+bool KFileMetaInfoItem::isValid() const
+{
     return true;
 }
 
-bool KFileMetaInfoItem::isSkipped() const {
-    // ########## TODO implement (vandenoever)
-    return false;
-}
-
-bool KFileMetaInfoItem::isEditable() const {
-    return d->writer != 0;
-}
-
-QString KFileMetaInfoItem::suffix() const {
-    // ########## TODO implement (vandenoever)
-    return QString();
-}
-
-QString KFileMetaInfoItem::prefix() const {
-    // ########## TODO implement (vandenoever)
-    return QString();
+QString KFileMetaInfoItem::toString() const
+{
+#warning TODO: implement properly
+    return d->value.toString();
 }

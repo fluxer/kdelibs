@@ -51,7 +51,7 @@ namespace KIO { class Job; }
  * It will take care of deleting itself when closed.
  *
  * If you are looking for more flexibility, see KFileMetaInfo and
- * KFileMetaInfoWidget.
+ * KFileMetaDataWidget.
  */
 class KIO_EXPORT KPropertiesDialog : public KPageDialog
 {

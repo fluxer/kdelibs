@@ -111,7 +111,6 @@ install(
     KFilePreviewGenerator
     KFilePlacesView
     KFileWidget
-    KFileWritePlugin
     KDiskFreeSpaceInfo
     KDoubleNumInput
     KDoubleValidator

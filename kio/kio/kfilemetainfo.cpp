@@ -23,8 +23,6 @@
 #include "kfilemetainfo.h"
 #include "kfilemetainfoitem.h"
 #include "kfilemetainfoitem_p.h"
-#include "kfilewriteplugin.h"
-#include "kfilewriteplugin_p.h"
 
 #ifndef KIO_NO_STRIGI
 #include <strigi/bufferedstream.h>
@@ -243,12 +241,7 @@ public:
         if (info) {
             std::string name(field->key());
             QString key = QString::fromUtf8(name.c_str(), name.size());
-            QHash<QString, KFileMetaInfoItem>::iterator i = info->find(key);
-            if (i == info->end()) {
-                info->insert(key, KFileMetaInfoItem(key, value, 0, true));
-            } else {
-                i.value().addValue(value);
-            }
+            info->insert(key, KFileMetaInfoItem(key, value));
         }
     }
     void addValue(const Strigi::AnalysisResult* ar,
@@ -284,7 +277,6 @@ public:
     KUrl m_url;
 
     void init ( QIODevice& stream, const KUrl& url, time_t mtime, KFileMetaInfo::WhatFlags w );
-    void initWriters ( const KUrl& /*file*/ );
     void operator= ( const KFileMetaInfoPrivate& k ) {
         items = k.items;
     }
@@ -340,18 +332,6 @@ void KFileMetaInfoPrivate::init ( QIODevice& stream, const KUrl& url, time_t mti
     indexer.analyze ( idx, &strigiStream );
 }
 
-void KFileMetaInfoPrivate::initWriters ( const KUrl& file )
-{
-    QHash<QString, KFileMetaInfoItem>::iterator i;
-    for ( i = items.begin(); i != items.end(); ++i ) {
-        KFileWritePlugin *w =
-            KFileWriterProvider::self()->loadPlugin ( i.key() );
-        if ( w && w->canWrite ( file, i.key() ) ) {
-            i.value().d->writer = w;
-        }
-    }
-}
-
 KFileMetaInfo::KFileMetaInfo ( const QString& path, KFileMetaInfo::WhatFlags w )
         : d ( new KFileMetaInfoPrivate() )
 {
@@ -363,9 +343,6 @@ KFileMetaInfo::KFileMetaInfo ( const QString& path, KFileMetaInfo::WhatFlags w )
             && file.open ( QIODevice::ReadOnly ) ) {
         KUrl u ( path );
         d->init ( file, u, fileinfo.lastModified().toTime_t(), w );
-        if ( fileinfo.isWritable() ) {
-            d->initWriters ( u );
-        }
     }
 }
 
@@ -376,9 +353,6 @@ KFileMetaInfo::KFileMetaInfo ( const KUrl& url, KFileMetaInfo::WhatFlags w )
     QFile file ( url.toLocalFile() );
     if ( file.open ( QIODevice::ReadOnly ) ) {
         d->init ( file, url, fileinfo.lastModified().toTime_t(), w );
-        if ( fileinfo.isWritable() ) {
-            d->initWriters ( url );
-        }
     }
 }
 
@@ -398,28 +372,6 @@ KFileMetaInfo& KFileMetaInfo::operator= ( KFileMetaInfo const & kfmi )
 
 KFileMetaInfo::~KFileMetaInfo()
 {
-}
-
-bool KFileMetaInfo::applyChanges()
-{
-    // go through all editable fields and group them by writer
-    QHash<KFileWritePlugin*, QVariantMap> data;
-    QHashIterator<QString, KFileMetaInfoItem> i(d->items);
-    while ( i.hasNext() ) {
-        i.next();
-        if ( i.value().isModified() && i.value().d->writer ) {
-            data[i.value().d->writer][i.key() ] = i.value().value();
-        }
-    }
-
-    // call the writers on the data they can write
-    bool ok = true;
-    QHashIterator<KFileWritePlugin*, QVariantMap> j(data);
-    while ( j.hasNext() ) {
-        j.next();
-        ok &= j.key()->write ( d->m_url, j.value() );
-    }
-    return ok;
 }
 
 const KUrl& KFileMetaInfo::url() const
@@ -455,14 +407,15 @@ bool KFileMetaInfo::isValid() const
 
 QStringList KFileMetaInfo::preferredKeys() const
 {
+#warning TODO: implement
     return QStringList();
 }
 
 QStringList KFileMetaInfo::supportedKeys() const
 {
-    return QStringList();
+#warning TODO: implement properly
+    return keys();
 }
-
 
 #else //KIO_NO_STRIGI
 
@@ -500,11 +453,6 @@ KFileMetaInfo& KFileMetaInfo::operator= ( KFileMetaInfo const & kfmi )
 
 KFileMetaInfo::~KFileMetaInfo()
 {
-}
-
-bool KFileMetaInfo::applyChanges()
-{
-    return false;
 }
 
 const KUrl& KFileMetaInfo::url() const

@@ -4,6 +4,6 @@ protocol=metainfo
 input=stream
 output=stream
 reading=true
-writing=true
+writing=false
 source=false
 Icon=help-about

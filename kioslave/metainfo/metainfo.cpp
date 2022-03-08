@@ -74,25 +74,3 @@ void MetaInfoProtocol::get(const KUrl &url)
     data(arr);
     finished();
 }
-
-void MetaInfoProtocol::put(const KUrl& url, int, KIO::JobFlags)
-{
-    KFileMetaInfo info;
-
-    QByteArray arr;
-    readData(arr);
-    QDataStream stream(arr);
-
-    stream >> info;
-
-    if (info.isValid())
-    {
-        info.applyChanges();
-    }
-    else
-    {
-        error(ERR_NO_CONTENT, i18n("No metainfo for %1", url.path()));
-        return;
-    }
-    finished();
-}

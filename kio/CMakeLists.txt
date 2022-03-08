@@ -69,7 +69,6 @@ set(kiocore_STAT_SRCS
     kio/kfileitemdelegate.cpp
     kio/kfilemetainfo.cpp
     kio/kfilemetainfoitem.cpp
-    kio/kfilewriteplugin.cpp
     kio/kimageio.cpp
     kio/kmimetypechooser.cpp
     kio/kprotocolmanager.cpp
@@ -148,7 +147,6 @@ set(kfile_STAT_SRCS
     kfile/kfiledialog.cpp
     kfile/kfilemetadataconfigurationwidget.cpp
     kfile/kfilemetadatawidget.cpp
-    kfile/kfilemetainfowidget.cpp
     kfile/kicondialog.cpp
     kfile/kimagefilepreview.cpp
     kfile/kmetaprops.cpp
@@ -217,7 +215,6 @@ install(
     kscan.desktop
     kurifilterplugin.desktop
     kfile/kpropertiesdialogplugin.desktop
-    kio/kfilewrite.desktop
     kio/kfileitemactionplugin.desktop
     kfile/kiofilemodule.desktop
     DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
@@ -278,7 +275,6 @@ install(
     kio/kfileitemdelegate.h
     kio/kfilemetainfo.h
     kio/kfilemetainfoitem.h
-    kio/kfilewriteplugin.h
     kio/kimageio.h
     kio/kmimetypechooser.h
     kio/knfsshare.h
