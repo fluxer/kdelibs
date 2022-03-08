@@ -83,7 +83,6 @@ set(kiocore_STAT_SRCS
     kio/netaccess.cpp
     kio/paste.cpp
     kio/pastedialog.cpp
-    kio/predicateproperties.cpp
     kio/previewjob.cpp
     kio/renamedialog.cpp
     kio/scheduler.cpp
@@ -292,7 +291,6 @@ install(
     kio/kshellcompletion.h
     kio/kurifilter.h
     kio/kurlcompletion.h
-    kio/predicateproperties.h
     kfile/kabstractfilemodule.h
     kfile/kabstractfilewidget.h
     kfile/kdiskfreespaceinfo.h

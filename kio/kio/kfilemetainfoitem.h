@@ -104,7 +104,7 @@ public:
 private:
     QSharedDataPointer<KFileMetaInfoItemPrivate> d;
 
-    KFileMetaInfoItem(const QString& pp,
+    KFileMetaInfoItem(const QString& key,
         const QVariant& v, KFileWritePlugin* w, bool e);
 };
 

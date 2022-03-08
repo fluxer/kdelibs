@@ -21,7 +21,6 @@
 #ifndef KFILEMETAINFO_H
 #define KFILEMETAINFO_H
 
-#include "predicateproperties.h"
 #include "kfilemetainfoitem.h"
 
 class KUrl;

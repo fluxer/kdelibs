@@ -21,6 +21,7 @@
 #define __KFILEMETAINFOWIDGET_H__
 
 #include <QtGui/QWidget>
+#include <QtGui/QValidator>
 #include <QtCore/QVariant>
 #include <kfilemetainfo.h>
 

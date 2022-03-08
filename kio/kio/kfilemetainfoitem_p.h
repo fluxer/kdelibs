@@ -23,7 +23,6 @@
 
 #include "kurl.h"
 #include <config-kio.h>
-#include <predicateproperties.h>
 
 #include <QtCore/QSharedData>
 
@@ -32,8 +31,8 @@ class KFileWritePlugin;
 class KFileMetaInfoItemPrivate : public QSharedData {
 public:
     KFileMetaInfoItemPrivate() : writer(0) {}
-    PredicateProperties pp;
-    KUrl propertyUri;
+    QString name;
+    QString key;
     QVariant value;
     KFileWritePlugin* writer;
     bool embedded;

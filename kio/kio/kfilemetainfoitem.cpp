@@ -21,20 +21,22 @@
 
 #include "kfilemetainfoitem.h"
 #include "kfilemetainfoitem_p.h"
+#include "knfotranslator_p.h"
 
 KFileMetaInfoItem::KFileMetaInfoItem() : d(new KFileMetaInfoItemPrivate()) {
 }
 
 KFileMetaInfoItem::KFileMetaInfoItem(const KFileMetaInfoItem& item) : d(item.d) {
 }
-KFileMetaInfoItem::KFileMetaInfoItem(const QString& pp,
+KFileMetaInfoItem::KFileMetaInfoItem(const QString& key,
                                      const QVariant& v, KFileWritePlugin* w, bool e)
     : d(new KFileMetaInfoItemPrivate()) {
     d->value = v;
     d->writer = w;
     d->embedded = e;
     d->modified = false;
-    d->pp = pp;
+    d->key = key;
+    d->name = KNfoTranslator::translation(KUrl(d->key));
 }
 KFileMetaInfoItem::~KFileMetaInfoItem() {
 }
@@ -45,7 +47,7 @@ const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& i
 }
 
 const QString& KFileMetaInfoItem::name() const {
-    return d->pp.name();
+    return d->name;
 }
 
 const QVariant& KFileMetaInfoItem::value() const {
