@@ -23,18 +23,17 @@
 #define KFILEMETAINFOITEM_H
 
 #include <kio/kio_export.h>
-#include <QtCore/QSharedData>
+#include <QSharedData>
+#include <QVariant>
 
 class KFileWritePlugin;
-#include <QVariant>
-class PredicateProperties;
 class KUrl;
-
 class KFileMetaInfoItemPrivate;
+
 class KIO_EXPORT KFileMetaInfoItem {
-friend class KFileMetaInfo;
-friend class KFileMetaInfoPrivate;
-friend class KMetaInfoWriter;
+    friend class KFileMetaInfo;
+    friend class KFileMetaInfoPrivate;
+    friend class KMetaInfoWriter;
 public:
     /**
      * @brief Default constructor

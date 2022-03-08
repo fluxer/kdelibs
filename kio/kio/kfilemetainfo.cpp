@@ -43,20 +43,6 @@
 #include <QDateTime>
 #include <QStringList>
 
-class KFileMetaInfoGroupPrivate : public QSharedData {
-public:
-    QString name;
-};
-
-KFileMetaInfoGroup::~KFileMetaInfoGroup()
-{
-}
-
-KFileMetaInfoGroup::KFileMetaInfoGroup ( KFileMetaInfoGroup const& g )
-{
-    d = g.d;
-}
-
 QDataStream& operator >> ( QDataStream& s, KFileMetaInfo& )
 {
     return s;
@@ -567,13 +553,3 @@ QStringList KFileMetaInfo::supportedKeys() const
     return QStringList();
 }
 #endif
-
-KFileMetaInfoItemList KFileMetaInfoGroup::items() const
-{
-    return KFileMetaInfoItemList();
-}
-
-const QString& KFileMetaInfoGroup::name() const
-{
-    return d->name;
-}

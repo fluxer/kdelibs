@@ -28,22 +28,6 @@ class KUrl;
 
 typedef QList<KFileMetaInfoItem> KFileMetaInfoItemList;
 
-class KFileMetaInfoGroupPrivate;
-class KIO_EXPORT KFileMetaInfoGroup {
-public:
-    KFileMetaInfoGroup();
-    KFileMetaInfoGroup(const KFileMetaInfoGroup&);
-    ~KFileMetaInfoGroup();
-    const KFileMetaInfoGroup& operator=(const KFileMetaInfoGroup&);
-    KFileMetaInfoItemList items() const;
-    const QString& name() const;
-    const QStringList& keys() const;
-private:
-    QSharedDataPointer<KFileMetaInfoGroupPrivate> d;
-};
-
-typedef QList<KFileMetaInfoGroup> KFileMetaInfoGroupList;
-
 class KFileMetaInfoPrivate;
 /**
  * KFileMetaInfo provides metadata extracted from a file or other resource.
@@ -121,12 +105,11 @@ public:
     bool isValid() const;
     QStringList preferredKeys() const;
     QStringList supportedKeys() const;
-    KIO_EXPORT friend QDataStream& operator >>(QDataStream& s, KFileMetaInfo&)
-;
-    KIO_EXPORT friend QDataStream& operator <<(QDataStream& s, const KFileMetaInfo&);
-    KFileMetaInfoGroupList groups() const;
     QStringList keys() const;
     const KUrl& url() const;
+
+    KIO_EXPORT friend QDataStream& operator >>(QDataStream& s, KFileMetaInfo&);
+    KIO_EXPORT friend QDataStream& operator <<(QDataStream& s, const KFileMetaInfo&);
 
 private:
     QSharedDataPointer<KFileMetaInfoPrivate> d;
