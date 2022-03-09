@@ -35,11 +35,7 @@ class KUrl;
 /**
  * @brief Provides the data for the KMetaDataWidget.
  *
- * The default implementation provides all meta data that are available due to
- * Strigi. If custom meta data should be added, the method
- * KFileMetaDataProvider::loadData() must be overwritten.
- *
- * @see KFileMetaDataWidget
+ * @see KFileMetaDataWidget, KFileMetaInfo
  */
 class KFileMetaDataProvider : public QObject
 {
@@ -47,7 +43,7 @@ class KFileMetaDataProvider : public QObject
 
 public:
     explicit KFileMetaDataProvider(QObject* parent = 0);
-    virtual ~KFileMetaDataProvider();
+    ~KFileMetaDataProvider();
 
     /**
      * Sets the items, where the meta data should be
@@ -66,20 +62,7 @@ public:
      *         by \p metaDataUri. If no custom translation is provided, the
      *         base implementation must be invoked.
      */
-    virtual QString label(const KUrl& metaDataUri) const;
-
-    /**
-     * Meta data items are sorted alphabetically by their translated
-     * label per default. However it is possible to provide an internal
-     * prefix to the label, so that specific items are grouped together.
-     * For example it makes sense that the meta data for 'width' and 'height'
-     * of an image are shown below each other. By adding a common prefix,
-     * a grouping is done.
-     * @return Returns the name of the group the meta data indicated
-     *         by \p metaDataUri belongs to. Per default an empty string
-     *         is returned.
-     */
-    virtual QString group(const KUrl& metaDataUri) const;
+    QString label(const KUrl& metaDataUri) const;
 
     /**
      * @return Meta data for the items that have been set by
@@ -87,7 +70,7 @@ public:
      *         be invoked after the signal loadingFinished() has
      *         been received (otherwise no data will be returned).
      */
-    virtual QHash<KUrl, QVariant> data() const;
+    QHash<KUrl, QVariant> data() const;
 
     /**
      * @return Factory method that returns a widget that should be used
@@ -96,9 +79,9 @@ public:
      *         implementation must be invoked. Per default an instance
      *         of QLabel will be returned.
      */
-    virtual QWidget* createValueWidget(const KUrl& metaDataUri,
-                                       const QVariant& value,
-                                       QWidget* parent) const;
+    QWidget* createValueWidget(const KUrl& metaDataUri,
+                               const QVariant& value,
+                               QWidget* parent) const;
 
 Q_SIGNALS:
     /**

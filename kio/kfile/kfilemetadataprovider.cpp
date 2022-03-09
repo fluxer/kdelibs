@@ -190,24 +190,6 @@ QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
     return KNfoTranslator::translation(metaDataUri);
 }
 
-QString KFileMetaDataProvider::group(const KUrl& metaDataUri) const
-{
-    QString group; // return value
-
-    const QString uri = metaDataUri.url();
-    if (uri == QLatin1String("kfileitem#type")) {
-        group = QLatin1String("0FileItemA");
-    } else if (uri == QLatin1String("kfileitem#size")) {
-        group = QLatin1String("0FileItemB");
-    } else if (uri == QLatin1String("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width")) {
-        group = QLatin1String("0SizeA");
-    } else if (uri == QLatin1String("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height")) {
-        group = QLatin1String("0SizeB");
-    }
-
-    return group;
-}
-
 KFileItemList KFileMetaDataProvider::items() const
 {
     return d->m_fileItems;
