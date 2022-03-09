@@ -152,6 +152,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
         return;
     }
     d->m_urls.clear();
+    d->m_data.clear();
     foreach (const KFileItem& item, items) {
         const KUrl url = item.url();
         if (url.isValid()) {
