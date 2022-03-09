@@ -137,7 +137,7 @@ QString KNfoTranslator::translation(const KUrl& uri)
         { "font.spacing", i18nc("@label", "Font Spacing") },
     };
 
-    const QString key = uri.url();
+    const QString key = uri.prettyUrl();
     const TranslationMap::const_iterator it = s_translations.find(key);
     if (it != s_translations.cend()) {
         return it->second;
