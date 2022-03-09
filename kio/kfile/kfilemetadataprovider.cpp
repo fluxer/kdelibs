@@ -41,14 +41,6 @@ public:
     void slotMetaDataUpdateDone();
     void slotLinkActivated(const QString& link);
 
-    /**
-     * Disables the metadata widget and starts the job that
-     * changes the meta data asynchronously. After the job
-     * has been finished, the metadata widget gets enabled again.
-     */
-    void startChangeDataJob(KJob* job);
-
-    QList<QString> resourceList() const;   
     QWidget* createValueWidget(const QString& value, QWidget* parent);
 
     /*
@@ -128,22 +120,6 @@ void KFileMetaDataProvider::Private::readMetadata()
 void KFileMetaDataProvider::Private::slotLinkActivated(const QString& link)
 {
     emit q->urlActivated(KUrl(link));
-}
-
-void KFileMetaDataProvider::Private::startChangeDataJob(KJob* job)
-{
-    job->start();
-}
-
-QList<QString> KFileMetaDataProvider::Private::resourceList() const
-{
-    QList<QString> list;
-    foreach (const KFileItem& item, m_fileItems) {
-        const KUrl url = item.url();
-        if(url.isValid())
-            list.append(url.prettyUrl());
-    }
-    return list;
 }
 
 QWidget* KFileMetaDataProvider::Private::createValueWidget(const QString& value, QWidget* parent)
