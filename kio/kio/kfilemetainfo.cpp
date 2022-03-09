@@ -28,6 +28,7 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
+#include <kconfiggroup.h>
 
 #include <QFileInfo>
 #include <QDateTime>
@@ -59,7 +60,7 @@ public:
     }
 
     static QString variant(enum EXTRACTOR_MetaFormat format,
-                            const char *data, size_t data_len);
+                           const char *data, size_t data_len);
     static int metadata(void *cls,
                         const char *plugin_name,
                         enum EXTRACTOR_MetaType type,
@@ -70,7 +71,7 @@ public:
 };
 
 QString KFileMetaInfoPrivate::variant(enum EXTRACTOR_MetaFormat format,
-                                       const char *data, size_t data_len)
+                                      const char *data, size_t data_len)
 {
     switch (format) {
         case EXTRACTOR_METAFORMAT_UTF8: {
@@ -656,8 +657,16 @@ bool KFileMetaInfo::isValid() const
 
 QStringList KFileMetaInfo::preferredKeys() const
 {
-#warning TODO: implement
-    return QStringList();
+    QStringList result;
+    KConfig config("kmetainformationrc", KConfig::NoGlobals);
+    KConfigGroup settings = config.group("Show");
+    foreach (const QString &key, supportedKeys()) {
+        const bool show = settings.readEntry(key, true);
+        if (show) {
+            result.append(key);
+        }
+    }
+    return result;
 }
 
 QStringList KFileMetaInfo::supportedKeys() const

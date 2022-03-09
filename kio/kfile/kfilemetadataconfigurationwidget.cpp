@@ -89,7 +89,7 @@ void KFileMetaDataConfigurationWidget::Private::loadMetaData()
 
 void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
 {
-    // Meta information provided by Nepomuk that is already
+    // Meta information provided by KFileMetaInfo that is already
     // available from KFileItem as "fixed item" (see above)
     // should not be shown as second entry.
     static const char* const hiddenProperties[] = {
@@ -104,7 +104,7 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     };
 
     int i = 0;
-    const QString key = uri.url();
+    const QString key = uri.prettyUrl();
     while (hiddenProperties[i] != 0) {
         if (key == QLatin1String(hiddenProperties[i])) {
             // the item is hidden
