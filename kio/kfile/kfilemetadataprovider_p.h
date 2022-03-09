@@ -21,15 +21,11 @@
 #define KFILEMETADATAMODEL_H
 
 #include <kurl.h>
+#include <kfileitem.h>
 
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QString>
-
-#include <config-kio.h>
-
-class KFileItemList;
-class KUrl;
 #include <QWidget>
 
 /**
@@ -59,8 +55,7 @@ public:
 
     /**
      * @return Translated string for the label of the meta data represented
-     *         by \p metaDataUri. If no custom translation is provided, the
-     *         base implementation must be invoked.
+     *         by \p metaDataUri.
      */
     QString label(const KUrl& metaDataUri) const;
 
@@ -74,10 +69,8 @@ public:
 
     /**
      * @return Factory method that returns a widget that should be used
-     *         to show the meta data represented by \p metaDataUri. If
-     *         no custom value widget is used for the given URI, the base
-     *         implementation must be invoked. Per default an instance
-     *         of QLabel will be returned.
+     *         to show the meta data represented by \p metaDataUri. A
+     *         QLabel will be returned.
      */
     QWidget* createValueWidget(const KUrl& metaDataUri,
                                const QVariant& value,
@@ -92,13 +85,17 @@ Q_SIGNALS:
 
     void urlActivated(const KUrl& url);
 
+private Q_SLOTS:
+    void slotLinkActivated(const QString&);
+
 private:
-    class Private;
-    Private* const d;
+    /*!
+     * @return The number of subdirectories for the directory \a path.
+     */
+    static int subDirectoriesCount(const QString &path);
 
-    Q_PRIVATE_SLOT(d, void slotLinkActivated(const QString&))
-
-    friend class KLoadMetaDataThread; // invokes KMetaDataObject::loadData()
+    QList<KFileItem> m_fileItems;
+    QHash<KUrl, QVariant> m_data;
 };
 
-#endif
+#endif // KFILEMETADATAMODEL_H

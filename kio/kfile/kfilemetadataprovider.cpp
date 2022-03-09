@@ -19,62 +19,44 @@
 
 #include "kfilemetadataprovider_p.h"
 
-#include <kfileitem.h>
 #include <knfotranslator_p.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
-#include <kurl.h>
 #include <kdebug.h>
 
 #include <QLabel>
 #include <QDir>
 
-class KFileMetaDataProvider::Private
-{
-
-public:
-    Private(KFileMetaDataProvider* parent);
-    ~Private();
-
-    void readMetadata();
-
-    void slotMetaDataUpdateDone();
-    void slotLinkActivated(const QString& link);
-
-    QWidget* createValueWidget(const QString& value, QWidget* parent);
-
-    /*
-     * @return The number of subdirectories for the directory \a path.
-     */
-    static int subDirectoriesCount(const QString &path);
-
-    QList<KFileItem> m_fileItems;
-
-    QList<KUrl> m_urls;
-    QHash<KUrl, QVariant> m_data;
-
-private:
-    KFileMetaDataProvider* const q;
-};
-
-KFileMetaDataProvider::Private::Private(KFileMetaDataProvider* parent) :
-    m_fileItems(),
-    m_data(),
-    q(parent)
+KFileMetaDataProvider::KFileMetaDataProvider(QObject* parent)
+    : QObject(parent)
 {
 }
 
-KFileMetaDataProvider::Private::~Private()
+KFileMetaDataProvider::~KFileMetaDataProvider()
 {
 }
 
-void KFileMetaDataProvider::Private::readMetadata()
+void KFileMetaDataProvider::setItems(const KFileItemList& items)
 {
-#warning implement multi-URL metadata support
-    if (m_urls.count() > 1) {
-        kWarning() << "the API does not handle multile URLs metadata";
+    m_fileItems = items;
+
+    if (items.isEmpty()) {
+        return;
     }
-    const QString path = m_urls.first().toLocalFile();
+
+    m_data.clear();
+    QList<KUrl> urls;
+    foreach (const KFileItem& item, items) {
+        const KUrl url = item.url();
+        if (url.isValid()) {
+            urls.append(url);
+        }
+    }
+#warning TODO: implement multi-URL metadata
+    if (urls.count() > 1) {
+        kWarning() << "multile URLs metadata is not supported";
+    }
+    const QString path = urls.first().toLocalFile();
     const KFileMetaInfo metaInfo(path, KFileMetaInfo::TechnicalInfo);
     foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
         const QString uriString = metaInfoItem.name();
@@ -114,52 +96,7 @@ void KFileMetaDataProvider::Private::readMetadata()
         m_data.insert(KUrl("kfileitem#totalSize"), KIO::convertSize(totalSize));
     }
 
-    emit q->loadingFinished();
-}
-
-void KFileMetaDataProvider::Private::slotLinkActivated(const QString& link)
-{
-    emit q->urlActivated(KUrl(link));
-}
-
-QWidget* KFileMetaDataProvider::Private::createValueWidget(const QString& value, QWidget* parent)
-{
-    QLabel* valueWidget = new QLabel(parent);
-    valueWidget->setWordWrap(true);
-    valueWidget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    valueWidget->setTextFormat(Qt::PlainText);
-    valueWidget->setText(value);
-    connect(valueWidget, SIGNAL(linkActivated(QString)), q, SLOT(slotLinkActivated(QString)));
-    return valueWidget;
-}
-
-KFileMetaDataProvider::KFileMetaDataProvider(QObject* parent) :
-    QObject(parent),
-    d(new Private(this))
-{
-}
-
-KFileMetaDataProvider::~KFileMetaDataProvider()
-{
-    delete d;
-}
-
-void KFileMetaDataProvider::setItems(const KFileItemList& items)
-{
-    d->m_fileItems = items;
-
-    if (items.isEmpty()) {
-        return;
-    }
-    d->m_urls.clear();
-    d->m_data.clear();
-    foreach (const KFileItem& item, items) {
-        const KUrl url = item.url();
-        if (url.isValid()) {
-            d->m_urls.append(url);
-        }
-    }
-    d->readMetadata();
+    emit loadingFinished();
 }
 
 QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
@@ -169,12 +106,12 @@ QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
 
 KFileItemList KFileMetaDataProvider::items() const
 {
-    return d->m_fileItems;
+    return m_fileItems;
 }
 
 QHash<KUrl, QVariant> KFileMetaDataProvider::data() const
 {
-    return d->m_data;
+    return m_data;
 }
 
 QWidget* KFileMetaDataProvider::createValueWidget(const KUrl& metaDataUri,
@@ -182,19 +119,25 @@ QWidget* KFileMetaDataProvider::createValueWidget(const KUrl& metaDataUri,
                                                   QWidget* parent) const
 {
     Q_ASSERT(parent != 0);
-    QWidget* widget = 0;
+    QLabel* widget = new QLabel(parent);
 
-    if (widget == 0) {
-        widget = d->createValueWidget(value.toString(), parent);
-    }
-
+    widget->setWordWrap(true);
+    widget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    widget->setTextFormat(Qt::PlainText);
+    widget->setText(value.toString());
     widget->setForegroundRole(parent->foregroundRole());
     widget->setFont(parent->font());
+    connect(widget, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)));
 
     return widget;
 }
 
-int KFileMetaDataProvider::Private::subDirectoriesCount(const QString& path)
+void KFileMetaDataProvider::slotLinkActivated(const QString& link)
+{
+    emit urlActivated(KUrl(link));
+}
+
+int KFileMetaDataProvider::subDirectoriesCount(const QString& path)
 {
     QDir dir(path);
     return dir.entryList(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::System).count();
