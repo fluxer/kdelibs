@@ -56,12 +56,14 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
     if (urls.count() > 1) {
         kWarning() << "multile URLs metadata is not supported";
     }
-    const QString path = urls.first().toLocalFile();
-    const KFileMetaInfo metaInfo(path, KFileMetaInfo::TechnicalInfo);
-    foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
-        const QString uriString = metaInfoItem.name();
-        const QVariant value = metaInfoItem.value();
-        m_data.insert(uriString, value);
+
+    if (urls.count() > 0) {
+        const KFileMetaInfo metaInfo(urls.first(), KFileMetaInfo::TechnicalInfo);
+        foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
+            const QString uriString = metaInfoItem.name();
+            const QVariant value = metaInfoItem.value();
+            m_data.insert(uriString, value);
+        }
     }
 
     if (m_fileItems.count() == 1) {
