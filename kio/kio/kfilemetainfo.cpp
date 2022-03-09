@@ -230,11 +230,6 @@ int KFileMetaInfoPrivate::metadata(void *cls,
             kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", kfmi);
             break;
         }
-        case EXTRACTOR_METATYPE_CAMERA_MODEL: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", KFileMetaInfoPrivate::variant(format, data, data_len));
-            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", kfmi);
-            break;
-        }
         case EXTRACTOR_METATYPE_EXPOSURE: {
             const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime", KFileMetaInfoPrivate::variant(format, data, data_len));
             kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime", kfmi);
@@ -318,11 +313,6 @@ int KFileMetaInfoPrivate::metadata(void *cls,
         case EXTRACTOR_METATYPE_REVISION_NUMBER: {
             const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#sequence", KFileMetaInfoPrivate::variant(format, data, data_len));
             kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#sequence", kfmi);
-            break;
-        }
-        case EXTRACTOR_METATYPE_DURATION: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", KFileMetaInfoPrivate::variant(format, data, data_len));
-            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ALBUM: {
@@ -435,7 +425,123 @@ int KFileMetaInfoPrivate::metadata(void *cls,
             kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#subtitle", kfmi);
             break;
         }
-        // TODO: handle more cases
+        case EXTRACTOR_METATYPE_CODEC: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_VIDEO_CODEC: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_AUDIO_CODEC: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_SUBTITLE_CODEC: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_CONTAINER_FORMAT: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_BITRATE: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_SERIAL: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_ENCODER: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_GROUPING: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_DEVICE_MANUFACTURER: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_CAMERA_MODEL:
+        case EXTRACTOR_METATYPE_DEVICE_MODEL: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_CHANNELS: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_SAMPLE_RATE: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_AUDIO_DEPTH: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_AUDIO_BITRATE: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_VIDEO_DEPTH: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_FRAME_RATE: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_PIXEL_ASPECT_RATIO: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_VIDEO_BITRATE: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_DURATION:
+        case EXTRACTOR_METATYPE_VIDEO_DURATION:
+        case EXTRACTOR_METATYPE_AUDIO_DURATION: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", KFileMetaInfoPrivate::variant(format, data, data_len));
+            kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", kfmi);
+            break;
+        }
+        case EXTRACTOR_METATYPE_IMAGE_DIMENSIONS:
+        case EXTRACTOR_METATYPE_VIDEO_DIMENSIONS: {
+            const QString dimensions = KFileMetaInfoPrivate::variant(format, data, data_len).toString();
+            const QStringList splitdimensions = dimensions.split(QLatin1Char('x'));
+            if (splitdimensions.size() == 2) {
+                const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width", QVariant(splitdimensions.at(0)));
+                kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width", kfmi);
+                const KFileMetaInfoItem kfmi2("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height", QVariant(splitdimensions.at(1)));
+                kfmip->items.insert("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height", kfmi);
+            } else {
+                kWarning() << "Invalid dimensions" << dimensions;
+            }
+            break;
+        }
     }
     return 0;
 }
