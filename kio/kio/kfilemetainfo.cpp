@@ -571,6 +571,21 @@ void KFileMetaInfoPrivate::init(const QByteArray &filepath, const KUrl& url, KFi
         KFileMetaInfoPrivate::metadata, this
     );
     EXTRACTOR_plugin_remove_all(extractorplugins);
+
+    // filter duplicates from the falltrough cases in the extraction which essentially have the
+    // same meaning
+    KFileMetaInfoItemList::iterator it = items.begin();
+    QStringList itemkeys;
+    itemkeys.reserve(items.size());
+    while (it != items.end()) {
+        if (!itemkeys.contains(it->key())) {
+            itemkeys.append(it->key());
+            it++;
+        } else {
+            kDebug() << "Multiple entries for the same key" << it->key();
+            it = items.erase(it);
+        }
+    }
 }
 
 KFileMetaInfo::KFileMetaInfo(const QString& path, KFileMetaInfo::WhatFlags w)
