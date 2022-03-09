@@ -73,7 +73,7 @@ void KFileMetaInfoTest::testMetaInfo()
     QVERIFY(fileMetaInfo.isValid());
 
     const KFileMetaInfoItem& item = fileMetaInfo.item("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName");
-    QCOMPARE(item.value().toString(), QString("testfilename"));
+    QCOMPARE(item.value(), QString("testfilename"));
 }
 
 void KFileMetaInfoTest::testReentrancy()

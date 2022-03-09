@@ -83,9 +83,8 @@ void KFileMetaDataProvider::Private::readMetadata()
         kWarning() << "the API does not handle multile URLs metadata";
     }
     const QString path = m_urls.first().toLocalFile();
-    KFileMetaInfo metaInfo(path, KFileMetaInfo::TechnicalInfo);
-    const QHash<QString, KFileMetaInfoItem> metaInfoItems = metaInfo.items();
-    foreach (const KFileMetaInfoItem& metaInfoItem, metaInfoItems) {
+    const KFileMetaInfo metaInfo(path, KFileMetaInfo::TechnicalInfo);
+    foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
         const QString uriString = metaInfoItem.name();
         const QVariant value = metaInfoItem.value();
         m_data.insert(uriString, value);

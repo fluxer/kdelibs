@@ -29,7 +29,7 @@ public:
     KFileMetaInfoItemPrivate() {}
     QString name;
     QString key;
-    QVariant value;
+    QString value;
 };
 
 #endif // KFILEMETAINFOITEM_P_H

@@ -30,7 +30,7 @@ KFileMetaInfoItem::KFileMetaInfoItem(const KFileMetaInfoItem& item)
 {
 }
 
-KFileMetaInfoItem::KFileMetaInfoItem(const QString& key, const QVariant& value)
+KFileMetaInfoItem::KFileMetaInfoItem(const QString& key, const QString& value)
     : d(new KFileMetaInfoItemPrivate())
 {
     d->value = value;
@@ -58,7 +58,7 @@ const QString& KFileMetaInfoItem::name() const
     return d->name;
 }
 
-const QVariant& KFileMetaInfoItem::value() const 
+const QString& KFileMetaInfoItem::value() const
 {
     return d->value;
 }
@@ -66,10 +66,4 @@ const QVariant& KFileMetaInfoItem::value() const
 bool KFileMetaInfoItem::isValid() const
 {
     return true;
-}
-
-QString KFileMetaInfoItem::toString() const
-{
-#warning TODO: implement properly
-    return d->value.toString();
 }

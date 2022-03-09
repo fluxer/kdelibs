@@ -91,7 +91,7 @@ public:
     /**
      * @brief Retrieve all the items.
      **/
-    const QHash<QString, KFileMetaInfoItem>& items() const;
+    const KFileMetaInfoItemList& items() const;
     KFileMetaInfoItem& item(const QString& key);
     const KFileMetaInfoItem& item(const QString& key) const;
     bool isValid() const;

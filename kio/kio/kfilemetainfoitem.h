@@ -22,7 +22,7 @@
 #include <kio/kio_export.h>
 
 #include <QSharedDataPointer>
-#include <QVariant>
+#include <QString>
 
 class KFileMetaInfoItemPrivate;
 
@@ -54,7 +54,7 @@ public:
     /**
      * @brief Retrieve the value of this item
      **/
-    const QVariant& value() const;
+    const QString& value() const;
     /**
      * @brief Is this a valid item.
      **/
@@ -63,14 +63,10 @@ public:
      * @brief Returns localized name of the key
      **/
     const QString& name() const;
-    /**
-     * @brief Returns string suitable for displaying the value of the item
-     */
-    QString toString() const;
 private:
     QSharedDataPointer<KFileMetaInfoItemPrivate> d;
 
-    KFileMetaInfoItem(const QString& key, const QVariant& value);
+    KFileMetaInfoItem(const QString& key, const QString& value);
 };
 
 #endif // KFILEMETAINFOITEM_H
