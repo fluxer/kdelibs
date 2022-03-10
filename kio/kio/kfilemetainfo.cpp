@@ -34,16 +34,6 @@
 #include <QDateTime>
 #include <QStringList>
 
-QDataStream& operator>>(QDataStream& s, KFileMetaInfo& kfmi)
-{
-    return s;
-}
-
-QDataStream& operator<<(QDataStream& s, const KFileMetaInfo& kfmi)
-{
-    return s;
-}
-
 #ifndef KIO_NO_LIBEXTRACTOR
 static const KFileMetaInfoItem nullitem;
 static KFileMetaInfoItem mutablenullitem;

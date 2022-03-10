@@ -100,9 +100,6 @@ public:
     QStringList keys() const;
     const KUrl& url() const;
 
-    KIO_EXPORT friend QDataStream& operator >>(QDataStream& s, KFileMetaInfo&);
-    KIO_EXPORT friend QDataStream& operator <<(QDataStream& s, const KFileMetaInfo&);
-
 private:
     QSharedDataPointer<KFileMetaInfoPrivate> d;
 };

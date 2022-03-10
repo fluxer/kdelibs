@@ -77,7 +77,6 @@ set(kiocore_STAT_SRCS
     kio/kshellcompletion.cpp
     kio/kurifilter.cpp
     kio/kurlcompletion.cpp
-    kio/metainfojob.cpp
     kio/netaccess.cpp
     kio/paste.cpp
     kio/pastedialog.cpp
@@ -247,7 +246,6 @@ install(
     kio/previewjob.h
     kio/thumbcreator.h
     kio/thumbsequencecreator.h
-    kio/metainfojob.h
     kio/directorysizejob.h
     kio/renamedialog.h
     kio/skipdialog.h

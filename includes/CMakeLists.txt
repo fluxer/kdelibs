@@ -444,7 +444,6 @@ install(
     KIO/JobUiDelegate
     KIO/ListJob
     KIO/MetaData
-    KIO/MetaInfoJob
     KIO/MimetypeJob
     KIO/MultiGetJob
     KIO/NetAccess
