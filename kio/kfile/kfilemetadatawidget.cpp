@@ -112,50 +112,38 @@ void KFileMetaDataWidget::Private::initMetaInfoSettings()
         KConfigGroup settings = config.group("Show");
 
         static const char* enabledProperties[] = {
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#depends",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#plainTextContent",
+            "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum",
+            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist",
+            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title",
+            "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber",
+            "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth",
             "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate",
-            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#apertureValue",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureBiasValue",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#flash",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLength",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation",
-            "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance",
-            "http://www.semanticdesktop.org/ontologies/2007/08/15/nao#description",
-            "http://www.semanticdesktop.org/ontologies/2007/08/15/nao#hasTag",
+            "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#beatsPerMinute",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec",
+            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration",
+            "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width",
+            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height",
+            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated",
             "http://www.semanticdesktop.org/ontologies/2007/08/15/nao#lastModified",
-            "http://www.semanticdesktop.org/ontologies/2007/08/15/nao#numericRating",
             "kfileitem#owner",
             "kfileitem#permissions",
             "kfileitem#mimetype",
             0 // mandatory last entry
         };
 
-        static const char* disabledProperties[] = {
-            "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#isPartOf",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#lastModified",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentSize",
-            "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType",
-            "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
-            0 // mandatory last entry
-        };
+        foreach (const QString &key, KFileMetaInfo::supportedKeys()) {
+            settings.writeEntry(key, false);
+        }
 
         for (int i = 0; enabledProperties[i] != 0; ++i) {
             settings.writeEntry(enabledProperties[i], true);
-        }
-
-        for (int i = 0; disabledProperties[i] != 0; ++i) {
-            settings.writeEntry(disabledProperties[i], false);
         }
 
         // mark the group as initialized
