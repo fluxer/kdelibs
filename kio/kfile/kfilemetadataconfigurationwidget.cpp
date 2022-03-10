@@ -23,7 +23,6 @@
 #include <kconfiggroup.h>
 #include <kfilemetainfo.h>
 #include <kfilemetainfoitem.h>
-#include "knfotranslator_p.h"
 #include <klocale.h>
 #include "kfilemetadataprovider_p.h"
 
@@ -118,7 +117,7 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     KConfigGroup settings = config.group("Show");
 
     const QString label = (m_provider == 0)
-                          ? KNfoTranslator::translation(uri)
+                          ? KFileMetaInfo::name(key)
                           : m_provider->label(uri);
 
     QListWidgetItem* item = new QListWidgetItem(label, m_metaDataList);

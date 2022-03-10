@@ -148,7 +148,6 @@ set(kfile_STAT_SRCS
     kfile/kicondialog.cpp
     kfile/kimagefilepreview.cpp
     kfile/kmetaprops.cpp
-    kfile/knfotranslator.cpp
     kfile/kopenwithdialog.cpp
     kfile/kpreviewprops.cpp
     kfile/kpreviewwidgetbase.cpp

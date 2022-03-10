@@ -18,7 +18,7 @@
 
 #include "kfilemetainfoitem.h"
 #include "kfilemetainfoitem_p.h"
-#include "knfotranslator_p.h"
+#include "kfilemetainfo.h"
 
 KFileMetaInfoItem::KFileMetaInfoItem()
     : d(new KFileMetaInfoItemPrivate())
@@ -35,7 +35,7 @@ KFileMetaInfoItem::KFileMetaInfoItem(const QString& key, const QString& value)
 {
     d->value = value;
     d->key = key;
-    d->name = KNfoTranslator::translation(KUrl(d->key));
+    d->name = KFileMetaInfo::name(d->key);
 }
 
 KFileMetaInfoItem::~KFileMetaInfoItem()

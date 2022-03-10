@@ -19,7 +19,6 @@
 
 #include "kfilemetadataprovider_p.h"
 
-#include <knfotranslator_p.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kdebug.h>
@@ -103,7 +102,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
 
 QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
 {
-    return KNfoTranslator::translation(metaDataUri);
+    return KFileMetaInfo::name(metaDataUri.prettyUrl());
 }
 
 KFileItemList KFileMetaDataProvider::items() const

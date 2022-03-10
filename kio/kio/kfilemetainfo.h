@@ -96,10 +96,17 @@ public:
     const KFileMetaInfoItem& item(const QString& key) const;
     bool isValid() const;
     QStringList preferredKeys() const;
-    QStringList supportedKeys() const;
     QStringList keys() const;
     const KUrl& url() const;
 
+    /**
+     * @brief Returns all supported keys
+     **/
+    static QStringList supportedKeys();
+    /**
+     * @brief Returns localized name of @p key
+     **/
+    static QString name(const QString& key);
 private:
     QSharedDataPointer<KFileMetaInfoPrivate> d;
 };

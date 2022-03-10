@@ -94,7 +94,7 @@ QString KFileMetaInfoPrivate::string(enum EXTRACTOR_MetaFormat format,
 QString KFileMetaInfoPrivate::time(enum EXTRACTOR_MetaFormat format,
                                    const char *data, size_t data_len)
 {
-    QString timestring = KFileMetaInfoPrivate::string(format, data, data_len);
+    const QString timestring = KFileMetaInfoPrivate::string(format, data, data_len);
     const QStringList splittimestring = timestring.split(QLatin1Char('.'));
     if (splittimestring.size() == 2) {
         return splittimestring.at(0);
@@ -106,7 +106,7 @@ QString KFileMetaInfoPrivate::time(enum EXTRACTOR_MetaFormat format,
 QString KFileMetaInfoPrivate::frameRate(enum EXTRACTOR_MetaFormat format,
                                         const char *data, size_t data_len)
 {
-    QString frameratestring = KFileMetaInfoPrivate::string(format, data, data_len);
+    const QString frameratestring = KFileMetaInfoPrivate::string(format, data, data_len);
     const QStringList splitframeratestring = frameratestring.split(QLatin1Char('/'));
     if (splitframeratestring.size() == 2) {
         return i18n("%1 per second").arg(splitframeratestring.at(0));
@@ -720,10 +720,202 @@ QStringList KFileMetaInfo::preferredKeys() const
     return result;
 }
 
-QStringList KFileMetaInfo::supportedKeys() const
+QStringList KFileMetaInfo::supportedKeys()
 {
-#warning TODO: implement properly
-    return keys();
+    static const QStringList s_keys = QStringList()
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLatitudeRef"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLongitudeRef"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#country"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword"
+        << "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#summary"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureBiasValue"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#apertureValue"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#flash"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLength"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureMode"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#resolution"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lineCount"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#wordCount"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#characterCount"
+        << "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#sequence"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration"
+        << "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist"
+        << "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre"
+        << "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber"
+        << "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#performer"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#Contact"
+        << "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor"
+        << "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#director"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#conductor"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#interpretedBy"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#composer"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#beatsPerMinute"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encodedBy"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalArtist"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalTextWriter"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalReleaseYear"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#SynchronizedText"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#licensee"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#InvolvedPerson"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#subtitle"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier"
+        << "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make"
+        << "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width"
+        << "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height";
+    return s_keys;
+}
+
+QString KFileMetaInfo::name(const QString& key)
+{
+    typedef std::map<QString,QString> TranslationMap;
+
+    static const TranslationMap s_translations = {
+        { "kfileitem#modified", i18nc("@label", "Modified") },
+        { "kfileitem#owner", i18nc("@label", "Owner") },
+        { "kfileitem#permissions", i18nc("@label", "Permissions") },
+        { "kfileitem#size", i18nc("@label", "Size") },
+        { "kfileitem#totalSize", i18nc("@label", "Total Size") },
+        { "kfileitem#type", i18nc("@label", "Type") },
+        { "kfileitem#mimetype", i18nc("@label", "MIME Type") },
+        // implemented so far
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName", i18nc("@label", "Filename") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", i18nc("@label", "Comment") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", i18nc("@label music title", "Title") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", i18nc("@label", "Page Count") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator", i18nc("@label", "Creator") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email", i18nc("@label", "Creator E-Mail") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher", i18nc("@label", "Publisher") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url", i18nc("@label file URL", "URL") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", i18nc("@label", "Hash Value") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm", i18nc("@label", "Hash Algorithm") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLatitudeRef", i18nc("@label", "GPS Latitude Reference") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLongitudeRef", i18nc("@label", "GPS Longitude Reference") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#country", i18nc("@label", "Country") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", i18nc("@label", "Description") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", i18nc("@label", "Copyright") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", i18nc("@label", "Keyword") },
+        { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#summary", i18nc("@label", "Summary") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject", i18nc("@label", "Subject") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator", i18nc("@label Software used to generate content", "Generator") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", i18nc("@label creation date", "Created") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", i18nc("@label modification date", "Modified") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime", i18nc("@label EXIF", "Exposure Time") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureBiasValue", i18nc("@label EXIF", "Exposure Bias Value") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#apertureValue", i18nc("@label EXIF aperture value", "Aperture") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#flash", i18nc("@label EXIF", "Flash") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLength", i18nc("@label EXIF", "Focal Length") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm", i18nc("@label EXIF", "Focal Length 35 mm") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings", i18nc("@label EXIF", "ISO Speed Ratings") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureMode", i18nc("@label EXIF", "Exposure Mode") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode", i18nc("@label EXIF", "Metering Mode") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance", i18nc("@label EXIF", "White Balance") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation", i18nc("@label EXIF", "Orientation") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#resolution", i18nc("@label EXIF", "Resolution") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", i18nc("@label", "Character Set") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lineCount", i18nc("@label number of lines", "Lines") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#wordCount", i18nc("@label number of words", "Words") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#characterCount", i18nc("@label", "Character Count") },
+        { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#sequence", i18nc("@label", "Revision") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", i18nc("@label", "Duration") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum", i18nc("@label music album", "Album") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist", i18nc("@label music or image artist", "Artist") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre",  i18nc("@label music genre", "Genre") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber", i18nc("@label music track number", "Track") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#performer", i18nc("@label", "Performer") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#Contact", i18nc("@label", "Contact") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", i18nc("@label", "Disclaimer") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter", i18nc("@label", "Text Writer") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", i18nc("@label", "Contributor") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#director", i18nc("@label video director", "Director") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#conductor", i18nc("@label", "Conductor") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#interpretedBy", i18nc("@label", "Interpreted By") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#composer", i18nc("@label music composer", "Composer") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#beatsPerMinute", i18nc("@label", "Beats Per Minute") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encodedBy", i18nc("@label", "Encoded By") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalArtist", i18nc("@label", "Original Artist") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalTextWriter", i18nc("@label", "Original Text Writer") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalReleaseYear", i18nc("@label", "Original Release Year") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#SynchronizedText", i18nc("@label", "Lyrics") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#licensee", i18nc("@label", "Licensee") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#InvolvedPerson", i18nc("@label", "Musician Credits") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#subtitle", i18nc("@label", "Subtitle") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec",  i18nc("@label", "Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec",  i18nc("@label", "Video Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec",  i18nc("@label", "Audio Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec",  i18nc("@label", "Subtitle Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer",  i18nc("@label", "Container Format") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", i18nc("@label", "Average Bitrate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", i18nc("@label", "Encoder") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", i18nc("@label", "Serial") },
+        { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", i18nc("@label", "Grouping") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make", i18nc("@label EXIF", "Manufacturer") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", i18nc("@label EXIF", "Model") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", i18nc("@label", "Channels") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", i18nc("@label", "Sample Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", i18nc("@label", "Audio Bit Depth") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", i18nc("@label", "Audio Bit Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", i18nc("@label", "Video Bit Depth") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate", i18nc("@label", "Frame Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", i18nc("@label", "Aspect Ratio") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", i18nc("@label", "Video Bit Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width", i18nc("@label", "Width") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height", i18nc("@label", "Height") },
+    };
+
+    const TranslationMap::const_iterator it = s_translations.find(key);
+    if (it != s_translations.cend()) {
+        return it->second;
+    }
+
+    // fallback if the URI is not translated
+    const int index = key.indexOf(QChar('#'));
+    if (index >= 0) {
+        return key.right(key.size() - index - 1);
+    }
+    return key;
 }
 
 #else //KIO_NO_LIBEXTRACTOR
@@ -809,4 +1001,11 @@ QStringList KFileMetaInfo::supportedKeys() const
 {
     return QStringList();
 }
+
+QString KFileMetaInfo::name(const QString& key)
+{
+    Q_UNUSED(key);
+    retrun QString();
+}
+
 #endif // KIO_NO_LIBEXTRACTOR
