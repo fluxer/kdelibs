@@ -49,7 +49,15 @@ public:
         items = kfmip.items;
     }
 
-    static QString variant(enum EXTRACTOR_MetaFormat format,
+    static QString string(enum EXTRACTOR_MetaFormat format,
+                          const char *data, size_t data_len);
+    static QString time(enum EXTRACTOR_MetaFormat format,
+                        const char *data, size_t data_len);
+    static QString frameRate(enum EXTRACTOR_MetaFormat format,
+                             const char *data, size_t data_len);
+    static QString sampleRate(enum EXTRACTOR_MetaFormat format,
+                              const char *data, size_t data_len);
+    static QString bitRate(enum EXTRACTOR_MetaFormat format,
                            const char *data, size_t data_len);
     static int metadata(void *cls,
                         const char *plugin_name,
@@ -60,8 +68,8 @@ public:
                         size_t data_len);
 };
 
-QString KFileMetaInfoPrivate::variant(enum EXTRACTOR_MetaFormat format,
-                                      const char *data, size_t data_len)
+QString KFileMetaInfoPrivate::string(enum EXTRACTOR_MetaFormat format,
+                                     const char *data, size_t data_len)
 {
     switch (format) {
         case EXTRACTOR_METAFORMAT_UTF8: {
@@ -83,6 +91,44 @@ QString KFileMetaInfoPrivate::variant(enum EXTRACTOR_MetaFormat format,
     return QString();
 }
 
+QString KFileMetaInfoPrivate::time(enum EXTRACTOR_MetaFormat format,
+                                   const char *data, size_t data_len)
+{
+    QString timestring = KFileMetaInfoPrivate::string(format, data, data_len);
+    const QStringList splittimestring = timestring.split(QLatin1Char('.'));
+    if (splittimestring.size() == 2) {
+        return splittimestring.at(0);
+    }
+    kDebug() << "Unexpected time" << timestring;
+    return timestring;
+}
+
+QString KFileMetaInfoPrivate::frameRate(enum EXTRACTOR_MetaFormat format,
+                                        const char *data, size_t data_len)
+{
+    QString frameratestring = KFileMetaInfoPrivate::string(format, data, data_len);
+    const QStringList splitframeratestring = frameratestring.split(QLatin1Char('/'));
+    if (splitframeratestring.size() == 2) {
+        return i18n("%1 per second").arg(splitframeratestring.at(0));
+    }
+    kDebug() << "Unexpected frame rate" << frameratestring;
+    return frameratestring;
+}
+
+QString KFileMetaInfoPrivate::sampleRate(enum EXTRACTOR_MetaFormat format,
+                                         const char *data, size_t data_len)
+{
+    const QString ratestring = KFileMetaInfoPrivate::string(format, data, data_len);
+    return i18n("%1 kHz").arg(ratestring.toInt() / 1000);
+}
+
+QString KFileMetaInfoPrivate::bitRate(enum EXTRACTOR_MetaFormat format,
+                                         const char *data, size_t data_len)
+{
+    const QString ratestring = KFileMetaInfoPrivate::string(format, data, data_len);
+    return i18n("%1 Kbps").arg(ratestring.toInt() / 1000);
+}
+
 int KFileMetaInfoPrivate::metadata(void *cls,
                                    const char *plugin_name,
                                    enum EXTRACTOR_MetaType type,
@@ -99,430 +145,430 @@ int KFileMetaInfoPrivate::metadata(void *cls,
             break;
         }
         case EXTRACTOR_METATYPE_FILENAME: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_COMMENT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_TITLE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_PAGE_COUNT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         // TODO: or http://www.semanticdesktop.org/ontologies/2007/03/22/nco#emailAddress?
         case EXTRACTOR_METATYPE_AUTHOR_EMAIL: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_PUBLISHER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_URL: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_HASH_MD4: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             const KFileMetaInfoItem kfmi2("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm", QString::fromLatin1("MD4"));
             kfmip->items.append(kfmi2);
             break;
         }
         case EXTRACTOR_METATYPE_HASH_MD5: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             const KFileMetaInfoItem kfmi2("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm", QString::fromLatin1("MD5"));
             kfmip->items.append(kfmi2);
             break;
         }
         case EXTRACTOR_METATYPE_HASH_SHA0: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             const KFileMetaInfoItem kfmi2("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm", QString::fromLatin1("SHA-0"));
             kfmip->items.append(kfmi2);
             break;
         }
         case EXTRACTOR_METATYPE_HASH_SHA1: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             const KFileMetaInfoItem kfmi2("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm", QString::fromLatin1("SHA-1"));
             kfmip->items.append(kfmi2);
             break;
         }
         case EXTRACTOR_METATYPE_GPS_LATITUDE_REF: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLatitudeRef", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLatitudeRef", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_GPS_LONGITUDE_REF: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLongitudeRef", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLongitudeRef", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_LOCATION_COUNTRY: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#country", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#country", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_DESCRIPTION: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_COPYRIGHT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_KEYWORDS: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_SUMMARY: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#summary", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#summary", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_SUBJECT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CREATOR: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CREATED_BY_SOFTWARE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CREATION_DATE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_MODIFICATION_DATE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_EXPOSURE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_EXPOSURE_BIAS: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureBiasValue", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureBiasValue", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_APERTURE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#apertureValue", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#apertureValue", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_FLASH: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#flash", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#flash", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_FOCAL_LENGTH: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLength", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLength", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_FOCAL_LENGTH_35MM: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ISO_SPEED: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_EXPOSURE_MODE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureMode", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureMode", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_METERING_MODE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_WHITE_BALANCE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ORIENTATION: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_IMAGE_RESOLUTION: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#resolution", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#resolution", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CHARACTER_SET: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_LINE_COUNT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lineCount", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lineCount", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_WORD_COUNT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#wordCount", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#wordCount", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CHARACTER_COUNT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#characterCount", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#characterCount", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_REVISION_NUMBER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#sequence", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#sequence", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ALBUM: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ARTIST: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_GENRE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_TRACK_NUMBER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_PERFORMER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#performer", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#performer", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CONTACT_INFORMATION: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#Contact", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#Contact", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_DISCLAIMER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_WRITER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CONTRIBUTOR_NAME: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_MOVIE_DIRECTOR: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#director", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#director", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CONDUCTOR: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#conductor", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#conductor", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_INTERPRETATION: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#interpretedBy", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#interpretedBy", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_COMPOSER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#composer", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#composer", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_BEATS_PER_MINUTE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#beatsPerMinute", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#beatsPerMinute", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ENCODED_BY: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encodedBy", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encodedBy", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ORIGINAL_ARTIST: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalArtist", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalArtist", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ORIGINAL_WRITER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalTextWriter", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalTextWriter", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ORIGINAL_RELEASE_YEAR: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalReleaseYear", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalReleaseYear", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_LYRICS: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#SynchronizedText", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#SynchronizedText", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_LICENSEE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#licensee", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#licensee", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_MUSICIAN_CREDITS_LIST: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#InvolvedPerson", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#InvolvedPerson", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_SUBTITLE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#subtitle", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#subtitle", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CODEC: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#codec", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_VIDEO_CODEC: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_AUDIO_CODEC: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_SUBTITLE_CODEC: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CONTAINER_FORMAT: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_BITRATE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", KFileMetaInfoPrivate::bitRate(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_SERIAL: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_ENCODER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_GROUPING: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_DEVICE_MANUFACTURER: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CAMERA_MODEL:
         case EXTRACTOR_METATYPE_DEVICE_MODEL: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_CHANNELS: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_SAMPLE_RATE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate", KFileMetaInfoPrivate::sampleRate(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_AUDIO_DEPTH: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_AUDIO_BITRATE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", KFileMetaInfoPrivate::bitRate(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_VIDEO_DEPTH: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_FRAME_RATE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate", KFileMetaInfoPrivate::frameRate(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_PIXEL_ASPECT_RATIO: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_VIDEO_BITRATE: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", KFileMetaInfoPrivate::bitRate(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_DURATION:
         case EXTRACTOR_METATYPE_VIDEO_DURATION:
         case EXTRACTOR_METATYPE_AUDIO_DURATION: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", KFileMetaInfoPrivate::variant(format, data, data_len));
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", KFileMetaInfoPrivate::time(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
         case EXTRACTOR_METATYPE_IMAGE_DIMENSIONS:
         case EXTRACTOR_METATYPE_VIDEO_DIMENSIONS: {
-            const QString dimensions = KFileMetaInfoPrivate::variant(format, data, data_len);
+            const QString dimensions = KFileMetaInfoPrivate::string(format, data, data_len);
             const QStringList splitdimensions = dimensions.split(QLatin1Char('x'));
             if (splitdimensions.size() == 2) {
                 const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width", splitdimensions.at(0));
