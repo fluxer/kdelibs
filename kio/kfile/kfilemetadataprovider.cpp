@@ -59,7 +59,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
     if (urls.count() > 0) {
         const KFileMetaInfo metaInfo(urls.first(), KFileMetaInfo::TechnicalInfo);
         foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
-            const QString uriString = metaInfoItem.name();
+            const QString uriString = metaInfoItem.key();
             const QVariant value = metaInfoItem.value();
             m_data.insert(uriString, value);
         }

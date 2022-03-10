@@ -189,7 +189,7 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
     KConfigGroup settings = config.group("Show");
     QHash<KUrl, QVariant>::iterator it = data.begin();
     while (it != data.end()) {
-        const QString uriString = it.key().url();
+        const QString uriString = it.key().prettyUrl();
         if (!settings.readEntry(uriString, true)) {
             it = data.erase(it);
         } else {
