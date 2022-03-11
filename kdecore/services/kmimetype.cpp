@@ -99,16 +99,6 @@ static KMimeType::Ptr findFromMode( const QString& path /*only used if is_local_
     }
 
     if ( S_ISDIR( mode ) ) {
-        // KDE4 TODO: use an overlay instead
-#if 0
-        // Special hack for local files. We want to see whether we
-        // are allowed to enter the directory
-        if ( is_local_file )
-        {
-            if ( KDE::access( path, R_OK ) == -1 )
-                return KMimeType::mimeType( "inode/directory-locked" );
-        }
-#endif
         return KMimeType::mimeType( QLatin1String("inode/directory") );
     }
     if ( S_ISCHR( mode ) )

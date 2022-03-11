@@ -639,8 +639,6 @@ void KMimeTypeRepository::checkEssentialMimeTypes()
 
     if (!KMimeType::mimeType(QLatin1String("inode/directory")))
         missingMimeTypes.append(QLatin1String("inode/directory"));
-    //if (!KMimeType::mimeType(QLatin1String("inode/directory-locked")))
-    //  missingMimeTypes.append(QLatin1String("inode/directory-locked"));
     if (!KMimeType::mimeType(QLatin1String("inode/blockdevice")))
         missingMimeTypes.append(QLatin1String("inode/blockdevice"));
     if (!KMimeType::mimeType(QLatin1String("inode/chardevice")))

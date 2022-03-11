@@ -112,12 +112,7 @@ bool KRun::isExecutableFile(const KUrl& url, const QString &mimetype)
 bool KRun::runUrl(const KUrl& u, const QString& _mimetype, QWidget* window, bool tempFile, bool runExecutables, const QString& suggestedFileName, const QByteArray& asn)
 {
     bool noRun = false;
-    if (_mimetype == QLatin1String("inode/directory-locked")) {
-        KMessageBoxWrapper::error(window,
-                                  i18n("<qt>Unable to enter <b>%1</b>.\nYou do not have access rights to this location.</qt>", Qt::escape(u.prettyUrl())));
-        return false;
-    }
-    else if (_mimetype == QLatin1String("application/x-desktop")) {
+    if (_mimetype == QLatin1String("application/x-desktop")) {
         if (u.isLocalFile() && runExecutables) {
             return KDesktopFileActions::run(u, true);
         }
