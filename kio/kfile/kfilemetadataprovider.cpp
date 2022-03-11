@@ -60,7 +60,7 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
         const KFileMetaInfo metaInfo(urls.first(), KFileMetaInfo::TechnicalInfo);
         foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
             const QString uriString = metaInfoItem.key();
-            const QVariant value = metaInfoItem.value();
+            const QString value = metaInfoItem.value();
             m_data.insert(uriString, value);
         }
     }
@@ -110,13 +110,13 @@ KFileItemList KFileMetaDataProvider::items() const
     return m_fileItems;
 }
 
-QHash<KUrl, QVariant> KFileMetaDataProvider::data() const
+QHash<KUrl, QString> KFileMetaDataProvider::data() const
 {
     return m_data;
 }
 
 QWidget* KFileMetaDataProvider::createValueWidget(const KUrl& metaDataUri,
-                                                  const QVariant& value,
+                                                  const QString& value,
                                                   QWidget* parent) const
 {
     Q_ASSERT(parent != 0);
@@ -125,7 +125,7 @@ QWidget* KFileMetaDataProvider::createValueWidget(const KUrl& metaDataUri,
     widget->setWordWrap(true);
     widget->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     widget->setTextFormat(Qt::PlainText);
-    widget->setText(value.toString());
+    widget->setText(value);
     widget->setForegroundRole(parent->foregroundRole());
     widget->setFont(parent->font());
     connect(widget, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)));

@@ -608,7 +608,7 @@ void KFileMetaInfoPrivate::init(const QByteArray &filepath, const KUrl& url, KFi
     );
     EXTRACTOR_plugin_remove_all(extractorplugins);
 
-    // filter duplicates from the falltrough cases in the extraction which essentially have the
+    // remove duplicates from the falltrough cases in the extraction which essentially have the
     // same meaning
     KFileMetaInfoItemList::iterator it = items.begin();
     QStringList itemkeys;

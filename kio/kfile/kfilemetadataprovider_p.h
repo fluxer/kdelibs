@@ -65,7 +65,7 @@ public:
      *         be invoked after the signal loadingFinished() has
      *         been received (otherwise no data will be returned).
      */
-    QHash<KUrl, QVariant> data() const;
+    QHash<KUrl, QString> data() const;
 
     /**
      * @return Factory method that returns a widget that should be used
@@ -73,7 +73,7 @@ public:
      *         QLabel will be returned.
      */
     QWidget* createValueWidget(const KUrl& metaDataUri,
-                               const QVariant& value,
+                               const QString& value,
                                QWidget* parent) const;
 
 Q_SIGNALS:
@@ -95,7 +95,7 @@ private:
     static int subDirectoriesCount(const QString &path);
 
     QList<KFileItem> m_fileItems;
-    QHash<KUrl, QVariant> m_data;
+    QHash<KUrl, QString> m_data;
 };
 
 #endif // KFILEMETADATAMODEL_H
