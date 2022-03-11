@@ -16,9 +16,9 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${KDE4_KDEUI_INCLUDES}
     ${KDE4_KDECORE_INCLUDES}
-    ${ZLIB_INCLUDE_DIR}
 )
 
+set(KIO_EXTRA_LIBS)
 if(NOT KIO_NO_LIBEXTRACTOR)
     include_directories(${LIBEXTRACTOR_INCLUDES})
     set(KIO_EXTRA_LIBS
@@ -173,8 +173,6 @@ set(kio_LIB_SRCS
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
 target_link_libraries(kio PRIVATE
-    ${ZLIB_LIBRARY}
-    ${X11_LIBRARIES}
     ${KIO_EXTRA_LIBS}
 )
 
