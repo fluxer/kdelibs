@@ -112,6 +112,7 @@ extern "C" {
 #include <ksqueezedtextlabel.h>
 #include <kmimetypetrader.h>
 #include <kpreviewprops.h>
+#include <kmetaprops.h>
 #include <krun.h>
 #include <kvbox.h>
 #include <kacl.h>
@@ -401,7 +402,8 @@ bool KPropertiesDialog::canDisplay( const KFileItemList& _items )
             KDesktopPropsPlugin::supports( _items ) ||
             KUrlPropsPlugin::supports( _items ) ||
             KDevicePropsPlugin::supports( _items ) ||
-            KPreviewPropsPlugin::supports( _items );
+            KPreviewPropsPlugin::supports( _items ) ||
+            KFileMetaPropsPlugin::supports( _items );
 }
 
 void KPropertiesDialog::slotOk()
@@ -491,6 +493,11 @@ void KPropertiesDialog::KPropertiesDialogPrivate::insertPages()
 
     if ( KPreviewPropsPlugin::supports( m_items ) ) {
         KPropertiesDialogPlugin *p = new KPreviewPropsPlugin(q);
+        q->insertPlugin(p);
+    }
+
+    if ( KFileMetaPropsPlugin::supports( m_items ) ) {
+        KFileMetaPropsPlugin *p = new KFileMetaPropsPlugin(q);
         q->insertPlugin(p);
     }
 
