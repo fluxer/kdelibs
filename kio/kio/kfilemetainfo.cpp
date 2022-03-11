@@ -180,6 +180,11 @@ int KFileMetaInfoPrivate::metadata(void *cls,
             kfmip->items.append(kfmi);
             break;
         }
+        case EXTRACTOR_METATYPE_URI: {
+            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", KFileMetaInfoPrivate::string(format, data, data_len));
+            kfmip->items.append(kfmi);
+            break;
+        }
         case EXTRACTOR_METATYPE_HASH_MD4: {
             const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
@@ -490,11 +495,6 @@ int KFileMetaInfoPrivate::metadata(void *cls,
         }
         case EXTRACTOR_METATYPE_BITRATE: {
             const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", KFileMetaInfoPrivate::bitRate(format, data, data_len));
-            kfmip->items.append(kfmi);
-            break;
-        }
-        case EXTRACTOR_METATYPE_SERIAL: {
-            const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", KFileMetaInfoPrivate::string(format, data, data_len));
             kfmip->items.append(kfmi);
             break;
         }
@@ -889,7 +889,7 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer",  i18nc("@label", "Container Format") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", i18nc("@label", "Average Bitrate") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", i18nc("@label", "Encoder") },
-        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", i18nc("@label", "Serial") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", i18nc("@label", "URI") },
         { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", i18nc("@label", "Grouping") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make", i18nc("@label EXIF", "Manufacturer") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", i18nc("@label EXIF", "Model") },
