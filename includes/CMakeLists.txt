@@ -84,7 +84,6 @@ install(
     KCrash
     KCurrencyCode
     KCursor
-    KDBusServiceStarter
     KDebug
     KDEDModule
     KDEPrintDialog

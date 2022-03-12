@@ -55,7 +55,6 @@ set(kiocore_STAT_SRCS
     kio/kabstractfileitemactionplugin.cpp
     kio/kacl.cpp
     kio/kbuildsycocaprogressdialog.cpp
-    kio/kdbusservicestarter.cpp
     kio/kdesktopfileactions.cpp
     kio/kdirlister.cpp
     kio/kdirmodel.cpp
@@ -257,7 +256,6 @@ install(
     kio/kacl.h
     kio/kautomount.h
     kio/kbuildsycocaprogressdialog.h
-    kio/kdbusservicestarter.h
     kio/kdesktopfileactions.h
     kio/kdirlister.h
     kio/kdirmodel.h

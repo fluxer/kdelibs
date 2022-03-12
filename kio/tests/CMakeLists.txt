@@ -51,7 +51,6 @@ KIO_EXECUTABLE_TESTS(
     netaccesstest
     kdirmodeltest_gui
     kmimetypechoosertest_gui
-    kdbusservicestartertest
     kurlrequestertest
     kopenwithtest
     kicondialogtest
