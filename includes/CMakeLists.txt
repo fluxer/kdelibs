@@ -129,7 +129,6 @@ install(
     KFileItemDelegate
     KFileMetaDataWidget
     KFileMetaInfo
-    KFileMetaInfoGroup
     KFileMetaInfoItem
     KFilePlacesModel
     KFileTreeView
