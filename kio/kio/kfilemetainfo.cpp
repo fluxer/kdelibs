@@ -594,6 +594,8 @@ void KFileMetaInfoPrivate::init(const QByteArray &filepath, const KUrl& url, KFi
     extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "deb");
     extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "rpm");
     extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "thumbnailgtk");
+    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "previewopus");
+    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "thumbnailffmpeg");
     if ((w & KFileMetaInfo::ContentInfo) == 0) {
         extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "pdf");
         extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "ole2");
