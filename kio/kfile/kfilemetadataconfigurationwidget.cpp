@@ -73,6 +73,8 @@ KFileMetaDataConfigurationWidget::Private::Private(KFileMetaDataConfigurationWid
     layout->addWidget(m_metaDataList);
 
     m_provider = new KFileMetaDataProvider(q);
+    connect(m_provider, SIGNAL(loadingFinished()),
+            q, SLOT(slotLoadingFinished()));
 }
 
 KFileMetaDataConfigurationWidget::Private::~Private()
@@ -81,8 +83,6 @@ KFileMetaDataConfigurationWidget::Private::~Private()
 
 void KFileMetaDataConfigurationWidget::Private::loadMetaData()
 {
-    connect(m_provider, SIGNAL(loadingFinished()),
-            q, SLOT(slotLoadingFinished()));
     m_provider->setItems(m_fileItems);
 }
 
