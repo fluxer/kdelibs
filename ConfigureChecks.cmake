@@ -60,6 +60,7 @@ check_function_exists(backtrace     HAVE_BACKTRACE)                         # kd
 check_function_exists(fdatasync     HAVE_FDATASYNC)                         # kdecore
 check_function_exists(sendfile      HAVE_SENDFILE)                          # kioslave
 
+check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)                 # kinit
 
 if (UNIX)
   # for kpty
