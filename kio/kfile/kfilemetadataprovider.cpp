@@ -38,12 +38,12 @@ KFileMetaDataProvider::~KFileMetaDataProvider()
 void KFileMetaDataProvider::setItems(const KFileItemList& items)
 {
     m_fileItems = items;
+    m_data.clear();
 
     if (items.isEmpty()) {
         return;
     }
 
-    m_data.clear();
     QList<KUrl> urls;
     foreach (const KFileItem& item, items) {
         const KUrl url = item.url();
