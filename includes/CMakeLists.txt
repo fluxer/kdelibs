@@ -358,8 +358,6 @@ install(
     KUser
     KUserGroup
     KVBox
-    KViewStateMaintainer
-    KViewStateSaver
     KWindowInfo
     KWindowSystem
     KWordMacroExpander
