@@ -93,23 +93,17 @@ class MyMainWindow : public KMainWindow
 {
 public:
     MyMainWindow() : KMainWindow(),
-                     m_queryClosedCalled( false ),
-                     m_queryExitCalled( false )
+                     m_queryClosedCalled( false )
     {
     }
     /*reimp*/ bool queryClose() {
         m_queryClosedCalled = true;
         return true;
     }
-    /*reimp*/ bool queryExit() {
-        m_queryExitCalled = true;
-        return true;
-    }
     ~MyMainWindow() {
         s_mainWindowDeleted = true;
     }
     bool m_queryClosedCalled;
-    bool m_queryExitCalled;
 
     void reallyResize(int width, int height) {
         const QSize oldSize = size();
@@ -124,7 +118,6 @@ public:
 
 // Here we test
 // - that queryClose is called
-// - that queryExit is called
 // - that autodeletion happens
 void KMainWindow_UnitTest::testDeleteOnClose()
 {
@@ -134,7 +127,6 @@ void KMainWindow_UnitTest::testDeleteOnClose()
     QVERIFY( mw->testAttribute( Qt::WA_DeleteOnClose ) );
     mw->close();
     QVERIFY( mw->m_queryClosedCalled );
-    QVERIFY( mw->m_queryExitCalled );
     qApp->sendPostedEvents( mw, QEvent::DeferredDelete );
     QVERIFY( s_mainWindowDeleted );
 }

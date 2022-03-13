@@ -172,10 +172,9 @@ public:
   /**
    * Returns true if the application is currently saving its session
    * data (most probably before KDE logout). This is intended for use
-   * mainly in KMainWindow::queryClose() and KMainWindow::queryExit().
+   * mainly in KMainWindow::queryClose().
    *
    * @see KMainWindow::queryClose
-   * @see KMainWindow::queryExit
    */
   bool sessionSaving() const;
 

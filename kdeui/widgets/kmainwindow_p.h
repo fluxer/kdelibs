@@ -46,7 +46,6 @@ public:
     bool autoSaveWindowSize:1;
     bool care_about_geometry:1;
     bool sizeApplied:1;
-    bool shuttingDown:1;
     KConfigGroup autoSaveGroup;
     QTimer *settingsTimer;
     QTimer *sizeTimer;
@@ -57,7 +56,6 @@ public:
     QString dbusName;
     bool letDirtySettings;
 
-    void _k_shuttingDown();
     // This slot will be called when the style KCM changes settings that need
     // to be set on the already running applications.
     void _k_slotSettingsChanged(int category);

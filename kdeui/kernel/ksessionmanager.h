@@ -30,13 +30,13 @@
    base.
 
    KSessionManager makes it possible to provide implementations for
- QApplication::commitData() and QApplication::saveState(), without
+   QApplication::commitData() and QApplication::saveState(), without
    subclassing KApplication. KMainWindow internally makes use of this.
 
    You don't need to do anything with this class when using
    KMainWindow. Instead, use KMainWindow::saveProperties(),
- KMainWindow::readProperties(), KMainWindow::queryClose(),
- KMainWindow::queryExit() and friends.
+   KMainWindow::readProperties(), KMainWindow::queryClose(),
+   and friends.
 
   @short Highlevel access to session management.
   @author Matthias Ettrich <ettrich@kde.org>

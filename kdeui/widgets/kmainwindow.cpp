@@ -72,8 +72,6 @@
 
 #include <config.h>
 
-static bool no_query_exit = false;
-
 static KStatusBar *internalStatusBar(KMainWindow *mw)
 {
     // Don't use qFindChild here, it's recursive!
@@ -160,7 +158,6 @@ public:
         // not really a fast method but the only compatible one
         if ( sm.allowsInteraction() ) {
             bool canceled = false;
-            ::no_query_exit = true;
 
             foreach (KMainWindow *window, KMainWindow::memberList()) {
                 if ( !window->testAttribute( Qt::WA_WState_Hidden ) ) {
@@ -185,18 +182,9 @@ public:
                     */
                 }
             }
-            ::no_query_exit = false;
             if (canceled)
                return false;
 
-            KMainWindow* last = 0;
-            foreach (KMainWindow *window, KMainWindow::memberList()) {
-                if ( !window->testAttribute( Qt::WA_WState_Hidden ) ) {
-                    last = window;
-                }
-            }
-            if ( last )
-                return last->queryExit();
             // else
             return true;
         }
@@ -249,7 +237,6 @@ void KMainWindowPrivate::init(KMainWindow *_q)
     helpMenu = 0;
 
     //actionCollection()->setWidget( this );
-    QObject::connect(qApp, SIGNAL(aboutToQuit()), q, SLOT(_k_shuttingDown()));
     QObject::connect(KGlobalSettings::self(), SIGNAL(settingsChanged(int)),
                      q, SLOT(_k_slotSettingsChanged(int)));
 
@@ -264,7 +251,6 @@ void KMainWindowPrivate::init(KMainWindow *_q)
     //d->kaccel = actionCollection()->kaccel();
     settingsTimer = 0;
     sizeTimer = 0;
-    shuttingDown = false;
     if ((care_about_geometry = being_first)) {
         being_first = false;
 
@@ -584,25 +570,7 @@ void KMainWindow::closeEvent ( QCloseEvent *e )
 
     if (queryClose()) {
         e->accept();
-
-        int not_withdrawn = 0;
-        foreach (KMainWindow* mw, KMainWindow::memberList()) {
-            if ( !mw->isHidden() && mw->isTopLevel() && mw != this )
-                not_withdrawn++;
-        }
-
-        if ( !no_query_exit && not_withdrawn <= 0 ) { // last window close accepted?
-            if (!( queryExit() && ( !kapp || !kapp->sessionSaving() ) && !d->shuttingDown )) {
-              // cancel closing, it's stupid to end up with no windows at all....
-              e->ignore();
-            }
-        }
     } else e->ignore(); //if the window should not be closed, don't close it
-}
-
-bool KMainWindow::queryExit()
-{
-    return true;
 }
 
 bool KMainWindow::queryClose()
@@ -1043,21 +1011,6 @@ KStatusBar *KMainWindow::statusBar()
         setStatusBar(sb);
     }
     return sb;
-}
-
-void KMainWindowPrivate::_k_shuttingDown()
-{
-    // Needed for Qt <= 3.0.3 at least to prevent reentrancy
-    // when queryExit() shows a dialog. Check before removing!
-    static bool reentrancy_protection = false;
-    if (!reentrancy_protection)
-    {
-       reentrancy_protection = true;
-       shuttingDown = true;
-       // call the virtual queryExit
-       q->queryExit();
-       reentrancy_protection = false;
-    }
 }
 
 void KMainWindowPrivate::_k_slotSettingsChanged(int category)
