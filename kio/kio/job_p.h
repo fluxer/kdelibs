@@ -235,15 +235,6 @@ namespace KIO {
          */
         void redirection( KIO::Job *job, const KUrl &url );
 
-        /**
-         * Signals a permanent redirection.
-         * The redirection itself is handled internally.
-         * @param job the job that is redirected
-         * @param fromUrl the original URL
-         * @param toUrl the new URL
-         */
-        void permanentRedirection( KIO::Job *job, const KUrl &fromUrl, const KUrl &toUrl );
-
     protected Q_SLOTS:
         virtual void slotFinished();
 

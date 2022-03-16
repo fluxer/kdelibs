@@ -658,9 +658,6 @@ void MkdirJob::slotFinished()
     if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() )
     {
         //kDebug(7007) << "MkdirJob: Redirection to " << m_redirectionURL;
-        if (queryMetaData("permanent-redirect")=="true")
-            emit permanentRedirection(this, d->m_url, d->m_redirectionURL);
-
         if ( d->m_redirectionHandlingEnabled )
         {
             KUrl dummyUrl;
@@ -877,9 +874,6 @@ void StatJob::slotFinished()
     if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() )
     {
         //kDebug(7007) << "StatJob: Redirection to " << m_redirectionURL;
-        if (queryMetaData("permanent-redirect")=="true")
-            emit permanentRedirection(this, d->m_url, d->m_redirectionURL);
-
         if ( d->m_redirectionHandlingEnabled )
         {
             d->m_packedArgs.truncate(0);
@@ -1002,9 +996,6 @@ void TransferJob::slotFinished()
     if (!d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid()) {
 
         //kDebug(7007) << "Redirection to" << m_redirectionURL;
-        if (queryMetaData("permanent-redirect")=="true")
-            emit permanentRedirection(this, d->m_url, d->m_redirectionURL);
-
         if (d->m_redirectionHandlingEnabled) {
             // Honour the redirection
             // We take the approach of "redirecting this same job"
@@ -1499,9 +1490,6 @@ void MimetypeJob::slotFinished( )
     if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() && !error() )
     {
         //kDebug(7007) << "Redirection to " << m_redirectionURL;
-        if (queryMetaData("permanent-redirect")=="true")
-            emit permanentRedirection(this, d->m_url, d->m_redirectionURL);
-
         if (d->m_redirectionHandlingEnabled)
         {
             d->staticData.truncate(0);
@@ -2357,9 +2345,6 @@ void ListJob::slotFinished()
     if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() && !error() ) {
 
         //kDebug(7007) << "Redirection to " << d->m_redirectionURL;
-        if (queryMetaData("permanent-redirect")=="true")
-            emit permanentRedirection(this, d->m_url, d->m_redirectionURL);
-
         if ( d->m_redirectionHandlingEnabled ) {
             d->m_packedArgs.truncate(0);
             QDataStream stream( &d->m_packedArgs, QIODevice::WriteOnly );

@@ -502,15 +502,6 @@ namespace KIO {
          */
         void redirection( KIO::Job *job, const KUrl &url );
 
-        /**
-         * Signals a permanent redirection.
-         * The redirection itself is handled internally.
-         * @param job the job that is redirected
-         * @param fromUrl the original URL
-         * @param toUrl the new URL
-         */
-        void permanentRedirection( KIO::Job *job, const KUrl &fromUrl, const KUrl &toUrl );
-
     protected Q_SLOTS:
         virtual void slotFinished();
         virtual void slotMetaData( const KIO::MetaData &_metaData);
@@ -626,15 +617,6 @@ namespace KIO {
          * @param url the new URL
          */
         void redirection( KIO::Job *job, const KUrl &url );
-
-        /**
-         * Signals a permanent redirection.
-         * The redirection itself is handled internally.
-         * @param job the job that emitted this signal
-         * @param fromUrl the original URL
-         * @param toUrl the new URL
-         */
-        void permanentRedirection( KIO::Job *job, const KUrl &fromUrl, const KUrl &toUrl );
 
         /**
          * Mimetype determined.
@@ -936,15 +918,6 @@ namespace KIO {
          * @param url the new url
          */
         void redirection( KIO::Job *job, const KUrl &url );
-
-        /**
-         * Signals a permanent redirection.
-         * The redirection itself is handled internally.
-         * @param job the job that emitted this signal
-         * @param fromUrl the original URL
-         * @param toUrl the new URL
-         */
-        void permanentRedirection( KIO::Job *job, const KUrl &fromUrl, const KUrl &toUrl );
 
     protected Q_SLOTS:
         virtual void slotFinished( );
