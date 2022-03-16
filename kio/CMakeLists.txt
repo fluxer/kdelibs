@@ -72,7 +72,6 @@ set(kiocore_STAT_SRCS
     kio/kprotocolmanager.cpp
     kio/kremoteencoding.cpp
     kio/krun.cpp
-    kio/kscan.cpp
     kio/kshellcompletion.cpp
     kio/kurifilter.cpp
     kio/kurlcompletion.cpp
@@ -206,7 +205,6 @@ install(
     application.desktop
     kcmodule.desktop
     kcmoduleinit.desktop
-    kscan.desktop
     kurifilterplugin.desktop
     kfile/kpropertiesdialogplugin.desktop
     kio/kfileitemactionplugin.desktop
@@ -275,7 +273,6 @@ install(
     kio/krun.h
     kio/ksambashare.h
     kio/ksambasharedata.h
-    kio/kscan.h
     kio/kshellcompletion.h
     kio/kurifilter.h
     kio/kurlcompletion.h

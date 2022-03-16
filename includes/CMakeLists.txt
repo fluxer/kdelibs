@@ -218,7 +218,6 @@ install(
     KNotificationRestrictions
     KNotifyConfigWidget
     KNumInput
-    KOCRDialog
     KOpenWithDialog
     KOperaBookmarkExporterImpl
     KOperaBookmarkImporter
@@ -270,7 +269,6 @@ install(
     KSambaShare
     KSambaShareData
     KSaveFile
-    KScanDialog
     KSelectAction
     KSelectionOwner
     KSelectionWatcher

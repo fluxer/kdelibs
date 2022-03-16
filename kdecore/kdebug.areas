@@ -49,7 +49,6 @@
 921        Solid Networking
 930        KUnitConversion
 940        KMediaPlayer
-950        ThreadWeaver
 
 1000        kparts
 
@@ -89,7 +88,6 @@
 1903        kfind (KfindTabDialog::createQuery)
 2000        kfind
 2001        kregexpeditor
-2002        kfloppy
 2100        kgpg
 
 # kdeaccessibility
@@ -150,7 +148,6 @@
 7022        kurifilter
 7023        kurifilter (plugins)
 7024        kio (UIServer)
-7025        kpac
 7027        kio (TCPSlaveBase)
 7028        kio (Observer)
 7029        kssl
@@ -158,7 +155,6 @@
 7031        KImageIO
 7032        kio (KUrlCompletion)
 7033        KFileMetaInfo
-7034        KFileMetainfo (plugins)
 7040        KZip
 7041        KTar
 7042        KAr
@@ -179,19 +175,6 @@
 7121        kio_nfs
 7131        kio_xz
 
-# kdesdk
-8100        kompare
-8101        kompare (libs)
-8102        kompare (shell)
-8103        kompare (part)
-8104        kompare (list view)
-8105        kompare (nav view)
-8106        kompare (connect widget)
-8110        lokalize
-8111        lokalize (TM)
-8112        lokalize (Gettext)
-8113        lokalize (XLIFF)
-
 # KatePart/Kate/KWrite
 13000   Kate
 13001   Kate (App)
@@ -209,14 +192,8 @@
 #kfilereplace
 23000        KFileReplace (kfilereplacepart)
 
-# libkscan / kooka
-29000   libkscan
-
 # KEXIV2 - KDE C++ wrapper for LibExiv2
 51003   KEXIV2
-
-# KSANE - KDE C++ wrapper for LibSane
-51004   KSANE
 
 # kdemultimedia
 67100   kmix

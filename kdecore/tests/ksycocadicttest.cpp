@@ -56,7 +56,6 @@ void KSycocaDictTest::testStandardDict()
     QStringList mimeTypes;
     mimeTypes << "KUriFilter/Plugin"
               << "KCModule"
-              << "KScan/KScanDialog"
               << "Plasma/Applet"
               << "Plasma/Runner";
     {
@@ -73,9 +72,9 @@ void KSycocaDictTest::testStandardDict()
 
     QDataStream stream(buffer);
     KSycocaDict loadingDict(&stream, 0);
-    int offset = loadingDict.find_string("KScan/KScanDialog");
+    int offset = loadingDict.find_string("Plasma/Applet);
     QVERIFY(offset > 0);
-    QCOMPARE(offset, KServiceType::serviceType("KScan/KScanDialog")->offset());
+    QCOMPARE(offset, KServiceType::serviceType("Plasma/Applet")->offset());
     foreach(const QString& str, mimeTypes) {
         int offset = loadingDict.find_string(str);
         QVERIFY(offset > 0);
