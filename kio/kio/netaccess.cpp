@@ -76,9 +76,9 @@ using namespace KIO;
 /**
  * List of temporary files
  */
-static QStringList* tmpfiles;
+static QStringList tmpfiles;
 
-static QString* lastErrorMsg = 0;
+static QString lastErrorMsg;
 static int lastErrorCode = 0;
 
 NetAccess::NetAccess() :
@@ -99,9 +99,7 @@ bool NetAccess::download(const KUrl& u, QString & target, QWidget* window)
     bool accessible = KStandardDirs::checkAccess(target, R_OK);
     if(!accessible)
     {
-        if(!lastErrorMsg)
-            lastErrorMsg = new QString;
-        *lastErrorMsg = i18n("File '%1' is not readable", target);
+        lastErrorMsg = i18n("File '%1' is not readable", target);
         lastErrorCode = ERR_COULD_NOT_READ;
     }
     return accessible;
@@ -113,9 +111,7 @@ bool NetAccess::download(const KUrl& u, QString & target, QWidget* window)
       tmpFile.setAutoRemove(false);
       tmpFile.open();
       target = tmpFile.fileName();
-      if (!tmpfiles)
-          tmpfiles = new QStringList;
-      tmpfiles->append(target);
+      tmpfiles.append(target);
   }
 
   NetAccess kioNet;
@@ -258,7 +254,7 @@ QString NetAccess::mimetype( const KUrl& url, QWidget* window )
 
 QString NetAccess::lastErrorString()
 {
-    return lastErrorMsg ? *lastErrorMsg : QString();
+    return lastErrorMsg;
 }
 
 int NetAccess::lastError()
@@ -268,12 +264,10 @@ int NetAccess::lastError()
 
 void NetAccess::removeTempFile(const QString& name)
 {
-  if (!tmpfiles)
-    return;
-  if (tmpfiles->contains(name))
+  if (tmpfiles.contains(name))
   {
     unlink(QFile::encodeName(name));
-    tmpfiles->removeAll(name);
+    tmpfiles.removeAll(name);
   }
 }
 
@@ -427,9 +421,7 @@ void NetAccess::slotResult( KJob * job )
   d->bJobOK = !job->error();
   if ( !d->bJobOK )
   {
-    if ( !lastErrorMsg )
-      lastErrorMsg = new QString;
-    *lastErrorMsg = job->errorString();
+    lastErrorMsg = job->errorString();
   }
   KIO::StatJob* statJob = qobject_cast<KIO::StatJob *>( job );
   if ( statJob )
