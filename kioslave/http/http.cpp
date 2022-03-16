@@ -223,6 +223,14 @@ void HttpProtocol::get(const KUrl &url)
         kWarning(7103) << curl_easy_strerror(curlresult);
     }
 
+    if (hasMetaData(QLatin1String("referrer"))) {
+        const QString referrerbytes = metaData("referrer").toAscii();
+        curlresult = curl_easy_setopt(m_curl, CURLOPT_REFERER, referrerbytes.constData());
+        if (curlresult != CURLE_OK) {
+            kWarning(7103) << curl_easy_strerror(curlresult);
+        }
+    }
+
     struct curl_slist *curllist = NULL;
     if (hasMetaData(QLatin1String("Languages"))) {
         curllist = curl_slist_append(curllist, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
@@ -230,10 +238,6 @@ void HttpProtocol::get(const KUrl &url)
 
     if (hasMetaData(QLatin1String("Charsets"))) {
         curllist = curl_slist_append(curllist, QByteArray("Accept-Charset: ") + metaData("Charsets").toAscii());
-    }
-
-    if (hasMetaData(QLatin1String("referrer"))) {
-        curllist = curl_slist_append(curllist, QByteArray("Referrer: ") + metaData("referrer").toAscii());
     }
 
     if (hasMetaData(QLatin1String("accept"))) {
