@@ -587,20 +587,37 @@ int KFileMetaInfoPrivate::metadata(void *cls,
 void KFileMetaInfoPrivate::init(const QByteArray &filepath, const KUrl& url, KFileMetaInfo::WhatFlags w)
 {
     m_url = url;
+
     struct EXTRACTOR_PluginList *extractorplugins = EXTRACTOR_plugin_add_defaults(EXTRACTOR_OPTION_DEFAULT_POLICY);
-    // not interested in the metadata provided by these plugins
-    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "archive");
-    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "zip");
-    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "deb");
-    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "rpm");
-    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "thumbnailgtk");
-    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "previewopus");
-    extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "thumbnailffmpeg");
-    if ((w & KFileMetaInfo::ContentInfo) == 0) {
-        extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "pdf");
-        extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "ole2");
-        extractorplugins = EXTRACTOR_plugin_remove(extractorplugins, "html");
+    // since EXTRACTOR_plugin_remove() does not really work explicitly enable most plugins
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "av", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "exiv2", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "flac", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "gif", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "gstreamer", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "jpeg", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "midi", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "mpeg", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "ogg", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "tiff", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "it", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "nsf", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "nsfe", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "png", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "riff", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "s3m", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "sid", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "wav", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "xm", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+    if ((w & KFileMetaInfo::ContentInfo) != 0) {
+        extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "pdf", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+        extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "ole2", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+        extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "html", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+        extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "dvi", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+        extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "man", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
+        extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "ps", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
     }
+
     EXTRACTOR_extract(
         extractorplugins,
         filepath.constData(),
