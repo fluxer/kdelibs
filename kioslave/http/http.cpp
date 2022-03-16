@@ -182,6 +182,13 @@ void HttpProtocol::get(const KUrl &url)
         return;
     }
 
+    curlresult = curl_easy_setopt(m_curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
+    if (curlresult != CURLE_OK) {
+        kWarning(7103) << curl_easy_strerror(curlresult);
+        error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
+        return;
+    }
+
     kDebug(7103) << "Metadata" << allMetaData();
 
     if (hasMetaData(QLatin1String("UserAgent"))) {
