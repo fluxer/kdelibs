@@ -588,7 +588,7 @@ void KFileMetaInfoPrivate::init(const QByteArray &filepath, const KUrl& url, KFi
 {
     m_url = url;
 
-    struct EXTRACTOR_PluginList *extractorplugins = EXTRACTOR_plugin_add_defaults(EXTRACTOR_OPTION_DEFAULT_POLICY);
+    struct EXTRACTOR_PluginList *extractorplugins = NULL;
     // since EXTRACTOR_plugin_remove() does not really work explicitly enable most plugins
     extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "av", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
     extractorplugins = EXTRACTOR_plugin_add(extractorplugins, "exiv2", NULL, EXTRACTOR_OPTION_DEFAULT_POLICY);
