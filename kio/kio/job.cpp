@@ -929,16 +929,6 @@ StatJob *KIO::stat(const KUrl& url, KIO::StatJob::StatSide side, short int detai
     return job;
 }
 
-SimpleJob *KIO::http_update_cache( const KUrl& url, bool no_cache, time_t expireDate)
-{
-    Q_ASSERT(url.protocol() == "http" || url.protocol() == "https");
-    // Send http update_cache command (2)
-    KIO_ARGS << (int)2 << url << no_cache << qlonglong(expireDate);
-    SimpleJob * job = SimpleJobPrivate::newJob(url, CMD_SPECIAL, packedArgs);
-    Scheduler::setJobPriority(job, 1);
-    return job;
-}
-
 //////////
 
 TransferJob::TransferJob(TransferJobPrivate &dd)

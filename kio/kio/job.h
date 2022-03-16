@@ -151,17 +151,6 @@ namespace KIO {
     KIO_EXPORT SimpleJob *unmount( const QString & point, JobFlags flags = DefaultFlags );
 
     /**
-     * HTTP cache update
-     *
-     * @param url Url to update, protocol must be "http".
-     * @param no_cache If true, cache entry for @p url is deleted.
-     * @param expireDate Local machine time indicating when the entry is
-     * supposed to expire.
-     * @return the job handling the operation.
-     */
-    KIO_EXPORT SimpleJob *http_update_cache( const KUrl& url, bool no_cache, time_t expireDate);
-
-    /**
      * Find all details for one file or directory.
      *
      * @param url the URL of the file
