@@ -45,7 +45,6 @@
 #include <kconfiggroup.h>
 #include <kprotocolinfo.h>
 
-#include "kio/netaccess.h"
 #include "jobuidelegate.h"
 #include "job_p.h"
 
@@ -508,8 +507,7 @@ bool PreviewJobPrivate::statResultThumbnail()
     // NOTE: make sure the algorithm and name match those used in kde-workspace/kioslave/thumbnail/thumbnail.cpp
     const QByteArray hash = QFile::encodeName( origName ).toHex();
     KIO::UDSEntry thumbEntry;
-    KIO::NetAccess::stat(currentItem.item.mostLocalUrl(), thumbEntry, nullptr);
-    const QString modTime = QString::number(thumbEntry.numberValue(KIO::UDSEntry::UDS_MODIFICATION_TIME));
+    const QString modTime = QString::number(QFileInfo(origName).lastModified().toTime_t());
     thumbName = hash + modTime + thumbExt;
 
     QImage thumb;
