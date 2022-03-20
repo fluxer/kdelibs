@@ -47,6 +47,7 @@ public:
     void init(const QByteArray &filepath, const KUrl& url, KFileMetaInfo::WhatFlags w);
     void operator=(const KFileMetaInfoPrivate& kfmip) {
         items = kfmip.items;
+        m_url = kfmip.m_url;
     }
 
     static QString string(enum EXTRACTOR_MetaFormat format,
