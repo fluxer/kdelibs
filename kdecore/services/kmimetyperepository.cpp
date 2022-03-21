@@ -482,7 +482,7 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
         return rules;
     }
     QList<KMimeMagicMatch> matches; // toplevel matches (indent==0)
-    int priority = 0; // to avoid warning
+    int priority = 50;
     QString mimeTypeName;
 
     static const int sharedmimeinfover = mimeDataBaseVersion();
