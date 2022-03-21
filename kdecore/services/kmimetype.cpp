@@ -181,10 +181,10 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
     }
 
     // Try the magic matches (if we can read the data)
-    QByteArray beginning;
     if ( device ) {
+        QByteArray cache;
         int magicAccuracy;
-        KMimeType::Ptr mime = KMimeTypeRepository::self()->findFromContent(device, &magicAccuracy, beginning);
+        KMimeType::Ptr mime = KMimeTypeRepository::self()->findFromContent(device, &magicAccuracy, cache);
         // mime can't be 0, except in case of install problems.
         // However we get magicAccuracy==0 for octet-stream, i.e. no magic match found.
         //kDebug(servicesDebugArea()) << "findFromContent said" << (mime?mime->name():QString()) << "with accuracy" << magicAccuracy;
