@@ -170,6 +170,16 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
 
     QStringList mimeList;
 
+    // Try to find out by looking at the filename (if there's one)
+    const QString fileName( _url.fileName() );
+    if ( !fileName.isEmpty() && !path.endsWith( QLatin1Char('/') ) ) {
+        // and if we can trust it (e.g. don't trust *.pl over HTTP, could be anything)
+        if ( is_local_file || _url.hasSubUrl() || // Explicitly trust suburls
+             KProtocolInfo::determineMimetypeFromExtension( _url.protocol() ) ) {
+            mimeList = KMimeTypeRepository::self()->findFromFileName( fileName );
+        }
+    }
+
     // Try the magic matches (if we can read the data)
     QByteArray beginning;
     if ( device ) {
@@ -203,28 +213,20 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
         }
     }
 
-    // Not a local file, or no magic allowed, or magic found nothing.
-    // Try to find out by looking at the filename (if there's one)
-    const QString fileName( _url.fileName() );
-    if ( !fileName.isEmpty() && !path.endsWith( QLatin1Char('/') ) ) {
-        // and if we can trust it (e.g. don't trust *.pl over HTTP, could be anything)
-        if ( is_local_file || _url.hasSubUrl() || // Explicitly trust suburls
-             KProtocolInfo::determineMimetypeFromExtension( _url.protocol() ) ) {
-            mimeList = KMimeTypeRepository::self()->findFromFileName( fileName );
-            // Found one glob match exactly: OK, use that.
-            // We disambiguate multiple glob matches by sniffing, below.
-            if ( mimeList.count() == 1 ) {
-                const QString selectedMime = mimeList.at(0);
-                KMimeType::Ptr mime = mimeType(selectedMime);
-                if (!mime) {
-                    // #265188 - this can happen when an old globs file is lying around after
-                    // the packages xml file was removed.
-                    kWarning() << "Glob file refers to" << selectedMime << "but this mimetype does not exist!";
-                    mimeList.clear();
-                } else {
-                    return mime;
-                }
-            }
+    // Found one glob match exactly: OK, use that.
+    // We disambiguate multiple glob matches by sniffing, below.
+    if ( mimeList.count() == 1 ) {
+        if (accuracy)
+            *accuracy = 50;
+        const QString selectedMime = mimeList.at(0);
+        KMimeType::Ptr mime = mimeType(selectedMime);
+        if (!mime) {
+            // #265188 - this can happen when an old globs file is lying around after
+            // the packages xml file was removed.
+            kWarning() << "Glob file refers to" << selectedMime << "but this mimetype does not exist!";
+            mimeList.clear();
+        } else {
+            return mime;
         }
     }
 
