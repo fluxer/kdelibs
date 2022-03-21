@@ -1418,7 +1418,7 @@ KMimeType::Ptr KFileItem::mimeTypePtr() const
                                                d->m_delayedMimeTypes, &accuracy );
         // If we used the "fast mode" (no sniffing), and we didn't get a perfect (extension-based) match,
         // then determineMimeType will be able to do better.
-        const bool canDoBetter = d->m_delayedMimeTypes && accuracy < 100;
+        const bool canDoBetter = (d->m_delayedMimeTypes || accuracy < 100);
         //kDebug() << "finding mimetype for" << url << ":" << d->m_pMimeType->name() << "canDoBetter=" << canDoBetter;
         d->m_bMimeTypeKnown = !canDoBetter;
     }
