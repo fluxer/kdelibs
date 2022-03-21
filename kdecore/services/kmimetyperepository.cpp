@@ -34,6 +34,94 @@
 
 extern int servicesDebugArea();
 
+static int mimeDataBaseVersion()
+{
+    // shared-mime-info installs a "version" file since 0.91
+    const QStringList versionFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("version"));
+    if (!versionFiles.isEmpty()) {
+        QFile file(versionFiles.first()); // Look at the global file, not at a possibly old local one
+        if (file.open(QIODevice::ReadOnly)) {
+            const QByteArray line = file.readLine().simplified();
+            QRegExp versionRe(QString::fromLatin1("(\\d+)\\.(\\d+)(\\.(\\d+))?"));
+            if (versionRe.indexIn(QString::fromLocal8Bit(line)) > -1) {
+                return KDE_MAKE_VERSION(versionRe.cap(1).toInt(), versionRe.cap(2).toInt(), versionRe.cap(4).toInt());
+            }
+        }
+    }
+
+    // TODO: Remove the #idef'ed code below once the issue is fixed
+    // in QProcess or when we require s-m-i >= 0.91
+#ifdef Q_OS_UNIX
+    // Try to read the version number from the shared-mime-info.pc file
+    QStringList paths;
+    const QByteArray pkgConfigPath = qgetenv("PKG_CONFIG_PATH");
+    if (!pkgConfigPath.isEmpty()) {
+        paths << QFile::decodeName(pkgConfigPath).split(QLatin1Char(':'), QString::SkipEmptyParts);
+    }
+
+    // Add platform specific hard-coded default paths to the list...
+    paths << QLatin1String("/share/pkgconfig");
+    paths << QLatin1String("/lib/pkgconfig");
+    paths << QLatin1String("/lib32/pkgconfig");
+    paths << QLatin1String("/lib64/pkgconfig");
+    paths << QLatin1String("/usr/share/pkgconfig");
+    paths << QLatin1String("/usr/lib/pkgconfig");
+    paths << QLatin1String("/usr/lib32/pkgconfig");
+    paths << QLatin1String("/usr/lib64/pkgconfig");
+    paths << QLatin1String(KDEDIR "/share/pkgconfig");
+    paths << QLatin1String(KDEDIR "/lib/pkgconfig");
+    paths << QLatin1String(KDEDIR "/lib32/pkgconfig");
+    paths << QLatin1String(KDEDIR "/lib64/pkgconfig");
+
+    Q_FOREACH(const QString& path, paths) {
+        const QString fileName = path + QLatin1String("/shared-mime-info.pc");
+        if (!QFile::exists(fileName)) {
+            continue;
+        }
+
+        QFile file (fileName);
+        if (!file.open(QIODevice::ReadOnly)) {
+            break;
+        }
+
+        while (!file.atEnd()) {
+            const QByteArray line = file.readLine().simplified();
+            if (!line.startsWith("Version")) { // krazy:exclude=strings
+                continue;
+            }
+            QRegExp versionRe(QString::fromLatin1("Version: (\\d+)\\.(\\d+)(\\.(\\d+))?"));
+            if (versionRe.indexIn(QString::fromLocal8Bit(line)) > -1) {
+                return KDE_MAKE_VERSION(versionRe.cap(1).toInt(), versionRe.cap(2).toInt(), versionRe.cap(4).toInt());
+            }
+        }
+    }
+#endif
+
+    // Execute "update-mime-database -v" to determine version number.
+    // NOTE: On *nix, the code below is known to cause freezes/hangs in apps
+    // that block signals. See https://bugs.kde.org/show_bug.cgi?id=260719.
+    const QString umd = KStandardDirs::findExe(QString::fromLatin1("update-mime-database"));
+    if (umd.isEmpty()) {
+        kWarning(servicesDebugArea()) << "update-mime-database not found!";
+        return -1;
+    }
+
+    QProcess smi;
+    smi.start(umd, QStringList() << QString::fromLatin1("-v"));
+    if (smi.waitForStarted() && smi.waitForFinished()) {
+        const QString out = QString::fromLocal8Bit(smi.readAllStandardError());
+        QRegExp versionRe(QString::fromLatin1("update-mime-database \\(shared-mime-info\\) (\\d+)\\.(\\d+)(\\.(\\d+))?"));
+        if (versionRe.indexIn(out) > -1) {
+            return KDE_MAKE_VERSION(versionRe.cap(1).toInt(), versionRe.cap(2).toInt(), versionRe.cap(4).toInt());
+        }
+        kWarning(servicesDebugArea()) << "Unexpected version scheme from update-mime-database -v: got" << out;
+    } else {
+        kWarning(servicesDebugArea()) << "Error running update-mime-database -v";
+    }
+
+    return -1;
+}
+
 KMimeTypeRepository * KMimeTypeRepository::self()
 {
     K_GLOBAL_STATIC(KMimeTypeRepository, s_self)
@@ -397,6 +485,9 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
     int priority = 0; // to avoid warning
     QString mimeTypeName;
 
+    static const int sharedmimeinfover = mimeDataBaseVersion();
+    static const int sharedmimeinfo200 = KDE_MAKE_VERSION(2, 0, 0);
+
     Q_FOREVER {
         char ch = '\0';
         bool chOk = file->getChar(&ch);
@@ -404,7 +495,13 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
         if (!chOk || ch == '[') {
             // Finish previous section
             if (!mimeTypeName.isEmpty()) {
-                rules.append(KMimeMagicRule(mimeTypeName, priority, matches));
+                // workaround for:
+                // https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/144
+                if (sharedmimeinfover <= sharedmimeinfo200 && mimeTypeName == QLatin1String("audio/x-mod")) {
+                    kDebug(servicesDebugArea()) << "Ignoring audio/x-mod magic rules";
+                } else {
+                    rules.append(KMimeMagicRule(mimeTypeName, priority, matches));
+                }
                 matches.clear();
                 mimeTypeName.clear();
             }
@@ -688,94 +785,6 @@ bool KMimeTypeRepository::useFavIcons()
         m_useFavIcons = cg.readEntry("EnableFavicon", true);
     }
     return m_useFavIcons;
-}
-
-static int mimeDataBaseVersion()
-{
-    // shared-mime-info installs a "version" file since 0.91
-    const QStringList versionFiles = KGlobal::dirs()->findAllResources("xdgdata-mime", QLatin1String("version"));
-    if (!versionFiles.isEmpty()) {
-        QFile file(versionFiles.first()); // Look at the global file, not at a possibly old local one
-        if (file.open(QIODevice::ReadOnly)) {
-            const QByteArray line = file.readLine().simplified();
-            QRegExp versionRe(QString::fromLatin1("(\\d+)\\.(\\d+)(\\.(\\d+))?"));
-            if (versionRe.indexIn(QString::fromLocal8Bit(line)) > -1) {
-                return KDE_MAKE_VERSION(versionRe.cap(1).toInt(), versionRe.cap(2).toInt(), versionRe.cap(4).toInt());
-            }
-        }
-    }
-
-    // TODO: Remove the #idef'ed code below once the issue is fixed
-    // in QProcess or when we require s-m-i >= 0.91
-#ifdef Q_OS_UNIX
-    // Try to read the version number from the shared-mime-info.pc file
-    QStringList paths;
-    const QByteArray pkgConfigPath = qgetenv("PKG_CONFIG_PATH");
-    if (!pkgConfigPath.isEmpty()) {
-        paths << QFile::decodeName(pkgConfigPath).split(QLatin1Char(':'), QString::SkipEmptyParts);
-    }
-
-    // Add platform specific hard-coded default paths to the list...
-    paths << QLatin1String("/share/pkgconfig");
-    paths << QLatin1String("/lib/pkgconfig");
-    paths << QLatin1String("/lib32/pkgconfig");
-    paths << QLatin1String("/lib64/pkgconfig");
-    paths << QLatin1String("/usr/share/pkgconfig");
-    paths << QLatin1String("/usr/lib/pkgconfig");
-    paths << QLatin1String("/usr/lib32/pkgconfig");
-    paths << QLatin1String("/usr/lib64/pkgconfig");
-    paths << QLatin1String(KDEDIR "/share/pkgconfig");
-    paths << QLatin1String(KDEDIR "/lib/pkgconfig");
-    paths << QLatin1String(KDEDIR "/lib32/pkgconfig");
-    paths << QLatin1String(KDEDIR "/lib64/pkgconfig");
-
-    Q_FOREACH(const QString& path, paths) {
-        const QString fileName = path + QLatin1String("/shared-mime-info.pc");
-        if (!QFile::exists(fileName)) {
-            continue;
-        }
-
-        QFile file (fileName);
-        if (!file.open(QIODevice::ReadOnly)) {
-            break;
-        }
-
-        while (!file.atEnd()) {
-            const QByteArray line = file.readLine().simplified();
-            if (!line.startsWith("Version")) { // krazy:exclude=strings
-                continue;
-            }
-            QRegExp versionRe(QString::fromLatin1("Version: (\\d+)\\.(\\d+)(\\.(\\d+))?"));
-            if (versionRe.indexIn(QString::fromLocal8Bit(line)) > -1) {
-                return KDE_MAKE_VERSION(versionRe.cap(1).toInt(), versionRe.cap(2).toInt(), versionRe.cap(4).toInt());
-            }
-        }
-    }
-#endif
-
-    // Execute "update-mime-database -v" to determine version number.
-    // NOTE: On *nix, the code below is known to cause freezes/hangs in apps
-    // that block signals. See https://bugs.kde.org/show_bug.cgi?id=260719.
-    const QString umd = KStandardDirs::findExe(QString::fromLatin1("update-mime-database"));
-    if (umd.isEmpty()) {
-        kWarning(servicesDebugArea()) << "update-mime-database not found!";
-        return -1;
-    }
-
-    QProcess smi;
-    smi.start(umd, QStringList() << QString::fromLatin1("-v"));
-    if (smi.waitForStarted() && smi.waitForFinished()) {
-        const QString out = QString::fromLocal8Bit(smi.readAllStandardError());
-        QRegExp versionRe(QString::fromLatin1("update-mime-database \\(shared-mime-info\\) (\\d+)\\.(\\d+)(\\.(\\d+))?"));
-        if (versionRe.indexIn(out) > -1) {
-            return KDE_MAKE_VERSION(versionRe.cap(1).toInt(), versionRe.cap(2).toInt(), versionRe.cap(4).toInt());
-        }
-        kWarning(servicesDebugArea()) << "Unexpected version scheme from update-mime-database -v: got" << out;
-    } else {
-        kWarning(servicesDebugArea()) << "Error running update-mime-database -v";
-    }
-
-    return -1;
 }
 
 int KMimeTypeRepository::sharedMimeInfoVersion()
