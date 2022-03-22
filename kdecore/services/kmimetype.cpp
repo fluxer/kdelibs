@@ -180,6 +180,23 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
         }
     }
 
+    // Found one glob match exactly: OK, use that like the reference xdgmime
+    // implementation.
+    if ( mimeList.count() == 1 ) {
+        if (accuracy)
+            *accuracy = 50;
+        const QString selectedMime = mimeList.at(0);
+        KMimeType::Ptr mime = mimeType(selectedMime);
+        if (!mime) {
+            // #265188 - this can happen when an old globs file is lying around after
+            // the packages xml file was removed.
+            kWarning() << "Glob file refers to" << selectedMime << "but this mimetype does not exist!";
+            mimeList.clear();
+        } else {
+            return mime;
+        }
+    }
+
     // Try the magic matches (if we can read the data)
     if ( device ) {
         QByteArray cache;
@@ -210,39 +227,6 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
             if (accuracy)
                 *accuracy = magicAccuracy;
             return mime;
-        }
-    }
-
-    // Found one glob match exactly: OK, use that.
-    // We disambiguate multiple glob matches by sniffing, below.
-    if ( mimeList.count() == 1 ) {
-        if (accuracy)
-            *accuracy = 50;
-        const QString selectedMime = mimeList.at(0);
-        KMimeType::Ptr mime = mimeType(selectedMime);
-        if (!mime) {
-            // #265188 - this can happen when an old globs file is lying around after
-            // the packages xml file was removed.
-            kWarning() << "Glob file refers to" << selectedMime << "but this mimetype does not exist!";
-            mimeList.clear();
-        } else {
-            return mime;
-        }
-    }
-
-    // Maybe we had multiple matches from globs?
-    if (!mimeList.isEmpty()) {
-        if (accuracy)
-            *accuracy = 20;
-        // We have to pick one...
-        // At least make this deterministic
-        qSort(mimeList.begin(), mimeList.end());
-        Q_FOREACH(const QString& mimeName, mimeList) {
-            KMimeType::Ptr mime = mimeType(mimeName);
-            if (!mime)
-                kWarning() << "Glob file refers to" << mimeName << "but this mimetype does not exist!";
-            else
-                return mime;
         }
     }
 

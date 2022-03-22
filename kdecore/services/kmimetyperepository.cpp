@@ -289,24 +289,27 @@ QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QStri
     findFromOtherPatternList(matchingMimeTypes, fileName, foundExt, true);
     if (matchingMimeTypes.isEmpty()) {
 
-        // Now use the "fast patterns" dict, for simple *.foo patterns with weight 50
-        // (which is most of them, so this optimization is definitely worth it)
-        const int lastDot = fileName.lastIndexOf(QLatin1Char('.'));
-        if (lastDot != -1) { // if no '.', skip the extension lookup
-            const int ext_len = fileName.length() - lastDot - 1;
-            const QString simpleExtension = fileName.right( ext_len ).toLower();
-            // (toLower because fast matterns are always case-insensitive and saved as lowercase)
-
-            matchingMimeTypes = m_globs.m_fastPatterns.value(simpleExtension);
-            if (!matchingMimeTypes.isEmpty()) {
-                foundExt = simpleExtension;
-                // Can't return yet; *.tar.bz2 has to win over *.bz2, so we need the low-weight mimetypes anyway,
-                // at least those with weight 50.
-            }
-        }
-
-        // Finally, try the low weight matches (<=50)
+        // Try the low weight matches (<=50)
         findFromOtherPatternList(matchingMimeTypes, fileName, foundExt, false);
+
+        if (matchingMimeTypes.isEmpty()) {
+            // Now use the "fast patterns" dict, for simple *.foo patterns with weight 50
+            // (which is most of them, so this optimization is definitely worth it)
+            const int lastDot = fileName.lastIndexOf(QLatin1Char('.'));
+            if (lastDot != -1) { // if no '.', skip the extension lookup
+                const int ext_len = fileName.length() - lastDot - 1;
+                const QString simpleExtension = fileName.right( ext_len ).toLower();
+                // (toLower because fast matterns are always case-insensitive and saved as lowercase)
+
+                matchingMimeTypes = m_globs.m_fastPatterns.value(simpleExtension);
+                if (!matchingMimeTypes.isEmpty()) {
+                    foundExt = simpleExtension;
+                    // Can't return yet; *.tar.bz2 has to win over *.bz2, so we need the low-weight mimetypes anyway,
+                    // at least those with weight 50.
+                }
+            }
+            findFromOtherPatternList(matchingMimeTypes, fileName, foundExt, false);
+        }
     }
     if (pMatchingExtension)
         *pMatchingExtension = foundExt;
