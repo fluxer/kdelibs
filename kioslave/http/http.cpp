@@ -238,10 +238,20 @@ void HttpProtocol::get(const KUrl &url)
     }
 
     if (hasMetaData(QLatin1String("referrer"))) {
-        const QString referrerbytes = metaData("referrer").toAscii();
+        const QByteArray referrerbytes = metaData("referrer").toAscii();
         curlresult = curl_easy_setopt(m_curl, CURLOPT_REFERER, referrerbytes.constData());
         if (curlresult != CURLE_OK) {
             kWarning(7103) << curl_easy_strerror(curlresult);
+        }
+    }
+
+    if (hasMetaData(QLatin1String("resume"))) {
+        const qlonglong resumeoffset = metaData(QLatin1String("resume")).toLongLong();
+        curlresult = curl_easy_setopt(m_curl, CURLOPT_RESUME_FROM_LARGE, resumeoffset);
+        if (curlresult != CURLE_OK) {
+            kWarning(7103) << curl_easy_strerror(curlresult);
+        } else {
+            canResume();
         }
     }
 
