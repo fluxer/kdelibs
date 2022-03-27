@@ -295,6 +295,13 @@ void HttpProtocol::get(const KUrl &url)
     setMetaData(QString::fromLatin1("modified"), httpheader.get(QLatin1String("Last-Modified")));
 
     curl_slist_free_all(curllist);
+
+    if (httpheader.status() >= 400) {
+        kDebug(7103) << "HTTP error" << httpheader.status() << httpheader.errorString();
+        error(KIO::ERR_NO_CONTENT, httpheader.errorString());
+        return;
+    }
+
     finished();
 }
 
