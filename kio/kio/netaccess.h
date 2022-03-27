@@ -395,7 +395,6 @@ private:
 
     bool delInternal(const KUrl & url, QWidget* window = 0);
     bool mkdirInternal(const KUrl & url, int permissions, QWidget* window = 0);
-    QString fish_executeInternal(const KUrl & url, const QString &command, QWidget* window = 0);
     bool synchronousRunInternal( Job* job, QWidget* window, QByteArray* data,
                                  KUrl* finalURL, QMap<QString,QString>* metaData );
 
