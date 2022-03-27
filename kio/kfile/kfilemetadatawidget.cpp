@@ -270,33 +270,7 @@ QSize KFileMetaDataWidget::sizeHint() const
         return QWidget::sizeHint();
     }
 
-    // Calculate the required width for the labels and values
-    int leftWidthMax = 0;
-    int rightWidthMax = 0;
-    foreach (const Private::Row& row, d->m_rows) {
-        const int rightWidth = row.value->sizeHint().width();
-        if (rightWidth > rightWidthMax) {
-            rightWidthMax = rightWidth;
-        }
-
-        const int leftWidth = row.label->sizeHint().width();
-        if (leftWidth > leftWidthMax) {
-            leftWidthMax = leftWidth;
-        }
-    }
-
-    // Based on the available width calculate the required height
-    int height = d->m_gridLayout->margin() * 2 + d->m_gridLayout->spacing() * (d->m_rows.count() - 1);
-    foreach (const Private::Row& row, d->m_rows) {
-        const int rowHeight = qMax(row.label->heightForWidth(leftWidthMax),
-                                   row.value->heightForWidth(rightWidthMax));
-        height += rowHeight;
-    }
-
-    const int width = d->m_gridLayout->margin() * 2 + leftWidthMax +
-                      d->m_gridLayout->spacing() + rightWidthMax;
-
-    return QSize(width, height);
+    return d->m_gridLayout->sizeHint();
 }
 
 #include "moc_kfilemetadatawidget.cpp"
