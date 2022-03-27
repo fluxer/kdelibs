@@ -44,27 +44,6 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
         return;
     }
 
-    QList<KUrl> urls;
-    foreach (const KFileItem& item, items) {
-        const KUrl url = item.url();
-        if (url.isValid()) {
-            urls.append(url);
-        }
-    }
-#warning TODO: implement multi-URL metadata
-    if (urls.count() > 1) {
-        kWarning() << "multile URLs metadata is not supported";
-    }
-
-    if (urls.count() > 0) {
-        const KFileMetaInfo metaInfo(urls.first(), KFileMetaInfo::TechnicalInfo);
-        foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
-            const QString uriString = metaInfoItem.key();
-            const QString value = metaInfoItem.value();
-            m_data.insert(uriString, value);
-        }
-    }
-
     if (m_fileItems.count() == 1) {
         // TODO: Handle case if remote URLs are used properly. isDir() does
         // not work, the modification date needs also to be adjusted...
@@ -79,6 +58,11 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
                 m_data.insert(KUrl("kfileitem#size"), itemCountString);
             }
         } else {
+            const KFileMetaInfo metaInfo(item.url(), KFileMetaInfo::TechnicalInfo);
+            foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
+                m_data.insert(metaInfoItem.key(), metaInfoItem.value());
+            }
+
             m_data.insert(KUrl("kfileitem#size"), KIO::convertSize(item.size()));
         }
         m_data.insert(KUrl("kfileitem#type"), item.mimeComment());
