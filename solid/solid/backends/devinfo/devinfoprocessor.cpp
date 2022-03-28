@@ -55,17 +55,36 @@ bool Processor::canChangeFrequency() const
 
 Solid::Processor::InstructionSets Processor::instructionSets() const
 {
-    // TODO: IntelSse2, IntelSse3, IntelSse4, Amd3DNow, AltiVec
+    // TODO: Amd3DNow, AltiVec
 
     Solid::Processor::InstructionSets cpuinstructions = Solid::Processor::NoExtensions;
 
-    const qlonglong instructionsse = DevinfoDevice::integerByName("hw.instruction_sse");
-    // qDebug() << Q_FUNC_INFO << instructionsse;
-    if (instructionsse == 1) {
-        // for reference: freebsd-src/sys/amd64/amd64/initcpu.c
+    // for reference:
+    // https://gcc.gnu.org/onlinedocs/gcc/x86-Built-in-Functions.html
+    // https://github.com/llvm-mirror/clang/blob/master/lib/Basic/Targets/X86.cpp#L1333
+#if defined(Q_CC_GNU) || defined(Q_CC_CLANG)
+    __builtin_cpu_init();
+
+    if (__builtin_cpu_supports("mmx")) {
         cpuinstructions |= Solid::Processor::IntelMmx;
+    }
+
+    if (__builtin_cpu_supports("sse")) {
         cpuinstructions |= Solid::Processor::IntelSse;
     }
+
+    if (__builtin_cpu_supports("sse2")) {
+        cpuinstructions |= Solid::Processor::IntelSse2;
+    }
+
+    if (__builtin_cpu_supports("sse3")) {
+        cpuinstructions |= Solid::Processor::IntelSse3;
+    }
+
+    if (__builtin_cpu_supports("sse4.1") || __builtin_cpu_supports("sse4.2")) {
+        cpuinstructions |= Solid::Processor::IntelSse4;
+    }
+#endif // Q_CC_GNU || Q_CC_CLANG
 
     return cpuinstructions;
 }
