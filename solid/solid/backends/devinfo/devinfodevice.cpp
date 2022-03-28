@@ -51,6 +51,7 @@ int getDeviceProperties(struct devinfo_dev *dev, void *arg)
         properties[DevinfoDevice::DeviceDescription] = dev->dd_desc;
         properties[DevinfoDevice::DeviceDriver] = dev->dd_drivername;
         properties[DevinfoDevice::DevicePnPInfo] = dev->dd_pnpinfo;
+        properties[DevinfoDevice::DeviceLocation] = dev->dd_location;
         typedarg->second = properties;
         // device found, abort scan
         return -1;
@@ -130,9 +131,11 @@ QString DevinfoDevice::vendor() const
         return QString();
     }
 
-    // TODO: lookup either PCI or USB table depending on bus type
-    QString result = lookupPCIVendor(pnpvendor.constData() + 2);
-    if (result.isEmpty()) {
+    const QByteArray parent = deviceProperty(DevinfoDevice::DeviceParent);
+    QString result;
+    if (parent.contains("pci")) {
+        result = lookupPCIVendor(pnpvendor.constData() + 2);
+    } else {
         result = lookupUSBVendor(pnpvendor.constData() + 2);
     }
 
@@ -159,9 +162,11 @@ QString DevinfoDevice::product() const
         return QString();
     }
 
-    // TODO: lookup either PCI or USB table depending on bus type
-    QString result = lookupPCIDevice(pnpvendor.constData() + 2, pnpdevice.constData() + 2);
-    if (result.isEmpty()) {
+    const QByteArray parent = deviceProperty(DevinfoDevice::DeviceParent);
+    QString result;
+    if (parent.contains("pci")) {
+        result = lookupPCIDevice(pnpvendor.constData() + 2, pnpdevice.constData() + 2);
+    } else {
         result = lookupUSBDevice(pnpvendor.constData() + 2, pnpdevice.constData() + 2);
     }
 

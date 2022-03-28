@@ -41,7 +41,8 @@ public:
         DeviceName = 1,
         DeviceDescription = 2,
         DeviceDriver = 3,
-        DevicePnPInfo = 4
+        DevicePnPInfo = 4,
+        DeviceLocation = 5
     };
 
     enum PnPInfo {
