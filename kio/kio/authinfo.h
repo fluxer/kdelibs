@@ -346,7 +346,7 @@ public:
    *
    * @param url the url whose login information will be checked
    * @param login the login information will be writte here
-   * @param userealnetrc if true, use $HOME/.netrc fle
+   * @param userealnetrc if true, use $HOME/.netrc file
    * @param type the type of the login. If null, the @p url's protocol
    *        will be taken
    * @param mode the LookUpMode flags (ORed) for the query
