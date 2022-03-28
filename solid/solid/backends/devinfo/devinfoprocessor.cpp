@@ -44,8 +44,19 @@ int Processor::number() const
 
 int Processor::maxSpeed() const
 {
-    // TODO: parse freq_levels instead
-    return m_device->deviceCtl("freq").toInt();
+    int result = 0;
+    const QByteArray freqbytes = m_device->deviceCtl("freq");
+    foreach (const QByteArray &freqpair, freqbytes.split(' ')) {
+        const QList<QByteArray> splitfreqpair = freqpair.split('/');
+        if (splitfreqpair.size() != 2) {
+            continue;
+        }
+        const int freqint = splitfreqpair.at(0).toInt();
+        if (result < freqint) {
+            result = freqint;
+        }
+    }
+    return result;
 }
 
 bool Processor::canChangeFrequency() const
