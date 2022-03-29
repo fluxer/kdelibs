@@ -2,7 +2,7 @@ project(kioslave-http)
 
 include_directories(
     ${KDE4_KIO_INCLUDES}
-    ${CURL_INCLUDES}
+    ${CURL_INCLUDE_DIRS}
 )
 
 ########### next target ###############

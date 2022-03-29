@@ -69,8 +69,8 @@ set_package_properties(ENCHANT PROPERTIES
     PURPOSE "Spell checking support via Enchant"
 )
 
-find_package(Curl)
-set_package_properties(Curl PROPERTIES
+find_package(CURL)
+set_package_properties(CURL PROPERTIES
     DESCRIPTION "Command line tool and library for transferring data with URLs"
     URL "https://curl.se/"
     TYPE REQUIRED

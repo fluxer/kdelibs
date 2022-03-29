@@ -15,7 +15,6 @@ set(cmakeFilesDontInstall
     FindLibCDIO.cmake
     FindLibExtractor.cmake
     FindDevinfo.cmake
-    FindCurl.cmake
 )
 
 # Explicitly list all files which will be installed.
