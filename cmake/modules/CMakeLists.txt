@@ -38,7 +38,6 @@ set(cmakeFiles
     FindGphoto2.cmake
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
-    FindKSane.cmake
     FindLibATASmart.cmake
     FindLibDRM.cmake
     FindLibGcrypt.cmake
@@ -63,7 +62,6 @@ set(cmakeFiles
     FindQalculate.cmake
     FindRAW1394.cmake
     FindSamba.cmake
-    FindSane.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
     FindSpeechd.cmake
