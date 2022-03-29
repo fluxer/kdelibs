@@ -31,17 +31,3 @@ install(
     PROGRAMS ktelnetservice.desktop
     DESTINATION ${KDE4_XDG_APPS_INSTALL_DIR}
 )
-
-########### install files ###############
-
-install(
-    FILES
-    rtsp.protocol
-    mms.protocol
-    mmst.protocol
-    mmsu.protocol
-    pnm.protocol
-    rtspt.protocol
-    rtspu.protocol
-    DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
-)
