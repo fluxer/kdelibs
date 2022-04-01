@@ -50,6 +50,7 @@ set(cmakeFiles
     FindLibSSH.cmake
     FindLibTorrent.cmake
     FindLibVNCServer.cmake
+    FindLightDM.cmake
     FindMPFR.cmake
     FindMtp.cmake
     FindNetworkManager.cmake
