@@ -200,6 +200,7 @@ set(kdeui_LIB_SRCS
     util/kpixmapsequence.cpp
     util/kpixmapsequenceoverlaypainter.cpp
     util/kpixmapsequencewidget.cpp
+    util/kimageio.cpp
     widgets/kactionselector.cpp
     widgets/kanimatedbutton.cpp
     widgets/kdialogbuttonbox.cpp
@@ -550,6 +551,7 @@ install(
     util/kpixmapsequence.h
     util/kpixmapsequenceoverlaypainter.h
     util/kpixmapsequencewidget.h
+    util/kimageio.h
     widgets/kactionselector.h
     widgets/kanimatedbutton.h
     widgets/kdatecombobox.h

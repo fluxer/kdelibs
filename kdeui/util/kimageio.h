@@ -5,12 +5,12 @@
 * This library is distributed under the conditions of the GNU LGPL.
 */
 
-#ifndef KIO_KIMAGEIO_H
-#define KIO_KIMAGEIO_H
+#ifndef KIMAGEIO_H
+#define KIMAGEIO_H
 
 #include <QtCore/QStringList>
 
-#include <kio/kio_export.h>
+#include <kdeui_export.h>
 
 /**
  * Methods to get information about image format names and
@@ -64,7 +64,7 @@ namespace KImageIO
    * @return a space-separated list of file globs that describe the
    * supported formats
    */
-  KIO_EXPORT QString pattern(Mode mode = Reading);
+  KDEUI_EXPORT QString pattern(Mode mode = Reading);
 
   /**
    * Returns the type of a MIME type.
@@ -72,14 +72,14 @@ namespace KImageIO
    * @return type id(s) of the MIME type or QStringList() if the MIME type
    *         is not supported
    */
-  KIO_EXPORT QStringList typeForMime(const QString& mimeType);
+  KDEUI_EXPORT QStringList typeForMime(const QString& mimeType);
   /**
    * Returns a list of all KImageIO supported formats.
    *
    * @param mode Tells whether to retrieve modes that can be read or written.
    * @return a list of the type ids
    */
-  KIO_EXPORT QStringList types(Mode mode = Writing);
+  KDEUI_EXPORT QStringList types(Mode mode = Writing);
                    
   /**
    *  Returns a list of MIME types for all KImageIO supported formats.
@@ -87,7 +87,7 @@ namespace KImageIO
    * @param mode Tells whether to retrieve modes that can be read or written.
    * @return a list if MIME types of the supported formats
    */
-  KIO_EXPORT QStringList mimeTypes(Mode mode = Writing);
+  KDEUI_EXPORT QStringList mimeTypes(Mode mode = Writing);
 
   /**
    * Test to see whether a MIME type is supported to reading/writing.
@@ -95,8 +95,7 @@ namespace KImageIO
    * @param _mode Tells whether to check for reading or writing capabilities
    * @return true if the type is supported
    **/
-  KIO_EXPORT bool isSupported(const QString& mimeType, Mode mode = Writing);
+  KDEUI_EXPORT bool isSupported(const QString& mimeType, Mode mode = Writing);
 }
 
-
-#endif
+#endif // KIMAGEIO_H

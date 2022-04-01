@@ -67,7 +67,6 @@ set(kiocore_STAT_SRCS
     kio/kfileitemdelegate.cpp
     kio/kfilemetainfo.cpp
     kio/kfilemetainfoitem.cpp
-    kio/kimageio.cpp
     kio/kmimetypechooser.cpp
     kio/kprotocolmanager.cpp
     kio/kremoteencoding.cpp
@@ -265,7 +264,6 @@ install(
     kio/kfileitemdelegate.h
     kio/kfilemetainfo.h
     kio/kfilemetainfoitem.h
-    kio/kimageio.h
     kio/kmimetypechooser.h
     kio/knfsshare.h
     kio/kprotocolmanager.h
