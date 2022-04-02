@@ -24,7 +24,6 @@
 #include "private/dialog_p.h"
 
 #include <QPainter>
-#include <QSvgRenderer>
 #include <QtGui/qevent.h>
 #ifdef Q_WS_X11
 #include <QtGui/qx11info_x11.h>
