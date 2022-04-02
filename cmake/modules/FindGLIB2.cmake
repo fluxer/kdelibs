@@ -29,10 +29,15 @@ find_library(GLIB2_LIBRARY
     HINTS ${PC_LibGLIB2_LIBDIR}
 )
 
-set(GLIB2_LIBRARIES ${GLIB2_LIBRARY})
+find_library(GOBJECT2_LIBRARY
+    NAMES gobject-2.0
+    HINTS ${PC_LibGLIB2_LIBDIR}
+)
+
+set(GLIB2_LIBRARIES ${GLIB2_LIBRARY} ${GOBJECT2_LIBRARY})
 
 # search the glibconfig.h include dir under the same root where the library is found
-get_filename_component(glib2LibDir "${GLIB2_LIBRARIES}" PATH)
+get_filename_component(glib2LibDir "${GLIB2_LIBRARY}" PATH)
 
 find_path(GLIB2_INTERNAL_INCLUDE_DIR
     NAMES glibconfig.h
@@ -49,6 +54,8 @@ if(GLIB2_INTERNAL_INCLUDE_DIR)
 endif(GLIB2_INTERNAL_INCLUDE_DIR)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(GLIB2  DEFAULT_MSG  GLIB2_LIBRARIES GLIB2_MAIN_INCLUDE_DIR)
+find_package_handle_standard_args(GLIB2
+    REQUIRED_VARS GLIB2_LIBRARIES GLIB2_LIBRARY GOBJECT2_LIBRARY GLIB2_MAIN_INCLUDE_DIR
+)
 
-mark_as_advanced(GLIB2_INCLUDE_DIR GLIB2_LIBRARIES)
+mark_as_advanced(GLIB2_INCLUDE_DIR GLIB2_LIBRARIES GLIB2_LIBRARY GOBJECT2_LIBRARY)
