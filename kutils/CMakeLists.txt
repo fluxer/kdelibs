@@ -9,6 +9,7 @@ include_directories(
 
 add_subdirectory(kmediaplayer)
 add_subdirectory(kexiv2)
+add_subdirectory(kpasswdstore)
 
 ######## kidletime ####################
 

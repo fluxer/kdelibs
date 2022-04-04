@@ -206,12 +206,20 @@ set_package_properties(LibCDIO PROPERTIES
     TYPE OPTIONAL
 )
 
-find_package(Exiv2 0.21)
+macro_optional_find_package(Exiv2 0.21)
 set_package_properties(Exiv2 PROPERTIES
     DESCRIPTION "Image metadata library and tools"
     URL "http://www.exiv2.org"
     TYPE RECOMMENDED
     PURPOSE "Exiv2 metadata extraction and image rotation based on the data"
+)
+
+macro_optional_find_package(OpenSSL)
+set_package_properties(OpenSSL PROPERTIES
+    DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"
+    URL "https://www.openssl.org/"
+    TYPE RECOMMENDED
+    PURPOSE "Store password securely"
 )
 
 ################# configure checks and create the configured files #################

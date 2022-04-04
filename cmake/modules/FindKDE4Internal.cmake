@@ -59,6 +59,7 @@
 #  KDE4_PLASMA_LIBS           - the plasma library and all depending librairies
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
 #  KDE4_KMEDIAPLAYER_LIBS     - the kmediaplayer library and all depending libraries
+#  KDE4_KPASSWDSTORE_LIBS     - the kpasswdstore library and all depending libraries
 #
 # The variable INSTALL_TARGETS_DEFAULT_ARGS can be used when installing libraries
 # or executables into the default locations.
@@ -288,6 +289,7 @@ set(_kde_libraries
     kdeui
     kdnssd
     kexiv2
+    kpasswdstore
     kfile
     kidletime
     kio

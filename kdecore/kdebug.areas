@@ -189,11 +189,14 @@
 13050   Kate (Scripting)
 13060   Kate (Indentation)
 
-#kfilereplace
+# kfilereplace
 23000        KFileReplace (kfilereplacepart)
 
 # KEXIV2 - KDE C++ wrapper for LibExiv2
 51003   KEXIV2
+
+# kpasswdstore
+51004   kpasswdstore
 
 # kdemultimedia
 67100   kmix
