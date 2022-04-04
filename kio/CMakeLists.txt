@@ -16,6 +16,8 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${KDE4_KDEUI_INCLUDES}
     ${KDE4_KDECORE_INCLUDES}
+    ${CMAKE_SOURCE_DIR}/kutils/kpasswdstore
+    ${CMAKE_BINARY_DIR}/kutils/kpasswdstore
 )
 
 set(KIO_EXTRA_LIBS)
