@@ -20,6 +20,7 @@
 #include "kstandarddirs.h"
 #include "kconfiggroup.h"
 #include "kpassworddialog.h"
+#include "kmessagebox.h"
 #include "klocale.h"
 #include "kdebug.h"
 
@@ -33,6 +34,7 @@
 #endif
 
 static const int kpasswdstore_buffsize = 1024;
+static const int kpasswdstore_passretries = 3;
 static const int kpasswdstore_passtimeout = 30000;
 
 // EVP_CIPHER_CTX_key_length() and EVP_CIPHER_CTX_iv_length() cannot be called
@@ -52,19 +54,21 @@ public:
     KPasswdStorePrivate();
     ~KPasswdStorePrivate();
 
-    bool ensurePasswd();
+    bool ensurePasswd(const bool showerror);
+    bool hasPasswd() const;
 
     QString decryptPasswd(const QString &passwd, bool *ok);
     QString encryptPasswd(const QString &passwd, bool *ok);
 
-    bool cacheonly;
+    mutable bool cacheonly;
     QString storeid;
     QString passwdstore;
-    QMap<QByteArray, QString> cache;
+    mutable QMap<QByteArray, QString> cache;
 
 private:
 #if defined(HAVE_OPENSSL)
     static QByteArray genBytes(const QByteArray &data, const int length);
+    static QString passwdHash(const QString &passwd);
 
     QByteArray m_passwd;
     QByteArray m_passwdiv;
@@ -87,8 +91,10 @@ KPasswdStorePrivate::~KPasswdStorePrivate()
 {
 }
 
-bool KPasswdStorePrivate::ensurePasswd()
+bool KPasswdStorePrivate::ensurePasswd(const bool showerror)
 {
+    Q_ASSERT(!cacheonly);
+
 #if defined(HAVE_OPENSSL)
     if (!m_passwd.isEmpty() && m_passwdtimer.elapsed() >= kpasswdstore_passtimeout) {
         m_passwd.clear();
@@ -98,25 +104,59 @@ bool KPasswdStorePrivate::ensurePasswd()
     if (m_passwd.isEmpty()) {
         KPasswordDialog kpasswddialog;
         kpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", storeid));
+        if (showerror) {
+            kpasswddialog.showErrorMessage(i18n("Incorrect password"));
+        }
         if (!kpasswddialog.exec()) {
             return false;
         }
-        m_passwd = KPasswdStorePrivate::genBytes(kpasswddialog.password().toUtf8(), kpasswdstore_keylen);
-        if (m_passwd.isEmpty()) {
+        const QByteArray kpasswddialogpass = kpasswddialog.password().toUtf8();
+        if (kpasswddialogpass.isEmpty()) {
             kWarning() << "Password is empty";
+            return false;
+        }
+        m_passwd = KPasswdStorePrivate::genBytes(kpasswddialogpass, kpasswdstore_keylen);
+        if (m_passwd.isEmpty()) {
+            kWarning() << "Password bytes is empty";
+            m_passwd.clear();
+            m_passwdiv.clear();
             return false;
         }
         m_passwdiv = KPasswdStorePrivate::genBytes(m_passwd.toHex(), kpasswdstore_ivlen);
         if (m_passwdiv.isEmpty()) {
             kWarning() << "Password initialization vector is empty";
+            m_passwd.clear();
+            m_passwdiv.clear();
             return false;
         }
+
+        // the only reason to encrypt and decrypt passwords is to obscure them
+        // for the naked eye, if one can overwrite, delete or otherwise alter
+        // the password store then there are more possibilities for havoc
+        KConfig kconfig(passwdstore);
+        KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
+        const QString passwdhash = kconfiggroup.readEntry(storeid, QString());
+        if (passwdhash.isEmpty()) {
+            kconfiggroup.writeEntry(storeid, KPasswdStorePrivate::passwdHash(m_passwd));
+            return true;
+        }
+        if (KPasswdStorePrivate::passwdHash(m_passwd) != passwdhash) {
+            m_passwd.clear();
+            m_passwdiv.clear();
+            return false;
+        }
+        return true;
     }
     return !m_passwd.isEmpty();
 #else
     // not used
     return true;
 #endif
+}
+
+bool KPasswdStorePrivate::hasPasswd() const
+{
+    return !m_passwd.isEmpty();
 }
 
 QString KPasswdStorePrivate::decryptPasswd(const QString &passwd, bool *ok)
@@ -249,6 +289,11 @@ QByteArray KPasswdStorePrivate::genBytes(const QByteArray &data, const int lengt
     Q_ASSERT(result.size() >= length);
     return result.mid(length);
 }
+
+QString KPasswdStorePrivate::passwdHash(const QString &passwd)
+{
+    return QCryptographicHash::hash(passwd.toUtf8(), QCryptographicHash::Sha512).toHex();
+}
 #endif
 
 KPasswdStore::KPasswdStore(QObject *parent)
@@ -275,12 +320,19 @@ void KPasswdStore::setCacheOnly(const bool cacheonly)
 
 QString KPasswdStore::getPasswd(const QByteArray &key) const
 {
-    if (!d->ensurePasswd()) {
-        return QString();
-    }
-
     if (d->cacheonly) {
         return d->cache.value(key, QString());
+    }
+
+    int retry = kpasswdstore_passretries;
+    while (retry > 0 && !d->ensurePasswd(retry < kpasswdstore_passretries)) {
+        retry--;
+    }
+    if (!d->hasPasswd()) {
+        KMessageBox::error(nullptr, i18n("The storage could not be open, no passwords will be permanently stored"));
+        d->cacheonly = true;
+        d->cache.clear();
+        return QString();
     }
 
     bool ok = false;
@@ -291,13 +343,19 @@ QString KPasswdStore::getPasswd(const QByteArray &key) const
 
 bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd)
 {
-    if (!d->ensurePasswd()) {
-        return false;
-    }
-
     if (d->cacheonly) {
         d->cache.insert(key, passwd);
         return true;
+    }
+
+    int retry = kpasswdstore_passretries;
+    while (retry > 0 && !d->ensurePasswd(retry < kpasswdstore_passretries)) {
+        retry--;
+    }
+    if (!d->hasPasswd()) {
+        KMessageBox::error(nullptr, i18n("The storage could not be open, no passwords will be permanently stored"));
+        setCacheOnly(true);
+        return storePasswd(key, passwd);
     }
 
     bool ok = false;
