@@ -172,6 +172,7 @@ public:
     {
         if (!m_passwdStore) {
             m_passwdStore = new KPasswdStore();
+            m_passwdStore->setStoreID("KIO");
         }
 
         return m_passwdStore;
