@@ -89,8 +89,6 @@ set(kiocore_STAT_SRCS
     kio/thumbsequencecreator.cpp
     kio/udsentry.cpp
     kio/hostinfo.cpp
-    kio/kpasswdserver.cpp
-    kio/kpasswdserverloop.cpp
     kio/usernotificationhandler.cpp
     kio/clipboardupdater.cpp
     kio/kautomount.cpp
@@ -109,14 +107,6 @@ qt4_add_dbus_adaptor(kiocore_STAT_SRCS
 qt4_add_dbus_interface(kiocore_STAT_SRCS
     kio/org.kde.kuiserver.xml
     kuiserver_interface
-)
-
-set_source_files_properties(kio/org.kde.KPasswdServer.xml
-   PROPERTIES INCLUDE kio/authinfo.h
-)
-qt4_add_dbus_interface(kiocore_STAT_SRCS
-    kio/org.kde.KPasswdServer.xml
-    kpasswdserver_interface
 )
 
 set(kbookmarks_STAT_SRCS
@@ -176,6 +166,7 @@ target_link_libraries(kio PRIVATE
 target_link_libraries(kio PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
+    ${KDE4_KPASSWDSTORE_LIBS}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}
@@ -311,7 +302,6 @@ install(
     FILES
     kio/org.kde.KDirNotify.xml
     kio/org.kde.kio.FileUndoManager.xml
-    kio/org.kde.KPasswdServer.xml
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 

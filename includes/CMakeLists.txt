@@ -552,14 +552,6 @@ install(
 
 install(
     FILES
-    KWallet/Wallet
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KWallet
-    COMPONENT Devel
-)
-
-
-install(
-    FILES
     Solid/AcAdapter
     Solid/AudioInterface
     Solid/Battery

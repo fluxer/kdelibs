@@ -63,15 +63,24 @@ public:
         @note Caching only is disabled by default
     */
     void setCacheOnly(const bool cacheonly);
+    /*!
+        @brief Returns @p true if password are cached only, @p false otherwise
+    */
+    bool cacheOnly() const;
 
+    /*!
+        @brief Returns @p true if there is password for the given @p key in the
+        password store, @p false otherwise
+    */
+    bool hasPasswd(const QByteArray &key, const qlonglong windowid = 0);
     /*!
         @brief Retrieves password for the given @p key from the password store
     */
-    QString getPasswd(const QByteArray &key) const;
+    QString getPasswd(const QByteArray &key, const qlonglong windowid = 0) const;
     /*!
         @brief Stores @p passwd with the given @p key in the password store
     */
-    bool storePasswd(const QByteArray &key, const QString &passwd);
+    bool storePasswd(const QByteArray &key, const QString &passwd, const qlonglong windowid = 0);
 
     /*!
         @brief Makes a unique key from @p string for use with @p getPasswd() and @p storePasswd()

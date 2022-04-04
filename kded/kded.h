@@ -57,8 +57,6 @@ public:
    //bool isWindowRegistered(qlonglong windowId) const;
    /**
     * Applications can register/unregister their windows with kded modules.
-    * This allows kpasswdserver and kcookiejar to delete authentication
-    * and cookies that are local to a particular window when closing it.
     */
    //@{
    /**

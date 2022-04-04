@@ -34,6 +34,7 @@
 #include <signal.h>
 #include <time.h>
 
+#include <QtCore/QBuffer>
 #include <QtCore/QFile>
 #include <QtCore/QList>
 #include <QtCore/QDateTime>
@@ -44,19 +45,26 @@
 #include <kconfiggroup.h>
 #include <kde_file.h>
 #include <klocale.h>
+#include <kpassworddialog.h>
+#include <kwindowsystem.h>
 
 #include "kremoteencoding.h"
 
 #include "connection.h"
 #include "ioslave_defaults.h"
 #include "slaveinterface.h"
-#include "kpasswdserver_p.h"
+#include "kpasswdstore.h"
 
 #ifndef NDEBUG
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>
 #endif
 #endif
+
+#define AUTHINFO_EXTRAFIELD_DOMAIN QLatin1String("domain")
+#define AUTHINFO_EXTRAFIELD_ANONYMOUS QLatin1String("anonymous")
+#define AUTHINFO_EXTRAFIELD_SKIP_CACHING_ON_QUERY QLatin1String("skip-caching-on-query")
+#define AUTHINFO_EXTRAFIELD_HIDE_USERNAME_INPUT QLatin1String("hide-username-line")
 
 extern "C" {
     static void sigsegv_handler(int sig);
@@ -72,18 +80,41 @@ typedef QMap<QString,QByteArray> AuthKeysMap;
 
 namespace KIO {
 
+static QByteArray authInfoKey(const AuthInfo &authinfo)
+{
+    return KPasswdStore::makeKey(authinfo.url.prettyUrl());
+}
+
+static QString authInfoToData(const AuthInfo &authinfo)
+{
+    QByteArray authdata;
+    QDataStream authstream(&authdata, QIODevice::WriteOnly);
+    authstream << authinfo;
+    return QString::fromAscii(authdata);
+}
+
+static AuthInfo authInfoFromData(const QByteArray &authdata)
+{
+    QBuffer authbuffer;
+    authbuffer.setData(authdata);
+    authbuffer.open(QBuffer::ReadOnly);
+    AuthInfo authinfo;
+    QDataStream authstream(&authbuffer);
+    authstream >> authinfo;
+    return authinfo;
+}
+
 class SlaveBasePrivate {
 public:
     SlaveBase* q;
-    SlaveBasePrivate(SlaveBase* owner): q(owner), m_passwdServer(0) {}
-    ~SlaveBasePrivate() { delete m_passwdServer; }
+    SlaveBasePrivate(SlaveBase* owner): q(owner), m_passwdStore(nullptr) {}
+    ~SlaveBasePrivate() { delete m_passwdStore; }
 
     UDSEntryList pendingListEntries;
     QTime m_timeSinceLastBatch;
     Connection appConnection;
     QString poolSocket;
     bool isConnectedToApp;
-    static qlonglong s_seqNr;
 
     QString slaveid;
     bool resume:1;
@@ -105,7 +136,7 @@ public:
     enum { Idle, InsideMethod, FinishedCalled, ErrorCalled } m_state;
     QByteArray timeoutData;
 
-    KPasswdServer* m_passwdServer;
+    KPasswdStore* m_passwdStore;
 
     // Reconstructs configGroup from configData and mIncomingMetaData
     void rebuildConfig()
@@ -137,24 +168,23 @@ public:
         }
     }
 
-    KPasswdServer* passwdServer()
+    KPasswdStore* passwdStore()
     {
-        if (!m_passwdServer) {
-            m_passwdServer = new KPasswdServer;
+        if (!m_passwdStore) {
+            m_passwdStore = new KPasswdStore();
         }
 
-        return m_passwdServer;
+        return m_passwdStore;
     }
 };
 
 }
 
-static SlaveBase *globalSlave;
-qlonglong SlaveBasePrivate::s_seqNr;
+static SlaveBase *globalSlave = nullptr;
 
 static volatile bool slaveWriteError = false;
 
-static const char *s_protocol;
+static const char *s_protocol = nullptr;
 
 #ifdef Q_OS_UNIX
 extern "C" {
@@ -809,8 +839,8 @@ void SlaveBase::reparseConfiguration()
 
 bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
 {
-    const long windowId = metaData(QLatin1String("window-id")).toLong();
-    const unsigned long userTimestamp = metaData(QLatin1String("user-timestamp")).toULong();
+    const qlonglong windowId = metaData(QLatin1String("window-id")).toLongLong();
+    QWidget *windowWidget = QWidget::find(windowId);
     QString errorMessage;
     if (metaData(QLatin1String("no-auth-prompt")).compare(QLatin1String("true"), Qt::CaseInsensitive) == 0) {
         errorMessage = QLatin1String("<NoAuthPrompt>");
@@ -818,25 +848,86 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
         errorMessage = errorMsg;
     }
 
-    AuthInfo dlgInfo (info);
+    AuthInfo dlgInfo(info);
     // Make sure the modified flag is not set.
     dlgInfo.setModified(false);
     // Prevent queryAuthInfo from caching the user supplied password since
     // we need the ioslaves to first authenticate against the server with
     // it to ensure it is valid.
-    dlgInfo.setExtraField(QLatin1String("skip-caching-on-query"), true);
+    dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_SKIP_CACHING_ON_QUERY, true);
 
-    KPasswdServer* passwdServer = d->passwdServer();
+    KPasswdStore* passwdstore = d->passwdStore();
 
-    if (passwdServer) {
-        qlonglong seqNr = passwdServer->queryAuthInfo(dlgInfo, errorMessage, windowId,
-                                                      SlaveBasePrivate::s_seqNr, userTimestamp);
-        if (seqNr > 0) {
-            SlaveBasePrivate::s_seqNr = seqNr;
-            if (dlgInfo.isModified()) {
-                info = dlgInfo;
-                return true;
+    if (passwdstore) {
+        // assemble dialog-flags
+        KPasswordDialog::KPasswordDialogFlags dialogFlags;
+
+        if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid()) {
+            dialogFlags |= KPasswordDialog::ShowDomainLine;
+            if (dlgInfo.getExtraFieldFlags(AUTHINFO_EXTRAFIELD_DOMAIN) & KIO::AuthInfo::ExtraFieldReadOnly) {
+                dialogFlags |= KPasswordDialog::DomainReadOnly;
             }
+        }
+
+        if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid()) {
+            dialogFlags |= KPasswordDialog::ShowAnonymousLoginCheckBox;
+        }
+
+        if (!dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_HIDE_USERNAME_INPUT).toBool()) {
+            dialogFlags |= KPasswordDialog::ShowUsernameLine;
+        }
+
+        // If store is not enabled and the caller explicitly requested for it,
+        // do not show the keep password checkbox.
+        if (dlgInfo.keepPassword && !passwdstore->cacheOnly())
+            dialogFlags |= KPasswordDialog::ShowKeepPassword;
+
+        KPasswordDialog* dlg = new KPasswordDialog(windowWidget, dialogFlags);
+
+        QString username = dlgInfo.username;
+        QString password = dlgInfo.password;
+
+        dlg->setPrompt(dlgInfo.prompt);
+        dlg->setUsername(username);
+        if (dlgInfo.caption.isEmpty())
+            dlg->setWindowTitle(i18n("Authentication Dialog"));
+        else
+            dlg->setWindowTitle(dlgInfo.caption);
+
+        if (!dlgInfo.comment.isEmpty() )
+            dlg->addCommentLine(dlgInfo.commentLabel, dlgInfo.comment);
+
+        if (!password.isEmpty())
+            dlg->setPassword(password);
+
+        if (dlgInfo.readOnly)
+            dlg->setUsernameReadOnly(true);
+
+        if (!passwdstore->cacheOnly())
+            dlg->setKeepPassword(true);
+
+        if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid ())
+            dlg->setDomain(dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).toString());
+
+        if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid () && password.isEmpty() && username.isEmpty())
+            dlg->setAnonymousMode(dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).toBool());
+
+        KWindowSystem::setMainWindow(dlg, windowId);
+
+        if (dlg->exec()) {
+            dlgInfo.setModified(false);
+
+            dlgInfo.username = dlg->username();
+            dlgInfo.password = dlg->password();
+            dlgInfo.keepPassword = dlg->keepPassword();
+
+            if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid())
+                dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_DOMAIN, dlg->domain());
+            if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid())
+                dlgInfo.setExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS, dlg->anonymousMode());
+
+            info = dlgInfo;
+            return true;
         }
     }
 
@@ -947,8 +1038,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
 
     switch( command ) {
     case CMD_HOST: {
-        // Reset s_seqNr, see kpasswdserver/DESIGN
-        SlaveBasePrivate::s_seqNr = 0;
         QString passwd;
         QString host, user;
         quint16 port;
@@ -1168,10 +1257,18 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
 
 bool SlaveBase::checkCachedAuthentication( AuthInfo& info )
 {
-    KPasswdServer* passwdServer = d->passwdServer();
-    return (passwdServer &&
-            passwdServer->checkAuthInfo(info, metaData(QLatin1String("window-id")).toLong(),
-                                        metaData(QLatin1String("user-timestamp")).toULong()));
+    KPasswdStore* passwdstore = d->passwdStore();
+    if (!passwdstore) {
+        return false;
+    }
+    const qlonglong windowId = metaData(QLatin1String("window-id")).toLongLong();
+    const QByteArray authkey = authInfoKey(info);
+    if (passwdstore->hasPasswd(authkey, windowId)) {
+        const QString passwd = passwdstore->getPasswd(authkey, windowId);
+        info = authInfoFromData(passwd.toAscii());
+        return true;
+    }
+    return false;
 }
 
 void SlaveBase::dispatchOpenCommand( int command, const QByteArray &data )
@@ -1208,13 +1305,13 @@ void SlaveBase::dispatchOpenCommand( int command, const QByteArray &data )
 
 bool SlaveBase::cacheAuthentication( const AuthInfo& info )
 {
-    KPasswdServer* passwdServer = d->passwdServer();
+    KPasswdStore* passwdstore = d->passwdStore();
 
-    if (!passwdServer) {
+    if (!passwdstore) {
         return false;
     }
 
-    passwdServer->addAuthInfo(info, metaData(QLatin1String("window-id")).toLongLong());
+    passwdstore->storePasswd(authInfoKey(info), authInfoToData(info), metaData(QLatin1String("window-id")).toLongLong());
     return true;
 }
 

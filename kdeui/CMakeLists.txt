@@ -192,7 +192,6 @@ set(kdeui_LIB_SRCS
     util/kpassivepopup.cpp
     util/kpassivepopupmessagehandler.cpp
     util/kstandardguiitem.cpp
-    util/kwallet.cpp
     util/kwordwrap.cpp
     util/kxerrorhandler.cpp
     util/kxmessages.cpp
@@ -321,13 +320,6 @@ else()
     )
 endif()
 
-set(kwallet_xml util/org.kde.KWallet.xml)
-install(
-    FILES ${kwallet_xml}
-    DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
-)
-
-qt4_add_dbus_interface(kdeui_LIB_SRCS ${kwallet_xml} kwallet_interface )
 qt4_add_dbus_interfaces(kdeui_LIB_SRCS jobs/org.kde.JobViewServer.xml )
 
 qt4_add_dbus_interface(kdeui_LIB_SRCS
@@ -543,7 +535,6 @@ install(
     util/kpassivepopup.h
     util/kpassivepopupmessagehandler.h
     util/kstandardguiitem.h
-    util/kwallet.h
     util/kwordwrap.h
     util/kxerrorhandler.h
     util/kxmessages.h

@@ -128,7 +128,6 @@ KDEUI_EXECUTABLE_TESTS(
     ktitlewidgettest
     ktoolbartest
     ktoolbarlabelactiontest
-    kwallettest
     kwidgetitemdelegatetest
     kwindowtest
     kxmlguitest

@@ -172,30 +172,6 @@ public:
    QString commentLabel;
 
    /**
-    * A unique identifier that allows caching of multiple
-    * passwords for different resources in the same server.
-    *
-    * Mostly this setting is applicable to the HTTP protocol
-    * whose authentication scheme explicitly defines the use
-    * of such a unique key.  However, any protocol that can
-    * generate or supply a unique id can effectively use it
-    * to distinguish passwords.
-    *
-    * This setting is @em optional and not set by default.
-    */
-   QString realmValue;
-
-   /**
-    * Field to store any extra authentication information for
-    * protocols that need it.
-    *
-    * This setting is @em optional and mostly applicable for HTTP
-    * protocol.  However, any protocol can make use of it to
-    * store extra info.
-    */
-   QString digestInfo;
-
-   /**
     * Flag that, if set, indicates whether a path match should be
     * performed when requesting for cached authorization.
     *
@@ -271,8 +247,7 @@ public:
 
    /**
     * Register the meta-types for AuthInfo. This is called from
-    * AuthInfo's constructor but needed by daemons on the DBus such
-    * as kpasswdserver.
+    * AuthInfo's constructor.
     * @since 4.3
     */
    static void registerMetaTypes();

@@ -152,8 +152,6 @@ AuthInfo& AuthInfo::operator= ( const AuthInfo& info )
     caption = info.caption;
     comment = info.comment;
     commentLabel = info.commentLabel;
-    realmValue = info.realmValue;
-    digestInfo = info.digestInfo;
     verifyPath = info.verifyPath;
     readOnly = info.readOnly;
     keepPassword = info.keepPassword;
@@ -210,7 +208,7 @@ QDataStream& KIO::operator<< (QDataStream& s, const AuthInfo& a)
 {
     s << (quint8)1
       << a.url << a.username << a.password << a.prompt << a.caption
-      << a.comment << a.commentLabel << a.realmValue << a.digestInfo
+      << a.comment << a.commentLabel
       << a.verifyPath << a.readOnly << a.keepPassword << a.modified
       << a.d->extraFields;
     return s;
@@ -221,7 +219,7 @@ QDataStream& KIO::operator>> (QDataStream& s, AuthInfo& a)
     quint8 version;
     s >> version
       >> a.url >> a.username >> a.password >> a.prompt >> a.caption
-      >> a.comment >> a.commentLabel >> a.realmValue >> a.digestInfo
+      >> a.comment >> a.commentLabel
       >> a.verifyPath >> a.readOnly >> a.keepPassword >> a.modified
       >> a.d->extraFields;
     return s;
@@ -232,7 +230,7 @@ QDBusArgument &KIO::operator<<(QDBusArgument &argument, const AuthInfo &a)
     argument.beginStructure();
     argument << (quint8)1
              << a.url.url() << a.username << a.password << a.prompt << a.caption
-             << a.comment << a.commentLabel << a.realmValue << a.digestInfo
+             << a.comment << a.commentLabel
              << a.verifyPath << a.readOnly << a.keepPassword << a.modified
              << a.d->extraFields;
     argument.endStructure();
@@ -247,7 +245,7 @@ const QDBusArgument &KIO::operator>>(const QDBusArgument &argument, AuthInfo &a)
     argument.beginStructure();
     argument >> version
              >> url >> a.username >> a.password >> a.prompt >> a.caption
-             >> a.comment >> a.commentLabel >> a.realmValue >> a.digestInfo
+             >> a.comment >> a.commentLabel
              >> a.verifyPath >> a.readOnly >> a.keepPassword >> a.modified
              >> a.d->extraFields;
     argument.endStructure();

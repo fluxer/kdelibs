@@ -709,7 +709,7 @@ public:
      * \endcode
      *
      * \note You should consider using checkCachedAuthentication() to
-     * see if the password is available in kpasswdserver before calling
+     * see if the password is available in KPasswdStore before calling
      * this function.
      *
      * \note A call to this function can fail and return @p false,
@@ -717,7 +717,7 @@ public:
      *
      * \note Starting with KDE 4.7, this function will no longer store the password
      * information automatically. If you want to store the password information in
-     * a persistent storage like KWallet, then you MUST call @ref cacheAuthentication.
+     * a persistent storage like KPasswdStore, then you MUST call @ref cacheAuthentication.
      *
      * @see checkCachedAuthentication
      * @param info  See AuthInfo.
@@ -731,12 +731,11 @@ public:
      * given by @p info.
      *
      * Use this function to check if any cached password exists
-     * for the URL given by @p info.  If @p AuthInfo::realmValue
-     * and/or @p AuthInfo::verifyPath flag is specified, then
-     * they will also be factored in determining the presence
-     * of a cached password.  Note that @p Auth::url is a required
-     * parameter when attempting to check for cached authorization
-     * info. Here is a simple example:
+     * for the URL given by @p info. If @p AuthInfo::verifyPath
+     * flag is specified, then they will also be factored in
+     * determining the presence of a cached password.  Note that
+     * @p Auth::url is a required parameter when attempting to
+     * check for cached authorization info. Here is a simple example:
      *
      * \code
      * AuthInfo info;
@@ -756,7 +755,7 @@ public:
     bool checkCachedAuthentication( AuthInfo& info );
 
     /**
-     * Caches @p info in a persistent storage like KWallet.
+     * Caches @p info in a persistent storage like KPasswdStore.
      *
      * Starting with KDE 4.7, calling openPasswordDialog will no longer store
      * passwords automatically for you. This was done to avoid accidental storage
