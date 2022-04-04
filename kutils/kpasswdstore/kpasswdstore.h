@@ -65,11 +65,11 @@ public:
     void setCacheOnly(const bool cacheonly);
 
     /*!
-        @brief Retrieves passwd for the give @p key from the password store
+        @brief Retrieves passwd for the given @p key from the password store
     */
     QString getPasswd(const QByteArray &key) const;
     /*!
-        @brief Stores @p passwd with the give @p key in the password store
+        @brief Stores @p passwd with the given @p key in the password store
     */
     bool storePasswd(const QByteArray &key, const QString &passwd);
 

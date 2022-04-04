@@ -101,12 +101,16 @@ bool KPasswdStorePrivate::ensurePasswd()
         if (!kpasswddialog.exec()) {
             return false;
         }
-        m_passwd = kpasswddialog.password().toUtf8();
+        m_passwd = KPasswdStorePrivate::genBytes(kpasswddialog.password().toUtf8(), kpasswdstore_keylen);
         if (m_passwd.isEmpty()) {
             kWarning() << "Password is empty";
             return false;
         }
-        m_passwdiv = m_passwd.toHex();
+        m_passwdiv = KPasswdStorePrivate::genBytes(m_passwd.toHex(), kpasswdstore_ivlen);
+        if (m_passwdiv.isEmpty()) {
+            kWarning() << "Password initialization vector is empty";
+            return false;
+        }
     }
     return !m_passwd.isEmpty();
 #else
@@ -124,12 +128,10 @@ QString KPasswdStorePrivate::decryptPasswd(const QString &passwd, bool *ok)
         return QString();
     }
 
-    const QByteArray opensslpass = KPasswdStorePrivate::genBytes(m_passwd, kpasswdstore_keylen);
-    const QByteArray openssliv = KPasswdStorePrivate::genBytes(m_passwdiv, kpasswdstore_ivlen);
     int opensslresult = EVP_DecryptInit(
         opensslctx, EVP_aes_256_cbc(),
-        reinterpret_cast<const uchar*>(opensslpass.constData()),
-        reinterpret_cast<const uchar*>(openssliv.constData())
+        reinterpret_cast<const uchar*>(m_passwd.constData()),
+        reinterpret_cast<const uchar*>(m_passwdiv.constData())
     );
     if (Q_UNLIKELY(opensslresult != 1)) {
         kWarning() << ERR_error_string(ERR_get_error(), NULL);
@@ -189,12 +191,10 @@ QString KPasswdStorePrivate::encryptPasswd(const QString &passwd, bool *ok)
         return QString();
     }
 
-    const QByteArray opensslpass = KPasswdStorePrivate::genBytes(m_passwd, kpasswdstore_keylen);
-    const QByteArray openssliv = KPasswdStorePrivate::genBytes(m_passwdiv, kpasswdstore_ivlen);
     int opensslresult = EVP_EncryptInit(
         opensslctx, EVP_aes_256_cbc(),
-        reinterpret_cast<const uchar*>(opensslpass.constData()),
-        reinterpret_cast<const uchar*>(openssliv.constData())
+        reinterpret_cast<const uchar*>(m_passwd.constData()),
+        reinterpret_cast<const uchar*>(m_passwdiv.constData())
     );
     if (Q_UNLIKELY(opensslresult != 1)) {
         kWarning() << ERR_error_string(ERR_get_error(), NULL);
