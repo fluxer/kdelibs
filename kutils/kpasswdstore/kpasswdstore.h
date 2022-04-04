@@ -29,13 +29,18 @@ class KPasswdStorePrivate;
     Class to store and retrieve passwords.
 
     The password used for encrypting and decrypting the store will be asked for
-    upon the first request and again after 30sec of inactivity.
+    upon the first request and again after 30sec of inactivity. Opening the
+    store pre-emptively is also possbile but optional.
 
     @code
     KPasswdStore kpasswdstore;
     kpasswdstore.setStoreID("myid");
-    qDebug() << kpasswdstore.storePasswd("mykey", "mypass");
-    qDebug() << kpasswdstore.getPasswd("mykey");
+    if (kpasswdstore.openStore()) {
+        qDebug() << kpasswdstore.storePasswd("mykey", "mypass");
+        qDebug() << kpasswdstore.getPasswd("mykey");
+    } else {
+        qWarning() << "could not open store";
+    }
     @endcode
 
     @since 4.21
@@ -57,6 +62,12 @@ public:
     void setStoreID(const QString &id);
 
     /*!
+        @brief Opens the store by asking for the password for it and returns
+        @p true if the store is open, @p false otherwise
+    */
+    bool openStore(const qlonglong windowid = 0);
+
+    /*!
         @brief If @p cacheonly is @p true then no permanent storage is used and
         passwords store is discarded when the object is destroyed. Whenever
         called the cache is also cleared
@@ -64,7 +75,7 @@ public:
     */
     void setCacheOnly(const bool cacheonly);
     /*!
-        @brief Returns @p true if password are cached only, @p false otherwise
+        @brief Returns @p true if passwords are cached only, @p false otherwise
     */
     bool cacheOnly() const;
 
@@ -76,7 +87,7 @@ public:
     /*!
         @brief Retrieves password for the given @p key from the password store
     */
-    QString getPasswd(const QByteArray &key, const qlonglong windowid = 0) const;
+    QString getPasswd(const QByteArray &key, const qlonglong windowid = 0);
     /*!
         @brief Stores @p passwd with the given @p key in the password store
     */

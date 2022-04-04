@@ -323,6 +323,25 @@ void KPasswdStore::setStoreID(const QString &id)
     d->clearPasswd();
 }
 
+bool KPasswdStore::openStore(const qlonglong windowid)
+{
+    if (d->cacheonly) {
+        return false;
+    }
+
+    // TODO: on cancel just bail
+    int retry = kpasswdstore_passretries;
+    while (retry > 0 && !d->ensurePasswd(windowid, retry < kpasswdstore_passretries)) {
+        retry--;
+    }
+    if (!d->hasPasswd()) {
+        KMessageBox::error(widgetForWindowID(windowid), i18n("The storage could not be open, no passwords will be permanently stored"));
+        setCacheOnly(true);
+        return false;
+    }
+    return true;
+}
+
 void KPasswdStore::setCacheOnly(const bool cacheonly)
 {
     d->cacheonly = cacheonly;
@@ -339,20 +358,13 @@ bool KPasswdStore::hasPasswd(const QByteArray &key, const qlonglong windowid)
     return !getPasswd(key, windowid).isEmpty();
 }
 
-QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid) const
+QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
 {
     if (d->cacheonly) {
         return d->cache.value(key, QString());
     }
 
-    int retry = kpasswdstore_passretries;
-    while (retry > 0 && !d->ensurePasswd(windowid, retry < kpasswdstore_passretries)) {
-        retry--;
-    }
-    if (!d->hasPasswd()) {
-        KMessageBox::error(nullptr, i18n("The storage could not be open, no passwords will be permanently stored"));
-        d->cacheonly = true;
-        d->cache.clear();
+    if (!openStore(windowid)) {
         return QString();
     }
 
@@ -369,13 +381,7 @@ bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd, con
         return true;
     }
 
-    int retry = kpasswdstore_passretries;
-    while (retry > 0 && !d->ensurePasswd(windowid, retry < kpasswdstore_passretries)) {
-        retry--;
-    }
-    if (!d->hasPasswd()) {
-        KMessageBox::error(widgetForWindowID(windowid), i18n("The storage could not be open, no passwords will be permanently stored"));
-        setCacheOnly(true);
+    if (!openStore(windowid)) {
         return storePasswd(key, passwd);
     }
 
