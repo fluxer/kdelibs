@@ -54,6 +54,7 @@ class KPasswdStorePrivate;
 */
 class KPASSWDSTORE_EXPORT KPasswdStore : public QObject
 {
+    Q_OBJECT
 public:
     /*!
         @brief Contructs object with @p parent
