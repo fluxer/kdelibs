@@ -60,7 +60,7 @@ public:
     KPasswdStorePrivate();
     ~KPasswdStorePrivate();
 
-    bool ensurePasswd(const qlonglong windowid, const bool showerror);
+    bool ensurePasswd(const qlonglong windowid, const bool showerror, bool *cancel);
     bool hasPasswd() const;
     void clearPasswd();
 
@@ -97,7 +97,7 @@ KPasswdStorePrivate::~KPasswdStorePrivate()
 {
 }
 
-bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool showerror)
+bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool showerror, bool *cancel)
 {
     Q_ASSERT(!cacheonly);
 
@@ -122,6 +122,7 @@ bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool show
             if (knewpasswddialog.exec() != KNewPasswordDialog::Accepted) {
                 kDebug() << "New password dialog not accepted";
                 clearPasswd();
+                *cancel = true;
                 return false;
             }
             kpasswddialogpass = knewpasswddialog.password().toUtf8();
@@ -134,6 +135,7 @@ bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool show
             if (kpasswddialog.exec() != KPasswordDialog::Accepted) {
                 kDebug() << "Password dialog not accepted";
                 clearPasswd();
+                *cancel = true;
                 return false;
             }
             kpasswddialogpass = kpasswddialog.password().toUtf8();
@@ -341,10 +343,13 @@ bool KPasswdStore::openStore(const qlonglong windowid)
         return false;
     }
 
-    // TODO: on cancel just bail
+    bool cancel = false;
     int retry = kpasswdstore_passretries;
-    while (retry > 0 && !d->ensurePasswd(windowid, retry < kpasswdstore_passretries)) {
+    while (retry > 0 && !d->ensurePasswd(windowid, retry < kpasswdstore_passretries, &cancel)) {
         retry--;
+        if (cancel) {
+            break;
+        }
     }
     if (!d->hasPasswd()) {
         KMessageBox::error(widgetForWindowID(windowid), i18n("The storage could not be open, no passwords will be permanently stored"));
