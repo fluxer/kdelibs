@@ -43,15 +43,18 @@ static const qint64 kpasswdstore_passtimeout = 2 * 60000;
 static const int kpasswdstore_keylen = 32;
 static const int kpasswdstore_ivlen = 16;
 
-#if QT_VERSION >= 0x041200
-static const QCryptographicHash::Algorithm kpasswdstore_algorithm = QCryptographicHash::KAT;
-#else
-static const QCryptographicHash::Algorithm kpasswdstore_algorithm = QCryptographicHash::Sha256;
-#endif
-
-static QWidget* widgetForWindowID(const qlonglong windowid)
+static inline QWidget* widgetForWindowID(const qlonglong windowid)
 {
     return QWidget::find(windowid);
+}
+
+static inline QByteArray hashForBytes(const QByteArray &bytes)
+{
+#if QT_VERSION >= 0x041200
+    return QCryptographicHash::hash(bytes, QCryptographicHash::KAT).toHex();
+#else
+    return QCryptographicHash::hash(bytes, QCryptographicHash::Sha256).toHex();
+#endif
 }
 
 class KPasswdStorePrivate
@@ -114,8 +117,8 @@ bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool show
         // the password store then there are more possibilities for havoc
         KConfig kconfig(passwdstore);
         KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
-        const QString passwdhash = kconfiggroup.readEntry(storeid, QString());
-        if (passwdhash.isEmpty()) {
+        const QString storepasswdhash = kconfiggroup.readEntry(storeid, QString());
+        if (storepasswdhash.isEmpty()) {
             KNewPasswordDialog knewpasswddialog(widgetForWindowID(windowid));
             knewpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", storeid));
             knewpasswddialog.setAllowEmptyPasswords(false);
@@ -152,18 +155,19 @@ bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool show
             clearPasswd();
             return false;
         }
-        m_passwdiv = KPasswdStorePrivate::genBytes(m_passwd.toHex(), kpasswdstore_ivlen);
+        const QByteArray passhash = hashForBytes(m_passwd);
+        m_passwdiv = KPasswdStorePrivate::genBytes(passhash, kpasswdstore_ivlen);
         if (m_passwdiv.isEmpty()) {
             kWarning() << "Password initialization vector is empty";
             clearPasswd();
             return false;
         }
 
-        if (passwdhash.isEmpty()) {
-            kconfiggroup.writeEntry(storeid, KPasswdStore::makeKey(m_passwd));
+        if (storepasswdhash.isEmpty()) {
+            kconfiggroup.writeEntry(storeid, passhash);
             return true;
         }
-        if (KPasswdStore::makeKey(m_passwd) != passwdhash) {
+        if (passhash != storepasswdhash) {
             kWarning() << "Password hash does not match";
             clearPasswd();
             return false;
@@ -314,9 +318,9 @@ QString KPasswdStorePrivate::encryptPasswd(const QString &passwd, bool *ok)
 #if defined(HAVE_OPENSSL)
 QByteArray KPasswdStorePrivate::genBytes(const QByteArray &data, const int length)
 {
-    const QByteArray result = QCryptographicHash::hash(data, kpasswdstore_algorithm).toHex();
+    const QByteArray result = data + hashForBytes(data);
     Q_ASSERT(result.size() >= length);
-    return result.mid(length);
+    return result.mid(0, length);
 }
 #endif
 
@@ -415,5 +419,5 @@ bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd, con
 
 QByteArray KPasswdStore::makeKey(const QString &string)
 {
-    return QCryptographicHash::hash(string.toUtf8(), kpasswdstore_algorithm).toHex();
+    return hashForBytes(string.toUtf8());
 }
