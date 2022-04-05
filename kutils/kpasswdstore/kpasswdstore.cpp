@@ -73,7 +73,7 @@ public:
     bool cacheonly;
     QString storeid;
     QString passwdstore;
-    QMap<QByteArray, QString> cache;
+    QMap<QByteArray, QString> cachemap;
 
 private:
 #if defined(HAVE_OPENSSL)
@@ -217,7 +217,7 @@ QString KPasswdStorePrivate::decryptPasswd(const QString &passwd, bool *ok)
     Q_ASSERT(EVP_CIPHER_CTX_key_length(opensslctx) == kpasswdstore_keylen);
     Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == kpasswdstore_ivlen);
 
-    const QByteArray passwdbytes = QByteArray::fromHex(passwd.toUtf8());
+    const QByteArray passwdbytes = QByteArray::fromHex(passwd.toLatin1());
     const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
     uchar opensslbuffer[opensslbuffersize];
     ::memset(opensslbuffer, 0, sizeof(opensslbuffer) * sizeof(uchar));
@@ -243,7 +243,7 @@ QString KPasswdStorePrivate::decryptPasswd(const QString &passwd, bool *ok)
         return QString();
     }
 
-    const QString result = QString::fromLatin1(reinterpret_cast<char*>(opensslbuffer), opensslbufferpos);
+    const QString result = QString::fromUtf8(reinterpret_cast<char*>(opensslbuffer), opensslbufferpos);
     EVP_CIPHER_CTX_free(opensslctx);
     *ok = !result.isEmpty();
     return result;
@@ -366,7 +366,7 @@ bool KPasswdStore::openStore(const qlonglong windowid)
 void KPasswdStore::setCacheOnly(const bool cacheonly)
 {
     d->cacheonly = cacheonly;
-    d->cache.clear();
+    d->cachemap.clear();
 }
 
 bool KPasswdStore::cacheOnly() const
@@ -382,7 +382,7 @@ bool KPasswdStore::hasPasswd(const QByteArray &key, const qlonglong windowid)
 QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
 {
     if (d->cacheonly) {
-        return d->cache.value(key, QString());
+        return d->cachemap.value(key, QString());
     }
 
     if (!openStore(windowid)) {
@@ -401,12 +401,16 @@ QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
 bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd, const qlonglong windowid)
 {
     if (d->cacheonly) {
-        d->cache.insert(key, passwd);
+        d->cachemap.insert(key, passwd);
         return true;
     }
 
     if (!openStore(windowid)) {
         return storePasswd(key, passwd);
+    }
+
+    if (passwd.isEmpty()) {
+        return false;
     }
 
     bool ok = false;
