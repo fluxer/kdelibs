@@ -66,10 +66,10 @@ public:
     QString decryptPasswd(const QString &passwd, bool *ok);
     QString encryptPasswd(const QString &passwd, bool *ok);
 
-    mutable bool cacheonly;
+    bool cacheonly;
     QString storeid;
     QString passwdstore;
-    mutable QMap<QByteArray, QString> cache;
+    QMap<QByteArray, QString> cache;
 
 private:
 #if defined(HAVE_OPENSSL)
