@@ -43,6 +43,12 @@ class KPasswdStorePrivate;
     }
     @endcode
 
+    Unlike KWallet the password stores do not use master password - each store
+    has its own password and if password for one store is compromised the
+    other stores will not be affected, unless the same password is used for
+    multiple stores. Note that this is left up to the user - using the same
+    password for multiple password stores is absolutely possible.
+
     @since 4.21
     @warning the API is subject to change
 */
@@ -94,7 +100,7 @@ public:
     bool storePasswd(const QByteArray &key, const QString &passwd, const qlonglong windowid = 0);
 
     /*!
-        @brief Makes a unique key from @p string for use with @p getPasswd() and @p storePasswd()
+        @brief Returns unique key for @p string for use with @p getPasswd() and @p storePasswd()
     */
     static QByteArray makeKey(const QString &string);
 
