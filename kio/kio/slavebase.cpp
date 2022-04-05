@@ -751,7 +751,7 @@ static void sigsegv_handler(int sig)
     char buffer[120];
     memset(buffer, '\0', sizeof(buffer) * sizeof(char));
     snprintf(buffer, sizeof(buffer), "kioslave: ####### CRASH ###### protocol = %s pid = %d signal = %d\n", s_protocol, getpid(), sig);
-    write(2, buffer, strlen(buffer));
+    write(STDERR_FILENO, buffer, strlen(buffer));
 #ifndef NDEBUG
 #ifdef HAVE_BACKTRACE
     void* trace[256];
