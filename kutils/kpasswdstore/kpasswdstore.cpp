@@ -36,7 +36,7 @@
 
 static const int kpasswdstore_buffsize = 1024;
 static const int kpasswdstore_passretries = 3;
-static const int kpasswdstore_passtimeout = 30000;
+static const qint64 kpasswdstore_passtimeout = 2 * 60000;
 
 // EVP_CIPHER_CTX_key_length() and EVP_CIPHER_CTX_iv_length() cannot be called
 // prior to EVP_EncryptInit() and EVP_DecryptInit() so hardcoding these

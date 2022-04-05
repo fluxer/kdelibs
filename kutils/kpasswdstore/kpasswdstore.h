@@ -29,7 +29,7 @@ class KPasswdStorePrivate;
     Class to store and retrieve passwords.
 
     The password used for encrypting and decrypting the store will be asked for
-    upon the first request and again after 30sec of inactivity. Opening the
+    upon the first request and again after 2 minutes of inactivity. Opening the
     store pre-emptively is also possbile but optional.
 
     @code
