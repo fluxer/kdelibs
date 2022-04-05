@@ -46,7 +46,7 @@ static const int kpasswdstore_ivlen = 16;
 #if QT_VERSION >= 0x041200
 static const QCryptographicHash::Algorithm kpasswdstore_algorithm = QCryptographicHash::KAT;
 #else
-static const QCryptographicHash::Algorithm kpasswdstore_algorithm = QCryptographicHash::Sha1;
+static const QCryptographicHash::Algorithm kpasswdstore_algorithm = QCryptographicHash::Sha256;
 #endif
 
 static QWidget* widgetForWindowID(const qlonglong windowid)
@@ -75,7 +75,6 @@ public:
 private:
 #if defined(HAVE_OPENSSL)
     static QByteArray genBytes(const QByteArray &data, const int length);
-    static QString passwdHash(const QString &passwd);
 
     QByteArray m_passwd;
     QByteArray m_passwdiv;
@@ -159,10 +158,10 @@ bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool show
         }
 
         if (passwdhash.isEmpty()) {
-            kconfiggroup.writeEntry(storeid, KPasswdStorePrivate::passwdHash(m_passwd));
+            kconfiggroup.writeEntry(storeid, KPasswdStore::makeKey(m_passwd));
             return true;
         }
-        if (KPasswdStorePrivate::passwdHash(m_passwd) != passwdhash) {
+        if (KPasswdStore::makeKey(m_passwd) != passwdhash) {
             kWarning() << "Password hash does not match";
             clearPasswd();
             return false;
@@ -316,11 +315,6 @@ QByteArray KPasswdStorePrivate::genBytes(const QByteArray &data, const int lengt
     const QByteArray result = QCryptographicHash::hash(data, kpasswdstore_algorithm).toHex();
     Q_ASSERT(result.size() >= length);
     return result.mid(length);
-}
-
-QString KPasswdStorePrivate::passwdHash(const QString &passwd)
-{
-    return QCryptographicHash::hash(passwd.toUtf8(), QCryptographicHash::Sha512).toHex();
 }
 #endif
 
