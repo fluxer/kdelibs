@@ -41,9 +41,9 @@
 #include <cstdlib>
 #include <cstring>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
+#include <QtGui/QApplication>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -152,7 +152,7 @@ using namespace KIO;
 
 extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
 {
-  QCoreApplication app(argc, argv);
+  QApplication app(argc, argv);
   KComponentData componentData( "kio_ftp", "kdelibs4" );
   ( void ) KGlobal::locale();
 
