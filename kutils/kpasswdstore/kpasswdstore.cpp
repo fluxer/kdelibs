@@ -20,6 +20,7 @@
 #include "kstandarddirs.h"
 #include "kconfiggroup.h"
 #include "kpassworddialog.h"
+#include "knewpassworddialog.h"
 #include "kmessagebox.h"
 #include "klocale.h"
 #include "kdebug.h"
@@ -108,15 +109,37 @@ bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool show
     m_passwdtimer.restart();
 
     if (m_passwd.isEmpty()) {
-        KPasswordDialog kpasswddialog(widgetForWindowID(windowid));
-        kpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", storeid));
-        if (showerror) {
-            kpasswddialog.showErrorMessage(i18n("Incorrect password"));
+        QByteArray kpasswddialogpass;
+        // the only reason to encrypt and decrypt passwords is to obscure them
+        // for the naked eye, if one can overwrite, delete or otherwise alter
+        // the password store then there are more possibilities for havoc
+        KConfig kconfig(passwdstore);
+        KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
+        const QString passwdhash = kconfiggroup.readEntry(storeid, QString());
+        if (passwdhash.isEmpty()) {
+            KNewPasswordDialog knewpasswddialog(widgetForWindowID(windowid));
+            knewpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", storeid));
+            knewpasswddialog.setAllowEmptyPasswords(false);
+            if (knewpasswddialog.exec() != KNewPasswordDialog::Accepted) {
+                kDebug() << "New password dialog not accepted";
+                clearPasswd();
+                return false;
+            }
+            kpasswddialogpass = knewpasswddialog.password().toUtf8();
+        } else {
+            KPasswordDialog kpasswddialog(widgetForWindowID(windowid));
+            kpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", storeid));
+            if (showerror) {
+                kpasswddialog.showErrorMessage(i18n("Incorrect password"));
+            }
+            if (kpasswddialog.exec() != KPasswordDialog::Accepted) {
+                kDebug() << "Password dialog not accepted";
+                clearPasswd();
+                return false;
+            }
+            kpasswddialogpass = kpasswddialog.password().toUtf8();
         }
-        if (!kpasswddialog.exec()) {
-            return false;
-        }
-        const QByteArray kpasswddialogpass = kpasswddialog.password().toUtf8();
+
         if (kpasswddialogpass.isEmpty()) {
             kWarning() << "Password is empty";
             clearPasswd();
@@ -135,17 +158,12 @@ bool KPasswdStorePrivate::ensurePasswd(const qlonglong windowid, const bool show
             return false;
         }
 
-        // the only reason to encrypt and decrypt passwords is to obscure them
-        // for the naked eye, if one can overwrite, delete or otherwise alter
-        // the password store then there are more possibilities for havoc
-        KConfig kconfig(passwdstore);
-        KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
-        const QString passwdhash = kconfiggroup.readEntry(storeid, QString());
         if (passwdhash.isEmpty()) {
             kconfiggroup.writeEntry(storeid, KPasswdStorePrivate::passwdHash(m_passwd));
             return true;
         }
         if (KPasswdStorePrivate::passwdHash(m_passwd) != passwdhash) {
+            kWarning() << "Password hash does not match";
             clearPasswd();
             return false;
         }
