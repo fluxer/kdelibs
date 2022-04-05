@@ -371,6 +371,9 @@ QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
     bool ok = false;
     KConfig kconfig(d->passwdstore);
     const QString passwd = kconfig.group(d->storeid).readEntry(key.constData(), QString());
+    if (passwd.isEmpty()) {
+        return QString();
+    }
     return d->decryptPasswd(passwd, &ok);
 }
 
