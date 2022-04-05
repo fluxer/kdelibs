@@ -7,6 +7,8 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=51004)
 
 set(kpasswdstore_LIB_SRCS
     kpasswdstore.cpp
+    kpasswdroulettedialog.cpp
+    kpasswdroulettedialog.ui
 )
 
 add_library(kpasswdstore ${LIBRARY_TYPE} ${kpasswdstore_LIB_SRCS})
@@ -31,6 +33,7 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kpasswdstore_export.h
     kpasswdstore.h
+    kpasswdroulettedialog.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )
