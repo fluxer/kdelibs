@@ -220,13 +220,15 @@ QString KPasswdStorePrivate::decryptPasswd(const QString &passwd, bool *ok)
     const QByteArray passwdbytes = QByteArray::fromHex(passwd.toLatin1());
     const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
     uchar opensslbuffer[opensslbuffersize];
-    ::memset(opensslbuffer, 0, sizeof(opensslbuffer) * sizeof(uchar));
+    ::memset(opensslbuffer, 0, opensslbuffersize * sizeof(uchar));
     int opensslbufferpos = 0;
+    int openssloutputsize = 0;
     opensslresult = EVP_DecryptUpdate(
         opensslctx,
         opensslbuffer, &opensslbufferpos,
         reinterpret_cast<const uchar*>(passwdbytes.constData()), passwdbytes.size()
     );
+    openssloutputsize = opensslbufferpos;
     if (Q_UNLIKELY(opensslresult != 1)) {
         kWarning() << ERR_error_string(ERR_get_error(), NULL);
         EVP_CIPHER_CTX_free(opensslctx);
@@ -237,13 +239,14 @@ QString KPasswdStorePrivate::decryptPasswd(const QString &passwd, bool *ok)
         opensslctx,
         opensslbuffer + opensslbufferpos, &opensslbufferpos
     );
+    openssloutputsize += opensslbufferpos;
     if (Q_UNLIKELY(opensslresult != 1)) {
         kWarning() << ERR_error_string(ERR_get_error(), NULL);
         EVP_CIPHER_CTX_free(opensslctx);
         return QString();
     }
 
-    const QString result = QString::fromUtf8(reinterpret_cast<char*>(opensslbuffer), opensslbufferpos);
+    const QString result = QString::fromUtf8(reinterpret_cast<char*>(opensslbuffer), openssloutputsize);
     EVP_CIPHER_CTX_free(opensslctx);
     *ok = !result.isEmpty();
     return result;
@@ -281,13 +284,15 @@ QString KPasswdStorePrivate::encryptPasswd(const QString &passwd, bool *ok)
     const QByteArray passwdbytes = passwd.toUtf8();
     const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
     uchar opensslbuffer[opensslbuffersize];
-    ::memset(opensslbuffer, 0, sizeof(opensslbuffer) * sizeof(uchar));
+    ::memset(opensslbuffer, 0, opensslbuffersize * sizeof(uchar));
     int opensslbufferpos = 0;
+    int openssloutputsize = 0;
     opensslresult = EVP_EncryptUpdate(
         opensslctx,
         opensslbuffer, &opensslbufferpos,
         reinterpret_cast<const uchar*>(passwdbytes.constData()), passwdbytes.size()
     );
+    openssloutputsize = opensslbufferpos;
     if (Q_UNLIKELY(opensslresult != 1)) {
         kWarning() << ERR_error_string(ERR_get_error(), NULL);
         EVP_CIPHER_CTX_free(opensslctx);
@@ -298,13 +303,14 @@ QString KPasswdStorePrivate::encryptPasswd(const QString &passwd, bool *ok)
         opensslctx,
         opensslbuffer + opensslbufferpos, &opensslbufferpos
     );
+    openssloutputsize += opensslbufferpos;
     if (Q_UNLIKELY(opensslresult != 1)) {
         kWarning() << ERR_error_string(ERR_get_error(), NULL);
         EVP_CIPHER_CTX_free(opensslctx);
         return QString();
     }
 
-    const QString result = QString::fromLatin1(QByteArray(reinterpret_cast<char*>(opensslbuffer), opensslbufferpos).toHex());
+    const QString result = QString::fromLatin1(QByteArray(reinterpret_cast<char*>(opensslbuffer), openssloutputsize).toHex());
     EVP_CIPHER_CTX_free(opensslctx);
     *ok = !result.isEmpty();
     return result;

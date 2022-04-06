@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     {
         KPasswdStore kpasswdstore;
         kpasswdstore.setStoreID("myid");
-        qDebug() << kpasswdstore.storePasswd("mykey", "dasasd");
+        qDebug() << kpasswdstore.storePasswd("mykey", "8c168487464f045828bb0fba288b880764929954bf13de50c5e24a54097a3a7a");
         firstpass = kpasswdstore.getPasswd("mykey");
         qDebug() << firstpass;
     }
