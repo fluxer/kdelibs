@@ -47,8 +47,8 @@ private:
     bool hasPasswd() const;
     void clearPasswd();
 
-    QString decryptPasswd(const QString &passwd, bool *ok);
-    QString encryptPasswd(const QString &passwd, bool *ok);
+    QString encryptPasswd(const QString &passwd, bool *ok) const;
+    QString decryptPasswd(const QString &passwd, bool *ok) const;
 
     bool m_cacheonly;
     QString m_storeid;
@@ -56,8 +56,6 @@ private:
     QMap<QByteArray, QString> m_cachemap;
 
 #if defined(HAVE_OPENSSL)
-    static QByteArray genBytes(const QByteArray &data, const int length);
-
     QByteArray m_passwd;
     QByteArray m_passwdiv;
     QElapsedTimer m_passwdtimer;

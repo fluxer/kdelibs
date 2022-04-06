@@ -55,6 +55,13 @@ static inline QByteArray hashForBytes(const QByteArray &bytes)
 #endif
 }
 
+static inline QByteArray genBytes(const QByteArray &data, const int length)
+{
+    const QByteArray result = data + hashForBytes(data);
+    Q_ASSERT(result.size() >= length);
+    return result.mid(0, length);
+}
+
 KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
     : m_cacheonly(false),
     m_storeid(id),
@@ -205,14 +212,14 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
             clearPasswd();
             return false;
         }
-        m_passwd = KPasswdStoreImpl::genBytes(kpasswddialogpass, kpasswdstore_keylen);
+        m_passwd = genBytes(kpasswddialogpass, kpasswdstore_keylen);
         if (m_passwd.isEmpty()) {
             kWarning() << "Password bytes is empty";
             clearPasswd();
             return false;
         }
         const QByteArray passhash = hashForBytes(m_passwd);
-        m_passwdiv = KPasswdStoreImpl::genBytes(passhash, kpasswdstore_ivlen);
+        m_passwdiv = genBytes(passhash, kpasswdstore_ivlen);
         if (m_passwdiv.isEmpty()) {
             kWarning() << "Password initialization vector is empty";
             clearPasswd();
@@ -248,7 +255,70 @@ void KPasswdStoreImpl::clearPasswd()
     m_passwdiv.clear();
 }
 
-QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok)
+QString KPasswdStoreImpl::encryptPasswd(const QString &passwd, bool *ok) const
+{
+#if defined(HAVE_OPENSSL)
+    EVP_CIPHER_CTX *opensslctx = EVP_CIPHER_CTX_new();
+    if (Q_UNLIKELY(!opensslctx)) {
+        kWarning() << ERR_error_string(ERR_get_error(), NULL);
+        return QString();
+    }
+
+    int opensslresult = EVP_EncryptInit(
+        opensslctx, EVP_aes_256_cbc(),
+        reinterpret_cast<const uchar*>(m_passwd.constData()),
+        reinterpret_cast<const uchar*>(m_passwdiv.constData())
+    );
+    if (Q_UNLIKELY(opensslresult != 1)) {
+        kWarning() << ERR_error_string(ERR_get_error(), NULL);
+        EVP_CIPHER_CTX_free(opensslctx);
+        return QString();
+    }
+
+    Q_ASSERT(EVP_CIPHER_CTX_key_length(opensslctx) == kpasswdstore_keylen);
+    Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == kpasswdstore_ivlen);
+
+    const QByteArray passwdbytes = passwd.toUtf8();
+    const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
+    uchar opensslbuffer[opensslbuffersize];
+    ::memset(opensslbuffer, 0, opensslbuffersize * sizeof(uchar));
+    int opensslbufferpos = 0;
+    int openssloutputsize = 0;
+    opensslresult = EVP_EncryptUpdate(
+        opensslctx,
+        opensslbuffer, &opensslbufferpos,
+        reinterpret_cast<const uchar*>(passwdbytes.constData()), passwdbytes.size()
+    );
+    openssloutputsize = opensslbufferpos;
+    if (Q_UNLIKELY(opensslresult != 1)) {
+        kWarning() << ERR_error_string(ERR_get_error(), NULL);
+        EVP_CIPHER_CTX_free(opensslctx);
+        return QString();
+    }
+
+    opensslresult = EVP_EncryptFinal(
+        opensslctx,
+        opensslbuffer + opensslbufferpos, &opensslbufferpos
+    );
+    openssloutputsize += opensslbufferpos;
+    if (Q_UNLIKELY(opensslresult != 1)) {
+        kWarning() << ERR_error_string(ERR_get_error(), NULL);
+        EVP_CIPHER_CTX_free(opensslctx);
+        return QString();
+    }
+
+    const QString result = QString::fromLatin1(QByteArray(reinterpret_cast<char*>(opensslbuffer), openssloutputsize).toHex());
+    EVP_CIPHER_CTX_free(opensslctx);
+    *ok = !result.isEmpty();
+    return result;
+#else
+    const QString result = passwd.toUtf8().toBase64();
+    *ok = !result.isEmpty();
+    return result;
+#endif
+}
+
+QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok) const
 {
 #if defined(HAVE_OPENSSL)
     EVP_CIPHER_CTX *opensslctx = EVP_CIPHER_CTX_new();
@@ -313,75 +383,3 @@ QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok)
     return result;
 #endif
 }
-
-QString KPasswdStoreImpl::encryptPasswd(const QString &passwd, bool *ok)
-{
-#if defined(HAVE_OPENSSL)
-    EVP_CIPHER_CTX *opensslctx = EVP_CIPHER_CTX_new();
-    if (Q_UNLIKELY(!opensslctx)) {
-        kWarning() << ERR_error_string(ERR_get_error(), NULL);
-        return QString();
-    }
-
-    int opensslresult = EVP_EncryptInit(
-        opensslctx, EVP_aes_256_cbc(),
-        reinterpret_cast<const uchar*>(m_passwd.constData()),
-        reinterpret_cast<const uchar*>(m_passwdiv.constData())
-    );
-    if (Q_UNLIKELY(opensslresult != 1)) {
-        kWarning() << ERR_error_string(ERR_get_error(), NULL);
-        EVP_CIPHER_CTX_free(opensslctx);
-        return QString();
-    }
-
-    Q_ASSERT(EVP_CIPHER_CTX_key_length(opensslctx) == kpasswdstore_keylen);
-    Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == kpasswdstore_ivlen);
-
-    const QByteArray passwdbytes = passwd.toUtf8();
-    const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
-    uchar opensslbuffer[opensslbuffersize];
-    ::memset(opensslbuffer, 0, opensslbuffersize * sizeof(uchar));
-    int opensslbufferpos = 0;
-    int openssloutputsize = 0;
-    opensslresult = EVP_EncryptUpdate(
-        opensslctx,
-        opensslbuffer, &opensslbufferpos,
-        reinterpret_cast<const uchar*>(passwdbytes.constData()), passwdbytes.size()
-    );
-    openssloutputsize = opensslbufferpos;
-    if (Q_UNLIKELY(opensslresult != 1)) {
-        kWarning() << ERR_error_string(ERR_get_error(), NULL);
-        EVP_CIPHER_CTX_free(opensslctx);
-        return QString();
-    }
-
-    opensslresult = EVP_EncryptFinal(
-        opensslctx,
-        opensslbuffer + opensslbufferpos, &opensslbufferpos
-    );
-    openssloutputsize += opensslbufferpos;
-    if (Q_UNLIKELY(opensslresult != 1)) {
-        kWarning() << ERR_error_string(ERR_get_error(), NULL);
-        EVP_CIPHER_CTX_free(opensslctx);
-        return QString();
-    }
-
-    const QString result = QString::fromLatin1(QByteArray(reinterpret_cast<char*>(opensslbuffer), openssloutputsize).toHex());
-    EVP_CIPHER_CTX_free(opensslctx);
-    *ok = !result.isEmpty();
-    return result;
-#else
-    const QString result = passwd.toUtf8().toBase64();
-    *ok = !result.isEmpty();
-    return result;
-#endif
-}
-
-#if defined(HAVE_OPENSSL)
-QByteArray KPasswdStoreImpl::genBytes(const QByteArray &data, const int length)
-{
-    const QByteArray result = data + hashForBytes(data);
-    Q_ASSERT(result.size() >= length);
-    return result.mid(0, length);
-}
-#endif
