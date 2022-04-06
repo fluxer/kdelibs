@@ -37,4 +37,5 @@ public Q_SLOTS:
 private Q_SLOTS:
     void _removeFinished();
 };
+
 #endif // KAUDIOPLAYER_KDED_H

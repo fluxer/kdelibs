@@ -1,0 +1,12 @@
+[Desktop Entry]
+Icon=dialog-password
+Name=Password store
+Comment=Password store service
+Type=Service
+X-KDE-ServiceTypes=KDEDModule
+X-KDE-Library=kpasswdstore
+X-KDE-DBus-ModuleName=kpasswdstore
+X-KDE-Kded-autoload=false
+X-KDE-Kded-load-on-demand=true
+X-KDE-MediaPlayer=kded_kpasswdstore
+OnlyShowIn=KDE;
