@@ -90,13 +90,13 @@ static QString authInfoToData(const AuthInfo &authinfo)
     QByteArray authdata;
     QDataStream authstream(&authdata, QIODevice::WriteOnly);
     authstream << authinfo;
-    return QString::fromAscii(authdata);
+    return QString::fromLatin1(authdata.toHex());
 }
 
 static AuthInfo authInfoFromData(const QByteArray &authdata)
 {
     QBuffer authbuffer;
-    authbuffer.setData(authdata);
+    authbuffer.setData(QByteArray::fromHex(authdata));
     authbuffer.open(QBuffer::ReadOnly);
     AuthInfo authinfo;
     QDataStream authstream(&authbuffer);
@@ -1266,7 +1266,7 @@ bool SlaveBase::checkCachedAuthentication( AuthInfo& info )
     const QByteArray authkey = authInfoKey(info);
     if (passwdstore->hasPasswd(authkey, windowId)) {
         const QString passwd = passwdstore->getPasswd(authkey, windowId);
-        info = authInfoFromData(passwd.toAscii());
+        info = authInfoFromData(passwd.toLatin1());
         return true;
     }
     return false;
