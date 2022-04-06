@@ -14,33 +14,22 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
-*/ 
+*/
 
-#include <QDebug>
-#include <QApplication>
+#ifndef KPASSWDSTORETEST_H
+#define KPASSWDSTORETEST_H
 
-#include "kpasswdstore.h"
+#include <QObject>
 
-int main(int argc, char **argv)
+class KPasswdStoreTest : public QObject
 {
-    QApplication app(argc, argv);
+    Q_OBJECT
+private Q_SLOTS:
+    void initTestCase();
+    void cleanupTestCase();
 
-    QString firstpass;
-    {
-        KPasswdStore kpasswdstore;
-        kpasswdstore.setStoreID("myid");
-        qDebug() << kpasswdstore.storePasswd("mykey", "8c168487464f045828bb0fba288b880764929954bf13de50c5e24a54097a3a7a");
-        firstpass = kpasswdstore.getPasswd("mykey");
-        qDebug() << firstpass;
-    }
+    void storeAndGet();
+};
 
-    {
-        QString secondpass;
-        KPasswdStore kpasswdstore;
-        kpasswdstore.setStoreID("myid");
-        secondpass = kpasswdstore.getPasswd("mykey");
-        qDebug() << firstpass << secondpass;
-    }
+#endif // KPASSWDSTORETEST_H
 
-    return app.exec();
-}
