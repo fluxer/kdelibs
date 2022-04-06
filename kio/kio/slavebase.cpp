@@ -863,9 +863,6 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
 
         if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_DOMAIN).isValid()) {
             dialogFlags |= KPasswordDialog::ShowDomainLine;
-            if (dlgInfo.getExtraFieldFlags(AUTHINFO_EXTRAFIELD_DOMAIN) & KIO::AuthInfo::ExtraFieldReadOnly) {
-                dialogFlags |= KPasswordDialog::DomainReadOnly;
-            }
         }
 
         if (dlgInfo.getExtraField(AUTHINFO_EXTRAFIELD_ANONYMOUS).isValid()) {
@@ -913,7 +910,7 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
 
         KWindowSystem::setMainWindow(dlg, windowId);
 
-        if (dlg->exec()) {
+        if (dlg->exec() == KPasswordDialog::Accepted) {
             dlgInfo.username = dlg->username();
             dlgInfo.password = dlg->password();
             dlgInfo.keepPassword = dlg->keepPassword();

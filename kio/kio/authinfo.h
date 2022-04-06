@@ -38,8 +38,7 @@ class AuthInfoPrivate;
  * When using this class to cache, retrieve or prompt authentication
  * information, you only need to set the necessary attributes. For
  * example, to check whether a password is already cached, the only
- * required information is the URL of the resource and optionally
- * whether or not a path match should be performed.  Similarly, to
+ * required information is the URL of the resource. Similarly, to
  * prompt for password you only need to optionally set the prompt,
  * username (if already supplied), comment and commentLabel fields.
  *
@@ -180,17 +179,6 @@ public:
    bool keepPassword;
 
    /**
-    * Flags for extra fields
-    * @since 4.1 
-    */
-   enum FieldFlags
-   {
-       ExtraFieldNoFlags = 0,
-       ExtraFieldReadOnly = 1<<1,
-       ExtraFieldMandatory = 1<<2
-   };
-
-   /**
     * Set Extra Field Value. 
     * Currently supported extra-fields: 
     *    "domain" (QString), 
@@ -202,23 +190,11 @@ public:
    void setExtraField(const QString &fieldName, const QVariant & value);
 
    /**
-    * Set Extra Field Flags
-    * @since 4.1
-    */
-   void setExtraFieldFlags(const QString &fieldName, const FieldFlags flags);
-
-   /**
     * Get Extra Field Value
     * Check QVariant::isValid() to find out if the field exists.
     * @since 4.1 
     */
    QVariant getExtraField(const QString &fieldName) const;
-
-   /**
-    * Get Extra Field Flags
-    * @since 4.1
-    */
-   AuthInfo::FieldFlags getExtraFieldFlags(const QString &fieldName) const;
 
    /**
     * Register the meta-types for AuthInfo. This is called from

@@ -44,80 +44,10 @@ using namespace KIO;
 
 //////
 
-class ExtraField
-{
-public:
-    ExtraField()
-    : flags(AuthInfo::ExtraFieldNoFlags)
-    {
-    }
-
-    ExtraField(const ExtraField& other)
-    : customTitle(other.customTitle),
-      flags (other.flags),
-      value (other.value)
-    {
-    }
-
-   ExtraField& operator=(const ExtraField& other)
-   {
-      customTitle = other.customTitle;
-      flags = other.flags;
-      value = other.value;
-      return *this;
-   }
-
-    QString customTitle; // reserved for future use
-    AuthInfo::FieldFlags flags;
-    QVariant value;
-};
-Q_DECLARE_METATYPE(ExtraField)
-
-QDataStream& operator<< (QDataStream& s, const ExtraField& extraField)
-{
-    s << extraField.customTitle;
-    s << (int)extraField.flags;
-    s << extraField.value;
-    return s;
-}
-
-QDataStream& operator>> (QDataStream& s, ExtraField& extraField)
-{
-    s >> extraField.customTitle ;
-    int i;
-    s >> i;
-    extraField.flags = (AuthInfo::FieldFlags)i;
-    s >> extraField.value ;
-    return s;
-}
-
-QDBusArgument &operator<<(QDBusArgument &argument, const ExtraField &extraField)
-{
-    argument.beginStructure();
-    argument << extraField.customTitle << (int)extraField.flags
-             << QDBusVariant(extraField.value);
-    argument.endStructure();
-    return argument;
-}
-
-const QDBusArgument &operator>>(const QDBusArgument &argument, ExtraField &extraField)
-{
-    QDBusVariant value;
-    int flag;
-
-    argument.beginStructure();
-    argument >> extraField.customTitle >> flag >> value;
-    argument.endStructure();
-
-    extraField.value = value.variant();
-    extraField.flags = (KIO::AuthInfo::FieldFlags)flag;
-    return argument;
-}
-
 class KIO::AuthInfoPrivate  
 {
 public:
-    QMap<QString, ExtraField> extraFields;
+    QMap<QString, QVariant> extraFields;
 };
 
 
@@ -160,31 +90,18 @@ AuthInfo& AuthInfo::operator= ( const AuthInfo& info )
 
 void AuthInfo::setExtraField(const QString &fieldName, const QVariant & value)
 {
-    d->extraFields[fieldName].value = value;
+    d->extraFields[fieldName] = value;
 }
- 
-void AuthInfo::setExtraFieldFlags(const QString &fieldName, const FieldFlags flags)
-{
-    d->extraFields[fieldName].flags = flags;
-}
- 
+
 QVariant AuthInfo::getExtraField(const QString &fieldName) const
 {
     if (!d->extraFields.contains(fieldName)) return QVariant();
-    return d->extraFields[fieldName].value; 
-}
- 
-AuthInfo::FieldFlags AuthInfo::getExtraFieldFlags(const QString &fieldName) const
-{
-    if (!d->extraFields.contains(fieldName)) return AuthInfo::ExtraFieldNoFlags;
-    return d->extraFields[fieldName].flags; 
+    return d->extraFields[fieldName];
 }
 
 void AuthInfo::registerMetaTypes()
 {
-    qRegisterMetaType<ExtraField>();
     qRegisterMetaType<KIO::AuthInfo>();
-    qDBusRegisterMetaType<ExtraField>();
     qDBusRegisterMetaType<KIO::AuthInfo>();
 }
 
