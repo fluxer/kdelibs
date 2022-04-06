@@ -21,6 +21,7 @@ add_library(kpasswdstore ${LIBRARY_TYPE} ${kpasswdstore_LIB_SRCS})
 
 target_link_libraries(kpasswdstore PUBLIC
     ${KDE4_KDECORE_LIBS}
+    ${KDE4_KDEUI_LIBS}
     ${QT_QTDBUS_LIBRARY}
 )
 
