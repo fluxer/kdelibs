@@ -378,7 +378,7 @@ QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok) const
     return result;
 #else
     const QByteArray decrypted = QByteArray::fromBase64(passwd.toUtf8());
-    const QString result = QString::fromLatin1(decrypted.constData(), decrypted.size());
+    const QString result = QString::fromUtf8(decrypted.constData(), decrypted.size());
     *ok = !result.isEmpty();
     return result;
 #endif
