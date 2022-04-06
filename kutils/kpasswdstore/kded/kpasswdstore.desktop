@@ -8,5 +8,4 @@ X-KDE-Library=kpasswdstore
 X-KDE-DBus-ModuleName=kpasswdstore
 X-KDE-Kded-autoload=false
 X-KDE-Kded-load-on-demand=true
-X-KDE-MediaPlayer=kded_kpasswdstore
 OnlyShowIn=KDE;

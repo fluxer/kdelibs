@@ -22,7 +22,6 @@
 #include "kpasswdstore_export.h"
 
 #include <QObject>
-#include <QDBusInterface>
 
 class KPasswdStorePrivate;
 
@@ -107,9 +106,8 @@ public:
     static QByteArray makeKey(const QString &string);
 
 private:
-    QDBusInterface m_interface;
-    QByteArray m_cookie;
-    QString m_storeid;
+    Q_DISABLE_COPY(KPasswdStore);
+    KPasswdStorePrivate *d;
 };
 
 #endif // KPASSWDSTORE_H

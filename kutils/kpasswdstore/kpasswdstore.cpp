@@ -36,37 +36,53 @@ static QByteArray getCookie()
 #endif
 }
 
+class KPasswdStorePrivate
+{
+public:
+    KPasswdStorePrivate();
+
+    QDBusInterface interface;
+    QByteArray cookie;
+    QString storeid;
+};
+
+KPasswdStorePrivate::KPasswdStorePrivate()
+    : interface("org.kde.kded", "/modules/kpasswdstore", "org.kde.kpasswdstore"),
+    cookie(getCookie()),
+    storeid(QApplication::applicationName())
+{
+}
+
 KPasswdStore::KPasswdStore(QObject *parent)
     : QObject(parent),
-    m_interface("org.kde.kded", "/modules/kpasswdstore", "org.kde.kpasswdstore"),
-    m_cookie(getCookie()),
-    m_storeid(QApplication::applicationName())
+    d(new KPasswdStorePrivate())
 {
 }
 
 KPasswdStore::~KPasswdStore()
 {
+    delete d;
 }
 
 void KPasswdStore::setStoreID(const QString &id)
 {
-    m_storeid = id;
+    d->storeid = id;
 }
 
 bool KPasswdStore::openStore(const qlonglong windowid)
 {
-    QDBusReply<bool> result = m_interface.call("openStore", m_cookie, m_storeid, windowid);
+    QDBusReply<bool> result = d->interface.call("openStore", d->cookie, d->storeid, windowid);
     return result.value();
 }
 
 void KPasswdStore::setCacheOnly(const bool cacheonly)
 {
-    m_interface.call("setCacheOnly", m_cookie, m_storeid, cacheonly);
+    d->interface.call("setCacheOnly", d->cookie, d->storeid, cacheonly);
 }
 
 bool KPasswdStore::cacheOnly() const
 {
-    QDBusReply<bool> result = m_interface.call("cacheOnly", m_cookie, m_storeid);
+    QDBusReply<bool> result = d->interface.call("cacheOnly", d->cookie, d->storeid);
     return result.value();
 }
 
@@ -77,13 +93,13 @@ bool KPasswdStore::hasPasswd(const QByteArray &key, const qlonglong windowid)
 
 QString KPasswdStore::getPasswd(const QByteArray &key, const qlonglong windowid)
 {
-    QDBusReply<QString> result = m_interface.call("getPasswd", m_cookie, m_storeid, key, windowid);
+    QDBusReply<QString> result = d->interface.call("getPasswd", d->cookie, d->storeid, key, windowid);
     return result.value();
 }
 
 bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd, const qlonglong windowid)
 {
-    QDBusReply<bool> result = m_interface.call("storePasswd", m_cookie, m_storeid, key, passwd, windowid);
+    QDBusReply<bool> result = d->interface.call("storePasswd", d->cookie, d->storeid, key, passwd, windowid);
     return result.value();
 }
 
@@ -95,3 +111,5 @@ QByteArray KPasswdStore::makeKey(const QString &string)
     return QCryptographicHash::hash(string.toUtf8(), QCryptographicHash::Sha256).toHex();
 #endif
 }
+
+#include "moc_kpasswdstore.cpp"

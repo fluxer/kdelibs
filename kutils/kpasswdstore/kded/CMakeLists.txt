@@ -2,6 +2,7 @@
 
 set(kded_kpasswdstore_SRCS 
     kded_kpasswdstore.cpp
+    kpasswdstoreimpl.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kpasswdstore.xml
 )
 

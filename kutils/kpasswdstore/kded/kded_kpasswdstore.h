@@ -20,10 +20,9 @@
 #define KPASSWDSTORE_KDED_H
 
 #include "kdedmodule.h"
+#include "kpasswdstoreimpl.h"
 
 #include <QMap>
-
-class KPasswdStorePrivate;
 
 class KPasswdStoreModule: public KDEDModule
 {
@@ -45,7 +44,7 @@ public Q_SLOTS:
     Q_SCRIPTABLE bool storePasswd(const QByteArray &cookie, const QString &storeid, const QByteArray &key, const QString &passwd, const qlonglong windowid = 0);
 
 private:
-    typedef QMap<QByteArray, KPasswdStorePrivate*> KPasswdStoreMap;
+    typedef QMap<QByteArray, KPasswdStoreImpl*> KPasswdStoreMap;
     KPasswdStoreMap m_stores;
 };
 
