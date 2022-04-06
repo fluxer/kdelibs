@@ -83,18 +83,6 @@ public:
    AuthInfo& operator=( const AuthInfo& info );
 
    /**
-    * Use this method to check if the object was modified.
-    * @return true if the object has been modified
-    */
-   bool isModified() const;
-
-   /**
-    * Use this method to indicate that this object has been modified.
-    * @param flag true to mark the object as modified, false to clear
-    */
-   void setModified( bool flag );
-
-   /**
     * The URL for which authentication is to be stored.
     *
     * This field is required when attempting to cache authorization
@@ -172,19 +160,6 @@ public:
    QString commentLabel;
 
    /**
-    * Flag that, if set, indicates whether a path match should be
-    * performed when requesting for cached authorization.
-    *
-    * A path is deemed to be a match if it is equal to or is a subset
-    * of the cached path.  For example, if stored path is "/foo/bar"
-    * and the request's path set to "/foo/bar/acme", then it is a match
-    * whereas it would not if the request's path was set to "/foo".
-    *
-    * This setting is @em optional and false by default.
-    */
-   bool verifyPath;
-
-   /**
     * Flag which if set forces the username field to be read-only.
     *
     * This setting is @em optional and false by default.
@@ -251,9 +226,6 @@ public:
     * @since 4.3
     */
    static void registerMetaTypes();
-
-protected:
-    bool modified;
 
 private:
     friend class ::KIO::AuthInfoPrivate;

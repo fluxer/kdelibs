@@ -850,8 +850,6 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
     }
 
     AuthInfo dlgInfo(info);
-    // Make sure the modified flag is not set.
-    dlgInfo.setModified(false);
     // Prevent queryAuthInfo from caching the user supplied password since
     // we need the ioslaves to first authenticate against the server with
     // it to ensure it is valid.
@@ -916,8 +914,6 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
         KWindowSystem::setMainWindow(dlg, windowId);
 
         if (dlg->exec()) {
-            dlgInfo.setModified(false);
-
             dlgInfo.username = dlg->username();
             dlgInfo.password = dlg->password();
             dlgInfo.keepPassword = dlg->keepPassword();

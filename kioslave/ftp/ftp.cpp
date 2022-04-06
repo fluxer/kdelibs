@@ -519,7 +519,6 @@ bool Ftp::ftpLogin(bool* userChanged)
       info.commentLabel = i18n( "Site:" );
       info.comment = i18n("<b>%1</b>",  m_host );
       info.keepPassword = true; // Prompt the user for persistence as well.
-      info.setModified(false);  // Default the modified flag since we reuse authinfo.
 
       bool disablePassDlg = config()->readEntry( "DisablePassDlg", false );
       if ( disablePassDlg || !openPasswordDialog( info, errorMsg ) )

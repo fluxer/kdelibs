@@ -125,9 +125,7 @@ public:
 
 AuthInfo::AuthInfo() : d(new AuthInfoPrivate())
 {
-    modified = false;
     readOnly = false;
-    verifyPath = false;
     keepPassword = false;
     AuthInfo::registerMetaTypes();
 }
@@ -152,22 +150,10 @@ AuthInfo& AuthInfo::operator= ( const AuthInfo& info )
     caption = info.caption;
     comment = info.comment;
     commentLabel = info.commentLabel;
-    verifyPath = info.verifyPath;
     readOnly = info.readOnly;
     keepPassword = info.keepPassword;
-    modified = info.modified;
     d->extraFields = info.d->extraFields;
     return *this;
-}
-
-bool AuthInfo::isModified() const
-{
-    return modified;
-}
-
-void AuthInfo::setModified( bool flag )
-{
-    modified = flag;
 }
 
 /////
@@ -206,21 +192,16 @@ void AuthInfo::registerMetaTypes()
 
 QDataStream& KIO::operator<< (QDataStream& s, const AuthInfo& a)
 {
-    s << (quint8)1
-      << a.url << a.username << a.password << a.prompt << a.caption
-      << a.comment << a.commentLabel
-      << a.verifyPath << a.readOnly << a.keepPassword << a.modified
+    s << a.url << a.username << a.password << a.prompt << a.caption
+      << a.comment << a.commentLabel << a.readOnly << a.keepPassword
       << a.d->extraFields;
     return s;
 }
 
 QDataStream& KIO::operator>> (QDataStream& s, AuthInfo& a)
 {
-    quint8 version;
-    s >> version
-      >> a.url >> a.username >> a.password >> a.prompt >> a.caption
-      >> a.comment >> a.commentLabel
-      >> a.verifyPath >> a.readOnly >> a.keepPassword >> a.modified
+    s >> a.url >> a.username >> a.password >> a.prompt >> a.caption
+      >> a.comment >> a.commentLabel >> a.readOnly >> a.keepPassword
       >> a.d->extraFields;
     return s;
 }
@@ -228,10 +209,8 @@ QDataStream& KIO::operator>> (QDataStream& s, AuthInfo& a)
 QDBusArgument &KIO::operator<<(QDBusArgument &argument, const AuthInfo &a)
 {
     argument.beginStructure();
-    argument << (quint8)1
-             << a.url.url() << a.username << a.password << a.prompt << a.caption
-             << a.comment << a.commentLabel
-             << a.verifyPath << a.readOnly << a.keepPassword << a.modified
+    argument << a.url.url() << a.username << a.password << a.prompt << a.caption
+             << a.comment << a.commentLabel << a.readOnly << a.keepPassword
              << a.d->extraFields;
     argument.endStructure();
     return argument;
@@ -240,13 +219,10 @@ QDBusArgument &KIO::operator<<(QDBusArgument &argument, const AuthInfo &a)
 const QDBusArgument &KIO::operator>>(const QDBusArgument &argument, AuthInfo &a)
 {
     QString url;
-    quint8 version;
     
     argument.beginStructure();
-    argument >> version
-             >> url >> a.username >> a.password >> a.prompt >> a.caption
-             >> a.comment >> a.commentLabel
-             >> a.verifyPath >> a.readOnly >> a.keepPassword >> a.modified
+    argument >> url >> a.username >> a.password >> a.prompt >> a.caption
+             >> a.comment >> a.commentLabel >> a.readOnly >> a.keepPassword
              >> a.d->extraFields;
     argument.endStructure();
 
