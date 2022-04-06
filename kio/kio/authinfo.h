@@ -183,6 +183,7 @@ public:
     * Currently supported extra-fields: 
     *    "domain" (QString), 
     *    "anonymous" (bool)
+    *    "hide-username-line" (bool)
     * Setting it to an invalid QVariant() will disable the field.
     * Extra Fields are disabled by default.
     * @since 4.1
