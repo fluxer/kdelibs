@@ -43,11 +43,12 @@ class KPasswdStorePrivate;
     }
     @endcode
 
-    Unlike KWallet the password stores do not use master password - each store
-    has its own password and if password for one store is compromised the
-    other stores will not be affected, unless the same password is used for
-    multiple stores. Note that this is left up to the user - using the same
-    password for multiple password stores is absolutely possible.
+    Unlike KWallet the password stores do not use master password (for the
+    commonly used network and local wallets) - each store has its own password
+    and if password for one store is compromised the other stores will not be
+    affected, unless the same password is used for multiple stores. Note that
+    this is left up to the user - using the same password for multiple password
+    stores is absolutely possible.
 
     @since 4.21
     @warning the API is subject to change
