@@ -30,6 +30,7 @@ set(cmakeFiles
     FindExiv2.cmake
     FindFFmpegThumbnailer.cmake
     FindFontconfig.cmake
+    FindGeoClue.cmake
     FindGettextPO.cmake
     FindGLIB2.cmake
     FindGMP.cmake
