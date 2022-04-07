@@ -20,13 +20,13 @@ target_link_libraries(solid-fakehardwaretest
     ${QT_QTTEST_LIBRARY}
 )
 
-add_definitions(-DTEST_DATA="\\"${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw/fakecomputer.xml\\"")
+add_definitions(-DTEST_DATA="${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw/fakecomputer.xml")
 
 ########### solidhwtest ###############
 
 kde4_add_test(solid-solidhwtest solidhwtest.cpp)
 
-add_definitions(-DFAKE_COMPUTER_XML="\\"${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw/fakecomputer.xml\\"")
+add_definitions(-DFAKE_COMPUTER_XML="${CMAKE_CURRENT_SOURCE_DIR}/../solid/backends/fakehw/fakecomputer.xml")
 
 target_link_libraries(solid-solidhwtest
     ${QT_QTCORE_LIBRARY}

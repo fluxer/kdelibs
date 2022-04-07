@@ -141,9 +141,6 @@ cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 cmake_policy(SET CMP0000 OLD)
 # CMP0003: add the link paths to the link command as with cmake 2.4
 cmake_policy(SET CMP0003 OLD)
-# TODO: get rid of this and adjust to new behaviour
-# CMP0005: keep escaping behaviour for definitions added via add_definitions()
-cmake_policy(SET CMP0005 OLD)
 if(NOT CMAKE_VERSION VERSION_LESS "3.3.0")
     cmake_policy(SET CMP0063 NEW)
 endif()
