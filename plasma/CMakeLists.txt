@@ -175,10 +175,6 @@ if(X11_FOUND)
    target_link_libraries(plasma PRIVATE ${X11_LIBRARIES})
 endif(X11_FOUND)
 
-if(DL_LIBRARY)
-    target_link_libraries(plasma PRIVATE ${DL_LIBRARY})
-endif(DL_LIBRARY)
-
 set_target_properties(plasma PROPERTIES
     VERSION ${GENERIC_LIB_VERSION}
     SOVERSION ${GENERIC_LIB_SOVERSION}
