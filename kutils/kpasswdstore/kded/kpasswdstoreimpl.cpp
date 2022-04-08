@@ -38,8 +38,8 @@ static const qint64 kpasswdstore_passtimeout = 2 * 60000;
 
 // EVP_CIPHER_CTX_key_length() and EVP_CIPHER_CTX_iv_length() cannot be called
 // prior to EVP_EncryptInit() and EVP_DecryptInit() so hardcoding these
-static const int kpasswdstore_keylen = 32;
-static const int kpasswdstore_ivlen = 16;
+static const int kpasswdstore_keylen = 16;
+static const int kpasswdstore_ivlen = 8;
 
 static inline QWidget* widgetForWindowID(const qlonglong windowid)
 {
@@ -69,7 +69,7 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
 {
 #if defined(HAVE_OPENSSL)
     ERR_load_ERR_strings();
-    EVP_add_cipher(EVP_aes_256_cbc());
+    EVP_add_cipher(EVP_bf_cfb64());
 #endif
 }
 
@@ -265,7 +265,7 @@ QString KPasswdStoreImpl::encryptPasswd(const QString &passwd, bool *ok) const
     }
 
     int opensslresult = EVP_EncryptInit(
-        opensslctx, EVP_aes_256_cbc(),
+        opensslctx, EVP_bf_cfb64(),
         reinterpret_cast<const uchar*>(m_passwd.constData()),
         reinterpret_cast<const uchar*>(m_passwdiv.constData())
     );
@@ -328,7 +328,7 @@ QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok) const
     }
 
     int opensslresult = EVP_DecryptInit(
-        opensslctx, EVP_aes_256_cbc(),
+        opensslctx, EVP_bf_cfb64(),
         reinterpret_cast<const uchar*>(m_passwd.constData()),
         reinterpret_cast<const uchar*>(m_passwdiv.constData())
     );
