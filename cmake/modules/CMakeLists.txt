@@ -54,7 +54,6 @@ set(cmakeFiles
     FindLightDM.cmake
     FindMPFR.cmake
     FindMtp.cmake
-    FindNetworkManager.cmake
     FindOpenEXR.cmake
     FindOpenGLES.cmake
     FindPAM.cmake
