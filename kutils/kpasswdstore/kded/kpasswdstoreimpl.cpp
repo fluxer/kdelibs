@@ -36,11 +36,6 @@ static const int kpasswdstore_buffsize = 1024;
 static const int kpasswdstore_passretries = 3;
 static const qint64 kpasswdstore_passtimeout = 2; // minutes
 
-// EVP_CIPHER_CTX_key_length() and EVP_CIPHER_CTX_iv_length() cannot be called
-// prior to EVP_EncryptInit() and EVP_DecryptInit() so hardcoding these
-static const int kpasswdstore_keylen = 16;
-static const int kpasswdstore_ivlen = 8;
-
 static inline QWidget* widgetForWindowID(const qlonglong windowid)
 {
     return QWidget::find(windowid);
@@ -63,7 +58,9 @@ static inline QByteArray genBytes(const QByteArray &data, const int length)
 }
 
 KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
-    : m_retries(kpasswdstore_passretries),
+    : m_opensslkeylen(0),
+    m_opensslivlen(0),
+    m_retries(kpasswdstore_passretries),
     m_timeout(kpasswdstore_passtimeout * 60000),
     m_cacheonly(false),
     m_storeid(id),
@@ -72,6 +69,9 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
 #if defined(HAVE_OPENSSL)
     ERR_load_ERR_strings();
     EVP_add_cipher(EVP_bf_cfb64());
+
+    m_opensslkeylen = EVP_CIPHER_key_length(EVP_bf_cfb64());
+    m_opensslivlen = EVP_CIPHER_iv_length(EVP_bf_cfb64());
 #endif
 
     KConfig kconfig("kpasswdstorerc", KConfig::SimpleConfig);
@@ -192,7 +192,7 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
             KNewPasswordDialog knewpasswddialog(widgetForWindowID(windowid));
             knewpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", m_storeid));
             knewpasswddialog.setAllowEmptyPasswords(false);
-            knewpasswddialog.setMaximumPasswordLength(kpasswdstore_keylen);
+            knewpasswddialog.setMaximumPasswordLength(m_opensslkeylen);
             if (knewpasswddialog.exec() != KNewPasswordDialog::Accepted) {
                 kDebug() << "New password dialog not accepted";
                 clearPasswd();
@@ -220,14 +220,14 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
             clearPasswd();
             return false;
         }
-        m_passwd = genBytes(kpasswddialogpass, kpasswdstore_keylen);
+        m_passwd = genBytes(kpasswddialogpass, m_opensslkeylen);
         if (m_passwd.isEmpty()) {
             kWarning() << "Password bytes is empty";
             clearPasswd();
             return false;
         }
         const QByteArray passhash = hashForBytes(m_passwd);
-        m_passwdiv = genBytes(passhash, kpasswdstore_ivlen);
+        m_passwdiv = genBytes(passhash, m_opensslivlen);
         if (m_passwdiv.isEmpty()) {
             kWarning() << "Password initialization vector is empty";
             clearPasswd();
@@ -283,8 +283,8 @@ QString KPasswdStoreImpl::encryptPasswd(const QString &passwd, bool *ok) const
         return QString();
     }
 
-    Q_ASSERT(EVP_CIPHER_CTX_key_length(opensslctx) == kpasswdstore_keylen);
-    Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == kpasswdstore_ivlen);
+    Q_ASSERT(EVP_CIPHER_CTX_key_length(opensslctx) == m_opensslkeylen);
+    Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == m_opensslivlen);
 
     const QByteArray passwdbytes = passwd.toUtf8();
     const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
@@ -346,10 +346,8 @@ QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok) const
         return QString();
     }
 
-    // qDebug() << Q_FUNC_INFO << EVP_CIPHER_CTX_key_length(opensslctx);
-    // qDebug() << Q_FUNC_INFO << EVP_CIPHER_CTX_iv_length(opensslctx);
-    Q_ASSERT(EVP_CIPHER_CTX_key_length(opensslctx) == kpasswdstore_keylen);
-    Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == kpasswdstore_ivlen);
+    Q_ASSERT(EVP_CIPHER_CTX_key_length(opensslctx) == m_opensslkeylen);
+    Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == m_opensslivlen);
 
     const QByteArray passwdbytes = QByteArray::fromHex(passwd.toLatin1());
     const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));

@@ -58,6 +58,8 @@ private:
     QMap<QByteArray, QString> m_cachemap;
 
 #if defined(HAVE_OPENSSL)
+    int m_opensslkeylen;
+    int m_opensslivlen;
     QByteArray m_passwd;
     QByteArray m_passwdiv;
     QElapsedTimer m_passwdtimer;
