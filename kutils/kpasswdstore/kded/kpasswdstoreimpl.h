@@ -50,6 +50,8 @@ private:
     QString encryptPasswd(const QString &passwd, bool *ok) const;
     QString decryptPasswd(const QString &passwd, bool *ok) const;
 
+    quint8 m_retries;
+    qint64 m_timeout;
     bool m_cacheonly;
     QString m_storeid;
     QString m_passwdstore;

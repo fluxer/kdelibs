@@ -17,6 +17,8 @@
 */
 
 #include "kpasswdstore.h"
+#include "kconfig.h"
+#include "kconfiggroup.h"
 
 #include <QApplication>
 #include <QDBusInterface>
@@ -28,12 +30,19 @@
 
 static QByteArray getCookie()
 {
-    // TODO: config knob for this, eavesdropping will be piece of cake
-    return QByteArray::number(::getuid());
-#if 0
-    return QByteArray::number(::getpid());
-    return qRandomUuid();
+    KConfig kconfig("kpasswdstorerc", KConfig::SimpleConfig);
+    KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
+    const QByteArray cookietype = kconfiggroup.readEntry("Cookie", QByteArray()).toLower();
+    if (cookietype == "pid") {
+        return QByteArray::number(::getpid());
+    } else if (cookietype == "random") {
+#if QT_VERSION >= 0x041200
+        return qRandomUuid();
+#else
+        return QByteArray::number(qrand());
 #endif
+    }
+    return QByteArray::number(::getuid());
 }
 
 class KPasswdStorePrivate

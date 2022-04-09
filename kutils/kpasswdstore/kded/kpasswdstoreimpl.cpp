@@ -34,7 +34,7 @@
 
 static const int kpasswdstore_buffsize = 1024;
 static const int kpasswdstore_passretries = 3;
-static const qint64 kpasswdstore_passtimeout = 2 * 60000;
+static const qint64 kpasswdstore_passtimeout = 2; // minutes
 
 // EVP_CIPHER_CTX_key_length() and EVP_CIPHER_CTX_iv_length() cannot be called
 // prior to EVP_EncryptInit() and EVP_DecryptInit() so hardcoding these
@@ -63,7 +63,9 @@ static inline QByteArray genBytes(const QByteArray &data, const int length)
 }
 
 KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
-    : m_cacheonly(false),
+    : m_retries(kpasswdstore_passretries),
+    m_timeout(kpasswdstore_passtimeout * 60000),
+    m_cacheonly(false),
     m_storeid(id),
     m_passwdstore(KStandardDirs::locateLocal("data", "kpasswdstore.ini"))
 {
@@ -71,6 +73,11 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
     ERR_load_ERR_strings();
     EVP_add_cipher(EVP_bf_cfb64());
 #endif
+
+    KConfig kconfig("kpasswdstorerc", KConfig::SimpleConfig);
+    KConfigGroup kconfiggroup = kconfig.group("KPasswdStore");
+    m_retries = kconfiggroup.readEntry("Retries", kpasswdstore_passretries);
+    m_timeout = (kconfiggroup.readEntry("Timeout", kpasswdstore_passtimeout) * 60000);
 }
 
 KPasswdStoreImpl::~KPasswdStoreImpl()
@@ -89,8 +96,8 @@ bool KPasswdStoreImpl::openStore(const qlonglong windowid)
     }
 
     bool cancel = false;
-    int retry = kpasswdstore_passretries;
-    while (retry > 0 && !ensurePasswd(windowid, retry < kpasswdstore_passretries, &cancel)) {
+    quint8 retry = m_retries;
+    while (retry > 0 && !ensurePasswd(windowid, retry < m_retries, &cancel)) {
         retry--;
         if (cancel) {
             break;
@@ -168,7 +175,7 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
     Q_ASSERT(!cacheonly);
 
 #if defined(HAVE_OPENSSL)
-    if (!m_passwd.isEmpty() && m_passwdtimer.elapsed() >= kpasswdstore_passtimeout) {
+    if (!m_passwd.isEmpty() && m_passwdtimer.elapsed() >= m_timeout) {
         m_passwd.clear();
     }
     m_passwdtimer.restart();
