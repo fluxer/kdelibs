@@ -185,6 +185,7 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
             KNewPasswordDialog knewpasswddialog(widgetForWindowID(windowid));
             knewpasswddialog.setPrompt(i18n("Enter a password for <b>%1</b> password storage", m_storeid));
             knewpasswddialog.setAllowEmptyPasswords(false);
+            knewpasswddialog.setMaximumPasswordLength(kpasswdstore_keylen);
             if (knewpasswddialog.exec() != KNewPasswordDialog::Accepted) {
                 kDebug() << "New password dialog not accepted";
                 clearPasswd();
