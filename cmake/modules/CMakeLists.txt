@@ -39,7 +39,6 @@ set(cmakeFiles
     FindKDE4Workspace.cmake
     FindLibATASmart.cmake
     FindLibDRM.cmake
-    FindLibGcrypt.cmake
     FindLibintl.cmake
     FindLibKonq.cmake
     FindLibLZMA.cmake
