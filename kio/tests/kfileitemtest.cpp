@@ -320,9 +320,9 @@ void KFileItemTest::testListProperties_data()
     QTest::newRow("dir+root dir") << "d/" << true << false << true << true << "inode/directory" << "inode";
     QTest::newRow("two (text+html) files") << "ff" << true << true << true << false << "" << "text";
     QTest::newRow("three (text+html+empty) files") << "fff" << true << true << true << false << "" << "";
-    QTest::newRow("http url") << "h" << true << true /*says kio_http...*/
+    QTest::newRow("http url") << "h" << true << false /*says kio_http...*/
                               << false << false << "application/octet-stream" << "application";
-    QTest::newRow("2 http urls") << "hh" << true << true /*says kio_http...*/
+    QTest::newRow("2 http urls") << "hh" << true << false /*says kio_http...*/
                               << false << false << "application/octet-stream" << "application";
 }
 

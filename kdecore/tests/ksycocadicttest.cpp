@@ -72,7 +72,7 @@ void KSycocaDictTest::testStandardDict()
 
     QDataStream stream(buffer);
     KSycocaDict loadingDict(&stream, 0);
-    int offset = loadingDict.find_string("Plasma/Applet);
+    int offset = loadingDict.find_string("Plasma/Applet");
     QVERIFY(offset > 0);
     QCOMPARE(offset, KServiceType::serviceType("Plasma/Applet")->offset());
     foreach(const QString& str, mimeTypes) {

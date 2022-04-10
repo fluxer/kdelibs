@@ -116,14 +116,6 @@ int main(int argc, char **argv)
         QStringList filter;
         filter << "all/allfiles" << "text/plain";
         dlg->setMimeFilter( filter, "all/allfiles" );
-#if 0 // SPLIT-TODO
-        KUrlBar *urlBar = dlg->speedBar();
-        if ( urlBar )
-        {
-            urlBar->insertDynamicItem( KUrl("ftp://ftp.kde.org"),
-                                       QLatin1String("KDE FTP Server") );
-        }
-#endif
         if ( dlg->exec() == KDialog::Accepted )
             name1 = dlg->selectedUrl().url();
     }

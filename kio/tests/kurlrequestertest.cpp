@@ -9,7 +9,7 @@ int main( int argc, char **argv )
     KApplication app;
     app.setQuitOnLastWindowClosed(false);
  
-    KUrl url = KUrlRequesterDialog::getUrl( "ftp://ftp.kde.org" );
+    KUrl url = KUrlRequesterDialog::getUrl( "ftp://ftp.gnu.org/" );
     qDebug( "Selected url: %s", url.url().toLatin1().constData());
 
     KUrlRequester *req = new KUrlRequester();

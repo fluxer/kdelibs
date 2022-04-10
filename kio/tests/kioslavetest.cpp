@@ -173,11 +173,11 @@ KioslaveTest::KioslaveTest( QString src, QString dest, uint op, uint pr )
   setCentralWidget( main_widget );
 
   slave = 0;
-//  slave = KIO::Scheduler::getConnectedSlave(KUrl("ftp://ftp.kde.org"));
+//  slave = KIO::Scheduler::getConnectedSlave(KUrl("ftp://ftp.gnu.org/"));
   KIO::Scheduler::connect(SIGNAL(slaveConnected(KIO::Slave*)),
-	this, SLOT(slotSlaveConnected()));
+    this, SLOT(slotSlaveConnected()));
   KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave*,int,QString)),
-	this, SLOT(slotSlaveError()));
+    this, SLOT(slotSlaveError()));
 }
 
 void KioslaveTest::slotQuit(){

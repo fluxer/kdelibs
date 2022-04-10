@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 {
   KCmdLineArgs::init(argc,argv, "netaccesstest", 0, ki18n("netaccesstest"), 0);
   KApplication app;
-  KUrl srcURL( "ftp://ftp.kde.org/pub/kde/README" );
+  KUrl srcURL( "ftp://ftp.gnu.org/README" );
   KUrl tmpURL( "file:/tmp/netaccesstest_README" );
 
   for ( uint i = 0; i < 4 ; ++i ) {
