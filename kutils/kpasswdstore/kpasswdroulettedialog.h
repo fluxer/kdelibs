@@ -43,7 +43,6 @@ class KPasswdRouletteDialogPrivate;
     @endcode
 
     @since 4.21
-    @warning the API is subject to change
 */
 class KPASSWDSTORE_EXPORT KPasswdRouletteDialog : public KDialog
 {

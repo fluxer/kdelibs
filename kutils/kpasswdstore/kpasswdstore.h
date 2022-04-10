@@ -51,7 +51,8 @@ class KPasswdStorePrivate;
     stores is absolutely possible.
 
     @since 4.21
-    @warning the API is subject to change
+    @note there are some type of changes and additions I will intentionally not
+    make nor will I accept patches for
 */
 class KPASSWDSTORE_EXPORT KPasswdStore : public QObject
 {
