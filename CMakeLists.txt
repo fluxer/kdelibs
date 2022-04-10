@@ -69,7 +69,8 @@ set_package_properties(ENCHANT PROPERTIES
     PURPOSE "Spell checking support via Enchant"
 )
 
-find_package(CURL)
+# v7.43.0+ required for CURL_AT_LEAST_VERSION() macro
+find_package(CURL 7.43.0)
 set_package_properties(CURL PROPERTIES
     DESCRIPTION "Command line tool and library for transferring data with URLs"
     URL "https://curl.se/"

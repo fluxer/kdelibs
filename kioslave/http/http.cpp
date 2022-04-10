@@ -39,8 +39,7 @@ static inline curl_proxytype curlProxyType(const QString &proxy)
 {
     const QString proxyprotocol = KUrl(proxy).protocol();
 
-    // added in 7.52.0
-#ifdef CURLPROXY_HTTPS
+#if CURL_AT_LEAST_VERSION(7, 52, 0)
     if (proxyprotocol.startsWith(QLatin1String("https"))) {
         return CURLPROXY_HTTPS;
     }
@@ -79,7 +78,9 @@ static inline KIO::Error KIOError(const CURLcode curlcode)
         case CURLE_URL_MALFORMAT: {
             return KIO::ERR_MALFORMED_URL;
         }
+#if CURL_AT_LEAST_VERSION(7, 73, 0)
         case CURLE_PROXY:
+#endif
         case CURLE_COULDNT_RESOLVE_PROXY: {
             return KIO::ERR_UNKNOWN_PROXY_HOST;
         }
