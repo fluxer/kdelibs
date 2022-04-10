@@ -73,6 +73,54 @@ static inline QString HTTPCharset(const QString &contenttype)
     return splitcontenttype.at(1);
 }
 
+static inline KIO::Error KIOError(const CURLcode curlcode)
+{
+    switch (curlcode) {
+        case CURLE_URL_MALFORMAT: {
+            return KIO::ERR_MALFORMED_URL;
+        }
+        case CURLE_PROXY:
+        case CURLE_COULDNT_RESOLVE_PROXY: {
+            return KIO::ERR_UNKNOWN_PROXY_HOST;
+        }
+        case CURLE_AUTH_ERROR:
+        case CURLE_LOGIN_DENIED:
+        case CURLE_REMOTE_ACCESS_DENIED: {
+            return KIO::ERR_COULD_NOT_AUTHENTICATE;
+        }
+        case CURLE_FILE_COULDNT_READ_FILE:
+        case CURLE_READ_ERROR: {
+            return KIO::ERR_COULD_NOT_READ;
+        }
+        case CURLE_WRITE_ERROR: {
+            return KIO::ERR_COULD_NOT_WRITE;
+        }
+        case CURLE_OUT_OF_MEMORY: {
+            return KIO::ERR_OUT_OF_MEMORY;
+        }
+        case CURLE_BAD_DOWNLOAD_RESUME: {
+            return KIO::ERR_CANNOT_RESUME;
+        }
+        case CURLE_REMOTE_FILE_NOT_FOUND: {
+            return KIO::ERR_DOES_NOT_EXIST;
+        }
+        case CURLE_GOT_NOTHING: {
+            return KIO::ERR_NO_CONTENT;
+        }
+        case CURLE_REMOTE_DISK_FULL: {
+            return KIO::ERR_DISK_FULL;
+        }
+        case CURLE_OPERATION_TIMEDOUT: {
+            return KIO::ERR_SERVER_TIMEOUT;
+        }
+        case CURLE_COULDNT_CONNECT:
+        default: {
+            return KIO::ERR_COULD_NOT_CONNECT;
+        }
+    }
+    Q_UNREACHABLE();
+}
+
 size_t curlWriteCallback(char *ptr, size_t size, size_t nmemb, void *userdata)
 {
     HttpProtocol* httpprotocol = static_cast<HttpProtocol*>(userdata);
@@ -280,7 +328,7 @@ void HttpProtocol::get(const KUrl &url)
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(curllist);
         kWarning(7103) << curl_easy_strerror(curlresult);
-        error(KIO::ERR_COULD_NOT_CONNECT, curl_easy_strerror(curlresult));
+        error(KIOError(curlresult), curl_easy_strerror(curlresult));
         return;
     }
 
