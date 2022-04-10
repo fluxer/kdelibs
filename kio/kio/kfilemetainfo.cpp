@@ -628,12 +628,17 @@ void KFileMetaInfoPrivate::init(const QByteArray &filepath, const KUrl& url, KFi
     );
     EXTRACTOR_plugin_remove_all(extractorplugins);
 
+    bool hasfilename = false;
     // remove duplicates from the falltrough cases in the extraction which essentially have the
     // same meaning
     KFileMetaInfoItemList::iterator it = items.begin();
     QStringList itemkeys;
     itemkeys.reserve(items.size());
     while (it != items.end()) {
+        if (it->key() == QLatin1String("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName")) {
+            hasfilename = true;
+        }
+
         if (!itemkeys.contains(it->key())) {
             itemkeys.append(it->key());
             it++;
@@ -641,6 +646,13 @@ void KFileMetaInfoPrivate::init(const QByteArray &filepath, const KUrl& url, KFi
             kDebug() << "Multiple entries for the same key" << it->key();
             it = items.erase(it);
         }
+    }
+
+    // for compatibility
+    if (!hasfilename) {
+        const QString kfmifilename = QFileInfo(filepath).fileName();
+        const KFileMetaInfoItem kfmi("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName", kfmifilename);
+        items.append(kfmi);
     }
 }
 
