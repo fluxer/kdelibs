@@ -53,7 +53,6 @@ set(cmakeFiles
     FindMPFR.cmake
     FindMtp.cmake
     FindOpenEXR.cmake
-    FindOpenGLES.cmake
     FindPAM.cmake
     FindPCIUTILS.cmake
     FindPopplerQt4.cmake
