@@ -63,7 +63,7 @@ bool correctLastComponentCase(const QString &path, QString &correctCasePath, con
     //kDebug() << "Correcting " << path;
 
     // If the file already exists then no need to search for it.
-    if (QFile::exists(path)) {
+    if (QFileInfo(path).exists()) {
         correctCasePath = path;
         //kDebug() << "Correct path is" << correctCasePath;
         return true;
@@ -110,7 +110,7 @@ Returns true on success and false on error, in case of error, corrected is not m
 bool correctPathCase(const QString& path, QString &corrected)
 {
     // early exit check
-    if (QFile::exists(path)) {
+    if (QFileInfo(path).exists()) {
         corrected = path;
         return true;
     }
@@ -213,14 +213,14 @@ class RunnerContextPrivate : public QSharedData
                     // but if a path doesn't have any slashes
                     // it's too ambiguous to be sure we're in a filesystem context
                     path = QDir::cleanPath(url.toLocalFile());
-                    //kDebug( )<< "slash check" << path;
+                    // kDebug() << "slash check" << path << url;
                     if (hasProtocol || ((path.indexOf('/') != -1 || path.indexOf('\\') != -1))) {
                         QString correctCasePath;
                         if (correctPathCase(path, correctCasePath)) {
+                            // kDebug() << "correct case path is" << path << correctCasePath;
                             path = correctCasePath;
                             QFileInfo info(path);
-                            //kDebug( )<< "correct cas epath is" << correctCasePath << info.isSymLink() <<
-                            //    info.isDir() << info.isFile();
+                            // kDebug() << info.isSymLink() << info.isDir() << info.isFile();
 
                             if (info.isSymLink()) {
                                 path = info.canonicalFilePath();
