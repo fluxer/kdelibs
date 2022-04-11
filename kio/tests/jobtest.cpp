@@ -1311,7 +1311,8 @@ void JobTest::mostLocalUrl()
     createTestFile( filePath );
     KIO::StatJob* job = KIO::mostLocalUrl(filePath, KIO::HideProgressInfo);
     QVERIFY(job);
-    bool ok = job->exec();
+    job->setUiDelegate(0);
+    bool ok = KIO::NetAccess::synchronousRun(job, 0);
     QVERIFY(ok);
     QCOMPARE(job->mostLocalUrl().toLocalFile(), filePath);
 }
