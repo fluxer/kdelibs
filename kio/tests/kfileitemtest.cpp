@@ -227,9 +227,10 @@ void KFileItemTest::testMimeTypeOnDemand()
         file.close();
         KFileItem fileItem(KFileItem::Unknown, KFileItem::Unknown, KUrl(fileName), true /*on demand*/);
         QCOMPARE(fileItem.mimeTypePtr()->name(), QString("text/plain"));
-        QVERIFY(fileItem.isMimeTypeKnown());
+        QVERIFY(!fileItem.isMimeTypeKnown());
         QCOMPARE(fileItem.determineMimeType()->name(), QString("text/plain"));
         QCOMPARE(fileItem.mimetype(), QString("text/plain"));
+        QVERIFY(fileItem.isMimeTypeKnown());
 
         // And if the mimetype is not on demand?
         KFileItem fileItem2(KFileItem::Unknown, KFileItem::Unknown, KUrl(fileName));
