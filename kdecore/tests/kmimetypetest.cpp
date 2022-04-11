@@ -390,12 +390,12 @@ void KMimeTypeTest::testFindByNameAndContent()
     QVERIFY( mime );
     QCOMPARE( mime->name(), QString::fromLatin1("text/plain") );
 
-    // textfile.doc -> text/plain. We added this to the mimetype database so that it can be handled.
+    // mswordfile.doc -> application/msword. Found by glob.
     mime = KMimeType::findByNameAndContent("textfile.doc", textData);
     QVERIFY( mime );
-    QCOMPARE( mime->name(), QString::fromLatin1("text/plain") );
+    QCOMPARE( mime->name(), QString::fromLatin1("application/msword") );
 
-    // mswordfile.doc -> application/msword. Found by contents, because of the above case.
+    // mswordfile.doc -> application/msword. Found by contents.
     // Note that it's application/msword, not application/vnd.ms-word, since it's the former that is registered to IANA.
     QByteArray mswordData = "\320\317\021\340\241\261\032\341";
     mime = KMimeType::findByNameAndContent("mswordfile.doc", mswordData);
@@ -755,7 +755,6 @@ void KMimeTypeTest::testPatterns_data()
     QTest::newRow("mimetype with many patterns") << "application/vnd.wordperfect" << "*.wp;*.wp4;*.wp5;*.wp6;*.wpd;*.wpp" << ".wp";
     QTest::newRow("oasis text mimetype") << "application/vnd.oasis.opendocument.text" << "*.odt" << ".odt";
     QTest::newRow("oasis presentation mimetype") << "application/vnd.oasis.opendocument.presentation" << "*.odp" << ".odp";
-    QTest::newRow("mimetype with multiple patterns, *.doc added by kde") << "text/plain" << "*.asc;*.txt;*.doc;*,v" << ".txt";
     QTest::newRow("mimetype with uncommon pattern") << "application/x-kcachegrind" << "callgrind.out*;cachegrind.out*" << QString();
     QTest::newRow("mimetype with no patterns") << "application/x-ole-storage" << QString() << QString();
 }
