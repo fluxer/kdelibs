@@ -63,9 +63,22 @@ QT_END_NAMESPACE
 
 static const char *const lockName = "klockfiletest.lock";
 
+static bool seenWarningMessage = false;
+static QtMsgHandler msgHandler = nullptr;
+
+void kMessageHandler(QtMsgType type, const char *msg)
+{
+    QByteArray expectedMsg = QByteArray("Deleting stale lockfile ") + lockName;
+    if (QByteArray(msg).contains(expectedMsg)) {
+        seenWarningMessage = true;
+    }
+    msgHandler(type, msg);
+}
+
 void
 Test_KLockFile::initTestCase()
 {
+    msgHandler = qInstallMsgHandler(kMessageHandler);
     QFile::remove( lockName );
     lockFile = new KLockFile(QLatin1String(lockName));
 }
@@ -75,6 +88,7 @@ Test_KLockFile::cleanupTestCase()
 {
     delete lockFile;
     lockFile = nullptr;
+    qInstallMsgHandler(nullptr);
 }
 
 static KLockFile::LockResult testLockFromProcess(const QString& lockName)
@@ -146,9 +160,10 @@ Test_KLockFile::testStaleNoBlockFlag()
     KLockFile* lockFile2 = new KLockFile(QLatin1String(lockName));
     QVERIFY(!lockFile2->isLocked());
     QCOMPARE(lockFile2->lock(KLockFile::NoBlockFlag), KLockFile::LockStale);
-    QByteArray expectedMsg = QByteArray("WARNING: deleting stale lockfile ") + lockName;
-    QTest::ignoreMessage(QtWarningMsg, expectedMsg);
+    seenWarningMessage = false;
     QCOMPARE(lockFile2->lock(KLockFile::NoBlockFlag|KLockFile::ForceFlag), KLockFile::LockOK);
+    QTest::qWait(2000);
+    QVERIFY(seenWarningMessage);
 
     QVERIFY(lockFile2->isLocked());
     delete lockFile2;
