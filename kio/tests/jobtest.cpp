@@ -59,18 +59,6 @@ static QString otherTmpDir()
     return "/tmp/jobtest/";
 }
 
-#if 0
-static KUrl systemTmpDir()
-{
-    return KUrl( "system:/home/.kde-unit-test/jobtest-system/" );
-}
-
-static QString realSystemPath()
-{
-    return QFile::decodeName( getenv( "KDEHOME" ) ) + "/jobtest-system/";
-}
-#endif
-
 Q_DECLARE_METATYPE(KIO::Job*)
 
 void JobTest::initTestCase()
@@ -85,15 +73,6 @@ void JobTest::initTestCase()
         if ( !ok )
             kFatal() << "Couldn't create " << otherTmpDir();
     }
-#if 0
-    if ( KProtocolInfo::isKnownProtocol( "system" ) ) {
-        if ( !QFile::exists( realSystemPath() ) ) {
-            bool ok = dir.mkdir( realSystemPath() );
-            if ( !ok )
-                kFatal() << "Couldn't create " << realSystemPath();
-        }
-    }
-#endif
 
     qRegisterMetaType<KJob*>("KJob*");
     qRegisterMetaType<KIO::Job*>("KIO::Job*");
@@ -112,11 +91,6 @@ void JobTest::cleanupTestCase()
 {
     delDir( homeTmpDir() );
     delDir( otherTmpDir() );
-#if 0
-    if ( KProtocolInfo::isKnownProtocol( "system" ) ) {
-        delDir(systemTmpDir());
-    }
-#endif
 }
 
 void JobTest::enterLoop()
@@ -998,83 +972,6 @@ void JobTest::calculateRemainingSeconds()
     text = KIO::convertSeconds( seconds );
     QCOMPARE( text, i18n( "00:00:50" ) );
 }
-
-#if 0
-void JobTest::copyFileToSystem()
-{
-    if ( !KProtocolInfo::isKnownProtocol( "system" ) ) {
-        kDebug() << "no kio_system, skipping test";
-        return;
-    }
-
-    // First test with support for UDS_LOCAL_PATH
-    copyFileToSystem( true );
-
-    QString dest = realSystemPath() + "fileFromHome_copied";
-    QFile::remove( dest );
-
-    // Then disable support for UDS_LOCAL_PATH, i.e. test what would
-    // happen for ftp, smb, http etc.
-    copyFileToSystem( false );
-}
-
-void JobTest::copyFileToSystem( bool resolve_local_urls )
-{
-    kDebug() << resolve_local_urls;
-    extern KIO_EXPORT bool kio_resolve_local_urls;
-    kio_resolve_local_urls = resolve_local_urls;
-
-    const QString src = homeTmpDir() + "fileFromHome";
-    createTestFile( src );
-    KUrl u;
-    u.setPath( src );
-    KUrl d = systemTmpDir();
-    d.addPath( "fileFromHome_copied" );
-
-    kDebug() << "copying " << u << " to " << d;
-
-    // copy the file with file_copy
-    m_mimetype.clear();
-    KIO::FileCopyJob* job = KIO::file_copy(u, d, -1, KIO::HideProgressInfo);
-    job->setUiDelegate( 0 );
-    connect( job, SIGNAL(mimetype(KIO::Job*,QString)),
-             this, SLOT(slotMimetype(KIO::Job*,QString)) );
-    bool ok = KIO::NetAccess::synchronousRun( job, 0 );
-    QVERIFY( ok );
-
-    QString dest = realSystemPath() + "fileFromHome_copied";
-
-    QVERIFY( QFile::exists( dest ) );
-    QVERIFY( QFile::exists( src ) ); // still there
-
-    {
-        // do NOT check that the timestamp is the same.
-        // It can't work with file_copy when it uses the datapump,
-        // unless we use setModificationTime in the app code.
-    }
-
-    // Check mimetype
-    QCOMPARE(m_mimetype, QString("text/plain"));
-
-    // cleanup and retry with KIO::copy()
-    QFile::remove( dest );
-    job = KIO::copy(u, d, KIO::HideProgressInfo);
-    job->setUiDelegate(0);
-    ok = KIO::NetAccess::synchronousRun(job, 0);
-    QVERIFY( ok );
-    QVERIFY( QFile::exists( dest ) );
-    QVERIFY( QFile::exists( src ) ); // still there
-    {
-        // check that the timestamp is the same (#79937)
-        QFileInfo srcInfo( src );
-        QFileInfo destInfo( dest );
-        QCOMPARE( srcInfo.lastModified(), destInfo.lastModified() );
-    }
-
-    // restore normal behavior
-    kio_resolve_local_urls = true;
-}
-#endif
 
 void JobTest::getInvalidUrl()
 {

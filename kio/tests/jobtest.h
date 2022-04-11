@@ -79,9 +79,6 @@ private Q_SLOTS:
     void moveAndOverwrite();
     void moveOverSymlinkToSelf();
 
-    // Remote tests
-    //void copyFileToSystem();
-
     void getInvalidUrl();
 
 Q_SIGNALS:
