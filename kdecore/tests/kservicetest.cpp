@@ -201,7 +201,7 @@ void KServiceTest::testAllServices()
             const QString menuId = service->menuId();
             if ( menuId.isEmpty() )
                 qWarning( "%s has an empty menuId!", qPrintable( entryPath ) );
-            else if ( menuId == "konsole.desktop" )
+            else if ( menuId == "kde4-konsole.desktop" )
                 m_hasKde4Konsole = true;
             QVERIFY( !menuId.isEmpty() );
             lookedupService = KService::serviceByMenuId( menuId );
@@ -235,11 +235,11 @@ void KServiceTest::testDBUSStartupType()
     if ( !KSycoca::isAvailable() )
         QSKIP( "ksycoca not available", SkipAll );
     if ( !m_hasKde4Konsole )
-        QSKIP( "konsole.desktop not available", SkipAll );
-    //KService::Ptr konsole = KService::serviceByMenuId( "konsole.desktop" );
+        QSKIP( "kde4-konsole.desktop not available", SkipAll );
+    //KService::Ptr konsole = KService::serviceByMenuId( "kde4-konsole.desktop" );
     KService::Ptr konsole = KService::serviceByDesktopName( "konsole" );
     QVERIFY(konsole);
-    QCOMPARE(konsole->menuId(), QString("konsole.desktop"));
+    QCOMPARE(konsole->menuId(), QString("kde4-konsole.desktop"));
     //qDebug() << konsole->entryPath();
     QCOMPARE((int)konsole->dbusStartupType(), (int)KService::DBusUnique);
 }
@@ -251,10 +251,10 @@ void KServiceTest::testByStorageId()
     if (KGlobal::dirs()->locate("xdgdata-apps", "kde4/kmailservice.desktop").isEmpty()) {
         QSKIP("kde4/kmailservice.desktop not available", SkipAll);
     }
-    QVERIFY(KService::serviceByMenuId("kmailservice.desktop"));
-    QVERIFY(!KService::serviceByMenuId("kmailservice")); // doesn't work, extension mandatory
-    QVERIFY(KService::serviceByStorageId("kmailservice.desktop"));
-    //QVERIFY(!KService::serviceByStorageId("kmailservice")); // doesn't work, extension mandatory; also shows a debug
+    QVERIFY(KService::serviceByMenuId("kde4-kmailservice.desktop"));
+    QVERIFY(!KService::serviceByMenuId("kde4-kmailservice")); // doesn't work, extension mandatory
+    QVERIFY(KService::serviceByStorageId("kde4-kmailservice.desktop"));
+    //QVERIFY(!KService::serviceByStorageId("kde4-kmailservice")); // doesn't work, extension mandatory; also shows a debug
 
     // This one fails here; probably because there are two such files, so this would be too
     // ambiguous... According to the testAllServices output, the entryPaths are
@@ -265,7 +265,7 @@ void KServiceTest::testByStorageId()
 
     QVERIFY(KService::serviceByDesktopName("kmailservice"));
     // This could fail if it finds the kde3 kmailservice from /usr/share. But who still has kde3 :-)
-    QCOMPARE(KService::serviceByDesktopName("kmailservice")->menuId(), QString("kmailservice.desktop"));
+    QCOMPARE(KService::serviceByDesktopName("kmailservice")->menuId(), QString("kde4-kmailservice.desktop"));
 }
 
 void KServiceTest::testServiceTypeTraderForReadOnlyPart()
