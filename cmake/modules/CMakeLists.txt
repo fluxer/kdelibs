@@ -53,7 +53,6 @@ set(cmakeFiles
     FindMPFR.cmake
     FindMtp.cmake
     FindOpenEXR.cmake
-    FindPAM.cmake
     FindPCIUTILS.cmake
     FindPopplerQt4.cmake
     FindQalculate.cmake
@@ -76,7 +75,6 @@ set(cmakeFiles
     MacroLibrary.cmake
     MacroOptionalAddSubdirectory.cmake
     MacroOptionalFindPackage.cmake
-    UnixAuth.cmake
 )
 
 install(FILES ${cmakeFiles} DESTINATION ${module_install_dir})
