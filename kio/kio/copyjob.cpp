@@ -1081,15 +1081,16 @@ void CopyJobPrivate::slotResultConflictCreatingDirs( KJob * job )
     if (m_reportTimer)
         m_reportTimer->start(REPORT_TIMEOUT);
     switch ( r ) {
-        case R_CANCEL:
+        case R_CANCEL: {
             q->setError( ERR_USER_CANCELED );
             q->emitResult();
             return;
-        case R_AUTO_RENAME:
+        }
+        case R_AUTO_RENAME: {
             m_bAutoRenameDirs = true;
             // fall through
-        case R_RENAME:
-        {
+        }
+        case R_RENAME: {
             QString oldPath = (*it).uDest.path( KUrl::AddTrailingSlash );
             KUrl newUrl( (*it).uDest );
             newUrl.setPath( newPath );
@@ -1131,34 +1132,40 @@ void CopyJobPrivate::slotResultConflictCreatingDirs( KJob * job )
                 emit q->aboutToCreate( q, dirs );
             if (!files.isEmpty())
                 emit q->aboutToCreate( q, files );
+            break;
         }
-        break;
-        case R_AUTO_SKIP:
+        case R_AUTO_SKIP: {
             m_bAutoSkipDirs = true;
             // fall through
-        case R_SKIP:
+        }
+        case R_SKIP: {
             m_skipList.append( existingDest );
             skip((*it).uSource, true);
             // Move on to next dir
             dirs.erase( it );
             m_processedDirs++;
             break;
-        case R_OVERWRITE:
+        }
+        case R_OVERWRITE: {
             m_overwriteList.insert( existingDest );
             emit q->copyingDone( q, (*it).uSource, (*it).uDest, (*it).mtime, true /* directory */, false /* renamed */ );
             // Move on to next dir
             dirs.erase( it );
             m_processedDirs++;
             break;
-        case R_OVERWRITE_ALL:
+        }
+        case R_OVERWRITE_ALL: {
             m_bOverwriteAllDirs = true;
             emit q->copyingDone( q, (*it).uSource, (*it).uDest, (*it).mtime, true /* directory */, false /* renamed */ );
             // Move on to next dir
             dirs.erase( it );
             m_processedDirs++;
             break;
-        default:
+        }
+        default: {
             assert( 0 );
+            break;
+        }
     }
     state = STATE_CREATING_DIRS;
     //emit processedAmount( this, KJob::Directories, m_processedDirs );
@@ -1422,15 +1429,16 @@ void CopyJobPrivate::slotResultConflictCopyingFiles( KJob * job )
     q->removeSubjob( job );
     assert ( !q->hasSubjobs() );
     switch ( res ) {
-        case R_CANCEL:
+        case R_CANCEL: {
             q->setError( ERR_USER_CANCELED );
             q->emitResult();
             return;
-        case R_AUTO_RENAME:
+        }
+        case R_AUTO_RENAME: {
             m_bAutoRenameFiles = true;
             // fall through
-        case R_RENAME:
-        {
+        }
+        case R_RENAME: {
             KUrl newUrl( (*it).uDest );
             newUrl.setPath( newPath );
             emit q->renamed( q, (*it).uDest, newUrl ); // for e.g. kpropsdlg
@@ -1439,27 +1447,32 @@ void CopyJobPrivate::slotResultConflictCopyingFiles( KJob * job )
             QList<CopyInfo> files;
             files.append(*it);
             emit q->aboutToCreate( q, files );
+            break;
         }
-        break;
-        case R_AUTO_SKIP:
+        case R_AUTO_SKIP: {
             m_bAutoSkipFiles = true;
             // fall through
-        case R_SKIP:
+        }
+        case R_SKIP: {
             // Move on to next file
             skip((*it).uSource, false);
             m_processedSize += (*it).size;
             files.erase( it );
             m_processedFiles++;
             break;
-       case R_OVERWRITE_ALL:
+        }
+        case R_OVERWRITE_ALL: {
             m_bOverwriteAllFiles = true;
             break;
-        case R_OVERWRITE:
+        }
+        case R_OVERWRITE: {
             // Add to overwrite list, so that copyNextFile knows to overwrite
             m_overwriteList.insert( (*it).uDest.path() );
             break;
-        default:
+        }
+        default: {
             assert( 0 );
+        }
     }
     state = STATE_COPYING_FILES;
     copyNextFile();
@@ -1976,22 +1989,20 @@ void CopyJobPrivate::slotResultRenaming( KJob* job )
 
                 switch ( r )
                 {
-                case R_CANCEL:
-                {
+                case R_CANCEL: {
                     q->setError( ERR_USER_CANCELED );
                     q->emitResult();
                     return;
                 }
-                case R_AUTO_RENAME:
+                case R_AUTO_RENAME: {
                     if (isDir) {
                         m_bAutoRenameDirs = true;
-                    }
-                    else {
+                    } else {
                         m_bAutoRenameFiles = true;
                     }
                     // fall through
-                case R_RENAME:
-                {
+                }
+                case R_RENAME: {
                     // Set m_dest to the chosen destination
                     // This is only for this src url; the next one will revert to m_globalDest
                     m_dest.setPath( newPath );
@@ -2001,23 +2012,26 @@ void CopyJobPrivate::slotResultRenaming( KJob* job )
                     q->addSubjob(job);
                     return;
                 }
-                case R_AUTO_SKIP:
+                case R_AUTO_SKIP: {
                     if (isDir)
                         m_bAutoSkipDirs = true;
                     else
                         m_bAutoSkipFiles = true;
                     // fall through
-                case R_SKIP:
+                }
+                case R_SKIP: {
                     // Move on to next url
                     skipSrc(isDir);
                     return;
-                case R_OVERWRITE_ALL:
+                }
+                case R_OVERWRITE_ALL: {
                     if (destIsDir)
                         m_bOverwriteAllDirs = true;
                     else
                         m_bOverwriteAllFiles = true;
                     break;
-                case R_OVERWRITE:
+                }
+                case R_OVERWRITE: {
                     // Add to overwrite list
                     // Note that we add dest, not m_dest.
                     // This ensures that when moving several urls into a dir (m_dest),
@@ -2026,9 +2040,11 @@ void CopyJobPrivate::slotResultRenaming( KJob* job )
                     kDebug(7007) << "adding to overwrite list: " << dest.path();
                     m_overwriteList.insert( dest.path() );
                     break;
-                default:
+                }
+                default: {
                     //assert( 0 );
                     break;
+                }
                 }
             } else if ( err != KIO::ERR_UNSUPPORTED_ACTION ) {
                 // Dest already exists, and job is not interactive -> abort with error
