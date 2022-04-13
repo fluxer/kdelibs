@@ -309,13 +309,13 @@ endforeach()
 #####################  provide some options   ##########################################
 
 configure_file(
-    ${kde_cmake_module_dir}/kde4_exec.sh.in
-    ${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh
+    "${kde_cmake_module_dir}/kde4_exec.sh.in"
+    "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh"
     @ONLY
 )
 file(
-    COPY ${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh
-    DESTINATION ${CMAKE_BINARY_DIR}
+    COPY "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_exec.sh"
+    DESTINATION "${CMAKE_BINARY_DIR}"
     FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ WORLD_READ
 )
 
