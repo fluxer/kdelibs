@@ -67,7 +67,7 @@ void KJobTest::testEmitResult()
 
     // Verify that the job is not deleted immediately...
     QCOMPARE( destroyed_spy.size(), 0 );
-    QTimer::singleShot( 0, &loop, SLOT(quit()) );
+    QTimer::singleShot( 200, &loop, SLOT(quit()) );
     // ... but when we enter the event loop again.
     loop.exec();
     QCOMPARE( destroyed_spy.size(), 1 );
@@ -213,9 +213,10 @@ void KJobTest::testExec()
 
     // Verify that the job is not deleted immediately...
     QCOMPARE( destroyed_spy.size(), 0 );
-    QTimer::singleShot( 0, &loop, SLOT(quit()) );
+    QTimer::singleShot( 200, &loop, SLOT(quit()) );
     // ... but when we enter the event loop again.
     loop.exec();
+    loop.processEvents( QEventLoop::AllEvents, 1000 );
     QCOMPARE( destroyed_spy.size(), 1 );
 }
 
@@ -275,7 +276,7 @@ void KJobTest::testKill()
 
     // Verify that the job is not deleted immediately...
     QCOMPARE( destroyed_spy.size(), 0 );
-    QTimer::singleShot( 0, &loop, SLOT(quit()) );
+    QTimer::singleShot( 200, &loop, SLOT(quit()) );
     // ... but when we enter the event loop again.
     loop.exec();
     QCOMPARE( destroyed_spy.size(), 1 );
@@ -354,12 +355,10 @@ void KJobTest::slotFinished(KJob *job)
 
 TestJob::TestJob() : KJob()
 {
-
 }
 
 TestJob::~TestJob()
 {
-
 }
 
 void TestJob::start()
@@ -408,7 +407,7 @@ void WaitJob::start()
 
 void WaitJob::makeItFinish()
 {
-  emitResult();
+    emitResult();
 }
 
 void TestJobUiDelegate::connectJob( KJob *job )
