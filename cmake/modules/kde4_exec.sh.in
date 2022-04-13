@@ -1,0 +1,21 @@
+#!/bin/sh
+
+set -e
+
+if [ -z "$LD_LIBRARY_PATH" ];then
+    export LD_LIBRARY_PATH="@LIBRARY_OUTPUT_PATH@"
+else
+    export LD_LIBRARY_PATH="@LIBRARY_OUTPUT_PATH@:$LD_LIBRARY_PATH"
+fi
+
+if [ -z "$PATH" ];then
+    export PATH="@EXECUTABLE_OUTPUT_PATH@"
+else
+    export PATH="@EXECUTABLE_OUTPUT_PATH@:$PATH"
+fi
+
+bin="$1"
+shift
+
+cd "$(dirname "$bin")"
+exec @CMAKE_CROSSCOMPILING_EMULATOR@ "./$(basename "$bin")" "$@"

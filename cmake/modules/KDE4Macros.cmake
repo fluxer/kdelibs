@@ -212,7 +212,10 @@ endmacro(KDE4_ADD_PLUGIN)
 # always created and built unless ENABLE_TESTING is set to negative value.
 macro(KDE4_ADD_TEST _targetName)
     KDE4_ADD_MANUAL_TEST(${_targetName} ${ARGN})
-    add_test(NAME ${_targetName} COMMAND ${_targetName})
+    add_test(
+        NAME ${_targetName}
+        COMMAND "${CMAKE_BINARY_DIR}/kde4_exec.sh" "${CMAKE_CURRENT_BINARY_DIR}/${_targetName}"
+    )
 endmacro(KDE4_ADD_TEST)
 
 macro(KDE4_ADD_MANUAL_TEST _targetName)

@@ -222,11 +222,9 @@ void KStandarddirsTest::testFindExe()
     QVERIFY( !kdeinit.isEmpty() );
     QVERIFY2(kdeinit.endsWith("bin/kdeinit4" EXT, PATH_SENSITIVITY), qPrintable(kdeinit));
 
-
     // Check the "exe" resource too
-    QString kdeinitPath1 = KGlobal::dirs()->realFilePath(kdeinit);
-    QString kdeinitPath2 = KGlobal::dirs()->locate( "exe", "kdeinit4" );
-    QCOMPARE_PATHS( kdeinitPath1, kdeinitPath2 );
+    QString kdeinitexe = KGlobal::dirs()->locate( "exe", "kdeinit4" );
+    QVERIFY2(kdeinitexe.endsWith("bin/kdeinit4" EXT, PATH_SENSITIVITY), qPrintable(kdeinit));
 
 #ifdef Q_OS_UNIX
     // findExe with a result in libexec
