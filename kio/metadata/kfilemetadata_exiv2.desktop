@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Name=KFileMetaDataExiv2Plugin
+X-KDE-Library=kfilemetadata_exiv2
+X-KDE-ServiceTypes=KFileMetaData/Plugin
+InitialPreference=1

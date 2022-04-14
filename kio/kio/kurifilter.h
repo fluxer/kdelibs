@@ -30,12 +30,11 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
-
+#include <QHostInfo>
 
 class KUriFilterPrivate;
 class KUriFilterDataPrivate;
 class KCModule;
-#include <QHostInfo>
 
 /**
  * Class that holds information about a search provider.

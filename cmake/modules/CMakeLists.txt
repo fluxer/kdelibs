@@ -13,7 +13,6 @@ set(cmakeFilesDontInstall
     FindENCHANT.cmake
     FindACL.cmake
     FindLibCDIO.cmake
-    FindLibExtractor.cmake
     FindDevinfo.cmake
 )
 

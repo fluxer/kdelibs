@@ -19,8 +19,6 @@
 
 #include "kdesktopfileactions.h"
 
-#include "config-kio.h"
-
 #include "krun.h"
 #include "kautomount.h"
 

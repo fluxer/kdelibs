@@ -1,9 +1,5 @@
 project(kio)
 
-if(NOT LibExtractor_FOUND)
-    set(KIO_NO_LIBEXTRACTOR TRUE)
-endif()
-
 # This applies to all subdirs; let's put kio's dependencies (and own dirs) here, once and for all
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/bookmarks
@@ -20,21 +16,8 @@ include_directories(
     ${CMAKE_BINARY_DIR}/kutils/kpasswdstore
 )
 
-set(KIO_EXTRA_LIBS)
-if(NOT KIO_NO_LIBEXTRACTOR)
-    include_directories(${LIBEXTRACTOR_INCLUDES})
-    set(KIO_EXTRA_LIBS
-        ${KIO_EXTRA_LIBS}
-        ${LIBEXTRACTOR_LIBRARIES}
-    )
-endif()
-
-configure_file(
-    kio/config-kio.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/kio/config-kio.h
-)
-
 add_subdirectory(misc)
+add_subdirectory(metadata)
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
@@ -69,6 +52,7 @@ set(kiocore_STAT_SRCS
     kio/kfileitemdelegate.cpp
     kio/kfilemetainfo.cpp
     kio/kfilemetainfoitem.cpp
+    kio/kfilemetadata.cpp
     kio/kmimetypechooser.cpp
     kio/kprotocolmanager.cpp
     kio/kremoteencoding.cpp
@@ -161,10 +145,6 @@ set(kio_LIB_SRCS
 
 add_library(kio ${LIBRARY_TYPE} ${kio_LIB_SRCS})
 
-target_link_libraries(kio PRIVATE
-    ${KIO_EXTRA_LIBS}
-)
-
 target_link_libraries(kio PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KDEUI_LIBS}
@@ -197,6 +177,7 @@ install(
     application.desktop
     kcmodule.desktop
     kcmoduleinit.desktop
+    kfilemetadataplugin.desktop
     kurifilterplugin.desktop
     kfile/kpropertiesdialogplugin.desktop
     kio/kfileitemactionplugin.desktop
@@ -257,6 +238,7 @@ install(
     kio/kfileitemdelegate.h
     kio/kfilemetainfo.h
     kio/kfilemetainfoitem.h
+    kio/kfilemetadata.h
     kio/kmimetypechooser.h
     kio/knfsshare.h
     kio/kprotocolmanager.h

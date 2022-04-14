@@ -34,8 +34,6 @@
 #include <QTimer>
 #include <QSpacerItem>
 
-#include <config-kio.h>
-
 class KFileMetaDataWidget::Private
 {
 public:

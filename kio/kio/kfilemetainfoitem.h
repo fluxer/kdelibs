@@ -40,6 +40,10 @@ public:
      **/
     KFileMetaInfoItem(const KFileMetaInfoItem& item);
     /**
+     * @brief Constructor used by plugins
+     **/
+    KFileMetaInfoItem(const QString& key, const QString& value);
+    /**
      * @brief Destructor
      **/
     ~KFileMetaInfoItem();
@@ -65,8 +69,6 @@ public:
     const QString& name() const;
 private:
     QSharedDataPointer<KFileMetaInfoItemPrivate> d;
-
-    KFileMetaInfoItem(const QString& key, const QString& value);
 };
 
 #endif // KFILEMETAINFOITEM_H

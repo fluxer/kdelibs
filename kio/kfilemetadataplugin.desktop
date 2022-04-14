@@ -1,0 +1,4 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=KFileMetaData/Plugin
+Name=File Meta Information Plugin

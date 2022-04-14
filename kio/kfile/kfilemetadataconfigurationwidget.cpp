@@ -26,8 +26,6 @@
 #include <klocale.h>
 #include "kfilemetadataprovider_p.h"
 
-#include <config-kio.h>
-
 #include <QEvent>
 #include <QListWidget>
 #include <QVBoxLayout>

@@ -21,14 +21,12 @@
 #include "kfileitem.h"
 
 #include <config.h>
-#include <config-kio.h>
 
 #include <sys/time.h>
 #include <pwd.h>
 #include <grp.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
 #include <assert.h>
 #include <unistd.h>
 

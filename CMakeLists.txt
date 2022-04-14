@@ -113,14 +113,6 @@ set_package_properties(DBusMenuQt PROPERTIES
     TYPE RECOMMENDED
 )
 
-macro_optional_find_package(LibExtractor)
-set_package_properties(LibExtractor PROPERTIES
-    DESCRIPTION "GNU Libextractor is a library used to extract meta data from files"
-    URL "https://www.gnu.org/software/libextractor/"
-    TYPE RECOMMENDED
-    PURPOSE "Required by KIO"
-)
-
 macro_optional_find_package(MPV 0.23.0)
 set_package_properties(MPV PROPERTIES
     DESCRIPTION "A fork of mplayer2 and MPlayer"
