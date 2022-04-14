@@ -64,7 +64,11 @@ QStringList KFileMetaDataFFmpegPlugin::keys() const
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels");
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate");
     return result;
 }
 
@@ -111,6 +115,31 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
                         QString::fromUtf8(ffmpegcodecname)
                     )
                 );
+                if (ffmpegcodec->width > 0) {
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width"),
+                            QString::number(ffmpegcodec->width)
+                        )
+                    );
+                }
+                if (ffmpegcodec->height > 0) {
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height"),
+                            QString::number(ffmpegcodec->height)
+                        )
+                    );
+                }
+                if (ffmpegcodec->bit_rate > 1) {
+                    const QString ffmpegbitrate = i18n("%1 kb/s", ffmpegcodec->bit_rate / 1000);
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate"),
+                            ffmpegbitrate
+                        )
+                    );
+                }
             } else if (ffmpegcodec->codec_type == AVMEDIA_TYPE_AUDIO) {
                 result.append(
                     KFileMetaInfoItem(
@@ -118,18 +147,31 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
                         QString::fromUtf8(ffmpegcodecname)
                     )
                 );
-                result.append(
-                    KFileMetaInfoItem(
-                        QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate"),
-                        QString::number(ffmpegcodec->sample_rate)
-                    )
-                );
-                result.append(
-                    KFileMetaInfoItem(
-                        QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels"),
-                        QString::number(ffmpegcodec->channels)
-                    )
-                );
+                if (ffmpegcodec->sample_rate > 0) {
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate"),
+                            QString::number(ffmpegcodec->sample_rate)
+                        )
+                    );
+                }
+                if (ffmpegcodec->channels > 0) {
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels"),
+                            QString::number(ffmpegcodec->channels)
+                        )
+                    );
+                }
+                if (ffmpegcodec->bit_rate > 0) {
+                    const QString ffmpegbitrate = i18n("%1 kb/s", ffmpegcodec->bit_rate / 1000);
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate"),
+                            ffmpegbitrate
+                        )
+                    );
+                }
             } else if (ffmpegcodec->codec_type == AVMEDIA_TYPE_SUBTITLE) {
                 result.append(
                     KFileMetaInfoItem(
