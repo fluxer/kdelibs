@@ -53,11 +53,11 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
 {
     m_url = url;
 
+    const KMimeType::Ptr filemimetype = KMimeType::findByUrl(url);
     const KService::List kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
     foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
         KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
         if (kfmdplugininstance) {
-            const KMimeType::Ptr filemimetype = KMimeType::findByUrl(url);
             // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdplugininstance->mimeTypes();
             foreach (const QString &kfmdpluginmime, kfmdplugininstance->mimeTypes()) {
                 if (filemimetype->is(kfmdpluginmime)) {
@@ -234,12 +234,22 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url", i18nc("@label file URL", "URL") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width", i18nc("@label", "Width") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height", i18nc("@label", "Height") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", i18nc("@label", "Average Bitrate") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", i18nc("@label", "Copyright") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", i18nc("@label", "Comment") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", i18nc("@label music title", "Title") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword", i18nc("@label", "Keyword") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description", i18nc("@label", "Description") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator", i18nc("@label Software used to generate content", "Generator") },
+        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", i18nc("@label creation date", "Created") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum", i18nc("@label music album", "Album") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre",  i18nc("@label music genre", "Genre") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#performer", i18nc("@label", "Performer") },
+        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber", i18nc("@label music track number", "Track") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#composer", i18nc("@label music composer", "Composer") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", i18nc("@label", "Encoder") },
+        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encodedBy", i18nc("@label", "Encoded By") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher", i18nc("@label", "Publisher") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make", i18nc("@label EXIF", "Manufacturer") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model", i18nc("@label EXIF", "Model") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation", i18nc("@label EXIF", "Orientation") },
@@ -260,13 +270,11 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", i18nc("@label", "Page Count") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator", i18nc("@label", "Creator") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email", i18nc("@label", "Creator E-Mail") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher", i18nc("@label", "Publisher") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", i18nc("@label", "Hash Value") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm", i18nc("@label", "Hash Algorithm") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#country", i18nc("@label", "Country") },
         { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#summary", i18nc("@label", "Summary") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject", i18nc("@label", "Subject") },
-        { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated", i18nc("@label creation date", "Created") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified", i18nc("@label modification date", "Modified") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#characterSet", i18nc("@label", "Character Set") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#lineCount", i18nc("@label number of lines", "Lines") },
@@ -274,10 +282,6 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#characterCount", i18nc("@label", "Character Count") },
         { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#sequence", i18nc("@label", "Revision") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", i18nc("@label", "Duration") },
-        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum", i18nc("@label music album", "Album") },
-        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre",  i18nc("@label music genre", "Genre") },
-        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber", i18nc("@label music track number", "Track") },
-        { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#performer", i18nc("@label", "Performer") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#Contact", i18nc("@label", "Contact") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#disclaimer", i18nc("@label", "Disclaimer") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter", i18nc("@label", "Text Writer") },
@@ -285,9 +289,7 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#director", i18nc("@label video director", "Director") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#conductor", i18nc("@label", "Conductor") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#interpretedBy", i18nc("@label", "Interpreted By") },
-        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#composer", i18nc("@label music composer", "Composer") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#beatsPerMinute", i18nc("@label", "Beats Per Minute") },
-        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encodedBy", i18nc("@label", "Encoded By") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalArtist", i18nc("@label", "Original Artist") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalTextWriter", i18nc("@label", "Original Text Writer") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalReleaseYear", i18nc("@label", "Original Release Year") },
@@ -300,8 +302,6 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec",  i18nc("@label", "Audio Codec") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec",  i18nc("@label", "Subtitle Codec") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer",  i18nc("@label", "Container Format") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate", i18nc("@label", "Average Bitrate") },
-        { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder", i18nc("@label", "Encoder") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier", i18nc("@label", "URI") },
         { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", i18nc("@label", "Grouping") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", i18nc("@label", "Channels") },

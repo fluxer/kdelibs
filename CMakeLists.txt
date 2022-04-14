@@ -207,6 +207,14 @@ set_package_properties(Exiv2 PROPERTIES
     PURPOSE "Exiv2 metadata extraction and image rotation based on the data"
 )
 
+macro_optional_find_package(FFmpeg)
+set_package_properties(FFmpeg PROPERTIES
+    DESCRIPTION "A complete, cross-platform solution to record, convert and stream audio and video"
+    URL "https://ffmpeg.org/"
+    TYPE RECOMMENDED
+    PURPOSE "Video metadata extraction"
+)
+
 macro_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"
