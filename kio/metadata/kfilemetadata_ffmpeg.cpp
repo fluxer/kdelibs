@@ -18,6 +18,8 @@
 
 #include "kfilemetadata_ffmpeg.h"
 #include "kpluginfactory.h"
+#include "kglobal.h"
+#include "klocale.h"
 #include "kmimetype.h"
 #include "kdebug.h"
 
@@ -43,6 +45,7 @@ KFileMetaDataFFmpegPlugin::~KFileMetaDataFFmpegPlugin()
 QStringList KFileMetaDataFFmpegPlugin::keys() const
 {
     static const QStringList result = QStringList()
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment")
@@ -97,6 +100,18 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
     if (ffmpegresult != 0 || !ffmpegcontext) {
         kWarning() << "Could not open" << urlpath;
         return result;
+    }
+    if (ffmpegcontext->duration > 0) {
+        const QString ffmpegduration = KGlobal::locale()->formatTime(
+            QTime().addSecs((ffmpegcontext->duration / AV_TIME_BASE)),
+            true, true
+        );
+        result.append(
+            KFileMetaInfoItem(
+                QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration"),
+                ffmpegduration
+            )
+        );
     }
     AVDictionaryEntry *ffmpegentry = av_dict_get(ffmpegcontext->metadata, "album", NULL, 0);
     if (ffmpegentry) {
