@@ -18,11 +18,11 @@ build_script:
 
     sudo apt-get update -qq
 
-    sudo apt-get install -qq cmake katie-dev libenchant-dev \
-        libmagick++-dev libmpv-dev xorg-dev mesa-common-dev \
+    sudo apt-get install -qq cmake katie-dev libenchant-dev libbz2-dev \
+        libmagick++-dev libmpv-dev xorg-dev mesa-common-dev libacl1-dev \
         libavahi-common-dev libwebp-dev libudev-dev liblzma-dev \
-        libexiv2-dev libbz2-dev libacl1-dev libcdio-dev libssl-dev \
-        libcurl4-openssl-dev libdbusmenu-katie libavutil-dev libavformat-dev \
+        libexiv2-dev libcdio-dev libssl-dev libcurl4-openssl-dev \
+        libdbusmenu-katie libavcodec-dev libavutil-dev libavformat-dev \
         media-player-info shared-mime-info media-player-info xdg-utils ccache
 
     export PATH="/usr/lib/ccache/:$PATH"

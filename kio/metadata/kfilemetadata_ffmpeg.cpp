@@ -19,10 +19,10 @@
 #include "kfilemetadata_ffmpeg.h"
 #include "kpluginfactory.h"
 #include "kmimetype.h"
-
-#include <QDebug>
+#include "kdebug.h"
 
 extern "C" {
+#include <libavcodec/codec_desc.h>
 #include <libavformat/avformat.h>
 #include <libavutil/dict.h>
 }
@@ -95,6 +95,7 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
     AVFormatContext *ffmpegcontext = NULL;
     const int ffmpegresult = avformat_open_input(&ffmpegcontext, urlpath.constData(), NULL, NULL);
     if (ffmpegresult != 0 || !ffmpegcontext) {
+        kWarning() << "Could not open" << urlpath;
         return result;
     }
     AVDictionaryEntry *ffmpegentry = av_dict_get(ffmpegcontext->metadata, "album", NULL, 0);
