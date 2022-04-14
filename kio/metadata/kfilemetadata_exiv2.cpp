@@ -37,12 +37,15 @@ QStringList KFileMetaDataExiv2Plugin::keys() const
     static const QStringList result = QStringList()
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation")
@@ -58,7 +61,8 @@ QStringList KFileMetaDataExiv2Plugin::keys() const
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance");
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier");
     return result;
 }
 
@@ -118,6 +122,13 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, con
                     kexiv2value
                 )
             );
+        } else if (kexiv2key == "Exif.Image.FrameRate") {
+            result.append(
+                KFileMetaInfoItem(
+                    QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate"),
+                    kexiv2value
+                )
+            );
         } else if (kexiv2key == "Exif.Image.Copyright") {
             result.append(
                 KFileMetaInfoItem(
@@ -146,6 +157,14 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, con
                     kexiv2value
                 )
             );
+
+        } else if (kexiv2key == "Exif.Image.XPSubject") {
+            result.append(
+                KFileMetaInfoItem(
+                    QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject"),
+                    kexiv2value
+                )
+            );
         } else if (kexiv2key == "Exif.Image.ImageDescription") {
             result.append(
                 KFileMetaInfoItem(
@@ -157,6 +176,13 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, con
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator"),
+                    kexiv2value
+                )
+            );
+        } else if (kexiv2key == "Exif.Image.DateTimeOriginal" || kexiv2key == "Exif.Photo.DateTimeOriginal") {
+            result.append(
+                KFileMetaInfoItem(
+                    QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated"),
                     kexiv2value
                 )
             );
@@ -269,6 +295,13 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, con
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance"),
+                    kexiv2value
+                )
+            );
+        } else if (kexiv2key == "Exif.Photo.ImageUniqueID") {
+            result.append(
+                KFileMetaInfoItem(
+                    QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier"),
                     kexiv2value
                 )
             );
