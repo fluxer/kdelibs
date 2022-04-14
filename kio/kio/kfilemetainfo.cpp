@@ -31,7 +31,6 @@
 #include <kmimetype.h>
 
 #include <QFileInfo>
-#include <QDateTime>
 #include <QStringList>
 
 static const KFileMetaInfoItem nullitem;

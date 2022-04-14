@@ -14,6 +14,8 @@ include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kutils/kpasswdstore
     ${CMAKE_BINARY_DIR}/kutils/kpasswdstore
+    ${CMAKE_SOURCE_DIR}/kutils/kexiv2
+    ${CMAKE_BINARY_DIR}/kutils/kexiv2
 )
 
 add_subdirectory(misc)
