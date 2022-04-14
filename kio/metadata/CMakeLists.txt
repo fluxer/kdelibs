@@ -37,3 +37,25 @@ if (FFMPEG_FOUND)
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
     )
 endif()
+
+if (TAGLIB_FOUND)
+    include_directories(${TAGLIB_INCLUDES})
+
+    set(kfilemetadata_taglib_SRCS kfilemetadata_taglib.cpp)
+
+    kde4_add_plugin(kfilemetadata_taglib ${kfilemetadata_taglib_SRCS})
+    target_link_libraries(kfilemetadata_taglib
+        ${KDE4_KIO_LIBS}
+        ${TAGLIB_LIBRARIES}
+    )
+
+    install(
+        TARGETS kfilemetadata_taglib
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
+    )
+
+    install(
+        FILES kfilemetadata_taglib.desktop
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
+    )
+endif()

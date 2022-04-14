@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Service
+Name=KFileMetaDataTagLibPlugin
+X-KDE-Library=kfilemetadata_taglib
+X-KDE-ServiceTypes=KFileMetaData/Plugin
+InitialPreference=1

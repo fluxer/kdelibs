@@ -215,6 +215,14 @@ set_package_properties(FFmpeg PROPERTIES
     PURPOSE "Video metadata extraction"
 )
 
+macro_optional_find_package(Taglib)
+set_package_properties(Taglib PROPERTIES
+    DESCRIPTION "TagLib Audio Meta-Data Library"
+    URL "https://taglib.org/"
+    TYPE RECOMMENDED
+    PURPOSE "Audio metadata extraction"
+)
+
 macro_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"
