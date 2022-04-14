@@ -131,7 +131,7 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
                         )
                     );
                 }
-                if (ffmpegcodec->bit_rate > 1) {
+                if (ffmpegcodec->bit_rate > 0) {
                     const QString ffmpegbitrate = i18n("%1 kb/s", ffmpegcodec->bit_rate / 1000);
                     result.append(
                         KFileMetaInfoItem(

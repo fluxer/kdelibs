@@ -288,6 +288,8 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec",  i18nc("@label", "Video Codec") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec",  i18nc("@label", "Audio Codec") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec",  i18nc("@label", "Subtitle Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", i18nc("@label", "Audio Bit Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", i18nc("@label", "Video Bit Rate") },
         // TODO: implement
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", i18nc("@label", "Page Count") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator", i18nc("@label", "Creator") },
@@ -320,10 +322,8 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer",  i18nc("@label", "Container Format") },
         { "http://www.semanticdesktop.org/ontologies/2007/04/02/ncal#UnionOfEventJournalTodo", i18nc("@label", "Grouping") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", i18nc("@label", "Audio Bit Depth") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", i18nc("@label", "Audio Bit Rate") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", i18nc("@label", "Video Bit Depth") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", i18nc("@label", "Aspect Ratio") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", i18nc("@label", "Video Bit Rate") },
     };
 
     const TranslationMap::const_iterator it = s_translations.find(key);

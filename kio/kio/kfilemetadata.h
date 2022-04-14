@@ -28,10 +28,10 @@
 #include <QStringList>
 
 /*!
-    Class to retrieve file metadata.
+    Base class for plugins to retrieve file metadata.
 
     @since 4.21
-    @warning the API is subject to change
+    @note all virtual methods, despite not being pure-virtual, must be reimplemented
 */
 class KIO_EXPORT KFileMetaDataPlugin : public QObject
 {
