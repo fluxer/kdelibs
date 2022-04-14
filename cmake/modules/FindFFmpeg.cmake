@@ -25,7 +25,7 @@ endif()
 
 if(NOT LIBAVCODEC_INCLUDES OR NOT LIBAVCODEC_LIBRARIES)
     find_path(LIBAVCODEC_INCLUDES
-        NAMES libavcodec/codec_desc.h
+        NAMES libavcodec/avcodec.h
         HINTS $ENV{FFMPEGDIR}/include
     )
 
@@ -49,12 +49,12 @@ endif()
 
 if(NOT LIBAVUTIL_INCLUDES OR NOT LIBAVUTIL_LIBRARIES)
     find_path(LIBAVUTIL_INCLUDES
-        NAMES libavutil/dict.h
+        NAMES libavutil/avutil.h
         HINTS $ENV{FFMPEGDIR}/include
     )
 
     find_library(LIBAVUTIL_LIBRARIES
-        NAMES avformat
+        NAMES avutil
         HINTS $ENV{FFMPEGDIR}/lib
     )
 endif()

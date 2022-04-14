@@ -22,9 +22,9 @@
 #include "kdebug.h"
 
 extern "C" {
-#include <libavcodec/codec_desc.h>
+#include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
-#include <libavutil/dict.h>
+#include <libavutil/avutil.h>
 }
 
 KFileMetaDataFFmpegPlugin::KFileMetaDataFFmpegPlugin(QObject* parent, const QVariantList &args)
