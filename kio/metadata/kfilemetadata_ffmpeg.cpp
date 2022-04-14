@@ -59,7 +59,12 @@ QStringList KFileMetaDataFFmpegPlugin::keys() const
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate");
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels");
     return result;
 }
 
@@ -100,6 +105,54 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
     if (ffmpegresult != 0 || !ffmpegcontext) {
         kWarning() << "Could not open" << urlpath;
         return result;
+    }
+    for (uint i = 0; i < ffmpegcontext->nb_streams; i++) {
+#if LIBAVFORMAT_VERSION_INT >= AV_VERSION_INT(57, 33, 100)
+        const AVCodecParameters *ffmpegcodec = ffmpegcontext->streams[i]->codecpar;
+#else
+        const AVCodecContext *ffmpegcodec = ffmpegcontext->streams[i]->codec;
+#endif
+        if (ffmpegcodec) {
+#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(55, 11, 0)
+            const char *ffmpegcodecname = avcodec_get_name(ffmpegcodec->codec_id);
+#else
+            const char *ffmpegcodecname = ffmpegcodec->codec_name;
+#endif
+            if (ffmpegcodec->codec_type == AVMEDIA_TYPE_VIDEO) {
+                result.append(
+                    KFileMetaInfoItem(
+                        QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec"),
+                        QString::fromUtf8(ffmpegcodecname)
+                    )
+                );
+            } else if (ffmpegcodec->codec_type == AVMEDIA_TYPE_AUDIO) {
+                result.append(
+                    KFileMetaInfoItem(
+                        QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec"),
+                        QString::fromUtf8(ffmpegcodecname)
+                    )
+                );
+                result.append(
+                    KFileMetaInfoItem(
+                        QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate"),
+                        QString::number(ffmpegcodec->sample_rate)
+                    )
+                );
+                result.append(
+                    KFileMetaInfoItem(
+                        QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels"),
+                        QString::number(ffmpegcodec->channels)
+                    )
+                );
+            } else if (ffmpegcodec->codec_type == AVMEDIA_TYPE_SUBTITLE) {
+                result.append(
+                    KFileMetaInfoItem(
+                        QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec"),
+                        QString::fromUtf8(ffmpegcodecname)
+                    )
+                );
+            }
+        }
     }
     if (ffmpegcontext->duration > 0) {
         const QString ffmpegduration = KGlobal::locale()->formatTime(
