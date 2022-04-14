@@ -18,7 +18,6 @@
 
 #include "kfilemetadata_taglib.h"
 #include "kpluginfactory.h"
-#include "kmimetype.h"
 #include "kglobal.h"
 #include "klocale.h"
 #include "kdebug.h"

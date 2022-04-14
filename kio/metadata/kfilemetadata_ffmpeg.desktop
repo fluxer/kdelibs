@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Name=KFileMetaDataFFmpegPlugin
+GenericName=FFmpeg metadata extractor
 X-KDE-Library=kfilemetadata_ffmpeg
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 InitialPreference=1

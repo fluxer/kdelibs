@@ -53,21 +53,27 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
 {
     m_url = url;
 
+    KConfig config("kmetainformationrc", KConfig::NoGlobals);
+    KConfigGroup pluginsgroup = config.group("Plugins");
     const KMimeType::Ptr filemimetype = KMimeType::findByUrl(url);
     const KService::List kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
     foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
-        KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
-        if (kfmdplugininstance) {
-            // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdplugininstance->mimeTypes();
-            foreach (const QString &kfmdpluginmime, kfmdplugininstance->mimeTypes()) {
-                if (filemimetype->is(kfmdpluginmime)) {
-                    items.append(kfmdplugininstance->metaData(url, w));
-                    break;
+        const QString key = kfmdplugin->desktopEntryName();
+        const bool enable = pluginsgroup.readEntry(key, true);
+        if (enable) {
+            KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
+            if (kfmdplugininstance) {
+                // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdplugininstance->mimeTypes();
+                foreach (const QString &kfmdpluginmime, kfmdplugininstance->mimeTypes()) {
+                    if (filemimetype->is(kfmdpluginmime)) {
+                        items.append(kfmdplugininstance->metaData(url, w));
+                        break;
+                    }
                 }
+                delete kfmdplugininstance;
+            } else {
+                kWarning() << "Could not create KFileMetaDataPlugin instance";
             }
-            delete kfmdplugininstance;
-        } else {
-            kWarning() << "Could not create KFileMetaDataPlugin instance";
         }
     }
 
@@ -185,9 +191,9 @@ QStringList KFileMetaInfo::preferredKeys() const
 {
     QStringList result;
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
-    KConfigGroup settings = config.group("Show");
+    KConfigGroup showgroup = config.group("Show");
     foreach (const QString &key, supportedKeys()) {
-        const bool show = settings.readEntry(key, true);
+        const bool show = showgroup.readEntry(key, true);
         if (show) {
             result.append(key);
         }
@@ -201,14 +207,20 @@ QStringList KFileMetaInfo::supportedKeys()
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#url");
 
+    KConfig config("kmetainformationrc", KConfig::NoGlobals);
+    KConfigGroup pluginsgroup = config.group("Plugins");
     const KService::List kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
     foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
-        KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
-        if (kfmdplugininstance) {
-            keys.append(kfmdplugininstance->keys());
-            delete kfmdplugininstance;
-        } else {
-            kWarning() << "Could not create KFileMetaDataPlugin instance";
+        const QString key = kfmdplugin->desktopEntryName();
+        const bool enable = pluginsgroup.readEntry(key, true);
+        if (enable) {
+            KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
+            if (kfmdplugininstance) {
+                keys.append(kfmdplugininstance->keys());
+                delete kfmdplugininstance;
+            } else {
+                kWarning() << "Could not create KFileMetaDataPlugin instance";
+            }
         }
     }
     keys.removeDuplicates();
