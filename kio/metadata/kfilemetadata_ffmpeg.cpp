@@ -71,20 +71,6 @@ QStringList KFileMetaDataFFmpegPlugin::keys() const
 QStringList KFileMetaDataFFmpegPlugin::mimeTypes() const
 {
     QStringList result;
-    const AVCodecDescriptor* ffmpegcodec = avcodec_descriptor_next(NULL);
-    while (ffmpegcodec) {
-        if (ffmpegcodec->mime_types) {
-            int ffmpegcodeccounter = 0;
-            while (ffmpegcodec->mime_types[ffmpegcodeccounter]) {
-                // qDebug() << Q_FUNC_INFO << ffmpegcodec->mime_types[ffmpegcodeccounter];
-                result.append(QString::fromLatin1(ffmpegcodec->mime_types[ffmpegcodeccounter]));
-                ffmpegcodeccounter++;
-            }
-        }
-        ffmpegcodec = avcodec_descriptor_next(ffmpegcodec);
-    }
-    // most of the above MIME types are for images or null so manually adding all audio and video
-    // MIME types
     foreach (const KMimeType::Ptr &kmimetype, KMimeType::allMimeTypes()) {
         if (kmimetype->name().startsWith("audio/") || kmimetype->name().startsWith("video/")) {
             result.append(kmimetype->name());
