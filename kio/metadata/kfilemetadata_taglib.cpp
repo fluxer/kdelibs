@@ -186,7 +186,7 @@ QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url, co
                 )
             );
         }
-        const QString taglibbitrate = i18n("%1 kb/s", taglibaudio->bitrate());
+        const QString taglibbitrate = i18nc("kfilemetadata", "%1 kb/s", taglibaudio->bitrate());
         if (!taglibbitrate.isEmpty() && taglibaudio->bitrate() > 0) {
             result.append(
                 KFileMetaInfoItem(
@@ -195,7 +195,7 @@ QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url, co
                 )
             );
         }
-        const QString taglibsamplerate = i18n("%1 Hz", taglibaudio->sampleRate());
+        const QString taglibsamplerate = i18nc("kfilemetadata", "%1 Hz", taglibaudio->sampleRate());
         if (!taglibsamplerate.isEmpty() && taglibaudio->sampleRate() > 0) {
             result.append(
                 KFileMetaInfoItem(

@@ -30,6 +30,12 @@
 /*!
     Base class for plugins to retrieve file metadata.
 
+    There are two template strings that are localized and can be used by plugins where appropriate:
+    @code
+    const QString bitratestring = i18nc("kfilemetadata", "%1 kb/s", bitrate);
+    const QString sampleratestring = i18nc("kfilemetadata", "%1 Hz", samplerate);
+    @endcode
+
     @since 4.21
     @note all virtual methods, despite not being pure-virtual, must be reimplemented
 */

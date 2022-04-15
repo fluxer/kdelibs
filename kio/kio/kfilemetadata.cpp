@@ -17,10 +17,13 @@
 */
 
 #include "kfilemetadata.h"
+#include "kglobal.h"
+#include "klocale.h"
 
 KFileMetaDataPlugin::KFileMetaDataPlugin(QObject *parent)
     : QObject(parent)
 {
+    KGlobal::locale()->insertCatalog("kio4");
 }
 
 KFileMetaDataPlugin::~KFileMetaDataPlugin()

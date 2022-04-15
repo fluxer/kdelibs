@@ -231,6 +231,9 @@ QStringList KFileMetaInfo::supportedKeys()
 
 QString KFileMetaInfo::name(const QString& key)
 {
+    I18N_NOOP2("kfilemetadata", "%1 kb/s");
+    I18N_NOOP2("kfilemetadata", "%1 Hz");
+
     typedef std::map<QString,QString> TranslationMap;
 
     static const TranslationMap s_translations = {
@@ -251,6 +254,11 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels", i18nc("@label", "Channels") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration", i18nc("@label", "Duration") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate", i18nc("@label", "Frame Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec",  i18nc("@label", "Video Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec",  i18nc("@label", "Audio Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec",  i18nc("@label", "Subtitle Codec") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", i18nc("@label", "Audio Bit Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", i18nc("@label", "Video Bit Rate") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", i18nc("@label", "Copyright") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", i18nc("@label", "Comment") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", i18nc("@label music title", "Title") },
@@ -285,11 +293,6 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings", i18nc("@label EXIF", "ISO Speed Ratings") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode", i18nc("@label EXIF", "Metering Mode") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance", i18nc("@label EXIF", "White Balance") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec",  i18nc("@label", "Video Codec") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec",  i18nc("@label", "Audio Codec") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec",  i18nc("@label", "Subtitle Codec") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", i18nc("@label", "Audio Bit Rate") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", i18nc("@label", "Video Bit Rate") },
         // TODO: implement
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", i18nc("@label", "Page Count") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator", i18nc("@label", "Creator") },
