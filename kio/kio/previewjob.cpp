@@ -507,7 +507,7 @@ bool PreviewJobPrivate::statResultThumbnail()
     // NOTE: make sure the algorithm and name match those used in kde-workspace/kioslave/thumbnail/thumbnail.cpp
     const QByteArray hash = QFile::encodeName( origName ).toHex();
     KIO::UDSEntry thumbEntry;
-    const QString modTime = QString::number(QFileInfo(origName).lastModified().toTime_t());
+    const QString modTime = QString::number(QFileInfo(url.prettyUrl()).lastModified().toTime_t());
     thumbName = hash + modTime + thumbExt;
 
     QImage thumb;
