@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+Name=KFileMetaDataEPubPlugin
+GenericName=EPUB metadata extractor
+X-KDE-Library=kfilemetadata_epub
+X-KDE-ServiceTypes=KFileMetaData/Plugin
+InitialPreference=1

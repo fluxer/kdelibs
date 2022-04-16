@@ -223,6 +223,14 @@ set_package_properties(Taglib PROPERTIES
     PURPOSE "Audio metadata extraction"
 )
 
+macro_optional_find_package(EPub)
+set_package_properties(EPub PROPERTIES
+    DESCRIPTION "A library for reading EPub documents"
+    URL "https://sourceforge.net/projects/ebook-tools/"
+    TYPE RECOMMENDED
+    PURPOSE "eBook metadata extraction"
+)
+
 macro_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"

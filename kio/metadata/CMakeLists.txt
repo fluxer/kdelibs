@@ -59,3 +59,25 @@ if (TAGLIB_FOUND)
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
     )
 endif()
+
+if (EPUB_FOUND)
+    include_directories(${EPUB_INCLUDE_DIR})
+
+    set(kfilemetadata_epub_SRCS kfilemetadata_epub.cpp)
+
+    kde4_add_plugin(kfilemetadata_epub ${kfilemetadata_epub_SRCS})
+    target_link_libraries(kfilemetadata_epub
+        ${KDE4_KIO_LIBS}
+        ${EPUB_LIBRARIES}
+    )
+
+    install(
+        TARGETS kfilemetadata_epub
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
+    )
+
+    install(
+        FILES kfilemetadata_epub.desktop
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
+    )
+endif()
