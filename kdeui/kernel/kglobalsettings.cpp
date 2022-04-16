@@ -333,7 +333,6 @@ struct KFontData
     const char* ConfigKey;
     const char* FontName;
     int Size;
-    int Weight;
 #if QT_VERSION < 0x041200
     QFont::StyleHint StyleHint;
 #endif
@@ -345,21 +344,21 @@ static const char GeneralId[] =      "General";
 static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
 {
 #if QT_VERSION < 0x041200
-    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9, -1, QFont::SansSerif },
-    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9, -1, QFont::TypeWriter },
-    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8, -1, QFont::SansSerif },
-    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9, -1, QFont::SansSerif },
-    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8, -1, QFont::SansSerif },
-    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9, -1, QFont::SansSerif },
-    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8, -1, QFont::SansSerif }
+    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9, QFont::SansSerif },
+    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9, QFont::TypeWriter },
+    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8, QFont::SansSerif },
+    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9, QFont::SansSerif },
+    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8, QFont::SansSerif },
+    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9, QFont::SansSerif },
+    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8, QFont::SansSerif }
 #else
-    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9, -1 },
-    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9, -1 },
-    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8, -1 },
-    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9, -1 },
-    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8, -1 },
-    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9, -1 },
-    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8, -1 }
+    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9 },
+    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9 },
+    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8 },
+    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9 },
+    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8 },
+    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9 },
+    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8 }
 #endif
 };
 
@@ -370,7 +369,7 @@ QFont KGlobalSettingsData::font( FontTypes fontType )
     if (!cachedFont)
     {
         const KFontData& fontData = DefaultFontData[fontType];
-        cachedFont = new QFont( fontData.FontName, fontData.Size, fontData.Weight );
+        cachedFont = new QFont( fontData.FontName, fontData.Size );
 #if QT_VERSION < 0x041200
         cachedFont->setStyleHint( fontData.StyleHint );
 #endif
