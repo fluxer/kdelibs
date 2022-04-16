@@ -77,7 +77,8 @@ KExiv2Private::KExiv2Private(const QString &path)
 #if defined(HAVE_EXIV2)
     try {
         kDebug() << "reading Exiv2 metadata from" << path;
-        Exiv2::Image::AutoPtr exiv2image = Exiv2::ImageFactory::open(path.toLocal8Bit().constData());
+        const QByteArray pathbytes = path.toLocal8Bit();
+        Exiv2::Image::AutoPtr exiv2image = Exiv2::ImageFactory::open(pathbytes.constData());
         if (!exiv2image.get()) {
             kWarning() << "image pointer is null";
             return;
@@ -90,7 +91,7 @@ KExiv2Private::KExiv2Private(const QString &path)
             const std::string key = (*it).key();
             const std::string value = (*it).value().toString();
             kDebug() << "key" << key.c_str() << "value" << value.c_str();
-            m_datamap.insert(QByteArray(key.c_str(), key.size()), QString::fromUtf8(value.c_str(), value.size()));
+            m_datamap.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
         }
 
         kDebug() << "obtaninig Exiv2 preview for" << path;
