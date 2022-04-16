@@ -80,7 +80,6 @@ QStringList KFileMetaDataFFmpegPlugin::mimeTypes() const
             result.append(kmimetype->name());
         }
     }
-    result.removeDuplicates();
     // qDebug() << Q_FUNC_INFO << result;
     return result;
 }
