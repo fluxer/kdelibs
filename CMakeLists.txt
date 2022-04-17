@@ -231,6 +231,14 @@ set_package_properties(EPub PROPERTIES
     PURPOSE "eBook metadata extraction"
 )
 
+macro_optional_find_package(Poppler)
+set_package_properties(Poppler PROPERTIES
+    DESCRIPTION "PDF rendering library"
+    URL "https://poppler.freedesktop.org/"
+    TYPE RECOMMENDED
+    PURPOSE "PDF metadata extraction"
+)
+
 macro_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"

@@ -81,3 +81,25 @@ if (EPUB_FOUND)
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
     )
 endif()
+
+if (POPPLER_FOUND)
+    include_directories(${POPPLER_INCLUDE_DIR})
+
+    set(kfilemetadata_poppler_SRCS kfilemetadata_poppler.cpp)
+
+    kde4_add_plugin(kfilemetadata_poppler ${kfilemetadata_poppler_SRCS})
+    target_link_libraries(kfilemetadata_poppler
+        ${KDE4_KIO_LIBS}
+        ${POPPLER_LIBRARIES}
+    )
+
+    install(
+        TARGETS kfilemetadata_poppler
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
+    )
+
+    install(
+        FILES kfilemetadata_poppler.desktop
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
+    )
+endif()

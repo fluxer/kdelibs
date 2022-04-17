@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+Name=KFileMetaDataPopplerPlugin
+GenericName=Poppler metadata extractor
+X-KDE-Library=kfilemetadata_poppler
+X-KDE-ServiceTypes=KFileMetaData/Plugin
+InitialPreference=1

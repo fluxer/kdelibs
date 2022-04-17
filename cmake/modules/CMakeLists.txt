@@ -54,6 +54,7 @@ set(cmakeFiles
     FindMtp.cmake
     FindOpenEXR.cmake
     FindPCIUTILS.cmake
+    FindPoppler.cmake
     FindPopplerQt4.cmake
     FindQalculate.cmake
     FindRAW1394.cmake
