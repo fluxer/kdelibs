@@ -135,12 +135,12 @@ QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url, c
             )
         );
     }
-    const QString popplercreationdata = getTime(popplerdocument->get_creation_date());
-    if (!popplercreationdata.isEmpty()) {
+    const QString popplercreationdate = getTime(popplerdocument->get_creation_date());
+    if (!popplercreationdate.isEmpty()) {
         result.append(
             KFileMetaInfoItem(
                 QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated"),
-                popplercreationdata
+                popplercreationdate
             )
         );
     }

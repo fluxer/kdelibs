@@ -68,7 +68,8 @@ QStringList KFileMetaDataFFmpegPlugin::keys() const
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height")
         << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate");
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate")
+        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate");
     return result;
 }
 
@@ -135,6 +136,15 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
                     result.append(
                         KFileMetaInfoItem(
                             QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate"),
+                            ffmpegbitrate
+                        )
+                    );
+                }
+                if (ffmpegcontext->streams[i]->avg_frame_rate.num > 0 && ffmpegcontext->streams[i]->avg_frame_rate.den > 0) {
+                    const QString ffmpegbitrate = QString::number(av_q2d(ffmpegcontext->streams[i]->avg_frame_rate));
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate"),
                             ffmpegbitrate
                         )
                     );
