@@ -226,24 +226,6 @@ public:
     KConfig* copyTo(const QString &file, KConfig *config = 0) const;
 
     /**
-     * Ensures that the configuration file contains a certain update.
-     *
-     * If the configuration file does not contain the update @p id
-     * as contained in @p updateFile, kconf_update is run to update
-     * the configuration file.
-     *
-     * If you install config update files with critical fixes
-     * you may wish to use this method to verify that a critical
-     * update has indeed been performed to catch the case where
-     * a user restores an old config file from backup that has
-     * not been updated yet.
-     *
-     * @param id the update to check
-     * @param updateFile the file containing the update
-     */
-    void checkUpdate(const QString &id, const QString &updateFile);
-
-    /**
      * Updates the state of this object to match the persistent storage.
      */
     void reparseConfiguration();

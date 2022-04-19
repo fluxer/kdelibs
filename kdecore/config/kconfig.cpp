@@ -453,17 +453,6 @@ bool KConfig::isDirty() const
     return d->bDirty;
 }
 
-void KConfig::checkUpdate(const QString &id, const QString &updateFile)
-{
-    const KConfigGroup cg(this, "$Version");
-    const QString cfg_id = updateFile+QLatin1Char(':')+id;
-    const QStringList ids = cg.readEntry("update_info", QStringList());
-    if (!ids.contains(cfg_id)) {
-        KToolInvocation::kdeinitExecWait(QString::fromLatin1("kconf_update"), QStringList() << QString::fromLatin1("--check") << updateFile);
-        reparseConfiguration();
-    }
-}
-
 KConfig* KConfig::copyTo(const QString &file, KConfig *config) const
 {
     Q_D(const KConfig);
