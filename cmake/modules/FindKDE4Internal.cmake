@@ -60,6 +60,7 @@
 #  KDE4_KEXIV2_LIBS           - the kexiv2 library and all depending libraries
 #  KDE4_KMEDIAPLAYER_LIBS     - the kmediaplayer library and all depending libraries
 #  KDE4_KPASSWDSTORE_LIBS     - the kpasswdstore library and all depending libraries
+#  KDE4_KPOWERMANAGER_LIBS    - the kpowermanager library and all depending libraries
 #
 # The variable INSTALL_TARGETS_DEFAULT_ARGS can be used when installing libraries
 # or executables into the default locations.
@@ -287,6 +288,7 @@ set(_kde_libraries
     kdnssd
     kexiv2
     kpasswdstore
+    kpowermanager
     kfile
     kidletime
     kio

@@ -12,11 +12,16 @@
     </signal>
     <signal name="PowerSaveStatusChanged">
       <arg type="b" name="save_power" direction="out"/>
+
+    <signal name="BatteryRemainingTimeChanged">
+      <arg type="t" name="time" direction="out"/>
+    </signal>
+    </signal>
+    <signal name="ResumeFromSuspend">
     </signal>
 
     <method name="Suspend"/>
     <method name="Hibernate"/>
-
     <method name="CanSuspend">
       <arg type="b" name="can_suspend" direction="out"/>
     </method>
@@ -28,6 +33,10 @@
     </method>
     <method name="GetPowerSaveStatus">
       <arg type="b" name="save_power" direction="out"/>
+    </method>
+
+    <method name="isLidClosed">
+      <arg type="b" name="is_closed" direction="out"/>
     </method>
   </interface>
 </node>

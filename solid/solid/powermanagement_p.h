@@ -23,10 +23,7 @@
 
 #include "powermanagement.h"
 
-#include "inhibitinterface.h"
-#include "powermanagementinterface.h"
-#include "policyagentinterface.h"
-
+#include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusServiceWatcher>
 
 namespace Solid
@@ -50,18 +47,19 @@ namespace Solid
         void slotCanHibernateChanged(bool newState);
         void slotCanHybridSuspendChanged(bool newState);
         void slotPowerSaveStatusChanged(bool newState);
+        void slotResumeFromSuspend();
         void slotServiceRegistered(const QString &serviceName);
         void slotServiceUnregistered(const QString &serviceName);
 
     public:
-        OrgFreedesktopPowerManagementInterface managerIface;
-        OrgKdeSolidPowerManagementPolicyAgentInterface policyAgentIface;
-        OrgFreedesktopPowerManagementInhibitInterface inhibitIface;
+        QDBusInterface* managerIface;
+        QDBusInterface inhibitIface;
+        QDBusInterface saverIface;
         QDBusServiceWatcher serviceWatcher;
 
         bool powerSaveStatus;
         QSet<Solid::PowerManagement::SleepState> supportedSleepStates;
-        QHash<uint, uint> screensaverCookiesForPowerDevilCookies;
+        QList<uint> screensaverCookies;
     };
 }
 

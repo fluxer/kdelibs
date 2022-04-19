@@ -1,0 +1,11 @@
+[Desktop Entry]
+Icon=preferences-system-power-management
+Name=Power manager
+Comment=Power manager service
+Type=Service
+X-KDE-ServiceTypes=KDEDModule
+X-KDE-Library=kpowermanager
+X-KDE-DBus-ModuleName=kpowermanager
+X-KDE-Kded-autoload=true
+X-KDE-Kded-load-on-demand=true
+OnlyShowIn=KDE;
