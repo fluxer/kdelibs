@@ -21,7 +21,6 @@
 #include "kdebug.h"
 
 // TODO: BatteryRemainingTimeChanged
-// TODO: fallback to ConsoleKit
 
 // for reference:
 // https://consolekit2.github.io/ConsoleKit2/#Manager
@@ -31,6 +30,7 @@ KPowerManagerImpl::KPowerManagerImpl(QObject *parent)
     m_objectregistered(false),
     m_serviceregistered(false),
     m_login1("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", QDBusConnection::systemBus()),
+    m_consolekit("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager", QDBusConnection::systemBus()),
     m_canhibernate(false),
     m_canhybridsuspend(false),
     m_cansuspend(false),
@@ -84,29 +84,41 @@ KPowerManagerImpl::~KPowerManagerImpl()
 
 bool KPowerManagerImpl::CanHibernate()
 {
-    if (!m_login1.isValid()) {
-        return false;
+    if (m_login1.isValid()) {
+        QDBusReply<QString> reply = m_login1.call("CanHibernate");
+        return (reply.value() == QLatin1String("yes"));
     }
-    QDBusReply<QString> reply = m_login1.call("CanHibernate");
-    return (reply.value() == QLatin1String("yes"));
+    if (m_consolekit.isValid()) {
+        QDBusReply<QString> reply = m_consolekit.call("CanHibernate");
+        return (reply.value() == QLatin1String("yes"));
+    }
+    return false;
 }
 
 bool KPowerManagerImpl::CanHybridSuspend()
 {
-    if (!m_login1.isValid()) {
-        return false;
+    if (m_login1.isValid()) {
+        QDBusReply<QString> reply = m_login1.call("CanHybridSleep");
+        return (reply.value() == QLatin1String("yes"));
     }
-    QDBusReply<QString> reply = m_login1.call("CanHybridSleep");
-    return (reply.value() == QLatin1String("yes"));
+    if (m_consolekit.isValid()) {
+        QDBusReply<QString> reply = m_consolekit.call("CanHybridSleep");
+        return (reply.value() == QLatin1String("yes"));
+    }
+    return false;
 }
 
 bool KPowerManagerImpl::CanSuspend()
 {
-    if (!m_login1.isValid()) {
-        return false;
+    if (m_login1.isValid()) {
+        QDBusReply<QString> reply = m_login1.call("CanSuspend");
+        return (reply.value() == QLatin1String("yes"));
     }
-    QDBusReply<QString> reply = m_login1.call("CanSuspend");
-    return (reply.value() == QLatin1String("yes"));
+    if (m_consolekit.isValid()) {
+        QDBusReply<QString> reply = m_consolekit.call("CanSuspend");
+        return (reply.value() == QLatin1String("yes"));
+    }
+    return false;
 }
 
 bool KPowerManagerImpl::GetPowerSaveStatus()
@@ -119,18 +131,24 @@ bool KPowerManagerImpl::GetPowerSaveStatus()
 
 void KPowerManagerImpl::Hibernate()
 {
-    if (!m_login1.isValid()) {
+    if (m_login1.isValid()) {
+        m_login1.asyncCall("Hibernate", true);
         return;
     }
-    m_login1.asyncCall("Hibernate", true);
+    if (m_consolekit.isValid()) {
+        m_consolekit.asyncCall("Hibernate", true);
+    }
 }
 
 void KPowerManagerImpl::Suspend()
 {
-    if (!m_login1.isValid()) {
+    if (m_login1.isValid()) {
+        m_login1.asyncCall("Suspend", true);
         return;
     }
-    m_login1.asyncCall("Suspend", true);
+    if (m_consolekit.isValid()) {
+        m_consolekit.asyncCall("Suspend", true);
+    }
 }
 
 bool KPowerManagerImpl::isLidClosed()

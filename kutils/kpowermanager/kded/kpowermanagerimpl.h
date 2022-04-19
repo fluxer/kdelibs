@@ -60,6 +60,7 @@ private:
     bool m_objectregistered;
     bool m_serviceregistered;
     QDBusInterface m_login1;
+    QDBusInterface m_consolekit;
     bool m_canhibernate;
     bool m_canhybridsuspend;
     bool m_cansuspend;

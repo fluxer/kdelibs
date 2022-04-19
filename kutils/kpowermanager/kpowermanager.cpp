@@ -90,4 +90,4 @@ bool KPowerManager::setKeyboardBrightness(const int brightness)
     return false;
 }
 
-#include "kpowermanager.moc"
+#include "moc_kpowermanager.cpp"
