@@ -66,6 +66,8 @@ KPowerManagerImpl::KPowerManagerImpl(QObject *parent)
             this, SLOT(slotPropertiesChanged(QString,QVariantMap,QStringList))
         );
         connect(&m_login1, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
+    } else if (m_consolekit.isValid()) {
+        connect(&m_consolekit, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
     }
 }
 
@@ -165,11 +167,10 @@ void KPowerManagerImpl::slotPropertiesChanged(QString interface, QVariantMap cha
     Q_UNUSED(changed_properties);
     Q_UNUSED(invalidated_properties);
 
-    bool oldcanhibernate = CanHibernate();
-    bool oldcanhybridsuspend = CanHybridSuspend();
-    bool oldcansuspend = CanSuspend();
-    bool oldpowersavestatus = GetPowerSaveStatus();
-
+    const bool oldcanhibernate = m_canhibernate;
+    const bool oldcanhybridsuspend = m_canhybridsuspend;
+    const bool oldcansuspend = m_cansuspend;
+    const bool oldpowersavestatus = m_powersavestatus;
     m_canhibernate = CanHibernate();
     m_canhybridsuspend = CanHybridSuspend();
     m_cansuspend = CanSuspend();

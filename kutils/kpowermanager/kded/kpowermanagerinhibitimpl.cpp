@@ -23,17 +23,44 @@
 #include <unistd.h>
 #include <limits.h>
 
-// TODO: fallback to ConsoleKit
-
 // for refrence:
 // https://www.freedesktop.org/wiki/Software/systemd/inhibit/
 // https://consolekit2.github.io/ConsoleKit2/#Manager
+
+struct KInhibitor {
+    QString what;
+    QString who;
+    QString why;
+    QString mode;
+    uint uid;
+    uint pid;
+};
+Q_DECLARE_METATYPE(KInhibitor);
+Q_DECLARE_METATYPE(QList<KInhibitor>);
+
+QDBusArgument& operator<<(QDBusArgument &argument, const KInhibitor &kinhibitor)
+{
+    argument.beginStructure();
+    argument << kinhibitor.what << kinhibitor.who << kinhibitor.why << kinhibitor.mode << kinhibitor.uid << kinhibitor.pid;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument& operator>>(const QDBusArgument &argument, KInhibitor &kinhibitor)
+{
+    argument.beginStructure();
+    argument >> kinhibitor.what >> kinhibitor.who >> kinhibitor.why >> kinhibitor.mode >> kinhibitor.uid >> kinhibitor.pid;
+    argument.endStructure();
+    return argument;
+}
 
 KPowerManagerInhibitImpl::KPowerManagerInhibitImpl(QObject *parent)
     : QObject(parent),
     m_objectregistered(false),
     m_serviceregistered(false),
     m_login1("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", QDBusConnection::systemBus()),
+    m_consolekit("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager", QDBusConnection::systemBus()),
+    m_consolekittimerid(0),
     m_hasinhibit(false)
 {
     (void)new InhibitAdaptor(this);
@@ -62,11 +89,19 @@ KPowerManagerInhibitImpl::KPowerManagerInhibitImpl(QObject *parent)
             "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.DBus.Properties", "PropertiesChanged",
             this, SLOT(slotPropertiesChanged(QString,QVariantMap,QStringList))
         );
+    } else if (m_consolekit.isValid()) {
+        qDBusRegisterMetaType<KInhibitor>();
+        qDBusRegisterMetaType<QList<KInhibitor>>();
+        m_consolekittimerid = startTimer(2000);
     }
 }
 
 KPowerManagerInhibitImpl::~KPowerManagerInhibitImpl()
 {
+    if (m_consolekittimerid > 0) {
+        killTimer(m_consolekittimerid);
+    }
+
     if (m_serviceregistered) {
         QDBusConnection connection = QDBusConnection::sessionBus();
         connection.unregisterService("org.freedesktop.PowerManagement.Inhibit");
@@ -80,23 +115,35 @@ KPowerManagerInhibitImpl::~KPowerManagerInhibitImpl()
 
 bool KPowerManagerInhibitImpl::HasInhibit()
 {
-    if (!m_login1.isValid()) {
-        return false;
+    if (m_login1.isValid()) {
+        return (m_login1.property("NCurrentInhibitors").toULongLong() > 0);
     }
-    return (m_login1.property("NCurrentInhibitors").toULongLong() > 0);
+    if (m_consolekit.isValid()) {
+        QDBusReply<QList<KInhibitor>> reply = m_consolekit.call("ListInhibitors");
+        return (reply.isValid() && reply.value().size() > 0);
+    }
+    return false;
 }
 
 uint KPowerManagerInhibitImpl::Inhibit(const QString &application, const QString &reason)
 {
-    if (!m_login1.isValid()) {
+    qulonglong maxinhibitors = 0;
+    if (m_login1.isValid()) {
+        maxinhibitors = m_login1.property("InhibitorsMax").toULongLong();
+    } else if (m_consolekit.isValid()) {
+        maxinhibitors = INT_MAX;
+    } else {
         return 0;
     }
-    uint cookiecounter = 0;
-    const qulonglong maxinhibitors = m_login1.property("InhibitorsMax").toULongLong();
+
     if (maxinhibitors == 0) {
         kWarning() << "Inhibit limit is zero";
         return 0;
+    } else if (maxinhibitors > INT_MAX) {
+        kWarning() << "Inhibit limit greater than INT_MAX";
+        return 0;
     }
+    uint cookiecounter = 0;
     while (m_cookies.contains(cookiecounter)) {
         if (cookiecounter >= maxinhibitors) {
             kWarning() << "Inhibit limit reached";
@@ -105,12 +152,22 @@ uint KPowerManagerInhibitImpl::Inhibit(const QString &application, const QString
         cookiecounter++;
     }
 
-    QDBusReply<QDBusUnixFileDescriptor> reply = m_login1.call(
-        "Inhibit",
-        "sleep",
-        application, reason,
-        "block"
-    );
+    QDBusReply<QDBusUnixFileDescriptor> reply;
+    if (m_login1.isValid()) {
+        reply = m_login1.call(
+            "Inhibit",
+            "sleep",
+            application, reason,
+            "block"
+        );
+    } else {
+        reply = m_consolekit.call(
+            "Inhibit",
+            "sleep",
+            application, reason,
+            "block"
+        );
+    }
     if (reply.isValid()) {
         // qDebug() << Q_FUNC_INFO << cookiecounter;
         const int inhibitfd = reply.value().takeFileDescriptor();
@@ -123,7 +180,7 @@ uint KPowerManagerInhibitImpl::Inhibit(const QString &application, const QString
 
 void KPowerManagerInhibitImpl::UnInhibit(uint cookie)
 {
-    if (!m_login1.isValid()) {
+    if (!m_login1.isValid() && !m_consolekit.isValid()) {
         return;
     }
     if (!m_cookies.contains(cookie)) {
@@ -141,12 +198,24 @@ void KPowerManagerInhibitImpl::slotPropertiesChanged(QString interface, QVariant
     Q_UNUSED(changed_properties);
     Q_UNUSED(invalidated_properties);
 
-    bool oldhasinhibit = HasInhibit();
-
+    const bool oldhasinhibit = m_hasinhibit;
     m_hasinhibit = HasInhibit();
 
     if (oldhasinhibit != m_hasinhibit) {
         emit HasInhibitChanged(m_hasinhibit);
     }
 }
+
+void KPowerManagerInhibitImpl::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == m_consolekittimerid) {
+        const bool oldhasinhibit = m_hasinhibit;
+        m_hasinhibit = HasInhibit();
+
+        if (oldhasinhibit != m_hasinhibit) {
+            emit HasInhibitChanged(m_hasinhibit);
+        }
+    }
+}
+
 #include "moc_kpowermanagerinhibitimpl.cpp"

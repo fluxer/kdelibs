@@ -21,6 +21,7 @@
 
 #include <QObject>
 #include <QDBusInterface>
+#include <QTimerEvent>
 
 class KPowerManagerInhibitImpl : public QObject
 {
@@ -40,9 +41,14 @@ private Q_SLOTS:
     void slotPropertiesChanged(QString interface, QVariantMap changed_properties, QStringList invalidated_properties);
 
 private:
+    void timerEvent(QTimerEvent *event) final;
+
+private:
     bool m_objectregistered;
     bool m_serviceregistered;
     QDBusInterface m_login1;
+    QDBusInterface m_consolekit;
+    int m_consolekittimerid;
     QMap<uint, int> m_cookies;
     bool m_hasinhibit;
 };
