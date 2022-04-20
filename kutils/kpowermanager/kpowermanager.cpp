@@ -79,10 +79,8 @@ bool KPowerManager::setProfile(const QString &profile)
         return false;
     }
 
-    KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
-    KConfigGroup kconfiggeneral = kconfig.group("General");
-    const bool enable = kconfiggeneral.readEntry("Enable", true);
-    if (enable) {
+    if (KPowerManager::isEnabled()) {
+        KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
         KConfigGroup kconfigprofile = kconfig.group(profile);
         QString defaultcpugovernor;
         // this assumes the CPU governors are not disabled
@@ -145,6 +143,19 @@ bool KPowerManager::setCPUGovernor(const QString &governor)
     KAuth::ActionReply helperreply = helperaction.execute();
     // qDebug() << helperreply.errorCode() << helperreply.errorDescription();
     return (helperreply == KAuth::ActionReply::SuccessReply);
+}
+
+bool KPowerManager::isEnabled()
+{
+    KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
+    KConfigGroup kconfiggeneral = kconfig.group("General");
+    return kconfiggeneral.readEntry("Enable", true);
+}
+
+bool KPowerManager::isSupported()
+{
+    KPowerManager kpowermanager;
+    return (!kpowermanager.CPUGovernors().isEmpty());
 }
 
 void KPowerManager::_configDirty(const QString &path)

@@ -53,11 +53,13 @@ void KPowerManagerModule::slotPowerSaveStatusChanged(bool save_power)
 
 void KPowerManagerModule::setPowerProfile(bool save_power)
 {
-    KPowerManager kpowermanager;
-    if (save_power) {
-        kpowermanager.setProfile(QString::fromLatin1("PowerSave"));
-    } else {
-        kpowermanager.setProfile(QString::fromLatin1("Performance"));
+    if (KPowerManager::isEnabled() && KPowerManager::isSupported()) {
+        KPowerManager kpowermanager;
+        if (save_power) {
+            kpowermanager.setProfile(QString::fromLatin1("PowerSave"));
+        } else {
+            kpowermanager.setProfile(QString::fromLatin1("Performance"));
+        }
     }
 }
 
