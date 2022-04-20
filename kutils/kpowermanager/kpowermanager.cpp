@@ -20,13 +20,41 @@
 #include "kconfig.h"
 #include "kconfiggroup.h"
 #include "kauthaction.h"
+#include "kstandarddirs.h"
 #include "kdebug.h"
 
 #include <QFile>
+#include <QDir>
+#include <QFileSystemWatcher>
+
+class KPowerManagerPrivate
+ {
+public:
+    KPowerManagerPrivate();
+
+    QString profile;
+    QFileSystemWatcher kconfigwatch;
+    QFileSystemWatcher cpuwatch;
+};
+
+KPowerManagerPrivate::KPowerManagerPrivate()
+{
+    kconfigwatch.addPath(KStandardDirs::locateLocal("config", "kpowermanagerrc"));
+    cpuwatch.addPath("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
+}
 
 KPowerManager::KPowerManager(QObject *parent)
-    : QObject(parent)
+    : QObject(parent),
+    d(new KPowerManagerPrivate())
 {
+    d->profile = profile();
+    connect(&d->kconfigwatch, SIGNAL(fileChanged(QString)), this, SLOT(_configDirty(QString)));
+    connect(&d->cpuwatch, SIGNAL(fileChanged(QString)), this, SLOT(_CPUGovernorDirty(QString)));
+}
+
+KPowerManager::~KPowerManager()
+{
+    delete d;
 }
 
 QString KPowerManager::profile() const
@@ -38,7 +66,7 @@ QString KPowerManager::profile() const
 
 QStringList KPowerManager::profiles() const
 {
-    QStringList result = QStringList()
+    static const QStringList result = QStringList()
         << QString::fromLatin1("Performance")
         << QString::fromLatin1("PowerSave");
     return result;
@@ -57,6 +85,7 @@ bool KPowerManager::setProfile(const QString &profile)
     if (enable) {
         KConfigGroup kconfigprofile = kconfig.group(profile);
         QString defaultcpugovernor;
+        // this assumes the CPU governors are not disabled
         if (profile == QLatin1String("Performance")) {
             defaultcpugovernor = QString::fromLatin1("performance");
         } else {
@@ -64,12 +93,7 @@ bool KPowerManager::setProfile(const QString &profile)
         }
         const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", defaultcpugovernor);
         kDebug() << "Power manager CPU governor" << cpugovernor;
-        const bool result = setCPUGovernor(cpugovernor);
-        if (result) {
-            kconfiggeneral.writeEntry("Profile", profile);
-            emit profileChanged(profile);
-        }
-        return result;
+        return setCPUGovernor(cpugovernor);
     }
     kDebug() << "Power manager disabled";
     return true;
@@ -120,11 +144,23 @@ bool KPowerManager::setCPUGovernor(const QString &governor)
     helperaction.addArgument("governor", governor);
     KAuth::ActionReply helperreply = helperaction.execute();
     // qDebug() << helperreply.errorCode() << helperreply.errorDescription();
-    const bool result = (helperreply == KAuth::ActionReply::SuccessReply);
-    if (result) {
-        emit CPUGovernorChanged(governor);
+    return (helperreply == KAuth::ActionReply::SuccessReply);
+}
+
+void KPowerManager::_configDirty(const QString &path)
+{
+    Q_UNUSED(path);
+    const QString oldprofile = d->profile;
+    d->profile = profile();
+    if (oldprofile != d->profile) {
+        emit profileChanged(d->profile);
     }
-    return result;
+}
+
+void KPowerManager::_CPUGovernorDirty(const QString &path)
+{
+    Q_UNUSED(path);
+    emit CPUGovernorChanged(CPUGovernor());
 }
 
 #include "moc_kpowermanager.cpp"
