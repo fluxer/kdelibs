@@ -18,6 +18,9 @@
 
 #include "kded_kpowermanager.h"
 #include "kpluginfactory.h"
+#include "kconfig.h"
+#include "kconfiggroup.h"
+#include "kpowermanager.h"
 
 K_PLUGIN_FACTORY(KPowerManagerModuleFactory, registerPlugin<KPowerManagerModule>();)
 K_EXPORT_PLUGIN(KPowerManagerModuleFactory("kpowermanager"))
@@ -44,7 +47,29 @@ KPowerManagerModule::~KPowerManagerModule()
 
 void KPowerManagerModule::slotPowerSaveStatusChanged(bool save_power)
 {
-    // TODO:
+    KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
+    KConfigGroup kconfiggroup;
+    QString defaultcpugovernor;
+    int defaultscreenbrightness = 0;
+    int defaultkeyboardbrightness = 0;
+    if (save_power) {
+        kconfiggroup = kconfig.group("PowerSave");
+        defaultcpugovernor = "powersave";
+        defaultscreenbrightness = 70;
+        defaultkeyboardbrightness = 70;
+    } else {
+        kconfiggroup = kconfig.group("External");
+        defaultcpugovernor = "performance";
+        defaultscreenbrightness = 100;
+        defaultkeyboardbrightness = 100;
+    }
+    const QString cpugovernor = kconfiggroup.readEntry("CPUGovernor", defaultcpugovernor);
+    const int screenbrightness = kconfiggroup.readEntry("ScreenBrightness", defaultscreenbrightness);
+    const int keyboardbrightness = kconfiggroup.readEntry("KeyboardBrightness", defaultkeyboardbrightness);
+    KPowerManager kpowermanager;
+    kpowermanager.setCPUGovernor(cpugovernor);
+    kpowermanager.setScreenBrightness(screenbrightness);
+    kpowermanager.setKeyboardBrightness(keyboardbrightness);
 }
 
 #include "moc_kded_kpowermanager.cpp"

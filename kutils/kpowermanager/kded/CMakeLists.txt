@@ -24,6 +24,7 @@ qt4_generate_dbus_interface(kded_kpowermanager.h org.kde.kpowermanager.xml)
 kde4_add_plugin(kded_kpowermanager ${kded_kpowermanager_SRCS})
 target_link_libraries(kded_kpowermanager PRIVATE
     ${KDE4_KDECORE_LIBS}
+    ${KDE4_KPOWERMANAGER_LIBS}
     ${QT_QTDBUS_LIBRARY}
 )
 

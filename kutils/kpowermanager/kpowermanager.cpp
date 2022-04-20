@@ -62,6 +62,10 @@ QStringList KPowerManager::CPUGovernors() const
 
 bool KPowerManager::setCPUGovernor(const QString &governor)
 {
+    if (!CPUGovernors().contains(governor)) {
+        kWarning() << "Invalid CPU governor" << governor;
+        return false;
+    }
     // TODO:
     return false;
 }
@@ -74,6 +78,10 @@ int KPowerManager::screenBrightness() const
 
 bool KPowerManager::setScreenBrightness(const int brightness)
 {
+    if (brightness < 0 || brightness > 100) {
+        kWarning() << "Screen brightness value out of range" << brightness;
+        return false;
+    }
     // TODO:
     return false;
 }
@@ -86,6 +94,10 @@ int KPowerManager::keyboardBrightness() const
 
 bool KPowerManager::setKeyboardBrightness(const int brightness)
 {
+    if (brightness < 0 || brightness > 100) {
+        kWarning() << "Keyboard brightness value out of range" << brightness;
+        return false;
+    }
     // TODO:
     return false;
 }
