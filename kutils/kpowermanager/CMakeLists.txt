@@ -47,3 +47,20 @@ install(
     kded/org.freedesktop.PowerManagement.Inhibit.xml
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
+
+########### next target ###############
+
+set(kpowermanager_helper_srcs
+    kpowermanager_helper.cpp
+)
+
+add_executable(kpowermanager_helper ${kpowermanager_helper_srcs})
+target_link_libraries(kpowermanager_helper PUBLIC ${KDE4_KDECORE_LIBS})
+
+install(
+    TARGETS kpowermanager_helper
+    DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR}
+)
+
+kde4_install_auth_helper_files(kpowermanager_helper org.kde.kpowermanager.helper root)
+

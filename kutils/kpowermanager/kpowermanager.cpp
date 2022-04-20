@@ -17,6 +17,7 @@
 */
 
 #include "kpowermanager.h"
+#include "kauthaction.h"
 #include "kdebug.h"
 
 #include <QFile>
@@ -66,8 +67,13 @@ bool KPowerManager::setCPUGovernor(const QString &governor)
         kWarning() << "Invalid CPU governor" << governor;
         return false;
     }
-    // TODO:
-    return false;
+
+    KAuth::Action helperaction("org.kde.kpowermanager.helper.setgovernor");
+    helperaction.setHelperID("org.kde.kpowermanager.helper");
+    helperaction.addArgument("governor", governor);
+    KAuth::ActionReply helperreply = helperaction.execute();
+    // qDebug() << helperreply.errorCode() << helperreply.errorDescription();
+    return (helperreply == KAuth::ActionReply::SuccessReply);
 }
 
 int KPowerManager::screenBrightness() const
