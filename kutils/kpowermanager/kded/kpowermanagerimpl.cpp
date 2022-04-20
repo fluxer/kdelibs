@@ -31,6 +31,7 @@ KPowerManagerImpl::KPowerManagerImpl(QObject *parent)
     m_serviceregistered(false),
     m_login1("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", QDBusConnection::systemBus()),
     m_consolekit("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager", QDBusConnection::systemBus()),
+    m_consolekittimerid(0),
     m_canhibernate(false),
     m_canhybridsuspend(false),
     m_cansuspend(false),
@@ -67,13 +68,17 @@ KPowerManagerImpl::KPowerManagerImpl(QObject *parent)
         );
         connect(&m_login1, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
     } else if (m_consolekit.isValid()) {
-        // TODO: poll
         connect(&m_consolekit, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
+        m_consolekittimerid = startTimer(2000);
     }
 }
 
 KPowerManagerImpl::~KPowerManagerImpl()
 {
+    if (m_consolekittimerid > 0) {
+        killTimer(m_consolekittimerid);
+    }
+
     if (m_serviceregistered) {
         QDBusConnection connection = QDBusConnection::sessionBus();
         connection.unregisterService("org.freedesktop.PowerManagement");
@@ -175,6 +180,13 @@ void KPowerManagerImpl::slotPrepareForSleep(bool start)
 {
     if (!start) {
         emit ResumeFromSuspend();
+    }
+}
+
+void KPowerManagerImpl::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == m_consolekittimerid) {
+        emitSignals();
     }
 }
 

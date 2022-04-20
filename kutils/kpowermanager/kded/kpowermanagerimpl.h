@@ -23,6 +23,7 @@
 #include <QVariant>
 #include <QStringList>
 #include <QDBusInterface>
+#include <QTimerEvent>
 
 class KPowerManagerImpl : public QObject
 {
@@ -57,12 +58,16 @@ private Q_SLOTS:
     void slotPrepareForSleep(bool start);
 
 private:
+    void timerEvent(QTimerEvent *event) final;
+
+private:
     void emitSignals();
 
     bool m_objectregistered;
     bool m_serviceregistered;
     QDBusInterface m_login1;
     QDBusInterface m_consolekit;
+    int m_consolekittimerid;
     bool m_canhibernate;
     bool m_canhybridsuspend;
     bool m_cansuspend;
