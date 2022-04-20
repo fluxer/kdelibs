@@ -54,12 +54,12 @@ void KPowerManagerModule::slotPowerSaveStatusChanged(bool save_power)
     int defaultkeyboardbrightness = 0;
     if (save_power) {
         kconfiggroup = kconfig.group("PowerSave");
-        defaultcpugovernor = "powersave";
+        defaultcpugovernor = QString::fromLatin1("powersave");
         defaultscreenbrightness = 70;
         defaultkeyboardbrightness = 70;
     } else {
         kconfiggroup = kconfig.group("External");
-        defaultcpugovernor = "performance";
+        defaultcpugovernor = QString::fromLatin1("performance");
         defaultscreenbrightness = 100;
         defaultkeyboardbrightness = 100;
     }

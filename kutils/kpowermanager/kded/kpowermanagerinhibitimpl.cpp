@@ -187,9 +187,9 @@ void KPowerManagerInhibitImpl::UnInhibit(uint cookie)
         kWarning() << "Attempt to UnInhibit with invalid cookie";
         return;
     }
-    m_cookies.remove(cookie);
     // qDebug() << Q_FUNC_INFO << cookie;
     ::close(m_cookies.value(cookie));
+    m_cookies.remove(cookie);
 }
 
 void KPowerManagerInhibitImpl::slotPropertiesChanged(QString interface, QVariantMap changed_properties, QStringList invalidated_properties)
