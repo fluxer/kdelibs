@@ -76,36 +76,4 @@ bool KPowerManager::setCPUGovernor(const QString &governor)
     return (helperreply == KAuth::ActionReply::SuccessReply);
 }
 
-int KPowerManager::screenBrightness() const
-{
-    // TODO:
-    return 100;
-}
-
-bool KPowerManager::setScreenBrightness(const int brightness)
-{
-    if (brightness < 0 || brightness > 100) {
-        kWarning() << "Screen brightness value out of range" << brightness;
-        return false;
-    }
-    // TODO:
-    return false;
-}
-
-int KPowerManager::keyboardBrightness() const
-{
-    // TODO:
-    return 100;
-}
-
-bool KPowerManager::setKeyboardBrightness(const int brightness)
-{
-    if (brightness < 0 || brightness > 100) {
-        kWarning() << "Keyboard brightness value out of range" << brightness;
-        return false;
-    }
-    // TODO:
-    return false;
-}
-
 #include "moc_kpowermanager.cpp"

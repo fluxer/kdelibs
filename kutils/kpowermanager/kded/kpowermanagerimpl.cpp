@@ -67,6 +67,7 @@ KPowerManagerImpl::KPowerManagerImpl(QObject *parent)
         );
         connect(&m_login1, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
     } else if (m_consolekit.isValid()) {
+        // TODO: poll
         connect(&m_consolekit, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
     }
 }

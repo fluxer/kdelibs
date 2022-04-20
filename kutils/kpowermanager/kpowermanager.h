@@ -45,12 +45,6 @@ public:
     QStringList CPUGovernors() const;
     bool setCPUGovernor(const QString &governor);
 
-    int screenBrightness() const;
-    bool setScreenBrightness(const int brightness);
-
-    int keyboardBrightness() const;
-    bool setKeyboardBrightness(const int brightness);
-
 private:
     Q_DISABLE_COPY(KPowerManager);
     KPowerManagerPrivate *d;
