@@ -140,8 +140,7 @@ int Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString&
         message << QCoreApplication::applicationName();
         message << reason;
 
-        QDBusPendingReply<uint> ssReply = QDBusConnection::sessionBus().asyncCall(message);
-        ssReply.waitForFinished();
+        QDBusReply<uint> ssReply = QDBusConnection::sessionBus().call(message);
         if (ssReply.isValid()) {
             globalPowerManager()->screensaverCookies.append(ssReply.value());
         }
@@ -241,20 +240,16 @@ void Solid::PowerManagementPrivate::slotServiceRegistered(const QString &service
         );
 
         // Load all the properties
-        QDBusPendingReply<bool> suspendReply = managerIface->call("CanSuspend");
-        suspendReply.waitForFinished();
+        QDBusReply<bool> suspendReply = managerIface->call("CanSuspend");
         slotCanSuspendChanged(suspendReply.isValid() ? suspendReply.value() : false);
 
-        QDBusPendingReply<bool> hibernateReply = managerIface->call("CanHibernate");
-        hibernateReply.waitForFinished();
+        QDBusReply<bool> hibernateReply = managerIface->call("CanHibernate");
         slotCanHibernateChanged(hibernateReply.isValid() ? hibernateReply.value() : false);
 
-        QDBusPendingReply<bool> hybridSuspendReply = managerIface->call("CanHybridSuspend");
-        hybridSuspendReply.waitForFinished();
+        QDBusReply<bool> hybridSuspendReply = managerIface->call("CanHybridSuspend");
         slotCanHybridSuspendChanged(hybridSuspendReply.isValid() ? hybridSuspendReply.value() : false);
 
-        QDBusPendingReply<bool> saveStatusReply = managerIface->call("GetPowerSaveStatus");
-        saveStatusReply.waitForFinished();
+        QDBusReply<bool> saveStatusReply = managerIface->call("GetPowerSaveStatus");
         slotPowerSaveStatusChanged(saveStatusReply.isValid() ? saveStatusReply.value() : false);
 
         connect(managerIface, SIGNAL(CanSuspendChanged(bool)),
