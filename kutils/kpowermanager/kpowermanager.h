@@ -40,14 +40,18 @@ public:
         @brief Contructs object with @p parent
     */
     KPowerManager(QObject *parent = nullptr);
-    ~KPowerManager();
 
+    QString profile() const;
+    QStringList profiles() const;
+    bool setProfile(const QString &profile);
+
+    QString CPUGovernor() const;
     QStringList CPUGovernors() const;
     bool setCPUGovernor(const QString &governor);
 
-private:
-    Q_DISABLE_COPY(KPowerManager);
-    KPowerManagerPrivate *d;
+Q_SIGNALS:
+    void profileChanged(const QString &profile);
+    void CPUGovernorChanged(const QString &governor);
 };
 
 #endif // KPOWERMANAGER_H

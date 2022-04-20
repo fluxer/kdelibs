@@ -57,6 +57,8 @@ private Q_SLOTS:
     void slotPrepareForSleep(bool start);
 
 private:
+    void emitSignals();
+
     bool m_objectregistered;
     bool m_serviceregistered;
     QDBusInterface m_login1;

@@ -18,8 +18,6 @@
 
 #include "kded_kpowermanager.h"
 #include "kpluginfactory.h"
-#include "kconfig.h"
-#include "kconfiggroup.h"
 #include "kpowermanager.h"
 #include "kdebug.h"
 
@@ -38,6 +36,8 @@ KPowerManagerModule::KPowerManagerModule(QObject *parent, const QList<QVariant>&
     );
 
     m_powermanagerinhibitimpl = new KPowerManagerInhibitImpl(this);
+
+    setPowerProfile(m_powermanagerimpl->GetPowerSaveStatus());
 }
 
 KPowerManagerModule::~KPowerManagerModule()
@@ -48,24 +48,16 @@ KPowerManagerModule::~KPowerManagerModule()
 
 void KPowerManagerModule::slotPowerSaveStatusChanged(bool save_power)
 {
-    KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
-    KConfigGroup kconfiggroup = kconfig.group("General");
-    const bool enable = kconfiggroup.readEntry("Enable", true);
-    if (enable) {
-        QString defaultcpugovernor;
-        if (save_power) {
-            kconfiggroup = kconfig.group("PowerSave");
-            defaultcpugovernor = QString::fromLatin1("powersave");
-        } else {
-            kconfiggroup = kconfig.group("External");
-            defaultcpugovernor = QString::fromLatin1("performance");
-        }
-        const QString cpugovernor = kconfiggroup.readEntry("CPUGovernor", defaultcpugovernor);
-        kDebug() << "Power manager CPU governor" << cpugovernor;
-        KPowerManager kpowermanager;
-        kpowermanager.setCPUGovernor(cpugovernor);
+    setPowerProfile(save_power);
+}
+
+void KPowerManagerModule::setPowerProfile(bool save_power)
+{
+    KPowerManager kpowermanager;
+    if (save_power) {
+        kpowermanager.setProfile(QString::fromLatin1("PowerSave"));
     } else {
-        kDebug() << "Power manager disabled";
+        kpowermanager.setProfile(QString::fromLatin1("Performance"));
     }
 }
 

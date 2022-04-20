@@ -168,6 +168,18 @@ void KPowerManagerImpl::slotPropertiesChanged(QString interface, QVariantMap cha
     Q_UNUSED(changed_properties);
     Q_UNUSED(invalidated_properties);
 
+    emitSignals();
+}
+
+void KPowerManagerImpl::slotPrepareForSleep(bool start)
+{
+    if (!start) {
+        emit ResumeFromSuspend();
+    }
+}
+
+void KPowerManagerImpl::emitSignals()
+{
     const bool oldcanhibernate = m_canhibernate;
     const bool oldcanhybridsuspend = m_canhybridsuspend;
     const bool oldcansuspend = m_cansuspend;
@@ -188,13 +200,6 @@ void KPowerManagerImpl::slotPropertiesChanged(QString interface, QVariantMap cha
     }
     if (oldpowersavestatus != m_powersavestatus) {
         emit PowerSaveStatusChanged(m_powersavestatus);
-    }
-}
-
-void KPowerManagerImpl::slotPrepareForSleep(bool start)
-{
-    if (!start) {
-        emit ResumeFromSuspend();
     }
 }
 

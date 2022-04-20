@@ -198,23 +198,23 @@ void KPowerManagerInhibitImpl::slotPropertiesChanged(QString interface, QVariant
     Q_UNUSED(changed_properties);
     Q_UNUSED(invalidated_properties);
 
-    const bool oldhasinhibit = m_hasinhibit;
-    m_hasinhibit = HasInhibit();
-
-    if (oldhasinhibit != m_hasinhibit) {
-        emit HasInhibitChanged(m_hasinhibit);
-    }
+    emitSignals();
 }
 
 void KPowerManagerInhibitImpl::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == m_consolekittimerid) {
-        const bool oldhasinhibit = m_hasinhibit;
-        m_hasinhibit = HasInhibit();
+        emitSignals();
+    }
+}
 
-        if (oldhasinhibit != m_hasinhibit) {
-            emit HasInhibitChanged(m_hasinhibit);
-        }
+void KPowerManagerInhibitImpl::emitSignals()
+{
+    const bool oldhasinhibit = m_hasinhibit;
+    m_hasinhibit = HasInhibit();
+
+    if (oldhasinhibit != m_hasinhibit) {
+        emit HasInhibitChanged(m_hasinhibit);
     }
 }
 

@@ -44,6 +44,8 @@ private:
     void timerEvent(QTimerEvent *event) final;
 
 private:
+    void emitSignals();
+
     bool m_objectregistered;
     bool m_serviceregistered;
     QDBusInterface m_login1;
