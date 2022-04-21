@@ -22,6 +22,7 @@
 
 #include <unistd.h>
 #include <limits.h>
+#include <errno.h>
 
 // for refrence:
 // https://www.freedesktop.org/wiki/Software/systemd/inhibit/
@@ -169,7 +170,6 @@ uint KPowerManagerInhibitImpl::Inhibit(const QString &application, const QString
         );
     }
     if (reply.isValid()) {
-        // qDebug() << Q_FUNC_INFO << cookiecounter;
         const int inhibitfd = reply.value().takeFileDescriptor();
         m_cookies.insert(cookiecounter, inhibitfd);
         return cookiecounter;
@@ -187,8 +187,10 @@ void KPowerManagerInhibitImpl::UnInhibit(uint cookie)
         kWarning() << "Attempt to UnInhibit with invalid cookie";
         return;
     }
-    // qDebug() << Q_FUNC_INFO << cookie;
-    ::close(m_cookies.value(cookie));
+    if (::close(m_cookies.value(cookie)) == -1) {
+        const int savederrno = errno;
+        kWarning() << "Could not uninhibit" << qt_error_string(savederrno);
+    }
     m_cookies.remove(cookie);
 }
 
