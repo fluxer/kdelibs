@@ -1,6 +1,6 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 # for <kio/global.h>
-include_directories( ${KDE4_KIO_INCLUDES} )
+include_directories(${KDE4_KIO_INCLUDES})
 
 MACRO(KIO_UNIT_TESTS)
     FOREACH(_testname ${ARGN})

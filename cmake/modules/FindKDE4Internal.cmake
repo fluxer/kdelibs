@@ -197,23 +197,22 @@ endif(kdelibs_SOURCE_DIR)
 # Used in configure_file() and install(EXPORT)
 set(KDE4_TARGET_PREFIX KDE4::)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+
 #######################  #now try to find some kde stuff  ################################
 
 if (_kdeBootStrapping)
     set(KDE4_INCLUDE_DIR ${kdelibs_SOURCE_DIR})
 
-    set(EXECUTABLE_OUTPUT_PATH ${kdelibs_BINARY_DIR}/bin )
-
-    set(LIBRARY_OUTPUT_PATH               ${CMAKE_BINARY_DIR}/lib )
     set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX} )
     set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX} )
 
-    set(KDE4_LIB_DIR ${LIBRARY_OUTPUT_PATH}/${CMAKE_CFG_INTDIR})
+    set(KDE4_LIB_DIR ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR})
 
     set(KDE4_INSTALLED_VERSION_OK TRUE)
 else(_kdeBootStrapping)
-    set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/lib )
-
     # These files contain information about the installed kdelibs
     include(${kde_cmake_module_dir}/KDE4Config.cmake)
     include(${kde_cmake_module_dir}/KDE4Version.cmake)
