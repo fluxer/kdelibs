@@ -249,6 +249,37 @@ QString UDevDevice::icon() const
     } if (queryDeviceInterface(Solid::DeviceInterface::AcAdapter)) {
         return QLatin1String("preferences-system-power-management");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Battery)) {
+        const Battery batteryIface(const_cast<UDevDevice *>(this));
+        const int batterypercent = batteryIface.chargePercent();
+        if (batteryIface.chargeState() == Solid::Battery::Charging) {
+            if (batterypercent > 80) {
+                return QLatin1String("battery-charging");
+            } else if (batterypercent > 60) {
+                return QLatin1String("battery-charging-080");
+            } else if (batterypercent > 40) {
+                return QLatin1String("battery-charging-060");
+            } else if (batterypercent > 20) {
+                return QLatin1String("battery-charging-040");
+            } else if (batterypercent > 0) {
+                return QLatin1String("battery-charging-low");
+            } else {
+                return QLatin1String("battery-charging-caution");
+            }
+        } else if (batteryIface.chargeState() == Solid::Battery::Discharging) {
+            if (batterypercent > 80) {
+                return QLatin1String("battery");
+            } else if (batterypercent > 60) {
+                return QLatin1String("battery-080");
+            } else if (batterypercent > 40) {
+                return QLatin1String("battery-060");
+            } else if (batterypercent > 20) {
+                return QLatin1String("battery-040");
+            } else if (batterypercent > 0) {
+                return QLatin1String("battery-low");
+            } else {
+                return QLatin1String("battery-caution");
+            }
+        }
         return QLatin1String("battery");
     } else if (queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         return QLatin1String("cpu");
