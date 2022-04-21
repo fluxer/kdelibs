@@ -81,11 +81,11 @@ public:
 
 Q_SIGNALS:
     /*!
-        @brief Signals that the current profile has changed
+        @brief Signals that the current profile has changed to @p profile
     */
     void profileChanged(const QString &profile);
     /*!
-        @brief Signals that the current CPU governor has changed
+        @brief Signals that the current CPU governor has changed to @p governor
     */
     void CPUGovernorChanged(const QString &governor);
 
