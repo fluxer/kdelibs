@@ -482,9 +482,18 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
         return m_device.subsystem() == QLatin1String("block");
     }
 
-    case Solid::DeviceInterface::AcAdapter:
-    case Solid::DeviceInterface::Battery:
-        return m_device.subsystem() == QLatin1String("power_supply");
+    case Solid::DeviceInterface::AcAdapter: {
+        return (
+            m_device.subsystem() == QLatin1String("power_supply")
+            && deviceName().contains(QLatin1String("/power_supply/AC"))
+        );
+    }
+    case Solid::DeviceInterface::Battery: {
+        return (
+            m_device.subsystem() == QLatin1String("power_supply")
+            && deviceName().contains(QLatin1String("/power_supply/BAT"))
+        );
+    }
 
     case Solid::DeviceInterface::Processor:
         return m_device.driver() == QLatin1String("processor");
