@@ -82,14 +82,8 @@ bool KPowerManager::setProfile(const QString &profile)
     if (KPowerManager::isEnabled()) {
         KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
         KConfigGroup kconfigprofile = kconfig.group(profile);
-        QString defaultcpugovernor;
         // this assumes the CPU governors are not disabled
-        if (profile == QLatin1String("Performance")) {
-            defaultcpugovernor = QString::fromLatin1("performance");
-        } else {
-            defaultcpugovernor = QString::fromLatin1("powersave");
-        }
-        const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", defaultcpugovernor);
+        const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", profile.toLower());
         kDebug() << "Power manager CPU governor" << cpugovernor;
         return setCPUGovernor(cpugovernor);
     }
@@ -155,7 +149,18 @@ bool KPowerManager::isEnabled()
 bool KPowerManager::isSupported()
 {
     KPowerManager kpowermanager;
-    return (!kpowermanager.CPUGovernors().isEmpty());
+    const QStringList cpugovernors = kpowermanager.CPUGovernors();
+    bool result = true;
+    KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
+    foreach (const QString &profile, kpowermanager.profiles()) {
+        KConfigGroup kconfigprofile = kconfig.group(profile);
+        const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", profile.toLower());
+        if (!cpugovernors.contains(cpugovernor)) {
+            result = false;
+            break;
+        }
+    }
+    return result;
 }
 
 void KPowerManager::_configDirty(const QString &path)
