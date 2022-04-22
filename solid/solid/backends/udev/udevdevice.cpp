@@ -514,15 +514,19 @@ bool UDevDevice::queryDeviceInterface(const Solid::DeviceInterface::Type &type) 
     }
 
     case Solid::DeviceInterface::AcAdapter: {
+        const QString powersupplytype = deviceProperty("POWER_SUPPLY_TYPE").toLower();
         return (
             m_device.subsystem() == QLatin1String("power_supply")
-            && deviceName().contains(QLatin1String("/power_supply/AC"))
+            && (powersupplytype == QLatin1String("mains")
+            || powersupplytype.contains(QLatin1String("ups")))
         );
     }
     case Solid::DeviceInterface::Battery: {
+        const QString powersupplytype = deviceProperty("POWER_SUPPLY_TYPE").toLower();
         return (
-            m_device.subsystem() == QLatin1String("power_supply")
-            && deviceName().contains(QLatin1String("/power_supply/BAT"))
+            m_device.subsystem() == QLatin1String("power_supply") &&
+            (powersupplytype == QLatin1String("battery")
+            || powersupplytype.contains(QLatin1String("usb")))
         );
     }
 
