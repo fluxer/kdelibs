@@ -103,7 +103,7 @@ Solid::Battery::ChargeState FakeBattery::chargeState() const
     }
     else if (state == "full")
     {
-        return Solid::Battery::FullCharge;
+        return Solid::Battery::FullyCharged;
     }
     else
     {
@@ -123,7 +123,7 @@ void FakeBattery::setChargeState(Solid::Battery::ChargeState newState)
     case Solid::Battery::Discharging:
         name = "discharging";
         break;
-    case Solid::Battery::FullCharge:
+    case Solid::Battery::FullyCharged:
         name = "full";
         break;
     case Solid::Battery::UnknownCharge:

@@ -65,9 +65,9 @@ namespace Solid
          * - UnknownCharge : Battery state is Unknown
          * - Charging : Battery is charging
          * - Discharging : Battery is discharging
-         * - FullCharge : Battery is fully charged
+         * - FullyCharged : Battery is fully charged
          */
-        enum ChargeState { UnknownCharge, Charging, Discharging, FullCharge };
+        enum ChargeState { UnknownCharge, Charging, Discharging, FullyCharged };
 
 
     private:

@@ -114,7 +114,7 @@ Solid::Battery::ChargeState Battery::chargeState() const
     } else if (powersupplystatus == QLatin1String("discharging")) {
         return Solid::Battery::Discharging;
     } else if (powersupplystatus == QLatin1String("full")) {
-        return Solid::Battery::FullCharge;
+        return Solid::Battery::FullyCharged;
     }
 
     return Solid::Battery::UnknownCharge;
