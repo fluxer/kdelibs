@@ -38,7 +38,7 @@ public:
 
     void slotMIME();
     void slotData(const char* curldata, const size_t curldatasize);
-    void slotProgress(qint64 received, qint64 total);
+    void slotProgress(KIO::filesize_t received, KIO::filesize_t total);
 
     bool firstchunk;
     QByteArray headerdata;

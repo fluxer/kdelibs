@@ -139,13 +139,13 @@ size_t curlWriteCallback(char *ptr, size_t size, size_t nmemb, void *userdata)
     return nmemb;
 }
 
-int curlProgressCallback(void *userdata, double dltotal, double dlnow, double ultotal, double ulnow)
+int curlXFERCallback(void *userdata, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
 {
     HttpProtocol* httpprotocol = static_cast<HttpProtocol*>(userdata);
     if (!httpprotocol) {
         return CURLE_BAD_FUNCTION_ARGUMENT;
     }
-    httpprotocol->slotProgress(qRound(dlnow), qRound(dltotal));
+    httpprotocol->slotProgress(KIO::filesize_t(dlnow), KIO::filesize_t(dltotal));
     return CURLE_OK;
 }
 
@@ -214,12 +214,12 @@ void HttpProtocol::get(const KUrl &url)
     curl_easy_setopt(m_curl, CURLOPT_FOLLOWLOCATION, 1L);
     curl_easy_setopt(m_curl, CURLOPT_MAXREDIRS, 100L); // proxies apparently cause a lot of redirects
     curl_easy_setopt(m_curl, CURLOPT_CONNECTTIMEOUT, SlaveBase::connectTimeout());
-    // curl_easy_setopt(m_curl, CURLOPT_IGNORE_CONTENT_LENGTH, 1L); // breaks progress, fixes transfer of chunked content
+    // curl_easy_setopt(m_curl, CURLOPT_IGNORE_CONTENT_LENGTH, 1L); // breaks XFER info, fixes transfer of chunked content
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
-    curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the progress callback is not called
-    curl_easy_setopt(m_curl, CURLOPT_PROGRESSDATA, this);
-    curl_easy_setopt(m_curl, CURLOPT_PROGRESSFUNCTION, curlProgressCallback);
+    curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the XFER info callback is not called
+    curl_easy_setopt(m_curl, CURLOPT_XFERINFODATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_XFERINFOFUNCTION, curlXFERCallback);
     curl_easy_setopt(m_curl, CURLOPT_HEADERDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_HEADERFUNCTION, curlHeaderCallback);
 
@@ -376,12 +376,12 @@ void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
     data(QByteArray::fromRawData(curldata, curldatasize));
 }
 
-void HttpProtocol::slotProgress(qint64 received, qint64 total)
+void HttpProtocol::slotProgress(KIO::filesize_t received, KIO::filesize_t total)
 {
     kDebug(7103) << "Received" << received << "from" << total;
-    emit processedSize(static_cast<KIO::filesize_t>(received));
+    emit processedSize(received);
     if (total > 0 && received != total) {
-        emit totalSize(static_cast<KIO::filesize_t>(total));
+        emit totalSize(total);
     }
 }
 
