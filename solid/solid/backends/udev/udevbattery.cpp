@@ -55,7 +55,7 @@ Battery::~Battery()
 
 bool Battery::isPlugged() const
 {
-    return (m_device->deviceProperty("POWER_SUPPLY_ONLINE").toInt() == 1);
+    return (m_device->deviceProperty("POWER_SUPPLY_PRESENT").toInt() == 1);
 }
 
 Solid::Battery::BatteryType Battery::type() const
@@ -103,6 +103,10 @@ bool Battery::isRechargeable() const
 
 bool Battery::isPowerSupply() const
 {
+    const QString powersupplyscope(m_device->deviceProperty("POWER_SUPPLY_SCOPE").toLower());
+    if (powersupplyscope == QLatin1String("device")) {
+        return false;
+    }
     return (chargeState() == Solid::Battery::Discharging);
 }
 
@@ -116,7 +120,6 @@ Solid::Battery::ChargeState Battery::chargeState() const
     } else if (powersupplystatus == QLatin1String("full")) {
         return Solid::Battery::FullyCharged;
     }
-
     return Solid::Battery::UnknownCharge;
 }
 

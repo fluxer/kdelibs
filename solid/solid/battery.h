@@ -97,7 +97,8 @@ namespace Solid
         static Type deviceInterfaceType() { return DeviceInterface::Battery; }
 
         /**
-         * Indicates if this battery is plugged.
+         * Indicates if this battery is plugged. If true is returned from this
+         * method the device status will be shown by applets for example.
          *
          * @return true if the battery is plugged, false otherwise
          */
