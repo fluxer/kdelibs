@@ -103,7 +103,7 @@ bool Battery::isRechargeable() const
 
 bool Battery::isPowerSupply() const
 {
-    return (m_device->deviceProperty("POWER_SUPPLY_PRESENT").toInt() == 1);
+    return (chargeState() == Solid::Battery::Discharging);
 }
 
 Solid::Battery::ChargeState Battery::chargeState() const
