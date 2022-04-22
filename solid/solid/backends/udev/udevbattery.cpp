@@ -26,7 +26,7 @@ using namespace Solid::Backends::UDev;
 // linux/drivers/power/supply/power_supply_sysfs.c
 // include/linux/power_supply.h
 
-static const QStringList powersupplysubsystems = QStringList() << QLatin1String("power_suply");
+static const QStringList powersupplysubsystems = QStringList() << QLatin1String("power_supply");
 
 Battery::Battery(UDevDevice *device)
     : DeviceInterface(device),
