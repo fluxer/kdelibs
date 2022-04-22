@@ -60,6 +60,8 @@ public:
     UdevQt::Device udevDevice();
 
 private:
+    friend class AcAdapter;
+    friend class Battery;
     UdevQt::Device m_device;
 };
 

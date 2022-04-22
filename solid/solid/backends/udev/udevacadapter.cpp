@@ -48,6 +48,9 @@ bool AcAdapter::isPlugged() const
 void AcAdapter::slotEmitSignals(const UdevQt::Device &device)
 {
     if (device.sysfsPath() == m_device->deviceName()) {
+        // HACK: update device to refresh properties
+        m_device->m_device = device;
+
         bool previousplugged = m_isplugged;
         m_isplugged = isPlugged();
         if (previousplugged != m_isplugged) {

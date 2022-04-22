@@ -123,6 +123,9 @@ Solid::Battery::ChargeState Battery::chargeState() const
 void Battery::slotEmitSignals(const UdevQt::Device &device)
 {
     if (device.sysfsPath() == m_device->deviceName()) {
+        // HACK: update device to refresh properties
+        m_device->m_device = device;
+
         const int previouschargepercent = m_chargepercent;
         m_chargepercent = chargePercent();
         if (previouschargepercent != m_chargepercent) {
