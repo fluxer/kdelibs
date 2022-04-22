@@ -51,31 +51,23 @@ namespace Solid
         /**
          * This enum type defines the type of the device holding the battery
          *
-         * - PdaBattery : A battery in a Personal Digital Assistant
-         * - UpsBattery : A battery in an Uninterruptible Power Supply
-         * - PrimaryBattery : A primary battery for the system (for example laptop battery)
-         * - MouseBattery : A battery in a mouse
-         * - KeyboardBattery : A battery in a keyboard
-         * - KeyboardMouseBattery : A battery in a combined keyboard and mouse
-         * - CameraBattery : A battery in a camera
-         * - PhoneBattery : A battery in a phone
-         * - MonitorBattery : A battery in a monitor
          * - UnknownBattery : A battery in an unknown device
+         * - PrimaryBattery : A primary battery for the system (for example laptop battery)
+         * - UpsBattery : A battery in an Uninterruptible Power Supply
+         * - UsbBattery : A battery in a is of USB device (for example mouse battery)
          */
-        enum BatteryType { UnknownBattery, PdaBattery, UpsBattery,
-                           PrimaryBattery, MouseBattery, KeyboardBattery,
-                           KeyboardMouseBattery, CameraBattery,
-                           PhoneBattery, MonitorBattery };
+        enum BatteryType { UnknownBattery, PrimaryBattery, UpsBattery,
+                           UsbBattery };
 
         /**
          * This enum type defines charge state of a battery
          *
-         * - NoCharge : Battery charge is stable, not charging or discharging or
-         *              the state is Unknown
+         * - UnknownCharge : Battery state is Unknown
          * - Charging : Battery is charging
          * - Discharging : Battery is discharging
+         * - FullCharge : Battery is fully charged
          */
-        enum ChargeState { NoCharge, Charging, Discharging };
+        enum ChargeState { UnknownCharge, Charging, Discharging, FullCharge };
 
 
     private:
@@ -126,8 +118,6 @@ namespace Solid
          * @see Solid::Battery::BatteryType
          */
         BatteryType type() const;
-
-
 
         /**
          * Retrieves the current charge level of the battery normalised

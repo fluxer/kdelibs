@@ -56,8 +56,6 @@ namespace Ifaces
          */
         virtual Solid::Battery::BatteryType type() const = 0;
 
-
-
         /**
          * Retrieves the current charge level of the battery normalised
          * to percent.

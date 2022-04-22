@@ -41,7 +41,7 @@
             <property key="interfaces">Battery</property>
             <property key="parent">/org/kde/solid/fakehw/computer</property>
             <property key="isPluged">false</property>
-            <property key="batteryType">mouse</property>
+            <property key="batteryType">usb</property>
             <!-- Battery properties beyond charge percentage are only reported by UPower
                  for primary batteries, not for other batteries like this mouse -->
             <property key="isRechargeable">true</property>

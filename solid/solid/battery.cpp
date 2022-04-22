@@ -87,7 +87,7 @@ bool Solid::Battery::isRechargeable() const
 Solid::Battery::ChargeState Solid::Battery::chargeState() const
 {
     Q_D(const Battery);
-    return_SOLID_CALL(Ifaces::Battery *, d->backendObject(), NoCharge, chargeState());
+    return_SOLID_CALL(Ifaces::Battery *, d->backendObject(), UnknownCharge, chargeState());
 }
 
 #include "moc_battery.cpp"

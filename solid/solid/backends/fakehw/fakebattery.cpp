@@ -41,33 +41,17 @@ Solid::Battery::BatteryType FakeBattery::type() const
 {
     QString name = fakeDevice()->property("batteryType").toString();
 
-    if (name == "pda")
+    if (name == "primary")
     {
-        return Solid::Battery::PdaBattery;
+        return Solid::Battery::PrimaryBattery;
     }
     else if (name == "ups")
     {
         return Solid::Battery::UpsBattery;
     }
-    else if (name == "primary")
+    else if (name == "usb")
     {
-        return Solid::Battery::PrimaryBattery;
-    }
-    else if (name == "mouse")
-    {
-        return Solid::Battery::MouseBattery;
-    }
-    else if (name == "keyboard")
-    {
-        return Solid::Battery::KeyboardBattery;
-    }
-    else if (name == "keyboard_mouse")
-    {
-        return Solid::Battery::KeyboardMouseBattery;
-    }
-    else if (name == "camera")
-    {
-        return Solid::Battery::CameraBattery;
+        return Solid::Battery::UsbBattery;
     }
     else
     {
@@ -117,9 +101,13 @@ Solid::Battery::ChargeState FakeBattery::chargeState() const
     {
         return Solid::Battery::Discharging;
     }
+    else if (state == "full")
+    {
+        return Solid::Battery::FullCharge;
+    }
     else
     {
-        return Solid::Battery::NoCharge;
+        return Solid::Battery::UnknownCharge;
     }
 }
 
@@ -135,8 +123,11 @@ void FakeBattery::setChargeState(Solid::Battery::ChargeState newState)
     case Solid::Battery::Discharging:
         name = "discharging";
         break;
-    case Solid::Battery::NoCharge:
-        name = "noCharge";
+    case Solid::Battery::FullCharge:
+        name = "full";
+        break;
+    case Solid::Battery::UnknownCharge:
+        name = "unknown";
         break;
     }
 

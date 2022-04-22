@@ -23,6 +23,7 @@
 using namespace Solid::Backends::UDev;
 
 // for reference:
+// https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-class-power
 // linux/drivers/power/supply/power_supply_sysfs.c
 // include/linux/power_supply.h
 
@@ -33,7 +34,7 @@ Battery::Battery(UDevDevice *device)
     m_client(new UdevQt::Client(powersupplysubsystems)),
     m_chargepercent(0),
     m_capacity(0),
-    m_chargestate(Solid::Battery::NoCharge),
+    m_chargestate(Solid::Battery::UnknownCharge),
     m_ispowersupply(false),
     m_isplugged(false)
 {
@@ -65,25 +66,15 @@ Solid::Battery::BatteryType Battery::type() const
         return Solid::Battery::PrimaryBattery;
     } else if (powersupplytype == QLatin1String("ups")) {
         return Solid::Battery::UpsBattery;
-    } else if (powersupplytype == QLatin1String("usb_aca")) {
-        // one of:
-        // Solid::Battery::MouseBattery
-        // Solid::Battery::KeyboardBattery
-        // Solid::Battery::KeyboardMouseBattery
-        // Solid::Battery::CameraBattery
-        return Solid::Battery::KeyboardMouseBattery;
-    } else if (powersupplytype == QLatin1String("usb_pd")) {
-        return Solid::Battery::MonitorBattery;
-    } else if (powersupplytype == QLatin1String("usb_pd_drp")) {
-        // one of:
-        // Solid::Battery::PdaBattery
-        return Solid::Battery::PhoneBattery;
+    } else if (powersupplytype.contains(QLatin1String("usb"))) {
+        return Solid::Battery::UsbBattery;
     }
     return Solid::Battery::UnknownBattery;
 }
 
 int Battery::chargePercent() const
 {
+    // yes, it is POWER_SUPPLY_CAPACITY
     return m_device->deviceProperty("POWER_SUPPLY_CAPACITY").toInt();
 }
 
@@ -122,9 +113,11 @@ Solid::Battery::ChargeState Battery::chargeState() const
         return Solid::Battery::Charging;
     } else if (powersupplystatus == QLatin1String("discharging")) {
         return Solid::Battery::Discharging;
+    } else if (powersupplystatus == QLatin1String("full")) {
+        return Solid::Battery::FullCharge;
     }
 
-    return Solid::Battery::NoCharge; // stable or unknown
+    return Solid::Battery::UnknownCharge;
 }
 
 void Battery::slotEmitSignals(const UdevQt::Device &device)
