@@ -61,7 +61,7 @@ public:
     */
     QString CPUGovernor() const;
     /*!
-        @brief Returns the all valid GPU governors
+        @brief Returns all valid GPU governors
     */
     QStringList CPUGovernors() const;
     /*!

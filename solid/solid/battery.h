@@ -62,7 +62,7 @@ namespace Solid
         /**
          * This enum type defines charge state of a battery
          *
-         * - UnknownCharge : Battery state is Unknown
+         * - UnknownCharge : Battery charge state is unknown
          * - Charging : Battery is charging
          * - Discharging : Battery is discharging
          * - FullyCharged : Battery is fully charged
