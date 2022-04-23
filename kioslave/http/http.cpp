@@ -367,13 +367,22 @@ void HttpProtocol::slotMIME()
         kDebug(7103) << "charset" << httpcharset;
         setMetaData(QString::fromLatin1("charset"), httpcharset);
     } else {
-        kWarning(7103) << "Could not get info" << curl_easy_strerror(curlresult);
+        kWarning(7103) << "Could not get content type info" << curl_easy_strerror(curlresult);
     }
 }
 
 void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
 {
     data(QByteArray::fromRawData(curldata, curldatasize));
+
+    curl_off_t curlspeeddownload = 0;
+    CURLcode curlresult = curl_easy_getinfo(m_curl, CURLINFO_SPEED_DOWNLOAD_T, &curlspeeddownload);
+    if (curlresult == CURLE_OK) {
+        kDebug(7103) << "Download speed" << curlspeeddownload;
+        speed(ulong(curlspeeddownload));
+    } else {
+        kWarning(7103) << "Could not get download speed info" << curl_easy_strerror(curlresult);
+    }
 }
 
 void HttpProtocol::slotProgress(KIO::filesize_t received, KIO::filesize_t total)
