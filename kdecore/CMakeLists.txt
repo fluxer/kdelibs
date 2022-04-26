@@ -221,6 +221,7 @@ set(kdecore_LIB_SRCS
     text/kstringhandler.cpp
     util/kautostart.cpp
     util/kdedmodule.cpp
+    util/kdevicedatabase.cpp
     util/kdeversion.cpp
     util/klauncher_iface.cpp
     util/kmacroexpander.cpp
@@ -406,6 +407,7 @@ install(
     util/kautostart.h
     util/kde_file.h
     util/kdedmodule.h
+    util/kdevicedatabase.h
     util/klauncher_iface.h
     util/kmacroexpander.h
     util/kexportplugin.h

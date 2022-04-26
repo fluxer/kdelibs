@@ -36,9 +36,8 @@
 #include "udevgraphic.h"
 #include "udevmanager.h"
 #include "cpuinfo.h"
-#include "../shared/pciidstables.h"
-#include "../shared/usbidstables.h"
 
+#include "kdevicedatabase.h"
 #include "kglobal.h"
 #include "klocale.h"
 
@@ -99,14 +98,13 @@ QString UDevDevice::vendor() const
         }
 
         if (vendor.isEmpty()) {
-            QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
-            idvendorid = normalizeID(idvendorid);
+            const QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
             if (!idvendorid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
-                    vendor = lookupPCIVendor(idvendorid.constData());
+                    vendor = KDeviceDatabase::lookupPCIVendor(idvendorid);
                 } else if (idbus == QLatin1String("usb")) {
-                    vendor = lookupUSBVendor(idvendorid.constData());
+                    vendor = KDeviceDatabase::lookupUSBVendor(idvendorid);
                 }
             }
         }
@@ -143,16 +141,14 @@ QString UDevDevice::product() const
         }
 
         if (product.isEmpty()) {
-            QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
-            idvendorid = normalizeID(idvendorid);
-            QByteArray idmodelid(m_device.deviceProperty("ID_MODEL_ID").toLatin1());
-            idmodelid = normalizeID(idmodelid);
+            const QByteArray idvendorid(m_device.deviceProperty("ID_VENDOR_ID").toLatin1());
+            const QByteArray idmodelid(m_device.deviceProperty("ID_MODEL_ID").toLatin1());
             if (!idvendorid.isEmpty() && !idmodelid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
-                    product = lookupPCIDevice(idvendorid.constData(), idmodelid.constData());
+                    product = KDeviceDatabase::lookupPCIDevice(idvendorid, idmodelid);
                 } else if (idbus == QLatin1String("usb")) {
-                    product = lookupUSBDevice(idvendorid.constData(), idmodelid.constData());
+                    product = KDeviceDatabase::lookupUSBDevice(idvendorid, idmodelid);
                 }
             }
         }
