@@ -47,6 +47,8 @@ install(
     KCModuleProxy
     KCMultiDialog
     KIdleTime
+    KExiv2
+    KPasswdStore
     KCalendarSystem
     KCharMacroExpander
     KCharsets
