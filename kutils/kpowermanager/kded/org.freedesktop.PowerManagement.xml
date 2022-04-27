@@ -14,9 +14,6 @@
       <arg type="b" name="save_power" direction="out"/>
     </signal>
 
-    <signal name="BatteryRemainingTimeChanged">
-      <arg type="t" name="time" direction="out"/>
-    </signal>
     <signal name="ResumeFromSuspend">
     </signal>
 

@@ -49,8 +49,7 @@ Q_SIGNALS:
     void CanSuspendChanged(bool can_suspend);
     void PowerSaveStatusChanged(bool save_power);
 
-    // extensions
-    void BatteryRemainingTimeChanged(qulonglong time);
+    // extension
     void ResumeFromSuspend();
 
 private Q_SLOTS:

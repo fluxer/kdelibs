@@ -20,8 +20,6 @@
 #include "powermanagementadaptor.h"
 #include "kdebug.h"
 
-// TODO: BatteryRemainingTimeChanged
-
 // for reference:
 // https://consolekit2.github.io/ConsoleKit2/#Manager
 
