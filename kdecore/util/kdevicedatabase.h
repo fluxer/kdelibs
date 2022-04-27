@@ -26,26 +26,28 @@
 /*!
     Class for obtaining device product and vendor strings from their IDs
 
+    IDs should be either 4 or 6 characters long, e.g. "1d14" or "0x1d14"
+
     @since 4.21
 */
 class KDECORE_EXPORT KDeviceDatabase
 {
 public:
     /*!
-        @return The vendor for @p vendorid, empty string if @p vendorid is unknown
+        @return The vendor for @p vendorid, empty string if unknown
     */
     static QString lookupPCIVendor(const QByteArray &vendorid);
     /*!
-        @return The device for @p vendorid and @p deviceid, empty string if @p vendorid is unknown
+        @return The device for @p vendorid and @p deviceid, empty string if unknown
     */
     static QString lookupPCIDevice(const QByteArray &vendorid, const QByteArray &deviceid);
 
     /*!
-        @return The vendor for @p vendorid or empty string if @p vendorid is unknown
+        @return The vendor for @p vendorid, empty string if unknown
     */
     static QString lookupUSBVendor(const QByteArray &vendorid);
     /*!
-        @return The device for @p vendorid and @p deviceid, empty string if @p vendorid is unknown
+        @return The device for @p vendorid and @p deviceid, empty string if unknown
     */
     static QString lookupUSBDevice(const QByteArray &vendorid, const QByteArray &deviceid);
 };
