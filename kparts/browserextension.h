@@ -641,56 +641,6 @@ private:
   BrowserExtensionPrivate * const d;
 };
 
-/**
- * An extension class for LiveConnect, i.e. a call from JavaScript
- * from a HTML page which embeds this part.
- * A part can have an object hierarchy by using objid as a reference
- * to an object.
- */
-class KPARTS_EXPORT LiveConnectExtension : public QObject
-{
-  Q_OBJECT
-public:
-  enum Type {
-      TypeVoid=0, TypeBool, TypeFunction, TypeNumber, TypeObject, TypeString
-  };
-  typedef QList<QPair<Type, QString> > ArgList;
-
-  LiveConnectExtension( KParts::ReadOnlyPart *parent );
-
-  virtual ~LiveConnectExtension();
-  /**
-   * get a field value from objid, return true on success
-   */
-  virtual bool get( const unsigned long objid, const QString & field, Type & type, unsigned long & retobjid, QString & value );
-  /**
-   * put a field value in objid, return true on success
-   */
-  virtual bool put( const unsigned long objid, const QString & field, const QString & value );
-  /**
-   * calls a function of objid, return true on success
-   */
-  virtual bool call( const unsigned long objid, const QString & func, const QStringList & args, Type & type, unsigned long & retobjid, QString & value );
-  /**
-   * notifies the part that there is no reference anymore to objid
-   */
-  virtual void unregister( const unsigned long objid );
-
-  static LiveConnectExtension *childObject( QObject *obj );
-Q_SIGNALS:
-#if !defined(Q_MOC_RUN) && !defined(DOXYGEN_SHOULD_SKIP_THIS) && !defined(IN_IDE_PARSER)
-public:  // yes, those signals are public; don't tell moc, doxygen or kdevelop :)
-#endif
-  /**
-   * notify a event from the part of object objid
-   */
-  void partEvent( const unsigned long objid, const QString & event, const KParts::LiveConnectExtension::ArgList & args );
-
-private:
-  class LiveConnectExtensionPrivate;
-  LiveConnectExtensionPrivate * const d;
-};
-
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS( KParts::BrowserExtension::PopupFlags )

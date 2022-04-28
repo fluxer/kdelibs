@@ -468,7 +468,6 @@ install(
     KParts/Factory
     KParts/FileInfoExtension
     KParts/GUIActivateEvent
-    KParts/LiveConnectExtension
     KParts/ListingExtension
     KParts/MainWindow
     KParts/OpenUrlEvent

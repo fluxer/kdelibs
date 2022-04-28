@@ -523,28 +523,4 @@ BrowserExtension *BrowserExtension::childObject( QObject *obj )
     return KGlobal::findDirectChild<KParts::BrowserExtension *>(obj);
 }
 
-LiveConnectExtension::LiveConnectExtension( KParts::ReadOnlyPart *parent )
- : QObject( parent ), d( 0 ) {}
-
-LiveConnectExtension::~LiveConnectExtension() {}
-
-bool LiveConnectExtension::get( const unsigned long, const QString &, Type &, unsigned long &, QString & ) {
-    return false;
-}
-
-bool LiveConnectExtension::put( const unsigned long, const QString &, const QString & ) {
-    return false;
-}
-
-bool LiveConnectExtension::call( const unsigned long, const QString &, const QStringList &, Type &, unsigned long &, QString & ) {
-    return false;
-}
-
-void LiveConnectExtension::unregister( const unsigned long ) {}
-
-LiveConnectExtension *LiveConnectExtension::childObject( QObject *obj )
-{
-    return KGlobal::findDirectChild<KParts::LiveConnectExtension *>(obj);
-}
-
 #include "moc_browserextension.cpp"
