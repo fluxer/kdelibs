@@ -31,9 +31,5 @@
     <method name="GetPowerSaveStatus">
       <arg type="b" name="save_power" direction="out"/>
     </method>
-
-    <method name="isLidClosed">
-      <arg type="b" name="is_closed" direction="out"/>
-    </method>
   </interface>
 </node>

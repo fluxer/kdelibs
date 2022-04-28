@@ -40,9 +40,6 @@ public Q_SLOTS:
     void Hibernate();
     void Suspend();
 
-    // extension
-    bool isLidClosed();
-
 Q_SIGNALS:
     void CanHibernateChanged(bool can_hibernate);
     void CanHybridSuspendChanged(bool can_hybrid_suspend);

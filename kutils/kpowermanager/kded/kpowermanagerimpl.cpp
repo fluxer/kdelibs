@@ -157,14 +157,6 @@ void KPowerManagerImpl::Suspend()
     }
 }
 
-bool KPowerManagerImpl::isLidClosed()
-{
-    if (!m_login1.isValid()) {
-        return false;
-    }
-    return m_login1.property("LidClosed").toBool();
-}
-
 void KPowerManagerImpl::slotPropertiesChanged(QString interface, QVariantMap changed_properties, QStringList invalidated_properties)
 {
     Q_UNUSED(interface);
