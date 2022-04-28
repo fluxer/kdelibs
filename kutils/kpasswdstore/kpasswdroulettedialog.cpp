@@ -23,6 +23,8 @@
 
 #include "ui_kpasswdroulettedialog.h"
 
+#include <QProcess>
+
 class KPasswdRouletteDialogPrivate
 {
 public:
@@ -55,6 +57,41 @@ KPasswdRouletteDialog::KPasswdRouletteDialog(QWidget *parent)
 KPasswdRouletteDialog::~KPasswdRouletteDialog()
 {
     delete d;
+}
+
+bool KPasswdRouletteDialog::fortunate(const uint max)
+{
+    QMap<QString, QString> passwordsmap;
+    while (passwordsmap.size() < max) {
+        QProcess fortuneproc(this);
+        fortuneproc.start("fortune");
+        if (!fortuneproc.waitForStarted() || !fortuneproc.waitForFinished()) {
+            kWarning() << "Fortune process failed";
+            return false;
+        }
+        const QByteArray fortunedata = fortuneproc.readAllStandardOutput();
+        QString question;
+        QString answer;
+        foreach (const QByteArray &fortuneline, fortunedata.split('\n')) {
+            const QByteArray trimmedfortuneline = fortuneline.trimmed();
+            if (trimmedfortuneline.startsWith("Q:")) {
+                question = QString::fromLocal8Bit(trimmedfortuneline.constData(), trimmedfortuneline.size());
+                question = question.mid(2).trimmed();
+            } else if (trimmedfortuneline.startsWith("A:")) {
+                answer = QString::fromLocal8Bit(trimmedfortuneline.constData(), trimmedfortuneline.size());
+                answer = answer.mid(2).trimmed();
+            }
+            if (!question.isEmpty() && !answer.isEmpty()) {
+                passwordsmap.insert(question, answer);
+                break;
+            }
+        }
+    }
+
+    foreach (const QString &question, passwordsmap.keys()) {
+        addPasswd(question, passwordsmap.value(question));
+    }
+    return true;
 }
 
 void KPasswdRouletteDialog::addPasswd(const QString &label, const QString &passwd)

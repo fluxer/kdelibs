@@ -42,6 +42,22 @@ class KPasswdRouletteDialogPrivate;
     }
     @endcode
 
+    Alternatively, if you have fortune installed:
+    @code
+    KPasswdRouletteDialog kpasswdroulettedialog;
+    if (kpasswdroulettedialog.fortunate()) {
+        if (kpasswdroulettedialog.exec() != KPasswdRouletteDialog::Accepted) {
+            qDebug() << "password dialog not accepted";
+        } else if (kpasswdroulettedialog.isValid()) {
+            qDebug() << "password is valid";
+        } else {
+            qWarning() << "password is not valid";
+        }
+    } else {
+        qWarning() << "fortune not available";
+    }
+    @endcode
+
     @since 4.21
 */
 class KPASSWDSTORE_EXPORT KPasswdRouletteDialog : public KDialog
@@ -53,6 +69,14 @@ public:
     */
     KPasswdRouletteDialog(QWidget *parent = nullptr);
     ~KPasswdRouletteDialog();
+
+    /*!
+        @brief Adds answers from `fortune` as valid choices, not more than @p max
+        @warning This can take a lot of time depending on the available fortunes
+        and RNG, may never end actually. The answer to pretty much every question
+        `fortune` can output must also be known
+    */
+    bool fortunate(const uint max = 4);
 
     /*!
         @brief Adds @p passwd as valid choice with the given @p label
