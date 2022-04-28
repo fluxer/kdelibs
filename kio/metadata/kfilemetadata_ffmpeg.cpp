@@ -77,6 +77,10 @@ QStringList KFileMetaDataFFmpegPlugin::mimeTypes() const
 {
     QStringList result;
     foreach (const KMimeType::Ptr &kmimetype, KMimeType::allMimeTypes()) {
+        // NOTE: it may be null during sycoca database update
+        if (kmimetype.isNull()) {
+            continue;
+        }
         if (kmimetype->name().startsWith("audio/") || kmimetype->name().startsWith("video/")) {
             result.append(kmimetype->name());
         }
