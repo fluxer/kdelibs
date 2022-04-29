@@ -37,7 +37,6 @@
 #include "udevmanager.h"
 #include "cpuinfo.h"
 
-#include "kdevicedatabase.h"
 #include "kglobal.h"
 #include "klocale.h"
 
@@ -102,9 +101,9 @@ QString UDevDevice::vendor() const
             if (!idvendorid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
-                    vendor = KDeviceDatabase::lookupPCIVendor(idvendorid);
+                    vendor = m_devicedb.lookupPCIVendor(idvendorid);
                 } else if (idbus == QLatin1String("usb")) {
-                    vendor = KDeviceDatabase::lookupUSBVendor(idvendorid);
+                    vendor = m_devicedb.lookupUSBVendor(idvendorid);
                 }
             }
         }
@@ -146,9 +145,9 @@ QString UDevDevice::product() const
             if (!idvendorid.isEmpty() && !idmodelid.isEmpty()) {
                 const QString idbus(m_device.deviceProperty("ID_BUS"));
                 if (idbus == QLatin1String("pci")) {
-                    product = KDeviceDatabase::lookupPCIDevice(idvendorid, idmodelid);
+                    product = m_devicedb.lookupPCIDevice(idvendorid, idmodelid);
                 } else if (idbus == QLatin1String("usb")) {
-                    product = KDeviceDatabase::lookupUSBDevice(idvendorid, idmodelid);
+                    product = m_devicedb.lookupUSBDevice(idvendorid, idmodelid);
                 }
             }
         }

@@ -22,6 +22,7 @@
 #define SOLID_BACKENDS_UDEV_UDEVDEVICE_H
 
 #include "udevqt.h"
+#include "kdevicedatabase.h"
 
 #include <solid/ifaces/device.h>
 #include <QtCore/QStringList>
@@ -63,6 +64,7 @@ private:
     friend class AcAdapter;
     friend class Battery;
     UdevQt::Device m_device;
+    mutable KDeviceDatabase m_devicedb;
 };
 
 }

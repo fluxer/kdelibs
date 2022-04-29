@@ -23,33 +23,67 @@
 
 #include <QString>
 
+class KDeviceDatabasePrivate;
+
 /*!
     Class for obtaining device product and vendor strings from their IDs
 
-    IDs should be either 4 or 6 characters long, e.g. "1d14" or "0x1d14"
+    Vendor and device IDs should be either 4 or 6 characters long, e.g. "1d14" or "0x1d14". Class,
+    sub-class and protocol IDs should be 2 characters long, e.g. "0b"
 
     @since 4.21
 */
 class KDECORE_EXPORT KDeviceDatabase
 {
 public:
-    /*!
-        @return The vendor for @p vendorid, empty string if unknown
-    */
-    static QString lookupPCIVendor(const QByteArray &vendorid);
-    /*!
-        @return The device for @p vendorid and @p deviceid, empty string if unknown
-    */
-    static QString lookupPCIDevice(const QByteArray &vendorid, const QByteArray &deviceid);
+    KDeviceDatabase();
 
     /*!
         @return The vendor for @p vendorid, empty string if unknown
     */
-    static QString lookupUSBVendor(const QByteArray &vendorid);
+    QString lookupPCIVendor(const QByteArray &vendorid);
     /*!
         @return The device for @p vendorid and @p deviceid, empty string if unknown
     */
-    static QString lookupUSBDevice(const QByteArray &vendorid, const QByteArray &deviceid);
+    QString lookupPCIDevice(const QByteArray &vendorid, const QByteArray &deviceid);
+    /*!
+        @return The class for @p classid, empty string if unknown
+    */
+    QString lookupPCIClass(const QByteArray &classid);
+    /*!
+        @return The subclass for @p classid and @p subclassid, empty string if unknown
+    */
+    QString lookupPCISubClass(const QByteArray &classid, const QByteArray &subclassid);
+    /*!
+        @return The protocol for @p classid, @p subclassid and @p protocolid, empty string if unknown
+    */
+    QString lookupPCIProtocol(const QByteArray &classid, const QByteArray &subclassid, const QByteArray &protocolid);
+
+    /*!
+        @return The vendor for @p vendorid, empty string if unknown
+    */
+    QString lookupUSBVendor(const QByteArray &vendorid);
+    /*!
+        @return The device for @p vendorid and @p deviceid, empty string if unknown
+    */
+    QString lookupUSBDevice(const QByteArray &vendorid, const QByteArray &deviceid);
+    /*!
+        @return The class for @p classid, empty string if unknown
+    */
+    QString lookupUSBClass(const QByteArray &classid);
+    /*!
+        @return The subclass for @p classid and @p subclassid, empty string if unknown
+    */
+    QString lookupUSBSubClass(const QByteArray &classid, const QByteArray &subclassid);
+    /*!
+        @return The protocol for @p classid, @p subclassid and @p protocolid, empty string if unknown
+    */
+    QString lookupUSBProtocol(const QByteArray &classid, const QByteArray &subclassid, const QByteArray &protocolid);
+
+
+private:
+    Q_DISABLE_COPY(KDeviceDatabase);
+    KDeviceDatabasePrivate *d;
 };
 
 #endif // KDEVICEDATABASE_H

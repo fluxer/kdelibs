@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # a little helper script to regenerate yacc.[c,h] and lex.c
 
 YACC="bison"

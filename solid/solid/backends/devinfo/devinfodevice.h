@@ -24,6 +24,8 @@
 #include <solid/ifaces/device.h>
 #include <QtCore/QStringList>
 
+#include "kdevicedatabase.h"
+
 namespace Solid
 {
 namespace Backends
@@ -77,6 +79,7 @@ private:
     QString m_device;
     QMap<DeviceProperty, QByteArray> m_properties;
     QMap<PnPInfo, QByteArray> m_pnpinfo;
+    mutable KDeviceDatabase m_devicedb;
 };
 
 }

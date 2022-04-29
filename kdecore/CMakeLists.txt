@@ -441,3 +441,9 @@ install(
     DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
 
+install(
+    FILES
+    pci.ids
+    usb.ids
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdevicedatabase
+)

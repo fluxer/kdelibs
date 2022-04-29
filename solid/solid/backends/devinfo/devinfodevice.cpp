@@ -25,7 +25,6 @@
 #include "devinfographic.h"
 
 #include <QDebug>
-#include "kdevicedatabase.h"
 
 #include <sys/types.h>
 #include <sys/sysctl.h>
@@ -133,9 +132,9 @@ QString DevinfoDevice::vendor() const
     const QByteArray parent = deviceProperty(DevinfoDevice::DeviceParent);
     QString result;
     if (parent.contains("pci")) {
-        result = KDeviceDatabase::lookupPCIVendor(pnpvendor);
+        result = m_devicedb.lookupPCIVendor(pnpvendor);
     } else {
-        result = KDeviceDatabase::lookupUSBVendor(pnpvendor);
+        result = m_devicedb.lookupUSBVendor(pnpvendor);
     }
 
     return result;
@@ -164,9 +163,9 @@ QString DevinfoDevice::product() const
     const QByteArray parent = deviceProperty(DevinfoDevice::DeviceParent);
     QString result;
     if (parent.contains("pci")) {
-        result = KDeviceDatabase::lookupPCIDevice(pnpvendor, pnpdevice);
+        result = m_devicedb.lookupPCIDevice(pnpvendor, pnpdevice);
     } else {
-        result = KDeviceDatabase::lookupUSBDevice(pnpvendor, pnpdevice);
+        result = m_devicedb.lookupUSBDevice(pnpvendor, pnpdevice);
     }
 
     return result;

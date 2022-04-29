@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # a little helper script to regenerate predicate_parser.[c,h] and predicate_lexer.c
 
 YACC="bison"
