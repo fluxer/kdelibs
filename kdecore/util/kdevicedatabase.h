@@ -29,7 +29,8 @@ class KDeviceDatabasePrivate;
     Class for obtaining device product and vendor strings from their IDs
 
     Vendor and device IDs should be either 4 or 6 characters long, e.g. "1d14" or "0x1d14". Class,
-    sub-class and protocol IDs should be 2 characters long, e.g. "0b"
+    sub-class and protocol IDs should be 2 characters long, e.g. "0b". If they are not zero is
+    prepended to the IDs.
 
     @since 4.21
 */

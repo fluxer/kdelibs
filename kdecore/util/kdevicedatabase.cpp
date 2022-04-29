@@ -55,21 +55,18 @@ typedef QHash<QByteArray, QString> KClassEntryMap;
 typedef QHash<KDeviceEntry, QString> KSubClassEntryMap;
 typedef QHash<KProtocolEntry, QString> KProtocolEntryMap;
 
-// some but not all device vendor/product properties (e.g. ID_VENDOR_ID and ID_MODEL_ID on network
-// devices on Linux) have "0x" prefix, get rid of that inconsistency
 static inline QByteArray normalizeID(const QByteArray &id, const int padding)
 {
-    if (id.startsWith("0x")) {
-        return id.mid(2, id.size() - 2);
+    // some but not all device vendor/product properties (e.g. ID_VENDOR_ID and ID_MODEL_ID on network
+    // devices on Linux) have "0x" prefix, get rid of that inconsistency
+    QByteArray result = id;
+    if (result.startsWith("0x")) {
+        result = result.mid(2, result.size() - 2);
     }
-    if (id.size() < padding) {
-        QByteArray result = id;
-        while (result.size() < padding) {
-            result.prepend('0');
-        }
-        return result;
+    while (result.size() < padding) {
+        result.prepend('0');
     }
-    return id;
+    return result;
 }
 
 static QList<QByteArray> extractEntry(const QByteArray &line)
@@ -96,7 +93,7 @@ static void extractIDs(QFile *idsfile,
         const QByteArray trimmeddbline = dbline.trimmed();
         // qDebug() << Q_FUNC_INFO << dbline;
         if (dbline.startsWith("C ")) {
-            // classes after this line
+            // class on this line and after
             classessection = true;
         }
         if (trimmeddbline.isEmpty() || trimmeddbline.startsWith('#')) {
