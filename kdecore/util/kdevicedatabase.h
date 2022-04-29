@@ -81,7 +81,6 @@ public:
     */
     QString lookupUSBProtocol(const QByteArray &classid, const QByteArray &subclassid, const QByteArray &protocolid);
 
-
 private:
     Q_DISABLE_COPY(KDeviceDatabase);
     KDeviceDatabasePrivate *d;

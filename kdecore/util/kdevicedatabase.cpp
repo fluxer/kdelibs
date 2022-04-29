@@ -37,16 +37,16 @@ inline uint qHash(const KDeviceEntry &kdeviceentry)
 
 struct KProtocolEntry
 {
-    QByteArray vendorid;
-    QByteArray deviceid;
+    QByteArray classid;
+    QByteArray subclassid;
     QByteArray protocolid;
 
     bool operator==(const KProtocolEntry &other) const
-        { return vendorid == other.vendorid && deviceid == other.deviceid && protocolid == other.protocolid; }
+        { return classid == other.classid && subclassid == other.subclassid && protocolid == other.protocolid; }
 };
 inline uint qHash(const KProtocolEntry &kprotocolentry)
 {
-    return qHash(kprotocolentry.vendorid + kprotocolentry.deviceid + kprotocolentry.protocolid);
+    return qHash(kprotocolentry.classid + kprotocolentry.subclassid + kprotocolentry.protocolid);
 }
 
 typedef QHash<QByteArray, QString> KVendorEntryMap;
@@ -218,7 +218,8 @@ bool KDeviceDatabasePrivate::readPCIDatabase()
     pciclassesmap.clear();
     pcisubclassesmap.clear();
     pciprotocolsmap.clear();
-    extractIDs(&pciidsfile,
+    extractIDs(
+        &pciidsfile,
         &pcivendorsmap, &pcidevicesmap,
         &pciclassesmap, &pcisubclassesmap, &pciprotocolsmap
     );
@@ -246,7 +247,8 @@ bool KDeviceDatabasePrivate::readUSBDatabase()
     usbclassesmap.clear();
     usbsubclassesmap.clear();
     usbprotocolsmap.clear();
-    extractIDs(&usbidsfile,
+    extractIDs(
+        &usbidsfile,
         &usbvendorsmap, &usbdevicesmap,
         &usbclassesmap, &usbsubclassesmap, &usbprotocolsmap
     );
@@ -335,8 +337,8 @@ QString KDeviceDatabase::lookupPCIProtocol(const QByteArray &classid, const QByt
     const QByteArray normalizedsubclass = normalizeID(subclassid, 2);
     const QByteArray normalizedprotocol = normalizeID(protocolid, 2);
     foreach (const KProtocolEntry &protocolentry, d->pciprotocolsmap.keys()) {
-        if (qstrcmp(protocolentry.vendorid.constData(), normalizedclass.constData()) == 0
-            && qstrcmp(protocolentry.deviceid.constData(), normalizedsubclass.constData()) == 0
+        if (qstrcmp(protocolentry.classid.constData(), normalizedclass.constData()) == 0
+            && qstrcmp(protocolentry.subclassid.constData(), normalizedsubclass.constData()) == 0
             && qstrcmp(protocolentry.protocolid.constData(), normalizedprotocol.constData()) == 0) {
             return d->pciprotocolsmap.value(protocolentry);
         }
@@ -375,8 +377,6 @@ QString KDeviceDatabase::lookupUSBDevice(const QByteArray &vendorid, const QByte
     }
     return QString();
 }
-
-
 
 QString KDeviceDatabase::lookupUSBClass(const QByteArray &classid)
 {
@@ -420,8 +420,8 @@ QString KDeviceDatabase::lookupUSBProtocol(const QByteArray &classid, const QByt
     const QByteArray normalizedsubclass = normalizeID(subclassid, 2);
     const QByteArray normalizedprotocol = normalizeID(protocolid, 2);
     foreach (const KProtocolEntry &protocolentry, d->usbprotocolsmap.keys()) {
-        if (qstrcmp(protocolentry.vendorid.constData(), normalizedclass.constData()) == 0
-            && qstrcmp(protocolentry.deviceid.constData(), normalizedsubclass.constData()) == 0
+        if (qstrcmp(protocolentry.classid.constData(), normalizedclass.constData()) == 0
+            && qstrcmp(protocolentry.subclassid.constData(), normalizedsubclass.constData()) == 0
             && qstrcmp(protocolentry.protocolid.constData(), normalizedprotocol.constData()) == 0) {
             return d->usbprotocolsmap.value(protocolentry);
         }
