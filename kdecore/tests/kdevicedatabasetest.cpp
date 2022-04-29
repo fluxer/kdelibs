@@ -54,4 +54,25 @@ void KDeviceDatabaseTest::testUSB()
     QCOMPARE(m_devicedb.lookupUSBProtocol("02", "02", "00"), QLatin1String("None"));
 }
 
+void KDeviceDatabaseTest::testKDE4PCI()
+{
+    if (!m_iskdelibsinstalled) {
+        QSKIP("kdelibs not installed", SkipAll);
+    }
+
+    // no IDs yet
+}
+
+void KDeviceDatabaseTest::testKDE4USB()
+{
+    if (!m_iskdelibsinstalled) {
+        QSKIP("kdelibs not installed", SkipAll);
+    }
+
+    QCOMPARE(m_devicedb.lookupUSBVendor("1038"), QLatin1String("SteelSeries ApS"));
+    QCOMPARE(m_devicedb.lookupUSBDevice("1038", "1729"), QLatin1String("SteelSeries Rival 110 Gaming Mouse"));
+    QCOMPARE(m_devicedb.lookupUSBVendor("13d3"), QLatin1String("IMC Networks"));
+    QCOMPARE(m_devicedb.lookupUSBDevice("13d3", "56a2"), QLatin1String("USB2.0 HD UVC WebCam"));
+}
+
 #include "moc_kdevicedatabasetest.cpp"

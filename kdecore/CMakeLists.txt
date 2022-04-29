@@ -445,5 +445,7 @@ install(
     FILES
     pci.ids
     usb.ids
+    kde4_pci.ids
+    kde4_usb.ids
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdevicedatabase
 )

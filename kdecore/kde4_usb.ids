@@ -1,0 +1,19 @@
+#
+# KDE IDs, missing in the upstream database
+
+1038  SteelSeries ApS
+	1729  SteelSeries Rival 110 Gaming Mouse
+
+13d3  IMC Networks
+# https://linux-hardware.org/?probe=e8349bba13
+	56a2  USB2.0 HD UVC WebCam
+# https://linux-hardware.org/?probe=81f7a796be
+	56bc  Integrated Camera
+
+0480  Toshiba America Inc
+# https://linux-hardware.org/?probe=45c6c458bc
+	0210  External USB 3.0 1TB
+
+03f0  HP, Inc
+# https://linux-hardware.org/?probe=db3540f085
+	122a  LaserJet 200 colorMFP M276nw

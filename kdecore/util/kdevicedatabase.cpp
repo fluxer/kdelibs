@@ -206,25 +206,37 @@ bool KDeviceDatabasePrivate::readPCIDatabase()
         return true;
     }
 
+    pcivendorsmap.clear();
+    pcidevicesmap.clear();
+    pciclassesmap.clear();
+    pcisubclassesmap.clear();
+    pciprotocolsmap.clear();
+
     const QString pciids = KStandardDirs::locate("data", QString::fromLatin1("kdevicedatabase/pci.ids"));
     QFile pciidsfile(pciids);
     if (!pciidsfile.open(QFile::ReadOnly)) {
         kWarning() << "PCI IDs database not found";
         return false;
     }
-
-    pcivendorsmap.clear();
-    pcidevicesmap.clear();
-    pciclassesmap.clear();
-    pcisubclassesmap.clear();
-    pciprotocolsmap.clear();
     extractIDs(
         &pciidsfile,
         &pcivendorsmap, &pcidevicesmap,
         &pciclassesmap, &pcisubclassesmap, &pciprotocolsmap
     );
-    // qDebug() << Q_FUNC_INFO << pcivendorsmap;
 
+    const QString kde4pciids = KStandardDirs::locate("data", QString::fromLatin1("kdevicedatabase/kde4_pci.ids"));
+    QFile kde4pciidsfile(kde4pciids);
+    if (!kde4pciidsfile.open(QFile::ReadOnly)) {
+        kDebug() << "KDE PCI IDs database not found";
+    } else {
+        extractIDs(
+            &kde4pciidsfile,
+            &pcivendorsmap, &pcidevicesmap,
+            &pciclassesmap, &pcisubclassesmap, &pciprotocolsmap
+        );
+    }
+
+    // qDebug() << Q_FUNC_INFO << pcivendorsmap;
     m_pcicached = true;
     return true;
 }
@@ -234,26 +246,38 @@ bool KDeviceDatabasePrivate::readUSBDatabase()
     if (m_usbcached) {
         return true;
     }
-    
-    const QString usbids = KStandardDirs::locate("data", QString::fromLatin1("kdevicedatabase/usb.ids"));
-    QFile usbidsfile(usbids);
-    if (!usbidsfile.open(QFile::ReadOnly)) {
-        kWarning() << "USB IDs database not found";
-        return false;
-    }
 
     usbvendorsmap.clear();
     usbdevicesmap.clear();
     usbclassesmap.clear();
     usbsubclassesmap.clear();
     usbprotocolsmap.clear();
+
+    const QString usbids = KStandardDirs::locate("data", QString::fromLatin1("kdevicedatabase/usb.ids"));
+    QFile usbidsfile(usbids);
+    if (!usbidsfile.open(QFile::ReadOnly)) {
+        kWarning() << "USB IDs database not found";
+        return false;
+    }
     extractIDs(
         &usbidsfile,
         &usbvendorsmap, &usbdevicesmap,
         &usbclassesmap, &usbsubclassesmap, &usbprotocolsmap
     );
-    // qDebug() << Q_FUNC_INFO << usbvendorsmap;
 
+    const QString kde4usbids = KStandardDirs::locate("data", QString::fromLatin1("kdevicedatabase/kde4_usb.ids"));
+    QFile kde4usbidsfile(kde4usbids);
+    if (!kde4usbidsfile.open(QFile::ReadOnly)) {
+        kDebug() << "KDE USB IDs database not found";
+    } else {
+        extractIDs(
+            &kde4usbidsfile,
+            &usbvendorsmap, &usbdevicesmap,
+            &usbclassesmap, &usbsubclassesmap, &usbprotocolsmap
+        );
+    }
+
+    // qDebug() << Q_FUNC_INFO << usbvendorsmap;
     m_usbcached = true;
     return true;
 }

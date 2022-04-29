@@ -32,6 +32,9 @@ private Q_SLOTS:
     void testPCI();
     void testUSB();
 
+    void testKDE4PCI();
+    void testKDE4USB();
+
 private:
     bool m_iskdelibsinstalled;
     KDeviceDatabase m_devicedb;
