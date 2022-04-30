@@ -84,3 +84,22 @@
 0bda  Realtek Semiconductor Corp.
 # https://linux-hardware.org/?probe=c1c54ece08
 	58eb  HP Wide Vision HD Camera
+
+# manually filtered
+046d  Logitech, Inc.
+	c077  M105 Optical Mouse
+
+0424  Standard Microsystems Corp.
+	2504  USB 2.0 Hub
+
+04d9  Holtek Semiconductor, Inc.
+	0295  Ducky One 2 USB 3 Keyboard [Tenkeyless / ISO]
+
+046a  Cherry GmbH
+	01a2  Cherry GmbH CHERRY SECURE BOARD 1.0
+
+0080  Assmann Electronic GmbH
+	a001  Digitus DA-71114 SATA
+
+1908  GEMBIRD
+	1320  PhotoFrame PF-15-1
