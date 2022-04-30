@@ -1,5 +1,8 @@
 #
 # KDE IDs, missing in the upstream database
+#
+# kate: replace-tabs off; tab-indents: true;
+#
 
 1038  SteelSeries ApS
 	1729  SteelSeries Rival 110 Gaming Mouse
@@ -7,8 +10,14 @@
 13d3  IMC Networks
 # https://linux-hardware.org/?probe=e8349bba13
 	56a2  USB2.0 HD UVC WebCam
+# https://linux-hardware.org/?probe=5c309ec35d
+	56c1  USB2.0 HD UVC WebCam
 # https://linux-hardware.org/?probe=81f7a796be
 	56bc  Integrated Camera
+# https://linux-hardware.org/?probe=de4fb8782a
+	5458  USB2.0 HD UVC WebCam
+# https://linux-hardware.org/?probe=779fe5a429
+	5655  USB2.0 HD UVC WebCam
 
 0480  Toshiba America Inc
 # https://linux-hardware.org/?probe=45c6c458bc
@@ -17,3 +26,61 @@
 03f0  HP, Inc
 # https://linux-hardware.org/?probe=db3540f085
 	122a  LaserJet 200 colorMFP M276nw
+# https://linux-hardware.org/?probe=a7f5507dcd
+	ed2a  LaserJet Pro M148f-M149f
+
+0cf3  Qualcomm Atheros Communications
+# https://linux-hardware.org/?probe=66d159169f
+	e009  Qualcomm Atheros Bluetooth Device
+
+047f  Plantronics, Inc.
+# https://linux-hardware.org/?probe=66d159169f
+	c056  Blackwire 3220 Series
+
+041e  Creative Technology, Ltd
+# https://linux-hardware.org/?probe=75dbc4ddab
+	3256  Sound BlasterX G6
+
+28de  Valve Software
+# https://linux-hardware.org/?probe=75dbc4ddab
+	2102  Valve VR Radio & HMD Mic
+
+145f  Trust
+# https://linux-hardware.org/?probe=55baa49b73
+	01bc  GXT 155 Gaming Mouse
+
+0408  Quanta Computer, Inc.
+# https://linux-hardware.org/?probe=9b28418435
+	2010  Chromebook HD Camera
+# https://linux-hardware.org/?probe=a33d02fb0e
+	30d4  USB2.0 HD UVC WebCam
+
+2717  Xiaomi Inc.
+# https://linux-hardware.org/?probe=13a99f1912
+	5013  Mi Wireless Mouse
+
+0781  SanDisk Corp.
+# https://linux-hardware.org/?probe=a7f5507dcd
+	5583  Ultra Fit 62GB
+
+12cf  DEXIN
+# https://linux-hardware.org/?probe=d076b5c763
+	0106  Laser Gamer Mouse
+
+04f2  Chicony Electronics Co., Ltd
+# https://linux-hardware.org/?probe=e83ffcb04f
+	b5d5  HP TrueVision HD Camera
+# https://linux-hardware.org/?probe=9e6b6f4737
+	b59a  XiaoMi USB 2.0 Webcam
+
+062a  MosArt Semiconductor Corp.
+# https://linux-hardware.org/?probe=8271a7f1d5
+	9006  2.4G Keyboard Mouse
+
+248a  Maxxter
+# https://linux-hardware.org/?probe=8271a7f1d5
+	8713  2.4G Wireless Mouse
+
+0bda  Realtek Semiconductor Corp.
+# https://linux-hardware.org/?probe=c1c54ece08
+	58eb  HP Wide Vision HD Camera

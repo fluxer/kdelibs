@@ -98,7 +98,7 @@ static void extractIDs(QFile *idsfile,
         }
         if (trimmeddbline.isEmpty() || trimmeddbline.startsWith('#')) {
             if (classessection) {
-                // undocumented entries after class
+                // undocumented stuff after class
                 break;
             }
             continue;
