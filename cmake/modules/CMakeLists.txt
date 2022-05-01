@@ -36,6 +36,7 @@ set(cmakeFiles
     FindGphoto2.cmake
     FindKDE4Internal.cmake
     FindKDE4Workspace.cmake
+    FindKmod.cmake
     FindLibATASmart.cmake
     FindLibDRM.cmake
     FindLibintl.cmake
