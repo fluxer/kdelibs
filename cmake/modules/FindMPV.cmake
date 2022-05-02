@@ -18,6 +18,10 @@ if(NOT WIN32)
 endif()
 
 set(MPV_VERSION ${PC_MPV_VERSION})
+if (MPV_VERSION VERSION_LESS 0.2.2)
+    # workaround for incorrect version in pkg-config file, notably on OpenBSD
+    set(MPV_VERSION 0.23.0)
+endif()
 
 if(NOT MPV_INCLUDES OR NOT MPV_LIBRARIES)
     find_path(MPV_INCLUDES
