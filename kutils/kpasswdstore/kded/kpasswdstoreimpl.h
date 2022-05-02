@@ -60,6 +60,7 @@ private:
 #if defined(HAVE_OPENSSL)
     int m_opensslkeylen;
     int m_opensslivlen;
+    int m_opensslblocklen;
     QByteArray m_passwd;
     QByteArray m_passwdiv;
     QElapsedTimer m_passwdtimer;

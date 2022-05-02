@@ -58,13 +58,16 @@ static inline QByteArray genBytes(const QByteArray &data, const int length)
 }
 
 KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
-    : m_opensslkeylen(0),
-    m_opensslivlen(0),
-    m_retries(kpasswdstore_passretries),
+    : m_retries(kpasswdstore_passretries),
     m_timeout(kpasswdstore_passtimeout * 60000),
     m_cacheonly(false),
     m_storeid(id),
     m_passwdstore(KStandardDirs::locateLocal("data", "kpasswdstore.ini"))
+#if defined(HAVE_OPENSSL)
+    , m_opensslkeylen(0),
+    m_opensslivlen(0),
+    m_opensslblocklen(0)
+#endif
 {
 #if defined(HAVE_OPENSSL)
     ERR_load_ERR_strings();
@@ -72,6 +75,7 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
 
     m_opensslkeylen = EVP_CIPHER_key_length(EVP_bf_cfb64());
     m_opensslivlen = EVP_CIPHER_iv_length(EVP_bf_cfb64());
+    m_opensslblocklen = EVP_CIPHER_block_size(EVP_bf_cfb64());
 #endif
 
     KConfig kconfig("kpasswdstorerc", KConfig::SimpleConfig);
@@ -287,7 +291,7 @@ QString KPasswdStoreImpl::encryptPasswd(const QString &passwd, bool *ok) const
     Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == m_opensslivlen);
 
     const QByteArray passwdbytes = passwd.toUtf8();
-    const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
+    const int opensslbuffersize = (kpasswdstore_buffsize * m_opensslblocklen);
     uchar opensslbuffer[opensslbuffersize];
     ::memset(opensslbuffer, 0, opensslbuffersize * sizeof(uchar));
     int opensslbufferpos = 0;
@@ -350,7 +354,7 @@ QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok) const
     Q_ASSERT(EVP_CIPHER_CTX_iv_length(opensslctx) == m_opensslivlen);
 
     const QByteArray passwdbytes = QByteArray::fromHex(passwd.toLatin1());
-    const int opensslbuffersize = (kpasswdstore_buffsize * EVP_CIPHER_CTX_block_size(opensslctx));
+    const int opensslbuffersize = (kpasswdstore_buffsize * m_opensslblocklen);
     uchar opensslbuffer[opensslbuffersize];
     ::memset(opensslbuffer, 0, opensslbuffersize * sizeof(uchar));
     int opensslbufferpos = 0;
