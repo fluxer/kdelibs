@@ -151,7 +151,7 @@ QString DevinfoDevice::product() const
         }
     }  else if(queryDeviceInterface(Solid::DeviceInterface::Processor)) {
         const QByteArray hwmodel = DevinfoDevice::stringByName("hw.model");
-        return QString::fromLatin1(hwmodel.constData());
+        return QString::fromAscii(hwmodel.constData(), hwmodel.size());
     }
 
     const QByteArray pnpvendor = devicePnP(DevinfoDevice::PnPVendor);
