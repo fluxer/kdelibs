@@ -30,7 +30,7 @@ ActionReply KPowerManagerHelper::setgovernor(const QVariantMap &parameters)
 
     const QByteArray governorbytes = parameters.value("governor").toByteArray();
     QDir cpudir("/sys/devices/system/cpu");
-    foreach (const QFileInfo &cpuinfo, cpudir.entryInfoList()) {
+    foreach (const QFileInfo &cpuinfo, cpudir.entryInfoList(QDir::AllDirs | QDir::NoDotAndDotDot)) {
         QFile cpufile(cpuinfo.filePath() + QLatin1String("/cpufreq/scaling_governor"));
         if (!cpufile.exists()) {
             continue;
