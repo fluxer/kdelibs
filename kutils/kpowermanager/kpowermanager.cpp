@@ -24,7 +24,6 @@
 #include "kdebug.h"
 
 #include <QFile>
-#include <QDir>
 #include <QFileSystemWatcher>
 
 class KPowerManagerPrivate
