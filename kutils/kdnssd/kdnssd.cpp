@@ -66,7 +66,7 @@ public:
                                 void *userdata);
 
 private:
-    int m_poll;
+    int m_pollcounter;
     AvahiSimplePoll *m_avahipoll;
     AvahiClient *m_avahiclient;
     AvahiEntryGroup *m_avahigroup;
@@ -78,7 +78,7 @@ private:
 KDNSSDPrivate::KDNSSDPrivate(QObject *parent)
     : QObject(parent)
 #if defined(HAVE_AVAHI)
-    , m_poll(0),
+    , m_pollcounter(0),
     m_avahipoll(nullptr),
     m_avahiclient(nullptr),
     m_avahigroup(nullptr)
@@ -107,7 +107,7 @@ KDNSSDPrivate::KDNSSDPrivate(QObject *parent)
 KDNSSDPrivate::~KDNSSDPrivate()
 {
 #if defined(HAVE_AVAHI)
-    m_poll = 0;
+    m_pollcounter = 0;
 
     if (m_avahigroup) {
         avahi_entry_group_reset(m_avahigroup);
@@ -176,6 +176,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
 #if defined(HAVE_AVAHI)
     // qDebug() << Q_FUNC_INFO << servicetype;
 
+    m_pollcounter = 0;
     QList<QByteArray> servicetypes;
     if (servicetype.isEmpty()) {
         AvahiServiceTypeBrowser* avahiservice = avahi_service_type_browser_new(
@@ -189,10 +190,10 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
             return;
         }
 
-        m_poll++;
+        m_pollcounter++;
         m_servicetypes.clear();
-        while (m_poll) {
-            // qDebug() << Q_FUNC_INFO << m_poll;
+        while (m_pollcounter) {
+            // qDebug() << Q_FUNC_INFO << m_pollcounter;
             avahi_simple_poll_iterate(m_avahipoll, 0);
         }
 
@@ -203,6 +204,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
         servicetypes.append(servicetype);
     }
 
+    m_pollcounter = 0;
     m_services.clear();
     foreach (const QByteArray &servicetypeit, servicetypes) {
         AvahiServiceBrowser *avahibrowser = avahi_service_browser_new(
@@ -216,9 +218,9 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
             return;
         }
 
-        m_poll++;
-        while (m_poll) {
-            // qDebug() << Q_FUNC_INFO << m_poll;
+        m_pollcounter++;
+        while (m_pollcounter) {
+            // qDebug() << Q_FUNC_INFO << m_pollcounter;
             avahi_simple_poll_iterate(m_avahipoll, 0);
         }
 
@@ -272,7 +274,7 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
     switch (avahievent) {
         case AVAHI_BROWSER_NEW: {
             kDebug() << "New service" << avahiname << avahitype << avahidomain;
-            kdnssdprivate->m_poll++;
+            kdnssdprivate->m_pollcounter++;
             AvahiServiceResolver *avahiresolver = avahi_service_resolver_new(
                 avahiclient,
                 avahiinterface, avahiprotocol,
@@ -289,14 +291,14 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
         case AVAHI_BROWSER_ALL_FOR_NOW:
         case AVAHI_BROWSER_CACHE_EXHAUSTED: {
             kDebug() << "Done browsing";
-            kdnssdprivate->m_poll--;
+            kdnssdprivate->m_pollcounter--;
             KDNSSD *kdnssd= qobject_cast<KDNSSD*>(kdnssdprivate->parent());
             emit kdnssd->finished();
             break;
         }
         case AVAHI_BROWSER_FAILURE: {
             kWarning() << avahi_strerror(avahi_client_errno(avahiclient));
-            kdnssdprivate->m_poll = 0;
+            kdnssdprivate->m_pollcounter = 0;
             break;
         }
     }
@@ -345,7 +347,7 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
         }
     }
 
-    kdnssdprivate->m_poll--;
+    kdnssdprivate->m_pollcounter--;
     avahi_service_resolver_free(avahiresolver);
 }
 
@@ -374,12 +376,12 @@ void KDNSSDPrivate::serviceCallback(AvahiServiceTypeBrowser *avahiservice,
         case AVAHI_BROWSER_ALL_FOR_NOW:
         case AVAHI_BROWSER_CACHE_EXHAUSTED: {
             kDebug() << "Done browsing service types";
-            kdnssdprivate->m_poll--;
+            kdnssdprivate->m_pollcounter--;
             break;
         }
         case AVAHI_BROWSER_FAILURE: {
             kWarning() << avahi_strerror(avahi_client_errno(avahiclient));
-            kdnssdprivate->m_poll = 0;
+            kdnssdprivate->m_pollcounter = 0;
             break;
         }
     }
@@ -399,11 +401,7 @@ KDNSSD::~KDNSSD()
 
 bool KDNSSD::publishService(const QByteArray &servicetype, const uint serviceport, const QString &servicename)
 {
-#if defined(HAVE_AVAHI)
     return d->publishService(servicetype, serviceport, servicename);
-#else
-    return false;
-#endif
 }
 
 bool KDNSSD::unpublishService()
