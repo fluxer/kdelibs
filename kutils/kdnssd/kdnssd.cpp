@@ -20,9 +20,6 @@
 #include "kurl.h"
 #include "kdebug.h"
 
-#include <QCoreApplication>
-#include <QThread>
-
 #if defined(HAVE_AVAHI)
 #  include <avahi-client/client.h>
 #  include <avahi-client/publish.h>
