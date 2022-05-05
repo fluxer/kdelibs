@@ -29,9 +29,6 @@
 #include <QWidget>
 #include <QSet>
 
-#include <dnssd/publicservice.h>
-#include <dnssd/servicebrowser.h>
-
 #include "plasma/configloader.h"
 
 namespace Plasma
@@ -78,7 +75,6 @@ public:
         : q(service),
           config(0),
           dummyConfig(0),
-          publicService(0),
           serviceProvider(0)
     {
     }
@@ -103,7 +99,6 @@ public:
     QString resourcename;
     ConfigLoader *config;
     KConfig *dummyConfig;
-    DNSSD::PublicService *publicService;
     ServiceProvider *serviceProvider;
     QMultiHash<QWidget *, QString> associatedWidgets;
     QMultiHash<QGraphicsObject *, QString> associatedGraphicsWidgets;
