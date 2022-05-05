@@ -176,6 +176,7 @@ bool KDNSSDPrivate::unpublishService()
 
 void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
 {
+#if defined(HAVE_AVAHI)
     // qDebug() << Q_FUNC_INFO << servicetype;
 
     QList<QByteArray> servicetypes;
@@ -228,6 +229,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
     }
 
     // TODO: filter IPv6 if IPv4 addresses are available or vice-versa?
+#endif // HAVE_AVAHI
 }
 
 QList<KDNSSDService> KDNSSDPrivate::services()
