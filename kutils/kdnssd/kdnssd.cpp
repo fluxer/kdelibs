@@ -28,6 +28,9 @@
 #  include <avahi-common/error.h>
 #endif
 
+// TODO: filter IPv6 if IPv4 addresses are available or vice-versa?
+static const int s_avahiproto = AVAHI_PROTO_INET6;
+
 class KDNSSDPrivate : public QObject
 {
     Q_OBJECT
@@ -138,7 +141,7 @@ bool KDNSSDPrivate::publishService(const QByteArray &servicetype, const uint ser
     // qDebug() << Q_FUNC_INFO << servicenamebytes << servicetype;
     int avahiresult = avahi_entry_group_add_service(
         m_avahigroup,
-        AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
+        AVAHI_IF_UNSPEC, s_avahiproto,
         AvahiPublishFlags(0),
         servicenamebytes.constData(), servicetype.constData(), NULL, NULL, serviceport,
         NULL
@@ -181,7 +184,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
     if (servicetype.isEmpty()) {
         AvahiServiceTypeBrowser* avahiservice = avahi_service_type_browser_new(
             m_avahiclient,
-            AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, NULL,
+            AVAHI_IF_UNSPEC, s_avahiproto, NULL,
             AvahiLookupFlags(0),
             KDNSSDPrivate::serviceCallback, this
         );
@@ -209,7 +212,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
     foreach (const QByteArray &servicetypeit, servicetypes) {
         AvahiServiceBrowser *avahibrowser = avahi_service_browser_new(
             m_avahiclient,
-            AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, servicetypeit.constData(), NULL,
+            AVAHI_IF_UNSPEC, s_avahiproto, servicetypeit.constData(), NULL,
             AvahiLookupFlags(0),
             KDNSSDPrivate::browseCallback, this
         );
@@ -226,8 +229,6 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
 
         avahi_service_browser_free(avahibrowser);
     }
-
-    // TODO: filter IPv6 if IPv4 addresses are available or vice-versa?
 #endif // HAVE_AVAHI
 }
 
@@ -279,7 +280,7 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
                 avahiclient,
                 avahiinterface, avahiprotocol,
                 avahiname, avahitype, avahidomain,
-                AVAHI_PROTO_UNSPEC, AvahiLookupFlags(0),
+                s_avahiproto, AvahiLookupFlags(0),
                 KDNSSDPrivate::resolveCallback,
                 userdata
             );
