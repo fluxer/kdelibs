@@ -51,7 +51,7 @@ public:
                                void* userdata);
     static void resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIfIndex avahiinterface,
                                 AvahiProtocol avahiprotocol, AvahiResolverEvent avahievent,
-                                const char *avahiname, const char *avahitype, const char *avahidomain, const char *avahihost_name,
+                                const char *avahiname, const char *avahitype, const char *avahidomain, const char *avahihostname,
                                 const AvahiAddress *avahiaddress, uint16_t avahiport,
                                 AvahiStringList *avahitxt,
                                 AvahiLookupResultFlags avahiflags,
@@ -306,7 +306,7 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
 
 void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIfIndex avahiinterface,
                                     AvahiProtocol avahiprotocol, AvahiResolverEvent avahievent,
-                                    const char *avahiname, const char *avahitype, const char *avahidomain, const char *avahihost_name,
+                                    const char *avahiname, const char *avahitype, const char *avahidomain, const char *avahihostname,
                                     const AvahiAddress *avahiaddress, uint16_t avahiport,
                                     AvahiStringList *avahitxt,
                                     AvahiLookupResultFlags avahiflags,
@@ -318,24 +318,20 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
     switch (avahievent) {
         case AVAHI_RESOLVER_FOUND: {
             kDebug() << "Resolved service" << avahiname << avahitype << avahidomain;
-            char avahiaddressbuff[AVAHI_ADDRESS_STR_MAX];
-            ::memset(avahiaddressbuff, 0, sizeof(avahiaddressbuff) * sizeof(char));
-            avahi_address_snprint(avahiaddressbuff, sizeof(avahiaddressbuff), avahiaddress);
-
             QString kdnssdserviceprotocol = QString::fromLatin1(avahitype);
             kdnssdserviceprotocol = kdnssdserviceprotocol.mid(1);
             const int dotindex = kdnssdserviceprotocol.indexOf(QLatin1Char('.'));
             kdnssdserviceprotocol = kdnssdserviceprotocol.left(dotindex);
             KUrl kdnssdserviceurl;
             kdnssdserviceurl.setProtocol(kdnssdserviceprotocol);
-            kdnssdserviceurl.setHost(QString::fromLatin1(avahiaddressbuff));
+            kdnssdserviceurl.setHost(QString::fromUtf8(avahihostname));
             kdnssdserviceurl.setPort(avahiport);
 
             KDNSSDService kdnssdservice;
             kdnssdservice.name = QString::fromUtf8(avahiname);
             kdnssdservice.type = QByteArray(avahitype);
             kdnssdservice.domain = QString::fromUtf8(avahidomain);
-            kdnssdservice.hostname = QString::fromUtf8(avahihost_name);
+            kdnssdservice.hostname = QString::fromUtf8(avahihostname);
             kdnssdservice.url = kdnssdserviceurl.prettyUrl();
             kdnssdservice.port = avahiport;
             kdnssdprivate->m_services.append(kdnssdservice);
