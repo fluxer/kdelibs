@@ -20,7 +20,7 @@ build_script:
 
     sudo apt-get install -qq cmake katie-dev libenchant-dev libbz2-dev \
         libmagick++-dev libmpv-dev xorg-dev mesa-common-dev libacl1-dev \
-        libavahi-common-dev libwebp-dev libudev-dev liblzma-dev \
+        libavahi-client-dev libwebp-dev libudev-dev liblzma-dev \
         libexiv2-dev libcdio-dev libssl-dev libcurl4-openssl-dev \
         libdbusmenu-katie libavcodec-dev libavutil-dev libavformat-dev \
         libtag1-dev media-player-info shared-mime-info media-player-info \
