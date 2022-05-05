@@ -200,6 +200,9 @@
 # kpowermanager
 51005   kpowermanager
 
+# kdnssd
+51006   kdnssd
+
 # kdemultimedia
 67100   kmix
 

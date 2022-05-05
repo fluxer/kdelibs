@@ -133,17 +133,9 @@ set_package_properties(ACL
 macro_optional_find_package(Avahi)
 set_package_properties(Avahi PROPERTIES
     DESCRIPTION "Facilities for service discovery on a local network (DNSSD)"
-    URL "http://avahi.org"
+    URL "https://avahi.org/"
     TYPE OPTIONAL
-    PURPOSE "Either Avahi or DNSSD is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
-)
-
-macro_optional_find_package(DNSSD)
-set_package_properties(DNSSD PROPERTIES
-    DESCRIPTION "Facilities for service discovery on a local network"
-    URL "http://avahi.org"
-    TYPE OPTIONAL
-    PURPOSE "Either Avahi or DNSSD is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
+    PURPOSE "Avahi is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
 )
 
 macro_optional_find_package(BZip2)
@@ -359,7 +351,6 @@ set(KDE4_KPARTS_INCLUDES
 
 add_subdirectory( cmake )
 
-add_subdirectory( dnssd )
 add_subdirectory( includes )
 add_subdirectory( interfaces )
 add_subdirectory( kdeclarative )

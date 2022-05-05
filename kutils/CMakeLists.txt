@@ -11,6 +11,7 @@ add_subdirectory(kmediaplayer)
 add_subdirectory(kexiv2)
 add_subdirectory(kpasswdstore)
 add_subdirectory(kpowermanager)
+add_subdirectory(kdnssd)
 
 ######## kidletime ####################
 

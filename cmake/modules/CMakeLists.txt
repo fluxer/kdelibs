@@ -9,7 +9,6 @@ set(cmakeFilesDontInstall
     FindMPV.cmake
     FindUDev.cmake
     FindAvahi.cmake
-    FindDNSSD.cmake
     FindENCHANT.cmake
     FindACL.cmake
     FindLibCDIO.cmake

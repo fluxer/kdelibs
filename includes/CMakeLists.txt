@@ -403,21 +403,6 @@ install(
 
 install(
     FILES
-    DNSSD/Configuration
-    DNSSD/DomainBrowser
-    DNSSD/DomainModel
-    DNSSD/PublicService
-    DNSSD/RemoteService
-    DNSSD/ServiceBase
-    DNSSD/ServiceBrowser
-    DNSSD/ServiceModel
-    DNSSD/ServiceTypeBrowser
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/DNSSD
-    COMPONENT Devel
-)
-
-install(
-    FILES
     KAccelGen/Deref
     KAccelGen/Deref_Key
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KAccelGen
