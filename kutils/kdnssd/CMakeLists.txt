@@ -14,7 +14,6 @@ add_library(kdnssd ${LIBRARY_TYPE} ${kdnssd_LIB_SRCS})
 target_link_libraries(kdnssd PUBLIC
     ${KDE4_KDECORE_LIBS}
     ${QT_QTCORE_LIBRARY}
-    ${QT_QTNETWORK_LIBRARY}
 )
 
 if(AVAHI_FOUND)
