@@ -42,7 +42,7 @@ public:
     bool unpublishService();
 
     void startBrowse(const QByteArray &servicetype);
-    QList<KDNSSDService> services();
+    QList<KDNSSDService> services() const;
 
 #if defined(HAVE_AVAHI)
     static void clientCallback(AvahiClient *avahiclient, AvahiClientState avahistate, void *userdata);
@@ -232,7 +232,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
 #endif // HAVE_AVAHI
 }
 
-QList<KDNSSDService> KDNSSDPrivate::services()
+QList<KDNSSDService> KDNSSDPrivate::services() const
 {
 #if defined(HAVE_AVAHI)
     return m_services;
@@ -405,7 +405,7 @@ bool KDNSSD::unpublishService()
     return d->unpublishService();
 }
 
-QList<KDNSSDService> KDNSSD::services()
+QList<KDNSSDService> KDNSSD::services() const
 {
     return d->services();
 }

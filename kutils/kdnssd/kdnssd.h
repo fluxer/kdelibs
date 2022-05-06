@@ -60,7 +60,7 @@ public:
         include services for all service types. This will block until all services are resolved
     */
     void startBrowse(const QByteArray &servicetype = QByteArray());
-    QList<KDNSSDService> services();
+    QList<KDNSSDService> services() const;
 
 Q_SIGNALS:
     void finished();
