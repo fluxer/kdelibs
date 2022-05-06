@@ -258,7 +258,6 @@ void KDNSSDPrivate::clientCallback(AvahiClient *avahiclient, AvahiClientState av
 
     if (avahistate == AVAHI_CLIENT_FAILURE) {
         kWarning() << avahi_strerror(avahi_client_errno(avahiclient));
-        // avahi_simple_poll_quit(m_avahiclient);
     }
 }
 
