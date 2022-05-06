@@ -27,8 +27,8 @@
 /*!
     Structure that holds information about discovarable service.
 
-    @note The @p type member is in the form _\<service\>._\<sockettype\> where service is one as
-    described at @link http://www.dns-sd.org/ServiceTypes.html and sockettype is usually either
+    @note The @p type member is in the form _\<service\>._\<socket\> where service is one as
+    described at @link http://www.dns-sd.org/ServiceTypes.html and socket is usually either
     "tcp" or "udp".
 
     @note The @p url member is synthetized URL in the form of \<service\>://\<hostname\>:\<port\>

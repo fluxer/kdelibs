@@ -316,6 +316,7 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
         case AVAHI_RESOLVER_FOUND: {
             kDebug() << "Resolved service" << avahiname << avahitype << avahidomain;
 
+            const QByteArray kdnssdservicetype = QByteArray(avahitype);
             const QString kdnssdservicedomain = QString::fromUtf8(avahidomain);
             const QString kdnssdservicehostname = QString::fromUtf8(avahihostname);
             const uint kdnssdserviceport = avahiport;
@@ -323,7 +324,8 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
             // first comes, first serves
             bool isduplicate = false;
             foreach (const KDNSSDService &kdnssdserviceit, kdnssdprivate->m_services) {
-                if (kdnssdserviceit.domain == kdnssdservicedomain
+                if (kdnssdserviceit.type == kdnssdservicetype
+                    && kdnssdserviceit.domain == kdnssdservicedomain
                     && kdnssdserviceit.hostname == kdnssdservicehostname
                     && kdnssdserviceit.port == kdnssdserviceport) {
                     isduplicate = true;
@@ -342,7 +344,7 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
 
                 KDNSSDService kdnssdservice;
                 kdnssdservice.name = QString::fromUtf8(avahiname);
-                kdnssdservice.type = QByteArray(avahitype);
+                kdnssdservice.type = kdnssdservicetype;
                 kdnssdservice.domain = kdnssdservicedomain;
                 kdnssdservice.hostname = kdnssdservicehostname;
                 kdnssdservice.url = kdnssdserviceurl.prettyUrl();
