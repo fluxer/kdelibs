@@ -25,6 +25,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kfileitem.h>
+#include <kpixmapsequenceoverlaypainter.h>
 #include <kio/previewjob.h>
 #include <kconfiggroup.h>
 
@@ -36,8 +37,10 @@ class KImageFilePreview::KImageFilePreviewPrivate
 {
 public:
     KImageFilePreviewPrivate()
-        : m_job(0)
-        , clear(true)
+        : m_job(nullptr),
+        clear(true),
+        imageLabel(nullptr),
+        busyPainter(nullptr)
     {
         m_timeLine = new QTimeLine(150);
         m_timeLine->setCurveShape(QTimeLine::EaseInCurve);
@@ -50,15 +53,16 @@ public:
         delete m_timeLine;
     }
 
-    void _k_slotResult( KJob* );
-    void _k_slotFailed( const KFileItem& );
-    void _k_slotStepAnimation( int frame );
-    void _k_slotFinished( );
-    void _k_slotActuallyClear( );
+    void _k_slotResult(KJob*);
+    void _k_slotFailed(const KFileItem&);
+    void _k_slotStepAnimation(int frame);
+    void _k_slotFinished();
+    void _k_slotActuallyClear();
 
     KUrl currentURL;
     KUrl lastShownURL;
     QLabel *imageLabel;
+    KPixmapSequenceOverlayPainter *busyPainter;
     KIO::PreviewJob *m_job;
     QTimeLine *m_timeLine;
     QPixmap m_pmCurrent;
@@ -68,22 +72,32 @@ public:
     bool clear;
 };
 
-KImageFilePreview::KImageFilePreview( QWidget *parent )
-    : KPreviewWidgetBase(parent), d(new KImageFilePreviewPrivate)
+KImageFilePreview::KImageFilePreview(QWidget *parent)
+    : KPreviewWidgetBase(parent),
+    d(new KImageFilePreviewPrivate())
 {
-    QVBoxLayout *vb = new QVBoxLayout( this );
-    vb->setMargin( 0 );
+    QVBoxLayout *vb = new QVBoxLayout(this);
+    vb->setMargin(0);
 
     d->imageLabel = new QLabel(this);
     d->imageLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     d->imageLabel->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
     vb->addWidget(d->imageLabel);
 
-    setSupportedMimeTypes( KIO::PreviewJob::supportedMimeTypes() );
-    setMinimumWidth( 50 );
+    d->busyPainter = new KPixmapSequenceOverlayPainter(this);
+    d->busyPainter->setWidget(d->imageLabel);
 
-    connect(d->m_timeLine, SIGNAL(frameChanged(int)), this, SLOT(_k_slotStepAnimation(int)));
-    connect(d->m_timeLine, SIGNAL(finished()), this, SLOT(_k_slotFinished()));
+    setSupportedMimeTypes(KIO::PreviewJob::supportedMimeTypes());
+    setMinimumWidth(50);
+
+    connect(
+        d->m_timeLine, SIGNAL(frameChanged(int)),
+        this, SLOT(_k_slotStepAnimation(int))
+    );
+    connect(
+        d->m_timeLine, SIGNAL(finished()),
+        this, SLOT(_k_slotFinished())
+    );
 }
 
 KImageFilePreview::~KImageFilePreview()
@@ -99,58 +113,72 @@ void KImageFilePreview::showPreview()
 {
     // Pass a copy since clearPreview() will clear currentURL
     KUrl url = d->currentURL;
-    showPreview( url, true );
+    showPreview(url, true);
 }
 
 // called via KPreviewWidgetBase interface
-void KImageFilePreview::showPreview( const KUrl& url )
+void KImageFilePreview::showPreview(const KUrl& url)
 {
-    showPreview( url, false );
+    showPreview(url, false);
 }
 
-void KImageFilePreview::showPreview( const KUrl &url, bool force )
+void KImageFilePreview::showPreview(const KUrl &url, bool force)
 {
     if (!url.isValid() ||
         (d->lastShownURL.isValid() &&
          url.equals(d->lastShownURL, KUrl::CompareWithoutTrailingSlash) &&
-         d->currentURL.isValid()))
+         d->currentURL.isValid())) {
         return;
+    }
 
     d->clear = false;
     d->currentURL = url;
     d->lastShownURL = url;
 
+    d->busyPainter->start();
+
     int w = d->imageLabel->contentsRect().width() - 4;
     int h = d->imageLabel->contentsRect().height() - 4;
 
     if (d->m_job) {
-        disconnect(d->m_job, SIGNAL(result(KJob*)),
-                    this, SLOT(_k_slotResult(KJob*)));
-        disconnect(d->m_job, SIGNAL(gotPreview(const KFileItem&,
-                                                const QPixmap& )), this,
-                SLOT(gotPreview(KFileItem,QPixmap)));
+        disconnect(
+            d->m_job, SIGNAL(result(KJob*)),
+            this, SLOT(_k_slotResult(KJob*))
+        );
+        disconnect(
+            d->m_job, SIGNAL(gotPreview(const KFileItem&, const QPixmap& )),
+            this, SLOT(gotPreview(KFileItem,QPixmap))
+        );
 
-        disconnect(d->m_job, SIGNAL(failed(KFileItem)),
-                    this, SLOT(_k_slotFailed(KFileItem)));
+        disconnect(
+            d->m_job, SIGNAL(failed(KFileItem)),
+            this, SLOT(_k_slotFailed(KFileItem))
+        );
 
         d->m_job->kill();
     }
 
     d->m_job = createJob(url, w, h);
-    if ( force ) // explicitly requested previews shall always be generated!
+    if (force) { // explicitly requested previews shall always be generated!
         d->m_job->setIgnoreMaximumSize(true);
+    }
 
-    connect(d->m_job, SIGNAL(result(KJob*)),
-                this, SLOT(_k_slotResult(KJob*)));
-    connect(d->m_job, SIGNAL(gotPreview(const KFileItem&,
-                                        const QPixmap& )),
-                SLOT(gotPreview(KFileItem,QPixmap)));
+    connect(
+        d->m_job, SIGNAL(result(KJob*)),
+        this, SLOT(_k_slotResult(KJob*))
+    );
+    connect(
+        d->m_job, SIGNAL(gotPreview(const KFileItem&,const QPixmap&)),
+        this, SLOT(gotPreview(KFileItem,QPixmap))
+    );
 
-    connect(d->m_job, SIGNAL(failed(KFileItem)),
-                this, SLOT(_k_slotFailed(KFileItem)));
+    connect(
+        d->m_job, SIGNAL(failed(KFileItem)),
+        this, SLOT(_k_slotFailed(KFileItem))
+    );
 }
 
-void KImageFilePreview::resizeEvent( QResizeEvent * )
+void KImageFilePreview::resizeEvent(QResizeEvent *)
 {
     clearPreview();
     d->currentURL = KUrl(); // force this to actually happen
@@ -159,10 +187,10 @@ void KImageFilePreview::resizeEvent( QResizeEvent * )
 
 QSize KImageFilePreview::sizeHint() const
 {
-    return QSize( 100, 200 );
+    return QSize(100, 200);
 }
 
-KIO::PreviewJob * KImageFilePreview::createJob( const KUrl& url, int w, int h )
+KIO::PreviewJob * KImageFilePreview::createJob(const KUrl& url, int w, int h)
 {
     if (url.isValid()) {
         KFileItemList items;
@@ -178,8 +206,10 @@ KIO::PreviewJob * KImageFilePreview::createJob( const KUrl& url, int w, int h )
     }
 }
 
-void KImageFilePreview::gotPreview( const KFileItem& item, const QPixmap& pm )
+void KImageFilePreview::gotPreview(const KFileItem& item, const QPixmap& pm)
 {
+    d->busyPainter->stop();
+
     if (item.url() == d->currentURL) {  // should always be the case
         if (KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
             if (d->m_timeLine->state() == QTimeLine::Running) {
@@ -191,31 +221,31 @@ void KImageFilePreview::gotPreview( const KFileItem& item, const QPixmap& pm )
             d->m_pmCurrentOpacity = 1;
             d->m_timeLine->setDirection(QTimeLine::Forward);
             d->m_timeLine->start();
-        }
-        else
-        {
+        } else {
             d->imageLabel->setPixmap(pm);
         }
     }
 }
 
-void KImageFilePreview::KImageFilePreviewPrivate::_k_slotFailed( const KFileItem& item )
+void KImageFilePreview::KImageFilePreviewPrivate::_k_slotFailed(const KFileItem& item)
 {
-    if ( item.isDir() )
+    if (item.isDir()) {
         imageLabel->clear();
-    else if (item.url() == currentURL) // should always be the case
-        imageLabel->setPixmap(SmallIcon( "image-missing", KIconLoader::SizeLarge,
-                                         KIconLoader::DisabledState ));
-}
-
-void KImageFilePreview::KImageFilePreviewPrivate::_k_slotResult( KJob *job )
-{
-    if (job == m_job) {
-        m_job = 0L;
+    } else if (item.url() == currentURL) { // should always be the case
+        imageLabel->setPixmap(
+            SmallIcon("image-missing", KIconLoader::SizeLarge, KIconLoader::DisabledState)
+        );
     }
 }
 
-void KImageFilePreview::KImageFilePreviewPrivate::_k_slotStepAnimation( int frame )
+void KImageFilePreview::KImageFilePreviewPrivate::_k_slotResult(KJob *job)
+{
+    if (job == m_job) {
+        m_job = nullptr;
+    }
+}
+
+void KImageFilePreview::KImageFilePreviewPrivate::_k_slotStepAnimation(int frame)
 {
     Q_UNUSED(frame)
 
@@ -259,7 +289,7 @@ void KImageFilePreview::clearPreview()
 {
     if (d->m_job) {
         d->m_job->kill();
-        d->m_job = 0L;
+        d->m_job = nullptr;
     }
 
     if (d->clear || d->m_timeLine->state() == QTimeLine::Running) {
@@ -276,9 +306,7 @@ void KImageFilePreview::clearPreview()
         }
         d->currentURL = KUrl();
         d->clear = true;
-    }
-    else
-    {
+    } else {
         d->imageLabel->clear();
     }
 }
