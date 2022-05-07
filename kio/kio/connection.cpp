@@ -183,7 +183,7 @@ bool SocketConnectionBackend::listenForRemote()
     localServer = new QLocalServer(this);
     localServer->listen(serveraddress);
     if (!localServer->isListening()) {
-        kWarning(7017) << "could not listen on" << serveraddress << localServer->errorString();
+        kWarning(7017) << "Could not listen on" << serveraddress << localServer->errorString();
         errorString = localServer->errorString();
         delete localServer;
         localServer = nullptr;
@@ -394,13 +394,19 @@ bool Connection::suspended() const
 void Connection::connectToRemote(const QString &address)
 {
     d->setBackend(new SocketConnectionBackend(this));
-    kDebug(7017) << "Connection requested to " << address;
+    kDebug(7017) << "Connection requested to" << address;
 
     if (!d->backend->connectToRemote(address)) {
-        kWarning(7017) << "could not connect to " << address;
-        delete d->backend;
-        d->backend = 0;
-        return;
+        // should the process owning QLocalServer crash and its address remain in use attempt to
+        // connect to new server
+        kDebug(7017) << "Creating new server since connection to address failed" << address;
+        d->backend->listenForRemote();
+        if (!d->backend->connectToRemote(d->backend->address)) {
+            kWarning(7017) << "Could not connect to" << address;
+            delete d->backend;
+            d->backend = 0;
+            return;
+        }
     }
 
     d->dequeue();
