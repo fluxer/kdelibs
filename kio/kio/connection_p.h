@@ -20,8 +20,8 @@
 #ifndef KIO_CONNECTION_P_H
 #define KIO_CONNECTION_P_H
 
-#include <QTcpSocket>
-#include <QTcpServer>
+#include <QLocalSocket>
+#include <QLocalServer>
 
 class KUrl;
 
@@ -42,8 +42,8 @@ namespace KIO {
     private:
         enum { HeaderSize = 10, StandardBufferSize = 32*1024 };
 
-        QTcpSocket *socket;
-        QTcpServer *tcpServer;
+        QLocalSocket *socket;
+        QLocalServer *localServer;
         long len;
         int cmd;
         bool signalEmitted;
@@ -53,7 +53,7 @@ namespace KIO {
         ~SocketConnectionBackend();
 
         void setSuspended(bool enable);
-        bool connectToRemote(const KUrl &url);
+        bool connectToRemote(const QString &address);
         bool listenForRemote();
         bool waitForIncomingTask(int ms);
         bool sendCommand(const Task &task);

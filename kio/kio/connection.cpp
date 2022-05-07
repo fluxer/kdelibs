@@ -34,6 +34,8 @@
 #include <ktemporaryfile.h>
 #include <kurl.h>
 
+#include <unistd.h>
+
 using namespace KIO;
 
 class KIO::ConnectionPrivate
@@ -105,7 +107,7 @@ void ConnectionPrivate::setBackend(SocketConnectionBackend *b)
 }
 
 SocketConnectionBackend::SocketConnectionBackend(QObject *parent)
-    : QObject(parent), state(Idle), socket(0), tcpServer(0), len(-1),
+    : QObject(parent), state(Idle), socket(nullptr), localServer(nullptr), len(-1),
     cmd(0), signalEmitted(false)
 {
 }
@@ -119,7 +121,7 @@ void SocketConnectionBackend::setSuspended(bool enable)
     if (state != Connected)
         return;
     Q_ASSERT(socket);
-    Q_ASSERT(!tcpServer);
+    Q_ASSERT(!localServer);
 
     if (enable) {
         //kDebug() << this << " suspending";
@@ -141,17 +143,17 @@ void SocketConnectionBackend::setSuspended(bool enable)
     }
 }
 
-bool SocketConnectionBackend::connectToRemote(const KUrl &url)
+bool SocketConnectionBackend::connectToRemote(const QString &address)
 {
     Q_ASSERT(state == Idle || state == Listening);
     Q_ASSERT(!socket);
 
-    socket = new QTcpSocket(this);
-    socket->connectToHost(url.host(),url.port());
+    socket = new QLocalSocket(this);
+    socket->connectToServer(address);
 
     if (!socket->waitForConnected()) {
         state = Idle;
-        kDebug() << "could not connect to " << url;
+        kDebug() << "could not connect to " << address;
         return false;
     }
 
@@ -171,19 +173,25 @@ bool SocketConnectionBackend::listenForRemote()
 {
     Q_ASSERT(state == Idle);
     Q_ASSERT(!socket);
-    Q_ASSERT(!tcpServer);
+    Q_ASSERT(!localServer);
 
-    tcpServer = new QTcpServer(this);
-    tcpServer->listen(QHostAddress::LocalHost);
-    if (!tcpServer->isListening()) {
-        errorString = tcpServer->errorString();
-        delete tcpServer;
-        tcpServer = 0;
+#if QT_VERSION >= 0x041200
+    const QString serveraddress = QString::fromLatin1(qRandomUuid());
+#else
+    const QString serveraddress = QString::fromLatin1("kio_") + QString::number(::getpid());
+#endif
+    localServer = new QLocalServer(this);
+    localServer->listen(serveraddress);
+    if (!localServer->isListening()) {
+        kWarning(7017) << "could not listen on" << serveraddress << localServer->errorString();
+        errorString = localServer->errorString();
+        delete localServer;
+        localServer = nullptr;
         return false;
     }
 
-    address = QLatin1String("tcp://") + tcpServer->serverAddress().toString() + ":" + QString::number(tcpServer->serverPort());
-    connect(tcpServer, SIGNAL(newConnection()), SIGNAL(newConnection()));
+    address = localServer->fullServerName();
+    connect(localServer, SIGNAL(newConnection()), SIGNAL(newConnection()));
 
     state = Listening;
     return true;
@@ -193,7 +201,7 @@ bool SocketConnectionBackend::waitForIncomingTask(int ms)
 {
     Q_ASSERT(state == Connected);
     Q_ASSERT(socket);
-    if (socket->state() != QAbstractSocket::ConnectedState) {
+    if (socket->state() != QLocalSocket::ConnectedState) {
         state = Idle;
         return false;           // socket has probably closed, what do we do?
     }
@@ -208,14 +216,14 @@ bool SocketConnectionBackend::waitForIncomingTask(int ms)
     QTime timer;
     timer.start();
 
-    while (socket->state() == QAbstractSocket::ConnectedState && !signalEmitted &&
+    while (socket->state() == QLocalSocket::ConnectedState && !signalEmitted &&
            (ms == -1 || timer.elapsed() < ms))
         if (!socket->waitForReadyRead(ms == -1 ? -1 : ms - timer.elapsed()))
             break;
 
     if (signalEmitted)
         return true;
-    if (socket->state() != QAbstractSocket::ConnectedState)
+    if (socket->state() != QLocalSocket::ConnectedState)
         state = Idle;
     return false;
 }
@@ -235,21 +243,21 @@ bool SocketConnectionBackend::sendCommand(const Task &task)
     //         << " bytes left to write";
 
     // blocking mode:
-    while (socket->bytesToWrite() > 0 && socket->state() == QAbstractSocket::ConnectedState)
+    while (socket->bytesToWrite() > 0 && socket->state() == QLocalSocket::ConnectedState)
         socket->waitForBytesWritten(-1);
 
-    return socket->state() == QAbstractSocket::ConnectedState;
+    return socket->state() == QLocalSocket::ConnectedState;
 }
 
 SocketConnectionBackend *SocketConnectionBackend::nextPendingConnection()
 {
     Q_ASSERT(state == Listening);
-    Q_ASSERT(tcpServer);
+    Q_ASSERT(localServer);
     Q_ASSERT(!socket);
 
     //kDebug() << "Got a new connection";
 
-    QTcpSocket *newSocket = tcpServer->nextPendingConnection();
+    QLocalSocket *newSocket = localServer->nextPendingConnection();
     if (!newSocket)
         return 0;               // there was no connection...
 
@@ -386,31 +394,10 @@ bool Connection::suspended() const
 void Connection::connectToRemote(const QString &address)
 {
     d->setBackend(new SocketConnectionBackend(this));
-    /*
-        establish the server to get its address if address is empty
-        and for compatibilty with local mode (which is no more, but its
-        uses are still present)
-    */
-    d->backend->listenForRemote();
-
     kDebug(7017) << "Connection requested to " << address;
-    KUrl url(address);
-    if (Q_UNLIKELY(url.host().isEmpty() && d->backend)) {
-        kWarning(7017) << "host address is empty, using address from backend";
-        url = d->backend->address;
-    }
 
-    const QString scheme = url.protocol();
-    if (Q_UNLIKELY(scheme != QLatin1String("tcp"))) {
-        kWarning(7017) << "Unknown requested KIO::Connection protocol='" << scheme
-        << "' (" << url << ")";
-        Q_ASSERT(0);
-        return;
-    }
-
-    // connection succeeded
-    if (!d->backend->connectToRemote(url)) {
-        kWarning(7017) << "could not connect to " << url;
+    if (!d->backend->connectToRemote(address)) {
+        kWarning(7017) << "could not connect to " << address;
         delete d->backend;
         d->backend = 0;
         return;
@@ -509,7 +496,7 @@ void ConnectionServer::listenForRemote()
         return;
     }
 
-    connect(d->backend, SIGNAL(newConnection()), SIGNAL(newConnection()));
+    connect(d->backend, SIGNAL(newConnection()), this, SIGNAL(newConnection()));
     kDebug(7017) << "Listening on " << d->backend->address;
 }
 
