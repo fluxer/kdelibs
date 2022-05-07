@@ -340,7 +340,7 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
                 KUrl kdnssdserviceurl;
                 kdnssdserviceurl.setProtocol(kdnssdserviceprotocol);
                 kdnssdserviceurl.setHost(kdnssdservicehostname);
-                kdnssdserviceurl.setPort(avahiport);
+                kdnssdserviceurl.setPort(kdnssdserviceport);
 
                 KDNSSDService kdnssdservice;
                 kdnssdservice.name = QString::fromUtf8(avahiname);
@@ -348,7 +348,7 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
                 kdnssdservice.domain = kdnssdservicedomain;
                 kdnssdservice.hostname = kdnssdservicehostname;
                 kdnssdservice.url = kdnssdserviceurl.prettyUrl();
-                kdnssdservice.port = avahiport;
+                kdnssdservice.port = kdnssdserviceport;
 
                 kdnssdprivate->m_services.append(kdnssdservice);
             }

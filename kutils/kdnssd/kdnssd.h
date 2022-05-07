@@ -74,8 +74,7 @@ public:
     /*!
         @brief Publishes service of type @p servicetype on port @p serviceport with name
         @p servicename on the default domain.
-        @note Only one service may be published per KDNSSD object. To publish multiple services
-        a new KDNSSD object must be constructed.
+        @note Only one service may be published per KDNSSD object.
     */
     bool publishService(const QByteArray &servicetype, const uint serviceport, const QString &servicename);
     /*!
