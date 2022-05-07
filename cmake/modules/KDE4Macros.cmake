@@ -7,7 +7,6 @@
 # KDE4_ADD_WIDGET
 # KDE4_INSTALL_ICONS
 # KDE4_INSTALL_AUTH_HELPER_FILES
-# KDE4_AUTH_INSTALL_ACTIONS
 
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
