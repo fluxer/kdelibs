@@ -42,7 +42,6 @@ namespace Ifaces
          */
         virtual ~NetworkShare();
 
-
         /**
          * Retrieves the type of network
          *
