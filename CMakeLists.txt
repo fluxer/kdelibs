@@ -239,6 +239,14 @@ set_package_properties(OpenSSL PROPERTIES
     PURPOSE "Store password securely"
 )
 
+macro_optional_find_package(Libmicrohttpd)
+set_package_properties(Libmicrohttpd PROPERTIES
+    DESCRIPTION "Small C library that is supposed to make it easy to run an HTTP server as part of another application"
+    URL "https://www.gnu.org/software/libmicrohttpd/"
+    TYPE RECOMMENDED
+    PURPOSE "HTTP(S) server"
+)
+
 ################# configure checks and create the configured files #################
 
 include(ConfigureChecks.cmake)

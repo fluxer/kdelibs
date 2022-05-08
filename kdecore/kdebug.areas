@@ -203,6 +203,9 @@
 # kdnssd
 51006   kdnssd
 
+# khttp
+51007   khttp
+
 # kdemultimedia
 67100   kmix
 

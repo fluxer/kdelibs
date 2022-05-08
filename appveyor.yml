@@ -24,7 +24,7 @@ build_script:
         libexiv2-dev libcdio-dev libssl-dev libcurl4-openssl-dev \
         libdbusmenu-katie libavcodec-dev libavutil-dev libavformat-dev \
         libtag1-dev media-player-info shared-mime-info media-player-info \
-        libepub-dev libpoppler-cpp-dev xdg-utils ccache
+        libepub-dev libpoppler-cpp-dev libmicrohttpd-dev xdg-utils ccache
 
     export PATH="/usr/lib/ccache/:$PATH"
 

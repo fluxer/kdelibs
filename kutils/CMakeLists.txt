@@ -12,6 +12,7 @@ add_subdirectory(kexiv2)
 add_subdirectory(kpasswdstore)
 add_subdirectory(kpowermanager)
 add_subdirectory(kdnssd)
+add_subdirectory(khttp)
 
 ######## kidletime ####################
 
