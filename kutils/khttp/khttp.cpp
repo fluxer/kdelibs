@@ -17,10 +17,10 @@
 */
 
 #include "khttp.h"
-#include "kurl.h"
 #include "kdebug.h"
 
-#include <QFile>
+#include <QCoreApplication>
+#include <QUrl>
 #include <QTimer>
 
 #if defined(HAVE_LIBMICROHTTPD)
@@ -154,7 +154,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
     // qDebug() << Q_FUNC_INFO << address.protocol();
     int mhdflags = MHD_NO_FLAG;
     if (!m_tlskey.isEmpty() && !m_tlscert.isEmpty()) {
-        // qDebug() << Q_FUNC_INFO << "Enabling TLS";
+        kDebug() << "Enabling TLS";
         mhdflags |= MHD_USE_TLS;
     }
     const enum MHD_Result mhdresult = MHD_is_feature_supported(MHD_FEATURE_MESSAGES);
@@ -314,7 +314,12 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
                 kWarning() << "Could not create MHD auth response";
                 return MHD_NO;
             }
-            enum MHD_Result mhdresult = MHD_queue_basic_auth_fail_response(connection, "KHTTPD Ream", mhdresponse);
+            const QByteArray mhdrealm = QCoreApplication::applicationName().toUtf8();
+            const enum MHD_Result mhdresult = MHD_queue_basic_auth_fail_response(
+                connection,
+                mhdrealm.constData(),
+                mhdresponse
+            );
             MHD_destroy_response(mhdresponse);
             return mhdresult;
         }
@@ -327,7 +332,8 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
     }
 
     khttpprivate->m_url = QUrl(QString::fromUtf8(url));
-    MHD_get_connection_values(connection,
+    MHD_get_connection_values(
+        connection,
         MHD_GET_ARGUMENT_KIND,
         KHTTPPrivate::keyValueCallback,
         cls

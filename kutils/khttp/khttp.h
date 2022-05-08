@@ -69,7 +69,7 @@ public:
 protected:
     /*!
         @brief Reimplement this method to send back data to clients when @p url is requested.
-        @p outdata is the content, httpstatus is a standard HTTP status (e.g. 404) and
+        @p outdata is the content, @p httpstatus is a standard HTTP status (e.g. 404) and
         @p outheaders is map of additional headers to be send (e.g. "Content-Type"). All input
         arguments (@p outdata, @p httpstatus and @p outheaders) are optional however if none is
         changed 404 response will be send to clients with no content.
