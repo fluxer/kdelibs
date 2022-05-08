@@ -34,8 +34,6 @@
 #include <ktemporaryfile.h>
 #include <kurl.h>
 
-#include <unistd.h>
-
 using namespace KIO;
 
 class KIO::ConnectionPrivate
@@ -175,11 +173,8 @@ bool SocketConnectionBackend::listenForRemote()
     Q_ASSERT(!socket);
     Q_ASSERT(!localServer);
 
-#if QT_VERSION >= 0x041200
-    const QString serveraddress = QString::fromLatin1(qRandomUuid());
-#else
-    const QString serveraddress = QString::fromLatin1("kio_") + QString::number(::getpid());
-#endif
+    // NOTE: using long/complex server name can cause reconnection issues
+    const QString serveraddress = QString::fromLatin1("kio_") + QString::number(qrand());
     localServer = new QLocalServer(this);
     localServer->listen(serveraddress);
     if (!localServer->isListening()) {
