@@ -239,7 +239,8 @@ set_package_properties(OpenSSL PROPERTIES
     PURPOSE "Store password securely"
 )
 
-macro_optional_find_package(Libmicrohttpd)
+# v0.9.71+ required for MHD_Result
+macro_optional_find_package(Libmicrohttpd 0.9.71)
 set_package_properties(Libmicrohttpd PROPERTIES
     DESCRIPTION "Small C library that is supposed to make it easy to run an HTTP server as part of another application"
     URL "https://www.gnu.org/software/libmicrohttpd/"
