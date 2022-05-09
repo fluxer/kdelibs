@@ -49,15 +49,15 @@ public:
         requires password it must also be provided as @p password.
         @note HTTP requests to the server address will not be redirected, clients must request
         HTTPS address. For example if TLS/SSL certificate is set "http://foo.bar" will not be
-        reachable (no data is send) however "https://foo.bar" will be, unless external means are
+        accessible (no data is send) however "https://foo.bar" will be, unless external means are
         used to redirect the request. This is the case only when non-standard ports are used, if
         HTTP server runs on port 80 and HTTPS server runs on port 443 then both are accessible but
-        the client will most likely be making requests to the HTTP server on port 80.
+        clients will most likely be making requests to the HTTP server on port 80.
     */
     bool setCertificate(const QByteArray &keydata, const QByteArray &certdata, const QByteArray &password = QByteArray());
     /*!
         @brief Sets @p username and @p password to be used for authentication with @p message as
-        content to be send to the client when authentication fails.
+        content to be send to clients when authentication fails.
         @note The authentication method used is basic
     */
     bool setAuthenticate(const QByteArray &username, const QByteArray &password, const QString &message);

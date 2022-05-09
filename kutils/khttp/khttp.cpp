@@ -28,7 +28,8 @@
 #  include <microhttpd.h>
 #endif
 
-static const int MHDPollInterval = 100;
+static const int MHDPollInterval = 50;
+static const uint MHDConnectionLimit = 10;
 
 class KHTTPPrivate : public QObject
 {
@@ -157,7 +158,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
         kDebug() << "Enabling TLS";
         mhdflags |= MHD_USE_TLS;
     }
-    const enum MHD_Result mhdresult = MHD_is_feature_supported(MHD_FEATURE_MESSAGES);
+    enum MHD_Result mhdresult = MHD_is_feature_supported(MHD_FEATURE_MESSAGES);
     if (mhdresult == MHD_NO) {
         kWarning() << "Messages are not supported";
     } else {
@@ -181,12 +182,15 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
                 MHD_OPTION_HTTPS_MEM_CERT, m_tlscert.constData(),
                 MHD_OPTION_HTTPS_KEY_PASSWORD, m_tlspassword.constData(),
                 MHD_OPTION_SOCK_ADDR, &socketaddress,
+                MHD_OPTION_CONNECTION_LIMIT, MHDConnectionLimit,
+                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDConnectionLimit,
                 MHD_OPTION_END
             );
             break;
         }
         case QAbstractSocket::IPv6Protocol: {
-            if (MHD_is_feature_supported(MHD_FEATURE_IPv6) != MHD_YES) {
+            mhdresult = MHD_is_feature_supported(MHD_FEATURE_IPv6);
+            if (mhdresult == MHD_NO) {
                 kWarning() << "IPv6 is not supported";
                 return false;
             }
@@ -207,6 +211,8 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
                 MHD_OPTION_HTTPS_MEM_CERT, m_tlscert.constData(),
                 MHD_OPTION_HTTPS_KEY_PASSWORD, m_tlspassword.constData(),
                 MHD_OPTION_SOCK_ADDR, &socketaddress,
+                MHD_OPTION_CONNECTION_LIMIT, MHDConnectionLimit,
+                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDConnectionLimit,
                 MHD_OPTION_END
             );
             break;
@@ -253,7 +259,10 @@ QString KHTTPPrivate::errorString() const
 void KHTTPPrivate::slotMHDPoll()
 {
     if (m_mhddaemon) {
-        MHD_run(m_mhddaemon);
+        const enum MHD_Result mhdresult = MHD_run(m_mhddaemon);
+        if (Q_UNLIKELY(mhdresult == MHD_NO)) {
+            kWarning() << "Could not poll";
+        }
     }
 }
 
@@ -310,7 +319,7 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
                 khttpprivate->m_authmessage.size(), khttpprivate->m_authmessage.data(),
                 MHD_RESPMEM_MUST_COPY
             );
-            if (!mhdresponse) {
+            if (Q_UNLIKELY(!mhdresponse)) {
                 kWarning() << "Could not create MHD auth response";
                 return MHD_NO;
             }
@@ -331,7 +340,7 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
         }
     }
 
-    khttpprivate->m_url = QUrl(QString::fromUtf8(url));
+    khttpprivate->m_url = QUrl(QString::fromAscii(url));
     MHD_get_connection_values(
         connection,
         MHD_GET_ARGUMENT_KIND,
@@ -340,28 +349,28 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
     );
 
     QByteArray khttpurl = khttpprivate->m_url.toEncoded();
-    KHTTPHeaders khttpheaders;
+    KHTTPHeaders mhdouthttpheaders;
     QByteArray mhdoutdata;
     ushort mhdouthttpstatus = MHD_HTTP_NOT_FOUND;
-    khttp->respond(khttpurl, &mhdoutdata, &mhdouthttpstatus, &khttpheaders);
+    khttp->respond(khttpurl, &mhdoutdata, &mhdouthttpstatus, &mhdouthttpheaders);
 
     struct MHD_Response *mhdresponse = MHD_create_response_from_buffer(
         mhdoutdata.size(), mhdoutdata.data(),
         MHD_RESPMEM_MUST_COPY
     );
-    if (!mhdresponse) {
+    if (Q_UNLIKELY(!mhdresponse)) {
         kWarning() << "Could not create MHD response";
         return MHD_NO;
     }
 
     enum MHD_Result mhdresult = MHD_NO;
-    foreach (const QByteArray &httpheaderkey, khttpheaders.keys()) {
+    foreach (const QByteArray &httpheaderkey, mhdouthttpheaders.keys()) {
         if (qstricmp(httpheaderkey.constData(), "Content-Length") == 0) {
             // MHD refuses to add it
             kDebug() << "Ignoring content-length";
             continue;
         }
-        const QByteArray httpheadervalue = khttpheaders.value(httpheaderkey);
+        const QByteArray httpheadervalue = mhdouthttpheaders.value(httpheaderkey);
         mhdresult = MHD_add_response_header(mhdresponse, httpheaderkey.constData(), httpheadervalue.constData());
         if (mhdresult == MHD_NO) {
             kWarning() << "Could not add response header" << httpheaderkey << httpheadervalue;
