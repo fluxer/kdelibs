@@ -86,6 +86,7 @@ KImageFilePreview::KImageFilePreview(QWidget *parent)
 
     d->busyPainter = new KPixmapSequenceOverlayPainter(this);
     d->busyPainter->setWidget(d->imageLabel);
+    d->busyPainter->stop();
 
     setSupportedMimeTypes(KIO::PreviewJob::supportedMimeTypes());
     setMinimumWidth(50);
@@ -135,8 +136,6 @@ void KImageFilePreview::showPreview(const KUrl &url, bool force)
     d->currentURL = url;
     d->lastShownURL = url;
 
-    d->busyPainter->start();
-
     int w = d->imageLabel->contentsRect().width() - 4;
     int h = d->imageLabel->contentsRect().height() - 4;
 
@@ -157,6 +156,8 @@ void KImageFilePreview::showPreview(const KUrl &url, bool force)
 
         d->m_job->kill();
     }
+
+    d->busyPainter->start();
 
     d->m_job = createJob(url, w, h);
     if (force) { // explicitly requested previews shall always be generated!
@@ -208,8 +209,6 @@ KIO::PreviewJob * KImageFilePreview::createJob(const KUrl& url, int w, int h)
 
 void KImageFilePreview::gotPreview(const KFileItem& item, const QPixmap& pm)
 {
-    d->busyPainter->stop();
-
     if (item.url() == d->currentURL) {  // should always be the case
         if (KGlobalSettings::graphicEffectsLevel() & KGlobalSettings::SimpleAnimationEffects) {
             if (d->m_timeLine->state() == QTimeLine::Running) {
@@ -243,6 +242,8 @@ void KImageFilePreview::KImageFilePreviewPrivate::_k_slotResult(KJob *job)
     if (job == m_job) {
         m_job = nullptr;
     }
+
+    busyPainter->stop();
 }
 
 void KImageFilePreview::KImageFilePreviewPrivate::_k_slotStepAnimation(int frame)
