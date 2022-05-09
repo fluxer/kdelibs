@@ -75,6 +75,7 @@ private:
     QTimer m_polltimer;
     QUrl m_url;
 #endif // HAVE_LIBMICROHTTPD
+private:
     QString m_errorstring;
 };
 

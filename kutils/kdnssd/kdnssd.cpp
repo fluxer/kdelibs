@@ -28,6 +28,19 @@
 #  include <avahi-common/error.h>
 #endif
 
+#if defined(HAVE_AVAHI)
+static QString getAvahiError(const int avahierror)
+{
+    kWarning() << avahi_strerror(avahierror);
+    return QString::fromAscii(avahi_strerror(avahierror));
+}
+
+static QString getAvahiClientError(AvahiClient *avahiclient)
+{
+    return getAvahiError(avahi_client_errno(avahiclient));
+}
+#endif
+
 class KDNSSDPrivate : public QObject
 {
     Q_OBJECT
@@ -40,6 +53,7 @@ public:
 
     void startBrowse(const QByteArray &servicetype);
     QList<KDNSSDService> services() const;
+    QString errorString() const;
 
 #if defined(HAVE_AVAHI)
     static void clientCallback(AvahiClient *avahiclient, AvahiClientState avahistate, void *userdata);
@@ -73,6 +87,8 @@ private:
     QList<KDNSSDService> m_services;
     QList<QByteArray> m_servicetypes;
 #endif // HAVE_AVAHI
+private:
+    QString m_errorstring;
 };
 
 KDNSSDPrivate::KDNSSDPrivate(QObject *parent)
@@ -87,7 +103,7 @@ KDNSSDPrivate::KDNSSDPrivate(QObject *parent)
 #if defined(HAVE_AVAHI)
     m_avahipoll = avahi_simple_poll_new();
     if (!m_avahipoll) {
-        kWarning() << "Could not create Avahi poll";
+        m_errorstring = QString::fromLatin1("Could not create Avahi poll");
         return;
     }
 
@@ -98,7 +114,7 @@ KDNSSDPrivate::KDNSSDPrivate(QObject *parent)
         &avahierror
     );
     if (!m_avahiclient) {
-        kWarning() << "Could not create Avahi client" << avahi_strerror(avahierror);
+        m_errorstring = getAvahiError(avahierror);
         return;
     }
 #endif // HAVE_AVAHI
@@ -131,7 +147,7 @@ bool KDNSSDPrivate::publishService(const QByteArray &servicetype, const uint ser
     }
     m_avahigroup = avahi_entry_group_new(m_avahiclient, KDNSSDPrivate::groupCallback, this);
     if (!m_avahigroup) {
-        kWarning() << "Could not create Avahi group";
+        m_errorstring = QString::fromLatin1("Could not create Avahi group");
         return false;
     }
     const QByteArray servicenamebytes = servicename.toUtf8();
@@ -144,7 +160,7 @@ bool KDNSSDPrivate::publishService(const QByteArray &servicetype, const uint ser
         NULL
     );
     if (avahiresult < 0) {
-        kWarning() << "Could not add Avahi service to group" << avahi_strerror(avahiresult);
+        m_errorstring = getAvahiError(avahiresult);
         return false;
     }
     avahiresult = avahi_entry_group_commit(m_avahigroup);
@@ -162,7 +178,7 @@ bool KDNSSDPrivate::unpublishService()
     }
     const int avahiresult = avahi_entry_group_reset(m_avahigroup);
     if (avahiresult < 0) {
-        kWarning() << "Could not reset Avahi service group" << avahi_strerror(avahiresult);
+        m_errorstring = getAvahiError(avahiresult);
         return false;
     }
     return true;
@@ -186,7 +202,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
             KDNSSDPrivate::serviceCallback, this
         );
         if (!avahiservice) {
-            kWarning() << "Could not create Avahi service type browser" << avahi_strerror(avahi_client_errno(m_avahiclient));
+            m_errorstring = getAvahiClientError(m_avahiclient);
             return;
         }
 
@@ -214,7 +230,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
             KDNSSDPrivate::browseCallback, this
         );
         if (!avahibrowser) {
-            kWarning() << "Could not create Avahi browser" << avahi_strerror(avahi_client_errno(m_avahiclient));
+            m_errorstring = getAvahiClientError(m_avahiclient);
             return;
         }
 
@@ -239,13 +255,19 @@ QList<KDNSSDService> KDNSSDPrivate::services() const
 #endif
 }
 
+QString KDNSSDPrivate::errorString() const
+{
+    return m_errorstring;
+}
+
 #if defined(HAVE_AVAHI)
 void KDNSSDPrivate::groupCallback(AvahiEntryGroup *avahigroup, AvahiEntryGroupState avahistate, void *userdata)
 {
     // qDebug() << Q_FUNC_INFO << avahigroup << avahistate << userdata;
 
     if (avahistate == AVAHI_ENTRY_GROUP_FAILURE) {
-        kWarning() << avahi_strerror(avahi_client_errno(avahi_entry_group_get_client(avahigroup)));
+        KDNSSDPrivate *kdnssdprivate = static_cast<KDNSSDPrivate*>(userdata);
+        kdnssdprivate->m_errorstring = getAvahiClientError(avahi_entry_group_get_client(avahigroup));
     }
 }
 
@@ -254,7 +276,8 @@ void KDNSSDPrivate::clientCallback(AvahiClient *avahiclient, AvahiClientState av
     // qDebug() << Q_FUNC_INFO << avahistate << userdata;
 
     if (avahistate == AVAHI_CLIENT_FAILURE) {
-        kWarning() << avahi_strerror(avahi_client_errno(avahiclient));
+        KDNSSDPrivate *kdnssdprivate = static_cast<KDNSSDPrivate*>(userdata);
+        kdnssdprivate->m_errorstring = getAvahiClientError(avahiclient);
     }
 }
 
@@ -281,7 +304,7 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
                 userdata
             );
             if (!avahiresolver) {
-                kWarning() << avahi_strerror(avahi_client_errno(avahiclient));
+                kdnssdprivate->m_errorstring = getAvahiClientError(avahiclient);
             }
             break;
         }
@@ -294,7 +317,7 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
             break;
         }
         case AVAHI_BROWSER_FAILURE: {
-            kWarning() << avahi_strerror(avahi_client_errno(avahiclient));
+            kdnssdprivate->m_errorstring = getAvahiClientError(avahiclient);
             kdnssdprivate->m_pollcounter = 0;
             break;
         }
@@ -355,7 +378,7 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
             break;
         }
         case AVAHI_RESOLVER_FAILURE: {
-            kWarning() << avahi_strerror(avahi_client_errno(avahi_service_resolver_get_client(avahiresolver)));
+            kdnssdprivate->m_errorstring = getAvahiClientError(avahi_service_resolver_get_client(avahiresolver));
             break;
         }
     }
@@ -393,7 +416,7 @@ void KDNSSDPrivate::serviceCallback(AvahiServiceTypeBrowser *avahiservice,
             break;
         }
         case AVAHI_BROWSER_FAILURE: {
-            kWarning() << avahi_strerror(avahi_client_errno(avahiclient));
+            kdnssdprivate->m_errorstring = getAvahiClientError(avahiclient);
             kdnssdprivate->m_pollcounter = 0;
             break;
         }
@@ -430,6 +453,11 @@ QList<KDNSSDService> KDNSSD::services() const
 void KDNSSD::startBrowse(const QByteArray &servicetype)
 {
     d->startBrowse(servicetype);
+}
+
+QString KDNSSD::errorString() const
+{
+    return d->errorString();
 }
 
 #include "kdnssd.moc"
