@@ -209,7 +209,6 @@ install(
     KMultiTabBarButton
     KMultiTabBarTab
     KNameAndUrlInputDialog
-    KNFSShare
     KNSBookmarkExporter
     KNSBookmarkExporterImpl
     KNSBookmarkImporter
@@ -268,8 +267,6 @@ install(
     KRichTextWidget
     KRuler
     KRun
-    KSambaShare
-    KSambaShareData
     KSaveFile
     KSelectAction
     KSelectionOwner

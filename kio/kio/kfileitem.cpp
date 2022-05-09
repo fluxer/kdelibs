@@ -36,7 +36,8 @@
 #include <QtCore/QMap>
 #include <QtGui/QApplication>
 #include <QtGui/QPalette>
-#include <QTextDocument>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusReply>
 
 #include <kdebug.h>
 #include <kfilemetainfo.h>
@@ -49,9 +50,45 @@
 #include <kdesktopfile.h>
 #include <kmountpoint.h>
 #include <kconfiggroup.h>
-#include <knfsshare.h>
-#include <ksambashare.h>
 #include <kfilesystemtype_p.h>
+
+static bool isSMBShare(const QString &dirpath)
+{
+    // TODO:
+    return false;
+}
+
+static bool isNFSShare(const QString &dirpath)
+{
+    QFile etabfile(QString::fromLatin1("/var/lib/nfs/etab"));
+    if (!etabfile.open(QFile::ReadOnly)) {
+        return false;
+    }
+    while (!etabfile.atEnd()) {
+        const QList<QByteArray> etabsplitline = etabfile.readLine().split('\t');
+        if (etabsplitline.size() < 1) {
+            continue;
+        }
+        if (etabsplitline.at(0) == dirpath.toLocal8Bit()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool isKDirShare(const QString &dirpath)
+{
+    static QDBusInterface kdirshareiface(
+        QString::fromLatin1("org.kde.kded"),
+        QString::fromLatin1("/modules/kdirshare"),
+        QString::fromLatin1("org.kde.kdirshare")
+    );
+    QDBusReply<bool> kdirsharereply = kdirshareiface.call("isShared", dirpath);
+    if (!kdirsharereply.isValid()) {
+        return false;
+    }
+    return kdirsharereply.value();
+}
 
 class KFileItemPrivate : public QSharedData
 {
@@ -954,8 +991,9 @@ QStringList KFileItem::overlays() const
 
     if( S_ISDIR( d->m_fileMode ) && d->m_bIsLocalUrl)
     {
-        if (KSambaShare::instance()->isDirectoryShared( d->m_url.toLocalFile() ) ||
-            KNFSShare::instance()->isDirectoryShared( d->m_url.toLocalFile() ))
+        if (isSMBShare( d->m_url.toLocalFile() ) ||
+            isNFSShare( d->m_url.toLocalFile() ) ||
+            isKDirShare( d->m_url.toLocalFile() ))
         {
             //kDebug() << d->m_url.path();
             names.append("network-workgroup");

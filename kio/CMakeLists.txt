@@ -80,9 +80,6 @@ set(kiocore_STAT_SRCS
     kio/usernotificationhandler.cpp
     kio/clipboardupdater.cpp
     kio/kautomount.cpp
-    kio/knfsshare.cpp
-    kio/ksambashare.cpp
-    kio/ksambasharedata.cpp
 )
 
 qt4_add_dbus_adaptor(kiocore_STAT_SRCS
@@ -242,12 +239,9 @@ install(
     kio/kfilemetainfoitem.h
     kio/kfilemetadata.h
     kio/kmimetypechooser.h
-    kio/knfsshare.h
     kio/kprotocolmanager.h
     kio/kremoteencoding.h
     kio/krun.h
-    kio/ksambashare.h
-    kio/ksambasharedata.h
     kio/kshellcompletion.h
     kio/kurifilter.h
     kio/kurlcompletion.h

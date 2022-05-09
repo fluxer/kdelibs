@@ -394,7 +394,7 @@ void Connection::connectToRemote(const QString &address)
     if (!d->backend->connectToRemote(address)) {
         // should the process owning QLocalServer crash and its address remain in use attempt to
         // connect to new server
-        kDebug(7017) << "Creating new server since connection to address failed" << address;
+        kDebug(7017) << "Creating new server since connecting to address failed" << address;
         d->backend->listenForRemote();
         if (!d->backend->connectToRemote(d->backend->address)) {
             kWarning(7017) << "Could not connect to" << address;
