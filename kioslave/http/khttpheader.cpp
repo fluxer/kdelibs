@@ -23,7 +23,6 @@ class KHTTPHeaderPrivate
 {
 public:
     int m_status;
-    QByteArray m_path;
     QMap<QString,QString> m_map;
 };
 
@@ -36,12 +35,6 @@ KHTTPHeader::KHTTPHeader()
 KHTTPHeader::~KHTTPHeader()
 {
     delete d;
-}
-
-void KHTTPHeader::setUrl(const KUrl &url)
-{
-    set(QLatin1String("Host"), url.host());
-    d->m_path = url.path().toAscii();
 }
 
 QString KHTTPHeader::get(const QString &field) const
@@ -63,83 +56,6 @@ void KHTTPHeader::clear()
 {
     d->m_status = HTTP_Unknown;
     d->m_map.clear();
-    // mandatory
-    set(QLatin1String("Accept"), QLatin1String("*/*"));
-    // HTTP/1.1
-#if 0
-    set(QLatin1String("Connection"), QLatin1String("keep-alive"));
-    set(QLatin1String("Keep-Alive"), QLatin1String("timeout=30, max=10"));
-#endif
-}
-
-QByteArray KHTTPHeader::toHead(const HTTPVersion version) const
-{
-    QByteArray result("HEAD ");
-    result.append(d->m_path);
-    switch (version) {
-        case HTTP_1_0: {
-            result.append(" HTTP/1.0\r\n");
-            break;
-        }
-        case HTTP_1_1: {
-            result.append(" HTTP/1.1\r\n");
-            break;
-        }
-        case HTTP_2_0: {
-            result.append(" HTTP/2.0\r\n");
-            break;
-        }
-        default: {
-            kWarning() << "Invalid HTTP version" << version;
-            result.append(" HTTP/1.0\r\n");
-            break;
-        }
-    }
-    QMapIterator<QString,QString> iter(d->m_map);
-    while (iter.hasNext()) {
-        iter.next();
-        result.append(iter.key().toAscii());
-        result.append(": ");
-        result.append(iter.value().toAscii());
-        result.append("\r\n");
-    }
-    result.append("\r\n");
-    return result;
-}
-
-QByteArray KHTTPHeader::toGet(const HTTPVersion version) const
-{
-    QByteArray result("GET ");
-    result.append(d->m_path);
-    switch (version) {
-        case HTTP_1_0: {
-            result.append(" HTTP/1.0\r\n");
-            break;
-        }
-        case HTTP_1_1: {
-            result.append(" HTTP/1.1\r\n");
-            break;
-        }
-        case HTTP_2_0: {
-            result.append(" HTTP/2.0\r\n");
-            break;
-        }
-        default: {
-            kWarning() << "Invalid HTTP version" << version;
-            result.append(" HTTP/1.0\r\n");
-            break;
-        }
-    }
-    QMapIterator<QString,QString> iter(d->m_map);
-    while (iter.hasNext()) {
-        iter.next();
-        result.append(iter.key().toAscii());
-        result.append(": ");
-        result.append(iter.value().toAscii());
-        result.append("\r\n");
-    }
-    result.append("\r\n");
-    return result;
 }
 
 void KHTTPHeader::parseHeader(const QByteArray &header)
@@ -175,11 +91,6 @@ void KHTTPHeader::parseHeader(const QByteArray &header)
             QString::fromAscii(headervalue.constData(), headervalue.size())
         );
     }
-}
-
-QString KHTTPHeader::path() const
-{
-    return d->m_path;
 }
 
 int KHTTPHeader::status() const

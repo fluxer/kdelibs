@@ -100,16 +100,8 @@ public:
         HTTP_NetworkAuthenticationRequired = 511
     };
 
-    enum HTTPVersion {
-        HTTP_1_0 = 1,
-        HTTP_1_1 = 11,
-        HTTP_2_0 = 20
-    };
-
     KHTTPHeader();
     ~KHTTPHeader();
-
-    void setUrl(const KUrl &url);
 
     QString get(const QString &field) const;
     void set(const QString &field, const QString &value);
@@ -117,12 +109,8 @@ public:
     void clear();
 
     void parseHeader(const QByteArray &header);
-    QString path() const;
     int status() const;
     QString errorString() const;
-
-    QByteArray toHead(const HTTPVersion version = HTTP_1_0) const;
-    QByteArray toGet(const HTTPVersion version = HTTP_1_0) const;
 
 private:
     Q_DISABLE_COPY(KHTTPHeader);
