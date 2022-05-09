@@ -84,6 +84,8 @@ KHTTPPrivate::KHTTPPrivate(QObject *parent)
 #if defined(HAVE_LIBMICROHTTPD)
     , m_mhddaemon(nullptr),
     m_polltimer(this)
+#else
+    , m_errorstring(QString::fromLatin1("Build without Libmicrohttpd"))
 #endif
 {
 #if defined(HAVE_LIBMICROHTTPD)
@@ -103,11 +105,11 @@ bool KHTTPPrivate::setCertificate(const QByteArray &keydata, const QByteArray &c
 #if defined(HAVE_LIBMICROHTTPD)
     const enum MHD_Result mhdresult = MHD_is_feature_supported(MHD_FEATURE_TLS);
     if (mhdresult == MHD_NO) {
-        kWarning() << "TLS is not supported";
+        m_errorstring = QString::fromLatin1("TLS is not supported");
         return false;
     }
     if (keydata.isEmpty() || certdata.isEmpty()) {
-        kWarning() << "TLS key or certificate data is empty";
+        m_errorstring = QString::fromLatin1("TLS key or certificate data is empty");
         m_tlskey.clear();
         m_tlscert.clear();
         return false;
@@ -117,7 +119,6 @@ bool KHTTPPrivate::setCertificate(const QByteArray &keydata, const QByteArray &c
     m_tlspassword = password;
     return true;
 #else
-    // TODO: set error?
     return false;
 #endif
 }
@@ -127,11 +128,11 @@ bool KHTTPPrivate::setAuthenticate(const QByteArray &username, const QByteArray 
 #if defined(HAVE_LIBMICROHTTPD)
     const enum MHD_Result mhdresult = MHD_is_feature_supported(MHD_FEATURE_BASIC_AUTH);
     if (mhdresult == MHD_NO) {
-        kWarning() << "Authentication is not supported";
+        m_errorstring = QString::fromLatin1("Authentication is not supported");
         return false;
     }
     if (username.isEmpty() || password.isEmpty()) {
-        kWarning() << "Empty user name or password";
+        m_errorstring = QString::fromLatin1("Empty user name or password");
         m_authusername.clear();
         m_authpassword.clear();
         return false;
@@ -141,7 +142,6 @@ bool KHTTPPrivate::setAuthenticate(const QByteArray &username, const QByteArray 
     m_authmessage = message.toAscii();
     return true;
 #else
-    // TODO: set error?
     return false;
 #endif
 }
@@ -150,7 +150,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
 {
 #if defined(HAVE_LIBMICROHTTPD)
     if (m_mhddaemon) {
-        kWarning() << "Already started";
+        m_errorstring = QString::fromLatin1("Already started");
         return false;
     }
     // qDebug() << Q_FUNC_INFO << address.protocol();
@@ -192,7 +192,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
         case QAbstractSocket::IPv6Protocol: {
             mhdresult = MHD_is_feature_supported(MHD_FEATURE_IPv6);
             if (mhdresult == MHD_NO) {
-                kWarning() << "IPv6 is not supported";
+                m_errorstring = QString::fromLatin1("IPv6 is not supported");
                 return false;
             }
 
@@ -219,11 +219,12 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
             break;
         }
         default: {
-            kWarning() << "Invalid address protocol" << address.protocol();
+            m_errorstring = QString::fromLatin1("Invalid address protocol: %1").arg(int(address.protocol()));
             return false;
         }
     }
     if (!m_mhddaemon) {
+        // logger should provide a clue why it did
         kWarning() << "Could not start MHD";
         return false;
     }
@@ -231,7 +232,6 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
     m_polltimer.start(MHDPollInterval);
     return true;
 #else
-    // TODO: set error?
     return false;
 #endif
 }

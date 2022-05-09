@@ -64,6 +64,12 @@ public:
 
     bool start(const QHostAddress &address = QHostAddress::Any, quint16 port = 0);
     bool stop();
+
+    /*!
+        @brief Returns human-readable description of the error that occured, if @p start() returns
+        @p false for example it may be used along with @p KMessageBox to notify the user about the
+        error.
+    */
     QString errorString() const;
 
 protected:
