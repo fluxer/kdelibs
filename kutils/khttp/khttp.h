@@ -83,7 +83,7 @@ protected:
         @p outheaders is map of additional headers to be send (e.g. "Content-Type"). Either
         @p outdata must be non-empty or @p outfilepath must be pointing to a file, the other
         arguments (@p outhttpstatus and @p outheaders) are optional.
-        @note Prefer @p outfilepath over @p outdata for serving files, Large-file support is
+        @note Prefer @p outfilepath over @p outdata for serving files, Large File Support is
         transparent.
         @link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
         @link https://en.wikipedia.org/wiki/Large-file_support

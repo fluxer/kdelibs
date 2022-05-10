@@ -329,7 +329,7 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
                 kWarning() << "Could not create MHD auth response";
                 return MHD_NO;
             }
-            const QByteArray mhdrealm = QCoreApplication::applicationName().toUtf8();
+            const QByteArray mhdrealm = QCoreApplication::applicationName().toAscii();
             const enum MHD_Result mhdresult = MHD_queue_basic_auth_fail_response(
                 connection,
                 mhdrealm.constData(),
