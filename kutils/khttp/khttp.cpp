@@ -391,9 +391,12 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
     }
 
     foreach (const QByteArray &httpheaderkey, mhdouthttpheaders.keys()) {
+        // MHD refuses to add these
         if (qstricmp(httpheaderkey.constData(), "Content-Length") == 0) {
-            // MHD refuses to add it
             kDebug() << "Ignoring content-length";
+            continue;
+        } else if (qstricmp(httpheaderkey.constData(), "Date") == 0) {
+            kDebug() << "Ignoring date";
             continue;
         }
         const QByteArray httpheadervalue = mhdouthttpheaders.value(httpheaderkey);
