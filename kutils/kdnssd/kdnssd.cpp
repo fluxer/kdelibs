@@ -29,6 +29,10 @@
 #endif
 
 #if defined(HAVE_AVAHI)
+// NOTE: resolving to and publishing IPv4 addresses since curl, ping, etc. cannot handle URLs with
+// IPv6 addresses as host along with port (e.g. [fe80::fe4d:d4ff:fe4c:5575]:7287)
+static const AvahiProtocol s_avahiproto = AVAHI_PROTO_INET;
+
 static QString getAvahiError(const int avahierror)
 {
     kWarning() << avahi_strerror(avahierror);
@@ -154,7 +158,7 @@ bool KDNSSDPrivate::publishService(const QByteArray &servicetype, const uint ser
     // qDebug() << Q_FUNC_INFO << servicenamebytes << servicetype;
     int avahiresult = avahi_entry_group_add_service(
         m_avahigroup,
-        AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC,
+        AVAHI_IF_UNSPEC, s_avahiproto,
         AvahiPublishFlags(0),
         servicenamebytes.constData(), servicetype.constData(), NULL, NULL, serviceport,
         NULL
@@ -197,7 +201,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
     if (servicetype.isEmpty()) {
         AvahiServiceTypeBrowser* avahiservice = avahi_service_type_browser_new(
             m_avahiclient,
-            AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, NULL,
+            AVAHI_IF_UNSPEC, s_avahiproto, NULL,
             AvahiLookupFlags(0),
             KDNSSDPrivate::serviceCallback, this
         );
@@ -225,7 +229,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
     foreach (const QByteArray &servicetypeit, servicetypes) {
         AvahiServiceBrowser *avahibrowser = avahi_service_browser_new(
             m_avahiclient,
-            AVAHI_IF_UNSPEC, AVAHI_PROTO_UNSPEC, servicetypeit.constData(), NULL,
+            AVAHI_IF_UNSPEC, s_avahiproto, servicetypeit.constData(), NULL,
             AvahiLookupFlags(0),
             KDNSSDPrivate::browseCallback, this
         );
@@ -299,7 +303,7 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
                 avahiclient,
                 avahiinterface, avahiprotocol,
                 avahiname, avahitype, avahidomain,
-                AVAHI_PROTO_UNSPEC, AvahiLookupFlags(0),
+                s_avahiproto, AvahiLookupFlags(0),
                 KDNSSDPrivate::resolveCallback,
                 userdata
             );
@@ -356,13 +360,17 @@ void KDNSSDPrivate::resolveCallback(AvahiServiceResolver *avahiresolver, AvahiIf
                 }
             }
             if (!isduplicate) {
+                char avahiaddressbuff[AVAHI_ADDRESS_STR_MAX];
+                ::memset(avahiaddressbuff, 0, sizeof(avahiaddressbuff) * sizeof(char));
+                avahi_address_snprint(avahiaddressbuff, sizeof(avahiaddressbuff), avahiaddress);
+
                 QString kdnssdserviceprotocol = QString::fromLatin1(avahitype);
                 kdnssdserviceprotocol = kdnssdserviceprotocol.mid(1);
                 const int dotindex = kdnssdserviceprotocol.indexOf(QLatin1Char('.'));
                 kdnssdserviceprotocol = kdnssdserviceprotocol.left(dotindex);
                 KUrl kdnssdserviceurl;
-                kdnssdserviceurl.setProtocol(kdnssdserviceprotocol);
-                kdnssdserviceurl.setHost(kdnssdservicehostname);
+                kdnssdserviceurl.setScheme(kdnssdserviceprotocol);
+                kdnssdserviceurl.setHost(QString::fromLatin1(avahiaddressbuff));
                 kdnssdserviceurl.setPort(kdnssdserviceport);
 
                 KDNSSDService kdnssdservice;
