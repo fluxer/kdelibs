@@ -260,11 +260,15 @@ QString KHTTPPrivate::errorString() const
 #if defined(HAVE_LIBMICROHTTPD)
 void KHTTPPrivate::slotMHDPoll()
 {
-    if (m_mhddaemon) {
-        const enum MHD_Result mhdresult = MHD_run(m_mhddaemon);
-        if (Q_UNLIKELY(mhdresult == MHD_NO)) {
-            kWarning() << "Could not poll";
-        }
+    if (Q_UNLIKELY(!m_mhddaemon)) {
+        kDebug() << "MHD daemon pointer is null";
+        m_polltimer.stop();
+        return;
+    }
+
+    const enum MHD_Result mhdresult = MHD_run(m_mhddaemon);
+    if (Q_UNLIKELY(mhdresult == MHD_NO)) {
+        kWarning() << "Could not poll";
     }
 }
 
