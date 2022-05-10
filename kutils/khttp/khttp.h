@@ -84,7 +84,8 @@ protected:
         @p outdata must be non-empty or @p outfilepath must be pointing to a file, the other
         arguments (@p outhttpstatus and @p outheaders) are optional.
         @note Prefer @p outfilepath over @p outdata for serving files, Large-file support is
-        transparent
+        transparent.
+        @link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
         @link https://en.wikipedia.org/wiki/Large-file_support
     */
     virtual void respond(

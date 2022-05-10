@@ -354,8 +354,8 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
     QByteArray mhdoutdata;
     ushort mhdouthttpstatus = MHD_HTTP_OK;
     KHTTPHeaders mhdouthttpheaders;
-    QString outfilepath;
-    khttp->respond(khttpurl, &mhdoutdata, &mhdouthttpstatus, &mhdouthttpheaders, &outfilepath);
+    QString mhdoutfilepath;
+    khttp->respond(khttpurl, &mhdoutdata, &mhdouthttpstatus, &mhdouthttpheaders, &mhdoutfilepath);
 
     enum MHD_Result mhdresult = MHD_NO;
     struct MHD_Response *mhdresponse = NULL;
@@ -364,22 +364,22 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
             mhdoutdata.size(), mhdoutdata.data(),
             MHD_RESPMEM_MUST_COPY
         );
-    } else if (!outfilepath.isEmpty()) {
-        int mhdoutfd = KDE::open(outfilepath, O_RDONLY);
+    } else if (!mhdoutfilepath.isEmpty()) {
+        int mhdfd = KDE::open(mhdoutfilepath, O_RDONLY);
         QT_STATBUF statbuf;
-        if (KDE::stat(outfilepath, &statbuf) == -1) {
-            kWarning() << "Could not stat" << outfilepath;
+        if (KDE::stat(mhdoutfilepath, &statbuf) == -1) {
+            kWarning() << "Could not stat" << mhdoutfilepath;
             return MHD_NO;
         }
         if (!S_ISREG(statbuf.st_mode)) {
-            kWarning() << "Filepath does not point to regular file" << outfilepath;
+            kWarning() << "Filepath does not point to regular file" << mhdoutfilepath;
             return MHD_NO;
         }
         mhdresult = MHD_is_feature_supported(MHD_FEATURE_LARGE_FILE);
         if (mhdresult == MHD_NO) {
-            mhdresponse = MHD_create_response_from_fd(statbuf.st_size, mhdoutfd);
+            mhdresponse = MHD_create_response_from_fd(statbuf.st_size, mhdfd);
         } else {
-            mhdresponse = MHD_create_response_from_fd64(statbuf.st_size, mhdoutfd);
+            mhdresponse = MHD_create_response_from_fd64(statbuf.st_size, mhdfd);
         }
     } else {
         kWarning() << "Either output data or filepath must be non-empty";
