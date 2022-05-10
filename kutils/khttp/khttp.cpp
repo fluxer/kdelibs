@@ -29,8 +29,9 @@
 #  include <microhttpd.h>
 #endif
 
-static const int MHDPollInterval = 50;
-static const uint MHDConnectionLimit = 10;
+static const int MHDPollInterval = 100;
+static const uint MHDIPConnectionLimit = 10;
+static const uint MHDConnectionLimit = (MHDIPConnectionLimit * MHDIPConnectionLimit);
 
 class KHTTPPrivate : public QObject
 {
@@ -185,7 +186,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
                 MHD_OPTION_HTTPS_KEY_PASSWORD, m_tlspassword.constData(),
                 MHD_OPTION_SOCK_ADDR, &socketaddress,
                 MHD_OPTION_CONNECTION_LIMIT, MHDConnectionLimit,
-                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDConnectionLimit,
+                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDIPConnectionLimit,
                 MHD_OPTION_END
             );
             break;
@@ -214,7 +215,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
                 MHD_OPTION_HTTPS_KEY_PASSWORD, m_tlspassword.constData(),
                 MHD_OPTION_SOCK_ADDR, &socketaddress,
                 MHD_OPTION_CONNECTION_LIMIT, MHDConnectionLimit,
-                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDConnectionLimit,
+                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDIPConnectionLimit,
                 MHD_OPTION_END
             );
             break;
@@ -266,9 +267,23 @@ void KHTTPPrivate::slotMHDPoll()
         return;
     }
 
-    const enum MHD_Result mhdresult = MHD_run(m_mhddaemon);
-    if (Q_UNLIKELY(mhdresult == MHD_NO)) {
-        kWarning() << "Could not poll";
+    short mhdretry = 0;
+    const union MHD_DaemonInfo* mhddaemoninfo = MHD_get_daemon_info(
+        m_mhddaemon,
+        MHD_DAEMON_INFO_CURRENT_CONNECTIONS,
+        NULL
+    );
+    if (mhddaemoninfo) {
+        mhdretry = mhddaemoninfo->num_connections;
+    }
+    mhdretry++;
+    // mhdretry = MHDConnectionLimit;
+    while (mhdretry) {
+        const enum MHD_Result mhdresult = MHD_run(m_mhddaemon);
+        if (Q_UNLIKELY(mhdresult == MHD_NO)) {
+            kWarning() << "Could not poll";
+        }
+        mhdretry--;
     }
 }
 
