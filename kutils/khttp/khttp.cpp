@@ -29,9 +29,9 @@
 #  include <microhttpd.h>
 #endif
 
-static const int MHDPollInterval = 100;
-static const uint MHDIPConnectionLimit = 10;
-static const uint MHDConnectionLimit = (MHDIPConnectionLimit * MHDIPConnectionLimit);
+static const int s_MHDPollInterval = 100;
+static const uint s_MHDIPConnectionLimit = 10;
+static const uint s_MHDConnectionLimit = (s_MHDIPConnectionLimit * s_MHDIPConnectionLimit);
 
 class KHTTPPrivate : public QObject
 {
@@ -185,8 +185,8 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
                 MHD_OPTION_HTTPS_MEM_CERT, m_tlscert.constData(),
                 MHD_OPTION_HTTPS_KEY_PASSWORD, m_tlspassword.constData(),
                 MHD_OPTION_SOCK_ADDR, &socketaddress,
-                MHD_OPTION_CONNECTION_LIMIT, MHDConnectionLimit,
-                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDIPConnectionLimit,
+                MHD_OPTION_CONNECTION_LIMIT, s_MHDConnectionLimit,
+                MHD_OPTION_PER_IP_CONNECTION_LIMIT, s_MHDIPConnectionLimit,
                 MHD_OPTION_END
             );
             break;
@@ -214,8 +214,8 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
                 MHD_OPTION_HTTPS_MEM_CERT, m_tlscert.constData(),
                 MHD_OPTION_HTTPS_KEY_PASSWORD, m_tlspassword.constData(),
                 MHD_OPTION_SOCK_ADDR, &socketaddress,
-                MHD_OPTION_CONNECTION_LIMIT, MHDConnectionLimit,
-                MHD_OPTION_PER_IP_CONNECTION_LIMIT, MHDIPConnectionLimit,
+                MHD_OPTION_CONNECTION_LIMIT, s_MHDConnectionLimit,
+                MHD_OPTION_PER_IP_CONNECTION_LIMIT, s_MHDIPConnectionLimit,
                 MHD_OPTION_END
             );
             break;
@@ -231,7 +231,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
         return false;
     }
     MHD_set_panic_func(KHTTPPrivate::panicCallback, this);
-    m_polltimer.start(MHDPollInterval);
+    m_polltimer.start(s_MHDPollInterval);
     return true;
 #else
     return false;
@@ -267,23 +267,23 @@ void KHTTPPrivate::slotMHDPoll()
         return;
     }
 
-    short mhdretry = 0;
+    short pollcounter = 0;
     const union MHD_DaemonInfo* mhddaemoninfo = MHD_get_daemon_info(
         m_mhddaemon,
         MHD_DAEMON_INFO_CURRENT_CONNECTIONS,
         NULL
     );
     if (mhddaemoninfo) {
-        mhdretry = mhddaemoninfo->num_connections;
+        pollcounter = mhddaemoninfo->num_connections;
     }
-    mhdretry++;
-    // mhdretry = MHDConnectionLimit;
-    while (mhdretry) {
+    pollcounter++;
+    // pollcounter = s_MHDConnectionLimit;
+    while (pollcounter) {
         const enum MHD_Result mhdresult = MHD_run(m_mhddaemon);
         if (Q_UNLIKELY(mhdresult == MHD_NO)) {
             kWarning() << "Could not poll";
         }
-        mhdretry--;
+        pollcounter--;
     }
 }
 

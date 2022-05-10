@@ -322,7 +322,6 @@ void KDNSSDPrivate::browseCallback(AvahiServiceBrowser *avahibrowser, AvahiIfInd
         }
         case AVAHI_BROWSER_FAILURE: {
             kdnssdprivate->m_errorstring = getAvahiClientError(avahiclient);
-            kdnssdprivate->m_pollcounter--;
             break;
         }
     }
@@ -425,7 +424,6 @@ void KDNSSDPrivate::serviceCallback(AvahiServiceTypeBrowser *avahiservice,
         }
         case AVAHI_BROWSER_FAILURE: {
             kdnssdprivate->m_errorstring = getAvahiClientError(avahiclient);
-            kdnssdprivate->m_pollcounter--;
             break;
         }
     }
