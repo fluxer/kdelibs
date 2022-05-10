@@ -18,6 +18,7 @@
 
 #include "khttp.h"
 #include "kdebug.h"
+#include "kde_file.h"
 
 #include <QCoreApplication>
 #include <QUrl>
@@ -132,7 +133,7 @@ bool KHTTPPrivate::setAuthenticate(const QByteArray &username, const QByteArray 
         return false;
     }
     if (username.isEmpty() || password.isEmpty()) {
-        m_errorstring = QString::fromLatin1("Empty user name or password");
+        m_errorstring = QString::fromLatin1("User name or password is empty");
         m_authusername.clear();
         m_authpassword.clear();
         return false;
@@ -200,7 +201,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
             ::memset(&socketaddress, 0, sizeof(struct sockaddr_in6));
             socketaddress.sin6_family = AF_INET6;
             socketaddress.sin6_port = htons(port);
-            Q_IPV6ADDR ipv6address = address.toIPv6Address();
+            const Q_IPV6ADDR ipv6address = address.toIPv6Address();
             ::memcpy(&socketaddress.sin6_addr.s6_addr, &ipv6address, sizeof(ipv6address));
             m_mhddaemon = MHD_start_daemon(
                 mhdflags | MHD_USE_IPv6,
@@ -224,7 +225,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
         }
     }
     if (!m_mhddaemon) {
-        // logger should provide a clue why it did
+        // logger should provide a clue why
         kWarning() << "Could not start MHD";
         return false;
     }
@@ -350,21 +351,45 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
     );
 
     QByteArray khttpurl = khttpprivate->m_url.toEncoded();
-    KHTTPHeaders mhdouthttpheaders;
     QByteArray mhdoutdata;
-    ushort mhdouthttpstatus = MHD_HTTP_NOT_FOUND;
-    khttp->respond(khttpurl, &mhdoutdata, &mhdouthttpstatus, &mhdouthttpheaders);
+    ushort mhdouthttpstatus = MHD_HTTP_OK;
+    KHTTPHeaders mhdouthttpheaders;
+    QString outfilepath;
+    khttp->respond(khttpurl, &mhdoutdata, &mhdouthttpstatus, &mhdouthttpheaders, &outfilepath);
 
-    struct MHD_Response *mhdresponse = MHD_create_response_from_buffer(
-        mhdoutdata.size(), mhdoutdata.data(),
-        MHD_RESPMEM_MUST_COPY
-    );
+    enum MHD_Result mhdresult = MHD_NO;
+    struct MHD_Response *mhdresponse = NULL;
+    if (!mhdoutdata.isEmpty()) {
+        mhdresponse = MHD_create_response_from_buffer(
+            mhdoutdata.size(), mhdoutdata.data(),
+            MHD_RESPMEM_MUST_COPY
+        );
+    } else if (!outfilepath.isEmpty()) {
+        int mhdoutfd = KDE::open(outfilepath, O_RDONLY);
+        QT_STATBUF statbuf;
+        if (KDE::stat(outfilepath, &statbuf) == -1) {
+            kWarning() << "Could not stat" << outfilepath;
+            return MHD_NO;
+        }
+        if (!S_ISREG(statbuf.st_mode)) {
+            kWarning() << "Filepath does not point to regular file" << outfilepath;
+            return MHD_NO;
+        }
+        mhdresult = MHD_is_feature_supported(MHD_FEATURE_LARGE_FILE);
+        if (mhdresult == MHD_NO) {
+            mhdresponse = MHD_create_response_from_fd(statbuf.st_size, mhdoutfd);
+        } else {
+            mhdresponse = MHD_create_response_from_fd64(statbuf.st_size, mhdoutfd);
+        }
+    } else {
+        kWarning() << "Either output data or filepath must be non-empty";
+        return MHD_NO;
+    }
     if (Q_UNLIKELY(!mhdresponse)) {
         kWarning() << "Could not create MHD response";
         return MHD_NO;
     }
 
-    enum MHD_Result mhdresult = MHD_NO;
     foreach (const QByteArray &httpheaderkey, mhdouthttpheaders.keys()) {
         if (qstricmp(httpheaderkey.constData(), "Content-Length") == 0) {
             // MHD refuses to add it

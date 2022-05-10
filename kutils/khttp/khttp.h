@@ -58,10 +58,14 @@ public:
     /*!
         @brief Sets @p username and @p password to be used for authentication with @p message as
         content to be send to clients when authentication fails.
-        @note The authentication method used is basic
+        @note The authentication method used is basic.
     */
     bool setAuthenticate(const QByteArray &username, const QByteArray &password, const QString &message);
 
+    /*!
+        @brief Starts serving data for requests at @p address on @p port.
+        @note If port is 0 (the default) then a random port is chosen.
+    */
     bool start(const QHostAddress &address = QHostAddress::Any, quint16 port = 0);
     bool stop();
 
@@ -76,11 +80,17 @@ protected:
     /*!
         @brief Reimplement this method to send back data to clients when @p url is requested.
         @p outdata is the content, @p outhttpstatus is a standard HTTP status (e.g. 404) and
-        @p outheaders is map of additional headers to be send (e.g. "Content-Type"). All output
-        arguments (@p outdata, @p outhttpstatus and @p outheaders) are optional however if none is
-        changed 404 response will be send to clients with no content.
+        @p outheaders is map of additional headers to be send (e.g. "Content-Type"). Either
+        @p outdata must be non-empty or @p outfilepath must be pointing to a file, the other
+        arguments (@p outhttpstatus and @p outheaders) are optional.
+        @note Prefer @p outfilepath over @p outdata for serving files, Large-file support is
+        transparent
+        @link https://en.wikipedia.org/wiki/Large-file_support
     */
-    virtual void respond(const QByteArray &url, QByteArray *outdata, ushort *outhttpstatus, KHTTPHeaders *outheaders) = 0;
+    virtual void respond(
+        const QByteArray &url,
+        QByteArray *outdata, ushort *outhttpstatus, KHTTPHeaders *outheaders, QString *outfilepath
+    ) = 0;
     
 private:
     friend KHTTPPrivate;
