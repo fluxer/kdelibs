@@ -1,7 +1,7 @@
 [Desktop Entry]
 Icon=preferences-system-power-management
-Name=Power manager
-Comment=Power manager service
+Name=Power Manager
+Comment=Switches to power-saving or performance profile based on the power source
 Type=Service
 X-KDE-ServiceTypes=KDEDModule
 X-KDE-Library=kpowermanager

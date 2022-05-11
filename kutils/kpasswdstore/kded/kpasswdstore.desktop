@@ -1,7 +1,7 @@
 [Desktop Entry]
 Icon=dialog-password
-Name=Password store
-Comment=Password store service
+Name=Password Store
+Comment=Stores passwords securely
 Type=Service
 X-KDE-ServiceTypes=KDEDModule
 X-KDE-Library=kpasswdstore

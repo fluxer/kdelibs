@@ -1,7 +1,7 @@
 [Desktop Entry]
 Icon=audio-x-generic
-Name=Audio player
-Comment=Audio player service
+Name=Audio Player
+Comment=Plays notification and accessibility sounds
 Type=Service
 X-KDE-ServiceTypes=KDEDModule
 X-KDE-Library=kaudioplayer
