@@ -168,7 +168,11 @@ bool KDNSSDPrivate::publishService(const QByteArray &servicetype, const uint ser
         return false;
     }
     avahiresult = avahi_entry_group_commit(m_avahigroup);
-    return (avahiresult >= 0);
+    if (avahiresult < 0) {
+        m_errorstring = getAvahiError(avahiresult);
+        return false;
+    }
+    return true;
 #else
     return false;
 #endif
