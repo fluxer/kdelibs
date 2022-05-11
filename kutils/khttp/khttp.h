@@ -32,7 +32,6 @@ class KHTTPPrivate;
     Class to serve data over HTTP(S).
 
     @since 4.21
-    @warning the API is subject to change
 */
 class KHTTP_EXPORT KHTTP : public QObject
 {
