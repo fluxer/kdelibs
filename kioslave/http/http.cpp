@@ -123,10 +123,17 @@ static inline KIO::Error curlToKIOError(const CURLcode curlcode)
 
 static inline KIO::Error HTTPToKIOError(const int httpcode)
 {
-    // TODO: handle more codes
     switch (httpcode) {
-        case 401: {
+        case 401:
+        case 403:
+        case 407: {
             return KIO::ERR_COULD_NOT_AUTHENTICATE;
+        }
+        case 408: {
+            return KIO::ERR_SERVER_TIMEOUT;
+        }
+        case 500: {
+            return KIO::ERR_INTERNAL_SERVER;
         }
         default: {
             return KIO::ERR_NO_CONTENT;
