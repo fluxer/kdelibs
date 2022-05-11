@@ -57,7 +57,7 @@ static inline curl_proxytype curlProxyType(const QString &proxy)
 static inline QString HTTPMIMEType(const QString &contenttype)
 {
     const QList<QString> splitcontenttype = contenttype.split(QLatin1Char(';'));
-    if (splitcontenttype.isEmpty()) {
+    if (splitcontenttype.isEmpty() || splitcontenttype.at(0).isEmpty()) {
         return QString::fromLatin1("application/octet-stream");
     }
     return splitcontenttype.at(0);
