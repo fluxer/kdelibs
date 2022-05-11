@@ -102,6 +102,8 @@ KDNSSDPrivate::KDNSSDPrivate(QObject *parent)
     m_avahipoll(nullptr),
     m_avahiclient(nullptr),
     m_avahigroup(nullptr)
+#else
+    , m_errorstring(QString::fromLatin1("Built without Avahi"))
 #endif
 {
 #if defined(HAVE_AVAHI)

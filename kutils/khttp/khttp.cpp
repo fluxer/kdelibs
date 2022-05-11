@@ -87,7 +87,7 @@ KHTTPPrivate::KHTTPPrivate(QObject *parent)
     , m_mhddaemon(nullptr),
     m_polltimer(this)
 #else
-    , m_errorstring(QString::fromLatin1("Build without Libmicrohttpd"))
+    , m_errorstring(QString::fromLatin1("Built without Libmicrohttpd"))
 #endif
 {
 #if defined(HAVE_LIBMICROHTTPD)
