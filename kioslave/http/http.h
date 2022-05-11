@@ -19,7 +19,7 @@
 #ifndef KDELIBS_HTTP_H
 #define KDELIBS_HTTP_H
 
-#include <config.h>
+#include "khttpheader.h"
 
 #include <kurl.h>
 #include <kio/slavebase.h>
@@ -32,9 +32,10 @@ class HttpProtocol : public QObject, public KIO::SlaveBase
 
 public:
     HttpProtocol(const QByteArray &pool, const QByteArray &app);
-    virtual ~HttpProtocol();
+    ~HttpProtocol();
 
-    virtual void get(const KUrl &url);
+    void mimetype(const KUrl &url) final;
+    void get(const KUrl &url)  final;
 
     void slotMIME();
     void slotData(const char* curldata, const size_t curldatasize);
@@ -43,7 +44,11 @@ public:
     bool firstchunk;
     QByteArray headerdata;
 private:
+    bool setupCurl(const KUrl &url);
+
     CURL* m_curl;
+    struct curl_slist *m_curlheaders;
+    KHTTPHeader m_httpheader;
 };
 
 #endif // KDELIBS_HTTP_H

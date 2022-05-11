@@ -19,7 +19,6 @@
 #include "http.h"
 #include "kdebug.h"
 #include "kcomponentdata.h"
-#include "khttpheader.h"
 
 #include <QCoreApplication>
 
@@ -72,7 +71,7 @@ static inline QString HTTPCharset(const QString &contenttype)
     return splitcontenttype.at(1);
 }
 
-static inline KIO::Error KIOError(const CURLcode curlcode)
+static inline KIO::Error curlToKIOError(const CURLcode curlcode)
 {
     switch (curlcode) {
         case CURLE_URL_MALFORMAT: {
@@ -117,6 +116,20 @@ static inline KIO::Error KIOError(const CURLcode curlcode)
         case CURLE_COULDNT_CONNECT:
         default: {
             return KIO::ERR_COULD_NOT_CONNECT;
+        }
+    }
+    Q_UNREACHABLE();
+}
+
+static inline KIO::Error HTTPToKIOError(const int httpcode)
+{
+    // TODO: handle more codes
+    switch (httpcode) {
+        case 401: {
+            return KIO::ERR_COULD_NOT_AUTHENTICATE;
+        }
+        default: {
+            return KIO::ERR_NO_CONTENT;
         }
     }
     Q_UNREACHABLE();
@@ -182,7 +195,8 @@ extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
 }
 
 HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
-    : SlaveBase("http", pool, app), firstchunk(true), m_curl(nullptr)
+    : SlaveBase("http", pool, app), firstchunk(true),
+    m_curl(nullptr), m_curlheaders(nullptr)
 {
     m_curl = curl_easy_init();
     if (!m_curl) {
@@ -193,18 +207,125 @@ HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
 
 HttpProtocol::~HttpProtocol()
 {
+    if (m_curlheaders) {
+        curl_slist_free_all(m_curlheaders);
+    }
     if (m_curl) {
         curl_easy_cleanup(m_curl);
     }
+}
+
+void HttpProtocol::mimetype(const KUrl &url)
+{
+    kDebug(7103) << "URL" << url.prettyUrl();
+
+    if (!setupCurl(url)) {
+        return;
+    }
+
+    CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_NOBODY, 1L);
+    if (curlresult != CURLE_OK) {
+        kWarning(7103) << curl_easy_strerror(curlresult);
+        error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
+        return;
+    }
+
+    curlresult = curl_easy_perform(m_curl);
+    if (curlresult != CURLE_OK) {
+        kWarning(7103) << curl_easy_strerror(curlresult);
+        error(curlToKIOError(curlresult), curl_easy_strerror(curlresult));
+        return;
+    }
+
+    if (m_httpheader.status() >= 400) {
+        return;
+    }
+
+    finished();
 }
 
 void HttpProtocol::get(const KUrl &url)
 {
     kDebug(7103) << "URL" << url.prettyUrl();
 
+    if (!setupCurl(url)) {
+        return;
+    }
+
+    CURLcode curlresult = curl_easy_perform(m_curl);
+    if (curlresult != CURLE_OK) {
+        kWarning(7103) << curl_easy_strerror(curlresult);
+        error(curlToKIOError(curlresult), curl_easy_strerror(curlresult));
+        return;
+    }
+
+    if (m_httpheader.status() >= 400) {
+        return;
+    }
+
+    finished();
+}
+
+void HttpProtocol::slotMIME()
+{
+    m_httpheader.parseHeader(headerdata);
+    setMetaData(QString::fromLatin1("modified"), m_httpheader.get(QLatin1String("Last-Modified")));
+
+    if (m_httpheader.status() >= 400) {
+        kDebug(7103) << "HTTP error" << m_httpheader.status() << m_httpheader.errorString();
+        error(HTTPToKIOError(m_httpheader.status()), m_httpheader.errorString());
+        return;
+    }
+
+    char *curlcontenttype = nullptr;
+    CURLcode curlresult = curl_easy_getinfo(m_curl, CURLINFO_CONTENT_TYPE, &curlcontenttype);
+    if (curlresult == CURLE_OK) {
+        const QString httpmimetype = HTTPMIMEType(QString::fromAscii(curlcontenttype));
+        kDebug(7103) << "MIME type" << httpmimetype;
+        mimeType(httpmimetype);
+
+        const QString httpcharset = HTTPCharset(QString::fromAscii(curlcontenttype));
+        kDebug(7103) << "charset" << httpcharset;
+        setMetaData(QString::fromLatin1("charset"), httpcharset);
+    } else {
+        kWarning(7103) << "Could not get content type info" << curl_easy_strerror(curlresult);
+    }
+
+    if (hasMetaData(QLatin1String("PropagateHttpHeader"))) {
+        const QString httpheaders = QString::fromAscii(headerdata.constData(), headerdata.size());
+        kDebug(7103) << "HTTP headers" << httpheaders;
+        setMetaData(QString::fromLatin1("HTTP-Headers"), httpheaders);
+    }
+}
+
+void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
+{
+    data(QByteArray::fromRawData(curldata, curldatasize));
+
+    curl_off_t curlspeeddownload = 0;
+    CURLcode curlresult = curl_easy_getinfo(m_curl, CURLINFO_SPEED_DOWNLOAD_T, &curlspeeddownload);
+    if (curlresult == CURLE_OK) {
+        kDebug(7103) << "Download speed" << curlspeeddownload;
+        speed(ulong(curlspeeddownload));
+    } else {
+        kWarning(7103) << "Could not get download speed info" << curl_easy_strerror(curlresult);
+    }
+}
+
+void HttpProtocol::slotProgress(KIO::filesize_t received, KIO::filesize_t total)
+{
+    kDebug(7103) << "Received" << received << "from" << total;
+    emit processedSize(received);
+    if (total > 0 && received != total) {
+        emit totalSize(total);
+    }
+}
+
+bool HttpProtocol::setupCurl(const KUrl &url)
+{
     if (Q_UNLIKELY(!m_curl)) {
         error(KIO::ERR_OUT_OF_MEMORY, QString::fromLatin1("Null context"));
-        return;
+        return false;
     }
 
     firstchunk = true;
@@ -228,21 +349,21 @@ void HttpProtocol::get(const KUrl &url)
     if (curlresult != CURLE_OK) {
         kWarning(7103) << curl_easy_strerror(curlresult);
         error(KIO::ERR_MALFORMED_URL, curl_easy_strerror(curlresult));
-        return;
+        return false;
     }
 
     curlresult = curl_easy_setopt(m_curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     if (curlresult != CURLE_OK) {
         kWarning(7103) << curl_easy_strerror(curlresult);
         error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
-        return;
+        return false;
     }
 
     curlresult = curl_easy_setopt(m_curl, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     if (curlresult != CURLE_OK) {
         kWarning(7103) << curl_easy_strerror(curlresult);
         error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
-        return;
+        return false;
     }
 
     kDebug(7103) << "Metadata" << allMetaData();
@@ -265,7 +386,7 @@ void HttpProtocol::get(const KUrl &url)
         if (curlresult != CURLE_OK) {
             kWarning(7103) << curl_easy_strerror(curlresult);
             error(KIO::ERR_UNKNOWN_PROXY_HOST, curl_easy_strerror(curlresult));
-            return;
+            return false;
         }
         curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXYTYPE, curlproxytype);
         if (curlresult != CURLE_OK) {
@@ -304,94 +425,33 @@ void HttpProtocol::get(const KUrl &url)
         }
     }
 
-    struct curl_slist *curllist = NULL;
+    if (m_curlheaders) {
+        curl_slist_free_all(m_curlheaders);
+        m_curlheaders = nullptr;
+    }
+
     if (hasMetaData(QLatin1String("Languages"))) {
-        curllist = curl_slist_append(curllist, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
+        m_curlheaders = curl_slist_append(m_curlheaders, QByteArray("Accept-Language: ") + metaData("Languages").toAscii());
     }
 
     if (hasMetaData(QLatin1String("Charsets"))) {
-        curllist = curl_slist_append(curllist, QByteArray("Accept-Charset: ") + metaData("Charsets").toAscii());
+        m_curlheaders = curl_slist_append(m_curlheaders, QByteArray("Accept-Charset: ") + metaData("Charsets").toAscii());
     }
 
     if (hasMetaData(QLatin1String("accept"))) {
-        curllist = curl_slist_append(curllist, QByteArray("Accept: ") + metaData("accept").toAscii());
+        m_curlheaders = curl_slist_append(m_curlheaders, QByteArray("Accept: ") + metaData("accept").toAscii());
     }
 
-    curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, curllist);
+    curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPHEADER, m_curlheaders);
     if (curlresult != CURLE_OK) {
-        curl_slist_free_all(curllist);
+        curl_slist_free_all(m_curlheaders);
+        m_curlheaders = nullptr;
         kWarning(7103) << curl_easy_strerror(curlresult);
         error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
-        return;
+        return false;
     }
 
-    curlresult = curl_easy_perform(m_curl);
-    if (curlresult != CURLE_OK) {
-        curl_slist_free_all(curllist);
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(KIOError(curlresult), curl_easy_strerror(curlresult));
-        return;
-    }
-
-    if (hasMetaData(QLatin1String("PropagateHttpHeader"))) {
-        const QString httpheaders = QString::fromAscii(headerdata.constData(), headerdata.size());
-        kDebug(7103) << "HTTP headers" << httpheaders;
-        setMetaData(QString::fromLatin1("HTTP-Headers"), httpheaders);
-    }
-
-    KHTTPHeader httpheader;
-    httpheader.parseHeader(headerdata);
-    setMetaData(QString::fromLatin1("modified"), httpheader.get(QLatin1String("Last-Modified")));
-
-    curl_slist_free_all(curllist);
-
-    if (httpheader.status() >= 400) {
-        kDebug(7103) << "HTTP error" << httpheader.status() << httpheader.errorString();
-        error(KIO::ERR_NO_CONTENT, httpheader.errorString());
-        return;
-    }
-
-    finished();
-}
-
-void HttpProtocol::slotMIME()
-{
-    char *curlcontenttype = nullptr;
-    CURLcode curlresult = curl_easy_getinfo(m_curl, CURLINFO_CONTENT_TYPE, &curlcontenttype);
-    if (curlresult == CURLE_OK) {
-        const QString httpmimetype = HTTPMIMEType(QString::fromAscii(curlcontenttype));
-        kDebug(7103) << "MIME type" << httpmimetype;
-        mimeType(httpmimetype);
-
-        const QString httpcharset = HTTPCharset(QString::fromAscii(curlcontenttype));
-        kDebug(7103) << "charset" << httpcharset;
-        setMetaData(QString::fromLatin1("charset"), httpcharset);
-    } else {
-        kWarning(7103) << "Could not get content type info" << curl_easy_strerror(curlresult);
-    }
-}
-
-void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
-{
-    data(QByteArray::fromRawData(curldata, curldatasize));
-
-    curl_off_t curlspeeddownload = 0;
-    CURLcode curlresult = curl_easy_getinfo(m_curl, CURLINFO_SPEED_DOWNLOAD_T, &curlspeeddownload);
-    if (curlresult == CURLE_OK) {
-        kDebug(7103) << "Download speed" << curlspeeddownload;
-        speed(ulong(curlspeeddownload));
-    } else {
-        kWarning(7103) << "Could not get download speed info" << curl_easy_strerror(curlresult);
-    }
-}
-
-void HttpProtocol::slotProgress(KIO::filesize_t received, KIO::filesize_t total)
-{
-    kDebug(7103) << "Received" << received << "from" << total;
-    emit processedSize(received);
-    if (total > 0 && received != total) {
-        emit totalSize(total);
-    }
+    return true;
 }
 
 #include "moc_http.cpp"
