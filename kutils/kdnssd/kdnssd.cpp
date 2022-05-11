@@ -151,7 +151,7 @@ bool KDNSSDPrivate::publishService(const QByteArray &servicetype, const uint ser
     }
     m_avahigroup = avahi_entry_group_new(m_avahiclient, KDNSSDPrivate::groupCallback, this);
     if (!m_avahigroup) {
-        m_errorstring = QString::fromLatin1("Could not create Avahi group");
+        m_errorstring = getAvahiClientError(m_avahiclient);
         return false;
     }
     const QByteArray servicenamebytes = servicename.toUtf8();
