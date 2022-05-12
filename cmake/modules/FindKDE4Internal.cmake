@@ -117,9 +117,9 @@
 #
 #  This module allows to depend on a particular minimum version of kdelibs.
 #  To acomplish that one should use the appropriate cmake syntax for
-#  find_package. For example to depend on kdelibs >= 4.21.0 one should use
+#  find_package. For example to depend on kdelibs >= 4.22.0 one should use
 #
-#  find_package(KDE4 4.21.0 REQUIRED)
+#  find_package(KDE4 4.22.0 REQUIRED)
 #
 #  In earlier versions of KDE you could use the variable KDE_MIN_VERSION to
 #  have such a dependency. This variable is deprecated with KDE 4.2.0, but
@@ -453,13 +453,13 @@ macro(KDE4_PRINT_RESULTS)
     # inside kdelibs the include dir and lib dir are internal, not "found"
     if(NOT _kdeBootStrapping)
         if(KDE4_INCLUDE_DIR)
-            message(STATUS "Found KDE 4.21 include dir: ${KDE4_INCLUDE_DIR}")
+            message(STATUS "Found KDE 4.22 include dir: ${KDE4_INCLUDE_DIR}")
         else()
             message(STATUS "ERROR: unable to find the KDE 4 headers")
         endif()
 
         if(KDE4_LIB_DIR)
-            message(STATUS "Found KDE 4.21 library dir: ${KDE4_LIB_DIR}")
+            message(STATUS "Found KDE 4.22 library dir: ${KDE4_LIB_DIR}")
         else()
             message(STATUS "ERROR: unable to find the KDE 4 core library")
         endif()
