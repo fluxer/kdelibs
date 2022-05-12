@@ -35,6 +35,7 @@ public:
     ~HttpProtocol();
 
     void mimetype(const KUrl &url) final;
+    void stat(const KUrl &url) final;
     void get(const KUrl &url)  final;
 
     void slotMIME();

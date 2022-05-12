@@ -71,6 +71,17 @@ static inline QString HTTPCharset(const QString &contenttype)
     return splitcontenttype.at(1);
 }
 
+static inline QDateTime HTTPDateTime(const QString &httpdatestring)
+{
+    if (httpdatestring.isEmpty()) {
+        return QDateTime();
+    }
+    QString parsabledatestring = httpdatestring;
+    parsabledatestring.replace(QLatin1Char(','), QLatin1String(""));
+    parsabledatestring.replace(QLatin1String(" GMT"), QLatin1String(""));
+    return QDateTime::fromString(parsabledatestring, "ddd dd MMM yyyy hh:mm:ss");
+}
+
 static inline KIO::Error curlToKIOError(const CURLcode curlcode)
 {
     switch (curlcode) {
@@ -185,7 +196,6 @@ extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
     KComponentData componentData("kio_http", "kdelibs4");
-    (void)KGlobal::locale();
 
     kDebug(7103) << "Starting" << ::getpid();
 
@@ -247,6 +257,39 @@ void HttpProtocol::mimetype(const KUrl &url)
     if (m_httpheader.status() >= 400) {
         return;
     }
+
+    finished();
+}
+
+void HttpProtocol::stat(const KUrl &url)
+{
+    kDebug(7103) << "URL" << url.prettyUrl();
+
+    if (!setupCurl(url)) {
+        return;
+    }
+
+    // NOTE: do not set CURLOPT_NOBODY, server may not send some headers
+    CURLcode curlresult = curl_easy_perform(m_curl);
+    if (curlresult != CURLE_OK) {
+        kWarning(7103) << curl_easy_strerror(curlresult);
+        error(curlToKIOError(curlresult), curl_easy_strerror(curlresult));
+        return;
+    }
+
+    if (m_httpheader.status() >= 400) {
+        return;
+    }
+
+    KIO::UDSEntry kioudsentry;
+    const QDateTime httpmodified = HTTPDateTime(m_httpheader.get(QLatin1String("Last-Modified")));
+    const QString httplength = m_httpheader.get(QLatin1String("Content-Length"));
+    kDebug(7103) << "HTTP last-modified" << httpmodified;
+    kDebug(7103) << "HTTP content-length" << httplength;
+    kioudsentry.insert(KIO::UDSEntry::UDS_NAME, url.fileName());
+    kioudsentry.insert(KIO::UDSEntry::UDS_SIZE, httplength.toLongLong());
+    kioudsentry.insert(KIO::UDSEntry::UDS_MODIFICATION_TIME, httpmodified.toTime_t());
+    statEntry(kioudsentry);
 
     finished();
 }
