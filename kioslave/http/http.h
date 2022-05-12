@@ -49,6 +49,7 @@ private:
 
     CURL* m_curl;
     struct curl_slist *m_curlheaders;
+    KUrl m_url;
     KHTTPHeader m_httpheader;
 };
 

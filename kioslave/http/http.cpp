@@ -242,15 +242,13 @@ void HttpProtocol::mimetype(const KUrl &url)
 
     CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_NOBODY, 1L);
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return;
     }
 
     curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(curlToKIOError(curlresult), curl_easy_strerror(curlresult));
+        error(curlToKIOError(curlresult), url.prettyUrl());
         return;
     }
 
@@ -272,8 +270,7 @@ void HttpProtocol::stat(const KUrl &url)
     // NOTE: do not set CURLOPT_NOBODY, server may not send some headers
     CURLcode curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(curlToKIOError(curlresult), curl_easy_strerror(curlresult));
+        error(curlToKIOError(curlresult), url.prettyUrl());
         return;
     }
 
@@ -304,8 +301,7 @@ void HttpProtocol::get(const KUrl &url)
 
     CURLcode curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(curlToKIOError(curlresult), curl_easy_strerror(curlresult));
+        error(curlToKIOError(curlresult), url.prettyUrl());
         return;
     }
 
@@ -322,8 +318,8 @@ void HttpProtocol::slotMIME()
     setMetaData(QString::fromLatin1("modified"), m_httpheader.get(QLatin1String("Last-Modified")));
 
     if (m_httpheader.status() >= 400) {
-        kDebug(7103) << "HTTP error" << m_httpheader.status() << m_httpheader.errorString();
-        error(HTTPToKIOError(m_httpheader.status()), m_httpheader.errorString());
+        kDebug(7103) << "HTTP error" << m_httpheader.status();
+        error(HTTPToKIOError(m_httpheader.status()), m_url.prettyUrl());
         return;
     }
 
@@ -373,6 +369,8 @@ void HttpProtocol::slotProgress(KIO::filesize_t received, KIO::filesize_t total)
 
 bool HttpProtocol::setupCurl(const KUrl &url)
 {
+    m_url = url;
+
     if (Q_UNLIKELY(!m_curl)) {
         error(KIO::ERR_OUT_OF_MEMORY, QString::fromLatin1("Null context"));
         return false;
@@ -397,22 +395,19 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
     CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(KIO::ERR_MALFORMED_URL, curl_easy_strerror(curlresult));
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return false;
     }
 
     curlresult = curl_easy_setopt(m_curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return false;
     }
 
     curlresult = curl_easy_setopt(m_curl, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return false;
     }
 
@@ -422,7 +417,8 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         const QByteArray useragentbytes = metaData("UserAgent").toAscii();
         curlresult = curl_easy_setopt(m_curl, CURLOPT_USERAGENT, useragentbytes.constData());
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << curl_easy_strerror(curlresult);
+            error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+            return false;
         }
     }
 
@@ -434,34 +430,37 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         kDebug(7103) << "Proxy" << proxybytes << curlproxytype;
         curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << curl_easy_strerror(curlresult);
-            error(KIO::ERR_UNKNOWN_PROXY_HOST, curl_easy_strerror(curlresult));
+            error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
             return false;
         }
         curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXYTYPE, curlproxytype);
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << curl_easy_strerror(curlresult);
+            error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+            return false;
         }
 
         const bool noproxyauth = (noauth || metaData("no-proxy-auth") == QLatin1String("yes"));
         kDebug(7103) << "Proxy auth" << noproxyauth;
         curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXYAUTH, noproxyauth ? CURLAUTH_NONE : CURLAUTH_ANY);
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << curl_easy_strerror(curlresult);
+            error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+            return false;
         }
     }
 
     kDebug(7103) << "Auth" << noauth;
     curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPAUTH, noauth ? CURLAUTH_NONE : CURLAUTH_ANY);
     if (curlresult != CURLE_OK) {
-        kWarning(7103) << curl_easy_strerror(curlresult);
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+        return false;
     }
 
     if (hasMetaData(QLatin1String("referrer"))) {
         const QByteArray referrerbytes = metaData("referrer").toAscii();
         curlresult = curl_easy_setopt(m_curl, CURLOPT_REFERER, referrerbytes.constData());
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << curl_easy_strerror(curlresult);
+            error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+            return false;
         }
     }
 
@@ -469,7 +468,8 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         const qlonglong resumeoffset = metaData(QLatin1String("resume")).toLongLong();
         curlresult = curl_easy_setopt(m_curl, CURLOPT_RESUME_FROM_LARGE, resumeoffset);
         if (curlresult != CURLE_OK) {
-            kWarning(7103) << curl_easy_strerror(curlresult);
+            error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+            return false;
         } else {
             canResume();
         }
@@ -496,8 +496,7 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     if (curlresult != CURLE_OK) {
         curl_slist_free_all(m_curlheaders);
         m_curlheaders = nullptr;
-        kWarning(7103) << curl_easy_strerror(curlresult);
-        error(KIO::ERR_CONNECTION_BROKEN, curl_easy_strerror(curlresult));
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return false;
     }
 
