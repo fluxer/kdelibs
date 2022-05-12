@@ -259,6 +259,7 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec",  i18nc("@label", "Subtitle Codec") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate", i18nc("@label", "Audio Bit Rate") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate", i18nc("@label", "Video Bit Rate") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", i18nc("@label", "Page Count") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright", i18nc("@label", "Copyright") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment", i18nc("@label", "Comment") },
         { "http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title", i18nc("@label music title", "Title") },
@@ -298,7 +299,6 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode", i18nc("@label EXIF", "Metering Mode") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance", i18nc("@label EXIF", "White Balance") },
         // to be used by plugins
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount", i18nc("@label", "Page Count") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email", i18nc("@label", "Creator E-Mail") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", i18nc("@label", "Hash Value") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashAlgorithm", i18nc("@label", "Hash Algorithm") },
