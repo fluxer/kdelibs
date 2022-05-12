@@ -26,19 +26,16 @@
 #include <kparts/part.h>
 #include <kparts/event.h>
 
-#include <QtCore/qshareddata.h>
-
 #include <QPair>
-template<typename T> class Q3PtrList;
 #include <QMap>
 #include <QList>
-
-class KFileItem;
-class KFileItemList;
 #include <QDataStream>
 #include <QPoint>
 #include <QString>
 #include <QStringList>
+
+class KFileItem;
+class KFileItemList;
 
 namespace KParts {
 

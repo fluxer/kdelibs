@@ -22,13 +22,13 @@
 #define KPARTS_STATUSBAREXTENSION_H
 
 #include <QtGui/QWidget>
+#include <QtCore/QList>
+#include <QEvent>
 
 #include <kparts/kparts_export.h>
-#include <QtCore/QList>
 
 class KStatusBar;
 class KMainWindow;
-#include <QEvent>
 
 namespace KParts
 {

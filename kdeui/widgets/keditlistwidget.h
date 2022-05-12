@@ -145,32 +145,23 @@ public:
       QPushButton* downButton() const;
 
       /**
-       * See Q3ListBox::count()
+       * See QStringListModel::rowCount()
        */
       int count() const;
       /**
-       * See Q3ListBox::insertStringList()
+       * See QStringListModel::setStringList()
        */
       void insertStringList(const QStringList& list, int index=-1);
-      /**
-       * See Q3ListBox::insertItem()
-       */
       void insertItem(const QString& text, int index=-1);
       /**
        * Clears both the listbox and the line edit.
        */
       void clear();
       /**
-       * See Q3ListBox::text()
+       * See QStringListModel::stringList()
        */
       QString text(int index) const;
-      /**
-       * See Q3ListBox::currentItem()
-       */
       int currentItem() const;
-      /**
-       * See Q3ListBox::currentText()
-       */
       QString currentText() const;
 
       /**

@@ -23,7 +23,9 @@
 #include <QtCore/QPointer>
 #include <QtCore/QEvent>
 #include <QtCore/qshareddata.h>
-#include <QtXml/qdom.h> // KDE5: remove
+#include <QWidget>
+#include <QEvent>
+#include <QPoint>
 
 #include <kurl.h>
 #include <kxmlguiclient.h>
@@ -37,10 +39,6 @@
 
 class KIconLoader;
 class KComponentData;
-#include <QWidget>
-#include <QEvent>
-#include <QPoint>
-struct QUnknownInterface;
 
 class KJob;
 namespace KIO {

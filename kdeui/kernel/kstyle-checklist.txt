@@ -24,9 +24,6 @@ drawComplexControl:
   CC_TitleBar:
     Looks OK
 
-  CC_Q3ListView:
-    Looks OK
-
   CC_GroupBox:
     No handling (Qt 4.1)
 
@@ -58,9 +55,6 @@ sizeFromContents:
     CT_ComboBox:
       Missing! Should compute space much like subControlRect computations do
 
-    CT_Q3DockWindow: Missing, along with other Q3DockWindow primitives. Need to test in 
-      designer to see if it's drawn OK. 
-
     CT_HeaderSection: Hardcodes icon size instead of using PM_SmallIconSize.
       Probably should not apply the icon - text margin when there is no icon..
 
@@ -71,9 +65,6 @@ sizeFromContents:
       see also SE_LineEditContents..
 
     CT_Menu: OK
-    
-    CT_Q3Header:
-      Missing. Probably share code with CT_HeaderSection, or OK as-is?
 
     CT_MenuBar, CT_MenuItem: CT_MenuBarItem: OK
 

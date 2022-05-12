@@ -26,6 +26,7 @@
 #include <kcomponentdata.h>
 
 #include <QTextEdit>
+
 namespace KParts {
 class GUIActivateEvent;
 }

@@ -21,9 +21,7 @@
 #define KPARTSMAINWINDOW_H
 
 #include <kaction.h>
-
 #include <kxmlguiwindow.h>
-
 #include <kparts/part.h>
 
 #include <QString>

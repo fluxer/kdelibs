@@ -21,10 +21,10 @@
 #define __kparts_event_h__
 
 #include <QtGui/qevent.h>
+#include <QWidget>
 
 #include <kparts/kparts_export.h>
 
-#include <QWidget>
 
 namespace KParts
 {
