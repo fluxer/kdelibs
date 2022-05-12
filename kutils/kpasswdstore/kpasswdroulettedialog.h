@@ -27,7 +27,8 @@
 class KPasswdRouletteDialogPrivate;
 
 /*!
-    Class to ask for password from a choice of several passwords.
+    Class to ask for password from a choice of several passwords. The choice is not for the user
+    to make however, it is up to RNG which of the added choices will to be presented.
 
     @code
     KPasswdRouletteDialog kpasswdroulettedialog;
