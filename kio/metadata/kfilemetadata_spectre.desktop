@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+Name=KFileMetaDataSpectrePlugin
+GenericName=Spectre metadata extractor
+X-KDE-Library=kfilemetadata_spectre
+X-KDE-ServiceTypes=KFileMetaData/Plugin
+InitialPreference=1

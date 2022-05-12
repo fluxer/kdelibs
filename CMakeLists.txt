@@ -231,6 +231,14 @@ set_package_properties(Poppler PROPERTIES
     PURPOSE "PDF metadata extraction"
 )
 
+macro_optional_find_package(LibSpectre)
+set_package_properties(LibSpectre PROPERTIES
+    DESCRIPTION "Small library for rendering Postscript documents"
+    URL "https://www.freedesktop.org/wiki/Software/libspectre/"
+    TYPE RECOMMENDED
+    PURPOSE "Postscript metadata extraction"
+)
+
 macro_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"

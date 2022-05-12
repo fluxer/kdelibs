@@ -103,3 +103,25 @@ if (POPPLER_FOUND)
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
     )
 endif()
+
+if (LIBSPECTRE_FOUND)
+    include_directories(${LIBSPECTRE_INCLUDE_DIR})
+
+    set(kfilemetadata_spectre_SRCS kfilemetadata_spectre.cpp)
+
+    kde4_add_plugin(kfilemetadata_spectre ${kfilemetadata_spectre_SRCS})
+    target_link_libraries(kfilemetadata_spectre
+        ${KDE4_KIO_LIBS}
+        ${LIBSPECTRE_LIBRARY}
+    )
+
+    install(
+        TARGETS kfilemetadata_spectre
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
+    )
+
+    install(
+        FILES kfilemetadata_spectre.desktop
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
+    )
+endif()
