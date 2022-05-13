@@ -443,13 +443,15 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     }
 
     if (!noauth) {
-        const QString urlusername = url.userName();
-        const QString urlpassword = url.password();
+        const QByteArray urlusername = url.userName().toAscii();
+        const QByteArray urlpassword = url.password().toAscii();
         if (!urlusername.isEmpty() && !urlpassword.isEmpty()) {
-            QByteArray curluserpwd = urlusername.toAscii();
-            curluserpwd.append(':');
-            curluserpwd.append(urlpassword.toAscii());
-            curlresult = curl_easy_setopt(m_curl, CURLOPT_USERPWD, curluserpwd.constData());
+            curlresult = curl_easy_setopt(m_curl, CURLOPT_USERNAME, urlusername.constData());
+            if (curlresult != CURLE_OK) {
+                error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+                return false;
+            }
+            curlresult = curl_easy_setopt(m_curl, CURLOPT_PASSWORD, urlpassword.constData());
             if (curlresult != CURLE_OK) {
                 error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
                 return false;
