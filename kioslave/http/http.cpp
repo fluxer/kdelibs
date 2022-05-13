@@ -81,9 +81,36 @@ static inline long HTTPCode(CURL *curl)
     return curlresponsecode;
 }
 
-static inline KIO::Error curlToKIOError(const CURLcode curlcode)
+static inline KIO::Error HTTPToKIOError(const long httpcode)
+{
+    switch (httpcode) {
+        case 401:
+        case 403:
+        case 407: {
+            return KIO::ERR_COULD_NOT_AUTHENTICATE;
+        }
+        case 408: {
+            return KIO::ERR_SERVER_TIMEOUT;
+        }
+        case 500: {
+            return KIO::ERR_INTERNAL_SERVER;
+        }
+        default: {
+            return KIO::ERR_NO_CONTENT;
+        }
+    }
+    Q_UNREACHABLE();
+}
+
+static inline KIO::Error curlToKIOError(const CURLcode curlcode, CURL *curl)
 {
     switch (curlcode) {
+        case CURLE_HTTP_RETURNED_ERROR:
+        case CURLE_ABORTED_BY_CALLBACK: {
+            const long httpcode = HTTPCode(curl);
+            kDebug(7103) << "HTTP error" << httpcode;
+            return HTTPToKIOError(httpcode);
+        }
         case CURLE_URL_MALFORMAT: {
             return KIO::ERR_MALFORMED_URL;
         }
@@ -126,27 +153,6 @@ static inline KIO::Error curlToKIOError(const CURLcode curlcode)
         case CURLE_COULDNT_CONNECT:
         default: {
             return KIO::ERR_COULD_NOT_CONNECT;
-        }
-    }
-    Q_UNREACHABLE();
-}
-
-static inline KIO::Error HTTPToKIOError(const int httpcode)
-{
-    switch (httpcode) {
-        case 401:
-        case 403:
-        case 407: {
-            return KIO::ERR_COULD_NOT_AUTHENTICATE;
-        }
-        case 408: {
-            return KIO::ERR_SERVER_TIMEOUT;
-        }
-        case 500: {
-            return KIO::ERR_INTERNAL_SERVER;
-        }
-        default: {
-            return KIO::ERR_NO_CONTENT;
         }
     }
     Q_UNREACHABLE();
@@ -229,14 +235,7 @@ void HttpProtocol::stat(const KUrl &url)
     // NOTE: do not set CURLOPT_NOBODY, server may not send some headers
     CURLcode curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
-        error(curlToKIOError(curlresult), url.prettyUrl());
-        return;
-    }
-
-    const long httpcode = HTTPCode(m_curl);
-    if (httpcode >= 400) {
-        kDebug(7103) << "HTTP error" << httpcode;
-        error(HTTPToKIOError(httpcode), url.prettyUrl());
+        error(curlToKIOError(curlresult, m_curl), url.prettyUrl());
         return;
     }
 
@@ -286,14 +285,7 @@ void HttpProtocol::get(const KUrl &url)
 
     CURLcode curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
-        error(curlToKIOError(curlresult), url.prettyUrl());
-        return;
-    }
-
-    const long httpcode = HTTPCode(m_curl);
-    if (httpcode >= 400) {
-        kDebug(7103) << "HTTP error" << httpcode;
-        error(HTTPToKIOError(httpcode), url.prettyUrl());
+        error(curlToKIOError(curlresult, m_curl), url.prettyUrl());
         return;
     }
 
