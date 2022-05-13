@@ -1,7 +1,8 @@
 [Desktop Entry]
 Type=Service
 Name=KFileMetaDataPopplerPlugin
-GenericName=Poppler metadata extractor
+GenericName=Poppler
+Comment=Extracts metadata from Portable Document Format (PDF) documents
 X-KDE-Library=kfilemetadata_poppler
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 InitialPreference=1

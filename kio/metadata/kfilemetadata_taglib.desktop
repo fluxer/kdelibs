@@ -1,7 +1,8 @@
 [Desktop Entry]
 Type=Service
 Name=KFileMetaDataTagLibPlugin
-GenericName=TagLib metadata extractor
+GenericName=TagLib
+Comment=Extracts metadata from audio files
 X-KDE-Library=kfilemetadata_taglib
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 InitialPreference=1
