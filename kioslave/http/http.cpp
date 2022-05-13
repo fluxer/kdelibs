@@ -25,13 +25,17 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-static inline QByteArray curlProxyString(const QString &proxy)
+static inline QByteArray curlProxyBytes(const QString &proxy)
 {
     const KUrl proxyurl(proxy);
+    const QString proxyhost = proxyurl.host();
     if (proxyurl.port() > 0) {
-        return QString::fromLatin1("%1:%2").arg(proxyurl.host()).arg(proxyurl.port()).toAscii();
+        QByteArray curlproxybytes = proxyhost.toAscii();
+        curlproxybytes.append(':');
+        curlproxybytes.append(QByteArray::number(proxyurl.port()));
+        return curlproxybytes;
     }
-    return proxyurl.host().toAscii();
+    return proxyhost.toAscii();
 }
 
 static inline curl_proxytype curlProxyType(const QString &proxy)
@@ -396,7 +400,7 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     const bool noauth = (metaData("no-auth") == QLatin1String("yes"));
     if (hasMetaData(QLatin1String("UseProxy"))) {
         const QString proxystring = metaData("UseProxy");
-        const QByteArray proxybytes = curlProxyString(proxystring);
+        const QByteArray proxybytes = curlProxyBytes(proxystring);
         const curl_proxytype curlproxytype = curlProxyType(proxystring);
         kDebug(7103) << "Proxy" << proxybytes << curlproxytype;
         curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXY, proxybytes.constData());
@@ -424,6 +428,21 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     if (curlresult != CURLE_OK) {
         error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return false;
+    }
+
+    if (!noauth) {
+        const QString urlusername = url.userName();
+        const QString urlpassword = url.password();
+        if (!urlusername.isEmpty() && !urlpassword.isEmpty()) {
+            QByteArray curluserpwd = urlusername.toAscii();
+            curluserpwd.append(':');
+            curluserpwd.append(urlpassword.toAscii());
+            curlresult = curl_easy_setopt(m_curl, CURLOPT_USERPWD, curluserpwd.constData());
+            if (curlresult != CURLE_OK) {
+                error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+                return false;
+            }
+        }
     }
 
     if (hasMetaData(QLatin1String("resume"))) {
