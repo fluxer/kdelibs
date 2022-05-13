@@ -426,15 +426,6 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         return false;
     }
 
-    if (hasMetaData(QLatin1String("referrer"))) {
-        const QByteArray referrerbytes = metaData("referrer").toAscii();
-        curlresult = curl_easy_setopt(m_curl, CURLOPT_REFERER, referrerbytes.constData());
-        if (curlresult != CURLE_OK) {
-            error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
-            return false;
-        }
-    }
-
     if (hasMetaData(QLatin1String("resume"))) {
         const qlonglong resumeoffset = metaData(QLatin1String("resume")).toLongLong();
         curlresult = curl_easy_setopt(m_curl, CURLOPT_RESUME_FROM_LARGE, resumeoffset);
