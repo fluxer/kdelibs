@@ -66,11 +66,6 @@ no-proxy-auth   bool            Flag that indicates that no HTTP proxy authentic
 no-auth-prompt  bool            Flag that indicates that only cached authentication tokens should
                                 be used.
 
-PropagateHttpHeader  bool       Whether HTTP headers should be send back (read by http)
-
-HTTP-Headers    string          The HTTP headers, concatenated, \n delimited. Requires
-                                PropagateHttpHeader to be set. (set by http)
-
 UseProxy        string          URL representing the proxy settings (read by http)
 ProxyUrls       string          Comma separated list of proxy urls. The first url in this list
                                 matches one set in "UseProxy".

@@ -336,12 +336,6 @@ void HttpProtocol::slotMIME()
     } else {
         kWarning(7103) << "Could not get content type info" << curl_easy_strerror(curlresult);
     }
-
-    if (hasMetaData(QLatin1String("PropagateHttpHeader"))) {
-        const QString httpheaders = QString::fromAscii(headerdata.constData(), headerdata.size());
-        kDebug(7103) << "HTTP headers" << httpheaders;
-        setMetaData(QString::fromLatin1("HTTP-Headers"), httpheaders);
-    }
 }
 
 void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)

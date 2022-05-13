@@ -310,10 +310,9 @@ public:
      * @code
      * KIO::Job *job = KIO::get( url );
      * QMap<QString, QString> metaData;
-     * metaData.insert( "PropagateHttpHeader", "true" );
+     * metaData.insert( "no-auth", "yes" );
      * if ( NetAccess::synchronousRun( job, 0, &data, &url, &metaData ) ) {
-     *   QString responseHeaders = metaData[ "HTTP-Headers" ];
-     *   kDebug()<<"Response header = "<< responseHeaders;
+     *   kDebug()<<"Success";
      * }
      * @endcode
      *
