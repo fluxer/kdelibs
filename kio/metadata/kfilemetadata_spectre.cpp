@@ -60,7 +60,7 @@ QList<KFileMetaInfoItem> KFileMetaDataSpectrePlugin::metaData(const KUrl &url, c
         return result;
     }
     spectre_document_load(spectredocument, urlpath.constData());
-    SpectreStatus spectrestatus = spectre_document_status(spectredocument);
+    const SpectreStatus spectrestatus = spectre_document_status(spectredocument);
     if (spectrestatus != SPECTRE_STATUS_SUCCESS) {
         kWarning() << "Could not open" << urlpath;
         spectre_document_free(spectredocument);
