@@ -38,8 +38,6 @@ private Q_SLOTS:
     void slotPowerSaveStatusChanged(bool save_power);
 
 private:
-    void setPowerProfile(bool save_power);
-
     KPowerManagerImpl *m_powermanagerimpl;
     KPowerManagerInhibitImpl *m_powermanagerinhibitimpl;
 };

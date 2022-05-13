@@ -21,6 +21,18 @@
 #include "kpowermanager.h"
 #include "kdebug.h"
 
+static void setPowerProfile(bool save_power)
+{
+    if (KPowerManager::isEnabled() && KPowerManager::isSupported()) {
+        KPowerManager kpowermanager;
+        if (save_power) {
+            kpowermanager.setProfile(QString::fromLatin1("PowerSave"));
+        } else {
+            kpowermanager.setProfile(QString::fromLatin1("Performance"));
+        }
+    }
+}
+
 K_PLUGIN_FACTORY(KPowerManagerModuleFactory, registerPlugin<KPowerManagerModule>();)
 K_EXPORT_PLUGIN(KPowerManagerModuleFactory("kpowermanager"))
 
@@ -49,18 +61,6 @@ KPowerManagerModule::~KPowerManagerModule()
 void KPowerManagerModule::slotPowerSaveStatusChanged(bool save_power)
 {
     setPowerProfile(save_power);
-}
-
-void KPowerManagerModule::setPowerProfile(bool save_power)
-{
-    if (KPowerManager::isEnabled() && KPowerManager::isSupported()) {
-        KPowerManager kpowermanager;
-        if (save_power) {
-            kpowermanager.setProfile(QString::fromLatin1("PowerSave"));
-        } else {
-            kpowermanager.setProfile(QString::fromLatin1("Performance"));
-        }
-    }
 }
 
 #include "moc_kded_kpowermanager.cpp"
