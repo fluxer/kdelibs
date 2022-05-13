@@ -42,6 +42,7 @@ public:
 
 private:
     bool setupCurl(const KUrl &url);
+    bool authUrl(const KUrl &url);
 
     bool m_emitmime;
     CURL* m_curl;

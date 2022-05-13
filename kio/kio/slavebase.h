@@ -731,17 +731,14 @@ public:
      * given by @p info.
      *
      * Use this function to check if any cached password exists
-     * for the URL given by @p info. If @p AuthInfo::verifyPath
-     * flag is specified, then they will also be factored in
-     * determining the presence of a cached password.  Note that
-     * @p Auth::url is a required parameter when attempting to
-     * check for cached authorization info. Here is a simple example:
+     * for the URL given by @p info. Note that @p Auth::url is
+     * a required parameter when attempting to check for cached
+     * authorization info. Here is a simple example:
      *
      * \code
      * AuthInfo info;
      * info.url = KUrl("http://www.foobar.org/foo/bar");
      * info.username = "somename";
-     * info.verifyPath = true;
      * if ( !checkCachedAuthentication( info ) )
      * {
      *    if ( !openPasswordDialog(info) )

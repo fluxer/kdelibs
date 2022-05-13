@@ -20,7 +20,7 @@
 #include "kdebug.h"
 #include "kcomponentdata.h"
 
-#include <QCoreApplication>
+#include <QApplication>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -189,7 +189,7 @@ int curlXFERCallback(void *userdata, curl_off_t dltotal, curl_off_t dlnow, curl_
 
 extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
 {
-    QCoreApplication app(argc, argv);
+    QApplication app(argc, argv);
     KComponentData componentData("kio_http", "kdelibs4");
 
     kDebug(7103) << "Starting" << ::getpid();
@@ -208,7 +208,7 @@ extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
 
 HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
     : SlaveBase("http", pool, app),
-    m_emitmime(true), aborttransfer(false),
+    aborttransfer(false), m_emitmime(true),
     m_curl(nullptr), m_curlheaders(nullptr)
 {
     m_curl = curl_easy_init();
@@ -239,7 +239,13 @@ void HttpProtocol::stat(const KUrl &url)
     // NOTE: do not set CURLOPT_NOBODY, server may not send some headers
     CURLcode curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
-        error(curlToKIOError(curlresult, m_curl), url.prettyUrl());
+        const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
+        if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
+            if (authUrl(url)) {
+                return;
+            }
+        }
+        error(kioerror, url.prettyUrl());
         return;
     }
 
@@ -289,7 +295,13 @@ void HttpProtocol::get(const KUrl &url)
 
     CURLcode curlresult = curl_easy_perform(m_curl);
     if (curlresult != CURLE_OK) {
-        error(curlToKIOError(curlresult, m_curl), url.prettyUrl());
+        const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
+        if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
+            if (authUrl(url)) {
+                return;
+            }
+        }
+        error(kioerror, url.prettyUrl());
         return;
     }
 
@@ -352,8 +364,8 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         return false;
     }
 
-    m_emitmime = true;
     aborttransfer = false;
+    m_emitmime = true;
     curl_easy_reset(m_curl);
     curl_easy_setopt(m_curl, CURLOPT_NOSIGNAL, 1L);
     curl_easy_setopt(m_curl, CURLOPT_FILETIME, 1L);
@@ -482,6 +494,23 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     }
 
     return true;
+}
+
+bool HttpProtocol::authUrl(const KUrl &url)
+{
+    KIO::AuthInfo kioauthinfo;
+    kioauthinfo.url = url;
+    if (!checkCachedAuthentication(kioauthinfo)) {
+        if (openPasswordDialog(kioauthinfo)) {
+            KUrl newurl(url);
+            newurl.setUser(kioauthinfo.username);
+            newurl.setPassword(kioauthinfo.password);
+            redirection(newurl);
+            finished();
+            return true;
+        }
+    }
+    return false;
 }
 
 #include "moc_http.cpp"
