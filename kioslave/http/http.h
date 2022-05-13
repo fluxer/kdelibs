@@ -19,8 +19,6 @@
 #ifndef KDELIBS_HTTP_H
 #define KDELIBS_HTTP_H
 
-#include "khttpheader.h"
-
 #include <kurl.h>
 #include <kio/slavebase.h>
 
@@ -34,23 +32,20 @@ public:
     HttpProtocol(const QByteArray &pool, const QByteArray &app);
     ~HttpProtocol();
 
-    void mimetype(const KUrl &url) final;
     void stat(const KUrl &url) final;
     void get(const KUrl &url)  final;
 
-    void slotMIME();
     void slotData(const char* curldata, const size_t curldatasize);
     void slotProgress(KIO::filesize_t received, KIO::filesize_t total);
 
-    bool firstchunk;
-    QByteArray headerdata;
+    bool aborttransfer;
+
 private:
     bool setupCurl(const KUrl &url);
 
+    bool m_emitmime;
     CURL* m_curl;
     struct curl_slist *m_curlheaders;
-    KUrl m_url;
-    KHTTPHeader m_httpheader;
 };
 
 #endif // KDELIBS_HTTP_H
