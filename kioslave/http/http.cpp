@@ -503,6 +503,9 @@ bool HttpProtocol::authUrl(const KUrl &url)
     KIO::AuthInfo kioauthinfo;
     kioauthinfo.url = url;
     if (!checkCachedAuthentication(kioauthinfo)) {
+        kioauthinfo.prompt = i18n("You need to supply a username and a password to access this URL.");
+        kioauthinfo.commentLabel = i18n("URL:");
+        kioauthinfo.comment = i18n("<b>%1</b>", url.prettyUrl());
         if (openPasswordDialog(kioauthinfo)) {
             KUrl newurl(url);
             newurl.setUser(kioauthinfo.username);
