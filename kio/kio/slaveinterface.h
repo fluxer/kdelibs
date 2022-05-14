@@ -52,7 +52,6 @@ class SlaveInterfacePrivate;
    INF_WARNING = 23,
    INF_INFOMESSAGE,
    INF_META_DATA,
-   INF_NETWORK_STATUS,
    INF_MESSAGEBOX,
    INF_POSITION
    // add new ones here once a release is done, to avoid breaking binary compatibility
@@ -72,8 +71,6 @@ class SlaveInterfacePrivate;
    MSG_RESUME,
    MSG_SLAVE_STATUS,
    MSG_SLAVE_ACK, // 110
-   MSG_NET_REQUEST,
-   MSG_NET_DROP,
    MSG_NEED_SUBURL_DATA,
    MSG_CANRESUME,
    MSG_OPENED,
@@ -183,10 +180,6 @@ protected:
     void messageBox( int type, const QString &text, const QString &caption,
                      const QString &buttonYes, const QString &buttonNo,
                      const QString &dontAskAgainName );
-
-    // I need to identify the slaves
-    void requestNetwork( const QString &, const QString &);
-    void dropNetwork( const QString &, const QString &);
 
 protected Q_SLOTS:
     void calcSpeed();

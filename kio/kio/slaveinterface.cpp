@@ -290,20 +290,6 @@ bool SlaveInterface::dispatch(int _cmd, const QByteArray &rawdata)
         emit metaData(m);
         break;
     }
-    case MSG_NET_REQUEST: {
-        QString host;
-        QString slaveid;
-        stream >> host >> slaveid;
-        requestNetwork(host, slaveid);
-        break;
-    }
-    case MSG_NET_DROP: {
-        QString host;
-        QString slaveid;
-        stream >> host >> slaveid;
-        dropNetwork(host, slaveid);
-        break;
-    }
     case MSG_NEED_SUBURL_DATA: {
         emit needSubUrlData();
         break;
@@ -325,21 +311,6 @@ KIO::filesize_t SlaveInterface::offset() const
 {
     Q_D(const SlaveInterface);
     return d->offset;
-}
-
-void SlaveInterface::requestNetwork(const QString &host, const QString &slaveid)
-{
-    Q_D(SlaveInterface);
-    kDebug(7007) << "requestNetwork " << host << slaveid;
-    QByteArray packedArgs;
-    QDataStream stream( &packedArgs, QIODevice::WriteOnly );
-    stream << true;
-    d->connection->sendnow( INF_NETWORK_STATUS, packedArgs );
-}
-
-void SlaveInterface::dropNetwork(const QString &host, const QString &slaveid)
-{
-    kDebug(7007) << "dropNetwork " << host << slaveid;
 }
 
 void SlaveInterface::sendResumeAnswer( bool resume )

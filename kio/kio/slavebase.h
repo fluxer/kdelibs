@@ -764,41 +764,6 @@ public:
     bool cacheAuthentication( const AuthInfo& info );
 
     /**
-     * Used by the slave to check if it can connect
-     * to a given host. This should be called where the slave is ready
-     * to do a ::connect() on a socket. For each call to
-     * requestNetwork must exist a matching call to
-     * dropNetwork, or the system will stay online until
-     * KNetMgr gets closed (or the SlaveBase gets destructed)!
-     *
-     * If KNetMgr is not running, then this is a no-op and returns true
-     *
-     * @param host tells the netmgr the host the slave wants to connect
-     *             to. As this could also be a proxy, we can't just take
-     *             the host currenctly connected to (but that's the default
-     *             value)
-     *
-     * @return true in theorie, the host is reachable
-     *         false the system is offline and the host is in a remote network.
-     */
-    bool requestNetwork(const QString& host = QString());
-
-    /**
-     * Used by the slave to withdraw a connection requested by
-     * requestNetwork. This function cancels the last call to
-     * requestNetwork. If a client uses more than one internet
-     * connection, it must use dropNetwork(host) to
-     * stop each request.
-     *
-     * If KNetMgr is not running, then this is a no-op.
-     *
-     * @param host the host passed to requestNetwork
-     *
-     * A slave should call this function every time it disconnect from a host.
-     * */
-    void dropNetwork(const QString& host = QString());
-
-    /**
      * Wait for an answer to our request, until we get @p expected1 or @p expected2
      * @return the result from readData, as well as the cmd in *pCmd if set, and the data in @p data
      */

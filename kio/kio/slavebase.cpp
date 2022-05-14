@@ -666,27 +666,6 @@ void SlaveBase::infoMessage( const QString &_msg)
     send( INF_INFOMESSAGE, data );
 }
 
-bool SlaveBase::requestNetwork(const QString& host)
-{
-    KIO_DATA << host << d->slaveid;
-    send( MSG_NET_REQUEST, data );
-
-    if ( waitForAnswer( INF_NETWORK_STATUS, 0, data ) != -1 )
-    {
-        bool status;
-        QDataStream stream( data );
-        stream >> status;
-        return status;
-    } else
-        return false;
-}
-
-void SlaveBase::dropNetwork(const QString& host)
-{
-    KIO_DATA << host << d->slaveid;
-    send( MSG_NET_DROP, data );
-}
-
 void SlaveBase::statEntry( const UDSEntry& entry )
 {
     KIO_DATA << entry;
