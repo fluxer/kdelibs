@@ -22,7 +22,6 @@
 #include "kuiserverjobtracker_p.h"
 
 #include "jobviewiface.h"
-#include "jobviewifacev2.h"
 
 #include <klocale.h>
 #include <kdebug.h>
@@ -45,12 +44,12 @@ public:
 
     void _k_killJob();
 
-    QHash<KJob*, org::kde::JobViewV2*> progressJobView;
+    QHash<KJob*, org::kde::JobView*> progressJobView;
 };
 
 void KUiServerJobTracker::Private::_k_killJob()
 {
-    org::kde::JobViewV2 *jobView = qobject_cast<org::kde::JobViewV2*>(q->sender());
+    org::kde::JobView *jobView = qobject_cast<org::kde::JobView*>(q->sender());
 
     if (jobView) {
         KJob *job = progressJobView.key(jobView);
@@ -97,7 +96,7 @@ void KUiServerJobTracker::registerJob(KJob *job)
 
     // If we got a valid reply, register the interface for later usage.
     if (reply.isValid()) {
-        org::kde::JobViewV2 *jobView = new org::kde::JobViewV2("org.kde.JobViewServer",
+        org::kde::JobView *jobView = new org::kde::JobView("org.kde.JobViewServer",
                                                            reply.value().path(),
                                                            QDBusConnection::sessionBus());
         if (!jobWatch) {
@@ -144,7 +143,7 @@ void KUiServerJobTracker::unregisterJob(KJob *job)
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView.take(job);
+    org::kde::JobView *jobView = d->progressJobView.take(job);
 
     if (job->error()) {
         jobView->terminate(job->errorText());
@@ -161,7 +160,7 @@ void KUiServerJobTracker::finished(KJob *job)
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView.take(job);
+    org::kde::JobView *jobView = d->progressJobView.take(job);
 
     if (job->error()) {
         jobView->terminate(job->errorText());
@@ -176,7 +175,7 @@ void KUiServerJobTracker::suspended(KJob *job)
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     jobView->setSuspended(true);
 }
@@ -187,7 +186,7 @@ void KUiServerJobTracker::resumed(KJob *job)
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     jobView->setSuspended(false);
 }
@@ -200,7 +199,7 @@ void KUiServerJobTracker::description(KJob *job, const QString &title,
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     jobView->setInfoMessage(title);
 
@@ -225,7 +224,7 @@ void KUiServerJobTracker::infoMessage(KJob *job, const QString &plain, const QSt
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     jobView->setInfoMessage(plain);
 }
@@ -236,7 +235,7 @@ void KUiServerJobTracker::totalAmount(KJob *job, KJob::Unit unit, qulonglong amo
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     switch (unit) {
     case KJob::Bytes:
@@ -259,7 +258,7 @@ void KUiServerJobTracker::processedAmount(KJob *job, KJob::Unit unit, qulonglong
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     switch (unit) {
     case KJob::Bytes:
@@ -282,7 +281,7 @@ void KUiServerJobTracker::percent(KJob *job, unsigned long percent)
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     jobView->setPercent(percent);
 }
@@ -293,7 +292,7 @@ void KUiServerJobTracker::speed(KJob *job, unsigned long value)
         return;
     }
 
-    org::kde::JobViewV2 *jobView = d->progressJobView[job];
+    org::kde::JobView *jobView = d->progressJobView[job];
 
     jobView->setSpeed(value);
 }
