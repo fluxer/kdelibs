@@ -1901,7 +1901,6 @@ void FileCopyJobPrivate::slotCanResume( KIO::Job* job, KIO::filesize_t offset )
         {
             m_getJob = KIO::get( m_src, NoReload, HideProgressInfo /* no GUI */ );
             //kDebug(7007) << "m_getJob=" << m_getJob << m_src;
-            m_getJob->addMetaData( "AllowCompressedPage", "false" );
             // Set size in subjob. This helps if the slave doesn't emit totalSize.
             if ( m_sourceSize != (KIO::filesize_t)-1 )
                 m_getJob->setTotalAmount(KJob::Bytes, m_sourceSize);
