@@ -812,10 +812,6 @@ protected:
     MetaData mOutgoingMetaData;
     MetaData mIncomingMetaData;
 
-    enum VirtualFunctionId {
-        AppConnectionMade = 0
-    };
-
 private:
 #if 0 // TODO KDE5: enable
     // This helps catching missing tr() calls in error().
