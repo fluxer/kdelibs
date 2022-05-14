@@ -423,7 +423,6 @@ install(
     KIO/ListJob
     KIO/MetaData
     KIO/MimetypeJob
-    KIO/MultiGetJob
     KIO/NetAccess
     KIO/NetRC
     KIO/PreviewJob

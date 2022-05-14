@@ -49,8 +49,6 @@ Charsets        string          Charset(s) send in the "Accept-Charset:" HTTP Re
 
 Languages       string          Language(s) send in the "Accept-Language:" HTTP Request Header.
 
-request-id      number          Sequence number to identify requests in a MultiGet command.
-
 no-auth         bool            Flag that indicates that no authentication (neither WWW nor proxy)
                                 attempts should be made.
 no-www-auth     bool            Flag that indicates that no HTTP WWW authentication attempts should

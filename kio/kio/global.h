@@ -163,14 +163,13 @@ namespace KIO
     CMD_MESSAGEBOXANSWER = 'S', // 83
     CMD_RESUMEANSWER = 'T', // 84
     CMD_CONFIG = 'U', // 85
-    CMD_MULTI_GET = 'V', // 86
-    CMD_SETLINKDEST = 'W', // 87
-    CMD_OPEN = 'X', // 88
-    CMD_CHOWN = 'Y', // 89
-    CMD_READ = 'Z', // 90
-    CMD_WRITE = 91,
-    CMD_SEEK = 92,
-    CMD_CLOSE = 93
+    CMD_SETLINKDEST = 'V', // 86
+    CMD_OPEN = 'W', // 87
+    CMD_CHOWN = 'X', // 88
+    CMD_READ = 'Y', // 89
+    CMD_WRITE = 'Z',
+    CMD_SEEK = 91,
+    CMD_CLOSE = 92
     // Add new ones here once a release is done, to avoid breaking binary compatibility.
     // Note that protocol-specific commands shouldn't be added here, but should use special.
   };

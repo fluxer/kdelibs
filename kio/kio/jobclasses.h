@@ -390,15 +390,6 @@ namespace KIO {
         virtual void slotMetaData( const KIO::MetaData &_metaData);
 
     protected:
-        /*
-         * Allow jobs that inherit SimpleJob and are aware
-         * of redirections to store the SSL session used.
-         * Retrieval is handled by SimpleJob::start
-         * @param m_redirectionURL Reference to redirection URL,
-         * used instead of m_url if not empty
-         */
-        void storeSSLSessionFromJob(const KUrl &m_redirectionURL);
-
         /**
          * Creates a new simple job. You don't need to use this constructor,
          * unless you create a new job that inherits from SimpleJob.
@@ -693,65 +684,6 @@ namespace KIO {
         Q_PRIVATE_SLOT(d_func(), void slotStoredDataReq( KIO::Job *job, QByteArray &data ))
 
         Q_DECLARE_PRIVATE(StoredTransferJob)
-    };
-
-    class MultiGetJobPrivate;
-    /**
-     * The MultiGetJob is a TransferJob that allows you to get
-     * several files from a single server. Don't create directly,
-     * but use KIO::multi_get() instead.
-     * @see KIO::multi_get()
-     */
-    class KIO_EXPORT MultiGetJob : public TransferJob {
-    Q_OBJECT
-
-    public:
-        virtual ~MultiGetJob();
-
-        /**
-         * Get an additional file.
-         *
-         * @param id the id of the file
-         * @param url the url of the file to get
-         * @param metaData the meta data for this request
-         */
-        void get(long id, const KUrl &url, const MetaData &metaData);
-
-    Q_SIGNALS:
-        /**
-         * Data from the slave has arrived.
-         * @param id the id of the request
-         * @param data data received from the slave.
-         * End of data (EOD) has been reached if data.size() == 0
-         */
-        void data( long id, const QByteArray &data);
-
-        /**
-         * Mimetype determined
-         * @param id the id of the request
-         * @param type the mime type
-         */
-        void mimetype( long id, const QString &type );
-
-        /**
-         * File transfer completed.
-         *
-         * When all files have been processed, result(KJob *) gets
-         * emitted.
-         * @param id the id of the request
-         */
-        void result( long id);
-
-    protected Q_SLOTS:
-        virtual void slotRedirection( const KUrl &url);
-        virtual void slotFinished();
-        virtual void slotData( const QByteArray &data);
-        virtual void slotMimetype( const QString &mimetype );
-
-    protected:
-        MultiGetJob(MultiGetJobPrivate &dd);
-    private:
-        Q_DECLARE_PRIVATE(MultiGetJob)
     };
 
     class MimetypeJobPrivate;

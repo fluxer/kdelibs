@@ -563,15 +563,6 @@ public:
     virtual void special( const QByteArray & data );
 
     /**
-     * Used for multiple get. Currently only used foir HTTP pielining
-     * support.
-     *
-     * @param data packed data; Contains number of URLs to fetch, and for
-     * each URL the URL itself and its associated MetaData.
-     */
-    virtual void multiGet( const QByteArray & data );
-
-    /**
      * Called to get the status of the slave. Slave should respond
      * by calling slaveStatus(...)
      */

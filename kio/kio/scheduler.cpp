@@ -979,9 +979,6 @@ static bool mayReturnContent(int cmd, const QString& protocol)
     if (cmd == CMD_GET)
         return true;
 
-    if (cmd == CMD_MULTI_GET)
-        return true;
-
     if (cmd == CMD_SPECIAL && protocol.startsWith(QLatin1String("http"), Qt::CaseInsensitive))
         return true;
 
@@ -1219,7 +1216,7 @@ Slave *SchedulerPrivate::heldSlaveForJob(SimpleJob *job)
     if (!slave && m_slaveOnHold) {
         // Make sure that the job wants to do a GET or a POST, and with no offset
         const int cmd = jobPriv->m_command;
-        bool canJobReuse = (cmd == CMD_GET || cmd == CMD_MULTI_GET);
+        bool canJobReuse = (cmd == CMD_GET);
 
         if (KIO::TransferJob *tJob = qobject_cast<KIO::TransferJob *>(job)) {
             canJobReuse = ( canJobReuse || cmd == CMD_SPECIAL );

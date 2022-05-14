@@ -231,7 +231,7 @@ namespace KIO {
      * @param flags Can be HideProgressInfo, Overwrite and Resume here. WARNING:
      * Setting Resume means that the data will be appended to @p dest if @p dest exists.
      * @return the job handling the operation.
-     * @see multi_get()
+     * @see get()
      */
     KIO_EXPORT TransferJob *put( const KUrl& url, int permissions,
                                  JobFlags flags = DefaultFlags );
@@ -260,18 +260,6 @@ namespace KIO {
      */
     KIO_EXPORT StoredTransferJob *storedPut( const QByteArray& arr, const KUrl& url, int permissions,
                                              JobFlags flags = DefaultFlags );
-
-    /**
-     * Creates a new multiple get job.
-     *
-     * @param id the id of the get operation
-     * @param url the URL of the file
-     * @param metaData the MetaData associated with the file
-     *
-     * @return the job handling the operation.
-     * @see get()
-     */
-    KIO_EXPORT MultiGetJob *multi_get( long id, const KUrl &url, const MetaData &metaData);
 
     /**
      * Find mimetype for one file or directory.
