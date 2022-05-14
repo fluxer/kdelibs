@@ -813,11 +813,9 @@ bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
 {
     const qlonglong windowId = metaData(QLatin1String("window-id")).toLongLong();
     QWidget *windowWidget = QWidget::find(windowId);
-    QString errorMessage;
+
     if (metaData(QLatin1String("no-auth-prompt")).compare(QLatin1String("true"), Qt::CaseInsensitive) == 0) {
-        errorMessage = QLatin1String("<NoAuthPrompt>");
-    } else {
-        errorMessage = errorMsg;
+        return false;
     }
 
     AuthInfo dlgInfo(info);
