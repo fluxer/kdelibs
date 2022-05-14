@@ -81,9 +81,6 @@ Q_SIGNALS:
 
 protected:
     void keyPressEvent( QKeyEvent *e );
-#ifndef QT_KATIE
-    void inputMethodEvent(QInputMethodEvent *e);
-#endif
 
 private:
   KRestrictedLinePrivate * const d;

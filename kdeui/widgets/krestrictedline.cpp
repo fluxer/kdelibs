@@ -69,30 +69,6 @@ void KRestrictedLine::keyPressEvent( QKeyEvent *e )
     }
 }
 
-#ifndef QT_KATIE
-void KRestrictedLine::inputMethodEvent(QInputMethodEvent *e)
-{
-    const QString str = e->commitString();
-    if (!d->qsValidChars.isEmpty() && !str.isEmpty()) {
-        bool allOK = true;
-        Q_FOREACH(QChar ch, str) {
-            if (!d->qsValidChars.contains(ch)) {
-                emit invalidChar(ch.unicode());
-                allOK = false;
-            }
-        }
-        // ## we can't remove invalid chars from the string, however.
-        // we really need a validator (with a different signal like invalidChar(QChar)
-        // or invalidCharacters(QString) maybe.
-
-        if (!allOK)
-            return;
-    }
-
-    KLineEdit::inputMethodEvent(e);
-}
-#endif
-
 void KRestrictedLine::setValidChars( const QString& valid)
 {
   d->qsValidChars = valid;
