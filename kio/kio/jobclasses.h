@@ -535,15 +535,6 @@ namespace KIO {
         void setModificationTime( const QDateTime& mtime );
 
         /**
-         * Checks whether we got an error page. This currently only happens
-         * with HTTP urls. Call this from your slot connected to result().
-         *
-         * @return true if we got an (HTML) error page from the server
-         * instead of what we asked for.
-         */
-        bool isErrorPage() const;
-
-        /**
          * Enable the async data mode.
          * When async data is enabled, data should be provided to the job by
          * calling sendAsyncData() instead of returning data in the
@@ -646,7 +637,6 @@ namespace KIO {
     protected:
         TransferJob(TransferJobPrivate &dd);
     private:
-        Q_PRIVATE_SLOT(d_func(), void slotErrorPage())
         Q_PRIVATE_SLOT(d_func(), void slotCanResume( KIO::filesize_t offset ))
         Q_PRIVATE_SLOT(d_func(), void slotNeedSubUrlData())
         Q_PRIVATE_SLOT(d_func(), void slotSubUrlData(KIO::Job*, const QByteArray &))

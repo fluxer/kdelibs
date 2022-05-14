@@ -593,11 +593,6 @@ void SlaveBase::redirection( const KUrl& _url )
     send( INF_REDIRECTION, data );
 }
 
-void SlaveBase::errorPage()
-{
-    send( INF_ERROR_PAGE );
-}
-
 static bool isSubCommand(int cmd)
 {
    return ( (cmd == CMD_REPARSECONFIGURATION) ||

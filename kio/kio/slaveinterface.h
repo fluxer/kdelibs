@@ -49,7 +49,6 @@ class SlaveInterfacePrivate;
    INF_SPEED,
    INF_REDIRECTION = 20,
    INF_MIME_TYPE = 21,
-   INF_ERROR_PAGE = 22,
    INF_WARNING = 23,
    INF_INFOMESSAGE,
    INF_META_DATA,
@@ -165,7 +164,6 @@ Q_SIGNALS:
     void position( KIO::filesize_t );
 
     void speed( unsigned long );
-    void errorPage();
     void mimeType( const QString & );
     void warning( const QString & );
     void infoMessage( const QString & );

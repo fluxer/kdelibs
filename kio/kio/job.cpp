@@ -1162,11 +1162,6 @@ bool TransferJob::doResume()
     return true;
 }
 
-bool TransferJob::isErrorPage() const
-{
-    return d_func()->m_errorPage;
-}
-
 void TransferJobPrivate::start(Slave *slave)
 {
     Q_Q(TransferJob);
@@ -1187,9 +1182,6 @@ void TransferJobPrivate::start(Slave *slave)
 
     q->connect( slave, SIGNAL(mimeType(QString)),
              SLOT(slotMimetype(QString)) );
-
-    q->connect( slave, SIGNAL(errorPage()),
-             SLOT(slotErrorPage()) );
 
     q->connect( slave, SIGNAL(needSubUrlData()),
              SLOT(slotNeedSubUrlData()) );
@@ -1233,11 +1225,6 @@ void TransferJob::slotMetaData( const KIO::MetaData &_metaData)
     Q_D(TransferJob);
     SimpleJob::slotMetaData(_metaData);
     storeSSLSessionFromJob(d->m_redirectionURL);
-}
-
-void TransferJobPrivate::slotErrorPage()
-{
-    m_errorPage = true;
 }
 
 void TransferJobPrivate::slotCanResume( KIO::filesize_t offset )
@@ -1922,7 +1909,6 @@ void FileCopyJobPrivate::slotCanResume( KIO::Job* job, KIO::filesize_t offset )
         {
             m_getJob = KIO::get( m_src, NoReload, HideProgressInfo /* no GUI */ );
             //kDebug(7007) << "m_getJob=" << m_getJob << m_src;
-            m_getJob->addMetaData( "errorPage", "false" );
             m_getJob->addMetaData( "AllowCompressedPage", "false" );
             // Set size in subjob. This helps if the slave doesn't emit totalSize.
             if ( m_sourceSize != (KIO::filesize_t)-1 )

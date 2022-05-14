@@ -206,13 +206,6 @@ public:
     void redirection( const KUrl &_url );
 
     /**
-     * Tell that we will only get an error page here.
-     * This means: the data you'll get isn't the data you requested,
-     * but an error page (usually HTML) that describes an error.
-     */
-    void errorPage();
-
-    /**
      * Call this in mimetype() and in get(), when you know the mimetype.
      * See mimetype about other ways to implement it.
      */

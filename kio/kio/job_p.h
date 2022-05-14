@@ -252,20 +252,19 @@ namespace KIO {
         inline TransferJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs,
                                   const QByteArray &_staticData)
             : SimpleJobPrivate(url, command, packedArgs),
-              m_internalSuspended(false), m_errorPage(false),
+              m_internalSuspended(false),
               staticData(_staticData), m_isMimetypeEmitted(false), m_subJob(0)
             { }
 
         inline TransferJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs,
                                   QIODevice* ioDevice)
             : SimpleJobPrivate(url, command, packedArgs),
-              m_internalSuspended(false), m_errorPage(false),
+              m_internalSuspended(false),
               m_isMimetypeEmitted(false), m_subJob(0),
               m_outgoingDataSource(ioDevice)
             { }
 
         bool m_internalSuspended;
-        bool m_errorPage;
         QByteArray staticData;
         KUrl m_redirectionURL;
         KUrl::List m_redirectionList;
@@ -297,7 +296,6 @@ namespace KIO {
          */
         virtual void slotDataReqFromDevice();
 
-        void slotErrorPage();
         void slotCanResume( KIO::filesize_t offset );
         void slotNeedSubUrlData();
         void slotSubUrlData(KIO::Job*, const QByteArray &);
