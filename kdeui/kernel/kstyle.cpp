@@ -416,41 +416,15 @@ void KStyle::polish(QPalette &pal)
 {
     QCommonStyle::polish(pal);
 }
-QRect KStyle::itemTextRect(const QFontMetrics &fm, const QRect &r,
-                       int flags, bool enabled,
-                       const QString &text) const
-{
-    return QCommonStyle::itemTextRect(fm, r, flags, enabled, text);
-}
-QRect KStyle::itemPixmapRect(const QRect &r, int flags, const QPixmap &pixmap) const
-{
-    return QCommonStyle::itemPixmapRect(r, flags, pixmap);
-}
-void KStyle::drawItemText(QPainter *painter, const QRect &rect,
-                      int flags, const QPalette &pal, bool enabled,
-                      const QString &text, QPalette::ColorRole textRole) const
-{
-    QCommonStyle::drawItemText(painter, rect, flags, pal, enabled,
-                               text, textRole);
-}
-void KStyle::drawItemPixmap(QPainter *painter, const QRect &rect,
-                            int alignment, const QPixmap &pixmap) const
-{
-    QCommonStyle::drawItemPixmap(painter, rect, alignment, pixmap);
-}
+
 QPalette KStyle::standardPalette() const
 {
     return KGlobalSettings::createApplicationPalette(
         KSharedConfig::openConfig(d->m_componentData));
 }
 
-#ifndef QT_KATIE
-QIcon KStyle::standardIconImplementation(
-#else
-QIcon KStyle::standardIcon(
-#endif
-                                         StandardPixmap standardIcon, const QStyleOption *option,
-                                         const QWidget *widget) const
+QIcon KStyle::standardIcon(StandardPixmap standardIcon, const QStyleOption *option,
+                           const QWidget *widget) const
 {
     switch (standardIcon) {
         case QStyle::SP_DesktopIcon:
@@ -566,23 +540,8 @@ QIcon KStyle::standardIcon(
             return KIcon("audio-volume-muted");
 
         default:
-#ifndef QT_KATIE
-            return QStyle::standardIconImplementation(standardIcon, option, widget);
-#else
             return QStyle::standardIcon(standardIcon, option, widget);
-#endif
     }
-}
-
-QPixmap KStyle::standardPixmap(StandardPixmap standardPixmap, const QStyleOption *opt,
-                               const QWidget *widget) const
-{
-    return QCommonStyle::standardPixmap(standardPixmap, opt, widget);
-}
-QPixmap KStyle::generatedIconPixmap(QIcon::Mode iconMode, const QPixmap &pixmap,
-                                    const QStyleOption *opt) const
-{
-    return QCommonStyle::generatedIconPixmap(iconMode, pixmap, opt);
 }
 
 void KStyle::drawInsideRect(QPainter* p, const QRect& r) const
@@ -599,8 +558,6 @@ QRect KStyle::centerRect(const QRect &in, const QSize &size) const
 {
     return centerRect(in, size.width(), size.height());
 }
-
-
 
 void KStyle::drawKStylePrimitive(WidgetType widgetType, int primitive,
                                  const QStyleOption* opt,
@@ -2828,11 +2785,7 @@ int KStyle::pixelMetric(PixelMetric metric, const QStyleOption* option, const QW
     return QCommonStyle::pixelMetric(metric, option, widget);
 }
 
-#ifndef QT_KATIE
-int KStyle::layoutSpacingImplementation(
-#else
 int KStyle::layoutSpacing(
-#endif
     QSizePolicy::ControlType control1, QSizePolicy::ControlType control2,
     Qt::Orientation orientation, const QStyleOption *option, const QWidget *widget) const
 {

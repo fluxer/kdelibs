@@ -103,36 +103,6 @@ void KFontFamilyDelegate::paint (QPainter *painter,
     QString trFontFamily = index.data(Qt::DisplayRole).toString();
     QString fontFamily = fontFamilyTrMap[trFontFamily];
 
-    bool canShowLanguageSample = true;
-#ifndef QT_KATIE
-    // Writing systems provided by the font.
-    QList<QFontDatabase::WritingSystem> availableSystems = QFontDatabase().writingSystems(fontFamily);
-
-    // Intersect font's writing systems with that specified for
-    // the language's sample text, to see if the sample can be shown.
-    // If the font reports no writing systems, assume it can show the sample.
-    if (availableSystems.count() > 0) {
-        canShowLanguageSample = false;
-        QString scriptsSpec = i18nc("Numeric IDs of scripts for font previews",
-        // i18n: Integer which indicates the script you used in the sample text
-        // for font previews in your language. For the possible values, see
-        // http://doc.trolltech.com/qfontdatabase.html#WritingSystem-enum
-        // If the sample text contains several scripts, their IDs can be given
-        // as a comma-separated list (e.g. for Japanese it is "1,27").
-                                    "1");
-        QStringList scriptStrIds = scriptsSpec.split(',');
-        foreach (const QString &scriptStrId, scriptStrIds) {
-            bool convOk;
-            int ws = scriptStrId.toInt(&convOk);
-            if (   convOk && ws > 0 && ws < QFontDatabase::WritingSystemsCount
-                && availableSystems.contains(static_cast<QFontDatabase::WritingSystem>(ws))) {
-                canShowLanguageSample = true;
-                break;
-            }
-        }
-    }
-#endif
-
     // Choose and paint an icon according to the font type, scalable or bitmat.
     const QIcon *icon = &bitmap;
     if (QFontDatabase().isSmoothlyScalable(fontFamily)) {
@@ -163,20 +133,7 @@ void KFontFamilyDelegate::paint (QPainter *painter,
     // Show text sample in user's language if the writing system is supported,
     // otherwise show a collage of generic script samples provided by Qt.
     // If the font does not report what it supports, assume all.
-    QString sample;
-    if (canShowLanguageSample) {
-        sample = alphabetSample();
-#ifndef QT_KATIE
-    } else {
-        foreach (const QFontDatabase::WritingSystem &ws, availableSystems) {
-            sample += QFontDatabase::writingSystemSample(ws) + "  ";
-            if (sample.length() > 40) { // do not let the sample be too long
-                break;
-            }
-        }
-        sample = sample.trimmed();
-#endif
-    }
+    QString sample = alphabetSample();
     QFont sampleFont;
     sampleFont.setFamily(fontFamily);
     sampleFont.setPointSizeF(sampleFont.pointSizeF() * sizeFactSample);
