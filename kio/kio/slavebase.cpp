@@ -998,9 +998,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
 {
     QDataStream stream( data );
 
-    KUrl url;
-    int i;
-
     switch( command ) {
         case CMD_HOST: {
             QString passwd;
@@ -1070,6 +1067,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_GET: {
+            KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
             get( url );
@@ -1078,6 +1076,8 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_OPEN: {
+            KUrl url;
+            int i;
             stream >> url >> i;
             QIODevice::OpenMode mode = QFlag(i);
             d->m_state = d->InsideMethod;
@@ -1086,6 +1086,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_PUT: {
+            KUrl url;
             int permissions;
             qint8 iOverwrite, iResume;
             stream >> url >> iOverwrite >> iResume >> permissions;
@@ -1105,6 +1106,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_STAT: {
+            KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
             stat( url ); //krazy:exclude=syscalls
@@ -1113,6 +1115,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_MIMETYPE: {
+            KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
             mimetype( url );
@@ -1121,6 +1124,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_LISTDIR: {
+            KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
             listDir( url );
@@ -1129,6 +1133,8 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_MKDIR: {
+            KUrl url;
+            int i;
             stream >> url >> i;
             d->m_state = d->InsideMethod;
             mkdir( url, i ); //krazy:exclude=syscalls
@@ -1137,8 +1143,9 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_RENAME: {
-            qint8 iOverwrite;
+            KUrl url;
             KUrl url2;
+            qint8 iOverwrite;
             stream >> url >> url2 >> iOverwrite;
             JobFlags flags;
             if ( iOverwrite != 0 ) flags |= Overwrite;
@@ -1149,8 +1156,9 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_SYMLINK: {
-            qint8 iOverwrite;
+            KUrl url;
             QString target;
+            qint8 iOverwrite;
             stream >> target >> url >> iOverwrite;
             JobFlags flags;
             if ( iOverwrite != 0 ) flags |= Overwrite;
@@ -1161,9 +1169,10 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_COPY: {
+            KUrl url;
+            KUrl url2;
             int permissions;
             qint8 iOverwrite;
-            KUrl url2;
             stream >> url >> url2 >> permissions >> iOverwrite;
             JobFlags flags;
             if ( iOverwrite != 0 ) flags |= Overwrite;
@@ -1174,6 +1183,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_DEL: {
+            KUrl url;
             qint8 isFile;
             stream >> url >> isFile;
             d->m_state = d->InsideMethod;
@@ -1183,6 +1193,8 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_CHMOD: {
+            KUrl url;
+            int i;
             stream >> url >> i;
             d->m_state = d->InsideMethod;
             chmod( url, i);
@@ -1191,6 +1203,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_CHOWN: {
+            KUrl url;
             QString owner, group;
             stream >> url >> owner >> group;
             d->m_state = d->InsideMethod;
@@ -1200,6 +1213,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_SETMODIFICATIONTIME: {
+            KUrl url;
             QDateTime dt;
             stream >> url >> dt;
             d->m_state = d->InsideMethod;
@@ -1222,6 +1236,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_SUBURL: {
+            KUrl url;
             stream >> url;
             d->m_state = d->InsideMethod;
             setSubUrl(url);
@@ -1262,30 +1277,34 @@ void SlaveBase::dispatchOpenCommand( int command, const QByteArray &data )
     QDataStream stream( data );
 
     switch( command ) {
-    case CMD_READ: {
-        KIO::filesize_t bytes;
-        stream >> bytes;
-        read(bytes);
-        break;
-    }
-    case CMD_WRITE: {
-        write(data);
-        break;
-    }
-    case CMD_SEEK: {
-        KIO::filesize_t offset;
-        stream >> offset;
-        seek(offset);
-    }
-    case CMD_NONE:
-        break;
-    case CMD_CLOSE:
-        close();                // must call finish(), which will set d->inOpenLoop=false
-        break;
-    default:
-        // Some command we don't understand.
-        // Just ignore it, it may come from some future version of KDE.
-        break;
+        case CMD_READ: {
+            KIO::filesize_t bytes;
+            stream >> bytes;
+            read(bytes);
+            break;
+        }
+        case CMD_WRITE: {
+            write(data);
+            break;
+        }
+        case CMD_SEEK: {
+            KIO::filesize_t offset;
+            stream >> offset;
+            seek(offset);
+            break;
+        }
+        case CMD_NONE: {
+            break;
+        }
+        case CMD_CLOSE: {
+            close();                // must call finish(), which will set d->inOpenLoop=false
+            break;
+        }
+        default: {
+            // Some command we don't understand.
+            // Just ignore it, it may come from some future version of KDE.
+            break;
+        }
     }
 }
 
@@ -1331,7 +1350,6 @@ int SlaveBase::responseTimeout()
        return result;
     return DEFAULT_RESPONSE_TIMEOUT;
 }
-
 
 int SlaveBase::readTimeout()
 {
