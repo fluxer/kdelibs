@@ -68,45 +68,24 @@ class KExiv2Private
 public:
     KExiv2Private(const QString &path);
 
-    QImage m_preview;
-    KExiv2::DataMap m_datamap;
+#if defined(HAVE_EXIV2)
+    Exiv2::Image::AutoPtr m_exiv2image;
+#endif
+    const QByteArray m_path;
 };
 
 KExiv2Private::KExiv2Private(const QString &path)
+    : m_path(path.toLocal8Bit())
 {
 #if defined(HAVE_EXIV2)
     try {
-        kDebug() << "reading Exiv2 metadata from" << path;
-        const QByteArray pathbytes = path.toLocal8Bit();
-        Exiv2::Image::AutoPtr exiv2image = Exiv2::ImageFactory::open(pathbytes.constData());
-        if (!exiv2image.get()) {
-            kWarning() << "image pointer is null";
+        kDebug() << "Reading Exiv2 metadata from" << m_path;
+        m_exiv2image = Exiv2::ImageFactory::open(m_path.constData());
+        if (!m_exiv2image.get()) {
+            kWarning() << "Image pointer is null";
             return;
         }
-        exiv2image->readMetadata();
-
-        kDebug() << "mapping Exiv2 data for" << path;
-        const Exiv2::ExifData exiv2data = exiv2image->exifData();
-        for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
-            const std::string key = (*it).key();
-            const std::string value = (*it).value().toString();
-            kDebug() << "key" << key.c_str() << "value" << value.c_str();
-            m_datamap.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
-        }
-
-        kDebug() << "obtaninig Exiv2 preview for" << path;
-        Exiv2::PreviewManager exiv2previewmanager(*exiv2image);
-        Exiv2::PreviewPropertiesList exiv2previewpropertieslist = exiv2previewmanager.getPreviewProperties();
-        // reverse iteration to get the largest preview
-        for (size_t i = exiv2previewpropertieslist.size(); i > 0; i--) {
-            const Exiv2::PreviewProperties exiv2previewproperties = exiv2previewpropertieslist.at(i - 1);
-            Exiv2::PreviewImage exiv2previewimage = exiv2previewmanager.getPreviewImage(exiv2previewproperties);
-            m_preview.loadFromData(reinterpret_cast<const char*>(exiv2previewimage.pData()),
-                exiv2previewimage.size(), exiv2previewimage.extension().c_str());
-            if (!m_preview.isNull()) {
-                break;
-            }
-        }
+        m_exiv2image->readMetadata();
     } catch(Exiv2::Error &err) {
         kWarning() << err.what() << err.code();
     } catch(std::exception &err) {
@@ -114,7 +93,7 @@ KExiv2Private::KExiv2Private(const QString &path)
     } catch (...) {
         kWarning() << "exception raised";
     }
-#endif
+#endif // HAVE_EXIV2
 }
 
 KExiv2::KExiv2(const QString &path)
@@ -124,14 +103,40 @@ KExiv2::KExiv2(const QString &path)
 
 QImage KExiv2::preview() const
 {
-    return d->m_preview;
+    QImage result;
+#if defined(HAVE_EXIV2)
+    if (d->m_exiv2image.get()) {
+        try {
+            kDebug() << "Obtaninig Exiv2 preview for" << d->m_path;
+            Exiv2::PreviewManager exiv2previewmanager(*d->m_exiv2image);
+            Exiv2::PreviewPropertiesList exiv2previewpropertieslist = exiv2previewmanager.getPreviewProperties();
+            // reverse iteration to get the largest preview
+            for (size_t i = exiv2previewpropertieslist.size(); i > 0; i--) {
+                const Exiv2::PreviewProperties exiv2previewproperties = exiv2previewpropertieslist.at(i - 1);
+                Exiv2::PreviewImage exiv2previewimage = exiv2previewmanager.getPreviewImage(exiv2previewproperties);
+                result.loadFromData(reinterpret_cast<const char*>(exiv2previewimage.pData()),
+                    exiv2previewimage.size(), exiv2previewimage.extension().c_str());
+                if (!result.isNull()) {
+                    break;
+                }
+            }
+        } catch(Exiv2::Error &err) {
+            kWarning() << err.what() << err.code();
+        } catch(std::exception &err) {
+            kWarning() << err.what();
+        } catch (...) {
+            kWarning() << "Exception raised";
+        }
+    }
+#endif // HAVE_EXIV2
+    return result;
 }
 
 bool KExiv2::rotateImage(QImage &image) const
 {
     // for reference:
     // https://exiv2.org/tags-xmp-tiff.html
-    const int orientation = d->m_datamap.value("Exif.Image.Orientation").toInt();
+    const int orientation = data().value("Exif.Image.Orientation").toInt();
     switch (orientation) {
         case 0: // not documented, nothing to do I guess
         case 1: { // normal orientation
@@ -176,7 +181,7 @@ bool KExiv2::rotateImage(QImage &image) const
             return true;
         }
         default: {
-            kWarning() << "unknown orientation" << orientation;
+            kWarning() << "Unknown orientation" << orientation;
             return false;
         }
     }
@@ -185,5 +190,26 @@ bool KExiv2::rotateImage(QImage &image) const
 
 KExiv2::DataMap KExiv2::data() const
 {
-    return d->m_datamap;
+    KExiv2::DataMap result;
+#if defined(HAVE_EXIV2)
+    if (d->m_exiv2image.get()) {
+        try {
+            kDebug() << "Mapping Exiv2 data for" << d->m_path;
+            const Exiv2::ExifData exiv2data = d->m_exiv2image->exifData();
+            for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
+                const std::string key = (*it).key();
+                const std::string value = (*it).value().toString();
+                kDebug() << "Key" << key.c_str() << "value" << value.c_str();
+                result.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
+            }
+        } catch(Exiv2::Error &err) {
+            kWarning() << err.what() << err.code();
+        } catch(std::exception &err) {
+            kWarning() << err.what();
+        } catch (...) {
+            kWarning() << "Exception raised";
+        }
+    }
+#endif // HAVE_EXIV2
+    return result;
 }

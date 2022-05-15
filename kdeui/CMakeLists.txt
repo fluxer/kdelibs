@@ -328,11 +328,6 @@ qt4_add_dbus_interface(kdeui_LIB_SRCS
 )
 
 qt4_add_dbus_interface(kdeui_LIB_SRCS
-    jobs/org.kde.JobViewV2.xml
-    jobviewifacev2
-)
-
-qt4_add_dbus_interface(kdeui_LIB_SRCS
     notifications/org.freedesktop.Notifications.xml
     notifications_interface
 )
@@ -647,7 +642,6 @@ install(
     FILES
     jobs/org.kde.JobViewServer.xml
     jobs/org.kde.JobView.xml
-    jobs/org.kde.JobViewV2.xml
     notifications/org.kde.StatusNotifierItem.xml
     notifications/org.kde.StatusNotifierWatcher.xml
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
