@@ -73,7 +73,6 @@ protected:
     QString location;
     QString type;
     QString name;
-    class DynMenuInfoPrivate *d;
   };
 
   /**
