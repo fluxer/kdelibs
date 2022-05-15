@@ -159,35 +159,6 @@ QPainterPath AppletHandle::shape() const
     }
 }
 
-QPainterPath handleRect(const QRectF &rect, int radius, bool onRight)
-{
-    QPainterPath path;
-    if (onRight) {
-        // make the left side straight
-        path.moveTo(rect.left(), rect.top());              // Top left
-        path.lineTo(rect.right() - radius, rect.top());    // Top side
-        path.quadTo(rect.right(), rect.top(),
-                    rect.right(), rect.top() + radius);    // Top right corner
-        path.lineTo(rect.right(), rect.bottom() - radius); // Right side
-        path.quadTo(rect.right(), rect.bottom(),
-                    rect.right() - radius, rect.bottom()); // Bottom right corner
-        path.lineTo(rect.left(), rect.bottom());           // Bottom side
-    } else {
-        // make the right side straight
-        path.moveTo(QPointF(rect.left(), rect.top() + radius));
-        path.quadTo(rect.left(), rect.top(),
-                    rect.left() + radius, rect.top());     // Top left corner
-        path.lineTo(rect.right(), rect.top());             // Top side
-        path.lineTo(rect.right(), rect.bottom());          // Right side
-        path.lineTo(rect.left() + radius, rect.bottom());  // Bottom side
-        path.quadTo(rect.left(), rect.bottom(),
-                    rect.left(), rect.bottom() - radius);  // Bottom left corner
-    }
-
-    path.closeSubpath();
-    return path;
-}
-
 void AppletHandle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(option);
