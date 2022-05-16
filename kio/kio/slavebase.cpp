@@ -811,12 +811,12 @@ void SlaveBase::reparseConfiguration()
 
 bool SlaveBase::openPasswordDialog( AuthInfo& info, const QString &errorMsg )
 {
-    const qlonglong windowId = metaData(QLatin1String("window-id")).toLongLong();
-    QWidget *windowWidget = QWidget::find(windowId);
-
     if (metaData(QLatin1String("no-auth-prompt")).compare(QLatin1String("true"), Qt::CaseInsensitive) == 0) {
         return false;
     }
+
+    const qlonglong windowId = metaData(QLatin1String("window-id")).toLongLong();
+    QWidget *windowWidget = QWidget::find(windowId);
 
     AuthInfo dlgInfo(info);
     // Prevent queryAuthInfo from caching the user supplied password since
