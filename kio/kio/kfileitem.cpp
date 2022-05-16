@@ -52,12 +52,6 @@
 #include <kconfiggroup.h>
 #include <kfilesystemtype_p.h>
 
-static bool isSMBShare(const QString &dirpath)
-{
-    // TODO:
-    return false;
-}
-
 static bool isNFSShare(const QString &dirpath)
 {
     QFile etabfile(QString::fromLatin1("/var/lib/nfs/etab"));
@@ -991,8 +985,7 @@ QStringList KFileItem::overlays() const
 
     if( S_ISDIR( d->m_fileMode ) && d->m_bIsLocalUrl)
     {
-        if (isSMBShare( d->m_url.toLocalFile() ) ||
-            isNFSShare( d->m_url.toLocalFile() ) ||
+        if (isNFSShare( d->m_url.toLocalFile() ) ||
             isKDirShare( d->m_url.toLocalFile() ))
         {
             //kDebug() << d->m_url.path();
