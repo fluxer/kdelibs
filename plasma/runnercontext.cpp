@@ -21,8 +21,7 @@
 
 #include <cmath>
 
-#include <QReadWriteLock>
-
+#include <QMutex>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -40,12 +39,8 @@
 #include "abstractrunner.h"
 #include "querymatch.h"
 
-//#define LOCK_FOR_READ(d) if (d->policy == Shared) { d->lock.lockForRead(); }
-//#define LOCK_FOR_WRITE(d) if (d->policy == Shared) { d->lock.lockForWrite(); }
-//#define UNLOCK(d) if (d->policy == Shared) { d->lock.unlock(); }
-
-#define LOCK_FOR_READ(d) d->lock.lockForRead();
-#define LOCK_FOR_WRITE(d) d->lock.lockForWrite();
+#define LOCK_FOR_READ(d) d->lock.lock();
+#define LOCK_FOR_WRITE(d) d->lock.lock();
 #define UNLOCK(d) d->lock.unlock();
 
 namespace Plasma
@@ -249,7 +244,7 @@ class RunnerContextPrivate : public QSharedData
             q = &s_dummyContext;
         }
 
-        QReadWriteLock lock;
+        QMutex lock;
         QList<QueryMatch> matches;
         QMap<QString, const QueryMatch*> matchesById;
         QHash<QString, int> launchCounts;
