@@ -51,7 +51,6 @@ public:
                                             enum MHD_ValueKind kind,
                                             const char *key,
                                             const char *value);
-    static enum MHD_Result acceptCallback(void *cls, const struct sockaddr *addr, socklen_t addrlen);
     static enum MHD_Result accessCallback(void *cls,
                                           struct MHD_Connection *connection,
                                           const char *url,
@@ -178,7 +177,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
             m_mhddaemon = MHD_start_daemon(
                 mhdflags,
                 0,
-                KHTTPPrivate::acceptCallback, this,
+                NULL, NULL,
                 KHTTPPrivate::accessCallback, this,
                 MHD_OPTION_EXTERNAL_LOGGER, KHTTPPrivate::loggerCallback, this,
                 MHD_OPTION_HTTPS_MEM_KEY, m_tlskey.constData(),
@@ -207,7 +206,7 @@ bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
             m_mhddaemon = MHD_start_daemon(
                 mhdflags | MHD_USE_IPv6,
                 0,
-                KHTTPPrivate::acceptCallback, this,
+                NULL, NULL,
                 KHTTPPrivate::accessCallback, this,
                 MHD_OPTION_EXTERNAL_LOGGER, KHTTPPrivate::loggerCallback, this,
                 MHD_OPTION_HTTPS_MEM_KEY, m_tlskey.constData(),
@@ -296,12 +295,6 @@ enum MHD_Result KHTTPPrivate::keyValueCallback(void *cls,
     Q_UNUSED(kind);
     KHTTPPrivate* khttpprivate = static_cast<KHTTPPrivate*>(cls);
     khttpprivate->m_url.addQueryItem(QString::fromUtf8(key), QString::fromUtf8(value));
-    return MHD_YES;
-}
-
-enum MHD_Result KHTTPPrivate::acceptCallback(void *cls, const struct sockaddr *addr, socklen_t addrlen)
-{
-    // qDebug() << Q_FUNC_INFO;
     return MHD_YES;
 }
 
