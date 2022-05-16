@@ -61,7 +61,7 @@ static int KExiv2Deinit()
     return 0;
 }
 Q_DESTRUCTOR_FUNCTION(KExiv2Deinit);
-#endif
+#endif // HAVE_EXIV2
 
 class KExiv2Private
 {
@@ -194,7 +194,7 @@ KExiv2::DataMap KExiv2::data() const
 #if defined(HAVE_EXIV2)
     if (d->m_exiv2image.get()) {
         try {
-            kDebug() << "Mapping Exiv2 data for" << d->m_path;
+            kDebug() << "Mapping EXIF data for" << d->m_path;
             const Exiv2::ExifData exiv2data = d->m_exiv2image->exifData();
             for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
                 const std::string key = (*it).key();

@@ -28,7 +28,7 @@
 class KExiv2Private;
 
 /*!
-    Class to obtain Exiv2 metadata, preview and rotate images based on the metadata.
+    Class to obtain EXIF metadata, preview and rotate images based on the metadata.
 
     @note Initialization and cleanup of the Exiv2 library resources is automatic
     @since 4.20
@@ -39,23 +39,23 @@ public:
     typedef QMap<QByteArray,QString> DataMap;
 
     /*!
-        @brief Contructs object from @p path and obtains Exiv2 data if possible
+        @brief Contructs object from @p path and obtains EXIF data if possible
     */
     KExiv2(const QString &path);
 
     /*!
-        @return Largest preview image if provided in the Exiv2 data, the image is not rotated
+        @return Largest preview image if provided in the EXIF data, the image is not rotated
         automatically and may be null
     */
     QImage preview() const;
 
     /*!
-        @return Rotates @p image according to the Exiv2 orientation data
+        @return Rotates @p image according to the EXIF orientation data
     */
     bool rotateImage(QImage &image) const;
 
     /*!
-        @return Map of all Exiv2 properties
+        @return Map of all EXIF properties
     */
     DataMap data() const;
 
