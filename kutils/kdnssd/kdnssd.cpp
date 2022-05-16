@@ -30,7 +30,7 @@
 
 #if defined(HAVE_AVAHI)
 // NOTE: resolving to and publishing IPv4 addresses since curl, ping, etc. cannot handle URLs with
-// IPv6 addresses as host along with port (e.g. [fe80::fe4d:d4ff:fe4c:5575]:7287)
+// IPv6 address as host along with port (e.g. http://[fe80::fe4d:d4ff:fe4c:5575]:7287)
 static const AvahiProtocol s_avahiproto = AVAHI_PROTO_INET;
 
 static QString getAvahiError(const int avahierror)
