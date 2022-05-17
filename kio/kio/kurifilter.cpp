@@ -20,8 +20,6 @@
 
 #include "kurifilter.h"
 
-#include "hostinfo_p.h"
-
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kservicetypetrader.h>
@@ -547,7 +545,8 @@ QString KUriFilterPlugin::iconNameFor(const KUrl& url, KUriFilterData::UriTypes 
 
 QHostInfo KUriFilterPlugin::resolveName(const QString& hostname, unsigned long timeout) const
 {
-    return KIO::HostInfo::lookupHost(hostname, timeout);
+    Q_UNUSED(timeout);
+    return QHostInfo::fromName(hostname);
 }
 
 

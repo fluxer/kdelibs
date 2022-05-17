@@ -21,8 +21,6 @@
 
 #include "kprotocolmanager.h"
 
-#include "hostinfo_p.h"
-
 #include <string.h>
 #include <unistd.h>
 #include <sys/utsname.h>
@@ -198,7 +196,7 @@ bool KProtocolManagerPrivate::shouldIgnoreProxyFor(const KUrl& url)
     // TODO: Perhaps we should make configurable ?
     if (address.isNull()) {
       kDebug() << "Performing DNS lookup for" << host;
-      QHostInfo info = KIO::HostInfo::lookupHost(host, 2000);
+      QHostInfo info = QHostInfo::fromName(host);
       const QList<QHostAddress> addresses = info.addresses();
       if (!addresses.isEmpty())
         address = addresses.first();

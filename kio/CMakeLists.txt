@@ -76,7 +76,6 @@ set(kiocore_STAT_SRCS
     kio/thumbcreator.cpp
     kio/thumbsequencecreator.cpp
     kio/udsentry.cpp
-    kio/hostinfo.cpp
     kio/usernotificationhandler.cpp
     kio/clipboardupdater.cpp
     kio/kautomount.cpp
