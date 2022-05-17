@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Mario Bensi <mbensi@ipsquad.net>
+    Copyright 2022 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,44 +18,41 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_FSTAB_WATCHER_H
-#define SOLID_BACKENDS_FSTAB_WATCHER_H
+#ifndef SOLID_BACKENDS_EXPORTS_EXPORTSMANAGER_H
+#define SOLID_BACKENDS_EXPORTS_EXPORTSMANAGER_H
 
-#include <QObject>
+#define EXPORTS_ROOT_UDI "/org/kde/exports/root0"
+#define EXPORTS_UDI_PREFIX "/org/kde/exports"
 
-#include <QFileSystemWatcher>
-#include <QFile>
-#include <QSocketNotifier>
+#include <solid/ifaces/devicemanager.h>
 
 namespace Solid
 {
 namespace Backends
 {
-namespace Fstab
+namespace Exports
 {
+class ExportsManager : public Solid::Ifaces::DeviceManager
+{
+    Q_OBJECT
 
-    class FstabWatcher : public QObject {
-        Q_OBJECT
-    public:
-        FstabWatcher();
-        virtual ~FstabWatcher();
+public:
+    ExportsManager(QObject *parent);
+    virtual ~ExportsManager();
 
-        static FstabWatcher *instance();
+    virtual QString udiPrefix() const;
+    virtual QSet<Solid::DeviceInterface::Type> supportedInterfaces() const;
+    virtual QStringList allDevices();
+    virtual QStringList devicesFromQuery(const QString &parentUdi,
+                                         Solid::DeviceInterface::Type type);
+    virtual QObject *createDevice(const QString &udi);
 
-    Q_SIGNALS:
-        void mtabChanged();
-        void fstabChanged();
-
-    private Q_SLOTS:
-        void onFileChanged(const QString &path);
-
-    private:
-        QFileSystemWatcher *m_fileSystemWatcher;
-        QSocketNotifier *m_mtabSocketNotifier;
-        QFile *m_mtabFile;
-    };
+private:
+    class Private;
+    Private *const d;
+};
 }
 }
 }
-#endif // SOLID_BACKENDS_FSTAB_WATCHER_H
 
+#endif // SOLID_BACKENDS_EXPORTS_EXPORTSMANAGER_H

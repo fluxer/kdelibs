@@ -67,12 +67,11 @@ set(solid_LIB_SRCS
     ifaces/graphic.cpp
 
     backends/shared/rootdevice.cpp
-    backends/fstab/fstabmanager.cpp
-    backends/fstab/fstabdevice.cpp
-    backends/fstab/fstabnetworkshare.cpp
-    backends/fstab/fstabstorageaccess.cpp
-    backends/fstab/fstabhandling.cpp
-    backends/fstab/fstabwatcher.cpp
+    backends/exports/exportsdevice.cpp
+    backends/exports/exportsdeviceinterface.cpp
+    backends/exports/exportsmanager.cpp
+    backends/exports/exportsnetworkshare.cpp
+    backends/exports/exportsstorageaccess.cpp
 )
 
 configure_file(

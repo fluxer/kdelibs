@@ -1,5 +1,5 @@
 /*
-    Copyright 2011 Mario Bensi <mbensi@ipsquad.net>
+    Copyright 2022 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,45 +18,33 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_FSTAB_NETWORKSHARE_H
-#define SOLID_BACKENDS_FSTAB_NETWORKSHARE_H
+#ifndef SOLID_BACKENDS_EXPORTS_NETWORKSHARE_H
+#define SOLID_BACKENDS_EXPORTS_NETWORKSHARE_H
 
 #include <solid/ifaces/networkshare.h>
-
-#include <QtCore/QObject>
+#include "exportsdeviceinterface.h"
 
 namespace Solid
 {
 namespace Backends
 {
-namespace Fstab
+namespace Exports
 {
-    class FstabDevice;
-    class FstabNetworkShare : public QObject, public Solid::Ifaces::NetworkShare
-    {
-        Q_OBJECT
-        Q_INTERFACES(Solid::Ifaces::NetworkShare)
+class ExportsDevice;
 
-        public:
-            explicit FstabNetworkShare(Solid::Backends::Fstab::FstabDevice *device);
+class NetworkShare : public DeviceInterface, virtual public Solid::Ifaces::NetworkShare
+{
+    Q_OBJECT
+    Q_INTERFACES(Solid::Ifaces::NetworkShare)
 
-            virtual ~FstabNetworkShare();
+public:
+    NetworkShare(ExportsDevice *device);
 
-            virtual Solid::NetworkShare::ShareType type() const;
-
-            virtual QUrl url() const;
-
-        public:
-            const Solid::Backends::Fstab::FstabDevice* fstabDevice() const;
-
-        private:
-            Solid::Backends::Fstab::FstabDevice *m_fstabDevice;
-            Solid::NetworkShare::ShareType m_type;
-            QUrl m_url;
-    };
-
+    virtual Solid::NetworkShare::ShareType type() const;
+    virtual QUrl url() const;
+};
 }
 }
 }
 
-#endif // SOLID_BACKENDS_FSTAB_NETWORKSHARE_H
+#endif // SOLID_BACKENDS_EXPORTS_NETWORKSHARE_H

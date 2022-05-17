@@ -1,5 +1,5 @@
 /*
-    Copyright 2010 Mario Bensi <mbensi@ipsquad.net>
+    Copyright 2022 Ivailo Monev <xakepa10@gmail.com>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -18,11 +18,17 @@
     License along with this library. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef SOLID_BACKENDS_FSTAB_SERVICE_H
-#define SOLID_BACKENDS_FSTAB_SERVICE_H
+#include "exportsdeviceinterface.h"
 
-/* FStab */
-#define FSTAB_UDI_PREFIX             "/org/kde/fstab"
+using namespace Solid::Backends::Exports;
 
-#endif // SOLID_BACKENDS_FSTAB_H
+DeviceInterface::DeviceInterface(ExportsDevice *device)
+    : QObject(device), m_device(device)
+{
+}
 
+DeviceInterface::~DeviceInterface()
+{
+}
+
+#include "backends/exports/moc_exportsdeviceinterface.cpp"

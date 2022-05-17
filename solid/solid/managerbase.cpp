@@ -24,7 +24,7 @@
 
 #include <stdlib.h>
 
-#include "backends/fstab/fstabmanager.h"
+#include "backends/exports/exportsmanager.h"
 
 #if defined(ENABLE_TESTING)
 #include "backends/fakehw/fakemanager.h"
@@ -57,7 +57,7 @@ void Solid::ManagerBasePrivate::loadBackends()
     }
 #endif
 
-    m_backends << new Solid::Backends::Fstab::FstabManager(0);
+    m_backends << new Solid::Backends::Exports::ExportsManager(0);
 
 #if defined(UDEV_FOUND)
     m_backends << new Solid::Backends::UDev::UDevManager(0);
