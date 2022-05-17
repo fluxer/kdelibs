@@ -27,6 +27,9 @@
 #include <kstandarddirs.h>
 
 #include <QtCore/qhash.h>
+#include <QtCore/qthread.h>
+#include <QtCore/qelapsedtimer.h>
+#include <QtCore/qcoreapplication.h>
 #include <QtNetwork/QHostInfo>
 #include <QtNetwork/QHostAddress>
 
@@ -87,6 +90,43 @@ static QString lookupIconNameFor(const KUrl &url, KUriFilterData::UriTypes type)
     return iconName;
 }
 
+class KHostInfoThread : public QThread
+{
+    Q_OBJECT
+public:
+    KHostInfoThread(QObject *parent, const QString &hostname);
+    ~KHostInfoThread();
+
+    QHostInfo resolved() const;
+
+protected:
+    void run() final;
+
+private:
+    QString m_hostname;
+    QHostInfo m_resolved;
+};
+
+KHostInfoThread::KHostInfoThread(QObject *parent, const QString &hostname)
+    : QThread(parent)
+    , m_hostname(hostname)
+{
+}
+
+KHostInfoThread::~KHostInfoThread()
+{
+    terminate();
+}
+
+void KHostInfoThread::run()
+{
+    m_resolved = QHostInfo::fromName(m_hostname);
+}
+
+QHostInfo KHostInfoThread::resolved() const
+{
+    return m_resolved;
+}
 
 class KUriFilterSearchProvider::KUriFilterSearchProviderPrivate
 {
@@ -543,10 +583,21 @@ QString KUriFilterPlugin::iconNameFor(const KUrl& url, KUriFilterData::UriTypes 
     return lookupIconNameFor(url, type);
 }
 
-QHostInfo KUriFilterPlugin::resolveName(const QString& hostname, unsigned long timeout) const
+QHostInfo KUriFilterPlugin::resolveName(const QString &hostname, unsigned long timeout) const
 {
-    Q_UNUSED(timeout);
-    return QHostInfo::fromName(hostname);
+    kDebug(7022) << "Resolving" << hostname << "with timeout" << timeout;
+    KHostInfoThread khostinfothread(qApp, hostname);
+    QElapsedTimer hostinfotimer;
+    hostinfotimer.start();
+    khostinfothread.start();
+    while (!khostinfothread.isFinished()) {
+        if (hostinfotimer.elapsed() >= timeout) {
+            khostinfothread.terminate();
+            return QHostInfo();
+        }
+        QCoreApplication::processEvents();
+    }
+    return khostinfothread.resolved();
 }
 
 
@@ -680,4 +731,4 @@ void KUriFilter::loadPlugins()
     }
 }
 
-#include "moc_kurifilter.cpp"
+#include "kurifilter.moc"
