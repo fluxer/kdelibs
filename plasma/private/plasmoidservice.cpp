@@ -32,7 +32,6 @@
 
 #include <QFile>
 #include <QFileInfo>
-#include <QHostInfo>
 
 namespace Plasma
 {

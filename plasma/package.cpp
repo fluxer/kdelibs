@@ -24,8 +24,6 @@
 #include <QDir>
 #include <QFile>
 #include <QRegExp>
-#include <QtNetwork/QHostInfo>
-
 
 #include <karchive.h>
 #include <kcomponentdata.h>

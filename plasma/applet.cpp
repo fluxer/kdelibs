@@ -36,7 +36,6 @@
 #include <QGraphicsGridLayout>
 #include <QtGui/qgraphicssceneevent.h>
 #include <QGraphicsView>
-#include <QHostInfo>
 #include <QLabel>
 #include <QList>
 #include <QGraphicsLinearLayout>

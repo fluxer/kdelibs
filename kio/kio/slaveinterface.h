@@ -24,7 +24,6 @@
 #include <sys/types.h>
 
 #include <QtCore/QObject>
-#include <QtNetwork/QHostInfo>
 
 #include <kio/global.h>
 #include <kio/udsentry.h>

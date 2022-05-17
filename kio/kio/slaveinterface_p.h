@@ -25,7 +25,6 @@
 #include <QtCore/QTimer>
 #include <QtGui/QWidget>
 #include <QtCore/QPointer>
-#include <QtNetwork/QHostInfo>
 
 #include <sys/time.h>
 
