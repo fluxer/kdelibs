@@ -35,6 +35,7 @@
 
 #include <locale.h>
 #include <future>
+#include <chrono>
 
 QTEST_KDEMAIN_CORE( KServiceTest )
 
@@ -416,40 +417,36 @@ void KServiceTest::testServiceGroups()
 void KServiceTest::testKSycocaUpdate()
 {
     kWarning();
+    connect(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), this, SLOT(slotDBUpdate(QStringList)));
     KService::Ptr fakeService = KService::serviceByDesktopPath("fakeservice.desktop");
     QVERIFY(fakeService); // see initTestCase; it should be found.
 
     // Test deleting a service
     const QString servPath = KStandardDirs::locateLocal("services", "fakeservice.desktop");
     QVERIFY(QFile::exists(servPath));
-    QSignalSpy spy(KSycoca::self(), SIGNAL(databaseChanged(QStringList)));
-    QVERIFY(spy.isValid());
+    m_resourcesUpdated.clear();
     QFile::remove(servPath);
     kDebug() << QThread::currentThread() << "executing kbuildsycoca";
     QProcess::execute( KStandardDirs::findExe(KBUILDSYCOCA_EXENAME) );
     kDebug() << QThread::currentThread() << "done";
-    while (spy.isEmpty())
-        QTest::qWait(50);
-    QVERIFY(!spy.isEmpty());
+    QVERIFY(QTest::kWaitForSignal(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), 10000));
     QVERIFY(!KService::serviceByDesktopPath("fakeservice.desktop")); // not in ksycoca anymore
-    QVERIFY(spy[0][0].toStringList().contains("services"));
+    QVERIFY(m_resourcesUpdated.contains("services"));
     kDebug() << QThread::currentThread() << "got signal ok";
 
-    spy.clear();
     QVERIFY(fakeService); // the whole point of refcounting is that this KService instance is still valid.
     QVERIFY(!QFile::exists(servPath));
 
     // Recreate it, for future tests
+    m_resourcesUpdated.clear();
     createFakeService();
     QVERIFY(QFile::exists(servPath));
     kDebug() << QThread::currentThread() << "executing kbuildsycoca (2)";
     QProcess::execute( KStandardDirs::findExe(KBUILDSYCOCA_EXENAME) );
     kDebug() << QThread::currentThread() << "done (2)";
-    while (spy.isEmpty())
-        QTest::qWait(50);
+    QVERIFY(QTest::kWaitForSignal(KSycoca::self(), SIGNAL(databaseChanged(QStringList)), 10000));
     kDebug() << QThread::currentThread() << "got signal ok (2)";
-    QVERIFY(spy[0][0].toStringList().contains("services"));
-    m_sycocaUpdateDone.ref();
+    QVERIFY(m_resourcesUpdated.contains("services"));
 }
 
 void KServiceTest::createFakeService()
@@ -493,7 +490,7 @@ void KServiceTest::testThreads()
     std::future<void> future2 = std::async(std::launch::async, &KServiceTest::testHasServiceType1, this);
     std::future<void> future3 = std::async(std::launch::async, &KServiceTest::testKSycocaUpdate, this);
     std::future<void> future4 = std::async(std::launch::async, &KServiceTest::testTraderConstraints, this);
-    while (m_sycocaUpdateDone == 0) { // not using a bool, just to silence helgrind
+    while (future3.wait_for(std::chrono::milliseconds(100)) == std::future_status::timeout) {
         QTest::qWait(100); // process D-Bus events!
         kDebug() << "Waiting";
     }
@@ -502,6 +499,12 @@ void KServiceTest::testThreads()
     future2.wait();
     future3.wait();
     future4.wait();
+}
+
+void KServiceTest::slotDBUpdate(const QStringList &resources)
+{
+    // qDebug() << Q_FUNC_INFO << resources;
+    m_resourcesUpdated = resources;
 }
 
 #include "moc_kservicetest.cpp"

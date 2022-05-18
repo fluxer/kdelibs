@@ -18,14 +18,14 @@
 #ifndef KSERVICETEST_H
 #define KSERVICETEST_H
 
-#include <QtCore/qatomic.h>
 #include <QtCore/QObject>
+#include <QtCore/QStringList>
 
 class KServiceTest : public QObject
 {
     Q_OBJECT
 public:
-    KServiceTest() : m_sycocaUpdateDone(0) {}
+    KServiceTest() {}
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
@@ -45,12 +45,15 @@ private Q_SLOTS:
     void testReaderThreads();
     void testThreads();
 
+private Q_SLOTS:
+    void slotDBUpdate(const QStringList &resources);
+
 private:
     void createFakeService();
     QString m_firstOffer;
     bool m_hasKde4Konsole;
-    QAtomicInt m_sycocaUpdateDone;
     bool m_hasNonCLocale;
+    QStringList m_resourcesUpdated;
 };
 
 #endif
