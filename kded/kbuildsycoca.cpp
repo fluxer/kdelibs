@@ -795,11 +795,12 @@ int main(int argc, char **argv)
    if (args->isSet("signal"))
    {
      // Notify ALL applications that have a ksycoca object, using a signal
+     changedResources.removeDuplicates();
      QDBusMessage signal = QDBusMessage::createSignal("/", "org.kde.KSycoca", "notifyDatabaseChanged" );
      signal << changedResources;
 
      if (QDBusConnection::sessionBus().isConnected()) {
-         kDebug() << "Emitting notifyDatabaseChanged" << changedResources;
+       kDebug() << "Emitting notifyDatabaseChanged" << changedResources;
        QDBusConnection::sessionBus().send(signal);
        qApp->processEvents(); // make sure the dbus signal is sent before we quit.
      }
