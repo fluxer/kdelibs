@@ -16,26 +16,25 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include <config.h>
+#include <config-prefix.h>
 #include "kstandarddirstest.h"
-
 #include "qtest_kde.h"
-#include "moc_kstandarddirstest.cpp"
-
-QTEST_KDEMAIN_CORE( KStandarddirsTest )
-
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <kconfig.h>
 #include <kglobal.h>
 #include <ktempdir.h>
-#include <config-prefix.h>
-#include <QtCore/QDebug>
 #include <kconfiggroup.h>
-#include <config.h>
+#include <QtCore/QDebug>
+
+#include <future>
 
 // we need case-insensitive comparison of file paths on windows
 #define QCOMPARE_PATHS(x,y) QCOMPARE(QString(x), QString(y))
 #define PATH_SENSITIVITY Qt::CaseSensitive
+
+QTEST_KDEMAIN_CORE( KStandarddirsTest )
 
 void KStandarddirsTest::initTestCase()
 {
@@ -446,21 +445,24 @@ void KStandarddirsTest::testSymlinkResolution()
     QCOMPARE(KGlobal::dirs()->realPath(QString("/does_not_exist/")), QString("/does_not_exist/"));
 }
 
-#include <QThreadPool>
-#include <qtconcurrentrun.h>
-
 // To find multithreading bugs: valgrind --tool=helgrind ./kstandarddirstest testThreads
 void KStandarddirsTest::testThreads()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(6);
-    QList<QFuture<void> > futures;
-    futures << QtConcurrent::run(this, &KStandarddirsTest::testLocateLocal);
-    futures << QtConcurrent::run(this, &KStandarddirsTest::testSaveLocation);
-    futures << QtConcurrent::run(this, &KStandarddirsTest::testAppData);
-    futures << QtConcurrent::run(this, &KStandarddirsTest::testFindResource);
-    futures << QtConcurrent::run(this, &KStandarddirsTest::testFindAllResources);
-    futures << QtConcurrent::run(this, &KStandarddirsTest::testLocate);
-    futures << QtConcurrent::run(this, &KStandarddirsTest::testRelativeLocation);
-    Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-        f.waitForFinished();
+    std::future<void> future1 = std::async(std::launch::async, &KStandarddirsTest::testLocateLocal, this);
+    std::future<void> future2 = std::async(std::launch::async, &KStandarddirsTest::testSaveLocation, this);
+    std::future<void> future3 = std::async(std::launch::async, &KStandarddirsTest::testAppData, this);
+    std::future<void> future4 = std::async(std::launch::async, &KStandarddirsTest::testFindResource, this);
+    std::future<void> future5 = std::async(std::launch::async, &KStandarddirsTest::testFindAllResources, this);
+    std::future<void> future6 = std::async(std::launch::async, &KStandarddirsTest::testLocate, this);
+    std::future<void> future7 = std::async(std::launch::async, &KStandarddirsTest::testRelativeLocation, this);
+    kDebug() << "Joining all threads";
+    future1.wait();
+    future2.wait();
+    future3.wait();
+    future4.wait();
+    future5.wait();
+    future6.wait();
+    future7.wait();
 }
+
+#include "moc_kstandarddirstest.cpp"

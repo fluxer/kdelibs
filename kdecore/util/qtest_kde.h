@@ -93,7 +93,7 @@ int main(int argc, char *argv[]) \
 }
 
 /**
- * \short KDE Replacement for QTEST_MAIN from QTestLib
+ * \short KDE replacement for QTEST_MAIN from QTestLib
  *
  * This macro should be used for classes that need a KComponentData.
  * So instead of writing QTEST_MAIN( TestClass ) you write
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) \
 #define QTEST_KDEMAIN(TestObject, flags) QTEST_KDEMAIN_WITH_COMPONENTNAME(TestObject, flags, "qttest")
 
 /**
- * \short KDE Replacement for QTEST_MAIN from QTestLib, for non-gui code.
+ * \short KDE replacement for QTEST_MAIN from QTestLib, for non-gui code.
  *
  * This macro should be used for classes that need a KComponentData.
  * So instead of writing QTEST_MAIN( TestClass ) you write
@@ -142,7 +142,7 @@ int main(int argc, char *argv[]) \
 }
 
 /**
- * \short KDE Replacement for QTEST_MAIN from QTestLib, for non-gui code.
+ * \short KDE replacement for QTEST_MAIN from QTestLib, for non-gui code.
  *
  * This macro should be used for classes that need a KComponentData.
  * So instead of writing QTEST_MAIN( TestClass ) you write

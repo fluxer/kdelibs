@@ -17,13 +17,11 @@
  */
 
 #include <kglobal.h>
-
-#include <QtCore/QObject>
-#include <QtCore/qthreadpool.h>
-#include <QtCore/qfuture.h>
-#include <QtCore/qtconcurrentrun.h>
-
 #include <qtest_kde.h>
+#include <kdebug.h>
+#include <QtCore/QObject>
+
+#include <future>
 
 class KGlobalTest : public QObject
 {
@@ -63,12 +61,11 @@ private Q_SLOTS:
     // We have to install the qtranslator in the main thread.
     void testThreads()
     {
-        QThreadPool::globalInstance()->setMaxThreadCount(10);
-        QList<QFuture<void> > futures;
-        futures << QtConcurrent::run(this, &KGlobalTest::testLocale);
-        futures << QtConcurrent::run(this, &KGlobalTest::testLocale);
-        Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-            f.waitForFinished();
+        std::future<void> future1 = std::async(std::launch::async, &KGlobalTest::testLocale, this);
+        std::future<void> future2 = std::async(std::launch::async, &KGlobalTest::testLocale, this);
+        kDebug() << "Joining all threads";
+        future1.wait();
+        future2.wait();
     }
 
 protected Q_SLOTS:

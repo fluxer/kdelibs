@@ -25,7 +25,8 @@
 #include <kdebug.h>
 #include <kstandarddirs.h>
 #include <qprocess.h>
-#include "moc_kdebug_unittest.cpp"
+
+#include <future>
 
 QTEST_KDEMAIN_CORE( KDebugTest )
 
@@ -240,9 +241,6 @@ void KDebugTest::testNoMainComponentData()
     QCOMPARE(receivedLines, expectedLines);
 }
 
-#include <QThreadPool>
-#include <qtconcurrentrun.h>
-
 class KDebugThreadTester
 {
 public:
@@ -260,12 +258,27 @@ void KDebugTest::testMultipleThreads()
     QFile::remove("kdebug.dbg");
 
     KDebugThreadTester tester;
-    QThreadPool::globalInstance()->setMaxThreadCount(10);
-    QList<QFuture<void> > futures;
-    for (int threadNum = 0; threadNum < 10; ++threadNum)
-        futures << QtConcurrent::run(&tester, &KDebugThreadTester::doDebugs);
-    Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-        f.waitForFinished();
+    std::future<void> future1 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future2 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future3 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future4 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future5 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future6 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future7 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future8 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future9 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    std::future<void> future10 = std::async(std::launch::async, &KDebugThreadTester::doDebugs, &tester);
+    kDebug() << "Joining all threads";
+    future1.wait();
+    future2.wait();
+    future3.wait();
+    future4.wait();
+    future5.wait();
+    future6.wait();
+    future7.wait();
+    future8.wait();
+    future9.wait();
+    future10.wait();
 
     QVERIFY(QFile::exists("kdebug.dbg"));
 
@@ -288,3 +301,5 @@ void KDebugTest::testMultipleThreads()
     }
 #endif
 }
+
+#include "moc_kdebug_unittest.cpp"

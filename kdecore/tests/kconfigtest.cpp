@@ -28,8 +28,8 @@
 #include <kconfiggroup.h>
 
 #include <QHostInfo>
-#include <QThreadPool>
-#include <qtconcurrentrun.h>
+
+#include <future>
 
 #ifdef Q_OS_UNIX
 #include <utime.h>
@@ -1594,18 +1594,20 @@ void KConfigTest::testNoKdeHome()
 // To find multithreading bugs: valgrind --tool=helgrind --track-lockorders=no ./kconfigtest testThreads
 void KConfigTest::testThreads()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(6);
-    QList<QFuture<void> > futures;
     // Run in parallel some tests that work on different config files,
     // otherwise unexpected things might indeed happen.
-    futures << QtConcurrent::run(this, &KConfigTest::testAddConfigSources);
-    futures << QtConcurrent::run(this, &KConfigTest::testSimple);
-    futures << QtConcurrent::run(this, &KConfigTest::testDefaults);
-    // QEXPECT_FAIL triggers race conditions, it should be fixed to use QThreadStorage...
-    //futures << QtConcurrent::run(this, &KConfigTest::testDeleteWhenLocalized);
-    //futures << QtConcurrent::run(this, &KConfigTest::testEntryMap);
-    Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-        f.waitForFinished();
+    std::future<void> future1 = std::async(std::launch::async, &KConfigTest::testAddConfigSources, this);
+    std::future<void> future2 = std::async(std::launch::async, &KConfigTest::testSimple, this);
+    std::future<void> future3 = std::async(std::launch::async, &KConfigTest::testDefaults, this);
+    // QEXPECT_FAIL triggers race conditions...
+    // std::future<void> future4 = std::async(std::launch::async, &KConfigTest::testDeleteWhenLocalized, this);
+    // std::future<void> future5 = std::async(std::launch::async, &KConfigTest::testEntryMap, this);
+    kDebug() << "Joining all threads";
+    future1.wait();
+    future2.wait();
+    future3.wait();
+    // future4.wait();
+    // future5.wait();
 }
 
 #include "moc_kconfigtest.cpp"

@@ -21,21 +21,17 @@
 #include "klocalizedstringtest.h"
 
 #include <config.h>
-
-#include <locale.h>
-
 #include <kdebug.h>
 #include "qtest_kde.h"
-
 #include "kglobal.h"
 #include <kstandarddirs.h>
 #include "klocale.h"
 #include "klocalizedstring.h"
 #include "kconfiggroup.h"
-
 #include <QtCore/QString>
 
-#include "moc_klocalizedstringtest.cpp"
+#include <locale.h>
+#include <future>
 
 void KLocalizedStringTest::initTestCase ()
 {
@@ -242,23 +238,24 @@ void KLocalizedStringTest::translateQt()
     QCOMPARE(result, m_hasFrench ? QString("Paysage") : QString("Landscape"));
 }
 
-#include <QThreadPool>
-#include <qtconcurrentrun.h>
-
 void KLocalizedStringTest::testThreads()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(10);
-    QList<QFuture<void> > futures;
-    futures << QtConcurrent::run(this, &KLocalizedStringTest::correctSubs);
-    futures << QtConcurrent::run(this, &KLocalizedStringTest::correctSubs);
-    futures << QtConcurrent::run(this, &KLocalizedStringTest::correctSubs);
-    futures << QtConcurrent::run(this, &KLocalizedStringTest::translateQt);
-    futures << QtConcurrent::run(this, &KLocalizedStringTest::translateQt);
-    futures << QtConcurrent::run(this, &KLocalizedStringTest::translateToFrench);
+    std::future<void> future1 = std::async(std::launch::async, &KLocalizedStringTest::correctSubs, this);
+    std::future<void> future2 = std::async(std::launch::async, &KLocalizedStringTest::correctSubs, this);
+    std::future<void> future3 = std::async(std::launch::async, &KLocalizedStringTest::correctSubs, this);
+    std::future<void> future4 = std::async(std::launch::async, &KLocalizedStringTest::translateQt, this);
+    std::future<void> future5 = std::async(std::launch::async, &KLocalizedStringTest::translateQt, this);
+    std::future<void> future6 = std::async(std::launch::async, &KLocalizedStringTest::translateToFrench, this);
     KGlobal::locale()->removeCatalog("kdelibs4");
-    Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-        f.waitForFinished();
-    QThreadPool::globalInstance()->setMaxThreadCount(1); // delete those threads
+    kDebug() << "Joining all threads";
+    future1.wait();
+    future2.wait();
+    future3.wait();
+    future4.wait();
+    future5.wait();
+    future6.wait();
 }
 
 QTEST_KDEMAIN_CORE_WITH_COMPONENTNAME(KLocalizedStringTest, "kdelibs4" /*so that the .po exists*/)
+
+#include "moc_klocalizedstringtest.cpp"

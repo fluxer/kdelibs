@@ -16,19 +16,14 @@
  *  Boston, MA 02110-1301, USA.
  */
 
-#include <locale.h>
-
 #include "kservicetest.h"
-#include "moc_kservicetest.cpp"
 #include <qtest_kde.h>
-
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdesktopfile.h>
 #include <ksycoca.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
-
 #include <kprotocolinfo.h>
 #include <kdebug.h>
 #include <kservicegroup.h>
@@ -37,6 +32,9 @@
 
 #include <QtCore/qprocess.h>
 #include <QtCore/qthread.h>
+
+#include <locale.h>
+#include <future>
 
 QTEST_KDEMAIN_CORE( KServiceTest )
 
@@ -451,8 +449,7 @@ void KServiceTest::testKSycocaUpdate()
         QTest::qWait(50);
     kDebug() << QThread::currentThread() << "got signal ok (2)";
     QVERIFY(spy[0][0].toStringList().contains("services"));
-    if (QThread::currentThread() != QCoreApplication::instance()->thread())
-        m_sycocaUpdateDone.ref();
+    m_sycocaUpdateDone.ref();
 }
 
 void KServiceTest::createFakeService()
@@ -468,9 +465,6 @@ void KServiceTest::createFakeService()
     group.writeEntry("MimeType", "text/plain;");
 }
 
-#include <QThreadPool>
-#include <qtconcurrentrun.h>
-
 // Testing for concurrent access to ksycoca from multiple threads
 // It's especially interesting to run this test as ./kservicetest testThreads
 // so that even the ksycoca initialization is happening from N threads at the same time.
@@ -478,30 +472,36 @@ void KServiceTest::createFakeService()
 
 void KServiceTest::testReaderThreads()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(10);
-    QList<QFuture<void> > futures;
-    futures << QtConcurrent::run(this, &KServiceTest::testAllServices);
-    futures << QtConcurrent::run(this, &KServiceTest::testAllServices);
-    futures << QtConcurrent::run(this, &KServiceTest::testAllServices);
-    futures << QtConcurrent::run(this, &KServiceTest::testHasServiceType1);
-    futures << QtConcurrent::run(this, &KServiceTest::testAllServices);
-    futures << QtConcurrent::run(this, &KServiceTest::testAllServices);
-    Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-        f.waitForFinished();
-    QThreadPool::globalInstance()->setMaxThreadCount(1); // delete those threads
+    std::future<void> future1 = std::async(std::launch::async, &KServiceTest::testAllServices, this);
+    std::future<void> future2 = std::async(std::launch::async, &KServiceTest::testAllServices, this);
+    std::future<void> future3 = std::async(std::launch::async, &KServiceTest::testAllServices, this);
+    std::future<void> future4 = std::async(std::launch::async, &KServiceTest::testHasServiceType1, this);
+    std::future<void> future5 = std::async(std::launch::async, &KServiceTest::testAllServices, this);
+    std::future<void> future6 = std::async(std::launch::async, &KServiceTest::testAllServices, this);
+    kDebug() << "Joining all threads";
+    future1.wait();
+    future2.wait();
+    future3.wait();
+    future4.wait();
+    future5.wait();
+    future6.wait();
 }
 
 void KServiceTest::testThreads()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(10);
-    QList<QFuture<void> > futures;
-    futures << QtConcurrent::run(this, &KServiceTest::testAllServices);
-    futures << QtConcurrent::run(this, &KServiceTest::testHasServiceType1);
-    futures << QtConcurrent::run(this, &KServiceTest::testKSycocaUpdate);
-    futures << QtConcurrent::run(this, &KServiceTest::testTraderConstraints);
-    while (m_sycocaUpdateDone == 0) // not using a bool, just to silence helgrind
+    std::future<void> future1 = std::async(std::launch::async, &KServiceTest::testAllServices, this);
+    std::future<void> future2 = std::async(std::launch::async, &KServiceTest::testHasServiceType1, this);
+    std::future<void> future3 = std::async(std::launch::async, &KServiceTest::testKSycocaUpdate, this);
+    std::future<void> future4 = std::async(std::launch::async, &KServiceTest::testTraderConstraints, this);
+    while (m_sycocaUpdateDone == 0) { // not using a bool, just to silence helgrind
         QTest::qWait(100); // process D-Bus events!
+        kDebug() << "Waiting";
+    }
     kDebug() << "Joining all threads";
-    Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-        f.waitForFinished();
+    future1.wait();
+    future2.wait();
+    future3.wait();
+    future4.wait();
 }
+
+#include "moc_kservicetest.cpp"

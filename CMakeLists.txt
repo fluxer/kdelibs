@@ -44,6 +44,17 @@ if(UNIX AND Q_WS_X11)
     endif(NOT X11_SM_FOUND)
 endif(UNIX AND Q_WS_X11)
 
+if(ENABLE_TESTING)
+    set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
+    find_package(Threads)
+    set_package_properties(Threads PROPERTIES
+        PURPOSE "Required for asynchorouns functions and methods execution"
+        DESCRIPTION "Platform dependent threads implementation"
+        URL ""
+        TYPE REQUIRED
+    )
+endif()
+
 # required features
 find_package(ZLIB)
 set_package_properties(ZLIB PROPERTIES

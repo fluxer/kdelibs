@@ -26,7 +26,6 @@
 #include <QHostInfo>
 
 // TODO test locking from two different threads
-//#include <qtconcurrentrun.h>
 
 QT_BEGIN_NAMESPACE
 namespace QTest {

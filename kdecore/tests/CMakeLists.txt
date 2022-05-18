@@ -4,7 +4,7 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 MACRO(KDECORE_UNIT_TESTS)
     FOREACH(_testname ${ARGN})
         kde4_add_test(kdecore-${_testname} ${_testname}.cpp)
-        target_link_libraries(kdecore-${_testname} ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTNETWORK_LIBRARY})
+        target_link_libraries(kdecore-${_testname} ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTNETWORK_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
     ENDFOREACH(_testname)
 ENDMACRO(KDECORE_UNIT_TESTS)
 MACRO(KDECORE_EXECUTABLE_TESTS)
@@ -108,7 +108,7 @@ target_link_libraries(kdecore-klimitediodevicetest ${KDE4_KDECORE_LIBS} ${QT_QTT
 # compile kmimemagicrule.cpp into the test since it's not exported and we call match().
 set(kmimetypetest_SRCS kmimetypetest.cpp ../services/kmimemagicrule.cpp)
 kde4_add_test(kdecore-kmimetypetest ${kmimetypetest_SRCS})
-target_link_libraries(kdecore-kmimetypetest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
+target_link_libraries(kdecore-kmimetypetest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
 
 ########### kmimeglobsfileparsertest ###############
 

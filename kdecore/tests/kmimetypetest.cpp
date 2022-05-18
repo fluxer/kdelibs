@@ -30,7 +30,6 @@
 #include <ktempdir.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
-
 #include <qtest_kde.h>
 #include <kprotocolinfo.h>
 #include <kmimetypetrader.h>
@@ -40,9 +39,9 @@
 #include <kdesktopfile.h>
 
 #include <QtCore/qbuffer.h>
-#include <QtCore/qfuture.h>
-#include <QtCore/qtconcurrentrun.h>
 #include <QtCore/qprocess.h>
+
+#include <future>
 
 void KMimeTypeTest::initTestCase()
 {
@@ -955,22 +954,28 @@ void KMimeTypeTest::testFromThread()
 
 void KMimeTypeTest::testThreads()
 {
-    QThreadPool::globalInstance()->setMaxThreadCount(20);
     // Note that data-based tests cannot be used here (QTest::fetchData asserts).
-    QList<QFuture<void> > futures;
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testFindByUrl);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testFindByFileContent);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testFindByNameAndContent);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testFindByPathWithContent);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testAllMimeTypes);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testAlias);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testMimeTypeParent);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testPreferredService);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testFromThread);
-    futures << QtConcurrent::run(this, &KMimeTypeTest::testHelperProtocols);
+    std::future<void> future1 = std::async(std::launch::async, &KMimeTypeTest::testFindByUrl, this);
+    std::future<void> future2 = std::async(std::launch::async, &KMimeTypeTest::testFindByFileContent, this);
+    std::future<void> future3 = std::async(std::launch::async, &KMimeTypeTest::testFindByNameAndContent, this);
+    std::future<void> future4 = std::async(std::launch::async, &KMimeTypeTest::testFindByPathWithContent, this);
+    std::future<void> future5 = std::async(std::launch::async, &KMimeTypeTest::testAllMimeTypes, this);
+    std::future<void> future6 = std::async(std::launch::async, &KMimeTypeTest::testAlias, this);
+    std::future<void> future7 = std::async(std::launch::async, &KMimeTypeTest::testMimeTypeParent, this);
+    std::future<void> future8 = std::async(std::launch::async, &KMimeTypeTest::testPreferredService, this);
+    std::future<void> future9 = std::async(std::launch::async, &KMimeTypeTest::testFromThread, this);
+    std::future<void> future10 = std::async(std::launch::async, &KMimeTypeTest::testHelperProtocols, this);
     kDebug() << "Joining all threads";
-    Q_FOREACH(QFuture<void> f, futures) // krazy:exclude=foreach
-        f.waitForFinished();
+    future1.wait();
+    future2.wait();
+    future3.wait();
+    future4.wait();
+    future5.wait();
+    future6.wait();
+    future7.wait();
+    future8.wait();
+    future9.wait();
+    future10.wait();
 }
 
 void KMimeTypeTest::testProperties()
