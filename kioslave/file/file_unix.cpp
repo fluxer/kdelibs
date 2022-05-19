@@ -453,7 +453,7 @@ void FileProtocol::rename( const KUrl &srcUrl, const KUrl &destUrl,
         }
     }
 
-    if ( KDE_rename( _src.data(), _dest.data()))
+    if ( KDE_rename( _src.data(), _dest.data()) == -1)
     {
         if (( errno == EACCES ) || (errno == EPERM)) {
             error(KIO::ERR_ACCESS_DENIED, dest);
