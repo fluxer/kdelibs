@@ -1078,7 +1078,7 @@ void JobTest::deleteManyDirs(bool using_fast_path)
     bool ok = KIO::NetAccess::synchronousRun(job, 0);
     QVERIFY(ok);
     Q_FOREACH(const KUrl& dir, dirs) {
-        QVERIFY(!QFile::exists(dir.path()));
+        QVERIFY(!QDir(dir.path()).exists());
     }
 
     kDebug() << "Deleted" << numDirs << "dirs in" << dt.elapsed() << "milliseconds";
