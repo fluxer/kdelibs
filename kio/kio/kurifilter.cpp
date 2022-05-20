@@ -95,7 +95,6 @@ class KHostInfoThread : public QThread
     Q_OBJECT
 public:
     KHostInfoThread(QObject *parent, const QString &hostname);
-    ~KHostInfoThread();
 
     QHostInfo resolved() const;
 
@@ -111,11 +110,6 @@ KHostInfoThread::KHostInfoThread(QObject *parent, const QString &hostname)
     : QThread(parent)
     , m_hostname(hostname)
 {
-}
-
-KHostInfoThread::~KHostInfoThread()
-{
-    terminate();
 }
 
 void KHostInfoThread::run()
