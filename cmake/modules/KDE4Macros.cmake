@@ -215,6 +215,20 @@ macro(KDE4_ADD_TEST _targetName)
         NAME ${_targetName}
         COMMAND "${CMAKE_BINARY_DIR}/kde4_exec.sh" "${CMAKE_CURRENT_BINARY_DIR}/${_targetName}"
     )
+    set(KDE4_TESTTARGET "${_targetName}")
+    configure_file(
+        "${kde_cmake_module_dir}/kde4_test.sh.in"
+        "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_test_${_targetName}.sh"
+        @ONLY
+    )
+    file(
+        COPY "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_test_${_targetName}.sh"
+        DESTINATION "${CMAKE_CURRENT_BINARY_DIR}"
+        FILE_PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ WORLD_READ
+    )
+    file(
+        REMOVE "${CMAKE_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/kde4_test_${_targetName}.sh"
+    )
 endmacro(KDE4_ADD_TEST)
 
 macro(KDE4_ADD_MANUAL_TEST _targetName)
