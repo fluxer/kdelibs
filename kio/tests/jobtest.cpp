@@ -975,7 +975,7 @@ void JobTest::calculateRemainingSeconds()
 
 void JobTest::getInvalidUrl()
 {
-    KUrl url("http://strange<hostname>/");
+    KUrl url("http:/strange<hostname>/");
     QVERIFY(!url.isValid());
 
     KIO::SimpleJob* job = KIO::get(url, KIO::NoReload, KIO::HideProgressInfo);
