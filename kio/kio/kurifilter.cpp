@@ -586,7 +586,7 @@ QHostInfo KUriFilterPlugin::resolveName(const QString &hostname, unsigned long t
     khostinfothread.start();
     while (!khostinfothread.isFinished()) {
         if (hostinfotimer.elapsed() >= timeout) {
-            khostinfothread.terminate();
+            khostinfothread.quit();
             return QHostInfo();
         }
         QCoreApplication::processEvents();
