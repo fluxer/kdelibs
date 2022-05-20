@@ -1062,9 +1062,8 @@ void KRun::init()
 {
     kDebug(7010) << "INIT called";
     if (!d->m_strURL.isValid()) {
-        // TODO KDE5: call virtual method on error
         d->m_showingDialog = true;
-        KMessageBoxWrapper::error(d->m_window, i18n("Malformed URL\n%1", d->m_strURL.url()));
+        error(i18n("Malformed URL\n%1", d->m_strURL.url()));
         d->m_showingDialog = false;
         d->m_bFault = true;
         d->m_bFinished = true;
@@ -1085,10 +1084,11 @@ void KRun::init()
             KDE_struct_stat buff;
             if (KDE::stat(d->m_strURL.toLocalFile(), &buff) == -1) {
                 d->m_showingDialog = true;
-                KMessageBoxWrapper::error(d->m_window,
-                                          i18n("<qt>Unable to run the command specified. "
-                                          "The file or folder <b>%1</b> does not exist.</qt>" ,
-                                          Qt::escape(d->m_strURL.prettyUrl())));
+                error(
+                    i18n("<qt>Unable to run the command specified. "
+                    "The file or folder <b>%1</b> does not exist.</qt>" ,
+                    Qt::escape(d->m_strURL.prettyUrl()))
+                );
                 d->m_showingDialog = false;
                 d->m_bFault = true;
                 d->m_bFinished = true;
@@ -1109,9 +1109,8 @@ void KRun::init()
             }
         } else if (mime->isDefault() && !QFileInfo(d->m_strURL.toLocalFile()).isReadable()) {
             // Unknown mimetype because the file is unreadable, no point in showing an open-with dialog (#261002)
-            const QString msg = KIO::buildErrorString(KIO::ERR_ACCESS_DENIED, d->m_strURL.prettyUrl());
             d->m_showingDialog = true;
-            KMessageBoxWrapper::error(d->m_window, msg);
+            error(KIO::buildErrorString(KIO::ERR_ACCESS_DENIED, d->m_strURL.prettyUrl()));
             d->m_showingDialog = false;
             d->m_bFault = true;
             d->m_bFinished = true;
@@ -1428,6 +1427,11 @@ void KRun::foundMimeType(const QString& type)
         d->m_bFault = true;
     }
     setFinished(true);
+}
+
+void KRun::error(const QString& message)
+{
+    KMessageBoxWrapper::error(window(), message);
 }
 
 void KRun::killJob()

@@ -419,6 +419,11 @@ protected:
     virtual void foundMimeType(const QString& type);
 
     /**
+     * Called if error occurres.
+     */
+    virtual void error(const QString& message);
+
+    /**
      * Kills the file scanning job.
      */
     virtual void killJob();

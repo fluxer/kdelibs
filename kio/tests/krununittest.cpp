@@ -210,10 +210,15 @@ public:
     KRunImpl(const KUrl& url, bool isLocalFile = false)
         : KRun(url, 0, 0, isLocalFile, false) {}
 
-    virtual void foundMimeType(const QString& type) {
+    void foundMimeType(const QString& type) final {
         m_mimeType = type;
         // don't call KRun::foundMimeType, we don't want to start an app ;-)
         setFinished(true);
+    }
+
+    void error(const QString& message) final {
+        // don't show message box, this is unit test
+        Q_UNUSED(message);
     }
 
     QString mimeTypeFound() const { return m_mimeType; }
