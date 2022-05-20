@@ -29,11 +29,11 @@
 
 #include <cstring>
 
-#include <QtCore/qstring.h>
-#include <QtGui/QApplication>
-#include <QtCore/QFile>
-#include <QtCore/qmetaobject.h>
+#include <QtCore/QString>
+#include <QtCore/QFileInfo>
+#include <QtCore/QMetaObject>
 #include <QtCore/QTextStream>
+#include <QtGui/QApplication>
 
 #include <klocale.h>
 #include <ktemporaryfile.h>
@@ -178,39 +178,38 @@ bool NetAccess::dircopy( const KUrl::List & srcList, const KUrl & target, QWidge
 
 
 
-bool NetAccess::exists( const KUrl & url, StatSide side, QWidget* window )
+bool NetAccess::exists(const KUrl & url, StatSide side, QWidget* window)
 {
-  if ( url.isLocalFile() )
-    return QFile::exists( url.toLocalFile() );
+  if (url.isLocalFile()) {
+    return QFileInfo(url.toLocalFile()).exists();
+  }
   NetAccess kioNet;
-  return kioNet.statInternal( url, 0 /*no details*/, side, window );
+  return kioNet.statInternal(url, 0 /*no details*/, side, window);
 }
 
-bool NetAccess::stat( const KUrl & url, KIO::UDSEntry & entry, QWidget* window )
+bool NetAccess::stat(const KUrl& url, KIO::UDSEntry &entry, QWidget* window)
 {
   NetAccess kioNet;
-  bool ret = kioNet.statInternal( url, 2 /*all details*/, SourceSide, window );
-  if (ret)
+  bool ret = kioNet.statInternal(url, 2 /*all details*/, SourceSide, window);
+  if (ret) {
     entry = kioNet.d->m_entry;
+  }
   return ret;
 }
 
-KUrl NetAccess::mostLocalUrl(const KUrl & url, QWidget* window)
+KUrl NetAccess::mostLocalUrl(const KUrl &url, QWidget* window)
 {
-  if ( url.isLocalFile() )
-  {
+  if (url.isLocalFile()) {
     return url;
   }
 
   KIO::UDSEntry entry;
-  if (!stat(url, entry, window))
-  {
+  if (!stat(url, entry, window)) {
     return url;
   }
 
   const QString path = entry.stringValue( KIO::UDSEntry::UDS_LOCAL_PATH );
-  if ( !path.isEmpty() )
-  {
+  if ( !path.isEmpty() ) {
     KUrl new_url;
     new_url.setPath(path);
     return new_url;
