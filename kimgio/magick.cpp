@@ -108,6 +108,7 @@ bool MagickHandler::read(QImage *image)
         m_imagedelay = magickinimage.animationDelay();
 
         Magick::Blob magickoutblob;
+        magickinimage.quality(100);
         magickinimage.write(&magickoutblob, "PNG");
 
         const Magick::Geometry magicksize = magickinimage.size();
@@ -206,7 +207,7 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
 
     try {
         Magick::Blob magickinblob(data.constData(), data.size());
-        Magick::Image magickimage; 
+        Magick::Image magickimage;
         magickimage.read(magickinblob);
         // PNG handler used by this plugin
         const std::string magickmagick = magickimage.magick();
