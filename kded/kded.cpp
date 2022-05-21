@@ -711,8 +711,6 @@ int main(int argc, char *argv[])
     if (bCheckHostname) {
         (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
     }
-    
-    KCrash::setFlags(KCrash::AutoRestart);
 
     int result = app.exec(); // keep running
 
