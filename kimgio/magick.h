@@ -35,7 +35,7 @@ public:
 
     QByteArray name() const final;
 
-    static bool canRead(QIODevice *device);
+    static bool canRead(QIODevice *device, QByteArray *actualformat);
 
     QVariant option(QImageIOHandler::ImageOption option) const final;
     bool supportsOption(QImageIOHandler::ImageOption option) const final;

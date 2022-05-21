@@ -61,9 +61,10 @@ bool MagickHandler::canRead() const
     }
 
     m_magickimages.clear();
-    if (MagickHandler::canRead(device())) {
+    QByteArray actualformat;
+    if (MagickHandler::canRead(device(), &actualformat)) {
         m_device = device();
-        setFormat(magickpluginformat);
+        setFormat(actualformat.toLower());
         return true;
     }
     return false;
@@ -155,7 +156,7 @@ QByteArray MagickHandler::name() const
     return magickpluginformat;
 }
 
-bool MagickHandler::canRead(QIODevice *device)
+bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
 {
     if (Q_UNLIKELY(!device)) {
         kWarning() << "Called with no device";
@@ -170,8 +171,10 @@ bool MagickHandler::canRead(QIODevice *device)
             kDebug() << "Using QFile shortcut for" << file->fileName() << "with extension" << filesuffix;
             try {
                 const Magick::CoderInfo magickcoderinfo(std::string(filesuffix.constData()));
-                if (magickcoderinfo.isReadable() && (qstrnicmp(magickcoderinfo.name().c_str(), "png", 3) != 0)) {
+                const std::string magickcodername = magickcoderinfo.name();
+                if (magickcoderinfo.isReadable() && (qstrnicmp(magickcodername.c_str(), "png", 3) != 0)) {
                     kDebug() << "Shortcut says it is supported";
+                    actualformat->append(magickcodername.c_str(), magickcodername.size());
                     return true;
                 }
                 kDebug() << "Shortcut says it is not supported";
@@ -205,8 +208,12 @@ bool MagickHandler::canRead(QIODevice *device)
         Magick::Blob magickinblob(data.constData(), data.size());
         Magick::Image magickimage; 
         magickimage.read(magickinblob);
-         // PNG handler used by this plugin
-        isvalid = (magickimage.isValid() && (qstrnicmp(magickimage.magick().c_str(), "png", 3) != 0));
+        // PNG handler used by this plugin
+        const std::string magickmagick = magickimage.magick();
+        isvalid = (magickimage.isValid() && (qstrnicmp(magickmagick.c_str(), "png", 3) != 0));
+        if (isvalid) {
+            actualformat->append(magickmagick.c_str(), magickmagick.size());
+        }
     } catch(Magick::Exception &err) {
         kWarning() << err.what();
     } catch(std::exception &err) {
@@ -306,7 +313,8 @@ QImageIOPlugin::Capabilities MagickPlugin::capabilities(QIODevice *device, const
         return 0;
 
     Capabilities cap;
-    if (device->isReadable() && MagickHandler::canRead(device))
+    QByteArray actualformat;
+    if (device->isReadable() && MagickHandler::canRead(device, &actualformat))
         cap |= CanRead;
     return cap;
 }
