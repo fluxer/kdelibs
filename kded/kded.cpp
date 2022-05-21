@@ -655,14 +655,12 @@ int main(int argc, char *argv[])
 
     KCmdLineArgs::init(argc, argv, &aboutData);
 
-    // WABA: Make sure not to enable session management.
-    putenv(qstrdup("SESSION_MANAGER="));
-
     KComponentData componentData(&aboutData);
     KSharedConfig::Ptr config = componentData.config(); // Enable translations.
 
     KApplication app;
     app.setQuitOnLastWindowClosed(false);
+    app.disableSessionManagement();
 
     KDE_signal(SIGTERM, sighandler);
     KDE_signal(SIGHUP, sighandler);
