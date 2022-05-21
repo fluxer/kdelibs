@@ -671,6 +671,10 @@ int main(int argc, char *argv[])
     KSharedConfig::Ptr config = componentData.config(); // Enable translations.
 
     KApplication app;
+    app.setQuitOnLastWindowClosed(false);
+
+    KDE_signal(SIGTERM, sighandler);
+    KDE_signal(SIGHUP, sighandler);
 
     KConfigGroup cg(config, "General");
     if (args->isSet("check")) {
@@ -679,9 +683,6 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // Thiago: reenable if such a thing exists in QtDBus in the future
-    //KUniqueApplication::dcopClient()->setQtBridgeEnabled(false);
-
     HostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
     bCheckSycoca = cg.readEntry("CheckSycoca", true);
     bCheckUpdates = cg.readEntry("CheckUpdates", true);
@@ -689,13 +690,8 @@ int main(int argc, char *argv[])
     checkStamps = cg.readEntry("CheckFileStamps", true);
     delayedCheck = cg.readEntry("DelayedCheck", false);
 
-    Kded *kded = new Kded(); // Build data base
-
-    KDE_signal(SIGTERM, sighandler);
-    KDE_signal(SIGHUP, sighandler);
-    app.setQuitOnLastWindowClosed(false);
-
-    kded->recreate(true); // initial
+    Kded *kded = new Kded();
+    kded->recreate(true); // Build initial database
 
 #ifdef Q_WS_X11
     XEvent e;
