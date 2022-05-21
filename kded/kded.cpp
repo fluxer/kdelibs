@@ -24,7 +24,7 @@
 
 #include <kcrash.h>
 #include <kdeversion.h>
-#include <kuniqueapplication.h>
+#include <kapplication.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
@@ -116,6 +116,7 @@ Kded::Kded()
     QDBusConnection session = QDBusConnection::sessionBus();
     session.registerObject("/kbuildsycoca", this);
     session.registerObject("/kded", this);
+    session.registerService("org.kde.kded");
 
     qDBusAddSpyHook(messageFilter);
 
@@ -212,12 +213,6 @@ void Kded::initModules()
         }
     }
 
-    // There will be a "phase 2" only if we're in the KDE startup.
-    // If kded is restarted by its crashhandled or by hand,
-    // then there will be no second phase autoload, so load
-    // these modules now, if in a KDE session.
-    const bool loadPhase2Now = (kde_running && qgetenv("KDED_STARTED_BY_KDEINIT").toInt() == 0);
-
     // Preload kded modules.
     const KService::List kdedModules = KServiceTypeTrader::self()->query("KDEDModule");
     foreach (KService::Ptr service, kdedModules) {
@@ -240,7 +235,8 @@ void Kded::initModules()
             }
             case 2: // autoload delayed, only in KDE
             default: {
-                if (!loadPhase2Now) {
+                // "phase 2" only in KDE
+                if (!kde_running) {
                     prevent_autoload = true;
                 }
                 break;
@@ -646,56 +642,6 @@ void KBuildsycocaAdaptor::recreate()
     Kded::self()->recreate();
 }
 
-class KDEDApplication : public KUniqueApplication
-{
-public:
-    KDEDApplication();
-
-    int newInstance();
-
-    bool startup;
-};
-
-KDEDApplication::KDEDApplication()
-    : KUniqueApplication()
-    , startup(true)
-{
-}
-
-int KDEDApplication::newInstance()
-{
-    if (startup) {
-        startup = false;
-
-        // This long initialization has to be here, not in kdemain.
-        // If it was in main, it would cause a dbus timeout when
-        // our parent from KUniqueApplication tries to call our
-        // newInstance method.
-
-        Kded *kded = Kded::self();
-
-        kded->recreate(true); // initial
-
-#ifdef Q_WS_X11
-        XEvent e;
-        e.xclient.type = ClientMessage;
-        e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False);
-        e.xclient.display = QX11Info::display();
-        e.xclient.window = QX11Info::appRootWindow();
-        e.xclient.format = 8;
-        strcpy(e.xclient.data.b, "kded");
-        XSendEvent(QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e);
-#endif
-
-        if (bCheckHostname) {
-            (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
-        }
-    } else {
-        runBuildSycoca();
-    }
-    return 0;
-}
-
 int main(int argc, char *argv[])
 {
     KAboutData aboutData("kded" /*don't change this one to kded4! dbus registration should be org.kde.kded etc.*/,
@@ -708,8 +654,6 @@ int main(int argc, char *argv[])
 
     KCmdLineArgs::init(argc, argv, &aboutData);
 
-    KUniqueApplication::addCmdLineOptions();
-
     KCmdLineArgs::addCmdLineOptions(options);
 
     // WABA: Make sure not to enable session management.
@@ -721,17 +665,12 @@ int main(int argc, char *argv[])
     KComponentData componentData(&aboutData);
     KSharedConfig::Ptr config = componentData.config(); // Enable translations.
 
+    KApplication app;
+
     KConfigGroup cg(config, "General");
     if (args->isSet("check")) {
-        // KUniqueApplication not wanted here.
-        KApplication app;
         checkStamps = cg.readEntry("CheckFileStamps", true);
         runBuildSycoca();
-        return 0;
-    }
-
-    if (!KUniqueApplication::start()) {
-        fprintf(stderr, "KDE Daemon (kded) already running.\n");
         return 0;
     }
 
@@ -749,17 +688,28 @@ int main(int argc, char *argv[])
 
     KDE_signal(SIGTERM, sighandler);
     KDE_signal(SIGHUP, sighandler);
-    KDEDApplication k;
-    k.setQuitOnLastWindowClosed(false);
+    app.setQuitOnLastWindowClosed(false);
 
+    kded->recreate(true); // initial
+
+#ifdef Q_WS_X11
+    XEvent e;
+    e.xclient.type = ClientMessage;
+    e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False);
+    e.xclient.display = QX11Info::display();
+    e.xclient.window = QX11Info::appRootWindow();
+    e.xclient.format = 8;
+    strcpy(e.xclient.data.b, "kded");
+    XSendEvent(QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e);
+#endif
+
+    if (bCheckHostname) {
+        (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
+    }
+    
     KCrash::setFlags(KCrash::AutoRestart);
 
-    // Not sure why kded is created before KDEDApplication
-    // but if it has to be, then it needs to be moved to the main thread
-    // before it can use timers (DF)
-    kded->moveToThread( k.thread() );
-
-    int result = k.exec(); // keep running
+    int result = app.exec(); // keep running
 
     delete kded;
 

@@ -119,7 +119,6 @@ static struct {
   int exit_status;
   pid_t fork;
   pid_t launcher_pid;
-  pid_t kded_pid;
   int n;
   char **argv;
   int (*func)(int, char *[]);
@@ -1355,8 +1354,6 @@ int kdeinit_xio_errhandler( Display *disp )
     {
        if (d.launcher_pid)
           kill(d.launcher_pid, SIGTERM);
-       if (d.kded_pid)
-          kill(d.kded_pid, SIGTERM);
        exit( 0 );
     }
 
@@ -1489,7 +1486,6 @@ int main(int argc, char **argv)
    pid_t pid;
    bool do_fork = true;
    int launch_klauncher = 1;
-   int launch_kded = 1;
    int keep_running = 1;
    d.suicide = false;
 
@@ -1500,8 +1496,6 @@ int main(int argc, char **argv)
       safe_argv[i] = strcpy((char*)malloc(strlen(argv[i])+1), argv[i]);
       if (strcmp(safe_argv[i], "--no-klauncher") == 0)
          launch_klauncher = 0;
-      if (strcmp(safe_argv[i], "--no-kded") == 0)
-         launch_kded = 0;
       if (strcmp(safe_argv[i], "--no-fork") == 0)
          do_fork = false;
       if (strcmp(safe_argv[i], "--suicide") == 0)
@@ -1585,7 +1579,6 @@ int main(int argc, char **argv)
 
    d.maxname = strlen(argv[0]);
    d.launcher_pid = 0;
-   d.kded_pid = 0;
    d.wrapper = -1;
    d.accepted_fd = -1;
    d.debug_wait = false;
@@ -1617,18 +1610,6 @@ int main(int argc, char **argv)
 #if QT_VERSION < 0x041200
    QFont::initialize();
 #endif
-
-   if (launch_kded)
-   {
-      setenv("KDED_STARTED_BY_KDEINIT", "1", true);
-      pid = launch( 1, KDED_EXENAME, 0 );
-      unsetenv("KDED_STARTED_BY_KDEINIT");
-#ifndef NDEBUG
-      fprintf(stderr, "kdeinit4: Launched KDED, pid = %ld result = %d\n", (long) pid, d.result);
-#endif
-      d.kded_pid = pid;
-      handle_requests(pid);
-   }
 
    for(int i = 1; i < argc; i++)
    {

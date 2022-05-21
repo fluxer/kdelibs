@@ -37,6 +37,8 @@ install(
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
+dbus_add_activation_service(org.kde.kded.service.in)
+
 ########### next target ###############
 
 set(kbuildsycoca_SRCS
