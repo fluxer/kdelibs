@@ -25,7 +25,6 @@
 #include <kcrash.h>
 #include <kdeversion.h>
 #include <kapplication.h>
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kaboutdata.h>
 #include <klocale.h>
@@ -654,18 +653,10 @@ int main(int argc, char *argv[])
         KDE_VERSION_STRING,
         ki18n("KDE Daemon - triggers Sycoca database updates when needed"));
 
-    KCmdLineOptions options;
-    options.add("check", ki18n("Check Sycoca database only once"));
-
     KCmdLineArgs::init(argc, argv, &aboutData);
-
-    KCmdLineArgs::addCmdLineOptions(options);
 
     // WABA: Make sure not to enable session management.
     putenv(qstrdup("SESSION_MANAGER="));
-
-    // Parse command line before checking DCOP
-    KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
     KComponentData componentData(&aboutData);
     KSharedConfig::Ptr config = componentData.config(); // Enable translations.
@@ -677,12 +668,6 @@ int main(int argc, char *argv[])
     KDE_signal(SIGHUP, sighandler);
 
     KConfigGroup cg(config, "General");
-    if (args->isSet("check")) {
-        checkStamps = cg.readEntry("CheckFileStamps", true);
-        runBuildSycoca();
-        return 0;
-    }
-
     HostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
     bCheckSycoca = cg.readEntry("CheckSycoca", true);
     bCheckUpdates = cg.readEntry("CheckUpdates", true);
