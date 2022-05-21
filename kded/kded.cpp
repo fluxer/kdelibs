@@ -100,7 +100,11 @@ static void runDontChangeHostname(const QByteArray &oldName, const QByteArray &n
 }
 
 Kded::Kded()
-    : m_needDelayedCheck(false)
+    : m_pDirWatch(nullptr),
+    m_pTimer(nullptr),
+    m_recreateBusy(false),
+    m_serviceWatcher(nullptr),
+    m_needDelayedCheck(false)
 {
     _self = this;
 
@@ -123,10 +127,6 @@ Kded::Kded()
     m_pTimer = new QTimer(this);
     m_pTimer->setSingleShot(true);
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(recreate()));
-
-    m_pDirWatch = 0;
-
-    m_recreateBusy = false;
 }
 
 Kded::~Kded()
