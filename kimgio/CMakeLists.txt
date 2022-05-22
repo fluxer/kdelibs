@@ -20,28 +20,6 @@ if(IMAGEMAGICK_FOUND)
         TARGETS kimg_magick
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
-    install(
-        FILES
-        pbm.desktop
-        pgm.desktop
-        ppm.desktop
-        xbm.desktop
-        bmp.desktop
-        gif.desktop
-        ico.desktop
-        jpg.desktop
-        tga.desktop
-        tiff.desktop
-        dds.desktop
-        eps.desktop
-        exr.desktop
-        jp2.desktop
-        pcx.desktop
-        psd.desktop
-        xcf.desktop
-        x-dcraw.desktop
-        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
-    )
 endif(IMAGEMAGICK_FOUND)
 
 ##################################
@@ -59,19 +37,4 @@ if(WEBP_FOUND)
         TARGETS kimg_webp
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
     )
-    install(
-        FILES
-        webp.desktop
-        x-webp.desktop
-        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}/qimageioplugins
-    )
 endif(WEBP_FOUND)
-
-########### install files ###############
-
-install(
-    FILES qimageio_plugin.desktop
-    DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
-)
-
-
