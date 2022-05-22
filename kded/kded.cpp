@@ -206,16 +206,13 @@ void Kded::initModules()
 {
     m_dontLoad.clear();
     bool kde_running = !qgetenv("KDE_FULL_SESSION").isEmpty();
+    if (!kde_running) {
+        kde_running = (QProcess::execute("kcheckrunning") == 0);
+    }
     if (kde_running) {
         // not the same user like the one running the session (most likely we're run via sudo or something)
         const QByteArray sessionUID = qgetenv("KDE_SESSION_UID");
-        if (!sessionUID.isEmpty() && uid_t( sessionUID.toInt()) != ::getuid()) {
-            kde_running = false;
-        }
-
-        // not the same kde version as the current desktop
-        const QByteArray kdeSession = qgetenv("KDE_SESSION_VERSION");
-        if (kdeSession.toInt() != KDE_VERSION_MAJOR) {
+        if (!sessionUID.isEmpty() && uid_t(sessionUID.toInt()) != ::getuid()) {
             kde_running = false;
         }
     }
