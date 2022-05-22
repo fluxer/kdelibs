@@ -327,12 +327,14 @@ bool KSycocaPrivate::checkDatabase(BehaviorsIfNotFound ifNotFound)
 
     closeDatabase(); // close the dummy one
 
-    // We can only use the installed ksycoca file if kdeinit+klauncher+kded are running,
-    // since kded is what keeps the file uptodate.
-    const bool kdeinitRunning = QDBusConnection::sessionBus().interface()->isServiceRegistered(QString::fromLatin1("org.kde.klauncher"));
+    static const QString kdedInterface = QString::fromLatin1("org.kde.kded");
+    QDBusConnectionInterface* sessionInterface = QDBusConnection::sessionBus().interface();
+    // We can only use the installed ksycoca file if kded is running, since
+    // kded is what keeps the file up-to-date.
+    const bool kdedRunning = sessionInterface->isServiceRegistered(kdedInterface);
 
     // Check if new database already available
-    if (kdeinitRunning && openDatabase(ifNotFound & IfNotFoundOpenDummy)) {
+    if (kdedRunning && openDatabase(ifNotFound & IfNotFoundOpenDummy)) {
         if (checkVersion()) {
             // Database exists, and version is ok.
             return true;
@@ -340,16 +342,16 @@ bool KSycocaPrivate::checkDatabase(BehaviorsIfNotFound ifNotFound)
     }
 
     if (ifNotFound & IfNotFoundRecreate) {
-        // Well, if kdeinit is not running we need to launch it,
+        // Well, if kded is not running we need to launch it,
         // but otherwise we simply need to run kbuildsycoca to recreate the sycoca file.
-        if (!kdeinitRunning) {
-            kDebug(7011) << "We have no database.... launching kdeinit";
-            KToolInvocation::klauncher(); // this calls startKdeinit, and blocks until it returns
-            // and since kdeinit4 only returns after kbuildsycoca4 is done, we can proceed.
+        if (!kdedRunning) {
+            kDebug(7011) << "We have no database.... launching kded";
+            sessionInterface->startService(kdedInterface);
         } else {
             kDebug(7011) << QThread::currentThread() << "We have no database.... launching" << KBUILDSYCOCA_EXENAME;
-            if (QProcess::execute(KStandardDirs::findExe(QString::fromLatin1(KBUILDSYCOCA_EXENAME))) != 0)
+            if (QProcess::execute(KStandardDirs::findExe(QString::fromLatin1(KBUILDSYCOCA_EXENAME))) != 0) {
                 qWarning("ERROR: Running KSycoca failed.");
+            }
         }
 
         closeDatabase(); // close the dummy one
