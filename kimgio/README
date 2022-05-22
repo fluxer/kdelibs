@@ -6,8 +6,8 @@ Current formats include:
 WEBP    <read> <write>
 
 along with whatever ImageMagick supports but it is assumed that it supports
-reading atleast the following formats (even if they cannot be loaded) for
-compatibility:
+reading atleast the following formats (even if they cannot be loaded because
+it was build without support for these formats for example) for compatibility:
 
 PBM     <read>
 PGM     <read>
