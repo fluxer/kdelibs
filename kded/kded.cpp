@@ -57,6 +57,7 @@
 #define KDED_EXENAME "kded4"
 
 #define MODULES_PATH "/modules/"
+#define MODULES_PATH_SIZE 9
 
 Kded *Kded::_self = 0;
 
@@ -172,12 +173,12 @@ void Kded::messageFilter(const QDBusMessage &message)
     }
 
     QString obj = message.path();
-    if (!obj.startsWith(MODULES_PATH)) {
+    if (!obj.startsWith(QLatin1String(MODULES_PATH))) {
         return;
     }
 
     // Remove the <MODULES_PATH> part
-    obj = obj.mid(strlen(MODULES_PATH));
+    obj = obj.mid(MODULES_PATH_SIZE);
 
     // Remove the part after the modules name
     int index = obj.indexOf('/');
