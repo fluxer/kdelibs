@@ -110,11 +110,14 @@ Kded::Kded(QObject *parent)
 {
     _self = this;
 
+    m_pDirWatch = new KDirWatch(this);
+    connect(m_pDirWatch, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
+
     m_serviceWatcher = new QDBusServiceWatcher(this);
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
-    QObject::connect(m_serviceWatcher, SIGNAL(serviceUnregistered(QString)),
-                     this, SLOT(slotApplicationRemoved(QString)));
+    connect(m_serviceWatcher, SIGNAL(serviceUnregistered(QString)),
+            this, SLOT(slotApplicationRemoved(QString)));
 
     new KBuildsycocaAdaptor(this);
     new KdedAdaptor(this);
@@ -446,9 +449,8 @@ void Kded::updateDirWatch()
     }
 
     delete m_pDirWatch;
-    m_pDirWatch = new KDirWatch;
-
-    QObject::connect(m_pDirWatch, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
+    m_pDirWatch = new KDirWatch(this);
+    connect(m_pDirWatch, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
 
     foreach(const QString &it, m_allResourceDirs) {
         readDirectory(it);
