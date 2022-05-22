@@ -470,9 +470,6 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
 Slave* Slave::holdSlave( const QString &protocol, const KUrl& url )
 {
     //kDebug(7002) << "holdSlave" << protocol << "for" << url;
-    // Firstly take into account all special slaves
-    if (protocol == "data")
-        return 0;
     Slave *slave = new Slave(protocol);
     QString slaveAddress = slave->d_func()->slaveconnserver->address();
     QDBusReply<qint64> reply = KToolInvocation::klauncher()->requestHoldSlave(url.url(), slaveAddress);
