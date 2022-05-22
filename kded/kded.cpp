@@ -133,12 +133,13 @@ Kded::Kded(QObject *parent)
 
 Kded::~Kded()
 {
+    _self = 0;
+
     QDBusConnection session = QDBusConnection::sessionBus();
     session.unregisterObject("/kbuildsycoca");
     session.unregisterObject("/kded");
     session.unregisterService("org.kde.kded");
 
-    _self = 0;
     m_pTimer->stop();
     delete m_pTimer;
     delete m_pDirWatch;
