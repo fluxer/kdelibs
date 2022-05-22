@@ -40,6 +40,8 @@
 
 #include <QProcess>
 #include <QHostInfo>
+#include <QDBusReply>
+#include <QDBusConnectionInterface>
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -664,6 +666,17 @@ int main(int argc, char *argv[])
 
     KDE_signal(SIGTERM, sighandler);
     KDE_signal(SIGHUP, sighandler);
+
+    QDBusConnection session = QDBusConnection::sessionBus();
+    if (!session.isConnected()) {
+        kWarning() << "No DBUS session-bus found. Check if you have started the DBUS server.";
+        return 1;
+    }
+    QDBusReply<bool> sessionReply = session.interface()->isServiceRegistered("org.kde.kded");
+    if (sessionReply.isValid() && sessionReply.value() == true) {
+        kWarning() << "Another instance of kded4 is already running!";
+        return 2;
+    }
 
     KConfigGroup cg(config, "General");
     HostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
