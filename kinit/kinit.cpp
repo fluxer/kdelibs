@@ -1607,10 +1607,6 @@ int main(int argc, char **argv)
    X11fd = initXconnection();
 #endif
 
-#if QT_VERSION < 0x041200
-   QFont::initialize();
-#endif
-
    for(int i = 1; i < argc; i++)
    {
       if (safe_argv[i][0] == '+')

@@ -333,9 +333,6 @@ struct KFontData
     const char* ConfigKey;
     const char* FontName;
     int Size;
-#if QT_VERSION < 0x041200
-    QFont::StyleHint StyleHint;
-#endif
 };
 
 // NOTE: keep in sync with kdebase/workspace/kcontrol/fonts/fonts.cpp
@@ -343,15 +340,6 @@ static const char GeneralId[] =      "General";
 
 static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
 {
-#if QT_VERSION < 0x041200
-    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9, QFont::SansSerif },
-    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9, QFont::TypeWriter },
-    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8, QFont::SansSerif },
-    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9, QFont::SansSerif },
-    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8, QFont::SansSerif },
-    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9, QFont::SansSerif },
-    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8, QFont::SansSerif }
-#else
     { GeneralId, "font",                 KDE_DEFAULT_FONT,       9 },
     { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9 },
     { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8 },
@@ -359,7 +347,6 @@ static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
     { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8 },
     { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9 },
     { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8 }
-#endif
 };
 
 QFont KGlobalSettingsData::font( FontTypes fontType )
@@ -370,9 +357,6 @@ QFont KGlobalSettingsData::font( FontTypes fontType )
     {
         const KFontData& fontData = DefaultFontData[fontType];
         cachedFont = new QFont( fontData.FontName, fontData.Size );
-#if QT_VERSION < 0x041200
-        cachedFont->setStyleHint( fontData.StyleHint );
-#endif
 
         const KConfigGroup configGroup( KGlobal::config(), fontData.ConfigGroupKey );
         *cachedFont = configGroup.readEntry( fontData.ConfigKey, *cachedFont );

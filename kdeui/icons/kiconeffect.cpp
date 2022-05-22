@@ -727,56 +727,6 @@ void KIconEffect::overlay(QImage &src, QImage &overlay)
 	return;
     }
 
-#if QT_VERSION < 0x041200
-    // Overlay at 8 bpp doesn't use alpha blending
-
-    if (src.depth() == 8)
-    {
-	if (src.colorCount() + overlay.colorCount() > 255)
-	{
-	    kDebug(265) << "Too many colors in src + overlay!\n";
-	    return;
-	}
-
-	// Find transparent pixel in overlay
-	int trans;
-	for (trans=0; trans<overlay.colorCount(); trans++)
-	{
-	    if (qAlpha(overlay.color(trans)) == 0)
-	    {
-		kDebug(265) << "transparent pixel found at " << trans << "\n";
-		break;
-	    }
-	}
-	if (trans == overlay.colorCount())
-	{
-	    kDebug(265) << "transparent pixel not found!\n";
-	    return;
-	}
-
-	// Merge color tables
-	int nc = src.colorCount();
-	src.setColorCount(nc + overlay.colorCount());
-	for (i=0; i<overlay.colorCount(); ++i)
-	{
-	    src.setColor(nc+i, overlay.color(i));
-	}
-
-	// Overwrite nontransparent pixels.
-	unsigned char *oline, *sline;
-	for (i=0; i<src.height(); ++i)
-	{
-	    oline = overlay.scanLine(i);
-	    sline = src.scanLine(i);
-	    for (j=0; j<src.width(); ++j)
-	    {
-		if (oline[j] != trans)
-		    sline[j] = oline[j]+nc;
-	    }
-	}
-    }
-#endif // QT_VERSION < 0x041200
-
     // Overlay at 32 bpp does use alpha blending
 
     if (src.depth() == 32)

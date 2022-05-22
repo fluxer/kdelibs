@@ -43,11 +43,7 @@ static inline QWidget* widgetForWindowID(const qlonglong windowid)
 
 static inline QByteArray hashForBytes(const QByteArray &bytes)
 {
-#if QT_VERSION >= 0x041200
     return QCryptographicHash::hash(bytes, QCryptographicHash::KAT).toHex();
-#else
-    return QCryptographicHash::hash(bytes, QCryptographicHash::Sha256).toHex();
-#endif
 }
 
 static inline QByteArray genBytes(const QByteArray &data, const int length)

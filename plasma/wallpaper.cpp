@@ -48,11 +48,7 @@
 #include "plasma/private/packages_p.h"
 #include "plasma/private/wallpaper_p.h"
 
-#if QT_VERSION >= 0x041200
 static const QByteArray imageFormat = QImageWriter::defaultImageFormat();
-#else
-static const QByteArray imageFormat = "png";
-#endif
 
 namespace Plasma
 {

@@ -36,11 +36,7 @@ static QByteArray getCookie()
     if (cookietype == "pid") {
         return QByteArray::number(::getpid());
     } else if (cookietype == "random") {
-#if QT_VERSION >= 0x041200
         return qRandomUuid();
-#else
-        return QByteArray::number(qrand());
-#endif
     }
     return QByteArray::number(::getuid());
 }
@@ -114,11 +110,7 @@ bool KPasswdStore::storePasswd(const QByteArray &key, const QString &passwd, con
 
 QByteArray KPasswdStore::makeKey(const QString &string)
 {
-#if QT_VERSION >= 0x041200
     return QCryptographicHash::hash(string.toUtf8(), QCryptographicHash::KAT).toHex();
-#else
-    return QCryptographicHash::hash(string.toUtf8(), QCryptographicHash::Sha256).toHex();
-#endif
 }
 
 #include "moc_kpasswdstore.cpp"
