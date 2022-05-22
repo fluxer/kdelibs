@@ -42,7 +42,7 @@ class Kded : public QObject
 {
   Q_OBJECT
 public:
-   Kded();
+   Kded(QObject *parent);
    virtual ~Kded();
 
    static Kded *self() { return _self;}

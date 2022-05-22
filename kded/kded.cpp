@@ -100,8 +100,9 @@ static void runDontChangeHostname(const QByteArray &oldName, const QByteArray &n
     QProcess::execute("kdontchangethehostname", args);
 }
 
-Kded::Kded()
-    : m_pDirWatch(nullptr),
+Kded::Kded(QObject *parent)
+    : QObject(parent),
+    m_pDirWatch(nullptr),
     m_pTimer(nullptr),
     m_recreateBusy(false),
     m_serviceWatcher(nullptr),
@@ -686,8 +687,8 @@ int main(int argc, char *argv[])
     checkStamps = cg.readEntry("CheckFileStamps", true);
     delayedCheck = cg.readEntry("DelayedCheck", false);
 
-    Kded *kded = new Kded();
-    kded->recreate(true); // Build initial database
+    Kded kded(&app);
+    kded.recreate(true); // Build initial database
 
 #ifdef Q_WS_X11
     XEvent e;
@@ -704,11 +705,7 @@ int main(int argc, char *argv[])
         (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
     }
 
-    int result = app.exec(); // keep running
-
-    delete kded;
-
-    return result;
+    return app.exec(); // keep running
 }
 
 #include "moc_kded.cpp"
