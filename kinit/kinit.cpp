@@ -1514,7 +1514,6 @@ int main(int argc, char **argv)
      // printf("    --no-dcop         Do not start dcopserver\n");
         printf("    --no-fork         Do not fork\n");
      // printf("    --no-klauncher    Do not start klauncher\n");
-        printf("    --no-kded         Do not start kded\n");
         printf("    --suicide         Terminate when no KDE applications are left running\n");
 	printf("    --version         Show version information\n");
      // printf("    --exit            Terminate when kded has run\n");
