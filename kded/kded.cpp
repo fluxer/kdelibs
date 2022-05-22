@@ -68,11 +68,7 @@ static bool bCheckUpdates = true;
 static bool bCheckHostname = true;
 
 QT_BEGIN_NAMESPACE
-#ifdef Q_DBUS_EXPORT
 extern Q_DBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
-#else
-extern QDBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
-#endif
 QT_END_NAMESPACE
 
 static bool runBuildSycoca()
