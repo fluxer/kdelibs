@@ -606,15 +606,12 @@ static void sighandler(int /*sig*/)
     }
 }
 
-KHostnameD::KHostnameD(int pollInterval)
+KHostnameD::KHostnameD(QObject *parent, int pollInterval)
+    : QObject(parent)
 {
     m_Timer.start(pollInterval); // repetitive timer (not single-shot)
     connect(&m_Timer, SIGNAL(timeout()), this, SLOT(checkHostname()));
     checkHostname();
-}
-
-KHostnameD::~KHostnameD()
-{
 }
 
 void KHostnameD::checkHostname()
@@ -692,7 +689,7 @@ int main(int argc, char *argv[])
 #ifdef Q_WS_X11
     XEvent e;
     e.xclient.type = ClientMessage;
-    e.xclient.message_type = XInternAtom( QX11Info::display(), "_KDE_SPLASH_PROGRESS", False);
+    e.xclient.message_type = XInternAtom(QX11Info::display(), "_KDE_SPLASH_PROGRESS", False);
     e.xclient.display = QX11Info::display();
     e.xclient.window = QX11Info::appRootWindow();
     e.xclient.format = 8;
@@ -701,7 +698,7 @@ int main(int argc, char *argv[])
 #endif
 
     if (bCheckHostname) {
-        (void) new KHostnameD(HostnamePollInterval); // Watch for hostname changes
+        (void)new KHostnameD(&app, HostnamePollInterval); // Watch for hostname changes
     }
 
     return app.exec(); // keep running

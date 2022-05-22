@@ -222,8 +222,7 @@ class KHostnameD : public QObject
 {
    Q_OBJECT
 public:
-   KHostnameD(int pollInterval);
-   ~KHostnameD();
+   KHostnameD(QObject *parent, int pollInterval);
 
 public Q_SLOTS:
    void checkHostname();
