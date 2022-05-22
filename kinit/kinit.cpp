@@ -1504,7 +1504,7 @@ int main(int argc, char **argv)
          keep_running = 0;
       if (strcmp(safe_argv[i], "--version") == 0)
       {
-	 printf("Qt: %s\n", qVersion());
+	 printf("Katie: %s\n", qVersion());
 	 printf("KDE: %s\n", KDE_VERSION_STRING);
 	 exit(0);
       }
