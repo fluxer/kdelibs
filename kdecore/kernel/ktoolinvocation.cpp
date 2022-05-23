@@ -27,16 +27,15 @@
 #include "kurl.h"
 #include "kmessage.h"
 #include "kservice.h"
-#include <klockfile.h>
-#include <klocale.h>
-
-#include <errno.h>
+#include "klocale.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QProcess>
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
+
+#include <errno.h>
 
 KToolInvocation *KToolInvocation::self()
 {
@@ -59,7 +58,16 @@ org::kde::KLauncher *KToolInvocation::klauncher()
 {
     if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QString::fromLatin1("org.kde.klauncher"))) {
         kDebug(180) << "klauncher not running... launching kdeinit";
-        KToolInvocation::startKdeinit();
+        // Try to launch kdeinit.
+        QString srv = KStandardDirs::findExe(QLatin1String("kdeinit4"));
+        if (srv.isEmpty()) {
+            kError() << "kdeinit4 not available";
+            // NOTE: this will crash any users not checking the pointer
+            return nullptr;
+        }
+        QStringList args;
+        args += QString::fromLatin1("--suicide");
+        QProcess::execute(srv, args);
     }
     return ::klauncherIface();
 }
@@ -300,30 +308,6 @@ void KToolInvocation::invokeMailer(const KUrl &mailtoURL, const QByteArray& star
     }
 
     invokeMailer( address, cc, bcc, subject, body, QString(), attachURLs, startup_id );
-}
-
-void KToolInvocation::startKdeinit()
-{
-  KComponentData inst( "startkdeinitlock" );
-  KLockFile lock( KStandardDirs::locateLocal("tmp", QString::fromLatin1("startkdeinitlock"), inst ));
-  if( lock.lock( KLockFile::NoBlockFlag ) != KLockFile::LockOK ) {
-     lock.lock();
-     if( QDBusConnection::sessionBus().interface()->isServiceRegistered(QString::fromLatin1("org.kde.klauncher")))
-         return; // whoever held the lock has already started it
-  }
-  // Try to launch kdeinit.
-  QString srv = KStandardDirs::findExe(QLatin1String("kdeinit4"));
-  if (srv.isEmpty())
-     return;
-//   this is disabled because we are in kdecore
-//  const bool gui = qApp && qApp->type() != QApplication::Tty;
-//  if ( gui )
-//    qApp->setOverrideCursor( Qt::WaitCursor );
-  QStringList args;
-  args += QString::fromLatin1("--suicide");
-  QProcess::execute(srv, args);
-//  if ( gui )
-//    qApp->restoreOverrideCursor();
 }
 
 #include "moc_ktoolinvocation.cpp"
