@@ -203,6 +203,24 @@ void Kded::initModules()
     if (!kde_running) {
         kde_running = (QProcess::execute("kcheckrunning") == 0);
     }
+    if (!kde_running) {
+        // if ksmserver is not started yet check for the X11 atom that startkde sets
+        Atom type = None;
+        int format = 0;
+        unsigned long nitems = 0;
+        unsigned long after = 0;
+        unsigned char* data = NULL;
+        const int kde_full_session_status = XGetWindowProperty(
+            QX11Info::display(), RootWindow(QX11Info::display(), 0),
+            XInternAtom(QX11Info::display(), "KDE_FULL_SESSION", False),
+            0, 0, False, AnyPropertyType, &type, &format, &nitems, &after, &data
+        );
+        kde_running = (kde_full_session_status == Success && data);
+        if (data) {
+            XFree(data);
+        }
+    }
+    // qDebug() << Q_FUNC_INFO << kde_running;
     if (kde_running) {
         // not the same user like the one running the session (most likely we're run via sudo or something)
         const QByteArray sessionUID = qgetenv("KDE_SESSION_UID");
