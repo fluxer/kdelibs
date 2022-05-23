@@ -22,7 +22,6 @@
 #include "kdedadaptor.h"
 #include "kdedmodule.h"
 
-#include <kcrash.h>
 #include <kdeversion.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -36,17 +35,11 @@
 #include <kstandarddirs.h>
 #include <kservicetypetrader.h>
 #include <kde_file.h>
-#include "klauncher_iface.h"
 
 #include <QProcess>
 #include <QHostInfo>
 #include <QDBusReply>
 #include <QDBusConnectionInterface>
-
-#include <unistd.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <time.h>
 
 #ifdef Q_WS_X11
 #include <qx11info_x11.h>
@@ -596,14 +589,6 @@ void Kded::unregisterWindowId(qlonglong windowId, const QString &sender)
     }
 }
 
-
-static void sighandler(int /*sig*/)
-{
-    if (qApp) {
-        qApp->quit();
-    }
-}
-
 KHostnameD::KHostnameD(QObject *parent, int pollInterval)
     : QObject(parent)
 {
@@ -658,9 +643,6 @@ int main(int argc, char *argv[])
     KApplication app;
     app.setQuitOnLastWindowClosed(false);
     app.disableSessionManagement();
-
-    KDE_signal(SIGTERM, sighandler);
-    KDE_signal(SIGHUP, sighandler);
 
     QDBusConnection session = QDBusConnection::sessionBus();
     if (!session.isConnected()) {
