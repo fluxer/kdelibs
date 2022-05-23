@@ -427,7 +427,7 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         }
 
         const bool noproxyauth = (noauth || metaData("no-proxy-auth") == QLatin1String("yes"));
-        kDebug(7103) << "Proxy auth" << noproxyauth;
+        kDebug(7103) << "No proxy auth" << noproxyauth;
         curlresult = curl_easy_setopt(m_curl, CURLOPT_PROXYAUTH, noproxyauth ? CURLAUTH_NONE : CURLAUTH_ANY);
         if (curlresult != CURLE_OK) {
             error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
@@ -435,14 +435,15 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         }
     }
 
-    kDebug(7103) << "Auth" << noauth;
-    curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPAUTH, noauth ? CURLAUTH_NONE : CURLAUTH_ANY);
+    const bool nowwwauth = (noauth || metaData("no-www-auth") == QLatin1String("true"));
+    kDebug(7103) << "No WWW auth" << nowwwauth;
+    curlresult = curl_easy_setopt(m_curl, CURLOPT_HTTPAUTH, nowwwauth ? CURLAUTH_NONE : CURLAUTH_ANY);
     if (curlresult != CURLE_OK) {
         error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return false;
     }
 
-    if (!noauth) {
+    if (!nowwwauth) {
         const QByteArray urlusername = url.userName().toAscii();
         const QByteArray urlpassword = url.password().toAscii();
         if (!urlusername.isEmpty() && !urlpassword.isEmpty()) {
