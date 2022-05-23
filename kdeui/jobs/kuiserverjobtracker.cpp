@@ -300,18 +300,15 @@ void KUiServerJobTracker::speed(KJob *job, unsigned long value)
 KSharedUiServerProxy::KSharedUiServerProxy()
     : m_uiserver("org.kde.JobViewServer", "/JobViewServer", QDBusConnection::sessionBus())
 {
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.JobViewServer"))
-    {
-        QString error;
-        int ret = KToolInvocation::startServiceByDesktopPath("kuiserver.desktop",
-                                                             QStringList(), &error);
-        if (ret > 0)
-        {
-            kError() << "Couldn't start kuiserver from kuiserver.desktop: " << error;
+    QDBusConnectionInterface* sessionIface = QDBusConnection::sessionBus().interface();
+    if (!sessionIface->isServiceRegistered("org.kde.JobViewServer")) {
+        QDBusReply<void> sessionReply = sessionIface->startService("org.kde.kuiserver");
+        if (!sessionReply.isValid()) {
+            kError() << "Couldn't start kuiserver service" << sessionReply.error();
         }
     }
 
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.JobViewServer"))
+    if (!sessionIface->isServiceRegistered("org.kde.JobViewServer"))
         kDebug() << "The dbus name org.kde.JobViewServer is STILL NOT REGISTERED, even after starting kuiserver. Should not happen.";
     else
         kDebug() << "kuiserver registered";

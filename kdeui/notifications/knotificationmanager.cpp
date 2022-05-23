@@ -48,12 +48,11 @@ KNotificationManager * KNotificationManager::self()
 KNotificationManager::KNotificationManager()
     : d(new Private)
 {
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.knotify")) {
-        QString error;
-        int ret = KToolInvocation::startServiceByDesktopPath("knotify4.desktop",
-                                                             QStringList(), &error);
-        if (ret > 0) {
-            kError() << "Couldn't start knotify from knotify4.desktop: " << error << endl;
+    QDBusConnectionInterface* sessionIface = QDBusConnection::sessionBus().interface();
+    if (!sessionIface->isServiceRegistered("org.kde.knotify")) {
+        QDBusReply<void> sessionReply = sessionIface->startService("org.kde.knotify");
+        if (!sessionReply.isValid()) {
+            kError() << "Couldn't start knotify service" << sessionReply.error();
         }
     }
     d->knotify =
