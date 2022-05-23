@@ -486,7 +486,7 @@ void Kded::recreate(bool initial)
     // Using KLauncher here is difficult since we might not have a
     // database
 
-    if (!initial) {
+    if (initial) {
         updateDirWatch(); // Update tree first, to be sure to miss nothing.
         if (runBuildSycoca()) {
             recreateDone();
@@ -494,7 +494,7 @@ void Kded::recreate(bool initial)
             recreateFailed();
         }
     } else {
-        if(!delayedCheck) {
+        if (!delayedCheck) {
             updateDirWatch(); // this would search all the directories
         }
         if (bCheckSycoca) {

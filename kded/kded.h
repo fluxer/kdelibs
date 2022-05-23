@@ -163,7 +163,7 @@ protected Q_SLOTS:
    /**
     * @internal Triggers rebuilding
     */
-   void update (const QString& dir );
+   void update(const QString& dir);
 
    void runDelayedCheck();
 
@@ -173,7 +173,7 @@ private:
    /**
     * Scans dir for new files and new subdirectories.
     */
-   void readDirectory(const QString& dir );
+   void readDirectory(const QString& dir);
 
    /**
     * Pointer to the dirwatch class which tells us, when some directories
