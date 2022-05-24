@@ -219,13 +219,9 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
 #ifdef Q_OS_UNIX
     if (qgetenv("KDE_DEBUG").isEmpty())
     {
-        KCrash::setCrashHandler( sigsegv_handler );
-        KDE_signal(SIGILL,&sigsegv_handler);
-        KDE_signal(SIGTRAP,&sigsegv_handler);
-        KDE_signal(SIGABRT,&sigsegv_handler);
-        KDE_signal(SIGBUS,&sigsegv_handler);
-        KDE_signal(SIGALRM,&sigsegv_handler);
-        KDE_signal(SIGFPE,&sigsegv_handler);
+        KCrash::setCrashHandler(sigsegv_handler);
+        KDE_signal(SIGTRAP, &sigsegv_handler);
+        KDE_signal(SIGALRM, &sigsegv_handler);
 #ifdef SIGPOLL
         KDE_signal(SIGPOLL, &sigsegv_handler);
 #endif
