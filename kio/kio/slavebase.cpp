@@ -116,7 +116,6 @@ public:
     QString poolSocket;
     bool isConnectedToApp;
 
-    QString slaveid;
     bool resume:1;
     bool needSendCanResume:1;
     bool onHold:1;
@@ -191,15 +190,15 @@ static const char *s_protocol = nullptr;
 extern "C" {
 static void genericsig_handler(int sigNumber)
 {
-   KDE_signal(sigNumber,SIG_IGN);
+   KDE_signal(sigNumber, SIG_IGN);
    //WABA: Don't do anything that requires malloc, we can deadlock on it since
    //a SIGTERM signal can come in while we are in malloc/free.
    //kDebug()<<"kioslave : exiting due to signal "<<sigNumber;
    //set the flag which will be checked in dispatchLoop() and which *should* be checked
    //in lengthy operations in the various slaves
-   if (globalSlave!=0)
+   if (globalSlave != 0)
       globalSlave->setKillFlag();
-   KDE_signal(SIGALRM,SIG_DFL);
+   KDE_signal(SIGALRM, SIG_DFL);
    alarm(5);  //generate an alarm signal in 5 seconds, in this time the slave has to exit
 }
 }
@@ -241,22 +240,19 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
 
     struct sigaction act;
     act.sa_handler = sigpipe_handler;
-    sigemptyset( &act.sa_mask );
+    sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
-    sigaction( SIGPIPE, &act, 0 );
+    sigaction(SIGPIPE, &act, 0);
 
-    KDE_signal(SIGINT,&genericsig_handler);
-    KDE_signal(SIGQUIT,&genericsig_handler);
-    KDE_signal(SIGTERM,&genericsig_handler);
+    KDE_signal(SIGINT, &genericsig_handler);
+    KDE_signal(SIGQUIT, &genericsig_handler);
+    KDE_signal(SIGTERM, &genericsig_handler);
 #endif
 
-    globalSlave=this;
+    globalSlave = this;
 
     d->isConnectedToApp = true;
 
-    // by kahl for netmgr (need a way to identify slaves)
-    d->slaveid = protocol;
-    d->slaveid += QString::number(getpid());
     d->resume = false;
     d->needSendCanResume = false;
     d->config = new KConfig(QString(), KConfig::SimpleConfig);
