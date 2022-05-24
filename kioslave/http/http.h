@@ -41,6 +41,7 @@ public:
     bool aborttransfer;
 
 private:
+    bool redirectUrl(const KUrl &url);
     bool setupCurl(const KUrl &url);
     bool authUrl(const KUrl &url);
 

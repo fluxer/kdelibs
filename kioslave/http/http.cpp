@@ -21,6 +21,8 @@
 #include "kcomponentdata.h"
 
 #include <QApplication>
+#include <QHostAddress>
+#include <QHostInfo>
 
 #include <sys/types.h>
 #include <unistd.h>
@@ -156,6 +158,7 @@ static inline KIO::Error curlToKIOError(const CURLcode curlcode, CURL *curl)
         }
         case CURLE_COULDNT_CONNECT:
         default: {
+            kWarning(7103) << "curl error" << curl_easy_strerror(curlcode);
             return KIO::ERR_COULD_NOT_CONNECT;
         }
     }
@@ -232,6 +235,10 @@ void HttpProtocol::stat(const KUrl &url)
 {
     kDebug(7103) << "URL" << url.prettyUrl();
 
+    if (redirectUrl(url)) {
+        return;
+    }
+
     if (!setupCurl(url)) {
         return;
     }
@@ -288,6 +295,10 @@ void HttpProtocol::stat(const KUrl &url)
 void HttpProtocol::get(const KUrl &url)
 {
     kDebug(7103) << "URL" << url.prettyUrl();
+
+    if (redirectUrl(url)) {
+        return;
+    }
 
     if (!setupCurl(url)) {
         return;
@@ -355,6 +366,28 @@ void HttpProtocol::slotProgress(KIO::filesize_t received, KIO::filesize_t total)
     if (total > 0 && received != total) {
         emit totalSize(total);
     }
+}
+
+bool HttpProtocol::redirectUrl(const KUrl &url)
+{
+    // curl cannot verify certs if the host is address, CURLOPT_USE_SSL set to CURLUSESSL_TRY
+    // does not bypass such cases so resolving it manually
+    const QHostAddress urladdress(url.host());
+    if (!urladdress.isNull()) {
+        const QHostInfo urlinfo = QHostInfo::fromName(url.host());
+        if (urlinfo.error() == QHostInfo::NoError) {
+            KUrl newurl(url);
+            newurl.setHost(urlinfo.hostName());
+            kDebug(7103) << "Rewrote" << url << "to" << newurl;
+            redirection(newurl);
+            finished();
+            return true;
+        } else {
+            kWarning() << "Could not resolve" << url.host();
+            return false;
+        }
+    }
+    return false;
 }
 
 bool HttpProtocol::setupCurl(const KUrl &url)

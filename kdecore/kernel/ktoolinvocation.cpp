@@ -62,7 +62,7 @@ org::kde::KLauncher *KToolInvocation::klauncher()
         QString srv = KStandardDirs::findExe(QLatin1String("kdeinit4"));
         if (srv.isEmpty()) {
             kError() << "kdeinit4 not available";
-            // NOTE: this will crash any users not checking the pointer
+            // NOTE: this will crash users not checking the pointer
             return nullptr;
         }
         QStringList args;
