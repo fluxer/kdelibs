@@ -80,35 +80,16 @@ typedef struct
  * char *error msg (utf8)
  */
 
-#define LAUNCHER_SHELL	6
-/*
- * LAUNCHER_SHELL
- *
- * Start a new process and use given environment.
- * Starts app-startup notification.
- *
- * long argc: number of arguments
- * char *args: arguments, argument 0 is the program to start.
- * char *cwd: Working directory.
- * long envc: number of environment vars
- * char *envs: environment strings.
- * int avoid_loops : avoid using the first path in $PATH where
- *    this process binary is found in order to avoid
- *    infinite loop by binary->kdeinit_wrapper link in $PATH
- * char* startup_id: app startup notification id, "0" for none,
- *   "" ( empty string ) is the default
- */
-
-#define LAUNCHER_TERMINATE_KDE 7
+#define LAUNCHER_TERMINATE_KDE 6
 
 /*
  * LAUNCHER_TERMINATE_KDEINIT
  *
  * Suicide is painless
  */
-#define LAUNCHER_TERMINATE_KDEINIT	8
+#define LAUNCHER_TERMINATE_KDEINIT 7
 
-#define LAUNCHER_DEBUG_WAIT		9
+#define LAUNCHER_DEBUG_WAIT 8
 /*
  * LAUNCHER_DEBUG_WAIT
  *
@@ -118,7 +99,7 @@ typedef struct
  * (Used for debugging io-slaves)
  */
 
-#define LAUNCHER_EXT_EXEC	10
+#define LAUNCHER_EXT_EXEC 9
 /*
  * LAUNCHER_EXT_EXEC
  *
@@ -138,28 +119,7 @@ typedef struct
  * 
  */
 
-
-#define LAUNCHER_KWRAPPER	11
-/*
- * LAUNCHER_KWRAPPER
- *
- * Start a new process, use given environment, pass signals and output.
- * Starts app-startup notification.
- *
- * long argc: number of arguments
- * char *args: arguments, argument 0 is the program to start.
- * char *cwd: Working directory.
- * long envc: number of environment vars
- * char *envs: environment strings.
- * char *tty: tty to redirect stdout/stderr to.
- * int avoid_loops : avoid using the first path in $PATH where
- *    this process binary is found in order to avoid
- *    infinite loop by binary->kdeinit_wrapper link in $PATH
- * char* startup_id: app startup notification id, "0" for none,
- *   "" ( empty string ) is the default
- */
-
-#define LAUNCHER_EXEC_NEW	12
+#define LAUNCHER_EXEC_NEW 10
 /*
  * LAUNCHER_EXEC_NEW
  *

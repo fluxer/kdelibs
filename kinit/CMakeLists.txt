@@ -47,22 +47,6 @@ endif()
 
 install(TARGETS kdeinit4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-########### kwrapper4 ###############
-
-add_executable(kwrapper4 kwrapper.c)
-
-target_link_libraries(kwrapper4 ${KINIT_SOCKET_LIBRARY})
-
-install(TARGETS kwrapper4 ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-########### kshell4 ###############
-
-add_executable(kshell4 shell.c)
-
-target_link_libraries(kshell4 ${KINIT_SOCKET_LIBRARY})
-
-install(TARGETS kshell4 ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 ########### kioslave ###############
 
 add_executable(kioslave kioslave.cpp)

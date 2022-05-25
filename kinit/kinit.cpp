@@ -1021,8 +1021,6 @@ static bool handle_launcher_request(int sock, const char *who)
    else if (request_header.arg_length &&
       ((request_header.cmd == LAUNCHER_EXEC) ||
        (request_header.cmd == LAUNCHER_EXT_EXEC) ||
-       (request_header.cmd == LAUNCHER_SHELL ) ||
-       (request_header.cmd == LAUNCHER_KWRAPPER) ||
        (request_header.cmd == LAUNCHER_EXEC_NEW)))
    {
       pid_t pid;
@@ -1052,13 +1050,7 @@ static bool handle_launcher_request(int sock, const char *who)
         arg_n = arg_n + strlen(arg_n) + 1;
       }
 
-      if( request_header.cmd == LAUNCHER_SHELL || request_header.cmd == LAUNCHER_KWRAPPER )
-      {
-         // Shell or kwrapper
-         cwd = arg_n; arg_n += strlen(cwd) + 1;
-      }
-      if( request_header.cmd == LAUNCHER_SHELL || request_header.cmd == LAUNCHER_KWRAPPER
-          || request_header.cmd == LAUNCHER_EXT_EXEC || request_header.cmd == LAUNCHER_EXEC_NEW )
+      if( request_header.cmd == LAUNCHER_EXT_EXEC || request_header.cmd == LAUNCHER_EXEC_NEW )
       {
          memcpy( &l, arg_n, sizeof( long ));
          envc = l;
@@ -1068,23 +1060,12 @@ static bool handle_launcher_request(int sock, const char *who)
          {
            arg_n = arg_n + strlen(arg_n) + 1;
          }
-         if( request_header.cmd == LAUNCHER_KWRAPPER )
-         {
-             tty = arg_n;
-             arg_n += strlen( tty ) + 1;
-         }
-      }
-
-     if( request_header.cmd == LAUNCHER_SHELL || request_header.cmd == LAUNCHER_KWRAPPER
-         || request_header.cmd == LAUNCHER_EXT_EXEC || request_header.cmd == LAUNCHER_EXEC_NEW )
-     {
          memcpy( &l, arg_n, sizeof( long ));
          avoid_loops = l;
          arg_n += sizeof( long );
-     }
+      }
 
-     if( request_header.cmd == LAUNCHER_SHELL || request_header.cmd == LAUNCHER_KWRAPPER
-         || request_header.cmd == LAUNCHER_EXT_EXEC )
+     if( request_header.cmd == LAUNCHER_EXT_EXEC )
      {
          startup_id_str = arg_n;
          arg_n += strlen( startup_id_str ) + 1;
@@ -1108,7 +1089,7 @@ static bool handle_launcher_request(int sock, const char *who)
      }
 
       pid = launch( argc, name, args, cwd, envc, envs,
-          request_header.cmd == LAUNCHER_SHELL || request_header.cmd == LAUNCHER_KWRAPPER,
+          false,
           tty, avoid_loops, startup_id_str );
 
       if (pid && (d.result == 0))
