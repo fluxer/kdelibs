@@ -70,7 +70,6 @@ static bool runBuildSycoca()
     const QString exe = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
     Q_ASSERT(!exe.isEmpty());
     QStringList args;
-    args.append("--incremental");
     if (checkStamps) {
         args.append("--checkstamps");
     }
