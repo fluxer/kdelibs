@@ -1141,15 +1141,6 @@ static bool handle_launcher_request(int sock, const char *who)
       }
       setenv( env_name, env_value, 1);
    }
-   else if (request_header.cmd == LAUNCHER_TERMINATE_KDE)
-   {
-#ifndef NDEBUG
-       fprintf(stderr,"kdeinit4: terminate KDE.\n");
-#endif
-#ifdef Q_WS_X11
-       kdeinit_xio_errhandler( 0L );
-#endif
-   }
    else if (request_header.cmd == LAUNCHER_TERMINATE_KDEINIT)
    {
 #ifndef NDEBUG

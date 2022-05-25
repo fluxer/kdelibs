@@ -28,7 +28,6 @@ typedef struct
 
 /* Launcher commands: */
 
-#define LAUNCHER_EXEC	1
 /*
  * LAUNCHER_EXEC
  *
@@ -38,9 +37,8 @@ typedef struct
  * long argc: number of arguments
  * char *args: arguments, argument 0 is the program to start.
  */
+#define LAUNCHER_EXEC 1
 
-
-#define LAUNCHER_SETENV	2
 /*
  * LAUNCHER_SETENV
  *
@@ -51,8 +49,8 @@ typedef struct
  * char *env_name;
  * char *env_value;
  */
+#define LAUNCHER_SETENV 2
 
-#define LAUNCHER_CHILD_DIED 3
 /*
  * LAUNCHER_CHILD_DIED
  *
@@ -61,8 +59,8 @@ typedef struct
  * long pid;
  * long exit_code;
  */
+#define LAUNCHER_CHILD_DIED 3
 
-#define LAUNCHER_OK 4
 /*
  * LAUNCHER_OK
  *
@@ -70,8 +68,8 @@ typedef struct
  *
  * long pid;
  */
+#define LAUNCHER_OK 4
 
-#define LAUNCHER_ERROR 5
 /*
  * LAUNCHER_ERROR
  *
@@ -79,17 +77,15 @@ typedef struct
  *
  * char *error msg (utf8)
  */
-
-#define LAUNCHER_TERMINATE_KDE 6
+#define LAUNCHER_ERROR 5
 
 /*
  * LAUNCHER_TERMINATE_KDEINIT
  *
  * Suicide is painless
  */
-#define LAUNCHER_TERMINATE_KDEINIT 7
+#define LAUNCHER_TERMINATE_KDEINIT 6
 
-#define LAUNCHER_DEBUG_WAIT 8
 /*
  * LAUNCHER_DEBUG_WAIT
  *
@@ -98,8 +94,8 @@ typedef struct
  *
  * (Used for debugging io-slaves)
  */
+#define LAUNCHER_DEBUG_WAIT 7
 
-#define LAUNCHER_EXT_EXEC 9
 /*
  * LAUNCHER_EXT_EXEC
  *
@@ -118,8 +114,8 @@ typedef struct
  *   "" ( empty string ) is the default
  * 
  */
+#define LAUNCHER_EXT_EXEC 8
 
-#define LAUNCHER_EXEC_NEW 10
 /*
  * LAUNCHER_EXEC_NEW
  *
@@ -136,6 +132,7 @@ typedef struct
  *    this process binary is found in order to avoid
  *    infinite loop by binary->kdeinit_wrapper link in $PATH
  */
+#define LAUNCHER_EXEC_NEW 9
 
 const char* commandToString(int command);
 

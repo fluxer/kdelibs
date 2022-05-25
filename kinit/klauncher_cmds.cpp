@@ -33,8 +33,6 @@ const char* commandToString(int command)
         return "LAUNCHER_OK";
     case LAUNCHER_ERROR:
         return "LAUNCHER_ERROR";
-    case LAUNCHER_TERMINATE_KDE:
-        return "LAUNCHER_TERMINATE_KDE";
     case LAUNCHER_TERMINATE_KDEINIT:
         return "LAUNCHER_TERMINATE_KDEINIT";
     case LAUNCHER_DEBUG_WAIT:
