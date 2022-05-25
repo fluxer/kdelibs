@@ -889,7 +889,7 @@ KLauncher::cancel_service_startup_info( KLaunchRequest* request, const QByteArra
         }
         Display* dpy = NULL;
         if( !dpy_str.isEmpty() && mCached_dpy != NULL
-            && dpy_str != QLatin1String(XDisplayString( mCached_dpy )) )
+            && dpy_str != QString::fromLatin1(XDisplayString( mCached_dpy )) )
             dpy = mCached_dpy;
         if( dpy == NULL )
             dpy = XOpenDisplay( dpy_str.toLatin1().constData() );
