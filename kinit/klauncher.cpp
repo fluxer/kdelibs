@@ -1067,7 +1067,7 @@ KLauncher::requestSlave(const QString &protocol,
     QString name = KProtocolInfo::exec(protocol);
     if (name.isEmpty())
     {
-	error = i18n("Unknown protocol '%1'.\n", protocol);
+        error = i18n("Unknown protocol '%1'.\n", protocol);
         return 0;
     }
 
@@ -1137,7 +1137,7 @@ bool KLauncher::checkForHeldSlave(const QString &url)
 void
 KLauncher::waitForSlave(pid_t pid, QDBusMessage msg)
 {
-    foreach (IdleSlave *slave, mSlaveList)
+    foreach (const IdleSlave *slave, mSlaveList)
     {
         if (slave->pid() == pid)
            return; // Already here.
