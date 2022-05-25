@@ -54,12 +54,6 @@ void KLauncherAdaptor::exec_blind(const QString &name, const QStringList &arg_li
     static_cast<KLauncher *>(parent())->exec_blind(name, arg_list);
 }
 
-void KLauncherAdaptor::exec_blind(const QString &name, const QStringList &arg_list, const QStringList &envs, const QString &startup_id)
-{
-    // handle method call org.kde.KLauncher.exec_blind
-    static_cast<KLauncher *>(parent())->exec_blind(name, arg_list, envs, startup_id);
-}
-
 int KLauncherAdaptor::kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &, QString &, qint64 &)
 {
     // handle method call org.kde.KLauncher.kdeinit_exec

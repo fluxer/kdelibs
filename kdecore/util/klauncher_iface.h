@@ -61,13 +61,6 @@ public Q_SLOTS: // METHODS
         return callWithArgumentList(QDBus::Block, QLatin1String("autoStart"), argumentList);
     }
 
-    inline QDBusReply<void> exec_blind(const QString &name, const QStringList &arg_list, const QStringList &envs, const QString &startup_id)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(name) << qVariantFromValue(arg_list) << qVariantFromValue(envs) << qVariantFromValue(startup_id);
-        return callWithArgumentList(QDBus::Block, QLatin1String("exec_blind"), argumentList);
-    }
-
     inline QDBusReply<void> exec_blind(const QString &name, const QStringList &arg_list)
     {
         QList<QVariant> argumentList;

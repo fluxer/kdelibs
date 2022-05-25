@@ -47,7 +47,6 @@ public: // PROPERTIES
 public Q_SLOTS: // METHODS
     void autoStart(int phase = 1);
     void exec_blind(const QString &name, const QStringList &arg_list);
-    void exec_blind(const QString &name, const QStringList &arg_list, const QStringList &envs, const QString &startup_id);
     int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);

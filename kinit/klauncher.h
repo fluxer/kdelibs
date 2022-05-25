@@ -152,14 +152,8 @@ public: // remote methods, called by KLauncherAdaptor
 
     /**
      * Starts a program.
-     * 'envs' are environment variables that will be added
-     *   to this program's environment before starting it
-     * 'startup_id' is for application startup notification,
-     * "" is the default, "0" for none
      */
-    void exec_blind(const QString &name, const QStringList &arg_list, const QStringList &envs, const QString &startup_id);
-    inline void exec_blind(const QString &name, const QStringList &arg_list)
-    { exec_blind(name, arg_list, QStringList(), QLatin1String("0")); }
+    void exec_blind(const QString &name, const QStringList &arg_list);
 
     bool kdeinit_exec(const QString &app, const QStringList &args,
                       const QString& workdir, const QStringList &envs,

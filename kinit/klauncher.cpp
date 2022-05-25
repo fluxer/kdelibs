@@ -667,7 +667,7 @@ KLauncher::requestStart(KLaunchRequest *request)
    while (lastRequest != 0);
 }
 
-void KLauncher::exec_blind(const QString &name, const QStringList &arg_list, const QStringList &envs, const QString &startup_id)
+void KLauncher::exec_blind(const QString &name, const QStringList &arg_list)
 {
    KLaunchRequest *request = new KLaunchRequest;
    request->autoStart = false;
@@ -676,13 +676,7 @@ void KLauncher::exec_blind(const QString &name, const QStringList &arg_list, con
    request->dbus_startup_type = KService::DBusNone;
    request->pid = 0;
    request->status = KLaunchRequest::Launching;
-   request->envs = envs;
-   // Find service, if any - strip path if needed
-   KService::Ptr service = KService::serviceByDesktopName( name.mid( name.lastIndexOf(QLatin1Char('/')) + 1 ));
-   if (service)
-       send_service_startup_info(request, service, startup_id.toLocal8Bit(), QStringList());
-   else // no .desktop file, no startup info
-       cancel_service_startup_info( request, startup_id.toLocal8Bit(), envs );
+   request->envs = QStringList();
 
    requestStart(request);
    // We don't care about this request any longer....
