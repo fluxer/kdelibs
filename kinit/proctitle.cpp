@@ -30,12 +30,8 @@
 
 #ifdef HAVE_SETPROCTITLE
 #  define PF_ARGV_TYPE PF_ARGV_NONE
-#  ifdef HAVE_SYS_TYPES_H
-#    include <sys/types.h>
-#  endif /* HAVE_SYS_TYPES_H */
-#  ifdef HAVE_UNISTD_H
-#    include <unistd.h>
-#  endif /* HAVE_UNISTD_H */
+#  include <sys/types.h>
+#  include <unistd.h>
 #endif /* HAVE_SETPROCTITLE */
 
 #ifdef HAVE___PROGNAME
