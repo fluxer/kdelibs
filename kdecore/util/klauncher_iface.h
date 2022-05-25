@@ -158,19 +158,6 @@ public Q_SLOTS: // METHODS
         return reply;
     }
 
-    inline QDBusReply<int> start_service_by_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, QString &dbusServiceName, QString &error, qint64 &pid)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(serviceName) << qVariantFromValue(urls) << qVariantFromValue(envs) << qVariantFromValue(startup_id) << qVariantFromValue(blind);
-        QDBusMessage reply = callWithArgumentList(QDBus::Block, QLatin1String("start_service_by_name"), argumentList);
-        if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 4) {
-            dbusServiceName = qdbus_cast<QString>(reply.arguments().at(1));
-            error = qdbus_cast<QString>(reply.arguments().at(2));
-            pid = qdbus_cast<qint64>(reply.arguments().at(3));
-        }
-        return reply;
-    }
-
     inline QDBusReply<void> waitForSlave(int pid)
     {
         QList<QVariant> argumentList;
