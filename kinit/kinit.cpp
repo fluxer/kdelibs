@@ -1305,7 +1305,7 @@ static void kdeinit_library_path()
    display.replace(':','_');
    // WARNING, if you change the socket name, adjust kwrapper too
    const QString socketFileName = QString::fromLatin1("kdeinit4_%1").arg(QLatin1String(display));
-   QByteArray socketName = QFile::encodeName(KStandardDirs::locateLocal("socket", socketFileName, *s_instance));
+   QByteArray socketName = QFile::encodeName(KStandardDirs::locateLocal("tmp", socketFileName, *s_instance));
    if (socketName.length() >= MAX_SOCK_FILE)
    {
      fprintf(stderr, "kdeinit4: Aborting. Socket name will be too long:\n");

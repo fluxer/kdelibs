@@ -59,6 +59,7 @@
 #include <QtCore/QCache>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
 #include <QtNetwork/QHostInfo>
 
 #include <mutex>
@@ -263,7 +264,6 @@ QStringList KStandardDirs::allTypes() const
     //list.append(QString::fromLatin1("home")); // undocumented on purpose, said Waldo in r113855.
 
     // Those are handled by resourceDirs() itself
-    list.append(QString::fromLatin1("socket"));
     list.append(QString::fromLatin1("tmp"));
     list.append(QString::fromLatin1("cache"));
     // Those are handled by installPath()
@@ -854,12 +854,20 @@ KStandardDirs::realFilePath(const QString &filename)
 
 void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type)
 {
-    QString resourceDir = QDir::tempPath();
-    resourceDir.append(QDir::separator());
-    resourceDir.append(QLatin1String("kde-"));
-    resourceDir.append(QString::fromLatin1(type));
-    resourceDir.append(QLatin1Char('-'));
-    resourceDir.append(QString::number(::getuid()));
+    QString resourceDir;
+    if (qstrcmp(type, "cache") == 0) {
+        resourceDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+        resourceDir.append(QDir::separator());
+        resourceDir.append(QLatin1String("katana"));
+    } else if (qstrcmp(type, "tmp") == 0) {
+        resourceDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
+        // if the base directory is /tmp not /run/user/<uid> make sure it is user specific
+        resourceDir.append(QDir::separator());
+        resourceDir.append(QLatin1String("katana-"));
+        resourceDir.append(QString::number(::getuid()));
+    } else {
+        Q_ASSERT(false);
+    }
     q->addResourceDir(type, QDir::cleanPath(resourceDir) + QLatin1Char('/'), false);
 }
 
@@ -886,11 +894,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
     else // filling cache
     {
         //qDebug() << this << "resourceDirs(" << type << "), not in cache";
-        if (strcmp(type, "socket") == 0)
-            createSpecialResource(type);
-        else if (strcmp(type, "tmp") == 0)
-            createSpecialResource(type);
-        else if (strcmp(type, "cache") == 0)
+        if (strcmp(type, "tmp") == 0 || strcmp(type, "cache") == 0)
             createSpecialResource(type);
 
         QDir testdir;
@@ -1184,12 +1188,9 @@ QString KStandardDirs::saveLocation(const char *type,
     if (path.isEmpty())
     {
         QStringList dirs = d->m_relatives.value(type);
-        if (dirs.isEmpty() && (
-                (strcmp(type, "socket") == 0) ||
-                (strcmp(type, "tmp") == 0) ||
-                (strcmp(type, "cache") == 0) ))
+        if (dirs.isEmpty() && (strcmp(type, "tmp") == 0 || strcmp(type, "cache") == 0))
         {
-            (void) resourceDirs(type); // Generate socket|tmp|cache resource.
+            (void) resourceDirs(type); // Generate tmp|cache resource.
             dirs = d->m_relatives.value(type); // Search again.
         }
         if (!dirs.isEmpty())

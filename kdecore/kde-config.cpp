@@ -141,8 +141,7 @@ int main(int argc, char **argv)
             "xdgdata-mime", I18N_NOOP("XDG Mime Types"),
             "xdgconf-menu", I18N_NOOP("XDG Menu layout (.menu files)"),
             "xdgconf-autostart", I18N_NOOP("XDG autostart directory"),
-            "tmp", I18N_NOOP("Temporary files (specific for both current host and current user)"),
-            "socket", I18N_NOOP("UNIX Sockets (specific for both current host and current user)"),
+            "tmp", I18N_NOOP("Temporary files (specific for current user)"),
             0, 0
         };
         Q_FOREACH(const QString &type, types)

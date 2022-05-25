@@ -78,8 +78,7 @@ class KConfig;
  * @li @c sound - Application sounds.
  * @li @c templates - Templates for the "Create new file" functionality.
  * @li @c wallpaper - Wallpapers.
- * @li @c tmp - Temporary files (specific for both current host and current user)
- * @li @c socket - UNIX Sockets (specific for both current host and current user)
+ * @li @c tmp - Temporary files (specific for current user)
  * @li @c xdgconf-menu - Freedesktop.org standard location for menu layout (.menu) files.
  * @li @c xdgdata-apps - Freedesktop.org standard location for application desktop files.
  * @li @c xdgdata-dirs - Freedesktop.org standard location for menu descriptions (.directory files).
