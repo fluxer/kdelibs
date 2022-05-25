@@ -38,6 +38,10 @@
 #include <pwd.h>
 #include <signal.h>
 
+#if !defined(WE_ARE_KWRAPPER) && !defined(WE_ARE_KSHELL)
+#  error neither WE_ARE_KWRAPPER nor WE_ARE_KSHELL is defined
+#endif
+
 extern char **environ;
 
 static char *getDisplay()
@@ -329,7 +333,6 @@ static int kwrapper_run( pid_t wrapped, int sock )
 int main(int argc, char **argv)
 {
    int i;
-   int wrapper = 0;
    int ext_wrapper = 0;
    int kwrapper = 0;
    long arg_count;
@@ -359,44 +362,19 @@ int main(int argc, char **argv)
       p++;
    start = p;
 
-   if (strcmp(start, "kdeinit4_wrapper") == 0)
-      wrapper = 1;
-   else if (strcmp(start, "kshell4") == 0)
+   if (strcmp(start, "kshell4") == 0)
       ext_wrapper = 1;
    else if (strcmp(start, "kwrapper4") == 0)
       kwrapper = 1;
-   else if (strcmp(start, "kdeinit4_shutdown") == 0)
-   {
-      if( argc > 1)
-      {
-         fprintf(stderr, "Usage: %s\n\n", start);
-         fprintf(stderr, "Shuts down kdeinit4 master process and terminates all processes spawned from it.\n");
-         exit( 255 );
-      }
-      sock = openSocket();
-      if( sock < 0 )
-      {
-          fprintf( stderr, "Error: Can not contact kdeinit4!\n" );
-          exit( 255 );
-      }
-      header.cmd = LAUNCHER_TERMINATE_KDE;
-      header.arg_length = 0;
-      write_socket(sock, (char *) &header, sizeof(header));
-      read_socket(sock, (char *) &header, 1); /* wait for the socket to close */
-      return 0;
-   }
 
-   if (wrapper || ext_wrapper || kwrapper)
+   argv++;
+   argc--;
+   if (argc < 1)
    {
-      argv++;
-      argc--;
-      if (argc < 1)
-      {
-         fprintf(stderr, "Usage: %s <application> [<args>]\n", start);
-         exit(255); /* usage should be documented somewhere ... */
-      }
-      start = argv[0];
+      fprintf(stderr, "Usage: %s <application> [<args>]\n", start);
+      exit(255); /* usage should be documented somewhere ... */
    }
+   start = argv[0];
 
    sock = openSocket();
    if( sock < 0 ) /* couldn't contact kdeinit4, start argv[ 0 ] directly */
@@ -405,18 +383,6 @@ int main(int argc, char **argv)
       fprintf( stderr, "Error: Can not run %s !\n", argv[ 0 ] );
       exit( 255 );
    }
-   
-   if( !wrapper && !ext_wrapper && !kwrapper )
-       { /* was called as a symlink */
-       avoid_loops = 1;
-#if defined(WE_ARE_KWRAPPER)
-       kwrapper = 1;
-#elif defined(WE_ARE_KSHELL)
-       ext_wrapper = 1;
-#else
-       wrapper = 1;
-#endif
-       }
 
    arg_count = argc;
    env_count = 0;
@@ -429,51 +395,39 @@ int main(int argc, char **argv)
    {
       size += strlen(argv[i])+1;
    }
-   if( wrapper )
+   if (!getcwd(cwd, 8192))
+      cwd[0] = '\0';
+   size += strlen(cwd)+1;
+
+   size += sizeof(long); /* Number of env.vars. */
+
+   for(; environ[env_count] ; env_count++)
    {
-      size += sizeof(long); /* empty envs */
+      int l = strlen(environ[env_count])+1;
+      size += l;
    }
-   if (ext_wrapper || kwrapper)
+
+   if( kwrapper )
    {
-      if (!getcwd(cwd, 8192))
-         cwd[0] = '\0';
-      size += strlen(cwd)+1;
-
-      size += sizeof(long); /* Number of env.vars. */
-
-      for(; environ[env_count] ; env_count++)
-      {
-         int l = strlen(environ[env_count])+1;
-         size += l;
-      }
-
-      if( kwrapper )
-      {
 #if defined(HAVE_TTYNAME_R)
-          if (ttyname_r(1, tty, sizeof(tty)) != 0 || !isatty(2))
-             memset(tty, '\0', sizeof(tty) * sizeof(char));
+       if (ttyname_r(1, tty, sizeof(tty)) != 0 || !isatty(2))
+          memset(tty, '\0', sizeof(tty) * sizeof(char));
 #else
-          tty = ttyname(1);
-          if (!tty || !isatty(2))
-             tty = "";
+       tty = ttyname(1);
+       if (!tty || !isatty(2))
+          tty = "";
 #endif
-          size += strlen(tty)+1;
-      }
+       size += strlen(tty)+1;
    }
 
    size += sizeof( avoid_loops );
 
-   if( !wrapper )
-   {
-       startup_id = getenv( "DESKTOP_STARTUP_ID" );
-       if( startup_id == NULL )
-           startup_id = "";
-       size += strlen( startup_id ) + 1;
-   }
+   startup_id = getenv( "DESKTOP_STARTUP_ID" );
+   if( startup_id == NULL )
+      startup_id = "";
+   size += strlen( startup_id ) + 1;
 
-   if (wrapper)
-      header.cmd = LAUNCHER_EXEC_NEW;
-   else if (kwrapper)
+   if (kwrapper)
       header.cmd = LAUNCHER_KWRAPPER;
    else
       header.cmd = LAUNCHER_SHELL;
@@ -500,42 +454,30 @@ int main(int argc, char **argv)
       p += strlen(argv[i])+1;
    }
 
-   if( wrapper )
+   memcpy(p, cwd, strlen(cwd)+1);
+   p+= strlen(cwd)+1;
+
+   memcpy(p, &env_count, sizeof(env_count));
+   p+= sizeof(env_count);
+
+   for(i = 0; i < env_count; i++)
    {
-      long dummy = 0;
-      memcpy(p, &dummy, sizeof(dummy)); /* empty envc */
-      p+= sizeof( dummy );
+      int l = strlen(environ[i])+1;
+      memcpy(p, environ[i], l);
+      p += l;
    }
-   if (ext_wrapper || kwrapper)
+
+   if( kwrapper )
    {
-      memcpy(p, cwd, strlen(cwd)+1);
-      p+= strlen(cwd)+1;
-
-      memcpy(p, &env_count, sizeof(env_count));
-      p+= sizeof(env_count);
-
-      for(i = 0; i < env_count; i++)
-      {
-         int l = strlen(environ[i])+1;
-         memcpy(p, environ[i], l);
-         p += l;
-      }
-
-      if( kwrapper )
-      {
-          memcpy(p, tty, strlen(tty)+1);
-          p+=strlen(tty)+1;
-      }
+       memcpy(p, tty, strlen(tty)+1);
+       p+=strlen(tty)+1;
    }
 
    memcpy( p, &avoid_loops, sizeof( avoid_loops ));
    p += sizeof( avoid_loops );
 
-   if( !wrapper )
-   {
-       memcpy(p, startup_id, strlen(startup_id)+1);
-       p+= strlen(startup_id)+1;
-   }
+   memcpy(p, startup_id, strlen(startup_id)+1);
+   p+= strlen(startup_id)+1;
 
    if( p - buffer != size ) /* should fail only if you change this source and do */
                                  /* a stupid mistake, it should be assert() actually */

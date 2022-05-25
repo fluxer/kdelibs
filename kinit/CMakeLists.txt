@@ -55,22 +55,6 @@ target_link_libraries(kwrapper4 ${KINIT_SOCKET_LIBRARY})
 
 install(TARGETS kwrapper4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-########### kdeinit4_wrapper ###############
-
-add_executable(kdeinit4_wrapper wrapper.c)
-
-target_link_libraries(kdeinit4_wrapper ${KINIT_SOCKET_LIBRARY})
-
-install(TARGETS kdeinit4_wrapper ${INSTALL_TARGETS_DEFAULT_ARGS})
-
-########### kdeinit4_shutdown ###############
-
-add_executable(kdeinit4_shutdown wrapper.c)
-
-target_link_libraries(kdeinit4_shutdown ${KINIT_SOCKET_LIBRARY})
-
-install(TARGETS kdeinit4_shutdown ${INSTALL_TARGETS_DEFAULT_ARGS})
-
 ########### kshell4 ###############
 
 add_executable(kshell4 shell.c)

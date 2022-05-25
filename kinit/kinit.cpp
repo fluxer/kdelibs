@@ -765,6 +765,49 @@ static void init_signals()
   sigaction( SIGPIPE, &act, 0L);
 }
 
+static void shutdown_kdeinit()
+{
+  QT_SOCKLEN_T socklen;
+
+  /** Test if socket file is already present
+   *  note that access() resolves symlinks, and so we check the actual
+   *  socket file if it exists
+   */
+  if (access(sock_file, W_OK) == 0)
+  {
+     int s;
+     struct sockaddr_un server;
+
+//     fprintf(stderr, "kdeinit4: Warning, socket_file already exists!\n");
+     /*
+      * create the socket stream
+      */
+     s = socket(PF_UNIX, SOCK_STREAM, 0);
+     if (s < 0)
+     {
+        perror("socket() failed");
+        exit(255);
+     }
+     server.sun_family = AF_UNIX;
+     strcpy(server.sun_path, sock_file);
+     socklen = sizeof(server);
+
+     if(connect(s, (struct sockaddr *)&server, socklen) == 0)
+     {
+        fprintf(stderr, "kdeinit4: Shutting down running client.\n");
+        klauncher_header request_header;
+        request_header.cmd = LAUNCHER_TERMINATE_KDEINIT;
+        request_header.arg_length = 0;
+        write(s, &request_header, sizeof(request_header));
+        sleep(1); // Give it some time
+     }
+     close(s);
+  }
+
+  /** Delete any stale socket file (and symlink) **/
+  unlink(sock_file);
+}
+
 static void init_kdeinit_socket()
 {
   struct sockaddr_un sa;
@@ -813,43 +856,7 @@ static void init_kdeinit_socket()
 #endif
   }
 
-  /** Test if socket file is already present
-   *  note that access() resolves symlinks, and so we check the actual
-   *  socket file if it exists
-   */
-  if (access(sock_file, W_OK) == 0)
-  {
-     int s;
-     struct sockaddr_un server;
-
-//     fprintf(stderr, "kdeinit4: Warning, socket_file already exists!\n");
-     /*
-      * create the socket stream
-      */
-     s = socket(PF_UNIX, SOCK_STREAM, 0);
-     if (s < 0)
-     {
-        perror("socket() failed");
-        exit(255);
-     }
-     server.sun_family = AF_UNIX;
-     strcpy(server.sun_path, sock_file);
-     socklen = sizeof(server);
-
-     if(connect(s, (struct sockaddr *)&server, socklen) == 0)
-     {
-        fprintf(stderr, "kdeinit4: Shutting down running client.\n");
-        klauncher_header request_header;
-        request_header.cmd = LAUNCHER_TERMINATE_KDEINIT;
-        request_header.arg_length = 0;
-        write(s, &request_header, sizeof(request_header));
-        sleep(1); // Give it some time
-     }
-     close(s);
-  }
-
-  /** Delete any stale socket file (and symlink) **/
-  unlink(sock_file);
+  shutdown_kdeinit();
 
   /** create socket **/
   d.wrapper = socket(PF_UNIX, SOCK_STREAM, 0);
@@ -1485,7 +1492,7 @@ int main(int argc, char **argv)
    pid_t pid;
    bool do_fork = true;
    int launch_klauncher = 1;
-   int keep_running = 1;
+   int do_shutdown = 0;
    d.suicide = false;
 
    /** Save arguments first... **/
@@ -1499,13 +1506,13 @@ int main(int argc, char **argv)
          do_fork = false;
       if (strcmp(safe_argv[i], "--suicide") == 0)
          d.suicide = true;
-      if (strcmp(safe_argv[i], "--exit") == 0)
-         keep_running = 0;
+      if (strcmp(safe_argv[i], "--shutdown") == 0)
+         do_shutdown = 1;
       if (strcmp(safe_argv[i], "--version") == 0)
       {
-	 printf("Katie: %s\n", qVersion());
-	 printf("KDE: %s\n", KDE_VERSION_STRING);
-	 exit(0);
+         printf("Katie: %s\n", qVersion());
+         printf("KDE: %s\n", KDE_VERSION_STRING);
+         exit(0);
       }
       if (strcmp(safe_argv[i], "--help") == 0)
       {
@@ -1514,9 +1521,17 @@ int main(int argc, char **argv)
         printf("    --no-klauncher    Do not start klauncher\n");
         printf("    --suicide         Terminate when no KDE applications are left running\n");
         printf("    --version         Show version information\n");
-        printf("    --exit            Terminate when kded has run\n");
+        printf("    --shutdown        Shutdown running kdeinit4 instance\n");
         exit(0);
       }
+   }
+
+   if (do_shutdown) {
+      KDE_signal(SIGPIPE, SIG_IGN);
+      s_instance = new KComponentData("kdeinit4", QByteArray(), KComponentData::SkipMainComponentRegistration);
+      kdeinit_library_path();
+      shutdown_kdeinit();
+      return 0;
    }
 
    cleanup_fds();
@@ -1553,8 +1568,7 @@ int main(int argc, char **argv)
    }
 
    /** Make process group leader (for shutting down children later) **/
-   if(keep_running)
-      setsid();
+   setsid();
 
    /** Create our instance **/
    s_instance = new KComponentData("kdeinit4", QByteArray(), KComponentData::SkipMainComponentRegistration);
@@ -1586,14 +1600,12 @@ int main(int argc, char **argv)
    setupX();
 #endif
 
-   if (keep_running)
-   {
-      /*
-       * Create ~/.kde/tmp-<hostname>/kdeinit4-<display> socket for incoming wrapper
-       * requests.
-       */
-      init_kdeinit_socket();
-   }
+   /*
+   * Create ~/.kde/tmp-<hostname>/kdeinit4-<display> socket for incoming wrapper
+   * requests.
+   */
+   init_kdeinit_socket();
+
    if (launch_klauncher)
    {
       start_klauncher();
@@ -1637,9 +1649,6 @@ int main(int argc, char **argv)
 #ifndef SKIP_PROCTITLE
    proctitle_set("kdeinit4 Running...");
 #endif
-
-   if (!keep_running)
-      return 0;
 
    if (d.initpipe[1] != -1)
    {
