@@ -262,6 +262,12 @@ public:
    */
   void updateRemoteUserTimestamp( const QString& service, int time = 0 );
 
+  /**
+   * Setups signal handler for SIGTERM, SIGHUP and SIGINT to call QApplication::quit() when such
+   * signal is received.
+   */
+  static void quitOnSignal();
+
 #ifdef Q_WS_X11
   /**
       @internal

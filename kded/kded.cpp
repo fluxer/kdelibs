@@ -34,8 +34,8 @@
 #include <kdirwatch.h>
 #include <kstandarddirs.h>
 #include <kservicetypetrader.h>
-#include <kde_file.h>
 
+#include <QFile>
 #include <QProcess>
 #include <QHostInfo>
 #include <QDBusReply>
@@ -46,6 +46,8 @@
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 #endif
+
+#include <unistd.h>
 
 #define KDED_EXENAME "kded4"
 
@@ -660,6 +662,7 @@ int main(int argc, char *argv[])
     KApplication app;
     app.setQuitOnLastWindowClosed(false);
     app.disableSessionManagement();
+    app.quitOnSignal();
 
     QDBusConnection session = QDBusConnection::sessionBus();
     if (!session.isConnected()) {

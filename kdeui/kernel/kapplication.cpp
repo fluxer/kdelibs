@@ -25,13 +25,15 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QTimer>
+#include <QtCore/QList>
+#include <QtCore/QMetaType>
 #include <QtGui/QSessionManager>
 #include <QtGui/QStyleFactory>
-#include <QtCore/QTimer>
 #include <QtGui/QWidget>
-#include <QtCore/QList>
-#include <QtDBus/QtDBus>
-#include <QtCore/QMetaType>
+#include <QtGui/qevent.h>
+#include <QtDBus/QDBusInterface>
+#include <QtDBus/QDBusConnectionInterface>
 
 #include "kauthorized.h"
 #include "kaboutdata.h"
@@ -54,29 +56,23 @@
 #include "kurl.h"
 #include "kmessage.h"
 #include "kmessageboxmessagehandler.h"
-
-#if defined Q_WS_X11
-#include <QtGui/qx11info_x11.h>
+#include "kwindowsystem.h"
+#include "kde_file.h"
 #include <kstartupinfo.h>
-#endif
+#include <kcomponentdata.h>
 
 #include <sys/types.h>
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
-#endif
 #include <sys/wait.h>
-
-#include "kwindowsystem.h"
-
 #include <fcntl.h>
 #include <stdlib.h> // srand(), rand()
 #include <unistd.h>
-#if defined Q_WS_X11
-//#ifndef Q_WS_QWS //FIXME(embedded): NetWM should talk to QWS...
-#include <netwm.h>
+#include <signal.h>
+#ifdef HAVE_SYS_STAT_H
+#  include <sys/stat.h>
 #endif
 
 #ifdef Q_WS_X11
+#include <netwm.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/Xatom.h>
@@ -85,14 +81,6 @@
 
 #include <QtGui/qx11info_x11.h>
 #endif
-
-
-#ifdef Q_OS_UNIX
-#include <signal.h>
-#endif
-
-#include <QtGui/qevent.h>
-#include <kcomponentdata.h>
 
 KApplication* KApplication::KApp = 0L;
 bool KApplication::loadedByKdeinit = false;
@@ -188,9 +176,9 @@ static void installSigpipeHandler()
 #ifdef Q_OS_UNIX
     struct sigaction act;
     act.sa_handler = SIG_IGN;
-    sigemptyset( &act.sa_mask );
+    sigemptyset(&act.sa_mask);
     act.sa_flags = 0;
-    sigaction( SIGPIPE, &act, 0 );
+    sigaction(SIGPIPE, &act, 0);
 #endif
 }
 
@@ -843,7 +831,25 @@ void KApplication::updateRemoteUserTimestamp( const QString& service, int time )
 #endif
 }
 
+static void quit_handler(int sig)
+{
+    Q_UNUSED(sig);
 
+    KDE_signal(SIGTERM, SIG_DFL);
+    KDE_signal(SIGHUP, SIG_DFL);
+    KDE_signal(SIGINT, SIG_DFL);
+
+    if (qApp) {
+       qApp->quit();
+    }
+}
+
+void KApplication::quitOnSignal()
+{
+    KDE_signal(SIGTERM, quit_handler);
+    KDE_signal(SIGHUP, quit_handler);
+    KDE_signal(SIGINT, quit_handler);
+}
 
 
 QString KApplication::checkRecoverFile( const QString& pFilename,
