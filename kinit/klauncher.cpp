@@ -882,17 +882,17 @@ KLauncher::cancel_service_startup_info( KLaunchRequest* request, const QByteArra
         request->startup_id = "0"; // krazy:exclude=doublequote_chars
     if( !startup_id.isEmpty() && startup_id != "0" )
     {
-        QString dpy_str;
+        QByteArray dpy_bytes;
         foreach (const QString &env, envs) {
             if (env.startsWith(QLatin1String("DISPLAY=")))
-                dpy_str = env.mid(8);
+                dpy_bytes = env.mid(8).toLatin1();
         }
         Display* dpy = NULL;
-        if( !dpy_str.isEmpty() && mCached_dpy != NULL
-            && dpy_str != QString::fromLatin1(XDisplayString( mCached_dpy )) )
+        if( !dpy_bytes.isEmpty() && mCached_dpy != NULL
+            && dpy_bytes != XDisplayString( mCached_dpy ) )
             dpy = mCached_dpy;
         if( dpy == NULL )
-            dpy = XOpenDisplay( dpy_str.toLatin1().constData() );
+            dpy = XOpenDisplay( dpy_bytes.constData() );
         if( dpy == NULL )
             return;
         KStartupInfoId id;
