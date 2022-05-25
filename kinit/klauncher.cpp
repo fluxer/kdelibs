@@ -172,7 +172,7 @@ IdleSlave::age(time_t now) const
    return (int) difftime(now, mBirthDate);
 }
 
-static KLauncher* g_klauncher_self;
+static KLauncher* g_klauncher_self = NULL;
 
 
 // From qcore_unix_p.h. We could also port to QLocalSocket :)
