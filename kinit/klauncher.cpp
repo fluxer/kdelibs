@@ -348,15 +348,13 @@ void KLauncher::processRequestReturn(int status, const QByteArray &requestData)
 {
    if (status == LAUNCHER_CHILD_DIED)
    {
-     long *request_data;
-     request_data = (long *) requestData.data();
+     long *request_data = (long *) requestData.data();
      processDied(request_data[0], request_data[1]);
      return;
    }
    if (lastRequest && (status == LAUNCHER_OK))
    {
-     long *request_data;
-     request_data = (long *) requestData.data();
+     long *request_data = (long *) requestData.data();
      lastRequest->pid = (pid_t) (*request_data);
      kDebug(7016).nospace() << lastRequest->name << " (pid " << lastRequest->pid <<
         ") up and running.";
