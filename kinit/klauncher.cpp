@@ -753,7 +753,7 @@ KLauncher::start_service(KService::Ptr service, const QStringList &_urls,
       // For the first file we launch the application in the
       // usual way. The reported result is based on this
       // application.
-      foreach(const QString it, urls) {
+      foreach(const QString &it, urls) {
          QByteArray startup_id2 = startup_id;
          const QStringList singleUrl(it);
          if( !startup_id2.isEmpty() && startup_id2 != "0" )

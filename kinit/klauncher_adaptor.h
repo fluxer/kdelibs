@@ -57,7 +57,6 @@ public Q_SLOTS: // METHODS
     void setLaunchEnv(const QString &name, const QString &value);
     int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    // Deprecated, to be removed in KDE5.
     void waitForSlave(qint64 pid, const QDBusMessage &msg);
     void terminate_kdeinit();
 Q_SIGNALS: // SIGNALS

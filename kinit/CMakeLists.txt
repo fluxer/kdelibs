@@ -15,7 +15,6 @@ check_variable_exists(__progname HAVE___PROGNAME)
 check_variable_exists(__progname_full HAVE___PROGNAME_FULL)
 check_function_exists(setproctitle HAVE_SETPROCTITLE)
 
-# used by 4 executables in this file
 set(KINIT_SOCKET_LIBRARY)
 if(HAVE_SOCKET_LIBRARY)
     set(KINIT_SOCKET_LIBRARY socket)
