@@ -227,13 +227,13 @@ void KStandarddirsTest::testFindExe()
 
 #ifdef Q_OS_UNIX
     // findExe with a result in libexec
-    const QString lnusertemp = KGlobal::dirs()->findExe( "lnusertemp" );
-    QVERIFY( !lnusertemp.isEmpty() );
-    QVERIFY( lnusertemp.endsWith("/lnusertemp" EXT, PATH_SENSITIVITY ) );
+    const QString klauncher = KGlobal::dirs()->findExe( "klauncher" );
+    QVERIFY( !klauncher.isEmpty() );
+    QVERIFY( klauncher.endsWith("/klauncher" EXT, PATH_SENSITIVITY ) );
 
     // locate("exe") with a result in libexec
-    const QString locateExeResult = KGlobal::dirs()->locate("exe", "lnusertemp");
-    QVERIFY(locateExeResult.endsWith("/lnusertemp" EXT, PATH_SENSITIVITY));
+    const QString locateExeResult = KGlobal::dirs()->locate("exe", "klauncher");
+    QVERIFY(locateExeResult.endsWith("/klauncher" EXT, PATH_SENSITIVITY));
 
     // findExe with relative path
     const QString pwd = QDir::currentPath();

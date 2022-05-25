@@ -79,15 +79,6 @@ target_link_libraries(kshell4 ${KINIT_SOCKET_LIBRARY})
 
 install(TARGETS kshell4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 
-########### lnusertemp ###############
-
-add_executable(lnusertemp lnusertemp.c)
-
-target_link_libraries(lnusertemp ${KDE4_KDECORE_LIBS})
-
-install(TARGETS lnusertemp DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
-
-
 ########### kioslave ###############
 
 add_executable(kioslave kioslave.cpp)

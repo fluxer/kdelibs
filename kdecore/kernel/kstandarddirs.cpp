@@ -854,57 +854,13 @@ KStandardDirs::realFilePath(const QString &filename)
 
 void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type)
 {
-    const QString localkdedir = m_prefixes.first();
-    QString dir = localkdedir + QString::fromLatin1(type) + QLatin1Char('-') + QHostInfo::localHostName();
-    char link[1024];
-    link[1023] = 0;
-    int result = readlink(QFile::encodeName(dir).constData(), link, 1023);
-    bool relink = (result == -1) && (errno == ENOENT);
-    if (result > 0)
-    {
-        link[result] = 0;
-        if (!QDir::isRelativePath(QFile::decodeName(link)))
-        {
-            KDE_struct_stat stat_buf;
-            int res = KDE::lstat(QFile::decodeName(link), &stat_buf);
-            if ((res == -1) && (errno == ENOENT))
-            {
-                relink = true;
-            }
-            else if ((res == -1) || (!S_ISDIR(stat_buf.st_mode)))
-            {
-                fprintf(stderr, "Error: \"%s\" is not a directory.\n", link);
-                relink = true;
-            }
-            else if (stat_buf.st_uid != getuid())
-            {
-                fprintf(stderr, "Error: \"%s\" is owned by uid %d instead of uid %d.\n", link, stat_buf.st_uid, getuid());
-                relink = true;
-            }
-        }
-    }
-    if (relink)
-    {
-        QString srv = findExe(QLatin1String("lnusertemp"), installPath("libexec"));
-        if (srv.isEmpty())
-            srv = findExe(QLatin1String("lnusertemp"));
-        if (!srv.isEmpty())
-        {
-            if (system(QByteArray(QFile::encodeName(srv) + ' ' + type)) == -1) {
-                fprintf(stderr, "Error: unable to launch lnusertemp command" );
-            }
-            result = readlink(QFile::encodeName(dir).constData(), link, 1023);
-        }
-    }
-    if (result > 0)
-    {
-        link[result] = 0;
-        if (link[0] == '/')
-            dir = QFile::decodeName(link);
-        else
-            dir = QDir::cleanPath(dir + QFile::decodeName(link));
-    }
-    q->addResourceDir(type, dir + QLatin1Char('/'), false);
+    QString resourceDir = QDir::tempPath();
+    resourceDir.append(QDir::separator());
+    resourceDir.append(QLatin1String("kde-"));
+    resourceDir.append(QString::fromLatin1(type));
+    resourceDir.append(QLatin1Char('-'));
+    resourceDir.append(QString::number(::getuid()));
+    q->addResourceDir(type, QDir::cleanPath(resourceDir) + QLatin1Char('/'), false);
 }
 
 QStringList KStandardDirs::resourceDirs(const char *type) const
