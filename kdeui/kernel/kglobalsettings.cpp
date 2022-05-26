@@ -30,23 +30,24 @@
 #include <kstyle.h>
 #include <kapplication.h>
 
+#include <QtCore/QDir>
+#include <QtCore/QStandardPaths>
 #include <QtGui/QColor>
 #include <QtGui/QCursor>
 #include <QtGui/QDesktopWidget>
-#include <QtCore/QDir>
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
 #include <QtGui/QFontInfo>
 #include <QtGui/QKeySequence>
 #include <QtGui/QPixmap>
 #include <QtGui/QPixmapCache>
-#include <QApplication>
-#include <QtDBus/QtDBus>
-#include <QtGui/QStyleFactory>
-#include <QtCore/QStandardPaths>
-#include "qplatformdefs.h"
 #include <QtGui/QToolTip>
 #include <QtGui/QWhatsThis>
+#include <QtGui/QApplication>
+#include <QtGui/QStyleFactory>
+#include <QtGui/QGuiPlatformPlugin>
+#include <QtDBus/QtDBus>
+#include "qplatformdefs.h"
 
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
@@ -812,51 +813,20 @@ QString kde_overrideStyle;
 
 void KGlobalSettings::Private::applyGUIStyle()
 {
-  //Platform plugin only loaded on X11 systems
-#ifdef Q_WS_X11
-    if (!kde_overrideStyle.isEmpty()) {
-        const QLatin1String currentStyleName(qApp->style()->metaObject()->className());
-        if (0 != kde_overrideStyle.compare(currentStyleName, Qt::CaseInsensitive) &&
-            0 != (QString(kde_overrideStyle + QLatin1String("Style"))).compare(currentStyleName, Qt::CaseInsensitive)) {
-            qApp->setStyle(kde_overrideStyle);
-        }
-    } else {
-        emit q->kdisplayStyleChanged();
+    if (!kdeFullSession) {
+        return;
     }
-#else
-    const QLatin1String currentStyleName(qApp->style()->metaObject()->className());
 
     if (kde_overrideStyle.isEmpty()) {
-        const QString &defaultStyle = KStyle::defaultStyle();
         const KConfigGroup pConfig(KGlobal::config(), "General");
-        const QString &styleStr = pConfig.readEntry("widgetStyle", defaultStyle);
-
-        if (styleStr.isEmpty() ||
-                // check whether we already use the correct style to return then
-                // (workaround for Qt misbehavior to avoid double style initialization)
-                0 == (QString(styleStr + QLatin1String("Style"))).compare(currentStyleName, Qt::CaseInsensitive) ||
-                0 == styleStr.compare(currentStyleName, Qt::CaseInsensitive)) {
-            return;
-        }
-
-        QStyle* sp = QStyleFactory::create( styleStr );
-        if (sp && currentStyleName == sp->metaObject()->className()) {
-            delete sp;
-            return;
-        }
-
-        // If there is no default style available, try falling back any available style
-        if ( !sp && styleStr != defaultStyle)
-            sp = QStyleFactory::create( defaultStyle );
-        if ( !sp )
-            sp = QStyleFactory::create( QStyleFactory::keys().first() );
-        qApp->setStyle(sp);
-    } else if (0 != kde_overrideStyle.compare(currentStyleName, Qt::CaseInsensitive) &&
-            0 != (QString(kde_overrideStyle + QLatin1String("Style"))).compare(currentStyleName, Qt::CaseInsensitive)) {
-        qApp->setStyle(kde_overrideStyle);
+        kde_overrideStyle = pConfig.readEntry("widgetStyle", KStyle::defaultStyle());
     }
+    if (kde_overrideStyle.isEmpty()) {
+        return;
+    }
+
+    qApp->setStyle(kde_overrideStyle);
     emit q->kdisplayStyleChanged();
-#endif //Q_WS_X11
 }
 
 QPalette KGlobalSettings::createApplicationPalette(const KSharedConfigPtr &config)
