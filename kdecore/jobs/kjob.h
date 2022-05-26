@@ -243,12 +243,6 @@ public:
      * You should avoid calling exec() whenever you can and use the asynchronous interface of KJob
      * instead.
      *
-     * Note that user input events will not be processed while the job is being executed, which
-     * means your user interface will effectivly be blocked. Other events like paint or network
-     * events are still being processed. The advantage of not processing user input events is that
-     * the chance of accidental reentrancy is greatly reduced. Still you should avoid calling this
-     * function.
-     *
      * Another thing to note is that the result of the job will be emited after the execution
      * finishes.
      *

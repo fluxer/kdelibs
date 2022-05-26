@@ -196,7 +196,7 @@ bool KJob::exec()
 
     start();
     while( !d->isFinished ) {
-        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+        QCoreApplication::processEvents();
     }
     return ( d->error == NoError );
 }
