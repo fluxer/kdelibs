@@ -88,7 +88,6 @@ Kded::Kded(QObject *parent)
     : QObject(parent),
     m_pDirWatch(nullptr),
     m_pTimer(nullptr),
-    m_recreateBusy(false),
     m_serviceWatcher(nullptr)
 {
     _self = this;
@@ -453,19 +452,18 @@ void Kded::updateResourceList()
 
 void Kded::recreate()
 {
-    m_recreateBusy = true;
     updateDirWatch(); // this would search all the directories
     runBuildSycoca();
     updateResourceList();
-    m_recreateBusy = false;
 
     initModules();
 }
 
-void Kded::update(const QString& )
+void Kded::update(const QString& path)
 {
-    if (!m_recreateBusy) {
-        m_pTimer->start(10000);
+    Q_UNUSED(path);
+    if (!m_pTimer->isActive()) {
+        m_pTimer->start(5000);
     }
 }
 

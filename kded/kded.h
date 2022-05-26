@@ -178,8 +178,6 @@ private:
     */
    QTimer* m_pTimer;
 
-   bool m_recreateBusy;
-
    QHash<QString,KDEDModule *> m_modules;
     //QHash<QString,QLibrary *> m_libs;
    QHash<QString,QObject *> m_dontLoad;
