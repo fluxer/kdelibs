@@ -1306,10 +1306,7 @@ void KFilePropsPlugin::applyChanges()
             connect( job, SIGNAL(renamed(KIO::Job*,KUrl,KUrl)),
                      SLOT(slotFileRenamed(KIO::Job*,KUrl,KUrl)) );
             // wait for job
-            QEventLoop eventLoop;
-            connect(this, SIGNAL(leaveModality()),
-                    &eventLoop, SLOT(quit()));
-            eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+            job->exec();
             return;
         }
         properties->updateUrl(properties->kurl());
@@ -2481,10 +2478,7 @@ void KFilePermissionsPropsPlugin::applyChanges()
 
         connect( job, SIGNAL(result(KJob*)),
                  SLOT(slotChmodResult(KJob*)) );
-        QEventLoop eventLoop;
-        connect(this, SIGNAL(leaveModality()),
-                &eventLoop, SLOT(quit()));
-        eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+        job->exec();
     }
     if (dirs.count() > 0) {
         job = KIO::chmod( dirs, orDirPermissions, ~andDirPermissions,
@@ -2496,10 +2490,7 @@ void KFilePermissionsPropsPlugin::applyChanges()
 
         connect( job, SIGNAL(result(KJob*)),
                  SLOT(slotChmodResult(KJob*)) );
-        QEventLoop eventLoop;
-        connect(this, SIGNAL(leaveModality()),
-                &eventLoop, SLOT(quit()));
-        eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+        job->exec();
     }
 }
 

@@ -411,7 +411,7 @@ void NetAccess::enter_loop()
     QEventLoop eventLoop;
     connect(this, SIGNAL(leaveModality()),
             &eventLoop, SLOT(quit()));
-    eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+    eventLoop.exec();
 }
 
 void NetAccess::slotResult( KJob * job )

@@ -1012,7 +1012,7 @@ bool ReadWritePart::waitSaveComplete()
 
     d->m_waitForSave = true;
 
-    d->m_eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
+    d->m_eventLoop.exec();
 
     d->m_waitForSave = false;
 
