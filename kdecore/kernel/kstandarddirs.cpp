@@ -868,7 +868,10 @@ void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type
     } else {
         Q_ASSERT(false);
     }
-    q->addResourceDir(type, QDir::cleanPath(resourceDir) + QLatin1Char('/'), false);
+    // NOTE: QStandardPaths::writableLocation() should create the base directory
+    const QString cleanPath = QDir::cleanPath(resourceDir) + QLatin1Char('/');
+    KStandardDirs::makeDir(cleanPath, 0700);
+    q->addResourceDir(type, cleanPath, false);
 }
 
 QStringList KStandardDirs::resourceDirs(const char *type) const
@@ -1238,7 +1241,7 @@ QString KStandardDirs::saveLocation(const char *type,
 #endif
             return fullPath;
         }
-        if(!makeDir(fullPath, 0700)) {
+        if(!KStandardDirs::makeDir(fullPath, 0700)) {
             return fullPath;
         }
         d->m_dircache.remove(type);
