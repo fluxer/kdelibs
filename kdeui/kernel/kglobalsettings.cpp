@@ -32,6 +32,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QProcess>
 #include <QtGui/QColor>
 #include <QtGui/QCursor>
 #include <QtGui/QDesktopWidget>
@@ -140,6 +141,9 @@ class KGlobalSettings::Private
             : q(q), activated(false), paletteCreated(false)
         {
             kdeFullSession = !qgetenv("KDE_FULL_SESSION").isEmpty();
+            if (!kdeFullSession) {
+                kdeFullSession = (QProcess::execute("kcheckrunning") == 0);
+            }
         }
 
         QPalette createApplicationPalette(const KSharedConfigPtr &config);
