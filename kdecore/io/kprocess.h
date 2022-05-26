@@ -131,8 +131,7 @@ public:
     /**
      * Empties the process' environment.
      *
-     * Note that LD_LIBRARY_PATH/DYLD_LIBRARY_PATH is automatically added
-     * on *NIX.
+     * Note that LD_LIBRARY_PATH is automatically added on *NIX.
      *
      * This function must be called before starting the process.
      */
