@@ -923,9 +923,9 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
                 if ((*it).startsWith(QLatin1Char('%'))) {
                     // grab the "data" from "%data/apps"
                     const int pos = (*it).indexOf(QLatin1Char('/'));
-                    QString rel = (*it).mid(1, pos - 1);
+                    QByteArray rel = (*it).mid(1, pos - 1).toUtf8();
                     QString rest = (*it).mid(pos + 1);
-                    const QStringList basedirs = resourceDirs(rel.toUtf8().constData(), subdirForRestrictions);
+                    const QStringList basedirs = resourceDirs(rel.constData(), subdirForRestrictions);
                     for (QStringList::ConstIterator it2 = basedirs.begin();
                          it2 != basedirs.end(); ++it2)
                     {
@@ -1200,9 +1200,9 @@ QString KStandardDirs::saveLocation(const char *type,
             if (path.startsWith(QLatin1Char('%'))) {
                 // grab the "data" from "%data/apps"
                 const int pos = path.indexOf(QLatin1Char('/'));
-                QString rel = path.mid(1, pos - 1);
+                QByteArray rel = path.mid(1, pos - 1).toUtf8();
                 QString rest = path.mid(pos + 1);
-                QString basepath = saveLocation(rel.toUtf8().constData());
+                QString basepath = saveLocation(rel.constData());
                 path = basepath + rest;
             } else
 
@@ -1365,8 +1365,10 @@ void KStandardDirs::addResourcesFrom_krcdirs()
             continue;
 
         key.replace(QLatin1String("KStandardDirs/"), QLatin1String(""));
-        if(path.makeAbsolute())
-            addResourceDir(key.toLatin1(), path.path(), false);
+        if (path.makeAbsolute()) {
+            const QByteArray latin1Path = key.toLatin1();
+            addResourceDir(latin1Path, path.path(), false);
+        }
     }
 }
 
@@ -1664,7 +1666,8 @@ bool KStandardDirs::addCustomized(KConfig *config)
                 QString resType = key.mid(4);
                 for (; sIt != dirs.end(); ++sIt)
                 {
-                    addResourceDir(resType.toLatin1(), *sIt, priority);
+                    const QByteArray latin1ResType = resType.toLatin1();
+                    addResourceDir(latin1ResType.constData(), *sIt, priority);
                 }
             }
         }
