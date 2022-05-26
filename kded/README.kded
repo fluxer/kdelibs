@@ -11,11 +11,6 @@ software is detected. Updating of ksycoca is done by the program kbuildsycoca
 which gets started by kded. When kded is first started it always runs
 kbuildsycoca to ensure that ksycoca is up to date.
 
-*) Checking for newly installed update files. Applications can install
-*.upd update files. These *.upd files are used to update configuration files 
-of users, primarily when new versions of applications are installed with
-(slightly) different configuration file formats.
-
 *) Checking for hostname changes. It is a really bad idea to change the 
 hostname of a running system and it usually only happens with incorrectly
 configured dial-up connections. Never the less, kded will check for hostname
@@ -50,35 +45,18 @@ Example kdedrc file with default values:
 [General]
 HostnamePollInterval=5000
 CheckSycoca=true
-CheckUpdates=true
 CheckHostname=true
 CheckFileStamps=true
-DelayedCheck=false
 
-If FAM or DNOTIFY is not available, the filesystem will be polled at regular interval for any changes. Under the [DirWatch] group in the kdeglobals file
-the following options are available to adjust the polling frequency:
+The filesystem will be polled at regular interval for any changes. Under the
+[DirWatch] group in the kdeglobals file the following options are available
+to adjust the polling frequency:
 
 PollInterval: This can be used to adjust the time interval at which the local
 filesystem is checked for new software or update files. The time is specified
-in milliseconds and has a default of 500 (0.5 seconds).
-
-NFSPollInterval: This can be used to adjust the time interval at which remote
-filesystems, such as NFS or Samba, are ebing checked for new software or 
-update files. The time is specified in milliseconds and has a default of 5000
-(5 seconds).
-
-The above options are not used when FAM is used to watch for changes in the
-filesystem, or when DNOTIFY is used. Specifying larger intervals may reduce 
-the CPU load and/or network traffic. Shorter intervals are not recommended.
-
-Please note that in previous versions of KDE these options where listed in 
-the kderc file.
-
-Example kdeglobals fragment:
-
-[DirWatch]
-PollInterval=500
-NFSPollInterval=5000
+in milliseconds and has a default of 5000 (5 seconds). Specifying larger
+intervals may reduce  the CPU load and/or network traffic. Shorter intervals
+are not recommended.
 
 KDED modules
 ============

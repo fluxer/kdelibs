@@ -56,11 +56,9 @@
 
 Kded *Kded::_self = 0;
 
-static bool checkStamps = true;
-static bool delayedCheck = false;
 static int HostnamePollInterval = 5000;
+static bool bCheckStamps = true;
 static bool bCheckSycoca = true;
-static bool bCheckUpdates = true;
 static bool bCheckHostname = true;
 
 QT_BEGIN_NAMESPACE
@@ -72,13 +70,8 @@ static bool runBuildSycoca()
     const QString exe = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
     Q_ASSERT(!exe.isEmpty());
     QStringList args;
-    if (checkStamps) {
+    if (bCheckStamps) {
         args.append("--checkstamps");
-    }
-    if (delayedCheck) {
-        args.append("--nocheckfiles");
-    } else {
-        checkStamps = false; // useful only during kded startup
     }
     return (QProcess::execute(exe, args) == 0);
 }
@@ -96,13 +89,9 @@ Kded::Kded(QObject *parent)
     m_pDirWatch(nullptr),
     m_pTimer(nullptr),
     m_recreateBusy(false),
-    m_serviceWatcher(nullptr),
-    m_needDelayedCheck(false)
+    m_serviceWatcher(nullptr)
 {
     _self = this;
-
-    m_pDirWatch = new KDirWatch(this);
-    connect(m_pDirWatch, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
 
     m_serviceWatcher = new QDBusServiceWatcher(this);
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
@@ -117,6 +106,10 @@ Kded::Kded(QObject *parent)
     session.registerObject("/kbuildsycoca", this);
     session.registerObject("/kded", this);
     session.registerService("org.kde.kded");
+
+    updateDirWatch();
+    updateResourceList();
+    initModules();
 
     qDBusAddSpyHook(messageFilter);
 
@@ -433,7 +426,7 @@ void Kded::slotApplicationRemoved(const QString &name)
 
 void Kded::updateDirWatch()
 {
-    if (!bCheckUpdates) {
+    if (!bCheckSycoca) {
         return;
     }
 
@@ -450,10 +443,6 @@ void Kded::updateResourceList()
 {
     KSycoca::clearCaches();
 
-    if (!bCheckUpdates || delayedCheck) {
-        return;
-    }
-
     foreach(const QString &it, KSycoca::self()->allResourceDirs()) {
         if (!m_allResourceDirs.contains(it)) {
             m_allResourceDirs.append(it);
@@ -464,62 +453,10 @@ void Kded::updateResourceList()
 
 void Kded::recreate()
 {
-    recreate(false);
-}
-
-void Kded::runDelayedCheck()
-{
-    if (m_needDelayedCheck) {
-        recreate(false);
-    }
-    m_needDelayedCheck = false;
-}
-
-void Kded::recreate(bool initial)
-{
     m_recreateBusy = true;
-    // Using KLauncher here is difficult since we might not have a
-    // database
-
-    if (initial) {
-        updateDirWatch(); // Update tree first, to be sure to miss nothing.
-        if (runBuildSycoca()) {
-            recreateDone();
-        } else {
-            recreateFailed();
-        }
-    } else {
-        if (!delayedCheck) {
-            updateDirWatch(); // this would search all the directories
-        }
-        if (bCheckSycoca) {
-            runBuildSycoca();
-        }
-        recreateDone();
-        if (delayedCheck) {
-            // do a proper ksycoca check after a delay
-            QTimer::singleShot(60000, this, SLOT(runDelayedCheck()));
-            m_needDelayedCheck = true;
-            delayedCheck = false;
-        } else {
-            m_needDelayedCheck = false;
-        }
-    }
-}
-
-void Kded::recreateFailed()
-{
-    afterRecreateFinished();
-}
-
-void Kded::recreateDone()
-{
+    updateDirWatch(); // this would search all the directories
+    runBuildSycoca();
     updateResourceList();
-    afterRecreateFinished();
-}
-
-void Kded::afterRecreateFinished()
-{
     m_recreateBusy = false;
 
     initModules();
@@ -534,6 +471,10 @@ void Kded::update(const QString& )
 
 void Kded::readDirectory(const QString& _path)
 {
+    if (!bCheckSycoca) {
+        return;
+    }
+
     QString path(_path);
     if (!path.endsWith('/')) {
         path += '/';
@@ -544,7 +485,7 @@ void Kded::readDirectory(const QString& _path)
         return;
     }
 
-    m_pDirWatch->addDir(path,KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
+    m_pDirWatch->addDir(path, KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
 }
 
 #if 0
@@ -665,13 +606,10 @@ int main(int argc, char *argv[])
     KConfigGroup cg(config, "General");
     HostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
     bCheckSycoca = cg.readEntry("CheckSycoca", true);
-    bCheckUpdates = cg.readEntry("CheckUpdates", true);
     bCheckHostname = cg.readEntry("CheckHostname", true);
-    checkStamps = cg.readEntry("CheckFileStamps", true);
-    delayedCheck = cg.readEntry("DelayedCheck", false);
+    bCheckStamps = cg.readEntry("CheckFileStamps", true);
 
     Kded kded(&app);
-    kded.recreate(true); // Build initial database
 
 #ifdef Q_WS_X11
     XEvent e;

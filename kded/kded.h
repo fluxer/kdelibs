@@ -68,7 +68,6 @@ public:
     */
    void unregisterWindowId(qlonglong windowId, const QString &sender);
    //@}
-   void recreate(bool initial);
    void loadSecondPhase();
 
    //@{
@@ -133,12 +132,6 @@ public Q_SLOTS:
    void recreate();
 
    /**
-    * Recreating finished
-    */
-   void recreateDone();
-   void recreateFailed();
-
-   /**
     * Collect all directories to watch
     */
    void updateDirWatch();
@@ -165,11 +158,7 @@ protected Q_SLOTS:
     */
    void update(const QString& dir);
 
-   void runDelayedCheck();
-
 private:
-   void afterRecreateFinished();
-
    /**
     * Scans dir for new files and new subdirectories.
     */
@@ -201,7 +190,6 @@ private:
    QSet<long> m_globalWindowIdList;
 
    QStringList m_allResourceDirs;
-   bool m_needDelayedCheck;
 
    static Kded *_self;
 };

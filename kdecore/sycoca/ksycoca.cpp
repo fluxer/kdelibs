@@ -342,16 +342,10 @@ bool KSycocaPrivate::checkDatabase(BehaviorsIfNotFound ifNotFound)
     }
 
     if (ifNotFound & IfNotFoundRecreate) {
-        // Well, if kded is not running we need to launch it,
-        // but otherwise we simply need to run kbuildsycoca to recreate the sycoca file.
-        if (!kdedRunning) {
-            kDebug(7011) << "We have no database.... launching kded";
-            sessionInterface->startService(kdedInterface);
-        } else {
-            kDebug(7011) << QThread::currentThread() << "We have no database.... launching" << KBUILDSYCOCA_EXENAME;
-            if (QProcess::execute(KStandardDirs::findExe(QString::fromLatin1(KBUILDSYCOCA_EXENAME))) != 0) {
-                qWarning("ERROR: Running KSycoca failed.");
-            }
+        // We simply need to run kbuildsycoca to recreate the sycoca file.
+        kDebug(7011) << QThread::currentThread() << "We have no database.... launching" << KBUILDSYCOCA_EXENAME;
+        if (QProcess::execute(KStandardDirs::findExe(QString::fromLatin1(KBUILDSYCOCA_EXENAME))) != 0) {
+            kWarning(7011) << "Running KSycoca failed.";
         }
 
         closeDatabase(); // close the dummy one
@@ -365,6 +359,13 @@ bool KSycocaPrivate::checkDatabase(BehaviorsIfNotFound ifNotFound)
             kDebug(7011) << "Still outdated...";
             return false; // Still outdated - uh oh
         }
+
+        // If kded is not running we need to launch it as it monitors for changes
+        if (!kdedRunning) {
+            kDebug(7011) << "Launching kded";
+            sessionInterface->startService(kdedInterface);
+        }
+
         return true;
     }
 
@@ -469,15 +470,16 @@ QStringList KSycoca::allResourceDirs()
 
 void KSycoca::flagError()
 {
-    kWarning(7011) << "ERROR: KSycoca database corruption!";
+    kWarning(7011) << "KSycoca database corruption!";
     KSycocaPrivate* d = ksycocaInstance->sycoca()->d;
     if (d->readError)
         return;
     d->readError = true;
     if (s_autoRebuild) {
         // Rebuild the damned thing.
-        if (QProcess::execute(KStandardDirs::findExe(QString::fromLatin1(KBUILDSYCOCA_EXENAME))) != 0)
-            qWarning("ERROR: Running %s failed", KBUILDSYCOCA_EXENAME);
+        if (QProcess::execute(KStandardDirs::findExe(QString::fromLatin1(KBUILDSYCOCA_EXENAME))) != 0) {
+            kWarning(7011) << "Running KSycoca failed.";
+        }
         // Old comment, maybe not true anymore:
         // Do not wait until the DBUS signal from kbuildsycoca here.
         // It deletes m_str which is a problem when flagError is called during the KSycocaFactory ctor...
