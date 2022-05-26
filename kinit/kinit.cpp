@@ -31,29 +31,24 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/wait.h>
-#ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h> // Needed on some systems.
-#endif
-
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
-#include "proctitle.h"
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
+#ifdef HAVE_SYS_SELECT_H
+#  include <sys/select.h> // Needed on some systems.
+#endif
 
 #include <qplatformdefs.h>
 #include <QtCore/QLibrary>
 #include <QtCore/QString>
 #include <QtCore/QFile>
-#include <QtCore/QDateTime>
-#include <QtCore/QFileInfo>
 #include <QtCore/QRegExp>
-#include <QtGui/QFont>
 #include <kcomponentdata.h>
 #include <kstandarddirs.h>
 #include <kglobal.h>
@@ -64,6 +59,9 @@
 #include <kde_file.h>
 #include <ksavefile.h>
 #include <kpluginloader.h>
+#include <kdeversion.h>
+#include "klauncher_cmds.h"
+#include "proctitle.h"
 
 #ifdef Q_OS_LINUX
 #include <sys/prctl.h>
@@ -71,11 +69,6 @@
 #define PR_SET_NAME 15
 #endif
 #endif
-
-
-#include <kdeversion.h>
-
-#include "klauncher_cmds.h"
 
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
@@ -475,7 +468,7 @@ static pid_t launch(int argc, const char *_name, const char *args,
      break;
   case 0:
   {
-     /** Child **/
+     // Child
      close(d.fd[0]);
      close_fds();
 
@@ -531,9 +524,9 @@ static pid_t launch(int argc, const char *_name, const char *args,
        d.argv[argc] = 0;
 
 #ifndef SKIP_PROCTITLE
-       /** Give the process a new name **/
+       // Give the process a new name
 #ifdef Q_OS_LINUX
-       /* set the process name, so that killall works like intended */
+       // Set the process name so that killall works like intended
        r = prctl(PR_SET_NAME, (unsigned long) name.data(), 0, 0, 0);
        if ( r == 0 )
            proctitle_set( "%s [kdeinit]%s", name.data(), procTitle.data() ? procTitle.data() : "" );
@@ -625,7 +618,7 @@ static pid_t launch(int argc, const char *_name, const char *args,
      break;
   }
   default:
-     /** Parent **/
+     // Parent
      close(d.fd[1]);
      bool exec = false;
      for(;;)
@@ -779,9 +772,7 @@ static void shutdown_kdeinit()
      struct sockaddr_un server;
 
 //     fprintf(stderr, "kdeinit4: Warning, socket_file already exists!\n");
-     /*
-      * create the socket stream
-      */
+     // Create the socket stream
      s = socket(PF_UNIX, SOCK_STREAM, 0);
      if (s < 0)
      {
@@ -804,7 +795,7 @@ static void shutdown_kdeinit()
      close(s);
   }
 
-  /** Delete any stale socket file (and symlink) **/
+  // Delete any stale socket file (and symlink)
   unlink(sock_file);
 }
 
@@ -858,7 +849,7 @@ static void init_kdeinit_socket()
 
   shutdown_kdeinit();
 
-  /** create socket **/
+  // Create socket
   d.wrapper = socket(PF_UNIX, SOCK_STREAM, 0);
   if (d.wrapper < 0)
   {
@@ -882,7 +873,7 @@ static void init_kdeinit_socket()
   }
 
   while (1) {
-      /** bind it **/
+      // Bind it
       socklen = sizeof(sa);
       memset(&sa, 0, socklen);
       sa.sun_family = AF_UNIX;
@@ -900,7 +891,7 @@ static void init_kdeinit_socket()
           break;
   }
 
-  /** set permissions **/
+  // Set permissions
   if (chmod(sock_file, 0600) != 0)
   {
      perror("kdeinit4: Aborting. Can not set permissions on socket");
@@ -1323,7 +1314,7 @@ int kdeinit_xio_errhandler( Display *disp )
 
     if (sock_file[0])
     {
-      /** Delete any stale socket file **/
+      // Delete any stale socket file
       unlink(sock_file);
     }
 
@@ -1338,7 +1329,7 @@ int kdeinit_xio_errhandler( Display *disp )
     if ( disp )
        kWarning() << "Sending SIGHUP to children.";
 
-    /* this should remove all children we started */
+    // this should remove all children we started
     KDE_signal(SIGHUP, SIG_IGN);
     kill(0, SIGHUP);
 
@@ -1347,7 +1338,7 @@ int kdeinit_xio_errhandler( Display *disp )
     if ( disp )
        kWarning() << "Sending SIGTERM to children.";
 
-    /* and if they don't listen to us, this should work */
+    // And if they don't listen to us, this should work
     KDE_signal(SIGTERM, SIG_IGN);
     kill(0, SIGTERM);
 
@@ -1467,7 +1458,7 @@ int main(int argc, char **argv)
    int do_shutdown = 0;
    d.suicide = false;
 
-   /** Save arguments first... **/
+   // Save arguments first...
    char **safe_argv = (char **) malloc( sizeof(char *) * argc);
    for(int i = 0; i < argc; i++)
    {
@@ -1539,13 +1530,13 @@ int main(int argc, char **argv)
       d.initpipe[0] = -1;
    }
 
-   /** Make process group leader (for shutting down children later) **/
+   // Make process group leader (for shutting down children later)
    setsid();
 
-   /** Create our instance **/
+   // Create our instance
    s_instance = new KComponentData("kdeinit4", QByteArray(), KComponentData::SkipMainComponentRegistration);
 
-   /** Prepare to change process name **/
+   // Prepare to change process name
 #ifndef SKIP_PROCTITLE
    proctitle_init(argc, argv);
 #endif
@@ -1571,10 +1562,7 @@ int main(int argc, char **argv)
    setupX();
 #endif
 
-   /*
-   * Create ~/.kde/tmp-<hostname>/kdeinit4-<display> socket for incoming wrapper
-   * requests.
-   */
+   // Create socket for incoming wrapper requests
    init_kdeinit_socket();
 
    if (launch_klauncher)
@@ -1610,7 +1598,7 @@ int main(int argc, char **argv)
       }
    }
 
-   /** Free arguments **/
+   // Free argumentsf
    for(int i = 0; i < argc; i++)
    {
       free(safe_argv[i]);

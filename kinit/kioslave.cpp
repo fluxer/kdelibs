@@ -51,18 +51,18 @@ int main(int argc, char **argv)
      if ( !lib.load() || !lib.isLoaded() )
      {
         fprintf(stderr, "could not open %s: %s", qPrintable(libpath),
-                qPrintable (lib.errorString()) );
+                qPrintable (lib.errorString()));
         exit(1);
      }  
 
      void* sym = lib.resolve("kdemain");
      if (!sym )
      {
-        fprintf(stderr, "Could not find kdemain: %s\n", qPrintable(lib.errorString() ));
+        fprintf(stderr, "Could not find kdemain: %s\n", qPrintable(lib.errorString()));
         exit(1);
      }
 
      int (*func)(int, char *[]) = (int (*)(int, char *[])) sym;
 
-     exit( func(argc-1, argv+1)); /* Launch! */
+     exit(func(argc-1, argv+1)); /* Launch! */
 }
