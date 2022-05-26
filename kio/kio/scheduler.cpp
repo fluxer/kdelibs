@@ -30,14 +30,14 @@
 #include <kdebug.h>
 #include <kprotocolmanager.h>
 #include <kprotocolinfo.h>
-#include <kstandarddirs.h>
 
 
 #include <QtCore/qhash.h>
-#include <QtGui/qwidget.h>
-#include <QtDBus/QtDBus>
 #include <QtCore/qcoreapplication.h>
 #include <QtCore/qthread.h>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusInterface>
+#include <QtGui/qwidget.h>
 
 #include <assert.h>
 
@@ -95,8 +95,6 @@ void SessionData::configDataFor( MetaData &configData, const QString &proto)
         configData["Languages"] = language;
     if ( configData["Charsets"].isEmpty() )
         configData["Charsets"] = charsets;
-    if ( configData["CacheDir"].isEmpty() )
-        configData["CacheDir"] = KGlobal::dirs()->saveLocation("cache", "http");
     if ( configData["UserAgent"].isEmpty() )
         configData["UserAgent"] = KProtocolManager::defaultUserAgent();
   }
