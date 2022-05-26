@@ -659,6 +659,10 @@ int main(int argc, char *argv[])
     KComponentData componentData(&aboutData);
     KSharedConfig::Ptr config = componentData.config(); // Enable translations.
 
+    // NOTE: disables session manager entirely, for reference:
+    // https://www.x.org/releases/X11R7.7/doc/libSM/xsmp.html
+    ::unsetenv("SESSION_MANAGER");
+
     KApplication app;
     app.setQuitOnLastWindowClosed(false);
     app.disableSessionManagement();
