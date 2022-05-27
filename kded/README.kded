@@ -48,15 +48,7 @@ CheckSycoca=true
 CheckHostname=true
 CheckFileStamps=true
 
-The filesystem will be polled at regular interval for any changes. Under the
-[DirWatch] group in the kdeglobals file the following options are available
-to adjust the polling frequency:
-
-PollInterval: This can be used to adjust the time interval at which the local
-filesystem is checked for new software or update files. The time is specified
-in milliseconds and has a default of 5000 (5 seconds). Specifying larger
-intervals may reduce  the CPU load and/or network traffic. Shorter intervals
-are not recommended.
+The filesystem will be polled at regular interval for any changes.
 
 KDED modules
 ============
