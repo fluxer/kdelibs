@@ -19,10 +19,8 @@
 
 #ifndef __KMETAPROPS_H__
 #define __KMETAPROPS_H__
+
 #include <kpropertiesdialog.h>
-
-
-class KFileMetaInfoItem;
 
 /*!
  * 'MetaProps plugin
