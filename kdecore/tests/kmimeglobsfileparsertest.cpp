@@ -52,10 +52,6 @@ private Q_SLOTS:
         KMimeGlobsFileParser::PatternsMap patMap = mimeTypeGlobs.patternsMap();
         QCOMPARE(patMap.count(), 1);
         QVERIFY(patMap.contains("text/plain"));
-        const QHash<QString, QStringList> fastPatterns = mimeTypeGlobs.m_fastPatterns;
-        QCOMPARE(fastPatterns.count(), 2);
-        QCOMPARE(fastPatterns["kmimefileparserunittest"], QStringList() << QString("text/plain"));
-        QCOMPARE(fastPatterns["kmimefileparserunittest2"], QStringList() << QString("text/plain"));
     }
 
     void testParseGlobs2File()
@@ -203,7 +199,7 @@ private Q_SLOTS:
         QStringList parsedFiles;
         m_allGlobs = KMimeGlobsFileParser::parseGlobFiles(globFiles, parsedFiles);
         m_patternsMap = m_allGlobs.patternsMap();
-        const int patCount = m_allGlobs.m_fastPatterns.count() + m_allGlobs.m_highWeightGlobs.count() + m_allGlobs.m_lowWeightGlobs.count();
+        const int patCount = m_allGlobs.m_highWeightGlobs.count() + m_allGlobs.m_lowWeightGlobs.count();
         kDebug() << m_patternsMap.count() << "mimetypes," << patCount << "patterns";
     }
 

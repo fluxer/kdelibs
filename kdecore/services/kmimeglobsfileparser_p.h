@@ -89,9 +89,8 @@ public:
         void removeMime(const QString& mime);
         PatternsMap patternsMap() const; // for KMimeTypeFactory
 
-        QHash<QString, QStringList> m_fastPatterns; // example: "doc" -> "application/msword", "text/plain"
-        GlobList m_highWeightGlobs;
-        GlobList m_lowWeightGlobs; // <= 50, including the non-fast 50 patterns
+        GlobList m_highWeightGlobs; // >= 50 patterns
+        GlobList m_lowWeightGlobs; // < 50 patterns
     };
     enum Format { OldGlobs, Globs2WithWeight };
 

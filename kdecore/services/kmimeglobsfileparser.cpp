@@ -138,17 +138,6 @@ bool KMimeGlobsFileParser::parseGlobFile(QIODevice* file, Format format, AllGlob
     return true;
 }
 
-static bool isFastPattern(const QString& pattern)
-{
-   // starts with "*.", has no other '*' and no other '.'
-   return pattern.lastIndexOf(QLatin1Char('*')) == 0
-      && pattern.lastIndexOf(QLatin1Char('.')) == 1
-      // and contains no other special character
-      && !pattern.contains(QLatin1Char('?'))
-      && !pattern.contains(QLatin1Char('['))
-      ;
-}
-
 void KMimeGlobsFileParser::AllGlobs::addGlob(const Glob& glob)
 {
     // Note that in each case, we check for duplicates to avoid inserting duplicated patterns.
@@ -158,29 +147,21 @@ void KMimeGlobsFileParser::AllGlobs::addGlob(const Glob& glob)
     const QString &pattern = glob.pattern;
     Q_ASSERT(!pattern.isEmpty());
 
-    //kDebug() << "pattern" << pattern << "glob.weight=" << glob.weight << "isFast=" << isFastPattern(pattern) << glob.flags;
+    //kDebug() << "pattern" << pattern << "glob.weight=" << glob.weight << glob.flags;
 
     // Store each patterns into either m_fastPatternDict (*.txt, *.html etc. with default weight 50)
     // or for the rest, like core.*, *.tar.bz2, *~, into highWeightPatternOffset (>50)
     // or lowWeightPatternOffset (<=50)
 
-    if (glob.weight == 50 && isFastPattern(pattern) && ((glob.flags & KMimeTypeRepository::CaseSensitive) == 0)) {
-        // The bulk of the patterns is *.foo with weight 50 --> those go into the fast patterns hash.
-        const QString extension = pattern.mid(2).toLower();
-        QStringList& patterns = m_fastPatterns[extension]; // find or create
-        if (!patterns.contains(glob.mimeType))
-            patterns.append(glob.mimeType);
+    Glob adjustedGlob(glob);
+    if ((adjustedGlob.flags & KMimeTypeRepository::CaseSensitive) == 0)
+        adjustedGlob.pattern = adjustedGlob.pattern.toLower();
+    if (adjustedGlob.weight >= 50) {
+        if (!m_highWeightGlobs.hasPattern(adjustedGlob.mimeType, adjustedGlob.pattern))
+            m_highWeightGlobs.append(adjustedGlob);
     } else {
-        Glob adjustedGlob(glob);
-        if ((adjustedGlob.flags & KMimeTypeRepository::CaseSensitive) == 0)
-            adjustedGlob.pattern = adjustedGlob.pattern.toLower();
-        if (adjustedGlob.weight > 50) {
-            if (!m_highWeightGlobs.hasPattern(adjustedGlob.mimeType, adjustedGlob.pattern))
-                m_highWeightGlobs.append(adjustedGlob);
-        } else {
-            if (!m_lowWeightGlobs.hasPattern(adjustedGlob.mimeType, adjustedGlob.pattern))
-                m_lowWeightGlobs.append(adjustedGlob);
-        }
+        if (!m_lowWeightGlobs.hasPattern(adjustedGlob.mimeType, adjustedGlob.pattern))
+            m_lowWeightGlobs.append(adjustedGlob);
     }
 }
 
@@ -190,13 +171,6 @@ KMimeGlobsFileParser::PatternsMap KMimeGlobsFileParser::AllGlobs::patternsMap() 
 
     // This is just to fill in KMimeType::patterns. This has no real effect
     // on the actual mimetype matching.
-
-    QHashIterator<QString, QStringList> it(m_fastPatterns);
-    while (it.hasNext()) {
-        it.next();
-        Q_FOREACH(const QString& mime, it.value())
-            patMap[mime].append(QString::fromLatin1("*.") + it.key());
-    }
 
     Q_FOREACH(const Glob& glob, m_highWeightGlobs)
         patMap[glob.mimeType].append(glob.pattern);
@@ -209,10 +183,6 @@ KMimeGlobsFileParser::PatternsMap KMimeGlobsFileParser::AllGlobs::patternsMap() 
 
 void KMimeGlobsFileParser::AllGlobs::removeMime(const QString& mime)
 {
-    QMutableHashIterator<QString, QStringList> it(m_fastPatterns);
-    while (it.hasNext()) {
-        it.next().value().removeAll(mime);
-    }
     m_highWeightGlobs.removeMime(mime);
     m_lowWeightGlobs.removeMime(mime);
 }
