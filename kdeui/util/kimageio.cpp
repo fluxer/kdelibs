@@ -19,7 +19,7 @@ QString KImageIO::pattern(Mode mode)
 {
     QStringList patterns;
     QString allPatterns;
-    QString separator("|");
+    static const QLatin1Char separator('|');
 
     foreach(const QString &mimeType, KImageIO::mimeTypes(mode)) {
         KMimeType::Ptr mime = KMimeType::mimeType(mimeType);
@@ -47,9 +47,9 @@ QStringList KImageIO::typeForMime(const QString &mimeType)
     if (mimeType.isEmpty()) {
         return result;
     }
-    const QByteArray latinType = QImageReader::formatForMimeType(mimeType.toLatin1());
-    if (!latinType.isEmpty()) {
-        result << latinType;
+    const QByteArray format = QImageReader::formatForMimeType(mimeType.toLatin1());
+    if (!format.isEmpty()) {
+        result << QString::fromLatin1(format.constData());
     }
     return result;
 }
@@ -89,12 +89,10 @@ bool KImageIO::isSupported(const QString& mimeType, Mode mode)
     if (mimeType.isEmpty()) {
         return false;
     }
-
     foreach(const QString &mime, KImageIO::mimeTypes(mode)) {
         if (mimeType == mime) {
             return true;
         }
     }
-
     return false;
 }
