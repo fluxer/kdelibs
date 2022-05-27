@@ -20,7 +20,6 @@
 #ifndef KFILEMETADATAMODEL_H
 #define KFILEMETADATAMODEL_H
 
-#include <kurl.h>
 #include <kfileitem.h>
 
 #include <QtCore/QHash>
@@ -57,7 +56,7 @@ public:
      * @return Translated string for the label of the meta data represented
      *         by \p metaDataUri.
      */
-    QString label(const KUrl& metaDataUri) const;
+    QString label(const QString& metaDataUri) const;
 
     /**
      * @return Meta data for the items that have been set by
@@ -65,14 +64,14 @@ public:
      *         be invoked after the signal loadingFinished() has
      *         been received (otherwise no data will be returned).
      */
-    QHash<KUrl, QString> data() const;
+    KFileMetaInfoItemList data() const;
 
     /**
      * @return Factory method that returns a widget that should be used
      *         to show the meta data represented by \p metaDataUri. A
      *         QLabel will be returned.
      */
-    QWidget* createValueWidget(const KUrl& metaDataUri,
+    QWidget* createValueWidget(const QString& metaDataUri,
                                const QString& value,
                                QWidget* parent) const;
 
@@ -95,7 +94,7 @@ private:
     static int subDirectoriesCount(const QString &path);
 
     QList<KFileItem> m_fileItems;
-    QHash<KUrl, QString> m_data;
+    KFileMetaInfoItemList m_data;
 };
 
 #endif // KFILEMETADATAMODEL_H

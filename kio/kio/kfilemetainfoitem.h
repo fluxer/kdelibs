@@ -38,7 +38,7 @@ public:
     /**
      * @brief Copy constructor
      **/
-    KFileMetaInfoItem(const KFileMetaInfoItem& item);
+    KFileMetaInfoItem(const KFileMetaInfoItem& other);
     /**
      * @brief Constructor used by plugins
      **/
@@ -50,7 +50,7 @@ public:
     /**
      * @brief Copy operator
      **/
-    const KFileMetaInfoItem& operator=(const KFileMetaInfoItem& item);
+    const KFileMetaInfoItem& operator=(const KFileMetaInfoItem& other);
     /**
      * @brief Retrieve the key of this item
      **/
@@ -60,13 +60,17 @@ public:
      **/
     const QString& value() const;
     /**
+     * @brief Returns localized name of the key
+     **/
+    const QString& name() const;
+    /**
      * @brief Is this a valid item.
      **/
     bool isValid() const;
     /**
-     * @brief Returns localized name of the key
+     * @brief Returns if item is less than other item
      **/
-    const QString& name() const;
+    bool operator<(const KFileMetaInfoItem &other) const;
 private:
     QSharedDataPointer<KFileMetaInfoItemPrivate> d;
 };

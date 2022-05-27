@@ -111,7 +111,7 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
 
     const QString label = (m_provider == 0)
                           ? KFileMetaInfo::name(key)
-                          : m_provider->label(uri);
+                          : m_provider->label(key);
 
     QListWidgetItem* item = new QListWidgetItem(label, m_metaDataList);
     item->setData(Qt::UserRole, key);
@@ -125,10 +125,8 @@ void KFileMetaDataConfigurationWidget::Private::slotLoadingFinished()
     // the currently shown file item and add them to the list.
     Q_ASSERT(m_provider != 0);
 
-    QHashIterator<KUrl, QString> it(m_provider->data());
-    while (it.hasNext()) {
-        it.next();
-        addItem(it.key());
+    foreach (const KFileMetaInfoItem &it, m_provider->data()) {
+        addItem(KUrl(it.key()));
     }
 }
 

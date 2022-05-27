@@ -168,15 +168,14 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
         m_gridLayout->setSpacing(q->fontMetrics().height() / 4);
     }
 
-    QHash<KUrl, QString> data = m_provider->data();
+    KFileMetaInfoItemList data = m_provider->data();
 
     // Remove all items, that are marked as hidden in kmetainformationrc
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     KConfigGroup settings = config.group("Show");
-    QHash<KUrl, QString>::iterator it = data.begin();
+    KFileMetaInfoItemList::iterator it = data.begin();
     while (it != data.end()) {
-        const QString uriString = it.key().prettyUrl();
-        if (!settings.readEntry(uriString, true)) {
+        if (!settings.readEntry(it->key(), true)) {
             it = data.erase(it);
         } else {
             ++it;
@@ -186,9 +185,9 @@ void KFileMetaDataWidget::Private::slotLoadingFinished()
     // Iterate through all remaining items embed the label
     // and the value as new row in the widget
     int rowIndex = 0;
-    const QList<KUrl> keys = data.keys();
-    foreach (const KUrl& key, keys) {
-        const QString value = data.value(key);
+    foreach (const KFileMetaInfoItem& item, data) {
+        const QString key = item.key();
+        const QString value = item.value();
         if (value.isEmpty()) {
             continue;
         }

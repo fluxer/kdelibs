@@ -52,24 +52,22 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
         if (item.isDir()) {
             const int count = subDirectoriesCount(item.url().pathOrUrl());
             if (count == -1) {
-                m_data.insert(KUrl("kfileitem#size"), QString("Unknown"));
+                m_data.append(KFileMetaInfoItem("kfileitem#size", QString::fromLatin1("Unknown")));
             } else {
                 const QString itemCountString = i18ncp("@item:intable", "%1 item", "%1 items", count);
-                m_data.insert(KUrl("kfileitem#size"), itemCountString);
+                m_data.append(KFileMetaInfoItem("kfileitem#size", itemCountString));
             }
         } else {
             const KFileMetaInfo metaInfo(item.url(), KFileMetaInfo::TechnicalInfo);
-            foreach (const KFileMetaInfoItem& metaInfoItem, metaInfo.items()) {
-                m_data.insert(metaInfoItem.key(), metaInfoItem.value());
-            }
+            m_data = metaInfo.items();
 
-            m_data.insert(KUrl("kfileitem#size"), KIO::convertSize(item.size()));
+            m_data.append(KFileMetaInfoItem("kfileitem#size", KIO::convertSize(item.size())));
         }
-        m_data.insert(KUrl("kfileitem#type"), item.mimeComment());
-        m_data.insert(KUrl("kfileitem#modified"), KGlobal::locale()->formatDateTime(item.time(KFileItem::ModificationTime), KLocale::FancyLongDate));
-        m_data.insert(KUrl("kfileitem#owner"), item.user());
-        m_data.insert(KUrl("kfileitem#permissions"), item.permissionsString());
-        m_data.insert(KUrl("kfileitem#mimetype"), item.mimetype());
+        m_data.append(KFileMetaInfoItem("kfileitem#type", item.mimeComment()));
+        m_data.append(KFileMetaInfoItem("kfileitem#modified", KGlobal::locale()->formatDateTime(item.time(KFileItem::ModificationTime), KLocale::FancyLongDate)));
+        m_data.append(KFileMetaInfoItem("kfileitem#owner", item.user()));
+        m_data.append(KFileMetaInfoItem("kfileitem#permissions", item.permissionsString()));
+        m_data.append(KFileMetaInfoItem("kfileitem#mimetype", item.mimetype()));
     } else if (m_fileItems.count() > 1) {
         // Calculate the size of all items
         quint64 totalSize = 0;
@@ -78,15 +76,17 @@ void KFileMetaDataProvider::setItems(const KFileItemList& items)
                 totalSize += item.size();
             }
         }
-        m_data.insert(KUrl("kfileitem#totalSize"), KIO::convertSize(totalSize));
+        m_data.append(KFileMetaInfoItem("kfileitem#totalSize", KIO::convertSize(totalSize)));
     }
+
+    qSort(m_data);
 
     emit loadingFinished();
 }
 
-QString KFileMetaDataProvider::label(const KUrl& metaDataUri) const
+QString KFileMetaDataProvider::label(const QString& metaDataUri) const
 {
-    return KFileMetaInfo::name(metaDataUri.prettyUrl());
+    return KFileMetaInfo::name(metaDataUri);
 }
 
 KFileItemList KFileMetaDataProvider::items() const
@@ -94,12 +94,12 @@ KFileItemList KFileMetaDataProvider::items() const
     return m_fileItems;
 }
 
-QHash<KUrl, QString> KFileMetaDataProvider::data() const
+KFileMetaInfoItemList KFileMetaDataProvider::data() const
 {
     return m_data;
 }
 
-QWidget* KFileMetaDataProvider::createValueWidget(const KUrl& metaDataUri,
+QWidget* KFileMetaDataProvider::createValueWidget(const QString& metaDataUri,
                                                   const QString& value,
                                                   QWidget* parent) const
 {

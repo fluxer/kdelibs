@@ -25,8 +25,8 @@ KFileMetaInfoItem::KFileMetaInfoItem()
 {
 }
 
-KFileMetaInfoItem::KFileMetaInfoItem(const KFileMetaInfoItem& item)
-    : d(item.d)
+KFileMetaInfoItem::KFileMetaInfoItem(const KFileMetaInfoItem &other)
+    : d(other.d)
 {
 }
 
@@ -42,10 +42,10 @@ KFileMetaInfoItem::~KFileMetaInfoItem()
 {
 }
 
-const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& item)
+const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& other)
 {
-    d = item.d;
-    return item;
+    d = other.d;
+    return other;
 }
 
 const QString& KFileMetaInfoItem::key() const
@@ -53,17 +53,22 @@ const QString& KFileMetaInfoItem::key() const
     return d->key;
 }
 
-const QString& KFileMetaInfoItem::name() const
-{
-    return d->name;
-}
-
 const QString& KFileMetaInfoItem::value() const
 {
     return d->value;
 }
 
+const QString& KFileMetaInfoItem::name() const
+{
+    return d->name;
+}
+
 bool KFileMetaInfoItem::isValid() const
 {
     return (!d->key.isEmpty() && !d->value.isEmpty());
+}
+
+bool KFileMetaInfoItem::operator<(const KFileMetaInfoItem &other) const
+{
+    return d->name < other.d->name;
 }
