@@ -22,7 +22,6 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kfilemetainfo.h>
-#include <kfilemetainfoitem.h>
 #include <klocale.h>
 #include "kfilemetadataprovider_p.h"
 
