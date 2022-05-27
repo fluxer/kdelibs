@@ -65,5 +65,5 @@ const QString& KFileMetaInfoItem::value() const
 
 bool KFileMetaInfoItem::isValid() const
 {
-    return true;
+    return (!d->key.isEmpty() && !d->value.isEmpty());
 }
