@@ -64,7 +64,7 @@ set_package_properties(ZLIB PROPERTIES
     PURPOSE "Required by the core KDE libraries and some critical kioslaves"
 )
 
-find_package(SharedMimeInfo 0.70)
+find_package(SharedMimeInfo 0.91)
 set_package_properties(SharedMimeInfo PROPERTIES
     DESCRIPTION "Shared Mime Info"
     URL "http://freedesktop.org/wiki/Software/shared-mime-info"

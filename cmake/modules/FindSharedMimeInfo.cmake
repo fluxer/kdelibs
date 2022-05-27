@@ -4,10 +4,10 @@
 #  UPDATE_MIME_DATABASE_EXECUTABLE - the update-mime-database executable
 #
 # The minimum required version of SharedMimeInfo can be specified using the
-# standard syntax, e.g. find_package(SharedMimeInfo 0.20)
+# standard syntax, e.g. find_package(SharedMimeInfo 0.91)
 #
 # For backward compatibility, the following two variables are also supported:
-#  SHARED_MIME_INFO_MINIMUM_VERSION - set to the minimum version you need, default is 0.18.
+#  SHARED_MIME_INFO_MINIMUM_VERSION - set to the minimum version you need, default is 0.91.
 #    When both are used, i.e. the version is set in the find_package() call and
 #   SHARED_MIME_INFO_MINIMUM_VERSION is set, the version specified in the find_package()
 #   call takes precedence.
@@ -20,7 +20,7 @@
 
 # the minimum version of shared-mime-database we require
 if(NOT SharedMimeInfo_FIND_VERSION)
-    set(SharedMimeInfo_FIND_VERSION "0.18")
+    set(SharedMimeInfo_FIND_VERSION "0.91")
 endif()
 
 find_program (UPDATE_MIME_DATABASE_EXECUTABLE NAMES update-mime-database)
