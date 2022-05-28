@@ -199,12 +199,6 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
         return false;
     }
 
-    if (qstrncmp(data.constData(), reinterpret_cast<const char*>(icoheader), 5) == 0) {
-        device->seek(oldpos);
-        kDebug() << "ICO header detected";
-        return true;
-    }
-
     try {
         Magick::Blob magickinblob(data.constData(), data.size());
         Magick::Image magickimage;
@@ -221,6 +215,12 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
         kWarning() << err.what();
     } catch (...) {
         kWarning() << "Exception raised";
+    }
+
+    if (qstrncmp(data.constData(), reinterpret_cast<const char*>(icoheader), 5) == 0) {
+        kDebug() << "ICO header detected";
+        actualformat->append("ico");
+        isvalid = true;
     }
 
     device->seek(oldpos);
