@@ -13,11 +13,8 @@
 #include <QtGui/QLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
-#include <QtGui/QComboBox>
 #include <QtGui/QCheckBox>
 #include <QtGui/qevent.h>
-#include <QtCore/QTimer>
-#include <QtCore/QTimeLine>
 
 #include <kglobalsettings.h>
 #include <kconfig.h>
