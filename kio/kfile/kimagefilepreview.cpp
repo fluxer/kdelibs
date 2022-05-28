@@ -229,10 +229,12 @@ void KImageFilePreview::gotPreview(const KFileItem& item, const QPixmap& pm)
 void KImageFilePreview::KImageFilePreviewPrivate::_k_slotFailed(const KFileItem& item)
 {
     if (item.isDir()) {
-        imageLabel->clear();
+        imageLabel->setPixmap(
+            DesktopIcon("inode-directory", KIconLoader::SizeEnormous, KIconLoader::DisabledState)
+        );
     } else if (item.url() == currentURL) { // should always be the case
         imageLabel->setPixmap(
-            SmallIcon("image-missing", KIconLoader::SizeLarge, KIconLoader::DisabledState)
+            SmallIcon("image-missing", KIconLoader::SizeEnormous, KIconLoader::DisabledState)
         );
     }
 }
