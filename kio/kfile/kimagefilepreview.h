@@ -15,11 +15,11 @@
 #include <QtGui/QPixmap>
 
 #include <kurl.h>
+#include <kjob.h>
+#include <kfileitem.h>
 #include <kpreviewwidgetbase.h>
 
-class KFileItem;
-class KJob;
-namespace KIO { class PreviewJob; }
+class KImageFilePreviewPrivate;
 
 /**
  * Image preview widget for the file dialog.
@@ -58,25 +58,18 @@ public Q_SLOTS:
     virtual void clearPreview();
 
 protected Q_SLOTS:
-    void showPreview();
-    void showPreview( const KUrl& url, bool force );
-
-    virtual void gotPreview( const KFileItem&, const QPixmap& );
+    void gotPreview(const KFileItem &item, const QPixmap &pixmap);
 
 protected:
-    virtual void resizeEvent( QResizeEvent *event );
-    virtual KIO::PreviewJob * createJob( const KUrl& url, int width, int height );
+    virtual void resizeEvent(QResizeEvent *event);
 
 private:
-    class KImageFilePreviewPrivate;
     KImageFilePreviewPrivate *const d;
 
     Q_DISABLE_COPY(KImageFilePreview)
 
-    Q_PRIVATE_SLOT( d, void _k_slotResult( KJob* ) )
-    Q_PRIVATE_SLOT( d, void _k_slotFailed( const KFileItem& ) )
-    Q_PRIVATE_SLOT( d, void _k_slotStepAnimation( int frame ) )
-    Q_PRIVATE_SLOT( d, void _k_slotFinished( ) )
+    Q_PRIVATE_SLOT(d, void _k_slotResult(KJob *job))
+    Q_PRIVATE_SLOT(d, void _k_slotFailed(const KFileItem &item))
 };
 
 #endif // KIMAGEFILEPREVIEW_H
