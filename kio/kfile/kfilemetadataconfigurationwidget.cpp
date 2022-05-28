@@ -37,7 +37,7 @@ public:
 
     void init();
     void loadMetaData();
-    void addItem(const KUrl& uri);
+    void addItem(const QString& uri);
 
     /**
      * Is invoked after the meta data model has finished the loading of
@@ -83,7 +83,7 @@ void KFileMetaDataConfigurationWidget::Private::loadMetaData()
     m_provider->setItems(m_fileItems);
 }
 
-void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
+void KFileMetaDataConfigurationWidget::Private::addItem(const QString& uri)
 {
     // Meta information provided by KFileMetaInfo that is already
     // available from KFileItem as "fixed item" (see above)
@@ -96,9 +96,8 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     };
 
     int i = 0;
-    const QString key = uri.prettyUrl();
     while (hiddenProperties[i] != 0) {
-        if (key == QLatin1String(hiddenProperties[i])) {
+        if (uri == QLatin1String(hiddenProperties[i])) {
             // the item is hidden
             return;
         }
@@ -110,12 +109,12 @@ void KFileMetaDataConfigurationWidget::Private::addItem(const KUrl& uri)
     KConfigGroup settings = config.group("Show");
 
     const QString label = (m_provider == 0)
-                          ? KFileMetaInfo::name(key)
-                          : m_provider->label(key);
+                          ? KFileMetaInfo::name(uri)
+                          : m_provider->label(uri);
 
     QListWidgetItem* item = new QListWidgetItem(label, m_metaDataList);
-    item->setData(Qt::UserRole, key);
-    const bool show = settings.readEntry(key, true);
+    item->setData(Qt::UserRole, uri);
+    const bool show = settings.readEntry(uri, true);
     item->setCheckState(show ? Qt::Checked : Qt::Unchecked);
 }
 
@@ -126,7 +125,7 @@ void KFileMetaDataConfigurationWidget::Private::slotLoadingFinished()
     Q_ASSERT(m_provider != 0);
 
     foreach (const KFileMetaInfoItem &it, m_provider->data()) {
-        addItem(KUrl(it.key()));
+        addItem(it.key());
     }
 }
 
