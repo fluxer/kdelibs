@@ -24,13 +24,11 @@
 
 #include <QtCore/QObject>
 #include <QtGui/QPixmap>
+#include <QtGui/QIcon>
+#include <QtGui/QMovie>
 
 #include <kglobal.h>
 #include <kdeui_export.h>
-
-#include <QIcon>
-#include <QMovie>
-#include <QPixmap>
 
 class KComponentData;
 class KIconLoaderPrivate;
