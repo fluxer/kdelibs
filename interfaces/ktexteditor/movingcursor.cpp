@@ -62,7 +62,7 @@ bool MovingCursor::atEndOfLine() const {
 }
 
 bool MovingCursor::atEndOfDocument() const {
-  return *this == document()->documentEnd();
+  return toCursor() == document()->documentEnd();
 }
 
 bool MovingCursor::atStartOfDocument() const {
@@ -143,7 +143,7 @@ bool MovingCursor::move(int chars, WrapBehavior wrapBehavior)
     }
   }
 
-  if (c != *this) {
+  if (c != toCursor()) {
     setPosition(c);
   }
   return true;

@@ -41,14 +41,15 @@ void MovingRange::setRange (const Cursor &start, const Cursor &end)
 
 bool MovingRange::overlaps( const Range& range ) const
 {
-  if (range.start() <= start())
-    return range.end() > start();
+  const Cursor startcursor = start().toCursor();
+  if (range.start() <= startcursor)
+    return range.end() > startcursor;
 
-  else if (range.end() >= end())
-    return range.start() < end();
+  const Cursor endcursor = end().toCursor();
+  if (range.end() >= endcursor)
+    return range.start() < endcursor;
 
-  else
-    return contains(range);
+  return contains(range);
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

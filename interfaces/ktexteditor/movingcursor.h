@@ -270,13 +270,6 @@ class KTEXTEDITOR_EXPORT MovingCursor
      */
     const Cursor toCursor () const { return Cursor (line(), column()); }
 
-    /**
-     * Convert this clever cursor into a dumb one. Equal to toCursor, allowing to use implicit conversion.
-     * Even if this cursor belongs to a range, the created one not.
-     * @return normal cursor
-     */
-    operator const Cursor () const { return Cursor (line(), column()); }
-
 //
 // operators for: MovingCursor <-> MovingCursor
 //

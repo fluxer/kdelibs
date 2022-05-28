@@ -333,12 +333,6 @@ class KTEXTEDITOR_EXPORT MovingRange
     const Range toRange () const { return Range (start().toCursor(), end().toCursor()); }
 
     /**
-     * Convert this clever range into a dumb one. Equal to toRange, allowing to use implicit conversion.
-     * @return normal range
-     */
-    operator const Range () const { return Range (start().toCursor(), end().toCursor()); }
-
-    /**
      * kDebug() stream operator. Writes this range to the debug output in a nicely formatted way.
      * @param s debug stream
      * @param cursor range to print
@@ -387,7 +381,7 @@ class KTEXTEDITOR_EXPORT MovingRange
      * \return \e true, if this range contains \e range, otherwise \e false
      */
     inline bool contains(const Range& range) const {
-      return range.start() >= start() && range.end() <= end();
+      return range.start() >= start().toCursor() && range.end() <= end().toCursor();
     }
 
     /**
@@ -398,7 +392,7 @@ class KTEXTEDITOR_EXPORT MovingRange
      * \return \e true if the cursor is contained within this range, otherwise \e false.
      */
     inline bool contains(const Cursor& cursor) const {
-      return cursor >= start() && cursor < end();
+      return cursor >= start().toCursor() && cursor < end().toCursor();
     }
 
     /**
