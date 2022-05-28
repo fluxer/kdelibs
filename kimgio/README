@@ -28,6 +28,6 @@ PSD     <read>
 XCF     <read>
 RAW     <read>
 
-If you want to want to contribute plugin for image format and there is no solid
+If you want to contribute plugin for image format and there is no solid
 C/C++ library for it (like there is for WebP) then it is unlikely it will be
 accepted.
