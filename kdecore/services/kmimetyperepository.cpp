@@ -303,7 +303,7 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
             //kDebug(7021) << "Now parsing" << fileName;
             if (qfile.open(QIODevice::ReadOnly)) {
                 while (!qfile.atEnd()) {
-                    const QByteArray line = qfile.readLine();
+                    const QByteArray line = qfile.readLine().trimmed();
                     if (line.isEmpty() || line[0] == '#')
                         continue;
                     const int pos = line.indexOf(' ');
@@ -572,7 +572,7 @@ const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
         //kDebug(7021) << "Now parsing" << fileName;
         if (qfile.open(QIODevice::ReadOnly)) {
             while (!qfile.atEnd()) {
-                const QByteArray line = qfile.readLine();
+                const QByteArray line = qfile.readLine().trimmed();
                 if (line.isEmpty() || line[0] == '#')
                     continue;
                 const int pos = line.indexOf(' ');

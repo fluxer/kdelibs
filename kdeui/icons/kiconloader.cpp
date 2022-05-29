@@ -309,7 +309,7 @@ void KIconLoaderGlobalData::parseGenericIconsFiles(const QString& fileName)
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly)) {
         while (!file.atEnd()) {
-            const QByteArray line = file.readLine();
+            const QByteArray line = file.readLine().trimmed();
             if (line.isEmpty() || line[0] == '#')
                 continue;
             const int pos = line.indexOf(':');
