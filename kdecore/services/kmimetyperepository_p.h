@@ -153,7 +153,7 @@ private:
                                   QString& foundExt,
                                   bool highWeight);
 
-    mutable AliasesMap m_aliases; // alias -> canonicalName
+    AliasesMap m_aliases; // alias -> canonicalName
 
     typedef QHash<QString, QStringList> ParentsMap;
     ParentsMap m_parents;
@@ -163,7 +163,7 @@ private:
 
     bool m_parentsMapLoaded;
     bool m_magicFilesParsed;
-    mutable bool m_aliasFilesParsed;
+    bool m_aliasFilesParsed;
     bool m_globsFilesParsed;
     bool m_patternsMapCalculated;
     bool m_mimeTypesChecked;
