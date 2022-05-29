@@ -54,7 +54,6 @@
 1100        kdeedu
 
 # kdebase
-1201        konqtree
 1203        libkonq
 1204        plasma
 1205        kdesudo
@@ -87,7 +86,6 @@
 1903        kfind (KfindTabDialog::createQuery)
 2000        kfind
 2001        kregexpeditor
-2100        kgpg
 
 # kdeaccessibility
 2400        kttsd (daemon)
@@ -113,14 +111,10 @@
 4711        okular (Spectre)
 4712        okular (XpsGenerator)
 4713        okular (DVI)
-4714        okular (TIFF)
 4715        okular (OooGenerator)
 
 # kdenetwork, kdepim
 5001        kget
-5002        kppp
-5007        kpf
-5009        filesharing
 5010        krdc
 5011        krdc (VNC backend)
 5012        krdc (RDP backend)
@@ -149,7 +143,6 @@
 7024        kio (UIServer)
 7027        kio (TCPSlaveBase)
 7028        kio (Observer)
-7029        kssl
 7030        kio (KEMailSettings)
 7031        KImageIO
 7032        kio (KUrlCompletion)
@@ -220,5 +213,3 @@
 90180   konq-plugins (domtreeviewer)
 90190   konq-plugins (dirfilter)
 90210   konq-plugins (rellinks)
-
-100200       kfs
