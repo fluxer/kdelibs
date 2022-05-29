@@ -27,6 +27,7 @@
 #include "kglobalsettings.h"
 #include "kfontchooser.h"
 #include "kcompletion.h"
+#include "kiconloader.h"
 
 #include <QEvent>
 #include <QListView>
@@ -74,8 +75,8 @@ public:
 KFontFamilyDelegate::KFontFamilyDelegate (QObject *parent)
 : QAbstractItemDelegate(parent)
 {
-    truetype = QIcon(QLatin1String(":/trolltech/styles/commonstyle/images/fonttruetype-16.png"));
-    bitmap = QIcon(QLatin1String(":/trolltech/styles/commonstyle/images/fontbitmap-16.png"));
+    truetype = SmallIcon(QString::fromLatin1("application-x-font-ttf"));
+    bitmap = SmallIcon(QString::fromLatin1("application-x-font-bdf"));
 
     // Font size factors for family name and text sample in font previes,
     // multiplies normal font size.
