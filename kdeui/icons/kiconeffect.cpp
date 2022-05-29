@@ -337,7 +337,7 @@ struct KIEImgEdit
 
     ~KIEImgEdit()
     {
-	if (img.depth() <= 8)
+	if (img.depth() == 1)
 	    img.setColorTable(colors);
     }
 };
@@ -551,17 +551,6 @@ void KIconEffect::semiTransparent(QImage &img)
         }
     }
     else{
-        if (img.depth() == 8) {
-            if (painterSupportsAntialiasing()) {
-                // not running on 8 bit, we can safely install a new colorTable
-                QVector<QRgb> colorTable = img.colorTable();
-                for (int i = 0; i < colorTable.size(); ++i) {
-                    colorTable[i] = (colorTable[i] & 0x00ffffff) | ((colorTable[i] & 0xfe000000) >> 1);
-                }
-                img.setColorTable(colorTable);
-                return;
-            }
-        }
         // Insert transparent pixel into the clut.
         int transColor = -1;
 
@@ -578,37 +567,27 @@ void KIconEffect::semiTransparent(QImage &img)
         if(transColor < 0 || transColor >= img.colorCount())
             return;
 
-	img.setColor(transColor, 0);
+        img.setColor(transColor, 0);
         unsigned char *line;
-        if(img.depth() == 8){
+        bool setOn = (transColor != 0);
+        if (img.format() == QImage::Format_MonoLSB){
             for(y=0; y<img.height(); ++y){
                 line = img.scanLine(y);
-                for(x=(y%2); x<img.width(); x+=2)
-                    line[x] = transColor;
-            }
-	}
-        else{
-            bool setOn = (transColor != 0);
-            if(img.format() == QImage::Format_MonoLSB){
-                for(y=0; y<img.height(); ++y){
-                    line = img.scanLine(y);
-                    for(x=(y%2); x<img.width(); x+=2){
-                        if(!setOn)
-                            *(line + (x >> 3)) &= ~(1 << (x & 7));
-                        else
-                            *(line + (x >> 3)) |= (1 << (x & 7));
-                    }
+                for(x=(y%2); x<img.width(); x+=2){
+                    if(!setOn)
+                        *(line + (x >> 3)) &= ~(1 << (x & 7));
+                    else
+                        *(line + (x >> 3)) |= (1 << (x & 7));
                 }
             }
-            else{
-                for(y=0; y<img.height(); ++y){
-                    line = img.scanLine(y);
-                    for(x=(y%2); x<img.width(); x+=2){
-                        if(!setOn)
-                            *(line + (x >> 3)) &= ~(1 << (7-(x & 7)));
-                        else
-                            *(line + (x >> 3)) |= (1 << (7-(x & 7)));
-                    }
+        } else {
+            for(y=0; y<img.height(); ++y){
+                line = img.scanLine(y);
+                for(x=(y%2); x<img.width(); x+=2){
+                    if(!setOn)
+                        *(line + (x >> 3)) &= ~(1 << (7-(x & 7)));
+                    else
+                        *(line + (x >> 3)) |= (1 << (7-(x & 7)));
                 }
             }
         }
