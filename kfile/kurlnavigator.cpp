@@ -772,7 +772,6 @@ bool KUrlNavigator::Private::isCompressedPath(const KUrl& url) const
             mime->is("application/x-xz-compressed-tar") ||
             mime->is("application/x-tar") ||
             mime->is("application/x-tarz") ||
-            mime->is("application/x-tzo") || // (not sure KTar supports those?)
             mime->is("application/zip") ||
             mime->is("application/x-archive");
 }
