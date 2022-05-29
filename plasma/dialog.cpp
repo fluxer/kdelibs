@@ -175,7 +175,7 @@ void DialogPrivate::checkBorders(bool updateMaskIfNeeded)
                 rightWidth = 0;
                 bottomHeight = 0;
             }
-        break;
+            break;
 
         case TopEdge:
             if (applet->containment() &&
@@ -186,7 +186,7 @@ void DialogPrivate::checkBorders(bool updateMaskIfNeeded)
                 leftWidth = 0;
                 rightWidth = 0;
             }
-        break;
+            break;
 
         case LeftEdge:
             if (applet->containment() &&
@@ -196,7 +196,7 @@ void DialogPrivate::checkBorders(bool updateMaskIfNeeded)
                 leftWidth = 0;
                 rightWidth = 0;
             }
-        break;
+            break;
 
         case RightEdge:
             if (applet->containment() &&
@@ -206,10 +206,10 @@ void DialogPrivate::checkBorders(bool updateMaskIfNeeded)
                 leftWidth = 0;
                 rightWidth = 0;
             }
-        break;
+            break;
 
         default:
-        break;
+            break;
         }
     }
 
@@ -471,7 +471,7 @@ void Dialog::mouseMoveEvent(QMouseEvent *event)
                 position = QPoint(x(), y());
                 break;
             }
-             default: {
+            default: {
                 newHeight = qMin(maximumHeight(), qMax(minimumHeight(), height()));
                 newWidth = d->calculateWidthForHeightAndRatio(newHeight, aspectRatio);
                 if (newWidth == -1) {
