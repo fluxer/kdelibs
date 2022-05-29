@@ -19,6 +19,20 @@
 #include "kfilemetainfoitem.h"
 #include "kfilemetainfoitem_p.h"
 #include "kfilemetainfo.h"
+#include "kglobalsettings.h"
+#include "kwindowsystem.h"
+
+#include <QFontMetrics>
+
+static QString elideValue(const QString &value)
+{
+    static const QSize halfworkareasize = (KWindowSystem::workArea().size() / 2);
+    if (value.size() > halfworkareasize.width()) {
+        QFontMetrics fontmetrics(KGlobalSettings::generalFont());
+        return fontmetrics.elidedText(value, Qt::ElideRight, halfworkareasize.width());
+    }
+    return value;
+}
 
 KFileMetaInfoItem::KFileMetaInfoItem()
     : d(new KFileMetaInfoItemPrivate())
@@ -30,10 +44,10 @@ KFileMetaInfoItem::KFileMetaInfoItem(const KFileMetaInfoItem &other)
 {
 }
 
-KFileMetaInfoItem::KFileMetaInfoItem(const QString& key, const QString& value)
+KFileMetaInfoItem::KFileMetaInfoItem(const QString &key, const QString &value)
     : d(new KFileMetaInfoItemPrivate())
 {
-    d->value = value;
+    d->value = elideValue(value);
     d->key = key;
     d->name = KFileMetaInfo::name(d->key);
 }
@@ -42,7 +56,7 @@ KFileMetaInfoItem::~KFileMetaInfoItem()
 {
 }
 
-const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem& other)
+const KFileMetaInfoItem& KFileMetaInfoItem::operator=(const KFileMetaInfoItem &other)
 {
     d = other.d;
     return other;
