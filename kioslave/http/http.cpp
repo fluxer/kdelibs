@@ -551,5 +551,3 @@ bool HttpProtocol::authUrl(const KUrl &url)
     }
     return false;
 }
-
-#include "moc_http.cpp"

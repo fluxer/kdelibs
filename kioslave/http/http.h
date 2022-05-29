@@ -24,10 +24,8 @@
 
 #include <curl/curl.h>
 
-class HttpProtocol : public QObject, public KIO::SlaveBase
+class HttpProtocol : public KIO::SlaveBase
 {
-    Q_OBJECT
-
 public:
     HttpProtocol(const QByteArray &pool, const QByteArray &app);
     ~HttpProtocol();
