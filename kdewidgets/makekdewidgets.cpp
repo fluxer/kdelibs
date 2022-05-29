@@ -1,4 +1,7 @@
 /* Copyright (C) 2004-2005 ian reinhart geiser <geiseri@sourcextreme.com> */
+
+#include "config-prefix.h"
+
 #include <kaboutdata.h>
 #include <kcomponentdata.h>
 #include <kcmdlineargs.h>
@@ -186,6 +189,9 @@ QString buildWidgetClass( const QString &name, KConfig &_input, const QString &g
     KConfigGroup input(&_input, name);
     QHash<QString, QString> defMap;
 
+    const QString widgetIconName = denamespace( name ).toLower();
+    QString widgetIconPath = QString::fromLatin1(DATA_INSTALL_DIR "/kdewidgets/pics/%1.png").arg( widgetIconName );
+
     defMap.insert( "Group", input.readEntry( "Group", group ).replace( '\"', "\\\"" ) );
     defMap.insert( "IconSet", input.readEntry( "IconSet", QString(name.toLower() + ".png") ).replace( ':', '_' ) );
     defMap.insert( "Pixmap", name.toLower().replace( ':', '_' ) + "_xpm" );
@@ -193,7 +199,7 @@ QString buildWidgetClass( const QString &name, KConfig &_input, const QString &g
     defMap.insert( "ToolTip", input.readEntry( "ToolTip", QString(name + " Widget") ).replace( '\"', "\\\"" ) );
     defMap.insert( "WhatsThis", input.readEntry( "WhatsThis", QString(name + " Widget") ).replace( '\"', "\\\"" ) );
     defMap.insert( "IsContainer", input.readEntry( "IsContainer", "false" ) );
-    defMap.insert( "IconName", input.readEntry( "IconName", QString::fromLatin1(":/pics/%1.png").arg( denamespace( name ).toLower() ) ) );
+    defMap.insert( "IconName", input.readEntry( "IconName",  widgetIconPath ) );
     defMap.insert( "Class", name );
     defMap.insert( "PluginName", denamespace( name ) + QLatin1String( "Plugin" ) );
 

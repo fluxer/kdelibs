@@ -30,8 +30,6 @@ install(
 if(QT_QTDESIGNER_FOUND)
     kde4_add_widget(kdewidgets_SRCS kde.widgets)
 
-    qt4_add_resources(kdewidgets_SRCS kdewidgets.qrc)
-
     kde4_add_plugin(kdewidgets ${kdewidgets_SRCS})
 
     target_link_libraries(kdewidgets ${KDE4_KIO_LIBS} ${KDE4_KMEDIAPLAYER_LIBS})
