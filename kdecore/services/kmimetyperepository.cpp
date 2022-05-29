@@ -302,24 +302,24 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
             QFile qfile( fileName );
             //kDebug(7021) << "Now parsing" << fileName;
             if (qfile.open(QIODevice::ReadOnly)) {
-                QTextStream stream(&qfile);
-                stream.setCodec("ISO-8859-1");
-                while (!stream.atEnd()) {
-                    const QString line = stream.readLine();
-                    if (line.isEmpty() || line[0] == QLatin1Char('#'))
+                while (!qfile.atEnd()) {
+                    const QByteArray line = qfile.readLine();
+                    if (line.isEmpty() || line[0] == '#')
                         continue;
-                    const int pos = line.indexOf(QLatin1Char(' '));
+                    const int pos = line.indexOf(' ');
                     if (pos == -1) // syntax error
                         continue;
-                    const QString derivedTypeName = line.left(pos);
-                    KMimeType::Ptr derivedType = findMimeTypeByName(derivedTypeName, KMimeType::ResolveAliases);
+                    const QByteArray derivedTypeName = line.left(pos);
+                    const QString derivedTypeNameStr = QString::fromLatin1(derivedTypeName.constData(), derivedTypeName.size());
+                    KMimeType::Ptr derivedType = findMimeTypeByName(derivedTypeNameStr, KMimeType::ResolveAliases);
                     if (!derivedType)
-                        kWarning(7012) << fileName << " refers to unknown mimetype " << derivedTypeName;
+                        kWarning(7012) << fileName << " refers to unknown mimetype " << derivedTypeNameStr;
                     else {
-                        const QString parentTypeName = line.mid(pos+1);
+                        const QByteArray parentTypeName = line.mid(pos+1);
+                        const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
                         Q_ASSERT(!parentTypeName.isEmpty());
-                        //derivedType->setParentMimeType(parentTypeName);
-                        m_parents[derivedTypeName].append(parentTypeName);
+                        //derivedType->setParentMimeType(parentTypeNameStr);
+                        m_parents[derivedTypeNameStr].append(parentTypeNameStr);
                     }
                 }
             }
@@ -571,26 +571,26 @@ const KMimeTypeRepository::AliasesMap& KMimeTypeRepository::aliases()
         QFile qfile(fileName);
         //kDebug(7021) << "Now parsing" << fileName;
         if (qfile.open(QIODevice::ReadOnly)) {
-            QTextStream stream(&qfile);
-            stream.setCodec("ISO-8859-1");
-            while (!stream.atEnd()) {
-                const QString line = stream.readLine();
-                if (line.isEmpty() || line[0] == QLatin1Char('#'))
+            while (!qfile.atEnd()) {
+                const QByteArray line = qfile.readLine();
+                if (line.isEmpty() || line[0] == '#')
                     continue;
-                const int pos = line.indexOf(QLatin1Char(' '));
+                const int pos = line.indexOf(' ');
                 if (pos == -1) // syntax error
                     continue;
-                const QString aliasTypeName = line.left(pos);
-                const QString parentTypeName = line.mid(pos+1);
+                const QByteArray aliasTypeName = line.left(pos);
+                const QByteArray parentTypeName = line.mid(pos+1);
                 Q_ASSERT(!aliasTypeName.isEmpty());
                 Q_ASSERT(!parentTypeName.isEmpty());
+                const QString aliasTypeNameStr = QString::fromLatin1(aliasTypeName.constData(), aliasTypeName.size());
+                const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
 
                 const KMimeType::Ptr realMimeType =
-                    findMimeTypeByName(aliasTypeName, KMimeType::DontResolveAlias);
+                    findMimeTypeByName(aliasTypeNameStr, KMimeType::DontResolveAlias);
                 if (realMimeType) {
-                    //kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeName << "because also defined as a real mimetype";
+                    //kDebug(servicesDebugArea()) << "Ignoring alias" << aliasTypeNameStr << "because also defined as a real mimetype";
                 } else {
-                    m_aliases.insert(aliasTypeName, parentTypeName);
+                    m_aliases.insert(aliasTypeNameStr, parentTypeNameStr);
                 }
             }
         }

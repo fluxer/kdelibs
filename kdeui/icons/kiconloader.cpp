@@ -308,24 +308,24 @@ void KIconLoaderGlobalData::parseGenericIconsFiles(const QString& fileName)
 {
     QFile file(fileName);
     if (file.open(QIODevice::ReadOnly)) {
-        QTextStream stream(&file);
-        stream.setCodec("ISO-8859-1");
-        while (!stream.atEnd()) {
-            const QString line = stream.readLine();
+        while (!file.atEnd()) {
+            const QByteArray line = file.readLine();
             if (line.isEmpty() || line[0] == '#')
                 continue;
             const int pos = line.indexOf(':');
             if (pos == -1) // syntax error
                 continue;
-            QString mimeIcon = line.left(pos);
-            const int slashindex = mimeIcon.indexOf(QLatin1Char('/'));
+            QByteArray mimeIcon = line.left(pos);
+            const int slashindex = mimeIcon.indexOf('/');
             if (slashindex != -1) {
-                mimeIcon[slashindex] = QLatin1Char('-');
+                mimeIcon[slashindex] = '-';
             }
+            const QString mimeIconStr = QString::fromLatin1(mimeIcon.constData(), mimeIcon.size());
 
-            const QString genericIcon = line.mid(pos+1);
-            m_genericIcons.insert(mimeIcon, genericIcon);
-            //kDebug(264) << mimeIcon << "->" << genericIcon;
+            const QByteArray genericIcon = line.mid(pos+1);
+            const QString genericIconStr = QString::fromLatin1(genericIcon.constData(), genericIcon.size());
+            m_genericIcons.insert(mimeIconStr, genericIconStr);
+            //kDebug(264) << mimeIconStr << "->" << genericIconStr;
         }
     }
 }
