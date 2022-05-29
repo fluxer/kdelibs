@@ -42,6 +42,7 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <khbox.h>
+#include <kstandarddirs.h>
 
 #ifdef HAVE_ACL_LIBACL_H
 # include <acl/libacl.h>
@@ -613,6 +614,10 @@ void EditACLEntryDialog::slotSelectionChanged( QAbstractButton *button )
     }
 }
 
+static QString kfileIconPath(const char* const name)
+{
+    return KStandardDirs::locate("data", QString::fromLatin1("kio/pics/%1.png").arg(name));
+}
 
 KACLListView::KACLListView( QWidget* parent )
  : QTreeWidget( parent ),
@@ -636,10 +641,10 @@ KACLListView::KACLListView( QWidget* parent )
 
     // Load the avatars
     for ( int i=0; i < LAST_IDX; ++i ) {
-        s_itemAttributes[i].pixmap = new QPixmap( QString::fromLatin1(":/images/%1").arg(s_itemAttributes[i].pixmapName) );
+        s_itemAttributes[i].pixmap = new QPixmap( kfileIconPath(s_itemAttributes[i].pixmapName) );
     }
-    m_yesPixmap = new QPixmap( ":/images/yes.png" );
-    m_yesPartialPixmap = new QPixmap( ":/images/yespartial.png" );
+    m_yesPixmap = new QPixmap( kfileIconPath("yes") );
+    m_yesPartialPixmap = new QPixmap( kfileIconPath("yespartial") );
 
 
     // fill the lists of all legal users and groups

@@ -131,8 +131,6 @@ set(kfile_STAT_SRCS
     kfile/kfilemetadataprovider.cpp
 )
 
-qt4_add_resources(kfile_STAT_SRCS kfile/kacleditwidget.qrc)
-
 ########### next target ###############
 
 set(kio_LIB_SRCS
@@ -289,4 +287,19 @@ install(
     FILES
     kio/accept-languages.codes
     DESTINATION ${KDE4_CONFIG_INSTALL_DIR}
+)
+
+
+install(
+    FILES
+    kfile/images/yes.png
+    kfile/images/yespartial.png
+    kfile/images/user.png
+    kfile/images/user-grey.png
+    kfile/images/group.png
+    kfile/images/group-grey.png
+    kfile/images/others.png
+    kfile/images/others-grey.png
+    kfile/images/mask.png
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kio/pics
 )
