@@ -24,7 +24,7 @@
 #include <QThread>
 
 namespace {
-QAtomicInt s_connectionCounter;
+QAtomicInt s_connectionCounter(0);
 
 class KDBusConnectionPoolPrivate
 {
