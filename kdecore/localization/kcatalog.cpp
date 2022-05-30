@@ -34,9 +34,8 @@
 #  include <libintl.h>
 #endif
 
-static char *langenv = 0;
-static const int langenvMaxlen = 42;
 // = "LANGUAGE=" + 32 chars for language code + terminating zero
+static const int langenvMaxlen = 42;
 
 Q_GLOBAL_STATIC(QMutex, catalogLock)
 
@@ -91,15 +90,6 @@ KCatalog::KCatalog(const QString & name, const QString & language )
 
   // Invalidate current language, to trigger binding at next translate call.
   KCatalogPrivate::currentLanguage.clear();
-
-  if (!langenv) {
-    // Call putenv only here, to initialize LANGUAGE variable.
-    // Later only change langenv to what is currently needed.
-    langenv = new char[langenvMaxlen];
-    QByteArray lang = qgetenv("LANGUAGE");
-    snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", lang.constData());
-    putenv(langenv);
-  }
 #endif
 }
 
@@ -150,9 +140,11 @@ void KCatalogPrivate::setupGettextEnv ()
   // Point Gettext to current language, recording system value for recovery.
   systemLanguage = qgetenv("LANGUAGE");
   if (systemLanguage != language) {
-    // putenv has been called in the constructor,
     // it is enough to change the string set there.
+    char langenv[langenvMaxlen];
+    ::memset(langenv, 0, langenvMaxlen * sizeof(char));
     snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", language.constData());
+    putenv(strdup(langenv));
   }
 
   // Rebind text domain if language actually changed from the last time,
@@ -179,7 +171,10 @@ void KCatalogPrivate::setupGettextEnv ()
 void KCatalogPrivate::resetSystemLanguage ()
 {
   if (language != systemLanguage) {
+    char langenv[langenvMaxlen];
+    ::memset(langenv, 0, langenvMaxlen * sizeof(char));
     snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", systemLanguage.constData());
+    putenv(strdup(langenv));
   }
 }
 #endif
