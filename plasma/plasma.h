@@ -306,10 +306,7 @@ PLASMA_EXPORT QGraphicsView *viewFor(const QGraphicsItem *item);
 PLASMA_EXPORT QList<QAction*> actionsFromMenu(QMenu *menu,
                                               const QString &prefix = QString(),
                                               QObject *parent = 0);
-/**
- * Verifies that a plugin is compatible with plasma
- */
-PLASMA_EXPORT bool isPluginCompatible(const QString &plugin, unsigned int version);
+
 } // Plasma namespace
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Plasma::Constraints)

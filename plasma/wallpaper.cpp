@@ -145,12 +145,6 @@ Wallpaper *Wallpaper::load(const QString &wallpaperName, const QVariantList &arg
     QVariantList allArgs;
     allArgs << offer->storageId() << args;
 
-    KPluginLoader plugin(*offer);
-
-    if (!Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
-        return 0;
-    }
-
     QString error;
     Wallpaper *wallpaper = offer->createInstance<Plasma::Wallpaper>(0, allArgs, &error);
 

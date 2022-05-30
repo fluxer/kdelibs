@@ -93,11 +93,6 @@ ContainmentActions *ContainmentActions::load(Containment *parent, const QString 
     }
 
     KService::Ptr offer = offers.first();
-    KPluginLoader plugin(*offer);
-
-    if (!Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
-        return 0;
-    }
 
     QVariantList allArgs;
     allArgs << offer->storageId() << args;

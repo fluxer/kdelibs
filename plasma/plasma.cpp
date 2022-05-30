@@ -140,21 +140,4 @@ QList<QAction*> actionsFromMenu(QMenu *menu, const QString &prefix, QObject *par
     return ret;
 }
 
-bool isPluginCompatible(const QString &plugin, unsigned int version)
-{
-    if (!version) {
-        // unversioned, just let it through
-        kWarning() << "unversioned plugin" << plugin << "detected, may result in instability";
-        return true;
-    }
-
-    if (version < KDE_VERSION) {
-        kDebug() << "plugin" << plugin << "is compiled against incompatible Plasma version " << version
-                 << "This build is compatible with" << KDE_VERSION_STRING;
-        return false;
-    }
-
-    return true;
-}
-
 } // Plasma namespace

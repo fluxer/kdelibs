@@ -63,11 +63,7 @@ AbstractToolBox *AbstractToolBox::load(const QString &name, const QVariantList &
 
     if (!offers.isEmpty()) {
         KService::Ptr offer = offers.first();
-
-        KPluginLoader plugin(*offer);
-        if (Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
-            return offer->createInstance<AbstractToolBox>(containment, args);
-        }
+        return offer->createInstance<AbstractToolBox>(containment, args);
     }
 
     return 0;

@@ -128,15 +128,6 @@ Applet *PluginLoader::loadApplet(const QString &name, uint appletId, const QVari
         }
     }
 
-    KPluginLoader plugin(*offer);
-
-    if (!Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion()) &&
-        (name != "internal:extender")) {
-        return 0;
-    }
-
-
-
     Applet *applet = 0;
     QString error;
     if (name == "internal:extender") {
@@ -169,10 +160,7 @@ DataEngine *PluginLoader::loadDataEngine(const QString &name)
         QString api = offers.first()->property("X-Plasma-API").toString();
         if (api.isEmpty()) {
             if (offers.first()) {
-                KPluginLoader plugin(*offers.first());
-                if (Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
-                    engine = offers.first()->createInstance<Plasma::DataEngine>(0, allArgs, &error);
-                }
+                engine = offers.first()->createInstance<Plasma::DataEngine>(0, allArgs, &error);
             }
         } else {
             engine = new DataEngine(0, offers.first());
@@ -208,13 +196,9 @@ Service *PluginLoader::loadService(const QString &name, const QVariantList &args
         return new NullService(name, parent);
     }
 
-    Service *service = 0;
-    QString error;
     KService::Ptr offer = offers.first();
-    KPluginLoader plugin(*offer);
-    if (Plasma::isPluginCompatible(plugin.pluginName(), plugin.pluginVersion())) {
-        service = offer->createInstance<Plasma::Service>(parent, args, &error);
-    }
+    QString error;
+    Service *service = offer->createInstance<Plasma::Service>(parent, args, &error);
 
     if (!service) {
         kDebug() << "Couldn't load Service \"" << name << "\"! reason given: " << error;
