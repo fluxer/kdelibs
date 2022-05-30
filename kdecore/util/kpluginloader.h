@@ -123,12 +123,6 @@ public:
     QString pluginName() const;
 
     /**
-     * Queries the plugin version.
-     * \returns The version defined as KDE_VERSION or (quint32) 0 if plugin is not valid KDE plugin.
-     */
-    quint32 pluginVersion() const;
-
-    /**
      * Queries the last error.
      * \returns The description of the last error.
      */

@@ -34,14 +34,13 @@ class KPluginLoaderPrivate
 {
 public:
     KPluginLoaderPrivate(const QString &libname)
-        : name(libname), pluginVersion(0)
+        : name(libname)
     {}
     ~KPluginLoaderPrivate()
     {
     }
 
     const QString name;
-    mutable quint32 pluginVersion;
     QString errorString;
 };
 
@@ -175,22 +174,6 @@ QString KPluginLoader::errorString() const
         return d->errorString;
 
     return QPluginLoader::errorString();
-}
-
-quint32 KPluginLoader::pluginVersion() const
-{
-    Q_D(const KPluginLoader);
-
-    if (!d->pluginVersion && !fileName().isEmpty()) {
-        QLibrary lib(fileName());
-
-        KDEPluginVerificationData *verificationData = (KDEPluginVerificationData *) lib.resolve("kde_plugin_verification_data");
-        if (verificationData) {
-            d->pluginVersion = (verificationData->KDEVersion & 0xFFFF00);
-        }
-    }
-
-    return d->pluginVersion;
 }
 
 QString KPluginLoader::pluginName() const
