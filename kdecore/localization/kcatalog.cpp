@@ -39,6 +39,16 @@ static const int langenvMaxlen = 42;
 
 Q_GLOBAL_STATIC(QMutex, catalogLock)
 
+// for reference:
+// https://github.com/autotools-mirror/gettext/blob/master/gnulib-local/lib/gettext.h
+static QByteArray gettextHack(const char* const msgctxt, const char* const msgid)
+{
+    QByteArray msgwithctx(msgctxt);
+    msgwithctx.append('\004');
+    msgwithctx.append(msgid);
+    return msgwithctx;
+}
+
 class KCatalogPrivate
 {
 public:
@@ -194,14 +204,20 @@ QString KCatalog::translate(const char * msgid) const
 
 QString KCatalog::translate(const char * msgctxt, const char * msgid) const
 {
-  Q_UNUSED(msgctxt);
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dgettext(d->name, msgid);
+  const char *msgstr = nullptr;
+  if (msgctxt) {
+    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    msgstr = dgettext(d->name, msgwithctx.constData());
+  } else {
+    msgstr = dgettext(d->name, msgid);
+  }
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
 #else
+  Q_UNUSED(msgctxt);
   return QString::fromUtf8(msgid);
 #endif
 }
@@ -223,14 +239,20 @@ QString KCatalog::translate(const char * msgid, const char * msgid_plural,
 QString KCatalog::translate(const char * msgctxt, const char * msgid,
                             const char * msgid_plural, unsigned long n) const
 {
-  Q_UNUSED(msgctxt);
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
+  const char *msgstr = nullptr;
+  if (msgctxt) {
+    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
+  } else {
+    msgstr = dngettext(d->name, msgid, msgid_plural, n);
+  }
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
 #else
+  Q_UNUSED(msgctxt);
   return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
 #endif
 }
@@ -251,14 +273,23 @@ QString KCatalog::translateStrict(const char * msgid) const
 
 QString KCatalog::translateStrict(const char * msgctxt, const char * msgid) const
 {
-  Q_UNUSED(msgctxt);
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dgettext(d->name, msgid);
+  const char *msgstr = nullptr;
+  bool msgstrict = false;
+  if (msgctxt) {
+    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    msgstr = dgettext(d->name, msgwithctx.constData());
+    msgstrict = (msgstr != msgwithctx);
+  } else {
+    msgstr = dgettext(d->name, msgid);
+    msgstrict = (msgstr != msgid);
+  }
   d->resetSystemLanguage();
-  return msgstr != msgid ? QString::fromUtf8(msgstr) : QString();
+  return msgstrict ? QString::fromUtf8(msgstr) : QString();
 #else
+  Q_UNUSED(msgctxt);
   Q_UNUSED(msgid);
   return QString();
 #endif
@@ -284,14 +315,27 @@ QString KCatalog::translateStrict(const char * msgid, const char * msgid_plural,
 QString KCatalog::translateStrict(const char * msgctxt, const char * msgid,
                                   const char * msgid_plural, unsigned long n) const
 {
-  Q_UNUSED(msgctxt);
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
+  const char *msgstr = nullptr;
+  bool msgstrict = false;
+  bool msgstrict2 = false;
+  if (msgctxt) {
+    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
+    msgstrict = (msgstr != msgwithctx.constData());
+    msgstrict2 = (msgstr != msgid_plural);
+  } else {
+    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
+    msgstrict = (msgstr != msgid);
+    msgstrict2 = (msgstr != msgid_plural);
+  }
   d->resetSystemLanguage();
-  return msgstr != msgid && msgstr != msgid_plural ? QString::fromUtf8(msgstr) : QString();
+  return msgstrict && msgstrict2 ? QString::fromUtf8(msgstr) : QString();
 #else
+  Q_UNUSED(msgctxt);
   Q_UNUSED(msgid);
   Q_UNUSED(msgid_plural);
   Q_UNUSED(n);
