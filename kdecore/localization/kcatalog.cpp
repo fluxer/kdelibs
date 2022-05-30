@@ -59,7 +59,7 @@ KMsgCtx::KMsgCtx(const char* const msgctxt, const char* const msgid)
     m_freedata(false)
 {
     const int msgidlen = qstrlen(msgid);
-    if (msgidlen <= 0) {
+    if (Q_UNLIKELY(msgidlen <= 0)) {
         m_data = nullptr;
         return;
     }
