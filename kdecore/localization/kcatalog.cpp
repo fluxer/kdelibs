@@ -46,7 +46,10 @@ public:
     ~KMsgCtx();
 
     const char* const constData() const;
+
 private:
+    Q_DISABLE_COPY(KMsgCtx);
+
     bool m_freedata;
     char* m_data;
 };
