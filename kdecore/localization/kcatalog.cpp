@@ -52,24 +52,15 @@ static QByteArray gettextHack(const char* const msgctxt, const char* const msgid
 class KCatalogPrivate
 {
 public:
-    KCatalogPrivate()
-#ifdef HAVE_LIBINTL
-        : bindDone(false)
-#endif
-    {}
-
   QByteArray language;
   QByteArray name;
   QByteArray localeDir;
 
 #ifdef HAVE_LIBINTL
   QByteArray systemLanguage;
-  bool bindDone;
 
-  static QByteArray currentLanguage;
-
-  void setupGettextEnv ();
-  void resetSystemLanguage ();
+  void setupGettextEnv();
+  void resetSystemLanguage();
 #endif
 };
 
@@ -78,28 +69,27 @@ QDebug operator<<(QDebug debug, const KCatalog &c)
   return debug << c.d->language << " " << c.d->name << " " << c.d->localeDir;
 }
 
-#ifdef HAVE_LIBINTL
-QByteArray KCatalogPrivate::currentLanguage;
-#endif
-
-KCatalog::KCatalog(const QString & name, const QString & language )
+KCatalog::KCatalog(const QString &name, const QString &language)
   : d( new KCatalogPrivate )
 {
   setlocale(LC_ALL, "");
 
   // Find locale directory for this catalog.
-  QString localeDir = catalogLocaleDir( name, language );
+  QString localeDir = catalogLocaleDir(name, language);
 
-  d->language = QFile::encodeName( language );
-  d->name = QFile::encodeName( name );
-  d->localeDir = QFile::encodeName( localeDir );
+  d->language = QFile::encodeName(language);
+  d->name = QFile::encodeName(name);
+  d->localeDir = QFile::encodeName(localeDir);
 
 #ifdef HAVE_LIBINTL
-  // Always get translations in UTF-8, regardless of user's environment.
-  bind_textdomain_codeset( d->name, "UTF-8" );
+  // Point Gettext to current language, recording system value for recovery.
+  d->systemLanguage = qgetenv("LANGUAGE");
 
-  // Invalidate current language, to trigger binding at next translate call.
-  KCatalogPrivate::currentLanguage.clear();
+  // Always get translations in UTF-8, regardless of user's environment.
+  bind_textdomain_codeset(d->name.constData(), "UTF-8");
+
+  //kDebug() << << name << language << localeDir;
+  bindtextdomain(d->name.constData(), d->localeDir.constData());
 #endif
 }
 
@@ -145,36 +135,14 @@ QString KCatalog::localeDir() const
 }
 
 #ifdef HAVE_LIBINTL
-void KCatalogPrivate::setupGettextEnv ()
+void KCatalogPrivate::setupGettextEnv()
 {
-  // Point Gettext to current language, recording system value for recovery.
-  systemLanguage = qgetenv("LANGUAGE");
-  if (systemLanguage != language) {
+  if (language != systemLanguage) {
     // it is enough to change the string set there.
     char langenv[langenvMaxlen];
     ::memset(langenv, 0, langenvMaxlen * sizeof(char));
     snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", language.constData());
     putenv(strdup(langenv));
-  }
-
-  // Rebind text domain if language actually changed from the last time,
-  // as locale directories may differ for different languages of same catalog.
-  if (language != currentLanguage || !bindDone) {
-
-    currentLanguage = language;
-    bindDone = true;
-
-    //kDebug() << "bindtextdomain" << name << localeDir;
-    bindtextdomain(name, localeDir);
-
-#ifdef __GLIBC__
-    // Magic to make sure Gettext doesn't use stale cached translation
-    // from previous language.
-    extern int _nl_msg_cat_cntr;
-    ++_nl_msg_cat_cntr;
-#else
-#warning is the catalog workaround needed?
-#endif
   }
 }
 
