@@ -20,8 +20,8 @@
 #include "kfilemodule.h"
 #include "kfilewidget.h"
 #include "kdirselectdialog.h"
-
-#include <kpluginfactory.h>
+#include "kpluginfactory.h"
+#include "kpluginloader.h"
 
 K_PLUGIN_FACTORY(KFileModuleFactory, registerPlugin<KFileModule>();)
 K_EXPORT_PLUGIN(KFileModuleFactory("kfilemodule", "kio4"))

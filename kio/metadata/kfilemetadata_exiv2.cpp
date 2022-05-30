@@ -18,6 +18,7 @@
 
 #include "kfilemetadata_exiv2.h"
 #include "kpluginfactory.h"
+#include "kpluginloader.h"
 #include "kexiv2.h"
 
 #include <QDebug>

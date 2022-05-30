@@ -410,7 +410,6 @@ install(
     util/kdevicedatabase.h
     util/klauncher_iface.h
     util/kmacroexpander.h
-    util/kexportplugin.h
     util/kpluginfactory.h
     util/kpluginloader.h
     util/kshell.h

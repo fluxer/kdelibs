@@ -18,6 +18,7 @@
 
 #include "kfilemetadata_ffmpeg.h"
 #include "kpluginfactory.h"
+#include "kpluginloader.h"
 #include "kglobal.h"
 #include "klocale.h"
 #include "kmimetype.h"
