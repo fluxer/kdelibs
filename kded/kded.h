@@ -160,11 +160,6 @@ protected Q_SLOTS:
 
 private:
    /**
-    * Scans dir for new files and new subdirectories.
-    */
-   void readDirectory(const QString& dir);
-
-   /**
     * Pointer to the dirwatch class which tells us, when some directories
     * changed.
     * Slower polling for remote file systems is now done in KDirWatch (JW).

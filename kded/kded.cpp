@@ -434,7 +434,15 @@ void Kded::updateDirWatch()
     connect(m_pDirWatch, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
 
     foreach(const QString &it, m_allResourceDirs) {
-        readDirectory(it);
+        QString path(it);
+        if (!path.endsWith('/')) {
+            path += '/';
+        }
+        // Already seen this one?
+        if (m_pDirWatch->contains(path)) {
+            continue;
+        }
+        m_pDirWatch->addDir(path, KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
     }
 }
 
@@ -464,25 +472,6 @@ void Kded::update(const QString& path)
     if (!m_pTimer->isActive()) {
         m_pTimer->start(5000);
     }
-}
-
-void Kded::readDirectory(const QString& _path)
-{
-    if (!bCheckSycoca) {
-        return;
-    }
-
-    QString path(_path);
-    if (!path.endsWith('/')) {
-        path += '/';
-    }
-
-    // Already seen this one?
-    if (m_pDirWatch->contains(path)) {
-        return;
-    }
-
-    m_pDirWatch->addDir(path, KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
 }
 
 #if 0
