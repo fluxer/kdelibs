@@ -39,14 +39,57 @@ static const int langenvMaxlen = 42;
 
 Q_GLOBAL_STATIC(QMutex, catalogLock)
 
-// for reference:
-// https://github.com/autotools-mirror/gettext/blob/master/gnulib-local/lib/gettext.h
-static QByteArray gettextHack(const char* const msgctxt, const char* const msgid)
+class KMsgCtx
 {
-    QByteArray msgwithctx(msgctxt);
-    msgwithctx.append('\004');
-    msgwithctx.append(msgid);
-    return msgwithctx;
+public:
+    KMsgCtx(const char* const msgctxt, const char* const msgid);
+    ~KMsgCtx();
+
+    const char* const constData() const;
+private:
+    bool m_freedata;
+    char* m_data;
+};
+
+KMsgCtx::KMsgCtx(const char* const msgctxt, const char* const msgid)
+    : m_data(nullptr),
+    m_freedata(false)
+{
+    const int msgidlen = qstrlen(msgid);
+    if (msgidlen <= 0) {
+        m_data = nullptr;
+        return;
+    }
+
+    const int msgctxtlen = qstrlen(msgctxt);
+    if (msgctxtlen <= 0) {
+        m_data = (char*)msgid;
+        return;
+    }
+
+    // for reference:
+    // https://github.com/autotools-mirror/gettext/blob/master/gnulib-local/lib/gettext.h
+    const int totallen = (msgctxtlen + 1 + msgidlen + 1);
+    m_data = static_cast<char*>(::malloc(totallen * sizeof(char)));
+    ::memcpy(m_data, msgctxt, msgctxtlen * sizeof(char));
+    m_data[msgctxtlen] = '\004';
+    ::memcpy(m_data + msgctxtlen + 1, msgid, msgidlen * sizeof(char));
+    m_data[totallen - 1] = '\0';
+    m_freedata = true;
+
+    // qDebug() << Q_FUNC_INFO << m_data;
+}
+
+KMsgCtx::~KMsgCtx()
+{
+    if (m_freedata) {
+        ::free(m_data);
+    }
+}
+
+const char* const KMsgCtx::constData() const
+{
+    return m_data;
 }
 
 class KCatalogPrivate
@@ -177,7 +220,7 @@ QString KCatalog::translate(const char * msgctxt, const char * msgid) const
   d->setupGettextEnv();
   const char *msgstr = nullptr;
   if (msgctxt) {
-    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    const KMsgCtx msgwithctx(msgctxt, msgid);
     msgstr = dgettext(d->name, msgwithctx.constData());
   } else {
     msgstr = dgettext(d->name, msgid);
@@ -212,7 +255,7 @@ QString KCatalog::translate(const char * msgctxt, const char * msgid,
   d->setupGettextEnv();
   const char *msgstr = nullptr;
   if (msgctxt) {
-    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    const KMsgCtx msgwithctx(msgctxt, msgid);
     msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
   } else {
     msgstr = dngettext(d->name, msgid, msgid_plural, n);
@@ -247,9 +290,9 @@ QString KCatalog::translateStrict(const char * msgctxt, const char * msgid) cons
   const char *msgstr = nullptr;
   bool msgstrict = false;
   if (msgctxt) {
-    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    const KMsgCtx msgwithctx(msgctxt, msgid);
     msgstr = dgettext(d->name, msgwithctx.constData());
-    msgstrict = (msgstr != msgwithctx);
+    msgstrict = (msgstr != msgwithctx.constData());
   } else {
     msgstr = dgettext(d->name, msgid);
     msgstrict = (msgstr != msgid);
@@ -290,13 +333,12 @@ QString KCatalog::translateStrict(const char * msgctxt, const char * msgid,
   bool msgstrict = false;
   bool msgstrict2 = false;
   if (msgctxt) {
-    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
+    const KMsgCtx msgwithctx(msgctxt, msgid);
     msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
     msgstrict = (msgstr != msgwithctx.constData());
     msgstrict2 = (msgstr != msgid_plural);
   } else {
-    const QByteArray msgwithctx = gettextHack(msgctxt, msgid);
-    msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
+    msgstr = dngettext(d->name, msgid, msgid_plural, n);
     msgstrict = (msgstr != msgid);
     msgstrict2 = (msgstr != msgid_plural);
   }
