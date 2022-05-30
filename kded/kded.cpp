@@ -106,8 +106,8 @@ Kded::Kded(QObject *parent)
     session.registerObject("/kded", this);
     session.registerService("org.kde.kded");
 
-    updateDirWatch();
     updateResourceList();
+    updateDirWatch();
     initModules();
 
     qDBusAddSpyHook(messageFilter);
@@ -445,16 +445,15 @@ void Kded::updateResourceList()
     foreach(const QString &it, KSycoca::self()->allResourceDirs()) {
         if (!m_allResourceDirs.contains(it)) {
             m_allResourceDirs.append(it);
-            readDirectory(it);
         }
     }
 }
 
 void Kded::recreate()
 {
-    updateDirWatch(); // this would search all the directories
     runBuildSycoca();
     updateResourceList();
+    updateDirWatch();
 
     initModules();
 }
