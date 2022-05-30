@@ -51,11 +51,9 @@ static inline QString makeLibName( const QString &libname )
     if (pos < 0)
         pos = 0;
     if (libname.indexOf(QLatin1Char('.'), pos) < 0) {
-        const char* const extList[] = { ".so", ".sl" };
-        for (uint i = 0; i < sizeof(extList) / sizeof(*extList); ++i) {
-            const QString lib = libname + QString::fromLatin1(extList[i]);
-            if (QLibrary::isLibrary(lib))
-                return lib;
+        const QString lib = libname + QLatin1String(".so");
+        if (QLibrary::isLibrary(lib)) {
+            return lib;
         }
     }
     return libname;
