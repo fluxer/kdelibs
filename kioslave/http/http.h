@@ -32,6 +32,7 @@ public:
 
     void stat(const KUrl &url) final;
     void get(const KUrl &url)  final;
+    void put(const KUrl &url, int permissions, KIO::JobFlags flags) final;
 
     void slotData(const char* curldata, const size_t curldatasize);
     void slotProgress(KIO::filesize_t received, KIO::filesize_t total);

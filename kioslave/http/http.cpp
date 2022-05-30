@@ -177,6 +177,23 @@ size_t curlWriteCallback(char *ptr, size_t size, size_t nmemb, void *userdata)
     return nmemb;
 }
 
+size_t curlReadCallback(char *ptr, size_t size, size_t nmemb, void *userdata)
+{
+    HttpProtocol* httpprotocol = static_cast<HttpProtocol*>(userdata);
+    if (!httpprotocol) {
+        return 0;
+    }
+    httpprotocol->dataReq();
+    QByteArray kioreadbuffer;
+    const int kioreadresult = httpprotocol->readData(kioreadbuffer);
+    if (kioreadbuffer.size() > nmemb) {
+        kWarning(7103) << "Request data size larger than the buffer size";
+        return 0;
+    }
+    ::memcpy(ptr, kioreadbuffer.constData(), kioreadbuffer.size() * sizeof(char));
+    return kioreadresult;
+}
+
 int curlXFERCallback(void *userdata, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow)
 {
     HttpProtocol* httpprotocol = static_cast<HttpProtocol*>(userdata);
@@ -319,6 +336,40 @@ void HttpProtocol::get(const KUrl &url)
     finished();
 }
 
+
+void HttpProtocol::put(const KUrl &url, int permissions, KIO::JobFlags flags)
+{
+    kDebug(7103) << "URL" << url.prettyUrl();
+
+    if (redirectUrl(url)) {
+        return;
+    }
+
+    if (!setupCurl(url)) {
+        return;
+    }
+
+    CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_POST, 1L);
+    if (curlresult != CURLE_OK) {
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+        return;
+    }
+
+    curlresult = curl_easy_perform(m_curl);
+    if (curlresult != CURLE_OK) {
+        const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
+        if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
+            if (authUrl(url)) {
+                return;
+            }
+        }
+        error(kioerror, url.prettyUrl());
+        return;
+    }
+
+    finished();
+}
+
 void HttpProtocol::slotData(const char* curldata, const size_t curldatasize)
 {
     if (aborttransfer) {
@@ -408,6 +459,8 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     // curl_easy_setopt(m_curl, CURLOPT_IGNORE_CONTENT_LENGTH, 1L); // breaks XFER info, fixes transfer of chunked content
     curl_easy_setopt(m_curl, CURLOPT_WRITEDATA, this);
     curl_easy_setopt(m_curl, CURLOPT_WRITEFUNCTION, curlWriteCallback);
+    curl_easy_setopt(m_curl, CURLOPT_READDATA, this);
+    curl_easy_setopt(m_curl, CURLOPT_READFUNCTION, curlReadCallback);
     curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the XFER info callback is not called
     curl_easy_setopt(m_curl, CURLOPT_XFERINFODATA, this);
     curl_easy_setopt(m_curl, CURLOPT_XFERINFOFUNCTION, curlXFERCallback);
