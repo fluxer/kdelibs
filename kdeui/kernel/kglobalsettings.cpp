@@ -821,15 +821,16 @@ void KGlobalSettings::Private::applyGUIStyle()
         return;
     }
 
-    if (kde_overrideStyle.isEmpty()) {
-        const KConfigGroup pConfig(KGlobal::config(), "General");
-        kde_overrideStyle = pConfig.readEntry("widgetStyle", KStyle::defaultStyle());
-    }
-    if (kde_overrideStyle.isEmpty()) {
-        return;
+    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
+        if (kde_overrideStyle.isEmpty()) {
+            const KConfigGroup pConfig(KGlobal::config(), "General");
+            kde_overrideStyle = pConfig.readEntry("widgetStyle", KStyle::defaultStyle());
+        }
+        if (!kde_overrideStyle.isEmpty()) {
+            qApp->setStyle(kde_overrideStyle);
+        }
     }
 
-    qApp->setStyle(kde_overrideStyle);
     emit q->kdisplayStyleChanged();
 }
 
