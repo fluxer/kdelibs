@@ -562,7 +562,6 @@ bool Package::registerPackage(const PackageMetadata &data, const QString &iconPa
 
     QFile icon(iconPath);
     if (icon.exists()) {
-        //FIXME: the '/' search will break on non-UNIX. do we care?
         QString installedIcon("plasma_applet_" + data.pluginName() +
                               iconPath.right(iconPath.length() - iconPath.lastIndexOf("/")));
         cg.writeEntry("Icon", installedIcon);
