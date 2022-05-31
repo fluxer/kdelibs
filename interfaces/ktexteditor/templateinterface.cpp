@@ -24,6 +24,7 @@
 #include <kglobal.h>
 #include <kmessagebox.h>
 #include <kcalendarsystem.h>
+#include <kemailsettings.h>
 #include <kdebug.h>
 
 #include <QString>
@@ -41,9 +42,6 @@ bool TemplateInterface::expandMacros( QMap<QString, QString> &map, QWidget *pare
   QDate date = datetime.date();
   QTime time = datetime.time();
 
-  QStringList personalitems;
-  personalitems<<"firstname"<<"lastname"<<"fullname"<<"email";
-
   QMap<QString,QString>::Iterator it;
   for ( it = map.begin(); it != map.end(); ++it )
   {
@@ -53,20 +51,17 @@ bool TemplateInterface::expandMacros( QMap<QString, QString> &map, QWidget *pare
       if ( placeholder == "index" ) map[ placeholder ] = "i";
       else if ( placeholder == "loginname" )
       {}
-      else if (personalitems.contains(placeholder))
+      else if (placeholder == "fullname" || placeholder == "email")
       {
-#warning FIXME: implement first and last name info via KEMailSettings, KUser or other class
-#if 0
         KEMailSettings mailsettings;
-        map[ "firstname" ] = mailsettings.getSetting(KEMailSettings::TODO);
-        map[ "lastname" ] = mailsettings.getSetting(KEMailSettings::TODO);
-        map[ "fullname" ] = mailsettings.getSetting(KEMailSettings::RealName);
-        map[ "email" ] = mailsettings.getSetting(KEMailSettings::EmailAddresss);
-#else
-        // TODO: use this message when the info is missing (not set yet)
-        KMessageBox::sorry(parentWindow,i18n("The template needs information about you but it is not available.\n The information can be set set from system settings."));
-        return false;
-#endif
+        const QString fullname = mailsettings.getSetting(KEMailSettings::RealName);
+        const QString email = mailsettings.getSetting(KEMailSettings::EmailAddress);
+        if (fullname.isEmpty() || email.isEmpty()) {
+          KMessageBox::sorry(parentWindow,i18n("The template needs information about you but it is not available.\n The information can be set set from system settings."));
+          return false;
+        }
+        map[ "fullname" ] = fullname;
+        map[ "email" ] = email;
       }
       else if ( placeholder == "date" )
       {
