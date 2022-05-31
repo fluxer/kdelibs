@@ -217,9 +217,9 @@ QString PackageStructure::type() const
     return d->type;
 }
 
-QList<const char*> PackageStructure::directories() const
+QList<QByteArray> PackageStructure::directories() const
 {
-    QList<const char*> dirs;
+    QList<QByteArray> dirs;
     QMapIterator<QByteArray, ContentStructure> it(d->contents);
     while (it.hasNext()) {
         it.next();
@@ -230,9 +230,9 @@ QList<const char*> PackageStructure::directories() const
     return dirs;
 }
 
-QList<const char*> PackageStructure::requiredDirectories() const
+QList<QByteArray> PackageStructure::requiredDirectories() const
 {
-    QList<const char*> dirs;
+    QList<QByteArray> dirs;
     QMapIterator<QByteArray, ContentStructure> it(d->contents);
     while (it.hasNext()) {
         it.next();
@@ -244,9 +244,9 @@ QList<const char*> PackageStructure::requiredDirectories() const
     return dirs;
 }
 
-QList<const char*> PackageStructure::files() const
+QList<QByteArray> PackageStructure::files() const
 {
-    QList<const char*> files;
+    QList<QByteArray> files;
     QMapIterator<QByteArray, ContentStructure> it(d->contents);
     while (it.hasNext()) {
         it.next();
@@ -257,9 +257,9 @@ QList<const char*> PackageStructure::files() const
     return files;
 }
 
-QList<const char*> PackageStructure::requiredFiles() const
+QList<QByteArray> PackageStructure::requiredFiles() const
 {
-    QList<const char*> files;
+    QList<QByteArray> files;
     QMapIterator<QByteArray, ContentStructure> it(d->contents);
     while (it.hasNext()) {
         it.next();

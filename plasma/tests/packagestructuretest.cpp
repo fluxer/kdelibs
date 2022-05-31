@@ -64,30 +64,29 @@ void PackageStructureTest::type()
 
 void PackageStructureTest::directories()
 {
-    QList<const char*> dirs;
+    QList<QByteArray> dirs;
     dirs << "animations" << "config" << "data" << "images" << "scripts" << "theme" << "translations" << "ui";
 
-    QList<const char*> psDirs = ps->directories();
+    QList<QByteArray> psDirs = ps->directories();
 
     QCOMPARE(dirs.count(), psDirs.count());
 
     for (int i = 0; i < psDirs.count(); ++i) {
-        QVERIFY(qstrcmp(dirs[i], psDirs[i]) == 0);
+        QCOMPARE(dirs[i], psDirs[i]);
     }
 }
 
 void PackageStructureTest::requiredDirectories()
 {
-    QList<const char*> dirs;
-    QCOMPARE(ps->requiredDirectories(), dirs);
+    QCOMPARE(ps->requiredDirectories().size(), 0);
 }
 
 void PackageStructureTest::files()
 {
-    QList<const char*> files;
+    QList<QByteArray> files;
     files << "defaultconfig" << "mainconfigui" << "mainconfigxml" << "mainscript";
 
-    QList<const char*> psFiles = ps->files();
+    QList<QByteArray> psFiles = ps->files();
 
     //for (int i = 0; i < psFiles.count(); ++i) {
     //    qDebug() << psFiles[i];
@@ -100,10 +99,10 @@ void PackageStructureTest::files()
 
 void PackageStructureTest::requiredFiles()
 {
-    QList<const char*> files;
+    QList<QByteArray> files;
     files << "mainscript";
 
-    QList<const char*> psFiles = ps->requiredFiles();
+    QList<QByteArray> psFiles = ps->requiredFiles();
 
     QCOMPARE(files.count(), psFiles.count());
     for (int i = 0; i < files.count(); ++i) {
@@ -152,10 +151,10 @@ void PackageStructureTest::read()
     QCOMPARE(structure.path("mainscript"), QString("code/main"));
 
     // compare files
-    QList<const char *> files;
+    QList<QByteArray> files;
     files << "mainconfiggui" << "mainconfigxml" << "mainscript";
 
-    QList<const char *> psFiles = structure.files();
+    QList<QByteArray> psFiles = structure.files();
 
     QCOMPARE(psFiles.count(), files.count());
     for (int i = 0; i < files.count(); ++i) {
@@ -163,14 +162,14 @@ void PackageStructureTest::read()
     }
 
     // compare required files
-    QList<const char *> reqFiles = structure.requiredFiles();
+    QList<QByteArray> reqFiles = structure.requiredFiles();
     QCOMPARE(reqFiles.count(), 1);
-    QCOMPARE(reqFiles[0], "mainscript");
+    QCOMPARE(reqFiles[0], QByteArray("mainscript"));
 
     // compare directories
-    QList <const char *> dirs;
+    QList <QByteArray> dirs;
     dirs << "config" << "configui" << "images" << "scripts";
-    QList <const char *> psDirs = structure.directories();
+    QList <QByteArray> psDirs = structure.directories();
     QCOMPARE(psDirs.count(), dirs.count());
     for (int i = 0; i < dirs.count(); i++) {
         QCOMPARE(psDirs[i], dirs[i]);

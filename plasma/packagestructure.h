@@ -112,22 +112,22 @@ public:
     /**
      * The directories defined for this package
      **/
-    QList<const char*> directories() const;
+    QList<QByteArray> directories() const;
 
     /**
      * The required directories defined for this package
      **/
-    QList<const char*> requiredDirectories() const;
+    QList<QByteArray> requiredDirectories() const;
 
     /**
      * The individual files, by key, that are defined for this package
      **/
-    QList<const char*> files() const;
+    QList<QByteArray> files() const;
 
     /**
      * The individual required files, by key, that are defined for this package
      **/
-    QList<const char*> requiredFiles() const;
+    QList<QByteArray> requiredFiles() const;
 
     /**
      * Adds a directory to the structure of the package. It is added as
