@@ -283,7 +283,7 @@ QStringList PackageStructure::entryList(const char *key)
         // no prefixes is the same as d->contentsPrefixPths with QStringList() << QString()
         list << d->entryList(QString(), p);
     } else {
-        foreach (QString prefix, d->contentsPrefixPaths) {
+        foreach (const QString &prefix, d->contentsPrefixPaths) {
             list << d->entryList(prefix, p);
         }
     }
