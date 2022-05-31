@@ -223,8 +223,9 @@ QString KCatalog::translate(const char * msgctxt, const char * msgid) const
   d->setupGettextEnv();
   const KMsgCtx msgwithctx(msgctxt, msgid);
   const char *msgstr = dgettext(d->name, msgwithctx.constData());
+  const bool msgstrict = (msgstr != msgwithctx.constData());
   d->resetSystemLanguage();
-  return QString::fromUtf8(msgstr);
+  return msgstrict ? QString::fromUtf8(msgstr) : QString::fromUtf8(msgid);
 #else
   Q_UNUSED(msgctxt);
   return QString::fromUtf8(msgid);
@@ -253,8 +254,10 @@ QString KCatalog::translate(const char * msgctxt, const char * msgid,
   d->setupGettextEnv();
   const KMsgCtx msgwithctx(msgctxt, msgid);
   const char *msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
+  const bool msgstrict = (msgstr != msgwithctx.constData());
+  const bool msgstrict2 = (msgstr != msgid_plural);
   d->resetSystemLanguage();
-  return QString::fromUtf8(msgstr);
+  return msgstrict && msgstrict2 ? QString::fromUtf8(msgstr) : (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
 #else
   Q_UNUSED(msgctxt);
   return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
