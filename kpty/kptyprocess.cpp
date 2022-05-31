@@ -79,9 +79,9 @@ KPtyProcess::~KPtyProcess()
     Q_D(KPtyProcess);
 
     if (state() != QProcess::NotRunning && d->addUtmp) {
-        d->pty->logout();
         disconnect(SIGNAL(stateChanged(QProcess::ProcessState)),
                    this, SLOT(_k_onStateChanged(QProcess::ProcessState)));
+        d->pty->logout();
     }
     delete d->pty;
 }
