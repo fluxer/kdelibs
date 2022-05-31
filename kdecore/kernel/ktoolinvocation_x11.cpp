@@ -25,11 +25,6 @@
 #include <config.h>
 
 #include "ktoolinvocation.h"
-
-#include <kconfiggroup.h>
-#include <kmimetypetrader.h>
-#include <kurl.h>
-
 #include "kcmdlineargs.h"
 #include "kconfig.h"
 #include "kdebug.h"
@@ -40,6 +35,10 @@
 #include "kstandarddirs.h"
 #include "kmessage.h"
 #include "kservice.h"
+#include <kconfiggroup.h>
+#include <kmimetypetrader.h>
+#include <kurl.h>
+#include <QProcess>
 
 static QStringList splitEmailAddressList( const QString & aStr )
 {
@@ -278,7 +277,8 @@ void KToolInvocation::invokeBrowser( const QString &url, const QByteArray& start
     QString exe; // the binary we are going to launch.
 
     const QString xdg_open = KStandardDirs::findExe(QString::fromLatin1("xdg-open"));
-    if (qgetenv("KDE_FULL_SESSION").isEmpty()) {
+    static const bool kde_full_session = (QProcess::execute(QString::fromLatin1("kcheckrunning")) == 0);
+    if (!kde_full_session) {
         exe = xdg_open;
     }
 

@@ -194,7 +194,7 @@ void Kded::initModules()
     m_dontLoad.clear();
     bool kde_running = !qgetenv("KDE_FULL_SESSION").isEmpty();
     if (!kde_running) {
-        kde_running = (QProcess::execute("kcheckrunning") == 0);
+        kde_running = (QProcess::execute(QString::fromLatin1("kcheckrunning")) == 0);
     }
     // qDebug() << Q_FUNC_INFO << kde_running;
     if (kde_running) {
