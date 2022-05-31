@@ -27,6 +27,7 @@
 #include <QtCore/QObject>
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
+#include <QtCore/qplugin.h>
 #include <kcomponentdata.h>
 #include <kglobal.h>
 
@@ -68,6 +69,17 @@ KComponentData name::componentData() \
 #define K_PLUGIN_FACTORY_WITH_BASEFACTORY(name, baseFactory, pluginRegistrations) \
     K_PLUGIN_FACTORY_DECLARATION_WITH_BASEFACTORY(name, baseFactory) \
     K_PLUGIN_FACTORY_DEFINITION_WITH_BASEFACTORY(name, baseFactory, pluginRegistrations)
+
+/**
+ * \relates KPluginLoader
+ * This macro exports the main object of the plugin. Most times, this will be a KPluginFactory
+ * or derived class, but any QObject derived class can be used.
+ * Take a look at the documentation of Q_EXPORT_PLUGIN2 for some details.
+ *
+ * @ingroup KDEMacros
+ */
+#define K_EXPORT_PLUGIN(factory) \
+Q_EXPORT_PLUGIN(factory)
 
 /**
  * \relates KPluginFactory

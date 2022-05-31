@@ -18,7 +18,6 @@
 
 #include "kded_kpasswdstore.h"
 #include "kpluginfactory.h"
-#include "kpluginloader.h"
 
 K_PLUGIN_FACTORY(KPasswdStoreModuleFactory, registerPlugin<KPasswdStoreModule>();)
 K_EXPORT_PLUGIN(KPasswdStoreModuleFactory("kpasswdstore"))

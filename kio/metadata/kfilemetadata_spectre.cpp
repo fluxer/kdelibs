@@ -18,7 +18,6 @@
 
 #include "kfilemetadata_spectre.h"
 #include "kpluginfactory.h"
-#include "kpluginloader.h"
 #include "kdebug.h"
 
 #include <libspectre/spectre.h>

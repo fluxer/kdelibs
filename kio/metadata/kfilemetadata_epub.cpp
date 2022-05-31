@@ -18,7 +18,6 @@
 
 #include "kfilemetadata_epub.h"
 #include "kpluginfactory.h"
-#include "kpluginloader.h"
 #include "kdebug.h"
 
 #include <epub.h>

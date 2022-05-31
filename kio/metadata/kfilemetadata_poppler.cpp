@@ -18,7 +18,6 @@
 
 #include "kfilemetadata_poppler.h"
 #include "kpluginfactory.h"
-#include "kpluginloader.h"
 #include "kglobal.h"
 #include "klocale.h"
 #include "kdatetime.h"

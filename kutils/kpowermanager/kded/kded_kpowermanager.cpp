@@ -18,7 +18,6 @@
 
 #include "kded_kpowermanager.h"
 #include "kpluginfactory.h"
-#include "kpluginloader.h"
 #include "kpowermanager.h"
 #include "kdebug.h"
 

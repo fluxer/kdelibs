@@ -22,7 +22,6 @@
 #include <kdeversion.h>
 
 #include <QtCore/QPluginLoader>
-#include <QtCore/qplugin.h>
 
 class KComponentData;
 class KPluginFactory;
@@ -132,16 +131,5 @@ private:
 
     KPluginLoaderPrivate *const d_ptr;
 };
-
-/**
- * \relates KPluginLoader
- * This macro exports the main object of the plugin. Most times, this will be a KPluginFactory
- * or derived class, but any QObject derived class can be used.
- * Take a look at the documentation of Q_EXPORT_PLUGIN2 for some details.
- *
- * @ingroup KDEMacros
- */
-#define K_EXPORT_PLUGIN(factory) \
-Q_EXPORT_PLUGIN(factory)
 
 #endif

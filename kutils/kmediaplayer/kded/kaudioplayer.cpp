@@ -18,7 +18,6 @@
 
 #include "kaudioplayer.h"
 #include "kpluginfactory.h"
-#include "kpluginloader.h"
 
 K_PLUGIN_FACTORY(KAudioPlayerModuleFactory, registerPlugin<KAudioPlayerModule>();)
 K_EXPORT_PLUGIN(KAudioPlayerModuleFactory("kaudioplayer"))
