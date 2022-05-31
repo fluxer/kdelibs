@@ -221,13 +221,8 @@ QString KCatalog::translate(const char * msgctxt, const char * msgid) const
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = nullptr;
-  if (msgctxt) {
-    const KMsgCtx msgwithctx(msgctxt, msgid);
-    msgstr = dgettext(d->name, msgwithctx.constData());
-  } else {
-    msgstr = dgettext(d->name, msgid);
-  }
+  const KMsgCtx msgwithctx(msgctxt, msgid);
+  const char *msgstr = dgettext(d->name, msgwithctx.constData());
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
 #else
@@ -256,13 +251,8 @@ QString KCatalog::translate(const char * msgctxt, const char * msgid,
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = nullptr;
-  if (msgctxt) {
-    const KMsgCtx msgwithctx(msgctxt, msgid);
-    msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
-  } else {
-    msgstr = dngettext(d->name, msgid, msgid_plural, n);
-  }
+  const KMsgCtx msgwithctx(msgctxt, msgid);
+  const char *msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
   d->resetSystemLanguage();
   return QString::fromUtf8(msgstr);
 #else
@@ -290,16 +280,9 @@ QString KCatalog::translateStrict(const char * msgctxt, const char * msgid) cons
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = nullptr;
-  bool msgstrict = false;
-  if (msgctxt) {
-    const KMsgCtx msgwithctx(msgctxt, msgid);
-    msgstr = dgettext(d->name, msgwithctx.constData());
-    msgstrict = (msgstr != msgwithctx.constData());
-  } else {
-    msgstr = dgettext(d->name, msgid);
-    msgstrict = (msgstr != msgid);
-  }
+  const KMsgCtx msgwithctx(msgctxt, msgid);
+  const char *msgstr = dgettext(d->name, msgwithctx.constData());
+  const bool msgstrict = (msgstr != msgwithctx.constData());
   d->resetSystemLanguage();
   return msgstrict ? QString::fromUtf8(msgstr) : QString();
 #else
@@ -332,19 +315,10 @@ QString KCatalog::translateStrict(const char * msgctxt, const char * msgid,
 #ifdef HAVE_LIBINTL
   QMutexLocker locker(catalogLock());
   d->setupGettextEnv();
-  const char *msgstr = nullptr;
-  bool msgstrict = false;
-  bool msgstrict2 = false;
-  if (msgctxt) {
-    const KMsgCtx msgwithctx(msgctxt, msgid);
-    msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
-    msgstrict = (msgstr != msgwithctx.constData());
-    msgstrict2 = (msgstr != msgid_plural);
-  } else {
-    msgstr = dngettext(d->name, msgid, msgid_plural, n);
-    msgstrict = (msgstr != msgid);
-    msgstrict2 = (msgstr != msgid_plural);
-  }
+  const KMsgCtx msgwithctx(msgctxt, msgid);
+  const char *msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
+  const bool msgstrict = (msgstr != msgwithctx.constData());
+  const bool msgstrict2 = (msgstr != msgid_plural);
   d->resetSystemLanguage();
   return msgstrict && msgstrict2 ? QString::fromUtf8(msgstr) : QString();
 #else
