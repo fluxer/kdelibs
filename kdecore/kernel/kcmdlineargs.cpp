@@ -275,15 +275,6 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("nograb", ki18n("tells Katie to never grab the mouse or the keyboard"));
     qt_options.add("dograb", ki18n("running under a debugger can cause an implicit\n-nograb, use -dograb to override"));
     qt_options.add("sync", ki18n("switches to synchronous mode for debugging"));
-    qt_options.add("fn");
-    qt_options.add("font <fontname>", ki18n("defines the application font"));
-    qt_options.add("bg");
-    qt_options.add("background <color>", ki18n("sets the default background color and an\napplication palette (light and dark shades are\ncalculated)"));
-    qt_options.add("fg");
-    qt_options.add("foreground <color>", ki18n("sets the default foreground color"));
-    qt_options.add("btn");
-    qt_options.add("button <color>", ki18n("sets the default button color"));
-    qt_options.add("name <name>", ki18n("sets the application name"));
     qt_options.add("title <title>", ki18n("sets the application title (caption)"));
 #ifdef Q_WS_X11
     qt_options.add("visual TrueColor", ki18n("forces the application to use a TrueColor visual on\nan 8-bit display"));
