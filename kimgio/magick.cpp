@@ -140,6 +140,7 @@ bool MagickHandler::read(QImage *image)
         kWarning() << err.what();
         return false;
     } catch (...) {
+        kWarning() << "Exception raised";
         return false;
     }
 
@@ -184,7 +185,7 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
             } catch(std::exception &err) {
                 kWarning() << err.what();
             } catch (...) {
-                ;
+                kWarning() << "Exception raised";
             }
         }
     }
