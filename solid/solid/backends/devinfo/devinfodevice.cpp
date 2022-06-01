@@ -289,7 +289,12 @@ QByteArray DevinfoDevice::stringByName(const char* sysctlname)
         // qWarning() << "sysctlbyname failed" << sysctlname;
         return QByteArray();
     }
-    return QByteArray(sysctlbuff, sysctlbuffsize);
+    QByteArray result(sysctlbuff, sysctlbuffsize);
+    // chop non-printable character at the end, whatever it is
+    if (!result.isEmpty() && !::isprint(result.at(result.size() - 1))) {
+        result.chop(1);
+    }
+    return result;
 }
 
 qlonglong DevinfoDevice::integerByName(const char* sysctlname)
