@@ -67,44 +67,62 @@ KMimeGlobsFileParser::AllGlobs KMimeGlobsFileParser::parseGlobFiles(const QStrin
     return allGlobs;
 }
 
+static void filterEmptyFromList(QList<QByteArray>* bytelist)
+{
+    QList<QByteArray>::iterator fieldsit = bytelist->begin();
+    while (fieldsit != bytelist->end()) {
+        if (fieldsit->isEmpty()) {
+            fieldsit = bytelist->erase(fieldsit);
+        } else {
+            fieldsit++;
+        }
+    }
+}
+
 // uses a QIODevice to make unit tests possible
 bool KMimeGlobsFileParser::parseGlobFile(QIODevice* file, Format format, AllGlobs& globs)
 {
-    if (!file->open(QIODevice::ReadOnly))
+    Q_ASSERT(file);
+    if (!file->open(QIODevice::ReadOnly)) {
         return false;
+    }
 
-    QTextStream stream(file);
-    //stream.setCodec("UTF-8"); // should be all latin1
-    QString lastMime, lastPattern;
-    QString line;
-    while (!stream.atEnd()) {
-        line = stream.readLine();
-        if (line.isEmpty() || line.startsWith(QLatin1Char('#')))
+    // for reference:
+    // https://specifications.freedesktop.org/shared-mime-info-spec/latest/ar01s02.html
+    // NOTE: the file is supposed to be in UTF-8 encoding however in practise no mime-type entry
+    // contains non-latin1 characters
+    QByteArray lastMime, lastPattern;
+    QByteArray line;
+    while (!file->atEnd()) {
+        line = file->readLine().trimmed();
+        if (line.isEmpty() || line.startsWith('#'))
             continue;
 
-        const QStringList fields = line.split(QLatin1Char(':'), QString::KeepEmptyParts);
+        QList<QByteArray> fields = line.split(':');
+        filterEmptyFromList(&fields);
         if (fields.count() < 2) // syntax error
             continue;
 
         //kDebug() << "line=" << line;
 
-        QString mimeTypeName, pattern;
-        QStringList flagList;
+        QByteArray mimeTypeName, pattern;
+        QList<QByteArray> flagList;
         int weight = 50;
         if (format == Globs2WithWeight) {
             if (fields.count() < 3) // syntax error
                 continue;
-            weight = fields[0].toInt();
-            mimeTypeName = fields[1];
-            pattern = fields[2];
-            const QString flagsStr = fields.value(3); // could be empty
-            flagList = flagsStr.split(QLatin1Char(','), QString::SkipEmptyParts);
+            weight = fields.at(0).toInt();
+            mimeTypeName = fields.at(1);
+            pattern = fields.at(2);
+            const QByteArray flagsStr = fields.value(3); // could be empty
+            flagList = flagsStr.split(',');
+            filterEmptyFromList(&flagList);
         } else {
-            mimeTypeName = fields[0];
-            pattern = fields[1];
+            mimeTypeName = fields.at(0);
+            pattern = fields.at(1);
         }
         Q_ASSERT(!pattern.isEmpty());
-        Q_ASSERT(!pattern.contains(QLatin1Char(':')));
+        Q_ASSERT(!pattern.contains(':'));
 
         //kDebug() << " got:" << mimeTypeName << pattern;
 
@@ -115,11 +133,12 @@ bool KMimeGlobsFileParser::parseGlobFile(QIODevice* file, Format format, AllGlob
             continue;
         }
 
-        bool caseSensitive = flagList.contains(QLatin1String("cs"));
+        bool caseSensitive = flagList.contains(QByteArray("cs"));
 
-        if (pattern == QLatin1String("__NOGLOBS__")) {
+        const QString mimeTypeNameStr = QString::fromLatin1(mimeTypeName.constData(), mimeTypeName.size());
+        if (pattern == "__NOGLOBS__") {
             //kDebug() << "removing" << mimeTypeName;
-            globs.removeMime(mimeTypeName);
+            globs.removeMime(mimeTypeNameStr);
             lastMime.clear();
         } else {
             int flags = 0;
@@ -130,7 +149,8 @@ bool KMimeGlobsFileParser::parseGlobFile(QIODevice* file, Format format, AllGlob
             //    kDebug() << "Adding pattern" << pattern << "to mimetype" << mimeTypeName << "from globs file, with weight" << weight;
             //if (pattern.toLower() == "*.c")
             //    kDebug() << " Adding pattern" << pattern << "to mimetype" << mimeTypeName << "from globs file, with weight" << weight << "flags" << flags;
-            globs.addGlob(Glob(mimeTypeName, weight, pattern, flags));
+            const QString patternStr = QString::fromLatin1(pattern.constData(), pattern.size());
+            globs.addGlob(Glob(mimeTypeNameStr, weight, patternStr, flags));
             lastMime = mimeTypeName;
             lastPattern = pattern;
         }
