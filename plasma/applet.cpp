@@ -1480,7 +1480,7 @@ FormFactor Applet::formFactor() const
     }
 
 
-    const PopupApplet *pa = dynamic_cast<const PopupApplet *>(this);
+    const PopupApplet *pa = qobject_cast<const PopupApplet *>(this);
 
     //if the applet is in a widget that isn't a containment
     //try to retrieve the formFactor from the parent size

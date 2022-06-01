@@ -412,10 +412,10 @@ void DeleteJob::slotResult( KJob *job )
         }
         break;
     case DELETEJOB_STATE_DELETING_FILES:
-	// Propagate the subjob's metadata (a SimpleJob) to the real DeleteJob
-	// FIXME: setMetaData() in the KIO API only allows access to outgoing metadata,
-	// but we need to alter the incoming one
-	d->m_incomingMetaData = dynamic_cast<KIO::Job*>(job)->metaData();
+        // Propagate the subjob's metadata (a SimpleJob) to the real DeleteJob
+        // FIXME: setMetaData() in the KIO API only allows access to outgoing metadata,
+        // but we need to alter the incoming one
+        d->m_incomingMetaData = qobject_cast<KIO::Job*>(job)->metaData();
 
         if ( job->error() )
         {

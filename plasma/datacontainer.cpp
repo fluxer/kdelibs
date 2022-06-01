@@ -140,11 +140,11 @@ DataEngine* DataContainer::getDataEngine()
     DataEngine *de = NULL;
     while (de == NULL)
     {
-        o = dynamic_cast<QObject *> (o->parent());
+        o = qobject_cast<QObject *> (o->parent());
         if (o == NULL) {
             return NULL;
         }
-        de = dynamic_cast<DataEngine *> (o);
+        de = qobject_cast<DataEngine *> (o);
     }
     return de;
 }

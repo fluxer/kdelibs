@@ -1394,7 +1394,7 @@ void ContainmentPrivate::clearDataForMimeJob(KIO::Job *job)
 void ContainmentPrivate::dropJobResult(KJob *job)
 {
 #ifndef PLASMA_NO_KIO
-    KIO::TransferJob* tjob = dynamic_cast<KIO::TransferJob*>(job);
+    KIO::TransferJob* tjob = qobject_cast<KIO::TransferJob*>(job);
     if (!tjob) {
         kDebug() << "job is not a KIO::TransferJob, won't handle the drop...";
         clearDataForMimeJob(tjob);
@@ -1413,7 +1413,7 @@ void ContainmentPrivate::mimeTypeRetrieved(KIO::Job *job, const QString &mimetyp
 {
 #ifndef PLASMA_NO_KIO
     kDebug() << "Mimetype Job returns." << mimetype;
-    KIO::TransferJob* tjob = dynamic_cast<KIO::TransferJob*>(job);
+    KIO::TransferJob* tjob = qobject_cast<KIO::TransferJob*>(job);
     if (!tjob) {
         kDebug() << "job should be a TransferJob, but isn't";
         clearDataForMimeJob(job);

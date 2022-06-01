@@ -175,13 +175,13 @@ int KMultiTabBarButton::id() const
 
 void KMultiTabBarButton::hideEvent( QHideEvent* he) {
 	QPushButton::hideEvent(he);
-	KMultiTabBar *tb=dynamic_cast<KMultiTabBar*>(parentWidget());
+	KMultiTabBar *tb=qobject_cast<KMultiTabBar*>(parentWidget());
 	if (tb) tb->updateSeparator();
 }
 
 void KMultiTabBarButton::showEvent( QShowEvent* he) {
 	QPushButton::showEvent(he);
-	KMultiTabBar *tb=dynamic_cast<KMultiTabBar*>(parentWidget());
+	KMultiTabBar *tb=qobject_cast<KMultiTabBar*>(parentWidget());
 	if (tb) tb->updateSeparator();
 }
 

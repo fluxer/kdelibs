@@ -518,7 +518,7 @@ void KCategorizedView::setModel(QAbstractItemModel *model)
         disconnect(d->proxyModel, SIGNAL(layoutChanged()), this, SLOT(slotLayoutChanged()));
     }
 
-    d->proxyModel = dynamic_cast<KCategorizedSortFilterProxyModel*>(model);
+    d->proxyModel = qobject_cast<KCategorizedSortFilterProxyModel*>(model);
 
     if (d->proxyModel) {
         connect(d->proxyModel, SIGNAL(layoutChanged()), this, SLOT(slotLayoutChanged()));

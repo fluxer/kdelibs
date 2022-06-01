@@ -60,7 +60,7 @@ KComponentData Factory::partComponentDataFromLibrary( const QString &libraryName
     KPluginFactory *factory = loader.factory();
     if ( !factory )
         return KComponentData();
-    KParts::Factory *pfactory = dynamic_cast<KParts::Factory *>( factory );
+    KParts::Factory *pfactory = qobject_cast<KParts::Factory *>( factory );
     if ( !pfactory )
         return KComponentData();
     return pfactory->partComponentData();

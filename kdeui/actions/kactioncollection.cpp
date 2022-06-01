@@ -299,7 +299,7 @@ QAction *KActionCollection::addAction(const QString &name, QAction *action)
     connect(action, SIGNAL(destroyed(QObject*)), SLOT(_k_actionDestroyed(QObject*)));
 
     // only our private class is a friend of KAction
-    if (KAction *kaction = dynamic_cast<KAction *>(action)) {
+    if (KAction *kaction = qobject_cast<KAction *>(action)) {
       d->setComponentForAction(kaction);
     }
 

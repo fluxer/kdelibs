@@ -1404,7 +1404,7 @@ void KFileWidgetPrivate::_k_urlEntered(const KUrl& url)
     urlNavigator->setLocationUrl(url);
 
     // is trigged in ctor before completion object is set
-    KUrlCompletion *completion = dynamic_cast<KUrlCompletion*>(locationEdit->completionObject());
+    KUrlCompletion *completion = qobject_cast<KUrlCompletion*>(locationEdit->completionObject());
     if (completion) {
         completion->setDir( url.path() );
     }
@@ -1882,7 +1882,7 @@ void KFileWidgetPrivate::readRecentFiles()
     combo->setUrl(ops->url());
     // since we delayed this moment, initialize the directory of the completion object to
     // our current directory (that was very probably set on the constructor)
-    KUrlCompletion *completion = dynamic_cast<KUrlCompletion*>(locationEdit->completionObject());
+    KUrlCompletion *completion = qobject_cast<KUrlCompletion*>(locationEdit->completionObject());
     if (completion) {
         completion->setDir(ops->url().url());
     }

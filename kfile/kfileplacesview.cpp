@@ -59,6 +59,7 @@
 
 class KFilePlacesViewDelegate : public QAbstractItemDelegate
 {
+    Q_OBJECT
 public:
     KFilePlacesViewDelegate(KFilePlacesView *parent);
     virtual ~KFilePlacesViewDelegate();
@@ -555,7 +556,7 @@ void KFilePlacesView::keyPressEvent(QKeyEvent *event)
 void KFilePlacesView::contextMenuEvent(QContextMenuEvent *event)
 {
     KFilePlacesModel *placesModel = qobject_cast<KFilePlacesModel*>(model());
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(itemDelegate());
 
     if (placesModel==0) return;
 
@@ -730,7 +731,7 @@ void KFilePlacesView::dragEnterEvent(QDragEnterEvent *event)
     QListView::dragEnterEvent(event);
     d->dragging = true;
 
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(itemDelegate());
     delegate->setShowHoverIndication(false);
 
     d->dropRect = QRect();
@@ -741,7 +742,7 @@ void KFilePlacesView::dragLeaveEvent(QDragLeaveEvent *event)
     QListView::dragLeaveEvent(event);
     d->dragging = false;
 
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(itemDelegate());
     delegate->setShowHoverIndication(true);
 
     setDirtyRegion(d->dropRect);
@@ -792,7 +793,7 @@ void KFilePlacesView::dropEvent(QDropEvent *event)
     QListView::dropEvent(event);
     d->dragging = false;
 
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(itemDelegate());
     delegate->setShowHoverIndication(true);
 }
 
@@ -855,7 +856,7 @@ void KFilePlacesView::rowsInserted(const QModelIndex &parent, int start, int end
     QListView::rowsInserted(parent, start, end);
     setUrl(d->currentUrl);
 
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(itemDelegate());
     KFilePlacesModel *placesModel = qobject_cast<KFilePlacesModel*>(model());
 
     for (int i=start; i<=end; ++i) {
@@ -917,7 +918,7 @@ void KFilePlacesView::Private::setCurrentIndex(const QModelIndex &index)
 
 void KFilePlacesView::Private::adaptItemSize()
 {
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
     if (!delegate) return;
 
     if (!autoResizeItems) {
@@ -1121,14 +1122,14 @@ void KFilePlacesView::Private::_k_adaptItemsUpdate(qreal value)
 
     int size = oldSize+add;
 
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
     delegate->setIconSize(size);
     q->scheduleDelayedItemsLayout();
 }
 
 void KFilePlacesView::Private::_k_itemAppearUpdate(qreal value)
 {
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
 
     delegate->setAppearingItemProgress(value);
     q->scheduleDelayedItemsLayout();
@@ -1136,7 +1137,7 @@ void KFilePlacesView::Private::_k_itemAppearUpdate(qreal value)
 
 void KFilePlacesView::Private::_k_itemDisappearUpdate(qreal value)
 {
-    KFilePlacesViewDelegate *delegate = dynamic_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
+    KFilePlacesViewDelegate *delegate = qobject_cast<KFilePlacesViewDelegate*>(q->itemDelegate());
 
     delegate->setDisappearingItemProgress(value);
 
@@ -1193,5 +1194,6 @@ void KFilePlacesView::dataChanged(const QModelIndex &topLeft, const QModelIndex 
     d->adaptItemSize();
 }
 
+#include "kfileplacesview.moc"
 #include "moc_kfileplacesview.cpp"
 #include "moc_kfileplacesview_p.cpp"

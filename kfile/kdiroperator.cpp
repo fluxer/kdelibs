@@ -2078,7 +2078,7 @@ void KDirOperator::writeConfig(KConfigGroup& configGroup)
     // don't save the preview when an application specific preview is in use.
     bool appSpecificPreview = false;
     if (d->preview) {
-        KImageFilePreview *tmp = dynamic_cast<KImageFilePreview*>(d->preview);
+        KImageFilePreview *tmp = qobject_cast<KImageFilePreview*>(d->preview);
         appSpecificPreview = (tmp == 0);
     }
 

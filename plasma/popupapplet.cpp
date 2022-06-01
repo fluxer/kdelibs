@@ -139,7 +139,7 @@ void PopupApplet::setWidget(QWidget *widget)
 
             QLayout *existingLayout = dialog->layout();
             if (existingLayout) {
-                lay = dynamic_cast<QVBoxLayout *>(existingLayout);
+                lay = qobject_cast<QVBoxLayout *>(existingLayout);
                 if (!lay) {
                     delete existingLayout;
                 }
