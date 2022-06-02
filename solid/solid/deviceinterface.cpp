@@ -99,8 +99,6 @@ QString Solid::DeviceInterface::typeDescription(Type type)
         return QObject::tr("Audio Interface");
     case Video:
         return QObject::tr("Video");
-    case NetworkShare:
-        return QObject::tr("Network Share");
     case Graphic:
         return QObject::tr("Graphic");
     case Last:

@@ -354,8 +354,6 @@ void CopyJobPrivate::slotResultStating( KJob *job )
             } else {
                 kDebug(7007) << "Couldn't determine free space information for" << path;
             }
-            //TODO actually preliminary check is even more valuable for slow NFS/SMB mounts,
-            //but we need to find a way to report connection errors to user
         }
 
         const bool isGlobalDest = m_dest == m_globalDest;

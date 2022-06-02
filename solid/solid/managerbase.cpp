@@ -24,8 +24,6 @@
 
 #include <stdlib.h>
 
-#include "backends/exports/exportsmanager.h"
-
 #if defined(ENABLE_TESTING)
 #include "backends/fakehw/fakemanager.h"
 #endif
@@ -56,8 +54,6 @@ void Solid::ManagerBasePrivate::loadBackends()
         return;
     }
 #endif
-
-    m_backends << new Solid::Backends::Exports::ExportsManager(0);
 
 #if defined(UDEV_FOUND)
     m_backends << new Solid::Backends::UDev::UDevManager(0);

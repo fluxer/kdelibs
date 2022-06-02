@@ -52,24 +52,6 @@
 #include <kconfiggroup.h>
 #include <kfilesystemtype_p.h>
 
-static bool isNFSShare(const QString &dirpath)
-{
-    QFile etabfile(QString::fromLatin1("/var/lib/nfs/etab"));
-    if (!etabfile.open(QFile::ReadOnly)) {
-        return false;
-    }
-    while (!etabfile.atEnd()) {
-        const QList<QByteArray> etabsplitline = etabfile.readLine().split('\t');
-        if (etabsplitline.size() < 1) {
-            continue;
-        }
-        if (etabsplitline.at(0) == dirpath.toLocal8Bit()) {
-            return true;
-        }
-    }
-    return false;
-}
-
 static bool isKDirShare(const QString &dirpath)
 {
     static QDBusInterface kdirshareiface(
@@ -985,8 +967,7 @@ QStringList KFileItem::overlays() const
 
     if( S_ISDIR( d->m_fileMode ) && d->m_bIsLocalUrl)
     {
-        if (isNFSShare( d->m_url.toLocalFile() ) ||
-            isKDirShare( d->m_url.toLocalFile() ))
+        if (isKDirShare( d->m_url.toLocalFile() ))
         {
             //kDebug() << d->m_url.path();
             names.append("network-workgroup");

@@ -56,7 +56,6 @@ set(cmakeFiles
     FindPoppler.cmake
     FindQalculate.cmake
     FindRAW1394.cmake
-    FindSamba.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
     FindSpeechd.cmake

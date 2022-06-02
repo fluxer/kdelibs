@@ -59,7 +59,6 @@ namespace Solid
          * - Camera : A digital camera
          * - PortableMediaPlayer: A portable media player
          * - NetworkInterface: A network interface
-         * - NetworkShare: A network share interface
          * - Graphic: A graphic interface
          */
         enum Type { Unknown = 0, GenericInterface = 1, Processor = 2,
@@ -68,7 +67,7 @@ namespace Solid
                     Camera = 9, PortableMediaPlayer = 10,
                     NetworkInterface = 11, AcAdapter = 12, Battery = 13,
                     Button = 14, AudioInterface = 15, Video = 16,
-                    NetworkShare = 17, Graphic = 18, Last = 0xffff  };
+                    Graphic = 17, Last = 0xffff  };
 
         /**
          * Destroys a DeviceInterface object.

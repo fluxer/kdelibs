@@ -69,7 +69,6 @@ FakeManager::FakeManager(QObject *parent, const QString &xmlFile)
                            << Solid::DeviceInterface::Button
                            << Solid::DeviceInterface::AudioInterface
                            << Solid::DeviceInterface::Video
-                           << Solid::DeviceInterface::NetworkShare
                            << Solid::DeviceInterface::Graphic;
 }
 
@@ -81,7 +80,7 @@ FakeManager::~FakeManager()
 
 QString FakeManager::udiPrefix() const
 {
-    return "/org/kde/solid/fakehw";
+    return QString::fromLatin1("/org/kde/solid/fakehw");
 }
 
 QSet<Solid::DeviceInterface::Type> FakeManager::supportedInterfaces() const

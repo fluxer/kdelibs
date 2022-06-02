@@ -50,8 +50,6 @@
 #include <solid/ifaces/portablemediaplayer.h>
 #include <solid/networkinterface.h>
 #include <solid/ifaces/networkinterface.h>
-#include <solid/networkshare.h>
-#include <solid/ifaces/networkshare.h>
 #include <solid/acadapter.h>
 #include <solid/ifaces/acadapter.h>
 #include <solid/battery.h>
@@ -220,9 +218,6 @@ const Solid::DeviceInterface *Solid::Device::asDeviceInterface(const DeviceInter
                 break;
             case DeviceInterface::Video:
                 iface = deviceinterface_cast(Ifaces::Video, Video, dev_iface);
-                break;
-            case DeviceInterface::NetworkShare:
-                iface = deviceinterface_cast(Ifaces::NetworkShare, NetworkShare, dev_iface);
                 break;
             case DeviceInterface::Graphic:
                 iface = deviceinterface_cast(Ifaces::Graphic, Graphic, dev_iface);

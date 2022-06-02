@@ -31,7 +31,6 @@ set(solid_LIB_SRCS
     camera.cpp
     portablemediaplayer.cpp
     networkinterface.cpp
-    networkshare.cpp
     acadapter.cpp
     battery.cpp
     button.cpp
@@ -56,7 +55,6 @@ set(solid_LIB_SRCS
     ifaces/devicemanager.cpp
     ifaces/genericinterface.cpp
     ifaces/networkinterface.cpp
-    ifaces/networkshare.cpp
     ifaces/opticaldisc.cpp
     ifaces/portablemediaplayer.cpp
     ifaces/processor.cpp
@@ -67,11 +65,6 @@ set(solid_LIB_SRCS
     ifaces/graphic.cpp
 
     backends/shared/rootdevice.cpp
-    backends/exports/exportsdevice.cpp
-    backends/exports/exportsdeviceinterface.cpp
-    backends/exports/exportsmanager.cpp
-    backends/exports/exportsnetworkshare.cpp
-    backends/exports/exportsstorageaccess.cpp
 )
 
 configure_file(
@@ -93,7 +86,6 @@ if(ENABLE_TESTING)
         backends/fakehw/fakedeviceinterface.cpp
         backends/fakehw/fakegenericinterface.cpp
         backends/fakehw/fakemanager.cpp
-        backends/fakehw/fakenetworkshare.cpp
         backends/fakehw/fakenetworkinterface.cpp
         backends/fakehw/fakeopticaldisc.cpp
         backends/fakehw/fakeportablemediaplayer.cpp
@@ -253,8 +245,7 @@ install(
     predicate.h
     powermanagement.h
     networking.h
-    video.h 
-    networkshare.h
+    video.h
     graphic.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/solid
     COMPONENT Devel
