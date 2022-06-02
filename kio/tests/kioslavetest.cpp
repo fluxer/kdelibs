@@ -172,12 +172,15 @@ KioslaveTest::KioslaveTest( QString src, QString dest, uint op, uint pr )
   main_widget->setMinimumSize( main_widget->sizeHint() );
   setCentralWidget( main_widget );
 
-  slave = 0;
-//  slave = KIO::Scheduler::getConnectedSlave(KUrl("ftp://ftp.gnu.org/"));
-  KIO::Scheduler::connect(SIGNAL(slaveConnected(KIO::Slave*)),
-    this, SLOT(slotSlaveConnected()));
-  KIO::Scheduler::connect(SIGNAL(slaveError(KIO::Slave*,int,QString)),
-    this, SLOT(slotSlaveError()));
+  connect(
+    KIO::Scheduler::self(),
+    SIGNAL(slaveConnected(KIO::Slave*)),
+    this, SLOT(slotSlaveConnected())
+  );
+  connect(
+    KIO::Scheduler::self(), SIGNAL(slaveError(KIO::Slave*,int,QString)),
+    this, SLOT(slotSlaveError())
+  );
 }
 
 void KioslaveTest::slotQuit(){
@@ -291,9 +294,8 @@ void KioslaveTest::startJob() {
   }
   if (myJob)
   {
-    if (slave)
-      KIO::Scheduler::assignJobToSlave(slave, myJob);
     job = myJob;
+    KIO::Scheduler::doJob(myJob);
   }
 
   statusBar()->addWidget( statusTracker->widget(job), 0 );
@@ -345,7 +347,6 @@ void KioslaveTest::slotSlaveConnected()
 void KioslaveTest::slotSlaveError()
 {
    kDebug() << "Error connected.";
-   slave = 0;
 }
 
 void KioslaveTest::printUDSEntry( const KIO::UDSEntry & entry )

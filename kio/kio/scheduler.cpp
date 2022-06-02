@@ -254,147 +254,6 @@ QList<Slave *> HostQueue::allSlaves() const
     return ret;
 }
 
-
-
-ConnectedSlaveQueue::ConnectedSlaveQueue()
-{
-    m_startJobsTimer.setSingleShot(true);
-    connect (&m_startJobsTimer, SIGNAL(timeout()), SLOT(startRunnableJobs()));
-}
-
-bool ConnectedSlaveQueue::queueJob(SimpleJob *job, Slave *slave)
-{
-    QHash<Slave *, PerSlaveQueue>::Iterator it = m_connectedSlaves.find(slave);
-    if (it == m_connectedSlaves.end()) {
-        return false;
-    }
-    SimpleJobPrivate::get(job)->m_slave = slave;
-
-    PerSlaveQueue &jobs = it.value();
-    jobs.waitingList.append(job);
-    if (!jobs.runningJob) {
-        // idle slave now has a job to run
-        m_runnableSlaves.insert(slave);
-        m_startJobsTimer.start();
-    }
-    return true;
-}
-
-bool ConnectedSlaveQueue::removeJob(SimpleJob *job)
-{
-    Slave *slave = jobSlave(job);
-    Q_ASSERT(slave);
-    QHash<Slave *, PerSlaveQueue>::Iterator it = m_connectedSlaves.find(slave);
-    if (it == m_connectedSlaves.end()) {
-        return false;
-    }
-    PerSlaveQueue &jobs = it.value();
-    if (jobs.runningJob || jobs.waitingList.isEmpty()) {
-        // a slave that was busy running a job was not runnable.
-        // a slave that has no waiting job(s) was not runnable either.
-        Q_ASSERT(!m_runnableSlaves.contains(slave));
-    }
-
-    const bool removedRunning = jobs.runningJob == job;
-    const bool removedWaiting = jobs.waitingList.removeAll(job) != 0;
-    if (removedRunning) {
-        jobs.runningJob = 0;
-        Q_ASSERT(!removedWaiting);
-    }
-    const bool removedTheJob = removedRunning || removedWaiting;
-
-    if (!slave->isAlive()) {
-        removeSlave(slave);
-        return removedTheJob;
-    }
-
-    if (removedRunning && jobs.waitingList.count()) {
-        m_runnableSlaves.insert(slave);
-        m_startJobsTimer.start();
-    }
-    if (removedWaiting && jobs.waitingList.isEmpty()) {
-        m_runnableSlaves.remove(slave);
-    }
-    return removedTheJob;
-}
-
-void ConnectedSlaveQueue::addSlave(Slave *slave)
-{
-    Q_ASSERT(slave);
-    if (!m_connectedSlaves.contains(slave)) {
-        m_connectedSlaves.insert(slave, PerSlaveQueue());
-    }
-}
-
-bool ConnectedSlaveQueue::removeSlave(Slave *slave)
-{
-    QHash<Slave *, PerSlaveQueue>::Iterator it = m_connectedSlaves.find(slave);
-    if (it == m_connectedSlaves.end()) {
-        return false;
-    }
-    PerSlaveQueue &jobs = it.value();
-    Q_FOREACH (SimpleJob *job, jobs.waitingList) {
-        // ### for compatibility with the old scheduler we don't touch the running job, if any.
-        // make sure that the job doesn't call back into Scheduler::cancelJob(); this would
-        // a) crash and b) be unnecessary because we clean up just fine.
-        SimpleJobPrivate::get(job)->m_schedSerial = 0;
-        job->kill();
-    }
-    m_connectedSlaves.erase(it);
-    m_runnableSlaves.remove(slave);
-
-    slave->kill();
-    return true;
-}
-
-// KDE5: only one caller, for doubtful reasons. remove this if possible.
-bool ConnectedSlaveQueue::isIdle(Slave *slave)
-{
-    QHash<Slave *, PerSlaveQueue>::Iterator it = m_connectedSlaves.find(slave);
-    if (it == m_connectedSlaves.end()) {
-        return false;
-    }
-    return it.value().runningJob == 0;
-}
-
-
-//private slot
-void ConnectedSlaveQueue::startRunnableJobs()
-{
-    QSet<Slave *>::Iterator it = m_runnableSlaves.begin();
-    while (it != m_runnableSlaves.end()) {
-        Slave *slave = *it;
-        if (!slave->isConnected()) {
-            // this polling is somewhat inefficient...
-            m_startJobsTimer.start();
-            ++it;
-            continue;
-        }
-        it = m_runnableSlaves.erase(it);
-        PerSlaveQueue &jobs = m_connectedSlaves[slave];
-        SimpleJob *job = jobs.waitingList.takeFirst();
-        Q_ASSERT(!jobs.runningJob);
-        jobs.runningJob = job;
-
-        const KUrl url = job->url();
-        // no port is -1 in QUrl, but in kde3 we used 0 and the kioslaves assume that.
-        const int port = url.port() == -1 ? 0 : url.port();
-
-        if (slave->host() == "<reset>") {
-            MetaData configData = SlaveConfig::self()->configData(url.protocol(), url.host());
-            slave->setConfig(configData);
-            slave->setProtocol(url.protocol());
-            slave->setHost(url.host(), port, url.user(), url.pass());
-        }
-
-        Q_ASSERT(slave->protocol() == url.protocol());
-        Q_ASSERT(slave->host() == url.host());
-        Q_ASSERT(slave->port() == port);
-        startJob(job, slave);
-    }
-}
-
-
 static void ensureNoDuplicates(QMap<int, HostQueue *> *queuesBySerial)
 {
     Q_UNUSED(queuesBySerial);
@@ -561,9 +420,7 @@ void ProtoQueue::removeJob(SimpleJob *job)
         // should be a connected slave
         // if the assertion fails the job has probably changed the host part of its URL while
         // running, so we can't find it by hostname. don't do this.
-        const bool removed = m_connectedSlaveQueue.removeJob(job);
-        Q_UNUSED(removed);
-        Q_ASSERT(removed);
+        Q_ASSERT(false);
     }
 
     ensureNoDuplicates(&m_queuesBySerial);
@@ -590,10 +447,9 @@ Slave *ProtoQueue::createSlave(const QString &protocol, SimpleJob *job, const KU
 
 bool ProtoQueue::removeSlave (KIO::Slave *slave)
 {
-    const bool removedConnected = m_connectedSlaveQueue.removeSlave(slave);
     const bool removedUnconnected = m_slaveKeeper.removeSlave(slave);
-    Q_ASSERT(!(removedConnected && removedUnconnected));
-    return removedConnected || removedUnconnected;
+    Q_ASSERT(!removedUnconnected);
+    return removedUnconnected;
 }
 
 QList<Slave *> ProtoQueue::allSlaves() const
@@ -602,7 +458,6 @@ QList<Slave *> ProtoQueue::allSlaves() const
     Q_FOREACH (const HostQueue &hq, m_queuesByHostname) {
         ret.append(hq.allSlaves());
     }
-    ret.append(m_connectedSlaveQueue.allSlaves());
     return ret;
 }
 
@@ -728,9 +583,6 @@ public:
     void jobFinished(KIO::SimpleJob *job, KIO::Slave *slave);
     void putSlaveOnHold(KIO::SimpleJob *job, const KUrl &url);
     void removeSlaveOnHold();
-    Slave *getConnectedSlave(const KUrl &url, const KIO::MetaData &metaData);
-    bool assignJobToSlave(KIO::Slave *slave, KIO::SimpleJob *job);
-    bool disconnectSlave(KIO::Slave *slave);
     void checkSlaveOnHold(bool b);
     void publishSlaveOnHold();
     Slave *heldSlaveForJob(KIO::SimpleJob *job);
@@ -869,22 +721,6 @@ bool Scheduler::isSlaveOnHoldFor(const KUrl& url)
 void Scheduler::updateInternalMetaData(SimpleJob* job)
 {
     schedulerPrivate->updateInternalMetaData(job);
-}
-
-KIO::Slave *Scheduler::getConnectedSlave(const KUrl &url,
-        const KIO::MetaData &config )
-{
-    return schedulerPrivate->getConnectedSlave(url, config);
-}
-
-bool Scheduler::assignJobToSlave(KIO::Slave *slave, KIO::SimpleJob *job)
-{
-    return schedulerPrivate->assignJobToSlave(slave, job);
-}
-
-bool Scheduler::disconnectSlave(KIO::Slave *slave)
-{
-    return schedulerPrivate->disconnectSlave(slave);
 }
 
 void Scheduler::registerWindow(QWidget *wid)
@@ -1230,28 +1066,6 @@ void SchedulerPrivate::removeSlaveOnHold()
     m_urlOnHold.clear();
 }
 
-Slave *SchedulerPrivate::getConnectedSlave(const KUrl &url, const KIO::MetaData &config)
-{
-    QStringList proxyList;
-    const QString protocol = KProtocolManager::slaveProtocol(url, proxyList);
-    ProtoQueue *pq = protoQ(protocol, url.host());
-
-    Slave *slave = pq->createSlave(protocol, /* job */0, url);
-    if (slave) {
-        setupSlave(slave, url, protocol, proxyList, true, &config);
-        pq->m_connectedSlaveQueue.addSlave(slave);
-
-        slave->send( CMD_CONNECT );
-        q->connect(slave, SIGNAL(connected()),
-                   SLOT(slotSlaveConnected()));
-        q->connect(slave, SIGNAL(error(int,QString)),
-                   SLOT(slotSlaveError(int,QString)));
-    }
-    kDebug(7006) << url << slave;
-    return slave;
-}
-
-
 void SchedulerPrivate::slotSlaveConnected()
 {
     kDebug(7006);
@@ -1266,30 +1080,11 @@ void SchedulerPrivate::slotSlaveError(int errorNr, const QString &errorMsg)
     Slave *slave = static_cast<Slave *>(q->sender());
     kDebug(7006) << slave << errorNr << errorMsg;
     ProtoQueue *pq = protoQ(slave->protocol(), slave->host());
-    if (!slave->isConnected() || pq->m_connectedSlaveQueue.isIdle(slave)) {
+    if (!slave->isConnected()) {
         // Only forward to application if slave is idle or still connecting.
         // ### KDE5: can we remove this apparently arbitrary behavior and just always emit SlaveError?
         emit q->slaveError(slave, errorNr, errorMsg);
     }
-}
-
-bool SchedulerPrivate::assignJobToSlave(KIO::Slave *slave, SimpleJob *job)
-{
-    kDebug(7006) << slave << job;
-    // KDE5: queueing of jobs can probably be removed, it provides very little benefit
-    ProtoQueue *pq = m_protocols.value(slave->protocol());
-    if (pq) {
-        pq->removeJob(job);
-        return pq->m_connectedSlaveQueue.queueJob(job, slave);
-    }
-    return false;
-}
-
-bool SchedulerPrivate::disconnectSlave(KIO::Slave *slave)
-{
-    kDebug(7006) << slave;
-    ProtoQueue *pq = m_protocols.value(slave->protocol());
-    return (pq ? pq->m_connectedSlaveQueue.removeSlave(slave) : false);
 }
 
 void SchedulerPrivate::checkSlaveOnHold(bool b)

@@ -36,8 +36,6 @@ public:
     if ( job ) {
         job->kill( KJob::Quietly );  // kill the job quietly
     }
-    if (slave)
-        KIO::Scheduler::disconnectSlave(slave);
   }
 
   enum Operations { List = 0, ListRecursive, Stat, Get, Put, Copy, Move, Delete, Mkdir, Mimetype };
@@ -105,7 +103,6 @@ private:
   int selectedOperation;
   int progressMode;
   int putBuffer;
-  KIO::Slave *slave;
 };
 
 #endif // KIOSLAVETEST_H

@@ -78,28 +78,11 @@ namespace KIO {
      *
      * Example:
      * \code
-     *    Slave *slave = KIO::Scheduler::getConnectedSlave(
-     *            KUrl("pop3://bastian:password@mail.kde.org"));
      *    TransferJob *job1 = KIO::get(
      *            KUrl("pop3://bastian:password@mail.kde.org/msg1"));
-     *    KIO::Scheduler::assignJobToSlave(slave, job1);
-     *    TransferJob *job2 = KIO::get(
-     *            KUrl("pop3://bastian:password@mail.kde.org/msg2"));
-     *    KIO::Scheduler::assignJobToSlave(slave, job2);
-     *    TransferJob *job3 = KIO::get(
-     *            KUrl("pop3://bastian:password@mail.kde.org/msg3"));
-     *    KIO::Scheduler::assignJobToSlave(slave, job3);
+     *    KIO::Scheduler::doJob(job1);
      *
      *    // ... Wait for jobs to finish...
-     *
-     *    KIO::Scheduler::disconnectSlave(slave);
-     * \endcode
-     *
-     * Note that you need to explicitly disconnect the slave when the
-     * connection goes down, so your error handler should contain:
-     * \code
-     *    if (error == KIO::ERR_CONNECTION_BROKEN)
-     *        KIO::Scheduler::disconnectSlave(slave);
      * \endcode
      *
      * @see KIO::Slave
@@ -117,7 +100,7 @@ namespace KIO {
          * is available. This can be changed by calling setJobPriority.
          * @param job the job to register
          */
-        static void doJob(SimpleJob *job);
+        static void doJob(KIO::SimpleJob *job);
 
         /**
          * Changes the priority of @p job; jobs of the same priority run in the order in which
@@ -127,13 +110,13 @@ namespace KIO {
          * @param job the job to change
          * @param priority new priority of @p job, lower runs earlier
          */
-        static void setJobPriority(SimpleJob *job, int priority);
+        static void setJobPriority(KIO::SimpleJob *job, int priority);
 
         /**
          * Stop the execution of a job.
          * @param job the job to cancel
          */
-        static void cancelJob(SimpleJob *job);
+        static void cancelJob(KIO::SimpleJob *job);
 
         /**
          * Called when a job is done.
@@ -167,52 +150,6 @@ namespace KIO {
          * that was started.
          */
         static void publishSlaveOnHold();
-
-        /**
-         * Requests a slave for use in connection-oriented mode.
-         *
-         * @param url This defines the username,password,host & port to
-         *            connect with.
-         * @param config Configuration data for the slave.
-         *
-         * @return A pointer to a connected slave or 0 if an error occurred.
-         * @see assignJobToSlave()
-         * @see disconnectSlave()
-         */
-        static KIO::Slave *getConnectedSlave(const KUrl &url,
-                const KIO::MetaData &config = MetaData() );
-
-        /**
-         * Uses @p slave to do @p job.
-         * This function should be called immediately after creating a Job.
-         *
-         * @param slave The slave to use. The slave must have been obtained
-         *              with a call to getConnectedSlave and must not
-         *              be currently assigned to any other job.
-         * @param job The job to do.
-         *
-         * @return true is successful, false otherwise.
-         *
-         * @see getConnectedSlave()
-         * @see disconnectSlave()
-         * @see slaveConnected()
-         * @see slaveError()
-         */
-        static bool assignJobToSlave(KIO::Slave *slave, KIO::SimpleJob *job);
-
-        /**
-         * Disconnects @p slave.
-         *
-         * @param slave The slave to disconnect. The slave must have been
-         *              obtained with a call to getConnectedSlave
-         *              and must not be assigned to any job.
-         *
-         * @return true is successful, false otherwise.
-         *
-         * @see getConnectedSlave
-         * @see assignJobToSlave
-         */
-        static bool disconnectSlave(KIO::Slave *slave);
 
         /**
          * Register the mainwindow @p wid with the KIO subsystem
@@ -251,6 +188,8 @@ namespace KIO {
          */
         static void updateInternalMetaData(SimpleJob* job);
 
+        static Scheduler *self();
+
     Q_SIGNALS:
         void slaveConnected(KIO::Slave *slave);
         void slaveError(KIO::Slave *slave, int error, const QString &errorMsg);
@@ -263,8 +202,6 @@ namespace KIO {
         Q_DISABLE_COPY(Scheduler)
         Scheduler();
         ~Scheduler();
-
-        static Scheduler *self();
 
         Q_PRIVATE_SLOT(d_func(), void slotSlaveDied(KIO::Slave *slave))
         Q_PRIVATE_SLOT(d_func(), void slotSlaveStatus(pid_t pid, const QByteArray &protocol,
