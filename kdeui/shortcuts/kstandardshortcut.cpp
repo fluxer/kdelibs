@@ -81,16 +81,16 @@ struct KStandardShortcutInfo
 // Read the comments of the big enum in kstandardshortcut.h before you change anything!
 static KStandardShortcutInfo g_infoStandardShortcut[] =
 {
-//Group File,
+    // Group File,
     {AccelNone, 0      , 0                   , 0       , 0      , 0           , KShortcut(), false },
-    { Open    , "Open" , I18N_NOOP2("@action", "Open") , CTRL(O), 0           , KShortcut(), false }    ,
-    { New     , "New"  , I18N_NOOP2("@action", "New")  , CTRL(N), 0           , KShortcut(), false }    ,
-    { Close   , "Close", I18N_NOOP2("@action", "Close"), CTRL(W), CTRL(Escape), KShortcut(), false }    ,
-    { Save    , "Save" , I18N_NOOP2("@action", "Save") , CTRL(S), 0           , KShortcut(), false }    ,
-    { Print   , "Print", I18N_NOOP2("@action", "Print"), CTRL(P), 0           , KShortcut(), false }    ,
-    { Quit    , "Quit" , I18N_NOOP2("@action", "Quit") , CTRL(Q), 0           , KShortcut(), false }    ,
+    { Open    , "Open" , I18N_NOOP2("@action", "Open") , CTRL(O), 0           , KShortcut(), false },
+    { New     , "New"  , I18N_NOOP2("@action", "New")  , CTRL(N), 0           , KShortcut(), false },
+    { Close   , "Close", I18N_NOOP2("@action", "Close"), CTRL(W), CTRL(Escape), KShortcut(), false },
+    { Save    , "Save" , I18N_NOOP2("@action", "Save") , CTRL(S), 0           , KShortcut(), false },
+    { Print   , "Print", I18N_NOOP2("@action", "Print"), CTRL(P), 0           , KShortcut(), false },
+    { Quit    , "Quit" , I18N_NOOP2("@action", "Quit") , CTRL(Q), 0           , KShortcut(), false },
 
-//Group Edit
+    // Group Edit
     { Undo             , "Undo"             , I18N_NOOP2("@action", "Undo")                 , CTRL(Z)          , 0            , KShortcut(), false },
     { Redo             , "Redo"             , I18N_NOOP2("@action", "Redo")                 , CTRLSHIFT(Z)     , 0            , KShortcut(), false },
     { Cut              , "Cut"              , I18N_NOOP2("@action", "Cut")                  , CTRL(X)          , SHIFT(Delete), KShortcut(), false },
@@ -108,17 +108,17 @@ static KStandardShortcutInfo g_infoStandardShortcut[] =
     { FindPrev         , "FindPrev"         , I18N_NOOP2("@action", "Find Prev")            , SHIFT(F3)        , 0            , KShortcut(), false },
     { Replace          , "Replace"          , I18N_NOOP2("@action", "Replace")              , CTRL(R)          , 0            , KShortcut(), false },
 
-//Group Navigation
-    { Home           , "Home"                 , I18N_NOOP2("@action Go to main page"      , "Home")                 , ALT(Home)       , 0            , KShortcut(), false },
+    // Group Navigation
+    { Home           , "Home"                 , I18N_NOOP2("@action Go to main page"      , "Home")                 , ALT(Home)       , 0                 , KShortcut(), false },
     { Begin          , "Begin"                , I18N_NOOP2("@action Beginning of document", "Begin")                , CTRL(Home)      , 0                 , KShortcut(), false },
     { End            , "End"                  , I18N_NOOP2("@action End of document"      , "End")                  , CTRL(End)       , 0                 , KShortcut(), false },
     { Prior          , "Prior"                , I18N_NOOP2("@action"                      , "Prior")                , Qt::Key_PageUp  , 0                 , KShortcut(), false },
     { Next           , "Next"                 , I18N_NOOP2("@action Opposite to Prior"    , "Next")                 , Qt::Key_PageDown, 0                 , KShortcut(), false },
 
     { Up             , "Up"                   , I18N_NOOP2("@action"                      , "Up")                   , ALT(Up)         , 0                 , KShortcut(), false },
-    { Back           , "Back"                 , I18N_NOOP2("@action"                      , "Back")                 , ALT(Left)       , 0      , KShortcut(), false },
-    { Forward        , "Forward"              , I18N_NOOP2("@action"                      , "Forward")              , ALT(Right)      , 0   , KShortcut(), false },
-    { Reload         , "Reload"               , I18N_NOOP2("@action"                      , "Reload")               , Qt::Key_F5      , 0            , KShortcut(), false },
+    { Back           , "Back"                 , I18N_NOOP2("@action"                      , "Back")                 , ALT(Left)       , 0                 , KShortcut(), false },
+    { Forward        , "Forward"              , I18N_NOOP2("@action"                      , "Forward")              , ALT(Right)      , 0                 , KShortcut(), false },
+    { Reload         , "Reload"               , I18N_NOOP2("@action"                      , "Reload")               , Qt::Key_F5      , 0                 , KShortcut(), false },
 
     { BeginningOfLine, "BeginningOfLine"      , I18N_NOOP2("@action"                      , "Beginning of Line")    , Qt::Key_Home    , 0                 , KShortcut(), false },
     { EndOfLine      , "EndOfLine"            , I18N_NOOP2("@action"                      , "End of Line")          , Qt::Key_End     , 0                 , KShortcut(), false },
@@ -135,51 +135,51 @@ static KStandardShortcutInfo g_infoStandardShortcut[] =
     { TabNext        , "Activate Next Tab"    , I18N_NOOP2("@action"                      , "Activate Next Tab")    , CTRL(Period)    , CTRL(BracketRight), KShortcut(), false },
     { TabPrev        , "Activate Previous Tab", I18N_NOOP2("@action"                      , "Activate Previous Tab"), CTRL(Comma)     , CTRL(BracketLeft) , KShortcut(), false },
 
-    //Group Help
+    // Group Help
     { Help           , "Help"                 , I18N_NOOP2("@action"                      , "Help")                 , Qt::Key_F1      , 0                 , KShortcut(), false },
     { WhatsThis      , "WhatsThis"            , I18N_NOOP2("@action"                      , "What's This")          , SHIFT(F1)       , 0                 , KShortcut(), false },
 
-//Group TextCompletion
-    { TextCompletion           , "TextCompletion"           , I18N_NOOP2("@action", "Text Completion")          , CTRL(E)     , 0, KShortcut(), false },
-    { PrevCompletion           , "PrevCompletion"           , I18N_NOOP2("@action", "Previous Completion Match"), CTRL(Up)    , 0, KShortcut(), false },
-    { NextCompletion           , "NextCompletion"           , I18N_NOOP2("@action", "Next Completion Match")    , CTRL(Down)  , 0, KShortcut(), false },
-    { SubstringCompletion      , "SubstringCompletion"      , I18N_NOOP2("@action", "Substring Completion")     , CTRL(T)     , 0, KShortcut(), false },
+    // Group TextCompletion
+    { TextCompletion           , "TextCompletion"           , I18N_NOOP2("@action", "Text Completion")            , CTRL(E)        , 0, KShortcut(), false },
+    { PrevCompletion           , "PrevCompletion"           , I18N_NOOP2("@action", "Previous Completion Match")  , CTRL(Up)       , 0, KShortcut(), false },
+    { NextCompletion           , "NextCompletion"           , I18N_NOOP2("@action", "Next Completion Match")      , CTRL(Down)     , 0, KShortcut(), false },
+    { SubstringCompletion      , "SubstringCompletion"      , I18N_NOOP2("@action", "Substring Completion")       , CTRL(T)        , 0, KShortcut(), false },
 
-    { RotateUp                 , "RotateUp"                 , I18N_NOOP2("@action", "Previous Item in List")    , Qt::Key_Up  , 0, KShortcut(), false },
-    { RotateDown               , "RotateDown"               , I18N_NOOP2("@action", "Next Item in List")        , Qt::Key_Down, 0, KShortcut(), false },
+    { RotateUp                 , "RotateUp"                 , I18N_NOOP2("@action", "Previous Item in List")      , Qt::Key_Up     , 0, KShortcut(), false },
+    { RotateDown               , "RotateDown"               , I18N_NOOP2("@action", "Next Item in List")          , Qt::Key_Down   , 0, KShortcut(), false },
 
-    { OpenRecent               , "OpenRecent"               , I18N_NOOP2("@action", "Open Recent")               , 0           , 0, KShortcut(), false },
-    { SaveAs                   , "SaveAs"                   , I18N_NOOP2("@action", "Save As")                   , CTRLSHIFT(S) , 0, KShortcut(), false },
-    { Revert                   , "Revert"                   , I18N_NOOP2("@action", "Revert")                   , 0           , 0, KShortcut(), false },
-    { PrintPreview             , "PrintPreview"             , I18N_NOOP2("@action", "Print Preview")             , 0           , 0, KShortcut(), false },
-    { Mail                     , "Mail"                     , I18N_NOOP2("@action", "Mail")                     , 0           , 0, KShortcut(), false },
-    { Clear                    , "Clear"                    , I18N_NOOP2("@action", "Clear")                    , 0           , 0, KShortcut(), false },
-    { ActualSize               , "ActualSize"               , I18N_NOOP2("@action", "Actual Size")               , 0           , 0, KShortcut(), false },
-    { FitToPage                , "FitToPage"                , I18N_NOOP2("@action", "Fit To Page")                , 0           , 0, KShortcut(), false },
-    { FitToWidth               , "FitToWidth"               , I18N_NOOP2("@action", "Fit To Width")               , 0           , 0, KShortcut(), false },
-    { FitToHeight              , "FitToHeight"              , I18N_NOOP2("@action", "Fit To Height")              , 0           , 0, KShortcut(), false },
-    { Zoom                     , "Zoom"                     , I18N_NOOP2("@action", "Zoom")                     , 0           , 0, KShortcut(), false },
-    { Goto                     , "Goto"                     , I18N_NOOP2("@action", "Goto")                     , 0           , 0, KShortcut(), false },
-    { GotoPage                 , "GotoPage"                 , I18N_NOOP2("@action", "Goto Page")                 , 0           , 0, KShortcut(), false },
-    { DocumentBack             , "DocumentBack"             , I18N_NOOP2("@action", "Document Back")             , ALTSHIFT(Left), 0, KShortcut(), false },
-    { DocumentForward          , "DocumentForward"          , I18N_NOOP2("@action", "Document Forward")          , ALTSHIFT(Right), 0, KShortcut(), false },
-    { EditBookmarks            , "EditBookmarks"            , I18N_NOOP2("@action", "Edit Bookmarks")            , 0           , 0, KShortcut(), false },
-    { Spelling                 , "Spelling"                 , I18N_NOOP2("@action", "Spelling")                 , 0           , 0, KShortcut(), false },
-    { ShowToolbar              , "ShowToolbar"              , I18N_NOOP2("@action", "Show Toolbar")              , 0           , 0, KShortcut(), false },
-    { ShowStatusbar            , "ShowStatusbar"            , I18N_NOOP2("@action", "Show Statusbar")            , 0           , 0, KShortcut(), false },
-    { SaveOptions              , "SaveOptions"              , I18N_NOOP2("@action", "Save Options")              , 0           , 0, KShortcut(), false },
-    { KeyBindings              , "KeyBindings"              , I18N_NOOP2("@action", "Key Bindings")              , 0           , 0, KShortcut(), false },
-    { Preferences              , "Preferences"              , I18N_NOOP2("@action", "Preferences")              , 0           , 0, KShortcut(), false },
-    { ConfigureToolbars        , "ConfigureToolbars"        , I18N_NOOP2("@action", "Configure Toolbars")        , 0           , 0, KShortcut(), false },
-    { ConfigureNotifications   , "ConfigureNotifications"   , I18N_NOOP2("@action", "Configure Notifications")   , 0           , 0, KShortcut(), false },
-    { TipofDay                 , "TipofDay"                 , I18N_NOOP2("@action", "Tip Of Day")                 , 0           , 0, KShortcut(), false },
-    { ReportBug                , "ReportBug"                , I18N_NOOP2("@action", "Report Bug")                , 0           , 0, KShortcut(), false },
-    { SwitchApplicationLanguage, "SwitchApplicationLanguage", I18N_NOOP2("@action", "Switch Application Language"), 0           , 0, KShortcut(), false },
-    { AboutApp                 , "AboutApp"                 , I18N_NOOP2("@action", "About Application")                 , 0           , 0, KShortcut(), false },
-    { AboutKDE                 , "AboutKatana"                 , I18N_NOOP2("@action", "About Katana")                 , 0           , 0, KShortcut(), false },
+    { OpenRecent               , "OpenRecent"               , I18N_NOOP2("@action", "Open Recent")                , 0              , 0, KShortcut(), false },
+    { SaveAs                   , "SaveAs"                   , I18N_NOOP2("@action", "Save As")                    , CTRLSHIFT(S)   , 0, KShortcut(), false },
+    { Revert                   , "Revert"                   , I18N_NOOP2("@action", "Revert")                     , 0              , 0, KShortcut(), false },
+    { PrintPreview             , "PrintPreview"             , I18N_NOOP2("@action", "Print Preview")              , 0              , 0, KShortcut(), false },
+    { Mail                     , "Mail"                     , I18N_NOOP2("@action", "Mail")                       , 0              , 0, KShortcut(), false },
+    { Clear                    , "Clear"                    , I18N_NOOP2("@action", "Clear")                      , 0              , 0, KShortcut(), false },
+    { ActualSize               , "ActualSize"               , I18N_NOOP2("@action", "Actual Size")                , 0              , 0, KShortcut(), false },
+    { FitToPage                , "FitToPage"                , I18N_NOOP2("@action", "Fit To Page")                , 0              , 0, KShortcut(), false },
+    { FitToWidth               , "FitToWidth"               , I18N_NOOP2("@action", "Fit To Width")               , 0              , 0, KShortcut(), false },
+    { FitToHeight              , "FitToHeight"              , I18N_NOOP2("@action", "Fit To Height")              , 0              , 0, KShortcut(), false },
+    { Zoom                     , "Zoom"                     , I18N_NOOP2("@action", "Zoom")                       , 0              , 0, KShortcut(), false },
+    { Goto                     , "Goto"                     , I18N_NOOP2("@action", "Goto")                       , 0              , 0, KShortcut(), false },
+    { GotoPage                 , "GotoPage"                 , I18N_NOOP2("@action", "Goto Page")                  , 0              , 0, KShortcut(), false },
+    { DocumentBack             , "DocumentBack"             , I18N_NOOP2("@action", "Document Back")              , ALTSHIFT(Left) , 0, KShortcut(), false },
+    { DocumentForward          , "DocumentForward"          , I18N_NOOP2("@action", "Document Forward")           , ALTSHIFT(Right), 0, KShortcut(), false },
+    { EditBookmarks            , "EditBookmarks"            , I18N_NOOP2("@action", "Edit Bookmarks")             , 0              , 0, KShortcut(), false },
+    { Spelling                 , "Spelling"                 , I18N_NOOP2("@action", "Spelling")                   , 0              , 0, KShortcut(), false },
+    { ShowToolbar              , "ShowToolbar"              , I18N_NOOP2("@action", "Show Toolbar")               , 0              , 0, KShortcut(), false },
+    { ShowStatusbar            , "ShowStatusbar"            , I18N_NOOP2("@action", "Show Statusbar")             , 0              , 0, KShortcut(), false },
+    { SaveOptions              , "SaveOptions"              , I18N_NOOP2("@action", "Save Options")               , 0              , 0, KShortcut(), false },
+    { KeyBindings              , "KeyBindings"              , I18N_NOOP2("@action", "Key Bindings")               , 0              , 0, KShortcut(), false },
+    { Preferences              , "Preferences"              , I18N_NOOP2("@action", "Preferences")                , 0              , 0, KShortcut(), false },
+    { ConfigureToolbars        , "ConfigureToolbars"        , I18N_NOOP2("@action", "Configure Toolbars")         , 0              , 0, KShortcut(), false },
+    { ConfigureNotifications   , "ConfigureNotifications"   , I18N_NOOP2("@action", "Configure Notifications")    , 0              , 0, KShortcut(), false },
+    { TipofDay                 , "TipofDay"                 , I18N_NOOP2("@action", "Tip Of Day")                 , 0              , 0, KShortcut(), false },
+    { ReportBug                , "ReportBug"                , I18N_NOOP2("@action", "Report Bug")                 , 0              , 0, KShortcut(), false },
+    { SwitchApplicationLanguage, "SwitchApplicationLanguage", I18N_NOOP2("@action", "Switch Application Language"), 0              , 0, KShortcut(), false },
+    { AboutApp                 , "AboutApp"                 , I18N_NOOP2("@action", "About Application")          , 0              , 0, KShortcut(), false },
+    { AboutKDE                 , "AboutKatana"              , I18N_NOOP2("@action", "About Katana")               , 0              , 0, KShortcut(), false },
 
-    //dummy entry to catch simple off-by-one errors. Insert new entries before this line.
-    { AccelNone                , 0                          , 0                   , 0                           , 0, 0, KShortcut(), false }
+    // Dummy entry to catch simple off-by-one errors. Insert new entries before this line.
+    { AccelNone                , 0                          , 0                   , 0                             , 0              , 0, KShortcut(), false }
 };
 
 
