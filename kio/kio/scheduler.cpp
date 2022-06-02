@@ -897,30 +897,6 @@ void Scheduler::unregisterWindow(QObject *wid)
     schedulerPrivate->slotUnregisterWindow(wid);
 }
 
-bool Scheduler::connect( const char *signal, const QObject *receiver,
-                         const char *member)
-{
-    return QObject::connect(self(), signal, receiver, member);
-}
-
-bool Scheduler::connect( const QObject* sender, const char* signal,
-                         const QObject* receiver, const char* member )
-{
-    return QObject::connect(sender, signal, receiver, member);
-}
-
-bool Scheduler::disconnect( const QObject* sender, const char* signal,
-                            const QObject* receiver, const char* member )
-{
-    return QObject::disconnect(sender, signal, receiver, member);
-}
-
-bool Scheduler::connect( const QObject *sender, const char *signal,
-                         const char *member )
-{
-    return QObject::connect(sender, signal, member);
-}
-
 void Scheduler::checkSlaveOnHold(bool b)
 {
     schedulerPrivate->checkSlaveOnHold(b);

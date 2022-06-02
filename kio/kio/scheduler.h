@@ -229,25 +229,6 @@ namespace KIO {
         static void unregisterWindow(QObject *wid);
 
         /**
-         * Function to connect signals emitted by the scheduler.
-         *
-         * @see slaveConnected()
-         * @see slaveError()
-         */
-        // KDE5: those methods should probably be removed, ugly and only marginally useful
-        static bool connect( const char *signal, const QObject *receiver,
-                             const char *member);
-
-        static bool connect( const QObject* sender, const char* signal,
-                             const QObject* receiver, const char* member );
-
-        static bool disconnect( const QObject* sender, const char* signal,
-                                const QObject* receiver, const char* member );
-
-        bool connect( const QObject *sender, const char *signal,
-                      const char *member );
-
-        /**
          * When true, the next job will check whether KLauncher has a slave
          * on hold that is suitable for the job.
          * @param b true when KLauncher has a job on hold
