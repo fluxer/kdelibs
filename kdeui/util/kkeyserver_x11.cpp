@@ -168,8 +168,6 @@ static const TransKey g_rgQtToSymX[] =
     { Qt::Key_Hyper_L,    XK_Hyper_L },
     { Qt::Key_Hyper_R,    XK_Hyper_R },
     { Qt::Key_Help,       XK_Help },
-    //{ Qt::Key_Direction_L, XK_Direction_L }, These keys don't exist in X11
-    //{ Qt::Key_Direction_R, XK_Direction_R },
 
     { '/',                XK_KP_Divide },
     { '*',                XK_KP_Multiply },
@@ -575,9 +573,9 @@ bool keyQtToSymX( int keyQt, int* keySym )
     }
 
     *keySym = 0;
-    if( symQt != Qt::Key_Shift && symQt != Qt::Key_Control && symQt != Qt::Key_Alt &&
-        symQt != Qt::Key_Meta && symQt != Qt::Key_Direction_L && symQt != Qt::Key_Direction_R )
+    if( symQt != Qt::Key_Shift && symQt != Qt::Key_Control && symQt != Qt::Key_Alt && symQt != Qt::Key_Meta) {
         kDebug(125) << "Sym::initQt( " << QString::number(keyQt,16) << " ): failed to convert key.";
+    }
     return false;
 }
 
