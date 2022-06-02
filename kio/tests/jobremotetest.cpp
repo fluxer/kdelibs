@@ -42,7 +42,6 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <kprotocolinfo.h>
-#include <kio/scheduler.h>
 #include <kio/directorysizejob.h>
 #include <kio/copyjob.h>
 #include <kio/deletejob.h>
