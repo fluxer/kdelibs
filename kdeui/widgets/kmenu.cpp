@@ -236,7 +236,7 @@ void KMenu::keyPressEvent(QKeyEvent* e)
     if (key == Qt::Key_Escape || key == Qt::Key_Return || key == Qt::Key_Enter
             || key == Qt::Key_Up || key == Qt::Key_Down || key == Qt::Key_Left
             || key == Qt::Key_Right || key == Qt::Key_F1 || key == Qt::Key_PageUp
-            || key == Qt::Key_PageDown || key == Qt::Key_Back || key == Qt::Key_Select) {
+            || key == Qt::Key_PageDown || key == Qt::Key_Select) {
 
         d->resetKeyboardVars();
         // continue event processing by QMenu

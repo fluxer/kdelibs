@@ -109,16 +109,16 @@ static KStandardShortcutInfo g_infoStandardShortcut[] =
     { Replace          , "Replace"          , I18N_NOOP2("@action", "Replace")              , CTRL(R)          , 0            , KShortcut(), false },
 
 //Group Navigation
-    { Home           , "Home"                 , I18N_NOOP2("@action Go to main page"      , "Home")                 , ALT(Home)       , Qt::Key_HomePage  , KShortcut(), false },
+    { Home           , "Home"                 , I18N_NOOP2("@action Go to main page"      , "Home")                 , ALT(Home)       , 0            , KShortcut(), false },
     { Begin          , "Begin"                , I18N_NOOP2("@action Beginning of document", "Begin")                , CTRL(Home)      , 0                 , KShortcut(), false },
     { End            , "End"                  , I18N_NOOP2("@action End of document"      , "End")                  , CTRL(End)       , 0                 , KShortcut(), false },
     { Prior          , "Prior"                , I18N_NOOP2("@action"                      , "Prior")                , Qt::Key_PageUp  , 0                 , KShortcut(), false },
     { Next           , "Next"                 , I18N_NOOP2("@action Opposite to Prior"    , "Next")                 , Qt::Key_PageDown, 0                 , KShortcut(), false },
 
     { Up             , "Up"                   , I18N_NOOP2("@action"                      , "Up")                   , ALT(Up)         , 0                 , KShortcut(), false },
-    { Back           , "Back"                 , I18N_NOOP2("@action"                      , "Back")                 , ALT(Left)       , Qt::Key_Back      , KShortcut(), false },
-    { Forward        , "Forward"              , I18N_NOOP2("@action"                      , "Forward")              , ALT(Right)      , Qt::Key_Forward   , KShortcut(), false },
-    { Reload         , "Reload"               , I18N_NOOP2("@action"                      , "Reload")               , Qt::Key_F5      , Qt::Key_Refresh   , KShortcut(), false },
+    { Back           , "Back"                 , I18N_NOOP2("@action"                      , "Back")                 , ALT(Left)       , 0      , KShortcut(), false },
+    { Forward        , "Forward"              , I18N_NOOP2("@action"                      , "Forward")              , ALT(Right)      , 0   , KShortcut(), false },
+    { Reload         , "Reload"               , I18N_NOOP2("@action"                      , "Reload")               , Qt::Key_F5      , 0            , KShortcut(), false },
 
     { BeginningOfLine, "BeginningOfLine"      , I18N_NOOP2("@action"                      , "Beginning of Line")    , Qt::Key_Home    , 0                 , KShortcut(), false },
     { EndOfLine      , "EndOfLine"            , I18N_NOOP2("@action"                      , "End of Line")          , Qt::Key_End     , 0                 , KShortcut(), false },
