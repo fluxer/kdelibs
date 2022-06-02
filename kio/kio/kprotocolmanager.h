@@ -276,21 +276,6 @@ public:
    */
   static int minimumKeepSize();
 
-
-  /*============================ NETWORK CONNECTIONS ==========================*/
-  /**
-   * Returns true if proxy connections should be persistent.
-   * @return true if proxy connections should be persistent
-   */
-  static bool persistentProxyConnection();
-
-  /**
-   * Returns true if connections should be persistent
-   * @return true if the connections should be persistent
-   */
-  static bool persistentConnections();
-
-
   /*===================== PROTOCOL CAPABILITIES ===============================*/
 
   /**

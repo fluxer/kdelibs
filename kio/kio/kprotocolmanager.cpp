@@ -692,16 +692,6 @@ bool KProtocolManager::autoResume()
   return config()->group(QByteArray()).readEntry( "AutoResume", false );
 }
 
-bool KProtocolManager::persistentConnections()
-{
-  return config()->group(QByteArray()).readEntry( "PersistentConnections", true );
-}
-
-bool KProtocolManager::persistentProxyConnection()
-{
-  return config()->group(QByteArray()).readEntry( "PersistentProxyConnection", false );
-}
-
 /* =========================== PROTOCOL CAPABILITIES ============== */
 
 static KProtocolInfo::Ptr findProtocol(const KUrl &url)
