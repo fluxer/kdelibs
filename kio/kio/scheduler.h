@@ -54,7 +54,7 @@ namespace KIO {
      *
      *
      * <h3>2. Scheduled</h3>
-     * If you create a lot of jobs, you might want not want to have a
+     * If you create a lot of jobs, you might not want to have a
      * slave for each job. If you schedule a job, a maximum number
      * of slaves will be created. When more jobs arrive, they will be
      * queued. When a slave is finished with a job, it will be assigned
@@ -71,10 +71,8 @@ namespace KIO {
      * the same connection. This can only be ensured if all these jobs
      * use the same slave.
      *
-     * You can ask the scheduler to open a slave for connection oriented
-     * operations. You can then use the scheduler to assign jobs to this
-     * slave. The jobs will be queued and the slave will handle these jobs
-     * one after the other.
+     * You can then use the scheduler to assign jobs. The jobs will be
+     * queued and the slave will handle these jobs one after the other.
      *
      * Example:
      * \code
