@@ -108,17 +108,17 @@ bool KIO::JobUiDelegate::askDeleteConfirmation(const KUrl::List& urls,
     if (!ask) {
         KSharedConfigPtr kioConfig = KSharedConfig::openConfig("kiorc", KConfig::NoGlobals);
 
-	switch (deletionType ) {
-	case Delete:
-	    keyName = "ConfirmDelete" ;
-	    break;
-	case Trash:
-	    keyName = "ConfirmTrash" ;
-	    break;
-	case EmptyTrash:
-	    keyName = "ConfirmEmptyTrash" ;
-	    break;
-	}
+        switch (deletionType ) {
+        case Delete:
+            keyName = "ConfirmDelete" ;
+            break;
+        case Trash:
+            keyName = "ConfirmTrash" ;
+            break;
+        case EmptyTrash:
+            keyName = "ConfirmEmptyTrash" ;
+            break;
+        }
 
         // The default value for confirmations is true (for both delete and trash)
         // If you change this, update kdebase/apps/konqueror/settings/konq/behaviour.cpp
@@ -145,34 +145,34 @@ bool KIO::JobUiDelegate::askDeleteConfirmation(const KUrl::List& urls,
         switch(deletionType) {
         case Delete:
             result = KMessageBox::warningContinueCancelList(
-                widget,
-             	i18np("Do you really want to delete this item?", "Do you really want to delete these %1 items?", prettyList.count()),
-             	prettyList,
-		i18n("Delete Files"),
-		KStandardGuiItem::del(),
-		KStandardGuiItem::cancel(),
-		keyName, options);
+            widget,
+            i18np("Do you really want to delete this item?", "Do you really want to delete these %1 items?", prettyList.count()),
+            prettyList,
+            i18n("Delete Files"),
+            KStandardGuiItem::del(),
+            KStandardGuiItem::cancel(),
+            keyName, options);
             break;
         case EmptyTrash:
-	    result = KMessageBox::warningContinueCancel(
-	        widget,
-		i18nc("@info", "Do you want to permanently delete all items from Trash? This action cannot be undone."),
-		QString(),
-		KGuiItem(i18nc("@action:button", "Empty Trash"),
-		KIcon("user-trash")),
-		KStandardGuiItem::cancel(),
-		keyName, options);
-	    break;
+            result = KMessageBox::warningContinueCancel(
+            widget,
+            i18nc("@info", "Do you want to permanently delete all items from Trash? This action cannot be undone."),
+            QString(),
+            KGuiItem(i18nc("@action:button", "Empty Trash"),
+            KIcon("user-trash")),
+            KStandardGuiItem::cancel(),
+            keyName, options);
+            break;
         case Trash:
         default:
             result = KMessageBox::warningContinueCancelList(
                 widget,
                 i18np("Do you really want to move this item to the trash?", "Do you really want to move these %1 items to the trash?", prettyList.count()),
                 prettyList,
-		i18n("Move to Trash"),
-		KGuiItem(i18nc("Verb", "&Trash"), "user-trash"),
-		KStandardGuiItem::cancel(),
-		keyName, options);
+                i18n("Move to Trash"),
+                KGuiItem(i18nc("Verb", "&Trash"), "user-trash"),
+                KStandardGuiItem::cancel(),
+                keyName, options);
         }
         if (!keyName.isEmpty()) {
             // Check kmessagebox setting... erase & copy to konquerorrc.

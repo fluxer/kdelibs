@@ -35,9 +35,9 @@
 #include <QFileInfo>
 #include <QBitArray>
 #include <QDir>
+
 #include <sys/types.h>
 #include <dirent.h>
-
 
 class KDirModelNode;
 class KDirModelDirNode;

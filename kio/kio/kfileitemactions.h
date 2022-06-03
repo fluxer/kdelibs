@@ -24,10 +24,10 @@
 #include <kservice.h>
 #include <kfileitem.h>
 #include <kio/kio_export.h>
+#include <QMenu>
 
 class KFileItemListProperties;
 class KAction;
-#include <QMenu>
 class KFileItemActionsPrivate;
 
 /**
