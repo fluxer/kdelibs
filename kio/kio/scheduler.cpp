@@ -65,7 +65,7 @@ static inline void startJob(SimpleJob *job, Slave *slave)
 // here be uglies
 // forward declaration to break cross-dependency of SlaveKeeper and SchedulerPrivate
 static void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
-                       const QStringList &proxyList, bool newSlave, const KIO::MetaData *config = 0);
+                       const QStringList &proxyList, bool newSlave);
 // same reason as above
 static Scheduler *scheduler();
 static Slave *heldSlaveForJob(SimpleJob *job);
@@ -591,7 +591,7 @@ public:
 
     MetaData metaDataFor(const QString &protocol, const QStringList &proxyList, const KUrl &url);
     void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
-                    const QStringList &proxyList, bool newSlave, const KIO::MetaData *config = 0);
+                    const QStringList &proxyList, bool newSlave);
 
     void slotSlaveDied(KIO::Slave *slave);
     void slotSlaveStatus(pid_t pid, const QByteArray &protocol,
@@ -859,9 +859,9 @@ void SchedulerPrivate::jobFinished(SimpleJob *job, Slave *slave)
 
 // static
 void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
-                const QStringList &proxyList , bool newSlave, const KIO::MetaData *config)
+                const QStringList &proxyList , bool newSlave)
 {
-    schedulerPrivate->setupSlave(slave, url, protocol, proxyList, newSlave, config);
+    schedulerPrivate->setupSlave(slave, url, protocol, proxyList, newSlave);
 }
 
 MetaData SchedulerPrivate::metaDataFor(const QString &protocol, const QStringList &proxyList, const KUrl &url)
@@ -902,7 +902,7 @@ MetaData SchedulerPrivate::metaDataFor(const QString &protocol, const QStringLis
 }
 
 void SchedulerPrivate::setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
-                                  const QStringList &proxyList, bool newSlave, const KIO::MetaData *config)
+                                  const QStringList &proxyList, bool newSlave)
 {
     int port = url.port();
     if ( port == -1 ) // no port is -1 in QUrl, but in kde3 we used 0 and the kioslaves assume that.
@@ -915,9 +915,6 @@ void SchedulerPrivate::setupSlave(KIO::Slave *slave, const KUrl &url, const QStr
         slave->user() != user || slave->passwd() != passwd) {
 
         MetaData configData = metaDataFor(protocol, proxyList, url);
-        if (config)
-           configData += *config;
-
         slave->setConfig(configData);
         slave->setProtocol(url.protocol());
         slave->setHost(host, port, user, passwd);
