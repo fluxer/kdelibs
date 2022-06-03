@@ -171,16 +171,6 @@ KioslaveTest::KioslaveTest( QString src, QString dest, uint op, uint pr )
 
   main_widget->setMinimumSize( main_widget->sizeHint() );
   setCentralWidget( main_widget );
-
-  connect(
-    KIO::Scheduler::self(),
-    SIGNAL(slaveConnected(KIO::Slave*)),
-    this, SLOT(slotSlaveConnected())
-  );
-  connect(
-    KIO::Scheduler::self(), SIGNAL(slaveError(KIO::Slave*,int,QString)),
-    this, SLOT(slotSlaveError())
-  );
 }
 
 void KioslaveTest::slotQuit(){
@@ -337,16 +327,6 @@ void KioslaveTest::slotResult( KJob * _job )
   pbStop->setEnabled( false );
 
   //statusBar()->removeWidget( statusTracker->widget(job) );
-}
-
-void KioslaveTest::slotSlaveConnected()
-{
-   kDebug() << "Slave connected.";
-}
-
-void KioslaveTest::slotSlaveError()
-{
-   kDebug() << "Error connected.";
 }
 
 void KioslaveTest::printUDSEntry( const KIO::UDSEntry & entry )

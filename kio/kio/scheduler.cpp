@@ -121,7 +121,7 @@ int SerialPicker::changedPrioritySerial(int oldSerial, int newPriority) const
 SlaveKeeper::SlaveKeeper()
 {
     m_grimTimer.setSingleShot(true);
-    connect (&m_grimTimer, SIGNAL(timeout()), SLOT(grimReaper()));
+    connect(&m_grimTimer, SIGNAL(timeout()), this, SLOT(grimReaper()));
 }
 
 void SlaveKeeper::returnSlave(Slave *slave)
@@ -432,10 +432,10 @@ Slave *ProtoQueue::createSlave(const QString &protocol, SimpleJob *job, const KU
     QString errortext;
     Slave *slave = Slave::createSlave(protocol, url, error, errortext);
     if (slave) {
-        scheduler()->connect(slave, SIGNAL(slaveDied(KIO::Slave*)),
-                             SLOT(slotSlaveDied(KIO::Slave*)));
-        scheduler()->connect(slave, SIGNAL(slaveStatus(pid_t,QByteArray,QString,bool)),
-                             SLOT(slotSlaveStatus(pid_t,QByteArray,QString,bool)));
+        connect(
+            slave, SIGNAL(slaveDied(KIO::Slave*)),
+            scheduler(), SLOT(slotSlaveDied(KIO::Slave*))
+        );
     } else {
         kError() << "couldn't create slave:" << errortext;
         if (job) {
@@ -601,8 +601,6 @@ public:
     void slotReparseSlaveConfiguration(const QString &, const QDBusMessage&);
     void slotSlaveOnHoldListChanged();
 
-    void slotSlaveConnected();
-    void slotSlaveError(int error, const QString &errorMsg);
     void slotUnregisterWindow(QObject *);
 
     ProtoQueue *protoQ(const QString& protocol, const QString& host)
@@ -952,12 +950,6 @@ void SchedulerPrivate::setupSlave(KIO::Slave *slave, const KUrl &url, const QStr
     }
 }
 
-
-void SchedulerPrivate::slotSlaveStatus(pid_t, const QByteArray&, const QString &, bool)
-{
-}
-
-
 void SchedulerPrivate::slotSlaveDied(KIO::Slave *slave)
 {
     kDebug(7006) << slave;
@@ -1064,27 +1056,6 @@ void SchedulerPrivate::removeSlaveOnHold()
     }
     m_slaveOnHold = 0;
     m_urlOnHold.clear();
-}
-
-void SchedulerPrivate::slotSlaveConnected()
-{
-    kDebug(7006);
-    Slave *slave = static_cast<Slave *>(q->sender());
-    slave->setConnected(true);
-    q->disconnect(slave, SIGNAL(connected()), q, SLOT(slotSlaveConnected()));
-    emit q->slaveConnected(slave);
-}
-
-void SchedulerPrivate::slotSlaveError(int errorNr, const QString &errorMsg)
-{
-    Slave *slave = static_cast<Slave *>(q->sender());
-    kDebug(7006) << slave << errorNr << errorMsg;
-    ProtoQueue *pq = protoQ(slave->protocol(), slave->host());
-    if (!slave->isConnected()) {
-        // Only forward to application if slave is idle or still connecting.
-        // ### KDE5: can we remove this apparently arbitrary behavior and just always emit SlaveError?
-        emit q->slaveError(slave, errorNr, errorMsg);
-    }
 }
 
 void SchedulerPrivate::checkSlaveOnHold(bool b)

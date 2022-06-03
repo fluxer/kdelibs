@@ -18,7 +18,10 @@
 
 #ifndef SCHEDULER_P_H
 #define SCHEDULER_P_H
+
 #include <QSet>
+#include <QTimer>
+#include <QMap>
 
 // #define SCHEDULER_DEBUG
 

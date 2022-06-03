@@ -91,8 +91,6 @@ protected Q_SLOTS:
   void slotDataReq( KIO::Job *, QByteArray &data );
 
   void slotQuit();
-  void slotSlaveConnected();
-  void slotSlaveError();
 
 private:
   KIO::Job *job;

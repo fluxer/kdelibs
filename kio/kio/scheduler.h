@@ -24,10 +24,7 @@
 
 #include "kio/job.h"
 #include "kio/jobclasses.h"
-#include <QtCore/QTimer>
-#include <QtCore/QMap>
 #include <QtGui/qwindowdefs.h>
-#include <sys/types.h> // pid_t
 
 namespace KIO {
 
@@ -189,9 +186,6 @@ namespace KIO {
         static Scheduler *self();
 
     Q_SIGNALS:
-        void slaveConnected(KIO::Slave *slave);
-        void slaveError(KIO::Slave *slave, int error, const QString &errorMsg);
-
         // DBUS
         Q_SCRIPTABLE void reparseSlaveConfiguration(const QString &);
         Q_SCRIPTABLE void slaveOnHoldListChanged();
@@ -202,15 +196,11 @@ namespace KIO {
         ~Scheduler();
 
         Q_PRIVATE_SLOT(d_func(), void slotSlaveDied(KIO::Slave *slave))
-        Q_PRIVATE_SLOT(d_func(), void slotSlaveStatus(pid_t pid, const QByteArray &protocol,
-                                               const QString &host, bool connected))
 
         // connected to D-Bus signal:
         Q_PRIVATE_SLOT(d_func(), void slotReparseSlaveConfiguration(const QString &, const QDBusMessage&))
         Q_PRIVATE_SLOT(d_func(), void slotSlaveOnHoldListChanged())
 
-        Q_PRIVATE_SLOT(d_func(), void slotSlaveConnected())
-        Q_PRIVATE_SLOT(d_func(), void slotSlaveError(int error, const QString &errorMsg))
         Q_PRIVATE_SLOT(d_func(), void slotUnregisterWindow(QObject *))
     private:
         friend class SchedulerPrivate;
