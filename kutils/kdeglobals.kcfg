@@ -450,10 +450,8 @@
   <entry key="floppy" type="Bool" />
   <entry key="fonts" type="Bool" />
   <entry key="ftp" type="Bool" />
-  <entry key="nfs" type="Bool" />
   <entry key="settings" type="Bool" />
   <entry key="sftp" type="Bool" />
-  <entry key="smb" type="Bool" />
   <entry key="mtp" type="Bool" />
   <entry key="system" type="Bool" />
   <entry key="tar" type="Bool" />

@@ -200,9 +200,7 @@ void KUrlNavigatorProtocolCombo::initializeCategories()
     if (m_categories.isEmpty()) {
         m_categories.insert("file", CoreCategory);
         m_categories.insert("ftp", CoreCategory);
-        m_categories.insert("nfs", CoreCategory);
         m_categories.insert("sftp", CoreCategory);
-        m_categories.insert("smb", CoreCategory);
 
         m_categories.insert("desktop", PlacesCategory);
         m_categories.insert("fonts", PlacesCategory);
