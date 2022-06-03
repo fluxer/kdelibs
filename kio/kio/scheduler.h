@@ -176,13 +176,6 @@ namespace KIO {
          */
         static bool isSlaveOnHoldFor(const KUrl& url);
 
-        /**
-         * Updates the internal metadata from job.
-         *
-         * @since 4.6.5
-         */
-        static void updateInternalMetaData(SimpleJob* job);
-
         static Scheduler *self();
 
     Q_SIGNALS:

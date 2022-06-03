@@ -588,7 +588,6 @@ public:
     Slave *heldSlaveForJob(KIO::SimpleJob *job);
     bool isSlaveOnHoldFor(const KUrl& url);
     void registerWindow(QWidget *wid);
-    void updateInternalMetaData(SimpleJob* job);
 
     MetaData metaDataFor(const QString &protocol, const QStringList &proxyList, const KUrl &url);
     void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protocol,
@@ -714,11 +713,6 @@ void Scheduler::publishSlaveOnHold()
 bool Scheduler::isSlaveOnHoldFor(const KUrl& url)
 {
     return schedulerPrivate->isSlaveOnHoldFor(url);
-}
-
-void Scheduler::updateInternalMetaData(SimpleJob* job)
-{
-    schedulerPrivate->updateInternalMetaData(job);
 }
 
 void Scheduler::registerWindow(QWidget *wid)
@@ -856,31 +850,11 @@ void SchedulerPrivate::jobFinished(SimpleJob *job, Slave *slave)
     }
 
     if (slave) {
-        // If we have internal meta-data, tell existing ioslaves to reload
-        // their configuration.
-        if (jobPriv->m_internalMetaData.count()) {
-            kDebug(7006) << "Updating ioslaves with new internal metadata information";
-            ProtoQueue * queue = m_protocols.value(slave->protocol());
-            if (queue) {
-                QListIterator<Slave*> it (queue->allSlaves());
-                while (it.hasNext()) {
-                    Slave* runningSlave = it.next();
-                    if (slave->host() == runningSlave->host()) {
-                        slave->setConfig(metaDataFor(slave->protocol(), jobPriv->m_proxyList, job->url()));
-                        kDebug(7006) << "Updated configuration of" << slave->protocol()
-                                     << "ioslave, pid=" << slave->slave_pid();
-                    }
-                }
-            }
-        }
         slave->setJob(0);
         slave->disconnect(job);
     }
     jobPriv->m_schedSerial = 0; // this marks the job as unscheduled again
     jobPriv->m_slave = 0;
-    // Clear the values in the internal metadata container since they have
-    // already been taken care of above...
-    jobPriv->m_internalMetaData.clear();
 }
 
 // static
@@ -1123,25 +1097,6 @@ void SchedulerPrivate::slotUnregisterWindow(QObject *obj)
    QDBusInterface("org.kde.kded", "/kded", "org.kde.kded").
        call(QDBus::NoBlock, "unregisterWindowId", qlonglong(windowId));
 }
-
-void SchedulerPrivate::updateInternalMetaData(SimpleJob* job)
-{
-    KIO::SimpleJobPrivate *const jobPriv = SimpleJobPrivate::get(job);
-    // Preserve all internal meta-data so they can be sent back to the
-    // ioslaves as needed...
-    const KUrl jobUrl = job->url();
-    kDebug(7006) << job << jobPriv->m_internalMetaData;
-    QMapIterator<QString, QString> it (jobPriv->m_internalMetaData);
-    while (it.hasNext()) {
-        it.next();
-        if (it.key().startsWith(QLatin1String("{internal~currenthost}"), Qt::CaseInsensitive)) {
-            SlaveConfig::self()->setConfigData(jobUrl.protocol(), jobUrl.host(), it.key().mid(22), it.value());
-        } else if (it.key().startsWith(QLatin1String("{internal~allhosts}"), Qt::CaseInsensitive)) {
-            SlaveConfig::self()->setConfigData(jobUrl.protocol(), QString(), it.key().mid(19), it.value());
-        }
-    }
-}
-
 
 #include "moc_scheduler.cpp"
 #include "moc_scheduler_p.cpp"
