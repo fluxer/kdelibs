@@ -545,7 +545,6 @@ install(
     Solid/DeviceNotifier
     Solid/GenericInterface
     Solid/NetworkInterface
-    Solid/NetworkShare
     Solid/Networking
     Solid/OpticalDisc
     Solid/OpticalDrive
