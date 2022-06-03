@@ -26,7 +26,6 @@
 #if defined(HAVE_MPV)
 #include <locale.h>
 #include <mpv/client.h>
-#include "qthelper.hpp"
 #else
 static bool s_fullscreen = false;
 #endif // HAVE_MPV
@@ -59,31 +58,119 @@ static bool s_fullscreen = false;
 #define COMMON_COMMAND_SENDER \
     kDebug() << i18n("sending command") << command; \
     if (d->m_handle) { \
-        const QVariant result = mpv::qt::command(d->m_handle, command); \
-        if (mpv::qt::is_error(result)) { \
-            kWarning() << command << mpv_error_string(mpv::qt::get_error(result)); \
+        const char* commanddata[command.size() + 1]; \
+        ::memset(commanddata, 0, command.size() * sizeof(const char*)); \
+        for (int i = 0; i < command.size(); i++) { \
+            commanddata[i] = command.at(i).constData(); \
+        } \
+        commanddata[command.size()] = NULL; \
+        const int mpvresult = mpv_command(d->m_handle, commanddata); \
+        if (mpvresult < 0) { \
+            kWarning() << command << mpv_error_string(mpvresult); \
         } \
     }
+
+static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
+{
+    QVariant result;
+    switch (mpvnode->format) {
+        case MPV_FORMAT_NONE: {
+            break;
+        }
+        case MPV_FORMAT_FLAG: {
+            result = QVariant(bool(mpvnode->u.flag));
+            break;
+        }
+        case MPV_FORMAT_INT64: {
+            result = QVariant(qlonglong(mpvnode->u.int64));
+            break;
+        }
+        case MPV_FORMAT_DOUBLE: {
+            result = QVariant(double(mpvnode->u.double_));
+            break;
+        }
+        case MPV_FORMAT_STRING: {
+            result = QVariant(QString::fromUtf8(mpvnode->u.string));
+            break;
+        }
+        case MPV_FORMAT_NODE_ARRAY: {
+            QVariantList resultlist;
+            for (int i = 0; i < mpvnode->u.list->num; i++) {
+                resultlist.append(mpvNodeToVariant(&mpvnode->u.list->values[i]));
+            }
+            result = resultlist;
+            break;
+        }
+        case MPV_FORMAT_NODE_MAP: {
+            QVariantMap resultmap;
+            for (int i = 0; i < mpvnode->u.list->num; i++) {
+                resultmap.insert(
+                    QString::fromUtf8(mpvnode->u.list->keys[i]),
+                    mpvNodeToVariant(&mpvnode->u.list->values[i])
+                );
+            }
+            result = resultmap;
+            break;
+        }
+        default: {
+            kWarning() << i18n("Unknown node format") << mpvnode->format;
+            break;
+        }
+    }
+    return result;
+}
 
 // certain properties are not available when not playing for an example thus do not issue warning
 // in case of error
 #define COMMON_OPTION_GETTER \
     kDebug() << i18n("getting option") << name; \
     if (d->m_handle) { \
-        const QVariant result = mpv::qt::get_property(d->m_handle, name); \
-        if (mpv::qt::is_error(result)) { \
-            kDebug() << name << mpv_error_string(mpv::qt::get_error(result)); \
+        mpv_node mpvnode; \
+        const int mpvresult = mpv_get_property(d->m_handle, name.constData(), MPV_FORMAT_NODE, &mpvnode); \
+        if (mpvresult < 0) { \
+            kDebug() << name << mpv_error_string(mpvresult); \
             return QVariant(); \
         } \
+        QVariant result = mpvNodeToVariant(&mpvnode); \
+        mpv_free_node_contents(&mpvnode); \
         return result; \
     }
 
+// NOTE: flags are integers
 #define COMMON_OPTION_SETTER \
     kDebug() << i18n("setting option") << name << value; \
     if (d->m_handle) { \
-        const QVariant result = mpv::qt::set_property(d->m_handle, name, value); \
-        if (mpv::qt::is_error(result)) { \
-            kWarning() << name << mpv_error_string(mpv::qt::get_error(result)); \
+        int mpvresult = MPV_ERROR_PROPERTY_FORMAT; \
+        switch (value.type()) { \
+            case QVariant::Bool: { \
+                int boolvalue = value.toBool(); \
+                mpvresult = mpv_set_property(d->m_handle, name.constData(), MPV_FORMAT_FLAG, &boolvalue); \
+                break; \
+            } \
+            case QVariant::Int: \
+            case QVariant::UInt: \
+            case QVariant::LongLong: \
+            case QVariant::ULongLong: { \
+                qint64 int64value = value.toLongLong(); \
+                mpvresult = mpv_set_property(d->m_handle, name.constData(), MPV_FORMAT_INT64, &int64value); \
+                break; \
+            } \
+            case QVariant::Float: \
+            case QVariant::Double: { \
+                qint64 doublevalue = value.toDouble(); \
+                mpvresult = mpv_set_property(d->m_handle, name.constData(), MPV_FORMAT_DOUBLE, &doublevalue); \
+                break; \
+            } \
+            case QVariant::ByteArray: \
+            case QVariant::String: { \
+                QByteArray bytevalue = value.toByteArray(); \
+                char* bytevaluedata = bytevalue.data(); \
+                mpvresult = mpv_set_property(d->m_handle, name.constData(), MPV_FORMAT_STRING, &bytevaluedata); \
+                break; \
+            } \
+        } \
+        if (mpvresult < 0) { \
+            kWarning() << name << mpv_error_string(mpvresult); \
         } \
     }
 
@@ -256,13 +343,15 @@ KAbstractPlayerPrivate::~KAbstractPlayerPrivate()
 
 void KAbstractPlayer::load(const QString &path)
 {
-    command(QVariantList() << "loadfile" << path);
+    command(QList<QByteArray>() << "loadfile" << path.toLocal8Bit());
 }
 
 void KAbstractPlayer::load(const QByteArray &data)
 {
-    // SECURITY: this is dangerous but some applications/libraries (like KHTML) require it
-    command(QVariantList() << "loadfile" << QString("memory://%1").arg(data.data()));
+    // SECURITY: this is dangerous but some applications and libraries (like Okular) require it
+    QByteArray memorydata("memory://");
+    memorydata.append(data);
+    command(QList<QByteArray>() << "loadfile" << memorydata);
 }
 
 void KAbstractPlayer::play()
@@ -277,17 +366,17 @@ void KAbstractPlayer::pause()
 
 void KAbstractPlayer::seek(const float position)
 {
-    command(QVariantList() << "seek" << position << "absolute");
+    command(QList<QByteArray>() << "seek" << QByteArray::number(position) << "absolute");
 }
 
 void KAbstractPlayer::seek(const int position)
 {
-    command(QVariantList() << "seek" << position << "absolute");
+    command(QList<QByteArray>() << "seek" << QByteArray::number(position) << "absolute");
 }
 
 void KAbstractPlayer::stop()
 {
-    command(QVariantList() << "stop");
+    command(QList<QByteArray>() << "stop");
 }
 
 QString KAbstractPlayer::path() const
@@ -462,7 +551,7 @@ KAudioPlayer::~KAudioPlayer()
     delete d;
 }
 
-void KAudioPlayer::command(const QVariant &command) const
+void KAudioPlayer::command(const QList<QByteArray> &command) const
 {
 #if defined(HAVE_MPV)
     COMMON_COMMAND_SENDER
@@ -471,7 +560,7 @@ void KAudioPlayer::command(const QVariant &command) const
 #endif
 }
 
-QVariant KAudioPlayer::option(const QString &name) const
+QVariant KAudioPlayer::option(const QByteArray &name) const
 {
 #if defined(HAVE_MPV)
     COMMON_OPTION_GETTER
@@ -481,7 +570,7 @@ QVariant KAudioPlayer::option(const QString &name) const
     return QVariant();
 }
 
-void KAudioPlayer::setOption(const QString &name, const QVariant &value) const
+void KAudioPlayer::setOption(const QByteArray &name, const QVariant &value) const
 {
 #if defined(HAVE_MPV)
     COMMON_OPTION_SETTER
@@ -559,7 +648,7 @@ KMediaPlayer::~KMediaPlayer()
     delete d;
 }
 
-void KMediaPlayer::command(const QVariant &command) const
+void KMediaPlayer::command(const QList<QByteArray> &command) const
 {
 #if defined(HAVE_MPV)
     COMMON_COMMAND_SENDER
@@ -568,7 +657,7 @@ void KMediaPlayer::command(const QVariant &command) const
 #endif
 }
 
-QVariant KMediaPlayer::option(const QString &name) const
+QVariant KMediaPlayer::option(const QByteArray &name) const
 {
 #if defined(HAVE_MPV)
     COMMON_OPTION_GETTER
@@ -578,7 +667,7 @@ QVariant KMediaPlayer::option(const QString &name) const
     return QVariant();
 }
 
-void KMediaPlayer::setOption(const QString &name, const QVariant &value) const
+void KMediaPlayer::setOption(const QByteArray &name, const QVariant &value) const
 {
 #if defined(HAVE_MPV)
     COMMON_OPTION_SETTER

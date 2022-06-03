@@ -52,11 +52,11 @@ public:
         you rely on them.
     **/
     //! @brief A low-level player command sender
-    virtual void command(const QVariant &params) const = 0;
+    virtual void command(const QList<QByteArray> &params) const = 0;
     //! @brief A low-level player property getter
-    virtual QVariant option(const QString &name) const = 0;
+    virtual QVariant option(const QByteArray &name) const = 0;
     //! @brief A low-level player property setter
-    virtual void setOption(const QString &name, const QVariant &value) const = 0;
+    virtual void setOption(const QByteArray &name, const QVariant &value) const = 0;
     //@}
 
     /*!
@@ -244,9 +244,9 @@ public:
     KAudioPlayer(QObject *parent = 0);
     ~KAudioPlayer();
 
-    void command(const QVariant &command) const;
-    QVariant option(const QString &name) const;
-    void setOption(const QString &name, const QVariant& value) const;
+    void command(const QList<QByteArray> &command) const;
+    QVariant option(const QByteArray &name) const;
+    void setOption(const QByteArray &name, const QVariant& value) const;
 
     void setPlayerID(const QString &id);
     bool isMimeSupported(const QString &mime) const;
@@ -308,9 +308,9 @@ public:
     KMediaPlayer(QWidget *parent = 0);
     ~KMediaPlayer();
 
-    void command(const QVariant &command) const;
-    QVariant option(const QString &name) const;
-    void setOption(const QString &name, const QVariant &value) const;
+    void command(const QList<QByteArray> &command) const;
+    QVariant option(const QByteArray &name) const;
+    void setOption(const QByteArray &name, const QVariant &value) const;
 
     void setPlayerID(const QString &id);
     bool isMimeSupported(const QString &mime) const;
