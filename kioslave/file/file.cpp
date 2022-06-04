@@ -784,11 +784,8 @@ bool FileProtocol::createUDSEntry( const QString & filename, const QByteArray & 
         if (S_ISLNK(buff.st_mode)) {
 
             char buffer2[ 1000 ];
-            int n = readlink( path.data(), buffer2, 999 );
-            if ( n != -1 ) {
-                buffer2[ n ] = 0;
-            }
-
+            ::memset(buffer2, 0, 1000 * sizeof(char));
+            readlink( path.data(), buffer2, 999 );
             entry.insert( KIO::UDSEntry::UDS_LINK_DEST, QFile::decodeName( buffer2 ) );
 
             // A symlink -> follow it only if details>1
