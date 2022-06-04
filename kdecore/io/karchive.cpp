@@ -44,6 +44,10 @@
 #include <sys/stat.h>
 #include <limits.h>  // PATH_MAX
 
+#ifndef PATH_MAX
+# define PATH_MAX _POSIX_PATH_MAX
+#endif
+
 class KArchivePrivate
 {
 public:
