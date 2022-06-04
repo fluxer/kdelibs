@@ -31,7 +31,7 @@ void KStandardShortcutTest::testShortcutDefault()
     QCOMPARE( KStandardShortcut::hardcodedDefaultShortcut( KStandardShortcut::FullScreen ).toString(), QLatin1String( "Ctrl+Shift+F" ) );
     QCOMPARE( KStandardShortcut::hardcodedDefaultShortcut( KStandardShortcut::BeginningOfLine ).toString(), QLatin1String( "Home" ) );
     QCOMPARE( KStandardShortcut::hardcodedDefaultShortcut( KStandardShortcut::EndOfLine ).toString(), QLatin1String( "End" ) );
-    QCOMPARE( KStandardShortcut::hardcodedDefaultShortcut( KStandardShortcut::Home ).toString(), QLatin1String( "Alt+Home; Home Page" ) );
+    QCOMPARE( KStandardShortcut::hardcodedDefaultShortcut( KStandardShortcut::Home ).toString(), QLatin1String( "Alt+Home" ) );
 }
 
 void KStandardShortcutTest::testName()
