@@ -1707,30 +1707,30 @@ void KUrlTest::testMailto()
   QCOMPARE(urlNoPath.prettyUrl(), QString("mailto:?to=test@example.com"));
 }
 
-void KUrlTest::testSmb()
+void KUrlTest::testSftp()
 {
-  KUrl smb("smb://domain;username:password@server/share");
-  QVERIFY( smb.isValid() );
-  QCOMPARE( smb.user(), QString("domain;username") );
-  smb = "smb:/";
-  QVERIFY( smb.isValid() );
-  QCOMPARE(smb.url(), QString::fromLatin1("smb:/"));
-  QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb:/"));
-  smb = "smb://"; // KDE3: kurl.cpp rev 1.106 made it invalid. Valid again with QUrl.
-  QVERIFY( smb.isValid() );
-  QCOMPARE(smb.url(), QString::fromLatin1("smb://"));
-  QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb://"));
-  smb = "smb://host";
-  QVERIFY( smb.isValid() );
-  QCOMPARE(smb.url(), QString::fromLatin1("smb://host"));
-  QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb://host"));
-  smb = "smb:///";
-  QVERIFY( smb.isValid() );
-  QCOMPARE(smb.url(), QString::fromLatin1("smb:///"));
-  QCOMPARE(smb.prettyUrl(), QString::fromLatin1("smb:/"));
+  KUrl sftp("sftp://username:password@server/share");
+  QVERIFY( sftp.isValid() );
+  QCOMPARE( sftp.user(), QString("username") );
+  sftp = "sftp:/";
+  QVERIFY( sftp.isValid() );
+  QCOMPARE(sftp.url(), QString::fromLatin1("sftp:/"));
+  QCOMPARE(sftp.prettyUrl(), QString::fromLatin1("sftp:/"));
+  sftp = "sftp://"; // KDE3: kurl.cpp rev 1.106 made it invalid. Valid again with QUrl.
+  QVERIFY( sftp.isValid() );
+  QCOMPARE(sftp.url(), QString::fromLatin1("sftp://"));
+  QCOMPARE(sftp.prettyUrl(), QString::fromLatin1("sftp://"));
+  sftp = "sftp://host";
+  QVERIFY( sftp.isValid() );
+  QCOMPARE(sftp.url(), QString::fromLatin1("sftp://host"));
+  QCOMPARE(sftp.prettyUrl(), QString::fromLatin1("sftp://host"));
+  sftp = "sftp:///";
+  QVERIFY( sftp.isValid() );
+  QCOMPARE(sftp.url(), QString::fromLatin1("sftp:///"));
+  QCOMPARE(sftp.prettyUrl(), QString::fromLatin1("sftp:/"));
 
   KUrl implicitSmb("file://host/path");
-  QVERIFY(!implicitSmb.isLocalFile()); // -> kio_file will redirect to smb (by default)
+  QVERIFY(!implicitSmb.isLocalFile()); // -> kio_file will redirect to sftp (by default)
   QCOMPARE(implicitSmb.host(), QString("host"));
 
   KUrl noImplicitSmb("//path1/path2");

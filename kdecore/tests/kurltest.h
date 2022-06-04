@@ -61,7 +61,7 @@ private Q_SLOTS:
     void testBrokenStuff();
     void testMoreBrokenStuff();
     void testMailto();
-    void testSmb();
+    void testSftp();
     void testOtherProtocols();
     void testOtherEncodings();
     void testPathOrURL();
