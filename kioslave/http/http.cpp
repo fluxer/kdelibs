@@ -68,15 +68,6 @@ static inline QString HTTPMIMEType(const QString &contenttype)
     return splitcontenttype.at(0);
 }
 
-static inline QString HTTPCharset(const QString &contenttype)
-{
-    const QList<QString> splitcontenttype = contenttype.split(QLatin1Char(';'));
-    if (splitcontenttype.size() < 2) {
-        return QString();
-    }
-    return splitcontenttype.at(1);
-}
-
 static inline long HTTPCode(CURL *curl)
 {
     long curlresponsecode = 0;

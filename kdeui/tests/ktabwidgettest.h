@@ -50,7 +50,6 @@ private Q_SLOTS:
 
 private:
   KTabWidget*     mWidget;
-  int             mChange;
 
   QCheckBox *     mLeftButton;
   QCheckBox *     mRightButton;

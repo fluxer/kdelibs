@@ -875,7 +875,6 @@ void StatJob::slotFinished()
 
 void StatJob::slotMetaData( const KIO::MetaData &_metaData)
 {
-    Q_D(StatJob);
     SimpleJob::slotMetaData(_metaData);
 }
 
@@ -1205,7 +1204,6 @@ void TransferJobPrivate::slotSubUrlData(KIO::Job*, const QByteArray &data)
 
 void TransferJob::slotMetaData( const KIO::MetaData &_metaData)
 {
-    Q_D(TransferJob);
     SimpleJob::slotMetaData(_metaData);
 }
 
@@ -2328,7 +2326,6 @@ void ListJob::slotFinished()
 
 void ListJob::slotMetaData( const KIO::MetaData &_metaData)
 {
-    Q_D(ListJob);
     SimpleJob::slotMetaData(_metaData);
 }
 
