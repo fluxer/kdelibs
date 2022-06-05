@@ -25,11 +25,38 @@
 #include "kjobuidelegate.h"
 
 #include <kglobal.h>
-#include <QEventLoop>
 #include <QCoreApplication>
+#include <QEventLoop>
 #include <QMap>
 #include <QMetaType>
 #include <QTimer>
+
+class KJobLoop : public QEventLoop
+{
+    Q_OBJECT
+public:
+    KJobLoop(QObject *parent);
+
+    int error;
+
+public Q_SLOTS:
+    void slotFinished(KJob* job);
+
+private:
+    Q_DISABLE_COPY(KJobLoop);
+};
+
+KJobLoop::KJobLoop(QObject *parent)
+    : QEventLoop(parent),
+    error(0)
+{
+}
+
+void KJobLoop::slotFinished(KJob* job)
+{
+    error = job->error();
+    quit();
+}
 
 KJobPrivate::KJobPrivate()
     : q_ptr(0), uiDelegate(0), error(KJob::NoError),
@@ -192,13 +219,15 @@ void KJob::setCapabilities( KJob::Capabilities capabilities )
 
 bool KJob::exec()
 {
-    Q_D(KJob);
-
+    KJobLoop kjobloop(qApp);
+    connect(
+        this, SIGNAL(finished(KJob*)),
+        &kjobloop, SLOT(slotFinished(KJob*)),
+        Qt::DirectConnection
+    );
     start();
-    while( !d->isFinished ) {
-        QCoreApplication::processEvents();
-    }
-    return ( d->error == NoError );
+    kjobloop.exec();
+    return (kjobloop.error == NoError);
 }
 
 int KJob::error() const
@@ -341,4 +370,5 @@ void KJob::setAutoDelete( bool autodelete )
     d->isAutoDelete = autodelete;
 }
 
+#include "kjob.moc"
 #include "moc_kjob.cpp"
