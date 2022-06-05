@@ -26,6 +26,7 @@
 
 
 #include <QCoreApplication>
+#include <QMutex>
 #include <kglobal.h>
 #include <ksharedconfig.h>
 #include <kprotocolinfo.h>
@@ -35,13 +36,6 @@
 #include <netdb.h>
 #include <kurl.h>
 #include <kconfiggroup.h>
-
-#include <QMutex>
-#include <QtCore/qmutex.h>
-#include <QtCore/qglobal.h>
-
-extern bool kde_kiosk_exception;
-
 
 class URLActionRule
 {
@@ -195,7 +189,7 @@ public:
       blockEverything=true;
       return;
     }
-    actionRestrictions = config->hasGroup("KDE Action Restrictions" ) && !kde_kiosk_exception;
+    actionRestrictions = config->hasGroup("KDE Action Restrictions" );
   }
 
   ~KAuthorizedPrivate()
@@ -236,7 +230,7 @@ bool KAuthorized::authorizeKAction(const QString& action)
 
 bool KAuthorized::authorizeControlModule(const QString &menuId)
 {
-   if (menuId.isEmpty() || kde_kiosk_exception)
+   if (menuId.isEmpty())
       return true;
    KConfigGroup cg(KGlobal::config(), "KDE Control Module Restrictions");
    return cg.readEntry(menuId, true);

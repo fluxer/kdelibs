@@ -296,23 +296,6 @@ public:
                           const QString& filename ) const;
 
     /**
-     * Checks whether a resource is restricted as part of the KIOSK
-     * framework. When a resource is restricted it means that user-
-     * specific files in the resource are ignored.
-     *
-     * E.g. by restricting the @c "wallpaper" resource, only system-wide
-     * installed wallpapers will be found by this class. Wallpapers
-     * installed under the @c $KDEHOME directory will be ignored.
-     *
-     * @param type The type of the resource to check
-     * @param relPath A relative path in the resource.
-     *
-     * @return True if the resource is restricted.
-     */
-    bool isRestrictedResource( const char *type,
-                               const QString& relPath=QString() ) const;
-
-    /**
      * Returns a number that identifies this version of the resource.
      * When a change is made to the resource this number will change.
      *
@@ -511,17 +494,6 @@ public:
     static int findAllExe( QStringList& list, const QString& appname,
                            const QString& pathstr=QString(),
                            SearchOptions options = NoSearchOptions );
-
-    /**
-     * Reads customized entries out of the given config object and add
-     * them via addResourceDirs().
-     *
-     * @param config The object the entries are read from. This should
-     *        contain global config files
-     * @return @c true if new config paths have been added
-     * from @p config.
-     **/
-    bool addCustomized(KConfig *config);
 
     /**
      * This function is used internally by almost all other function as

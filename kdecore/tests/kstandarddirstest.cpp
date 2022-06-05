@@ -357,58 +357,6 @@ void KStandarddirsTest::testSetXdgDataDirs()
     QVERIFY(newDirs.contains(localApps, PATH_SENSITIVITY));
 }
 
-void KStandarddirsTest::testRestrictedResources()
-{
-    // Ensure we have a local xdgdata-apps dir
-    QFile localFile(KStandardDirs::locateLocal("xdgdata-apps", "foo.desktop"));
-    localFile.open(QIODevice::WriteOnly|QIODevice::Text);
-    localFile.write("foo");
-    localFile.close();
-    const QString localAppsDir = KGlobal::dirs()->realPath(QFileInfo(localFile).absolutePath() + '/');
-    QVERIFY(!localAppsDir.contains("foo.desktop"));
-    // Ensure we have a local share/apps/qttest dir
-    const QString localDataDir = KStandardDirs::locateLocal("data", "qttest/");
-    QVERIFY(!localDataDir.isEmpty());
-    QVERIFY(QDir(localDataDir).exists());
-    const QString localOtherDataDir = KStandardDirs::locateLocal("data", "other/");
-    QVERIFY(!localOtherDataDir.isEmpty());
-
-    // Check unrestricted results first
-    const QStringList appsDirs = KGlobal::dirs()->resourceDirs("xdgdata-apps");
-    const QString kdeDataApps = KGlobal::dirs()->realPath(KDEDIR "/share/applications/");
-    QCOMPARE_PATHS(appsDirs.first(), localAppsDir);
-    QVERIFY(appsDirs.contains(kdeDataApps, PATH_SENSITIVITY));
-    const QStringList dataDirs = KGlobal::dirs()->findDirs("data", "qttest");
-    QCOMPARE_PATHS(dataDirs.first(), localDataDir);
-    const QStringList otherDataDirs = KGlobal::dirs()->findDirs("data", "other");
-    QCOMPARE_PATHS(otherDataDirs.first(), localOtherDataDir);
-
-    // Initialize restrictions.
-    // Need a new componentdata to trigger restricted-resource initialization
-    // And we need to write the config _before_ creating the KComponentData.
-    KConfig foorc("foorc");
-    KConfigGroup restrictionsGroup(&foorc, "KDE Resource Restrictions");
-    restrictionsGroup.writeEntry("xdgdata-apps", false);
-    restrictionsGroup.writeEntry("data_qttest", false);
-    restrictionsGroup.sync();
-
-    // Check restrictions.
-    KComponentData cData("foo");
-    QVERIFY(cData.dirs()->isRestrictedResource("xdgdata-apps"));
-    QVERIFY(cData.dirs()->isRestrictedResource("data", "qttest"));
-
-    const QStringList newAppsDirs = cData.dirs()->resourceDirs("xdgdata-apps");
-    QVERIFY(newAppsDirs.contains(kdeDataApps, PATH_SENSITIVITY));
-    QVERIFY(!newAppsDirs.contains(localAppsDir, PATH_SENSITIVITY)); // restricted!
-    const QStringList newDataDirs = cData.dirs()->findDirs("data", "qttest");
-    QVERIFY(!newDataDirs.contains(localDataDir, PATH_SENSITIVITY)); // restricted!
-    const QStringList newOtherDataDirs = cData.dirs()->findDirs("data", "other");
-    QVERIFY(newOtherDataDirs.contains(localOtherDataDir, PATH_SENSITIVITY)); // not restricted!
-
-    restrictionsGroup.deleteGroup();
-    localFile.remove();
-}
-
 void KStandarddirsTest::testSymlinkResolution()
 {
     // This makes the save location for the david resource, "$HOME/.kde-unit-test/symlink/test/"

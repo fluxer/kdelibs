@@ -138,9 +138,6 @@ void KComponentDataPrivate::lazyInit(const KComponentData &component)
         dirs->addResourceType("appdata", "data", aboutData.appName() + QLatin1Char('/'), true);
 
         configInit(component);
-
-        if (dirs->addCustomized(sharedConfig.data()))
-            sharedConfig->reparseConfiguration();
     }
 
     // the first KComponentData sets the KDE Qt plugin paths
@@ -153,34 +150,16 @@ void KComponentDataPrivate::lazyInit(const KComponentData &component)
     }
 }
 
-bool kde_kiosk_exception = false; // flag to disable kiosk restrictions
-bool kde_kiosk_admin = false;
-
 void KComponentDataPrivate::configInit(const KComponentData &component)
 {
     Q_ASSERT(!sharedConfig);
 
     if (!configName.isEmpty()) {
         sharedConfig = KSharedConfig::openConfig(component, configName);
-
-        //FIXME: this is broken and I don't know how to repair it
-        // Check whether custom config files are allowed.
-        KConfigGroup cg(sharedConfig, "KDE Action Restrictions");
-        QString kioskException = cg.readEntry("kiosk_exception");
-        if (!cg.readEntry("custom_config", true)) {
-           sharedConfig = 0;
-        }
     }
     
     if (!sharedConfig) {
         sharedConfig = KSharedConfig::openConfig(component);
-    }
-
-    // Check if we are excempt from kiosk restrictions
-    if (kde_kiosk_admin && !kde_kiosk_exception && !qgetenv("KDE_KIOSK_NO_RESTRICTIONS").isEmpty()) {
-        kde_kiosk_exception = true;
-        sharedConfig = 0;
-        configInit(component); // Reread...
     }
 }
 

@@ -623,8 +623,6 @@ void KConfigPrivate::parseConfigFiles()
             if (bFileImmutable)
                 break;
         }
-        if (componentData.dirs()->isRestrictedResource(resourceType, fileName))
-            bFileImmutable = true;
     }
 }
 

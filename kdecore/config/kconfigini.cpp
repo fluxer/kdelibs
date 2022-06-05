@@ -39,8 +39,6 @@
 #include <qmetaobject.h>
 #include <qregexp.h>
 
-extern bool kde_kiosk_exception;
-
 static QByteArray lookup(const KConfigIniBackend::BufferFragment& fragment, QHash<KConfigIniBackend::BufferFragment, QByteArray>* cache)
 {
     QHash<KConfigIniBackend::BufferFragment, QByteArray>::iterator it = cache->find(fragment);
@@ -141,9 +139,9 @@ KConfigIniBackend::parseConfig(const QByteArray& currentLocale, KEntryMap& entry
                     line.at(start) == '$' && line.at(start + 1) == 'i')
                 {
                     if (newGroup.isEmpty())
-                        fileOptionImmutable = !kde_kiosk_exception;
+                        fileOptionImmutable = true;
                     else
-                        groupOptionImmutable = !kde_kiosk_exception;
+                        groupOptionImmutable = true;
                 }
                 else {
                     if (!newGroup.isEmpty())
@@ -201,8 +199,7 @@ KConfigIniBackend::parseConfig(const QByteArray& currentLocale, KEntryMap& entry
                     while (i < end) {
                         switch (aKey.at(i)) {
                             case 'i':
-                                if (!kde_kiosk_exception)
-                                    entryOptions |= KEntryMap::EntryImmutable;
+                                entryOptions |= KEntryMap::EntryImmutable;
                                 break;
                             case 'e':
                                 if (allowExecutableValues)

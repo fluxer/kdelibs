@@ -60,7 +60,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
-#include <QtNetwork/QHostInfo>
 
 #include <mutex>
 
@@ -74,20 +73,13 @@ class KStandardDirs::KStandardDirsPrivate
 {
 public:
     KStandardDirsPrivate(KStandardDirs* qq)
-        : m_restrictionsActive(false),
-          m_checkRestrictions(true),
-          q(qq)
+        : q(qq)
     { }
 
-    bool hasDataRestrictions(const QString &relPath) const;
     QStringList resourceDirs(const char* type, const QString& subdirForRestrictions);
     void createSpecialResource(const char*);
     bool exists(const QString &fullPath);
     QString realPath(const QString &dirname);
-
-    bool m_restrictionsActive : 1;
-    bool m_checkRestrictions : 1;
-    QMap<QByteArray, bool> m_restrictions;
 
     QStringList xdgdata_prefixes;
     QStringList xdgconf_prefixes;
@@ -226,33 +218,6 @@ KStandardDirs::~KStandardDirs()
 {
     delete d;
 }
-
-bool KStandardDirs::isRestrictedResource(const char *type, const QString& relPath) const
-{
-    if (!d->m_restrictionsActive)
-        return false;
-
-    if (d->m_restrictions.value(type, false))
-        return true;
-
-    if (strcmp(type, "data")==0 && d->hasDataRestrictions(relPath))
-        return true;
-
-    return false;
-}
-
-bool KStandardDirs::KStandardDirsPrivate::hasDataRestrictions(const QString &relPath) const
-{
-    QString key;
-    const int i = relPath.indexOf(QLatin1Char('/'));
-    if (i != -1)
-        key = QString::fromLatin1("data_") + relPath.left(i);
-    else
-        key = QString::fromLatin1("data_") + relPath;
-
-    return m_restrictions.value(key.toLatin1(), false);
-}
-
 
 QStringList KStandardDirs::allTypes() const
 {
@@ -882,15 +847,12 @@ QStringList KStandardDirs::resourceDirs(const char *type) const
 QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, const QString& subdirForRestrictions)
 {
     std::lock_guard<std::recursive_mutex> lock(m_cacheMutex);
-    const bool dataRestrictionActive = m_restrictionsActive
-                                       && (strcmp(type, "data") == 0)
-                                       && hasDataRestrictions(subdirForRestrictions);
 
     QMap<QByteArray, QStringList>::const_iterator dirCacheIt = m_dircache.constFind(type);
 
     QStringList candidates;
 
-    if (dirCacheIt != m_dircache.constEnd() && !dataRestrictionActive) {
+    if (dirCacheIt != m_dircache.constEnd()) {
         //qDebug() << this << "resourceDirs(" << type << "), in cache already";
         candidates = *dirCacheIt;
     }
@@ -901,16 +863,6 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
             createSpecialResource(type);
 
         QDir testdir;
-
-        bool restrictionActive = false;
-        if (m_restrictionsActive) {
-            if (dataRestrictionActive)
-                restrictionActive = true;
-            if (m_restrictions.value("all", false))
-                restrictionActive = true;
-            else if (m_restrictions.value(type, false))
-                restrictionActive = true;
-        }
 
         const QStringList dirs = m_relatives.value(type);
         const QString typeInstallPath = installPath(type); // could be empty
@@ -962,8 +914,6 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
                             continue;
                         const QString path = realPath( *pit + *it );
                         testdir.setPath(path);
-                        if (local && restrictionActive)
-                            continue;
                         if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity))
                             candidates.append(path);
                     }
@@ -1006,11 +956,8 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
         }
 
         // Insert result into the cache for next time.
-        // Exception: data_subdir restrictions are per-subdir, so we can't store such results
-        if (!dataRestrictionActive) {
-            //kDebug() << this << "Inserting" << type << candidates << "into dircache";
-            m_dircache.insert(type, candidates);
-        }
+        //kDebug() << this << "Inserting" << type << candidates << "into dircache";
+        m_dircache.insert(type, candidates);
     }
 
 #if 0
@@ -1588,126 +1535,6 @@ static QStringList lookupProfiles(const QString &mapFile)
     if (profiles.isEmpty())
         profiles << QString::fromLatin1("default");
     return profiles;
-}
-
-extern bool kde_kiosk_admin;
-
-bool KStandardDirs::addCustomized(KConfig *config)
-{
-    if (!d->m_checkRestrictions) // there are already customized entries
-        return false; // we just quit and hope they are the right ones
-
-    // save the numbers of config directories. If this changes,
-    // we will return true to give KConfig a chance to reparse
-    const int configdirs = resourceDirs("config").count();
-
-    // reading the prefixes in
-    QString group = QLatin1String("Directories");
-    KConfigGroup cg(config, group);
-
-    QString kioskAdmin = cg.readEntry("kioskAdmin");
-    if (!kioskAdmin.isEmpty() && !kde_kiosk_admin)
-    {
-        int i = kioskAdmin.indexOf(QLatin1Char(':'));
-        QString user = kioskAdmin.left(i);
-        QString host = kioskAdmin.mid(i+1);
-
-        KUser thisUser;
-        if ((user == thisUser.loginName()) &&
-            (host.isEmpty() || (host == QHostInfo::localHostName())))
-        {
-            kde_kiosk_admin = true;
-        }
-    }
-
-    bool readProfiles = true;
-
-    if (kde_kiosk_admin && !qgetenv("KDE_KIOSK_NO_PROFILES").isEmpty())
-        readProfiles = false;
-
-    QString userMapFile = cg.readEntry("userProfileMapFile");
-    QString profileDirsPrefix = cg.readEntry("profileDirsPrefix");
-    if (!profileDirsPrefix.isEmpty() && !profileDirsPrefix.endsWith(QLatin1Char('/')))
-        profileDirsPrefix.append(QLatin1Char('/'));
-
-    QStringList profiles;
-    if (readProfiles)
-        profiles = lookupProfiles(userMapFile);
-    QString profile;
-
-    bool priority = false;
-    while(true)
-    {
-        KConfigGroup cg(config, group);
-        const QStringList list = cg.readEntry("prefixes", QStringList());
-        foreach (const QString it, list) {
-            addPrefix(it, priority);
-            addXdgConfigPrefix(it + QLatin1String("/etc/xdg"), priority);
-            addXdgDataPrefix(it + QLatin1String("/share"), priority);
-        }
-        // If there are no prefixes defined, check if there is a directory
-        // for this profile under <profileDirsPrefix>
-        if (list.isEmpty() && !profile.isEmpty() && !profileDirsPrefix.isEmpty())
-        {
-            QString dir = profileDirsPrefix + profile;
-            addPrefix(dir, priority);
-            addXdgConfigPrefix(dir + QLatin1String("/etc/xdg"), priority);
-            addXdgDataPrefix(dir + QLatin1String("/share"), priority);
-        }
-
-        // iterating over all entries in the group Directories
-        // to find entries that start with dir_$type
-        const QMap<QString, QString> entries = config->entryMap(group);
-        for (QMap<QString, QString>::ConstIterator it2 = entries.begin();
-                it2 != entries.end(); ++it2)
-        {
-            const QString key = it2.key();
-            if (key.startsWith(QLatin1String("dir_"))) {
-                // generate directory list, there may be more than 1.
-                const QStringList dirs = (*it2).split(QString(QLatin1Char(',')));
-                QStringList::ConstIterator sIt(dirs.begin());
-                QString resType = key.mid(4);
-                for (; sIt != dirs.end(); ++sIt)
-                {
-                    const QByteArray latin1ResType = resType.toLatin1();
-                    addResourceDir(latin1ResType.constData(), *sIt, priority);
-                }
-            }
-        }
-        if (profiles.isEmpty())
-            break;
-        profile = profiles.back();
-        group = QString::fromLatin1("Directories-%1").arg(profile);
-        profiles.pop_back();
-        priority = true;
-    }
-
-    // Process KIOSK restrictions.
-    if (!kde_kiosk_admin || qgetenv("KDE_KIOSK_NO_RESTRICTIONS").isEmpty())
-    {
-        KConfigGroup cg(config, "KDE Resource Restrictions");
-        const QMap<QString, QString> entries = cg.entryMap();
-        for (QMap<QString, QString>::ConstIterator it2 = entries.begin();
-             it2 != entries.end(); ++it2)
-        {
-            const QString key = it2.key();
-            if (!cg.readEntry(key, true))
-            {
-                d->m_restrictionsActive = true;
-                const QByteArray cKey = key.toLatin1();
-                d->m_restrictions.insert(cKey, true);
-                d->m_dircache.remove(cKey);
-                d->m_savelocations.remove(cKey);
-            }
-        }
-    }
-
-    // check if the number of config dirs changed
-    const bool configDirsChanged = (resourceDirs("config").count() != configdirs);
-    // If the config dirs changed, we check kiosk restrictions again.
-    d->m_checkRestrictions = configDirsChanged;
-    // return true if the number of config dirs changed: reparse config file
-    return configDirsChanged;
 }
 
 QString KStandardDirs::localkdedir() const
