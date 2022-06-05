@@ -318,7 +318,7 @@ public:
      * @internal Translates a message as a QTranslator is supposed to.
      * The worker of the same-name KLocale API function.
      */
-    QString translateQt(const char *context, const char *sourceText, const char *comment) const;
+    QString translateQt(const char *context, const char *sourceText) const;
 
     /**
      * @internal Checks whether or not the active catalog is found for the given language.

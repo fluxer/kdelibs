@@ -43,23 +43,12 @@ public:
         setObjectName(QLatin1String("kdetranslator"));
     }
 
-    // provides virtuals for old and new method
-    virtual QString translate(const char *context,
-                              const char *sourceText) const
+    QString translate(const char *context, const char *sourceText) const final
     {
-        return KGlobal::locale()->translateQt(context, sourceText, 0);
+        return KGlobal::locale()->translateQt(context, sourceText);
     }
 
-    virtual QString translate(const char *context,
-                              const char *sourceText,
-                              const char *message,
-                              const char *disambiguation = 0) const
-    {
-        Q_UNUSED(disambiguation);
-        return KGlobal::locale()->translateQt(context, sourceText, message);
-    }
-
-    virtual bool isEmpty() const
+    bool isEmpty() const final
     {
         return false;
     }

@@ -175,9 +175,9 @@ void KLocale::translateRaw(const char *ctxt, const char *singular, const char *p
     d->translateRawFrom(0, ctxt, singular, plural, n, lang, trans);
 }
 
-QString KLocale::translateQt(const char *context, const char *sourceText, const char *comment) const
+QString KLocale::translateQt(const char *context, const char *sourceText) const
 {
-    return d->translateQt(context, sourceText, comment);
+    return d->translateQt(context, sourceText);
 }
 
 QList<KLocale::DigitSet> KLocale::allDigitSetsList() const

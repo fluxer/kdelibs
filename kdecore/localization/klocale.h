@@ -1788,7 +1788,7 @@ public:
      * The parameters are similar to i18n(), but the result
      * value has other semantics (it can be QString())
      */
-    QString translateQt(const char *context, const char *sourceText, const char *comment) const;
+    QString translateQt(const char *context, const char *sourceText) const;
 
     /**
      * Provides list of all known language codes.
