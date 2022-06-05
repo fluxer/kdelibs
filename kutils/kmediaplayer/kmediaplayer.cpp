@@ -157,7 +157,7 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
             } \
             case QVariant::Float: \
             case QVariant::Double: { \
-                qint64 doublevalue = value.toDouble(); \
+                double doublevalue = value.toDouble(); \
                 mpvresult = mpv_set_property(d->m_handle, name.constData(), MPV_FORMAT_DOUBLE, &doublevalue); \
                 break; \
             } \
