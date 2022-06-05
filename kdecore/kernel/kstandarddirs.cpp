@@ -1364,9 +1364,8 @@ void KStandardDirs::addKDEDefaults()
         addPrefix(localKdeDir);
     }
 
-    foreach (const QString it, kdedirList) {
-        const QString dir = KShell::tildeExpand(it);
-        addPrefix(dir);
+    foreach (const QString &it, kdedirList) {
+        addPrefix(KShell::tildeExpand(it));
     }
     // end KDEDIRS
 
@@ -1405,7 +1404,7 @@ void KStandardDirs::addKDEDefaults()
 
     // begin XDG_DATA_XXX
     QStringList kdedirDataDirs;
-    foreach (const QString it, kdedirList) {
+    foreach (const QString &it, kdedirList) {
         if (!it.endsWith(QLatin1Char('/'))) {
             kdedirDataDirs.append(it + QLatin1String("/share/"));
         } else {
