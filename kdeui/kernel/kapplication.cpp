@@ -363,8 +363,6 @@ void KApplicationPrivate::init()
 
   (void) KClipboardSynchronizer::self();
 
-  QApplication::setDesktopSettingsAware( false );
-
 #ifdef Q_WS_X11
   // create all required atoms in _one_ roundtrip to the X server
   const int max = 20;
