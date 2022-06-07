@@ -180,6 +180,7 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
         }
     }
 
+    QStringList globMimeList = mimeList;
     // Found one glob match exactly: OK, use that like the reference xdgmime
     // implementation.
     if ( mimeList.count() == 1 ) {
@@ -260,6 +261,16 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
                 }
             } else
                 return defaultMimeTypePtr(); // == 'no idea', e.g. for "data:,foo/"
+        }
+    }
+
+    if (globMimeList.count() > 0) {
+        // Glob with no magic (e.g. application/x-cd-image)
+        KMimeType::Ptr mime = mimeType( globMimeList.at(0) );
+        if (mime) {
+            if (accuracy)
+                *accuracy = 50;
+            return mime;
         }
     }
 
