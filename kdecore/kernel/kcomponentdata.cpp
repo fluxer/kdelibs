@@ -143,8 +143,8 @@ void KComponentDataPrivate::lazyInit(const KComponentData &component)
     // the first KComponentData sets the KDE Qt plugin paths
     if (dirs && kdeLibraryPathsAdded != KdeLibraryPathsAddedDone) {
         kdeLibraryPathsAdded = KdeLibraryPathsAddedDone;
-        const QStringList &plugins = dirs->resourceDirs("qtplugins");
-        foreach (const QString it, plugins) {
+        const QStringList plugins = dirs->resourceDirs("qtplugins");
+        foreach (const QString &it, plugins) {
             QCoreApplication::addLibraryPath(it);
         }
     }
