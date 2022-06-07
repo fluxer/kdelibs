@@ -38,11 +38,6 @@ namespace KGlobal
 class KDETranslator : public QTranslator
 {
 public:
-    KDETranslator(QObject *parent) : QTranslator(parent)
-    {
-        setObjectName(QLatin1String("kdetranslator"));
-    }
-
     QString translate(const char *context, const char *sourceText) const final
     {
         return KGlobal::locale()->translateQt(context, sourceText);
