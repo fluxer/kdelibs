@@ -169,6 +169,7 @@ private Q_SLOTS:
     void _updateStatus(const QString string);
     void _updateFinished();
     void _updateError(const QString error);
+    void _updateVolume(const int volume);
 
 private:
     KMediaWidgetPrivate *d;

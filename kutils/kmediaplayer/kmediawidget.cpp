@@ -69,7 +69,10 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_ui->w_volume->setValue(d->m_player->volume());
     d->m_ui->w_fullscreen->setIcon(KIcon("view-fullscreen"));
 
-    connect(&d->m_volumeline, SIGNAL(frameChanged(int)), this, SLOT(setVolume(int)));
+    connect(&d->m_volumeline, SIGNAL(frameChanged(int)), this, SLOT(_updateVolume(int)));
+    d->m_volumeline.setFrameRange(0, d->m_ui->w_volume->value());
+    d->m_volumeline.setDuration(3000);
+    d->m_volumeline.setDirection(QTimeLine::Forward);
 
     connect(d->m_ui->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
     // connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
@@ -104,8 +107,9 @@ KMediaWidget::~KMediaWidget()
     if (d->m_timerid >= 0) {
         killTimer(d->m_timerid);
     }
-    while (d->m_volumeline.state() == QTimeLine::Running) {
-        QCoreApplication::processEvents();
+    if (d->m_volumeline.state() == QTimeLine::Running) {
+        d->m_volumeline.stop();
+        setVolume(d->m_volumeline.endFrame());
     }
     d->m_player->stop();
     d->m_player->deleteLater();
@@ -122,17 +126,18 @@ void KMediaWidget::open(const QString &path)
     d->m_ui->w_play->setEnabled(true);
     d->m_ui->w_position->setEnabled(true);
 
-    while (d->m_volumeline.state() == QTimeLine::Running) {
-        QCoreApplication::processEvents();
-    }
     if (d->m_smoothvolume) {
-        d->m_volumeline.setFrameRange(0, d->m_player->volume());
-        d->m_volumeline.setDuration(3000);
-        d->m_volumeline.setDirection(QTimeLine::Forward);
-        d->m_player->setVolume(0);
-        d->m_volumeline.start();
+        if (d->m_volumeline.state() == QTimeLine::Running) {
+            d->m_volumeline.stop();
+            setVolume(d->m_volumeline.endFrame());
+        }
+        d->m_volumeline.setFrameRange(0, d->m_ui->w_volume->value());
+        setVolume(0);
     }
     d->m_player->load(path);
+    if (d->m_smoothvolume) {
+        d->m_volumeline.start();
+    }
 
     d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
 }
@@ -146,7 +151,7 @@ void KMediaWidget::setPlay(const int value)
 {
     // TODO: can the position be stored and restored reliably as well?
     if (d->m_replay && !d->m_path.isEmpty()) {
-        open(d->m_path);
+        KMediaWidget::open(d->m_path);
         return;
     }
 
@@ -405,6 +410,14 @@ void KMediaWidget::_updateFinished()
         _updateControls(true);
     }
     _updatePlay(true);
+}
+
+void KMediaWidget::_updateVolume(const int volume)
+{
+    if (volume == d->m_volumeline.endFrame()) {
+        d->m_volumeline.stop();
+    }
+    setVolume(volume);
 }
 
 void KMediaWidget::_updateError(const QString error)
