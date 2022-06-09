@@ -34,6 +34,8 @@
 class KMediaWidgetPrivate
 {
 public:
+    KMediaWidgetPrivate();
+
     KMediaPlayer *m_player;
     bool m_dragdrop;
     bool m_fullscreen;
@@ -50,8 +52,17 @@ public:
     Ui_KMediaWidgetPrivate *m_ui;
 };
 
+KMediaWidgetPrivate::KMediaWidgetPrivate()
+    : m_dragdrop(false), m_fullscreen(false), m_hiddencontrols(false), m_smoothvolume(false),
+    m_parent(nullptr), m_parenthack(nullptr),
+    m_timerid(0),
+    m_replay(false),
+    m_visible(false)
+{
+}
+
 KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
-    : QWidget(parent), d(new KMediaWidgetPrivate)
+    : QWidget(parent), d(new KMediaWidgetPrivate())
 {
     d->m_ui = new Ui_KMediaWidgetPrivate();
     d->m_ui->setupUi(this);
@@ -242,6 +253,7 @@ void KMediaWidget::resetControlsTimer()
 {
     if (d->m_timerid >= 0) {
         killTimer(d->m_timerid);
+        d->m_timerid = 0;
     }
     // do not hide the controls if path is not loaded
     if (!d->m_player->path().isEmpty()) {
@@ -405,6 +417,7 @@ void KMediaWidget::_updateFinished()
         // show the controls until the next open
         if (d->m_timerid >= 0) {
             killTimer(d->m_timerid);
+            d->m_timerid = 0;
         }
         setMouseTracking(false);
         _updateControls(true);
