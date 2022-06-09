@@ -109,7 +109,7 @@ KFadeWidgetEffect::KFadeWidgetEffect(QWidget *destWidget)
     setGeometry(QRect(destWidget->mapTo(parentWidget(), QPoint(0, 0)), destWidget->size()));
     d->oldPixmap = QPixmap::grabWidget(destWidget);
     d->timeLine.setFrameRange(0, 255);
-    d->timeLine.setCurveShape(QTimeLine::EaseOutCurve);
+    d->timeLine.setEasingCurve(QEasingCurve(QEasingCurve::OutCurve));
     connect(&d->timeLine, SIGNAL(finished()), SLOT(finished()));
     connect(&d->timeLine, SIGNAL(frameChanged(int)), SLOT(repaint()));
     show();
