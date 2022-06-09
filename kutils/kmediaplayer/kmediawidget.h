@@ -67,8 +67,10 @@ public:
         FullscreenVideo = 0x2,
         //! @brief After a certain amount of time the controls will hide and show again when needed
         HiddenControls = 0x4,
+        //! @brief Whenever path is loaded the volume is slowly increased
+        SmoothVolume = 0x8,
         //! @brief All available options
-        AllOptions = DragDrop | FullscreenVideo | HiddenControls,
+        AllOptions = DragDrop | FullscreenVideo | HiddenControls | SmoothVolume,
         //! @brief Default options
         DefaultOptions = NoOptions
     };

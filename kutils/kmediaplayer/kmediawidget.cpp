@@ -20,6 +20,7 @@
 #include <QInputDialog>
 #include <QMessageBox>
 #include <QTimer>
+#include <QTimeLine>
 
 #include "kdebug.h"
 #include "klocale.h"
@@ -37,9 +38,11 @@ public:
     bool m_dragdrop;
     bool m_fullscreen;
     bool m_hiddencontrols;
+    bool m_smoothvolume;
     QWidget *m_parent;
     QMainWindow *m_parenthack;
     QSize m_parentsizehack;
+    QTimeLine m_volumeline;
     int m_timerid;
     QString m_path;
     bool m_replay;
@@ -56,6 +59,7 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_dragdrop = (options & DragDrop) != options;
     d->m_fullscreen = (options & FullscreenVideo) != options;
     d->m_hiddencontrols = (options & HiddenControls) != options;
+    d->m_smoothvolume = (options & SmoothVolume) != options;
     d->m_parent = parent;
 
     d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
@@ -64,6 +68,8 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_ui->w_position->setEnabled(false);
     d->m_ui->w_volume->setValue(d->m_player->volume());
     d->m_ui->w_fullscreen->setIcon(KIcon("view-fullscreen"));
+
+    connect(&d->m_volumeline, SIGNAL(frameChanged(int)), this, SLOT(setVolume(int)));
 
     connect(d->m_ui->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
     // connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
@@ -98,6 +104,9 @@ KMediaWidget::~KMediaWidget()
     if (d->m_timerid >= 0) {
         killTimer(d->m_timerid);
     }
+    while (d->m_volumeline.state() == QTimeLine::Running) {
+        QCoreApplication::processEvents();
+    }
     d->m_player->stop();
     d->m_player->deleteLater();
     delete d->m_ui;
@@ -113,6 +122,16 @@ void KMediaWidget::open(const QString &path)
     d->m_ui->w_play->setEnabled(true);
     d->m_ui->w_position->setEnabled(true);
 
+    while (d->m_volumeline.state() == QTimeLine::Running) {
+        QCoreApplication::processEvents();
+    }
+    if (d->m_smoothvolume) {
+        d->m_volumeline.setFrameRange(0, d->m_player->volume());
+        d->m_volumeline.setDuration(3000);
+        d->m_volumeline.setDirection(QTimeLine::Forward);
+        d->m_player->setVolume(0);
+        d->m_volumeline.start();
+    }
     d->m_player->load(path);
 
     d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
