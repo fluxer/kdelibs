@@ -14,6 +14,7 @@ if(IMAGEMAGICK_FOUND)
     )
     set_target_properties(kimg_magick PROPERTIES
         COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
+        OUTPUT_NAME magick
     )
 
     install(
@@ -31,6 +32,9 @@ if(WEBP_FOUND)
         ${KDE4_KDECORE_LIBS}
         ${QT_QTGUI_LIBRARY}
         ${WEBP_LIBRARIES}
+    )
+    set_target_properties(kimg_webp PROPERTIES
+        OUTPUT_NAME webp
     )
 
     install(
