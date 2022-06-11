@@ -38,8 +38,8 @@ static QString getSettingsPath(const QString &filename)
     return KStandardDirs::locateLocal("config", filename);
 }
 
-KSettings::KSettings(const QString& file, const OpenFlags mode, QObject *parent)
-    : QSettings(getSettingsPath(file), defaultformat, parent)
+KSettings::KSettings(const QString& file, const OpenFlags mode)
+    : QSettings(getSettingsPath(file), defaultformat)
 {
     if ((mode & IncludeGlobals) != mode) {
         addSource(KStandardDirs::locateLocal("config", QLatin1String("kdeglobals")));

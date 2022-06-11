@@ -337,7 +337,7 @@ KAbstractPlayerPrivate::~KAbstractPlayerPrivate()
     mpv_terminate_destroy(m_handle);
 #endif
     if (m_settings) {
-        m_settings->deleteLater();
+        delete m_settings;
     }
 }
 

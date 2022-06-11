@@ -37,7 +37,6 @@
  */
 class KDECORE_EXPORT KSettings : public QSettings
 {
-    Q_OBJECT
 public:
     /**
      * Determines how the system-wide and user's global settings will affect
@@ -66,7 +65,7 @@ public:
      *                     to influence the values returned by this object.  See OpenFlags for
      *                     more details.
      */
-    KSettings(const QString &file, const OpenFlags mode, QObject *parent = 0);
+    KSettings(const QString &file, const OpenFlags mode);
 
     ~KSettings();
 
