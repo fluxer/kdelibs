@@ -638,44 +638,22 @@ static int openSocket()
   struct sockaddr_un server;
 #define MAX_SOCK_FILE 255
   char sock_file[MAX_SOCK_FILE + 1];
-  const char *home_dir = getenv("HOME");
-  const char *kde_home = getenv("KDEHOME");
+  const QByteArray tmp_dir = QFile::encodeName(KGlobal::dirs()->resourceDirs("tmp").first());
   char *display;
 
   sock_file[0] = sock_file[MAX_SOCK_FILE] = 0;
 
-  if (!kde_home || !kde_home[0])
+  if (tmp_dir.isEmpty())
   {
-     kde_home = "~/" KDE_DEFAULT_HOME "/";
+    fprintf(stderr, "Warning: no temp dir!\n");
+    return -1;
   }
-
-  if (kde_home[0] == '~')
-  {
-     if (!home_dir || !home_dir[0])
-     {
-        fprintf(stderr, "Warning: $HOME not set!\n");
-        return -1;
-     }
-     if (strlen(home_dir) > (MAX_SOCK_FILE-100))
-     {
-        fprintf(stderr, "Warning: Home directory path too long!\n");
-        return -1;
-     }
-     kde_home++;
-     strncpy(sock_file, home_dir, MAX_SOCK_FILE);
-  }
-  strncat(sock_file, kde_home, MAX_SOCK_FILE - strlen(sock_file));
+  strncat(sock_file, tmp_dir.constData(), MAX_SOCK_FILE - strlen(sock_file));
 
   /** Strip trailing '/' **/
   if ( sock_file[strlen(sock_file)-1] == '/')
      sock_file[strlen(sock_file)-1] = 0;
-  
-  strncat(sock_file, "/socket-", MAX_SOCK_FILE - strlen(sock_file));
-  if (gethostname(sock_file+strlen(sock_file), MAX_SOCK_FILE - strlen(sock_file) - 1) != 0)
-  {
-     perror("Warning: Could not determine hostname: ");
-     return -1;
-  }
+
   sock_file[sizeof(sock_file)-1] = '\0';
 
   /* append $DISPLAY */
