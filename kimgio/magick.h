@@ -19,6 +19,7 @@
 #ifndef KIMG_MAGICK_H
 #define KIMG_MAGICK_H
 
+#include <QtCore/qstringlist.h>
 #include <QtGui/qimageiohandler.h>
 
 #include <Magick++/Image.h>
@@ -59,7 +60,7 @@ private:
 class MagickPlugin : public QImageIOPlugin
 {
 public:
-    QStringList keys() const final;
+    QStringList keys() const;
     QList<QByteArray> mimeTypes() const;
     Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
     QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;

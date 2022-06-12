@@ -23,6 +23,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef WEBP_H
 #define WEBP_H
 
+#include <QStringList>
 #include <QImageIOHandler>
 
 class WebPHandler : public QImageIOHandler
@@ -50,7 +51,7 @@ private:
 class WebPPlugin : public QImageIOPlugin
 {
 public:
-    QStringList keys() const final;
+    QStringList keys() const;
     QList<QByteArray> mimeTypes() const;
     Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
     QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;
