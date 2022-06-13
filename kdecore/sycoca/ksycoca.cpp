@@ -327,14 +327,8 @@ bool KSycocaPrivate::checkDatabase(BehaviorsIfNotFound ifNotFound)
 
     closeDatabase(); // close the dummy one
 
-    static const QString kdedInterface = QString::fromLatin1("org.kde.kded");
-    QDBusConnectionInterface* sessionInterface = QDBusConnection::sessionBus().interface();
-    // We can only use the installed ksycoca file if kded is running, since
-    // kded is what keeps the file up-to-date.
-    const bool kdedRunning = sessionInterface->isServiceRegistered(kdedInterface);
-
     // Check if new database already available
-    if (kdedRunning && openDatabase(ifNotFound & IfNotFoundOpenDummy)) {
+    if (openDatabase(ifNotFound & IfNotFoundOpenDummy)) {
         if (checkVersion()) {
             // Database exists, and version is ok.
             return true;
@@ -361,6 +355,9 @@ bool KSycocaPrivate::checkDatabase(BehaviorsIfNotFound ifNotFound)
         }
 
         // If kded is not running we need to launch it as it monitors for changes
+        static const QString kdedInterface = QString::fromLatin1("org.kde.kded");
+        QDBusConnectionInterface* sessionInterface = QDBusConnection::sessionBus().interface();
+        const bool kdedRunning = sessionInterface->isServiceRegistered(kdedInterface);
         if (!kdedRunning) {
             kDebug(7011) << "Launching kded";
             sessionInterface->startService(kdedInterface);
