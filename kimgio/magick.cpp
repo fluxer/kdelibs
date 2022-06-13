@@ -29,12 +29,16 @@
 #include <Magick++/CoderInfo.h>
 #include <Magick++/STL.h>
 
-static const char* const magickpluginformat = "magick";
-static const uchar icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
+static const char* const s_magickpluginformat = "magick";
+static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
+
+static QList<std::string> s_blacklist = QList<std::string>()
+    << std::string("SVG")
+    << std::string("SVGZ");
 
 int initMagick()
 {
-    Magick::InitializeMagick(magickpluginformat);
+    Magick::InitializeMagick(s_magickpluginformat);
     return 0;
 }
 Q_CONSTRUCTOR_FUNCTION(initMagick);
@@ -77,7 +81,7 @@ bool MagickHandler::read(QImage *image)
         if (m_magickimages.size() == 0) {
             const QByteArray data = device()->readAll();
             // some ImageMagick coders fail to load from blob (e.g. icon)
-            if (qstrncmp(data.constData(), reinterpret_cast<const char*>(icoheader), 5) == 0) {
+            if (qstrncmp(data.constData(), reinterpret_cast<const char*>(s_icoheader), 5) == 0) {
                 kDebug() << "ICO workaround";
                 KTemporaryFile tempblobfile;
                 tempblobfile.setFileTemplate("XXXXXXXXXX.ico");
@@ -155,7 +159,7 @@ bool MagickHandler::write(const QImage &image)
 
 QByteArray MagickHandler::name() const
 {
-    return magickpluginformat;
+    return s_magickpluginformat;
 }
 
 bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
@@ -174,12 +178,15 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
             try {
                 const Magick::CoderInfo magickcoderinfo(std::string(filesuffix.constData()));
                 const std::string magickcodername = magickcoderinfo.name();
-                if (magickcoderinfo.isReadable() && (qstrnicmp(magickcodername.c_str(), "png", 3) != 0)) {
+                if (s_blacklist.contains(magickcodername)) {
+                    kDebug() << "Shortcut says it is blacklisted";
+                } else if (magickcoderinfo.isReadable() && (qstrnicmp(magickcodername.c_str(), "png", 3) != 0)) {
                     kDebug() << "Shortcut says it is supported";
                     actualformat->append(magickcodername.c_str(), magickcodername.size());
                     return true;
+                } else {
+                    kDebug() << "Shortcut says it is not supported";
                 }
-                kDebug() << "Shortcut says it is not supported";
             } catch(Magick::Exception &err) {
                 kWarning() << err.what();
             } catch(std::exception &err) {
@@ -218,7 +225,7 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
         kWarning() << "Exception raised";
     }
 
-    if (qstrncmp(data.constData(), reinterpret_cast<const char*>(icoheader), 5) == 0) {
+    if (qstrncmp(data.constData(), reinterpret_cast<const char*>(s_icoheader), 5) == 0) {
         kDebug() << "ICO header detected";
         actualformat->append("ico");
         isvalid = true;
@@ -278,7 +285,7 @@ int MagickHandler::currentImageNumber() const
 
 QStringList MagickPlugin::keys() const
 {
-    return QStringList() << magickpluginformat;
+    return QStringList() << s_magickpluginformat;
 }
 
 QList<QByteArray> MagickPlugin::mimeTypes() const
@@ -307,7 +314,7 @@ QList<QByteArray> MagickPlugin::mimeTypes() const
 
 QImageIOPlugin::Capabilities MagickPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == magickpluginformat)
+    if (format == s_magickpluginformat)
         return Capabilities(CanRead);
     if (!format.isEmpty())
         return 0;
