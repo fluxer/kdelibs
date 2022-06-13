@@ -35,9 +35,27 @@
 #include <kservice.h>
 
 #include <QDBusServiceWatcher>
+
 class KDirWatch;
 
-// No need for this in libkio - apps only get readonly access
+class KHostnameD : public QObject
+{
+   Q_OBJECT
+public:
+   KHostnameD(QObject *parent);
+
+public Q_SLOTS:
+   void checkHostname();
+
+private:
+   /**
+    * Timer for interval hostname checking.
+    */
+   QTimer m_Timer;
+   QByteArray m_hostname;
+};
+
+// Apps get read-only access
 class Kded : public QObject
 {
   Q_OBJECT
@@ -162,7 +180,6 @@ private:
    /**
     * Pointer to the dirwatch class which tells us, when some directories
     * changed.
-    * Slower polling for remote file systems is now done in KDirWatch (JW).
     */
    KDirWatch* m_pDirWatch;
 
@@ -172,6 +189,12 @@ private:
     * in only one rebuilding.
     */
    QTimer* m_pTimer;
+
+   /**
+    * Pointer to the hostname class which updates X11 authorization when
+    * hostname changes.
+    */
+   KHostnameD* m_pHostnameD;
 
    QHash<QString,KDEDModule *> m_modules;
     //QHash<QString,QLibrary *> m_libs;
@@ -196,24 +219,6 @@ public:
 
 public Q_SLOTS:
    void recreate();
-};
-
-
-class KHostnameD : public QObject
-{
-   Q_OBJECT
-public:
-   KHostnameD(QObject *parent, int pollInterval);
-
-public Q_SLOTS:
-   void checkHostname();
-
-private:
-   /**
-    * Timer for interval hostname checking.
-    */
-   QTimer m_Timer;
-   QByteArray m_hostname;
 };
 
 #endif

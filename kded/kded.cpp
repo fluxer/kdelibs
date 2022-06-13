@@ -56,7 +56,7 @@
 
 Kded *Kded::_self = 0;
 
-static int HostnamePollInterval = 5000;
+static int iHostnamePollInterval = 5000;
 static bool bCheckStamps = true;
 static bool bCheckSycoca = true;
 static bool bCheckHostname = true;
@@ -88,6 +88,7 @@ Kded::Kded(QObject *parent)
     : QObject(parent),
     m_pDirWatch(nullptr),
     m_pTimer(nullptr),
+    m_pHostnameD(nullptr),
     m_serviceWatcher(nullptr)
 {
     _self = this;
@@ -115,6 +116,11 @@ Kded::Kded(QObject *parent)
     m_pTimer = new QTimer(this);
     m_pTimer->setSingleShot(true);
     connect(m_pTimer, SIGNAL(timeout()), this, SLOT(recreate()));
+
+    if (bCheckHostname) {
+         // Watch for hostname changes
+        m_pHostnameD = new KHostnameD(this);
+    }
 }
 
 Kded::~Kded()
@@ -129,6 +135,8 @@ Kded::~Kded()
     m_pTimer->stop();
     delete m_pTimer;
     delete m_pDirWatch;
+
+    delete m_pHostnameD;
 
     QHashIterator<QString,KDEDModule*> it(m_modules);
     while (it.hasNext()) {
@@ -518,10 +526,10 @@ void Kded::unregisterWindowId(qlonglong windowId, const QString &sender)
     }
 }
 
-KHostnameD::KHostnameD(QObject *parent, int pollInterval)
+KHostnameD::KHostnameD(QObject *parent)
     : QObject(parent)
 {
-    m_Timer.start(pollInterval); // repetitive timer (not single-shot)
+    m_Timer.start(iHostnamePollInterval); // repetitive timer (not single-shot)
     connect(&m_Timer, SIGNAL(timeout()), this, SLOT(checkHostname()));
     checkHostname();
 }
@@ -590,7 +598,7 @@ int main(int argc, char *argv[])
     }
 
     KConfigGroup cg(config, "General");
-    HostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
+    iHostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
     bCheckSycoca = cg.readEntry("CheckSycoca", true);
     bCheckHostname = cg.readEntry("CheckHostname", true);
     bCheckStamps = cg.readEntry("CheckFileStamps", true);
@@ -607,10 +615,6 @@ int main(int argc, char *argv[])
     strcpy(e.xclient.data.b, "kded");
     XSendEvent(QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e);
 #endif
-
-    if (bCheckHostname) {
-        (void)new KHostnameD(&app, HostnamePollInterval); // Watch for hostname changes
-    }
 
     return app.exec(); // keep running
 }
