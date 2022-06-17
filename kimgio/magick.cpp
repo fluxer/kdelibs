@@ -32,13 +32,45 @@
 static const char* const s_magickpluginformat = "magick";
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
 
+// borked coders
 static QList<std::string> s_blacklist = QList<std::string>()
     << std::string("SVG")
-    << std::string("SVGZ");
+    << std::string("SVGZ")
+    << std::string("PDF")
+    << std::string("EPDF")
+    << std::string("PS")
+    << std::string("HTML")
+    << std::string("SHTML")
+    << std::string("TXT")
+    << std::string("VIDEO")
+    << std::string("TTF");
 
 int initMagick()
 {
     Magick::InitializeMagick(s_magickpluginformat);
+    std::list<Magick::CoderInfo> magickcoderlist;
+    Magick::coderInfoList(
+        &magickcoderlist,
+        Magick::CoderInfo::AnyMatch,
+        Magick::CoderInfo::AnyMatch,
+        Magick::CoderInfo::AnyMatch
+    );
+    foreach (const Magick::CoderInfo &magickcoder, magickcoderlist) {
+        foreach (const std::string &blacklist, s_blacklist) {
+            if (magickcoder.name() == blacklist) {
+                kDebug() << "Blacklisting coder" << blacklist.c_str();
+                try {
+                    magickcoder.unregister();
+                } catch(Magick::Exception &err) {
+                    kWarning() << err.what();
+                } catch(std::exception &err) {
+                    kWarning() << err.what();
+                } catch (...) {
+                    kWarning() << "Exception raised";
+                }
+            }
+        }
+    }
     return 0;
 }
 Q_CONSTRUCTOR_FUNCTION(initMagick);
@@ -178,9 +210,7 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
             try {
                 const Magick::CoderInfo magickcoderinfo(std::string(filesuffix.constData()));
                 const std::string magickcodername = magickcoderinfo.name();
-                if (s_blacklist.contains(magickcodername)) {
-                    kDebug() << "Shortcut says it is blacklisted";
-                } else if (magickcoderinfo.isReadable() && (qstrnicmp(magickcodername.c_str(), "png", 3) != 0)) {
+                if (magickcoderinfo.isReadable() && (qstrnicmp(magickcodername.c_str(), "png", 3) != 0)) {
                     kDebug() << "Shortcut says it is supported";
                     actualformat->append(magickcodername.c_str(), magickcodername.size());
                     return true;
@@ -211,9 +241,12 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
         Magick::Blob magickinblob(data.constData(), data.size());
         Magick::Image magickimage;
         magickimage.read(magickinblob);
-        // PNG handler used by this plugin
         const std::string magickmagick = magickimage.magick();
-        isvalid = (magickimage.isValid() && (qstrnicmp(magickmagick.c_str(), "png", 3) != 0));
+        isvalid = (
+            magickimage.isValid()
+            // PNG handler used by this plugin
+            && (qstrnicmp(magickmagick.c_str(), "png", 3) != 0)
+        );
         if (isvalid) {
             actualformat->append(magickmagick.c_str(), magickmagick.size());
         }
