@@ -270,15 +270,10 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("display <displayname>", ki18n("Use the X-server display 'displayname'"));
 #endif
     qt_options.add("session <sessionId>", ki18n("Restore the application for the given 'sessionId'"));
-    qt_options.add("cmap", ki18n("Causes the application to install a private color\nmap on an 8-bit display"));
-    qt_options.add("ncols <count>", ki18n("Limits the number of colors allocated in the color\ncube on an 8-bit display, if the application is\nusing the QApplication::ManyColor color\nspecification"));
     qt_options.add("nograb", ki18n("tells Katie to never grab the mouse or the keyboard"));
     qt_options.add("dograb", ki18n("running under a debugger can cause an implicit\n-nograb, use -dograb to override"));
     qt_options.add("sync", ki18n("switches to synchronous mode for debugging"));
     qt_options.add("title <title>", ki18n("sets the application title (caption)"));
-#ifdef Q_WS_X11
-    qt_options.add("visual TrueColor", ki18n("forces the application to use a TrueColor visual on\nan 8-bit display"));
-#endif // Q_WS_X11
     qt_options.add("reverse", ki18n("mirrors the whole layout of widgets"));
     qt_options.add("stylesheet <file.qss>", ki18n("applies the Katie stylesheet to the application widgets"));
 #ifndef QT_KATIE
