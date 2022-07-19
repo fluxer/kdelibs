@@ -254,13 +254,19 @@ bool KPasswdStoreImpl::ensurePasswd(const qlonglong windowid, const bool showerr
 
 bool KPasswdStoreImpl::hasPasswd() const
 {
+#if defined(HAVE_OPENSSL)
     return !m_passwd.isEmpty();
+#else
+    return false;
+#endif
 }
 
 void KPasswdStoreImpl::clearPasswd()
 {
+#if defined(HAVE_OPENSSL)
     m_passwd.clear();
     m_passwdiv.clear();
+#endif
 }
 
 QString KPasswdStoreImpl::encryptPasswd(const QString &passwd, bool *ok) const
