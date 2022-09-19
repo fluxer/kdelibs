@@ -30,7 +30,45 @@
 #include <Magick++/STL.h>
 
 static const char* const s_magickpluginformat = "magick";
+static const uchar s_eps30header[] = { 0x25, 0x21, 0x50, 0x53, 0x2D, 0x41, 0x64, 0x6F, 0x62, 0x65, 0x2D, 0x33, 0x2E, 0x30, 0x20, 0x45, 0x50, 0x53, 0x46, 0x2D, 0x33, 0x2E, 0x30 };
+static const uchar s_eps31header[] = { 0x25, 0x21, 0x50, 0x53, 0x2D, 0x41, 0x64, 0x6F, 0x62, 0x65, 0x2D, 0x33, 0x2E, 0x31, 0x20, 0x45, 0x50, 0x53, 0x46, 0x2D, 0x33, 0x2E, 0x30 };
+static const uchar s_jp2header[] = { 0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87, 0x0A };
+static const uchar s_jpgjfifheader[] = { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01 };
+static const uchar s_xcfheader[] = { 0x67, 0x69, 0x6D, 0x70, 0x20, 0x78, 0x63, 0x66 };
+static const uchar s_gif87aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };
+static const uchar s_gif89aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
+static const uchar s_jpgheader[] = { 0xFF, 0xD8, 0xFF, 0xE0 };
+static const uchar s_exrheader[] = { 0x76, 0x2F, 0x31, 0x01 };
+static const uchar s_psdheader[] = { 0x38, 0x42, 0x50, 0x53 };
+static const uchar s_tifleheader[] = { 0x49, 0x49, 0x2A, 0x00 };
+static const uchar s_tifbeheader[] = { 0x4D, 0x4D, 0x00, 0x2A };
+static const uchar s_bmpheader[] = { 0x42, 0x4D };
+static const ushort s_peekbuffsize = 32;
+
+// for reference:
+// https://en.wikipedia.org/wiki/List_of_file_signatures
+static const struct HeadersTblData {
+    const uchar *header;
+    const int headersize;
+    const char *format;
+} HeadersTbl[] = {
+    { s_eps30header, 23, "eps", },
+    { s_eps31header, 23, "eps", },
+    { s_jp2header, 12, "jp2", },
+    { s_jpgjfifheader, 12, "jpg", },
+    { s_xcfheader, 8, "xcf", },
+    { s_gif87aheader, 6, "gif", },
+    { s_gif89aheader, 6, "gif", },
+    { s_icoheader, 5, "ico", },
+    { s_jpgheader, 4, "jpg", },
+    { s_exrheader, 4, "exr", },
+    { s_psdheader, 4, "psd", },
+    { s_tifleheader, 4, "tif", },
+    { s_tifbeheader, 4, "tif", },
+    { s_bmpheader , 2, "bmp", }
+};
+static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
 // borked coders
 static QList<std::string> s_blacklist = QList<std::string>()
@@ -209,54 +247,32 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
         return false;
     }
 
-    const QFile *file = qobject_cast<QFile*>(device);
-    if (file) {
-        QFileInfo fileinfo(file->fileName());
-        const QByteArray filesuffix = fileinfo.suffix().toLatin1();
-        if (!filesuffix.isEmpty()) {
-            kDebug() << "Using QFile shortcut for" << file->fileName() << "with extension" << filesuffix;
-            try {
-                const Magick::CoderInfo magickcoderinfo(std::string(filesuffix.constData()));
-                const std::string magickcodername = magickcoderinfo.name();
-                if (magickcoderinfo.isReadable() && (qstrnicmp(magickcodername.c_str(), "png", 3) != 0)) {
-                    kDebug() << "Shortcut says it is supported";
-                    actualformat->append(magickcodername.c_str(), magickcodername.size());
-                    return true;
-                } else {
-                    kDebug() << "Shortcut says it is not supported";
-                }
-            } catch(Magick::Exception &err) {
-                kWarning() << err.what();
-            } catch(std::exception &err) {
-                kWarning() << err.what();
-            } catch (...) {
-                kWarning() << "Exception raised";
-            }
-        }
-    }
-
-    const qint64 oldpos = device->pos();
-
-    bool isvalid = false;
-    const QByteArray data = device->readAll();
+    const QByteArray data = device->peek(s_peekbuffsize);
 
     if (Q_UNLIKELY(data.isEmpty())) {
-        device->seek(oldpos);
         return false;
     }
 
+    for (int i = 0; i < HeadersTblSize; i++) {
+        if (qstrncmp(data.constData(), reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
+            kDebug() << "Header detected" << HeadersTbl[i].format;
+            actualformat->append(HeadersTbl[i].format);
+            return true;
+        }
+    }
+
+    bool isvalid = false;
     try {
-        Magick::Blob magickinblob(data.constData(), data.size());
-        Magick::Image magickimage;
-        magickimage.read(magickinblob);
-        const std::string magickmagick = magickimage.magick();
+        char magickformat[s_peekbuffsize];
+        ::memset(magickformat, '\0', s_peekbuffsize * sizeof(char));
         isvalid = (
-            magickimage.isValid()
+            MagickCore::GetImageMagick(reinterpret_cast<const uchar*>(data.constData()), data.size(), magickformat)
             // PNG handler used by this plugin
-            && (qstrnicmp(magickmagick.c_str(), "png", 3) != 0)
+            && (qstrnicmp(magickformat, "png", 3) != 0)
         );
+        kDebug() << "Magick format detected" << magickformat;
         if (isvalid) {
-            actualformat->append(magickmagick.c_str(), magickmagick.size());
+            actualformat->append(magickformat);
         }
     } catch(Magick::Exception &err) {
         kWarning() << err.what();
@@ -265,14 +281,6 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
     } catch (...) {
         kWarning() << "Exception raised";
     }
-
-    if (qstrncmp(data.constData(), reinterpret_cast<const char*>(s_icoheader), 5) == 0) {
-        kDebug() << "ICO header detected";
-        actualformat->append("ico");
-        isvalid = true;
-    }
-
-    device->seek(oldpos);
 
     return isvalid;
 }
