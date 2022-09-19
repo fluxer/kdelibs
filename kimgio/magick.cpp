@@ -49,12 +49,20 @@ int initMagick()
 {
     Magick::InitializeMagick(s_magickpluginformat);
     std::list<Magick::CoderInfo> magickcoderlist;
-    Magick::coderInfoList(
-        &magickcoderlist,
-        Magick::CoderInfo::AnyMatch,
-        Magick::CoderInfo::AnyMatch,
-        Magick::CoderInfo::AnyMatch
-    );
+    try {
+        Magick::coderInfoList(
+            &magickcoderlist,
+            Magick::CoderInfo::AnyMatch,
+            Magick::CoderInfo::AnyMatch,
+            Magick::CoderInfo::AnyMatch
+        );
+    } catch(Magick::Exception &err) {
+        kWarning() << err.what();
+    } catch(std::exception &err) {
+        kWarning() << err.what();
+    } catch (...) {
+        kWarning() << "Exception raised";
+    }
     foreach (const Magick::CoderInfo &magickcoder, magickcoderlist) {
         foreach (const std::string &blacklist, s_blacklist) {
             if (magickcoder.name() == blacklist) {
