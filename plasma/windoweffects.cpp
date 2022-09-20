@@ -44,7 +44,7 @@ bool isEffectAvailable(Effect effect)
         return false;
     }
 #ifdef Q_WS_X11
-    QString effectName;
+    QByteArray effectName;
 
     switch (effect) {
         case Slide: {
@@ -75,7 +75,7 @@ bool isEffectAvailable(Effect effect)
     // hackish way to find out if KWin has the effect enabled,
     // TODO provide proper support
     Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom(dpy, effectName.toLatin1(), False);
+    Atom atom = XInternAtom(dpy, effectName.constData(), False);
     int cnt;
     Atom *list = XListProperties(dpy, DefaultRootWindow(dpy), &cnt);
     if (list != NULL) {
