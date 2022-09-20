@@ -70,7 +70,6 @@ void PackageMetadataTest::read()
     QCOMPARE(pm->website(), QString("http://plasma.kde.org/"));
     QCOMPARE(pm->license(), QString("GPL"));
     QCOMPARE(pm->application(), QString("A Test name"));
-    //QCOMPARE(pm->requiredVersion(), QString("1.2.3"));
     QCOMPARE(pm->category(), QString("System test"));
 }
 
@@ -85,7 +84,6 @@ void PackageMetadataTest::write()
     pm->setWebsite(QString("http://plasma.kde.org/"));
     pm->setLicense(QString("GPL"));
     pm->setApplication(QString("A Test name"));
-    pm->setRequiredVersion(QString("1.2.3"));
 
     pm->write(mDataDir + "somefile.desktop");
     delete pm;
@@ -101,7 +99,6 @@ void PackageMetadataTest::write()
     QCOMPARE(pm->website(), QString("http://plasma.kde.org/"));
     QCOMPARE(pm->license(), QString("GPL"));
     QCOMPARE(pm->application(), QString("A Test name"));
-    //QCOMPARE(pm->requiredVersion(), QString("1.2.3")); DOES NOT WORK
 }
 
 QTEST_KDEMAIN(PackageMetadataTest, NoGUI)

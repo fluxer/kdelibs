@@ -46,7 +46,6 @@ class PackageMetadataPrivate
         QString license;
         QString app;
         QString category;
-        QString requiredVersion;
         QString pluginName;
         QString type;
         QString serviceType;
@@ -223,11 +222,6 @@ QStringList PackageMetadata::keywords() const
     return d->keywords;
 }
 
-QString PackageMetadata::requiredVersion() const
-{
-    return d->requiredVersion;
-}
-
 QString PackageMetadata::type() const
 {
     return d->type;
@@ -301,11 +295,6 @@ void PackageMetadata::setApplication(const QString &application)
 void PackageMetadata::setCategory(const QString &category)
 {
     d->category = category;
-}
-
-void PackageMetadata::setRequiredVersion(const QString &requiredVersion)
-{
-    d->requiredVersion = requiredVersion;
 }
 
 void PackageMetadata::setType(const QString &type)
