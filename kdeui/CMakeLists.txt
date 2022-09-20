@@ -394,7 +394,6 @@ install(
     dialogs/kdeprint_nup4.png
     dialogs/kdeprint_nupother.png
     dialogs/ktip-bulb.png
-    dialogs/thumb_frame.png
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui/pics
 )
 
@@ -655,33 +654,3 @@ if(NOT Q_WS_X11)
         DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui
     )
 endif()
-
-install(
-    FILES
-    about/body-background.png
-    about/bar-bottom-left.png
-    about/bar-top-right.png
-    about/bar-bottom-middle.png
-    # about/bottom-left.png
-    about/box-middle-left.png
-    # about/top-right.png
-    about/bar-bottom-right.png
-    # bottom-middle.png
-    about/box-middle-right.png
-    about/top-middle.png
-    about/bar-middle-left.png
-    # about/bottom-right.png
-    about/box-top-left.png
-    about/bar-middle-right.png
-    about/box-bottom-left.png
-    about/box-top-middle.png
-    about/bar-top-left.png
-    about/box-bottom-middle.png
-    about/box-top-right.png
-    about/bar-top-middle.png
-    about/box-bottom-right.png
-    about/box-center.png
-    about/kde_infopage.css
-    about/kde_infopage_rtl.css
-    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdeui/about
-)
