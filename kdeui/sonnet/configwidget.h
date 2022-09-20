@@ -70,11 +70,6 @@ namespace Sonnet
         void configChanged();
 
     private:
-        void init(KConfig *config);
-        void setFromGui();
-        void setCorrectLanguage( const QStringList& langs ); // remove in KDE5, no implementation anymore
-
-    private:
         class Private;
         friend class Private;
         Private* const d;

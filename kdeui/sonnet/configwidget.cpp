@@ -46,16 +46,6 @@ ConfigWidget::ConfigWidget(KConfig *config, QWidget *parent)
     : QWidget(parent),
       d(new Private)
 {
-    init(config);
-}
-
-ConfigWidget::~ConfigWidget()
-{
-    delete d;
-}
-
-void ConfigWidget::init(KConfig *config)
-{
     d->loader = Loader::openLoader();
     d->loader->settings()->restore(config);
     d->config = config;
@@ -88,13 +78,12 @@ void ConfigWidget::init(KConfig *config)
     connect(d->ui.m_ignoreListBox, SIGNAL(changed()), this, SIGNAL(configChanged()));
 }
 
-void ConfigWidget::save()
+ConfigWidget::~ConfigWidget()
 {
-    setFromGui();
-    d->loader->settings()->save(d->config);
+    delete d;
 }
 
-void ConfigWidget::setFromGui()
+void ConfigWidget::save()
 {
     if (d->ui.m_langCombo->count() ) {
         d->loader->settings()->setDefaultLanguage( d->ui.m_langCombo->currentDictionary() );
@@ -107,17 +96,14 @@ void ConfigWidget::setFromGui()
         d->ui.m_bgSpellCB->isChecked() );
     d->loader->settings()->setCheckerEnabledByDefault(
         d->ui.m_checkerEnabledByDefaultCB->isChecked() );
+
+    d->loader->settings()->save(d->config);
 }
 
 void ConfigWidget::slotChanged()
 {
     d->loader->settings()->setCurrentIgnoreList(
         d->ui.m_ignoreListBox->items() );
-}
-
-void ConfigWidget::setCorrectLanguage( const QStringList& )
-{
-    // can be removed in KDE5.
 }
 
 void ConfigWidget::setBackgroundCheckingButtonShown( bool b )
