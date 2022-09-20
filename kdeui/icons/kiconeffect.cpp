@@ -619,9 +619,7 @@ void KIconEffect::semiTransparent(QPixmap &pix)
         for (int x=0; x<(img.width()+31)/32; x++)
             line[x] &= pattern;
     }
-    QBitmap mask;
-    mask = QBitmap::fromImage(img);
-    pix.setMask(mask);
+    pix.setMask(QBitmap::fromImage(img));
 }
 
 QImage KIconEffect::doublePixels(const QImage &src) const
