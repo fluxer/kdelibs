@@ -39,10 +39,10 @@ void KUnitConversionTest::testTemperature()
     KTemperature invalidtemp(12, "");
     QCOMPARE(invalidtemp.unitEnum(), KTemperature::Invalid);
 
-    KTemperature tostringtemp(123.4, "°F");
+    KTemperature tostringtemp(123.4, QString::fromUtf8("°F"));
     QCOMPARE(tostringtemp.toString(), QString::fromUtf8("123.4 °F"));
 
-    KTemperature ctemp(12.3, "°C");
+    KTemperature ctemp(12.3, QString::fromUtf8("°C"));
     QCOMPARE(ctemp.unitEnum(), KTemperature::Celsius);
     QCOMPARE(KUnitConversion::round(ctemp.convertTo(KTemperature::Invalid), 1), 0.0);
     QCOMPARE(KUnitConversion::round(ctemp.convertTo(KTemperature::Fahrenheit), 1), 54.1);
@@ -50,7 +50,7 @@ void KUnitConversionTest::testTemperature()
     QCOMPARE(KUnitConversion::round(ctemp.convertTo(KTemperature::Kelvin), 1), 285.5);
     QCOMPARE(KUnitConversion::round(ctemp.convertTo(KTemperature::UnitCount), 1), 0.0);
 
-    KTemperature ftemp(123.4, "°F");
+    KTemperature ftemp(123.4, QString::fromUtf8("°F"));
     QCOMPARE(ftemp.unitEnum(), KTemperature::Fahrenheit);
     QCOMPARE(KUnitConversion::round(ftemp.convertTo(KTemperature::Invalid), 1), 0.0);
     QCOMPARE(KUnitConversion::round(ftemp.convertTo(KTemperature::Fahrenheit), 1), 123.4);
