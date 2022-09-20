@@ -273,8 +273,8 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
             // PNG handler used by this plugin
             && (qstrnicmp(magickformat, "png", 3) != 0)
         );
-        kDebug() << "Magick format detected" << magickformat;
         if (isvalid) {
+            kDebug() << "Magick format detected" << magickformat;
             actualformat->append(magickformat);
         }
     } catch(Magick::Exception &err) {
