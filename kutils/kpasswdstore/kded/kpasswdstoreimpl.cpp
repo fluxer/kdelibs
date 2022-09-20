@@ -67,11 +67,11 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
 {
 #if defined(HAVE_OPENSSL)
     ERR_load_ERR_strings();
-    EVP_add_cipher(EVP_bf_cfb64());
+    EVP_add_cipher(EVP_aes_256_cbc());
 
-    m_opensslkeylen = EVP_CIPHER_key_length(EVP_bf_cfb64());
-    m_opensslivlen = EVP_CIPHER_iv_length(EVP_bf_cfb64());
-    m_opensslblocklen = EVP_CIPHER_block_size(EVP_bf_cfb64());
+    m_opensslkeylen = EVP_CIPHER_key_length(EVP_aes_256_cbc());
+    m_opensslivlen = EVP_CIPHER_iv_length(EVP_aes_256_cbc());
+    m_opensslblocklen = EVP_CIPHER_block_size(EVP_aes_256_cbc());
 #endif
 
     KConfig kconfig("kpasswdstorerc", KConfig::SimpleConfig);
@@ -279,7 +279,7 @@ QString KPasswdStoreImpl::encryptPasswd(const QString &passwd, bool *ok) const
     }
 
     int opensslresult = EVP_EncryptInit(
-        opensslctx, EVP_bf_cfb64(),
+        opensslctx, EVP_aes_256_cbc(),
         reinterpret_cast<const uchar*>(m_passwd.constData()),
         reinterpret_cast<const uchar*>(m_passwdiv.constData())
     );
@@ -342,7 +342,7 @@ QString KPasswdStoreImpl::decryptPasswd(const QString &passwd, bool *ok) const
     }
 
     int opensslresult = EVP_DecryptInit(
-        opensslctx, EVP_bf_cfb64(),
+        opensslctx, EVP_aes_256_cbc(),
         reinterpret_cast<const uchar*>(m_passwd.constData()),
         reinterpret_cast<const uchar*>(m_passwdiv.constData())
     );
