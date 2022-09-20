@@ -1961,7 +1961,7 @@ QStringList AppletPrivate::knownCategories()
 {
     // this is to trick the tranlsation tools into making the correct
     // strings for translation
-    QStringList categories = s_customCategories;
+    QStringList categories;
     categories << QString(I18N_NOOP("Accessibility")).toLower()
                << QString(I18N_NOOP("Application Launchers")).toLower()
                << QString(I18N_NOOP("Astronomy")).toLower()
@@ -2280,16 +2280,6 @@ QStringList Applet::listCategories(const QString &parentApp, bool visibleOnly)
 
     categories.sort();
     return categories;
-}
-
-void Applet::setCustomCategories(const QStringList &categories)
-{
-    AppletPrivate::s_customCategories = categories;
-}
-
-QStringList Applet::customCategories()
-{
-    return AppletPrivate::s_customCategories;
 }
 
 Applet *Applet::loadPlasmoid(const QString &path, uint appletId, const QVariantList &args)
@@ -2876,7 +2866,6 @@ uint AppletPrivate::s_maxAppletId = 0;
 int AppletPrivate::s_maxZValue = 0;
 int AppletPrivate::s_minZValue = 0;
 PackageStructure::Ptr AppletPrivate::packageStructure(0);
-QStringList AppletPrivate::s_customCategories;
 
 AppletOverlayWidget::AppletOverlayWidget(QGraphicsWidget *parent)
     : QGraphicsWidget(parent),
