@@ -428,12 +428,11 @@ quint32 KStandardDirs::calcResourceHash( const char *type,
         // absolute dirs are absolute dirs, right? :-/
         return updateHash(filename, hash);
     }
-    QStringList candidates = d->resourceDirs(type, filename);
 
-    foreach ( const QString& candidate, candidates )
+    foreach ( const QString & it, d->resourceDirs(type, filename) )
     {
-        hash = updateHash(candidate + filename, hash);
-        if (  !( options & Recursive ) && hash ) {
+        hash = updateHash(it + filename, hash);
+        if ( !( options & Recursive ) && hash ) {
             return hash;
         }
     }
@@ -1198,8 +1197,7 @@ QString KStandardDirs::saveLocation(const char *type,
     return fullPath;
 }
 
-// KDE5: make the method const
-QString KStandardDirs::relativeLocation(const char *type, const QString &absPath)
+QString KStandardDirs::relativeLocation(const char *type, const QString &absPath) const
 {
     QString fullPath = absPath;
     int i = absPath.lastIndexOf(QLatin1Char('/'));
@@ -1207,12 +1205,9 @@ QString KStandardDirs::relativeLocation(const char *type, const QString &absPath
         fullPath = realFilePath(absPath); // Normalize
     }
 
-    const QStringList candidates = resourceDirs(type);
-
-    for (QStringList::ConstIterator it = candidates.begin();
-         it != candidates.end(); ++it) {
-        if (fullPath.startsWith(*it, case_sensitivity)) {
-            return fullPath.mid((*it).length());
+    foreach (const QString &it, resourceDirs(type)) {
+        if (fullPath.startsWith(it, case_sensitivity)) {
+            return fullPath.mid(it.length());
         }
     }
     return absPath;
@@ -1304,11 +1299,10 @@ void KStandardDirs::addResourcesFrom_krcdirs()
 
     QSettings iniFile(localFile, QSettings::IniFormat);
 #ifndef QT_KATIE
-    const QStringList resources = iniFile.allKeys();
+    foreach(QString key, iniFile.allKeys())
 #else
-    const QStringList resources = iniFile.keys();
+    foreach(QString key, iniFile.keys())
 #endif
-    foreach(QString key, resources)
     {
         QDir path(iniFile.value(key).toString());
         if (!path.exists())

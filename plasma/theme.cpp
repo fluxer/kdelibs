@@ -149,7 +149,7 @@ public:
     void processWallpaperSettings(KConfigBase *metadata);
     void processAnimationSettings(const QString &theme, KConfigBase *metadata);
 
-    const QString processStyleSheet(const QString &css);
+    QString processStyleSheet(const QString &css);
 
     static const char *defaultTheme;
     static const char *systemColorsTheme;
@@ -352,7 +352,7 @@ void ThemePrivate::notifyOfChanged()
     emit q->themeChanged();
 }
 
-const QString ThemePrivate::processStyleSheet(const QString &css)
+QString ThemePrivate::processStyleSheet(const QString &css)
 {
     QString stylesheet;
     if (css.isEmpty()) {
