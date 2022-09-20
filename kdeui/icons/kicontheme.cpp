@@ -158,7 +158,6 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
         << KGlobal::dirs()->resourceDirs("xdgdata-pixmap");
     icnlibs.removeDuplicates();
 
-    QString fileName, mainSection;
     for (it=icnlibs.constBegin(); it!=icnlibs.constEnd(); ++it) {
         const QString cDir = *it + name + '/';
         if (KGlobal::dirs()->exists(cDir)) {
@@ -166,12 +165,6 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
             if (d->mDir.isEmpty()) {
                 if (KGlobal::dirs()->exists(cDir + "index.theme")) {
                     d->mDir = cDir;
-                    fileName = d->mDir + "index.theme";
-                    mainSection = "Icon Theme";
-                } else if (KGlobal::dirs()->exists(cDir + "index.desktop")) {
-                    d->mDir = cDir;
-                    fileName = d->mDir + "index.desktop";
-                    mainSection = "KDE Icon Theme";
                 }
             }
         }
@@ -184,9 +177,9 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
 
     // Use KSharedConfig to avoid parsing the file many times, from each kinstance.
     // Need to keep a ref to it to make this useful
-    d->sharedConfig = KSharedConfig::openConfig(fileName, KConfig::NoGlobals);
+    d->sharedConfig = KSharedConfig::openConfig(d->mDir + "index.theme", KConfig::NoGlobals);
 
-    KConfigGroup cfg(d->sharedConfig, mainSection);
+    KConfigGroup cfg(d->sharedConfig, "Icon Theme");
     d->mName = cfg.readEntry("Name");
     d->mDesc = cfg.readEntry("Comment");
     d->mDepth = cfg.readEntry("DisplayDepth", 32);
@@ -245,10 +238,9 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
     groups += "Panel";
     groups += "Dialog";
     const int defDefSizes[] = { 32, 22, 22, 16, 32, 32 };
-    KConfigGroup cg(d->sharedConfig, mainSection);
     for (it=groups.constBegin(), i=0; it!=groups.constEnd(); ++it, i++) {
-        d->mDefSize[i] = cg.readEntry(*it + "Default", defDefSizes[i]);
-        const QList<int> lst = cg.readEntry(*it + "Sizes", QList<int>());
+        d->mDefSize[i] = cfg.readEntry(*it + "Default", defDefSizes[i]);
+        const QList<int> lst = cfg.readEntry(*it + "Sizes", QList<int>());
         QList<int> exp;
         QList<int>::ConstIterator it2;
         for (it2=lst.begin(); it2!=lst.end(); ++it2) {
@@ -567,7 +559,7 @@ QStringList KIconTheme::list()
             if ((*it2 == ".") || (*it2 == "..") || (*it2).startsWith(QLatin1String("default.")) ) {
                 continue;
             }
-            if (!KGlobal::dirs()->exists(*it + *it2 + "/index.desktop") && !KGlobal::dirs()->exists(*it + *it2 + "/index.theme")) {
+            if (!KGlobal::dirs()->exists(*it + *it2 + "/index.theme")) {
                 continue;
             }
             KIconTheme oink(*it2);
