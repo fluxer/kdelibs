@@ -34,7 +34,7 @@ Rectangle {
         textElement.text = testObject.prop
 
         //test urls
-        var url = new Url("http://www.kde.org")
+        var url = new Url("https://github.com/fluxer/katana")
         print(url.protocol)
         print(url.host)
 
