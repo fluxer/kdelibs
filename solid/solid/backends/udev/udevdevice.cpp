@@ -75,7 +75,7 @@ QString UDevDevice::parentUdi() const
         return devicePath();
     }
 
-    return UDEV_UDI_PREFIX;
+    return QString::fromLatin1(UDEV_UDI_PREFIX);
 }
 
 QString UDevDevice::vendor() const
@@ -656,7 +656,7 @@ int UDevDevice::deviceNumber() const
 
 QString UDevDevice::devicePath() const
 {
-    return QString(UDEV_UDI_PREFIX) + deviceName();
+    return QString::fromLatin1(UDEV_UDI_PREFIX) + deviceName();
 }
 
 UdevQt::Device UDevDevice::udevDevice()
