@@ -323,7 +323,6 @@ void KServicePrivate::load(QDataStream& s)
 {
     qint8 def, term;
     qint8 dst, initpref;
-    QStringList dummyList; // KDE4: you can reuse this for another QStringList. KDE5: remove
 
     // WARNING: THIS NEEDS TO REMAIN COMPATIBLE WITH PREVIOUS KDE 4.x VERSIONS!
     // !! This data structure should remain binary compatible at all times !!
@@ -331,7 +330,7 @@ void KServicePrivate::load(QDataStream& s)
     // number in ksycoca.h
     s >> m_strType >> m_strName >> m_strExec >> m_strIcon
       >> term >> m_strTerminalOptions
-      >> m_strPath >> m_strComment >> dummyList >> def >> m_mapProps
+      >> m_strPath >> m_strComment >> def >> m_mapProps
       >> m_strLibrary
       >> dst
       >> m_strDesktopEntryName
@@ -360,7 +359,7 @@ void KServicePrivate::save(QDataStream& s)
     // number in ksycoca.h
     s << m_strType << m_strName << m_strExec << m_strIcon
       << term << m_strTerminalOptions
-      << m_strPath << m_strComment << QStringList() << def << m_mapProps
+      << m_strPath << m_strComment << def << m_mapProps
       << m_strLibrary
       << dst
       << m_strDesktopEntryName
