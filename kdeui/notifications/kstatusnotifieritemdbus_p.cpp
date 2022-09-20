@@ -23,7 +23,6 @@
 #include "kstatusnotifieritem.h"
 
 #include <QApplication>
-#include <QMovie>
 #include <QMetaObject>
 
 #include <kdebug.h>
@@ -235,7 +234,7 @@ KDbusImageVector KStatusNotifierItemDBus::OverlayIconPixmap() const
     return m_statusNotifierItem->d->serializedOverlayIcon;
 }
 
-//Requesting attention icon and movie
+//Requesting attention icon
 
 QString KStatusNotifierItemDBus::AttentionIconName() const
 {
@@ -245,11 +244,6 @@ QString KStatusNotifierItemDBus::AttentionIconName() const
 KDbusImageVector KStatusNotifierItemDBus::AttentionIconPixmap() const
 {
     return m_statusNotifierItem->d->serializedAttentionIcon;
-}
-
-QString KStatusNotifierItemDBus::AttentionMovieName() const
-{
-    return m_statusNotifierItem->d->movieName;
 }
 
 

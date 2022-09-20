@@ -29,9 +29,6 @@
 
 class KActionCollection;
 class KMenu;
-#include <QMovie>
-
-
 class KStatusNotifierItemPrivate;
 
 /**
@@ -275,19 +272,6 @@ public:
      * @return a pixmap of the requesting attention icon
      */
     QIcon attentionIconPixmap() const;
-
-    /**
-     * Sets a movie as the requesting attention icon.
-     * This overrides anything set in setAttentionIcon()
-     */
-    void setAttentionMovieByName(const QString &name);
-
-    /**
-     * @return the name of the movie to be displayed when the application is
-     * requesting the user attention
-     */
-    QString attentionMovieName() const;
-
 
     //ToolTip handling
     /**

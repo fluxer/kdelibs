@@ -63,7 +63,6 @@ class KStatusNotifierItemDBus : public QObject
     Q_PROPERTY(KDbusImageVector OverlayIconPixmap READ OverlayIconPixmap)
     Q_PROPERTY(QString AttentionIconName READ AttentionIconName)
     Q_PROPERTY(KDbusImageVector AttentionIconPixmap READ AttentionIconPixmap)
-    Q_PROPERTY(QString AttentionMovieName READ AttentionMovieName)
     Q_PROPERTY(KDbusToolTipStruct ToolTip READ ToolTip)
     Q_PROPERTY(QString IconThemePath READ IconThemePath)
     Q_PROPERTY(QDBusObjectPath Menu READ Menu)
@@ -148,11 +147,6 @@ public:
      * @return a serialization of the requesting attention icon data
      */
     KDbusImageVector AttentionIconPixmap() const;
-
-    /**
-     * @return the name of the attention movie
-     */
-    QString AttentionMovieName() const;
 
     /**
      * all the data needed for a tooltip

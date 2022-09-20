@@ -23,6 +23,7 @@
 
 #include <QtCore/qpointer.h>
 #include <QtGui/qevent.h>
+#include <QAction>
 
 #include <ksystemtrayicon.h>
 
@@ -35,9 +36,6 @@
 class KActionCollection;
 class KSystemTrayIcon;
 class KMenu;
-#include <QMovie>
-#include <QAction>
-
 
 // this class is needed because we can't just put an event filter on it:
 // the events that are passed to QSystemTrayIcon are done so in a way that
@@ -110,8 +108,6 @@ public:
     QString attentionIconName;
     QIcon attentionIcon;
     KDbusImageVector serializedAttentionIcon;
-    QString movieName;
-    QPointer<QMovie> movie;
 
     QString toolTipIconName;
     KDbusImageVector serializedToolTipIcon;

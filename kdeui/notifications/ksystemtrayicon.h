@@ -23,12 +23,11 @@
 #include <kdeui_export.h>
 #include <kglobal.h>
 
-#include <QtGui/QSystemTrayIcon>
+#include <QSystemTrayIcon>
+#include <QAction>
 
 class KActionCollection;
 class KSystemTrayIconPrivate;
-#include <QAction>
-#include <QMovie>
 
 /**
  * \brief %KDE System Tray Window class
@@ -89,32 +88,9 @@ public:
     explicit KSystemTrayIcon( const QIcon& icon, QWidget* parent = 0 );
 
     /**
-     * Same as above but allows one to define the movie by QMovie that should
-     * be used for the system tray icon. Memory management for the movie will
-     * be handled by KSystemTrayIcon.
-     */
-    explicit KSystemTrayIcon(QMovie* movie, QWidget* parent);
-
-    /**
      * Destructor
      */
     ~KSystemTrayIcon();
-
-    /**
-     * Set the movie to use. To manipulate the movie (start, stop, pause), call
-     * @see movie() and make calls on the QMovie* that it returns.
-     * Memory management for the movie will be handled by KSystemTrayIcon.
-     * @since 4.2
-     */
-    void setMovie(QMovie* movie);
-
-    /**
-     * Get a pointer to the movie. Use this pointer to manipulate the movie
-     * (start, stop, pause).
-     * Will return null if no movie has been set
-     * @since 4.2
-     */
-    const QMovie* movie() const;
 
     /**
        Easy access to the actions in the context menu
@@ -182,8 +158,6 @@ private:
     void minimizeRestore( bool restore );
 
     KSystemTrayIconPrivate* const d;
-
-Q_PRIVATE_SLOT(d, void _k_slotNewFrame())
 };
 
 #endif

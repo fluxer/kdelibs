@@ -23,7 +23,6 @@
 #include "kstatusnotifieritemdbus_p.h"
 
 #include <QApplication>
-#include <QMovie>
 #include <QPainter>
 #include <QMetaObject>
 #include <QTimer>
@@ -236,7 +235,7 @@ QIcon KStatusNotifierItem::overlayIconPixmap() const
     return d->overlayIcon;
 }
 
-//Icons and movie for requesting attention state
+//Icons for requesting attention state
 
 void KStatusNotifierItem::setAttentionIconByName(const QString &name)
 {
@@ -269,30 +268,6 @@ void KStatusNotifierItem::setAttentionIconByPixmap(const QIcon &icon)
 QIcon KStatusNotifierItem::attentionIconPixmap() const
 {
     return d->attentionIcon;
-}
-
-void KStatusNotifierItem::setAttentionMovieByName(const QString &name)
-{
-    if (d->movieName == name) {
-        return;
-    }
-
-    d->movieName = name;
-
-    delete d->movie;
-    d->movie = 0;
-
-    emit d->statusNotifierItemDBus->NewAttentionIcon();
-
-    if (d->systemTrayIcon) {
-        d->movie = new QMovie(d->movieName);
-        d->systemTrayIcon->setMovie(d->movie);
-    }
-}
-
-QString KStatusNotifierItem::attentionMovieName() const
-{
-    return d->movieName;
 }
 
 //ToolTip
@@ -677,7 +652,6 @@ KStatusNotifierItemPrivate::KStatusNotifierItemPrivate(KStatusNotifierItem *item
     : q(item),
       category(KStatusNotifierItem::ApplicationStatus),
       status(KStatusNotifierItem::Passive),
-      movie(0),
       menu(0),
       titleAction(0),
       statusNotifierWatcher(0),
@@ -843,12 +817,7 @@ void KStatusNotifierItemPrivate::setLegacySystemTrayEnabled(bool enabled)
 void KStatusNotifierItemPrivate::syncLegacySystemTrayIcon()
 {
     if (status == KStatusNotifierItem::NeedsAttention) {
-        if (!movieName.isNull()) {
-            if (!movie) {
-                movie = new QMovie(movieName);
-            }
-            systemTrayIcon->setMovie(movie);
-        } else if (!attentionIconName.isNull()) {
+        if (!attentionIconName.isNull()) {
             systemTrayIcon->setIcon(KIcon(attentionIconName));
         } else {
             systemTrayIcon->setIcon(attentionIcon);

@@ -41,7 +41,6 @@
 #include <kconfiggroup.h>
 
 #include <QToolButton>
-#include <QMovie>
 
 class KSystemTrayIconPrivate
 {
@@ -53,7 +52,6 @@ public:
         hasQuit = false;
         onAllDesktops = false;
         window = parent;
-        movie = 0;
     }
 
     ~KSystemTrayIconPrivate()
@@ -62,13 +60,6 @@ public:
         delete menu;
     }
 
-
-    void _k_slotNewFrame()
-    {
-        q->setIcon(QIcon(movie->currentPixmap()));
-    }
-
-
     KSystemTrayIcon* q;
     KActionCollection* actionCollection;
     KMenu* menu;
@@ -76,7 +67,6 @@ public:
     QAction* titleAction;
     bool onAllDesktops : 1; // valid only when the parent widget was hidden
     bool hasQuit : 1;
-    QPointer<QMovie> movie;
 };
 
 KSystemTrayIcon::KSystemTrayIcon( QWidget* parent )
@@ -98,14 +88,6 @@ KSystemTrayIcon::KSystemTrayIcon( const QIcon& icon, QWidget* parent )
       d( new KSystemTrayIconPrivate( this, parent ) )
 {
     init( parent );
-}
-
-KSystemTrayIcon::KSystemTrayIcon(QMovie* movie, QWidget *parent)
-    : QSystemTrayIcon(parent),
-      d( new KSystemTrayIconPrivate( this, parent ) )
-{
-    init(parent);
-    setMovie(movie);
 }
 
 void KSystemTrayIcon::init( QWidget* parent )
@@ -347,23 +329,6 @@ QAction *KSystemTrayIcon::contextMenuTitle() const
 {
     QToolButton *button = static_cast<QToolButton*>((static_cast<QWidgetAction*>(d->titleAction))->defaultWidget());
     return button->defaultAction();
-}
-
-void KSystemTrayIcon::setMovie(QMovie* m)
-{
-    if (d->movie == m) {
-        return;
-    }
-    delete d->movie;
-    m->setParent(this);
-    d->movie = m;
-    connect(d->movie, SIGNAL(frameChanged(int)), this, SLOT(_k_slotNewFrame()));
-    d->movie->setCacheMode(QMovie::CacheAll);
-}
-
-const QMovie* KSystemTrayIcon::movie() const
-{
-    return d->movie;
 }
 
 #include "moc_ksystemtrayicon.cpp"
