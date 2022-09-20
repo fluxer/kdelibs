@@ -748,35 +748,33 @@ void KTextEdit::setHighlighter(Sonnet::Highlighter *_highLighter)
 
 void KTextEdit::setCheckSpellingEnabled(bool check)
 {
-    if (d->spellInterface)
+    if (d->spellInterface) {
         d->spellInterface->setSpellCheckingEnabled(check);
-    else
-        setCheckSpellingEnabledInternal(check);
-}
-
-void KTextEdit::setCheckSpellingEnabledInternal( bool check )
-{
-  emit checkSpellingChanged( check );
-  if ( check == d->checkSpellingEnabled )
-    return;
-
-  // From the above statment we know know that if we're turning checking
-  // on that we need to create a new highlighter and if we're turning it
-  // off we should remove the old one.
-
-  d->checkSpellingEnabled = check;
-    if ( check )
-    {
-        if ( hasFocus() ) {
-            createHighlighter();
-            if (!spellCheckingLanguage().isEmpty())
-                setSpellCheckingLanguage(spellCheckingLanguage());
-        }
     }
     else
     {
-        delete d->highlighter;
-        d->highlighter = 0;
+        emit checkSpellingChanged( check );
+        if ( check == d->checkSpellingEnabled )
+            return;
+
+        // From the above statment we know know that if we're turning checking
+        // on that we need to create a new highlighter and if we're turning it
+        // off we should remove the old one.
+
+        d->checkSpellingEnabled = check;
+        if ( check )
+        {
+            if ( hasFocus() ) {
+                createHighlighter();
+                if (!spellCheckingLanguage().isEmpty())
+                    setSpellCheckingLanguage(spellCheckingLanguage());
+            }
+        }
+        else
+        {
+            delete d->highlighter;
+            d->highlighter = 0;
+        }
     }
 }
 
@@ -793,12 +791,7 @@ bool KTextEdit::checkSpellingEnabled() const
     if (d->spellInterface)
       return d->spellInterface->isSpellCheckingEnabled();
     else
-      return checkSpellingEnabledInternal();
-}
-
-bool KTextEdit::checkSpellingEnabledInternal() const
-{
-  return d->checkSpellingEnabled;
+      return d->checkSpellingEnabled;
 }
 
 void KTextEdit::setReadOnly( bool readOnly )

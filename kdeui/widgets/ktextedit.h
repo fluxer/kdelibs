@@ -433,26 +433,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      */
     virtual void contextMenuEvent( QContextMenuEvent* );
 
-    // TODO: KDE5: get rid of these as soon as BIC changes are allowed, they
-    //             should be folded back into the normal public version, which
-    //             should be made virtual.
-    //             These methods just provide a way for derived classes to call
-    //             the base class version of the normal methods.
-
-    /**
-     * Enable or disable the spellchecking. This is what setCheckSpellingEnabled()
-     * calls if there is no spell interface.
-     * @since 4.2
-     */
-    void setCheckSpellingEnabledInternal(bool check);
-
-    /**
-     * Checks whether spellchecking is enabled or disabled. This is what
-     * checkSpellingEnabled calls if there is no spell interface.
-     * @since 4.2
-     */
-    bool checkSpellingEnabledInternal() const;
-
   private:
     class Private;
     Private *const d;
