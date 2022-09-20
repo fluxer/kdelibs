@@ -445,11 +445,11 @@ KHTTP::KHTTP(QObject *parent)
     : QObject(parent),
     d(new KHTTPPrivate(this))
 {
-    stop();
 }
 
 KHTTP::~KHTTP()
 {
+    stop();
     delete d;
 }
 
