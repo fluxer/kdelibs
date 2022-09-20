@@ -17,6 +17,7 @@
 */
 
 #include <QWidget>
+#include <QImageWriter>
 #include <QBuffer>
 
 #include "knotificationmanager_p.h"
@@ -31,6 +32,8 @@
 #include "knotify_interface.h"
 
 typedef QHash<QString,QString> Dict;
+
+static const QByteArray imageFormat = QImageWriter::defaultImageFormat();
 
 struct KNotificationManager::Private
 {
@@ -112,7 +115,7 @@ bool KNotificationManager::notify( KNotification* n, const QPixmap &pix,
     QByteArray pixmapData;
     QBuffer buffer(&pixmapData);
     buffer.open(QIODevice::WriteOnly);
-    pix.save(&buffer, "PNG");
+    pix.save(&buffer, imageFormat);
 
     QVariantList contextList;
     typedef QPair<QString,QString> Context;
@@ -147,7 +150,7 @@ void KNotificationManager::update(KNotification * n, int id)
     if(!n->pixmap().isNull()) {
         QBuffer buffer(&pixmapData);
         buffer.open(QIODevice::WriteOnly);
-        n->pixmap().save(&buffer, "PNG");
+        n->pixmap().save(&buffer, imageFormat);
     }
 
     d->knotify->update(id, n->title(), n->text(), pixmapData , n->actions() );
