@@ -44,27 +44,30 @@ bool isEffectAvailable(Effect effect)
         return false;
     }
 #ifdef Q_WS_X11
-    QByteArray effectName;
+    // hackish way to find out if KWin has the effect enabled,
+    // TODO provide proper support
 
+    Display *dpy = QX11Info::display();
+    Atom atom = None;
     switch (effect) {
         case Slide: {
-            effectName = "_KDE_SLIDE";
+            atom = XInternAtom(dpy, "_KDE_SLIDE", False);
             break;
         }
         case WindowPreview: {
-            effectName = "_KDE_WINDOW_PREVIEW";
+            atom = XInternAtom(dpy, "_KDE_WINDOW_PREVIEW", False);
             break;
         }
         case PresentWindows: {
-            effectName = "_KDE_PRESENT_WINDOWS_DESKTOP";
+            atom = XInternAtom(dpy, "_KDE_PRESENT_WINDOWS_DESKTOP", False);
             break;
         }
         case PresentWindowsGroup: {
-            effectName = "_KDE_PRESENT_WINDOWS_GROUP";
+            atom = XInternAtom(dpy, "_KDE_PRESENT_WINDOWS_GROUP", False);
             break;
         }
         case HighlightWindows: {
-            effectName = "_KDE_WINDOW_HIGHLIGHT";
+            atom = XInternAtom(dpy, "_KDE_WINDOW_HIGHLIGHT", False);
             break;
         }
         default: {
@@ -72,11 +75,7 @@ bool isEffectAvailable(Effect effect)
         }
     }
 
-    // hackish way to find out if KWin has the effect enabled,
-    // TODO provide proper support
-    Display *dpy = QX11Info::display();
-    Atom atom = XInternAtom(dpy, effectName.constData(), False);
-    int cnt;
+    int cnt = 0;
     Atom *list = XListProperties(dpy, DefaultRootWindow(dpy), &cnt);
     if (list != NULL) {
         bool ret = (qFind(list, list + cnt, atom) != list + cnt);
