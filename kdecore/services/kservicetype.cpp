@@ -102,10 +102,8 @@ KServiceType::KServiceType( KServiceTypePrivate &dd)
 void
 KServiceTypePrivate::load( QDataStream& _str )
 {
-    qint8 b;
-    QString dummy;
-    _str >> m_strName >> dummy >> m_strComment >> m_mapProps >> m_mapPropDefs
-         >> b >> m_serviceOffersOffset;
+    _str >> m_strName >> m_strComment >> m_mapProps >> m_mapPropDefs
+         >> m_serviceOffersOffset;
     m_bDerived = m_mapProps.contains(QString::fromLatin1("X-KDE-Derived"));
 }
 
@@ -116,8 +114,8 @@ KServiceTypePrivate::save( QDataStream& _str )
   // !! This data structure should remain binary compatible at all times !!
   // You may add new fields at the end. Make sure to update the version
   // number in ksycoca.h
-  _str << m_strName << QString() /*was icon*/ << m_strComment << m_mapProps << m_mapPropDefs
-       << (qint8) 1 << m_serviceOffersOffset;
+  _str << m_strName << m_strComment << m_mapProps << m_mapPropDefs
+       << m_serviceOffersOffset;
 }
 
 KServiceType::~KServiceType()

@@ -33,7 +33,7 @@ void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
 {
     int off = 0;
     do {
-        int ret = ::write(fd, buf.data() + off, buf.size() - off);
+        int ret = ::write(fd, buf.constData() + off, buf.size() - off);
         if (ret < 0) {
             if (errno != EINTR)
                 return;
