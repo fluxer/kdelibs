@@ -224,7 +224,7 @@ bool KBuildSycoca::build()
   g_ctimeInfo = new KCTimeInfo(); // This is a build factory too, don't delete!!
   bool uptodate = true;
   // For all resources
-  foreach(const QString it1, allResources)
+  foreach(const QString &it1, allResources)
   {
      g_changed = false;
      g_resource = it1.toLatin1();
@@ -261,7 +261,7 @@ bool KBuildSycoca::build()
            if (res.resource != it1) continue;
 
            // For each file in the resource
-           foreach(const QString it3, relFiles)
+           foreach(const QString &it3, relFiles)
            {
                // Check if file matches filter
                if (it3.endsWith(res.extension))
@@ -562,7 +562,7 @@ bool KBuildSycoca::checkTimestamps( quint32 timestamp, const QStringList &dirs )
     kDebug( 7021 ) << "checking file timestamps";
     QDateTime stamp;
     stamp.setTime_t( timestamp );
-    foreach(const QString it, dirs)
+    foreach(const QString &it, dirs)
     {
         if( !checkDirTimestamps( it, stamp, true ))
             return false;
