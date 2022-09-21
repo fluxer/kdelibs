@@ -119,7 +119,7 @@ StatusBarExtension *StatusBarExtension::childObject( QObject *obj )
 bool StatusBarExtension::eventFilter(QObject * watched, QEvent* ev)
 {
   if ( !GUIActivateEvent::test( ev ) ||
-       !::qobject_cast<KParts::ReadOnlyPart *>(watched)  )
+       !qobject_cast<KParts::ReadOnlyPart *>(watched)  )
       return QObject::eventFilter(watched, ev);
 
   KStatusBar * sb = statusBar();

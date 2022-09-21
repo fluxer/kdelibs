@@ -28,19 +28,18 @@
 
 #include <QPixmap>
 #include <QTreeWidget>
-#include <QtCore/QHash>
+#include <QHash>
+#include <QButtonGroup>
+#include <QStackedWidget>
+#include <QCheckBox>
+#include <QAbstractButton>
 
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <kfileitem.h>
 
 class KACLListViewItem;
-#include <QButtonGroup>
 class KACLListView;
-#include <QStackedWidget>
-#include <QCheckBox>
-#include <QAbstractButton>
-class QColorGroup;
 
 /**
 @author Sean Harmer
@@ -180,11 +179,6 @@ public:
     bool isAllowedToChangeType() const;
 
     void togglePerm( acl_perm_t perm );
-
-#if 0
-    virtual void paintCell( QPainter *p, const QColorGroup &cg,
-                            int column, int width, int alignment );
-#endif
 
     void updatePermPixmaps();
     void repaint();
