@@ -11,7 +11,7 @@ public:
     Client() {}
 
     void setXMLFile( const QString &f, bool merge = true, bool setXMLDoc = true ) { KXMLGUIClient::setXMLFile( f, merge, setXMLDoc ); }
-    void setComponentData(const KComponentData &inst, bool loadPlugins = true) { KXMLGUIClient::setComponentData(inst, loadPlugins); }
+    void setComponentData(const KComponentData &inst) { KXMLGUIClient::setComponentData(inst); }
 
 public Q_SLOTS:
     void slotSec();

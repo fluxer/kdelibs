@@ -22,7 +22,6 @@
 #include <kedittoolbar.h>
 #include <kparts/event.h>
 #include <kparts/part.h>
-#include <kparts/plugin.h>
 #include <kcomponentdata.h>
 #include <kstatusbar.h>
 #include <khelpmenu.h>
@@ -102,7 +101,6 @@ void MainWindow::createGUI( Part * part )
 
   if ( !d->m_bShellGUIActivated )
   {
-    loadPlugins( this, this, KGlobal::mainComponent() );
     createShellGUI();
     d->m_bShellGUIActivated = true;
   }

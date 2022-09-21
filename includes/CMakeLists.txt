@@ -455,7 +455,6 @@ install(
     KParts/PartBase
     KParts/PartManager
     KParts/PartSelectEvent
-    KParts/Plugin
     KParts/ReadOnlyPart
     KParts/ReadWritePart
     KParts/StatusBarExtension

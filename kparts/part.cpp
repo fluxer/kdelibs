@@ -19,9 +19,7 @@
 */
 
 #include "part.h"
-#include <kprotocolinfo.h>
 #include "event.h"
-#include "plugin.h"
 #include "mainwindow.h"
 #include "partmanager.h"
 #include "browserextension.h"
@@ -32,6 +30,7 @@
 #include <QtGui/QPainter>
 #include <QtCore/QPoint>
 
+#include <kprotocolinfo.h>
 #include <kdirnotify.h>
 #include <kfiledialog.h>
 #include <kcomponentdata.h>
@@ -61,8 +60,6 @@ public:
 
     PartBasePrivate(PartBase *q): q_ptr(q)
     {
-        m_pluginLoadingMode = PartBase::LoadPlugins;
-        m_pluginInterfaceVersion = 0;
         m_obj = 0;
     }
 
@@ -71,8 +68,6 @@ public:
     }
 
     PartBase *q_ptr;
-    PartBase::PluginLoadingMode m_pluginLoadingMode;
-    int m_pluginInterfaceVersion;
     QObject *m_obj;
 };
 
@@ -134,40 +129,15 @@ QObject *PartBase::partObject() const
     return d->m_obj;
 }
 
-void PartBase::setComponentData(const KComponentData &componentData, bool bLoadPlugins)
+void PartBase::setComponentData(const KComponentData &componentData)
 {
     Q_D(PartBase);
 
-    KXMLGUIClient::setComponentData(componentData, bLoadPlugins);
+    KXMLGUIClient::setComponentData(componentData);
     KGlobal::locale()->insertCatalog(componentData.catalogName());
     // install 'instancename'data resource type
     KGlobal::dirs()->addResourceType(QString(componentData.componentName() + "data").toUtf8(),
                                      "data", componentData.componentName());
-    if (bLoadPlugins) {
-        loadPlugins(d->m_obj, this, componentData);
-    }
-}
-
-void PartBase::loadPlugins(QObject *parent, KXMLGUIClient *parentGUIClient, const KComponentData &instance)
-{
-    Q_D(PartBase);
-
-    if( d->m_pluginLoadingMode != DoNotLoadPlugins )
-        Plugin::loadPlugins( parent, parentGUIClient, instance, d->m_pluginLoadingMode == LoadPlugins, d->m_pluginInterfaceVersion );
-}
-
-void PartBase::setPluginLoadingMode( PluginLoadingMode loadingMode )
-{
-    Q_D(PartBase);
-
-    d->m_pluginLoadingMode = loadingMode;
-}
-
-void KParts::PartBase::setPluginInterfaceVersion( int version )
-{
-    Q_D(PartBase);
-
-    d->m_pluginInterfaceVersion = version;
 }
 
 Part::Part( QObject *parent )
@@ -347,11 +317,6 @@ void Part::slotWidgetDestroyed()
         kDebug(1000) << "deleting part" << objectName();
         delete this; // ouch, this should probably be deleteLater()
     }
-}
-
-void Part::loadPlugins()
-{
-    PartBase::loadPlugins(this, this, componentData());
 }
 
 //////////////////////////////////////////////////

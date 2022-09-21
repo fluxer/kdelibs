@@ -43,7 +43,7 @@ Part1::Part1( QObject *parent, QWidget * parentWidget )
     : KParts::ReadOnlyPart(parent),
       m_componentData("kpartstestpart")
 {
-    setComponentData(m_componentData, false);
+    setComponentData(m_componentData);
     m_edit = new QTextEdit( parentWidget );
     setWidget( m_edit );
 
@@ -67,8 +67,6 @@ Part1::Part1( QObject *parent, QWidget * parentWidget )
     connect(mailForward, SIGNAL(triggered()), this, SLOT(slotFooBar()));
     actionCollection()->addAction("p1_foo_bar", mailForward);
     menu->addAction(mailForward);
-
-    loadPlugins();
 }
 
 Part1::~Part1()
@@ -110,7 +108,7 @@ Part2::Part2( QObject *parent, QWidget * parentWidget )
     : KParts::Part(parent),
     m_componentData("part2")
 {
-    setComponentData(m_componentData, false);
+    setComponentData(m_componentData);
     QWidget * w = new QWidget( parentWidget );
     w->setObjectName( "Part2Widget" );
     setWidget( w );
@@ -126,8 +124,6 @@ Part2::Part2( QObject *parent, QWidget * parentWidget )
     // strong focus for it, otherwise we get the
     // the famous activating-file-menu-switches-part bug.
     w->setFocusPolicy( Qt::ClickFocus );
-
-    // loadPlugins(); // in case we want to allow plugins for this part.
 }
 
 Part2::~Part2()

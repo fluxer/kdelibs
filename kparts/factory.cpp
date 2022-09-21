@@ -27,6 +27,7 @@
 #include <klocale.h>
 #include <kglobal.h>
 #include <kcomponentdata.h>
+
 #include <assert.h>
 
 using namespace KParts;

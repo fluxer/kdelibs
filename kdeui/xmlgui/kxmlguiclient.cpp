@@ -186,7 +186,7 @@ void KXMLGUIClient::reloadXML()
         setXMLFile( file );
 }
 
-void KXMLGUIClient::setComponentData(const KComponentData &componentData, bool loadPlugins)
+void KXMLGUIClient::setComponentData(const KComponentData &componentData)
 {
   d->m_componentData = componentData;
   actionCollection()->setComponentData( componentData );

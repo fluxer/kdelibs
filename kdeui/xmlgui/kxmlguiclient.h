@@ -310,12 +310,12 @@ protected:
    * Call this first in the inherited class constructor.
    * (At least before setXMLFile().)
    */
-  virtual void setComponentData(const KComponentData &componentData, bool loadPlugins = true);
+  virtual void setComponentData(const KComponentData &componentData);
 
   /**
    * Sets the name of the rc file containing the XML for the part.
    *
-   * Call this in the inherited class constructor, for parts and plugins.
+   * Call this in the inherited class constructor for parts.
    * NOTE: for mainwindows, don't call this, pass the name of the xml file
    * to KXmlGuiWindow::setupGUI() or KXmlGuiWindow::createGUI().
    *
@@ -364,7 +364,6 @@ protected:
    * For application-specific changes to a client's XML, it is a better idea to
    * save the modified dom document to an app/default-client.xml and define a local-xml-file
    * to something specific like app/local-client.xml, using replaceXMLFile.
-   * See kdepimlibs/kontactinterface/plugin.cpp for an example.
    */
   virtual void setDOMDocument( const QDomDocument &document, bool merge = false );
 

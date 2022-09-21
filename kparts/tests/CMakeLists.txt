@@ -32,14 +32,6 @@ target_link_libraries(kparts-partviewer ${KDE4_KPARTS_LIBS})
 
 ########### next target ###############
 
-kde4_add_plugin(spellcheckplugin plugin_spellcheck.cpp)
-
-target_link_libraries(spellcheckplugin ${KDE4_KPARTS_LIBS})
-
-install(TARGETS spellcheckplugin DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
-
-########### next target ###############
-
 kde4_add_plugin(notepadpart notepad.cpp)
 
 target_link_libraries(notepadpart ${KDE4_KPARTS_LIBS})
@@ -74,6 +66,3 @@ KPARTS_UNIT_TESTS(
 #install( FILES partviewer_shell.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/partviewer )
 #install( FILES kpartstest_shell.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/kpartstest )
 #install( FILES kpartstest_part1.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/kpartstestpart )
-
-# To test plugins without installing them, try "ln -s kpartplugins <srcdir>"
-#install( FILES plugin_foobar.rc plugin_spellcheck.rc  DESTINATION  ${KDE4_DATA_INSTALL_DIR}/notepadpart/kpartplugins )
