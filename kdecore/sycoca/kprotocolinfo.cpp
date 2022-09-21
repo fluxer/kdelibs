@@ -135,7 +135,7 @@ KProtocolInfo::load( QDataStream& _str)
           i_supportsMoving, i_supportsOpening,
           i_determineMimetypeFromExtension,
           i_canCopyFromFile, i_canCopyToFile, i_showPreviews,
-          i_uriMode, i_canRenameFromFile, i_canRenameToFile,
+          i_canRenameFromFile, i_canRenameToFile,
           i_canDeleteRecursive, i_fileNameUsedForCopying;
 
    _str >> m_name >> m_exec >> m_listing >> m_defaultMimetype
@@ -149,7 +149,7 @@ KProtocolInfo::load( QDataStream& _str)
         >> i_supportsMoving >> i_supportsOpening
         >> i_canCopyFromFile >> i_canCopyToFile
         >> m_config >> m_maxSlaves >> d->docPath >> d->protClass
-        >> d->extraFields >> i_showPreviews >> i_uriMode
+        >> d->extraFields >> i_showPreviews
         >> d->capabilities >> d->proxyProtocol
         >> i_canRenameFromFile >> i_canRenameToFile
         >> i_canDeleteRecursive >> i_fileNameUsedForCopying
@@ -192,7 +192,7 @@ KProtocolInfoPrivate::save( QDataStream& _str)
           i_supportsMoving, i_supportsOpening,
           i_determineMimetypeFromExtension,
           i_canCopyFromFile, i_canCopyToFile, i_showPreviews,
-          i_uriMode, i_canRenameFromFile, i_canRenameToFile,
+          i_canRenameFromFile, i_canRenameToFile,
           i_canDeleteRecursive, i_fileNameUsedForCopying;
 
    i_inputType = (qint32) q->m_inputType;
@@ -215,7 +215,6 @@ KProtocolInfoPrivate::save( QDataStream& _str)
    i_fileNameUsedForCopying = int(fileNameUsedForCopying);
    i_determineMimetypeFromExtension = q->m_determineMimetypeFromExtension ? 1 : 0;
    i_showPreviews = showPreviews ? 1 : 0;
-  i_uriMode = 0;
 
    _str << q->m_name << q->m_exec << q->m_listing << q->m_defaultMimetype
         << i_determineMimetypeFromExtension
@@ -228,7 +227,7 @@ KProtocolInfoPrivate::save( QDataStream& _str)
         << i_supportsMoving << i_supportsOpening
         << i_canCopyFromFile << i_canCopyToFile
         << q->m_config << q->m_maxSlaves << docPath << protClass
-        << extraFields << i_showPreviews << i_uriMode
+        << extraFields << i_showPreviews
         << capabilities << proxyProtocol
         << i_canRenameFromFile << i_canRenameToFile
         << i_canDeleteRecursive << i_fileNameUsedForCopying
