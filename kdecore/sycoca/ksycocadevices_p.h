@@ -31,7 +31,7 @@ public:
 
     virtual ~KSycocaAbstractDevice() { delete m_stream; }
 
-    virtual QIODevice* device() = 0;
+    virtual QIODevice* device() const = 0;
 
     QDataStream* & stream() {
         if (!m_stream) {
@@ -55,7 +55,7 @@ public:
     ~KSycocaFileDevice() {
         delete m_database;
     }
-    virtual QIODevice* device() {
+    virtual QIODevice* device() const {
         return m_database;
     }
 private:
@@ -72,7 +72,7 @@ public:
     ~KSycocaBufferDevice() {
         delete m_buffer;
     }
-    virtual QIODevice* device() {
+    virtual QIODevice* device() const {
         return m_buffer;
     }
 private:
