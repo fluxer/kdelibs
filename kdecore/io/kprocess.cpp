@@ -29,10 +29,6 @@
 # include <unistd.h>
 # include <errno.h>
 
-# define STD_OUTPUT_HANDLE 1
-# define STD_ERROR_HANDLE 2
-
-
 void KProcessPrivate::writeAll(const QByteArray &buf, int fd)
 {
     int off = 0;
@@ -59,12 +55,12 @@ void KProcessPrivate::forwardStd(KProcess::ProcessChannel good, int fd)
 
 void KProcessPrivate::_k_forwardStdout()
 {
-    forwardStd(KProcess::StandardOutput, STD_OUTPUT_HANDLE);
+    forwardStd(KProcess::StandardOutput, STDOUT_FILENO);
 }
 
 void KProcessPrivate::_k_forwardStderr()
 {
-    forwardStd(KProcess::StandardError, STD_ERROR_HANDLE);
+    forwardStd(KProcess::StandardError, STDERR_FILENO);
 }
 
 /////////////////////////////
