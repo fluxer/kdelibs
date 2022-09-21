@@ -137,29 +137,23 @@ void KComponentDataPrivate::lazyInit(const KComponentData &component)
         // install appdata resource type
         dirs->addResourceType("appdata", "data", aboutData.appName() + QLatin1Char('/'), true);
 
-        configInit(component);
+        Q_ASSERT(!sharedConfig);
+
+        if (!configName.isEmpty()) {
+            sharedConfig = KSharedConfig::openConfig(component, configName);
+        }
+
+        if (!sharedConfig) {
+            sharedConfig = KSharedConfig::openConfig(component);
+        }
     }
 
     // the first KComponentData sets the KDE Qt plugin paths
     if (dirs && kdeLibraryPathsAdded != KdeLibraryPathsAddedDone) {
         kdeLibraryPathsAdded = KdeLibraryPathsAddedDone;
-        const QStringList plugins = dirs->resourceDirs("qtplugins");
-        foreach (const QString &it, plugins) {
+        foreach (const QString &it, dirs->resourceDirs("qtplugins")) {
             QCoreApplication::addPluginPath(it);
         }
-    }
-}
-
-void KComponentDataPrivate::configInit(const KComponentData &component)
-{
-    Q_ASSERT(!sharedConfig);
-
-    if (!configName.isEmpty()) {
-        sharedConfig = KSharedConfig::openConfig(component, configName);
-    }
-    
-    if (!sharedConfig) {
-        sharedConfig = KSharedConfig::openConfig(component);
     }
 }
 

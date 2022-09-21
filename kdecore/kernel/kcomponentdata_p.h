@@ -76,7 +76,6 @@ public:
     }
 
     void lazyInit(const KComponentData &component);
-    void configInit(const KComponentData &component);  //call this only from lazyInit()!
 
     KStandardDirs *dirs;
     KAboutData aboutData;
