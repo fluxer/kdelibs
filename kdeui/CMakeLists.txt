@@ -172,8 +172,6 @@ set(kdeui_LIB_SRCS
     shortcuts/kglobalshortcutinfo_dbus.cpp
     shortcuts/kacceleratormanager.cpp
     shortcuts/kcheckaccelerators.cpp
-    shortcuts/kgesture.cpp
-    shortcuts/kgesturemap.cpp
     sonnet/dialog.cpp
     sonnet/configwidget.cpp
     sonnet/highlighter.cpp
@@ -516,7 +514,6 @@ install(
     shortcuts/kglobalshortcutinfo.h
     shortcuts/kglobalshortcutinfo_p.h
     shortcuts/kacceleratormanager.h
-    shortcuts/kgesture.h
     util/kaccelgen.h
     util/kcompletion.h
     util/kcrash.h

@@ -32,8 +32,6 @@
 #include <QtGui/QWidgetAction>
 
 class KIcon;
-class KShapeGesture;
-class KRockerGesture;
 
 namespace KAuth {
     class Action;
@@ -439,12 +437,6 @@ public:
      * @since 4.1
      */
     void forgetGlobalShortcut();
-
-    KShapeGesture shapeGesture(ShortcutTypes type = ActiveShortcut) const;
-    KRockerGesture rockerGesture(ShortcutTypes type = ActiveShortcut) const;
-
-    void setShapeGesture(const KShapeGesture& gest, ShortcutTypes type = ShortcutTypes(ActiveShortcut | DefaultShortcut));
-    void setRockerGesture(const KRockerGesture& gest, ShortcutTypes type = ShortcutTypes(ActiveShortcut | DefaultShortcut));
 
     /**
      * Returns the action object associated with this action, or 0 if it does not have one

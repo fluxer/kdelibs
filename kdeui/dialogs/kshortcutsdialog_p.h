@@ -22,8 +22,6 @@
 #ifndef KSHORTCUTSDIALOG_P_H
 #define KSHORTCUTSDIALOG_P_H
 
-#include "kgesture.h"
-
 #include "kextendableitemdelegate.h"
 #include "kshortcutseditor.h"
 #include "kkeysequencewidget.h"
@@ -34,11 +32,11 @@
 #include <QTreeWidget>
 #include <QtCore/QList>
 #include <QGroupBox>
-
 #include <QLabel>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
 #include <QRadioButton>
+
 class KAction;
 class KActionCollection;
 class KPushButton;
@@ -51,8 +49,6 @@ enum ColumnDesignation {
     LocalAlternate,
     GlobalPrimary,
     GlobalAlternate,
-    RockerGesture,
-    ShapeGesture,
     Id
 };
 
@@ -135,9 +131,6 @@ private Q_SLOTS:
     void stealShortcut(const QKeySequence &seq, KAction *action);
 
     void keySequenceChanged(const QKeySequence &);
-    void shapeGestureChanged(const KShapeGesture &);
-    void rockerGestureChanged(const KRockerGesture &);
-
 };
 
 
@@ -215,10 +208,6 @@ private:
     bool m_isUpdating;
 };
 
-Q_DECLARE_METATYPE(KShapeGesture)
-Q_DECLARE_METATYPE(KRockerGesture)
-
-
 class KShortcutSchemesEditor: public QGroupBox {
     Q_OBJECT
 public:
@@ -251,8 +240,6 @@ private:
 
 class KAction;
 class KShortcut;
-class KShapeGesture;
-class KRockerGesture;
 
 /**
  * A QTreeWidgetItem that can handle KActions.
@@ -286,8 +273,6 @@ public:
 
     QKeySequence keySequence(uint column) const;
     void setKeySequence(uint column, const QKeySequence &seq);
-    void setShapeGesture(const KShapeGesture &gst);
-    void setRockerGesture(const KRockerGesture &gst);
 
     bool isModified(uint column) const;
     bool isModified() const;
@@ -310,8 +295,6 @@ private:
     //! The original shortcuts before user changes. 0 means no change.
     KShortcut *m_oldLocalShortcut;
     KShortcut *m_oldGlobalShortcut;
-    KShapeGesture *m_oldShapeGesture;
-    KRockerGesture *m_oldRockerGesture;
     //@}
 
     //! The localized action name
@@ -366,14 +349,8 @@ public:
     // Import shortcuts from file
     void importConfiguration(KConfigBase *config);
 
-    //helper functions for conflict resolution
-    bool stealShapeGesture(KShortcutsEditorItem *item, const KShapeGesture &gest);
-    bool stealRockerGesture(KShortcutsEditorItem *item, const KRockerGesture &gest);
-
     //conflict resolution functions
     void changeKeyShortcut(KShortcutsEditorItem *item, uint column, const QKeySequence &capture);
-    void changeShapeGesture(KShortcutsEditorItem *item, const KShapeGesture &capture);
-    void changeRockerGesture(KShortcutsEditorItem *item, const KRockerGesture &capture);
 
 // private slots
     //this invokes the appropriate conflict resolution function

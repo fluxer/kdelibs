@@ -20,7 +20,6 @@
 #define KACTION_P_H
 
 #include "kglobalaccel.h"
-#include "kgesturemap.h"
 #include <kcomponentdata.h>
 #include <kicon.h>
 
@@ -53,8 +52,6 @@ class KActionPrivate
 
         KComponentData componentData;   //this is **way** more lightweight than it looks
         KShortcut globalShortcut, defaultGlobalShortcut;
-        KShapeGesture shapeGesture, defaultShapeGesture;
-        KRockerGesture rockerGesture, defaultRockerGesture;
 
         bool globalShortcutEnabled : 1;
         bool neverSetGlobalShortcut : 1;

@@ -161,8 +161,6 @@ KAction::~KAction()
         KGlobalAccel::self()->d->remove(this, KGlobalAccelPrivate::SetInactive);
     }
 
-    KGestureMap::self()->removeGesture(d->shapeGesture, this);
-    KGestureMap::self()->removeGesture(d->rockerGesture, this);
     delete d;
 }
 
@@ -298,60 +296,6 @@ void KAction::forgetGlobalShortcut()
         d->neverSetGlobalShortcut = true;   //it's a fresh start :)
         KGlobalAccel::self()->d->remove(this, KGlobalAccelPrivate::UnRegister);
     }
-}
-
-KShapeGesture KAction::shapeGesture( ShortcutTypes type ) const
-{
-  Q_ASSERT(type);
-  if ( type & DefaultShortcut )
-    return d->defaultShapeGesture;
-
-  return d->shapeGesture;
-}
-
-KRockerGesture KAction::rockerGesture( ShortcutTypes type ) const
-{
-  Q_ASSERT(type);
-  if ( type & DefaultShortcut )
-    return d->defaultRockerGesture;
-
-  return d->rockerGesture;
-}
-
-void KAction::setShapeGesture( const KShapeGesture& gest,  ShortcutTypes type )
-{
-  Q_ASSERT(type);
-
-  if( type & DefaultShortcut )
-    d->defaultShapeGesture = gest;
-
-  if ( type & ActiveShortcut ) {
-    if ( KGestureMap::self()->findAction( gest ) ) {
-      kDebug(283) << "New mouse gesture already in use, won't change gesture.";
-      return;
-    }
-    KGestureMap::self()->removeGesture( d->shapeGesture, this );
-    KGestureMap::self()->addGesture( gest, this );
-    d->shapeGesture = gest;
-  }
-}
-
-void KAction::setRockerGesture( const KRockerGesture& gest,  ShortcutTypes type )
-{
-  Q_ASSERT(type);
-
-  if( type & DefaultShortcut )
-    d->defaultRockerGesture = gest;
-
-  if ( type & ActiveShortcut ) {
-    if ( KGestureMap::self()->findAction( gest ) ) {
-      kDebug(283) << "New mouse gesture already in use, won't change gesture.";
-      return;
-    }
-    KGestureMap::self()->removeGesture( d->rockerGesture, this );
-    KGestureMap::self()->addGesture( gest, this );
-    d->rockerGesture = gest;
-  }
 }
 
 void KAction::setHelpText(const QString& text)

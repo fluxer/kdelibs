@@ -864,7 +864,7 @@ void KDialog::delayedDestruct()
 
 void KDialog::slotButtonClicked( int button )
 {
-    Q_D(KDialog);
+  Q_D(KDialog);
   emit buttonClicked( static_cast<KDialog::ButtonCode>(button) );
 
   switch( button ) {
@@ -873,7 +873,7 @@ void KDialog::slotButtonClicked( int button )
       accept();
       break;
     case Apply:
-        emit applyClicked();
+      emit applyClicked();
       break;
     case Try:
       emit tryClicked();
@@ -882,17 +882,17 @@ void KDialog::slotButtonClicked( int button )
       emit user3Clicked();
       break;
     case User2:
-        emit user2Clicked();
+      emit user2Clicked();
       break;
     case User1:
-        emit user1Clicked();
-        break;
+      emit user1Clicked();
+      break;
     case Yes:
       emit yesClicked();
       done( Yes );
       break;
     case No:
-        emit noClicked();
+      emit noClicked();
       done( No );
       break;
     case Cancel:

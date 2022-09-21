@@ -198,12 +198,6 @@ void KShortcutsEditorDelegate::itemActivated(QModelIndex index)
             connect(m_editor, SIGNAL(stealShortcut(QKeySequence,KAction*)),
                     this, SLOT(stealShortcut(QKeySequence,KAction*)));
 
-        } else if (column == RockerGesture) {
-            m_editor = new QLabel("A lame placeholder", viewport);
-
-        } else if (column == ShapeGesture) {
-            m_editor = new QLabel("<i>A towel</i>", viewport);
-
         } else
             return;
 
@@ -330,20 +324,3 @@ void KShortcutsEditorDelegate::setCheckActionCollections(
 {
     m_checkActionCollections = checkActionCollections;
 }
-
-//slot
-void KShortcutsEditorDelegate::shapeGestureChanged(const KShapeGesture &gest)
-{
-    //this is somewhat verbose because the gesture types are not "built in" to QVariant
-    QVariant ret = QVariant::fromValue(gest);
-    emit shortcutChanged(ret, m_editingIndex);
-}
-
-
-//slot
-void KShortcutsEditorDelegate::rockerGestureChanged(const KRockerGesture &gest)
-{
-    QVariant ret = QVariant::fromValue(gest);
-    emit shortcutChanged(ret, m_editingIndex);
-}
-

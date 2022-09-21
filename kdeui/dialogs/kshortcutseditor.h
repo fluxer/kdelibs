@@ -25,8 +25,9 @@
 #ifndef KSHORTCUTSEDITOR_H
 #define KSHORTCUTSEDITOR_H
 
+#include <kdeui_export.h>
+
 #include <QtGui/QWidget>
-#include "kgesture.h"
 
 class KActionCollection;
 class KConfig;

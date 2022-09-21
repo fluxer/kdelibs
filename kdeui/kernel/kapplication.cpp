@@ -52,7 +52,6 @@
 #include "kstandarddirs.h"
 #include "kstandardshortcut.h"
 #include "ktoolinvocation.h"
-#include "kgesturemap.h"
 #include "kurl.h"
 #include "kmessage.h"
 #include "kmessageboxmessagehandler.h"
@@ -445,7 +444,6 @@ void KApplicationPrivate::init()
     KMessage::setMessageHandler( new KMessageBoxMessageHandler(0) );
 
     KCheckAccelerators::initiateIfNeeded(q);
-    KGestureMap::self()->installEventFilterOnMe( q );
 
     q->connect(KToolInvocation::self(), SIGNAL(kapplication_hook(QStringList&,QByteArray&)),
                q, SLOT(_k_slot_KToolInvocation_hook(QStringList&,QByteArray&)));
