@@ -496,8 +496,7 @@ public:
   /**
    * Returns the list of fields this protocol returns when listing
    * The current possibilities are
-   * Name, Type, Size, Date, AccessDate, Access, Owner, Group, Link, URL, MimeType
-   * as well as Extra1, Extra2 etc. for extra fields (see extraFields).
+   * Name, Type, Size, Date, AccessDate, Access, Owner, Group, Link, URL, MimeType.
    *
    * This corresponds to the "listing=" field in the protocol description file.
    * The supported fields should be separated with ',' in the protocol description file.

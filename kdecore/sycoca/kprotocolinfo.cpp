@@ -95,16 +95,6 @@ KProtocolInfo::KProtocolInfo(const QString &path)
   if (d->protClass[0] != QLatin1Char(':'))
      d->protClass.prepend(QLatin1Char(':'));
 
-  const QStringList extraNames = config.readEntry( "ExtraNames", QStringList() );
-  const QStringList extraTypes = config.readEntry( "ExtraTypes", QStringList() );
-  QStringList::const_iterator it = extraNames.begin();
-  QStringList::const_iterator typeit = extraTypes.begin();
-  for( ; it != extraNames.end() && typeit != extraTypes.end(); ++it, ++typeit ) {
-      QVariant::Type type = QVariant::nameToType( (*typeit).toLatin1() );
-      // currently QVariant::Type and ExtraField::Type use the same subset of values, so we can just cast.
-      d->extraFields.append( ExtraField( *it, static_cast<ExtraField::Type>(type) ) );
-  }
-
   d->showPreviews = config.readEntry( "ShowPreviews", d->protClass == QLatin1String(":local") );
 
   d->capabilities = config.readEntry( "Capabilities", QStringList() );
@@ -149,7 +139,7 @@ KProtocolInfo::load( QDataStream& _str)
         >> i_supportsMoving >> i_supportsOpening
         >> i_canCopyFromFile >> i_canCopyToFile
         >> m_config >> m_maxSlaves >> d->docPath >> d->protClass
-        >> d->extraFields >> i_showPreviews
+        >> i_showPreviews
         >> d->capabilities >> d->proxyProtocol
         >> i_canRenameFromFile >> i_canRenameToFile
         >> i_canDeleteRecursive >> i_fileNameUsedForCopying
@@ -227,7 +217,7 @@ KProtocolInfoPrivate::save( QDataStream& _str)
         << i_supportsMoving << i_supportsOpening
         << i_canCopyFromFile << i_canCopyToFile
         << q->m_config << q->m_maxSlaves << docPath << protClass
-        << extraFields << i_showPreviews
+        << i_showPreviews
         << capabilities << proxyProtocol
         << i_canRenameFromFile << i_canRenameToFile
         << i_canDeleteRecursive << i_fileNameUsedForCopying
@@ -342,15 +332,6 @@ QString KProtocolInfo::exec(const QString& protocol)
         return prot->m_exec;
     }
     return QString();
-}
-
-KProtocolInfo::ExtraFieldList KProtocolInfo::extraFields( const KUrl &url )
-{
-  KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(url.protocol());
-  if ( !prot )
-    return ExtraFieldList();
-
-  return prot->d_func()->extraFields;
 }
 
 QString KProtocolInfo::docPath( const QString& _protocol )
@@ -471,19 +452,3 @@ bool KProtocolInfo::isKnownProtocol( const QString &protocol )
   KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
   return prot || isHelperProtocol(protocol);
 }
-
-QT_BEGIN_NAMESPACE
-QDataStream& operator>>( QDataStream& s, KProtocolInfo::ExtraField& field )  {
-  s >> field.name;
-  int type;
-  s >> type;
-  field.type = static_cast<KProtocolInfo::ExtraField::Type>( type );
-  return s;
-}
-
-QDataStream& operator<<( QDataStream& s, const KProtocolInfo::ExtraField& field )  {
-  s << field.name;
-  s << static_cast<int>( field.type );
-  return s;
-}
-QT_END_NAMESPACE

@@ -105,35 +105,6 @@ public:
   };
 
   /**
-   * Definition of an extra field in the UDS entries, returned by a listDir operation.
-   *
-   * The name is the name of the column, translated.
-   *
-   * The type name comes from QVariant::typeName()
-   * Currently supported types: "QString", "QDateTime" (ISO-8601 format)
-   */
-  struct ExtraField {
-
-    enum Type { String = QVariant::String, DateTime = QVariant::DateTime, Invalid = QVariant::Invalid };
-
-    ExtraField() : type(Invalid) {}
-    ExtraField(const QString& _name, Type _type )
-      : name(_name), type(_type) {
-    }
-    QString name;
-    Type type;
-  };
-  typedef QList<ExtraField> ExtraFieldList;
-  /**
-   * Definition of extra fields in the UDS entries, returned by a listDir operation.
-   *
-   * This corresponds to the "ExtraNames=" and "ExtraTypes=" fields in the protocol description file.
-   * Those two lists should be separated with ',' in the protocol description file.
-   * See ExtraField for details about names and types
-   */
-  static ExtraFieldList extraFields( const KUrl& url );
-
-  /**
    * Returns whether the protocol can act as a helper protocol.
    * A helper protocol invokes an external application and does not return
    * a file or stream.
@@ -369,10 +340,5 @@ private:
     static void selectServiceOrHelper(const QString& protocol, KProtocolInfo::Ptr& returnProtocol, KService::Ptr& returnService);
 
 };
-
-QT_BEGIN_NAMESPACE
-KDECORE_EXPORT QDataStream& operator>>( QDataStream& s, KProtocolInfo::ExtraField& field );
-KDECORE_EXPORT QDataStream& operator<<( QDataStream& s, const KProtocolInfo::ExtraField& field );
-QT_END_NAMESPACE
 
 #endif

@@ -39,10 +39,6 @@ int main(int argc, char **argv) {
     assert( KProtocolManager::inputType(url) == KProtocolInfo::T_NONE );
     assert( KProtocolManager::outputType(url) == KProtocolInfo::T_FILESYSTEM );
     assert( KProtocolManager::supportsReading(url) == true );
-    KProtocolInfo::ExtraFieldList extraFields = KProtocolInfo::extraFields(url);
-    KProtocolInfo::ExtraFieldList::Iterator extraFieldsIt = extraFields.begin();
-    for ( ; extraFieldsIt != extraFields.end() ; ++extraFieldsIt )
-        kDebug() << (*extraFieldsIt).name << " " << (*extraFieldsIt).type;
 
     assert( KProtocolInfo::showFilePreview( "file" ) == true );
     assert( KProtocolInfo::showFilePreview( "audiocd" ) == false );

@@ -380,28 +380,11 @@ void KioslaveTest::printUDSEntry( const KIO::UDSEntry & entry )
 void KioslaveTest::slotEntries(KIO::Job* job, const KIO::UDSEntryList& list) {
 
     KUrl url = static_cast<KIO::ListJob*>( job )->url();
-    KProtocolInfo::ExtraFieldList extraFields = KProtocolInfo::extraFields(url);
     UDSEntryList::ConstIterator it=list.begin();
     for (; it != list.end(); ++it) {
         // For each file...
         QString name = (*it).stringValue( KIO::UDSEntry::UDS_NAME );
         kDebug() << name;
-
-        KProtocolInfo::ExtraFieldList::Iterator extraFieldsIt = extraFields.begin();
-        const QList<uint> fields = it->listFields();
-        QList<uint>::ConstIterator it2 = fields.begin();
-        for( ; it2 != fields.end(); it2++ ) {
-            if ( *it2 >= UDSEntry::UDS_EXTRA && *it2 <= UDSEntry::UDS_EXTRA_END) {
-                if ( extraFieldsIt != extraFields.end() ) {
-                    QString column = (*extraFieldsIt).name;
-                    //QString type = (*extraFieldsIt).type;
-                    kDebug() << "  Extra data (" << column << ") :" << it->stringValue(*it2);
-                    ++extraFieldsIt;
-                } else {
-                    kDebug() << "  Extra data (UNDEFINED) :" << it->stringValue(*it2);
-                }
-            }
-        }
     }
 }
 
