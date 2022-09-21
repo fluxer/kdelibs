@@ -38,8 +38,8 @@ class KPARTS_EXPORT Event : public QEvent
 {
 public:
   Event( const char *eventName );
-  virtual ~Event();
-  virtual const char *eventName() const;
+  ~Event();
+  const char *eventName() const;
 
   static bool test( const QEvent *event );
   static bool test( const QEvent *event, const char *name );
@@ -60,7 +60,7 @@ class KPARTS_EXPORT GUIActivateEvent : public Event
 {
 public:
   GUIActivateEvent( bool activated );
-  virtual ~GUIActivateEvent();
+  ~GUIActivateEvent();
 
   bool activated() const;
 
@@ -83,7 +83,7 @@ class KPARTS_EXPORT PartActivateEvent : public Event
 {
 public:
   PartActivateEvent( bool activated, Part *part, QWidget *widget );
-  virtual ~PartActivateEvent();
+  ~PartActivateEvent();
   bool activated() const;
 
   Part *part() const;
@@ -104,7 +104,7 @@ class KPARTS_EXPORT PartSelectEvent : public Event
 {
 public:
   PartSelectEvent( bool selected, Part *part, QWidget *widget );
-  virtual ~PartSelectEvent();
+  ~PartSelectEvent();
   bool selected() const;
 
   Part *part() const;
