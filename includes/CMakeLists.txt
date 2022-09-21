@@ -447,9 +447,7 @@ install(
     KParts/BrowserExtension
     KParts/Event
     KParts/Factory
-    KParts/FileInfoExtension
     KParts/GUIActivateEvent
-    KParts/ListingExtension
     KParts/MainWindow
     KParts/OpenUrlEvent
     KParts/Part

@@ -17,8 +17,6 @@ set(kparts_LIB_SRCS
     browserextension.cpp
     factory.cpp
     statusbarextension.cpp
-    fileinfoextension.cpp
-    listingextension.cpp
 )
 
 add_library(kparts ${LIBRARY_TYPE} ${kparts_LIB_SRCS})
@@ -63,8 +61,6 @@ install(
     browserextension.h
     factory.h
     statusbarextension.h
-    fileinfoextension.h
-    listingextension.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/kparts
     COMPONENT Devel
 )
