@@ -186,7 +186,7 @@ QStringList KUrl::List::toStringList(KUrl::AdjustPathOption trailing) const
 static QByteArray uriListData(const KUrl::List& urls)
 {
     QByteArray uriListData;
-    foreach(const KUrl uit, urls) {
+    foreach(const KUrl &uit, urls) {
         // Get each URL encoded in utf8 - and since we get it in escaped
         // form on top of that, .toLatin1() is fine.
         uriListData += uit.toMimeDataString().toLatin1();
@@ -306,7 +306,7 @@ KUrl::List KUrl::List::fromMimeData(const QMimeData *mimeData,
             const QStringList lst = str.split(QLatin1String("$@@$"));
             bool readingKey = true; // true, then false, then true, etc.
             QString key;
-            foreach(const QString it, lst) {
+            foreach(const QString &it, lst) {
                 if ( readingKey )
                     key = it;
                 else
@@ -748,7 +748,7 @@ QString KUrl::fileEncoding() const
      q = q.mid(1);
 
   const QStringList args = q.split(QLatin1Char('&'), QString::SkipEmptyParts);
-  foreach(const QString it, args)
+  foreach(const QString &it, args)
   {
       QString s = QUrl::fromPercentEncoding(it.toLatin1());
       if (s.startsWith(QLatin1String("charset=")))
@@ -1466,7 +1466,7 @@ QMap< QString, QString > KUrl::queryItems( const QueryItemsOptions &options ) co
 
   QMap< QString, QString > result;
   const QStringList items = strQueryEncoded.split( QLatin1Char('&'), QString::SkipEmptyParts );
-  foreach(const QString it, items) {
+  foreach(const QString &it, items) {
     const int equal_pos = it.indexOf(QLatin1Char('='));
     if ( equal_pos > 0 ) { // = is not the first char...
       QString name = it.left( equal_pos );
