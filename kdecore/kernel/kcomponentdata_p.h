@@ -33,7 +33,6 @@ public:
     KComponentDataPrivate(const KAboutData &aboutData_)
         : dirs(0),
         aboutData(aboutData_),
-        syncing(false),
         refCount(1)
     {
         if (KGlobal::hasLocale()) {
@@ -83,7 +82,6 @@ public:
     KAboutData aboutData;
     QString configName;
     KSharedConfig::Ptr sharedConfig;
-    bool syncing;
 
 private:
     bool shouldRemoveCatalog;
