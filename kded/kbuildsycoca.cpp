@@ -76,8 +76,7 @@ static QStringList *g_allResourceDirs = 0;
 static bool g_changed = false;
 static KSycocaEntry::List g_tempStorage;
 static VFolderMenu *g_vfolder = 0;
-
-static const char *cSycocaPath = 0;
+static QByteArray g_sycocaPath = 0;
 
 static bool bGlobalDatabase = false;
 static bool bMenuTest = false;
@@ -86,8 +85,8 @@ void crashHandler(int)
 {
    // If we crash while reading sycoca, we delete the database
    // in an attempt to recover.
-   if (cSycocaPath)
-      unlink(cSycocaPath);
+   if (!g_sycocaPath.isEmpty())
+      unlink(g_sycocaPath.constData());
 }
 
 static QString sycocaPath()
@@ -703,8 +702,7 @@ int main(int argc, char **argv)
    if( checkstamps && incremental )
    {
        QString path = sycocaPath()+"stamp";
-       QByteArray qPath = QFile::encodeName(path);
-       cSycocaPath = qPath.data(); // Delete timestamps on crash
+       g_sycocaPath = QFile::encodeName(path); // Delete timestamps on crash
        QFile ksycocastamp(path);
        if( ksycocastamp.open( QIODevice::ReadOnly ))
        {
@@ -734,7 +732,7 @@ int main(int argc, char **argv)
        {
            checkstamps = false;
        }
-       cSycocaPath = 0;
+       g_sycocaPath.clear();
    }
 
    newTimestamp = (quint32) time(0);
@@ -742,8 +740,7 @@ int main(int argc, char **argv)
 
    if( checkfiles && ( !checkstamps || !KBuildSycoca::checkTimestamps( filestamp, oldresourcedirs )))
    {
-      QByteArray qSycocaPath = QFile::encodeName(sycocaPath());
-      cSycocaPath = qSycocaPath.data();
+      g_sycocaPath = QFile::encodeName(sycocaPath());
 
       g_allEntries = 0;
       g_ctimeDict = 0;
@@ -773,7 +770,7 @@ int main(int argc, char **argv)
          KCTimeInfo *ctimeInfo = new KCTimeInfo;
          *g_ctimeDict = ctimeInfo->loadDict();
       }
-      cSycocaPath = 0;
+      g_sycocaPath.clear();
 
       KBuildSycoca *sycoca = new KBuildSycoca; // Build data base (deletes oldSycoca)
       if (args->isSet("track"))
