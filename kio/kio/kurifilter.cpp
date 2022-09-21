@@ -636,16 +636,14 @@ bool KUriFilter::filterUri( KUriFilterData& data, const QStringList& filters )
     // If no specific filters were requested, iterate through all the plugins.
     // Otherwise, only use available filters.
     if( filters.isEmpty() ) {        
-        QStringListIterator it (d->pluginNames);
-        while (it.hasNext()) {
-            KUriFilterPlugin* plugin = d->plugins.value(it.next());
+        foreach (const QString &it, d->pluginNames) {
+            KUriFilterPlugin* plugin = d->plugins.value(it);
             if (plugin &&  plugin->filterUri( data ))
                 filtered = true;
         }
     } else {
-        QStringListIterator it (filters);
-        while (it.hasNext()) {
-            KUriFilterPlugin* plugin = d->plugins.value(it.next());
+        foreach (const QString &it, filters) {
+            KUriFilterPlugin* plugin = d->plugins.value(it);
             if (plugin &&  plugin->filterUri( data ))
                 filtered = true;
         }

@@ -367,22 +367,22 @@ QList<QByteArray> MagickPlugin::mimeTypes() const
 QImageIOPlugin::Capabilities MagickPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
     if (format == s_magickpluginformat)
-        return Capabilities(CanRead);
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
     if (!format.isEmpty())
         return 0;
     if (!device->isOpen())
         return 0;
 
-    Capabilities cap;
+    QImageIOPlugin::Capabilities cap;
     QByteArray actualformat;
     if (device->isReadable() && MagickHandler::canRead(device, &actualformat))
-        cap |= CanRead;
+        cap |= QImageIOPlugin::CanRead;
     return cap;
 }
 
 QImageIOHandler *MagickPlugin::create(QIODevice *device, const QByteArray &format) const
 {
-    QImageIOHandler *handler = new MagickHandler;
+    QImageIOHandler *handler = new MagickHandler();
     handler->setDevice(device);
     handler->setFormat(format);
     return handler;
