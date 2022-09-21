@@ -30,8 +30,7 @@
  */
 enum KSycocaType { KST_KSycocaEntry = 0, KST_KService = 1, KST_KServiceType = 2, KST_KMimeType = 3,
                    KST_KFolderMimeType = 4, KST_KMimeTypeEntry = 5 /*internal*/,
-                   KST_KServiceGroup = 6, KST_KImageIOFormat = 7, KST_KProtocolInfo = 8,
-                   KST_KServiceSeparator = 9,
+                   KST_KServiceGroup = 6, KST_KProtocolInfo = 7, KST_KServiceSeparator = 8,
                    KST_KCustom = 1000 };
 
 /**
