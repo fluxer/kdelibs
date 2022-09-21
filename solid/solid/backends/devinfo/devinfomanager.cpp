@@ -89,7 +89,7 @@ DevinfoManager::~DevinfoManager()
 
 QString DevinfoManager::udiPrefix() const
 {
-    return QString(DEVINFO_UDI_PREFIX);
+    return QString::fromLatin1(DEVINFO_UDI_PREFIX);
 }
 
 QSet<Solid::DeviceInterface::Type> DevinfoManager::supportedInterfaces() const
