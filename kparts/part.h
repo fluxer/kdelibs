@@ -74,14 +74,6 @@ public:
    */
   virtual ~PartBase();
 
-  /**
-   *  Internal method. Called by KParts::Part to specify the parent object.
-   *
-   * @internal
-   */
-  void setPartObject( QObject *object );
-  QObject *partObject() const;
-
 protected:
   /**
    * Set the componentData(KComponentData) for this part.

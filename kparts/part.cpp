@@ -60,15 +60,9 @@ public:
 
     PartBasePrivate(PartBase *q): q_ptr(q)
     {
-        m_obj = 0;
-    }
-
-    virtual ~PartBasePrivate()
-    {
     }
 
     PartBase *q_ptr;
-    QObject *m_obj;
 };
 
 class PartPrivate: public PartBasePrivate
@@ -115,20 +109,6 @@ PartBase::~PartBase()
     delete d_ptr;
 }
 
-void PartBase::setPartObject( QObject *obj )
-{
-    Q_D(PartBase);
-
-    d->m_obj = obj;
-}
-
-QObject *PartBase::partObject() const
-{
-    Q_D(const PartBase);
-
-    return d->m_obj;
-}
-
 void PartBase::setComponentData(const KComponentData &componentData)
 {
     Q_D(PartBase);
@@ -143,13 +123,11 @@ void PartBase::setComponentData(const KComponentData &componentData)
 Part::Part( QObject *parent )
     : QObject( parent ), PartBase( *new PartPrivate(this) )
 {
-    PartBase::setPartObject( this );
 }
 
 Part::Part(PartPrivate &dd, QObject *parent)
     : QObject( parent ), PartBase( dd )
 {
-    PartBase::setPartObject( this );
 }
 
 Part::~Part()
