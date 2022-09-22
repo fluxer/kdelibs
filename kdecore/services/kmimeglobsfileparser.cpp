@@ -188,6 +188,7 @@ void KMimeGlobsFileParser::AllGlobs::addGlob(const Glob& glob)
 KMimeGlobsFileParser::PatternsMap KMimeGlobsFileParser::AllGlobs::patternsMap() const
 {
     PatternsMap patMap;
+    patMap.reserve(m_highWeightGlobs.size() + m_lowWeightGlobs.size());
 
     // This is just to fill in KMimeType::patterns. This has no real effect
     // on the actual mimetype matching.
