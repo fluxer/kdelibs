@@ -17,15 +17,16 @@
  *  Boston, MA 02110-1301, USA.
  */
 
+#include "kmimetype.h"
+#include "kfoldermimetype.h"
 #include "kmimetyperepository_p.h"
 #include <kstandarddirs.h>
 #include <ksharedconfig.h>
 #include <kconfiggroup.h>
-#include "kmimetype.h"
 #include <kdeversion.h> // KDE_MAKE_VERSION
 #include <kmessage.h>
 #include <klocale.h>
-#include "kfoldermimetype.h"
+#include <kstandarddirs.h>
 #include <QFile>
 #include <QProcess>
 #include <QtCore/qendian.h>
@@ -334,10 +335,6 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
 
     return parents;
 }
-
-#include <arpa/inet.h> // for ntohs
-#include <kstandarddirs.h>
-#include <QFile>
 
 // Sort them in descending order of priority
 static bool mimeMagicRuleCompare(const KMimeMagicRule& lhs, const KMimeMagicRule& rhs) {
