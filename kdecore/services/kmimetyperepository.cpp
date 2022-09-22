@@ -63,7 +63,6 @@ KMimeTypeRepository::KMimeTypeRepository()
       m_magicFilesParsed(false),
       m_aliasFilesParsed(false),
       m_globsFilesParsed(false),
-      m_patternsMapCalculated(false),
       m_mimeTypesChecked(false),
       m_useFavIcons(true),
       m_useFavIconsChecked(false),
@@ -608,18 +607,6 @@ void KMimeTypeRepository::parseGlobs()
 
     KMimeGlobsFileParser parser;
     m_globs = parser.parseGlobs();
-}
-
-QStringList KMimeTypeRepository::patternsForMimetype(const QString& mimeType)
-{
-    parseGlobs();
-
-    std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    if (!m_patternsMapCalculated) {
-        m_patternsMapCalculated = true;
-        m_patterns = m_globs.patternsMap();
-    }
-    return m_patterns.value(mimeType);
 }
 
 static void errorMissingMimeTypes( const QStringList& _types )

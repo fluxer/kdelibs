@@ -68,12 +68,6 @@ public:
     };
 
     /**
-     * Return the patterns (globs) for a given mimetype
-     * TEMPORARY method, it will go away once we can require shared-mime-info >= 0.70.
-     */
-    QStringList patternsForMimetype(const QString& mimeType);
-
-    /**
      * This function makes sure that vital mime types are installed.
      */
     void checkEssentialMimeTypes();
@@ -158,14 +152,10 @@ private:
     typedef QHash<QString, QStringList> ParentsMap;
     ParentsMap m_parents;
 
-    typedef QHash<QString, QStringList> PatternsMap;
-    PatternsMap m_patterns;
-
     bool m_parentsMapLoaded;
     bool m_magicFilesParsed;
     bool m_aliasFilesParsed;
     bool m_globsFilesParsed;
-    bool m_patternsMapCalculated;
     bool m_mimeTypesChecked;
     bool m_useFavIcons;
     bool m_useFavIconsChecked;
