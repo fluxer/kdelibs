@@ -438,8 +438,6 @@ private:
     int offset() const;
     void save(QDataStream &s);
 
-    void loadInternal( QDataStream& _str);
-    static void buildDefaultType();
     static void checkEssentialMimeTypes();
     static KMimeType::Ptr findByUrlHelper( const KUrl& url, mode_t mode,
                                            bool is_local_file, QIODevice* device, int* accuracy );
