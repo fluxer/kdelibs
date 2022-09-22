@@ -49,6 +49,8 @@ install(
     KIdleTime
     KExiv2
     KPasswdStore
+    KHTTP
+    KDNSSD
     KCalendarSystem
     KCharMacroExpander
     KCharsets
