@@ -193,15 +193,12 @@ KBzip2Filter::Result KBzip2Filter::compress( bool finish )
         case BZ_RUN_OK:
         case BZ_FINISH_OK:
             return KFilterBase::Ok;
-            break;
         case BZ_STREAM_END:
             //qDebug() << "  bzCompress returned " << result;
             return KFilterBase::End;
-            break;
         default:
             //qDebug() << "  bzCompress returned " << result;
             return KFilterBase::Error;
-            break;
     }
 }
 
