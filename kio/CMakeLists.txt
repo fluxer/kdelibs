@@ -100,9 +100,6 @@ set(kbookmarks_STAT_SRCS
     bookmarks/kbookmarkmanageradaptor.cc
     bookmarks/kbookmarkmenu.cc
     bookmarks/konqbookmarkmenu.cc
-    bookmarks/kbookmarkimporter_opera.cc
-    bookmarks/kbookmarkimporter_ie.cc
-    bookmarks/kbookmarkimporter_ns.cc
     bookmarks/kbookmarkdombuilder.cc
     bookmarks/kbookmarkdialog.cc
 )
@@ -265,9 +262,6 @@ install(
     bookmarks/kbookmarkimporter.h
     bookmarks/kbookmarkmanager.h
     bookmarks/kbookmarkmenu.h
-    bookmarks/kbookmarkimporter_opera.h
-    bookmarks/kbookmarkimporter_ie.h
-    bookmarks/kbookmarkimporter_ns.h
     bookmarks/kbookmarkdombuilder.h
     bookmarks/konqbookmarkmenu.h
     bookmarks/kbookmarkdialog.h
