@@ -157,9 +157,6 @@ install(
     KHelpMenu
     KHistoryComboBox
     KHueSaturationSelector
-    KIEBookmarkExporterImpl
-    KIEBookmarkImporter
-    KIEBookmarkImporterImpl
     KIcon
     KIconButton
     KIconCanvas
@@ -202,17 +199,12 @@ install(
     KMimeTypeChooserDialog
     KMimeTypeTrader
     KModelIndexProxyMapper
-    KMozillaBookmarkImporterImpl
     KModifierKeyInfo
     KMountPoint
     KMultiTabBar
     KMultiTabBarButton
     KMultiTabBarTab
     KNameAndUrlInputDialog
-    KNSBookmarkExporter
-    KNSBookmarkExporterImpl
-    KNSBookmarkImporter
-    KNSBookmarkImporterImpl
     KNewFileMenu
     KNewPasswordDialog
     KNotification
@@ -220,9 +212,6 @@ install(
     KNotifyConfigWidget
     KNumInput
     KOpenWithDialog
-    KOperaBookmarkExporterImpl
-    KOperaBookmarkImporter
-    KOperaBookmarkImporterImpl
     KPageDialog
     KPageModel
     KPageView
