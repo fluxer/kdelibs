@@ -369,8 +369,6 @@ install(
     KXYSelector
     KZip
     KZipFileEntry
-    KonqBookmarkMenu
-    KonqBookmarkOwner
     NET
     NETRootInfo
     NETWinInfo

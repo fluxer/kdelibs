@@ -99,7 +99,6 @@ set(kbookmarks_STAT_SRCS
     bookmarks/kbookmarkmanager.cc
     bookmarks/kbookmarkmanageradaptor.cc
     bookmarks/kbookmarkmenu.cc
-    bookmarks/konqbookmarkmenu.cc
     bookmarks/kbookmarkdombuilder.cc
     bookmarks/kbookmarkdialog.cc
 )
@@ -263,7 +262,6 @@ install(
     bookmarks/kbookmarkmanager.h
     bookmarks/kbookmarkmenu.h
     bookmarks/kbookmarkdombuilder.h
-    bookmarks/konqbookmarkmenu.h
     bookmarks/kbookmarkdialog.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
