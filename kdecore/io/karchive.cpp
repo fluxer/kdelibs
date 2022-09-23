@@ -271,6 +271,7 @@ bool KArchive::addLocalFile( const QString& fileName, const QString& destName )
         total += n;
     }
     Q_ASSERT( total == size );
+    Q_UNUSED( total );
 
     if ( !finishWriting( size ) )
     {

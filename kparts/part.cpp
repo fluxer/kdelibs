@@ -111,8 +111,6 @@ PartBase::~PartBase()
 
 void PartBase::setComponentData(const KComponentData &componentData)
 {
-    Q_D(PartBase);
-
     KXMLGUIClient::setComponentData(componentData);
     KGlobal::locale()->insertCatalog(componentData.catalogName());
     // install 'instancename'data resource type

@@ -54,8 +54,6 @@
 #include <sys/param.h>
 #include <sys/types.h>
 #include <dirent.h>
-#include <pwd.h>
-#include <grp.h>
 #include <mutex>
 
 #define case_sensitivity Qt::CaseSensitive
@@ -129,74 +127,6 @@ static QString checkExecutable( const QString& path, bool ignoreExecBit )
     //kDebug(180) << "checkExecutable(): failed, returning empty string";
     return QString();
 }
-
-static QStringList lookupProfiles(const QString &mapFile)
-{
-    QStringList profiles;
-
-    if (mapFile.isEmpty() || !QFile::exists(mapFile))
-    {
-        profiles << QString::fromLatin1("default");
-        return profiles;
-    }
-
-    struct passwd *pw = getpwuid(geteuid());
-    if (!pw)
-    {
-        profiles << QString::fromLatin1("default");
-        return profiles; // Not good
-    }
-
-    QByteArray user = pw->pw_name;
-
-    gid_t sup_gids[512];
-    int sup_gids_nr = getgroups(512, sup_gids);
-
-    KConfig mapCfgFile(mapFile);
-    KConfigGroup mapCfg(&mapCfgFile, "Users");
-    if (mapCfg.hasKey(user.constData()))
-    {
-        profiles = mapCfg.readEntry(user.constData(), QStringList());
-        return profiles;
-    }
-
-    const KConfigGroup generalGrp(&mapCfgFile, "General");
-    const QStringList groups = generalGrp.readEntry("groups", QStringList());
-
-    const KConfigGroup groupsGrp(&mapCfgFile, "Groups");
-
-    for( QStringList::ConstIterator it = groups.begin();
-         it != groups.end(); ++it )
-    {
-        QByteArray grp = (*it).toUtf8();
-        // Check if user is in this group
-        struct group *grp_ent = getgrnam(grp);
-        if (!grp_ent) continue;
-        gid_t gid = grp_ent->gr_gid;
-        if (pw->pw_gid == gid)
-        {
-            // User is in this group --> add profiles
-            profiles += groupsGrp.readEntry(*it, QStringList());
-        }
-        else
-        {
-            for(int i = 0; i < sup_gids_nr; i++)
-            {
-                if (sup_gids[i] == gid)
-                {
-                    // User is in this group --> add profiles
-                    profiles += groupsGrp.readEntry(*it, QStringList());
-                    break;
-                }
-            }
-        }
-    }
-
-    if (profiles.isEmpty())
-        profiles << QString::fromLatin1("default");
-    return profiles;
-}
-
 
 static quint32 updateHash(const QString &file, quint32 hash)
 {

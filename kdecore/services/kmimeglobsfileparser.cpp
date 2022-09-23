@@ -166,6 +166,7 @@ void KMimeGlobsFileParser::AllGlobs::addGlob(const Glob& glob)
 
     const QString &pattern = glob.pattern;
     Q_ASSERT(!pattern.isEmpty());
+    Q_UNUSED(pattern);
 
     //kDebug() << "pattern" << pattern << "glob.weight=" << glob.weight << glob.flags;
 

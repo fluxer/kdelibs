@@ -165,5 +165,3 @@ QStyle::SubElement KStyle::customSubElement(const QString &element, const QWidge
 {
     return (QStyle::SubElement) customStyleElement(SH_KCustomStyleElement, element, const_cast<QWidget*>(widget));
 }
-
-#include "moc_kstyle.cpp"
