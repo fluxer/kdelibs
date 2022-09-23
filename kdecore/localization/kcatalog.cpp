@@ -140,9 +140,8 @@ KCatalog::KCatalog(const QString &name, const QString &language)
 }
 
 KCatalog::KCatalog(const KCatalog & rhs)
-  : d( new KCatalogPrivate )
+  : d( new KCatalogPrivate(*rhs.d) )
 {
-  *this = rhs;
 }
 
 KCatalog & KCatalog::operator=(const KCatalog & rhs)
