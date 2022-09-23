@@ -83,7 +83,7 @@ private:
     bool bForceGlobal:1;
     bool bSuppressGlobal:1;
 
-   QString sGlobalFileName;
+    QString sGlobalFileName;
 
     KEntryMap entryMap;
     QString backendType;
@@ -91,7 +91,6 @@ private:
 
     QString locale;
     QString fileName;
-    QString etc_kderc;
     KComponentData componentData;
     KConfigBase::AccessMode configState;
 

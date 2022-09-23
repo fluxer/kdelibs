@@ -556,8 +556,7 @@ void KConfigPrivate::parseGlobalFiles()
     const QStringList globalFiles = getGlobalFiles();
 //    qDebug() << "parsing global files" << globalFiles;
 
-    // TODO: can we cache the values in etc_kderc / other global files
-    //       on a per-application basis?
+    // TODO: can we cache the values in global files on a per-application basis?
     const QByteArray utf8Locale = locale.toUtf8();
     foreach(const QString& file, globalFiles) {
         KConfigIniBackend::ParseOptions parseOpts = KConfigIniBackend::ParseGlobal|KConfigIniBackend::ParseExpansions;
