@@ -23,11 +23,6 @@
 #include "knuminput.h"
 
 #include <config.h>
-#ifdef HAVE_LIMITS_H
-#include <limits.h>
-#endif
-
-#include <cmath>
 
 #include <QtGui/QApplication>
 #include <QtGui/QLabel>
@@ -38,6 +33,9 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <klocalizedstring.h>
+
+#include <limits.h>
+#include <cmath>
 
 static inline int calcDiffByTen(int x, int y)
 {

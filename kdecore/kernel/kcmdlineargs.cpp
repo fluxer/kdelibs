@@ -17,35 +17,28 @@
 */
 
 #include "kcmdlineargs.h"
-#include <kdebug.h>
-#include <kglobalsettings.h>
-
-#include <config.h>
-
-#include <sys/param.h>
-
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <locale.h>
-
-#ifdef HAVE_LIMITS_H
-#include <limits.h>
-#endif
-
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QHash>
-#include <QtCore/QTextCodec>
-
+#include "kdebug.h"
+#include "kglobalsettings.h"
 #include "kaboutdata.h"
 #include "klocale.h"
 #include "kdeversion.h"
 #include "kcomponentdata.h"
 #include "kglobal.h"
 #include "kurl.h"
+
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QHash>
+#include <QtCore/QTextCodec>
+
+#include <sys/param.h>
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <locale.h>
+#include <limits.h>
 
 // -----------------------------------------------------------------------------
 // Design notes:

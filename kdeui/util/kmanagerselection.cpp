@@ -34,9 +34,7 @@ DEALINGS IN THE SOFTWARE.
 #include <sys/time.h>
 #endif
 
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 
 #include <QtCore/QObject>
 #ifdef Q_WS_X11 // FIXME(E)

@@ -24,6 +24,10 @@
  * Generated: Thu Mar  5 16:05:28 EST 1998
  */
 
+#include <config.h>
+#include <config-prefix.h>
+#include <config-kstandarddirs.h>
+
 #include "kstandarddirs.h"
 #include "kconfig.h"
 #include "kconfiggroup.h"
@@ -34,9 +38,12 @@
 #include "kde_file.h"
 #include "klocale.h"
 
-#include <config.h>
-#include <config-prefix.h>
-#include <config-kstandarddirs.h>
+#include <QtCore/QRegExp>
+#include <QtCore/QDir>
+#include <QtCore/QCache>
+#include <QtCore/QFileInfo>
+#include <QtCore/QSettings>
+#include <QtCore/QStandardPaths>
 
 #include <stdlib.h>
 #include <assert.h>
@@ -45,22 +52,12 @@
 #ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
 #endif
-#ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 #include <sys/param.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <pwd.h>
 #include <grp.h>
-
-#include <QtCore/QRegExp>
-#include <QtCore/QDir>
-#include <QtCore/QCache>
-#include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
-#include <QtCore/QStandardPaths>
-
 #include <mutex>
 
 #define case_sensitivity Qt::CaseSensitive

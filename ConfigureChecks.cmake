@@ -25,7 +25,6 @@ macro_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)              # kio
 
 check_include_files(string.h      HAVE_STRING_H)                       # various
 check_include_files(fstab.h       HAVE_FSTAB_H)                        # kio, kdecore
-check_include_files(limits.h      HAVE_LIMITS_H)                       # various
 check_include_files(mntent.h      HAVE_MNTENT_H)                       # solid, kio, kdecore
 check_include_files(sys/stat.h    HAVE_SYS_STAT_H)                     # various
 check_include_files(sys/types.h   HAVE_SYS_TYPES_H)                    # various
@@ -34,7 +33,6 @@ check_include_files(sys/param.h   HAVE_SYS_PARAM_H)                    # various
 check_include_files("stdio.h;sys/mnttab.h"  HAVE_SYS_MNTTAB_H)         # kio, kdecore
 check_include_files(sys/mntent.h  HAVE_SYS_MNTENT_H)                   # solid, kio, kdecore
 check_include_files("sys/param.h;sys/mount.h"  HAVE_SYS_MOUNT_H)       # kio, kdecore
-check_include_files(unistd.h      HAVE_UNISTD_H)                       # various
 check_include_files(paths.h       HAVE_PATHS_H)                        # kdecore
 check_include_files(sys/time.h    HAVE_SYS_TIME_H)                     # kioslave
 
