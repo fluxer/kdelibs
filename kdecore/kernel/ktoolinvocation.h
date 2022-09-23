@@ -31,7 +31,6 @@
 
 class OrgKdeKLauncherInterface;
 class KUrl;
-class KToolInvocationPrivate;
 
 /**
  * KToolInvocation: for starting other programs
@@ -71,11 +70,11 @@ class KDECORE_EXPORT KToolInvocation : public QObject
 
   Q_OBJECT
 private:
-	KToolInvocation();
+    KToolInvocation();
 public:
-	// @internal
-	~KToolInvocation();
-	static KToolInvocation *self();
+    // @internal
+    ~KToolInvocation();
+    static KToolInvocation *self();
 
 public Q_SLOTS:
   /**
@@ -93,7 +92,7 @@ public Q_SLOTS:
 
   static void invokeHelp( const QString& anchor = QString(),
                    const QString& appname = QString(),
-		   const QByteArray& startup_id = QByteArray());
+                   const QByteArray& startup_id = QByteArray());
 
   /**
    * Convenience method; invokes the standard email application.
@@ -334,8 +333,6 @@ private:
                            const QByteArray& startup_id, bool noWait,
                            const QString& workdir = QString());
   static bool isMainThreadActive(QString* error = 0);
-
-  KToolInvocationPrivate * const d;
 };
 
 #endif

@@ -43,7 +43,8 @@ KToolInvocation *KToolInvocation::self()
     return s_self;
 }
 
-KToolInvocation::KToolInvocation() : QObject(0), d(0)
+KToolInvocation::KToolInvocation()
+    : QObject(0)
 {
 }
 
