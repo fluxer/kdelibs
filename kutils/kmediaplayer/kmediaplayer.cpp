@@ -140,7 +140,7 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
 #define COMMON_OPTION_SETTER \
     kDebug() << i18n("setting option") << name << value; \
     if (d->m_handle) { \
-        int mpvresult = MPV_ERROR_PROPERTY_FORMAT; \
+        int mpvresult = 0; \
         switch (value.type()) { \
             case QVariant::Bool: { \
                 int boolvalue = value.toBool(); \
@@ -168,6 +168,10 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
                 mpvresult = mpv_set_property(d->m_handle, name.constData(), MPV_FORMAT_STRING, &bytevaluedata); \
                 break; \
             } \
+            default: { \
+                kWarning() << i18n("Invalid option type") << value.type(); \
+                break; \
+            } \
         } \
         if (mpvresult < 0) { \
             kWarning() << name << mpv_error_string(mpvresult); \
@@ -180,7 +184,6 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
         switch (event->event_id) { \
             case MPV_EVENT_NONE: { \
                 return; \
-                break; \
             } \
             case MPV_EVENT_SHUTDOWN: { \
                 d->m_stopprocessing = true; \
