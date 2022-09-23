@@ -187,8 +187,4 @@ static int initKConfigGroupGui()
     return 42;                  // because 42 is nicer than 1 or 0
 }
 
-#ifdef Q_CONSTRUCTOR_FUNCTION
 Q_CONSTRUCTOR_FUNCTION(initKConfigGroupGui)
-#else
-static int dummyKConfigGroupGui = initKConfigGroupGui();
-#endif
