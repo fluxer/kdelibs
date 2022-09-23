@@ -194,7 +194,6 @@ public:
 
   int m_overlap;
   QWeakPointer<QStyle> m_subStyle;
-  QString m_lastStyleClass;
   bool m_sentinel;
 };
 
