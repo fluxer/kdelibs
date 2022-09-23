@@ -35,17 +35,17 @@ namespace Sonnet
         QSpellEnchantClient(QObject *parent);
         ~QSpellEnchantClient();
 
-        virtual int reliability() const {
+        int reliability() const {
             return 30;
         }
 
-        virtual QSpellEnchantDict *createSpeller(const QString &language);
-
-        virtual QStringList languages() const;
-
-        virtual QString name() const {
+        QString name() const {
             return QString::fromLatin1("Enchant");
         }
+
+        QSpellEnchantDict *createSpeller(const QString &language);
+
+        QStringList languages() const;
 
         void addLanguage(const QString &lang);
 

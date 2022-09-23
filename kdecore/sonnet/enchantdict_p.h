@@ -31,6 +31,7 @@ namespace Sonnet
     {
     public:
         ~QSpellEnchantDict();
+
         bool isCorrect(const QString &word) const;
 
         QStringList suggest(const QString &word) const;

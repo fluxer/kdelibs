@@ -54,11 +54,9 @@ QSpellEnchantClient::~QSpellEnchantClient()
     enchant_broker_free(m_broker);
 }
 
-QSpellEnchantDict *QSpellEnchantClient::createSpeller(
-    const QString &language)
+QSpellEnchantDict *QSpellEnchantClient::createSpeller(const QString &language)
 {
-    EnchantDict *dict = enchant_broker_request_dict(m_broker,
-                                                    language.toUtf8());
+    EnchantDict *dict = enchant_broker_request_dict(m_broker, language.toUtf8());
 
     if (!dict) {
 #ifndef NDEBUG	    
