@@ -325,8 +325,6 @@ private:
   /**
    * @internal
    */
-  static void startKdeinit();
-
   int startServiceInternal(const char *_function,
                            const QString& _name, const QStringList &URLs,
                            QString *error, QString *serviceName, qint64 *pid,
