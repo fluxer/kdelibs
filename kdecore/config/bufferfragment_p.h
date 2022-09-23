@@ -185,19 +185,9 @@ private:
 
 uint qHash(const KConfigIniBackend::BufferFragment& fragment)
 {
-    const uchar *p = reinterpret_cast<const uchar*>(fragment.constData());
+    const char *p = fragment.constData();
     const int len = fragment.length();
-
-    // This algorithm is copied from qhash.cpp (Qt5 version).
-    // Sadly this code is not accessible from the outside without going through abstraction
-    // layers. Even QByteArray::fromRawData would do an allocation internally...
-    uint h = 0;
-
-    for (int i = 0; i < len; ++i) {
-        h = 31 * h + p[i];
-    }
-
-    return h;
+    return qChecksum(p, len);
 }
 
 #endif
