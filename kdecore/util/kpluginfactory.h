@@ -381,18 +381,6 @@ protected:
         registerPlugin(keyword, &T::staticMetaObject, instanceFunction);
     }
 
-    /**
-     * \internal
-     * Converts a QStringList to a QVariantList
-     */
-    QVariantList stringListToVariantList(const QStringList &list);
-
-    /**
-     * \internal
-     * Converts a QVariantList of strings to a QStringList
-     */
-    QStringList variantListToStringList(const QVariantList &list);
-
     virtual void setupTranslations();
 
     KPluginFactoryPrivate *const d_ptr;
