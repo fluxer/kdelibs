@@ -57,7 +57,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~KCharsets();
+    ~KCharsets();
 
     /**
      * Provided for compatibility.

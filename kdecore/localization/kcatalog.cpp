@@ -116,7 +116,7 @@ QDebug operator<<(QDebug debug, const KCatalog &c)
 }
 
 KCatalog::KCatalog(const QString &name, const QString &language)
-  : d( new KCatalogPrivate )
+  : d( new KCatalogPrivate() )
 {
   setlocale(LC_ALL, "");
 
