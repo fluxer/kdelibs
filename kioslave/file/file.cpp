@@ -35,10 +35,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sys/socket.h>
-#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
-#endif
-
 #include <assert.h>
 #include <dirent.h>
 #include <errno.h>
@@ -51,9 +48,7 @@
 #include <time.h>
 #include <utime.h>
 #include <unistd.h>
-#ifdef HAVE_STRING_H
 #include <string.h>
-#endif
 
 #include <QtCore/qbytearray.h>
 #include <QtCore/qdatetime.h>

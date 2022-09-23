@@ -62,13 +62,8 @@
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
-
-#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
-#endif
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
 
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>

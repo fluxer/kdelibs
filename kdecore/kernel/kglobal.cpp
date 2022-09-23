@@ -26,15 +26,14 @@
 
 #include "kglobal.h"
 #include "kglobal_p.h"
-#include <QThread>
-#include <QtCore/qatomic.h>
 
 #include <config.h>
 
-#ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
-#endif
+#include <unistd.h> // umask
 
+#include <QThread>
+#include <QtCore/qatomic.h>
 #include <QtCore/QList>
 #include <QtCore/QSet>
 
@@ -50,7 +49,6 @@
 #include <QtCore/QDebug>
 #include <QtCore/QTextCodec>
 #include "kcmdlineargs.h"
-#include <unistd.h> // umask
 
 mode_t s_umsk;
 

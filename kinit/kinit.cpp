@@ -31,6 +31,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <sys/wait.h>
+#include <sys/select.h> // Needed on some systems.
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -40,9 +41,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
-#ifdef HAVE_SYS_SELECT_H
-#  include <sys/select.h> // Needed on some systems.
-#endif
 
 #include <qplatformdefs.h>
 #include <QtCore/QLibrary>

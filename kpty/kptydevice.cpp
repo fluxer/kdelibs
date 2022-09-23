@@ -40,9 +40,7 @@
 #ifdef HAVE_SYS_FILIO_H
 # include <sys/filio.h>
 #endif
-#ifdef HAVE_SYS_TIME_H
-# include <sys/time.h>
-#endif
+#include <sys/time.h>
 
 #if defined(Q_OS_FREEBSD) || defined(Q_OS_DRAGONFLY)
   // "the other end's output queue size" - kinda braindead, huh?

@@ -26,13 +26,9 @@
 
 #include <math.h>
 #include <locale.h>
-
-#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
-#endif
-#ifdef HAVE_TIME_H
 #include <time.h>
-#endif
+#include <mutex>
 
 #include <QtCore/QTextCodec>
 #include <QtCore/QFile>
@@ -42,8 +38,6 @@
 #include <QtCore/QLocale>
 #include <QtCore/QHash>
 #include <QtCore/QStringList>
-
-#include <mutex>
 
 #include "kcatalog_p.h"
 #include "kglobal.h"

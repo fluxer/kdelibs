@@ -49,9 +49,7 @@
 #include <assert.h>
 #include <string.h>
 #include <errno.h>
-#ifdef HAVE_SYS_STAT_H
 #include <sys/stat.h>
-#endif
 #include <unistd.h>
 #include <sys/param.h>
 #include <sys/types.h>

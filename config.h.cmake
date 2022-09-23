@@ -6,11 +6,7 @@
 
 /****************************/
 
-#cmakedefine HAVE_SYS_STAT_H 1
-#cmakedefine HAVE_SYS_TYPES_H 1
 #cmakedefine HAVE_SYS_PARAM_H 1
-#cmakedefine HAVE_SYS_TIME_H 1
-#cmakedefine HAVE_SYS_SELECT_H 1
 #cmakedefine HAVE_SYS_MNTTAB_H 1
 #cmakedefine HAVE_SYS_MNTENT_H 1
 #cmakedefine HAVE_SYS_MOUNT_H 1
@@ -26,11 +22,6 @@
 #cmakedefine HAVE_STRTOLL 1
 #cmakedefine HAVE_GETGROUPLIST 1
 #cmakedefine HAVE_TTYNAME_R 1
-
-#cmakedefine TIME_WITH_SYS_TIME 1
-
-/* Define to 1 if you have string.h */
-#cmakedefine HAVE_STRING_H 1
 
 /* define if message translations are enabled */
 #cmakedefine ENABLE_NLS 1
