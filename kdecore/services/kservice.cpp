@@ -649,8 +649,6 @@ QString KService::username() const {
     QVariant v = property(QLatin1String("X-KDE-Username"), QVariant::String);
     user = v.isValid() ? v.toString() : QString();
     if (user.isEmpty())
-        user = QString::fromLocal8Bit(qgetenv("ADMIN_ACCOUNT"));
-    if (user.isEmpty())
         user = QString::fromLatin1("root");
     return user;
 }

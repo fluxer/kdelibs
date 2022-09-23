@@ -251,7 +251,7 @@ bool KDesktopFile::tryExec() const
     return false;
   }
   const QStringList list = d->desktopGroup.readEntry("X-KDE-AuthorizeAction", QStringList());
-  foreach (const QString it, list) {
+  foreach (const QString &it, list) {
     if (!KAuthorized::authorize(it.trimmed()))
       return false;
   }
@@ -261,8 +261,6 @@ bool KDesktopFile::tryExec() const
   if (su)
   {
       QString user = d->desktopGroup.readEntry("X-KDE-Username", QString());
-      if (user.isEmpty())
-        user = QString::fromLocal8Bit(qgetenv("ADMIN_ACCOUNT"));
       if (user.isEmpty())
         user = QString::fromLatin1("root");
       if (!KAuthorized::authorize(QString::fromLatin1("user/")+user))
