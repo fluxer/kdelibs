@@ -601,19 +601,10 @@ public:
   class KDECORE_EXPORT ItemEnum:public ItemInt
   {
   public:
-    //KDE5: remove the old Choice struct, rename Choice2 to Choice
     struct Choice
     {
       QString name;
       QString label;
-      QString whatsThis;
-    };
-
-    struct Choice2
-    {
-      QString name;
-      QString label;
-      QString toolTip;
       QString whatsThis;
     };
 
@@ -623,14 +614,7 @@ public:
     ItemEnum(const QString & _group, const QString & _key, qint32 &reference,
              const QList<Choice> &choices, qint32 defaultValue = 0);
 
-    /** @copydoc KConfigSkeletonGenericItem::KConfigSkeletonGenericItem
-        @param choices The list of enums that can be stored in this item
-      */
-    ItemEnum(const QString & _group, const QString & _key, qint32 &reference,
-             const QList<Choice2> &choices, qint32 defaultValue = 0);
-
     QList<Choice> choices() const;
-    QList<Choice2> choices2() const;
 
     /** @copydoc KConfigSkeletonItem::readConfig(KConfig*) */
     void readConfig(KConfig * config);
@@ -639,7 +623,7 @@ public:
     void writeConfig(KConfig * config);
 
   private:
-    QList<Choice2> mChoices;
+    QList<Choice> mChoices;
   };
 
 

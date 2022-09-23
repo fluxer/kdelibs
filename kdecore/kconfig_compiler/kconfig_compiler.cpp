@@ -190,7 +190,6 @@ class CfgEntry
       QString name;
       QString context;
       QString label;
-      QString toolTip;
       QString whatsThis;
     };
     class Choices
@@ -716,10 +715,6 @@ CfgEntry *parseEntry( const QString &group, const QDomElement &element, const Cf
           for( QDomElement e3 = e2.firstChildElement(); !e3.isNull(); e3 = e3.nextSiblingElement() ) {
             if ( e3.tagName() == "label" ) {
               choice.label = e3.text();
-              choice.context = e3.attribute( "context" );
-            }
-            if ( e3.tagName() == "tooltip" ) {
-              choice.toolTip = e3.text();
               choice.context = e3.attribute( "context" );
             }
             if ( e3.tagName() == "whatsthis" ) {
@@ -2072,13 +2067,13 @@ int main( int argc, char **argv )
       cpp << (*itEntry)->code() << endl;
     }
     if ( (*itEntry)->type() == "Enum" ) {
-      cpp << "  QList<"+cfg.inherits+"::ItemEnum::Choice2> values"
+      cpp << "  QList<"+cfg.inherits+"::ItemEnum::Choice> values"
           << (*itEntry)->name() << ";" << endl;
       const QList<CfgEntry::Choice> choices = (*itEntry)->choices().choices;
       QList<CfgEntry::Choice>::ConstIterator it;
       for( it = choices.constBegin(); it != choices.constEnd(); ++it ) {
         cpp << "  {" << endl;
-        cpp << "    "+cfg.inherits+"::ItemEnum::Choice2 choice;" << endl;
+        cpp << "    "+cfg.inherits+"::ItemEnum::Choice choice;" << endl;
         cpp << "    choice.name = QLatin1String(\"" << (*it).name << "\");" << endl;
         if ( cfg.setUserTexts ) {
           if ( !(*it).label.isEmpty() ) {
@@ -2088,14 +2083,6 @@ int main( int argc, char **argv )
             else
               cpp << "i18n(";
             cpp << quoteString((*it).label) << ");" << endl;
-          }
-          if ( !(*it).toolTip.isEmpty() ) {
-            cpp << "    choice.toolTip = ";
-            if ( !(*it).context.isEmpty() )
-              cpp << "i18nc(" + quoteString((*it).context) + ", ";
-            else
-              cpp << "i18n(";
-            cpp << quoteString((*it).toolTip) << ");" << endl;
           }
           if ( !(*it).whatsThis.isEmpty() ) {
             cpp << "    choice.whatsThis = ";

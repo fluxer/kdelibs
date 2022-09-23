@@ -58,19 +58,19 @@ public:
         colorItem = new ItemColor( currentGroup(), QLatin1String( "Color" ), color, Qt::white );
         addItem( colorItem, QLatin1String( "Color" ) );
 
-        QList<ItemEnum::Choice2> textValues;
+        QList<ItemEnum::Choice> textValues;
         {
-            ItemEnum::Choice2 choice;
+            ItemEnum::Choice choice;
             choice.name = QLatin1String("A");
             textValues.append( choice );
         }
         {
-            ItemEnum::Choice2 choice;
+            ItemEnum::Choice choice;
             choice.name = QLatin1String("B");
             textValues.append( choice );
         }
         {
-            ItemEnum::Choice2 choice;
+            ItemEnum::Choice choice;
             choice.name = QLatin1String("C");
             textValues.append( choice );
         }

@@ -23,31 +23,31 @@ Test2::Test2(  )
   mArchiveFileItem = new MyPrefs::ItemString( currentGroup(), QLatin1String( "Archive File" ), mArchiveFile );
   mArchiveFileItem->setLabel( i18n("Archive File") );
   addItem( mArchiveFileItem, QLatin1String( "ArchiveFile" ) );
-  QList<MyPrefs::ItemEnum::Choice2> valuesDestination;
+  QList<MyPrefs::ItemEnum::Choice> valuesDestination;
   {
-    MyPrefs::ItemEnum::Choice2 choice;
+    MyPrefs::ItemEnum::Choice choice;
     choice.name = QLatin1String("standardDestination");
     valuesDestination.append( choice );
   }
   {
-    MyPrefs::ItemEnum::Choice2 choice;
+    MyPrefs::ItemEnum::Choice choice;
     choice.name = QLatin1String("askDestination");
     valuesDestination.append( choice );
   }
   {
-    MyPrefs::ItemEnum::Choice2 choice;
+    MyPrefs::ItemEnum::Choice choice;
     choice.name = QLatin1String("argl1");
     choice.label = i18n("Argl1 Label");
     valuesDestination.append( choice );
   }
   {
-    MyPrefs::ItemEnum::Choice2 choice;
+    MyPrefs::ItemEnum::Choice choice;
     choice.name = QLatin1String("argl2");
     choice.whatsThis = i18n("Argl2 Whatsthis");
     valuesDestination.append( choice );
   }
   {
-    MyPrefs::ItemEnum::Choice2 choice;
+    MyPrefs::ItemEnum::Choice choice;
     choice.name = QLatin1String("argl3");
     choice.label = i18n("Argl3 Label");
     choice.whatsThis = i18n("Argl3 Whatsthis");

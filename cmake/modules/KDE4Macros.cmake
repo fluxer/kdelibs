@@ -77,7 +77,7 @@ macro(KDE4_ADD_KCFG_FILES _sources )
             )
 
             if(_kcfg_generatemoc)
-                qt4_generate_moc(${_header_FILE} ${_moc_FILE} )
+                qt4_generate_moc(${_header_FILE} ${_moc_FILE})
                 set_source_files_properties(${_src_FILE} PROPERTIES SKIP_AUTOMOC TRUE)
                 list(APPEND ${_sources} ${_moc_FILE})
             endif()
