@@ -879,8 +879,7 @@ qreal KFontChooser::Private::setupSizeListBox (const QString& family, const QStr
     if (dbase.isSmoothlyScalable(family, style)) {
         // A vector font.
         //>sampleEdit->setPaletteBackgroundPixmap( VectorPixmap ); // TODO
-    }
-    else {
+    } else {
         // A bitmap font.
         //sampleEdit->setPaletteBackgroundPixmap( BitmapPixmap ); // TODO
         QList<int> smoothSizes = dbase.smoothSizes(family, style);

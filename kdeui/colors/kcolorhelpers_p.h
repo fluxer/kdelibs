@@ -21,7 +21,10 @@
 #ifndef KDEUI_COLORS_KCOLORHELPERS_P_H
 #define KDEUI_COLORS_KCOLORHELPERS_P_H
 
-#include <QtGui/QColor>
+#include <QColor>
+#include <QPainter>
+#include <QRect>
+#include <QBrush>
 
 // normalize: like qBound(a, 0.0, 1.0) but without needing the args and with
 // "safer" behavior on NaN (isnan(a) -> return 0.0)
@@ -29,10 +32,6 @@ static inline qreal normalize(qreal a)
 {
     return (a < 1.0 ? (a > 0.0 ? a : 0.0) : 1.0);
 }
-
-#include <QPainter>
-#include <QRect>
-#include <QBrush>
 
 namespace KDEPrivate {
 

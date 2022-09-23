@@ -23,8 +23,7 @@
 #include <kdeui_export.h>
 #include <ksharedconfig.h>
 
-#include <QtGui/QPalette>
-
+#include <QPalette>
 #include <QColor>
 #include <QBrush>
 
@@ -299,7 +298,7 @@ public:
     KColorScheme(const KColorScheme&);
 
     /** Destructor */
-    virtual ~KColorScheme();
+    ~KColorScheme();
 
     /** Standard assignment operator */
     KColorScheme& operator=(const KColorScheme&);
