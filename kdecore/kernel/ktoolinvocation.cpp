@@ -98,7 +98,7 @@ int KToolInvocation::startServiceInternal(const char *_function,
                                           const QByteArray& startup_id, bool noWait,
                                           const QString& workdir)
 {
-    QString function = QLatin1String(_function);
+    QString function = QString::fromLatin1(_function);
     org::kde::KLauncher *launcher = KToolInvocation::klauncher();
     QDBusMessage msg = QDBusMessage::createMethodCall(launcher->service(),
                                                 launcher->path(),
