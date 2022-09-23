@@ -22,7 +22,6 @@
 #define SOLID_IFACES_GENERICINTERFACE_H
 
 #include <QtCore/QObject>
-#include <QtCore/qglobal.h>
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
 

@@ -261,7 +261,7 @@ private:
 };
 
 #define DEFAULT(c) QColor( c[0], c[1], c[2] )
-#define  SET_DEFAULT(a) DEFAULT( defaults.a )
+#define SET_DEFAULT(a) DEFAULT( defaults.a )
 #define DECO_DEFAULT(a) DEFAULT( defaultDecorationColors.a )
 
 KColorSchemePrivate::KColorSchemePrivate(const KSharedConfigPtr &config,

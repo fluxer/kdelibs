@@ -99,16 +99,16 @@ Q_SIGNALS:
     void highlighted( const QColor &col );
 
 protected:
-        virtual void paintEvent(QPaintEvent *event);
+    virtual void paintEvent(QPaintEvent *event);
 
 private:
-        friend class KColorComboPrivate;
-        KColorComboPrivate *const d;
-        
-        Q_DISABLE_COPY(KColorCombo)
+    friend class KColorComboPrivate;
+    KColorComboPrivate *const d;
 
-        Q_PRIVATE_SLOT(d, void _k_slotActivated(int))
-        Q_PRIVATE_SLOT(d, void _k_slotHighlighted(int))
+    Q_DISABLE_COPY(KColorCombo)
+
+    Q_PRIVATE_SLOT(d, void _k_slotActivated(int))
+    Q_PRIVATE_SLOT(d, void _k_slotHighlighted(int))
 };
 
 Q_DECLARE_METATYPE(QList<QColor>)

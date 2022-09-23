@@ -24,7 +24,6 @@
 #define KFONTMETRICS_H
 
 #include "kdeui_export.h"
-#include <qglobal.h>
 
 #include <QPainter>
 #include <QSizeF>

@@ -104,9 +104,10 @@ public:
     * @see editable()
     * @see setEditable()
     */
-   enum Editable { Yes, ///< Collection may be edited
-                  No,  ///< Collection may not be edited
-		   Ask  ///< Ask user before editing
+   enum Editable {
+      Yes, ///< Collection may be edited
+      No,  ///< Collection may not be edited
+      Ask  ///< Ask user before editing
    };
   
    /**

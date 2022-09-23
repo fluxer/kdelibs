@@ -22,8 +22,6 @@
 
 #include "kcolorchoosermode.h"
 
-#include <QtCore/qglobal.h>
-
 #include <QColor>
 
 namespace KDEPrivate {

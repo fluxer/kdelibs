@@ -24,6 +24,7 @@
 #define KKEYSERVER_H
 
 #include <kdeui_export.h>
+
 #include <qglobal.h>
 
 #if defined Q_WS_X11 /*or defined Q_WS_WIN*/
