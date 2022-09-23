@@ -181,7 +181,7 @@ public:
     bool hasUrls: 1, hasSpec: 1;
 
 protected:
-    virtual int expandEscapedMacro(const QString &str, int pos, QStringList &ret);
+    int expandEscapedMacro(const QString &str, int pos, QStringList &ret) final;
 
 private:
     const KService &service;
@@ -234,7 +234,7 @@ public:
     bool ignFile: 1;
 
 protected:
-    virtual int expandEscapedMacro(const QString &str, int pos, QStringList &ret);
+    int expandEscapedMacro(const QString &str, int pos, QStringList &ret) final;
 
 private:
     void subst(int option, const KUrl &url, QStringList &ret);

@@ -225,9 +225,9 @@ public:
 
 protected:
     /** \internal Not to be called or reimplemented. */
-    virtual int expandPlainMacro( const QString &str, int pos, QStringList &ret );
+    int expandPlainMacro( const QString &str, int pos, QStringList &ret ) final;
     /** \internal Not to be called or reimplemented. */
-    virtual int expandEscapedMacro( const QString &str, int pos, QStringList &ret );
+    int expandEscapedMacro( const QString &str, int pos, QStringList &ret ) final;
 
     /**
      * Return substitution list @p ret for string macro @p str.
@@ -261,9 +261,9 @@ public:
 
 protected:
     /** \internal Not to be called or reimplemented. */
-    virtual int expandPlainMacro( const QString &str, int pos, QStringList &ret );
+    int expandPlainMacro( const QString &str, int pos, QStringList &ret ) final;
     /** \internal Not to be called or reimplemented. */
-    virtual int expandEscapedMacro( const QString &str, int pos, QStringList &ret );
+    int expandEscapedMacro( const QString &str, int pos, QStringList &ret ) final;
 
     /**
      * Return substitution list @p ret for single-character macro @p chr.
