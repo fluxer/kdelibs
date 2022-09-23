@@ -57,7 +57,7 @@ public:
   /**
    * Destructor.
    */
-  virtual ~KCatalog();
+  ~KCatalog();
 
   /**
    * Finds the locale directory for the given catalog in given language.

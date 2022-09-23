@@ -20,15 +20,15 @@
 #define KCHARSETS_H
 
 #include <kdecore_export.h>
-#include <QtCore/QList>
 
-class KCharsets;
-class KCharsetsPrivate;
-
+#include <QList>
 #include <QChar>
 #include <QString>
 #include <QStringList>
 #include <QTextCodec>
+
+class KCharsets;
+class KCharsetsPrivate;
 
 namespace KGlobal
 {
