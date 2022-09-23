@@ -153,7 +153,6 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
 
     icnlibs = KGlobal::dirs()->resourceDirs("icon")
         << KGlobal::dirs()->resourceDirs("xdgdata-icon")
-        << "/usr/share/pixmaps/"
         // These are not in the icon spec, but e.g. GNOME puts some icons there anyway.
         << KGlobal::dirs()->resourceDirs("xdgdata-pixmap");
     icnlibs.removeDuplicates();
@@ -541,11 +540,11 @@ QStringList KIconTheme::list()
         return *_theme_list;
     }
 
-    const QStringList icnlibs = KGlobal::dirs()->resourceDirs("icon")
-     << KGlobal::dirs()->resourceDirs("xdgdata-icon")
-     << "/usr/share/pixmaps"
-     // These are not in the icon spec, but e.g. GNOME puts some icons there anyway.
-     << KGlobal::dirs()->resourceDirs("xdgdata-pixmap");
+    QStringList icnlibs = KGlobal::dirs()->resourceDirs("icon")
+        << KGlobal::dirs()->resourceDirs("xdgdata-icon")
+        // These are not in the icon spec, but e.g. GNOME puts some icons there anyway.
+        << KGlobal::dirs()->resourceDirs("xdgdata-pixmap");
+    icnlibs.removeDuplicates();
 
     QStringList::ConstIterator it;
     for (it=icnlibs.begin(); it!=icnlibs.end(); ++it) {
