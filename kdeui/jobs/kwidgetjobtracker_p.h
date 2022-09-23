@@ -26,7 +26,9 @@
 
 #include <QWidget>
 #include <QMap>
-#include <QtCore/qdatetime.h>
+#include <QTime>
+#include <QLabel>
+#include <QProgressBar>
 #include <QQueue>
 #include <QCheckBox>
 
@@ -36,8 +38,6 @@
 
 class KPushButton;
 class KSqueezedTextLabel;
-#include <QLabel>
-#include <QProgressBar>
 
 class KWidgetJobTracker::Private
     : public KAbstractWidgetJobTracker::Private

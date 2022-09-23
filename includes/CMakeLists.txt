@@ -295,7 +295,6 @@ install(
     KStatusNotifierItem
     KStringHandler
     KStyle
-    KStyleFactory
     KSycoca
     KSycocaEntry
     KSystemEventFilter
