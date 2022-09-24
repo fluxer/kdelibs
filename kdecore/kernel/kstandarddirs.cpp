@@ -68,8 +68,7 @@ static const QChar s_pathseparatorchar = QChar::fromLatin1(KPATH_SEPARATOR);
 
 static QString readEnvPath(const char *env)
 {
-    QByteArray c_path;
-    c_path = qgetenv(env);
+    const QByteArray c_path = qgetenv(env);
     if (c_path.isEmpty())
         return QString();
     return QDir::fromNativeSeparators(QFile::decodeName(c_path));
