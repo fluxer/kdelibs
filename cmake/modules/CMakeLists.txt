@@ -67,7 +67,6 @@ set(cmakeFiles
     FindXCB.cmake
     kde4_cmake_uninstall.cmake.in
     kde4_exec.sh.in
-    kde4_test.sh.in
     KDE4Defaults.cmake
     KDE4Macros.cmake
     MacroBoolTo01.cmake

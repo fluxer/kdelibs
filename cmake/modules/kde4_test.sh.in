@@ -1,7 +1,0 @@
-#!/bin/sh
-
-set -e
-
-cd "@CMAKE_CURRENT_BINARY_DIR@"
-
-exec @CMAKE_BINARY_DIR@/kde4_exec.sh "./@KDE4_TESTTARGET@" "$@"
