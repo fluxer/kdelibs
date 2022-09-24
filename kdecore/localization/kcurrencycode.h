@@ -22,10 +22,7 @@
 
 #include <kdecore_export.h>
 
-#include <QtCore/qshareddata.h>
-#include <QtCore/qdatetime.h>
-
-#include <QDate>
+#include <QSharedDataPointer>
 #include <QStringList>
 #include <QFileInfo>
 
@@ -45,19 +42,6 @@ class KCurrencyCodePrivate;
 class KDECORE_EXPORT KCurrencyCode
 {
 public:
-    /**
-     * The Status of the Currency
-     *
-     * @see CurrencyStatusFlags
-     * @see currencyStatus()
-     */
-    enum CurrencyStatus {
-        ActiveCurrency     = 0x01, /**< Currency is currently in use */
-        SuspendedCurrency  = 0x02, /**< Currency is not currently in use but has not been replaced */
-        ObsoleteCurrency   = 0x04  /**< Currency is no longer in use and has been replaced */
-    };
-    Q_DECLARE_FLAGS( CurrencyStatusFlags, CurrencyStatus )
-
     /**
      * Constructs a KCurrencyCode for a given ISO Currency Code.
      *
@@ -142,48 +126,6 @@ public:
      * @see name()
      */
     QString isoName() const;
-
-    /**
-     * Return Currency Status for the currency, if Active, Suspended or Obsolete
-     *
-     * @return the Currency Status
-     *
-     * @see CurrencyStatus
-     */
-    CurrencyStatus status() const;
-
-    /**
-     * Return the date the currency was introduced
-     *
-     * @return the date the currency was introduced
-     *
-     * @see status()
-     * @see dateSuspended()
-     * @see dateWithdrawn()
-     */
-    QDate dateIntroduced() const;
-
-    /**
-     * Return the date the currency was suspended
-     *
-     * @return the date the currency was suspended, QDate() if active
-     *
-     * @see status()
-     * @see dateIntroduced()
-     * @see dateWithdrawn()
-     */
-    QDate dateSuspended() const;
-
-    /**
-     * Return the date the currency was withdrawn from circulation
-     *
-     * @return the date the currency was withdrawn, QDate() if active
-     *
-     * @see status()
-     * @see dateIntroduced()
-     * @see dateSuspended()
-     */
-    QDate dateWithdrawn() const;
 
     /**
      * Return a list of valid Symbols for the Currency in order of preference
@@ -282,36 +224,23 @@ public:
 
     /**
      * Return if a given Currency Code is supported in KDE.
-     * Optionally validate if an Active, Suspended, or Obsolete currency, default is if any.
      *
      * @param currencyCode the Currency Code to validate
-     * @param currencyStatus the CurrencyStatus to validate
      *
      * @return true if valid currency code
      */
-    static bool isValid( const QString &currencyCode, CurrencyStatusFlags currencyStatus =
-                                                      CurrencyStatusFlags( ActiveCurrency |
-                                                                           SuspendedCurrency |
-                                                                           ObsoleteCurrency ) );
+    static bool isValid( const QString &currencyCode );
 
     /**
      * Provides list of all known ISO Currency Codes.
      *
      * Use currencyCodeToName(currencyCode) to get human readable, localized currency names.
      *
-     * By default returns all Active, Suspended and Obsolete currencies, set the currencyStatus
-     * flags as appropriate to return required status currencies
-     *
-     * @param currencyStatus which status currencies to return
-     *
-     * @return a list of all ISO Currency Codes
+     * @return a list of all active ISO Currency Codes
      *
      * @see currencyCodeToName
      */
-    static QStringList allCurrencyCodesList( CurrencyStatusFlags currencyStatus =
-                                             CurrencyStatusFlags( ActiveCurrency |
-                                                                  SuspendedCurrency |
-                                                                  ObsoleteCurrency ) );
+    static QStringList allCurrencyCodesList( );
 
     /**
      * Convert a known ISO Currency Code to a human readable, localized form.
@@ -334,8 +263,5 @@ public:
 private:
     QSharedDataPointer<KCurrencyCodePrivate> d;
 };
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( KCurrencyCode::CurrencyStatusFlags )
-
 
 #endif // KCURRENCYCODE_H

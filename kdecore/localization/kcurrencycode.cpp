@@ -38,7 +38,7 @@ public:
     KCurrencyCodePrivate( const QString &isoCurrencyCode, const QString &language = QString() );
     KCurrencyCodePrivate( const QFileInfo &currencyCodeFile, const QString &language = QString() );
     KCurrencyCodePrivate( const KCurrencyCodePrivate& other );
-    virtual ~KCurrencyCodePrivate();
+    ~KCurrencyCodePrivate();
 
     void loadCurrency( const QFileInfo &currencyCodeFile, const QString &language );
 
@@ -49,14 +49,7 @@ public:
     QStringList m_currencyUnitSymbols;
     QString     m_currencyUnitSymbolDefault;
     QString     m_currencyUnitSymbolUnambiguous;
-    QString     m_currencyUnitSingular;
-    QString     m_currencyUnitPlural;
     QString     m_currencySubunitSymbol;
-    QString     m_currencySubunitSingular;
-    QString     m_currencySubunitPlural;
-    QDate       m_currencyIntroducedDate;
-    QDate       m_currencySuspendedDate;
-    QDate       m_currencyWithdrawnDate;
     int         m_currencySubunits;
     int         m_currencySubunitsPerUnit;
     bool        m_currencySubunitsInCirculation;
@@ -85,14 +78,7 @@ KCurrencyCodePrivate::KCurrencyCodePrivate( const KCurrencyCodePrivate& other )
       m_currencyUnitSymbols( other.m_currencyUnitSymbols ),
       m_currencyUnitSymbolDefault( other.m_currencyUnitSymbolDefault ),
       m_currencyUnitSymbolUnambiguous( other.m_currencyUnitSymbolUnambiguous ),
-      m_currencyUnitSingular( other.m_currencyUnitSingular ),
-      m_currencyUnitPlural( other.m_currencyUnitPlural ),
       m_currencySubunitSymbol( other.m_currencySubunitSymbol ),
-      m_currencySubunitSingular( other.m_currencySubunitSingular ),
-      m_currencySubunitPlural( other.m_currencySubunitPlural ),
-      m_currencyIntroducedDate( other.m_currencyIntroducedDate ),
-      m_currencySuspendedDate( other.m_currencySuspendedDate ),
-      m_currencyWithdrawnDate( other.m_currencyWithdrawnDate ),
       m_currencySubunits( other.m_currencySubunits ),
       m_currencySubunitsPerUnit( other.m_currencySubunitsPerUnit ),
       m_currencySubunitsInCirculation( other.m_currencySubunitsInCirculation ),
@@ -123,14 +109,7 @@ void KCurrencyCodePrivate::loadCurrency( const QFileInfo &currencyCodeFile, cons
     m_currencyUnitSymbols           = cg.readEntry( "CurrencyUnitSymbols",           QStringList() );
     m_currencyUnitSymbolDefault     = cg.readEntry( "CurrencyUnitSymbolDefault",     QString() );
     m_currencyUnitSymbolUnambiguous = cg.readEntry( "CurrencyUnitSymbolUnambiguous", QString() );
-    m_currencyUnitSingular          = cg.readEntry( "CurrencyUnitSingular",          QString() );
-    m_currencyUnitPlural            = cg.readEntry( "CurrencyUnitPlural",            QString() );
     m_currencySubunitSymbol         = cg.readEntry( "CurrencySubunitSymbol",         QString() );
-    m_currencySubunitSingular       = cg.readEntry( "CurrencySubunitSingular",       QString() );
-    m_currencySubunitPlural         = cg.readEntry( "CurrencySubunitPlural",         QString() );
-    m_currencyIntroducedDate        = cg.readEntry( "CurrencyIntroducedDate",        QDate() );
-    m_currencySuspendedDate         = cg.readEntry( "CurrencySuspendedDate",         QDate() );
-    m_currencyWithdrawnDate         = cg.readEntry( "CurrencyWithdrawnDate",         QDate() );
     m_currencySubunits              = cg.readEntry( "CurrencySubunits",              1 );
     m_currencySubunitsInCirculation = cg.readEntry( "CurrencySubunitsInCirculation", true );
     m_currencySubunitsPerUnit       = cg.readEntry( "CurrencySubunitsPerUnit",       100 );
@@ -182,32 +161,6 @@ QString KCurrencyCode::name() const
 QString KCurrencyCode::isoName() const
 {
     return d->m_currencyNameIso;
-}
-
-KCurrencyCode::CurrencyStatus KCurrencyCode::status() const
-{
-    if ( dateWithdrawn() != QDate() ) {
-        return ObsoleteCurrency;
-    } else if ( dateSuspended() != QDate() ) {
-        return SuspendedCurrency;
-    } else {
-        return ActiveCurrency;
-    }
-}
-
-QDate KCurrencyCode::dateIntroduced() const
-{
-    return d->m_currencyIntroducedDate;
-}
-
-QDate KCurrencyCode::dateSuspended() const
-{
-    return d->m_currencySuspendedDate;
-}
-
-QDate KCurrencyCode::dateWithdrawn() const
-{
-    return d->m_currencyWithdrawnDate;
 }
 
 QStringList KCurrencyCode::symbolList() const
@@ -268,13 +221,13 @@ bool KCurrencyCode::isValid() const
     return !d->m_currencyCodeIsoAlpha3.isEmpty();
 }
 
-bool KCurrencyCode::isValid( const QString &isoCurrencyCode, CurrencyStatusFlags currencyStatusFlags )
+bool KCurrencyCode::isValid( const QString &isoCurrencyCode )
 {
     KCurrencyCode test = KCurrencyCode( isoCurrencyCode );
-    return test.isValid() && ( currencyStatusFlags & test.status() );
+    return test.isValid();
 }
 
-QStringList KCurrencyCode::allCurrencyCodesList( CurrencyStatusFlags currencyStatus )
+QStringList KCurrencyCode::allCurrencyCodesList( )
 {
     QStringList currencyCodes;
 
@@ -284,7 +237,7 @@ QStringList KCurrencyCode::allCurrencyCodesList( CurrencyStatusFlags currencySta
     {
         QString code = path.mid( path.length()-11, 3 ).toUpper();
 
-        if ( KCurrencyCode::isValid( code, currencyStatus ) ) {
+        if ( KCurrencyCode::isValid( code ) ) {
             currencyCodes.append( code );
         }
     }
