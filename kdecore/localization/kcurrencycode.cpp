@@ -34,15 +34,8 @@ public:
     QString     m_currencyCodeIsoNumeric3;
     QString     m_currencyNameIso;
     QString     m_currencyNameDisplay;
-    QStringList m_currencyUnitSymbols;
     QString     m_currencyUnitSymbolDefault;
-    QString     m_currencyUnitSymbolUnambiguous;
-    QString     m_currencySubunitSymbol;
-    int         m_currencySubunits;
-    int         m_currencySubunitsPerUnit;
-    bool        m_currencySubunitsInCirculation;
     int         m_currencyDecimalPlacesDisplay;
-    QStringList m_currencyCountriesInUse;
 };
 
 KCurrencyCodePrivate::KCurrencyCodePrivate( const QString &isoCurrencyCode, const QString &language )
@@ -62,15 +55,8 @@ KCurrencyCodePrivate::KCurrencyCodePrivate( const QString &isoCurrencyCode, cons
     m_currencyCodeIsoNumeric3       = cg.readEntry( "CurrencyCodeIsoNumeric3",       QString() );
     m_currencyNameIso               = cg.readEntry( "CurrencyNameIso",               QString() );
     m_currencyNameDisplay           = cg.readEntry( "Name",                          QString() );
-    m_currencyUnitSymbols           = cg.readEntry( "CurrencyUnitSymbols",           QStringList() );
     m_currencyUnitSymbolDefault     = cg.readEntry( "CurrencyUnitSymbolDefault",     QString() );
-    m_currencyUnitSymbolUnambiguous = cg.readEntry( "CurrencyUnitSymbolUnambiguous", QString() );
-    m_currencySubunitSymbol         = cg.readEntry( "CurrencySubunitSymbol",         QString() );
-    m_currencySubunits              = cg.readEntry( "CurrencySubunits",              1 );
-    m_currencySubunitsInCirculation = cg.readEntry( "CurrencySubunitsInCirculation", true );
-    m_currencySubunitsPerUnit       = cg.readEntry( "CurrencySubunitsPerUnit",       100 );
     m_currencyDecimalPlacesDisplay  = cg.readEntry( "CurrencyDecimalPlacesDisplay",  2 );
-    m_currencyCountriesInUse        = cg.readEntry( "CurrencyCountriesInUse",        QStringList() );
 }
 
 KCurrencyCodePrivate::KCurrencyCodePrivate( const KCurrencyCodePrivate& other )
@@ -79,15 +65,8 @@ KCurrencyCodePrivate::KCurrencyCodePrivate( const KCurrencyCodePrivate& other )
       m_currencyCodeIsoNumeric3( other.m_currencyCodeIsoNumeric3 ),
       m_currencyNameIso( other.m_currencyNameIso ),
       m_currencyNameDisplay( other.m_currencyNameDisplay ),
-      m_currencyUnitSymbols( other.m_currencyUnitSymbols ),
       m_currencyUnitSymbolDefault( other.m_currencyUnitSymbolDefault ),
-      m_currencyUnitSymbolUnambiguous( other.m_currencyUnitSymbolUnambiguous ),
-      m_currencySubunitSymbol( other.m_currencySubunitSymbol ),
-      m_currencySubunits( other.m_currencySubunits ),
-      m_currencySubunitsPerUnit( other.m_currencySubunitsPerUnit ),
-      m_currencySubunitsInCirculation( other.m_currencySubunitsInCirculation ),
-      m_currencyDecimalPlacesDisplay( other.m_currencyDecimalPlacesDisplay ),
-      m_currencyCountriesInUse( other.m_currencyCountriesInUse )
+      m_currencyDecimalPlacesDisplay( other.m_currencyDecimalPlacesDisplay )
 {
 }
 
@@ -133,55 +112,14 @@ QString KCurrencyCode::isoName() const
     return d->m_currencyNameIso;
 }
 
-QStringList KCurrencyCode::symbolList() const
-{
-    return d->m_currencyUnitSymbols;
-}
-
 QString KCurrencyCode::defaultSymbol() const
 {
     return d->m_currencyUnitSymbolDefault;
 }
 
-QString KCurrencyCode::unambiguousSymbol() const
-{
-    if ( d->m_currencyUnitSymbolUnambiguous.isEmpty() ) {
-        return d->m_currencyUnitSymbolDefault;
-    }
-    return d->m_currencyUnitSymbolUnambiguous;
-}
-
-bool KCurrencyCode::hasSubunits() const
-{
-    if ( d->m_currencySubunits > 0 ) {
-        return true;
-    }
-    return false;
-}
-
-bool KCurrencyCode::hasSubunitsInCirculation() const
-{
-    return ( hasSubunits() && d->m_currencySubunitsInCirculation );
-}
-
-QString KCurrencyCode::subunitSymbol() const
-{
-    return d->m_currencySubunitSymbol;
-}
-
-int KCurrencyCode::subunitsPerUnit() const
-{
-    return d->m_currencySubunitsPerUnit;
-}
-
 int KCurrencyCode::decimalPlaces() const
 {
     return d->m_currencyDecimalPlacesDisplay;
-}
-
-QStringList KCurrencyCode::countriesUsingCurrency() const
-{
-    return d->m_currencyCountriesInUse;
 }
 
 bool KCurrencyCode::isValid() const

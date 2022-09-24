@@ -63,7 +63,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~KCurrencyCode();
+    ~KCurrencyCode();
 
     /**
      * Assignment operator
@@ -114,78 +114,13 @@ public:
     QString isoName() const;
 
     /**
-     * Return a list of valid Symbols for the Currency in order of preference
-     *
-     * This list will normally contain the Default and Unambiguous symbols and the ISO Currency Code
-     *
-     * @return list of Currency Symbols
-     *
-     * @see defaultSymbol()
-     * @see unambiguousSymbol()
-     */
-    QStringList symbolList() const;
-
-    /**
      * Return the default Symbol for the Currency, e.g. $ or £
      *
      * @return the default Currency Symbol
      *
      * @see symbols()
-     * @see unambiguousSymbol()
      */
     QString defaultSymbol() const;
-
-    /**
-     * Return the unambiguous Symbol for the Currency, e.g. US$ or NZ$
-     *
-     * @return the unambiguous Currency Symbol
-     *
-     * @see symbols()
-     * @see defaultSymbol()
-     */
-    QString unambiguousSymbol() const;
-
-    /**
-     * Return if the Currency has subunits or not,
-     * e.g. USD has cents, VUV has none
-     *
-     * @return true if the Currency has subunits
-     *
-     * @see hasSubunitsInCirculation()
-     * @see subunitName()
-     * @see subunitSymbol()
-     * @see subunitsPerUnit()
-     */
-    bool hasSubunits() const;
-
-    /**
-     * Return if the Currency has subunits in circulation,
-     * e.g. JPY has sen but these are no longer used due to inflation
-     *
-     * @return true if the Currency has subunits in circulation
-     *
-     * @see hasSubunits()
-     */
-    bool hasSubunitsInCirculation() const;
-
-    /**
-     * Return the Currency subunit symbol if it has one
-     * e.g. ¢ for USD cent
-     *
-     * @return the currency subunit symbol
-     *
-     * @see hasSubunits()
-     */
-    QString subunitSymbol() const;
-
-    /**
-     * Return the number of subunits in every unit, e.g. 100 cents in the dollar
-     *
-     * @return number of subunits per unit, 0 if no subunits
-     *
-     * @see hasSubunits()
-     */
-    int subunitsPerUnit() const;
 
     /**
      * Return the number of decimal places required to display the currency subunits
@@ -193,13 +128,6 @@ public:
      * @return number of decimal places
      */
     int decimalPlaces() const;
-
-    /**
-     * Return a list of countries known to be using the currency
-     *
-     * @return list of ISO Country Codes using the currency
-     */
-    QStringList countriesUsingCurrency() const;
 
     /**
      * Return if the currency object loaded/initialised correctly
