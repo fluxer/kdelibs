@@ -930,63 +930,53 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
         const QString typeInstallPath = installPath(type); // could be empty
         const QString installdir = typeInstallPath.isEmpty() ? QString() : realPath(typeInstallPath);
         const QString installprefix = installPath("kdedir");
-        if (!dirs.isEmpty())
-        {
+        if (!dirs.isEmpty()) {
             bool local = true;
 
-            for (QStringList::ConstIterator it = dirs.constBegin();
-                 it != dirs.constEnd(); ++it)
-            {
-                if ((*it).startsWith(QLatin1Char('%'))) {
+            foreach (const QString &it, dirs) {
+                if (it.startsWith(QLatin1Char('%'))) {
                     // grab the "data" from "%data/apps"
-                    const int pos = (*it).indexOf(QLatin1Char('/'));
-                    QByteArray rel = (*it).mid(1, pos - 1).toUtf8();
-                    QString rest = (*it).mid(pos + 1);
-                    foreach (const QString &it2, resourceDirs(rel.constData()))
-                    {
+                    const int pos = it.indexOf(QLatin1Char('/'));
+                    QByteArray rel = it.mid(1, pos - 1).toUtf8();
+                    QString rest = it.mid(pos + 1);
+                    foreach (const QString &it2, resourceDirs(rel.constData())) {
                         const QString path = realPath( it2 + rest );
                         testdir.setPath(path);
-                        if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity))
+                        if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity)) {
                             candidates.append(path);
+                        }
                         local = false;
                     }
                 }
             }
 
             const QStringList *prefixList = 0;
-            if (strncmp(type, "xdgdata-", 8) == 0)
+            if (strncmp(type, "xdgdata-", 8) == 0) {
                 prefixList = &(xdgdata_prefixes);
-            else if (strncmp(type, "xdgconf-", 8) == 0)
+            } else if (strncmp(type, "xdgconf-", 8) == 0) {
                 prefixList = &(xdgconf_prefixes);
-            else
+            } else {
                 prefixList = &m_prefixes;
+            }
 
-            for (QStringList::ConstIterator pit = prefixList->begin();
-                 pit != prefixList->end();
-                 ++pit)
-            {
-            if((*pit).compare(installprefix, case_sensitivity) != 0 || installdir.isEmpty())
-            {
-                    for (QStringList::ConstIterator it = dirs.constBegin();
-                         it != dirs.constEnd(); ++it)
-                    {
-                        if ((*it).startsWith(QLatin1Char('%')))
+            for (QStringList::ConstIterator pit = prefixList->begin(); pit != prefixList->end(); ++pit) {
+                if((*pit).compare(installprefix, case_sensitivity) != 0 || installdir.isEmpty()) {
+                    foreach (const QString &it, dirs) {
+                        if (it.startsWith(QLatin1Char('%')))
                             continue;
-                        const QString path = realPath( *pit + *it );
+                        const QString path = realPath(*pit + it);
                         testdir.setPath(path);
                         if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity))
                             candidates.append(path);
                     }
                     local = false;
-                }
-            else
-            {
+                } else {
                     // we have a custom install path, so use this instead of <installprefix>/<relative dir>
-                testdir.setPath(installdir);
-                    if(testdir.exists() && ! candidates.contains(installdir, case_sensitivity))
+                    testdir.setPath(installdir);
+                    if (testdir.exists() && ! candidates.contains(installdir, case_sensitivity))
                         candidates.append(installdir);
+                }
             }
-        }
         }
 
         // make sure we find the path where it's installed
@@ -1002,13 +992,10 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
                 candidates.append(installdir);
         }
 
-        const QStringList absDirs = m_absolutes.value(type);
-        for (QStringList::ConstIterator it = absDirs.constBegin();
-             it != absDirs.constEnd(); ++it)
-        {
-            testdir.setPath(*it);
+        foreach (const QString &it, m_absolutes.value(type)) {
+            testdir.setPath(it);
             if (testdir.exists()) {
-                const QString filename = realPath( *it );
+                const QString filename = realPath(it);
                 if (!candidates.contains(filename, case_sensitivity)) {
                     candidates.append(filename);
                 }
@@ -1121,25 +1108,16 @@ QString KStandardDirs::findRootExe( const QString& appname,
     return findExe(appname, exePaths.join(s_pathseparator), options);
 }
 
-int KStandardDirs::findAllExe( QStringList& list, const QString& appname,
-                               const QString& pstr, SearchOptions options )
+int KStandardDirs::findAllExe(QStringList& list, const QString& appname,
+                              const QString& pstr, SearchOptions options)
 {
-    QFileInfo info;
-    QString p;
     list.clear();
 
-    const QStringList exePaths = systemPaths( pstr );
-    for (QStringList::ConstIterator it = exePaths.begin(); it != exePaths.end(); ++it)
-    {
-        p = (*it) + QLatin1Char('/');
-        p += appname;
-
-
-        info.setFile( p );
-
-        if( info.exists() && ( ( options & IgnoreExecBit ) || info.isExecutable())
-            && info.isFile() ) {
-            list.append( p );
+    foreach (const QString &it, systemPaths(pstr)) {
+        QString p = it + QLatin1Char('/') + appname;
+        QFileInfo info(p);
+        if (info.exists() && ((options & IgnoreExecBit) || info.isExecutable()) && info.isFile()) {
+            list.append(p );
         }
     }
 
@@ -1343,11 +1321,8 @@ void KStandardDirs::addKDEDefaults()
     localXdgDir = KShell::tildeExpand(localXdgDir);
     addXdgConfigPrefix(localXdgDir);
 
-    for (QStringList::ConstIterator it = xdgdirList.constBegin();
-         it != xdgdirList.constEnd(); ++it)
-    {
-        QString dir = KShell::tildeExpand(*it);
-        addXdgConfigPrefix(dir);
+    foreach (const QString &it, xdgdirList) {
+        addXdgConfigPrefix(KShell::tildeExpand(it));
     }
     // end XDG_CONFIG_XXX
 
@@ -1392,11 +1367,8 @@ void KStandardDirs::addKDEDefaults()
     localXdgDir = KShell::tildeExpand(localXdgDir);
     addXdgDataPrefix(localXdgDir);
 
-    for (QStringList::ConstIterator it = xdgdirList.constBegin();
-         it != xdgdirList.constEnd(); ++it)
-    {
-        QString dir = KShell::tildeExpand(*it);
-        addXdgDataPrefix(dir);
+    foreach (const QString &it, xdgdirList) {
+        addXdgDataPrefix(KShell::tildeExpand(it));
     }
     // end XDG_DATA_XXX
 
