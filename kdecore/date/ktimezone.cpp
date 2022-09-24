@@ -496,7 +496,7 @@ int KTimeZoneBackend::offsetAtZoneTime(const KTimeZone* caller, const QDateTime 
             const int offset = transitions[index].phase().utcOffset();
             if (secondOffset)
                 *secondOffset = offset;
-#ifdef COMPILING_TESTS
+#ifdef ENABLE_TESTING
             kDebug(161) << "-> Using cache";   // enable the debug area to see this in the tests
 #endif
             return offset;
@@ -504,7 +504,7 @@ int KTimeZoneBackend::offsetAtZoneTime(const KTimeZone* caller, const QDateTime 
     }
 
     // The time doesn't fall within the cached transition, or there isn't a cached transition
-#ifdef COMPILING_TESTS
+#ifdef ENABLE_TESTING
     kDebug(161) << "-> No cache";   // enable the debug area to see this in the tests
 #endif
     bool validTime;
@@ -537,7 +537,7 @@ int KTimeZoneBackend::offsetAtUtc(const KTimeZone* caller, const QDateTime &utcD
              || utcDateTime < transitions[index + 1].time()))
         {
             // The time falls within the cached transition, so return its UTC offset
-#ifdef COMPILING_TESTS
+#ifdef ENABLE_TESTING
             kDebug(161) << "Using cache";   // enable the debug area to see this in the tests
 #endif
             return transitions[index].phase().utcOffset();
@@ -545,7 +545,7 @@ int KTimeZoneBackend::offsetAtUtc(const KTimeZone* caller, const QDateTime &utcD
     }
 
     // The time doesn't fall within the cached transition, or there isn't a cached transition
-#ifdef COMPILING_TESTS
+#ifdef ENABLE_TESTING
     kDebug(161) << "No cache";   // enable the debug area to see this in the tests
 #endif
     index = caller->transitionIndex(utcDateTime);

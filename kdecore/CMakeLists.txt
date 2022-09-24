@@ -55,11 +55,6 @@ set(kdecore_OPTIONAL_LIBS)
 
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 
-# Needed for the kdatetime test in release mode
-if(ENABLE_TESTING)
-    add_definitions(-DCOMPILING_TESTS)
-endif(ENABLE_TESTING)
-
 # compile bzip2 support if available
 if(BZIP2_FOUND)
     include_directories(${BZIP2_INCLUDE_DIR})

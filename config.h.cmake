@@ -50,5 +50,5 @@
 /* Defined to 1 if you have a d_type member in struct dirent */
 #cmakedefine HAVE_DIRENT_D_TYPE 1
 
-/* Define to 1 if testing is enabled */
+/* Needed for the kdecore and solid tests in release mode */
 #cmakedefine ENABLE_TESTING 1
