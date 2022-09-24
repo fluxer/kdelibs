@@ -46,8 +46,8 @@
 #define KDE_DEFAULT_FIXED_FONT "DejaVu Sans Mono"
 
 // misc overrides
-#define HOME_URL "https://github.com/fluxer/katana"
-#define BUG_REPORT_URL "https://github.com/fluxer/katana/issues"
+#define HOME_URL "https://osdn.net/projects/kde/"
+#define BUG_REPORT_URL "https://osdn.net/projects/kde/ticket/"
 #define BUG_REPORT_EMAIL "xakepa10@gmail.com"
 
 class KUrl;
