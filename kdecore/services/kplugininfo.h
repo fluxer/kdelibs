@@ -136,16 +136,6 @@ class KDECORE_EXPORT KPluginInfo
         static KPluginInfo::List fromFiles(const QStringList &files, const KConfigGroup &config = KConfigGroup());
 
         /**
-         * @return A list of KPluginInfo objects for the KParts plugins of a
-         * component. You only need the name of the component not a pointer to the
-         * KComponentData object.
-         *
-         * @param componentName Use the component name to look up all KParts plugins for it.
-         * @param config The config group where to save/load whether the plugin is enabled/disabled
-         */
-        static KPluginInfo::List fromKPartsInstanceName(const QString &componentName, const KConfigGroup &config = KConfigGroup());
-
-        /**
          * @return Whether the plugin should be hidden.
          */
         bool isHidden() const;

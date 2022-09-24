@@ -217,14 +217,6 @@ QList<KPluginInfo> KPluginInfo::fromFiles(const QStringList &files, const KConfi
     return infolist;
 }
 
-QList<KPluginInfo> KPluginInfo::fromKPartsInstanceName(const QString &name, const KConfigGroup &config)
-{
-    const QStringList files = KGlobal::dirs()->findAllResources(
-        "data", name + QString::fromLatin1("/kpartplugins/*.desktop"),
-        KStandardDirs::Recursive );
-    return fromFiles(files, config);
-}
-
 bool KPluginInfo::isHidden() const
 {
     KPLUGININFO_ISVALID_ASSERTION;
