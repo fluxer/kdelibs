@@ -746,8 +746,6 @@ private:
     void addXdgConfigPrefix( const QString& dir, bool priority );
     void addXdgDataPrefix( const QString& dir, bool priority );
     void addKDEDefaults();
-
-    void addResourcesFrom_krcdirs();
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KStandardDirs::SearchOptions)

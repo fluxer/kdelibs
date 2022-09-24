@@ -1282,35 +1282,8 @@ bool KStandardDirs::makeDir(const QString& dir, int mode)
     return true;
 }
 
-void KStandardDirs::addResourcesFrom_krcdirs()
-{
-    QString localFile = QDir::currentPath() + QLatin1String("/.krcdirs");
-    if (!QFile::exists(localFile))
-        return;
-
-    QSettings iniFile(localFile, QSettings::IniFormat);
-#ifndef QT_KATIE
-    foreach(QString key, iniFile.allKeys())
-#else
-    foreach(QString key, iniFile.keys())
-#endif
-    {
-        QDir path(iniFile.value(key).toString());
-        if (!path.exists())
-            continue;
-
-        key.replace(QLatin1String("KStandardDirs/"), QLatin1String(""));
-        if (path.makeAbsolute()) {
-            const QByteArray latin1Path = key.toLatin1();
-            addResourceDir(latin1Path, path.path(), false);
-        }
-    }
-}
-
 void KStandardDirs::addKDEDefaults()
 {
-    addResourcesFrom_krcdirs();
-
     QStringList kdedirList;
     // begin KDEDIRS
     QString kdedirs = readEnvPath("KDEDIRS");
