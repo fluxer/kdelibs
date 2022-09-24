@@ -24,7 +24,6 @@
 
 #include <QSharedDataPointer>
 #include <QStringList>
-#include <QFileInfo>
 
 class KCurrencyCodePrivate;
 
@@ -52,19 +51,6 @@ public:
      *
      */
     explicit KCurrencyCode( const QString &isoCurrencyCode, const QString &language = QString() );
-
-    /**
-     * Constructs a KCurrencyCode for a given config file and Language.
-     *
-     * Note that any translations must be supplied in the config file, none will be provided.
-     *
-     * If the supplied config file is not valid then the KCurrencyCode will return isValid() == false
-     *
-     * @param currencyCodeFile the ISO Currency Code to construct, defaults to USD
-     * @param language the language to use for translations, default to the Locale language
-     *
-     */
-    explicit KCurrencyCode( const QFileInfo &currencyCodeFile, const QString &language = QString() );
 
     /**
      * Copy Constructor

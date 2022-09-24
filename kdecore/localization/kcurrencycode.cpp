@@ -18,29 +18,17 @@
 */
 
 #include "kcurrencycode.h"
-
-#include <QtCore/QSharedData>
-#include <QtCore/qdatetime.h>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QFileInfo>
-
 #include "kconfig.h"
 #include "kconfiggroup.h"
 #include "kglobal.h"
-#include "klocale.h"
 #include "kstandarddirs.h"
 #include "kdebug.h"
 
 class KCurrencyCodePrivate : public QSharedData
 {
 public:
-    KCurrencyCodePrivate( const QString &isoCurrencyCode, const QString &language = QString() );
-    KCurrencyCodePrivate( const QFileInfo &currencyCodeFile, const QString &language = QString() );
+    KCurrencyCodePrivate( const QString &isoCurrencyCode, const QString &language );
     KCurrencyCodePrivate( const KCurrencyCodePrivate& other );
-    ~KCurrencyCodePrivate();
-
-    void loadCurrency( const QFileInfo &currencyCodeFile, const QString &language );
 
     QString     m_currencyCodeIsoAlpha3;
     QString     m_currencyCodeIsoNumeric3;
@@ -59,41 +47,9 @@ public:
 
 KCurrencyCodePrivate::KCurrencyCodePrivate( const QString &isoCurrencyCode, const QString &language )
 {
-    QFileInfo file( KStandardDirs::locate( "locale", QString::fromLatin1( "currency/%1.desktop" ).arg( isoCurrencyCode.toLower() ) ) );
+    QString file = KStandardDirs::locate( "locale", QString::fromLatin1( "currency/%1.desktop" ).arg( isoCurrencyCode.toLower() ) );
 
-    loadCurrency( file, language );
-}
-
-KCurrencyCodePrivate::KCurrencyCodePrivate( const QFileInfo &currencyCodeFile, const QString &language )
-{
-    loadCurrency( currencyCodeFile, language );
-}
-
-KCurrencyCodePrivate::KCurrencyCodePrivate( const KCurrencyCodePrivate& other )
-    : QSharedData( other ),
-      m_currencyCodeIsoAlpha3( other.m_currencyCodeIsoAlpha3 ),
-      m_currencyCodeIsoNumeric3( other.m_currencyCodeIsoNumeric3 ),
-      m_currencyNameIso( other.m_currencyNameIso ),
-      m_currencyNameDisplay( other.m_currencyNameDisplay ),
-      m_currencyUnitSymbols( other.m_currencyUnitSymbols ),
-      m_currencyUnitSymbolDefault( other.m_currencyUnitSymbolDefault ),
-      m_currencyUnitSymbolUnambiguous( other.m_currencyUnitSymbolUnambiguous ),
-      m_currencySubunitSymbol( other.m_currencySubunitSymbol ),
-      m_currencySubunits( other.m_currencySubunits ),
-      m_currencySubunitsPerUnit( other.m_currencySubunitsPerUnit ),
-      m_currencySubunitsInCirculation( other.m_currencySubunitsInCirculation ),
-      m_currencyDecimalPlacesDisplay( other.m_currencyDecimalPlacesDisplay ),
-      m_currencyCountriesInUse( other.m_currencyCountriesInUse )
-{
-}
-
-KCurrencyCodePrivate::~KCurrencyCodePrivate()
-{
-}
-
-void KCurrencyCodePrivate::loadCurrency( const QFileInfo &currencyCodeFile, const QString &language )
-{
-    KConfig cgFile( currencyCodeFile.absoluteFilePath() );
+    KConfig cgFile( file );
 
     // If language is empty, means to stick with the global default, which is the default for any new KConfig
     if ( !language.isEmpty() ) {
@@ -117,25 +73,39 @@ void KCurrencyCodePrivate::loadCurrency( const QFileInfo &currencyCodeFile, cons
     m_currencyCountriesInUse        = cg.readEntry( "CurrencyCountriesInUse",        QStringList() );
 }
 
-KCurrencyCode::KCurrencyCode( const QString &isoCurrencyCode, const QString &language )
-              :d( new KCurrencyCodePrivate( isoCurrencyCode, language ) )
+KCurrencyCodePrivate::KCurrencyCodePrivate( const KCurrencyCodePrivate& other )
+    : QSharedData( other ),
+      m_currencyCodeIsoAlpha3( other.m_currencyCodeIsoAlpha3 ),
+      m_currencyCodeIsoNumeric3( other.m_currencyCodeIsoNumeric3 ),
+      m_currencyNameIso( other.m_currencyNameIso ),
+      m_currencyNameDisplay( other.m_currencyNameDisplay ),
+      m_currencyUnitSymbols( other.m_currencyUnitSymbols ),
+      m_currencyUnitSymbolDefault( other.m_currencyUnitSymbolDefault ),
+      m_currencyUnitSymbolUnambiguous( other.m_currencyUnitSymbolUnambiguous ),
+      m_currencySubunitSymbol( other.m_currencySubunitSymbol ),
+      m_currencySubunits( other.m_currencySubunits ),
+      m_currencySubunitsPerUnit( other.m_currencySubunitsPerUnit ),
+      m_currencySubunitsInCirculation( other.m_currencySubunitsInCirculation ),
+      m_currencyDecimalPlacesDisplay( other.m_currencyDecimalPlacesDisplay ),
+      m_currencyCountriesInUse( other.m_currencyCountriesInUse )
 {
 }
 
-KCurrencyCode::KCurrencyCode( const QFileInfo &currencyCodeFile, const QString &language )
-              :d( new KCurrencyCodePrivate( currencyCodeFile, language ) )
+KCurrencyCode::KCurrencyCode( const QString &isoCurrencyCode, const QString &language )
+    :d( new KCurrencyCodePrivate( isoCurrencyCode, language ) )
 {
 }
 
 KCurrencyCode::KCurrencyCode( const KCurrencyCode &rhs )
-              :d( rhs.d )
+    :d( rhs.d )
 {
 }
 
 KCurrencyCode& KCurrencyCode::operator=( const KCurrencyCode &rhs )
 {
-    if (&rhs != this)
+    if (&rhs != this) {
         d = rhs.d;
+    }
     return *this;
 }
 
@@ -177,18 +147,16 @@ QString KCurrencyCode::unambiguousSymbol() const
 {
     if ( d->m_currencyUnitSymbolUnambiguous.isEmpty() ) {
         return d->m_currencyUnitSymbolDefault;
-    } else {
-        return d->m_currencyUnitSymbolUnambiguous;
     }
+    return d->m_currencyUnitSymbolUnambiguous;
 }
 
 bool KCurrencyCode::hasSubunits() const
 {
     if ( d->m_currencySubunits > 0 ) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 }
 
 bool KCurrencyCode::hasSubunitsInCirculation() const
@@ -230,18 +198,13 @@ bool KCurrencyCode::isValid( const QString &isoCurrencyCode )
 QStringList KCurrencyCode::allCurrencyCodesList( )
 {
     QStringList currencyCodes;
-
     const QStringList paths = KGlobal::dirs()->findAllResources( "locale", QLatin1String("currency/*.desktop") );
-
-    foreach( const QString &path, paths )
-    {
+    foreach( const QString &path, paths ) {
         QString code = path.mid( path.length()-11, 3 ).toUpper();
-
         if ( KCurrencyCode::isValid( code ) ) {
             currencyCodes.append( code );
         }
     }
-
     return currencyCodes;
 }
 
@@ -250,7 +213,6 @@ QString KCurrencyCode::currencyCodeToName( const QString &isoCurrencyCode, const
     KCurrencyCode temp = KCurrencyCode( isoCurrencyCode, language );
     if ( temp.isValid() ) {
         return temp.name();
-    } else {
-        return QString();
     }
+    return QString();
 }
