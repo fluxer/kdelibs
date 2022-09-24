@@ -339,7 +339,7 @@ public:
         : q(qq)
     { }
 
-    QStringList resourceDirs(const char* type, const QString& subdirForRestrictions);
+    QStringList resourceDirs(const char* type);
     void createSpecialResource(const char*);
     bool exists(const QString &fullPath);
     QString realPath(const QString &dirname);
@@ -666,7 +666,7 @@ quint32 KStandardDirs::calcResourceHash( const char *type,
         return updateHash(filename, hash);
     }
 
-    foreach ( const QString & it, d->resourceDirs(type, filename) )
+    foreach ( const QString &it, d->resourceDirs(type) )
     {
         hash = updateHash(it + filename, hash);
         if ( !( options & Recursive ) && hash ) {
@@ -695,11 +695,8 @@ QStringList KStandardDirs::findDirs( const char *type,
         return list;
     }
 
-    const QStringList candidates = d->resourceDirs(type, reldir);
-
-    for (QStringList::ConstIterator it = candidates.begin();
-         it != candidates.end(); ++it) {
-        testdir.setPath(*it + reldir);
+    foreach (const QString &it, d->resourceDirs(type)) {
+        testdir.setPath(it + reldir);
         if (testdir.exists())
             list.append(testdir.absolutePath() + QLatin1Char('/'));
     }
@@ -717,12 +714,9 @@ QString KStandardDirs::findResourceDir( const char *type,
     }
 #endif
 
-    const QStringList candidates = d->resourceDirs(type, filename);
-
-    for (QStringList::ConstIterator it = candidates.begin();
-         it != candidates.end(); ++it) {
-        if (exists(*it + filename)) {
-            return *it;
+    foreach (const QString &it, d->resourceDirs(type)) {
+        if (exists(it + filename)) {
+            return it;
         }
     }
 
@@ -779,7 +773,7 @@ KStandardDirs::findAllResources( const char *type,
     }
     else
     {
-        candidates = d->resourceDirs(type, filter);
+        candidates = d->resourceDirs(type);
     }
 
     if (filterFile.isEmpty()) {
@@ -910,10 +904,10 @@ void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type
 
 QStringList KStandardDirs::resourceDirs(const char *type) const
 {
-    return d->resourceDirs(type, QString());
+    return d->resourceDirs(type);
 }
 
-QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, const QString& subdirForRestrictions)
+QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
 {
     std::lock_guard<std::recursive_mutex> lock(m_cacheMutex);
 
@@ -949,11 +943,9 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type, 
                     const int pos = (*it).indexOf(QLatin1Char('/'));
                     QByteArray rel = (*it).mid(1, pos - 1).toUtf8();
                     QString rest = (*it).mid(pos + 1);
-                    const QStringList basedirs = resourceDirs(rel.constData(), subdirForRestrictions);
-                    for (QStringList::ConstIterator it2 = basedirs.begin();
-                         it2 != basedirs.end(); ++it2)
+                    foreach (const QString &it2, resourceDirs(rel.constData()))
                     {
-                        const QString path = realPath( *it2 + rest );
+                        const QString path = realPath( it2 + rest );
                         testdir.setPath(path);
                         if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity))
                             candidates.append(path);
