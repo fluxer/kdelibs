@@ -34,7 +34,6 @@
 #include "kdebug.h"
 #include "kdatetime.h"
 #include "kcalendarsystem.h"
-#include "kcurrencycode.h"
 #include "kcatalogname_p.h"
 #include "common_helpers_p.h"
 
@@ -73,11 +72,6 @@ bool KLocale::setLanguage(const QStringList &languages)
     return d->setLanguage(languages);
 }
 
-void KLocale::setCurrencyCode(const QString &newCurrencyCode)
-{
-    d->setCurrencyCode(newCurrencyCode);
-}
-
 bool KLocale::isApplicationTranslatedInto(const QString &lang)
 {
     return d->isApplicationTranslatedInto(lang);
@@ -102,16 +96,6 @@ QString KLocale::country() const
 QString KLocale::countryDivisionCode() const
 {
     return d->countryDivisionCode();
-}
-
-KCurrencyCode *KLocale::currency() const
-{
-    return d->currency();
-}
-
-QString KLocale::currencyCode() const
-{
-    return d->currencyCode();
 }
 
 void KLocale::insertCatalog(const QString &catalog)
@@ -240,21 +224,6 @@ QString KLocale::thousandsSeparator() const
     return d->thousandsSeparator();
 }
 
-QString KLocale::currencySymbol() const
-{
-    return d->currencySymbol();
-}
-
-QString KLocale::monetaryDecimalSymbol() const
-{
-    return d->monetaryDecimalSymbol();
-}
-
-QString KLocale::monetaryThousandsSeparator() const
-{
-    return d->monetaryThousandsSeparator();
-}
-
 QString KLocale::positiveSign() const
 {
     return d->positiveSign();
@@ -263,36 +232,6 @@ QString KLocale::positiveSign() const
 QString KLocale::negativeSign() const
 {
     return d->negativeSign();
-}
-
-int KLocale::monetaryDecimalPlaces() const
-{
-    return d->monetaryDecimalPlaces();
-}
-
-bool KLocale::positivePrefixCurrencySymbol() const
-{
-    return d->positivePrefixCurrencySymbol();
-}
-
-bool KLocale::negativePrefixCurrencySymbol() const
-{
-    return d->negativePrefixCurrencySymbol();
-}
-
-KLocale::SignPosition KLocale::positiveMonetarySignPosition() const
-{
-    return d->positiveMonetarySignPosition();
-}
-
-KLocale::SignPosition KLocale::negativeMonetarySignPosition() const
-{
-    return d->negativeMonetarySignPosition();
-}
-
-QString KLocale::formatMoney(double num, const QString &symbol, int precision) const
-{
-    return d->formatMoney(num, symbol, precision);
 }
 
 QString KLocale::formatNumber(double num, int precision) const
@@ -356,11 +295,6 @@ double KLocale::readNumber(const QString &_str, bool * ok) const
     return d->readNumber(_str, ok);
 }
 
-double KLocale::readMoney(const QString &_str, bool *ok) const
-{
-    return d->readMoney(_str, ok);
-}
-
 QDate KLocale::readDate(const QString &intstr, bool *ok) const
 {
     return d->readDate(intstr, ok);
@@ -415,11 +349,6 @@ QString KLocale::dayPeriodText(const QTime &time, DateTimeComponentFormat format
 QStringList KLocale::languageList() const
 {
     return d->languageList();
-}
-
-QStringList KLocale::currencyCodeList() const
-{
-    return d->currencyCodeList();
 }
 
 /* Just copy in for now to keep diff clean, remove later
@@ -523,46 +452,6 @@ void KLocale::setNegativeSign(const QString &sign)
     d->setNegativeSign(sign);
 }
 
-void KLocale::setPositiveMonetarySignPosition(KLocale::SignPosition signpos)
-{
-    d->setPositiveMonetarySignPosition(signpos);
-}
-
-void KLocale::setNegativeMonetarySignPosition(KLocale::SignPosition signpos)
-{
-    d->setNegativeMonetarySignPosition(signpos);
-}
-
-void KLocale::setPositivePrefixCurrencySymbol(bool prefix)
-{
-    d->setPositivePrefixCurrencySymbol(prefix);
-}
-
-void KLocale::setNegativePrefixCurrencySymbol(bool prefix)
-{
-    d->setNegativePrefixCurrencySymbol(prefix);
-}
-
-void KLocale::setMonetaryDecimalPlaces(int digits)
-{
-    d->setMonetaryDecimalPlaces(digits);
-}
-
-void KLocale::setMonetaryThousandsSeparator(const QString &separator)
-{
-    d->setMonetaryThousandsSeparator(separator);
-}
-
-void KLocale::setMonetaryDecimalSymbol(const QString &symbol)
-{
-    d->setMonetaryDecimalSymbol(symbol);
-}
-
-void KLocale::setCurrencySymbol(const QString & symbol)
-{
-    d->setCurrencySymbol(symbol);
-}
-
 int KLocale::pageSize() const
 {
     return d->pageSize();
@@ -591,11 +480,6 @@ QString KLocale::defaultLanguage()
 QString KLocale::defaultCountry()
 {
     return KLocalePrivate::defaultCountry();
-}
-
-QString KLocale::defaultCurrencyCode()
-{
-    return KLocalePrivate::defaultCurrencyCode();
 }
 
 const QByteArray KLocale::encoding() const
@@ -720,16 +604,6 @@ void KLocale::setDigitSet(KLocale::DigitSet digitSet)
 KLocale::DigitSet KLocale::digitSet() const
 {
     return d->digitSet();
-}
-
-void KLocale::setMonetaryDigitSet(KLocale::DigitSet digitSet)
-{
-    d->setMonetaryDigitSet(digitSet);
-}
-
-KLocale::DigitSet KLocale::monetaryDigitSet() const
-{
-    return d->monetaryDigitSet();
 }
 
 void KLocale::setDateTimeDigitSet(KLocale::DigitSet digitSet)

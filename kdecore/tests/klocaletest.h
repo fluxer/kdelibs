@@ -23,29 +23,26 @@
 
 class KLocaleTest : public QObject
 {
-	Q_OBJECT
+    Q_OBJECT
 private Q_SLOTS:
-	void initTestCase();
+    void initTestCase();
     void languages();
     void formatNumbers();
-	void formatNumberStrings();
-	void readNumber();
-    void formatMoney();
-    void readMoney();
-	void formatDate();
-	void readDate();
-	void formatTime();
-	void formatDateTime();
-	void readTime();
+    void formatNumberStrings();
+    void readNumber();
+    void formatDate();
+    void readDate();
+    void formatTime();
+    void formatDateTime();
+    void readTime();
     void testDayPeriods();
     void testCalendarSystemType();
     void testCountryDivision();
-	void prettyFormatDuration();
-	void formatByteSize();
-	void bug95511();
-	void weekDays();
-	void removeAcceleratorMarker();
-	void formatByteSize2();
+    void prettyFormatDuration();
+    void formatByteSize();
+    void weekDays();
+    void removeAcceleratorMarker();
+    void formatByteSize2();
 };
 
 #endif // KLOCALETEST_H

@@ -30,7 +30,6 @@
 
 class KDateTime;
 class KCalendarSystem;
-class KCurrencyCode;
 class KLocalePrivate;
 
 /**
@@ -43,7 +42,7 @@ class KLocalePrivate;
   * the national language.
   *
   * KLocale supports translating, as well as specifying the format
-  * for numbers, currency, time, and date.
+  * for numbers, time, and date.
   *
   * Use KGlobal::locale() to get pointer to the global KLocale object,
   * containing the applications current locale settings.
@@ -267,33 +266,6 @@ public:
     bool setEncoding(int mibEnum);
 
     /**
-     * Various positions for where to place the positive or negative
-     * sign when they are related to a monetary value.
-     */
-    enum SignPosition {
-        /**
-         * Put parantheses around the quantity, e.g. "$ (217)"
-         */
-        ParensAround = 0,
-        /**
-         * Prefix the quantity with the sign, e.g. "$ -217"
-         */
-        BeforeQuantityMoney = 1,
-        /**
-         * Suffix the quanitity with the sign, e.g. "$ 217-"
-         */
-        AfterQuantityMoney = 2,
-        /**
-         * Prefix the currency symbol with the sign, e.g. "-$ 217"
-         */
-        BeforeMoney = 3,
-        /**
-         * Suffix the currency symbol with the sign, e.g. "$- 217"
-         */
-        AfterMoney = 4
-    };
-
-    /**
      * @since 4.3
      *
      * The set of digit characters used to display and enter numbers.
@@ -394,50 +366,6 @@ public:
     DigitSet digitSet() const;
 
     /**
-     * @since 4.4
-     *
-     * Returns the ISO 4217 Currency Code for the current locale
-     *
-     * @return The default ISO Currency Code used by locale.
-    */
-    QString currencyCode() const;
-
-    /**
-     * @since 4.4
-     *
-     * Returns the Currency Code object for the current locale
-     *
-     * @return The default Currency Code object used by locale.
-    */
-    KCurrencyCode *currency() const;
-
-    /**
-     * Returns what the symbol denoting currency in the current locale
-     * as as defined by user settings should look like.
-     *
-     * @return The default currency symbol used by locale.
-     */
-    QString currencySymbol() const;
-
-    /**
-     * Returns what a decimal point should look like ("." or "," etc.)
-     * for monetary values, according to the current locale or user
-     * settings.
-     *
-     * @return The monetary decimal symbol used by locale.
-     */
-    QString monetaryDecimalSymbol() const;
-
-    /**
-     * Returns what a thousands separator for monetary values should
-     * look like ("," or " " etc.) according to the current locale or
-     * user settings.
-     *
-     * @return The monetary thousands separator used by locale.
-     */
-    QString monetaryThousandsSeparator() const;
-
-    /**
      * Returns what a positive sign should look like ("+", " ", etc.)
      * according to the current locale or user settings.
      *
@@ -461,77 +389,6 @@ public:
      * @return Default number of numeric decimal places used by locale.
      */
     int decimalPlaces() const;
-
-    /**
-     * @since 4.4
-     *
-     * The number of decimal places to include in monetary values (usually 2).
-     *
-     * @return Default number of monetary decimal places used by locale.
-     */
-    int monetaryDecimalPlaces() const;
-
-    /**
-     * If and only if the currency symbol precedes a positive value,
-     * this will be true.
-     *
-     * @return Where to print the currency symbol for positive numbers.
-     */
-    bool positivePrefixCurrencySymbol() const;
-
-    /**
-     * If and only if the currency symbol precedes a negative value,
-     * this will be true.
-     *
-     * @return True if the currency symbol precedes negative numbers.
-     */
-    bool negativePrefixCurrencySymbol() const;
-
-    /**
-     * Returns the position of a positive sign in relation to a
-     * monetary value.
-     *
-     * @return Where/how to print the positive sign.
-     * @see SignPosition
-     */
-    SignPosition positiveMonetarySignPosition() const;
-
-    /**
-     * Denotes where to place a negative sign in relation to a
-     * monetary value.
-     *
-     * @return Where/how to print the negative sign.
-     * @see SignPosition
-     */
-    SignPosition negativeMonetarySignPosition() const;
-
-    /**
-     * @since 4.3
-     *
-     * Retuns the digit set used to display monetary values.
-     *
-     * @return the digit set identifier
-     * @see DigitSet
-     * @see digitSetToName
-     */
-    DigitSet monetaryDigitSet() const;
-
-    /**
-     * Given a double, converts that to a numeric string containing
-     * the localized monetary equivalent.
-     *
-     * e.g. given 123456, return "$ 123,456.00".
-     *
-     * If precision isn't specified or is < 0, then the default monetaryDecimalPlaces() is used.
-     *
-     * @param num The number we want to format
-     * @param currency The currency symbol you want.
-     * @param precision Number of decimal places displayed
-     *
-     * @return The number of money as a localized string
-     * @see monetaryDecimalPlaces()
-     */
-    QString formatMoney(double num, const QString &currency = QString(), int precision = -1) const;
 
     /**
      * Given a double, converts that to a numeric string containing
@@ -1168,17 +1025,6 @@ public:
     KLocale::WeekNumberSystem weekNumberSystem() const;
 
     /**
-     * Converts a localized monetary string to a double.
-     *
-     * @param numStr the string we want to convert.
-     * @param ok the boolean that is set to false if it's not a number.
-     *           If @p ok is 0, it will be ignored
-     *
-     * @return The string converted to a double
-     */
-    double readMoney(const QString &numStr, bool * ok = 0) const;
-
-    /**
      * Converts a localized numeric string to a double.
      *
      * @param numStr the string we want to convert.
@@ -1391,21 +1237,6 @@ public:
      * @see languageCodeToName
      */
     QStringList languageList() const;
-
-    /**
-     * @since 4.4
-     *
-     * Returns the ISO Currency Codes used in the locale, ordered by decreasing
-     * priority.
-     *
-     * Use KCurrency::currencyCodeToName(currencyCode) to get human readable,
-     * localized language name.
-     *
-     * @return list of ISO Currency Codes
-     *
-     * @see currencyCodeToName
-     */
-    QStringList currencyCodeList() const;
 
     /**
      * Returns the user's preferred encoding.
@@ -1628,38 +1459,6 @@ public:
     void setDigitSet(DigitSet digitSet);
 
     /**
-     * Changes the sign position used for positive monetary values.
-     *
-     * @param signpos The new sign position
-     */
-    void setPositiveMonetarySignPosition(SignPosition signpos);
-
-    /**
-     * Changes the sign position used for negative monetary values.
-     *
-     * @param signpos The new sign position
-     */
-    void setNegativeMonetarySignPosition(SignPosition signpos);
-
-    /**
-     * Changes the position where the currency symbol should be printed for
-     * positive monetary values.
-     *
-     * @param prefix True if the currency symbol should be prefixed instead of
-     * postfixed
-     */
-    void setPositivePrefixCurrencySymbol(bool prefix);
-
-    /**
-     * Changes the position where the currency symbol should be printed for
-     * negative monetary values.
-     *
-     * @param prefix True if the currency symbol should be prefixed instead of
-     * postfixed
-     */
-    void setNegativePrefixCurrencySymbol(bool prefix);
-
-    /**
      * @since 4.4
      *
      * Changes the number of decimal places used when formating numbers.
@@ -1667,59 +1466,6 @@ public:
      * @param digits The default number of digits to use.
      */
     void setDecimalPlaces(int digits);
-
-    /**
-     * @since 4.4
-     *
-     * Changes the number of decimal places used when formating money.
-     *
-     * @param digits The default number of digits to use.
-     */
-    void setMonetaryDecimalPlaces(int digits);
-
-    /**
-     * Changes the separator used to group digits when formating monetary values.
-     *
-     * @param separator The new thousands separator.
-     */
-    void setMonetaryThousandsSeparator(const QString & separator);
-
-    /**
-     * Changes the symbol used to identify the decimal pointer for monetary
-     * values.
-     *
-     * @param symbol The new decimal symbol.
-     */
-    void setMonetaryDecimalSymbol(const QString & symbol);
-
-    /**
-     * @since 4.4
-     *
-     * Changes the current ISO Currency Code.
-     *
-     * @param newCurrencyCode The new Currency Code
-     */
-    void setCurrencyCode(const QString &newCurrencyCode);
-
-    /**
-     * Changes the current currency symbol.
-     *
-     * This symbol should be consistant with the selected Currency Code
-     *
-     * @param symbol The new currency symbol
-     * @see currencyCode, KCurrency::currencySymbols
-     */
-    void setCurrencySymbol(const QString & symbol);
-
-    /**
-     * @since 4.3
-     *
-     * Set digit characters used to display monetary values.
-     *
-     * @param digitSet the digit set identifier
-     * @see DigitSet
-     */
-    void setMonetaryDigitSet(DigitSet digitSet);
 
     /**
      * Returns the preferred page size for printing.
@@ -1922,15 +1668,6 @@ public:
      * @return Name of the default country
      */
     static QString defaultCountry();
-
-    /**
-     * @since 4.4
-     *
-     * Returns the ISO Code of the default currency.
-     *
-     * @return ISO Currency Code of the default currency
-     */
-    static QString defaultCurrencyCode();
 
     /**
      * Checks whether or not the active catalog is found for the given language.

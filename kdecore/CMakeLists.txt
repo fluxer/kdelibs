@@ -202,7 +202,6 @@ set(kdecore_LIB_SRCS
     sonnet/globals.cpp
 
     localization/kcatalog.cpp
-    localization/kcurrencycode.cpp
     localization/kcharsets.cpp
     localization/kencodingdetector.cpp
     localization/guess_ja.cpp
@@ -395,7 +394,6 @@ install(
     #services/kserviceoffer.h: do not install, internal API
     services/kplugininfo.h
     localization/kcharsets.h
-    localization/kcurrencycode.h
     localization/kencodingdetector.h
     localization/klocale.h
     localization/klocalizedstring.h

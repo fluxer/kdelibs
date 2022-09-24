@@ -86,7 +86,6 @@ install(
     KConfigSkeletonItem
     KSharedConfigPtr
     KCrash
-    KCurrencyCode
     KCursor
     KDebug
     KDEDModule
