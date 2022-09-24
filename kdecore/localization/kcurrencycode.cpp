@@ -35,6 +35,7 @@ public:
     QString     m_currencyNameIso;
     QString     m_currencyNameDisplay;
     QString     m_currencyUnitSymbolDefault;
+    QStringList m_currencyUnitSymbols;
     int         m_currencyDecimalPlacesDisplay;
 };
 
@@ -56,6 +57,7 @@ KCurrencyCodePrivate::KCurrencyCodePrivate( const QString &isoCurrencyCode, cons
     m_currencyNameIso               = cg.readEntry( "CurrencyNameIso",               QString() );
     m_currencyNameDisplay           = cg.readEntry( "Name",                          QString() );
     m_currencyUnitSymbolDefault     = cg.readEntry( "CurrencyUnitSymbolDefault",     QString() );
+    m_currencyUnitSymbols           = cg.readEntry( "CurrencyUnitSymbols",           QStringList() );
     m_currencyDecimalPlacesDisplay  = cg.readEntry( "CurrencyDecimalPlacesDisplay",  2 );
 }
 
@@ -66,7 +68,8 @@ KCurrencyCodePrivate::KCurrencyCodePrivate( const KCurrencyCodePrivate& other )
       m_currencyNameIso( other.m_currencyNameIso ),
       m_currencyNameDisplay( other.m_currencyNameDisplay ),
       m_currencyUnitSymbolDefault( other.m_currencyUnitSymbolDefault ),
-      m_currencyDecimalPlacesDisplay( other.m_currencyDecimalPlacesDisplay )
+      m_currencyDecimalPlacesDisplay( other.m_currencyDecimalPlacesDisplay ),
+      m_currencyUnitSymbols( other.m_currencyUnitSymbols )
 {
 }
 
@@ -115,6 +118,11 @@ QString KCurrencyCode::isoName() const
 QString KCurrencyCode::defaultSymbol() const
 {
     return d->m_currencyUnitSymbolDefault;
+}
+
+QStringList KCurrencyCode::symbolList() const
+{
+    return d->m_currencyUnitSymbols;
 }
 
 int KCurrencyCode::decimalPlaces() const

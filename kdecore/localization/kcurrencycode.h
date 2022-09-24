@@ -123,6 +123,17 @@ public:
     QString defaultSymbol() const;
 
     /**
+     * Return a list of valid Symbols for the Currency in order of preference
+     *
+     * This list will normally contain the Default and Unambiguous symbols and the ISO Currency Code
+     *
+     * @return list of Currency Symbols
+     *
+     * @see defaultSymbol()
+     */
+    QStringList symbolList() const;
+
+    /**
      * Return the number of decimal places required to display the currency subunits
      *
      * @return number of decimal places
