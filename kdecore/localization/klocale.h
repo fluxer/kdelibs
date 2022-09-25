@@ -118,7 +118,7 @@ public:
     /**
      * Destructor
      */
-    virtual ~KLocale();
+    ~KLocale();
 
     /**
      * @since 4.5
