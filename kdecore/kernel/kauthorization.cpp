@@ -62,17 +62,13 @@ static bool isDBusServiceRegistered(const QString &helper)
     return true;
 }
 
-static void killDBusService(const QString &helper)
+static void killDBusService(const QString &helper, QDBusInterface *kauthorizationinterface)
 {
     if (!isDBusServiceRegistered(helper)) {
         return;
     }
 
-    QDBusInterface kauthorizationinterface(
-        helper, QString::fromLatin1("/"), QString::fromLatin1("org.kde.kauthorization"),
-        QDBusConnection::systemBus()
-    );
-    QDBusReply<void> reply = kauthorizationinterface.call(QString::fromLatin1("stop"));
+    QDBusReply<void> reply = kauthorizationinterface->call(QString::fromLatin1("stop"));
     if (!reply.isValid()) {
         kWarning() << reply.error().message();
     }
@@ -121,6 +117,7 @@ void KAuthorizationAdaptor::stop()
     qApp->quit();
 }
 
+
 KAuthorization::KAuthorization(QObject *parent)
     : QObject(parent)
 {
@@ -136,11 +133,11 @@ bool KAuthorization::isAuthorized(const QString &helper)
     QDBusReply<bool> reply = kauthorizationinterface.call(QString::fromLatin1("ping"));
     if (!reply.isValid()) {
         kWarning() << reply.error().message();
-        killDBusService(helper);
+        killDBusService(helper, &kauthorizationinterface);
         return false;
     }
     const bool result = reply.value();
-    killDBusService(helper);
+    killDBusService(helper, &kauthorizationinterface);
     return result;
 }
 
@@ -153,7 +150,7 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
     while (isDBusServiceRegistered(helper)) {
         kDebug() << "Waiting for service to unregister" << helper;
         QCoreApplication::processEvents();
-        QThread::msleep(1000);
+        QThread::msleep(500);
     }
 
     QDBusInterface kauthorizationinterface(
@@ -167,7 +164,7 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
     } else {
         result = reply.value();
     }
-    killDBusService(helper);
+    killDBusService(helper, &kauthorizationinterface);
     kDebug() << "Result" << helper << method << result;
     return result;
 }
