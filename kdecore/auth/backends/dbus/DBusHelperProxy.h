@@ -49,23 +49,23 @@ class DBusHelperProxy : public HelperProxy
 public:
     DBusHelperProxy() : responder(0), m_stopRequest(false) {}
 
-    virtual bool executeActions(const QList<QPair<QString, QVariantMap> > &list, const QString &helperID);
-    virtual ActionReply executeAction(const QString &action, const QString &helperID, const QVariantMap &arguments);
-    virtual Action::AuthStatus authorizeAction(const QString& action, const QString& helperID);
-    virtual void stopAction(const QString &action, const QString &helperID);
+    bool executeActions(const QList<QPair<QString, QVariantMap> > &list, const QString &helperID) final;
+    ActionReply executeAction(const QString &action, const QString &helperID, const QVariantMap &arguments) final;
+    Action::AuthStatus authorizeAction(const QString& action, const QString& helperID) final;
+    void stopAction(const QString &action, const QString &helperID) final;
 
-    virtual bool initHelper(const QString &name);
-    virtual void setHelperResponder(QObject *o);
-    virtual bool hasToStopAction();
-    virtual void sendDebugMessage(int level, const char *msg);
-    virtual void sendProgressStep(int step);
-    virtual void sendProgressStep(const QVariantMap &data);
+    bool initHelper(const QString &name) final;
+    void setHelperResponder(QObject *o) final;
+    bool hasToStopAction() final;
+    void sendDebugMessage(int level, const char *msg) final;
+    void sendProgressStep(int step) final;
+    void sendProgressStep(const QVariantMap &data) final;
 
 public slots:
     void stopAction(const QString &action);
-    void performActions(QByteArray blob, const QByteArray &callerID);
-    QByteArray performAction(const QString &action, const QByteArray &callerID, QByteArray arguments);
-    uint authorizeAction(const QString &action, const QByteArray &callerID);
+    void performActions(QByteArray blob);
+    QByteArray performAction(const QString &action, QByteArray arguments);
+    uint authorizeAction(const QString &action);
 
 signals:
     void remoteSignal(int type, const QString &action, const QByteArray &blob); // This signal is sent from the helper to the app

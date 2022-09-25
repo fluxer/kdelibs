@@ -72,7 +72,7 @@ bool DBusHelperProxy::executeActions(const QList<QPair<QString, QVariantMap> > &
     message = QDBusMessage::createMethodCall(helperID, QLatin1String("/"), QLatin1String("org.kde.auth"), QLatin1String("performActions"));
 
     QList<QVariant> args;
-    args << blob << BackendsManager::authBackend()->callerID();
+    args << blob;
     message.setArguments(args);
 
     QDBusPendingCall reply = QDBusConnection::systemBus().asyncCall(message); // This is a NO_REPLY method
@@ -107,7 +107,7 @@ ActionReply DBusHelperProxy::executeAction(const QString &action, const QString 
     message = QDBusMessage::createMethodCall(helperID, QLatin1String("/"), QLatin1String("org.kde.auth"), QLatin1String("performAction"));
 
     QList<QVariant> args;
-    args << action << BackendsManager::authBackend()->callerID() << blob;
+    args << action << blob;
     message.setArguments(args);
 
     m_actionsInProgress.push_back(action);
@@ -159,7 +159,7 @@ Action::AuthStatus DBusHelperProxy::authorizeAction(const QString& action, const
     message = QDBusMessage::createMethodCall(helperID, QLatin1String("/"), QLatin1String("org.kde.auth"), QLatin1String("authorizeAction"));
 
     QList<QVariant> args;
-    args << action << BackendsManager::authBackend()->callerID();
+    args << action;
     message.setArguments(args);
 
     m_actionsInProgress.push_back(action);
@@ -250,7 +250,7 @@ bool DBusHelperProxy::hasToStopAction()
     return m_stopRequest;
 }
 
-void DBusHelperProxy::performActions(QByteArray blob, const QByteArray &callerID)
+void DBusHelperProxy::performActions(QByteArray blob)
 {
     QDataStream stream(&blob, QIODevice::ReadOnly);
     QList< QPair< QString, QVariantMap > > actions;
@@ -264,13 +264,13 @@ void DBusHelperProxy::performActions(QByteArray blob, const QByteArray &callerID
 
         stream << i->second;
 
-        performAction(i->first, callerID, blob);
+        performAction(i->first, blob);
 
         ++i;
     }
 }
 
-QByteArray DBusHelperProxy::performAction(const QString &action, const QByteArray &callerID, QByteArray arguments)
+QByteArray DBusHelperProxy::performAction(const QString &action, QByteArray arguments)
 {
     if (!responder) {
         return ActionReply::NoResponderReply.serialized();
@@ -294,7 +294,7 @@ QByteArray DBusHelperProxy::performAction(const QString &action, const QByteArra
     QTimer *timer = responder->property("__KAuth_Helper_Shutdown_Timer").value<QTimer*>();
     timer->stop();
 
-    if (BackendsManager::authBackend()->isCallerAuthorized(action, callerID)) {
+    if (BackendsManager::authBackend()->isCallerAuthorized(action)) {
         QString slotname = action;
         if (slotname.startsWith(m_name + QLatin1Char('.'))) {
             slotname = slotname.right(slotname.length() - m_name.length() - 1);
@@ -324,7 +324,7 @@ QByteArray DBusHelperProxy::performAction(const QString &action, const QByteArra
 }
 
 
-uint DBusHelperProxy::authorizeAction(const QString& action, const QByteArray& callerID)
+uint DBusHelperProxy::authorizeAction(const QString& action)
 {
     if (!m_currentAction.isEmpty()) {
         return static_cast<uint>(Action::Error);
@@ -337,7 +337,7 @@ uint DBusHelperProxy::authorizeAction(const QString& action, const QByteArray& c
     QTimer *timer = responder->property("__KAuth_Helper_Shutdown_Timer").value<QTimer*>();
     timer->stop();
 
-    if (BackendsManager::authBackend()->isCallerAuthorized(action, callerID)) {
+    if (BackendsManager::authBackend()->isCallerAuthorized(action)) {
         retVal = static_cast<uint>(Action::Authorized);
     } else {
         retVal = static_cast<uint>(Action::Denied);

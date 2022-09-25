@@ -23,47 +23,14 @@
 namespace KAuth
 {
 
-class AuthBackend::Private
-{
-public:
-    Private() {}
-    virtual ~Private() {}
-
-    Capabilities capabilities;
-};
-
 AuthBackend::AuthBackend()
     : QObject(0)
-    , d(new Private)
 {
 
 }
 
 AuthBackend::~AuthBackend()
 {
-    delete d;
-}
-
-AuthBackend::Capabilities AuthBackend::capabilities() const
-{
-    return d->capabilities;
-}
-
-void AuthBackend::setCapabilities(AuthBackend::Capabilities capabilities)
-{
-    d->capabilities = capabilities;
-}
-
-bool AuthBackend::actionExists(const QString& action)
-{
-    Q_UNUSED(action);
-    return false;
-}
-
-void AuthBackend::preAuthAction(const QString& action, QWidget* parent)
-{
-    Q_UNUSED(action)
-    Q_UNUSED(parent)
 }
 
 } //namespace KAuth

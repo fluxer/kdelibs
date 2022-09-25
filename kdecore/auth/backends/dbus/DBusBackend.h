@@ -34,11 +34,10 @@ class DBusBackend : public AuthBackend
 
 public:
     DBusBackend();
-    virtual void setupAction(const QString&);
-    virtual Action::AuthStatus authorizeAction(const QString&);
-    virtual Action::AuthStatus actionStatus(const QString&);
-    virtual QByteArray callerID() const;
-    virtual bool isCallerAuthorized(const QString &action, QByteArray callerID);
+
+    Action::AuthStatus authorizeAction(const QString&) final;
+    Action::AuthStatus actionStatus(const QString&) final;
+    bool isCallerAuthorized(const QString &action) final;
 };
 
 } // namespace Auth

@@ -34,41 +34,19 @@ class AuthBackend : public QObject
     Q_DISABLE_COPY(AuthBackend)
 
 public:
-    enum Capability {
-        NoCapability = 0,
-        AuthorizeFromClientCapability = 1,
-        AuthorizeFromHelperCapability = 2,
-        CheckActionExistenceCapability = 4,
-        PreAuthActionCapability = 8
-    };
-    Q_DECLARE_FLAGS(Capabilities, Capability)
-
     AuthBackend();
     virtual ~AuthBackend();
-    virtual void setupAction(const QString &action) = 0;
-    virtual void preAuthAction(const QString &action, QWidget *parent);
+
     virtual Action::AuthStatus authorizeAction(const QString &action) = 0;
     virtual Action::AuthStatus actionStatus(const QString &action) = 0;
-    virtual QByteArray callerID() const = 0;
-    virtual bool isCallerAuthorized(const QString &action, QByteArray callerID) = 0;
-    virtual bool actionExists(const QString &action);
-
-    Capabilities capabilities() const;
-
-protected:
-    void setCapabilities(Capabilities capabilities);
+    virtual bool isCallerAuthorized(const QString &action) = 0;
 
 Q_SIGNALS:
     void actionStatusChanged(const QString &action, Action::AuthStatus status);
-
-private:
-    class Private;
-    Private * const d;
 };
 
 } // namespace Auth
 
 Q_DECLARE_INTERFACE(KAuth::AuthBackend, "org.kde.auth.AuthBackend/0.1")
-Q_DECLARE_OPERATORS_FOR_FLAGS(KAuth::AuthBackend::Capabilities)
 
 #endif

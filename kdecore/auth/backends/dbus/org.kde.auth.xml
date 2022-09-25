@@ -3,18 +3,15 @@
     <interface name="org.kde.auth">
         <method name="performAction" >
             <arg name="action" type="s" direction="in" />
-            <arg name="callerID" type="ay" direction="in" />
             <arg name="arguments" type="ay" direction="in" />
             <arg name="r" type="ay" direction="out" />
         </method>
         <method name="authorizeAction" >
             <arg name="action" type="s" direction="in" />
-            <arg name="callerID" type="ay" direction="in" />
             <arg name="r" type="u" direction="out" />
         </method>
         <method name="performActions" >
             <arg name="blob" type="ay" direction="in" />
-            <arg name="callerID" type="ay" direction="in" />
             <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
         </method>
         <method name="stopAction" >
