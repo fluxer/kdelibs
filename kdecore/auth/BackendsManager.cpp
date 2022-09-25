@@ -19,14 +19,9 @@
 
 #include "BackendsManager.h"
 
-#include "BackendsConfig.h"
-
 // Include dbus backends
 #include "backends/dbus/DBusBackend.h"
 #include "backends/dbus/DBusHelperProxy.h"
-
-#include <QPluginLoader>
-#include <QDir>
 
 #include <kdebug.h>
 
@@ -40,69 +35,14 @@ BackendsManager::BackendsManager()
 {
 }
 
-QList< QObject* > BackendsManager::retrieveInstancesIn(const QString& path)
-{
-    QDir pluginPath(path);
-
-    if (!pluginPath.exists()) {
-        return QList< QObject* >();
-    }
-
-    const QFileInfoList entryList = pluginPath.entryInfoList(QDir::NoDotAndDotDot | QDir::Files);
-
-    if (entryList.isEmpty()) {
-        return QList< QObject* >();
-    }
-
-    QList< QObject* > retlist;
-
-    foreach(const QFileInfo &fi, entryList) {
-        QString filePath = fi.filePath(); // file name with path
-        QString fileName = fi.fileName(); // just file name
-
-        if(!QLibrary::isLibrary(filePath)) {
-            continue;
-        }
-
-        QString errstr;
-        QPluginLoader loader(filePath);
-        QObject *instance = loader.instance();
-        if (instance) {
-            retlist.append(instance);
-        }
-    }
-
-    return retlist;
-}
-
 void BackendsManager::init()
 {
-    // Backend plugin
-    const QList< QObject* > backends = retrieveInstancesIn(QFile::decodeName(KAUTH_BACKEND_PLUGIN_DIR));
-
-    foreach (QObject *instance, backends) {
-        auth = qobject_cast< KAuth::AuthBackend* >(instance);
-        if (auth) {
-            break;
-        }
-    }
-
-    // Helper plugin
-    const QList< QObject* > helpers = retrieveInstancesIn(QFile::decodeName(KAUTH_HELPER_PLUGIN_DIR));
-
-    foreach (QObject *instance, helpers) {
-        helper = qobject_cast< KAuth::HelperProxy* >(instance);
-        if (helper) {
-            break;
-        }
-    }
-
     if (!auth) {
-        auth = new DBusBackend;
+        auth = new DBusBackend();
     }
 
     if (!helper) {
-        helper = new DBusHelperProxy;
+        helper = new DBusHelperProxy();
     }
 }
 

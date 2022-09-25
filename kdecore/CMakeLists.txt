@@ -28,15 +28,6 @@ configure_file(
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/compression)
 
-# This file handles all the logic for compiling KAuth's backends
-include(auth/ConfigureChecks.cmake)
-
-# Configure a small file to tell BackendsManager what to use
-configure_file(
-    auth/BackendsConfig.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/BackendsConfig.h
-)
-
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}
@@ -94,6 +85,12 @@ if(ENABLE_TESTING)
     add_subdirectory(tests)
     add_subdirectory(sonnet/tests)
 endif()
+
+qt4_add_dbus_adaptor(kauth_dbus_adaptor_SRCS
+    auth/backends/dbus/org.kde.auth.xml
+    auth/backends/dbus/DBusHelperProxy.h
+    KAuth::DBusHelperProxy
+)
 
 ########### next target ###############
 
@@ -235,8 +232,10 @@ set(kdecore_LIB_SRCS
     util/kmacroexpander_unix.cpp
 
     ${kdecore_OPTIONAL_SRCS}
-    ${KAUTH_BACKEND_SRCS}
-    ${KAUTH_HELPER_BACKEND_SRCS}
+    auth/backends/dbus/DBusBackend.cpp
+    auth/backends/dbus/DBusBackend.h
+    auth/backends/dbus/DBusHelperProxy.cpp
+    ${kauth_dbus_adaptor_SRCS}
 )
 
 if(NOT Q_WS_X11 AND NOT Q_WS_QWS)
@@ -267,33 +266,6 @@ install(
     TARGETS kdecore
     EXPORT kdelibsLibraryTargets
     ${INSTALL_TARGETS_DEFAULT_ARGS}
-)
-
-########### next target ###############
-
-# KAuth backend plugin
-
-set(KAUTH_BACKEND_SRCS ${KAUTH_BACKEND_SRCS} auth/AuthBackend.cpp)
-kde4_add_plugin(kauth_backend_plugin ${KAUTH_BACKEND_SRCS})
-target_link_libraries(kauth_backend_plugin ${KAUTH_BACKEND_LIBS})
-install(
-    TARGETS kauth_backend_plugin
-    LIBRARY DESTINATION ${KDE4_KAUTH_BACKEND_PLUGIN_DIR}
-    ARCHIVE DESTINATION ${KDE4_KAUTH_BACKEND_PLUGIN_DIR}
-    RUNTIME DESTINATION ${KDE4_KAUTH_BACKEND_PLUGIN_DIR}
-)
-
-########### next target ###############
-
-# KAuth helper plugin
-
-kde4_add_plugin(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_SRCS} auth/HelperProxy.cpp)
-target_link_libraries(kauth_helper_plugin ${KAUTH_HELPER_BACKEND_LIBS})
-install(
-    TARGETS kauth_helper_plugin
-    LIBRARY DESTINATION ${KDE4_KAUTH_HELPER_PLUGIN_DIR}
-    ARCHIVE DESTINATION ${KDE4_KAUTH_HELPER_PLUGIN_DIR}
-    RUNTIME DESTINATION ${KDE4_KAUTH_HELPER_PLUGIN_DIR}
 )
 
 ########### next target ###############
@@ -440,4 +412,18 @@ install(
     kde4_pci.ids
     kde4_usb.ids
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/kdevicedatabase
+)
+
+install(
+    FILES
+    auth/backends/dbus/org.kde.auth.conf
+    DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/dbus-1/system.d
+)
+
+install(
+    FILES
+    auth/backends/dbus/dbus_policy.stub
+    auth/backends/dbus/dbus_service.stub
+    DESTINATION ${KDE4_DATA_INSTALL_DIR}/kauth
+    COMPONENT Devel
 )
