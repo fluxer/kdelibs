@@ -54,7 +54,12 @@ void kAuthMessageHandler(QtMsgType type, const char *msg)
 
 static bool isDBusServiceRegistered(const QString &helper)
 {
-    QDBusReply<bool> reply = QDBusConnection::systemBus().interface()->isServiceRegistered(helper);
+    QDBusConnectionInterface* dbusinterface = QDBusConnection::systemBus().interface();
+    if (!dbusinterface) {
+        kDebug() << "Null D-Bus interface" << helper;
+        return false;
+    }
+    QDBusReply<bool> reply = dbusinterface->isServiceRegistered(helper);
     if (reply.value() == false) {
         kDebug() << "Service not registered" << helper;
         return false;
