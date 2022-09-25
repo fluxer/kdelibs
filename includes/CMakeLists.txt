@@ -18,7 +18,7 @@ install(
     KArchiveEntry
     KArchiveFile
     KAssistantDialog
-    KAuthorized
+    KAuthorization
     KAutoMount
     KAutoUnmount
     KAutoSaveFile
@@ -553,16 +553,6 @@ install(
     Sonnet/DictionaryComboBox
     Sonnet/Highlighter
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/Sonnet
-    COMPONENT Devel
-)
-
-install(
-    FILES
-    KAuth/Action
-    KAuth/ActionReply
-    KAuth/ActionWatcher
-    KAuth/HelperSupport
-    DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}/KDE/KAuth
     COMPONENT Devel
 )
 

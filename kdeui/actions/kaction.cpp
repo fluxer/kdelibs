@@ -29,8 +29,6 @@
 #include "kglobalaccel_p.h"
 #include "klocale.h"
 #include "kmessagebox.h"
-#include "kauthaction.h"
-#include "kauthactionwatcher.h"
 
 #include <QtGui/QApplication>
 #include <QtGui/QHBoxLayout>
@@ -66,46 +64,6 @@ void KActionPrivate::setActiveGlobalShortcutNoEnable(const KShortcut &cut)
 void KActionPrivate::slotTriggered()
 {
   emit q->triggered(QApplication::mouseButtons(), QApplication::keyboardModifiers());
-
-  if (authAction) {
-      KAuth::Action::AuthStatus s = authAction->earlyAuthorize();
-      switch(s) {
-      case KAuth::Action::Denied:
-          q->setEnabled(false);
-          break;
-      case KAuth::Action::Authorized:
-          emit q->authorized(authAction);
-          break;
-      default:
-          break;
-      }
-  }
-}
-
-void KActionPrivate::authStatusChanged(int status)
-{
-    KAuth::Action::AuthStatus s = (KAuth::Action::AuthStatus)status;
-
-    switch(s) {
-        case KAuth::Action::Authorized:
-            q->setEnabled(true);
-            if(!oldIcon.isNull()) {
-                q->setIcon(oldIcon);
-                oldIcon = KIcon();
-            }
-            break;
-        case KAuth::Action::AuthRequired:
-            q->setEnabled(true);
-            oldIcon = KIcon(q->icon());
-            q->setIcon(KIcon("dialog-password"));
-            break;
-        default:
-            q->setEnabled(false);
-            if(!oldIcon.isNull()) {
-                q->setIcon(oldIcon);
-                oldIcon = KIcon();
-            }
-    }
 }
 
 bool KAction::event(QEvent *event)
@@ -304,51 +262,6 @@ void KAction::setHelpText(const QString& text)
     setToolTip(text);
     if (whatsThis().isEmpty())
         setWhatsThis(text);
-}
-
-KAuth::Action *KAction::authAction() const
-{
-    return d->authAction;
-}
-
-void KAction::setAuthAction(const QString &actionName)
-{
-    if (actionName.isEmpty()) {
-        setAuthAction(0);
-    } else {
-        setAuthAction(new KAuth::Action(actionName));
-        // this memory leak is gone in frameworks 5
-    }
-}
-
-void KAction::setAuthAction(KAuth::Action *action)
-{
-    if (d->authAction == action) {
-        return;
-    }
-
-    if (d->authAction) {
-        disconnect(d->authAction->watcher(), SIGNAL(statusChanged(int)),
-                this, SLOT(authStatusChanged(int)));
-        // d->authAction can not be deleted because it could
-        // be any kind of pointer, including a pointer to a stack object.
-        d->authAction = 0;
-        if (!d->oldIcon.isNull()) {
-            setIcon(d->oldIcon);
-            d->oldIcon = KIcon();
-        }
-    }
-
-    if (action != 0) {
-        d->authAction = action;
-
-        // Set the parent widget
-        d->authAction->setParentWidget(parentWidget());
-
-        connect(d->authAction->watcher(), SIGNAL(statusChanged(int)),
-                this, SLOT(authStatusChanged(int)));
-        d->authStatusChanged(d->authAction->status());
-    }
 }
 
 /* vim: et sw=2 ts=2

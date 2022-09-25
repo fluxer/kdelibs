@@ -20,10 +20,7 @@
 
 #include "kbookmarkmenu.h"
 #include "kbookmarkmenu_p.h"
-
 #include "kbookmarkdialog.h"
-
-#include <kauthorized.h>
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <klocale.h>
@@ -37,8 +34,6 @@
 
 #include <qclipboard.h>
 #include <qmimedata.h>
-
-
 #include <QtCore/QStack>
 #include <QtGui/QHeaderView>
 #include <QtGui/QApplication>

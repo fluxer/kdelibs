@@ -56,7 +56,7 @@ kconfig_compiler/
 
 kernel/
   kaboutdata.cpp                  David Faure <faure@kde.org>
-  kauthorized.cpp
+  kauthorization.cpp
   kautostart.cpp
   kcmdlineargs.cpp
   kcomponentdata.cpp

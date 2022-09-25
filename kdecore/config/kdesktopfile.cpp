@@ -30,7 +30,6 @@
 #include "kdebug.h"
 #include "kurl.h"
 #include "kconfiggroup.h"
-#include "kauthorized.h"
 #include "kstandarddirs.h"
 #include "kconfigini_p.h"
 #include "kde_file.h"
@@ -243,28 +242,12 @@ bool KDesktopFile::hasDeviceType() const
 bool KDesktopFile::tryExec() const
 {
   Q_D(const KDesktopFile);
-  // Test for TryExec and "X-KDE-AuthorizeAction"
+  // Test for TryExec
   // NOT readPathEntry (see readPath())
   const QString te = d->desktopGroup.readEntry("TryExec", QString());
 
   if (!te.isEmpty() && KGlobal::dirs()->findExe(te).isEmpty()) {
     return false;
-  }
-  const QStringList list = d->desktopGroup.readEntry("X-KDE-AuthorizeAction", QStringList());
-  foreach (const QString &it, list) {
-    if (!KAuthorized::authorize(it.trimmed()))
-      return false;
-  }
-
-  // See also KService::username()
-  bool su = d->desktopGroup.readEntry("X-KDE-SubstituteUID", false);
-  if (su)
-  {
-      QString user = d->desktopGroup.readEntry("X-KDE-Username", QString());
-      if (user.isEmpty())
-        user = QString::fromLatin1("root");
-      if (!KAuthorized::authorize(QString::fromLatin1("user/")+user))
-        return false;
   }
 
   return true;

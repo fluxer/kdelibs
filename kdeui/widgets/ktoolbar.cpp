@@ -39,7 +39,6 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
-#include <kauthorized.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kedittoolbar.h>

@@ -48,7 +48,6 @@
 #include <QtDBus/QDBusConnection>
 #include <kaction.h>
 #include <kapplication.h>
-#include <kauthorized.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kedittoolbar.h>

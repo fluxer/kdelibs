@@ -24,11 +24,6 @@
 
 #include "kcmultidialog.h"
 #include "kcmultidialog_p.h"
-
-#include <QtCore/QStringList>
-#include <QtCore/QProcess>
-
-#include <kauthorized.h>
 #include <kguiitem.h>
 #include <kicon.h>
 #include <klocale.h>
@@ -38,13 +33,12 @@
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <kurl.h>
-
-#include "auth/kauthaction.h"
-
 #include "kcolorscheme.h"
-
 #include "kcmoduleloader.h"
 #include "kcmoduleproxy.h"
+
+#include <QtCore/QStringList>
+#include <QtCore/QProcess>
 
 bool KCMultiDialogPrivate::resolveChanges(KCModuleProxy *currentProxy)
 {
@@ -124,37 +118,19 @@ void KCMultiDialogPrivate::_k_clientChanged()
 
         if (q->button(KDialog::Apply)) {
             q->disconnect(q, SIGNAL(applyClicked()), q, SLOT(slotApplyClicked()));
-            q->disconnect(q->button(KDialog::Apply), SIGNAL(authorized(KAuth::Action*)), q, SLOT(slotApplyClicked()));
             q->button(KDialog::Apply)->setEnabled(change);
         }
 
         if (q->button(KDialog::Ok)) {
             q->disconnect(q, SIGNAL(okClicked()), q, SLOT(slotOkClicked()));
-            q->disconnect(q->button(KDialog::Ok), SIGNAL(authorized(KAuth::Action*)), q, SLOT(slotOkClicked()));
         }
 
-        if (activeModule->realModule()->needsAuthorization()) {
-            if (q->button(KDialog::Apply)) {
-                q->button(KDialog::Apply)->setAuthAction(activeModule->realModule()->authAction());
-                activeModule->realModule()->authAction()->setParentWidget(activeModule->realModule());
-                q->connect(q->button(KDialog::Apply), SIGNAL(authorized(KAuth::Action*)), SLOT(slotApplyClicked()));
-            }
+        if (q->button(KDialog::Apply)) {
+            q->connect(q, SIGNAL(applyClicked()), SLOT(slotApplyClicked()));
+        }
 
-            if (q->button(KDialog::Ok)) {
-                q->button(KDialog::Ok)->setAuthAction(activeModule->realModule()->authAction());
-                activeModule->realModule()->authAction()->setParentWidget(activeModule->realModule());
-                q->connect(q->button(KDialog::Ok), SIGNAL(authorized(KAuth::Action*)), SLOT(slotOkClicked()));
-            }
-        } else {
-            if (q->button(KDialog::Apply)) {
-                q->connect(q, SIGNAL(applyClicked()), SLOT(slotApplyClicked()));
-                q->button(KDialog::Apply)->setAuthAction(0);
-            }
-
-            if (q->button(KDialog::Ok)) {
-                q->connect(q, SIGNAL(okClicked()), SLOT(slotOkClicked()));
-                q->button(KDialog::Ok)->setAuthAction(0);
-            }
+        if (q->button(KDialog::Ok)) {
+            q->connect(q, SIGNAL(okClicked()), SLOT(slotOkClicked()));
         }
     }
 
@@ -374,8 +350,6 @@ KPageWidgetItem* KCMultiDialog::addModule( const KCModuleInfo& moduleInfo,
     if ( !moduleInfo.service() )
         return 0;
 
-    //KAuthorized::authorizeControlModule( moduleInfo.service()->menuId() ) is
-    //checked in noDisplay already
     if ( moduleInfo.service()->noDisplay() )
         return 0;
 

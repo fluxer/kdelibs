@@ -35,7 +35,6 @@
 #include <cmath>
 
 #include <kaction.h>
-#include <kauthorized.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>

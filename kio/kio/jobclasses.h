@@ -805,11 +805,6 @@ namespace KIO {
          */
         const KUrl& redirectionUrl() const;
 
-        /**
-         * Do not apply any KIOSK restrictions to this job.
-         */
-        void setUnrestricted(bool unrestricted);
-
     Q_SIGNALS:
         /**
          * This signal emits the entry found by the job while listing.

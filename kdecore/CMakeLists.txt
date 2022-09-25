@@ -86,12 +86,6 @@ if(ENABLE_TESTING)
     add_subdirectory(sonnet/tests)
 endif()
 
-qt4_add_dbus_adaptor(kauth_dbus_adaptor_SRCS
-    auth/backends/dbus/org.kde.auth.xml
-    auth/backends/dbus/DBusHelperProxy.h
-    KAuth::DBusHelperProxy
-)
-
 ########### next target ###############
 
 set(kdecore_LIB_SRCS
@@ -149,7 +143,7 @@ set(kdecore_LIB_SRCS
     jobs/kjob.cpp
     jobs/kjobuidelegate.cpp
     jobs/kjobtrackerinterface.cpp
-    kernel/kauthorized.cpp
+    kernel/kauthorization.cpp
     kernel/kaboutdata.cpp
     kernel/kcmdlineargs.cpp
     kernel/kdbusconnectionpool.cpp
@@ -157,13 +151,6 @@ set(kdecore_LIB_SRCS
     kernel/kcomponentdata.cpp
     kernel/kstandarddirs.cpp
     kernel/ktoolinvocation.cpp
-    auth/kauthaction.cpp
-    auth/kauthactionreply.cpp
-    auth/kauthactionwatcher.cpp
-    auth/AuthBackend.cpp
-    auth/BackendsManager.cpp
-    auth/HelperProxy.cpp
-    auth/kauthhelpersupport.cpp
     services/kfoldermimetype.cpp
     services/kmimetypefactory.cpp
     services/kmimemagicrule.cpp
@@ -232,10 +219,6 @@ set(kdecore_LIB_SRCS
     util/kmacroexpander_unix.cpp
 
     ${kdecore_OPTIONAL_SRCS}
-    auth/backends/dbus/DBusBackend.cpp
-    auth/backends/dbus/DBusBackend.h
-    auth/backends/dbus/DBusHelperProxy.cpp
-    ${kauth_dbus_adaptor_SRCS}
 )
 
 if(NOT Q_WS_X11 AND NOT Q_WS_QWS)
@@ -338,17 +321,13 @@ install(
     jobs/kjobuidelegate.h
     jobs/kjobtrackerinterface.h
     kernel/kaboutdata.h
-    kernel/kauthorized.h
+    kernel/kauthorization.h
     kernel/kcmdlineargs.h
     kernel/kdbusconnectionpool.h
     kernel/kglobal.h
     kernel/kcomponentdata.h
     kernel/kstandarddirs.h
     kernel/ktoolinvocation.h
-    auth/kauthaction.h
-    auth/kauthactionreply.h
-    auth/kauthactionwatcher.h
-    auth/kauthhelpersupport.h
     services/kmimetype.h
     services/kmimetypetrader.h
     services/kservice.h
@@ -416,14 +395,8 @@ install(
 
 install(
     FILES
-    auth/backends/dbus/org.kde.auth.conf
-    DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/dbus-1/system.d
-)
-
-install(
-    FILES
-    auth/backends/dbus/dbus_policy.stub
-    auth/backends/dbus/dbus_service.stub
+    dbus_policy.stub
+    dbus_service.stub
     DESTINATION ${KDE4_DATA_INSTALL_DIR}/kauth
     COMPONENT Devel
 )

@@ -36,7 +36,6 @@
 #include <QGraphicsLinearLayout>
 
 #include <kaction.h>
-#include <kauthorized.h>
 #include <kicon.h>
 #include <kmenu.h>
 #include <kmessagebox.h>

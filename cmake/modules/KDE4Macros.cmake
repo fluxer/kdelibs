@@ -131,9 +131,9 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
     set(_lang ${ARGV1})
     if(_lang)
         set(_l10n_SUBDIR l10n/${_lang})
-    else(_lang)
+    else()
         set(_l10n_SUBDIR ".")
-    endif(_lang)
+    endif()
 
     # first the png icons
     file(GLOB _icons *.png)
@@ -266,19 +266,27 @@ endmacro(KDE4_ADD_WIDGET)
 # *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to make
 # sure everything will work.
 function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
-    if (_kdeBootStrapping)
-        set(_stubFilesDir ${CMAKE_SOURCE_DIR}/kdecore/auth/backends/dbus/)
-    else (_kdeBootStrapping)
-        set(_stubFilesDir ${KDE4_DATA_INSTALL_DIR}/kauth/)
-    endif (_kdeBootStrapping)
+    if(_kdeBootStrapping)
+        set(_stubFilesDir ${CMAKE_SOURCE_DIR}/kdecore)
+    else()
+        set(_stubFilesDir ${KDE4_DATA_INSTALL_DIR}/kauth)
+    endif()
 
-    configure_file(${_stubFilesDir}/dbus_policy.stub
-                    ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf
-            DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/dbus-1/system.d/)
+    configure_file(
+        ${_stubFilesDir}/dbus_policy.stub
+        ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf
+    )
+    install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.conf
+        DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/dbus-1/system.d/
+    )
 
-    configure_file(${_stubFilesDir}/dbus_service.stub
-                    ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
-            DESTINATION ${KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR})
+    configure_file(
+        ${_stubFilesDir}/dbus_service.stub
+        ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
+    )
+    install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/${HELPER_ID}.service
+        DESTINATION ${KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR}
+    )
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)

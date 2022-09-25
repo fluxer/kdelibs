@@ -78,7 +78,6 @@ extern "C" {
 #include <sys/acl.h>
 #endif
 
-#include <kauthorized.h>
 #include <kdialog.h>
 #include <kdirnotify.h>
 #include <kdiskfreespaceinfo.h>

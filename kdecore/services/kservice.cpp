@@ -34,7 +34,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QMap>
 
-#include <kauthorized.h>
 #include <kdebug.h>
 #include <kdesktopfile.h>
 #include <kglobal.h>
@@ -680,9 +679,6 @@ bool KService::noDisplay() const {
         return true;
 
     if (!showInKDE())
-        return true;
-
-    if (!KAuthorized::authorizeControlModule( storageId() ) )
         return true;
 
     return false;

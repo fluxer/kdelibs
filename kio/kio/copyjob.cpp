@@ -866,7 +866,6 @@ void CopyJobPrivate::startListing( const KUrl & src )
     state = STATE_LISTING;
     m_bURLDirty = true;
     ListJob * newjob = listRecursive(src, KIO::HideProgressInfo);
-    newjob->setUnrestricted(true);
     q->connect(newjob, SIGNAL(entries(KIO::Job*,KIO::UDSEntryList)),
                SLOT(slotEntries(KIO::Job*,KIO::UDSEntryList)));
     q->connect(newjob, SIGNAL(subError(KIO::ListJob*,KIO::ListJob*)),

@@ -50,7 +50,6 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kauthorized.h>
 #include <kcolorscheme.h>
 #include <kdialog.h>
 #include <kdesktopfile.h>

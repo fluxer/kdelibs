@@ -34,8 +34,6 @@
 #include <kglobal.h>
 #include <kcomponentdata.h>
 #include <klocale.h>
-#include "auth/kauthaction.h"
-#include "auth/kauthactionwatcher.h"
 
 class KCModulePrivate
 {
@@ -45,12 +43,8 @@ public:
         _about( 0 ),
         _useRootOnlyMessage( false ),
         _firstshow(true),
-        _needsAuthorization(false),
-        _authAction(0),
         _unmanagedWidgetChangeState( false )
         { }
-
-    void authStatusChanged(int status);
 
     KCModule::Buttons _buttons;
     KComponentData _componentData;
@@ -62,9 +56,6 @@ public:
     bool _useRootOnlyMessage : 1;
     bool _firstshow : 1;
 
-    bool  _needsAuthorization : 1;
-    KAuth::Action *_authAction;
-    
     // this member is used to record the state on non-automatically
     // managed widgets, allowing for mixed KConfigXT-drive and manual
     // widgets to coexist peacefully and do the correct thing with
@@ -119,53 +110,6 @@ KConfigDialogManager* KCModule::addConfig( KConfigSkeleton *config, QWidget* wid
     connect( manager, SIGNAL(widgetModified()), SLOT(widgetChanged()));
     d->managers.append( manager );
     return manager;
-}
-
-void KCModule::setNeedsAuthorization(bool needsAuth)
-{
-    d->_needsAuthorization = needsAuth;
-    if (needsAuth && d->_about) {
-        d->_authAction = new KAuth::Action(QString("org.kde.kcontrol." + d->_about->appName() + ".save"));
-        d->_needsAuthorization = d->_authAction->isValid();
-        d->_authAction->setHelperID("org.kde.kcontrol." + d->_about->appName());
-        d->_authAction->setParentWidget(this);
-        connect(d->_authAction->watcher(), SIGNAL(statusChanged(int)),
-                this, SLOT(authStatusChanged(int)));
-        authStatusChanged(d->_authAction->status());
-    } else {
-        d->_authAction = 0;
-    }
-}
-
-bool KCModule::needsAuthorization() const
-{
-    return d->_needsAuthorization;
-}
-
-KAuth::Action *KCModule::authAction() const
-{
-    return d->_authAction;
-}
-
-void KCModule::authStatusChanged(int status)
-{
-    KAuth::Action::AuthStatus s = (KAuth::Action::AuthStatus)status;
-
-    switch(s) {
-        case KAuth::Action::Authorized:
-            setUseRootOnlyMessage(false);
-            break;
-        case KAuth::Action::AuthRequired:
-            setUseRootOnlyMessage(true);
-            setRootOnlyMessage(i18n("You will be asked to authenticate before saving"));
-            break;
-        default:
-            setUseRootOnlyMessage(true);
-            setRootOnlyMessage(i18n("You are not allowed to save the configuration"));
-            break;
-    }
-
-    qDebug() << useRootOnlyMessage();
 }
 
 KCModule::~KCModule()

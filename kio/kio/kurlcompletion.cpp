@@ -27,10 +27,6 @@
 
 #include <config.h>
 
-#include <stdlib.h>
-#include <assert.h>
-#include <limits.h>
-
 #include <QtCore/QCoreApplication>
 #include <QtCore/qstringlist.h>
 #include <QtCore/QRegExp>
@@ -42,7 +38,6 @@
 #include <QtCore/QThread>
 #include <QtGui/qevent.h>
 
-#include <kauthorized.h>
 #include <kdebug.h>
 #include <kurl.h>
 #include <kio/job.h>
@@ -51,7 +46,11 @@
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <kde_file.h>
+#include <kconfiggroup.h>
 
+#include <stdlib.h>
+#include <assert.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <dirent.h>
 #include <unistd.h>
@@ -59,7 +58,6 @@
 #include <pwd.h>
 #include <time.h>
 #include <sys/param.h>
-#include <kconfiggroup.h>
 
 
 static bool expandTilde(QString&);
@@ -1070,19 +1068,7 @@ QString KUrlCompletionPrivate::listDirectories(
         if (dirListThread)
             dirListThread->requestTermination();
 
-        QStringList dirs;
-
-        QStringList::ConstIterator end = dirList.constEnd();
-        for (QStringList::ConstIterator it = dirList.constBegin();
-                it != end;
-                ++it) {
-            KUrl url;
-            url.setPath(*it);
-            if (KAuthorized::authorizeUrlAction(QLatin1String("list"), KUrl(), url))
-                dirs.append(*it);
-        }
-
-        dirListThread = new DirectoryListThread(this, dirs, filter, only_exe, only_dir,
+        dirListThread = new DirectoryListThread(this, dirList, filter, only_exe, only_dir,
                                                 no_hidden, append_slash_to_dir);
         dirListThread->start();
         dirListThread->wait(200);

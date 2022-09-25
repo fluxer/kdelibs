@@ -50,8 +50,7 @@ namespace KIO {
         enum { EF_TransferJobAsync    = (1 << 0),
                EF_TransferJobNeedData = (1 << 1),
                EF_TransferJobDataSent = (1 << 2),
-               EF_ListJobUnrestricted = (1 << 3),
-               EF_KillCalled          = (1 << 4) };
+               EF_KillCalled          = (1 << 3) };
 
         // Maybe we could use the QObject parent/child mechanism instead
         // (requires a new ctor, and moving the ctor code to some init()).

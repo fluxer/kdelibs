@@ -27,32 +27,16 @@
 #include <kdesktopfileactions.h>
 #include <kmenu.h>
 #include <klocale.h>
-#include <kauthorized.h>
 #include <kconfiggroup.h>
 #include <kdesktopfile.h>
 #include <kglobal.h>
 #include <kicon.h>
 #include <kstandarddirs.h>
 #include <kservicetypetrader.h>
+
 #include <QFile>
 #include <QtCore/qalgorithms.h>
-
 #include <QtDBus/QtDBus>
-
-static bool KIOSKAuthorizedAction(const KConfigGroup& cfg)
-{
-    if (!cfg.hasKey("X-KDE-AuthorizeAction")) {
-        return true;
-    }
-    const QStringList list = cfg.readEntry("X-KDE-AuthorizeAction", QStringList());
-    for(QStringList::ConstIterator it = list.constBegin();
-        it != list.constEnd(); ++it) {
-        if (!KAuthorized::authorize((*it).trimmed())) {
-            return false;
-        }
-    }
-    return true;
-}
 
 // This helper class stores the .desktop-file actions and the servicemenus
 // in order to support X-KDE-Priority and X-KDE-Submenu.
@@ -169,9 +153,7 @@ int KFileItemActionsPrivate::insertServices(const ServiceList& list,
 void KFileItemActionsPrivate::slotExecuteService(QAction* act)
 {
     KServiceAction serviceAction = act->data().value<KServiceAction>();
-    if (KAuthorized::authorizeKAction(serviceAction.name())) {
-        KDesktopFileActions::executeService(m_props.urlList(), serviceAction);
-    }
+    KDesktopFileActions::executeService(m_props.urlList(), serviceAction);
 }
 
 ////
@@ -242,12 +224,10 @@ int KFileItemActions::addServiceActionsTo(QMenu* mainMenu)
             const KDesktopFile desktopFile(dotDirectoryFile);
             const KConfigGroup cfg = desktopFile.desktopGroup();
 
-            if (KIOSKAuthorizedAction(cfg)) {
-                const QString priority = cfg.readEntry("X-KDE-Priority");
-                const QString submenuName = cfg.readEntry("X-KDE-Submenu");
-                ServiceList& list = s.selectList(priority, submenuName);
-                list += KDesktopFileActions::userDefinedServices(dotDirectoryFile, desktopFile, true);
-            }
+            const QString priority = cfg.readEntry("X-KDE-Priority");
+            const QString submenuName = cfg.readEntry("X-KDE-Submenu");
+            ServiceList& list = s.selectList(priority, submenuName);
+            list += KDesktopFileActions::userDefinedServices(dotDirectoryFile, desktopFile, true);
         }
     }
 
@@ -263,10 +243,6 @@ int KFileItemActions::addServiceActionsTo(QMenu* mainMenu)
         QString file = KStandardDirs::locate("services", (*it2)->entryPath());
         KDesktopFile desktopFile(file);
         const KConfigGroup cfg = desktopFile.desktopGroup();
-
-        if (!KIOSKAuthorizedAction(cfg)) {
-            continue;
-        }
 
         if (cfg.hasKey("X-KDE-ShowIfRunning")) {
             const QString app = cfg.readEntry("X-KDE-ShowIfRunning");

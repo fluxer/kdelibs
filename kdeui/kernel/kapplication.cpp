@@ -35,7 +35,6 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
 
-#include "kauthorized.h"
 #include "kaboutdata.h"
 #include "kcheckaccelerators.h"
 #include "kcrash.h"
@@ -425,8 +424,7 @@ void KApplicationPrivate::init()
   QByteArray readOnly = qgetenv("KDE_HOME_READONLY");
   if (readOnly.isEmpty() && q->applicationName() != QLatin1String("kdialog"))
   {
-    if (KAuthorized::authorize(QLatin1String("warn_unwritable_config")))
-       config->isConfigWritable(true);
+    config->isConfigWritable(true);
   }
 
   if (q->type() == KAPPLICATION_GUI_TYPE)

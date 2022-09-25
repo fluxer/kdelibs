@@ -356,7 +356,6 @@ void DeleteJobPrivate::currentSourceStated(bool isDir, bool isLink)
             //kDebug(7007) << url << "is a directory, let's list it";
             ListJob *newjob = KIO::listRecursive(url, KIO::HideProgressInfo);
             newjob->addMetaData("details", "0");
-            newjob->setUnrestricted(true); // No KIOSK restrictions
             Scheduler::setJobPriority(newjob, 1);
             QObject::connect(newjob, SIGNAL(entries(KIO::Job*,KIO::UDSEntryList)),
                              q, SLOT(slotEntries(KIO::Job*,KIO::UDSEntryList)));

@@ -34,7 +34,6 @@
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
-#include <kauthorized.h>
 #include <kdialog.h>
 #include <kguiitem.h>
 #include <khbox.h>

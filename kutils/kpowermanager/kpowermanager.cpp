@@ -19,7 +19,7 @@
 #include "kpowermanager.h"
 #include "kconfig.h"
 #include "kconfiggroup.h"
-#include "kauthaction.h"
+#include "kauthorization.h"
 #include "kstandarddirs.h"
 #include "kdebug.h"
 
@@ -130,12 +130,13 @@ bool KPowerManager::setCPUGovernor(const QString &governor)
         return false;
     }
 
-    KAuth::Action helperaction("org.kde.kpowermanager.helper.setgovernor");
-    helperaction.setHelperID("org.kde.kpowermanager.helper");
-    helperaction.addArgument("governor", governor);
-    KAuth::ActionReply helperreply = helperaction.execute();
-    // qDebug() << helperreply.errorCode() << helperreply.errorDescription();
-    return (helperreply == KAuth::ActionReply::SuccessReply);
+    QVariantMap helperargs;
+    helperargs.insert("governor", governor);
+    int helperreply = KAuthorization::execute(
+        QString::fromLatin1("org.kde.kpowermanager.helper"),
+        QString::fromLatin1("setgovernor"), helperargs
+    );
+    return (helperreply == KAuthorization::NoError);
 }
 
 bool KPowerManager::isEnabled()

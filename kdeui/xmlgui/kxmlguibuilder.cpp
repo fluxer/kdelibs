@@ -19,9 +19,7 @@
 */
 
 #include "kxmlguibuilder.h"
-
 #include "kapplication.h"
-#include "kauthorized.h"
 #include "kxmlguiclient.h"
 #include "kmenu.h"
 #include "ktoolbar.h"
@@ -161,9 +159,6 @@ QWidget *KXMLGUIBuilder::createContainer( QWidget *parent, int index, const QDom
         p = p->parentWidget();
 
     QByteArray name = element.attribute( d->attrName ).toUtf8();
-
-    if (!KAuthorized::authorizeKAction(name))
-       return 0;
 
     KMenu *popup = new KMenu(p);
     popup->setObjectName(name);

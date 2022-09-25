@@ -32,7 +32,6 @@
 #include <QtGui/QStyle>
 #include <QtGui/qstyleoption.h>
 
-#include <kauthorized.h>
 #include <khistorycombobox.h>
 #include <kdesktopfile.h>
 #include <klineedit.h>
@@ -47,12 +46,12 @@
 #include <kmimetype.h>
 #include <kservicegroup.h>
 #include <kserviceoffer.h>
+#include <kbuildsycocaprogressdialog.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 
 #include <assert.h>
 #include <stdlib.h>
-#include <kbuildsycocaprogressdialog.h>
-#include <kconfiggroup.h>
 
 inline void writeEntry( KConfigGroup& group, const char* key,
                         const KGlobalSettings::Completion& aValue,

@@ -52,8 +52,6 @@
 #include "kfile/kopenwithdialog.h"
 #include "kfile/krecentdocument.h"
 #include "kdesktopfileactions.h"
-
-#include <kauthorized.h>
 #include <kmessageboxwrapper.h>
 #include <kurl.h>
 #include <kglobal.h>

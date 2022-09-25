@@ -21,6 +21,11 @@
 #include "kxmlguiversionhandler_p.h"
 #include "kxmlguifactory.h"
 #include "kxmlguibuilder.h"
+#include "kcomponentdata.h"
+#include "kstandarddirs.h"
+#include "kdebug.h"
+#include "kaction.h"
+#include "kactioncollection.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -28,14 +33,6 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QRegExp>
 #include <QtCore/QPointer>
-
-#include <kcomponentdata.h>
-#include <kstandarddirs.h>
-#include <kdebug.h>
-#include <kauthorized.h>
-
-#include "kaction.h"
-#include "kactioncollection.h"
 
 #include <assert.h>
 
@@ -363,8 +360,7 @@ bool KXMLGUIClientPrivate::mergeXML( QDomElement &base, QDomElement &additive, K
             // not implemented, then we remove the element
             if (equalstr(tag, tagAction)) {
                 const QString name =  e.attribute(attrName);
-                if (!actionCollection->action(name) ||
-                    !KAuthorized::authorizeKAction(name))
+                if (!actionCollection->action(name))
                 {
                     // remove this child as we aren't using it
                     base.removeChild( e );

@@ -26,7 +26,6 @@
 
 #include "kactioncollection.h"
 #include "kactioncategory.h"
-#include <kauthorized.h>
 #include "kxmlguiclient.h"
 #include "kxmlguifactory.h"
 
@@ -265,13 +264,6 @@ QAction *KActionCollection::addAction(const QString &name, QAction *action)
         // This is not a multi map!
         Q_ASSERT( d->actionByName.count(indexName)==1);
         return action;
-    }
-
-    if (!KAuthorized::authorizeKAction(indexName)) {
-      // Disable this action
-      action->setEnabled(false);
-      action->setVisible(false);
-      action->blockSignals(true);
     }
 
     // Check if we have another action under this name

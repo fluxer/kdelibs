@@ -68,7 +68,6 @@
 #include <QtCore/QFSFileEngine>
 #include <kshell.h>
 #include <kmessagebox.h>
-#include <kauthorized.h>
 
 class KFileWidgetPrivate
 {

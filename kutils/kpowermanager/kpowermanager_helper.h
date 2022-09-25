@@ -19,16 +19,13 @@
 #ifndef KPOWERMANAGER_HELPER_H
 #define KPOWERMANAGER_HELPER_H
 
-#include <kauthactionreply.h>
+#include <kauthorization.h>
 
-// methods return type must be ActionReply otherwise QMetaObject::invokeMethod() fails
-using namespace KAuth;
-
-class KPowerManagerHelper : public QObject
+class KPowerManagerHelper : public KAuthorization
 {
     Q_OBJECT
 public slots:
-    ActionReply setgovernor(const QVariantMap &parameters);
+    int setgovernor(const QVariantMap &parameters);
 };
 
 #endif // KPOWERMANAGER_HELPER_H

@@ -26,7 +26,6 @@
 
 #include <kactioncollection.h>
 #include <kapplication.h>
-#include <kauthorized.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <khistorycombobox.h>

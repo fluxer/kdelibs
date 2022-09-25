@@ -42,7 +42,6 @@ extern "C" {
 #include <QtCore/QFile>
 #include <QtCore/qbuffer.h>
 
-#include <kauthorized.h>
 #include <klocale.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -623,13 +622,6 @@ void MkdirJobPrivate::slotRedirection( const KUrl &url)
 {
      Q_Q(MkdirJob);
      kDebug(7007) << url;
-     if (!KAuthorized::authorizeUrlAction("redirect", m_url, url))
-     {
-         kWarning(7007) << "Redirection from" << m_url << "to" << url << "REJECTED!";
-         q->setError( ERR_ACCESS_DENIED );
-         q->setErrorText( url.pathOrUrl() );
-         return;
-     }
      m_redirectionURL = url; // We'll remember that when the job finishes
      // Tell the user that we haven't finished yet
      emit q->redirection(q, m_redirectionURL);
@@ -839,13 +831,6 @@ void StatJobPrivate::slotRedirection( const KUrl &url)
 {
      Q_Q(StatJob);
      kDebug(7007) << m_url << "->" << url;
-     if (!KAuthorized::authorizeUrlAction("redirect", m_url, url))
-     {
-       kWarning(7007) << "Redirection from " << m_url << " to " << url << " REJECTED!";
-       q->setError( ERR_ACCESS_DENIED );
-       q->setErrorText( url.pathOrUrl() );
-       return;
-     }
      m_redirectionURL = url; // We'll remember that when the job finishes
      // Tell the user that we haven't finished yet
      emit q->redirection(q, m_redirectionURL);
@@ -946,11 +931,6 @@ void TransferJob::slotRedirection( const KUrl &url)
 {
     Q_D(TransferJob);
     kDebug(7007) << url;
-    if (!KAuthorized::authorizeUrlAction("redirect", d->m_url, url))
-    {
-        kWarning(7007) << "Redirection from " << d->m_url << " to " << url << " REJECTED!";
-        return;
-    }
 
     // Some websites keep redirecting to themselves where each redirection
     // acts as the stage in a state-machine. We define "endless redirections"
@@ -2280,11 +2260,6 @@ void ListJob::slotResult( KJob * job )
 void ListJobPrivate::slotRedirection( const KUrl & url )
 {
     Q_Q(ListJob);
-    if (!KAuthorized::authorizeUrlAction("redirect", m_url, url))
-    {
-        kWarning(7007) << "ListJob: Redirection from " << m_url << " to " << url << " REJECTED!";
-        return;
-    }
     m_redirectionURL = url; // We'll remember that when the job finishes
     emit q->redirection( q, m_redirectionURL );
 }
@@ -2339,26 +2314,9 @@ ListJob *KIO::listRecursive( const KUrl& url, JobFlags flags, bool includeHidden
     return ListJobPrivate::newJob(url, true, QString(), QString(), includeHidden, flags);
 }
 
-void ListJob::setUnrestricted(bool unrestricted)
-{
-    Q_D(ListJob);
-    if (unrestricted)
-        d->m_extraFlags |= JobPrivate::EF_ListJobUnrestricted;
-    else
-        d->m_extraFlags &= ~JobPrivate::EF_ListJobUnrestricted;
-}
-
 void ListJobPrivate::start(Slave *slave)
 {
     Q_Q(ListJob);
-    if (!KAuthorized::authorizeUrlAction("list", m_url, m_url) &&
-        !(m_extraFlags & EF_ListJobUnrestricted))
-    {
-        q->setError( ERR_ACCESS_DENIED );
-        q->setErrorText( m_url.url() );
-        QTimer::singleShot(0, q, SLOT(slotFinished()) );
-        return;
-    }
     q->connect( slave, SIGNAL(listEntries(KIO::UDSEntryList)),
              SLOT(slotListEntries(KIO::UDSEntryList)));
     q->connect( slave, SIGNAL(totalSize(KIO::filesize_t)),

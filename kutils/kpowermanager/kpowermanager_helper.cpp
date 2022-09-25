@@ -17,15 +17,16 @@
 */
 
 #include "kpowermanager_helper.h"
-#include "kauthhelpersupport.h"
 
 #include <QFile>
 #include <QDir>
 
-ActionReply KPowerManagerHelper::setgovernor(const QVariantMap &parameters)
+#include <kdebug.h>
+
+int KPowerManagerHelper::setgovernor(const QVariantMap &parameters)
 {
     if (!parameters.contains("governor")) {
-        return KAuth::ActionReply::HelperErrorReply;
+        return KAuthorization::HelperError;
     }
 
     const QByteArray governorbytes = parameters.value("governor").toByteArray();
@@ -36,30 +37,24 @@ ActionReply KPowerManagerHelper::setgovernor(const QVariantMap &parameters)
             continue;
         }
         if (!cpufile.open(QFile::WriteOnly)) {
-            KAuth::ActionReply errorreply(KAuth::ActionReply::HelperError);
-            errorreply.setErrorDescription(
+            kWarning() <<
                 QString::fromLatin1("Could not open: %1 (%2)")
                     .arg(cpufile.fileName())
                     .arg(cpufile.errorString()
-                )
-            );
-            errorreply.setErrorCode(1);
-            return errorreply;
+                );
+            return KAuthorization::HelperError;
         }
         if (cpufile.write(governorbytes) != governorbytes.size()) {
-            KAuth::ActionReply errorreply(KAuth::ActionReply::HelperError);
-            errorreply.setErrorDescription(
+            kWarning() <<
                 QString::fromLatin1("Could not write to: %1 (%2)")
                     .arg(cpufile.fileName())
                     .arg(cpufile.errorString()
-                )
-            );
-            errorreply.setErrorCode(2);
-            return errorreply;
+                );
+            return KAuthorization::HelperError;
         }
     }
 
-    return KAuth::ActionReply::SuccessReply;
+    return KAuthorization::NoError;
 }
 
-KDE4_AUTH_HELPER_MAIN("org.kde.kpowermanager.helper", KPowerManagerHelper)
+K_AUTH_MAIN("org.kde.kpowermanager.helper", KPowerManagerHelper)
