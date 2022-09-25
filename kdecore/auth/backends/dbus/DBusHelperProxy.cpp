@@ -20,14 +20,13 @@
 
 #include "DBusHelperProxy.h"
 
-#include <QtCore/qplugin.h>
 #include <QObject>
 #include <QMap>
-#include <QtDBus/QDBusMessage>
-#include <QtDBus/QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusConnection>
 #include <QDebug>
 #include <QTimer>
-#include <QtCore/qeventloop.h>
+#include <QEventLoop>
 
 #include <klocalizedstring.h>
 
@@ -400,5 +399,3 @@ void debugMessageReceived(int t, const QString &message)
 }
 
 } // namespace Auth
-
-Q_EXPORT_PLUGIN2(kauth_helper_backend, KAuth::DBusHelperProxy)

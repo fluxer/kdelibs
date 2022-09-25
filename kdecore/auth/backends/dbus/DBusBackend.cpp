@@ -19,11 +19,10 @@
 
 #include "DBusBackend.h"
 
-#include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusMessage>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusPendingCall>
-#include <QtCore/qstring.h>
+#include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QRegExp>
 

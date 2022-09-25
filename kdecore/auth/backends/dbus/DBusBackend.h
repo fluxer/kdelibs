@@ -22,7 +22,7 @@
 
 #include "AuthBackend.h"
 
-#include <QByteArray>
+#include <QString>
 
 namespace KAuth
 {
