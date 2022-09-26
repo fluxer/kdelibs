@@ -25,8 +25,6 @@ endif()
 
 set(KDE_DEFAULT_HOME ".katana" CACHE STRING "The default home directory" )
 
-set(KDE_NO_DEPRECATED TRUE CACHE BOOL "Whether deprecated functionality is desired")
-
 set(LIBRARY_TYPE SHARED)
 
 ################# now find all used packages #################
