@@ -962,7 +962,7 @@ int & KCmdLineArgs::qtArgc()
    return qt_argc;
 }
 
-static char** s_qt_argv;
+static char** s_qt_argv = nullptr;
 
 char **
 KCmdLineArgs::qtArgv()
@@ -970,7 +970,7 @@ KCmdLineArgs::qtArgv()
    if (!s->argsList)
       addStdCmdLineOptions(CmdLineArgKDE|CmdLineArgQt); // Lazy bastards!
 
-   if( s_qt_argv != NULL )
+   if( s_qt_argv != nullptr )
       return s_qt_argv;
 
    if (!(s->mStdargs & KCmdLineArgs::CmdLineArgQt))
