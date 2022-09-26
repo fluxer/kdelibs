@@ -32,14 +32,16 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include <QtDBus/QtDBus>
-#include <QtCore/QPointer>
-
 using namespace KIO;
 
+static KIO::filesize_t readFilesize_t(QDataStream &stream)
+{
+    KIO::filesize_t result;
+    stream >> result;
+    return result;
+}
 
 Q_GLOBAL_STATIC(UserNotificationHandler, globalUserNotificationHandler)
-
 
 SlaveInterface::SlaveInterface(SlaveInterfacePrivate &dd, QObject *parent)
     : QObject(parent), d_ptr(&dd)
@@ -66,13 +68,6 @@ Connection *SlaveInterface::connection() const
     return d->connection;
 }
 
-static KIO::filesize_t readFilesize_t(QDataStream &stream)
-{
-    KIO::filesize_t result;
-    stream >> result;
-    return result;
-}
-
 bool SlaveInterface::dispatch()
 {
     Q_D(SlaveInterface);
@@ -81,11 +76,11 @@ bool SlaveInterface::dispatch()
     int cmd;
     QByteArray data;
 
-    int ret = d->connection->read( &cmd, data );
+    int ret = d->connection->read(&cmd, data);
     if (ret == -1)
       return false;
 
-    return dispatch( cmd, data );
+    return dispatch(cmd, data);
 }
 
 void SlaveInterface::calcSpeed()
@@ -149,9 +144,10 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
     QDataStream stream(rawdata);
 
     switch(cmd) {
-        case MSG_DATA:
+        case MSG_DATA: {
             emit data(rawdata);
             break;
+        }
         case MSG_DATA_REQ: {
             emit dataReq();
             break;
@@ -239,7 +235,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
         }
         case INF_PROCESSED_SIZE: {
             KIO::filesize_t size = readFilesize_t(stream);
-            emit processedSize( size );
+            emit processedSize(size);
             d->filesize = size;
             break;
         }
