@@ -28,6 +28,43 @@
 /*!
     Authorization class
 
+    KAuthorization class can be used to implement helper program that does tasks which require
+    priviledge elevation (e.g. executing command that requires the current user to be root as
+    regular user).
+
+    Helper class looks like this:
+    @code
+    class MyHelper : public KAuthorization
+    {
+        Q_OBJECT
+    public Q_SLOTS:
+        int mymethod(const QVariantMap &args)
+        {
+            kDebug() << args.value("foo").toString();
+            return KAuthorization::NoError;
+        }
+    }
+
+    K_AUTH_MAIN("org.kde.myhelper", MyHelper)
+    @endcode
+
+    Note that the return type of the method is integer which means that @p errno and process exit
+    codes can be returned from it and used to present human-readable error string to the user if
+    the standard status codes (@p KAuthorizationStatus) are not sufficient.
+
+    The helper authorization policy files must be installed from the project build system via the
+    @p kde4_install_auth_helper_files function.
+
+    Helper method execution looks like this:
+    @code
+    QVariantMap myargs;
+    myargs.insert("foo", "bar");
+    int myresult = KAuthorization::execute("org.kde.myhelper", "mymethod", myargs);
+    if (myresult != KAuthorization::NoError) {
+        kWarning() << KAuthorization::errorString(myresult);
+    }
+    @endcode
+
     @since 4.22
 */
 class KDECORE_EXPORT KAuthorization : public QObject
@@ -35,6 +72,10 @@ class KDECORE_EXPORT KAuthorization : public QObject
     Q_OBJECT
 
 public:
+    /*!
+        @brief Standard status codes that @p KAuthorization::execute may return
+        @note custom status codes are supported and should be positive integers
+    */
     enum KAuthorizationStatus {
         NoError = 0,
         HelperError = -1,
@@ -45,10 +86,22 @@ public:
 
     KAuthorization(QObject *parent = nullptr);
 
+    /*!
+        @brief Returns @p true if the current user is allowed to execute @p helper methods,
+        @p false otherwise
+    */
     static bool isAuthorized(const QString &helper);
+    /*!
+        @brief Executes @p method of @p helper with arguments specified as @p arguments
+        synchronously and returns its status (usually one of @p KAuthorizationStatus)
+    */
     static int execute(const QString &helper, const QString &method, const QVariantMap &arguments);
+    /*!
+        @brief Returns string representation of the status code specified as @p status
+    */
     static QString errorString(const int status);
 
+    //! @internal
     static void helperMain(const char* const helper, KAuthorization *object);
 
 private:
