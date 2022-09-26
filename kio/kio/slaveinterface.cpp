@@ -71,7 +71,7 @@ Connection *SlaveInterface::connection() const
 bool SlaveInterface::dispatch()
 {
     Q_D(SlaveInterface);
-    Q_ASSERT( d->connection );
+    Q_ASSERT(d->connection);
 
     int cmd;
     QByteArray data;
@@ -166,6 +166,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             stream >> count;
 
             UDSEntryList list;
+            list.reserve(count);
             UDSEntry entry;
             for (uint i = 0; i < count; i++) {
                 stream >> entry;
