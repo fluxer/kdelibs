@@ -97,24 +97,6 @@ KPassivePopup::KPassivePopup( WId win )
     init( win );
 }
 
-#if 0 // These break macos and win32 where the definition of WId makes them ambiguous
-KPassivePopup::KPassivePopup( int popupStyle, QWidget *parent, Qt::WindowFlags f )
-    : QFrame( 0, f ? f : POPUP_FLAGS ),
-      d(new Private())
-{
-    init( parent ? parent->winId() : 0L );
-    setPopupStyle( popupStyle );
-}
-
-KPassivePopup::KPassivePopup( int popupStyle, WId win, Qt::WindowFlags f )
-    : QFrame( 0, f ? f : POPUP_FLAGS ),
-      d(new Private())
-{
-    init( win );
-    setPopupStyle( popupStyle );
-}
-#endif
-
 void KPassivePopup::init( WId window )
 {
     d->window = window;

@@ -104,20 +104,6 @@ public:
      */
     explicit KPassivePopup( WId parent );
 
-#if 0 // These break macos and win32 where the definition of WId makes them ambiguous
-    /**
-     * Creates a popup for the specified widget.
-     * THIS WILL BE REMOVED, USE setPopupStyle().
-     */
-    explicit KPassivePopup( int popupStyle, QWidget *parent=0, Qt::WindowFlags f=0 ) KDE_DEPRECATED;
-
-    /**
-     * Creates a popup for the specified window.
-     * THIS WILL BE REMOVED, USE setPopupStyle().
-     */
-    KPassivePopup( int popupStyle, WId parent, Qt::WindowFlags f=0 ) KDE_DEPRECATED;
-#endif
-
     /**
      * Cleans up.
      */
