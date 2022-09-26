@@ -25,7 +25,7 @@
 #define KCONFIG_P_H
 
 #include "kconfigdata.h"
-#include <kglobal.h>
+#include "kglobal.h"
 #include "kconfigini_p.h"
 #include "kconfiggroup.h"
 #include "kcomponentdata.h"

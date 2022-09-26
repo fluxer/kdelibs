@@ -62,13 +62,6 @@ class KCleanUpGlobalStatic
         inline ~KCleanUpGlobalStatic() { func(); }
 };
 
-/**
- * @internal
- *
- * Make the struct of the K_GLOBAL_STATIC anonymous.
- */
-#define K_GLOBAL_STATIC_STRUCT_NAME(NAME)
-
 /// @endcond
 
 /**
@@ -245,7 +238,7 @@ class KCleanUpGlobalStatic
 #define K_GLOBAL_STATIC_WITH_ARGS(TYPE, NAME, ARGS)                            \
 static QAtomicPointer<TYPE > _k_static_##NAME (0);                             \
 static bool _k_static_##NAME##_destroyed;                                      \
-static struct K_GLOBAL_STATIC_STRUCT_NAME(NAME)                                \
+static struct                                                                  \
 {                                                                              \
     inline bool isDestroyed() const                                            \
     {                                                                          \
