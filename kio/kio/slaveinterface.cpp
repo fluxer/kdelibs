@@ -361,14 +361,10 @@ void SlaveInterface::messageBox( int type, const QString &text, const QString &c
     // TODO: Fix this in KIO::SlaveBase.
     if (buttonYes == i18n("&Details")) {
         data.insert(UserNotificationHandler::MSG_YES_BUTTON_ICON, QLatin1String("help-about"));
-    } else if (buttonYes == i18n("&Forever")) {
-        data.insert(UserNotificationHandler::MSG_YES_BUTTON_ICON, QLatin1String("flag-green"));
     }
 
     if (buttonNo == i18n("Co&ntinue")) {
         data.insert(UserNotificationHandler::MSG_NO_BUTTON_ICON, QLatin1String("arrow-right"));
-    } else if (buttonNo == i18n("&Current Session only")) {
-        data.insert(UserNotificationHandler::MSG_NO_BUTTON_ICON, QLatin1String("chronometer"));
     }
 
     globalUserNotificationHandler()->requestMessageBox(this, type, data);
