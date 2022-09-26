@@ -4,7 +4,7 @@
 #  SPEECHD_INCLUDE_DIR - the speech-dispatcher include directory
 #  SPEECHD_LIBRARIES - the libraries needed to use speech-dispatcher
 #
-# Copyright (c) 2020, Ivailo Monev, <xakepa10@gmail.com>
+# Copyright (c) 2020 Ivailo Monev <xakepa10@gmail.com>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
