@@ -80,10 +80,6 @@ IdleSlave::IdleSlave(QObject *parent)
    mOnHold = false;
 }
 
-template<int T> struct PIDType { typedef pid_t PID_t; } ;
-template<> struct PIDType<2> { typedef qint16 PID_t; } ;
-template<> struct PIDType<4> { typedef qint32 PID_t; } ;
-
 void
 IdleSlave::gotInput()
 {
@@ -107,14 +103,12 @@ IdleSlave::gotInput()
    else
    {
       QDataStream stream( data );
-      PIDType<sizeof(pid_t)>::PID_t stream_pid;
-      pid_t pid;
+      qint64 pid;
       QByteArray protocol;
       QString host;
       qint8 b;
-      stream >> stream_pid >> protocol >> host >> b;
-      pid = stream_pid;
-// Overload with (bool) onHold, (KUrl) url.
+      stream >> pid >> protocol >> host >> b;
+      // Overload with (bool) onHold, (KUrl) url.
       if (!stream.atEnd())
       {
          KUrl url;
@@ -123,7 +117,7 @@ IdleSlave::gotInput()
          mUrl = url;
       }
 
-      mPid = pid;
+      mPid = static_cast<pid_t>(pid);
       mConnected = (b != 0);
       mProtocol = QString::fromLatin1(protocol);
       mHost = host;
@@ -595,11 +589,10 @@ KLauncher::requestDone(KLaunchRequest *request)
       if ( requestResult.dbusName.isNull() ) // null strings can't be sent
           requestResult.dbusName.clear();
       Q_ASSERT( !requestResult.error.isNull() );
-      PIDType<sizeof(pid_t)>::PID_t stream_pid = requestResult.pid;
       QDBusConnection::sessionBus().send(request->transaction.createReply(QVariantList() << requestResult.result
                                      << requestResult.dbusName
                                      << requestResult.error
-                                     << stream_pid));
+                                     << static_cast<qint64>(requestResult.pid)));
    }
 #ifdef KLAUNCHER_VERBOSE_OUTPUT
    kDebug(7016) << "removing done request" << request->name << "PID" << request->pid;
