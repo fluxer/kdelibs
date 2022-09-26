@@ -125,7 +125,6 @@ set(kdecore_LIB_SRCS
     date/ktzfiletimezone.cpp
     io/kar.cpp
     io/karchive.cpp
-    io/kautosavefile.cpp
     io/kdebug.cpp
     io/kdirwatch.cpp
     io/kfilesystemtype_p.cpp
@@ -303,7 +302,6 @@ install(
     date/ktzfiletimezone.h
     io/kar.h
     io/karchive.h
-    io/kautosavefile.h
     io/kdebug.h
     io/kdirwatch.h
     io/kmessage.h

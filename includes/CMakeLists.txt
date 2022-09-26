@@ -21,7 +21,6 @@ install(
     KAuthorization
     KAutoMount
     KAutoUnmount
-    KAutoSaveFile
     KAutostart
     KBookmark
     KBookmarkAction
