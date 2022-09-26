@@ -37,7 +37,6 @@
 #include <QtCore/QDir>
 
 #include "kglobal.h"
-#include "krandom.h"
 #include "kcomponentdata.h"
 #include "kstandarddirs.h"
 #include <kdebug.h>
@@ -67,8 +66,6 @@ KTempDir::KTempDir(const QString &directoryPrefix, int mode) : d(new Private)
 
 bool KTempDir::create(const QString &directoryPrefix, int mode)
 {
-   (void) KRandom::random();
-
    QByteArray nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
    char *realName;
    if((realName=mkdtemp(nme.data())) == 0)
@@ -76,7 +73,7 @@ bool KTempDir::create(const QString &directoryPrefix, int mode)
        // Recreate it for the warning, mkdtemps emptied it
        nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
        kWarning(180) << "KTempDir: Error trying to create " << nme.data()
-		      << ": " << ::strerror(errno) << endl;
+                     << ": " << ::strerror(errno) << endl;
        d->error = errno;
        d->tmpName.clear();
        return false;
@@ -85,8 +82,7 @@ bool KTempDir::create(const QString &directoryPrefix, int mode)
    // got a return value != 0
    QByteArray realNameStr(realName);
    d->tmpName = QFile::decodeName(realNameStr)+QLatin1Char('/');
-   kDebug(180) << "KTempDir: Temporary directory created :" << d->tmpName
-	        << endl;
+   kDebug(180) << "KTempDir: Temporary directory created :" << d->tmpName << endl;
 
    mode_t umsk = KGlobal::umask();
    if(chmod(nme, mode&(~umsk)) < 0) {
