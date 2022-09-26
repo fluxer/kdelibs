@@ -179,9 +179,6 @@ void KServicePrivate::init( const KDesktopFile *config, KService* q )
     entryMap.remove(QLatin1String("Comment"));
     m_strGenName = config->readGenericName();
     entryMap.remove(QLatin1String("GenericName"));
-    QString _untranslatedGenericName = desktopGroup.readEntryUntranslated( "GenericName" );
-    if (!_untranslatedGenericName.isEmpty())
-        entryMap.insert(QLatin1String("UntranslatedGenericName"), _untranslatedGenericName);
 
     m_lstKeywords = desktopGroup.readXdgListEntry("Keywords", QStringList());
     entryMap.remove(QLatin1String("Keywords"));
@@ -682,11 +679,6 @@ bool KService::noDisplay() const {
         return true;
 
     return false;
-}
-
-QString KService::untranslatedGenericName() const {
-    QVariant v = property(QString::fromLatin1("UntranslatedGenericName"), QVariant::String);
-    return v.isValid() ? v.toString() : QString();
 }
 
 QString KService::parentApp() const {
