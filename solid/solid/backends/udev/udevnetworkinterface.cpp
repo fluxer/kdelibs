@@ -113,7 +113,7 @@ QString NetworkInterface::hwAddress() const
             if (addrFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
                 QByteArray addr = addrFile.readAll().trimmed();
                 if (!addr.isEmpty()) {
-                    return QString::fromLatin1(addr);
+                    return QString::fromLatin1(addr.constData(), addr.size());
                 }
             }
         }
