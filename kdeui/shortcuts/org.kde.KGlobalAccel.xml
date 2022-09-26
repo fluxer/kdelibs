@@ -56,9 +56,6 @@
     <method name="doRegister">
       <arg name="actionId" type="as" direction="in"/>
     </method>
-    <method name="unRegister">
-      <arg name="actionId" type="as" direction="in"/>
-    </method>
     <method name="activateGlobalShortcutContext">
       <arg name="component" type="s" direction="in"/>
       <arg name="context" type="s" direction="in"/>
@@ -72,6 +69,11 @@
       <arg type="b" direction="out"/>
       <arg name="key" type="i" direction="in"/>
       <arg name="component" type="s" direction="in"/>
+    </method>
+    <method name="unregister">
+      <arg type="b" direction="out"/>
+      <arg name="componentUnique" type="s" direction="in"/>
+      <arg name="shortcutUnique" type="s" direction="in"/>
     </method>
   </interface>
 </node>
