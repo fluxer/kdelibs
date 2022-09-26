@@ -126,8 +126,6 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
     Q_D(SlaveInterface);
     //kDebug(7007) << "dispatch " << cmd;
 
-    QDataStream stream(rawdata);
-
     switch(cmd) {
         case MSG_DATA: {
             emit data(rawdata);
@@ -142,22 +140,23 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case MSG_FINISHED: {
-            //kDebug(7007) << "Finished [this = " << this << "]";
+            // kDebug(7007) << "Finished [this = " << this << "]";
             d->offset = 0;
             d->speed_timer.stop();
             emit finished();
             break;
         }
         case MSG_STAT_ENTRY: {
+            QDataStream stream(rawdata);
             UDSEntry entry;
             stream >> entry;
             emit statEntry(entry);
             break;
         }
         case MSG_LIST_ENTRIES: {
+            QDataStream stream(rawdata);
             quint32 count;
             stream >> count;
-
             UDSEntryList list;
             list.reserve(count);
             UDSEntry entry;
@@ -169,6 +168,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case MSG_RESUME: { // From the put job
+            QDataStream stream(rawdata);
             stream >> d->offset;
             emit canResume(d->offset);
             break;
@@ -179,6 +179,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case MSG_ERROR: {
+            QDataStream stream(rawdata);
             qint32 i;
             QString str;
             stream >> i >> str;
@@ -187,6 +188,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case MSG_SLAVE_STATUS: {
+            QDataStream stream(rawdata);
             qint64 pid;
             QByteArray protocol;
             QString str;
@@ -200,12 +202,14 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case MSG_WRITTEN: {
+            QDataStream stream(rawdata);
             KIO::filesize_t size;
             stream >> size;
             emit written(size);
             break;
         }
         case INF_TOTAL_SIZE: {
+            QDataStream stream(rawdata);
             KIO::filesize_t size;
             stream >> size;
             gettimeofday(&d->start_time, 0);
@@ -220,17 +224,20 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case INF_PROCESSED_SIZE: {
+            QDataStream stream(rawdata);
             stream >> d->filesize;
             emit processedSize(d->filesize);
             break;
         }
         case INF_POSITION: {
+            QDataStream stream(rawdata);
             KIO::filesize_t pos;
             stream >> pos;
             emit position(pos);
             break;
         }
         case INF_SPEED: {
+            QDataStream stream(rawdata);
             quint32 ul;
             stream >> ul;
             d->slave_calcs_speed = true;
@@ -239,12 +246,14 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case INF_REDIRECTION: {
+            QDataStream stream(rawdata);
             KUrl url;
             stream >> url;
             emit redirection(url);
             break;
         }
         case INF_MIME_TYPE: {
+            QDataStream stream(rawdata);
             QString str;
             stream >> str;
             emit mimeType(str);
@@ -253,6 +262,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case INF_WARNING: {
+            QDataStream stream(rawdata);
             QString str;
             stream >> str;
             emit warning(str);
@@ -260,6 +270,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
         }
         case INF_MESSAGEBOX: {
             kDebug(7007) << "needs a msg box";
+            QDataStream stream(rawdata);
             QString text, caption, buttonYes, buttonNo, dontAskAgainName;
             int type;
             stream >> type >> text >> caption >> buttonYes >> buttonNo;
@@ -272,12 +283,14 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case INF_INFOMESSAGE: {
+            QDataStream stream(rawdata);
             QString msg;
             stream >> msg;
             emit infoMessage(msg);
             break;
         }
         case INF_META_DATA: {
+            QDataStream stream(rawdata);
             MetaData m;
             stream >> m;
             emit metaData(m);
