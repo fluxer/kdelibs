@@ -30,12 +30,12 @@
 #ifndef KLINEEDIT_H
 #define KLINEEDIT_H
 
-#include <QtGui/QLineEdit>
+#include <QLineEdit>
+#include <QAction>
+#include <QMenu>
 
 #include <kcompletion.h>
 
-#include <QAction>
-#include <QMenu>
 class KCompletionBox;
 class KUrl;
 class KLineEditPrivate;

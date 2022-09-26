@@ -152,7 +152,7 @@ public:
      * special one, if you used the special constructor.
      *
      * It is provided so that you can e.g. set an own completion object
-     * (e.g. KShellCompletion) into it.
+     * into it.
      */
     KLineEdit * lineEdit() const;
 

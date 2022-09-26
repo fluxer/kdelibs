@@ -58,7 +58,6 @@ set(kiocore_STAT_SRCS
     kio/kprotocolmanager.cpp
     kio/kremoteencoding.cpp
     kio/krun.cpp
-    kio/kshellcompletion.cpp
     kio/kurifilter.cpp
     kio/kurlcompletion.cpp
     kio/netaccess.cpp
@@ -234,7 +233,6 @@ install(
     kio/kprotocolmanager.h
     kio/kremoteencoding.h
     kio/krun.h
-    kio/kshellcompletion.h
     kio/kurifilter.h
     kio/kurlcompletion.h
     kfile/kabstractfilemodule.h
