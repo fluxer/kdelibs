@@ -171,7 +171,7 @@ protected:
     ////////////////
 
     virtual bool dispatch();
-    virtual bool dispatch( int _cmd, const QByteArray &data );
+    virtual bool dispatch( int cmd, const QByteArray &data );
 
     void messageBox( int type, const QString &text, const QString &caption,
                      const QString &buttonYes, const QString &buttonNo );
