@@ -34,13 +34,6 @@
 
 using namespace KIO;
 
-static KIO::filesize_t readFilesize_t(QDataStream &stream)
-{
-    KIO::filesize_t result;
-    stream >> result;
-    return result;
-}
-
 Q_GLOBAL_STATIC(UserNotificationHandler, globalUserNotificationHandler)
 
 SlaveInterface::SlaveInterface(SlaveInterfacePrivate &dd, QObject *parent)
@@ -176,7 +169,7 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case MSG_RESUME: { // From the put job
-            d->offset = readFilesize_t(stream);
+            stream >> d->offset;
             emit canResume(d->offset);
             break;
         }
@@ -207,12 +200,14 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case MSG_WRITTEN: {
-            KIO::filesize_t size = readFilesize_t(stream);
+            KIO::filesize_t size;
+            stream >> size;
             emit written(size);
             break;
         }
         case INF_TOTAL_SIZE: {
-            KIO::filesize_t size = readFilesize_t(stream);
+            KIO::filesize_t size;
+            stream >> size;
             gettimeofday(&d->start_time, 0);
             d->last_time = 0;
             d->filesize = d->offset;
@@ -225,13 +220,13 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             break;
         }
         case INF_PROCESSED_SIZE: {
-            KIO::filesize_t size = readFilesize_t(stream);
-            emit processedSize(size);
-            d->filesize = size;
+            stream >> d->filesize;
+            emit processedSize(d->filesize);
             break;
         }
         case INF_POSITION: {
-            KIO::filesize_t pos = readFilesize_t(stream);
+            KIO::filesize_t pos;
+            stream >> pos;
             emit position(pos);
             break;
         }
