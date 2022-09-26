@@ -26,7 +26,6 @@
 
 namespace KIO {
     class Job;
-    class CopyJob;
 
   /**
    * Pastes the content of the clipboard to the given destination URL.
@@ -38,43 +37,8 @@ namespace KIO {
    * @param widget parent widget to use for dialogs
    * @param move true to move the data, false to copy -- now ignored and handled automatically
    * @return the job that handles the operation
-   * @see pasteData()
    */
-  KIO_EXPORT Job *pasteClipboard( const KUrl& destURL, QWidget* widget, bool move = false );
-
-  /**
-   * Pastes the given @p data to the given destination URL.
-   * NOTE: This method is blocking (uses NetAccess for saving the data).
-   * Please consider using pasteDataAsync instead.
-   *
-   * @param destURL the URL of the directory where the data will be pasted.
-   * The filename to use in that directory is prompted by this method.
-   * @param data the data to copy
-   * @param widget parent widget to use for dialogs
-   * @see pasteClipboard()
-   *
-   * This method is a candidate for disappearing in KDE5, email faure at kde.org if you
-   * are using it in your application, then I'll reconsider.
-   */
-  KIO_EXPORT void pasteData( const KUrl& destURL, const QByteArray& data, QWidget* widget );
-
-
-  /**
-   * Pastes the given @p data to the given destination URL.
-   * Note that this method requires the caller to have chosen the QByteArray
-   * to paste before hand, unlike pasteClipboard and pasteMimeSource.
-   *
-   * @param destURL the URL of the directory where the data will be pasted.
-   * The filename to use in that directory is prompted by this method.
-   * @param data the data to copy
-   * @param dialogText the text to show in the dialog
-   * @see pasteClipboard()
-   *
-   * This method is a candidate for disappearing in KDE5, email faure at kde.org if you
-   * are using it in your application, then I'll reconsider.
-   */
-  KIO_EXPORT CopyJob *pasteDataAsync( const KUrl& destURL, const QByteArray& data, QWidget *widget, const QString& dialogText = QString() );
-
+  KIO_EXPORT Job *pasteClipboard(const KUrl& destURL, QWidget* widget, bool move = false);
 
   /**
    * Save the given mime @p data to the given destination URL
@@ -94,17 +58,6 @@ namespace KIO {
    */
   KIO_EXPORT Job* pasteMimeData(const QMimeData* data, const KUrl& destUrl,
                                 const QString& dialogText, QWidget* widget);
-
-  /**
-   * @deprecated because it returns a CopyJob*, and this is better implemented
-   * without a copy job. Use pasteMimeData instead.
-   * Note that you'll have to tell the user in case of an error (no data to paste),
-   * while pasteMimeSource did that.
-   */
-  KIO_DEPRECATED_EXPORT CopyJob* pasteMimeSource( const QMimeData* data, const KUrl& destURL,
-                                       const QString& dialogText, QWidget* widget,
-                                       bool clipboard = false );
-
 
   /**
    * Returns true if pasteMimeSource finds any interesting format in @p data.
