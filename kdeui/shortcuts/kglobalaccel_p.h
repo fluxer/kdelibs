@@ -55,7 +55,7 @@ public:
     ///Register the action in this class and in the KDED module
     void doRegister(KAction *action);   //"register" is a C keyword :p
     ///cf. the RemoveAction enum
-    void remove (KAction *action, Removal r);
+    void remove(KAction *action, Removal r);
 
     //"private" helpers
     QString componentUniqueForAction(const KAction *action);
