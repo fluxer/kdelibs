@@ -330,20 +330,20 @@ void SlaveInterface::sendMessageBoxAnswer(int result)
         d->connection->resume();
     }
     QByteArray packedArgs;
-    QDataStream stream( &packedArgs, QIODevice::WriteOnly );
+    QDataStream stream(&packedArgs, QIODevice::WriteOnly);
     stream << result;
     d->connection->sendnow(CMD_MESSAGEBOXANSWER, packedArgs);
     kDebug(7007) << "message box answer" << result;
 }
 
-void SlaveInterface::messageBox( int type, const QString &text, const QString &_caption,
-                                 const QString &buttonYes, const QString &buttonNo )
+void SlaveInterface::messageBox(int type, const QString &text, const QString &caption,
+                                const QString &buttonYes, const QString &buttonNo)
 {
-    messageBox( type, text, _caption, buttonYes, buttonNo, QString() );
+    messageBox(type, text, caption, buttonYes, buttonNo, QString());
 }
 
-void SlaveInterface::messageBox( int type, const QString &text, const QString &caption,
-                                 const QString &buttonYes, const QString &buttonNo, const QString &dontAskAgainName )
+void SlaveInterface::messageBox(int type, const QString &text, const QString &caption,
+                                const QString &buttonYes, const QString &buttonNo, const QString &dontAskAgainName)
 {
     Q_D(SlaveInterface);
 
@@ -371,7 +371,7 @@ void SlaveInterface::messageBox( int type, const QString &text, const QString &c
     globalUserNotificationHandler()->requestMessageBox(this, type, data);
 }
 
-void SlaveInterface::setWindow (QWidget* window)
+void SlaveInterface::setWindow(QWidget* window)
 {
     Q_D(SlaveInterface);
     d->parentWindow = window;

@@ -129,7 +129,6 @@ public:
 
     struct timeval last_tv;
     KIO::filesize_t totalSize;
-    KIO::filesize_t sentListEntries;
     KRemoteEncoding *remotefile;
     time_t timeout;
     enum { Idle, InsideMethod, FinishedCalled, ErrorCalled } m_state;
@@ -262,9 +261,7 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     d->wasKilled=false;
     d->last_tv.tv_sec = 0;
     d->last_tv.tv_usec = 0;
-//    d->processed_size = 0;
     d->totalSize=0;
-    d->sentListEntries=0;
     d->timeout = 0;
     connectSlave(QFile::decodeName(app_socket));
 
@@ -457,7 +454,6 @@ void SlaveBase::error( int _errid, const QString &_text )
 
     send( MSG_ERROR, data );
     //reset
-    d->sentListEntries=0;
     d->totalSize=0;
     d->inOpenLoop=false;
 }
@@ -484,7 +480,6 @@ void SlaveBase::finished()
     send( MSG_FINISHED );
 
     // reset
-    d->sentListEntries=0;
     d->totalSize=0;
     d->inOpenLoop=false;
 }
@@ -516,7 +511,6 @@ void SlaveBase::totalSize( KIO::filesize_t _bytes )
 
     //this one is usually called before the first item is listed in listDir()
     d->totalSize=_bytes;
-    d->sentListEntries=0;
 }
 
 void SlaveBase::processedSize( KIO::filesize_t _bytes )
@@ -550,7 +544,6 @@ void SlaveBase::processedSize( KIO::filesize_t _bytes )
             d->last_tv.tv_usec = tv.tv_usec;
         }
     }
-//    d->processed_size = _bytes;
 }
 
 void SlaveBase::written( KIO::filesize_t _bytes )
@@ -691,7 +684,6 @@ void SlaveBase::listEntries( const UDSEntryList& list )
     for (; it != end; ++it)
       stream << *it;
     send( MSG_LIST_ENTRIES, data);
-    d->sentListEntries+=(uint)list.count();
 }
 
 static void sigsegv_handler(int sig)
