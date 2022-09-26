@@ -215,11 +215,7 @@ void KAuthorization::helperMain(const char* const helper, KAuthorization *object
     }
 
     // in case the process executing the helper crashes
-    QTimer *quittimer = new QTimer();
-    quittimer->setInterval(30000);
-    quittimer->start();
-
-    QObject::connect(quittimer, SIGNAL(timeout()), qApp, SLOT(quit()));
+    QTimer::singleShot(30000, qApp, SLOT(quit()));
 }
 
 #include "kauthorization.moc"
