@@ -20,6 +20,7 @@
 #include "kdirmodel.h"
 #include "kdirlister.h"
 #include "kfileitem.h"
+#include "kuiserver_interface.h"
 #include <kdatetime.h>
 #include <kicon.h>
 #include <klocale.h>
@@ -27,7 +28,6 @@
 #include <kio/copyjob.h>
 #include <kio/fileundomanager.h>
 #include <kio/jobuidelegate.h>
-#include <kio/joburlcache_p.h>
 #include <kurl.h>
 #include <kdebug.h>
 #include <QMimeData>
@@ -35,12 +35,18 @@
 #include <QFileInfo>
 #include <QBitArray>
 #include <QDir>
+#include <QApplication>
 
 #include <sys/types.h>
 #include <dirent.h>
 
 class KDirModelNode;
 class KDirModelDirNode;
+
+K_GLOBAL_STATIC_WITH_ARGS(
+    org::kde::kuiserver, globalJobViewServer,
+    ("org.kde.kuiserver", "/JobViewServer", QDBusConnection::sessionBus(), qApp)
+);
 
 static KUrl cleanupUrl(const KUrl& url) {
     KUrl u = url;
@@ -836,11 +842,14 @@ void KDirModel::requestSequenceIcon(const QModelIndex& index, int sequenceIndex)
 
 void KDirModel::setJobTransfersVisible(bool value)
 {
-    if(value) {
+    if (value) {
         d->m_jobTransfersVisible = true;
-        connect(&JobUrlCache::instance(), SIGNAL(jobUrlsChanged(QStringList)), this, SLOT(_k_slotJobUrlsChanged(QStringList)), Qt::UniqueConnection);
-
-        JobUrlCache::instance().requestJobUrlsChanged();
+        connect(
+            globalJobViewServer, SIGNAL(jobUrlsChanged(QStringList)),
+            this, SLOT(_k_slotJobUrlsChanged(QStringList)),
+            Qt::UniqueConnection
+        );
+        globalJobViewServer->emitJobUrlsChanged();
     } else {
         disconnect(this, SLOT(_k_slotJobUrlsChanged(QStringList)));
     }

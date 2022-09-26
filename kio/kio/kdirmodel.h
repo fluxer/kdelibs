@@ -25,7 +25,6 @@
 
 class KDirLister;
 class KDirModelPrivate;
-class JobUrlCache;
 
 /**
  * @short A model for a KIO-based directory tree.

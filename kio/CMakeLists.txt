@@ -38,7 +38,6 @@ set(kiocore_STAT_SRCS
     kio/global.cpp
     kio/job.cpp
     kio/jobuidelegate.cpp
-    kio/joburlcache.cpp
     kio/kabstractfileitemactionplugin.cpp
     kio/kacl.cpp
     kio/kbuildsycocaprogressdialog.cpp
