@@ -446,7 +446,7 @@ KLockFile::LockResult KLockFile::lock(LockFlags options)
             break;
         }
 
-        ::usleep((KRandom::random() % 1000) + 200);
+        ::usleep(KRandom::randomMax(1000) + 200);
     }
     if (result == LockOK) {
         d->isLocked = true;

@@ -241,7 +241,6 @@ install(
     KProtocolManager
     KPushButton
     KRandom
-    KRandomSequence
     KRatingPainter
     KRatingWidget
     KRecentDocument

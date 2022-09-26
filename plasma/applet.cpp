@@ -63,6 +63,7 @@
 #include <kshortcut.h>
 #include <kwindowsystem.h>
 #include <kpushbutton.h>
+#include <krandom.h>
 
 #ifndef PLASMA_NO_KUTILS
 #include <kcmoduleinfo.h>
@@ -89,9 +90,6 @@
 #include "svg.h"
 #include "framesvg.h"
 #include "popupapplet.h"
-#include "private/applethandle_p.h"
-#include "private/extenderitem_p.h"
-#include "private/framesvg_p.h"
 #include "theme.h"
 #include "view.h"
 #include "widgets/iconwidget.h"
@@ -104,6 +102,9 @@
 #include "abstractdialogmanager.h"
 #include "pluginloader.h"
 
+#include "private/applethandle_p.h"
+#include "private/extenderitem_p.h"
+#include "private/framesvg_p.h"
 #include "private/associatedapplicationmanager_p.h"
 #include "private/containment_p.h"
 #include "private/extenderapplet_p.h"
@@ -957,8 +958,8 @@ void Applet::setBackgroundHints(const BackgroundHints hints)
             QSize overlaySize = d->background->elementSize("overlay");
 
             //position is in the boundaries overlaySize.width()*2, overlaySize.height()
-            d->background->d->overlayPos.rx() = - (overlaySize.width() /2) + (overlaySize.width() /4) * (qrand() % (4 + 1));
-            d->background->d->overlayPos.ry() = (- (overlaySize.height() /2) + (overlaySize.height() /4) * (qrand() % (4 + 1)))/2;
+            d->background->d->overlayPos.rx() = - (overlaySize.width() /2) + (overlaySize.width() /4) * KRandom::randomMax(4 + 1);
+            d->background->d->overlayPos.ry() = (- (overlaySize.height() /2) + (overlaySize.height() /4) * (KRandom::randomMax(4 + 1)))/2;
         }
     } else if (d->background) {
         qreal left, top, right, bottom;

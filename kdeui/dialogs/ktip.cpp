@@ -123,7 +123,7 @@ KTipDatabase::KTipDatabase( const QString &_tipFile )
   d->loadTips( tipFile );
 
   if ( !d->tips.isEmpty() )
-    d->currentTip = KRandom::random() % d->tips.count();
+    d->currentTip = KRandom::randomMax(d->tips.count());
 }
 
 KTipDatabase::KTipDatabase( const QStringList& tipsFiles )
@@ -137,7 +137,7 @@ KTipDatabase::KTipDatabase( const QStringList& tipsFiles )
   }
 
   if ( !d->tips.isEmpty() )
-    d->currentTip = KRandom::random() % d->tips.count();
+    d->currentTip = KRandom::randomMax(d->tips.count());
 }
 
 KTipDatabase::~KTipDatabase()
@@ -366,7 +366,7 @@ void KTipDialog::showMultiTip( QWidget *parent, const QStringList &tipFiles, boo
       QDateTime lastShown = configGroup.readEntry( "TipLastShown", QDateTime() );
 
       // Show tip roughly once a week
-      if ( lastShown.secsTo( QDateTime::currentDateTime() ) < (oneDay + (KRandom::random() % (10 * oneDay))) )
+      if ( lastShown.secsTo( QDateTime::currentDateTime() ) < (oneDay + (KRandom::randomMax(10 * oneDay))) )
         return;
     }
 

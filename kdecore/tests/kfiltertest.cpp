@@ -93,7 +93,7 @@ void KFilterTest::test_biggerWrites()
     data.reserve(10000);
     // Prepare test data
     for (int i = 0; i < 8170; ++i)
-        data.append((char)(KRandom::random() % 256));
+        data.append(static_cast<char>(KRandom::randomMax(256)));
     QCOMPARE(data.size(), 8170);
     // 8170 random bytes compress to 8194 bytes due to the gzip header/footer.
     // Now we can go one by one until we pass 8192.
@@ -107,7 +107,7 @@ void KFilterTest::test_biggerWrites()
         test_readall(outFile, QString::fromLatin1("application/x-gzip"), data);
 
 
-        data.append((char)(KRandom::random() % 256));
+        data.append(static_cast<char>(KRandom::randomMax(256)));
     }
 }
 

@@ -206,7 +206,6 @@ set(kdecore_LIB_SRCS
     util/kpluginloader.cpp
     util/kshell.cpp
     util/krandom.cpp
-    util/krandomsequence.cpp
     util/kunitconversion.cpp
     util/qtest_kde.cpp
 
@@ -356,7 +355,6 @@ install(
     util/kpluginloader.h
     util/kshell.h
     util/krandom.h
-    util/krandomsequence.h
     util/kunitconversion.h
     util/ksharedptr.h
     util/ksortablelist.h

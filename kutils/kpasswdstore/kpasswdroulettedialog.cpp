@@ -17,7 +17,7 @@
 */
 
 #include "kpasswdroulettedialog.h"
-#include "krandomsequence.h"
+#include "krandom.h"
 #include "klocale.h"
 #include "kdebug.h"
 
@@ -33,7 +33,6 @@ public:
     bool isvalid;
     QString validpasswd;
     QMap<QString, QString> passwdmap;
-    KRandomSequence krandomsequence;
     Ui::KPasswdRouletteDialogUI ui;
 };
 
@@ -98,7 +97,7 @@ void KPasswdRouletteDialog::addPasswd(const QString &label, const QString &passw
 {
     d->passwdmap.insert(label, passwd);
 
-    const int randomrange = d->krandomsequence.getLong(d->passwdmap.size());
+    const int randomrange = KRandom::randomMax(d->passwdmap.size());
     const QList<QString> labelslist = d->passwdmap.keys();
     const QString randomkey = labelslist.at(randomrange);
     d->validpasswd = d->passwdmap.value(randomkey);

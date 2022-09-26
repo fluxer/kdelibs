@@ -66,7 +66,6 @@ KDECORE_UNIT_TESTS(
 )
 
 KDECORE_EXECUTABLE_TESTS(
-    krandomsequencetest
     ktartest
     kziptest
     kdebugtest
