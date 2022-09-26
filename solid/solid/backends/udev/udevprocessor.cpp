@@ -53,9 +53,13 @@ int Processor::maxSpeed() const
     if (m_maxSpeed == -1) {
         QFile cpuMaxFreqFile(m_device->deviceName() + prefix() + "/cpufreq/cpuinfo_max_freq");
         if (cpuMaxFreqFile.open(QIODevice::ReadOnly)) {
-            const QString value(cpuMaxFreqFile.readAll().trimmed());
-            // cpuinfo_max_freq is in kHz
-            m_maxSpeed = static_cast<int>(value.toLongLong() / 1000);
+            qlonglong maxFreq = cpuMaxFreqFile.readAll().trimmed().toLongLong();
+            if (maxFreq > 0) {
+                // cpuinfo_max_freq is in kHz
+                m_maxSpeed = static_cast<int>(maxFreq / 1000);
+            } else {
+                m_maxSpeed = 0;
+            }
         }
     }
     return m_maxSpeed;
