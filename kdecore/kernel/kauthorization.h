@@ -74,7 +74,7 @@ class KDECORE_EXPORT KAuthorization : public QObject
 public:
     /*!
         @brief Standard status codes that @p KAuthorization::execute may return
-        @note custom status codes are supported and should be positive integers
+        @note Custom status codes are supported and should be positive integers
     */
     enum KAuthorizationStatus {
         NoError = 0,
