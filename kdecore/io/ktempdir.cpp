@@ -172,7 +172,7 @@ static bool rmtree(const QByteArray& name)
         }
         while ((ep = KDE_readdir(dp))) {
             //kDebug(180) << "CHECKING" << name << "/" << ep->d_name;
-            if (!qstrcmp(ep->d_name, "." ) || !qstrcmp(ep->d_name, "..")) {
+            if (qstrcmp(ep->d_name, "." ) == 0 || qstrcmp(ep->d_name, "..") == 0) {
                 continue;
             }
             QByteArray newName(name);
@@ -205,11 +205,11 @@ static bool rmtree(const QByteArray& name)
             return false;
         }
         //kDebug(180) << "RMDIR dir " << name;
-        return !::rmdir(name);
+        return (::rmdir(name) == 0);
     }
     // This is a non-directory file, so remove it
     //kDebug(180) << "KTempDir: unlinking file" << name;
-    return !::unlink(name);
+    return (::unlink(name) == 0);
 }
 
 bool KTempDir::removeDir(const QString &path)
