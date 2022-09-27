@@ -63,6 +63,7 @@ public:
     QString uniqueName() const;
 
 private:
+    friend class GlobalShortcut; // in kde-workspace/kglobalaccel/globalshortcut.*
     friend KDEUI_EXPORT const QDBusArgument &operator>> (
             const QDBusArgument &argument,
             KGlobalShortcutInfo &shortcut);
