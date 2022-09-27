@@ -137,8 +137,6 @@ endif()
 
 # now we are sure we have everything we need
 include(MacroOptionalFindPackage)
-include(CheckCXXCompilerFlag)
-include(CheckCXXSourceCompiles)
 # TODO: move to main CMakeLists.txt files at the same time CMP0000 is dealt with
 include(FeatureSummary)
 
@@ -337,9 +335,6 @@ set(INSTALL_TARGETS_DEFAULT_ARGS
 )
 
 ##############  add some more default search paths  ###############
-#
-# the KDE4_xxx_INSTALL_DIR variables are empty when building kdelibs itself
-# and otherwise point to the kde4 install dirs
 
 set(CMAKE_SYSTEM_INCLUDE_PATH
     ${CMAKE_SYSTEM_INCLUDE_PATH}
