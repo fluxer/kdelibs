@@ -21,7 +21,6 @@
 #cmakedefine HAVE_SETMNTENT 1
 #cmakedefine HAVE_STRTOLL 1
 #cmakedefine HAVE_GETGROUPLIST 1
-#cmakedefine HAVE_TTYNAME_R 1
 
 /* define if message translations are enabled */
 #cmakedefine ENABLE_NLS 1
