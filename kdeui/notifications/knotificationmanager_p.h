@@ -21,6 +21,7 @@
 #define KNOTIFICATIONMANAGER_H
 
 #include <knotification.h>
+#include "knotify_interface.h"
 
 #include <QPixmap>
 #include <QStringList>
@@ -40,7 +41,7 @@ public:
      * send the dbus call to the knotify server
      */
     bool notify(KNotification *n, const QPixmap& pix, const QStringList &action,
-                        const KNotification::ContextList& contexts, const QString &appname);
+                const KNotification::ContextList& contexts, const QString &appname);
 
     /**
      * send the close dcop call to the knotify server for the notification with the identifier @p id .
@@ -66,13 +67,14 @@ public:
     void reemit(KNotification *n, int id);
 
 private Q_SLOTS:
-    void notificationClosed( int id );
-    void notificationActivated( int id,  int action);
+    void notificationClosed(int id);
+    void notificationActivated(int id, int action);
 
 private:
-    struct Private;
-    Private * const d;
     KNotificationManager();
+
+    QHash<int , KNotification*> m_notifications;
+    org::kde::KNotify *m_knotify;
 };
 
 #endif // KNOTIFICATIONMANAGER_H
