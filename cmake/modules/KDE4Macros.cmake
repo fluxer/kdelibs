@@ -155,27 +155,13 @@ macro(KDE4_ADD_KCFG_FILES _sources )
     endforeach (_current_FILE)
 endmacro(KDE4_ADD_KCFG_FILES)
 
-#  KDE4_ADD_PLUGIN(NAME [WITH_PREFIX] FILE1 ... FILEN)
+#  KDE4_ADD_PLUGIN(NAME FILE1 ... FILEN)
 #    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
-#    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib",
-#    otherwise it won't.
+#    The resulting plugin will not have "lib" prefix.
 macro(KDE4_ADD_PLUGIN _target_NAME)
-    set(_plugin_prefix)
-    set(_plugin_srcs)
+    add_library(${_target_NAME} MODULE ${ARGN})
 
-    foreach(arg ${ARGN})
-        if(arg STREQUAL "WITH_PREFIX")
-            set(_plugin_prefix TRUE)
-        else()
-            list(APPEND _plugin_srcs ${arg})
-        endif()
-    endforeach()
-
-    add_library(${_target_NAME} MODULE ${_plugin_srcs})
-
-    if(NOT "${_plugin_prefix}")
-        set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
-    endif()
+    set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
 endmacro(KDE4_ADD_PLUGIN)
 
 #  KDE4_ADD_TEST(TESTNAME FILE1 ... FILEN)
