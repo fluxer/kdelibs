@@ -29,8 +29,6 @@
 #include <kconfig.h>
 #include <klocale.h>
 
-typedef QPair<QString,QString> Context;
-
 static const QByteArray imageFormat = QImageWriter::defaultImageFormat();
 
 KNotificationManager * KNotificationManager::self()
@@ -110,7 +108,7 @@ bool KNotificationManager::notify(KNotification* n, const QPixmap &pix,
     pix.save(&buffer, imageFormat);
 
     QVariantList contextList;
-    foreach (const Context& ctx, contexts) {
+    foreach (const KNotification::Context& ctx, contexts) {
         QVariantList vl;
         vl << ctx.first << ctx.second;
         contextList << vl;
@@ -151,7 +149,7 @@ void KNotificationManager::update(KNotification * n, int id)
 void KNotificationManager::reemit(KNotification * n, int id)
 {
     QVariantList contextList;
-    foreach (const Context& ctx, n->contexts()) {
+    foreach (const KNotification::Context& ctx, n->contexts()) {
         // kDebug(299) << "add context " << ctx.first << "-" << ctx.second;
         QVariantList vl;
         vl << ctx.first << ctx.second;
