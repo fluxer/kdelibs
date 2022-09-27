@@ -22,7 +22,6 @@
 
 #include <knotification.h>
 
-class KNotification;
 #include <QPixmap>
 #include <QStringList>
 
@@ -47,7 +46,7 @@ public:
      * send the close dcop call to the knotify server for the notification with the identifier @p id .
      * And remove the notification from the internal map
      * @param id the id of the notification
-	 * @param force if false, only close registered notification
+     * @param force if false, only close registered notification
      */
     void close(int id, bool force = false);
 
@@ -76,4 +75,4 @@ private:
     KNotificationManager();
 };
 
-#endif
+#endif // KNOTIFICATIONMANAGER_H
