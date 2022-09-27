@@ -56,7 +56,7 @@ public:
 
     ~KGlobalShortcutInfo();
 
-    KGlobalShortcutInfo& operator= (const KGlobalShortcutInfo& rhs);
+    KGlobalShortcutInfo& operator=(const KGlobalShortcutInfo& rhs);
 
     QString contextFriendlyName() const;
 

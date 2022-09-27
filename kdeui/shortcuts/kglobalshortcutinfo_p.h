@@ -25,8 +25,8 @@
 #include "kglobalshortcutinfo.h"
 
 class KGlobalShortcutInfoPrivate
-    {
-    public:
+{
+public:
     QString contextUniqueName;
     QString contextFriendlyName;
     QString componentUniqueName;
@@ -35,16 +35,10 @@ class KGlobalShortcutInfoPrivate
     QString friendlyName;
     QList<QKeySequence> keys;
     QList<QKeySequence> defaultKeys;
-    };
+};
 
-KDEUI_EXPORT QDBusArgument &operator<< (
-        QDBusArgument &argument,
-        const KGlobalShortcutInfo &shortcut);
-
-KDEUI_EXPORT const QDBusArgument &operator>> (
-        const QDBusArgument &argument,
-        KGlobalShortcutInfo &shortcut);
-
+KDEUI_EXPORT QDBusArgument &operator<<(QDBusArgument &argument, const KGlobalShortcutInfo &shortcut);
+KDEUI_EXPORT const QDBusArgument &operator>>(const QDBusArgument &argument, KGlobalShortcutInfo &shortcut);
 
 // these should be in kglobalaccel_interface.h. But this way it's easier to
 // regenerate that file.
