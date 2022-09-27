@@ -266,7 +266,7 @@ public:
 	 * @param widget is a widget where the notification reports to
 	 * @param flags is a bitmask of NotificationFlag
 	 */
-	explicit KNotification(const QString & eventId , QWidget *widget=0L, const NotificationFlags &flags=CloseOnTimeout);
+	explicit KNotification(const QString & eventId , QWidget *widget=0L, const NotificationFlags &flags = CloseOnTimeout);
 
 	/**
 	 * Create a new notification.
@@ -291,7 +291,7 @@ public:
 	// stay this way for now. The second argument CANNOT have a default
 	// argument. if someone needs a widget associated with the notification he
 	// should use setWidget after creating the object (or some xyz_cast magic)
-	explicit KNotification(const QString & eventId , const NotificationFlags &flags, QObject *parent = NULL );
+	explicit KNotification(const QString & eventId, const NotificationFlags &flags, QObject *parent = NULL);
 
 	~KNotification();
 
@@ -394,7 +394,7 @@ public:
 	 * @param context_key is the key of the context
 	 * @param context_value is the value of the context
 	 */
-	void addContext( const QString & context_key, const QString & context_value );
+	void addContext(const QString &context_key, const QString &context_value);
 
 	/**
 	 * @return the notification flags.
@@ -454,7 +454,7 @@ public Q_SLOTS:
 	 * @brief Activate the action specified action
 	 * If the action is zero, then the default action is activated
 	 */
-	void activate(unsigned int action=0);
+	void activate(unsigned int action = 0);
 
 	/**
 	 * Close the notification without activating it.
