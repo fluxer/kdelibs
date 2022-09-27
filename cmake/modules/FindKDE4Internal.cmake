@@ -79,9 +79,8 @@
 #
 # The following user adjustable options are provided:
 #
-#  KDE4_ADD_KCFG_FILES (SRCS_VAR [GENERATE_MOC] file1.kcfgc ... fileN.kcfgc)
+#  KDE4_ADD_KCFG_FILES (SRCS_VAR file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
-#    Use optional GENERATE_MOC to generate moc if you use signals in your kcfg files.
 #
 #  KDE4_ADD_WIDGET (SRCS_VAR file1.widgets ... fileN.widgets)
 #    Use this to add widget description files for the makekdewidgets code generator
