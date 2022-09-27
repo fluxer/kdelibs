@@ -26,12 +26,14 @@
 #include <QLabel>
 #include <QDir>
 
-KFileMetaDataProvider::KFileMetaDataProvider(QObject* parent)
-    : QObject(parent)
+static int subDirectoriesCount(const QString &path)
 {
+    QDir dir(path);
+    return dir.entryList(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::System).count();
 }
 
-KFileMetaDataProvider::~KFileMetaDataProvider()
+KFileMetaDataProvider::KFileMetaDataProvider(QObject* parent)
+    : QObject(parent)
 {
 }
 
@@ -120,12 +122,6 @@ QWidget* KFileMetaDataProvider::createValueWidget(const QString& metaDataUri,
 void KFileMetaDataProvider::slotLinkActivated(const QString& link)
 {
     emit urlActivated(KUrl(link));
-}
-
-int KFileMetaDataProvider::subDirectoriesCount(const QString& path)
-{
-    QDir dir(path);
-    return dir.entryList(QDir::AllEntries|QDir::NoDotAndDotDot|QDir::System).count();
 }
 
 #include "moc_kfilemetadataprovider_p.cpp"

@@ -38,7 +38,6 @@ class KFileMetaDataProvider : public QObject
 
 public:
     explicit KFileMetaDataProvider(QObject* parent = 0);
-    ~KFileMetaDataProvider();
 
     /**
      * Sets the items, where the meta data should be
@@ -88,11 +87,6 @@ private Q_SLOTS:
     void slotLinkActivated(const QString&);
 
 private:
-    /*!
-     * @return The number of subdirectories for the directory \a path.
-     */
-    static int subDirectoriesCount(const QString &path);
-
     QList<KFileItem> m_fileItems;
     KFileMetaInfoItemList m_data;
 };
