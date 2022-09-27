@@ -22,32 +22,13 @@ macro(KDE4_ADD_KCFG_FILES _sources )
         if(${_current_ARG} STREQUAL "GENERATE_MOC" )
             set(_kcfg_generatemoc TRUE)
         endif()
-
-        if(${_current_ARG} STREQUAL "USE_RELATIVE_PATH" )
-            set(_kcfg_relativepath TRUE)
-        endif()
     endforeach()
 
     foreach(_current_FILE ${ARGN})
-        if(NOT ${_current_FILE} STREQUAL "GENERATE_MOC" AND NOT ${_current_FILE} STREQUAL "USE_RELATIVE_PATH")
+        if(NOT ${_current_FILE} STREQUAL "GENERATE_MOC")
             get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
             get_filename_component(_abs_PATH ${_tmp_FILE} DIRECTORY)
-
-            if(_kcfg_relativepath) # Process relative path only if the option was set
-                # Get relative path
-                get_filename_component(_rel_PATH ${_current_FILE} DIRECTORY)
-
-                if(IS_ABSOLUTE ${_rel_PATH})
-                    # We got an absolute path
-                    set(_rel_PATH "")
-                endif()
-            endif()
-
             get_filename_component(_basename ${_tmp_FILE} NAME_WE)
-            # If we had a relative path and we're asked to use it, then change the basename accordingly
-            if(NOT ${_rel_PATH} STREQUAL "")
-                set(_basename ${_rel_PATH}/${_basename})
-            endif()
 
             file(READ ${_tmp_FILE} _contents)
             string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILENAME "${_contents}")
@@ -64,14 +45,14 @@ macro(KDE4_ADD_KCFG_FILES _sources )
             endif()
 
             # make sure the directory exist in the build directory
-            if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}")
-                file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH})
+            if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/")
+                file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/")
             endif()
 
             # the command for creating the source file from the kcfg file
             add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
                 COMMAND ${KDE4_KCFGC_EXECUTABLE}
-                ARGS ${_kcfg_FILE} ${_tmp_FILE} -d ${CMAKE_CURRENT_BINARY_DIR}/${_rel_PATH}
+                ARGS ${_kcfg_FILE} ${_tmp_FILE} -d "${CMAKE_CURRENT_BINARY_DIR}/"
                 MAIN_DEPENDENCY ${_tmp_FILE}
                 DEPENDS ${_kcfg_FILE}
             )
@@ -83,7 +64,7 @@ macro(KDE4_ADD_KCFG_FILES _sources )
             endif()
 
             list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
-        endif(NOT ${_current_FILE} STREQUAL "GENERATE_MOC" AND NOT ${_current_FILE} STREQUAL "USE_RELATIVE_PATH")
+        endif()
     endforeach (_current_FILE)
 endmacro(KDE4_ADD_KCFG_FILES)
 
