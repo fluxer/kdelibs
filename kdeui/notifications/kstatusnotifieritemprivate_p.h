@@ -88,8 +88,6 @@ public:
     KDbusImageVector iconToVector(const QIcon &icon);
     bool checkVisibility(QPoint pos, bool perform = true);
 
-    static const int s_protocolVersion;
-
     KStatusNotifierItem *q;
 
     KStatusNotifierItem::ItemCategory category;

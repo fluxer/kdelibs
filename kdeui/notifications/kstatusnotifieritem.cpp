@@ -646,7 +646,7 @@ bool KStatusNotifierItem::eventFilter(QObject *watched, QEvent *event)
 
 //KStatusNotifierItemPrivate
 
-const int KStatusNotifierItemPrivate::s_protocolVersion = 0;
+static const int s_protocolVersion = 0;
 
 KStatusNotifierItemPrivate::KStatusNotifierItemPrivate(KStatusNotifierItem *item)
     : q(item),
