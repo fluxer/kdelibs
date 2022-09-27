@@ -32,6 +32,7 @@
 #include "knotify_interface.h"
 
 typedef QHash<QString,QString> Dict;
+typedef QPair<QString,QString> Context;
 
 static const QByteArray imageFormat = QImageWriter::defaultImageFormat();
 
@@ -118,7 +119,6 @@ bool KNotificationManager::notify( KNotification* n, const QPixmap &pix,
     pix.save(&buffer, imageFormat);
 
     QVariantList contextList;
-    typedef QPair<QString,QString> Context;
     foreach (const Context& ctx, contexts) {
         QVariantList vl;
         vl << ctx.first << ctx.second;
@@ -159,7 +159,6 @@ void KNotificationManager::update(KNotification * n, int id)
 void KNotificationManager::reemit(KNotification * n, int id)
 {
     QVariantList contextList;
-    typedef QPair<QString,QString> Context;
     foreach (const Context& ctx, n->contexts())
     {
 //      kDebug(299) << "add context " << ctx.first << "-" << ctx.second;
