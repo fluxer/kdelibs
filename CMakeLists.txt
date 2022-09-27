@@ -31,7 +31,6 @@ set(LIBRARY_TYPE SHARED)
 
 find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
-include(MacroLibrary)
 include(GenerateExportHeader)
 
 if(UNIX AND Q_WS_X11)

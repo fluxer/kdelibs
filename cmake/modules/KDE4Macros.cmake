@@ -9,6 +9,7 @@
 # KDE4_INSTALL_AUTH_HELPER_FILES
 # KDE4_ADD_DBUS_SERVICE
 # KDE4_BOOL_TO_01
+# KDE4_OPTIONAL_ADD_SUBDIRECTORY
 
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
@@ -54,7 +55,7 @@ macro(_KDE4_ADD_ICON_INSTALL_RULE _install_PATH _group _orig_NAME _install_NAME 
     endif()
 endmacro(_KDE4_ADD_ICON_INSTALL_RULE)
 
-#  KDE4_INSTALL_ICONS ( path theme)
+#  KDE4_INSTALL_ICONS(PATH THEME)
 #    Installs all png and svgz files in the current directory to the icon
 #    directory given in path, in the subdirectory for the given icon theme.
 macro(KDE4_INSTALL_ICONS _defaultpath )
@@ -116,7 +117,7 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
     endforeach()
 endmacro(KDE4_INSTALL_ICONS)
 
-#  KDE4_ADD_KCFG_FILES (SRCS_VAR file1.kcfgc ... fileN.kcfgc)
+#  KDE4_ADD_KCFG_FILES(SRCS_VAR file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
 macro(KDE4_ADD_KCFG_FILES _sources )
     foreach(_current_FILE ${ARGN})
@@ -154,7 +155,7 @@ macro(KDE4_ADD_KCFG_FILES _sources )
     endforeach (_current_FILE)
 endmacro(KDE4_ADD_KCFG_FILES)
 
-#  KDE4_ADD_PLUGIN ( name [WITH_PREFIX] file1 ... fileN )
+#  KDE4_ADD_PLUGIN(NAME [WITH_PREFIX] FILE1 ... FILEN)
 #    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
 #    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib",
 #    otherwise it won't.
@@ -177,7 +178,7 @@ macro(KDE4_ADD_PLUGIN _target_NAME)
     endif()
 endmacro(KDE4_ADD_PLUGIN)
 
-#  KDE4_ADD_TEST (testname file1 ... fileN)
+#  KDE4_ADD_TEST(TESTNAME FILE1 ... FILEN)
 #    add a unit test, which is executed when running make test. The targets
 #    are build and executed only if the ENABLE_TESTING option is enabled.
 #    KDESRCDIR is set to the source directory of the test, this can be used
@@ -190,7 +191,7 @@ macro(KDE4_ADD_TEST _targetName)
     )
 endmacro(KDE4_ADD_TEST)
 
-#  KDE4_ADD_MANUAL_TEST (testname file1 ... fileN)
+#  KDE4_ADD_MANUAL_TEST(TESTNAME FILE1 ... FILEN)
 #    same as KDE_ADD_TEST() except that the test is not run on `make test`
 macro(KDE4_ADD_MANUAL_TEST _targetName)
     add_executable(${_targetName} ${ARGN})
@@ -206,7 +207,7 @@ macro(KDE4_ADD_MANUAL_TEST _targetName)
     )
 endmacro(KDE4_ADD_MANUAL_TEST)
 
-#  KDE4_ADD_WIDGET (SRCS_VAR file1.widgets ... fileN.widgets)
+#  KDE4_ADD_WIDGET(SRCS_VAR FILE1.widgets ... FILEN.widgets)
 #    Use this to add widget description files for the makekdewidgets code
 #    generator for Qt Designer plugins.
 macro(KDE4_ADD_WIDGET _output _sources)
@@ -232,7 +233,7 @@ macro(KDE4_ADD_WIDGET _output _sources)
     endforeach(_current_FILE)
 endmacro(KDE4_ADD_WIDGET)
 
-#  KDE4_INSTALL_AUTH_HELPER_FILES ( HELPER_TARGET HELPER_ID HELPER_USER )
+#  KDE4_INSTALL_AUTH_HELPER_FILES(HELPER_TARGET HELPER_ID HELPER_USER)
 #   This macro adds the needed files for an helper executable meant to be used
 #   by applications using KAuth. It accepts the helper target, the helper ID
 #   (the D-Bus name) and the user under which the helper will run on.
@@ -265,9 +266,8 @@ function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
     )
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
 
-#  KDE4_ADD_DBUS_SERVICE (file1 ... fileN)
-#    Use this to add D-Bus service activation file(s). The input file(s) must
-#    be ".service.in" suffixed
+#  KDE4_ADD_DBUS_SERVICE(FILE1.service.in ... FILEN.service.in)
+#    Use this to add D-Bus service activation file(s)
 macro(KDE4_ADD_DBUS_SERVICE _sources)
     foreach(_current_FILE ${_sources})
         get_filename_component(_input ${_current_FILE} ABSOLUTE)
@@ -294,3 +294,14 @@ macro(KDE4_BOOL_TO_01 _var _result)
         set(${_result} 0)
     endif()
 endmacro(KDE4_BOOL_TO_01)
+
+# KDE4_OPTIONAL_ADD_SUBDIRECTORY(DIR)
+#    If you use KDE4_OPTIONAL_ADD_SUBDIRECTORY() instead of ADD_SUBDIRECTORY()
+#    an option to skip the subdirectory will be added. Skipping the directory
+#    will be possbile via: cmake -DBUILD_<dir>=TRUE <srcdir>
+macro(KDE4_OPTIONAL_ADD_SUBDIRECTORY _dir)
+    option(BUILD_${_dir} "Build directory ${_dir}" TRUE)
+    if(BUILD_${_dir})
+        add_subdirectory(${_dir})
+    endif()
+endmacro(KDE4_OPTIONAL_ADD_SUBDIRECTORY)

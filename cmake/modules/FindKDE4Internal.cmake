@@ -136,10 +136,9 @@ if(NOT Katie_FOUND)
 endif()
 
 # now we are sure we have everything we need
-include(MacroLibrary)
+include(MacroOptionalFindPackage)
 include(CheckCXXCompilerFlag)
 include(CheckCXXSourceCompiles)
-# used to be included in MacroLogFeature which was included by MacroLibrary
 # TODO: move to main CMakeLists.txt files at the same time CMP0000 is dealt with
 include(FeatureSummary)
 
