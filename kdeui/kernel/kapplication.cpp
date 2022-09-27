@@ -843,49 +843,6 @@ void KApplication::quitOnSignal()
     KDE_signal(SIGINT, quit_handler);
 }
 
-
-QString KApplication::checkRecoverFile( const QString& pFilename,
-        bool& bRecover )
-{
-  QString aFilename;
-
-  if( QDir::isRelativePath(pFilename) )
-    {
-      kWarning(240) << "Relative filename passed to KApplication::tempSaveName";
-      aFilename = QFileInfo( QDir( QLatin1String(".") ), pFilename ).absoluteFilePath();
-    }
-  else
-    aFilename = pFilename;
-
-  QDir aAutosaveDir( QDir::homePath() + QLatin1String("/autosave/") );
-  if( !aAutosaveDir.exists() )
-    {
-      if( !aAutosaveDir.mkdir( aAutosaveDir.absolutePath() ) )
-        {
-          // Last chance: use temp dir
-          aAutosaveDir.setPath( KGlobal::dirs()->saveLocation("tmp") );
-        }
-    }
-
-  aFilename.replace( QLatin1String("/"), QLatin1String("\\!") )
-      .prepend( QLatin1Char('#') )
-      .append( QLatin1Char('#') )
-      .prepend( QLatin1Char('/') )
-      .prepend( aAutosaveDir.absolutePath() );
-
-  if( QFile( aFilename ).exists() )
-    {
-      bRecover = true;
-      return aFilename;
-    }
-  else
-    {
-      bRecover = false;
-      return pFilename;
-    }
-}
-
-
 void KApplication::setTopWidget( QWidget *topWidget )
 {
     if( !topWidget )

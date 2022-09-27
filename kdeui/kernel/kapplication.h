@@ -192,18 +192,6 @@ public:
   void setTopWidget( QWidget *topWidget );
 
   /**
-   * Check whether  an auto-save file exists for the document you want to
-   * open.
-   *
-   * @param pFilename The full path to the document you want to open.
-   * @param bRecover  This gets set to true if there was a recover
-   * file.
-   * @return The full path of the file to open.
-   */
-  static QString checkRecoverFile( const QString& pFilename, bool& bRecover );
-
-
-  /**
    *  Installs widget filter as global X11 event filter.
    *
    * The widget
