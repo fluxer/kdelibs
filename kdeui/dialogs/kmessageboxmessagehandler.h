@@ -22,10 +22,9 @@
 #include <kdeui_export.h>
 #include <kmessage.h>
 
-#include <QtCore/QObject>
-
+#include <QObject>
 #include <QWidget>
-class KMessageBoxMessageHandlerPrivate;
+
 /**
  * @brief This is a convience KMessageHandler that use KMessageBox.
  *
@@ -50,10 +49,6 @@ public:
      * @copydoc KMessageHandler::message
      */
     virtual void message(KMessage::MessageType messageType, const QString &text, const QString &caption);
-
-private:
-    KMessageBoxMessageHandlerPrivate * const d;
 };
 
-#endif
-// kate: space-indent on; indent-width 4; encoding utf-8; replace-tabs on;
+#endif // KDEUI_KMESSAGEBOXMESSAGEHANDLER_H

@@ -20,38 +20,16 @@
 
 #include <kmessagebox.h>
 
-class KMessageBoxMessageHandlerPrivate
-{
-    public:
-        KMessageBoxMessageHandlerPrivate(KMessageBoxMessageHandler *q)
-            : q(q)
-        {
-        }
-
-        void showMessageBox(KMessage::MessageType messageType, const QString &text, const QString &caption);
-        QWidget *parentWidget();
-
-        KMessageBoxMessageHandler *q;
-};
-
-
 KMessageBoxMessageHandler::KMessageBoxMessageHandler(QWidget *parent)
- : QObject(parent), d(new KMessageBoxMessageHandlerPrivate(this))
+    : QObject(parent)
 {
 }
 
 KMessageBoxMessageHandler::~KMessageBoxMessageHandler()
 {
-    delete d;
 }
 
 void KMessageBoxMessageHandler::message(KMessage::MessageType messageType, const QString &text, const QString &caption)
-{
-    d->showMessageBox(messageType, text, caption);
-}
-
-void KMessageBoxMessageHandlerPrivate::showMessageBox(KMessage::MessageType messageType,
-                                                      const QString &text, const QString &caption)
 {
     KMessageBox::DialogType dlgType;
 
@@ -71,13 +49,7 @@ void KMessageBoxMessageHandlerPrivate::showMessageBox(KMessage::MessageType mess
             break;
     }
 
-    KMessageBox::queuedMessageBox(parentWidget(), dlgType, text, caption);
-}
-
-QWidget *KMessageBoxMessageHandlerPrivate::parentWidget()
-{
-    return qobject_cast<QWidget*>(q->parent());
+    KMessageBox::queuedMessageBox(qobject_cast<QWidget*>(parent()), dlgType, text, caption);
 }
 
 #include "moc_kmessageboxmessagehandler.cpp"
-// kate: space-indent on; indent-width 4; encoding utf-8; replace-tabs on;
