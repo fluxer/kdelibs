@@ -22,9 +22,6 @@
 #cmakedefine HAVE_STRTOLL 1
 #cmakedefine HAVE_GETGROUPLIST 1
 
-/* define if message translations are enabled */
-#cmakedefine ENABLE_NLS 1
-
 /* Define to 1 if you have the Xtest extension */
 #cmakedefine HAVE_XTEST 1
 
