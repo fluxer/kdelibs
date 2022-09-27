@@ -77,8 +77,6 @@ public:
 
     //! The main component data. For convenience
     KComponentData mainComponent;
-    bool isUsingForeignComponentName;
-    bool enabled;
 
     org::kde::KGlobalAccel iface;
 
