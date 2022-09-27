@@ -1,11 +1,11 @@
 # for documentation look at FindKDE4Internal.cmake
 
 # this file contains the following macros (or functions):
+# KDE4_INSTALL_ICONS
 # KDE4_ADD_KCFG_FILES
 # KDE4_ADD_PLUGIN
 # KDE4_ADD_TEST
 # KDE4_ADD_WIDGET
-# KDE4_INSTALL_ICONS
 # KDE4_INSTALL_AUTH_HELPER_FILES
 
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
@@ -15,44 +15,6 @@
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
-
-
-macro(KDE4_ADD_KCFG_FILES _sources )
-    foreach(_current_FILE ${ARGN})
-        get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
-        get_filename_component(_abs_PATH ${_tmp_FILE} DIRECTORY)
-        get_filename_component(_basename ${_tmp_FILE} NAME_WE)
-
-        file(READ ${_tmp_FILE} _contents)
-        string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILENAME "${_contents}")
-        set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
-        set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
-        set(_kcfg_FILE   ${_abs_PATH}/${_kcfg_FILENAME})
-        # Maybe the .kcfg is a generated file?
-        if(NOT EXISTS "${_kcfg_FILE}")
-            set(_kcfg_FILE   ${CMAKE_CURRENT_BINARY_DIR}/${_kcfg_FILENAME})
-        endif()
-        if(NOT EXISTS "${_kcfg_FILE}")
-            message(ERROR "${_kcfg_FILENAME} not found; tried in ${_abs_PATH} and ${CMAKE_CURRENT_BINARY_DIR}")
-        endif()
-
-        # make sure the directory exist in the build directory
-        if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/")
-            file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/")
-        endif()
-
-        # the command for creating the source file from the kcfg file
-        add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
-            COMMAND ${KDE4_KCFGC_EXECUTABLE}
-            ARGS ${_kcfg_FILE} ${_tmp_FILE} -d "${CMAKE_CURRENT_BINARY_DIR}/"
-            MAIN_DEPENDENCY ${_tmp_FILE}
-            DEPENDS ${_kcfg_FILE}
-        )
-
-        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
-    endforeach (_current_FILE)
-endmacro(KDE4_ADD_KCFG_FILES)
-
 
 # KDE 4 / icon naming specification compatibility
 set(_KDE4_ICON_GROUP_mimetypes  "mimetypes")
@@ -72,7 +34,6 @@ set(_KDE4_ICON_THEME_ox "ariya")
 set(_KDE4_ICON_THEME_lo "locolor")
 set(_KDE4_ICON_THEME_hi "hicolor")
 
-
 # only used internally by KDE4_INSTALL_ICONS
 macro(_KDE4_ADD_ICON_INSTALL_RULE _install_PATH _group _orig_NAME _install_NAME _l10n_SUBDIR)
     # if the string doesn't match the pattern, the result is the full string,
@@ -91,7 +52,9 @@ macro(_KDE4_ADD_ICON_INSTALL_RULE _install_PATH _group _orig_NAME _install_NAME 
     endif()
 endmacro(_KDE4_ADD_ICON_INSTALL_RULE)
 
-
+#  KDE4_INSTALL_ICONS ( path theme)
+#    Installs all png and svgz files in the current directory to the icon
+#    directory given in path, in the subdirectory for the given icon theme.
 macro(KDE4_INSTALL_ICONS _defaultpath )
     # the l10n-subdir if language given as second argument (localized icon)
     set(_lang ${ARGV1})
@@ -151,9 +114,48 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
     endforeach()
 endmacro(KDE4_INSTALL_ICONS)
 
+#  KDE4_ADD_KCFG_FILES (SRCS_VAR file1.kcfgc ... fileN.kcfgc)
+#    Use this to add KDE config compiler files to your application/library.
+macro(KDE4_ADD_KCFG_FILES _sources )
+    foreach(_current_FILE ${ARGN})
+        get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
+        get_filename_component(_abs_PATH ${_tmp_FILE} DIRECTORY)
+        get_filename_component(_basename ${_tmp_FILE} NAME_WE)
 
-# If "WITH_PREFIX" is in the arugments then the standard "lib" prefix will be
-# preserved
+        file(READ ${_tmp_FILE} _contents)
+        string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILENAME "${_contents}")
+        set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
+        set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
+        set(_kcfg_FILE   ${_abs_PATH}/${_kcfg_FILENAME})
+        # Maybe the .kcfg is a generated file?
+        if(NOT EXISTS "${_kcfg_FILE}")
+            set(_kcfg_FILE   ${CMAKE_CURRENT_BINARY_DIR}/${_kcfg_FILENAME})
+        endif()
+        if(NOT EXISTS "${_kcfg_FILE}")
+            message(ERROR "${_kcfg_FILENAME} not found; tried in ${_abs_PATH} and ${CMAKE_CURRENT_BINARY_DIR}")
+        endif()
+
+        # make sure the directory exist in the build directory
+        if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/")
+            file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/")
+        endif()
+
+        # the command for creating the source file from the kcfg file
+        add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
+            COMMAND ${KDE4_KCFGC_EXECUTABLE}
+            ARGS ${_kcfg_FILE} ${_tmp_FILE} -d "${CMAKE_CURRENT_BINARY_DIR}/"
+            MAIN_DEPENDENCY ${_tmp_FILE}
+            DEPENDS ${_kcfg_FILE}
+        )
+
+        list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
+    endforeach (_current_FILE)
+endmacro(KDE4_ADD_KCFG_FILES)
+
+#  KDE4_ADD_PLUGIN ( name [WITH_PREFIX] file1 ... fileN )
+#    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
+#    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib",
+#    otherwise it won't.
 macro(KDE4_ADD_PLUGIN _target_NAME)
     set(_plugin_prefix)
     set(_plugin_srcs)
@@ -173,8 +175,11 @@ macro(KDE4_ADD_PLUGIN _target_NAME)
     endif()
 endmacro(KDE4_ADD_PLUGIN)
 
-# Add a unit test, which is executed when running make test. The targets are
-# always created and built unless ENABLE_TESTING is set to negative value.
+#  KDE4_ADD_TEST (testname file1 ... fileN)
+#    add a unit test, which is executed when running make test. The targets
+#    are build and executed only if the ENABLE_TESTING option is enabled.
+#    KDESRCDIR is set to the source directory of the test, this can be used
+#    with KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
 macro(KDE4_ADD_TEST _targetName)
     KDE4_ADD_MANUAL_TEST(${_targetName} ${ARGN})
     add_test(
@@ -183,6 +188,8 @@ macro(KDE4_ADD_TEST _targetName)
     )
 endmacro(KDE4_ADD_TEST)
 
+#  KDE4_ADD_MANUAL_TEST (testname file1 ... fileN)
+#    same as KDE_ADD_TEST() except that the test is not run on `make test`
 macro(KDE4_ADD_MANUAL_TEST _targetName)
     add_executable(${_targetName} ${ARGN})
 
@@ -197,6 +204,9 @@ macro(KDE4_ADD_MANUAL_TEST _targetName)
     )
 endmacro(KDE4_ADD_MANUAL_TEST)
 
+#  KDE4_ADD_WIDGET (SRCS_VAR file1.widgets ... fileN.widgets)
+#    Use this to add widget description files for the makekdewidgets code
+#    generator for Qt Designer plugins.
 macro(KDE4_ADD_WIDGET _output _sources)
     foreach(_current_FILE ${_sources})
         get_filename_component(_input ${_current_FILE} ABSOLUTE)
@@ -220,17 +230,13 @@ macro(KDE4_ADD_WIDGET _output _sources)
     endforeach(_current_FILE)
 endmacro(KDE4_ADD_WIDGET)
 
-
-# This macro adds the needed files for an helper executable meant to be used by
-# applications using KAuth. It accepts the helper target, the helper ID (the
-# DBUS name) and the user under which the helper will run on. The macro also
-# takes care of generate the needed files, and install them in the right
-# location. This boils down to a DBus policy to let the helper register on the
-# system bus, and a service file for letting the helper being automatically
-# activated by the system bus.
+#  KDE4_INSTALL_AUTH_HELPER_FILES ( HELPER_TARGET HELPER_ID HELPER_USER )
+#   This macro adds the needed files for an helper executable meant to be used
+#   by applications using KAuth. It accepts the helper target, the helper ID
+#   (the DBUS name) and the user under which the helper will run on.
 #
-# *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to make
-# sure everything will work.
+#   *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to
+#             make sure everything will work.
 function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
     if(_kdeBootStrapping)
         set(_stubFilesDir ${CMAKE_SOURCE_DIR}/kdecore)

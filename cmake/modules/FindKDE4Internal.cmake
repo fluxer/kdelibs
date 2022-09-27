@@ -71,46 +71,7 @@
 # It also MUST NOT be used for executables which are intended to go into sbin/ or libexec/.
 #
 # Usage is like this:
-#    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS} )
-#
-# This will install libraries correctly under UNIX, OSX and Windows (i.e. dll's go
-# into bin/.
-#
-#
-# The following user adjustable options are provided:
-#
-#  KDE4_ADD_KCFG_FILES (SRCS_VAR file1.kcfgc ... fileN.kcfgc)
-#    Use this to add KDE config compiler files to your application/library.
-#
-#  KDE4_ADD_WIDGET (SRCS_VAR file1.widgets ... fileN.widgets)
-#    Use this to add widget description files for the makekdewidgets code generator
-#    for Qt Designer plugins.
-#
-#  KDE4_ADD_PLUGIN ( name [WITH_PREFIX] file1 ... fileN )
-#    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
-#    If WITH_PREFIX is given, the resulting plugin will have the prefix "lib", otherwise it won't.
-#
-#  KDE4_ADD_TEST (testname file1 ... fileN)
-#    add a unit test, which is executed when running make test. The targets
-#    are build and executed only if the ENABLE_TESTING option is enabled.
-#    KDESRCDIR is set to the source directory of the test, this can be used
-#    with KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
-#
-#  KDE4_ADD_MANUAL_TEST (testname file1 ... fileN)
-#    same as KDE_ADD_TEST() except that the test is not run on `make test`
-#
-#  KDE4_INSTALL_ICONS ( path theme)
-#    Installs all png and svgz files in the current directory to the icon
-#    directory given in path, in the subdirectory for the given icon theme.
-#
-#  KDE4_INSTALL_AUTH_HELPER_FILES ( HELPER_TARGET HELPER_ID HELPER_USER )
-#   This macro adds the needed files for an helper executable meant to be used by applications using KAuth.
-#   It accepts the helper target, the helper ID (the DBUS name) and the user under which the helper will run on.
-#   This macro takes care of generate the needed files, and install them in the right location. This boils down
-#   to a DBus policy to let the helper register on the system bus, and a service file for letting the helper
-#   being automatically activated by the system bus.
-#   *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to make sure everything will work.
-#
+#    install(TARGETS kdecore kdeui ${INSTALL_TARGETS_DEFAULT_ARGS})
 #
 #  This module allows to depend on a particular minimum version of kdelibs.
 #  To acomplish that one should use the appropriate cmake syntax for
