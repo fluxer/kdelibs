@@ -69,8 +69,8 @@ public:
     * users not in the file's group, with the same values.
     *
     **/
-   explicit KTempDir(const QString& directoryPrefix=QString(),
-                     int mode = 0700 );
+   explicit KTempDir(const QString &directoryPrefix = QString(),
+                     int mode = 0700);
 
 
    /**
@@ -144,7 +144,7 @@ public:
     * (Use errno for more details about the error.)
     * @todo decide how and where this function should be defined in KDE5
     */
-    static bool removeDir( const QString& path );
+    static bool removeDir(const QString &path);
 
 protected:
 
@@ -155,7 +155,7 @@ protected:
     * @param mode directory permissions
     * @return true upon success
     */
-   bool create(const QString &directoryPrefix,  int mode);
+   bool create(const QString &directoryPrefix, int mode);
 
 private:
     Q_DISABLE_COPY(KTempDir)
