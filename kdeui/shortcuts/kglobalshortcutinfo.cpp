@@ -38,7 +38,6 @@ KGlobalShortcutInfo::KGlobalShortcutInfo(const KGlobalShortcutInfo &rhs)
     d->defaultKeys           = rhs.d->defaultKeys;
 }
 
-
 KGlobalShortcutInfo::~KGlobalShortcutInfo()
 {
     delete d;

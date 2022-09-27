@@ -23,15 +23,13 @@
 #include <QtGui/QKeySequence>
 #include <QtDBus/QDBusArgument>
 
-
 class KGlobalShortcutInfoPrivate;
-
 
 /**
  * @author Michael Jansen <kde@michael-jansen.biz>
  */
 class KDEUI_EXPORT KGlobalShortcutInfo : public QObject
-    {
+{
     Q_OBJECT
 
     Q_CLASSINFO("D-Bus Interface", "org.kde.kglobalaccel.KShortcutInfo")
@@ -49,35 +47,22 @@ class KDEUI_EXPORT KGlobalShortcutInfo : public QObject
     Q_SCRIPTABLE Q_PROPERTY(QList<QKeySequence> defaultKeys READ keys)
 
 public:
-
     KGlobalShortcutInfo();
-
     KGlobalShortcutInfo(const KGlobalShortcutInfo &rhs);
-
     ~KGlobalShortcutInfo();
 
     KGlobalShortcutInfo& operator=(const KGlobalShortcutInfo& rhs);
 
     QString contextFriendlyName() const;
-
     QString contextUniqueName() const;
-
     QString componentFriendlyName() const;
-
     QString componentUniqueName() const;
-
     QList<QKeySequence> defaultKeys() const;
-
     QString friendlyName() const;
-
     QList<QKeySequence> keys() const;
-
     QString uniqueName() const;
 
 private:
-
-    friend class GlobalShortcut;
-
     friend KDEUI_EXPORT const QDBusArgument &operator>> (
             const QDBusArgument &argument,
             KGlobalShortcutInfo &shortcut);

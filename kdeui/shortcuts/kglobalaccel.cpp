@@ -214,8 +214,9 @@ void KGlobalAccelPrivate::doRegister(KAction *action)
     }
 
     const bool isRegistered = actions.contains(action);
-    if (isRegistered)
+    if (isRegistered) {
         return;
+    }
 
     // Under configuration mode - deprecated - we ignore the component given
     // from the action and use our own.

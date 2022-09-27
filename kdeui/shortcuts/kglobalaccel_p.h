@@ -32,11 +32,11 @@ class KAction;
 class KShortcut;
 
 enum SetShortcutFlag
-    {
+{
     SetPresent =2,
     NoAutoloading = 4,
     IsDefault = 8
-    };
+};
 
 
 class KGlobalAccelPrivate
