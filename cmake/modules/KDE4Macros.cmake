@@ -233,7 +233,7 @@ endmacro(KDE4_ADD_WIDGET)
 #  KDE4_INSTALL_AUTH_HELPER_FILES ( HELPER_TARGET HELPER_ID HELPER_USER )
 #   This macro adds the needed files for an helper executable meant to be used
 #   by applications using KAuth. It accepts the helper target, the helper ID
-#   (the DBUS name) and the user under which the helper will run on.
+#   (the D-Bus name) and the user under which the helper will run on.
 #
 #   *WARNING* You have to install the helper in ${KDE4_LIBEXEC_INSTALL_DIR} to
 #             make sure everything will work.
@@ -262,3 +262,22 @@ function(KDE4_INSTALL_AUTH_HELPER_FILES HELPER_TARGET HELPER_ID HELPER_USER)
         DESTINATION ${KDE4_DBUS_SYSTEM_SERVICES_INSTALL_DIR}
     )
 endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
+
+#  KDE4_ADD_DBUS_SERVICE (file1 ... fileN)
+#    Use this to add D-Bus service activation file(s). The input file(s) must
+#    be ".service.in" suffixed
+macro(KDE4_ADD_DBUS_SERVICE _sources)
+    foreach(_current_FILE ${_sources})
+        get_filename_component(_input ${_current_FILE} ABSOLUTE)
+        get_filename_component(_basename ${_input} NAME)
+        string(REPLACE ".service.in" ".service" _output_file ${_basename})
+        configure_file(
+            ${_input}
+            ${CMAKE_CURRENT_BINARY_DIR}/${_output_file}
+        )
+        install(
+            FILES ${CMAKE_CURRENT_BINARY_DIR}/${_output_file}
+            DESTINATION ${KDE4_DBUS_SERVICES_INSTALL_DIR}
+        )
+    endforeach()
+endmacro(KDE4_ADD_DBUS_SERVICE)

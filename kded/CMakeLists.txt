@@ -37,7 +37,7 @@ install(
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
 )
 
-dbus_add_activation_service(org.kde.kded.service.in)
+kde4_add_dbus_service(org.kde.kded.service.in)
 
 ########### next target ###############
 
@@ -80,5 +80,3 @@ install(
     kdedmodule.desktop
     DESTINATION ${KDE4_SERVICETYPES_INSTALL_DIR}
 )
-
-

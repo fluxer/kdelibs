@@ -70,7 +70,6 @@ set(cmakeFiles
     KDE4Defaults.cmake
     KDE4Macros.cmake
     MacroBoolTo01.cmake
-    MacroDBusAddActivationService.cmake
     MacroLibrary.cmake
     MacroOptionalAddSubdirectory.cmake
     MacroOptionalFindPackage.cmake
