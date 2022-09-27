@@ -7,5 +7,4 @@
 
 INCLUDE(MacroOptionalFindPackage)
 INCLUDE(MacroOptionalAddSubdirectory)
-INCLUDE(MacroAddFileDependencies)
 INCLUDE(MacroBoolTo01)
