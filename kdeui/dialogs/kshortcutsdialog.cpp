@@ -27,7 +27,6 @@
 
 #include "kshortcutsdialog.h"
 #include "kshortcutsdialog_p.h"
-#include "kshortcutschemeshelper_p.h"
 
 #include "kdebug.h"
 #include "klocale.h"

@@ -54,8 +54,6 @@ public:
      * @return the name of the scheme file for application itself.
     */
     static QString applicationShortcutSchemeFileName(const QString &schemeName);
-
-    static bool saveShortcutScheme();
 };
 
 #endif
