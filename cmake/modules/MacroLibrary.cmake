@@ -7,4 +7,3 @@
 
 INCLUDE(MacroOptionalFindPackage)
 INCLUDE(MacroOptionalAddSubdirectory)
-INCLUDE(MacroBoolTo01)

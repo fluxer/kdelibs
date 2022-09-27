@@ -7,6 +7,8 @@
 # KDE4_ADD_TEST
 # KDE4_ADD_WIDGET
 # KDE4_INSTALL_AUTH_HELPER_FILES
+# KDE4_ADD_DBUS_SERVICE
+# KDE4_BOOL_TO_01
 
 # Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
@@ -281,3 +283,14 @@ macro(KDE4_ADD_DBUS_SERVICE _sources)
         )
     endforeach()
 endmacro(KDE4_ADD_DBUS_SERVICE)
+
+# KDE4_BOOL_TO_01(VAR RESULT)
+#    This macro evaluates its first argument and sets the second argument
+#    either to 0 or 1 depending on the value of the first one
+macro(KDE4_BOOL_TO_01 _var _result)
+    if(${_var})
+        set(${_result} 1)
+    else()
+        set(${_result} 0)
+    endif()
+endmacro(KDE4_BOOL_TO_01)

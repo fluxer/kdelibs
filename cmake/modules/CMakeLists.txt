@@ -69,7 +69,6 @@ set(cmakeFiles
     kde4_exec.sh.in
     KDE4Defaults.cmake
     KDE4Macros.cmake
-    MacroBoolTo01.cmake
     MacroLibrary.cmake
     MacroOptionalAddSubdirectory.cmake
     MacroOptionalFindPackage.cmake

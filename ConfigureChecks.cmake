@@ -15,8 +15,8 @@ include(CMakePushCheckState)
 # definitions like _GNU_SOURCE that are needed on each platform.
 set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 
-macro_bool_to_01(Libintl_FOUND HAVE_LIBINTL)            # kdecore
-macro_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)              # kio
+kde4_bool_to_01(Libintl_FOUND HAVE_LIBINTL)            # kdecore
+kde4_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)              # kio
 
 check_include_files(fstab.h       HAVE_FSTAB_H)                        # kio, kdecore
 check_include_files(mntent.h      HAVE_MNTENT_H)                       # solid, kio, kdecore
@@ -27,11 +27,11 @@ check_include_files("sys/param.h;sys/mount.h"  HAVE_SYS_MOUNT_H)       # kio, kd
 check_include_files(paths.h       HAVE_PATHS_H)                        # kdecore
 
 # TODO: separate to config-x11.h
-macro_bool_to_01(X11_XTest_FOUND HAVE_XTEST)                           # kdecore
-macro_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)                       # kdeui
-macro_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)                         # kdeui
-macro_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)             # kidletime
-macro_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)                           # kidletime
+kde4_bool_to_01(X11_XTest_FOUND HAVE_XTEST)                           # kdecore
+kde4_bool_to_01(X11_Xcursor_FOUND HAVE_XCURSOR)                       # kdeui
+kde4_bool_to_01(X11_Xfixes_FOUND HAVE_XFIXES)                         # kdeui
+kde4_bool_to_01(X11_Xscreensaver_FOUND HAVE_XSCREENSAVER)             # kidletime
+kde4_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)                           # kidletime
 
 
 # Use check_symbol_exists to check for symbols in a reliable
