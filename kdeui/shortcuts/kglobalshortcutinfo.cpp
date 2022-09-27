@@ -20,7 +20,8 @@
 #include "kglobalshortcutinfo_p.h"
 
 KGlobalShortcutInfo::KGlobalShortcutInfo()
-    : d(new KGlobalShortcutInfoPrivate())
+    : QObject(),
+    d(new KGlobalShortcutInfoPrivate())
 {
 }
 
