@@ -160,10 +160,6 @@ set(kdeui_LIB_SRCS
     paged/kpageview_p.cpp
     paged/kpagewidget.cpp
     paged/kpagewidgetmodel.cpp
-    plotting/kplotaxis.cpp
-    plotting/kplotpoint.cpp
-    plotting/kplotobject.cpp
-    plotting/kplotwidget.cpp
     shortcuts/kshortcut.cpp
     shortcuts/kshortcutschemeshelper.cpp
     shortcuts/kstandardshortcut.cpp
@@ -504,10 +500,6 @@ install(
     paged/kpageview.h
     paged/kpagewidget.h
     paged/kpagewidgetmodel.h
-    plotting/kplotwidget.h
-    plotting/kplotpoint.h
-    plotting/kplotobject.h
-    plotting/kplotaxis.h
     shortcuts/kshortcut.h
     shortcuts/kstandardshortcut.h
     shortcuts/kglobalaccel.h

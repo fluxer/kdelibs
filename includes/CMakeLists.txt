@@ -224,10 +224,6 @@ install(
     KPasteTextAction
     KPixmapRegionSelectorDialog
     KPixmapRegionSelectorWidget
-    KPlotAxis
-    KPlotObject
-    KPlotPoint
-    KPlotWidget
     KPluginFactory
     KPluginInfo
     KPluginLoader

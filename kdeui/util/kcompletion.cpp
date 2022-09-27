@@ -198,7 +198,6 @@ void KCompletion::addWeightedItem( const QString& item )
     }
 
     addItem( item.left( len ), weight );
-    return;
 }
 
 

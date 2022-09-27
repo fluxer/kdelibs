@@ -152,12 +152,6 @@ if (Q_WS_X11)
     target_link_libraries(kdeui-kxerrorhandlertest ${X11_X11_LIB})
 endif (Q_WS_X11)
 
-## kplottest
-
-set(kplottest_SRCS testplot_widget.cpp testplot_main.cpp)
-kde4_add_manual_test(kplottest ${kplottest_SRCS})
-target_link_libraries(kplottest ${KDE4_KDEUI_LIBS})
-
 ## kcolorutilsdemo
 
 set(kcolorUtilsDemoSources

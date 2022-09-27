@@ -23,10 +23,10 @@
 #include <QtCore/QMap>
 #include <QtXml/qdom.h>
 #include <QStack>
+#include <QWidget>
 
 #include <kaction.h>
 
-#include <QWidget>
 class KXMLGUIClient;
 class KXMLGUIBuilder;
 

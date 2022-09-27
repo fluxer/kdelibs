@@ -20,15 +20,14 @@
 #include "kxmlguifactory_p.h"
 #include "kxmlguiclient.h"
 #include "kxmlguibuilder.h"
-
-#include <QtGui/QWidget>
-
 #include <kglobal.h>
 #include <kdebug.h>
-
-#include <assert.h>
 #include <kcomponentdata.h>
 #include <ktoolbar.h>
+
+#include <QWidget>
+
+#include <assert.h>
 
 using namespace KXMLGUI;
 

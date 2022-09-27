@@ -236,12 +236,6 @@ ToolTip=Pixmap Sequence Widget (KDE)
 WhatsThis=A simple widget showing a fixed size pixmap sequence.
 Group=Display (KDE)
 
-[KPlotWidget]
-IncludeFile=kplotwidget.h
-ToolTip=A plot widget
-WhatsThis=A widget for easily making 2-dimensional plots
-Group=Plot (KDE)
-
 [KPushButton]
 ToolTip=Improved QPushButton (KDE)
 WhatsThis=An improved QPushButton to follow KDE settings
