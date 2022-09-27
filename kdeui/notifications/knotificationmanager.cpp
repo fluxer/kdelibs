@@ -31,7 +31,6 @@
 
 #include "knotify_interface.h"
 
-typedef QHash<QString,QString> Dict;
 typedef QPair<QString,QString> Context;
 
 static const QByteArray imageFormat = QImageWriter::defaultImageFormat();
