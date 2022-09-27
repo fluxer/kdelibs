@@ -118,7 +118,7 @@ bool KNotificationManager::notify(KNotification* n, const QPixmap &pix,
     // CloseOnTimeout => -1 == let the server decide
     int timeout = (n->flags() & KNotification::Persistent) ? 0 : -1;
 
-    QList<QVariant>  args;
+    QList<QVariant> args;
     args << n->eventId() << (appname.isEmpty() ? KGlobal::mainComponent().componentName() : appname);
     args.append(QVariant(contextList)); 
     args << n->title() << n->text() <<  pixmapData << QVariant(actions) << timeout << qlonglong(winId) ;

@@ -208,7 +208,7 @@ public:
 		/**
 		 * The notification will be automatically closed after a timeout. (this is the default)
 		 */
-		CloseOnTimeout=0x00,
+		CloseOnTimeout = 0x00,
 
 		/**
 		 * When the notification is activated, raise the notification's widget.
@@ -216,14 +216,14 @@ public:
 		 * This will change the desktop, raise the window, and switch to the tab.
 		 * @todo  doesn't work yet
 		 */
-		RaiseWidgetOnActivation=0x01,
+		RaiseWidgetOnActivation = 0x01,
 
 		/**
 		 * The notification will NOT be automatically closed after a timeout.
 		 * You will have to track the notification, and close it with the 
 		 * close function manually when the event is done, otherwise there will be a memory leak
 		 */
-		Persistent=0x02,
+		Persistent = 0x02,
 
 		/**
 		 * The notification will be automatically closed if the widget() becomes
@@ -235,12 +235,12 @@ public:
 		 * This only works if the widget is the toplevel widget
 		 * @todo make it work with tabulated widget
 		 */
-		CloseWhenWidgetActivated=0x03,
+		CloseWhenWidgetActivated = 0x03,
 		/**
 		 * @internal
 		 * The event is a standard kde event, and not an event of the application
  		 */
-		DefaultEvent=0xF000
+		DefaultEvent= 0xF000
 		
 	};
 	
@@ -266,7 +266,7 @@ public:
 	 * @param widget is a widget where the notification reports to
 	 * @param flags is a bitmask of NotificationFlag
 	 */
-	explicit KNotification(const QString & eventId , QWidget *widget=0L, const NotificationFlags &flags = CloseOnTimeout);
+	explicit KNotification(const QString &eventId , QWidget *widget= 0L, const NotificationFlags &flags = CloseOnTimeout);
 
 	/**
 	 * Create a new notification.
@@ -291,7 +291,7 @@ public:
 	// stay this way for now. The second argument CANNOT have a default
 	// argument. if someone needs a widget associated with the notification he
 	// should use setWidget after creating the object (or some xyz_cast magic)
-	explicit KNotification(const QString & eventId, const NotificationFlags &flags, QObject *parent = NULL);
+	explicit KNotification(const QString &eventId, const NotificationFlags &flags, QObject *parent = NULL);
 
 	~KNotification();
 
@@ -372,7 +372,7 @@ public:
 	 * Set the list of actions link shown in the popup.
 	 * @param actions the list of actions
 	 */
-	void setActions(const QStringList& actions);
+	void setActions(const QStringList &actions);
 	
 	/**
 	 * @return the list of contexts, see KNotification::Context
@@ -383,12 +383,12 @@ public:
 	 * 
 	 * The list of contexts must be set before calling sendEvent;
 	 */
-	void setContexts( const ContextList &contexts);
+	void setContexts(const ContextList &contexts);
 	/**
 	 * append a context at the list of contexts, see KNotificaiton::Context
 	 * @param context the context which is added
 	 */
-	void addContext( const Context & context);
+	void addContext(const Context &context);
 	/**
 	 * @overload
 	 * @param context_key is the key of the context
@@ -498,7 +498,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 	void slotReceivedId(int);
-	void slotReceivedIdError(const QDBusError&);
+	void slotReceivedIdError(const QDBusError &);
 	
 private:
 	struct Private;
@@ -508,8 +508,7 @@ protected:
 	/**
 	 * reimplemented for internal reasons
 	 */
-	virtual bool eventFilter( QObject * watched, QEvent * event );
-
+	virtual bool eventFilter(QObject *watched, QEvent *event);
 
 public:
 	/**
@@ -574,9 +573,9 @@ public:
 	 * @param widget is a widget where the notification reports to
 	 * @param flags is a bitmask of NotificationFlag 
 	 */
-	static KNotification *event( StandardEvent eventId , const QString& text=QString(),
-								 const QPixmap& pixmap=QPixmap(), QWidget *widget=0L,
-								 const NotificationFlags& flags=CloseOnTimeout);
+	static KNotification *event(StandardEvent eventId, const QString &text = QString(),
+								 const QPixmap &pixmap = QPixmap(), QWidget *widget = 0L,
+								 const NotificationFlags &flags = CloseOnTimeout);
 
 	/**
 	 * @brief emit a standard event
@@ -593,9 +592,9 @@ public:
 	 * @param flags is a bitmask of NotificationFlag
 	 * @since 4.4
 	 */
-	static KNotification *event( StandardEvent eventId , const QString& title, const QString& text,
-	                         const QPixmap& pixmap=QPixmap(), QWidget *widget=0L,
-	                         const NotificationFlags& flags=CloseOnTimeout);
+	static KNotification *event(StandardEvent eventId , const QString &title, const QString &text,
+	                         const QPixmap &pixmap = QPixmap(), QWidget *widget = 0L,
+	                         const NotificationFlags &flags = CloseOnTimeout);
 
 	/**
 	 * This is a simple substitution for QApplication::beep()
@@ -603,7 +602,7 @@ public:
 	 * @param reason a short text explaining what has happened (may be empty)
 	 * @param widget the widget the notification refers to
 	 */
-	static void beep( const QString& reason = QString() , QWidget *widget=0L);
+	static void beep(const QString &reason = QString() , QWidget *widget = 0L);
 	
 	//prevent warning
 	using QObject::event;

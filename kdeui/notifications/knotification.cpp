@@ -85,7 +85,7 @@ KNotification::KNotification( const QString& eventId, const NotificationFlags& f
     : QObject(parent),
     d(new Private)
 {
-    d->eventId=eventId;
+    d->eventId = eventId;
     d->flags = flags;
     connect(&d->updateTimer,SIGNAL(timeout()), this, SLOT(update()));
     d->updateTimer.setSingleShot(true);
@@ -95,7 +95,7 @@ KNotification::KNotification( const QString& eventId, const NotificationFlags& f
 
 KNotification::~KNotification()
 {
-    if (d ->id > 0) {
+    if (d->id > 0) {
         KNotificationManager::self()->close(d->id);
     }
     delete d;
@@ -142,7 +142,7 @@ void KNotification::setTitle(const QString &title)
 void KNotification::setText(const QString &text)
 {
     d->needUpdate = true;
-    d->text=text;
+    d->text = text;
     if (d->id > 0) {
         d->updateTimer.start();
     }
@@ -213,20 +213,23 @@ void KNotification::setComponentData(const KComponentData &c)
 
 void KNotification::activate(unsigned int action)
 {
-    switch (action)
-    {
-        case 0:
+    switch (action) {
+        case 0: {
             emit activated();
             break;
-        case 1:
+        }
+        case 1: {
             emit action1Activated();
             break;
-        case 2:
+        }
+        case 2: {
             emit action2Activated();
             break;
-        case 3:
+        }
+        case 3: {
             emit action3Activated();
             break;
+        }
     }
     emit activated(action);
     if (d->id != -1) {
@@ -257,7 +260,6 @@ void KNotification::raiseWidget()
 
     Private::raiseWidget(d->widget);
 }
-
 
 void KNotification::Private::raiseWidget(QWidget *w)
 {
@@ -322,7 +324,7 @@ KNotification *KNotification::event(StandardEvent eventid , const QString &title
     return event(message, title, text, pixmap, widget, flags | DefaultEvent);
 }
 
-KNotification *KNotification::event(StandardEvent eventid , const QString &text,
+KNotification *KNotification::event(StandardEvent eventid, const QString &text,
         const QPixmap &pixmap, QWidget *widget, const NotificationFlags &flags)
 {
     return event(eventid, QString(), text, pixmap, widget , flags);
@@ -359,11 +361,11 @@ void KNotification::sendEvent()
             appname = KGlobal::mainComponent().componentName();
         }
 
-        if (KNotificationManager::self()->notify(this , d->pixmap , d->actions , d->contexts , appname)) {
+        if (KNotificationManager::self()->notify(this, d->pixmap, d->actions, d->contexts, appname)) {
             d->id = -1;
         }
     } else if (d->id > 0) {
-        KNotificationManager::self()->reemit(this , d->id);
+        KNotificationManager::self()->reemit(this, d->id);
     } else if (d->id == -1) {
         //schedule an update.
         d->needUpdate = true;
@@ -378,10 +380,11 @@ void KNotification::slotReceivedId(int id)
         return;
     }
     d->id = id;
-    if (d->id>0) {
-        KNotificationManager::self()->insert(this,d->id);
-        if (d->needUpdate)
+    if (d->id > 0) {
+        KNotificationManager::self()->insert(this, d->id);
+        if (d->needUpdate) {
             sendEvent();
+        }
     } else {
         //if there is no presentation, delete the object
         QTimer::singleShot(0, this, SLOT(deref()));
@@ -409,7 +412,7 @@ bool KNotification::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == d->widget) {
         if (event->type() == QEvent::WindowActivate) {
-            if (d->flags &  CloseWhenWidgetActivated) {
+            if (d->flags & CloseWhenWidgetActivated) {
                 QTimer::singleShot(500, this, SLOT(close()));
             }
         }
