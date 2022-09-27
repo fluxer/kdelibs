@@ -3,16 +3,12 @@
 #     and the CMakeLists.txt that generates it (or a separate ConfigureChecks.make file if you prefer)
 #     to minimize recompilations and increase modularity.
 
-include(CheckIncludeFile)
 include(CheckIncludeFiles)
 include(CheckSymbolExists)
-include(CheckCXXSymbolExists)
 include(CheckFunctionExists)
 include(CheckLibraryExists)
-include(CheckTypeSize)
 include(CheckStructHasMember)
 include(CheckCXXSourceCompiles)
-include(CheckPrototypeDefinition)
 include(CMakePushCheckState)
 
 # The FindKDE4.cmake module sets _KDE4_PLATFORM_DEFINITIONS with

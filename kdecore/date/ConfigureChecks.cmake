@@ -1,3 +1,5 @@
+include(CheckTypeSize)
+
 check_type_size(time_t SIZEOF_TIME_T)
 
 check_struct_has_member("struct tm" tm_zone time.h HAVE_STRUCT_TM_TM_ZONE)
