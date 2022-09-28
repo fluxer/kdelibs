@@ -368,8 +368,6 @@ QImageIOPlugin::Capabilities MagickPlugin::capabilities(QIODevice *device, const
 {
     if (format == s_magickpluginformat)
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
-    if (!format.isEmpty())
-        return 0;
     if (!device->isOpen())
         return 0;
 
