@@ -34,20 +34,13 @@ static const char* const s_magickpluginformat = "magick";
 static const ushort s_peekbuffsize = 32;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
-static const uchar s_eps30header[] = { 0x25, 0x21, 0x50, 0x53, 0x2D, 0x41, 0x64, 0x6F, 0x62, 0x65, 0x2D, 0x33, 0x2E, 0x30, 0x20, 0x45, 0x50, 0x53, 0x46, 0x2D, 0x33, 0x2E, 0x30 };
-static const uchar s_eps31header[] = { 0x25, 0x21, 0x50, 0x53, 0x2D, 0x41, 0x64, 0x6F, 0x62, 0x65, 0x2D, 0x33, 0x2E, 0x31, 0x20, 0x45, 0x50, 0x53, 0x46, 0x2D, 0x33, 0x2E, 0x30 };
 static const uchar s_jp2header[] = { 0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87, 0x0A };
 static const uchar s_jpgjfifheader[] = { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01 };
-static const uchar s_xcfheader[] = { 0x67, 0x69, 0x6D, 0x70, 0x20, 0x78, 0x63, 0x66 };
 static const uchar s_gif87aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };
 static const uchar s_gif89aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
 static const uchar s_jpgheader[] = { 0xFF, 0xD8, 0xFF, 0xE0 };
 static const uchar s_jpg2header[] = { 0xFF, 0xD8, 0xFF, 0xEE };
-static const uchar s_exrheader[] = { 0x76, 0x2F, 0x31, 0x01 };
-static const uchar s_psdheader[] = { 0x38, 0x42, 0x50, 0x53 };
-static const uchar s_tifleheader[] = { 0x49, 0x49, 0x2A, 0x00 };
-static const uchar s_tifbeheader[] = { 0x4D, 0x4D, 0x00, 0x2A };
 static const uchar s_bmpheader[] = { 0x42, 0x4D };
 
 static const struct HeadersTblData {
@@ -55,20 +48,13 @@ static const struct HeadersTblData {
     const int headersize;
     const char *format;
 } HeadersTbl[] = {
-    { s_eps30header, 23, "eps", },
-    { s_eps31header, 23, "eps", },
     { s_jp2header, 12, "jp2", },
     { s_jpgjfifheader, 12, "jpg", },
-    { s_xcfheader, 8, "xcf", },
     { s_gif87aheader, 6, "gif", },
     { s_gif89aheader, 6, "gif", },
     { s_icoheader, 5, "ico", },
     { s_jpgheader, 4, "jpg", },
     { s_jpg2header, 4, "jpg", },
-    { s_exrheader, 4, "exr", },
-    { s_psdheader, 4, "psd", },
-    { s_tifleheader, 4, "tif", },
-    { s_tifbeheader, 4, "tif", },
     { s_bmpheader , 2, "bmp", }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
@@ -344,23 +330,15 @@ QList<QByteArray> MagickPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()
         << "image/bmp"
-        << "image/x-dds"
-        << "image/x-eps"
-        << "image/x-exr"
         << "image/gif"
         << "image/vnd.microsoft.icon"
         << "image/jp2"
         << "image/jpeg"
         << "image/x-portable-bitmap"
-        << "image/x-pcx"
         << "image/x-portable-graymap"
         << "image/x-portable-pixmap"
-        << "image/x-psd"
-        << "image/x-tga"
-        << "image/tiff"
         << "image/x-dcraw"
-        << "image/x-xbitmap"
-        << "image/x-xcf";
+        << "image/x-xbitmap";
     return list;
 }
 
