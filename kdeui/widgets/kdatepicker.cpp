@@ -57,9 +57,7 @@ KDatePickerPrivateYearSelector::KDatePickerPrivateYearSelector(
     calendar = cal;
     oldDate = currentDate;
 
-    QFont font;
-    font = KGlobalSettings::generalFont();
-    setFont( font );
+    setFont( KGlobalSettings::generalFont() );
 
     setFrame( false );
 
