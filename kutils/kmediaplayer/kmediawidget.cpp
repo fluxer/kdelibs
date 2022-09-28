@@ -316,7 +316,7 @@ void KMediaWidget::dropEvent(QDropEvent *event)
 {
     const QList<QUrl> urls = event->mimeData()->urls();
     QStringList invalid;
-    foreach (const QUrl url, urls) {
+    foreach (const QUrl &url, urls) {
         QString urlstring = url.toString();
         if (!d->m_player->isPathSupported(urlstring)) {
             kDebug() << i18n("ignoring unsupported:\n%1", urlstring);
@@ -388,7 +388,7 @@ void KMediaWidget::_updateLoaded()
     }
 }
 
-void KMediaWidget::_updateStatus(const QString string)
+void KMediaWidget::_updateStatus(const QString &string)
 {
     if (d->m_fullscreen) {
         QWidget *windowwidget = window();
@@ -433,7 +433,7 @@ void KMediaWidget::_updateVolume(const int volume)
     setVolume(volume);
 }
 
-void KMediaWidget::_updateError(const QString error)
+void KMediaWidget::_updateError(const QString &error)
 {
     if (d->m_fullscreen) {
         _updateStatus(error);

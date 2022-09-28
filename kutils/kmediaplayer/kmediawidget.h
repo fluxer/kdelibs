@@ -166,9 +166,9 @@ private Q_SLOTS:
     void _updateSeekable(const bool seekable);
     void _updatePosition(const double seconds);
     void _updateLoaded();
-    void _updateStatus(const QString string);
+    void _updateStatus(const QString &string);
     void _updateFinished();
-    void _updateError(const QString error);
+    void _updateError(const QString &error);
     void _updateVolume(const int volume);
 
 private:
