@@ -38,9 +38,6 @@
       <annotation name="org.qtproject.QtDBus.QtTypeName" value="KDbusImageVector"/>
     </property>
 
-    <property name="AttentionMovieName" type="s" access="read"/>
-
-
 
     <!-- tooltip data -->
 
