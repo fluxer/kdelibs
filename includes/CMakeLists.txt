@@ -10,7 +10,6 @@ install(
     KActionCollection
     KActionMenu
     KActionSelector
-    KAnimatedButton
     KApplication
     KAr
     KArchive

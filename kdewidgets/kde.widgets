@@ -7,12 +7,6 @@ IncludeFile=kactionselector.h
 ToolTip=A widget for selecting and arranging actions/objects
 Group=Views (KDE)
 
-[KAnimatedButton]
-IncludeFile=kanimatedbutton.h
-ToolTip=An extended version of QToolButton which can display an animated icon.
-Group=Display (KDE)
-ConstructorArgs=(parent)
-
 [KButtonGroup]
 IncludeFile=kbuttongroup.h
 ToolTip=Group of radio buttons with index selection.

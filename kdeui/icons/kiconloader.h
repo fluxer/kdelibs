@@ -25,7 +25,6 @@
 #include <QtCore/QObject>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
-#include <QtGui/QMovie>
 
 #include <kglobal.h>
 #include <kdeui_export.h>
@@ -288,31 +287,7 @@ public:
                      bool canReturnNull=false) const;
 
     /**
-     * Loads an animated icon.
-     * @param name The name of the icon.
-     * @param group The icon group. See loadIcon().
-     * @param size Override the default size for @p group.
-     *             See KIconLoader::StdSizes.
-     * @param parent The parent object of the returned QMovie.
-     * @return A QMovie object. Can be null if not found or not valid.
-     *         Ownership is passed to the caller.
-     */
-    QMovie *loadMovie(const QString& name, KIconLoader::Group group, int size=0, QObject *parent=0) const;
-
-    /**
-     * Returns the path to an animated icon.
-     * @param name The name of the icon.
-     * @param group The icon group. See loadIcon().
-     * @param size Override the default size for @p group.
-     *             See KIconLoader::StdSizes.
-     * @return the full path to the movie, ready to be passed to QMovie's constructor.
-     * Empty string if not found.
-     */
-    QString moviePath(const QString& name, KIconLoader::Group group, int size=0) const;
-
-    /**
-     * Loads an animated icon as a series of still frames. If you want to load
-     * a .mng animation as QMovie instead, please use loadMovie() instead.
+     * Loads an animated icon as a series of still frames.
      * @param name The name of the icon.
      * @param group The icon group. See loadIcon().
      * @param size Override the default size for @p group.

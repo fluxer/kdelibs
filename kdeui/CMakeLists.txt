@@ -195,7 +195,6 @@ set(kdeui_LIB_SRCS
     util/kpixmapsequencewidget.cpp
     util/kimageio.cpp
     widgets/kactionselector.cpp
-    widgets/kanimatedbutton.cpp
     widgets/kdialogbuttonbox.cpp
     widgets/kbuttongroup.cpp
     widgets/kcapacitybar.cpp
@@ -527,7 +526,6 @@ install(
     util/kpixmapsequencewidget.h
     util/kimageio.h
     widgets/kactionselector.h
-    widgets/kanimatedbutton.h
     widgets/kdatecombobox.h
     widgets/kdatepicker.h
     widgets/kcapacitybar.h

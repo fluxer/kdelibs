@@ -35,7 +35,6 @@
 #include <QtCore/QDir>
 #include <QtGui/QIcon>
 #include <QtGui/QImage>
-#include <QtGui/QMovie>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QPixmapCache>
@@ -1158,70 +1157,6 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
 
     return pix;
 }
-
-QMovie *KIconLoader::loadMovie(const QString& name, KIconLoader::Group group, int size, QObject *parent) const
-{
-    QString file = moviePath( name, group, size );
-    if (file.isEmpty())
-        return 0;
-    int dirLen = file.lastIndexOf('/');
-    QString icon = iconPath(name, size ? -size : group, true);
-    if (!icon.isEmpty() && file.left(dirLen) != icon.left(dirLen))
-        return 0;
-    QMovie *movie = new QMovie(file, QByteArray(), parent);
-    if (!movie->isValid())
-    {
-        delete movie;
-        return 0;
-    }
-    return movie;
-}
-
-QString KIconLoader::moviePath(const QString& name, KIconLoader::Group group, int size) const
-{
-    if (!d->mpGroups) return QString();
-
-    d->initIconThemes();
-
-    if ( (group < -1 || group >= KIconLoader::LastGroup) && group != KIconLoader::User )
-    {
-        kDebug(264) << "Illegal icon group: " << group;
-        group = KIconLoader::Desktop;
-    }
-    if (size == 0 && group < 0)
-    {
-        kDebug(264) << "Neither size nor group specified!";
-        group = KIconLoader::Desktop;
-    }
-
-    QString file = name + ".mng";
-    if (group == KIconLoader::User)
-    {
-        file = d->mpDirs->findResource("appicon", file);
-    }
-    else
-    {
-        if (size == 0)
-            size = d->mpGroups[group].size;
-
-        K3Icon icon;
-
-        foreach(KIconThemeNode *themeNode, d->links)
-        {
-            icon = themeNode->theme->iconPath(file, size, KIconLoader::MatchExact);
-            if (icon.isValid())
-                break;
-
-            icon = themeNode->theme->iconPath(file, size, KIconLoader::MatchBest);
-            if (icon.isValid())
-                break;
-        }
-
-        file = icon.isValid() ? icon.path : QString();
-    }
-    return file;
-}
-
 
 QStringList KIconLoader::loadAnimated(const QString& name, KIconLoader::Group group, int size) const
 {
