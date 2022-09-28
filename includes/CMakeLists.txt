@@ -499,7 +499,6 @@ install(
     KTextEditor/SmartRangeNotifier
     KTextEditor/SmartRangeWatcher
     KTextEditor/TemplateInterface
-    KTextEditor/TemplateInterface2
     KTextEditor/TextHintInterface
     KTextEditor/VariableInterface
     KTextEditor/View

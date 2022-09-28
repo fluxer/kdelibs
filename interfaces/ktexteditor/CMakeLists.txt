@@ -12,7 +12,6 @@ set(ktexteditor_LIB_SRCS
     range.cpp
     cursor.cpp
     templateinterface.cpp
-    templateinterface2.cpp
     editorchooser.cpp
     attribute.cpp
     cursorfeedback.cpp
@@ -72,7 +71,6 @@ install(
     texthintinterface.h
     variableinterface.h
     templateinterface.h
-    templateinterface2.h
     modificationinterface.h
     commandinterface.h
     smartinterface.h

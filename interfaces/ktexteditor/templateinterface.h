@@ -87,30 +87,6 @@ class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInt
      * If you have mirrored ranges and want another occurence than the first one as the master
      * you can add @ directly after the placeholder name.
      * 
-     * The interface2 version invokes the function specified by functionName within the script specified
-     * by the scriptToken, if a placeholder is specified with backticks like
-     * ${placeholder`functionName`}
-     * The function has a global environment containing "view", "document" and "debug", at 
-     * least in the katepart implementation. The function invokation is not allowed to be mixed with other replacements
-     * 
-     * If a / or ` replacement is done on a master the initial value is modified and therefor
-     * also all mirrored placeholders are affected too, later on the replacement is not done anymore on master ranges
-     * 
-     *
-     * The parameters for invoked javascript functions will be the following:
-     * value of the master (or initial value), //to be done: placeholder name, small wrapper around the template handler (to do more sophisticated things, like adding additional placehlder points, aattaching custom properties for state keeping, ....) you tell
-     *
-     * 
-     * Specification of initial values
-     * You can specify initial values which are different from the placeholder name
-     * this is done via, this makes only sense for $ placeholders, not for %
-     * ${placeholder:some value} or ${placeholder@:some value}
-     * It is not allowed to mix : and /
-     * after the first  colon, everything is interpreted as default value, } in
-     * the default value have to be escaped (backslashes before } have to be escaped themselves) and regexp searches are ignored. The : has to be
-     * directly after the placeholder name or after an optional @ symbol.
-     * 
-     * 
      * Common placeholders and values are
      *
      * - index: "i"
@@ -134,7 +110,6 @@ class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInt
      *
      * If the editor supports some kind of smart indentation, the inserted code
      * should be layouted by the indenter.
-     * @deprecated
      */
     bool insertTemplateText ( const Cursor &insertPosition, const QString &templateString, const QMap<QString,QString> &initialValues);
 
@@ -145,7 +120,6 @@ protected:
      * this method should work as described in the documentation for
      * insertTemplateText above.
      * \return true if any text was inserted.
-     * @deprecated
      */
     virtual bool insertTemplateTextImplementation ( const Cursor &insertPosition, const QString &templateString, const QMap<QString,QString> &initialValues)=0;
 
