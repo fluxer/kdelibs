@@ -51,9 +51,6 @@ class KActionPrivate
         bool globalShortcutEnabled : 1;
         bool neverSetGlobalShortcut : 1;
         KAction *q;
-
-        // TODO: Remove whenever QIcon overlays will get fixed
-        KIcon oldIcon;
 };
 
 #endif

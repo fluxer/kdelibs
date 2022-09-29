@@ -53,8 +53,6 @@ public:
     QTimer * delayedMenuTimer;
     bool m_dragEnabled;
     QPoint startPos;
-    // TODO: Remove whenever QIcon overlays will get fixed
-    KIcon oldIcon;
 
     void slotSettingsChanged( int );
     void slotPressedInternal();
