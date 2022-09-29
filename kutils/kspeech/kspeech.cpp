@@ -41,6 +41,7 @@ public:
 
 #if defined(HAVE_SPEECHD)
     void initSpeechD();
+    void closeSpeechD();
     static void speechCallback(size_t msg_id, size_t client_id, SPDNotificationType state);
 #endif
 
@@ -76,32 +77,39 @@ KSpeechPrivate::~KSpeechPrivate()
 #if defined(HAVE_SPEECHD)
 void KSpeechPrivate::initSpeechD()
 {
-    if (!m_speechd) {
-        m_speechd = spd_open(m_speechid.constData(), "main", NULL, SPD_MODE_THREADED);
-        if (Q_UNLIKELY(!m_speechd)) {
-            kWarning() << "Could not open speech-dispatcher connection";
-            return;
-        }
+    Q_ASSERT(!m_speechd);
+    m_speechd = spd_open(m_speechid.constData(), "main", NULL, SPD_MODE_THREADED);
+    if (Q_UNLIKELY(!m_speechd)) {
+        kWarning() << "Could not open speech-dispatcher connection";
+        return;
+    }
 
-        m_speechd->callback_begin = KSpeechPrivate::speechCallback;
-        m_speechd->callback_end = KSpeechPrivate::speechCallback;
-        m_speechd->callback_cancel = KSpeechPrivate::speechCallback;
+    m_speechd->callback_begin = KSpeechPrivate::speechCallback;
+    m_speechd->callback_end = KSpeechPrivate::speechCallback;
+    m_speechd->callback_cancel = KSpeechPrivate::speechCallback;
 
-        spd_set_notification_on(m_speechd, SPD_BEGIN);
-        spd_set_notification_on(m_speechd, SPD_END);
-        spd_set_notification_on(m_speechd, SPD_CANCEL);
+    spd_set_notification_on(m_speechd, SPD_BEGIN);
+    spd_set_notification_on(m_speechd, SPD_END);
+    spd_set_notification_on(m_speechd, SPD_CANCEL);
 
-        KConfig kconfig("kspeechrc", KConfig::SimpleConfig);
-        KConfigGroup kconfiggroup = kconfig.group(m_speechid);
-        const int volume = kconfiggroup.readEntry("volume", 100);
-        const int pitch = kconfiggroup.readEntry("pitch", 0);
-        const QByteArray voice = kconfiggroup.readEntry("voice", QByteArray());
-        // qDebug() << Q_FUNC_INFO << m_speechid << volume << pitch << voice;
-        KSpeech* kspeech = qobject_cast<KSpeech*>(parent());
-        Q_ASSERT(kspeech);
-        kspeech->setVolume(volume);
-        kspeech->setPitch(pitch);
-        kspeech->setVoice(voice);
+    KConfig kconfig("kspeechrc", KConfig::SimpleConfig);
+    KConfigGroup kconfiggroup = kconfig.group(m_speechid);
+    const int volume = kconfiggroup.readEntry("volume", 100);
+    const int pitch = kconfiggroup.readEntry("pitch", 0);
+    const QByteArray voice = kconfiggroup.readEntry("voice", QByteArray());
+    // qDebug() << Q_FUNC_INFO << m_speechid << volume << pitch << voice;
+    KSpeech* kspeech = qobject_cast<KSpeech*>(parent());
+    Q_ASSERT(kspeech);
+    kspeech->setVolume(volume);
+    kspeech->setPitch(pitch);
+    kspeech->setVoice(voice);
+}
+
+void KSpeechPrivate::closeSpeechD()
+{
+    if (m_speechd) {
+        spd_close(m_speechd);
+        m_speechd = nullptr;
     }
 }
 
@@ -153,6 +161,9 @@ KSpeech::KSpeech(QObject* parent)
 
 KSpeech::~KSpeech()
 {
+#if defined(HAVE_SPEECHD)
+    d->closeSpeechD();
+#endif
     delete d;
 }
 
@@ -167,7 +178,9 @@ bool KSpeech::isSupported()
 
 void KSpeech::setSpeechID(const QString &id)
 {
-    removeAllJobs();
+#if defined(HAVE_SPEECHD)
+    d->closeSpeechD();
+#endif
     d->m_speechid = id.toUtf8();
 #if defined(HAVE_SPEECHD)
     d->initSpeechD();
@@ -193,6 +206,11 @@ bool KSpeech::setVolume(const int volume)
 #if defined(HAVE_SPEECHD)
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
+        return false;
+    }
+
+    if (volume < -100 || volume > 100) {
+        kWarning() << "Invalid volume value" << volume;
         return false;
     }
 
@@ -223,6 +241,11 @@ bool KSpeech::setPitch(const int pitch)
 #if defined(HAVE_SPEECHD)
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
+        return false;
+    }
+
+    if (pitch < -100 || pitch > 100) {
+        kWarning() << "Invalid pitch value" << pitch;
         return false;
     }
 
@@ -271,7 +294,7 @@ bool KSpeech::setVoice(const QByteArray &voice)
         return false;
     } else if (!KSpeech::voices().contains(voice)) {
         // NOTE: if voice is invalid speech-dispatcher will not dispatch anything
-        kWarning() << "Invalid voice" << voice;
+        kWarning() << "Invalid voice value" << voice;
         return false;
     }
 
@@ -316,8 +339,6 @@ void KSpeech::removeAllJobs()
 
     // TODO: error check
     (void)spd_stop(d->m_speechd);
-    spd_close(d->m_speechd);
-    d->m_speechd = nullptr;
 #endif
 }
 
