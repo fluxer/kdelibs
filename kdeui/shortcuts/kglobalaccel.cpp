@@ -41,7 +41,7 @@
 #include "kmessagebox.h"
 #include "kshortcut.h"
 
-org::kde::kglobalaccel::Component *KGlobalAccelPrivate::getComponent(const QString &componentUnique, bool remember = false)
+org::kde::kglobalaccel::Component *KGlobalAccelPrivate::getComponent(const QString &componentUnique, bool remember)
 {
     // Check if we already have this component
     if (components.contains(componentUnique)) {

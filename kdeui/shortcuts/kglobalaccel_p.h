@@ -82,7 +82,7 @@ public:
 
     //! Get the component @p componentUnique. If @p remember is true the instance is cached and we
     //! subscribe to signals about changes to the component.
-    org::kde::kglobalaccel::Component *getComponent(const QString &componentUnique, bool remember);
+    org::kde::kglobalaccel::Component *getComponent(const QString &componentUnique, bool remember = false);
 
     //! Our owner
     KGlobalAccel *q;
