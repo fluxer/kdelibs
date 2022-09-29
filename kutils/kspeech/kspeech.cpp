@@ -145,6 +145,9 @@ KSpeech::KSpeech(QObject* parent)
         this, SLOT(_jobStateChanged(int,int))
     );
 
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+#endif
     // qDebug() << Q_FUNC_INFO << volume() << pitch() << voices();
 }
 
@@ -166,13 +169,14 @@ void KSpeech::setSpeechID(const QString &id)
 {
     removeAllJobs();
     d->m_speechid = id.toUtf8();
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+#endif
 }
 
 int KSpeech::volume() const
 {
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
-
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
         return 0;
@@ -187,8 +191,6 @@ int KSpeech::volume() const
 bool KSpeech::setVolume(const int volume)
 {
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
-
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
         return false;
@@ -205,8 +207,6 @@ bool KSpeech::setVolume(const int volume)
 int KSpeech::pitch() const
 {
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
-
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
         return 0;
@@ -221,8 +221,6 @@ int KSpeech::pitch() const
 bool KSpeech::setPitch(const int pitch)
 {
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
-
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
         return false;
@@ -240,8 +238,6 @@ QList<QByteArray> KSpeech::voices() const
 {
     QList<QByteArray> result;
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
-
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
         return result;
@@ -265,8 +261,6 @@ QList<QByteArray> KSpeech::voices() const
 bool KSpeech::setVoice(const QByteArray &voice)
 {
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
-
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
         return false;
@@ -283,7 +277,10 @@ bool KSpeech::setVoice(const QByteArray &voice)
 int KSpeech::say(const QString &text)
 {
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
+    if (Q_UNLIKELY(!d->m_speechd)) {
+        kDebug() << "Null speech-dispatcher pointer";
+        return 0;
+    }
 
     const QByteArray textbytes = text.toUtf8();
     const int jobNum = spd_say(d->m_speechd, SPD_TEXT, textbytes.constData());
