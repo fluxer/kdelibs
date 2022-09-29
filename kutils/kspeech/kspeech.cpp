@@ -266,6 +266,15 @@ bool KSpeech::setVoice(const QByteArray &voice)
         return false;
     }
 
+    if (voice.isEmpty()) {
+        kWarning() << "Empty voice" << voice;
+        return false;
+    } else if (!KSpeech::voices().contains(voice)) {
+        // NOTE: if voice is invalid speech-dispatcher will not dispatch anything
+        kWarning() << "Invalid voice" << voice;
+        return false;
+    }
+
     // TODO: error check
     (void)spd_set_synthesis_voice(d->m_speechd, voice.constData());
     return true;
