@@ -52,18 +52,7 @@ public:
      * @param name the name of the cursor to try and load
      * @param fallback the cursor to load if @p name cursor can not be loaded
      */
-    explicit KCursor( const QString & name, Qt::CursorShape fallback = Qt::ArrowCursor );
-
-    /**
-     * Creates a copy of @p cursor.
-     */
-    KCursor( const QCursor & cursor );
-
-    /**
-     * Assigns @p cursor to this cursor, and returns a reference to this
-     * cursor.
-     */
-    KCursor & operator = ( const KCursor & cursor );
+    static QCursor fromName( const QString & name, Qt::CursorShape fallback = Qt::ArrowCursor );
 
     /**
      * Sets auto-hiding the cursor for widget @p w. Enabling it will result in
@@ -135,10 +124,6 @@ public:
      * didn't enable or after disabling auto-hiding.
      */
     static void autoHideEventFilter( QObject *, QEvent * );
-
-private:
-    class Private;
-    Private* const d;
 };
 
 

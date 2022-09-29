@@ -165,36 +165,23 @@ namespace
 #endif // Q_WS_X11
 
 
-KCursor::KCursor( const QString& name, Qt::CursorShape fallback )
-    : QCursor( fallback ),
-      d( 0 )
+QCursor KCursor::fromName( const QString& name, Qt::CursorShape fallback )
 {
 #ifdef Q_WS_X11
     Qt::HANDLE handle = x11LoadXcursor(name);
-
-    if (!handle)
+    if (!handle) {
         handle = x11LoadFontCursor(name);
+    }
+    if (handle) {
+        QCursor result(handle);
+        x11SetCursorName(result.handle(), name);
+        return result;
+    }
 
-    // Unfortunately QCursor doesn't have a setHandle()
-    if (handle)
-        *this = KCursor(handle);
-
-    x11SetCursorName(QCursor::handle(), name);
+    return QCursor(fallback);
 #else
     Q_UNUSED( name )
 #endif
-}
-
-
-KCursor::KCursor( const QCursor &cursor )
-    : QCursor( cursor ), d( 0 )
-{
-}
-
-KCursor &KCursor::operator=( const KCursor &cursor )
-{
-    QCursor::operator=( cursor );
-    return *this;
 }
 
 void KCursor::setAutoHideCursor( QWidget *w, bool enable,
