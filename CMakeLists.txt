@@ -116,7 +116,7 @@ set_package_properties(Libintl PROPERTIES
 macro_optional_find_package(DBusMenuQt)
 set_package_properties(DBusMenuQt PROPERTIES
     DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
-    URL "https://launchpad.net/libdbusmenu-qt"
+    URL "https://osdn.net/projects/kde/"
     TYPE RECOMMENDED
 )
 
@@ -155,7 +155,7 @@ set_package_properties(BZip2 PROPERTIES
 macro_optional_find_package(LibLZMA)
 set_package_properties(LibLZMA PROPERTIES
     DESCRIPTION "Support for xz compressed files and data streams"
-    URL "http://tukaani.org/xz/"
+    URL "https://tukaani.org/xz/"
     TYPE OPTIONAL
 )
 
@@ -266,7 +266,7 @@ set_package_properties(Libmicrohttpd PROPERTIES
 macro_optional_find_package(Speechd)
 set_package_properties(Speechd PROPERTIES
     DESCRIPTION "Speech Dispatcher provides a high-level device independent layer for speech synthesis"
-    URL "http://www.freebsoft.org/speechd"
+    URL "https://freebsoft.org/speechd"
     TYPE RECOMMENDED
     PURPOSE "Text To Speech"
 )
