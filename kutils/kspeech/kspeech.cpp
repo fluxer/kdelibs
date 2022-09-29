@@ -214,8 +214,11 @@ bool KSpeech::setVolume(const int volume)
         return false;
     }
 
-    // TODO: error check
-    (void)spd_set_volume(d->m_speechd, volume);
+    const int speechdresult = spd_set_volume(d->m_speechd, volume);
+    if (speechdresult < 0) {
+        kWarning() << "Speech-dispatcher set volume failed";
+        return false;
+    }
     return true;
 #else
     return false;
@@ -249,8 +252,11 @@ bool KSpeech::setPitch(const int pitch)
         return false;
     }
 
-    // TODO: error check
-    (void)spd_set_voice_pitch(d->m_speechd, pitch);
+    const int speechdresult = spd_set_voice_pitch(d->m_speechd, pitch);
+    if (speechdresult < 0) {
+        kWarning() << "Speech-dispatcher set pitch failed";
+        return false;
+    }
     return true;
 #else
     return false;
@@ -298,8 +304,11 @@ bool KSpeech::setVoice(const QByteArray &voice)
         return false;
     }
 
-    // TODO: error check
-    (void)spd_set_synthesis_voice(d->m_speechd, voice.constData());
+    const int speechdresult = spd_set_synthesis_voice(d->m_speechd, voice.constData());
+    if (speechdresult < 0) {
+        kWarning() << "Speech-dispatcher set voice failed";
+        return false;
+    }
     return true;
 #else
     return false;
@@ -337,8 +346,10 @@ void KSpeech::removeAllJobs()
         return;
     }
 
-    // TODO: error check
-    (void)spd_stop(d->m_speechd);
+    const int speechdresult = spd_stop(d->m_speechd);
+    if (speechdresult < 0) {
+        kWarning() << "Speech-dispatcher stop failed";
+    }
 #endif
 }
 
@@ -350,8 +361,10 @@ void KSpeech::removeJob(int jobNum)
         return;
     }
 
-    // TODO: error check
-    (void)spd_stop_uid(d->m_speechd, jobNum);
+    const int speechdresult = spd_stop_uid(d->m_speechd, jobNum);
+    if (speechdresult < 0) {
+        kWarning() << "Speech-dispatcher stop uid failed";
+    }
 #endif
 }
 
