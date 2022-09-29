@@ -58,7 +58,7 @@ endmacro(_KDE4_ADD_ICON_INSTALL_RULE)
 #  KDE4_INSTALL_ICONS(PATH THEME)
 #    Installs all png and svgz files in the current directory to the icon
 #    directory given in path, in the subdirectory for the given icon theme.
-macro(KDE4_INSTALL_ICONS _defaultpath )
+macro(KDE4_INSTALL_ICONS _defaultpath)
     # the l10n-subdir if language given as second argument (localized icon)
     set(_lang ${ARGV1})
     if(_lang)
@@ -91,7 +91,7 @@ macro(KDE4_INSTALL_ICONS _defaultpath )
                 ${_l10n_SUBDIR}
             )
         endif( _theme_GROUP)
-    endforeach(_current_ICON)
+    endforeach()
 
     # and now the svg icons
     file(GLOB _icons *.svgz)
@@ -119,13 +119,13 @@ endmacro(KDE4_INSTALL_ICONS)
 
 #  KDE4_ADD_KCFG_FILES(SRCS_VAR file1.kcfgc ... fileN.kcfgc)
 #    Use this to add KDE config compiler files to your application/library.
-macro(KDE4_ADD_KCFG_FILES _sources )
+macro(KDE4_ADD_KCFG_FILES _sources)
     foreach(_current_FILE ${ARGN})
-        get_filename_component(_tmp_FILE ${_current_FILE} ABSOLUTE)
-        get_filename_component(_abs_PATH ${_tmp_FILE} DIRECTORY)
-        get_filename_component(_basename ${_tmp_FILE} NAME_WE)
+        get_filename_component(_input ${_current_FILE} ABSOLUTE)
+        get_filename_component(_abs_PATH ${_input} DIRECTORY)
+        get_filename_component(_basename ${_input} NAME_WE)
 
-        file(READ ${_tmp_FILE} _contents)
+        file(READ ${_input} _contents)
         string(REGEX REPLACE "^(.*\n)?File=([^\n]+kcfg).*\n.*$" "\\2"  _kcfg_FILENAME "${_contents}")
         set(_src_FILE    ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.cpp)
         set(_header_FILE ${CMAKE_CURRENT_BINARY_DIR}/${_basename}.h)
@@ -146,22 +146,22 @@ macro(KDE4_ADD_KCFG_FILES _sources )
         # the command for creating the source file from the kcfg file
         add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
             COMMAND ${KDE4_KCFGC_EXECUTABLE}
-            ARGS ${_kcfg_FILE} ${_tmp_FILE} -d "${CMAKE_CURRENT_BINARY_DIR}/"
-            MAIN_DEPENDENCY ${_tmp_FILE}
+            ARGS ${_kcfg_FILE} ${_input} -d "${CMAKE_CURRENT_BINARY_DIR}/"
+            MAIN_DEPENDENCY ${_input}
             DEPENDS ${_kcfg_FILE}
         )
 
         list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
-    endforeach (_current_FILE)
+    endforeach()
 endmacro(KDE4_ADD_KCFG_FILES)
 
 #  KDE4_ADD_PLUGIN(NAME FILE1 ... FILEN)
 #    Create a KDE plugin (KPart, kioslave, etc.) from the given source files.
 #    The resulting plugin will not have "lib" prefix.
-macro(KDE4_ADD_PLUGIN _target_NAME)
-    add_library(${_target_NAME} MODULE ${ARGN})
+macro(KDE4_ADD_PLUGIN _target)
+    add_library(${_target} MODULE ${ARGN})
 
-    set_target_properties(${_target_NAME} PROPERTIES PREFIX "")
+    set_target_properties(${_target} PROPERTIES PREFIX "")
 endmacro(KDE4_ADD_PLUGIN)
 
 #  KDE4_ADD_TEST(TESTNAME FILE1 ... FILEN)
@@ -169,26 +169,28 @@ endmacro(KDE4_ADD_PLUGIN)
 #    are build and executed only if the ENABLE_TESTING option is enabled.
 #    KDESRCDIR is set to the source directory of the test, this can be used
 #    with KGlobal::dirs()->addResourceDir( "data", KDESRCDIR )
-macro(KDE4_ADD_TEST _targetName)
-    KDE4_ADD_MANUAL_TEST(${_targetName} ${ARGN})
+macro(KDE4_ADD_TEST _target)
+    KDE4_ADD_MANUAL_TEST(${_target} ${ARGN})
+
     add_test(
-        NAME ${_targetName}
-        COMMAND "${CMAKE_BINARY_DIR}/kde4_exec.sh" "${CMAKE_CURRENT_BINARY_DIR}/${_targetName}"
+        NAME ${_target}
+        COMMAND "${CMAKE_BINARY_DIR}/kde4_exec.sh" "${CMAKE_CURRENT_BINARY_DIR}/${_target}"
     )
 endmacro(KDE4_ADD_TEST)
 
 #  KDE4_ADD_MANUAL_TEST(TESTNAME FILE1 ... FILEN)
 #    same as KDE_ADD_TEST() except that the test is not run on `make test`
-macro(KDE4_ADD_MANUAL_TEST _targetName)
-    add_executable(${_targetName} ${ARGN})
+macro(KDE4_ADD_MANUAL_TEST _target)
+    add_executable(${_target} ${ARGN})
 
     target_compile_definitions(
-        ${_targetName} PRIVATE
+        ${_target} PRIVATE
         -DKDESRCDIR="${CMAKE_CURRENT_SOURCE_DIR}/"
         -DKDEBINDIR="${CMAKE_CURRENT_BINARY_DIR}/"
     )
+
     set_target_properties(
-        ${_targetName} PROPERTIES
+        ${_target} PROPERTIES
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
     )
 endmacro(KDE4_ADD_MANUAL_TEST)
@@ -196,27 +198,27 @@ endmacro(KDE4_ADD_MANUAL_TEST)
 #  KDE4_ADD_WIDGET(SRCS_VAR FILE1.widgets ... FILEN.widgets)
 #    Use this to add widget description files for the makekdewidgets code
 #    generator for Qt Designer plugins.
-macro(KDE4_ADD_WIDGET _output _sources)
-    foreach(_current_FILE ${_sources})
+macro(KDE4_ADD_WIDGET _sources)
+    foreach(_current_FILE ${ARGN})
         get_filename_component(_input ${_current_FILE} ABSOLUTE)
         get_filename_component(_basename ${_input} NAME_WE)
 
-        set(_source ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.cpp)
+        set(_output ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.cpp)
         set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.moc)
 
         # create source file from the .widgets file
         add_custom_command(
-            OUTPUT ${_source}
-            COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE} -o ${_source} ${_input}
+            OUTPUT ${_output}
+            COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE} -o ${_output} ${_input}
             MAIN_DEPENDENCY ${_input}
         )
 
-        qt4_generate_moc("${_source}" "${_moc}")
+        qt4_generate_moc("${_output}" "${_moc}")
 
-        add_library(${_basename}_autowidgets OBJECT ${_source} ${_moc})
+        add_library(${_basename}_autowidgets OBJECT ${_output} ${_moc})
 
-        set(${_output} ${${_output}} ${_source} ${_moc})
-    endforeach(_current_FILE)
+        set(${_sources} ${${_sources}} ${_output} ${_moc})
+    endforeach()
 endmacro(KDE4_ADD_WIDGET)
 
 #  KDE4_INSTALL_AUTH_HELPER_FILES(HELPER_TARGET HELPER_ID HELPER_USER)
@@ -254,17 +256,18 @@ endfunction(KDE4_INSTALL_AUTH_HELPER_FILES)
 
 #  KDE4_ADD_DBUS_SERVICE(FILE1.service.in ... FILEN.service.in)
 #    Use this to add D-Bus service activation file(s)
-macro(KDE4_ADD_DBUS_SERVICE _sources)
-    foreach(_current_FILE ${_sources})
+macro(KDE4_ADD_DBUS_SERVICE)
+    foreach(_current_FILE ${ARGN})
         get_filename_component(_input ${_current_FILE} ABSOLUTE)
         get_filename_component(_basename ${_input} NAME)
-        string(REPLACE ".service.in" ".service" _output_file ${_basename})
+        string(REPLACE ".service.in" ".service" _output ${_basename})
+
         configure_file(
             ${_input}
-            ${CMAKE_CURRENT_BINARY_DIR}/${_output_file}
+            ${CMAKE_CURRENT_BINARY_DIR}/${_output}
         )
         install(
-            FILES ${CMAKE_CURRENT_BINARY_DIR}/${_output_file}
+            FILES ${CMAKE_CURRENT_BINARY_DIR}/${_output}
             DESTINATION ${KDE4_DBUS_SERVICES_INSTALL_DIR}
         )
     endforeach()
