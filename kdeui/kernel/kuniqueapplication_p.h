@@ -36,7 +36,6 @@ public:
    static KComponentData initHack(bool configUnique);
 
    KUniqueApplication *q;
-   bool processingRequest;
    bool firstInstance;
 
    static bool s_nofork;
