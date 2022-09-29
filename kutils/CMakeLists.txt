@@ -13,6 +13,7 @@ add_subdirectory(kpasswdstore)
 add_subdirectory(kpowermanager)
 add_subdirectory(kdnssd)
 add_subdirectory(khttp)
+add_subdirectory(kspeech)
 
 ######## kidletime ####################
 

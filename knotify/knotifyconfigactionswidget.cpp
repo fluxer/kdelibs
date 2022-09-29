@@ -22,6 +22,7 @@
 
 #include <kstandarddirs.h>
 #include <kiconloader.h>
+#include <kspeech.h>
 
 KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
 	: QWidget(parent)

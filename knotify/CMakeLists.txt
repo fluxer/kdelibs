@@ -4,6 +4,8 @@ include_directories(
     ${KDE4_KIO_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_SOURCE_DIR}/kutils/kspeech
+    ${CMAKE_BINARY_DIR}/kutils/kspeech
 )
 
 if(ENABLE_TESTING)

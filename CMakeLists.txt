@@ -263,6 +263,14 @@ set_package_properties(Libmicrohttpd PROPERTIES
     PURPOSE "HTTP(S) server"
 )
 
+macro_optional_find_package(Speechd)
+set_package_properties(Speechd PROPERTIES
+    DESCRIPTION "Speech Dispatcher provides a high-level device independent layer for speech synthesis"
+    URL "http://www.freebsoft.org/speechd"
+    TYPE RECOMMENDED
+    PURPOSE "Text To Speech"
+)
+
 ################# configure checks and create the configured files #################
 
 include(ConfigureChecks.cmake)
