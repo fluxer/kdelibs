@@ -439,9 +439,6 @@ public:
     /**
      * Returns a path that can be used to create a new KService based
      * on @p suggestedName.
-     * @param showInMenu true, if the service should be shown in the KDE menu
-     *        false, if the service should be hidden from the menu
-     *        This argument isn't used anymore, use NoDisplay=true to hide the service.
      * @param suggestedName name to base the file on, if a service with such
      *        name already exists, a prefix will be added to make it unique.
      * @param menuId If provided, menuId will be set to the menu id to use for
@@ -451,7 +448,7 @@ public:
      *        of the reservedMenuIds
      * @return The path to use for the new KService.
      */
-    static QString newServicePath(bool showInMenu, const QString &suggestedName,
+    static QString newServicePath(const QString &suggestedName,
                                   QString *menuId = 0,
                                   const QStringList *reservedMenuIds = 0);
 

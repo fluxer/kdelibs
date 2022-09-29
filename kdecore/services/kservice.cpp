@@ -755,11 +755,9 @@ QString KService::locateLocal() const
     return KStandardDirs::locateLocal("xdgdata-apps", d->menuId);
 }
 
-QString KService::newServicePath(bool showInMenu, const QString &suggestedName,
+QString KService::newServicePath(const QString &suggestedName,
                                  QString *menuId, const QStringList *reservedMenuIds)
 {
-    Q_UNUSED(showInMenu); // TODO KDE5: remove argument
-
     QString base = suggestedName;
     QString result;
     for(int i = 1; true; i++)

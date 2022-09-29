@@ -910,7 +910,7 @@ bool KOpenWithDialogPrivate::checkAccept()
             // If we got here, we can't seem to find a service for what they wanted. Create one.
 
             QString menuId;
-            QString newPath = KService::newServicePath(false /* ignored argument */, serviceName, &menuId);
+            QString newPath = KService::newServicePath(serviceName, &menuId);
             kDebug(250) << "Creating new service" << serviceName << "(" << newPath << ")" << "menuId=" << menuId;
 
             KDesktopFile desktopFile(newPath);
