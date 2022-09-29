@@ -150,7 +150,6 @@ KSpeech::KSpeech(QObject* parent)
 
 KSpeech::~KSpeech()
 {
-    removeAllJobs();
     delete d;
 }
 
