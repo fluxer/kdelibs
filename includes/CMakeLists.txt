@@ -339,7 +339,6 @@ install(
     KWindowInfo
     KWindowSystem
     KWordMacroExpander
-    KWordWrap
     KXBELBookmarkImporterImpl
     KXErrorHandler
     KXMLGUIBuilder

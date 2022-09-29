@@ -49,7 +49,6 @@ KDEUI_UNIT_TESTS(
     kshortcuttest
     kstandardshortcuttest
     kuniqueapptest
-    kwordwraptest
     kstartupinfo_unittest
     kcolorutilstest
     kxmlgui_unittest

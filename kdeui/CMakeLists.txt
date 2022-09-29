@@ -188,7 +188,6 @@ set(kdeui_LIB_SRCS
     util/kpassivepopup.cpp
     util/kpassivepopupmessagehandler.cpp
     util/kstandardguiitem.cpp
-    util/kwordwrap.cpp
     util/kxerrorhandler.cpp
     util/kxmessages.cpp
     util/kundostack.cpp
@@ -520,7 +519,6 @@ install(
     util/kpassivepopup.h
     util/kpassivepopupmessagehandler.h
     util/kstandardguiitem.h
-    util/kwordwrap.h
     util/kxerrorhandler.h
     util/kxmessages.h
     util/kundostack.h
