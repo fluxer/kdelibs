@@ -182,8 +182,6 @@ set(kdeui_LIB_SRCS
     util/kguiitem.cpp
     util/kkeyserver.cpp
     util/kmanagerselection.cpp
-    util/kmodifierkeyinfo.cpp
-    util/kmodifierkeyinfoprovider.cpp
     util/knumvalidator.cpp
     util/kpassivepopup.cpp
     util/kpassivepopupmessagehandler.cpp
@@ -302,15 +300,6 @@ if (Q_WS_X11 AND X11_Xkb_FOUND AND X11_Xkbfile_FOUND)
     include_directories (
         ${X11_Xkb_INCLUDE_PATH}
         ${X11_Xlib_INCLUDE_PATH}
-    )
-    set(kdeui_LIB_SRCS
-        ${kdeui_LIB_SRCS}
-        util/kmodifierkeyinfoprovider_x11.cpp
-    )
-else()
-    set(kdeui_LIB_SRCS
-        ${kdeui_LIB_SRCS}
-        util/kmodifierkeyinfoprovider_dummy.cpp
     )
 endif()
 
@@ -514,7 +503,6 @@ install(
     util/kguiitem.h
     util/kkeyserver.h
     util/kmanagerselection.h
-    util/kmodifierkeyinfo.h
     util/knumvalidator.h
     util/kpassivepopup.h
     util/kpassivepopupmessagehandler.h

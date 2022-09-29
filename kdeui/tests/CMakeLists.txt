@@ -136,7 +136,6 @@ KDEUI_EXECUTABLE_TESTS(
     kcompletionuitest
     kmainwindowrestoretest
     kmainwindowtest
-    kmodifierkeyinfotest
 )
 
 if (Q_WS_X11)

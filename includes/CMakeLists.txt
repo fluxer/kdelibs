@@ -198,7 +198,6 @@ install(
     KMimeTypeChooserDialog
     KMimeTypeTrader
     KModelIndexProxyMapper
-    KModifierKeyInfo
     KMountPoint
     KMultiTabBar
     KMultiTabBarButton
