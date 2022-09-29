@@ -97,7 +97,6 @@ void KSpeechPrivate::initSpeechD()
     const int volume = kconfiggroup.readEntry("volume", 100);
     const int pitch = kconfiggroup.readEntry("pitch", 0);
     const QByteArray voice = kconfiggroup.readEntry("voice", QByteArray());
-    // qDebug() << Q_FUNC_INFO << m_speechid << volume << pitch << voice;
     KSpeech* kspeech = qobject_cast<KSpeech*>(parent());
     Q_ASSERT(kspeech);
     kspeech->setVolume(volume);
@@ -116,7 +115,6 @@ void KSpeechPrivate::closeSpeechD()
 void KSpeechPrivate::speechCallback(size_t msg_id, size_t client_id, SPDNotificationType state)
 {
     Q_UNUSED(client_id);
-    // qDebug() << Q_FUNC_INFO << msg_id << client_id << state;
     if (Q_UNLIKELY(!s_kspeechprivate)) {
         kWarning() << "Null kspeech private pointer";
         return;
@@ -156,7 +154,6 @@ KSpeech::KSpeech(QObject* parent)
 #if defined(HAVE_SPEECHD)
     d->initSpeechD();
 #endif
-    // qDebug() << Q_FUNC_INFO << volume() << pitch() << voices();
 }
 
 KSpeech::~KSpeech()
@@ -329,8 +326,6 @@ int KSpeech::say(const QString &text)
         kWarning() << "Speech-dispatcher say failed";
         return 0;
     }
-
-    // qDebug() << Q_FUNC_INFO << jobNum << spd_get_client_id(d->m_speechd);
     return jobNum;
 #else
     kWarning() << "KSpeech is a stub";
@@ -372,4 +367,5 @@ void KSpeech::_jobStateChanged(int jobNum, int state)
 {
     emit jobStateChanged(jobNum, state);
 }
+
 #include "kspeech.moc"
