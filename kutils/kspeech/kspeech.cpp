@@ -94,7 +94,7 @@ void KSpeechPrivate::initSpeechD()
         KConfig kconfig("kspeechrc", KConfig::SimpleConfig);
         KConfigGroup kconfiggroup = kconfig.group(m_speechid);
         const int volume = kconfiggroup.readEntry("volume", 100);
-        const int pitch = kconfiggroup.readEntry("pitch", 1);
+        const int pitch = kconfiggroup.readEntry("pitch", 0);
         const QByteArray voice = kconfiggroup.readEntry("voice", QByteArray());
         // qDebug() << Q_FUNC_INFO << m_speechid << volume << pitch << voice;
         KSpeech* kspeech = qobject_cast<KSpeech*>(parent());
