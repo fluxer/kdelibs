@@ -33,14 +33,13 @@ static KSpeechPrivate* s_kspeechprivate = nullptr;
 // connection
 class KSpeechPrivate : public QObject
 {
-    friend class KSpeech;
     Q_OBJECT
 public:
     KSpeechPrivate(QObject *parent);
     ~KSpeechPrivate();
 
 #if defined(HAVE_SPEECHD)
-    void initSpeechD();
+    void openSpeechD();
     void closeSpeechD();
     static void speechCallback(size_t msg_id, size_t client_id, SPDNotificationType state);
 #endif
@@ -49,6 +48,7 @@ Q_SIGNALS:
     void signalJobStateChanged(int jobNum, int state);
 
 private:
+    friend KSpeech;
 #if defined(HAVE_SPEECHD)
     SPDConnection* m_speechd;
 #endif
@@ -75,7 +75,7 @@ KSpeechPrivate::~KSpeechPrivate()
 }
 
 #if defined(HAVE_SPEECHD)
-void KSpeechPrivate::initSpeechD()
+void KSpeechPrivate::openSpeechD()
 {
     Q_ASSERT(!m_speechd);
     m_speechd = spd_open(m_speechid.constData(), "main", NULL, SPD_MODE_THREADED);
@@ -152,7 +152,7 @@ KSpeech::KSpeech(QObject* parent)
     );
 
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
+    d->openSpeechD();
 #endif
 }
 
@@ -180,7 +180,7 @@ void KSpeech::setSpeechID(const QString &id)
 #endif
     d->m_speechid = id.toUtf8();
 #if defined(HAVE_SPEECHD)
-    d->initSpeechD();
+    d->openSpeechD();
 #endif
 }
 
@@ -206,13 +206,13 @@ bool KSpeech::setVolume(const int volume)
         return false;
     }
 
-    if (volume < -100 || volume > 100) {
+    if (Q_UNLIKELY(volume < -100 || volume > 100)) {
         kWarning() << "Invalid volume value" << volume;
         return false;
     }
 
     const int speechdresult = spd_set_volume(d->m_speechd, volume);
-    if (speechdresult < 0) {
+    if (Q_UNLIKELY(speechdresult < 0)) {
         kWarning() << "Speech-dispatcher set volume failed";
         return false;
     }
@@ -244,13 +244,13 @@ bool KSpeech::setPitch(const int pitch)
         return false;
     }
 
-    if (pitch < -100 || pitch > 100) {
+    if (Q_UNLIKELY(pitch < -100 || pitch > 100)) {
         kWarning() << "Invalid pitch value" << pitch;
         return false;
     }
 
     const int speechdresult = spd_set_voice_pitch(d->m_speechd, pitch);
-    if (speechdresult < 0) {
+    if (Q_UNLIKELY(speechdresult < 0)) {
         kWarning() << "Speech-dispatcher set pitch failed";
         return false;
     }
@@ -270,7 +270,7 @@ QList<QByteArray> KSpeech::voices() const
     }
 
     SPDVoice** speechdvoices = spd_list_synthesis_voices(d->m_speechd);
-    if (!speechdvoices) {
+    if (Q_UNLIKELY(!speechdvoices)) {
         kWarning() << "Null speech-dispatcher voices pointer";
         return result;
     }
@@ -292,17 +292,18 @@ bool KSpeech::setVoice(const QByteArray &voice)
         return false;
     }
 
+    // could be empty if not set in kspeechrc
     if (voice.isEmpty()) {
         kWarning() << "Empty voice" << voice;
         return false;
-    } else if (!KSpeech::voices().contains(voice)) {
+    } else if (Q_UNLIKELY(!KSpeech::voices().contains(voice))) {
         // NOTE: if voice is invalid speech-dispatcher will not dispatch anything
         kWarning() << "Invalid voice value" << voice;
         return false;
     }
 
     const int speechdresult = spd_set_synthesis_voice(d->m_speechd, voice.constData());
-    if (speechdresult < 0) {
+    if (Q_UNLIKELY(speechdresult < 0)) {
         kWarning() << "Speech-dispatcher set voice failed";
         return false;
     }
@@ -322,7 +323,7 @@ int KSpeech::say(const QString &text)
 
     const QByteArray textbytes = text.toUtf8();
     const int jobNum = spd_say(d->m_speechd, SPD_TEXT, textbytes.constData());
-    if (jobNum < 0) {
+    if (Q_UNLIKELY(jobNum < 0)) {
         kWarning() << "Speech-dispatcher say failed";
         return 0;
     }
@@ -342,7 +343,7 @@ void KSpeech::removeAllJobs()
     }
 
     const int speechdresult = spd_stop(d->m_speechd);
-    if (speechdresult < 0) {
+    if (Q_UNLIKELY(speechdresult < 0)) {
         kWarning() << "Speech-dispatcher stop failed";
     }
 #endif
@@ -357,7 +358,7 @@ void KSpeech::removeJob(int jobNum)
     }
 
     const int speechdresult = spd_stop_uid(d->m_speechd, jobNum);
-    if (speechdresult < 0) {
+    if (Q_UNLIKELY(speechdresult < 0)) {
         kWarning() << "Speech-dispatcher stop uid failed";
     }
 #endif
