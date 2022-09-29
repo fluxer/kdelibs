@@ -26,11 +26,10 @@
 class KSpeechPrivate;
 
 /*!
-    Class for Text To Speech.
+    Class for Text-To-Speech.
 
     @since 4.22
     @warning the API is subject to change
-    @todo implement configuration options
 */
 class KSPEECH_EXPORT KSpeech : public QObject
 {
@@ -48,6 +47,15 @@ public:
     static bool isSupported();
 
     void setSpeechID(const QString &id);
+
+    int volume() const;
+    bool setVolume(const int volume);
+
+    int pitch() const;
+    bool setPitch(const int pitch);
+
+    QList<QByteArray> voices() const;
+    bool setVoice(const QByteArray &voice);
 
 public Q_SLOTS:
     int say(const QString &text);

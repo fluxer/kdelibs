@@ -20,6 +20,8 @@
 
 #include <QCoreApplication>
 #include <kdebug.h>
+#include <kconfig.h>
+#include <kconfiggroup.h>
 
 #if defined(HAVE_SPEECHD)
 #  include <speech-dispatcher/libspeechd.h>
@@ -38,6 +40,7 @@ public:
     ~KSpeechPrivate();
 
 #if defined(HAVE_SPEECHD)
+    void initSpeechD();
     static void speechCallback(size_t msg_id, size_t client_id, SPDNotificationType state);
 #endif
 
@@ -71,6 +74,37 @@ KSpeechPrivate::~KSpeechPrivate()
 }
 
 #if defined(HAVE_SPEECHD)
+void KSpeechPrivate::initSpeechD()
+{
+    if (!m_speechd) {
+        m_speechd = spd_open(m_speechid.constData(), "main", NULL, SPD_MODE_THREADED);
+        if (Q_UNLIKELY(!m_speechd)) {
+            kWarning() << "Could not open speech-dispatcher connection";
+            return;
+        }
+
+        m_speechd->callback_begin = KSpeechPrivate::speechCallback;
+        m_speechd->callback_end = KSpeechPrivate::speechCallback;
+        m_speechd->callback_cancel = KSpeechPrivate::speechCallback;
+
+        spd_set_notification_on(m_speechd, SPD_BEGIN);
+        spd_set_notification_on(m_speechd, SPD_END);
+        spd_set_notification_on(m_speechd, SPD_CANCEL);
+
+        KConfig kconfig("kspeechrc", KConfig::SimpleConfig);
+        KConfigGroup kconfiggroup = kconfig.group(m_speechid);
+        const int volume = kconfiggroup.readEntry("volume", 100);
+        const int pitch = kconfiggroup.readEntry("pitch", 1);
+        const QByteArray voice = kconfiggroup.readEntry("voice", QByteArray());
+        // qDebug() << Q_FUNC_INFO << m_speechid << volume << pitch << voice;
+        KSpeech* kspeech = qobject_cast<KSpeech*>(parent());
+        Q_ASSERT(kspeech);
+        kspeech->setVolume(volume);
+        kspeech->setPitch(pitch);
+        kspeech->setVoice(voice);
+    }
+}
+
 void KSpeechPrivate::speechCallback(size_t msg_id, size_t client_id, SPDNotificationType state)
 {
     Q_UNUSED(client_id);
@@ -110,6 +144,8 @@ KSpeech::KSpeech(QObject* parent)
         d, SIGNAL(signalJobStateChanged(int,int)),
         this, SLOT(_jobStateChanged(int,int))
     );
+
+    // qDebug() << Q_FUNC_INFO << volume() << pitch() << voices();
 }
 
 KSpeech::~KSpeech()
@@ -133,24 +169,122 @@ void KSpeech::setSpeechID(const QString &id)
     d->m_speechid = id.toUtf8();
 }
 
+int KSpeech::volume() const
+{
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+
+    if (Q_UNLIKELY(!d->m_speechd)) {
+        kDebug() << "Null speech-dispatcher pointer";
+        return 0;
+    }
+
+    return spd_get_volume(d->m_speechd);
+#else
+    return 0;
+#endif
+}
+
+bool KSpeech::setVolume(const int volume)
+{
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+
+    if (Q_UNLIKELY(!d->m_speechd)) {
+        kDebug() << "Null speech-dispatcher pointer";
+        return false;
+    }
+
+    // TODO: error check
+    (void)spd_set_volume(d->m_speechd, volume);
+    return true;
+#else
+    return false;
+#endif
+}
+
+int KSpeech::pitch() const
+{
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+
+    if (Q_UNLIKELY(!d->m_speechd)) {
+        kDebug() << "Null speech-dispatcher pointer";
+        return 0;
+    }
+
+    return spd_get_voice_pitch(d->m_speechd);
+#else
+    return 0;
+#endif
+}
+
+bool KSpeech::setPitch(const int pitch)
+{
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+
+    if (Q_UNLIKELY(!d->m_speechd)) {
+        kDebug() << "Null speech-dispatcher pointer";
+        return false;
+    }
+
+    // TODO: error check
+    (void)spd_set_voice_pitch(d->m_speechd, pitch);
+    return true;
+#else
+    return false;
+#endif
+}
+
+QList<QByteArray> KSpeech::voices() const
+{
+    QList<QByteArray> result;
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+
+    if (Q_UNLIKELY(!d->m_speechd)) {
+        kDebug() << "Null speech-dispatcher pointer";
+        return result;
+    }
+
+    SPDVoice** speechdvoices = spd_list_synthesis_voices(d->m_speechd);
+    if (!speechdvoices) {
+        kWarning() << "Null speech-dispatcher voices pointer";
+        return result;
+    }
+    int i = 0;
+    while (speechdvoices[i]) {
+        result.append(speechdvoices[i]->name);
+        i++;
+    }
+    free_spd_voices(speechdvoices);
+#endif
+    return result;
+}
+
+bool KSpeech::setVoice(const QByteArray &voice)
+{
+#if defined(HAVE_SPEECHD)
+    d->initSpeechD();
+
+    if (Q_UNLIKELY(!d->m_speechd)) {
+        kDebug() << "Null speech-dispatcher pointer";
+        return false;
+    }
+
+    // TODO: error check
+    (void)spd_set_synthesis_voice(d->m_speechd, voice.constData());
+    return true;
+#else
+    return false;
+#endif
+}
+
 int KSpeech::say(const QString &text)
 {
 #if defined(HAVE_SPEECHD)
-    if (!d->m_speechd) {
-        d->m_speechd = spd_open(d->m_speechid.constData(), "main", NULL, SPD_MODE_THREADED);
-        if (Q_UNLIKELY(!d->m_speechd)) {
-            kWarning() << "Could not open speech-dispatcher connection";
-            return 0;
-        }
-
-        d->m_speechd->callback_begin = KSpeechPrivate::speechCallback;
-        d->m_speechd->callback_end = KSpeechPrivate::speechCallback;
-        d->m_speechd->callback_cancel = KSpeechPrivate::speechCallback;
-
-        spd_set_notification_on(d->m_speechd, SPD_BEGIN);
-        spd_set_notification_on(d->m_speechd, SPD_END);
-        spd_set_notification_on(d->m_speechd, SPD_CANCEL);
-    }
+    d->initSpeechD();
 
     const QByteArray textbytes = text.toUtf8();
     const int jobNum = spd_say(d->m_speechd, SPD_TEXT, textbytes.constData());
@@ -175,7 +309,8 @@ void KSpeech::removeAllJobs()
         return;
     }
 
-    spd_stop(d->m_speechd);
+    // TODO: error check
+    (void)spd_stop(d->m_speechd);
     spd_close(d->m_speechd);
     d->m_speechd = nullptr;
 #endif
@@ -189,7 +324,8 @@ void KSpeech::removeJob(int jobNum)
         return;
     }
 
-    spd_stop_uid(d->m_speechd, jobNum);
+    // TODO: error check
+    (void)spd_stop_uid(d->m_speechd, jobNum);
 #endif
 }
 
