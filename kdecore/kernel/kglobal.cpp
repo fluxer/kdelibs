@@ -165,7 +165,6 @@ KLocale *KGlobal::locale()
         d->locale = 0;
         d->locale = new KLocale(mainComponent().catalogName());
         d->localeIsFromFakeComponent = !d->mainComponent.isValid();
-        QTextCodec::setCodecForLocale(d->locale->codecForEncoding());
         mainComponent().aboutData()->translateInternalProgramName();
         QCoreApplication* coreApp = QCoreApplication::instance();
         if (coreApp) { // testcase: kwrite --help: no qcore app

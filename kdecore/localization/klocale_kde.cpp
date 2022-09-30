@@ -99,8 +99,7 @@ KLocalePrivate::KLocalePrivate(KLocale *q_ptr, const QString &catalogName, KShar
     m_language(QString()),
     m_languages(0),
     m_catalogName(QString()),
-    m_calendar(0),
-    m_codecForEncoding(0)
+    m_calendar(0)
 {
     init(catalogName, QString(), QString(), config, 0);
 }
@@ -113,8 +112,7 @@ KLocalePrivate::KLocalePrivate(KLocale *q_ptr, const QString& catalogName,
     m_language(QString()),
     m_languages(0),
     m_catalogName(QString()),
-    m_calendar(0),
-    m_codecForEncoding(0)
+    m_calendar(0)
 {
     init(catalogName, language, country, KSharedConfig::Ptr(), config);
 }
@@ -196,11 +194,6 @@ void KLocalePrivate::copy(const KLocalePrivate &rhs)
     m_byteSizeFmt = rhs.m_byteSizeFmt;
     m_pageSize = rhs.m_pageSize;
     m_measureSystem = rhs.m_measureSystem;
-
-    // Encoding settings
-    m_encoding = rhs.m_encoding;
-    m_codecForEncoding = rhs.m_codecForEncoding;
-    m_utf8FileEncoding = rhs.m_utf8FileEncoding;
 }
 
 KLocalePrivate::~KLocalePrivate()
@@ -240,8 +233,6 @@ void KLocalePrivate::init(const QString& catalogName, const QString &language, c
         useEnvironmentVariables = false;
     }
 
-    initEncoding();
-    initFileNameEncoding();
     initCountry(country, cg.readEntry(QLatin1String("Country")));
     initLanguageList(language, cg.readEntry(QLatin1String("Language")), useEnvironmentVariables);
     // Now that we have a language, we can set up the config which uses it to setLocale()
@@ -2237,49 +2228,6 @@ bool KLocalePrivate::useDefaultLanguage() const
     return language() == KLocale::defaultLanguage();
 }
 
-void KLocalePrivate::initEncoding()
-{
-    m_codecForEncoding = 0;
-
-    // This all made more sense when we still had the EncodingEnum config key.
-    setEncoding(QTextCodec::codecForLocale()->mibEnum());
-
-    if (!m_codecForEncoding) {
-        kWarning() << "Cannot resolve system encoding, defaulting to ISO 8859-1.";
-        const int mibDefault = 4; // ISO 8859-1
-        setEncoding(mibDefault);
-    }
-
-    Q_ASSERT(m_codecForEncoding);
-}
-
-void KLocalePrivate::initFileNameEncoding()
-{
-    // If the following environment variable is set, assume all filenames
-    // are in UTF-8 regardless of the current C locale.
-    m_utf8FileEncoding = !qgetenv("KDE_UTF8_FILENAMES").isEmpty();
-    if (!m_utf8FileEncoding) {
-        const QByteArray ctype = setlocale(LC_CTYPE, 0);
-        if (ctype.endsWith("UTF-8")) {
-            m_utf8FileEncoding = true;
-            return;
-        }
-        QByteArray lang = qgetenv("LC_ALL");
-        if (lang.isEmpty()) {
-            lang = qgetenv("LC_CTYPE");
-        }
-        if (lang.isEmpty()) {
-            lang = qgetenv("LANG");
-        }
-        if (lang.endsWith("UTF-8")) {
-            m_utf8FileEncoding = true;
-            return;
-        }
-    }
-    // Otherwise, stay with QFile's default filename encoding functions
-    // which, on Unix platforms, use the locale's codec.
-}
-
 void KLocalePrivate::setDateFormat(const QString &format)
 {
     m_dateFormat = format.trimmed();
@@ -2404,39 +2352,6 @@ QString KLocalePrivate::defaultLanguage()
 QString KLocalePrivate::defaultCountry()
 {
     return QString::fromLatin1("C");
-}
-
-const QByteArray KLocalePrivate::encoding() const
-{
-    return codecForEncoding()->name();
-}
-
-int KLocalePrivate::encodingMib() const
-{
-    return codecForEncoding()->mibEnum();
-}
-
-int KLocalePrivate::fileEncodingMib() const
-{
-    if (m_utf8FileEncoding) {
-        return 106;
-    }
-    return codecForEncoding()->mibEnum();
-}
-
-QTextCodec *KLocalePrivate::codecForEncoding() const
-{
-    return m_codecForEncoding;
-}
-
-bool KLocalePrivate::setEncoding(int mibEnum)
-{
-    QTextCodec * codec = QTextCodec::codecForMib(mibEnum);
-    if (codec) {
-        m_codecForEncoding = codec;
-    }
-
-    return codec != 0;
 }
 
 QStringList KLocalePrivate::allLanguagesList()

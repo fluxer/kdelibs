@@ -1239,46 +1239,6 @@ public:
     QStringList languageList() const;
 
     /**
-     * Returns the user's preferred encoding.
-     *
-     * @return The name of the preferred encoding
-     *
-     * @see codecForEncoding
-     * @see encodingMib
-     */
-    const QByteArray encoding() const;
-
-    /**
-     * Returns the user's preferred encoding.
-     *
-     * @return The Mib of the preferred encoding
-     *
-     * @see encoding
-     * @see codecForEncoding
-     */
-    int encodingMib() const;
-
-    /**
-     * Returns the user's preferred encoding. Should never be NULL.
-     *
-     * @return The codec for the preferred encoding
-     *
-     * @see encoding
-     * @see encodingMib
-     */
-    QTextCodec * codecForEncoding() const;
-
-    /**
-     * Returns the file encoding.
-     *
-     * @return The Mib of the file encoding
-     *
-     * @see QFile::encodeName
-     * @see QFile::decodeName
-     */
-    int fileEncodingMib() const;
-
-    /**
      * Changes the current date format.
      *
      * The format of the date is a string which contains variables that will

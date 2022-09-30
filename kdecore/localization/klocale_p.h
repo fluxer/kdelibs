@@ -846,55 +846,6 @@ public:
     KLocale::MeasureSystem measureSystem() const;
 
     /***************************
-     **   Encoding settings   **
-     ***************************/
-
-protected:
-
-    /**
-     * @internal Figures out which encoding the user prefers.
-     */
-    void initEncoding();
-
-    /**
-     * @internal Figures out which encoding the user prefers for filenames
-     * and sets up the appropriate QFile encoding and decoding functions.
-     */
-    void initFileNameEncoding();
-
-public:
-
-    /**
-     * @internal Sets the current encoding
-     * The worker of the same-name KLocale API function.
-     */
-    bool setEncoding(int mibEnum);
-
-    /**
-     * @internal Returns the user's preferred encoding.
-     * The worker of the same-name KLocale API function.
-     */
-    const QByteArray encoding() const;
-
-    /**
-     * @internal Returns the user's preferred encoding.
-     * The worker of the same-name KLocale API function.
-     */
-    int encodingMib() const;
-
-    /**
-     * @internal Returns the file encoding.
-     * The worker of the same-name KLocale API function.
-     */
-    int fileEncodingMib() const;
-
-    /**
-     * @internal Returns the user's preferred encoding.
-     * The worker of the same-name KLocale API function.
-     */
-    QTextCodec *codecForEncoding() const;
-
-    /***************************
      **       Utilities       **
      ***************************/
 
@@ -992,11 +943,6 @@ private:
     QList<QString>             m_byteSizeFmt;
     int                        m_pageSize;
     KLocale::MeasureSystem     m_measureSystem;
-
-    // Encoding settings
-    QString     m_encoding;
-    QTextCodec *m_codecForEncoding;
-    bool        m_utf8FileEncoding;
 };
 
 #endif /* KLOCALE_P_H */

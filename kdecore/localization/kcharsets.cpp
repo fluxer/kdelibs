@@ -345,7 +345,7 @@ QTextCodec *KCharsets::codecForNameOrNull( const QByteArray& n ) const
         // No name, assume locale (KDE's, not Qt's)
         if ( d->codecForNameDict.contains( kSystemEncoding ) )
             return d->codecForNameDict.value( kSystemEncoding );
-        QTextCodec* codec = KGlobal::locale()->codecForEncoding();
+        QTextCodec* codec = QTextCodec::codecForLocale();
         d->codecForNameDict.insert(kSystemEncoding, codec);
         return codec;
     }

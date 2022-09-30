@@ -50,8 +50,8 @@ KEncodingFileDialog::KEncodingFileDialog(const QString& startDir, const QString&
 
   d->encoding->clear ();
   QString sEncoding = encoding;
-  QString systemEncoding = QLatin1String(KGlobal::locale()->encoding());
-  if (sEncoding.isEmpty() || sEncoding == "System")
+  QByteArray systemEncoding = QTextCodec::codecForLocale()->name();
+  if (sEncoding.isEmpty() || sEncoding == QLatin1String("System"))
      sEncoding = systemEncoding;
 
   const QStringList encodings (KGlobal::charsets()->availableEncodingNames());

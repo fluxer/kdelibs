@@ -478,31 +478,6 @@ QString KLocale::defaultCountry()
     return KLocalePrivate::defaultCountry();
 }
 
-const QByteArray KLocale::encoding() const
-{
-    return d->encoding();
-}
-
-int KLocale::encodingMib() const
-{
-    return d->encodingMib();
-}
-
-int KLocale::fileEncodingMib() const
-{
-    return d->fileEncodingMib();
-}
-
-QTextCodec *KLocale::codecForEncoding() const
-{
-    return d->codecForEncoding();
-}
-
-bool KLocale::setEncoding(int mibEnum)
-{
-    return d->setEncoding(mibEnum);
-}
-
 QStringList KLocale::allLanguagesList() const
 {
     return d->allLanguagesList();

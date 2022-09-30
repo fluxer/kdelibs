@@ -941,22 +941,7 @@ QString KUrl::toMimeDataString() const // don't fold this into populateMimeData,
 {
   if ( isLocalFile() )
   {
-#if 1
     return url();
-#else
-    // According to the XDND spec, file:/ URLs for DND must have
-    // the hostname part. But in really it just breaks many apps,
-    // so it's disabled for now.
-    const QString s = url( 0, KGlobal::locale()->fileEncodingMib() );
-    if( !s.startsWith( QLatin1String ( "file://" ) ))
-    {
-        QString hostname = QHostInfo::localHostName();
-        if ( !hostname.isEmpty() )
-        {
-            return QString( "file://" ) + hostname + s.mid( 5 );
-        }
-    }
-#endif
   }
 
   if (hasPass()) {
