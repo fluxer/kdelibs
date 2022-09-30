@@ -146,17 +146,6 @@ public:
     */
     static bool removeDir(const QString &path);
 
-protected:
-
-   /**
-    * Creates a "random" directory with specified mode
-    * @param directoryPrefix to use when creating temp directory
-    *       (the rest is generated randomly)
-    * @param mode directory permissions
-    * @return true upon success
-    */
-   bool create(const QString &directoryPrefix, int mode);
-
 private:
     Q_DISABLE_COPY(KTempDir)
     class Private;

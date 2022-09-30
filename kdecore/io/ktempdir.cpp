@@ -111,52 +111,49 @@ public:
     }
 };
 
-KTempDir::KTempDir(const QString &directoryPrefix, int mode)
-    : d(new Private)
+KTempDir::KTempDir(const QString &_directoryPrefix, int mode)
+    : d(new Private())
 {
-    (void) create(directoryPrefix.isEmpty() ? KStandardDirs::locateLocal("tmp", KGlobal::mainComponent().componentName()) : directoryPrefix , mode);
-}
+    QString directoryPrefix = _directoryPrefix;
+    if (directoryPrefix.isEmpty()) {
+        directoryPrefix = KStandardDirs::locateLocal("tmp", KGlobal::mainComponent().componentName());
+    }
 
-bool KTempDir::create(const QString &directoryPrefix, int mode)
-{
-   QByteArray nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
-   char *realName = ::mkdtemp(nme.data());
-   if (realName == 0) {
-       // Recreate it for the warning, mkdtemps emptied it
-       nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
-       kWarning(180) << "KTempDir: Error trying to create " << nme.data()
-                     << ": " << ::strerror(errno) << endl;
-       d->error = errno;
-       d->tmpName.clear();
-       return false;
+    QByteArray nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
+    char *realName = ::mkdtemp(nme.data());
+    if (realName == 0) {
+        // Recreate it for the warning, mkdtemps emptied it
+        nme = QFile::encodeName(directoryPrefix) + "XXXXXX";
+        kWarning(180) << "KTempDir: Error trying to create " << nme.data()
+                      << ": " << ::strerror(errno) << endl;
+        d->error = errno;
+        d->tmpName.clear();
+        return;
+    }
+
+    QByteArray realNameStr(realName);
+    d->tmpName = QFile::decodeName(realNameStr)+QLatin1Char('/');
+    kDebug(180) << "KTempDir: Temporary directory created :" << d->tmpName << endl;
+
+    mode_t umsk = KGlobal::umask();
+    if (::chmod(nme, mode & (~umsk)) < 0) {
+        kWarning(180) << "KTempDir: Unable to change permissions on" << d->tmpName
+                      << ":" << ::strerror(errno);
+        d->error = errno;
+        d->tmpName.clear();
+        (void) ::rmdir(realName); // Cleanup created directory
+        return;
    }
 
-   // got a return value != 0
-   QByteArray realNameStr(realName);
-   d->tmpName = QFile::decodeName(realNameStr)+QLatin1Char('/');
-   kDebug(180) << "KTempDir: Temporary directory created :" << d->tmpName << endl;
+    // Success!
+    d->exists = true;
 
-   mode_t umsk = KGlobal::umask();
-   if (::chmod(nme, mode & (~umsk)) < 0) {
-       kWarning(180) << "KTempDir: Unable to change permissions on" << d->tmpName
-                     << ":" << ::strerror(errno);
-       d->error = errno;
-       d->tmpName.clear();
-       (void) ::rmdir(realName); // Cleanup created directory
-       return false;
+    // Set uid/gid (necessary for SUID programs)
+    if (::chown(nme, ::getuid(), ::getgid()) < 0) {
+        // Just warn, but don't failover yet
+        kWarning(180) << "KTempDir: Unable to change owner on" << d->tmpName
+                      << ":" << ::strerror(errno);
    }
-
-   // Success!
-   d->exists = true;
-
-   // Set uid/gid (necessary for SUID programs)
-   if (::chown(nme, ::getuid(), ::getgid()) < 0) {
-       // Just warn, but don't failover yet
-       kWarning(180) << "KTempDir: Unable to change owner on" << d->tmpName
-                     << ":" << ::strerror(errno);
-   }
-
-   return true;
 }
 
 KTempDir::~KTempDir()
@@ -164,7 +161,6 @@ KTempDir::~KTempDir()
     if (d->autoRemove) {
         unlink();
     }
-
     delete d;
 }
 
@@ -208,9 +204,10 @@ void KTempDir::unlink()
 
 bool KTempDir::removeDir(const QString &path)
 {
-    //kDebug(180) << path;
+    // kDebug(180) << path;
     if (!QDir(path).exists()) {
-        return true; // The goal is that there is no directory
+        // The goal is that there is no directory
+        return true;
     }
 
     const QByteArray cstr(QFile::encodeName(path));
