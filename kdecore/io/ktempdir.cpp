@@ -33,9 +33,67 @@
 #include "kglobal.h"
 #include "kcomponentdata.h"
 #include "kstandarddirs.h"
-#include <kdebug.h>
+#include "kdebug.h"
 #include "kde_file.h"
 
+// Auxiliary recursive function for removeDirs
+static bool rmtree(const QByteArray &name)
+{
+    //kDebug(180) << "Checking directory for remove" << name;
+    KDE_struct_stat st;
+    if (KDE_lstat(name.constData(), &st) == -1) { // Do not dereference symlink!
+        return false;
+    }
+    if (S_ISDIR(st.st_mode)) {
+        // This is a directory, so process it
+        //kDebug(180) << "File" << name << "is DIRECTORY!";
+        KDE_struct_dirent* ep;
+        DIR* dp = ::opendir(name.constData());
+        if (!dp) {
+            return false;
+        }
+        while ((ep = KDE_readdir(dp))) {
+            //kDebug(180) << "CHECKING" << name << "/" << ep->d_name;
+            if (qstrcmp(ep->d_name, "." ) == 0 || qstrcmp(ep->d_name, "..") == 0) {
+                continue;
+            }
+            QByteArray newName(name);
+            newName += '/';
+            newName += ep->d_name;
+            /*
+             * Be defensive and close the directory.
+             *
+             * Potential problems:
+             * - opendir/readdir/closedir is not re-entrant
+             * - unlink and rmdir invalidates a opendir/readdir/closedir
+             * - limited number of file descriptors for opendir/readdir/closedir
+             */
+            if (::closedir(dp)) {
+                kDebug(180) << "Error closing" << name;
+                return false;
+            }
+            // Recurse!
+            //kDebug(180) << "RECURSE: " << newName;
+            if (!rmtree(newName)) {
+                return false;
+            }
+            // We have to re-open the directory before continuing
+            dp = ::opendir(name.constData());
+            if (!dp) {
+                return false;
+            }
+        }
+        if (::closedir(dp)) {
+            kDebug(180) << "Error closing" << name;
+            return false;
+        }
+        //kDebug(180) << "RMDIR dir " << name;
+        return (::rmdir(name) == 0);
+    }
+    // This is a non-directory file, so remove it
+    //kDebug(180) << "KTempDir: unlinking file" << name;
+    return (::unlink(name) == 0);
+}
 
 class KTempDir::Private
 {
@@ -56,7 +114,7 @@ public:
 KTempDir::KTempDir(const QString &directoryPrefix, int mode)
     : d(new Private)
 {
-    (void) create( directoryPrefix.isEmpty() ? KStandardDirs::locateLocal("tmp", KGlobal::mainComponent().componentName()) : directoryPrefix , mode);
+    (void) create(directoryPrefix.isEmpty() ? KStandardDirs::locateLocal("tmp", KGlobal::mainComponent().componentName()) : directoryPrefix , mode);
 }
 
 bool KTempDir::create(const QString &directoryPrefix, int mode)
@@ -146,64 +204,6 @@ void KTempDir::unlink()
         d->error = errno;
     }
     d->exists = false;
-}
-
-// Auxiliary recursive function for removeDirs
-static bool rmtree(const QByteArray& name)
-{
-    //kDebug(180) << "Checking directory for remove" << name;
-    KDE_struct_stat st;
-    if (KDE_lstat(name.data(), &st) == -1) { // Do not dereference symlink!
-        return false;
-    }
-    if (S_ISDIR(st.st_mode)) {
-        // This is a directory, so process it
-        //kDebug(180) << "File" << name << "is DIRECTORY!";
-        KDE_struct_dirent* ep;
-        DIR* dp = ::opendir(name.data());
-        if (!dp) {
-            return false;
-        }
-        while ((ep = KDE_readdir(dp))) {
-            //kDebug(180) << "CHECKING" << name << "/" << ep->d_name;
-            if (qstrcmp(ep->d_name, "." ) == 0 || qstrcmp(ep->d_name, "..") == 0) {
-                continue;
-            }
-            QByteArray newName(name);
-            newName += '/';
-            newName += ep->d_name;
-            /*
-             * Be defensive and close the directory.
-             *
-             * Potential problems:
-             * - opendir/readdir/closedir is not re-entrant
-             * - unlink and rmdir invalidates a opendir/readdir/closedir
-             * - limited number of file descriptors for opendir/readdir/closedir
-             */
-            if (::closedir(dp)) {
-                kDebug(180) << "Error closing" << name;
-                return false;
-            }
-            // Recurse!
-            //kDebug(180) << "RECURSE: " << newName;
-            if (!rmtree(newName)) {
-                return false;
-            }
-            // We have to re-open the directory before continuing
-            dp = ::opendir(name.data());
-            if (!dp)
-                return false;
-        }
-        if (::closedir(dp)) {
-            kDebug(180) << "Error closing" << name;
-            return false;
-        }
-        //kDebug(180) << "RMDIR dir " << name;
-        return (::rmdir(name) == 0);
-    }
-    // This is a non-directory file, so remove it
-    //kDebug(180) << "KTempDir: unlinking file" << name;
-    return (::unlink(name) == 0);
 }
 
 bool KTempDir::removeDir(const QString &path)
