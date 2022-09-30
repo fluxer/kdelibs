@@ -548,12 +548,6 @@ public:
     virtual void setAcceptDrops(bool b);
 
     /**
-     * Sets the options for dropping files.
-     * CURRENTLY NOT IMPLEMENTED
-     */
-    virtual void setDropOptions(int options);
-
-    /**
      * Starts and returns a KIO::CopyJob to trash the given @p items.
      *
      * @param items the list of items to be trashed

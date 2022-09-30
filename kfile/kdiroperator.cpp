@@ -281,7 +281,6 @@ public:
     bool onlyDoubleClickSelectsFiles;
     QString lastURL; // used for highlighting a directory on cdUp
     QTimer *progressDelayTimer;
-    int dropOptions;
 
     KActionMenu *actionMenu;
     KActionCollection *actionCollection;
@@ -319,7 +318,6 @@ KDirOperator::Private::Private(KDirOperator *_parent) :
     dirHighlighting(false),
     onlyDoubleClickSelectsFiles(!KGlobalSettings::singleClick()),
     progressDelayTimer(0),
-    dropOptions(0),
     actionMenu(0),
     actionCollection(0),
     newFileMenu(0),
@@ -1377,17 +1375,9 @@ QAbstractItemView* KDirOperator::createView(QWidget* parent, KFile::FileView vie
 void KDirOperator::setAcceptDrops(bool b)
 {
     // TODO:
-    //if (d->fileView)
-    //   d->fileView->widget()->setAcceptDrops(b);
+    //if (d->itemView)
+    //   d->itemView->setAcceptDrops(b);
     QWidget::setAcceptDrops(b);
-}
-
-void KDirOperator::setDropOptions(int options)
-{
-    d->dropOptions = options;
-    // TODO:
-    //if (d->fileView)
-    //   d->fileView->setDropOptions(options);
 }
 
 void KDirOperator::setView(KFile::FileView viewKind)
@@ -1481,7 +1471,7 @@ void KDirOperator::setView(QAbstractItemView *view)
     d->itemView->viewport()->setAttribute(Qt::WA_Hover);
     d->itemView->setContextMenuPolicy(Qt::CustomContextMenu);
     d->itemView->setMouseTracking(true);
-    //d->itemView->setDropOptions(d->dropOptions);
+    //d->itemView->setAcceptDrops(acceptDrops());
 
     // first push our settings to the view, then listen for changes from the view
     QTreeView* treeView = qobject_cast<QTreeView*>(d->itemView);
