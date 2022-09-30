@@ -324,9 +324,9 @@ KApplication::KApplication(Display *display, int& argc, char** argv, const QByte
     d(new KApplicationPrivate(this, rAppName))
 {
     d->read_app_startup_id();
-    setApplicationName(QLatin1String(rAppName));
+    setApplicationName(QString::fromLocal8Bit(rAppName.constData(), rAppName.size()));
     installSigpipeHandler();
-    KCmdLineArgs::initIgnore(argc, argv, rAppName.data());
+    KCmdLineArgs::initIgnore(argc, argv, rAppName);
     d->init();
 }
 #endif
