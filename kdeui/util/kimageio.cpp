@@ -49,7 +49,7 @@ QStringList KImageIO::typeForMime(const QString &mimeType)
     }
     const QByteArray format = QImageReader::formatForMimeType(mimeType.toLatin1());
     if (!format.isEmpty()) {
-        result << QString::fromLatin1(format.constData());
+        result << QString::fromLatin1(format.constData(), format.size());
     }
     return result;
 }
@@ -59,11 +59,11 @@ QStringList KImageIO::mimeTypes(Mode mode)
     QStringList result;
     if (mode == KImageIO::Reading) {
         foreach(const QByteArray &mime, QImageReader::supportedMimeTypes()) {
-            result << QString::fromLatin1(mime.constData());
+            result << QString::fromLatin1(mime.constData(), mime.size());
         }
     } else {
         foreach(const QByteArray &mime, QImageWriter::supportedMimeTypes()) {
-            result << QString::fromLatin1(mime.constData());
+            result << QString::fromLatin1(mime.constData(), mime.size());
         }
     }
     return result;
@@ -74,11 +74,11 @@ QStringList KImageIO::types(Mode mode)
     QStringList result;
     if (mode == KImageIO::Reading) {
         foreach(const QByteArray &format, QImageReader::supportedImageFormats()) {
-            result << QString::fromLatin1(format.constData());
+            result << QString::fromLatin1(format.constData(), format.size());
         }
     } else {
         foreach(const QByteArray &format, QImageWriter::supportedImageFormats()) {
-            result << QString::fromLatin1(format.constData());
+            result << QString::fromLatin1(format.constData(), format.size());
         }
     }
     return result;
