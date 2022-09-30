@@ -20,8 +20,6 @@
 
 #include "ktempdir.h"
 
-#include <config.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -29,10 +27,6 @@
 #include <unistd.h>
 #include <errno.h>
 #include <dirent.h>
-
-#ifdef HAVE_TEST
-#include <test.h>
-#endif
 
 #include <QtCore/QDir>
 
