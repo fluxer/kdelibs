@@ -57,7 +57,6 @@ KDECORE_UNIT_TESTS(
     kconfigafterkglobaltest2
     ksycocathreadtest
     kdebug_unittest
-    kencodingdetectortest
     qcoreapptest
     kdebug_qcoreapptest
     kmimetype_nomimetypes

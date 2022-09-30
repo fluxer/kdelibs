@@ -181,8 +181,6 @@ set(kdecore_LIB_SRCS
 
     localization/kcatalog.cpp
     localization/kcharsets.cpp
-    localization/kencodingdetector.cpp
-    localization/guess_ja.cpp
     localization/klocale.cpp
     localization/klocale_kde.cpp
     localization/klocalizedstring.cpp
@@ -337,7 +335,6 @@ install(
     #services/kserviceoffer.h: do not install, internal API
     services/kplugininfo.h
     localization/kcharsets.h
-    localization/kencodingdetector.h
     localization/klocale.h
     localization/klocalizedstring.h
     sycoca/kprotocolinfo.h
