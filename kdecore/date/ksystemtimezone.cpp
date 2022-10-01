@@ -32,6 +32,9 @@
 #include "ksystemtimezone.h"
 #include "ktzfiletimezone.h"
 
+#include <sys/time.h>
+#include <time.h>
+
 static const QString s_localtime = QString::fromLatin1("/etc/localtime");
 
 // Convert sHHMM or sHHMMSS to a floating point number of degrees.
@@ -123,6 +126,7 @@ class KSystemTimeZonesPrivate : public QObject, public KTimeZones
 public:
     KSystemTimeZonesPrivate();
 
+    KTimeZone m_localtz;
     QString m_zoneinfoDir;
     KTzfileTimeZoneSource* m_tzfileSource;
 
@@ -146,6 +150,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
 {
     Q_UNUSED(path);
 
+    m_localtz = KTimeZone::utc();
     m_zoneinfoDir = zoneinfoDir();
     delete m_tzfileSource;
     m_tzfileSource = new KTzfileTimeZoneSource(m_zoneinfoDir);
@@ -161,9 +166,11 @@ void KSystemTimeZonesPrivate::update(const QString &path)
 
     m_watcher->addFile(zonetab);
     m_watcher->addFile(s_localtime);
-    QFileInfo localtime(s_localtime);
-    if (localtime.isSymLink()) {
-        m_watcher->addFile(localtime.readLink());
+    QString reallocaltime(s_localtime);
+    QFileInfo localtimeinfo(s_localtime);
+    if (localtimeinfo.isSymLink()) {
+        reallocaltime = localtimeinfo.readLink();
+        m_watcher->addFile(reallocaltime);
     }
 
     kDebug() << "Parsing" << zonetab;
@@ -198,6 +205,33 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         );
         KTimeZones::add(ktzfiletimezone);
     }
+
+    if (localtimeinfo.isSymLink()) {
+        const int zonediroffset = (m_zoneinfoDir.size() + 1);
+        const QString localtz = reallocaltime.mid(zonediroffset, reallocaltime.size() - zonediroffset);
+        m_localtz = KTimeZones::zone(localtz);
+        return;
+    }
+
+    time_t ltime;
+    ::time(&ltime);
+    ::tzset();
+    struct tm res;
+    struct tm *t = ::localtime_r(&ltime, &res);
+#if defined(HAVE_STRUCT_TM_TM_ZONE)
+    const QByteArray localtz(t->tm_zone);
+#else
+    const QByteArray localtz(tzname[t->tm_isdst]);
+#endif
+    const KTimeZones::ZoneMap allzones = KTimeZones::zones();
+    KTimeZones::ZoneMap::const_iterator it = allzones.constBegin();
+    while (it != allzones.constEnd()) {
+        if (it.value().abbreviations().contains(localtz)) {
+            m_localtz = KTimeZones::zone(it.key());
+            break;
+        }
+        it++;
+    }
 }
 
 K_GLOBAL_STATIC(KSystemTimeZonesPrivate, s_systemzones);
@@ -214,32 +248,7 @@ KTimeZone KSystemTimeZones::local()
         return KSystemTimeZones::zone(QString::fromLocal8Bit(envtz.constData(), envtz.size()));
     }
 
-    QFileInfo localtime(s_localtime);
-    if (localtime.isSymLink()) {
-        const QString localtz = localtime.readLink().replace(s_systemzones->m_zoneinfoDir + QLatin1Char('/'), QString());
-        return KSystemTimeZones::zone(localtz);
-    }
-
-    time_t ltime;
-    ::time(&ltime);
-    ::tzset();
-    struct tm res;
-    struct tm *t = ::localtime_r(&ltime, &res);
-#if defined(HAVE_STRUCT_TM_TM_ZONE)
-    const QByteArray localtz(t->tm_zone);
-#else
-    const QByteArray localtz(tzname[t->tm_isdst]);
-#endif
-    const KTimeZones::ZoneMap allzones = KSystemTimeZones::zones();
-    KTimeZones::ZoneMap::const_iterator it = allzones.constBegin();
-    while (it != allzones.constEnd()) {
-        if (it.value().abbreviations().contains(localtz)) {
-            return KSystemTimeZones::zone(it.key());
-        }
-        it++;
-    }
-
-    return KTimeZone::utc();
+    return s_systemzones->m_localtz;
 }
 
 QString KSystemTimeZones::zoneinfoDir()
