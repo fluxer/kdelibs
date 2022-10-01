@@ -378,7 +378,7 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
         );
     } else if (!mhdoutfilepath.isEmpty()) {
         int mhdfd = KDE::open(mhdoutfilepath, O_RDONLY);
-        QT_STATBUF statbuf;
+        KDE_struct_stat statbuf;
         if (KDE::stat(mhdoutfilepath, &statbuf) == -1) {
             kWarning() << "Could not stat" << mhdoutfilepath;
             return MHD_NO;
