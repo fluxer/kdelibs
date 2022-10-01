@@ -22,13 +22,13 @@
 #include "config-date.h"
 #include "config-prefix.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QDir>
+#include <QFileSystemWatcher>
 
 #include "kglobal.h"
 #include "kdebug.h"
-#include "kdirwatch.h"
 #include "ksystemtimezone.h"
 
 #include <sys/time.h>
@@ -117,16 +117,14 @@ private Q_SLOTS:
     void update(const QString &path);
 
 private:
-    KDirWatch *m_watcher;
+    QFileSystemWatcher *m_watcher;
 };
 
 KSystemTimeZonesPrivate::KSystemTimeZonesPrivate()
     : m_tzfileSource(nullptr),
-    m_watcher(new KDirWatch(this))
+    m_watcher(nullptr)
 {
     update(QString());
-
-    connect(m_watcher, SIGNAL(dirty(QString)), this, SLOT(update(QString)));
 }
 
 void KSystemTimeZonesPrivate::update(const QString &path)
@@ -151,14 +149,19 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         return;
     }
 
-    m_watcher->addFile(zonetab);
-    m_watcher->addFile(s_localtime);
+    QStringList watchlist = QStringList()
+        << zonetab
+        << s_localtime;
     QString reallocaltime(s_localtime);
     QFileInfo localtimeinfo(s_localtime);
     if (localtimeinfo.isSymLink()) {
         reallocaltime = localtimeinfo.readLink();
-        m_watcher->addFile(reallocaltime);
+        watchlist.append(reallocaltime);
     }
+    m_watcher->deleteLater();
+    m_watcher = new QFileSystemWatcher(this);
+    m_watcher->addPaths(watchlist);
+    connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(update(QString)));
 
     kDebug() << "Parsing" << zonetab;
     while (!zonetabfile.atEnd()) {
