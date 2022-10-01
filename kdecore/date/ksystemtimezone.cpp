@@ -172,12 +172,12 @@ void KSystemTimeZonesPrivate::update(const QString &path)
             continue;
         }
         const QList<QByteArray> zonetabparts = zonetabline.split('\t');
-        if (zonetabparts.size() < 3) {
+        if (zonetabparts.size() < 3 || zonetabparts.size() > 4) {
             kWarning() << "Invalid zone.tab entry" << zonetabline;
             continue;
         }
         const QList<float> zonetabcoordinates = splitZoneTabCoordinates(zonetabparts.at(1));
-        if (zonetabcoordinates.size() < 2) {
+        if (zonetabcoordinates.size() != 2) {
             kWarning() << "Invalid zone.tab coordinates" << zonetabline;
             continue;
         }
