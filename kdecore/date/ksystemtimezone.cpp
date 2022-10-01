@@ -81,20 +81,6 @@ static QString zoneinfoDir()
     return zoneinfodirs.last();
 }
 
-static QList<QByteArray> splitZoneTabLine(const QByteArray &zonetabline)
-{
-    QList<QByteArray> result;
-    const QList<QByteArray> zonetabparts = zonetabline.split('\t');
-    for (int i = 0; i < zonetabparts.size(); i++) {
-        const QByteArray part = zonetabparts.at(i);
-        if (part.isEmpty()) {
-            continue;
-        }
-        result.append(part);
-    }
-    return result;
-}
-
 static QList<float> splitZoneTabCoordinates(const QByteArray &zonetabcoordinates)
 {
     QList<float> result;
@@ -179,22 +165,22 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         if (zonetabline.isEmpty() || zonetabline.startsWith('#')) {
             continue;
         }
-        const QList<QByteArray> zonetabentry = splitZoneTabLine(zonetabline);
-        if (zonetabentry.size() < 3) {
+        const QList<QByteArray> zonetabparts = zonetabline.split('\t');
+        if (zonetabparts.size() < 3) {
             kWarning() << "Invalid zone.tab entry" << zonetabline;
             continue;
         }
-        const QList<float> zonetabcoordinate = splitZoneTabCoordinates(zonetabentry.at(1));
+        const QList<float> zonetabcoordinate = splitZoneTabCoordinates(zonetabparts.at(1));
         if (zonetabcoordinate.size() < 2) {
             kWarning() << "Invalid zone.tab coordinates" << zonetabline;
             continue;
         }
 
-        const QString zonecode = QString::fromLatin1(zonetabentry.at(0).constData(), zonetabentry.at(0).size());
-        const QString zonename = QString::fromLatin1(zonetabentry.at(2).constData(), zonetabentry.at(2).size());
+        const QString zonecode = QString::fromLatin1(zonetabparts.at(0).constData(), zonetabparts.at(0).size());
+        const QString zonename = QString::fromLatin1(zonetabparts.at(2).constData(), zonetabparts.at(2).size());
         QString zonecomment;
-        if (zonetabentry.size() == 4) {
-            zonecomment = QString::fromLatin1(zonetabentry.at(3).constData(), zonetabentry.at(3).size());
+        if (zonetabparts.size() == 4) {
+            zonecomment = QString::fromLatin1(zonetabparts.at(3).constData(), zonetabparts.at(3).size());
         }
         const float latitude = zonetabcoordinate.at(0);
         const float longitude = zonetabcoordinate.at(1);
