@@ -158,7 +158,9 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         reallocaltime = localtimeinfo.readLink();
         watchlist.append(reallocaltime);
     }
-    m_watcher->deleteLater();
+    if (m_watcher) {
+        m_watcher->deleteLater();
+    }
     m_watcher = new QFileSystemWatcher(this);
     m_watcher->addPaths(watchlist);
     connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(update(QString)));
