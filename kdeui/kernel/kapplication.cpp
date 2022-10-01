@@ -549,40 +549,6 @@ commitDataRestart:
     d->session_save = false;
 }
 
-#ifdef Q_WS_X11
-static void checkRestartVersion( QSessionManager& sm )
-{
-    Display* dpy = QX11Info::display();
-    Atom type;
-    int format;
-    unsigned long nitems, after;
-    unsigned char* data;
-    if( dpy != NULL && XGetWindowProperty( dpy, RootWindow( dpy, 0 ), XInternAtom( dpy, "KDE_SESSION_VERSION", False ),
-        0, 1, False, AnyPropertyType, &type, &format, &nitems, &after, &data ) == Success ) {
-        if( type == XA_CARDINAL && format == 32 ) {
-            int version = *( long* ) data;
-            if( version == KDE_VERSION_MAJOR ) { // we run in our native session
-                XFree( data );
-                return; // no need to wrap
-            }
-        }
-        XFree( data );
-    }
-    if( getenv( "KDE_SESSION_VERSION" ) != NULL && atoi( getenv( "KDE_SESSION_VERSION" )) == KDE_VERSION_MAJOR )
-        return; // we run in our native session, no need to wrap
-#define NUM_TO_STRING2( num ) #num
-#define NUM_TO_STRING( num ) NUM_TO_STRING2( num )
-    QString wrapper = KStandardDirs::findExe( "kde" NUM_TO_STRING( KDE_VERSION_MAJOR ) ); // "kde4", etc.
-#undef NUM_TO_STRING
-#undef NUM_TO_STRING2
-    if( !wrapper.isEmpty()) {
-        QStringList restartCommand = sm.restartCommand();
-        restartCommand.prepend( wrapper );
-        sm.setRestartCommand( restartCommand );
-    }
-}
-#endif // Q_WS_X11
-
 void KApplication::saveState( QSessionManager& sm )
 {
     d->session_save = true;
@@ -633,10 +599,6 @@ void KApplication::saveState( QSessionManager& sm )
         }
         sm.setRestartCommand( restartCommand );
     }
-
-#ifdef Q_WS_X11
-    checkRestartVersion( sm );
-#endif
 
     // finally: do session management
     emit saveYourself(); // for compatibility
