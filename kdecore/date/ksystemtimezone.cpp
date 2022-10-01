@@ -171,8 +171,8 @@ void KSystemTimeZonesPrivate::update(const QString &path)
             kWarning() << "Invalid zone.tab entry" << zonetabline;
             continue;
         }
-        const QList<float> zonetabcoordinate = splitZoneTabCoordinates(zonetabparts.at(1));
-        if (zonetabcoordinate.size() < 2) {
+        const QList<float> zonetabcoordinates = splitZoneTabCoordinates(zonetabparts.at(1));
+        if (zonetabcoordinates.size() < 2) {
             kWarning() << "Invalid zone.tab coordinates" << zonetabline;
             continue;
         }
@@ -183,8 +183,8 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         if (zonetabparts.size() == 4) {
             zonecomment = QString::fromLatin1(zonetabparts.at(3).constData(), zonetabparts.at(3).size());
         }
-        const float zonelatitude = zonetabcoordinate.at(0);
-        const float zonelongitude = zonetabcoordinate.at(1);
+        const float zonelatitude = zonetabcoordinates.at(0);
+        const float zonelongitude = zonetabcoordinates.at(1);
 
         const KTimeZone ktimezone(
             m_tzfileSource,
@@ -230,7 +230,7 @@ KTimeZone KSystemTimeZones::local()
     QByteArray envtz = qgetenv("TZ");
     if (!envtz.isEmpty()) {
         if (envtz.at(0) == ':') {
-            envtz = envtz.mid(1, envtz.size() - 1);
+            return KSystemTimeZones::zone(QString::fromLocal8Bit(envtz.constData() + 1, envtz.size() - 1));
         }
         return KSystemTimeZones::zone(QString::fromLocal8Bit(envtz.constData(), envtz.size()));
     }
