@@ -19,23 +19,41 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <config-date.h>
-#include <config-prefix.h>
+#include "config-date.h"
+#include "config-prefix.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include <kglobal.h>
-#include <kdebug.h>
-#include <kdirwatch.h>
+#include "kglobal.h"
+#include "kdebug.h"
+#include "kdirwatch.h"
 #include "ksystemtimezone.h"
-#include "ktzfiletimezone.h"
 
 #include <sys/time.h>
 #include <time.h>
 
 static const QString s_localtime = QString::fromLatin1("/etc/localtime");
+
+QString zoneinfoDir()
+{
+    static const QStringList zoneinfodirs = QStringList()
+        << QString::fromLatin1("/share/zoneinfo")
+        << QString::fromLatin1("/lib/zoneinfo")
+        << QString::fromLatin1("/usr/share/zoneinfo")
+        << QString::fromLatin1("/usr/lib/zoneinfo")
+        << QString::fromLatin1("/usr/local/share/zoneinfo")
+        << QString::fromLatin1("/usr/local/lib/zoneinfo")
+        << (QString::fromLatin1(KDEDIR) + QLatin1String("/share/zoneinfo"))
+        << (QString::fromLatin1(KDEDIR) + QLatin1String("/lib/zoneinfo"));
+    foreach (const QString &zoneinfodir, zoneinfodirs) {
+        if (QDir(zoneinfodir).exists()) {
+            return zoneinfodir;
+        }
+    }
+    return zoneinfodirs.last();
+}
 
 // Convert sHHMM or sHHMMSS to a floating point number of degrees.
 static float convertCoordinate(const QByteArray &coordinate)
@@ -58,27 +76,6 @@ static float convertCoordinate(const QByteArray &coordinate)
     }
     value = degrees * 3600 + minutes * 60 + seconds;
     return value / 3600.0;
-}
-
-static QString zoneinfoDir()
-{
-    static const QByteArray kdezoneinfodir = qgetenv("KDE_ZONEINFO_DIR");
-    static const QStringList zoneinfodirs = QStringList()
-        << QString::fromLatin1(kdezoneinfodir.constData(), kdezoneinfodir.size())
-        << QString::fromLatin1("/share/zoneinfo")
-        << QString::fromLatin1("/lib/zoneinfo")
-        << QString::fromLatin1("/usr/share/zoneinfo")
-        << QString::fromLatin1("/usr/lib/zoneinfo")
-        << QString::fromLatin1("/usr/local/share/zoneinfo")
-        << QString::fromLatin1("/usr/local/lib/zoneinfo")
-        << (QString::fromLatin1(KDEDIR) + QLatin1String("/share/zoneinfo"))
-        << (QString::fromLatin1(KDEDIR) + QLatin1String("/lib/zoneinfo"));
-    foreach (const QString &zoneinfodir, zoneinfodirs) {
-        if (!zoneinfodir.isEmpty() && QDir(zoneinfodir).exists()) {
-            return zoneinfodir;
-        }
-    }
-    return zoneinfodirs.last();
 }
 
 static QList<float> splitZoneTabCoordinates(const QByteArray &zonetabcoordinates)
@@ -114,7 +111,7 @@ public:
 
     KTimeZone m_localtz;
     QString m_zoneinfoDir;
-    KTzfileTimeZoneSource* m_tzfileSource;
+    KTimeZoneSource* m_tzfileSource;
 
 private Q_SLOTS:
     void update(const QString &path);
@@ -137,9 +134,13 @@ void KSystemTimeZonesPrivate::update(const QString &path)
     Q_UNUSED(path);
 
     m_localtz = KTimeZone::utc();
-    m_zoneinfoDir = zoneinfoDir();
+    static const QByteArray kdezoneinfodir = qgetenv("KDE_ZONEINFO_DIR");
+    m_zoneinfoDir = QFile::decodeName(kdezoneinfodir);
+    if (m_zoneinfoDir.isEmpty()) {
+        m_zoneinfoDir = zoneinfoDir();
+    }
     delete m_tzfileSource;
-    m_tzfileSource = new KTzfileTimeZoneSource(m_zoneinfoDir);
+    m_tzfileSource = new KTimeZoneSource(m_zoneinfoDir);
 
     KTimeZones::clear();
 
@@ -182,14 +183,14 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         if (zonetabparts.size() == 4) {
             zonecomment = QString::fromLatin1(zonetabparts.at(3).constData(), zonetabparts.at(3).size());
         }
-        const float latitude = zonetabcoordinate.at(0);
-        const float longitude = zonetabcoordinate.at(1);
+        const float zonelatitude = zonetabcoordinate.at(0);
+        const float zonelongitude = zonetabcoordinate.at(1);
 
-        const KTzfileTimeZone ktzfiletimezone(
+        const KTimeZone ktimezone(
             m_tzfileSource,
-            zonename, zonecode, latitude, longitude, zonecomment
+            zonename, zonecode, zonelatitude, zonelongitude, zonecomment
         );
-        KTimeZones::add(ktzfiletimezone);
+        KTimeZones::add(ktimezone);
     }
 
     if (localtimeinfo.isSymLink()) {
@@ -249,7 +250,7 @@ KTimeZones *KSystemTimeZones::timeZones()
 
 KTimeZone KSystemTimeZones::readZone(const QString &name)
 {
-    return KTzfileTimeZone(s_systemzones->m_tzfileSource, name);
+    return KTimeZone(s_systemzones->m_tzfileSource, name);
 }
 
 const KTimeZones::ZoneMap KSystemTimeZones::zones()

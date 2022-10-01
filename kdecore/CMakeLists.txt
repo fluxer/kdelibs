@@ -122,7 +122,6 @@ set(kdecore_LIB_SRCS
     date/klocalizeddate.cpp
     date/ktimezone.cpp
     date/ksystemtimezone.cpp
-    date/ktzfiletimezone.cpp
     io/kar.cpp
     io/karchive.cpp
     io/kdebug.cpp
@@ -296,7 +295,6 @@ install(
     date/klocalizeddate.h
     date/ksystemtimezone.h
     date/ktimezone.h
-    date/ktzfiletimezone.h
     io/kar.h
     io/karchive.h
     io/kdebug.h

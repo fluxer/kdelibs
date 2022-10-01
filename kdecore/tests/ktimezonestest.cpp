@@ -17,16 +17,16 @@
    Boston, MA 02110-1301, USA.
 */
 
+#include "config-date.h" // for HAVE_TM_GMTOFF
+#include "ktimezonestest.h"
 #include "ktimezonestest_p.h"
+#include "ksystemtimezone.h"
+#include "qtest_kde.h"
 
-#include <stdio.h>
-#include <qtest_kde.h>
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
-#include <config-date.h> // for HAVE_TM_GMTOFF
-#include "ksystemtimezone.h"
-#include "ktzfiletimezone.h"
-#include "moc_ktimezonestest.cpp"
+
+#include <stdio.h>
 
 QTEST_KDEMAIN_CORE(KTimeZonesTest)
 
@@ -119,7 +119,7 @@ void KTimeZonesTest::local()
     KTimeZone local = KSystemTimeZones::local();
     QVERIFY(local.isValid());
     QCOMPARE(local.name(), QString::fromLatin1("Europe/Paris"));
-    QCOMPARE(local.type(), QByteArray("KTzfileTimeZone"));
+    QCOMPARE(local.type(), QByteArray("KTimeZone"));
 }
 
 void KTimeZonesTest::zone()
@@ -405,7 +405,7 @@ void KTimeZonesTest::convert()
 }
 
 ////////////////////////
-// KTzfileTimeZone tests
+// KTimeZone tests
 // Plus KSystemTimeZones::readZone() tests
 ////////////////////////
 
@@ -414,15 +414,15 @@ void KTimeZonesTest::tzfile()
     QDateTime winter(QDate(2005,1,1), QTime(0,0,0), Qt::UTC);
     QString zoneinfo = KSystemTimeZones::zoneinfoDir();
     QVERIFY(!zoneinfo.isEmpty());
-    KTzfileTimeZoneSource tzsource(zoneinfo);
-    KTimeZone *tzcairo = new KTzfileTimeZone(&tzsource, "Africa/Cairo");
+    KTimeZoneSource tzsource(zoneinfo);
+    KTimeZone *tzcairo = new KTimeZone(&tzsource, "Africa/Cairo");
     delete tzcairo;
-    tzcairo = new KTzfileTimeZone(&tzsource, "Africa/Cairo");
+    tzcairo = new KTimeZone(&tzsource, "Africa/Cairo");
     QCOMPARE(tzcairo->offsetAtUtc(winter), 7200);
     delete tzcairo;
-    KTimeZone *johannesburg = new KTzfileTimeZone(&tzsource, "Africa/Johannesburg");
+    KTimeZone *johannesburg = new KTimeZone(&tzsource, "Africa/Johannesburg");
     delete johannesburg;
-    johannesburg = new KTzfileTimeZone(&tzsource, "Africa/Johannesburg");
+    johannesburg = new KTimeZone(&tzsource, "Africa/Johannesburg");
     QCOMPARE(johannesburg->offsetAtUtc(winter), 7200);
     delete johannesburg;
 }
@@ -430,15 +430,15 @@ void KTimeZonesTest::tzfile()
 void KTimeZonesTest::tzfileDstShifts()
 {
     // Check time zone conversions against zdump output for zone
-    KTzfileTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
-    KTimeZone berlin = KTzfileTimeZone(&tzsource, "Europe/Berlin");
-    KTimeZone losAngeles = KTzfileTimeZone(&tzsource, "America/Los_Angeles");
+    KTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
+    KTimeZone berlin = KTimeZone(&tzsource, "Europe/Berlin");
+    KTimeZone losAngeles = KTimeZone(&tzsource, "America/Los_Angeles");
     KTimeZone tz = berlin;
     for (int n = 0; n < 2; ++n, tz = losAngeles)
     {
         qDebug() << tz.name();
         QVERIFY(tz.isValid());
-        QCOMPARE(tz.type(), QByteArray("KTzfileTimeZone"));
+        QCOMPARE(tz.type(), QByteArray("KTimeZone"));
         QFile file(QString::fromLatin1(KDESRCDIR) + tz.name().remove(QRegExp("^.+/")) + QLatin1String(".zdump"));
         QVERIFY(file.open(QIODevice::ReadOnly));
         QTextStream in(&file);
@@ -467,10 +467,10 @@ void KTimeZonesTest::tzfileDstShifts()
 void KTimeZonesTest::tzfileToZoneTime()
 {
     // Convert from UTC.
-    KTzfileTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
-    KTimeZone london = KTzfileTimeZone(&tzsource, "Europe/London");
+    KTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
+    KTimeZone london = KTimeZone(&tzsource, "Europe/London");
     QVERIFY(london.isValid());
-    QCOMPARE(london.type(), QByteArray("KTzfileTimeZone"));
+    QCOMPARE(london.type(), QByteArray("KTimeZone"));
     QDateTime prepre(QDate(2005,10,29), QTime(23,59,59), Qt::UTC);  // before time shift (local time not repeated)
     QDateTime pre(QDate(2005,10,30), QTime(0,0,0), Qt::UTC);  // before time shift (local time repeated afterwards)
     QDateTime before(QDate(2005,10,30), QTime(0,59,59), Qt::UTC);  // before time shift (local time repeated afterwards)
@@ -517,10 +517,10 @@ void KTimeZonesTest::tzfileOffsetAtUtc()
     QDateTime bBst(QDate(2005,10,29), QTime(23,30,0), Qt::UTC);
     QDateTime bBstBeforeGmt(QDate(2005,10,30), QTime(0,30,0), Qt::UTC);
     QDateTime bGmt(QDate(2005,10,30), QTime(2,30,0), Qt::UTC);
-    KTzfileTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
-    KTimeZone london = KTzfileTimeZone(&tzsource, "Europe/London");
+    KTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
+    KTimeZone london = KTimeZone(&tzsource, "Europe/London");
     QVERIFY(london.isValid());
-    QCOMPARE(london.type(), QByteArray("KTzfileTimeZone"));
+    QCOMPARE(london.type(), QByteArray("KTimeZone"));
     QCOMPARE(london.offsetAtUtc(a3Gmt), 0);
     QCOMPARE(london.offsetAtUtc(a2Gmt), 0);             // uses cache
     QCOMPARE(london.offsetAtUtc(aGmt), 0);              // uses cache
@@ -531,9 +531,9 @@ void KTimeZonesTest::tzfileOffsetAtUtc()
     QCOMPARE(london.offsetAtUtc(bGmt), 0);
 
     QDateTime recent(QDate(2013,5,10), QTime(13,0,0), Qt::UTC);
-    KTimeZone johannesburg = KTzfileTimeZone(&tzsource, "Africa/Johannesburg");
+    KTimeZone johannesburg = KTimeZone(&tzsource, "Africa/Johannesburg");
     QVERIFY(johannesburg.isValid());
-    QCOMPARE(johannesburg.type(), QByteArray("KTzfileTimeZone"));
+    QCOMPARE(johannesburg.type(), QByteArray("KTimeZone"));
     QCOMPARE(johannesburg.offsetAtUtc(recent), 7200);
 }
 
@@ -552,8 +552,8 @@ void KTimeZonesTest::tzfileOffsetAtZoneTime()
     QDateTime BstToGmt3(QDate(2005,10,30), QTime(1,59,59), Qt::LocalTime);
     QDateTime BstToGmt4(QDate(2005,10,30), QTime(2,0,0), Qt::LocalTime);
     QDateTime Gmt2(QDate(2005,10,30), QTime(2,30,0), Qt::LocalTime);
-    KTzfileTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
-    KTimeZone london = KTzfileTimeZone(&tzsource, "Europe/London");
+    KTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
+    KTimeZone london = KTimeZone(&tzsource, "Europe/London");
     QVERIFY(london.isValid());
     int offset2;
     QCOMPARE(london.offsetAtZoneTime(Gmt0, &offset2), 0);
@@ -612,9 +612,9 @@ void KTimeZonesTest::tzfileOffsetAtZoneTime()
     QCOMPARE(sysLondon.offsetAtZoneTime(Gmt2, &offset2), 0);          // uses cache
     QCOMPARE(offset2, 0);
 
-    KTimeZone johannesburg = KTzfileTimeZone(&tzsource, "Africa/Johannesburg");
+    KTimeZone johannesburg = KTimeZone(&tzsource, "Africa/Johannesburg");
     QVERIFY(johannesburg.isValid());
-    QCOMPARE(johannesburg.type(), QByteArray("KTzfileTimeZone"));
+    QCOMPARE(johannesburg.type(), QByteArray("KTimeZone"));
     QDateTime recent(QDate(2013,5,10), QTime(13,0,0), Qt::LocalTime);
     QCOMPARE(johannesburg.offsetAtZoneTime(recent, &offset2), 7200);
     QCOMPARE(offset2, 7200);
@@ -622,8 +622,8 @@ void KTimeZonesTest::tzfileOffsetAtZoneTime()
 
 void KTimeZonesTest::tzfileUtcOffsets()
 {
-    KTzfileTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
-    KTimeZone london = KTzfileTimeZone(&tzsource, "Europe/London");
+    KTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
+    KTimeZone london = KTimeZone(&tzsource, "Europe/London");
     QVERIFY(london.isValid());
     QList<int> offsets = london.utcOffsets();
     QCOMPARE(offsets.count(), 3);
@@ -642,8 +642,8 @@ void KTimeZonesTest::tzfileUtcOffsets()
 
 void KTimeZonesTest::tzfileAbbreviation()
 {
-    KTzfileTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
-    KTimeZone london = KTzfileTimeZone(&tzsource, "Europe/London");
+    KTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
+    KTimeZone london = KTimeZone(&tzsource, "Europe/London");
     QVERIFY(london.isValid());
     QDateTime winter(QDate(2005,1,1), QTime(0,0,0), Qt::UTC);
     QDateTime summer(QDate(2005,6,1), QTime(0,0,0), Qt::UTC);
@@ -663,8 +663,8 @@ void KTimeZonesTest::tzfileAbbreviation()
 
 void KTimeZonesTest::tzfileTransitions()
 {
-    KTzfileTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
-    KTimeZone london = KTzfileTimeZone(&tzsource, "Europe/London");
+    KTimeZoneSource tzsource(KSystemTimeZones::zoneinfoDir());
+    KTimeZone london = KTimeZone(&tzsource, "Europe/London");
     QVERIFY(london.isValid());
     QList<KTimeZone::Transition> all = london.transitions();
     QVERIFY(!all.isEmpty());
@@ -711,3 +711,4 @@ void KTimeZonesTest::tzfileTransitions()
     }
 }
 
+#include "moc_ktimezonestest.cpp"

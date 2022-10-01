@@ -35,10 +35,13 @@
 #include <QtCore/QSet>
 #include <QtCore/QSharedData>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QFile>
 
 #include <kdebug.h>
 #include <kglobal.h>
+#include <ksystemtimezone.h>
 
+extern QString zoneinfoDir(); // in ksystemtimezone.cpp
 
 /* Return the offset to UTC in the current time zone at the specified UTC time.
  * The thread-safe function localtime_r() is used in preference if available.
@@ -86,6 +89,21 @@ static int gmtoff(time_t t)
 #endif
 }
 
+// Use this replacement for QDateTime::setTime_t(uint) since our time
+// values are signed.
+static QDateTime fromTime_t(qint32 seconds)
+{
+    static const QDate epochDate(1970,1,1);
+    static const QTime epochTime(0,0,0);
+    int days = seconds / 86400;
+    seconds -= days * 86400;
+    if (seconds < 0)
+    {
+        --days;
+        seconds += 86400;
+    }
+    return QDateTime(epochDate.addDays(days), epochTime.addSecs(seconds), Qt::UTC);
+}
 
 /******************************************************************************/
 
@@ -442,7 +460,7 @@ KTimeZoneSource *KTimeZonePrivate::utcSource()
 {
     if (!mUtcSource)
     {
-        mUtcSource = new KTimeZoneSource;
+        mUtcSource = new KTimeZoneSource(zoneinfoDir());
         qAddPostRoutine(KTimeZonePrivate::cleanup);
     }
     return mUtcSource;
@@ -626,7 +644,7 @@ bool KTimeZoneBackend::isDst(const KTimeZone* caller, time_t t) const
 bool KTimeZoneBackend::hasTransitions(const KTimeZone* caller) const
 {
     Q_UNUSED(caller);
-    return false;
+    return true;
 }
 
 
@@ -647,6 +665,12 @@ KTimeZone::KTimeZone()
 
 KTimeZone::KTimeZone(const QString &name)
   : d(new KTimeZoneBackend(name))
+{}
+
+KTimeZone::KTimeZone(KTimeZoneSource *source, const QString &name,
+        const QString &countryCode, float latitude, float longitude,
+        const QString &comment)
+  : d(new KTimeZoneBackend(source, name, countryCode, latitude, longitude, comment))
 {}
 
 KTimeZone::KTimeZone(const KTimeZone &tz)
@@ -954,7 +978,7 @@ bool KTimeZone::isDst(time_t t) const
 
 KTimeZone KTimeZone::utc()
 {
-    static KTimeZone utcZone(QLatin1String("UTC"));
+    static KTimeZone utcZone(KTimeZonePrivate::utcSource(), QLatin1String("UTC"));
     return utcZone;
 }
 
@@ -996,18 +1020,31 @@ time_t KTimeZone::toTime_t(const QDateTime &utcDateTime)
 class KTimeZoneSourcePrivate
 {
 public:
+    KTimeZoneSourcePrivate()
+      : mUseZoneParse(true) {}
+
+    KTimeZoneSourcePrivate(const QString &loc)
+      : mUseZoneParse(true), mLocation(loc) {}
+
     bool mUseZoneParse;
+    QString mLocation;
 };
 
 
 KTimeZoneSource::KTimeZoneSource()
-  : d(new KTimeZoneSourcePrivate)
+  : d(new KTimeZoneSourcePrivate())
 {
-    d->mUseZoneParse = true;
+}
+
+KTimeZoneSource::KTimeZoneSource(const QString &location)
+  : d(new KTimeZoneSourcePrivate(location))
+{
+    if (location.length() > 1 && location.endsWith(QLatin1Char('/')))
+        d->mLocation.chop(1);
 }
 
 KTimeZoneSource::KTimeZoneSource(bool useZoneParse)
-  : d(new KTimeZoneSourcePrivate)
+  : d(new KTimeZoneSourcePrivate())
 {
     d->mUseZoneParse = useZoneParse;
 }
@@ -1017,10 +1054,251 @@ KTimeZoneSource::~KTimeZoneSource()
     delete d;
 }
 
-KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &) const
+KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
 {
     Q_ASSERT(d->mUseZoneParse);  // method should never be called if it isn't usable
-    return new KTimeZoneData;
+
+    quint32 abbrCharCount;     // the number of characters of time zone abbreviation strings
+    quint32 ttisgmtcnt;
+    quint8  is;
+    quint8  T_, Z_, i_, f_;    // tzfile identifier prefix
+
+    QString path = zone.name();
+    if (!path.startsWith(QLatin1Char('/')))
+    {
+        if (d->mLocation == QLatin1String("/"))
+            path.prepend(d->mLocation);
+        else
+            path = d->mLocation + QLatin1Char('/') + path;
+    }
+    QFile f(path);
+    if (!f.open(QIODevice::ReadOnly))
+    {
+        kError() << "Cannot open " << f.fileName() << endl;
+        return 0;
+    }
+    QDataStream str(&f);
+
+    // Read the file type identifier
+    str >> T_ >> Z_ >> i_ >> f_;
+    if (T_ != 'T' || Z_ != 'Z' || i_ != 'i' || f_ != 'f')
+    {
+        kError() << "Not a TZFILE: " << f.fileName() << endl;
+        return 0;
+    }
+    // Discard 16 bytes reserved for future use
+    unsigned i;
+    for (i = 0; i < 4; ++i)
+        str >> ttisgmtcnt;
+
+    KTimeZoneData* data = new KTimeZoneData();
+
+    // Read the sizes of arrays held in the file
+    quint32 nTransitionTimes;
+    quint32 nLocalTimeTypes;
+    quint32 nLeapSecondAdjusts;
+    quint32 nIsStandard;
+    quint32 nIsUtc;
+    str >> nIsUtc
+        >> nIsStandard
+        >> nLeapSecondAdjusts
+        >> nTransitionTimes
+        >> nLocalTimeTypes
+        >> abbrCharCount;
+    // kDebug() << "header: " << nIsUtc << ", " << nIsStandard << ", " << nLeapSecondAdjusts << ", " <<
+    //    nTransitionTimes << ", " << nLocalTimeTypes << ", " << abbrCharCount << endl;
+
+    // Read the transition times, at which the rules for computing local time change
+    struct TransitionTime
+    {
+        qint32 time;            // time (as returned by time(2)) at which the rules for computing local time change
+        quint8 localTimeIndex;  // index into the LocalTimeType array
+    };
+//kDebug()<<"Reading zone "<<zone.name();
+    TransitionTime *transitionTimes = new TransitionTime[nTransitionTimes];
+    for (i = 0;  i < nTransitionTimes;  ++i)
+    {
+        str >> transitionTimes[i].time;
+    }
+    for (i = 0;  i < nTransitionTimes;  ++i)
+    {
+        str >> transitionTimes[i].localTimeIndex;
+//kDebug() << "Transition time "<<i<<": "<<transitionTimes[i].time<<"   lt index="<<(int)transitionTimes[i].localTimeIndex;
+    }
+
+    // Read the local time types
+    struct LocalTimeType
+    {
+        qint32 gmtoff;     // number of seconds to be added to UTC
+        bool   isdst;      // whether tm_isdst should be set by localtime(3)
+        quint8 abbrIndex;  // index into the list of time zone abbreviations
+        bool   isutc;      // transition times are in UTC. If UTC, isstd is ignored.
+        bool   isstd;      // if true, transition times are in standard time;
+                           // if false, transition times are in wall clock time,
+                           // i.e. standard time or daylight savings time
+                           // whichever is current before the transition
+    };
+    LocalTimeType *localTimeTypes = new LocalTimeType[nLocalTimeTypes];
+    LocalTimeType *ltt = localTimeTypes;
+    for (i = 0;  i < nLocalTimeTypes;  ++ltt, ++i)
+    {
+        str >> ltt->gmtoff;
+        str >> is;
+        ltt->isdst = (is != 0);
+        str >> ltt->abbrIndex;
+        // kDebug() << "local type: " << ltt->gmtoff << ", " << is << ", " << ltt->abbrIndex;
+        ltt->isstd = false;   // default if no data
+        ltt->isutc = false;   // default if no data
+    }
+
+    // Read the timezone abbreviations. They are stored as null terminated strings in
+    // a character array.
+    // Make sure we don't fall foul of maliciously coded time zone abbreviations.
+    if (abbrCharCount > 64)
+    {
+        kError() << "excessive length for timezone abbreviations: " << abbrCharCount << endl;
+        delete data;
+        delete[] transitionTimes;
+        delete[] localTimeTypes;
+        return 0;
+    }
+    QByteArray array(abbrCharCount, 0);
+    str.readRawData(array.data(), array.size());
+    const char *abbrs = array.constData();
+    if (abbrs[abbrCharCount - 1] != 0)
+    {
+        // These abbreviations are corrupt!
+        kError() << "timezone abbreviations not null terminated: " << abbrs[abbrCharCount - 1] << endl;
+        delete data;
+        delete[] transitionTimes;
+        delete[] localTimeTypes;
+        return 0;
+    }
+    quint8 n = 0;
+    QList<QByteArray> abbreviations;
+    for (i = 0;  i < abbrCharCount;  ++n, i += strlen(abbrs + i) + 1)
+    {
+        abbreviations += QByteArray(abbrs + i);
+        // Convert the LocalTimeTypes pointer to a sequential index
+        ltt = localTimeTypes;
+        for (unsigned j = 0;  j < nLocalTimeTypes;  ++ltt, ++j)
+        {
+            if (ltt->abbrIndex == i)
+                ltt->abbrIndex = n;
+        }
+    }
+
+
+    // Read the leap second adjustments
+    qint32  t;
+    quint32 s;
+    QList<KTimeZone::LeapSeconds> leapChanges;
+    for (i = 0;  i < nLeapSecondAdjusts;  ++i)
+    {
+        str >> t >> s;
+        // kDebug() << "leap entry: " << t << ", " << s;
+        // Don't use QDateTime::setTime_t() because it takes an unsigned argument
+        leapChanges += KTimeZone::LeapSeconds(fromTime_t(t), static_cast<int>(s));
+    }
+    data->setLeapSecondChanges(leapChanges);
+
+    // Read the standard/wall time indicators.
+    // These are true if the transition times associated with local time types
+    // are specified as standard time, false if wall clock time.
+    for (i = 0;  i < nIsStandard;  ++i)
+    {
+        str >> is;
+        localTimeTypes[i].isstd = (is != 0);
+        // kDebug() << "standard: " << is;
+    }
+
+    // Read the UTC/local time indicators.
+    // These are true if the transition times associated with local time types
+    // are specified as UTC, false if local time.
+    for (i = 0;  i < nIsUtc;  ++i)
+    {
+        str >> is;
+        localTimeTypes[i].isutc = (is != 0);
+        // kDebug() << "UTC: " << is;
+    }
+
+
+    // Find the starting offset from UTC to use before the first transition time.
+    // This is first non-daylight savings local time type, or if there is none,
+    // the first local time type.
+    LocalTimeType* firstLtt = 0;
+    ltt = localTimeTypes;
+    for (i = 0;  i < nLocalTimeTypes;  ++ltt, ++i)
+    {
+        if (!ltt->isdst)
+        {
+            firstLtt = ltt;
+            break;
+        }
+    }
+
+    // Compile the time type data into a list of KTimeZone::Phase instances.
+    // Also check for local time types which are identical (this does happen)
+    // and use the same Phase instance for each.
+    QByteArray abbrev;
+    QList<KTimeZone::Phase> phases;
+    QList<QByteArray> phaseAbbrevs;
+    QVector<int> lttLookup(nLocalTimeTypes);
+    ltt = localTimeTypes;
+    for (i = 0;  i < nLocalTimeTypes;  ++ltt, ++i)
+    {
+        if (ltt->abbrIndex >= abbreviations.count())
+        {
+            kError() << "KTimeZoneSource::parse(): abbreviation index out of range" << endl;
+            abbrev = "???";
+        }
+        else
+            abbrev = abbreviations[ltt->abbrIndex];
+        // Check for an identical Phase
+        int phindex = 0;
+        for (int j = 0, jend = phases.count();  j < jend;  ++j, ++phindex)
+        {
+            if (ltt->gmtoff == phases[j].utcOffset()
+            &&  (bool)ltt->isdst == phases[j].isDst()
+            &&  abbrev == phaseAbbrevs[j])
+                break;
+        }
+        lttLookup[i] = phindex;
+        if (phindex == phases.count())
+        {
+            phases += KTimeZone::Phase(ltt->gmtoff, abbrev, ltt->isdst);
+            phaseAbbrevs += abbrev;
+        }
+    }
+    KTimeZone::Phase prePhase(firstLtt->gmtoff,
+                              (firstLtt->abbrIndex < abbreviations.count() ? abbreviations[firstLtt->abbrIndex] : ""),
+                              false);
+    data->setPhases(phases, prePhase);
+
+    // Compile the transition list
+    QList<KTimeZone::Transition> transitions;
+    TransitionTime *tt = transitionTimes;
+    for (i = 0;  i < nTransitionTimes;  ++tt, ++i)
+    {
+        if (tt->localTimeIndex >= nLocalTimeTypes)
+        {
+            kError() << "KTimeZoneSource::parse(): transition ignored: local time type out of range: " <<(int)tt->localTimeIndex<<" > "<<nLocalTimeTypes << endl;
+            continue;
+        }
+
+        // Convert local transition times to UTC
+        ltt = &localTimeTypes[tt->localTimeIndex];
+        const KTimeZone::Phase phase = phases[lttLookup[tt->localTimeIndex]];
+//kDebug(161) << "Transition time "<<i<<": "<<fromTime_t(tt->time)<<", offset="<<phase.utcOffset()/60;
+        transitions += KTimeZone::Transition(fromTime_t(tt->time), phase);
+    }
+    data->setTransitions(transitions);
+//for(int xxx=1;xxx<data->transitions().count();xxx++)
+//kDebug(161) << "Transition time "<<xxx<<": "<<data->transitions()[xxx].time()<<", offset="<<data->transitions()[xxx].phase().utcOffset()/60;
+    delete[] localTimeTypes;
+    delete[] transitionTimes;
+
+    return data;
 }
 
 bool KTimeZoneSource::useZoneParse() const
@@ -1028,6 +1306,10 @@ bool KTimeZoneSource::useZoneParse() const
     return d->mUseZoneParse;
 }
 
+QString KTimeZoneSource::location() const
+{
+    return d->mLocation;
+}
 
 /******************************************************************************/
 
@@ -1241,7 +1523,7 @@ QList<QByteArray> KTimeZoneData::abbreviations() const
 QByteArray KTimeZoneData::abbreviation(const QDateTime &utcDateTime) const
 {
     if (d->phases.isEmpty())
-        return "UTC";
+        return QByteArray("UTC");
     const KTimeZone::Transition *tr = transition(utcDateTime);
     const QList<QByteArray> abbrevs = tr ? tr->phase().abbreviations()
                                          : d->prePhase.abbreviations();
@@ -1287,7 +1569,7 @@ void KTimeZoneData::setPhases(const QList<KTimeZone::Phase> &phases, int previou
 
 bool KTimeZoneData::hasTransitions() const
 {
-    return false;
+    return true;
 }
 
 QList<KTimeZone::Transition> KTimeZoneData::transitions(const QDateTime &start, const QDateTime &end) const

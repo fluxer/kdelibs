@@ -315,8 +315,6 @@ install(
     KToolInvocation
     KTreeWidgetSearchLine
     KTreeWidgetSearchLineWidget
-    KTzfileTimeZone
-    KTzfileTimeZoneSource
     KUndoStack
     KUniqueApplication
     KUriFilter

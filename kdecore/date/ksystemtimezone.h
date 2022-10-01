@@ -34,13 +34,11 @@
 /**
  * The KSystemTimeZones class represents the system time zone database, consisting
  * of a collection of individual system time zone definitions, indexed by name.
- * Each individual time zone is defined in a KSystemTimeZone or KTzfileTimeZone
- * instance. Additional time zones (of any class derived from KTimeZone) may be
- * added if desired.
+ * Each individual time zone is defined in a KTimeZone instance.
  *
  * At initialisation, KSystemTimeZones on UNIX systems reads the zone.tab file
- * to obtain the list of system time zones, and creates a KTzfileTimeZone
- * instance for each one.
+ * to obtain the list of system time zones and creates a KTimeZone instance for
+ * each one.
  *
  * @note KSystemTimeZones gets the system's time zone configuration, including
  * the current local system time zone and the location of zone.tab. If the local
@@ -61,15 +59,8 @@
  * QDateTime omaniTime = local.convert(oman, sampleTime);
  * \endcode
  *
- * @note KTzfileTimeZone is used in preference to KSystemTimeZone on UNIX
- * systems since use of the standard system libraries by KSystemTimeZone
- * requires the use of tzset() in several methods. That function reads and
- * parses the local system time zone definition file every time it is called,
- * and this has been observed to make applications hang for many seconds when
- * a large number of KSystemTimeZone calls are made in succession.
- *
  * @short System time zone access
- * @see KTimeZones, KSystemTimeZone, KSystemTimeZoneSource, KTzfileTimeZone
+ * @see KTimeZone, KTimeZones
  * @ingroup timezones
  * @author David Jarvie <djarvie@kde.org>.
  * @author S.R.Haque <srhaque@iee.org>.
@@ -100,7 +91,7 @@ public:
      * use the potentially slower method readZone().
      *
      * @param name name of time zone
-     * @return time zone (usually a KSystemTimeZone instance), or invalid if not found
+     * @return time zone (usually a KTimeZone instance), or invalid if not found
      * @see readZone()
      */
     static KTimeZone zone(const QString &name);
@@ -112,7 +103,7 @@ public:
      * data the system holds.
      *
      * @param name name of time zone
-     * @return time zone (usually a KTzfileTimeZone instance), or invalid if not found
+     * @return time zone (usually a KTimeZone instance), or invalid if not found
      * @see zone()
      */
     static KTimeZone readZone(const QString &name);
@@ -149,4 +140,4 @@ public:
     static QString zoneinfoDir();
 };
 
-#endif
+#endif // KSYSTEMTIMEZONE_H

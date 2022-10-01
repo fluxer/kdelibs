@@ -116,39 +116,7 @@ class KTimeZoneLeapSecondsPrivate;
  *
  * Access to system time zones is provided by the KSystemTimeZones class, which
  * reads the zone.tab file to obtain the list of system time zones, and creates a
- * KSystemTimeZone instance for each one. KSystemTimeZone has a
- * KSystemTimeZoneBackend backend class, and uses the KSystemTimeZoneSource
- * and KSystemTimeZoneData classes to obtain time zone data via libc library
- * functions.
- *
- * Normally, KSystemTimeZoneSource and KSystemTimeZoneData operate in the
- * background and you will not need to use them directly.
- *
- * @warning The KSystemTimeZone class uses the standard system libraries to
- * access time zone data, and its functionality is limited to what these libraries
- * provide. On many systems, dates earlier than 1902 are not handled, and on
- * non-GNU systems there is no guarantee that the time zone abbreviation returned
- * for a given date will be correct if the abbreviations applicable then were
- * not those currently in use. The KSystemTimeZones::readZone() method overcomes
- * these restrictions by reading the time zone definition directly from the
- * system time zone database files.
- *
- * \section tzfile Tzfile access
- *
- * The KTzfileTimeZone class provides access to tzfile(5) time zone definition
- * files, which are used to form the time zone database on UNIX systems. Usually,
- * for current information, it is easier to use the KSystemTimeZones class to
- * access system tzfile data. However, for dealing with past data the
- * KTzfileTimeZone class provides better guarantees of accurary, although it
- * cannot handle dates earlier than 1902. It also provides more detailed
- * information, and allows you to read non-system tzfile files. Alternatively,
- * the KSystemTimeZones::readZone() method uses the KTzfileTimeZone class to
- * read system time zone definition files.
- *
- * KTzfileTimeZone has a KTzfileTimeZoneBackend backend class, and uses the
- * KTzfileTimeZoneSource and KTzfileTimeZoneData classes to obtain time zone
- * data from tzfile files.
- *
+ * KTimeZone instance for each one.
  *
  * \section deriving Handling time zone data from other sources
  *
@@ -611,6 +579,21 @@ public:
      * @param name name of the UTC time zone
      */
     explicit KTimeZone(const QString &name);
+
+    /**
+     * Creates a time zone.
+     *
+     * @param source      tzfile reader and parser
+     * @param name        time zone's unique name, which must be the tzfile path relative
+     *                    to the location specified for @p source
+     * @param countryCode ISO 3166 2-character country code, empty if unknown
+     * @param latitude    in degrees (between -90 and +90), UNKNOWN if not known
+     * @param longitude   in degrees (between -180 and +180), UNKNOWN if not known
+     * @param comment     description of the time zone, if any
+     */
+    KTimeZone(KTimeZoneSource *source, const QString &name,
+        const QString &countryCode = QString(), float latitude = UNKNOWN, float longitude = UNKNOWN,
+        const QString &comment = QString());
 
     KTimeZone(const KTimeZone &tz);
     KTimeZone &operator=(const KTimeZone &tz);
@@ -1122,6 +1105,22 @@ public:
     /** Implements KTimeZone::KTimeZone(const QString&). */
     explicit KTimeZoneBackend(const QString &name);
 
+    /**
+     * Constructs a time zone.
+     *
+     * @param source      reader/parser for the database containing this time zone. This will
+     *                    be an instance of a class derived from KTimeZoneSource.
+     * @param name        in system-dependent format. The name must be unique within any
+     *                    KTimeZones instance which contains this KTimeZone.
+     * @param countryCode ISO 3166 2-character country code, empty if unknown
+     * @param latitude    in degrees (between -90 and +90), UNKNOWN if not known
+     * @param longitude   in degrees (between -180 and +180), UNKNOWN if not known
+     * @param comment     description of the time zone, if any
+     */
+    KTimeZoneBackend(KTimeZoneSource *source, const QString &name,
+                     const QString &countryCode = QString(), float latitude = KTimeZone::UNKNOWN,
+                     float longitude = KTimeZone::UNKNOWN, const QString &comment = QString());
+
     KTimeZoneBackend(const KTimeZoneBackend &other);
     KTimeZoneBackend &operator=(const KTimeZoneBackend &other);
     virtual ~KTimeZoneBackend();
@@ -1183,23 +1182,6 @@ public:
      */
     virtual bool hasTransitions(const KTimeZone* caller) const;
 
-protected:
-    /**
-     * Constructs a time zone.
-     *
-     * @param source      reader/parser for the database containing this time zone. This will
-     *                    be an instance of a class derived from KTimeZoneSource.
-     * @param name        in system-dependent format. The name must be unique within any
-     *                    KTimeZones instance which contains this KTimeZone.
-     * @param countryCode ISO 3166 2-character country code, empty if unknown
-     * @param latitude    in degrees (between -90 and +90), UNKNOWN if not known
-     * @param longitude   in degrees (between -180 and +180), UNKNOWN if not known
-     * @param comment     description of the time zone, if any
-     */
-    KTimeZoneBackend(KTimeZoneSource *source, const QString &name,
-                     const QString &countryCode = QString(), float latitude = KTimeZone::UNKNOWN,
-                     float longitude = KTimeZone::UNKNOWN, const QString &comment = QString());
-
 private:
     KTimeZonePrivate *d;   // non-const
     friend class KTimeZone;
@@ -1228,6 +1210,19 @@ class KDECORE_EXPORT KTimeZoneSource
 {
 public:
     KTimeZoneSource();
+
+    /**
+     * Constructs a time zone source.
+     *
+     * The directory containing the time zone definition files is given by the
+     * @p location parameter, which will usually be the zoneinfo directory. For
+     * tzfile files in other locations, bear in mind that the name generated
+     * for each KTimeZone is its file path relative to @p location.
+     *
+     * @param location the local directory containing the time zone definition files
+     */
+    explicit KTimeZoneSource(const QString &location);
+
     virtual ~KTimeZoneSource();
 
     /**
@@ -1256,6 +1251,13 @@ public:
      *         performed by other methods
      */
     bool useZoneParse() const;
+
+    /**
+     * Returns the local directory containing the time zone definition files.
+     *
+     * @return path to time zone definition files
+     */
+    QString location() const;
 
 protected:
     /**
@@ -1523,6 +1525,8 @@ protected:
     void setLeapSecondChanges(const QList<KTimeZone::LeapSeconds> &adjusts);
 
 private:
+    friend KTimeZoneSource;
+
     KTimeZoneDataPrivate * const d;
 };
 
