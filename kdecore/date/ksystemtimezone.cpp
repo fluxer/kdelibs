@@ -232,7 +232,7 @@ K_GLOBAL_STATIC(KSystemTimeZonesPrivate, s_systemzones);
 
 KTimeZone KSystemTimeZones::local()
 {
-    QByteArray envtz = qgetenv("TZ");
+    const QByteArray envtz = qgetenv("TZ");
     if (!envtz.isEmpty()) {
         if (envtz.at(0) == ':') {
             return KSystemTimeZones::zone(QString::fromLocal8Bit(envtz.constData() + 1, envtz.size() - 1));
