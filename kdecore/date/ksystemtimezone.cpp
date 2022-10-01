@@ -30,6 +30,7 @@
 #include "kglobal.h"
 #include "kdebug.h"
 #include "ksystemtimezone.h"
+#include "kde_file.h"
 
 #include <sys/time.h>
 #include <time.h>
@@ -48,7 +49,8 @@ QString zoneinfoDir()
         << (QString::fromLatin1(KDEDIR) + QLatin1String("/share/zoneinfo"))
         << (QString::fromLatin1(KDEDIR) + QLatin1String("/lib/zoneinfo"));
     foreach (const QString &zoneinfodir, zoneinfodirs) {
-        if (QDir(zoneinfodir).exists()) {
+        KDE_struct_stat statbuf;
+        if (KDE::stat(zoneinfodir, &statbuf) == 0 && S_ISDIR(statbuf.st_mode)) {
             return zoneinfodir;
         }
     }
