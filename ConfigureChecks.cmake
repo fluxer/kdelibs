@@ -43,9 +43,10 @@ kde4_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)                           # kidletim
 check_symbol_exists(strtoll         "stdlib.h"           HAVE_STRTOLL)      # kioslave
 check_symbol_exists(getgrouplist    "unistd.h;grp.h"     HAVE_GETGROUPLIST) # kio
 
-check_function_exists(backtrace     HAVE_BACKTRACE)                         # kdecore, kio
-check_function_exists(fdatasync     HAVE_FDATASYNC)                         # kdecore
-check_function_exists(sendfile      HAVE_SENDFILE)                          # kioslave
+check_function_exists(backtrace          HAVE_BACKTRACE)                    # kdecore, kio
+check_function_exists(fdatasync          HAVE_FDATASYNC)                    # kdecore
+check_function_exists(arc4random_uniform HAVE_ARC4RANDOM_UNIFORM)           # kdecore
+check_function_exists(sendfile           HAVE_SENDFILE)                     # kioslave
 
 check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)                 # kinit
 

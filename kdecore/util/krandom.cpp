@@ -16,8 +16,13 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "config.h"
 #include "krandom.h"
 #include "kdebug.h"
+
+#if defined(HAVE_ARC4RANDOM_UNIFORM)
+#  include <stdlib.h>
+#endif
 
 int KRandom::randomMax(int max)
 {
@@ -26,7 +31,11 @@ int KRandom::randomMax(int max)
         return 0;
     }
 
+#if defined(HAVE_ARC4RANDOM_UNIFORM)
+    return ::arc4random_uniform(max);
+#else
     return KRandom::random() % max;
+#endif
 }
 
 QString KRandom::randomString(int length)

@@ -17,6 +17,7 @@
 #cmakedefine HAVE_BACKTRACE 1
 #cmakedefine HAVE_GETMNTINFO 1
 #cmakedefine HAVE_FDATASYNC 1
+#cmakedefine HAVE_ARC4RANDOM_UNIFORM 1
 #cmakedefine HAVE_SENDFILE 1
 #cmakedefine HAVE_SETMNTENT 1
 #cmakedefine HAVE_STRTOLL 1
