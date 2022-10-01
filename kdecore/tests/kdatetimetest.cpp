@@ -48,7 +48,7 @@ void KDateTimeTest::initTestCase()
     f.setFileName(mDataDir + QLatin1String("/zone.tab"));
     f.open(QIODevice::WriteOnly);
     QTextStream fStream(&f);
-    fStream << "DE      +5230+01322     Europe/Berlin\n"
+    fStream << "DE	+5230+01322	Europe/Berlin\n"
                "EG	+3003+03115	Africa/Cairo\n"
                "FR	+4852+00220	Europe/Paris\n"
                "GB	+512830-0001845	Europe/London	Great Britain\n"
@@ -64,12 +64,10 @@ void KDateTimeTest::initTestCase()
     QVERIFY(QFile::copy(QString::fromLatin1(KDESRCDIR) + QLatin1String("/London"), mDataDir + QLatin1String("/Europe/London")));
     QVERIFY(QFile::copy(QString::fromLatin1(KDESRCDIR) + QLatin1String("/Paris"), mDataDir + QLatin1String("/Europe/Paris")));
 
-    KConfig config("ktimezonedrc");
-    KConfigGroup group(&config, "TimeZones");
-    group.writeEntry("ZoneinfoDir", mDataDir);
-    group.writeEntry("Zonetab", QString(mDataDir + QString::fromLatin1("/zone.tab")));
-    group.writeEntry("LocalZone", QString::fromLatin1("America/Los_Angeles"));
-    config.sync();
+    const QByteArray mDataDirBytes = mDataDir.toLocal8Bit();
+    ::setenv("KDE_ZONEINFO_DIR", mDataDirBytes.constData(), 1);
+    ::setenv("TZ", ":America/Los_Angeles", 1);
+    ::tzset();
 }
 
 void KDateTimeTest::cleanupTestCase()
@@ -78,8 +76,8 @@ void KDateTimeTest::cleanupTestCase()
     removeDir(QLatin1String("kdatetimetest/America"));
     removeDir(QLatin1String("kdatetimetest/Europe"));
     removeDir(QLatin1String("kdatetimetest"));
-    removeDir(QLatin1String("share/config"));
-    QDir().rmpath(QDir::homePath() + "/.kde-unit-test/share");
+    ::unsetenv("TZ");
+    ::tzset();
 }
 
 void KDateTimeTest::removeDir(const QString &subdir)
@@ -1335,38 +1333,14 @@ void KDateTimeTest::toClockTime()
 
 void KDateTimeTest::toZone()
 {
-    QEventLoop loop;
-    QTimer timer;
-    timer.setSingleShot(true);
-    QObject::connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    QSignalSpy timeoutSpy(&timer, SIGNAL(timeout()));
-
-    // This test relies on kded running, and on kdebase/runtime being installed
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kded")) {
-        QSKIP("kded not running", SkipSingle);
-    }
-    QDBusInterface ktimezoned("org.kde.kded", "/modules/ktimezoned", "org.kde.kded.KTimeZoned");
-    if (!ktimezoned.isValid())
-    {
-        // Need to load the KDED time zones module
-        QDBusInterface kded("org.kde.kded", "/kded", "org.kde.kded");
-        QDBusReply<bool> reply = kded.call("loadModule", "ktimezoned");
-        if (!reply.isValid() || !reply)
-            QSKIP("Could not load ktimezoned kded module", SkipSingle);
-    }
+    const QString localtzname = KSystemTimeZones::local().name();
+    // Ensure that local time is different from UTC and different from 'london'
+    const char *originalZone = ::getenv("TZ");   // save the original local time zone
+    ::setenv("TZ", ":Europe/London", 1);
+    ::tzset();
 
     KTimeZone london = KSystemTimeZones::zone("Europe/London");
     KTimeZone losAngeles = KSystemTimeZones::zone("America/Los_Angeles");
-
-    // Ensure that local time is different from UTC and different from 'london'
-    KConfig config("ktimezonedrc");
-    KConfigGroup group(&config, "TimeZones");
-    group.writeEntry("LocalZone", QString::fromLatin1("Europe/London"));
-    config.sync();
-    QDBusMessage message = QDBusMessage::createSignal("/Daemon", "org.kde.KTimeZoned", "configChanged");
-    QDBusConnection::sessionBus().send(message);
-    timer.start(1000);
-    loop.exec();
 
     // Zone -> Zone
     KDateTime londonWinter(QDate(2005,1,1), QTime(0,0,0), london);
@@ -1441,11 +1415,11 @@ void KDateTimeTest::toZone()
     QVERIFY(!(utc == locUtc));
 
     // Restore the original local time zone
-    group.writeEntry("LocalZone", QString::fromLatin1("America/Los_Angeles"));
-    config.sync();
-    QDBusConnection::sessionBus().send(message);
-    timer.start(1000);
-    loop.exec();
+    if (!originalZone)
+        ::unsetenv("TZ");
+    else
+        ::setenv("TZ", originalZone, 1);
+    ::tzset();
 }
 
 void KDateTimeTest::toTimeSpec()

@@ -103,7 +103,6 @@ private Q_SLOTS:
     }
 private:
     // Because we don't use a separate KDEHOME, we can't use TimeZoneTestData.
-    // It would remove ktimezonedrc from the user!
     //TimeZoneTestData mTestData;
 };
 

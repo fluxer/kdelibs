@@ -22,8 +22,7 @@
 #include <stdio.h>
 #include <qtest_kde.h>
 #include <QtCore/QDir>
-#include <QtCore/qdatetime.h>
-#include <QtDBus/QtDBus>
+#include <QtCore/QDateTime>
 #include <config-date.h> // for HAVE_TM_GMTOFF
 #include "ksystemtimezone.h"
 #include "ktzfiletimezone.h"
@@ -146,12 +145,6 @@ void KTimeZonesTest::zoneinfoDir()
 
 void KTimeZonesTest::zonetabChange()
 {
-    QEventLoop loop;
-    QTimer timer;
-    timer.setSingleShot(true);
-    QObject::connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    QSignalSpy timeoutSpy(&timer, SIGNAL(timeout()));
-
     QCOMPARE(KSystemTimeZones::zones().count(), 5);
     KTimeZone london = KSystemTimeZones::zone("Europe/London");
     QVERIFY(london.isValid());
@@ -169,14 +162,9 @@ void KTimeZonesTest::zonetabChange()
     // Check that 'london' is automatically updated with the new zone.tab
     // contents, and that the new zones are added to KSystemTimeZones.
     s_testData.writeZoneTab(true);
-    QDBusMessage message = QDBusMessage::createSignal("/Daemon", "org.kde.KTimeZoned", "zonetabChanged");
-    QList<QVariant> args;
-    args += QString(mDataDir + QLatin1String("/zone.tab"));
-    message.setArguments(args);
-    QDBusConnection::sessionBus().send(message);
-    timer.start(1000);
-    loop.exec();
+    QTest::qWait(3000);
     QCOMPARE(KSystemTimeZones::zones().count(), 7);
+    london = KSystemTimeZones::zone("Europe/London");
     QVERIFY(london.isValid());
     QCOMPARE(london.countryCode(), QString("XX"));
     QCOMPARE(london.latitude(), -float(51*3600 + 28*60 + 30)/3600.0f);
@@ -194,9 +182,8 @@ void KTimeZonesTest::zonetabChange()
     // Check that 'london' is automatically updated with the new zone.tab
     // contents, and that the removed zones are deleted from KSystemTimeZones.
     s_testData.writeZoneTab(false);
-    QDBusConnection::sessionBus().send(message);
-    timer.start(1000);
-    loop.exec();
+    QTest::qWait(3000);
+    london = KSystemTimeZones::zone("Europe/London");
     QCOMPARE(KSystemTimeZones::zones().count(), 5);
     QVERIFY(london.isValid());
     QCOMPARE(london.countryCode(), QString("GB"));
@@ -219,9 +206,8 @@ void KTimeZonesTest::zonetabChange()
 
 void KTimeZonesTest::currentOffset()
 {
-    QString tzfile = ':' + mDataDir + "/Europe/Paris";
     const char *originalZone = ::getenv("TZ");   // save the original local time zone
-    ::setenv("TZ", tzfile.toLatin1().data(), 1);
+    ::setenv("TZ", ":Europe/Paris", 1);
     ::tzset();
 
     // Find the current offset of a time zone

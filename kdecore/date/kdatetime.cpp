@@ -425,9 +425,6 @@ class KDateTimePrivate : public QSharedData
 
 
     static QTime         sod;               // start of day (00:00:00)
-#ifndef NDEBUG
-    static qint64        currentDateTimeOffset;  // offset to apply to current system time
-#endif
 
     /* Because some applications create thousands of instances of KDateTime, this
      * data structure is designed to minimize memory usage. Ensure that all small
@@ -462,9 +459,6 @@ private:
 
 
 QTime KDateTimePrivate::sod(0,0,0);
-#ifndef NDEBUG
-qint64 KDateTimePrivate::currentDateTimeOffset = 0;
-#endif
 
 KDateTime::Spec KDateTimePrivate::spec() const
 {
@@ -1235,10 +1229,6 @@ int KDateTime::daysTo(const KDateTime &t2) const
 
 KDateTime KDateTime::currentLocalDateTime()
 {
-#ifndef NDEBUG
-    if (KSystemTimeZones::isSimulated())
-        return currentUtcDateTime().toZone(KSystemTimeZones::local());
-#endif
     return KDateTime(QDateTime::currentDateTime(), Spec(KSystemTimeZones::local()));
 }
 
@@ -1248,11 +1238,7 @@ KDateTime KDateTime::currentUtcDateTime()
     time_t t;
     ::time(&t);
     result.setTime_t(static_cast<qint64>(t));
-#ifndef NDEBUG
-    return result.addSecs(KDateTimePrivate::currentDateTimeOffset);
-#else
     return result;
-#endif
 }
 
 KDateTime KDateTime::currentDateTime(const Spec &spec)
@@ -2414,32 +2400,6 @@ KDateTime KDateTime::fromString(const QString &string, const QString &format,
 void KDateTime::setFromStringDefault(const Spec &spec)
 {
     KDateTimePrivate::fromStringDefault() = spec;
-}
-
-void KDateTime::setSimulatedSystemTime(const KDateTime& newTime)
-{
-    Q_UNUSED(newTime);
-#ifndef NDEBUG
-    if (newTime.isValid())
-    {
-        KDateTimePrivate::currentDateTimeOffset = realCurrentLocalDateTime().secsTo_long(newTime);
-        KSystemTimeZones::setLocalZone(newTime.timeZone());
-    }
-    else
-    {
-        KDateTimePrivate::currentDateTimeOffset = 0;
-        KSystemTimeZones::setLocalZone(KTimeZone());
-    }
-#endif
-}
-
-KDateTime KDateTime::realCurrentLocalDateTime()
-{
-#ifndef NDEBUG
-    return KDateTime(QDateTime::currentDateTime(), KSystemTimeZones::realLocalZone());
-#else
-    return KDateTime(QDateTime::currentDateTime(), Spec(KSystemTimeZones::local()));
-#endif
 }
 
 QT_BEGIN_NAMESPACE

@@ -152,16 +152,6 @@ class KDateTimeSpecPrivate;
  * chosen as the basis for KDateTime. For those who need an extended date
  * range, other classes exist.
  *
- * @section simulation Simulation Facility
- *
- * This class provides a facility to simulate the local system time, which
- * affects all functions using or returning the system time. This facility is
- * provided for testing purposes only, and is only available if the library is
- * compiled with debug enabled. In release mode, simulation is inoperative and
- * the real local system time is used at all times. Use
- * setSimulatedSystemTime() to set or clear the simulated time. To read the
- * real (not simulated) system time, use realCurrentLocalDateTime().
- *
  * @see KTimeZone, KSystemTimeZones, QDateTime, QDate, QTime
  * @see <a href="http://www.w3.org/TR/timezone/">W3C: Working with Time Zones</a>
  * @author David Jarvie \<djarvie@kde.org\>.
@@ -1569,57 +1559,6 @@ class KDECORE_EXPORT KDateTime //krazy:exclude=dpointer (implicitly shared)
      * inappropriately, it will reduce efficiency!
      */
     void detach();
-
-    /**
-     * Set an adjustment to be applied when fetching the current system time.
-     * This is applied by all KDateTime methods which return the system date
-     * and/or time.
-     *
-     * The supplied date/time is used as the current simulated time and the
-     * time adjustment is set to the difference between the real current time
-     * and @p newTime. If @p newTime has a time zone, that time zone is set
-     * to be the simulated local system time zone by calling
-     * KSystemTimeZones::setLocalZone()).
-     *
-     * To cancel time simulation, supply an invalid @p newTime parameter.
-     *
-     * @warning This function is provided only for testing purposes, and should
-     *          not be used in released code. If the library is compiled without
-     *          debug enabled, setSimulatedSystemTime() has no effect.
-     *          To avoid confusion, it is recommended that calls to it should be
-     *          conditionally compiled, e.g.:
-     *          \code
-     *          #ifndef NDEBUG
-     *             KDateTime::simulateSystemTime(kdt);
-     *          #endif
-     *          \endcode
-     *
-     * @param newTime the current simulated time, or invalid to cancel simulation
-     *
-     * @see currentDateTime(), currentLocalDateTime(), currentUtcDateTime(),
-     *      currentLocalDate(), currentLocalTime()
-     * @since 4.3
-     */
-    static void setSimulatedSystemTime(const KDateTime& newTime);
-
-    /**
-     * Return the real (not simulated) system time.
-     *
-     * @warning This method is provided only for testing purposes, and should
-     *          not be used in released code. If the library is compiled without
-     *          debug enabled, currentLocalDateTime() and realCurrentLocalDateTime()
-     *          both return the real system time.
-     *          To avoid confusion, it is recommended that calls to
-     *          realCurrentLocalDateTime() should be conditionally compiled, e.g.:
-     *          \code
-     *          #ifndef NDEBUG
-     *             dt = KDateTime::realCurrentLocalDateTime();
-     *          #endif
-     *          \endcode
-     *
-     * @since 4.3
-     */
-    static KDateTime realCurrentLocalDateTime();
 
   private:
     QSharedDataPointer<KDateTimePrivate> d;

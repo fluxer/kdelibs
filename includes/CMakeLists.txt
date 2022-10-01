@@ -288,8 +288,6 @@ install(
     KSycoca
     KSycocaEntry
     KSystemEventFilter
-    KSystemTimeZone
-    KSystemTimeZoneSource
     KSystemTimeZones
     KSystemTrayIcon
     KTabBar

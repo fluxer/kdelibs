@@ -20,8 +20,6 @@
 #ifndef KTIMEZONESTEST_P_H
 #define KTIMEZONESTEST_P_H
 
-#include <kconfiggroup.h>
-#include <kstandarddirs.h>
 #include <QDebug>
 #include <QtCore/QDir>
 #include "qtest_kde.h"
@@ -38,7 +36,8 @@ public:
         removeDir(QLatin1String("ktimezonestest/Asia"));
         removeDir(QLatin1String("ktimezonestest/Europe"));
         removeDir(QLatin1String("ktimezonestest"));
-        QFile::remove(KStandardDirs::locateLocal("config", "ktimezonedrc", false, KGlobal::mainComponent()));
+        ::unsetenv("TZ");
+        ::tzset();
     }
 
     void setupTimeZoneTest()
@@ -61,12 +60,10 @@ public:
         QFile::copy(QString::fromLatin1(KDESRCDIR) + QLatin1String("/London"), mDataDir + QLatin1String("/Europe/London"));
         QFile::copy(QString::fromLatin1(KDESRCDIR) + QLatin1String("/Paris"), mDataDir + QLatin1String("/Europe/Paris"));
 
-        KConfig config("ktimezonedrc");
-        KConfigGroup group(&config, "TimeZones");
-        group.writeEntry("ZoneinfoDir", mDataDir);
-        group.writeEntry("Zonetab", QString(mDataDir + QString::fromLatin1("/zone.tab")));
-        group.writeEntry("LocalZone", QString::fromLatin1("Europe/Paris"));
-        config.sync();
+        const QByteArray mDataDirBytes = mDataDir.toLocal8Bit();
+        ::setenv("KDE_ZONEINFO_DIR", mDataDirBytes.constData(), 1);
+        ::setenv("TZ", ":Europe/Paris", 1);
+        ::tzset();
     }
 
 private:
