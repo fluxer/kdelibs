@@ -70,6 +70,7 @@ static bool s_fullscreen = false;
         } \
     }
 
+#if defined(HAVE_MPV)
 static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
 {
     QVariant result;
@@ -119,6 +120,7 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
     }
     return result;
 }
+#endif // HAVE_MPV
 
 // certain properties are not available when not playing for an example thus do not issue warning
 // in case of error
