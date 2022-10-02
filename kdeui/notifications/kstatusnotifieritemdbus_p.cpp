@@ -39,12 +39,6 @@
 #include "statusnotifierwatcher_interface.h"
 #include "statusnotifieritemadaptor.h"
 
-__inline int toInt(WId wid) 
-{
-    return (int)wid;
-}
-
-
 // Marshall the ImageStruct data into a D-BUS argument
 const QDBusArgument &operator<<(QDBusArgument &argument, const KDbusImageStruct &icon)
 {
@@ -204,8 +198,9 @@ QString KStatusNotifierItemDBus::Status() const
 
 int KStatusNotifierItemDBus::WindowId() const
 {
+#warning FIXME: WId type is ulong
     if (m_statusNotifierItem->d->associatedWidget && m_statusNotifierItem->d->associatedWidget != m_statusNotifierItem->d->menu) {
-        return toInt(m_statusNotifierItem->d->associatedWidget->winId());
+        return static_cast<int>(m_statusNotifierItem->d->associatedWidget->winId());
     } else {
         return 0;
     }
