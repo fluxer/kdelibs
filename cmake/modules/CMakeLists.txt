@@ -14,6 +14,7 @@ set(cmakeFilesDontInstall
     FindLibCDIO.cmake
     FindDevinfo.cmake
     FindFFmpeg.cmake
+    FindSpeechd.cmake
 )
 
 # Explicitly list all files which will be installed.
@@ -58,7 +59,6 @@ set(cmakeFiles
     FindRAW1394.cmake
     FindSensors.cmake
     FindSharedMimeInfo.cmake
-    FindSpeechd.cmake
     FindSudo.cmake
     FindTaglib.cmake
     FindLibUSB.cmake
