@@ -38,23 +38,6 @@
 
 class KDirWatch;
 
-class KHostnameD : public QObject
-{
-   Q_OBJECT
-public:
-   KHostnameD(QObject *parent);
-
-public Q_SLOTS:
-   void checkHostname();
-
-private:
-   /**
-    * Timer for interval hostname checking.
-    */
-   QTimer m_Timer;
-   QByteArray m_hostname;
-};
-
 // Apps get read-only access
 class Kded : public QObject
 {
@@ -169,12 +152,17 @@ public Q_SLOTS:
     */
    void slotKDEDModuleRemoved(KDEDModule *);
 
-protected Q_SLOTS:
+private Q_SLOTS:
 
    /**
     * @internal Triggers rebuilding
     */
    void update(const QString& dir);
+
+   /**
+    * @internal Executes kdontchangethehostname when hostname changes
+    */
+   void checkHostname();
 
 private:
    /**
@@ -191,10 +179,13 @@ private:
    QTimer* m_pTimer;
 
    /**
-    * Pointer to the hostname class which updates X11 authorization when
-    * hostname changes.
+    * Timer for periodic hostname checking.
     */
-   KHostnameD* m_pHostnameD;
+   QTimer* m_hTimer;
+   /**
+    * The current hostname.
+    */
+   QByteArray m_hostname;
 
    QHash<QString,KDEDModule *> m_modules;
     //QHash<QString,QLibrary *> m_libs;
