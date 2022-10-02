@@ -103,6 +103,7 @@ cmake_policy(SET CMP0000 OLD)
 # CMP0003: add the link paths to the link command as with cmake 2.4
 cmake_policy(SET CMP0003 OLD)
 if(NOT CMAKE_VERSION VERSION_LESS "3.3.0")
+    # CMP0003: enable symbols visibility preset for all targets
     cmake_policy(SET CMP0063 NEW)
 endif()
 if(NOT CMAKE_VERSION VERSION_LESS "3.10.0")
