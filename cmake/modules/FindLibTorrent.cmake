@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBTORRENT QUIET libtorrent-rasterbar)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBTORRENT QUIET libtorrent-rasterbar)
 
-    set(LIBTORRENT_INCLUDES ${PC_LIBTORRENT_INCLUDE_DIRS})
-    set(LIBTORRENT_LIBRARIES ${PC_LIBTORRENT_LIBRARIES})
-endif()
-
+set(LIBTORRENT_INCLUDES ${PC_LIBTORRENT_INCLUDE_DIRS})
+set(LIBTORRENT_LIBRARIES ${PC_LIBTORRENT_LIBRARIES})
 set(LIBTORRENT_VERSION ${PC_LIBTORRENT_VERSION})
 
 if(NOT LIBTORRENT_INCLUDES OR NOT LIBTORRENT_LIBRARIES)

@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBUSB QUIET libusb-1.0)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBUSB QUIET libusb-1.0)
 
-    set(LIBUSB_INCLUDES ${PC_LIBUSB_INCLUDE_DIRS})
-    set(LIBUSB_LIBRARIES ${PC_LIBUSB_LIBRARIES})
-endif()
-
+set(LIBUSB_INCLUDES ${PC_LIBUSB_INCLUDE_DIRS})
+set(LIBUSB_LIBRARIES ${PC_LIBUSB_LIBRARIES})
 set(LIBUSB_VERSION ${PC_LIBUSB_VERSION})
 
 if(NOT LIBUSB_INCLUDES OR NOT LIBUSB_LIBRARIES)

@@ -12,10 +12,9 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-IF (NOT WIN32)
 # use pkg-config to get the directories and then use these values
 # in the FIND_PATH() and FIND_LIBRARY() calls
-FIND_PACKAGE(PkgConfig)
+FIND_PACKAGE(PkgConfig REQUIRED)
 PKG_CHECK_MODULES(PKG_X11_XCB QUIET x11-xcb)
 
 SET(X11_XCB_DEFINITIONS ${PKG_X11_XCB_CFLAGS})
@@ -27,4 +26,3 @@ include(FindPackageHandleStandardArgs)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(X11_XCB DEFAULT_MSG X11_XCB_LIBRARIES X11_XCB_INCLUDE_DIR)
 
 MARK_AS_ADVANCED(X11_XCB_INCLUDE_DIR X11_XCB_LIBRARIES)
-ENDIF (NOT WIN32)

@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_MPV QUIET mpv)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_MPV QUIET mpv)
 
-    set(MPV_INCLUDES ${PC_MPV_INCLUDE_DIRS})
-    set(MPV_LIBRARIES ${PC_MPV_LIBRARIES})
-endif()
-
+set(MPV_INCLUDES ${PC_MPV_INCLUDE_DIRS})
+set(MPV_LIBRARIES ${PC_MPV_LIBRARIES})
 set(MPV_VERSION ${PC_MPV_VERSION})
 if (MPV_VERSION VERSION_LESS 0.2.2)
     # workaround for incorrect version in pkg-config file, notably on OpenBSD

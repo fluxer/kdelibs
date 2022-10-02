@@ -10,14 +10,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIGHTDM QUIET liblightdm-gobject-1)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIGHTDM QUIET liblightdm-gobject-1)
 
-    set(LIGHTDM_INCLUDE_DIR ${PC_LIGHTDM_INCLUDE_DIRS})
-    set(LIGHTDM_LIBRARIES ${PC_LIGHTDM_LIBRARIES})
-endif()
-
+set(LIGHTDM_INCLUDE_DIR ${PC_LIGHTDM_INCLUDE_DIRS})
+set(LIGHTDM_LIBRARIES ${PC_LIGHTDM_LIBRARIES})
 set(LIGHTDM_VERSION ${PC_LIGHTDM_VERSION})
 set(LIGHTDM_DEFINITIONS ${PC_LIGHTDM_CFLAGS_OTHER})
 

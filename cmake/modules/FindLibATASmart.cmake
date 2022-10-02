@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBATASMART QUIET libatasmart)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBATASMART QUIET libatasmart)
 
-    set(LIBATASMART_INCLUDES ${PC_LIBATASMART_INCLUDE_DIRS})
-    set(LIBATASMART_LIBRARIES ${PC_LIBATASMART_LIBRARIES})
-endif()
-
+set(LIBATASMART_INCLUDES ${PC_LIBATASMART_INCLUDE_DIRS})
+set(LIBATASMART_LIBRARIES ${PC_LIBATASMART_LIBRARIES})
 set(LIBATASMART_VERSION ${PC_LIBATASMART_VERSION})
 
 if(NOT LIBATASMART_INCLUDES OR NOT LIBATASMART_LIBRARIES)

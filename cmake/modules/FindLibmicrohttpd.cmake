@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBMICROHTTPD QUIET libmicrohttpd)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBMICROHTTPD QUIET libmicrohttpd)
 
-    set(LIBMICROHTTPD_INCLUDE_DIR ${PC_LIBMICROHTTPD_INCLUDE_DIRS})
-    set(LIBMICROHTTPD_LIBRARIES ${PC_LIBMICROHTTPD_LIBRARIES})
-endif()
-
+set(LIBMICROHTTPD_INCLUDE_DIR ${PC_LIBMICROHTTPD_INCLUDE_DIRS})
+set(LIBMICROHTTPD_LIBRARIES ${PC_LIBMICROHTTPD_LIBRARIES})
 set(LIBMICROHTTPD_VERSION ${PC_LIBMICROHTTPD_VERSION})
 set(LIBMICROHTTPD_DEFINITIONS ${PC_LIBMICROHTTPD_CFLAGS_OTHER})
 

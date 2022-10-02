@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBDRM QUIET libdrm)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBDRM QUIET libdrm)
 
-    set(LIBDRM_INCLUDE_DIR ${PC_LIBDRM_INCLUDE_DIRS})
-    set(LIBDRM_LIBRARIES ${PC_LIBDRM_LIBRARIES})
-endif()
-
+set(LIBDRM_INCLUDE_DIR ${PC_LIBDRM_INCLUDE_DIRS})
+set(LIBDRM_LIBRARIES ${PC_LIBDRM_LIBRARIES})
 set(LIBDRM_VERSION ${PC_LIBDRM_VERSION})
 
 if(NOT LIBDRM_INCLUDE_DIR OR NOT LIBDRM_LIBRARIES)

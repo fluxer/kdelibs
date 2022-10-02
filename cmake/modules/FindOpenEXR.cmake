@@ -10,14 +10,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_OPENEXR QUIET OpenEXR)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_OPENEXR QUIET OpenEXR)
 
-    set(OPENEXR_INCLUDE_DIR ${PC_OPENEXR_INCLUDE_DIRS})
-    set(OPENEXR_LIBRARIES ${PC_OPENEXR_LIBRARIES})
-endif()
-
+set(OPENEXR_INCLUDE_DIR ${PC_OPENEXR_INCLUDE_DIRS})
+set(OPENEXR_LIBRARIES ${PC_OPENEXR_LIBRARIES})
 set(OPENEXR_VERSION ${PC_OPENEXR_VERSION})
 set(OPENEXR_DEFINITIONS ${PC_OPENEXR_CFLAGS_OTHER})
 

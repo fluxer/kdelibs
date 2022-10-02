@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBSPECTRE QUIET libspectre)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBSPECTRE QUIET libspectre)
 
-    set(LIBSPECTRE_INCLUDE_DIR ${PC_LIBSPECTRE_INCLUDE_DIRS})
-    set(LIBSPECTRE_LIBRARY ${PC_LIBSPECTRE_LIBRARIES})
-endif()
-
+set(LIBSPECTRE_INCLUDE_DIR ${PC_LIBSPECTRE_INCLUDE_DIRS})
+set(LIBSPECTRE_LIBRARY ${PC_LIBSPECTRE_LIBRARIES})
 set(LIBSPECTRE_VERSION ${PC_LIBSPECTRE_VERSION})
 
 if(NOT LIBSPECTRE_INCLUDE_DIR OR NOT LIBSPECTRE_LIBRARY)

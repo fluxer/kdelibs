@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_POPPLER QUIET poppler-cpp)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_POPPLER QUIET poppler-cpp)
 
-    set(POPPLER_INCLUDE_DIR ${PC_POPPLER_INCLUDE_DIRS})
-    set(POPPLER_LIBRARIES ${PC_POPPLER_LIBRARIES})
-endif()
-
+set(POPPLER_INCLUDE_DIR ${PC_POPPLER_INCLUDE_DIRS})
+set(POPPLER_LIBRARIES ${PC_POPPLER_LIBRARIES})
 set(POPPLER_VERSION ${PC_POPPLER_VERSION})
 
 if(NOT POPPLER_INCLUDE_DIR OR NOT POPPLER_LIBRARIES)

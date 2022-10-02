@@ -10,14 +10,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_MTP QUIET libmtp)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_MTP QUIET libmtp)
 
-    set(MTP_INCLUDE_DIR ${PC_MTP_INCLUDE_DIRS})
-    set(MTP_LIBRARIES ${PC_MTP_LIBRARIES})
-endif()
-
+set(MTP_INCLUDE_DIR ${PC_MTP_INCLUDE_DIRS})
+set(MTP_LIBRARIES ${PC_MTP_LIBRARIES})
 set(MTP_VERSION ${PC_MTP_VERSION})
 set(MTP_DEFINITIONS ${PC_MTP_CFLAGS_OTHER})
 

@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_TAGLIB QUIET taglib)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_TAGLIB QUIET taglib)
 
-    set(TAGLIB_INCLUDES ${PC_TAGLIB_INCLUDE_DIRS})
-    set(TAGLIB_LIBRARY ${PC_TAGLIB_LIBRARIES})
-endif()
-
+set(TAGLIB_INCLUDES ${PC_TAGLIB_INCLUDE_DIRS})
+set(TAGLIB_LIBRARY ${PC_TAGLIB_LIBRARIES})
 set(TAGLIB_VERSION ${PC_TAGLIB_VERSION})
 set(TAGLIB_CFLAGS ${PC_TAGLIB_CFLAGS_OTHER})
 

@@ -12,17 +12,15 @@
 
 set(DBUSMENU_QT_NAMES dbusmenu-katie dbusmenu-qt dbusmenu-qtd)
 
-if(NOT WIN32)
-    find_package(PkgConfig)
-    foreach(name ${DBUSMENU_QT_NAMES})
-        if(NOT PC_DBUSMENUQT_FOUND)
-            pkg_check_modules(PC_DBUSMENUQT QUIET ${name})
+find_package(PkgConfig REQUIRED)
+foreach(name ${DBUSMENU_QT_NAMES})
+    if(NOT PC_DBUSMENUQT_FOUND)
+        pkg_check_modules(PC_DBUSMENUQT QUIET ${name})
 
-            set(DBUSMENUQT_INCLUDE_DIR ${PC_DBUSMENUQT_INCLUDE_DIRS})
-            set(DBUSMENUQT_LIBRARIES ${PC_DBUSMENUQT_LIBRARIES})
-        endif()
-    endforeach()
-endif()
+        set(DBUSMENUQT_INCLUDE_DIR ${PC_DBUSMENUQT_INCLUDE_DIRS})
+        set(DBUSMENUQT_LIBRARIES ${PC_DBUSMENUQT_LIBRARIES})
+    endif()
+endforeach()
 
 set(DBUSMENUQT_VERSION ${PC_DBUSMENUQT_VERSION})
 set(DBUSMENUQT_DEFINITIONS ${PC_DBUSMENUQT_CFLAGS_OTHER})

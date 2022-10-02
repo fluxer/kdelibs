@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_GPHOTO2 QUIET libgphoto2)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_GPHOTO2 QUIET libgphoto2)
 
-    set(GPHOTO2_INCLUDE_DIR ${PC_GPHOTO2_INCLUDE_DIRS})
-    set(GPHOTO2_LIBRARIES ${PC_GPHOTO2_LIBRARIES})
-endif()
-
+set(GPHOTO2_INCLUDE_DIR ${PC_GPHOTO2_INCLUDE_DIRS})
+set(GPHOTO2_LIBRARIES ${PC_GPHOTO2_LIBRARIES})
 set(GPHOTO2_VERSION ${PC_GPHOTO2_VERSION})
 
 if(NOT GPHOTO2_INCLUDE_DIR OR NOT GPHOTO2_LIBRARIES)

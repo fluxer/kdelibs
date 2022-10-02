@@ -10,14 +10,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_EXIV2 QUIET exiv2)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_EXIV2 QUIET exiv2)
 
-    set(EXIV2_INCLUDE_DIR ${PC_EXIV2_INCLUDE_DIRS})
-    set(EXIV2_LIBRARIES ${PC_EXIV2_LIBRARIES})
-endif()
-
+set(EXIV2_INCLUDE_DIR ${PC_EXIV2_INCLUDE_DIRS})
+set(EXIV2_LIBRARIES ${PC_EXIV2_LIBRARIES})
 set(EXIV2_VERSION ${PC_EXIV2_VERSION})
 set(EXIV2_DEFINITIONS ${PC_EXIV2_CFLAGS_OTHER})
 

@@ -10,14 +10,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBSSH QUIET libssh)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBSSH QUIET libssh)
 
-    set(LIBSSH_INCLUDE_DIR ${PC_LIBSSH_INCLUDE_DIRS})
-    set(LIBSSH_LIBRARIES ${PC_LIBSSH_LIBRARIES})
-endif()
-
+set(LIBSSH_INCLUDE_DIR ${PC_LIBSSH_INCLUDE_DIRS})
+set(LIBSSH_LIBRARIES ${PC_LIBSSH_LIBRARIES})
 set(LIBSSH_VERSION ${PC_LIBSSH_VERSION})
 set(LIBSSH_DEFINITIONS ${PC_LIBSSH_CFLAGS_OTHER})
 

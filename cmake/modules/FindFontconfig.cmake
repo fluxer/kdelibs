@@ -10,14 +10,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_FONTCONFIG QUIET fontconfig)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_FONTCONFIG QUIET fontconfig)
 
-    set(FONTCONFIG_INCLUDE_DIR ${PC_FONTCONFIG_INCLUDE_DIRS})
-    set(FONTCONFIG_LIBRARIES ${PC_FONTCONFIG_LIBRARIES})
-endif()
-
+set(FONTCONFIG_INCLUDE_DIR ${PC_FONTCONFIG_INCLUDE_DIRS})
+set(FONTCONFIG_LIBRARIES ${PC_FONTCONFIG_LIBRARIES})
 set(FONTCONFIG_VERSION ${PC_FONTCONFIG_VERSION})
 set(FONTCONFIG_DEFINITIONS ${PC_FONTCONFIG_CFLAGS_OTHER})
 

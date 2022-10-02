@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_AVAHI QUIET avahi-client)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_AVAHI QUIET avahi-client)
 
-    set(AVAHI_INCLUDE_DIR ${PC_AVAHI_INCLUDE_DIRS})
-    set(AVAHI_LIBRARIES ${PC_AVAHI_LIBRARIES})
-endif()
-
+set(AVAHI_INCLUDE_DIR ${PC_AVAHI_INCLUDE_DIRS})
+set(AVAHI_LIBRARIES ${PC_AVAHI_LIBRARIES})
 set(AVAHI_VERSION ${PC_AVAHI_VERSION})
 
 if(NOT AVAHI_INCLUDE_DIR OR NOT AVAHI_LIBRARIES)

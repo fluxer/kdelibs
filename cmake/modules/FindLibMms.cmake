@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBMMS QUIET libmms)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBMMS QUIET libmms)
 
-    set(LIBMMS_INCLUDE_DIR ${PC_LIBMMS_INCLUDE_DIRS})
-    set(LIBMMS_LIBRARIES ${PC_LIBMMS_LIBRARIES})
-endif()
-
+set(LIBMMS_INCLUDE_DIR ${PC_LIBMMS_INCLUDE_DIRS})
+set(LIBMMS_LIBRARIES ${PC_LIBMMS_LIBRARIES})
 set(LIBMMS_VERSION ${PC_LIBMMS_VERSION})
 
 if(NOT LIBMMS_INCLUDE_DIR OR NOT LIBMMS_LIBRARIES)

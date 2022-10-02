@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_PCIUTILS QUIET libpci)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_PCIUTILS QUIET libpci)
 
-    set(PCIUTILS_INCLUDE_DIR ${PC_PCIUTILS_INCLUDE_DIRS})
-    set(PCIUTILS_LIBRARIES ${PC_PCIUTILS_LIBRARIES})
-endif()
-
+set(PCIUTILS_INCLUDE_DIR ${PC_PCIUTILS_INCLUDE_DIRS})
+set(PCIUTILS_LIBRARIES ${PC_PCIUTILS_LIBRARIES})
 set(PCIUTILS_VERSION ${PC_PCIUTILS_VERSION})
 
 if(NOT PCIUTILS_INCLUDE_DIR OR NOT PCIUTILS_LIBRARIES)

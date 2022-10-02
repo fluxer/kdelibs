@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBCDIO QUIET libcdio)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBCDIO QUIET libcdio)
 
-    set(LIBCDIO_INCLUDES ${PC_LIBCDIO_INCLUDE_DIRS})
-    set(LIBCDIO_LIBRARIES ${PC_LIBCDIO_LIBRARIES})
-endif()
-
+set(LIBCDIO_INCLUDES ${PC_LIBCDIO_INCLUDE_DIRS})
+set(LIBCDIO_LIBRARIES ${PC_LIBCDIO_LIBRARIES})
 set(LIBCDIO_VERSION ${PC_LIBCDIO_VERSION})
 
 if(NOT LIBCDIO_INCLUDES OR NOT LIBCDIO_LIBRARIES)

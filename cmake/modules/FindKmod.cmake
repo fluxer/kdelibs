@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_KMOD QUIET libkmod)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_KMOD QUIET libkmod)
 
-    set(KMOD_INCLUDE_DIR ${PC_KMOD_INCLUDE_DIRS})
-    set(KMOD_LIBRARIES ${PC_KMOD_LIBRARIES})
-endif()
-
+set(KMOD_INCLUDE_DIR ${PC_KMOD_INCLUDE_DIRS})
+set(KMOD_LIBRARIES ${PC_KMOD_LIBRARIES})
 set(KMOD_VERSION ${PC_KMOD_VERSION})
 
 if(NOT KMOD_INCLUDE_DIR OR NOT KMOD_LIBRARIES)

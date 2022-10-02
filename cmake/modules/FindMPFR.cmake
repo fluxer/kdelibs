@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_MPFR QUIET mpfr)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_MPFR QUIET mpfr)
 
-    set(MPFR_INCLUDE_DIR ${PC_MPFR_INCLUDE_DIRS})
-    set(MPFR_LIBRARIES ${PC_MPFR_LIBRARIES})
-endif()
-
+set(MPFR_INCLUDE_DIR ${PC_MPFR_INCLUDE_DIRS})
+set(MPFR_LIBRARIES ${PC_MPFR_LIBRARIES})
 set(MPFR_VERSION ${PC_MPFR_VERSION})
 
 if(NOT MPFR_INCLUDE_DIR OR NOT MPFR_LIBRARIES)

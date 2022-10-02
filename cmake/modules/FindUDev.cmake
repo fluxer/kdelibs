@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_UDEV QUIET libudev)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_UDEV QUIET libudev)
 
-    set(UDEV_INCLUDES ${PC_UDEV_INCLUDE_DIRS})
-    set(UDEV_LIBRARIES ${PC_UDEV_LIBRARIES})
-endif()
-
+set(UDEV_INCLUDES ${PC_UDEV_INCLUDE_DIRS})
+set(UDEV_LIBRARIES ${PC_UDEV_LIBRARIES})
 set(UDEV_VERSION ${PC_UDEV_VERSION})
 
 if(NOT UDEV_INCLUDES OR NOT UDEV_LIBRARIES)

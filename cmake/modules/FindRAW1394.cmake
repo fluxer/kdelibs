@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_RAW1394 QUIET libraw1394)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_RAW1394 QUIET libraw1394)
 
-    set(RAW1394_INCLUDE_DIR ${PC_RAW1394_INCLUDE_DIRS})
-    set(RAW1394_LIBRARIES ${PC_RAW1394_LIBRARIES})
-endif()
-
+set(RAW1394_INCLUDE_DIR ${PC_RAW1394_INCLUDE_DIRS})
+set(RAW1394_LIBRARIES ${PC_RAW1394_LIBRARIES})
 set(RAW1394_VERSION ${PC_RAW1394_VERSION})
 
 if(NOT RAW1394_INCLUDE_DIR OR NOT RAW1394_LIBRARIES)

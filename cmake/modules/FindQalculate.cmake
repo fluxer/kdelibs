@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_QALCULATE QUIET libqalculate)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_QALCULATE QUIET libqalculate)
 
-    set(QALCULATE_INCLUDE_DIR ${PC_QALCULATE_INCLUDE_DIRS})
-    set(QALCULATE_LIBRARIES ${PC_QALCULATE_LIBRARIES})
-endif()
-
+set(QALCULATE_INCLUDE_DIR ${PC_QALCULATE_INCLUDE_DIRS})
+set(QALCULATE_LIBRARIES ${PC_QALCULATE_LIBRARIES})
 set(QALCULATE_VERSION ${PC_QALCULATE_VERSION})
 
 if(NOT QALCULATE_INCLUDE_DIR OR NOT QALCULATE_LIBRARIES)

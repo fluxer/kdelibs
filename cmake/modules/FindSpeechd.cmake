@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_SPEECHD QUIET speech-dispatcher)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_SPEECHD QUIET speech-dispatcher)
 
-    set(SPEECHD_INCLUDE_DIR ${PC_SPEECHD_INCLUDE_DIRS})
-    set(SPEECHD_LIBRARIES ${PC_SPEECHD_LIBRARIES})
-endif()
-
+set(SPEECHD_INCLUDE_DIR ${PC_SPEECHD_INCLUDE_DIRS})
+set(SPEECHD_LIBRARIES ${PC_SPEECHD_LIBRARIES})
 set(SPEECHD_VERSION ${PC_SPEECHD_VERSION})
 
 if(NOT SPEECHD_INCLUDE_DIR OR NOT SPEECHD_LIBRARIES)

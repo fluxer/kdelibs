@@ -12,17 +12,15 @@
 
 set(ENCHANT_NAMES enchant-2 enchant)
 
-if(NOT WIN32)
-    find_package(PkgConfig)
-    foreach(name ${ENCHANT_NAMES})
-        if(NOT PC_ENCHANT_FOUND)
-            pkg_check_modules(PC_ENCHANT QUIET ${name})
+find_package(PkgConfig REQUIRED)
+foreach(name ${ENCHANT_NAMES})
+    if(NOT PC_ENCHANT_FOUND)
+        pkg_check_modules(PC_ENCHANT QUIET ${name})
 
-            set(ENCHANT_INCLUDE_DIR ${PC_ENCHANT_INCLUDE_DIRS})
-            set(ENCHANT_LIBRARIES ${PC_ENCHANT_LIBRARIES})
-        endif()
-    endforeach()
-endif()
+        set(ENCHANT_INCLUDE_DIR ${PC_ENCHANT_INCLUDE_DIRS})
+        set(ENCHANT_LIBRARIES ${PC_ENCHANT_LIBRARIES})
+    endif()
+endforeach()
 
 set(ENCHANT_VERSION ${PC_ENCHANT_VERSION})
 set(ENCHANT_DEFINITIONS ${PC_ENCHANT_CFLAGS_OTHER})

@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_WEBP QUIET libwebp)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_WEBP QUIET libwebp)
 
-    set(WEBP_INCLUDES ${PC_WEBP_INCLUDE_DIRS})
-    set(WEBP_LIBRARIES ${PC_WEBP_LIBRARIES})
-endif()
-
+set(WEBP_INCLUDES ${PC_WEBP_INCLUDE_DIRS})
+set(WEBP_LIBRARIES ${PC_WEBP_LIBRARIES})
 set(WEBP_VERSION ${PC_WEBP_VERSION})
 
 if(NOT WEBP_INCLUDES OR NOT WEBP_LIBRARIES)

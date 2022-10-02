@@ -9,14 +9,11 @@
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if(NOT WIN32)
-    include(FindPkgConfig)
-    pkg_check_modules(PC_LIBLZMA QUIET liblzma)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PC_LIBLZMA QUIET liblzma)
 
-    set(LIBLZMA_INCLUDE_DIR ${PC_LIBLZMA_INCLUDE_DIRS})
-    set(LIBLZMA_LIBRARIES ${PC_LIBLZMA_LIBRARIES})
-endif()
-
+set(LIBLZMA_INCLUDE_DIR ${PC_LIBLZMA_INCLUDE_DIRS})
+set(LIBLZMA_LIBRARIES ${PC_LIBLZMA_LIBRARIES})
 set(LIBLZMA_VERSION ${PC_LIBLZMA_VERSION})
 
 if(NOT LIBLZMA_INCLUDE_DIR OR NOT LIBLZMA_LIBRARIES)
