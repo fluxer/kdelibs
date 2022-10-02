@@ -196,11 +196,10 @@ QString KStatusNotifierItemDBus::Status() const
     return m_statusNotifierItem->metaObject()->enumerator(m_statusNotifierItem->metaObject()->indexOfEnumerator("ItemStatus")).valueToKey(m_statusNotifierItem->status());
 }
 
-int KStatusNotifierItemDBus::WindowId() const
+qlonglong KStatusNotifierItemDBus::WindowId() const
 {
-#warning FIXME: WId type is ulong
     if (m_statusNotifierItem->d->associatedWidget && m_statusNotifierItem->d->associatedWidget != m_statusNotifierItem->d->menu) {
-        return static_cast<int>(m_statusNotifierItem->d->associatedWidget->winId());
+        return static_cast<qlonglong>(m_statusNotifierItem->d->associatedWidget->winId());
     } else {
         return 0;
     }

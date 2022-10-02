@@ -55,7 +55,7 @@ class KStatusNotifierItemDBus : public QObject
     Q_PROPERTY(QString Id READ Id)
     Q_PROPERTY(QString Title READ Title)
     Q_PROPERTY(QString Status READ Status)
-    Q_PROPERTY(int WindowId READ WindowId)
+    Q_PROPERTY(qlonglong WindowId READ WindowId)
     Q_PROPERTY(bool ItemIsMenu READ ItemIsMenu)
     Q_PROPERTY(QString IconName READ IconName)
     Q_PROPERTY(KDbusImageVector IconPixmap READ IconPixmap)
@@ -107,7 +107,7 @@ public:
     /**
      * @return The id of the main window of the application that controls the item
      */
-    int WindowId() const;
+    qlonglong WindowId() const;
 
     /**
      * @return The item only support the context menu, the visualization should prefer sending ContextMenu() instead of Activate()
