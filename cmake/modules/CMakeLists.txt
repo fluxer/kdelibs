@@ -69,7 +69,6 @@ set(cmakeFiles
     kde4_exec.sh.in
     KDE4Defaults.cmake
     KDE4Macros.cmake
-    MacroOptionalFindPackage.cmake
 )
 
 install(FILES ${cmakeFiles} DESTINATION ${module_install_dir})

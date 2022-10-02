@@ -10,8 +10,9 @@
 # KDE4_ADD_DBUS_SERVICE
 # KDE4_BOOL_TO_01
 # KDE4_OPTIONAL_ADD_SUBDIRECTORY
+# KDE4_OPTIONAL_FIND_PACKAGE
 
-# Copyright (c) 2006-2009 Alexander Neundorf, <neundorf@kde.org>
+# Copyright (c) 2006-2010 Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2006, 2007, Laurent Montel, <montel@kde.org>
 # Copyright (c) 2007 Matthias Kretz <kretz@kde.org>
 # Copyright (c) 2015 Ivailo Monev <xakepa10@gmail.com>
@@ -294,3 +295,15 @@ macro(KDE4_OPTIONAL_ADD_SUBDIRECTORY _dir)
         add_subdirectory(${_dir})
     endif()
 endmacro(KDE4_OPTIONAL_ADD_SUBDIRECTORY)
+
+# KDE4_OPTIONAL_FIND_PACKAGE(<name> ... )
+#    This macro is a combination of OPTION() and FIND_PACKAGE(), it works like
+#    FIND_PACKAGE(), but additionally it automatically creates an option
+#    WITH_<name>, which can be disabled via the cmake GUI or via
+#    -DWITH_<name>=OFF
+macro(KDE4_OPTIONAL_FIND_PACKAGE _name)
+   option(WITH_${_name} "Search for ${_name} package" ON)
+   if (WITH_${_name})
+      find_package(${_name} ${ARGN})
+   endif ()
+endmacro(KDE4_OPTIONAL_FIND_PACKAGE)

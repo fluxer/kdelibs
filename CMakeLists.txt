@@ -105,7 +105,7 @@ if(X11_FOUND)
     endif(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
 endif(X11_FOUND)
 
-macro_optional_find_package(Libintl)
+kde4_optional_find_package(Libintl)
 set_package_properties(Libintl PROPERTIES
     DESCRIPTION "Support for multiple languages"
     URL "http://www.gnu.org/software/gettext"
@@ -113,14 +113,14 @@ set_package_properties(Libintl PROPERTIES
     PURPOSE "Enables KDE to be available in many different languages"
 )
 
-macro_optional_find_package(DBusMenuQt)
+kde4_optional_find_package(DBusMenuQt)
 set_package_properties(DBusMenuQt PROPERTIES
     DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
     URL "https://osdn.net/projects/kde/"
     TYPE RECOMMENDED
 )
 
-macro_optional_find_package(MPV 0.23.0)
+kde4_optional_find_package(MPV 0.23.0)
 set_package_properties(MPV PROPERTIES
     DESCRIPTION "A fork of mplayer2 and MPlayer"
     URL "https://mpv.io/"
@@ -128,7 +128,7 @@ set_package_properties(MPV PROPERTIES
     PURPOSE "Media preview, sound notifications, etc."
 )
 
-macro_optional_find_package(ACL)
+kde4_optional_find_package(ACL)
 set_package_properties(ACL
     PROPERTIES
     DESCRIPTION "Support for manipulating access control lists"
@@ -137,7 +137,7 @@ set_package_properties(ACL
     PURPOSE "KIO and KIO slaves"
 )
 
-macro_optional_find_package(Avahi)
+kde4_optional_find_package(Avahi)
 set_package_properties(Avahi PROPERTIES
     DESCRIPTION "Facilities for service discovery on a local network (DNSSD)"
     URL "https://avahi.org/"
@@ -145,28 +145,28 @@ set_package_properties(Avahi PROPERTIES
     PURPOSE "Avahi is required for KDE applications to make use of multicast DNS/DNS-SD service discovery"
 )
 
-macro_optional_find_package(BZip2)
+kde4_optional_find_package(BZip2)
 set_package_properties(BZip2 PROPERTIES
     DESCRIPTION "Support for BZip2 compressed files and data streams"
     URL "http://www.bzip.org"
     TYPE RECOMMENDED
 )
 
-macro_optional_find_package(LibLZMA)
+kde4_optional_find_package(LibLZMA)
 set_package_properties(LibLZMA PROPERTIES
     DESCRIPTION "Support for xz compressed files and data streams"
     URL "https://tukaani.org/xz/"
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(ImageMagick COMPONENTS Magick++)
+kde4_optional_find_package(ImageMagick COMPONENTS Magick++)
 set_package_properties(ImageMagick PROPERTIES
     URL "https://imagemagick.org/"
     PURPOSE "Support for various image formats"
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(WebP)
+kde4_optional_find_package(WebP)
 set_package_properties(WebP PROPERTIES
     DESCRIPTION "A new image format for the Web"
     URL "https://developers.google.com/speed/webp"
@@ -174,7 +174,7 @@ set_package_properties(WebP PROPERTIES
 )
 
 # v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
-macro_optional_find_package(UDev 143)
+kde4_optional_find_package(UDev 143)
 set_package_properties(UDev PROPERTIES
     DESCRIPTION "UDev support for Solid"
     URL "http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev.html"
@@ -182,7 +182,7 @@ set_package_properties(UDev PROPERTIES
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(Devinfo)
+kde4_optional_find_package(Devinfo)
 set_package_properties(Devinfo PROPERTIES
     DESCRIPTION "Devinfo support for Solid"
     URL "https://www.freebsd.org/cgi/man.cgi?query=devinfo&sektion=3"
@@ -190,7 +190,7 @@ set_package_properties(Devinfo PROPERTIES
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(LibCDIO)
+kde4_optional_find_package(LibCDIO)
 set_package_properties(LibCDIO PROPERTIES
     DESCRIPTION "GNU Compact Disc Input and Control Library"
     URL "https://www.gnu.org/software/libcdio/"
@@ -198,7 +198,7 @@ set_package_properties(LibCDIO PROPERTIES
     TYPE OPTIONAL
 )
 
-macro_optional_find_package(Exiv2 0.21)
+kde4_optional_find_package(Exiv2 0.21)
 set_package_properties(Exiv2 PROPERTIES
     DESCRIPTION "Image metadata library and tools"
     URL "http://www.exiv2.org"
@@ -206,7 +206,7 @@ set_package_properties(Exiv2 PROPERTIES
     PURPOSE "Exiv2 metadata extraction and image rotation based on the data"
 )
 
-macro_optional_find_package(FFmpeg)
+kde4_optional_find_package(FFmpeg)
 set_package_properties(FFmpeg PROPERTIES
     DESCRIPTION "A complete, cross-platform solution to record, convert and stream audio and video"
     URL "https://ffmpeg.org/"
@@ -214,7 +214,7 @@ set_package_properties(FFmpeg PROPERTIES
     PURPOSE "Video metadata extraction"
 )
 
-macro_optional_find_package(Taglib)
+kde4_optional_find_package(Taglib)
 set_package_properties(Taglib PROPERTIES
     DESCRIPTION "TagLib Audio Meta-Data Library"
     URL "https://taglib.org/"
@@ -222,7 +222,7 @@ set_package_properties(Taglib PROPERTIES
     PURPOSE "Audio metadata extraction"
 )
 
-macro_optional_find_package(EPub)
+kde4_optional_find_package(EPub)
 set_package_properties(EPub PROPERTIES
     DESCRIPTION "A library for reading EPub documents"
     URL "https://sourceforge.net/projects/ebook-tools/"
@@ -230,7 +230,7 @@ set_package_properties(EPub PROPERTIES
     PURPOSE "eBook metadata extraction"
 )
 
-macro_optional_find_package(Poppler)
+kde4_optional_find_package(Poppler)
 set_package_properties(Poppler PROPERTIES
     DESCRIPTION "PDF rendering library"
     URL "https://poppler.freedesktop.org/"
@@ -238,7 +238,7 @@ set_package_properties(Poppler PROPERTIES
     PURPOSE "PDF metadata extraction"
 )
 
-macro_optional_find_package(LibSpectre)
+kde4_optional_find_package(LibSpectre)
 set_package_properties(LibSpectre PROPERTIES
     DESCRIPTION "Small library for rendering Postscript documents"
     URL "https://www.freedesktop.org/wiki/Software/libspectre/"
@@ -246,7 +246,7 @@ set_package_properties(LibSpectre PROPERTIES
     PURPOSE "Postscript metadata extraction"
 )
 
-macro_optional_find_package(OpenSSL)
+kde4_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"
     URL "https://www.openssl.org/"
@@ -255,7 +255,7 @@ set_package_properties(OpenSSL PROPERTIES
 )
 
 # v0.9.71+ required for MHD_Result
-macro_optional_find_package(Libmicrohttpd 0.9.71)
+kde4_optional_find_package(Libmicrohttpd 0.9.71)
 set_package_properties(Libmicrohttpd PROPERTIES
     DESCRIPTION "Small C library that is supposed to make it easy to run an HTTP server as part of another application"
     URL "https://www.gnu.org/software/libmicrohttpd/"
@@ -263,7 +263,7 @@ set_package_properties(Libmicrohttpd PROPERTIES
     PURPOSE "HTTP(S) server"
 )
 
-macro_optional_find_package(Speechd)
+kde4_optional_find_package(Speechd)
 set_package_properties(Speechd PROPERTIES
     DESCRIPTION "Speech Dispatcher provides a high-level device independent layer for speech synthesis"
     URL "https://freebsoft.org/speechd"

@@ -138,7 +138,6 @@ if(NOT Katie_FOUND)
 endif()
 
 # now we are sure we have everything we need
-include(MacroOptionalFindPackage)
 # TODO: move to main CMakeLists.txt files at the same time CMP0000 is dealt with
 include(FeatureSummary)
 
@@ -164,8 +163,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 if (_kdeBootStrapping)
     set(KDE4_INCLUDE_DIR ${kdelibs_SOURCE_DIR})
 
-    set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX} )
-    set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX} )
+    set(KDE4_KCFGC_EXECUTABLE             kconfig_compiler${CMAKE_EXECUTABLE_SUFFIX})
+    set(KDE4_MAKEKDEWIDGETS_EXECUTABLE    makekdewidgets${CMAKE_EXECUTABLE_SUFFIX})
 
     set(KDE4_LIB_DIR ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR})
 
