@@ -29,8 +29,6 @@
 
 #include "ktimezone.h"
 
-#include <qobject.h>
-
 /**
  * The KSystemTimeZones class represents the system time zone database, consisting
  * of a collection of individual system time zone definitions, indexed by name.
