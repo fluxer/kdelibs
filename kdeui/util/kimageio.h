@@ -24,16 +24,14 @@
  * \b Formats:
  *
  * Currently supported formats include:
- * @li PBM     \<read\>
+ * @li WEBP    \<read\> \<write\>
  * @li PGM     \<read\>
- * @li PPM     \<read\>
  * @li XBM     \<read\>
  * @li BMP     \<read\>
  * @li ICO     \<read\>
  * @li JPEG    \<read\>
- * @li GIF     \<read\>
  * @li JP2     \<read\>
- * @li WEBP    \<read\> \<write\>
+ * @li GIF     \<read\>
  * @li RAW     \<read\>
  *
  * @todo move to kdeui

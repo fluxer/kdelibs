@@ -59,10 +59,8 @@ static const struct HeadersTblData {
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
-// borked coders
 static QList<std::string> s_blacklist = QList<std::string>()
-    << std::string("SVG")
-    << std::string("SVGZ")
+    // borked coders
     << std::string("PDF")
     << std::string("EPDF")
     << std::string("PS")
@@ -70,7 +68,15 @@ static QList<std::string> s_blacklist = QList<std::string>()
     << std::string("SHTML")
     << std::string("TXT")
     << std::string("VIDEO")
-    << std::string("TTF");
+    << std::string("TTF")
+    // kdelibs provides these
+    << std::string("WEBP")
+    // Katie provides these, SVG coders are very borked
+    << std::string("SVG")
+    << std::string("SVGZ")
+    << std::string("XPM")
+    << std::string("PBM")
+    << std::string("PPM");
 
 int initMagick()
 {
