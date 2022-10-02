@@ -94,12 +94,8 @@ static QList<float> splitZoneTabCoordinates(const QByteArray &zonetabcoordinates
     if (signindex < startindex) {
         return result;
     }
-    const float latitude = convertCoordinate(
-        QByteArray(zonetabcoordinates.mid(0, signindex))
-    );
-    const float longitude = convertCoordinate(
-        QByteArray(zonetabcoordinates.mid(signindex, zonetabcoordinates.size() - signindex))
-    );
+    const float latitude = convertCoordinate(zonetabcoordinates.mid(0, signindex));
+    const float longitude = convertCoordinate(zonetabcoordinates.mid(signindex, zonetabcoordinates.size() - signindex));
     result.append(latitude);
     result.append(longitude);
     return result;
@@ -174,12 +170,12 @@ void KSystemTimeZonesPrivate::update(const QString &path)
             continue;
         }
         const QList<QByteArray> zonetabparts = zonetabline.split('\t');
-        if (zonetabparts.size() < 3 || zonetabparts.size() > 4) {
+        if (Q_UNLIKELY(zonetabparts.size() < 3 || zonetabparts.size() > 4)) {
             kWarning() << "Invalid zone.tab entry" << zonetabline;
             continue;
         }
         const QList<float> zonetabcoordinates = splitZoneTabCoordinates(zonetabparts.at(1));
-        if (zonetabcoordinates.size() != 2) {
+        if (Q_UNLIKELY(zonetabcoordinates.size() != 2)) {
             kWarning() << "Invalid zone.tab coordinates" << zonetabline;
             continue;
         }
