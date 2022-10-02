@@ -1,5 +1,8 @@
 project(kdelibs)
 
+include(GenerateExportHeader)
+include(FeatureSummary)
+
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
@@ -31,7 +34,6 @@ set(LIBRARY_TYPE SHARED)
 
 find_package(KDE4Internal REQUIRED)
 include(KDE4Defaults)
-include(GenerateExportHeader)
 
 if(UNIX AND Q_WS_X11)
     #X11 Session Management (SM) is required

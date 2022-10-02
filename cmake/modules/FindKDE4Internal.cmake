@@ -137,10 +137,6 @@ if(NOT Katie_FOUND)
     return()
 endif()
 
-# now we are sure we have everything we need
-# TODO: move to main CMakeLists.txt files at the same time CMP0000 is dealt with
-include(FeatureSummary)
-
 # are we trying to compile kdelibs? then enter bootstrap mode
 # kdelibs_SOURCE_DIR comes from "project(kdelibs)" in kdelibs/CMakeLists.txt
 
