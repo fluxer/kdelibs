@@ -65,7 +65,7 @@ QT_BEGIN_NAMESPACE
 extern Q_DBUS_EXPORT void qDBusAddSpyHook(void (*)(const QDBusMessage&));
 QT_END_NAMESPACE
 
-static bool runBuildSycoca()
+static void runBuildSycoca()
 {
     const QString exe = KStandardDirs::findExe(KBUILDSYCOCA_EXENAME);
     Q_ASSERT(!exe.isEmpty());
@@ -73,15 +73,21 @@ static bool runBuildSycoca()
     if (bCheckStamps) {
         args.append("--checkstamps");
     }
-    return (QProcess::execute(exe, args) == 0);
+    if (QProcess::execute(exe, args) != 0) {
+        kWarning() << "a problem occured while running" << exe;
+    }
 }
 
 static void runDontChangeHostname(const QByteArray &oldName, const QByteArray &newName)
 {
+    const QString exe = KStandardDirs::findExe(QString::fromLatin1("kdontchangethehostname"));
+    Q_ASSERT(!exe.isEmpty());
     QStringList args;
     args.append(QFile::decodeName(oldName));
     args.append(QFile::decodeName(newName));
-    QProcess::execute("kdontchangethehostname", args);
+    if (QProcess::execute(exe, args) != 0) {
+        kWarning() << "a problem occured while running" << exe;
+    }
 }
 
 Kded::Kded(QObject *parent)
