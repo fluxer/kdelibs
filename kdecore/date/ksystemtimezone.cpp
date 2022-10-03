@@ -26,6 +26,7 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QFileSystemWatcher>
+#include <QElapsedTimer>
 
 #include "kglobal.h"
 #include "kdebug.h"
@@ -129,6 +130,11 @@ void KSystemTimeZonesPrivate::update(const QString &path)
 {
     Q_UNUSED(path);
 
+#ifndef NDEBUG
+    QElapsedTimer updatetimer;
+    updatetimer.start();
+#endif
+
     m_localtz = KTimeZone::utc();
     static const QByteArray kdezoneinfodir = qgetenv("KDE_ZONEINFO_DIR");
     m_zoneinfoDir = QFile::decodeName(kdezoneinfodir);
@@ -211,6 +217,9 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         const int zonediroffset = (m_zoneinfoDir.size() + 1);
         const QString localtz = reallocaltime.mid(zonediroffset, reallocaltime.size() - zonediroffset);
         m_localtz = KTimeZones::zone(localtz);
+#ifndef NDEBUG
+        kDebug() << "Zones update took" << updatetimer.elapsed() << "ms";
+#endif
         return;
     }
 
@@ -229,6 +238,9 @@ void KSystemTimeZonesPrivate::update(const QString &path)
     while (it != allzones.constEnd()) {
         if (it.value().abbreviations().contains(localtz)) {
             m_localtz = KTimeZones::zone(it.key());
+#ifndef NDEBUG
+            kDebug() << "Zones update took" << updatetimer.elapsed() << "ms";
+#endif
             break;
         }
         it++;
