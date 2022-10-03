@@ -1515,9 +1515,8 @@ void KEditToolBarWidgetPrivate::updateLocal(QDomElement& elem)
 
 void KEditToolBarWidgetPrivate::slotChangeIcon()
 {
-  // We can't use KIconChooser here, since it's in libkio
-  // ##### KDE4: reconsider this, e.g. move KEditToolBar to libkio,
-  // ##### or better, dlopen libkfile from here like kio does.
+  // We can't use KIconDialog here, since it's in libkio
+  // ##### KDE4: reconsider this, e.g. move KEditToolBar to libkio
 
   //if the process is already running (e.g. when somebody clicked the change button twice (see #127149)) - do nothing...
   //otherwise m_kdialogProcess will be overwritten and set to zero in slotProcessExited()...crash!
