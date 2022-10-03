@@ -109,8 +109,6 @@ private:
     QHash<KT,VT> macromap;
 };
 
-static QStringList &operator+=( QStringList &s, const QString &n) { s << n; return s; }
-
 ////////
 
 static bool
