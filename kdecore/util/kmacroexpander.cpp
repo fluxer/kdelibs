@@ -154,7 +154,7 @@ int
 KMacroMapExpander<QChar,VT>::expandEscapedMacro( const QString &str, int pos, QStringList &ret )
 {
     if (str.length() <= pos + 1)
-      return 0;
+        return 0;
 
     if (str.unicode()[pos + 1] == escapeChar()) {
         ret += QString( escapeChar() );

@@ -277,12 +277,9 @@ bool KSaveFile::directWriteFallback() const
 
 bool KSaveFile::backupFile( const QString& qFilename, const QString& backupDir )
 {
-    // get backup type from config, by default use "simple"
     // get extension from config, by default use "~"
-    // get max number of backups from config, by default set to 10
 
     KConfigGroup g(KGlobal::config(), "Backups"); // look in the Backups section
-    QString type = g.readEntry( "Type", "simple" );
     QString extension = g.readEntry( "Extension", "~" );
 
     QString backupFileName = qFilename + extension;
