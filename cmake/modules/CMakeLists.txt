@@ -43,7 +43,6 @@ set(cmakeFiles
     FindLibKonq.cmake
     FindLibLZMA.cmake
     FindLibMms.cmake
-    FindLibNXCL.cmake
     FindLIBPARTED.cmake
     FindLibSpectre.cmake
     FindLibSSH.cmake
