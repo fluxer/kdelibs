@@ -20,8 +20,7 @@
  */
 
 #include "proctitle.h"
-#include <config.h>
-#include <config-kdeinit.h>
+#include "config-kdeinit.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -40,7 +39,6 @@ extern char *__progname;
 #ifdef HAVE___PROGNAME_FULL
 extern char *__progname_full;
 #endif /* HAVE___PROGNAME_FULL */
-extern char **environ;
 
 /**
  * Set up the memory space for setting the proctitle
