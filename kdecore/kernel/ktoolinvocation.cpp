@@ -239,18 +239,21 @@ void KToolInvocation::invokeHelp( const QString& anchor,
     QString docPath;
     if (_appname.isEmpty()) {
         appname = QCoreApplication::instance()->applicationName();
-    } else
+    } else {
         appname = _appname;
+    }
 
     KService::Ptr service(KService::serviceByDesktopName(appname));
     if (service) {
         docPath = service->docPath();
     }
 
+    // NOTE: keep the URL in sync with kdeui/kernel/kglobalsettings.h
+    static const QString helpurl = QString::fromLatin1("https://osdn.net/projects/kde/wiki/");
     if (!docPath.isEmpty()) {
-        url = KUrl(KUrl("help:/"), docPath);
+        url = KUrl(KUrl(helpurl), docPath);
     } else {
-        url = QString::fromLatin1("help:/%1/index.html").arg(appname);
+        url = helpurl;
     }
 
     if (!anchor.isEmpty()) {
