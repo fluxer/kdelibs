@@ -180,18 +180,16 @@ void KSystemTimeZonesPrivate::update(const QString &path)
             continue;
         }
 
-        const QString zonecode = QString::fromLatin1(zonetabparts.at(0).constData(), zonetabparts.at(0).size());
-        const QString zonename = QString::fromLatin1(zonetabparts.at(2).constData(), zonetabparts.at(2).size());
         QString zonecomment;
         if (zonetabparts.size() == 4) {
             zonecomment = QString::fromLatin1(zonetabparts.at(3).constData(), zonetabparts.at(3).size());
         }
-        const float zonelatitude = zonetabcoordinates.at(0);
-        const float zonelongitude = zonetabcoordinates.at(1);
-
         const KTimeZone ktimezone(
             m_tzfileSource,
-            zonename, zonecode, zonelatitude, zonelongitude, zonecomment
+            QString::fromLatin1(zonetabparts.at(2).constData(), zonetabparts.at(2).size()),
+            QString::fromLatin1(zonetabparts.at(0).constData(), zonetabparts.at(0).size()),
+            zonetabcoordinates.at(0), zonetabcoordinates.at(1),
+            zonecomment
         );
         KTimeZones::add(ktimezone);
     }
