@@ -154,7 +154,7 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
       result = i18n( "Could not start process %1.", errorText );
       break;
     case  KIO::ERR_INTERNAL:
-      result = i18n( "Internal Error\nPlease send a full bug report at %1\n%2", QString(BUG_REPORT_URL), errorText );
+      result = i18n( "Internal Error\nPlease send a full bug report at %1\n%2", QString::fromLatin1(KDE_BUG_REPORT_URL), errorText );
       break;
     case  KIO::ERR_MALFORMED_URL:
       result = i18n( "Malformed URL %1.", errorText );
@@ -337,7 +337,7 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
       result = i18n( "%1 is required by the server, but is not available." , errorText);
       break;
     default:
-      result = i18n( "Unknown error code %1\n%2\nPlease send a full bug report at %3.", errorCode , errorText, QString(BUG_REPORT_URL) );
+      result = i18n( "Unknown error code %1\n%2\nPlease send a full bug report at %3.", errorCode , errorText, QString::fromLatin1(KDE_BUG_REPORT_URL) );
       break;
     }
 
@@ -499,7 +499,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
     "the same bug has been submitted by someone else by searching at the "
     "<a href=\"%1/\">bug reporting website</a>. If not, take "
     "note of the details given above, and include them in your bug report, along "
-    "with as many other details as you think might help.", QString(BUG_REPORT_URL));
+    "with as many other details as you think might help.", QString::fromLatin1(KDE_BUG_REPORT_URL));
   QString cNetwork = i18n( "There may have been a problem with your network "
     "connection." );
   // FIXME netconf kcontrol link
@@ -1017,7 +1017,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "program implementing the protocol %1." ,  protocol );
       solutions << i18n( "Please file a bug at <a href=\"%1\">"
         "%2/</a> to inform the team working on it of the unsupported "
-        "authentication method.", QString(BUG_REPORT_URL), QString(BUG_REPORT_URL) ) << sSysadmin;
+        "authentication method.", QString::fromLatin1(KDE_BUG_REPORT_URL), QString::fromLatin1(KDE_BUG_REPORT_URL) ) << sSysadmin;
       break;
 
     case  KIO::ERR_ABORTED:

@@ -45,9 +45,9 @@
 #define KDE_DEFAULT_FONT "DejaVu Sans"
 #define KDE_DEFAULT_FIXED_FONT "DejaVu Sans Mono"
 
-#define HOME_URL "https://osdn.net/projects/kde/"
-#define BUG_REPORT_URL "https://osdn.net/projects/kde/ticket/"
-#define BUG_REPORT_EMAIL "xakepa10@gmail.com"
+#define KDE_HOME_URL "https://osdn.net/projects/kde/"
+#define KDE_BUG_REPORT_URL "https://osdn.net/projects/kde/ticket/"
+#define KDE_BUG_REPORT_EMAIL "xakepa10@gmail.com"
 #define KDE_HELP_URL "https://osdn.net/projects/kde/wiki/"
 
 class KUrl;

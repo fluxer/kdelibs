@@ -1082,7 +1082,7 @@ KUrl Theme::homepage() const
     const QString metadataPath(KStandardDirs::locate("data", QLatin1String("desktoptheme/") + d->themeName + QLatin1String("/metadata.desktop")));
     KConfig metadata(metadataPath);
     KConfigGroup brandConfig(&metadata, "Branding");
-    return brandConfig.readEntry("homepage", KUrl(HOME_URL));
+    return brandConfig.readEntry("homepage", KUrl(QString::fromLatin1(KDE_HOME_URL)));
 }
 
 int Theme::toolTipDelay() const

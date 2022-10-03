@@ -623,7 +623,8 @@ void KMimeTypePrivate::ensureXmlDataLoaded() const
 #warning FIXME: non-glibc crash workaround, investigate
 #ifdef __GLIBC__
             if (xml.name() != "mime-type") {
-                kFatal() << "Programming error in KMimeType XML loading, please create a bug report on " << BUG_REPORT_URL << "including the file" << fullPath;
+                kFatal() << "Programming error in KMimeType XML loading, please create a bug report on"
+                    << KDE_BUG_REPORT_URL << "including the file" << fullPath;
             }
 #endif
         }

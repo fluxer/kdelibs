@@ -56,7 +56,7 @@ void KAboutDataTest::testConstructorWithDefaults()
     QCOMPARE( aboutData.version(), QString(Version) );
     QCOMPARE( aboutData.catalogName(), QString(CatalogName) );
     QCOMPARE( aboutData.homepage(), QString() );
-    QCOMPARE( aboutData.bugAddress(), QString(BUG_REPORT_EMAIL) );
+    QCOMPARE( aboutData.bugAddress(), QString(KDE_BUG_REPORT_EMAIL) );
     QVERIFY( aboutData.authors().isEmpty() );
     QVERIFY( aboutData.credits().isEmpty() );
     QVERIFY( aboutData.translators().isEmpty() );

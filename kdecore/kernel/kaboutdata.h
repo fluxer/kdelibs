@@ -243,7 +243,7 @@ class KDECORE_EXPORT KAboutData
                 const KLocalizedString &copyrightStatement = KLocalizedString(),
                 const KLocalizedString &otherText = KLocalizedString(),
                 const QByteArray &homePageAddress = QByteArray(),
-                const QByteArray &bugsEmailAddress = BUG_REPORT_EMAIL
+                const QByteArray &bugsEmailAddress = KDE_BUG_REPORT_EMAIL
               );
 
     /**

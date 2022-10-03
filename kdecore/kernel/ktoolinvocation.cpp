@@ -28,6 +28,7 @@
 #include "kmessage.h"
 #include "kservice.h"
 #include "klocale.h"
+#include "kglobalsettings.h"
 
 #include <QtCore/QThread>
 #include <QtCore/QProcess>
@@ -248,12 +249,10 @@ void KToolInvocation::invokeHelp( const QString& anchor,
         docPath = service->docPath();
     }
 
-    // NOTE: keep the URL in sync with kdeui/kernel/kglobalsettings.h
-    static const QString helpurl = QString::fromLatin1("https://osdn.net/projects/kde/wiki/");
     if (!docPath.isEmpty()) {
-        url = KUrl(KUrl(helpurl), docPath);
+        url = KUrl(KUrl(QString::fromLatin1(KDE_HELP_URL)), docPath);
     } else {
-        url = helpurl;
+        url = QString::fromLatin1(KDE_HELP_URL);
     }
 
     if (!anchor.isEmpty()) {

@@ -300,7 +300,7 @@ void KHelpMenu::aboutKDE()
 
 void KHelpMenu::reportBug()
 {
-  KToolInvocation::invokeBrowser( BUG_REPORT_URL );
+  KToolInvocation::invokeBrowser( KDE_BUG_REPORT_URL );
 }
 
 
