@@ -164,32 +164,45 @@ void KSystemTimeZonesPrivate::update(const QString &path)
     connect(m_watcher, SIGNAL(fileChanged(QString)), this, SLOT(update(QString)));
 
     kDebug() << "Parsing" << zonetab;
+    char zonecode[4];
+    char zonecoordinates[1024];
+    char zonename[1024];
+    char zonecomment[1024];
     while (!zonetabfile.atEnd()) {
         const QByteArray zonetabline = zonetabfile.readLine().trimmed();
         if (zonetabline.isEmpty() || zonetabline.startsWith('#')) {
             continue;
         }
-        const QList<QByteArray> zonetabparts = zonetabline.split('\t');
-        if (Q_UNLIKELY(zonetabparts.size() < 3 || zonetabparts.size() > 4)) {
+
+        ::memset(zonecode, '\0', sizeof(zonecode));
+        ::memset(zonecoordinates, '\0', sizeof(zonecode));
+        ::memset(zonename, '\0', sizeof(zonename));
+        ::memset(zonecomment, '\0', sizeof(zonecomment));
+        const int sscanfresult = sscanf(
+            zonetabline.constData(),
+            "%4s %1024s %1024s %1024[^\n]]",
+            zonecode, zonecoordinates, zonename, zonecomment
+        );
+
+        if (Q_UNLIKELY(sscanfresult < 3 || sscanfresult > 4)) {
             kWarning() << "Invalid zone.tab entry" << zonetabline;
             continue;
         }
-        const QList<float> zonetabcoordinates = splitZoneTabCoordinates(zonetabparts.at(1));
+
+        const QList<float> zonetabcoordinates = splitZoneTabCoordinates(
+            QByteArray::fromRawData(zonecoordinates, qstrlen(zonecoordinates))
+        );
         if (Q_UNLIKELY(zonetabcoordinates.size() != 2)) {
             kWarning() << "Invalid zone.tab coordinates" << zonetabline;
             continue;
         }
 
-        QString zonecomment;
-        if (zonetabparts.size() == 4) {
-            zonecomment = QString::fromLatin1(zonetabparts.at(3).constData(), zonetabparts.at(3).size());
-        }
         const KTimeZone ktimezone(
             m_tzfileSource,
-            QString::fromLatin1(zonetabparts.at(2).constData(), zonetabparts.at(2).size()),
-            QString::fromLatin1(zonetabparts.at(0).constData(), zonetabparts.at(0).size()),
+            QString::fromLatin1(zonename),
+            QString::fromLatin1(zonecode),
             zonetabcoordinates.at(0), zonetabcoordinates.at(1),
-            zonecomment
+            QString::fromLatin1(zonecomment)
         );
         KTimeZones::add(ktimezone);
     }
