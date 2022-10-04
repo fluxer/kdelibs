@@ -154,8 +154,8 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
 
     while (isDBusServiceRegistered(helper)) {
         kDebug() << "Waiting for service to unregister" << helper;
-        QCoreApplication::processEvents();
-        QThread::msleep(500);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
+        QThread::msleep(250);
     }
 
     QDBusInterface kauthorizationinterface(
