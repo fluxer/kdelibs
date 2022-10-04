@@ -549,16 +549,6 @@ void PackageStructure::setContentsPrefixPaths(const QStringList &prefixPaths)
     }
 }
 
-bool PackageStructure::installPackage(const QString &package, const QString &packageRoot)
-{
-    return Package::installPackage(package, packageRoot, d->servicePrefix);
-}
-
-bool PackageStructure::uninstallPackage(const QString &packageName, const QString &packageRoot)
-{
-    return Package::uninstallPackage(packageName, packageRoot, d->servicePrefix);
-}
-
 QString PackageStructure::defaultPackageRoot() const
 {
     return d->packageRoot;
@@ -597,55 +587,8 @@ PackageMetadata PackageStructure::metadata()
 {
     if (!d->metadata && !d->path.isEmpty()) {
         QFileInfo fileInfo(d->path);
-
         if (fileInfo.isDir()) {
             d->createPackageMetadata(d->path);
-        } else if (fileInfo.exists()) {
-            KArchive *archive = 0;
-            KMimeType::Ptr mimetype = KMimeType::findByPath(d->path);
-
-            if (mimetype->is("application/zip")) {
-                archive = new KZip(d->path);
-            } else if (mimetype->is("application/x-compressed-tar") || mimetype->is("application/x-gzip") ||
-                       mimetype->is("application/x-xz-compressed-tar") || mimetype->is("application/x-lzma-compressed-tar") ||
-                       mimetype->is("application/x-tar")|| mimetype->is("application/x-bzip-compressed-tar")) {
-                archive = new KTar(d->path);
-            } else {
-                kWarning() << "Could not open package file, unsupported archive format:" << d->path << mimetype->name();
-            }
-
-            if (archive && archive->open(QIODevice::ReadOnly)) {
-                const KArchiveDirectory *source = archive->directory();
-                KTempDir tempdir;
-                source->copyTo(tempdir.name());
-
-                // This is to help with the theme packages, which include an extra folder in their package archive.
-                // Question: Would it be better to search just the first level dirs for metadata.desktop file?
-                // As in /path/Theme Name/Dir1/metadata.desktop and not /path/Theme Name/Dir1/Dir2/metadata.desktop 
-                // This fixes bug https://bugs.kde.org/show_bug.cgi?id=149479 properly.
-                // 2nd rev. Search an extra first directory only.
-
-                QDir dir(tempdir.name());
-                QString filename = "metadata.desktop";
-                QFileInfo metadataFileInfo(dir, filename);
-
-                if (metadataFileInfo.exists()) {
-                    d->createPackageMetadata(metadataFileInfo.absolutePath());
-                } else {
-                    dir.setFilter(QDir::NoDotAndDotDot|QDir::Dirs);
-                    dir.setSorting(QDir::DirsFirst);
-                    QFileInfo firstDir(dir.entryInfoList().first());
-                    metadataFileInfo = QFileInfo(firstDir.filePath(), filename);
-                    if (metadataFileInfo.exists()) {
-                        kWarning() << "Found in: " << metadataFileInfo.absolutePath();
-                        d->createPackageMetadata(metadataFileInfo.absolutePath());
-                    }
-                }
-            } else {
-                kWarning() << "Could not open package file:" << d->path;
-            }
-
-            delete archive;
         }
     }
 

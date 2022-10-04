@@ -37,7 +37,6 @@ private Q_SLOTS:
     void entryList();
     void knownPackages();
     void metadata();
-    void createAndInstallPackage();
 
 private:
     void removeDir(const QString &subdir);

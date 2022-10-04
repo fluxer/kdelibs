@@ -2,7 +2,6 @@
 <!DOCTYPE kcfg SYSTEM
     "http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
 <kcfg>
-    <group name="GetPackage" />
     <group name="GetMetaData" />
     <group name="DataEngine">
         <entry name="EngineName" type="String">

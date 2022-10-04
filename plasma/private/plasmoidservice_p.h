@@ -26,8 +26,6 @@
 #include "../service.h"
 #include "../servicejob.h"
 
-#include <ktemporaryfile.h>
-
 namespace Plasma
 {
 
@@ -41,8 +39,7 @@ class PlasmoidServiceJob : public ServiceJob
    Q_OBJECT
 
     public:
-        PlasmoidServiceJob(const QString &plasmoidLocation,
-                           const QString &destination,
+        PlasmoidServiceJob(const QString &destination,
                            const QString &operation,
                            QMap<QString,QVariant>& parameters,
                            PlasmoidService *parent = 0);
@@ -51,7 +48,6 @@ class PlasmoidServiceJob : public ServiceJob
 
     private:
         PlasmoidService *m_service;
-        QString m_packagePath;
         QString m_pluginName;
 };
 
@@ -72,7 +68,6 @@ class PlasmoidService : public Service, DataEngineConsumer
     private:
         QString m_packagePath;
         PackageMetadata m_metadata;
-        KTemporaryFile m_tempFile;
 
         friend class PlasmoidServiceJob;
 };

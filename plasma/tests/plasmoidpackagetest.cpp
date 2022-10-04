@@ -292,39 +292,4 @@ void PlasmoidPackageTest::metadata()
     QCOMPARE(metadata.name(), plasmoid);
 }
 
-void PlasmoidPackageTest::createAndInstallPackage()
-{
-    QString plasmoid("plasmoid_to_package");
-    createTestPackage(plasmoid);
-
-    QString packagePath = mPackageRoot + '/' + "package.zip";
-    Plasma::PackageMetadata metadata(
-        QString(KDESRCDIR) + "/packagemetadatatest.desktop");
-    QVERIFY(Plasma::Package::createPackage(metadata,
-                                           mPackageRoot + '/' + plasmoid + "/contents",
-                                           packagePath));
-    QVERIFY(QFile::exists(packagePath));
-
-    KZip package(packagePath);
-    QVERIFY(package.open(QIODevice::ReadOnly));
-    const KArchiveDirectory *dir = package.directory();
-    QVERIFY(dir);
-    QVERIFY(dir->entry("metadata.desktop"));
-    const KArchiveEntry *contentsEntry = dir->entry("contents");
-    QVERIFY(contentsEntry);
-    QVERIFY(contentsEntry->isDirectory());
-    const KArchiveDirectory *contents =
-        static_cast<const KArchiveDirectory *>(contentsEntry);
-    QVERIFY(contents->entry("code"));
-    QVERIFY(contents->entry("images"));
-
-    QVERIFY(Plasma::Package::installPackage(packagePath, mPackageRoot, "plasma-applet-"));
-    QString installedPackage = mPackageRoot + "/test";
-
-    QVERIFY(QDir(installedPackage).exists());
-
-    p = new Plasma::Package(installedPackage, ps);
-    QVERIFY(p->isValid());
-}
-
 QTEST_KDEMAIN(PlasmoidPackageTest, NoGUI)

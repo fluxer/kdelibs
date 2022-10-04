@@ -36,34 +36,19 @@
 namespace Plasma
 {
 
-PlasmoidServiceJob::PlasmoidServiceJob(const QString &plasmoidLocation,
-                                       const QString &destination,
+PlasmoidServiceJob::PlasmoidServiceJob(const QString &destination,
                                        const QString &operation,
                                        QMap<QString,QVariant>& parameters,
                                        PlasmoidService *service)
     : Plasma::ServiceJob(destination, operation, parameters,
                          static_cast<Plasma::Service*>(service)),
-      m_service(service),
-      m_packagePath(plasmoidLocation)
+      m_service(service)
 {
 }
 
 void PlasmoidServiceJob::start()
 {
-    if (operationName() == "GetPackage") {
-        kDebug() << "sending " << m_service->m_packagePath;
-        QFileInfo fileInfo(m_service->m_packagePath);
-
-        if (fileInfo.exists() && fileInfo.isAbsolute()) {
-            kDebug() << "file exists, let's try and read it";
-            QFile file(m_service->m_packagePath);
-            file.open(QIODevice::ReadOnly);
-            setResult(file.readAll());
-        } else {
-            kDebug() << "file doesn't exists, we're sending the plugin name";
-            setResult(m_packagePath);
-        }
-    } else if (operationName() == "GetMetaData") {
+    if (operationName() == "GetMetaData") {
         KTemporaryFile tempFile;
         m_service->m_metadata.write(tempFile.fileName());
         QFile file(tempFile.fileName());
@@ -90,25 +75,6 @@ PlasmoidService::PlasmoidService(const QString &packageLocation)
     if (!m_metadata.isValid()) {
         kDebug() << "not a valid package";
     }
-    if (!m_tempFile.open()) {
-        kDebug() << "could not create tempfile";
-    }
-    QString packagePath = m_tempFile.fileName();
-    m_tempFile.close();
-
-    // put everything into a zip archive
-    KZip creation(packagePath);
-    creation.setCompression(KZip::NoCompression);
-    if (!creation.open(QIODevice::WriteOnly)) {
-        kDebug() << "could not open archive";
-    }
-
-    creation.addLocalFile(location + "metadata.desktop", "metadata.desktop");
-    location.append("contents/");
-    creation.addLocalDirectory(location, "contents");
-    creation.close();
-
-    m_packagePath = packagePath;
 }
 
 PlasmoidService::PlasmoidService(Applet *applet)
@@ -116,7 +82,6 @@ PlasmoidService::PlasmoidService(Applet *applet)
     setName("plasmoidservice");
     if (!applet->package() || !applet->package()->isValid()) {
         kDebug() << "not a valid package";
-        m_packagePath = applet->pluginName();
     }
 }
 
@@ -128,7 +93,7 @@ PackageMetadata PlasmoidService::metadata() const
 Plasma::ServiceJob* PlasmoidService::createJob(const QString& operation,
                                           QMap<QString,QVariant>& parameters)
 {
-    return new PlasmoidServiceJob(m_packagePath, destination(), operation, parameters, this);
+    return new PlasmoidServiceJob(destination(), operation, parameters, this);
 }
 
 }

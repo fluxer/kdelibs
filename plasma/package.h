@@ -143,59 +143,6 @@ class PLASMA_EXPORT Package
          **/
         static QStringList listInstalledPaths(const QString &packageRoot);
 
-        /**
-         * Installs a package.
-         *
-         * @param package path to the Plasmagik package
-         * @param packageRoot path to the directory where the package should be
-         *                    installed to
-         * @param servicePrefix the prefix for the desktop file, so as not to interfere
-         *                      with unrelated services (eg: "plasma-applet-"). If no prefix
-         *                      is set (e.g. a QString() is passed in), then the package will NOT
-         *                      be registered as a service
-         * @return true on successful installation, false otherwise
-         **/
-        static bool installPackage(const QString &package,
-                                   const QString &packageRoot,
-                                   const QString &servicePrefix);
-
-        /**
-         * Uninstalls a package.
-         *
-         * @param package path to the Plasmagik package
-         * @param packageRoot path to the directory where the package should be
-         *                    installed to
-         * @param servicePrefix the prefix for the desktop file, so as not to interfere
-         *                      with unrelated services (eg: "plasma-applet-")
-         * @return true on successful uninstallation, false otherwise
-         **/
-        static bool uninstallPackage(const QString &package,
-                                     const QString &packageRoot,
-                                     const QString &servicePrefix);
-
-        /**
-         * Registers a package described by the given desktop file
-         *
-         * @param the full path to the desktop file (must be KPluginInfo compatible)
-         * @return true on success, false on failure
-         */
-        static bool registerPackage(const PackageMetadata &data, const QString &iconPath);
-
-        /**
-         * Creates a package based on the metadata from the files contained
-         * in the source directory
-         *
-         * @param metadata description of the package to create
-         * @param source path to local directory containing the individual
-         *             files to be added to the package
-         * @param destination path to the package that should be created
-         * @param icon path to the package icon
-         **/
-        static bool createPackage(const PackageMetadata &metadata,
-                                  const QString &source,
-                                  const QString &destination,
-                                  const QString &icon = QString());
-
     private:
         PackagePrivate * const d;
 
