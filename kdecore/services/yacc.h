@@ -1,4 +1,4 @@
-/* A Bison parser, made by GNU Bison 3.7.6.  */
+/* A Bison parser, made by GNU Bison 3.8.2.  */
 
 /* Bison interface for Yacc-like parsers in C
 
@@ -104,6 +104,8 @@ typedef union YYSTYPE YYSTYPE;
 
 
 
+
 int kiotraderparse (void *_scanner);
+
 
 #endif /* !YY_KIOTRADER_YACC_H_INCLUDED  */
