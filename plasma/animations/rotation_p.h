@@ -78,12 +78,6 @@ public:
      */
     qreal angle() const;
 
-    /**
-     * Reimplemented from Plasma::Animation
-     * @param curve Easing curve
-     */
-    void setEasingCurve(const QEasingCurve &curve);
-
 public slots:
     /**
      * set animation rotation axis
