@@ -186,7 +186,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         ::memset(zonecomment, '\0', sizeof(zonecomment));
         const int sscanfresult = sscanf(
             zonetabline.constData(),
-            "%4s %1024s %1024s %1024[^\n]]",
+            "%4s %1024s %1024s %1024[^\n]",
             zonecode, zonecoordinates, zonename, zonecomment
         );
 
