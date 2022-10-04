@@ -318,17 +318,16 @@ void KCMultiDialog::slotHelpClicked()
         return;
 
     Q_D(KCMultiDialog);
-    QString docPath;
+    QString moduleService;
     for ( int i = 0; i < d->modules.count(); ++i ) {
         if ( d->modules[ i ].item == item ) {
-            docPath = d->modules[ i ].kcm->moduleInfo().docPath();
+            moduleService = d->modules[ i ].kcm->moduleInfo().fileName();
             break;
         }
     }
 
-#warning this can make use of KToolInvocation::invokeHelp()
-    KUrl docUrl( KUrl( "help:/" ), docPath );
-    KToolInvocation::invokeBrowser( docUrl.url() );
+    moduleService = moduleService.replace(QLatin1String(".desktop"), QString());
+    KToolInvocation::invokeHelp(QString(), moduleService);
 }
 
 
