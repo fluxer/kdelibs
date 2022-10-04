@@ -544,11 +544,6 @@ void Dialog::keyPressEvent(QKeyEvent *event)
     }
 }
 
-bool Dialog::event(QEvent *event)
-{
-    return QWidget::event(event);
-}
-
 void Dialog::resizeEvent(QResizeEvent *event)
 {
     Q_UNUSED(event)

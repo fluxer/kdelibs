@@ -632,21 +632,6 @@ QString Corona::preferredToolBoxPlugin(const Containment::Type type) const
     return d->toolBoxPlugins.value(type);
 }
 
-void Corona::dragEnterEvent(QGraphicsSceneDragDropEvent *event)
-{
-    QGraphicsScene::dragEnterEvent(event);
-}
-
-void Corona::dragLeaveEvent(QGraphicsSceneDragDropEvent *event)
-{
-    QGraphicsScene::dragLeaveEvent(event);
-}
-
-void Corona::dragMoveEvent(QGraphicsSceneDragDropEvent *event)
-{
-    QGraphicsScene::dragMoveEvent(event);
-}
-
 ImmutabilityType Corona::immutability() const
 {
     return d->immutability;
