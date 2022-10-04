@@ -28,9 +28,10 @@
 #include <QtCore/QFile>
 
 #include <kmountpoint.h>
+#include <kdebug.h>
 
 #include <sys/statvfs.h>
-
+#include <errno.h>
 
 class KDiskFreeSpaceInfo::Private : public QSharedData
 {
@@ -121,6 +122,9 @@ KDiskFreeSpaceInfo KDiskFreeSpaceInfo::freeSpaceInfo( const QString& path )
         info.d->available = statvfs_buf.f_bavail * blksize;
         info.d->size = statvfs_buf.f_blocks * blksize;
         info.d->valid = true;
+    } else {
+        const int savederrno = errno;
+        kWarning() << qt_error_string(savederrno);
     }
 
     return info;
