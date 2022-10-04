@@ -171,8 +171,8 @@ void KSystemTimeZonesPrivate::update(const QString &path)
 
     kDebug() << "Parsing" << zonetab;
     char zonecode[4];
-    char zonecoordinates[1024];
-    char zonename[1024];
+    char zonecoordinates[32];
+    char zonename[128];
     char zonecomment[1024];
     while (!zonetabfile.atEnd()) {
         const QByteArray zonetabline = zonetabfile.readLine().trimmed();
@@ -186,7 +186,7 @@ void KSystemTimeZonesPrivate::update(const QString &path)
         ::memset(zonecomment, '\0', sizeof(zonecomment));
         const int sscanfresult = sscanf(
             zonetabline.constData(),
-            "%4s %1024s %1024s %1024[^\n]",
+            "%4s %32s %128s %1024[^\n]",
             zonecode, zonecoordinates, zonename, zonecomment
         );
 
