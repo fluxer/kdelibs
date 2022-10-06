@@ -237,7 +237,7 @@ public:
     QString m_error;
 
 #if defined(HAVE_LIBARCHIVE)
-    static const char* passphaseCallback(struct archive* archiveptr, void* dataptr);
+    static const char* passphraseCallback(struct archive* archiveptr, void* dataptr);
 
     struct archive* openRead(const QByteArray &path);
     struct archive* openWrite(const QByteArray &path);
@@ -256,7 +256,7 @@ KArchivePrivate::KArchivePrivate()
 }
 
 #if defined(HAVE_LIBARCHIVE)
-const char* KArchivePrivate::passphaseCallback(struct archive* archiveptr, void* dataptr)
+const char* KArchivePrivate::passphraseCallback(struct archive* archiveptr, void* dataptr)
 {
     // TODO: ask for password via KPasswordDialog
     kWarning() << "Password-protected archives are not supported";
@@ -272,7 +272,7 @@ struct archive* KArchivePrivate::openRead(const QByteArray &path)
     if (readarchive) {
         archive_read_support_filter_all(readarchive);
         archive_read_support_format_all(readarchive);
-        archive_read_set_passphrase_callback(readarchive, NULL, KArchivePrivate::passphaseCallback);
+        archive_read_set_passphrase_callback(readarchive, NULL, KArchivePrivate::passphraseCallback);
 
         if (archive_read_open_filename(readarchive, path, KARCHIVE_BUFFSIZE) != ARCHIVE_OK) {
             m_error = i18n("archive_read_open_filename: %1", archive_error_string(readarchive));
@@ -295,7 +295,7 @@ struct archive* KArchivePrivate::openWrite(const QByteArray &path)
         }
 
         archive_write_set_format_pax_restricted(writearchive);
-        archive_write_set_passphrase_callback(writearchive, NULL, KArchivePrivate::passphaseCallback);
+        archive_write_set_passphrase_callback(writearchive, NULL, KArchivePrivate::passphraseCallback);
 
         if (archive_write_open_filename(writearchive, path) != ARCHIVE_OK) {
             m_error = i18n("archive_write_open_filename: %1", archive_error_string(writearchive));
