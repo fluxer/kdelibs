@@ -70,6 +70,8 @@ public:
     QString fancyMTime() const;
     //! @brief Fancy type for the purpose of widgets
     QString fancyType() const;
+
+    bool operator==(const KArchiveEntry &karchiveentry) const;
 };
 #ifndef QT_NO_DEBUG_STREAM
 KARCHIVE_EXPORT QDebug operator<<(QDebug, const KArchiveEntry &karchiveentry);

@@ -204,6 +204,24 @@ bool KArchiveEntry::isNull() const
     return (mode == 0);
 }
 
+bool KArchiveEntry::operator==(const KArchiveEntry &karchiveentry) const {
+    return (
+        encrypted == karchiveentry.encrypted &&
+        size == karchiveentry.size &&
+        gid == karchiveentry.gid &&
+        uid == karchiveentry.uid &&
+        mode == karchiveentry.mode &&
+        atime == karchiveentry.atime &&
+        ctime == karchiveentry.ctime &&
+        mtime == karchiveentry.mtime &&
+        hardlink == karchiveentry.hardlink &&
+        symlink == karchiveentry.symlink &&
+        pathname == karchiveentry.pathname &&
+        groupname == karchiveentry.groupname &&
+        username == karchiveentry.username
+    );
+}
+
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<(QDebug d, const KArchiveEntry &karchiveentry)
 {
