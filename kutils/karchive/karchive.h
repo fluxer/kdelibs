@@ -72,7 +72,7 @@ public:
     QString fancyType() const;
 };
 #ifndef QT_NO_DEBUG_STREAM
-KARCHIVE_EXPORT QDebug operator<<(QDebug, const KArchiveEntry &entry);
+KARCHIVE_EXPORT QDebug operator<<(QDebug, const KArchiveEntry &karchiveentry);
 #endif
 QT_BEGIN_NAMESPACE
 Q_DECLARE_TYPEINFO(KArchiveEntry, Q_PRIMITIVE_TYPE);

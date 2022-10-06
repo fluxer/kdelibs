@@ -149,9 +149,9 @@ QString KArchiveEntry::fancyMode() const
 
     char strmodebuffer[20];
     ::memset(strmodebuffer, '\0', sizeof(strmodebuffer) * sizeof(char));
-    ::strmode(mode, buffer);
+    ::strmode(mode, strmodebuffer);
 
-    return QString::fromLatin1(buffer);
+    return QString::fromLatin1(strmodebuffer);
 #elif defined(HAVE_LIBARCHIVE)
     struct archive_entry* archiveentry = archive_entry_new();
     archive_entry_set_mode(archiveentry, mode);
@@ -205,22 +205,22 @@ bool KArchiveEntry::isNull() const
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-QDebug operator<<(QDebug d, const KArchiveEntry &info)
+QDebug operator<<(QDebug d, const KArchiveEntry &karchiveentry)
 {
-    d << "KArchiveEntry( encrypted:" << info.fancyEncrypted()
-        << ", size:" << info.fancySize()
-        << ", gid:" << info.gid
-        << ", uid:" << info.uid
-        << ", mode:" << info.fancyMode()
-        << ", atime:" << info.fancyATime()
-        << ", ctime:" << info.fancyCTime()
-        << ", mtime:" << info.fancyMTime()
-        << ", hardlink:" << info.hardlink
-        << ", symlink:" << info.symlink
-        << ", pathname:" << info.pathname
-        << ", groupname:" << info.groupname
-        << ", username:" << info.username
-        << ", type:" << info.fancyType()
+    d << "KArchiveEntry( encrypted:" << karchiveentry.fancyEncrypted()
+        << ", size:" << karchiveentry.fancySize()
+        << ", gid:" << karchiveentry.gid
+        << ", uid:" << karchiveentry.uid
+        << ", mode:" << karchiveentry.fancyMode()
+        << ", atime:" << karchiveentry.fancyATime()
+        << ", ctime:" << karchiveentry.fancyCTime()
+        << ", mtime:" << karchiveentry.fancyMTime()
+        << ", hardlink:" << karchiveentry.hardlink
+        << ", symlink:" << karchiveentry.symlink
+        << ", pathname:" << karchiveentry.pathname
+        << ", groupname:" << karchiveentry.groupname
+        << ", username:" << karchiveentry.username
+        << ", type:" << karchiveentry.fancyType()
         << ")";
     return d;
 }
@@ -409,9 +409,9 @@ KArchive::KArchive(const QString &path)
     }
 
     if (QFile::exists(path)) {
-        const KMimeType::Ptr mime = KMimeType::findByPath(path);
-        if (mime) {
-            if (s_writemimetypes.contains(mime->name())) {
+        const KMimeType::Ptr kmimetype = KMimeType::findByPath(path);
+        if (kmimetype) {
+            if (s_writemimetypes.contains(kmimetype->name())) {
                 d->m_writable = true;
             }
         }
