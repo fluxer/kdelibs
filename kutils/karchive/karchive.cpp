@@ -39,6 +39,10 @@
 #  include <string.h>
 #endif
 
+#ifndef PATH_MAX
+#  define PATH_MAX _POSIX_PATH_MAX
+#endif
+
 // NOTE: many KArchive users are not doing listing and extraction in a thread which means that the
 // UI will be "frozen" while that happens so process events while doing so
 #define KARCHIVE_TIMEOUT 250
