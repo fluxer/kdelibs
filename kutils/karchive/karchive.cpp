@@ -545,7 +545,8 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
 
         struct stat statistic;
         if (::lstat(localpath, &statistic) != 0) {
-            d->m_error = i18n("lstat: %1", qt_error_string(errno));
+            const int savederrno = errno;
+            d->m_error = i18n("lstat: %1", qt_error_string(savederrno));
             kDebug() << d->m_error;
             result = false;
             break;
@@ -583,7 +584,8 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         if (S_ISLNK(statistic.st_mode)) {
             QByteArray linkbuffer(PATH_MAX + 1, Qt::Uninitialized);
             if (::readlink(localpath, linkbuffer.data(), PATH_MAX) == -1) {
-                d->m_error = i18n("readlink: %1", qt_error_string(errno));
+                const int savederrno = errno;
+                d->m_error = i18n("readlink: %1", qt_error_string(savederrno));
                 result = false;
                 break;
             }
