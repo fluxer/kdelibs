@@ -31,7 +31,7 @@
 # git has its own built in compression methods
 
 # You can enable these (for most people's uses),
-# but keep in mind test file for KTar/KZip would
+# but keep in mind test file for KArchive would
 # obviously need these.
 #*.7z
 #*.dmg

@@ -18,9 +18,6 @@ ENDMACRO(KDECORE_EXECUTABLE_TESTS)
 ########### next target ###############
 
 KDECORE_UNIT_TESTS(
-    # FIXME: due to issues with kgzipfilter the test bellow is disabled as it
-    # causes a hang
-    # karchivetest
     klocaletimeformattest
     klocalizedstringtest
     kmountpointtest
@@ -65,8 +62,6 @@ KDECORE_UNIT_TESTS(
 )
 
 KDECORE_EXECUTABLE_TESTS(
-    ktartest
-    kziptest
     kdebugtest
     kcmdlineargstest
     dbuscalltest
@@ -94,11 +89,6 @@ target_link_libraries(kdecore-klocaletest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRA
 set(kdatetimeformattertest_SRCS kdatetimeformattertest.cpp ../date/kdatetimeformatter.cpp ../date/kdayperiod.cpp)
 kde4_add_test(kdecore-kdatetimeformattertest ${kdatetimeformattertest_SRCS})
 target_link_libraries(kdecore-kdatetimeformattertest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} )
-
-########### klimitediodevicetest ###############
-
-kde4_add_test(kdecore-klimitediodevicetest klimitediodevicetest.cpp ../io/klimitediodevice.cpp)
-target_link_libraries(kdecore-klimitediodevicetest ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY})
 
 ########### kmimetypetest ###############
 

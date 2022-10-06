@@ -63,6 +63,7 @@
 #  KDE4_KDNSSD_LIBS           - the kdnssd library and all depending libraries
 #  KDE4_KHTTP_LIBS            - the khttp library and all depending libraries
 #  KDE4_KSPEECH_LIBS          - the kspeech library and all depending libraries
+#  KDE4_KARCHIVE_LIBS         - the kspeech library and all depending libraries
 #
 # The variable INSTALL_TARGETS_DEFAULT_ARGS can be used when installing libraries
 # or executables into the default locations.
@@ -243,6 +244,7 @@ set(_kde_libraries
     kdnssd
     khttp
     kspeech
+    karchive
     kfile
     kidletime
     kio

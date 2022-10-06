@@ -30,7 +30,6 @@
 #include <kmimetype.h>
 #include <kplugininfo.h>
 #include <kstandarddirs.h>
-#include <ktar.h>
 #include <kdebug.h>
 
 #include "packagemetadata.h"

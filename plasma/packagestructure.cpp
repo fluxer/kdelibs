@@ -35,11 +35,8 @@
 #include <kmimetype.h>
 #include <kstandarddirs.h>
 #include <kservicetypetrader.h>
-#include <ktar.h>
 #include <ktemporaryfile.h>
-#include <ktempdir.h>
 #include <kurl.h>
-#include <kzip.h>
 
 #include "package.h"
 #include "private/packages_p.h"

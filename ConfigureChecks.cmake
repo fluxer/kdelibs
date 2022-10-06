@@ -42,6 +42,7 @@ kde4_bool_to_01(X11_XSync_FOUND HAVE_XSYNC)                           # kidletim
 # check is to be added to get the proper set of headers.
 check_symbol_exists(strtoll         "stdlib.h"           HAVE_STRTOLL)      # kioslave
 check_symbol_exists(getgrouplist    "unistd.h;grp.h"     HAVE_GETGROUPLIST) # kio
+check_symbol_exists(strmode         "string.h"           HAVE_STRMODE) # karchive
 
 check_function_exists(backtrace          HAVE_BACKTRACE)                    # kdecore, kio
 check_function_exists(fdatasync          HAVE_FDATASYNC)                    # kdecore

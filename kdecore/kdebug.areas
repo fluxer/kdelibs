@@ -138,9 +138,6 @@
 7031        KImageIO
 7032        kio (KUrlCompletion)
 7033        KFileMetaInfo
-7040        KZip
-7041        KTar
-7042        KAr
 7043        kio (bookmarks)
 7044        kio (AccessManager)
 
@@ -192,6 +189,9 @@
 
 # kspeech
 51008   kspeech
+
+# karchive
+51009   karchive
 
 # kdemultimedia
 67100   kmix

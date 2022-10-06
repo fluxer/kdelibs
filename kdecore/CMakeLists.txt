@@ -122,21 +122,16 @@ set(kdecore_LIB_SRCS
     date/klocalizeddate.cpp
     date/ktimezone.cpp
     date/ksystemtimezone.cpp
-    io/kar.cpp
-    io/karchive.cpp
     io/kdebug.cpp
     io/kdirwatch.cpp
     io/kfilesystemtype_p.cpp
-    io/klimitediodevice.cpp
     io/kmessage.cpp
     io/kmountpoint.cpp
     io/kprocess.cpp
     io/ksavefile.cpp
-    io/ktar.cpp
     io/ktempdir.cpp
     io/ktemporaryfile.cpp
     io/kurl.cpp
-    io/kzip.cpp
     jobs/kcompositejob.cpp
     jobs/kjob.cpp
     jobs/kjobuidelegate.cpp
@@ -295,8 +290,6 @@ install(
     date/klocalizeddate.h
     date/ksystemtimezone.h
     date/ktimezone.h
-    io/kar.h
-    io/karchive.h
     io/kdebug.h
     io/kdirwatch.h
     io/kmessage.h
@@ -304,11 +297,9 @@ install(
     io/klockfile.h
     io/kmountpoint.h
     io/ksavefile.h
-    io/ktar.h
     io/ktempdir.h
     io/ktemporaryfile.h
     io/kurl.h
-    io/kzip.h
     jobs/kcompositejob.h
     jobs/kjob.h
     jobs/kjobuidelegate.h

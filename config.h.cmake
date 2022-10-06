@@ -22,6 +22,7 @@
 #cmakedefine HAVE_SETMNTENT 1
 #cmakedefine HAVE_STRTOLL 1
 #cmakedefine HAVE_GETGROUPLIST 1
+#cmakedefine HAVE_STRMODE 1
 
 /* Define to 1 if you have the Xtest extension */
 #cmakedefine HAVE_XTEST 1

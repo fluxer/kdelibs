@@ -22,7 +22,6 @@
 
 #include <QDir>
 #include <QFile>
-#include <kzip.h>
 #include <kstandarddirs.h>
 
 #include "plasma/applet.h"

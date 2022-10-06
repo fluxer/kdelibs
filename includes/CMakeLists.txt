@@ -11,11 +11,8 @@ install(
     KActionMenu
     KActionSelector
     KApplication
-    KAr
     KArchive
-    KArchiveDirectory
     KArchiveEntry
-    KArchiveFile
     KAssistantDialog
     KAuthorization
     KAutoMount
@@ -292,7 +289,6 @@ install(
     KSystemTrayIcon
     KTabBar
     KTabWidget
-    KTar
     KTempDir
     KTemporaryFile
     KTextEdit
@@ -342,8 +338,6 @@ install(
     KXmlGuiWindow
     KXMessages
     KXYSelector
-    KZip
-    KZipFileEntry
     NET
     NETRootInfo
     NETWinInfo

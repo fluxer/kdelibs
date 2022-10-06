@@ -28,7 +28,6 @@
 
 #include <kdebug.h>
 #include <ktemporaryfile.h>
-#include <kzip.h>
 
 #include <QFile>
 #include <QFileInfo>
