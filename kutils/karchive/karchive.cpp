@@ -421,16 +421,15 @@ KArchive::KArchive(const QString &path)
         return;
     }
 
-    if (QFile::exists(path)) {
-        const KMimeType::Ptr kmimetype = KMimeType::findByPath(path);
-        if (kmimetype) {
-            if (s_writemimetypes.contains(kmimetype->name())) {
-                d->m_writable = true;
-            }
+    d->m_writable = QFileInfo(QFileInfo(path).path()).isWritable();
+    const KMimeType::Ptr kmimetype = KMimeType::findByPath(path);
+    if (kmimetype) {
+        if (!s_writemimetypes.contains(kmimetype->name())) {
+            d->m_writable = false;
         }
-    } else {
-        // TODO: check if the leading directory is writable
-        d->m_writable = true;
+    }
+    if (!d->m_writable) {
+        d->m_error = i18n("Archive is not writable");
     }
 #else
     d->m_error = QString::fromLatin1("Built without LibArchive");
