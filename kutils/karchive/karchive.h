@@ -86,12 +86,12 @@ class KArchivePrivate;
 
     Example:
     \code
-    KArchiveManager archive("/home/joe/archive.tar.gz");
+    KArchive archive("/home/joe/archive.tar.gz");
     kDebug() << archive.list();
 
     QDir::mkpath("/tmp/destination");
-    archive.extract("dir/in/archive/", "/tmp/destination");
-    archive.delete("file/in/archive.txt");
+    archive.extract(QStringList() << "dir/in/archive/", "/tmp/destination");
+    archive.remove(QStringList() << "file/in/archive.txt");
     \endcode
 
     @note Paths ending with "/" will be considered as directories
