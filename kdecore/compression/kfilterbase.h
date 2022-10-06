@@ -24,6 +24,8 @@
 
 #include <QtCore/qiodevice.h>
 
+class KFilterBasePrivate;
+
 /**
  * This is the base class for compression filters
  * such as gzip and bzip2. It's pretty much internal.
@@ -113,14 +115,9 @@ public:
      */
     static KFilterBase * findFilterByMimeType( const QString & mimeType );
 
-protected: // TODO KDE5: move to d pointer
-    QIODevice * m_dev;
-    bool m_bAutoDel;
-
 private:
     Q_DISABLE_COPY( KFilterBase )
-    class Private;
-    Private * const d;
+    KFilterBasePrivate * const d;
 };
 
 #endif

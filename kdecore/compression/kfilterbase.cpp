@@ -30,35 +30,44 @@
 #include "kxzfilter.h"
 #endif
 
-class KFilterBase::Private
+class KFilterBasePrivate
 {
 public:
-    Private()
-        : m_flags(WithHeaders) {}
-    FilterFlags m_flags;
+    KFilterBasePrivate();
+
+    QIODevice * m_dev;
+    bool m_bAutoDel;
+    KFilterBase::FilterFlags m_flags;
 };
 
+KFilterBasePrivate::KFilterBasePrivate()
+    : m_dev( 0L ),
+    m_bAutoDel( false ),
+    m_flags(KFilterBase::WithHeaders)
+{
+}
+
 KFilterBase::KFilterBase()
-    : m_dev( 0L ), m_bAutoDel( false ), d(new Private)
+    : d(new KFilterBasePrivate())
 {
 }
 
 KFilterBase::~KFilterBase()
 {
-    if ( m_bAutoDel )
-        delete m_dev;
+    if ( d->m_bAutoDel )
+        delete d->m_dev;
     delete d;
 }
 
 void KFilterBase::setDevice( QIODevice * dev, bool autodelete )
 {
-    m_dev = dev;
-    m_bAutoDel = autodelete;
+    d->m_dev = dev;
+    d->m_bAutoDel = autodelete;
 }
 
 QIODevice * KFilterBase::device()
 {
-    return m_dev;
+    return d->m_dev;
 }
 
 bool KFilterBase::inBufferEmpty() const
