@@ -327,6 +327,8 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", i18nc("@label", "Audio Bit Depth") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", i18nc("@label", "Video Bit Depth") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", i18nc("@label", "Aspect Ratio") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fontFamily", i18nc("@label", "Family") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#foundry", i18nc("@label", "Foundry") },
     };
 
     const TranslationMap::const_iterator it = s_translations.find(key);
