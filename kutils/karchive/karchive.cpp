@@ -554,6 +554,7 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
     }
 
     foreach (const QString &path, recursivepaths) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
         const QByteArray localpath = QFile::encodeName(path);
 
         struct stat statistic;
