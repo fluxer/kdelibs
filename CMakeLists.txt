@@ -277,6 +277,7 @@ kde4_optional_find_package(LibArchive 3.0.3)
 set_package_properties(LibArchive PROPERTIES
     DESCRIPTION "Multi-format archive and compression library"
     URL "https://libarchive.org/"
+    TYPE RECOMMENDED
     PURPOSE "Archives in TAR, ZIP and other formats"
 )
 
