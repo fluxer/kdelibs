@@ -20,7 +20,6 @@
 #include "qtest_kde.h"
 #include <ktimezonewidget.h>
 #include <kconfiggroup.h>
-#include <QtDBus/QtDBus>
 #include "../../kdecore/tests/ktimezonestest_p.h"
 
 class KTimeZoneWidgetTest : public QObject
@@ -44,10 +43,6 @@ private Q_SLOTS:
 
     void testSetSelected()
     {
-        if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kded")) {
-            QSKIP("kded not running", SkipSingle);
-        }
-
         KTimeZoneWidget tzw;
         QVERIFY(tzw.topLevelItemCount() > 0);
         QVERIFY(tzw.selectedItems().isEmpty());
@@ -75,10 +70,6 @@ private Q_SLOTS:
 
     void testCheckableItems()
     {
-        //if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kded")) {
-        //    QSKIP("kded not running", SkipSingle);
-        //}
-
         KTimeZoneWidget tzw;
         tzw.setItemsCheckable(true);
         QVERIFY(tzw.topLevelItemCount() > 0);

@@ -31,7 +31,6 @@
 #include "ksystemtimezone.h"
 #include <QtCore/QString>
 #include <QtCore/qdatetime.h>
-#include <QtDBus/QtDBus>
 
 #include "moc_klocaletest.cpp"
 
@@ -384,11 +383,6 @@ KLocaleTest::formatDateTime()
 	QCOMPARE(locale.formatDateTime(qdt, KLocale::FancyLongDate), QString(locale.calendar()->weekDayName(qdt.date()) + qdt.time().toString(tfmt)));
 	qdt = qdt.addDays(-1);
 	QCOMPARE(locale.formatDateTime(qdt, KLocale::FancyLongDate), qdt.toString(full));
-
-	// The use of KSystemTimeZones requires kded to be running
-	if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.kde.kded")) {
-	    QSKIP( "kded not running", SkipAll );
-	}
 
 	small = "%Y-%m-%d %H:%M";
 	smallsecs = "%Y-%m-%d %H:%M:%S";
