@@ -595,7 +595,7 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         }
 
         if (S_ISLNK(statistic.st_mode)) {
-            QByteArray linkbuffer(PATH_MAX + 1, Qt::Uninitialized);
+            QByteArray linkbuffer(PATH_MAX + 1, char('\0'));
             if (::readlink(localpath, linkbuffer.data(), PATH_MAX) == -1) {
                 const int savederrno = errno;
                 d->m_error = i18n("readlink: %1", qt_error_string(savederrno));
