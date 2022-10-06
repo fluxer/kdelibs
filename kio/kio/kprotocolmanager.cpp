@@ -122,8 +122,6 @@ public:
    QString noProxyFor;
    QList<SubnetPair> noProxySubnets;
    QCache<QString, KProxyData> cachedProxyData;
-
-   QMap<QString /*mimetype*/, QString /*protocol*/> protocolForArchiveMimetypes;
 };
 
 K_GLOBAL_STATIC(KProtocolManagerPrivate, kProtocolManagerPrivate)
@@ -877,22 +875,6 @@ QString KProtocolManager::defaultMimetype( const KUrl &url )
     return QString();
 
   return prot->m_defaultMimetype;
-}
-
-QString KProtocolManager::protocolForArchiveMimetype( const QString& mimeType )
-{
-    PRIVATE_DATA;
-    if (d->protocolForArchiveMimetypes.isEmpty()) {
-        const KProtocolInfo::List allProtocols = KProtocolInfoFactory::self()->allProtocols();
-        for (KProtocolInfo::List::const_iterator it = allProtocols.begin();
-             it != allProtocols.end(); ++it) {
-            const QStringList archiveMimetypes = (*it)->archiveMimeTypes();
-            Q_FOREACH(const QString& mime, archiveMimetypes) {
-                d->protocolForArchiveMimetypes.insert(mime, (*it)->name());
-            }
-        }
-    }
-    return d->protocolForArchiveMimetypes.value(mimeType);
 }
 
 QString KProtocolManager::charsetFor(const KUrl& url)

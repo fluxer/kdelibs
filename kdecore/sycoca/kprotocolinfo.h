@@ -295,8 +295,6 @@ public:
   bool supportsListing() const;
   /// @internal. Use KProtocolManager instead.
   QString defaultMimeType() const;
-  /// @internal. Use KProtocolManager instead.
-  QStringList archiveMimeTypes() const;
 
 protected:
   QString m_name;

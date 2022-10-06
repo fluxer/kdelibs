@@ -68,7 +68,6 @@ KProtocolInfo::KProtocolInfo(const QString &path)
   m_supportsListing = ( m_listing.count() > 0 );
   m_defaultMimetype = config.readEntry( "defaultMimetype" );
   m_determineMimetypeFromExtension = config.readEntry( "determineMimetypeFromExtension", true );
-  d->archiveMimetype = config.readEntry("archiveMimetype", QStringList());
   m_icon = config.readEntry( "Icon" );
   m_config = config.readEntry( "config", m_name );
   m_maxSlaves = config.readEntry( "maxInstances", 1);
@@ -143,7 +142,7 @@ KProtocolInfo::load( QDataStream& _str)
         >> d->capabilities >> d->proxyProtocol
         >> i_canRenameFromFile >> i_canRenameToFile
         >> i_canDeleteRecursive >> i_fileNameUsedForCopying
-        >> d->archiveMimetype >> d->maxSlavesPerHost;
+        >> d->maxSlavesPerHost;
 
    m_inputType = (Type) i_inputType;
    m_outputType = (Type) i_outputType;
@@ -221,7 +220,7 @@ KProtocolInfoPrivate::save( QDataStream& _str)
         << capabilities << proxyProtocol
         << i_canRenameFromFile << i_canRenameToFile
         << i_canDeleteRecursive << i_fileNameUsedForCopying
-        << archiveMimetype << maxSlavesPerHost;
+        << maxSlavesPerHost;
 }
 
 
@@ -382,13 +381,6 @@ QString KProtocolInfo::proxiedBy( const QString& _protocol )
 QString KProtocolInfo::defaultMimeType() const
 {
     return m_defaultMimetype;
-}
-
-
-QStringList KProtocolInfo::archiveMimeTypes() const
-{
-    Q_D(const KProtocolInfo);
-    return d->archiveMimetype;
 }
 
 bool KProtocolInfo::supportsListing() const

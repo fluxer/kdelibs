@@ -52,13 +52,5 @@ int main(int argc, char **argv) {
     kDebug() << "kio_imap capabilities: " << capabilities;
     //assert(capabilities.contains("ACL"));
 
-    if (!QFile::exists(KStandardDirs::locate("services", "zip.protocol"))) {
-        //QSKIP("kdebase not installed", SkipAll);
-    } else {
-        QString zip = KProtocolManager::protocolForArchiveMimetype("application/zip");
-        assert( zip == "zip");
-    }
-
-
     return 0;
 }

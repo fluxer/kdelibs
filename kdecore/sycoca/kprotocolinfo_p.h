@@ -48,7 +48,6 @@ public:
   KProtocolInfo *q;
   QString docPath;
   QString protClass;
-  QStringList archiveMimetype;
   bool showPreviews : 1;
   bool canRenameFromFile : 1;
   bool canRenameToFile : 1;
