@@ -125,3 +125,25 @@ if (LIBSPECTRE_FOUND)
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
     )
 endif()
+
+if (FREETYPE_FOUND)
+    include_directories(${FREETYPE_INCLUDE_DIRS})
+
+    set(kfilemetadata_freetype_SRCS kfilemetadata_freetype.cpp)
+
+    kde4_add_plugin(kfilemetadata_freetype ${kfilemetadata_freetype_SRCS})
+    target_link_libraries(kfilemetadata_freetype
+        ${KDE4_KIO_LIBS}
+        ${FREETYPE_LIBRARIES}
+    )
+
+    install(
+        TARGETS kfilemetadata_freetype
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
+    )
+
+    install(
+        FILES kfilemetadata_freetype.desktop
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
+    )
+endif()

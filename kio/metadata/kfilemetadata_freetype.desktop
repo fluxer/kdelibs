@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Name=KFileMetaDataFreetypePlugin
+GenericName=Freetype
+Comment=Extracts metadata from fonts
+X-KDE-Library=kfilemetadata_freetype
+X-KDE-ServiceTypes=KFileMetaData/Plugin
+InitialPreference=1

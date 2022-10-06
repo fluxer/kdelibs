@@ -248,6 +248,14 @@ set_package_properties(LibSpectre PROPERTIES
     PURPOSE "Postscript metadata extraction"
 )
 
+kde4_optional_find_package(Freetype)
+set_package_properties(Freetype PROPERTIES
+    DESCRIPTION "Freely available software library to render fonts"
+    URL "https://www.freetype.org"
+    TYPE RECOMMENDED
+    PURPOSE "Fonts metadata extraction"
+)
+
 kde4_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"

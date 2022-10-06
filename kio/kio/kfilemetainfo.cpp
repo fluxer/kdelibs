@@ -298,6 +298,7 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings", i18nc("@label EXIF", "ISO Speed Ratings") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode", i18nc("@label EXIF", "Metering Mode") },
         { "http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance", i18nc("@label EXIF", "White Balance") },
+        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fontFamily", i18nc("@label", "Family") },
         // to be used by plugins
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nmo#Email", i18nc("@label", "Creator E-Mail") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#hashValue", i18nc("@label", "Hash Value") },
@@ -327,7 +328,6 @@ QString KFileMetaInfo::name(const QString& key)
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitDepth", i18nc("@label", "Audio Bit Depth") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitDepth", i18nc("@label", "Video Bit Depth") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#aspectRatio", i18nc("@label", "Aspect Ratio") },
-        { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fontFamily", i18nc("@label", "Family") },
         { "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#foundry", i18nc("@label", "Foundry") },
     };
 
