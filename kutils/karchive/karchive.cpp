@@ -485,19 +485,12 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
     }
 
     QFileInfo fileinfo(d->m_path);
-    KTemporaryFile tmpfile;
-    tmpfile.setPrefix(QString::fromLatin1("karchive_"));
-    tmpfile.setSuffix(QString::fromLatin1(".%1").arg(fileinfo.completeSuffix()));
-    if (!tmpfile.open()) {
-        d->m_error = i18n("Could not open temporary file: %1", tmpfile.errorString());
-        kDebug() << d->m_error;
-        return result;
-    }
+    const QString tmptemplate = QString::fromLatin1("XXXXXXXXXX.%1").arg(fileinfo.completeSuffix());
+    const QString tmpfile = KTemporaryFile::filePath(tmptemplate);
 
-    const QByteArray tmppath = QFile::encodeName(tmpfile.fileName());
-    struct archive* writearchive = d->openWrite(tmppath);
+    struct archive* writearchive = d->openWrite(QFile::encodeName(tmpfile));
     if (!writearchive) {
-        d->m_error = i18n("Could not open temporary archive: %1", tmpfile.fileName());
+        d->m_error = i18n("Could not open temporary archive: %1", tmpfile);
         kDebug() << d->m_error;
         return result;
     }
@@ -682,14 +675,14 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
     KArchivePrivate::closeWrite(writearchive);
 
     if (result) {
-        kDebug() << "Replacing" << d->m_path << "with" << tmppath;
+        kDebug() << "Replacing" << d->m_path << "with" << tmpfile;
 
         // NOTE: QFile::rename() can choke on cross-filesystem move
         QFile::remove(d->m_path);
-        result = QFile::copy(tmpfile.fileName(), d->m_path);
-        QFile::remove(tmpfile.fileName());
+        result = QFile::copy(tmpfile, d->m_path);
+        QFile::remove(tmpfile);
         if (!result) {
-            d->m_error = i18n("Could not move: %1 to: %2", tmpfile.fileName(), d->m_path);
+            d->m_error = i18n("Could not move: %1 to: %2", tmpfile, d->m_path);
             kDebug() << d->m_error;
         }
     }
@@ -726,20 +719,12 @@ bool KArchive::remove(const QStringList &paths) const
     }
 
     QFileInfo fileinfo(d->m_path);
-    KTemporaryFile tmpfile;
-    tmpfile.setPrefix(QString::fromLatin1("karchive_"));
-    tmpfile.setSuffix(QString::fromLatin1(".%1").arg(fileinfo.completeSuffix()));
-    if (!tmpfile.open()) {
-        d->m_error = i18n("Could not open temporary file: %1", tmpfile.errorString());
-        kDebug() << d->m_error;
-        return result;
-    }
-    tmpfile.close();
+    const QString tmptemplate = QString::fromLatin1("XXXXXXXXXX.%1").arg(fileinfo.completeSuffix());
+    const QString tmpfile = KTemporaryFile::filePath(tmptemplate);
 
-    const QByteArray tmppath = QFile::encodeName(tmpfile.fileName());
-    struct archive* writearchive = d->openWrite(tmppath);
+    struct archive* writearchive = d->openWrite(QFile::encodeName(tmpfile));
     if (!writearchive) {
-        d->m_error = i18n("Could not open temporary archive: %1", tmpfile.fileName());
+        d->m_error = i18n("Could not open temporary archive: %1", tmpfile);
         kDebug() << d->m_error;
         return result;
     }
@@ -795,13 +780,13 @@ bool KArchive::remove(const QStringList &paths) const
     KArchivePrivate::closeRead(readarchive);
 
     if (result) {
-        kDebug() << "Replacing" << d->m_path << "with" << tmppath;
+        kDebug() << "Replacing" << d->m_path << "with" << tmpfile;
 
         QFile::remove(d->m_path);
-        result = QFile::copy(tmpfile.fileName(), d->m_path);
-        QFile::remove(tmpfile.fileName());
+        result = QFile::copy(tmpfile, d->m_path);
+        QFile::remove(tmpfile);
         if (!result) {
-            d->m_error = i18n("Could not move: %1 to: %2", tmpfile.fileName(), d->m_path);
+            d->m_error = i18n("Could not move: %1 to: %2", tmpfile, d->m_path);
             kDebug() << d->m_error;
         }
     }

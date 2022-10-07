@@ -26,10 +26,8 @@
 
 static QString tmpName(const QString &archiveext)
 {
-    KTemporaryFile ktempfile;
-    ktempfile.setSuffix(archiveext);
-    ktempfile.open();
-    return ktempfile.fileName();
+    const QString tmptemplate = QString::fromLatin1("XXXXXXXXXX.%1").arg(archiveext);
+    return KTemporaryFile::filePath(tmptemplate);
 }
 
 static QString tmpCopy(const QString &archivepath)
