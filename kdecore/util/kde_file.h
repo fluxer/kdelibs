@@ -58,60 +58,72 @@
 
 namespace KDE
 {
-  /** replacement for ::access() to handle filenames in a platform independent way */
-  KDECORE_EXPORT int access(const QString &path, int mode);
-  /** replacement for ::chmod() to handle filenames in a platform independent way */
-  KDECORE_EXPORT int chmod(const QString &path, mode_t mode);
-  /** replacement for ::fopen()/::fopen64() to handle filenames in a platform independent way */
-  KDECORE_EXPORT FILE *fopen(const QString &pathname, const char *mode);
-  /** replacement for ::lstat()/::lstat64() to handle filenames in a platform independent way */
-  KDECORE_EXPORT int lstat(const QString &path, KDE_struct_stat *buf);
-  /** replacement for ::mkdir() to handle pathnames in a platform independent way */
-  KDECORE_EXPORT int mkdir(const QString &pathname, mode_t mode);
-  /** replacement for ::open()/::open64() to handle filenames in a platform independent way */
-  KDECORE_EXPORT int open(const QString &pathname, int flags, mode_t mode = 0);
-  /** replacement for ::rename() to handle pathnames in a platform independent way */
-  KDECORE_EXPORT int rename(const QString &in, const QString &out);
-  /** replacement for ::stat()/::stat64() to handle filenames in a platform independent way */
-  KDECORE_EXPORT int stat(const QString &path, KDE_struct_stat *buf);
-  /** replacement for ::utime() to handle filenames in a platform independent way */
-  KDECORE_EXPORT int utime(const QString &filename, struct utimbuf *buf);
-  inline int access(const QString &path, int mode)
-  {
-    return ::access( QFile::encodeName(path).constData(), mode );
-  }
-  inline int chmod(const QString &path, mode_t mode)
-  {
-    return ::chmod( QFile::encodeName(path).constData(), mode );
-  }
-  inline FILE *fopen(const QString &pathname, const char *mode)
-  {
-    return QT_FOPEN( QFile::encodeName(pathname).constData(), mode );
-  }
-  inline int lstat(const QString &path, KDE_struct_stat *buf)
-  {
-    return QT_LSTAT( QFile::encodeName(path).constData(), buf );
-  }
-  inline int mkdir(const QString &pathname, mode_t mode)
-  {
-    return ::mkdir( QFile::encodeName(pathname).constData(), mode );
-  }
-  inline int open(const QString &pathname, int flags, mode_t mode)
-  {
-    return QT_OPEN( QFile::encodeName(pathname).constData(), flags, mode );
-  }
-  inline int rename(const QString &in, const QString &out)
-  {
-    return ::rename( QFile::encodeName(in).constData(), QFile::encodeName(out).constData() );
-  }
-  inline int stat(const QString &path, KDE_struct_stat *buf)
-  {
-    return QT_STAT( QFile::encodeName(path).constData(), buf );
-  }
-  inline int utime(const QString &filename, struct utimbuf *buf)
-  {
-    return ::utime( QFile::encodeName(filename).constData(), buf );
-  }
+    /** replacement for ::access() to handle filenames in a platform independent way */
+    KDECORE_EXPORT int access(const QString &path, int mode);
+    /** replacement for ::chmod() to handle filenames in a platform independent way */
+    KDECORE_EXPORT int chmod(const QString &path, mode_t mode);
+    /** replacement for ::fopen()/::fopen64() to handle filenames in a platform independent way */
+    KDECORE_EXPORT FILE *fopen(const QString &pathname, const char *mode);
+    /** replacement for ::lstat()/::lstat64() to handle filenames in a platform independent way */
+    KDECORE_EXPORT int lstat(const QString &path, KDE_struct_stat *buf);
+    /** replacement for ::mkdir() to handle pathnames in a platform independent way */
+    KDECORE_EXPORT int mkdir(const QString &pathname, mode_t mode);
+    /** replacement for ::open()/::open64() to handle filenames in a platform independent way */
+    KDECORE_EXPORT int open(const QString &pathname, int flags, mode_t mode = 0);
+    /** replacement for ::rename() to handle pathnames in a platform independent way */
+    KDECORE_EXPORT int rename(const QString &in, const QString &out);
+    /** replacement for ::stat()/::stat64() to handle filenames in a platform independent way */
+    KDECORE_EXPORT int stat(const QString &path, KDE_struct_stat *buf);
+    /** replacement for ::utime() to handle filenames in a platform independent way */
+    KDECORE_EXPORT int utime(const QString &filename, struct utimbuf *buf);
+
+    inline int access(const QString &path, int mode)
+    {
+        const QByteArray encodedpath(QFile::encodeName(path));
+        return ::access(encodedpath.constData(), mode);
+    }
+
+    inline int chmod(const QString &path, mode_t mode)
+    {
+        const QByteArray encodedpath(QFile::encodeName(path));
+        return ::chmod(encodedpath.constData(), mode);
+    }
+
+    inline FILE *fopen(const QString &pathname, const char *mode)
+    {
+        const QByteArray encodedpathname(QFile::encodeName(pathname));
+        return QT_FOPEN(encodedpathname.constData(), mode);
+    }
+
+    inline int lstat(const QString &path, KDE_struct_stat *buf)
+    {
+        const QByteArray encodedpath(QFile::encodeName(path));
+        return QT_LSTAT(encodedpath.constData(), buf);
+    }
+
+    inline int mkdir(const QString &pathname, mode_t mode)
+    {
+        const QByteArray encodedpathname(QFile::encodeName(pathname));
+        return ::mkdir(encodedpathname.constData(), mode);
+    }
+
+    inline int open(const QString &pathname, int flags, mode_t mode)
+    {
+        const QByteArray encodedpathname(QFile::encodeName(pathname));
+        return QT_OPEN(encodedpathname.constData(), flags, mode);
+    }
+
+    inline int stat(const QString &path, KDE_struct_stat *buf)
+    {
+        const QByteArray encodedpath(QFile::encodeName(path));
+        return QT_STAT(encodedpath.constData(), buf);
+    }
+
+    inline int utime(const QString &filename, struct utimbuf *buf)
+    {
+        const QByteArray encodedfilename(QFile::encodeName(filename));
+        return ::utime(encodedfilename.constData(), buf);
+    }
 }
 
 #define KPATH_SEPARATOR ':'

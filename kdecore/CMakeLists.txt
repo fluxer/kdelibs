@@ -189,6 +189,7 @@ set(kdecore_LIB_SRCS
     sycoca/kprotocolinfofactory.cpp
     text/kstringhandler.cpp
     util/kautostart.cpp
+    util/kde_file.cpp
     util/kdedmodule.cpp
     util/kdevicedatabase.cpp
     util/kdeversion.cpp

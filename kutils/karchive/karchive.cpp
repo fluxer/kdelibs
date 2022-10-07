@@ -28,6 +28,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmimetype.h>
+#include <kde_file.h>
 
 #if defined(HAVE_LIBARCHIVE)
 #  include <archive.h>
@@ -677,10 +678,7 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
     if (result) {
         kDebug() << "Replacing" << d->m_path << "with" << tmpfile;
 
-        // NOTE: QFile::rename() can choke on cross-filesystem move
-        QFile::remove(d->m_path);
-        result = QFile::copy(tmpfile, d->m_path);
-        QFile::remove(tmpfile);
+        result = (KDE::rename(tmpfile, d->m_path) != -1);
         if (!result) {
             d->m_error = i18n("Could not move: %1 to: %2", tmpfile, d->m_path);
             kDebug() << d->m_error;
@@ -782,9 +780,7 @@ bool KArchive::remove(const QStringList &paths) const
     if (result) {
         kDebug() << "Replacing" << d->m_path << "with" << tmpfile;
 
-        QFile::remove(d->m_path);
-        result = QFile::copy(tmpfile, d->m_path);
-        QFile::remove(tmpfile);
+        result = (KDE::rename(tmpfile, d->m_path) != -1);
         if (!result) {
             d->m_error = i18n("Could not move: %1 to: %2", tmpfile, d->m_path);
             kDebug() << d->m_error;
