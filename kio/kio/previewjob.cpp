@@ -52,7 +52,7 @@ namespace KIO { struct PreviewItem; }
 using namespace KIO;
 
 static const QByteArray thumbFormat = QImageWriter::defaultImageFormat();
-static const QByteArray thumbExt = "." + thumbFormat;
+static const QString thumbExt = QLatin1String(".") + thumbFormat;
 
 // NOTE: keep in sync with:
 // kde-baseapps/dolphin/src/settings/general/previewssettingspage.cpp
@@ -588,15 +588,9 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
     QString tempFileName;
     bool savedCorrectly = false;
     if (save) {
-        KTemporaryFile temp;
-        temp.setPrefix(thumbPath + "kde-tmp-");
-        temp.setSuffix(thumbExt);
-        temp.setAutoRemove(false);
-        if (temp.open()) //Only try to write out the thumbnail if we
-        {                //actually created the temp file.
-            tempFileName = temp.fileName();
-            savedCorrectly = thumb.save(tempFileName, thumbFormat);
-        }
+        // Only try to write out the thumbnail if we actually created the temp file.
+        tempFileName = KTemporaryFile::filePath(QString::fromLatin1("XXXXXXXXXX.%1").arg(thumbExt));
+        savedCorrectly = thumb.save(tempFileName, thumbFormat);
     }
     if (savedCorrectly) {
         Q_ASSERT(!tempFileName.isEmpty());
