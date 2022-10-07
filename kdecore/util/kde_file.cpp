@@ -35,7 +35,9 @@ int rename(const QString &in, const QString &out)
 #ifdef EXDEV
     const int result = ::rename(encodedin.constData(), encodedout.constData());
     if (result == -1 && errno == EXDEV) {
-        if (::unlink(encodedout.constData()) == -1) {
+        QT_STATBUF statbuf;
+        if (QT_STAT(encodedout.constData(), &statbuf) == 0
+            && ::unlink(encodedout.constData()) == -1) {
             errno = EXDEV;
             return -1;
         }
