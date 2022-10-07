@@ -919,31 +919,20 @@ void KNewFileMenuPrivate::_k_slotUrlDesktopFile()
     if (m_copyData.m_chosenFileName.isEmpty() || linkUrl.isEmpty())
         return;
 
-    // It's a "URL" desktop file; we need to make a temp copy of it, to modify it
-    // before copying it to the final destination [which could be a remote protocol]
-    KTemporaryFile tmpFile;
-    tmpFile.setAutoRemove(false); // done below
-    if (!tmpFile.open()) {
-        kError() << "Couldn't create temp file!";
-        return;
-    }
-
     if (!checkSourceExists(m_copyData.m_templatePath)) {
         return;
     }
 
-    // First copy the template into the temp file
-    QFile file(m_copyData.m_templatePath);
-    if (!file.open(QIODevice::ReadOnly)) {
-        kError() << "Couldn't open template" << m_copyData.m_templatePath;
+    // It's a "URL" desktop file; we need to make a temp copy of it, to modify it
+    // before copying it to the final destination [which could be a remote protocol]
+    const QString tempFileName = KTemporaryFile::filePath();
+    Q_ASSERT(!tempFileName.isEmpty());
+
+    bool ok = QFile::copy(m_copyData.m_templatePath, tempFileName);
+    if (!ok) {
+        kError() << "Couldn't copy template" << m_copyData.m_templatePath << "to" << tempFileName;
         return;
     }
-    const QByteArray data = file.readAll();
-    tmpFile.write(data);
-    const QString tempFileName = tmpFile.fileName();
-    Q_ASSERT(!tempFileName.isEmpty());
-    tmpFile.close();
-    file.close();
 
     KDesktopFile df(tempFileName);
     KConfigGroup group = df.desktopGroup();
