@@ -21,6 +21,7 @@
 #include "ktemporaryfile.h"
 #include "kcomponentdata.h"
 #include "kstandarddirs.h"
+#include "krandom.h"
 
 #include <QDir>
 
@@ -75,4 +76,32 @@ void KTemporaryFile::setSuffix(const QString &suffix)
     QString prefix = oldTemplate.left(oldTemplate.indexOf(QLatin1String("XXXXXX")));
 
     setFileTemplate(prefix + QLatin1String("XXXXXX") + suffix);
+}
+
+QString KTemporaryFile::filePath(const QString &pathtemplate)
+{
+    static QChar xchar = QChar::fromLatin1('X');
+    static QChar underscorechar = QChar::fromLatin1('_');
+    static const char tmpnamechars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    if (pathtemplate.isEmpty()) {
+        QString result = KGlobal::dirs()->saveLocation("tmp");
+        result.append(KGlobal::mainComponent().componentName());
+        result.append(underscorechar);
+        for (ushort i = 0; i < 10; i++) {
+            result.append(QChar::fromLatin1(tmpnamechars[KRandom::randomMax(52)]));
+        }
+        return result;
+    }
+
+    QString result = pathtemplate;
+    int xindex = result.indexOf(xchar);
+    while (xindex != -1) {
+        result.replace(xindex, 1, QChar::fromLatin1(tmpnamechars[KRandom::randomMax(52)]));
+        xindex = result.indexOf(xchar, xindex + 1);
+    }
+    result.prepend(underscorechar);
+    result.prepend(KGlobal::mainComponent().componentName());
+    result.prepend(KGlobal::dirs()->saveLocation("tmp"));
+    return result;
 }

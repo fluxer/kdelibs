@@ -117,6 +117,7 @@ public:
      * a relative directory it will be relative to the default temporary
      * location. To set a relative directory for the current working directory
      * you should use QTemporaryFile::setFileTemplate() directly.
+     *
      * @param prefix The prefix to use when creating the file. Remember to
      *  end the prefix with a '/' if you are designating a directory.
      */
@@ -130,6 +131,19 @@ public:
      * @param suffix The suffix to use when creating the file.
      */
     void setSuffix(const QString &suffix);
+
+    /**
+     * @brief Generates a filepath to be used as temporary file.
+     *
+     * If @p pathtemplate is empty the result will have 10 characters, the
+     * standard temporary directory prepended along with the main component
+     * name. Otherwise any 'X' in @p pathtemplate is replaced with random
+     * character, the standard temporary directory prepended along with the
+     * main component name.
+     *
+     * @param pathtemplate The template to use when generating filepath.
+     */
+    static QString filePath(const QString &pathtemplate = QString());
 
 private:
     KTemporaryFilePrivate *const d;
