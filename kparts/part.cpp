@@ -522,11 +522,7 @@ void ReadOnlyPartPrivate::openRemoteFile()
     QString extension;
     if (!ext.isEmpty() && m_url.query().isNull()) // not if the URL has a query, e.g. cgi.pl?something
         extension = '.'+ext; // keep the '.'
-    KTemporaryFile tempFile;
-    tempFile.setSuffix(extension);
-    tempFile.setAutoRemove(false);
-    tempFile.open();
-    m_file = tempFile.fileName();
+    m_file = KTemporaryFile::filePath(QString::fromLatin1("XXXXXXXXXX%1").arg(extension));
 
     KUrl destURL;
     destURL.setPath( m_file );
@@ -843,10 +839,7 @@ void ReadWritePartPrivate::prepareSaving()
         // We haven't saved yet, or we did but locally - provide a temp file
         if ( m_file.isEmpty() || !m_bTemp )
         {
-            KTemporaryFile tempFile;
-            tempFile.setAutoRemove(false);
-            tempFile.open();
-            m_file = tempFile.fileName();
+            m_file = KTemporaryFile::filePath();
             m_bTemp = true;
         }
         // otherwise, we already had a temp file
@@ -877,10 +870,7 @@ bool ReadWritePart::saveToUrl()
             d->m_uploadJob->kill();
             d->m_uploadJob = 0;
         }
-        KTemporaryFile *tempFile = new KTemporaryFile();
-        tempFile->open();
-        QString uploadFile = tempFile->fileName();
-        delete tempFile;
+        QString uploadFile = KTemporaryFile::filePath();
         KUrl uploadUrl;
         uploadUrl.setPath( uploadFile );
         // Create hardlink
