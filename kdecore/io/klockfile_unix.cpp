@@ -40,9 +40,7 @@
 #include "krandom.h"
 #include "kglobal.h"
 #include "kcomponentdata.h"
-#include "ktemporaryfile.h"
 #include "kde_file.h"
-#include "kfilesystemtype_p.h"
 
 // Related reading:
 // http://www.spinnaker.de/linux/nfs-locking.html
@@ -50,8 +48,6 @@
 // http://apenwarr.ca/log/?m=201012
 
 // Related source code:
-// * lockfile-create, from the lockfile-progs package, uses the link() trick from lockFileWithLink
-// below, so it works over NFS but fails on FAT32 too.
 // * the flock program, which uses flock(LOCK_EX), works on local filesystems (including FAT32),
 //    but not NFS.
 //  Note about flock: don't unlink, it creates a race. http://world.std.com/~swmcd/steven/tech/flock.html
@@ -62,10 +58,10 @@
 // See the apenwarr.ca article above.
 
 // open(O_EXCL) seems to be the best solution for local files (on all filesystems),
-// it only fails over NFS (at least with old NFS servers).
+// it only fails over NFS (at least with old NFS servers, v3 or older).
 // See http://www.informit.com/guides/content.aspx?g=cplusplus&seqNum=144
 
-// Conclusion: we use O_EXCL by default, and the link() trick over NFS.
+// Conclusion: we use O_EXCL regardless.
 
 class KLockFile::Private
 {
@@ -73,32 +69,22 @@ public:
     Private(const KComponentData &c)
         : staleTime(30), // 30 seconds
           isLocked(false),
-          linkCountSupport(true),
           mustCloseFd(false),
           m_pid(-1),
           m_componentData(c)
     {
     }
 
-    // The main method
     KLockFile::LockResult lockFile(KDE_struct_stat &st_buf);
-
-    // Two different implementations
-    KLockFile::LockResult lockFileOExcl(KDE_struct_stat &st_buf);
-    KLockFile::LockResult lockFileWithLink(KDE_struct_stat &st_buf);
-
     KLockFile::LockResult deleteStaleLock();
-    KLockFile::LockResult deleteStaleLockWithLink();
 
     void writeIntoLockFile(QFile& file, const KComponentData& componentData);
     void readLockFile();
-    bool isNfs() const;
 
     QFile m_file;
     QString m_fileName;
     int staleTime;
     bool isLocked;
-    bool linkCountSupport;
     bool mustCloseFd;
     QTime staleTimer;
     KDE_struct_stat statBuf;
@@ -121,15 +107,12 @@ KLockFile::~KLockFile()
     delete d;
 }
 
-int
-KLockFile::staleTime() const
+int KLockFile::staleTime() const
 {
     return d->staleTime;
 }
 
-
-void
-KLockFile::setStaleTime(int _staleTime)
+void KLockFile::setStaleTime(int _staleTime)
 {
     d->staleTime = _staleTime;
 }
@@ -147,18 +130,6 @@ static bool operator!=( const KDE_struct_stat& st_buf1,
             const KDE_struct_stat& st_buf2 )
 {
     return !(st_buf1 == st_buf2);
-}
-
-static bool testLinkCountSupport(const QByteArray &fileName)
-{
-    KDE_struct_stat st_buf;
-    int result = -1;
-    // Check if hardlinks raise the link count at all?
-    if(!::link( fileName, QByteArray(fileName+".test") )) {
-        result = KDE_lstat( fileName, &st_buf );
-        ::unlink( QByteArray(fileName+".test") );
-    }
-    return (result < 0 || ((result == 0) && (st_buf.st_nlink == 2)));
 }
 
 void KLockFile::Private::writeIntoLockFile(QFile& file, const KComponentData& componentData)
@@ -195,77 +166,7 @@ void KLockFile::Private::readLockFile()
     }
 }
 
-KLockFile::LockResult KLockFile::Private::lockFileWithLink(KDE_struct_stat &st_buf)
-{
-    const QByteArray lockFileName = QFile::encodeName( m_fileName );
-    int result = KDE_lstat( lockFileName, &st_buf );
-    if (result == 0) {
-        return KLockFile::LockFail;
-    }
-
-    KTemporaryFile uniqueFile(m_componentData);
-    uniqueFile.setFileTemplate(m_fileName);
-    if (!uniqueFile.open()) {
-        return KLockFile::LockError;
-    }
-
-    writeIntoLockFile(uniqueFile, m_componentData);
-
-    QByteArray uniqueName = QFile::encodeName( uniqueFile.fileName() );
-
-    // Create lock file
-    result = ::link( uniqueName, lockFileName );
-    if (result != 0) {
-        return KLockFile::LockError;
-    }
-
-    if (!linkCountSupport) {
-        return KLockFile::LockOK;
-    }
-
-    KDE_struct_stat st_buf2;
-    result = KDE_lstat( uniqueName, &st_buf2 );
-    if (result != 0) {
-        return KLockFile::LockError;
-    }
-
-    result = KDE_lstat( lockFileName, &st_buf );
-    if (result != 0) {
-        return KLockFile::LockError;
-    }
-
-    if (st_buf != st_buf2 || S_ISLNK(st_buf.st_mode) || S_ISLNK(st_buf2.st_mode)) {
-        // SMBFS supports hardlinks by copying the file, as a result the above test will always fail
-        // cifs increases link count artifically but the inodes are still different
-        if ((st_buf2.st_nlink > 1 ||
-            ((st_buf.st_nlink == 1) && (st_buf2.st_nlink == 1))) && (st_buf.st_ino != st_buf2.st_ino))
-        {
-            linkCountSupport = testLinkCountSupport(uniqueName);
-            if (!linkCountSupport)
-                return KLockFile::LockOK; // Link count support is missing... assume everything is OK.
-        }
-        return KLockFile::LockFail;
-    }
-
-    return KLockFile::LockOK;
-}
-
-bool KLockFile::Private::isNfs() const
-{
-    const KFileSystemType::Type fsType = KFileSystemType::fileSystemType(m_fileName);
-    return fsType == KFileSystemType::Nfs;
-}
-
 KLockFile::LockResult KLockFile::Private::lockFile(KDE_struct_stat &st_buf)
-{
-    if (isNfs()) {
-        return lockFileWithLink(st_buf);
-    }
-
-    return lockFileOExcl(st_buf);
-}
-
-KLockFile::LockResult KLockFile::Private::lockFileOExcl(KDE_struct_stat &st_buf)
 {
     const QByteArray lockFileName = QFile::encodeName( m_fileName );
 
@@ -303,10 +204,6 @@ KLockFile::LockResult KLockFile::Private::lockFileOExcl(KDE_struct_stat &st_buf)
 
 KLockFile::LockResult KLockFile::Private::deleteStaleLock()
 {
-    if (isNfs()) {
-        return deleteStaleLockWithLink();
-    }
-
     // I see no way to prevent the race condition here, where we could
     // delete a new lock file that another process just got after we
     // decided the old one was too stale for us too.
@@ -314,67 +211,6 @@ KLockFile::LockResult KLockFile::Private::deleteStaleLock()
     QFile::remove(m_fileName);
     return LockOK;
 }
-
-KLockFile::LockResult KLockFile::Private::deleteStaleLockWithLink()
-{
-    // This is dangerous, we could be deleting a new lock instead of
-    // the old stale one, let's be very careful
-
-    // Create temp file
-    KTemporaryFile *ktmpFile = new KTemporaryFile(m_componentData);
-    ktmpFile->setFileTemplate(m_fileName);
-    if (!ktmpFile->open()) {
-        delete ktmpFile;
-        return KLockFile::LockError;
-    }
-
-    const QByteArray lckFile = QFile::encodeName(m_fileName);
-    const QByteArray tmpFile = QFile::encodeName(ktmpFile->fileName());
-    delete ktmpFile;
-
-    // link to lock file
-    if (::link(lckFile, tmpFile) != 0) {
-        return KLockFile::LockFail; // Try again later
-    }
-
-    // check if link count increased with exactly one
-    // and if the lock file still matches
-    KDE_struct_stat st_buf1;
-    KDE_struct_stat st_buf2;
-    memcpy(&st_buf1, &statBuf, sizeof(KDE_struct_stat));
-    st_buf1.st_nlink++;
-    if ((KDE_lstat(tmpFile, &st_buf2) == 0) && st_buf1 == st_buf2) {
-        if ((KDE_lstat(lckFile, &st_buf2) == 0) && st_buf1 == st_buf2) {
-            // - - if yes, delete lock file, delete temp file, retry lock
-            kWarning() << "Deleting stale lockfile" << lckFile.data();
-            ::unlink(lckFile);
-            ::unlink(tmpFile);
-            return KLockFile::LockOK;
-        }
-    }
-
-    // SMBFS supports hardlinks by copying the file, as a result the above test will always fail
-    if (linkCountSupport) {
-        linkCountSupport = testLinkCountSupport(tmpFile);
-    }
-
-    if (!linkCountSupport) {
-        // Without support for link counts we will have a little race condition
-        kWarning() << "Deleting stale lockfile" << lckFile.data();
-        ::unlink(tmpFile);
-        if (::unlink(lckFile) < 0) {
-            kWarning() << "Problem deleting stale lockfile" << lckFile.data() << ": " << strerror(errno);
-            return KLockFile::LockFail;
-        }
-        return KLockFile::LockOK;
-    }
-
-    // Failed to delete stale lock file
-    kWarning() << "Problem deleting stale lockfile" << lckFile.data();
-    ::unlink(tmpFile);
-    return KLockFile::LockFail;
-}
-
 
 KLockFile::LockResult KLockFile::lock(LockFlags options)
 {
