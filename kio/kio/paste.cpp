@@ -34,7 +34,6 @@
 #include <kinputdialog.h>
 #include <kmessagebox.h>
 #include <kmimetype.h>
-#include <ktemporaryfile.h>
 
 #include <QApplication>
 #include <QClipboard>

@@ -31,7 +31,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
-#include <ktemporaryfile.h>
 #include <kurl.h>
 
 using namespace KIO;

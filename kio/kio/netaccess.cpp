@@ -107,10 +107,7 @@ bool NetAccess::download(const KUrl& u, QString & target, QWidget* window)
 
   if (target.isEmpty())
   {
-      KTemporaryFile tmpFile;
-      tmpFile.setAutoRemove(false);
-      tmpFile.open();
-      target = tmpFile.fileName();
+      target = KTemporaryFile::filePath();
       tmpfiles.append(target);
   }
 

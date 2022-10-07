@@ -47,7 +47,6 @@ extern "C" {
 #include <kdebug.h>
 #include <kde_file.h>
 #include <kdirnotify.h>
-#include <ktemporaryfile.h>
 
 #include "jobuidelegate.h"
 #include "kmimetype.h"

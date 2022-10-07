@@ -544,11 +544,9 @@ void PreviewJobPrivate::getOrCreateThumbnail()
         // No plugin support access to this remote content, copy the file
         // to the local machine, then create the thumbnail
         state = PreviewJobPrivate::STATE_GETORIG;
-        KTemporaryFile localFile;
-        localFile.setAutoRemove(false);
-        localFile.open();
+        tempName = KTemporaryFile::filePath();
         KUrl localURL;
-        localURL.setPath( tempName = localFile.fileName() );
+        localURL.setPath( tempName );
         const KUrl currentURL = item.mostLocalUrl();
         KIO::Job * job = KIO::file_copy( currentURL, localURL, -1, KIO::Overwrite | KIO::HideProgressInfo /* No GUI */ );
         job->addMetaData("thumbnail","1");
