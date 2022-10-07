@@ -589,7 +589,7 @@ void PreviewJobPrivate::slotThumbData(KIO::Job *, const QByteArray &data)
     bool savedCorrectly = false;
     if (save) {
         // Only try to write out the thumbnail if we actually created the temp file.
-        tempFileName = KTemporaryFile::filePath(QString::fromLatin1("XXXXXXXXXX.%1").arg(thumbExt));
+        tempFileName = KTemporaryFile::filePath(QString::fromLatin1("XXXXXXXXXX%1").arg(thumbExt));
         savedCorrectly = thumb.save(tempFileName, thumbFormat);
     }
     if (savedCorrectly) {
