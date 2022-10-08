@@ -369,16 +369,16 @@ static void complete_startup_info( KStartupInfoId& id, pid_t pid )
 QByteArray execpath_avoid_loops( const QByteArray& exec, int envc, const char* envs, bool avoid_loops )
 {
      QStringList paths;
-     const QRegExp pathSepRegExp(QString::fromLatin1("[:\b]"));
+     static const QChar pathSep = QChar::fromLatin1(':');
      if( envc > 0 ) /* use the passed environment */
      {
          const char* path = get_env_var( "PATH=", envc, envs );
          if( path != NULL )
-             paths = QFile::decodeName(path).split(pathSepRegExp);
+             paths = QFile::decodeName(path).split(pathSep);
      } else {
-         paths = QString::fromLocal8Bit(qgetenv("PATH")).split(pathSepRegExp, QString::KeepEmptyParts);
+         paths = QString::fromLocal8Bit(qgetenv("PATH")).split(pathSep, QString::KeepEmptyParts);
      }
-     QString execpath = s_instance->dirs()->findExe(QFile::decodeName(exec), paths.join(QLatin1String(":")));
+     QString execpath = s_instance->dirs()->findExe(QFile::decodeName(exec), paths.join(pathSep));
      if (avoid_loops && !execpath.isEmpty()) {
          const int pos = execpath.lastIndexOf(QLatin1Char('/'));
          const QString bin_path = execpath.left(pos);
@@ -390,7 +390,7 @@ QByteArray execpath_avoid_loops( const QByteArray& exec, int envc, const char* e
                  break; // -->
              }
          }
-         execpath = s_instance->dirs()->findExe(QFile::decodeName(exec), paths.join(QLatin1String(":")));
+         execpath = s_instance->dirs()->findExe(QFile::decodeName(exec), paths.join(pathSep));
      }
      return QFile::encodeName(execpath);
 }
