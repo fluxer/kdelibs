@@ -40,8 +40,8 @@ public:
         : KMimeTypePrivate(str, offset)
     {}
 
-    virtual QString comment(const KUrl &url) const;
-    virtual QString iconName(const KUrl &url) const;
+    QString comment(const KUrl &url = KUrl()) const final;
+    QString iconName(const KUrl &url) const final;
 
 };
 
