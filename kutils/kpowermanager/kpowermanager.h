@@ -70,10 +70,6 @@ public:
     bool setCPUGovernor(const QString &governor);
 
     /*!
-        @brief Returns @p true if power manager is enabled, @p false otherwise
-    */
-    static bool isEnabled();
-    /*!
         @brief Returns @p true if power management is supported on this host,
         @p false otherwise
     */

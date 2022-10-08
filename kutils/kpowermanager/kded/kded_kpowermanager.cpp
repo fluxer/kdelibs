@@ -23,7 +23,7 @@
 
 static void setPowerProfile(bool save_power)
 {
-    if (KPowerManager::isEnabled() && KPowerManager::isSupported()) {
+    if (KPowerManager::isSupported()) {
         KPowerManager kpowermanager;
         if (save_power) {
             kpowermanager.setProfile(QString::fromLatin1("PowerSave"));
