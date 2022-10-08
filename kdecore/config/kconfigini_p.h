@@ -27,6 +27,7 @@
 #include <klockfile.h>
 #include <kconfigdata.h>
 #include <kconfigbase.h>
+#include <kcomponentdata.h>
 #include <QFile>
 #include <QDateTime>
 

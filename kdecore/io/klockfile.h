@@ -20,7 +20,7 @@
 #ifndef KLOCKFILE_H
 #define KLOCKFILE_H
 
-#include <kglobal.h>
+#include <kdecore_export.h>
 
 #include <QString>
 
