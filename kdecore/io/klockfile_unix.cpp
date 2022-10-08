@@ -107,7 +107,8 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
 KLockFile::KLockFile(const QString &file)
     : d(new KLockFilePrivate())
 {
-    d->m_lockfile = QFile::encodeName(file + QLatin1String(".klockfile"));
+    d->m_lockfile = QFile::encodeName(file);
+    d->m_lockfile.append(".klockfile");
 }
 
 KLockFile::~KLockFile()
@@ -122,7 +123,7 @@ tryagain:
     KLockFile::LockResult result = d->tryLock();
     if (result == KLockFile::LockStale && options & KLockFile::ForceFlag) {
         kWarning() << "Deleting stale lock file" << d->m_lockfile;
-        if (Q_UNLIKELY(::unlink(d->m_lockfile) == -1)) {
+        if (Q_UNLIKELY(::unlink(d->m_lockfile.constData()) == -1)) {
             const int savederrno = errno;
             kWarning() << "Could not remove lock file" << qt_error_string(savederrno);
         }
@@ -147,7 +148,7 @@ void KLockFile::unlock()
 {
     if (d->m_lockfd != -1) {
         QT_CLOSE(d->m_lockfd);
-        if (Q_UNLIKELY(::unlink(d->m_lockfile) == -1)) {
+        if (Q_UNLIKELY(::unlink(d->m_lockfile.constData()) == -1)) {
             const int savederrno = errno;
             kWarning() << "Could not remove lock file" << qt_error_string(savederrno);
         }
