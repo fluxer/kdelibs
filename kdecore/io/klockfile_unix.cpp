@@ -31,6 +31,7 @@
 #include <signal.h>
 #include <errno.h>
 
+#define KLOCKFILE_TIMEOUT 250
 #define KLOCKFILE_SLEEPTIME 250
 
 class KLockFilePrivate
@@ -65,12 +66,12 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
         const int savederrno = errno;
         if (savederrno == EEXIST) {
             QFile infofile(QFile::decodeName(m_lockfile));
-            if (!infofile.open(QFile::ReadOnly)) {
+            if (Q_UNLIKELY(!infofile.open(QFile::ReadOnly))) {
                 kWarning() << infofile.errorString();
                 return KLockFile::LockError;
             }
             const QList<QByteArray> lockinfo = infofile.readAll().split('\t');
-            if (lockinfo.size() != 2) {
+            if (Q_UNLIKELY(lockinfo.size() != 2)) {
                 kWarning() << "Invalid lock information";
                 return KLockFile::LockError;
             }
@@ -93,7 +94,7 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
     QByteArray infodata = QByteArray::number(m_pid);
     infodata.append('\t');
     infodata.append(m_hostname);
-    if (QT_WRITE(m_lockfd, infodata.constData(), infodata.size()) != infodata.size()) {
+    if (Q_UNLIKELY(QT_WRITE(m_lockfd, infodata.constData(), infodata.size()) != infodata.size())) {
         const int savederrno = errno;
         kWarning() << "Could not write lock information" << qt_error_string(savederrno);
         return KLockFile::LockError;
@@ -122,14 +123,14 @@ tryagain:
     KLockFile::LockResult result = d->tryLock();
     if (result == KLockFile::LockStale && options & KLockFile::ForceFlag) {
         kWarning() << "Deleting stale lock file" << d->m_lockfile;
-        if (::unlink(d->m_lockfile) == -1) {
+        if (Q_UNLIKELY(::unlink(d->m_lockfile) == -1)) {
             const int savederrno = errno;
             kWarning() << "Could not remove lock file" << qt_error_string(savederrno);
         }
         result = d->tryLock();
     }
     if (!(options & KLockFile::NoBlockFlag) && result != KLockFile::LockOK) {
-        const int randomtimeout = KRandom::randomMax(1000);
+        const int randomtimeout = KRandom::randomMax(KLOCKFILE_TIMEOUT) + KLOCKFILE_TIMEOUT;
         kDebug() << "Retrying to lock after" << (randomtimeout + KLOCKFILE_SLEEPTIME);
         QCoreApplication::processEvents(QEventLoop::AllEvents, randomtimeout);
         QThread::msleep(KLOCKFILE_SLEEPTIME);
@@ -147,7 +148,7 @@ void KLockFile::unlock()
 {
     if (d->m_lockfd != -1) {
         QT_CLOSE(d->m_lockfd);
-        if (::unlink(d->m_lockfile) == -1) {
+        if (Q_UNLIKELY(::unlink(d->m_lockfile) == -1)) {
             const int savederrno = errno;
             kWarning() << "Could not remove lock file" << qt_error_string(savederrno);
         }
