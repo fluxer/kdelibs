@@ -334,33 +334,43 @@ int KSpeech::say(const QString &text)
 #endif // HAVE_SPEECHD
 }
 
-void KSpeech::removeAllJobs()
+bool KSpeech::removeAllJobs()
 {
 #if defined(HAVE_SPEECHD)
     if (Q_UNLIKELY(!d->m_speechd)) {
         kDebug() << "Null speech-dispatcher pointer";
-        return;
+        return false;
     }
 
     const int speechdresult = spd_stop(d->m_speechd);
     if (Q_UNLIKELY(speechdresult < 0)) {
         kWarning() << "Speech-dispatcher stop failed";
+        return false;
     }
+    return true;
+#else
+    kWarning() << "KSpeech is a stub";
+    return false;
 #endif
 }
 
-void KSpeech::removeJob(int jobNum)
+bool KSpeech::removeJob(int jobNum)
 {
 #if defined(HAVE_SPEECHD)
     if (Q_UNLIKELY(!d->m_speechd)) {
         kWarning() << "Null speech-dispatcher pointer";
-        return;
+        return false;
     }
 
     const int speechdresult = spd_stop_uid(d->m_speechd, jobNum);
     if (Q_UNLIKELY(speechdresult < 0)) {
         kWarning() << "Speech-dispatcher stop uid failed";
+        return false;
     }
+    return true;
+#else
+    kWarning() << "KSpeech is a stub";
+    return false;
 #endif
 }
 

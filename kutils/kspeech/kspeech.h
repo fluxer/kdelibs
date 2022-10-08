@@ -60,8 +60,8 @@ public:
 public Q_SLOTS:
     int say(const QString &text);
 
-    void removeAllJobs();
-    void removeJob(int jobNum);
+    bool removeAllJobs();
+    bool removeJob(int jobNum);
 
 Q_SIGNALS:
     void jobStateChanged(int jobNum, int state);
