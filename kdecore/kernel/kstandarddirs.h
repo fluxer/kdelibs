@@ -26,7 +26,6 @@
 #include <kglobal.h>
 #include <QtCore/qmap.h>
 
-class KConfig;
 
 /**
  * @short Site-independent access to standard KDE directories.
