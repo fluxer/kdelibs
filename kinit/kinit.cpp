@@ -366,7 +366,7 @@ static void complete_startup_info( KStartupInfoId& id, pid_t pid )
 }
 #endif
 
-QByteArray execpath_avoid_loops( const QByteArray& exec, int envc, const char* envs, bool avoid_loops )
+static QByteArray execpath_avoid_loops( const QByteArray& exec, int envc, const char* envs, bool avoid_loops )
 {
      QStringList paths;
      static const QChar pathSep = QChar::fromLatin1(':');
