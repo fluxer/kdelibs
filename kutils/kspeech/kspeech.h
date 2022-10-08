@@ -54,6 +54,7 @@ public:
     int pitch() const;
     bool setPitch(const int pitch);
 
+    QByteArray voice() const;
     QList<QByteArray> voices() const;
     bool setVoice(const QByteArray &voice);
 

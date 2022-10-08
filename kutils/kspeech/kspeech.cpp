@@ -51,6 +51,7 @@ private:
     friend KSpeech;
 #if defined(HAVE_SPEECHD)
     SPDConnection* m_speechd;
+    QByteArray m_voice;
 #endif
     QByteArray m_speechid;
 };
@@ -260,6 +261,15 @@ bool KSpeech::setPitch(const int pitch)
 #endif
 }
 
+QByteArray KSpeech::voice() const
+{
+#if defined(HAVE_SPEECHD)
+    return d->m_voice;
+#else
+    return QByteArray();
+#endif
+}
+
 QList<QByteArray> KSpeech::voices() const
 {
     QList<QByteArray> result;
@@ -307,6 +317,7 @@ bool KSpeech::setVoice(const QByteArray &voice)
         kWarning() << "Speech-dispatcher set voice failed";
         return false;
     }
+    d->m_voice = voice;
     return true;
 #else
     return false;
