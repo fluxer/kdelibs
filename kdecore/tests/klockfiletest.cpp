@@ -55,16 +55,14 @@ void kMessageHandler(QtMsgType type, const char *msg)
     msgHandler(type, msg);
 }
 
-void
-Test_KLockFile::initTestCase()
+void Test_KLockFile::initTestCase()
 {
     msgHandler = qInstallMsgHandler(kMessageHandler);
-    QFile::remove(lockName);
+    QFile::remove(QString::fromLatin1(lockNameFull));
     lockFile = new KLockFile(lockName);
 }
 
-void
-Test_KLockFile::cleanupTestCase()
+void Test_KLockFile::cleanupTestCase()
 {
     delete lockFile;
     lockFile = nullptr;
@@ -77,8 +75,7 @@ static KLockFile::LockResult testLockFromProcess(const QString& lockName)
     return KLockFile::LockResult(ret);
 }
 
-void
-Test_KLockFile::testLock()
+void Test_KLockFile::testLock()
 {
     QVERIFY(!lockFile->isLocked());
     QCOMPARE(lockFile->lock(), KLockFile::LockOK);
@@ -95,8 +92,7 @@ Test_KLockFile::testLock()
     QCOMPARE(testLockFromProcess(lockName), KLockFile::LockFail);
 }
 
-void
-Test_KLockFile::testLockInfo()
+void Test_KLockFile::testLockInfo()
 {
     QVERIFY(lockFile->isLocked());
 
@@ -104,21 +100,20 @@ Test_KLockFile::testLockInfo()
     QCOMPARE(lf.lock(KLockFile::NoBlockFlag), KLockFile::LockFail);
     QVERIFY(!lf.isLocked());
 
-    qint64 pid;
+    qint64 pid = -1;
     QString host;
-    if (lf.getLockInfo(pid, host)) {
-        QCOMPARE(pid, static_cast<qint64>(::getpid()));
-        QCOMPARE(host, QHostInfo::localHostName());
-    }
+    QVERIFY(!lf.getLockInfo(pid, host));
+    QCOMPARE(pid, qint64(-1));
+    QCOMPARE(host, QString());
 
-    if (lockFile->getLockInfo(pid, host)) {
-        QCOMPARE(pid, static_cast<qint64>(::getpid()));
-        QCOMPARE(host, QHostInfo::localHostName());
-    }
+    pid = -1;
+    host.clear();
+    QVERIFY(lockFile->getLockInfo(pid, host));
+    QCOMPARE(pid, static_cast<qint64>(::getpid()));
+    QCOMPARE(host, QHostInfo::localHostName());
 }
 
-void
-Test_KLockFile::testUnlock()
+void Test_KLockFile::testUnlock()
 {
     QVERIFY(lockFile->isLocked());
     lockFile->unlock();
@@ -126,8 +121,7 @@ Test_KLockFile::testUnlock()
 }
 
 
-void
-Test_KLockFile::testStaleNoBlockFlag()
+void Test_KLockFile::testStaleNoBlockFlag()
 {
     QFile f(QString::fromLatin1(lockNameFull));
     f.open(QIODevice::WriteOnly);
@@ -147,6 +141,5 @@ Test_KLockFile::testStaleNoBlockFlag()
     QVERIFY(lockFile2->isLocked());
     delete lockFile2;
 }
-
 
 QTEST_KDEMAIN_CORE(Test_KLockFile)
