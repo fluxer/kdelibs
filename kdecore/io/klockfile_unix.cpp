@@ -68,12 +68,12 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
             QFile infofile(QFile::decodeName(m_lockfile));
             if (Q_UNLIKELY(!infofile.open(QFile::ReadOnly))) {
                 kWarning() << infofile.errorString();
-                return KLockFile::LockError;
+                return KLockFile::LockFail;
             }
             const QList<QByteArray> lockinfo = infofile.readAll().split('\t');
             if (Q_UNLIKELY(lockinfo.size() != 2)) {
                 kWarning() << "Invalid lock information";
-                return KLockFile::LockError;
+                return KLockFile::LockFail;
             }
             const qint64 lockpid = lockinfo.at(0).toLongLong();
             const QByteArray lockhost = lockinfo.at(1);
@@ -104,7 +104,6 @@ KLockFile::LockResult KLockFilePrivate::tryLock()
 }
 
 
-
 KLockFile::KLockFile(const QString &file)
     : d(new KLockFilePrivate())
 {
@@ -129,7 +128,7 @@ tryagain:
         }
         result = d->tryLock();
     }
-    if (!(options & KLockFile::NoBlockFlag) && result != KLockFile::LockOK) {
+    if (!(options & KLockFile::NoBlockFlag) && result == KLockFile::LockFail) {
         const int randomtimeout = KRandom::randomMax(KLOCKFILE_TIMEOUT) + KLOCKFILE_TIMEOUT;
         kDebug() << "Retrying to lock after" << (randomtimeout + KLOCKFILE_SLEEPTIME);
         QCoreApplication::processEvents(QEventLoop::AllEvents, randomtimeout);
