@@ -340,8 +340,6 @@ public:
 
     QStringList resourceDirs(const char* type);
     void createSpecialResource(const char*);
-    bool exists(const QString &fullPath);
-    QString realPath(const QString &dirname);
 
     QStringList xdgdata_prefixes;
     QStringList xdgconf_prefixes;
@@ -720,7 +718,7 @@ QString KStandardDirs::findResourceDir(const char *type,
 #endif
 
     foreach (const QString &it, d->resourceDirs(type)) {
-        if (exists(it + filename)) {
+        if (KStandardDirs::exists(it + filename)) {
             return it;
         }
     }
@@ -733,21 +731,15 @@ QString KStandardDirs::findResourceDir(const char *type,
     return QString();
 }
 
-bool KStandardDirs::exists(const QString &fullPath) const
-{
-    return d->exists(fullPath);
-}
-
-bool KStandardDirs::KStandardDirsPrivate::exists(const QString &fullPath)
+bool KStandardDirs::exists(const QString &fullPath)
 {
     QFileInfo fileinfo(fullPath);
     if (!fileinfo.isReadable()) {
         return false;
     } else if (!fullPath.endsWith(QLatin1Char('/'))) {
         return !fileinfo.isDir() && fileinfo.exists();
-    } else {
-        return fileinfo.isDir() && fileinfo.exists();
     }
+    return fileinfo.isDir() && fileinfo.exists();
 }
 
 QStringList
@@ -806,8 +798,7 @@ KStandardDirs::findAllResources(const char *type,
 //         and this method is often used with the expectation for it to work
 //         even if the directory doesn't exist. so ... no, we can't drop this
 //         yet
-QString
-KStandardDirs::KStandardDirsPrivate::realPath(const QString &dirname)
+QString KStandardDirs::realPath(const QString &dirname)
 {
     if (dirname.isEmpty() || (dirname.size() == 1 && dirname.at(0) == QLatin1Char('/')))
        return dirname;
@@ -818,10 +809,10 @@ KStandardDirs::KStandardDirsPrivate::realPath(const QString &dirname)
     }
 
     char realpath_buffer[PATH_MAX + 1];
-    memset(realpath_buffer, 0, PATH_MAX + 1);
+    ::memset(realpath_buffer, 0, PATH_MAX + 1);
 
     /* If the path contains symlinks, get the real name */
-    if (realpath( QFile::encodeName(dirname).constData(), realpath_buffer) != 0) {
+    if (::realpath( QFile::encodeName(dirname).constData(), realpath_buffer) != 0) {
         // success, use result from realpath
         int len = strlen(realpath_buffer);
         realpath_buffer[len] = '/';
@@ -837,7 +828,7 @@ KStandardDirs::KStandardDirsPrivate::realPath(const QString &dirname)
     if (!dir.endsWith(QLatin1Char('/')))
         dir += QLatin1Char('/');
     QString relative;
-    while (!exists(dir)) {
+    while (!KStandardDirs::exists(dir)) {
         //qDebug() << "does not exist:" << dir;
         const int pos = dir.lastIndexOf(QLatin1Char('/'), -2);
         Q_ASSERT(pos >= 0); // what? even "/" doesn't exist?
@@ -853,12 +844,6 @@ KStandardDirs::KStandardDirsPrivate::realPath(const QString &dirname)
     return dir;
 }
 
-QString
-KStandardDirs::realPath(const QString &dirname) const
-{
-    return d->realPath(dirname);
-}
-
 // ####### KDE4: should this be removed, in favor of QDir::canonicalPath()?
 // aseigo: QDir::canonicalPath returns QString() if the dir doesn't exist
 //         and this method is often used with the expectation for it to work
@@ -868,17 +853,16 @@ QString
 KStandardDirs::realFilePath(const QString &filename)
 {
     char realpath_buffer[PATH_MAX + 1];
-    memset(realpath_buffer, 0, PATH_MAX + 1);
+    ::memset(realpath_buffer, 0, PATH_MAX + 1);
 
     /* If the path contains symlinks, get the real name */
-    if (realpath( QFile::encodeName(filename).constData(), realpath_buffer) != 0) {
+    if (::realpath( QFile::encodeName(filename).constData(), realpath_buffer) != 0) {
         // success, use result from realpath
         return QFile::decodeName(realpath_buffer);
     }
 
     return filename;
 }
-
 
 void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type)
 {
