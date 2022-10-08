@@ -37,7 +37,8 @@ class KConfigIniBackend: public QObject, public QSharedData
     Q_FLAGS(WriteOption)
 
 private:
-    KLockFile::Ptr lockFile;
+    KLockFile* m_lockfile;
+
 public:
     class BufferFragment;
 

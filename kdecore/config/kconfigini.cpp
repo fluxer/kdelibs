@@ -55,7 +55,8 @@ QString KConfigIniBackend::warningProlog(const QFile &file, int line)
 }
 
 KConfigIniBackend::KConfigIniBackend()
-    : QObject(), QSharedData()
+    : QObject(), QSharedData(),
+    m_lockfile(nullptr)
 {
 }
 
@@ -589,24 +590,25 @@ bool KConfigIniBackend::lock(const KComponentData& componentData)
 {
     Q_ASSERT(!filePath().isEmpty());
 
-    if (!lockFile) {
-        lockFile = new KLockFile(filePath() + QLatin1String(".lock"), componentData);
+    if (!m_lockfile) {
+        m_lockfile = new KLockFile(filePath());
     }
 
-    if (lockFile->lock() == KLockFile::LockStale) // attempt to break the lock
-        lockFile->lock(KLockFile::ForceFlag);
-    return lockFile->isLocked();
+    if (m_lockfile->lock() == KLockFile::LockStale) // attempt to break the lock
+        m_lockfile->lock(KLockFile::ForceFlag);
+    return m_lockfile->isLocked();
 }
 
 void KConfigIniBackend::unlock()
 {
-    lockFile->unlock();
-    lockFile.clear();
+    m_lockfile->unlock();
+    delete m_lockfile;
+    m_lockfile = nullptr;
 }
 
 bool KConfigIniBackend::isLocked() const
 {
-    return lockFile && lockFile->isLocked();
+    return m_lockfile && m_lockfile->isLocked();
 }
 
 QByteArray KConfigIniBackend::stringToPrintable(const QByteArray& aString, StringType type)

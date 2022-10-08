@@ -40,34 +40,15 @@ char* toString(const KLockFile::LockResult &result)
 }
 QT_END_NAMESPACE
 
-// Here's how to test file locking on a FAT filesystem, on linux:
-// cd /tmp
-// dd if=/dev/zero of=fatfile count=180000
-// mkfs.vfat -F32 fatfile
-// mkdir -p fatsystem
-// sudo mount -o loop -o uid=$UID fatfile fatsystem
-// 
-// static const char *const lockName = "/tmp/fatsystem/klockfiletest.lock";
-//
-// =====================================================================
-// 
-// And here's how to test file locking over NFS, on linux:
-// In /etc/exports:    /tmp/nfs localhost(rw,sync,no_subtree_check)
-// sudo mount -t nfs localhost:/tmp/nfs /tmp/nfs-mount
-// 
-// static const char *const lockName = "/tmp/nfs-mount/klockfiletest.lock";
-//
-// =====================================================================
-// 
-
-static const char *const lockName = "klockfiletest.lock";
+static const QString lockName = "klockfiletest";
+static const char *const lockNameFull = "klockfiletest.klockfile";
 
 static bool seenWarningMessage = false;
 static QtMsgHandler msgHandler = nullptr;
 
 void kMessageHandler(QtMsgType type, const char *msg)
 {
-    QByteArray expectedMsg = QByteArray("Deleting stale lockfile ") + lockName;
+    QByteArray expectedMsg = QByteArray("Deleting stale lock file \"") + lockNameFull + "\"";
     if (QByteArray(msg).contains(expectedMsg)) {
         seenWarningMessage = true;
     }
@@ -78,8 +59,8 @@ void
 Test_KLockFile::initTestCase()
 {
     msgHandler = qInstallMsgHandler(kMessageHandler);
-    QFile::remove( lockName );
-    lockFile = new KLockFile(QLatin1String(lockName));
+    QFile::remove(lockName);
+    lockFile = new KLockFile(lockName);
 }
 
 void
@@ -104,36 +85,35 @@ Test_KLockFile::testLock()
     QVERIFY(lockFile->isLocked());
 
     // Try to lock it again, should fail
-    KLockFile *lockFile2 = new KLockFile(QLatin1String(lockName));
+    KLockFile *lockFile2 = new KLockFile(lockName);
     QVERIFY(!lockFile2->isLocked());
     QCOMPARE(lockFile2->lock(KLockFile::NoBlockFlag), KLockFile::LockFail);
     QVERIFY(!lockFile2->isLocked());
     delete lockFile2;
 
     // Also try from a different process.
-    QCOMPARE(testLockFromProcess(QLatin1String(lockName)), KLockFile::LockFail);
+    QCOMPARE(testLockFromProcess(lockName), KLockFile::LockFail);
 }
 
 void
-Test_KLockFile::testStale()
+Test_KLockFile::testLockInfo()
 {
     QVERIFY(lockFile->isLocked());
 
-    const int secs = 2;
-    KLockFile lf = KLockFile(QLatin1String(lockName));
-    lf.setStaleTime(secs);
-    QVERIFY(lf.staleTime() == secs);
-
-    QTest::qWait(secs*1000);
-    QCOMPARE(lf.lock(), KLockFile::LockStale);
+    KLockFile lf(lockName);
+    QCOMPARE(lf.lock(KLockFile::NoBlockFlag), KLockFile::LockFail);
     QVERIFY(!lf.isLocked());
 
-    int pid;
-    QString host, app;
-    if (lf.getLockInfo(pid, host, app)) {
-        QCOMPARE(pid, ::getpid());
+    qint64 pid;
+    QString host;
+    if (lf.getLockInfo(pid, host)) {
+        QCOMPARE(pid, static_cast<qint64>(::getpid()));
         QCOMPARE(host, QHostInfo::localHostName());
-        QCOMPARE(app, QLatin1String("qttest")); // this is our KComponentData name
+    }
+
+    if (lockFile->getLockInfo(pid, host)) {
+        QCOMPARE(pid, static_cast<qint64>(::getpid()));
+        QCOMPARE(host, QHostInfo::localHostName());
     }
 }
 
@@ -149,14 +129,14 @@ Test_KLockFile::testUnlock()
 void
 Test_KLockFile::testStaleNoBlockFlag()
 {
-    QFile f(lockName);
+    QFile f(QString::fromLatin1(lockNameFull));
     f.open(QIODevice::WriteOnly);
     QTextStream stream(&f);
-    stream << QString::number(111222) << endl << QLatin1String("qttest") << endl << QHostInfo::localHostName() << endl;
+    stream << (QString::number(111222) + QLatin1Char('\t') + QHostInfo::localHostName());
     stream.flush();
     f.close();
 
-    KLockFile* lockFile2 = new KLockFile(QLatin1String(lockName));
+    KLockFile* lockFile2 = new KLockFile(lockName);
     QVERIFY(!lockFile2->isLocked());
     QCOMPARE(lockFile2->lock(KLockFile::NoBlockFlag), KLockFile::LockStale);
     seenWarningMessage = false;
