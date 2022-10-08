@@ -323,18 +323,6 @@ public:
      **   Calendar settings   **
      ***************************/
 
-protected:
-
-    /**
-     * @internal Converts a CalendarType into a CalendarSystem
-     */
-    KLocale::CalendarSystem calendarTypeToCalendarSystem(const QString &calendarType) const;
-
-    /**
-     * @internal Converts a CalendarSystem into a CalendarType
-     */
-    QString calendarSystemToCalendarType(KLocale::CalendarSystem) const;
-
 public:
 
     /**
