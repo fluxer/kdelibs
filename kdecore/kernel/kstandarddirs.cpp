@@ -95,21 +95,6 @@ static inline QStringList splitPath(const QString &path)
     return tokens;
 }
 
-static void priorityAdd(QStringList &prefixes, const QString& dir, bool priority)
-{
-    if (priority && !prefixes.isEmpty())
-    {
-        // Add in front but behind $KDEHOME
-        QStringList::iterator it = prefixes.begin();
-        ++it;
-        prefixes.insert(it, dir);
-    }
-    else
-    {
-        prefixes.append(dir);
-    }
-}
-
 static QString checkExecutable( const QString& path, bool ignoreExecBit )
 {
     QFileInfo info( path );
@@ -469,7 +454,136 @@ static const int types_indices[] = {
 KStandardDirs::KStandardDirs()
     : d(new KStandardDirsPrivate(this))
 {
-    addKDEDefaults();
+    QStringList kdedirList;
+    // begin KDEDIRS
+    QString kdedirs = readEnvPath("KDEDIRS");
+
+    if (!kdedirs.isEmpty()) {
+        kdedirList = splitPath(kdedirs);
+    }
+    kdedirList.append(installPath("kdedir"));
+
+    QString execPrefix(QFile::decodeName(EXEC_INSTALL_PREFIX));
+    if (!execPrefix.isEmpty() && !kdedirList.contains(execPrefix, case_sensitivity))
+        kdedirList.append(execPrefix);
+#ifdef Q_OS_LINUX
+    const QString linuxExecPrefix = executablePrefix();
+    if (!linuxExecPrefix.isEmpty())
+        kdedirList.append( linuxExecPrefix );
+#endif
+
+    // We treat root differently to prevent a "su" shell messing up the
+    // file permissions in the user's home directory.
+    QString localKdeDir = readEnvPath(getuid() ? "KDEHOME" : "KDEROOTHOME");
+    if (!localKdeDir.isEmpty()) {
+        if (!localKdeDir.endsWith(QLatin1Char('/')))
+            localKdeDir += QLatin1Char('/');
+    } else {
+        // TODO KDE5: make localKdeDir equal to localXdgDir (which is determined further below and
+        // defaults to ~/.config) + '/' + $KDECONFIG (which would default to e.g. "KDE")
+        // This would mean ~/.config/KDE/ by default, more xdg-compliant.
+        localKdeDir =  QDir::homePath() + QLatin1Char('/') + QString::fromLatin1(KDE_DEFAULT_HOME) + QLatin1Char('/');
+    }
+
+    if (localKdeDir != QLatin1String("-/")) {
+        localKdeDir = KShell::tildeExpand(localKdeDir);
+        addPrefix(localKdeDir);
+    }
+
+    foreach (const QString &it, kdedirList) {
+        addPrefix(KShell::tildeExpand(it));
+    }
+    // end KDEDIRS
+
+    // begin XDG_CONFIG_XXX
+    QStringList xdgdirList;
+    QString xdgdirs = readEnvPath("XDG_CONFIG_DIRS");
+    if (!xdgdirs.isEmpty()) {
+        xdgdirList = splitPath(xdgdirs);
+    } else {
+        xdgdirList.clear();
+        xdgdirList.append(QString::fromLatin1("/etc/xdg"));
+        xdgdirList.append(QFile::decodeName(SYSCONF_INSTALL_DIR "/xdg"));
+    }
+
+    QString localXdgDir = readEnvPath("XDG_CONFIG_HOME");
+    if (!localXdgDir.isEmpty()) {
+        if (!localXdgDir.endsWith(QLatin1Char('/'))) {
+            localXdgDir += QLatin1Char('/');
+        }
+    } else {
+        localXdgDir = QDir::homePath() + QString::fromLatin1("/.config/");
+    }
+
+    localXdgDir = KShell::tildeExpand(localXdgDir);
+    addXdgConfigPrefix(localXdgDir);
+
+    foreach (const QString &it, xdgdirList) {
+        addXdgConfigPrefix(KShell::tildeExpand(it));
+    }
+    // end XDG_CONFIG_XXX
+
+    // begin XDG_DATA_XXX
+    QStringList kdedirDataDirs;
+    foreach (const QString &it, kdedirList) {
+        if (!it.endsWith(QLatin1Char('/'))) {
+            kdedirDataDirs.append(it + QLatin1String("/share/"));
+        } else {
+            kdedirDataDirs.append(it + QLatin1String("share/"));
+        }
+    }
+
+    xdgdirs = readEnvPath("XDG_DATA_DIRS");
+    if (!xdgdirs.isEmpty()) {
+        xdgdirList = splitPath(xdgdirs);
+        // Ensure the kdedirDataDirs are in there too,
+        // otherwise resourceDirs() will add kdedir/share/applications/kde4
+        // as returned by installPath(), and that's incorrect.
+        Q_FOREACH(const QString& dir, kdedirDataDirs) {
+            if (!xdgdirList.contains(dir, case_sensitivity)) {
+                xdgdirList.append(dir);
+            }
+        }
+    } else {
+        xdgdirList = kdedirDataDirs;
+        xdgdirList.append(QString::fromLatin1("/usr/local/share/"));
+        xdgdirList.append(QString::fromLatin1("/usr/share/"));
+        xdgdirList.append(QString::fromLatin1("/share/"));
+    }
+
+    localXdgDir = readEnvPath("XDG_DATA_HOME");
+    if (!localXdgDir.isEmpty()) {
+        if (localXdgDir[localXdgDir.length()-1] != QLatin1Char('/')) {
+            localXdgDir += QLatin1Char('/');
+        }
+    } else {
+        localXdgDir = QDir::homePath() + QLatin1String("/.local/share/");
+    }
+
+    localXdgDir = KShell::tildeExpand(localXdgDir);
+    addXdgDataPrefix(localXdgDir);
+
+    foreach (const QString &it, xdgdirList) {
+        addXdgDataPrefix(KShell::tildeExpand(it));
+    }
+    // end XDG_DATA_XXX
+
+    addResourceDir("lib", QLatin1String(LIB_INSTALL_DIR "/"), true);
+    addResourceDir("exe", QLatin1String(LIBEXEC_INSTALL_DIR), true );
+
+    addResourceType("qtplugins", "lib", QLatin1String("plugins"));
+
+    uint index = 0;
+    while (types_indices[index] != -1) {
+        addResourceType(types_string + types_indices[index], 0,
+            QLatin1String(types_string + types_indices[index+1]), true);
+        index+=2;
+    }
+
+    addResourceDir("home", QDir::homePath(), false);
+
+    addResourceType("autostart", "xdgconf-autostart", QLatin1String("/")); // merge them, start with xdg autostart
+    addResourceType("autostart", NULL, QLatin1String("share/autostart")); // KDE ones are higher priority
 }
 
 KStandardDirs::~KStandardDirs()
@@ -483,7 +597,7 @@ QStringList KStandardDirs::allTypes() const
     for (int i = 0; types_indices[i] != -1; i += 2) {
         list.append(QString::fromLatin1(types_string + types_indices[i]));
     }
-    // Those are added manually by addKDEDefaults
+    // Those are added manually by the constructor
     list.append(QString::fromLatin1("lib"));
     //list.append(QString::fromLatin1("home")); // undocumented on purpose, said Waldo in r113855.
 
@@ -498,12 +612,7 @@ QStringList KStandardDirs::allTypes() const
     return list;
 }
 
-void KStandardDirs::addPrefix(const QString &dir)
-{
-    addPrefix(dir, false);
-}
-
-void KStandardDirs::addPrefix(const QString &_dir, bool priority)
+void KStandardDirs::addPrefix(const QString &_dir)
 {
     if (_dir.isEmpty())
         return;
@@ -513,17 +622,12 @@ void KStandardDirs::addPrefix(const QString &_dir, bool priority)
         dir += QLatin1Char('/');
 
     if (!d->m_prefixes.contains(dir, case_sensitivity)) {
-        priorityAdd(d->m_prefixes, dir, priority);
+        d->m_prefixes.append(dir);
         d->m_dircache.clear();
     }
 }
 
-void KStandardDirs::addXdgConfigPrefix(const QString &dir)
-{
-    addXdgConfigPrefix(dir, false);
-}
-
-void KStandardDirs::addXdgConfigPrefix(const QString &_dir, bool priority)
+void KStandardDirs::addXdgConfigPrefix(const QString &_dir)
 {
     if (_dir.isEmpty())
         return;
@@ -533,17 +637,12 @@ void KStandardDirs::addXdgConfigPrefix(const QString &_dir, bool priority)
         dir += QLatin1Char('/');
 
     if (!d->xdgconf_prefixes.contains(dir, case_sensitivity)) {
-        priorityAdd(d->xdgconf_prefixes, dir, priority);
+        d->xdgconf_prefixes.append(dir);
         d->m_dircache.clear();
     }
 }
 
-void KStandardDirs::addXdgDataPrefix(const QString &dir)
-{
-    addXdgDataPrefix(dir, false);
-}
-
-void KStandardDirs::addXdgDataPrefix(const QString &_dir, bool priority)
+void KStandardDirs::addXdgDataPrefix(const QString &_dir)
 {
     if (_dir.isEmpty())
         return;
@@ -553,7 +652,7 @@ void KStandardDirs::addXdgDataPrefix(const QString &_dir, bool priority)
         dir += QLatin1Char('/');
 
     if (!d->xdgdata_prefixes.contains(dir, case_sensitivity)) {
-        priorityAdd(d->xdgdata_prefixes, dir, priority);
+        d->xdgdata_prefixes.append(dir);
         d->m_dircache.clear();
     }
 }
@@ -1225,140 +1324,6 @@ bool KStandardDirs::makeDir(const QString &dir, int mode)
         i = pos + 1;
     }
     return true;
-}
-
-void KStandardDirs::addKDEDefaults()
-{
-    QStringList kdedirList;
-    // begin KDEDIRS
-    QString kdedirs = readEnvPath("KDEDIRS");
-
-    if (!kdedirs.isEmpty()) {
-        kdedirList = splitPath(kdedirs);
-    }
-    kdedirList.append(installPath("kdedir"));
-
-    QString execPrefix(QFile::decodeName(EXEC_INSTALL_PREFIX));
-    if (!execPrefix.isEmpty() && !kdedirList.contains(execPrefix, case_sensitivity))
-        kdedirList.append(execPrefix);
-#ifdef Q_OS_LINUX
-    const QString linuxExecPrefix = executablePrefix();
-    if (!linuxExecPrefix.isEmpty())
-        kdedirList.append( linuxExecPrefix );
-#endif
-
-    // We treat root differently to prevent a "su" shell messing up the
-    // file permissions in the user's home directory.
-    QString localKdeDir = readEnvPath(getuid() ? "KDEHOME" : "KDEROOTHOME");
-    if (!localKdeDir.isEmpty()) {
-        if (!localKdeDir.endsWith(QLatin1Char('/')))
-            localKdeDir += QLatin1Char('/');
-    } else {
-        // TODO KDE5: make localKdeDir equal to localXdgDir (which is determined further below and
-        // defaults to ~/.config) + '/' + $KDECONFIG (which would default to e.g. "KDE")
-        // This would mean ~/.config/KDE/ by default, more xdg-compliant.
-        localKdeDir =  QDir::homePath() + QLatin1Char('/') + QString::fromLatin1(KDE_DEFAULT_HOME) + QLatin1Char('/');
-    }
-
-    if (localKdeDir != QLatin1String("-/")) {
-        localKdeDir = KShell::tildeExpand(localKdeDir);
-        addPrefix(localKdeDir);
-    }
-
-    foreach (const QString &it, kdedirList) {
-        addPrefix(KShell::tildeExpand(it));
-    }
-    // end KDEDIRS
-
-    // begin XDG_CONFIG_XXX
-    QStringList xdgdirList;
-    QString xdgdirs = readEnvPath("XDG_CONFIG_DIRS");
-    if (!xdgdirs.isEmpty()) {
-        xdgdirList = splitPath(xdgdirs);
-    } else {
-        xdgdirList.clear();
-        xdgdirList.append(QString::fromLatin1("/etc/xdg"));
-        xdgdirList.append(QFile::decodeName(SYSCONF_INSTALL_DIR "/xdg"));
-    }
-
-    QString localXdgDir = readEnvPath("XDG_CONFIG_HOME");
-    if (!localXdgDir.isEmpty()) {
-        if (!localXdgDir.endsWith(QLatin1Char('/'))) {
-            localXdgDir += QLatin1Char('/');
-        }
-    } else {
-        localXdgDir = QDir::homePath() + QString::fromLatin1("/.config/");
-    }
-
-    localXdgDir = KShell::tildeExpand(localXdgDir);
-    addXdgConfigPrefix(localXdgDir);
-
-    foreach (const QString &it, xdgdirList) {
-        addXdgConfigPrefix(KShell::tildeExpand(it));
-    }
-    // end XDG_CONFIG_XXX
-
-    // begin XDG_DATA_XXX
-    QStringList kdedirDataDirs;
-    foreach (const QString &it, kdedirList) {
-        if (!it.endsWith(QLatin1Char('/'))) {
-            kdedirDataDirs.append(it + QLatin1String("/share/"));
-        } else {
-            kdedirDataDirs.append(it + QLatin1String("share/"));
-        }
-    }
-
-    xdgdirs = readEnvPath("XDG_DATA_DIRS");
-    if (!xdgdirs.isEmpty()) {
-        xdgdirList = splitPath(xdgdirs);
-        // Ensure the kdedirDataDirs are in there too,
-        // otherwise resourceDirs() will add kdedir/share/applications/kde4
-        // as returned by installPath(), and that's incorrect.
-        Q_FOREACH(const QString& dir, kdedirDataDirs) {
-            if (!xdgdirList.contains(dir, case_sensitivity)) {
-                xdgdirList.append(dir);
-            }
-        }
-    } else {
-        xdgdirList = kdedirDataDirs;
-        xdgdirList.append(QString::fromLatin1("/usr/local/share/"));
-        xdgdirList.append(QString::fromLatin1("/usr/share/"));
-        xdgdirList.append(QString::fromLatin1("/share/"));
-    }
-
-    localXdgDir = readEnvPath("XDG_DATA_HOME");
-    if (!localXdgDir.isEmpty()) {
-        if (localXdgDir[localXdgDir.length()-1] != QLatin1Char('/')) {
-            localXdgDir += QLatin1Char('/');
-        }
-    } else {
-        localXdgDir = QDir::homePath() + QLatin1String("/.local/share/");
-    }
-
-    localXdgDir = KShell::tildeExpand(localXdgDir);
-    addXdgDataPrefix(localXdgDir);
-
-    foreach (const QString &it, xdgdirList) {
-        addXdgDataPrefix(KShell::tildeExpand(it));
-    }
-    // end XDG_DATA_XXX
-
-    addResourceDir("lib", QLatin1String(LIB_INSTALL_DIR "/"), true);
-    addResourceDir("exe", QLatin1String(LIBEXEC_INSTALL_DIR), true );
-
-    addResourceType("qtplugins", "lib", QLatin1String("plugins"));
-
-    uint index = 0;
-    while (types_indices[index] != -1) {
-        addResourceType(types_string + types_indices[index], 0,
-            QLatin1String(types_string + types_indices[index+1]), true);
-        index+=2;
-    }
-
-    addResourceDir("home", QDir::homePath(), false);
-
-    addResourceType("autostart", "xdgconf-autostart", QLatin1String("/")); // merge them, start with xdg autostart
-    addResourceType("autostart", NULL, QLatin1String("share/autostart")); // KDE ones are higher priority
 }
 
 QString KStandardDirs::localkdedir() const

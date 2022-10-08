@@ -226,7 +226,7 @@ public:
      *
      * You may add as many as you need, but it is advised that there
      * is exactly one to make writing definite.
-     * All basic types are added by addKDEDefaults(),
+     * All basic types are added by the constructor,
      * but for those you can add more relative paths as well.
      *
      * The later a suffix is added, the higher its priority. Note, that the
@@ -738,14 +738,6 @@ private:
 
     class KStandardDirsPrivate;
     KStandardDirsPrivate* const d;
-
-    // Like their public counter parts but with an extra priority argument
-    // If priority is true, the directory is added directly after
-    // $KDEHOME/$XDG_DATA_HOME/$XDG_CONFIG_HOME
-    void addPrefix( const QString& dir, bool priority );
-    void addXdgConfigPrefix( const QString& dir, bool priority );
-    void addXdgDataPrefix( const QString& dir, bool priority );
-    void addKDEDefaults();
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KStandardDirs::SearchOptions)
