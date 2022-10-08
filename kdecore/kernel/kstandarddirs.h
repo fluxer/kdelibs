@@ -24,9 +24,8 @@
 #define KSTANDARDDIRS_H
 
 #include <kglobal.h>
-#include <QtCore/qmap.h>
 
-class KConfig;
+#include <QStringList>
 
 /**
  * @short Site-independent access to standard KDE directories.
