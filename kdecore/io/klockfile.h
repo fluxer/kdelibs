@@ -38,7 +38,7 @@ class KDECORE_EXPORT KLockFile
 {
 public:
     /*!
-        @brief Creates the object, does not attempt to aquire the lock
+        @brief Creates the object, does not attempt to acquire the lock
     */
     KLockFile(const QString &file);
 
@@ -68,7 +68,7 @@ public:
         //! @brief Return immediately, do not wait for the lock to become available
         NoBlockFlag = 1,
 
-        //! @brief Automatically remove a lock when it is detected that to be stale
+        //! @brief Automatically remove a lock when it is detected to be stale
         ForceFlag = 2
     };
     Q_DECLARE_FLAGS(LockFlags, LockFlag)
