@@ -870,7 +870,7 @@ QString KStandardDirs::realPath(const QString &dirname)
        return dirname;
 
     if (dirname.at(0) != QLatin1Char('/')) {
-        qWarning("realPath called with a relative path '%s', please fix", qPrintable(dirname));
+        qWarning("KStandardDirs::realPath called with a relative path '%s', please fix", qPrintable(dirname));
         return dirname;
     }
 
@@ -905,7 +905,7 @@ QString KStandardDirs::realPath(const QString &dirname)
     Q_ASSERT(!relative.isEmpty()); // infinite recursion ahead
     if (!relative.isEmpty()) {
         //qDebug() << "done, resolving" << dir << "and adding" << relative;
-        dir = realPath(dir) + relative;
+        dir = KStandardDirs::realPath(dir) + relative;
     }
     return dir;
 }
@@ -978,7 +978,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
 
         const QStringList dirs = m_relatives.value(type);
         const QString typeInstallPath = installPath(type); // could be empty
-        const QString installdir = typeInstallPath.isEmpty() ? QString() : realPath(typeInstallPath);
+        const QString installdir = typeInstallPath.isEmpty() ? QString() : KStandardDirs::realPath(typeInstallPath);
         const QString installprefix = installPath("kdedir");
         if (!dirs.isEmpty()) {
             bool local = true;
@@ -990,7 +990,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
                     QByteArray rel = it.mid(1, pos - 1).toUtf8();
                     QString rest = it.mid(pos + 1);
                     foreach (const QString &it2, resourceDirs(rel.constData())) {
-                        const QString path = realPath(it2 + rest);
+                        const QString path = KStandardDirs::realPath(it2 + rest);
                         testdir.setPath(path);
                         if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity)) {
                             candidates.append(path);
@@ -1014,7 +1014,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
                     foreach (const QString &it, dirs) {
                         if (it.startsWith(QLatin1Char('%')))
                             continue;
-                        const QString path = realPath(*pit + it);
+                        const QString path = KStandardDirs::realPath(*pit + it);
                         testdir.setPath(path);
                         if ((local || testdir.exists()) && !candidates.contains(path, case_sensitivity))
                             candidates.append(path);
@@ -1045,7 +1045,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
         foreach (const QString &it, m_absolutes.value(type)) {
             testdir.setPath(it);
             if (testdir.exists()) {
-                const QString filename = realPath(it);
+                const QString filename = KStandardDirs::realPath(it);
                 if (!candidates.contains(filename, case_sensitivity)) {
                     candidates.append(filename);
                 }
@@ -1196,11 +1196,11 @@ QString KStandardDirs::saveLocation(const char *type,
             } else {
                 // Check for existence of typed directory + suffix
                 if (strncmp(type, "xdgdata-", 8) == 0) {
-                    path = realPath(localxdgdatadir() + path) ;
+                    path = KStandardDirs::realPath(localxdgdatadir() + path) ;
                 } else if (strncmp(type, "xdgconf-", 8) == 0) {
-                    path = realPath(localxdgconfdir() + path);
+                    path = KStandardDirs::realPath(localxdgconfdir() + path);
                 } else {
-                    path = realPath(localkdedir() + path);
+                    path = KStandardDirs::realPath(localkdedir() + path);
                 }
             }
         } else {
@@ -1208,7 +1208,7 @@ QString KStandardDirs::saveLocation(const char *type,
             if (dirs.isEmpty()) {
                 qFatal("KStandardDirs: The resource type %s is not registered", type);
             } else {
-                path = realPath(dirs.first());
+                path = KStandardDirs::realPath(dirs.first());
             }
         }
 
