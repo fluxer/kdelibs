@@ -1090,8 +1090,6 @@ QString KStandardDirs::findExe(const QString &appname,
 {
     //kDebug(180) << "findExe(" << appname << ", pstr, " << ignoreExecBit << ") called";
 
-    QFileInfo info;
-
     // absolute or relative path?
     if (appname.contains(QDir::separator())) {
         //kDebug(180) << "findExe(): absolute path given";
