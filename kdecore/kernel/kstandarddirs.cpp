@@ -288,34 +288,6 @@ static void lookupPrefix(const QString& prefix, const QString& relpath,
     }
 }
 
-#ifdef Q_OS_LINUX
-static QString executablePrefix()
-{
-    char path_buffer[PATH_MAX + 1];
-    path_buffer[PATH_MAX] = 0;
-    int length = readlink ("/proc/self/exe", path_buffer, PATH_MAX);
-    if (length == -1)
-        return QString();
-
-    path_buffer[length] = '\0';
-
-    QString path = QFile::decodeName(path_buffer);
-
-    if(path.isEmpty())
-        return QString();
-
-    int pos = path.lastIndexOf(QLatin1Char('/')); // Skip filename
-    if(pos <= 0)
-        return QString();
-    pos = path.lastIndexOf(QLatin1Char('/'), pos - 1); // Skip last directory
-    if(pos <= 0)
-        return QString();
-
-    return path.left(pos);
-}
-#endif
-
-
 class KStandardDirs::KStandardDirsPrivate
 {
 public:
@@ -466,11 +438,6 @@ KStandardDirs::KStandardDirs()
     QString execPrefix(QFile::decodeName(EXEC_INSTALL_PREFIX));
     if (!execPrefix.isEmpty() && !kdedirList.contains(execPrefix, case_sensitivity))
         kdedirList.append(execPrefix);
-#ifdef Q_OS_LINUX
-    const QString linuxExecPrefix = executablePrefix();
-    if (!linuxExecPrefix.isEmpty())
-        kdedirList.append( linuxExecPrefix );
-#endif
 
     // We treat root differently to prevent a "su" shell messing up the
     // file permissions in the user's home directory.
