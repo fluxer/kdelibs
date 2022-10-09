@@ -936,6 +936,7 @@ QList<KArchiveEntry> KArchive::list(const QString &path) const
         if (!path.isEmpty()) {
             const QString pathnamestring = QFile::decodeName(pathname);
             if (!pathnamestring.startsWith(path)) {
+                ret = archive_read_next_header(readarchive, &entry);
                 continue;
             }
         }
