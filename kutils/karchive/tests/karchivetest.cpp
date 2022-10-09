@@ -58,6 +58,8 @@ private Q_SLOTS:
 
     void error_data();
     void error();
+
+    void encryption();
 };
 
 QTEST_KDEMAIN_CORE(KArchiveTest)
@@ -202,5 +204,31 @@ void KArchiveTest::error()
         QCOMPARE(karchive.errorString(), expectederror);
     }
 }
+
+void KArchiveTest::encryption()
+{
+    KArchive karchive(QFile::decodeName(KDESRCDIR "/tests_encryption.zip"));
+    QVERIFY(karchive.isReadable());
+    QVERIFY(karchive.requiresPassphrase());
+    QCOMPARE(karchive.list().size(), 1);
+
+    QStringList toextract = QStringList()
+        << QFile::decodeName("tests/CMakeLists.txt");
+    {
+        KTempDir ktempdir;
+        QVERIFY(ktempdir.exists());
+        QVERIFY(!karchive.extract(toextract, ktempdir.name()));
+        QCOMPARE(karchive.errorString(), QString::fromLatin1("archive_read_extract2: Passphrase required for this entry"));
+    }
+
+    {
+        KTempDir ktempdir;
+        QVERIFY(ktempdir.exists());
+        karchive.setReadPassphrase("foobar");
+        QVERIFY(karchive.extract(toextract, ktempdir.name()));
+        QCOMPARE(karchive.errorString(), QString());
+    }
+}
+
 
 #include "karchivetest.moc"

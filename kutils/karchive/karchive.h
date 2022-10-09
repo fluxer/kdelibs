@@ -151,9 +151,9 @@ public:
 
     //! @brief Returns if path has encrypted entries
     bool requiresPassphrase() const;
-    //! @brief Sets the passphrase to be used when reading the archive
+    //! @brief Sets the passphrase to be used when reading archive
     void setReadPassphrase(const QString &passphrase);
-    //! @brief Sets the passphrase to be used when writing the archive
+    //! @brief Sets the passphrase to be used when writing archive
     void setWritePassphrase(const QString &passphrase);
 
     //! @brief Returns human-readable description of the error that occured
