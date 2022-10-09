@@ -149,6 +149,13 @@ public:
     //! @brief Returns if path is writable archive
     bool isWritable() const;
 
+    //! @brief Returns if path has encrypted entries
+    bool requiresPassphrase() const;
+    //! @brief Sets the passphrase to be used when reading the archive
+    void setReadPassphrase(const QString &passphrase);
+    //! @brief Sets the passphrase to be used when writing the archive
+    void setWritePassphrase(const QString &passphrase);
+
     //! @brief Returns human-readable description of the error that occured
     QString errorString() const;
 

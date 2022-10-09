@@ -175,6 +175,7 @@ void KArchiveTest::error_data()
         << QString::fromLatin1("lstat: No such file or directory")
         << true << false << false
         << (QStringList() << "does_not_exist");
+    // TODO: test remove and extract
 }
 
 void KArchiveTest::error()

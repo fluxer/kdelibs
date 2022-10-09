@@ -254,10 +254,10 @@ public:
     QString m_path;
     bool m_writable;
     QString m_error;
+    QByteArray m_readpass;
+    QByteArray m_writepass;
 
 #if defined(HAVE_LIBARCHIVE)
-    static const char* passphraseCallback(struct archive* archiveptr, void* dataptr);
-
     struct archive* openRead(const QByteArray &path);
     struct archive* openWrite(const QByteArray &path);
     struct archive* openDisk(const bool preserve);
@@ -275,15 +275,6 @@ KArchivePrivate::KArchivePrivate()
 }
 
 #if defined(HAVE_LIBARCHIVE)
-const char* KArchivePrivate::passphraseCallback(struct archive* archiveptr, void* dataptr)
-{
-    // TODO: ask for password via KPasswordDialog
-    kWarning() << "Password-protected archives are not supported";
-    Q_UNUSED(archiveptr);
-    Q_UNUSED(dataptr);
-    return NULL;
-}
-
 struct archive* KArchivePrivate::openRead(const QByteArray &path)
 {
     struct archive* readarchive = archive_read_new();
@@ -291,7 +282,11 @@ struct archive* KArchivePrivate::openRead(const QByteArray &path)
     if (readarchive) {
         archive_read_support_filter_all(readarchive);
         archive_read_support_format_all(readarchive);
-        archive_read_set_passphrase_callback(readarchive, NULL, KArchivePrivate::passphraseCallback);
+
+        if (!m_readpass.isEmpty() && archive_read_add_passphrase(readarchive, m_readpass.constData()) != ARCHIVE_OK) {
+            m_error = i18n("archive_read_add_passphrase: %1", archive_error_string(readarchive));
+            kDebug() << m_error;
+        }
 
         if (archive_read_open_filename(readarchive, path, KARCHIVE_BUFFSIZE) != ARCHIVE_OK) {
             m_error = i18n("archive_read_open_filename: %1", archive_error_string(readarchive));
@@ -314,7 +309,11 @@ struct archive* KArchivePrivate::openWrite(const QByteArray &path)
         }
 
         archive_write_set_format_pax_restricted(writearchive);
-        archive_write_set_passphrase_callback(writearchive, NULL, KArchivePrivate::passphraseCallback);
+
+        if (!m_writepass.isEmpty() && archive_write_set_passphrase(writearchive, m_writepass.constData()) != ARCHIVE_OK) {
+            m_error = i18n("archive_write_set_passphrase: %1", archive_error_string(writearchive));
+            kDebug() << m_error;
+        }
 
         if (archive_write_open_filename(writearchive, path) != ARCHIVE_OK) {
             m_error = i18n("archive_write_open_filename: %1", archive_error_string(writearchive));
@@ -1113,6 +1112,32 @@ bool KArchive::isReadable() const
 bool KArchive::isWritable() const
 {
     return d->m_writable;
+}
+
+bool KArchive::requiresPassphrase() const
+{
+    bool result = false;
+
+#if defined(HAVE_LIBARCHIVE)
+    foreach (const KArchiveEntry &karchiveentry, KArchive::list()) {
+        if (karchiveentry.encrypted == true) {
+            result = true;
+            break;
+        }
+    }
+#endif
+
+    return result;
+}
+
+void KArchive::setReadPassphrase(const QString &passphrase)
+{
+    d->m_readpass = passphrase.toUtf8();
+}
+
+void KArchive::setWritePassphrase(const QString &passphrase)
+{
+    d->m_writepass = passphrase.toUtf8();
 }
 
 QString KArchive::errorString() const
