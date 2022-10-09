@@ -28,6 +28,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmimetype.h>
+#include <kuser.h>
 #include <kde_file.h>
 
 #if defined(HAVE_LIBARCHIVE)
@@ -594,16 +595,15 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         // NOTE: archive_entry_copy_stat doesn't work
         // http://linux.die.net/man/2/stat
         struct archive_entry* newentry = archive_entry_new();
-        archive_entry_set_pathname(newentry, pathname);
+        archive_entry_set_pathname(newentry, pathname.constData());
         archive_entry_set_size(newentry, statistic.st_size);
         archive_entry_set_gid(newentry, statistic.st_gid);
         archive_entry_set_uid(newentry, statistic.st_uid);
+        // filetype and mode are supposedly the same, permissions are set when mode is set
+        archive_entry_set_mode(newentry, statistic.st_mode);
         archive_entry_set_atime(newentry, statistic.st_atim.tv_sec, statistic.st_atim.tv_nsec);
         archive_entry_set_ctime(newentry, statistic.st_ctim.tv_sec, statistic.st_ctim.tv_nsec);
         archive_entry_set_mtime(newentry, statistic.st_mtim.tv_sec, statistic.st_mtim.tv_nsec);
-
-        // filetype and mode are supposedly the same, permissions are set when mode is set
-        archive_entry_set_mode(newentry, statistic.st_mode);
 
         if (statistic.st_nlink > 1) {
             // TODO: archive_entry_set_hardlink(newentry, pathname);
@@ -623,6 +623,19 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
             }
 
             archive_entry_set_symlink(newentry, linkbuffer.constData());
+        }
+
+        const QByteArray pathgname = KUserGroup(statistic.st_gid).name().toUtf8();
+        if (!pathgname.isEmpty()) {
+            archive_entry_set_gname(newentry, pathgname.constData());
+        } else {
+            kDebug() << "Empty group name";
+        }
+        const QByteArray pathuname = KUser(statistic.st_uid).loginName().toUtf8();
+        if (!pathuname.isEmpty()) {
+            archive_entry_set_uname(newentry, pathuname.constData());
+        } else {
+            kDebug() << "Empty user name";
         }
 
         if (archive_write_header(writearchive, newentry) != ARCHIVE_OK) {
