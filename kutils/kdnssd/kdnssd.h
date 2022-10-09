@@ -90,7 +90,7 @@ public:
         When the query is done @p finished() signal is emited and the result can be retrieved via
         the @p services() method.
     */
-    void startBrowse(const QByteArray &servicetype = QByteArray());
+    bool startBrowse(const QByteArray &servicetype = QByteArray());
     QList<KDNSSDService> services() const;
 
     /*!

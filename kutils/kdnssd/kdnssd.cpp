@@ -55,7 +55,7 @@ public:
     bool publishService(const QByteArray &servicetype, const uint serviceport, const QString &servicename);
     bool unpublishService();
 
-    void startBrowse(const QByteArray &servicetype);
+    bool startBrowse(const QByteArray &servicetype);
     QList<KDNSSDService> services() const;
     QString errorString() const;
 
@@ -197,7 +197,7 @@ bool KDNSSDPrivate::unpublishService()
 #endif
 }
 
-void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
+bool KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
 {
 #if defined(HAVE_AVAHI)
     // qDebug() << Q_FUNC_INFO << servicetype;
@@ -213,7 +213,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
         );
         if (!avahiservice) {
             m_errorstring = getAvahiClientError(m_avahiclient);
-            return;
+            return false;
         }
 
         m_pollcounter++;
@@ -241,7 +241,7 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
         );
         if (!avahibrowser) {
             m_errorstring = getAvahiClientError(m_avahiclient);
-            return;
+            return false;
         }
 
         m_pollcounter++;
@@ -252,6 +252,9 @@ void KDNSSDPrivate::startBrowse(const QByteArray &servicetype)
 
         avahi_service_browser_free(avahibrowser);
     }
+    return true;
+#else
+    return false;
 #endif // HAVE_AVAHI
 }
 
@@ -470,9 +473,9 @@ QList<KDNSSDService> KDNSSD::services() const
     return d->services();
 }
 
-void KDNSSD::startBrowse(const QByteArray &servicetype)
+bool KDNSSD::startBrowse(const QByteArray &servicetype)
 {
-    d->startBrowse(servicetype);
+    return d->startBrowse(servicetype);
 }
 
 QString KDNSSD::errorString() const
