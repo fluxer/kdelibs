@@ -311,113 +311,39 @@ public:
     KStandardDirs* q;
 };
 
-/* If you add a new resource type here, make sure to
- * 1) regenerate using "generate_string_table.pl types < tmpfile" with the data below in tmpfile.
- * 2) update the KStandardDirs class documentation
- * 3) update the list in kde-config.cpp
-
-data
-share/apps
-html
-share/doc/HTML
-icon
-share/icons
-config
-share/config
-pixmap
-share/pixmaps
-sound
-share/sounds
-locale
-share/locale
-services
-share/kde4/services
-servicetypes
-share/kde4/servicetypes
-wallpaper
-share/wallpapers
-templates
-share/templates
-exe
-bin
-module
-%lib/kde4
-qtplugins
-%lib/kde4/plugins
-kcfg
-share/config.kcfg
-xdgdata-apps
-applications
-xdgdata-icon
-icons
-xdgdata-pixmap
-pixmaps
-xdgdata-dirs
-desktop-directories
-xdgdata-mime
-mime
-xdgconf-menu
-menus
-xdgconf-autostart
-autostart
+/*
+    If you add a new resource type here, make sure to
+        1) update the KStandardDirs class documentation
+        2) update the list in kde-config.cpp
 */
-
-static const char types_string[] =
-    "data\0"
-    "share/apps\0"
-    "html\0"
-    "share/doc/HTML\0"
-    "icon\0"
-    "share/icons\0"
-    "config\0"
-    "share/config\0"
-    "pixmap\0"
-    "share/pixmaps\0"
-    "sound\0"
-    "share/sounds\0"
-    "locale\0"
-    "share/locale\0"
-    "services\0"
-    "share/kde4/services\0"
-    "servicetypes\0"
-    "share/kde4/servicetypes\0"
-    "wallpaper\0"
-    "share/wallpapers\0"
-    "templates\0"
-    "share/templates\0"
-    "exe\0"
-    "bin\0"
-    "module\0"
-    "%lib/kde4\0"
-    "qtplugins\0"
-    "%lib/kde4/plugins\0"
-    "kcfg\0"
-    "share/config.kcfg\0"
-    "xdgdata-apps\0"
-    "applications\0"
-    "xdgdata-icon\0"
-    "icons\0"
-    "xdgdata-pixmap\0"
-    "pixmaps\0"
-    "xdgdata-dirs\0"
-    "desktop-directories\0"
-    "xdgdata-mime\0"
-    "mime\0"
-    "xdgconf-menu\0"
-    "menus\0"
-    "xdgconf-autostart\0"
-    "autostart\0"
-    "\0";
-
-static const int types_indices[] = {
-       0,    5,   16,   21,   36,   41,   53,   60,
-      73,   80,   94,  100,  113,  120,  133,  142,
-     162,  175,  199,  209,  226,  236,  252,  256,
-     260,  267,  277,  287,  305,  310,  328,  341,
-     354,  367,  373,  388,  396,  409,  429,  442,
-     447,  460,  466,  484,   -1
+static const struct ResourcesTblData {
+    const char* const type;
+    const char* const relativename;
+} ResourcesTbl[] = {
+    { "data\0", "share/apps\0" },
+    { "html\0", "share/doc/HTML\0" },
+    { "icon\0", "share/icons\0" },
+    { "config\0", "share/config\0" },
+    { "pixmap\0", "share/pixmaps\0" },
+    { "sound\0", "share/sounds\0" },
+    { "locale\0", "share/locale\0" },
+    { "services\0", "share/kde4/services\0" },
+    { "servicetypes\0", "share/kde4/servicetypes\0" },
+    { "wallpaper\0", "share/wallpapers\0" },
+    { "templates\0", "share/templates\0" },
+    { "exe\0", "bin\0" },
+    { "module\0", "%lib/kde4\0" },
+    { "qtplugins\0", "%lib/kde4/plugins\0" },
+    { "kcfg\0", "share/config.kcfg\0" },
+    { "xdgdata-apps\0", "applications\0" },
+    { "xdgdata-icon\0", "icons\0" },
+    { "xdgdata-pixmap\0", "pixmaps\0" },
+    { "xdgdata-dirs\0", "desktop-directories\0" },
+    { "xdgdata-mime\0", "mime\0" },
+    { "xdgconf-menu\0", "menus\0" },
+    { "xdgconf-autostart\0", "autostart\0" }
 };
-
+static const qint16 ResourcesTblSize = sizeof(ResourcesTbl) / sizeof(ResourcesTblData);
 
 KStandardDirs::KStandardDirs()
     : d(new KStandardDirsPrivate(this))
@@ -490,9 +416,9 @@ KStandardDirs::KStandardDirs()
     QStringList kdedirDataDirs;
     foreach (const QString &it, kdedirList) {
         if (!it.endsWith(QLatin1Char('/'))) {
-            kdedirDataDirs.append(it + QLatin1String("/share/"));
+            kdedirDataDirs.append(it + QString::fromLatin1("/share/"));
         } else {
-            kdedirDataDirs.append(it + QLatin1String("share/"));
+            kdedirDataDirs.append(it + QString::fromLatin1("share/"));
         }
     }
 
@@ -520,7 +446,7 @@ KStandardDirs::KStandardDirs()
             localXdgDir += QLatin1Char('/');
         }
     } else {
-        localXdgDir = QDir::homePath() + QLatin1String("/.local/share/");
+        localXdgDir = QDir::homePath() + QString::fromLatin1("/.local/share/");
     }
 
     localXdgDir = KShell::tildeExpand(localXdgDir);
@@ -531,22 +457,19 @@ KStandardDirs::KStandardDirs()
     }
     // end XDG_DATA_XXX
 
-    addResourceDir("lib", QLatin1String(LIB_INSTALL_DIR "/"), true);
-    addResourceDir("exe", QLatin1String(LIBEXEC_INSTALL_DIR), true );
+    addResourceDir("lib", QString::fromLatin1(LIB_INSTALL_DIR "/"), true);
+    addResourceDir("exe", QString::fromLatin1(LIBEXEC_INSTALL_DIR), true );
 
-    addResourceType("qtplugins", "lib", QLatin1String("plugins"));
+    addResourceType("qtplugins", "lib", QString::fromLatin1("plugins"));
 
-    uint index = 0;
-    while (types_indices[index] != -1) {
-        addResourceType(types_string + types_indices[index], 0,
-            QLatin1String(types_string + types_indices[index+1]), true);
-        index+=2;
+    for (int i = 0; i < ResourcesTblSize; i++) {
+        addResourceType(ResourcesTbl[i].type, nullptr, QString::fromLatin1(ResourcesTbl[i].relativename), true);
     }
 
     addResourceDir("home", QDir::homePath(), false);
 
-    addResourceType("autostart", "xdgconf-autostart", QLatin1String("/")); // merge them, start with xdg autostart
-    addResourceType("autostart", NULL, QLatin1String("share/autostart")); // KDE ones are higher priority
+    addResourceType("autostart", "xdgconf-autostart", QString::fromLatin1("/")); // merge them, start with xdg autostart
+    addResourceType("autostart", nullptr, QString::fromLatin1("share/autostart")); // KDE ones are higher priority
 }
 
 KStandardDirs::~KStandardDirs()
@@ -557,8 +480,9 @@ KStandardDirs::~KStandardDirs()
 QStringList KStandardDirs::allTypes() const
 {
     QStringList list;
-    for (int i = 0; types_indices[i] != -1; i += 2) {
-        list.append(QString::fromLatin1(types_string + types_indices[i]));
+    list.reserve(ResourcesTblSize + 4);
+    for (int i = 0; i < ResourcesTblSize; i++) {
+        list.append(QString::fromLatin1(ResourcesTbl[i].type));
     }
     // Those are added manually by the constructor
     list.append(QString::fromLatin1("lib"));
@@ -1133,10 +1057,10 @@ QString KStandardDirs::findRootExe( const QString& appname,
 {
     QStringList exePaths = systemPaths( pstr );
     static const QStringList rootPaths = QStringList()
-        << QLatin1String("/sbin")
-        << QLatin1String("/usr/sbin")
-        << QLatin1String("/usr/local/sbin")
-        << QLatin1String(KDEDIR "/sbin");
+        << QString::fromLatin1("/sbin")
+        << QString::fromLatin1("/usr/sbin")
+        << QString::fromLatin1("/usr/local/sbin")
+        << QString::fromLatin1(KDEDIR "/sbin");
 
     foreach (const QString &rootPath, rootPaths) {
         if (exePaths.contains(rootPath) || !QDir(rootPath).exists()) {

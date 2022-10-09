@@ -48,14 +48,14 @@ static const struct HeadersTblData {
     const int headersize;
     const char *format;
 } HeadersTbl[] = {
-    { s_jp2header, 12, "jp2", },
-    { s_jpgjfifheader, 12, "jpg", },
-    { s_gif87aheader, 6, "gif", },
-    { s_gif89aheader, 6, "gif", },
-    { s_icoheader, 5, "ico", },
-    { s_jpgheader, 4, "jpg", },
-    { s_jpg2header, 4, "jpg", },
-    { s_bmpheader , 2, "bmp", }
+    { s_jp2header, 12, "jp2" },
+    { s_jpgjfifheader, 12, "jpg" },
+    { s_gif87aheader, 6, "gif" },
+    { s_gif89aheader, 6, "gif" },
+    { s_icoheader, 5, "ico" },
+    { s_jpgheader, 4, "jpg" },
+    { s_jpg2header, 4, "jpg" },
+    { s_bmpheader , 2, "bmp" }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
