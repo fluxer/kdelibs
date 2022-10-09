@@ -107,10 +107,11 @@ class KArchivePrivate;
 
     @todo set permissions on file after copy, same as the original
 */
-class KARCHIVE_EXPORT KArchive
+class KARCHIVE_EXPORT KArchive : public QObject
 {
+    Q_OBJECT
 public:
-    KArchive(const QString &path);
+    KArchive(const QString &path, QObject *parent = nullptr);
     ~KArchive();
 
     static bool isSupported();
@@ -128,7 +129,7 @@ public:
         @param destination existing directory, you can use @p QDir::mkpath(QString)
         @param preserve preserve advanced attributes (ACL/ATTR)
     */
-    bool extract(const QStringList &paths, const QString &destination, bool preserve = true) const;
+    bool extract(const QStringList &paths, const QString &destination, const bool preserve = true) const;
 
     /*!
         @brief List the content of the archive
@@ -137,10 +138,8 @@ public:
         @note Some formats list directories, some do not
     */
     QList<KArchiveEntry> list(const QString &path = QString()) const;
-
     //! @brief Get entry information for path in archive
     KArchiveEntry entry(const QString &path) const;
-
     //! @brief Get data for path in archive
     QByteArray data(const QString &path) const;
 
@@ -163,6 +162,13 @@ public:
     static QStringList readableMimeTypes();
     //! @brief Returns list of archive MIME types that are writable
     static QStringList writableMimeTypes();
+
+Q_SIGNALS:
+    /*!
+        @brief Signals how far operation (add, remove or extract) is from completing
+        @note The progress value is between 0.0 and 1.0
+    */
+    void progress(const qreal value) const;
 
 private:
     Q_DISABLE_COPY(KArchive);

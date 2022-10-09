@@ -427,8 +427,9 @@ bool KArchivePrivate::copyData(struct archive* readarchive, QByteArray *buffer)
 }
 #endif // HAVE_LIBARCHIVE
 
-KArchive::KArchive(const QString &path)
-    : d(new KArchivePrivate())
+KArchive::KArchive(const QString &path, QObject *parent)
+    : QObject(parent),
+    d(new KArchivePrivate())
 {
     d->m_path = path;
 
@@ -563,8 +564,11 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         KArchivePrivate::closeRead(readarchive);
     }
 
+    emit progress(0.0); // reset progress bars for example
     foreach (const QString &path, recursivepaths) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
+        // TODO: emit progress(qreal);
+
         const QByteArray localpath = QFile::encodeName(path);
 
         struct stat statistic;
@@ -671,6 +675,7 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
 
         result = true;
     }
+    emit progress(qreal(1.0)); // if no paths were added or error occured emit done anyway
 
     KArchivePrivate::closeWrite(writearchive);
 
@@ -728,10 +733,12 @@ bool KArchive::remove(const QStringList &paths) const
 
     QStringList notfound = paths;
 
+    emit progress(0.0);
     struct archive_entry* entry = archive_entry_new();
     int ret = archive_read_next_header(readarchive, &entry);
     while (ret != ARCHIVE_EOF) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
+        // TODO: emit progress(qreal);
 
         if (ret < ARCHIVE_OK) {
             d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
@@ -772,6 +779,7 @@ bool KArchive::remove(const QStringList &paths) const
 
         ret = archive_read_next_header(readarchive, &entry);
     }
+    emit progress(qreal(1.0));
 
     KArchivePrivate::closeWrite(writearchive);
     KArchivePrivate::closeRead(readarchive);
@@ -798,7 +806,7 @@ bool KArchive::remove(const QStringList &paths) const
     return result;
 }
 
-bool KArchive::extract(const QStringList &paths, const QString &destination, bool preserve) const
+bool KArchive::extract(const QStringList &paths, const QString &destination, const bool preserve) const
 {
     bool result = false;
 
@@ -833,10 +841,12 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, boo
 
     QStringList notfound = paths;
 
+    emit progress(0.0);
     struct archive_entry* entry = archive_entry_new();
     int ret = archive_read_next_header(readarchive, &entry);
     while (ret != ARCHIVE_EOF) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
+        // TODO: emit progress(qreal);
 
         if (ret < ARCHIVE_OK) {
             d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
@@ -878,6 +888,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, boo
 
         ret = archive_read_next_header(readarchive, &entry);
     }
+    emit progress(qreal(1.0));
 
     KArchivePrivate::closeWrite(writearchive);
     KArchivePrivate::closeRead(readarchive);
