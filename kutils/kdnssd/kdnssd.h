@@ -71,6 +71,8 @@ public:
     KDNSSD(QObject *parent = nullptr);
     ~KDNSSD();
 
+    static bool isSupported();
+
     /*!
         @brief Publishes service of type @p servicetype on port @p serviceport with name
         @p servicename on the default domain.

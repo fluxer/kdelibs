@@ -458,6 +458,15 @@ KDNSSD::~KDNSSD()
     delete d;
 }
 
+bool KDNSSD::isSupported()
+{
+#if defined(HAVE_AVAHI)
+    return true;
+#else
+    return false;
+#endif
+}
+
 bool KDNSSD::publishService(const QByteArray &servicetype, const uint serviceport, const QString &servicename)
 {
     return d->publishService(servicetype, serviceport, servicename);
