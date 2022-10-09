@@ -40,9 +40,7 @@
 
 #include <QtCore/QRegExp>
 #include <QtCore/QDir>
-#include <QtCore/QCache>
 #include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
 #include <QtCore/QStandardPaths>
 
 #include <stdlib.h>
@@ -74,6 +72,7 @@ static QString readEnvPath(const char *env)
     return QDir::fromNativeSeparators(QFile::decodeName(c_path));
 }
 
+// split path using : as delimiters
 static inline QStringList splitPath(const QString &path)
 {
     const int len = path.length();
@@ -1076,7 +1075,6 @@ QStringList KStandardDirs::systemPaths(const QString &pstr)
     }
 
     QStringList exePaths;
-    // split path using : as delimiters
     for (int i = 0; i < tokens.count(); i++) {
         exePaths << KShell::tildeExpand( tokens.at(i) );
     }
