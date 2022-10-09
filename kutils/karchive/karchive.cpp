@@ -864,7 +864,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, boo
         }
 
         if (archive_read_extract2(readarchive, entry, writearchive) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_read_extract2: %1", archive_error_string(writearchive));
+            d->m_error = i18n("archive_read_extract2: %1", archive_error_string(readarchive));
             kDebug() << d->m_error;
             result = false;
             break;
