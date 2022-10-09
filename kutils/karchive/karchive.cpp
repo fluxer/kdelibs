@@ -625,7 +625,6 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         if (archive_write_header(writearchive, newentry) != ARCHIVE_OK) {
             d->m_error = i18n("archive_write_header: %1", archive_error_string(writearchive));
             kDebug() << d->m_error;
-            archive_entry_free(newentry);
             result = false;
             break;
         }
