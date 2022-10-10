@@ -305,7 +305,6 @@ public:
 
     // Caches (protected by mutex in const methods, cf ctor docu)
     QMap<QByteArray, QStringList> m_dircache;
-    QMap<QByteArray, QString> m_savelocations;
     std::recursive_mutex m_cacheMutex; // resourceDirs is recursive
 
     KStandardDirs* q;
@@ -582,7 +581,6 @@ bool KStandardDirs::addResourceType(const char *type,
         }
         // clean the caches
         d->m_dircache.remove(typeBa);
-        d->m_savelocations.remove(typeBa);
         return true;
     }
     return false;
@@ -612,7 +610,6 @@ bool KStandardDirs::addResourceDir(const char *type,
         }
         // clean the caches
         d->m_dircache.remove(typeBa);
-        d->m_savelocations.remove(typeBa);
         return true;
     }
     return false;
@@ -1088,64 +1085,20 @@ QString KStandardDirs::saveLocation(const char *type,
                                     const QString &suffix,
                                     bool create) const
 {
-    std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
-    QString path = d->m_savelocations.value(type);
-    if (path.isEmpty()) {
-        QStringList dirs = d->m_relatives.value(type);
-        if (dirs.isEmpty() && (strcmp(type, "tmp") == 0 || strcmp(type, "cache") == 0)) {
-            (void) resourceDirs(type); // Generate tmp|cache resource.
-            dirs = d->m_relatives.value(type); // Search again.
-        }
-        if (!dirs.isEmpty()) {
-            path = dirs.first();
-
-            if (path.startsWith(QLatin1Char('%'))) {
-                // grab the "data" from "%data/apps"
-                const int pos = path.indexOf(QLatin1Char('/'));
-                const QByteArray rel = path.mid(1, pos - 1).toUtf8();
-                const QString rest = path.mid(pos + 1);
-                const QString basepath = saveLocation(rel.constData());
-                path = basepath + rest;
-            } else {
-                // Check for existence of typed directory + suffix
-                if (strncmp(type, "xdgdata-", 8) == 0) {
-                    path = KStandardDirs::realPath(localxdgdatadir() + path) ;
-                } else if (strncmp(type, "xdgconf-", 8) == 0) {
-                    path = KStandardDirs::realPath(localxdgconfdir() + path);
-                } else {
-                    path = KStandardDirs::realPath(localkdedir() + path);
-                }
-            }
-        } else {
-            dirs = d->m_absolutes.value(type);
-            if (dirs.isEmpty()) {
-                qFatal("KStandardDirs: The resource type %s is not registered", type);
-            } else {
-                path = KStandardDirs::realPath(dirs.first());
-            }
-        }
-
-        d->m_savelocations.insert(type, path.endsWith(QLatin1Char('/')) ? path : path + QLatin1Char('/'));
+    const QStringList dirs = resourceDirs(type); // Generate tmp|cache resource.
+    if (dirs.isEmpty()) {
+        qFatal("KStandardDirs: The resource type %s is not registered", type);
+        return QString();
     }
-    QString fullPath = path + suffix;
 
-    KDE_struct_stat st;
-    if (KDE::stat(fullPath, &st) != 0 || !(S_ISDIR(st.st_mode))) {
-        if (!create) {
-#ifndef NDEBUG
-            // Too much noise from kbuildsycoca4 -- it's fine if this happens from KConfig
-            // when parsing global files without a local equivalent.
-            //kDebug(180) << QString("save location %1 doesn't exist").arg(fullPath);
-#endif
-            return fullPath;
-        }
-        if (!KStandardDirs::makeDir(fullPath, 0700)) {
-            return fullPath;
-        }
-        d->m_dircache.remove(type);
-    }
+    QString fullPath = KStandardDirs::realPath(dirs.first()) + suffix;
     if (!fullPath.endsWith(QLatin1Char('/')))
         fullPath += QLatin1Char('/');
+
+    if (create && KStandardDirs::makeDir(fullPath, 0700)) {
+        d->m_dircache.remove(type);
+    }
+
     return fullPath;
 }
 
