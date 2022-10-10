@@ -63,7 +63,6 @@ int main(int argc, char **argv)
     KCmdLineArgs::init( argc, argv, &about);
 
     KCmdLineOptions options;
-    options.add("expandvars",  ki18n("Left for legacy support"));
     options.add("prefix",      ki18n("Compiled in prefix for KDE libraries"));
     options.add("exec-prefix", ki18n("Compiled in exec_prefix for KDE libraries"));
     options.add("localprefix", ki18n("Prefix in $HOME used to write files"));
