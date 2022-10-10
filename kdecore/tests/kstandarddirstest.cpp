@@ -157,18 +157,6 @@ void KStandarddirsTest::testFindAllResources()
     QVERIFY( !oneEndsWith( configFilesWithFilter, "share/config/accept-languages.codes" ) ); // didn't match the filter
     QCOMPARE(fileNames.count(), configFilesWithFilter.count());
     QVERIFY(fileNames.contains("kdebugrc"));
-
-#if 0
-    list = t.findAllResources("html", "en/*/index.html", false);
-    for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it) {
-        kDebug() << "docs " << (*it).toLatin1().constData();
-    }
-
-    list = t.findAllResources("html", "*/*/*.html", false);
-    for (QStringList::ConstIterator it = list.begin(); it != list.end(); ++it) {
-        kDebug() << "docs " << (*it).toLatin1().constData();
-    }
-#endif
 }
 
 void KStandarddirsTest::testFindAllResourcesNewDir()

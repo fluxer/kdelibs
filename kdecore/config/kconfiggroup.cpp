@@ -407,8 +407,6 @@ static QString translatePath( QString path ) // krazy:exclude=passbyvalue
    while (path[0] == QLatin1Char('/') && path[1] == QLatin1Char('/'))
        path.remove(0,1);
 
-   // we can not use KGlobal::dirs()->relativeLocation("home", path) here,
-   // since it would not recognize paths without a trailing '/'.
    // All of the 3 following functions to return the user's home directory
    // can return different paths. We have to test all them.
    const QString homeDir0 = QFile::decodeName(qgetenv("HOME"));

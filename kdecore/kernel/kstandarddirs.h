@@ -47,8 +47,8 @@
  * install location, and one is <tt>$KDEHOME</tt>.
  * Under these toplevel prefixes there are several well-defined suffixes
  * where specific resource types can be found.
- * For example, for the resource type @c "html" the suffixes could be
- * @c share/doc/HTML and @c share/doc/kde/HTML.
+ * For example, for the resource type @c "services" the suffixes could be
+ * @c share/services and @c share/kde4/services.
  * The search algorithm tries to locate the file under each prefix-suffix
  * combination.
  *
@@ -65,7 +65,6 @@
  * @li @c config - Configuration files.
  * @li @c data - Where applications store data.
  * @li @c exe - Executables in $prefix/bin. findExe() for a function that takes $PATH into account.
- * @li @c html - HTML documentation.
  * @li @c icon - Icons, see KIconLoader.
  * @li @c kcfg - KConfigXT config files.
  * @li @c lib - Libraries.
@@ -571,7 +570,6 @@ public:
      * of what this is all about.
      *
      * @li @c data - @c share/apps
-     * @li @c html - @c share/doc/HTML
      * @li @c icon - @c share/icon
      * @li @c config - @c share/config
      * @li @c pixmap - @c share/pixmaps

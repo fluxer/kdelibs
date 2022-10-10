@@ -321,7 +321,6 @@ static const struct ResourcesTblData {
     const char* const relativename;
 } ResourcesTbl[] = {
     { "data\0", "share/apps\0" },
-    { "html\0", "share/doc/HTML\0" },
     { "icon\0", "share/icons\0" },
     { "config\0", "share/config\0" },
     { "pixmap\0", "share/pixmaps\0" },
@@ -466,8 +465,6 @@ KStandardDirs::KStandardDirs()
         addResourceType(ResourcesTbl[i].type, nullptr, QString::fromLatin1(ResourcesTbl[i].relativename), true);
     }
 
-    addResourceDir("home", QDir::homePath(), false);
-
     addResourceType("autostart", "xdgconf-autostart", QString::fromLatin1("/")); // merge them, start with xdg autostart
     addResourceType("autostart", nullptr, QString::fromLatin1("share/autostart")); // KDE ones are higher priority
 }
@@ -486,7 +483,6 @@ QStringList KStandardDirs::allTypes() const
     }
     // Those are added manually by the constructor
     list.append(QString::fromLatin1("lib"));
-    //list.append(QString::fromLatin1("home")); // undocumented on purpose, said Waldo in r113855.
 
     // Those are handled by resourceDirs() itself
     list.append(QString::fromLatin1("tmp"));

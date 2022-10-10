@@ -119,7 +119,6 @@ int main(int argc, char **argv)
             "config", I18N_NOOP("Configuration files"),
             "data", I18N_NOOP("Where applications store data"),
             "exe", I18N_NOOP("Executables in $prefix/bin"),
-            "html", I18N_NOOP("HTML documentation"),
             "icon", I18N_NOOP("Icons"),
             "kcfg", I18N_NOOP("Configuration description files"),
             "lib", I18N_NOOP("Libraries"),
