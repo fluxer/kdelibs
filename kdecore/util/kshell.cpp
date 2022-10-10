@@ -87,18 +87,19 @@ QString KShell::envExpand( const QString &fname )
             int varend = varstart;
             int varlen = 0;
             while (varend < result.size()) {
-                if (result.at(varend) == QLatin1Char('{')) {
+                const QChar varchar = result.at(varend);
+                if (varchar == QLatin1Char('{')) {
                     varstart++;
                     varend++;
                     varlen++;
                     continue;
                 }
-                if (result.at(varend) == QLatin1Char('}')) {
+                if (varchar == QLatin1Char('}')) {
                     varlen++;
                     varend--;
                     break;
                 }
-                if (!isVariableChar(result.at(varend))) {
+                if (!isVariableChar(varchar)) {
                     break;
                 }
                 varlen++;
