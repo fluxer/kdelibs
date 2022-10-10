@@ -47,6 +47,7 @@
 #include <kglobalsettings.h>
 #include <kde_file.h>
 #include <kconfiggroup.h>
+#include <kshell.h>
 
 #include <stdlib.h>
 #include <assert.h>
@@ -1414,52 +1415,19 @@ static bool expandEnv(QString& text)
  */
 static bool expandTilde(QString& text)
 {
-    if (text.isEmpty() || (text.at(0) != QLatin1Char('~')))
+    if (text.isEmpty() || (text.at(0) != QLatin1Char('~'))) {
         return false;
-
-    bool expanded = false;
-
-    // Find the end of the user name = next '/' or ' '
-    //
-    int pos2 = text.indexOf(QLatin1Char(' '), 1);
-    int pos_tmp = text.indexOf(QLatin1Char('/'), 1);
-
-    if (pos2 == -1 || (pos_tmp != -1 && pos_tmp < pos2))
-        pos2 = pos_tmp;
-
-    if (pos2 == -1)
-        pos2 = text.length();
-
-    // Replace ~user if the user name is terminated by '/' or ' '
-    //
-    if (pos2 >= 0) {
-
-        QString user = text.mid(1, pos2 - 1);
-        QString dir;
-
-        // A single ~ is replaced with $HOME
-        //
-        if (user.isEmpty()) {
-            dir = QDir::homePath();
-        }
-        // ~user is replaced with the dir from passwd
-        //
-        else {
-            struct passwd* pw = ::getpwnam(user.toLocal8Bit());
-
-            if (pw)
-                dir = QFile::decodeName(pw->pw_dir);
-
-            ::endpwent();
-        }
-
-        if (!dir.isEmpty()) {
-            expanded = true;
-            text.replace(0, pos2, dir);
-        }
     }
 
-    return expanded;
+    const QString expanded = KShell::tildeExpand(text);
+    if (expanded.isEmpty()) {
+        return false;
+    }
+    if (expanded != text) {
+        text = expanded;
+        return true;
+    }
+    return false;
 }
 
 /*
