@@ -24,7 +24,8 @@
 #include "kdebug.h"
 
 #include <QtCore/QDir>
-#include <QtCore/QProcessEnvironment>
+
+#include <stdlib.h>
 
 namespace KShell {
 
@@ -75,10 +76,6 @@ static bool isVariableChar(const QChar &ch)
 
 QString KShell::envExpand( const QString &fname )
 {
-    if (!fname.contains(QLatin1Char('$'))) {
-        return fname;
-    }
-    const QProcessEnvironment qprocenv = QProcessEnvironment::systemEnvironment();
     QString result = fname;
     int i = 0;
     while (i < result.size()) {
@@ -105,9 +102,10 @@ QString KShell::envExpand( const QString &fname )
                 varlen++;
                 varend++;
             }
-            const QString varname = result.mid(varstart, varend - i - 1);
-            // kDebug() << "replacing" << varname << "with" << qprocenv.value(varname);
-            result = result.replace(i, varlen + 1, qprocenv.value(varname));
+            const QByteArray varname = result.mid(varstart, varend - i - 1).toLocal8Bit();
+            const QString varvalue = QString::fromLocal8Bit(::getenv(varname.constData()));
+            // kDebug() << "replacing" << varname << "with" << varvalue);
+            result = result.replace(i, varlen + 1, varvalue);
             i = 0;
             continue;
         }
