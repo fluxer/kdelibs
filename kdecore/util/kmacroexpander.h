@@ -88,16 +88,6 @@ public:
      * &quot;<tt>sh -c 'foo \%f'</tt>&quot; is taboo.
      * &quot;<tt>file=\%f sh -c 'foo "$file"'</tt>&quot; is OK.
      *
-     * <h3>Windows notes</h3>
-     *
-     * All quoting syntax supported by KShell is supported here as well.
-     * Additionally, command grouping via parentheses is recognized - note
-     * however, that the parser is much stricter about unquoted parentheses
-     * than cmd itself.
-     * The rest of the cmd syntax is simply ignored, as it is not expected
-     * to cause problems - do not use commands that embed other commands,
-     * though - &quot;<tt>for /f ...</tt>&quot; is taboo.
-     *
      * @param str the string in which macros are expanded in-place
      * @param pos the position inside the string at which parsing/substitution
      *  should start, and upon exit where processing stopped

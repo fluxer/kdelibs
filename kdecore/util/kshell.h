@@ -42,8 +42,6 @@ namespace KShell {
 
         /**
          * Perform tilde expansion.
-         * On Windows, this flag is ignored, as the Windows shell has no
-         * equivalent functionality.
          */
         TildeExpand = 1,
 
@@ -70,11 +68,6 @@ namespace KShell {
          * @c question @c mark and opening and closing @c square @c brackets
          * and the comment symbol @c hash @c mark.
          * Additionally, a variable assignment in the first word is recognized.
-         *
-         * A further meta character on Windows is the environment variable
-         * expansion symbol @c percent. Occurrences of @c \%PERCENT_SIGN% as
-         * inserted by quoteArg() are converted back and cause no bail-out,
-         * though.
          */
         AbortOnMeta = 2
     };
@@ -118,25 +111,6 @@ namespace KShell {
      *   backslash has a similar meaning to the one in C strings. Consult
      *   the bash manual for more information.
      *
-     * On Windows, the behavior is defined by the Microsoft C runtime. Qt and
-     * many other implementations comply with this standard, but many do not.
-     * - Whitespace splits tokens
-     * - A string enclosed in double quotes is not split
-     *   - 2N double quotes within a quoted string yield N literal quotes.
-     *     This is not documented on MSDN.
-     * - Backslashes have special semantics iff they are followed by a double
-     *   quote:
-     *   - 2N backslashes + double quote => N backslashes and begin/end quoting
-     *   - 2N+1 backslashes + double quote => N backslashes + literal quote
-     *
-     * If AbortOnMeta is used on Windows, this function applies cmd shell
-     * semantics before proceeding with word splitting:
-     * - Cmd ignores @em all special chars between double quotes.
-     *   Note that the quotes are @em not removed at this stage - the
-     *   tokenization rules described above still apply.
-     * - The @c circumflex is the escape char for everything including
-     *   itself.
-     *
      * @param cmd the command to split
      * @param flags operation flags, see \ref Option
      * @param err if not NULL, a status code will be stored at the pointer
@@ -147,9 +121,6 @@ namespace KShell {
 
     /**
      * Quotes and joins @p args together according to system shell rules.
-     *
-     * If the output is fed back into splitArgs(), the AbortOnMeta flag
-     * needs to be used on Windows. On *NIX, no such requirement exists.
      *
      * See quoteArg() for more info.
      *
@@ -167,11 +138,6 @@ namespace KShell {
      * It also prevents expansion of wild cards and environment variables.
      *
      * On *NIX, the output is POSIX shell compliant.
-     * On Windows, it is compliant with the argument splitting code of the
-     * Microsoft C runtime and the cmd shell used together.
-     * Occurrences of the @c percent @c sign are replaced with
-     * @c \%PERCENT_SIGN% to prevent spurious variable expansion;
-     * related KDE functions are prepared for this.
      *
      * @param arg the argument to quote
      * @return the quoted argument
@@ -180,9 +146,8 @@ namespace KShell {
 
     /**
      * Performs tilde expansion on @p path. Interprets "~/path" and
-     * "~user/path". If the path starts with an escaped tilde ("\~" on UNIX,
-     * "^~" on Windows), the escape char is removed and the path is returned
-     * as is.
+     * "~user/path". If the path starts with an escaped tilde ("\~" on UNIX),
+     * the escape char is removed and the path is returned as is.
      *
      * Note that if @p path starts with a tilde but cannot be properly expanded,
      * this function will return an empty string.
