@@ -131,7 +131,7 @@ bool KUser::operator !=(const KUser& user) const
 
 bool KUser::isValid() const
 {
-    return uid() != uid_t(-1);
+    return (uid() != uid_t(-1));
 }
 
 K_UID KUser::uid() const
@@ -146,7 +146,7 @@ K_GID KUser::gid() const
 
 bool KUser::isSuperUser() const
 {
-    return uid() == 0;
+    return (uid() == 0);
 }
 
 QString KUser::loginName() const
@@ -213,11 +213,11 @@ QList<KUser> KUser::allUsers()
     QList<KUser> result;
 
     struct passwd* p;
-    setpwent();
-    while ((p = getpwent())) {
+    ::setpwent();
+    while ((p = ::getpwent())) {
         result.append(KUser(p));
     }
-    endpwent();
+    ::endpwent();
 
     return result;
 }
@@ -227,11 +227,11 @@ QStringList KUser::allUserNames()
     QStringList result;
 
     struct passwd* p;
-    setpwent();
-    while ((p = getpwent()))  {
+    ::setpwent();
+    while ((p = ::getpwent()))  {
         result.append(QString::fromLocal8Bit(p->pw_name));
     }
-    endpwent();
+    ::endpwent();
 
     return result;
 }
@@ -261,19 +261,20 @@ public:
         if (p) {
             gid = p->gr_gid;
             name = QString::fromLocal8Bit(p->gr_name);
-            for (char **user = p->gr_mem; *user; user++)
+            for (char **user = p->gr_mem; *user; user++) {
                 users.append(KUser(*user));
+            }
         }
     }
 };
 
 KUserGroup::KUserGroup(KUser::UIDMode mode)
-    : d(new Private(getgrgid(KUser(mode).gid())))
+    : d(new Private(::getgrgid(KUser(mode).gid())))
 {
 }
 
 KUserGroup::KUserGroup(K_GID _gid)
-    : d(new Private(getgrgid(_gid)))
+    : d(new Private(::getgrgid(_gid)))
 {
 }
 
@@ -345,11 +346,11 @@ QList<KUserGroup> KUserGroup::allGroups()
     QList<KUserGroup> result;
 
     struct group* g;
-    setgrent();
-    while ((g = getgrent())) {
+    ::setgrent();
+    while ((g = ::getgrent())) {
         result.append(KUserGroup(g));
     }
-    endgrent();
+    ::endgrent();
 
     return result;
 }
@@ -359,11 +360,11 @@ QStringList KUserGroup::allGroupNames()
     QStringList result;
 
     struct group* g;
-    setgrent();
-    while ((g = getgrent()))  {
+    ::setgrent();
+    while ((g = ::getgrent()))  {
         result.append(QString::fromLocal8Bit(g->gr_name));
     }
-    endgrent();
+    ::endgrent();
 
     return result;
 }
