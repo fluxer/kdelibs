@@ -22,8 +22,14 @@
 #include "job.h"
 #include "job_p.h"
 #include "clipboardupdater_p.h"
-
-#include <config.h>
+#include "jobuidelegate.h"
+#include "kmimetype.h"
+#include "slave.h"
+#include "scheduler.h"
+#include "kdirwatch.h"
+#include "kprotocolinfo.h"
+#include "kprotocolmanager.h"
+#include "filejob.h"
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -33,10 +39,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>
-extern "C" {
-#include <pwd.h>
-#include <grp.h>
-}
+
 #include <QtCore/QList>
 #include <QtCore/QTimer>
 #include <QtCore/QFile>
@@ -47,15 +50,6 @@ extern "C" {
 #include <kdebug.h>
 #include <kde_file.h>
 #include <kdirnotify.h>
-
-#include "jobuidelegate.h"
-#include "kmimetype.h"
-#include "slave.h"
-#include "scheduler.h"
-#include "kdirwatch.h"
-#include "kprotocolinfo.h"
-#include "kprotocolmanager.h"
-#include "filejob.h"
 
 using namespace KIO;
 

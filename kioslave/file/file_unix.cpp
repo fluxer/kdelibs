@@ -37,14 +37,13 @@
 #include <kdebug.h>
 #include <kconfiggroup.h>
 #include <kmountpoint.h>
+#include <kuser.h>
 
 #include <dirent.h>
 #include <string.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <grp.h>
 #include <utime.h>
-#include <pwd.h>
 #include <stdlib.h>
 
 //sendfile has different semantics in different platforms
@@ -567,28 +566,28 @@ void FileProtocol::chown( const KUrl& url, const QString& owner, const QString& 
 
     // get uid from given owner
     {
-        struct passwd *p = ::getpwnam(owner.toLatin1());
+        const KUser kuser(owner);
 
-        if ( ! p ) {
+        if ( ! kuser.isValid() ) {
             error( KIO::ERR_SLAVE_DEFINED,
                    i18n( "Could not get user id for given user name %1", owner ) );
             return;
         }
 
-        uid = p->pw_uid;
+        uid = kuser.uid();
     }
 
     // get gid from given group
     {
-        struct group *p = ::getgrnam(group.toLatin1());
+        const KUserGroup kusergroup(group);
 
-        if ( ! p ) {
+        if ( ! kusergroup.isValid() ) {
             error( KIO::ERR_SLAVE_DEFINED,
                    i18n( "Could not get group id for given group name %1", group ) );
             return;
         }
 
-        gid = p->gr_gid;
+        gid = kusergroup.gid();
     }
 
     if ( ::chown(_path, uid, gid) == -1 ) {

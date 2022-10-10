@@ -27,12 +27,11 @@
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <kuser.h>
 #include <QtCore/QFile>
 
 #include <config.h>
 
-#include <pwd.h>
-#include <grp.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <assert.h>
@@ -272,20 +271,20 @@ ChmodJob *KIO::chmod( const KFileItemList& lstItems, int permissions, int mask,
     uid_t newOwnerID = uid_t(-1); // chown(2) : -1 means no change
     if ( !owner.isEmpty() )
     {
-        struct passwd* pw = getpwnam(QFile::encodeName(owner));
-        if ( pw == 0L )
+        const KUser kuser(owner);
+        if ( !kuser.isValid() )
             kError(250) << "No user" << owner;
         else
-            newOwnerID = pw->pw_uid;
+            newOwnerID = kuser.uid();
     }
     gid_t newGroupID = gid_t(-1); // chown(2) : -1 means no change
     if ( !group.isEmpty() )
     {
-        struct group* g = getgrnam(QFile::encodeName(group));
-        if ( g == 0L )
+        const KUserGroup kusergroup(group);
+        if ( kusergroup.isValid() )
             kError(250) << "No group" << group;
         else
-            newGroupID = g->gr_gid;
+            newGroupID = kusergroup.gid();
     }
     return ChmodJobPrivate::newJob(lstItems, permissions, mask, newOwnerID,
                                    newGroupID, recursive, flags);

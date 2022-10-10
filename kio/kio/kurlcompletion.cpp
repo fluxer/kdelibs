@@ -48,6 +48,7 @@
 #include <kde_file.h>
 #include <kconfiggroup.h>
 #include <kshell.h>
+#include <kuser.h>
 
 #include <stdlib.h>
 #include <assert.h>
@@ -56,7 +57,6 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <pwd.h>
 #include <time.h>
 #include <sys/param.h>
 
@@ -255,11 +255,12 @@ protected:
 
         // we don't need to handle prepend here, right? ~user is always at pos 0
         assert(m_prepend.isEmpty());
-        struct passwd* pw;
-        ::setpwent();
-        while ((pw = ::getpwent()) && !terminationRequested())
-            addMatch(tilde + QString::fromLocal8Bit(pw->pw_name));
-        ::endpwent();
+        foreach (const QString &user, KUser::allUserNames()) {
+            if (terminationRequested()) {
+                break;
+            }
+            addMatch(tilde + user);
+        }
 
         addMatch(QString(tilde));
 

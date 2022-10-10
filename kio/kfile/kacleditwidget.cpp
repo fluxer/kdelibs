@@ -43,15 +43,11 @@
 #include <kdialog.h>
 #include <khbox.h>
 #include <kstandarddirs.h>
+#include <kuser.h>
 
 #ifdef HAVE_ACL_LIBACL_H
 # include <acl/libacl.h>
 #endif
-extern "C" {
-#include <pwd.h>
-#include <grp.h>
-}
-#include <assert.h>
 
 static struct {
     const char* label;
@@ -617,19 +613,8 @@ KACLListView::KACLListView( QWidget* parent )
 
 
     // fill the lists of all legal users and groups
-    struct passwd *user = 0;
-    setpwent();
-    while ( ( user = getpwent() ) != 0 ) {
-       m_allUsers << QString::fromLatin1( user->pw_name );
-    }
-    endpwent();
-
-    struct group *gr = 0;
-    setgrent();
-    while ( ( gr = getgrent() ) != 0 ) {
-       m_allGroups << QString::fromLatin1( gr->gr_name );
-    }
-    endgrent();
+    m_allUsers = KUser::allUserNames();
+    m_allGroups << KUserGroup::allGroupNames();
     m_allUsers.sort();
     m_allGroups.sort();
 

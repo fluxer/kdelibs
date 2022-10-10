@@ -39,7 +39,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <grp.h>
 
 #if defined(HAVE_PTY_H)
 # include <pty.h>

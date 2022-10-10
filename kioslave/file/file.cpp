@@ -40,8 +40,6 @@
 #include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <grp.h>
-#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -74,6 +72,7 @@
 #include <kde_file.h>
 #include <kglobal.h>
 #include <kmimetype.h>
+#include <kuser.h>
 
 using namespace KIO;
 
@@ -731,12 +730,11 @@ void FileProtocol::put( const KUrl& url, int _mode, KIO::JobFlags _flags )
 QString FileProtocol::getUserName( uid_t uid ) const
 {
     if ( !mUsercache.contains( uid ) ) {
-        struct passwd *user = getpwuid( uid );
-        if ( user ) {
-            mUsercache.insert( uid, QString::fromLatin1(user->pw_name) );
-        }
-        else
+        const KUser kuser( uid );
+        if ( !kuser.isValid() ) {
             return QString::number( uid );
+        }
+        mUsercache.insert( uid, kuser.loginName() );
     }
     return mUsercache[uid];
 }
@@ -744,12 +742,11 @@ QString FileProtocol::getUserName( uid_t uid ) const
 QString FileProtocol::getGroupName( gid_t gid ) const
 {
     if ( !mGroupcache.contains( gid ) ) {
-        struct group *grp = getgrgid( gid );
-        if ( grp ) {
-            mGroupcache.insert( gid, QString::fromLatin1(grp->gr_name) );
-        }
-        else
+        const KUserGroup kusergroup( gid );
+        if ( !kusergroup.isValid() ) {
             return QString::number( gid );
+        }
+        mGroupcache.insert( gid, kusergroup.name() );
     }
     return mGroupcache[gid];
 }

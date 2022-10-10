@@ -23,11 +23,8 @@
 #include <config.h>
 
 #include <sys/time.h>
-#include <pwd.h>
-#include <grp.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <assert.h>
 #include <unistd.h>
 
 #include <QtCore/qdatetime.h>
@@ -50,6 +47,7 @@
 #include <kdesktopfile.h>
 #include <kmountpoint.h>
 #include <kconfiggroup.h>
+#include <kuser.h>
 #include <kfilesystemtype_p.h>
 
 static bool isKDirShare(const QString &dirpath)
@@ -682,10 +680,9 @@ QString KFileItemPrivate::user() const
         KDE_struct_stat buff;
         if ( KDE::lstat( m_url.toLocalFile( KUrl::RemoveTrailingSlash ), &buff ) == 0) // get uid/gid of the link, if it's a link
         {
-            struct passwd *pwuser = getpwuid( buff.st_uid );
-            if ( pwuser != 0 ) {
-                userName = QString::fromLocal8Bit(pwuser->pw_name);
-                m_entry.insert( KIO::UDSEntry::UDS_USER, userName );
+            const KUser kuser( buff.st_uid );
+            if ( kuser.isValid() ) {
+                m_entry.insert( KIO::UDSEntry::UDS_USER, kuser.loginName() );
             }
         }
     }
@@ -708,14 +705,12 @@ QString KFileItemPrivate::group() const
         KDE_struct_stat buff;
         if ( KDE::lstat( m_url.toLocalFile( KUrl::RemoveTrailingSlash ), &buff ) == 0) // get uid/gid of the link, if it's a link
         {
-            struct group *ge = getgrgid( buff.st_gid );
-            if ( ge != 0 ) {
-                groupName = QString::fromLocal8Bit(ge->gr_name);
-                if (groupName.isEmpty())
-                    groupName.sprintf("%d",ge->gr_gid);
+            const KUserGroup kusergroup( buff.st_gid );
+            if ( kusergroup.isValid() ) {
+                groupName = kusergroup.name();
             }
-            else
-                groupName.sprintf("%d",buff.st_gid);
+            if (groupName.isEmpty())
+                groupName = QString::number(buff.st_gid);
             m_entry.insert( KIO::UDSEntry::UDS_GROUP, groupName );
         }
     }
@@ -1045,8 +1040,7 @@ bool KFileItem::isReadable() const
         return false;
 
     /*
-      struct passwd * user = getpwuid( geteuid() );
-      bool isMyFile = (QString::fromLocal8Bit(user->pw_name) == d->m_user);
+      bool isMyFile = (KUser(KUser::UseEffectiveUID).loginName() == d->m_user);
       // This gets ugly for the group....
       // Maybe we want a static QString for the user and a static QStringList
       // for the groups... then we need to handle the deletion properly...
@@ -1075,8 +1069,7 @@ bool KFileItem::isWritable() const
         return false;
 
     /*
-      struct passwd * user = getpwuid( geteuid() );
-      bool isMyFile = (QString::fromLocal8Bit(user->pw_name) == d->m_user);
+      bool isMyFile = (KUser(KUser::UseEffectiveUID).loginName() == d->m_user);
       // This gets ugly for the group....
       // Maybe we want a static QString for the user and a static QStringList
       // for the groups... then we need to handle the deletion properly...

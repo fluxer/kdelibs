@@ -48,8 +48,6 @@
 #include <config.h>
 #include <config-acl.h>
 extern "C" {
-#include <pwd.h>
-#include <grp.h>
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -61,10 +59,10 @@ extern "C" {
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
+#include <QtCore/QStringList>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
 #include <QtGui/QCheckBox>
-#include <QtCore/qstringlist.h>
 #include <QtCore/QTextStream>
 #include <QtGui/QPainter>
 #include <QtGui/QLayout>
@@ -72,7 +70,6 @@ extern "C" {
 #include <QtGui/QProgressBar>
 #include <QVector>
 #include <QFileInfo>
-#include <QtCore/qvarlengtharray.h>
 
 #ifdef HAVE_POSIX_ACL
 #include <sys/acl.h>
@@ -119,6 +116,7 @@ extern "C" {
 #include <kshell.h>
 #include <kcapacitybar.h>
 #include <kfileitemlistproperties.h>
+#include <kuser.h>
 
 #include "ui_kpropertiesdesktopbase.h"
 #include "ui_kpropertiesdesktopadvbase.h"
@@ -1542,7 +1540,7 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
     QString fname = properties->kurl().fileName();
     bool isLocal = properties->kurl().isLocalFile();
     bool isTrash = ( properties->kurl().protocol().toLower() == "trash" );
-    bool IamRoot = (geteuid() == 0);
+    bool IamRoot = (::geteuid() == 0);
 
     const KFileItem item = properties->item();
     bool isLink = item.isLink();
@@ -1604,12 +1602,12 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
     bool isMyFile = false;
 
     if (isLocal && !d->strOwner.isEmpty()) { // local files, and all owned by the same person
-        struct passwd *myself = getpwuid( geteuid() );
-        if ( myself != 0L )
+        const KUser kuser(KUser::UseEffectiveUID);
+        if ( kuser.isValid() )
         {
-            isMyFile = (d->strOwner == QString::fromLocal8Bit(myself->pw_name));
+            isMyFile = (d->strOwner == kuser.loginName());
         } else
-            kWarning() << "I don't exist ?! geteuid=" << geteuid();
+            kWarning() << "I don't exist ?! geteuid=" << ::geteuid();
     } else {
         //We don't know, for remote files, if they are ours or not.
         //So we let the user change permissions, and
@@ -1718,7 +1716,6 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
    * OTOH, it is nice to offer this functionality for the standard user.
    */
     int i, maxEntries = 1000;
-    struct passwd *user;
 
     /* File owner: For root, offer a KLineEdit with autocompletion.
    * For a user, who can never chown() a file, offer a QLabel.
@@ -1728,10 +1725,9 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
         d->usrEdit = new KLineEdit( gb );
         KCompletion *kcom = d->usrEdit->completionObject();
         kcom->setOrder(KCompletion::Sorted);
-        setpwent();
-        for (i=0; ((user = getpwent()) != 0L) && (i < maxEntries); ++i)
-            kcom->addItem(QString::fromLatin1(user->pw_name));
-        endpwent();
+        const QStringList usernames = KUser::allUserNames();
+        for (i = 0; i < usernames.size() && i < maxEntries; ++i)
+            kcom->addItem(usernames.at(i));
         d->usrEdit->setCompletionMode((i < maxEntries) ? KGlobalSettings::CompletionAuto :
                                       KGlobalSettings::CompletionNone);
         d->usrEdit->setText(d->strOwner);
@@ -1748,30 +1744,11 @@ KFilePermissionsPropsPlugin::KFilePermissionsPropsPlugin( KPropertiesDialog *_pr
     /*** Set Group ***/
 
     QStringList groupList;
-    QByteArray strUser;
-    user = getpwuid(geteuid());
-    if (user != 0L) {
-        strUser = user->pw_name;
-
-#ifdef HAVE_GETGROUPLIST
+    const KUser kuser(KUser::UseEffectiveUID);
+    if (kuser.isValid()) {
         // pick the groups to which the user belongs
-        int groupCount = 0;
-        QVarLengthArray<gid_t> groups;
-        if (getgrouplist(strUser, user->pw_gid, NULL, &groupCount) < 0) {
-            groups.resize(groupCount);
-            if (groups.data())
-                getgrouplist(strUser, user->pw_gid, groups.data(), &groupCount);
-            else
-                groupCount = 0;
-        }
-
-        for (i = 0; i < groupCount; i++) {
-            struct group *mygroup = getgrgid(groups[i]);
-            if (mygroup)
-                groupList += QString::fromLocal8Bit(mygroup->gr_name);
-        }
+        groupList = kuser.groupNames();
     }
-#endif // HAVE_GETGROUPLIST
 
     bool isMyGroup = groupList.contains(d->strGroup);
 
@@ -3290,12 +3267,10 @@ void KDesktopPropsPlugin::slotAdvanced()
     // Provide username completion up to 1000 users.
     KCompletion *kcom = new KCompletion;
     kcom->setOrder(KCompletion::Sorted);
-    struct passwd *pw;
     int i, maxEntries = 1000;
-    setpwent();
-    for (i=0; ((pw = getpwent()) != 0L) && (i < maxEntries); i++)
-        kcom->addItem(QString::fromLatin1(pw->pw_name));
-    endpwent();
+    const QStringList usernames = KUser::allUserNames();
+    for (i = 0; i < usernames.size() && i < maxEntries; i++)
+        kcom->addItem(usernames.at(i));
     if (i < maxEntries)
     {
         w.suidEdit->setCompletionObject(kcom, true);

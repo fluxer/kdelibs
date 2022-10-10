@@ -22,20 +22,18 @@
 
 #include <config-acl.h>
 
-#include <sys/types.h>
-#include <pwd.h>
-#include <grp.h>
-#include <sys/stat.h>
-#ifdef HAVE_POSIX_ACL
-#include <sys/acl.h>
-#include <acl/libacl.h>
-#endif
 #include <QHash>
 #include <QList>
 #include <QPair>
-
 #include <kdebug.h>
+#include <kuser.h>
 
+#include <sys/types.h>
+#include <sys/stat.h>
+#ifdef HAVE_POSIX_ACL
+#  include <sys/acl.h>
+#  include <acl/libacl.h>
+#endif
 
 class KACL::KACLPrivate {
 public:
@@ -185,20 +183,12 @@ static void printACL( acl_t acl, const QString &comment )
 
 static int getUidForName( const QString& name )
 {
-    struct passwd *user = getpwnam( name.toLocal8Bit() );
-    if ( user )
-        return user->pw_uid;
-    else
-        return -1;
+    return KUser( name ).uid();
 }
 
 static int getGidForName( const QString& name )
 {
-    struct group *group = getgrnam( name.toLocal8Bit() );
-    if ( group )
-        return group->gr_gid;
-    else
-        return -1;
+    return KUserGroup( name ).gid();
 }
 #endif
 // ------------------ begin API implementation ------------
@@ -626,12 +616,11 @@ QString KACL::asString() const
 QString KACL::KACLPrivate::getUserName( uid_t uid ) const
 {
     if ( !m_usercache.contains( uid ) ) {
-        struct passwd *user = getpwuid( uid );
-        if ( user ) {
-            m_usercache.insert( uid, QString::fromLatin1(user->pw_name) );
-        }
-        else
+        const KUser kuser( uid );
+        if ( !kuser.isValid() ) {
             return QString::number( uid );
+        }
+        m_usercache.insert( uid, kuser.loginName() );
     }
     return m_usercache[uid];
 }
@@ -640,12 +629,11 @@ QString KACL::KACLPrivate::getUserName( uid_t uid ) const
 QString KACL::KACLPrivate::getGroupName( gid_t gid ) const
 {
     if ( !m_groupcache.contains( gid ) ) {
-        struct group *grp = getgrgid( gid );
-        if ( grp ) {
-            m_groupcache.insert( gid, QString::fromLatin1(grp->gr_name) );
-        }
-        else
+        const KUserGroup kusergroup( gid );
+        if ( !kusergroup.isValid() ) {
             return QString::number( gid );
+        }
+        m_groupcache.insert( gid, kusergroup.name() );
     }
     return m_groupcache[gid];
 }
