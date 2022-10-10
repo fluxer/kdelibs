@@ -977,7 +977,6 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
     return candidates;
 }
 
-
 QStringList KStandardDirs::systemPaths(const QString &pstr)
 {
     QStringList tokens;

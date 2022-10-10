@@ -19,7 +19,7 @@ if(IMAGEMAGICK_FOUND)
 
     install(
         TARGETS kimg_magick
-        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
     )
 endif(IMAGEMAGICK_FOUND)
 
@@ -39,6 +39,6 @@ if(WEBP_FOUND)
 
     install(
         TARGETS kimg_webp
-        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/imageformats
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
     )
 endif(WEBP_FOUND)

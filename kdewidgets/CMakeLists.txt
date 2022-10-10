@@ -36,7 +36,7 @@ if(QT_QTDESIGNER_FOUND)
 
     install(
         TARGETS kdewidgets
-        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/kde4/plugins/designer
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/designer
     )
 endif(QT_QTDESIGNER_FOUND)
 
