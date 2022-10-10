@@ -60,12 +60,6 @@
 #include <time.h>
 #include <sys/param.h>
 
-
-static bool expandTilde(QString&);
-static bool expandEnv(QString&);
-
-static QString unescape(const QString& text);
-
 // Permission mask for files that are executable by
 // user, group or other
 #define MODE_EXE (S_IXUSR | S_IXGRP | S_IXOTH)
@@ -74,6 +68,108 @@ static QString unescape(const QString& text);
 enum ComplType {CTNone = 0, CTEnv, CTUser, CTMan, CTExe, CTFile, CTUrl, CTInfo};
 
 class CompletionThread;
+
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+// Static functions
+
+/*
+ * expandEnv
+ *
+ * Expand environment variables in text. Escaped '$' are ignored.
+ * Return true if expansion was made.
+ */
+static bool expandEnv(QString& text)
+{
+    // Find all environment variables beginning with '$'
+    //
+    int pos = 0;
+
+    bool expanded = false;
+
+    while ((pos = text.indexOf(QLatin1Char('$'), pos)) != -1) {
+
+        // Skip escaped '$'
+        //
+        if (pos > 0 && text.at(pos - 1) == QLatin1Char('\\')) {
+            pos++;
+        }
+        // Variable found => expand
+        //
+        else {
+            // Find the end of the variable = next '/' or ' '
+            //
+            int pos2 = text.indexOf(QLatin1Char(' '), pos + 1);
+            int pos_tmp = text.indexOf(QLatin1Char('/'), pos + 1);
+
+            if (pos2 == -1 || (pos_tmp != -1 && pos_tmp < pos2))
+                pos2 = pos_tmp;
+
+            if (pos2 == -1)
+                pos2 = text.length();
+
+            // Replace if the variable is terminated by '/' or ' '
+            // and defined
+            //
+            if (pos2 >= 0) {
+                int len = pos2 - pos;
+                QString key = text.mid(pos + 1, len - 1);
+                QString value =
+                    QString::fromLocal8Bit(qgetenv(key.toLocal8Bit()));
+
+                if (!value.isEmpty()) {
+                    expanded = true;
+                    text.replace(pos, len, value);
+                    pos = pos + value.length();
+                } else {
+                    pos = pos2;
+                }
+            }
+        }
+    }
+
+    return expanded;
+}
+
+/*
+ * expandTilde
+ *
+ * Replace "~user" with the users home directory
+ * Return true if expansion was made.
+ */
+static bool expandTilde(QString& text)
+{
+    if (text.isEmpty() || (text.at(0) != QLatin1Char('~'))) {
+        return false;
+    }
+
+    const QString expanded = KShell::tildeExpand(text);
+    if (expanded.isEmpty()) {
+        return false;
+    }
+    if (expanded != text) {
+        text = expanded;
+        return true;
+    }
+    return false;
+}
+
+/*
+ * unescape
+ *
+ * Remove escapes and return the result in a new string
+ *
+ */
+static QString unescape(const QString& text)
+{
+    QString result;
+
+    for (int pos = 0; pos < text.length(); pos++)
+        if (text.at(pos) != QLatin1Char('\\'))
+            result.insert(result.length(), text.at(pos));
+
+    return result;
+}
 
 ///////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////
@@ -1344,108 +1440,6 @@ QString KUrlCompletion::replacedPath(const QString& text, bool replaceHome, bool
 QString KUrlCompletion::replacedPath(const QString& text) const
 {
     return replacedPath(text, d->replace_home, d->replace_env);
-}
-
-/////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////
-// Static functions
-
-/*
- * expandEnv
- *
- * Expand environment variables in text. Escaped '$' are ignored.
- * Return true if expansion was made.
- */
-static bool expandEnv(QString& text)
-{
-    // Find all environment variables beginning with '$'
-    //
-    int pos = 0;
-
-    bool expanded = false;
-
-    while ((pos = text.indexOf(QLatin1Char('$'), pos)) != -1) {
-
-        // Skip escaped '$'
-        //
-        if (pos > 0 && text.at(pos - 1) == QLatin1Char('\\')) {
-            pos++;
-        }
-        // Variable found => expand
-        //
-        else {
-            // Find the end of the variable = next '/' or ' '
-            //
-            int pos2 = text.indexOf(QLatin1Char(' '), pos + 1);
-            int pos_tmp = text.indexOf(QLatin1Char('/'), pos + 1);
-
-            if (pos2 == -1 || (pos_tmp != -1 && pos_tmp < pos2))
-                pos2 = pos_tmp;
-
-            if (pos2 == -1)
-                pos2 = text.length();
-
-            // Replace if the variable is terminated by '/' or ' '
-            // and defined
-            //
-            if (pos2 >= 0) {
-                int len = pos2 - pos;
-                QString key = text.mid(pos + 1, len - 1);
-                QString value =
-                    QString::fromLocal8Bit(qgetenv(key.toLocal8Bit()));
-
-                if (!value.isEmpty()) {
-                    expanded = true;
-                    text.replace(pos, len, value);
-                    pos = pos + value.length();
-                } else {
-                    pos = pos2;
-                }
-            }
-        }
-    }
-
-    return expanded;
-}
-
-/*
- * expandTilde
- *
- * Replace "~user" with the users home directory
- * Return true if expansion was made.
- */
-static bool expandTilde(QString& text)
-{
-    if (text.isEmpty() || (text.at(0) != QLatin1Char('~'))) {
-        return false;
-    }
-
-    const QString expanded = KShell::tildeExpand(text);
-    if (expanded.isEmpty()) {
-        return false;
-    }
-    if (expanded != text) {
-        text = expanded;
-        return true;
-    }
-    return false;
-}
-
-/*
- * unescape
- *
- * Remove escapes and return the result in a new string
- *
- */
-static QString unescape(const QString& text)
-{
-    QString result;
-
-    for (int pos = 0; pos < text.length(); pos++)
-        if (text.at(pos) != QLatin1Char('\\'))
-            result.insert(result.length(), text.at(pos));
-
-    return result;
 }
 
 #include "moc_kurlcompletion.cpp"
