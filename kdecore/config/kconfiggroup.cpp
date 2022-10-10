@@ -22,14 +22,14 @@
 
 #include "kconfiggroup.h"
 #include "kconfiggroup_p.h"
-
 #include "kconfig.h"
 #include "kconfig_p.h"
 #include "ksharedconfig.h"
 #include "kcomponentdata.h"
 #include "kconfigdata.h"
-#include <kdebug.h>
-#include <kurl.h>
+#include "kdebug.h"
+#include "kurl.h"
+#include "kshell.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QSharedData>
@@ -643,7 +643,7 @@ QString KConfigGroup::readEntry(const char* key, const QString& aDefault) const
         aValue = aDefault;
 
     if (expand)
-        return KConfigPrivate::expandString(aValue);
+        return KShell::envExpand(aValue);
 
     return aValue;
 }
@@ -764,7 +764,7 @@ QString KConfigGroup::readPathEntry(const char *key, const QString & aDefault) c
     if (aValue.isNull())
         aValue = aDefault;
 
-    return KConfigPrivate::expandString(aValue);
+    return KShell::envExpand(aValue);
 }
 
 QStringList KConfigGroup::readPathEntry(const QString& pKey, const QStringList& aDefault) const

@@ -32,6 +32,7 @@ class KShellTest : public QObject
     Q_OBJECT
 
   private Q_SLOTS:
+    void envExpand();
     void tildeExpand();
     void quoteArg();
     void joinArgs();
@@ -40,6 +41,26 @@ class KShellTest : public QObject
     void quoteSplit_data();
     void abortOnMeta();
 };
+
+void
+KShellTest::envExpand()
+{
+    QString me(KUser().loginName());
+    QCOMPARE(KShell::envExpand("$HOME"), QDir::homePath());
+    QCOMPARE(KShell::envExpand("${HOME}"), QDir::homePath());
+    QCOMPARE(KShell::envExpand("\\$HOME"), QString("\\$HOME"));
+    QCOMPARE(KShell::envExpand("$HOME/dir"), QString(QDir::homePath()+"/dir"));
+    QCOMPARE(KShell::envExpand("${HOME}/dir"), QString(QDir::homePath()+"/dir"));
+    QCOMPARE(KShell::envExpand("\\${HOME}/dir"), QString("\\${HOME}/dir"));
+    QCOMPARE(KShell::envExpand("$LOGNAME"), me); 
+    QCOMPARE(KShell::envExpand("${LOGNAME}"), me);
+    QCOMPARE(KShell::envExpand("$HOME/$LOGNAME"), QString(QDir::homePath()+"/" + me));
+    QCOMPARE(KShell::envExpand("\\$HOME/$LOGNAME"), QString("\\$HOME/" + me));
+    QCOMPARE(KShell::envExpand("$HOME/\\$LOGNAME"), QString(QDir::homePath()+"/\\$LOGNAME"));
+    QCOMPARE(KShell::envExpand("${HOME}/${LOGNAME}"), QString(QDir::homePath()+"/" + me));
+    QCOMPARE(KShell::envExpand("\\${HOME}/${LOGNAME}"), QString("\\${HOME}/" + me));
+    QCOMPARE(KShell::envExpand("${HOME}/\\${LOGNAME}"), QString(QDir::homePath()+"/\\${LOGNAME}"));
+}
 
 void
 KShellTest::tildeExpand()

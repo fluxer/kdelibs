@@ -21,8 +21,10 @@
 
 #include "kshell.h"
 #include "kuser.h"
+#include "kdebug.h"
 
 #include <QtCore/QDir>
+#include <QtCore/QProcessEnvironment>
 
 namespace KShell {
 
@@ -60,4 +62,55 @@ QString KShell::tildeExpand( const QString &fname )
         return fname.mid(1);
     }
     return fname;
+}
+
+static bool isVariableChar(const QChar &ch)
+{
+    const char c = ch.toLatin1();
+    if ((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_') {
+        return true;
+    }
+    return false;
+}
+
+QString KShell::envExpand( const QString &fname )
+{
+    if (!fname.contains(QLatin1Char('$'))) {
+        return fname;
+    }
+    const QProcessEnvironment qprocenv = QProcessEnvironment::systemEnvironment();
+    QString result = fname;
+    int i = 0;
+    while (i < result.size()) {
+        if (result.at(i) == QLatin1Char('$') && result[i - 1] != QLatin1Char('\\')) {
+            int varstart = i + 1;
+            int varend = varstart;
+            int varlen = 0;
+            while (varend < result.size()) {
+                if (result.at(varend) == QLatin1Char('{')) {
+                    varstart++;
+                    varend++;
+                    varlen++;
+                    continue;
+                }
+                if (result.at(varend) == QLatin1Char('}')) {
+                    varlen++;
+                    varend--;
+                    break;
+                }
+                if (!isVariableChar(result.at(varend))) {
+                    break;
+                }
+                varlen++;
+                varend++;
+            }
+            const QString varname = result.mid(varstart, varend - i - 1);
+            // kDebug() << "replacing" << varname << "with" << qprocenv.value(varname);
+            result = result.replace(i, varlen + 1, qprocenv.value(varname));
+            i = 0;
+            continue;
+        }
+        i++;
+    }
+    return result;
 }

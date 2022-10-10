@@ -63,8 +63,6 @@ public:
     QSet<QByteArray> allSubGroups(const QByteArray& parentGroup) const;
     bool hasNonDeletedEntries(const QByteArray& group) const;
 
-    static QString expandString(const QString& value);
-
 protected:
     KSharedPtr<KConfigIniBackend> mBackend;
 

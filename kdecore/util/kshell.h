@@ -156,6 +156,16 @@ namespace KShell {
      * @return the expanded path
      */
     KDECORE_EXPORT QString tildeExpand( const QString &path );
+
+    /**
+     * Performs variable expansion on @p str. Interprets "$PATH/bin" and
+     * "${PATH}/bin". If the dollar sign is escaped the variable is not
+     * expanded.
+     *
+     * @param str the string to expand
+     * @return the expanded string
+     */
+    KDECORE_EXPORT QString envExpand( const QString &str );
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(KShell::Options)
