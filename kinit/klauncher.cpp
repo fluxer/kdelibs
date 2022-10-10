@@ -1083,7 +1083,7 @@ KLauncher::requestSlave(const QString &protocol,
     if (mSlaveValgrind == protocol) {
        KPluginLoader lib(name, KGlobal::mainComponent());
        arg_list.prepend(lib.fileName());
-       arg_list.prepend(KStandardDirs::locate("exe", QString::fromLatin1("kioslave")));
+       arg_list.prepend(KStandardDirs::findExe(QString::fromLatin1("kioslave")));
        name = QString::fromLatin1("valgrind");
 
        if (!mSlaveValgrindSkin.isEmpty()) {

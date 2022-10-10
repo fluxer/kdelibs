@@ -439,7 +439,7 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
        const QStringList args = QStringList() << lib_path << protocol << "" << slaveAddress;
        kDebug() << "kioslave" << ", " << lib_path << ", " << protocol << ", " << QString() << ", " << slaveAddress;
 
-       QProcess::startDetached( KStandardDirs::locate("exe", "kioslave"), args );
+       QProcess::startDetached( KStandardDirs::findExe("kioslave"), args );
 
        return slave;
     }
