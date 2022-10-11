@@ -38,7 +38,6 @@
 #include <kaboutdata.h>
 #include <kshell.h>
 #include <kdebug.h>
-#include <kshell.h>
 
 #include <qbytearray.h>
 #include <qfile.h>
