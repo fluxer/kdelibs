@@ -15,6 +15,7 @@ set(cmakeFilesDontInstall
     FindDevinfo.cmake
     FindFFmpeg.cmake
     FindSpeechd.cmake
+    FindLibRaw.cmake
 )
 
 # Explicitly list all files which will be installed.
