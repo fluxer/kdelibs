@@ -287,13 +287,6 @@ static void lookupPrefix(const QString& prefix, const QString& relpath,
 class KStandardDirs::KStandardDirsPrivate
 {
 public:
-    KStandardDirsPrivate(KStandardDirs* qq)
-        : q(qq)
-    { }
-
-    QStringList resourceDirs(const char* type);
-    void createSpecialResource(const char*);
-
     QStringList xdgdata_prefixes;
     QStringList xdgconf_prefixes;
     QStringList m_prefixes;
@@ -306,8 +299,6 @@ public:
     // Caches (protected by mutex in const methods, cf ctor docu)
     QMap<QByteArray, QStringList> m_dircache;
     std::recursive_mutex m_cacheMutex; // resourceDirs is recursive
-
-    KStandardDirs* q;
 };
 
 /*
@@ -344,7 +335,7 @@ static const struct ResourcesTblData {
 static const qint16 ResourcesTblSize = sizeof(ResourcesTbl) / sizeof(ResourcesTblData);
 
 KStandardDirs::KStandardDirs()
-    : d(new KStandardDirsPrivate(this))
+    : d(new KStandardDirsPrivate())
 {
     QStringList kdedirList;
     // begin KDEDIRS
@@ -456,7 +447,10 @@ KStandardDirs::KStandardDirs()
     // end XDG_DATA_XXX
 
     addResourceDir("lib", QString::fromLatin1(LIB_INSTALL_DIR "/"), true);
-    addResourceDir("exe", QString::fromLatin1(LIBEXEC_INSTALL_DIR), true );
+    addResourceDir("exe", QString::fromLatin1(LIBEXEC_INSTALL_DIR), true);
+    // NOTE: QStandardPaths::writableLocation() should create the base directory
+    addResourceDir("cache", QStandardPaths::writableLocation(QStandardPaths::CacheLocation), true);
+    addResourceDir("tmp", QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation), true);
 
     addResourceType("qtplugins", "lib", QString::fromLatin1("plugins"));
 
@@ -482,8 +476,6 @@ QStringList KStandardDirs::allTypes() const
     }
     // Those are added manually by the constructor
     list.append(QString::fromLatin1("lib"));
-
-    // Those are handled by resourceDirs() itself
     list.append(QString::fromLatin1("tmp"));
     list.append(QString::fromLatin1("cache"));
     // Those are handled by installPath()
@@ -649,7 +641,7 @@ quint32 KStandardDirs::calcResourceHash(const char *type,
         return updateHash(filename, hash);
     }
 
-    foreach (const QString &it, d->resourceDirs(type)) {
+    foreach (const QString &it, resourceDirs(type)) {
         hash = updateHash(it + filename, hash);
         if (!( options & Recursive ) && hash) {
             return hash;
@@ -676,7 +668,7 @@ QStringList KStandardDirs::findDirs(const char *type,
         return list;
     }
 
-    foreach (const QString &it, d->resourceDirs(type)) {
+    foreach (const QString &it, resourceDirs(type)) {
         testdir.setPath(it + reldir);
         if (testdir.exists()) {
             list.append(testdir.absolutePath() + QLatin1Char('/'));
@@ -696,7 +688,7 @@ QString KStandardDirs::findResourceDir(const char *type,
     }
 #endif
 
-    foreach (const QString &it, d->resourceDirs(type)) {
+    foreach (const QString &it, resourceDirs(type)) {
         if (KStandardDirs::exists(it + filename)) {
             return it;
         }
@@ -745,7 +737,7 @@ KStandardDirs::findAllResources(const char *type,
         candidates << QString::fromLatin1("/");
         filterPath = filterPath.mid(1);
     } else {
-        candidates = d->resourceDirs(type);
+        candidates = resourceDirs(type);
     }
 
     if (filterFile.isEmpty()) {
@@ -843,53 +835,22 @@ KStandardDirs::realFilePath(const QString &filename)
     return filename;
 }
 
-void KStandardDirs::KStandardDirsPrivate::createSpecialResource(const char *type)
-{
-    QString resourceDir;
-    if (qstrcmp(type, "cache") == 0) {
-        resourceDir = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-        resourceDir.append(QDir::separator());
-        resourceDir.append(QLatin1String("katana"));
-    } else if (qstrcmp(type, "tmp") == 0) {
-        resourceDir = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation);
-        // if the base directory is /tmp not /run/user/<uid> make sure it is user specific
-        resourceDir.append(QDir::separator());
-        resourceDir.append(QLatin1String("katana-"));
-        resourceDir.append(QString::number(::getuid()));
-    } else {
-        Q_ASSERT(false);
-    }
-    // NOTE: QStandardPaths::writableLocation() should create the base directory
-    const QString cleanPath = QDir::cleanPath(resourceDir) + QLatin1Char('/');
-    KStandardDirs::makeDir(cleanPath, 0700);
-    q->addResourceDir(type, cleanPath, false);
-}
-
 QStringList KStandardDirs::resourceDirs(const char *type) const
 {
-    return d->resourceDirs(type);
-}
+    std::lock_guard<std::recursive_mutex> lock(d->m_cacheMutex);
 
-QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
-{
-    std::lock_guard<std::recursive_mutex> lock(m_cacheMutex);
-
-    QMap<QByteArray, QStringList>::const_iterator dirCacheIt = m_dircache.constFind(type);
+    QMap<QByteArray, QStringList>::const_iterator dirCacheIt = d->m_dircache.constFind(type);
 
     QStringList candidates;
 
-    if (dirCacheIt != m_dircache.constEnd()) {
+    if (dirCacheIt != d->m_dircache.constEnd()) {
         //qDebug() << this << "resourceDirs(" << type << "), in cache already";
         candidates = *dirCacheIt;
     } else { // filling cache
         //qDebug() << this << "resourceDirs(" << type << "), not in cache";
-        if (strcmp(type, "tmp") == 0 || strcmp(type, "cache") == 0) {
-            createSpecialResource(type);
-        }
-
         QDir testdir;
 
-        const QStringList dirs = m_relatives.value(type);
+        const QStringList dirs = d->m_relatives.value(type);
         const QString typeInstallPath = installPath(type); // could be empty
         const QString installdir = typeInstallPath.isEmpty() ? QString() : KStandardDirs::realPath(typeInstallPath);
         const QString installprefix = installPath("kdedir");
@@ -915,11 +876,11 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
 
             const QStringList *prefixList = 0;
             if (strncmp(type, "xdgdata-", 8) == 0) {
-                prefixList = &(xdgdata_prefixes);
+                prefixList = &(d->xdgdata_prefixes);
             } else if (strncmp(type, "xdgconf-", 8) == 0) {
-                prefixList = &(xdgconf_prefixes);
+                prefixList = &(d->xdgconf_prefixes);
             } else {
-                prefixList = &m_prefixes;
+                prefixList = &d->m_prefixes;
             }
 
             for (QStringList::ConstIterator pit = prefixList->begin(); pit != prefixList->end(); ++pit) {
@@ -955,7 +916,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
                 candidates.append(installdir);
         }
 
-        foreach (const QString &it, m_absolutes.value(type)) {
+        foreach (const QString &it, d->m_absolutes.value(type)) {
             testdir.setPath(it);
             if (testdir.exists()) {
                 const QString filename = KStandardDirs::realPath(it);
@@ -967,7 +928,7 @@ QStringList KStandardDirs::KStandardDirsPrivate::resourceDirs(const char* type)
 
         // Insert result into the cache for next time.
         //kDebug() << this << "Inserting" << type << candidates << "into dircache";
-        m_dircache.insert(type, candidates);
+        d->m_dircache.insert(type, candidates);
     }
 
 #if 0
