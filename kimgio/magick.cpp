@@ -35,12 +35,9 @@ static const ushort s_peekbuffsize = 32;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 static const uchar s_jp2header[] = { 0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87, 0x0A };
-static const uchar s_jpgjfifheader[] = { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01 };
 static const uchar s_gif87aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };
 static const uchar s_gif89aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
-static const uchar s_jpgheader[] = { 0xFF, 0xD8, 0xFF, 0xE0 };
-static const uchar s_jpg2header[] = { 0xFF, 0xD8, 0xFF, 0xEE };
 static const uchar s_bmpheader[] = { 0x42, 0x4D };
 
 static const struct HeadersTblData {
@@ -49,12 +46,9 @@ static const struct HeadersTblData {
     const char *format;
 } HeadersTbl[] = {
     { s_jp2header, 12, "jp2" },
-    { s_jpgjfifheader, 12, "jpg" },
     { s_gif87aheader, 6, "gif" },
     { s_gif89aheader, 6, "gif" },
     { s_icoheader, 5, "ico" },
-    { s_jpgheader, 4, "jpg" },
-    { s_jpg2header, 4, "jpg" },
     { s_bmpheader , 2, "bmp" }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
@@ -64,7 +58,6 @@ static QList<std::string> s_whitelist = QList<std::string>()
     << std::string("XBM")
     << std::string("BMP")
     << std::string("ICO")
-    << std::string("JPEG")
     << std::string("JP2")
     << std::string("GIF")
     << std::string("PNG");

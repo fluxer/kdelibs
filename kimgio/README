@@ -5,6 +5,7 @@ Current formats include:
 
 WEBP    <read> <write>
 RAW     <read>
+JPEG    <read>
 
 along with whatever ImageMagick supports but it is assumed that it supports
 reading atleast the following formats (even if they cannot be loaded because
@@ -14,7 +15,6 @@ PGM     <read>
 XBM     <read>
 BMP     <read>
 ICO     <read>
-JPEG    <read>
 JP2     <read>
 GIF     <read>
 

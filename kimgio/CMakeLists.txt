@@ -63,3 +63,23 @@ if(LIBRAW_FOUND)
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
     )
 endif(LIBRAW_FOUND)
+
+##################################
+
+if(LIBJPEG_FOUND)
+    include_directories(${LIBJPEG_INCLUDE_DIR})
+    kde4_add_plugin(kimg_jpeg jpeg.cpp)
+    target_link_libraries(kimg_jpeg
+        ${KDE4_KDECORE_LIBS}
+        ${QT_QTGUI_LIBRARY}
+        ${LIBJPEG_LIBRARIES}
+    )
+    set_target_properties(kimg_jpeg PROPERTIES
+        OUTPUT_NAME jpeg
+    )
+
+    install(
+        TARGETS kimg_jpeg
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
+    )
+endif(LIBJPEG_FOUND)

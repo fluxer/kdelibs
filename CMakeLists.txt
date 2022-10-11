@@ -185,6 +185,14 @@ set_package_properties(LibRaw PROPERTIES
     TYPE OPTIONAL
 )
 
+kde4_optional_find_package(LibJPEG)
+set_package_properties(LibJPEG PROPERTIES
+    DESCRIPTION "JPEG image codec that uses SIMD instructions"
+    URL "https://libjpeg-turbo.org/"
+    PURPOSE "Support for JPEG image format"
+    TYPE OPTIONAL
+)
+
 # v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
 kde4_optional_find_package(UDev 143)
 set_package_properties(UDev PROPERTIES
