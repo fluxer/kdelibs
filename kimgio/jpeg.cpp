@@ -26,6 +26,7 @@
 static const char* const s_jpegpluginformat = "jpg";
 
 static const ushort s_peekbuffsize = 32;
+static const TJPF s_jpegpixelformat = TJPF_ARGB;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 static const uchar s_jpgjfifheader[] = { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01 };
@@ -64,7 +65,7 @@ bool JPEGHandler::canRead() const
 
 bool JPEGHandler::read(QImage *image)
 {
-    QByteArray data = device()->readAll();
+    const QByteArray data = device()->readAll();
 
     tjhandle jpegdecomp = tjInitDecompress();
     if (!jpegdecomp) {
@@ -88,8 +89,7 @@ bool JPEGHandler::read(QImage *image)
         return false;
     }
 
-    static int s_jpegpixelFormat = TJPF_ARGB;
-    int jpegbuffersize = (jpegwidth * jpegheight * tjPixelSize[s_jpegpixelFormat]);
+    int jpegbuffersize = (jpegwidth * jpegheight * tjPixelSize[s_jpegpixelformat]);
     unsigned char *jpegbuffer = tjAlloc(jpegbuffersize);
     if (!jpegbuffer) {
         kWarning() << "Could not allocate buffer" << tjGetErrorStr2(jpegdecomp);
@@ -102,7 +102,7 @@ bool JPEGHandler::read(QImage *image)
         reinterpret_cast<const uchar*>(data.constData()), data.size(),
         jpegbuffer,
         jpegwidth, 0 , jpegheight,
-        s_jpegpixelFormat,
+        s_jpegpixelformat,
         TJFLAG_FASTDCT
     );
     if (jpegstatus != 0) {

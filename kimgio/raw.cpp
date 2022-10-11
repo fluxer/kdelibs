@@ -58,28 +58,28 @@ bool RAWHandler::read(QImage *image)
 
         int rawresult = raw.open_buffer(data.data(), data.size());
         if (rawresult != LIBRAW_SUCCESS) {
-            kWarning() << libraw_strerror(rawresult);
+            kWarning() << "Could not open buffer" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
 
         rawresult = raw.unpack();
         if (rawresult != LIBRAW_SUCCESS) {
-            kWarning() << libraw_strerror(rawresult);
+            kWarning() << "Could not unpack" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
 
         rawresult = raw.dcraw_process();
         if (rawresult != LIBRAW_SUCCESS) {
-            kWarning() << libraw_strerror(rawresult);
+            kWarning() << "Could not process" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
 
         libraw_processed_image_t* rawimg = raw.dcraw_make_mem_image(&rawresult);
         if (!rawimg || rawresult != LIBRAW_SUCCESS) {
-            kWarning() << libraw_strerror(rawresult);
+            kWarning() << "Could not make image" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
@@ -151,7 +151,7 @@ bool RAWHandler::canRead(QIODevice *device)
             raw.recycle();
             return false;
         } else if (rawresult != LIBRAW_SUCCESS) {
-            kWarning() << libraw_strerror(rawresult);
+            kWarning() << "Could not open buffer" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
