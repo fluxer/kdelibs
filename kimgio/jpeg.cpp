@@ -159,7 +159,8 @@ bool JPEGHandler::canRead(QIODevice *device)
     }
 
     for (int i = 0; i < HeadersTblSize; i++) {
-        if (qstrncmp(data.constData(), reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
+        if (data.size() >= HeadersTbl[i].headersize &&
+            qstrncmp(data.constData(), reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
             kDebug() << "Header detected";
             return true;
         }

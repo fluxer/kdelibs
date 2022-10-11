@@ -46,7 +46,8 @@ static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData)
 static OPJ_CODEC_FORMAT guessOJCodec(const char* const data)
 {
     for (int i = 0; i < HeadersTblSize; i++) {
-        if (qstrncmp(data, reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
+        if (qstrlen(data) >= HeadersTbl[i].headersize &&
+            qstrncmp(data, reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
             kDebug() << "Codec detected" << HeadersTbl[i].ojcodec;
             return HeadersTbl[i].ojcodec;
         }
