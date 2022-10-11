@@ -25,6 +25,7 @@
  *
  * Currently supported formats include:
  * @li WEBP    \<read\> \<write\>
+ * @li RAW     \<read\>
  * @li PGM     \<read\>
  * @li XBM     \<read\>
  * @li BMP     \<read\>
@@ -32,7 +33,6 @@
  * @li JPEG    \<read\>
  * @li JP2     \<read\>
  * @li GIF     \<read\>
- * @li RAW     \<read\>
  *
  * @todo move to kdeui
  */

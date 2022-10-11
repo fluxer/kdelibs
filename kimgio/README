@@ -4,6 +4,7 @@ writing a new handler.
 Current formats include:
 
 WEBP    <read> <write>
+RAW     <read>
 
 along with whatever ImageMagick supports but it is assumed that it supports
 reading atleast the following formats (even if they cannot be loaded because
@@ -16,7 +17,6 @@ ICO     <read>
 JPEG    <read>
 JP2     <read>
 GIF     <read>
-RAW     <read>
 
 If you want to contribute plugin for image format and there is no solid
 C/C++ library for it (like there is for WebP) then it is unlikely it will be

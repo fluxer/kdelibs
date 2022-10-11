@@ -59,24 +59,15 @@ static const struct HeadersTblData {
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
-static QList<std::string> s_blacklist = QList<std::string>()
-    // borked coders
-    << std::string("PDF")
-    << std::string("EPDF")
-    << std::string("PS")
-    << std::string("HTML")
-    << std::string("SHTML")
-    << std::string("TXT")
-    << std::string("VIDEO")
-    << std::string("TTF")
-    // kdelibs provides these
-    << std::string("WEBP")
-    // Katie provides these, SVG coders are very borked
-    << std::string("SVG")
-    << std::string("SVGZ")
-    << std::string("XPM")
-    << std::string("PBM")
-    << std::string("PPM");
+static QList<std::string> s_whitelist = QList<std::string>()
+    << std::string("PGM")
+    << std::string("XBM")
+    << std::string("BMP")
+    << std::string("ICO")
+    << std::string("JPEG")
+    << std::string("JP2")
+    << std::string("GIF")
+    << std::string("PNG");
 
 int initMagick()
 {
@@ -97,19 +88,18 @@ int initMagick()
         kWarning() << "Exception raised";
     }
     foreach (const Magick::CoderInfo &magickcoder, magickcoderlist) {
-        foreach (const std::string &blacklist, s_blacklist) {
-            if (magickcoder.name() == blacklist) {
-                kDebug() << "Blacklisting coder" << blacklist.c_str();
-                try {
-                    magickcoder.unregister();
-                } catch(Magick::Exception &err) {
-                    kWarning() << err.what();
-                } catch(std::exception &err) {
-                    kWarning() << err.what();
-                } catch (...) {
-                    kWarning() << "Exception raised";
-                }
-            }
+        if (s_whitelist.contains(magickcoder.name())) {
+            continue;
+        }
+        try {
+            kDebug() << "Blacklisting coder" << magickcoder.name().c_str();
+            magickcoder.unregister();
+        } catch(Magick::Exception &err) {
+            kWarning() << err.what();
+        } catch(std::exception &err) {
+            kWarning() << err.what();
+        } catch (...) {
+            kWarning() << "Exception raised";
         }
     }
     return 0;
@@ -267,7 +257,11 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
         );
         if (isvalid) {
             kDebug() << "Magick format detected" << magickformat;
-            actualformat->append(magickformat);
+            if (s_whitelist.contains(std::string(magickformat, qstrlen(magickformat)))) {
+                actualformat->append(magickformat);
+            } else {
+                isvalid = false;
+            }
         }
     } catch(Magick::Exception &err) {
         kWarning() << err.what();
@@ -343,7 +337,6 @@ QList<QByteArray> MagickPlugin::mimeTypes() const
         << "image/x-portable-bitmap"
         << "image/x-portable-graymap"
         << "image/x-portable-pixmap"
-        << "image/x-dcraw"
         << "image/x-xbitmap";
     return list;
 }

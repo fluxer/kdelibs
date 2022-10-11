@@ -42,3 +42,24 @@ if(WEBP_FOUND)
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
     )
 endif(WEBP_FOUND)
+
+##################################
+
+if(LIBRAW_FOUND)
+    include_directories(${LIBRAW_INCLUDE_DIR})
+    kde4_add_plugin(kimg_raw raw.cpp)
+    target_link_libraries(kimg_raw
+        ${KDE4_KDECORE_LIBS}
+        ${QT_QTGUI_LIBRARY}
+        ${LIBRAW_LIBRARIES}
+    )
+    set_target_properties(kimg_raw PROPERTIES
+        COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
+        OUTPUT_NAME raw
+    )
+
+    install(
+        TARGETS kimg_raw
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
+    )
+endif(LIBRAW_FOUND)
