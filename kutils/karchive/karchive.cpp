@@ -303,7 +303,29 @@ struct archive* KArchivePrivate::openWrite(const QByteArray &path)
     struct archive* writearchive = archive_write_new();
 
     if (writearchive) {
-        if (archive_write_set_format_filter_by_ext(writearchive, path) != ARCHIVE_OK) {
+        // NOTE: archive_write_set_format_filter_by_ext() cannot recognize all supported formats
+        const QByteArray lowerpath = path.toLower();
+        if (lowerpath.endsWith(".lzma")) {
+            archive_write_add_filter_lzma(writearchive);
+#if ARCHIVE_VERSION_NUMBER > 3000004
+        } else if (lowerpath.endsWith(".lzo")) {
+            archive_write_add_filter_lzop(writearchive);
+        } else if (lowerpath.endsWith(".lrz")) {
+            archive_write_add_filter_lrzip(writearchive);
+#endif
+#if ARCHIVE_VERSION_NUMBER > 3001002
+        } else if (lowerpath.endsWith(".lz4")) {
+            archive_write_add_filter_lz4(writearchive);
+#endif
+#if ARCHIVE_VERSION_NUMBER > 3003002
+        } else if (lowerpath.endsWith(".zst")) {
+            archive_write_add_filter_zstd(writearchive);
+#endif
+        } else if (lowerpath.endsWith(".lz")) {
+            archive_write_add_filter_lzip(writearchive);
+        } else if (lowerpath.endsWith(".z")) {
+            archive_write_add_filter_compress(writearchive);
+        } else if (archive_write_set_format_filter_by_ext(writearchive, path) != ARCHIVE_OK) {
             m_error = i18n("archive_write_set_format_filter_by_ext: %1", archive_error_string(writearchive));
             kDebug() << m_error;
             archive_write_add_filter_none(writearchive);
