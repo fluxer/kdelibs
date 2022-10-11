@@ -322,8 +322,6 @@ QList<QByteArray> MagickPlugin::mimeTypes() const
         << "image/bmp"
         << "image/gif"
         << "image/vnd.microsoft.icon"
-        << "image/jp2"
-        << "image/jpeg"
         << "image/x-portable-bitmap"
         << "image/x-portable-graymap"
         << "image/x-portable-pixmap"
