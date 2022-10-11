@@ -463,12 +463,16 @@ KArchive::KArchive(const QString &path, QObject *parent)
         return;
     }
 
-    d->m_writable = QFileInfo(QFileInfo(path).path()).isWritable();
     const KMimeType::Ptr kmimetype = KMimeType::findByPath(path);
     if (kmimetype) {
-        if (!s_writemimetypes.contains(kmimetype->name())) {
-            d->m_writable = false;
+        foreach (const QString &mime, KArchive::writableMimeTypes()) {
+            if (kmimetype->is(mime)) {
+                d->m_writable = true;
+            }
         }
+    }
+    if (d->m_writable) {
+        d->m_writable = QFileInfo(QFileInfo(path).path()).isWritable();
     }
     if (!d->m_writable) {
         d->m_error = i18n("Archive is not writable");
