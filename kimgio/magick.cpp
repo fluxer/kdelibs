@@ -34,7 +34,6 @@ static const char* const s_magickpluginformat = "magick";
 static const ushort s_peekbuffsize = 32;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
-static const uchar s_jp2header[] = { 0x00, 0x00, 0x00, 0x0C, 0x6A, 0x50, 0x20, 0x20, 0x0D, 0x0A, 0x87, 0x0A };
 static const uchar s_gif87aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };
 static const uchar s_gif89aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
@@ -45,7 +44,6 @@ static const struct HeadersTblData {
     const int headersize;
     const char *format;
 } HeadersTbl[] = {
-    { s_jp2header, 12, "jp2" },
     { s_gif87aheader, 6, "gif" },
     { s_gif89aheader, 6, "gif" },
     { s_icoheader, 5, "ico" },
@@ -58,7 +56,6 @@ static QList<std::string> s_whitelist = QList<std::string>()
     << std::string("XBM")
     << std::string("BMP")
     << std::string("ICO")
-    << std::string("JP2")
     << std::string("GIF")
     << std::string("PNG");
 
