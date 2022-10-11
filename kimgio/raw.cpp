@@ -44,9 +44,7 @@ bool RAWHandler::canRead() const
 
 bool RAWHandler::read(QImage *image)
 {
-    const qint64 devicepos = device()->pos();
     QByteArray data = device()->readAll();
-    device()->seek(devicepos);
 
     if (Q_UNLIKELY(data.isEmpty())) {
         return false;

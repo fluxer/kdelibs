@@ -117,9 +117,11 @@ bool JP2Handler::canRead() const
 
 bool JP2Handler::read(QImage *image)
 {
-    const qint64 devicepos = device()->pos();
     const QByteArray data = device()->readAll();
-    device()->seek(devicepos);
+
+    if (Q_UNLIKELY(data.isEmpty())) {
+        return false;
+    }
 
     opj_codec_t* ojcodec = opj_create_decompress(guessOJCodec(data.constData()));
     if (!ojcodec) {

@@ -37,12 +37,11 @@ static const uchar s_jpegexifheader[] = { 0xFF, 0xD8, 0xFF, 0xE1 };
 static const struct HeadersTblData {
     const uchar *header;
     const int headersize;
-    const char *format;
 } HeadersTbl[] = {
-    { s_jpgjfifheader, 12, "jpg" },
-    { s_jpgheader, 4, "jpg" },
-    { s_jpg2header, 4, "jpg" },
-    { s_jpegexifheader, 4, "jpg" }
+    { s_jpgjfifheader, 12 },
+    { s_jpgheader, 4 },
+    { s_jpg2header, 4 },
+    { s_jpegexifheader, 4 }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
@@ -66,6 +65,10 @@ bool JPEGHandler::canRead() const
 bool JPEGHandler::read(QImage *image)
 {
     const QByteArray data = device()->readAll();
+
+    if (Q_UNLIKELY(data.isEmpty())) {
+        return false;
+    }
 
     tjhandle jpegdecomp = tjInitDecompress();
     if (!jpegdecomp) {
@@ -157,7 +160,7 @@ bool JPEGHandler::canRead(QIODevice *device)
 
     for (int i = 0; i < HeadersTblSize; i++) {
         if (qstrncmp(data.constData(), reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
-            kDebug() << "Header detected" << HeadersTbl[i].format;
+            kDebug() << "Header detected";
             return true;
         }
     }
