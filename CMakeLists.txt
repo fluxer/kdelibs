@@ -193,6 +193,13 @@ set_package_properties(LibJPEG PROPERTIES
     TYPE OPTIONAL
 )
 
+kde4_optional_find_package(OpenJPEG)
+set_package_properties(OpenJPEG PROPERTIES
+    DESCRIPTION "Open-source JPEG 2000 codec written in C language"
+    URL "https://www.openjpeg.org/"
+    PURPOSE "Support for JPEG 2000 image format"
+    TYPE OPTIONAL
+)
 # v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
 kde4_optional_find_package(UDev 143)
 set_package_properties(UDev PROPERTIES

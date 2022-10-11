@@ -83,3 +83,23 @@ if(LIBJPEG_FOUND)
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
     )
 endif(LIBJPEG_FOUND)
+
+##################################
+
+if(OPENJPEG_FOUND)
+    include_directories(${OPENJPEG_INCLUDE_DIR})
+    kde4_add_plugin(kimg_jp2 jp2.cpp)
+    target_link_libraries(kimg_jp2
+        ${KDE4_KDECORE_LIBS}
+        ${QT_QTGUI_LIBRARY}
+        ${OPENJPEG_LIBRARIES}
+    )
+    set_target_properties(kimg_jp2 PROPERTIES
+        OUTPUT_NAME jp2
+    )
+
+    install(
+        TARGETS kimg_jp2
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
+    )
+endif(OPENJPEG_FOUND)

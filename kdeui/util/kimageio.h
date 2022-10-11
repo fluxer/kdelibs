@@ -27,11 +27,11 @@
  * @li WEBP    \<read\> \<write\>
  * @li RAW     \<read\>
  * @li JPEG    \<read\>
+ * @li JP2     \<read\>
  * @li PGM     \<read\>
  * @li XBM     \<read\>
  * @li BMP     \<read\>
  * @li ICO     \<read\>
- * @li JP2     \<read\>
  * @li GIF     \<read\>
  */
 namespace KImageIO
