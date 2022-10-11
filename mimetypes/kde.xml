@@ -501,6 +501,7 @@ Notes:
     <comment xml:lang="uk">архів документа Okular</comment>
     <comment xml:lang="zh_CN">Okular 文档归档</comment>
     <comment xml:lang="zh_TW">Okular 文件歸檔</comment>
+    <generic-icon name="x-office-document"/>
     <glob pattern="*.okular"/>
   </mime-type>
 
