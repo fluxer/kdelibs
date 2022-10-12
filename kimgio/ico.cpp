@@ -155,7 +155,6 @@ bool ICOHandler::read(QImage *image)
             continue;
         }
 
-        const qint64 bmpstreampos = datastream.device()->pos();
         datastream.device()->seek(icoimageoffset);
         QByteArray imagebytes(icoimagesize, char(0));
         if (datastream.readRawData(imagebytes.data(), icoimagesize) != icoimagesize) {
@@ -165,7 +164,7 @@ bool ICOHandler::read(QImage *image)
 
         if (imagebytes.size() > s_pngheadersize &&
             ::memcmp(imagebytes.constData(), s_pngheader, s_pngheadersize) != 0) {
-            datastream.device()->seek(bmpstreampos);
+            datastream.device()->seek(icoimageoffset);
             uint bmpheadersize = 0;
             uint bmpwidth = 0;
             uint bmpheight = 0;
