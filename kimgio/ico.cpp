@@ -28,12 +28,14 @@ static const uchar s_pngheader[] = { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
+static const uchar s_icoheader2[] = { 0x0, 0x0, 0x1, 0x0, 0x1 };
 
 static const struct HeadersTblData {
     const uchar *header;
     const int headersize;
 } HeadersTbl[] = {
-    { s_icoheader, 5 }
+    { s_icoheader, 5 },
+    { s_icoheader2, 5 }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
@@ -233,7 +235,7 @@ bool ICOHandler::canRead(QIODevice *device)
 
     for (int i = 0; i < HeadersTblSize; i++) {
         if (data.size() >= HeadersTbl[i].headersize &&
-            qstrncmp(data.constData(), reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
+            ::memcmp(data.constData(), HeadersTbl[i].header, HeadersTbl[i].headersize) == 0) {
             kDebug() << "Header detected";
             return true;
         }
