@@ -25,6 +25,7 @@ static const char* const s_icopluginformat = "ico";
 
 static const ushort s_peekbuffsize = 32;
 static const uchar s_pngheader[] = { 0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a };
+static const ushort s_pngheadersize = 8;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
@@ -42,6 +43,19 @@ static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData)
 enum ICOType {
     IconType = 1,
     CursorType = 2
+};
+
+enum BMPCompression {
+    CompressionRGB = 0,
+    CompressionRLE8 = 1,
+    CompressionRLE4 = 2,
+    CompressionBitFields = 3,
+    CompressionJPEG = 4,
+    CompressionPNG = 5,
+    CompressionAlphaBitFields = 6,
+    CompressionCMYK = 7,
+    CompressionCMYKRLE8 = 8,
+    CompressionCMYKRLE4 = 9,
 };
 
 ICOHandler::ICOHandler()
@@ -84,10 +98,10 @@ bool ICOHandler::read(QImage *image)
         return false;
     }
 
-    if (icotype == CursorType) {
+    if (icotype == ICOType::CursorType) {
         kWarning() << "Cursor icons are not supported";
         return false;
-    } else if (icotype != IconType) {
+    } else if (icotype != ICOType::IconType) {
         kWarning() << "Invalid icon type" << icotype;
         return false;
     } else if (iconimages < 1) {
@@ -126,7 +140,8 @@ bool ICOHandler::read(QImage *image)
             return false;
         }
 
-        if (imagebytes.size() > 8 && ::memcmp(imagebytes.constData(), s_pngheader, 8) != 0) {
+        if (imagebytes.size() > s_pngheadersize &&
+            ::memcmp(imagebytes.constData(), s_pngheader, s_pngheadersize) != 0) {
             datastream.device()->seek(bmpstreampos);
             uint bmpheadersize = 0;
             uint bmpwidth = 0;
@@ -156,9 +171,10 @@ bool ICOHandler::read(QImage *image)
                 continue;
             }
 
-            // fallbacks
-            const int imagewidth = (icowidth ? icowidth : bmpwidth);
-            const int imageheight = (icoheight ? icoheight : bmpheight);
+            if (bmpcompression != BMPCompression::CompressionRGB) {
+                kWarning() << "Unsupported BMP compression" << bmpcompression;
+                continue;
+            }
 
             QImage::Format imageformat = QImage::Format_ARGB32;
             switch (bmpbpp) {
@@ -178,6 +194,10 @@ bool ICOHandler::read(QImage *image)
                 continue;
             }
 
+            // fallbacks
+            const int imagewidth = (icowidth ? icowidth : bmpwidth);
+            const int imageheight = (icoheight ? icoheight : bmpheight);
+
             QImage bmpimage(imagewidth, imageheight, imageformat);
             if (bmpimage.isNull()) {
                 kWarning() << "Could not create BMP image" << imagewidth << imageheight << imageformat;
@@ -195,10 +215,10 @@ bool ICOHandler::read(QImage *image)
             return true;;
         }
 
-        const QImage icoimage = QImage::fromData(imagebytes.constData(), imagebytes.size(), "PNG");
-        if (!icoimage.isNull()) {
+        const QImage pngimage = QImage::fromData(imagebytes.constData(), imagebytes.size(), "PNG");
+        if (!pngimage.isNull()) {
             kDebug() << "Valid PNG image" << ii;
-            *image = icoimage;
+            *image = pngimage;
             return true;
         }
     }
