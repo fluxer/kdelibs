@@ -9,14 +9,6 @@ JPEG    <read>
 JP2     <read>
 ICO     <read>
 
-along with whatever ImageMagick supports but it is assumed that it supports
-reading atleast the following formats (even if they cannot be loaded because
-it was build without support for these formats for example) for compatibility:
-
-PGM     <read>
-XBM     <read>
-GIF     <read>
-
 If you want to contribute plugin for image format and there is no solid
 C/C++ library for it (like there is for WebP) then it is unlikely it will be
 accepted.

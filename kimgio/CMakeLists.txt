@@ -20,27 +20,6 @@ install(
 
 ##################################
 
-if(IMAGEMAGICK_FOUND)
-    include_directories(${ImageMagick_INCLUDE_DIRS})
-    kde4_add_plugin(kimg_magick magick.cpp)
-    target_link_libraries(kimg_magick
-        ${KDE4_KDECORE_LIBS}
-        ${QT_QTGUI_LIBRARY}
-        ${ImageMagick_LIBRARIES}
-    )
-    set_target_properties(kimg_magick PROPERTIES
-        COMPILE_FLAGS "${KDE4_ENABLE_EXCEPTIONS}"
-        OUTPUT_NAME magick
-    )
-
-    install(
-        TARGETS kimg_magick
-        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
-    )
-endif(IMAGEMAGICK_FOUND)
-
-##################################
-
 if(WEBP_FOUND)
     include_directories(${WEBP_INCLUDES})
     kde4_add_plugin(kimg_webp webp.cpp)

@@ -161,14 +161,6 @@ set_package_properties(LibLZMA PROPERTIES
     TYPE OPTIONAL
 )
 
-kde4_optional_find_package(ImageMagick COMPONENTS Magick++)
-set_package_properties(ImageMagick PROPERTIES
-    DESCRIPTION "Software suite to create, edit, and compose bitmap images"
-    URL "https://imagemagick.org/"
-    PURPOSE "Support for various image formats"
-    TYPE OPTIONAL
-)
-
 kde4_optional_find_package(WebP)
 set_package_properties(WebP PROPERTIES
     DESCRIPTION "A new image format for the Web"
