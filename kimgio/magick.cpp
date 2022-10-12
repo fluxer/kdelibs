@@ -229,7 +229,8 @@ bool MagickHandler::canRead(QIODevice *device, QByteArray *actualformat)
     }
 
     for (int i = 0; i < HeadersTblSize; i++) {
-        if (qstrncmp(data.constData(), reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
+        if (data.size() >= HeadersTbl[i].headersize &&
+            qstrncmp(data.constData(), reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
             kDebug() << "Header detected" << HeadersTbl[i].format;
             actualformat->append(HeadersTbl[i].format);
             return true;
