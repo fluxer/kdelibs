@@ -180,16 +180,16 @@ bool JP2Handler::read(QImage *image)
         case 4: {
             QRgb* imagebits = reinterpret_cast<QRgb*>(image->bits());
             const uint bitscount = (ojimage->comps->h * ojimage->comps->w * ojimage->numcomps);
-            OPJ_INT32* r = ojimage->comps[0].data;
-            OPJ_INT32* g = ojimage->comps[1].data;
-            OPJ_INT32* b = ojimage->comps[2].data;
-            OPJ_INT32* a = ojimage->comps[3].data;
+            OPJ_INT32* ojr = ojimage->comps[0].data;
+            OPJ_INT32* ojg = ojimage->comps[1].data;
+            OPJ_INT32* ojb = ojimage->comps[2].data;
+            OPJ_INT32* oja = ojimage->comps[3].data;
             for (uint i = 0 ; i < bitscount; i += ojimage->numcomps) {
-                *imagebits = qRgba(*r, *g, *b, *a);
-                r++;
-                g++;
-                b++;
-                a++;
+                *imagebits = qRgba(*ojr, *ojg, *ojb, *oja);
+                ojr++;
+                ojg++;
+                ojb++;
+                oja++;
                 imagebits++;
             }
             break;
@@ -197,20 +197,46 @@ bool JP2Handler::read(QImage *image)
         case 3: {
             QRgb* imagebits = reinterpret_cast<QRgb*>(image->bits());
             const uint bitscount = (ojimage->comps->h * ojimage->comps->w * ojimage->numcomps);
-            OPJ_INT32* r = ojimage->comps[0].data;
-            OPJ_INT32* g = ojimage->comps[1].data;
-            OPJ_INT32* b = ojimage->comps[2].data;
+            OPJ_INT32* ojr = ojimage->comps[0].data;
+            OPJ_INT32* ojg = ojimage->comps[1].data;
+            OPJ_INT32* ojb = ojimage->comps[2].data;
             for (uint i = 0 ; i < bitscount; i += ojimage->numcomps) {
-                *imagebits = qRgba(*r, *g, *b, 0xff);
-                r++;
-                g++;
-                b++;
+                *imagebits = qRgba(*ojr, *ojg, *ojb, 0xff);
+                ojr++;
+                ojg++;
+                ojb++;
+                imagebits++;
+            }
+            break;
+        }
+        // gray with alpha
+        case 2: {
+            QRgb* imagebits = reinterpret_cast<QRgb*>(image->bits());
+            const uint bitscount = (ojimage->comps->h * ojimage->comps->w * ojimage->numcomps);
+            OPJ_INT32* ojg = ojimage->comps[0].data;
+            OPJ_INT32* oja = ojimage->comps[1].data;
+            for (uint i = 0 ; i < bitscount; i += ojimage->numcomps) {
+                *imagebits = qRgba(*ojg, *ojg, *ojg, *oja);
+                ojg++;
+                oja++;
+                imagebits++;
+            }
+            break;
+        }
+        // gray only
+        case 1: {
+            QRgb* imagebits = reinterpret_cast<QRgb*>(image->bits());
+            const uint bitscount = (ojimage->comps->h * ojimage->comps->w * ojimage->numcomps);
+            OPJ_INT32* ojg = ojimage->comps[0].data;
+            for (uint i = 0 ; i < bitscount; i += ojimage->numcomps) {
+                *imagebits = qRgba(*ojg, *ojg, *ojg, 0xff);
+                ojg++;
                 imagebits++;
             }
             break;
         }
         default: {
-            kWarning() << "Unsupported color component count" << ojimage->numcomps;
+            kWarning() << "Invalid color component count" << ojimage->numcomps;
             *image = QImage();
             break;
         }
