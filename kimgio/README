@@ -7,6 +7,7 @@ WEBP    <read> <write>
 RAW     <read>
 JPEG    <read>
 JP2     <read>
+ICO     <read>
 
 along with whatever ImageMagick supports but it is assumed that it supports
 reading atleast the following formats (even if they cannot be loaded because
@@ -14,8 +15,6 @@ it was build without support for these formats for example) for compatibility:
 
 PGM     <read>
 XBM     <read>
-BMP     <read>
-ICO     <read>
 GIF     <read>
 
 If you want to contribute plugin for image format and there is no solid

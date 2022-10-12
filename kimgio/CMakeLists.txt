@@ -4,6 +4,22 @@ include_directories(${KDE4_KDEUI_INCLUDES})
 
 ##################################
 
+kde4_add_plugin(kimg_ico ico.cpp)
+target_link_libraries(kimg_ico
+    ${KDE4_KDECORE_LIBS}
+    ${QT_QTGUI_LIBRARY}
+)
+set_target_properties(kimg_ico PROPERTIES
+    OUTPUT_NAME ico
+)
+
+install(
+    TARGETS kimg_ico
+    DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
+)
+
+##################################
+
 if(IMAGEMAGICK_FOUND)
     include_directories(${ImageMagick_INCLUDE_DIRS})
     kde4_add_plugin(kimg_magick magick.cpp)

@@ -36,8 +36,6 @@ static const ushort s_peekbuffsize = 32;
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 static const uchar s_gif87aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 };
 static const uchar s_gif89aheader[] = { 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 };
-static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
-static const uchar s_bmpheader[] = { 0x42, 0x4D };
 
 static const struct HeadersTblData {
     const uchar *header;
@@ -45,17 +43,13 @@ static const struct HeadersTblData {
     const char *format;
 } HeadersTbl[] = {
     { s_gif87aheader, 6, "gif" },
-    { s_gif89aheader, 6, "gif" },
-    { s_icoheader, 5, "ico" },
-    { s_bmpheader , 2, "bmp" }
+    { s_gif89aheader, 6, "gif" }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
 static QList<std::string> s_whitelist = QList<std::string>()
     << std::string("PGM")
     << std::string("XBM")
-    << std::string("BMP")
-    << std::string("ICO")
     << std::string("GIF")
     << std::string("PNG");
 
@@ -133,22 +127,8 @@ bool MagickHandler::read(QImage *image)
         // QMovie will continuously call read() to get each frame
         if (m_magickimages.size() == 0) {
             const QByteArray data = device()->readAll();
-            // some ImageMagick coders fail to load from blob (e.g. icon)
-            if (qstrncmp(data.constData(), reinterpret_cast<const char*>(s_icoheader), 5) == 0) {
-                kDebug() << "ICO workaround";
-                KTemporaryFile tempblobfile;
-                tempblobfile.setFileTemplate("XXXXXXXXXX.ico");
-                if (!tempblobfile.open()) {
-                    kWarning() << "Could not open temporary file";
-                    return false;
-                }
-                tempblobfile.write(data.constData(), data.size());
-                const QByteArray tmpblob = tempblobfile.fileName().toLocal8Bit();
-                Magick::readImages(&m_magickimages, std::string(tmpblob.constData()));
-            } else {
-                Magick::Blob magickinblob(data.constData(), data.size());
-                Magick::readImages(&m_magickimages, magickinblob);
-            }
+            Magick::Blob magickinblob(data.constData(), data.size());
+            Magick::readImages(&m_magickimages, magickinblob);
         }
 
         if (Q_UNLIKELY(m_magickimages.size() == 0)) {
@@ -320,9 +300,7 @@ QStringList MagickPlugin::keys() const
 QList<QByteArray> MagickPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()
-        << "image/bmp"
         << "image/gif"
-        << "image/vnd.microsoft.icon"
         << "image/x-portable-bitmap"
         << "image/x-portable-graymap"
         << "image/x-portable-pixmap"
