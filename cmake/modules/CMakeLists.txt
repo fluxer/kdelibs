@@ -54,7 +54,6 @@ set(cmakeFiles
     FindLightDM.cmake
     FindMPFR.cmake
     FindMtp.cmake
-    FindOpenEXR.cmake
     FindPCIUTILS.cmake
     FindPoppler.cmake
     FindQalculate.cmake
