@@ -19,6 +19,7 @@
 #include "raw.h"
 
 #include <QImage>
+#include <kmimetype.h>
 #include <kdebug.h>
 
 #include <libraw/libraw.h>
@@ -170,8 +171,16 @@ QStringList RAWPlugin::keys() const
 
 QList<QByteArray> RAWPlugin::mimeTypes() const
 {
-    static const QList<QByteArray> list = QList<QByteArray>()
-        << "image/x-dcraw";
+    static QList<QByteArray> list;
+    if (list.isEmpty()) {
+        foreach (const KMimeType::Ptr &mime, KMimeType::allMimeTypes()) {
+            // NOTE: RAW MIME types are sub-class of image/x-dcraw
+            if (mime->is(QString::fromLatin1("image/x-dcraw"))
+                && mime->name() != QLatin1String("image/x-dcraw")) {
+                list.append(mime->name().toLatin1());
+            }
+        }
+    }
     return list;
 }
 
