@@ -40,14 +40,15 @@ static const struct HeadersTblData {
 } HeadersTbl[] = {
     { s_jp2header, 12, OPJ_CODEC_JP2 },
     { s_j2kheader, 4, OPJ_CODEC_J2K }
+    // TODO: OPJ_CODEC_JPT
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
-static OPJ_CODEC_FORMAT guessOJCodec(const char* const data)
+static OPJ_CODEC_FORMAT guessOJCodec(const QByteArray &data)
 {
     for (int i = 0; i < HeadersTblSize; i++) {
-        if (qstrlen(data) >= HeadersTbl[i].headersize &&
-            qstrncmp(data, reinterpret_cast<const char*>(HeadersTbl[i].header), HeadersTbl[i].headersize) == 0) {
+        if (data.size() >= HeadersTbl[i].headersize &&
+            ::memcmp(data.constData(), HeadersTbl[i].header, HeadersTbl[i].headersize) == 0) {
             kDebug() << "Codec detected" << HeadersTbl[i].ojcodec;
             return HeadersTbl[i].ojcodec;
         }
@@ -124,7 +125,7 @@ bool JP2Handler::read(QImage *image)
         return false;
     }
 
-    opj_codec_t* ojcodec = opj_create_decompress(guessOJCodec(data.constData()));
+    opj_codec_t* ojcodec = opj_create_decompress(guessOJCodec(data));
     if (!ojcodec) {
         kWarning() << "Could not create codec";
         return false;
@@ -273,7 +274,7 @@ bool JP2Handler::canRead(QIODevice *device)
         return false;
     }
 
-    return (guessOJCodec(data.constData()) != OPJ_CODEC_UNKNOWN);
+    return (guessOJCodec(data) != OPJ_CODEC_UNKNOWN);
 }
 
 QStringList JP2Plugin::keys() const
