@@ -29,14 +29,30 @@ static const ushort s_pngheadersize = 8;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 static const uchar s_icoheader[] = { 0x0, 0x0, 0x1, 0x0, 0x0 };
-static const uchar s_icoheader2[] = { 0x0, 0x0, 0x1, 0x0, 0x1 };
+static const uchar s_icoheader1[] = { 0x0, 0x0, 0x1, 0x0, 0x01 };
+static const uchar s_icoheader2[] = { 0x0, 0x0, 0x1, 0x0, 0x02 };
+static const uchar s_icoheader3[] = { 0x0, 0x0, 0x1, 0x0, 0x03 };
+static const uchar s_icoheader4[] = { 0x0, 0x0, 0x1, 0x0, 0x04 };
+static const uchar s_icoheader5[] = { 0x0, 0x0, 0x1, 0x0, 0x05 };
+static const uchar s_icoheader6[] = { 0x0, 0x0, 0x1, 0x0, 0x06 };
+static const uchar s_icoheader7[] = { 0x0, 0x0, 0x1, 0x0, 0x07 };
+static const uchar s_icoheader8[] = { 0x0, 0x0, 0x1, 0x0, 0x08 };
+static const uchar s_icoheader9[] = { 0x0, 0x0, 0x1, 0x0, 0x09 };
 
 static const struct HeadersTblData {
     const uchar *header;
     const int headersize;
 } HeadersTbl[] = {
     { s_icoheader, 5 },
-    { s_icoheader2, 5 }
+    { s_icoheader1, 5 },
+    { s_icoheader2, 5 },
+    { s_icoheader3, 5 },
+    { s_icoheader4, 5 },
+    { s_icoheader5, 5 },
+    { s_icoheader6, 5 },
+    { s_icoheader7, 5 },
+    { s_icoheader8, 5 },
+    { s_icoheader9, 5 }
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
