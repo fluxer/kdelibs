@@ -21,6 +21,8 @@
 #include <QImage>
 #include <kdebug.h>
 
+#include <limits.h>
+
 static const char* const s_icopluginformat = "ico";
 
 static const ushort s_peekbuffsize = 32;
@@ -148,6 +150,11 @@ bool ICOHandler::read(QImage *image)
             return false;
         }
 
+        if (icoimagesize >= INT_MAX) {
+            kWarning() << "ICO image size is too big" << icoimagesize;
+            continue;
+        }
+
         const qint64 bmpstreampos = datastream.device()->pos();
         datastream.device()->seek(icoimageoffset);
         QByteArray imagebytes(icoimagesize, char(0));
@@ -204,6 +211,11 @@ bool ICOHandler::read(QImage *image)
                 }
             }
 
+            if (bmpimagesize >= INT_MAX) {
+                kWarning() << "BMP image size is too big" << bmpimagesize;
+                continue;
+            }
+
             imagebytes.resize(bmpimagesize);
             if (datastream.readRawData(imagebytes.data(), bmpimagesize) != bmpimagesize) {
                 kWarning() << "Could not read BMP image data";
@@ -213,6 +225,11 @@ bool ICOHandler::read(QImage *image)
             // fallbacks
             const int imagewidth = (icowidth ? icowidth : bmpwidth);
             const int imageheight = (icoheight ? icoheight : bmpheight);
+
+            if (imagewidth > USHRT_MAX || imageheight > USHRT_MAX) {
+                kWarning() << "Image width or height is too big" << imagewidth << imageheight;
+                continue;
+            }
 
             QImage bmpimage(imagewidth, imageheight, imageformat);
             if (bmpimage.isNull()) {
@@ -228,7 +245,7 @@ bool ICOHandler::read(QImage *image)
             // pixel data is backwards so flip the image vertically
             *image = bmpimage.mirrored(false, true);
             kDebug() << "Valid BMP image" << ii;
-            return true;;
+            return true;
         }
 
         const QImage pngimage = QImage::fromData(imagebytes.constData(), imagebytes.size(), "PNG");
