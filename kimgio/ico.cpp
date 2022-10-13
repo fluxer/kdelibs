@@ -147,7 +147,7 @@ bool ICOHandler::read(QImage *image)
 
         if (Q_UNLIKELY(icoimagesize >= INT_MAX)) {
             kWarning() << "ICO image size is too big" << icoimagesize;
-            continue;
+            return false;
         }
 
         datastream.device()->seek(icoimageoffset);
@@ -185,12 +185,12 @@ bool ICOHandler::read(QImage *image)
 
             if (bmpheadersize != 40) {
                 kWarning() << "Invalid BMP info header size" << bmpheadersize;
-                continue;
+                return false;
             }
 
             if (bmpcompression != BMPCompression::CompressionRGB) {
                 kWarning() << "Unsupported BMP compression" << bmpcompression;
-                continue;
+                return false;
             }
 
             QImage::Format imageformat = QImage::Format_ARGB32;
@@ -201,19 +201,19 @@ bool ICOHandler::read(QImage *image)
                 default: {
                     // TODO:
                     kWarning() << "Unsupported BMP bits per-pixel" << bmpbpp;
-                    continue;
+                    return false;
                 }
             }
 
             if (Q_UNLIKELY(bmpimagesize >= INT_MAX)) {
                 kWarning() << "BMP image size is too big" << bmpimagesize;
-                continue;
+                return false;
             }
 
             imagebytes.resize(bmpimagesize);
             if (Q_UNLIKELY(datastream.readRawData(imagebytes.data(), bmpimagesize) != bmpimagesize)) {
                 kWarning() << "Could not read BMP image data";
-                continue;
+                return false;
             }
 
             // fallbacks
