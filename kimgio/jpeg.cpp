@@ -183,17 +183,16 @@ QList<QByteArray> JPEGPlugin::mimeTypes() const
 
 QImageIOPlugin::Capabilities JPEGPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == s_jpegpluginformat)
+    if (format == s_jpegpluginformat) {
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
-    if (!format.isEmpty())
+    }
+    if (!device || !device->isOpen()) {
         return 0;
-    if (!device->isOpen())
-        return 0;
-
-    QImageIOPlugin::Capabilities cap;
-    if (device->isReadable() && JPEGHandler::canRead(device))
-        cap |= QImageIOPlugin::CanRead;
-    return cap;
+    }
+    if (device->isReadable() && JPEGHandler::canRead(device)) {
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+    }
+    return 0;
 }
 
 QImageIOHandler *JPEGPlugin::create(QIODevice *device, const QByteArray &format) const

@@ -186,17 +186,16 @@ QList<QByteArray> RAWPlugin::mimeTypes() const
 
 QImageIOPlugin::Capabilities RAWPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == s_rawpluginformat)
+    if (format == s_rawpluginformat) {
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
-    if (!format.isEmpty())
+    }
+    if (!device || !device->isOpen()) {
         return 0;
-    if (!device->isOpen())
-        return 0;
-
-    QImageIOPlugin::Capabilities cap;
-    if (device->isReadable() && RAWHandler::canRead(device))
-        cap |= QImageIOPlugin::CanRead;
-    return cap;
+    }
+    if (device->isReadable() && RAWHandler::canRead(device)) {
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+    }
+    return 0;
 }
 
 QImageIOHandler *RAWPlugin::create(QIODevice *device, const QByteArray &format) const

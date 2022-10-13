@@ -305,15 +305,16 @@ QList<QByteArray> JP2Plugin::mimeTypes() const
 
 QImageIOPlugin::Capabilities JP2Plugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == s_jp2pluginformat)
+    if (format == s_jp2pluginformat) {
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
-    if (!device->isOpen())
+    }
+    if (!device || !device->isOpen()) {
         return 0;
-
-    QImageIOPlugin::Capabilities cap;
-    if (device->isReadable() && JP2Handler::canRead(device))
-        cap |= QImageIOPlugin::CanRead;
-    return cap;
+    }
+    if (device->isReadable() && JP2Handler::canRead(device)) {
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+    }
+    return 0;
 }
 
 QImageIOHandler *JP2Plugin::create(QIODevice *device, const QByteArray &format) const

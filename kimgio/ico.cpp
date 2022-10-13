@@ -300,17 +300,16 @@ QList<QByteArray> ICOPlugin::mimeTypes() const
 
 QImageIOPlugin::Capabilities ICOPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == s_icopluginformat)
+    if (format == s_icopluginformat) {
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
-    if (!format.isEmpty())
+    }
+    if (!device || !device->isOpen()) {
         return 0;
-    if (!device->isOpen())
-        return 0;
-
-    QImageIOPlugin::Capabilities cap;
-    if (device->isReadable() && ICOHandler::canRead(device))
-        cap |= QImageIOPlugin::CanRead;
-    return cap;
+    }
+    if (device->isReadable() && ICOHandler::canRead(device)) {
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+    }
+    return 0;
 }
 
 QImageIOHandler *ICOPlugin::create(QIODevice *device, const QByteArray &format) const

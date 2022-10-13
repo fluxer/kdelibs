@@ -203,21 +203,17 @@ QList<QByteArray> WebPPlugin::mimeTypes() const
 QImageIOPlugin::Capabilities WebPPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
     if (format == "webp") {
-        return Capabilities(CanRead | CanWrite);
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead | QImageIOPlugin::CanWrite);
     }
-    if (!format.isEmpty()) {
+    if (!device || !device->isOpen()) {
         return 0;
     }
-    if (!device->isOpen()) {
-        return 0;
-    }
-
-    Capabilities cap;
+    QImageIOPlugin::Capabilities cap;
     if (device->isReadable() && WebPHandler::canRead(device)) {
-        cap |= CanRead;
+        cap |= QImageIOPlugin::CanRead;
     }
     if (device->isWritable()) {
-        cap |= CanWrite;
+        cap |= QImageIOPlugin::CanWrite;
     }
     return cap;
 }
