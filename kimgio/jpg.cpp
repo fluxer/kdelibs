@@ -29,7 +29,6 @@ static const ushort s_peekbuffsize = 32;
 static const TJPF s_jpegreadpf = TJPF_ARGB;
 static const TJPF s_jpegwritepf = TJPF_BGRA;
 static const TJSAMP s_jpegsubsampling = TJSAMP_444;
-static const int s_jpegquality = 100;
 static const int s_jpegflags = TJFLAG_FASTDCT;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
@@ -50,6 +49,7 @@ static const struct HeadersTblData {
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
 JPGHandler::JPGHandler()
+    : m_quality(100)
 {
 }
 
@@ -167,7 +167,7 @@ bool JPGHandler::write(const QImage &image)
         s_jpegwritepf,
         &jpegbuffer, &jpegbuffersize,
         s_jpegsubsampling,
-        s_jpegquality,
+        m_quality,
         s_jpegflags
     );
     if (Q_UNLIKELY(jpegstatus != 0)) {
@@ -193,6 +193,37 @@ bool JPGHandler::write(const QImage &image)
 QByteArray JPGHandler::name() const
 {
     return s_jpgpluginformat;
+}
+
+bool JPGHandler::supportsOption(QImageIOHandler::ImageOption option) const
+{
+    return (option == QImageIOHandler::Quality);
+}
+
+QVariant JPGHandler::option(QImageIOHandler::ImageOption option) const
+{
+    switch (option) {
+        case QImageIOHandler::Quality: {
+            return m_quality;
+        }
+        default: {
+            return QVariant();
+        }
+    }
+    Q_UNREACHABLE();
+}
+
+void JPGHandler::setOption(QImageIOHandler::ImageOption option, const QVariant &value)
+{
+    if (option == QImageIOHandler::Quality) {
+        const int newquality = value.toInt();
+        // -1 means default
+        if (newquality == -1) {
+            m_quality = 100;
+        } else {
+            m_quality = qBound(0, newquality, 100);
+        }
+    }
 }
 
 bool JPGHandler::canRead(QIODevice *device)

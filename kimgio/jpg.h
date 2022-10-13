@@ -34,7 +34,14 @@ public:
 
     QByteArray name() const final;
 
+    bool supportsOption(QImageIOHandler::ImageOption option) const final;
+    QVariant option(QImageIOHandler::ImageOption option) const final;
+    void setOption(QImageIOHandler::ImageOption option, const QVariant &value) final;
+
     static bool canRead(QIODevice *device);
+
+private:
+    int m_quality;
 };
 
 class JPGPlugin : public QImageIOPlugin
