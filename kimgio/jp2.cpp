@@ -125,9 +125,16 @@ bool JP2Handler::read(QImage *image)
         return false;
     }
 
+    opj_stream_t *ojstream = opj_stream_create(s_ojbuffersize, OPJ_TRUE);
+    if (Q_UNLIKELY(!ojstream)) {
+        kWarning() << "Could not create stream";
+        return false;
+    }
+
     opj_codec_t* ojcodec = opj_create_decompress(guessOJCodec(data));
     if (Q_UNLIKELY(!ojcodec)) {
         kWarning() << "Could not create codec";
+        opj_stream_destroy(ojstream);
         return false;
     }
 
@@ -138,13 +145,10 @@ bool JP2Handler::read(QImage *image)
     opj_dparameters_t ojparameters;
     opj_set_default_decoder_parameters(&ojparameters);
     ojparameters.m_verbose = true;
-
-    opj_setup_decoder(ojcodec, &ojparameters);
-
-    opj_stream_t *ojstream = opj_stream_create(s_ojbuffersize, OPJ_TRUE);
-    if (Q_UNLIKELY(!ojstream)) {
-        kWarning() << "Could not create stream";
+    if (Q_UNLIKELY(opj_setup_decoder(ojcodec, &ojparameters) == OPJ_FALSE)) {
+        kWarning() << "Could setup decoder";
         opj_destroy_codec(ojcodec);
+        opj_stream_destroy(ojstream);
         return false;
     }
 
@@ -165,8 +169,19 @@ bool JP2Handler::read(QImage *image)
 
     if (Q_UNLIKELY(opj_decode(ojcodec, ojstream, ojimage) == OPJ_FALSE)) {
         kWarning() << "Could not decode stream";
+        opj_destroy_codec(ojcodec);
+        opj_stream_destroy(ojstream);
+        opj_image_destroy(ojimage);
+        return false;
     }
-    opj_end_decompress(ojcodec, ojstream);
+
+    if (Q_UNLIKELY(opj_end_decompress(ojcodec, ojstream) == OPJ_FALSE)) {
+        kWarning() << "Could end decompression";
+        opj_destroy_codec(ojcodec);
+        opj_stream_destroy(ojstream);
+        opj_image_destroy(ojimage);
+        return false;
+    }
 
     *image = QImage(ojimage->comps->w, ojimage->comps->h, QImage::Format_ARGB32);
     if (Q_UNLIKELY(image->isNull())) {
