@@ -79,6 +79,7 @@ public:
           combo(0),
           fileDialogMode(KFile::File | KFile::ExistingOnly | KFile::LocalOnly)
     {
+        qRegisterMetaType<KUrl>("KUrl");
     }
 
     ~KUrlRequesterPrivate()
@@ -206,8 +207,6 @@ public:
 KUrlRequester::KUrlRequester( QWidget *editWidget, QWidget *parent)
   : KHBox( parent),d(new KUrlRequesterPrivate(this))
 {
-    qRegisterMetaType<KUrl>("KUrl");
-
     // must have this as parent
     editWidget->setParent( this );
     d->combo = qobject_cast<KComboBox*>( editWidget );
