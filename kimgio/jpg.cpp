@@ -16,14 +16,14 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "jpeg.h"
+#include "jpg.h"
 
 #include <QImage>
 #include <kdebug.h>
 
 #include <turbojpeg.h>
 
-static const char* const s_jpegpluginformat = "jpg";
+static const char* const s_jpgpluginformat = "jpg";
 
 static const ushort s_peekbuffsize = 32;
 static const TJPF s_jpegpixelformat = TJPF_ARGB;
@@ -45,24 +45,24 @@ static const struct HeadersTblData {
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
-JPEGHandler::JPEGHandler()
+JPGHandler::JPGHandler()
 {
 }
 
-JPEGHandler::~JPEGHandler()
+JPGHandler::~JPGHandler()
 {
 }
 
-bool JPEGHandler::canRead() const
+bool JPGHandler::canRead() const
 {
     if (canRead(device())) {
-        setFormat(s_jpegpluginformat);
+        setFormat(s_jpgpluginformat);
         return true;
     }
     return false;
 }
 
-bool JPEGHandler::read(QImage *image)
+bool JPGHandler::read(QImage *image)
 {
     const QByteArray data = device()->readAll();
 
@@ -134,18 +134,18 @@ bool JPEGHandler::read(QImage *image)
     return true;
 }
 
-bool JPEGHandler::write(const QImage &image)
+bool JPGHandler::write(const QImage &image)
 {
     // this plugin is a read-only kind of plugin
     return false;
 }
 
-QByteArray JPEGHandler::name() const
+QByteArray JPGHandler::name() const
 {
-    return s_jpegpluginformat;
+    return s_jpgpluginformat;
 }
 
-bool JPEGHandler::canRead(QIODevice *device)
+bool JPGHandler::canRead(QIODevice *device)
 {
     if (Q_UNLIKELY(!device)) {
         kWarning() << "Called with no device";
@@ -169,38 +169,38 @@ bool JPEGHandler::canRead(QIODevice *device)
     return false;
 }
 
-QStringList JPEGPlugin::keys() const
+QStringList JPGPlugin::keys() const
 {
-    return QStringList() << s_jpegpluginformat;
+    return QStringList() << s_jpgpluginformat;
 }
 
-QList<QByteArray> JPEGPlugin::mimeTypes() const
+QList<QByteArray> JPGPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()
         << "image/jpeg";
     return list;
 }
 
-QImageIOPlugin::Capabilities JPEGPlugin::capabilities(QIODevice *device, const QByteArray &format) const
+QImageIOPlugin::Capabilities JPGPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == s_jpegpluginformat) {
+    if (format == s_jpgpluginformat) {
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
     }
     if (!device || !device->isOpen()) {
         return 0;
     }
-    if (device->isReadable() && JPEGHandler::canRead(device)) {
+    if (device->isReadable() && JPGHandler::canRead(device)) {
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
     }
     return 0;
 }
 
-QImageIOHandler *JPEGPlugin::create(QIODevice *device, const QByteArray &format) const
+QImageIOHandler *JPGPlugin::create(QIODevice *device, const QByteArray &format) const
 {
-    QImageIOHandler *handler = new JPEGHandler();
+    QImageIOHandler *handler = new JPGHandler();
     handler->setDevice(device);
     handler->setFormat(format);
     return handler;
 }
 
-Q_EXPORT_PLUGIN2(jpeg, JPEGPlugin)
+Q_EXPORT_PLUGIN2(jpg, JPGPlugin)

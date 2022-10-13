@@ -16,17 +16,17 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef KIMG_JPEG_H
-#define KIMG_JPEG_H
+#ifndef KIMG_JPG_H
+#define KIMG_JPG_H
 
 #include <QtCore/qstringlist.h>
 #include <QtGui/qimageiohandler.h>
 
-class JPEGHandler : public QImageIOHandler
+class JPGHandler : public QImageIOHandler
 {
 public:
-    JPEGHandler();
-    ~JPEGHandler();
+    JPGHandler();
+    ~JPGHandler();
 
     bool canRead() const final;
     bool read(QImage *image) final;
@@ -37,7 +37,7 @@ public:
     static bool canRead(QIODevice *device);
 };
 
-class JPEGPlugin : public QImageIOPlugin
+class JPGPlugin : public QImageIOPlugin
 {
 public:
     QStringList keys() const;
@@ -46,5 +46,5 @@ public:
     QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;
 };
 
-#endif // KIMG_JPEG_H
+#endif // KIMG_JPG_H
  
