@@ -150,7 +150,7 @@ bool JP2Handler::read(QImage *image)
     opj_set_default_decoder_parameters(&ojparameters);
     ojparameters.m_verbose = true;
     if (Q_UNLIKELY(opj_setup_decoder(ojcodec, &ojparameters) == OPJ_FALSE)) {
-        kWarning() << "Could setup decoder";
+        kWarning() << "Could not setup decoder";
         opj_destroy_codec(ojcodec);
         opj_stream_destroy(ojstream);
         return false;
@@ -174,7 +174,7 @@ bool JP2Handler::read(QImage *image)
     }
 
     if (Q_UNLIKELY(opj_end_decompress(ojcodec, ojstream) == OPJ_FALSE)) {
-        kWarning() << "Could end decompression";
+        kWarning() << "Could not end decompression";
         opj_destroy_codec(ojcodec);
         opj_stream_destroy(ojstream);
         opj_image_destroy(ojimage);

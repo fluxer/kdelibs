@@ -200,7 +200,7 @@ bool ICOHandler::read(QImage *image)
                 }
                 default: {
                     // TODO:
-                    kWarning() << "Unsupported BMP bytes per-pixel" << bmpbpp;
+                    kWarning() << "Unsupported BMP bits per-pixel" << bmpbpp;
                     continue;
                 }
             }
