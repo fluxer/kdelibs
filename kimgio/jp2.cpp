@@ -30,7 +30,10 @@ static const OPJ_SIZE_T s_ojbuffersize = QT_BUFFSIZE;
 static const ushort s_peekbuffsize = 32;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
-static const uchar s_jp2header[] = { 0x00, 0x00, 0x00, 0x0c, 0x6a, 0x50, 0x20, 0x20, 0x0d, 0x0a, 0x87, 0x0a };
+// https://www.rfc-editor.org/rfc/rfc3745
+// openjpeg/tests/j2k_random_tile_access.c
+static const uchar s_jp2rfc3745header[] = { 0x00, 0x00, 0x00, 0x0c, 0x6a, 0x50, 0x20, 0x20, 0x0d, 0x0a, 0x87, 0x0a };
+static const uchar s_jp2header[] = { 0x0d, 0x0a, 0x87, 0x0a };
 static const uchar s_j2kheader[] = { 0xff, 0x4f, 0xff, 0x51 };
 
 static const struct HeadersTblData {
@@ -38,7 +41,8 @@ static const struct HeadersTblData {
     const int headersize;
     const OPJ_CODEC_FORMAT ojcodec;
 } HeadersTbl[] = {
-    { s_jp2header, 12, OPJ_CODEC_JP2 },
+    { s_jp2rfc3745header, 12, OPJ_CODEC_JP2 },
+    { s_jp2header, 4, OPJ_CODEC_JP2 },
     { s_j2kheader, 4, OPJ_CODEC_J2K }
     // TODO: OPJ_CODEC_JPT
 };
