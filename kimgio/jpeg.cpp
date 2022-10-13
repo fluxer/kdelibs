@@ -71,7 +71,7 @@ bool JPEGHandler::read(QImage *image)
     }
 
     tjhandle jpegdecomp = tjInitDecompress();
-    if (!jpegdecomp) {
+    if (Q_UNLIKELY(!jpegdecomp)) {
         kWarning() << "Could not initialize decompressor" << tjGetErrorStr();
         return false;
     }
@@ -86,7 +86,7 @@ bool JPEGHandler::read(QImage *image)
         &jpegwidth, &jpegheight,
         &jpegsubsamp, &jpegcolorspace
     );
-    if (jpegstatus != 0) {
+    if (Q_UNLIKELY(jpegstatus != 0)) {
         kWarning() << "Could not decompress header" << tjGetErrorStr2(jpegdecomp);
         (void)tjDestroy(jpegdecomp);
         return false;
@@ -94,7 +94,7 @@ bool JPEGHandler::read(QImage *image)
 
     int jpegbuffersize = (jpegwidth * jpegheight * tjPixelSize[s_jpegpixelformat]);
     unsigned char *jpegbuffer = tjAlloc(jpegbuffersize);
-    if (!jpegbuffer) {
+    if (Q_UNLIKELY(!jpegbuffer)) {
         kWarning() << "Could not allocate buffer" << tjGetErrorStr2(jpegdecomp);
         (void)tjDestroy(jpegdecomp);
         return false;
@@ -108,7 +108,7 @@ bool JPEGHandler::read(QImage *image)
         s_jpegpixelformat,
         TJFLAG_FASTDCT
     );
-    if (jpegstatus != 0) {
+    if (Q_UNLIKELY(jpegstatus != 0)) {
         kWarning() << "Could not decompress" << tjGetErrorStr2(jpegdecomp);
         tjFree(jpegbuffer);
         (void)tjDestroy(jpegdecomp);
@@ -116,7 +116,7 @@ bool JPEGHandler::read(QImage *image)
     }
 
     *image = QImage(jpegwidth, jpegheight, QImage::Format_ARGB32);
-    if (image->isNull()) {
+    if (Q_UNLIKELY(image->isNull())) {
         tjFree(jpegbuffer);
         (void)tjDestroy(jpegdecomp);
         return false;

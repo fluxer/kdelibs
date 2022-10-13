@@ -126,7 +126,7 @@ bool JP2Handler::read(QImage *image)
     }
 
     opj_codec_t* ojcodec = opj_create_decompress(guessOJCodec(data));
-    if (!ojcodec) {
+    if (Q_UNLIKELY(!ojcodec)) {
         kWarning() << "Could not create codec";
         return false;
     }
@@ -142,7 +142,7 @@ bool JP2Handler::read(QImage *image)
     opj_setup_decoder(ojcodec, &ojparameters);
 
     opj_stream_t *ojstream = opj_stream_create(s_ojbuffersize, OPJ_TRUE);
-    if (!ojstream) {
+    if (Q_UNLIKELY(!ojstream)) {
         kWarning() << "Could not create stream";
         opj_destroy_codec(ojcodec);
         return false;
@@ -155,7 +155,7 @@ bool JP2Handler::read(QImage *image)
     opj_stream_set_user_data(ojstream, this, NULL);
 
     opj_image_t* ojimage = NULL;
-    if (opj_read_header(ojstream, ojcodec, &ojimage) == OPJ_FALSE) {
+    if (Q_UNLIKELY(opj_read_header(ojstream, ojcodec, &ojimage) == OPJ_FALSE)) {
         kWarning() << "Could not read header";
         opj_destroy_codec(ojcodec);
         opj_stream_destroy(ojstream);
@@ -163,13 +163,13 @@ bool JP2Handler::read(QImage *image)
         return false;
     }
 
-    if (opj_decode(ojcodec, ojstream, ojimage) == OPJ_FALSE) {
+    if (Q_UNLIKELY(opj_decode(ojcodec, ojstream, ojimage) == OPJ_FALSE)) {
         kWarning() << "Could not decode stream";
     }
     opj_end_decompress(ojcodec, ojstream);
 
     *image = QImage(ojimage->comps->w, ojimage->comps->h, QImage::Format_ARGB32);
-    if (image->isNull()) {
+    if (Q_UNLIKELY(image->isNull())) {
         kWarning() << "Could not create image QImage";
         opj_destroy_codec(ojcodec);
         opj_stream_destroy(ojstream);

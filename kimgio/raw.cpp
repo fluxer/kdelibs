@@ -56,28 +56,28 @@ bool RAWHandler::read(QImage *image)
         raw.imgdata.params.output_color = LIBRAW_COLORSPACE_sRGB;
 
         int rawresult = raw.open_buffer(data.data(), data.size());
-        if (rawresult != LIBRAW_SUCCESS) {
+        if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
             kWarning() << "Could not open buffer" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
 
         rawresult = raw.unpack();
-        if (rawresult != LIBRAW_SUCCESS) {
+        if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
             kWarning() << "Could not unpack" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
 
         rawresult = raw.dcraw_process();
-        if (rawresult != LIBRAW_SUCCESS) {
+        if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
             kWarning() << "Could not process" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
 
         libraw_processed_image_t* rawimg = raw.dcraw_make_mem_image(&rawresult);
-        if (!rawimg || rawresult != LIBRAW_SUCCESS) {
+        if (Q_UNLIKELY(!rawimg || rawresult != LIBRAW_SUCCESS)) {
             kWarning() << "Could not make image" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
@@ -91,7 +91,7 @@ bool RAWHandler::read(QImage *image)
         }
 
         *image = QImage(rawimg->width, rawimg->height, QImage::Format_ARGB32);
-        if (image->isNull()) {
+        if (Q_UNLIKELY(image->isNull())) {
             kWarning() << "Could not create QImage";
             raw.dcraw_clear_mem(rawimg);
             raw.recycle();
@@ -149,7 +149,7 @@ bool RAWHandler::canRead(QIODevice *device)
             kDebug() << libraw_strerror(rawresult);
             raw.recycle();
             return false;
-        } else if (rawresult != LIBRAW_SUCCESS) {
+        } else if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
             kWarning() << "Could not open buffer" << libraw_strerror(rawresult);
             raw.recycle();
             return false;

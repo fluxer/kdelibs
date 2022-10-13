@@ -102,19 +102,14 @@ bool ICOHandler::read(QImage *image)
     Q_ASSERT(sizeof(ushort) == 2);
     Q_ASSERT(sizeof(uint) == 4);
 
+    QDataStream datastream(device());
+    datastream.setByteOrder(QDataStream::LittleEndian);
     ushort icoreserved = 0;
     ushort icotype = 0;
     ushort iconimages = 0;
-    QDataStream datastream(device());
-    datastream.setByteOrder(QDataStream::LittleEndian);
-
     datastream >> icoreserved;
     datastream >> icotype;
     datastream >> iconimages;
-    if (datastream.atEnd()) {
-        kWarning() << "Reached end of data before valid ICO";
-        return false;
-    }
 
     if (icotype == ICOType::CursorType) {
         kWarning() << "Cursor icons are not supported";
@@ -145,19 +140,19 @@ bool ICOHandler::read(QImage *image)
         datastream >> icoimagesize;
         datastream >> icoimageoffset;
 
-        if (icoimageoffset > datastream.device()->size()) {
+        if (Q_UNLIKELY(icoimageoffset > datastream.device()->size())) {
             kWarning() << "Invalid image offset" << icoimageoffset;
             return false;
         }
 
-        if (icoimagesize >= INT_MAX) {
+        if (Q_UNLIKELY(icoimagesize >= INT_MAX)) {
             kWarning() << "ICO image size is too big" << icoimagesize;
             continue;
         }
 
         datastream.device()->seek(icoimageoffset);
         QByteArray imagebytes(icoimagesize, char(0));
-        if (datastream.readRawData(imagebytes.data(), icoimagesize) != icoimagesize) {
+        if (Q_UNLIKELY(datastream.readRawData(imagebytes.data(), icoimagesize) != icoimagesize)) {
             kWarning() << "Could not read image data";
             return false;
         }
@@ -210,13 +205,13 @@ bool ICOHandler::read(QImage *image)
                 }
             }
 
-            if (bmpimagesize >= INT_MAX) {
+            if (Q_UNLIKELY(bmpimagesize >= INT_MAX)) {
                 kWarning() << "BMP image size is too big" << bmpimagesize;
                 continue;
             }
 
             imagebytes.resize(bmpimagesize);
-            if (datastream.readRawData(imagebytes.data(), bmpimagesize) != bmpimagesize) {
+            if (Q_UNLIKELY(datastream.readRawData(imagebytes.data(), bmpimagesize) != bmpimagesize)) {
                 kWarning() << "Could not read BMP image data";
                 continue;
             }
@@ -225,13 +220,8 @@ bool ICOHandler::read(QImage *image)
             const int imagewidth = (icowidth ? icowidth : bmpwidth);
             const int imageheight = (icoheight ? icoheight : bmpheight);
 
-            if (imagewidth > USHRT_MAX || imageheight > USHRT_MAX) {
-                kWarning() << "Image width or height is too big" << imagewidth << imageheight;
-                continue;
-            }
-
             QImage bmpimage(imagewidth, imageheight, imageformat);
-            if (bmpimage.isNull()) {
+            if (Q_UNLIKELY(bmpimage.isNull())) {
                 kWarning() << "Could not create BMP image" << imagewidth << imageheight << imageformat;
                 continue;
             }
@@ -248,7 +238,7 @@ bool ICOHandler::read(QImage *image)
         }
 
         const QImage pngimage = QImage::fromData(imagebytes.constData(), imagebytes.size(), "PNG");
-        if (!pngimage.isNull()) {
+        if (Q_LIKELY(!pngimage.isNull())) {
             kDebug() << "Valid PNG image" << ii;
             *image = pngimage;
             return true;
