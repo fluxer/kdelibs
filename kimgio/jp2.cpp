@@ -80,9 +80,9 @@ static void oj_error_callback(const char *msg, void *data)
 
 static OPJ_SIZE_T oj_read_callback(void *buffer, OPJ_SIZE_T size, void *data)
 {
-    JP2Handler* jp2handler = static_cast<JP2Handler*>(data);
+    QIODevice* device = static_cast<QIODevice*>(data);
     char* ojbuffer = static_cast<char*>(buffer);
-    const qint64 result = jp2handler->device()->read(ojbuffer, size);
+    const qint64 result = device->read(ojbuffer, size);
     if (result == 0) {
         return -1;
     }
@@ -91,8 +91,8 @@ static OPJ_SIZE_T oj_read_callback(void *buffer, OPJ_SIZE_T size, void *data)
 
 static OPJ_BOOL oj_seek_callback(OPJ_OFF_T size, void *data)
 {
-    JP2Handler* jp2handler = static_cast<JP2Handler*>(data);
-    return jp2handler->device()->seek(size);
+    QIODevice* device = static_cast<QIODevice*>(data);
+    return device->seek(size);
 }
 
 static OPJ_OFF_T oj_skip_callback(OPJ_OFF_T size, void *data)
@@ -123,19 +123,19 @@ bool JP2Handler::canRead() const
 
 bool JP2Handler::read(QImage *image)
 {
-    const QByteArray data = device()->readAll();
-
-    if (Q_UNLIKELY(data.isEmpty())) {
-        return false;
-    }
-
     opj_stream_t *ojstream = opj_stream_create(s_ojbuffersize, OPJ_TRUE);
     if (Q_UNLIKELY(!ojstream)) {
         kWarning() << "Could not create stream";
         return false;
     }
 
-    opj_codec_t* ojcodec = opj_create_decompress(guessOJCodec(data));
+    opj_stream_set_user_data(ojstream, device(), NULL);
+    opj_stream_set_user_data_length(ojstream, device()->size());
+    opj_stream_set_read_function(ojstream, oj_read_callback);
+    opj_stream_set_seek_function(ojstream, oj_seek_callback);
+    opj_stream_set_skip_function(ojstream, oj_skip_callback);
+
+    opj_codec_t* ojcodec = opj_create_decompress(guessOJCodec(device()->peek(s_peekbuffsize)));
     if (Q_UNLIKELY(!ojcodec)) {
         kWarning() << "Could not create codec";
         opj_stream_destroy(ojstream);
@@ -155,12 +155,6 @@ bool JP2Handler::read(QImage *image)
         opj_stream_destroy(ojstream);
         return false;
     }
-
-    opj_stream_set_user_data_length(ojstream, data.size());
-    opj_stream_set_read_function(ojstream, oj_read_callback);
-    opj_stream_set_seek_function(ojstream, oj_seek_callback);
-    opj_stream_set_skip_function(ojstream, oj_skip_callback);
-    opj_stream_set_user_data(ojstream, this, NULL);
 
     opj_image_t* ojimage = NULL;
     if (Q_UNLIKELY(opj_read_header(ojstream, ojcodec, &ojimage) == OPJ_FALSE)) {
