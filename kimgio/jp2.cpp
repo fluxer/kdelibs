@@ -298,7 +298,8 @@ QStringList JP2Plugin::keys() const
 QList<QByteArray> JP2Plugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()
-        << "image/jp2";
+        << "image/jp2"
+        << "image/x-jp2-codestream";
     return list;
 }
 
