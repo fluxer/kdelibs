@@ -227,12 +227,11 @@ bool ICOHandler::read(QImage *image)
             }
 
             QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
-            for (uint bi = 0; bi < bmpimagesize; bi += 4) {
-                *bmpimagebits = qRgba(imagebytes[bi + 2], imagebytes[bi + 1], imagebytes[bi], imagebytes[bi + 3]);
+            for (uint bi = bmpimagesize; bi > 0; bi -= 4) {
+                *bmpimagebits = qRgba(imagebytes[bi - 2], imagebytes[bi - 3], imagebytes[bi - 4], imagebytes[bi - 1]);
                 bmpimagebits++;
             }
-            // pixel data is backwards so flip the image vertically
-            *image = bmpimage.mirrored(false, true);
+            *image = bmpimage;
             kDebug() << "Valid BMP image" << ii;
             return true;
         }
