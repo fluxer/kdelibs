@@ -26,7 +26,11 @@
 static const char* const s_jpgpluginformat = "jpg";
 
 static const ushort s_peekbuffsize = 32;
-static const TJPF s_jpegpixelformat = TJPF_ARGB;
+static const TJPF s_jpegreadpf = TJPF_ARGB;
+static const TJPF s_jpegwritepf = TJPF_BGRA;
+static const TJSAMP s_jpegsubsampling = TJSAMP_444;
+static const int s_jpegquality = 100;
+static const int s_jpegflags = TJFLAG_FASTDCT;
 // for reference:
 // https://en.wikipedia.org/wiki/List_of_file_signatures
 static const uchar s_jpgjfifheader[] = { 0xFF, 0xD8, 0xFF, 0xE0, 0x00, 0x10, 0x4A, 0x46, 0x49, 0x46, 0x00, 0x01 };
@@ -92,7 +96,7 @@ bool JPGHandler::read(QImage *image)
         return false;
     }
 
-    int jpegbuffersize = (jpegwidth * jpegheight * tjPixelSize[s_jpegpixelformat]);
+    int jpegbuffersize = (jpegwidth * jpegheight * tjPixelSize[s_jpegreadpf]);
     unsigned char *jpegbuffer = tjAlloc(jpegbuffersize);
     if (Q_UNLIKELY(!jpegbuffer)) {
         kWarning() << "Could not allocate buffer" << tjGetErrorStr2(jpegdecomp);
@@ -105,8 +109,8 @@ bool JPGHandler::read(QImage *image)
         reinterpret_cast<const uchar*>(data.constData()), data.size(),
         jpegbuffer,
         jpegwidth, 0 , jpegheight,
-        s_jpegpixelformat,
-        TJFLAG_FASTDCT
+        s_jpegreadpf,
+        s_jpegflags
     );
     if (Q_UNLIKELY(jpegstatus != 0)) {
         kWarning() << "Could not decompress" << tjGetErrorStr2(jpegdecomp);
@@ -136,8 +140,54 @@ bool JPGHandler::read(QImage *image)
 
 bool JPGHandler::write(const QImage &image)
 {
-    // this plugin is a read-only kind of plugin
-    return false;
+    if (Q_UNLIKELY(image.isNull())) {
+        return false;
+    }
+
+    const QImage image32 = image.convertToFormat(QImage::Format_ARGB32);
+
+    tjhandle jpegcomp = tjInitCompress();
+    if (Q_UNLIKELY(!jpegcomp)) {
+        kWarning() << "Could not initialize compressor" << tjGetErrorStr();
+        return false;
+    }
+
+    ulong jpegbuffersize = (image32.width() * image32.height() * tjPixelSize[s_jpegwritepf]);
+    unsigned char *jpegbuffer = tjAlloc(jpegbuffersize);
+    if (Q_UNLIKELY(!jpegbuffer)) {
+        kWarning() << "Could not allocate buffer" << tjGetErrorStr2(jpegcomp);
+        (void)tjDestroy(jpegcomp);
+        return false;
+    }
+
+    int jpegstatus = tjCompress2(
+        jpegcomp,
+        image32.constBits(),
+        image32.width(), 0 , image32.height(),
+        s_jpegwritepf,
+        &jpegbuffer, &jpegbuffersize,
+        s_jpegsubsampling,
+        s_jpegquality,
+        s_jpegflags
+    );
+    if (Q_UNLIKELY(jpegstatus != 0)) {
+        kWarning() << "Could not compress" << tjGetErrorStr2(jpegcomp);
+        tjFree(jpegbuffer);
+        (void)tjDestroy(jpegcomp);
+        return false;
+    }
+
+    if (device()->write(reinterpret_cast<char*>(jpegbuffer), jpegbuffersize) != jpegbuffersize) {
+        kWarning() << "Could not write data to device";
+        tjFree(jpegbuffer);
+        (void)tjDestroy(jpegcomp);
+        return false;
+    }
+
+    tjFree(jpegbuffer);
+    (void)tjDestroy(jpegcomp);
+
+    return true;
 }
 
 QByteArray JPGHandler::name() const
@@ -184,15 +234,19 @@ QList<QByteArray> JPGPlugin::mimeTypes() const
 QImageIOPlugin::Capabilities JPGPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
     if (format == s_jpgpluginformat) {
-        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead | QImageIOPlugin::CanWrite);
     }
     if (!device || !device->isOpen()) {
         return 0;
     }
+    QImageIOPlugin::Capabilities cap;
     if (device->isReadable() && JPGHandler::canRead(device)) {
-        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+        cap |= QImageIOPlugin::CanRead;
     }
-    return 0;
+    if (device->isWritable()) {
+        cap |= QImageIOPlugin::CanWrite;
+    }
+    return cap;
 }
 
 QImageIOHandler *JPGPlugin::create(QIODevice *device, const QByteArray &format) const
