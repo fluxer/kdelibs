@@ -175,7 +175,7 @@ QList<QByteArray> RAWPlugin::mimeTypes() const
     if (list.isEmpty()) {
         foreach (const KMimeType::Ptr &mime, KMimeType::allMimeTypes()) {
             // NOTE: RAW MIME types are sub-class of image/x-dcraw
-            if (mime->is(QString::fromLatin1("image/x-dcraw"))
+            if (mime && mime->is(QString::fromLatin1("image/x-dcraw"))
                 && mime->name() != QLatin1String("image/x-dcraw")) {
                 list.append(mime->name().toLatin1());
             }
