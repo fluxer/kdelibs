@@ -211,7 +211,6 @@
    <header>klineedit.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
  <connections>
   <connection>
    <sender>terminalCheck</sender>

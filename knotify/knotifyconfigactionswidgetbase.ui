@@ -157,7 +157,6 @@
    <header>kcombobox.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
  <connections>
   <connection>
    <sender>Sound_check</sender>

@@ -743,7 +743,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
  <connections>
   <connection>
    <sender>inRed</sender>

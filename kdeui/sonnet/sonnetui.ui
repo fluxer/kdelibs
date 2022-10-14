@@ -286,6 +286,5 @@ Click here if you consider the unknown word not to be misspelled, and you want t
   <tabstop>m_suggestions</tabstop>
   <tabstop>m_language</tabstop>
  </tabstops>
- <resources/>
  <connections/>
 </ui>

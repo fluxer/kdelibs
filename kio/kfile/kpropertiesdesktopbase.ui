@@ -268,6 +268,5 @@ Following the command, you can have several place holders which will be replaced
    <header>kseparator.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
  <connections/>
 </ui>
