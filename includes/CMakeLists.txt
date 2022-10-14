@@ -111,6 +111,8 @@ install(
     KDiskFreeSpaceInfo
     KDoubleNumInput
     KDoubleValidator
+    KEMail
+    KEMailDialog
     KEMailSettings
     KEditListWidget
     KEditToolBar

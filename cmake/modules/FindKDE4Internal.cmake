@@ -245,6 +245,7 @@ set(_kde_libraries
     khttp
     kspeech
     karchive
+    kemail
     kfile
     kidletime
     kio

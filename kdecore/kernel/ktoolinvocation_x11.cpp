@@ -120,11 +120,8 @@ void KToolInvocation::invokeMailer(const QString &_to, const QString &_cc, const
         return;
 
     KConfig config(QString::fromLatin1("emaildefaults"));
-    KConfigGroup defaultsGrp(&config, "Defaults");
+    KConfigGroup profileGrp(&config, "General");
 
-    QString group = defaultsGrp.readEntry("Profile","Default");
-
-    KConfigGroup profileGrp(&config, QString::fromLatin1("PROFILE_%1").arg(group) );
     QString command = profileGrp.readPathEntry("EmailClient", QString());
 
     QString to, cc, bcc;

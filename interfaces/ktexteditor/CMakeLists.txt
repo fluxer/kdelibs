@@ -2,6 +2,8 @@ include_directories(
     ${KDE4_KPARTS_INCLUDES}
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}/..
+    ${CMAKE_SOURCE_DIR}/kutils/kemail
+    ${CMAKE_BINARY_DIR}/kutils/kemail
 )
 
 ########### next target ###############
@@ -36,6 +38,7 @@ add_library(ktexteditor ${LIBRARY_TYPE} ${ktexteditor_LIB_SRCS})
 target_link_libraries(ktexteditor
     ${KDE4_KDECORE_LIBS}
     ${KDE4_KPARTS_LIBS}
+    ${KDE4_KEMAIL_LIBS}
     ${QT_QTDBUS_LIBRARY}
 )
 

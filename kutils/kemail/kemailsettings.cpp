@@ -1,0 +1,133 @@
+/*
+ * Copyright (c) 2000 Alex Zepeda <zipzippy@sonic.net>
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ */
+
+#include "kemailsettings.h"
+
+#include <kconfig.h>
+#include <kconfiggroup.h>
+#include <klocale.h>
+#include <kdebug.h>
+
+class KEMailSettingsPrivate {
+public:
+    KEMailSettingsPrivate();
+    ~KEMailSettingsPrivate();
+
+    KConfig *m_config;
+};
+
+KEMailSettingsPrivate::KEMailSettingsPrivate()
+    : m_config(nullptr)
+{
+    m_config = new KConfig("emaildefaults");
+}
+
+KEMailSettingsPrivate::~KEMailSettingsPrivate()
+{
+    delete m_config;
+}
+
+QString KEMailSettings::getSetting(KEMailSettings::Setting s) const
+{
+    KConfigGroup cg(d->m_config, QString("General"));
+    switch (s) {
+        case ClientProgram: {
+            return cg.readEntry("EmailClient");
+        }
+        case ClientTerminal: {
+            return cg.readEntry("TerminalClient", QVariant(false)).toString();
+        }
+        case RealName: {
+            return cg.readEntry("FullName");
+        }
+        case EmailAddress: {
+            return cg.readEntry("EmailAddress");
+        }
+        case Organization: {
+            return cg.readEntry("Organization");
+        }
+        case OutServer: {
+            return cg.readEntry("OutgoingServer");
+                break;
+        }
+        case OutServerLogin: {
+            return cg.readEntry("OutgoingUserName");
+        }
+        case OutServerPass: {
+            return cg.readEntry("OutgoingPassword");
+        }
+    };
+    return QString();
+}
+void KEMailSettings::setSetting(KEMailSettings::Setting s, const QString  &v)
+{
+    KConfigGroup cg(d->m_config, QString("General"));
+    switch (s) {
+        case ClientProgram: {
+            cg.writePathEntry("EmailClient", v);
+            break;
+        }
+        case ClientTerminal: {
+            cg.writeEntry("TerminalClient", (v == "true") );
+            break;
+        }
+        case RealName: {
+            cg.writeEntry("FullName", v);
+            break;
+        }
+        case EmailAddress: {
+            cg.writeEntry("EmailAddress", v);
+            break;
+        }
+        case Organization: {
+            cg.writeEntry("Organization", v);
+            break;
+        }
+        case OutServer: {
+            cg.writeEntry("OutgoingServer", v);
+            break;
+        }
+        case OutServerLogin: {
+            cg.writeEntry("OutgoingUserName", v);
+            break;
+        }
+        case OutServerPass: {
+            cg.writeEntry("OutgoingPassword", v);
+            break;
+        }
+    };
+    cg.sync();
+}
+
+KEMailSettings::KEMailSettings()
+    : d(new KEMailSettingsPrivate())
+{
+}
+
+KEMailSettings::~KEMailSettings()
+{
+    delete d;
+}

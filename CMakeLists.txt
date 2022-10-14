@@ -85,7 +85,7 @@ set_package_properties(CURL PROPERTIES
     DESCRIPTION "Command line tool and library for transferring data with URLs"
     URL "https://curl.se/"
     TYPE REQUIRED
-    PURPOSE "KIO HTTP(S) slave"
+    PURPOSE "E-mail library and KIO HTTP(S) slave"
 )
 
 # optional features
