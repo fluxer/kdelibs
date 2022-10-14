@@ -448,7 +448,7 @@ QStringList KRun::processDesktopExec(const KService &_service, const KUrl::List&
             if (!_service.path().isEmpty()) {
                 terminal += " --workdir " + KShell::quoteArg(_service.path());
             }
-            terminal += " -caption=%c %i %m";
+            terminal += " --icon '%i' --caption '%c'";
         }
         terminal += ' ';
         terminal += _service.terminalOptions();
