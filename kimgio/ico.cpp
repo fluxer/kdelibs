@@ -59,8 +59,8 @@ static const struct HeadersTblData {
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
 enum ICOType {
-    IconType = 1,
-    CursorType = 2
+    TypeIcon = 1,
+    TypeCursor = 2
 };
 
 enum BMPCompression {
@@ -111,10 +111,10 @@ bool ICOHandler::read(QImage *image)
     datastream >> icotype;
     datastream >> iconimages;
 
-    if (icotype == ICOType::CursorType) {
+    if (icotype == ICOType::TypeCursor) {
         kWarning() << "Cursor icons are not supported";
         return false;
-    } else if (icotype != ICOType::IconType) {
+    } else if (icotype != ICOType::TypeIcon) {
         kWarning() << "Invalid icon type" << icotype;
         return false;
     } else if (iconimages < 1) {
