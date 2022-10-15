@@ -133,6 +133,11 @@ void KEMailDialog::slotButtonClicked(int button)
             d->ui.attachlistwidget->items()
         );
         return;
+    } else if (button == KDialog::Cancel) {
+        if (d->isRunning() &&
+            KMessageBox::questionYesNo(this, i18n("Mail is being send, are you sure?")) == KMessageBox::Yes) {
+            d->terminate();
+        }
     }
     KDialog::slotButtonClicked(button);
 }
