@@ -243,7 +243,7 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
     curl_easy_setopt(d->m_curl, CURLOPT_READFUNCTION, KEMailPrivate::curlReadCallback);
     curl_easy_setopt(d->m_curl, CURLOPT_READDATA, d);
     curl_easy_setopt(d->m_curl, CURLOPT_UPLOAD, 1L);
-    curl_easy_setopt(d->m_curl, CURLOPT_VERBOSE, 1L);
+    // curl_easy_setopt(d->m_curl, CURLOPT_VERBOSE, 1L);
     // TODO: option for these and add setting to KEMailSettings
     curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
     curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_TRY);
