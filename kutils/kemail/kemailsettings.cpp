@@ -31,7 +31,8 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-class KEMailSettingsPrivate {
+class KEMailSettingsPrivate
+{
 public:
     KEMailSettingsPrivate();
     ~KEMailSettingsPrivate();
@@ -50,10 +51,10 @@ KEMailSettingsPrivate::~KEMailSettingsPrivate()
     delete m_config;
 }
 
-QString KEMailSettings::getSetting(KEMailSettings::Setting s) const
+QString KEMailSettings::getSetting(KEMailSettings::Setting setting) const
 {
     KConfigGroup cg(d->m_config, QString("General"));
-    switch (s) {
+    switch (setting) {
         case ClientProgram: {
             return cg.readEntry("EmailClient");
         }
@@ -71,7 +72,6 @@ QString KEMailSettings::getSetting(KEMailSettings::Setting s) const
         }
         case OutServer: {
             return cg.readEntry("OutgoingServer");
-                break;
         }
         case OutServerLogin: {
             return cg.readEntry("OutgoingUserName");
@@ -82,40 +82,40 @@ QString KEMailSettings::getSetting(KEMailSettings::Setting s) const
     };
     return QString();
 }
-void KEMailSettings::setSetting(KEMailSettings::Setting s, const QString  &v)
+void KEMailSettings::setSetting(KEMailSettings::Setting setting, const QString &value)
 {
     KConfigGroup cg(d->m_config, QString("General"));
-    switch (s) {
+    switch (setting) {
         case ClientProgram: {
-            cg.writePathEntry("EmailClient", v);
+            cg.writePathEntry("EmailClient", value);
             break;
         }
         case ClientTerminal: {
-            cg.writeEntry("TerminalClient", (v == "true") );
+            cg.writeEntry("TerminalClient", (value == "true") );
             break;
         }
         case RealName: {
-            cg.writeEntry("FullName", v);
+            cg.writeEntry("FullName", value);
             break;
         }
         case EmailAddress: {
-            cg.writeEntry("EmailAddress", v);
+            cg.writeEntry("EmailAddress", value);
             break;
         }
         case Organization: {
-            cg.writeEntry("Organization", v);
+            cg.writeEntry("Organization", value);
             break;
         }
         case OutServer: {
-            cg.writeEntry("OutgoingServer", v);
+            cg.writeEntry("OutgoingServer", value);
             break;
         }
         case OutServerLogin: {
-            cg.writeEntry("OutgoingUserName", v);
+            cg.writeEntry("OutgoingUserName", value);
             break;
         }
         case OutServerPass: {
-            cg.writeEntry("OutgoingPassword", v);
+            cg.writeEntry("OutgoingPassword", value);
             break;
         }
     };

@@ -28,7 +28,7 @@
 class KEMailPrivate;
 
 /*!
-    Class to send mail.
+    Class to send e-mail.
     Example:
     \code
     KEMail kemail;
@@ -44,6 +44,7 @@ class KEMailPrivate;
     @warning the API is subject to change
 
     @see KEMailSettings
+    @see KEMailDialog
 */
 class KEMAIL_EXPORT KEMail : public QObject
 {

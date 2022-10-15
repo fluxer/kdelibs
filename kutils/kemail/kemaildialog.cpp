@@ -76,7 +76,7 @@ void KEMailDialog::slotButtonClicked(int button)
             KMessageBox::error(this, i18n("No server specified"));
             return;
         } else if (d->m_kemail->from().isEmpty()) {
-            KMessageBox::error(this, i18n("No Sender specified"));
+            KMessageBox::error(this, i18n("No sender specified"));
             return;
         } else if (d->m_kemail->to().isEmpty()) {
             KMessageBox::error(this, i18n("No recipients specified"));
@@ -88,6 +88,7 @@ void KEMailDialog::slotButtonClicked(int button)
             KMessageBox::error(this, i18n("No message specified"));
             return;
         }
+        // TODO: do it in thread
         const bool result = d->m_kemail->send(
             d->ui.sibjectlineedit->text(),
             d->ui.messagetextedit->textOrHtml(),

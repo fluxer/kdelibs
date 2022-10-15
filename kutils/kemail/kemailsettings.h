@@ -39,14 +39,17 @@ class KEMailSettingsPrivate;
   * a sane way, and allowing any program to manage multiple e-mail 
   * profiles effortlessly
   *
+  * @see KEmail
+  * @see KEmailDialog
+  *
   * @author Alex Zepeda zipzippy@sonic.net
   **/
 class KEMAIL_EXPORT KEMailSettings {
 public:
     /**
      * The list of settings that I thought of when I wrote this 
-     * class.  Any extra settings thought of later can be accessed 
-     * easily with getExtendedSetting and setExtendedSetting.
+     * class.
+     *
      * @see getSetting()
      * @see setSetting()
      **/
@@ -62,8 +65,8 @@ public:
     };
 
     /**
-        * Default constructor, just sets things up.
-        **/
+     * Default constructor, just sets things up.
+     **/
     KEMailSettings();
 
     /**
@@ -72,18 +75,18 @@ public:
     ~KEMailSettings();
 
     /**
-        * Get one of the predefined "basic" settings.
-        * @param setting the setting to get
-        * @return the value of the setting, or QString() if not set
-        **/
-    QString getSetting(const KEMailSettings::Setting ssetting) const;
+     * Get one of the predefined "basic" settings.
+     * @param setting the setting to get
+     * @return the value of the setting, or QString() if not set
+     **/
+    QString getSetting(const KEMailSettings::Setting setting) const;
 
     /**
      * Set one of the predefined "basic" settings.
      * @param setting the setting to set
      * @param value the new value of the setting, or QString() to unset
      **/
-    void setSetting(KEMailSettings::Setting setting, const QString &value);
+    void setSetting(const KEMailSettings::Setting setting, const QString &value);
 
 private:
     KEMailSettingsPrivate* const d;

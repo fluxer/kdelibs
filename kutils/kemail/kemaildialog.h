@@ -27,7 +27,8 @@
 class KEMailDialogPrivate;
 
 /*!
-    Class to send mail via convenience dialog.
+    Class to send e-mail via convenience dialog.
+
     Example:
     \code
     KEMailDialog kemaildialog;
@@ -37,6 +38,9 @@ class KEMailDialogPrivate;
 
     @since 4.22
     @warning the API is subject to change
+
+    @see KEMail
+    @see KEMailSettings
 */
 class KEMAIL_EXPORT KEMailDialog : public KDialog
 {
