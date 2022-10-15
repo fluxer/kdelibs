@@ -281,17 +281,32 @@ struct archive* KArchivePrivate::openRead(const QByteArray &path)
     struct archive* readarchive = archive_read_new();
 
     if (readarchive) {
-        archive_read_support_filter_all(readarchive);
-        archive_read_support_format_all(readarchive);
+        if (archive_read_support_filter_all(readarchive) != ARCHIVE_OK) {
+            m_error = i18n("archive_read_support_filter_all: %1", archive_error_string(readarchive));
+            kDebug() << m_error;
+            KArchivePrivate::closeRead(readarchive);
+            return nullptr;
+        }
+
+        if (archive_read_support_format_all(readarchive) != ARCHIVE_OK) {
+            m_error = i18n("archive_read_support_format_all: %1", archive_error_string(readarchive));
+            kDebug() << m_error;
+            KArchivePrivate::closeRead(readarchive);
+            return nullptr;
+        }
 
         if (!m_readpass.isEmpty() && archive_read_add_passphrase(readarchive, m_readpass.constData()) != ARCHIVE_OK) {
             m_error = i18n("archive_read_add_passphrase: %1", archive_error_string(readarchive));
             kDebug() << m_error;
+            KArchivePrivate::closeRead(readarchive);
+            return nullptr;
         }
 
         if (archive_read_open_filename(readarchive, path, KARCHIVE_BUFFSIZE) != ARCHIVE_OK) {
             m_error = i18n("archive_read_open_filename: %1", archive_error_string(readarchive));
             kDebug() << m_error;
+            KArchivePrivate::closeRead(readarchive);
+            return nullptr;
         }
     }
 
@@ -328,19 +343,24 @@ struct archive* KArchivePrivate::openWrite(const QByteArray &path)
         } else if (archive_write_set_format_filter_by_ext(writearchive, path) != ARCHIVE_OK) {
             m_error = i18n("archive_write_set_format_filter_by_ext: %1", archive_error_string(writearchive));
             kDebug() << m_error;
-            archive_write_add_filter_none(writearchive);
+            KArchivePrivate::closeWrite(writearchive);
+            return nullptr;
         }
 
-        archive_write_set_format_pax_restricted(writearchive);
+        (void)archive_write_set_format_pax_restricted(writearchive);
 
         if (!m_writepass.isEmpty() && archive_write_set_passphrase(writearchive, m_writepass.constData()) != ARCHIVE_OK) {
             m_error = i18n("archive_write_set_passphrase: %1", archive_error_string(writearchive));
             kDebug() << m_error;
+            KArchivePrivate::closeWrite(writearchive);
+            return nullptr;
         }
 
         if (archive_write_open_filename(writearchive, path) != ARCHIVE_OK) {
             m_error = i18n("archive_write_open_filename: %1", archive_error_string(writearchive));
             kDebug() << m_error;
+            KArchivePrivate::closeWrite(writearchive);
+            return nullptr;
         }
     }
 
@@ -360,8 +380,19 @@ struct archive* KArchivePrivate::openDisk(const bool preserve)
             extractFlags |= ARCHIVE_EXTRACT_FFLAGS | ARCHIVE_EXTRACT_MAC_METADATA;
         }
 
-        archive_write_disk_set_options(writearchive, extractFlags);
-        archive_write_disk_set_standard_lookup(writearchive);
+        if (archive_write_disk_set_options(writearchive, extractFlags) != ARCHIVE_OK) {
+            m_error = i18n("archive_write_disk_set_options: %1", archive_error_string(writearchive));
+            kDebug() << m_error;
+            KArchivePrivate::closeWrite(writearchive);
+            return nullptr;
+        }
+
+        if (archive_write_disk_set_standard_lookup(writearchive) != ARCHIVE_OK) {
+            m_error = i18n("archive_write_disk_set_standard_lookup: %1", archive_error_string(writearchive));
+            kDebug() << m_error;
+            KArchivePrivate::closeWrite(writearchive);
+            return nullptr;
+        }
     }
 
     return writearchive;
