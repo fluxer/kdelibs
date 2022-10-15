@@ -30,7 +30,9 @@ public:
     KEMailPrivate();
     ~KEMailPrivate();
 
-    static QByteArray makeData(const QString &subject, const QString &message, const KUrl::List &attach);
+    static QByteArray makeData(const QString &from, const QStringList &to,
+                               const QString &subject, const QString &message,
+                               const KUrl::List &attach);
 
     static size_t curlReadCallback(char *ptr, size_t size, size_t nmemb, void *userdata);
 
@@ -40,7 +42,6 @@ public:
     QString m_user;
     QString m_password;
     QString m_from;
-    QStringList m_to;
     QByteArray m_data;
     QString m_errorstring;
 };
@@ -63,16 +64,38 @@ KEMailPrivate::~KEMailPrivate()
 
 // for reference:
 // https://www.rfc-editor.org/rfc/rfc5322
-QByteArray KEMailPrivate::makeData(const QString &subject, const QString &message, const KUrl::List &attach)
+QByteArray KEMailPrivate::makeData(const QString &from, const QStringList &to,
+                                   const QString &subject, const QString &message,
+                                   const KUrl::List &attach)
 {
     // TODO:
     Q_UNUSED(attach);
 
     QByteArray subjectbytes("Subject: ");
     subjectbytes.append(subject.toAscii());
-    subjectbytes.append("\n\n");
+
+    QByteArray frombytes("From: ");
+    frombytes.append(from.toAscii());
+
+    QByteArray toandccbytes("To: ");
+    toandccbytes.append(to.at(0).toAscii());
+
+    if (to.size() > 1) {
+        toandccbytes.append("\nCc: ");
+        for (int i = 1; i < to.size(); i++) {
+            if (i != 1) {
+                toandccbytes.append(',');
+            }
+            toandccbytes.append(to.at(i).toAscii());
+        }
+    }
 
     QByteArray result = subjectbytes;
+    result.append("\n");
+    result.append(frombytes);
+    result.append("\n");
+    result.append(toandccbytes);
+    result.append("\n\n");
     result.append(message.toAscii());
     result.append("\n");
     result.replace('\n', "\r\n");
@@ -178,38 +201,30 @@ bool KEMail::setFrom(const QString &from)
     return true;
 }
 
-QStringList KEMail::to() const
-{
-    return d->m_to;
-}
-
-bool KEMail::setTo(const QStringList &to)
+bool KEMail::send(const QStringList &to, const QString &subject, const QString &message, const KUrl::List &attach)
 {
     d->m_errorstring.clear();
     if (to.isEmpty()) {
         d->m_errorstring = i18n("Invalid receivers: %1", to.join(QLatin1String(", ")));
         return false;
-    }
-    d->m_to = to;
-    return true;
-}
-
-bool KEMail::send(const QString &subject, const QString &message, const KUrl::List &attach)
-{
-    d->m_errorstring.clear();
-    if (message.isEmpty()) {
+    } else if (subject.isEmpty()) {
+        d->m_errorstring = i18n("Invalid subject: %1", subject);
+        return false;
+    } else if (message.isEmpty()) {
         d->m_errorstring = i18n("Invalid message: %1", message);
         return false;
     }
-    d->m_data = KEMailPrivate::makeData(subject, message, attach);
+
+    if (d->m_curlrcpt) {
+        curl_slist_free_all(d->m_curlrcpt);
+        d->m_curlrcpt = nullptr;
+    }
+
+    d->m_data = KEMailPrivate::makeData(d->m_from, to, subject, message, attach);
     d->m_curl = curl_easy_init();
     if (!d->m_curl) {
         d->m_errorstring = i18n("Could not create context");
         return false;
-    }
-    if (d->m_curlrcpt) {
-        curl_slist_free_all(d->m_curlrcpt);
-        d->m_curlrcpt = nullptr;
     }
 
     const QByteArray serverbytes = d->m_server.url().toAscii();
@@ -220,15 +235,15 @@ bool KEMail::send(const QString &subject, const QString &message, const KUrl::Li
     curl_easy_setopt(d->m_curl, CURLOPT_USERNAME, userbytes.constData());
     curl_easy_setopt(d->m_curl, CURLOPT_PASSWORD, passwordbytes.constData());
     curl_easy_setopt(d->m_curl, CURLOPT_MAIL_FROM, frombytes.constData());
-    foreach (const QString &to, d->m_to) {
-        const QByteArray tobytes = to.toAscii();
+    foreach (const QString &it, to) {
+        const QByteArray tobytes = it.toAscii();
         d->m_curlrcpt = curl_slist_append(d->m_curlrcpt, tobytes.constData());
     }
     curl_easy_setopt(d->m_curl, CURLOPT_MAIL_RCPT, d->m_curlrcpt);
     curl_easy_setopt(d->m_curl, CURLOPT_READFUNCTION, KEMailPrivate::curlReadCallback);
     curl_easy_setopt(d->m_curl, CURLOPT_READDATA, d);
     curl_easy_setopt(d->m_curl, CURLOPT_UPLOAD, 1L);
-    // curl_easy_setopt(d->m_curl, CURLOPT_VERBOSE, 1L);
+    curl_easy_setopt(d->m_curl, CURLOPT_VERBOSE, 1L);
     // TODO: option for these and add setting to KEMailSettings
     curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
     curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_TRY);

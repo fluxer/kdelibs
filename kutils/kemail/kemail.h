@@ -66,10 +66,8 @@ public:
 
     QString from() const;
     bool setFrom(const QString &from);
-    QStringList to() const;
-    bool setTo(const QStringList &to);
 
-    bool send(const QString &subject, const QString &message, const KUrl::List &attach = KUrl::List());
+    bool send(const QStringList &to, const QString &subject, const QString &message, const KUrl::List &attach = KUrl::List());
 
     //! @brief Returns human-readable description of the error that occured
     QString errorString() const;

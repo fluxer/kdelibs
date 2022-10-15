@@ -36,7 +36,7 @@ public:
     KEMail* m_kemail;
     Ui::KEMailDialogUI ui;
 
-    void sendMail(const QString &subject, const QString &message, const QStringList &attach);
+    void sendMail(const QStringList &to, const QString &subject, const QString &message, const QStringList &attach);
 
 Q_SIGNALS:
     void sent();
@@ -46,6 +46,7 @@ protected:
     void run() final;
 
 private:
+    QStringList m_to;
     QString m_subject;
     QString m_message;
     QStringList m_attach;
@@ -62,8 +63,9 @@ KEMailDialogPrivate::~KEMailDialogPrivate()
     delete m_kemail;
 }
 
-void KEMailDialogPrivate::sendMail(const QString &subject, const QString &message, const QStringList &attach)
+void KEMailDialogPrivate::sendMail(const QStringList &to, const QString &subject, const QString &message, const QStringList &attach)
 {
+    m_to = to;
     m_subject = subject;
     m_message = message;
     m_attach = attach;
@@ -72,7 +74,7 @@ void KEMailDialogPrivate::sendMail(const QString &subject, const QString &messag
 
 void KEMailDialogPrivate::run()
 {
-    const bool result = m_kemail->send(m_subject, m_message, m_attach);
+    const bool result = m_kemail->send(m_to, m_subject, m_message, m_attach);
     if (result) {
         emit sent();
     } else {
@@ -106,14 +108,13 @@ void KEMailDialog::slotButtonClicked(int button)
         d->m_kemail->setFrom(d->ui.fromlineedit->text());
         d->m_kemail->setUser(d->ui.userlineedit->text());
         d->m_kemail->setPassword(d->ui.passlineedit->text());
-        d->m_kemail->setTo(d->ui.recipientslistwidget->items());
         if (!d->m_kemail->server().isValid()) {
             KMessageBox::error(this, i18n("No server specified"));
             return;
         } else if (d->m_kemail->from().isEmpty()) {
             KMessageBox::error(this, i18n("No sender specified"));
             return;
-        } else if (d->m_kemail->to().isEmpty()) {
+        } else if (d->ui.recipientslistwidget->items().isEmpty()) {
             KMessageBox::error(this, i18n("No recipients specified"));
             return;
         } else if (d->ui.sibjectlineedit->text().isEmpty()) {
@@ -124,6 +125,7 @@ void KEMailDialog::slotButtonClicked(int button)
             return;
         }
         d->sendMail(
+            d->ui.recipientslistwidget->items(),
             d->ui.sibjectlineedit->text(),
             d->ui.messagetextedit->textOrHtml(),
             d->ui.attachlistwidget->items()
