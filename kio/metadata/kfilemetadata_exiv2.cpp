@@ -102,8 +102,7 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, con
     Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const KExiv2 kexiv2(url.toLocalFile());
-    const KExiv2PropertyList kexiv2metadata = kexiv2.metadata();
-    foreach (const KExiv2Property &kexiv2property, kexiv2metadata) {
+    foreach (const KExiv2Property &kexiv2property, kexiv2.metadata()) {
         // qDebug() << Q_FUNC_INFO << kexiv2property.name << kexiv2property.value;
         // for reference:
         // https://exiv2.org/tags.html
@@ -306,7 +305,6 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, con
             );
         }
     }
-    // qDebug() << Q_FUNC_INFO << url << kexiv2metadata;
     return result;
 }
 
