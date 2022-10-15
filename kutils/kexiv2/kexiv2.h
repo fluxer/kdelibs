@@ -59,6 +59,11 @@ public:
     */
     DataMap data() const;
 
+    /*!
+        @return Tag label for EXIF property
+    */
+    QString label(const QByteArray &key) const;
+
 private:
     Q_DISABLE_COPY(KExiv2);
     KExiv2Private * const d;

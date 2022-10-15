@@ -231,3 +231,12 @@ KExiv2::DataMap KExiv2::data() const
 #endif // HAVE_EXIV2
     return result;
 }
+
+QString KExiv2::label(const QByteArray &key) const
+{
+    const int lastdotindex = key.lastIndexOf('.');
+    if (lastdotindex >= 0) {
+        return QString::fromLatin1(key.constData() + lastdotindex + 1, key.size() - lastdotindex - 1);
+    }
+    return QString::fromLatin1(key.constData(), key.size());
+}
