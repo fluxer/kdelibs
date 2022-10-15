@@ -21,7 +21,11 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_6">
       <item row="0" column="1">
-       <widget class="KLineEdit" name="sibjectlineedit"/>
+       <widget class="KLineEdit" name="sibjectlineedit">
+        <property name="placeholderText">
+         <string>Cannot be empty</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
        <widget class="QLabel" name="label_4">
@@ -46,7 +50,11 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
       <item row="0" column="1">
-       <widget class="KLineEdit" name="fromlineedit"/>
+       <widget class="KLineEdit" name="fromlineedit">
+        <property name="placeholderText">
+         <string>Cannot be empty</string>
+        </property>
+       </widget>
       </item>
       <item row="1" column="1">
        <widget class="KLineEdit" name="userlineedit"/>
@@ -103,26 +111,26 @@
    </item>
    <item row="0" column="1" rowspan="3">
     <layout class="QGridLayout" name="gridLayout_5">
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QGroupBox" name="groupBox_2">
        <property name="title">
         <string>Attachments</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="3" column="0">
-         <widget class="QGroupBox" name="groupBox_3">
-          <property name="title">
-           <string>Recipients</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_4">
-           <item row="0" column="0">
-            <widget class="KEditListWidget" name="recipientslistwidget"/>
-           </item>
-          </layout>
-         </widget>
-        </item>
         <item row="1" column="0">
          <widget class="KEditListWidget" name="attachlistwidget"/>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QGroupBox" name="groupBox_3">
+       <property name="title">
+        <string>Recipients</string>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="KEditListWidget" name="recipientslistwidget"/>
         </item>
        </layout>
       </widget>

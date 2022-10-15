@@ -68,12 +68,12 @@ QByteArray KEMailPrivate::makeData(const QString &subject, const QString &messag
 
     QByteArray subjectbytes("Subject: ");
     subjectbytes.append(subject.toAscii());
-    subjectbytes.append("\r\n\r\n");
+    subjectbytes.append("\n\n");
 
     QByteArray result = subjectbytes;
     result.append(message.toAscii());
+    result.append("\n");
     result.replace('\n', "\r\n");
-    result.append("\r\n");
     return result;
 }
 
@@ -82,7 +82,7 @@ size_t KEMailPrivate::curlReadCallback(char *ptr, size_t size, size_t nmemb, voi
     KEMailPrivate* kemailprivate = static_cast<KEMailPrivate*>(userdata);
     Q_ASSERT(kemailprivate);
     Q_ASSERT(size == 1);
-    QByteArray kemailmessage = kemailprivate->m_data.left(qMin(int(nmemb), kemailprivate->m_data.size()));
+    const QByteArray kemailmessage = kemailprivate->m_data.left(qMin(int(nmemb), kemailprivate->m_data.size()));
     if (kemailmessage.size() <= 0) {
         kDebug() << "Message has been sent";
         return 0;

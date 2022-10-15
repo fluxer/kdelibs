@@ -29,6 +29,7 @@ class KEMailPrivate;
 
 /*!
     Class to send e-mail.
+
     Example:
     \code
     KEMail kemail;
@@ -37,7 +38,7 @@ class KEMailPrivate;
     kemail.setPassword("mypass");
     kemail.setFrom("myuser@myhost.com");
     kemail.setTo(QStringList() << "otheruser@otherhost.com");
-    qDebug() << kemail.send("hello");
+    qDebug() << kemail.send("hello", "hi");
     \endcode
 
     @since 4.22

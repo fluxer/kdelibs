@@ -23,14 +23,32 @@
 
 #include "ui_kemaildialog.h"
 
-class KEMailDialogPrivate
+#include <QThread>
+#include <QProcess>
+
+class KEMailDialogPrivate : public QThread
 {
+    Q_OBJECT
 public:
     KEMailDialogPrivate();
     ~KEMailDialogPrivate();
 
     KEMail* m_kemail;
     Ui::KEMailDialogUI ui;
+
+    void sendMail(const QString &subject, const QString &message, const QStringList &attach);
+
+Q_SIGNALS:
+    void sent();
+    void error(const QString &errorstring);
+
+protected:
+    void run() final;
+
+private:
+    QString m_subject;
+    QString m_message;
+    QStringList m_attach;
 };
 
 KEMailDialogPrivate::KEMailDialogPrivate()
@@ -44,6 +62,25 @@ KEMailDialogPrivate::~KEMailDialogPrivate()
     delete m_kemail;
 }
 
+void KEMailDialogPrivate::sendMail(const QString &subject, const QString &message, const QStringList &attach)
+{
+    m_subject = subject;
+    m_message = message;
+    m_attach = attach;
+    start();
+}
+
+void KEMailDialogPrivate::run()
+{
+    const bool result = m_kemail->send(m_subject, m_message, m_attach);
+    if (result) {
+        emit sent();
+    } else {
+        emit error(m_kemail->errorString());
+    }
+}
+
+
 KEMailDialog::KEMailDialog(QWidget *parent, Qt::WindowFlags flags)
     : KDialog(parent, flags),
     d(new KEMailDialogPrivate())
@@ -52,17 +89,15 @@ KEMailDialog::KEMailDialog(QWidget *parent, Qt::WindowFlags flags)
     d->ui.fromlineedit->setText(d->m_kemail->from());
     d->ui.userlineedit->setText(d->m_kemail->user());
     d->ui.passlineedit->setText(d->m_kemail->password());
-    // TODO: connect(d->ui.settingslabel)
+    connect(d->ui.settingslabel, SIGNAL(leftClickedUrl()), this, SLOT(_slotSettings()));
+
+    connect(d, SIGNAL(sent()), this, SLOT(_slotSent()));
+    connect(d, SIGNAL(error(QString)), this, SLOT(_slotError(QString)));
 }
 
 KEMailDialog::~KEMailDialog()
 {
     delete d;
-}
-
-KEMail* KEMailDialog::kemail() const
-{
-    return d->m_kemail;
 }
 
 void KEMailDialog::slotButtonClicked(int button)
@@ -88,16 +123,32 @@ void KEMailDialog::slotButtonClicked(int button)
             KMessageBox::error(this, i18n("No message specified"));
             return;
         }
-        // TODO: do it in thread
-        const bool result = d->m_kemail->send(
+        d->sendMail(
             d->ui.sibjectlineedit->text(),
             d->ui.messagetextedit->textOrHtml(),
             d->ui.attachlistwidget->items()
         );
-        if (!result) {
-            KMessageBox::error(this, d->m_kemail->errorString());
-            return;
-        }
+        return;
     }
     KDialog::slotButtonClicked(button);
 }
+
+void KEMailDialog::_slotSettings()
+{
+    QProcess::startDetached(
+        QString::fromLatin1("kcmshell4"),
+        QStringList() << QString::fromLatin1("useraccount")
+    );
+}
+
+void KEMailDialog::_slotSent()
+{
+    KDialog::slotButtonClicked(KDialog::Ok);
+}
+
+void KEMailDialog::_slotError(const QString &errorstring)
+{
+    KMessageBox::error(this, errorstring);
+}
+
+#include "kemaildialog.moc"

@@ -52,10 +52,13 @@ public:
     KEMailDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
     ~KEMailDialog();
 
-    KEMail* kemail() const;
-    
 protected Q_SLOTS:
     virtual void slotButtonClicked(int button);
+
+private Q_SLOTS:
+    void _slotSettings();
+    void _slotSent();
+    void _slotError(const QString &errorstring);
 
 private:
     Q_DISABLE_COPY(KEMailDialog);
