@@ -194,9 +194,27 @@ KExiv2::DataMap KExiv2::data() const
 #if defined(HAVE_EXIV2)
     if (d->m_exiv2image.get()) {
         try {
-            kDebug() << "Mapping EXIF data for" << d->m_path;
+            kDebug() << "Mapping Exif data for" << d->m_path;
             const Exiv2::ExifData exiv2data = d->m_exiv2image->exifData();
             for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
+                const std::string key = (*it).key();
+                const std::string value = (*it).value().toString();
+                kDebug() << "Key" << key.c_str() << "value" << value.c_str();
+                result.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
+            }
+
+            kDebug() << "Mapping Iptc data for" << d->m_path;
+            const Exiv2::IptcData iptcdata = d->m_exiv2image->iptcData();
+            for (Exiv2::IptcData::const_iterator it = iptcdata.begin(); it != iptcdata.end(); it++) {
+                const std::string key = (*it).key();
+                const std::string value = (*it).value().toString();
+                kDebug() << "Key" << key.c_str() << "value" << value.c_str();
+                result.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
+            }
+
+            kDebug() << "Mapping Xmp data for" << d->m_path;
+            const Exiv2::XmpData xmpdata = d->m_exiv2image->xmpData();
+            for (Exiv2::XmpData::const_iterator it = xmpdata.begin(); it != xmpdata.end(); it++) {
                 const std::string key = (*it).key();
                 const std::string value = (*it).value().toString();
                 kDebug() << "Key" << key.c_str() << "value" << value.c_str();
