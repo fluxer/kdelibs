@@ -125,6 +125,7 @@ void KEMailDialog::slotButtonClicked(int button)
             KMessageBox::error(this, i18n("No message specified"));
             return;
         }
+        KDialog::enableButtonOk(false);
         d->sendMail(
             d->ui.recipientslistwidget->items(),
             d->ui.subjectlineedit->text(),
@@ -218,11 +219,13 @@ void KEMailDialog::_slotSettings()
 void KEMailDialog::_slotSent()
 {
     KMessageBox::information(this, i18n("Mail sent"), QString(), QString::fromLatin1("mailsent"));
+    KDialog::enableButtonOk(true);
     KDialog::slotButtonClicked(KDialog::Ok);
 }
 
 void KEMailDialog::_slotError(const QString &errorstring)
 {
+    KDialog::enableButtonOk(true);
     KMessageBox::error(this, errorstring);
 }
 
