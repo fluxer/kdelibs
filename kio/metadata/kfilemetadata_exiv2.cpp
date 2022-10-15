@@ -102,207 +102,206 @@ QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, con
     Q_UNUSED(flags);
     QList<KFileMetaInfoItem> result;
     const KExiv2 kexiv2(url.toLocalFile());
-    const KExiv2::DataMap kexiv2metadata = kexiv2.data();
-    foreach (const QByteArray &kexiv2key, kexiv2metadata.keys()) {
-        const QString kexiv2value = kexiv2metadata.value(kexiv2key);
-        // qDebug() << Q_FUNC_INFO << kexiv2key << kexiv2value;
+    const KExiv2PropertyList kexiv2metadata = kexiv2.metadata();
+    foreach (const KExiv2Property &kexiv2property, kexiv2metadata) {
+        // qDebug() << Q_FUNC_INFO << kexiv2property.name << kexiv2property.value;
         // for reference:
         // https://exiv2.org/tags.html
-        if (kexiv2key == "Exif.Image.ImageWidth") {
+        if (kexiv2property.name == "Exif.Image.ImageWidth") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.ImageLength") {
+        } else if (kexiv2property.name == "Exif.Image.ImageLength") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.FrameRate") {
+        } else if (kexiv2property.name == "Exif.Image.FrameRate") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.Copyright") {
+        } else if (kexiv2property.name == "Exif.Image.Copyright") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.UserComment" || kexiv2key == "Exif.Photo.XPComment") {
+        } else if (kexiv2property.name == "Exif.Image.UserComment" || kexiv2property.name == "Exif.Photo.XPComment") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.XPTitle") {
+        } else if (kexiv2property.name == "Exif.Photo.XPTitle") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.XPKeywords") {
+        } else if (kexiv2property.name == "Exif.Image.XPKeywords") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
 
-        } else if (kexiv2key == "Exif.Image.XPSubject") {
+        } else if (kexiv2property.name == "Exif.Image.XPSubject") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.ImageDescription") {
+        } else if (kexiv2property.name == "Exif.Image.ImageDescription") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.Software") {
+        } else if (kexiv2property.name == "Exif.Image.Software") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.DateTimeOriginal" || kexiv2key == "Exif.Photo.DateTimeOriginal") {
+        } else if (kexiv2property.name == "Exif.Image.DateTimeOriginal" || kexiv2property.name == "Exif.Photo.DateTimeOriginal") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.Make") {
+        } else if (kexiv2property.name == "Exif.Image.Make") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.Model") {
+        } else if (kexiv2property.name == "Exif.Image.Model") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.Orientation") {
+        } else if (kexiv2property.name == "Exif.Image.Orientation") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.Artist") {
+        } else if (kexiv2property.name == "Exif.Image.Artist") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.GPSInfo.GPSLatitudeRef") {
+        } else if (kexiv2property.name == "Exif.GPSInfo.GPSLatitudeRef") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLatitudeRef"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.GPSInfo.GPSLongitudeRef") {
+        } else if (kexiv2property.name == "Exif.GPSInfo.GPSLongitudeRef") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLongitudeRef"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.Flash") {
+        } else if (kexiv2property.name == "Exif.Image.Flash") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#flash"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.ExposureTime") {
+        } else if (kexiv2property.name == "Exif.Photo.ExposureTime") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.ExposureBiasValue") {
+        } else if (kexiv2property.name == "Exif.Image.ExposureBiasValue") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureBiasValue"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.ExposureMode") {
+        } else if (kexiv2property.name == "Exif.Photo.ExposureMode") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureMode"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.ApertureValue") {
+        } else if (kexiv2property.name == "Exif.Photo.ApertureValue") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#apertureValue"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.FocalLength") {
+        } else if (kexiv2property.name == "Exif.Image.FocalLength") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLength"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.FocalLengthIn35mmFilm") {
+        } else if (kexiv2property.name == "Exif.Photo.FocalLengthIn35mmFilm") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Image.ISOSpeedRatings") {
+        } else if (kexiv2property.name == "Exif.Image.ISOSpeedRatings") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.MeteringMode") {
+        } else if (kexiv2property.name == "Exif.Photo.MeteringMode") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.WhiteBalance") {
+        } else if (kexiv2property.name == "Exif.Photo.WhiteBalance") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
-        } else if (kexiv2key == "Exif.Photo.ImageUniqueID") {
+        } else if (kexiv2property.name == "Exif.Photo.ImageUniqueID") {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier"),
-                    kexiv2value
+                    kexiv2property.value
                 )
             );
         }

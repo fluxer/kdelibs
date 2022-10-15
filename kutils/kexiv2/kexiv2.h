@@ -21,48 +21,61 @@
 
 #include "kexiv2_export.h"
 
-#include <QMap>
+#include <QList>
 #include <QString>
 #include <QImage>
 
 class KExiv2Private;
 
+
 /*!
-    Class to obtain EXIF metadata, preview and rotate images based on the metadata.
+    Structure that holds information about Exif, IPTC or XMP property.
+
+    @since 4.22
+    @see KExiv2
+    @link https://exiv2.org/metadata.html
+*/
+struct KExiv2Property
+{
+    QByteArray name;
+    QString value;
+    QString label;
+};
+
+typedef QList<KExiv2Property> KExiv2PropertyList;
+
+/*!
+    Class to obtain Exif, IPTC and XMP metadata, preview and rotate images based on the metadata.
 
     @note Initialization and cleanup of the Exiv2 library resources is automatic
     @since 4.20
+    @see KExiv2Property
 */
 class KEXIV2_EXPORT KExiv2
 {
 public:
-    typedef QMap<QByteArray,QString> DataMap;
-
     /*!
-        @brief Contructs object from @p path and obtains EXIF data if possible
+        @brief Contructs object from @p path
     */
     KExiv2(const QString &path);
 
+    static bool isSupported();
+
     /*!
-        @return Largest preview image if provided in the EXIF data, the image is not rotated
+        @return Largest preview image if provided in the metadata, the image is not rotated
         automatically and may be null
     */
     QImage preview() const;
 
     /*!
-        @return Rotates @p image according to the EXIF orientation data
+        @return Rotates @p image according to the orientation metadata
     */
     bool rotateImage(QImage &image) const;
 
     /*!
-        @return Map of all EXIF properties
+        @return List of all Exif, IPTC and XMP metadata properties
     */
-    DataMap data() const;
-
-    /*!
-        @return Tag label for EXIF property
-    */
-    QString label(const QByteArray &key) const;
+    KExiv2PropertyList metadata() const;
 
 private:
     Q_DISABLE_COPY(KExiv2);

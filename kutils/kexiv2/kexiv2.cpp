@@ -101,6 +101,15 @@ KExiv2::KExiv2(const QString &path)
 {
 }
 
+bool KExiv2::isSupported()
+{
+#if defined(HAVE_EXIV2)
+    return true;
+#else
+    return false;
+#endif
+}
+
 QImage KExiv2::preview() const
 {
     QImage result;
@@ -134,9 +143,32 @@ QImage KExiv2::preview() const
 
 bool KExiv2::rotateImage(QImage &image) const
 {
+#if defined(HAVE_EXIV2)
     // for reference:
     // https://exiv2.org/tags-xmp-tiff.html
-    const int orientation = data().value("Exif.Image.Orientation").toInt();
+    int orientation = 0;
+    if (d->m_exiv2image.get()) {
+        static const std::string s_orientationkey = std::string("Exif.Image.Orientation");
+        try {
+            kDebug() << "Checking for orientation Exif data for" << d->m_path;
+            const Exiv2::ExifData exiv2data = d->m_exiv2image->exifData();
+            for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
+                const std::string key = (*it).key();
+                if (key != s_orientationkey) {
+                    continue;
+                }
+                orientation = (*it).value().toLong();
+                kDebug() << "Found orientation Exif data" << orientation;
+                break;
+            }
+        } catch(Exiv2::Error &err) {
+            kWarning() << err.what() << err.code();
+        } catch(std::exception &err) {
+            kWarning() << err.what();
+        } catch (...) {
+            kWarning() << "Exception raised";
+        }
+    }
     switch (orientation) {
         case 0: // not documented, nothing to do I guess
         case 1: { // normal orientation
@@ -186,21 +218,30 @@ bool KExiv2::rotateImage(QImage &image) const
         }
     }
     Q_UNREACHABLE();
+#else
+    kWarning() << "KExiv2 is a stub";
+    return false;
+#endif // HAVE_EXIV2
 }
 
-KExiv2::DataMap KExiv2::data() const
+KExiv2PropertyList KExiv2::metadata() const
 {
-    KExiv2::DataMap result;
+    KExiv2PropertyList result;
 #if defined(HAVE_EXIV2)
     if (d->m_exiv2image.get()) {
         try {
+            KExiv2Property kexiv2property;
             kDebug() << "Mapping Exif data for" << d->m_path;
             const Exiv2::ExifData exiv2data = d->m_exiv2image->exifData();
             for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
                 const std::string key = (*it).key();
                 const std::string value = (*it).value().toString();
-                kDebug() << "Key" << key.c_str() << "value" << value.c_str();
-                result.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
+                const std::string taglabel = (*it).tagLabel();
+                kDebug() << "Key" << key.c_str() << "value" << value.c_str() << "tag label" << taglabel.c_str();
+                kexiv2property.name = QByteArray(key.c_str(), key.size());
+                kexiv2property.value = QString::fromStdString(value);
+                kexiv2property.label = QString::fromStdString(taglabel);
+                result.append(kexiv2property);
             }
 
             kDebug() << "Mapping Iptc data for" << d->m_path;
@@ -208,8 +249,12 @@ KExiv2::DataMap KExiv2::data() const
             for (Exiv2::IptcData::const_iterator it = iptcdata.begin(); it != iptcdata.end(); it++) {
                 const std::string key = (*it).key();
                 const std::string value = (*it).value().toString();
-                kDebug() << "Key" << key.c_str() << "value" << value.c_str();
-                result.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
+                const std::string taglabel = (*it).tagLabel();
+                kDebug() << "Key" << key.c_str() << "value" << value.c_str() << "tag label" << taglabel.c_str();
+                kexiv2property.name = QByteArray(key.c_str(), key.size());
+                kexiv2property.value = QString::fromStdString(value);
+                kexiv2property.label = QString::fromStdString(taglabel);
+                result.append(kexiv2property);
             }
 
             kDebug() << "Mapping Xmp data for" << d->m_path;
@@ -217,8 +262,12 @@ KExiv2::DataMap KExiv2::data() const
             for (Exiv2::XmpData::const_iterator it = xmpdata.begin(); it != xmpdata.end(); it++) {
                 const std::string key = (*it).key();
                 const std::string value = (*it).value().toString();
-                kDebug() << "Key" << key.c_str() << "value" << value.c_str();
-                result.insert(QByteArray(key.c_str(), key.size()), QString::fromStdString(value));
+                const std::string taglabel = (*it).tagLabel();
+                kDebug() << "Key" << key.c_str() << "value" << value.c_str() << "tag label" << taglabel.c_str();
+                kexiv2property.name = QByteArray(key.c_str(), key.size());
+                kexiv2property.value = QString::fromStdString(value);
+                kexiv2property.label = QString::fromStdString(taglabel);
+                result.append(kexiv2property);
             }
         } catch(Exiv2::Error &err) {
             kWarning() << err.what() << err.code();
@@ -232,11 +281,3 @@ KExiv2::DataMap KExiv2::data() const
     return result;
 }
 
-QString KExiv2::label(const QByteArray &key) const
-{
-    const int lastdotindex = key.lastIndexOf('.');
-    if (lastdotindex >= 0) {
-        return QString::fromLatin1(key.constData() + lastdotindex + 1, key.size() - lastdotindex - 1);
-    }
-    return QString::fromLatin1(key.constData(), key.size());
-}
