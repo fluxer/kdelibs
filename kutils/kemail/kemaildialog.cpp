@@ -18,6 +18,7 @@
 
 #include "kemaildialog.h"
 #include "klocale.h"
+#include "kstandarddirs.h"
 #include "kmessagebox.h"
 #include "kdebug.h"
 
@@ -203,8 +204,13 @@ bool KEMailDialog::setAttach(const QStringList &attach)
 
 void KEMailDialog::_slotSettings()
 {
+    const QString kcmshell4exe = KStandardDirs::findExe(QString::fromLatin1("kcmshell4"));
+    if (kcmshell4exe.isEmpty()) {
+        KMessageBox::error(this, i18n("kcmshell4 not found"));
+        return;
+    }
     QProcess::startDetached(
-        QString::fromLatin1("kcmshell4"),
+        kcmshell4exe,
         QStringList() << QString::fromLatin1("useraccount")
     );
 }
