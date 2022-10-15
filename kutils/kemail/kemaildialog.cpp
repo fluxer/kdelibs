@@ -211,6 +211,7 @@ void KEMailDialog::_slotSettings()
 
 void KEMailDialog::_slotSent()
 {
+    KMessageBox::information(this, i18n("Mail sent"), QString(), QString::fromLatin1("mailsent"));
     KDialog::slotButtonClicked(KDialog::Ok);
 }
 
