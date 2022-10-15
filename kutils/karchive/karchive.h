@@ -103,9 +103,6 @@ class KArchivePrivate;
 
     @see KArchiveEntry
     @since 4.22
-    @warning the API is subject to change
-
-    @todo set permissions on file after copy, same as the original
 */
 class KARCHIVE_EXPORT KArchive : public QObject
 {

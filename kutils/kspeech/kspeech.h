@@ -29,7 +29,6 @@ class KSpeechPrivate;
     Class for Text-To-Speech.
 
     @since 4.22
-    @warning the API is subject to change
 */
 class KSPEECH_EXPORT KSpeech : public QObject
 {
