@@ -126,15 +126,13 @@ public Q_SLOTS:
    * @param cc          The Cc field
    * @param bcc         The Bcc field
    * @param subject     Subject string
-   * @param body        A string containing the body of the mail (exclusive with messageFile)
-   * @param messageFile A file (URL) containing the body of the mail (exclusive with body) - currently unsupported
+   * @param body        A string containing the body of the mail
    * @param attachURLs  List of URLs to be attached to the mail.
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    */
   static void invokeMailer(const QString &to, const QString &cc, const QString &bcc,
                     const QString &subject, const QString &body,
-                    const QString &messageFile = QString(),
                     const QStringList &attachURLs = QStringList(),
                     const QByteArray& startup_id = QByteArray() );
 

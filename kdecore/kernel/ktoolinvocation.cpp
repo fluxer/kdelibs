@@ -267,8 +267,7 @@ void KToolInvocation::invokeMailer(const QString &address, const QString &subjec
     if (!isMainThreadActive())
         return;
 
-    invokeMailer(address, QString(), QString(), subject, QString(), QString(),
-                 QStringList(), startup_id );
+    invokeMailer(address, QString(), QString(), subject, QString(), QStringList(), startup_id );
 }
 
 void KToolInvocation::invokeMailer(const KUrl &mailtoURL, const QByteArray& startup_id, bool allowAttachments )
@@ -310,7 +309,7 @@ void KToolInvocation::invokeMailer(const KUrl &mailtoURL, const QByteArray& star
                                     address = address.isEmpty()? KUrl::fromPercentEncoding((*it).mid(3).toLatin1()): address + comma + KUrl::fromPercentEncoding((*it).mid(3).toLatin1());
     }
 
-    invokeMailer( address, cc, bcc, subject, body, QString(), attachURLs, startup_id );
+    invokeMailer( address, cc, bcc, subject, body, attachURLs, startup_id );
 }
 
 #include "moc_ktoolinvocation.cpp"

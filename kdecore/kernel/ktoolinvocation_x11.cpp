@@ -113,7 +113,7 @@ static QStringList splitEmailAddressList( const QString & aStr )
 
 void KToolInvocation::invokeMailer(const QString &_to, const QString &_cc, const QString &_bcc,
                                    const QString &subject, const QString &body,
-                                   const QString & /*messageFile TODO*/, const QStringList &attachURLs,
+                                   const QStringList &attachURLs,
                                    const QByteArray& startup_id )
 {
     if (!isMainThreadActive())
