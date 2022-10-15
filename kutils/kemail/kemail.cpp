@@ -61,6 +61,8 @@ KEMailPrivate::~KEMailPrivate()
     }
 }
 
+// for reference:
+// https://www.rfc-editor.org/rfc/rfc5322
 QByteArray KEMailPrivate::makeData(const QString &subject, const QString &message, const KUrl::List &attach)
 {
     // TODO:
@@ -232,7 +234,7 @@ bool KEMail::send(const QString &subject, const QString &message, const KUrl::Li
     curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_TRY);
 
     bool result = true;
-    CURLcode curlresult = curl_easy_perform(d->m_curl);
+    const CURLcode curlresult = curl_easy_perform(d->m_curl);
     if (curlresult != CURLE_OK) {
         d->m_errorstring = curl_easy_strerror(curlresult);
         kWarning() << d->m_errorstring;
