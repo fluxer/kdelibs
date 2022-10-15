@@ -69,6 +69,8 @@ void KArchiveTest::initTestCase()
     if (!KArchive::isSupported()) {
         QSKIP("Built without LibArchive", SkipAll);
     }
+    // qDebug() << KArchive::readableMimeTypes();
+    // qDebug() << KArchive::writableMimeTypes();
 }
 
 void KArchiveTest::cleanupTestCase()
@@ -218,7 +220,7 @@ void KArchiveTest::encryption()
         KTempDir ktempdir;
         QVERIFY(ktempdir.exists());
         QVERIFY(!karchive.extract(toextract, ktempdir.name()));
-        QCOMPARE(karchive.errorString(), QString::fromLatin1("archive_read_extract2: Passphrase required for this entry"));
+        QCOMPARE(karchive.errorString(), QString::fromLatin1("Passphrase required for this entry"));
     }
 
     {

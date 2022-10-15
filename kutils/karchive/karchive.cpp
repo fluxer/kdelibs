@@ -215,29 +215,25 @@ struct archive* KArchivePrivate::openRead(const QByteArray &path)
 
     if (readarchive) {
         if (archive_read_support_filter_all(readarchive) != ARCHIVE_OK) {
-            m_error = i18n("archive_read_support_filter_all: %1", archive_error_string(readarchive));
-            kDebug() << m_error;
+            kDebug() << "archive_read_support_filter_all" << archive_error_string(readarchive);
             KArchivePrivate::closeRead(readarchive);
             return nullptr;
         }
 
         if (archive_read_support_format_all(readarchive) != ARCHIVE_OK) {
-            m_error = i18n("archive_read_support_format_all: %1", archive_error_string(readarchive));
-            kDebug() << m_error;
+            kDebug() << "archive_read_support_format_all" << archive_error_string(readarchive);
             KArchivePrivate::closeRead(readarchive);
             return nullptr;
         }
 
         if (!m_readpass.isEmpty() && archive_read_add_passphrase(readarchive, m_readpass.constData()) != ARCHIVE_OK) {
-            m_error = i18n("archive_read_add_passphrase: %1", archive_error_string(readarchive));
-            kDebug() << m_error;
+            kDebug() << "archive_read_add_passphrase" << archive_error_string(readarchive);
             KArchivePrivate::closeRead(readarchive);
             return nullptr;
         }
 
         if (archive_read_open_filename(readarchive, path, KARCHIVE_BUFFSIZE) != ARCHIVE_OK) {
-            m_error = i18n("archive_read_open_filename: %1", archive_error_string(readarchive));
-            kDebug() << m_error;
+            kDebug() << "archive_read_open_filename" << archive_error_string(readarchive);
             KArchivePrivate::closeRead(readarchive);
             return nullptr;
         }
@@ -274,8 +270,7 @@ struct archive* KArchivePrivate::openWrite(const QByteArray &path)
         } else if (lowerpath.endsWith(".z")) {
             archive_write_add_filter_compress(writearchive);
         } else if (archive_write_set_format_filter_by_ext(writearchive, path) != ARCHIVE_OK) {
-            m_error = i18n("archive_write_set_format_filter_by_ext: %1", archive_error_string(writearchive));
-            kDebug() << m_error;
+            kDebug() << "archive_write_set_format_filter_by_ext" << archive_error_string(writearchive);
             KArchivePrivate::closeWrite(writearchive);
             return nullptr;
         }
@@ -283,15 +278,13 @@ struct archive* KArchivePrivate::openWrite(const QByteArray &path)
         (void)archive_write_set_format_pax_restricted(writearchive);
 
         if (!m_writepass.isEmpty() && archive_write_set_passphrase(writearchive, m_writepass.constData()) != ARCHIVE_OK) {
-            m_error = i18n("archive_write_set_passphrase: %1", archive_error_string(writearchive));
-            kDebug() << m_error;
+            kDebug() << "archive_write_set_passphrase" << archive_error_string(writearchive);
             KArchivePrivate::closeWrite(writearchive);
             return nullptr;
         }
 
         if (archive_write_open_filename(writearchive, path) != ARCHIVE_OK) {
-            m_error = i18n("archive_write_open_filename: %1", archive_error_string(writearchive));
-            kDebug() << m_error;
+            kDebug() << "archive_write_open_filename" << archive_error_string(writearchive);
             KArchivePrivate::closeWrite(writearchive);
             return nullptr;
         }
@@ -314,15 +307,13 @@ struct archive* KArchivePrivate::openDisk(const bool preserve)
         }
 
         if (archive_write_disk_set_options(writearchive, extractFlags) != ARCHIVE_OK) {
-            m_error = i18n("archive_write_disk_set_options: %1", archive_error_string(writearchive));
-            kDebug() << m_error;
+            kDebug() << "archive_write_disk_set_options" << archive_error_string(writearchive);
             KArchivePrivate::closeWrite(writearchive);
             return nullptr;
         }
 
         if (archive_write_disk_set_standard_lookup(writearchive) != ARCHIVE_OK) {
-            m_error = i18n("archive_write_disk_set_standard_lookup: %1", archive_error_string(writearchive));
-            kDebug() << m_error;
+            kDebug() << "archive_write_disk_set_standard_lookup" << archive_error_string(writearchive);
             KArchivePrivate::closeWrite(writearchive);
             return nullptr;
         }
@@ -374,14 +365,14 @@ bool KArchivePrivate::copyData(struct archive* readarchive, struct archive* writ
 
         const int result = archive_errno(readarchive);
         if (result != ARCHIVE_OK) {
-            m_error = i18n("archive_read_data: %1", archive_error_string(readarchive));
-            kDebug() << m_error;
+            m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_data" << m_error;
             return false;
         }
 
         if (archive_write_data(writearchive, readbuffer, readsize) != readsize) {
-            m_error = i18n("archive_write_data: %1", archive_error_string(writearchive));
-            kDebug() << m_error;
+            m_error = archive_error_string(writearchive);
+            kDebug() << "archive_write_data" << m_error;
             return false;
         }
 
@@ -400,8 +391,8 @@ bool KArchivePrivate::copyData(struct archive* readarchive, QByteArray *buffer)
 
         const int result = archive_errno(readarchive);
         if (result != ARCHIVE_OK) {
-            m_error = i18n("archive_read_data: %1", archive_error_string(readarchive));
-            kDebug() << m_error;
+            m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_data" << m_error;
             return false;
         }
 
@@ -516,8 +507,8 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
             QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
 
             if (ret < ARCHIVE_OK) {
-                d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
-                kDebug() << d->m_error;
+                d->m_error = archive_error_string(readarchive);
+                kDebug() << "archive_read_next_header" << d->m_error;
                 result = false;
                 break;
             }
@@ -531,8 +522,8 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
             }
 
             if (archive_write_header(writearchive, archiveentry) != ARCHIVE_OK) {
-                d->m_error = i18n("archive_write_header: %1", archive_error_string(writearchive));
-                kDebug() << d->m_error;
+                d->m_error = archive_error_string(writearchive);
+                kDebug() << "archive_write_header" << d->m_error;
                 result = false;
                 break;
             }
@@ -543,8 +534,8 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
             }
 
             if (archive_write_finish_entry(writearchive) != ARCHIVE_OK) {
-                d->m_error = i18n("archive_write_finish_entry: %1", archive_error_string(writearchive));
-                kDebug() << d->m_error;
+                d->m_error = archive_error_string(writearchive);
+                kDebug() << "archive_write_finish_entry" << d->m_error;
                 result = false;
                 break;
             }
@@ -629,8 +620,8 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         }
 
         if (archive_write_header(writearchive, newentry) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_write_header: %1", archive_error_string(writearchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(writearchive);
+            kDebug() << "archive_write_header" << d->m_error;
             archive_entry_free(newentry);
             result = false;
             break;
@@ -662,16 +653,16 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
             }
 
             if (archive_write_data(writearchive, data.constData(), data.size()) != statistic.st_size) {
-                d->m_error = i18n("archive_write_data: %1", archive_error_string(writearchive));
-                kDebug() << d->m_error;
+                d->m_error = archive_error_string(writearchive);
+                kDebug() << "archive_write_data" << d->m_error;
                 result = false;
                 break;
             }
         }
 
         if (archive_write_finish_entry(writearchive) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_write_finish_entry: %1", archive_error_string(writearchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(writearchive);
+            kDebug() << "archive_write_finish_entry" << d->m_error;
             result = false;
             break;
         }
@@ -745,8 +736,8 @@ bool KArchive::remove(const QStringList &paths) const
         // TODO: emit progress(qreal);
 
         if (ret < ARCHIVE_OK) {
-            d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_next_header" << d->m_error;
             result = false;
             break;
         }
@@ -763,8 +754,8 @@ bool KArchive::remove(const QStringList &paths) const
         }
 
         if (archive_write_header(writearchive, entry) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_write_header: %1", archive_error_string(writearchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(writearchive);
+            kDebug() << "archive_write_header" << d->m_error;
             result = false;
             break;
         }
@@ -775,8 +766,8 @@ bool KArchive::remove(const QStringList &paths) const
         }
 
         if (archive_write_finish_entry(writearchive) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_write_finish_entry: %1", archive_error_string(writearchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(writearchive);
+            kDebug() << "archive_write_finish_entry" << d->m_error;
             result = false;
             break;
         }
@@ -853,8 +844,8 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
         // TODO: emit progress(qreal);
 
         if (ret < ARCHIVE_OK) {
-            d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_next_header" << d->m_error;
             result = false;
             break;
         }
@@ -870,22 +861,22 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
         result = true;
 
         if (archive_write_header(writearchive, entry) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_write_header: %1", archive_error_string(writearchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(writearchive);
+            kDebug() << "archive_write_header" << d->m_error;
             result = false;
             break;
         }
 
         if (archive_read_extract2(readarchive, entry, writearchive) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_read_extract2: %1", archive_error_string(readarchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_extract2" << d->m_error;
             result = false;
             break;
         }
 
         if (archive_write_finish_entry(writearchive) != ARCHIVE_OK) {
-            d->m_error = i18n("archive_write_finish_entry: %1", archive_error_string(writearchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(writearchive);
+            kDebug() << "archive_write_finish_entry" << d->m_error;
             result = false;
             break;
         }
@@ -941,7 +932,8 @@ QList<KArchiveEntry> KArchive::list(const QString &path) const
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
 
         if (ret < ARCHIVE_OK) {
-            d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
+            d->m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_next_header" << d->m_error;
             result.clear();
             break;
         }
@@ -1009,8 +1001,8 @@ KArchiveEntry KArchive::entry(const QString &path) const
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
 
         if (ret < ARCHIVE_OK) {
-            d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_next_header" << d->m_error;
             break;
         }
 
@@ -1078,8 +1070,8 @@ QByteArray KArchive::data(const QString &path) const
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
 
         if (ret < ARCHIVE_OK) {
-            d->m_error = i18n("archive_read_next_header: %1", archive_error_string(readarchive));
-            kDebug() << d->m_error;
+            d->m_error = archive_error_string(readarchive);
+            kDebug() << "archive_read_next_header" << d->m_error;
             break;
         }
 
