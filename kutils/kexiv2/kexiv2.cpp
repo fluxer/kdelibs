@@ -123,8 +123,14 @@ QImage KExiv2::preview() const
             for (size_t i = exiv2previewpropertieslist.size(); i > 0; i--) {
                 const Exiv2::PreviewProperties exiv2previewproperties = exiv2previewpropertieslist.at(i - 1);
                 Exiv2::PreviewImage exiv2previewimage = exiv2previewmanager.getPreviewImage(exiv2previewproperties);
-                result.loadFromData(reinterpret_cast<const char*>(exiv2previewimage.pData()),
-                    exiv2previewimage.size(), exiv2previewimage.extension().c_str());
+                std::string imageextension = exiv2previewimage.extension();
+                if (imageextension.size() > 0 && imageextension.at(0) == '.') {
+                    imageextension = imageextension.substr(1, imageextension.size() - 1);
+                }
+                result.loadFromData(
+                    reinterpret_cast<const char*>(exiv2previewimage.pData()), exiv2previewimage.size(),
+                    imageextension.c_str()
+                );
                 if (!result.isNull()) {
                     break;
                 }
