@@ -33,7 +33,7 @@ public:
     KEMailDialogPrivate();
     ~KEMailDialogPrivate();
 
-    KEMail* m_kemail;
+    KEMail* kemail;
     Ui::KEMailDialogUI ui;
 
     void sendMail(const QStringList &to, const QString &subject, const QString &message, const QStringList &attach);
@@ -53,14 +53,14 @@ private:
 };
 
 KEMailDialogPrivate::KEMailDialogPrivate()
-    : m_kemail(nullptr)
+    : kemail(nullptr)
 {
-    m_kemail = new KEMail();
+    kemail = new KEMail();
 }
 
 KEMailDialogPrivate::~KEMailDialogPrivate()
 {
-    delete m_kemail;
+    delete kemail;
 }
 
 void KEMailDialogPrivate::sendMail(const QStringList &to, const QString &subject, const QString &message, const QStringList &attach)
@@ -74,11 +74,11 @@ void KEMailDialogPrivate::sendMail(const QStringList &to, const QString &subject
 
 void KEMailDialogPrivate::run()
 {
-    const bool result = m_kemail->send(m_to, m_subject, m_message, m_attach);
+    const bool result = kemail->send(m_to, m_subject, m_message, m_attach);
     if (result) {
         emit sent();
     } else {
-        emit error(m_kemail->errorString());
+        emit error(kemail->errorString());
     }
 }
 
@@ -88,9 +88,9 @@ KEMailDialog::KEMailDialog(QWidget *parent, Qt::WindowFlags flags)
     d(new KEMailDialogPrivate())
 {
     d->ui.setupUi(mainWidget());
-    d->ui.fromlineedit->setText(d->m_kemail->from());
-    d->ui.userlineedit->setText(d->m_kemail->user());
-    d->ui.passlineedit->setText(d->m_kemail->password());
+    d->ui.fromlineedit->setText(d->kemail->from());
+    d->ui.userlineedit->setText(d->kemail->user());
+    d->ui.passlineedit->setText(d->kemail->password());
     connect(d->ui.settingslabel, SIGNAL(leftClickedUrl()), this, SLOT(_slotSettings()));
 
     connect(d, SIGNAL(sent()), this, SLOT(_slotSent()));
@@ -105,19 +105,19 @@ KEMailDialog::~KEMailDialog()
 void KEMailDialog::slotButtonClicked(int button)
 {
     if (button == KDialog::Ok) {
-        d->m_kemail->setFrom(d->ui.fromlineedit->text());
-        d->m_kemail->setUser(d->ui.userlineedit->text());
-        d->m_kemail->setPassword(d->ui.passlineedit->text());
-        if (!d->m_kemail->server().isValid()) {
+        d->kemail->setFrom(d->ui.fromlineedit->text());
+        d->kemail->setUser(d->ui.userlineedit->text());
+        d->kemail->setPassword(d->ui.passlineedit->text());
+        if (!d->kemail->server().isValid()) {
             KMessageBox::error(this, i18n("No server specified"));
             return;
-        } else if (d->m_kemail->from().isEmpty()) {
+        } else if (d->kemail->from().isEmpty()) {
             KMessageBox::error(this, i18n("No sender specified"));
             return;
         } else if (d->ui.recipientslistwidget->items().isEmpty()) {
             KMessageBox::error(this, i18n("No recipients specified"));
             return;
-        } else if (d->ui.sibjectlineedit->text().isEmpty()) {
+        } else if (d->ui.subjectlineedit->text().isEmpty()) {
             KMessageBox::error(this, i18n("No subject specified"));
             return;
         } else if (d->ui.messagetextedit->textOrHtml().isEmpty()) {
@@ -126,13 +126,79 @@ void KEMailDialog::slotButtonClicked(int button)
         }
         d->sendMail(
             d->ui.recipientslistwidget->items(),
-            d->ui.sibjectlineedit->text(),
+            d->ui.subjectlineedit->text(),
             d->ui.messagetextedit->textOrHtml(),
             d->ui.attachlistwidget->items()
         );
         return;
     }
     KDialog::slotButtonClicked(button);
+}
+
+QString KEMailDialog::from() const
+{
+    return d->kemail->from();
+}
+
+bool KEMailDialog::setFrom(const QString &from)
+{
+    return d->kemail->setFrom(from);
+}
+
+QStringList KEMailDialog::to() const
+{
+    return d->ui.recipientslistwidget->items();
+}
+
+bool KEMailDialog::setTo(const QStringList &to)
+{
+    if (to.isEmpty()) {
+        return false;
+    }
+    d->ui.recipientslistwidget->setItems(to);
+    return true;
+}
+
+QString KEMailDialog::subject() const
+{
+    return d->ui.subjectlineedit->text();
+}
+
+bool KEMailDialog::setSubject(const QString &subject)
+{
+    if (subject.isEmpty()) {
+        return false;
+    }
+    d->ui.subjectlineedit->setText(subject);
+    return true;
+}
+
+QString KEMailDialog::message() const
+{
+    return d->ui.messagetextedit->textOrHtml();
+}
+
+bool KEMailDialog::setMessage(const QString &message)
+{
+    if (message.isEmpty()) {
+        return false;
+    }
+    d->ui.messagetextedit->setText(message);
+    return true;
+}
+
+QStringList KEMailDialog::attach() const
+{
+    return d->ui.attachlistwidget->items();
+}
+
+bool KEMailDialog::setAttach(const QStringList &attach)
+{
+    if (attach.isEmpty()) {
+        return false;
+    }
+    d->ui.attachlistwidget->setItems(attach);
+    return true;
 }
 
 void KEMailDialog::_slotSettings()

@@ -52,6 +52,17 @@ public:
     KEMailDialog(QWidget *parent = nullptr, Qt::WindowFlags flags = 0);
     ~KEMailDialog();
 
+    QString from() const;
+    bool setFrom(const QString &from);
+    QStringList to() const;
+    bool setTo(const QStringList &to);
+    QString subject() const;
+    bool setSubject(const QString &subject);
+    QString message() const;
+    bool setMessage(const QString &message);
+    QStringList attach() const;
+    bool setAttach(const QStringList &attach);
+
 protected Q_SLOTS:
     virtual void slotButtonClicked(int button);
 
