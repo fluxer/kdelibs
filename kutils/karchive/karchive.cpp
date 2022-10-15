@@ -50,73 +50,6 @@
 #define KARCHIVE_TIMEOUT 250
 #define KARCHIVE_BUFFSIZE 10240
 
-#if defined(HAVE_LIBARCHIVE)
-static const QStringList s_writemimetypes = QStringList()
-#if ARCHIVE_VERSION_NUMBER > 3000004
-    << QString::fromLatin1("application/x-lzop")
-#endif
-#if ARCHIVE_VERSION_NUMBER > 3001002
-    << QString::fromLatin1("application/x-lz4")
-#endif
-#if ARCHIVE_VERSION_NUMBER > 3003002
-    << QString::fromLatin1("application/zstd")
-    << QString::fromLatin1("application/x-zstd-compressed-tar")
-#endif
-    << QString::fromLatin1("application/x-tar")
-    << QString::fromLatin1("application/x-compressed-tar")
-    << QString::fromLatin1("application/x-bzip")
-    << QString::fromLatin1("application/x-gzip")
-    << QString::fromLatin1("application/x-bzip-compressed-tar")
-    << QString::fromLatin1("application/x-gzip-compressed-tar")
-    << QString::fromLatin1("application/x-tarz")
-    << QString::fromLatin1("application/x-xz")
-    << QString::fromLatin1("application/x-xz-compressed-tar")
-    << QString::fromLatin1("application/x-lzma-compressed-tar")
-    << QString::fromLatin1("application/x-java-archive")
-    << QString::fromLatin1("application/zip")
-    << QString::fromLatin1("application/x-7z-compressed")
-    << QString::fromLatin1("application/x-iso9660-image")
-    << QString::fromLatin1("application/x-apple-diskimage")
-    << QString::fromLatin1("application/x-cd-image")
-    << QString::fromLatin1("application/x-raw-disk-image");
-
-static const QStringList s_readmimetypes = QStringList()
-#if ARCHIVE_VERSION_NUMBER > 3000004
-    << QString::fromLatin1("application/x-lzop")
-    << QString::fromLatin1("application/x-lrzip")
-#endif
-#if ARCHIVE_VERSION_NUMBER > 3001002
-    << QString::fromLatin1("application/x-lz4")
-    << QString::fromLatin1("application/x-lz4-compressed-tar")
-#endif
-#if ARCHIVE_VERSION_NUMBER > 3003002
-    << QString::fromLatin1("application/zstd")
-    << QString::fromLatin1("application/x-zstd")
-    << QString::fromLatin1("application/x-zstd-compressed-tar")
-#endif
-#if ARCHIVE_VERSION_NUMBER > 3003004
-    << QString::fromLatin1("application/vnd.rar")
-#endif
-    << QString::fromLatin1("application/x-archive")
-    << QString::fromLatin1("application/x-xar")
-    << QString::fromLatin1("application/x-deb")
-    << QString::fromLatin1("application/x-cd-image")
-    << QString::fromLatin1("application/x-bcpio")
-    << QString::fromLatin1("application/x-cpio")
-    << QString::fromLatin1("application/x-cpio-compressed")
-    << QString::fromLatin1("application/x-sv4cpio")
-    << QString::fromLatin1("application/x-sv4crc")
-    << QString::fromLatin1("application/x-rpm")
-    << QString::fromLatin1("application/x-source-rpm")
-    << QString::fromLatin1("application/vnd.ms-cab-compressed")
-    << QString::fromLatin1("application/x-servicepack")
-    << QString::fromLatin1("application/x-compress")
-    << QString::fromLatin1("application/x-lzip");
-#else
-static const QStringList s_writemimetypes;
-static const QStringList s_readmimetypes;
-#endif // HAVE_LIBARCHIVE
-
 KArchiveEntry::KArchiveEntry()
     : encrypted(false),
     size(0),
@@ -1230,13 +1163,69 @@ QString KArchive::errorString() const
 
 QStringList KArchive::readableMimeTypes()
 {
+#if defined(HAVE_LIBARCHIVE)
+    static const QStringList s_readmimetypes = QStringList()
+#if ARCHIVE_VERSION_NUMBER > 3003004
+        << QString::fromLatin1("application/vnd.rar")
+#endif
+        << KArchive::writableMimeTypes();
     return s_readmimetypes;
+#else
+    return QStringList();
+#endif // HAVE_LIBARCHIVE
 }
 
 QStringList KArchive::writableMimeTypes()
 {
-    QStringList result = s_readmimetypes;
-    result.append(s_writemimetypes);
-    result.removeDuplicates();
-    return result;
+#if defined(HAVE_LIBARCHIVE)
+    static const QStringList s_writemimetypes = QStringList()
+#if ARCHIVE_VERSION_NUMBER > 3000004
+        << QString::fromLatin1("application/x-lzop")
+        << QString::fromLatin1("application/x-lrzip")
+#endif
+#if ARCHIVE_VERSION_NUMBER > 3001002
+        << QString::fromLatin1("application/x-lz4")
+        << QString::fromLatin1("application/x-lz4-compressed-tar")
+#endif
+#if ARCHIVE_VERSION_NUMBER > 3003002
+        << QString::fromLatin1("application/zstd")
+        << QString::fromLatin1("application/x-zstd")
+        << QString::fromLatin1("application/x-zstd-compressed-tar")
+#endif
+        << QString::fromLatin1("application/x-tar")
+        << QString::fromLatin1("application/x-compressed-tar")
+        << QString::fromLatin1("application/x-bzip")
+        << QString::fromLatin1("application/x-gzip")
+        << QString::fromLatin1("application/x-bzip-compressed-tar")
+        << QString::fromLatin1("application/x-gzip-compressed-tar")
+        << QString::fromLatin1("application/x-tarz")
+        << QString::fromLatin1("application/x-xz")
+        << QString::fromLatin1("application/x-xz-compressed-tar")
+        << QString::fromLatin1("application/x-lzma-compressed-tar")
+        << QString::fromLatin1("application/x-java-archive")
+        << QString::fromLatin1("application/zip")
+        << QString::fromLatin1("application/x-7z-compressed")
+        << QString::fromLatin1("application/x-iso9660-image")
+        << QString::fromLatin1("application/x-apple-diskimage")
+        << QString::fromLatin1("application/x-cd-image")
+        << QString::fromLatin1("application/x-raw-disk-image")
+        << QString::fromLatin1("application/x-archive")
+        << QString::fromLatin1("application/x-xar")
+        << QString::fromLatin1("application/x-deb")
+        << QString::fromLatin1("application/x-cd-image")
+        << QString::fromLatin1("application/x-bcpio")
+        << QString::fromLatin1("application/x-cpio")
+        << QString::fromLatin1("application/x-cpio-compressed")
+        << QString::fromLatin1("application/x-sv4cpio")
+        << QString::fromLatin1("application/x-sv4crc")
+        << QString::fromLatin1("application/x-rpm")
+        << QString::fromLatin1("application/x-source-rpm")
+        << QString::fromLatin1("application/vnd.ms-cab-compressed")
+        << QString::fromLatin1("application/x-servicepack")
+        << QString::fromLatin1("application/x-compress")
+        << QString::fromLatin1("application/x-lzip");
+    return s_writemimetypes;
+#else
+    return QStringList();
+#endif // HAVE_LIBARCHIVE
 }
