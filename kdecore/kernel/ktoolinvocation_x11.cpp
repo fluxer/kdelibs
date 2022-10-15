@@ -111,7 +111,7 @@ static QStringList splitEmailAddressList( const QString & aStr )
     return list;
 }
 
-void KToolInvocation::invokeMailer(const QString &_to, const QString &_cc,
+void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
                                    const QString &subject, const QString &body,
                                    const QStringList &attachURLs,
                                    const QByteArray& startup_id )
@@ -122,32 +122,10 @@ void KToolInvocation::invokeMailer(const QString &_to, const QString &_cc,
     KConfig config(QString::fromLatin1("emaildefaults"));
     KConfigGroup profileGrp(&config, "General");
 
-    QString command = profileGrp.readPathEntry("EmailClient", QString());
-
-    QString to, cc;
-    if (command.isEmpty() || command == QLatin1String("kmail")
-        || command.endsWith(QLatin1String("/kmail")))
+    QString command = profileGrp.readPathEntry("EmailClient", QString::fromLatin1("kmail"));
+    if( !command.contains( QLatin1Char('%') ))
     {
-        command = QLatin1String("kmail --subject='%s' --to='%t' --cc='%c' --body='%B' --attach='%A'");
-        if ( !_to.isEmpty() )
-        {
-            KUrl url;
-            url.setProtocol(QLatin1String("mailto"));
-            url.setPath(_to);
-            to = QString::fromLatin1(url.toEncoded());
-        }
-        if ( !_cc.isEmpty() )
-        {
-            KUrl url;
-            url.setProtocol(QLatin1String("mailto"));
-            url.setPath(_cc);
-            cc = QString::fromLatin1(url.toEncoded());
-        }
-    } else {
-        to = _to;
-        cc = _cc;
-        if( !command.contains( QLatin1Char('%') ))
-            command += QLatin1String(" %u");
+        command += QLatin1String(" %u");
     }
 
     if (profileGrp.readEntry("TerminalClient", false))
