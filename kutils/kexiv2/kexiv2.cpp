@@ -277,6 +277,8 @@ KExiv2PropertyList KExiv2::metadata() const
             kWarning() << "Exception raised";
         }
     }
+#else
+    kWarning() << "KExiv2 is a stub";
 #endif // HAVE_EXIV2
     return result;
 }
