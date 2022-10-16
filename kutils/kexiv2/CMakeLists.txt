@@ -44,3 +44,7 @@ install(
     EXPORT kdelibsLibraryTargets
     ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
+
+if(ENABLE_TESTING)
+    add_subdirectory(tests)
+endif()
