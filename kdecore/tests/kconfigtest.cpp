@@ -27,8 +27,6 @@
 #include <kdebug.h>
 #include <kconfiggroup.h>
 
-#include <QHostInfo>
-
 #include <future>
 
 #ifdef Q_OS_UNIX
@@ -480,7 +478,7 @@ void KConfigTest::testPath()
   QVERIFY(group.hasKey("URL"));
   QCOMPARE(group.readEntry("URL", QString()), QString("file://" + HOMEPATH) );
   QVERIFY(group.hasKey("hostname"));
-  QCOMPARE(group.readEntry("hostname", QString()), QHostInfo::localHostName());
+  QCOMPARE(group.readEntry("hostname", QString()), QString("$(hostname)"));
   QVERIFY(group.hasKey("noeol"));
   QCOMPARE(group.readEntry("noeol", QString()), QString("foo"));
 }
