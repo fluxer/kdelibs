@@ -20,6 +20,8 @@
 #include "kspeech.h"
 #include "kdebug.h"
 
+#include <QSignalSpy>
+
 class KSpeechTest : public QObject
 {
     Q_OBJECT
@@ -59,7 +61,10 @@ void KSpeechTest::say()
     QFETCH(QString, saystr);
 
     KSpeech kspeech(this);
+    QSignalSpy spyJobStateChanged(&kspeech, SIGNAL(jobStateChanged(int,int)));
     QVERIFY(kspeech.say(saystr) != 0);
+    QTest::qWait(3000);
+    QVERIFY(spyJobStateChanged.count() == 2);
 }
 
 void KSpeechTest::setters_and_getters_data()
