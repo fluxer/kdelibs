@@ -927,11 +927,11 @@ void KMimeTypeTest::testHelperProtocols()
     QVERIFY(!KProtocolInfo::isHelperProtocol("unknown"));
     QVERIFY(KProtocolInfo::isHelperProtocol("telnet"));
 
-    // "mailto" is associated with kmail2 when present, and with kmailservice otherwise.
-    KService::Ptr kmail2 = KService::serviceByStorageId("KMail2.desktop");
-    if (kmail2) {
-        //qDebug() << kmail2->entryPath();
-        QVERIFY2(KProtocolInfo::exec("mailto").contains(QLatin1String("kmail -caption ")), // comes from KMail2.desktop
+    // "mailto" is associated with kmail when present, and with kmailservice otherwise.
+    KService::Ptr kmail = KService::serviceByStorageId("kmail.desktop");
+    if (kmail) {
+        // qDebug() << kmail->entryPath();
+        QVERIFY2(KProtocolInfo::exec("mailto").contains(QLatin1String("kmail --icon ")), // comes from kmail.desktop
                  qPrintable(KProtocolInfo::exec("mailto")));
     } else {
         QCOMPARE(KProtocolInfo::exec("mailto"), QLatin1String("kmailservice --icon '%i' --caption '%c' %u"));
