@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 
     KMediaWidget widget(&window, KMediaWidget::AllOptions);
     window.setCentralWidget(&widget);
-    widget.open("http://dl5.webmfiles.org/big-buck-bunny_trailer.webm");
+    widget.open("https://dl5.webmfiles.org/big-buck-bunny_trailer.webm");
 
     return app.exec();
 }
