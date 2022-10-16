@@ -69,7 +69,8 @@ QTEST_KDEMAIN_CORE( KConfigTest )
 #define VARIANTLISTENTRY (QVariantList() << true << false << QString("joe") << 10023)
 #define VARIANTLISTENTRY2 (QVariantList() << POINTENTRY << SIZEENTRY)
 #define HOMEPATH QString(QDir::homePath()+"/foo")
-#define HOMEPATHESCAPE QString(QDir::homePath()+"/foo/$HOME")
+#define HOMEPATHENV QString(QDir::homePath()+"/foo/$HOME")
+#define HOMEPATHENVEXPANDED QString(QDir::homePath()+"/foo/"+QDir::homePath())
 #define DOLLARGROUP "$i"
 
 void KConfigTest::initTestCase()
@@ -149,7 +150,7 @@ void KConfigTest::initTestCase()
 
   cg = KConfigGroup(&sc, "Path Type" );
   cg.writePathEntry( "homepath", HOMEPATH );
-  cg.writePathEntry( "homepathescape", HOMEPATHESCAPE );
+  cg.writePathEntry( "homepathenv", HOMEPATHENV );
 
   cg = KConfigGroup(&sc, "Enum Types" );
   writeEntry( cg, "enum-10", Tens );
@@ -451,7 +452,7 @@ void KConfigTest::testPath()
   KConfig sc2( "kconfigtest" );
   KConfigGroup sc3(&sc2, "Path Type");
   QCOMPARE( sc3.readPathEntry( "homepath", QString() ), HOMEPATH );
-  QCOMPARE( sc3.readPathEntry( "homepathescape", QString() ), HOMEPATHESCAPE );
+  QCOMPARE( sc3.readPathEntry( "homepathenv", QString() ), HOMEPATHENVEXPANDED );
   QCOMPARE( sc3.entryMap()["homepath"], HOMEPATH );
 
   {
