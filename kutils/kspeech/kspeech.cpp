@@ -18,6 +18,7 @@
 
 #include "kspeech.h"
 
+#include <QMutex>
 #include <QCoreApplication>
 #include <kdebug.h>
 #include <kconfig.h>
@@ -27,7 +28,10 @@
 #  include <speech-dispatcher/libspeechd.h>
 #endif
 
-static KSpeechPrivate* s_kspeechprivate = nullptr;
+typedef QMap<int, KSpeechPrivate*> KSpeechMap;
+
+Q_GLOBAL_STATIC(QMutex, globalKSpeechInstancesMutex)
+Q_GLOBAL_STATIC(KSpeechMap, globalKSpeechInstances)
 
 // NOTE: the callback function is not called in the same thread as the object that opens the
 // connection
@@ -51,6 +55,7 @@ private:
     friend KSpeech;
 #if defined(HAVE_SPEECHD)
     SPDConnection* m_speechd;
+    int m_speechdid;
     QByteArray m_voice;
 #endif
     QByteArray m_speechid;
@@ -59,20 +64,17 @@ private:
 KSpeechPrivate::KSpeechPrivate(QObject *parent)
     : QObject(parent)
 #if defined(HAVE_SPEECHD)
-    , m_speechd(nullptr)
+    , m_speechd(nullptr),
+    m_speechdid(0)
 #endif
 {
-    if (Q_UNLIKELY(s_kspeechprivate)) {
-        kWarning() << "Multiple KSpeech instances are not supported";
-    }
-
-    s_kspeechprivate = this;
     m_speechid = QCoreApplication::applicationName().toLocal8Bit();
 }
 
 KSpeechPrivate::~KSpeechPrivate()
 {
-    s_kspeechprivate = nullptr;
+    Q_ASSERT(!m_speechd);
+    Q_ASSERT(m_speechdid == 0);
 }
 
 #if defined(HAVE_SPEECHD)
@@ -83,6 +85,12 @@ void KSpeechPrivate::openSpeechD()
     if (Q_UNLIKELY(!m_speechd)) {
         kWarning() << "Could not open speech-dispatcher connection";
         return;
+    }
+
+    m_speechdid = spd_get_client_id(m_speechd);
+    {
+        QMutexLocker locker(globalKSpeechInstancesMutex());
+        globalKSpeechInstances()->insert(m_speechdid, this);
     }
 
     m_speechd->callback_begin = KSpeechPrivate::speechCallback;
@@ -110,13 +118,18 @@ void KSpeechPrivate::closeSpeechD()
     if (m_speechd) {
         spd_close(m_speechd);
         m_speechd = nullptr;
+
+        QMutexLocker locker(globalKSpeechInstancesMutex());
+        globalKSpeechInstances()->remove(m_speechdid);
+        m_speechdid = 0;
     }
 }
 
 void KSpeechPrivate::speechCallback(size_t msg_id, size_t client_id, SPDNotificationType state)
 {
-    Q_UNUSED(client_id);
-    if (Q_UNLIKELY(!s_kspeechprivate)) {
+    QMutexLocker locker(globalKSpeechInstancesMutex());
+    KSpeechPrivate* kspeechprivate = globalKSpeechInstances()->value(static_cast<int>(client_id), 0);
+    if (Q_UNLIKELY(!kspeechprivate)) {
         kWarning() << "Null kspeech private pointer";
         return;
     }
@@ -124,15 +137,15 @@ void KSpeechPrivate::speechCallback(size_t msg_id, size_t client_id, SPDNotifica
     const int jobNum = msg_id;
     switch (state) {
         case SPD_EVENT_BEGIN: {
-            emit s_kspeechprivate->signalJobStateChanged(jobNum, KSpeech::JobStarted);
+            emit kspeechprivate->signalJobStateChanged(jobNum, KSpeech::JobStarted);
             break;
         }
         case SPD_EVENT_END: {
-            emit s_kspeechprivate->signalJobStateChanged(jobNum, KSpeech::JobFinished);
+            emit kspeechprivate->signalJobStateChanged(jobNum, KSpeech::JobFinished);
             break;
         }
         case SPD_EVENT_CANCEL: {
-            emit s_kspeechprivate->signalJobStateChanged(jobNum, KSpeech::JobCanceled);
+            emit kspeechprivate->signalJobStateChanged(jobNum, KSpeech::JobCanceled);
             break;
         }
         default: {
