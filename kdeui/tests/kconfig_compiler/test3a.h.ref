@@ -93,28 +93,28 @@ class Test3a : public KConfigSkeleton
     }
 
     /**
-      Set MyPassword
+      Set MyPath
     */
-    void setMyPassword( const QString & v )
+    void setMyPath( const QString & v )
     {
-      if (!isImmutable( QString::fromLatin1( "MyPassword" ) ))
-        mMyPassword = v;
+      if (!isImmutable( QString::fromLatin1( "MyPath" ) ))
+        mMyPath = v;
     }
 
     /**
-      Get MyPassword
+      Get MyPath
     */
-    QString myPassword() const
+    QString myPath() const
     {
-      return mMyPassword;
+      return mMyPath;
     }
 
     /**
-      Get Item object corresponding to MyPassword()
+      Get Item object corresponding to MyPath()
     */
-    ItemPassword *myPasswordItem()
+    ItemPath *myPathItem()
     {
-      return mMyPasswordItem;
+      return mMyPathItem;
     }
 
   protected:
@@ -125,13 +125,13 @@ class Test3a : public KConfigSkeleton
     // Blah
     int mBlubb;
     QString mBlahBlah;
-    QString mMyPassword;
+    QString mMyPath;
 
   private:
     ItemBool *mAutoSaveItem;
     ItemInt *mBlubbItem;
     ItemString *mBlahBlahItem;
-    ItemPassword *mMyPasswordItem;
+    ItemPath *mMyPathItem;
 };
 
 }

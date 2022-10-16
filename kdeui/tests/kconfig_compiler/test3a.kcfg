@@ -20,7 +20,7 @@
     <entry type="String" name="BlahBlah">
       <default>a string</default>
     </entry>
-    <entry type="Password" name="MyPassword"/>
+    <entry type="Path" name="/home/blah/blah"/>
   </group>
 
 </kcfg>

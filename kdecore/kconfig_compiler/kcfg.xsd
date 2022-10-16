@@ -178,7 +178,6 @@
             <xsd:enumeration value="Enum"/>
             <xsd:enumeration value="Path"/>
             <xsd:enumeration value="PathList"/>
-            <xsd:enumeration value="Password"/>
             <xsd:enumeration value="Url"/>
             <xsd:enumeration value="UrlList"/>
         </xsd:restriction>

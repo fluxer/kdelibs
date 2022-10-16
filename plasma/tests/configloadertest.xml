@@ -31,9 +31,6 @@
                 <entry name="DefaultIntItem" type="Int">
                         <default>27</default>
                 </entry>
-                <entry name="DefaultPasswordItem" type="Password">
-                        <default>h4x.</default>
-                </entry>
                 <entry name="DefaultPathItem" type="Path">
                         <default>/dev/null</default>
                 </entry>

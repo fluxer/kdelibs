@@ -19,8 +19,8 @@ Test3::Test3(  )
   addItem( mBlubbItem, QLatin1String( "Blubb" ) );
   mBlahBlahItem = new KConfigSkeleton::ItemString( currentGroup(), QLatin1String( "BlahBlah" ), mBlahBlah, QLatin1String( "a string" ) );
   addItem( mBlahBlahItem, QLatin1String( "BlahBlah" ) );
-  mMyPasswordItem = new KConfigSkeleton::ItemPassword( currentGroup(), QLatin1String( "MyPassword" ), mMyPassword );
-  addItem( mMyPasswordItem, QLatin1String( "MyPassword" ) );
+  mMyPathItem = new KConfigSkeleton::ItemPath( currentGroup(), QLatin1String( "MyPath" ), mMyPath );
+  addItem( mMyPathItem, QLatin1String( "MyPath" ) );
 }
 
 Test3::~Test3()

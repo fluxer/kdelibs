@@ -101,13 +101,6 @@ void ConfigLoaderTest::intDefaultValue()
     QVERIFY(typeItem->isEqual(27));
 }
 
-void ConfigLoaderTest::passwordDefaultValue()
-{
-    GET_CONFIG_ITEM_VALUE(KConfigSkeleton::ItemPassword*, "DefaultPasswordItem");
-
-    QVERIFY(typeItem->isEqual(QString::fromLatin1("h4x.")));
-}
-
 void ConfigLoaderTest::pathDefaultValue()
 {
     GET_CONFIG_ITEM_VALUE(KConfigSkeleton::ItemPath*, "DefaultPathItem");

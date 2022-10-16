@@ -368,16 +368,13 @@ public:
   class KDECORE_EXPORT ItemString:public KConfigSkeletonGenericItem < QString >
   {
   public:
-    enum Type { Normal, Password, Path };
+    enum Type { Normal, Path };
 
     /** @enum Type
         The type of string that is held in this item
 
         @var ItemString::Type ItemString::Normal
         A normal string
-
-        @var ItemString::Type ItemString::Password
-        A password string
 
         @var ItemString::Type ItemString::Path
         A path to a file or directory
@@ -409,18 +406,6 @@ public:
 
   private:
     Type mType;
-  };
-
-  /**
-   * Class for handling a password preferences item.
-   */
-  class KDECORE_EXPORT ItemPassword:public ItemString
-  {
-  public:
-    /** @copydoc KConfigSkeletonGenericItem::KConfigSkeletonGenericItem */
-    ItemPassword(const QString & _group, const QString & _key,
-               QString & reference,
-               const QString & defaultValue = QLatin1String("")); // NOT QString() !!
   };
 
   /**
@@ -1034,23 +1019,6 @@ public:
   ItemString *addItemString(const QString & name, QString & reference,
                             const QString & defaultValue = QLatin1String(""), // NOT QString() !!
                             const QString & key = QString());
-
-  /**
-   * Register a password item of type QString. The string value is written
-   * encrypted to the config file. Note that the current encryption scheme
-   * is very weak.
-   *
-   * @param name Name used to identify this setting. Names must be unique.
-   * @param reference Pointer to the variable, which is set by readConfig()
-   * calls and read by writeConfig() calls.
-   * @param defaultValue Default value, which is used when the config file
-   * does not yet contain the key of this item.
-   * @param key Key used in config file. If key is null, name is used as key.
-   * @return The created item
-   */
-  ItemPassword *addItemPassword(const QString & name, QString & reference,
-                              const QString & defaultValue = QLatin1String(""),
-                              const QString & key = QString());
 
   /**
    * Register a path item of type QString. The string value is interpreted

@@ -45,7 +45,6 @@ private Q_SLOTS:
     void enumDefaultValue();
     void fontDefaultValue();
     void intDefaultValue();
-    void passwordDefaultValue();
     void pathDefaultValue();
     void stringDefaultValue();
     void stringListDefaultValue();

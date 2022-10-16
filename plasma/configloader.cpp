@@ -235,8 +235,6 @@ void ConfigLoaderHandler::addItem()
         }
 
         item = intItem;
-    } else if (m_type == "password") {
-        item = m_config->addItemPassword(m_name, *d->newString(), m_default, m_key);
     } else if (m_type == "path") {
         item = m_config->addItemPath(m_name, *d->newString(), m_default, m_key);
     } else if (m_type == "string") {

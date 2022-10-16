@@ -25,7 +25,6 @@
 #include "kstandarddirs.h"
 #include "kglobal.h"
 #include "kdebug.h"
-#include "kstringhandler.h"
 
 KConfigSkeletonItem::KConfigSkeletonItem(const QString & _group,
                                          const QString & _key)
@@ -139,8 +138,6 @@ void KCoreConfigSkeleton::ItemString::writeConfig( KConfig *config )
       cg.revertToDefault( mKey );
     else if ( mType == Path )
       cg.writePathEntry( mKey, mReference );
-    else if ( mType == Password )
-      cg.writeEntry( mKey, KStringHandler::obscure( mReference ) );
     else
       cg.writeEntry( mKey, mReference );
   }
@@ -154,11 +151,6 @@ void KCoreConfigSkeleton::ItemString::readConfig( KConfig *config )
   if ( mType == Path )
   {
     mReference = cg.readPathEntry( mKey, mDefault );
-  }
-  else if ( mType == Password )
-  {
-    QString val = cg.readEntry( mKey, KStringHandler::obscure( mDefault ) );
-    mReference = KStringHandler::obscure( val );
   }
   else
   {
@@ -183,13 +175,6 @@ bool KCoreConfigSkeleton::ItemString::isEqual(const QVariant &v) const
 QVariant KCoreConfigSkeleton::ItemString::property() const
 {
   return QVariant(mReference);
-}
-
-KCoreConfigSkeleton::ItemPassword::ItemPassword( const QString &_group, const QString &_key,
-                                    QString &reference,
-                                    const QString &defaultValue)
-  : ItemString( _group, _key, reference, defaultValue, Password )
-{
 }
 
 KCoreConfigSkeleton::ItemPath::ItemPath( const QString &_group, const QString &_key,
@@ -1100,16 +1085,6 @@ KCoreConfigSkeleton::ItemString *KCoreConfigSkeleton::addItemString( const QStri
   item = new KCoreConfigSkeleton::ItemString( d->mCurrentGroup, key.isEmpty() ? name : key,
                                           reference, defaultValue,
                                           KCoreConfigSkeleton::ItemString::Normal );
-  addItem( item, name );
-  return item;
-}
-
-KCoreConfigSkeleton::ItemPassword *KCoreConfigSkeleton::addItemPassword( const QString &name, QString &reference,
-                                       const QString &defaultValue, const QString &key )
-{
-  KCoreConfigSkeleton::ItemPassword *item;
-  item = new KCoreConfigSkeleton::ItemPassword( d->mCurrentGroup, key.isNull() ? name : key,
-                                          reference, defaultValue );
   addItem( item, name );
   return item;
 }

@@ -899,12 +899,12 @@ QString param( const QString &t )
     else if ( type == "enum" )        return "int";
     else if ( type == "path" )        return "const QString &";
     else if ( type == "pathlist" )    return "const QStringList &";
-    else if ( type == "password" )    return "const QString &";
     else if ( type == "url" )         return "const KUrl &";
     else if ( type == "urllist" )     return "const KUrl::List &";
     else {
         cerr <<"kconfig_compiler does not support type \""<< type <<"\""<<endl;
-        return "QString"; //For now, but an assert would be better
+        exit(1);
+        return "QString";
     }
 }
 
