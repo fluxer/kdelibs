@@ -29,6 +29,8 @@ private Q_SLOTS:
 
     void orientation_data();
     void orientation();
+
+    void metadata();
 };
 
 QTEST_KDEMAIN_CORE(KExiv2Test)
@@ -74,11 +76,37 @@ void KExiv2Test::orientation()
     QFETCH(bool, different);
 
     QImage qimage(imagepath);
+    QVERIFY(!qimage.isNull());
     QImage qimagecopy(qimage);
+    QVERIFY(!qimagecopy.isNull());
     QVERIFY(qimage == qimagecopy);
     KExiv2 kexiv2(imagepath);
     QVERIFY(kexiv2.rotateImage(qimage));
     QCOMPARE(qimage != qimagecopy, different);
+}
+
+void KExiv2Test::metadata()
+{
+    const QString imagepath = QFile::decodeName(KDESRCDIR "//metadata/exiv2_iptc.jpg");
+    KExiv2 kexiv2(imagepath);
+    const KExiv2PropertyList kexiv2properylist = kexiv2.metadata();
+    QVERIFY(kexiv2properylist.size() > 0);
+    QString exifmakepropvalue;
+    QString iptcrecordpropvalue;
+    QString xmpmakepropvalue;
+    foreach (const KExiv2Property &kexiv2property, kexiv2properylist) {
+        // qDebug() << Q_FUNC_INFO << kexiv2property.name << kexiv2property.value;
+        if (kexiv2property.name == "Exif.Image.Make") {
+            exifmakepropvalue = kexiv2property.value;
+        } else if (kexiv2property.name == "Iptc.Application2.RecordVersion") {
+            iptcrecordpropvalue = kexiv2property.value;
+        } else if (kexiv2property.name == "Xmp.tiff.Make") {
+            xmpmakepropvalue = kexiv2property.value;
+        }
+    }
+    QCOMPARE(exifmakepropvalue, QString::fromLatin1("PENTAX Corporation"));
+    QCOMPARE(iptcrecordpropvalue, QString::fromLatin1("2"));
+    QCOMPARE(xmpmakepropvalue, QString::fromLatin1("PENTAX Corporation"));
 }
 
 #include "kexiv2test.moc"
