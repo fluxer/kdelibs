@@ -89,7 +89,6 @@ KEMailDialog::KEMailDialog(QWidget *parent, Qt::WindowFlags flags)
     d(new KEMailDialogPrivate())
 {
     d->ui.setupUi(mainWidget());
-    d->ui.fromlineedit->setText(d->kemail->from());
     d->ui.userlineedit->setText(d->kemail->user());
     d->ui.passlineedit->setText(d->kemail->password());
     connect(d->ui.settingslabel, SIGNAL(leftClickedUrl()), this, SLOT(_slotSettings()));
@@ -106,7 +105,6 @@ KEMailDialog::~KEMailDialog()
 void KEMailDialog::slotButtonClicked(int button)
 {
     if (button == KDialog::Ok) {
-        d->kemail->setFrom(d->ui.fromlineedit->text());
         d->kemail->setUser(d->ui.userlineedit->text());
         d->kemail->setPassword(d->ui.passlineedit->text());
         if (!d->kemail->server().isValid()) {
