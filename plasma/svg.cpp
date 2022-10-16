@@ -30,7 +30,6 @@
 #include <kcolorscheme.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
-#include <kfilterdev.h>
 #include <kiconeffect.h>
 #include <kglobalsettings.h>
 #include <ksharedptr.h>
@@ -47,40 +46,9 @@ SharedSvgRenderer::SharedSvgRenderer(QObject *parent)
 {
 }
 
-SharedSvgRenderer::SharedSvgRenderer(
-    const QString &filename,
-    QHash<QString, QRectF> &interestingElements,
-    QObject *parent)
-    : QSvgRenderer(parent)
+SharedSvgRenderer::SharedSvgRenderer(const QString &filename, QObject *parent)
+    : QSvgRenderer(filename, parent)
 {
-    QIODevice *file = KFilterDev::deviceForFile(filename, "application/x-gzip");
-    if (!file->open(QIODevice::ReadOnly)) {
-        delete file;
-        return;
-    }
-    const QByteArray contents = file->readAll();
-    delete file;
-
-    if (!QSvgRenderer::load(contents)) {
-        return;
-    }
-
-    // Search the SVG to find and store all ids that contain size hints.
-    const QString contentsAsString(QString::fromLatin1(contents));
-    QRegExp idExpr("id\\s*=\\s*(['\"])(\\d+-\\d+-.*)\\1");
-    idExpr.setMinimal(true);
-
-    int pos = 0;
-    while ((pos = idExpr.indexIn(contentsAsString, pos)) != -1) {
-        QString elementId = idExpr.cap(2);
-
-        QRectF elementRect = boundsOnElement(elementId);
-        if (elementRect.isValid()) {
-            interestingElements.insert(elementId, elementRect);
-        }
-
-        pos += idExpr.matchedLength();
-    }
 }
 
 #define QLSEP QLatin1Char('_')
@@ -354,21 +322,7 @@ void SvgPrivate::createRenderer()
         if (path.isEmpty()) {
             renderer = new SharedSvgRenderer();
         } else {
-            QHash<QString, QRectF> interestingElements;
-            renderer = new SharedSvgRenderer(path, interestingElements);
-
-            // Add interesting elements to the theme's rect cache.
-            QHashIterator<QString, QRectF> i(interestingElements);
-
-            while (i.hasNext()) {
-                i.next();
-                const QString &elementId = i.key();
-                const QRectF &elementRect = i.value();
-
-                const QString cacheId = CACHE_ID_NATURAL_SIZE(elementId);
-                localRectCache.insert(cacheId, elementRect);
-                cacheAndColorsTheme()->insertIntoRectsCache(path, cacheId, elementRect);
-            }
+            renderer = new SharedSvgRenderer(path);
         }
 
         s_renderers[path] = renderer;

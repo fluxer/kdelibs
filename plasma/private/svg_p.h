@@ -37,10 +37,7 @@ class SharedSvgRenderer : public QSvgRenderer, public QSharedData
         typedef KSharedPtr<SharedSvgRenderer> Ptr;
 
         SharedSvgRenderer(QObject *parent = 0);
-        SharedSvgRenderer(
-            const QString &filename,
-            QHash<QString, QRectF> &interestingElements,
-            QObject *parent = 0);
+        SharedSvgRenderer(const QString &filename, QObject *parent = 0);
 };
 
 class SvgPrivate
