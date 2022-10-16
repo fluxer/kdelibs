@@ -614,8 +614,7 @@ QString KConfigGroup::readEntryUntranslated(const char *key, const QString& aDef
 {
     Q_ASSERT_X(isValid(), "KConfigGroup::readEntryUntranslated", "accessing an invalid group");
 
-    bool expand = false;
-    QString result = config()->d_func()->lookupData(d->fullName(), key, KEntryMap::SearchFlags(), &expand);
+    QString result = config()->d_func()->lookupData(d->fullName(), key, KEntryMap::SearchFlags(), 0);
     if (result.isNull())
         return aDefault;
     return result;
@@ -765,10 +764,7 @@ QString KConfigGroup::readPathEntry(const char *key, const QString & aDefault) c
     if (aValue.isNull())
         aValue = aDefault;
 
-    if (expand)
-        return KShell::envExpand(aValue);
-
-    return aValue;
+    return KShell::envExpand(aValue);
 }
 
 QStringList KConfigGroup::readPathEntry(const QString& pKey, const QStringList& aDefault) const
