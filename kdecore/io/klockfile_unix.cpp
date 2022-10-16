@@ -19,7 +19,6 @@
 
 #include "klockfile.h"
 #include "kdebug.h"
-#include "krandom.h"
 #include "kde_file.h"
 
 #include <QHostInfo>
@@ -31,8 +30,8 @@
 #include <signal.h>
 #include <errno.h>
 
-#define KLOCKFILE_TIMEOUT 250
-#define KLOCKFILE_SLEEPTIME 250
+#define KLOCKFILE_TIMEOUT 150
+#define KLOCKFILE_SLEEPTIME 150
 
 class KLockFilePrivate
 {
@@ -130,9 +129,8 @@ tryagain:
         result = d->tryLock();
     }
     if (!(options & KLockFile::NoBlockFlag) && result == KLockFile::LockFail) {
-        const int randomtimeout = KRandom::randomMax(KLOCKFILE_TIMEOUT) + KLOCKFILE_TIMEOUT;
-        kDebug() << "Retrying to lock after" << (randomtimeout + KLOCKFILE_SLEEPTIME);
-        QCoreApplication::processEvents(QEventLoop::AllEvents, randomtimeout);
+        kDebug() << "Retrying to lock after" << (KLOCKFILE_TIMEOUT + KLOCKFILE_SLEEPTIME);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, KLOCKFILE_TIMEOUT);
         QThread::msleep(KLOCKFILE_SLEEPTIME);
         goto tryagain;
     }

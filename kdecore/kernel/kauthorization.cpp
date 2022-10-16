@@ -30,6 +30,9 @@
 
 #include <syslog.h>
 
+#define KAUTHORIZATION_TIMEOUT 150
+#define KAUTHORIZATION_SLEEPTIME 150
+
 void kAuthMessageHandler(QtMsgType type, const char *msg)
 {
     switch (type) {
@@ -154,8 +157,8 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
 
     while (isDBusServiceRegistered(helper)) {
         kDebug() << "Waiting for service to unregister" << helper;
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
-        QThread::msleep(250);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
+        QThread::msleep(KAUTHORIZATION_SLEEPTIME);
     }
 
     QDBusInterface kauthorizationinterface(
