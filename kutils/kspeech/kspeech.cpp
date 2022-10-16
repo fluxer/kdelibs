@@ -112,7 +112,9 @@ void KSpeechPrivate::openSpeechD()
     Q_ASSERT(kspeech);
     kspeech->setVolume(volume);
     kspeech->setPitch(pitch);
-    kspeech->setVoice(voice);
+    if (!voice.isEmpty()) {
+        kspeech->setVoice(voice);
+    }
 }
 
 void KSpeechPrivate::closeSpeechD()
