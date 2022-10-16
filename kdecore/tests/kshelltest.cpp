@@ -60,6 +60,8 @@ KShellTest::envExpand()
     QCOMPARE(KShell::envExpand("${HOME}/${LOGNAME}"), QString(QDir::homePath()+"/" + me));
     QCOMPARE(KShell::envExpand("\\${HOME}/${LOGNAME}"), QString("\\${HOME}/" + me));
     QCOMPARE(KShell::envExpand("${HOME}/\\${LOGNAME}"), QString(QDir::homePath()+"/\\${LOGNAME}"));
+
+    QCOMPARE(KShell::envExpand("$(hostname)"), QString("$(hostname)"));
 }
 
 void

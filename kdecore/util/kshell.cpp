@@ -79,7 +79,9 @@ QString KShell::envExpand( const QString &fname )
     QString result = fname;
     int i = 0;
     while (i < result.size()) {
-        if (result.at(i) == QLatin1Char('$') && result[i - 1] != QLatin1Char('\\')) {
+        if (result.at(i) == QLatin1Char('$')
+            && result[i - 1] != QLatin1Char('\\')
+            && result[i + 1] != QLatin1Char('(')) {
             int varstart = i + 1;
             int varend = varstart;
             int varlen = 0;
