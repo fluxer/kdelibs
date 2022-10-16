@@ -100,7 +100,7 @@ KLedTest::nextColor() {
 
 void 
 KLedTest::nextLook() { 
-  register int tmp;
+  int tmp;
   if (kled_round) {
     tmp = (static_cast<int>(ledlook) +1 ) % 3 ;
   }
