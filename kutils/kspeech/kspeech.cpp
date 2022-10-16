@@ -73,8 +73,10 @@ KSpeechPrivate::KSpeechPrivate(QObject *parent)
 
 KSpeechPrivate::~KSpeechPrivate()
 {
+#if defined(HAVE_SPEECHD)
     Q_ASSERT(!m_speechd);
     Q_ASSERT(m_speechdid == 0);
+#endif
 }
 
 #if defined(HAVE_SPEECHD)
