@@ -31,6 +31,8 @@ private Q_SLOTS:
     void orientation();
 
     void metadata();
+
+    void preview();
 };
 
 QTEST_KDEMAIN_CORE(KExiv2Test)
@@ -80,15 +82,15 @@ void KExiv2Test::orientation()
     QImage qimagecopy(qimage);
     QVERIFY(!qimagecopy.isNull());
     QVERIFY(qimage == qimagecopy);
-    KExiv2 kexiv2(imagepath);
+    const KExiv2 kexiv2(imagepath);
     QVERIFY(kexiv2.rotateImage(qimage));
     QCOMPARE(qimage != qimagecopy, different);
 }
 
 void KExiv2Test::metadata()
 {
-    const QString imagepath = QFile::decodeName(KDESRCDIR "//metadata/exiv2_iptc.jpg");
-    KExiv2 kexiv2(imagepath);
+    const QString imagepath = QFile::decodeName(KDESRCDIR "/metadata/exiv2_iptc.jpg");
+    const KExiv2 kexiv2(imagepath);
     const KExiv2PropertyList kexiv2properylist = kexiv2.metadata();
     QVERIFY(kexiv2properylist.size() > 0);
     QString exifmakepropvalue;
@@ -107,6 +109,13 @@ void KExiv2Test::metadata()
     QCOMPARE(exifmakepropvalue, QString::fromLatin1("PENTAX Corporation"));
     QCOMPARE(iptcrecordpropvalue, QString::fromLatin1("2"));
     QCOMPARE(xmpmakepropvalue, QString::fromLatin1("PENTAX Corporation"));
+}
+
+void KExiv2Test::preview()
+{
+    const QString imagepath = QFile::decodeName(KDESRCDIR "/metadata/exiv2_iptc.jpg");
+    const KExiv2 kexiv2(imagepath);
+    QVERIFY(!kexiv2.preview().isNull());
 }
 
 #include "kexiv2test.moc"
