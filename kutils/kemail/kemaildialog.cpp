@@ -56,7 +56,7 @@ private:
 KEMailDialogPrivate::KEMailDialogPrivate()
     : kemail(nullptr)
 {
-    kemail = new KEMail();
+    kemail = new KEMail(this);
 }
 
 KEMailDialogPrivate::~KEMailDialogPrivate()

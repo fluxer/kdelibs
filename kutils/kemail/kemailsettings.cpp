@@ -28,6 +28,7 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
+#include <kpasswdstore.h>
 #include <klocale.h>
 #include <kdebug.h>
 
@@ -38,16 +39,21 @@ public:
     ~KEMailSettingsPrivate();
 
     KConfig *m_config;
+    KPasswdStore *m_store;
 };
 
 KEMailSettingsPrivate::KEMailSettingsPrivate()
-    : m_config(nullptr)
+    : m_config(nullptr),
+    m_store(nullptr)
 {
     m_config = new KConfig("emaildefaults");
+    m_store = new KPasswdStore();
+    m_store->setStoreID(QString::fromLatin1("KEMailSettings"));
 }
 
 KEMailSettingsPrivate::~KEMailSettingsPrivate()
 {
+    delete m_store;
     delete m_config;
 }
 
@@ -74,10 +80,10 @@ QString KEMailSettings::getSetting(KEMailSettings::Setting setting) const
             return cg.readEntry("OutgoingServer");
         }
         case OutServerLogin: {
-            return cg.readEntry("OutgoingUserName");
+            return d->m_store->getPasswd(KPasswdStore::makeKey("OutgoingUserName"));
         }
         case OutServerPass: {
-            return cg.readEntry("OutgoingPassword");
+            return d->m_store->getPasswd(KPasswdStore::makeKey("OutgoingPassword"));
         }
     };
     return QString();
@@ -111,11 +117,11 @@ void KEMailSettings::setSetting(KEMailSettings::Setting setting, const QString &
             break;
         }
         case OutServerLogin: {
-            cg.writeEntry("OutgoingUserName", value);
+            d->m_store->storePasswd(KPasswdStore::makeKey("OutgoingUserName"), value);
             break;
         }
         case OutServerPass: {
-            cg.writeEntry("OutgoingPassword", value);
+            d->m_store->storePasswd(KPasswdStore::makeKey("OutgoingPassword"), value);
             break;
         }
     };

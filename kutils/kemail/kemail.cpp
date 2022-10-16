@@ -130,6 +130,12 @@ KEMail::KEMail(QObject *parent)
 
 KEMail::~KEMail()
 {
+    KEMailSettings kemailsettings;
+    kemailsettings.setSetting(KEMailSettings::OutServer, server().url());
+    kemailsettings.setSetting(KEMailSettings::EmailAddress, from());
+    kemailsettings.setSetting(KEMailSettings::OutServerLogin, user());
+    kemailsettings.setSetting(KEMailSettings::OutServerPass, password());
+
     delete d;
 }
 
