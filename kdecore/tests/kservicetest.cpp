@@ -359,29 +359,26 @@ void KServiceTest::testHasServiceType2() // with services coming from ksycoca
 
 void KServiceTest::testActionsAndDataStream()
 {
-    const QString servicePath = KStandardDirs::locate( "services", "ScreenSavers/krandom.desktop" );
+    const QString servicePath = KStandardDirs::locate( "services", "ServiceMenus/ark_servicemenu.desktop" );
     if (servicePath.isEmpty() )
-        QSKIP("kdebase not installed, krandom.desktop not found", SkipAll);
+        QSKIP("kde-extraapps not installed, ark_servicemenu.desktop not found", SkipAll);
     KService service( servicePath );
     QVERIFY(!service.property("Name[fr]", QVariant::String).isValid());
     const QList<KServiceAction> actions = service.actions();
     QCOMPARE(actions.count(), 3);
     const KServiceAction setupAction = actions[0];
-    QCOMPARE(setupAction.name(), QString("Setup"));
-    QCOMPARE(setupAction.exec(), QString("krandom.kss -setup"));
-    QVERIFY(!setupAction.icon().isEmpty());
+    QCOMPARE(setupAction.name(), QString("arkAutoExtractHere"));
+    QCOMPARE(setupAction.exec(), QString("ark --batch --autodestination --autosubfolder %F"));
+    QCOMPARE(setupAction.icon(), QString("ark"));
     QCOMPARE(setupAction.noDisplay(), false);
     QVERIFY(!setupAction.isSeparator());
-    const KServiceAction rootAction = actions[2];
-    QCOMPARE(rootAction.name(), QString("Root"));
+    const KServiceAction extractHereAction = actions[2];
+    QCOMPARE(extractHereAction.name(), QString("arkExtractHere"));
 
     QByteArray data;
     QDataStream stream(&data, QIODevice::WriteOnly);
     service.save(stream);
     QVERIFY(!data.isEmpty());
-    // The binary size of that KService in ksycoca was 3700 when storing all Name[...] translations!
-    // Now down to 755. This is on x86, so make the assert for 1500 in case x86_64 needs more.
-    QVERIFY(data.size() < 1500);
     QDataStream loadingStream(data);
     // loading must first get type, see KSycocaEntryPrivate::save
     // (the path that save writes out, is read by the KSycocaEntryPrivate ctor)
