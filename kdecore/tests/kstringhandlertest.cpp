@@ -141,16 +141,6 @@ void KStringHandlerTest::naturalCompare()
     QCOMPARE(KStringHandler::naturalCompare("abc.jpg", "abc_a.jpg", Qt::CaseInsensitive), -1);
 }
 
-void KStringHandlerTest::obscure()
-{
-  // See bug 167900, obscure() produced chars that could not properly be converted to and from
-  // UTF8. The result was that storing passwords with '!' in them did not work.
-  QString test = "!TEST!";
-  QString obscured = KStringHandler::obscure( test );
-  QByteArray obscuredBytes = obscured.toUtf8();
-  QCOMPARE( KStringHandler::obscure( QString::fromUtf8( obscuredBytes ) ), test );
-}
-
 void KStringHandlerTest::preProcessWrap_data()
 {
     const QChar zwsp(0x200b);

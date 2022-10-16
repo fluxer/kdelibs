@@ -12,7 +12,6 @@ private Q_SLOTS:
     void tagURLs();
     void perlSplit();
     void naturalCompare();
-    void obscure();
     void preProcessWrap_data();
     void preProcessWrap();
 

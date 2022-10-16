@@ -166,21 +166,6 @@ namespace KStringHandler
     KDECORE_EXPORT QString tagUrls( const QString& text );
 
     /**
-      Obscure string by using a simple symmetric encryption. Applying the
-      function to a string obscured by this function will result in the original
-      string.
-
-      The function can be used to obscure passwords stored to configuration
-      files. Note that this won't give you any more security than preventing
-      that the password is directly copied and pasted.
-
-      @param str string to be obscured
-      @return obscured string
-    */
-    KDECORE_EXPORT QString obscure( const QString &str );
-
-
-    /**
       Guess whether a string is UTF8 encoded.
 
       @param str the string to check
