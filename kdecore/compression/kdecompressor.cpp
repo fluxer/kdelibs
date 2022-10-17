@@ -116,7 +116,7 @@ bool KDecompressor::process(const QByteArray &data)
             }
             libdeflate_free_decompressor(decomp);
 
-            if (decompresult != LIBDEFLATE_SUCCESS) {
+            if (Q_UNLIKELY(decompresult != LIBDEFLATE_SUCCESS)) {
                 d->m_errorstring = i18n("Could not decompress data");
                 d->m_result.clear();
                 return false;
@@ -155,7 +155,7 @@ bool KDecompressor::process(const QByteArray &data)
             }
             libdeflate_free_decompressor(decomp);
 
-            if (decompresult != LIBDEFLATE_SUCCESS) {
+            if (Q_UNLIKELY(decompresult != LIBDEFLATE_SUCCESS)) {
                 d->m_errorstring = i18n("Could not decompress data");
                 d->m_result.clear();
                 return false;
@@ -194,7 +194,7 @@ bool KDecompressor::process(const QByteArray &data)
             }
             libdeflate_free_decompressor(decomp);
 
-            if (decompresult != LIBDEFLATE_SUCCESS) {
+            if (Q_UNLIKELY(decompresult != LIBDEFLATE_SUCCESS)) {
                 d->m_errorstring = i18n("Could not decompress data");
                 d->m_result.clear();
                 return false;
@@ -278,7 +278,6 @@ bool KDecompressor::process(const QByteArray &data)
             d->m_result.resize(speculativesize);
             return true;
         }
-
 #endif // HAVE_XZ_SUPPORT
         default: {
             kWarning() << "Unsupported type" << d->m_type;

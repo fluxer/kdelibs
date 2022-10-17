@@ -209,6 +209,7 @@ bool KCompressor::process(const QByteArray &data)
 
             if (Q_UNLIKELY(compresult < BZ_OK || compresult > BZ_STREAM_END)) {
                 d->m_errorstring = i18n("Could not compress data");
+                d->m_result.clear();
                 return false;
             }
 
