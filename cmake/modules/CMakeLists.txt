@@ -52,6 +52,7 @@ set(cmakeFiles
     FindLibTorrent.cmake
     FindLibVNCServer.cmake
     FindLightDM.cmake
+    FindLibDeflate.cmake
     FindMPFR.cmake
     FindMtp.cmake
     FindPCIUTILS.cmake
