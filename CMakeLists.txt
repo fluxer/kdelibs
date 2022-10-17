@@ -55,12 +55,12 @@ if(ENABLE_TESTING)
 endif()
 
 # required features
-find_package(ZLIB)
+find_package(LibDeflate)
 set_package_properties(ZLIB PROPERTIES
-    DESCRIPTION "Support for gzip compressed files and data streams"
-    URL "http://www.zlib.net"
+    DESCRIPTION "Heavily optimized library for DEFLATE/zlib/gzip compression and decompression"
+    URL "https://github.com/ebiggers/libdeflate"
     TYPE REQUIRED
-    PURPOSE "Required by the core KDE libraries and some critical kioslaves"
+    PURPOSE "Compression and decompression of DEFLATE/zlib/gzip format"
 )
 
 find_package(SharedMimeInfo 0.91)

@@ -132,8 +132,8 @@ install(
     KFileMetaInfoItem
     KFilePlacesModel
     KFileTreeView
-    KFilterBase
-    KFilterDev
+    KCompressor
+    KDecompressor
     KFind
     KFindDialog
     KFloatValidator

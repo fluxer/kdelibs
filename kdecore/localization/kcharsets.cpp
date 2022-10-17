@@ -19,8 +19,6 @@
     Boston, MA 02110-1301, USA.
 */
 #include "kcharsets.h"
-
-#include "kfilterdev.h"
 #include "kentities.cpp"
 
 #include "kconfig.h"
