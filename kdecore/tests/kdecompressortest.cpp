@@ -18,11 +18,12 @@
 
 #include "qtest_kde.h"
 #include "kcompressor.h"
+#include "kdecompressor.h"
 #include "kdebug.h"
 
 static const QByteArray s_testdata = QByteArray("foobar");
 
-class KCompressorTest : public QObject
+class KDecompressorTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
@@ -33,41 +34,41 @@ private Q_SLOTS:
     void process();
 };
 
-QTEST_KDEMAIN_CORE(KCompressorTest)
+QTEST_KDEMAIN_CORE(KDecompressorTest)
 
-void KCompressorTest::initTestCase()
+void KDecompressorTest::initTestCase()
 {
 }
 
-void KCompressorTest::cleanupTestCase()
+void KDecompressorTest::cleanupTestCase()
 {
 }
 
-void KCompressorTest::process_data()
+void KDecompressorTest::process_data()
 {
     QTest::addColumn<int>("type");
     QTest::addColumn<int>("level");
 
-    static const char* kcompressortypestr[] = {
-        "KCompressor::TypeUnknown",
-        "KCompressor::TypeDeflate",
-        "KCompressor::TypeZlib",
-        "KCompressor::TypeGZip",
-        "KCompressor::TypeBZip2",
-        "KCompressor::TypeXZ"
+    static const char* kdecompressortypestr[] = {
+        "KDecompressor::TypeUnknown",
+        "KDecompressor::TypeDeflate",
+        "KDecompressor::TypeZlib",
+        "KDecompressor::TypeGZip",
+        "KDecompressor::TypeBZip2",
+        "KDecompressor::TypeXZ"
     };
-    for (int itype = 1; itype < int(KCompressor::TypeXZ + 1); itype++) {
+    for (int itype = 1; itype < int(KDecompressor::TypeXZ + 1); itype++) {
         for (int ilevel = 0; ilevel < 10; ilevel++) {
-            if (itype == int(KCompressor::TypeBZip2) && ilevel == 0) {
+            if (itype == int(KDecompressor::TypeBZip2) && ilevel == 0) {
                 // compression level 0 is not valid for Bzip2
                 continue;
             }
-            QTest::newRow(kcompressortypestr[itype]) << itype << ilevel;
+            QTest::newRow(kdecompressortypestr[itype]) << itype << ilevel;
         }
     }
 }
 
-void KCompressorTest::process()
+void KDecompressorTest::process()
 {
     QFETCH(int, type);
     QFETCH(int, level);
@@ -79,7 +80,16 @@ void KCompressorTest::process()
     kcompressor.setLevel(level);
     QCOMPARE(kcompressor.level(), level);
     QCOMPARE(kcompressor.process(s_testdata), true);
-    QCOMPARE(kcompressor.errorString(), QString());
+    const QByteArray compresseddata = kcompressor.result();
+
+    KDecompressor::KDecompressorType kdecompressortype = static_cast<KDecompressor::KDecompressorType>(type);
+    KDecompressor kdecompressor;
+    kdecompressor.setType(kdecompressortype);
+    QCOMPARE(kdecompressor.type(), kdecompressortype);
+    QCOMPARE(kdecompressor.process(compresseddata), true);
+    QCOMPARE(kdecompressor.errorString(), QString());
+    const QByteArray decompresseddata = kdecompressor.result();
+    QCOMPARE(decompresseddata, s_testdata);
 }
 
-#include "kcompressortest.moc"
+#include "kdecompressortest.moc"

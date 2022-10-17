@@ -60,6 +60,7 @@ KDECORE_UNIT_TESTS(
     kunitconversiontest
     kdevicedatabasetest
     kcompressortest
+    kdecompressortest
 )
 
 KDECORE_EXECUTABLE_TESTS(
