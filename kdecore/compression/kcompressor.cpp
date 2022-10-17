@@ -86,11 +86,11 @@ int KCompressor::level() const
 bool KCompressor::setLevel(const int level)
 {
     d->m_errorstring.clear();
-    if (level < 0 || level > 9) {
+    if (Q_UNLIKELY(level < 0 || level > 9)) {
         d->m_errorstring = i18n("Compression level not in the 0-9 range: %1", level);
         return false;
     }
-    if (d->m_type == KCompressor::TypeBZip2 && level == 0) {
+    if (Q_UNLIKELY(d->m_type == KCompressor::TypeBZip2 && level == 0)) {
         // compression level 0 is not valid for Bzip2
         d->m_errorstring = i18n("Compression level not in the 1-9 range: %1", level);
         return false;
