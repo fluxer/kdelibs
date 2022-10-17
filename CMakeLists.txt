@@ -56,7 +56,7 @@ endif()
 
 # required features
 find_package(LibDeflate)
-set_package_properties(ZLIB PROPERTIES
+set_package_properties(LibDeflate PROPERTIES
     DESCRIPTION "Heavily optimized library for DEFLATE/zlib/gzip compression and decompression"
     URL "https://github.com/ebiggers/libdeflate"
     TYPE REQUIRED
