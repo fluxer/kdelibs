@@ -255,6 +255,7 @@ bool KDecompressor::process(const QByteArray &data)
             size_t speculativesize = (data.size() * 2);
             d->m_result.resize(speculativesize);
 
+        redolzmadecoding:
             lzma_stream decomp = LZMA_STREAM_INIT;
             decomp.next_in = (const uint8_t*)data.constData();
             decomp.avail_in = data.size();
@@ -269,16 +270,17 @@ bool KDecompressor::process(const QByteArray &data)
                 return false;
             }
 
-            // FIXME: LZMA_BUF_ERROR is not returned if the output buffer is not big enough, what's
-            // going on?
             decompresult = LZMA_BUF_ERROR;
-            while (decompresult == LZMA_BUF_ERROR) {
+            while (decompresult != LZMA_STREAM_END) {
                 decompresult = lzma_code(&decomp, LZMA_FINISH);
 
                 if (decompresult == LZMA_BUF_ERROR) {
                     speculativesize = (speculativesize + QT_BUFFSIZE);
                     d->m_result.resize(speculativesize);
-                    decomp.avail_out = speculativesize;
+                    lzma_end(&decomp);
+                    goto redolzmadecoding;
+                } else if (decompresult != LZMA_OK) {
+                    break;
                 }
 
                 if (speculativesize >= INT_MAX) {
