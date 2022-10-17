@@ -41,6 +41,7 @@ set(cmakeFiles
     FindKDE4Workspace.cmake
     FindKmod.cmake
     FindLibATASmart.cmake
+    FindLibDeflate.cmake
     FindLibDRM.cmake
     FindLibintl.cmake
     FindLibKonq.cmake
@@ -50,9 +51,9 @@ set(cmakeFiles
     FindLibSpectre.cmake
     FindLibSSH.cmake
     FindLibTorrent.cmake
+    FindLibUSB.cmake
     FindLibVNCServer.cmake
     FindLightDM.cmake
-    FindLibDeflate.cmake
     FindMPFR.cmake
     FindMtp.cmake
     FindPCIUTILS.cmake
@@ -63,7 +64,6 @@ set(cmakeFiles
     FindSharedMimeInfo.cmake
     FindSudo.cmake
     FindTaglib.cmake
-    FindLibUSB.cmake
     FindWebP.cmake
     FindX11_XCB.cmake
     FindXCB.cmake
