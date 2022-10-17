@@ -221,6 +221,7 @@ bool KDecompressor::process(const QByteArray &data)
         case KDecompressor::TypeBZip2: {
             uint speculativesize = (data.size() * 2);
             d->m_result.resize(speculativesize);
+
             int decompresult = BZ_OUTBUFF_FULL;
             while (decompresult == BZ_OUTBUFF_FULL) {
                 decompresult = BZ2_bzBuffToBuffDecompress(
@@ -267,13 +268,16 @@ bool KDecompressor::process(const QByteArray &data)
                 return false;
             }
 
-            decompresult = LZMA_MEM_ERROR;
-            while (decompresult == LZMA_MEM_ERROR) {
+            // FIXME: LZMA_BUF_ERROR is not returned if the output buffer is not big enough, what's
+            // going on?
+            decompresult = LZMA_BUF_ERROR;
+            while (decompresult == LZMA_BUF_ERROR) {
                 decompresult = lzma_code(&decomp, LZMA_FINISH);
 
-                if (decompresult == LZMA_MEM_ERROR) {
+                if (decompresult == LZMA_BUF_ERROR) {
                     speculativesize = (speculativesize + QT_BUFFSIZE);
                     d->m_result.resize(speculativesize);
+                    decomp.avail_out = speculativesize;
                 }
 
                 if (speculativesize >= INT_MAX) {
