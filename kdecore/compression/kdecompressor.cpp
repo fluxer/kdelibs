@@ -329,6 +329,9 @@ KDecompressor::KDecompressorType KDecompressor::typeForMime(const QString &mime)
             return KDecompressor::TypeBZip2;
         } else if (kmimetype->is(QString::fromLatin1("application/x-xz"))) {
             return KDecompressor::TypeXZ;
+        // lzma_auto_decoder() should detect the filter for it
+        } else if (kmimetype->is(QString::fromLatin1("application/x-lzma"))) {
+            return KDecompressor::TypeXZ;
         }
     }
     return KDecompressor::TypeUnknown;
