@@ -69,6 +69,7 @@ public:
     static KDecompressorType typeForFile(const QString &filepath);
 
 private:
+    Q_DISABLE_COPY(KDecompressor);
     KDecompressorPrivate* d;
 };
 

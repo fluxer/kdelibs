@@ -72,6 +72,7 @@ public:
     static KCompressorType typeForFile(const QString &filepath);
 
 private:
+    Q_DISABLE_COPY(KCompressor);
     KCompressorPrivate* d;
 };
 
