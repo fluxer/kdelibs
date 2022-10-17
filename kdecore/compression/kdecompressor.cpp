@@ -70,9 +70,23 @@ KDecompressor::KDecompressorType KDecompressor::type() const
 
 bool KDecompressor::setType(const KDecompressorType type)
 {
+    d->m_errorstring.clear();
     if (type == KDecompressor::TypeUnknown) {
+        d->m_errorstring = i18n("Invalid type: %1", int(type));
         return false;
     }
+#if !defined(HAVE_BZIP2_SUPPORT)
+    if (type == KCompressor::TypeBZip2) {
+        d->m_errorstring = i18n("Unsupported type: %1", int(type));
+        return false;
+    }
+#endif
+#if !defined(HAVE_XZ_SUPPORT)
+    if (type == KCompressor::TypeXZ) {
+        d->m_errorstring = i18n("Unsupported type: %1", int(type));
+        return false;
+    }
+#endif
     d->m_type = type;
     return true;
 }
@@ -280,7 +294,7 @@ bool KDecompressor::process(const QByteArray &data)
         }
 #endif // HAVE_XZ_SUPPORT
         default: {
-            kWarning() << "Unsupported type" << d->m_type;
+            d->m_errorstring = i18n("Unsupported type: %1", int(d->m_type));
             return false;
         }
     }
