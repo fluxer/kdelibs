@@ -265,6 +265,7 @@ bool KDecompressor::process(const QByteArray &data)
             if (Q_UNLIKELY(decompresult != LZMA_OK)) {
                 d->m_errorstring = i18n("Could not initialize decompressor");
                 d->m_result.clear();
+                lzma_end(&decomp);
                 return false;
             }
 
@@ -288,6 +289,7 @@ bool KDecompressor::process(const QByteArray &data)
             if (Q_UNLIKELY(decompresult != LZMA_OK && decompresult != LZMA_STREAM_END)) {
                 d->m_errorstring = i18n("Could not decompress data");
                 d->m_result.clear();
+                lzma_end(&decomp);
                 return false;
             }
             speculativesize = decomp.total_out;

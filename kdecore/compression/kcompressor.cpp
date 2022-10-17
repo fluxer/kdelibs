@@ -220,7 +220,7 @@ bool KCompressor::process(const QByteArray &data)
             d->m_result.resize(data.size() + QT_BUFFSIZE);
             uint compsize = d->m_result.size();
 
-            int compresult = compresult = BZ2_bzBuffToBuffCompress(
+            const int compresult = BZ2_bzBuffToBuffCompress(
                 d->m_result.data(), &compsize,
                 (char*)data.constData(), data.size(),
                 d->m_level, 0, 0
@@ -251,6 +251,7 @@ bool KCompressor::process(const QByteArray &data)
             if (Q_UNLIKELY(compresult != LZMA_OK)) {
                 d->m_errorstring = i18n("Could not initialize compressor");
                 d->m_result.clear();
+                lzma_end(&comp);
                 return false;
             }
 
@@ -258,6 +259,7 @@ bool KCompressor::process(const QByteArray &data)
             if (Q_UNLIKELY(compresult != LZMA_OK && compresult != LZMA_STREAM_END)) {
                 d->m_errorstring = i18n("Could not compress data");
                 d->m_result.clear();
+                lzma_end(&comp);
                 return false;
             }
             compsize = comp.total_out;
