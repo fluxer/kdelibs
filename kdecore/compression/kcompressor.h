@@ -25,6 +25,24 @@
 
 class KCompressorPrivate;
 
+/*!
+    Class to compress data in various formats.
+
+    Example:
+    \code
+    KCompressor kcompressor;
+    kcompressor.setType(KCompressor::TypeDeflate);
+    kcompressor.setLevel(5);
+    if (!kcompressor.process(mydata)) {
+        kWarning() << kcompressor.errorString();
+        return;
+    }
+    kDebug() << kcompressor.result().toHex();
+    \endcode
+
+    @since 4.22
+    @see KDecompressor
+*/
 class KDECORE_EXPORT KCompressor
 {
 public:
