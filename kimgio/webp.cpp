@@ -29,7 +29,7 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 #include <webp/encode.h>
 #include <webp/demux.h>
 
-static const int s_peekbuffsize = 32;
+static const ushort s_peekbuffsize = 32;
 
 WebPHandler::WebPHandler()
     : m_quality(100),

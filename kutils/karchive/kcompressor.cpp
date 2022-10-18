@@ -32,6 +32,9 @@
 #  include <lzma.h>
 #endif
 
+// space for headers in the worst case scenario
+static const ushort s_headersize = 256;
+
 // for reference:
 // http://linux.math.tifr.res.in/manuals/html/manual_3.html
 
@@ -216,7 +219,7 @@ bool KCompressor::process(const QByteArray &data)
         }
 #if defined(HAVE_BZIP2)
         case KCompressor::TypeBZip2: {
-            d->m_result.resize(data.size() + QT_BUFFSIZE);
+            d->m_result.resize(data.size() + s_headersize);
             uint compsize = d->m_result.size();
 
             const int compresult = BZ2_bzBuffToBuffCompress(
@@ -237,7 +240,7 @@ bool KCompressor::process(const QByteArray &data)
 #endif // HAVE_BZIP2
 #if defined(HAVE_LIBLZMA)
         case KCompressor::TypeXZ: {
-            d->m_result.resize(data.size() + QT_BUFFSIZE);
+            d->m_result.resize(data.size() + s_headersize);
             size_t compsize = d->m_result.size();
 
             lzma_stream comp = LZMA_STREAM_INIT;
