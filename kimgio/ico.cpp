@@ -234,6 +234,7 @@ bool ICOHandler::read(QImage *image)
             }
 
             if (bmpimagesize != imagebounds) {
+                // data may be padded
                 kDebug() << "BMP and QImage bytes count mismatch" << bmpimagesize << imagebounds;
             }
 
