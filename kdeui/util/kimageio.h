@@ -25,13 +25,10 @@
  *
  * Currently supported formats include:
  * @li WEBP    \<read\> \<write\>
- * @li RAW     \<read\>
- * @li JPEG    \<read\>
+ * @li JPEG    \<read\> \<write\>
  * @li JP2     \<read\>
+ * @li RAW     \<read\>
  * @li ICO     \<read\>
- * @li PGM     \<read\>
- * @li XBM     \<read\>
- * @li GIF     \<read\>
  */
 namespace KImageIO
 {

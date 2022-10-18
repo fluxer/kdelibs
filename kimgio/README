@@ -4,9 +4,9 @@ writing a new handler.
 Current formats include:
 
 WEBP    <read> <write>
-RAW     <read>
-JPEG    <read>
+JPEG    <read> <write>
 JP2     <read>
+RAW     <read>
 ICO     <read>
 
 If you want to contribute plugin for image format and there is no solid
