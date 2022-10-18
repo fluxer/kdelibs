@@ -74,8 +74,8 @@ void KServiceTypeTrader::applyConstraints( KService::List& lst,
 static void dumpOfferList( const KServiceOfferList& offers )
 {
     kDebug(7014) << "Sorted list:";
-    OfferList::Iterator itOff = offers.begin();
-    for( ; itOff != offers.end(); ++itOff )
+    KServiceOfferList::ConstIterator itOff = offers.constBegin();
+    for( ; itOff != offers.constEnd(); ++itOff )
         kDebug(7014) << (*itOff).service()->name() << " allow-as-default=" << (*itOff).allowAsDefault() << " preference=" << (*itOff).preference();
 }
 #endif
