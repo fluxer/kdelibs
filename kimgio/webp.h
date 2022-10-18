@@ -43,8 +43,19 @@ public:
 
     static bool canRead(QIODevice *device);
 
+    bool jumpToNextImage() final;
+    bool jumpToImage(int imageNumber) final;
+    int loopCount() const final;
+    int imageCount() const final;
+    int nextImageDelay() const final;
+    int currentImageNumber() const final;
+
 private:
-    int quality;
+    int m_quality;
+    int m_loopcount;
+    int m_imagecount;
+    int m_imagedelay;
+    int m_currentimage;
 };
 
 

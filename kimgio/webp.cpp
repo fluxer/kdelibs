@@ -27,9 +27,16 @@ License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <webp/decode.h>
 #include <webp/encode.h>
+#include <webp/demux.h>
+
+static const int s_peekbuffsize = 32;
 
 WebPHandler::WebPHandler()
-    : quality(100)
+    : m_quality(100),
+    m_loopcount(0),
+    m_imagecount(1),
+    m_imagedelay(80),
+    m_currentimage(0)
 {
 }
 
@@ -44,45 +51,85 @@ bool WebPHandler::canRead() const
 
 bool WebPHandler::read(QImage *image)
 {
+    // NOTE: QMovie will continuously call read() to get each frame
+    const qint64 devicepos = device()->pos();
     const QByteArray data = device()->readAll();
+    device()->seek(devicepos);
 
-    WebPBitstreamFeatures features;
-    const VP8StatusCode ret = WebPGetFeatures(reinterpret_cast<const uint8_t*>(data.constData()),
-                                              data.size(), &features);
-    if (ret != VP8_STATUS_OK) {
-        kWarning() << "Could not get image features";
+    const WebPData webpdata = { reinterpret_cast<const uint8_t*>(data.constData()), size_t(data.size()) };
+    WebPAnimDecoderOptions webpanimoptions;
+    WebPAnimDecoderOptionsInit(&webpanimoptions);
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+    webpanimoptions.color_mode = WEBP_CSP_MODE::MODE_ARGB;
+#else
+    webpanimoptions.color_mode = WEBP_CSP_MODE::MODE_BGRA;
+#endif
+    WebPAnimDecoder* webpanimdec = WebPAnimDecoderNew(
+        &webpdata,
+        &webpanimoptions
+    );
+    if (!webpanimdec) {
+        kWarning() << "Could not create animation decoder";
         return false;
     }
 
-    if (features.has_alpha) {
-        *image = QImage(features.width, features.height, QImage::Format_ARGB32);
+    WebPAnimInfo webpaniminfo;
+    if (WebPAnimDecoderGetInfo(webpanimdec, &webpaniminfo) == 0) {
+        kWarning() << "Could not get animation information";
+        WebPAnimDecoderDelete(webpanimdec);
+        return false;
+    }
+
+    m_loopcount = webpaniminfo.loop_count;
+    m_imagecount = webpaniminfo.frame_count;
+
+    const WebPDemuxer* webpdemuxer = WebPAnimDecoderGetDemuxer(webpanimdec);
+    WebPIterator webpiter;
+    if (WebPDemuxGetFrame(webpdemuxer, m_currentimage, &webpiter) == 0) {
+        kWarning() << "Could not get frame";
+        WebPAnimDecoderDelete(webpanimdec);
+        return false;
+    }
+
+    if (webpiter.has_alpha) {
+        *image = QImage(webpiter.width, webpiter.height, QImage::Format_ARGB32);
     } else {
-        *image = QImage(features.width, features.height, QImage::Format_RGB32);
+        *image = QImage(webpiter.width, webpiter.height, QImage::Format_RGB32);
     }
     if (Q_UNLIKELY(image->isNull())) {
-        // out of memory
         kWarning() << "Could not create image";
+        WebPDemuxReleaseIterator(&webpiter);
+        WebPAnimDecoderDelete(webpanimdec);
         return false;
     }
 
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
-    const uint8_t* output = WebPDecodeARGBInto(
-        reinterpret_cast<const uint8_t*>(data.constData()), data.size(),
+    const uint8_t* webpoutput = WebPDecodeARGBInto(
+        webpiter.fragment.bytes, webpiter.fragment.size,
         reinterpret_cast<uint8_t*>(image->bits()), image->byteCount(),
         image->bytesPerLine()
     );
 #else
-    const uint8_t* output = WebPDecodeBGRAInto(
-        reinterpret_cast<const uint8_t*>(data.constData()), data.size(),
+    const uint8_t* webpoutput = WebPDecodeBGRAInto(
+        webpiter.fragment.bytes, webpiter.fragment.size,
         reinterpret_cast<uint8_t*>(image->bits()), image->byteCount(),
         image->bytesPerLine()
     );
 #endif
-    if (Q_UNLIKELY(!output)) {
+    if (Q_UNLIKELY(!webpoutput)) {
         kWarning() << "Could not decode image";
+        WebPDemuxReleaseIterator(&webpiter);
+        WebPAnimDecoderDelete(webpanimdec);
         return false;
     }
 
+    m_currentimage++;
+    if (m_currentimage >= m_imagecount) {
+        m_currentimage = 0;
+    }
+
+    WebPDemuxReleaseIterator(&webpiter);
+    WebPAnimDecoderDelete(webpanimdec);
     return true;
 }
 
@@ -102,41 +149,41 @@ bool WebPHandler::write(const QImage &image)
     }
 
     size_t idx = 0;
-    uint8_t *imageData = new uint8_t[image32.width() * image32.height() * (3 + image32.hasAlphaChannel())];
+    uint8_t *webpimagedata = new uint8_t[image32.width() * image32.height() * (3 + image32.hasAlphaChannel())];
     for (int y = 0; y < image32.height(); y++) {
         const QRgb *scanline = reinterpret_cast<const QRgb*>(image32.constScanLine(y));
         for (int x = 0; x < image32.width(); x++) {
-            imageData[idx++] = qRed(scanline[x]);
-            imageData[idx++] = qGreen(scanline[x]);
-            imageData[idx++] = qBlue(scanline[x]);
+            webpimagedata[idx++] = qRed(scanline[x]);
+            webpimagedata[idx++] = qGreen(scanline[x]);
+            webpimagedata[idx++] = qBlue(scanline[x]);
 
             if (image32.hasAlphaChannel()) {
-                imageData[idx++] = qAlpha(scanline[x]);
+                webpimagedata[idx++] = qAlpha(scanline[x]);
             }
         }
     }
 
-    size_t size = 0;
-    uint8_t *output = nullptr;
+    size_t webpsize = 0;
+    uint8_t *webpoutput = nullptr;
     if (image32.hasAlphaChannel()) {
-        size = WebPEncodeRGBA(imageData, image32.width(), image32.height(), image32.width() * 4, quality, &output);
+        webpsize = WebPEncodeRGBA(webpimagedata, image32.width(), image32.height(), image32.width() * 4, m_quality, &webpoutput);
     } else {
-        size = WebPEncodeRGB(imageData, image32.width(), image32.height(), image32.width() * 3, quality, &output);
+        webpsize = WebPEncodeRGB(webpimagedata, image32.width(), image32.height(), image32.width() * 3, m_quality, &webpoutput);
     }
-    delete []imageData;
+    delete []webpimagedata;
 
-    if (Q_UNLIKELY(size == 0)) {
+    if (Q_UNLIKELY(webpsize == 0)) {
         kWarning() << "Could not encode image";
-        WebPFree(output);
+        WebPFree(webpoutput);
         return false;
     }
 
-    if (Q_UNLIKELY(device()->write(reinterpret_cast<const char*>(output), size) != size)) {
+    if (Q_UNLIKELY(device()->write(reinterpret_cast<const char*>(webpoutput), webpsize) != webpsize)) {
         kWarning() << "Could not write image";
-        WebPFree(output);
+        WebPFree(webpoutput);
         return false;
     }
-    WebPFree(output);
+    WebPFree(webpoutput);
 
     return true;
 }
@@ -148,23 +195,52 @@ QByteArray WebPHandler::name() const
 
 bool WebPHandler::supportsOption(QImageIOHandler::ImageOption option) const
 {
-    return (option == QImageIOHandler::Quality) || (option == QImageIOHandler::Size);
+    switch (option) {
+        case QImageIOHandler::Quality:
+        case QImageIOHandler::Size:
+        case QImageIOHandler::Animation: {
+            return true;
+        }
+        default: {
+            return false;
+        }
+    }
+    Q_UNREACHABLE();
 }
 
 QVariant WebPHandler::option(QImageIOHandler::ImageOption option) const
 {
     switch (option) {
         case QImageIOHandler::Quality: {
-            return quality;
+            return m_quality;
         }
         case QImageIOHandler::Size: {
-            const QByteArray data = device()->peek(26);
-            int width = 0, height = 0;
-            if (WebPGetInfo(reinterpret_cast<const uint8_t*>(data.constData()),
-                            data.size(), &width, &height) == 0) {
-                return QSize(); // header error
+            const QByteArray data = device()->peek(s_peekbuffsize);
+
+            WebPBitstreamFeatures webpfeatures;
+            const VP8StatusCode vp8statusret = WebPGetFeatures(
+                reinterpret_cast<const uint8_t*>(data.constData()), data.size(),
+                &webpfeatures
+            );
+            if (vp8statusret != VP8_STATUS_OK) {
+                kWarning() << "Could not get image features for size option";
+                return QVariant(QSize());
             }
-            return QSize(width, height);
+            return QVariant(QSize(webpfeatures.width, webpfeatures.height));
+        }
+        case QImageIOHandler::Animation: {
+            const QByteArray data = device()->peek(s_peekbuffsize);
+
+            WebPBitstreamFeatures webpfeatures;
+            const VP8StatusCode vp8statusret = WebPGetFeatures(
+                reinterpret_cast<const uint8_t*>(data.constData()), data.size(),
+                &webpfeatures
+            );
+            if (vp8statusret != VP8_STATUS_OK) {
+                kWarning() << "Could not get image features for animation option";
+                return QVariant(bool(false));
+            }
+            return QVariant(bool(webpfeatures.has_animation));
         }
         default: {
             return QVariant();
@@ -179,11 +255,45 @@ void WebPHandler::setOption(QImageIOHandler::ImageOption option, const QVariant 
         const int newquality = value.toInt();
         // -1 means default
         if (newquality == -1) {
-            quality = 100;
+            m_quality = 100;
         } else {
-            quality = qBound(0, newquality, 100);
+            m_quality = qBound(0, newquality, 100);
         }
     }
+}
+
+bool WebPHandler::jumpToNextImage()
+{
+    return jumpToImage(m_currentimage + 1);
+}
+
+bool WebPHandler::jumpToImage(int imageNumber)
+{
+    if (imageNumber >= m_imagecount) {
+        return false;
+    }
+    m_currentimage = imageNumber;
+    return true;
+}
+
+int WebPHandler::loopCount() const
+{
+    return m_loopcount;
+}
+
+int WebPHandler::imageCount() const
+{
+    return m_imagecount;
+}
+
+int WebPHandler::nextImageDelay() const
+{
+    return m_imagedelay;
+}
+
+int WebPHandler::currentImageNumber() const
+{
+    return m_currentimage;
 }
 
 bool WebPHandler::canRead(QIODevice *device)
@@ -195,7 +305,10 @@ bool WebPHandler::canRead(QIODevice *device)
 
     // WebP file header: 4 bytes "RIFF", 4 bytes length, 4 bytes "WEBP"
     const QByteArray header = device->peek(12);
-    return (header.size() == 12) && header.startsWith("RIFF") && header.endsWith("WEBP");
+    if (header.size() == 12 && header.startsWith("RIFF") && header.endsWith("WEBP")) {
+        return true;
+    }
+    return false;
 }
 
 QStringList WebPPlugin::keys() const

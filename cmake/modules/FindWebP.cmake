@@ -10,7 +10,7 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(PC_WEBP QUIET libwebp)
+pkg_check_modules(PC_WEBP QUIET libwebpdemux)
 
 set(WEBP_INCLUDES ${PC_WEBP_INCLUDE_DIRS})
 set(WEBP_LIBRARIES ${PC_WEBP_LIBRARIES})
@@ -18,13 +18,13 @@ set(WEBP_VERSION ${PC_WEBP_VERSION})
 
 if(NOT WEBP_INCLUDES OR NOT WEBP_LIBRARIES)
     find_path(WEBP_INCLUDES
-        NAMES encode.h decode.h
+        NAMES encode.h decode.h demux.h
         PATH_SUFFIXES webp
         HINTS $ENV{WEBPDIR}/include
     )
 
     find_library(WEBP_LIBRARIES
-        NAMES webp
+        NAMES webpdemux
         HINTS $ENV{WEBPDIR}/lib
     )
 endif()
