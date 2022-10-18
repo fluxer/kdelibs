@@ -675,9 +675,6 @@ QString KUrlCompletion::makeCompletion(const QString& text)
         if (d->exeCompletion(url, &aMatch))
             return aMatch;
 
-        // KRun can run "man:" and "info:" etc. so why not treat them
-        // as executables...
-
         if (d->urlCompletion(url, &aMatch))
             return aMatch;
     } else {
