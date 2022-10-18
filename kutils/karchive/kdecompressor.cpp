@@ -16,7 +16,6 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include "config-compression.h"
 #include "kdecompressor.h"
 #include "klocale.h"
 #include "kmimetype.h"
@@ -26,11 +25,11 @@
 #include <limits.h>
 #include <libdeflate.h>
 
-#if defined(HAVE_BZIP2_SUPPORT)
+#if defined(HAVE_BZIP2)
 #  include <bzlib.h>
 #endif
 
-#if defined(HAVE_XZ_SUPPORT)
+#if defined(HAVE_LIBLZMA)
 #  include <lzma.h>
 #endif
 
@@ -75,13 +74,13 @@ bool KDecompressor::setType(const KDecompressorType type)
         d->m_errorstring = i18n("Invalid type: %1", int(type));
         return false;
     }
-#if !defined(HAVE_BZIP2_SUPPORT)
+#if !defined(HAVE_BZIP2)
     if (type == KCompressor::TypeBZip2) {
         d->m_errorstring = i18n("Unsupported type: %1", int(type));
         return false;
     }
 #endif
-#if !defined(HAVE_XZ_SUPPORT)
+#if !defined(HAVE_LIBLZMA)
     if (type == KCompressor::TypeXZ) {
         d->m_errorstring = i18n("Unsupported type: %1", int(type));
         return false;
@@ -217,7 +216,7 @@ bool KDecompressor::process(const QByteArray &data)
             d->m_result.resize(speculativesize);
             return true;
         }
-#if defined(HAVE_BZIP2_SUPPORT)
+#if defined(HAVE_BZIP2)
         case KDecompressor::TypeBZip2: {
             uint speculativesize = (data.size() * 2);
             d->m_result.resize(speculativesize);
@@ -249,8 +248,8 @@ bool KDecompressor::process(const QByteArray &data)
             d->m_result.resize(speculativesize);
             return true;
         }
-#endif // HAVE_BZIP2_SUPPORT
-#if defined(HAVE_XZ_SUPPORT)
+#endif // HAVE_BZIP2
+#if defined(HAVE_LIBLZMA)
         case KDecompressor::TypeXZ: {
             size_t speculativesize = (data.size() * 2);
             d->m_result.resize(speculativesize);
@@ -300,7 +299,7 @@ bool KDecompressor::process(const QByteArray &data)
             d->m_result.resize(speculativesize);
             return true;
         }
-#endif // HAVE_XZ_SUPPORT
+#endif // HAVE_LIBLZMA
         default: {
             d->m_errorstring = i18n("Unsupported type: %1", int(d->m_type));
             return false;

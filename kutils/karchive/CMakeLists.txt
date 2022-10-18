@@ -3,10 +3,23 @@ if(LibArchive_FOUND)
     add_definitions(-DHAVE_LIBARCHIVE)
 endif()
 
+if(BZIP2_FOUND)
+    include_directories(${BZIP2_INCLUDE_DIR})
+    add_definitions(-DHAVE_BZIP2)
+endif()
+
+if(LIBLZMA_FOUND)
+    include_directories(${LIBLZMA_INCLUDE_DIRS})
+    add_definitions(-DHAVE_LIBLZMA)
+endif()
+
+include_directories(${LIBDEFLATE_INCLUDES})
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=51009)
 
 set(karchive_LIB_SRCS
     karchive.cpp
+    kcompressor.cpp
+    kdecompressor.cpp
 )
 
 add_library(karchive ${LIBRARY_TYPE} ${karchive_LIB_SRCS})
@@ -14,9 +27,20 @@ add_library(karchive ${LIBRARY_TYPE} ${karchive_LIB_SRCS})
 target_link_libraries(karchive PUBLIC
     ${KDE4_KDECORE_LIBS}
 )
+target_link_libraries(karchive PRIVATE
+    ${LIBDEFLATE_LIBRARIES}
+)
 
 if(LibArchive_FOUND)
     target_link_libraries(karchive PRIVATE ${LibArchive_LIBRARIES})
+endif()
+
+if(BZIP2_FOUND)
+    target_link_libraries(karchive PRIVATE ${BZIP2_LIBRARIES})
+endif()
+
+if(LIBLZMA_FOUND)
+    target_link_libraries(karchive PRIVATE ${LIBLZMA_LIBRARIES})
 endif()
 
 set_target_properties(karchive PROPERTIES
@@ -30,6 +54,8 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/karchive_export.h
     karchive.h
+    kcompressor.h
+    kdecompressor.h
     DESTINATION ${KDE4_INCLUDE_INSTALL_DIR}
     COMPONENT Devel
 )

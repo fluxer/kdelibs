@@ -20,18 +20,9 @@ configure_file(
 )
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/date)
 
-# Configure checks for compression/
-include(compression/ConfigureChecks.cmake)
-configure_file(
-    compression/config-compression.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/compression/config-compression.h
-)
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/compression)
-
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}
-    ${LIBDEFLATE_INCLUDES}
     ${QT_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/auth
     ${CMAKE_CURRENT_SOURCE_DIR}/sonnet
@@ -45,18 +36,6 @@ set(kdecore_OPTIONAL_SRCS)
 set(kdecore_OPTIONAL_LIBS)
 
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
-
-# compile bzip2 support if available
-if(BZIP2_FOUND)
-    include_directories(${BZIP2_INCLUDE_DIR})
-    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${BZIP2_LIBRARIES})
-endif(BZIP2_FOUND)
-
-# compile lzma support if available
-if(LIBLZMA_FOUND)
-    include_directories(${LIBLZMA_INCLUDE_DIRS})
-    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBLZMA_LIBRARIES})
-endif(LIBLZMA_FOUND)
 
 # compile Gettext support if available
 if(LIBINTL_FOUND)
@@ -87,8 +66,6 @@ endif()
 ########### next target ###############
 
 set(kdecore_LIB_SRCS
-    compression/kcompressor.cpp
-    compression/kdecompressor.cpp
     config/kconfig.cpp
     config/kconfigbase.cpp
     config/kconfigdata.cpp
@@ -216,7 +193,6 @@ endif()
 add_library(kdecore ${LIBRARY_TYPE} ${kdecore_LIB_SRCS})
 
 target_link_libraries(kdecore PRIVATE
-    ${LIBDEFLATE_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${kdecore_OPTIONAL_LIBS}
 )
@@ -274,8 +250,6 @@ install(
 install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/kdecore_export.h
-    compression/kcompressor.h
-    compression/kdecompressor.h
     config/kconfig.h
     config/kconfigbase.h
     config/kconfiggroup.h

@@ -59,8 +59,6 @@ KDECORE_UNIT_TESTS(
     kmimetype_nomimetypes
     kunitconversiontest
     kdevicedatabasetest
-    kcompressortest
-    kdecompressortest
 )
 
 KDECORE_EXECUTABLE_TESTS(

@@ -19,7 +19,7 @@
 #ifndef KDECOMPRESSOR_H
 #define KDECOMPRESSOR_H
 
-#include <kdecore_export.h>
+#include <karchive_export.h>
 
 #include <QString>
 
@@ -42,7 +42,7 @@ class KDecompressorPrivate;
     @since 4.22
     @see KCompressor
 */
-class KDECORE_EXPORT KDecompressor
+class KARCHIVE_EXPORT KDecompressor
 {
 public:
     enum KDecompressorType {
