@@ -36,7 +36,6 @@ public:
     QDataStream* & stream() {
         if (!m_stream) {
             m_stream = new QDataStream(device());
-            m_stream->setVersion(QDataStream::Qt_4_8);
         }
         return m_stream;
     }
