@@ -276,13 +276,14 @@ bool KDecompressor::process(const QByteArray &data)
                 if (decompresult == LZMA_BUF_ERROR) {
                     speculativesize = (speculativesize + QT_BUFFSIZE);
                     d->m_result.resize(speculativesize);
+
+                    if (speculativesize >= INT_MAX) {
+                        break;
+                    }
+
                     lzma_end(&decomp);
                     goto redolzmadecoding;
                 } else if (decompresult != LZMA_OK) {
-                    break;
-                }
-
-                if (speculativesize >= INT_MAX) {
                     break;
                 }
             }
