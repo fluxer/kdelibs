@@ -66,6 +66,7 @@ public:
      * any X error.
      */
     explicit KXErrorHandler(Display* dpy = QX11Info::display());
+
     /**
      * This constructor takes pointer to a function whose prototype matches
      * the one that's used with the XSetErrorHandler() Xlib function.
@@ -73,6 +74,9 @@ public:
      * value.
      */
     explicit KXErrorHandler(int (*handler)(Display*, XErrorEvent* e), Display* dpy = QX11Info::display());
+
+    ~KXErrorHandler();
+
     /**
      * This function returns true if the error flag is set (i.e. no custom handler
      * function was used and there was any error, or the custom handler indicated
@@ -82,25 +86,25 @@ public:
      *             when the last X request required a roundtrip.
      */
     bool error(bool sync) const;
+
     /**
      * This function returns the error event for the first X error that occurred.
      * The return value is useful only if error() returned true.
      * @since 4.0.1
      */
     XErrorEvent errorEvent() const;
+
     /**
      * Returns error message for the given error. The error message is not translated,
      * as it is meant for debugging.
      * @since 4.0.1
      */
     static QByteArray errorMessage(const XErrorEvent& e, Display* dpy = QX11Info::display());
-    ~KXErrorHandler();
 
 private:
     void addHandler();
     int handle(Display* dpy, XErrorEvent* e);
-    bool (*user_handler1)(int request, int error_code, unsigned long resource_id);
-    int (*user_handler2)(Display*, XErrorEvent* e);
+    int (*user_handler)(Display*, XErrorEvent* e);
     int (*old_handler)(Display*, XErrorEvent* e);
     static int handler_wrapper(Display*, XErrorEvent* e);
     static KXErrorHandler** handlers;
