@@ -193,18 +193,6 @@ bool ICOHandler::read(QImage *image)
                 return false;
             }
 
-            QImage::Format imageformat = QImage::Format_ARGB32;
-            switch (bmpbpp) {
-                case 32: {
-                    break;
-                }
-                default: {
-                    // TODO:
-                    kWarning() << "Unsupported BMP bits per-pixel" << bmpbpp;
-                    return false;
-                }
-            }
-
             if (Q_UNLIKELY(bmpimagesize >= INT_MAX)) {
                 kWarning() << "BMP image size is too big" << bmpimagesize;
                 return false;
@@ -220,16 +208,56 @@ bool ICOHandler::read(QImage *image)
             const int imagewidth = (icowidth ? icowidth : bmpwidth);
             const int imageheight = (icoheight ? icoheight : bmpheight);
 
+            int imagebounds = 0;
+            QImage::Format imageformat = QImage::Format_ARGB32;
+            switch (bmpbpp) {
+                case 32: {
+                    imagebounds = (imagewidth * imageheight * 4);
+                    break;
+                }
+                case 24: {
+                    imageformat = QImage::Format_RGB32;
+                    imagebounds = (imagewidth * imageheight * 3);
+                    break;
+                }
+                default: {
+                    // TODO:
+                    kWarning() << "Unsupported BMP bits per-pixel" << bmpbpp;
+                    return false;
+                }
+            }
+
             QImage bmpimage(imagewidth, imageheight, imageformat);
             if (Q_UNLIKELY(bmpimage.isNull())) {
                 kWarning() << "Could not create BMP image" << imagewidth << imageheight << imageformat;
-                continue;
+                return false;
             }
 
-            QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
-            for (uint bi = 0; bi < bmpimagesize; bi += 4) {
-                *bmpimagebits = qRgba(imagebytes[bi + 2], imagebytes[bi + 1], imagebytes[bi], imagebytes[bi + 3]);
-                bmpimagebits++;
+            if (bmpimagesize != imagebounds) {
+                kDebug() << "BMP and QImage bytes count mismatch" << bmpimagesize << imagebounds;
+            }
+
+            switch (bmpbpp) {
+                case 32: {
+                    QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
+                    for (uint bi = 0; bi < bmpimagesize && bi < imagebounds; bi += 4) {
+                        *bmpimagebits = qRgba(imagebytes[bi + 2], imagebytes[bi + 1], imagebytes[bi], imagebytes[bi + 3]);
+                        bmpimagebits++;
+                    }
+                    break;
+                }
+                case 24: {
+                    QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
+                    for (uint bi = 0; bi < bmpimagesize && bi < imagebounds; bi += 3) {
+                        *bmpimagebits = qRgb(imagebytes[bi + 2], imagebytes[bi + 1], imagebytes[bi]);
+                        bmpimagebits++;
+                    }
+                    break;
+                }
+                default: {
+                    Q_ASSERT(false);
+                    break;
+                }
             }
             // pixel data is backwards so flip the image vertically
             *image = bmpimage.mirrored(false, true);
