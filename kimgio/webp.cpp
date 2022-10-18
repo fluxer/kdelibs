@@ -20,14 +20,13 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
-
 #include "webp.h"
-#include <webp/decode.h>
-#include <webp/encode.h>
-
+#include "kdebug.h"
 #include <QImage>
 #include <QVariant>
+
+#include <webp/decode.h>
+#include <webp/encode.h>
 
 WebPHandler::WebPHandler()
     : quality(100)
@@ -43,7 +42,7 @@ bool WebPHandler::canRead() const
     return false;
 }
 
-bool WebPHandler::read(QImage *retImage)
+bool WebPHandler::read(QImage *image)
 {
     const QByteArray data = device()->readAll();
 
@@ -51,32 +50,38 @@ bool WebPHandler::read(QImage *retImage)
     const VP8StatusCode ret = WebPGetFeatures(reinterpret_cast<const uint8_t*>(data.constData()),
                                               data.size(), &features);
     if (ret != VP8_STATUS_OK) {
+        kWarning() << "Could not get image features";
         return false;
     }
 
     if (features.has_alpha) {
-        *retImage = QImage(features.width, features.height, QImage::Format_ARGB32);
+        *image = QImage(features.width, features.height, QImage::Format_ARGB32);
     } else {
-        *retImage = QImage(features.width, features.height, QImage::Format_RGB32);
+        *image = QImage(features.width, features.height, QImage::Format_RGB32);
     }
-
-    if (retImage->isNull()) { // out of memory
+    if (Q_UNLIKELY(image->isNull())) {
+        // out of memory
+        kWarning() << "Could not create image";
         return false;
     }
 
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
-    if (WebPDecodeARGBInto(reinterpret_cast<const uint8_t*>(data.constData()),
-                           data.size(), reinterpret_cast<uint8_t*>(retImage->bits()),
-                           retImage->byteCount(), retImage->bytesPerLine()) == 0) {
-        return false;
-    }
+    const uint8_t* output = WebPDecodeARGBInto(
+        reinterpret_cast<const uint8_t*>(data.constData()), data.size(),
+        reinterpret_cast<uint8_t*>(image->bits()), image->byteCount(),
+        image->bytesPerLine()
+    );
 #else
-    if (WebPDecodeBGRAInto(reinterpret_cast<const uint8_t*>(data.constData()),
-                           data.size(), reinterpret_cast<uint8_t*>(retImage->bits()),
-                           retImage->byteCount(), retImage->bytesPerLine()) == 0) {
+    const uint8_t* output = WebPDecodeBGRAInto(
+        reinterpret_cast<const uint8_t*>(data.constData()), data.size(),
+        reinterpret_cast<uint8_t*>(image->bits()), image->byteCount(),
+        image->bytesPerLine()
+    );
+#endif
+    if (Q_UNLIKELY(!output)) {
+        kWarning() << "Could not decode image";
         return false;
     }
-#endif
 
     return true;
 }
@@ -85,8 +90,9 @@ bool WebPHandler::write(const QImage &image)
 {
     if (image.isNull()) {
         return false;
-    // limitation in WebP
-    } else if (image.height() >= WEBP_MAX_DIMENSION || image.width() >= WEBP_MAX_DIMENSION) {
+    } else if (Q_UNLIKELY(image.height() >= WEBP_MAX_DIMENSION || image.width() >= WEBP_MAX_DIMENSION)) {
+        // limitation in WebP
+        kWarning() << "Image dimension limit";
         return false;
     }
 
@@ -119,12 +125,14 @@ bool WebPHandler::write(const QImage &image)
     }
     delete []imageData;
 
-    if (size == 0) {
+    if (Q_UNLIKELY(size == 0)) {
+        kWarning() << "Could not encode image";
         WebPFree(output);
         return false;
     }
 
-    if (device()->write(reinterpret_cast<const char*>(output), size) != size) {
+    if (Q_UNLIKELY(device()->write(reinterpret_cast<const char*>(output), size) != size)) {
+        kWarning() << "Could not write image";
         WebPFree(output);
         return false;
     }
