@@ -25,7 +25,10 @@
 #include "kxerrorhandler.h"
 #include "netwm_def.h"
 
+#include <string.h>
 #include <stdio.h>
+
+static const ushort s_xerrorbuffsize = 256;
 
 class KXErrorHandlerPrivate
 {
@@ -130,24 +133,32 @@ int KXErrorHandler::handle(Display* dpy, XErrorEvent* e)
     return old_handler(dpy, e);
 }
 
-QByteArray KXErrorHandler::errorMessage( const XErrorEvent& event, Display* dpy )
-{ // "Error: <error> (<value>), Request: <request>(<value>), Resource: <value>"
-    QByteArray ret;
-    char tmp[ 256 ];
-    char num[ 256 ];
+QByteArray KXErrorHandler::errorMessage(const XErrorEvent& event, Display* dpy)
+{
+    // "Error: <error> (<value>), Request: <request>(<value>), Resource: <value>"
+    char xerrorbuff[s_xerrorbuffsize];
+    ::memset(xerrorbuff, '\0', s_xerrorbuffsize * sizeof(char));
+    XGetErrorText(dpy, event.error_code, xerrorbuff, s_xerrorbuffsize - 1);
 
-    XGetErrorText(dpy, event.error_code, tmp, 255);
     // the explanation in parentheses just makes it more verbose and is not really useful
-    if (char* paren = strchr(tmp, '(' )) {
+    if (char* paren = strchr(xerrorbuff, '(' )) {
         *paren = '\0';
     }
+
     // the various casts are to get overloads non-ambiguous :-/
-    ret = QByteArray("error: ") + (const char*)tmp + '[' + QByteArray::number(event.error_code) + ']';
-    ::sprintf(num, "%d", event.request_code);
-    XGetErrorDatabaseText( dpy, "XRequest", num, "<unknown>", tmp, 256);
-    ret += QByteArray(", request: ") + (const char*)tmp + '[' + QByteArray::number(event.request_code) + ']';
+    QByteArray ret = QByteArray("error: ") + (const char*)xerrorbuff + '[' + QByteArray::number(event.error_code) + ']';
+
+    char xrequestbuff[s_xerrorbuffsize];
+    ::memset(xrequestbuff, '\0', s_xerrorbuffsize * sizeof(char));
+    ::sprintf(xrequestbuff, "%d", event.request_code);
+    ::memset(xerrorbuff, '\0', s_xerrorbuffsize * sizeof(char));
+    XGetErrorDatabaseText(dpy, "XRequest", xrequestbuff, "<unknown>", xerrorbuff, s_xerrorbuffsize);
+
+    ret += QByteArray(", request: ") + (const char*)xerrorbuff + '[' + QByteArray::number(event.request_code) + ']';
+
     if (event.resourceid != 0) {
         ret += QByteArray(", resource: 0x") + QByteArray::number((qlonglong)event.resourceid, 16);
     }
+
     return ret;
 }
