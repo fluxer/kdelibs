@@ -68,13 +68,14 @@ bool WebPHandler::read(QImage *image)
         &webpdata,
         &webpanimoptions
     );
-    if (!webpanimdec) {
+    if (Q_UNLIKELY(!webpanimdec)) {
         kWarning() << "Could not create animation decoder";
         return false;
     }
 
     WebPAnimInfo webpaniminfo;
-    if (WebPAnimDecoderGetInfo(webpanimdec, &webpaniminfo) == 0) {
+    int webpstatus = WebPAnimDecoderGetInfo(webpanimdec, &webpaniminfo);
+    if (Q_UNLIKELY(webpstatus == 0)) {
         kWarning() << "Could not get animation information";
         WebPAnimDecoderDelete(webpanimdec);
         return false;
@@ -85,7 +86,8 @@ bool WebPHandler::read(QImage *image)
 
     const WebPDemuxer* webpdemuxer = WebPAnimDecoderGetDemuxer(webpanimdec);
     WebPIterator webpiter;
-    if (WebPDemuxGetFrame(webpdemuxer, m_currentimage, &webpiter) == 0) {
+    webpstatus = WebPDemuxGetFrame(webpdemuxer, m_currentimage, &webpiter);
+    if (Q_UNLIKELY(webpstatus == 0)) {
         kWarning() << "Could not get frame";
         WebPAnimDecoderDelete(webpanimdec);
         return false;
