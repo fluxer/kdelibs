@@ -503,38 +503,27 @@ void KUrlCompletionPrivate::MyURL::init(const QString& _url, const QString& cwd)
     // Save the original text
     m_url = _url;
 
-    // Non-const copy
-    QString url_copy = _url;
-
-    // Special shortcuts for "man:" and "info:"
-    if (url_copy.startsWith(QLatin1Char('#'))) {
-        if (url_copy.length() > 1 && url_copy.at(1) == QLatin1Char('#'))
-            url_copy.replace(0, 2, QLatin1String("info:"));
-        else
-            url_copy.replace(0, 1, QLatin1String("man:"));
-    }
-
     // Look for a protocol in 'url'
     QRegExp protocol_regex = QRegExp("^(?![A-Za-z]:)[^/\\s\\\\]*:");
 
     // Assume "file:" or whatever is given by 'cwd' if there is
     // no protocol.  (KUrl does this only for absolute paths)
-    if (protocol_regex.indexIn(url_copy) == 0) {
-        m_kurl = KUrl(url_copy);
+    if (protocol_regex.indexIn(_url) == 0) {
+        m_kurl = KUrl(_url);
         m_isURL = true;
     } else { // relative path or ~ or $something
         m_isURL = false;
-        if (!QDir::isRelativePath(url_copy) ||
-                url_copy.startsWith(QLatin1Char('~')) ||
-                url_copy.startsWith(QLatin1Char('$'))) {
+        if (!QDir::isRelativePath(_url) ||
+                _url.startsWith(QLatin1Char('~')) ||
+                _url.startsWith(QLatin1Char('$'))) {
             m_kurl = KUrl();
-            m_kurl.setPath(url_copy);
+            m_kurl.setPath(_url);
         } else {
             if (cwd.isEmpty()) {
-                m_kurl = KUrl(url_copy);
+                m_kurl = KUrl(_url);
             } else {
                 m_kurl = KUrl(cwd);
-                m_kurl.addPath(url_copy);
+                m_kurl.addPath(_url);
             }
         }
     }
