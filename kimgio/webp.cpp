@@ -301,7 +301,7 @@ int WebPHandler::currentImageNumber() const
 bool WebPHandler::canRead(QIODevice *device)
 {
     if (Q_UNLIKELY(!device)) {
-        qWarning("WebPHandler::canRead() called with no device");
+        kWarning() << "Called with no device";
         return false;
     }
 
