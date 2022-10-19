@@ -125,68 +125,8 @@ bool KCompressor::process(const QByteArray &data)
             d->m_errorstring = i18n("Invalid type: %1", int(d->m_type));
             return false;
         }
-        case KCompressor::TypeDeflate: {
-            struct libdeflate_compressor* comp = libdeflate_alloc_compressor(d->m_level);
-            if (Q_UNLIKELY(!comp)) {
-                d->m_errorstring = i18n("Could not allocate compressor");
-                return false;
-            }
-
-            const size_t boundresult = libdeflate_deflate_compress_bound(comp, data.size());
-            if (Q_UNLIKELY(boundresult <= 0)) {
-                d->m_errorstring = i18n("Compression boundary is negative or zero");
-                libdeflate_free_compressor(comp);
-                return false;
-            }
-
-            d->m_result.resize(boundresult);
-            const size_t compresult = libdeflate_deflate_compress(
-                comp,
-                data.constData(), data.size(),
-                d->m_result.data(), d->m_result.size()
-            );
-            libdeflate_free_compressor(comp);
-
-            if (Q_UNLIKELY(compresult <= 0)) {
-                d->m_errorstring = i18n("Could not compress data");
-                d->m_result.clear();
-                return false;
-            }
-
-            d->m_result.resize(compresult);
-            return true;
-        }
-        case KCompressor::TypeZlib: {
-            struct libdeflate_compressor* comp = libdeflate_alloc_compressor(d->m_level);
-            if (Q_UNLIKELY(!comp)) {
-                d->m_errorstring = i18n("Could not allocate compressor");
-                return false;
-            }
-
-            const size_t boundresult = libdeflate_zlib_compress_bound(comp, data.size());
-            if (Q_UNLIKELY(boundresult <= 0)) {
-                d->m_errorstring = i18n("Compression boundary is negative or zero");
-                libdeflate_free_compressor(comp);
-                return false;
-            }
-
-            d->m_result.resize(boundresult);
-            const size_t compresult = libdeflate_zlib_compress(
-                comp,
-                data.constData(), data.size(),
-                d->m_result.data(), d->m_result.size()
-            );
-            libdeflate_free_compressor(comp);
-
-            if (Q_UNLIKELY(compresult <= 0)) {
-                d->m_errorstring = i18n("Could not compress data");
-                d->m_result.clear();
-                return false;
-            }
-
-            d->m_result.resize(compresult);
-            return true;
-        }
+        case KCompressor::TypeDeflate:
+        case KCompressor::TypeZlib:
         case KCompressor::TypeGZip: {
             struct libdeflate_compressor* comp = libdeflate_alloc_compressor(d->m_level);
             if (Q_UNLIKELY(!comp)) {
@@ -194,19 +134,35 @@ bool KCompressor::process(const QByteArray &data)
                 return false;
             }
 
-            const size_t boundresult = libdeflate_gzip_compress_bound(comp, data.size());
-            if (Q_UNLIKELY(boundresult <= 0)) {
-                d->m_errorstring = i18n("Compression boundary is negative or zero");
-                libdeflate_free_compressor(comp);
-                return false;
+            d->m_result.resize(data.size() + s_headersize);
+
+            size_t compresult = 0;
+            switch (d->m_type) {
+                case KCompressor::TypeDeflate: {
+                    compresult = libdeflate_deflate_compress(
+                        comp,
+                        data.constData(), data.size(),
+                        d->m_result.data(), d->m_result.size()
+                    );
+                    break;
+                }
+                case KCompressor::TypeZlib: {
+                    compresult = libdeflate_zlib_compress(
+                        comp,
+                        data.constData(), data.size(),
+                        d->m_result.data(), d->m_result.size()
+                    );
+                    break;
+                }
+                case KCompressor::TypeGZip: {
+                    compresult = libdeflate_gzip_compress(
+                        comp,
+                        data.constData(), data.size(),
+                        d->m_result.data(), d->m_result.size()
+                    );
+                    break;
+                }
             }
-        
-            d->m_result.resize(boundresult);
-            const size_t compresult = libdeflate_gzip_compress(
-                comp,
-                data.constData(), data.size(),
-                d->m_result.data(), d->m_result.size()
-            );
             libdeflate_free_compressor(comp);
 
             if (Q_UNLIKELY(compresult <= 0)) {

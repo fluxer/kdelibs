@@ -100,84 +100,8 @@ bool KDecompressor::process(const QByteArray &data)
             d->m_errorstring = i18n("Invalid type: %1", int(d->m_type));
             return false;
         }
-        case KDecompressor::TypeDeflate: {
-            struct libdeflate_decompressor* decomp = libdeflate_alloc_decompressor();
-            if (Q_UNLIKELY(!decomp)) {
-                d->m_errorstring = i18n("Could not allocate decompressor");
-                return false;
-            }
-
-            size_t speculativesize = (data.size() * 2);
-            d->m_result.resize(speculativesize);
-
-            libdeflate_result decompresult = LIBDEFLATE_INSUFFICIENT_SPACE;
-            while (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {
-                decompresult = libdeflate_deflate_decompress(
-                    decomp,
-                    data.constData(), data.size(),
-                    d->m_result.data(), d->m_result.size(),
-                    &speculativesize
-                );
-
-                if (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {
-                    speculativesize = (speculativesize + QT_BUFFSIZE);
-                    d->m_result.resize(speculativesize);
-                }
-
-                if (speculativesize >= INT_MAX) {
-                    break;
-                }
-            }
-            libdeflate_free_decompressor(decomp);
-
-            if (Q_UNLIKELY(decompresult != LIBDEFLATE_SUCCESS)) {
-                d->m_errorstring = i18n("Could not decompress data");
-                d->m_result.clear();
-                return false;
-            }
-
-            d->m_result.resize(speculativesize);
-            return true;
-        }
-        case KDecompressor::TypeZlib: {
-            struct libdeflate_decompressor* decomp = libdeflate_alloc_decompressor();
-            if (Q_UNLIKELY(!decomp)) {
-                d->m_errorstring = i18n("Could not allocate decompressor");
-                return false;
-            }
-
-            size_t speculativesize = (data.size() * 2);
-            d->m_result.resize(speculativesize);
-
-            libdeflate_result decompresult = LIBDEFLATE_INSUFFICIENT_SPACE;
-            while (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {
-                decompresult = libdeflate_zlib_decompress(
-                    decomp,
-                    data.constData(), data.size(),
-                    d->m_result.data(), d->m_result.size(),
-                    &speculativesize
-                );
-
-                if (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {
-                    speculativesize = (speculativesize + QT_BUFFSIZE);
-                    d->m_result.resize(speculativesize);
-                }
-
-                if (speculativesize >= INT_MAX) {
-                    break;
-                }
-            }
-            libdeflate_free_decompressor(decomp);
-
-            if (Q_UNLIKELY(decompresult != LIBDEFLATE_SUCCESS)) {
-                d->m_errorstring = i18n("Could not decompress data");
-                d->m_result.clear();
-                return false;
-            }
-
-            d->m_result.resize(speculativesize);
-            return true;
-        }
+        case KDecompressor::TypeDeflate:
+        case KDecompressor::TypeZlib:
         case KDecompressor::TypeGZip: {
             struct libdeflate_decompressor* decomp = libdeflate_alloc_decompressor();
             if (Q_UNLIKELY(!decomp)) {
@@ -190,12 +114,35 @@ bool KDecompressor::process(const QByteArray &data)
 
             libdeflate_result decompresult = LIBDEFLATE_INSUFFICIENT_SPACE;
             while (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {
-                decompresult = libdeflate_gzip_decompress(
-                    decomp,
-                    data.constData(), data.size(),
-                    d->m_result.data(), d->m_result.size(),
-                    &speculativesize
-                );
+                switch (d->m_type) {
+                    case KDecompressor::TypeDeflate: {
+                        decompresult = libdeflate_deflate_decompress(
+                            decomp,
+                            data.constData(), data.size(),
+                            d->m_result.data(), d->m_result.size(),
+                            &speculativesize
+                        );
+                        break;
+                    }
+                    case KDecompressor::TypeZlib: {
+                        decompresult = libdeflate_zlib_decompress(
+                            decomp,
+                            data.constData(), data.size(),
+                            d->m_result.data(), d->m_result.size(),
+                            &speculativesize
+                        );
+                        break;
+                    }
+                    case KDecompressor::TypeGZip: {
+                        decompresult = libdeflate_gzip_decompress(
+                            decomp,
+                            data.constData(), data.size(),
+                            d->m_result.data(), d->m_result.size(),
+                            &speculativesize
+                        );
+                        break;
+                    }
+                }
 
                 if (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {
                     speculativesize = (speculativesize + QT_BUFFSIZE);
