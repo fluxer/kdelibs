@@ -136,9 +136,9 @@ bool KSaveFile::open(OpenMode flags)
     QFileInfo fi ( d->realFileName );
     if (fi.exists()) {
         //Qt apparently has no way to change owner/group of file :(
-        if (fchown(tempFile.handle(), fi.ownerId(), fi.groupId())) {
+        if (::fchown(tempFile.handle(), fi.ownerId(), fi.groupId()) == -1) {
             // failed to set user and group => try to restore group only.
-            fchown(tempFile.handle(), -1, fi.groupId());
+            ::fchown(tempFile.handle(), -1, fi.groupId());
         }
 
         tempFile.setPermissions(fi.permissions());
