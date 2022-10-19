@@ -162,7 +162,7 @@ class KStartupInfo::Private
             : q( q ),
             timeout( 60 ),
 #ifdef Q_WS_X11
-            msgs( NET_STARTUP_MSG, NULL, false ),
+            msgs( NET_STARTUP_MSG, NULL ),
 #endif
             flags( flags_P )
         {
@@ -425,7 +425,7 @@ bool KStartupInfo::sendStartup( const KStartupInfoId& id_P, const KStartupInfoDa
     QX11Info inf;
     msg = Private::check_required_startup_fields( msg, data_P, inf.screen());
     kDebug( 172 ) << "sending " << msg;
-    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1, false );
+    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1 );
 #endif
     return true;
 }
@@ -442,7 +442,7 @@ bool KStartupInfo::sendStartupX( Display* disp_P, const KStartupInfoId& id_P,
 #ifdef KSTARTUPINFO_ALL_DEBUG
     kDebug( 172 ) << "sending " << msg;
 #endif
-    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1, false );
+    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1 );
 #else
     return true;
 #endif
@@ -473,7 +473,7 @@ bool KStartupInfo::sendChange( const KStartupInfoId& id_P, const KStartupInfoDat
     QString msg = QString::fromLatin1( "change: %1 %2" )
         .arg( id_P.d->to_text()).arg( data_P.d->to_text());
     kDebug( 172 ) << "sending " << msg;
-    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1, false );
+    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1 );
 #endif
     return true;
 }
@@ -489,7 +489,7 @@ bool KStartupInfo::sendChangeX( Display* disp_P, const KStartupInfoId& id_P,
 #ifdef KSTARTUPINFO_ALL_DEBUG
     kDebug( 172 ) << "sending " << msg;
 #endif
-    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1, false );
+    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1 );
 #else
     return true;
 #endif
@@ -503,7 +503,7 @@ bool KStartupInfo::sendFinish( const KStartupInfoId& id_P )
     KXMessages msgs;
     QString msg = QString::fromLatin1( "remove: %1" ).arg( id_P.d->to_text());
     kDebug( 172 ) << "sending " << msg;
-    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1, false );
+    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1 );
 #endif
     return true;
 }
@@ -517,7 +517,7 @@ bool KStartupInfo::sendFinishX( Display* disp_P, const KStartupInfoId& id_P )
 #ifdef KSTARTUPINFO_ALL_DEBUG
     kDebug( 172 ) << "sending " << msg;
 #endif
-    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1, false );
+    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1 );
 #else
     return true;
 #endif
@@ -532,7 +532,7 @@ bool KStartupInfo::sendFinish( const KStartupInfoId& id_P, const KStartupInfoDat
     QString msg = QString::fromLatin1( "remove: %1 %2" )
         .arg( id_P.d->to_text()).arg( data_P.d->to_text());
     kDebug( 172 ) << "sending " << msg;
-    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1, false );
+    msgs.broadcastMessage( NET_STARTUP_MSG, msg, -1 );
 #endif
     return true;
 }
@@ -548,7 +548,7 @@ bool KStartupInfo::sendFinishX( Display* disp_P, const KStartupInfoId& id_P,
 #ifdef KSTARTUPINFO_ALL_DEBUG
     kDebug( 172 ) << "sending " << msg;
 #endif
-    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1, false );
+    return KXMessages::broadcastMessageX( disp_P, NET_STARTUP_MSG, msg, -1 );
 #else
     return true;
 #endif

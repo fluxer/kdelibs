@@ -52,16 +52,8 @@ public:
      * @param accept_broadcast if non-NULL, all broadcast messages with
      *                         this message type will be received.
      * @param parent the parent of this widget
-     * @param obsolete always set to false (needed for backwards compatibility
-     *                 with KDE3.1 and older)
     */
-    KXMessages(const char* accept_broadcast, QWidget* parent, bool obsolete);
-
-    /**
-     * @deprecated
-     * This method is equivalent to the other constructor with obsolete = true.
-     */
-    explicit KXMessages(const char* accept_broadcast = NULL, QWidget* parent = NULL);
+    KXMessages(const char* accept_broadcast = NULL, QWidget* parent = NULL);
 
     virtual ~KXMessages();
 
@@ -72,14 +64,7 @@ public:
      * @param w X11 handle for the destination window
      * @param msg_type the type of the message
      * @param message the message itself
-     * @param obsolete always set to false (needed for backwards compatibility
-     *                 with KDE3.1 and older)
      */
-    void sendMessage(WId w, const char* msg_type, const QString& message, bool obsolete);
-    /**
-    * @deprecated
-    * This method is equivalent to sendMessage() with obsolete = true.
-    */
     void sendMessage(WId w, const char* msg_type, const QString& message);
 
     /**
@@ -87,15 +72,8 @@ public:
      * @param msg_type the type of the message
      * @param message the message itself
      * @param screen X11 screen to use, -1 for the default
-     * @param obsolete always set to false (needed for backwards compatibility
-     *                 with KDE3.1 and older)
      */
-    void broadcastMessage(const char* msg_type, const QString& message, int screen, bool obsolete);
-    /**
-     * @deprecated
-     * This method is equivalent to broadcastMessage() with obsolete = true.
-     */
-    void broadcastMessage(const char* msg_type, const QString& message);
+    void broadcastMessage(const char* msg_type, const QString& message, int screen);
 
     /**
      * Sends the given message with the given message type only to given
@@ -106,14 +84,7 @@ public:
      * @param w X11 handle for the destination window
      * @param msg_type the type of the message
      * @param message the message itself
-     * @param obsolete always set to false (needed for backwards compatibility
-     *                 with KDE3.1 and older)
      * @return false when an error occurred, true otherwise
-     */
-    static bool sendMessageX(Display* disp, WId w, const char* msg_type, const QString& message, bool obsolete);
-    /**
-     * @deprecated
-     * This method is equivalent to sendMessageX() with obsolete = true.
      */
     static bool sendMessageX(Display* disp, WId w, const char* msg_type, const QString& message);
 
@@ -125,16 +96,9 @@ public:
      * @param msg_type the type of the message
      * @param message the message itself
      * @param screen X11 screen to use, -1 for the default
-     * @param obsolete always set to false (needed for backwards compatibility
-     *                 with KDE3.1 and older)
      * @return false when an error occurred, true otherwise
      */
-    static bool broadcastMessageX(Display* disp, const char* msg_type, const QString& message, int screen, bool obsolete);
-    /**
-     * @deprecated
-     * This method is equivalent to broadcastMessageX() with obsolete = true.
-     */
-    static bool broadcastMessageX(Display* disp, const char* msg_type, const QString& message);
+    static bool broadcastMessageX(Display* disp, const char* msg_type, const QString& message, int screen);
 
 Q_SIGNALS:
     /**
