@@ -58,6 +58,9 @@ static const struct HeadersTblData {
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
+// for reference:
+// https://en.wikipedia.org/wiki/ICO_(file_format)
+// https://en.wikipedia.org/wiki/BMP_file_format
 enum ICOType {
     TypeIcon = 1,
     TypeCursor = 2
@@ -93,9 +96,6 @@ bool ICOHandler::canRead() const
     return false;
 }
 
-// for reference:
-// https://en.wikipedia.org/wiki/ICO_(file_format)
-// https://en.wikipedia.org/wiki/BMP_file_format
 bool ICOHandler::read(QImage *image)
 {
     Q_ASSERT(sizeof(uchar) == 1);
@@ -104,6 +104,7 @@ bool ICOHandler::read(QImage *image)
 
     QDataStream datastream(device());
     datastream.setByteOrder(QDataStream::LittleEndian);
+
     ushort icoreserved = 0;
     ushort icotype = 0;
     ushort iconimages = 0;
@@ -279,8 +280,80 @@ bool ICOHandler::read(QImage *image)
 
 bool ICOHandler::write(const QImage &image)
 {
-    // this plugin is a read-only kind of plugin
-    return false;
+    if (image.isNull()) {
+        kWarning() << "Null image";
+        return false;
+    }
+
+    QImage bmpimage = image.convertToFormat(QImage::Format_ARGB32);
+    if (bmpimage.width() > 256 || bmpimage.height() > 256) {
+        kDebug() << "Scaling down image";
+        bmpimage = bmpimage.scaled(256, 256, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    }
+    bmpimage = bmpimage.mirrored(false, true);
+
+    QDataStream datastream(device());
+    datastream.setByteOrder(QDataStream::LittleEndian);
+
+    ushort icoreserved = 0;
+    ushort icotype = ICOType::TypeIcon;
+    ushort iconimages = 1;
+    datastream << icoreserved;
+    datastream << icotype;
+    datastream << iconimages;
+
+    uchar icowidth = bmpimage.width();
+    uchar icoheight = bmpimage.height();
+    uchar icocolors = 0;
+    uchar icoreserved2 = 0;
+    ushort icoplaneorhhs = 0;
+    ushort icobpporvhs = 0;
+    uint icoimagesize = bmpimage.byteCount();
+    uint icoimageoffset = 0;
+    datastream << icowidth;
+    datastream << icoheight;
+    datastream << icocolors;
+    datastream << icoreserved2;
+    datastream << icoplaneorhhs;
+    datastream << icobpporvhs;
+    datastream << icoimagesize;
+    icoimageoffset = (datastream.device()->pos() + sizeof(uint));
+    datastream << icoimageoffset;
+
+    uint bmpheadersize = 40;
+    uint bmpwidth = bmpimage.width();
+    uint bmpheight = bmpimage.width();
+    ushort bmpplanes = 0;
+    ushort bmpbpp = bmpimage.depth();
+    uint bmpcompression = BMPCompression::CompressionRGB;
+    uint bmpimagesize = bmpimage.byteCount();
+    uint bmphppm = 0;
+    uint bmpvppm = 0;
+    uint bmpncolors = 0;
+    uint bmpnimportantcolors = 0;
+    datastream << bmpheadersize;
+    datastream << bmpwidth;
+    datastream << bmpheight;
+    datastream << bmpplanes;
+    datastream << bmpbpp;
+    datastream << bmpcompression;
+    datastream << bmpimagesize;
+    datastream << bmphppm;
+    datastream << bmpvppm;
+    datastream << bmpncolors;
+    datastream << bmpnimportantcolors;
+
+    const QRgb* bmpimagebits = reinterpret_cast<const QRgb*>(bmpimage.constBits());
+    for (uint bi = 0; bi < bmpimagesize; bi += 4) {
+        const uchar bmpb = qBlue(*bmpimagebits);
+        const uchar bmpg = qGreen(*bmpimagebits);
+        const uchar bmpr = qRed(*bmpimagebits);
+        const uchar bmpa = qAlpha(*bmpimagebits);
+        datastream << bmpb << bmpg << bmpr << bmpa;
+        bmpimagebits++;
+    }
+
+    return (datastream.status() == QDataStream::Ok);
 }
 
 QByteArray ICOHandler::name() const
@@ -329,15 +402,19 @@ QList<QByteArray> ICOPlugin::mimeTypes() const
 QImageIOPlugin::Capabilities ICOPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
     if (format == s_icopluginformat) {
-        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead | QImageIOPlugin::CanWrite);
     }
     if (!device || !device->isOpen()) {
         return 0;
     }
+    QImageIOPlugin::Capabilities cap;
     if (device->isReadable() && ICOHandler::canRead(device)) {
-        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
+        cap |= QImageIOPlugin::CanRead;
     }
-    return 0;
+    if (device->isWritable()) {
+        cap |= QImageIOPlugin::CanWrite;
+    }
+    return cap;
 }
 
 QImageIOHandler *ICOPlugin::create(QIODevice *device, const QByteArray &format) const

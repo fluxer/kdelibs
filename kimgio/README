@@ -5,9 +5,9 @@ Current formats include:
 
 WEBP    <read> <write>
 JPEG    <read> <write>
+ICO     <read> <write>
 JP2     <read>
 RAW     <read>
-ICO     <read>
 
 If you want to contribute plugin for image format and there is no solid
 C/C++ library for it (like there is for WebP) then it is unlikely it will be
