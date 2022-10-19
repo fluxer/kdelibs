@@ -209,16 +209,16 @@ bool ICOHandler::read(QImage *image)
             const int imagewidth = (icowidth ? icowidth : bmpwidth);
             const int imageheight = (icoheight ? icoheight : bmpheight);
 
-            int imagebounds = 0;
+            int imageboundary = 0;
             QImage::Format imageformat = QImage::Format_ARGB32;
             switch (bmpbpp) {
                 case 32: {
-                    imagebounds = (imagewidth * imageheight * 4);
+                    imageboundary = (imagewidth * imageheight * 4);
                     break;
                 }
                 case 24: {
                     imageformat = QImage::Format_RGB32;
-                    imagebounds = (imagewidth * imageheight * 3);
+                    imageboundary = (imagewidth * imageheight * 3);
                     break;
                 }
                 default: {
@@ -233,15 +233,15 @@ bool ICOHandler::read(QImage *image)
                 return false;
             }
 
-            if (bmpimagesize != imagebounds) {
+            if (bmpimagesize != imageboundary) {
                 // data may be padded
-                kDebug() << "BMP and QImage bytes count mismatch" << bmpimagesize << imagebounds;
+                kDebug() << "BMP and QImage bytes count mismatch" << bmpimagesize << imageboundary;
             }
 
             switch (bmpbpp) {
                 case 32: {
                     QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
-                    for (uint bi = 0; bi < bmpimagesize && bi < imagebounds; bi += 4) {
+                    for (uint bi = 0; bi < bmpimagesize && bi < imageboundary; bi += 4) {
                         *bmpimagebits = qRgba(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi), imagebytes.at(bi + 3));
                         bmpimagebits++;
                     }
@@ -249,7 +249,7 @@ bool ICOHandler::read(QImage *image)
                 }
                 case 24: {
                     QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
-                    for (uint bi = 0; bi < bmpimagesize && bi < imagebounds; bi += 3) {
+                    for (uint bi = 0; bi < bmpimagesize && bi < imageboundary; bi += 3) {
                         *bmpimagebits = qRgb(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi));
                         bmpimagebits++;
                     }
