@@ -240,17 +240,14 @@ bool ICOHandler::read(QImage *image)
 
             switch (bmpbpp) {
                 case 32: {
-                    QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
-                    for (uint bi = 0; bi < bmpimagesize && bi < imageboundary; bi += 4) {
-                        *bmpimagebits = qRgba(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi), imagebytes.at(bi + 3));
-                        bmpimagebits++;
-                    }
+                    char* bmpimagebits = reinterpret_cast<char*>(bmpimage.bits());
+                    ::memcpy(bmpimagebits, imagebytes.constData(), imageboundary * sizeof(char));
                     break;
                 }
                 case 24: {
                     QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
                     for (uint bi = 0; bi < bmpimagesize && bi < imageboundary; bi += 3) {
-                        *bmpimagebits = qRgb(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi));
+                        *bmpimagebits = qRgba(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi), 0xff);
                         bmpimagebits++;
                     }
                     break;
@@ -343,15 +340,8 @@ bool ICOHandler::write(const QImage &image)
     datastream << bmpncolors;
     datastream << bmpnimportantcolors;
 
-    const QRgb* bmpimagebits = reinterpret_cast<const QRgb*>(bmpimage.constBits());
-    for (uint bi = 0; bi < bmpimagesize; bi += 4) {
-        const uchar bmpb = qBlue(*bmpimagebits);
-        const uchar bmpg = qGreen(*bmpimagebits);
-        const uchar bmpr = qRed(*bmpimagebits);
-        const uchar bmpa = qAlpha(*bmpimagebits);
-        datastream << bmpb << bmpg << bmpr << bmpa;
-        bmpimagebits++;
-    }
+    const char* bmpimagebits = reinterpret_cast<const char*>(bmpimage.constBits());
+    datastream.writeRawData(bmpimagebits, bmpimagesize);
 
     return (datastream.status() == QDataStream::Ok);
 }

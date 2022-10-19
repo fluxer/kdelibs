@@ -183,7 +183,7 @@ bool JP2Handler::read(QImage *image)
 
     *image = QImage(ojimage->comps->w, ojimage->comps->h, QImage::Format_ARGB32);
     if (Q_UNLIKELY(image->isNull())) {
-        kWarning() << "Could not create image QImage";
+        kWarning() << "Could not create image";
         opj_destroy_codec(ojcodec);
         opj_stream_destroy(ojstream);
         opj_image_destroy(ojimage);
