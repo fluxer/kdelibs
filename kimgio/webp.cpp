@@ -1,23 +1,19 @@
-/*
-QImageIO Routines to read/write WebP images.
+/*  This file is part of the KDE libraries
+    Copyright (C) 2022 Ivailo Monev <xakepa10@gmail.com>
 
-Copyright (c) 2012,2013 Martin Koller <kollix@aon.at>
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2, as published by the Free Software Foundation.
 
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) version 3, or any
-later version accepted by the membership of KDE e.V. (or its
-successor approved by the membership of KDE e.V.), which shall
-act as a proxy defined in Section 6 of version 3 of the license.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
 */
 
 #include "webp.h"
@@ -107,17 +103,13 @@ bool WebPHandler::read(QImage *image)
 
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
     const uint8_t* webpoutput = WebPDecodeARGBInto(
-        webpiter.fragment.bytes, webpiter.fragment.size,
-        reinterpret_cast<uint8_t*>(image->bits()), image->byteCount(),
-        image->bytesPerLine()
-    );
 #else
     const uint8_t* webpoutput = WebPDecodeBGRAInto(
+#endif
         webpiter.fragment.bytes, webpiter.fragment.size,
         reinterpret_cast<uint8_t*>(image->bits()), image->byteCount(),
         image->bytesPerLine()
     );
-#endif
     if (Q_UNLIKELY(!webpoutput)) {
         kWarning() << "Could not decode image";
         WebPDemuxReleaseIterator(&webpiter);
@@ -145,34 +137,19 @@ bool WebPHandler::write(const QImage &image)
         return false;
     }
 
-    QImage image32 = image;
-    if (image32.depth() != 32) {
-        image32 = image32.convertToFormat(QImage::Format_RGB32);
-    }
+    QImage image32 = image.convertToFormat(QImage::Format_ARGB32);
 
-    size_t idx = 0;
-    uint8_t *webpimagedata = new uint8_t[image32.width() * image32.height() * (3 + image32.hasAlphaChannel())];
-    for (int y = 0; y < image32.height(); y++) {
-        const QRgb *scanline = reinterpret_cast<const QRgb*>(image32.constScanLine(y));
-        for (int x = 0; x < image32.width(); x++) {
-            webpimagedata[idx++] = qRed(scanline[x]);
-            webpimagedata[idx++] = qGreen(scanline[x]);
-            webpimagedata[idx++] = qBlue(scanline[x]);
-
-            if (image32.hasAlphaChannel()) {
-                webpimagedata[idx++] = qAlpha(scanline[x]);
-            }
-        }
-    }
-
-    size_t webpsize = 0;
     uint8_t *webpoutput = nullptr;
-    if (image32.hasAlphaChannel()) {
-        webpsize = WebPEncodeRGBA(webpimagedata, image32.width(), image32.height(), image32.width() * 4, m_quality, &webpoutput);
-    } else {
-        webpsize = WebPEncodeRGB(webpimagedata, image32.width(), image32.height(), image32.width() * 3, m_quality, &webpoutput);
-    }
-    delete []webpimagedata;
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+    const size_t webpsize = WebPEncodeRGBA(
+#else
+    const size_t webpsize = WebPEncodeBGRA(
+#endif
+        image32.constBits(),
+        image32.width(), image32.height(), image32.width() * 4,
+        m_quality,
+        &webpoutput
+    );
 
     if (Q_UNLIKELY(webpsize == 0)) {
         kWarning() << "Could not encode image";
