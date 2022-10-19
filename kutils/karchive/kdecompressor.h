@@ -62,7 +62,8 @@ public:
         @brief Set the type of decompression to perform
         @note By default the type is none (i.e. @p KDecompressorType::TypeUnknown). The type must be
         set before processing data and can determined via @p KDecompressor::typeForMime or
-        @p KDecompressor::typeForFile depending if the input is file or data in memory.
+        @p KDecompressor::typeForFile depending if the input is file or data in memory
+        @see KMimeType::findByPath, KMimeType::findByContent
     */
     bool setType(const KDecompressorType type);
 

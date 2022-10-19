@@ -63,12 +63,13 @@ public:
         @brief Set the type of compression to perform
         @note By default the type is none (i.e. @p KCompressorType::TypeUnknown). The type must be
         set before processing data and can determined via @p KCompressor::typeForMime or
-        @p KCompressor::typeForFile depending if the input is file or data in memory.
+        @p KCompressor::typeForFile depending if the input is file or data in memory
+        @see KMimeType::findByPath, KMimeType::findByContent
     */
     bool setType(const KCompressorType type);
     /*!
         @note By default the level is 1 which is good balance between ratio and resources
-        requirements for the processing operation.
+        requirements for the processing operation
     */
     int level() const;
     bool setLevel(const int level);
