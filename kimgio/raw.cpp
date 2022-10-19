@@ -19,7 +19,6 @@
 #include "raw.h"
 
 #include <QImage>
-#include <kmimetype.h>
 #include <kdebug.h>
 
 #include <libraw/libraw.h>
@@ -171,16 +170,24 @@ QStringList RAWPlugin::keys() const
 
 QList<QByteArray> RAWPlugin::mimeTypes() const
 {
-    static QList<QByteArray> list;
-    if (list.isEmpty()) {
-        foreach (const KMimeType::Ptr &mime, KMimeType::allMimeTypes()) {
-            // NOTE: RAW MIME types are sub-class of image/x-dcraw
-            if (mime && mime->is(QString::fromLatin1("image/x-dcraw"))
-                && mime->name() != QLatin1String("image/x-dcraw")) {
-                list.append(mime->name().toLatin1());
-            }
-        }
-    }
+    static const QList<QByteArray> list = QList<QByteArray>()
+        << "image/x-sony-srf"
+        << "image/x-fuji-raf"
+        << "image/x-adobe-dng"
+        << "image/x-olympus-orf"
+        << "image/x-panasonic-rw2"
+        << "image/x-kodak-dcr"
+        << "image/x-kodak-k25"
+        << "image/x-sony-arw"
+        << "image/x-minolta-mrw"
+        << "image/x-kodak-kdc"
+        << "image/x-sigma-x3f"
+        << "image/x-nikon-nef"
+        << "image/x-pentax-pef"
+        << "image/x-panasonic-rw"
+        << "image/x-canon-crw"
+        << "image/x-sony-sr2"
+        << "image/x-canon-cr2";
     return list;
 }
 
