@@ -89,11 +89,7 @@ bool WebPHandler::read(QImage *image)
         return false;
     }
 
-    if (webpiter.has_alpha) {
-        *image = QImage(webpiter.width, webpiter.height, QImage::Format_ARGB32);
-    } else {
-        *image = QImage(webpiter.width, webpiter.height, QImage::Format_RGB32);
-    }
+    *image = QImage(webpiter.width, webpiter.height, QImage::Format_ARGB32);
     if (Q_UNLIKELY(image->isNull())) {
         kWarning() << "Could not create image";
         WebPDemuxReleaseIterator(&webpiter);
