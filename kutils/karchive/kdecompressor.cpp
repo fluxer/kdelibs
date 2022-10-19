@@ -97,6 +97,7 @@ bool KDecompressor::process(const QByteArray &data)
 
     switch (d->m_type) {
         case KDecompressor::TypeUnknown: {
+            d->m_errorstring = i18n("Invalid type: %1", int(d->m_type));
             return false;
         }
         case KDecompressor::TypeDeflate: {

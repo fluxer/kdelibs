@@ -122,6 +122,7 @@ bool KCompressor::process(const QByteArray &data)
 
     switch (d->m_type) {
         case KCompressor::TypeUnknown: {
+            d->m_errorstring = i18n("Invalid type: %1", int(d->m_type));
             return false;
         }
         case KCompressor::TypeDeflate: {
