@@ -215,16 +215,14 @@ bool KSaveFile::finalize()
 
     bool success = false;
 #ifdef Q_OS_UNIX
-    static int extraSync = -1;
-    if (extraSync < 0)
-        extraSync = getenv("KDE_EXTRA_FSYNC") != 0 ? 1 : 0;
+    static const bool extraSync = (::getenv("KDE_EXTRA_FSYNC") != 0 ? true : false);
     if (extraSync) {
         if (flush()) {
             forever {
 #ifdef HAVE_FDATASYNC
-                if (!fdatasync(handle()))
+                if (!::fdatasync(handle()))
 #else
-                if (!fsync(handle()))
+                if (!::fsync(handle()))
 #endif
                     break;
                 if (errno != EINTR) {
