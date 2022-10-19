@@ -2884,57 +2884,53 @@ const NETWinInfo &NETWinInfo::operator=(const NETWinInfo &wininfo) {
 
 
 void NETWinInfo::setIcon(NETIcon icon, Bool replace) {
-    setIconInternal( p->icons, p->icon_count, net_wm_icon, icon, replace );
-}
-
-void NETWinInfo::setIconInternal(NETRArray<NETIcon>& icons, int& icon_count, Atom property, NETIcon icon, Bool replace) {
     if (p->role != Client) return;
 
     int proplen, i, sz, j;
 
     if (replace) {
 
-	for (i = 0; i < icons.size(); i++) {
-	    delete [] icons[i].data;
-	    icons[i].data = 0;
-	    icons[i].size.width = 0;
-	    icons[i].size.height = 0;
+	for (i = 0; i < p->icons.size(); i++) {
+	    delete [] p->icons[i].data;
+	    p->icons[i].data = 0;
+	    p->icons[i].size.width = 0;
+	    p->icons[i].size.height = 0;
 	}
 
-	icon_count = 0;
+	p->icon_count = 0;
     }
 
     // assign icon
-    icons[icon_count] = icon;
-    icon_count++;
+    p->icons[p->icon_count] = icon;
+    p->icon_count++;
 
     // do a deep copy, we want to own the data
-    NETIcon &ni = icons[icon_count - 1];
+    NETIcon &ni = p->icons[p->icon_count - 1];
     sz = ni.size.width * ni.size.height;
     CARD32 *d = new CARD32[sz];
     ni.data = (unsigned char *) d;
     memcpy(d, icon.data, sz * sizeof(CARD32));
 
     // compute property length
-    for (i = 0, proplen = 0; i < icon_count; i++) {
-	proplen += 2 + (icons[i].size.width *
-			icons[i].size.height);
+    for (i = 0, proplen = 0; i < p->icon_count; i++) {
+	proplen += 2 + (p->icons[i].size.width *
+			p->icons[i].size.height);
     }
 
     CARD32 *d32;
     long *prop = new long[proplen], *pprop = prop;
-    for (i = 0; i < icon_count; i++) {
+    for (i = 0; i < p->icon_count; i++) {
 	// copy size into property
-       	*pprop++ = icons[i].size.width;
-	*pprop++ = icons[i].size.height;
+       	*pprop++ = p->icons[i].size.width;
+	*pprop++ = p->icons[i].size.height;
 
 	// copy data into property
-	sz = (icons[i].size.width * icons[i].size.height);
-	d32 = (CARD32 *) icons[i].data;
+	sz = (p->icons[i].size.width * p->icons[i].size.height);
+	d32 = (CARD32 *) p->icons[i].data;
 	for (j = 0; j < sz; j++) *pprop++ = *d32++;
     }
 
-    XChangeProperty(p->display, p->window, property, XA_CARDINAL, 32,
+    XChangeProperty(p->display, p->window, net_wm_icon, XA_CARDINAL, 32,
 		    PropModeReplace, (unsigned char *) prop, proplen);
 
     delete [] prop;
@@ -3557,7 +3553,35 @@ void NETWinInfo::kdeGeometry(NETRect& frame, NETRect& window) {
 
 
 NETIcon NETWinInfo::icon(int width, int height) const {
-    return iconInternal( p->icons, p->icon_count, width, height );
+    NETIcon result;
+    if ( !p->icon_count ) {
+	result.size.width = 0;
+	result.size.height = 0;
+	result.data = 0;
+	return result;
+    }
+
+    // find the largest icon
+    result = p->icons[0];
+    for (int i = 1; i < p->icons.size(); i++) {
+	if( p->icons[i].size.width >= result.size.width &&
+	     p->icons[i].size.height >= result.size.height )
+	    result = p->icons[i];
+    }
+
+    // return the largest icon if w and h are -1
+    if (width == -1 && height == -1) return result;
+
+    // find the icon that's closest in size to w x h...
+    for (int i = 0; i < p->icons.size(); i++) {
+	if ((p->icons[i].size.width >= width &&
+	     p->icons[i].size.width < result.size.width) &&
+	    (p->icons[i].size.height >= height &&
+	     p->icons[i].size.height < result.size.height))
+	    result = p->icons[i];
+    }
+
+    return result;
 }
 
 const int* NETWinInfo::iconSizes() const {
@@ -3573,39 +3597,6 @@ const int* NETWinInfo::iconSizes() const {
         p->icon_sizes[ p->icon_count * 2 + 1 ] = 0;
     }
     return p->icon_sizes;
-}
-
-NETIcon NETWinInfo::iconInternal(NETRArray<NETIcon>& icons, int icon_count, int width, int height) const {
-    NETIcon result;
-
-    if ( !icon_count ) {
-	result.size.width = 0;
-	result.size.height = 0;
-	result.data = 0;
-	return result;
-    }
-
-    // find the largest icon
-    result = icons[0];
-    for (int i = 1; i < icons.size(); i++) {
-	if( icons[i].size.width >= result.size.width &&
-	     icons[i].size.height >= result.size.height )
-	    result = icons[i];
-    }
-
-    // return the largest icon if w and h are -1
-    if (width == -1 && height == -1) return result;
-
-    // find the icon that's closest in size to w x h...
-    for (int i = 0; i < icons.size(); i++) {
-	if ((icons[i].size.width >= width &&
-	     icons[i].size.width < result.size.width) &&
-	    (icons[i].size.height >= height &&
-	     icons[i].size.height < result.size.height))
-	    result = icons[i];
-    }
-
-    return result;
 }
 
 void NETWinInfo::setUserTime( Time time ) {

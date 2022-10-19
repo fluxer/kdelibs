@@ -1386,8 +1386,6 @@ protected:
 private:
     void update( const unsigned long[] );
     void updateWMState();
-    void setIconInternal(NETRArray<NETIcon>& icons, int& icon_count, Atom property, NETIcon icon, Bool replace);
-    NETIcon iconInternal(NETRArray<NETIcon>& icons, int icon_count, int width, int height) const;
 
 private:
     NETWinInfoPrivate *p; // krazy:exclude=dpointer (implicitly shared)
