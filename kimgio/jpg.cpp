@@ -26,8 +26,7 @@
 static const char* const s_jpgpluginformat = "jpg";
 
 static const ushort s_peekbuffsize = 32;
-static const TJPF s_jpegreadpf = TJPF_ARGB;
-static const TJPF s_jpegwritepf = TJPF_BGRA;
+static const TJPF s_jpegpf = TJPF_BGRA;
 static const TJSAMP s_jpegsubsampling = TJSAMP_444;
 static const int s_jpegflags = TJFLAG_FASTDCT;
 // for reference:
@@ -96,10 +95,9 @@ bool JPGHandler::read(QImage *image)
         return false;
     }
 
-    int jpegbuffersize = (jpegwidth * jpegheight * tjPixelSize[s_jpegreadpf]);
-    unsigned char *jpegbuffer = tjAlloc(jpegbuffersize);
-    if (Q_UNLIKELY(!jpegbuffer)) {
-        kWarning() << "Could not allocate buffer" << tjGetErrorStr2(jpegdecomp);
+    *image = QImage(jpegwidth, jpegheight, QImage::Format_ARGB32);
+    if (Q_UNLIKELY(image->isNull())) {
+        kWarning() << "Could not create image";
         (void)tjDestroy(jpegdecomp);
         return false;
     }
@@ -107,32 +105,18 @@ bool JPGHandler::read(QImage *image)
     jpegstatus = tjDecompress2(
         jpegdecomp,
         reinterpret_cast<const uchar*>(data.constData()), data.size(),
-        jpegbuffer,
+        image->bits(),
         jpegwidth, 0 , jpegheight,
-        s_jpegreadpf,
+        s_jpegpf,
         s_jpegflags
     );
     if (Q_UNLIKELY(jpegstatus != 0)) {
         kWarning() << "Could not decompress" << tjGetErrorStr2(jpegdecomp);
-        tjFree(jpegbuffer);
+        *image = QImage();
         (void)tjDestroy(jpegdecomp);
         return false;
     }
 
-    *image = QImage(jpegwidth, jpegheight, QImage::Format_ARGB32);
-    if (Q_UNLIKELY(image->isNull())) {
-        tjFree(jpegbuffer);
-        (void)tjDestroy(jpegdecomp);
-        return false;
-    }
-
-    QRgb* imagebits = reinterpret_cast<QRgb*>(image->bits());
-    for (uint i = 0; i < jpegbuffersize; i += 4) {
-        *imagebits = qRgba(jpegbuffer[i + 1], jpegbuffer[i + 2], jpegbuffer[i + 3], jpegbuffer[i]);
-        imagebits++;
-    }
-
-    tjFree(jpegbuffer);
     (void)tjDestroy(jpegdecomp);
 
     return true;
@@ -152,8 +136,8 @@ bool JPGHandler::write(const QImage &image)
         return false;
     }
 
-    ulong jpegbuffersize = (image32.width() * image32.height() * tjPixelSize[s_jpegwritepf]);
-    unsigned char *jpegbuffer = tjAlloc(jpegbuffersize);
+    ulong jpegbuffersize = (image32.width() * image32.height() * tjPixelSize[s_jpegpf]);
+    uchar *jpegbuffer = tjAlloc(jpegbuffersize);
     if (Q_UNLIKELY(!jpegbuffer)) {
         kWarning() << "Could not allocate buffer" << tjGetErrorStr2(jpegcomp);
         (void)tjDestroy(jpegcomp);
@@ -164,7 +148,7 @@ bool JPGHandler::write(const QImage &image)
         jpegcomp,
         image32.constBits(),
         image32.width(), 0 , image32.height(),
-        s_jpegwritepf,
+        s_jpegpf,
         &jpegbuffer, &jpegbuffersize,
         s_jpegsubsampling,
         m_quality,
