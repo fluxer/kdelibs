@@ -21,6 +21,7 @@
 
 #include "kemail_export.h"
 
+#include <QShowEvent>
 #include <kdialog.h>
 #include <kemail.h>
 
@@ -63,6 +64,11 @@ public:
     QStringList attach() const;
     bool setAttach(const QStringList &attach);
 
+    // QWidget reimplementation
+protected:
+    virtual void showEvent(QShowEvent *event);
+
+    // KDialog reimplementation
 protected Q_SLOTS:
     virtual void slotButtonClicked(int button);
 
@@ -70,6 +76,7 @@ private Q_SLOTS:
     void _slotSettings();
     void _slotSent();
     void _slotError(const QString &errorstring);
+    void _slotFinished();
 
 private:
     Q_DISABLE_COPY(KEMailDialog);

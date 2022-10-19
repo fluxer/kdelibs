@@ -124,8 +124,6 @@ KEMail::KEMail(QObject *parent)
     KEMailSettings kemailsettings;
     setServer(KUrl(kemailsettings.getSetting(KEMailSettings::OutServer)));
     setFrom(kemailsettings.getSetting(KEMailSettings::EmailAddress));
-    setUser(kemailsettings.getSetting(KEMailSettings::OutServerLogin));
-    setPassword(kemailsettings.getSetting(KEMailSettings::OutServerPass));
 }
 
 KEMail::~KEMail()
@@ -133,8 +131,6 @@ KEMail::~KEMail()
     KEMailSettings kemailsettings;
     kemailsettings.setSetting(KEMailSettings::OutServer, server().url());
     kemailsettings.setSetting(KEMailSettings::EmailAddress, from());
-    kemailsettings.setSetting(KEMailSettings::OutServerLogin, user());
-    kemailsettings.setSetting(KEMailSettings::OutServerPass, password());
 
     delete d;
 }

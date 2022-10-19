@@ -17,6 +17,7 @@
 */
 
 #include "kemaildialog.h"
+#include "kemailsettings.h"
 #include "klocale.h"
 #include "kstandarddirs.h"
 #include "kmessagebox.h"
@@ -95,49 +96,13 @@ KEMailDialog::KEMailDialog(QWidget *parent, Qt::WindowFlags flags)
 
     connect(d, SIGNAL(sent()), this, SLOT(_slotSent()));
     connect(d, SIGNAL(error(QString)), this, SLOT(_slotError(QString)));
+
+    connect(this, SIGNAL(finished()), this, SLOT(_slotFinished()));
 }
 
 KEMailDialog::~KEMailDialog()
 {
     delete d;
-}
-
-void KEMailDialog::slotButtonClicked(int button)
-{
-    if (button == KDialog::Ok) {
-        d->kemail->setUser(d->ui.userlineedit->text());
-        d->kemail->setPassword(d->ui.passlineedit->text());
-        if (!d->kemail->server().isValid()) {
-            KMessageBox::error(this, i18n("No server specified"));
-            return;
-        } else if (d->kemail->from().isEmpty()) {
-            KMessageBox::error(this, i18n("No sender specified"));
-            return;
-        } else if (d->ui.recipientslistwidget->items().isEmpty()) {
-            KMessageBox::error(this, i18n("No recipients specified"));
-            return;
-        } else if (d->ui.subjectlineedit->text().isEmpty()) {
-            KMessageBox::error(this, i18n("No subject specified"));
-            return;
-        } else if (d->ui.messagetextedit->textOrHtml().isEmpty()) {
-            KMessageBox::error(this, i18n("No message specified"));
-            return;
-        }
-        KDialog::enableButtonOk(false);
-        d->sendMail(
-            d->ui.recipientslistwidget->items(),
-            d->ui.subjectlineedit->text(),
-            d->ui.messagetextedit->textOrHtml(),
-            d->ui.attachlistwidget->items()
-        );
-        return;
-    } else if (button == KDialog::Cancel || button == KDialog::Close) {
-        if (d->isRunning() &&
-            KMessageBox::questionYesNo(this, i18n("Mail is being send, are you sure?")) == KMessageBox::Yes) {
-            d->terminate();
-        }
-    }
-    KDialog::slotButtonClicked(button);
 }
 
 QString KEMailDialog::from() const
@@ -206,6 +171,65 @@ bool KEMailDialog::setAttach(const QStringList &attach)
     return true;
 }
 
+void KEMailDialog::showEvent(QShowEvent *event)
+{
+    // NOTE: delayed until show so that startup notification is done, cursor is not grabbed and
+    // the password dialog is interactable via mouse
+    const bool isuserempty = d->ui.userlineedit->text().isEmpty();
+    const bool ispassempty = d->ui.passlineedit->text().isEmpty();
+    KEMailSettings* kemailsettings = nullptr;
+    if (isuserempty || ispassempty) {
+        kemailsettings = new KEMailSettings();
+    }
+    if (isuserempty) {
+        d->ui.userlineedit->setText(kemailsettings->getSetting(KEMailSettings::OutServerLogin));
+    }
+    if (ispassempty) {
+        d->ui.passlineedit->setText(kemailsettings->getSetting(KEMailSettings::OutServerPass));
+    }
+    delete kemailsettings;
+
+    KDialog::showEvent(event);
+}
+
+void KEMailDialog::slotButtonClicked(int button)
+{
+    if (button == KDialog::Ok) {
+        d->kemail->setUser(d->ui.userlineedit->text());
+        d->kemail->setPassword(d->ui.passlineedit->text());
+        if (!d->kemail->server().isValid()) {
+            KMessageBox::error(this, i18n("No server specified"));
+            return;
+        } else if (d->kemail->from().isEmpty()) {
+            KMessageBox::error(this, i18n("No sender specified"));
+            return;
+        } else if (d->ui.recipientslistwidget->items().isEmpty()) {
+            KMessageBox::error(this, i18n("No recipients specified"));
+            return;
+        } else if (d->ui.subjectlineedit->text().isEmpty()) {
+            KMessageBox::error(this, i18n("No subject specified"));
+            return;
+        } else if (d->ui.messagetextedit->textOrHtml().isEmpty()) {
+            KMessageBox::error(this, i18n("No message specified"));
+            return;
+        }
+        KDialog::enableButtonOk(false);
+        d->sendMail(
+            d->ui.recipientslistwidget->items(),
+            d->ui.subjectlineedit->text(),
+            d->ui.messagetextedit->textOrHtml(),
+            d->ui.attachlistwidget->items()
+        );
+        return;
+    } else if (button == KDialog::Cancel || button == KDialog::Close) {
+        if (d->isRunning() &&
+            KMessageBox::questionYesNo(this, i18n("Mail is being send, are you sure?")) == KMessageBox::Yes) {
+            d->terminate();
+        }
+    }
+    KDialog::slotButtonClicked(button);
+}
+
 void KEMailDialog::_slotSettings()
 {
     const QString kcmshell4exe = KStandardDirs::findExe(QString::fromLatin1("kcmshell4"));
@@ -230,6 +254,13 @@ void KEMailDialog::_slotError(const QString &errorstring)
 {
     KDialog::enableButtonOk(true);
     KMessageBox::error(this, errorstring);
+}
+
+void KEMailDialog::_slotFinished()
+{
+    KEMailSettings kemailsettings;
+    kemailsettings.setSetting(KEMailSettings::OutServerLogin, d->ui.userlineedit->text());
+    kemailsettings.setSetting(KEMailSettings::OutServerPass, d->ui.passlineedit->text());
 }
 
 #include "kemaildialog.moc"
