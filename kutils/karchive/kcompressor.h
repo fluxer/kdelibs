@@ -59,13 +59,32 @@ public:
     ~KCompressor();
 
     KCompressorType type() const;
+    /*!
+        @brief Set the type of compression to perform
+        @note By default the type is none (i.e. @p KCompressorType::TypeUnknown). The type must be
+        set before processing data and can determined via @p KCompressor::typeForMime or
+        @p KCompressor::typeForFile depending if the input is file or data in memory.
+    */
     bool setType(const KCompressorType type);
+    /*!
+        @note By default the level is 1 which is good balance between ratio and resources
+        requirements for the processing operation.
+    */
     int level() const;
     bool setLevel(const int level);
 
+    /*!
+        @brief Compresses @p data to the set compression type
+        @note Multiple calls with different data are allowed
+    */
     bool process(const QByteArray &data);
+    /*!
+        @brief Returns the compressed data
+        @note May be empty if nothing was processed or error occurred
+    */
     QByteArray result() const;
 
+    //! @brief Returns human-readable description of the error that occured
     QString errorString() const;
 
     static KCompressorType typeForMime(const QString &mime);

@@ -58,11 +58,26 @@ public:
     ~KDecompressor();
 
     KDecompressorType type() const;
+    /*!
+        @brief Set the type of decompression to perform
+        @note By default the type is none (i.e. @p KDecompressorType::TypeUnknown). The type must be
+        set before processing data and can determined via @p KDecompressor::typeForMime or
+        @p KDecompressor::typeForFile depending if the input is file or data in memory.
+    */
     bool setType(const KDecompressorType type);
 
+    /*!
+        @brief Decompresses @p data in the set decompression type
+        @note Multiple calls with different data are allowed
+    */
     bool process(const QByteArray &data);
+    /*!
+        @brief Returns the decompressed data
+        @note May be empty if nothing was processed or error occurred
+    */
     QByteArray result() const;
 
+    //! @brief Returns human-readable description of the error that occured
     QString errorString() const;
 
     static KDecompressorType typeForMime(const QString &mime);
