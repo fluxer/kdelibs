@@ -322,7 +322,7 @@ bool ICOHandler::write(const QImage &image)
 
     uint bmpheadersize = 40;
     uint bmpwidth = bmpimage.width();
-    uint bmpheight = bmpimage.width();
+    uint bmpheight = bmpimage.height();
     ushort bmpplanes = 0;
     ushort bmpbpp = bmpimage.depth();
     uint bmpcompression = BMPCompression::CompressionRGB;
