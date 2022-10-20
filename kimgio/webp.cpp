@@ -138,6 +138,7 @@ bool WebPHandler::write(const QImage &image)
 
     uint8_t *webpoutput = nullptr;
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
+    // TODO: move alpha?
     const size_t webpsize = WebPEncodeRGBA(
 #else
     const size_t webpsize = WebPEncodeBGRA(
@@ -322,7 +323,5 @@ QImageIOHandler *WebPPlugin::create(QIODevice *device, const QByteArray &format)
     handler->setFormat(format);
     return handler;
 }
-
-//---------------------------------------------------------------------
 
 Q_EXPORT_PLUGIN2(webp, WebPPlugin)
