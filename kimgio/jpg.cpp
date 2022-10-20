@@ -26,7 +26,11 @@
 static const char* const s_jpgpluginformat = "jpg";
 
 static const ushort s_peekbuffsize = 32;
+#if Q_BYTE_ORDER == Q_BIG_ENDIAN
+static const TJPF s_jpegpf = TJPF_ARGB;
+#else
 static const TJPF s_jpegpf = TJPF_BGRA;
+#endif
 static const TJSAMP s_jpegsubsampling = TJSAMP_444;
 static const int s_jpegflags = TJFLAG_FASTDCT;
 // for reference:
