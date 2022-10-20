@@ -220,9 +220,9 @@ bool KSaveFile::finalize()
         if (flush()) {
             forever {
 #ifdef HAVE_FDATASYNC
-                if (!::fdatasync(handle()))
+                if (::fdatasync(handle()) == 0)
 #else
-                if (!::fsync(handle()))
+                if (::fsync(handle()) == 0)
 #endif
                     break;
                 if (errno != EINTR) {
