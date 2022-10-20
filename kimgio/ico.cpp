@@ -257,7 +257,7 @@ bool ICOHandler::read(QImage *image)
                     break;
                 }
             }
-            // pixel data is backwards so flip the image vertically
+            // image is flipped vertically
             *image = bmpimage.mirrored(false, true);
             kDebug() << "Valid BMP image" << ii;
             return true;

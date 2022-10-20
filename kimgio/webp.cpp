@@ -108,6 +108,7 @@ bool WebPHandler::read(QImage *image)
     );
     if (Q_UNLIKELY(!webpoutput)) {
         kWarning() << "Could not decode image";
+        *image = QImage();
         WebPDemuxReleaseIterator(&webpiter);
         WebPAnimDecoderDelete(webpanimdec);
         return false;
