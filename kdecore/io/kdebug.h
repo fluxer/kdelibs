@@ -175,17 +175,14 @@ KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
  */
 class KDebug                    //krazy= ?
 {
-    const char *file;
-    const char *funcinfo;
-    int line;
-    QtMsgType level;
+    const char* const file;
+    const char* const funcinfo;
+    const int line;
+    const QtMsgType level;
 public:
-    explicit inline KDebug(QtMsgType type, const char *f = 0, int l = -1, const char *info = 0)
+    explicit inline KDebug(QtMsgType type, const char* const f = 0, int l = -1, const char* const info = 0)
         : file(f), funcinfo(info), line(l), level(type)
         {
-#ifdef KDE4_CMAKE_TOPLEVEL_DIR_LENGTH // set by FindKDE4Internal.cmake
-            file = file + KDE4_CMAKE_TOPLEVEL_DIR_LENGTH + 1;
-#endif
         }
 
     inline QDebug operator()(int area = KDE_DEFAULT_DEBUG_AREA)
