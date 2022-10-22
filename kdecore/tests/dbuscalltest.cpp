@@ -13,7 +13,7 @@ int main( int argc, char** argv )
 
     QDBusConnectionInterface *bus = 0;
     if (!QDBusConnection::sessionBus().isConnected() || !(bus = QDBusConnection::sessionBus().interface())) {
-        kFatal(101) << "Session bus not found";
+        kFatal() << "Session bus not found";
         return 125;
     }
 
