@@ -888,9 +888,10 @@ void KConfigGroup::writeEntry( const char* key, const QVariant &value,
             data = value.toString().toUtf8();
             break;
         case QVariant::List:
-            kError(!value.canConvert(QVariant::StringList))
-                << "not all types in \"" << key << "\" can convert to QString,"
-                   " information will be lost";
+            if (!value.canConvert(QVariant::StringList)) {
+                kError() << "not all types in \"" << key << "\" can convert to QString,"
+                            " information will be lost";
+            }
         case QVariant::StringList:
             writeEntry( key, value.toList(), flags );
             return;
