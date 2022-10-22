@@ -31,7 +31,7 @@
 #define KPLUGININFO_ISVALID_ASSERTION \
     do { \
         if (!d) { \
-            kFatal(703) << "Accessed invalid KPluginInfo object"; \
+            kFatal(KPluginInfoPrivate::debugArea()) << "Accessed invalid KPluginInfo object"; \
         } \
     } while (false)
 //#else
