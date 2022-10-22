@@ -55,21 +55,41 @@ void KDebugTest::initTestCase()
 
 void KDebugTest::cleanupTestCase()
 {
+    ::unsetenv("KDE_DEBUG_METHODNAME");
+    ::unsetenv("KDE_DEBUG_TIMESTAMP");
+    ::unsetenv("KDE_COLOR_DEBUG");
 }
 
 void KDebugTest::output_data()
 {
     QTest::addColumn<int>("areaoutput");
-    QTest::newRow("file") << 0;
-    QTest::newRow("messagebox") << 1;
-    QTest::newRow("shell") << 2;
-    QTest::newRow("syslog") << 3;
-    QTest::newRow("off") << 4;
+    QTest::addColumn<bool>("areafancy");
+    QTest::newRow("file") << 0 << false;
+    QTest::newRow("file (fancy)") << 0 << true;
+    QTest::newRow("messagebox") << 1 << false;
+    QTest::newRow("messagebox") << 1 << true;
+    QTest::newRow("shell") << 2 << false;
+    QTest::newRow("shell (fancy)") << 2 << true;
+    QTest::newRow("syslog") << 3 << false;
+    QTest::newRow("syslog (fancy)") << 3 << true;
+    QTest::newRow("off") << 4 << false;
+    QTest::newRow("off (fancy)") << 4 << true;
 }
 
 void KDebugTest::output()
 {
     QFETCH(int, areaoutput);
+    QFETCH(bool, areafancy);
+
+    if (areafancy) {
+        ::setenv("KDE_DEBUG_METHODNAME", "1", 1);
+        ::setenv("KDE_DEBUG_TIMESTAMP", "1", 1);
+        ::setenv("KDE_COLOR_DEBUG", "1", 1);
+    } else {
+        ::unsetenv("KDE_DEBUG_METHODNAME");
+        ::unsetenv("KDE_DEBUG_TIMESTAMP");
+        ::unsetenv("KDE_COLOR_DEBUG");
+    }
 
     const QString areafilename = QFile::encodeName(KDEBINDIR "/123.log");
     QFile::remove(areafilename);

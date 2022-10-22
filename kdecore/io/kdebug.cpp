@@ -42,23 +42,42 @@
 
 static QByteArray kDebugHeader(const QByteArray &areaname, const char* const file, const int line, const char* const funcinfo)
 {
-    // TODO: KDE_DEBUG_METHODNAME, KDE_COLOR_DEBUG
     Q_UNUSED(file);
     Q_UNUSED(line);
-    Q_UNUSED(funcinfo);
 
+    static const bool kde_debug_methodname = !qgetenv("KDE_DEBUG_METHODNAME").isEmpty();
     static const bool kde_debug_timestamp = !qgetenv("KDE_DEBUG_TIMESTAMP").isEmpty();
+
+    if (!kde_debug_methodname && !kde_debug_timestamp) {
+        return areaname;
+    }
+
+    QByteArray result(areaname);
+    if (kde_debug_methodname) {
+        result.append(" from ");
+        const QList<QByteArray> funcnamelist = QByteArray(funcinfo).split(' ');
+        bool foundfunc = false;
+        foreach (const QByteArray &it, funcnamelist) {
+            if (it.contains('(') && it.contains(')')) {
+                result.append(it);
+                foundfunc = true;
+                break;
+            }
+        }
+        if (!foundfunc) {
+            result.append(funcinfo);
+        }
+    }
+
     if (kde_debug_timestamp) {
         static const QString timestamp_format = QString::fromLatin1("hh:mm:ss.zzz");
         const QByteArray timestamp = QDateTime::currentDateTime().time().toString(timestamp_format).toLocal8Bit();
 
-        QByteArray result(areaname);
         result.append(" at ");
         result.append(timestamp.constData(), timestamp.size());
-        return result;
     }
 
-    return areaname;
+    return result;
 }
 
 K_GLOBAL_STATIC(QMutex, globalKDebugMutex)
@@ -194,6 +213,7 @@ public:
 protected:
     qint64 writeData(const char* data, qint64 len) final
         {
+            // TODO: KDE_COLOR_DEBUG
             if (m_level == QtDebugMsg) {
                 ::fprintf(stdout, "%s: %s\n", m_header.constData(), data);
                 ::fflush(stdout);
