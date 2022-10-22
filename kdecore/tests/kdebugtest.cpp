@@ -57,7 +57,7 @@ void KDebugTest::cleanupTestCase()
 {
     ::unsetenv("KDE_DEBUG_METHODNAME");
     ::unsetenv("KDE_DEBUG_TIMESTAMP");
-    ::unsetenv("KDE_COLOR_DEBUG");
+    ::unsetenv("KDE_DEBUG_COLOR");
 }
 
 void KDebugTest::output_data()
@@ -84,11 +84,11 @@ void KDebugTest::output()
     if (areafancy) {
         ::setenv("KDE_DEBUG_METHODNAME", "1", 1);
         ::setenv("KDE_DEBUG_TIMESTAMP", "1", 1);
-        ::setenv("KDE_COLOR_DEBUG", "1", 1);
+        ::setenv("KDE_DEBUG_COLOR", "1", 1);
     } else {
         ::unsetenv("KDE_DEBUG_METHODNAME");
         ::unsetenv("KDE_DEBUG_TIMESTAMP");
-        ::unsetenv("KDE_COLOR_DEBUG");
+        ::unsetenv("KDE_DEBUG_COLOR");
     }
 
     const QString areafilename = QFile::encodeName(KDEBINDIR "/123.log");

@@ -33,6 +33,7 @@
 #include <QFile>
 #include <QMutex>
 
+#include <unistd.h>
 #include <stdio.h>
 #include <syslog.h>
 
@@ -55,9 +56,9 @@ static QByteArray kDebugHeader(const QByteArray &areaname, const char* const fil
     QByteArray result(areaname);
     if (kde_debug_methodname) {
         result.append(" from ");
-        const QList<QByteArray> funcnamelist = QByteArray(funcinfo).split(' ');
+        const QList<QByteArray> funcinfolist = QByteArray(funcinfo).split(' ');
         bool foundfunc = false;
-        foreach (const QByteArray &it, funcnamelist) {
+        foreach (const QByteArray &it, funcinfolist) {
             if (it.contains('(') && it.contains(')')) {
                 result.append(it);
                 foundfunc = true;
@@ -213,7 +214,40 @@ public:
 protected:
     qint64 writeData(const char* data, qint64 len) final
         {
-            // TODO: KDE_COLOR_DEBUG
+            static const bool kde_debug_color = !qgetenv("KDE_DEBUG_COLOR").isEmpty();
+            if (kde_debug_color) {
+                static const bool isttyoutput = (
+                    m_level == QtDebugMsg ? ::isatty(::fileno(stdout)) : ::isatty(::fileno(stderr))
+                );
+                if (isttyoutput) {
+                    switch (m_level) {
+                        // for reference:
+                        // https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit
+                        case QtDebugMsg: {
+                            ::fprintf(stdout, "\033[0;32m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stdout);
+                            break;
+                        }
+                        case QtWarningMsg: {
+                            ::fprintf(stdout, "\033[0;93m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stdout);
+                            break;
+                        }
+                        case QtCriticalMsg: {
+                            ::fprintf(stdout, "\033[0;33m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stdout);
+                            break;
+                        }
+                        case QtFatalMsg: {
+                            ::fprintf(stdout, "\033[0;31m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stdout);
+                            break;
+                        }
+                    }
+                    return len;
+                }
+            }
+
             if (m_level == QtDebugMsg) {
                 ::fprintf(stdout, "%s: %s\n", m_header.constData(), data);
                 ::fflush(stdout);

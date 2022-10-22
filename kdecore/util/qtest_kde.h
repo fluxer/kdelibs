@@ -79,7 +79,7 @@ int main(int argc, char *argv[]) \
     setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1("/.kde-unit-test") ), 1); \
     setenv("XDG_DATA_HOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1("/.kde-unit-test/xdg/local") ), 1); \
     setenv("XDG_CONFIG_HOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1("/.kde-unit-test/xdg/config") ), 1); \
-    unsetenv("KDE_COLOR_DEBUG"); \
+    unsetenv("KDE_DEBUG_COLOR"); \
     QFile::remove(QDir::homePath() + QString::fromLatin1("/.kde-unit-test/share/config/qttestrc"));  \
     KAboutData aboutData( QByteArray(componentName), QByteArray(), ki18n("KDE Test Program"), QByteArray("version") );  \
     KComponentData cData(&aboutData); \
@@ -128,7 +128,7 @@ int main(int argc, char *argv[]) \
     setenv("KDEHOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1("/.kde-unit-test" )), 1); \
     setenv("XDG_DATA_HOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1("/.kde-unit-test/xdg/local") ), 1); \
     setenv("XDG_CONFIG_HOME", QFile::encodeName( QDir::homePath() + QString::fromLatin1("/.kde-unit-test/xdg/config") ), 1); \
-    unsetenv("KDE_COLOR_DEBUG"); \
+    unsetenv("KDE_DEBUG_COLOR"); \
     QFile::remove(QDir::homePath() + QString::fromLatin1("/.kde-unit-test/share/config/qttestrc"));  \
     KAboutData aboutData( QByteArray(componentName), QByteArray(), ki18n("KDE Test Program"), QByteArray("version") );  \
     KComponentData cData(&aboutData); \

@@ -30,12 +30,12 @@
  * \addtogroup kdebug Debug message generators
  *  @{
  * KDE debug message streams let you and the user control just how many debug
- * messages you see. Debug message can be controled by editing kdebugrc.
- *
- * You can also control what you see: process name, area name, method name,
- * file and line number, timestamp, etc. using environment variables:
- * KDE_DEBUG_TIMESTAMP - adds timestamp to the message
- * KDE_DEBUG_METHODNAME - adds the method to the message
+ * messages you see. Debug message can be controled by editing kdebugrc and
+ * by setting or unsetting environment variables:
+ *  KDE_DEBUG_TIMESTAMP - adds timestamp to the message
+ *  KDE_DEBUG_METHODNAME - adds the method to the message
+ *  KDE_DEBUG_COLOR - colorizes the message, valid only for shell type of
+ *                    output and when it is TTY
  */
 
 /**
