@@ -392,11 +392,11 @@ void KioslaveTest::slotData(KIO::Job*, const QByteArray &data)
 {
     if (data.size() == 0)
     {
-       kDebug(0) << "Data: <End>";
+       kDebug() << "Data: <End>";
     }
     else
     {
-       kDebug(0) << "Data: \"" << QString( data ) << "\"";
+       kDebug() << "Data: \"" << QString( data ) << "\"";
     }
 }
 
@@ -419,14 +419,14 @@ void KioslaveTest::slotDataReq(KIO::Job*, QByteArray &data)
 
     if (!fileData)
     {
-       kDebug(0) << "DataReq: <End>";
+       kDebug() << "DataReq: <End>";
        return;
     }
     if (!strncmp(fileData, "BIG", 3))
 	data.fill(0, 8*1024*1024);
     else
 	data = QByteArray(fileData, strlen(fileData));
-    kDebug(0) << "DataReq: \"" << fileData << "\"";
+    kDebug() << "DataReq: \"" << fileData << "\"";
     sleep(1); // want to see progress info...
 }
 
