@@ -5,7 +5,7 @@
 # For standalone applications, just use kDebug() and an entry named after your
 # application will appear in kdebugdialog.
 #
-# Format : number<tab>description
+# Format : number description
 
 125        kdeui (KGlobalAccel)
 129        kdeui (KAction)

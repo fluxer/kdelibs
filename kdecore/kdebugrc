@@ -5,7 +5,7 @@
 # This file will be installed as $KDEDIR/share/config/kdebugrc
 #
 # There are four levels of output: Info, Warn, Error and Fatal
-# corresponding to kDebug(), kdWarn(), kError(), kFatal()
+# corresponding to kDebug(), kWarning(), kError(), kFatal()
 #
 # For every of them you can define a target by *Output=n
 # using the following numbers:
@@ -32,78 +32,9 @@
 # AbortFatal=1
 #
 
-# KGlobalAccel debug info off
-[125]
+# KHTTP warning, error and fatal to syslog
+[51007]
 InfoOutput=4
-
-# KAction debug info off
-[129]
-InfoOutput=4
-
-# KStartupInfo debug info off
-[172]
-InfoOutput=4
-
-# KLocale debug info off
-[173]
-InfoOutput=4
-
-# KMainWindow debug info off
-[200]
-InfoOutput=4
-
-# KFile debug info off
-[250]
-InfoOutput=4
-
-# KIconloader debug info off
-[264]
-InfoOutput=4
-
-# KSpell debug info off
-[750]
-InfoOutput=4
-
-# KHotKeys
-[1217]
-InfoOutput=4
-
-# KitchenSync (Syncing Algorithm)
-[5250]
-InfoOutput=4
-
-# calendarsystem debug info off
-[5400]
-InfoOutput=4
-
-# kabc/vcard
-[5710]
-InfoOutput=4
-
-# korganizer (verbose)
-[5855]
-InfoOutput=4
-
-# korgac (check)
-[5891]
-InfoOutput=4
-
-# kalarmd check
-[5901]
-InfoOutput=4
-
-# KDirWatch is quite verbose
-[7001]
-InfoOutput=4
-
-# kio_http_debug debug info off
-[7113]
-InfoOutput=4
-
-# kbzip2filter's debug info off
-[7118]
-InfoOutput=4
-
-# KRun debug info off
-[7010]
-InfoOutput=4
+WarnOutput=3
+ErrorOutput=3
+FatalOutput=3
