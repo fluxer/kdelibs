@@ -42,7 +42,7 @@
 
 static QByteArray kDebugHeader(const QByteArray &areaname, const char* const file, const int line, const char* const funcinfo)
 {
-    // TODO: KDE_DEBUG_METHODNAME
+    // TODO: KDE_DEBUG_METHODNAME, KDE_COLOR_DEBUG
     Q_UNUSED(file);
     Q_UNUSED(line);
     Q_UNUSED(funcinfo);
@@ -368,11 +368,6 @@ QString kBacktrace(int levels)
 #endif // HAVE_BACKTRACE
 }
 
-QDebug kDebugDevNull()
-{
-    return QDebug(globalKDebugNullDevie);
-}
-
 QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const char *funcinfo)
 {
     QMutexLocker locker(globalKDebugMutex);
@@ -380,7 +375,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
     KConfigGroup generalgroup = globalKDebugConfig->group(QString());
     const bool disableall = generalgroup.readEntry("DisableAll", false);
     if (disableall) {
-        return kDebugDevNull();
+        return QDebug(globalKDebugNullDevie);
     }
 
     KConfigGroup areagroup = globalKDebugConfig->group(QString::number(area));
@@ -460,7 +455,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
         }
         case KDebugConfig::TypeOff:
         default: {
-            return kDebugDevNull();
+            return QDebug(globalKDebugNullDevie);
         }
     }
     Q_UNREACHABLE();

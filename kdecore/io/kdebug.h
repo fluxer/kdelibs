@@ -46,12 +46,6 @@ KDECORE_EXPORT QDebug kDebugStream(QtMsgType level, int area, const char *file =
                                    int line = -1, const char *funcinfo = 0);
 
 /**
- * @internal
- * Returns a debug stream that goes the way of the blackhole.
- */
-KDECORE_EXPORT QDebug kDebugDevNull();
-
-/**
  * \relates KGlobal
  * Returns a backtrace.
  * Note: Hidden symbol visibility may negatively affect the information provided
