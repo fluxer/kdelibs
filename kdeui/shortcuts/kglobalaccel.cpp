@@ -127,7 +127,7 @@ void KGlobalAccelPrivate::readComponentData(const KComponentData &componentData)
 
     mainComponent = componentData;
     if (componentData.aboutData()->programName().isEmpty()) {
-        kDebug(123) << componentData.componentName() << " has empty programName()";
+        kDebug(125) << componentData.componentName() << " has empty programName()";
     }
 }
 
@@ -428,7 +428,7 @@ void KGlobalAccelPrivate::_k_serviceOwnerChanged(const QString &name, const QStr
     Q_UNUSED(oldOwner);
     if (name == QLatin1String("org.kde.kglobalaccel") && !newOwner.isEmpty()) {
         // kglobalaccel was restarted
-        kDebug(123) << "detected kglobalaccel restarting, re-registering all shortcut keys";
+        kDebug(125) << "detected kglobalaccel restarting, re-registering all shortcut keys";
         reRegisterAll();
     }
 }
