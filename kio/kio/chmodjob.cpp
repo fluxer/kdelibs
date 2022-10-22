@@ -273,7 +273,7 @@ ChmodJob *KIO::chmod( const KFileItemList& lstItems, int permissions, int mask,
     {
         const KUser kuser(owner);
         if ( !kuser.isValid() )
-            kError(250) << "No user" << owner;
+            kError(7007) << "No user" << owner;
         else
             newOwnerID = kuser.uid();
     }
@@ -282,7 +282,7 @@ ChmodJob *KIO::chmod( const KFileItemList& lstItems, int permissions, int mask,
     {
         const KUserGroup kusergroup(group);
         if ( kusergroup.isValid() )
-            kError(250) << "No group" << group;
+            kError(7007) << "No group" << group;
         else
             newGroupID = kusergroup.gid();
     }
