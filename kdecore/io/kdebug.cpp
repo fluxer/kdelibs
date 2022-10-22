@@ -98,12 +98,12 @@ class KDebugFileDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugFileDevice()
-        : m_priority(QtDebugMsg),
+        : m_level(QtDebugMsg),
         m_filepath(QString::fromLatin1("kdebug.log"))
         { }
 
-    void setPriority(const QtMsgType level)
-        { m_priority = level; }
+    void setLevel(const QtMsgType level)
+        { m_level = level; }
     void setHeader(const QByteArray &header)
         { m_header = header; }
     void setFilepath(const QString &filepath)
@@ -116,7 +116,7 @@ protected:
             if (!writefile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered)) {
                 return 0;
             }
-            // TODO: m_priority
+            // TODO: m_level
             writefile.write(m_header.constData(), m_header.size());
             writefile.write(": ", 2);
             writefile.write(data, len);
@@ -127,7 +127,7 @@ protected:
 private:
     Q_DISABLE_COPY(KDebugFileDevice);
 
-    int m_priority;
+    int m_level;
     QByteArray m_header;
     QString m_filepath;
 };
@@ -137,11 +137,11 @@ class KDebugMessageBoxDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugMessageBoxDevice()
-        : m_priority(QtDebugMsg)
+        : m_level(QtDebugMsg)
         { }
 
-    void setPriority(const QtMsgType level)
-        { m_priority = level; }
+    void setLevel(const QtMsgType level)
+        { m_level = level; }
     void setHeader(const QByteArray &header)
         { m_header = header; }
 
@@ -152,7 +152,7 @@ protected:
                 QString::fromLocal8Bit(m_header.constData(), m_header.size()),
                 QString::fromLocal8Bit(data, len)
             );
-            switch (m_priority) {
+            switch (m_level) {
                 case QtDebugMsg: {
                     KMessage::message(KMessage::Information, text);
                     break;
@@ -176,7 +176,7 @@ protected:
 private:
     Q_DISABLE_COPY(KDebugMessageBoxDevice);
 
-    int m_priority;
+    int m_level;
     QByteArray m_header;
 };
 
@@ -185,18 +185,18 @@ class KDebugShellDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugShellDevice()
-        : m_priority(QtDebugMsg)
+        : m_level(QtDebugMsg)
         { }
 
-    void setPriority(const QtMsgType level)
-        { m_priority = level; }
+    void setLevel(const QtMsgType level)
+        { m_level = level; }
     void setHeader(const QByteArray &header)
         { m_header = header; }
 
 protected:
     qint64 writeData(const char* data, qint64 len) final
         {
-            if (m_priority == QtDebugMsg) {
+            if (m_level == QtDebugMsg) {
                 ::fprintf(stdout, "%s: %s\n", m_header.constData(), data);
             } else {
                 ::fprintf(stderr, "%s: %s\n", m_header.constData(), data);
@@ -207,7 +207,7 @@ protected:
 private:
     Q_DISABLE_COPY(KDebugShellDevice);
 
-    int m_priority;
+    int m_level;
     QByteArray m_header;
 };
 
@@ -216,26 +216,26 @@ class KDebugSyslogDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugSyslogDevice(const QByteArray &areaname)
-        : m_priority(LOG_INFO)
+        : m_level(LOG_INFO)
     { ::openlog(areaname.constData(), 0, LOG_USER); }
 
-    void setPriority(const QtMsgType level)
+    void setLevel(const QtMsgType level)
         {
             switch (level) {
                 case QtDebugMsg: {
-                    m_priority = LOG_INFO;
+                    m_level = LOG_INFO;
                     break;
                 }
                 case QtWarningMsg: {
-                    m_priority = LOG_WARNING;
+                    m_level = LOG_WARNING;
                     break;
                 }
                 case QtCriticalMsg: {
-                    m_priority = LOG_CRIT;
+                    m_level = LOG_CRIT;
                     break;
                 }
                 case QtFatalMsg: {
-                    m_priority = LOG_ERR;
+                    m_level = LOG_ERR;
                     break;
                 }
             }
@@ -247,14 +247,14 @@ public:
 protected:
     qint64 writeData(const char* data, qint64 len) final
         {
-            ::syslog(m_priority, "%s: %s", m_header.constData(), data);
+            ::syslog(m_level, "%s: %s", m_header.constData(), data);
             return len;
         }
 
 private:
     Q_DISABLE_COPY(KDebugSyslogDevice);
 
-    int m_priority;
+    int m_level;
     QByteArray m_header;
 };
 
@@ -420,7 +420,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(area, qiodevice);
             }
             KDebugFileDevice* kdebugdevice = qobject_cast<KDebugFileDevice*>(qiodevice);
-            kdebugdevice->setPriority(level);
+            kdebugdevice->setLevel(level);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
             kdebugdevice->setFilepath(areafilename);
             return QDebug(kdebugdevice);
@@ -432,7 +432,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(area, qiodevice);
             }
             KDebugMessageBoxDevice* kdebugdevice = qobject_cast<KDebugMessageBoxDevice*>(qiodevice);
-            kdebugdevice->setPriority(level);
+            kdebugdevice->setLevel(level);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
             return QDebug(kdebugdevice);
         }
@@ -443,7 +443,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(area, qiodevice);
             }
             KDebugShellDevice* kdebugdevice = qobject_cast<KDebugShellDevice*>(qiodevice);
-            kdebugdevice->setPriority(level);
+            kdebugdevice->setLevel(level);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
             return QDebug(kdebugdevice);
         }
@@ -454,7 +454,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(area, qiodevice);
             }
             KDebugSyslogDevice* kdebugdevice = qobject_cast<KDebugSyslogDevice*>(qiodevice);
-            kdebugdevice->setPriority(level);
+            kdebugdevice->setLevel(level);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
             return QDebug(kdebugdevice);
         }

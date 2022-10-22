@@ -60,7 +60,7 @@ KDECORE_EXPORT QDebug kDebugDevNull();
  * @param levels the number of levels of the backtrace
  * @return a backtrace
  */
-KDECORE_EXPORT QString kBacktrace(int levels=-1);
+KDECORE_EXPORT QString kBacktrace(int levels = -1);
 
 /**
  * \relates KGlobal
@@ -157,10 +157,10 @@ public:
 };
 
 
-# define kDebug     KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-# define kWarning   KDebug(QtWarningMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-# define kError     KDebug(QtCriticalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-# define kFatal     KDebug(QtFatalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
+#define kDebug     KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)
+#define kWarning   KDebug(QtWarningMsg, __FILE__, __LINE__, Q_FUNC_INFO)
+#define kError     KDebug(QtCriticalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
+#define kFatal     KDebug(QtFatalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
 
 /**
  * Convenience macro, use this to remind yourself to finish the implementation of a function
