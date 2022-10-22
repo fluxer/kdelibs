@@ -174,23 +174,24 @@ void KActionSelector::setButtonIcon( const QString &icon, MoveButton button )
   switch ( button )
   {
     case ButtonAdd:
-    d->addIcon = icon;
-    d->btnAdd->setIcon( KIcon( icon ) );
-    break;
+      d->addIcon = icon;
+      d->btnAdd->setIcon( KIcon( icon ) );
+      break;
     case ButtonRemove:
-    d->removeIcon = icon;
-    d->btnRemove->setIcon( KIcon( icon ) );
-    break;
+      d->removeIcon = icon;
+      d->btnRemove->setIcon( KIcon( icon ) );
+      break;
     case ButtonUp:
-    d->upIcon = icon;
-    d->btnUp->setIcon( KIcon( icon ) );
-    break;
+      d->upIcon = icon;
+      d->btnUp->setIcon( KIcon( icon ) );
+      break;
     case ButtonDown:
-    d->downIcon = icon;
-    d->btnDown->setIcon( KIcon( icon ) );
-    break;
+      d->downIcon = icon;
+      d->btnDown->setIcon( KIcon( icon ) );
+      break;
     default:
-    kDebug(13001)<<"KActionSelector::setButtonIcon: DAINBREAD!";
+      kDebug(13001)<<"KActionSelector::setButtonIcon: DAINBREAD!";
+      break;
   }
 }
 
@@ -199,19 +200,20 @@ void KActionSelector::setButtonIconSet( const QIcon &iconset, MoveButton button 
   switch ( button )
   {
     case ButtonAdd:
-    d->btnAdd->setIcon( iconset );
-    break;
+      d->btnAdd->setIcon( iconset );
+      break;
     case ButtonRemove:
-    d->btnRemove->setIcon( iconset );
-    break;
+      d->btnRemove->setIcon( iconset );
+      break;
     case ButtonUp:
-    d->btnUp->setIcon( iconset );
-    break;
+      d->btnUp->setIcon( iconset );
+      break;
     case ButtonDown:
-    d->btnDown->setIcon( iconset );
-    break;
+      d->btnDown->setIcon( iconset );
+      break;
     default:
-    kDebug(13001)<<"KActionSelector::setButtonIconSet: DAINBREAD!";
+      kDebug(13001)<<"KActionSelector::setButtonIconSet: DAINBREAD!";
+      break;
   }
 }
 
@@ -220,23 +222,24 @@ void KActionSelector::setButtonTooltip( const QString &tip, MoveButton button )
   switch ( button )
   {
     case ButtonAdd:
-    d->btnAdd->setText( tip );
-    d->btnAdd->setToolTip( tip );
-    break;
+      d->btnAdd->setText( tip );
+      d->btnAdd->setToolTip( tip );
+      break;
     case ButtonRemove:
-    d->btnRemove->setText( tip );
-    d->btnRemove->setToolTip( tip );
-    break;
+      d->btnRemove->setText( tip );
+      d->btnRemove->setToolTip( tip );
+      break;
     case ButtonUp:
-    d->btnUp->setText( tip );
- 	d->btnUp->setToolTip( tip );
-    break;
+      d->btnUp->setText( tip );
+      d->btnUp->setToolTip( tip );
+      break;
     case ButtonDown:
-    d->btnDown->setText( tip );
-	d->btnDown->setToolTip( tip );
-    break;
+      d->btnDown->setText( tip );
+      d->btnDown->setToolTip( tip );
+      break;
     default:
-    kDebug(13001)<<"KActionSelector::setButtonToolTip: DAINBREAD!";
+      kDebug(13001)<<"KActionSelector::setButtonToolTip: DAINBREAD!";
+      break;
   }
 }
 
@@ -245,19 +248,20 @@ void KActionSelector::setButtonWhatsThis( const QString &text, MoveButton button
   switch ( button )
   {
     case ButtonAdd:
-    d->btnAdd->setWhatsThis(text );
-    break;
+      d->btnAdd->setWhatsThis(text );
+      break;
     case ButtonRemove:
-    d->btnRemove->setWhatsThis(text );
-    break;
+      d->btnRemove->setWhatsThis(text );
+      break;
     case ButtonUp:
-    d->btnUp->setWhatsThis(text );
-    break;
+      d->btnUp->setWhatsThis(text );
+      break;
     case ButtonDown:
-    d->btnDown->setWhatsThis(text );
-    break;
+      d->btnDown->setWhatsThis(text );
+      break;
     default:
-    kDebug(13001)<<"KActionSelector::setButtonWhatsThis: DAINBREAD!";
+      kDebug(13001)<<"KActionSelector::setButtonWhatsThis: DAINBREAD!";
+      break;
   }
 }
 
@@ -541,14 +545,15 @@ int KActionSelectorPrivate::insertionIndex( QListWidget *lb, KActionSelector::In
   switch ( policy )
   {
     case KActionSelector::BelowCurrent:
-    index = lb->currentRow();
-    if ( index > -1 ) index += 1;
-    break;
+      index = lb->currentRow();
+      if ( index > -1 ) index += 1;
+      break;
     case KActionSelector::AtTop:
-    index = 0;
-    break;
+      index = 0;
+      break;
     default:
-    index = -1;
+      index = -1;
+      break;
   }
   return index;
 }
@@ -557,7 +562,7 @@ int KActionSelectorPrivate::selectedRowIndex( QListWidget *lb )
 {
   QList<QListWidgetItem *> list = lb->selectedItems();
   if (list.isEmpty()) {
-      return -1;
+    return -1;
   }
   return lb->row(list.at(0));
 }
