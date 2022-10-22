@@ -126,7 +126,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(KDebugFileDevice);
-
     int m_level;
     QByteArray m_header;
     QString m_filepath;
@@ -175,7 +174,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(KDebugMessageBoxDevice);
-
     int m_level;
     QByteArray m_header;
 };
@@ -198,15 +196,16 @@ protected:
         {
             if (m_level == QtDebugMsg) {
                 ::fprintf(stdout, "%s: %s\n", m_header.constData(), data);
+                ::fflush(stdout);
             } else {
                 ::fprintf(stderr, "%s: %s\n", m_header.constData(), data);
+                ::fflush(stderr);
             }
             return len;
         }
 
 private:
     Q_DISABLE_COPY(KDebugShellDevice);
-
     int m_level;
     QByteArray m_header;
 };
@@ -253,7 +252,6 @@ protected:
 
 private:
     Q_DISABLE_COPY(KDebugSyslogDevice);
-
     int m_level;
     QByteArray m_header;
 };
