@@ -1018,7 +1018,7 @@ Qt::ItemFlags KDirModel::flags( const QModelIndex & index ) const
         } else {
             KFileItem item = itemForIndex(index);
             if (item.isNull()) {
-                kWarning(7007) << "Invalid item returned for index";
+                kWarning(7008) << "Invalid item returned for index";
             } else if (item.isDir()) {
                 if (d->m_dropsAllowed & DropOnDirectory) {
                     f |= Qt::ItemIsDropEnabled;
