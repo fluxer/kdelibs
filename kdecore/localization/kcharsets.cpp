@@ -121,7 +121,7 @@ QChar KCharsets::fromEntity(const QString &str)
     const entity *e = EntitiesHash::kde_findEntity( raw, raw.length() );
 
     if(!e) {
-        //kDebug( 0 ) << "unknown entity " << str <<", len = " << str.length();
+        //kDebug() << "unknown entity " << str <<", len = " << str.length();
         return QChar();
     }
 

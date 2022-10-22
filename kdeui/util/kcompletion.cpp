@@ -227,7 +227,7 @@ QString KCompletion::makeCompletion( const QString& string )
     if ( d->myCompletionMode == KGlobalSettings::CompletionNone )
         return QString();
 
-    //kDebug(0) << "KCompletion: completing: " << string;
+    //kDebug() << "KCompletion: completing: " << string;
 
     d->matches.clear();
     d->myRotationIndex = 0;
@@ -273,7 +273,7 @@ QString KCompletion::makeCompletion( const QString& string )
     postProcessMatch( &completion );
 
     if ( !string.isEmpty() ) { // only emit match when string is not empty
-        //kDebug(0) << "KCompletion: Match: " << completion;
+        //kDebug() << "KCompletion: Match: " << completion;
         emit match( completion );
     }
 
@@ -551,7 +551,7 @@ void KCompletion::findAllCompletions(const QString& string,
                                      KCompletionMatchesWrapper *matches,
                                      bool& hasMultipleMatches) const
 {
-    //kDebug(0) << "*** finding all completions for " << string;
+    //kDebug() << "*** finding all completions for " << string;
 
     if ( string.isEmpty() )
         return;

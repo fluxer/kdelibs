@@ -141,14 +141,14 @@ bool Highlighter::spellCheckerFound() const
 
 void Highlighter::slotRehighlight()
 {
-    kDebug(0) << "Highlighter::slotRehighlight()";
+    kDebug() << "Highlighter::slotRehighlight()";
     if (d->completeRehighlightRequired) {
         d->wordCount  = 0;
         d->errorCount = 0;
         rehighlight();
 
     } else {
-	//rehighlight the current para only (undo/redo safe)
+        //rehighlight the current para only (undo/redo safe)
         QTextCursor cursor = d->edit->textCursor();
         cursor.insertText( "" );
     }
