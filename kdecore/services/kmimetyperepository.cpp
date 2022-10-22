@@ -313,7 +313,7 @@ QStringList KMimeTypeRepository::parents(const QString& mime)
                     const QString derivedTypeNameStr = QString::fromLatin1(derivedTypeName.constData(), derivedTypeName.size());
                     KMimeType::Ptr derivedType = findMimeTypeByName(derivedTypeNameStr, KMimeType::ResolveAliases);
                     if (!derivedType)
-                        kWarning(7012) << fileName << " refers to unknown mimetype " << derivedTypeNameStr;
+                        kWarning(7021) << fileName << " refers to unknown mimetype " << derivedTypeNameStr;
                     else {
                         const QByteArray parentTypeName = line.mid(pos+1);
                         const QString parentTypeNameStr = QString::fromLatin1(parentTypeName.constData(), parentTypeName.size());
