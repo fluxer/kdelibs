@@ -190,7 +190,7 @@ void KActionSelector::setButtonIcon( const QString &icon, MoveButton button )
       d->btnDown->setIcon( KIcon( icon ) );
       break;
     default:
-      kDebug(13001)<<"KActionSelector::setButtonIcon: DAINBREAD!";
+      kDebug(240) << "DAINBREAD!";
       break;
   }
 }
@@ -212,7 +212,7 @@ void KActionSelector::setButtonIconSet( const QIcon &iconset, MoveButton button 
       d->btnDown->setIcon( iconset );
       break;
     default:
-      kDebug(13001)<<"KActionSelector::setButtonIconSet: DAINBREAD!";
+      kDebug(240) << "DAINBREAD!";
       break;
   }
 }
@@ -238,7 +238,7 @@ void KActionSelector::setButtonTooltip( const QString &tip, MoveButton button )
       d->btnDown->setToolTip( tip );
       break;
     default:
-      kDebug(13001)<<"KActionSelector::setButtonToolTip: DAINBREAD!";
+      kDebug(240) << "DAINBREAD!";
       break;
   }
 }
@@ -260,7 +260,7 @@ void KActionSelector::setButtonWhatsThis( const QString &text, MoveButton button
       d->btnDown->setWhatsThis(text );
       break;
     default:
-      kDebug(13001)<<"KActionSelector::setButtonWhatsThis: DAINBREAD!";
+      kDebug(240) << "DAINBREAD!";
       break;
   }
 }
@@ -378,20 +378,20 @@ void KActionSelector::keyPressEvent( QKeyEvent *e )
     switch ( e->key() )
     {
       case Qt::Key_Right:
-      d->buttonAddClicked();
-      break;
+        d->buttonAddClicked();
+        break;
       case Qt::Key_Left:
-      d->buttonRemoveClicked();
-      break;
+        d->buttonRemoveClicked();
+        break;
       case Qt::Key_Up:
-      d->buttonUpClicked();
-      break;
+        d->buttonUpClicked();
+        break;
       case Qt::Key_Down:
-      d->buttonDownClicked();
-      break;
+        d->buttonDownClicked();
+        break;
       default:
-      e->ignore();
-      return;
+        e->ignore();
+        return;
     }
   }
 }
@@ -405,20 +405,19 @@ bool KActionSelector::eventFilter( QObject *o, QEvent *e )
       switch ( ((QKeyEvent*)e)->key() )
       {
         case Qt::Key_Right:
-        d->buttonAddClicked();
-        break;
+          d->buttonAddClicked();
+          break;
         case Qt::Key_Left:
-        d->buttonRemoveClicked();
-        break;
+          d->buttonRemoveClicked();
+          break;
         case Qt::Key_Up:
-        d->buttonUpClicked();
-        break;
+          d->buttonUpClicked();
+          break;
         case Qt::Key_Down:
-        d->buttonDownClicked();
-        break;
+          d->buttonDownClicked();
+          break;
         default:
-        return QWidget::eventFilter( o, e );
-        break;
+          return QWidget::eventFilter( o, e );
       }
       return true;
     }
@@ -428,10 +427,10 @@ bool KActionSelector::eventFilter( QObject *o, QEvent *e )
       {
         case Qt::Key_Return:
         case Qt::Key_Enter:
-        int index = lb->currentRow();
-        if ( index < 0 ) break;
-        d->moveItem( lb->item( index ) );
-        return true;
+          int index = lb->currentRow();
+          if ( index < 0 ) break;
+          d->moveItem( lb->item( index ) );
+          return true;
       }
     }
   }
