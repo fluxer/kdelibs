@@ -937,7 +937,8 @@ QVariant KCoreConfigSkeleton::ItemIntList::property() const
     return qVariantFromValue< QList<int> >(mReference);
 }
 
-static int kCoreConfigSkeletionDebugArea() { static int s_area = KDebug::registerArea("kdecore (KConfigSkeleton)"); return s_area; }
+// see kdebug.areas
+static int kCoreConfigSkeletionDebugArea() { return 184; }
 
 KCoreConfigSkeleton::KCoreConfigSkeleton(const QString &configname, QObject* parent)
   : QObject(parent),

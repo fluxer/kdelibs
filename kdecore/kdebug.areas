@@ -4,9 +4,6 @@
 # ************************************************
 # For standalone applications, just use kDebug() and an entry named after your
 # application will appear in kdebugdialog.
-# For other cases (shared libs, plugins...), you can also use KDebug::registerArea("areaname").
-#
-# Previous instructions: If you plan to add some areas, look at http://lists.kde.org/?l=kde-devel&m=106607933724723&w=2 first.
 #
 # Format : number<tab>description
 
@@ -20,6 +17,10 @@
 176        kdeui (KWindowInfo)
 179        kdecore (KNetwork resolver)
 180        kdecore (kdelibs)
+181        kdecore (KUrl)
+182        kdecore (KPluginInfo)
+183        kdecore (services)
+184        kdecore (KConfigSkeleton)
 200        kdeui (KMainWindow)
 240        kdeui (kdelibs)
 250        kfile (kdelibs)
@@ -33,6 +34,7 @@
 293        kdeui (KLineEdit)
 297        kdeui (KNotificationRestrictions)
 299        kdeui (KNotification)
+300        kdeui (KConfigDialogManager)
 399        kimgio
 500        kdeprint
 700        kutils (KSettings::Dialog)
@@ -168,6 +170,8 @@
 13040   Kate (Plugins)
 13050   Kate (Scripting)
 13060   Kate (Indentation)
+13070   Kate (On-The-Fly Spellcheck)
+13080   Kate (File Tree)
 
 # kfilereplace
 23000        KFileReplace (kfilereplacepart)
@@ -210,3 +214,7 @@
 90180   konq-plugins (domtreeviewer)
 90190   konq-plugins (dirfilter)
 90210   konq-plugins (rellinks)
+
+90220 kcmshell
+90230 Oxygen (style)
+90240 Oxygen (decoration)

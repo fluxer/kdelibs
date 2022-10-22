@@ -45,7 +45,7 @@
 #include <QtNetwork/QHostInfo>
 
 #ifdef DEBUG_KURL
-static int kurlDebugArea() { static int s_area = KDebug::registerArea("kdecore (KUrl)"); return s_area; }
+static const int kurlDebugArea = 181; // see kdebug.areas
 #endif
 
 static QString cleanpath( const QString &_path, bool cleanDirSeparator, bool decodeDots )
@@ -463,16 +463,16 @@ KUrl::KUrl( const KUrl& _u, const QString& _rel_url )
           strPath = QLatin1Char('/');
     }
     setPath( strPath );
-    //kDebug(kurlDebugArea()) << "url()=" << url() << " rUrl=" << rUrl;
+    //kDebug(kurlDebugArea) << "url()=" << url() << " rUrl=" << rUrl;
     const KUrl tmp( url() + rUrl);
-    //kDebug(kurlDebugArea()) << "assigning tmp=" << tmp.url();
+    //kDebug(kurlDebugArea) << "assigning tmp=" << tmp.url();
     *this = tmp;
     cleanPath(KeepDirSeparators);
   }
   else
   {
     const KUrl tmp( rUrl );
-    //kDebug(kurlDebugArea()) << "not relative; assigning tmp=" << tmp.url();
+    //kDebug(kurlDebugArea) << "not relative; assigning tmp=" << tmp.url();
     *this = tmp;
     // Preserve userinfo if applicable.
     if (!_u.userInfo().isEmpty() && userInfo().isEmpty()
@@ -1118,7 +1118,7 @@ void KUrl::addPath( const QString& _txt )
   }
 
   setPath( strPath + _txt.mid( i ) );
-  //kDebug(kurlDebugArea())<<"addPath: resultpath="<<path();
+  //kDebug(kurlDebugArea)<<"addPath: resultpath="<<path();
 }
 
 QString KUrl::directory( const DirectoryOptions& options ) const

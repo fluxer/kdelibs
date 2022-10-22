@@ -19,8 +19,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef _KDEBUG_H_
-#define _KDEBUG_H_
+#ifndef KDEBUG_H
+#define KDEBUG_H
 
 #include <kdecore_export.h>
 
@@ -30,33 +30,13 @@
  * \addtogroup kdebug Debug message generators
  *  @{
  * KDE debug message streams let you and the user control just how many debug
- * messages you see. Debug message printing is controlled by (un)defining
- * QT_NO_DEBUG when compiling your source. If QT_NO_DEBUG is defined then debug
- * messages are not printed by default but can still be enabled by runtime
- * configuration, e.g. via kdebugdialog or by editing kdebugrc.
+ * messages you see. Debug message can be controled by editing kdebugrc.
  *
  * You can also control what you see: process name, area name, method name,
- * file and line number, timestamp, etc. using environment variables.
- * See http://techbase.kde.org/SysAdmin/Environment_Variables#KDE_DEBUG_NOPROCESSINFO
+ * file and line number, timestamp, etc. using environment variables:
+ * KDE_DEBUG_TIMESTAMP - adds timestamp to the message
+ * KDE_DEBUG_METHODNAME - adds the method to the message
  */
-
-#if !defined(KDE_NO_DEBUG_OUTPUT)
-# if defined(QT_NO_DEBUG_OUTPUT) || defined(QT_NO_DEBUG_STREAM)
-#  define KDE_NO_DEBUG_OUTPUT
-# endif
-#endif
-
-#if !defined(KDE_NO_WARNING_OUTPUT)
-# if defined(QT_NO_WARNING_OUTPUT)
-#  define KDE_NO_WARNING_OUTPUT
-# endif
-#endif
-
-#ifdef QT_NO_DEBUG /* The application is compiled in release mode */
-# define KDE_DEBUG_ENABLED_BY_DEFAULT false
-#else
-# define KDE_DEBUG_ENABLED_BY_DEFAULT true
-#endif
 
 /**
  * @internal
@@ -80,11 +60,7 @@ KDECORE_EXPORT QDebug kDebugDevNull();
  * @param levels the number of levels of the backtrace
  * @return a backtrace
  */
-#if !defined(KDE_NO_DEBUG_OUTPUT)
 KDECORE_EXPORT QString kBacktrace(int levels=-1);
-#else
-inline QString kBacktrace(int=-1) { return QString(); };
-#endif
 
 /**
  * \relates KGlobal
@@ -118,7 +94,6 @@ KDECORE_EXPORT void kClearDebugConfig();
   code, in each debug/warning statement.
 */
 
-#if !defined(KDE_NO_DEBUG_OUTPUT)
 /**
  * \relates KGlobal
  * Returns a debug stream. You can use it to print debug
@@ -128,11 +103,6 @@ KDECORE_EXPORT void kClearDebugConfig();
 static inline QDebug kDebug(int area = KDE_DEFAULT_DEBUG_AREA)
 { return kDebugStream(QtDebugMsg, area); }
 
-#else  // KDE_NO_DEBUG_OUTPUT
-static inline QDebug kDebug(int = KDE_DEFAULT_DEBUG_AREA) { return kDebugDevNull(); }
-#endif
-
-#if !defined(KDE_NO_WARNING_OUTPUT)
 /**
  * \relates KGlobal
  * Returns a warning stream. You can use it to print warning
@@ -141,9 +111,6 @@ static inline QDebug kDebug(int = KDE_DEFAULT_DEBUG_AREA) { return kDebugDevNull
  */
 static inline QDebug kWarning(int area = KDE_DEFAULT_DEBUG_AREA)
 { return kDebugStream(QtWarningMsg, area); }
-#else  // KDE_NO_WARNING_OUTPUT
-static inline QDebug kWarning(int = KDE_DEFAULT_DEBUG_AREA) { return kDebugDevNull(); }
-#endif
 
 /**
  * \relates KGlobal
@@ -187,62 +154,26 @@ public:
 
     inline QDebug operator()(int area = KDE_DEFAULT_DEBUG_AREA)
         { return kDebugStream(level, area, file, line, funcinfo); }
-
-    /**
-     * @since 4.4
-     * Register a debug area dynamically.
-     * @param areaName the name of the area
-     * @param enabled whether debug output should be enabled by default
-     * (all debug messages are disabled by default via DisableAll=true in
-       kdebugrc which can be changed by users from the system settings)
-     * @return the area code that was allocated for this area
-     *
-     * Typical usage:
-     * If all uses of the debug area are restricted to a single class, add a method like this
-     * (e.g. into the Private class, if there's one)
-     * <code>
-     *  static int debugArea() { static int s_area = KDebug::registerArea("areaName"); return s_area; }
-     * </code>
-     * Please do not use a file-static int, it would (indirectly) create KGlobal too early,
-     * create KConfig instances too early (breaking unittests which set KDEHOME), etc.
-     * By using a function as shown above, you make it all happen on-demand, rather than upfront.
-     *
-     * If all uses of the debug area are restricted to a single .cpp file, do the same
-     * but outside any class, and then use a more specific name for the function.
-     *
-     * If however multiple classes and files need the debug area, then
-     * declare it in one file without static, and use "extern int debugArea();"
-     * in other files (with a better name for the function of course).
-     */
-    static KDECORE_EXPORT int registerArea(const QByteArray& areaName, bool enabled = true);
 };
 
 
-#if !defined(KDE_NO_DEBUG_OUTPUT)
 # define kDebug     KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-#else
-# define kDebug      while (false) kDebug
-#endif
-#if !defined(KDE_NO_WARNING_OUTPUT)
-# define kWarning    KDebug(QtWarningMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-#else
-# define kWarning    while (false) kWarning
-#endif
+# define kWarning   KDebug(QtWarningMsg, __FILE__, __LINE__, Q_FUNC_INFO)
+# define kError     KDebug(QtCriticalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
+# define kFatal     KDebug(QtFatalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
 
 /**
  * Convenience macro, use this to remind yourself to finish the implementation of a function
- * The function name will appear in the output (unless $KDE_DEBUG_NOMETHODNAME is set)
  * @since 4.6
  */
-#define KWARNING_NOTIMPLEMENTED kWarning() << "NOT-IMPLEMENTED";
+#define KWARNING_NOTIMPLEMENTED kWarning() << "NOT-IMPLEMENTED" << Q_FUNC_INFO;
 
 /**
  * Convenience macro, use this to alert other developers to stop using a function
- * The function name will appear in the output (unless $KDE_DEBUG_NOMETHODNAME is set)
  * @since 4.6
  */
-#define KWARNING_DEPRECATED kWarning() << "DEPRECATED";
+#define KWARNING_DEPRECATED kWarning() << "DEPRECATED" << Q_FUNC_INFO;
 
 /** @} */
 
-#endif
+#endif // KDEBUG_H

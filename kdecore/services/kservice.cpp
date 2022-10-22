@@ -43,9 +43,9 @@
 #include "kservicefactory.h"
 #include "kservicetypefactory.h"
 
+// see kdebug.areas
 int servicesDebugArea() {
-    static int s_area = KDebug::registerArea("kdecore (services)");
-    return s_area;
+    return 183;
 }
 
 QDataStream &operator<<(QDataStream &s, const KService::ServiceTypeAndPreference &st)

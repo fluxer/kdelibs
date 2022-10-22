@@ -18,674 +18,459 @@
     Boston, MA 02110-1301, USA.
 */
 
-#define KDE_EXTENDED_DEBUG_OUTPUT
-
-#ifndef QT_NO_CAST_FROM_ASCII
-#define QT_NO_CAST_FROM_ASCII
-#endif
-#ifndef QT_NO_CAST_TO_ASCII
-#define QT_NO_CAST_TO_ASCII
-#endif
-
+#include "config.h"
 #include "kdebug.h"
-
-#ifdef NDEBUG
-#undef kDebug
-#undef kBacktrace
-#endif
-
-#include <config.h>
-
 #include "kglobal.h"
+#include "kconfig.h"
+#include "kconfiggroup.h"
+#include "kmessage.h"
 #include "kstandarddirs.h"
-#include "kdatetime.h"
-#include "kcmdlineargs.h"
-#include <kmessage.h>
-#include <klocale.h>
-#include <kconfiggroup.h>
-#include <kurl.h>
-#include <kconfig.h>
 #include "kcomponentdata.h"
+#include "kdatetime.h"
+#include "kurl.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QHash>
-#include <QtCore/QObject>
-#include <QtCore/QChar>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QMutex>
+#include <QCoreApplication>
+#include <QFile>
+#include <QMutex>
 
-#include <stdlib.h>	// abort
-#include <unistd.h>	// getpid
-#include <stdarg.h>	// vararg stuff
-#include <ctype.h>      // isprint
-#include <syslog.h>
-#include <errno.h>
-#include <string.h>
 #include <stdio.h>
-#include <sys/time.h>
-#include <time.h>
+#include <syslog.h>
 
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>
 #endif
 
-
-class KNoDebugStream: public QIODevice
+static QByteArray kDebugHeader(const QByteArray &areaname, const char* const file, const int line, const char* const funcinfo)
 {
-    // Q_OBJECT
-public:
-    KNoDebugStream() { open(WriteOnly); }
-    bool isSequential() const { return true; }
-    qint64 readData(char *, qint64) { return 0; /* eof */ }
-    qint64 readLineData(char *, qint64) { return 0; /* eof */ }
-    qint64 writeData(const char *, qint64 len) { return len; }
-};
+    // TODO: KDE_DEBUG_METHODNAME
+    Q_UNUSED(file);
+    Q_UNUSED(line);
+    Q_UNUSED(funcinfo);
 
-class KSyslogDebugStream: public KNoDebugStream
+    static const bool kde_debug_timestamp = !qgetenv("KDE_DEBUG_TIMESTAMP").isEmpty();
+    if (kde_debug_timestamp) {
+        static const QString timestamp_format = QString::fromLatin1("hh:mm:ss.zzz");
+        const QByteArray timestamp = QDateTime::currentDateTime().time().toString(timestamp_format).toLocal8Bit();
+
+        QByteArray result(areaname);
+        result.append(" at ");
+        result.append(timestamp.constData(), timestamp.size());
+        return result;
+    }
+
+    return areaname;
+}
+
+K_GLOBAL_STATIC(QMutex, globalKDebugMutex)
+
+
+class KDebugDevicesMap : public QMap<int,QIODevice*>
 {
-    // Q_OBJECT
 public:
-    qint64 writeData(const char *data, qint64 len)
+    ~KDebugDevicesMap()
         {
-            if (len) {
-                // not using fromRawData because we need a terminating NUL
-                const QByteArray buf(data, len);
-                syslog(m_priority, "%s", buf.constData());
+            foreach (const int area, keys()) {
+                QIODevice* qiodevice = take(area);
+                delete qiodevice;
             }
+        }
+};
+K_GLOBAL_STATIC(KDebugDevicesMap, globalKDebugDevices)
+
+
+class KDebugNullDevice: public QIODevice
+{
+    Q_OBJECT
+public:
+    KDebugNullDevice() { open(QIODevice::WriteOnly); }
+
+protected:
+    qint64 readData(char*, qint64) final
+        { return 0; /* eof */ }
+    qint64 writeData(const char*, qint64 len)
+        { return len; }
+};
+K_GLOBAL_STATIC(KDebugNullDevice, globalKDebugNullDevie)
+
+
+class KDebugFileDevice: public KDebugNullDevice
+{
+    Q_OBJECT
+public:
+    KDebugFileDevice()
+        : m_priority(QtDebugMsg),
+        m_filepath(QString::fromLatin1("kdebug.log"))
+        { }
+
+    void setPriority(const QtMsgType level)
+        { m_priority = level; }
+    void setHeader(const QByteArray &header)
+        { m_header = header; }
+    void setFilepath(const QString &filepath)
+        { m_filepath = filepath; }
+
+protected:
+    qint64 writeData(const char* data, qint64 len) final
+        {
+            QFile writefile(m_filepath);
+            if (!writefile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered)) {
+                return 0;
+            }
+            // TODO: m_priority
+            writefile.write(m_header.constData(), m_header.size());
+            writefile.write(": ", 2);
+            writefile.write(data, len);
+            writefile.write("\n", 1);
             return len;
         }
-    void setPriority(int priority) { m_priority = priority; }
+
 private:
+    Q_DISABLE_COPY(KDebugFileDevice);
+
     int m_priority;
+    QByteArray m_header;
+    QString m_filepath;
 };
 
-class KFileDebugStream: public KNoDebugStream
+class KDebugMessageBoxDevice: public KDebugNullDevice
 {
-    // Q_OBJECT
+    Q_OBJECT
 public:
-    qint64 writeData(const char *data, qint64 len)
+    KDebugMessageBoxDevice()
+        : m_priority(QtDebugMsg)
+        { }
+
+    void setPriority(const QtMsgType level)
+        { m_priority = level; }
+    void setHeader(const QByteArray &header)
+        { m_header = header; }
+
+protected:
+    qint64 writeData(const char* data, qint64 len) final
         {
-            if (len) {
-                QFile aOutputFile(m_fileName);
-                if (aOutputFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered)) {
-                    QByteArray buf = QByteArray::fromRawData(data, len);
-                    aOutputFile.write(buf.trimmed());
-                    aOutputFile.putChar('\n');
+            const QString text = QString::fromLatin1("%1: %2").arg(
+                QString::fromLocal8Bit(m_header.constData(), m_header.size()),
+                QString::fromLocal8Bit(data, len)
+            );
+            switch (m_priority) {
+                case QtDebugMsg: {
+                    KMessage::message(KMessage::Information, text);
+                    break;
+                }
+                case QtWarningMsg: {
+                    KMessage::message(KMessage::Warning, text);
+                    break;
+                }
+                case QtCriticalMsg: {
+                    KMessage::message(KMessage::Error, text);
+                    break;
+                }
+                case QtFatalMsg: {
+                    KMessage::message(KMessage::Fatal, text);
+                    break;
                 }
             }
             return len;
         }
-    void setFileName(const QString& fn) { m_fileName = fn; }
+
 private:
-    QString m_fileName;
+    Q_DISABLE_COPY(KDebugMessageBoxDevice);
+
+    int m_priority;
+    QByteArray m_header;
 };
 
-class KMessageBoxDebugStream: public KNoDebugStream
+class KDebugShellDevice: public KDebugNullDevice
 {
-    // Q_OBJECT
+    Q_OBJECT
 public:
-    qint64 writeData(const char *data, qint64 len)
+    KDebugShellDevice()
+        : m_priority(QtDebugMsg)
+        { }
+
+    void setPriority(const QtMsgType level)
+        { m_priority = level; }
+    void setHeader(const QByteArray &header)
+        { m_header = header; }
+
+protected:
+    qint64 writeData(const char* data, qint64 len) final
         {
-            if (len) {
-                // Since we are in kdecore here, we cannot use KMsgBox
-                const QString msg = QString::fromLatin1(data, len);
-                KMessage::message(KMessage::Information, msg, m_caption);
-            }
-            return len;
-        }
-    void setCaption(const QString& h) { m_caption = h; }
-private:
-    QString m_caption;
-};
-
-class KLineEndStrippingDebugStream: public KNoDebugStream
-{
-    // Q_OBJECT
-public:
-    qint64 writeData(const char *data, qint64 len)
-        {
-            const QByteArray buf = QByteArray::fromRawData(data, len);
-            qt_message_output(QtDebugMsg, buf.trimmed().constData());
-            return len;
-        }
-};
-
-struct KDebugPrivate
-{
-    enum OutputMode {
-        FileOutput = 0,
-        MessageBoxOutput = 1,
-        QtOutput = 2,
-        SyslogOutput = 3,
-        NoOutput = 4,
-        DefaultOutput = QtOutput, // if you change DefaultOutput, also change the defaults in kdebugdialog!
-        Unknown = 5
-    };
-
-    struct Area {
-        inline Area() { clear(); }
-        void clear(OutputMode set = Unknown)
-        {
-            for (int i = 0; i < 4; ++i) {
-                logFileName[i].clear();
-                mode[i] = set;
-            }
-        }
-
-        QByteArray name;
-        QString logFileName[4];
-        OutputMode mode[4];
-    };
-    typedef QHash<unsigned int, Area> Cache;
-
-    KDebugPrivate()
-        : config(0), m_disableAll(false), m_seenMainComponent(false)
-    {
-        Q_ASSERT(int(QtDebugMsg) == 0);
-        Q_ASSERT(int(QtFatalMsg) == 3);
-    }
-
-    ~KDebugPrivate()
-    {
-        delete config;
-
-        if (syslogwriter) {
-            delete syslogwriter;
-            syslogwriter = 0;
-        }
-        if (filewriter) {
-            delete filewriter;
-            filewriter = 0;
-        }
-        if (messageboxwriter) {
-            delete messageboxwriter;
-            messageboxwriter = 0;
-        }
-    }
-
-    void loadAreaNames()
-    {
-        // Don't clear the cache here, that would lose previously registered dynamic areas
-        //cache.clear();
-
-        Area &areaData = cache[0];
-        areaData.clear();
-
-        if (KGlobal::hasMainComponent()) {
-            areaData.name = KGlobal::mainComponent().componentName().toUtf8();
-            m_seenMainComponent = true;
-        } else {
-            areaData.name = qApp ? qApp->applicationName().toUtf8() : QByteArray("unnamed app");
-            m_seenMainComponent = false;
-        }
-        //qDebug() << "loadAreaNames: area 0 has name" << areaData.name;
-
-        QString filename(KStandardDirs::locate("config", QLatin1String("kdebug.areas")));
-        if (filename.isEmpty()) {
-            return;
-        }
-        QFile file(filename);
-        if (!file.open(QIODevice::ReadOnly)) {
-            qWarning("Couldn't open %s", filename.toLocal8Bit().constData());
-            file.close();
-            return;
-        }
-
-        uint lineNumber=0;
-
-        while (!file.atEnd()) {
-            const QByteArray line = file.readLine().trimmed();
-            ++lineNumber;
-            if (line.isEmpty())
-                continue;
-
-            int i=0;
-            unsigned char ch=line[i];
-
-            if (ch =='#')
-                continue; // We have an eof, a comment or an empty line
-
-            if (ch < '0' || ch > '9') {
-                qWarning("Syntax error parsing '%s': no number (line %u)", qPrintable(filename), lineNumber);
-                continue;
-            }
-
-            do {
-                ch=line[++i];
-            } while (ch >= '0' && ch <= '9' && i < line.length());
-
-            unsigned int number = line.left(i).toUInt();
-
-            while (i < line.length() && line[i] <= ' ')
-                i++;
-
-            Area areaData;
-            areaData.name = line.mid(i);
-            cache.insert(number, areaData);
-        }
-        file.close();
-    }
-
-    inline int level(QtMsgType type) const
-    { return int(type) - int(QtDebugMsg); }
-
-    QString groupNameForArea(unsigned int area) const
-    {
-        QString groupName = QString::number(area);
-        if (area == 0 || !config->hasGroup(groupName)) {
-            groupName = QString::fromLocal8Bit(cache.value(area).name);
-        }
-        return groupName;
-    }
-
-    OutputMode areaOutputMode(QtMsgType type, unsigned int area, bool enableByDefault)
-    {
-        if (!configObject())
-            return QtOutput;
-
-        QString key;
-        switch (type) {
-        case QtDebugMsg:
-            key = QLatin1String( "InfoOutput" );
-            if (m_disableAll)
-                return NoOutput;
-            break;
-        case QtWarningMsg:
-            key = QLatin1String( "WarnOutput" );
-            break;
-        case QtFatalMsg:
-            key = QLatin1String( "FatalOutput" );
-            break;
-        case QtCriticalMsg:
-        default:
-            /* Programmer error, use "Error" as default */
-            key = QLatin1String( "ErrorOutput" );
-            break;
-        }
-
-        const KConfigGroup cg(config, groupNameForArea(area));
-        const int mode = cg.readEntry(key, int(enableByDefault ? DefaultOutput : NoOutput));
-        return OutputMode(mode);
-    }
-
-    QString logFileName(QtMsgType type, unsigned int area)
-    {
-        if (!configObject())
-            return QString();
-
-        const char* aKey;
-        switch (type)
-        {
-        case QtDebugMsg:
-            aKey = "InfoFilename";
-            break;
-        case QtWarningMsg:
-            aKey = "WarnFilename";
-            break;
-        case QtFatalMsg:
-            aKey = "FatalFilename";
-            break;
-        case QtCriticalMsg:
-        default:
-            aKey = "ErrorFilename";
-            break;
-        }
-
-        KConfigGroup cg(config, groupNameForArea(area));
-        return cg.readPathEntry(aKey, QLatin1String("kdebug.dbg"));
-    }
-
-    KConfig* configObject()
-    {
-        if (!config) {
-            config = new KConfig(QLatin1String("kdebugrc"), KConfig::NoGlobals);
-            m_disableAll = config->group(QString()).readEntry("DisableAll", true);
-        }
-        return config;
-    }
-
-    Cache::Iterator areaData(QtMsgType type, unsigned int num, bool enableByDefault = true)
-    {
-        if (!cache.contains(0)) {
-            //qDebug() << "cache size=" << cache.count() << "loading area names";
-            loadAreaNames(); // fills 'cache'
-            Q_ASSERT(cache.contains(0));
-        } else if (!m_seenMainComponent && KGlobal::hasMainComponent()) {
-            // Update the name for area 0 once a main component exists
-            cache[0].name = KGlobal::mainComponent().componentName().toUtf8();
-            m_seenMainComponent = true;
-        }
-
-        Cache::Iterator it = cache.find(num);
-        if (it == cache.end()) {
-            // unknown area
-            Q_ASSERT(cache.contains(0));
-            it = cache.find(0);
-            num = 0;
-        }
-
-        if (num == 0) { // area 0 is special, it becomes the named area "appname"
-            static bool s_firstDebugFromApplication = true;
-            if (s_firstDebugFromApplication && !m_disableAll) {
-                s_firstDebugFromApplication = false;
-                //qDebug() << "First debug output from" << it->name << "writing out with default" << enableByDefault;
-                writeGroupForNamedArea(it->name, enableByDefault);
-            }
-        }
-
-        const int lev = level(type);
-        //qDebug() << "in cache for" << num << ":" << it->mode[lev];
-        if (it->mode[lev] == Unknown)
-            it->mode[lev] = areaOutputMode(type, num, enableByDefault);
-        if (it->mode[lev] == FileOutput && it->logFileName[lev].isEmpty())
-            it->logFileName[lev] = logFileName(type, num);
-
-        Q_ASSERT(it->mode[lev] != Unknown);
-
-        return it;
-    }
-
-    QDebug setupFileWriter(const QString &fileName)
-    {
-        if (!filewriter)
-            filewriter = new KFileDebugStream();
-        filewriter->setFileName(fileName);
-        QDebug result(filewriter);
-        return result;
-    }
-
-    QDebug setupMessageBoxWriter(QtMsgType type, const QByteArray &areaName)
-    {
-        if (!messageboxwriter)
-            messageboxwriter = new KMessageBoxDebugStream();
-        QDebug result(messageboxwriter);
-        QByteArray header;
-
-        switch (type) {
-        case QtDebugMsg:
-            header = "Info (";
-            break;
-        case QtWarningMsg:
-            header = "Warning (";
-            break;
-        case QtFatalMsg:
-            header = "Fatal Error (";
-            break;
-        case QtCriticalMsg:
-        default:
-            header = "Error (";
-            break;
-        }
-
-        header += areaName;
-        header += ')';
-        messageboxwriter->setCaption(QString::fromLatin1(header));
-        return result;
-    }
-
-    QDebug setupSyslogWriter(QtMsgType type)
-    {
-        if (!syslogwriter)
-            syslogwriter = new KSyslogDebugStream();
-        QDebug result(syslogwriter);
-        int level = 0;
-
-        switch (type) {
-        case QtDebugMsg:
-            level = LOG_INFO;
-            break;
-        case QtWarningMsg:
-            level = LOG_WARNING;
-            break;
-        case QtCriticalMsg:
-            level = LOG_CRIT;
-            break;
-        case QtFatalMsg:
-        default:
-            level = LOG_ERR;
-            break;
-        }
-        syslogwriter->setPriority(level);
-        return result;
-    }
-
-    QDebug setupQtWriter(QtMsgType type)
-    {
-        if (type != QtDebugMsg) {
-            return QDebug(type);
-        }
-        return QDebug(&lineendstrippingwriter);
-    }
-
-    QDebug printHeader(QDebug s, const QByteArray &areaName, const char * file, int line, const char *funcinfo, QtMsgType type, bool colored)
-    {
-#ifdef KDE_EXTENDED_DEBUG_OUTPUT
-        static bool printProcessInfo = (qgetenv("KDE_DEBUG_NOPROCESSINFO").isEmpty());
-        static bool printAreaName = (qgetenv("KDE_DEBUG_NOAREANAME").isEmpty());
-        static bool printMethodName = (qgetenv("KDE_DEBUG_NOMETHODNAME").isEmpty());
-        static bool printFileLine = (!qgetenv("KDE_DEBUG_FILELINE").isEmpty());
-
-        static int printTimeStamp = qgetenv("KDE_DEBUG_TIMESTAMP").toInt();
-        QByteArray programName;
-        s = s.nospace();
-        if (printTimeStamp > 0) {
-            if (printTimeStamp >= 2) {
-                // the extended print: 17:03:24.123
-                const QString sformat = QString::fromLatin1("hh:mm:ss.zzz");
-                s << qPrintable(QDateTime::currentDateTime().time().toString(sformat));
+            if (m_priority == QtDebugMsg) {
+                ::fprintf(stdout, "%s: %s\n", m_header.constData(), data);
             } else {
-                // the default print: 17:03:24
-                s << qPrintable(QDateTime::currentDateTime().time().toString());
+                ::fprintf(stderr, "%s: %s\n", m_header.constData(), data);
             }
-            s << ' ';
+            return len;
         }
 
-        if (printProcessInfo) {
-            programName = cache.value(0).name;
-            if (programName.isEmpty()) {
-                programName = QCoreApplication::applicationName().toLocal8Bit();
-                if (programName.isEmpty())
-                    programName = "<unknown program name>";
-            }
-            s << programName.constData() << "(" << unsigned(getpid()) << ")";
-        }
-        if (printAreaName && (!printProcessInfo || areaName != programName)) {
-            if (printProcessInfo)
-                s << "/";
-            s << areaName.constData();
-        }
+private:
+    Q_DISABLE_COPY(KDebugShellDevice);
 
-        if (printFileLine) {
-            s << ' ' << file << ':' << line << ' ';
-        }
-
-        if (funcinfo && printMethodName) {
-            if (colored) {
-                if (type <= QtDebugMsg)
-                    s << "\033[0;34m"; //blue
-                else
-                    s << "\033[0;31m"; //red
-            }
-# ifdef Q_CC_GNU
-            // strip the function info down to the base function name
-            // note that this throws away the template definitions,
-            // the parameter types (overloads) and any const/volatile qualifiers
-            QByteArray info = funcinfo;
-            int pos = info.indexOf('(');
-            Q_ASSERT_X(pos != -1, "kDebug",
-                       "Bug in kDebug(): I don't know how to parse this function name");
-            while (info.at(pos - 1) == ' ')
-                // that '(' we matched was actually the opening of a function-pointer
-                pos = info.indexOf('(', pos + 1);
-
-            info.truncate(pos);
-            // gcc 4.1.2 don't put a space between the return type and
-            // the function name if the function is in an anonymous namespace
-            int index = 1;
-            forever {
-                index = info.indexOf("<unnamed>::", index);
-                if ( index == -1 )
-                    break;
-
-                if ( info.at(index-1) != ':' )
-                    info.insert(index, ' ');
-
-                index += strlen("<unnamed>::");
-            }
-            pos = info.lastIndexOf(' ');
-            if (pos != -1) {
-                int startoftemplate = info.lastIndexOf('<');
-                if (startoftemplate != -1 && pos > startoftemplate &&
-                    pos < info.lastIndexOf(">::"))
-                    // we matched a space inside this function's template definition
-                    pos = info.lastIndexOf(' ', startoftemplate);
-            }
-
-            if (pos + 1 == info.length())
-                // something went wrong, so gracefully bail out
-                s << " " << funcinfo;
-            else
-                s << " " << info.constData() + pos + 1;
-# else
-            s << " " << funcinfo;
-# endif
-           if(colored)
-               s  << "\033[0m";
-        }
-
-        s << ":";
-#else
-        Q_UNUSED(funcinfo);
-        if (!areaName.isEmpty())
-            s << areaName.constData() << ':';
-#endif
-        return s.space();
-    }
-
-    QDebug stream(QtMsgType type, unsigned int area, const char *debugFile, int line,
-                  const char *funcinfo)
-    {
-        static bool env_colored = (!qgetenv("KDE_COLOR_DEBUG").isEmpty());
-        static bool env_colors_on_any_fd = (!qgetenv("KDE_COLOR_DEBUG_ALWAYS").isEmpty());
-        Cache::Iterator it = areaData(type, area);
-        OutputMode mode = it->mode[level(type)];
-        Q_ASSERT(mode != Unknown);
-        QByteArray areaName = it->name;
-
-        if (areaName.isEmpty())
-            areaName = cache.value(0).name;
-
-        bool colored=false;
-
-        QDebug s(&devnull);
-        switch (mode) {
-            case FileOutput: {
-                QString file = it->logFileName[level(type)];
-                s = setupFileWriter(file);
-                break;
-            }
-            case MessageBoxOutput: {
-                s = setupMessageBoxWriter(type, areaName);
-                break;
-            }
-            case SyslogOutput: {
-                s = setupSyslogWriter(type);
-                break;
-            }
-            case NoOutput: {
-                //no need to take the time to "print header" if we don't want to output anyway
-                return QDebug(&devnull);
-            }
-            case Unknown: // should not happen
-            default: {
-                // QtOutput
-                s = setupQtWriter(type);
-                //only color if the debug goes to a tty, unless env_colors_on_any_fd is set too.
-                colored = env_colored && (env_colors_on_any_fd || isatty(fileno(stderr)));
-                break;
-            }
-        }
-
-        return printHeader(s, areaName, debugFile, line, funcinfo, type, colored);
-    }
-
-    void writeGroupForNamedArea(const QByteArray& areaName, bool enabled)
-    {
-        // Ensure that this area name appears in kdebugrc, so that users (via kdebugdialog)
-        // can turn it off.
-        KConfig* cfgObj = configObject();
-        if (cfgObj) {
-            KConfigGroup cg(cfgObj, QString::fromUtf8(areaName));
-            const QString key = QString::fromLatin1("InfoOutput");
-            if (!cg.hasKey(key)) {
-                cg.writeEntry(key, int(enabled ? KDebugPrivate::QtOutput : KDebugPrivate::NoOutput));
-                cg.sync();
-            }
-        }
-    }
-
-    QMutex mutex;
-    KConfig *config;
-    Cache cache;
-    bool m_disableAll;
-    bool m_seenMainComponent; // false: area zero still contains qAppName
-
-    KNoDebugStream devnull;
-    static thread_local KSyslogDebugStream* syslogwriter;
-    static thread_local KFileDebugStream* filewriter;
-    static thread_local KMessageBoxDebugStream* messageboxwriter;
-    KLineEndStrippingDebugStream lineendstrippingwriter;
+    int m_priority;
+    QByteArray m_header;
 };
 
-thread_local KSyslogDebugStream* KDebugPrivate::syslogwriter = 0;
-thread_local KFileDebugStream* KDebugPrivate::filewriter = 0;
-thread_local KMessageBoxDebugStream* KDebugPrivate::messageboxwriter = 0;
+class KDebugSyslogDevice: public KDebugNullDevice
+{
+    Q_OBJECT
+public:
+    KDebugSyslogDevice(const QByteArray &areaname)
+        : m_priority(LOG_INFO)
+    { ::openlog(areaname.constData(), 0, LOG_USER); }
 
-K_GLOBAL_STATIC(KDebugPrivate, kDebug_data)
+    void setPriority(const QtMsgType level)
+        {
+            switch (level) {
+                case QtDebugMsg: {
+                    m_priority = LOG_INFO;
+                    break;
+                }
+                case QtWarningMsg: {
+                    m_priority = LOG_WARNING;
+                    break;
+                }
+                case QtCriticalMsg: {
+                    m_priority = LOG_CRIT;
+                    break;
+                }
+                case QtFatalMsg: {
+                    m_priority = LOG_ERR;
+                    break;
+                }
+            }
+        }
+
+    void setHeader(const QByteArray &header)
+        { m_header = header; }
+
+protected:
+    qint64 writeData(const char* data, qint64 len) final
+        {
+            ::syslog(m_priority, "%s: %s", m_header.constData(), data);
+            return len;
+        }
+
+private:
+    Q_DISABLE_COPY(KDebugSyslogDevice);
+
+    int m_priority;
+    QByteArray m_header;
+};
+
+
+class KDebugConfig : public KConfig
+{
+public:
+    enum KDebugType {
+        TypeFile = 0,
+        TypeMessageBox = 1,
+        TypeShell = 2,
+        TypeSyslog = 3,
+        TypeOff = 4
+    };
+
+    KDebugConfig();
+
+    void readAreas();
+
+    QByteArray areaName(const int number) const;
+
+private:
+    Q_DISABLE_COPY(KDebugConfig);
+    QMap<int,QByteArray> m_areanames;
+};
+K_GLOBAL_STATIC(KDebugConfig, globalKDebugConfig)
+
+KDebugConfig::KDebugConfig()
+    : KConfig(QString::fromLatin1("kdebugrc"), KConfig::NoGlobals)
+{
+    readAreas();
+}
+
+void KDebugConfig::readAreas()
+{
+    m_areanames.clear();
+
+    const QString kdebugareas = KStandardDirs::locate("config", QString::fromLatin1("kdebug.areas"));
+    if (kdebugareas.isEmpty()) {
+        return;
+    }
+
+    QFile kdebugareasfile(kdebugareas);
+    if (!kdebugareasfile.open(QFile::ReadOnly)) {
+        return;
+    }
+    while (!kdebugareasfile.atEnd()) {
+        QByteArray kdebugareasline = kdebugareasfile.readLine().trimmed();
+        if (kdebugareasline.isEmpty() || kdebugareasline.startsWith('#')) {
+            continue;
+        }
+
+        const int spaceindex = kdebugareasline.indexOf(' ');
+        if (spaceindex < 1) {
+            continue;
+        }
+
+        const int areanumber = kdebugareasline.mid(0, spaceindex).toLongLong();
+        const QByteArray areaname = kdebugareasline.mid(spaceindex + 1, kdebugareasline.size() - spaceindex - 1).trimmed();
+        if (areanumber <= 0 || areaname.isEmpty()) {
+            continue;
+        }
+
+        m_areanames.insert(areanumber, areaname);
+
+        // qDebug() << Q_FUNC_INFO << areanumber << areaname;
+    }
+}
+
+QByteArray KDebugConfig::areaName(const int number) const
+{
+    const QByteArray areaname = m_areanames.value(number);
+    if (!areaname.isEmpty()) {
+        return areaname;
+    }
+
+    if (KGlobal::hasMainComponent()) {
+        return KGlobal::mainComponent().componentName().toUtf8();
+    }
+    return QCoreApplication::applicationName().toUtf8();
+}
+
 
 QString kBacktrace(int levels)
 {
-    QString s;
 #ifdef HAVE_BACKTRACE
     void* trace[256];
     int n = backtrace(trace, 256);
     if (!n)
-        return s;
-    char** strings = backtrace_symbols (trace, n);
+        return QString();
+    char** strings = backtrace_symbols(trace, n);
 
-    if ( levels != -1 )
-        n = qMin( n, levels );
-    s = QLatin1String("[\n");
+    if (levels != -1) {
+        n = qMin(n, levels);
+    }
 
-    for (int i = 0; i < n; ++i)
+    QString s = QString::fromLatin1("[\n");
+    for (int i = 0; i < n; ++i) {
         s += QString::number(i) + QLatin1String(": ") +
              QString::fromLatin1(strings[i]) + QLatin1Char('\n');
+    }
     s += QLatin1String("]\n");
-    if (strings)
-        free (strings);
-#endif
+
+    if (strings) {
+        ::free(strings);
+    }
+
     return s;
+#else
+    return QString();
+#endif // HAVE_BACKTRACE
 }
 
 QDebug kDebugDevNull()
 {
-    return QDebug(&kDebug_data->devnull);
+    return QDebug(globalKDebugNullDevie);
 }
 
 QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const char *funcinfo)
 {
-    if (kDebug_data.isDestroyed()) {
-        // we don't know what to return now...
-        qCritical().nospace() << "kDebugStream called after destruction (from "
-                              << (funcinfo ? funcinfo : "")
-                              << (file ? " file " : " unknown file")
-                              << (file ? file :"")
-                              << " line " << line << ")";
-        return QDebug(level);
+    QMutexLocker locker(globalKDebugMutex);
+
+    KConfigGroup generalgroup = globalKDebugConfig->group(QString());
+    const bool disableall = generalgroup.readEntry("DisableAll", false);
+    if (disableall) {
+        return kDebugDevNull();
     }
 
-    QMutexLocker locker(&kDebug_data->mutex);
-    return kDebug_data->stream(level, area, file, line, funcinfo);
+    KConfigGroup areagroup = globalKDebugConfig->group(QString::number(area));
+    int areaoutput = int(KDebugConfig::TypeShell);
+    QString areafilename = QString::fromLatin1("kdebug.log");
+    // TODO: abort when? can't show message box and abort immediately
+    bool areaabort = true;
+    switch (level) {
+        case QtDebugMsg: {
+            areaoutput = areagroup.readEntry("InfoOutput", int(KDebugConfig::TypeOff));
+            areafilename = areagroup.readPathEntry("InfoFilename", areafilename);
+            break;
+        }
+        case QtWarningMsg: {
+            areaoutput = areagroup.readEntry("WarnOutput", areaoutput);
+            areagroup.readPathEntry("WarnFilename", areafilename);
+            break;
+        }
+        case QtCriticalMsg: {
+            areaoutput = areagroup.readEntry("ErrorOutput", areaoutput);
+            areafilename = areagroup.readPathEntry("ErrorFilename", areafilename);
+            break;
+        }
+        case QtFatalMsg: {
+            areaoutput = areagroup.readEntry("FatalOutput", areaoutput);
+            areafilename = areagroup.readPathEntry("FatalFilename", areafilename);
+            areaabort = areagroup.readEntry("AbortFatal", true);
+            break;
+        }
+    }
+
+    switch (areaoutput) {
+        case KDebugConfig::TypeFile: {
+            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            if (!qiodevice) {
+                qiodevice = new KDebugFileDevice();
+                globalKDebugDevices->insert(area, qiodevice);
+            }
+            KDebugFileDevice* kdebugdevice = qobject_cast<KDebugFileDevice*>(qiodevice);
+            kdebugdevice->setPriority(level);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            kdebugdevice->setFilepath(areafilename);
+            return QDebug(kdebugdevice);
+        }
+        case KDebugConfig::TypeMessageBox: {
+            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            if (!qiodevice) {
+                qiodevice = new KDebugMessageBoxDevice();
+                globalKDebugDevices->insert(area, qiodevice);
+            }
+            KDebugMessageBoxDevice* kdebugdevice = qobject_cast<KDebugMessageBoxDevice*>(qiodevice);
+            kdebugdevice->setPriority(level);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            return QDebug(kdebugdevice);
+        }
+        case KDebugConfig::TypeShell: {
+            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            if (!qiodevice) {
+                qiodevice = new KDebugShellDevice();
+                globalKDebugDevices->insert(area, qiodevice);
+            }
+            KDebugShellDevice* kdebugdevice = qobject_cast<KDebugShellDevice*>(qiodevice);
+            kdebugdevice->setPriority(level);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            return QDebug(kdebugdevice);
+        }
+        case KDebugConfig::TypeSyslog: {
+            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            if (!qiodevice) {
+                qiodevice = new KDebugSyslogDevice(globalKDebugConfig->areaName(area));
+                globalKDebugDevices->insert(area, qiodevice);
+            }
+            KDebugSyslogDevice* kdebugdevice = qobject_cast<KDebugSyslogDevice*>(qiodevice);
+            kdebugdevice->setPriority(level);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            return QDebug(kdebugdevice);
+        }
+        case KDebugConfig::TypeOff:
+        default: {
+            return kDebugDevNull();
+        }
+    }
+    Q_UNREACHABLE();
+}
+
+void kClearDebugConfig()
+{
+    QMutexLocker locker(globalKDebugMutex);
+    globalKDebugConfig->reparseConfiguration();
+    globalKDebugConfig->readAreas();
 }
 
 QDebug operator<<(QDebug s, const KDateTime &time)
@@ -703,33 +488,4 @@ QDebug operator<<(QDebug s, const KUrl &url)
     return s.space();
 }
 
-void kClearDebugConfig()
-{
-    if (!kDebug_data) return;
-    KDebugPrivate* d = kDebug_data;
-    QMutexLocker locker(&d->mutex);
-    delete d->config;
-    d->config = 0;
-
-    KDebugPrivate::Cache::Iterator it = d->cache.begin(),
-                                  end = d->cache.end();
-    for ( ; it != end; ++it)
-        it->clear();
-}
-
-int KDebug::registerArea(const QByteArray& areaName, bool enabled)
-{
-    // TODO for optimization: static int s_lastAreaNumber = 1;
-    KDebugPrivate* d = kDebug_data;
-    QMutexLocker locker(&d->mutex);
-    int areaNumber = 1;
-    while (d->cache.contains(areaNumber)) {
-        ++areaNumber;
-    }
-    KDebugPrivate::Area areaData;
-    areaData.name = areaName;
-    //qDebug() << "Assigning area number" << areaNumber << "for name" << areaName;
-    d->cache.insert(areaNumber, areaData);
-    d->writeGroupForNamedArea(areaName, enabled);
-    return areaNumber;
-}
+#include "kdebug.moc"

@@ -70,9 +70,9 @@ class KPluginInfoPrivate : public QSharedData
         KService::Ptr service;
         mutable QList<KService::Ptr> kcmservices;
 
+    // see kdebug.areas
     static int debugArea() {
-        static int s_area = KDebug::registerArea("kdecore (KPluginInfo)");
-        return s_area;
+        return 182;
     }
 };
 

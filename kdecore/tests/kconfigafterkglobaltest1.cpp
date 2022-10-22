@@ -55,9 +55,7 @@ int main(int argc, char **argv)
 Tester::~Tester()
 {
     // the KGlobal K_GLOBAL_STATIC should already be deleted
-    // If this fails, check that a new global static in kdecore didn't create KGlobal indirectly;
-    // e.g. this can happen if someone writes 'static int s_area = KDebug::registerArea("foo");' in
-    // a .cpp file, rather than using a function.
+    // If this fails, check that a new global static in kdecore didn't create KGlobal indirectly
     Q_ASSERT(!KGlobal::hasMainComponent());
     KConfigGroup group = m_config->group("test");
     group.writeEntry("test", 1);

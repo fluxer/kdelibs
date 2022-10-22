@@ -48,7 +48,8 @@ public:
 public:
   KConfigDialogManager *q;
 
-  static int debugArea() { static int s_area = KDebug::registerArea("kdeui (KConfigDialogManager)"); return s_area; }
+  // see kdebug.areas
+  static int debugArea() { return 300; }
 
   /**
   * KConfigSkeleton object used to store settings

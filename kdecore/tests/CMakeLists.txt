@@ -53,16 +53,14 @@ KDECORE_UNIT_TESTS(
     kconfigafterkglobaltest1
     kconfigafterkglobaltest2
     ksycocathreadtest
-    kdebug_unittest
     qcoreapptest
-    kdebug_qcoreapptest
     kmimetype_nomimetypes
     kunitconversiontest
     kdevicedatabasetest
+    kdebugtest
 )
 
 KDECORE_EXECUTABLE_TESTS(
-    kdebugtest
     kcmdlineargstest
     dbuscalltest
     startserviceby
