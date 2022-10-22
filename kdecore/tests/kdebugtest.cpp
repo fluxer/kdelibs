@@ -75,7 +75,10 @@ void KDebugTest::output()
     QFile::remove(areafilename);
     setupArea("123", areaoutput, areafilename);
 
-    kDebug(123) << "foo" << "bar";
+    kDebug(123) << "foo" << "info";
+    kWarning(123) << "bar" << "warning";
+    kError(123) << "foo" << "error";
+    kFatal(123) << "bar" << "fatal";
 }
 
 
