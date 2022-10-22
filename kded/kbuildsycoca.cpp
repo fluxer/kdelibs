@@ -542,7 +542,7 @@ bool KBuildSycoca::checkDirTimestamps( const QString& dirname, const QDateTime& 
          continue;
       if( fi.lastModified() > stamp )
       {
-         kDebug( 7201 ) << "timestamp changed:" << fi.filePath();
+         kDebug( 7021 ) << "timestamp changed:" << fi.filePath();
          return false;
       }
       if( fi.isDir() && !checkDirTimestamps( fi.filePath(), stamp, false ))
