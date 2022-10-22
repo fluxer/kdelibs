@@ -1,124 +1,50 @@
-# Old-style hardcoded debug areas for kdebug().
-# ************************************************
-# Please consider not adding anything to this file.
-# ************************************************
-# For standalone applications, just use kDebug() and an entry named after your
-# application will appear in kdebugdialog.
+# For applications, libraries and plugins that use kDebug(), kWarning(), etc.
+# without and an entry here defaults apply, their output will also not be
+# configurable via KCM (kdebugrc can still be edited manually)
 #
 # Format : number description
 
-125        kdeui (KGlobalAccel)
-129        kdeui (KAction)
-161        kdecore (K*TimeZone*)
-170        kdecore (KNetwork socket)
-172        kdecore (KStartupInfo)
-173        kdecore (KLocale)
-175        kdecore (KPty/K3Process)
-176        kdeui (KWindowInfo)
-179        kdecore (KNetwork resolver)
-180        kdecore (kdelibs)
-181        kdecore (KUrl)
-182        kdecore (KPluginInfo)
-183        kdecore (services)
-184        kdecore (KConfigSkeleton)
-200        kdeui (KMainWindow)
-240        kdeui (kdelibs)
-250        kfile (kdelibs)
-260        kdeui (KXmlGui)
-264        kdeui (KIconLoader)
-265        kdeui (KIconEffect)
-281        kdeui (KCModule)
-283        kdeui (K*Gesture*)
-291        kdeui (KAboutDialog)
-292        kdeui (KComboBox)
-293        kdeui (KLineEdit)
-297        kdeui (KNotificationRestrictions)
-299        kdeui (KNotification)
-300        kdeui (KConfigDialogManager)
-399        kimgio
-500        kdeprint
-700        kutils (KSettings::Dialog)
-701        kutils (KSettings::Dispatcher)
-702        kutils (KPluginSelector)
-704        kutils (KSettings::ComponentsDialog)
-710        kutils (KCMultiDialog)
-711        kutils (KCModuleProxy)
-712        kutils (KCModuleInfo)
-713        kutils (KCModuleContainer)
-912        ksmartcard (kdelibs)
-920        Solid (kdelibs)
-921        Solid Networking
-930        KUnitConversion
-940        KMediaPlayer
-
+# kdelibs
+125         kdeui (KGlobalAccel)
+129         kdeui (KAction)
+161         kdecore (K*TimeZone*)
+172         kdecore (KStartupInfo)
+173         kdecore (KLocale)
+175         kdecore (KPty/K3Process)
+176         kdeui (KWindowInfo)
+180         kdecore (kdelibs)
+181         kdecore (KUrl)
+182         kdecore (KPluginInfo)
+183         kdecore (services)
+184         kdecore (KConfigSkeleton)
+200         kdeui (KMainWindow)
+240         kdeui (kdelibs)
+250         kfile (kdelibs)
+260         kdeui (KXmlGui)
+264         kdeui (KIconLoader)
+265         kdeui (KIconEffect)
+283         kdeui (K*Gesture*)
+297         kdeui (KNotificationRestrictions)
+299         kdeui (KNotification)
+300         kdeui (KConfigDialogManager)
+700         kutils (KSettings::Dialog)
+701         kutils (KSettings::Dispatcher)
+702         kutils (KPluginSelector)
+704         kutils (KSettings::ComponentsDialog)
+710         kutils (KCMultiDialog)
+711         kutils (KCModuleProxy)
+712         kutils (KCModuleInfo)
+713         kutils (KCModuleContainer)
+921         Solid Networking
+930         KUnitConversion
+940         kmediaplayer
 1000        kparts
-
-1100        kdeedu
-
-# kdebase
-1203        libkonq
-1204        plasma
-1205        kdesudo
-1207        krunner
-1208        kcontrol
 1209        libplasma
-1211        konsole
-1212        kwin
-1215        ksysguard
-1216        kwin (client errors)
-1217        khotkeys
-1218        ksmserver
-1220        remote kioslave
-1222        networkstatus
-
-1410        drkonqi
-
-1420        kikbd
-1421        ki18b_keys (kcmodule)
-
-1441        Solid (NetworkManager)
-
-# kdeutils
-1511        kdessh (kdeutils)
-1512        kdepasswd
-1601        ark (kdeutils)
-1901        kfind
-1902        kfind (KfindWindow::updateResults)
-1903        kfind (KfindTabDialog::createQuery)
-2000        kfind
-2001        kregexpeditor
-
-# 2500-2999 Reserved for private use
-
-# kdegraphics
-4300        kdvi (kdegraphics)
-4400        kpaint (kdegraphics)
-4500        kghostview (kdegraphics)
-4600        kview
-4610        kviewviewer
-4620        kviewcanvas
-4630        kview_plugin
-4640        kiconedit
-4700        okular (app)
-4710        okular (Poppler)
-4711        okular (Spectre)
-4712        okular (XpsGenerator)
-4713        okular (DVI)
-4715        okular (OooGenerator)
-
-# kdenetwork, kdepim
-5001        kget
-5010        krdc
-5011        krdc (VNC backend)
-5012        krdc (RDP backend)
-
-# libkio
 7000        kio
 7001        kio (KDirWatch)
 7002        kio (Slave)
 7003        kio (KDirLister)
 7004        kio (KDirListerCache)
-7005        kio (Filter)
 7006        kio (Scheduler)
 7007        kio (KIOJob)
 7008        kio (KDirModel)
@@ -132,89 +58,76 @@
 7020        kded4
 7021        kbuildsycoca4
 7022        kurifilter
-7023        kurifilter (plugins)
-7024        kio (UIServer)
-7027        kio (TCPSlaveBase)
-7028        kio (Observer)
-7030        kio (KEMailSettings)
-7031        KImageIO
-7032        kio (KUrlCompletion)
-7033        KFileMetaInfo
 7043        kio (bookmarks)
-7044        kio (AccessManager)
-
-# 71xx      are for kioslaves
 7101        kio_file
 7102        kio_ftp
 7103        kio_http
-7106        kio_smb
-7109        kio_tar
-7110        kio_gzip
-7112        kio_smtp
+51003       kexiv2
+51004       kpasswdstore
+51005       kpowermanager
+51006       kdnssd
+51007       khttp
+51008       kspeech
+51009       karchive
+51010       kemail
+
+# kde-workspace
+101         kioclient
+900         kdesudo
+901         knotify
+1203        libkonq
+1204        plasma
+1207        krunner
+1208        kinfocenter
+1211        konsole
+1212        kwin
+1215        ksysguard
+1216        kwin (client errors)
+1217        khotkeys
+1218        ksmserver
+1220        kio_remote
+1222        networkstatus
+1410        drkonqi
+1512        kdepasswd
+7023        kurifilter (plugins)
+7024        kio (UIServer)
+7104        kio_floppy
 7115        kio_thumbnail
-7118        kio_bzip2
+7116        kio_trash
 7120        kio_sftp
-7121        kio_nfs
-7131        kio_xz
+7123        kio_camera
+7132        kio_mtp
+13000       Kate
+13001       Kate (App)
+13010       Kate (XML/Syntax)
+13020       Kate (Document)
+13025       Kate (Commands)
+13030       Kate (View)
+13033       Kate (Renderer)
+13035       Kate (Code Completion)
+13040       Kate (Plugins)
+13050       Kate (Scripting)
+13060       Kate (Indentation)
+13070       Kate (On-The-Fly Spellcheck)
+13080       Kate (File Tree)
+90220       kcmshell
+90230       Oxygen (style)
+90240       Oxygen (decoration)
+90250       kcminit
 
-# KatePart/Kate/KWrite
-13000   Kate
-13001   Kate (App)
-13002   Kate (View Manager)
-13010   Kate (XML/Syntax)
-13020   Kate (Document)
-13025   Kate (Commands)
-13030   Kate (View)
-13033   Kate (Renderer)
-13035   Kate (Code Completion)
-13040   Kate (Plugins)
-13050   Kate (Scripting)
-13060   Kate (Indentation)
-13070   Kate (On-The-Fly Spellcheck)
-13080   Kate (File Tree)
+# kde-extraapps
+500         kdeprint
+4700        okular (app)
+4710        okular (Poppler)
+4711        okular (Spectre)
+4712        okular (XpsGenerator)
+4713        okular (DVI)
+4715        okular (OooGenerator)
+5001        kget
+5010        krdc
+5011        krdc (VNC backend)
+5012        krdc (RDP backend)
+67100       kmix
+87400       kcron
+87500       ksystemlog
 
-# kfilereplace
-23000        KFileReplace (kfilereplacepart)
-
-# KEXIV2 - KDE C++ wrapper for LibExiv2
-51003   KEXIV2
-
-# kpasswdstore
-51004   kpasswdstore
-
-# kpowermanager
-51005   kpowermanager
-
-# kdnssd
-51006   kdnssd
-
-# khttp
-51007   khttp
-
-# kspeech
-51008   kspeech
-
-# karchive
-51009   karchive
-
-# kemail
-51010   kemail
-
-# kdemultimedia
-67100   kmix
-
-# kdeaddons
-90100   konq-plugins (fsview)
-90110   konq-plugins (webarchiver)
-90120   konq-plugins (validators)
-90130   konq-plugins (uachanger)
-90150   konq-plugins (minitools)
-90160   konq-plugins (kuick)
-90170   konq-plugins (kimgalleryplugin)
-90180   konq-plugins (domtreeviewer)
-90190   konq-plugins (dirfilter)
-90210   konq-plugins (rellinks)
-
-90220 kcmshell
-90230 Oxygen (style)
-90240 Oxygen (decoration)
