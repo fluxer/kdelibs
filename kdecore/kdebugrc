@@ -17,7 +17,7 @@
 #   4 = off
 #
 # For file output you can give a filename by *Filename=<file>
-# otherwise kdebug.dbg in the current directory is used.
+# otherwise kdebug.log in the current directory is used.
 #
 # example:
 #
@@ -29,7 +29,7 @@
 # InfoOutput=0
 # InfoFilename=/var/log/dbg.log
 # ErrorOutput=1
-# AbortFatal=1
+# AbortFatal=true
 #
 
 # KHTTP warning, error and fatal to syslog
