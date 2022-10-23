@@ -34,6 +34,7 @@ static void setupArea(const char* area, const int output, const QString &filenam
     kconfiggroup.writeEntry("FatalOutput", output);
     kconfiggroup.writePathEntry("FatalFilename", filename);
     kconfiggroup.writeEntry("AbortFatal", false);
+    kClearDebugConfig();
 }
 
 class KDebugTest : public QObject
@@ -100,6 +101,5 @@ void KDebugTest::output()
     kError(123) << "foo" << "error";
     kFatal(123) << "bar" << "fatal";
 }
-
 
 #include "kdebugtest.moc"

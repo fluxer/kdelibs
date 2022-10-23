@@ -41,20 +41,28 @@
 #include <execinfo.h>
 #endif
 
+static int s_kde_debug_methodname = -1;
+static int s_kde_debug_timestamp = -1;
+static int s_kde_debug_color = -1;
+
 static QByteArray kDebugHeader(const QByteArray &areaname, const char* const file, const int line, const char* const funcinfo)
 {
     Q_UNUSED(file);
     Q_UNUSED(line);
 
-    static const bool kde_debug_methodname = !qgetenv("KDE_DEBUG_METHODNAME").isEmpty();
-    static const bool kde_debug_timestamp = !qgetenv("KDE_DEBUG_TIMESTAMP").isEmpty();
+    if (s_kde_debug_methodname == -1) {
+        s_kde_debug_methodname = !qgetenv("KDE_DEBUG_METHODNAME").isEmpty();
+    }
+    if (s_kde_debug_timestamp == -1) {
+        s_kde_debug_timestamp = !qgetenv("KDE_DEBUG_TIMESTAMP").isEmpty();
+    }
 
-    if (!kde_debug_methodname && !kde_debug_timestamp) {
+    if (!s_kde_debug_methodname && !s_kde_debug_timestamp) {
         return areaname;
     }
 
     QByteArray result(areaname);
-    if (kde_debug_methodname) {
+    if (s_kde_debug_methodname) {
         result.append(" from ");
         const QList<QByteArray> funcinfolist = QByteArray(funcinfo).split(' ');
         bool foundfunc = false;
@@ -70,7 +78,7 @@ static QByteArray kDebugHeader(const QByteArray &areaname, const char* const fil
         }
     }
 
-    if (kde_debug_timestamp) {
+    if (s_kde_debug_timestamp) {
         static const QString timestamp_format = QString::fromLatin1("hh:mm:ss.zzz");
         const QByteArray timestamp = QDateTime::currentDateTime().time().toString(timestamp_format).toLocal8Bit();
 
@@ -88,6 +96,11 @@ class KDebugDevicesMap : public QMap<int,QIODevice*>
 {
 public:
     ~KDebugDevicesMap()
+        {
+            destroyDevices();
+        }
+
+    void destroyDevices()
         {
             foreach (const int area, keys()) {
                 QIODevice* qiodevice = take(area);
@@ -214,8 +227,11 @@ public:
 protected:
     qint64 writeData(const char* data, qint64 len) final
         {
-            static const bool kde_debug_color = !qgetenv("KDE_DEBUG_COLOR").isEmpty();
-            if (kde_debug_color) {
+            if (s_kde_debug_color == -1) {
+                s_kde_debug_color = !qgetenv("KDE_DEBUG_COLOR").isEmpty();
+            }
+
+            if (s_kde_debug_color) {
                 static const bool isttyoutput = (
                     m_level == QtDebugMsg ? ::isatty(::fileno(stdout)) : ::isatty(::fileno(stderr))
                 );
@@ -516,8 +532,15 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
 void kClearDebugConfig()
 {
     QMutexLocker locker(globalKDebugMutex);
+
+    globalKDebugDevices->destroyDevices();
+
     globalKDebugConfig->reparseConfiguration();
     globalKDebugConfig->readAreas();
+
+    s_kde_debug_methodname = -1;
+    s_kde_debug_timestamp = -1;
+    s_kde_debug_color = -1;
 }
 
 QDebug operator<<(QDebug s, const KDateTime &time)
