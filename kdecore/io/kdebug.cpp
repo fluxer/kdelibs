@@ -45,11 +45,8 @@ static int s_kde_debug_methodname = -1;
 static int s_kde_debug_timestamp = -1;
 static int s_kde_debug_color = -1;
 
-static QByteArray kDebugHeader(const QByteArray &areaname, const char* const file, const int line, const char* const funcinfo)
+static QByteArray kDebugHeader(const QByteArray &areaname, const char* const funcinfo)
 {
-    Q_UNUSED(file);
-    Q_UNUSED(line);
-
     if (s_kde_debug_methodname == -1) {
         s_kde_debug_methodname = !qgetenv("KDE_DEBUG_METHODNAME").isEmpty();
     }
@@ -486,7 +483,21 @@ QString kBacktrace(int levels)
 #endif // HAVE_BACKTRACE
 }
 
-QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const char *funcinfo)
+void kClearDebugConfig()
+{
+    QMutexLocker locker(globalKDebugMutex);
+
+    globalKDebugDevices->destroyDevices();
+
+    globalKDebugConfig->reparseConfiguration();
+    globalKDebugConfig->cacheAreas();
+
+    s_kde_debug_methodname = -1;
+    s_kde_debug_timestamp = -1;
+    s_kde_debug_color = -1;
+}
+
+QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
 {
     QMutexLocker locker(globalKDebugMutex);
 
@@ -499,7 +510,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
     QString areafilename;
     // TODO: abort when? can't show message box and abort immediately
     bool areaabort = true;
-    switch (level) {
+    switch (type) {
         case QtDebugMsg: {
             areaoutput = kdebugareacache.infooutput;
             areafilename = kdebugareacache.infofilename;
@@ -532,8 +543,8 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugFileDevice* kdebugdevice = qobject_cast<KDebugFileDevice*>(qiodevice);
-            kdebugdevice->setLevel(level);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            kdebugdevice->setLevel(type);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
             kdebugdevice->setFilepath(areafilename);
             return QDebug(kdebugdevice);
         }
@@ -544,8 +555,8 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugMessageBoxDevice* kdebugdevice = qobject_cast<KDebugMessageBoxDevice*>(qiodevice);
-            kdebugdevice->setLevel(level);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            kdebugdevice->setLevel(type);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
             return QDebug(kdebugdevice);
         }
         case KDebugConfig::TypeShell: {
@@ -555,8 +566,8 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugShellDevice* kdebugdevice = qobject_cast<KDebugShellDevice*>(qiodevice);
-            kdebugdevice->setLevel(level);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            kdebugdevice->setLevel(type);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
             return QDebug(kdebugdevice);
         }
         case KDebugConfig::TypeSyslog: {
@@ -566,8 +577,8 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
                 globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugSyslogDevice* kdebugdevice = qobject_cast<KDebugSyslogDevice*>(qiodevice);
-            kdebugdevice->setLevel(level);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), file, line, funcinfo));
+            kdebugdevice->setLevel(type);
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
             return QDebug(kdebugdevice);
         }
         case KDebugConfig::TypeOff:
@@ -576,20 +587,6 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
         }
     }
     Q_UNREACHABLE();
-}
-
-void kClearDebugConfig()
-{
-    QMutexLocker locker(globalKDebugMutex);
-
-    globalKDebugDevices->destroyDevices();
-
-    globalKDebugConfig->reparseConfiguration();
-    globalKDebugConfig->cacheAreas();
-
-    s_kde_debug_methodname = -1;
-    s_kde_debug_timestamp = -1;
-    s_kde_debug_color = -1;
 }
 
 QDebug operator<<(QDebug s, const KDateTime &time)

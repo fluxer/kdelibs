@@ -36,13 +36,6 @@
  */
 
 /**
- * @internal
- * Returns a debug stream that may or may not output anything.
- */
-KDECORE_EXPORT QDebug kDebugStream(QtMsgType level, int area, const char *file = 0,
-                                   int line = -1, const char *funcinfo = 0);
-
-/**
  * \relates KGlobal
  * Returns a backtrace.
  * Note: Hidden symbol visibility may negatively affect the information provided
@@ -89,37 +82,11 @@ KDECORE_EXPORT void kClearDebugConfig();
  * \relates KGlobal
  * Returns a debug stream. You can use it to print debug
  * information.
- * @param area an id to identify the output, KDE_DEFAULT_DEBUG_AREA for default
+ * @param type type of message
+ * @param funcinfo caller of KDebug
+ * @param area an id to identify the output
  */
-static inline QDebug kDebug(int area = KDE_DEFAULT_DEBUG_AREA)
-{ return kDebugStream(QtDebugMsg, area); }
-
-/**
- * \relates KGlobal
- * Returns a warning stream. You can use it to print warning
- * information.
- * @param area an id to identify the output, KDE_DEFAULT_DEBUG_AREA for default
- */
-static inline QDebug kWarning(int area = KDE_DEFAULT_DEBUG_AREA)
-{ return kDebugStream(QtWarningMsg, area); }
-
-/**
- * \relates KGlobal
- * Returns an error stream. You can use it to print error
- * information.
- * @param area an id to identify the output, KDE_DEFAULT_DEBUG_AREA for default
- */
-static inline QDebug kError(int area = KDE_DEFAULT_DEBUG_AREA)
-{ return kDebugStream(QtCriticalMsg, area); }
-
-/**
- * \relates KGlobal
- * Returns a fatal error stream. You can use it to print fatal error
- * information.
- * @param area an id to identify the output, KDE_DEFAULT_DEBUG_AREA for default
- */
-static inline QDebug kFatal(int area = KDE_DEFAULT_DEBUG_AREA)
-{ return kDebugStream(QtFatalMsg, area); }
+KDECORE_EXPORT QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area = KDE_DEFAULT_DEBUG_AREA);
 
 // operators for KDE types
 class KUrl;
@@ -127,30 +94,10 @@ class KDateTime;
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KUrl &url);
 KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
 
-/**
- * @internal
- * A class for using operator()
- */
-class KDebug
-{
-    const char* const file;
-    const char* const funcinfo;
-    const int line;
-    const QtMsgType level;
-public:
-    explicit inline KDebug(QtMsgType type, const char* const f = 0, int l = -1, const char* const info = 0)
-        : file(f), funcinfo(info), line(l), level(type)
-        {
-        }
-
-    inline QDebug operator()(int area = KDE_DEFAULT_DEBUG_AREA)
-        { return kDebugStream(level, area, file, line, funcinfo); }
-};
-
-#define kDebug     KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-#define kWarning   KDebug(QtWarningMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-#define kError     KDebug(QtCriticalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
-#define kFatal     KDebug(QtFatalMsg, __FILE__, __LINE__, Q_FUNC_INFO)
+#define kDebug(...)     KDebug(QtDebugMsg, Q_FUNC_INFO, ##__VA_ARGS__)
+#define kWarning(...)   KDebug(QtWarningMsg, Q_FUNC_INFO, ##__VA_ARGS__)
+#define kError(...)     KDebug(QtCriticalMsg, Q_FUNC_INFO, ##__VA_ARGS__)
+#define kFatal(...)     KDebug(QtFatalMsg, Q_FUNC_INFO, ##__VA_ARGS__)
 
 /**
  * Convenience macro, use this to remind yourself to finish the implementation of a function
