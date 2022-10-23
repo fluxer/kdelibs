@@ -39,6 +39,8 @@
 #include <execinfo.h>
 #endif
 
+static const QString s_kdebugfilepath = QString::fromLatin1("kdebug.log");
+
 static int s_kde_debug_methodname = -1;
 static int s_kde_debug_timestamp = -1;
 static int s_kde_debug_color = -1;
@@ -129,7 +131,7 @@ class KDebugFileDevice: public KDebugNullDevice
 public:
     KDebugFileDevice()
         : m_level(QtDebugMsg),
-        m_filepath(QString::fromLatin1("kdebug.log"))
+        m_filepath(s_kdebugfilepath)
         { }
 
     void setLevel(const QtMsgType level)
@@ -320,6 +322,31 @@ private:
     QByteArray m_areaname;
 };
 
+class KDebugAreaCache
+{
+public:
+    KDebugAreaCache()
+        : infooutput(4),
+        warnoutput(2),
+        erroroutput(2),
+        fataloutput(2),
+        infofilename(s_kdebugfilepath),
+        warnfilename(s_kdebugfilepath),
+        errorfilename(s_kdebugfilepath),
+        fatalfilename(s_kdebugfilepath),
+        abortfatal(true)
+    { }
+
+    int infooutput;
+    int warnoutput;
+    int erroroutput;
+    int fataloutput;
+    QString infofilename;
+    QString warnfilename;
+    QString errorfilename;
+    QString fatalfilename;
+    bool abortfatal;
+};
 
 class KDebugConfig : public KConfig
 {
@@ -334,31 +361,57 @@ public:
 
     KDebugConfig();
 
-    void readAreas();
+    void cacheAreas();
 
+    bool disableAll() const;
     QByteArray areaName(const int number) const;
+    KDebugAreaCache areaCache(const int number) const;
 
 private:
     Q_DISABLE_COPY(KDebugConfig);
+    bool m_disableall;
     QMap<int,QByteArray> m_areanames;
+    QMap<int,KDebugAreaCache> m_areacache;
 };
 K_GLOBAL_STATIC(KDebugConfig, globalKDebugConfig)
 
 KDebugConfig::KDebugConfig()
-    : KConfig(QString::fromLatin1("kdebugrc"), KConfig::NoGlobals)
+    : KConfig(QString::fromLatin1("kdebugrc"), KConfig::NoGlobals),
+    m_disableall(false)
 {
-    readAreas();
+    cacheAreas();
 }
 
-void KDebugConfig::readAreas()
+void KDebugConfig::cacheAreas()
 {
     m_areanames.clear();
+    m_areacache.clear();
+
+    KConfigGroup generalgroup = KConfig::group(QString());
+    m_disableall = generalgroup.readEntry("DisableAll", false);
+    if (m_disableall) {
+        return;
+    }
+
+    KDebugAreaCache kdebugareacache;
+    foreach (const QString &area, KConfig::groupList()) {
+        KConfigGroup areagroup = KConfig::group(area);
+        kdebugareacache.infooutput = areagroup.readEntry("InfoOutput", int(KDebugConfig::TypeOff));
+        kdebugareacache.infofilename = areagroup.readPathEntry("InfoFilename", s_kdebugfilepath);
+        kdebugareacache.warnoutput = areagroup.readEntry("WarnOutput", int(KDebugConfig::TypeShell));
+        kdebugareacache.warnfilename = areagroup.readPathEntry("WarnFilename", s_kdebugfilepath);
+        kdebugareacache.erroroutput = areagroup.readEntry("ErrorOutput", int(KDebugConfig::TypeShell));
+        kdebugareacache.errorfilename = areagroup.readPathEntry("ErrorFilename", s_kdebugfilepath);
+        kdebugareacache.fataloutput = areagroup.readEntry("FatalOutput", int(KDebugConfig::TypeShell));
+        kdebugareacache.fatalfilename = areagroup.readPathEntry("FatalFilename", s_kdebugfilepath);
+        kdebugareacache.abortfatal = areagroup.readEntry("AbortFatal", true);
+        m_areacache.insert(area.toLongLong(), kdebugareacache);
+    }
 
     const QString kdebugareas = KStandardDirs::locate("config", QString::fromLatin1("kdebug.areas"));
     if (kdebugareas.isEmpty()) {
         return;
     }
-
     QFile kdebugareasfile(kdebugareas);
     if (!kdebugareasfile.open(QFile::ReadOnly)) {
         return;
@@ -368,22 +421,23 @@ void KDebugConfig::readAreas()
         if (kdebugareasline.isEmpty() || kdebugareasline.startsWith('#')) {
             continue;
         }
-
         const int spaceindex = kdebugareasline.indexOf(' ');
         if (spaceindex < 1) {
             continue;
         }
-
         const int areanumber = kdebugareasline.mid(0, spaceindex).toLongLong();
         const QByteArray areaname = kdebugareasline.mid(spaceindex + 1, kdebugareasline.size() - spaceindex - 1).trimmed();
         if (areanumber <= 0 || areaname.isEmpty()) {
             continue;
         }
-
         m_areanames.insert(areanumber, areaname);
-
         // qDebug() << Q_FUNC_INFO << areanumber << areaname;
     }
+}
+
+bool KDebugConfig::disableAll() const
+{
+    return m_disableall;
 }
 
 QByteArray KDebugConfig::areaName(const int number) const
@@ -399,6 +453,10 @@ QByteArray KDebugConfig::areaName(const int number) const
     return QCoreApplication::applicationName().toUtf8();
 }
 
+KDebugAreaCache KDebugConfig::areaCache(const int number) const
+{
+    return m_areacache.value(number);
+}
 
 QString kBacktrace(int levels)
 {
@@ -434,37 +492,35 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
 {
     QMutexLocker locker(globalKDebugMutex);
 
-    KConfigGroup generalgroup = globalKDebugConfig->group(QString());
-    const bool disableall = generalgroup.readEntry("DisableAll", false);
-    if (disableall) {
+    if (globalKDebugConfig->disableAll()) {
         return QDebug(globalKDebugNullDevie);
     }
 
-    KConfigGroup areagroup = globalKDebugConfig->group(QString::number(area));
+    const KDebugAreaCache kdebugareacache = globalKDebugConfig->areaCache(area);
     int areaoutput = int(KDebugConfig::TypeShell);
-    QString areafilename = QString::fromLatin1("kdebug.log");
+    QString areafilename;
     // TODO: abort when? can't show message box and abort immediately
     bool areaabort = true;
     switch (level) {
         case QtDebugMsg: {
-            areaoutput = areagroup.readEntry("InfoOutput", int(KDebugConfig::TypeOff));
-            areafilename = areagroup.readPathEntry("InfoFilename", areafilename);
+            areaoutput = kdebugareacache.infooutput;
+            areafilename = kdebugareacache.infofilename;
             break;
         }
         case QtWarningMsg: {
-            areaoutput = areagroup.readEntry("WarnOutput", areaoutput);
-            areafilename = areagroup.readPathEntry("WarnFilename", areafilename);
+            areaoutput = kdebugareacache.warnoutput;
+            areafilename = kdebugareacache.warnfilename;
             break;
         }
         case QtCriticalMsg: {
-            areaoutput = areagroup.readEntry("ErrorOutput", areaoutput);
-            areafilename = areagroup.readPathEntry("ErrorFilename", areafilename);
+            areaoutput = kdebugareacache.erroroutput;
+            areafilename = kdebugareacache.errorfilename;
             break;
         }
         case QtFatalMsg: {
-            areaoutput = areagroup.readEntry("FatalOutput", areaoutput);
-            areafilename = areagroup.readPathEntry("FatalFilename", areafilename);
-            areaabort = areagroup.readEntry("AbortFatal", true);
+            areaoutput = kdebugareacache.fataloutput;
+            areafilename = kdebugareacache.fatalfilename;
+            areaabort = kdebugareacache.abortfatal;
             break;
         }
     }
@@ -530,7 +586,7 @@ void kClearDebugConfig()
     globalKDebugDevices->destroyDevices();
 
     globalKDebugConfig->reparseConfiguration();
-    globalKDebugConfig->readAreas();
+    globalKDebugConfig->cacheAreas();
 
     s_kde_debug_methodname = -1;
     s_kde_debug_timestamp = -1;
