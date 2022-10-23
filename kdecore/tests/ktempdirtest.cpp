@@ -27,48 +27,48 @@
 
 void KTempDirTest::testNoDelete()
 {
-	KTempDir dir("test");
-	dir.setAutoRemove(false);
-	QVERIFY(dir.status() == 0);
-	QVERIFY(dir.exists());
-	QVERIFY(QDir(dir.name()).exists());
+    KTempDir dir("test");
+    dir.setAutoRemove(false);
+    QVERIFY(dir.status() == 0);
+    QVERIFY(dir.exists());
+    QVERIFY(QDir(dir.name()).exists());
 
-	dir.unlink();
-	QVERIFY(dir.status() == 0);
-	QVERIFY(!dir.exists());
-	QVERIFY(!QDir(dir.name()).exists());
+    dir.unlink();
+    QVERIFY(dir.status() == 0);
+    QVERIFY(!dir.exists());
+    QVERIFY(!QDir(dir.name()).exists());
 }
 
 void KTempDirTest::testAutoDelete()
 {
-	KTempDir *dir = new KTempDir("test");
-	QVERIFY(dir->status() == 0);
-	QVERIFY(dir->exists());
+    KTempDir *dir = new KTempDir("test");
+    QVERIFY(dir->status() == 0);
+    QVERIFY(dir->exists());
 
-	QString dName = dir->name();
-	delete dir;
-	QVERIFY(!QDir(dName).exists());
+    QString dName = dir->name();
+    delete dir;
+    QVERIFY(!QDir(dName).exists());
 }
 
 void KTempDirTest::testCreateSubDir()
 {
-	KTempDir *dir = new KTempDir("test");
-	QVERIFY(dir->status() == 0);
-	QVERIFY(dir->exists());
+    KTempDir *dir = new KTempDir("test");
+    QVERIFY(dir->status() == 0);
+    QVERIFY(dir->exists());
 
-	QDir d ( dir->name() );
-	QVERIFY(d.exists());
+    QDir d ( dir->name() );
+    QVERIFY(d.exists());
 
-	QVERIFY(d.mkdir(QString("123")));
-	QVERIFY(d.mkdir(QString("456")));
+    QVERIFY(d.mkdir(QString("123")));
+    QVERIFY(d.mkdir(QString("456")));
 
-	QString dName = dir->name();
-	delete dir;
-	d.refresh();
+    QString dName = dir->name();
+    delete dir;
+    d.refresh();
 
-	QVERIFY(!QDir(dName).exists());
-	QVERIFY(!d.exists(QString("123")));
-	QVERIFY(!d.exists(QString("456")));
+    QVERIFY(!QDir(dName).exists());
+    QVERIFY(!d.exists(QString("123")));
+    QVERIFY(!d.exists(QString("456")));
 }
 
 QTEST_KDEMAIN_CORE(KTempDirTest)

@@ -138,8 +138,8 @@ public:
      * If @p pathtemplate is empty the result will have 10 characters, the
      * standard temporary directory prepended along with the main component
      * name. Otherwise any 'X' in @p pathtemplate is replaced with random
-     * character, the standard temporary directory prepended along with the
-     * main component name.
+     * character. The standard temporary directory prepended along with the
+     * main component name unless @p pathtemplate is absolute path.
      *
      * @param pathtemplate The template to use when generating filepath.
      */

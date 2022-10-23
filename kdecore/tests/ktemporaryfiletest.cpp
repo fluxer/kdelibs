@@ -98,3 +98,15 @@ void KTemporaryFileTest::testKTemporaryFile()
     //directories we have write access to?
 }
 
+void KTemporaryFileTest::testFilePath()
+{
+    const QString tmpdir = KGlobal::dirs()->saveLocation("tmp");
+
+    QString tmpfilepath = KTemporaryFile::filePath();
+    QVERIFY(tmpfilepath.startsWith(tmpdir));
+    QVERIFY(!tmpfilepath.contains('X'));
+
+    tmpfilepath = KTemporaryFile::filePath("/foo/bar/XXXXX.tmp");
+    QVERIFY(tmpfilepath.startsWith(QLatin1String("/foo/bar/")));
+    QVERIFY(!tmpfilepath.contains('X'));
+}

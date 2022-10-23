@@ -25,9 +25,10 @@ class KTempDirTest : public QObject
 {
 	Q_OBJECT
 private Q_SLOTS:
-	void testNoDelete();
-	void testAutoDelete();
-	void testCreateSubDir();
+    void testNoDelete();
+    void testAutoDelete();
+    void testCreateSubDir();
+    void testCreateSubDir();
 };
 
-#endif
+#endif // KTEMPDIRTEST_H

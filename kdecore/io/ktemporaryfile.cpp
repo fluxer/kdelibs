@@ -100,8 +100,10 @@ QString KTemporaryFile::filePath(const QString &pathtemplate)
         result.replace(xindex, 1, QChar::fromLatin1(tmpnamechars[KRandom::randomMax(52)]));
         xindex = result.indexOf(xchar, xindex + 1);
     }
-    result.prepend(underscorechar);
-    result.prepend(KGlobal::mainComponent().componentName());
-    result.prepend(KGlobal::dirs()->saveLocation("tmp"));
+    if (!QDir::isAbsolutePath(result)) {
+        result.prepend(underscorechar);
+        result.prepend(KGlobal::mainComponent().componentName());
+        result.prepend(KGlobal::dirs()->saveLocation("tmp"));
+    }
     return result;
 }

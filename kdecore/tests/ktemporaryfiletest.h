@@ -17,10 +17,11 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
     void testKTemporaryFile();
+    void testFilePath();
 
 private:
     QString kdeTempDir;
     QString componentName;
 };
 
-#endif
+#endif // KTEMPORARYFILETEST_H
