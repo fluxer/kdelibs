@@ -230,16 +230,14 @@ protected:
             }
 
             if (s_kde_debug_color) {
-                static const bool isttyoutput = (
-                    m_level == QtDebugMsg ? ::isatty(::fileno(stdout)) : ::isatty(::fileno(stderr))
-                );
+                static const bool isttyoutput = ::isatty(::fileno(stderr));
                 if (isttyoutput) {
                     switch (m_level) {
                         // for reference:
                         // https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit
                         case QtDebugMsg: {
-                            ::fprintf(stdout, "\033[0;32m%s: %s\033[0m\n", m_header.constData(), data);
-                            ::fflush(stdout);
+                            ::fprintf(stderr, "\033[0;32m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stderr);
                             break;
                         }
                         case QtWarningMsg: {
@@ -262,13 +260,8 @@ protected:
                 }
             }
 
-            if (m_level == QtDebugMsg) {
-                ::fprintf(stdout, "%s: %s\n", m_header.constData(), data);
-                ::fflush(stdout);
-            } else {
-                ::fprintf(stderr, "%s: %s\n", m_header.constData(), data);
-                ::fflush(stderr);
-            }
+            ::fprintf(stderr, "%s: %s\n", m_header.constData(), data);
+            ::fflush(stderr);
             return len;
         }
 
