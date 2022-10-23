@@ -39,13 +39,21 @@
 #include <execinfo.h>
 #endif
 
+enum KDebugType {
+    TypeFile = 0,
+    TypeMessageBox = 1,
+    TypeShell = 2,
+    TypeSyslog = 3,
+    TypeOff = 4
+};
+
 static const QString s_kdebugfilepath = QString::fromLatin1("kdebug.log");
 
 static int s_kde_debug_methodname = -1;
 static int s_kde_debug_timestamp = -1;
 static int s_kde_debug_color = -1;
 
-static QByteArray kDebugHeader(const QByteArray &areaname, const char* const funcinfo)
+static QByteArray kDebugHeader(const QByteArray &areaname, const char* const funcinfo, const int areaoutput)
 {
     if (s_kde_debug_methodname == -1) {
         s_kde_debug_methodname = !qgetenv("KDE_DEBUG_METHODNAME").isEmpty();
@@ -54,7 +62,10 @@ static QByteArray kDebugHeader(const QByteArray &areaname, const char* const fun
         s_kde_debug_timestamp = !qgetenv("KDE_DEBUG_TIMESTAMP").isEmpty();
     }
 
-    if (!s_kde_debug_methodname && !s_kde_debug_timestamp) {
+    // syslog timestamps messages
+    const bool addtimestamp = (s_kde_debug_timestamp && areaoutput != KDebugType::TypeSyslog);
+
+    if (!s_kde_debug_methodname && !addtimestamp) {
         return areaname;
     }
 
@@ -75,7 +86,7 @@ static QByteArray kDebugHeader(const QByteArray &areaname, const char* const fun
         }
     }
 
-    if (s_kde_debug_timestamp) {
+    if (addtimestamp) {
         static const QString timestamp_format = QString::fromLatin1("hh:mm:ss.zzz");
         const QByteArray timestamp = QDateTime::currentDateTime().time().toString(timestamp_format).toLocal8Bit();
         result.append(" at ");
@@ -345,14 +356,6 @@ public:
 class KDebugConfig : public KConfig
 {
 public:
-    enum KDebugType {
-        TypeFile = 0,
-        TypeMessageBox = 1,
-        TypeShell = 2,
-        TypeSyslog = 3,
-        TypeOff = 4
-    };
-
     KDebugConfig();
 
     void cacheAreas();
@@ -390,13 +393,13 @@ void KDebugConfig::cacheAreas()
     KDebugAreaCache kdebugareacache;
     foreach (const QString &area, KConfig::groupList()) {
         KConfigGroup areagroup = KConfig::group(area);
-        kdebugareacache.infooutput = areagroup.readEntry("InfoOutput", int(KDebugConfig::TypeOff));
+        kdebugareacache.infooutput = areagroup.readEntry("InfoOutput", int(KDebugType::TypeOff));
         kdebugareacache.infofilename = areagroup.readPathEntry("InfoFilename", s_kdebugfilepath);
-        kdebugareacache.warnoutput = areagroup.readEntry("WarnOutput", int(KDebugConfig::TypeShell));
+        kdebugareacache.warnoutput = areagroup.readEntry("WarnOutput", int(KDebugType::TypeShell));
         kdebugareacache.warnfilename = areagroup.readPathEntry("WarnFilename", s_kdebugfilepath);
-        kdebugareacache.erroroutput = areagroup.readEntry("ErrorOutput", int(KDebugConfig::TypeShell));
+        kdebugareacache.erroroutput = areagroup.readEntry("ErrorOutput", int(KDebugType::TypeShell));
         kdebugareacache.errorfilename = areagroup.readPathEntry("ErrorFilename", s_kdebugfilepath);
-        kdebugareacache.fataloutput = areagroup.readEntry("FatalOutput", int(KDebugConfig::TypeShell));
+        kdebugareacache.fataloutput = areagroup.readEntry("FatalOutput", int(KDebugType::TypeShell));
         kdebugareacache.fatalfilename = areagroup.readPathEntry("FatalFilename", s_kdebugfilepath);
         kdebugareacache.abortfatal = areagroup.readEntry("AbortFatal", true);
         m_areacache.insert(area.toInt(), kdebugareacache);
@@ -505,7 +508,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
     }
 
     const KDebugAreaCache kdebugareacache = globalKDebugConfig->areaCache(area);
-    int areaoutput = int(KDebugConfig::TypeShell);
+    int areaoutput = int(KDebugType::TypeShell);
     QString areafilename;
     // TODO: abort when? can't show message box and abort immediately
     bool areaabort = true;
@@ -535,7 +538,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
 
     const uint areakey = (area << 8 | areaoutput);
     switch (areaoutput) {
-        case KDebugConfig::TypeFile: {
+        case KDebugType::TypeFile: {
             QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugFileDevice();
@@ -543,11 +546,11 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugFileDevice* kdebugdevice = qobject_cast<KDebugFileDevice*>(qiodevice);
             kdebugdevice->setType(type);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             kdebugdevice->setFilepath(areafilename);
             return QDebug(kdebugdevice);
         }
-        case KDebugConfig::TypeMessageBox: {
+        case KDebugType::TypeMessageBox: {
             QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugMessageBoxDevice();
@@ -555,10 +558,10 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugMessageBoxDevice* kdebugdevice = qobject_cast<KDebugMessageBoxDevice*>(qiodevice);
             kdebugdevice->setType(type);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             return QDebug(kdebugdevice);
         }
-        case KDebugConfig::TypeShell: {
+        case KDebugType::TypeShell: {
             QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugShellDevice();
@@ -566,10 +569,10 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugShellDevice* kdebugdevice = qobject_cast<KDebugShellDevice*>(qiodevice);
             kdebugdevice->setType(type);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             return QDebug(kdebugdevice);
         }
-        case KDebugConfig::TypeSyslog: {
+        case KDebugType::TypeSyslog: {
             QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugSyslogDevice(globalKDebugConfig->areaName(area));
@@ -577,10 +580,10 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugSyslogDevice* kdebugdevice = qobject_cast<KDebugSyslogDevice*>(qiodevice);
             kdebugdevice->setType(type);
-            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo));
+            kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             return QDebug(kdebugdevice);
         }
-        case KDebugConfig::TypeOff:
+        case KDebugType::TypeOff:
         default: {
             return QDebug(globalKDebugNullDevie);
         }
