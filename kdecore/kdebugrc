@@ -38,3 +38,24 @@ InfoOutput=4
 WarnOutput=3
 ErrorOutput=3
 FatalOutput=3
+
+# kpasswdstore warning, error and fatal to syslog
+[51004]
+InfoOutput=4
+WarnOutput=3
+ErrorOutput=3
+FatalOutput=3
+
+# kpowermanager warning, error and fatal to syslog
+[51005]
+InfoOutput=4
+WarnOutput=3
+ErrorOutput=3
+FatalOutput=3
+
+# kdnssd warning, error and fatal to syslog
+[51006]
+InfoOutput=4
+WarnOutput=3
+ErrorOutput=3
+FatalOutput=3
