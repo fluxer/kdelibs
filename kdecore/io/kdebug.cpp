@@ -79,7 +79,6 @@ static QByteArray kDebugHeader(const QByteArray &areaname, const char* const fil
     if (s_kde_debug_timestamp) {
         static const QString timestamp_format = QString::fromLatin1("hh:mm:ss.zzz");
         const QByteArray timestamp = QDateTime::currentDateTime().time().toString(timestamp_format).toLocal8Bit();
-
         result.append(" at ");
         result.append(timestamp.constData(), timestamp.size());
     }
@@ -276,8 +275,9 @@ class KDebugSyslogDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugSyslogDevice(const QByteArray &areaname)
-        : m_level(LOG_INFO)
-    { ::openlog(areaname.constData(), 0, LOG_USER); }
+        : m_level(LOG_INFO),
+        m_areaname(areaname)
+    { }
 
     void setLevel(const QtMsgType level)
         {
@@ -307,7 +307,9 @@ public:
 protected:
     qint64 writeData(const char* data, qint64 len) final
         {
+            ::openlog(m_areaname.constData(), 0, LOG_USER);
             ::syslog(m_level, "%s: %s", m_header.constData(), data);
+            ::closelog();
             return len;
         }
 
@@ -315,6 +317,7 @@ private:
     Q_DISABLE_COPY(KDebugSyslogDevice);
     int m_level;
     QByteArray m_header;
+    QByteArray m_areaname;
 };
 
 
