@@ -28,7 +28,6 @@ private Q_SLOTS:
     void testNoDelete();
     void testAutoDelete();
     void testCreateSubDir();
-    void testCreateSubDir();
 };
 
 #endif // KTEMPDIRTEST_H
