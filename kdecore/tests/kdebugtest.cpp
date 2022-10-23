@@ -44,6 +44,14 @@ static void setupArea(const char* area, const int output, const QString &filenam
     kClearDebugConfig();
 }
 
+static void testArea(const int area)
+{
+    kDebug(area) << "foo" << "info";
+    kWarning(area) << "bar" << "warning";
+    kError(area) << "foo" << "error";
+    kFatal(area) << "bar" << "fatal";
+}
+
 class KDebugTest : public QObject
 {
     Q_OBJECT
@@ -55,6 +63,7 @@ private Q_SLOTS:
     void output();
 
     void to_file();
+    void different_output_type();
 };
 
 QTEST_KDEMAIN_CORE(KDebugTest)
@@ -104,20 +113,14 @@ void KDebugTest::output()
 
     setupArea(s_areaname, areaoutput, s_areafilename);
 
-    kDebug(s_areanumber) << "foo" << "info";
-    kWarning(s_areanumber) << "bar" << "warning";
-    kError(s_areanumber) << "foo" << "error";
-    kFatal(s_areanumber) << "bar" << "fatal";
+    testArea(s_areanumber);
 }
 
 void KDebugTest::to_file()
 {
     setupArea(s_areaname, 0, s_areafilename);
 
-    kDebug(s_areanumber) << "foo" << "info";
-    kWarning(s_areanumber) << "bar" << "warning";
-    kError(s_areanumber) << "foo" << "error";
-    kFatal(s_areanumber) << "bar" << "fatal";
+    testArea(s_areanumber);
 
     QFile areafile(s_areafilename);
     QVERIFY(areafile.open(QFile::ReadOnly));
@@ -126,6 +129,27 @@ void KDebugTest::to_file()
         areafilelines.append(areafile.readLine());
     }
     QCOMPARE(areafilelines.size(), 4);
+}
+
+void KDebugTest::different_output_type()
+{
+    QFile::remove(s_areafilename);
+    {
+        KConfig kconfig(QString::fromLatin1("kdebugrc"), KConfig::NoGlobals);
+        KConfigGroup kconfiggroup = kconfig.group(s_areaname);
+        kconfiggroup.writeEntry("InfoOutput", 0);
+        kconfiggroup.writePathEntry("InfoFilename", s_areafilename);
+        kconfiggroup.writeEntry("WarnOutput", 1);
+        kconfiggroup.writePathEntry("WarnFilename", s_areafilename);
+        kconfiggroup.writeEntry("ErrorOutput", 2);
+        kconfiggroup.writePathEntry("ErrorFilename", s_areafilename);
+        kconfiggroup.writeEntry("FatalOutput", 3);
+        kconfiggroup.writePathEntry("FatalFilename", s_areafilename);
+        kconfiggroup.writeEntry("AbortFatal", false);
+    }
+    kClearDebugConfig();
+
+    testArea(s_areanumber);
 }
 
 #include "kdebugtest.moc"

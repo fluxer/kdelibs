@@ -91,7 +91,7 @@ static QByteArray kDebugHeader(const QByteArray &areaname, const char* const fil
 K_GLOBAL_STATIC(QMutex, globalKDebugMutex)
 
 
-class KDebugDevicesMap : public QMap<int,QIODevice*>
+class KDebugDevicesMap : public QMap<uint,QIODevice*>
 {
 public:
     ~KDebugDevicesMap()
@@ -101,7 +101,7 @@ public:
 
     void destroyDevices()
         {
-            foreach (const int area, keys()) {
+            foreach (const uint area, keys()) {
                 QIODevice* qiodevice = take(area);
                 delete qiodevice;
             }
@@ -282,26 +282,7 @@ public:
     { }
 
     void setLevel(const QtMsgType level)
-        {
-            switch (level) {
-                case QtDebugMsg: {
-                    m_level = LOG_INFO;
-                    break;
-                }
-                case QtWarningMsg: {
-                    m_level = LOG_WARNING;
-                    break;
-                }
-                case QtCriticalMsg: {
-                    m_level = LOG_CRIT;
-                    break;
-                }
-                case QtFatalMsg: {
-                    m_level = LOG_ERR;
-                    break;
-                }
-            }
-        }
+        { m_level = level; }
 
     void setHeader(const QByteArray &header)
         { m_header = header; }
@@ -310,7 +291,24 @@ protected:
     qint64 writeData(const char* data, qint64 len) final
         {
             ::openlog(m_areaname.constData(), 0, LOG_USER);
-            ::syslog(m_level, "%s: %s", m_header.constData(), data);
+            switch (m_level) {
+                case QtDebugMsg: {
+                    ::syslog(LOG_INFO, "%s: %s", m_header.constData(), data);
+                    break;
+                }
+                case QtWarningMsg: {
+                    ::syslog(LOG_WARNING, "%s: %s", m_header.constData(), data);
+                    break;
+                }
+                case QtCriticalMsg: {
+                    ::syslog(LOG_CRIT, "%s: %s", m_header.constData(), data);
+                    break;
+                }
+                case QtFatalMsg: {
+                    ::syslog(LOG_ERR, "%s: %s", m_header.constData(), data);
+                    break;
+                }
+            }
             ::closelog();
             return len;
         }
@@ -405,7 +403,7 @@ void KDebugConfig::cacheAreas()
         kdebugareacache.fataloutput = areagroup.readEntry("FatalOutput", int(KDebugConfig::TypeShell));
         kdebugareacache.fatalfilename = areagroup.readPathEntry("FatalFilename", s_kdebugfilepath);
         kdebugareacache.abortfatal = areagroup.readEntry("AbortFatal", true);
-        m_areacache.insert(area.toLongLong(), kdebugareacache);
+        m_areacache.insert(area.toInt(), kdebugareacache);
     }
 
     const QString kdebugareas = KStandardDirs::locate("config", QString::fromLatin1("kdebug.areas"));
@@ -525,12 +523,13 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
         }
     }
 
+    const uint areakey = (area << 8 | areaoutput);
     switch (areaoutput) {
         case KDebugConfig::TypeFile: {
-            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugFileDevice();
-                globalKDebugDevices->insert(area, qiodevice);
+                globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugFileDevice* kdebugdevice = qobject_cast<KDebugFileDevice*>(qiodevice);
             kdebugdevice->setLevel(level);
@@ -539,10 +538,10 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
             return QDebug(kdebugdevice);
         }
         case KDebugConfig::TypeMessageBox: {
-            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugMessageBoxDevice();
-                globalKDebugDevices->insert(area, qiodevice);
+                globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugMessageBoxDevice* kdebugdevice = qobject_cast<KDebugMessageBoxDevice*>(qiodevice);
             kdebugdevice->setLevel(level);
@@ -550,10 +549,10 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
             return QDebug(kdebugdevice);
         }
         case KDebugConfig::TypeShell: {
-            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugShellDevice();
-                globalKDebugDevices->insert(area, qiodevice);
+                globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugShellDevice* kdebugdevice = qobject_cast<KDebugShellDevice*>(qiodevice);
             kdebugdevice->setLevel(level);
@@ -561,10 +560,10 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
             return QDebug(kdebugdevice);
         }
         case KDebugConfig::TypeSyslog: {
-            QIODevice* qiodevice = globalKDebugDevices->value(area, nullptr);
+            QIODevice* qiodevice = globalKDebugDevices->value(areakey, nullptr);
             if (!qiodevice) {
                 qiodevice = new KDebugSyslogDevice(globalKDebugConfig->areaName(area));
-                globalKDebugDevices->insert(area, qiodevice);
+                globalKDebugDevices->insert(areakey, qiodevice);
             }
             KDebugSyslogDevice* kdebugdevice = qobject_cast<KDebugSyslogDevice*>(qiodevice);
             kdebugdevice->setLevel(level);
