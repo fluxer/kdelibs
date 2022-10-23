@@ -245,18 +245,18 @@ protected:
                             break;
                         }
                         case QtWarningMsg: {
-                            ::fprintf(stdout, "\033[0;93m%s: %s\033[0m\n", m_header.constData(), data);
-                            ::fflush(stdout);
+                            ::fprintf(stderr, "\033[0;93m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stderr);
                             break;
                         }
                         case QtCriticalMsg: {
-                            ::fprintf(stdout, "\033[0;33m%s: %s\033[0m\n", m_header.constData(), data);
-                            ::fflush(stdout);
+                            ::fprintf(stderr, "\033[0;33m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stderr);
                             break;
                         }
                         case QtFatalMsg: {
-                            ::fprintf(stdout, "\033[0;31m%s: %s\033[0m\n", m_header.constData(), data);
-                            ::fflush(stdout);
+                            ::fprintf(stderr, "\033[0;31m%s: %s\033[0m\n", m_header.constData(), data);
+                            ::fflush(stderr);
                             break;
                         }
                     }
