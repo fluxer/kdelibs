@@ -21,19 +21,26 @@
 #include "kconfiggroup.h"
 #include "kdebug.h"
 
+static const int s_areanumber = 123;
+static const char* s_areaname = "123";
+static const QString s_areafilename = QFile::encodeName(KDEBINDIR "/123.log");
+
 static void setupArea(const char* area, const int output, const QString &filename)
 {
-    KConfig kconfig(QString::fromLatin1("kdebugrc"), KConfig::NoGlobals);
-    KConfigGroup kconfiggroup = kconfig.group(area);
-    kconfiggroup.writeEntry("InfoOutput", output);
-    kconfiggroup.writePathEntry("InfoFilename", filename);
-    kconfiggroup.writeEntry("WarnOutput", output);
-    kconfiggroup.writePathEntry("WarnFilename", filename);
-    kconfiggroup.writeEntry("ErrorOutput", output);
-    kconfiggroup.writePathEntry("ErrorFilename", filename);
-    kconfiggroup.writeEntry("FatalOutput", output);
-    kconfiggroup.writePathEntry("FatalFilename", filename);
-    kconfiggroup.writeEntry("AbortFatal", false);
+    QFile::remove(s_areafilename);
+    {
+        KConfig kconfig(QString::fromLatin1("kdebugrc"), KConfig::NoGlobals);
+        KConfigGroup kconfiggroup = kconfig.group(area);
+        kconfiggroup.writeEntry("InfoOutput", output);
+        kconfiggroup.writePathEntry("InfoFilename", filename);
+        kconfiggroup.writeEntry("WarnOutput", output);
+        kconfiggroup.writePathEntry("WarnFilename", filename);
+        kconfiggroup.writeEntry("ErrorOutput", output);
+        kconfiggroup.writePathEntry("ErrorFilename", filename);
+        kconfiggroup.writeEntry("FatalOutput", output);
+        kconfiggroup.writePathEntry("FatalFilename", filename);
+        kconfiggroup.writeEntry("AbortFatal", false);
+    }
     kClearDebugConfig();
 }
 
@@ -46,6 +53,8 @@ private Q_SLOTS:
 
     void output_data();
     void output();
+
+    void to_file();
 };
 
 QTEST_KDEMAIN_CORE(KDebugTest)
@@ -56,6 +65,7 @@ void KDebugTest::initTestCase()
 
 void KDebugTest::cleanupTestCase()
 {
+    QFile::remove(s_areafilename);
     ::unsetenv("KDE_DEBUG_METHODNAME");
     ::unsetenv("KDE_DEBUG_TIMESTAMP");
     ::unsetenv("KDE_DEBUG_COLOR");
@@ -92,14 +102,30 @@ void KDebugTest::output()
         ::unsetenv("KDE_DEBUG_COLOR");
     }
 
-    const QString areafilename = QFile::encodeName(KDEBINDIR "/123.log");
-    QFile::remove(areafilename);
-    setupArea("123", areaoutput, areafilename);
+    setupArea(s_areaname, areaoutput, s_areafilename);
 
-    kDebug(123) << "foo" << "info";
-    kWarning(123) << "bar" << "warning";
-    kError(123) << "foo" << "error";
-    kFatal(123) << "bar" << "fatal";
+    kDebug(s_areanumber) << "foo" << "info";
+    kWarning(s_areanumber) << "bar" << "warning";
+    kError(s_areanumber) << "foo" << "error";
+    kFatal(s_areanumber) << "bar" << "fatal";
+}
+
+void KDebugTest::to_file()
+{
+    setupArea(s_areaname, 0, s_areafilename);
+
+    kDebug(s_areanumber) << "foo" << "info";
+    kWarning(s_areanumber) << "bar" << "warning";
+    kError(s_areanumber) << "foo" << "error";
+    kFatal(s_areanumber) << "bar" << "fatal";
+
+    QFile areafile(s_areafilename);
+    QVERIFY(areafile.open(QFile::ReadOnly));
+    QList<QByteArray> areafilelines;
+    while (!areafile.atEnd()) {
+        areafilelines.append(areafile.readLine());
+    }
+    QCOMPARE(areafilelines.size(), 4);
 }
 
 #include "kdebugtest.moc"

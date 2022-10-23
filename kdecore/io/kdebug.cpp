@@ -457,7 +457,7 @@ QDebug kDebugStream(QtMsgType level, int area, const char *file, int line, const
         }
         case QtWarningMsg: {
             areaoutput = areagroup.readEntry("WarnOutput", areaoutput);
-            areagroup.readPathEntry("WarnFilename", areafilename);
+            areafilename = areagroup.readPathEntry("WarnFilename", areafilename);
             break;
         }
         case QtCriticalMsg: {
