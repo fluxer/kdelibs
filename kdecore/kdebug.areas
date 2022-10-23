@@ -1,5 +1,5 @@
 # For applications, libraries and plugins that use kDebug(), kWarning(), etc.
-# without and an entry here defaults apply, their output will also not be
+# without an entry here defaults apply, their output will also not be
 # configurable via KCM (kdebugrc can still be edited manually)
 #
 # Format : number description
@@ -130,4 +130,3 @@
 67100       kmix
 87400       kcron
 87500       ksystemlog
-

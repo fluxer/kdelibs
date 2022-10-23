@@ -134,7 +134,7 @@ KDECORE_EXPORT QDebug operator<<(QDebug s, const KDateTime &time);
  * @internal
  * A class for using operator()
  */
-class KDebug                    //krazy= ?
+class KDebug
 {
     const char* const file;
     const char* const funcinfo;
@@ -149,7 +149,6 @@ public:
     inline QDebug operator()(int area = KDE_DEFAULT_DEBUG_AREA)
         { return kDebugStream(level, area, file, line, funcinfo); }
 };
-
 
 #define kDebug     KDebug(QtDebugMsg, __FILE__, __LINE__, Q_FUNC_INFO)
 #define kWarning   KDebug(QtWarningMsg, __FILE__, __LINE__, Q_FUNC_INFO)
