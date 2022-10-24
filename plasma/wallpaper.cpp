@@ -552,10 +552,10 @@ bool WallpaperPrivate::findInCache(const QString &key, unsigned int lastModified
 {
     if (cacheRendering) {
         QString cache = cachePath(key);
-        if (QFile::exists(cache)) {
+        QFileInfo cacheinfo(cache);
+        if (cacheinfo.exists() && cacheinfo.isFile()) {
             if (lastModified > 0) {
-                QFileInfo info(cache);
-                if (info.lastModified().toTime_t() < lastModified) {
+                if (cacheinfo.lastModified().toTime_t() < lastModified) {
                     return false;
                 }
             }
@@ -574,10 +574,10 @@ bool Wallpaper::findInCache(const QString &key, QImage &image, unsigned int last
 {
     if (d->cacheRendering) {
         QString cache = d->cachePath(key);
-        if (QFile::exists(cache)) {
+        QFileInfo cacheinfo(cache);
+        if (cacheinfo.exists() && cacheinfo.isFile()) {
             if (lastModified > 0) {
-                QFileInfo info(cache);
-                if (info.lastModified().toTime_t() < lastModified) {
+                if (cacheinfo.lastModified().toTime_t() < lastModified) {
                     return false;
                 }
             }
