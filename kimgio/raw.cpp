@@ -47,7 +47,7 @@ public:
 
 private:
     QIODevice* m_device;
-    qint64 m_devicepos;
+    const qint64 m_devicepos;
 };
 
 RAWDataStream::RAWDataStream(QIODevice* device)
