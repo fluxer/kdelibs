@@ -233,25 +233,69 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
     const QByteArray userbytes = d->m_user.toAscii();
     const QByteArray passwordbytes = d->m_password.toAscii();
     const QByteArray frombytes = d->m_from.toAscii();
-    curl_easy_setopt(d->m_curl, CURLOPT_URL, serverbytes.constData());
-    curl_easy_setopt(d->m_curl, CURLOPT_USERNAME, userbytes.constData());
-    curl_easy_setopt(d->m_curl, CURLOPT_PASSWORD, passwordbytes.constData());
-    curl_easy_setopt(d->m_curl, CURLOPT_MAIL_FROM, frombytes.constData());
+
+    CURLcode curlresult = curl_easy_setopt(d->m_curl, CURLOPT_URL, serverbytes.constData());
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
+
+    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_USERNAME, userbytes.constData());
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
+
+    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_PASSWORD, passwordbytes.constData());
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
+
+    // TODO: option for these and add setting to KEMailSettings
+    (void)curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
+    (void)curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_TRY);
+
+    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_MAIL_FROM, frombytes.constData());
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
+
     foreach (const QString &it, to) {
         const QByteArray tobytes = it.toAscii();
         d->m_curlrcpt = curl_slist_append(d->m_curlrcpt, tobytes.constData());
     }
-    curl_easy_setopt(d->m_curl, CURLOPT_MAIL_RCPT, d->m_curlrcpt);
-    curl_easy_setopt(d->m_curl, CURLOPT_READFUNCTION, KEMailPrivate::curlReadCallback);
-    curl_easy_setopt(d->m_curl, CURLOPT_READDATA, d);
-    curl_easy_setopt(d->m_curl, CURLOPT_UPLOAD, 1L);
+    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_MAIL_RCPT, d->m_curlrcpt);
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_slist_free_all(d->m_curlrcpt);
+        d->m_curlrcpt = nullptr;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
+
+    (void)curl_easy_setopt(d->m_curl, CURLOPT_READFUNCTION, KEMailPrivate::curlReadCallback);
+    (void)curl_easy_setopt(d->m_curl, CURLOPT_READDATA, d);
+    (void)curl_easy_setopt(d->m_curl, CURLOPT_UPLOAD, 1L);
     // curl_easy_setopt(d->m_curl, CURLOPT_VERBOSE, 1L);
-    // TODO: option for these and add setting to KEMailSettings
-    curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
-    curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_TRY);
 
     bool result = true;
-    const CURLcode curlresult = curl_easy_perform(d->m_curl);
+    curlresult = curl_easy_perform(d->m_curl);
     if (curlresult != CURLE_OK) {
         d->m_errorstring = curl_easy_strerror(curlresult);
         kWarning() << d->m_errorstring;
