@@ -20,11 +20,12 @@
 #define KDIRLISTERTEST_H
 
 #include <QSignalSpy>
-#include <QtCore/QObject>
+#include <QObject>
+#include <QEventLoop>
+#include <QDateTime>
+#include <QTimer>
 #include <ktempdir.h>
-#include <QtCore/qdatetime.h>
 #include <kdirlister.h>
-#include <QtCore/QEventLoop>
 
 Q_DECLARE_METATYPE(KFileItemList)
 
@@ -132,6 +133,7 @@ private:
 private:
     int m_exitCount;
     QEventLoop m_eventLoop;
+    QTimer m_eventTimer;
     KTempDir m_tempDir;
     MyDirLister m_dirLister;
     KFileItemList m_items;

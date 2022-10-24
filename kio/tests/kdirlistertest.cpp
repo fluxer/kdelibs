@@ -1117,6 +1117,8 @@ void KDirListerTest::testDirPermissionChange()
 void KDirListerTest::enterLoop(int exitCount)
 {
     //qDebug("enterLoop");
+    connect(&m_eventTimer, SIGNAL(timeout()), &m_eventLoop, SLOT(quit()));
+    m_eventTimer.start(10000);
     m_exitCount = exitCount;
     m_eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
 }
@@ -1124,6 +1126,8 @@ void KDirListerTest::enterLoop(int exitCount)
 void KDirListerTest::exitLoop()
 {
     //qDebug("exitLoop");
+    disconnect(&m_eventTimer, SIGNAL(timeout()), &m_eventLoop, SLOT(quit()));
+    m_eventTimer.stop();
     --m_exitCount;
     if (m_exitCount <= 0) {
         m_eventLoop.quit();
