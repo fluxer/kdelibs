@@ -139,11 +139,14 @@ class KDebugFileDevice: public KDebugNullDevice
 public:
     KDebugFileDevice()
         : m_type(QtDebugMsg),
+        m_abortfatal(true),
         m_filepath(s_kdebugfilepath)
         { }
 
     void setType(const QtMsgType type)
         { m_type = type; }
+    void setAbortFatal(const bool abortfatal)
+        { m_abortfatal = abortfatal; }
     void setHeader(const QByteArray &header)
         { m_header = header; }
     void setFilepath(const QString &filepath)
@@ -154,19 +157,26 @@ protected:
         {
             QFile writefile(m_filepath);
             if (!writefile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered)) {
+                if (m_abortfatal && m_type == QtFatalMsg) {
+                    ::abort();
+                }
                 return 0;
             }
-            // TODO: m_type
+            // TODO: insert type somewhere
             writefile.write(m_header.constData(), m_header.size());
             writefile.write(": ", 2);
             writefile.write(data, len);
             writefile.write("\n", 1);
+            if (m_abortfatal && m_type == QtFatalMsg) {
+                ::abort();
+            }
             return len;
         }
 
 private:
     Q_DISABLE_COPY(KDebugFileDevice);
     QtMsgType m_type;
+    bool m_abortfatal;
     QByteArray m_header;
     QString m_filepath;
 };
@@ -176,11 +186,14 @@ class KDebugMessageBoxDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugMessageBoxDevice()
-        : m_type(QtDebugMsg)
+        : m_type(QtDebugMsg),
+        m_abortfatal(true)
         { }
 
     void setType(const QtMsgType type)
         { m_type = type; }
+    void setAbortFatal(const bool abortfatal)
+        { m_abortfatal = abortfatal; }
     void setHeader(const QByteArray &header)
         { m_header = header; }
 
@@ -206,6 +219,12 @@ protected:
                 }
                 case QtFatalMsg: {
                     KMessage::message(KMessage::Fatal, text);
+                    if (m_abortfatal) {
+                        // can't show message box and abort immediately, note that depending on the
+                        // KMessage handler and the alarm() behaviour (man 2 alarm) a lot of bad things
+                        // can happen meanwhile
+                        ::alarm(10);
+                    }
                     break;
                 }
             }
@@ -214,7 +233,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(KDebugMessageBoxDevice);
-    int m_type;
+    QtMsgType m_type;
+    bool m_abortfatal;
     QByteArray m_header;
 };
 
@@ -223,11 +243,14 @@ class KDebugShellDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugShellDevice()
-        : m_type(QtDebugMsg)
+        : m_type(QtDebugMsg),
+        m_abortfatal(true)
         { }
 
     void setType(const QtMsgType type)
         { m_type = type; }
+    void setAbortFatal(const bool abortfatal)
+        { m_abortfatal = abortfatal; }
     void setHeader(const QByteArray &header)
         { m_header = header; }
 
@@ -262,6 +285,9 @@ protected:
                         case QtFatalMsg: {
                             ::fprintf(stderr, "\033[0;5;31m%s: %s\033[0m\n", m_header.constData(), data);
                             ::fflush(stderr);
+                            if (m_abortfatal) {
+                                ::abort();
+                            }
                             break;
                         }
                     }
@@ -271,12 +297,16 @@ protected:
 
             ::fprintf(stderr, "%s: %s\n", m_header.constData(), data);
             ::fflush(stderr);
+            if (m_abortfatal && m_type == QtFatalMsg) {
+                ::abort();
+            }
             return len;
         }
 
 private:
     Q_DISABLE_COPY(KDebugShellDevice);
-    int m_type;
+    QtMsgType m_type;
+    bool m_abortfatal;
     QByteArray m_header;
 };
 
@@ -285,12 +315,15 @@ class KDebugSyslogDevice: public KDebugNullDevice
     Q_OBJECT
 public:
     KDebugSyslogDevice(const QByteArray &areaname)
-        : m_type(LOG_INFO),
+        : m_type(QtDebugMsg),
+        m_abortfatal(true),
         m_areaname(areaname)
     { }
 
     void setType(const QtMsgType type)
         { m_type = type; }
+    void setAbortFatal(const bool abortfatal)
+        { m_abortfatal = abortfatal; }
     void setHeader(const QByteArray &header)
         { m_header = header; }
 
@@ -317,12 +350,16 @@ protected:
                 }
             }
             ::closelog();
+            if (m_abortfatal && m_type == QtFatalMsg) {
+                ::abort();
+            }
             return len;
         }
 
 private:
     Q_DISABLE_COPY(KDebugSyslogDevice);
-    int m_type;
+    QtMsgType m_type;
+    bool m_abortfatal;
     QByteArray m_header;
     QByteArray m_areaname;
 };
@@ -361,8 +398,8 @@ public:
     void cacheAreas();
 
     bool disableAll() const;
-    QByteArray areaName(const int number) const;
-    KDebugAreaCache areaCache(const int number) const;
+    QByteArray areaName(const int area) const;
+    KDebugAreaCache areaCache(const int area) const;
 
 private:
     Q_DISABLE_COPY(KDebugConfig);
@@ -437,9 +474,9 @@ bool KDebugConfig::disableAll() const
     return m_disableall;
 }
 
-QByteArray KDebugConfig::areaName(const int number) const
+QByteArray KDebugConfig::areaName(const int area) const
 {
-    const QByteArray areaname = m_areanames.value(number);
+    const QByteArray areaname = m_areanames.value(area);
     if (!areaname.isEmpty()) {
         return areaname;
     }
@@ -450,9 +487,9 @@ QByteArray KDebugConfig::areaName(const int number) const
     return QCoreApplication::applicationName().toUtf8();
 }
 
-KDebugAreaCache KDebugConfig::areaCache(const int number) const
+KDebugAreaCache KDebugConfig::areaCache(const int area) const
 {
-    return m_areacache.value(number);
+    return m_areacache.value(area);
 }
 
 QString kBacktrace(int levels)
@@ -510,7 +547,6 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
     const KDebugAreaCache kdebugareacache = globalKDebugConfig->areaCache(area);
     int areaoutput = int(KDebugType::TypeShell);
     QString areafilename;
-    // TODO: abort when? can't show message box and abort immediately
     bool areaabort = true;
     switch (type) {
         case QtDebugMsg: {
@@ -546,6 +582,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugFileDevice* kdebugdevice = qobject_cast<KDebugFileDevice*>(qiodevice);
             kdebugdevice->setType(type);
+            kdebugdevice->setAbortFatal(areaabort);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             kdebugdevice->setFilepath(areafilename);
             return QDebug(kdebugdevice);
@@ -558,6 +595,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugMessageBoxDevice* kdebugdevice = qobject_cast<KDebugMessageBoxDevice*>(qiodevice);
             kdebugdevice->setType(type);
+            kdebugdevice->setAbortFatal(areaabort);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             return QDebug(kdebugdevice);
         }
@@ -569,6 +607,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugShellDevice* kdebugdevice = qobject_cast<KDebugShellDevice*>(qiodevice);
             kdebugdevice->setType(type);
+            kdebugdevice->setAbortFatal(areaabort);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             return QDebug(kdebugdevice);
         }
@@ -580,6 +619,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
             }
             KDebugSyslogDevice* kdebugdevice = qobject_cast<KDebugSyslogDevice*>(qiodevice);
             kdebugdevice->setType(type);
+            kdebugdevice->setAbortFatal(areaabort);
             kdebugdevice->setHeader(kDebugHeader(globalKDebugConfig->areaName(area), funcinfo, areaoutput));
             return QDebug(kdebugdevice);
         }
