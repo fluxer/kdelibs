@@ -79,13 +79,14 @@ KDECORE_EXPORT QString kBacktrace(int levels = -1);
 KDECORE_EXPORT void kClearDebugConfig();
 
 /*!
-    @brief Returns a debug stream. In most cases you do not want to use this
-    function, Use the convenience kDebug(), kWarning(), kError() and kFatal()
-    macros instead.
+    @brief Returns a debug stream.
+
+    @note In most cases you should not use this function directly, use the
+    convenience kDebug(), kWarning(), kError() and kFatal() macros instead.
 
     @param type type of message
     @param funcinfo caller of KDebug
-    @param area an id to identify the output
+    @param area number to identify the output
 */
 KDECORE_EXPORT QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area = KDE_DEFAULT_DEBUG_AREA);
 
