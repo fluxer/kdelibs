@@ -104,9 +104,9 @@ void KTemporaryFileTest::testFilePath()
 
     QString tmpfilepath = KTemporaryFile::filePath();
     QVERIFY(tmpfilepath.startsWith(tmpdir));
-    QVERIFY(!tmpfilepath.contains('X'));
+    QVERIFY(!tmpfilepath.contains("XXXXX"));
 
     tmpfilepath = KTemporaryFile::filePath("/foo/bar/XXXXX.tmp");
     QVERIFY(tmpfilepath.startsWith(QLatin1String("/foo/bar/")));
-    QVERIFY(!tmpfilepath.contains('X'));
+    QVERIFY(!tmpfilepath.contains("XXXXX"));
 }
