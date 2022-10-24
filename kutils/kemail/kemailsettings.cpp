@@ -25,12 +25,12 @@
  */
 
 #include "kemailsettings.h"
-
-#include <kconfig.h>
-#include <kconfiggroup.h>
-#include <kpasswdstore.h>
-#include <klocale.h>
-#include <kdebug.h>
+#include "kemail.h"
+#include "kconfig.h"
+#include "kconfiggroup.h"
+#include "kpasswdstore.h"
+#include "klocale.h"
+#include "kdebug.h"
 
 class KEMailSettingsPrivate
 {
@@ -59,7 +59,7 @@ KEMailSettingsPrivate::~KEMailSettingsPrivate()
 
 QString KEMailSettings::getSetting(KEMailSettings::Setting setting) const
 {
-    KConfigGroup cg(d->m_config, QString("General"));
+    KConfigGroup cg(d->m_config, QString::fromLatin1("General"));
     switch (setting) {
         case ClientProgram: {
             return cg.readEntry("EmailClient");
@@ -79,6 +79,10 @@ QString KEMailSettings::getSetting(KEMailSettings::Setting setting) const
         case OutServer: {
             return cg.readEntry("OutgoingServer");
         }
+        case OutServerSSL: {
+            // NOTE: same default as KEMail
+            return cg.readEntry("OutgoingServerSSL", QString::fromLatin1("try"));
+        }
         case OutServerLogin: {
             return d->m_store->getPasswd(KPasswdStore::makeKey("OutgoingUserName"));
         }
@@ -90,14 +94,14 @@ QString KEMailSettings::getSetting(KEMailSettings::Setting setting) const
 }
 void KEMailSettings::setSetting(KEMailSettings::Setting setting, const QString &value)
 {
-    KConfigGroup cg(d->m_config, QString("General"));
+    KConfigGroup cg(d->m_config, QString::fromLatin1("General"));
     switch (setting) {
         case ClientProgram: {
             cg.writePathEntry("EmailClient", value);
             break;
         }
         case ClientTerminal: {
-            cg.writeEntry("TerminalClient", (value == "true") );
+            cg.writeEntry("TerminalClient", (value == QLatin1String("true")));
             break;
         }
         case RealName: {
@@ -114,6 +118,10 @@ void KEMailSettings::setSetting(KEMailSettings::Setting setting, const QString &
         }
         case OutServer: {
             cg.writeEntry("OutgoingServer", value);
+            break;
+        }
+        case OutServerSSL: {
+            cg.writeEntry("OutgoingServerSSL", value);
             break;
         }
         case OutServerLogin: {

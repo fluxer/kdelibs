@@ -51,6 +51,15 @@ class KEMAIL_EXPORT KEMail : public QObject
 {
     Q_OBJECT
 public:
+    enum KEMailSSLType {
+        //! @brief No attempt to encrypt the connection will be made
+        SSLNo = 0,
+        //! @brief An attempt to encrypt the connection will be made, proceeding even if that cannot be done
+        SSLTry = 1,
+        //! @brief Connection will be encrypted or error will occurr
+        SSLYes = 2
+    };
+
     /*!
         @brief Contructs object with @p parent
     */
@@ -59,6 +68,11 @@ public:
 
     KUrl server() const;
     bool setServer(const KUrl &server);
+    /*!
+        @note Default is @p KEMailSSLType::SSLTry since it is unknown if the server supports encryption
+    */
+    KEMailSSLType ssl() const;
+    bool setSSL(const KEMailSSLType ssl);
     QString user() const;
     bool setUser(const QString &user);
     QString password() const;

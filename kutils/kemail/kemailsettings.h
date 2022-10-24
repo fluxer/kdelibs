@@ -60,6 +60,7 @@ public:
         EmailAddress,
         Organization,
         OutServer,
+        OutServerSSL,
         OutServerLogin,
         OutServerPass
     };

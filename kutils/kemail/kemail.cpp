@@ -24,6 +24,32 @@
 #include <string.h>
 #include <curl/curl.h>
 
+static QString enumToOutServerSSL(const KEMail::KEMailSSLType value)
+{
+    switch (value) {
+        case KEMail::KEMailSSLType::SSLNo: {
+            return QString::fromLatin1("no");
+        }
+        case KEMail::KEMailSSLType::SSLTry: {
+            return QString::fromLatin1("try");
+        }
+        case KEMail::KEMailSSLType::SSLYes: {
+            return QString::fromLatin1("yes");
+        }
+    }
+    return QString::fromLatin1("try");
+}
+
+static KEMail::KEMailSSLType outServerSSLToEnum(const QString &value)
+{
+    if (value == QLatin1String("yes")) {
+        return KEMail::KEMailSSLType::SSLYes;
+    } else if (value == QLatin1String("no")) {
+        return KEMail::KEMailSSLType::SSLNo;
+    }
+    return KEMail::KEMailSSLType::SSLTry;
+}
+
 class KEMailPrivate
 {
 public:
@@ -39,6 +65,7 @@ public:
     CURL* m_curl;
     struct curl_slist *m_curlrcpt;
     KUrl m_server;
+    KEMail::KEMailSSLType m_ssl;
     QString m_user;
     QString m_password;
     QString m_from;
@@ -48,7 +75,8 @@ public:
 
 KEMailPrivate::KEMailPrivate()
     : m_curl(nullptr),
-    m_curlrcpt(nullptr)
+    m_curlrcpt(nullptr),
+    m_ssl(KEMail::SSLTry)
 {
 }
 
@@ -123,6 +151,7 @@ KEMail::KEMail(QObject *parent)
 {
     KEMailSettings kemailsettings;
     setServer(KUrl(kemailsettings.getSetting(KEMailSettings::OutServer)));
+    setSSL(outServerSSLToEnum(kemailsettings.getSetting(KEMailSettings::OutServerSSL)));
     setFrom(kemailsettings.getSetting(KEMailSettings::EmailAddress));
 }
 
@@ -130,6 +159,7 @@ KEMail::~KEMail()
 {
     KEMailSettings kemailsettings;
     kemailsettings.setSetting(KEMailSettings::OutServer, server().url());
+    kemailsettings.setSetting(KEMailSettings::OutServerSSL, enumToOutServerSSL(ssl()));
     kemailsettings.setSetting(KEMailSettings::EmailAddress, from());
 
     delete d;
@@ -152,6 +182,21 @@ bool KEMail::setServer(const KUrl &server)
         serverurl.prepend(QLatin1String("smtp://"));
     }
     d->m_server = serverurl;
+    return true;
+}
+
+KEMail::KEMailSSLType KEMail::ssl() const
+{
+    return d->m_ssl;
+}
+
+bool KEMail::setSSL(const KEMailSSLType ssl)
+{
+    if (ssl < KEMailSSLType::SSLNo || ssl > KEMailSSLType::SSLYes) {
+        d->m_errorstring = i18n("Invalid SSL type: %1", int(ssl));
+        return false;
+    }
+    d->m_ssl = ssl;
     return true;
 }
 
@@ -243,6 +288,28 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
         return false;
     }
 
+    switch (d->m_ssl) {
+        case KEMailSSLType::SSLNo: {
+            curlresult = curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_NONE);
+            break;
+        }
+        case KEMailSSLType::SSLTry: {
+            curlresult = curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_TRY);
+            break;
+        }
+        case KEMailSSLType::SSLYes: {
+            curlresult = curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_ALL);
+            break;
+        }
+    }
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
+
     curlresult = curl_easy_setopt(d->m_curl, CURLOPT_USERNAME, userbytes.constData());
     if (curlresult != CURLE_OK) {
         d->m_errorstring = curl_easy_strerror(curlresult);
@@ -261,9 +328,8 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
         return false;
     }
 
-    // TODO: option for these and add setting to KEMailSettings
+    // TODO: option for that and add setting to KEMailSettings
     (void)curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
-    (void)curl_easy_setopt(d->m_curl, CURLOPT_USE_SSL, (long)CURLUSESSL_TRY);
 
     curlresult = curl_easy_setopt(d->m_curl, CURLOPT_MAIL_FROM, frombytes.constData());
     if (curlresult != CURLE_OK) {
