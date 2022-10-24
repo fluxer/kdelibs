@@ -539,6 +539,11 @@ void kClearDebugConfig()
 
 QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
 {
+    // e.g. called from late destructor
+    if (Q_UNLIKELY(globalKDebugMutex.isDestroyed())) {
+        return QDebug(type);
+    }
+
     QMutexLocker locker(globalKDebugMutex);
 
     if (globalKDebugConfig->disableAll()) {
