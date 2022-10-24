@@ -165,7 +165,7 @@ void SonnetCoreTest::testCore2()
     kDebug()<<"Elapsed time is "<<mtime.elapsed();
 
     kDebug()<<"Detecting language ...";
-    QString sentence = QString::fromLatin1("Die K Desktop Environment (KDE; auf Deutsch K-Arbeitsumgebung; früher: Kool Desktop Environment) ist eine frei verfügbare Arbeitsumgebung, das heißt eine grafische Benutzeroberfläche mit vielen Zusatzprogrammen für den täglichen Gebrauch.");
+    QString sentence = QString::fromUtf8("MÃ¶chten Sie wirklich alle Werkzeugleisten dieser Anwendung auf ihre Voreinstellungen zurÃ¼cksetzen? Die Ã„nderung wird sofort wirksam.");
     kDebug()<<"\tlang is "<<Sonnet::detectLanguage(sentence);
 }
 
