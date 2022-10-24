@@ -142,6 +142,11 @@ bool KDecompressor::process(const QByteArray &data)
                         );
                         break;
                     }
+                    default: {
+                        // shush compiler
+                        Q_ASSERT(false);
+                        break;
+                    }
                 }
 
                 if (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {

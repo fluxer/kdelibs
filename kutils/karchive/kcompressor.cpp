@@ -162,6 +162,11 @@ bool KCompressor::process(const QByteArray &data)
                     );
                     break;
                 }
+                default: {
+                    // shush compiler
+                    Q_ASSERT(false);
+                    break;
+                }
             }
             libdeflate_free_compressor(comp);
 
