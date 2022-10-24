@@ -645,4 +645,3 @@ void Wallpaper::setPreviewDuringConfiguration(const bool preview)
 } // Plasma namespace
 
 #include "moc_wallpaper.cpp"
-#include "private/moc_wallpaper_p.cpp"
