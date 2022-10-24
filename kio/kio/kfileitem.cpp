@@ -682,7 +682,8 @@ QString KFileItemPrivate::user() const
         {
             const KUser kuser( buff.st_uid );
             if ( kuser.isValid() ) {
-                m_entry.insert( KIO::UDSEntry::UDS_USER, kuser.loginName() );
+                userName = kuser.loginName();
+                m_entry.insert( KIO::UDSEntry::UDS_USER, userName );
             }
         }
     }
