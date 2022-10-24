@@ -52,6 +52,7 @@ public:
     Wallpaper::ResizeMethod lastResizeMethod;
     QSizeF targetSize;
     QList<KUrl> pendingUrls;
+    QList<QAction*> contextActions;
     bool cacheRendering : 1;
     bool initialized : 1;
     bool needsConfig : 1;
