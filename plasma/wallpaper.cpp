@@ -560,8 +560,7 @@ bool WallpaperPrivate::findInCache(const QString &key, unsigned int lastModified
                 }
             }
 
-            QImage image;
-            image.load(cache, imageFormat);
+            QImage image(cache, imageFormat);
             emit q->renderCompleted(image);
 
             return true;
