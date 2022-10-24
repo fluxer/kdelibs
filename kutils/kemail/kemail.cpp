@@ -96,9 +96,6 @@ QByteArray KEMailPrivate::makeData(const QString &from, const QStringList &to,
                                    const QString &subject, const QString &message,
                                    const KUrl::List &attach)
 {
-    // TODO:
-    Q_UNUSED(attach);
-
     QByteArray subjectbytes("Subject: ");
     subjectbytes.append(subject.toAscii());
 
@@ -116,6 +113,11 @@ QByteArray KEMailPrivate::makeData(const QString &from, const QStringList &to,
             }
             toandccbytes.append(to.at(i).toAscii());
         }
+    }
+
+    if (!attach.isEmpty()) {
+        // TODO:
+        kWarning() << "Attachments not implemented";
     }
 
     QByteArray result = subjectbytes;
