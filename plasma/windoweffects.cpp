@@ -222,6 +222,7 @@ void highlightWindows(WId controller, const QList<WId> &ids)
 
     if (numWindows == 0) {
         XDeleteProperty(dpy, controller, atom);
+        return;
     }
 
     QVarLengthArray<long, 32> data(numWindows);
