@@ -73,22 +73,31 @@ int RAWDataStream::read(void* rawptr, size_t rawsize, size_t rawnmemb)
 
 int RAWDataStream::seek(INT64 rawoffset, int rawwhence)
 {
+    bool result = false;
     switch (rawwhence) {
         case SEEK_SET: {
-            return m_device->seek(rawoffset);
+            result = m_device->seek(rawoffset);
+            break;
         }
         case SEEK_CUR: {
-            return m_device->seek(m_device->pos() + rawoffset);
+            result = m_device->seek(m_device->pos() + rawoffset);
+            break;
         }
         case SEEK_END: {
-            return m_device->seek(m_device->size() + rawoffset);
+            result = m_device->seek(m_device->size() + rawoffset);
+            break;
         }
         default: {
             kWarning() << "Invalid whence value" << rawwhence;
-            return 0;
+            result = false;
+            break;
         }
     }
-    Q_UNREACHABLE();
+    if (Q_UNLIKELY(!result)) {
+        kWarning() << "Could not seek" << rawoffset << rawwhence;
+        return -1;
+    }
+    return 0;
 }
 
 INT64 RAWDataStream::tell()
