@@ -25,6 +25,126 @@
 
 static const char* const s_rawpluginformat = "raw";
 
+// for reference:
+// https://www.libraw.org/docs/API-CXX.html#datastream
+class RAWDataStream : public LibRaw_abstract_datastream
+{
+public:
+    RAWDataStream(QIODevice* device);
+    ~RAWDataStream();
+
+    int valid() final;
+    int read(void* rawptr, size_t rawsize, size_t rawnmemb) final;
+    int seek(INT64 rawoffset, int rawwhence) final;
+    INT64 tell() final;
+    INT64 size() final;
+    int get_char() final;
+    char *gets(char* rawbuffer, int rawsize) final;
+    int scanf_one(const char*, void*) final;
+    int eof() final;
+    void *make_jas_stream() final;
+    const char *fname() final;
+
+private:
+    QIODevice* m_device;
+    qint64 m_devicepos;
+};
+
+RAWDataStream::RAWDataStream(QIODevice* device)
+    : m_device(device),
+    m_devicepos(m_device->pos())
+{
+}
+
+RAWDataStream::~RAWDataStream()
+{
+    m_device->seek(m_devicepos);
+}
+
+int RAWDataStream::valid()
+{
+    return m_device->isOpen();
+}
+
+int RAWDataStream::read(void* rawptr, size_t rawsize, size_t rawnmemb)
+{
+    return m_device->read(static_cast<char*>(rawptr), rawnmemb * rawsize);
+}
+
+int RAWDataStream::seek(INT64 rawoffset, int rawwhence)
+{
+    switch (rawwhence) {
+        case SEEK_SET: {
+            return m_device->seek(rawoffset);
+        }
+        case SEEK_CUR: {
+            return m_device->seek(m_device->pos() + rawoffset);
+        }
+        case SEEK_END: {
+            return m_device->seek(m_device->size() + rawoffset);
+        }
+        default: {
+            kWarning() << "Invalid whence value" << rawwhence;
+            return 0;
+        }
+    }
+    Q_UNREACHABLE();
+}
+
+INT64 RAWDataStream::tell()
+{
+    return m_device->pos();
+}
+
+INT64 RAWDataStream::size()
+{
+    return m_device->size();
+}
+
+int RAWDataStream::get_char()
+{
+    char ch = 0;
+    m_device->getChar(&ch);
+    return ch;
+}
+
+char* RAWDataStream::gets(char* rawbuffer, int rawsize)
+{
+    const qint64 readresult = m_device->readLine(rawbuffer, rawsize);
+    if (readresult > 0) {
+        return rawbuffer;
+    }
+    return nullptr;
+}
+
+int RAWDataStream::scanf_one(const char*, void*)
+{
+    // NOTE: not used at all by LibRaw, i.e. don't implement
+    KWARNING_NOTIMPLEMENTED
+    return 0;
+}
+
+int RAWDataStream::eof()
+{
+    if (m_device->atEnd()) {
+        return 1;
+    }
+    return 0;
+}
+
+void* RAWDataStream::make_jas_stream()
+{
+    // NOTE: used only for RedCine images
+    KWARNING_NOTIMPLEMENTED
+    return nullptr;
+}
+
+const char* RAWDataStream::fname()
+{
+    return "RAWDataStream";
+}
+
+
 RAWHandler::RAWHandler()
 {
 }
@@ -44,9 +164,8 @@ bool RAWHandler::canRead() const
 
 bool RAWHandler::read(QImage *image)
 {
-    QByteArray data = device()->readAll();
-
-    if (Q_UNLIKELY(data.isEmpty())) {
+    if (Q_UNLIKELY(!device())) {
+        kWarning() << "Called with no device";
         return false;
     }
 
@@ -54,7 +173,8 @@ bool RAWHandler::read(QImage *image)
         LibRaw raw;
         raw.imgdata.params.output_color = LIBRAW_COLORSPACE_sRGB;
 
-        int rawresult = raw.open_buffer(data.data(), data.size());
+        RAWDataStream rawdatastream(device());
+        int rawresult = raw.open_datastream(&rawdatastream);
         if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
             kWarning() << "Could not open buffer" << libraw_strerror(rawresult);
             raw.recycle();
@@ -89,7 +209,7 @@ bool RAWHandler::read(QImage *image)
             return false;
         }
 
-        *image = QImage(rawimg->width, rawimg->height, QImage::Format_ARGB32);
+        *image = QImage(rawimg->width, rawimg->height, QImage::Format_RGB32);
         if (Q_UNLIKELY(image->isNull())) {
             kWarning() << "Could not create QImage";
             raw.dcraw_clear_mem(rawimg);
@@ -99,7 +219,7 @@ bool RAWHandler::read(QImage *image)
 
         QRgb* imagebits = reinterpret_cast<QRgb*>(image->bits());
         for (uint i = 0 ; i < rawimg->data_size; i += 3) {
-            *imagebits = qRgba(rawimg->data[i], rawimg->data[i + 1], rawimg->data[i + 2], 0xff);
+            *imagebits = qRgb(rawimg->data[i], rawimg->data[i + 1], rawimg->data[i + 2]);
             imagebits++;
         }
 
@@ -131,19 +251,12 @@ bool RAWHandler::canRead(QIODevice *device)
         return false;
     }
 
-    const qint64 devicepos = device->pos();
-    QByteArray data = device->readAll();
-    device->seek(devicepos);
-
-    if (Q_UNLIKELY(data.isEmpty())) {
-        return false;
-    }
-
     try {
         LibRaw raw;
         raw.imgdata.params.output_color = LIBRAW_COLORSPACE_sRGB;
 
-        const int rawresult = raw.open_buffer(data.data(), data.size());
+        RAWDataStream rawdevicestream(device);
+        const int rawresult = raw.open_datastream(&rawdevicestream);
         if (rawresult == LIBRAW_FILE_UNSUPPORTED) {
             kDebug() << libraw_strerror(rawresult);
             raw.recycle();

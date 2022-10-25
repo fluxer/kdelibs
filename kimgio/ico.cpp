@@ -255,7 +255,7 @@ bool ICOHandler::read(QImage *image)
                 case 24: {
                     QRgb* bmpimagebits = reinterpret_cast<QRgb*>(bmpimage.bits());
                     for (uint bi = 0; bi < bmpimagesize && bi < imageboundary; bi += 3) {
-                        *bmpimagebits = qRgba(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi), 0xff);
+                        *bmpimagebits = qRgb(imagebytes.at(bi + 2), imagebytes.at(bi + 1), imagebytes.at(bi));
                         bmpimagebits++;
                     }
                     break;
