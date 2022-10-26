@@ -22,7 +22,7 @@
 
 using namespace Solid::Backends::UDev;
 
-static const QStringList powersupplysubsystems = QStringList() << QLatin1String("power_supply");
+static const QList<QByteArray> powersupplysubsystems = QList<QByteArray>() << "power_supply";
 
 AcAdapter::AcAdapter(UDevDevice *device)
     : DeviceInterface(device),

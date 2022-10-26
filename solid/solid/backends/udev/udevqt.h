@@ -70,7 +70,7 @@ class Client : public QObject
 {
     Q_OBJECT
 public:
-    Client(const QStringList &subsystems, QObject *parent = 0);
+    Client(const QList<QByteArray> &subsystems, QObject *parent = 0);
     ~Client();
 
     DeviceList allDevices();

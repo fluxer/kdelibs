@@ -49,7 +49,7 @@ public:
 
 UDevManager::Private::Private()
 {
-    static const QStringList subsystems = QStringList()
+    static const QList<QByteArray> subsystems = QList<QByteArray>()
         << "block"
         << "power_supply"
         << "processor"

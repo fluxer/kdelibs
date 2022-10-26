@@ -22,7 +22,7 @@
 
 namespace UdevQt {
 
-Client::Client(const QStringList& subsystems, QObject *parent)
+Client::Client(const QList<QByteArray>& subsystems, QObject *parent)
     : QObject(parent), m_udev(udev_new()), m_monitor(0), m_monitorNotifier(0)
 {
     // create a listener
@@ -33,8 +33,8 @@ Client::Client(const QStringList& subsystems, QObject *parent)
     }
 
     // apply subsystem filters
-    foreach (const QString &it, subsystems) {
-        udev_monitor_filter_add_match_subsystem_devtype(m_monitor, it.toLatin1().constData(), NULL);
+    foreach (const QByteArray &it, subsystems) {
+        udev_monitor_filter_add_match_subsystem_devtype(m_monitor, it.constData(), NULL);
     }
 
     // start the monitor receiving
