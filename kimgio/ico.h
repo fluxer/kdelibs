@@ -47,4 +47,3 @@ public:
 };
 
 #endif // KIMG_ICO_H
- 

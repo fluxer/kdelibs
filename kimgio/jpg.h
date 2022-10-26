@@ -54,4 +54,3 @@ public:
 };
 
 #endif // KIMG_JPG_H
- 
