@@ -24,6 +24,9 @@
 #include <string.h>
 #include <curl/curl.h>
 
+// for reference:
+// https://en.wikipedia.org/wiki/SMTP_Authentication
+
 static QString enumToOutServerSSL(const KEMail::KEMailSSLType value)
 {
     switch (value) {
@@ -330,8 +333,16 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
         return false;
     }
 
-    // TODO: option for that and add setting to KEMailSettings
-    (void)curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
+    // TODO: XOAUTH2 option and add setting to KEMailSettings
+    // (void)curl_easy_setopt(d->m_curl, CURLOPT_XOAUTH2_BEARER, "");
+    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
 
     curlresult = curl_easy_setopt(d->m_curl, CURLOPT_MAIL_FROM, frombytes.constData());
     if (curlresult != CURLE_OK) {
