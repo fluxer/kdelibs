@@ -44,7 +44,6 @@ static const struct HeadersTblData {
     { s_jp2rfc3745header, 12, OPJ_CODEC_JP2 },
     { s_jp2header, 4, OPJ_CODEC_JP2 },
     { s_j2kheader, 4, OPJ_CODEC_J2K }
-    // TODO: OPJ_CODEC_JPT
 };
 static const qint16 HeadersTblSize = sizeof(HeadersTbl) / sizeof(HeadersTblData);
 
