@@ -96,10 +96,9 @@ static OPJ_BOOL oj_seek_callback(OPJ_OFF_T size, void *data)
 
 static OPJ_OFF_T oj_skip_callback(OPJ_OFF_T size, void *data)
 {
-    kWarning() << "Not implemented";
-    Q_UNUSED(size);
-    Q_UNUSED(data);
-    return 0;
+    QIODevice* device = static_cast<QIODevice*>(data);
+    device->seek(device->pos() + size);
+    return device->pos();
 }
 
 
