@@ -30,7 +30,7 @@ static const char* const s_rawpluginformat = "raw";
 class RAWDataStream : public LibRaw_abstract_datastream
 {
 public:
-    RAWDataStream(QIODevice* device);
+    RAWDataStream(QIODevice* device, const bool restore);
     ~RAWDataStream();
 
     int valid() final;
@@ -48,17 +48,21 @@ public:
 private:
     QIODevice* m_device;
     const qint64 m_devicepos;
+    const bool m_restore;
 };
 
-RAWDataStream::RAWDataStream(QIODevice* device)
+RAWDataStream::RAWDataStream(QIODevice* device, const bool restore)
     : m_device(device),
-    m_devicepos(m_device->pos())
+    m_devicepos(m_device->pos()),
+    m_restore(restore)
 {
 }
 
 RAWDataStream::~RAWDataStream()
 {
-    m_device->seek(m_devicepos);
+    if (m_restore) {
+        m_device->seek(m_devicepos);
+    }
 }
 
 int RAWDataStream::valid()
@@ -184,7 +188,7 @@ bool RAWHandler::read(QImage *image)
         LibRaw raw;
         raw.imgdata.params.output_color = LIBRAW_COLORSPACE_sRGB;
 
-        RAWDataStream rawdatastream(device());
+        RAWDataStream rawdatastream(device(), false);
         int rawresult = raw.open_datastream(&rawdatastream);
         if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
             kWarning() << "Could not open datastream" << libraw_strerror(rawresult);
@@ -266,7 +270,7 @@ bool RAWHandler::canRead(QIODevice *device)
         LibRaw raw;
         raw.imgdata.params.output_color = LIBRAW_COLORSPACE_sRGB;
 
-        RAWDataStream rawdevicestream(device);
+        RAWDataStream rawdevicestream(device, true);
         const int rawresult = raw.open_datastream(&rawdevicestream);
         if (rawresult == LIBRAW_FILE_UNSUPPORTED) {
             kDebug() << libraw_strerror(rawresult);
