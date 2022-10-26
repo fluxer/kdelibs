@@ -55,11 +55,11 @@ static const QByteArray thumbFormat = QImageWriter::defaultImageFormat();
 static const QString thumbExt = QLatin1String(".") + thumbFormat;
 
 // NOTE: keep in sync with:
-// kde-baseapps/dolphin/src/settings/general/previewssettingspage.cpp
+// kde-workspace/dolphin/src/settings/general/previewssettingspage.cpp
 // kde-workspace/kioslave/thumbnail/thumbnail.h
 enum MaxPreviewSizes {
-    MaxLocalSize = 5, // 5 MB
-    MaxRemoteSize = 1 // 1 MB
+    MaxLocalSize = 20, // 20 MB
+    MaxRemoteSize = 5 // 5 MB
 };
 
 struct KIO::PreviewItem
