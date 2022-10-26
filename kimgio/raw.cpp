@@ -113,8 +113,10 @@ INT64 RAWDataStream::size()
 int RAWDataStream::get_char()
 {
     char ch = 0;
-    m_device->getChar(&ch);
-    return ch;
+    if (!m_device->getChar(&ch)) {
+        return -1;
+    }
+    return static_cast<uchar>(ch);
 }
 
 char* RAWDataStream::gets(char* rawbuffer, int rawsize)
@@ -185,7 +187,7 @@ bool RAWHandler::read(QImage *image)
         RAWDataStream rawdatastream(device());
         int rawresult = raw.open_datastream(&rawdatastream);
         if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
-            kWarning() << "Could not open buffer" << libraw_strerror(rawresult);
+            kWarning() << "Could not open datastream" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
@@ -271,7 +273,7 @@ bool RAWHandler::canRead(QIODevice *device)
             raw.recycle();
             return false;
         } else if (Q_UNLIKELY(rawresult != LIBRAW_SUCCESS)) {
-            kWarning() << "Could not open buffer" << libraw_strerror(rawresult);
+            kWarning() << "Could not open datastream" << libraw_strerror(rawresult);
             raw.recycle();
             return false;
         }
