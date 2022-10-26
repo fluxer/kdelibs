@@ -116,17 +116,17 @@ INT64 RAWDataStream::size()
 
 int RAWDataStream::get_char()
 {
-    char ch = 0;
-    if (!m_device->getChar(&ch)) {
+    char result = 0;
+    if (!m_device->getChar(&result)) {
         return -1;
     }
-    return static_cast<uchar>(ch);
+    return static_cast<uchar>(result);
 }
 
 char* RAWDataStream::gets(char* rawbuffer, int rawsize)
 {
-    const qint64 readresult = m_device->readLine(rawbuffer, rawsize);
-    if (readresult > 0) {
+    const qint64 result = m_device->readLine(rawbuffer, rawsize);
+    if (result > 0) {
         return rawbuffer;
     }
     return nullptr;
