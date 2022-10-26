@@ -78,7 +78,8 @@ DeviceList Client::allDevices()
 
 Device Client::deviceBySysfsPath(const QString &sysfsPath)
 {
-    struct udev_device *ud = udev_device_new_from_syspath(m_udev, sysfsPath.toLatin1().constData());
+    const QByteArray sysfsPathBytes = sysfsPath.toLatin1();
+    struct udev_device *ud = udev_device_new_from_syspath(m_udev, sysfsPathBytes.constData());
     if (!ud) {
         return Device();
     }
