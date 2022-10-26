@@ -217,7 +217,7 @@ bool RAWHandler::read(QImage *image)
             return false;
         }
 
-        if (rawimg->colors != 3) {
+        if (Q_UNLIKELY(rawimg->colors != 3)) {
             kWarning() << "Color components count not supported" << rawimg->colors;
             raw.dcraw_clear_mem(rawimg);
             raw.recycle();
