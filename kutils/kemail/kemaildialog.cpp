@@ -173,6 +173,9 @@ bool KEMailDialog::setAttach(const QStringList &attach)
 
 void KEMailDialog::showEvent(QShowEvent *event)
 {
+    KDialog::showEvent(event);
+    qApp->processEvents();
+
     // NOTE: delayed until show so that startup notification is done, cursor is not grabbed and
     // the password dialog is interactable via mouse
     const bool isuserempty = d->ui.userlineedit->text().isEmpty();
@@ -188,8 +191,6 @@ void KEMailDialog::showEvent(QShowEvent *event)
         d->ui.passlineedit->setText(kemailsettings->getSetting(KEMailSettings::OutServerPass));
     }
     delete kemailsettings;
-
-    KDialog::showEvent(event);
 }
 
 void KEMailDialog::slotButtonClicked(int button)
