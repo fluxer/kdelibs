@@ -22,9 +22,7 @@
 #include <kdebug.h>
 
 #include <stdio.h>
-extern "C" {
 #include <tiffio.h>
-};
 
 static const char* const s_tiffpluginformat = "tiff";
 
@@ -62,22 +60,25 @@ void tiff_warning_handler(const char* tiffmodule, const char* tiffformat, va_lis
     kWarning() << tiffmodule << vsnprintfbuff;
 }
 
-static tmsize_t tiff_read_proc(thandle_t tiffhandler, void* tiffptr, tmsize_t tiffsize)
+static tmsize_t tiff_read_proc(thandle_t tiffhandle, void* tiffptr, tmsize_t tiffsize)
 {
-    QIODevice* device = static_cast<QIODevice*>(tiffhandler);
+    QIODevice* device = static_cast<QIODevice*>(tiffhandle);
     return device->read(static_cast<char*>(tiffptr), tiffsize);
 }
 
-static tmsize_t tiff_write_proc(thandle_t tiffhandler, void* tiffptr, tmsize_t tiffsize)
+static tmsize_t tiff_write_proc(thandle_t tiffhandle, void* tiffptr, tmsize_t tiffsize)
 {
     // dummy
+    Q_UNUSED(tiffhandle);
+    Q_UNUSED(tiffptr);
+    Q_UNUSED(tiffsize);
     return 0;
 }
 
-static toff_t tiff_seek_proc(thandle_t tiffhandler, toff_t tiffoffset, int tiffwhence)
+static toff_t tiff_seek_proc(thandle_t tiffhandle, toff_t tiffoffset, int tiffwhence)
 {
     bool result = false;
-    QIODevice* device = static_cast<QIODevice*>(tiffhandler);
+    QIODevice* device = static_cast<QIODevice*>(tiffhandle);
     switch (tiffwhence) {
         case SEEK_SET: {
             result = device->seek(tiffoffset);
@@ -99,32 +100,37 @@ static toff_t tiff_seek_proc(thandle_t tiffhandler, toff_t tiffoffset, int tiffw
     }
     if (Q_UNLIKELY(!result)) {
         kWarning() << "Could not seek" << tiffoffset << tiffwhence;
-        return -1;
     }
     return device->pos();
 }
 
-static int tiff_close_proc(thandle_t tiffhandler)
+static int tiff_close_proc(thandle_t tiffhandle)
 {
     // nothing to do
     return 0;
 }
 
-static toff_t tiff_size_proc(thandle_t tiffhandler)
+static toff_t tiff_size_proc(thandle_t tiffhandle)
 {
-    QIODevice* device = static_cast<QIODevice*>(tiffhandler);
+    QIODevice* device = static_cast<QIODevice*>(tiffhandle);
     return device->size();
 }
 
-static int tiff_mapfile_proc(thandle_t tiffhandler, void** tiffptr, toff_t* tiffsize)
+static int tiff_mapfile_proc(thandle_t tiffhandle, void** tiffptr, toff_t* tiffsize)
 {
     // dummy
+    Q_UNUSED(tiffhandle);
+    Q_UNUSED(tiffptr);
+    Q_UNUSED(tiffsize);
     return 0;
 }
 
-static void tiff_unmapfile_proc(thandle_t tiffhandler, void* tiffptr, toff_t tiffsize)
+static void tiff_unmapfile_proc(thandle_t tiffhandle, void* tiffptr, toff_t tiffsize)
 {
     // dummy
+    Q_UNUSED(tiffhandle);
+    Q_UNUSED(tiffptr);
+    Q_UNUSED(tiffsize);
 }
 
 TIFFHandler::TIFFHandler()
@@ -167,7 +173,7 @@ bool TIFFHandler::read(QImage *image)
         return false;
     }
 
-    // NOTE: TIFFReadRGBA* functions do internal conversion (i.e. YCbCr to RGBA) which does not
+    // NOTE: TIFFReadRGBA* functions do internal conversion (e.g. YCbCr to RGBA) which does not
     // work for all images
     char tifferror[1024];
     ::memset(tifferror, '\0', sizeof(tifferror));
