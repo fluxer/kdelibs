@@ -291,8 +291,8 @@ QList<QStringList> KCharsets::encodingsByScript() const
     }
 
     // almost the same kung-fu as in descriptiveEncodingNames()
-    QList<QStringList>::iterator it = d->encodingsByScript.begin();
-    while (it != d->encodingsByScript.end()) {
+    QList<QStringList>::const_iterator it = d->encodingsByScript.constBegin();
+    while (it != d->encodingsByScript.constEnd()) {
         const QStringList &list = *it;
         if (list.size() == 2) {
             int i = 0;
@@ -309,7 +309,7 @@ QList<QStringList> KCharsets::encodingsByScript() const
                 d->encodingsByScript.append(QStringList() << d->kOtherGroup << encoding);
             }
 
-            it = d->encodingsByScript.begin();
+            it = d->encodingsByScript.constBegin();
         } else {
             it++;
         }
