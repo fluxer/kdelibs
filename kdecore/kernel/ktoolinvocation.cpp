@@ -114,7 +114,7 @@ int KToolInvocation::startServiceInternal(const char *_function,
     QByteArray s = startup_id;
     emit kapplication_hook(envs, s);
     msg << envs;
-    msg << QString::fromLatin1(s);
+    msg << QString::fromLatin1(s, s.size());
 #else
     msg << QStringList();
     msg << QString();
