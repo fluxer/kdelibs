@@ -29,6 +29,7 @@
  * @li ICO     \<read\> \<write\>
  * @li JP2     \<read\>
  * @li RAW     \<read\>
+ * @li TIFF    \<read\>
  */
 namespace KImageIO
 {

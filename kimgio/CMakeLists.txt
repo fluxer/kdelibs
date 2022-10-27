@@ -98,3 +98,23 @@ if(OPENJPEG_FOUND)
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
     )
 endif(OPENJPEG_FOUND)
+
+##################################
+
+if(TIFF_FOUND)
+    include_directories(${TIFF_INCLUDE_DIRS})
+    kde4_add_plugin(kimg_tiff tiff.cpp)
+    target_link_libraries(kimg_tiff
+        ${KDE4_KDECORE_LIBS}
+        ${QT_QTGUI_LIBRARY}
+        ${TIFF_LIBRARIES}
+    )
+    set_target_properties(kimg_tiff PROPERTIES
+        OUTPUT_NAME tiff
+    )
+
+    install(
+        TARGETS kimg_tiff
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/imageformats
+    )
+endif(TIFF_FOUND)

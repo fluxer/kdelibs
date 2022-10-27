@@ -192,6 +192,15 @@ set_package_properties(OpenJPEG PROPERTIES
     PURPOSE "Support for JPEG 2000 image format"
     TYPE OPTIONAL
 )
+
+kde4_optional_find_package(TIFF)
+set_package_properties(TIFF PROPERTIES
+    DESCRIPTION "TIFF Library and Utilities"
+    URL "http://www.libtiff.org/"
+    PURPOSE "Support for TIFF image format"
+    TYPE OPTIONAL
+)
+
 # v143+ required for udev_monitor_filter_add_match_subsystem_devtype()
 kde4_optional_find_package(UDev 143)
 set_package_properties(UDev PROPERTIES
