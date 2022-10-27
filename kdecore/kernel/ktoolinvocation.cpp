@@ -19,7 +19,6 @@
 */
 
 #include "ktoolinvocation.h"
-#include "klauncher_iface.h"
 #include "kdebug.h"
 #include "kglobal.h"
 #include "kstandarddirs.h"
@@ -36,8 +35,6 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
 
-#include <errno.h>
-
 KToolInvocation *KToolInvocation::self()
 {
     K_GLOBAL_STATIC(KToolInvocation, s_self)
@@ -45,16 +42,20 @@ KToolInvocation *KToolInvocation::self()
 }
 
 KToolInvocation::KToolInvocation()
-    : QObject(0)
+    : QObject(0),
+    klauncherIface(nullptr)
 {
+    klauncherIface = new org::kde::KLauncher(
+        QString::fromLatin1("org.kde.klauncher"),
+        QString::fromLatin1("/KLauncher"),
+        QDBusConnection::sessionBus()
+    );
 }
 
 KToolInvocation::~KToolInvocation()
 {
+    delete klauncherIface;
 }
-
-Q_GLOBAL_STATIC_WITH_ARGS(org::kde::KLauncher, klauncherIface,
-                          (QString::fromLatin1("org.kde.klauncher"), QString::fromLatin1("/KLauncher"), QDBusConnection::sessionBus()))
 
 org::kde::KLauncher *KToolInvocation::klauncher()
 {
@@ -71,7 +72,7 @@ org::kde::KLauncher *KToolInvocation::klauncher()
         args += QString::fromLatin1("--suicide");
         QProcess::execute(srv, args);
     }
-    return ::klauncherIface();
+    return self()->klauncherIface;
 }
 
 static void printError(const QString& text, QString* error)
@@ -80,17 +81,6 @@ static void printError(const QString& text, QString* error)
         *error = text;
     else
         kError() << text << endl;
-}
-
-bool KToolInvocation::isMainThreadActive(QString* error)
-{
-    if (QCoreApplication::instance() && QCoreApplication::instance()->thread() != QThread::currentThread())
-    {
-        printError(i18n("Function must be called from the main thread."), error);
-        return false;
-    }
-
-    return true;
 }
 
 int KToolInvocation::startServiceInternal(const char *_function,
@@ -156,9 +146,6 @@ KToolInvocation::startServiceByDesktopPath( const QString& _name, const QString 
                                             QString *error, QString *serviceName,
                                             qint64 *pid, const QByteArray& startup_id, bool noWait )
 {
-    if (!isMainThreadActive(error))
-        return EINVAL;
-
     QStringList URLs;
     if (!URL.isEmpty())
         URLs.append(URL);
@@ -171,9 +158,6 @@ KToolInvocation::startServiceByDesktopPath( const QString& _name, const QStringL
                                             QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
-    if (!isMainThreadActive(error))
-        return EINVAL;
-
     return self()->startServiceInternal("start_service_by_desktop_path",
                                 _name, URLs, error, serviceName, pid, startup_id, noWait);
 }
@@ -183,9 +167,6 @@ KToolInvocation::startServiceByDesktopName( const QString& _name, const QString 
                                             QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
-    if (!isMainThreadActive(error))
-        return EINVAL;
-
     QStringList URLs;
     if (!URL.isEmpty())
         URLs.append(URL);
@@ -198,9 +179,6 @@ KToolInvocation::startServiceByDesktopName( const QString& _name, const QStringL
                                             QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
-    if (!isMainThreadActive(error))
-        return EINVAL;
-
     return self()->startServiceInternal("start_service_by_desktop_name",
                                 _name, URLs, error, serviceName, pid, startup_id, noWait);
 }
@@ -209,9 +187,6 @@ int
 KToolInvocation::kdeinitExec( const QString& name, const QStringList &args,
                               QString *error, qint64 *pid, const QByteArray& startup_id )
 {
-    if (!isMainThreadActive(error))
-        return EINVAL;
-
     return self()->startServiceInternal("kdeinit_exec",
                                 name, args, error, 0, pid, startup_id, false);
 }
@@ -221,9 +196,6 @@ int
 KToolInvocation::kdeinitExecWait( const QString& name, const QStringList &args,
                                   QString *error, qint64 *pid, const QByteArray& startup_id )
 {
-    if (!isMainThreadActive(error))
-        return EINVAL;
-
     return self()->startServiceInternal("kdeinit_exec_wait",
                                 name, args, error, 0, pid, startup_id, false);
 }
@@ -232,9 +204,6 @@ void KToolInvocation::invokeHelp( const QString& anchor,
                                   const QString& _appname,
                                   const QByteArray& startup_id )
 {
-    if (!isMainThreadActive())
-        return;
-
     KUrl url;
     QString appname;
     QString docPath;
@@ -264,17 +233,11 @@ void KToolInvocation::invokeHelp( const QString& anchor,
 
 void KToolInvocation::invokeMailer(const QString &address, const QString &subject, const QByteArray& startup_id)
 {
-    if (!isMainThreadActive())
-        return;
-
     invokeMailer(address, QString(), subject, QString(), QStringList(), startup_id );
 }
 
 void KToolInvocation::invokeMailer(const KUrl &mailtoURL, const QByteArray& startup_id, bool allowAttachments )
 {
-    if (!isMainThreadActive())
-        return;
-
     QString address = mailtoURL.path();
     QString subject;
     QString cc;

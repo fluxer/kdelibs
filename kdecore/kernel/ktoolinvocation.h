@@ -26,6 +26,7 @@
 #define KTOOLINVOCATION_H
 
 #include <kdecore_export.h>
+#include <klauncher_iface.h>
 
 #include <QtCore/qstringlist.h>
 
@@ -327,7 +328,8 @@ private:
                            QString *error, QString *serviceName, qint64 *pid,
                            const QByteArray& startup_id, bool noWait,
                            const QString& workdir = QString());
-  static bool isMainThreadActive(QString* error = 0);
+
+  org::kde::KLauncher *klauncherIface;
 };
 
 #endif

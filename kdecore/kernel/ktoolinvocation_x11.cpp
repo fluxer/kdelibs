@@ -35,9 +35,9 @@
 #include "kstandarddirs.h"
 #include "kmessage.h"
 #include "kservice.h"
-#include <kconfiggroup.h>
-#include <kmimetypetrader.h>
-#include <kurl.h>
+#include "kconfiggroup.h"
+#include "kmimetypetrader.h"
+#include "kurl.h"
 #include <QProcess>
 
 static QStringList splitEmailAddressList( const QString & aStr )
@@ -116,9 +116,6 @@ void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
                                    const QStringList &attachURLs,
                                    const QByteArray& startup_id )
 {
-    if (!isMainThreadActive())
-        return;
-
     KConfig config(QString::fromLatin1("emaildefaults"));
     KConfigGroup profileGrp(&config, "General");
 
@@ -221,9 +218,6 @@ void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
 
 void KToolInvocation::invokeBrowser( const QString &url, const QByteArray& startup_id )
 {
-    if (!isMainThreadActive())
-        return;
-
     QStringList args;
     args << url;
     QString error;
@@ -308,10 +302,6 @@ void KToolInvocation::invokeTerminal(const QString &command,
                                      const QString &workdir,
                                      const QByteArray &startup_id)
 {
-    if (!isMainThreadActive()) {
-        return;
-    }
-
     KConfigGroup confGroup( KGlobal::config(), "General" );
     QString exec = confGroup.readPathEntry("TerminalApplication", QString::fromLatin1("konsole"));
 
