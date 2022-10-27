@@ -113,12 +113,15 @@ VFolderMenu::includeItems(QHash<QString,KService::Ptr>& items1, const QHash<QStr
 void
 VFolderMenu::matchItems(QHash<QString,KService::Ptr>& items1, const QHash<QString,KService::Ptr>& items2)
 {
-   foreach (const KService::Ptr &p, items1)
-   {
-       QString id = p->menuId();
-       if (!items2.contains(id))
-            items1.remove(id);
-   }
+   QHash<QString,KService::Ptr>::iterator it = items1.begin();
+   while (it != items1.end()) {
+      QString id = (*it)->menuId();
+       if (!items2.contains(id)) {
+            it = items1.erase(it);
+        } else {
+           it++;
+        }
+    }
 }
 
 void
