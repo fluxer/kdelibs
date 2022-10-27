@@ -252,6 +252,8 @@ void KArchiveTest::progress()
         QCOMPARE(karchive.errorString(), QString());
 
         QCOMPARE(signalspy.size(), 2);
+        QCOMPARE(signalspy[0][0].toReal(), qreal(0.5));
+        QCOMPARE(signalspy[1][0].toReal(), qreal(1.0));
     }
 
     {
@@ -270,6 +272,8 @@ void KArchiveTest::progress()
         QCOMPARE(karchive.errorString(), QString());
 
         QCOMPARE(signalspy.size(), 2);
+        QCOMPARE(signalspy[0][0].toReal(), qreal(0.5));
+        QCOMPARE(signalspy[1][0].toReal(), qreal(1.0));
     }
 
     {
@@ -290,6 +294,8 @@ void KArchiveTest::progress()
         QCOMPARE(karchive.errorString(), QString());
 
         QCOMPARE(signalspy.size(), 2);
+        QCOMPARE(signalspy[0][0].toReal(), qreal(0.5));
+        QCOMPARE(signalspy[1][0].toReal(), qreal(1.0));
     }
 }
 
