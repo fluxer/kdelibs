@@ -30,46 +30,6 @@
 #define HAVE_MOUSEPOPUPMENUIMPLEMENTATION 1
 
 /**
- * This interface is a workaround to keep binary compatibility in KDE4, because
- * adding the virtual keyword to functions is not BC.
- *
- * Call KTextEdit::setSpellInterface() to set this interface to a KTextEdit,
- * and some functions of KTextEdit will delegate their calls to this interface
- * instead, which provides a way for derived classes to modifiy the behavior
- * or those functions.
- *
- * @since 4.2
- *
- * TODO: Get rid of this class in KDE5 and add the methods to KTextEdit instead,
- *       by making them virtual there.
- */
-class KTextEditSpellInterface
-{
-  public:
-
-    /**
-     * @return true if spellchecking for the text edit is enabled.
-     */
-    virtual bool isSpellCheckingEnabled() const = 0;
-
-    /**
-     * Sets whether to enable spellchecking for the KTextEdit.
-     * @param enable true if spellchecking should be enabled, false otherwise
-     */
-    virtual void setSpellCheckingEnabled(bool enable) = 0;
-
-    /**
-     * Returns true if the given paragraph or block should be spellcheck.
-     * For example, a mail client does not want to check quoted text, and
-     * would return false here (by checking whether the block starts with a
-     * quote sign).
-     */
-    virtual bool shouldBlockBeSpellChecked(const QString& block) const = 0;
-
-    virtual ~KTextEditSpellInterface() {}
-};
-
-/**
  * @short A KDE'ified QTextEdit
  *
  * This is just a little subclass of QTextEdit, implementing
@@ -125,9 +85,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * Enabling spell checking will set back the current highlighter to the one
      * returned by createHighlighter().
      *
-     * If a spell interface is set by setSpellInterface(),
-     * the call will be delegated to there instead.
-     *
      * @see checkSpellingEnabled()
      * @see isReadOnly()
      * @see setReadOnly()
@@ -139,9 +96,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * Note that it even returns true if this is a read-only KTextEdit,
      * where spell checking is actually disabled.
      * By default spell checking is disabled.
-     *
-     * If a spell interface is set by setSpellInterface(),
-     * the call will be delegated to there instead.
      *
      * @see setCheckSpellingEnabled()
      */
@@ -225,16 +179,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
      * @since 4.1
      */
     void enableFindReplace( bool enabled);
-
-    /**
-     * Sets the spell interface, which is used to delegate certain function
-     * calls to the interface.
-     * This is a workaround for binary compatibility and should be removed in
-     * KDE5.
-     *
-     * @since 4.2
-     */
-    void setSpellInterface( KTextEditSpellInterface *spellInterface );
 
     /**
      * @return the spell checking language which was set by

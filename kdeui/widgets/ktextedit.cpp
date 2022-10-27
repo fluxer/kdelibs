@@ -125,7 +125,6 @@ class KTextEdit::Private
 
     void checkSpelling(bool force);
     KTextEdit *parent;
-    KTextEditSpellInterface *spellInterface;
     QAction *autoSpellCheckAction;
     QAction *allowTab;
     QAction *spellCheckAction;
@@ -305,7 +304,6 @@ QRect KTextEdit::Private::clickMessageRect() const
 
 void KTextEdit::Private::init()
 {
-    spellInterface = 0;
     KCursor::setAutoHideCursor(parent, true, false);
     parent->connect(parent, SIGNAL(languageChanged(QString)),
                     parent, SLOT(setSpellCheckingLanguage(QString)));
@@ -644,12 +642,8 @@ void KTextEdit::contextMenuEvent(QContextMenuEvent *event)
     // If the user clicked somewhere else, move the cursor there.
     // If the user clicked on a misspelled word, select that word.
     // Same behavior as in OpenOffice Writer.
-    bool inQuote = false;
-    if (d->spellInterface &&
-        !d->spellInterface->shouldBlockBeSpellChecked(cursorAtMouse.block().text()))
-        inQuote = true;
     if (!selectedWordClicked) {
-        if (wordIsMisspelled && !inQuote)
+        if (wordIsMisspelled)
             setTextCursor(wordSelectCursor);
         else
             setTextCursor(cursorAtMouse);
@@ -658,7 +652,7 @@ void KTextEdit::contextMenuEvent(QContextMenuEvent *event)
 
     // Use standard context menu for already selected words, correctly spelled
     // words and words inside quotes.
-    if (!wordIsMisspelled || selectedWordClicked || inQuote) {
+    if (!wordIsMisspelled || selectedWordClicked) {
         QMenu *popup = mousePopupMenu();
         if (popup) {
             aboutToShowContextMenu(popup);
@@ -737,33 +731,27 @@ void KTextEdit::setHighlighter(Sonnet::Highlighter *_highLighter)
 
 void KTextEdit::setCheckSpellingEnabled(bool check)
 {
-    if (d->spellInterface) {
-        d->spellInterface->setSpellCheckingEnabled(check);
+    emit checkSpellingChanged( check );
+    if ( check == d->checkSpellingEnabled )
+        return;
+
+    // From the above statment we know know that if we're turning checking
+    // on that we need to create a new highlighter and if we're turning it
+    // off we should remove the old one.
+
+    d->checkSpellingEnabled = check;
+    if ( check )
+    {
+        if ( hasFocus() ) {
+            createHighlighter();
+            if (!spellCheckingLanguage().isEmpty())
+                setSpellCheckingLanguage(spellCheckingLanguage());
+        }
     }
     else
     {
-        emit checkSpellingChanged( check );
-        if ( check == d->checkSpellingEnabled )
-            return;
-
-        // From the above statment we know know that if we're turning checking
-        // on that we need to create a new highlighter and if we're turning it
-        // off we should remove the old one.
-
-        d->checkSpellingEnabled = check;
-        if ( check )
-        {
-            if ( hasFocus() ) {
-                createHighlighter();
-                if (!spellCheckingLanguage().isEmpty())
-                    setSpellCheckingLanguage(spellCheckingLanguage());
-            }
-        }
-        else
-        {
-            delete d->highlighter;
-            d->highlighter = 0;
-        }
+        delete d->highlighter;
+        d->highlighter = 0;
     }
 }
 
@@ -777,10 +765,7 @@ void KTextEdit::focusInEvent( QFocusEvent *event )
 
 bool KTextEdit::checkSpellingEnabled() const
 {
-    if (d->spellInterface)
-      return d->spellInterface->isSpellCheckingEnabled();
-    else
-      return d->checkSpellingEnabled;
+    return d->checkSpellingEnabled;
 }
 
 void KTextEdit::setReadOnly( bool readOnly )
@@ -1023,11 +1008,6 @@ void KTextEdit::enableFindReplace( bool enabled )
 void KTextEdit::showTabAction( bool show )
 {
     d->showTabAction = show;
-}
-
-void KTextEdit::setSpellInterface(KTextEditSpellInterface *spellInterface)
-{
-    d->spellInterface = spellInterface;
 }
 
 bool KTextEdit::Private::overrideShortcut(const QKeyEvent* event)
