@@ -164,6 +164,12 @@ Q_SIGNALS:
     /*!
         @brief Signals how far operation (add, remove or extract) is from completing
         @note The progress value is between 0.0 and 1.0
+        @note Progress signal is emited only when @p KArchive::add(), @p KArchive::remove() or
+        @p KArchive::extract() is called
+        @note If you are connecting the progress value to QProgressBar, derived or similar class
+        make sure to set its initial value, progress is emited only for @b valid items. For example
+        progress will note be emited for paths that are not in the archive from
+        @p KArchive::remove()
     */
     void progress(const qreal value) const;
 

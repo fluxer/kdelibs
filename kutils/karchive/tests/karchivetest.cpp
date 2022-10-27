@@ -60,6 +60,8 @@ private Q_SLOTS:
     void error();
 
     void encryption();
+
+    void progress();
 };
 
 QTEST_KDEMAIN_CORE(KArchiveTest)
@@ -232,5 +234,63 @@ void KArchiveTest::encryption()
     }
 }
 
+void KArchiveTest::progress()
+{
+
+    {
+        QStringList toadd = QStringList()
+            << QFile::decodeName(KDESRCDIR "/CMakeLists.txt")
+            << QFile::decodeName(KDESRCDIR "/karchivetest.cpp");
+
+        KArchive karchive(tmpName(QString::fromLatin1(".tar.gz")));
+        QVERIFY(karchive.isWritable());
+
+        QSignalSpy signalspy(&karchive, SIGNAL(progress(qreal)));
+        QVERIFY(signalspy.isValid());
+
+        QVERIFY(karchive.add(toadd));
+        QCOMPARE(karchive.errorString(), QString());
+
+        QCOMPARE(signalspy.size(), 2);
+    }
+
+    {
+        QStringList toremove = QStringList()
+            << QFile::decodeName("CMakeLists.txt")
+            << QFile::decodeName("karchivetest.cpp");
+
+        KArchive karchive(tmpCopy(QFile::decodeName(KDESRCDIR "/tests_progress.tar.gz")));
+        QVERIFY(karchive.isReadable());
+        QCOMPARE(karchive.list().size(), 7);
+
+        QSignalSpy signalspy(&karchive, SIGNAL(progress(qreal)));
+        QVERIFY(signalspy.isValid());
+
+        QVERIFY(karchive.remove(toremove));
+        QCOMPARE(karchive.errorString(), QString());
+
+        QCOMPARE(signalspy.size(), 2);
+    }
+
+    {
+        QStringList toextract = QStringList()
+            << QFile::decodeName("CMakeLists.txt")
+            << QFile::decodeName("karchivetest.cpp");
+
+        KArchive karchive(QFile::decodeName(KDESRCDIR "/tests_progress.tar.gz"));
+        QVERIFY(karchive.isReadable());
+        QCOMPARE(karchive.list().size(), 7);
+
+        QSignalSpy signalspy(&karchive, SIGNAL(progress(qreal)));
+        QVERIFY(signalspy.isValid());
+
+        KTempDir ktempdir;
+        QVERIFY(ktempdir.exists());
+        QVERIFY(karchive.extract(toextract, ktempdir.name()));
+        QCOMPARE(karchive.errorString(), QString());
+
+        QCOMPARE(signalspy.size(), 2);
+    }
+}
 
 #include "karchivetest.moc"

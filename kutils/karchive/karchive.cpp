@@ -546,10 +546,11 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         KArchivePrivate::closeRead(readarchive);
     }
 
-    emit progress(0.0); // reset progress bars for example
+    qreal progressvalue = 0.0;
+    const qreal progessstep = (qreal(1.0) / qreal(recursivepaths.size()));
+
     foreach (const QString &path, recursivepaths) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
-        // TODO: emit progress(qreal);
 
         const QByteArray localpath = QFile::encodeName(path);
 
@@ -668,8 +669,10 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         }
 
         result = true;
+
+        progressvalue += progessstep;
+        emit progress(progressvalue);
     }
-    emit progress(qreal(1.0)); // if no paths were added or error occured emit done anyway
 
     KArchivePrivate::closeWrite(writearchive);
 
@@ -728,12 +731,13 @@ bool KArchive::remove(const QStringList &paths) const
 
     QStringList notfound = paths;
 
-    emit progress(0.0);
+    qreal progressvalue = 0.0;
+    const qreal progessstep = (qreal(1.0) / qreal(paths.size()));
+
     struct archive_entry* entry = archive_entry_new();
     int ret = archive_read_next_header(readarchive, &entry);
     while (ret != ARCHIVE_EOF) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
-        // TODO: emit progress(qreal);
 
         if (ret < ARCHIVE_OK) {
             d->m_error = archive_error_string(readarchive);
@@ -750,6 +754,10 @@ bool KArchive::remove(const QStringList &paths) const
             archive_read_data_skip(readarchive);
             ret = archive_read_next_header(readarchive, &entry);
             result = true;
+
+            progressvalue += progessstep;
+            emit progress(progressvalue);
+
             continue;
         }
 
@@ -774,7 +782,6 @@ bool KArchive::remove(const QStringList &paths) const
 
         ret = archive_read_next_header(readarchive, &entry);
     }
-    emit progress(qreal(1.0));
 
     KArchivePrivate::closeWrite(writearchive);
     KArchivePrivate::closeRead(readarchive);
@@ -836,12 +843,13 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
 
     QStringList notfound = paths;
 
-    emit progress(0.0);
+    qreal progressvalue = 0.0;
+    const qreal progessstep = (qreal(1.0) / qreal(paths.size()));
+
     struct archive_entry* entry = archive_entry_new();
     int ret = archive_read_next_header(readarchive, &entry);
     while (ret != ARCHIVE_EOF) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KARCHIVE_TIMEOUT);
-        // TODO: emit progress(qreal);
 
         if (ret < ARCHIVE_OK) {
             d->m_error = archive_error_string(readarchive);
@@ -857,6 +865,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
             ret = archive_read_next_header(readarchive, &entry);
             continue;
         }
+
         notfound.removeAll(pathnamestring);
         result = true;
 
@@ -881,9 +890,11 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
             break;
         }
 
+        progressvalue += progessstep;
+        emit progress(progressvalue);
+
         ret = archive_read_next_header(readarchive, &entry);
     }
-    emit progress(qreal(1.0));
 
     KArchivePrivate::closeWrite(writearchive);
     KArchivePrivate::closeRead(readarchive);
