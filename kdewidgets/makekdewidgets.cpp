@@ -23,27 +23,25 @@ static const char classHeader[] = 	"/**\n"
                                 "* input file.\n"
                                                 "*/\n"
                                 "#include <QtGui/qicon.h>\n"
-                                "#include <QtDesigner/container.h>\n"
-                                "#include <QtDesigner/customwidget.h>\n"
+                                "#include <QtUiTools/customwidget.h>\n"
                                 "#include <QtCore/qplugin.h>\n"
                                 "#include <QtCore/qdebug.h>\n";
 
-static const char collClassDef[] = "class %CollName : public QObject, public QDesignerCustomWidgetCollectionInterface\n"
+static const char collClassDef[] = "class %CollName : public QCustomWidgetPlugin\n"
                                 "{\n"
                                 "	Q_OBJECT\n"
-                                "	Q_INTERFACES(QDesignerCustomWidgetCollectionInterface)\n"
                                 "public:\n"
                                 "	%CollName(QObject *parent = 0);\n"
                                 "	virtual ~%CollName();\n"
-                                "	QList<QDesignerCustomWidgetInterface*> customWidgets() const { return m_plugins; } \n"
+                                "	QList<QCustomWidget*> customWidgets() const { return m_plugins; } \n"
                                 "	\n"
                                 "private:\n"
-                                "	QList<QDesignerCustomWidgetInterface*> m_plugins;\n"
+                                "	QList<QCustomWidget*> m_plugins;\n"
                                 "};\n\n"
                                 "Q_EXPORT_PLUGIN2(%CollName, %CollName)\n\n";
 
 static const char collClassImpl[] = "%CollName::%CollName(QObject *parent)\n"
-                                "	: QObject(parent)"
+                                "	: QCustomWidgetPlugin(parent)"
                                 "{\n"
                                 "	%CollInit\n"
                                 "	(void) new KComponentData(\"%CollName\");\n"
@@ -56,12 +54,11 @@ static const char collClassImpl[] = "%CollName::%CollName(QObject *parent)\n"
                                 "}\n";
 
 
-static const char classDef[] =  "class %PluginName : public QObject, public QDesignerCustomWidgetInterface\n"
+static const char classDef[] =  "class %PluginName : public QCustomWidget\n"
                                 "{\n"
                                 "	Q_OBJECT\n"
-                                "	Q_INTERFACES(QDesignerCustomWidgetInterface)\n"
                                 "public:\n"
-                                "	%PluginName(QObject *parent = 0) :\n\t\tQObject(parent), mInitialized(false) {}\n"
+                                "	%PluginName(QObject *parent = 0) :\n\t\tQCustomWidget(parent), mInitialized(false) {}\n"
                                 "	virtual ~%PluginName() {}\n"
                                 "	\n"
                                 "	bool isContainer() const { return %IsContainer; }\n"
@@ -75,7 +72,7 @@ static const char classDef[] =  "class %PluginName : public QObject, public QDes
                                 "	QString toolTip() const { return QLatin1String(\"%ToolTip\"); }\n"
                                 "	QString whatsThis() const { return QLatin1String(\"%WhatsThis\"); }\n\n"
                                 "	QWidget* createWidget( QWidget* parent ) \n\t{%CreateWidget\n\t}\n"
-                                "	void initialize(QDesignerFormEditorInterface *core) \n\t{%Initialize\n\t}\n"
+                                "	void initialize() \n\t{%Initialize\n\t}\n"
                                 "\n"
                                 "private:\n"
                                 "	bool mInitialized;\n"
@@ -91,7 +88,7 @@ int main( int argc, char **argv ) {
     new KComponentData( "makekdewidgets" );
 
     KLocalizedString description = ki18n( "Builds Qt widget plugins from an ini style description file." );
-    const char version[] = "0.4";
+    const char version[] = "0.5";
 
     KCmdLineOptions options;
     options.add("+file", ki18n( "Input file" ) );
@@ -103,6 +100,7 @@ int main( int argc, char **argv ) {
     KAboutData about( "makekdewidgets", 0, ki18n( "makekdewidgets" ), version, description, KAboutData::License_GPL, ki18n("(C) 2004-2005 Ian Reinhart Geiser"), KLocalizedString(), 0, "geiseri@kde.org" );
     about.addAuthor( ki18n("Ian Reinhart Geiser"), KLocalizedString(), "geiseri@kde.org" );
     about.addAuthor( ki18n("Daniel Molkentin"), KLocalizedString(), "molkentin@kde.org" );
+    about.addAuthor( ki18n("Ivalo Monev"), KLocalizedString(), "xakepa10@gmail.com" );
     KCmdLineArgs::init( argc, argv, &about );
     KCmdLineArgs::addCmdLineOptions( options );
     KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -207,7 +205,7 @@ QString buildWidgetClass( const QString &name, KConfig &_input, const QString &g
     QString domXml = input.readEntry("DomXML", QString());
     // If domXml is empty then we shoud call base class function
     if ( domXml.isEmpty() ) {
-        domXml = QLatin1String("QDesignerCustomWidgetInterface::domXml()");
+        domXml = QLatin1String("QCustomWidget::domXml()");
     }
     else {
         // Wrap domXml value into QLatin1String
@@ -219,7 +217,7 @@ QString buildWidgetClass( const QString &name, KConfig &_input, const QString &g
       QString( "\n\t\treturn new %1%2;" )
          .arg( input.readEntry( "ImplClass", name ) )
          .arg( input.readEntry( "ConstructorArgs", "( parent )" ) ) ) );
-    defMap.insert( "Initialize", input.readEntry( "Initialize", "\n\t\tQ_UNUSED(core);\n\t\tif (mInitialized) return;\n\t\tmInitialized=true;" ) );
+    defMap.insert( "Initialize", input.readEntry( "Initialize", "\n\t\tif (mInitialized) return;\n\t\tmInitialized=true;" ) );
 
     return KMacroExpander::expandMacros( classDef, defMap );
 }

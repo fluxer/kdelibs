@@ -27,7 +27,7 @@ install(
 
 ########### next target ###############
 
-if(QT_QTDESIGNER_FOUND)
+if(QT_QTUITOOLS_FOUND)
     kde4_add_widget(kdewidgets_SRCS kde.widgets)
 
     kde4_add_plugin(kdewidgets ${kdewidgets_SRCS})
@@ -38,5 +38,5 @@ if(QT_QTDESIGNER_FOUND)
         TARGETS kdewidgets
         DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}/plugins/designer
     )
-endif(QT_QTDESIGNER_FOUND)
+endif(QT_QTUITOOLS_FOUND)
 
