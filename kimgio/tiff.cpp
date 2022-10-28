@@ -186,7 +186,7 @@ bool TIFFHandler::read(QImage *image)
         return false;
     }
 
-    uint32 tiffwidth = 0;
+    uint32_t tiffwidth = 0;
     tiffresult = TIFFGetField(tiffclient, TIFFTAG_IMAGEWIDTH, &tiffwidth);
     if (Q_UNLIKELY(tiffresult != 1)) {
         kWarning() << "Could not get image width";
@@ -196,7 +196,7 @@ bool TIFFHandler::read(QImage *image)
         return false;
     }
 
-    uint32 tiffheight = 0;
+    uint32_t tiffheight = 0;
     tiffresult = TIFFGetField(tiffclient, TIFFTAG_IMAGELENGTH, &tiffheight);
     if (Q_UNLIKELY(tiffresult != 1)) {
         kWarning() << "Could not get image length";
@@ -218,7 +218,7 @@ bool TIFFHandler::read(QImage *image)
     tiffresult = TIFFReadRGBAImageOriented(
         tiffclient,
         tiffwidth, tiffheight,
-        reinterpret_cast<uint32*>(image->bits()), ORIENTATION_TOPLEFT,
+        reinterpret_cast<uint32_t*>(image->bits()), ORIENTATION_TOPLEFT,
         1
     );
     if (Q_UNLIKELY(tiffresult != 1)) {
