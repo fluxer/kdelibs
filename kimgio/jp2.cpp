@@ -250,14 +250,16 @@ bool JP2Handler::read(QImage *image)
         default: {
             kWarning() << "Invalid color component count" << ojimage->numcomps;
             *image = QImage();
-            break;
+            opj_destroy_codec(ojcodec);
+            opj_stream_destroy(ojstream);
+            opj_image_destroy(ojimage);
+            return false;
         }
     }
 
     opj_destroy_codec(ojcodec);
     opj_stream_destroy(ojstream);
     opj_image_destroy(ojimage);
-
     return true;
 }
 
