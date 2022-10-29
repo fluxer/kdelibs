@@ -56,8 +56,10 @@ Solid::DeviceManagerPrivate::~DeviceManagerPrivate()
     }
 
     foreach (QWeakPointer<DevicePrivate> dev, m_devicesMap) {
-        if (!dev.data()->ref.deref()) {
-            delete dev.data();
+        DevicePrivate *devData = dev.data();
+        disconnect(devData, 0, this, 0);
+        if (!devData->ref.deref()) {
+            delete devData;
         }
     }
 
