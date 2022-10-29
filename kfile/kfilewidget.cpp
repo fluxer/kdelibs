@@ -65,7 +65,6 @@
 #include <QtGui/QAbstractProxyModel>
 #include <QtGui/qevent.h>
 #include <QtGui/QApplication>
-#include <QtCore/QFSFileEngine>
 #include <kshell.h>
 #include <kmessagebox.h>
 
