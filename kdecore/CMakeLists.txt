@@ -24,7 +24,6 @@ include_directories(
     ${KDE4_KDECORE_INCLUDES}
     ${KDE4_KDEUI_INCLUDES}
     ${QT_INCLUDES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/auth
     ${CMAKE_CURRENT_SOURCE_DIR}/sonnet
 )
 

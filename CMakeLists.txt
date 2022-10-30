@@ -349,19 +349,16 @@ include_directories(
 # Use the one variable for the lib you depend upon.
 # E.g. kdeui uses ${KDE4_KDECORE_INCLUDES}. Something that depends on kparts uses ${KDE4_KPARTS_INCLUDES}.
 
-# kdecore depends on Qt
+# kdecore depends on Katie
 set(KDE4_KDECORE_INCLUDES
     ${KDE4_KDECORE_INCLUDES}
     ${CMAKE_SOURCE_DIR}/kdecore
     ${CMAKE_BINARY_DIR}/kdecore
-    ${CMAKE_SOURCE_DIR}/kdecore/compression
     ${CMAKE_SOURCE_DIR}/kdecore/config
     ${CMAKE_SOURCE_DIR}/kdecore/date
     ${CMAKE_SOURCE_DIR}/kdecore/io
     ${CMAKE_SOURCE_DIR}/kdecore/jobs
     ${CMAKE_SOURCE_DIR}/kdecore/kernel
-    ${CMAKE_SOURCE_DIR}/kdecore/auth
-    ${CMAKE_SOURCE_DIR}/kdecore/network
     ${CMAKE_SOURCE_DIR}/kdecore/services
     ${CMAKE_SOURCE_DIR}/kdecore/localization
     ${CMAKE_SOURCE_DIR}/kdecore/sycoca
