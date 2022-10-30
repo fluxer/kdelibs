@@ -1,6 +1,5 @@
 if(SPEECHD_FOUND)
     include_directories(${SPEECHD_INCLUDE_DIR})
-    add_definitions(-DHAVE_SPEECHD)
 endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=51008)

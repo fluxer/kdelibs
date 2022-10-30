@@ -1,6 +1,5 @@
 if(OPENSSL_FOUND)
     include_directories(${OPENSSL_INCLUDE_DIR})
-    add_definitions(-DHAVE_OPENSSL)
 endif()
 
 # for the kded module

@@ -1,6 +1,6 @@
 if(EXIV2_FOUND)
     include_directories(${EXIV2_INCLUDE_DIR})
-    add_definitions(-DHAVE_EXIV2 ${EXIV2_DEFINITIONS})
+    add_definitions(${EXIV2_DEFINITIONS})
 endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=51003)

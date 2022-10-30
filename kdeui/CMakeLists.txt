@@ -261,8 +261,6 @@ set(kdeui_LIB_SRCS
 )
 
 if(DBUSMENUQT_FOUND)
-    add_definitions(-DHAVE_DBUSMENUQT)
-
     include_directories(${DBUSMENUQT_INCLUDE_DIR})
 
     set(KDEUI_EXTRA_LIBS

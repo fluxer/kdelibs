@@ -1,6 +1,5 @@
 if(AVAHI_FOUND)
     include_directories(${AVAHI_INCLUDE_DIR})
-    add_definitions(-DHAVE_AVAHI)
 endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=51006)

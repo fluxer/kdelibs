@@ -1,6 +1,5 @@
 if(MPV_FOUND)
     include_directories(${MPV_INCLUDES})
-    add_definitions(-DHAVE_MPV)
 endif()
 
 # for the kded module

@@ -19,6 +19,7 @@
 #ifndef KPASSWDSTOREIMPL_H
 #define KPASSWDSTOREIMPL_H
 
+#include "config.h"
 #include "kpasswdstore_export.h"
 
 #include <QString>

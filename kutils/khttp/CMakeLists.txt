@@ -1,6 +1,5 @@
 if(LIBMICROHTTPD_FOUND)
     include_directories(${LIBMICROHTTPD_INCLUDE_DIR})
-    add_definitions(-DHAVE_LIBMICROHTTPD)
 endif()
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=51007)

@@ -41,6 +41,36 @@
 /* Define to 1 if you have libintl */
 #cmakedefine HAVE_LIBINTL 1
 
+/* Define to 1 if you have DBusMenuQt */
+#cmakedefine HAVE_DBUSMENUQT 1
+
+/* Define to 1 if you have libarchive */
+#cmakedefine HAVE_LIBARCHIVE 1
+
+/* Define to 1 if you have BZip2 */
+#cmakedefine HAVE_BZIP2 1
+
+/* Define to 1 if you have XZ Utils */
+#cmakedefine HAVE_LIBLZMA 1
+
+/* Define to 1 if you have Avahi */
+#cmakedefine HAVE_AVAHI 1
+
+/* Define to 1 if you have Exiv2 */
+#cmakedefine HAVE_EXIV2 1
+
+/* Define to 1 if you have Libmicrohttpd */
+#cmakedefine HAVE_LIBMICROHTTPD 1
+
+/* Define to 1 if you have MPV */
+#cmakedefine HAVE_MPV 1
+
+/* Define to 1 if you have OpenSSL */
+#cmakedefine HAVE_OPENSSL 1
+
+/* Define to 1 if you have Speech Dispatcher */
+#cmakedefine HAVE_SPEECHD 1
+
 /* Define to 1 if getmntinfo() uses statvfs struct */
 #cmakedefine GETMNTINFO_USES_STATVFS 1
 

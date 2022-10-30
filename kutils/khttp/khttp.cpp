@@ -16,6 +16,7 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "config.h"
 #include "khttp.h"
 #include "kdebug.h"
 #include "kde_file.h"

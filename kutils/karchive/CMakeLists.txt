@@ -1,16 +1,13 @@
 if(LibArchive_FOUND)
     include_directories(${LibArchive_INCLUDE_DIRS})
-    add_definitions(-DHAVE_LIBARCHIVE)
 endif()
 
 if(BZIP2_FOUND)
     include_directories(${BZIP2_INCLUDE_DIR})
-    add_definitions(-DHAVE_BZIP2)
 endif()
 
 if(LIBLZMA_FOUND)
     include_directories(${LIBLZMA_INCLUDE_DIRS})
-    add_definitions(-DHAVE_LIBLZMA)
 endif()
 
 include_directories(${LIBDEFLATE_INCLUDES})
