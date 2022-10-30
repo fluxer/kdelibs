@@ -22,10 +22,10 @@
 
 #include <ksycoca.h>
 
-KSycocaEntryPrivate::KSycocaEntryPrivate(QDataStream &_str, int iOffset)
+KSycocaEntryPrivate::KSycocaEntryPrivate(QDataStream &s, int iOffset)
     : offset(iOffset), deleted(false)
 {
-    KSycocaEntry::read( _str, path );
+    KSycocaEntry::read(s, path);
 }
 
 KSycocaEntry::KSycocaEntry()
@@ -43,52 +43,33 @@ KSycocaEntry::~KSycocaEntry()
     delete d_ptr;
 }
 
-void KSycocaEntry::read( QDataStream &s, QString &str )
+void KSycocaEntry::read(QDataStream &s, QString &str)
 {
-  quint32 bytes;
-  s >> bytes;                          // read size of string
-  if ( bytes > 8192 ) {                // null string or too big
-      if (bytes != 0xffffffff)
-         KSycoca::flagError();
-      str.clear();
-  }
-  else if ( bytes > 0 ) {              // not empty
-      int bt = bytes/2;
-      str.resize( bt );
-      QChar* ch = (QChar *) str.unicode();
-      char t[8192];
-      char *b = t;
-      s.readRawData( b, bytes );
-      while ( bt-- ) {
-          *ch++ = (ushort) (((ushort)b[0])<<8) | (uchar)b[1];
-          b += 2;
-      }
-  } else {
-      str.clear();
-  }
+    s >> str;
+    if (s.status() != QDataStream::Ok) {
+        KSycoca::flagError();
+        str.clear();
+    }
 }
 
-void KSycocaEntry::read( QDataStream &s, QStringList &list )
+void KSycocaEntry::read(QDataStream &s, QStringList &list)
 {
-  list.clear();
-  quint32 count;
-  s >> count;                          // read size of list
-  if (count >= 1024)
-  {
-     KSycoca::flagError();
-     return;
-  }
-  for(quint32 i = 0; i < count; i++)
-  {
-     QString str;
-     read(s, str);
-     list.append( str );
-     if (s.atEnd())
-     {
+    list.clear();
+    quint32 count;
+    s >> count;                          // read size of list
+    if (count >= 1024) {
         KSycoca::flagError();
         return;
-     }
-  }
+    }
+    for(quint32 i = 0; i < count; i++) {
+        QString str;
+        read(s, str);
+        list.append(str);
+        if (s.atEnd()) {
+            KSycoca::flagError();
+            return;
+        }
+    }
 }
 
 bool KSycocaEntry::isType(KSycocaType t) const

@@ -69,8 +69,8 @@ public:
    /**
     * Safe demarshalling functions.
     */
-   static void read( QDataStream &s, QString &str );
-   static void read( QDataStream &s, QStringList &list );
+   static void read(QDataStream &s, QString &str);
+   static void read(QDataStream &s, QStringList &list);
 
 
    /**
@@ -122,7 +122,7 @@ public:
    /**
     * Sets whether or not this service is deleted
     */
-   void setDeleted( bool deleted );
+   void setDeleted(bool deleted);
 
 
    /*
