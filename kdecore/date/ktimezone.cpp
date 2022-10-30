@@ -1054,6 +1054,8 @@ KTimeZoneSource::~KTimeZoneSource()
     delete d;
 }
 
+// for reference:
+// https://man7.org/linux/man-pages/man5/tzfile.5.html
 KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
 {
     Q_ASSERT(d->mUseZoneParse);  // method should never be called if it isn't usable
@@ -1078,6 +1080,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
         return 0;
     }
     QDataStream str(&f);
+    str.setByteOrder(QDataStream::BigEndian);
 
     // Read the file type identifier
     str >> T_ >> Z_ >> i_ >> f_;
@@ -1114,7 +1117,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
         qint32 time;            // time (as returned by time(2)) at which the rules for computing local time change
         quint8 localTimeIndex;  // index into the LocalTimeType array
     };
-//kDebug()<<"Reading zone "<<zone.name();
+    // kDebug()<<"Reading zone "<<zone.name();
     TransitionTime *transitionTimes = new TransitionTime[nTransitionTimes];
     for (i = 0;  i < nTransitionTimes;  ++i)
     {
@@ -1123,7 +1126,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     for (i = 0;  i < nTransitionTimes;  ++i)
     {
         str >> transitionTimes[i].localTimeIndex;
-//kDebug() << "Transition time "<<i<<": "<<transitionTimes[i].time<<"   lt index="<<(int)transitionTimes[i].localTimeIndex;
+        // kDebug() << "Transition time "<<i<<": "<<transitionTimes[i].time<<"   lt index="<<(int)transitionTimes[i].localTimeIndex;
     }
 
     // Read the local time types
@@ -1289,12 +1292,12 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
         // Convert local transition times to UTC
         ltt = &localTimeTypes[tt->localTimeIndex];
         const KTimeZone::Phase phase = phases[lttLookup[tt->localTimeIndex]];
-//kDebug(161) << "Transition time "<<i<<": "<<fromTime_t(tt->time)<<", offset="<<phase.utcOffset()/60;
+        // kDebug(161) << "Transition time "<<i<<": "<<fromTime_t(tt->time)<<", offset="<<phase.utcOffset()/60;
         transitions += KTimeZone::Transition(fromTime_t(tt->time), phase);
     }
     data->setTransitions(transitions);
-//for(int xxx=1;xxx<data->transitions().count();xxx++)
-//kDebug(161) << "Transition time "<<xxx<<": "<<data->transitions()[xxx].time()<<", offset="<<data->transitions()[xxx].phase().utcOffset()/60;
+    // for(int xxx=1;xxx<data->transitions().count();xxx++)
+    // kDebug(161) << "Transition time "<<xxx<<": "<<data->transitions()[xxx].time()<<", offset="<<data->transitions()[xxx].phase().utcOffset()/60;
     delete[] localTimeTypes;
     delete[] transitionTimes;
 
