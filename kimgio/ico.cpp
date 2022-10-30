@@ -194,17 +194,6 @@ bool ICOHandler::read(QImage *image)
                 return false;
             }
 
-            if (Q_UNLIKELY(bmpimagesize >= INT_MAX)) {
-                kWarning() << "BMP image size is too big" << bmpimagesize;
-                return false;
-            }
-
-            imagebytes.resize(bmpimagesize);
-            if (Q_UNLIKELY(datastream.readRawData(imagebytes.data(), bmpimagesize) != bmpimagesize)) {
-                kWarning() << "Could not read BMP image data";
-                return false;
-            }
-
             // fallbacks
             const int imagewidth = (icowidth ? icowidth : bmpwidth);
             const int imageheight = (icoheight ? icoheight : bmpheight);
@@ -225,6 +214,20 @@ bool ICOHandler::read(QImage *image)
                     kWarning() << "Unsupported BMP bits per-pixel" << bmpbpp;
                     return false;
                 }
+            }
+
+            if (Q_UNLIKELY(bmpimagesize == 0)) {
+                kDebug() << "BMP image size is dummy" << bmpimagesize << imageboundary;
+                bmpimagesize = imageboundary;
+            } else if (Q_UNLIKELY(bmpimagesize >= INT_MAX)) {
+                kWarning() << "BMP image size is too big" << bmpimagesize;
+                return false;
+            }
+
+            imagebytes.resize(bmpimagesize);
+            if (Q_UNLIKELY(datastream.readRawData(imagebytes.data(), bmpimagesize) != bmpimagesize)) {
+                kWarning() << "Could not read BMP image data";
+                return false;
             }
 
             QImage bmpimage(imagewidth, imageheight, imageformat);
