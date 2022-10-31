@@ -84,7 +84,6 @@ private:
     QString sGlobalFileName;
 
     KEntryMap entryMap;
-    QString backendType;
     QStack<QString> extraFiles;
 
     QString locale;
