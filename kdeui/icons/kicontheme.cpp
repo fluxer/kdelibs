@@ -23,10 +23,16 @@
 
 #include "kicontheme.h"
 #include "k3icon_p.h"
-
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "kdebug.h"
+#include "kicon.h"
+#include "kstandarddirs.h"
+#include "kglobal.h"
+#include "ksharedconfig.h"
+#include "kconfig.h"
+#include "kcomponentdata.h"
+#include "klocale.h"
+#include "kde_file.h"
+#include "kconfiggroup.h"
 
 #include <QtGui/QAction>
 #include <QtCore/qstring.h>
@@ -39,17 +45,10 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include <kdebug.h>
-#include <kicon.h>
-#include <kstandarddirs.h>
-#include <kglobal.h>
-#include <ksharedconfig.h>
-#include <kconfig.h>
-#include <kcomponentdata.h>
-#include <klocale.h>
-#include <kde_file.h>
-
-#include <kconfiggroup.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <limits.h>
 
 // The following define exists because the Qt SVG renderer needs
 // to be improved. This will be removed soon. (ereslibre)

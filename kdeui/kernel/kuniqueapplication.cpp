@@ -17,30 +17,28 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "config.h"
 #include "kuniqueapplication.h"
 #include "kuniqueapplication_p.h"
-#include <kmainwindow.h>
-
-#include <config.h>
-
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#include <assert.h>
-#include <errno.h>
-#include <stdlib.h>
-#include <unistd.h>
+#include "kmainwindow.h"
+#include "kcmdlineargs.h"
+#include "kstandarddirs.h"
+#include "kaboutdata.h"
+#include "kconfiggroup.h"
+#include "kwindowsystem.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QList>
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
 
-#include <kcmdlineargs.h>
-#include <kstandarddirs.h>
-#include <kaboutdata.h>
-#include <kconfiggroup.h>
-#include <kwindowsystem.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <assert.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <limits.h>
 
 #if defined Q_WS_X11
 #include <kstartupinfo.h>

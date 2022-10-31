@@ -27,19 +27,18 @@
 
 #include "krecentfilesaction.h"
 #include "krecentfilesaction_p.h"
+#include "kconfig.h"
+#include "kconfiggroup.h"
+#include "kdebug.h"
+#include "kicon.h"
+#include "klocale.h"
+#include "kstandarddirs.h"
+#include "kmenu.h"
 
 #include <QtCore/QFile>
 #include <QtGui/QDesktopWidget>
 
-#include <kconfig.h>
-#include <kconfiggroup.h>
-#include <kdebug.h>
-#include <kicon.h>
-#include <klocale.h>
-#include <kstandarddirs.h>
-
-#include "kmenu.h"
-
+#include <limits.h>
 
 KRecentFilesAction::KRecentFilesAction(QObject *parent)
   : KSelectAction(*new KRecentFilesActionPrivate, parent)
