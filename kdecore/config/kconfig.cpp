@@ -165,10 +165,10 @@ QStringList KConfig::groupList() const
     QSet<QString> groups;
 
     for (KEntryMap::ConstIterator entryMapIt( d->entryMap.constBegin() ); entryMapIt != d->entryMap.constEnd(); ++entryMapIt) {
-        const KEntryKey& key = entryMapIt.key();	
+        const KEntryKey& key = entryMapIt.key();
         const QByteArray group = key.mGroup;
         if (key.mKey.isNull() && !group.isEmpty() && group != "<default>" && group != "$Version") {
-            const QString groupname = QString::fromUtf8(group);
+            const QString groupname = QString::fromUtf8(group, group.size());
             groups << groupname.left(groupname.indexOf(QLatin1Char('\x1d')));
         }
     }
