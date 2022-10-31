@@ -44,8 +44,7 @@ class KTemporaryFilePrivate
 KTemporaryFile::KTemporaryFile(const KComponentData &componentData)
     : d(new KTemporaryFilePrivate(componentData))
 {
-    QString temp(d->defaultPrefix());
-    setFileTemplate(temp + QLatin1String("XXXXXX.tmp"));
+    setFileTemplate(d->defaultPrefix() + QLatin1String("XXXXXX.tmp"));
 }
 
 KTemporaryFile::~KTemporaryFile()
