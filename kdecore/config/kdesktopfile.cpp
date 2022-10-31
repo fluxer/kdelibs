@@ -190,8 +190,7 @@ QString KDesktopFile::readUrl() const
     } else {
         // NOT readPathEntry (see readPath())
         QString url = d->desktopGroup.readEntry("URL", QString());
-        if ( !url.isEmpty() && !QDir::isRelativePath(url) )
-        {
+        if (!url.isEmpty() && !QDir::isRelativePath(url)) {
             // Handle absolute paths as such (i.e. we need to escape them)
             return KUrl(url).url();
         }
@@ -207,12 +206,12 @@ QStringList KDesktopFile::readActions() const
 
 KConfigGroup KDesktopFile::actionGroup(const QString& group) const
 {
-    return KConfigGroup(this, QLatin1String("Desktop Action ") + group);
+    return KConfigGroup(this, QString::fromLatin1("Desktop Action ") + group);
 }
 
 bool KDesktopFile::hasActionGroup(const QString &group) const
 {
-    return hasGroup(QString(QLatin1String("Desktop Action ") + group).toUtf8().constData());
+    return hasGroup(QByteArray("Desktop Action ") + group.toUtf8());
 }
 
 bool KDesktopFile::hasLinkType() const
@@ -258,7 +257,7 @@ QStringList KDesktopFile::sortOrder() const
 QString KDesktopFile::readDocPath() const
 {
     Q_D(const KDesktopFile);
-    return d->desktopGroup.readPathEntry( "X-DocPath", QString() );
+    return d->desktopGroup.readPathEntry( "X-DocPath", QString());
 }
 
 KDesktopFile* KDesktopFile::copyTo(const QString &file) const
