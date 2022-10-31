@@ -239,7 +239,7 @@ QStringList KConfigPrivate::keyListImpl(const QByteArray& theGroup) const
         for (; it != theEnd && it.key().mGroup == theGroup; ++it) {
             const KEntryKey& key = it.key();
             if (!key.mKey.isNull() && !it->bDeleted)
-                tmp << QString::fromUtf8(key.mKey, key.mKey.size());
+                tmp << QString::fromUtf8(key.mKey);
         }
         keys = tmp.toList();
     }
@@ -273,9 +273,9 @@ QMap<QString,QString> KConfig::entryMap(const QString& aGroup) const
                 // with the non-localized entry
                 if (!theMap.contains(key)) {
                     if (it->bExpand) {
-                        theMap.insert(key,KShell::envExpand(QString::fromUtf8(it->mValue.constData(), it->mValue.size())));
+                        theMap.insert(key,KShell::envExpand(QString::fromUtf8(it->mValue.constData())));
                     } else {
-                        theMap.insert(key,QString::fromUtf8(it->mValue.constData(), it->mValue.size()));
+                        theMap.insert(key,QString::fromUtf8(it->mValue.constData()));
                     }
                 }
             }
