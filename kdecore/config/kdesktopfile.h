@@ -230,8 +230,14 @@ public:
      */
     KDesktopFile* copyTo(const QString &file) const;
 
+    /**
+     * @return the filename as passed to the constructor.
+     */
     QString fileName() const;
 
+    /**
+     * @return the resource type as passed to the constructor.
+     */
     const char *resource() const;
 
 private:

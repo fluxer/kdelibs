@@ -249,19 +249,7 @@ bool KDesktopFile::tryExec() const
     return true;
 }
 
-/**
- * @return the filename as passed to the constructor.
- */
-//QString KDesktopFile::fileName() const { return backEnd->fileName(); }
-
-/**
- * @return the resource type as passed to the constructor.
- */
-//QString
-//KDesktopFile::resource() const { return backEnd->resource(); }
-
-QStringList
-KDesktopFile::sortOrder() const
+QStringList KDesktopFile::sortOrder() const
 {
     Q_D(const KDesktopFile);
     return d->desktopGroup.readEntry("SortOrder", QStringList());
