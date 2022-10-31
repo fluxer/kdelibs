@@ -36,7 +36,7 @@
 
 class KDesktopFilePrivate : public KConfigPrivate
 {
- public:
+public:
     KDesktopFilePrivate(const char * resourceType, const QString &fileName);
     KConfigGroup desktopGroup;
 };
@@ -76,114 +76,110 @@ KConfigGroup KDesktopFile::desktopGroup() const
 
 QString KDesktopFile::locateLocal(const QString &path)
 {
-  QString local;
-  if (path.endsWith(QLatin1String(".directory")))
-  {
-    // XDG Desktop menu items come with absolute paths, we need to
-    // extract their relative path and then build a local path.
-    local = KGlobal::dirs()->relativeLocation("xdgdata-dirs", path);
-    if (!QDir::isRelativePath(local))
-    {
-      // Hm, that didn't work...
-      // What now? Use filename only and hope for the best.
-      local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
+    QString local;
+    if (path.endsWith(QLatin1String(".directory"))) {
+        // XDG Desktop menu items come with absolute paths, we need to
+        // extract their relative path and then build a local path.
+        local = KGlobal::dirs()->relativeLocation("xdgdata-dirs", path);
+        if (!QDir::isRelativePath(local)) {
+            // Hm, that didn't work...
+            // What now? Use filename only and hope for the best.
+            local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
+        }
+        local = KStandardDirs::locateLocal("xdgdata-dirs", local);
+    } else {
+        // XDG Desktop menu items come with absolute paths, we need to
+        // extract their relative path and then build a local path.
+        local = KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
+        if (!QDir::isRelativePath(local)) {
+            // What now? Use filename only and hope for the best.
+            local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
+        }
+        local = KStandardDirs::locateLocal("xdgdata-apps", local);
     }
-    local = KStandardDirs::locateLocal("xdgdata-dirs", local);
-  }
-  else
-  {
-    // XDG Desktop menu items come with absolute paths, we need to
-    // extract their relative path and then build a local path.
-    local = KGlobal::dirs()->relativeLocation("xdgdata-apps", path);
-    if (!QDir::isRelativePath(local))
-    {
-      // What now? Use filename only and hope for the best.
-      local = path.mid(path.lastIndexOf(QLatin1Char('/'))+1);
-    }
-    local = KStandardDirs::locateLocal("xdgdata-apps", local);
-  }
-  return local;
+    return local;
 }
 
 bool KDesktopFile::isDesktopFile(const QString& path)
 {
-  return (path.length() > 8
-          && path.endsWith(QLatin1String(".desktop")));
+    return (path.length() > 8 && path.endsWith(QLatin1String(".desktop")));
 }
 
 bool KDesktopFile::isAuthorizedDesktopFile(const QString& path)
 {
-  if (path.isEmpty())
-     return false; // Empty paths are not ok.
+    if (path.isEmpty())
+        return false; // Empty paths are not ok.
 
-  if (QDir::isRelativePath(path))
-     return true; // Relative paths are ok.
+    if (QDir::isRelativePath(path))
+        return true; // Relative paths are ok.
 
-  KStandardDirs *dirs = KGlobal::dirs();
-  QStringList kdePrefixes = dirs->resourceDirs("services");
-  kdePrefixes += dirs->resourceDirs("xdgdata-apps");
-  kdePrefixes += dirs->resourceDirs("autostart");
+    KStandardDirs *dirs = KGlobal::dirs();
+    QStringList kdePrefixes = dirs->resourceDirs("services");
+    kdePrefixes += dirs->resourceDirs("xdgdata-apps");
+    kdePrefixes += dirs->resourceDirs("autostart");
 
-  const QString realPath = KGlobal::dirs()->realPath(path);
+    const QString realPath = KGlobal::dirs()->realPath(path);
 
-  // Check if the .desktop file is installed as part of KDE or XDG.
-  foreach (const QString &prefix, kdePrefixes) {
-    if (realPath.startsWith(prefix))
-      return true;
-  }
+    // Check if the .desktop file is installed as part of KDE or XDG.
+    foreach (const QString &prefix, kdePrefixes) {
+        if (realPath.startsWith(prefix)) {
+            return true;
+        }
+    }
 
-  // Not otherwise permitted, so only allow if the file is executable, or if
-  // owned by root (uid == 0)
-  QFileInfo entryInfo( path );
-  if (entryInfo.isExecutable() || entryInfo.ownerId() == 0)
-      return true;
+    // Not otherwise permitted, so only allow if the file is executable, or if
+    // owned by root (uid == 0)
+    QFileInfo entryInfo( path );
+    if (entryInfo.isExecutable() || entryInfo.ownerId() == 0) {
+        return true;
+    }
 
-  kWarning() << "Access to '" << path << "' denied, not owned by root, executable flag not set." << endl;
-  return false;
+    kWarning() << "Access to '" << path << "' denied, not owned by root, executable flag not set." << endl;
+    return false;
 }
 
 QString KDesktopFile::readType() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readEntry("Type", QString());
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readEntry("Type", QString());
 }
 
 QString KDesktopFile::readIcon() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readEntry("Icon", QString());
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readEntry("Icon", QString());
 }
 
 QString KDesktopFile::readName() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readEntry("Name", QString());
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readEntry("Name", QString());
 }
 
 QString KDesktopFile::readComment() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readEntry("Comment", QString());
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readEntry("Comment", QString());
 }
 
 QString KDesktopFile::readGenericName() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readEntry("GenericName", QString());
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readEntry("GenericName", QString());
 }
 
 QString KDesktopFile::readPath() const
 {
-  Q_D(const KDesktopFile);
-  // NOT readPathEntry, it is not XDG-compliant. Path entries written by
-  // KDE4 will be still treated as such, though.
-  return d->desktopGroup.readEntry("Path", QString());
+    Q_D(const KDesktopFile);
+    // NOT readPathEntry, it is not XDG-compliant. Path entries written by
+    // KDE4 will be still treated as such, though.
+    return d->desktopGroup.readEntry("Path", QString());
 }
 
 QString KDesktopFile::readDevice() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readEntry("Dev", QString());
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readEntry("Dev", QString());
 }
 
 QString KDesktopFile::readUrl() const
@@ -216,41 +212,41 @@ KConfigGroup KDesktopFile::actionGroup(const QString& group) const
 
 bool KDesktopFile::hasActionGroup(const QString &group) const
 {
-  return hasGroup(QString(QLatin1String("Desktop Action ") + group).toUtf8().constData());
+    return hasGroup(QString(QLatin1String("Desktop Action ") + group).toUtf8().constData());
 }
 
 bool KDesktopFile::hasLinkType() const
 {
-  return readType() == QLatin1String("Link");
+    return readType() == QLatin1String("Link");
 }
 
 bool KDesktopFile::hasApplicationType() const
 {
-  return readType() == QLatin1String("Application");
+    return readType() == QLatin1String("Application");
 }
 
 bool KDesktopFile::hasMimeTypeType() const
 {
-  return readType() == QLatin1String("MimeType");
+    return readType() == QLatin1String("MimeType");
 }
 
 bool KDesktopFile::hasDeviceType() const
 {
-  return readType() == QLatin1String("FSDevice");
+    return readType() == QLatin1String("FSDevice");
 }
 
 bool KDesktopFile::tryExec() const
 {
-  Q_D(const KDesktopFile);
-  // Test for TryExec
-  // NOT readPathEntry (see readPath())
-  const QString te = d->desktopGroup.readEntry("TryExec", QString());
+    Q_D(const KDesktopFile);
+    // Test for TryExec
+    // NOT readPathEntry (see readPath())
+    const QString te = d->desktopGroup.readEntry("TryExec", QString());
 
-  if (!te.isEmpty() && KGlobal::dirs()->findExe(te).isEmpty()) {
-    return false;
-  }
+    if (!te.isEmpty() && KGlobal::dirs()->findExe(te).isEmpty()) {
+        return false;
+    }
 
-  return true;
+    return true;
 }
 
 /**
@@ -267,22 +263,22 @@ bool KDesktopFile::tryExec() const
 QStringList
 KDesktopFile::sortOrder() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readEntry("SortOrder", QStringList());
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readEntry("SortOrder", QStringList());
 }
 
 QString KDesktopFile::readDocPath() const
 {
-  Q_D(const KDesktopFile);
-  return d->desktopGroup.readPathEntry( "X-DocPath", QString() );
+    Q_D(const KDesktopFile);
+    return d->desktopGroup.readPathEntry( "X-DocPath", QString() );
 }
 
 KDesktopFile* KDesktopFile::copyTo(const QString &file) const
 {
-  KDesktopFile *config = new KDesktopFile(QString());
-  this->KConfig::copyTo(file, config);
-//  config->setDesktopGroup();
-  return config;
+    KDesktopFile *config = new KDesktopFile(QString());
+    this->KConfig::copyTo(file, config);
+    // config->setDesktopGroup();
+    return config;
 }
 
 const char *KDesktopFile::resource() const
