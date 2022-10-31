@@ -79,7 +79,6 @@ void KTemporaryFile::setSuffix(const QString &suffix)
 
 QString KTemporaryFile::filePath(const QString &pathtemplate)
 {
-    static QChar xchar = QChar::fromLatin1('X');
     static QChar underscorechar = QChar::fromLatin1('_');
     static const char tmpnamechars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -94,10 +93,14 @@ QString KTemporaryFile::filePath(const QString &pathtemplate)
     }
 
     QString result = pathtemplate;
-    int xindex = result.indexOf(xchar);
-    while (xindex != -1) {
-        result.replace(xindex, 1, QChar::fromLatin1(tmpnamechars[KRandom::randomMax(52)]));
-        xindex = result.indexOf(xchar, xindex + 1);
+    int counter = result.size();
+    while (counter) {
+        counter--;
+        if (result.at(counter) == QLatin1Char('/')) {
+            break;
+        } else if (result.at(counter) == QLatin1Char('X')) {
+            result.replace(counter, 1, QChar::fromLatin1(tmpnamechars[KRandom::randomMax(52)]));
+        }
     }
     if (!QDir::isAbsolutePath(result)) {
         result.prepend(underscorechar);
