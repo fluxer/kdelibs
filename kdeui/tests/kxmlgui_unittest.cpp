@@ -156,8 +156,9 @@ void KXmlGui_UnitTest::testVersionHandlerSameVersion()
     // Check that the toolbars modified by the user were kept
     QVERIFY(finalDoc.contains("<Action name=\"home\""));
 
-    QVERIFY(userFile.open());
-    const QString userFileContents = QString::fromUtf8(userFile.readAll());
+    QFile userFile2(firstFile);
+    QVERIFY(userFile2.open(QFile::ReadOnly));
+    const QString userFileContents = QString::fromUtf8(userFile2.readAll());
     QCOMPARE(finalDoc, userFileContents);
 }
 
@@ -202,8 +203,9 @@ void KXmlGui_UnitTest::testVersionHandlerNewVersionNothingKept()
     QVERIFY(finalDoc.startsWith("<?xml"));
     QVERIFY(finalDoc.contains("version=\"5\""));
 
-    QVERIFY(fileV5.open());
-    const QString fileV5Contents = QString::fromUtf8(fileV5.readAll());
+    QFile fileV52(fileV5.fileName());
+    QVERIFY(fileV52.open(QFile::ReadOnly));
+    const QString fileV5Contents = QString::fromUtf8(fileV52.readAll());
     QCOMPARE(finalDoc, fileV5Contents);
 }
 
