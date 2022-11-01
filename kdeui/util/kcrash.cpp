@@ -479,7 +479,7 @@ static pid_t startFromKdeinit(int argc, const char *argv[])
   if( socket < -1 )
     return 0;
   klauncher_header header;
-  header.cmd = LAUNCHER_EXEC_NEW;
+  header.cmd = LAUNCHER_EXEC;
   const int BUFSIZE = 8192; // make sure this is big enough
   char buffer[ BUFSIZE + 10 ];
   int pos = 0;

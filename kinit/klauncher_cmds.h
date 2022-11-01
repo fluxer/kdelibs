@@ -86,7 +86,7 @@ typedef struct
 #define LAUNCHER_DEBUG_WAIT 6
 
 /*
- * LAUNCHER_EXT_EXEC
+ * LAUNCHER_EXEC_ASN
  *
  * Start a new process. The given environment variables will
  * be added to its environment before starting it.
@@ -103,10 +103,10 @@ typedef struct
  *   "" ( empty string ) is the default
  * 
  */
-#define LAUNCHER_EXT_EXEC 7
+#define LAUNCHER_EXEC_ASN 7
 
 /*
- * LAUNCHER_EXEC_NEW
+ * LAUNCHER_EXEC
  *
  * Start a new process. The given environment variables will be
  * added to its environment before starting it.
@@ -120,7 +120,7 @@ typedef struct
  *    this process binary is found in order to avoid
  *    infinite loop by binary->kdeinit_wrapper link in $PATH
  */
-#define LAUNCHER_EXEC_NEW 8
+#define LAUNCHER_EXEC 8
 
 const char* commandToString(int command);
 

@@ -636,9 +636,9 @@ KLauncher::requestStart(KLaunchRequest *request)
        requestData.append(QFile::encodeName(request->cwd)).append('\0');
 
 #ifdef Q_WS_X11
-   request_header.cmd = startup_notify ? LAUNCHER_EXT_EXEC : LAUNCHER_EXEC_NEW;
+   request_header.cmd = startup_notify ? LAUNCHER_EXEC_ASN : LAUNCHER_EXEC;
 #else
-   request_header.cmd = LAUNCHER_EXEC_NEW;
+   request_header.cmd = LAUNCHER_EXEC;
 #endif
    request_header.arg_length = requestData.length();
 

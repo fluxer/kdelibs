@@ -991,8 +991,8 @@ static bool handle_launcher_request(int sock, const char *who)
       d.launcher_ok = true;
    }
    else if (request_header.arg_length &&
-      ((request_header.cmd == LAUNCHER_EXT_EXEC) ||
-       (request_header.cmd == LAUNCHER_EXEC_NEW)))
+      ((request_header.cmd == LAUNCHER_EXEC_ASN) ||
+       (request_header.cmd == LAUNCHER_EXEC)))
    {
       pid_t pid;
       klauncher_header response_header;
@@ -1033,7 +1033,7 @@ static bool handle_launcher_request(int sock, const char *who)
       avoid_loops = l;
       arg_n += sizeof( long );
 
-     if( request_header.cmd == LAUNCHER_EXT_EXEC )
+     if( request_header.cmd == LAUNCHER_EXEC_ASN )
      {
          startup_id_str = arg_n;
          arg_n += strlen( startup_id_str ) + 1;

@@ -35,10 +35,10 @@ const char* commandToString(int command)
         return "LAUNCHER_TERMINATE_KDEINIT";
     case LAUNCHER_DEBUG_WAIT:
         return "LAUNCHER_DEBUG_WAIT";
-    case LAUNCHER_EXT_EXEC:
-        return "LAUNCHER_EXT_EXEC";
-    case LAUNCHER_EXEC_NEW:
-        return "LAUNCHER_EXEC_NEW";
+    case LAUNCHER_EXEC_ASN:
+        return "LAUNCHER_EXEC_ASN";
+    case LAUNCHER_EXEC:
+        return "LAUNCHER_EXEC";
     default:
         return "UNKNOWN COMMAND";
     }
