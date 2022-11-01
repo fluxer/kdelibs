@@ -991,8 +991,7 @@ static bool handle_launcher_request(int sock, const char *who)
       d.launcher_ok = true;
    }
    else if (request_header.arg_length &&
-      ((request_header.cmd == LAUNCHER_EXEC) ||
-       (request_header.cmd == LAUNCHER_EXT_EXEC) ||
+      ((request_header.cmd == LAUNCHER_EXT_EXEC) ||
        (request_header.cmd == LAUNCHER_EXEC_NEW)))
    {
       pid_t pid;
@@ -1022,20 +1021,17 @@ static bool handle_launcher_request(int sock, const char *who)
         arg_n = arg_n + strlen(arg_n) + 1;
       }
 
-      if( request_header.cmd == LAUNCHER_EXT_EXEC || request_header.cmd == LAUNCHER_EXEC_NEW )
+      memcpy( &l, arg_n, sizeof( long ));
+      envc = l;
+      arg_n += sizeof(long);
+      envs = arg_n;
+      for(int i = 0; i < envc; i++)
       {
-         memcpy( &l, arg_n, sizeof( long ));
-         envc = l;
-         arg_n += sizeof(long);
-         envs = arg_n;
-         for(int i = 0; i < envc; i++)
-         {
-           arg_n = arg_n + strlen(arg_n) + 1;
-         }
-         memcpy( &l, arg_n, sizeof( long ));
-         avoid_loops = l;
-         arg_n += sizeof( long );
+        arg_n = arg_n + strlen(arg_n) + 1;
       }
+      memcpy( &l, arg_n, sizeof( long ));
+      avoid_loops = l;
+      arg_n += sizeof( long );
 
      if( request_header.cmd == LAUNCHER_EXT_EXEC )
      {
@@ -1043,8 +1039,7 @@ static bool handle_launcher_request(int sock, const char *who)
          arg_n += strlen( startup_id_str ) + 1;
      }
 
-     if ((request_header.arg_length > (arg_n - request_data)) &&
-         (request_header.cmd == LAUNCHER_EXT_EXEC || request_header.cmd == LAUNCHER_EXEC_NEW ))
+     if (request_header.arg_length > (arg_n - request_data))
      {
          // Optional cwd
          cwd = arg_n; arg_n += strlen(cwd) + 1;

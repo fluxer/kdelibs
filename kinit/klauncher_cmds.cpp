@@ -23,8 +23,6 @@
 const char* commandToString(int command)
 {
     switch (command) {
-    case LAUNCHER_EXEC:
-        return "EXEC";
     case LAUNCHER_SETENV:
         return "LAUNCHER_SETENV";
     case LAUNCHER_CHILD_DIED:
@@ -38,9 +36,9 @@ const char* commandToString(int command)
     case LAUNCHER_DEBUG_WAIT:
         return "LAUNCHER_DEBUG_WAIT";
     case LAUNCHER_EXT_EXEC:
-        return "EXT_EXEC";
+        return "LAUNCHER_EXT_EXEC";
     case LAUNCHER_EXEC_NEW:
-        return "EXEC_NEW";
+        return "LAUNCHER_EXEC_NEW";
     default:
         return "UNKNOWN COMMAND";
     }
