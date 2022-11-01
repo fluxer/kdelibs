@@ -350,9 +350,6 @@ KCrash::defaultCrashHandler (int sig)
         argv[i++] = "--appname";
         argv[i++] = s_appName ? s_appName : "<unknown>";
 
-        if (KApplication::loadedByKdeinit)
-            argv[i++] = "--kdeinit";
-
         // only add apppath if it's not NULL
         if (s_appPath && *s_appPath) {
             argv[i++] = "--apppath";

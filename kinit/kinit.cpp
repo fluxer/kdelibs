@@ -1528,7 +1528,6 @@ int main(int argc, char **argv)
    Q_ASSERT(!KGlobal::hasMainComponent());
    // don't change envvars before proctitle_init()
    unsetenv("LD_BIND_NOW");
-   KApplication::loadedByKdeinit = true;
 
    d.maxname = strlen(argv[0]);
    d.launcher_pid = 0;

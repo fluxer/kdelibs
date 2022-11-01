@@ -79,7 +79,6 @@
 #endif
 
 KApplication* KApplication::KApp = 0L;
-bool KApplication::loadedByKdeinit = false;
 
 #ifdef Q_WS_X11
 static Atom atom_DesktopWindow;
