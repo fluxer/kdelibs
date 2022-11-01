@@ -405,7 +405,7 @@ QString KCompletion::nextMatch()
     if ( d->matches.isEmpty() ) {
         findAllCompletions( d->myLastString, &d->matches, d->myHasMultipleMatches );
         if ( !d->matches.isEmpty() )
-	    completion = d->matches.first();
+            completion = d->matches.first();
         d->myCurrentMatch = completion;
         d->myRotationIndex = 0;
         postProcessMatch( &completion );
