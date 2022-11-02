@@ -35,12 +35,6 @@ set(kdecore_OPTIONAL_LIBS)
 
 add_definitions(-DQT_NO_CAST_FROM_ASCII)
 
-# compile Gettext support if available
-if(LIBINTL_FOUND)
-    include_directories(${LIBINTL_INCLUDE_DIR})
-    set(kdecore_OPTIONAL_LIBS ${kdecore_OPTIONAL_LIBS} ${LIBINTL_LIBRARIES})
-endif()
-
 # compile Enchant if available
 if(ENCHANT_FOUND)
     include_directories(

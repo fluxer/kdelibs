@@ -19,159 +19,115 @@
 
 #include "kcatalog_p.h"
 #include "kstandarddirs.h"
-
-#include <config.h>
-
-#include <QtCore/QFile>
-#include <QtCore/qmutex.h>
-
 #include <kdebug.h>
 
-#include <stdlib.h>
-#include <locale.h>
+#include <QFile>
+#include <QTranslator>
 
-#ifdef HAVE_LIBINTL
-#  include <libintl.h>
-#endif
-
-// = "LANGUAGE=" + 32 chars for language code + terminating zero
-static const int langenvMaxlen = 42;
-
-Q_GLOBAL_STATIC(QMutex, catalogLock)
-
-class KMsgCtx
+static QByteArray translationData(const QByteArray &localeDir, const QByteArray &language, const QByteArray &name)
 {
-public:
-    KMsgCtx(const char* const msgctxt, const char* const msgid);
-    ~KMsgCtx();
-
-    const char* const constData() const;
-
-private:
-    Q_DISABLE_COPY(KMsgCtx);
-
-    bool m_freedata;
-    char* m_data;
-};
-
-KMsgCtx::KMsgCtx(const char* const msgctxt, const char* const msgid)
-    : m_freedata(false),
-    m_data(nullptr)
-{
-    const int msgidlen = qstrlen(msgid);
-    if (Q_UNLIKELY(msgidlen <= 0)) {
-        m_data = nullptr;
-        return;
+    QByteArray translationpath = localeDir;
+    translationpath.append('/');
+    translationpath.append(language);
+    translationpath.append('/');
+    translationpath.append(name);
+    translationpath.append(".tr");
+    QFile translationfile(QFile::decodeName(translationpath));
+    if (!translationfile.open(QFile::ReadOnly)) {
+        return QByteArray();
     }
-
-    const int msgctxtlen = qstrlen(msgctxt);
-    if (msgctxtlen <= 0) {
-        m_data = (char*)msgid;
-        return;
-    }
-
-    // for reference:
-    // https://github.com/autotools-mirror/gettext/blob/master/gnulib-local/lib/gettext.h
-    const int totallen = (msgctxtlen + 1 + msgidlen + 1);
-    m_data = static_cast<char*>(::malloc(totallen * sizeof(char)));
-    ::memcpy(m_data, msgctxt, msgctxtlen * sizeof(char));
-    m_data[msgctxtlen] = '\004';
-    ::memcpy(m_data + msgctxtlen + 1, msgid, msgidlen * sizeof(char));
-    m_data[totallen - 1] = '\0';
-    m_freedata = true;
-
-    // qDebug() << Q_FUNC_INFO << m_data;
-}
-
-KMsgCtx::~KMsgCtx()
-{
-    if (m_freedata) {
-        ::free(m_data);
-    }
-}
-
-const char* const KMsgCtx::constData() const
-{
-    return m_data;
+    return translationfile.readAll();
 }
 
 class KCatalogPrivate
 {
 public:
-  QByteArray language;
-  QByteArray name;
-  QByteArray localeDir;
+    KCatalogPrivate();
+    ~KCatalogPrivate();
 
-#ifdef HAVE_LIBINTL
-  QByteArray systemLanguage;
+    QByteArray language;
+    QByteArray name;
+    QByteArray localeDir;
 
-  void setupGettextEnv();
-  void resetSystemLanguage();
+#ifndef QT_NO_TRANSLATION
+    QTranslator* translator;
 #endif
 };
 
+KCatalogPrivate::KCatalogPrivate()
+    : translator(nullptr)
+{
+}
+
+KCatalogPrivate::~KCatalogPrivate()
+{
+    delete translator;
+}
+
 QDebug operator<<(QDebug debug, const KCatalog &c)
 {
-  return debug << c.d->language << " " << c.d->name << " " << c.d->localeDir;
+    return debug << c.d->language << " " << c.d->name << " " << c.d->localeDir;
 }
 
 KCatalog::KCatalog(const QString &name, const QString &language)
-  : d( new KCatalogPrivate() )
+    : d(new KCatalogPrivate())
 {
-  setlocale(LC_ALL, "");
+    d->language = QFile::encodeName(language);
+    d->name = QFile::encodeName(name);
+    d->localeDir = QFile::encodeName(catalogLocaleDir(name, language));
 
-  // Find locale directory for this catalog.
-  QString localeDir = catalogLocaleDir(name, language);
-
-  d->language = QFile::encodeName(language);
-  d->name = QFile::encodeName(name);
-  d->localeDir = QFile::encodeName(localeDir);
-
-#ifdef HAVE_LIBINTL
-  // Point Gettext to current language, recording system value for recovery.
-  d->systemLanguage = qgetenv("LANGUAGE");
-
-  // Always get translations in UTF-8, regardless of user's environment.
-  bind_textdomain_codeset(d->name.constData(), "UTF-8");
-
-  //kDebug() << << name << language << localeDir;
-  bindtextdomain(d->name.constData(), d->localeDir.constData());
+#ifndef QT_NO_TRANSLATION
+    d->translator = new QTranslator();
+    d->translator->loadFromData(translationData(d->localeDir, d->language, d->name));
+    // kDebug() << << name << language << localeDir;
 #endif
 }
 
-KCatalog::KCatalog(const KCatalog & rhs)
-  : d( new KCatalogPrivate(*rhs.d) )
+KCatalog::KCatalog(const KCatalog &rhs)
+    : d(new KCatalogPrivate())
 {
+    d->language = rhs.d->language;
+    d->name = rhs.d->name;
+    d->localeDir = rhs.d->localeDir;
+
+#ifndef QT_NO_TRANSLATION
+    d->translator = new QTranslator();
+    d->translator->loadFromData(translationData(d->localeDir, d->language, d->name));
+#endif
 }
 
 KCatalog & KCatalog::operator=(const KCatalog & rhs)
 {
-  *d = *rhs.d;
+    d->language = rhs.d->language;
+    d->name = rhs.d->name;
+    d->localeDir = rhs.d->localeDir;
 
-  return *this;
+#ifndef QT_NO_TRANSLATION
+    d->translator->loadFromData(translationData(d->localeDir, d->language, d->name));
+#endif
+    return *this;
 }
 
 KCatalog::~KCatalog()
 {
-  delete d;
+    delete d;
 }
 
-QString KCatalog::catalogLocaleDir( const QString &name,
-                                    const QString &language )
+QString KCatalog::catalogLocaleDir(const QString &name,
+                                   const QString &language)
 {
-  QString relpath =  QString::fromLatin1( "%1/LC_MESSAGES/%2.mo" )
-                    .arg( language ).arg( name );
-  return KGlobal::dirs()->findResourceDir( "locale", relpath );
+    QString relpath =  QString::fromLatin1("%1/%2.tr").arg(language).arg(name);
+    return KGlobal::dirs()->findResourceDir("locale", relpath);
 }
 
 QString KCatalog::name() const
 {
-  return QFile::decodeName(d->name);
+    return QFile::decodeName(d->name);
 }
 
 QString KCatalog::language() const
 {
-  return QFile::decodeName(d->language);
+    return QFile::decodeName(d->language);
 }
 
 QString KCatalog::localeDir() const
@@ -179,156 +135,91 @@ QString KCatalog::localeDir() const
   return QFile::decodeName(d->localeDir);
 }
 
-#ifdef HAVE_LIBINTL
-void KCatalogPrivate::setupGettextEnv()
-{
-  if (language != systemLanguage) {
-    // it is enough to change the string set there.
-    char langenv[langenvMaxlen];
-    ::memset(langenv, 0, langenvMaxlen * sizeof(char));
-    snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", language.constData());
-    putenv(strdup(langenv));
-  }
-}
-
-void KCatalogPrivate::resetSystemLanguage ()
-{
-  if (language != systemLanguage) {
-    char langenv[langenvMaxlen];
-    ::memset(langenv, 0, langenvMaxlen * sizeof(char));
-    snprintf(langenv, langenvMaxlen, "LANGUAGE=%s", systemLanguage.constData());
-    putenv(strdup(langenv));
-  }
-}
-#endif
-
 QString KCatalog::translate(const char * msgid) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const char *msgstr = dgettext(d->name, msgid);
-  d->resetSystemLanguage();
-  return QString::fromUtf8(msgstr);
+#ifndef QT_NO_TRANSLATION
+    return d->translator->translate(nullptr, msgid);
 #else
-  return QString::fromUtf8(msgid);
+    return QString::fromUtf8(msgid);
 #endif
 }
 
 QString KCatalog::translate(const char * msgctxt, const char * msgid) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const KMsgCtx msgwithctx(msgctxt, msgid);
-  const char *msgstr = dgettext(d->name, msgwithctx.constData());
-  const bool msgstrict = (msgstr != msgwithctx.constData());
-  d->resetSystemLanguage();
-  return msgstrict ? QString::fromUtf8(msgstr) : QString::fromUtf8(msgid);
+#ifndef QT_NO_TRANSLATION
+    return d->translator->translate(msgctxt, msgid);
 #else
-  Q_UNUSED(msgctxt);
-  return QString::fromUtf8(msgid);
+    Q_UNUSED(msgctxt);
+    return QString::fromUtf8(msgid);
 #endif
 }
 
 QString KCatalog::translate(const char * msgid, const char * msgid_plural,
                             unsigned long n) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
-  d->resetSystemLanguage();
-  return QString::fromUtf8(msgstr);
+#ifndef QT_NO_TRANSLATION
+    return (n == 1 ? d->translator->translate(nullptr, msgid) : d->translator->translate(nullptr, msgid_plural));
 #else
-  return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
+    return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
 #endif
 }
 
 QString KCatalog::translate(const char * msgctxt, const char * msgid,
                             const char * msgid_plural, unsigned long n) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const KMsgCtx msgwithctx(msgctxt, msgid);
-  const char *msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
-  const bool msgstrict = (msgstr != msgwithctx.constData());
-  const bool msgstrict2 = (msgstr != msgid_plural);
-  d->resetSystemLanguage();
-  return msgstrict && msgstrict2 ? QString::fromUtf8(msgstr) : (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
+#ifndef QT_NO_TRANSLATION
+    return (n == 1 ? d->translator->translate(msgctxt, msgid) : d->translator->translate(msgctxt, msgid_plural));
 #else
-  Q_UNUSED(msgctxt);
-  return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
+    Q_UNUSED(msgctxt);
+    return (n == 1 ? QString::fromUtf8(msgid) : QString::fromUtf8(msgid_plural));
 #endif
 }
 
 QString KCatalog::translateStrict(const char * msgid) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const char *msgstr = dgettext(d->name, msgid);
-  d->resetSystemLanguage();
-  return msgstr != msgid ? QString::fromUtf8(msgstr) : QString();
+#ifndef QT_NO_TRANSLATION
+    return d->translator->translateStrict(nullptr, msgid);
 #else
-  Q_UNUSED(msgid);
-  return QString();
+    Q_UNUSED(msgid);
+    return QString();
 #endif
 }
 
 QString KCatalog::translateStrict(const char * msgctxt, const char * msgid) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const KMsgCtx msgwithctx(msgctxt, msgid);
-  const char *msgstr = dgettext(d->name, msgwithctx.constData());
-  const bool msgstrict = (msgstr != msgwithctx.constData());
-  d->resetSystemLanguage();
-  return msgstrict ? QString::fromUtf8(msgstr) : QString();
+#ifndef QT_NO_TRANSLATION
+    return d->translator->translateStrict(msgctxt, msgid);
 #else
-  Q_UNUSED(msgctxt);
-  Q_UNUSED(msgid);
-  return QString();
+    Q_UNUSED(msgctxt);
+    Q_UNUSED(msgid);
+    return QString();
 #endif
 }
 
 QString KCatalog::translateStrict(const char * msgid, const char * msgid_plural,
                                   unsigned long n) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const char *msgstr = dngettext(d->name, msgid, msgid_plural, n);
-  d->resetSystemLanguage();
-  return msgstr != msgid && msgstr != msgid_plural ? QString::fromUtf8(msgstr) : QString();
+#ifndef QT_NO_TRANSLATION
+    return (n == 1 ? d->translator->translateStrict(nullptr, msgid) : d->translator->translateStrict(nullptr, msgid_plural));
 #else
-  Q_UNUSED(msgid);
-  Q_UNUSED(msgid_plural);
-  Q_UNUSED(n);
-  return QString();
+    Q_UNUSED(msgid);
+    Q_UNUSED(msgid_plural);
+    Q_UNUSED(n);
+    return QString();
 #endif
 }
 
 QString KCatalog::translateStrict(const char * msgctxt, const char * msgid,
                                   const char * msgid_plural, unsigned long n) const
 {
-#ifdef HAVE_LIBINTL
-  QMutexLocker locker(catalogLock());
-  d->setupGettextEnv();
-  const KMsgCtx msgwithctx(msgctxt, msgid);
-  const char *msgstr = dngettext(d->name, msgwithctx.constData(), msgid_plural, n);
-  const bool msgstrict = (msgstr != msgwithctx.constData());
-  const bool msgstrict2 = (msgstr != msgid_plural);
-  d->resetSystemLanguage();
-  return msgstrict && msgstrict2 ? QString::fromUtf8(msgstr) : QString();
+#ifndef QT_NO_TRANSLATION
+    return (n == 1 ? d->translator->translateStrict(msgctxt, msgid) : d->translator->translateStrict(msgctxt, msgid_plural));
 #else
-  Q_UNUSED(msgctxt);
-  Q_UNUSED(msgid);
-  Q_UNUSED(msgid_plural);
-  Q_UNUSED(n);
-  return QString();
+    Q_UNUSED(msgctxt);
+    Q_UNUSED(msgid);
+    Q_UNUSED(msgid_plural);
+    Q_UNUSED(n);
+    return QString();
 #endif
 }
 

@@ -296,14 +296,37 @@ macro(KDE4_OPTIONAL_ADD_SUBDIRECTORY _dir)
     endif()
 endmacro(KDE4_OPTIONAL_ADD_SUBDIRECTORY)
 
-# KDE4_OPTIONAL_FIND_PACKAGE(<name> ... )
+# KDE4_OPTIONAL_FIND_PACKAGE(<PACKAGE> ...)
 #    This macro is a combination of OPTION() and FIND_PACKAGE(), it works like
 #    FIND_PACKAGE(), but additionally it automatically creates an option
 #    WITH_<name>, which can be disabled via the cmake GUI or via
 #    -DWITH_<name>=OFF
-macro(KDE4_OPTIONAL_FIND_PACKAGE _name)
-   option(WITH_${_name} "Search for ${_name} package" ON)
-   if (WITH_${_name})
-      find_package(${_name} ${ARGN})
+macro(KDE4_OPTIONAL_FIND_PACKAGE _PACKAGE)
+   option(WITH_${_PACKAGE} "Search for ${_PACKAGE} package" ON)
+   if (WITH_${_PACKAGE})
+      find_package(${_PACKAGE} ${ARGN})
    endif ()
 endmacro(KDE4_OPTIONAL_FIND_PACKAGE)
+
+# KDE4_OPTIONAL_FIND_PACKAGE(<LANGUAGE> FILE1.po ... FILEN.po)
+#    This macro is will create and install translation files
+macro(KDE4_TRANSLATE _LANGUAGE)
+    foreach(_pofile ${ARGN})
+        get_filename_component(_abspofile "${_pofile}" ABSOLUTE)
+        get_filename_component(_poname "${_abspofile}" NAME_WE)
+        make_directory("${CMAKE_CURRENT_BINARY_DIR}")
+        set(trout "${CMAKE_CURRENT_BINARY_DIR}/${_poname}.tr")
+        string(REPLACE "@" "_" _language ${_LANGUAGE})
+        add_custom_target(
+            translations_${_language}_${_poname} ALL
+            COMMAND ${KATIE_TRC} "${_abspofile}" -o "${trout}"
+            COMMENT "Generating ${_poname}.tr"
+        )
+        set_source_files_properties("${trout}" PROPERTIES GENERATED TRUE)
+        install(
+            FILES "${trout}"
+            DESTINATION "${KDE4_LOCALE_INSTALL_DIR}/${_LANGUAGE}"
+            RENAME "${_poname}.tr"
+        )
+    endforeach()
+endmacro(KDE4_TRANSLATE)

@@ -15,7 +15,6 @@ include(CMakePushCheckState)
 # definitions like _GNU_SOURCE that are needed on each platform.
 set(CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS})
 
-kde4_bool_to_01(Libintl_FOUND HAVE_LIBINTL)             # kdecore
 kde4_bool_to_01(DBUSMENUQT_FOUND HAVE_DBUSMENUQT)       # kdeui
 kde4_bool_to_01(LibArchive_FOUND HAVE_LIBARCHIVE)       # karchive
 kde4_bool_to_01(BZIP2_FOUND HAVE_BZIP2)                 # karchive
