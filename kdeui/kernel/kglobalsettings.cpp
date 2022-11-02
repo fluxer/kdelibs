@@ -154,6 +154,7 @@ class KGlobalSettings::Private
         void kdisplaySetPalette();
         void kdisplaySetStyle();
         void kdisplaySetFont();
+        void kdisplaySetCursor();
         void applyGUIStyle();
 
         /**
@@ -212,6 +213,7 @@ void KGlobalSettings::activate(ActivateOptions options)
         if (options & ApplySettings) {
             d->kdisplaySetStyle(); // implies palette setup
             d->kdisplaySetFont();
+            d->kdisplaySetCursor();
             d->propagateQtSettings();
         }
     }
@@ -914,7 +916,6 @@ void KGlobalSettings::Private::kdisplaySetPalette()
     emit q->appearanceChanged();
 }
 
-
 void KGlobalSettings::Private::kdisplaySetFont()
 {
     if (!kdeFullSession) {
@@ -935,6 +936,14 @@ void KGlobalSettings::Private::kdisplaySetFont()
     emit q->appearanceChanged();
 }
 
+void KGlobalSettings::Private::kdisplaySetCursor()
+{
+    if (!kdeFullSession) {
+        return;
+    }
+
+    applyCursorTheme();
+}
 
 void KGlobalSettings::Private::kdisplaySetStyle()
 {
