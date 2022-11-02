@@ -970,12 +970,11 @@ void KGlobalSettings::Private::applyCursorTheme()
     KConfig config("kcminputrc");
     KConfigGroup g(&config, "Mouse");
 
-    QString theme = g.readEntry("cursorTheme", QString());
-    int size      = g.readEntry("cursorSize", -1);
+    QByteArray theme = g.readEntry("cursorTheme", QByteArray("default"));
+    int size = g.readEntry("cursorSize", -1);
 
     // Default cursor size is 16 points
-    if (size == -1)
-    {
+    if (size == -1) {
         QApplication *app = static_cast<QApplication*>(QApplication::instance());
         size = app->desktop()->screen(0)->logicalDpiY() * 16 / 72;
     }
@@ -984,8 +983,7 @@ void KGlobalSettings::Private::applyCursorTheme()
     // with a NULL theme would cause Xcursor to use "default", but
     // in 7.2 and later it will cause it to revert to the theme that
     // was configured when the application was started.
-    XcursorSetTheme(QX11Info::display(), theme.isNull() ?
-                    "default" : QFile::encodeName(theme));
+    XcursorSetTheme(QX11Info::display(), theme.constData());
     XcursorSetDefaultSize(QX11Info::display(), size);
 
     emit q->cursorChanged();
