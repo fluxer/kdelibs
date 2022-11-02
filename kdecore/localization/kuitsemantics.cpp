@@ -45,61 +45,6 @@ static QString shorten (const QString &str)
         return str.left(maxlen).append(QLatin1String("..."));
 }
 
-/**
- * Reformat keyboard shortcut. The first of encountered of '+' or '-'
- * is taken for key delimiter, and the supplied delimiter is used instead.
- * A dictionary of replacement key names can also be provided, which can
- * be used for localization of the key names.
- */
-static QString kToKeyCombo (const QString &shstr, const QString &delim,
-                           const QHash<QString, QString> &keydict)
-{
-    static QRegExp delRx(QLatin1String("[+-]"));
-
-    int p = delRx.indexIn(shstr); // find delimiter
-
-    QStringList keys;
-    if (p < 0) { // single-key shortcut, no delimiter found
-        keys.append(shstr);
-    } else { // multi-key shortcut
-        QChar oldDelim = shstr[p];
-        keys = shstr.split(oldDelim, QString::SkipEmptyParts);
-    }
-
-    for (int i = 0; i < keys.size(); ++i) {
-        // Normalize key, trim and all lower-case.
-        QString nkey = keys[i].trimmed().toLower();
-        bool isFunctionKey = nkey.length() > 1 && nkey[1].isDigit();
-        if (!isFunctionKey) {
-            keys[i] = keydict.contains(nkey) ? keydict[nkey] : keys[i].trimmed();
-        } else {
-            keys[i] = keydict[QLatin1String("f%1")].arg(nkey.mid(1));
-        }
-    }
-    return keys.join(delim);
-}
-
-/**
- * Reformat GUI element path. Consider the first encountered of
- * '/', '|' or "->" as path delimiter, and replace them with the supplied
- * delimiter.
- */
-static QString kToInterfacePath (const QString &inpstr, const QString &delim)
-{
-    static QRegExp delRx(QLatin1String("\\||->"));
-
-    int p = delRx.indexIn(inpstr); // find delimiter
-    if (p < 0) { // single-element path, no delimiter found
-        return inpstr;
-    }
-    else { // multi-element path
-        QString oldDelim = delRx.capturedTexts().at(0);
-        QStringList guiels = inpstr.split(oldDelim, QString::SkipEmptyParts);
-        return guiels.join(delim);
-    }
-}
-
-
 // Custom entity resolver for QXmlStreamReader.
 class KuitEntityResolver : public QXmlStreamEntityResolver
 {
@@ -132,8 +77,8 @@ namespace Kuit {
             None,
             TopLong, TopShort,
             Title, Subtitle, Para, List, Item, Note, Warning, Link,
-            Filename, Application, Command, Resource, Icode, Bcode, Shortcut,
-            Interface, Emphasis, Placeholder, Email, Numid, Envar, Message, Nl,
+            Filename, Application, Command, Resource, Icode, Bcode,
+            Emphasis, Placeholder, Email, Numid, Envar, Message, Nl,
             NumIntg, NumReal // internal helpers for numbers, not part of DTD
         } Var;
     }
@@ -231,8 +176,7 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
     #undef INLINES
     #define INLINES \
         Filename << Link << Application << Command << Resource << Icode << \
-        Shortcut << Interface << Emphasis << Placeholder << Email << \
-        Numid << Envar << Nl
+        Emphasis << Placeholder << Email << Numid << Envar << Nl
 
     SETUP_TAG(TopLong, "kuit", Ctx, Title << Subtitle << Para);
     SETUP_TAG(TopShort, "kuil", Ctx, INLINES << Note << Warning << Message);
@@ -253,8 +197,6 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
     SETUP_TAG(Resource, "resource", None, None);
     SETUP_TAG(Icode, "icode", None, Envar << Placeholder);
     SETUP_TAG(Bcode, "bcode", None, None);
-    SETUP_TAG(Shortcut, "shortcut", None, None);
-    SETUP_TAG(Interface, "interface", None, None);
     SETUP_TAG(Emphasis, "emphasis", Strong, None);
     SETUP_TAG(Placeholder, "placeholder", None, None);
     SETUP_TAG(Email, "email", Address, None);
@@ -435,9 +377,6 @@ class KuitSemanticsPrivate
     // Set visual formatting patterns for text in semantic tags.
     void setFormattingPatterns ();
 
-    // Set data used in transformation of text within semantic tags.
-    void setTextTransformData ();
-
     // Compute integer hash key from the set of attributes.
     static int attSetKey (const QSet<Kuit::AttVar> &aset = QSet<Kuit::AttVar>());
 
@@ -509,11 +448,6 @@ class KuitSemanticsPrivate
           QHash<int, // attribute set key
                 QHash<Kuit::FmtVar, QString> > > m_patterns;
 
-    QHash<Kuit::FmtVar, QString> m_comboKeyDelim;
-    QHash<Kuit::FmtVar, QString> m_guiPathDelim;
-
-    QHash<QString, QString> m_keyNames;
-
     // For fetching metatranslations.
     KCatalog *m_metaCat;
 };
@@ -533,9 +467,6 @@ KuitSemanticsPrivate::KuitSemanticsPrivate (const QString &lang)
 
     // Get formatting patterns for all tag/att/fmt combinations.
     setFormattingPatterns();
-
-    // Get data for tag text transformations.
-    setTextTransformData();
 
     // Catalog not needed any more.
     delete m_metaCat;
@@ -769,26 +700,6 @@ void KuitSemanticsPrivate::setFormattingPatterns ()
     // i18n: KUIT pattern, see the comment to the first of these entries above.
                            "<pre>%1</pre>"));
 
-    // -------> Shortcut
-    SET_PATTERN(Tag::Shortcut, Att::None, Fmt::Plain,
-                I18N_NOOP2("@shortcut/plain",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "%1"));
-    SET_PATTERN(Tag::Shortcut, Att::None, Fmt::Rich,
-                I18N_NOOP2("@shortcut/rich",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "<b>%1</b>"));
-
-    // -------> Interface
-    SET_PATTERN(Tag::Interface, Att::None, Fmt::Plain,
-                I18N_NOOP2("@interface/plain",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "|%1|"));
-    SET_PATTERN(Tag::Interface, Att::None, Fmt::Rich,
-                I18N_NOOP2("@interface/rich",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "<i>%1</i>"));
-
     // -------> Emphasis
     SET_PATTERN(Tag::Emphasis, Att::None, Fmt::Plain,
                 I18N_NOOP2("@emphasis/plain",
@@ -866,85 +777,6 @@ void KuitSemanticsPrivate::setFormattingPatterns ()
                 XXXX_NOOP2("@nl/rich",
     // i18n: KUIT pattern, see the comment to the first of these entries above.
                            "%1<br/>"));
-}
-
-void KuitSemanticsPrivate::setTextTransformData ()
-{
-    // Mask metaTr with I18N_NOOP2 to have stuff extracted.
-    #undef I18N_NOOP2
-    #define I18N_NOOP2(ctxt, msg) metaTr(ctxt, msg)
-
-    // i18n: Decide which string is used to delimit keys in a keyboard
-    // shortcut (e.g. + in Ctrl+Alt+Tab) in plain text.
-    m_comboKeyDelim[Kuit::Fmt::Plain] = I18N_NOOP2("shortcut-key-delimiter/plain", "+");
-    m_comboKeyDelim[Kuit::Fmt::Term] = m_comboKeyDelim[Kuit::Fmt::Plain];
-    // i18n: Decide which string is used to delimit keys in a keyboard
-    // shortcut (e.g. + in Ctrl+Alt+Tab) in rich text.
-    m_comboKeyDelim[Kuit::Fmt::Rich] = I18N_NOOP2("shortcut-key-delimiter/rich", "+");
-
-    // i18n: Decide which string is used to delimit elements in a GUI path
-    // (e.g. -> in "Go to Settings->Advanced->Core tab.") in plain text.
-    m_guiPathDelim[Kuit::Fmt::Plain] = I18N_NOOP2("gui-path-delimiter/plain", "→");
-    m_guiPathDelim[Kuit::Fmt::Term] = m_guiPathDelim[Kuit::Fmt::Plain];
-    // i18n: Decide which string is used to delimit elements in a GUI path
-    // (e.g. -> in "Go to Settings->Advanced->Core tab.") in rich text.
-    m_guiPathDelim[Kuit::Fmt::Rich] = I18N_NOOP2("gui-path-delimiter/rich", "→");
-    // NOTE: The '→' glyph seems to be available in all widespread fonts.
-
-    // Collect keyboard key names.
-    #undef SET_KEYNAME
-    #define SET_KEYNAME(rawname) do { \
-        /* Normalize key, trim and all lower-case. */ \
-        QString normname = QString::fromLatin1(rawname).trimmed().toLower();  \
-        m_keyNames[normname] = metaTr("keyboard-key-name", rawname); \
-    } while (0)
-
-    // Now we need I18N_NOOP2 that does remove context.
-    #undef I18N_NOOP2
-    #define I18N_NOOP2(ctxt, msg) msg
-
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Alt"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "AltGr"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Backspace"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "CapsLock"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Control"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Ctrl"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Del"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Delete"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Down"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "End"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Enter"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Esc"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Escape"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Home"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Hyper"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Ins"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Insert"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Left"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Menu"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Meta"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "NumLock"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "PageDown"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "PageUp"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "PgDown"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "PgUp"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "PauseBreak"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "PrintScreen"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "PrtScr"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Return"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Right"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "ScrollLock"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Shift"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Space"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Super"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "SysReq"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Tab"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Up"));
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "Win"));
-    // TODO: Add rest of the key names?
-
-    // i18n: Pattern for the function keys.
-    SET_KEYNAME(I18N_NOOP2("keyboard-key-name", "F%1"));
 }
 
 QString KuitSemanticsPrivate::format (const QString &text,
@@ -1489,23 +1321,13 @@ QString KuitSemanticsPrivate::modifyTagText (const QString &text,
                                              Kuit::FmtVar fmt) const
 {
     // numctx < 1 means that the number is not in numeric-id context.
-    if (   (tag == Kuit::Tag::NumIntg || tag == Kuit::Tag::NumReal) \
-        && numctx < 1)
-    {
+    if (   (tag == Kuit::Tag::NumIntg || tag == Kuit::Tag::NumReal) && numctx < 1) {
         int fieldWidth = avals.value(Kuit::Att::Width, QString(QLatin1Char('0'))).toInt();
         const QString fillStr = avals.value(Kuit::Att::Fill, QString(QLatin1Char(' ')));
         const QChar fillChar = !fillStr.isEmpty() ? fillStr[0] : QChar::fromLatin1(' ');
-        return QString::fromLatin1("%1").arg(KGlobal::locale()->formatNumber(text, false),
-                                 fieldWidth, fillChar);
-    }
-    else if (tag == Kuit::Tag::Filename) {
+        return QString::fromLatin1("%1").arg(KGlobal::locale()->formatNumber(text, false), fieldWidth, fillChar);
+    } else if (tag == Kuit::Tag::Filename) {
         return QDir::toNativeSeparators(text);
-    }
-    else if (tag == Kuit::Tag::Shortcut) {
-        return kToKeyCombo(text, m_comboKeyDelim[fmt], m_keyNames);
-    }
-    else if (tag == Kuit::Tag::Interface) {
-        return kToInterfacePath(text, m_guiPathDelim[fmt]);
     }
 
     // Fell through, no modification.
