@@ -102,6 +102,11 @@ KExiv2::KExiv2(const QString &path)
 {
 }
 
+KExiv2::~KExiv2()
+{
+    delete d;
+}
+
 bool KExiv2::isSupported()
 {
 #if defined(HAVE_EXIV2)

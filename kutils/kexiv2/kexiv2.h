@@ -58,6 +58,7 @@ public:
         @brief Contructs object from @p path
     */
     KExiv2(const QString &path);
+    ~KExiv2();
 
     static bool isSupported();
 
