@@ -33,9 +33,10 @@
 #include <unistd.h> // umask
 
 #include <QThread>
-#include <QtCore/qatomic.h>
-#include <QtCore/QList>
-#include <QtCore/QSet>
+#include <QAtomicInt>
+#include <QList>
+#include <QSet>
+#include <QCoreApplication>
 
 #include <kaboutdata.h>
 #include <kconfig.h>
@@ -43,12 +44,8 @@
 #include <kcharsets.h>
 #include <kstandarddirs.h>
 #include <kcomponentdata.h>
-#undef QT_NO_TRANSLATION
-#include <QtCore/QCoreApplication>
-#define QT_NO_TRANSLATION
-#include <QtCore/QDebug>
-#include <QtCore/QTextCodec>
 #include "kcmdlineargs.h"
+#include "kcatalog_p.h"
 
 mode_t s_umsk;
 
@@ -58,6 +55,9 @@ class KGlobalPrivate
         inline KGlobalPrivate()
             : locale(0),
             charsets(0),
+#ifndef QT_NO_TRANSLATION
+            translator(0),
+#endif
             localeIsFromFakeComponent(false)
         {
             // the umask is read here before any threads are created to avoid race conditions
@@ -68,6 +68,10 @@ class KGlobalPrivate
 
         inline ~KGlobalPrivate()
         {
+#ifndef QT_NO_TRANSLATION
+            delete translator;
+            translator = 0;
+#endif
             delete locale;
             locale = 0;
             delete charsets;
@@ -78,6 +82,9 @@ class KGlobalPrivate
         KComponentData mainComponent; // holds a refcount
         KLocale *locale;
         KCharsets *charsets;
+#ifndef QT_NO_TRANSLATION
+        KDETranslator* translator;
+#endif
         bool localeIsFromFakeComponent;
         QStringList catalogsToInsert;
 
@@ -173,7 +180,10 @@ KLocale *KGlobal::locale()
                        " takes care of this. If not using KApplication, call KGlobal::locale() during initialization.");
 #ifndef QT_NO_TRANSLATION
             } else {
-                QCoreApplication::installTranslator(new KDETranslator(coreApp));
+                delete d->translator;
+                d->translator = 0;
+                d->translator = new KDETranslator();
+                QCoreApplication::installTranslator(d->translator);
 #endif
             }
         }

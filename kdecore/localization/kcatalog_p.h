@@ -42,17 +42,17 @@ public:
    * @param name The name of the catalog
    * @param language The language of this catalog
    */
-  KCatalog( const QString &name, const QString &language );
+  KCatalog(const QString &name, const QString &language);
 
   /**
    * Copy constructor.
    */
-  KCatalog(const KCatalog & rhs);
+  KCatalog(const KCatalog &rhs);
 
   /**
    * Assignment operator.
    */
-  KCatalog & operator = ( const KCatalog & rhs);
+  KCatalog& operator=(const KCatalog &rhs);
 
   /**
    * Destructor.
@@ -67,8 +67,18 @@ public:
    *
    * @return The locale directory if found, QString() otherwise.
    */
-  static QString catalogLocaleDir( const QString &name,
-                                   const QString &language );
+  static QString catalogLocaleDir(const QString &name, const QString &language);
+
+  /**
+   * Finds the catalog file for the given catalog in given language, reads it
+   * and returns its data.
+   *
+   * @param name The name of the catalog
+   * @param language The language of this catalog
+   *
+   * @return The catalog data if found, QByteArray() otherwise.
+   */
+  static QByteArray catalogData(const QString &name, const QString &language);
 
   /**
    * Returns the name of the catalog.
@@ -83,13 +93,6 @@ public:
    * @return The language of the catalog
    */
   QString language() const;
-
-  /**
-   * Returns locale directory of the catalog.
-   *
-   * @return The locale directory of the catalog.
-   */
-  QString localeDir() const;
 
   /**
    * Retrieves a translation of the specified message id.

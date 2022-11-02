@@ -32,7 +32,8 @@ namespace KGlobal
 
 #include "kglobal.h"
 #include "klocale.h"
-#include <QtCore/QTranslator>
+
+#include <QTranslator>
 
 #ifndef QT_NO_TRANSLATION
 class KDETranslator : public QTranslator
