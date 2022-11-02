@@ -833,41 +833,39 @@ void KLocalePrivate::translateRawFrom(const char *catname, const char *msgctxt, 
         return;
     }
 
-    const QList<KCatalog> catalogList = m_catalogs;
     QString catNameDecoded;
     if (catname != NULL) {
         catNameDecoded = QString::fromUtf8(catname);
     }
-    for (QList<KCatalog>::ConstIterator it = catalogList.constBegin(); it != catalogList.constEnd();
-         ++it) {
+    foreach (const KCatalog &it, m_catalogs) {
         // shortcut evaluation: once we have arrived at default language, we cannot consult
         // the catalog as it will not have an assiciated mo-file. For this default language we can
         // immediately pick the fallback string.
-        if ((*it).language() == KLocale::defaultLanguage()) {
-            return;
+        if (it.language() == KLocale::defaultLanguage()) {
+            break;
         }
 
-        if (catNameDecoded.isEmpty() || catNameDecoded == (*it).name()) {
+        if (catNameDecoded.isEmpty() || catNameDecoded == it.name()) {
             QString text;
             if (msgctxt != NULL && msgid_plural != NULL) {
-                text = (*it).translateStrict(msgctxt, msgid, msgid_plural, n);
+                text = it.translateStrict(msgctxt, msgid, msgid_plural, n);
             } else if (msgid_plural != NULL) {
-                text = (*it).translateStrict(msgid, msgid_plural, n);
+                text = it.translateStrict(msgid, msgid_plural, n);
             } else if (msgctxt != NULL) {
-                text = (*it).translateStrict(msgctxt, msgid);
+                text = it.translateStrict(msgctxt, msgid);
             } else {
-                text = (*it).translateStrict(msgid);
+                text = it.translateStrict(msgid);
             }
 
             if (!text.isEmpty()) {
                 // we found it
                 if (language) {
-                    *language = (*it).language();
+                    *language = it.language();
                 }
                 if (translation) {
                     *translation = text;
                 }
-                return;
+                break;
             }
         }
     }
