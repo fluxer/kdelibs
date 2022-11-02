@@ -77,8 +77,8 @@ namespace Kuit {
             None,
             TopLong, TopShort,
             Title, Subtitle, Para, List, Item, Note, Warning, Link,
-            Filename, Application, Command, Resource, Icode, Bcode,
-            Emphasis, Placeholder, Email, Numid, Envar, Message, Nl,
+            Filename, Application, Command, Resource,
+            Emphasis, Email, Numid, Envar, Message, Nl,
             NumIntg, NumReal // internal helpers for numbers, not part of DTD
         } Var;
     }
@@ -175,8 +175,8 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
 
     #undef INLINES
     #define INLINES \
-        Filename << Link << Application << Command << Resource << Icode << \
-        Emphasis << Placeholder << Email << Numid << Envar << Nl
+        Filename << Link << Application << Command << Resource << \
+        Emphasis << Email << Numid << Envar << Nl
 
     SETUP_TAG(TopLong, "kuit", Ctx, Title << Subtitle << Para);
     SETUP_TAG(TopShort, "kuil", Ctx, INLINES << Note << Warning << Message);
@@ -190,15 +190,12 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
 
     SETUP_TAG(Note, "note", Label, INLINES);
     SETUP_TAG(Warning, "warning", Label, INLINES);
-    SETUP_TAG(Filename, "filename", None, Envar << Placeholder);
+    SETUP_TAG(Filename, "filename", None, Envar);
     SETUP_TAG(Link, "link", Url, None);
     SETUP_TAG(Application, "application", None, None);
     SETUP_TAG(Command, "command", Section, None);
     SETUP_TAG(Resource, "resource", None, None);
-    SETUP_TAG(Icode, "icode", None, Envar << Placeholder);
-    SETUP_TAG(Bcode, "bcode", None, None);
     SETUP_TAG(Emphasis, "emphasis", Strong, None);
-    SETUP_TAG(Placeholder, "placeholder", None, None);
     SETUP_TAG(Email, "email", Address, None);
     SETUP_TAG(Envar, "envar", None, None);
     SETUP_TAG(Message, "message", None, None);
@@ -338,8 +335,6 @@ KuitSemanticsStaticData::KuitSemanticsStaticData ()
     SETUP_TAG_NL(Subtitle, 2);
     SETUP_TAG_NL(Para, 2);
     SETUP_TAG_NL(List, 1);
-    SETUP_TAG_NL(Bcode, 1);
-    SETUP_TAG_NL(Item, 1);
 
     // Default XML entities, direct and inverse mapping.
     xmlEntities[QString::fromLatin1("lt")] = QString(QLatin1Char('<'));
@@ -680,26 +675,6 @@ void KuitSemanticsPrivate::setFormattingPatterns ()
     // i18n: KUIT pattern, see the comment to the first of these entries above.
                            "“%1”"));
 
-    // -------> Icode
-    SET_PATTERN(Tag::Icode, Att::None, Fmt::Plain,
-                I18N_NOOP2("@icode/plain",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "“%1”"));
-    SET_PATTERN(Tag::Icode, Att::None, Fmt::Rich,
-                I18N_NOOP2("@icode/rich",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "<tt>%1</tt>"));
-
-    // -------> Bcode
-    SET_PATTERN(Tag::Bcode, Att::None, Fmt::Plain,
-                XXXX_NOOP2("@bcode/plain",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "\n%1\n"));
-    SET_PATTERN(Tag::Bcode, Att::None, Fmt::Rich,
-                XXXX_NOOP2("@bcode/rich",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "<pre>%1</pre>"));
-
     // -------> Emphasis
     SET_PATTERN(Tag::Emphasis, Att::None, Fmt::Plain,
                 I18N_NOOP2("@emphasis/plain",
@@ -717,16 +692,6 @@ void KuitSemanticsPrivate::setFormattingPatterns ()
                 I18N_NOOP2("@emphasis-strong/rich",
     // i18n: KUIT pattern, see the comment to the first of these entries above.
                            "<b>%1</b>"));
-
-    // -------> Placeholder
-    SET_PATTERN(Tag::Placeholder, Att::None, Fmt::Plain,
-                I18N_NOOP2("@placeholder/plain",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "&lt;%1&gt;"));
-    SET_PATTERN(Tag::Placeholder, Att::None, Fmt::Rich,
-                I18N_NOOP2("@placeholder/rich",
-    // i18n: KUIT pattern, see the comment to the first of these entries above.
-                           "&lt;<i>%1</i>&gt;"));
 
     // -------> Email
     SET_PATTERN(Tag::Email, Att::None, Fmt::Plain,
