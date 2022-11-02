@@ -68,7 +68,7 @@ class KLocalizedStringPrivate
     QByteArray msg;
     QByteArray plural;
 
-    QString toString (const KLocale *locale, const QString *catalogName) const;
+    QString toString (const KLocale *locale) const;
     QString selectForEnglish () const;
     QString substituteSimple (const QString &trans,
                               const QChar &plchar = QLatin1Char('%'),
@@ -137,27 +137,15 @@ bool KLocalizedString::isEmpty () const
 
 QString KLocalizedString::toString () const
 {
-    return d->toString(KGlobal::locale(), NULL);
-}
-
-QString KLocalizedString::toString (const QString &catalogName) const
-{
-    return d->toString(KGlobal::locale(), &catalogName);
+    return d->toString(KGlobal::locale());
 }
 
 QString KLocalizedString::toString (const KLocale *locale) const
 {
-    return d->toString(locale, NULL);
+    return d->toString(locale);
 }
 
-QString KLocalizedString::toString (const KLocale *locale,
-                                    const QString &catalogName) const
-{
-    return d->toString(locale, &catalogName);
-}
-
-QString KLocalizedStringPrivate::toString (const KLocale *locale,
-                                           const QString *catalogName) const
+QString KLocalizedStringPrivate::toString (const KLocale *locale) const
 {
     std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
 
@@ -179,23 +167,15 @@ QString KLocalizedStringPrivate::toString (const KLocale *locale,
 
     // Get raw translation.
     QString rawtrans, lang, ctry;
-    QByteArray catname;
-    if (catalogName != NULL) {
-        catname = catalogName->toUtf8();
-    }
     if (locale != NULL) {
         if (!ctxt.isEmpty() && !plural.isEmpty()) {
-            locale->translateRawFrom(catname, ctxt, msg, plural, number,
-                                     &lang, &rawtrans);
+            locale->translateRaw(ctxt, msg, plural, number, &lang, &rawtrans);
         } else if (!plural.isEmpty()) {
-            locale->translateRawFrom(catname, msg, plural, number,
-                                     &lang, &rawtrans);
+            locale->translateRaw(msg, plural, number, &lang, &rawtrans);
         } else if (!ctxt.isEmpty()) {
-            locale->translateRawFrom(catname, ctxt, msg,
-                                     &lang, &rawtrans);
+            locale->translateRaw(ctxt, msg, &lang, &rawtrans);
         } else {
-            locale->translateRawFrom(catname, msg,
-                                     &lang, &rawtrans);
+            locale->translateRaw(msg, &lang, &rawtrans);
         }
         ctry = locale->country();
     } else {

@@ -304,8 +304,8 @@ public:
      * @internal Function used by the translate versions
      * The worker of the same-name KLocale API function.
      */
-    void translateRawFrom(const char *catname, const char *msgctxt, const char *msgid, const char *msgid_plural = 0,
-                                  unsigned long n = 0, QString *language = 0, QString *translation = 0) const;
+    void translateRaw(const char *msgctxt, const char *msgid, const char *msgid_plural = 0,
+                      unsigned long n = 0, QString *language = 0, QString *translation = 0) const;
 
     /**
      * @internal Translates a message as a QTranslator is supposed to.

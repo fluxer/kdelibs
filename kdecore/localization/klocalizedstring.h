@@ -340,16 +340,6 @@ public:
     QString toString () const;
 
     /**
-     * @since 4.5
-     *
-     * Like toString, but looks for translation only in specific catalog.
-     *
-     * @param catalogName the name of the catalog to check for translation
-     * @return finalized translation
-     */
-    QString toString (const QString &catalogName) const;
-
-    /**
      * Finalizes the translation, creates QString with placeholders
      * substituted. Translation is obtained from given locale. If locale
      * is NULL, original message is used instead of translated.
@@ -361,17 +351,6 @@ public:
      * @return finalized translation
      */
     QString toString (const KLocale *locale) const;
-
-    /**
-     * @since 4.5
-     *
-     * Like toString, but looks for translation only in specific catalog.
-     *
-     * @param locale locale from which translations are to be taken
-     * @param catalogName the name of the catalog to check for translation
-     * @return finalized translation
-     */
-    QString toString (const KLocale *locale, const QString &catalogName) const;
 
     /**
      * Checks whether the message is empty. This will happen if you just

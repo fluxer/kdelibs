@@ -790,8 +790,8 @@ void KLocalePrivate::setActiveCatalog(const QString &catalog)
     updateCatalogs();
 }
 
-void KLocalePrivate::translateRawFrom(const char *catname, const char *msgctxt, const char *msgid, const char *msgid_plural,
-                                      unsigned long n, QString *language, QString *translation) const
+void KLocalePrivate::translateRaw(const char *msgctxt, const char *msgid, const char *msgid_plural,
+                                  unsigned long n, QString *language, QString *translation) const
 {
     if (!msgid || !msgid[0]) {
         kDebug(173) << "KLocale: trying to look up \"\" in catalog. "
@@ -833,10 +833,6 @@ void KLocalePrivate::translateRawFrom(const char *catname, const char *msgctxt, 
         return;
     }
 
-    QString catNameDecoded;
-    if (catname != NULL) {
-        catNameDecoded = QString::fromUtf8(catname);
-    }
     foreach (const KCatalog &it, m_catalogs) {
         // shortcut evaluation: once we have arrived at default language, we cannot consult
         // the catalog as it will not have an assiciated mo-file. For this default language we can
@@ -845,28 +841,26 @@ void KLocalePrivate::translateRawFrom(const char *catname, const char *msgctxt, 
             break;
         }
 
-        if (catNameDecoded.isEmpty() || catNameDecoded == it.name()) {
-            QString text;
-            if (msgctxt != NULL && msgid_plural != NULL) {
-                text = it.translateStrict(msgctxt, msgid, msgid_plural, n);
-            } else if (msgid_plural != NULL) {
-                text = it.translateStrict(msgid, msgid_plural, n);
-            } else if (msgctxt != NULL) {
-                text = it.translateStrict(msgctxt, msgid);
-            } else {
-                text = it.translateStrict(msgid);
-            }
+        QString text;
+        if (msgctxt != NULL && msgid_plural != NULL) {
+            text = it.translateStrict(msgctxt, msgid, msgid_plural, n);
+        } else if (msgid_plural != NULL) {
+            text = it.translateStrict(msgid, msgid_plural, n);
+        } else if (msgctxt != NULL) {
+            text = it.translateStrict(msgctxt, msgid);
+        } else {
+            text = it.translateStrict(msgid);
+        }
 
-            if (!text.isEmpty()) {
-                // we found it
-                if (language) {
-                    *language = it.language();
-                }
-                if (translation) {
-                    *translation = text;
-                }
-                break;
+        if (!text.isEmpty()) {
+            // we found it
+            if (language) {
+                *language = it.language();
             }
+            if (translation) {
+                *translation = text;
+            }
+            break;
         }
     }
 }
@@ -896,10 +890,10 @@ QString KLocalePrivate::translateQt(const char *context, const char *sourceText)
     // was found, otherwise we got the original string back as translation.
 
     if (context && context[0]) {
-        translateRawFrom(0, context, sourceText, 0, 0, &language, &translation);
+        translateRaw(context, sourceText, 0, 0, &language, &translation);
     }
     if (language.isEmpty() || language == defaultLanguage()) {
-        translateRawFrom(0, 0, sourceText, 0, 0, &language, &translation);
+        translateRaw(0, sourceText, 0, 0, &language, &translation);
     }
 
     if (language != defaultLanguage()) {
@@ -1387,7 +1381,7 @@ QList<QString> KLocalePrivate::dialectUnitsList(KLocale::BinaryUnitDialect diale
 
     // Adds a given translation to the binaryUnits list.
 #define CACHE_BYTE_FMT(ctxt_text) \
-        translateRawFrom(0, ctxt_text, 0, 0, 0, &s); \
+        translateRaw(ctxt_text, 0, 0, 0, &s); \
         binaryUnits.append(s);
 
     // Do not remove i18n: comments below, they are used by the

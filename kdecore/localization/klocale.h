@@ -123,14 +123,11 @@ public:
     /**
      * @since 4.5
      *
-     * Raw translation from a message catalog.
-     * If catalog name is null or empty,
-     * all loaded catalogs are searched for the translation.
+     * Raw translation from all loaded catalogs.
      *
      * Never use this directly to get message translations. See the i18n and ki18n
      * family of calls related to KLocalizedString.
      *
-     * @param catname the catalog name. Must be UTF-8 encoded.
      * @param msg the message. Must not be null or empty. Must be UTF-8 encoded.
      * @param lang language in which the translation was found. If no translation
      *             was found, KLocale::defaultLanguage() is reported. If null,
@@ -140,28 +137,18 @@ public:
      *              translation is not reported.
      *
      * @see KLocalizedString
-     */
-    void translateRawFrom(const char* catname, const char* msg, QString *lang, QString *trans) const;
-
-    /**
-     * Like translateRawFrom, with implicit lookup through all loaded catalogs.
-     *
-     * @deprecated Use translateRawFrom with null or empty catalog name.
      */
     void translateRaw(const char* msg, QString *lang, QString *trans) const;
 
     /**
      * @since 4.5
      *
-     * Raw translation from a message catalog, with given context.
+     * Raw translation from all loaded catalogs, with given context.
      * Context + message are used as the lookup key in the catalog.
-     * If catalog name is null or empty,
-     * all loaded catalogs are searched for the translation.
      *
      * Never use this directly to get message translations. See i18n* and ki18n*
      * calls related to KLocalizedString.
      *
-     * @param catname the catalog name. Must be UTF-8 encoded.
      * @param ctxt the context. Must not be null. Must be UTF-8 encoded.
      * @param msg the message. Must not be null or empty. Must be UTF-8 encoded.
      * @param lang language in which the translation was found. If no translation
@@ -173,27 +160,17 @@ public:
      *
      * @see KLocalizedString
      */
-    void translateRawFrom(const char *catname, const char *ctxt, const char *msg, QString *lang, QString *trans) const;
-
-    /**
-     * Like translateRawFrom, with implicit lookup through all loaded catalogs.
-     *
-     * @deprecated Use translateRawFrom with null or empty catalog name.
-     */
     void translateRaw(const char *ctxt, const char *msg, QString *lang, QString *trans) const;
 
     /**
      * @since 4.5
      *
-     * Raw translation from a message catalog, with given singular/plural form.
+     * Raw translation from all loaded catalogs, with given singular/plural form.
      * Singular form is used as the lookup key in the catalog.
-     * If catalog name is null or empty,
-     * all loaded catalogs are searched for the translation.
      *
      * Never use this directly to get message translations. See i18n* and ki18n*
      * calls related to KLocalizedString.
      *
-     * @param catname the catalog name. Must be UTF-8 encoded.
      * @param singular the singular form. Must not be null or empty. Must be UTF-8 encoded.
      * @param plural the plural form. Must not be null. Must be UTF-8 encoded.
      * @param n number on which the forms are decided.
@@ -207,30 +184,18 @@ public:
      *
      * @see KLocalizedString
      */
-    void translateRawFrom(const char *catname, const char *singular, const char *plural,  unsigned long n,
-                            QString *lang, QString *trans) const;
-
-    /**
-     * Like translateRawFrom, with implicit lookup through all loaded catalogs.
-     *
-     * @deprecated Use translateRawFrom with null or empty catalog name.
-     */
-    void translateRaw(const char *singular, const char *plural,  unsigned long n, QString *lang,
-                      QString *trans) const;
-
+    void translateRaw(const char *singular, const char *plural,  unsigned long n,
+                      QString *lang, QString *trans) const;
     /**
      * @since 4.5
      *
-     * Raw translation from a message catalog, with given context and
+     * Raw translation from all loaded catalogs, with given context and
      * singular/plural form.
      * Context + singular form is used as the lookup key in the catalog.
-     * If catalog name is null or empty,
-     * all loaded catalogs are searched for the translation.
      *
      * Never use this directly to get message translations. See i18n* and ki18n*
      * calls related to KLocalizedString.
      *
-     * @param catname the catalog name. Must be UTF-8 encoded.
      * @param ctxt the context. Must not be null. Must be UTF-8 encoded.
      * @param singular the singular form. Must not be null or empty. Must be UTF-8 encoded.
      * @param plural the plural form. Must not be null. Must be UTF-8 encoded.
@@ -245,16 +210,8 @@ public:
      *
      * @see KLocalizedString
      */
-    void translateRawFrom(const char *catname, const char *ctxt, const char *singular, const char *plural,
-                            unsigned long n, QString *lang, QString *trans) const;
-
-    /**
-     * Like translateRawFrom, with implicit lookup through all loaded catalogs.
-     *
-     * @deprecated Use translateRawFrom with null or empty catalog name.
-     */
-    void translateRaw(const char *ctxt, const char *singular, const char *plural, unsigned long n,
-                      QString *lang, QString *trans) const;
+    void translateRaw(const char *ctxt, const char *singular, const char *plural,
+                          unsigned long n, QString *lang, QString *trans) const;
 
     /**
      * Changes the current encoding.

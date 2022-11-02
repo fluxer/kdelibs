@@ -38,12 +38,12 @@
 #include "common_helpers_p.h"
 
 KLocale::KLocale(const QString &catalog, KSharedConfig::Ptr config)
-        : d(new KLocalePrivate(this, catalog, config))
+    : d(new KLocalePrivate(this, catalog, config))
 {
 }
 
 KLocale::KLocale(const QString& catalog, const QString &language, const QString &country, KConfig *config)
-        : d(new KLocalePrivate(this, catalog, language, country, config))
+    : d(new KLocalePrivate(this, catalog, language, country, config))
 {
 }
 
@@ -113,50 +113,26 @@ void KLocale::setActiveCatalog(const QString &catalog)
     d->setActiveCatalog(catalog);
 }
 
-void KLocale::translateRawFrom(const char *catname, const char *ctxt, const char *singular, const char *plural,
-                               unsigned long n, QString *lang, QString *trans) const
-{
-    d->translateRawFrom(catname, ctxt, singular, plural, n, lang, trans);
-}
-
-//Convenience versions
-void KLocale::translateRawFrom(const char *catname, const char *msg, QString *lang, QString *trans) const
-{
-    d->translateRawFrom(catname, 0, msg, 0, 0, lang, trans);
-}
-
 void KLocale::translateRaw(const char *msg, QString *lang, QString *trans) const
 {
-    d->translateRawFrom(0, 0, msg, 0, 0, lang, trans);
-}
-
-void KLocale::translateRawFrom(const char *catname, const char *ctxt, const char *msg, QString *lang,
-                               QString *trans) const
-{
-    d->translateRawFrom(catname, ctxt, msg, 0, 0, lang, trans);
+    d->translateRaw(0, msg, 0, 0, lang, trans);
 }
 
 void KLocale::translateRaw(const char *ctxt, const char *msg, QString *lang, QString *trans) const
 {
-    d->translateRawFrom(0, ctxt, msg, 0, 0, lang, trans);
-}
-
-void KLocale::translateRawFrom(const char *catname, const char *singular, const char *plural,
-                               unsigned long n, QString *lang, QString *trans) const
-{
-    d->translateRawFrom(catname, 0, singular, plural, n, lang, trans);
+    d->translateRaw(ctxt, msg, 0, 0, lang, trans);
 }
 
 void KLocale::translateRaw(const char *singular, const char *plural, unsigned long n, QString *lang,
                            QString *trans) const
 {
-    d->translateRawFrom(0, 0, singular, plural, n, lang, trans);
+    d->translateRaw(0, singular, plural, n, lang, trans);
 }
 
 void KLocale::translateRaw(const char *ctxt, const char *singular, const char *plural,
                            unsigned long n, QString *lang, QString *trans) const
 {
-    d->translateRawFrom(0, ctxt, singular, plural, n, lang, trans);
+    d->translateRaw(ctxt, singular, plural, n, lang, trans);
 }
 
 QString KLocale::translateQt(const char *context, const char *sourceText) const
