@@ -145,7 +145,6 @@ set(kdecore_LIB_SRCS
     localization/klocale_kde.cpp
     localization/klocalizedstring.cpp
     localization/kuitsemantics.cpp
-    localization/kuitformats.cpp
     localization/common_helpers.cpp
     sycoca/ksycoca.cpp
     sycoca/ksycocadict.cpp

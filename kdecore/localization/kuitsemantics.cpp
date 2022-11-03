@@ -31,7 +31,6 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kcatalog_p.h>
-#include <kuitformats_p.h>
 #include <klocale.h>
 
 // Truncates string, for output of long messages.
@@ -45,6 +44,61 @@ static QString shorten (const QString &str)
     else
         return str.left(maxlen).append(QLatin1String("..."));
 }
+
+/**
+ * Reformat keyboard shortcut. The first of encountered of '+' or '-'
+ * is taken for key delimiter, and the supplied delimiter is used instead.
+ * A dictionary of replacement key names can also be provided, which can
+ * be used for localization of the key names.
+ */
+static QString kToKeyCombo (const QString &shstr, const QString &delim,
+                           const QHash<QString, QString> &keydict)
+{
+    static QRegExp delRx(QLatin1String("[+-]"));
+
+    int p = delRx.indexIn(shstr); // find delimiter
+
+    QStringList keys;
+    if (p < 0) { // single-key shortcut, no delimiter found
+        keys.append(shstr);
+    } else { // multi-key shortcut
+        QChar oldDelim = shstr[p];
+        keys = shstr.split(oldDelim, QString::SkipEmptyParts);
+    }
+
+    for (int i = 0; i < keys.size(); ++i) {
+        // Normalize key, trim and all lower-case.
+        QString nkey = keys[i].trimmed().toLower();
+        bool isFunctionKey = nkey.length() > 1 && nkey[1].isDigit();
+        if (!isFunctionKey) {
+            keys[i] = keydict.contains(nkey) ? keydict[nkey] : keys[i].trimmed();
+        } else {
+            keys[i] = keydict[QLatin1String("f%1")].arg(nkey.mid(1));
+        }
+    }
+    return keys.join(delim);
+}
+
+/**
+ * Reformat GUI element path. Consider the first encountered of
+ * '/', '|' or "->" as path delimiter, and replace them with the supplied
+ * delimiter.
+ */
+static QString kToInterfacePath (const QString &inpstr, const QString &delim)
+{
+    static QRegExp delRx(QLatin1String("\\||->"));
+
+    int p = delRx.indexIn(inpstr); // find delimiter
+    if (p < 0) { // single-element path, no delimiter found
+        return inpstr;
+    }
+    else { // multi-element path
+        QString oldDelim = delRx.capturedTexts().at(0);
+        QStringList guiels = inpstr.split(oldDelim, QString::SkipEmptyParts);
+        return guiels.join(delim);
+    }
+}
+
 
 // Custom entity resolver for QXmlStreamReader.
 class KuitEntityResolver : public QXmlStreamEntityResolver
@@ -1448,10 +1502,10 @@ QString KuitSemanticsPrivate::modifyTagText (const QString &text,
         return QDir::toNativeSeparators(text);
     }
     else if (tag == Kuit::Tag::Shortcut) {
-        return KuitFormats::toKeyCombo(text, m_comboKeyDelim[fmt], m_keyNames);
+        return kToKeyCombo(text, m_comboKeyDelim[fmt], m_keyNames);
     }
     else if (tag == Kuit::Tag::Interface) {
-        return KuitFormats::toInterfacePath(text, m_guiPathDelim[fmt]);
+        return kToInterfacePath(text, m_guiPathDelim[fmt]);
     }
 
     // Fell through, no modification.
