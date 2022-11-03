@@ -198,11 +198,10 @@ void KApplication::removeX11EventFilter( const QWidget* filter )
         return;
     // removeAll doesn't work, creating QWeakPointer to something that's about to be deleted aborts
     // x11Filter->removeAll( const_cast< QWidget* >( filter ));
-    for( QMutableListIterator< QWeakPointer< QWidget > > it( *x11Filter );
-         it.hasNext();
-         ) {
-        QWidget* w = it.next().data();
-        if( w == filter || w == NULL )
+    QMutableListIterator< QWeakPointer< QWidget > > it( *x11Filter );
+    while (it.hasNext()) {
+        QWeakPointer< QWidget > wp = it.next();
+        if( wp.isNull() || wp.data() == filter )
             it.remove();
     }
     if ( x11Filter->isEmpty() ) {
@@ -729,9 +728,12 @@ public:
 bool KApplication::x11EventFilter( XEvent *_event )
 {
     if (x11Filter) {
-        foreach (const QWeakPointer< QWidget >& wp, *x11Filter) {
-            if( QWidget* w = wp.data())
-                if ( static_cast<KAppX11HackWidget*>( w )->publicx11Event(_event))
+        // either deep-copy or mutex
+        QListIterator< QWeakPointer< QWidget > > it( *x11Filter );
+        while (it.hasNext()) {
+            QWeakPointer< QWidget > wp = it.next();
+            if( !wp.isNull() )
+                if ( static_cast<KAppX11HackWidget*>( wp.data() )->publicx11Event(_event))
                     return true;
         }
     }
