@@ -51,7 +51,6 @@ public:
         extra2( 0 ),
         owner( owner_P )
     {
-        kapp->installX11EventFilter( this );
     }
 
     const Atom selection;
@@ -79,16 +78,19 @@ KSelectionOwner::KSelectionOwner( Atom selection_P, int screen_P, QObject* paren
     : QObject( parent_P ),
     d( new Private( this, selection_P, screen_P ) )
 {
+    kapp->installX11EventFilter( d );
 }
 
 KSelectionOwner::KSelectionOwner( const char* selection_P, int screen_P, QObject* parent_P )
     : QObject( parent_P ),
     d( new Private( this, XInternAtom( QX11Info::display(), selection_P, False ), screen_P ) )
 {
+    kapp->installX11EventFilter( d );
 }
 
 KSelectionOwner::~KSelectionOwner()
 {
+    kapp->removeX11EventFilter( d );
     release();
     delete d;
 }
