@@ -263,6 +263,11 @@ public:
   bool notify( QObject* receiver, QEvent* event );
 #endif // Q_WS_X11
 
+  /**
+   * @internal
+   */
+  static bool loadedByKdeinit;
+
 public Q_SLOTS:
   /**
    * Updates the last user action timestamp to the given time, or to the current time,
