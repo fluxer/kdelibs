@@ -4,6 +4,8 @@
 #
 # Format : number description
 
+0           default
+
 # kdelibs
 125         kdeui (KGlobalAccel)
 129         kdeui (KAction)
