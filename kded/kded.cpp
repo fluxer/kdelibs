@@ -41,12 +41,6 @@
 #include <QDBusReply>
 #include <QDBusConnectionInterface>
 
-#ifdef Q_WS_X11
-#include <qx11info_x11.h>
-#include <X11/Xlib.h>
-#include <fixx11h.h>
-#endif
-
 #include <unistd.h>
 
 #define KDED_EXENAME "kded4"
@@ -607,17 +601,6 @@ int main(int argc, char *argv[])
     iHostnamePollInterval = cg.readEntry("HostnamePollInterval", 5000);
 
     Kded kded(&app);
-
-#ifdef Q_WS_X11
-    XEvent e;
-    e.xclient.type = ClientMessage;
-    e.xclient.message_type = XInternAtom(QX11Info::display(), "_KDE_SPLASH_PROGRESS", False);
-    e.xclient.display = QX11Info::display();
-    e.xclient.window = QX11Info::appRootWindow();
-    e.xclient.format = 8;
-    strcpy(e.xclient.data.b, "kded");
-    XSendEvent(QX11Info::display(), QX11Info::appRootWindow(), False, SubstructureNotifyMask, &e);
-#endif
 
     return app.exec(); // keep running
 }
