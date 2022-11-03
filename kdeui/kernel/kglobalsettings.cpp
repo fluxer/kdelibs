@@ -979,7 +979,7 @@ void KGlobalSettings::Private::applyCursorTheme()
     KConfig config("kcminputrc");
     KConfigGroup g(&config, "Mouse");
 
-    QByteArray theme = g.readEntry("cursorTheme", QByteArray("default"));
+    QByteArray theme = g.readEntry("cursorTheme", QByteArray("Oxygen_White"));
     int size = g.readEntry("cursorSize", -1);
 
     // Default cursor size is 16 points
