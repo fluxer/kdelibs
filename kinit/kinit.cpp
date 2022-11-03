@@ -1433,26 +1433,24 @@ int main(int argc, char **argv)
    int do_shutdown = 0;
    d.suicide = false;
 
-   // Save arguments first...
-   char **safe_argv = (char **) malloc( sizeof(char *) * argc);
+   // Check arguments first...
    for(int i = 0; i < argc; i++)
    {
-      safe_argv[i] = strcpy((char*)malloc(strlen(argv[i])+1), argv[i]);
-      if (strcmp(safe_argv[i], "--no-klauncher") == 0)
+      if (strcmp(argv[i], "--no-klauncher") == 0)
          launch_klauncher = 0;
-      if (strcmp(safe_argv[i], "--no-fork") == 0)
+      if (strcmp(argv[i], "--no-fork") == 0)
          do_fork = false;
-      if (strcmp(safe_argv[i], "--suicide") == 0)
+      if (strcmp(argv[i], "--suicide") == 0)
          d.suicide = true;
-      if (strcmp(safe_argv[i], "--shutdown") == 0)
+      if (strcmp(argv[i], "--shutdown") == 0)
          do_shutdown = 1;
-      if (strcmp(safe_argv[i], "--version") == 0)
+      if (strcmp(argv[i], "--version") == 0)
       {
          printf("Katie: %s\n", qVersion());
          printf("KDE: %s\n", KDE_VERSION_STRING);
          exit(0);
       }
-      if (strcmp(safe_argv[i], "--help") == 0)
+      if (strcmp(argv[i], "--help") == 0)
       {
         printf("Usage: kdeinit4 [options]\n");
         printf("    --no-fork         Do not fork\n");
@@ -1521,8 +1519,6 @@ int main(int argc, char **argv)
    // (do it only after kdeinit_library_path, that one indirectly uses KConfig,
    // which seems to be buggy and always use KGlobal instead of the matching KComponentData)
    Q_ASSERT(!KGlobal::hasMainComponent());
-   // don't change envvars before proctitle_init()
-   unsetenv("LD_BIND_NOW");
    KApplication::loadedByKdeinit = true;
 
    d.maxname = strlen(argv[0]);
@@ -1549,36 +1545,6 @@ int main(int argc, char **argv)
 #ifdef Q_WS_X11
    X11fd = initXconnection();
 #endif
-
-   for(int i = 1; i < argc; i++)
-   {
-      if (safe_argv[i][0] == '+')
-      {
-         pid = launch( 1, safe_argv[i]+1, 0);
-#ifndef NDEBUG
-      fprintf(stderr, "kdeinit4: Launched '%s', pid = %ld result = %d\n", safe_argv[i]+1, (long) pid, d.result);
-#endif
-         handle_requests(pid);
-      }
-      else if (safe_argv[i][0] == '-')
-      {
-         // Ignore
-      }
-      else
-      {
-         pid = launch( 1, safe_argv[i], 0 );
-#ifndef NDEBUG
-      fprintf(stderr, "kdeinit4: Launched '%s', pid = %ld result = %d\n", safe_argv[i], (long) pid, d.result);
-#endif
-      }
-   }
-
-   // Free argumentsf
-   for(int i = 0; i < argc; i++)
-   {
-      free(safe_argv[i]);
-   }
-   free (safe_argv);
 
 #ifndef SKIP_PROCTITLE
    proctitle_set("kdeinit4 Running...");
