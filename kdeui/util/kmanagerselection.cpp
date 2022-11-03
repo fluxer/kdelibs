@@ -90,7 +90,9 @@ KSelectionOwner::KSelectionOwner( const char* selection_P, int screen_P, QObject
 
 KSelectionOwner::~KSelectionOwner()
 {
-    kapp->removeX11EventFilter( d );
+    if (kapp) {
+        kapp->removeX11EventFilter( d );
+    }
     release();
     delete d;
 }
