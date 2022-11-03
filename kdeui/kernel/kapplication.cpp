@@ -81,10 +81,10 @@
 KApplication* KApplication::KApp = 0L;
 
 #ifdef Q_WS_X11
-static Atom atom_DesktopWindow;
-static Atom atom_NetSupported;
-static Atom kde_xdnd_drop;
-static QByteArray* startup_id_tmp;
+static Atom atom_DesktopWindow = None;
+static Atom atom_NetSupported = None;
+static Atom kde_xdnd_drop = None;
+static QByteArray* startup_id_tmp = nullptr;
 #endif
 
 /*
@@ -873,7 +873,7 @@ void KApplicationPrivate::read_app_startup_id()
 #if defined Q_WS_X11
     startup_id = *startup_id_tmp;
     delete startup_id_tmp;
-    startup_id_tmp = NULL;
+    startup_id_tmp = nullptr;
 #endif
 }
 
