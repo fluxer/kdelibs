@@ -87,12 +87,11 @@ void KDirWatch::addDir(const QString& path, WatchModes watchModes)
         dir.cdUp();
     }
 
-    foreach(const QFileInfo info, dir.entryInfoList(filters)) {
-        const QString fullpath = info.absoluteFilePath();
+    foreach(const QFileInfo &info, dir.entryInfoList(filters)) {
         if (info.isDir()) {
-            addDir(fullpath, watchModes);
+            addDir(info.absoluteFilePath(), watchModes);
         } else {
-            d->watcher->addPath(fullpath);
+            d->watcher->addPath(info.absoluteFilePath());
         }
     }
 }
