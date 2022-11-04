@@ -32,40 +32,6 @@ KFileMetaDataExiv2Plugin::~KFileMetaDataExiv2Plugin()
 {
 }
 
-QStringList KFileMetaDataExiv2Plugin::keys() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#make")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#model")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#orientation")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLatitudeRef")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#gpsLongitudeRef")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#flash")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureTime")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureBiasValue")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#exposureMode")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#apertureValue")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLength")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#focalLengthIn35mmFilm")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#isoSpeedRatings")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#meteringMode")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#whiteBalance")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

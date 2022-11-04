@@ -28,8 +28,6 @@ public:
     KFileMetaDataFFmpegPlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataFFmpegPlugin();
 
-    QStringList keys() const final;
-
     QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
 };
 

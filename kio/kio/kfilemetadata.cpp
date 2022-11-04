@@ -30,11 +30,6 @@ KFileMetaDataPlugin::~KFileMetaDataPlugin()
 {
 }
 
-QStringList KFileMetaDataPlugin::keys() const
-{
-    return QStringList();
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(url);

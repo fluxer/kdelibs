@@ -6,4 +6,5 @@ Comment=Extracts metadata from e-book documents
 MimeType=application/epub+zip
 X-KDE-Library=kfilemetadata_epub
 X-KDE-ServiceTypes=KFileMetaData/Plugin
+X-KDE-MetadataKeys=http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#uniqueFileIdentifier,http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator,http://www.semanticdesktop.org/ontologies/2007/03/22/nco#contributor,http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#description,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright
 InitialPreference=1

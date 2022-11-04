@@ -238,13 +238,7 @@ QStringList KFileMetaInfo::supportedKeys()
         const QString key = kfmdplugin->desktopEntryName();
         const bool enable = pluginsgroup.readEntry(key, true);
         if (enable) {
-            KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
-            if (kfmdplugininstance) {
-                keys.append(kfmdplugininstance->keys());
-                delete kfmdplugininstance;
-            } else {
-                kWarning() << "Could not create KFileMetaDataPlugin instance";
-            }
+            keys.append(kfmdplugin->property("X-KDE-MetadataKeys", QVariant::StringList).toStringList());
         }
     }
     keys.removeDuplicates();

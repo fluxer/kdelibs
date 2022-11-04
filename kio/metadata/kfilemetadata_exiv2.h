@@ -28,8 +28,6 @@ public:
     KFileMetaDataExiv2Plugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataExiv2Plugin();
 
-    QStringList keys() const final;
-
     QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
 };
 

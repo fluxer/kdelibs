@@ -28,8 +28,6 @@ public:
     KFileMetaDataFreetypePlugin(QObject* parent, const QVariantList &args);
     ~KFileMetaDataFreetypePlugin();
 
-    QStringList keys() const final;
-
     QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
 };
 

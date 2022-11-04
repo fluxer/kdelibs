@@ -42,37 +42,6 @@ KFileMetaDataFFmpegPlugin::~KFileMetaDataFFmpegPlugin()
 {
 }
 
-QStringList KFileMetaDataFFmpegPlugin::keys() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#composer")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encoder")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#encodedBy")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#performer")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#publisher")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoCodec")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioCodec")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#subtitleCodec")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#width")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#height")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#audioBitRate")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#videoBitRate")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#frameRate");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

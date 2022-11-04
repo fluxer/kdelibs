@@ -32,16 +32,6 @@ KFileMetaDataSpectrePlugin::~KFileMetaDataSpectrePlugin()
 {
 }
 
-QStringList KFileMetaDataSpectrePlugin::keys() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataSpectrePlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

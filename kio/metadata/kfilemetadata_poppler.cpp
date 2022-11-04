@@ -49,21 +49,6 @@ KFileMetaDataPopplerPlugin::~KFileMetaDataPopplerPlugin()
 {
 }
 
-QStringList KFileMetaDataPopplerPlugin::keys() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter")
-        << QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);
