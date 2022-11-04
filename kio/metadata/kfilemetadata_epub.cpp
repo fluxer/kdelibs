@@ -68,13 +68,6 @@ QStringList KFileMetaDataEPubPlugin::keys() const
     return result;
 }
 
-QStringList KFileMetaDataEPubPlugin::mimeTypes() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("application/epub+zip");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataEPubPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

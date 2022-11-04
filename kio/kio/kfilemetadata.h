@@ -47,7 +47,6 @@ public:
     ~KFileMetaDataPlugin();
 
     virtual QStringList keys() const;
-    virtual QStringList mimeTypes() const;
 
     virtual QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags);
 };

@@ -3,6 +3,7 @@ Type=Service
 Name=KFileMetaDataFFmpegPlugin
 GenericName=FFmpeg
 Comment=Extracts metadata from audio and video files
+MimeType=audio/*;video/*
 X-KDE-Library=kfilemetadata_ffmpeg
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 InitialPreference=1

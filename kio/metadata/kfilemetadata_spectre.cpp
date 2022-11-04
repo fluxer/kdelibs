@@ -42,13 +42,6 @@ QStringList KFileMetaDataSpectrePlugin::keys() const
     return result;
 }
 
-QStringList KFileMetaDataSpectrePlugin::mimeTypes() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("application/postscript");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataSpectrePlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

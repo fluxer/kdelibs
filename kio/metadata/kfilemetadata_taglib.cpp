@@ -52,46 +52,6 @@ QStringList KFileMetaDataTagLibPlugin::keys() const
     return result;
 }
 
-QStringList KFileMetaDataTagLibPlugin::mimeTypes() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("audio/x-ape")
-        << QString::fromLatin1("application/vnd.ms-asf")
-        << QString::fromLatin1("video/x-ms-asf")
-        << QString::fromLatin1("audio/x-flac")
-        << QString::fromLatin1("audio/flac")
-        << QString::fromLatin1("audio/x-flac+ogg")
-        << QString::fromLatin1("audio/x-oggflac")
-        << QString::fromLatin1("audio/x-it")
-        << QString::fromLatin1("audio/x-mod")
-        << QString::fromLatin1("audio/mp4")
-        << QString::fromLatin1("video/mp4")
-        << QString::fromLatin1("audio/x-musepack")
-        << QString::fromLatin1("audio/mpeg")
-        << QString::fromLatin1("audio/x-mpeg")
-        << QString::fromLatin1("video/mpeg")
-        << QString::fromLatin1("video/x-mpeg")
-        << QString::fromLatin1("audio/ogg")
-        << QString::fromLatin1("audio/x-ogg")
-        << QString::fromLatin1("video/ogg")
-        << QString::fromLatin1("video/x-ogg")
-        << QString::fromLatin1("audio/x-vorbis+ogg")
-        << QString::fromLatin1("audio/x-flac+ogg")
-        << QString::fromLatin1("audio/x-oggflac")
-        << QString::fromLatin1("audio/x-opus+ogg")
-        << QString::fromLatin1("video/x-theora+ogg")
-        << QString::fromLatin1("video/x-ogm+ogg")
-        << QString::fromLatin1("audio/x-riff")
-        << QString::fromLatin1("audio/x-s3m")
-        << QString::fromLatin1("audio/x-tta")
-        << QString::fromLatin1("audio/wav")
-        << QString::fromLatin1("audio/vnd.wave")
-        << QString::fromLatin1("audio/x-wav")
-        << QString::fromLatin1("audio/x-wavpack")
-        << QString::fromLatin1("audio/x-xm");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

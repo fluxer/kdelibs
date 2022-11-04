@@ -35,11 +35,6 @@ QStringList KFileMetaDataPlugin::keys() const
     return QStringList();
 }
 
-QStringList KFileMetaDataPlugin::mimeTypes() const
-{
-    return QStringList();
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataPlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(url);

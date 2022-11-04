@@ -42,20 +42,6 @@ QStringList KFileMetaDataFreetypePlugin::keys() const
     return result;
 }
 
-QStringList KFileMetaDataFreetypePlugin::mimeTypes() const
-{
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("font/ttf")
-        << QString::fromLatin1("application/x-font-ttf")
-        << QString::fromLatin1("application/x-font-type1")
-        << QString::fromLatin1("font/otf")
-        << QString::fromLatin1("application/x-font-otf")
-        << QString::fromLatin1("application/x-font-afm")
-        << QString::fromLatin1("application/x-font-ttx")
-        << QString::fromLatin1("font/woff");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataFreetypePlugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

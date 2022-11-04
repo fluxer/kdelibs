@@ -36,6 +36,30 @@
 static const KFileMetaInfoItem nullitem;
 static KFileMetaInfoItem mutablenullitem;
 
+static QStringList expandMimeTypes(const QStringList &mimetypes)
+{
+    QStringList result;
+    foreach (const QString &mime, mimetypes) {
+        if (mime.endsWith(QLatin1String("/*"))) {
+            const QString mimeglob = mime.mid(0, mime.size() - 2);
+            foreach (const KMimeType::Ptr &kmimetype, KMimeType::allMimeTypes()) {
+                // NOTE: it may be null during sycoca database update
+                if (kmimetype.isNull()) {
+                    continue;
+                }
+                if (kmimetype->name().startsWith(mimeglob)) {
+                    result.append(kmimetype->name());
+                }
+            }
+        } else {
+            result.append(mime);
+        }
+    }
+    // qDebug() << Q_FUNC_INFO << result;
+    return result;
+}
+
+
 class KFileMetaInfoPrivate : public QSharedData
 {
 public:
@@ -61,18 +85,18 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
         const QString key = kfmdplugin->desktopEntryName();
         const bool enable = pluginsgroup.readEntry(key, true);
         if (enable) {
-            KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
-            if (kfmdplugininstance) {
-                // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdplugininstance->mimeTypes();
-                foreach (const QString &kfmdpluginmime, kfmdplugininstance->mimeTypes()) {
-                    if (filemimetype->is(kfmdpluginmime)) {
+            // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdplugin->mimeTypes();
+            foreach (const QString &kfmdpluginmime, expandMimeTypes(kfmdplugin->mimeTypes())) {
+                if (filemimetype->is(kfmdpluginmime)) {
+                    KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
+                    if (kfmdplugininstance) {
                         items.append(kfmdplugininstance->metaData(url, w));
-                        break;
+                        delete kfmdplugininstance;
+                    } else {
+                        kWarning() << "Could not create KFileMetaDataPlugin instance";
                     }
+                    break;
                 }
-                delete kfmdplugininstance;
-            } else {
-                kWarning() << "Could not create KFileMetaDataPlugin instance";
             }
         }
     }

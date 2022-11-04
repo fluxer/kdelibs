@@ -3,6 +3,7 @@ Type=Service
 Name=KFileMetaDataSpectrePlugin
 GenericName=Spectre
 Comment=Extracts metadata from Postscript documents
+MimeType=application/postscript
 X-KDE-Library=kfilemetadata_spectre
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 InitialPreference=1

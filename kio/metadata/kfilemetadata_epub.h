@@ -29,7 +29,6 @@ public:
     ~KFileMetaDataEPubPlugin();
 
     QStringList keys() const final;
-    QStringList mimeTypes() const final;
 
     QList<KFileMetaInfoItem> metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags) final;
 };

@@ -66,37 +66,6 @@ QStringList KFileMetaDataExiv2Plugin::keys() const
     return result;
 }
 
-QStringList KFileMetaDataExiv2Plugin::mimeTypes() const
-{
-    // for reference:
-    // https://dev.exiv2.org/projects/exiv2/wiki/Supported_image_formats
-    static const QStringList result = QStringList()
-        << QString::fromLatin1("image/jpeg")
-        << QString::fromLatin1("image/x-exv")
-        << QString::fromLatin1("image/x-canon-cr2")
-        << QString::fromLatin1("image/x-canon-crw")
-        << QString::fromLatin1("image/x-minolta-mrw")
-        << QString::fromLatin1("image/tiff")
-        << QString::fromLatin1("image/webp")
-        << QString::fromLatin1("image/x-webp")
-        << QString::fromLatin1("image/x-nikon-nef")
-        << QString::fromLatin1("image/x-pentax-pef")
-        << QString::fromLatin1("image/x-panasonic-rw2")
-        << QString::fromLatin1("image/x-olympus-orf")
-        << QString::fromLatin1("image/png")
-        << QString::fromLatin1("image/x-fuji-raf")
-        << QString::fromLatin1("image/x-eps")
-        << QString::fromLatin1("image/gif")
-        << QString::fromLatin1("image/photoshop")
-        << QString::fromLatin1("image/x-photoshop")
-        << QString::fromLatin1("image/x-tga")
-        << QString::fromLatin1("image/bmp")
-        << QString::fromLatin1("image/x-bmp")
-        << QString::fromLatin1("image/x-ms-bmp")
-        << QString::fromLatin1("image/jp2");
-    return result;
-}
-
 QList<KFileMetaInfoItem> KFileMetaDataExiv2Plugin::metaData(const KUrl &url, const KFileMetaInfo::WhatFlags flags)
 {
     Q_UNUSED(flags);

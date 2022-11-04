@@ -3,6 +3,9 @@ Type=Service
 Name=KFileMetaDataExiv2Plugin
 GenericName=Exiv2
 Comment=Extracts metadata from image files
+# for reference:
+# https://dev.exiv2.org/projects/exiv2/wiki/Supported_image_formats
+MimeType=image/jpeg;image/x-exv;image/x-canon-cr2;image/x-canon-crw;image/x-minolta-mrw;image/tiff;image/webp;image/x-webp;image/x-nikon-nef;image/x-pentax-pef;image/x-panasonic-rw2;image/x-olympus-orf;image/png;image/x-fuji-raf;image/x-eps;image/gif;image/photoshop;image/x-photoshop;image/x-tga;image/bmp;image/x-bmp;image/x-ms-bmp;image/jp2
 X-KDE-Library=kfilemetadata_exiv2
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 InitialPreference=1
