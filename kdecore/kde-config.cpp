@@ -70,7 +70,7 @@ int main(int argc, char **argv)
     options.add("types",       ki18n("Available KDE resource types"));
     options.add("path type",       ki18n("Search path for resource type"));
     options.add("locate filename", ki18n("Find filename inside the resource type given to --path"));
-    options.add("userpath type",   ki18n("User path: desktop|autostart|document"));
+    options.add("userpath type",   ki18n("User path: desktop|document"));
     options.add("install type",    ki18n("Prefix to install resource files to"));
     options.add("qt-prefix",   ki18n("Installation prefix for Qt"));
     options.add("qt-binaries", ki18n("Location of installed Qt binaries"));
@@ -186,17 +186,6 @@ int main(int argc, char **argv)
             if (!path.endsWith(QLatin1Char('/')))
               path.append(QLatin1Char('/'));
             printResult(path);
-        }
-        else if (type == QLatin1String("autostart"))
-        {
-            KConfigGroup g( KGlobal::config(), "Paths" );
-            QString path = QDir::homePath() + QLatin1String("/Autostart/");
-            path = g.readPathEntry( "Autostart", path);
-            path = QDir::cleanPath( path );
-            if (!path.endsWith(QLatin1Char('/')))
-              path.append(QLatin1Char(QLatin1Char('/')));
-            printResult(path);
-
         }
         else if (type == QLatin1String("document"))
         {

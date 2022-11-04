@@ -540,20 +540,6 @@ QString KGlobalSettings::desktopPath()
     return path.isEmpty() ? QDir::homePath() : path;
 }
 
-// Autostart is not a XDG path, so we have our own code for it.
-QString KGlobalSettings::autostartPath()
-{
-    QString s_autostartPath;
-    KConfigGroup g( KGlobal::config(), "Paths" );
-    s_autostartPath = KGlobal::dirs()->localkdedir() + "Autostart/";
-    s_autostartPath = g.readPathEntry( "Autostart" , s_autostartPath );
-    s_autostartPath = QDir::cleanPath( s_autostartPath );
-    if ( !s_autostartPath.endsWith( '/' ) ) {
-        s_autostartPath.append( QLatin1Char( '/' ) );
-    }
-    return s_autostartPath;
-}
-
 QString KGlobalSettings::documentPath()
 {
     QString path = QStandardPaths::writableLocation( QStandardPaths::DocumentsLocation );

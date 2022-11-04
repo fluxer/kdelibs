@@ -225,12 +225,6 @@ public:
     static QString desktopPath();
 
     /**
-     * The path to the autostart directory of the current user.
-     * @return the path of the autostart directory
-     */
-    static QString autostartPath();
-
-    /**
      * The path where documents are stored of the current user.
      * @return the path of the document directory
      */

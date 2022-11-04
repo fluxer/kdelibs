@@ -434,13 +434,6 @@
    <whatsthis>Most countries have no character for this</whatsthis>
   </entry>
  </group>
- <group name="Paths" >
-  <entry key="Autostart" type="Path" >
-    <label>Path to the autostart directory</label>
-    <whatsthis>Path to the directory containing executables to be run on session login</whatsthis>
-    <default>$KDEHOME/Autostart</default>
-  </entry>
- </group>
  <group name="PreviewSettings" >
   <entry key="MaximumSize" type="Int" />
   <entry key="MaximumRemoteSize" type="Int" />
