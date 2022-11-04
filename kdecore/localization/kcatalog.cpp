@@ -22,7 +22,6 @@
 #include <kdebug.h>
 
 #include <QFile>
-#include <QTranslator>
 
 class KCatalogPrivate
 {
@@ -61,7 +60,7 @@ KCatalog::KCatalog(const QString &name, const QString &language)
 
 #ifndef QT_NO_TRANSLATION
     d->translator = new QTranslator();
-    d->translator->loadFromData(catalogData(d->name, d->language));
+    KCatalog::loadCatalog(d->name, d->language, d->translator);
     // kDebug() << << name << language;
 #endif
 }
@@ -74,7 +73,7 @@ KCatalog::KCatalog(const KCatalog &rhs)
 
 #ifndef QT_NO_TRANSLATION
     d->translator = new QTranslator();
-    d->translator->loadFromData(catalogData(d->name, d->language));
+    KCatalog::loadCatalog(d->name, d->language, d->translator);
 #endif
 }
 
@@ -84,7 +83,7 @@ KCatalog & KCatalog::operator=(const KCatalog & rhs)
     d->name = rhs.d->name;
 
 #ifndef QT_NO_TRANSLATION
-    d->translator->loadFromData(catalogData(d->name, d->language));
+    KCatalog::loadCatalog(d->name, d->language, d->translator);
 #endif
     return *this;
 }
@@ -101,18 +100,18 @@ QString KCatalog::catalogLocaleDir(const QString &name,
     return KGlobal::dirs()->findResourceDir("locale", relpath);
 }
 
-QByteArray KCatalog::catalogData(const QString &name, const QString &language)
+bool KCatalog::loadCatalog(const QString &name, const QString &language, QTranslator *translator)
 {
     const QString relpath =  QString::fromLatin1("%1/%2.tr").arg(language).arg(name);
     const QString translationpath = KGlobal::dirs()->locate("locale", relpath);
     if (translationpath.isEmpty()) {
-        return QByteArray();
+        return false;
     }
     QFile translationfile(translationpath);
     if (!translationfile.open(QFile::ReadOnly)) {
-        return QByteArray();
+        return false;
     }
-    return translationfile.readAll();
+    return translator->loadFromData(translationfile.readAll());
 }
 
 

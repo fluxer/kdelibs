@@ -20,8 +20,9 @@
 #ifndef KCATALOG_H
 #define KCATALOG_H
 
-#include <QtCore/QString>
-#include <QtCore/QDebug>
+#include <QString>
+#include <QTranslator>
+#include <QDebug>
 
 class KCatalogPrivate;
 
@@ -69,16 +70,19 @@ public:
    */
   static QString catalogLocaleDir(const QString &name, const QString &language);
 
+#ifndef QT_NO_TRANSLATION
   /**
    * Finds the catalog file for the given catalog in given language, reads it
-   * and returns its data.
+   * and loads it into the QTranslator.
    *
    * @param name The name of the catalog
    * @param language The language of this catalog
+   * @param translator The QTranslator to load data into
    *
-   * @return The catalog data if found, QByteArray() otherwise.
+   * @return True if catalog file is found and loaded, false otherwise.
    */
-  static QByteArray catalogData(const QString &name, const QString &language);
+  static bool loadCatalog(const QString &name, const QString &language, QTranslator *translator);
+#endif
 
   /**
    * Returns the name of the catalog.
