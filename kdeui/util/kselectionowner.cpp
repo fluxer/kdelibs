@@ -25,9 +25,9 @@
 #include <QThread>
 #include <QTimer>
 
-#define KSELECTIONOWNER_TIMEOUT 400
-#define KSELECTIONOWNER_SLEEPTIME 400
-#define KSELECTIONOWNER_CHECKTIME 200
+#define KSELECTIONOWNER_TIMEOUT 500
+#define KSELECTIONOWNER_SLEEPTIME 500
+#define KSELECTIONOWNER_CHECKTIME 250
 
 class KSelectionOwnerPrivate
 {
@@ -73,12 +73,33 @@ bool KSelectionOwner::claim(const bool force)
         return false;
     }
     if (currentowner != None) {
+        kDebug() << "Selection is owned, clearing owner";
+        XEvent x11event;
+        x11event.xselectionclear.type = SelectionClear;
+        x11event.xselectionclear.serial = XLastKnownRequestProcessed(d->x11display);
+        x11event.xselectionclear.send_event = True;
+        x11event.xselectionclear.display = d->x11display;
+        x11event.xselectionclear.window = currentowner;
+        x11event.xselectionclear.selection = d->x11atom;
+        x11event.xselectionclear.time = CurrentTime;
+        XSendEvent(d->x11display, QX11Info::appRootWindow(d->x11screen), False, PropertyChangeMask, &x11event);
+        XFlush(d->x11display);
+        ushort counter = 0;
+        kDebug() << "Waiting for owner";
+        while (currentowner != None && counter < 5) {
+            currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
+            QCoreApplication::processEvents(QEventLoop::AllEvents, KSELECTIONOWNER_TIMEOUT);
+            QThread::msleep(KSELECTIONOWNER_SLEEPTIME);
+            counter++;
+        }
+    }
+    if (currentowner != None) {
         kDebug() << "Selection is owned, destroying owner";
         XDestroyWindow(d->x11display, currentowner);
         XFlush(d->x11display);
         ushort counter = 0;
         kDebug() << "Waiting for owner";
-        while (currentowner != None && counter < 10) {
+        while (currentowner != None && counter < 5) {
             currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
             QCoreApplication::processEvents(QEventLoop::AllEvents, KSELECTIONOWNER_TIMEOUT);
             QThread::msleep(KSELECTIONOWNER_SLEEPTIME);
@@ -138,6 +159,9 @@ void KSelectionOwner::_checkOwnership()
     if (currentowner != d->x11window) {
         kDebug() << "Selection owner changed";
         emit lostOwnership();
+        XDestroyWindow(d->x11display, d->x11window);
+        XFlush(d->x11display);
+        d->x11window = None;
         return;
     }
     QTimer::singleShot(KSELECTIONOWNER_CHECKTIME, this, SLOT(_checkOwnership()));
