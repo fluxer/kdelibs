@@ -251,7 +251,6 @@ install(
     KSaveFile
     KSelectAction
     KSelectionOwner
-    KSelectionWatcher
     KSelector
     KSeparator
     KService

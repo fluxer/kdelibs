@@ -181,7 +181,7 @@ set(kdeui_LIB_SRCS
     util/kcursor.cpp
     util/kguiitem.cpp
     util/kkeyserver.cpp
-    util/kmanagerselection.cpp
+    util/kselectionowner.cpp
     util/knumvalidator.cpp
     util/kpassivepopup.cpp
     util/kpassivepopupmessagehandler.cpp
@@ -500,7 +500,7 @@ install(
     util/kcursor.h
     util/kguiitem.h
     util/kkeyserver.h
-    util/kmanagerselection.h
+    util/kselectionowner.h
     util/knumvalidator.h
     util/kpassivepopup.h
     util/kpassivepopupmessagehandler.h

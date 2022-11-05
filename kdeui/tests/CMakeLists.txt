@@ -143,9 +143,7 @@ if (Q_WS_X11)
         fixx11h_test
         fixx11h_test2
         kxerrorhandlertest
-        kmanagerselectiontest
     )
-    target_link_libraries(kdeui-kmanagerselectiontest ${X11_X11_LIB})
     target_link_libraries(kdeui-kxerrorhandlertest ${X11_X11_LIB})
 endif (Q_WS_X11)
 
