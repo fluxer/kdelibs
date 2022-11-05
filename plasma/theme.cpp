@@ -35,7 +35,6 @@
 #include <kdirwatch.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
-#include <kmanagerselection.h>
 #include <ksharedconfig.h>
 #include <kstandarddirs.h>
 #include <kwindowsystem.h>
