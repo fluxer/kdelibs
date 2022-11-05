@@ -119,12 +119,11 @@ bool KSelectionOwner::claim(const bool force)
         }
     }
     kDebug() << "Creating selection owner";
-    XSetWindowAttributes x11attrs;
-    x11attrs.override_redirect = True;
-    d->x11window = XCreateWindow(
+    d->x11window = XCreateSimpleWindow(
         d->x11display, RootWindow(d->x11display, d->x11screen),
-        0, 0, 1, 1, 
-        0, CopyFromParent, InputOnly, CopyFromParent, CWOverrideRedirect, &x11attrs
+        0, 0, // x and y
+        1, 1, // width and height
+        0, 0, 0 // border width, border and background pixels
     );
     XSetSelectionOwner(d->x11display, d->x11atom, d->x11window, CurrentTime);
     XFlush(d->x11display);
@@ -157,7 +156,7 @@ Window KSelectionOwner::ownerWindow() const
 void KSelectionOwner::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == d->timerid) {
-        kDebug() << "Checking selection owner for" << XGetAtomName(d->x11display, d->x11atom);
+        // kDebug() << "Checking selection owner for" << XGetAtomName(d->x11display, d->x11atom);
         Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
         if (currentowner != d->x11window) {
             kDebug() << "Selection owner changed";
