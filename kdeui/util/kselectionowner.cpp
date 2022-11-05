@@ -38,13 +38,15 @@ public:
     Display* x11display;
     int x11screen;
     Window x11window;
+    int timerid;
 };
 
 KSelectionOwnerPrivate::KSelectionOwnerPrivate()
     : x11atom(None),
     x11display(QX11Info::display()),
     x11screen(QX11Info::appScreen()),
-    x11window(None)
+    x11window(None),
+    timerid(0)
 {
 }
 
@@ -126,7 +128,7 @@ bool KSelectionOwner::claim(const bool force)
     );
     XSetSelectionOwner(d->x11display, d->x11atom, d->x11window, CurrentTime);
     XFlush(d->x11display);
-    QTimer::singleShot(KSELECTIONOWNER_CHECKTIME, this, SLOT(_checkOwnership()));
+    d->timerid = startTimer(KSELECTIONOWNER_CHECKTIME);
     return true;
 }
 
@@ -135,6 +137,10 @@ void KSelectionOwner::release()
     if (d->x11window == None) {
         kDebug() << "No owner";
         return;
+    }
+    if (d->timerid >= 0) {
+        killTimer(d->timerid);
+        d->timerid = 0;
     }
     kDebug() << "Destroying owner window";
     XDestroyWindow(d->x11display, d->x11window);
@@ -148,26 +154,27 @@ Window KSelectionOwner::ownerWindow() const
     return d->x11window;
 }
 
-void KSelectionOwner::_checkOwnership()
+void KSelectionOwner::timerEvent(QTimerEvent *event)
 {
-    if (d->x11window == None) {
-        kDebug() << "Not going to poll";
-        return;
-    }
-    // kDebug() << "Checking selection owner";
-    Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
-    if (currentowner != d->x11window) {
-        kDebug() << "Selection owner changed";
-        emit lostOwnership();
-        // NOTE: catching errors here is done to not get fatal I/O
-        KXErrorHandler kx11errorhandler;
-        XDestroyWindow(d->x11display, d->x11window);
-        XFlush(d->x11display);
-        if (kx11errorhandler.error(true)) {
-            kDebug() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+    if (event->timerId() == d->timerid) {
+        kDebug() << "Checking selection owner for" << XGetAtomName(d->x11display, d->x11atom);
+        Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
+        if (currentowner != d->x11window) {
+            kDebug() << "Selection owner changed";
+            killTimer(d->timerid);
+            d->timerid = 0;
+            emit lostOwnership();
+            // NOTE: catching errors here is done to not get fatal I/O
+            KXErrorHandler kx11errorhandler;
+            XDestroyWindow(d->x11display, d->x11window);
+            XFlush(d->x11display);
+            if (kx11errorhandler.error(true)) {
+                kDebug() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            }
+            d->x11window = None;
         }
-        d->x11window = None;
-        return;
+        event->accept();
+    } else {
+        event->ignore();
     }
-    QTimer::singleShot(KSELECTIONOWNER_CHECKTIME, this, SLOT(_checkOwnership()));
 }

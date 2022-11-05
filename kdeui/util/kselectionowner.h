@@ -22,6 +22,8 @@
 #include <kdeui_export.h>
 
 #include <QObject>
+#include <QTimerEvent>
+
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 
@@ -45,8 +47,9 @@ public:
 Q_SIGNALS:
     void lostOwnership();
 
-private Q_SLOTS:
-    void _checkOwnership();
+protected:
+    //! @brief Reimplementation to support ownership check
+    virtual void timerEvent(QTimerEvent *event);
 
 private:
     Q_DISABLE_COPY(KSelectionOwner);
