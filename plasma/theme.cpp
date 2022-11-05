@@ -145,7 +145,6 @@ public:
     bool useCache();
     void settingsFileChanged(const QString &);
     void setThemeName(const QString &themeName, bool writeSettings);
-    void onAppExitCleanup();
     void processWallpaperSettings(KConfigBase *metadata);
     void processAnimationSettings(const QString &theme, KConfigBase *metadata);
 
@@ -242,14 +241,6 @@ bool ThemePrivate::useCache()
     }
 
     return cacheTheme;
-}
-
-void ThemePrivate::onAppExitCleanup()
-{
-    pixmapsToCache.clear();
-    delete pixmapCache;
-    pixmapCache = 0;
-    cacheTheme = false;
 }
 
 QString ThemePrivate::findInTheme(const QString &image, const QString &theme, bool cache)
@@ -460,10 +451,6 @@ Theme::Theme(QObject *parent)
       d(new ThemePrivate(this))
 {
     settingsChanged();
-    if (QCoreApplication::instance()) {
-        connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
-                this, SLOT(onAppExitCleanup()));
-    }
 }
 
 Theme::Theme(const QString &themeName, QObject *parent)
@@ -475,14 +462,16 @@ Theme::Theme(const QString &themeName, QObject *parent)
     d->cacheTheme = false;
     setThemeName(themeName);
     d->cacheTheme = useCache;
-    if (QCoreApplication::instance()) {
-        connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()),
-                this, SLOT(onAppExitCleanup()));
-    }
 }
 
 Theme::~Theme()
 {
+    d->cacheTheme = false;
+
+    d->pixmapsToCache.clear();
+    delete d->pixmapCache;
+    d->pixmapCache = 0;
+
     if (d->svgElementsCache) {
         QHashIterator<QString, QSet<QString> > it(d->invalidElements);
         while (it.hasNext()) {
@@ -492,7 +481,6 @@ Theme::~Theme()
         }
     }
 
-    d->onAppExitCleanup();
     delete d;
 }
 
