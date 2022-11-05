@@ -159,8 +159,13 @@ void KSelectionOwner::_checkOwnership()
     if (currentowner != d->x11window) {
         kDebug() << "Selection owner changed";
         emit lostOwnership();
+        // NOTE: catching errors here is done to not get fatal I/O
+        KXErrorHandler kx11errorhandler;
         XDestroyWindow(d->x11display, d->x11window);
         XFlush(d->x11display);
+        if (kx11errorhandler.error(true)) {
+            kDebug() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+        }
         d->x11window = None;
         return;
     }
