@@ -39,10 +39,11 @@ public:
     KSelectionOwner(const char* atom, const int screen = -1, QObject *parent = nullptr);
     ~KSelectionOwner();
 
+    Window ownerWindow() const;
+
+public Q_SLOTS:
     bool claim(const bool force);
     void release();
-
-    Window ownerWindow() const;
 
 Q_SIGNALS:
     void lostOwnership();

@@ -67,6 +67,12 @@ KSelectionOwner::~KSelectionOwner()
     delete d;
 }
 
+Window KSelectionOwner::ownerWindow() const
+{
+    kDebug() << "Current selection owner is" << d->x11window;
+    return d->x11window;
+}
+
 bool KSelectionOwner::claim(const bool force)
 {
     Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
@@ -145,12 +151,6 @@ void KSelectionOwner::release()
     XDestroyWindow(d->x11display, d->x11window);
     XFlush(d->x11display);
     d->x11window = None;
-}
-
-Window KSelectionOwner::ownerWindow() const
-{
-    kDebug() << "Current selection owner is" << d->x11window;
-    return d->x11window;
 }
 
 void KSelectionOwner::timerEvent(QTimerEvent *event)
