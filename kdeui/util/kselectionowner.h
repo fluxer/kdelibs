@@ -36,7 +36,7 @@ class KDEUI_EXPORT KSelectionOwner : public QObject
 {
     Q_OBJECT
 public:
-    KSelectionOwner(const char* atom, const int screen = -1, QObject *parent = nullptr);
+    KSelectionOwner(const char* const atomname, const int screen = -1, QObject *parent = nullptr);
     ~KSelectionOwner();
 
     Window ownerWindow() const;
