@@ -23,7 +23,6 @@
 #include <QX11Info>
 #include <QApplication>
 #include <QThread>
-#include <QTimer>
 
 #define KSELECTIONOWNER_TIMEOUT 500
 #define KSELECTIONOWNER_SLEEPTIME 500
