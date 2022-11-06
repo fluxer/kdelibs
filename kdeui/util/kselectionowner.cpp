@@ -121,7 +121,7 @@ void KSelectionOwner::release()
         kDebug() << "No owner";
         return;
     }
-    if (d->timerid >= 0) {
+    if (d->timerid > 0) {
         killTimer(d->timerid);
         d->timerid = 0;
     }
