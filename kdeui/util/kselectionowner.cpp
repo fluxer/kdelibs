@@ -103,12 +103,17 @@ bool KSelectionOwner::claim(const bool force)
         }
     }
     kDebug() << "Creating selection owner";
+    KXErrorHandler kx11errorhandler;
     d->x11window = XCreateSimpleWindow(
         d->x11display, RootWindow(d->x11display, d->x11screen),
         0, 0, // x and y
         1, 1, // width and height
         0, 0, 0 // border width, border and background pixels
     );
+    if (kx11errorhandler.error(true)) {
+        kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+        return false;
+    }
     XSetSelectionOwner(d->x11display, d->x11atom, d->x11window, CurrentTime);
     XFlush(d->x11display);
     d->timerid = startTimer(KSELECTIONOWNER_CHECKTIME);
