@@ -41,12 +41,15 @@ class KDETranslator : public QTranslator
 public:
     QString translate(const char *context, const char *sourceText) const final
     {
+        if (isEmpty()) {
+            return QString();
+        }
         return KGlobal::locale()->translateQt(context, sourceText);
     }
 
     bool isEmpty() const final
     {
-        return false;
+        return !KGlobal::hasLocale();
     }
 };
 #endif // QT_NO_TRANSLATION
