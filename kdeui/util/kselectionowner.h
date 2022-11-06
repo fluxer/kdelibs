@@ -36,13 +36,28 @@ class KDEUI_EXPORT KSelectionOwner : public QObject
 {
     Q_OBJECT
 public:
+    /*!
+        @brief Constructs object for @p atomname and @p screen with @p parent in preparation to
+        claim selection.
+    */
     KSelectionOwner(const char* const atomname, const int screen = -1, QObject *parent = nullptr);
     ~KSelectionOwner();
 
+    /*!
+        @brief Returns the X11 window used to claim the selection, valid only if selection is
+        claimed by this object and until it is either released or lost
+    */
     Window ownerWindow() const;
 
 public Q_SLOTS:
+    /*!
+        @brief Attempts to claim the selection, if @p force is true and the selection is owned by
+        someone else the owner selection will be cleared and possibly killed.
+    */
     bool claim(const bool force);
+    /*!
+        @brief Releases the selection.
+    */
     void release();
 
 Q_SIGNALS:
