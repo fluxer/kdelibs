@@ -132,7 +132,6 @@ void KSelectionOwner::release()
     }
     kDebug() << "Destroying owner window";
     XDestroyWindow(d->x11display, d->x11window);
-    XSetSelectionOwner(d->x11display, d->x11atom, None, CurrentTime);
     XFlush(d->x11display);
     d->x11window = None;
 }
