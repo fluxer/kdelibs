@@ -16,7 +16,7 @@
 *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 
-#include "dialogshadows_p.h"
+#include "dialogshadows.h"
 
 #include <QWidget>
 #include <QPainter>
@@ -29,17 +29,19 @@
 #endif
 
 #include <kdebug.h>
-#include <kglobal.h>
 
-class DialogShadows::Private
+namespace Plasma
+{
+
+class DialogShadowsPrivate
 {
 public:
-    Private(DialogShadows *shadows)
+    DialogShadowsPrivate(DialogShadows *shadows)
         : q(shadows)
     {
     }
 
-    ~Private()
+    ~DialogShadowsPrivate()
     {
         // Do not call clearPixmaps() from here: it creates new QPixmap(),
         // which causes a crash when application is stopping.
@@ -72,21 +74,9 @@ public:
     QHash<const QWidget *, Plasma::FrameSvg::EnabledBorders> m_windows;
 };
 
-class DialogShadowsSingleton
-{
-public:
-    DialogShadowsSingleton()
-    {
-    }
-
-   DialogShadows self;
-};
-
-K_GLOBAL_STATIC(DialogShadowsSingleton, privateDialogShadowsSelf)
-
 DialogShadows::DialogShadows(QObject *parent, const QString &prefix)
     : Plasma::Svg(parent),
-      d(new Private(this))
+      d(new DialogShadowsPrivate(this))
 {
     setImagePath(prefix);
     connect(this, SIGNAL(repaintNeeded()), this, SLOT(updateShadows()));
@@ -95,11 +85,6 @@ DialogShadows::DialogShadows(QObject *parent, const QString &prefix)
 DialogShadows::~DialogShadows()
 {
     delete d;
-}
-
-DialogShadows *DialogShadows::self()
-{
-    return &privateDialogShadowsSelf->self;
 }
 
 void DialogShadows::addWindow(const QWidget *window, Plasma::FrameSvg::EnabledBorders enabledBorders)
@@ -129,7 +114,7 @@ void DialogShadows::removeWindow(const QWidget *window)
     }
 }
 
-void DialogShadows::Private::windowDestroyed(QObject *deletedObject)
+void DialogShadowsPrivate::windowDestroyed(QObject *deletedObject)
 {
     m_windows.remove(static_cast<QWidget *>(deletedObject));
 
@@ -138,7 +123,7 @@ void DialogShadows::Private::windowDestroyed(QObject *deletedObject)
     }
 }
 
-void DialogShadows::Private::updateShadows()
+void DialogShadowsPrivate::updateShadows()
 {
     setupPixmaps();
     QHashIterator<const QWidget *, Plasma::FrameSvg::EnabledBorders> it(m_windows);
@@ -148,7 +133,7 @@ void DialogShadows::Private::updateShadows()
     }
 }
 
-void DialogShadows::Private::initPixmap(const QString &element)
+void DialogShadowsPrivate::initPixmap(const QString &element)
 {
 #ifdef Q_WS_X11
     QPixmap pix = q->pixmap(element);
@@ -165,7 +150,7 @@ void DialogShadows::Private::initPixmap(const QString &element)
 #endif
 }
 
-QPixmap DialogShadows::Private::initEmptyPixmap(const QSize &size)
+QPixmap DialogShadowsPrivate::initEmptyPixmap(const QSize &size)
 {
 #ifdef Q_WS_X11
     QPixmap tempEmptyPix;
@@ -180,7 +165,7 @@ QPixmap DialogShadows::Private::initEmptyPixmap(const QSize &size)
 #endif
 }
 
-void DialogShadows::Private::setupPixmaps()
+void DialogShadowsPrivate::setupPixmaps()
 {
     clearPixmaps();
     initPixmap("shadow-top");
@@ -203,7 +188,7 @@ void DialogShadows::Private::setupPixmaps()
 }
 
 
-void DialogShadows::Private::setupData(Plasma::FrameSvg::EnabledBorders enabledBorders)
+void DialogShadowsPrivate::setupData(Plasma::FrameSvg::EnabledBorders enabledBorders)
 {
 #ifdef Q_WS_X11
     //shadow-top
@@ -333,7 +318,7 @@ void DialogShadows::Private::setupData(Plasma::FrameSvg::EnabledBorders enabledB
     data[enabledBorders] << top << right << bottom << left;
 }
 
-void DialogShadows::Private::freeX11Pixmaps()
+void DialogShadowsPrivate::freeX11Pixmaps()
 {
 #ifdef Q_WS_X11
     foreach (const QPixmap &pixmap, m_shadowPixmaps) {
@@ -369,7 +354,7 @@ void DialogShadows::Private::freeX11Pixmaps()
 #endif
 }
 
-void DialogShadows::Private::clearPixmaps()
+void DialogShadowsPrivate::clearPixmaps()
 {
 #ifdef Q_WS_X11
     freeX11Pixmaps();
@@ -386,7 +371,7 @@ void DialogShadows::Private::clearPixmaps()
     data.clear();
 }
 
-void DialogShadows::Private::updateShadow(const QWidget *window, Plasma::FrameSvg::EnabledBorders enabledBorders)
+void DialogShadowsPrivate::updateShadow(const QWidget *window, Plasma::FrameSvg::EnabledBorders enabledBorders)
 {
 #ifdef Q_WS_X11
     if (m_shadowPixmaps.isEmpty()) {
@@ -406,7 +391,7 @@ void DialogShadows::Private::updateShadow(const QWidget *window, Plasma::FrameSv
 #endif
 }
 
-void DialogShadows::Private::clearShadow(const QWidget *window)
+void DialogShadowsPrivate::clearShadow(const QWidget *window)
 {
 #ifdef Q_WS_X11
     Display *dpy = QX11Info::display();
@@ -420,5 +405,7 @@ bool DialogShadows::enabled() const
      return hasElement("shadow-left");
 }
 
-#include "moc_dialogshadows_p.cpp"
+} // Plasma namespace
+
+#include "moc_dialogshadows.cpp"
 

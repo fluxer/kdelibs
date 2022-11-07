@@ -26,6 +26,7 @@
 
 #include <QTimer>
 #include "plasma/dialog.h"
+#include "plasma/dialogshadows.h"
 
 namespace Plasma {
 
@@ -37,6 +38,7 @@ class DialogPrivate
 public:
     DialogPrivate(Dialog *dialog)
             : q(dialog),
+              dialogshadows(0),
               background(0),
               view(0),
               resizeCorners(Dialog::NoCorner),
@@ -66,6 +68,7 @@ public:
 
     Plasma::Dialog *q;
 
+    Plasma::DialogShadows *dialogshadows;
     /**
      * Holds the background SVG, to be re-rendered when the cache is invalidated,
      * for example by resizing the dialogue.

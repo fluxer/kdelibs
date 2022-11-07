@@ -21,19 +21,21 @@
 
 #include <QSet>
 
-#include "plasma/framesvg.h"
-#include "plasma/svg.h"
+#include <plasma/plasma_export.h>
+#include <plasma/framesvg.h>
+#include <plasma/svg.h>
 
+namespace Plasma
+{
 
-class DialogShadows : public Plasma::Svg
+class DialogShadowsPrivate;
+
+class PLASMA_EXPORT DialogShadows : public Plasma::Svg
 {
     Q_OBJECT
-
 public:
     explicit DialogShadows(QObject *parent = 0, const QString &prefix = "dialogs/background");
     ~DialogShadows();
-
-    static DialogShadows *self();
 
     void addWindow(const QWidget *window, Plasma::FrameSvg::EnabledBorders enabledBorders = Plasma::FrameSvg::AllBorders);
     void removeWindow(const QWidget *window);
@@ -41,12 +43,12 @@ public:
     bool enabled() const;
 
 private:
-    class Private;
-    Private * const d;
+    DialogShadowsPrivate * const d;
 
     Q_PRIVATE_SLOT(d, void updateShadows())
     Q_PRIVATE_SLOT(d, void windowDestroyed(QObject *deletedObject))
 };
 
-#endif
+} // Plasma namespace
 
+#endif // PLASMA_DIALOGSHADOWS_H

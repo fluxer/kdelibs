@@ -49,7 +49,6 @@
 #include "plasma/corona.h"
 #include "plasma/extenders/extender.h"
 #include "plasma/private/extender_p.h"
-#include "plasma/private/dialogshadows_p.h"
 #include "plasma/framesvg.h"
 #include "plasma/theme.h"
 #include "plasma/widgets/scrollwidget.h"
@@ -231,7 +230,7 @@ void DialogPrivate::checkBorders(bool updateMaskIfNeeded)
     }
 
     background->setEnabledBorders(borders);
-    DialogShadows::self()->addWindow(q, borders);
+    dialogshadows->addWindow(q, borders);
 
     if (extender)  {
         FrameSvg::EnabledBorders disabledBorders = FrameSvg::NoBorder;
@@ -376,6 +375,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f)
 {
     setMouseTracking(true);
     setAttribute(Qt::WA_TranslucentBackground);
+    d->dialogshadows = new DialogShadows(this);
     d->background = new FrameSvg(this);
     d->background->setImagePath("dialogs/background");
     d->background->setEnabledBorders(FrameSvg::AllBorders);
@@ -399,7 +399,7 @@ Dialog::Dialog(QWidget *parent, Qt::WindowFlags f)
 
 Dialog::~Dialog()
 {
-    DialogShadows::self()->removeWindow(this);
+    d->dialogshadows->removeWindow(this);
     delete d;
 }
 
@@ -713,7 +713,7 @@ void Dialog::showEvent(QShowEvent * event)
     }
 
     emit dialogVisible(true);
-    DialogShadows::self()->addWindow(this, d->background->enabledBorders());
+    d->dialogshadows->addWindow(this, d->background->enabledBorders());
 }
 
 void Dialog::focusInEvent(QFocusEvent *event)
@@ -877,5 +877,6 @@ void Dialog::setAspectRatioMode(Plasma::AspectRatioMode mode)
     d->aspectRatioMode = mode;
 }
 
-}
+} // Plasma namespace
+
 #include "moc_dialog.cpp"

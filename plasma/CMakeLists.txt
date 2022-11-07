@@ -80,6 +80,7 @@ set(plasma_LIB_SRCS
     dataenginemanager.cpp
     delegate.cpp
     dialog.cpp
+    dialogshadows.cpp
     abstractdialogmanager.cpp
     extenders/extender.cpp
     extenders/extendergroup.cpp
@@ -95,7 +96,6 @@ set(plasma_LIB_SRCS
     private/dataenginebindings.cpp
     private/dataengineconsumer.cpp
     private/dataengineservice.cpp
-    private/dialogshadows.cpp
     private/extenderapplet.cpp
     private/extenderitemmimedata.cpp
     private/focusindicator.cpp
@@ -211,6 +211,7 @@ install(
     dataenginemanager.h
     delegate.h
     dialog.h
+    dialogshadows.h
     extenders/extender.h
     extenders/extendergroup.h
     extenders/extenderitem.h

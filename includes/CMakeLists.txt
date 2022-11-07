@@ -558,6 +558,7 @@ install(
     Plasma/DeclarativeWidget
     Plasma/Delegate
     Plasma/Dialog
+    Plasma/DialogShadows
     Plasma/Extender
     Plasma/ExtenderGroup
     Plasma/ExtenderItem
