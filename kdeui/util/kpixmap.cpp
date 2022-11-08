@@ -122,8 +122,15 @@ KPixmap::KPixmap(const QPixmap &pixmap)
             }
         }
 
-        GC x11gc = XCreateGC(QX11Info::display(), d->handle, 0, 0);
-        XPutImage(QX11Info::display(), d->handle, x11gc, x11image, 0, 0, 0, 0, x11image->width, x11image->height);
+        GC x11gc = XCreateGC(
+            QX11Info::display(), d->handle,
+            0, 0 // value mask and values
+        );
+        XPutImage(
+            QX11Info::display(), d->handle, x11gc, x11image,
+            0, 0, 0, 0, // source x and y, destination x and y
+            x11image->width, x11image->height
+        );
         XFreeGC(QX11Info::display(), x11gc);
 
         XDestroyImage(x11image);
