@@ -17,6 +17,7 @@
 */
 
 #include <X11/Xlib.h>
+#include <X11/Xutil.h>
 #include <fixx11h.h>
 
 #include "kpixmap.h"
@@ -161,8 +162,27 @@ QImage KPixmap::toImage() const
         kWarning(240) << "Null pixmap";
         return QImage();
     }
-    // TODO: optimize
-    return QPixmap::fromX11Pixmap(d->handle).toImage();
+    XImage *x11image = XGetImage(
+        QX11Info::display(), d->handle,
+        0, 0, // x and y
+        d->size.width(), d->size.height(),
+        AllPlanes, ZPixmap
+    );
+    if (Q_UNLIKELY(!x11image)) {
+        kWarning(240) << "Could not get image";
+        return QImage();
+    }
+    // this is sub-optimal but pixmaps are usually small (e.g. 32x32)
+    QImage qimage(d->size, QImage::Format_ARGB32);
+    for (int h = 0; h < x11image->height; h++) {
+        for (int w = 0; w < x11image->width; w++) {
+            const uint xpixel = XGetPixel(x11image, w, h);
+            qimage.setPixel(w, h, xpixel);
+        }
+    }
+    // qimage.save("/tmp/kpixmap.kat", "KAT");
+    XDestroyImage(x11image);
+    return qimage;
 }
 
 KPixmap& KPixmap::operator=(const KPixmap &other)
