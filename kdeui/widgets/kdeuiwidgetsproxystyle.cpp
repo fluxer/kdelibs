@@ -23,10 +23,10 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QWidget>
-#include <QtGui/QWindowsStyle>
 
 KdeUiProxyStyle::KdeUiProxyStyle(QWidget *referenceWidget)
-    : QStyle(), m_referenceWidget(referenceWidget)
+    : QStyle(),
+    m_referenceWidget(referenceWidget)
 {
 }
 

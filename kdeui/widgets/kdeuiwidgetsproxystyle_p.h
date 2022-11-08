@@ -25,7 +25,7 @@
 
 #include <QtGui/QStyle>
 
-class KDEUI_EXPORT KdeUiProxyStyle : public QStyle
+class KdeUiProxyStyle : public QStyle
 {
     Q_OBJECT
 public:
