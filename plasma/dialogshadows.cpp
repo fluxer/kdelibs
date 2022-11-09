@@ -17,6 +17,8 @@
 */
 
 #include "dialogshadows.h"
+#include "kpixmap.h"
+#include "kdebug.h"
 
 #include <QWidget>
 #include <QPainter>
@@ -27,8 +29,6 @@
 #include <X11/Xlib.h>
 #include <fixx11h.h>
 #endif
-
-#include <kdebug.h>
 
 namespace Plasma
 {
@@ -43,8 +43,6 @@ public:
 
     ~DialogShadowsPrivate()
     {
-        // Do not call clearPixmaps() from here: it creates new QPixmap(),
-        // which causes a crash when application is stopping.
         freeX11Pixmaps();
     }
 
@@ -52,7 +50,7 @@ public:
     void clearPixmaps();
     void setupPixmaps();
     void initPixmap(const QString &element);
-    QPixmap initEmptyPixmap(const QSize &size);
+    KPixmap initEmptyPixmap(const QSize &size);
     void updateShadow(const QWidget *window, Plasma::FrameSvg::EnabledBorders);
     void clearShadow(const QWidget *window);
     void updateShadows();
@@ -60,15 +58,15 @@ public:
     void setupData(Plasma::FrameSvg::EnabledBorders enabledBorders);
 
     DialogShadows *q;
-    QList<QPixmap> m_shadowPixmaps;
+    QList<KPixmap> m_shadowPixmaps;
 
-    QPixmap m_emptyCornerPix;
-    QPixmap m_emptyCornerLeftPix;
-    QPixmap m_emptyCornerTopPix;
-    QPixmap m_emptyCornerRightPix;
-    QPixmap m_emptyCornerBottomPix;
-    QPixmap m_emptyVerticalPix;
-    QPixmap m_emptyHorizontalPix;
+    KPixmap m_emptyCornerPix;
+    KPixmap m_emptyCornerLeftPix;
+    KPixmap m_emptyCornerTopPix;
+    KPixmap m_emptyCornerRightPix;
+    KPixmap m_emptyCornerBottomPix;
+    KPixmap m_emptyVerticalPix;
+    KPixmap m_emptyHorizontalPix;
 
     QHash<Plasma::FrameSvg::EnabledBorders, QVector<unsigned long> > data;
     QHash<const QWidget *, Plasma::FrameSvg::EnabledBorders> m_windows;
@@ -135,34 +133,12 @@ void DialogShadowsPrivate::updateShadows()
 
 void DialogShadowsPrivate::initPixmap(const QString &element)
 {
-#ifdef Q_WS_X11
-    QPixmap pix = q->pixmap(element);
-    QPixmap tempPix;
-    if (!pix.isNull()) {
-        Pixmap xPix = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), pix.width(), pix.height(), 32);
-        tempPix = QPixmap::fromX11Pixmap(xPix, QPixmap::ExplicitlyShared);
-        tempPix.fill(Qt::transparent);
-        QPainter p(&tempPix);
-        p.drawPixmap(QPoint(0, 0), pix);
-        p.end();
-    }
-    m_shadowPixmaps << tempPix;
-#endif
+    m_shadowPixmaps << KPixmap(q->pixmap(element));
 }
 
-QPixmap DialogShadowsPrivate::initEmptyPixmap(const QSize &size)
+KPixmap DialogShadowsPrivate::initEmptyPixmap(const QSize &size)
 {
-#ifdef Q_WS_X11
-    QPixmap tempEmptyPix;
-    if (!size.isEmpty()) {
-        Pixmap emptyXPix = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), size.width(), size.height(), 32);
-        tempEmptyPix = QPixmap::fromX11Pixmap(emptyXPix, QPixmap::ExplicitlyShared);
-        tempEmptyPix.fill(Qt::transparent);
-    }
-    return tempEmptyPix;
-#else
-    return QPixmap();
-#endif
+    return KPixmap(size);
 }
 
 void DialogShadowsPrivate::setupPixmaps()
@@ -321,35 +297,35 @@ void DialogShadowsPrivate::setupData(Plasma::FrameSvg::EnabledBorders enabledBor
 void DialogShadowsPrivate::freeX11Pixmaps()
 {
 #ifdef Q_WS_X11
-    foreach (const QPixmap &pixmap, m_shadowPixmaps) {
+    foreach (KPixmap &pixmap, m_shadowPixmaps) {
         if (!QX11Info::display()) {
             return;
         }
         if (!pixmap.isNull()) {
-            XFreePixmap(QX11Info::display(), pixmap.handle());
+            pixmap.release();
         }
     }
 
     if (!m_emptyCornerPix.isNull()) {
-        XFreePixmap(QX11Info::display(), m_emptyCornerPix.handle());
+        m_emptyCornerPix.release();
     }
     if (!m_emptyCornerBottomPix.isNull()) {
-        XFreePixmap(QX11Info::display(), m_emptyCornerBottomPix.handle());
+        m_emptyCornerBottomPix.release();
     }
     if (!m_emptyCornerLeftPix.isNull()) {
-        XFreePixmap(QX11Info::display(), m_emptyCornerLeftPix.handle());
+        m_emptyCornerLeftPix.release();
     }
     if (!m_emptyCornerRightPix.isNull()) {
-        XFreePixmap(QX11Info::display(), m_emptyCornerRightPix.handle());
+        m_emptyCornerRightPix.release();
     }
     if (!m_emptyCornerTopPix.isNull()) {
-        XFreePixmap(QX11Info::display(), m_emptyCornerTopPix.handle());
+        m_emptyCornerTopPix.release();
     }
     if (!m_emptyVerticalPix.isNull()) {
-        XFreePixmap(QX11Info::display(), m_emptyVerticalPix.handle());
+        m_emptyVerticalPix.release();
     }
     if (!m_emptyHorizontalPix.isNull()) {
-        XFreePixmap(QX11Info::display(), m_emptyHorizontalPix.handle());
+        m_emptyHorizontalPix.release();
     }
 #endif
 }
@@ -359,13 +335,13 @@ void DialogShadowsPrivate::clearPixmaps()
 #ifdef Q_WS_X11
     freeX11Pixmaps();
 
-    m_emptyCornerPix = QPixmap();
-    m_emptyCornerBottomPix = QPixmap();
-    m_emptyCornerLeftPix = QPixmap();
-    m_emptyCornerRightPix = QPixmap();
-    m_emptyCornerTopPix = QPixmap();
-    m_emptyVerticalPix = QPixmap();
-    m_emptyHorizontalPix = QPixmap();
+    m_emptyCornerPix = KPixmap();
+    m_emptyCornerBottomPix = KPixmap();
+    m_emptyCornerLeftPix = KPixmap();
+    m_emptyCornerRightPix = KPixmap();
+    m_emptyCornerTopPix = KPixmap();
+    m_emptyVerticalPix = KPixmap();
+    m_emptyHorizontalPix = KPixmap();
 #endif
     m_shadowPixmaps.clear();
     data.clear();

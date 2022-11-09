@@ -219,6 +219,7 @@ install(
     KPassivePopupMessageHandler
     KPasswordDialog
     KPasteTextAction
+    KPixmap
     KPixmapRegionSelectorDialog
     KPixmapRegionSelectorWidget
     KPluginFactory

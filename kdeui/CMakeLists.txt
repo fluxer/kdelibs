@@ -189,6 +189,7 @@ set(kdeui_LIB_SRCS
     util/kxerrorhandler.cpp
     util/kxmessages.cpp
     util/kundostack.cpp
+    util/kpixmap.cpp
     util/kpixmapsequence.cpp
     util/kpixmapsequenceoverlaypainter.cpp
     util/kpixmapsequencewidget.cpp
@@ -508,6 +509,7 @@ install(
     util/kxerrorhandler.h
     util/kxmessages.h
     util/kundostack.h
+    util/kpixmap.h
     util/kpixmapsequence.h
     util/kpixmapsequenceoverlaypainter.h
     util/kpixmapsequencewidget.h
