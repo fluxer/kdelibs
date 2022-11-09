@@ -66,7 +66,7 @@ KPixmap::KPixmap(const Qt::HANDLE pixmap)
         );
         d->size = QSize(x11width, x11height);
         if (kx11errorhandler.error(true)) {
-            kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             // in the worst case the pixmap will be leaked
             d->handle = XNone;
             d->size = QSize();
@@ -81,7 +81,7 @@ KPixmap::KPixmap(const QPixmap &pixmap)
         KXErrorHandler kx11errorhandler;
         d->handle = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), pixmap.width(), pixmap.height(), 32);
         if (kx11errorhandler.error(true)) {
-            kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             d->handle = XNone;
             return;
         }
@@ -107,7 +107,7 @@ KPixmap::KPixmap(const QSize &size)
         KXErrorHandler kx11errorhandler;
         d->handle = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), size.width(), size.height(), 32);
         if (kx11errorhandler.error(true)) {
-            kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             d->handle = XNone;
             return;
         }
@@ -142,14 +142,14 @@ Qt::HANDLE KPixmap::handle() const
 void KPixmap::release()
 {
     if (d->handle == XNone) {
-        kDebug() << "No handle";
+        kDebug(240) << "No handle";
         return;
     }
     // NOTE: catching errors here is done to not get fatal I/O
     KXErrorHandler kx11errorhandler;
     XFreePixmap(QX11Info::display(), d->handle);
     if (kx11errorhandler.error(true)) {
-        kWarning() << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+        kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
     }
     d->handle = XNone;
     d->size = QSize();
@@ -157,6 +157,10 @@ void KPixmap::release()
 
 QImage KPixmap::toImage() const
 {
+    if (isNull()) {
+        kWarning(240) << "Null pixmap";
+        return QImage();
+    }
     // TODO: optimize
     return QPixmap::fromX11Pixmap(d->handle).toImage();
 }

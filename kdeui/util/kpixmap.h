@@ -28,6 +28,8 @@ class KPixmapPrivate;
 
 /*!
     Class to deal with X11 pixmaps.
+
+    @since 4.22
 */
 class KDEUI_EXPORT KPixmap
 {
