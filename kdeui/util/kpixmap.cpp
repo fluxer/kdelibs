@@ -80,65 +80,11 @@ KPixmap::KPixmap(const QPixmap &pixmap)
 {
     if (!pixmap.isNull()) {
         KXErrorHandler kx11errorhandler;
-        d->handle = XCreatePixmap(
-            QX11Info::display(), QX11Info::appRootWindow(),
-            pixmap.width(), pixmap.height(),
-            32
-        );
-        if (kx11errorhandler.error(true)) {
-            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
-            d->handle = XNone;
+        d->handle = pixmap.toX11Pixmap();
+        if (!d->handle) {
+            kWarning(240) << "Could not convert pixmap";
             return;
         }
-        // this is sub-optimal but pixmaps are usually small (e.g. 32x32)
-        QImage qimage = pixmap.toImage();
-        if (qimage.depth() != 32) {
-            qimage = qimage.convertToFormat(QImage::Format_ARGB32);
-        }
-        // qimage.save("/tmp/kpixmap.kat", "KAT");
-        XImage* x11image = XCreateImage(
-            QX11Info::display(), (Visual*)QX11Info::appVisual(),
-            qimage.depth(),
-            ZPixmap,
-            0, NULL, // offset and data
-            qimage.width(), qimage.height(),
-            32,
-            0 // bytes per line
-        );
-        if (Q_UNLIKELY(!x11image)) {
-            kWarning(240) << "Could not create image";
-            XFreePixmap(QX11Info::display(), d->handle);
-            d->handle = XNone;
-            return;
-        }
-        x11image->data = static_cast<char*>(::malloc(size_t(x11image->bytes_per_line) * x11image->height));
-        if (Q_UNLIKELY(!x11image->data)) {
-            kWarning(240) << "Could not allocate image data";
-            XDestroyImage(x11image);
-            XFreePixmap(QX11Info::display(), d->handle);
-            d->handle = XNone;
-            return;
-        }
-        for (int h = 0; h < qimage.height(); h++) {
-            for (int w = 0; w < qimage.width(); w++) {
-                const QRgb qpixel = qimage.pixel(w, h);
-                XPutPixel(x11image, w, h, qpixel);
-            }
-        }
-
-        GC x11gc = XCreateGC(
-            QX11Info::display(), d->handle,
-            0, 0 // value mask and values
-        );
-        XPutImage(
-            QX11Info::display(), d->handle, x11gc, x11image,
-            0, 0, 0, 0, // source x and y, destination x and y
-            x11image->width, x11image->height
-        );
-        XFreeGC(QX11Info::display(), x11gc);
-
-        XDestroyImage(x11image);
-
         d->size = pixmap.size();
     }
 }
@@ -213,26 +159,7 @@ QImage KPixmap::toImage() const
         kWarning(240) << "Null pixmap";
         return QImage();
     }
-    XImage *x11image = XGetImage(
-        QX11Info::display(), d->handle,
-        0, 0, // x and y
-        d->size.width(), d->size.height(),
-        AllPlanes, ZPixmap
-    );
-    if (Q_UNLIKELY(!x11image)) {
-        kWarning(240) << "Could not get image";
-        return QImage();
-    }
-    QImage qimage(d->size, QImage::Format_ARGB32);
-    for (int h = 0; h < x11image->height; h++) {
-        for (int w = 0; w < x11image->width; w++) {
-            const uint x11pixel = XGetPixel(x11image, w, h);
-            qimage.setPixel(w, h, x11pixel);
-        }
-    }
-    // qimage.save("/tmp/kpixmap.kat", "KAT");
-    XDestroyImage(x11image);
-    return qimage;
+    return QPixmap::fromX11Pixmap(d->handle).toImage();
 }
 
 KPixmap& KPixmap::operator=(const KPixmap &other)
