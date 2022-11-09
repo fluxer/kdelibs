@@ -79,7 +79,6 @@ KPixmap::KPixmap(const QPixmap &pixmap)
     : d(new KPixmapPrivate())
 {
     if (!pixmap.isNull()) {
-        KXErrorHandler kx11errorhandler;
         d->handle = pixmap.toX11Pixmap();
         if (!d->handle) {
             kWarning(240) << "Could not convert pixmap";
@@ -164,7 +163,7 @@ QImage KPixmap::toImage() const
 
 KPixmap& KPixmap::operator=(const KPixmap &other)
 {
-    delete d;
-    d = new KPixmapPrivate(*other.d);
+    d->handle = other.d->handle;
+    d->size = other.d->size;
     return *this;
 }
