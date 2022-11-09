@@ -38,6 +38,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QPixmapCache>
+#include <QtGui/QX11Info>
 
 // kdecore
 #include <kconfig.h>
@@ -468,7 +469,7 @@ void KIconLoaderPrivate::init( const QString& _appname, KStandardDirs *_dirs )
 
         KConfigGroup cg(config, QLatin1String(groups[i]) + "Icons");
         mpGroups[i].size = cg.readEntry("Size", 0);
-        if (QPixmap::defaultDepth() > 8) {
+        if (QX11Info::appDepth() > 8) {
             mpGroups[i].alphaBlending = cg.readEntry("AlphaBlending", true);
         } else {
             mpGroups[i].alphaBlending = false;

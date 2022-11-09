@@ -27,6 +27,7 @@
 #include <QTimer>
 #include <QCache>
 #include <QBuffer>
+#include <QX11Info>
 
 #include <kcolorscheme.h>
 #include <kcomponentdata.h>
@@ -104,7 +105,7 @@ public:
         updateNotificationTimer->setInterval(500);
         QObject::connect(updateNotificationTimer, SIGNAL(timeout()), q, SLOT(notifyOfChanged()));
 
-        if (QPixmap::defaultDepth() > 8) {
+        if (QX11Info::appDepth() > 8) {
             QObject::connect(KWindowSystem::self(), SIGNAL(compositingChanged(bool)), q, SLOT(compositingChanged(bool)));
         }
     }

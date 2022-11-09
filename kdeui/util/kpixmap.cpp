@@ -80,7 +80,11 @@ KPixmap::KPixmap(const QPixmap &pixmap)
 {
     if (!pixmap.isNull()) {
         KXErrorHandler kx11errorhandler;
-        d->handle = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), pixmap.width(), pixmap.height(), 32);
+        d->handle = XCreatePixmap(
+            QX11Info::display(), QX11Info::appRootWindow(),
+            pixmap.width(), pixmap.height(),
+            32
+        );
         if (kx11errorhandler.error(true)) {
             kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             d->handle = XNone;
@@ -149,7 +153,11 @@ KPixmap::KPixmap(const QSize &size)
 {
     if (!size.isEmpty()) {
         KXErrorHandler kx11errorhandler;
-        d->handle = XCreatePixmap(QX11Info::display(), QX11Info::appRootWindow(), size.width(), size.height(), 32);
+        d->handle = XCreatePixmap(
+            QX11Info::display(), QX11Info::appRootWindow(),
+            size.width(), size.height(),
+            32
+        );
         if (kx11errorhandler.error(true)) {
             kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             d->handle = XNone;

@@ -523,7 +523,7 @@ QString KIconTheme::current()
     }
 /*    if (_theme->isEmpty())
     {
-        if (QPixmap::defaultDepth() > 8)
+        if (QX11Info::appDepth() > 8)
             *_theme = defaultThemeName();
         else
             *_theme = QLatin1String("locolor");
