@@ -159,6 +159,8 @@ static int removeKDETranslator()
     QCoreApplication* coreApp = QCoreApplication::instance();
     if (coreApp && s_kdetranslator) {
         QCoreApplication::removeTranslator(s_kdetranslator);
+        delete s_kdetranslator;
+        s_kdetranslator = nullptr;
     }
     return 0;
 }
