@@ -22,8 +22,7 @@
 
 #include <kdeui_export.h>
 
-#include <QtGui/QSplashScreen>
-
+#include <QSplashScreen>
 #include <QPixmap>
 
 /**
@@ -39,29 +38,27 @@
  *
  *  @author Chris Howells (howells@kde.org)
  */
-class KDEUI_EXPORT KSplashScreen : public QSplashScreen //krazy:exclude=qclasses
+class KDEUI_EXPORT KSplashScreen : public QSplashScreen
 {
-  Q_OBJECT
-
+    Q_OBJECT
 public:
+    /**
+     *  Constructs a splash screen.
+     */
+    explicit KSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f = 0);
 
-  /**
-   *  Constructs a splash screen.
-   */
-  explicit KSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f = 0);
-
-  /**
-   *  Destructor.
-   *
-   *  Deletes all internal objects.
-   */
-  ~KSplashScreen();
+    /**
+     *  Destructor.
+     *
+     *  Deletes all internal objects.
+     */
+    ~KSplashScreen();
 
 private:
     class Private;
     Private* const d;
-    Q_DISABLE_COPY( KSplashScreen )
+    Q_DISABLE_COPY(KSplashScreen)
 };
 
-#endif //KSPLASHSCREEN_H
+#endif // KSPLASHSCREEN_H
 
