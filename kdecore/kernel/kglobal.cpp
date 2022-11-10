@@ -55,9 +55,6 @@ class KGlobalPrivate
         inline KGlobalPrivate()
             : locale(0),
             charsets(0),
-#ifndef QT_NO_TRANSLATION
-            translator(0),
-#endif
             localeIsFromFakeComponent(false)
         {
             // the umask is read here before any threads are created to avoid race conditions
@@ -68,10 +65,6 @@ class KGlobalPrivate
 
         inline ~KGlobalPrivate()
         {
-#ifndef QT_NO_TRANSLATION
-            delete translator;
-            translator = 0;
-#endif
             delete locale;
             locale = 0;
             delete charsets;
@@ -82,9 +75,6 @@ class KGlobalPrivate
         KComponentData mainComponent; // holds a refcount
         KLocale *locale;
         KCharsets *charsets;
-#ifndef QT_NO_TRANSLATION
-        KDETranslator* translator;
-#endif
         bool localeIsFromFakeComponent;
         QStringList catalogsToInsert;
 
@@ -150,6 +140,31 @@ void KGlobal::insertCatalog(const QString& catalog)
     }
 }
 
+#ifndef QT_NO_TRANSLATION
+KDETranslator* s_kdetranslator = nullptr;
+
+static int installKDETranslator()
+{
+    QCoreApplication* coreApp = QCoreApplication::instance();
+    if (coreApp && !s_kdetranslator) { // testcase: kwrite --help: no qcore app
+        s_kdetranslator = new KDETranslator();
+        QCoreApplication::installTranslator(s_kdetranslator);
+    }
+    return 0;
+}
+Q_CONSTRUCTOR_FUNCTION(installKDETranslator);
+
+static int removeKDETranslator()
+{
+    QCoreApplication* coreApp = QCoreApplication::instance();
+    if (coreApp && s_kdetranslator) {
+        QCoreApplication::removeTranslator(s_kdetranslator);
+    }
+    return 0;
+}
+Q_DESTRUCTOR_FUNCTION(removeKDETranslator);
+#endif // QT_NO_TRANSLATION
+
 KLocale *KGlobal::locale()
 {
     PRIVATE_DATA;
@@ -173,20 +188,6 @@ KLocale *KGlobal::locale()
         d->locale = new KLocale(mainComponent().catalogName());
         d->localeIsFromFakeComponent = !d->mainComponent.isValid();
         mainComponent().aboutData()->translateInternalProgramName();
-        QCoreApplication* coreApp = QCoreApplication::instance();
-        if (coreApp) { // testcase: kwrite --help: no qcore app
-            if (coreApp->thread() != QThread::currentThread()) {
-                qFatal("KGlobal::locale() must be called from the main thread before using i18n() in threads. KApplication"
-                       " takes care of this. If not using KApplication, call KGlobal::locale() during initialization.");
-#ifndef QT_NO_TRANSLATION
-            } else {
-                delete d->translator;
-                d->translator = 0;
-                d->translator = new KDETranslator();
-                QCoreApplication::installTranslator(d->translator);
-#endif
-            }
-        }
         foreach(const QString &catalog, d->catalogsToInsert) {
             d->locale->insertCatalog(catalog);
         }
