@@ -19,13 +19,10 @@
 
 #include "ksplashscreen.h"
 
-#include <kconfig.h>
-#include <kglobal.h>
 #include <kglobalsettings.h>
 
 KSplashScreen::KSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f)
-    : QSplashScreen(pixmap, f),
-    d(0)
+    : QSplashScreen(pixmap, f)
 {
     QRect desk = KGlobalSettings::splashScreenDesktopGeometry();
     resize(pixmap.width(), pixmap.height());
@@ -35,10 +32,6 @@ KSplashScreen::KSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f)
         width(), height()
     );
 
-}
-
-KSplashScreen::~KSplashScreen()
-{
 }
 
 #include "moc_ksplashscreen.cpp"

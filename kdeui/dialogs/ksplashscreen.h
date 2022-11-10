@@ -46,18 +46,6 @@ public:
      *  Constructs a splash screen.
      */
     explicit KSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f = 0);
-
-    /**
-     *  Destructor.
-     *
-     *  Deletes all internal objects.
-     */
-    ~KSplashScreen();
-
-private:
-    class Private;
-    Private* const d;
-    Q_DISABLE_COPY(KSplashScreen)
 };
 
 #endif // KSPLASHSCREEN_H
