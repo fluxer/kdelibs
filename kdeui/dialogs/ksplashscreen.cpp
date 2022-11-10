@@ -23,8 +23,6 @@
 #include <kglobal.h>
 #include <kglobalsettings.h>
 
-#include <QtGui/QPixmap>
-
 KSplashScreen::KSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f)
     : QSplashScreen(pixmap, f),
     d(0)
