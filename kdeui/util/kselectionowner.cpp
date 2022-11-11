@@ -68,7 +68,7 @@ KSelectionOwner::~KSelectionOwner()
 
 Window KSelectionOwner::ownerWindow() const
 {
-    kDebug(240) << "Current selection owner is" << d->x11window;
+    // kDebug(240) << "Current selection owner is" << d->x11window;
     return d->x11window;
 }
 
@@ -123,14 +123,14 @@ bool KSelectionOwner::claim(const bool force)
 void KSelectionOwner::release()
 {
     if (d->x11window == None) {
-        kDebug(240) << "No owner";
+        // kDebug(240) << "No owner";
         return;
     }
     if (d->timerid > 0) {
         killTimer(d->timerid);
         d->timerid = 0;
     }
-    kDebug(240) << "Destroying owner window";
+    // kDebug(240) << "Destroying owner window";
     XDestroyWindow(d->x11display, d->x11window);
     XFlush(d->x11display);
     d->x11window = None;
@@ -143,7 +143,7 @@ void KSelectionOwner::timerEvent(QTimerEvent *event)
         Q_ASSERT(d->x11window != None);
         Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
         if (currentowner != d->x11window) {
-            kDebug(240) << "Selection owner changed";
+            // kDebug(240) << "Selection owner changed";
             killTimer(d->timerid);
             d->timerid = 0;
             emit lostOwnership();
@@ -153,7 +153,7 @@ void KSelectionOwner::timerEvent(QTimerEvent *event)
             XFlush(d->x11display);
             d->x11window = None;
             if (kx11errorhandler.error(true)) {
-                kDebug(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+                // kDebug(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             }
         }
         event->accept();
