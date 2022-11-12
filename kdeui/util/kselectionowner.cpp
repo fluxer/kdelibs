@@ -105,7 +105,7 @@ bool KSelectionOwner::claim(const bool force)
     }
     if (currentowner != None) {
         kDebug(240) << "Selection is owned, killing owner";
-        KXErrorHandler kx11errorhandler;
+        KXErrorHandler kx11errorhandler(d->x11display);
         XKillClient(d->x11display, currentowner);
         XFlush(d->x11display);
         if (kx11errorhandler.error(true)) {
@@ -114,7 +114,7 @@ bool KSelectionOwner::claim(const bool force)
         }
     }
     kDebug(240) << "Creating selection owner";
-    KXErrorHandler kx11errorhandler;
+    KXErrorHandler kx11errorhandler(d->x11display);
     d->x11window = XCreateSimpleWindow(
         d->x11display, RootWindow(d->x11display, d->x11screen),
         0, 0, // x and y
@@ -160,7 +160,7 @@ void KSelectionOwner::timerEvent(QTimerEvent *event)
             d->timerid = 0;
             emit lostOwnership();
             // NOTE: catching errors here is done to not get fatal I/O
-            KXErrorHandler kx11errorhandler;
+            KXErrorHandler kx11errorhandler(d->x11display);
             XDestroyWindow(d->x11display, d->x11window);
             XFlush(d->x11display);
             d->x11window = None;
