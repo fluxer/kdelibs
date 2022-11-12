@@ -147,7 +147,7 @@ BackgroundTest::BackgroundTest()
 void BackgroundTest::slotDone()
 {
     kDebug()<<"Text of length "<<m_len<<" checked in "
-             << m_timer.elapsed() << " msec."<<endl;
+             << m_timer.elapsed() << " msec.";
     QApplication::exit();
 }
 

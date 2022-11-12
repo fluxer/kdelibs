@@ -115,7 +115,7 @@ void KUrlCompletionTest::testLocalRelativePath()
     assert( comp1 == "file1" );
 
     // Completion from relative path
-    kDebug() << endl << "now completing on 'file#'";
+    kDebug() << "now completing on 'file#'";
     m_completion->makeCompletion( "file#" );
     waitForCompletion();
     QStringList compall = m_completion->allMatches();
@@ -126,7 +126,7 @@ void KUrlCompletionTest::testLocalRelativePath()
     assert( comp2 == "file#a" );
 
     // Completion with empty string
-    kDebug () << endl << "now completing on ''";
+    kDebug () << "now completing on ''";
     m_completion->makeCompletion( "" );
     waitForCompletion();
     QStringList compEmpty = m_completion->allMatches();
@@ -188,7 +188,7 @@ void KUrlCompletionTest::testEmptyCwd()
 {
     kDebug() ;
     // Completion with empty string (with a KUrlCompletion whose cwd is "")
-    kDebug () << endl << "now completing on '' with empty cwd";
+    kDebug () << "now completing on '' with empty cwd";
     m_completionEmptyCwd->makeCompletion( "" );
     waitForCompletion();
     QStringList compEmpty = m_completionEmptyCwd->allMatches();

@@ -85,41 +85,41 @@ KColorComboTest::KColorComboTest(QWidget* widget)
          << QColor(0,0,255) << QColor(0,0,192) << QColor(0,0,128) << QColor(0,0,64);
     mCustom->setColors(list);
     if (mCustom->colors() != list)
-        kError() << "Custom combo: setColors() != colors()" << endl;
+        kError() << "Custom combo: setColors() != colors()";
     mCustom->setColors(QList<QColor>());
     if (mCustom->colors() != standardList)
-        kError() << "Custom combo: setColors(empty) != standard colors" << endl;
+        kError() << "Custom combo: setColors(empty) != standard colors";
     mCustom->setColors(list);
     if (mCustom->colors() != list)
-        kError() << "Custom combo: setColors() != colors()" << endl;
+        kError() << "Custom combo: setColors() != colors()";
 
     if (mStandard->colors() != standardList)
-        kError() << "Standard combo: colors()" << endl;
+        kError() << "Standard combo: colors()";
 
     QColor col = QColor(1,2,3);
     mStandard->setColor(col);
     if (mStandard->color() != col)
-        kError() << "Standard combo: set custom color -> " << mStandard->color().red() << "," << mStandard->color().green() << "," << mStandard->color().blue() << endl;
+        kError() << "Standard combo: set custom color -> " << mStandard->color().red() << "," << mStandard->color().green() << "," << mStandard->color().blue();
     if (!mStandard->isCustomColor())
-        kError() << "Standard combo: custom color: isCustomColor() -> false" << endl;
+        kError() << "Standard combo: custom color: isCustomColor() -> false";
     mStandard->setColor(Qt::green);
     if (mStandard->color() != Qt::green)
-        kError() << "Standard combo: color() -> " << mStandard->color().red() << "," << mStandard->color().green() << "," << mStandard->color().blue() << endl;
+        kError() << "Standard combo: color() -> " << mStandard->color().red() << "," << mStandard->color().green() << "," << mStandard->color().blue();
     if (mStandard->isCustomColor())
-        kError() << "Standard combo: standard color: isCustomColor() -> true" << endl;
+        kError() << "Standard combo: standard color: isCustomColor() -> true";
 
     col = QColor(1,2,3);
     mCustom->setColor(col);
     if (mCustom->color() != col)
-        kError() << "Custom combo: set custom color -> " << mCustom->color().red() << "," << mCustom->color().green() << "," << mCustom->color().blue() << endl;
+        kError() << "Custom combo: set custom color -> " << mCustom->color().red() << "," << mCustom->color().green() << "," << mCustom->color().blue();
     if (!mCustom->isCustomColor())
-        kError() << "Custom combo: custom color: isCustomColor() -> false" << endl;
+        kError() << "Custom combo: custom color: isCustomColor() -> false";
     col = QColor(0,192,0);
     mCustom->setColor(col);
     if (mCustom->color() != col)
-        kError() << "Custom combo: color() -> " << mCustom->color().red() << "," << mCustom->color().green() << "," << mCustom->color().blue() << endl;
+        kError() << "Custom combo: color() -> " << mCustom->color().red() << "," << mCustom->color().green() << "," << mCustom->color().blue();
     if (mCustom->isCustomColor())
-        kError() << "Custom combo: standard color: isCustomColor() -> true" << endl;
+        kError() << "Custom combo: standard color: isCustomColor() -> true";
 
 }
 

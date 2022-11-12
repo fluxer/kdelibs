@@ -17,20 +17,20 @@ void output( const KUrl& u )
                     "read from them!  Please make sure either or both "
                     "of the above files exist and have the correct "
                     "permission, i.e. a regular file owned by you with "
-                    "with a read/write permission (0600)" << endl;
+                    "with a read/write permission (0600)";
        return;
     }
 
-    kDebug() << "Type: " << l.type << endl
-              << "Machine: " << l.machine << endl
-              << "Login: " << l.login << endl
-              << "Password: " << l.password << endl;
+    kDebug() << "Type: " << l.type << '\n'
+              << "Machine: " << l.machine << '\n'
+              << "Login: " << l.login << '\n'
+              << "Password: " << l.password;
 
     QMap<QString,QStringList>::ConstIterator it = l.macdef.constBegin();
     for ( ; it != l.macdef.constEnd(); ++it )
     {
         kDebug() << "Macro: " << it.key() << "= "
-                  << it.value().join("   ") << endl;
+                  << it.value().join("   ");
     }
 }
 

@@ -79,8 +79,7 @@ void KReplaceTest::replace( const QString &pattern, const QString &replacement, 
 void KReplaceTest::slotHighlight( const QString &str, int matchingIndex, int matchedLength )
 {
     kDebug() << "slotHighlight Index:" << matchingIndex << " Length:" << matchedLength
-              << " Substr:" << str.mid(matchingIndex, matchedLength)
-              << endl;
+              << " Substr:" << str.mid(matchingIndex, matchedLength);
     // Emulate the user saying yes
     // We need Qt::QueuedConnection (and the enterloop/exitloop)
     // otherwise we get an infinite loop (Match never returned,
@@ -160,7 +159,7 @@ static void testReplaceSimple( int options, int button = 0 )
     QStringList textLines = test.textLines();
     assert( textLines.count() == 1 );
     if ( textLines[ 0 ] != "HELLOHELLO" ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'HELLOHELLO'" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'HELLOHELLO'";
         exit(1);
     }
 }
@@ -175,7 +174,7 @@ static void testReplaceBlank( int options, int button = 0 )
     QStringList textLines = test.textLines();
     assert( textLines.count() == 1 );
     if ( !textLines[ 0 ].isEmpty() ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of ''" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of ''";
         exit(1);
     }
 }
@@ -190,7 +189,7 @@ static void testReplaceBlankSearch( int options, int button = 0 )
     QStringList textLines = test.textLines();
     assert( textLines.count() == 1 );
     if ( textLines[ 0 ] != "foobfoobfoobfoobfoo" ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'foobfoobfoobfoobfoo'" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'foobfoobfoobfoobfoo'";
         exit(1);
     }
 }
@@ -204,7 +203,7 @@ static void testReplaceLonger( int options, int button = 0 )
     QStringList textLines = test.textLines();
     assert( textLines.count() == 1 );
     if ( textLines[ 0 ] != "bbbbbbbb" ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'bbbbbbbb'" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'bbbbbbbb'";
         exit(1);
     }
 }
@@ -218,7 +217,7 @@ static void testReplaceLongerInclude( int options, int button = 0 )
     QStringList textLines = test.textLines();
     assert( textLines.count() == 1 );
     if ( textLines[ 0 ] != "a foobar b" ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'a foobar b'" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'a foobar b'";
         exit(1);
     }
 }
@@ -232,7 +231,7 @@ static void testReplaceLongerInclude2( int options, int button = 0 )
     QStringList textLines = test.textLines();
     assert( textLines.count() == 1 );
     if ( textLines[ 0 ] != "aaaaaaaa" ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'aaaaaaaa'" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of 'aaaaaaaa'";
         exit(1);
     }
 }
@@ -246,7 +245,7 @@ static void testReplaceBackRef( int options, int button = 0 )
     assert( textLines.count() == 1 );
     QString expected = options & KReplaceDialog::BackReference ? "(abc) def" : "(\\0) def";
     if ( textLines[ 0 ] != expected ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of '"<< expected << "'" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of '"<< expected << "'";
         exit(1);
     }
 }
@@ -260,7 +259,7 @@ static void testReplaceBackRef1( int options, int button = 0 )
     assert( textLines.count() == 1 );
     QString expected = "a and 1 in (a1) b and 2 in (b2) a and 3 in (a3)";
     if ( textLines[ 0 ] != expected ) {
-        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of '"<< expected << "'" << endl;
+        kError() << "ASSERT FAILED: replaced text is '" << textLines[ 0 ] << "' instead of '"<< expected << "'";
         exit(1);
     }
 }
