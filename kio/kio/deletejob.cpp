@@ -276,7 +276,7 @@ void DeleteJobPrivate::deleteNextFile()
             // Normal deletion
             // If local file, try do it directly
             if ( (*it).isLocalFile() && unlink( QFile::encodeName((*it).toLocalFile()) ) == 0 ) {
-                //kdDebug(7007) << "DeleteJob deleted" << (*it).toLocalFile();
+                //kDebug(7007) << "DeleteJob deleted" << (*it).toLocalFile();
                 job = 0;
                 m_processedFiles++;
                 if ( m_processedFiles % 300 == 1 || m_totalFilesDirs < 300) { // update progress info every 300 files
