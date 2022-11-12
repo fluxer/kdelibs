@@ -114,6 +114,7 @@ bool KSelectionOwner::claim(const bool force)
         kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
         return false;
     }
+    XSelectInput(d->x11display, d->x11window, NoEventMask);
     XSetSelectionOwner(d->x11display, d->x11atom, d->x11window, CurrentTime);
     XFlush(d->x11display);
     d->timerid = startTimer(KSELECTIONOWNER_CHECKTIME);
