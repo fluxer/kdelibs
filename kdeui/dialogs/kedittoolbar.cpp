@@ -1539,7 +1539,7 @@ void KEditToolBarWidgetPrivate::slotChangeIcon()
   m_kdialogProcess->setReadChannel(QProcess::StandardOutput);
   m_kdialogProcess->start(kdialogExe, kdialogArgs, QIODevice::ReadOnly | QIODevice::Text);
   if ( !m_kdialogProcess->waitForStarted() ) {
-    kError(240) << "Can't run " << kdialogExe << endl;
+    kError(240) << "Can't run " << kdialogExe;
     delete m_kdialogProcess;
     m_kdialogProcess = 0;
     return;
@@ -1605,7 +1605,7 @@ void KEditToolBarWidgetPrivate::slotProcessExited()
   QString icon;
 
   if (!m_kdialogProcess) {
-         kError(240) << "Something is wrong here! m_kdialogProcess is zero!" << endl;
+         kError(240) << "Something is wrong here! m_kdialogProcess is zero!";
          return;
   }
 

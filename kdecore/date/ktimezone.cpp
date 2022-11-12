@@ -1076,7 +1076,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     QFile f(path);
     if (!f.open(QIODevice::ReadOnly))
     {
-        kError() << "Cannot open " << f.fileName() << endl;
+        kError() << "Cannot open " << f.fileName();
         return 0;
     }
     QDataStream str(&f);
@@ -1086,7 +1086,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     str >> T_ >> Z_ >> i_ >> f_;
     if (T_ != 'T' || Z_ != 'Z' || i_ != 'i' || f_ != 'f')
     {
-        kError() << "Not a TZFILE: " << f.fileName() << endl;
+        kError() << "Not a TZFILE: " << f.fileName();
         return 0;
     }
     // Discard 16 bytes reserved for future use
@@ -1109,7 +1109,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
         >> nLocalTimeTypes
         >> abbrCharCount;
     // kDebug() << "header: " << nIsUtc << ", " << nIsStandard << ", " << nLeapSecondAdjusts << ", " <<
-    //    nTransitionTimes << ", " << nLocalTimeTypes << ", " << abbrCharCount << endl;
+    //    nTransitionTimes << ", " << nLocalTimeTypes << ", " << abbrCharCount;
 
     // Read the transition times, at which the rules for computing local time change
     struct TransitionTime
@@ -1159,7 +1159,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     // Make sure we don't fall foul of maliciously coded time zone abbreviations.
     if (abbrCharCount > 64)
     {
-        kError() << "excessive length for timezone abbreviations: " << abbrCharCount << endl;
+        kError() << "excessive length for timezone abbreviations: " << abbrCharCount;
         delete data;
         delete[] transitionTimes;
         delete[] localTimeTypes;
@@ -1171,7 +1171,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     if (abbrs[abbrCharCount - 1] != 0)
     {
         // These abbreviations are corrupt!
-        kError() << "timezone abbreviations not null terminated: " << abbrs[abbrCharCount - 1] << endl;
+        kError() << "timezone abbreviations not null terminated: " << abbrs[abbrCharCount - 1];
         delete data;
         delete[] transitionTimes;
         delete[] localTimeTypes;
@@ -1252,7 +1252,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     {
         if (ltt->abbrIndex >= abbreviations.count())
         {
-            kError() << "KTimeZoneSource::parse(): abbreviation index out of range" << endl;
+            kError() << "KTimeZoneSource::parse(): abbreviation index out of range";
             abbrev = "???";
         }
         else
@@ -1285,7 +1285,7 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
     {
         if (tt->localTimeIndex >= nLocalTimeTypes)
         {
-            kError() << "KTimeZoneSource::parse(): transition ignored: local time type out of range: " <<(int)tt->localTimeIndex<<" > "<<nLocalTimeTypes << endl;
+            kError() << "KTimeZoneSource::parse(): transition ignored: local time type out of range: " << (int)tt->localTimeIndex << " > " << nLocalTimeTypes;
             continue;
         }
 
@@ -1714,7 +1714,7 @@ void KTimeZoneData::setLeapSecondChanges(const QList<KTimeZone::LeapSeconds> &ad
 KTimeZone::LeapSeconds KTimeZoneData::leapSecondChange(const QDateTime &utc) const
 {
     if (utc.timeSpec() != Qt::UTC)
-        kError() << "KTimeZoneData::leapSecondChange(): non-UTC time specified" << endl;
+        kError() << "KTimeZoneData::leapSecondChange(): non-UTC time specified";
     else
     {
         for (int i = d->leapChanges.count();  --i >= 0;  )

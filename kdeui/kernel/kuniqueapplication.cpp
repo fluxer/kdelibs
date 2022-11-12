@@ -84,7 +84,7 @@ static QDBusConnectionInterface *tryToInitDBusConnection()
     QDBusConnection sessionBus = QDBusConnection::sessionBus();
     if (!sessionBus.isConnected() || !(dbusService = sessionBus.interface()))
     {
-        kError() << "KUniqueApplication: Cannot find the D-Bus session server: " << sessionBus.lastError().message() << endl;
+        kError() << "KUniqueApplication: Cannot find the D-Bus session server: " << sessionBus.lastError().message();
         ::exit(255);
     }
     return dbusService;
@@ -129,8 +129,7 @@ KUniqueApplication::start(StartFlags flags)
      bool registered = dbusService->registerService(appName) == QDBusConnectionInterface::ServiceRegistered;
      if (!registered)
      {
-        kError() << "KUniqueApplication: Can't setup D-Bus service. Probably already running."
-                 << endl;
+        kError() << "KUniqueApplication: Can't setup D-Bus service. Probably already running.";
         ::exit(255);
      }
 
@@ -144,13 +143,13 @@ KUniqueApplication::start(StartFlags flags)
   signed char result;
   if (0 > pipe(fd))
   {
-     kError() << "KUniqueApplication: pipe() failed!" << endl;
+     kError() << "KUniqueApplication: pipe() failed!";
      ::exit(255);
   }
   int fork_result = fork();
   switch(fork_result) {
   case -1:
-     kError() << "KUniqueApplication: fork() failed!" << endl;
+     kError() << "KUniqueApplication: fork() failed!";
      ::exit(255);
      break;
   case 0:
@@ -166,7 +165,7 @@ KUniqueApplication::start(StartFlags flags)
             dbusService->registerService(appName);
         if (!reply.isValid())
         {
-           kError() << "KUniqueApplication: Can't setup D-Bus service." << endl;
+           kError() << "KUniqueApplication: Can't setup D-Bus service.";
            result = -1;
            ::write(fd[1], &result, 1);
            ::exit(255);
@@ -217,12 +216,12 @@ KUniqueApplication::start(StartFlags flags)
        if (n == 1) break;
        if (n == 0)
        {
-          kError() << "KUniqueApplication: Pipe closed unexpectedly." << endl;
+          kError() << "KUniqueApplication: Pipe closed unexpectedly.";
           ::exit(255);
        }
        if (errno != EINTR)
        {
-          kError() << "KUniqueApplication: Error reading from pipe." << endl;
+          kError() << "KUniqueApplication: Error reading from pipe.";
           ::exit(255);
        }
      }
@@ -234,7 +233,7 @@ KUniqueApplication::start(StartFlags flags)
      QDBusConnectionInterface* dbusService = tryToInitDBusConnection();
      if (!dbusService->isServiceRegistered(appName))
      {
-        kError() << "KUniqueApplication: Registering failed!" << endl;
+        kError() << "KUniqueApplication: Registering failed!";
      }
 
      QByteArray saved_args;
@@ -260,8 +259,8 @@ KUniqueApplication::start(StartFlags flags)
      if (!reply.isValid())
      {
          QDBusError err = reply.error();
-        kError() << "Communication problem with " << KCmdLineArgs::aboutData()->appName() << ", it probably crashed." << endl
-                 << "Error message was: " << err.name() << ": \"" << err.message() << "\"" << endl;
+        kError() << "Communication problem with " << KCmdLineArgs::aboutData()->appName() << ", it probably crashed.\n"
+                 << "Error message was: " << err.name() << ": \"" << err.message() << "\"";
         ::exit(255);
      }
      ::exit(reply);

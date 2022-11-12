@@ -188,9 +188,9 @@ inline void checkDisplay()
 {
     // Some non-GUI apps might try to use us.
     if ( !QX11Info::display() ) {
-        kError() << "QX11Info::display() returns 0.  I'm probably going to crash now." << endl;
+        kError() << "QX11Info::display() returns 0.  I'm probably going to crash now.";
         kError() << "If this is a KApplication initialized without GUI stuff, change it to be "
-                    "initialized with GUI stuff." << endl;
+                    "initialized with GUI stuff.";
     }
 }
 #else // NDEBUG

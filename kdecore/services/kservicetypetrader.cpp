@@ -122,7 +122,7 @@ KService::List KServiceTypeTrader::query( const QString& serviceType,
     applyConstraints( lst, constraint );
 
     //kDebug(7014) << "query for serviceType " << serviceType << constraint
-    //             << " : returning " << lst.count() << " offers" << endl;
+    //             << " : returning " << lst.count() << " offers";
     return lst;
 }
 

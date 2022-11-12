@@ -22,6 +22,7 @@
 #include "khttp_export.h"
 
 #include <QObject>
+#include <QMap>
 #include <QHostAddress>
 
 typedef QMap<QByteArray,QByteArray> KHTTPHeaders;

@@ -88,7 +88,7 @@ IdleSlave::gotInput()
    if (mConn.read( &cmd, data) == -1)
    {
       // Communication problem with slave.
-      // kError(7016) << "No communication with slave." << endl;
+      // kError(7016) << "No communication with slave.";
       deleteLater();
    }
    else if (cmd == MSG_SLAVE_ACK)
@@ -97,7 +97,7 @@ IdleSlave::gotInput()
    }
    else if (cmd != MSG_SLAVE_STATUS)
    {
-      kError(7016) << "Unexpected data from slave." << endl;
+      kError(7016) << "Unexpected data from slave.";
       deleteLater();
    }
    else
@@ -369,7 +369,7 @@ void KLauncher::processRequestReturn(int status, const QByteArray &requestData)
    if (lastRequest && (status == LAUNCHER_ERROR))
    {
      lastRequest->status = KLaunchRequest::Error;
-     kDebug(7016) << lastRequest->name << " failed." << endl;
+     kDebug(7016) << lastRequest->name << " failed.";
      if (!requestData.isEmpty())
         lastRequest->errorMsg = QString::fromUtf8((char *) requestData.data());
      lastRequest = 0;
@@ -1070,7 +1070,7 @@ KLauncher::requestSlave(const QString &protocol,
     arg_list.append(app_socket);
 
     kDebug(7016) << "KLauncher: launching new slave " << name << " with protocol=" << protocol
-     << " args=" << arg_list << endl;
+     << " args=" << arg_list;
 
 #ifdef Q_OS_UNIX
     if (mSlaveDebug == protocol)

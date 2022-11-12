@@ -80,7 +80,7 @@ static void printError(const QString& text, QString* error)
     if (error)
         *error = text;
     else
-        kError() << text << endl;
+        kError() << text;
 }
 
 int KToolInvocation::startServiceInternal(const char *_function,

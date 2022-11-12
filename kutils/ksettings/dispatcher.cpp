@@ -61,7 +61,7 @@ KSharedConfig::Ptr configForComponentName(const QString &componentName)
         }
     }
     kError(701) << "configForComponentName('" << componentName.constData()
-        << "') could not find the KComponentData object" << endl;
+        << "') could not find the KComponentData object";
     Q_ASSERT(!d->m_componentInfo.isEmpty());
     return d->m_componentInfo.constBegin()->componentData.config();
 }

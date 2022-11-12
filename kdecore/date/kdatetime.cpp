@@ -632,7 +632,7 @@ QDateTime KDateTimePrivate::toUtc(const KTimeZone &local) const
                 loc = KSystemTimeZones::local();
             if (specZone == loc)
             {
-//                kDebug() << "toUtc(): cached -> " << utc() << endl,
+//                kDebug() << "toUtc(): cached -> " << utc();
 #ifdef ENABLE_TESTING
                 ++KDateTime_utcCacheHit;
 #endif
@@ -641,7 +641,7 @@ QDateTime KDateTimePrivate::toUtc(const KTimeZone &local) const
         }
         else
         {
-//            kDebug() << "toUtc(): cached -> " << utc() << endl,
+//            kDebug() << "toUtc(): cached -> " << utc();
 #ifdef ENABLE_TESTING
             ++KDateTime_utcCacheHit;
 #endif
@@ -660,7 +660,7 @@ QDateTime KDateTimePrivate::toUtc(const KTimeZone &local) const
                 break;
             QDateTime dt = QDateTime(mDt.date(), mDt.time(), Qt::UTC).addSecs(-specUtcOffset);
             setUtc(dt);
-//            kDebug() << "toUtc(): calculated -> " << dt << endl,
+//            kDebug() << "toUtc(): calculated -> " << dt;
             return dt;
         }
         case KDateTime::ClockTime:
@@ -672,14 +672,14 @@ QDateTime KDateTimePrivate::toUtc(const KTimeZone &local) const
             const_cast<KDateTimePrivate*>(this)->specZone = loc;
             QDateTime dt(specZone.toUtc(mDt));
             setUtc(dt);
-//            kDebug() << "toUtc(): calculated -> " << dt << endl,
+//            kDebug() << "toUtc(): calculated -> " << dt;
             return dt;
         }
         case KDateTime::TimeZone:
             if (!mDt.isValid())
                 break;
             timeZoneOffset();   // calculate offset and cache UTC value
-//            kDebug() << "toUtc(): calculated -> " << utc() << endl,
+//            kDebug() << "toUtc(): calculated -> " << utc();
             return utc();
         default:
             break;

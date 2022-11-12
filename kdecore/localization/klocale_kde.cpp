@@ -283,7 +283,7 @@ void KLocalePrivate::initMainCatalogs()
     if (m_catalogName.isEmpty()) {
         kDebug(173) << "KLocale instance created called without valid "
                     << "catalog! Give an argument or call setMainCatalog "
-                    << "before init" << endl;
+                    << "before init";
     } else {
         // do not use insertCatalog here, that would already trigger updateCatalogs
         m_catalogNames.append(KCatalogName(m_catalogName));   // application catalog
@@ -795,18 +795,18 @@ void KLocalePrivate::translateRaw(const char *msgctxt, const char *msgid, const 
 {
     if (!msgid || !msgid[0]) {
         kDebug(173) << "KLocale: trying to look up \"\" in catalog. "
-        << "Fix the program" << endl;
+        << "Fix the program";
         language->clear();
         translation->clear();
         return;
     }
     if (msgctxt && !msgctxt[0]) {
         kDebug(173) << "KLocale: trying to use \"\" as context to message. "
-        << "Fix the program" << endl;
+        << "Fix the program";
     }
     if (msgid_plural && !msgid_plural[0]) {
         kDebug(173) << "KLocale: trying to use \"\" as plural message. "
-        << "Fix the program" << endl;
+        << "Fix the program";
     }
 
     std::lock_guard<std::recursive_mutex> lock(kLocaleMutex());
@@ -875,7 +875,7 @@ QString KLocalePrivate::translateQt(const char *context, const char *sourceText)
 
     if (!sourceText || !sourceText[0]) {
         kDebug(173) << "KLocale: trying to look up \"\" in catalog. "
-        << "Fix the program" << endl;
+        << "Fix the program";
         return QString();
     }
 

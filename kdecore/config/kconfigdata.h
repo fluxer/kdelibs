@@ -24,6 +24,7 @@
 #define KCONFIGDATA_H
 
 #include <QtCore/qdebug.h>
+#include <QtCore/qmap.h>
 
 /**
  * map/dict/list config node entry.

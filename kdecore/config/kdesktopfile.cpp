@@ -134,7 +134,7 @@ bool KDesktopFile::isAuthorizedDesktopFile(const QString& path)
         return true;
     }
 
-    kWarning() << "Access to '" << path << "' denied, not owned by root, executable flag not set." << endl;
+    kWarning() << "Access to '" << path << "' denied, not owned by root, executable flag not set.";
     return false;
 }
 

@@ -344,7 +344,7 @@ void SlaveBase::connectSlave(const QString &address)
 
     if (!d->appConnection.inited())
     {
-        kDebug(7019) << "failed to connect to" << address << endl
+        kDebug(7019) << "failed to connect to" << address << '\n'
 		      << "Reason:" << d->appConnection.errorString();
         exit();
         return;

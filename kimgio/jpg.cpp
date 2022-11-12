@@ -19,6 +19,7 @@
 #include "jpg.h"
 
 #include <QImage>
+#include <QVariant>
 #include <kdebug.h>
 
 #include <turbojpeg.h>

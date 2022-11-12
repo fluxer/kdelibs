@@ -1960,7 +1960,7 @@ KFileWidget::OperationMode KFileWidget::operationMode() const
 void KFileWidgetPrivate::_k_slotAutoSelectExtClicked()
 {
 //     kDebug (kfile_area) << "slotAutoSelectExtClicked(): "
-//                          << autoSelectExtCheckBox->isChecked() << endl;
+//                          << autoSelectExtCheckBox->isChecked();
 
     // whether the _user_ wants it on/off
     autoSelectExtChecked = autoSelectExtCheckBox->isChecked();

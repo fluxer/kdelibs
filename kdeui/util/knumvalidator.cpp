@@ -216,7 +216,7 @@ QValidator::State KDoubleValidator::validate( QString & input, int & p ) const {
        ( !d.isEmpty() && d.indexOf('-') != -1 ) ) {
       // make sure we don't replace something twice:
       kWarning() << "KDoubleValidator: decimal symbol contains '-' or "
-                    "negative sign contains '.' -> improve algorithm" << endl;
+                    "negative sign contains '.' -> improve algorithm";
       return Invalid;
     }
 

@@ -385,9 +385,8 @@ void KApplicationPrivate::init()
   // sanity checking, to make sure we've connected
   QDBusConnectionInterface *bus = 0;
   if (!QDBusConnection::sessionBus().isConnected() || !(bus = QDBusConnection::sessionBus().interface())) {
-      kFatal(240) << "Session bus not found" << endl <<
-                  "To circumvent this problem try the following command (with Linux and bash)" << endl <<
-                  "export $(dbus-launch)";
+      kFatal(240) << "Session bus not found, to circumvent this problem try the following command (with Linux and bash)\n"
+                  << "export $(dbus-launch)";
       ::exit(125);
   }
 
@@ -407,7 +406,7 @@ void KApplicationPrivate::init()
       const QString pidSuffix = QString::number( getpid() ).prepend( QLatin1String("-") );
       const QString serviceName = reversedDomain + q->applicationName() + pidSuffix;
       if ( bus->registerService(serviceName) == QDBusConnectionInterface::ServiceNotRegistered ) {
-          kError(240) << "Couldn't register name '" << serviceName << "' with DBUS - another process owns it already!" << endl;
+          kError(240) << "Couldn't register name '" << serviceName << "' with DBUS - another process owns it already!";
           ::exit(126);
       }
   }

@@ -26,6 +26,7 @@
 
 #include "kfiledialog.h"
 
+#include <QtCore/QTextStream>
 #include <QtGui/QCheckBox>
 #include <QtGui/qevent.h>
 #include <QtGui/QFileDialog>

@@ -424,14 +424,14 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
             const int pos = line.indexOf(QLatin1Char(':'));
             if (pos == -1) { // syntax error
                 kWarning(servicesDebugArea()) << "Syntax error in " << mimeTypeName
-                               << " ':' not present in section name" << endl;
+                               << " ':' not present in section name";
                 break;
             }
             priority = line.left(pos).toInt();
             mimeTypeName = line.mid(pos+1);
             mimeTypeName = mimeTypeName.left(mimeTypeName.length()-2); // remove ']\n'
             //kDebug(servicesDebugArea()) << "New rule for " << mimeTypeName
-            //             << " with priority " << priority << endl;
+            //             << " with priority " << priority;
         } else {
             // Parse line in the section
             // [ indent ] ">" start-offset "=" value
@@ -459,7 +459,7 @@ QList<KMimeMagicRule> KMimeTypeRepository::parseMagicFile(QIODevice* file, const
                 break;
             const qint16 valueLength = qFromBigEndian(lengthBuffer);
             //kDebug() << "indent=" << indent << " rangeStart=" << match.m_rangeStart
-            //         << " valueLength=" << valueLength << endl;
+            //         << " valueLength=" << valueLength;
 
             match.m_data.resize(valueLength);
             if (file->read(match.m_data.data(), valueLength) != valueLength)

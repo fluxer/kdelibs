@@ -94,8 +94,7 @@ QSpellEnchantDict *Loader::createSpeller(const QString& language,
     const QList<QSpellEnchantClient*> lClients = d->languageClients[plang];
 
     if (lClients.isEmpty()) {
-        kError()<<"No language dictionaries for the language : "
-                << plang <<endl;
+        kError() << "No language dictionaries for the language : " << plang;
         return 0;
     }
 

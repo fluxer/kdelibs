@@ -97,7 +97,7 @@ void KServicePrivate::init( const KDesktopFile *config, KService* q )
     {
         /*kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath
           << " has no Type=... entry."
-          << " It should be \"Application\", \"Service\"" or \"FSDevice\" << endl;
+          << " It should be \"Application\", \"Service\"" or \"FSDevice\";
           m_bValid = false;
           return;*/
         m_strType = QString::fromLatin1("Application");
@@ -105,7 +105,7 @@ void KServicePrivate::init( const KDesktopFile *config, KService* q )
         && m_strType != QLatin1String("FSDevice")) {
         kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath
                        << " has Type=" << m_strType
-                       << " instead of \"Application\", \"Service\" or \"FSDevice\"" << endl;
+                       << " instead of \"Application\", \"Service\" or \"FSDevice\"";
         m_bValid = false;
         return;
     }
@@ -120,7 +120,7 @@ void KServicePrivate::init( const KDesktopFile *config, KService* q )
         if (m_strExec.isEmpty()) {
             kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath
                            << " has Type=" << m_strType
-                           << " but no Exec line" << endl;
+                           << " but no Exec line";
             m_bValid = false;
             return;
         }
@@ -142,7 +142,7 @@ void KServicePrivate::init( const KDesktopFile *config, KService* q )
     {
         kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath
                        << " has Type=" << m_strType << " but is located under \"" << resource
-                       << "\" instead of \"apps\"" << endl;
+                       << "\" instead of \"apps\"";
         m_bValid = false;
         return;
     }
@@ -799,7 +799,7 @@ QString KService::exec() const
     if (d->m_strType == QLatin1String("Application") && d->m_strExec.isEmpty())
     {
         kWarning(servicesDebugArea()) << "The desktop entry file " << entryPath()
-                       << " has Type=" << d->m_strType << " but has no Exec field." << endl;
+                       << " has Type=" << d->m_strType << " but has no Exec field.";
     }
     return d->m_strExec;
 }

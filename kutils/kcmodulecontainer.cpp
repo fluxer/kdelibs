@@ -106,7 +106,7 @@ void KCModuleContainer::addModule( const QString& module )
 	if ( !service )
 	{
 		kDebug(713) << "KCModuleContainer: module '" << 
-			module << "' was not found and thus not loaded" << endl;
+			module << "' was not found and thus not loaded";
 		return;
 	}
 

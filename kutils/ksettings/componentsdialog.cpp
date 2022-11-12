@@ -139,7 +139,7 @@ void ComponentsDialog::executed( QTreeWidgetItem * item, int )
     bool checked = ( item->checkState(0) == Qt::Checked );
 
     kDebug( 704 ) << "it's a " << ( checked ? "checked" : "unchecked" )
-        << " QCheckListItem" << endl;
+        << " QCheckListItem";
 
     KPluginInfo * info = d->plugininfomap[ item ];
     info->setPluginEnabled( checked );

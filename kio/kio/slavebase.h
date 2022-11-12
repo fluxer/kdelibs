@@ -669,9 +669,9 @@ public:
      * if ( openPasswordDialog( authInfo ) )
      * {
      *    kDebug() << QLatin1String("User: ")
-     *              << authInfo.username << endl;
+     *              << authInfo.username;
      *    kDebug() << QLatin1String("Password: ")
-     *              << QLatin1String("Not displayed here!") << endl;
+     *              << QLatin1String("Not displayed here!");
      * }
      * \endcode
      *
@@ -686,9 +686,9 @@ public:
      * if ( openPasswordDialog( authInfo, errorMsg ) )
      * {
      *    kDebug() << QLatin1String("User: ")
-     *              << authInfo.username << endl;
+     *              << authInfo.username;
      *    kDebug() << QLatin1String("Password: ")
-     *              << QLatin1String("Not displayed here!") << endl;
+     *              << QLatin1String("Not displayed here!");
      * }
      * \endcode
      *

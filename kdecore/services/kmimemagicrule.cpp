@@ -74,7 +74,7 @@ bool KMimeMagicMatch::match(QIODevice* device, qint64 deviceSize, QByteArray& av
 
     /*kDebug() << "need " << dataNeeded << " bytes of data starting at " << m_rangeStart
              << "  - availableData has " << availableData.size() << " bytes,"
-             << " device has " << deviceSize << " bytes." << endl;*/
+             << " device has " << deviceSize << " bytes.";*/
 
     if (m_rangeStart + dataNeeded > availableData.size() && availableData.size() < deviceSize) {
         // Need to read from device

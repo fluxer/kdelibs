@@ -808,7 +808,7 @@ QSize KDateTable::sizeHint() const
         return QSize( qRound( d->m_maxCell.width() * d->m_numDayColumns ),
                       ( qRound( d->m_maxCell.height() + 2 ) * d->m_numWeekRows ) );
     } else {
-        kDebug() << "KDateTable::sizeHint: obscure failure - " << endl;
+        kDebug() << "KDateTable::sizeHint: obscure failure - ";
         return QSize( -1, -1 );
     }
 }

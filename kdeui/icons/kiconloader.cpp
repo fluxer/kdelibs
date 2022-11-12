@@ -500,7 +500,7 @@ bool KIconLoaderPrivate::initIconThemes()
         def = new KIconTheme(KIconTheme::defaultThemeName(), appname);
         if (!def->isValid())
         {
-            kError(264) << "Error: standard icon theme" << KIconTheme::defaultThemeName() << "not found!" << endl;
+            kError(264) << "Error: standard icon theme" << KIconTheme::defaultThemeName() << "not found!";
             delete def;
             return false;
         }
@@ -912,7 +912,7 @@ inline QString KIconLoaderPrivate::unknownIconPath( int size ) const
     if (!icon.isValid())
     {
         kDebug(264) << "Warning: could not find \"Unknown\" icon for size = "
-                     << size << endl;
+                     << size;
         return QString();
     }
     return icon.path;

@@ -703,7 +703,7 @@ void ReadWritePart::setModified( bool modified )
     kDebug(1000) << "setModified(" << (modified ? "true" : "false") << ")";
     if ( !d->m_bReadWrite && modified )
     {
-        kError(1000) << "Can't set a read-only document to 'modified' !" << endl;
+        kError(1000) << "Can't set a read-only document to 'modified' !";
         return;
     }
     d->m_bModified = modified;
@@ -798,7 +798,7 @@ bool ReadWritePart::saveAs( const KUrl & kurl )
 
     if (!kurl.isValid())
     {
-        kError(1000) << "saveAs: Malformed URL " << kurl.url() << endl;
+        kError(1000) << "saveAs: Malformed URL " << kurl.url();
         return false;
     }
     d->m_duringSaveAs = true;

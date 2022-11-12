@@ -149,7 +149,7 @@ KService::List KMimeTypeTrader::query( const QString& mimeType,
     KServiceTypeTrader::applyConstraints(lst, constraint);
 
     kDebug(7014) << "query for mimeType " << mimeType << ", " << genericServiceType
-                 << " : returning " << lst.count() << " offers" << endl;
+                 << " : returning " << lst.count() << " offers";
     return lst;
 }
 

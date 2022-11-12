@@ -287,8 +287,7 @@ void Highlighter::setCurrentLanguage(const QString &lang)
             d->spellCheckerFound = false;
             kDebug()<<"No dictionary for \""
                     <<lang
-                    <<"\" staying with the current language."
-                    <<endl;
+                    <<"\" staying with the current language.";
             return;
         }
     }

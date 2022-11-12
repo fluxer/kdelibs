@@ -158,21 +158,21 @@ void KSwitchLanguageDialog::removeButtonClicked()
     QObject const *signalSender = sender();
     if (!signalSender)
     {
-        kError() << "KSwitchLanguageDialog::removeButtonClicked() called directly, not using signal" << endl;
+        kError() << "KSwitchLanguageDialog::removeButtonClicked() called directly, not using signal";
         return;
     }
 
     KPushButton *removeButton = const_cast<KPushButton*>(::qobject_cast<const KPushButton*>(signalSender));
     if (!removeButton)
     {
-        kError() << "KSwitchLanguageDialog::removeButtonClicked() called from something else than KPushButton" << endl;
+        kError() << "KSwitchLanguageDialog::removeButtonClicked() called from something else than KPushButton";
         return;
     }
 
     QMap<KPushButton *, LanguageRowData>::iterator it = d->languageRows.find(removeButton);
     if (it == d->languageRows.end())
     {
-        kError() << "KSwitchLanguageDialog::removeButtonClicked called from unknown KPushButton" << endl;
+        kError() << "KSwitchLanguageDialog::removeButtonClicked called from unknown KPushButton";
         return;
     }
 

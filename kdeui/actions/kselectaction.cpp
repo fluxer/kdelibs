@@ -315,7 +315,7 @@ void KSelectAction::actionTriggered(QAction* action)
   const QString text = ::DropAmpersands(action->text());
   const int index = selectableActionGroup()->actions().indexOf(action);
   //kDebug (129) << "KSelectAction::actionTriggered(" << action << ") text=" << text
-  //          << " index=" << index  << " emitting triggered()" << endl;
+  //          << " index=" << index  << " emitting triggered()";
 
   if (isCheckable()) // if this is subsidiary of other KSelectAction-derived class
     trigger();       // then imitate usual QAction behaviour so that other submenus (and their items) become unchecked
@@ -658,8 +658,7 @@ bool KSelectAction::eventFilter (QObject *watched, QEvent *event)
     QFocusEvent * const e = static_cast <QFocusEvent *> (event);
     //kDebug (129) << "KSelectAction::eventFilter(FocusOut)"
     //  << "    comboBox: ptr=" << comboBox
-    //  << " reason=" << e->reason ()
-    //  << endl;
+    //  << " reason=" << e->reason();
 
     if (e->reason () != Qt::ActiveWindowFocusReason/*switch window*/ &&
         e->reason () != Qt::PopupFocusReason/*menu*/ &&
@@ -690,8 +689,7 @@ bool KSelectAction::eventFilter (QObject *watched, QEvent *event)
     //          << " ptr=" << e->action ()
     //          << " icon=" << e->action ()->icon ()
     //          << " text=" << e->action ()->text ()
-    //          << " currentItem=" << newItem
-    //          << endl;
+    //          << " currentItem=" << newItem;
     comboBox->insertItem (index,
       e->action()->icon(),
       ::DropAmpersands (e->action()->text()),
@@ -718,8 +716,7 @@ bool KSelectAction::eventFilter (QObject *watched, QEvent *event)
     //          << "    action new: ptr=" << e->action ()
     //          << " icon=" << e->action ()->icon ()
     //          << " text=" << e->action ()->text ()
-    //          << " currentItem=" << newItem
-    //          << endl;
+    //          << " currentItem=" << newItem;
     comboBox->setItemIcon (index, e->action ()->icon ());
     comboBox->setItemText (index, ::DropAmpersands (e->action ()->text ()));
     if (QStandardItemModel *model = qobject_cast<QStandardItemModel *>(comboBox->model())) {
@@ -741,8 +738,7 @@ bool KSelectAction::eventFilter (QObject *watched, QEvent *event)
     //          << "    comboBox: ptr=" << comboBox
     //          << " currentItem=" << comboBox->currentIndex ()
     //          << "    delete action index=" << index
-    //          << "    new: currentItem=" << newItem
-    //          << endl;
+    //          << "    new: currentItem=" << newItem;
     comboBox->removeItem (index);
 
     // Removing an item from a combobox can change the current item so

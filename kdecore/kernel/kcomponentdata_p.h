@@ -56,13 +56,13 @@ public:
     inline void ref()
     {
         refCount.ref();
-        //qDebug() << refCount - 1 << "->" << refCount << kBacktrace() << endl;
+        //qDebug() << refCount - 1 << "->" << refCount << kBacktrace();
     }
 
     inline void deref()
     {
         const int refc = refCount.fetchAndAddOrdered(-1) - 1;
-        //qDebug() << refCount + 1 << "->" << refCount << kBacktrace() << endl;
+        //qDebug() << refCount + 1 << "->" << refCount << kBacktrace();
         if (refc == 0) {
             delete this;
         } else if (refc == 1 && sharedConfig && sharedConfig->componentData().d == this) { //sharedConfig has a reference to us

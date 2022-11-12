@@ -78,8 +78,7 @@ static QStringList splitEmailAddressList( const QString & aStr )
                 if (commentlevel > 0)
                     commentlevel--;
                 else {
-                    //kDebug() << "Error in address splitting: Unmatched ')'"
-                    //          << endl;
+                    // kDebug() << "Error in address splitting: Unmatched ')'";
                     return list;
                 }
             }
@@ -105,8 +104,7 @@ static QStringList splitEmailAddressList( const QString & aStr )
     }
     //else
     //  kDebug() << "Error in address splitting: "
-    //            << "Unexpected end of address list"
-    //            << endl;
+    //            << "Unexpected end of address list";
 
     return list;
 }
