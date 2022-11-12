@@ -247,27 +247,7 @@ protected:
     /**
       * Reimplemented from QAbstractItemView.
       */
-    virtual void startDrag(Qt::DropActions supportedActions);
-
-    /**
-      * Reimplemented from QAbstractItemView.
-      */
     virtual void dragMoveEvent(QDragMoveEvent *event);
-
-    /**
-      * Reimplemented from QAbstractItemView.
-      */
-    virtual void dragEnterEvent(QDragEnterEvent *event);
-
-    /**
-      * Reimplemented from QAbstractItemView.
-      */
-    virtual void dragLeaveEvent(QDragLeaveEvent *event);
-
-    /**
-      * Reimplemented from QAbstractItemView.
-      */
-    virtual void dropEvent(QDropEvent *event);
 
     /**
       * Reimplemented from QAbstractItemView.
@@ -286,12 +266,6 @@ protected:
       * Reimplemented from QAbstractItemView.
       */
     virtual void updateGeometries();
-
-    /**
-      * Reimplemented from QAbstractItemView.
-      */
-    virtual void currentChanged(const QModelIndex &current,
-                                const QModelIndex &previous);
 
     /**
       * Reimplemented from QAbstractItemView.

@@ -1070,30 +1070,10 @@ void KCategorizedView::leaveEvent(QEvent *event)
     }
 }
 
-void KCategorizedView::startDrag(Qt::DropActions supportedActions)
-{
-    QListView::startDrag(supportedActions);
-}
-
 void KCategorizedView::dragMoveEvent(QDragMoveEvent *event)
 {
     QListView::dragMoveEvent(event);
     d->hoveredIndex = indexAt(event->pos());
-}
-
-void KCategorizedView::dragEnterEvent(QDragEnterEvent *event)
-{
-    QListView::dragEnterEvent(event);
-}
-
-void KCategorizedView::dragLeaveEvent(QDragLeaveEvent *event)
-{
-    QListView::dragLeaveEvent(event);
-}
-
-void KCategorizedView::dropEvent(QDropEvent *event)
-{
-    QListView::dropEvent(event);
 }
 
 //TODO: improve se we take into account collapsed blocks
@@ -1426,12 +1406,6 @@ void KCategorizedView::updateGeometries()
     if (horizontalP == Qt::ScrollBarAsNeeded && (horizontalScrollBar()->isVisibleTo(this) != validRange))
         horizontalScrollBar()->setVisible(validRange);
     //END bugs 213068, 287847 --------------------------------------------------------------
-}
-
-void KCategorizedView::currentChanged(const QModelIndex &current,
-                                      const QModelIndex &previous)
-{
-    QListView::currentChanged(current, previous);
 }
 
 void KCategorizedView::dataChanged(const QModelIndex &topLeft,
