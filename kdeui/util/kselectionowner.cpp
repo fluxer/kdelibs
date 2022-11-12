@@ -20,7 +20,6 @@
 #include "kxerrorhandler.h"
 #include "kdebug.h"
 
-#include <QX11Info>
 #include <QApplication>
 #include <QThread>
 
@@ -32,6 +31,7 @@ class KSelectionOwnerPrivate
 {
 public:
     KSelectionOwnerPrivate();
+    ~KSelectionOwnerPrivate();
 
     Atom x11atom;
     Display* x11display;
@@ -42,13 +42,24 @@ public:
 
 KSelectionOwnerPrivate::KSelectionOwnerPrivate()
     : x11atom(None),
-    x11display(QX11Info::display()),
-    x11screen(QX11Info::appScreen()),
+    x11display(nullptr),
+    x11screen(0),
     x11window(None),
     timerid(0)
 {
+    x11display = XOpenDisplay(NULL);
+    if (!x11display) {
+        kFatal() << "Could not open X11 display";
+    }
+    x11screen = DefaultScreen(x11display);
 }
 
+KSelectionOwnerPrivate::~KSelectionOwnerPrivate()
+{
+    if (x11display) {
+        XCloseDisplay(x11display);
+    }
+}
 
 KSelectionOwner::KSelectionOwner(const char* const atomname, const int screen, QObject *parent)
     : QObject(parent),
