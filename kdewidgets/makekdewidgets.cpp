@@ -38,7 +38,7 @@ static const char collClassDef[] = "class %CollName : public QCustomWidgetPlugin
                                 "private:\n"
                                 "	QList<QCustomWidget*> m_plugins;\n"
                                 "};\n\n"
-                                "Q_EXPORT_PLUGIN2(%CollName, %CollName)\n\n";
+                                "Q_EXPORT_PLUGIN(%CollName)\n\n";
 
 static const char collClassImpl[] = "%CollName::%CollName(QObject *parent)\n"
                                 "	: QCustomWidgetPlugin(parent)"

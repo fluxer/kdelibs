@@ -437,4 +437,4 @@ QImageIOHandler *ICOPlugin::create(QIODevice *device, const QByteArray &format) 
     return handler;
 }
 
-Q_EXPORT_PLUGIN2(ico, ICOPlugin)
+Q_EXPORT_PLUGIN(ICOPlugin)

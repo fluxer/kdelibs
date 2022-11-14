@@ -74,7 +74,7 @@ KComponentData name::componentData() \
  * \relates KPluginLoader
  * This macro exports the main object of the plugin. Most times, this will be a KPluginFactory
  * or derived class, but any QObject derived class can be used.
- * Take a look at the documentation of Q_EXPORT_PLUGIN2 for some details.
+ * Take a look at the documentation of Q_EXPORT_PLUGIN for some details.
  *
  * @ingroup KDEMacros
  */

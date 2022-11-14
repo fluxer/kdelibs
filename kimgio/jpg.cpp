@@ -277,4 +277,4 @@ QImageIOHandler *JPGPlugin::create(QIODevice *device, const QByteArray &format) 
     return handler;
 }
 
-Q_EXPORT_PLUGIN2(jpg, JPGPlugin)
+Q_EXPORT_PLUGIN(JPGPlugin)

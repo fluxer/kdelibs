@@ -341,4 +341,4 @@ QImageIOHandler *RAWPlugin::create(QIODevice *device, const QByteArray &format) 
     return handler;
 }
 
-Q_EXPORT_PLUGIN2(raw, RAWPlugin)
+Q_EXPORT_PLUGIN(RAWPlugin)

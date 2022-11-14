@@ -324,4 +324,4 @@ QImageIOHandler *WebPPlugin::create(QIODevice *device, const QByteArray &format)
     return handler;
 }
 
-Q_EXPORT_PLUGIN2(webp, WebPPlugin)
+Q_EXPORT_PLUGIN(WebPPlugin)
