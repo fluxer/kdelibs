@@ -213,7 +213,6 @@ public:
 
     /**
      * This returns the current mouse settings.
-     * On Windows, settings are retrieved from the system.
      * @return the current mouse settings
      */
     static KMouseSettings & mouseSettings();
@@ -362,7 +361,6 @@ public:
      * Returns if the user specified multihead. In case the display
      * has multiple screens, the return value of this function specifies
      * if the user wants KDE to run on all of them or just on the primary
-     * On Windows, settings are retrieved from the system.
      * @return true if the user chose multi head
      */
     static bool isMultiHead();

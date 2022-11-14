@@ -580,8 +580,7 @@ void KApplication::saveState( QSessionManager& sm )
     // tell the session manager about our new lifecycle
     QStringList restartCommand = sm.restartCommand();
 
-    QByteArray multiHead = qgetenv("KDE_MULTIHEAD");
-    if (multiHead.toLower() == "true") {
+    if (KGlobalSettings::isMultiHead()) {
         // if multihead is enabled, we save our -display argument so that
         // we are restored onto the correct head... one problem with this
         // is that the display is hard coded, which means we cannot restore
