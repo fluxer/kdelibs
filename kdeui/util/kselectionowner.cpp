@@ -33,6 +33,7 @@ public:
     KSelectionOwnerPrivate();
     ~KSelectionOwnerPrivate();
 
+    QByteArray atomname;
     Atom x11atom;
     Display* x11display;
     int x11screen;
@@ -65,7 +66,8 @@ KSelectionOwner::KSelectionOwner(const char* const atomname, const int screen, Q
     : QObject(parent),
     d(new KSelectionOwnerPrivate())
 {
-    d->x11atom = XInternAtom(d->x11display, atomname, False);
+    d->atomname = atomname;
+    d->x11atom = XInternAtom(d->x11display, d->atomname.constData(), False);
     if (screen >= 0) {
         d->x11screen = screen;
     }
@@ -79,7 +81,7 @@ KSelectionOwner::~KSelectionOwner()
 
 Window KSelectionOwner::ownerWindow() const
 {
-    // kDebug(240) << "Current selection owner is" << d->x11window;
+    kDebug(240) << "Current" << d->atomname << "owner is" << d->x11window;
     return d->x11window;
 }
 
@@ -87,15 +89,15 @@ bool KSelectionOwner::claim(const bool force)
 {
     Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
     if (currentowner != None && !force) {
-        kDebug(240) << "Selection is owned";
+        kDebug(240) << d->atomname << "is owned";
         return false;
     }
     if (currentowner != None) {
-        kDebug(240) << "Selection is owned, clearing owner";
+        kDebug(240) << d->atomname << "is owned, clearing owner";
         XSetSelectionOwner(d->x11display, d->x11atom, None, CurrentTime);
         XFlush(d->x11display);
         ushort counter = 0;
-        kDebug(240) << "Waiting for owner";
+        kDebug(240) << "Waiting for" << d->atomname << "owner";
         while (currentowner != None && counter < 10) {
             currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
             QCoreApplication::processEvents(QEventLoop::AllEvents, KSELECTIONOWNER_TIMEOUT);
@@ -104,7 +106,7 @@ bool KSelectionOwner::claim(const bool force)
         }
     }
     if (currentowner != None) {
-        kDebug(240) << "Selection is owned, killing owner";
+        kDebug(240) << d->atomname << "is owned, killing owner";
         KXErrorHandler kx11errorhandler(d->x11display);
         XKillClient(d->x11display, currentowner);
         XFlush(d->x11display);
@@ -113,7 +115,7 @@ bool KSelectionOwner::claim(const bool force)
             return false;
         }
     }
-    kDebug(240) << "Creating selection owner";
+    kDebug(240) << "Creating" << d->atomname << "owner";
     KXErrorHandler kx11errorhandler(d->x11display);
     d->x11window = XCreateSimpleWindow(
         d->x11display, RootWindow(d->x11display, d->x11screen),
@@ -135,27 +137,31 @@ bool KSelectionOwner::claim(const bool force)
 void KSelectionOwner::release()
 {
     if (d->x11window == None) {
-        // kDebug(240) << "No owner";
+        kDebug(240) << "No" << d->atomname << "owner";
         return;
     }
     if (d->timerid > 0) {
         killTimer(d->timerid);
         d->timerid = 0;
     }
-    // kDebug(240) << "Destroying owner window";
+    kDebug(240) << "Destroying" << d->atomname << "owner window";
+    KXErrorHandler kx11errorhandler(d->x11display);
     XDestroyWindow(d->x11display, d->x11window);
     XFlush(d->x11display);
+    if (kx11errorhandler.error(true)) {
+        kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+    }
     d->x11window = None;
 }
 
 void KSelectionOwner::timerEvent(QTimerEvent *event)
 {
     if (event->timerId() == d->timerid) {
-        // kDebug(240) << "Checking selection owner for" << XGetAtomName(d->x11display, d->x11atom);
+        // kDebug(240) << "Checking owner for" << d->atomname;
         Q_ASSERT(d->x11window != None);
         Window currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
         if (currentowner != d->x11window) {
-            // kDebug(240) << "Selection owner changed";
+            kDebug(240) << d->atomname << "owner changed";
             killTimer(d->timerid);
             d->timerid = 0;
             emit lostOwnership();
@@ -165,7 +171,7 @@ void KSelectionOwner::timerEvent(QTimerEvent *event)
             XFlush(d->x11display);
             d->x11window = None;
             if (kx11errorhandler.error(true)) {
-                // kDebug(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+                kDebug(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             }
         }
         event->accept();
