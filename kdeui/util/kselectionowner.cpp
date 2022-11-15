@@ -27,10 +27,9 @@
 #define KSELECTIONOWNER_SLEEPTIME 500
 #define KSELECTIONOWNER_CHECKTIME 250
 
-static Window kWaitForOwner(Display* x11display, const Atom x11atom)
+static Window kWaitForOwner(Display* x11display, const Atom x11atom, Window currentowner)
 {
     ushort counter = 0;
-    Window currentowner = XGetSelectionOwner(x11display, x11atom);
     while (currentowner != None && counter < 10) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, KSELECTIONOWNER_TIMEOUT);
         QThread::msleep(KSELECTIONOWNER_SLEEPTIME);
@@ -115,7 +114,7 @@ bool KSelectionOwner::claim(const bool force)
             return false;
         }
         kDebug(240) << "Waiting for" << d->atomname << "owner";
-        currentowner = kWaitForOwner(d->x11display, d->x11atom);
+        currentowner = kWaitForOwner(d->x11display, d->x11atom, currentowner);
     }
     if (currentowner != None) {
         kDebug(240) << d->atomname << "is owned, killing owner";
@@ -127,7 +126,7 @@ bool KSelectionOwner::claim(const bool force)
             return false;
         }
         kDebug(240) << "Waiting for" << d->atomname << "owner";
-        currentowner = kWaitForOwner(d->x11display, d->x11atom);
+        currentowner = kWaitForOwner(d->x11display, d->x11atom, currentowner);
     }
     if (currentowner != None) {
         kWarning(240) << d->atomname << "is still owned";
