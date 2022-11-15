@@ -192,14 +192,6 @@ void KSelectionOwner::timerEvent(QTimerEvent *event)
             killTimer(d->timerid);
             d->timerid = 0;
             emit lostOwnership();
-            // NOTE: catching errors here is done to not get fatal I/O
-            KXErrorHandler kx11errorhandler(d->x11display);
-            XDestroyWindow(d->x11display, d->x11window);
-            XFlush(d->x11display);
-            d->x11window = None;
-            if (kx11errorhandler.error(true)) {
-                kDebug(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
-            }
         }
         event->accept();
     } else {
