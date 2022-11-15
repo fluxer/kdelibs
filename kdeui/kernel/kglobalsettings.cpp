@@ -38,7 +38,6 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QFont>
 #include <QtGui/QFontDatabase>
-#include <QtGui/QFontInfo>
 #include <QtGui/QKeySequence>
 #include <QtGui/QPixmap>
 #include <QtGui/QPixmapCache>
