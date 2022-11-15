@@ -70,10 +70,11 @@ public:
     double sizeFactSample;
 
     QHash<QString, QString> fontFamilyTrMap;
+    QFontDatabase fontdb;
 };
 
 KFontFamilyDelegate::KFontFamilyDelegate (QObject *parent)
-: QAbstractItemDelegate(parent)
+    : QAbstractItemDelegate(parent)
 {
     truetype = SmallIcon(QString::fromLatin1("application-x-font-ttf"));
     bitmap = SmallIcon(QString::fromLatin1("application-x-font-bdf"));
@@ -106,7 +107,7 @@ void KFontFamilyDelegate::paint (QPainter *painter,
 
     // Choose and paint an icon according to the font type, scalable or bitmat.
     const QIcon *icon = &bitmap;
-    if (QFontDatabase().isSmoothlyScalable(fontFamily)) {
+    if (fontdb.isSmoothlyScalable(fontFamily)) {
         icon = &truetype;
     }
     QRect r = option.rect;
