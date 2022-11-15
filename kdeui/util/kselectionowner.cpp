@@ -27,6 +27,19 @@
 #define KSELECTIONOWNER_SLEEPTIME 500
 #define KSELECTIONOWNER_CHECKTIME 250
 
+static Window kWaitForOwner(Display* x11display, const Atom x11atom)
+{
+    ushort counter = 0;
+    Window currentowner = XGetSelectionOwner(x11display, x11atom);
+    while (currentowner != None && counter < 10) {
+        QCoreApplication::processEvents(QEventLoop::AllEvents, KSELECTIONOWNER_TIMEOUT);
+        QThread::msleep(KSELECTIONOWNER_SLEEPTIME);
+        counter++;
+        currentowner = XGetSelectionOwner(x11display, x11atom);
+    }
+    return currentowner;
+}
+
 class KSelectionOwnerPrivate
 {
 public:
@@ -94,16 +107,15 @@ bool KSelectionOwner::claim(const bool force)
     }
     if (currentowner != None) {
         kDebug(240) << d->atomname << "is owned, clearing owner";
+        KXErrorHandler kx11errorhandler(d->x11display);
         XSetSelectionOwner(d->x11display, d->x11atom, None, CurrentTime);
         XFlush(d->x11display);
-        ushort counter = 0;
-        kDebug(240) << "Waiting for" << d->atomname << "owner";
-        while (currentowner != None && counter < 10) {
-            currentowner = XGetSelectionOwner(d->x11display, d->x11atom);
-            QCoreApplication::processEvents(QEventLoop::AllEvents, KSELECTIONOWNER_TIMEOUT);
-            QThread::msleep(KSELECTIONOWNER_SLEEPTIME);
-            counter++;
+        if (kx11errorhandler.error(true)) {
+            kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
+            return false;
         }
+        kDebug(240) << "Waiting for" << d->atomname << "owner";
+        currentowner = kWaitForOwner(d->x11display, d->x11atom);
     }
     if (currentowner != None) {
         kDebug(240) << d->atomname << "is owned, killing owner";
@@ -114,6 +126,12 @@ bool KSelectionOwner::claim(const bool force)
             kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             return false;
         }
+        kDebug(240) << "Waiting for" << d->atomname << "owner";
+        currentowner = kWaitForOwner(d->x11display, d->x11atom);
+    }
+    if (currentowner != None) {
+        kWarning(240) << d->atomname << "is still owned";
+        return false;
     }
     kDebug(240) << "Creating" << d->atomname << "owner";
     KXErrorHandler kx11errorhandler(d->x11display);
