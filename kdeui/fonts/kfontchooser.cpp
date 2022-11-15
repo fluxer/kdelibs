@@ -74,7 +74,7 @@ static int minimumListHeight( const QListWidget *list, int numVisibleEntry )
     return ( w * numVisibleEntry + 2 * list->frameWidth() );
 }
 
-static QString formatFontSize(qreal size)
+static QString formatFontSize(const qreal size)
 {
     return KGlobal::locale()->formatNumber(size, (size == floor(size)) ? 0 : 1);
 }
@@ -608,13 +608,15 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
     QStringList filteredStyles;
     qtStyles.clear();
     styleIDs.clear();
-    foreach (const QString &style, styles) {
+    QMutableListIterator<QString> stylesit(styles);
+    while (stylesit.hasNext()) {
+        const QString style = stylesit.next();
         // Sometimes the font database will report an invalid style,
         // that falls back back to another when set.
         // Remove such styles, by checking set/get round-trip.
         QFont testFont = dbase.font(currentFamily, style, 10);
         if (dbase.styleString(testFont) != style) {
-            styles.removeAll(style);
+            stylesit.remove();
             continue;
         }
 
@@ -858,7 +860,7 @@ qreal KFontChooser::Private::fillSizeList (const QList<qreal> &sizes_)
     // Insert sizes into the listbox.
     sizeListBox->clear();
     qSort(sizes);
-    foreach (qreal size, sizes) {
+    foreach (const qreal size, sizes) {
         sizeListBox->addItem(formatFontSize(size));
     }
 
@@ -883,8 +885,8 @@ qreal KFontChooser::Private::setupSizeListBox (const QString& family, const QStr
         // A bitmap font.
         //sampleEdit->setPaletteBackgroundPixmap( BitmapPixmap ); // TODO
         QList<int> smoothSizes = dbase.smoothSizes(family, style);
-        foreach (int size, smoothSizes) {
-            sizes.append(size);
+        foreach (const int size, smoothSizes) {
+            sizes.append(qreal(size));
         }
     }
 
