@@ -49,6 +49,12 @@ public:
     */
     Window ownerWindow() const;
 
+    /*!
+        @brief Returns the current X11 window that claims the selection, may not be the same as
+        the one returned by @p ownerWindow()
+    */
+    Window currentOwnerWindow() const;
+
 public Q_SLOTS:
     /*!
         @brief Attempts to claim the selection, if @p force is true and the selection is owned by

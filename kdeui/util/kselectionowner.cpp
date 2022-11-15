@@ -97,8 +97,14 @@ KSelectionOwner::~KSelectionOwner()
 
 Window KSelectionOwner::ownerWindow() const
 {
-    kDebug(240) << "Current" << d->atomname << "owner is" << d->x11window;
+    kDebug(240) << "Owner of" << d->atomname << "is" << d->x11window;
     return d->x11window;
+}
+
+Window KSelectionOwner::currentOwnerWindow() const
+{
+    kDebug(240) << "Current" << d->atomname << "owner is" << d->x11window;
+    return XGetSelectionOwner(d->x11display, d->x11atom);
 }
 
 bool KSelectionOwner::claim(const bool force)
