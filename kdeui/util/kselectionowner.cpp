@@ -118,7 +118,12 @@ bool KSelectionOwner::claim(const bool force)
         kDebug(240) << d->atomname << "is owned, killing owner via kill()";
         KXErrorHandler kx11errorhandler(d->x11display);
         KXErrorHandler handler;
-        NETWinInfo netwininfo(d->x11display, currentowner, QX11Info::appRootWindow(), NET::WMPid);
+        NETWinInfo netwininfo(
+            d->x11display,
+            currentowner,
+            RootWindow(d->x11display, d->x11screen),
+            NET::WMPid
+        );
         if (kx11errorhandler.error(true)) {
             kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
             return false;
@@ -149,7 +154,8 @@ bool KSelectionOwner::claim(const bool force)
     kDebug(240) << "Creating" << d->atomname << "owner";
     KXErrorHandler kx11errorhandler(d->x11display);
     d->x11window = XCreateSimpleWindow(
-        d->x11display, RootWindow(d->x11display, d->x11screen),
+        d->x11display,
+        RootWindow(d->x11display, d->x11screen),
         0, 0, // x and y
         1, 1, // width and height
         0, 0, 0 // border width, border and background pixels
@@ -158,7 +164,11 @@ bool KSelectionOwner::claim(const bool force)
         kWarning(240) << KXErrorHandler::errorMessage(kx11errorhandler.errorEvent());
         return false;
     }
-    NETWinInfo netwininfo(d->x11display, d->x11window, QX11Info::appRootWindow(), NET::WMPid);
+    NETWinInfo netwininfo(
+        d->x11display, d->x11window,
+        RootWindow(d->x11display, d->x11screen),
+        NET::WMPid
+    );
     netwininfo.setPid(::getpid());
     XSelectInput(d->x11display, d->x11window, NoEventMask);
     XSetSelectionOwner(d->x11display, d->x11atom, d->x11window, CurrentTime);
