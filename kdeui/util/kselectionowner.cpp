@@ -29,7 +29,7 @@
 
 #define KSELECTIONOWNER_TIMEOUT 500
 #define KSELECTIONOWNER_SLEEPTIME 500
-#define KSELECTIONOWNER_CHECKTIME 250
+#define KSELECTIONOWNER_CHECKTIME 500
 
 static Window kWaitForOwner(Display* x11display, const Atom x11atom, Window currentowner)
 {
