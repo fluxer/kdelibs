@@ -40,18 +40,18 @@ using namespace KCModuleLoader;
  */
 class KCMError : public KCModule
 {
-	public:
-		KCMError( const QString& msg, const QString& details, QWidget* parent )
-			: KCModule( KGlobal::mainComponent(), parent )
-		{
-			QVBoxLayout* topLayout = new QVBoxLayout( this );
-      QLabel *lab = new QLabel( msg, this );
-      lab->setWordWrap(true);
-			topLayout->addWidget( lab );
-      lab = new QLabel(details, this );
-      lab->setWordWrap(true);
-			topLayout->addWidget( lab );
-		}
+public:
+        KCMError( const QString& msg, const QString& details, QWidget* parent )
+            : KCModule( KGlobal::mainComponent(), parent )
+        {
+            QVBoxLayout* topLayout = new QVBoxLayout( this );
+            QLabel *lab = new QLabel( msg, this );
+            lab->setWordWrap(true);
+            topLayout->addWidget( lab );
+            lab = new QLabel(details, this );
+            lab->setWordWrap(true);
+            topLayout->addWidget( lab );
+        }
 };
 /***************************************************************/
 
