@@ -336,7 +336,11 @@ void ToolTip::resizeEvent(QResizeEvent *e)
 {
     QWidget::resizeEvent(e);
     d->background->resizeFrame(size());
-    setMask(d->background->mask());
+    if (Plasma::Theme::defaultTheme()->windowTranslucencyEnabled()) {
+        clearMask();
+    } else {
+        setMask(d->background->mask());
+    }
     d->preview->setInfo();
 
     if (isVisible()) {
