@@ -391,15 +391,15 @@ KWindowSystemPrivate* KWindowSystem::s_d_func()
 void KWindowSystem::connectNotify( const char* signal )
 {
     int what = INFO_BASIC;
-    if( QLatin1String( signal ) == SIGNAL(workAreaChanged()))
+    if( qstrcmp(signal, SIGNAL(workAreaChanged())) == 0)
         what = INFO_WINDOWS;
-    else if( QLatin1String( signal ) == SIGNAL(strutChanged()))
+    else if( qstrcmp(signal, SIGNAL(strutChanged())) == 0)
         what = INFO_WINDOWS;
-    else if( QLatin1String( signal ) == QMetaObject::normalizedSignature(SIGNAL(windowChanged(WId,const ulong*))).constData())
+    else if( QMetaObject::normalizedSignature(SIGNAL(windowChanged(WId,const ulong*))) == signal)
         what = INFO_WINDOWS;
-    else if( QLatin1String( signal ) ==  QMetaObject::normalizedSignature(SIGNAL(windowChanged(WId,uint))).constData())
+    else if( QMetaObject::normalizedSignature(SIGNAL(windowChanged(WId,uint))) == signal)
         what = INFO_WINDOWS;
-    else if( QLatin1String( signal ) ==  QMetaObject::normalizedSignature(SIGNAL(windowChanged(WId))).constData())
+    else if( QMetaObject::normalizedSignature(SIGNAL(windowChanged(WId))) == signal)
         what = INFO_WINDOWS;
 
     init( what );

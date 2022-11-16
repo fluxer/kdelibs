@@ -628,7 +628,7 @@ Q_SIGNALS:
      * have been initialized in the window manager.
      *
      * Since most KWin effect require compositor you can safely assume that
-     * when the compositor is not active effects like blur-behind are not
+     * when the compositor is not active effects like shadows are not
      * possible too.
      *
      * @since 4.7.1
