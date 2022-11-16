@@ -122,7 +122,8 @@ KWindowSystemPrivate::KWindowSystemPrivate(int _what)
                    2, -1, false ),
       strutSignalConnected( false ),
       haveXfixes( false ),
-      what( _what )
+      what( _what ),
+      xfixesEventBase(0)
 {
     (void ) qApp->desktop(); //trigger desktop widget creation to select root window events
 
