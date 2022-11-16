@@ -57,9 +57,10 @@ static const QString thumbExt = QLatin1String(".") + thumbFormat;
 // NOTE: keep in sync with:
 // kde-workspace/dolphin/src/settings/general/previewssettingspage.cpp
 // kde-workspace/kioslave/thumbnail/thumbnail.h
-enum MaxPreviewSizes {
+enum PreviewDefaults {
     MaxLocalSize = 20, // 20 MB
-    MaxRemoteSize = 5 // 5 MB
+    MaxRemoteSize = 5, // 5 MB
+    IconAlpha = 70
 };
 
 struct KIO::PreviewItem
@@ -138,6 +139,7 @@ PreviewJob::PreviewJob(const KFileItemList &items,
     KIO::Job(*new PreviewJobPrivate)
 {
     Q_D(PreviewJob);
+    const KConfigGroup globalConfig(KGlobal::config(), "PreviewSettings");
     d->tOrig = 0;
     d->initialItems = items;
     if (enabledPlugins) {
@@ -152,15 +154,14 @@ PreviewJob::PreviewJob(const KFileItemList &items,
             }
         }
 
-        const KConfigGroup globalConfig(KGlobal::config(), "PreviewSettings");
         d->enabledPlugins = globalConfig.readEntry("Plugins", enabledByDefault);
     }
     d->width = size.width();
     d->height = size.height();
     d->cacheWidth = d->width;
     d->cacheHeight = d->height;
-    d->iconSize = 0;
-    d->iconAlpha = 70;
+    d->iconSize = 0; // when zero KIconLoader::currentSize(KIconLoader::Desktop) is used
+    d->iconAlpha = globalConfig.readEntry("IconAlpha", int(PreviewDefaults::IconAlpha));
     d->bScale = true;
     d->bSave = true;
     d->succeeded = false;
@@ -326,8 +327,8 @@ void PreviewJobPrivate::startPreview()
     }
 
     KConfigGroup cg( KGlobal::config(), "PreviewSettings" );
-    maximumLocalSize = cg.readEntry( "MaximumSize", MaxPreviewSizes::MaxLocalSize *1024 * 1024LL);
-    maximumRemoteSize = cg.readEntry( "MaximumRemoteSize", MaxPreviewSizes::MaxRemoteSize *1024 * 1024LL );
+    maximumLocalSize = cg.readEntry( "MaximumSize", PreviewDefaults::MaxLocalSize *1024 * 1024LL);
+    maximumRemoteSize = cg.readEntry( "MaximumRemoteSize", PreviewDefaults::MaxRemoteSize *1024 * 1024LL );
 
     if (bNeedCache)
     {

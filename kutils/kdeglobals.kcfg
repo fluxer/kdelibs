@@ -437,6 +437,11 @@
  <group name="PreviewSettings" >
   <entry key="MaximumSize" type="Int" />
   <entry key="MaximumRemoteSize" type="Int" />
+  <entry key="IconAlpha" type="Int" >
+   <default>70</default>
+   <min>0</min>
+   <max>255</max>
+  </entry>
   <entry key="Plugins" type="StringList" />
   <entry key="ar" type="Bool" />
   <entry key="file" type="Bool" />
