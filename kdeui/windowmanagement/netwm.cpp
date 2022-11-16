@@ -4611,7 +4611,7 @@ NET::MappingState NETWinInfo::mappingState() const {
     return p->mapping_state;
 }
 
-Time NET::timestampCompare( Time time1, Time time2 ) // like strcmp()
+int NET::timestampCompare( Time time1, Time time2 ) // like strcmp()
 {
     if( time1 == time2 )
         return 0;
