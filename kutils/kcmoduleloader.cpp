@@ -27,7 +27,6 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 
-#include <kpluginloader.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
@@ -104,15 +103,6 @@ KCModule* KCModuleLoader::loadModule(const KCModuleInfo& mod, ErrorReporting rep
       i18n("The module %1 is not a valid configuration module.", mod.moduleName() ),
       i18n("<qt>The diagnosis is:<br />The desktop file %1 does not specify a library.</qt>", mod.fileName()), parent );
 }
-
-
-void KCModuleLoader::unloadModule(const KCModuleInfo &mod)
-{
-  // get the library loader instance
-  KPluginLoader loader(mod.library());
-  loader.unload();
-}
-
 
 KCModule* KCModuleLoader::reportError( ErrorReporting report, const QString & text,
         const QString &details, QWidget * parent )

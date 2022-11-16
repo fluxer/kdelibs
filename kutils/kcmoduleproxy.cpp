@@ -196,7 +196,6 @@ void KCModuleProxy::showEvent( QShowEvent * ev )
 KCModuleProxy::~KCModuleProxy()
 {
 	deleteClient();
-	KCModuleLoader::unloadModule(moduleInfo());
 
 	delete d_ptr;
 }

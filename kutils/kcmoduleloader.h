@@ -87,12 +87,6 @@ namespace KCModuleLoader
         QWidget *parent = 0, const QStringList& args = QStringList() );
 
     /**
-     * Unloads the module's library
-     * @param mod What module to unload for
-     */
-    KCMUTILS_EXPORT void unloadModule(const KCModuleInfo &mod);
-
-    /**
      * Returns a KCModule containing the messages @p report and @p text.
      *
      * @param report the type of error reporting, see ErrorReporting
@@ -103,7 +97,6 @@ namespace KCModuleLoader
      */
     KCMUTILS_EXPORT KCModule* reportError( ErrorReporting report, const QString & text,
         const QString &details, QWidget * parent );
-
 }
 
 // vim: ts=2 sw=2 et
