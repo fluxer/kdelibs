@@ -204,10 +204,12 @@ KCModuleProxy::~KCModuleProxy()
 void KCModuleProxy::deleteClient()
 {
     Q_D(KCModuleProxy);
-	delete d->kcm;
-	d->kcm = 0;
+    delete d->kcm;
+    d->kcm = 0;
 
-	qApp->syncX();
+    if (qApp) {
+        qApp->syncX();
+    }
 }
 
 void KCModuleProxyPrivate::_k_moduleChanged(bool c)
