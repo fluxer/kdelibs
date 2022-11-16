@@ -37,7 +37,6 @@ static KIO::PreviewJob* createJob(const KUrl &url, int w, int h)
         static const QStringList plugins = KIO::PreviewJob::availablePlugins();
 
         KIO::PreviewJob *previewJob = KIO::filePreview(items, QSize(w, h), &plugins);
-        previewJob->setOverlayIconAlpha(0);
         previewJob->setScaleType(KIO::PreviewJob::Scaled);
         return previewJob;
     }
