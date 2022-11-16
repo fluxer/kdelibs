@@ -100,10 +100,8 @@ public:
    *
    * @param parent The parent widget.
    * @param flags Defines how the font chooser is displayed. @see DisplayFlags
-   * @param fontList A list of fonts to display, in XLFD format.  If
-   *        no list is formatted, the internal KDE font list is used.
-   *        If that has not been created, X is queried, and all fonts
-   *        available on the system are displayed.
+   * @param fontList A list of fonts families to display.  If the list is
+   *        empty, all fonts available on the system are displayed.
    * @param visibleListSize The minimum number of visible entries in the
    *        fontlists.
    * @param sizeIsRelativeState If not zero the widget will show a
@@ -259,7 +257,6 @@ private:
     Q_PRIVATE_SLOT(d, void _k_size_chosen_slot(const QString&))
     Q_PRIVATE_SLOT(d, void _k_style_chosen_slot(const QString&))
     Q_PRIVATE_SLOT(d, void _k_displaySample(const QFont &font))
-    Q_PRIVATE_SLOT(d, void _k_showXLFDArea(bool))
     Q_PRIVATE_SLOT(d, void _k_size_value_slot(double))
 };
 

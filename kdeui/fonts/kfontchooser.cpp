@@ -35,7 +35,6 @@ Boston, MA 02110-1301, USA.
 #include <kdialog.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
-#include <klineedit.h>
 #include <klistwidget.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -106,7 +105,6 @@ public:
     void _k_size_chosen_slot(const QString&);
     void _k_style_chosen_slot(const QString&);
     void _k_displaySample(const QFont &font);
-    void _k_showXLFDArea(bool);
     void _k_size_value_slot(double);
 
     KFontChooser *q;
@@ -119,7 +117,6 @@ public:
     KDoubleNumInput *sizeOfFont;
 
     SampleEdit   *sampleEdit;
-    KLineEdit    *xlfdEdit;
 
     QLabel       *familyLabel;
     QLabel       *styleLabel;
@@ -161,7 +158,7 @@ KFontChooser::KFontChooser( QWidget *parent,
     setWhatsThis(i18nc("@info:whatsthis", "Here you can choose the font to be used." ));
 
     // The top layout is divided vertically into a splitter with font
-    // attribute widgets and preview on the top, and XLFD data at the bottom.
+    // attribute widgets and preview on the top, and fonts at the bottom.
     QVBoxLayout *topLayout = new QVBoxLayout( this );
     topLayout->setMargin( 0 );
     int checkBoxGap = KDialog::spacingHint() / 2;
@@ -397,7 +394,7 @@ KFontChooser::KFontChooser( QWidget *parent,
     //
     // Finished setting up the splitter.
 
-    // Add XLFD data below the font attributes/preview splitter.
+    // Add fonts below the font attributes/preview splitter.
     //
     QVBoxLayout *vbox;
     if( flags & DisplayFrame )
@@ -417,8 +414,6 @@ KFontChooser::KFontChooser( QWidget *parent,
         vbox->addWidget( label );
     }
 
-    d->xlfdEdit = new KLineEdit( page );
-    vbox->addWidget( d->xlfdEdit );
     //
     // Finished setting up the chooser layout.
 
@@ -428,9 +423,6 @@ KFontChooser::KFontChooser( QWidget *parent,
     // check or uncheck or gray out the "relative" checkbox
     if( sizeIsRelativeState && d->sizeIsRelativeCheckBox )
         setSizeIsRelative( *sizeIsRelativeState );
-
-    KConfigGroup cg(KGlobal::config(), QLatin1String("General"));
-    d->_k_showXLFDArea(cg.readEntry(QLatin1String("fontSelectorShowXLFD"), false));
 
     // Set focus to the size list as this is the most commonly changed property
     d->sizeListBox->setFocus();
@@ -797,17 +789,10 @@ void KFontChooser::Private::_k_size_value_slot(double dval)
 void KFontChooser::Private::_k_displaySample( const QFont& font )
 {
     sampleEdit->setFont(font);
-    //sampleEdit->setCursorPosition(0);
+    // sampleEdit->setCursorPosition(0);
 
-#ifndef QT_KATIE
-    // Katie has no support for raw X11 fonts
-    xlfdEdit->setText(font.rawName());
-#endif
-    xlfdEdit->setCursorPosition(0);
-
-    //QFontInfo a = QFontInfo(font);
-    //kDebug() << "font: " << a.family () << ", " << a.pointSize ();
-    //kDebug() << "      (" << font.toString() << ")\n";
+    // QFontInfo a = QFontInfo(font);
+    // kDebug() << "font:" << font.toString();
 }
 
 int KFontChooser::Private::nearestSizeRow (qreal val, bool customize)
@@ -1046,18 +1031,6 @@ void KFontChooser::Private::fillFamilyListBox(bool onlyFixedFonts)
     QStringList fontList;
     getFontList(fontList, onlyFixedFonts?FixedWidthFonts:0);
     setFamilyBoxItems(fontList);
-}
-
-void KFontChooser::Private::_k_showXLFDArea(bool show)
-{
-    if( show )
-    {
-        xlfdEdit->parentWidget()->show();
-    }
-    else
-    {
-        xlfdEdit->parentWidget()->hide();
-    }
 }
 
 // Human-readable style identifiers returned by QFontDatabase::styleString()
