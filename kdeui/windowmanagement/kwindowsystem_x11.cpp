@@ -773,8 +773,7 @@ void KWindowSystem::minimizeWindow( WId win, bool animation)
         create_atoms();
         sendClientMessageToRoot( win, kde_wm_change_state, IconicState, 1 );
     }
-    QX11Info inf;
-    XIconifyWindow( QX11Info::display(), win, inf.screen() );
+    XIconifyWindow( QX11Info::display(), win, DefaultScreen( QX11Info::display()) );
 }
 
 void KWindowSystem::unminimizeWindow( WId win, bool animation )
