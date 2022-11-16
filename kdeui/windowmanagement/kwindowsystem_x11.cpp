@@ -154,7 +154,7 @@ bool KWindowSystemPrivate::x11Event( XEvent * ev )
     KWindowSystem* s_q = KWindowSystem::self();
 
 #ifdef HAVE_XFIXES
-    if ( ev->type == xfixesEventBase + XFixesSelectionNotify ) {
+    if ( haveXfixes && ev->type == xfixesEventBase + XFixesSelectionNotify ) {
         if ( ev->xany.window == winId() ) {
             XFixesSelectionNotifyEvent *event = reinterpret_cast<XFixesSelectionNotifyEvent*>(ev);
             bool haveOwner = event->owner != None;
