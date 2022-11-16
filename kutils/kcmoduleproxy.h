@@ -193,10 +193,6 @@ public:
      * Returns the DBUS Path
      */
 	QString dbusPath() const;
-	/**
-	 * Returns the recommended minimum size for the widget
-	 */
-	QSize minimumSizeHint() const;
 
 public Q_SLOTS:
 
