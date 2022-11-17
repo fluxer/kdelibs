@@ -31,17 +31,16 @@ Boston, MA 02110-1301, USA.
 #include <stdlib.h>
 
 
-#include <QtGui/QComboBox>
-#include <QtGui/QCheckBox>
-#include <QtCore/QFile>
-#include <QtGui/QFont>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QScrollBar>
-#include <QtCore/qstringlist.h>
-#include <QtGui/QFontDatabase>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QFile>
+#include <QFont>
+#include <QLabel>
+#include <QLayout>
+#include <QScrollBar>
+#include <QStringList>
 #include <QList>
-#include <QtGui/QGroupBox>
+#include <QGroupBox>
 #include <kcharsets.h>
 #include <kconfig.h>
 #include <kdialog.h>
