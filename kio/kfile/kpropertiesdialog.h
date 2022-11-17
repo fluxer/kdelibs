@@ -362,12 +362,6 @@ public:
    */
   virtual void applyChanges();
 
-  /**
-   * Convenience method for most ::supports methods
-   * @return true if the file is a local, regular, readable, desktop file
-   * @deprecated use KFileItem::isDesktopFile
-   */
-
   void setDirty( bool b );
   bool isDirty() const;
 
