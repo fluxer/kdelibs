@@ -107,10 +107,6 @@ class KDEUI_EXPORT KTabBar: public QTabBar //krazy:exclude=qclasses
     virtual void dragMoveEvent( QDragMoveEvent *event );
     virtual void dropEvent( QDropEvent *event );
 
-    virtual void paintEvent( QPaintEvent *event );
-    virtual void leaveEvent( QEvent *event );
-    virtual QSize tabSizeHint( int index ) const;
-
   protected Q_SLOTS:
     virtual void activateDragSwitchTab();
 

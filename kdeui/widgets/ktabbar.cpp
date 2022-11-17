@@ -167,11 +167,6 @@ void KTabBar::mouseMoveEvent( QMouseEvent *event )
   QTabBar::mouseMoveEvent( event );
 }
 
-
-
-
-
-
 void KTabBar::activateDragSwitchTab()
 {
   int tab = selectTab( mapFromGlobal( QCursor::pos() ) );
@@ -275,23 +270,6 @@ void KTabBar::dropEvent( QDropEvent *event )
   QTabBar::dropEvent( event );
 }
 
-void KTabBar::paintEvent( QPaintEvent *event )
-{
-  QTabBar::paintEvent( event );
-}
-
-void KTabBar::leaveEvent( QEvent *event )
-{
-  QTabBar::leaveEvent( event );
-}
-
-QSize KTabBar::tabSizeHint( int index ) const
-{
-  QSize size = QTabBar::tabSizeHint( index );
-
-  return size;
-}
-
 #ifndef QT_NO_WHEELEVENT
 void KTabBar::wheelEvent( QWheelEvent *event )
 {
@@ -321,18 +299,7 @@ void KTabBar::wheelEvent( QWheelEvent *event )
     event->ignore();
   }
 }
-#endif
-
-
-
-
-
-
-
-
-
-
-
+#endif // QT_NO_WHEELEVENT
 
 void KTabBar::tabLayoutChange()
 {
