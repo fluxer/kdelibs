@@ -49,14 +49,8 @@ static bool readEntryGui(const QByteArray& data, const char* key, const QVariant
         if (data.isEmpty() || data == "invalid") {
             output = QColor();  // return what was stored
             return true;
-        } else if (data.at(0) == '#') {
-            QColor col;
-            col.setNamedColor(QString::fromUtf8(data.constData(), data.length()));
-            output = col;
-            return true;
-        } else if (!data.contains(',')) {
-            QColor col;
-            col.setNamedColor(QString::fromUtf8(data.constData(), data.length()));
+        } else if (data.at(0) == '#' || !data.contains(',')) {
+            QColor col(QString::fromUtf8(data.constData(), data.length()));
             if (!col.isValid())
                 kError() << qPrintable(errString);
             output = col;
