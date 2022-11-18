@@ -295,7 +295,9 @@ QStringList WebPPlugin::keys() const
 
 QList<QByteArray> WebPPlugin::mimeTypes() const
 {
-    return QList<QByteArray>() << "image/webp";
+    static const QList<QByteArray> list = QList<QByteArray>()
+        << "image/webp";
+    return list;
 }
 
 QImageIOPlugin::Capabilities WebPPlugin::capabilities(QIODevice *device, const QByteArray &format) const
@@ -318,7 +320,7 @@ QImageIOPlugin::Capabilities WebPPlugin::capabilities(QIODevice *device, const Q
 
 QImageIOHandler *WebPPlugin::create(QIODevice *device, const QByteArray &format) const
 {
-    QImageIOHandler *handler = new WebPHandler;
+    QImageIOHandler *handler = new WebPHandler();
     handler->setDevice(device);
     handler->setFormat(format);
     return handler;
