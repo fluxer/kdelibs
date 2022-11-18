@@ -270,8 +270,8 @@ bool RAWHandler::canRead(QIODevice *device)
         LibRaw raw;
         raw.imgdata.params.output_color = LIBRAW_COLORSPACE_sRGB;
 
-        RAWDataStream rawdevicestream(device, true);
-        const int rawresult = raw.open_datastream(&rawdevicestream);
+        RAWDataStream rawdatastream(device, true);
+        const int rawresult = raw.open_datastream(&rawdatastream);
         if (rawresult == LIBRAW_FILE_UNSUPPORTED) {
             kDebug() << libraw_strerror(rawresult);
             raw.recycle();
