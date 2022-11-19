@@ -51,13 +51,12 @@ static QFont nearestExistingFont (const QFont &font)
 
     // Check if the family has the requested style.
     // Easiest by piping it through font selection in the database.
-    QString retStyle = dbase.styleString(dbase.font(family, style, 10));
-    style = retStyle;
+    style = dbase.styleString(dbase.font(family, style, 10));
 
     // Check if the family has the requested size.
     // Only for bitmap fonts.
-    if (!dbase.isSmoothlyScalable(family, style)) {
-        QList<int> sizes = dbase.smoothSizes(family, style);
+    if (!dbase.isScalable(family, style)) {
+        QList<int> sizes = dbase.pointSizes(family, style);
         if (!sizes.contains(size)) {
             // Find nearest available size.
             int mindiff = 1000;
@@ -74,7 +73,7 @@ static QFont nearestExistingFont (const QFont &font)
 
     // Select the font with confirmed properties.
     QFont result = dbase.font(family, style, int(size));
-    if (dbase.isSmoothlyScalable(family, style) && result.pointSize() == floor(size)) {
+    if (dbase.isScalable(family, style) && result.pointSize() == floor(size)) {
         result.setPointSizeF(size);
     }
     return result;

@@ -107,7 +107,7 @@ void KFontFamilyDelegate::paint (QPainter *painter,
 
     // Choose and paint an icon according to the font type, scalable or bitmat.
     const QIcon *icon = &bitmap;
-    if (fontdb.isSmoothlyScalable(fontFamily)) {
+    if (fontdb.isScalable(fontFamily)) {
         icon = &truetype;
     }
     QRect r = option.rect;

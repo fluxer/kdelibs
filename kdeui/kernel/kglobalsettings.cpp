@@ -432,7 +432,7 @@ QFont KGlobalSettingsData::largeFont( const QString& text )
     for(QStringList::ConstIterator it = fam.constBegin();
         it != fam.constEnd(); ++it)
     {
-        if (db.isSmoothlyScalable(*it) && !db.isFixedPitch(*it))
+        if (db.isScalable(*it) && !db.isFixedPitch(*it))
         {
             QFont font(*it);
             font.setPixelSize(75);

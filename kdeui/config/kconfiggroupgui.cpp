@@ -151,7 +151,7 @@ static bool writeEntryGui(KConfigGroup *cg, const char* key, const QVariant &pro
         return true;
     }
     case QVariant::Font:
-        cg->writeEntry( key, prop.toString().toUtf8(), pFlags );
+        cg->writeEntry( key, prop.toString(), pFlags );
         return true;
 
     case QVariant::Pixmap:

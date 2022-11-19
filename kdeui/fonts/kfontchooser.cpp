@@ -655,7 +655,7 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
         sizeOfFont->setValue(currentSize);
 
         selFont = dbase.font(currentFamily, currentStyle, int(currentSize));
-        if (dbase.isSmoothlyScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
+        if (dbase.isScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
             selFont.setPointSizeF(currentSize);
         }
         emit q->fontSelected(selFont);
@@ -684,7 +684,7 @@ void KFontChooser::Private::_k_style_chosen_slot(const QString& style)
     sizeOfFont->setValue(currentSize);
 
     selFont = dbase.font(currentFamily, currentStyle, int(currentSize));
-    if (dbase.isSmoothlyScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
+    if (dbase.isScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
         selFont.setPointSizeF(currentSize);
     }
     emit q->fontSelected(selFont);
@@ -748,32 +748,7 @@ void KFontChooser::Private::_k_size_value_slot(double dval)
         customSizeRow = -1;
     }
 
-    bool canCustomize = true;
-
-    // For Qt-bad-sizes workaround: skip this block unconditionally
-    if (!dbase.isSmoothlyScalable(family, style)) {
-        // Bitmap font, allow only discrete sizes.
-        // Determine the nearest in the direction of change.
-        canCustomize = false;
-        int nrows = sizeListBox->count();
-        int row = sizeListBox->currentRow();
-        int nrow;
-        if (val - selFont.pointSizeF() > 0) {
-            for (nrow = row + 1; nrow < nrows; ++nrow)
-                if (KGlobal::locale()->readNumber(sizeListBox->item(nrow)->text()) >= val)
-                    break;
-        }
-        else {
-            for (nrow = row - 1; nrow >= 0; --nrow)
-                if (KGlobal::locale()->readNumber(sizeListBox->item(nrow)->text()) <= val)
-                    break;
-        }
-        // Make sure the new row is not out of bounds.
-        nrow = nrow < 0 ? 0 : nrow >= nrows ? nrows - 1 : nrow;
-        // Get the size from the new row and set the spinbox to that size.
-        val = KGlobal::locale()->readNumber(sizeListBox->item(nrow)->text());
-        sizeOfFont->setValue(val);
-    }
+    bool canCustomize = dbase.isScalable(family, style);
 
     // Set the current size in the size listbox.
     int row = nearestSizeRow(val, canCustomize);
@@ -863,14 +838,14 @@ qreal KFontChooser::Private::setupSizeListBox (const QString& family, const QStr
 {
     QFontDatabase dbase;
     QList<qreal> sizes;
-    if (dbase.isSmoothlyScalable(family, style)) {
+    if (dbase.isScalable(family, style)) {
         // A vector font.
         //>sampleEdit->setPaletteBackgroundPixmap( VectorPixmap ); // TODO
     } else {
         // A bitmap font.
         //sampleEdit->setPaletteBackgroundPixmap( BitmapPixmap ); // TODO
-        QList<int> smoothSizes = dbase.smoothSizes(family, style);
-        foreach (const int size, smoothSizes) {
+        QList<int> pointSizes = dbase.pointSizes(family, style);
+        foreach (const int size, pointSizes) {
             sizes.append(qreal(size));
         }
     }
@@ -976,7 +951,7 @@ void KFontChooser::Private::setupDisplay()
     // otherwise just select the nearest available size.
     QString currentFamily = qtFamilies[familyListBox->currentItem()->text()];
     QString currentStyle = qtStyles[styleListBox->currentItem()->text()];
-    bool canCustomize = dbase.isSmoothlyScalable(currentFamily, currentStyle);
+    bool canCustomize = dbase.isScalable(currentFamily, currentStyle);
     sizeListBox->setCurrentRow(nearestSizeRow(size, canCustomize));
 
     // Set current size in the spinbox.
@@ -996,7 +971,7 @@ void KFontChooser::getFontList( QStringList &list, uint fontListCriteria)
         for (QStringList::const_iterator it = lstSys.constBegin(); it != lstSys.constEnd(); ++it)
         {
             if ((fontListCriteria & FixedWidthFonts) > 0 && !dbase.isFixedPitch(*it)) continue;
-            if ((fontListCriteria & SmoothScalableFonts) > 0 && !dbase.isSmoothlyScalable(*it)) continue;
+            if ((fontListCriteria & SmoothScalableFonts) > 0 && !dbase.isScalable(*it)) continue;
             lstFonts.append(*it);
         }
 
