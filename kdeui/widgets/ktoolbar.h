@@ -193,7 +193,6 @@ public:
     virtual void slotMovableChanged(bool movable);
 
   protected:
-    virtual void contextMenuEvent( QContextMenuEvent* );
     virtual void actionEvent( QActionEvent* );
 
     // Draggable toolbar configuration

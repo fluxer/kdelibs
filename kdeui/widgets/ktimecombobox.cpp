@@ -471,11 +471,6 @@ void KTimeComboBox::setTimeList(QList<QTime> timeList,
     }
 }
 
-bool KTimeComboBox::eventFilter(QObject *object, QEvent *event)
-{
-    return KComboBox::eventFilter(object, event);
-}
-
 void KTimeComboBox::keyPressEvent(QKeyEvent *keyEvent)
 {
     QTime temp;
@@ -506,36 +501,6 @@ void KTimeComboBox::focusOutEvent(QFocusEvent *event)
     d->parseTime();
     d->warnTime();
     KComboBox::focusOutEvent(event);
-}
-
-void KTimeComboBox::showPopup()
-{
-    KComboBox::showPopup();
-}
-
-void KTimeComboBox::hidePopup()
-{
-    KComboBox::hidePopup();
-}
-
-void KTimeComboBox::mousePressEvent(QMouseEvent *event)
-{
-    KComboBox::mousePressEvent(event);
-}
-
-void KTimeComboBox::wheelEvent(QWheelEvent *event)
-{
-    KComboBox::wheelEvent(event);
-}
-
-void KTimeComboBox::focusInEvent(QFocusEvent *event)
-{
-    KComboBox::focusInEvent(event);
-}
-
-void KTimeComboBox::resizeEvent(QResizeEvent *event)
-{
-    KComboBox::resizeEvent(event);
 }
 
 #include "moc_ktimecombobox.cpp"

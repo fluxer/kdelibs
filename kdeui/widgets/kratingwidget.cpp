@@ -266,10 +266,4 @@ QSize KRatingWidget::sizeHint() const
                   pixSize.height() + frameWidth()*2 );
 }
 
-
-void KRatingWidget::resizeEvent( QResizeEvent* e )
-{
-    QFrame::resizeEvent( e );
-}
-
 #include "moc_kratingwidget.cpp"

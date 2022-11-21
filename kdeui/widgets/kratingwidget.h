@@ -175,7 +175,6 @@ class KDEUI_EXPORT KRatingWidget : public QFrame
     void mouseMoveEvent( QMouseEvent* e );
     void leaveEvent( QEvent* e );
     void paintEvent( QPaintEvent* e );
-    void resizeEvent( QResizeEvent* e );
 
  private:
     class Private;

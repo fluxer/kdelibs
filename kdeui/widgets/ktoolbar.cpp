@@ -838,12 +838,6 @@ void KToolBar::removeXMLGUIClient( KXMLGUIClient *client )
     d->xmlguiClients.remove(client);
 }
 
-void KToolBar::contextMenuEvent(QContextMenuEvent* event)
-{
-
-    QToolBar::contextMenuEvent(event);
-}
-
 Qt::ToolButtonStyle KToolBar::toolButtonStyleSetting()
 {
     KConfigGroup group(KGlobal::config(), "Toolbar style");

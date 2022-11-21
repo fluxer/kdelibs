@@ -331,12 +331,10 @@ void KHelpMenu::timerExpired()
     }
 }
 
-
 void KHelpMenu::menuDestroyed()
 {
     d->mMenu = 0;
 }
-
 
 void KHelpMenu::contextHelpActivated()
 {
