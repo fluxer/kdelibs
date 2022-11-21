@@ -56,7 +56,7 @@ public:
     KMessageWidget::MessageType messageType;
     bool wordWrap;
     QList<QToolButton*> buttons;
-    QPixmap contentSnapShot;
+    QImage contentSnapShot;
 
     void createLayout();
     void updateSnapShot();
@@ -174,7 +174,7 @@ void KMessageWidgetPrivate::updateSnapShot()
     // window layouts to be activated. Calling this method from resizeEvent()
     // can lead to infinite recursion, see:
     // https://bugs.kde.org/show_bug.cgi?id=311336
-    contentSnapShot = QPixmap(content->size());
+    contentSnapShot = QImage(content->size(), QImage::Format_ARGB32_Premultiplied);
     contentSnapShot.fill(Qt::transparent);
     content->render(&contentSnapShot, QPoint(), QRegion(), QWidget::DrawChildren);
 }
@@ -344,7 +344,8 @@ void KMessageWidget::paintEvent(QPaintEvent* event)
     if (d->timeLine->state() == QTimeLine::Running) {
         QPainter painter(this);
         painter.setOpacity(d->timeLine->currentValue() * d->timeLine->currentValue());
-        painter.drawPixmap(0, 0, d->contentSnapShot);
+        painter.drawImage(0, 0, d->contentSnapShot);
+        painter.end();
     }
 }
 
