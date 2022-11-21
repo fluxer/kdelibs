@@ -238,11 +238,9 @@ bool KGlobalSettings::smoothScroll()
 
 KGlobalSettings::TearOffHandle KGlobalSettings::insertTearOffHandle()
 {
-    int tearoff;
-    bool effectsenabled;
+    bool effectsenabled = (KGlobalSettings::graphicEffectsLevel() > KGlobalSettings::NoEffects);
     KConfigGroup g( KGlobal::config(), "KDE" );
-    effectsenabled = g.readEntry( "EffectsEnabled", false);
-    tearoff = g.readEntry("InsertTearOffHandle", KDE_DEFAULT_INSERTTEAROFFHANDLES);
+    int tearoff = g.readEntry("InsertTearOffHandle", KDE_DEFAULT_INSERTTEAROFFHANDLES);
     return effectsenabled ? (TearOffHandle) tearoff : Disable;
 }
 
