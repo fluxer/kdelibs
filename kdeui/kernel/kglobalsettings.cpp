@@ -914,7 +914,6 @@ void KGlobalSettings::Private::kdisplaySetFont()
         const QFont menuFont = data->font( KGlobalSettingsData::MenuFont );
         QApplication::setFont( menuFont, "QMenuBar" );
         QApplication::setFont( menuFont, "QMenu" );
-        QApplication::setFont( menuFont, "KPopupTitle" );
         QApplication::setFont( data->font(KGlobalSettingsData::ToolbarFont), "QToolBar" );
     }
     emit q->kdisplayFontChanged();
