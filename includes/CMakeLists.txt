@@ -118,7 +118,6 @@ install(
     KEditToolBar
     KEncodingFileDialog
     KExtendableItemDelegate
-    KFadeWidgetEffect
     KFile
     KFileDialog
     KFileFilterCombo

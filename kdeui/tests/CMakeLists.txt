@@ -38,7 +38,6 @@ KDEUI_UNIT_TESTS(
     kcompletioncoretest
     kconfigskeletontest
     kdualactiontest
-    kfadewidgeteffecttest
     kfindtest
     kglobalsettingstest
     kmainwindow_unittest

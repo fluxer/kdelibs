@@ -208,7 +208,6 @@ set(kdeui_LIB_SRCS
     widgets/kdatetimewidget.cpp
     widgets/kdatewidget.cpp
     widgets/keditlistwidget.cpp
-    widgets/kfadewidgeteffect.cpp
     widgets/khbox.cpp
     widgets/khelpmenu.cpp
     widgets/khistorycombobox.cpp
@@ -528,7 +527,6 @@ install(
     widgets/kdatewidget.h
     widgets/kdialogbuttonbox.h
     widgets/keditlistwidget.h
-    widgets/kfadewidgeteffect.h
     widgets/khbox.h
     widgets/khelpmenu.h
     widgets/khistorycombobox.h
