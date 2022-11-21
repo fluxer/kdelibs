@@ -92,6 +92,7 @@ KEMailDialog::KEMailDialog(QWidget *parent, Qt::WindowFlags flags)
     d->ui.setupUi(mainWidget());
     d->ui.userlineedit->setText(d->kemail->user());
     d->ui.passlineedit->setText(d->kemail->password());
+    d->ui.oauthlineedit->setText(d->kemail->oauth());
     connect(d->ui.settingslabel, SIGNAL(leftClickedUrl()), this, SLOT(_slotSettings()));
 
     connect(d, SIGNAL(sent()), this, SLOT(_slotSent()));
@@ -180,6 +181,7 @@ void KEMailDialog::showEvent(QShowEvent *event)
     // the password dialog is interactable via mouse
     const bool isuserempty = d->ui.userlineedit->text().isEmpty();
     const bool ispassempty = d->ui.passlineedit->text().isEmpty();
+    const bool isoauthempty = d->ui.oauthlineedit->text().isEmpty();
     KEMailSettings* kemailsettings = nullptr;
     if (isuserempty || ispassempty) {
         kemailsettings = new KEMailSettings();
@@ -190,6 +192,9 @@ void KEMailDialog::showEvent(QShowEvent *event)
     if (ispassempty) {
         d->ui.passlineedit->setText(kemailsettings->getSetting(KEMailSettings::OutServerPass));
     }
+    if (isoauthempty) {
+        d->ui.oauthlineedit->setText(kemailsettings->getSetting(KEMailSettings::OutServerOAuth));
+    }
     delete kemailsettings;
 }
 
@@ -198,6 +203,7 @@ void KEMailDialog::slotButtonClicked(int button)
     if (button == KDialog::Ok) {
         d->kemail->setUser(d->ui.userlineedit->text());
         d->kemail->setPassword(d->ui.passlineedit->text());
+        d->kemail->setOAuth(d->ui.oauthlineedit->text());
         if (!d->kemail->server().isValid()) {
             KMessageBox::error(this, i18n("No server specified"));
             return;
@@ -263,6 +269,7 @@ void KEMailDialog::_slotFinished()
     KEMailSettings kemailsettings;
     kemailsettings.setSetting(KEMailSettings::OutServerLogin, d->ui.userlineedit->text());
     kemailsettings.setSetting(KEMailSettings::OutServerPass, d->ui.passlineedit->text());
+    kemailsettings.setSetting(KEMailSettings::OutServerOAuth, d->ui.oauthlineedit->text());
 }
 
 #include "kemaildialog.moc"

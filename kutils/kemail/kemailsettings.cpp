@@ -89,6 +89,9 @@ QString KEMailSettings::getSetting(KEMailSettings::Setting setting) const
         case OutServerPass: {
             return d->m_store->getPasswd(KPasswdStore::makeKey("OutgoingPassword"));
         }
+        case OutServerOAuth: {
+            return d->m_store->getPasswd(KPasswdStore::makeKey("OutgoingOAuth"));
+        }
     };
     return QString();
 }
@@ -130,6 +133,10 @@ void KEMailSettings::setSetting(KEMailSettings::Setting setting, const QString &
         }
         case OutServerPass: {
             d->m_store->storePasswd(KPasswdStore::makeKey("OutgoingPassword"), value);
+            break;
+        }
+        case OutServerOAuth: {
+            d->m_store->storePasswd(KPasswdStore::makeKey("OutgoingOAuth"), value);
             break;
         }
     };

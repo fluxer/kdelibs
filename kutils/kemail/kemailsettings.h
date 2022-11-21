@@ -62,7 +62,8 @@ public:
         OutServer,
         OutServerSSL,
         OutServerLogin,
-        OutServerPass
+        OutServerPass,
+        OutServerOAuth
     };
 
     /**

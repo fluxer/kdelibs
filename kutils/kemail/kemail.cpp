@@ -71,6 +71,7 @@ public:
     KEMail::KEMailSSLType m_ssl;
     QString m_user;
     QString m_password;
+    QString m_oauth;
     QString m_from;
     QByteArray m_data;
     QString m_errorstring;
@@ -237,6 +238,22 @@ bool KEMail::setPassword(const QString &password)
     return true;
 }
 
+QString KEMail::oauth() const
+{
+    return d->m_oauth;
+}
+
+bool KEMail::setOAuth(const QString &oauth)
+{
+    d->m_errorstring.clear();
+    if (oauth.isEmpty()) {
+        d->m_errorstring = i18n("Invalid OAuth access token: %1", oauth);
+        return false;
+    }
+    d->m_oauth = oauth;
+    return true;
+}
+
 QString KEMail::from() const
 {
     return d->m_from;
@@ -282,6 +299,7 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
     const QByteArray serverbytes = d->m_server.url().toAscii();
     const QByteArray userbytes = d->m_user.toAscii();
     const QByteArray passwordbytes = d->m_password.toAscii();
+    const QByteArray oauthbytes = d->m_oauth.toAscii();
     const QByteArray frombytes = d->m_from.toAscii();
 
     CURLcode curlresult = curl_easy_setopt(d->m_curl, CURLOPT_URL, serverbytes.constData());
@@ -333,9 +351,17 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
         return false;
     }
 
-    // TODO: XOAUTH2 option and add setting to KEMailSettings
-    // (void)curl_easy_setopt(d->m_curl, CURLOPT_XOAUTH2_BEARER, "");
-    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=PLAIN");
+    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_XOAUTH2_BEARER, oauthbytes.constData());
+    if (curlresult != CURLE_OK) {
+        d->m_errorstring = curl_easy_strerror(curlresult);
+        kWarning() << d->m_errorstring;
+        curl_easy_cleanup(d->m_curl);
+        d->m_curl = nullptr;
+        return false;
+    }
+
+    // PLAIN, LOGIN, OAUTHBEARER, XOAUTH2
+    curlresult = curl_easy_setopt(d->m_curl, CURLOPT_LOGIN_OPTIONS, "AUTH=*");
     if (curlresult != CURLE_OK) {
         d->m_errorstring = curl_easy_strerror(curlresult);
         kWarning() << d->m_errorstring;

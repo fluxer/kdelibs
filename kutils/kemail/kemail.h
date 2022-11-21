@@ -77,6 +77,8 @@ public:
     bool setUser(const QString &user);
     QString password() const;
     bool setPassword(const QString &password);
+    QString oauth() const;
+    bool setOAuth(const QString &oauth);
 
     QString from() const;
     bool setFrom(const QString &from);
