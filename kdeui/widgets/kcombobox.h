@@ -482,8 +482,6 @@ protected:
     virtual void create( WId = 0, bool initializeWindow = true,
                          bool destroyOldWindow = true );
 
-    virtual void wheelEvent( QWheelEvent *ev );
-
     virtual QSize minimumSizeHint() const;
 
 private Q_SLOTS:

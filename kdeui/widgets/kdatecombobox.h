@@ -316,15 +316,9 @@ public Q_SLOTS:
 
 protected:
 
-    virtual bool eventFilter(QObject *object, QEvent *event);
     virtual void showPopup();
-    virtual void hidePopup();
-    virtual void mousePressEvent(QMouseEvent *event);
-    virtual void wheelEvent(QWheelEvent *event);
     virtual void keyPressEvent(QKeyEvent *event);
-    virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
-    virtual void resizeEvent(QResizeEvent *event);
 
     /**
      * Assign the date for the widget.

@@ -577,25 +577,10 @@ KTimeZones::ZoneMap KDateTimeEdit::timeZones() const
     return d->m_zones;
 }
 
-bool KDateTimeEdit::eventFilter(QObject *object, QEvent *event)
-{
-    return QWidget::eventFilter(object, event);
-}
-
-void KDateTimeEdit::focusInEvent(QFocusEvent *event)
-{
-    QWidget::focusInEvent(event);
-}
-
 void KDateTimeEdit::focusOutEvent(QFocusEvent *event)
 {
     d->warnDateTime();
     QWidget::focusOutEvent(event);
-}
-
-void KDateTimeEdit::resizeEvent(QResizeEvent *event)
-{
-    QWidget::resizeEvent(event);
 }
 
 #include "moc_kdatetimeedit.cpp"

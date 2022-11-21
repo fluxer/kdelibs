@@ -250,12 +250,6 @@ void KComboBox::create( WId id, bool initializeWindow, bool destroyOldWindow )
     KCursor::setAutoHideCursor( lineEdit(), true, true );
 }
 
-void KComboBox::wheelEvent( QWheelEvent *ev )
-{
-    // Not necessary anymore
-    QComboBox::wheelEvent( ev );
-}
-
 QSize KComboBox::minimumSizeHint() const
 {
     QSize size = QComboBox::minimumSizeHint();

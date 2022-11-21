@@ -792,16 +792,6 @@ bool KDateTable::setCalendarSystem( KLocale::CalendarSystem newCalendarSystem )
     return true;
 }
 
-void KDateTable::focusInEvent( QFocusEvent *e )
-{
-    QWidget::focusInEvent( e );
-}
-
-void KDateTable::focusOutEvent( QFocusEvent *e )
-{
-    QWidget::focusOutEvent( e );
-}
-
 QSize KDateTable::sizeHint() const
 {
     if( d->m_maxCell.height() > 0 && d->m_maxCell.width() > 0 ) {

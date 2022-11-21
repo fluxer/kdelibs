@@ -459,11 +459,6 @@ void KDateComboBox::setDateMap(QMap<QDate, QString> dateMap)
     }
 }
 
-bool KDateComboBox::eventFilter(QObject *object, QEvent *event)
-{
-    return KComboBox::eventFilter(object, event);
-}
-
 void KDateComboBox::keyPressEvent(QKeyEvent *keyEvent)
 {
     QDate temp;
@@ -533,31 +528,6 @@ void KDateComboBox::showPopup()
     }
 
     d->m_dateMenu->popup(popupPoint);
-}
-
-void KDateComboBox::hidePopup()
-{
-    KComboBox::hidePopup();
-}
-
-void KDateComboBox::mousePressEvent(QMouseEvent *event)
-{
-    KComboBox::mousePressEvent(event);
-}
-
-void KDateComboBox::wheelEvent(QWheelEvent *event)
-{
-    KComboBox::wheelEvent(event);
-}
-
-void KDateComboBox::focusInEvent(QFocusEvent *event)
-{
-    KComboBox::focusInEvent(event);
-}
-
-void KDateComboBox::resizeEvent(QResizeEvent *event)
-{
-    KComboBox::resizeEvent(event);
 }
 
 #include "moc_kdatecombobox.cpp"

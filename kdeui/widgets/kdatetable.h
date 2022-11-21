@@ -263,8 +263,6 @@ protected:
     virtual void mousePressEvent( QMouseEvent *e );
     virtual void wheelEvent( QWheelEvent *e );
     virtual void keyPressEvent( QKeyEvent *e );
-    virtual void focusInEvent( QFocusEvent *e );
-    virtual void focusOutEvent( QFocusEvent *e );
 
     /**
      * Cell highlight on mouse hovering
