@@ -62,9 +62,6 @@
 #include <kconfiggroup.h>
 
 
-//static QColor *_buttonBackground = 0;
-static KGlobalSettings::GraphicEffects _graphicEffects = KGlobalSettings::NoEffects;
-
 // TODO: merge this with KGlobalSettings::Private
 //
 // F. Kossebau: KDE5: think to make all methods static and not expose an object,
@@ -168,8 +165,6 @@ class KGlobalSettings::Private
          * is initialized.
          */
         void applyCursorTheme();
-
-        static void reloadStyleSettings();
 
         KGlobalSettings *q;
         bool activated;
@@ -640,30 +635,21 @@ QRect KGlobalSettings::desktopGeometry(const QWidget* w)
 bool KGlobalSettings::showIconsOnPushButtons()
 {
     KConfigGroup g( KGlobal::config(), "KDE" );
-    return g.readEntry("ShowIconsOnPushButtons",
-                       KDE_DEFAULT_ICON_ON_PUSHBUTTON);
+    return g.readEntry("ShowIconsOnPushButtons", KDE_DEFAULT_ICON_ON_PUSHBUTTON);
 }
 
 bool KGlobalSettings::naturalSorting()
 {
     KConfigGroup g( KGlobal::config(), "KDE" );
-    return g.readEntry("NaturalSorting",
-                       KDE_DEFAULT_NATURAL_SORTING);
+    return g.readEntry("NaturalSorting", KDE_DEFAULT_NATURAL_SORTING);
 }
 
 KGlobalSettings::GraphicEffects KGlobalSettings::graphicEffectsLevel()
 {
-    // This variable stores whether _graphicEffects has the default value because it has not been
-    // loaded yet, or if it has been loaded from the user settings or defaults and contains a valid
-    // value.
-    static bool _graphicEffectsInitialized = false;
+    KConfigGroup g( KGlobal::config(), "KDE-Global GUI Settings" );
 
-    if (!_graphicEffectsInitialized) {
-        _graphicEffectsInitialized = true;
-        Private::reloadStyleSettings();
-    }
-
-    return _graphicEffects;
+    int graphicEffects = g.readEntry("GraphicEffectsLevel", int(KGlobalSettings::graphicEffectsLevelDefault()));
+    return GraphicEffects(graphicEffects);
 }
 
 KGlobalSettings::GraphicEffects KGlobalSettings::graphicEffectsLevelDefault()
@@ -671,7 +657,7 @@ KGlobalSettings::GraphicEffects KGlobalSettings::graphicEffectsLevelDefault()
     // For now, let always enable animations by default. The plan is to make
     // this code a bit smarter. (ereslibre)
 
-    return ComplexAnimationEffects;
+    return SimpleAnimationEffects;
 }
 
 bool KGlobalSettings::showFilePreview(const KUrl &url)
@@ -756,9 +742,6 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
             }
         } else {
             switch (category) {
-                case SETTINGS_STYLE:
-                    reloadStyleSettings();
-                    break;
                 case SETTINGS_MOUSE:
                     KGlobalSettingsData::self()->dropMouseSettingsCache();
                     break;
@@ -936,24 +919,6 @@ void KGlobalSettings::Private::kdisplaySetStyle()
         kdisplaySetPalette();
     }
 }
-
-
-void KGlobalSettings::Private::reloadStyleSettings()
-{
-    KConfigGroup g( KGlobal::config(), "KDE-Global GUI Settings" );
-
-    // Asking for hasKey we do not ask for graphicEffectsLevelDefault() that can
-    // contain some very slow code. If we can save that time, do it. (ereslibre)
-
-    if (g.hasKey("GraphicEffectsLevel")) {
-        _graphicEffects = ((GraphicEffects) g.readEntry("GraphicEffectsLevel", QVariant((int) NoEffects)).toInt());
-
-        return;
-    }
-
-    _graphicEffects = KGlobalSettings::graphicEffectsLevelDefault();
-}
-
 
 void KGlobalSettings::Private::applyCursorTheme()
 {

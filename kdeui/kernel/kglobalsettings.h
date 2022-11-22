@@ -446,12 +446,10 @@ public:
 
     enum GraphicEffect {
         NoEffects               = 0x0000, ///< GUI with no effects at all.
-        GradientEffects         = 0x0001, ///< GUI with only gradients enabled.
-        SimpleAnimationEffects  = 0x0002, ///< GUI with simple animations enabled.
-        ComplexAnimationEffects = 0x0006  ///< GUI with complex animations enabled.
-                                          ///< Note that ComplexAnimationsEffects implies SimpleAnimationEffects.
+        SimpleAnimationEffects  = 0x0001, ///< GUI with simple animations enabled.
+        ComplexAnimationEffects = 0x0002  ///< GUI with complex animations enabled.
+                                          ///< Note that ComplexAnimationsEffects does not imply SimpleAnimationEffects.
     };
-
     Q_DECLARE_FLAGS(GraphicEffects, GraphicEffect)
 
     /**
