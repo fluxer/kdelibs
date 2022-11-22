@@ -766,8 +766,7 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
         break;
 
     case BlockShortcuts:
-        // FIXME KAccel port
-        //KGlobalAccel::blockShortcuts(arg);
+        // NOTE: KGlobalAccel connects to this signal
         emit q->blockShortcuts(arg); // see kwin
         break;
 
