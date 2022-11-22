@@ -128,7 +128,7 @@ KPassivePopup::~KPassivePopup()
 void KPassivePopup::setPopupStyle( int popupstyle )
 {
     if ( d->popupStyle == popupstyle )
-	return;
+        return;
 
     d->popupStyle = popupstyle;
     if( d->popupStyle == Boxed )
