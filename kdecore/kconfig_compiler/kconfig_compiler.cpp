@@ -1588,12 +1588,12 @@ int main( int argc, char **argv )
        exit(1);
      }
      Signal signal = *it;
-     h << "      " << signalEnumName(signal.name) << " = 0x" << hex << val;
+     h << "      " << signalEnumName(signal.name) << " = 0x" << QString::number(val, 16);
      if ( ++it != itEnd )
       h << ",";
      h << endl;
    }
-   h << " };" << dec << endl;
+   h << " };" << endl;
   }
   h << endl;
   // Constructor or singleton accessor
