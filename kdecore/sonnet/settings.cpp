@@ -51,7 +51,7 @@ public:
     int disablePercentage;
     int disableWordCount;
 
-    QMap<QString, bool> ignore;
+    QStringList ignore;
 };
 
 Settings::Settings(Loader *loader)
@@ -162,23 +162,19 @@ void Settings::setCurrentIgnoreList(const QStringList &ignores)
 
 void Settings::setQuietIgnoreList(const QStringList &ignores)
 {
-    d->ignore = QMap<QString, bool>();//clear out
-    for (QStringList::const_iterator itr = ignores.begin();
-         itr != ignores.end(); ++itr) {
-        d->ignore.insert(*itr, true);
-    }
+    d->ignore = ignores;
 }
 
 QStringList Settings::currentIgnoreList() const
 {
-    return d->ignore.keys();
+    return d->ignore;
 }
 
 void Settings::addWordToIgnore(const QString &word)
 {
     if (!d->ignore.contains(word)) {
         d->modified = true;
-        d->ignore.insert( word, true );
+        d->ignore.append( word );
     }
 }
 
@@ -218,7 +214,7 @@ void Settings::save(KConfig *config)
     if(conf.hasKey(defaultLanguage) && d->ignore.isEmpty())
       conf.deleteEntry(defaultLanguage);
     else if(!d->ignore.isEmpty())
-        conf.writeEntry(defaultLanguage, d->ignore.keys());
+        conf.writeEntry(defaultLanguage, d->ignore);
 
     conf.sync();
 }

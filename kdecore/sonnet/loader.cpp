@@ -77,7 +77,8 @@ Loader::Loader()
 Loader::~Loader()
 {
     //kDebug()<<"Removing loader : "<< this;
-    delete d->settings; d->settings = 0;
+    delete d->settings;
+    d->settings = 0;
     delete d;
 }
 
