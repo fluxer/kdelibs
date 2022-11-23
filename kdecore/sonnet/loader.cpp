@@ -82,9 +82,8 @@ Loader::~Loader()
 }
 
 QSpellEnchantDict *Loader::createSpeller(const QString& language,
-                                     const QString& clientName) const
+                                         const QString& clientName) const
 {
-    QString pclient = clientName;
     QString plang   = language;
 
     if (plang.isEmpty()) {
@@ -101,16 +100,14 @@ QSpellEnchantDict *Loader::createSpeller(const QString& language,
     QListIterator<QSpellEnchantClient*> itr(lClients);
     while (itr.hasNext()) {
         QSpellEnchantClient* item = itr.next();
-        if (!pclient.isEmpty()) {
-            if (pclient == item->name()) {
-                QSpellEnchantDict *dict = item->createSpeller(plang);
-                return dict;
+        if (!clientName.isEmpty()) {
+            if (clientName == item->name()) {
+                return item->createSpeller(plang);
             }
         } else {
             //the first one is the one with the highest
             //reliability
-            QSpellEnchantDict *dict = item->createSpeller(plang);
-            return dict;
+            return item->createSpeller(plang);
         }
     }
 
