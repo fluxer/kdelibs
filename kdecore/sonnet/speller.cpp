@@ -271,10 +271,9 @@ void Speller::setLanguage(const QString &lang)
 QMap<QString, QString> Sonnet::Speller::availableDictionaries() const
 {
     Loader *l = Loader::openLoader();
-    const QStringList lst = l->languages();
     QMap<QString, QString> langs;
 
-    foreach (QString tag, lst) { // no const& because tag is modified below
+    foreach (QString tag, l->languages()) { // no const& because tag is modified below
         tag = tag.mid(0, tag.indexOf(QLatin1Char('-')));
         int underscorePos = tag.indexOf(QLatin1Char('_'));
         QString cIsoName, lIsoName;
