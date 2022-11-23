@@ -54,7 +54,7 @@ Loader *Loader::openLoader()
 }
 
 Loader::Loader()
-    :d(new Private)
+    :d(new Private())
 {
     d->settings = new Settings(this);
     KConfig config(QString::fromLatin1("sonnetrc"));
@@ -64,13 +64,7 @@ Loader::Loader()
     d->clients.append(client->name());
 
     foreach (const QString &itr, client->languages()) {
-        const QList<QSpellEnchantClient*> langclient = d->languageClients[itr];
-        if (!langclient.isEmpty() &&
-            client->reliability() < langclient.first()->reliability()) {
-            d->languageClients[itr].append(client);
-        } else {
-            d->languageClients[itr].prepend(client);
-        }
+        d->languageClients[itr].prepend(client);
     }
 }
 

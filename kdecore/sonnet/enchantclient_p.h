@@ -35,10 +35,6 @@ namespace Sonnet
         QSpellEnchantClient(QObject *parent);
         ~QSpellEnchantClient();
 
-        int reliability() const {
-            return 30;
-        }
-
         QString name() const {
             return QString::fromLatin1("Enchant");
         }
