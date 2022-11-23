@@ -111,7 +111,7 @@ bool correctPathCase(const QString& path, QString &corrected)
     }
 
     // path components
-    QStringList components = QString(path).split(QDir::separator());
+    QStringList components = path.split(QDir::separator());
 
     if (components.size() < 1) {
         return false;
