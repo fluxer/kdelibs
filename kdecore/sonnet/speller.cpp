@@ -212,24 +212,20 @@ void Speller::setDefaultLanguage(const QString &lang)
     d->settings->setDefaultLanguage(lang);
 }
 
-
 QString Speller::defaultLanguage() const
 {
     return d->settings->defaultLanguage();
 }
-
 
 void Speller::setDefaultClient(const QString &client)
 {
     d->settings->setDefaultClient(client);
 }
 
-
 QString Speller::defaultClient() const
 {
     return d->settings->defaultClient();
 }
-
 
 void Speller::setAttribute(Attribute attr, bool b)
 {
@@ -249,10 +245,8 @@ bool Speller::testAttribute(Attribute attr) const
     switch (attr) {
     case CheckUppercase:
         return d->settings->checkUppercase();
-        break;
     case SkipRunTogether:
         return d->settings->skipRunTogether();
-        break;
     }
     return false;
 }
