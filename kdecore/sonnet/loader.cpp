@@ -63,7 +63,7 @@ Loader::Loader()
     QSpellEnchantClient *client = new QSpellEnchantClient(this);
     d->clients.append(client->name());
 
-    foreach (const QString itr, client->languages()) {
+    foreach (const QString &itr, client->languages()) {
         const QList<QSpellEnchantClient*> langclient = d->languageClients[itr];
         if (!langclient.isEmpty() &&
             client->reliability() < langclient.first()->reliability()) {
