@@ -11,8 +11,8 @@ KDED modules should be useful during the whole session and manage
 information that, for some reason, cannot be kept in any other process.
 
 Here are examples of KDED modules:
- kdelibs/kioslave/http/kcookiejar/kcookieserver.cpp  Cookie-handling module (including GUI)
- kdebase/apps/lib/konq/favicons/favicons.cpp         Favicons module, for downloading favicon.ico files when browsing
+ kdelibs/kutils/kmediaplayer/kded/kaudioplayer.cpp    Audio player module for playing notification and accessibility sounds
+ kde-workspace/lib/konq/favicons/favicons.cpp         Favicons module for downloading favicon.ico files
 
 A KDED module should install a .desktop file with
 	ServicesTypes=KDEDModule
