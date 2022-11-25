@@ -221,51 +221,55 @@ void Kded::initModules()
 
     // Preload kded modules.
     const KService::List kdedModules = KServiceTypeTrader::self()->query("KDEDModule");
-    foreach (KService::Ptr service, kdedModules) {
-        // Should the service load on startup?
-        const bool autoload = isModuleAutoloaded(service);
-
-        // see ksmserver's README for description of the phases
-        bool prevent_autoload = false;
-        switch( phaseForModule(service) ) {
-            case 0: {
-                // always autoload
-                break;
-            }
-            case 1: {
-                // autoload only in KDE
-                if (!kde_running) {
-                    prevent_autoload = true;
-                }
-                break;
-            }
-            case 2: // autoload delayed, only in KDE
-            default: {
-                // "phase 2" only in KDE
-                if (!kde_running) {
-                    prevent_autoload = true;
-                }
-                break;
-            }
-        }
-
-        // Load the module if necessary and allowed
-        if (autoload && !prevent_autoload) {
-            if (!loadModule(service, false)) {
+    for (int phase = 0; phase < 2; phase++) {
+        foreach (KService::Ptr service, kdedModules) {
+            const int module_phase = phaseForModule(service);
+            // Should the service be loaded in this phase or later?
+            if (module_phase != phase) {
                 continue;
             }
-        }
 
-        // Remember if the module is allowed to load on demand
-        bool loadOnDemand = isModuleLoadedOnDemand(service);
-        if (!loadOnDemand) {
-            noDemandLoad(service->desktopEntryName());
-        }
+            // Should the service load on startup?
+            const bool autoload = isModuleAutoloaded(service);
 
-        // In case of reloading the configuration it is possible for a module
-        // to run even if it is now allowed to. Stop it then.
-        if (!loadOnDemand && !autoload) {
-            unloadModule(service->desktopEntryName().toLatin1());
+            // see ksmserver's README for description of the phases
+            bool prevent_autoload = false;
+            switch( module_phase ) {
+                case 0: {
+                    // always autoload
+                    break;
+                }
+                case 1: {
+                    // autoload only in KDE
+                    if (!kde_running) {
+                        prevent_autoload = true;
+                    }
+                    break;
+                }
+                default: {
+                    Q_ASSERT(false);
+                    break;
+                }
+            }
+
+            // Load the module if necessary and allowed
+            if (autoload && !prevent_autoload) {
+                if (!loadModule(service, false)) {
+                    continue;
+                }
+            }
+
+            // Remember if the module is allowed to load on demand
+            bool loadOnDemand = isModuleLoadedOnDemand(service);
+            if (!loadOnDemand) {
+                noDemandLoad(service->desktopEntryName());
+            }
+
+            // In case of reloading the configuration it is possible for a module
+            // to run even if it is now allowed to. Stop it then.
+            if (!loadOnDemand && !autoload) {
+                unloadModule(service->desktopEntryName().toLatin1());
+            }
         }
     }
 }
@@ -477,6 +481,7 @@ void Kded::recreate()
     updateResourceList();
     updateDirWatch();
 
+    // NOTE: phase 2 is done by ksmserver, i.e. it will be redone on the next session
     initModules();
 }
 
