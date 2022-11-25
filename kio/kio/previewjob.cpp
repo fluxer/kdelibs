@@ -81,8 +81,6 @@ public:
 
     KFileItemList initialItems;
     QStringList enabledPlugins;
-    // Some plugins support remote URLs, <protocol, mimetypes>
-    QHash<QString, QStringList> m_remoteProtocolPlugins;
     // Our todo list :)
     // We remove the first item at every step, so use QList
     QList<PreviewItem> items;
@@ -123,7 +121,7 @@ public:
 
     void getOrCreateThumbnail();
     bool statResultThumbnail();
-    void createThumbnail(const QString&pixPath);
+    void createThumbnail(const QString &pixPath);
     void determineNextFile();
     void emitPreview(const QImage &thumb);
 
@@ -244,31 +242,7 @@ void PreviewJobPrivate::startPreview()
     // Load the list of plugins to determine which mimetypes are supported
     const KService::List plugins = KServiceTypeTrader::self()->query("ThumbCreator");
     QMap<QString, KService::Ptr> mimeMap;
-    QHash<QString, QHash<QString, KService::Ptr> > protocolMap;
     for (KService::List::ConstIterator it = plugins.constBegin(); it != plugins.constEnd(); ++it) {
-        QStringList protocols = (*it)->property("X-KDE-Protocols").toStringList();
-        const QString p = (*it)->property("X-KDE-Protocol").toString();
-        if (!p.isEmpty()) {
-            protocols.append(p);
-        }
-        foreach (const QString &protocol, protocols) {
-            QStringList mtypes = (*it)->serviceTypes();
-            // Filter out non-mimetype servicetypes
-            // TODO KDE5: use KService::mimeTypes()
-            foreach (const QString &_mtype, mtypes) {
-                if (!((*it)->hasMimeType(_mtype))) {
-                    mtypes.removeAll(_mtype);
-                }
-            }
-            // Add supported mimetype for this protocol
-            QStringList &_ms = m_remoteProtocolPlugins[protocol];
-            foreach (const QString &_m, mtypes) {
-                protocolMap[protocol].insert(_m, *it);
-                if (!_ms.contains(_m)) {
-                    _ms.append(_m);
-                }
-            }
-        }
         if (enabledPlugins.contains((*it)->desktopEntryName())) {
             const QStringList mimeTypes = (*it)->serviceTypes();
             for (QStringList::ConstIterator mt = mimeTypes.constBegin(); mt != mimeTypes.constEnd(); ++mt) {
@@ -284,12 +258,6 @@ void PreviewJobPrivate::startPreview()
         item.item = kit;
         const QString mimeType = item.item.mimetype();
         KService::Ptr plugin(0);
-
-        // look for protocol-specific thumbnail plugins first
-        QHash<QString, QHash<QString, KService::Ptr> >::const_iterator it = protocolMap.constFind(item.item.url().protocol());
-        if (it != protocolMap.constEnd()) {
-            plugin = it.value().value(mimeType);
-        }
 
         if (!plugin) {
             QMap<QString, KService::Ptr>::ConstIterator pluginIt = mimeMap.constFind(mimeType);
@@ -469,7 +437,7 @@ void PreviewJob::slotResult(KJob *job)
                 return;
             }
 
-            d->createThumbnail( static_cast<KIO::FileCopyJob*>(job)->destUrl().toLocalFile() );
+            d->createThumbnail(static_cast<KIO::FileCopyJob*>(job)->destUrl().toLocalFile());
             return;
         }
         case PreviewJobPrivate::STATE_CREATETHUMB: {
@@ -485,8 +453,9 @@ void PreviewJob::slotResult(KJob *job)
 
 bool PreviewJobPrivate::statResultThumbnail()
 {
-    if ( thumbPath.isEmpty() )
+    if (thumbPath.isEmpty()) {
         return false;
+    }
 
     KUrl url = currentItem.item.mostLocalUrl();
     // Don't include the password if any
@@ -520,31 +489,15 @@ void PreviewJobPrivate::getOrCreateThumbnail()
     if (!localPath.isEmpty()) {
         createThumbnail(localPath);
     } else {
-        const KUrl fileUrl = item.url();
-        // heuristics for remote URL support
-        bool supportsProtocol = false;
-        if (m_remoteProtocolPlugins.value(fileUrl.scheme()).contains(item.mimetype())) {
-            // There's a plugin supporting this protocol and mimetype
-            supportsProtocol = true;
-        } else if (m_remoteProtocolPlugins.value("KIO").contains(item.mimetype())) {
-            // Assume KIO understands any URL, ThumbCreator slaves who have
-            // X-KDE-Protocols=KIO will get fed the remote URL directly.
-            supportsProtocol = true;
-        }
-
-        if (supportsProtocol) {
-            createThumbnail(fileUrl.url());
-            return;
-        }
         // No plugin support access to this remote content, copy the file
         // to the local machine, then create the thumbnail
         state = PreviewJobPrivate::STATE_GETORIG;
         tempName = KTemporaryFile::filePath();
         KUrl localURL;
-        localURL.setPath( tempName );
+        localURL.setPath(tempName);
         const KUrl currentURL = item.mostLocalUrl();
         KIO::Job * job = KIO::file_copy(currentURL, localURL, -1, KIO::Overwrite | KIO::HideProgressInfo /* No GUI */);
-        job->addMetaData("thumbnail","1");
+        job->addMetaData("thumbnail", "1");
         q->addSubjob(job);
     }
 }
