@@ -210,7 +210,6 @@ void Kded::initModules()
     if (!kde_running) {
         kde_running = (QProcess::execute(QString::fromLatin1("kcheckrunning")) == 0);
     }
-    // qDebug() << Q_FUNC_INFO << kde_running;
     if (kde_running) {
         // not the same user like the one running the session (most likely we're run via sudo or something)
         const QByteArray sessionUID = qgetenv("KDE_SESSION_UID");
@@ -218,6 +217,7 @@ void Kded::initModules()
             kde_running = false;
         }
     }
+    kDebug(7020) << "kde_running" << kde_running;
 
     // Preload kded modules.
     const KService::List kdedModules = KServiceTypeTrader::self()->query("KDEDModule");
