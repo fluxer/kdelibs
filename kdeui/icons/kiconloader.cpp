@@ -263,6 +263,12 @@ public:
      */
     bool findCachedPixmapWithPath(const QString &key, QPixmap &data, QString &path);
 
+    /**
+     * @internal
+     * Returns size suitable for overlay image based on the width and height of @p size.
+     */
+    int overlaySize(const QSize &size) const;
+
     KIconLoader *const q;
 
     QStringList mThemesInTree;
@@ -338,22 +344,8 @@ void KIconLoaderPrivate::drawOverlays(const KIconLoader *iconLoader, KIconLoader
         return;
     }
 
-    const int width = pix.size().width();
-    const int height = pix.size().height();
-    const int iconSize = qMin(width, height);
-    int overlaySize;
-
-    if (iconSize < 32) {
-        overlaySize = 8;
-    } else if (iconSize <= 48) {
-        overlaySize = 16;
-    } else if (iconSize <= 96) {
-        overlaySize = 22;
-    } else if (iconSize < 256) {
-        overlaySize = 32;
-    } else {
-        overlaySize = 64;
-    }
+    const QSize pixSize = pix.size();
+    const int iconSize = overlaySize(pixSize);
 
     QPainter painter(&pix);
 
@@ -367,10 +359,10 @@ void KIconLoaderPrivate::drawOverlays(const KIconLoader *iconLoader, KIconLoader
             continue;
         }
 
-        //TODO: should we pass in the kstate? it results in a slower
+        //TODO: should we pass in the state? it results in a slower
         //      path, and perhaps emblems should remain in the default state
         //      anyways?
-        const QPixmap pixmap = iconLoader->loadIcon(overlay, group, overlaySize, state, QStringList(), 0, true);
+        const QPixmap pixmap = iconLoader->loadIcon(overlay, group, iconSize, state, QStringList(), 0, true);
 
         if (pixmap.isNull()) {
             continue;
@@ -380,16 +372,16 @@ void KIconLoaderPrivate::drawOverlays(const KIconLoader *iconLoader, KIconLoader
         switch (count) {
         case 0:
             // bottom left corner
-            startPoint = QPoint(2, height - overlaySize - 2);
+            startPoint = QPoint(2, pixSize.height() - iconSize - 2);
             break;
         case 1:
             // bottom right corner
-            startPoint = QPoint(width - overlaySize - 2,
-                                height - overlaySize - 2);
+            startPoint = QPoint(pixSize.width() - iconSize - 2,
+                                pixSize.height() - iconSize - 2);
             break;
         case 2:
             // top right corner
-            startPoint = QPoint(width - overlaySize - 2, 2);
+            startPoint = QPoint(pixSize.width() - iconSize - 2, 2);
             break;
         case 3:
             // top left corner
@@ -801,6 +793,21 @@ bool KIconLoaderPrivate::findCachedPixmapWithPath(const QString &key, QPixmap &d
     return false;
 }
 
+int KIconLoaderPrivate::overlaySize(const QSize &size) const
+{
+    const int minSize = qMin(size.width(), size.height());
+    if (minSize < 32) {
+        return 8;
+    } else if (minSize <= 48) {
+        return  16;
+    } else if (minSize <= 96) {
+        return  22;
+    } else if (minSize < 256) {
+        return  32;
+    }
+    return 64;
+}
+
 K3Icon KIconLoaderPrivate::findMatchingIconWithGenericFallbacks(const QString& name, int size) const
 {
     K3Icon icon = findMatchingIcon(name, size);
@@ -1124,6 +1131,9 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
                     break;
             }
 
+            // ensure the icon size is suitable for overlay
+            const int iconSize = d->overlaySize(img.size());
+            favIcon = favIcon.scaled(QSize(iconSize, iconSize), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
             QPainter p(&img);
 
