@@ -36,24 +36,17 @@
 static const KFileMetaInfoItem nullitem;
 static KFileMetaInfoItem mutablenullitem;
 
-static QStringList expandMimeTypes(const QStringList &mimetypes)
+// NOTE: same as kdelibs/kio/kio/previewjob.cpp except the service string
+static QStringList kMetaGlobMimeTypes(const QStringList &servicetypes)
 {
+    static const QString kfimetadatapluginservice("KFileMetaData/Plugin");
+
     QStringList result;
-    foreach (const QString &mime, mimetypes) {
-        if (mime.endsWith(QLatin1String("/*"))) {
-            const QString mimeglob = mime.mid(0, mime.size() - 2);
-            foreach (const KMimeType::Ptr &kmimetype, KMimeType::allMimeTypes()) {
-                // NOTE: it may be null during sycoca database update
-                if (kmimetype.isNull()) {
-                    continue;
-                }
-                if (kmimetype->name().startsWith(mimeglob)) {
-                    result.append(kmimetype->name());
-                }
-            }
-        } else {
-            result.append(mime);
+    foreach (const QString &servicetype, servicetypes) {
+        if (servicetype == kfimetadatapluginservice) {
+            continue;
         }
+        result.append(servicetype);
     }
     // qDebug() << Q_FUNC_INFO << result;
     return result;
@@ -86,8 +79,20 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
         const bool enable = pluginsgroup.readEntry(key, true);
         if (enable) {
             // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdplugin->mimeTypes();
-            foreach (const QString &kfmdpluginmime, expandMimeTypes(kfmdplugin->mimeTypes())) {
-                if (filemimetype->is(kfmdpluginmime)) {
+            foreach (const QString &kfmdpluginmime, kMetaGlobMimeTypes(kfmdplugin->serviceTypes())) {
+                bool mimematches = false;
+                if (kfmdpluginmime.endsWith('*')) {
+                    const QString kfmdpluginmimeglob = kfmdpluginmime.mid(0, kfmdpluginmime.size() - 1);
+                    if (filemimetype && filemimetype->name().startsWith(kfmdpluginmimeglob)) {
+                        mimematches = true;
+                    }
+                }
+
+                if (!mimematches && filemimetype->is(kfmdpluginmime)) {
+                    mimematches = true;
+                }
+
+                if (mimematches) {
                     KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
                     if (kfmdplugininstance) {
                         items.append(kfmdplugininstance->metaData(url, w));

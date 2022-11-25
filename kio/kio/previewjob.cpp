@@ -69,6 +69,23 @@ struct KIO::PreviewItem
     KService::Ptr plugin;
 };
 
+// NOTE: because KService::mimeTypes() validates the MIME types and some thumbnailers use globs
+// (such as video/*) which are not valid, KService::serviceTypes() is used to get the unfiltered
+// MIME types and then the service type is removed from the list
+static QStringList kThumbGlobMimeTypes(const QStringList &servicetypes)
+{
+    static const QString thumbcreatorservce("ThumbCreator");
+
+    QStringList result;
+    foreach (const QString &servicetype, servicetypes) {
+        if (servicetype == thumbcreatorservce) {
+            continue;
+        }
+        result.append(servicetype);
+    }
+    return result;
+}
+
 class KIO::PreviewJobPrivate: public KIO::JobPrivate
 {
 public:
@@ -241,13 +258,16 @@ void PreviewJobPrivate::startPreview()
     Q_Q(PreviewJob);
     // Load the list of plugins to determine which mimetypes are supported
     const KService::List plugins = KServiceTypeTrader::self()->query("ThumbCreator");
-    QMap<QString, KService::Ptr> mimeMap;
-    for (KService::List::ConstIterator it = plugins.constBegin(); it != plugins.constEnd(); ++it) {
-        if (enabledPlugins.contains((*it)->desktopEntryName())) {
-            const QStringList mimeTypes = (*it)->serviceTypes();
-            for (QStringList::ConstIterator mt = mimeTypes.constBegin(); mt != mimeTypes.constEnd(); ++mt) {
-                mimeMap.insert(*mt, *it);
+
+    // Map their MIME types
+    QHash<QString, KService::Ptr> mimesMap;
+    foreach (const KService::Ptr plugin, plugins) {
+        if (enabledPlugins.contains(plugin->desktopEntryName())) {
+            foreach (const QString &pluginmime, kThumbGlobMimeTypes(plugin->serviceTypes())) {
+                mimesMap.insert(pluginmime, plugin);
             }
+        } else {
+            kDebug() << "Plugin is disabled" << plugin->desktopEntryName();
         }
     }
 
@@ -256,45 +276,41 @@ void PreviewJobPrivate::startPreview()
     foreach (const KFileItem &kit, initialItems) {
         PreviewItem item;
         item.item = kit;
-        const QString mimeType = item.item.mimetype();
-        KService::Ptr plugin(0);
+        const QString itemmime = item.item.mimetype();
+        KService::Ptr itemplugin(0);
 
-        if (!plugin) {
-            QMap<QString, KService::Ptr>::ConstIterator pluginIt = mimeMap.constFind(mimeType);
-            if (pluginIt == mimeMap.constEnd()) {
-                QString groupMimeType = mimeType;
-                groupMimeType.replace(QRegExp("/.*"), "/*");
-                pluginIt = mimeMap.constFind(groupMimeType);
-
-                if (pluginIt == mimeMap.constEnd()) {
-                    // check mime type inheritance, resolve aliases
-                    const KMimeType::Ptr mimeInfo = KMimeType::mimeType(mimeType);
-                    if (mimeInfo) {
-                        const QStringList parentMimeTypes = mimeInfo->allParentMimeTypes();
-                        Q_FOREACH(const QString& parentMimeType, parentMimeTypes) {
-                            pluginIt = mimeMap.constFind(parentMimeType);
-                            if (pluginIt != mimeMap.constEnd())
-                                break;
-                        }
-                    }
+        QHash<QString, KService::Ptr>::ConstIterator it = mimesMap.constBegin();
+        while (it != mimesMap.constEnd()) {
+            const QString pluginmime = it.key();
+            if (pluginmime.endsWith('*')) {
+                const QString globmime = pluginmime.mid(0, pluginmime.size() - 1);
+                if (itemmime.startsWith(globmime)) {
+                    itemplugin = it.value();
+                    kDebug() << "Glob match for" << itemmime << itemplugin->library();
+                    break;
                 }
             }
 
-            if (pluginIt != mimeMap.constEnd()) {
-                plugin = *pluginIt;
+            const KMimeType::Ptr mimeInfo = KMimeType::mimeType(pluginmime);
+            if (mimeInfo && mimeInfo->is(itemmime)) {
+                itemplugin = it.value();
+                kDebug() << "MIME match for" << itemmime << itemplugin->library();
+                break;
             }
+            it++;
         }
 
-        if (plugin) {
-            item.plugin = plugin;
+        if (itemplugin) {
+            item.plugin = itemplugin;
             items.append(item);
             if (!bNeedCache && bSave &&
                 (kit.url().protocol() != "file" ||
                  !kit.url().directory( KUrl::AppendTrailingSlash ).startsWith(thumbRoot)) &&
-                plugin->property("CacheThumbnail").toBool()) {
+                itemplugin->property("CacheThumbnail").toBool()) {
                 bNeedCache = true;
             }
         } else {
+            kDebug() << "No match for" << itemmime << enabledPlugins;
             emit q->failed(kit);
         }
     }
@@ -578,7 +594,7 @@ QStringList PreviewJob::supportedMimeTypes()
     QStringList result;
     const KService::List plugins = KServiceTypeTrader::self()->query("ThumbCreator");
     for (KService::List::ConstIterator it = plugins.begin(); it != plugins.end(); ++it) {
-        result += (*it)->serviceTypes();
+        result += kThumbGlobMimeTypes((*it)->serviceTypes());
     }
     return result;
 }
