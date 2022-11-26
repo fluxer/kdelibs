@@ -282,11 +282,11 @@ void PreviewJobPrivate::startPreview()
 
         // The easy way, also takes preferences into account
         const KService::List offers = KMimeTypeTrader::self()->query(itemmime, "ThumbCreator");
-        if (!offers.isEmpty()) {
-            KService::Ptr firstoffer = offers.first();
-            if (enabledPlugins.contains(firstoffer->desktopEntryName())) {
-                itemplugin = offers.first();
+        foreach (const KService::Ptr offer, offers) {
+            if (enabledPlugins.contains(offer->desktopEntryName())) {
+                itemplugin = offer;
                 kDebug() << "Preferred match for" << itemmime << itemplugin->library();
+                break;
             }
         }
 
