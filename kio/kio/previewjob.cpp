@@ -75,11 +75,11 @@ struct KIO::PreviewItem
 // MIME types and then the service type is removed from the list
 static QStringList kThumbGlobMimeTypes(const QStringList &servicetypes)
 {
-    static const QString thumbcreatorservce("ThumbCreator");
+    static const QString thumbcreatorservice("ThumbCreator");
 
     QStringList result;
     foreach (const QString &servicetype, servicetypes) {
-        if (servicetype == thumbcreatorservce) {
+        if (servicetype == thumbcreatorservice) {
             continue;
         }
         result.append(servicetype);
