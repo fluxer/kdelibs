@@ -38,6 +38,7 @@
 #include <kfileitem.h>
 #include <kde_file.h>
 #include <ktemporaryfile.h>
+#include <kmimetypetrader.h>
 #include <kservicetypetrader.h>
 #include <kglobal.h>
 #include <kstandarddirs.h>
@@ -279,25 +280,40 @@ void PreviewJobPrivate::startPreview()
         const QString itemmime = item.item.mimetype();
         KService::Ptr itemplugin(0);
 
-        QHash<QString, KService::Ptr>::ConstIterator it = mimesMap.constBegin();
-        while (it != mimesMap.constEnd()) {
-            const QString pluginmime = it.key();
-            if (pluginmime.endsWith('*')) {
-                const QString globmime = pluginmime.mid(0, pluginmime.size() - 1);
-                if (itemmime.startsWith(globmime)) {
+        // The easy way, also takes preferences into account
+        const KService::List offers = KMimeTypeTrader::self()->query(itemmime, "ThumbCreator");
+        if (!offers.isEmpty()) {
+            KService::Ptr firstoffer = offers.first();
+            if (enabledPlugins.contains(firstoffer->desktopEntryName())) {
+                itemplugin = offers.first();
+                kDebug() << "Preferred match for" << itemmime << itemplugin->library();
+            }
+        }
+
+        if (!itemplugin) {
+            // Long stretch, globs first
+            QHash<QString, KService::Ptr>::ConstIterator it = mimesMap.constBegin();
+            while (it != mimesMap.constEnd()) {
+                const QString pluginmime = it.key();
+                if (pluginmime.endsWith('*')) {
+                    const QString globmime = pluginmime.mid(0, pluginmime.size() - 1);
+                    if (itemmime.startsWith(globmime)) {
+                        itemplugin = it.value();
+                        kDebug() << "Glob match for" << itemmime << itemplugin->library();
+                        break;
+                    }
+                }
+
+                // Soft MIME match
+                const KMimeType::Ptr mimeInfo = KMimeType::mimeType(pluginmime);
+                if (mimeInfo && mimeInfo->is(itemmime)) {
                     itemplugin = it.value();
-                    kDebug() << "Glob match for" << itemmime << itemplugin->library();
+                    kDebug() << "MIME match for" << itemmime << itemplugin->library();
                     break;
                 }
-            }
 
-            const KMimeType::Ptr mimeInfo = KMimeType::mimeType(pluginmime);
-            if (mimeInfo && mimeInfo->is(itemmime)) {
-                itemplugin = it.value();
-                kDebug() << "MIME match for" << itemmime << itemplugin->library();
-                break;
+                it++;
             }
-            it++;
         }
 
         if (itemplugin) {
