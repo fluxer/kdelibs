@@ -49,7 +49,7 @@ public:
     QString m_path;
     bool m_replay;
     bool m_visible;
-    Ui_KMediaWidgetPrivate *m_ui;
+    Ui_KMediaWidgetUI *m_ui;
 };
 
 KMediaWidgetPrivate::KMediaWidgetPrivate()
@@ -67,7 +67,7 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     : QWidget(parent),
     d(new KMediaWidgetPrivate())
 {
-    d->m_ui = new Ui_KMediaWidgetPrivate();
+    d->m_ui = new Ui_KMediaWidgetUI();
     d->m_ui->setupUi(this);
     d->m_player = new KMediaPlayer(d->m_ui->w_player);
     d->m_dragdrop = (options & DragDrop) != options;
