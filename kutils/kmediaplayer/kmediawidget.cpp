@@ -53,16 +53,19 @@ public:
 };
 
 KMediaWidgetPrivate::KMediaWidgetPrivate()
-    : m_dragdrop(false), m_fullscreen(false), m_hiddencontrols(false), m_smoothvolume(false),
+    : m_player(nullptr),
+    m_dragdrop(false), m_fullscreen(false), m_hiddencontrols(false), m_smoothvolume(false),
     m_parent(nullptr), m_parenthack(nullptr),
     m_timerid(0),
     m_replay(false),
-    m_visible(false)
+    m_visible(false),
+    m_ui(nullptr)
 {
 }
 
 KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
-    : QWidget(parent), d(new KMediaWidgetPrivate())
+    : QWidget(parent),
+    d(new KMediaWidgetPrivate())
 {
     d->m_ui = new Ui_KMediaWidgetPrivate();
     d->m_ui->setupUi(this);
@@ -123,7 +126,11 @@ KMediaWidget::~KMediaWidget()
         setVolume(d->m_volumeline.endFrame());
     }
     d->m_player->stop();
-    d->m_player->deleteLater();
+    /*
+        Deleting the player has to be done before the UI is deleted because the player is embeded
+        into UI widget and MPV accessing the window ID of d->m_ui->w_player may cause fatal X11 I/O
+    */
+    delete d->m_player;
     delete d->m_ui;
     delete d;
 }

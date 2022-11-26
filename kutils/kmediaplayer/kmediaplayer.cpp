@@ -531,7 +531,8 @@ static void wakeup_audio(void *ctx)
 }
 
 KAudioPlayer::KAudioPlayer(QObject *parent)
-    : QObject(parent), d(new KAbstractPlayerPrivate())
+    : QObject(parent),
+    d(new KAbstractPlayerPrivate())
 {
 #if defined(HAVE_MPV)
     if (d->m_handle) {
@@ -619,7 +620,8 @@ static void wakeup_media(void *ctx)
 }
 
 KMediaPlayer::KMediaPlayer(QWidget *parent)
-    : QWidget(parent), d(new KAbstractPlayerPrivate)
+    : QWidget(parent),
+    d(new KAbstractPlayerPrivate())
 {
 #if defined(HAVE_MPV)
     if (d->m_handle) {
