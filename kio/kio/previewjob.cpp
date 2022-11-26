@@ -521,8 +521,8 @@ void PreviewJobPrivate::getOrCreateThumbnail()
     if (!localPath.isEmpty()) {
         createThumbnail(localPath);
     } else {
-        // No plugin support access to this remote content, copy the file
-        // to the local machine, then create the thumbnail
+        // No plugins support access to remote content, copy the file to the local machine, then
+        // create the thumbnail
         state = PreviewJobPrivate::STATE_GETORIG;
         tempName = KTemporaryFile::filePath();
         KUrl localURL;
