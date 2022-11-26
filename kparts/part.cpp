@@ -132,13 +132,12 @@ Part::~Part()
 {
     Q_D(Part);
 
-    //kDebug(1000) << this;
+    // kDebug(1000) << this;
 
     if ( d->m_widget )
     {
-        // We need to disconnect first, to avoid calling it !
-        disconnect( d->m_widget, SIGNAL(destroyed()),
-                    this, SLOT(slotWidgetDestroyed()) );
+        // We need to disconnect first to avoid calling slotWidgetDestroyed() !
+        disconnect( d->m_widget, 0, this, 0 );
     }
 
     if ( d->m_manager )
@@ -174,6 +173,13 @@ void Part::setAutoDeleteWidget(bool autoDeleteWidget)
 {
     Q_D(Part);
     d->m_autoDeleteWidget = autoDeleteWidget;
+    if (d->m_widget) {
+        if (autoDeleteWidget) {
+            connect( d->m_widget, SIGNAL(destroyed()), this, SLOT(slotWidgetDestroyed()), Qt::UniqueConnection );
+        } else {
+            disconnect( d->m_widget, 0, this, 0 );
+        }
+    }
 }
 
 void Part::setAutoDeletePart(bool autoDeletePart)
@@ -181,8 +187,6 @@ void Part::setAutoDeletePart(bool autoDeletePart)
     Q_D(Part);
     d->m_autoDeletePart = autoDeletePart;
 }
-
-
 
 KIconLoader* Part::iconLoader()
 {
@@ -223,8 +227,7 @@ void Part::setWidget( QWidget *widget )
 {
     Q_D(Part);
     d->m_widget = widget;
-    connect( d->m_widget, SIGNAL(destroyed()),
-             this, SLOT(slotWidgetDestroyed()), Qt::UniqueConnection );
+    connect( d->m_widget, SIGNAL(destroyed()), this, SLOT(slotWidgetDestroyed()), Qt::UniqueConnection );
 }
 
 void Part::setSelectable( bool selectable )
