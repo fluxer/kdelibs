@@ -268,7 +268,7 @@ void PreviewJobPrivate::startPreview()
                 mimesMap.insert(pluginmime, plugin);
             }
         } else {
-            kDebug() << "Plugin is disabled" << plugin->desktopEntryName();
+            kDebug(7007) << "Plugin is disabled" << plugin->desktopEntryName();
         }
     }
 
@@ -285,7 +285,7 @@ void PreviewJobPrivate::startPreview()
         foreach (const KService::Ptr offer, offers) {
             if (enabledPlugins.contains(offer->desktopEntryName())) {
                 itemplugin = offer;
-                kDebug() << "Preferred match for" << itemmime << itemplugin->library();
+                kDebug(7007) << "Preferred match for" << itemmime << itemplugin->library();
                 break;
             }
         }
@@ -299,7 +299,7 @@ void PreviewJobPrivate::startPreview()
                     const QString globmime = pluginmime.mid(0, pluginmime.size() - 1);
                     if (itemmime.startsWith(globmime)) {
                         itemplugin = it.value();
-                        kDebug() << "Glob match for" << itemmime << itemplugin->library();
+                        kDebug(7007) << "Glob match for" << itemmime << itemplugin->library();
                         break;
                     }
                 }
@@ -308,7 +308,7 @@ void PreviewJobPrivate::startPreview()
                 const KMimeType::Ptr mimeInfo = KMimeType::mimeType(pluginmime);
                 if (mimeInfo && mimeInfo->is(itemmime)) {
                     itemplugin = it.value();
-                    kDebug() << "MIME match for" << itemmime << itemplugin->library();
+                    kDebug(7007) << "MIME match for" << itemmime << itemplugin->library();
                     break;
                 }
 
@@ -326,7 +326,7 @@ void PreviewJobPrivate::startPreview()
                 bNeedCache = true;
             }
         } else {
-            kDebug() << "No match for" << itemmime << enabledPlugins;
+            kDebug(7007) << "No match for" << itemmime << enabledPlugins;
             emit q->failed(kit);
         }
     }
