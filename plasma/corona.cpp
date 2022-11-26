@@ -801,7 +801,7 @@ void CoronaPrivate::init()
     lockAction->setAutoRepeat(true);
     lockAction->setIcon(KIcon("object-locked"));
     lockAction->setData(AbstractToolBox::ControlTool);
-    lockAction->setShortcut(KShortcut("alt+d, l"));
+    lockAction->setShortcut(KShortcut("alt+l"));
     lockAction->setShortcutContext(Qt::ApplicationShortcut);
 
     //FIXME this doesn't really belong here. desktop KCM maybe?
