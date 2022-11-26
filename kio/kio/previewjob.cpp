@@ -257,21 +257,6 @@ PreviewJob::ScaleType PreviewJob::scaleType() const
 void PreviewJobPrivate::startPreview()
 {
     Q_Q(PreviewJob);
-    // Load the list of plugins to determine which mimetypes are supported
-    const KService::List plugins = KServiceTypeTrader::self()->query("ThumbCreator");
-
-    // Map their MIME types
-    QHash<QString, KService::Ptr> mimesMap;
-    foreach (const KService::Ptr plugin, plugins) {
-        if (enabledPlugins.contains(plugin->desktopEntryName())) {
-            foreach (const QString &pluginmime, kThumbGlobMimeTypes(plugin->serviceTypes())) {
-                mimesMap.insert(pluginmime, plugin);
-            }
-        } else {
-            kDebug(7007) << "Plugin is disabled" << plugin->desktopEntryName();
-        }
-    }
-
     // Look for images and store the items in our todo list :)
     bool bNeedCache = false;
     foreach (const KFileItem &kit, initialItems) {
@@ -291,28 +276,30 @@ void PreviewJobPrivate::startPreview()
         }
 
         if (!itemplugin) {
-            // Long stretch, globs first
-            QHash<QString, KService::Ptr>::ConstIterator it = mimesMap.constBegin();
-            while (it != mimesMap.constEnd()) {
-                const QString pluginmime = it.key();
-                if (pluginmime.endsWith('*')) {
-                    const QString globmime = pluginmime.mid(0, pluginmime.size() - 1);
-                    if (itemmime.startsWith(globmime)) {
-                        itemplugin = it.value();
-                        kDebug(7007) << "Glob match for" << itemmime << itemplugin->library();
-                        break;
+            // Long stretch, globs match maybe?
+            const KService::List plugins = KServiceTypeTrader::self()->query("ThumbCreator");
+            bool breakouterloop = false;
+            foreach (const KService::Ptr plugin, plugins) {
+                if (!enabledPlugins.contains(plugin->desktopEntryName())) {
+                    kDebug(7007) << "Plugin is disabled" << plugin->desktopEntryName();
+                    continue;
+                }
+
+                foreach (const QString &pluginmime, kThumbGlobMimeTypes(plugin->serviceTypes())) {
+                    if (pluginmime.endsWith(QLatin1Char('*'))) {
+                        const QString globmime = pluginmime.mid(0, pluginmime.size() - 1);
+                        if (itemmime.startsWith(globmime)) {
+                            itemplugin = plugin;
+                            kDebug(7007) << "Glob match for" << itemmime << itemplugin->library();
+                            breakouterloop = true;
+                            break;
+                        }
                     }
                 }
 
-                // Soft MIME match
-                const KMimeType::Ptr mimeInfo = KMimeType::mimeType(pluginmime);
-                if (mimeInfo && mimeInfo->is(itemmime)) {
-                    itemplugin = it.value();
-                    kDebug(7007) << "MIME match for" << itemmime << itemplugin->library();
+                if (breakouterloop) {
                     break;
                 }
-
-                it++;
             }
         }
 
