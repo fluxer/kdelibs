@@ -188,6 +188,28 @@ bool JP2Handler::read(QImage *image)
         return false;
     }
 
+    switch (ojimage->color_space) {
+        case OPJ_CLRSPC_UNKNOWN:
+        case OPJ_CLRSPC_UNSPECIFIED: {
+            // NOTE: there are images with unspecified and unknown color space that are sRGB but
+            // in case it is not sRGB and it looks weird when it is loaded tell the person who
+            // created the image to fix it somehow
+            kDebug() << "Unspecified or unknown color space";
+            break;
+        }
+        case OPJ_CLRSPC_SRGB:
+        case OPJ_CLRSPC_GRAY: {
+            break;
+        }
+        default: {
+            kWarning() << "Unsupported color space" << ojimage->color_space;
+            opj_destroy_codec(ojcodec);
+            opj_stream_destroy(ojstream);
+            opj_image_destroy(ojimage);
+            return false;
+        }
+    }
+
     switch (ojimage->numcomps) {
         case 4: {
             QRgb* imagebits = reinterpret_cast<QRgb*>(image->bits());
