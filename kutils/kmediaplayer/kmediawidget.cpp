@@ -34,8 +34,13 @@
 class KMediaWidgetPrivate
 {
 public:
-    KMediaWidgetPrivate();
+    KMediaWidgetPrivate(KMediaWidget* q);
 
+    void updatePlayText(const QString &string);
+    void updateStatus(const QString &string);
+    void updateControls(const bool visible);
+
+    KMediaWidget* m_q;
     KMediaPlayer *m_player;
     bool m_dragdrop;
     bool m_fullscreen;
@@ -49,11 +54,13 @@ public:
     QString m_path;
     bool m_replay;
     bool m_visible;
+    QString m_playtext;
     Ui_KMediaWidgetUI *m_ui;
 };
 
-KMediaWidgetPrivate::KMediaWidgetPrivate()
-    : m_player(nullptr),
+KMediaWidgetPrivate::KMediaWidgetPrivate(KMediaWidget* q)
+    : m_q(q),
+    m_player(nullptr),
     m_dragdrop(false), m_fullscreen(false), m_hiddencontrols(false), m_smoothvolume(false),
     m_parent(nullptr), m_parenthack(nullptr),
     m_timerid(0),
@@ -63,9 +70,51 @@ KMediaWidgetPrivate::KMediaWidgetPrivate()
 {
 }
 
+void KMediaWidgetPrivate::updatePlayText(const QString &text)
+{
+    m_playtext = text;
+    const QSize qsize = m_q->size();
+    const QSize qminimumsize = m_q->minimumSizeHint();
+    if (qsize.width() > qminimumsize.width() && qsize.height() > qminimumsize.height()) {
+        m_ui->w_play->setText(text);
+    } else {
+        m_ui->w_play->setText(QString());
+    }
+}
+
+void KMediaWidgetPrivate::updateStatus(const QString &string)
+{
+    if (m_fullscreen) {
+        QWidget *windowwidget = m_q->window();
+        KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
+        if (kmainwindow) {
+            kmainwindow->setCaption(string);
+            KStatusBar *statusbar = kmainwindow->statusBar();
+            if (statusbar) {
+                if (m_player->isPlaying()) {
+                    statusbar->showMessage(i18n("Now playing: %1", string));
+                } else {
+                    statusbar->showMessage(string);
+                }
+            }
+        } else if (windowwidget) {
+            windowwidget->setWindowTitle(string);
+        }
+    }
+}
+
+void KMediaWidgetPrivate::updateControls(const bool visible)
+{
+    if (m_hiddencontrols && visible != m_visible) {
+        m_ui->w_frame->setVisible(visible);
+        emit m_q->controlsHidden(visible);
+        m_visible = visible;
+    }
+}
+
 KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     : QWidget(parent),
-    d(new KMediaWidgetPrivate())
+    d(new KMediaWidgetPrivate(this))
 {
     d->m_ui = new Ui_KMediaWidgetUI();
     d->m_ui->setupUi(this);
@@ -77,7 +126,7 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_parent = parent;
 
     d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
-    d->m_ui->w_play->setText(i18n("Play"));
+    d->updatePlayText(i18n("Play"));
     d->m_ui->w_play->setEnabled(false);
     d->m_ui->w_position->setEnabled(false);
     d->m_ui->w_volume->setValue(d->m_player->volume());
@@ -293,7 +342,7 @@ void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
 {
     if (d->m_hiddencontrols) {
         resetControlsTimer();
-        _updateControls(true);
+        d->updateControls(true);
     }
     event->ignore();
 }
@@ -305,7 +354,7 @@ void KMediaWidget::timerEvent(QTimerEvent *event)
         && !d->m_ui->w_position->isSliderDown()
         && !d->m_ui->w_volume->isSliderDown()
         && !d->m_ui->w_fullscreen->isDown()) {
-        _updateControls(false);
+        d->updateControls(false);
         event->accept();
     } else {
         event->ignore();
@@ -340,23 +389,20 @@ void KMediaWidget::dropEvent(QDropEvent *event)
     }
 }
 
-void KMediaWidget::_updateControls(const bool visible)
+void KMediaWidget::resizeEvent(QResizeEvent *event)
 {
-    if (d->m_hiddencontrols && visible != d->m_visible) {
-        d->m_ui->w_frame->setVisible(visible);
-        emit controlsHidden(visible);
-        d->m_visible = visible;
-    }
+    QWidget::resizeEvent(event);
+    d->updatePlayText(d->m_playtext);
 }
 
 void KMediaWidget::_updatePlay(const bool paused)
 {
     if (paused) {
         d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
-        d->m_ui->w_play->setText(i18n("Play"));
+        d->updatePlayText(i18n("Play"));
     } else {
         d->m_ui->w_play->setIcon(KIcon("media-playback-pause"));
-        d->m_ui->w_play->setText(i18n("Pause"));
+        d->updatePlayText(i18n("Pause"));
     }
 }
 
@@ -384,35 +430,14 @@ void KMediaWidget::_updateLoaded()
     d->m_path = d->m_player->path();
     const QString title = d->m_player->title();
     if (!title.isEmpty()) {
-        _updateStatus(title);
+        d->updateStatus(title);
     }
     _updatePlay(!d->m_player->isPlaying());
 
     if (d->m_hiddencontrols) {
         setMouseTracking(true);
         resetControlsTimer();
-        _updateControls(true);
-    }
-}
-
-void KMediaWidget::_updateStatus(const QString &string)
-{
-    if (d->m_fullscreen) {
-        QWidget *windowwidget = window();
-        KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
-        if (kmainwindow) {
-            kmainwindow->setCaption(string);
-            KStatusBar *statusbar = kmainwindow->statusBar();
-            if (statusbar) {
-                if (d->m_player->isPlaying()) {
-                    statusbar->showMessage(i18n("Now playing: %1", string));
-                } else {
-                    statusbar->showMessage(string);
-                }
-            }
-        } else if (windowwidget) {
-            windowwidget->setWindowTitle(string);
-        }
+        d->updateControls(true);
     }
 }
 
@@ -427,7 +452,7 @@ void KMediaWidget::_updateFinished()
             d->m_timerid = 0;
         }
         setMouseTracking(false);
-        _updateControls(true);
+        d->updateControls(true);
     }
     _updatePlay(true);
 }
@@ -443,12 +468,12 @@ void KMediaWidget::_updateVolume(const int volume)
 void KMediaWidget::_updateError(const QString &error)
 {
     if (d->m_fullscreen) {
-        _updateStatus(error);
+        d->updateStatus(error);
     } else {
         // since there are not many ways to indicate an error when
         // there are no extended controls use the play button to do so
         d->m_ui->w_play->setIcon(KIcon("dialog-error"));
-        d->m_ui->w_play->setText(i18n("Error"));
+        d->updatePlayText(i18n("Error"));
     }
 
     d->m_ui->w_position->setEnabled(false);

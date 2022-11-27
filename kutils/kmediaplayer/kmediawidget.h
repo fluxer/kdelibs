@@ -109,6 +109,8 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *event);
     //! @brief Reimplementation to support Drag-n-Drop
     virtual void dropEvent(QDropEvent *event);
+    //! @brief Reimplementation to show play button text conditionally
+    virtual void resizeEvent(QResizeEvent *event);
 
 public Q_SLOTS:
     /*!
@@ -160,18 +162,17 @@ Q_SIGNALS:
     void controlsHidden(const bool hidden);
 
 private Q_SLOTS:
-    void _updateControls(const bool visible);
     void _updatePlay(const bool paused);
     void _setPosition();
     void _updateSeekable(const bool seekable);
     void _updatePosition(const double seconds);
     void _updateLoaded();
-    void _updateStatus(const QString &string);
     void _updateFinished();
     void _updateError(const QString &error);
     void _updateVolume(const int volume);
 
 private:
+    friend KMediaWidgetPrivate;
     KMediaWidgetPrivate *d;
 };
 Q_DECLARE_OPERATORS_FOR_FLAGS(KMediaWidget::KMediaOptions);
