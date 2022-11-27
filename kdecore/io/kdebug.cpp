@@ -631,6 +631,7 @@ QDebug KDebug(const QtMsgType type, const char* const funcinfo, const int area)
         }
         case KDebugType::TypeOff:
         default: {
+            // can't issue a warning about invalid type from KDebug itself
             return QDebug(globalKDebugNullDevie);
         }
     }
