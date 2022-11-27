@@ -179,15 +179,6 @@ bool JP2Handler::read(QImage *image)
         return false;
     }
 
-    *image = QImage(ojimage->comps->w, ojimage->comps->h, QImage::Format_ARGB32);
-    if (Q_UNLIKELY(image->isNull())) {
-        kWarning() << "Could not create image";
-        opj_destroy_codec(ojcodec);
-        opj_stream_destroy(ojstream);
-        opj_image_destroy(ojimage);
-        return false;
-    }
-
     switch (ojimage->color_space) {
         case OPJ_CLRSPC_UNKNOWN:
         case OPJ_CLRSPC_UNSPECIFIED: {
@@ -208,6 +199,15 @@ bool JP2Handler::read(QImage *image)
             opj_image_destroy(ojimage);
             return false;
         }
+    }
+
+    *image = QImage(ojimage->comps->w, ojimage->comps->h, QImage::Format_ARGB32);
+    if (Q_UNLIKELY(image->isNull())) {
+        kWarning() << "Could not create image";
+        opj_destroy_codec(ojcodec);
+        opj_stream_destroy(ojstream);
+        opj_image_destroy(ojimage);
+        return false;
     }
 
     switch (ojimage->numcomps) {
