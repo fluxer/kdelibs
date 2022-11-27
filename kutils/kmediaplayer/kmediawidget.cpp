@@ -89,7 +89,7 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_volumeline.setDirection(QTimeLine::Forward);
 
     connect(d->m_ui->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
-    // connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(setPosition(int)));
+    // connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(_setPosition(int)));
     connect(d->m_ui->w_position, SIGNAL(sliderReleased()), this, SLOT(_setPosition()));
     connect(d->m_ui->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
     connect(d->m_ui->w_fullscreen, SIGNAL(clicked()), SLOT(setFullscreen()));
