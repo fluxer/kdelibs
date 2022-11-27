@@ -706,9 +706,6 @@ class PLASMA_EXPORT Applet : public QGraphicsWidget
          */
         void releaseVisualFocus();
 
-    protected:
-        void geometryChanged(); // in QGraphicsWidget now; preserve BC
-
     Q_SIGNALS:
         /**
          * Emitted when the user completes a transformation of the applet.

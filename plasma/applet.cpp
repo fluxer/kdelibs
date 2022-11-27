@@ -2931,12 +2931,6 @@ void AppletOverlayWidget::paint(QPainter *painter,
     painter->fillPath(backgroundShape, wash);
 }
 
-// in QGraphicsWidget now; preserve BC by implementing it as a protected method
-void Applet::geometryChanged()
-{
-    emit QGraphicsWidget::geometryChanged();
-}
-
 } // Plasma namespace
 
 #include "moc_applet.cpp"
