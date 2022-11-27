@@ -368,10 +368,10 @@ class KDebugAreaCache
 {
 public:
     KDebugAreaCache()
-        : infooutput(4),
-        warnoutput(2),
-        erroroutput(2),
-        fataloutput(2),
+        : infooutput(KDebugType::TypeOff),
+        warnoutput(KDebugType::TypeShell),
+        erroroutput(KDebugType::TypeShell),
+        fataloutput(KDebugType::TypeShell),
         infofilename(s_kdebugfilepath),
         warnfilename(s_kdebugfilepath),
         errorfilename(s_kdebugfilepath),
