@@ -394,29 +394,6 @@ KFontChooser::KFontChooser( QWidget *parent,
     //
     // Finished setting up the splitter.
 
-    // Add fonts below the font attributes/preview splitter.
-    //
-    QVBoxLayout *vbox;
-    if( flags & DisplayFrame )
-    {
-        page = new QGroupBox( i18n("Actual Font"), this );
-        topLayout->addWidget(page);
-        vbox = new QVBoxLayout( page );
-        vbox->addSpacing( fontMetrics().lineSpacing() );
-    }
-    else
-    {
-        page = new QWidget( this );
-        topLayout->addWidget(page);
-        vbox = new QVBoxLayout( page );
-        vbox->setMargin( 0 );
-        QLabel *label = new QLabel( i18n("Actual Font"), page );
-        vbox->addWidget( label );
-    }
-
-    //
-    // Finished setting up the chooser layout.
-
     // lets initialize the display if possible
     setFont( d->usingFixed ? KGlobalSettings::fixedFont() : KGlobalSettings::generalFont(), d->usingFixed );
 
