@@ -639,6 +639,8 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         } else {
             kWarning() << i18n("Could not get widget ID");
         }
+        // NOTE: the option for this changes like the wind
+        setOption("gpu-context", "x11");
 
         COMMON_STATE_LOAD
     }
