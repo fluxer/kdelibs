@@ -470,8 +470,7 @@ void KMediaWidget::_updateError(const QString &error)
     if (d->m_fullscreen) {
         d->updateStatus(error);
     } else {
-        // since there are not many ways to indicate an error when
-        // there are no extended controls use the play button to do so
+        // since there are not many ways to indicate an error use the play button to do so
         d->m_ui->w_play->setIcon(KIcon("dialog-error"));
         d->updatePlayText(i18n("Error"));
     }
