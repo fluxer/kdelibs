@@ -33,8 +33,7 @@ class KMediaWidgetPrivate;
     various media sources including Hard-Drives, Internet streams, CD, DVD, Blue-Ray,
     file-descriptor, raw data, you name it. Unlike @p KMediaPlayer it provides interactive media
     controls to play/pause, seek to position and set volume. It is ment to be a simple player but
-    supports drag-n-drop actions, fullscreen support and can automatically hide the media controls
-    optionally.
+    supports drag-n-drop actions optionally.
 
     For a simpler version of this class check out @p KMediaPlayer.
 
@@ -46,10 +45,8 @@ class KMediaWidgetPrivate;
     player.open("http://dl5.webmfiles.org/big-buck-bunny_trailer.webm");
     @endcode
 
-    @note You should construct it with parent widget, preferably a QMainWindow, so that it can be
-    layered on top of it. Otherwise when a video is played the widget will be floating. Ensuring
-    that the widget has parent is a key to the fullscreen support as it will ask the parent to
-    maximize itself when that needs to happen to ensure that the media controls are visible.
+    @note You should construct it with parent widget so that it can be layered on top of it.
+    Otherwise when a video is played the widget will be floating.
     @see KMediaPlayer
     @todo keyboard shortcuts
 */
@@ -63,12 +60,10 @@ public:
         NoOptions = 0x0,
         //! @brief When URL is dragged to the widget it will be opened
         DragDrop = 0x1,
-        //! @brief Provide fullscreen option, it is such because it will ask the parent to do it
-        FullscreenVideo = 0x2,
         //! @brief Whenever path is loaded the volume is slowly increased
-        SmoothVolume = 0x4,
+        SmoothVolume = 0x2,
         //! @brief All available options
-        AllOptions = DragDrop | FullscreenVideo | SmoothVolume,
+        AllOptions = DragDrop | SmoothVolume,
         //! @brief Default options
         DefaultOptions = NoOptions
     };
@@ -97,8 +92,6 @@ public:
     virtual QSize minimumSizeHint() const;
 
 protected:
-    //! @brief Reimplementation to support fullscreen
-    virtual void mouseDoubleClickEvent(QMouseEvent *event);
     //! @brief Reimplementation to support Drag-n-Drop
     virtual void dragEnterEvent(QDragEnterEvent *event);
     //! @brief Reimplementation to support Drag-n-Drop
@@ -129,14 +122,6 @@ public Q_SLOTS:
         @see KMediaPlayer::setVolume
     */
     void setVolume(const int value);
-    /*!
-        @brief Set the fullscreen state
-        @param value A tristate value for the fullscreen state, if "-1" the state will be
-        automatically decided for you. If "1 it will set the state to fullscreen and if "0" it
-        will set it non-fullscreen.
-        @see KMediaPlayer::isFullscreen, KMediaPlayer::setFullscreen
-    */
-    void setFullscreen(const int value = -1);
 
 private Q_SLOTS:
     void _updatePlay(const bool paused);

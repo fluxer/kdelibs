@@ -161,10 +161,6 @@ public:
     */
     bool isSeekable() const;
     /*!
-        @return Whether the current video is taking all screen space
-    */
-    bool isFullscreen() const;
-    /*!
         @param mime MIME type in the format \<category\>/\<format\>, e.g. "audio/aac" (without
         quotes)
         @return Whether the MIME type is supported
@@ -211,13 +207,6 @@ public:
         @see audiooutputs
     */
     void setAudioOutput(const QString &output);
-    /*!
-        @param fullscreen wheather it should take all screen space
-        @warning This will most likely fail and the property will be set but MPV will do nothing
-        because it is embeded, you will have to call @p QWidget::showFullscreen() on the parent
-        widget!
-    */
-    void setFullscreen(const bool fullscreen);
 };
 
 /*!

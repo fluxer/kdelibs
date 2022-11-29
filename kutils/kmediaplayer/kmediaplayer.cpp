@@ -27,8 +27,6 @@
 #if defined(HAVE_MPV)
 #include <locale.h>
 #include <mpv/client.h>
-#else
-static bool s_fullscreen = false;
 #endif // HAVE_MPV
 
 /*
@@ -466,15 +464,6 @@ bool KAbstractPlayer::isSeekable() const
     return option("seekable").toBool() || option("partially-seekable").toBool();
 }
 
-bool KAbstractPlayer::isFullscreen() const
-{
-#if defined(HAVE_MPV)
-    return option("fullscreen").toBool();
-#else
-    return s_fullscreen;
-#endif // HAVE_MPV
-}
-
 bool KAbstractPlayer::isProtocolSupported(const QString &protocol) const
 {
     foreach(const QString &proto, protocols()) {
@@ -512,15 +501,6 @@ void KAbstractPlayer::setMute(const bool mute)
 void KAbstractPlayer::setAudioOutput(const QString &output)
 {
     setOption("audio-device", output);
-}
-
-void KAbstractPlayer::setFullscreen(const bool fullscreen)
-{
-#if defined(HAVE_MPV)
-    setOption("fullscreen", fullscreen);
-#else
-    s_fullscreen = fullscreen;
-#endif // HAVE_MPV
 }
 
 static void wakeup_audio(void *ctx)

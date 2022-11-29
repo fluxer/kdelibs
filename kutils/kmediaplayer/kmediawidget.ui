@@ -38,16 +38,6 @@
       <enum>QFrame::Sunken</enum>
      </property>
      <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="3">
-       <widget class="QPushButton" name="w_fullscreen">
-        <property name="text">
-         <string>Fullscreen</string>
-        </property>
-        <property name="icon">
-         <iconset theme="view-fullscreen"/>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="0">
        <widget class="QPushButton" name="w_play">
         <property name="text">

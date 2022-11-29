@@ -42,11 +42,7 @@ public:
     KMediaWidget* m_q;
     KMediaPlayer *m_player;
     bool m_dragdrop;
-    bool m_fullscreen;
     bool m_smoothvolume;
-    QWidget *m_parent;
-    QMainWindow *m_parenthack;
-    QSize m_parentsizehack;
     QTimeLine m_volumeline;
     QString m_path;
     bool m_replay;
@@ -57,8 +53,7 @@ public:
 KMediaWidgetPrivate::KMediaWidgetPrivate(KMediaWidget* q)
     : m_q(q),
     m_player(nullptr),
-    m_dragdrop(false), m_fullscreen(false), m_smoothvolume(false),
-    m_parent(nullptr), m_parenthack(nullptr),
+    m_dragdrop(false), m_smoothvolume(false),
     m_replay(false),
     m_ui(nullptr)
 {
@@ -78,21 +73,17 @@ void KMediaWidgetPrivate::updatePlayText(const QString &text)
 
 void KMediaWidgetPrivate::updateStatus(const QString &string)
 {
-    if (m_fullscreen) {
-        QWidget *windowwidget = m_q->window();
-        KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
-        if (kmainwindow) {
-            kmainwindow->setCaption(string);
-            KStatusBar *statusbar = kmainwindow->statusBar();
-            if (statusbar) {
-                if (m_player->isPlaying()) {
-                    statusbar->showMessage(i18n("Now playing: %1", string));
-                } else {
-                    statusbar->showMessage(string);
-                }
+    QWidget *windowwidget = m_q->window();
+    KMainWindow *kmainwindow = qobject_cast<KMainWindow*>(windowwidget);
+    if (kmainwindow) {
+        kmainwindow->setCaption(string);
+        KStatusBar *statusbar = kmainwindow->statusBar();
+        if (statusbar) {
+            if (m_player->isPlaying()) {
+                statusbar->showMessage(i18n("Now playing: %1", string));
+            } else {
+                statusbar->showMessage(string);
             }
-        } else if (windowwidget) {
-            windowwidget->setWindowTitle(string);
         }
     }
 }
@@ -105,16 +96,13 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_ui->setupUi(this);
     d->m_player = new KMediaPlayer(d->m_ui->w_player);
     d->m_dragdrop = (options & DragDrop) != options;
-    d->m_fullscreen = (options & FullscreenVideo) != options;
     d->m_smoothvolume = (options & SmoothVolume) != options;
-    d->m_parent = parent;
 
     d->m_ui->w_play->setIcon(KIcon("media-playback-start"));
     d->updatePlayText(i18n("Play"));
     d->m_ui->w_play->setEnabled(false);
     d->m_ui->w_position->setEnabled(false);
     d->m_ui->w_volume->setValue(d->m_player->volume());
-    d->m_ui->w_fullscreen->setIcon(KIcon("view-fullscreen"));
 
     connect(&d->m_volumeline, SIGNAL(frameChanged(int)), this, SLOT(_updateVolume(int)));
     d->m_volumeline.setFrameRange(0, d->m_ui->w_volume->value());
@@ -125,7 +113,6 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     // connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(_setPosition(int)));
     connect(d->m_ui->w_position, SIGNAL(sliderReleased()), this, SLOT(_setPosition()));
     connect(d->m_ui->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
-    connect(d->m_ui->w_fullscreen, SIGNAL(clicked()), SLOT(setFullscreen()));
 
     connect(d->m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
     connect(d->m_player, SIGNAL(loaded()), this, SLOT(_updateLoaded()));
@@ -137,10 +124,6 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     if (d->m_dragdrop) {
         setAcceptDrops(true);
         d->m_player->setAcceptDrops(true);
-    }
-
-    if (!d->m_fullscreen) {
-        d->m_ui->w_fullscreen->setVisible(false);
     }
 }
 
@@ -221,66 +204,6 @@ void KMediaWidget::setVolume(const int value)
     d->m_player->setVolume(value);
 }
 
-void KMediaWidget::setFullscreen(const int value)
-{
-    bool fullscreen;
-    if (value == -1) {
-        fullscreen = !d->m_player->isFullscreen();
-    } else {
-        fullscreen = bool(value);
-    }
-    /*
-        Making a QWidget go fullscreen requires quite some magic for X11
-        because showFullScreen() requires the parent of the widget to be a
-        window (QMainWindow) thus the hack bellow. Asking the parent widget to
-        go fullscreen is required to preserve the media controls visible and
-        interactive. Note that setting the MPV property is just for consistency
-        and possible clients quering it, it does nothing when MPV is embed (as
-        of the time of writing this).
-    */
-    if (!d->m_parent && (parentWidget() == window()) && !d->m_parenthack) {
-        kDebug() << i18n("using parent widget from parentWidget()");
-        d->m_parent = parentWidget();
-        d->m_parentsizehack = QSize(-1, -1);
-        d->m_parenthack = NULL;
-    } else if (!d->m_parent && parentWidget()) {
-        kWarning() << i18n("creating a parent, detaching widget, starting voodoo dance..");
-        d->m_parent = parentWidget();
-        d->m_parentsizehack = d->m_parent->size();
-        d->m_parenthack = new QMainWindow(d->m_parent);
-    }
-
-    if (fullscreen) {
-        if (d->m_parenthack && d->m_parentsizehack.isValid() && d->m_parent) {
-            kDebug() << i18n("using parent hack widget");
-            d->m_parenthack->setCentralWidget(this);
-            d->m_parenthack->showFullScreen();
-        } else if (d->m_parent) {
-            kDebug() << i18n("using parent widget");
-            d->m_parent->showFullScreen();
-        } else {
-            kWarning() << i18n("cannot set fullscreen state");
-        }
-        d->m_player->setFullscreen(true);
-    } else {
-        if (d->m_parenthack && d->m_parentsizehack.isValid() && d->m_parent) {
-            kDebug() << i18n("restoring parent from hack widget");
-            setParent(d->m_parent);
-            resize(d->m_parentsizehack);
-            show();
-            delete d->m_parenthack;
-            d->m_parenthack = NULL;
-            d->m_parent = NULL;
-        } else if (d->m_parent) {
-            kDebug() << i18n("restoring from parent widget");
-            d->m_parent->showNormal();
-        } else {
-            kWarning() << i18n("cannot restore to non-fullscreen state");
-        }
-        d->m_player->setFullscreen(false);
-    }
-}
-
 QSize KMediaWidget::sizeHint() const
 {
     return d->m_ui->w_player->sizeHint();
@@ -288,18 +211,7 @@ QSize KMediaWidget::sizeHint() const
 
 QSize KMediaWidget::minimumSizeHint() const
 {
-    if (d->m_fullscreen) {
-        return QSize(300, 233);
-    }
     return QSize(180, 140);
-}
-
-void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
-{
-    if (d->m_fullscreen) {
-        setFullscreen();
-    }
-    event->ignore();
 }
 
 void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
@@ -392,13 +304,11 @@ void KMediaWidget::_updateVolume(const int volume)
 
 void KMediaWidget::_updateError(const QString &error)
 {
-    if (d->m_fullscreen) {
-        d->updateStatus(error);
-    } else {
-        // since there are not many ways to indicate an error use the play button to do so
-        d->m_ui->w_play->setIcon(KIcon("dialog-error"));
-        d->updatePlayText(i18n("Error"));
-    }
+    d->updateStatus(error);
+    // since there are not many ways to indicate an error use the play button to do so aswell in
+    // case the status bar is hidden
+    d->m_ui->w_play->setIcon(KIcon("dialog-error"));
+    d->updatePlayText(i18n("Error"));
 
     d->m_ui->w_position->setEnabled(false);
 }
