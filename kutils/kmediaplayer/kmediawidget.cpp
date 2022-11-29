@@ -175,7 +175,6 @@ KMediaPlayer* KMediaWidget::player() const
 
 void KMediaWidget::setPlay(const int value)
 {
-    // TODO: can the position be stored and restored reliably as well?
     if (d->m_replay && !d->m_path.isEmpty()) {
         KMediaWidget::open(d->m_path);
         return;
