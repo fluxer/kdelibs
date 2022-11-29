@@ -38,22 +38,18 @@ public:
 
     void updatePlayText(const QString &string);
     void updateStatus(const QString &string);
-    void updateControls(const bool visible);
 
     KMediaWidget* m_q;
     KMediaPlayer *m_player;
     bool m_dragdrop;
     bool m_fullscreen;
-    bool m_hiddencontrols;
     bool m_smoothvolume;
     QWidget *m_parent;
     QMainWindow *m_parenthack;
     QSize m_parentsizehack;
     QTimeLine m_volumeline;
-    int m_timerid;
     QString m_path;
     bool m_replay;
-    bool m_visible;
     QString m_playtext;
     Ui_KMediaWidgetUI *m_ui;
 };
@@ -61,11 +57,9 @@ public:
 KMediaWidgetPrivate::KMediaWidgetPrivate(KMediaWidget* q)
     : m_q(q),
     m_player(nullptr),
-    m_dragdrop(false), m_fullscreen(false), m_hiddencontrols(false), m_smoothvolume(false),
+    m_dragdrop(false), m_fullscreen(false), m_smoothvolume(false),
     m_parent(nullptr), m_parenthack(nullptr),
-    m_timerid(0),
     m_replay(false),
-    m_visible(false),
     m_ui(nullptr)
 {
 }
@@ -103,15 +97,6 @@ void KMediaWidgetPrivate::updateStatus(const QString &string)
     }
 }
 
-void KMediaWidgetPrivate::updateControls(const bool visible)
-{
-    if (m_hiddencontrols && visible != m_visible) {
-        m_ui->w_frame->setVisible(visible);
-        emit m_q->controlsHidden(visible);
-        m_visible = visible;
-    }
-}
-
 KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     : QWidget(parent),
     d(new KMediaWidgetPrivate(this))
@@ -121,7 +106,6 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_player = new KMediaPlayer(d->m_ui->w_player);
     d->m_dragdrop = (options & DragDrop) != options;
     d->m_fullscreen = (options & FullscreenVideo) != options;
-    d->m_hiddencontrols = (options & HiddenControls) != options;
     d->m_smoothvolume = (options & SmoothVolume) != options;
     d->m_parent = parent;
 
@@ -158,18 +142,10 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     if (!d->m_fullscreen) {
         d->m_ui->w_fullscreen->setVisible(false);
     }
-
-    if (d->m_hiddencontrols) {
-        d->m_visible = true;
-        setMouseTracking(false);
-    }
 }
 
 KMediaWidget::~KMediaWidget()
 {
-    if (d->m_timerid >= 0) {
-        killTimer(d->m_timerid);
-    }
     if (d->m_volumeline.state() == QTimeLine::Running) {
         d->m_volumeline.stop();
         setVolume(d->m_volumeline.endFrame());
@@ -305,18 +281,6 @@ void KMediaWidget::setFullscreen(const int value)
     }
 }
 
-void KMediaWidget::resetControlsTimer()
-{
-    if (d->m_timerid >= 0) {
-        killTimer(d->m_timerid);
-        d->m_timerid = 0;
-    }
-    // do not hide the controls if path is not loaded
-    if (!d->m_player->path().isEmpty()) {
-        d->m_timerid = startTimer(3000);
-    }
-}
-
 QSize KMediaWidget::sizeHint() const
 {
     return d->m_ui->w_player->sizeHint();
@@ -336,29 +300,6 @@ void KMediaWidget::mouseDoubleClickEvent(QMouseEvent *event)
         setFullscreen();
     }
     event->ignore();
-}
-
-void KMediaWidget::mouseMoveEvent(QMouseEvent *event)
-{
-    if (d->m_hiddencontrols) {
-        resetControlsTimer();
-        d->updateControls(true);
-    }
-    event->ignore();
-}
-
-void KMediaWidget::timerEvent(QTimerEvent *event)
-{
-    if (event->timerId() == d->m_timerid
-        && !d->m_ui->w_play->isDown()
-        && !d->m_ui->w_position->isSliderDown()
-        && !d->m_ui->w_volume->isSliderDown()
-        && !d->m_ui->w_fullscreen->isDown()) {
-        d->updateControls(false);
-        event->accept();
-    } else {
-        event->ignore();
-    }
 }
 
 void KMediaWidget::dragEnterEvent(QDragEnterEvent *event)
@@ -433,27 +374,11 @@ void KMediaWidget::_updateLoaded()
         d->updateStatus(title);
     }
     _updatePlay(!d->m_player->isPlaying());
-
-    if (d->m_hiddencontrols) {
-        setMouseTracking(true);
-        resetControlsTimer();
-        d->updateControls(true);
-    }
 }
 
 void KMediaWidget::_updateFinished()
 {
     d->m_replay = true;
-
-    if (d->m_hiddencontrols) {
-        // show the controls until the next open
-        if (d->m_timerid >= 0) {
-            killTimer(d->m_timerid);
-            d->m_timerid = 0;
-        }
-        setMouseTracking(false);
-        d->updateControls(true);
-    }
     _updatePlay(true);
 }
 

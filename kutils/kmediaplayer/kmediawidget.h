@@ -65,12 +65,10 @@ public:
         DragDrop = 0x1,
         //! @brief Provide fullscreen option, it is such because it will ask the parent to do it
         FullscreenVideo = 0x2,
-        //! @brief After a certain amount of time the controls will hide and show again when needed
-        HiddenControls = 0x4,
         //! @brief Whenever path is loaded the volume is slowly increased
-        SmoothVolume = 0x8,
+        SmoothVolume = 0x4,
         //! @brief All available options
-        AllOptions = DragDrop | FullscreenVideo | HiddenControls | SmoothVolume,
+        AllOptions = DragDrop | FullscreenVideo | SmoothVolume,
         //! @brief Default options
         DefaultOptions = NoOptions
     };
@@ -101,10 +99,6 @@ public:
 protected:
     //! @brief Reimplementation to support fullscreen
     virtual void mouseDoubleClickEvent(QMouseEvent *event);
-    //! @brief Reimplementation to support hidden controls
-    virtual void mouseMoveEvent(QMouseEvent *event);
-    //! @brief Reimplementation to support hidden controls
-    virtual void timerEvent(QTimerEvent *event);
     //! @brief Reimplementation to support Drag-n-Drop
     virtual void dragEnterEvent(QDragEnterEvent *event);
     //! @brief Reimplementation to support Drag-n-Drop
@@ -143,23 +137,6 @@ public Q_SLOTS:
         @see KMediaPlayer::isFullscreen, KMediaPlayer::setFullscreen
     */
     void setFullscreen(const int value = -1);
-    /*!
-        @brief Reset internal media controls hide/unhide timer, simulating user interactivity
-        @see controlsHidden
-    */
-    void resetControlsTimer();
-
-Q_SIGNALS:
-    /*!
-        @brief Signals that controls were hidden/unhidden
-        @note This signal can be used to show/hide parent widget elements, such as menubar, when
-        the media controls of this widget are hidden/unhidden. You will have to setup mouse
-        tracking for the widgets connected (directly or indirectly) and call
-        @p resetControlsTimer() to ensure that this signal is not emited while the widgets
-        are beeing interacted with, hidding them without reason.
-        @see resetControlsTimer
-    */
-    void controlsHidden(const bool hidden);
 
 private Q_SLOTS:
     void _updatePlay(const bool paused);
