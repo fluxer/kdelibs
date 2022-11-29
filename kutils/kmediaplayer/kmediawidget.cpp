@@ -198,16 +198,16 @@ void KMediaWidget::setPlay(const int value)
         return;
     }
 
-    bool pause;
+    bool play;
     if (value == -1) {
-        pause = d->m_player->isPlaying();
+        play = !d->m_player->isPlaying();
     } else {
-        pause = bool(value);
+        play = bool(value);
     }
-    if (pause) {
-        d->m_player->pause();
-    } else {
+    if (play) {
         d->m_player->play();
+    } else {
+        d->m_player->pause();
     }
 }
 

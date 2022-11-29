@@ -110,7 +110,7 @@ public Q_SLOTS:
     /*!
         @brief Set the state to play (unpaused) or paused
         @param value A tristate value for the play state, if "-1" the state will be automatically
-        decided for you. If "0" it will set the state to play (unpaused) and if "1" it will set it
+        decided for you. If "1" it will set the state to play (unpaused) and if "0" it will set it
         to pause (paused). Whenever called it updates the play/pause button state.
         @see KMediaPlayer::play, KMediaPlayer::pause
     */
@@ -132,7 +132,7 @@ public Q_SLOTS:
     /*!
         @brief Set the fullscreen state
         @param value A tristate value for the fullscreen state, if "-1" the state will be
-        automatically decided for you. If "0" it will set the state to fullscreen and if "1" it
+        automatically decided for you. If "1 it will set the state to fullscreen and if "0" it
         will set it non-fullscreen.
         @see KMediaPlayer::isFullscreen, KMediaPlayer::setFullscreen
     */
