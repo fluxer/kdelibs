@@ -182,7 +182,7 @@ bool JP2Handler::read(QImage *image)
     switch (ojimage->color_space) {
         case OPJ_CLRSPC_UNKNOWN:
         case OPJ_CLRSPC_UNSPECIFIED: {
-            // NOTE: there are images with unspecified and unknown color space that are sRGB but
+            // NOTE: there are images with unspecified or unknown color space that are sRGB but
             // in case it is not sRGB and it looks weird when it is loaded tell the person who
             // created the image to fix it somehow
             kDebug() << "Unspecified or unknown color space";
