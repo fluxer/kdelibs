@@ -851,11 +851,6 @@ void StatJob::slotFinished()
     SimpleJob::slotFinished();
 }
 
-void StatJob::slotMetaData( const KIO::MetaData &_metaData)
-{
-    SimpleJob::slotMetaData(_metaData);
-}
-
 StatJob *KIO::stat(const KUrl& url, JobFlags flags)
 {
     // Assume sideIsSource. Gets are more common than puts.
@@ -1173,11 +1168,6 @@ void TransferJobPrivate::slotSubUrlData(KIO::Job*, const QByteArray &data)
     staticData = data;
     m_subJob->d_func()->internalSuspend(); // Put job on hold until we have delivered the data.
     internalResume(); // Activate ourselves again.
-}
-
-void TransferJob::slotMetaData( const KIO::MetaData &_metaData)
-{
-    SimpleJob::slotMetaData(_metaData);
 }
 
 void TransferJobPrivate::slotCanResume( KIO::filesize_t offset )
@@ -2290,11 +2280,6 @@ void ListJob::slotFinished()
 
     // Return slave to the scheduler
     SimpleJob::slotFinished();
-}
-
-void ListJob::slotMetaData( const KIO::MetaData &_metaData)
-{
-    SimpleJob::slotMetaData(_metaData);
 }
 
 ListJob *KIO::listDir( const KUrl& url, JobFlags flags, bool includeHidden )

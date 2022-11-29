@@ -495,7 +495,6 @@ namespace KIO {
 
     protected Q_SLOTS:
         virtual void slotFinished();
-        virtual void slotMetaData( const KIO::MetaData &_metaData);
     protected:
         StatJob(StatJobPrivate &dd);
 
@@ -623,7 +622,6 @@ namespace KIO {
         virtual void slotData( const QByteArray &data);
         virtual void slotDataReq();
         virtual void slotMimetype( const QString &mimetype );
-        virtual void slotMetaData( const KIO::MetaData &_metaData);
 
     protected:
         TransferJob(TransferJobPrivate &dd);
@@ -837,7 +835,6 @@ namespace KIO {
 
     protected Q_SLOTS:
         virtual void slotFinished( );
-        virtual void slotMetaData( const KIO::MetaData &_metaData);
         virtual void slotResult( KJob *job );
 
     protected:
