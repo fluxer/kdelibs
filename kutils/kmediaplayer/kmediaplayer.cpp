@@ -322,7 +322,6 @@ KAbstractPlayerPrivate::KAbstractPlayerPrivate()
             kWarning() << mpv_error_string(rc);
         } else {
             mpv_observe_property(m_handle, 0, "time-pos", MPV_FORMAT_DOUBLE);
-            mpv_observe_property(m_handle, 0, "loadfile", MPV_FORMAT_NONE);
             mpv_observe_property(m_handle, 0, "paused-for-cache", MPV_FORMAT_FLAG);
             mpv_observe_property(m_handle, 0, "core-idle", MPV_FORMAT_FLAG);
             mpv_observe_property(m_handle, 0, "seekable", MPV_FORMAT_FLAG);
