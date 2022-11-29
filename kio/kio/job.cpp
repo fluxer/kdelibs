@@ -2251,20 +2251,6 @@ void ListJob::slotFinished()
 {
     Q_D(ListJob);
 
-    // Support for listing archives as directories
-    if ( error() == KIO::ERR_IS_FILE && d->m_url.isLocalFile() ) {
-        KMimeType::Ptr ptr = KMimeType::findByUrl( d->m_url, 0, true, true );
-        if ( ptr ) {
-            QString proto = ptr->property("X-KDE-LocalProtocol").toString();
-            if ( !proto.isEmpty() && KProtocolInfo::isKnownProtocol( proto) ) {
-                d->m_redirectionURL = d->m_url;
-                d->m_redirectionURL.setProtocol( proto );
-                setError( 0 );
-                emit redirection(this,d->m_redirectionURL);
-            }
-        }
-    }
-
     if ( !d->m_redirectionURL.isEmpty() && d->m_redirectionURL.isValid() && !error() ) {
 
         //kDebug(7007) << "Redirection to " << d->m_redirectionURL;
