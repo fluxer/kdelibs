@@ -186,6 +186,7 @@ void KMediaWidget::setPlay(const int value)
     } else {
         play = bool(value);
     }
+    _updatePlay(!play); // the state is known, don't have to wait for paused() signal
     if (play) {
         d->m_player->play();
     } else {
