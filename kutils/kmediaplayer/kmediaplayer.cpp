@@ -53,11 +53,11 @@ static bool s_fullscreen = false;
         d->m_settings->setValue(d->m_playerid + "/mute", mute()); \
         d->m_settings->sync(); \
     } else { \
-        kWarning() << i18n("Could not save state"); \
+        kWarning() << "Could not save state"; \
     }
 
 #define COMMON_COMMAND_SENDER \
-    kDebug() << i18n("sending command") << command; \
+    kDebug() << "Sending command" << command; \
     if (d->m_handle) { \
         const char* commanddata[command.size() + 1]; \
         ::memset(commanddata, 0, command.size() * sizeof(const char*)); \
@@ -67,7 +67,7 @@ static bool s_fullscreen = false;
         commanddata[command.size()] = NULL; \
         const int mpvresult = mpv_command(d->m_handle, commanddata); \
         if (mpvresult < 0) { \
-            kWarning() << command << mpv_error_string(mpvresult); \
+            kWarning() << "Could not send command" << command << mpv_error_string(mpvresult); \
         } \
     }
 
@@ -115,7 +115,7 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
             break;
         }
         default: {
-            kWarning() << i18n("Unknown node format") << mpvnode->format;
+            kWarning() << "Unknown node format" << mpvnode->format;
             break;
         }
     }
@@ -126,12 +126,12 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
 // certain properties are not available when not playing for an example thus do not issue warning
 // in case of error
 #define COMMON_OPTION_GETTER \
-    kDebug() << i18n("getting option") << name; \
+    kDebug() << "Getting option" << name; \
     if (d->m_handle) { \
         mpv_node mpvnode; \
         const int mpvresult = mpv_get_property(d->m_handle, name.constData(), MPV_FORMAT_NODE, &mpvnode); \
         if (mpvresult < 0) { \
-            kDebug() << name << mpv_error_string(mpvresult); \
+            kDebug() << "Could not get option" << name << mpv_error_string(mpvresult); \
             return QVariant(); \
         } \
         QVariant result = mpvNodeToVariant(&mpvnode); \
@@ -141,7 +141,7 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
 
 // NOTE: flags are integers
 #define COMMON_OPTION_SETTER \
-    kDebug() << i18n("setting option") << name << value; \
+    kDebug() << "Setting option" << name << value; \
     if (d->m_handle) { \
         int mpvresult = 0; \
         switch (value.type()) { \
@@ -172,12 +172,12 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
                 break; \
             } \
             default: { \
-                kWarning() << i18n("Invalid option type") << value.type(); \
+                kWarning() << "Invalid option type" << value.type(); \
                 break; \
             } \
         } \
         if (mpvresult < 0) { \
-            kWarning() << name << mpv_error_string(mpvresult); \
+            kWarning() << "Could not set option" << name << mpv_error_string(mpvresult); \
         } \
     }
 
@@ -193,7 +193,7 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
                 break; \
             } \
             case MPV_EVENT_FILE_LOADED: { \
-                kDebug() << i18n("playback loaded"); \
+                kDebug() << "Playback loaded"; \
                 emit loaded(); \
                 break; \
             } \
@@ -201,14 +201,14 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
                 mpv_event_end_file *prop = static_cast<mpv_event_end_file *>(event->data); \
                 if (prop->reason == MPV_END_FILE_REASON_ERROR) { \
                     const QString mpverror = QString::fromLatin1(mpv_error_string(prop->error)); \
-                    kWarning() << i18n("playback finished with error") << mpverror; \
+                    kWarning() << "Playback finished with error" << mpverror; \
                     emit finished(); \
                     emit error(mpverror); \
                 } else if (prop->reason == MPV_END_FILE_REASON_EOF \
                     || prop->reason == MPV_END_FILE_REASON_STOP \
                     || prop->reason == MPV_END_FILE_REASON_QUIT) { \
                     if (option("path").isNull()) { \
-                        kDebug() << i18n("playback finished"); \
+                        kDebug() << "Playback finished"; \
                         emit finished(); \
                     } \
                 } \
@@ -216,56 +216,56 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
             } \
             case MPV_EVENT_PROPERTY_CHANGE: { \
                 mpv_event_property *prop = static_cast<mpv_event_property *>(event->data); \
-                kDebug() << i18n("property changed") << QString::fromLatin1(prop->name); \
+                kDebug() << "Property changed" << QString::fromLatin1(prop->name); \
                 if (strcmp(prop->name, "=time-pos") == 0 || strcmp(prop->name, "time-pos") == 0) { \
                     if (prop->format == MPV_FORMAT_NONE) { \
-                        kDebug() << i18n("the time-pos property is not valid"); \
+                        kDebug() << "The time-pos property is not valid"; \
                     } else if (prop->format == MPV_FORMAT_DOUBLE) { \
                         const double value = *(double *)prop->data; \
                         emit position(value); \
                     } else { \
-                        kWarning() << i18n("the time-pos format has changed") << prop->format; \
+                        kWarning() << "The time-pos format has changed" << prop->format; \
                     } \
                 } else if (strcmp(prop->name, "seekable") == 0) { \
                     if (prop->format == MPV_FORMAT_NONE) { \
-                        kDebug() << i18n("the seekable property is not valid"); \
+                        kDebug() << "The seekable property is not valid"; \
                     } else if (prop->format == MPV_FORMAT_FLAG) { \
                         const bool value = *(bool *)prop->data; \
                         emit seekable(value); \
                     } else { \
-                        kWarning() << i18n("the seekable format has changed") << prop->format; \
+                        kWarning() << "The seekable format has changed" << prop->format; \
                     } \
                 } else if (strcmp(prop->name, "partially-seekable") == 0) { \
                     if (option("seekable").toBool() == false) { \
                         if (prop->format == MPV_FORMAT_NONE) { \
-                            kDebug() << i18n("the partially-seekable property is not valid"); \
+                            kDebug() << "The partially-seekable property is not valid"; \
                         } else if (prop->format == MPV_FORMAT_FLAG) { \
                             const bool value = *(bool *)prop->data; \
                             emit seekable(value); \
                         } else { \
-                            kWarning() << i18n("the partially-seekable format has changed") << prop->format; \
+                            kWarning() << "The partially-seekable format has changed" << prop->format; \
                         } \
                     } \
                 } else if (strcmp(prop->name, "paused-for-cache") == 0) { \
                     if (prop->format == MPV_FORMAT_NONE) { \
-                        kDebug() << i18n("the paused-for-cache property is not valid"); \
+                        kDebug() << "The paused-for-cache property is not valid"; \
                     } else if (prop->format == MPV_FORMAT_FLAG) { \
                         const bool value = *(bool *)prop->data; \
                         emit buffering(value); \
                     } else { \
-                        kWarning() << i18n("the paused-for-cache format has changed") << prop->format; \
+                        kWarning() << "The paused-for-cache format has changed" << prop->format; \
                     } \
                 } else if (strcmp(prop->name, "core-idle") == 0) { \
                     if (prop->format == MPV_FORMAT_NONE) { \
-                        kDebug() << i18n("the core-idle property is not valid"); \
+                        kDebug() << "The core-idle property is not valid"; \
                     } else if (prop->format == MPV_FORMAT_FLAG) { \
                         const bool value = *(bool *)prop->data; \
                         if (!option("path").isNull()) { \
-                            kDebug() << i18n("playback paused") << value; \
+                            kDebug() << "Playback paused" << value; \
                             emit paused(value); \
                         } \
                     } else { \
-                        kWarning() << i18n("the core-idle format has changed") << prop->format; \
+                        kWarning() << "The core-idle format has changed" << prop->format; \
                     } \
                 } \
                 break; \
@@ -276,7 +276,7 @@ static QVariant mpvNodeToVariant(const mpv_node *mpvnode)
                 break; \
             } \
             case MPV_EVENT_QUEUE_OVERFLOW: { \
-                kWarning() << i18n("event queue overflow"); \
+                kWarning() << "Event queue overflow"; \
                 break; \
             } \
         } \
@@ -312,7 +312,7 @@ KAbstractPlayerPrivate::KAbstractPlayerPrivate()
     m_settings(new KSettings("kmediaplayer", KSettings::FullConfig)),
     m_stopprocessing(false)
 {
-    kDebug() << i18n("initializing player");
+    kDebug() << "Initializing player";
 #if defined(HAVE_MPV)
     setlocale(LC_NUMERIC, "C");
     m_handle = mpv_create();
@@ -329,14 +329,14 @@ KAbstractPlayerPrivate::KAbstractPlayerPrivate()
             mpv_request_log_messages(m_handle, "info");
         }
     } else {
-        kWarning() << i18n("context creation failed");
+        kWarning() << "Context creation failed";
     }
 #endif
 }
 
 KAbstractPlayerPrivate::~KAbstractPlayerPrivate()
 {
-    kDebug() << i18n("destroying player");
+    kDebug() << "Destroying player";
     m_stopprocessing = true;
 #if defined(HAVE_MPV)
     mpv_terminate_destroy(m_handle);
@@ -544,7 +544,7 @@ KAudioPlayer::KAudioPlayer(QObject *parent)
         COMMON_STATE_LOAD
     }
 #else
-    kWarning() << i18n("KAudioPlayer is a stub");
+    kWarning() << "KAudioPlayer is a stub";
 #endif
 }
 
@@ -636,7 +636,7 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         if (wid.isValid()) {
             setOption("wid", wid);
         } else {
-            kWarning() << i18n("Could not get widget ID");
+            kWarning() << "Could not get widget ID";
         }
         // NOTE: the option for this changes like the wind
         setOption("gpu-context", "x11");
@@ -644,7 +644,7 @@ KMediaPlayer::KMediaPlayer(QWidget *parent)
         COMMON_STATE_LOAD
     }
 #else
-    kWarning() << i18n("KMediaPlayer is a stub");
+    kWarning() << "KMediaPlayer is a stub";
 #endif
 }
 
