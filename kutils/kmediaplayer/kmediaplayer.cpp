@@ -376,7 +376,7 @@ void KAbstractPlayer::seek(const float position)
 
 void KAbstractPlayer::seek(const int position)
 {
-    command(QList<QByteArray>() << "seek" << QByteArray::number(position) << "absolute");
+    seek(float(position));
 }
 
 void KAbstractPlayer::stop()
