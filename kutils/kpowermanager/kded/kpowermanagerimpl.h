@@ -38,6 +38,7 @@ public Q_SLOTS:
     bool CanSuspend();
     bool GetPowerSaveStatus();
     void Hibernate();
+    void HybridSuspend(); // extension
     void Suspend();
 
 Q_SIGNALS:

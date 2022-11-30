@@ -19,6 +19,7 @@
 
     <method name="Suspend"/>
     <method name="Hibernate"/>
+    <method name="HybridSuspend"/>
     <method name="CanSuspend">
       <arg type="b" name="can_suspend" direction="out"/>
     </method>

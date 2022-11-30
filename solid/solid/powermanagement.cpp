@@ -110,6 +110,10 @@ void Solid::PowerManagement::requestSleep(SleepState state, QObject *receiver, c
             globalPowerManager()->managerIface->asyncCall("Hibernate");
             break;
         }
+        case HybridSuspendState: {
+            globalPowerManager()->managerIface->asyncCall("HybridSuspend");
+            break;
+        }
     }
 }
 

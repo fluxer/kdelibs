@@ -146,6 +146,17 @@ void KPowerManagerImpl::Hibernate()
     }
 }
 
+void KPowerManagerImpl::HybridSuspend()
+{
+    if (m_login1.isValid()) {
+        m_login1.asyncCall("HybridSleep", true);
+        return;
+    }
+    if (m_consolekit.isValid()) {
+        m_consolekit.asyncCall("HybridSleep", true);
+    }
+}
+
 void KPowerManagerImpl::Suspend()
 {
     if (m_login1.isValid()) {
