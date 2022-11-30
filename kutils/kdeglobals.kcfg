@@ -22,7 +22,7 @@
   <entry key="widgetStyle" type="String" >
    <label>Widget style to use</label>
    <whatsthis>The name of the widget style, for example &quot;keramik&quot; or &quot;plastik&quot;. Without quotes.</whatsthis>
-   <default>keramik</default>
+   <default>oxygen</default>
   </entry>
   <entry key="windowBackground" type="String" />
   <entry key="windowForeground" type="String" />
