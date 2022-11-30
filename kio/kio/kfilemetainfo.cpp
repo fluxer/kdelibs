@@ -43,7 +43,7 @@ static QStringList kMetaGlobMimeTypes(const QStringList &servicetypes)
 
     QStringList result;
     foreach (const QString &servicetype, servicetypes) {
-        if (servicetype == kfimetadatapluginservice) {
+        if (servicetype.isEmpty() || servicetype == kfimetadatapluginservice) {
             continue;
         }
         result.append(servicetype);

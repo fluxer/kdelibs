@@ -79,7 +79,7 @@ static QStringList kThumbGlobMimeTypes(const QStringList &servicetypes)
 
     QStringList result;
     foreach (const QString &servicetype, servicetypes) {
-        if (servicetype == thumbcreatorservice) {
+        if (servicetype.isEmpty() || servicetype == thumbcreatorservice) {
             continue;
         }
         result.append(servicetype);
@@ -265,17 +265,22 @@ void PreviewJobPrivate::startPreview()
         const QString itemmime = item.item.mimetype();
         KService::Ptr itemplugin(0);
 
-        // The easy way, also takes preferences into account
-        const KService::List offers = KMimeTypeTrader::self()->query(itemmime, "ThumbCreator");
-        foreach (const KService::Ptr offer, offers) {
-            if (enabledPlugins.contains(offer->desktopEntryName())) {
-                itemplugin = offer;
-                kDebug(7007) << "Preferred match for" << itemmime << itemplugin->library();
-                break;
+        if (!itemmime.isEmpty()) {
+            // The easy way, also takes preferences into account
+            const KService::List offers = KMimeTypeTrader::self()->query(itemmime, "ThumbCreator");
+            foreach (const KService::Ptr offer, offers) {
+                if (enabledPlugins.contains(offer->desktopEntryName())) {
+                    itemplugin = offer;
+                    kDebug(7007) << "Preferred match for" << itemmime << itemplugin->library();
+                    break;
+                }
             }
+        } else {
+            // either the MIME type could not be determined (very unlikely) or the item is invalid
+            kDebug(7007) << "Empty MIME type" << kit.url();
         }
 
-        if (!itemplugin) {
+        if (!itemmime.isEmpty() && !itemplugin) {
             // Long stretch, globs match maybe?
             const KService::List plugins = KServiceTypeTrader::self()->query("ThumbCreator");
             bool breakouterloop = false;
