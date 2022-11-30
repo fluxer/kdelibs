@@ -538,8 +538,9 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     }
 
     if (hasMetaData(QLatin1String("resume"))) {
+        Q_ASSERT(sizeof(qlonglong) == sizeof(curl_off_t));
         const qlonglong resumeoffset = metaData(QLatin1String("resume")).toLongLong();
-        curlresult = curl_easy_setopt(m_curl, CURLOPT_RESUME_FROM_LARGE, resumeoffset);
+        curlresult = curl_easy_setopt(m_curl, CURLOPT_RESUME_FROM_LARGE, curl_off_t(resumeoffset));
         if (curlresult != CURLE_OK) {
             error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
             return false;
