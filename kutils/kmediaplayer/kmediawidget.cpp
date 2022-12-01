@@ -18,13 +18,13 @@
 
 #include <QFileDialog>
 #include <QInputDialog>
-#include <QMessageBox>
 #include <QTimer>
 #include <QTimeLine>
 
 #include "kdebug.h"
 #include "klocale.h"
 #include "kicon.h"
+#include "kmessagebox.h"
 #include "kmainwindow.h"
 #include "kstatusbar.h"
 #include "kmediaplayer.h"
@@ -235,8 +235,11 @@ void KMediaWidget::dropEvent(QDropEvent *event)
         open(urlstring);
     }
     if (!invalid.isEmpty()) {
-        QMessageBox::warning(this, i18n("Invalid paths"),
-            i18n("Some paths are invalid:\n%1", invalid.join("\n")));
+        KMessageBox::error(
+            this,
+            i18n("Some paths are invalid:\n%1", invalid.join("\n")),
+            i18n("Invalid paths")
+        );
     } else {
         event->acceptProposedAction();
     }
