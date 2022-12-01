@@ -91,6 +91,8 @@
 1222        networkstatus
 1410        drkonqi
 1512        kdepasswd
+1600        kdirshare
+1601        kscreensaver
 7023        kurifilter (plugins)
 7024        kio (UIServer)
 7104        kio_floppy
