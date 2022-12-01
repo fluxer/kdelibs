@@ -226,7 +226,7 @@ void KMediaWidget::dropEvent(QDropEvent *event)
     const QList<QUrl> urls = event->mimeData()->urls();
     QStringList invalid;
     foreach (const QUrl &url, urls) {
-        QString urlstring = url.toString();
+        const QString urlstring = url.toString();
         if (!d->m_player->isPathSupported(urlstring)) {
             kDebug() << i18n("ignoring unsupported:\n%1", urlstring);
             invalid.append(urlstring);
