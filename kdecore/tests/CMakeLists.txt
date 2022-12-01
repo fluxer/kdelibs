@@ -54,7 +54,6 @@ KDECORE_UNIT_TESTS(
     kconfigafterkglobaltest2
     ksycocathreadtest
     qcoreapptest
-    kmimetype_nomimetypes
     kunitconversiontest
     kdevicedatabasetest
     kdebugtest
