@@ -45,15 +45,17 @@ namespace Solid
         /**
          * This enum type defines the different suspend methods.
          *
-         * - StandbyState: Processes are stopped, some hardware is deactivated (ACPI S1)
          * - SuspendState: Most devices are deactivated, only RAM is powered (ACPI S3)
          * - HibernateState: State of the machine is saved to disk, and the machine is powered down (ACPI S4)
          * - HybridSleepState: The contents of RAM are first copied to non-volatile storage like for regular hibernation,
          *   but then, instead of powering down, the computer enters sleep mode
          */
-        enum SleepState { StandbyState = 1, SuspendState = 2, HibernateState = 4,
-                          /// @since 4.11
-                          HybridSuspendState = 8 };
+        enum SleepState {
+            SuspendState = 1,
+            HibernateState = 2,
+            /// @since 4.11
+            HybridSuspendState = 4
+        };
 
         /**
          * Retrieves a high level indication of how applications should behave according to the
@@ -92,7 +94,7 @@ namespace Solid
          * track the application's outstanding suppression requests.  Returns -1 if the request was
          * denied.
          */
-        SOLID_EXPORT int beginSuppressingSleep(const QString &reason = QString());
+        SOLID_EXPORT uint beginSuppressingSleep(const QString &reason = QString());
 
         /**
          * Tell the power management that a particular sleep suppression is no longer needed.  When
@@ -100,7 +102,7 @@ namespace Solid
          * @param cookie The cookie acquired when requesting sleep suppression
          * @return true if the suppression was stopped, false if an invalid cookie was given
          */
-        SOLID_EXPORT bool stopSuppressingSleep(int cookie);
+        SOLID_EXPORT bool stopSuppressingSleep(uint cookie);
 
         /**
          * Tell the power management subsystem to suppress automatic screen power management until
@@ -114,7 +116,7 @@ namespace Solid
          *
          * @since 4.6
          */
-        SOLID_EXPORT int beginSuppressingScreenPowerManagement(const QString &reason = QString());
+        SOLID_EXPORT uint beginSuppressingScreenPowerManagement(const QString &reason = QString());
 
         /**
          * Tell the power management that a particular screen power management suppression is no longer needed.  When
@@ -126,7 +128,7 @@ namespace Solid
          *
          * @since 4.6
          */
-        SOLID_EXPORT bool stopSuppressingScreenPowerManagement(int cookie);
+        SOLID_EXPORT bool stopSuppressingScreenPowerManagement(uint cookie);
 
         class SOLID_EXPORT Notifier : public QObject
         {

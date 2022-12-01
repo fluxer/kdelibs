@@ -101,7 +101,6 @@ void Solid::PowerManagement::requestSleep(SleepState state, QObject *receiver, c
 
     Q_ASSERT(managerIface);
     switch (state) {
-        case StandbyState:
         case SuspendState: {
             globalPowerManager()->managerIface->asyncCall("Suspend");
             break;
@@ -117,26 +116,25 @@ void Solid::PowerManagement::requestSleep(SleepState state, QObject *receiver, c
     }
 }
 
-int Solid::PowerManagement::beginSuppressingSleep(const QString &reason)
+uint Solid::PowerManagement::beginSuppressingSleep(const QString &reason)
 {
     QDBusReply<uint> reply = globalPowerManager()->inhibitIface.call("Inhibit", QCoreApplication::applicationName(), reason);
     if (reply.isValid())
         return reply;
-    return -1;
+    return 0;
 }
 
-bool Solid::PowerManagement::stopSuppressingSleep(int cookie)
+bool Solid::PowerManagement::stopSuppressingSleep(uint cookie)
 {
     if (globalPowerManager()->inhibitIface.isValid()) {
-        globalPowerManager()->inhibitIface.asyncCall("UnInhibit", uint(cookie));
+        globalPowerManager()->inhibitIface.asyncCall("UnInhibit", cookie);
         return true;
     }
     return false;
 }
 
-int Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString& reason)
+uint Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString& reason)
 {
-#warning TODO: the return type should be uint
     if (globalPowerManager()->saverIface.isValid()) {
         QDBusMessage message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.ScreenSaver"),
                                                               QLatin1String("/ScreenSaver"),
@@ -152,20 +150,19 @@ int Solid::PowerManagement::beginSuppressingScreenPowerManagement(const QString&
 
         return ssReply;
     }
-    // No way to fallback on something, hence return failure
-    return -1;
+    // No way to fallback on something, hence return failure (0 is invalid cookie)
+    return 0;
 }
 
-bool Solid::PowerManagement::stopSuppressingScreenPowerManagement(int cookie)
+bool Solid::PowerManagement::stopSuppressingScreenPowerManagement(uint cookie)
 {
-#warning TODO: the cookie type should be uint
     if (globalPowerManager()->saverIface.isValid()) {
         if (globalPowerManager()->screensaverCookies.contains(cookie)) {
             QDBusMessage message = QDBusMessage::createMethodCall(QLatin1String("org.freedesktop.ScreenSaver"),
                                                                   QLatin1String("/ScreenSaver"),
                                                                   QLatin1String("org.freedesktop.ScreenSaver"),
                                                                   QLatin1String("UnInhibit"));
-            message << uint(cookie);
+            message << cookie;
             QDBusReply<void> ssReply = QDBusConnection::sessionBus().call(message);
             if (ssReply.isValid()) {
                 globalPowerManager()->screensaverCookies.removeAll(cookie);
