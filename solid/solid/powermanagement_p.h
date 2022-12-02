@@ -32,13 +32,6 @@ namespace Solid
     {
         Q_OBJECT
     public:
-        enum RequiredPolicy {
-            None = 0,
-            InterruptSession = 1,
-            ChangeProfile = 2,
-            ChangeScreenSettings = 4
-        };
-
         PowerManagementPrivate();
         ~PowerManagementPrivate();
 
