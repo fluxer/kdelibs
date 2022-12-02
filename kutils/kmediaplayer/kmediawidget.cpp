@@ -64,7 +64,7 @@ void KMediaWidgetPrivate::updatePlayText(const QString &text)
     m_playtext = text;
     const QSize qsize = m_q->size();
     const QSize qminimumsize = m_q->minimumSizeHint();
-    if (qsize.width() > qminimumsize.width() && qsize.height() > qminimumsize.height()) {
+    if (qsize.width() > qminimumsize.width()) {
         m_ui->w_play->setText(text);
     } else {
         m_ui->w_play->setText(QString());
