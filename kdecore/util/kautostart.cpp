@@ -30,6 +30,8 @@
 #include <QtCore/QFile>
 #include <QStringList>
 
+static const int s_defaultphase = static_cast<int>(KAutostart::Applications);
+
 class KAutostart::Private
 {
     public:
@@ -222,53 +224,19 @@ void KAutostart::setCommandToCheck(const QString &exec)
     d->df->desktopGroup().writePathEntry("TryExec", exec);
 }
 
-// do not specialize the readEntry template -
-// http://connect.microsoft.com/VisualStudio/feedback/ViewFeedback.aspx?FeedbackID=100911
-KAutostart::StartPhase readEntry(const KConfigGroup &group, const char* key, const KAutostart::StartPhase& aDefault)
-{
-    const QByteArray data = group.readEntry(key, QByteArray());
-
-    if (data.isNull()) {
-        return aDefault;
-    }
-
-    if (data == "0" || data == "BaseDesktop") {
-        return KAutostart::BaseDesktop;
-    } else if (data == "1" || data == "DesktopServices") {
-        return KAutostart::DesktopServices;
-    } else if (data == "2" || data == "Applications") {
-        return KAutostart::Applications;
-    }
-
-    return aDefault;
-}
-
 KAutostart::StartPhase KAutostart::startPhase() const
 {
-    return readEntry(d->df->desktopGroup(), "X-KDE-autostart-phase", Applications);
+    return static_cast<KAutostart::StartPhase>(d->df->desktopGroup().readEntry("X-KDE-autostart-phase", s_defaultphase));
 }
 
 void KAutostart::setStartPhase(KAutostart::StartPhase phase)
 {
-    QString data = QString::fromLatin1("Applications");
-
-    switch (phase) {
-        case BaseDesktop:
-            data = QString::fromLatin1("BaseDesktop");
-            break;
-        case DesktopServices:
-            data = QString::fromLatin1("DesktopServices");
-            break;
-        case Applications: // This is the default
-            break;
-    }
-
-    if (d->df->desktopGroup().readEntry("X-KDE-autostart-phase", QString()) == data) {
+    if (d->df->desktopGroup().readEntry("X-KDE-autostart-phase", s_defaultphase) == static_cast<int>(phase)) {
         return;
     }
 
     d->copyIfNeeded();
-    d->df->desktopGroup().writeEntry("X-KDE-autostart-phase", data);
+    d->df->desktopGroup().writeEntry("X-KDE-autostart-phase", static_cast<int>(phase));
 }
 
 QStringList KAutostart::allowedEnvironments() const
