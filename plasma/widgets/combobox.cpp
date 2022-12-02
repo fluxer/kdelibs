@@ -223,16 +223,14 @@ void ComboBox::paint(QPainter *painter,
         return;
     }
 
-    QPixmap bufferPixmap;
-
-    //normal button
+    // normal button
     if (isEnabled()) {
         d->background->setElementPrefix("normal");
 
         d->background->paintFrame(painter);
-    //disabled widget
+        // disabled widget
     } else {
-        bufferPixmap = QPixmap(rect().size().toSize());
+        QPixmap bufferPixmap(rect().size().toSize());
         bufferPixmap.fill(Qt::transparent);
 
         QPainter buffPainter(&bufferPixmap);
