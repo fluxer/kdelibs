@@ -206,7 +206,7 @@ void KAutostart::setVisibleName(const QString &name)
 
 bool KAutostart::isServiceRegistered(const QString& entryName)
 {
-    return QFile::exists(KStandardDirs::locate("autostart", entryName + QString::fromLatin1(".desktop")));
+    return !KStandardDirs::locate("autostart", entryName + QString::fromLatin1(".desktop")).isEmpty();
 }
 
 QString KAutostart::commandToCheck() const
