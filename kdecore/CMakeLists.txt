@@ -22,6 +22,8 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/date)
 
 include_directories(
     ${KDE4_KDECORE_INCLUDES}
+    # for kglobalsettings header
+    ${KDE4_KDEUI_INCLUDES}
     ${QT_INCLUDES}
     ${CMAKE_CURRENT_SOURCE_DIR}/sonnet
 )
