@@ -145,11 +145,12 @@ macro(KDE4_ADD_KCFG_FILES _sources)
         endif()
 
         # the command for creating the source file from the kcfg file
-        add_custom_command(OUTPUT ${_header_FILE} ${_src_FILE}
+        add_custom_command(
             COMMAND ${KDE4_KCFGC_EXECUTABLE}
             ARGS ${_kcfg_FILE} ${_input} -d "${CMAKE_CURRENT_BINARY_DIR}/"
             MAIN_DEPENDENCY ${_input}
             DEPENDS ${_kcfg_FILE}
+            OUTPUT ${_header_FILE} ${_src_FILE}
         )
 
         list(APPEND ${_sources} ${_src_FILE} ${_header_FILE})
@@ -209,9 +210,9 @@ macro(KDE4_ADD_WIDGET _sources)
 
         # create source file from the .widgets file
         add_custom_command(
-            OUTPUT ${_output}
             COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE} -o ${_output} ${_input}
             MAIN_DEPENDENCY ${_input}
+            OUTPUT ${_output}
         )
 
         qt4_generate_moc("${_output}" "${_moc}")
@@ -321,6 +322,7 @@ macro(KDE4_TRANSLATE _LANGUAGE)
             translations_${_language}_${_poname} ALL
             COMMAND ${KATIE_TRC} "${_abspofile}" -o "${trout}"
             COMMENT "Generating ${_poname}.tr"
+            DEPENDS ${_abspofile}
         )
         set_source_files_properties("${trout}" PROPERTIES GENERATED TRUE)
         install(
