@@ -50,7 +50,7 @@ private:
     bool m_serviceregistered;
     QDBusInterface m_login1;
     QDBusInterface m_consolekit;
-    int m_consolekittimerid;
+    int m_timerid;
     QMap<uint, int> m_cookies;
     bool m_hasinhibit;
 };

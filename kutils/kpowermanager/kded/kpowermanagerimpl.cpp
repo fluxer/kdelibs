@@ -29,7 +29,7 @@ KPowerManagerImpl::KPowerManagerImpl(QObject *parent)
     m_serviceregistered(false),
     m_login1("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", QDBusConnection::systemBus()),
     m_consolekit("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager", QDBusConnection::systemBus()),
-    m_consolekittimerid(0),
+    m_timerid(0),
     m_canhibernate(false),
     m_canhybridsuspend(false),
     m_cansuspend(false),
@@ -59,22 +59,17 @@ KPowerManagerImpl::KPowerManagerImpl(QObject *parent)
     m_cansuspend = CanSuspend();
     m_powersavestatus = GetPowerSaveStatus();
     if (m_login1.isValid()) {
-        connection = QDBusConnection::systemBus();
-        connection.connect(
-            "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.DBus.Properties", "PropertiesChanged",
-            this, SLOT(slotPropertiesChanged(QString,QVariantMap,QStringList))
-        );
         connect(&m_login1, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
     } else if (m_consolekit.isValid()) {
         connect(&m_consolekit, SIGNAL(PrepareForSleep(bool)), this, SLOT(slotPrepareForSleep(bool)));
-        m_consolekittimerid = startTimer(2000);
     }
+    m_timerid = startTimer(2000);
 }
 
 KPowerManagerImpl::~KPowerManagerImpl()
 {
-    if (m_consolekittimerid > 0) {
-        killTimer(m_consolekittimerid);
+    if (m_timerid > 0) {
+        killTimer(m_timerid);
     }
 
     if (m_serviceregistered) {
@@ -186,8 +181,11 @@ void KPowerManagerImpl::slotPrepareForSleep(bool start)
 
 void KPowerManagerImpl::timerEvent(QTimerEvent *event)
 {
-    if (event->timerId() == m_consolekittimerid) {
+    if (event->timerId() == m_timerid) {
         emitSignals();
+        event->accept();
+    } else {
+        event->ignore();
     }
 }
 
@@ -201,6 +199,11 @@ void KPowerManagerImpl::emitSignals()
     m_canhybridsuspend = CanHybridSuspend();
     m_cansuspend = CanSuspend();
     m_powersavestatus = GetPowerSaveStatus();
+
+    kDebug() << "old can hibernate" << oldcanhibernate << "new can hibernate" << m_canhibernate;
+    kDebug() << "old can hybrid suspend" << oldcanhybridsuspend << "new can hybrid suspend" << m_canhybridsuspend;
+    kDebug() << "old can can suspend" << oldcansuspend << "new can can suspend" << m_cansuspend;
+    kDebug() << "old can power save status" << oldpowersavestatus << "new can power save status" << m_powersavestatus;
 
     if (oldcanhibernate != m_canhibernate) {
         emit CanHibernateChanged(m_canhibernate);

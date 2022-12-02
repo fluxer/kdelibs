@@ -64,7 +64,7 @@ private:
     bool m_serviceregistered;
     QDBusInterface m_login1;
     QDBusInterface m_consolekit;
-    int m_consolekittimerid;
+    int m_timerid;
     bool m_canhibernate;
     bool m_canhybridsuspend;
     bool m_cansuspend;

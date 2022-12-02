@@ -61,7 +61,7 @@ KPowerManagerInhibitImpl::KPowerManagerInhibitImpl(QObject *parent)
     m_serviceregistered(false),
     m_login1("org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.login1.Manager", QDBusConnection::systemBus()),
     m_consolekit("org.freedesktop.ConsoleKit", "/org/freedesktop/ConsoleKit/Manager", "org.freedesktop.ConsoleKit.Manager", QDBusConnection::systemBus()),
-    m_consolekittimerid(0),
+    m_timerid(0),
     m_hasinhibit(false)
 {
     (void)new InhibitAdaptor(this);
@@ -84,23 +84,17 @@ KPowerManagerInhibitImpl::KPowerManagerInhibitImpl(QObject *parent)
     m_serviceregistered = true;
 
     m_hasinhibit = HasInhibit();
-    if (m_login1.isValid()) {
-        connection = QDBusConnection::systemBus();
-        connection.connect(
-            "org.freedesktop.login1", "/org/freedesktop/login1", "org.freedesktop.DBus.Properties", "PropertiesChanged",
-            this, SLOT(slotPropertiesChanged(QString,QVariantMap,QStringList))
-        );
-    } else if (m_consolekit.isValid()) {
+    if (m_consolekit.isValid()) {
         qDBusRegisterMetaType<KInhibitor>();
         qDBusRegisterMetaType<QList<KInhibitor>>();
-        m_consolekittimerid = startTimer(2000);
     }
+    m_timerid = startTimer(2000);
 }
 
 KPowerManagerInhibitImpl::~KPowerManagerInhibitImpl()
 {
-    if (m_consolekittimerid > 0) {
-        killTimer(m_consolekittimerid);
+    if (m_timerid > 0) {
+        killTimer(m_timerid);
     }
 
     if (m_serviceregistered) {
@@ -205,8 +199,11 @@ void KPowerManagerInhibitImpl::slotPropertiesChanged(QString interface, QVariant
 
 void KPowerManagerInhibitImpl::timerEvent(QTimerEvent *event)
 {
-    if (event->timerId() == m_consolekittimerid) {
+    if (event->timerId() == m_timerid) {
         emitSignals();
+        event->accept();
+    } else {
+        event->ignore();
     }
 }
 
@@ -214,6 +211,8 @@ void KPowerManagerInhibitImpl::emitSignals()
 {
     const bool oldhasinhibit = m_hasinhibit;
     m_hasinhibit = HasInhibit();
+
+    kDebug() << "old has inhibit" << oldhasinhibit << "new has inhibit" << m_hasinhibit;
 
     if (oldhasinhibit != m_hasinhibit) {
         emit HasInhibitChanged(m_hasinhibit);
