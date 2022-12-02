@@ -1,4 +1,8 @@
-include_directories(${CURL_INCLUDE_DIRS})
+include_directories(
+    ${CMAKE_SOURCE_DIR}/kutils/kpasswdstore
+    ${CMAKE_BINARY_DIR}/kutils/kpasswdstore
+    ${CURL_INCLUDE_DIRS}
+)
 
 add_definitions(-DKDE_DEFAULT_DEBUG_AREA=51010)
 
