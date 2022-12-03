@@ -57,8 +57,6 @@ check_function_exists(fdatasync          HAVE_FDATASYNC)                    # kd
 check_function_exists(arc4random_uniform HAVE_ARC4RANDOM_UNIFORM)           # kdecore
 check_function_exists(sendfile           HAVE_SENDFILE)                     # kioslave
 
-check_library_exists(socket connect "" HAVE_SOCKET_LIBRARY)                 # kinit
-
 if (UNIX)
   # for kpty
   check_include_files("sys/types.h;libutil.h" HAVE_LIBUTIL_H)

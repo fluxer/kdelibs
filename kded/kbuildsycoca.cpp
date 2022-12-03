@@ -51,12 +51,14 @@
 #include <kaboutdata.h>
 #include <kcmdlineargs.h>
 #ifndef KBUILDSYCOCA_NO_KCRASH
+#include <kde_file.h>
 #include <kcrash.h>
 #endif
 
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <signal.h>
 
 typedef QHash<QString, KSycocaEntry::Ptr> KBSEntryDict;
 typedef QList<KSycocaEntry::List> KSycocaEntryListList;
@@ -81,12 +83,16 @@ static QByteArray g_sycocaPath = 0;
 static bool bGlobalDatabase = false;
 static bool bMenuTest = false;
 
-void crashHandler(int)
+void crashHandler(int sig)
 {
-   // If we crash while reading sycoca, we delete the database
-   // in an attempt to recover.
-   if (!g_sycocaPath.isEmpty())
-      unlink(g_sycocaPath.constData());
+    KDE_signal(sig, SIG_DFL);
+
+    // If we crash while reading sycoca, we delete the database in an attempt to recover.
+    if (!g_sycocaPath.isEmpty()) {
+        unlink(g_sycocaPath.constData());
+    }
+
+    ::exit(sig);
 }
 
 static QString sycocaPath()
@@ -641,9 +647,7 @@ int main(int argc, char **argv)
    KComponentData mainComponent(d);
 
 #ifndef KBUILDSYCOCA_NO_KCRASH
-   KCrash::setCrashHandler(KCrash::defaultCrashHandler);
-   KCrash::setEmergencySaveFunction(crashHandler);
-   KCrash::setApplicationName(QString(appName));
+   KCrash::setCrashHandler(crashHandler);
 #endif
 
    // force generating of KLocale object. if not, the database will get

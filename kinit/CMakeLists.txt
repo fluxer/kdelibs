@@ -1,45 +1,10 @@
-project(kdeinit)
+project(kinit)
 
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
 
-include_directories(${KDE4_KPARTS_INCLUDES})
-
-########### Configuring (mainly for proctitle) ###########
-
-include(CheckFunctionExists)
-include(CheckVariableExists)
-
-check_variable_exists(__progname HAVE___PROGNAME)
-check_variable_exists(__progname_full HAVE___PROGNAME_FULL)
-check_function_exists(setproctitle HAVE_SETPROCTITLE)
-
-set(KINIT_SOCKET_LIBRARY)
-if(HAVE_SOCKET_LIBRARY)
-    set(KINIT_SOCKET_LIBRARY socket)
-endif()
-
-if (NOT Q_WS_X11 AND NOT Q_WS_QWS)
-    add_definitions(-DNO_DISPLAY)
-endif()
-
-########### kdeinit4 ###############
-
-set(kdeinit_SRCS
-    kinit.cpp
-    proctitle.cpp
-    klauncher_cmds.cpp
-)
-
-add_executable(kdeinit4 ${kdeinit_SRCS})
-
-target_link_libraries(kdeinit4 ${KDE4_KDEUI_LIBS} ${KINIT_SOCKET_LIBRARY})
-if (Q_WS_X11)
-    target_link_libraries(kdeinit4 ${X11_X11_LIB})
-endif()
-
-install(TARGETS kdeinit4 ${INSTALL_TARGETS_DEFAULT_ARGS})
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1210)
 
 ########### kioslave ###############
 
@@ -49,14 +14,11 @@ target_link_libraries(kioslave ${QT_QTCORE_LIBRARY})
 
 install(TARGETS kioslave DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 
-
 ########### klauncher ###############
+
 set(klauncher_SRCS
     klauncher.cpp
-    klauncher_main.cpp
     klauncher_adaptor.cpp
-    autostart.cpp
-    klauncher_cmds.cpp
     # just so that it gets generated
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KLauncher.xml
 )
@@ -64,11 +26,16 @@ set(klauncher_SRCS
 # The adaptor is manually edited, generate the xml from it.
 qt4_generate_dbus_interface(klauncher_adaptor.h org.kde.KLauncher.xml)
 
-add_executable(klauncher ${klauncher_SRCS})
+add_executable(klauncher4 ${klauncher_SRCS})
 
-target_link_libraries(klauncher ${KDE4_KIO_LIBS} ${X11_LIBRARIES})
+target_link_libraries(klauncher4
+    ${KDE4_KDEUI_LIBS}
+    ${KDE4_KIO_LIBS}
+)
 
-install(TARGETS klauncher DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
+kde4_add_dbus_service(org.kde.klauncher.service.in)
+
+install(TARGETS klauncher4 DESTINATION ${KDE4_BIN_INSTALL_DIR})
 
 ########### install files ###############
 
@@ -76,11 +43,4 @@ install(
     FILES
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KLauncher.xml
     DESTINATION ${KDE4_DBUS_INTERFACES_INSTALL_DIR}
-)
-
-########### config-kdeinit.h ############
-
-configure_file(
-    config-kdeinit.h.cmake
-    ${CMAKE_CURRENT_BINARY_DIR}/config-kdeinit.h
 )

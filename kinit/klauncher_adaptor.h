@@ -1,47 +1,47 @@
-/*
- * Copyright 2006, 2007 Thiago Macieira <thiago@kde.org>
- * Copyright 2006-2008 David Faure <faure@kde.org>
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) version 3, or any
- * later version accepted by the membership of KDE e.V. (or its
- * successor approved by the membership of KDE e.V.), which shall
- * act as a proxy defined in Section 6 of version 3 of the license.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+/*  This file is part of the KDE libraries
+    Copyright (C) 2022 Ivailo Monev <xakepa10@gmail.com>
 
-#ifndef KLAUNCHER_ADAPTOR_H_18181148166088
-#define KLAUNCHER_ADAPTOR_H_18181148166088
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Library General Public
+    License version 2, as published by the Free Software Foundation.
 
-#include <QtCore/QObject>
-#include <QtDBus/QDBusAbstractAdaptor>
-#include <QtDBus/QDBusMessage>
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Library General Public License for more details.
 
-#include <QList>
-#include <QMap>
-#include <QString>
-#include <QStringList>
+    You should have received a copy of the GNU Library General Public License
+    along with this library; see the file COPYING.LIB.  If not, write to
+    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+    Boston, MA 02110-1301, USA.
+*/
 
-/*
- * Adaptor class for interface org.kde.KLauncher
- */
+#ifndef KLAUNCHER_ADAPTOR_H
+#define KLAUNCHER_ADAPTOR_H
+
+#include "kstartupinfo.h"
+
+#include <QDBusAbstractAdaptor>
+#include <QDBusMessage>
+#include <QProcess>
+
+// Adaptor class for interface org.kde.KLauncher
 class KLauncherAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.KLauncher")
 public:
+    enum KLauncherError {
+        NoError = 0,
+        ServiceError = 1,
+        FindError = 2,
+        ArgumentsError = 3,
+        ExecError = 4,
+        DBusError = 5
+    };
+
     KLauncherAdaptor(QObject *parent);
-    virtual ~KLauncherAdaptor();
+    ~KLauncherAdaptor();
 
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
@@ -51,18 +51,30 @@ public Q_SLOTS: // METHODS
     int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     void reparseConfiguration();
-    qint64 requestHoldSlave(const QString &url, const QString &app_socket);
-    qint64 requestSlave(const QString &protocol, const QString &host, const QString &app_socket, QString &error);
-    bool checkForHeldSlave (const QString &url);
     void setLaunchEnv(const QString &name, const QString &value);
     int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    void waitForSlave(qint64 pid, const QDBusMessage &msg);
-    void terminate_kdeinit();
+
 Q_SIGNALS: // SIGNALS
     void autoStart0Done();
     void autoStart1Done();
     void autoStart2Done();
+
+private Q_SLOTS:
+    void slotProcessStateChanged(QProcess::ProcessState state);
+    void slotProcessFinished(int exitcode);
+
+private:
+    QString findExe(const QString &app) const;
+    void sendSIStart() const;
+    void sendSIUpdate();
+    void sendSIFinish();
+
+    KStartupInfoId m_kstartupinfoid;
+    KStartupInfoData m_kstartupinfodata;
+    QProcessEnvironment m_environment;
+    QList<QProcess*> m_processes;
+    QStringList m_autostart;
 };
 
-#endif
+#endif // KLAUNCHER_ADAPTOR_H

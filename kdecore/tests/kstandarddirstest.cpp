@@ -205,23 +205,23 @@ void KStandarddirsTest::testFindExe()
         QSKIP( "kdelibs not installed", SkipAll );
 
     // findExe with a result in bin
-    const QString kdeinit = KGlobal::dirs()->findExe( "kdeinit4" );
-    QVERIFY( !kdeinit.isEmpty() );
-    QVERIFY2(kdeinit.endsWith("bin/kdeinit4" EXT, PATH_SENSITIVITY), qPrintable(kdeinit));
+    const QString klauncher = KGlobal::dirs()->findExe( "klauncher4" );
+    QVERIFY( !klauncher.isEmpty() );
+    QVERIFY2(klauncher.endsWith("bin/klauncher4" EXT, PATH_SENSITIVITY), qPrintable(klauncher));
 
     // Check the "exe" resource too
-    QString kdeinitexe = KGlobal::dirs()->locate( "exe", "kdeinit4" );
-    QVERIFY2(kdeinitexe.endsWith("bin/kdeinit4" EXT, PATH_SENSITIVITY), qPrintable(kdeinit));
+    QString klauncherexe = KGlobal::dirs()->locate( "exe", "klauncher4" );
+    QVERIFY2(klauncherexe.endsWith("bin/klauncher4" EXT, PATH_SENSITIVITY), qPrintable(klauncherexe));
 
 #ifdef Q_OS_UNIX
     // findExe with a result in libexec
-    const QString klauncher = KGlobal::dirs()->findExe( "klauncher" );
-    QVERIFY( !klauncher.isEmpty() );
-    QVERIFY( klauncher.endsWith("/klauncher" EXT, PATH_SENSITIVITY ) );
+    const QString kioslave = KGlobal::dirs()->findExe( "kioslave" );
+    QVERIFY( !kioslave.isEmpty() );
+    QVERIFY( kioslave.endsWith("/kioslave" EXT, PATH_SENSITIVITY ) );
 
     // locate("exe") with a result in libexec
-    const QString locateExeResult = KGlobal::dirs()->locate("exe", "klauncher");
-    QVERIFY(locateExeResult.endsWith("/klauncher" EXT, PATH_SENSITIVITY));
+    const QString locateExeResult = KGlobal::dirs()->locate("exe", "kioslave");
+    QVERIFY(locateExeResult.endsWith("/kioslave" EXT, PATH_SENSITIVITY));
 
     // findExe with relative path
     const QString pwd = QDir::currentPath();

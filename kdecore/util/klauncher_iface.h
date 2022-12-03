@@ -100,24 +100,6 @@ public Q_SLOTS: // METHODS
         return callWithArgumentList(QDBus::Block, QLatin1String("reparseConfiguration"), argumentList);
     }
 
-    inline QDBusReply<qint64> requestHoldSlave(const QString &url, const QString &app_socket)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(url) << qVariantFromValue(app_socket);
-        return callWithArgumentList(QDBus::Block, QLatin1String("requestHoldSlave"), argumentList);
-    }
-
-    inline QDBusReply<qint64> requestSlave(const QString &protocol, const QString &host, const QString &app_socket, QString &error)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(protocol) << qVariantFromValue(host) << qVariantFromValue(app_socket);
-        QDBusMessage reply = callWithArgumentList(QDBus::Block, QLatin1String("requestSlave"), argumentList);
-        if (reply.type() == QDBusMessage::ReplyMessage && reply.arguments().count() == 2) {
-            error = qdbus_cast<QString>(reply.arguments().at(1));
-        }
-        return reply;
-    }
-
     inline QDBusReply<void> setLaunchEnv(const QString &name, const QString &value)
     {
         QList<QVariant> argumentList;
@@ -149,20 +131,6 @@ public Q_SLOTS: // METHODS
             pid = qdbus_cast<qint64>(reply.arguments().at(3));
         }
         return reply;
-    }
-
-    inline QDBusReply<void> waitForSlave(int pid)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(pid);
-        return callWithArgumentList(QDBus::Block, QLatin1String("waitForSlave"), argumentList);
-    }
-
-    inline QDBusReply<bool> checkForHeldSlave(const QString &url)
-    {
-        QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(url);
-        return callWithArgumentList(QDBus::Block, QLatin1String("checkForHeldSlave"), argumentList);
     }
 
 Q_SIGNALS: // SIGNALS

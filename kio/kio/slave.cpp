@@ -38,7 +38,6 @@
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <ktoolinvocation.h>
-#include <klauncher_iface.h>
 
 #include "kservice.h"
 #include <kio/global.h>
@@ -300,10 +299,6 @@ void Slave::hold(const KUrl &url)
         emit slaveDied(this);
     }
     deref();
-    // Call KLauncher::waitForSlave(pid);
-    {
-        KToolInvocation::klauncher()->waitForSlave(d->m_pid);
-    }
 }
 
 void Slave::suspend()
@@ -402,95 +397,41 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
     Slave *slave = new Slave(protocol);
     QString slaveAddress = slave->d_func()->slaveconnserver->address();
 
-#ifdef Q_OS_UNIX
-    // In such case we start the slave via QProcess.
-    // It's possible to force this by setting the env. variable
-    // KDE_FORK_SLAVES, Clearcase seems to require this.
-    static bool bForkSlaves = !qgetenv("KDE_FORK_SLAVES").isEmpty();
-
-    if (!bForkSlaves)
+    QString _name = KProtocolInfo::exec(protocol);
+    if (_name.isEmpty())
     {
-       // check the UID of klauncher
-       QDBusReply<uint> reply = QDBusConnection::sessionBus().interface()->serviceUid(KToolInvocation::klauncher()->service());
-       if (reply.isValid() && getuid() != reply)
-          bForkSlaves = true;
-    }
-
-    if (bForkSlaves)
-    {
-       QString _name = KProtocolInfo::exec(protocol);
-       if (_name.isEmpty())
-       {
-          error_text = i18n("Unknown protocol '%1'.", protocol);
-          error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
-          delete slave;
-          return 0;
-       }
-       KPluginLoader lib(_name, KGlobal::mainComponent());
-       QString lib_path = lib.fileName();
-       if (lib_path.isEmpty())
-       {
-          error_text = i18n("Can not find io-slave for protocol '%1'.", protocol);
-          error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
-          delete slave;
-          return 0;
-       }
-
-       const QStringList args = QStringList() << lib_path << protocol << "" << slaveAddress;
-       kDebug() << "kioslave" << ", " << lib_path << ", " << protocol << ", " << QString() << ", " << slaveAddress;
-
-       QProcess::startDetached( KStandardDirs::findExe("kioslave"), args );
-
-       return slave;
-    }
-#endif
-
-    org::kde::KLauncher* klauncher = KToolInvocation::klauncher();
-    QString errorStr;
-    QDBusReply<qint64> reply = klauncher->requestSlave(protocol, url.host(), slaveAddress, errorStr);
-    if (!reply.isValid()) {
-        error_text = i18n("Cannot talk to klauncher: %1", klauncher->lastError().message() );
+        error_text = i18n("Unknown protocol '%1'.", protocol);
         error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
         delete slave;
         return 0;
     }
-    pid_t pid = reply;
-    if (!pid)
+    KPluginLoader lib(_name, KGlobal::mainComponent());
+    QString lib_path = lib.fileName();
+    if (lib_path.isEmpty())
     {
-        error_text = i18n("Unable to create io-slave:\nklauncher said: %1", errorStr);
+        error_text = i18n("Can not find io-slave for protocol '%1'.", protocol);
         error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
         delete slave;
         return 0;
     }
-    slave->setPID(pid);
-    QTimer::singleShot(1000*SLAVE_CONNECTION_TIMEOUT_MIN, slave, SLOT(timeout()));
+
+    const QStringList args = QStringList() << lib_path << protocol << "" << slaveAddress;
+    kDebug() << "kioslave" << ", " << lib_path << ", " << protocol << ", " << QString() << ", " << slaveAddress;
+
+    QProcess::startDetached( KStandardDirs::findExe("kioslave"), args );
+
     return slave;
 }
 
 Slave* Slave::holdSlave( const QString &protocol, const KUrl& url )
 {
     //kDebug(7002) << "holdSlave" << protocol << "for" << url;
-    Slave *slave = new Slave(protocol);
-    QString slaveAddress = slave->d_func()->slaveconnserver->address();
-    QDBusReply<qint64> reply = KToolInvocation::klauncher()->requestHoldSlave(url.url(), slaveAddress);
-    if (!reply.isValid()) {
-        delete slave;
-        return 0;
-    }
-    pid_t pid = reply;
-    if (!pid)
-    {
-        delete slave;
-        return 0;
-    }
-    slave->setPID(pid);
-    QTimer::singleShot(1000*SLAVE_CONNECTION_TIMEOUT_MIN, slave, SLOT(timeout()));
-    return slave;
+    return 0;
 }
 
 bool Slave::checkForHeldSlave(const KUrl &url)
 {
-    return KToolInvocation::klauncher()->checkForHeldSlave(url.url());
+    return false;
 }
 
 #include "moc_slave.cpp"

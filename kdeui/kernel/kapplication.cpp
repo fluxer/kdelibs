@@ -79,7 +79,6 @@
 #endif
 
 KApplication* KApplication::KApp = 0L;
-bool KApplication::loadedByKdeinit = false;
 
 #ifdef Q_WS_X11
 static Atom atom_DesktopWindow = None;
@@ -666,12 +665,7 @@ void KApplicationPrivate::parseCommandLine( )
     if (qgetenv("KDE_DEBUG").isEmpty() && args->isSet("crashhandler"))
     {
         // enable drkonqi
-        KCrash::setDrKonqiEnabled(true);
-    }
-    // Always set the app name, can be usefuls for apps that call setEmergencySaveFunction or enable AutoRestart
-    KCrash::setApplicationName(args->appName());
-    if (!QCoreApplication::applicationDirPath().isEmpty()) {
-        KCrash::setApplicationPath(QCoreApplication::applicationDirPath());
+        KCrash::setFlags(KCrash::flags() | KCrash::DrKonqi);
     }
 
 #ifdef Q_WS_X11

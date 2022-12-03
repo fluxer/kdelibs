@@ -59,18 +59,13 @@ KToolInvocation::~KToolInvocation()
 
 org::kde::KLauncher *KToolInvocation::klauncher()
 {
-    if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(QString::fromLatin1("org.kde.klauncher"))) {
-        kDebug(180) << "klauncher not running... launching kdeinit";
-        // Try to launch kdeinit.
-        QString srv = KStandardDirs::findExe(QLatin1String("kdeinit4"));
-        if (srv.isEmpty()) {
-            kError() << "kdeinit4 not available";
-            // NOTE: this will crash users not checking the pointer
-            return nullptr;
-        }
-        QStringList args;
-        args += QString::fromLatin1("--suicide");
-        QProcess::execute(srv, args);
+    // If klauncher is not running we need to launch it
+    static const QString klauncherInterface = QString::fromLatin1("org.kde.klauncher");
+    QDBusConnectionInterface* sessionInterface = QDBusConnection::sessionBus().interface();
+    const bool klauncherRunning = sessionInterface->isServiceRegistered(klauncherInterface);
+    if (!klauncherRunning) {
+        kDebug(7011) << "Launching klauncher";
+        sessionInterface->startService(klauncherInterface);
     }
     return self()->klauncherIface;
 }
