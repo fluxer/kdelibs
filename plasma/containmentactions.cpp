@@ -27,9 +27,6 @@
 
 #include <QtCore/qmetaobject.h>
 #include <QtGui/qevent.h>
-#include <QtGui/qevent.h>
-#include <QtGui/qgraphicssceneevent.h>
-#include <QtGui/qgraphicssceneevent.h>
 #include <QtGui/qgraphicssceneevent.h>
 
 #include <kdebug.h>
