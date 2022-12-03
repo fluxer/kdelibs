@@ -654,10 +654,12 @@ KGlobalSettings::GraphicEffects KGlobalSettings::graphicEffectsLevel()
 
 KGlobalSettings::GraphicEffects KGlobalSettings::graphicEffectsLevelDefault()
 {
-    // For now, let always enable animations by default. The plan is to make
-    // this code a bit smarter. (ereslibre)
-
-    return SimpleAnimationEffects;
+    KGlobalSettings::GraphicEffects result = KGlobalSettings::SimpleAnimationEffects;
+    // NOTE: Katie's fade effect requires compositor and it is enabled if complex effects are
+    if (QX11Info::isCompositingManagerRunning()) {
+        result |= KGlobalSettings::ComplexAnimationEffects;
+    }
+    return result;
 }
 
 bool KGlobalSettings::showFilePreview(const KUrl &url)
