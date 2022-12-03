@@ -28,16 +28,6 @@ contain the following optional entries to control its autostart:
       'default' is 'true'.
       If the entry is not within a group, the group entry can be left empty.
 
-   X-KDE-autostart-after = desktop_name
-
-         desktop_name  = the name of another .desktop file excluding path and
-                         the .desktop suffix. E.g. panel.desktop would appear
-                         as 'X-KDE-autostart-after=panel'
-                      
-      Waits until the .desktop file specified by 'desktop_name' has been
-      autostarted. The entry is ignored if the specified application is not
-      scheduled in the same autostart phase as this .desktop file.
-
    X-KDE-autostart-phase = phase
 
          phase  = 1 or 2

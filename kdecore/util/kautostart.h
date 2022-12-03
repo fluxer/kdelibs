@@ -264,14 +264,6 @@ class KDECORE_EXPORT KAutostart : public QObject
         void removeFromExcludedEnvironments(const QString& environment);
 
         /**
-         * Returns the name of another service that should be autostarted
-         * before this one (if that service would be autostarted).
-         * @internal
-         * @since 4.3
-         */
-        QString startAfter() const;
-
-        /**
          * Checks whether autostart is allowed in the given environment,
          * depending on allowedEnvironments() and excludedEnvironments().
          * @since 4.3

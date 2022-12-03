@@ -319,9 +319,4 @@ void KAutostart::removeFromExcludedEnvironments(const QString& environment)
     setExcludedEnvironments(envs);
 }
 
-QString KAutostart::startAfter() const
-{
-    return d->df->desktopGroup().readEntry("X-KDE-autostart-after");
-}
-
 #include "moc_kautostart.cpp"
