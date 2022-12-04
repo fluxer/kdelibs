@@ -39,9 +39,11 @@ static const int s_sleeptime = 50;
 static const qint64 s_servicetimeout = 10000; // 10sec
 
 KLauncherAdaptor::KLauncherAdaptor(QObject *parent)
-    : QDBusAbstractAdaptor(parent)
+    : QDBusAbstractAdaptor(parent),
+    m_dbusconnectioninterface(nullptr)
 {
     m_environment = QProcessEnvironment::systemEnvironment();
+    m_dbusconnectioninterface = QDBusConnection::sessionBus().interface();
 }
 
 KLauncherAdaptor::~KLauncherAdaptor()
@@ -263,11 +265,10 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         dbusServiceName.append(QString::number(pid));
     }
     kDebug() << "waiting for" << pid << dbusServiceName;
-    QDBusConnection session = QDBusConnection::sessionBus();
     QElapsedTimer elapsedtime;
     elapsedtime.start();
     while (true) {
-        QDBusReply<bool> sessionreply = session.interface()->isServiceRegistered(dbusServiceName);
+        QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
         if (!sessionreply.isValid()) {
             sendSIFinish();
             error = i18n("Invalid D-Bus reply for: %1", dbusServiceName);

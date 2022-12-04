@@ -23,6 +23,7 @@
 
 #include <QDBusAbstractAdaptor>
 #include <QDBusMessage>
+#include <QDBusConnectionInterface>
 #include <QProcess>
 
 // Adaptor class for interface org.kde.KLauncher
@@ -70,9 +71,10 @@ private:
     void sendSIUpdate();
     void sendSIFinish();
 
+    QProcessEnvironment m_environment;
+    QDBusConnectionInterface* m_dbusconnectioninterface;
     KStartupInfoId m_kstartupinfoid;
     KStartupInfoData m_kstartupinfodata;
-    QProcessEnvironment m_environment;
     QList<QProcess*> m_processes;
     QStringList m_autostart;
 };
