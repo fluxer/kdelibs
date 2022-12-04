@@ -98,7 +98,7 @@ void KCrash::defaultCrashHandler(int sig)
     KDE_signal(sig, SIG_DFL);
 
 #if 0
-    kFatal() << QCoreApplication::applicationName() << "crashed" << "(" << QCoreApplication::applicationPid() << ")";
+    kFatal() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
     return;
 #endif
 
@@ -106,11 +106,16 @@ void KCrash::defaultCrashHandler(int sig)
         QStringList args;
 
         // start up on the correct display
-        args.append(QString::fromLatin1("-display"));
+        const char* dpy = nullptr;
         if (QX11Info::display()) {
-            args.append(XDisplayString(QX11Info::display()));
+            dpy = XDisplayString(QX11Info::display());
         } else {
-            args.append(QString::fromLocal8Bit(::getenv("DISPLAY")));
+            dpy = ::getenv("DISPLAY");
+        }
+
+        if (dpy) {
+            args.append(QString::fromLatin1("-display"));
+            args.append(QString::fromLatin1(dpy));
         }
 
         QProcess::startDetached(QCoreApplication::applicationFilePath(), args);
