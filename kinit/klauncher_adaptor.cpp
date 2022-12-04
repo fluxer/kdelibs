@@ -317,6 +317,10 @@ void KLauncherAdaptor::slotProcessFinished(int exitcode)
 QString KLauncherAdaptor::findExe(const QString &app) const
 {
     if (QDir::isAbsolutePath(app)) {
+        if (!QFile::exists(app)) {
+            // return empty string if it does not exists (like KStandardDirs::findExe())
+            return QString();
+        }
         return app;
     }
     const QString environmentpath = m_environment.value(QString::fromLatin1("PATH"), QString());
