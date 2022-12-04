@@ -81,7 +81,6 @@ public:
           defaultWallpaperWidth(DEFAULT_WALLPAPER_WIDTH),
           defaultWallpaperHeight(DEFAULT_WALLPAPER_HEIGHT),
           cachesToDiscard(NoCache),
-          locolor(false),
           compositingActive(KWindowSystem::self()->compositingActive()),
           isDefault(false),
           useGlobal(true),
@@ -184,7 +183,6 @@ public:
     QString themeVersion;
     QString themeMetadataPath;
 
-    bool locolor : 1;
     bool compositingActive : 1;
     bool isDefault : 1;
     bool useGlobal : 1;
@@ -251,10 +249,7 @@ QString ThemePrivate::findInTheme(const QString &image, const QString &theme, bo
 
     QString search;
 
-    if (locolor) {
-        search = QLatin1String("desktoptheme/") + theme + QLatin1String("/locolor/") + image;
-        search =  KStandardDirs::locate("data", search);
-    } else if (!compositingActive) {
+    if (!compositingActive) {
         search = QLatin1String("desktoptheme/") + theme + QLatin1String("/opaque/") + image;
         search =  KStandardDirs::locate("data", search);
     } else {

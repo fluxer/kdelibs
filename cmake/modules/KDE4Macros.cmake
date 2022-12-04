@@ -35,7 +35,6 @@ set(_KDE4_ICON_GROUP_intl       "intl")
 
 # a "map" of short theme names to the theme directory
 set(_KDE4_ICON_THEME_ox "ariya")
-set(_KDE4_ICON_THEME_lo "locolor")
 set(_KDE4_ICON_THEME_hi "hicolor")
 
 # only used internally by KDE4_INSTALL_ICONS

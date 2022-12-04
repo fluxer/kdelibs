@@ -134,12 +134,11 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
     QStringList themeDirs;
     QSet<QString> addedDirs; // Used for avoiding duplicates.
 
-    // Applications can have local additions to the global "locolor" and
-    // "hicolor" icon themes. For these, the _global_ theme description
-    // files are used..
+    // Applications can have local additions to the global "hicolor" icon
+    // themes. For these, the _global_ theme description files are used..
 
     if (!appName.isEmpty() &&
-       ( name == defaultThemeName() || name== "hicolor" || name == "locolor" ) ) {
+       ( name == defaultThemeName() || name== "hicolor" ) ) {
         icnlibs = KGlobal::dirs()->resourceDirs("data");
         for (it=icnlibs.constBegin(); it!=icnlibs.constEnd(); ++it) {
             const QString cDir = *it + appName + "/icons/" + name;
@@ -521,13 +520,12 @@ QString KIconTheme::current()
     if ( *_theme == QLatin1String("hicolor") ) {
         *_theme = defaultThemeName();
     }
-/*    if (_theme->isEmpty())
+/*
+    if (_theme->isEmpty())
     {
-        if (QX11Info::appDepth() > 8)
-            *_theme = defaultThemeName();
-        else
-            *_theme = QLatin1String("locolor");
-    }*/
+        *_theme = defaultThemeName();
+    }
+*/
     return *_theme;
 }
 

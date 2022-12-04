@@ -158,46 +158,6 @@ ThemePackage::ThemePackage(QObject *parent)
     addFileDefinition("opaque/widgets/tooltip", "opaque/widgets/tooltip.svgz",
                       i18n("Opaque background image for tooltips"));
 
-    addDirectoryDefinition("locolor/dialogs", "locolor/dialogs/",
-                           i18n("Low color images for dialogs"));
-
-    addFileDefinition("locolor/dialogs/background", "locolor/dialogs/background.svg",
-                      i18n("Low color generic dialog background"));
-    addFileDefinition("locolor/dialogs/background", "locolor/dialogs/background.svgz",
-                      i18n("Low color generic dialog background"));
-
-    addFileDefinition("locolor/dialogs/shutdowndialog", "locolor/dialogs/shutdowndialog.svg",
-                      i18n("Low color theme for the logout dialog"));
-    addFileDefinition("locolor/dialogs/shutdowndialog", "locolor/dialogs/shutdowndialog.svgz",
-                      i18n("Low color theme for the logout dialog"));
-
-    addDirectoryDefinition("locolor/widgets", "locolor/widgets/", i18n("Images for widgets"));
-
-    addFileDefinition("locolor/widgets/background", "locolor/widgets/background.svg",
-                      i18n("Low color background image for widgets"));
-    addFileDefinition("locolor/widgets/background", "locolor/widgets/background.svgz",
-                      i18n("Low color background image for widgets"));
-
-    addFileDefinition("locolor/widgets/clock", "locolor/widgets/clock.svg",
-                      i18n("Low color analog clock face"));
-    addFileDefinition("locolor/widgets/clock", "locolor/widgets/clock.svgz",
-                      i18n("Low color analog clock face"));
-
-    addFileDefinition("locolor/widgets/panel-background", "locolor/widgets/panel-background.svg",
-                      i18n("Low color background image for panels"));
-    addFileDefinition("locolor/widgets/panel-background", "locolor/widgets/panel-background.svgz",
-                      i18n("Low color background image for panels"));
-
-    addFileDefinition("locolor/widgets/plot-background", "locolor/widgets/plot-background.svg",
-                      i18n("Low color background for graphing widgets"));
-    addFileDefinition("locolor/widgets/plot-background", "locolor/widgets/plot-background.svgz",
-                      i18n("Low color background for graphing widgets"));
-
-    addFileDefinition("locolor/widgets/tooltip", "locolor/widgets/tooltip.svg",
-                      i18n("Low color background image for tooltips"));
-    addFileDefinition("locolor/widgets/tooltip", "locolor/widgets/tooltip.svgz",
-                      i18n("Low color background image for tooltips"));
-
     addFileDefinition("colors", "colors", i18n("KColorScheme configuration file"));
 
     QStringList mimetypes;
