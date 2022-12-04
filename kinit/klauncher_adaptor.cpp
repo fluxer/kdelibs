@@ -165,7 +165,7 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
     foreach (const QString &it, env) {
         const int equalindex = it.indexOf(QLatin1Char('='));
         if (equalindex <= 0) {
-            kWarning() << "Invalid environment variable" << it;
+            kWarning() << "invalid environment variable" << it;
             continue;
         }
         const QString environmentvar = it.mid(0, equalindex);
@@ -179,7 +179,7 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
     m_kstartupinfoid = KStartupInfoId();
     m_kstartupinfoid.initId(startup_id.toLatin1());
     m_kstartupinfodata = KStartupInfoData();
-    m_kstartupinfodata.setBin(appexe);
+    m_kstartupinfodata.setBin(QFileInfo(appexe).fileName());
     process->start(appexe, args);
     sendSIStart();
     while (process->state() == QProcess::Starting) {
