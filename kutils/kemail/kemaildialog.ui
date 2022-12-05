@@ -53,7 +53,7 @@
        <widget class="KLineEdit" name="oauthlineedit"/>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="label_5">
         <property name="text">
          <string>OAuth access token:</string>
         </property>
