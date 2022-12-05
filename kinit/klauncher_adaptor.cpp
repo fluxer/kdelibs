@@ -360,6 +360,9 @@ QString KLauncherAdaptor::findExe(const QString &app) const
 
 void KLauncherAdaptor::sendSIStart() const
 {
+    if (m_kstartupinfoid.none()) {
+        return;
+    }
     kDebug() << "sending ASN start";
     KStartupInfo::sendStartup(m_kstartupinfoid, m_kstartupinfodata);
 }
