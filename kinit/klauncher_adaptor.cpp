@@ -297,6 +297,8 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         m_kstartupinfodata.setSilent(startupsilent ? KStartupInfoData::Yes : KStartupInfoData::No);
         m_kstartupinfodata.setWMClass(startupwmclass);
         sendSIStart();
+    } else {
+        kDebug() << "no ASN for" << kservice->entryPath();
     }
     int result = kdeinit_exec(program, programargs, envs, QString(), msg, dbusServiceName, error, pid);
     if (result != KLauncherAdaptor::NoError) {
