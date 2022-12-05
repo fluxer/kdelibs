@@ -129,7 +129,7 @@ void KLauncherAdaptor::exec_blind(const QString &name, const QStringList &arg_li
 {
     const QString appexe = findExe(name);
     if (appexe.isEmpty()) {
-        kWarning() << "Could not find" << name;
+        kWarning() << "could not find" << name;
         return;
     }
 
