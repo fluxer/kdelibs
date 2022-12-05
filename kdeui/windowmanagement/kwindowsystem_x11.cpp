@@ -127,19 +127,25 @@ KWindowSystemPrivate::KWindowSystemPrivate(int _what)
 {
     (void ) qApp->desktop(); //trigger desktop widget creation to select root window events
 
+    create_atoms();
+    compositingEnabled = XGetSelectionOwner(QX11Info::display(), net_wm_cm) != None;
+
 #ifdef HAVE_XFIXES
     int errorBase;
-    if ((haveXfixes = XFixesQueryExtension(QX11Info::display(), &xfixesEventBase, &errorBase))) {
-        create_atoms();
+    haveXfixes = XFixesQueryExtension(QX11Info::display(), &xfixesEventBase, &errorBase);
+#endif
+
+    KSystemEventFilter::installEventFilter(this);
+
+#ifdef HAVE_XFIXES
+    if (haveXfixes) {
         XFixesSelectSelectionInput(QX11Info::display(), winId(), net_wm_cm,
                                    XFixesSetSelectionOwnerNotifyMask |
                                    XFixesSelectionWindowDestroyNotifyMask |
                                    XFixesSelectionClientCloseNotifyMask);
-        compositingEnabled = XGetSelectionOwner(QX11Info::display(), net_wm_cm) != None;
     }
 #endif
 
-    KSystemEventFilter::installEventFilter(this);
 }
 
 // not virtual, but it's called directly only from init()
