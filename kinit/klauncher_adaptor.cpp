@@ -246,7 +246,9 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     }
     const KService::DBusStartupType dbusstartuptype = kservice->dbusStartupType();
     dbusServiceName = kservice->property(QString::fromLatin1("X-DBUS-ServiceName"), QVariant::String).toString();
-    if (dbusstartuptype == KService::DBusUnique) {
+    // any unique Katana application/service checks if another instance is running, if it already
+    // running starting it may raise its window instead (if it uses KUniqueApplication)
+    if (dbusstartuptype == KService::DBusUnique && !dbusServiceName.startsWith(QLatin1String("org.kde."))) {
         QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
         if (!sessionreply.isValid()) {
             sendSIFinish();
