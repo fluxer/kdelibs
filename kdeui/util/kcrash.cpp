@@ -97,11 +97,6 @@ void KCrash::defaultCrashHandler(int sig)
 {
     KDE_signal(sig, SIG_DFL);
 
-#if 0
-    kFatal() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
-    return;
-#endif
-
     if (s_flags & KCrash::AutoRestart) {
         QStringList args;
 
@@ -156,6 +151,9 @@ void KCrash::defaultCrashHandler(int sig)
         }
 
         QProcess::execute(drkonqiexe, args);
+    } else {
+        // not using kFatal() because that could call abort() (abort on fatal is a option)
+        kError() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
     }
 
     ::exit(sig);
