@@ -39,12 +39,12 @@ static const int s_eventstime = 250;
 static const int s_sleeptime = 50;
 static const qint64 s_servicetimeout = 10000; // 10sec
 
-static bool isPIDAlive(const pid_t pid)
+static inline bool isPIDAlive(const pid_t pid)
 {
     return (::kill(pid, 0) >= 0);
 }
 
-static int getExitStatus(const pid_t pid)
+static inline int getExitStatus(const pid_t pid)
 {
     int pidstate = 0;
     ::waitpid(pid, &pidstate, WNOHANG);
