@@ -181,8 +181,8 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
     m_kstartupinfoid.initId(startup_id.toLatin1());
     m_kstartupinfodata = KStartupInfoData();
     m_kstartupinfodata.setBin(QFileInfo(appexe).fileName());
-    process->start(appexe, args);
     sendSIStart();
+    process->start(appexe, args);
     while (process->state() == QProcess::Starting) {
         QApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
         QThread::msleep(s_sleeptime);
