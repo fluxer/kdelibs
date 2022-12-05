@@ -41,7 +41,8 @@ static const int s_sleeptime = 50;
 // kde-workspace/kwin/effects/startupfeedback/startupfeedback.cpp
 // kde-workspace/kcontrol/launch/kcmlaunch.cpp
 static const qint64 s_servicetimeout = 10000; // 10sec
-// klauncher is the last process to quit in a session so 5sec for each process is more than enough
+// klauncher is the last process to quit in a session (see kde-workspace/startkde.cmake) so 5sec
+// for each child process is more than enough
 static const qint64 s_processtimeout = 5000; // 5sec
 
 static inline bool isPIDAlive(const pid_t pid)
