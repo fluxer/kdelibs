@@ -251,7 +251,6 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     if (dbusstartuptype == KService::DBusUnique && !dbusServiceName.startsWith(QLatin1String("org.kde."))) {
         QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
         if (!sessionreply.isValid()) {
-            sendSIFinish();
             error = i18n("Invalid D-Bus reply for: %1", dbusServiceName);
             return KLauncherAdaptor::DBusError;
         }
