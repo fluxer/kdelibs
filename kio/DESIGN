@@ -2,8 +2,6 @@ DESIGN:
 =======
 
 libkio uses kioslaves (separate processes) that handle a given protocol.
-Launching those slaves is taken care of by the kdeinit/klauncher tandem,
-which are notified by DBus.
 
 Connection is the most low-level class, the one that encapsulates the pipe.
 

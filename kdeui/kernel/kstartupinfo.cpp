@@ -22,7 +22,6 @@ DEALINGS IN THE SOFTWARE.
 
 ****************************************************************************/
 
-// kDebug() can't be turned off in kdeinit
 #if 0
 #define KSTARTUPINFO_ALL_DEBUG
 #warning Extra KStartupInfo debug messages enabled.
@@ -956,7 +955,7 @@ QByteArray KStartupInfo::createNewStartupId()
 #endif
     QByteArray id = QString::fromLatin1( "%1;%2;%3;%4_TIME%5" ).arg( hostname ).arg( tm.tv_sec )
         .arg( tm.tv_usec ).arg( getpid()).arg( qt_x_user_time ).toUtf8();
-    kDebug( 172 ) << "creating: " << id << ":" << (qApp ? qApp->applicationName() : QString("unnamed app") /* e.g. kdeinit */);
+    kDebug( 172 ) << "creating: " << id << ":" << (qApp ? qApp->applicationName() : QString::fromLatin1("unnamed app"));
     return id;
 }
 
