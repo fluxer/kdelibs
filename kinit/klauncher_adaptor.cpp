@@ -276,13 +276,19 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     const QString program = programandargs.takeFirst();
     const QStringList programargs = programandargs;
     Q_ASSERT(m_kstartupinfoid.none() == true);
-    m_kstartupinfoid = KStartupInfoId();
-    m_kstartupinfodata = KStartupInfoData();
-    m_kstartupinfoid.initId(startup_id.toLatin1());
-    m_kstartupinfodata.setBin(QFileInfo(program).fileName());
-    m_kstartupinfodata.setIcon(kservice->icon());
-    m_kstartupinfodata.setDescription(i18n("Launching %1", kservice->name()));
-    sendSIStart();
+    bool startupsilent = false;
+    QByteArray startupwmclass;
+    if (KRun::checkStartupNotify(kservice.data(), &startupsilent, &startupwmclass)) {
+        m_kstartupinfoid = KStartupInfoId();
+        m_kstartupinfodata = KStartupInfoData();
+        m_kstartupinfoid.initId(startup_id.toLatin1());
+        m_kstartupinfodata.setBin(QFileInfo(program).fileName());
+        m_kstartupinfodata.setIcon(kservice->icon());
+        m_kstartupinfodata.setDescription(i18n("Launching %1", kservice->name()));
+        m_kstartupinfodata.setSilent(startupsilent ? KStartupInfoData::Yes : KStartupInfoData::No);
+        m_kstartupinfodata.setWMClass(startupwmclass);
+        sendSIStart();
+    }
     int result = kdeinit_exec(program, programargs, envs, QString(), msg, dbusServiceName, error, pid);
     if (result != KLauncherAdaptor::NoError) {
         // sendSIFinish() is called on exec error
