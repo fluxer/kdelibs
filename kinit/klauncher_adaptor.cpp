@@ -244,6 +244,20 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         error = i18n("Invalid service path: %1", serviceName);
         return KLauncherAdaptor::ServiceError;
     }
+    const KService::DBusStartupType dbusstartuptype = kservice->dbusStartupType();
+    dbusServiceName = kservice->property(QString::fromLatin1("X-DBUS-ServiceName"), QVariant::String).toString();
+    if (dbusstartuptype == KService::DBusUnique) {
+        QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
+        if (!sessionreply.isValid()) {
+            sendSIFinish();
+            error = i18n("Invalid D-Bus reply for: %1", dbusServiceName);
+            return KLauncherAdaptor::DBusError;
+        }
+        if (sessionreply.value() == true) {
+            kDebug() << "service already started" << dbusServiceName;
+            return KLauncherAdaptor::NoError;
+        }
+    }
     if (urls.size() > 1 && !kservice->allowMultipleFiles()) {
         // TODO: start multiple instances for each URL
         error = i18n("Service does not support multiple files: %1", serviceName);
@@ -256,8 +270,6 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     }
     const QString program = programandargs.takeFirst();
     const QStringList programargs = programandargs;
-    const KService::DBusStartupType dbusstartuptype = kservice->dbusStartupType();
-    dbusServiceName = kservice->property(QString::fromLatin1("X-DBUS-ServiceName"), QVariant::String).toString();
     int result = kdeinit_exec(program, programargs, envs, startup_id, msg, dbusServiceName, error, pid);
     if (result != KLauncherAdaptor::NoError) {
         // sendSIFinish() is called on exec error
