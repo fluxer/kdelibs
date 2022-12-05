@@ -33,6 +33,7 @@
 
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 static const int s_eventstime = 250;
 static const int s_sleeptime = 50;
