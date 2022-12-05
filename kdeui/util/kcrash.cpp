@@ -152,7 +152,7 @@ void KCrash::defaultCrashHandler(int sig)
 
         QProcess::execute(drkonqiexe, args);
     } else {
-        // not using kFatal() because that could call abort() (abort on fatal is a option)
+        // NOTE: not using kFatal() because that can call abort() (abort on fatal is a option)
         kError() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
     }
 
