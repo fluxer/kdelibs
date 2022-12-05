@@ -285,11 +285,11 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     const QString program = programandargs.takeFirst();
     const QStringList programargs = programandargs;
     Q_ASSERT(m_kstartupinfoid.none() == true);
+    m_kstartupinfoid = KStartupInfoId();
+    m_kstartupinfodata = KStartupInfoData();
     bool startupsilent = false;
     QByteArray startupwmclass;
     if (KRun::checkStartupNotify(kservice.data(), &startupsilent, &startupwmclass)) {
-        m_kstartupinfoid = KStartupInfoId();
-        m_kstartupinfodata = KStartupInfoData();
         m_kstartupinfoid.initId(startup_id.toLatin1());
         m_kstartupinfodata.setBin(QFileInfo(program).fileName());
         m_kstartupinfodata.setIcon(kservice->icon());
@@ -359,7 +359,7 @@ void KLauncherAdaptor::slotProcessStateChanged(QProcess::ProcessState state)
     kDebug() << "process state changed" << process << state;
     if (state == QProcess::Starting && !m_kstartupinfoid.none()) {
         m_kstartupinfodata.addPid(process->pid());
-        sendSIUpdate();
+        sendSIChange();
     } else if (state == QProcess::NotRunning && m_kstartupinfodata.is_pid(process->pid())) {
         sendSIFinish();
     }
@@ -390,16 +390,16 @@ void KLauncherAdaptor::sendSIStart() const
     if (m_kstartupinfoid.none()) {
         return;
     }
-    kDebug() << "sending ASN start";
+    kDebug() << "sending ASN start for" << m_kstartupinfodata.bin();
     KStartupInfo::sendStartup(m_kstartupinfoid, m_kstartupinfodata);
 }
 
-void KLauncherAdaptor::sendSIUpdate()
+void KLauncherAdaptor::sendSIChange()
 {
     if (m_kstartupinfoid.none()) {
         return;
     }
-    kDebug() << "sending ASN update";
+    kDebug() << "sending ASN change for" << m_kstartupinfodata.bin();
     KStartupInfo::sendChange(m_kstartupinfoid, m_kstartupinfodata);
 }
 
@@ -408,7 +408,7 @@ void KLauncherAdaptor::sendSIFinish()
     if (m_kstartupinfoid.none()) {
         return;
     }
-    kDebug() << "sending ASN finish";
+    kDebug() << "sending ASN finish for" << m_kstartupinfodata.bin();
     KStartupInfo::sendFinish(m_kstartupinfoid, m_kstartupinfodata);
     m_kstartupinfoid = KStartupInfoId();
     m_kstartupinfodata = KStartupInfoData();

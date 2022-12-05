@@ -68,7 +68,7 @@ private Q_SLOTS:
 private:
     QString findExe(const QString &app) const;
     void sendSIStart() const;
-    void sendSIUpdate();
+    void sendSIChange();
     void sendSIFinish();
 
     QProcessEnvironment m_environment;
