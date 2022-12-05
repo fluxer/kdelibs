@@ -534,7 +534,7 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
     bool silent;
     QByteArray wmclass;
     KStartupInfoId id;
-    bool startup_notify = (asn != "0" && KRun::checkStartupNotify(QString() /*unused*/, service, &silent, &wmclass));
+    bool startup_notify = (asn != "0" && KRun::checkStartupNotify(service, &silent, &wmclass));
     if (startup_notify) {
         id.initId(asn);
         id.setupStartupEnv();
@@ -584,7 +584,7 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
 }
 
 // This code is also used in klauncher.
-bool KRun::checkStartupNotify(const QString& /*binName*/, const KService* service, bool* silent_arg, QByteArray* wmclass_arg)
+bool KRun::checkStartupNotify(const KService* service, bool* silent_arg, QByteArray* wmclass_arg)
 {
     bool silent = false;
     QByteArray wmclass;
