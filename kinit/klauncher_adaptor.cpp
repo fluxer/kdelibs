@@ -188,11 +188,16 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
     process->setProcessEnvironment(processenv);
     process->setWorkingDirectory(workdir);
     kDebug() << "starting" << appexe << args << env << processenv.toStringList();
-    m_kstartupinfoid = KStartupInfoId();
-    m_kstartupinfoid.initId(startup_id.toLatin1());
-    m_kstartupinfodata = KStartupInfoData();
-    m_kstartupinfodata.setBin(QFileInfo(appexe).fileName());
-    sendSIStart();
+    // either start_service_by_desktop_path() or this method send ASN
+    if (!startup_id.isEmpty()) {
+        Q_ASSERT(m_kstartupinfoid.none() == true);
+        m_kstartupinfoid = KStartupInfoId();
+        m_kstartupinfodata = KStartupInfoData();
+        m_kstartupinfoid.initId(startup_id.toLatin1());
+        m_kstartupinfodata.setBin(QFileInfo(appexe).fileName());
+        m_kstartupinfodata.setDescription(i18n("Launching %1", m_kstartupinfodata.bin()));
+        sendSIStart();
+    }
     process->start(appexe, args);
     while (process->state() == QProcess::Starting) {
         QApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
@@ -203,8 +208,7 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
         error = i18n("Could not start: %1", appexe);
         return KLauncherAdaptor::ExecError;
     }
-    if (dbusServiceName.isEmpty()) {
-        // if service name is not empty it will be send when the service is up
+    if (!startup_id.isEmpty()) {
         sendSIFinish();
     }
 
@@ -246,8 +250,8 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     }
     const KService::DBusStartupType dbusstartuptype = kservice->dbusStartupType();
     dbusServiceName = kservice->property(QString::fromLatin1("X-DBUS-ServiceName"), QVariant::String).toString();
-    // any unique Katana application/service checks if another instance is running, if it already
-    // running starting it may raise its window instead (if it uses KUniqueApplication)
+    // any unique Katana application/service checks if another instance is running, if it is
+    // already running starting it may raise its window instead (if it uses KUniqueApplication)
     if (dbusstartuptype == KService::DBusUnique && !dbusServiceName.startsWith(QLatin1String("org.kde."))) {
         QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
         if (!sessionreply.isValid()) {
@@ -271,7 +275,15 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     }
     const QString program = programandargs.takeFirst();
     const QStringList programargs = programandargs;
-    int result = kdeinit_exec(program, programargs, envs, startup_id, msg, dbusServiceName, error, pid);
+    Q_ASSERT(m_kstartupinfoid.none() == true);
+    m_kstartupinfoid = KStartupInfoId();
+    m_kstartupinfodata = KStartupInfoData();
+    m_kstartupinfoid.initId(startup_id.toLatin1());
+    m_kstartupinfodata.setBin(QFileInfo(program).fileName());
+    m_kstartupinfodata.setIcon(kservice->icon());
+    m_kstartupinfodata.setDescription(i18n("Launching %1", kservice->name()));
+    sendSIStart();
+    int result = kdeinit_exec(program, programargs, envs, QString(), msg, dbusServiceName, error, pid);
     if (result != KLauncherAdaptor::NoError) {
         // sendSIFinish() is called on exec error
         return result;
