@@ -1,5 +1,10 @@
 project(kinit)
 
+include_directories(
+    ${KDE4_KDEUI_INCLUDES}
+    ${KDE4_KIO_INCLUDES}
+)
+
 if(ENABLE_TESTING)
     add_subdirectory(tests)
 endif()
