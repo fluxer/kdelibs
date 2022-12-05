@@ -37,7 +37,12 @@
 
 static const int s_eventstime = 250;
 static const int s_sleeptime = 50;
+// NOTE: keep in sync with:
+// kde-workspace/kwin/effects/startupfeedback/startupfeedback.cpp
+// kde-workspace/kcontrol/launch/kcmlaunch.cpp
 static const qint64 s_servicetimeout = 10000; // 10sec
+// klauncher is the last process to quit in a session so 5sec for each process is more than enough
+static const qint64 s_processtimeout = 5000; // 5sec
 
 static inline bool isPIDAlive(const pid_t pid)
 {
@@ -66,7 +71,11 @@ KLauncherAdaptor::~KLauncherAdaptor()
         QProcess* process = m_processes.takeLast();
         disconnect(process, 0, this, 0);
         process->terminate();
-        process->waitForFinished();
+        if (!process->waitForFinished(s_processtimeout)) {
+            kWarning() << "process still running" << process->pid();
+            // SIGKILL is non-ignorable
+            process->kill();
+        }
     }
 }
 
