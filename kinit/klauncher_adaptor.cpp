@@ -39,6 +39,18 @@ static const int s_eventstime = 250;
 static const int s_sleeptime = 50;
 static const qint64 s_servicetimeout = 10000; // 10sec
 
+static bool isPIDAlive(const pid_t pid)
+{
+    return (::kill(pid, 0) >= 0);
+}
+
+static int getExitStatus(const pid_t pid)
+{
+    int pidstate = 0;
+    ::waitpid(pid, &pidstate, WNOHANG);
+    return WEXITSTATUS(pidstate);
+}
+
 KLauncherAdaptor::KLauncherAdaptor(QObject *parent)
     : QDBusAbstractAdaptor(parent),
     m_dbusconnectioninterface(nullptr)
@@ -134,19 +146,18 @@ int KLauncherAdaptor::kdeinit_exec(const QString &app, const QStringList &args, 
 int KLauncherAdaptor::kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id,
                                         const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid)
 {
-    const int result = kdeinit_exec(app, args, env, startup_id, msg, dbusServiceName, error, pid);
+    int result = kdeinit_exec(app, args, env, startup_id, msg, dbusServiceName, error, pid);
     if (result != KLauncherAdaptor::NoError) {
         return result;
     }
     kDebug() << "waiting for" << pid;
-    while (::kill(pid, 0) >= 0) {
+    while (isPIDAlive(pid)) {
         QApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
         QThread::msleep(s_sleeptime);
     }
-    int pidstate = 0;
-    ::waitpid(pid, &pidstate, WNOHANG);
-    kDebug() << "done waiting for" << pid << ", exit status" << WEXITSTATUS(pidstate);
-    return WEXITSTATUS(pidstate);
+    result = getExitStatus(pid);
+    kDebug() << "done waiting for" << pid << ", exit status" << result;
+    return result;
 }
 
 int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id,
@@ -247,7 +258,7 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     const QStringList programargs = programandargs;
     const KService::DBusStartupType dbusstartuptype = kservice->dbusStartupType();
     dbusServiceName = kservice->property(QString::fromLatin1("X-DBUS-ServiceName"), QVariant::String).toString();
-    const int result = kdeinit_exec(program, programargs, envs, startup_id, msg, dbusServiceName, error, pid);
+    int result = kdeinit_exec(program, programargs, envs, startup_id, msg, dbusServiceName, error, pid);
     if (result != KLauncherAdaptor::NoError) {
         // sendSIFinish() is called on exec error
         return result;
@@ -286,6 +297,12 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         // or the program is just not registering the service at all
         if (elapsedtime.elapsed() >= s_servicetimeout && dbusstartuptype != KService::DBusWait) {
             kWarning() << "timed out for" << pid << ", service name" << dbusServiceName;
+            break;
+        }
+        // or the program is not even running
+        if (!isPIDAlive(pid)) {
+            result = getExitStatus(pid);
+            kWarning() << "not running" << pid << ", exit status" << result;
             break;
         }
         QApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
