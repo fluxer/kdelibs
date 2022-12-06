@@ -307,6 +307,8 @@ void SlaveBase::dispatchLoop()
         }
 
         if (ret == -1) { // some error occurred, perhaps no more application
+            disconnectSlave();
+            closeConnection();
             break;
         }
 
