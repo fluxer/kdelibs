@@ -19,50 +19,25 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#include <config.h>
-
 #include <stdlib.h>
 #include <stdio.h>
-#include <errno.h>
+#include <unistd.h>
 #include <locale.h>
-
-#include <QtCore/QString>
-#include <QtCore/QLibrary>
-#include <QtCore/QFile>
 
 int main(int argc, char **argv)
 {
-     if (argc < 5)
-     {
-        fprintf(stderr, "Usage: kioslave <slave-lib> <protocol> <klauncher-socket> <app-socket>\n\nThis program is part of KDE.\n");
-        exit(1);
-     }
-     setlocale(LC_ALL, "");
-     QString libpath = QFile::decodeName(argv[1]);
-
-     if (libpath.isEmpty())
-     {
-        fprintf(stderr, "library path is empty.\n");
-        exit(1); 
+     if (argc != 3) {
+        ::fprintf(stderr, "Usage: kioslave <slave-exe> <app-socket>\n\nThis program is part of KDE.\n");
+        ::exit(1);
      }
 
-     QLibrary lib(libpath);
-
-     if ( !lib.load() || !lib.isLoaded() )
+     ::setlocale(LC_ALL, "");
+     if (!argv[1])
      {
-        fprintf(stderr, "could not open %s: %s", qPrintable(libpath),
-                qPrintable (lib.errorString()));
-        exit(1);
-     }  
-
-     void* sym = lib.resolve("kdemain");
-     if (!sym )
-     {
-        fprintf(stderr, "Could not find kdemain: %s\n", qPrintable(lib.errorString()));
-        exit(1);
+        fprintf(stderr, "slave executable path is empty.\n");
+        ::exit(1); 
      }
 
-     int (*func)(int, char *[]) = (int (*)(int, char *[])) sym;
-
-     exit(func(argc-1, argv+1)); /* Launch! */
+     /* Launch! */
+     return ::execv(argv[1], argv+1);
 }

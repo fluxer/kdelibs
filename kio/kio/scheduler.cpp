@@ -68,7 +68,6 @@ static void setupSlave(KIO::Slave *slave, const KUrl &url, const QString &protoc
                        const QStringList &proxyList, bool newSlave);
 // same reason as above
 static Scheduler *scheduler();
-static Slave *heldSlaveForJob(SimpleJob *job);
 
 /********************************* SessionData ****************************/
 
@@ -134,11 +133,6 @@ void SlaveKeeper::returnSlave(Slave *slave)
 
 Slave *SlaveKeeper::takeSlaveForJob(SimpleJob *job)
 {
-    Slave *slave = heldSlaveForJob(job);
-    if (slave) {
-        return slave;
-    }
-
     KUrl url = SimpleJobPrivate::get(job)->m_url;
     // TODO take port, username and password into account
     QMultiHash<QString, Slave *>::Iterator it = m_idleSlaves.find(url.host());
@@ -148,7 +142,7 @@ Slave *SlaveKeeper::takeSlaveForJob(SimpleJob *job)
     if (it == m_idleSlaves.end()) {
         return 0;
     }
-    slave = it.value();
+    Slave *slave = it.value();
     m_idleSlaves.erase(it);
     return slave;
 }
@@ -550,8 +544,6 @@ class KIO::SchedulerPrivate
 public:
     SchedulerPrivate()
      : q(new Scheduler()),
-       m_slaveOnHold(0),
-       m_checkOnHold(true), // !! Always check with KLauncher for the first request
        m_ignoreConfigReparse(false)
     {
     }
@@ -569,9 +561,6 @@ public:
     }
     Scheduler *q;
 
-    Slave *m_slaveOnHold;
-    KUrl m_urlOnHold;
-    bool m_checkOnHold;
     bool m_ignoreConfigReparse;
 
     SessionData sessionData;
@@ -581,12 +570,6 @@ public:
     void setJobPriority(SimpleJob *job, int priority);
     void cancelJob(SimpleJob *job);
     void jobFinished(KIO::SimpleJob *job, KIO::Slave *slave);
-    void putSlaveOnHold(KIO::SimpleJob *job, const KUrl &url);
-    void removeSlaveOnHold();
-    void checkSlaveOnHold(bool b);
-    void publishSlaveOnHold();
-    Slave *heldSlaveForJob(KIO::SimpleJob *job);
-    bool isSlaveOnHoldFor(const KUrl& url);
     void registerWindow(QWidget *wid);
 
     MetaData metaDataFor(const QString &protocol, const QStringList &proxyList, const KUrl &url);
@@ -598,7 +581,6 @@ public:
                          const QString &host, bool connected);
 
     void slotReparseSlaveConfiguration(const QString &, const QDBusMessage&);
-    void slotSlaveOnHoldListChanged();
 
     void slotUnregisterWindow(QObject *);
 
@@ -648,12 +630,6 @@ Scheduler *scheduler()
     return schedulerPrivate->q;
 }
 
-//static
-Slave *heldSlaveForJob(SimpleJob *job)
-{
-    return schedulerPrivate->heldSlaveForJob(job);
-}
-
 
 Scheduler::Scheduler()
 {
@@ -666,8 +642,6 @@ Scheduler::Scheduler()
                                                  QDBusConnection::ExportScriptableSignals );
     dbus.connect(QString(), dbusPath, dbusInterface, "reparseSlaveConfiguration",
                  this, SLOT(slotReparseSlaveConfiguration(QString,QDBusMessage)));
-    dbus.connect(QString(), dbusPath, dbusInterface, "slaveOnHoldListChanged",
-                 this, SLOT(slotSlaveOnHoldListChanged()));
 }
 
 Scheduler::~Scheduler()
@@ -695,26 +669,6 @@ void Scheduler::jobFinished(KIO::SimpleJob *job, KIO::Slave *slave)
     schedulerPrivate->jobFinished(job, slave);
 }
 
-void Scheduler::putSlaveOnHold(KIO::SimpleJob *job, const KUrl &url)
-{
-    schedulerPrivate->putSlaveOnHold(job, url);
-}
-
-void Scheduler::removeSlaveOnHold()
-{
-    schedulerPrivate->removeSlaveOnHold();
-}
-
-void Scheduler::publishSlaveOnHold()
-{
-    schedulerPrivate->publishSlaveOnHold();
-}
-
-bool Scheduler::isSlaveOnHoldFor(const KUrl& url)
-{
-    return schedulerPrivate->isSlaveOnHoldFor(url);
-}
-
 void Scheduler::registerWindow(QWidget *wid)
 {
     schedulerPrivate->registerWindow(wid);
@@ -723,11 +677,6 @@ void Scheduler::registerWindow(QWidget *wid)
 void Scheduler::unregisterWindow(QObject *wid)
 {
     schedulerPrivate->slotUnregisterWindow(wid);
-}
-
-void Scheduler::checkSlaveOnHold(bool b)
-{
-    schedulerPrivate->checkSlaveOnHold(b);
 }
 
 void Scheduler::emitReparseSlaveConfiguration()
@@ -771,22 +720,6 @@ void SchedulerPrivate::slotReparseSlaveConfiguration(const QString &proto, const
     }
 }
 
-void SchedulerPrivate::slotSlaveOnHoldListChanged()
-{
-    m_checkOnHold = true;
-}
-
-static bool mayReturnContent(int cmd, const QString& protocol)
-{
-    if (cmd == CMD_GET)
-        return true;
-
-    if (cmd == CMD_SPECIAL && protocol.startsWith(QLatin1String("http"), Qt::CaseInsensitive))
-        return true;
-
-    return false;
-}
-
 void SchedulerPrivate::doJob(SimpleJob *job)
 {
     kDebug(7006) << job;
@@ -797,11 +730,6 @@ void SchedulerPrivate::doJob(SimpleJob *job)
     KIO::SimpleJobPrivate *const jobPriv = SimpleJobPrivate::get(job);
     jobPriv->m_proxyList.clear();
     jobPriv->m_protocol = KProtocolManager::slaveProtocol(job->url(), jobPriv->m_proxyList);
-
-    if (mayReturnContent(jobCommand(job), jobPriv->m_protocol)) {
-       jobPriv->m_checkOnHold = m_checkOnHold;
-       m_checkOnHold = false;
-    }
 
     ProtoQueue *proto = protoQ(jobPriv->m_protocol, job->url().host());
     proto->queueJob(job);
@@ -934,105 +862,7 @@ void SchedulerPrivate::slotSlaveDied(KIO::Slave *slave)
        // in case this was a connected slave...
        pq->removeSlave(slave);
     }
-    if (slave == m_slaveOnHold) {
-       m_slaveOnHold = 0;
-       m_urlOnHold.clear();
-    }
     slave->deref(); // Delete slave
-}
-
-void SchedulerPrivate::putSlaveOnHold(KIO::SimpleJob *job, const KUrl &url)
-{
-    Slave *slave = jobSlave(job);
-    kDebug(7006) << job << url << slave;
-    slave->disconnect(job);
-    // prevent the fake death of the slave from trying to kill the job again;
-    // cf. Slave::hold(const KUrl &url) called in SchedulerPrivate::publishSlaveOnHold().
-    slave->setJob(0);
-    SimpleJobPrivate::get(job)->m_slave = 0;
-
-    if (m_slaveOnHold) {
-        m_slaveOnHold->kill();
-    }
-    m_slaveOnHold = slave;
-    m_urlOnHold = url;
-    m_slaveOnHold->suspend();
-}
-
-void SchedulerPrivate::publishSlaveOnHold()
-{
-    kDebug(7006) << m_slaveOnHold;
-    if (!m_slaveOnHold)
-       return;
-
-    m_slaveOnHold->hold(m_urlOnHold);
-    emit q->slaveOnHoldListChanged();
-}
-
-bool SchedulerPrivate::isSlaveOnHoldFor(const KUrl& url)
-{
-    if (url.isValid() && m_urlOnHold.isValid() && url == m_urlOnHold)
-        return true;
-
-    return Slave::checkForHeldSlave(url);
-}
-
-Slave *SchedulerPrivate::heldSlaveForJob(SimpleJob *job)
-{
-    Slave *slave = 0;
-    KIO::SimpleJobPrivate *const jobPriv = SimpleJobPrivate::get(job);
-
-    if (jobPriv->m_checkOnHold) {
-        slave = Slave::holdSlave(jobPriv->m_protocol, job->url());
-    }
-
-    if (!slave && m_slaveOnHold) {
-        // Make sure that the job wants to do a GET or a POST, and with no offset
-        const int cmd = jobPriv->m_command;
-        bool canJobReuse = (cmd == CMD_GET);
-
-        if (KIO::TransferJob *tJob = qobject_cast<KIO::TransferJob *>(job)) {
-            canJobReuse = ( canJobReuse || cmd == CMD_SPECIAL );
-            if (canJobReuse) {
-                KIO::MetaData outgoing = tJob->outgoingMetaData();
-                const QString resume = outgoing.value("resume");
-                kDebug(7006) << "Resume metadata is" << resume;
-                canJobReuse = (resume.isEmpty() || resume == "0");
-            }
-        }
-
-        if (job->url() == m_urlOnHold) {
-            if (canJobReuse) {
-                kDebug(7006) << "HOLD: Reusing held slave (" << m_slaveOnHold << ")";
-                slave = m_slaveOnHold;
-            } else {
-                kDebug(7006) << "HOLD: Discarding held slave (" << m_slaveOnHold << ")";
-                m_slaveOnHold->kill();
-            }
-            m_slaveOnHold = 0;
-            m_urlOnHold.clear();
-        }
-    } else if (slave) {
-        kDebug(7006) << "HOLD: Reusing klauncher held slave (" << slave << ")";
-    }
-
-    return slave;
-}
-
-void SchedulerPrivate::removeSlaveOnHold()
-{
-    kDebug(7006) << m_slaveOnHold;
-    if (m_slaveOnHold) {
-        m_slaveOnHold->kill();
-    }
-    m_slaveOnHold = 0;
-    m_urlOnHold.clear();
-}
-
-void SchedulerPrivate::checkSlaveOnHold(bool b)
-{
-    kDebug(7006) << b;
-    m_checkOnHold = b;
 }
 
 /*

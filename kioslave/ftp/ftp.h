@@ -53,7 +53,7 @@ class Ftp : public QObject, public KIO::SlaveBase
   Q_OBJECT
 
 public:
-  Ftp( const QByteArray &pool, const QByteArray &app );
+  Ftp( const QByteArray &app );
   virtual ~Ftp();
 
   virtual void setHost( const QString& host, quint16 port, const QString& user, const QString& pass );

@@ -15,8 +15,6 @@ add_definitions(-DKDE_DEFAULT_DEBUG_AREA=1210)
 
 add_executable(kioslave kioslave.cpp)
 
-target_link_libraries(kioslave ${QT_QTCORE_LIBRARY})
-
 install(TARGETS kioslave DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 
 ########### klauncher ###############

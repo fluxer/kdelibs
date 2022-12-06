@@ -87,7 +87,7 @@ namespace KIO {
          */
         SimpleJobPrivate(const KUrl& url, int command, const QByteArray &packedArgs)
             : m_slave(0), m_packedArgs(packedArgs), m_url(url), m_command(command),
-              m_checkOnHold(false), m_schedSerial(0), m_redirectionHandlingEnabled(true)
+              m_schedSerial(0), m_redirectionHandlingEnabled(true)
         {
             if (m_url.hasSubUrl())
             {
@@ -122,7 +122,6 @@ namespace KIO {
         // Slave::setProtocol().
         QString m_protocol;
         QStringList m_proxyList;
-        bool m_checkOnHold;
         int m_schedSerial;
         bool m_redirectionHandlingEnabled;
 

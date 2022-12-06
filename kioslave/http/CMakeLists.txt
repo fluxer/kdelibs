@@ -7,7 +7,7 @@ include_directories(
 
 ########### next target ###############
 
-kde4_add_plugin(kio_http http.cpp)
+add_executable(kio_http http.cpp)
 
 target_link_libraries(kio_http
     ${KDE4_KDECORE_LIBS}
@@ -15,7 +15,7 @@ target_link_libraries(kio_http
     ${CURL_LIBRARIES}
 )
 
-install(TARGETS kio_http DESTINATION ${KDE4_PLUGIN_INSTALL_DIR})
+install(TARGETS kio_http DESTINATION ${KDE4_LIBEXEC_INSTALL_DIR})
 
 ########### install files ###############
 

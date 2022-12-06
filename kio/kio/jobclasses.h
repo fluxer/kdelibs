@@ -334,17 +334,6 @@ namespace KIO {
         const KUrl& url() const;
 
         /**
-         * Abort job.
-         * Suspends slave to be reused by another job for the same request.
-         */
-        virtual void putOnHold();
-
-        /**
-         * Discard suspended slave.
-         */
-        static void removeOnHold();
-
-        /**
          * Returns true when redirections are handled internally, the default.
          *
          * @since 4.4

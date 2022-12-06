@@ -121,32 +121,6 @@ namespace KIO {
         static void jobFinished(KIO::SimpleJob *job, KIO::Slave *slave);
 
         /**
-         * Puts a slave on notice. A next job may reuse this slave if it
-         * requests the same URL.
-         *
-         * A job can be put on hold after it has emit'ed its mimetype.
-         * Based on the mimetype, the program can give control to another
-         * component in the same process which can then resume the job
-         * by simply asking for the same URL again.
-         * @param job the job that should be stopped
-         * @param url the URL that is handled by the @p url
-         */
-        static void putSlaveOnHold(KIO::SimpleJob *job, const KUrl &url);
-
-        /**
-         * Removes any slave that might have been put on hold. If a slave
-         * was put on hold it will be killed.
-         */
-        static void removeSlaveOnHold();
-
-        /**
-         * Send the slave that was put on hold back to KLauncher. This
-         * allows another process to take over the slave and resume the job
-         * that was started.
-         */
-        static void publishSlaveOnHold();
-
-        /**
          * Register the mainwindow @p wid with the KIO subsystem
          * Do not call this, it is called automatically from
          * void KIO::Job::setWindow(QWidget*).
@@ -160,28 +134,13 @@ namespace KIO {
          */
         static void unregisterWindow(QObject *wid);
 
-        /**
-         * When true, the next job will check whether KLauncher has a slave
-         * on hold that is suitable for the job.
-         * @param b true when KLauncher has a job on hold
-         */
-        static void checkSlaveOnHold(bool b);
-
         static void emitReparseSlaveConfiguration();
-
-        /**
-         * Returns true if there is a slave on hold for @p url.
-         *
-         * @since 4.7
-         */
-        static bool isSlaveOnHoldFor(const KUrl& url);
 
         static Scheduler *self();
 
     Q_SIGNALS:
         // DBUS
         Q_SCRIPTABLE void reparseSlaveConfiguration(const QString &);
-        Q_SCRIPTABLE void slaveOnHoldListChanged();
 
     private:
         Q_DISABLE_COPY(Scheduler)
@@ -192,7 +151,6 @@ namespace KIO {
 
         // connected to D-Bus signal:
         Q_PRIVATE_SLOT(d_func(), void slotReparseSlaveConfiguration(const QString &, const QDBusMessage&))
-        Q_PRIVATE_SLOT(d_func(), void slotSlaveOnHoldListChanged())
 
         Q_PRIVATE_SLOT(d_func(), void slotUnregisterWindow(QObject *))
     private:

@@ -71,9 +71,8 @@ public:
 };
 
 ForwardingSlaveBase::ForwardingSlaveBase(const QByteArray &protocol,
-                                         const QByteArray &poolSocket,
                                          const QByteArray &appSocket)
-    : QObject(), SlaveBase(protocol, poolSocket, appSocket),
+    : QObject(), SlaveBase(protocol, appSocket),
       d( new ForwardingSlaveBasePrivate(this) )
 {
     d->q = this;

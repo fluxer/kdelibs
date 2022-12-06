@@ -83,7 +83,7 @@ static void appendACLAtoms( const QByteArray & path, UDSEntry& entry,
                             mode_t type, bool withACL );
 #endif
 
-extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
+int main( int argc, char **argv )
 {
   QCoreApplication app( argc, argv ); // needed for QSocketNotifier
   KComponentData componentData( "kio_file", "kdelibs4" );
@@ -91,21 +91,21 @@ extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
 
   kDebug(7101) << "Starting" << getpid();
 
-  if (argc != 4)
+  if (argc != 2)
   {
-     fprintf(stderr, "Usage: kio_file protocol domain-socket1 domain-socket2\n");
+     fprintf(stderr, "Usage: kio_file app-socket\n");
      exit(-1);
   }
 
-  FileProtocol slave(argv[2], argv[3]);
+  FileProtocol slave(argv[1]);
   slave.dispatchLoop();
 
   kDebug(7101) << "Done";
   return 0;
 }
 
-FileProtocol::FileProtocol( const QByteArray &pool, const QByteArray &app )
-    : SlaveBase( "file", pool, app ), openFd(-1)
+FileProtocol::FileProtocol( const QByteArray &app )
+    : SlaveBase( "file", app ), openFd(-1)
 {
 }
 

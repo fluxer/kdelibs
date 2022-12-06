@@ -141,7 +141,6 @@ namespace KIO
     CMD_DISCONNECT = '2', // 50
     CMD_SLAVE_STATUS = '3', // 51
     CMD_SLAVE_CONNECT = '4', // 52
-    CMD_SLAVE_HOLD = '5', // 53
     CMD_NONE = 'A', // 65
     CMD_TESTDIR = 'B', // 66
     CMD_GET = 'C', // 67

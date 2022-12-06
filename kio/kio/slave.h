@@ -144,19 +144,6 @@ public:
    */
   static Slave* createSlave( const QString &protocol, const KUrl& url, int& error, QString& error_text );
 
-  /**
-   * Requests a slave on hold for ths url, from klauncher, if there is such a job.
-   * See hold()
-   */
-  static Slave* holdSlave( const QString &protocol, const KUrl& url );
-
-  /**
-   * Returns true if klauncher is holding a slave for @p url.
-   *
-   * @since 4.7
-   */
-  static bool checkForHeldSlave(const KUrl& url);
-
   // == communication with connected kioslave ==
   // whenever possible prefer these methods over the respective
   // methods in connection()
@@ -184,15 +171,6 @@ public:
   virtual void send(int cmd, const QByteArray &arr = QByteArray());
 
   // == end communication with connected kioslave ==
-  /**
-   * Puts the kioslave associated with @p url at halt, and return it to klauncher, in order
-   * to let another application connect to it and finish the job.
-   * This is for the krunner case: type a URL in krunner, it will start downloading
-   * to find the mimetype (KRun), and then hold the slave, publish the held slave using,
-   * this method, and the final application can continue the same download by requesting
-   * the same URL.
-   */
-  virtual void hold(const KUrl &url); // TODO KDE5: no reason to be virtual
 
   /**
    * @return The time this slave has been idle.

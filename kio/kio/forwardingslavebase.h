@@ -90,7 +90,6 @@ class KIO_EXPORT ForwardingSlaveBase : public QObject, public SlaveBase
 Q_OBJECT
 public:
     ForwardingSlaveBase(const QByteArray &protocol,
-                        const QByteArray &poolSocket,
                         const QByteArray &appSocket);
     virtual ~ForwardingSlaveBase();
 

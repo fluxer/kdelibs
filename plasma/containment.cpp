@@ -1498,13 +1498,6 @@ void ContainmentPrivate::mimeTypeRetrieved(KIO::Job *job, const QString &mimetyp
 
             QAction *choice = choices->exec();
             if (choice) {
-                // Put the job on hold so it can be recycled to fetch the actual content,
-                // which is to be expected when something's dropped onto the desktop and
-                // an applet is to be created with this URL
-                if (!mimetype.isEmpty() && !tjob->error()) {
-                    tjob->putOnHold();
-                    KIO::Scheduler::publishSlaveOnHold();
-                }
                 QString plugin = actionsToApplets.value(choice);
                 if (plugin.isEmpty()) {
                     //set wallpapery stuff
@@ -1521,7 +1514,13 @@ void ContainmentPrivate::mimeTypeRetrieved(KIO::Job *job, const QString &mimetyp
                 } else {
                     addApplet(actionsToApplets[choice], args, QRectF(posi, QSize()));
                 }
-
+                // Put the job slave on hold so it can be recycled to fetch the actual content,
+                // which is to be expected when something's dropped onto the desktop and
+                // an applet is to be created with this URL
+                if (!mimetype.isEmpty() && !tjob->error()) {
+                    tjob->kill(KJob::Quietly);
+                }
+    
                 clearDataForMimeJob(job);
                 return;
             }

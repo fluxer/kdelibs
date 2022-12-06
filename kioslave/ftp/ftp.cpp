@@ -147,7 +147,7 @@ KIO::filesize_t Ftp::UnknownSize = (KIO::filesize_t)-1;
 
 using namespace KIO;
 
-extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
+int main( int argc, char **argv )
 {
   QApplication app(argc, argv);
   KComponentData componentData( "kio_ftp", "kdelibs4" );
@@ -155,13 +155,13 @@ extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
 
   kDebug(7102) << "Starting " << getpid();
 
-  if (argc != 4)
+  if (argc != 2)
   {
-     fprintf(stderr, "Usage: kio_ftp protocol domain-socket1 domain-socket2\n");
+     fprintf(stderr, "Usage: kio_ftp app-socket\n");
      exit(-1);
   }
 
-  Ftp slave(argv[2], argv[3]);
+  Ftp slave(argv[1]);
   slave.dispatchLoop();
 
   kDebug(7102) << "Done";
@@ -172,8 +172,8 @@ extern "C" int Q_DECL_EXPORT kdemain( int argc, char **argv )
 // Ftp
 //===============================================================================
 
-Ftp::Ftp( const QByteArray &pool, const QByteArray &app )
-    : SlaveBase( "ftp", pool, app )
+Ftp::Ftp( const QByteArray &app )
+    : SlaveBase( "ftp", app )
 {
   // init the socket data
   m_data = m_control = NULL;

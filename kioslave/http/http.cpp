@@ -198,27 +198,27 @@ int curlXFERCallback(void *userdata, curl_off_t dltotal, curl_off_t dlnow, curl_
     return CURLE_OK;
 }
 
-extern "C" int Q_DECL_EXPORT kdemain(int argc, char **argv)
+int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
     KComponentData componentData("kio_http", "kdelibs4");
 
     kDebug(7103) << "Starting" << ::getpid();
 
-    if (argc != 4) {
+    if (argc != 2) {
         ::fprintf(stderr, "Usage: kio_http protocol domain-socket1 domain-socket2\n");
         ::exit(-1);
     }
 
-    HttpProtocol slave(argv[2], argv[3]);
+    HttpProtocol slave(argv[1]);
     slave.dispatchLoop();
 
     kDebug(7103) << "Done";
     return 0;
 }
 
-HttpProtocol::HttpProtocol(const QByteArray &pool, const QByteArray &app)
-    : SlaveBase("http", pool, app),
+HttpProtocol::HttpProtocol(const QByteArray &app)
+    : SlaveBase("http", app),
     aborttransfer(false), m_emitmime(true),
     m_curl(nullptr), m_curlheaders(nullptr)
 {

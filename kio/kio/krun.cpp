@@ -1386,8 +1386,7 @@ void KRun::foundMimeType(const QString& type)
         // Update our URL in case of a redirection
         setUrl( job->url() );
 
-        job->putOnHold();
-        KIO::Scheduler::publishSlaveOnHold();
+        job->kill(KJob::Quietly);
         d->m_job = 0;
     }
 

@@ -285,22 +285,6 @@ bool Slave::isAlive()
     return !d->dead;
 }
 
-void Slave::hold(const KUrl &url)
-{
-    Q_D(Slave);
-    ref();
-    {
-        QByteArray data;
-        QDataStream stream( &data, QIODevice::WriteOnly );
-        stream << url;
-        d->connection->send( CMD_SLAVE_HOLD, data );
-        d->connection->close();
-        d->dead = true;
-        emit slaveDied(this);
-    }
-    deref();
-}
-
 void Slave::suspend()
 {
     Q_D(Slave);
@@ -397,17 +381,16 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
     Slave *slave = new Slave(protocol);
     QString slaveAddress = slave->d_func()->slaveconnserver->address();
 
-    QString _name = KProtocolInfo::exec(protocol);
-    if (_name.isEmpty())
+    QString slavename = KProtocolInfo::exec(protocol);
+    if (slavename.isEmpty())
     {
         error_text = i18n("Unknown protocol '%1'.", protocol);
         error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
         delete slave;
         return 0;
     }
-    KPluginLoader lib(_name, KGlobal::mainComponent());
-    QString lib_path = lib.fileName();
-    if (lib_path.isEmpty())
+    QString slaveexe = KStandardDirs::locate("libexec", slavename);
+    if (slaveexe.isEmpty())
     {
         error_text = i18n("Can not find io-slave for protocol '%1'.", protocol);
         error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
@@ -415,23 +398,12 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
         return 0;
     }
 
-    const QStringList args = QStringList() << lib_path << protocol << "" << slaveAddress;
-    kDebug() << "kioslave" << ", " << lib_path << ", " << protocol << ", " << QString() << ", " << slaveAddress;
+    const QStringList args = QStringList() << slaveexe << slaveAddress;
+    kDebug() << "kioslave" << ", " << slaveexe << ", " << protocol << ", " << slaveAddress;
 
     QProcess::startDetached( KStandardDirs::findExe("kioslave"), args );
 
     return slave;
-}
-
-Slave* Slave::holdSlave( const QString &protocol, const KUrl& url )
-{
-    //kDebug(7002) << "holdSlave" << protocol << "for" << url;
-    return 0;
-}
-
-bool Slave::checkForHeldSlave(const KUrl &url)
-{
-    return false;
 }
 
 #include "moc_slave.cpp"

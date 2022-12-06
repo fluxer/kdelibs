@@ -323,24 +323,6 @@ const KUrl& SimpleJob::url() const
     return d_func()->m_url;
 }
 
-void SimpleJob::putOnHold()
-{
-    Q_D(SimpleJob);
-    Q_ASSERT( d->m_slave );
-    if ( d->m_slave )
-    {
-        Scheduler::putSlaveOnHold(this, d->m_url);
-    }
-    // we should now be disassociated from the slave
-    Q_ASSERT(!d->m_slave);
-    kill( Quietly );
-}
-
-void SimpleJob::removeOnHold()
-{
-    Scheduler::removeSlaveOnHold();
-}
-
 bool SimpleJob::isRedirectionHandlingEnabled() const
 {
     return d_func()->m_redirectionHandlingEnabled;
@@ -1634,8 +1616,7 @@ void FileCopyJobPrivate::startBestCopyMethod()
    {
       startCopyJob(m_dest);
    }
-   else if (m_dest.isLocalFile() && KProtocolManager::canCopyToFile(m_src) &&
-            !KIO::Scheduler::isSlaveOnHoldFor(m_src))
+   else if (m_dest.isLocalFile() && KProtocolManager::canCopyToFile(m_src))
    {
       startCopyJob(m_src);
    }

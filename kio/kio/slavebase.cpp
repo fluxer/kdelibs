@@ -113,8 +113,6 @@ public:
     UDSEntryList pendingListEntries;
     QTime m_timeSinceLastBatch;
     Connection appConnection;
-    QString poolSocket;
-    bool isConnectedToApp;
 
     bool resume:1;
     bool needSendCanResume:1;
@@ -206,13 +204,11 @@ static void genericsig_handler(int sigNumber)
 //////////////
 
 SlaveBase::SlaveBase( const QByteArray &protocol,
-                      const QByteArray &pool_socket,
                       const QByteArray &app_socket )
     : mProtocol(protocol),
       d(new SlaveBasePrivate(this))
 
 {
-    d->poolSocket = QFile::decodeName(pool_socket);
     s_protocol = protocol.data();
 #ifdef Q_OS_UNIX
     if (qgetenv("KDE_DEBUG").isEmpty())
@@ -249,8 +245,6 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
 #endif
 
     globalSlave = this;
-
-    d->isConnectedToApp = true;
 
     d->resume = false;
     d->needSendCanResume = false;
@@ -313,15 +307,7 @@ void SlaveBase::dispatchLoop()
         }
 
         if (ret == -1) { // some error occurred, perhaps no more application
-            // When the app exits, should the slave be put back in the pool ?
-            if (!d->exit_loop && d->isConnectedToApp && !d->poolSocket.isEmpty()) {
-                disconnectSlave();
-                d->isConnectedToApp = false;
-                closeConnection();
-                connectSlave(d->poolSocket);
-            } else {
-                break;
-            }
+            break;
         }
 
         //I think we get here when we were killed in dispatch() and not in select()
@@ -345,7 +331,7 @@ void SlaveBase::connectSlave(const QString &address)
     if (!d->appConnection.inited())
     {
         kDebug(7019) << "failed to connect to" << address << '\n'
-		      << "Reason:" << d->appConnection.errorString();
+                     << "Reason:" << d->appConnection.errorString();
         exit();
         return;
     }
@@ -577,8 +563,7 @@ static bool isSubCommand(int cmd)
             (cmd == CMD_CONFIG) ||
             (cmd == CMD_SUBURL) ||
             (cmd == CMD_SLAVE_STATUS) ||
-            (cmd == CMD_SLAVE_CONNECT) ||
-            (cmd == CMD_SLAVE_HOLD));
+            (cmd == CMD_SLAVE_CONNECT));
 }
 
 void SlaveBase::mimeType( const QString &_type)
@@ -989,7 +974,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_DISCONNECT: {
-            closeConnection( );
+            closeConnection();
             break;
         }
         case CMD_SLAVE_STATUS: {
@@ -1007,20 +992,7 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             stream >> app_socket;
             d->appConnection.send( MSG_SLAVE_ACK );
             disconnectSlave();
-            d->isConnectedToApp = true;
             connectSlave(app_socket);
-            break;
-        }
-        case CMD_SLAVE_HOLD: {
-            KUrl url;
-            QDataStream stream( data );
-            stream >> url;
-            d->onHoldUrl = url;
-            d->onHold = true;
-            disconnectSlave();
-            d->isConnectedToApp = false;
-            // Do not close connection!
-            connectSlave(d->poolSocket);
             break;
         }
         case CMD_REPARSECONFIGURATION: {

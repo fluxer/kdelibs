@@ -23,7 +23,6 @@
 #ifndef __file_h__
 #define __file_h__
 
-#include "kio_file_export.h"
 #include <kio/global.h>
 #include <kio/slavebase.h>
 
@@ -43,16 +42,16 @@
 #include <stdio.h>
 #include <unistd.h>
 
-class KIO_FILE_EXPORT FileProtocol : public QObject, public KIO::SlaveBase
+class FileProtocol : public QObject, public KIO::SlaveBase
 {
   Q_OBJECT
 public:
-  FileProtocol( const QByteArray &pool, const QByteArray &app);
+  FileProtocol( const QByteArray &app);
   virtual ~FileProtocol();
 
   virtual void get( const KUrl& url );
   virtual void put( const KUrl& url, int _mode,
-		    KIO::JobFlags _flags );
+                     KIO::JobFlags _flags );
   virtual void copy( const KUrl &src, const KUrl &dest,
                      int mode, KIO::JobFlags flags );
   virtual void rename( const KUrl &src, const KUrl &dest,

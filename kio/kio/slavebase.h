@@ -47,7 +47,7 @@ class SlaveBasePrivate;
 class KIO_EXPORT SlaveBase
 {
 public:
-    SlaveBase( const QByteArray &protocol, const QByteArray &pool_socket, const QByteArray &app_socket);
+    SlaveBase( const QByteArray &protocol, const QByteArray &app_socket);
     virtual ~SlaveBase();
 
     /**
