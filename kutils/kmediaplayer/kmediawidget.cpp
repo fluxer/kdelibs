@@ -110,8 +110,8 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     d->m_volumeline.setDirection(QTimeLine::Forward);
 
     connect(d->m_ui->w_play, SIGNAL(clicked()), this, SLOT(setPlay()));
-    // connect(d->m_ui->w_position, SIGNAL(sliderMoved(int)), this, SLOT(_setPosition(int)));
-    connect(d->m_ui->w_position, SIGNAL(sliderReleased()), this, SLOT(_setPosition()));
+    d->m_ui->w_position->setTracking(false);
+    connect(d->m_ui->w_position, SIGNAL(valueChanged(int)), this, SLOT(setPosition(int)));
     connect(d->m_ui->w_volume, SIGNAL(valueChanged(int)), this, SLOT(setVolume(int)));
 
     connect(d->m_player, SIGNAL(paused(bool)), this, SLOT(_updatePlay(bool)));
@@ -268,16 +268,11 @@ void KMediaWidget::_updateSeekable(const bool seekable)
     d->m_ui->w_position->setMaximum(d->m_player->totalTime());
 }
 
-void KMediaWidget::_setPosition()
-{
-    d->m_player->seek(d->m_ui->w_position->value());
-}
-
 void KMediaWidget::_updatePosition(const double seconds)
 {
     // do not update the slider while it's dragged by the user
     if (!d->m_ui->w_position->isSliderDown()) {
-        d->m_ui->w_position->setValue(seconds);
+        d->m_ui->w_position->setSliderPosition(qRound(seconds));
     }
 }
 

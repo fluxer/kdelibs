@@ -125,7 +125,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void _updatePlay(const bool paused);
-    void _setPosition();
     void _updateSeekable(const bool seekable);
     void _updatePosition(const double seconds);
     void _updateLoaded();
