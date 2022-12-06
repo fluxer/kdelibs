@@ -454,7 +454,7 @@ QRegion FrameSvg::mask() const
         if (frame->cachedMasks.count() > frame->MAX_CACHED_MASKS) {
             frame->cachedMasks.clear();
         }
-        frame->cachedMasks.insert(id, QRegion(QBitmap(d->alphaMask().alphaChannel().createMaskFromColor(Qt::black))));
+        frame->cachedMasks.insert(id, QRegion(d->alphaMask().mask()));
     }
     return frame->cachedMasks[id];
 }
