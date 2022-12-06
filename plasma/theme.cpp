@@ -81,7 +81,6 @@ public:
           defaultWallpaperWidth(DEFAULT_WALLPAPER_WIDTH),
           defaultWallpaperHeight(DEFAULT_WALLPAPER_HEIGHT),
           cachesToDiscard(NoCache),
-          compositingActive(KWindowSystem::self()->compositingActive()),
           isDefault(false),
           useGlobal(true),
           hasWallpapers(false),
@@ -104,9 +103,7 @@ public:
         updateNotificationTimer->setInterval(500);
         QObject::connect(updateNotificationTimer, SIGNAL(timeout()), q, SLOT(notifyOfChanged()));
 
-        if (QX11Info::appDepth() > 8) {
-            QObject::connect(KWindowSystem::self(), SIGNAL(compositingChanged(bool)), q, SLOT(compositingChanged(bool)));
-        }
+        QObject::connect(KWindowSystem::self(), SIGNAL(compositingChanged(bool)), q, SLOT(compositingChanged(bool)));
     }
 
     ~ThemePrivate()
@@ -183,7 +180,6 @@ public:
     QString themeVersion;
     QString themeMetadataPath;
 
-    bool compositingActive : 1;
     bool isDefault : 1;
     bool useGlobal : 1;
     bool hasWallpapers : 1;
@@ -249,7 +245,7 @@ QString ThemePrivate::findInTheme(const QString &image, const QString &theme, bo
 
     QString search;
 
-    if (!compositingActive) {
+    if (!q->windowTranslucencyEnabled()) {
         search = QLatin1String("desktoptheme/") + theme + QLatin1String("/opaque/") + image;
         search =  KStandardDirs::locate("data", search);
     } else {
@@ -273,11 +269,8 @@ QString ThemePrivate::findInTheme(const QString &image, const QString &theme, bo
 void ThemePrivate::compositingChanged(bool active)
 {
 #ifdef Q_WS_X11
-    if (compositingActive != active) {
-        compositingActive = active;
-        //kDebug() << QTime::currentTime();
-        scheduleThemeChangeNotification(PixmapCache | SvgElementsCache);
-    }
+    // kDebug() << QTime::currentTime();
+    scheduleThemeChangeNotification(PixmapCache | SvgElementsCache);
 #endif
 }
 
@@ -882,7 +875,7 @@ QFontMetrics Theme::fontMetrics() const
 
 bool Theme::windowTranslucencyEnabled() const
 {
-    return d->compositingActive;
+    return KWindowSystem::self()->compositingActive();
 }
 
 void Theme::setUseGlobalSettings(bool useGlobal)
