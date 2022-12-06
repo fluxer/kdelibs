@@ -52,11 +52,6 @@ static inline Slave *jobSlave(SimpleJob *job)
     return SimpleJobPrivate::get(job)->m_slave;
 }
 
-static inline int jobCommand(SimpleJob *job)
-{
-    return SimpleJobPrivate::get(job)->m_command;
-}
-
 static inline void startJob(SimpleJob *job, Slave *slave)
 {
     SimpleJobPrivate::get(job)->start(slave);

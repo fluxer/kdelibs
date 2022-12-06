@@ -62,9 +62,9 @@ public:
 };
 
 KImageFilePreviewPrivate::KImageFilePreviewPrivate()
-    : m_job(nullptr),
-    imageLabel(nullptr),
-    busyPainter(nullptr)
+    : imageLabel(nullptr),
+    busyPainter(nullptr),
+    m_job(nullptr)
 {
 }
 
