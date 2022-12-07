@@ -98,7 +98,7 @@ void KCrash::defaultCrashHandler(int sig)
     KDE_signal(sig, SIG_DFL);
 
     if (s_flags & KCrash::AutoRestart) {
-        QStringList args;
+        QStringList procargs;
 
         // start up on the correct display
         const char* dpy = nullptr;
@@ -109,50 +109,55 @@ void KCrash::defaultCrashHandler(int sig)
         }
 
         if (dpy) {
-            args.append(QString::fromLatin1("-display"));
-            args.append(QString::fromLatin1(dpy));
+            procargs.append(QString::fromLatin1("--display"));
+            procargs.append(QString::fromLatin1(dpy));
         }
 
-        QProcess::startDetached(QCoreApplication::applicationFilePath(), args);
+        QProcess::startDetached(QCoreApplication::applicationFilePath(), procargs);
     } else if (s_flags & KCrash::DrKonqi) {
         const QString drkonqiexe = KStandardDirs::findExe(QString::fromLatin1("drkonqi"));
         if (drkonqiexe.isEmpty()) {
+            // NOTE: not using kFatal() because that can call abort() (abort on fatal is a option)
+            kError() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
             return;
         }
 
-        QStringList args;
+        QByteArray systemargs = drkonqiexe.toLocal8Bit();
 
-        args.append(QString::fromLatin1("--signal"));
-        args.append(QString::number(sig));
-        args.append(QString::fromLatin1("--appname"));
-        args.append(QCoreApplication::applicationName());
-        args.append(QString::fromLatin1("--apppath"));
-        args.append(QCoreApplication::applicationFilePath());
-        args.append(QString::fromLatin1("--pid"));
-        args.append(QString::number(QCoreApplication::applicationPid()));
+        systemargs.append(" --signal \"");
+        systemargs.append(QByteArray::number(sig));
+        systemargs.append("\" --appname \"");
+        systemargs.append(QCoreApplication::applicationName().toLocal8Bit());
+        systemargs.append("\" --apppath \"");
+        systemargs.append(QCoreApplication::applicationFilePath().toLocal8Bit());
+        systemargs.append("\" --pid \"");
+        systemargs.append(QByteArray::number(QCoreApplication::applicationPid()));
+        systemargs.append("\"");
 
         const KComponentData kcomponentdata = KGlobal::mainComponent();
         const KAboutData *kaboutdata = kcomponentdata.isValid() ? kcomponentdata.aboutData() : nullptr;
         if (kaboutdata) {
             if (kaboutdata->internalVersion()) {
-                args.append(QString::fromLatin1("--appversion"));
-                args.append(kaboutdata->internalVersion());
+                systemargs.append(" --appversion \"");
+                systemargs.append(kaboutdata->internalVersion());
+                systemargs.append("\"");
             }
 
             if (kaboutdata->internalProgramName()) {
-                args.append(QString::fromLatin1("--programname"));
-                args.append(kaboutdata->internalProgramName());
+                systemargs.append(" --programname \"");
+                systemargs.append(kaboutdata->internalProgramName());
+                systemargs.append("\"");
             }
 
             if (kaboutdata->internalBugAddress()) {
-                args.append(QString::fromLatin1("--bugaddress"));
-                args.append(kaboutdata->internalBugAddress());
+                systemargs.append(" --bugaddress \"");
+                systemargs.append(kaboutdata->internalBugAddress());
+                systemargs.append("\"");
             }
         }
 
-        QProcess::execute(drkonqiexe, args);
+        ::system(systemargs.constData());
     } else {
-        // NOTE: not using kFatal() because that can call abort() (abort on fatal is a option)
         kError() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
     }
 
