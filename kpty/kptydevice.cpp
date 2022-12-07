@@ -75,7 +75,6 @@ public:
     void clear()
     {
         buffers.clear();
-        QByteArray tmp;
         buffers << QByteArray(CHUNKSIZE, char('\0'));
         head = tail = 0;
         totalSize = 0;
