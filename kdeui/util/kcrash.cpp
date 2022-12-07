@@ -123,7 +123,7 @@ void KCrash::defaultCrashHandler(int sig)
         if (drkonqiexe.isEmpty()) {
             // NOTE: not using kFatal() because that can call abort() (abort on fatal is a option)
             kError() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
-            return;
+            ::exit(sig);
         }
 
         QByteArray systemargs = drkonqiexe.toLocal8Bit();
