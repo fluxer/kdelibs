@@ -283,6 +283,7 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         error = i18n("Could not process service: %1", kservice->entryPath());
         return KLauncherAdaptor::ArgumentsError;
     }
+    kDebug() << "starting" << kservice->entryPath() << urls << blind << dbusServiceName;
     const QString program = programandargs.takeFirst();
     const QStringList programargs = programandargs;
     Q_ASSERT(m_kstartupinfoid.none() == true);
@@ -326,33 +327,35 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     while (true) {
         QDBusReply<bool> sessionreply = m_dbusconnectioninterface->isServiceRegistered(dbusServiceName);
         if (!sessionreply.isValid()) {
+            kWarning() << "invalid D-Bus reply for" << dbusServiceName;
             sendSIFinish();
             error = i18n("Invalid D-Bus reply for: %1", dbusServiceName);
             return KLauncherAdaptor::DBusError;
         }
         // the service unregistered
         if (sessionreply.value() == false && dbusstartuptype == KService::DBusWait) {
+            kDebug() << "service unregistered" << dbusServiceName;
             break;
         }
         // the service registered
         if (sessionreply.value() == true && dbusstartuptype != KService::DBusWait) {
+            kDebug() << "service registered" << dbusServiceName;
             break;
         }
         // or the program is just not registering the service at all
         if (elapsedtime.elapsed() >= s_servicetimeout && dbusstartuptype != KService::DBusWait) {
-            kWarning() << "timed out for" << pid << ", service name" << dbusServiceName;
+            kWarning() << "timed out while waiting for service" << dbusServiceName;
             break;
         }
         // or the program is not even running
         if (!isPIDAlive(pid)) {
+            kWarning() << "service process is not running" << dbusServiceName;
             result = getExitStatus(pid);
-            kWarning() << "not running" << pid << ", exit status" << result;
             break;
         }
         QApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
         QThread::msleep(s_sleeptime);
     }
-    kDebug() << "done waiting for" << pid << ", service name" << dbusServiceName;
     sendSIFinish();
     return result;
 }
