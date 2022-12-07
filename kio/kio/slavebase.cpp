@@ -73,6 +73,13 @@ typedef QMap<QString,QByteArray> AuthKeysMap;
 
 namespace KIO {
 
+static const int s_quit_signals[] = {
+    SIGTERM,
+    SIGHUP,
+    SIGINT,
+    0
+};
+
 static QByteArray authInfoKey(const AuthInfo &authinfo)
 {
     return KPasswdStore::makeKey(authinfo.url.prettyUrl());
@@ -178,6 +185,7 @@ extern "C" {
 static void genericsig_handler(int sigNumber)
 {
    KDE_signal(sigNumber, SIG_IGN);
+
    //WABA: Don't do anything that requires malloc, we can deadlock on it since
    //a SIGTERM signal can come in while we are in malloc/free.
    //kDebug()<<"kioslave : exiting due to signal "<<sigNumber;
@@ -209,9 +217,15 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     act.sa_flags = 0;
     sigaction(SIGPIPE, &act, 0);
 
-    KDE_signal(SIGINT, &genericsig_handler);
-    KDE_signal(SIGQUIT, &genericsig_handler);
-    KDE_signal(SIGTERM, &genericsig_handler);
+    sigset_t handlermask;
+    ::sigemptyset(&handlermask);
+    int counter = 0;
+    while (s_quit_signals[counter]) {
+        KDE_signal(s_quit_signals[counter], genericsig_handler);
+        ::sigaddset(&handlermask, s_quit_signals[counter]);
+        counter++;
+    }
+    ::sigprocmask(SIG_UNBLOCK, &handlermask, NULL);
 
     globalSlave = this;
 

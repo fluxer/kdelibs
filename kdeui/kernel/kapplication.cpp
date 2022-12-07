@@ -87,6 +87,22 @@ static Atom kde_xdnd_drop = None;
 static QByteArray* startup_id_tmp = nullptr;
 #endif
 
+static const int s_quit_signals[] = {
+    SIGTERM,
+    SIGHUP,
+    SIGINT,
+    0
+};
+
+static void quit_handler(int sig)
+{
+    KDE_signal(sig, SIG_DFL);
+
+    if (qApp) {
+       qApp->quit();
+    }
+}
+
 /*
   Private data to make keeping binary compatibility easier
  */
@@ -779,24 +795,17 @@ void KApplication::updateRemoteUserTimestamp( const QString& service, int time )
 #endif
 }
 
-static void quit_handler(int sig)
-{
-    Q_UNUSED(sig);
-
-    KDE_signal(SIGTERM, SIG_DFL);
-    KDE_signal(SIGHUP, SIG_DFL);
-    KDE_signal(SIGINT, SIG_DFL);
-
-    if (qApp) {
-       qApp->quit();
-    }
-}
-
 void KApplication::quitOnSignal()
 {
-    KDE_signal(SIGTERM, quit_handler);
-    KDE_signal(SIGHUP, quit_handler);
-    KDE_signal(SIGINT, quit_handler);
+    sigset_t handlermask;
+    ::sigemptyset(&handlermask);
+    int counter = 0;
+    while (s_quit_signals[counter]) {
+        KDE_signal(s_quit_signals[counter], quit_handler);
+        ::sigaddset(&handlermask, s_quit_signals[counter]);
+        counter++;
+    }
+    ::sigprocmask(SIG_UNBLOCK, &handlermask, NULL);
 }
 
 void KApplication::setTopWidget( QWidget *topWidget )

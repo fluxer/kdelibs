@@ -81,11 +81,15 @@ void KCrash::setCrashHandler(HandlerType handler)
 
     s_crashHandler = handler;
 
+    sigset_t handlermask;
+    ::sigemptyset(&handlermask);
     int counter = 0;
     while (s_signals[counter]) {
         KDE_signal(s_signals[counter], s_crashHandler);
+        ::sigaddset(&handlermask, s_signals[counter]);
         counter++;
     }
+    ::sigprocmask(SIG_UNBLOCK, &handlermask, NULL);
 }
 
 KCrash::HandlerType KCrash::crashHandler()
