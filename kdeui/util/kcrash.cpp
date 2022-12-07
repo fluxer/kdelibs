@@ -61,7 +61,7 @@ void KCrash::setFlags(KCrash::CrashFlags flags)
         // Default crash handler is required for the flags to work but one may be set already
         if (!s_crashHandler) {
             KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
-            if (args->isSet("crashhandler")) {
+            if (args && args->isSet("crashhandler")) {
                 setCrashHandler(defaultCrashHandler);
             }
         }
