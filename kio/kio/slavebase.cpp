@@ -55,19 +55,12 @@
 #include "slaveinterface.h"
 #include "kpasswdstore.h"
 
-#ifndef NDEBUG
-#ifdef HAVE_BACKTRACE
-#include <execinfo.h>
-#endif
-#endif
-
 #define AUTHINFO_EXTRAFIELD_DOMAIN QLatin1String("domain")
 #define AUTHINFO_EXTRAFIELD_ANONYMOUS QLatin1String("anonymous")
 #define AUTHINFO_EXTRAFIELD_SKIP_CACHING_ON_QUERY QLatin1String("skip-caching-on-query")
 #define AUTHINFO_EXTRAFIELD_HIDE_USERNAME_INPUT QLatin1String("hide-username-line")
 
 extern "C" {
-    static void sigsegv_handler(int sig);
     static void sigpipe_handler(int sig);
 }
 
@@ -181,9 +174,6 @@ static SlaveBase *globalSlave = nullptr;
 
 static volatile bool slaveWriteError = false;
 
-static const char *s_protocol = nullptr;
-
-#ifdef Q_OS_UNIX
 extern "C" {
 static void genericsig_handler(int sigNumber)
 {
@@ -199,7 +189,6 @@ static void genericsig_handler(int sigNumber)
    alarm(5);  //generate an alarm signal in 5 seconds, in this time the slave has to exit
 }
 }
-#endif
 
 //////////////
 
@@ -209,28 +198,9 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
       d(new SlaveBasePrivate(this))
 
 {
-    s_protocol = protocol.data();
-#ifdef Q_OS_UNIX
     if (qgetenv("KDE_DEBUG").isEmpty())
     {
-        KCrash::setCrashHandler(sigsegv_handler);
-        KDE_signal(SIGTRAP, &sigsegv_handler);
-        KDE_signal(SIGALRM, &sigsegv_handler);
-#ifdef SIGPOLL
-        KDE_signal(SIGPOLL, &sigsegv_handler);
-#endif
-#ifdef SIGSYS
-        KDE_signal(SIGSYS, &sigsegv_handler);
-#endif
-#ifdef SIGVTALRM
-        KDE_signal(SIGVTALRM, &sigsegv_handler);
-#endif
-#ifdef SIGXCPU
-        KDE_signal(SIGXCPU, &sigsegv_handler);
-#endif
-#ifdef SIGXFSZ
-        KDE_signal(SIGXFSZ, &sigsegv_handler);
-#endif
+        KCrash::setFlags(KCrash::flags() | KCrash::DrKonqi);
     }
 
     struct sigaction act;
@@ -242,7 +212,6 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     KDE_signal(SIGINT, &genericsig_handler);
     KDE_signal(SIGQUIT, &genericsig_handler);
     KDE_signal(SIGTERM, &genericsig_handler);
-#endif
 
     globalSlave = this;
 
@@ -270,7 +239,6 @@ SlaveBase::~SlaveBase()
     delete d->config;
     delete d->remotefile;
     delete d;
-    s_protocol = "";
 }
 
 void SlaveBase::dispatchLoop()
@@ -671,33 +639,6 @@ void SlaveBase::listEntries( const UDSEntryList& list )
     for (; it != end; ++it)
       stream << *it;
     send( MSG_LIST_ENTRIES, data);
-}
-
-static void sigsegv_handler(int sig)
-{
-#ifdef Q_OS_UNIX
-    KDE_signal(sig,SIG_DFL); // Next one kills
-
-    //Kill us if we deadlock
-    KDE_signal(SIGALRM,SIG_DFL);
-    alarm(5);  //generate an alarm signal in 5 seconds, in this time the slave has to exit
-
-    // Debug and printf should be avoided because they might
-    // call malloc.. and get in a nice recursive malloc loop
-    char buffer[120];
-    memset(buffer, '\0', sizeof(buffer) * sizeof(char));
-    snprintf(buffer, sizeof(buffer), "kioslave: ####### CRASH ###### protocol = %s pid = %d signal = %d\n", s_protocol, getpid(), sig);
-    write(STDERR_FILENO, buffer, strlen(buffer));
-#ifndef NDEBUG
-#ifdef HAVE_BACKTRACE
-    void* trace[256];
-    int n = backtrace(trace, 256);
-    if (n)
-      backtrace_symbols_fd(trace, n, 2);
-#endif
-#endif
-    ::exit(1);
-#endif
 }
 
 static void sigpipe_handler (int)
