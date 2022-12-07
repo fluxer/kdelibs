@@ -127,7 +127,7 @@ void KAuthorizationAdaptor::stop()
 
 
 KAuthorization::KAuthorization(QObject *parent)
-    : QObject(parent)
+    : QObject(parent ? parent : qApp)
 {
     new KAuthorizationAdaptor(this);
 }
