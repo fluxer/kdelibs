@@ -138,6 +138,10 @@ void KCrash::defaultCrashHandler(int sig)
         systemargs.append(QByteArray::number(QCoreApplication::applicationPid()));
         systemargs.append("\"");
 
+        if (s_flags & KCrash::NoRestart) {
+            systemargs.append(" --restarted");
+        }
+
         const KComponentData kcomponentdata = KGlobal::mainComponent();
         const KAboutData *kaboutdata = kcomponentdata.isValid() ? kcomponentdata.aboutData() : nullptr;
         if (kaboutdata) {

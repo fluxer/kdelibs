@@ -208,7 +208,7 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
 {
     if (qgetenv("KDE_DEBUG").isEmpty())
     {
-        KCrash::setFlags(KCrash::flags() | KCrash::DrKonqi);
+        KCrash::setFlags(KCrash::flags() | KCrash::DrKonqi | KCrash::NoRestart);
     }
 
     struct sigaction act;
