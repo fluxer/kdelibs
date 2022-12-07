@@ -293,8 +293,9 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     if (KRun::checkStartupNotify(kservice.data(), &startupsilent, &startupwmclass)) {
         m_kstartupinfoid.initId(startup_id.toLatin1());
         m_kstartupinfodata.setBin(QFileInfo(program).fileName());
-        m_kstartupinfodata.setIcon(kservice->icon());
         m_kstartupinfodata.setDescription(i18n("Launching %1", kservice->name()));
+        m_kstartupinfodata.setIcon(kservice->icon());
+        m_kstartupinfodata.setApplicationId(kservice->entryPath());
         m_kstartupinfodata.setSilent(startupsilent ? KStartupInfoData::Yes : KStartupInfoData::No);
         m_kstartupinfodata.setWMClass(startupwmclass);
         sendSIStart();
