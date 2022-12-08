@@ -92,6 +92,8 @@ KMediaWidget::KMediaWidget(QWidget *parent, KMediaOptions options)
     : QWidget(parent),
     d(new KMediaWidgetPrivate(this))
 {
+    // TODO: show a buffering indicator somewhere (KPixmapSequence("process-working", 22))
+
     d->m_ui = new Ui_KMediaWidgetUI();
     d->m_ui->setupUi(this);
     d->m_player = new KMediaPlayer(d->m_ui->w_player);
