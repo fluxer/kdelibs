@@ -51,7 +51,7 @@ public:
     */
     KPixmap(const KPixmap &pixmap);
     /*!
-        @brief Constructs object for X11 pixmap with size @p size, the @p pixmap must be released.
+        @brief Constructs object for X11 pixmap with size @p size, the pixmap must be released.
     */
     KPixmap(const QSize &size);
     ~KPixmap();
