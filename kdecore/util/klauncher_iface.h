@@ -94,12 +94,6 @@ public Q_SLOTS: // METHODS
         return reply;
     }
 
-    inline QDBusReply<void> reparseConfiguration()
-    {
-        QList<QVariant> argumentList;
-        return callWithArgumentList(QDBus::Block, QLatin1String("reparseConfiguration"), argumentList);
-    }
-
     inline QDBusReply<void> setLaunchEnv(const QString &name, const QString &value)
     {
         QList<QVariant> argumentList;

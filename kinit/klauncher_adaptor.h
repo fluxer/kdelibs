@@ -51,7 +51,6 @@ public Q_SLOTS: // METHODS
     int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    void reparseConfiguration();
     void setLaunchEnv(const QString &name, const QString &value);
     int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);

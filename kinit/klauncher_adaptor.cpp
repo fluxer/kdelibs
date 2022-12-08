@@ -17,9 +17,9 @@
 */
 
 #include "klauncher_adaptor.h"
-#include "kprotocolmanager.h"
 #include "krun.h"
 #include "kstandarddirs.h"
+#include "kservice.h"
 #include "kautostart.h"
 #include "kdebug.h"
 
@@ -225,12 +225,6 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
     error.clear();
     pid = process->pid();
     return KLauncherAdaptor::NoError;
-}
-
-void KLauncherAdaptor::reparseConfiguration()
-{
-    kDebug() << "reparsing configuration";
-    KProtocolManager::reparseConfiguration();
 }
 
 void KLauncherAdaptor::setLaunchEnv(const QString &name, const QString &value)
