@@ -38,7 +38,6 @@ namespace Plasma
 
 class CoronaPrivate;
 class ContainmentActionsPluginsConfig;
-class AbstractDialogManager;
 
 /**
  * @class Corona plasma/corona.h <Plasma/Corona>
@@ -272,20 +271,6 @@ public:
      * Returns the default containmentactions plugins for the given containment type
      */
     ContainmentActionsPluginsConfig containmentActionsDefaults(Containment::Type containmentType);
-
-    /**
-     * @param the AbstractDialogManager implementaion
-     *
-     * @since 4.5
-     */
-    void setDialogManager(AbstractDialogManager *manager);
-
-    /**
-     * @return the AbstractDialogManager that will show dialogs used by applets, like configuration dialogs
-     *
-     * @since 4.5
-     */
-    AbstractDialogManager *dialogManager();
 
     /**
      * Returns the name of the preferred plugin to be used as containment toolboxes.

@@ -99,7 +99,6 @@
 #include "tooltipmanager.h"
 #include "wallpaper.h"
 #include "paintutils.h"
-#include "abstractdialogmanager.h"
 #include "pluginloader.h"
 
 #include "private/applethandle_p.h"
@@ -1938,13 +1937,7 @@ void Applet::showConfigurationInterface()
 
 void Applet::showConfigurationInterface(QWidget *widget)
 {
-    if (!containment() || !containment()->corona() ||
-        !containment()->corona()->dialogManager()) {
-        widget->show();
-        return;
-    }
-
-    QMetaObject::invokeMethod(containment()->corona()->dialogManager(), "showDialog", Q_ARG(QWidget *, widget), Q_ARG(Plasma::Applet *, this));
+    widget->show();
 }
 
 QString AppletPrivate::configDialogId() const

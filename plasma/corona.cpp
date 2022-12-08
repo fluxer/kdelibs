@@ -51,7 +51,6 @@
 #include "private/applet_p.h"
 #include "private/containment_p.h"
 #include "tooltipmanager.h"
-#include "abstractdialogmanager.h"
 
 using namespace Plasma;
 
@@ -754,16 +753,6 @@ void Corona::setContainmentActionsDefaults(Containment::Type containmentType, co
 ContainmentActionsPluginsConfig Corona::containmentActionsDefaults(Containment::Type containmentType)
 {
     return d->containmentActionsDefaults.value(containmentType);
-}
-
-void Corona::setDialogManager(AbstractDialogManager *dialogManager)
-{
-    d->dialogManager = dialogManager;
-}
-
-AbstractDialogManager *Corona::dialogManager()
-{
-    return d->dialogManager.data();
 }
 
 CoronaPrivate::CoronaPrivate(Corona *corona)

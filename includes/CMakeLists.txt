@@ -538,7 +538,6 @@ install(
 
 install(
     FILES
-    Plasma/AbstractDialogManager
     Plasma/AbstractRunner
     Plasma/AbstractToolBox
     Plasma/Animation

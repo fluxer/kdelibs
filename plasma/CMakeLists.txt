@@ -81,7 +81,6 @@ set(plasma_LIB_SRCS
     delegate.cpp
     dialog.cpp
     dialogshadows.cpp
-    abstractdialogmanager.cpp
     extenders/extender.cpp
     extenders/extendergroup.cpp
     extenders/extenderitem.cpp
@@ -195,7 +194,6 @@ install(
     packagemetadata.h
     packagestructure.h
     package.h
-    abstractdialogmanager.h
     abstractrunner.h
     abstracttoolbox.h
     animations/animation.h
