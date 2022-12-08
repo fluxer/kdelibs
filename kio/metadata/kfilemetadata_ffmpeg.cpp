@@ -121,6 +121,16 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
                         )
                     );
                 }
+#if LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(59, 24, 100)
+                if (ffmpegcodec->ch_layout.nb_channels > 0) {
+                    result.append(
+                        KFileMetaInfoItem(
+                            QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels"),
+                            QString::number(ffmpegcodec->ch_layout.nb_channels)
+                        )
+                    );
+                }
+#else
                 if (ffmpegcodec->channels > 0) {
                     result.append(
                         KFileMetaInfoItem(
@@ -129,6 +139,7 @@ QList<KFileMetaInfoItem> KFileMetaDataFFmpegPlugin::metaData(const KUrl &url, co
                         )
                     );
                 }
+#endif
                 if (ffmpegcodec->bit_rate > 0) {
                     const QString ffmpegbitrate = i18nc("kfilemetadata", "%1 kb/s", ffmpegcodec->bit_rate / 1000);
                     result.append(
