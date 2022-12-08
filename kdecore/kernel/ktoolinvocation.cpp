@@ -35,6 +35,14 @@
 #include <QtDBus/QDBusInterface>
 #include <QtDBus/QDBusConnectionInterface>
 
+static inline void printError(const QString& text, QString* error)
+{
+    if (error)
+        *error = text;
+    else
+        kError() << text;
+}
+
 KToolInvocation *KToolInvocation::self()
 {
     K_GLOBAL_STATIC(KToolInvocation, s_self)
@@ -57,40 +65,25 @@ KToolInvocation::~KToolInvocation()
     delete klauncherIface;
 }
 
-org::kde::KLauncher *KToolInvocation::klauncher()
+void KToolInvocation::setLaunchEnv(const QString &name, const QString &value)
 {
-    // If klauncher is not running we need to launch it
-    static const QString klauncherInterface = QString::fromLatin1("org.kde.klauncher");
-    QDBusConnectionInterface* sessionInterface = QDBusConnection::sessionBus().interface();
-    const bool klauncherRunning = sessionInterface->isServiceRegistered(klauncherInterface);
-    if (!klauncherRunning) {
-        kDebug(7011) << "Launching klauncher";
-        sessionInterface->startService(klauncherInterface);
-    }
-    return self()->klauncherIface;
-}
-
-static void printError(const QString& text, QString* error)
-{
-    if (error)
-        *error = text;
-    else
-        kError() << text;
+    self()->klauncherIface->setLaunchEnv(name, value);
 }
 
 int KToolInvocation::startServiceInternal(const char *_function,
-                                          const QString& _name, const QStringList &URLs,
+                                          const QString& name, const QStringList &URLs,
                                           QString *error, QString *serviceName, qint64 *pid,
                                           const QByteArray& startup_id, bool noWait,
                                           const QString& workdir)
 {
     QString function = QString::fromLatin1(_function);
-    org::kde::KLauncher *launcher = KToolInvocation::klauncher();
-    QDBusMessage msg = QDBusMessage::createMethodCall(launcher->service(),
-                                                launcher->path(),
-                                                launcher->interface(),
-                                                function);
-    msg << _name << URLs;
+    QDBusMessage msg = QDBusMessage::createMethodCall(
+        klauncherIface->service(),
+        klauncherIface->path(),
+        klauncherIface->interface(),
+        function
+    );
+    msg << name << URLs;
     if (function == QLatin1String("kdeinit_exec_with_workdir"))
         msg << workdir;
 #ifdef Q_WS_X11
@@ -112,7 +105,7 @@ int KToolInvocation::startServiceInternal(const char *_function,
     {
         QDBusReply<QString> replyObj(reply);
         if (replyObj.error().type() == QDBusError::NoReply) {
-            printError(i18n("Error launching %1. Either KLauncher is not running anymore, or it failed to start the application.", _name), error);
+            printError(i18n("Error launching %1. Either KLauncher is not running anymore, or it failed to start the application.", name), error);
         } else {
             const QString rpl = reply.arguments().count() > 0 ? reply.arguments().at(0).toString() : reply.errorMessage();
             printError(i18n("KLauncher could not be reached via D-Bus. Error when calling %1:\n%2\n",function, rpl), error);
@@ -137,7 +130,7 @@ int KToolInvocation::startServiceInternal(const char *_function,
 
 
 int
-KToolInvocation::startServiceByDesktopPath( const QString& _name, const QString &URL,
+KToolInvocation::startServiceByDesktopPath( const QString& name, const QString &URL,
                                             QString *error, QString *serviceName,
                                             qint64 *pid, const QByteArray& startup_id, bool noWait )
 {
@@ -145,20 +138,20 @@ KToolInvocation::startServiceByDesktopPath( const QString& _name, const QString 
     if (!URL.isEmpty())
         URLs.append(URL);
     return self()->startServiceInternal("start_service_by_desktop_path",
-                                _name, URLs, error, serviceName, pid, startup_id, noWait);
+                                        name, URLs, error, serviceName, pid, startup_id, noWait);
 }
 
 int
-KToolInvocation::startServiceByDesktopPath( const QString& _name, const QStringList &URLs,
+KToolInvocation::startServiceByDesktopPath( const QString& name, const QStringList &URLs,
                                             QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
     return self()->startServiceInternal("start_service_by_desktop_path",
-                                _name, URLs, error, serviceName, pid, startup_id, noWait);
+                                        name, URLs, error, serviceName, pid, startup_id, noWait);
 }
 
 int
-KToolInvocation::startServiceByDesktopName( const QString& _name, const QString &URL,
+KToolInvocation::startServiceByDesktopName( const QString& name, const QString &URL,
                                             QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
@@ -166,16 +159,16 @@ KToolInvocation::startServiceByDesktopName( const QString& _name, const QString 
     if (!URL.isEmpty())
         URLs.append(URL);
     return self()->startServiceInternal("start_service_by_desktop_name",
-                                _name, URLs, error, serviceName, pid, startup_id, noWait);
+                                        name, URLs, error, serviceName, pid, startup_id, noWait);
 }
 
 int
-KToolInvocation::startServiceByDesktopName( const QString& _name, const QStringList &URLs,
+KToolInvocation::startServiceByDesktopName( const QString& name, const QStringList &URLs,
                                             QString *error, QString *serviceName, qint64 *pid,
                                             const QByteArray& startup_id, bool noWait )
 {
     return self()->startServiceInternal("start_service_by_desktop_name",
-                                _name, URLs, error, serviceName, pid, startup_id, noWait);
+                                        name, URLs, error, serviceName, pid, startup_id, noWait);
 }
 
 int

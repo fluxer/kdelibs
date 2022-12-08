@@ -169,19 +169,19 @@ public Q_SLOTS:
 
 public:
   /**
-   * Returns the D-Bus interface of the service launcher.
-   * The returned object is owned by KApplication, do not delete it!
+   * Set environment variable of the launcher.
+   * E.g. "SESSION_MANAGER"
+   *
+   * @param name the environment variable name
+   * @param value the environment variable value
    */
-  static OrgKdeKLauncherInterface *klauncher();
-  // KDE5: remove this from the public API. Make it kdelibs-private, and provide
-  // replacements for setLaunchEnv and for "making sure kdeinit/klauncher is running".
-  // (We could do the last two without waiting, of course).
+  static void setLaunchEnv(const QString &name, const QString &value);
 
   /**
    * Starts a service based on the desktop path of the service.
    * E.g. "Applications/konqueror.desktop" or "/home/user/bla/myfile.desktop"
    *
-   * @param _name the path of the desktop file
+   * @param name the path of the desktop file
    * @param URL if not empty this URL is passed to the service
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
@@ -197,7 +197,7 @@ public:
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopPath( const QString& _name, const QString &URL,
+  static int startServiceByDesktopPath( const QString& name, const QString &URL,
                 QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                 const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
@@ -205,7 +205,7 @@ public:
    * Starts a service based on the desktop path of the service.
    * E.g. "Applications/konqueror.desktop" or "/home/user/bla/myfile.desktop"
    *
-   * @param _name the path of the desktop file
+   * @param name the path of the desktop file
    * @param URLs if not empty these URLs will be passed to the service
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
@@ -220,7 +220,7 @@ public:
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopPath( const QString& _name, const QStringList &URLs=QStringList(),
+  static int startServiceByDesktopPath( const QString& name, const QStringList &URLs=QStringList(),
                 QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                 const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
@@ -228,7 +228,7 @@ public:
    * Starts a service based on the desktop name of the service.
    * E.g. "konqueror"
    *
-   * @param _name the desktop name of the service
+   * @param name the desktop name of the service
    * @param URL if not empty this URL is passed to the service
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
@@ -244,7 +244,7 @@ public:
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopName( const QString& _name, const QString &URL,
+  static int startServiceByDesktopName( const QString& name, const QString &URL,
                                         QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                                         const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
@@ -252,7 +252,7 @@ public:
    * Starts a service based on the desktop name of the service.
    * E.g. "konqueror"
    *
-   * @param _name the desktop name of the service
+   * @param name the desktop name of the service
    * @param URLs if not empty these URLs will be passed to the service
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
@@ -268,7 +268,7 @@ public:
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopName( const QString& _name, const QStringList &URLs=QStringList(),
+  static int startServiceByDesktopName( const QString& name, const QStringList &URLs=QStringList(),
                                         QString *error=0, QString *serviceName=0, qint64 *pid = 0,
                                         const QByteArray &startup_id = QByteArray(), bool noWait = false );
 
@@ -324,7 +324,7 @@ private:
    * @internal
    */
   int startServiceInternal(const char *_function,
-                           const QString& _name, const QStringList &URLs,
+                           const QString& name, const QStringList &URLs,
                            QString *error, QString *serviceName, qint64 *pid,
                            const QByteArray& startup_id, bool noWait,
                            const QString& workdir = QString());
