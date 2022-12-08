@@ -290,6 +290,7 @@ void KMediaWidget::_updateFinished()
 {
     d->m_replay = true;
     _updatePlay(true);
+    d->m_ui->w_position->setSliderPosition(0);
 }
 
 void KMediaWidget::_updateVolume(const int volume)
