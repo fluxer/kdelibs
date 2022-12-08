@@ -146,12 +146,6 @@ public:
      */
     QString retrievePlacePath() const;
 
-    /**
-     * Returns true, if the MIME type of the path represents a
-     * compressed file like TAR or ZIP.
-     */
-    bool isCompressedPath(const KUrl& path) const;
-
     void removeTrailingSlash(QString& url) const;
 
     /**
@@ -762,20 +756,6 @@ QString KUrlNavigator::Private::retrievePlacePath() const
     return placePath;
 }
 
-bool KUrlNavigator::Private::isCompressedPath(const KUrl& url) const
-{
-    const KMimeType::Ptr mime = KMimeType::findByPath(url.path(KUrl::RemoveTrailingSlash));
-    // Note: this list of MIME types depends on the protocols implemented by kio_archive
-    return  mime->is("application/x-compressed-tar") ||
-            mime->is("application/x-bzip-compressed-tar") ||
-            mime->is("application/x-lzma-compressed-tar") ||
-            mime->is("application/x-xz-compressed-tar") ||
-            mime->is("application/x-tar") ||
-            mime->is("application/x-tarz") ||
-            mime->is("application/zip") ||
-            mime->is("application/x-archive");
-}
-
 void KUrlNavigator::Private::removeTrailingSlash(QString& url) const
 {
     const int length = url.length();
@@ -990,30 +970,6 @@ void KUrlNavigator::setLocationUrl(const KUrl& newUrl)
 
     KUrl url = newUrl;
     url.cleanPath();
-
-    if ((url.protocol() == QLatin1String("tar")) || (url.protocol() == QLatin1String("zip"))) {
-        // The URL represents a tar- or zip-file. Check whether
-        // the URL is really part of the tar- or zip-file, otherwise
-        // replace it by the local path again.
-        bool insideCompressedPath = d->isCompressedPath(url);
-        if (!insideCompressedPath) {
-            KUrl prevUrl = url;
-            KUrl parentUrl = url.upUrl();
-            while (parentUrl != prevUrl) {
-                if (d->isCompressedPath(parentUrl)) {
-                    insideCompressedPath = true;
-                    break;
-                }
-                prevUrl = parentUrl;
-                parentUrl = parentUrl.upUrl();
-            }
-        }
-        if (!insideCompressedPath) {
-            // drop the tar: or zip: protocol since we are not
-            // inside the compressed path
-            url.setProtocol("file");
-        }
-    }
 
     // Check whether current history element has the same URL.
     // If this is the case, just ignore setting the URL.
