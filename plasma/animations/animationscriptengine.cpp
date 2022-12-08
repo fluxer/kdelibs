@@ -192,12 +192,11 @@ bool loadScript(const QString &path, const QString &prefix)
     }
 
     QTextStream buffer(&file);
-    QString tmp(buffer.readAll());
 
     QScriptEngine *engine = AnimationScriptEngine::globalEngine();
     engine->pushContext();
     s_prefix = prefix;
-    QScriptValue def(engine->evaluate(tmp, path));
+    QScriptValue def(engine->evaluate(buffer.readAll(), path));
     s_prefix.clear();
     engine->popContext();
     if (engine->hasUncaughtException()) {
