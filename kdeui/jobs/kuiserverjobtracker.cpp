@@ -309,7 +309,7 @@ KSharedUiServerProxy::KSharedUiServerProxy()
     }
 
     if (!sessionIface->isServiceRegistered("org.kde.JobViewServer"))
-        kDebug() << "The dbus name org.kde.JobViewServer is STILL NOT REGISTERED, even after starting kuiserver. Should not happen.";
+        kError() << "The service org.kde.JobViewServer is still not registered";
     else
         kDebug() << "kuiserver registered";
 }

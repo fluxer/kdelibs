@@ -39,16 +39,15 @@ KNotificationManager * KNotificationManager::self()
 
 KNotificationManager::KNotificationManager()
 {
-    QDBusConnectionInterface* sessionIface = QDBusConnection::sessionBus().interface();
-    if (!sessionIface->isServiceRegistered("org.kde.knotify")) {
-        QDBusReply<void> sessionReply = sessionIface->startService("org.kde.knotify");
-        if (!sessionReply.isValid()) {
-            kError() << "Couldn't start knotify service" << sessionReply.error();
-        }
-    }
     m_knotify = new org::kde::KNotify(
         QLatin1String("org.kde.knotify"), QLatin1String("/Notify"), QDBusConnection::sessionBus(), this
     );
+
+    QDBusConnectionInterface* sessionIface = QDBusConnection::sessionBus().interface();
+    if (!sessionIface->isServiceRegistered("org.kde.knotify")) {
+        kError() << "The service org.kde.knotify is still not registered";
+    }
+
     connect(
         m_knotify, SIGNAL(notificationClosed(int)),
         this, SLOT(notificationClosed(int))
