@@ -56,8 +56,6 @@ public:
     FrameSvg *background;
     FrameSvg *lineEditBackground;
     FocusIndicator *focusIndicator;
-    int animId;
-    qreal opacity;
     QRectF activeRect;
     Style::Ptr style;
 };
