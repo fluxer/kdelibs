@@ -21,8 +21,7 @@
 
 #include <kdeui_export.h>
 
-#include <QtGui/QFrame>
-
+#include <QFrame>
 #include <QChildEvent>
 
 /**
@@ -45,12 +44,7 @@ public:
     /**
      * Creates a new hbox.
      */
-    explicit KHBox( QWidget* parent = 0 );
-  
-    /**
-     * Destructor.
-     */
-    ~KHBox();
+    explicit KHBox(QWidget* parent = 0);
 
     /**
      * Sets the @p margin of the hbox.
@@ -88,10 +82,6 @@ protected:
     virtual void childEvent(QChildEvent* ev);
 
 private:
-    class Private;
-    friend class Private;
-    Private* const d;
-
     Q_DISABLE_COPY(KHBox)
 };
 
