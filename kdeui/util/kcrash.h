@@ -84,12 +84,14 @@ namespace KCrash
 
     /**
      * Options to determine how the default crash handler should behave.
-     * @note AutoRestart takes priority over the other options even if they are set
+     * @note Options are prioritised in their numerical order, i.e. if
+     * AutoRestart is set all other options are ignored.
      */
     enum CrashFlag {
         AutoRestart = 1,  ///< autorestart this application. Only sensible for KUniqueApplications. @since 4.1.
         DrKonqi = 2,      ///< launchers DrKonqi. @since 4.23.
-        NoRestart = 4     ///< tell DrKonqi not to restart the program. @since 4.23.
+        NoRestart = 4,    ///< tell DrKonqi not to restart the program. @since 4.23.
+        Backtrace = 8     ///< log backtrace if the program crashes. @since 4.23.
     };
     Q_DECLARE_FLAGS(CrashFlags, CrashFlag)
 

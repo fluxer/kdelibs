@@ -58,7 +58,7 @@ static const int s_signals[] = {
 void KCrash::setFlags(KCrash::CrashFlags flags)
 {
     s_flags = flags;
-    if (s_flags & KCrash::AutoRestart || s_flags & KCrash::DrKonqi) {
+    if (s_flags & KCrash::AutoRestart || s_flags & KCrash::DrKonqi || s_flags & KCrash::Backtrace) {
         // Default crash handler is required for the flags to work but one may be set already
         if (!s_crashHandler) {
             KCmdLineArgs *args = KCmdLineArgs::parsedArgs("kde");
@@ -166,7 +166,7 @@ void KCrash::defaultCrashHandler(int sig)
         }
 
         ::system(systemargs.constData());
-    } else {
+    } else if (s_flags & KCrash::Backtrace) {
         // NOTE: if HAVE_BACKTRACE is not defined kBacktrace() will return empty string
 #ifdef HAVE_BACKTRACE
         kError() << QCoreApplication::applicationName() << "crashed:\n" << kBacktrace();
