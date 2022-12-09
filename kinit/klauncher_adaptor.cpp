@@ -229,6 +229,10 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
 
 void KLauncherAdaptor::setLaunchEnv(const QString &name, const QString &value)
 {
+    if (name.isEmpty()) {
+        kWarning() << "attempting to set empty environment variable to" << value;
+        return;
+    }
     kDebug() << "setting environment variable" << name << "to" << value;
     m_environment.insert(name, value);
 }
