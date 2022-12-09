@@ -130,7 +130,6 @@ bool KSelectionOwner::claim(const bool force)
         }
         const int currentownerpid = netwininfo.pid();
         if (currentownerpid > 0) {
-            ::kill(currentownerpid, SIGKILL);
             ::kill(currentownerpid, SIGTERM);
             // ::kill(currentownerpid, YOUSHALLDIEONEWAYORTHEOTHER);
             kDebug(240) << "Waiting for" << d->atomname << "owner";
