@@ -16,6 +16,7 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "config.h"
 #include "kcrash.h"
 #include "kcmdlineargs.h"
 #include "kde_file.h"
@@ -166,7 +167,12 @@ void KCrash::defaultCrashHandler(int sig)
 
         ::system(systemargs.constData());
     } else {
-        kError() << QCoreApplication::applicationName() << "crashed (" << QCoreApplication::applicationPid() << ")";
+        // NOTE: if HAVE_BACKTRACE is not defined kBacktrace() will return empty string
+#ifdef HAVE_BACKTRACE
+        kError() << QCoreApplication::applicationName() << "crashed:\n" << kBacktrace();
+#else
+        kError() << QCoreApplication::applicationName() << "crashed";
+#endif
     }
 
     ::exit(sig);
