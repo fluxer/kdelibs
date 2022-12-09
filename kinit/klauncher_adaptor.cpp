@@ -133,7 +133,8 @@ void KLauncherAdaptor::exec_blind(const QString &name, const QStringList &arg_li
         return;
     }
 
-    kDebug() << "blind starting" << appexe << arg_list << m_environment.toStringList();
+    const QStringList envlist = m_environment.toStringList();
+    kDebug() << "blind starting" << appexe << arg_list << envlist;
     const QString envexe = findExe("env");
     if (envexe.isEmpty()) {
         kWarning() << "env program not found";
@@ -141,7 +142,7 @@ void KLauncherAdaptor::exec_blind(const QString &name, const QStringList &arg_li
         return;
     }
 
-    QStringList envargs = m_environment.toStringList();
+    QStringList envargs = envlist;
     envargs += appexe;
     envargs += arg_list;
     QProcess::startDetached(envexe, envargs);
