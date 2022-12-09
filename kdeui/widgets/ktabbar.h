@@ -114,10 +114,6 @@ class KDEUI_EXPORT KTabBar: public QTabBar //krazy:exclude=qclasses
     virtual void tabLayoutChange();
 
   private:
-    QPoint closeButtonPos( int tabIndex ) const;
-    QRect closeButtonRect( int tabIndex ) const;
-
-  private:
     class Private;
     Private* const d;
 };

@@ -317,16 +317,4 @@ int KTabBar::selectTab( const QPoint &pos ) const
   return -1;
 }
 
-QPoint KTabBar::closeButtonPos( int tabIndex ) const
-{
-  Q_UNUSED(tabIndex);
-  return QPoint();
-}
-
-QRect KTabBar::closeButtonRect( int tabIndex ) const
-{
-  Q_UNUSED(tabIndex);
-  return QRect();
-}
-
 #include "moc_ktabbar.cpp"
