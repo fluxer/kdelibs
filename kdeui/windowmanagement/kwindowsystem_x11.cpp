@@ -1027,12 +1027,6 @@ QString KWindowSystem::readNameProperty( WId win, unsigned long atom )
     return result;
 }
 
-void KWindowSystem::allowExternalProcessWindowActivation( int pid )
-{
-    // Normally supported by X11, but may depend on some window managers ?
-    Q_UNUSED(pid)
-}
-
 void KWindowSystem::setBlockingCompositing( WId window, bool active )
 {
     NETWinInfo info( QX11Info::display(), window, QX11Info::appRootWindow(), 0 );
