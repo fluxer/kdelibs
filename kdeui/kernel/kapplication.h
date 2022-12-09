@@ -336,7 +336,8 @@ private:
 
   Q_PRIVATE_SLOT(d, void _k_x11FilterDestroyed())
   Q_PRIVATE_SLOT(d, void _k_checkAppStartedSlot())
-  Q_PRIVATE_SLOT(d, void _k_slot_KToolInvocation_hook(QStringList&, QByteArray&))
+  Q_PRIVATE_SLOT(d, void _k_KToolInvocation_hook(QStringList&, QByteArray&))
+  Q_PRIVATE_SLOT(d, void _k_disableAutorestartSlot())
 };
 
 #endif

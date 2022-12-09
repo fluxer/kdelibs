@@ -150,7 +150,8 @@ public:
 
   void _k_x11FilterDestroyed();
   void _k_checkAppStartedSlot();
-  void _k_slot_KToolInvocation_hook(QStringList&, QByteArray&);
+  void _k_KToolInvocation_hook(QStringList&, QByteArray&);
+  void _k_disableAutorestartSlot();
 
   QString sessionConfigName() const;
   void init();
@@ -455,9 +456,11 @@ void KApplicationPrivate::init()
     KCheckAccelerators::initiateIfNeeded(q);
 
     q->connect(KToolInvocation::self(), SIGNAL(kapplication_hook(QStringList&,QByteArray&)),
-               q, SLOT(_k_slot_KToolInvocation_hook(QStringList&,QByteArray&)));
+               q, SLOT(_k_KToolInvocation_hook(QStringList&,QByteArray&)));
   }
-
+  // too late to restart if the application is about to quit (e.g. if QApplication::quit() was
+  // called or SIGTERM was received)
+  q->connect(q, SIGNAL(aboutToQuit()), SLOT(_k_disableAutorestartSlot()));
 
   qRegisterMetaType<KUrl>();
   qRegisterMetaType<KUrl::List>();
@@ -880,7 +883,7 @@ void KApplicationPrivate::read_app_startup_id()
 }
 
 // Hook called by KToolInvocation
-void KApplicationPrivate::_k_slot_KToolInvocation_hook(QStringList& envs,QByteArray& startup_id)
+void KApplicationPrivate::_k_KToolInvocation_hook(QStringList& envs,QByteArray& startup_id)
 {
 #ifdef Q_WS_X11
     if (QX11Info::display()) {
@@ -898,6 +901,11 @@ void KApplicationPrivate::_k_slot_KToolInvocation_hook(QStringList& envs,QByteAr
     Q_UNUSED(envs);
     Q_UNUSED(startup_id);
 #endif
+}
+
+void KApplicationPrivate::_k_disableAutorestartSlot()
+{
+    KCrash::setFlags(KCrash::flags() & ~KCrash::AutoRestart);
 }
 
 void KApplication::setSynchronizeClipboard(bool synchronize)
