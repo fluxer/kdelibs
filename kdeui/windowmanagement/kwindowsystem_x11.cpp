@@ -31,7 +31,6 @@
 #include <QtGui/QBitmap>
 #include <QDesktopWidget>
 #include <QtGui/QDialog>
-#include <QtDBus/QDBusInterface>
 #include <QtGui/qx11info_x11.h>
 #include <X11/Xatom.h>
 
@@ -1026,12 +1025,6 @@ QString KWindowSystem::readNameProperty( WId win, unsigned long atom )
         XFree( tp.value );
     }
     return result;
-}
-
-void KWindowSystem::doNotManage( const QString& title )
-{
-    QDBusInterface("org.kde.kwin", "/KWin", "org.kde.KWin", QDBusConnection::sessionBus())
-        .call("doNotManage", title);
 }
 
 void KWindowSystem::allowExternalProcessWindowActivation( int pid )
