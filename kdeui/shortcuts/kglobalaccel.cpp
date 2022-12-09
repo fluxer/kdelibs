@@ -48,12 +48,6 @@ org::kde::kglobalaccel::Component *KGlobalAccelPrivate::getComponent(const QStri
         return components[componentUnique];
     }
 
-    // Check for the kglobalaccel daemon
-    if (!iface.isValid()) {
-        kDebug() << "Failed to connect to the kglobalaccel daemon" << QDBusConnection::sessionBus().lastError();
-        return NULL;
-    }
-
     // Get the path for our component. We have to do that because
     // componentUnique is probably not a valid dbus object path
     QDBusReply<QDBusObjectPath> reply = iface.getComponent(componentUnique);
@@ -65,7 +59,7 @@ org::kde::kglobalaccel::Component *KGlobalAccelPrivate::getComponent(const QStri
         }
 
         // An unknown error.
-        kDebug() << "Failed to get dbus path for component " << componentUnique << reply.error();
+        kError() << "Failed to get dbus path for component " << componentUnique << reply.error();
         return NULL;
     }
 
@@ -100,11 +94,6 @@ KGlobalAccelPrivate::KGlobalAccelPrivate(KGlobalAccel *q)
      :  iface("org.kde.kglobalaccel", "/kglobalaccel", QDBusConnection::sessionBus()),
         q(q)
 {
-    // Check if kglobalaccel is running. The iface declaration above starts it.
-    QDBusConnectionInterface* sessionIface = QDBusConnection::sessionBus().interface();
-    if (!sessionIface->isServiceRegistered("org.kde.kglobalaccel")) {
-        kError() << "The service org.kde.kglobalaccel is still not registered";
-    }
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(iface.service(),
                                                            QDBusConnection::sessionBus(),
                                                            QDBusServiceWatcher::WatchForOwnerChange,
