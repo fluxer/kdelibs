@@ -23,12 +23,11 @@
 #include <kdeui_export.h>
 
 #include <QtGui/QWidget>
+#include <QDate>
 
 #include "klocale.h"
 
 class KCalendarSystem;
-
-#include <QDate>
 
 /**
  * @short A date selection widget.

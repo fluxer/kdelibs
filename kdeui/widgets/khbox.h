@@ -39,9 +39,9 @@
  */
 class KDEUI_EXPORT KHBox : public QFrame
 {
-  Q_OBJECT
+    Q_OBJECT
   
-  public:
+public:
     /**
      * Creates a new hbox.
      */
@@ -55,19 +55,19 @@ class KDEUI_EXPORT KHBox : public QFrame
     /**
      * Sets the @p margin of the hbox.
      */
-    void setMargin( int margin );
+    void setMargin(int margin);
 
     /**
      * Sets the spacing between the child widgets to @p space.
      *
      * To get the default layout spacing, set @p space to -1.
      */
-    void setSpacing( int space );
+    void setSpacing(int space);
 
     /**
      * Sets the stretch factor of @p widget to @p stretch.
      */
-    void setStretchFactor( QWidget* widget, int stretch );
+    void setStretchFactor(QWidget* widget, int stretch);
 
     /**
      * Calculate the recommended size for this hbox.
@@ -79,19 +79,19 @@ class KDEUI_EXPORT KHBox : public QFrame
      */
     virtual QSize minimumSizeHint() const;
 
-  protected:
+protected:
     /*
      * @internal
      */
-    KHBox( bool vertical, QWidget* parent );
+    KHBox(bool vertical, QWidget* parent);
 
-    virtual void childEvent( QChildEvent* ev );
+    virtual void childEvent(QChildEvent* ev);
 
-  private:
+private:
     class Private;
     friend class Private;
     Private* const d;
-    
+
     Q_DISABLE_COPY(KHBox)
 };
 
