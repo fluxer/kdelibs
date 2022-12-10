@@ -26,6 +26,8 @@
 #include <QDBusConnectionInterface>
 #include <QProcess>
 
+// #define KLAUNCHER_DEBUG
+
 // Adaptor class for interface org.kde.KLauncher
 class KLauncherAdaptor: public QDBusAbstractAdaptor
 {
@@ -59,6 +61,11 @@ public Q_SLOTS:
     int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
+
+    // for debugging
+#ifdef KLAUNCHER_DEBUG
+    QStringList environment() const;
+#endif
 
 Q_SIGNALS:
     void autoStart0Done();

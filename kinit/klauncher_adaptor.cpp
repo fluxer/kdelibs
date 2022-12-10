@@ -198,7 +198,7 @@ int KLauncherAdaptor::kdeinit_exec_with_workdir(const QString &app, const QStrin
     }
     process->setProcessEnvironment(processenv);
     process->setWorkingDirectory(workdir);
-    kDebug() << "starting" << appexe << args << env << processenv.toStringList();
+    kDebug() << "starting" << appexe << args << env;
     // either start_service_by_desktop_path() or this method send ASN
     if (!startup_id.isEmpty()) {
         Q_ASSERT(m_kstartupinfoid.none() == true);
@@ -358,6 +358,13 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
     sendSIFinish();
     return result;
 }
+
+#ifdef KLAUNCHER_DEBUG
+QStringList KLauncherAdaptor::environment() const
+{
+    return m_environment.toStringList();
+}
+#endif
 
 void KLauncherAdaptor::slotProcessStateChanged(QProcess::ProcessState state)
 {
