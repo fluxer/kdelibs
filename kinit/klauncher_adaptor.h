@@ -44,18 +44,23 @@ public:
     KLauncherAdaptor(QObject *parent);
     ~KLauncherAdaptor();
 
-public: // PROPERTIES
-public Q_SLOTS: // METHODS
-    void autoStart(int phase = 1);
+public:
+public Q_SLOTS:
+    // used by ksmserver
+    void autoStart(int phase);
+
+    // used by ksmserver and klauncher itself
     void exec_blind(const QString &name, const QStringList &arg_list);
+
+    // used by KToolInvocation
+    void setLaunchEnv(const QString &name, const QString &value);
     int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    void setLaunchEnv(const QString &name, const QString &value);
     int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
     int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
 
-Q_SIGNALS: // SIGNALS
+Q_SIGNALS:
     void autoStart0Done();
     void autoStart1Done();
     void autoStart2Done();
