@@ -84,11 +84,11 @@ class KGlobalPrivate
          */
         static KComponentData initFakeComponent()
         {
-            QString name = QCoreApplication::applicationName();
-            if(name.isEmpty())
-                name = QString::fromLatin1("kde");
-            return KComponentData(name.toLatin1(), name.toLatin1(),
-                                  KComponentData::SkipMainComponentRegistration);
+            QByteArray name = QCoreApplication::applicationName().toLatin1();
+            if (name.isEmpty()) {
+                name = "kde";
+            }
+            return KComponentData(name, name, KComponentData::SkipMainComponentRegistration);
         }
 };
 
