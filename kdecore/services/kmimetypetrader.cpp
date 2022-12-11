@@ -18,21 +18,13 @@
 */
 
 #include "kmimetypetrader.h"
-
 #include "kservicetype.h"
 #include "kservicetypetrader.h"
 #include "kmimetype.h"
 #include "kservicefactory.h"
 #include "kmimetypefactory.h"
 #include "kmimetyperepository_p.h"
-
-#include <kdebug.h>
-
-class KMimeTypeTrader::Private
-{
-public:
-    Private() {}
-};
+#include "kdebug.h"
 
 KMimeTypeTrader* KMimeTypeTrader::self()
 {
@@ -41,13 +33,7 @@ KMimeTypeTrader* KMimeTypeTrader::self()
 }
 
 KMimeTypeTrader::KMimeTypeTrader()
-    : d(new Private())
 {
-}
-
-KMimeTypeTrader::~KMimeTypeTrader()
-{
-    delete d;
 }
 
 static KServiceOfferList mimeTypeSycocaOffers(const QString& mimeType)

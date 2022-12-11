@@ -43,12 +43,6 @@ class KServiceOffer;
 class KDECORE_EXPORT KMimeTypeTrader
 {
 public:
-
-    /**
-     * Standard destructor
-     */
-    ~KMimeTypeTrader();
-
     /**
      * This method returns a list of services which are associated with a given mimetype.
      *
@@ -186,10 +180,6 @@ private:
      * @internal
      */
     KMimeTypeTrader();
-
-private:
-    class Private;
-    Private * const d;
 };
 
 #endif /* KMIMETYPETRADER_H */
