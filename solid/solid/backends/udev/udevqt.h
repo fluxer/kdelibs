@@ -98,7 +98,7 @@ static inline QStringList listFromListEntry(struct udev_list_entry *list)
     QStringList ret;
     struct udev_list_entry *entry;
     udev_list_entry_foreach(entry, list) {
-        ret << QString::fromLatin1(udev_list_entry_get_name(entry));
+        ret << QString::fromUtf8(udev_list_entry_get_name(entry));
     }
     return ret;
 }

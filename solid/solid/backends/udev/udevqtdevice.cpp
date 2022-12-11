@@ -82,7 +82,7 @@ QString Device::devType() const
     if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_devtype(m_device));
+    return QString::fromUtf8(udev_device_get_devtype(m_device));
 }
 
 QString Device::name() const
@@ -90,7 +90,7 @@ QString Device::name() const
     if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_sysname(m_device));
+    return QString::fromUtf8(udev_device_get_sysname(m_device));
 }
 
 QString Device::sysfsPath() const
@@ -98,7 +98,7 @@ QString Device::sysfsPath() const
     if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_syspath(m_device));
+    return QString::fromUtf8(udev_device_get_syspath(m_device));
 }
 
 int Device::sysfsNumber() const
@@ -156,7 +156,7 @@ QString Device::deviceProperty(const QByteArray &name) const
     if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_property_value(m_device, name.constData()));
+    return QString::fromUtf8(udev_device_get_property_value(m_device, name.constData()));
 }
 
 QString Device::sysfsProperty(const QByteArray &name) const
@@ -164,7 +164,7 @@ QString Device::sysfsProperty(const QByteArray &name) const
     if (!m_device) {
         return QString();
     }
-    return QString::fromLatin1(udev_device_get_sysattr_value(m_device, name.constData()));
+    return QString::fromUtf8(udev_device_get_sysattr_value(m_device, name.constData()));
 }
 
 }
