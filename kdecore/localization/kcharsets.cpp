@@ -250,9 +250,8 @@ QStringList KCharsets::descriptiveEncodingNames() const
         iter.next();
         const QStringList value(iter.value());
         if (value.size() == 1) {
-            QString group(iter.key());
             encodingGroups[d->kOtherGroup].append(value.at(0));
-            encodingGroups.remove(group);
+            encodingGroups.remove(iter.key());
         }
     }
 
@@ -320,8 +319,7 @@ QList<QStringList> KCharsets::encodingsByScript() const
 
 QTextCodec* KCharsets::codecForName(const QString &n) const
 {
-    const QByteArray name( n.toLatin1() );
-    QTextCodec* codec = codecForNameOrNull( name );
+    QTextCodec* codec = codecForNameOrNull( n.toLatin1() );
     if ( codec ) {
         return codec;
     }
@@ -330,8 +328,7 @@ QTextCodec* KCharsets::codecForName(const QString &n) const
 
 QTextCodec* KCharsets::codecForName(const QString &n, bool &ok) const
 {
-    const QByteArray name( n.toLatin1() );
-    QTextCodec* codec = codecForNameOrNull( name );
+    QTextCodec* codec = codecForNameOrNull( n.toLatin1() );
     if ( codec ) {
         ok = true;
         return codec;
