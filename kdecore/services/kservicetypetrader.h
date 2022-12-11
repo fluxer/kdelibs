@@ -200,9 +200,6 @@ private:
     // dissalow copy ctor and assignment operator
     KServiceTypeTrader( const KServiceTypeTrader& other );
     KServiceTypeTrader& operator=( const KServiceTypeTrader& rhs );
-
-    class Private;
-    Private * const d;
 };
 
 #endif

@@ -36,7 +36,6 @@ KServiceTypeTrader* KServiceTypeTrader::self()
 }
 
 KServiceTypeTrader::KServiceTypeTrader()
-    : d(0)
 {
 }
 
