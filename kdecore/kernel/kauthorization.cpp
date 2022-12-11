@@ -28,43 +28,27 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include <syslog.h>
-
 #define KAUTHORIZATION_TIMEOUT 150
 #define KAUTHORIZATION_SLEEPTIME 150
 
+// see kdebug.areas
+static const int s_kauthorization_area = 185;
+
 void kAuthMessageHandler(QtMsgType type, const char *msg)
 {
-    switch (type) {
-        case QtDebugMsg: {
-            ::syslog(LOG_DEBUG, "%s", msg);
-            break;
-        }
-        case QtWarningMsg: {
-            ::syslog(LOG_WARNING, "%s", msg);
-            break;
-        }
-        case QtCriticalMsg: {
-            ::syslog(LOG_CRIT, "%s", msg);
-            break;
-        }
-        case QtFatalMsg: {
-            ::syslog(LOG_ERR, "%s", msg);
-            break;
-        }
-    }
+    KDebug(type, Q_FUNC_INFO, s_kauthorization_area) << msg;
 }
 
 static bool isDBusServiceRegistered(const QString &helper)
 {
     QDBusConnectionInterface* dbusinterface = QDBusConnection::systemBus().interface();
     if (!dbusinterface) {
-        kDebug() << "Null D-Bus interface" << helper;
+        kDebug(s_kauthorization_area) << "Null D-Bus interface" << helper;
         return false;
     }
     QDBusReply<bool> reply = dbusinterface->isServiceRegistered(helper);
     if (reply.value() == false) {
-        kDebug() << "Service not registered" << helper;
+        kDebug(s_kauthorization_area) << "Service not registered" << helper;
         return false;
     }
     return true;
@@ -78,7 +62,7 @@ static void killDBusService(const QString &helper, QDBusInterface *kauthorizatio
 
     QDBusReply<void> reply = kauthorizationinterface->call(QString::fromLatin1("stop"));
     if (!reply.isValid()) {
-        kWarning() << reply.error().message();
+        kWarning(s_kauthorization_area) << reply.error().message();
     }
 }
 
@@ -114,7 +98,7 @@ int KAuthorizationAdaptor::execute(const QString &method, const QVariantMap &arg
         Q_RETURN_ARG(int, result), Q_ARG(QVariantMap, arguments)
     );
     if (!success) {
-        kWarning() << "Invalid method" << method;
+        kWarning(s_kauthorization_area) << "Invalid method" << method;
         return KAuthorization::MethodError;
     }
     return result;
@@ -140,7 +124,7 @@ bool KAuthorization::isAuthorized(const QString &helper)
     );
     QDBusReply<bool> reply = kauthorizationinterface.call(QString::fromLatin1("ping"));
     if (!reply.isValid()) {
-        kWarning() << reply.error().message();
+        kWarning(s_kauthorization_area) << reply.error().message();
         killDBusService(helper, &kauthorizationinterface);
         return false;
     }
@@ -156,7 +140,7 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
     }
 
     while (isDBusServiceRegistered(helper)) {
-        kDebug() << "Waiting for service to unregister" << helper;
+        kDebug(s_kauthorization_area) << "Waiting for service to unregister" << helper;
         QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
         QThread::msleep(KAUTHORIZATION_SLEEPTIME);
     }
@@ -168,12 +152,12 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
     QDBusReply<int> reply = kauthorizationinterface.call(QString::fromLatin1("execute"), method, arguments);
     int result = KAuthorization::DBusError;
     if (!reply.isValid()) {
-        kWarning() << reply.error().message();
+        kWarning(s_kauthorization_area) << reply.error().message();
     } else {
         result = reply.value();
     }
     killDBusService(helper, &kauthorizationinterface);
-    kDebug() << "Result" << helper << method << result;
+    kDebug(s_kauthorization_area) << "Result" << helper << method << result;
     return result;
 }
 
@@ -204,8 +188,6 @@ QString KAuthorization::errorString(const int status)
 
 void KAuthorization::helperMain(const char* const helper, KAuthorization *object)
 {
-    ::openlog(helper, 0, LOG_USER);
-
     qInstallMsgHandler(kAuthMessageHandler);
 
     if (!QDBusConnection::systemBus().registerService(QString::fromLatin1(helper))) {

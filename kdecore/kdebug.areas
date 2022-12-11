@@ -19,6 +19,7 @@
 182         kdecore (KPluginInfo)
 183         kdecore (services)
 184         kdecore (KConfigSkeleton)
+185         kdecore (KAuthorization)
 200         kdeui (KMainWindow)
 240         kdeui (kdelibs)
 250         kfile (kdelibs)
