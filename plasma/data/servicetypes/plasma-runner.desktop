@@ -89,7 +89,3 @@ Type=bool
 
 [PropertyDef::TryExec]
 Type=QString
-
-[PropertyDef::X-Plasma-Args]
-Type=QStringList
-
