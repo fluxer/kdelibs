@@ -62,8 +62,7 @@ DeviceList Client::allDevices()
     struct udev_list_entry *entry;
     struct udev_list_entry *list = udev_enumerate_get_list_entry(en);
     udev_list_entry_foreach(entry, list) {
-        struct udev_device *ud = udev_device_new_from_syspath(udev_enumerate_get_udev(en),
-                                        udev_list_entry_get_name(entry));
+        struct udev_device *ud = udev_device_new_from_syspath(m_udev, udev_list_entry_get_name(entry));
 
         if (!ud) {
             continue;
