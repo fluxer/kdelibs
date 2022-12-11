@@ -71,11 +71,6 @@ class KDECORE_EXPORT KServiceTypeTrader
 {
 public:
     /**
-     * Standard destructor
-     */
-    ~KServiceTypeTrader();
-
-    /**
      * The main function in the KServiceTypeTrader class.
      *
      * It will return a list of services that match your
@@ -198,8 +193,7 @@ private:
     KServiceTypeTrader();
 
     // dissalow copy ctor and assignment operator
-    KServiceTypeTrader( const KServiceTypeTrader& other );
-    KServiceTypeTrader& operator=( const KServiceTypeTrader& rhs );
+    Q_DISABLE_COPY(KServiceTypeTrader);
 };
 
 #endif

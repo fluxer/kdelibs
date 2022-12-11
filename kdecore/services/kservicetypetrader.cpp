@@ -39,10 +39,6 @@ KServiceTypeTrader::KServiceTypeTrader()
 {
 }
 
-KServiceTypeTrader::~KServiceTypeTrader()
-{
-}
-
 // shared with KMimeTypeTrader
 void KServiceTypeTrader::applyConstraints( KService::List& lst,
                                 const QString& constraint )
