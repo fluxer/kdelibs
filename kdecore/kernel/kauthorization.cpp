@@ -17,6 +17,8 @@
 */
 
 #include "kauthorization.h"
+#include "klocale.h"
+#include "kdebug.h"
 
 #include <QThread>
 #include <QTimer>
@@ -25,8 +27,7 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
-#include <klocale.h>
-#include <kdebug.h>
+#include <syslog.h>
 
 #define KAUTHORIZATION_TIMEOUT 150
 #define KAUTHORIZATION_SLEEPTIME 150
@@ -36,7 +37,25 @@ static const int s_kauthorization_area = 185;
 
 void kAuthMessageHandler(QtMsgType type, const char *msg)
 {
-    KDebug(type, Q_FUNC_INFO, s_kauthorization_area) << msg;
+    // NOTE: cannot use KDebug because of it triggers a warning the program will dead-lock
+    switch (type) {
+        case QtDebugMsg: {
+            ::syslog(LOG_DEBUG, "%s", msg);
+            break;
+        }
+        case QtWarningMsg: {
+            ::syslog(LOG_WARNING, "%s", msg);
+            break;
+        }
+        case QtCriticalMsg: {
+            ::syslog(LOG_CRIT, "%s", msg);
+            break;
+        }
+        case QtFatalMsg: {
+            ::syslog(LOG_ERR, "%s", msg);
+            break;
+        }
+    }
 }
 
 static bool isDBusServiceRegistered(const QString &helper)
@@ -188,6 +207,8 @@ QString KAuthorization::errorString(const int status)
 
 void KAuthorization::helperMain(const char* const helper, KAuthorization *object)
 {
+    ::openlog(helper, 0, LOG_USER);
+
     qInstallMsgHandler(kAuthMessageHandler);
 
     if (!QDBusConnection::systemBus().registerService(QString::fromLatin1(helper))) {
