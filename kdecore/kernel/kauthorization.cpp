@@ -37,7 +37,7 @@ static const int s_kauthorization_area = 185;
 
 void kAuthMessageHandler(QtMsgType type, const char *msg)
 {
-    // NOTE: cannot use KDebug because of it triggers a warning the program will dead-lock
+    // NOTE: cannot use KDebug because if it triggers a warning the program will dead-lock
     switch (type) {
         case QtDebugMsg: {
             ::syslog(LOG_DEBUG, "%s", msg);
