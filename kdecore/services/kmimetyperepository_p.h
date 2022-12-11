@@ -104,11 +104,10 @@ private: // only for KMimeType and unittests
      * Find a mimetype from the content of a file or buffer
      * @param device the file or buffer. Must be open.
      * @param accuracy returns the priority of the rule that matched
-     * @param beginning will contain the first N bytes of the device; used as cache to avoid repeated seeks
      *
      * This is internal API, use KMimeType::findByUrl instead.
      */
-    KMimeType::Ptr findFromContent(QIODevice* device, int* accuracy, QByteArray& beginning);
+    KMimeType::Ptr findFromContent(QIODevice* device, int* accuracy);
 
     /**
      * @return true if at least one mimetype is present

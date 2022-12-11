@@ -228,7 +228,7 @@ QStringList KMimeTypeRepository::findFromFileName(const QString &fileName, QStri
     return matchingMimeTypes;
 }
 
-KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accuracy, QByteArray& beginning)
+KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accuracy)
 {
     Q_ASSERT(device->isOpen());
     const qint64 deviceSize = device->size();
@@ -237,13 +237,11 @@ KMimeType::Ptr KMimeTypeRepository::findFromContent(QIODevice* device, int* accu
             *accuracy = 100;
         return findMimeTypeByName(QLatin1String("application/x-zerosize"));
     }
-    if (beginning.isEmpty()) {
-        // check if we can really read the data; also provide enough data for most rules
-        const qint64 dataNeeded = qMin(deviceSize, (qint64) 16384);
-        beginning.resize(dataNeeded);
-        if (!device->seek(0) || device->read(beginning.data(), dataNeeded) == -1) {
-            return defaultMimeTypePtr(); // don't bother detecting unreadable file
-        }
+    // check if we can really read the data; also provide enough data for most rules
+    const qint64 dataNeeded = qMin(deviceSize, (qint64) 16384);
+    QByteArray beginning(dataNeeded, '\0');
+    if (!device->seek(0) || device->read(beginning.data(), dataNeeded) == -1) {
+        return defaultMimeTypePtr(); // don't bother detecting unreadable file
     }
 
     parseMagic();

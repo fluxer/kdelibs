@@ -200,9 +200,8 @@ KMimeType::Ptr KMimeType::findByUrlHelper( const KUrl& _url, mode_t mode,
 
     // Try the magic matches (if we can read the data)
     if ( device ) {
-        QByteArray cache;
         int magicAccuracy;
-        KMimeType::Ptr mime = KMimeTypeRepository::self()->findFromContent(device, &magicAccuracy, cache);
+        KMimeType::Ptr mime = KMimeTypeRepository::self()->findFromContent(device, &magicAccuracy);
         // mime can't be 0, except in case of install problems.
         // However we get magicAccuracy==0 for octet-stream, i.e. no magic match found.
         //kDebug(servicesDebugArea()) << "findFromContent said" << (mime?mime->name():QString()) << "with accuracy" << magicAccuracy;
@@ -328,14 +327,12 @@ KMimeType::Ptr KMimeType::findByContent( const QByteArray &data, int *accuracy )
 {
     QBuffer buffer(const_cast<QByteArray *>(&data));
     buffer.open(QIODevice::ReadOnly);
-    QByteArray cache;
-    return KMimeTypeRepository::self()->findFromContent(&buffer, accuracy, cache);
+    return KMimeTypeRepository::self()->findFromContent(&buffer, accuracy);
 }
 
 KMimeType::Ptr KMimeType::findByContent( QIODevice* device, int* accuracy )
 {
-    QByteArray cache;
-    return KMimeTypeRepository::self()->findFromContent(device, accuracy, cache);
+    return KMimeTypeRepository::self()->findFromContent(device, accuracy);
 }
 
 KMimeType::Ptr KMimeType::findByFileContent( const QString &fileName, int *accuracy )
@@ -356,8 +353,7 @@ KMimeType::Ptr KMimeType::findByFileContent( const QString &fileName, int *accur
         return KMimeType::defaultMimeTypePtr();
     }
 
-    QByteArray cache;
-    return KMimeTypeRepository::self()->findFromContent(&device, accuracy, cache);
+    return KMimeTypeRepository::self()->findFromContent(&device, accuracy);
 }
 
 bool KMimeType::isBinaryData( const QString &fileName )
