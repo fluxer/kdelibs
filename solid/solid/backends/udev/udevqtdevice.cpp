@@ -106,7 +106,7 @@ int Device::sysfsNumber() const
     if (!m_device) {
         return -1;
     }
-    QString value = QString::fromLatin1(udev_device_get_sysnum(m_device));
+    QByteArray value = udev_device_get_sysnum(m_device);
     bool success = false;
     int number = value.toInt(&success);
     if (success) {
