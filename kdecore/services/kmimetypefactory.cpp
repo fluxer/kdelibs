@@ -109,6 +109,7 @@ QStringList KMimeTypeFactory::allMimeTypes()
     // then move to KMimeTypeRepository
     QStringList result;
     const KSycocaEntry::List list = allEntries();
+    result.reserve(list.size());
     for( KSycocaEntry::List::ConstIterator it = list.begin();
          it != list.end();
          ++it)
