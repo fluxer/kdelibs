@@ -31,7 +31,6 @@
 namespace Plasma
 {
 
-class SlideAnimationPrivate;
 /**
  * @class Slide plasma/animations/slide.h
  * @short Slide effect
