@@ -79,13 +79,6 @@ public:
      **/
     static Plasma::Animation *create(const QString &animationName, QObject *parent = 0);
 
-Q_SIGNALS:
-    void animationFinished(QGraphicsItem *item, Plasma::Animator::Animation anim);
-    void movementFinished(QGraphicsItem *item);
-    void elementAnimationFinished(int id);
-    void customAnimationFinished(int id);
-
-
 private:
     Animator();
 
