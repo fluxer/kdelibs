@@ -99,7 +99,7 @@ public:
     static bool isAuthorized(const QString &helper);
     /*!
         @brief Executes @p method of @p helper with arguments specified as @p arguments
-        returns its status (usually one of @p KAuthorizationStatus)
+        and returns its status (usually one of @p KAuthorizationStatus)
     */
     static int execute(const QString &helper, const QString &method, const QVariantMap &arguments);
     /*!
