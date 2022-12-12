@@ -29,8 +29,8 @@
 
 #include <syslog.h>
 
-#define KAUTHORIZATION_TIMEOUT 150
-#define KAUTHORIZATION_SLEEPTIME 150
+#define KAUTHORIZATION_TIMEOUT 250
+#define KAUTHORIZATION_SLEEPTIME 50
 
 // see kdebug.areas
 static const int s_kauthorization_area = 185;
@@ -169,7 +169,12 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
         helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),
         QDBusConnection::systemBus()
     );
-    QDBusReply<int> reply = kauthorizationinterface.call(QString::fromLatin1("execute"), method, arguments);
+    QDBusPendingReply<int> reply = kauthorizationinterface.asyncCall(QString::fromLatin1("execute"), method, arguments);
+    while (!reply.isFinished()) {
+        kDebug(s_kauthorization_area) << "Waiting for service call to finish" << helper;
+        QCoreApplication::processEvents(QEventLoop::AllEvents, KAUTHORIZATION_TIMEOUT);
+        QThread::msleep(KAUTHORIZATION_SLEEPTIME);
+    }
     int result = KAuthorization::NoError;
     if (!reply.isValid()) {
         result = KAuthorization::DBusError;
