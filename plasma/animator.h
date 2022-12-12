@@ -46,7 +46,6 @@ class PLASMA_EXPORT Animator : public QObject
 {
     Q_OBJECT
     Q_ENUMS(Animation)
-    Q_ENUMS(CurveShape)
     Q_ENUMS(Movement)
 
 public:
@@ -66,14 +65,6 @@ public:
         ZoomAnimation, /*<<Zoom animation */
         PixmapTransitionAnimation, /*<< Transition between two pixmaps*/
         LastAnimation = 1024
-    };
-
-    enum CurveShape {
-        EaseInCurve = 0,
-        EaseOutCurve,
-        EaseInOutCurve,
-        LinearCurve,
-        PendularCurve
     };
 
     enum Movement {
@@ -100,12 +91,6 @@ public:
      * @since 4.5
      **/
     static Plasma::Animation *create(const QString &animationName, QObject *parent = 0);
-
-    /**
-     * Factory to build new custom easing curves.
-     * @since 4.5
-     */
-    static QEasingCurve create(Animator::CurveShape type);
 
 Q_SIGNALS:
     void animationFinished(QGraphicsItem *item, Plasma::Animator::Animation anim);

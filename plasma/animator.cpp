@@ -31,7 +31,6 @@
 #include "animations/geometry_p.h"
 #include "animations/zoom_p.h"
 #include "animations/pixmaptransition_p.h"
-#include "animations/pendulumcurve_p.h"
 #include "animations/javascriptanimation_p.h"
 #include "theme.h"
 
@@ -134,40 +133,6 @@ Plasma::Animation* Animator::create(Animator::Animation type, QObject *parent)
         }
         default: {
             //kDebug() << "Unsupported animation type.";
-            break;
-        }
-    }
-
-    return result;
-}
-
-QEasingCurve Animator::create(Animator::CurveShape type)
-{
-    QEasingCurve result;
-
-    switch (type) {
-        case EaseInCurve: {
-            result.setType(QEasingCurve::InQuad);
-            break;
-        }
-        case EaseOutCurve: {
-            result.setType(QEasingCurve::OutQuad);
-            break;
-        }
-        case EaseInOutCurve: {
-            result.setType(QEasingCurve::InOutQuad);
-            break;
-        }
-        case LinearCurve: {
-            result.setType(QEasingCurve::Linear);
-            break;
-        }
-        case PendularCurve: {
-            result = PendulumCurve();
-            break;
-        }
-        default: {
-            kDebug() << "Unsupported easing curve type.";
             break;
         }
     }
