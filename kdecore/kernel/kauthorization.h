@@ -37,6 +37,11 @@
     class MyHelper : public KAuthorization
     {
         Q_OBJECT
+    public:
+        MyHelper(const char* const helper, QObject *parent = nullptr)
+            : KAuthorization(helper, parent)
+        {
+        }
     public Q_SLOTS:
         int mymethod(const QVariantMap &args)
         {
