@@ -45,7 +45,7 @@ static QScriptValue ctor(QScriptContext *ctx, QScriptEngine *eng)
         QScriptValue arg = ctx->argument(0);
         if (arg.isNumber()) {
             qint32 type = arg.toInt32();
-            if (type > -1 && type < QEasingCurve::Custom) {
+            if (type > -1 && type < QEasingCurve::NCurveTypes) {
                 return qScriptValueFromValue(eng, QEasingCurve(static_cast<QEasingCurve::Type>(type)));
             }
         }
@@ -76,7 +76,7 @@ static QScriptValue type(QScriptContext *ctx, QScriptEngine *eng)
 
             type = easingCurveEnum.keyToValue(arg.toString().toLatin1().data());
         }
-        if (type > -1 && type < QEasingCurve::Custom) {
+        if (type > -1 && type < QEasingCurve::NCurveTypes) {
             self->setType(static_cast<QEasingCurve::Type>(type));
         }
     }
