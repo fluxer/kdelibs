@@ -23,9 +23,7 @@
 #include <QColor>
 #include <QFont>
 #include <QHash>
-#include <QtXml/qxml.h>
-#include <QtXml/qxml.h>
-#include <QtXml/qxml.h>
+#include <QXmlInputSource>
 
 #include <kdebug.h>
 #include <kurl.h>
