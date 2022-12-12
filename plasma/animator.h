@@ -34,7 +34,6 @@
 namespace Plasma
 {
 
-class AnimatorPrivate;
 class Animation;
 
 /**
@@ -81,9 +80,6 @@ public:
 
 private:
     Animator();
-
-    friend class AnimatorPrivate;
-    AnimatorPrivate * const d;
 };
 
 } // namespace Plasma
