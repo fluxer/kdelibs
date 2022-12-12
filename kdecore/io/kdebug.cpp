@@ -492,7 +492,6 @@ void KDebugConfig::destroyDevices()
     }
 }
 
-
 QIODevice* KDebugConfig::areaDevice(const QtMsgType type, const char* const funcinfo, const int area)
 {
     const KDebugAreaCache kdebugareacache = KDebugConfig::areaCache(area);

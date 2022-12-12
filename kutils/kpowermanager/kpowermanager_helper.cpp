@@ -23,6 +23,11 @@
 
 #include <kdebug.h>
 
+KPowerManagerHelper::KPowerManagerHelper(const char* const helper, QObject *parent)
+    : KAuthorization(helper, parent)
+{
+}
+
 int KPowerManagerHelper::setgovernor(const QVariantMap &parameters)
 {
     if (!parameters.contains("governor")) {

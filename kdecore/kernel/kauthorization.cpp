@@ -121,17 +121,28 @@ void KAuthorizationAdaptor::delayedStop()
 }
 
 
-KAuthorization::KAuthorization(QObject *parent)
+KAuthorization::KAuthorization(const char* const helper, QObject *parent)
     : QObject(parent ? parent : qApp)
 {
+    Q_ASSERT(helper);
+    setObjectName(QString::fromLatin1(helper));
     new KAuthorizationAdaptor(this);
+}
+
+KAuthorization::~KAuthorization()
+{
+    const QString helper = objectName();
+    if (!helper.isEmpty()) {
+        QDBusConnection::systemBus().unregisterService(helper);
+        QDBusConnection::systemBus().unregisterObject(QString::fromLatin1("/KAuthorization"));
+    }
 }
 
 bool KAuthorization::isAuthorized(const QString &helper)
 {
     kDebug() << "Checking if" << helper << "is authorized";
     QDBusInterface kauthorizationinterface(
-        helper, QString::fromLatin1("/"), QString::fromLatin1("org.kde.kauthorization"),
+        helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),
         QDBusConnection::systemBus()
     );
     QDBusReply<void> reply = kauthorizationinterface.call(QString::fromLatin1("stop"));
@@ -155,7 +166,7 @@ int KAuthorization::execute(const QString &helper, const QString &method, const 
     }
 
     QDBusInterface kauthorizationinterface(
-        helper, QString::fromLatin1("/"), QString::fromLatin1("org.kde.kauthorization"),
+        helper, QString::fromLatin1("/KAuthorization"), QString::fromLatin1("org.kde.kauthorization"),
         QDBusConnection::systemBus()
     );
     QDBusReply<int> reply = kauthorizationinterface.call(QString::fromLatin1("execute"), method, arguments);
@@ -208,7 +219,7 @@ void KAuthorization::helperMain(const char* const helper, KAuthorization *object
         qApp->exit(1);
         return;
     }
-    if (!QDBusConnection::systemBus().registerObject(QString::fromLatin1("/"), object)) {
+    if (!QDBusConnection::systemBus().registerObject(QString::fromLatin1("/KAuthorization"), object)) {
         qApp->exit(2);
         return;
     }

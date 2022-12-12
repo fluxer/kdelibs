@@ -24,6 +24,8 @@
 class KPowerManagerHelper : public KAuthorization
 {
     Q_OBJECT
+public:
+    KPowerManagerHelper(const char* const helper, QObject *parent = nullptr);
 public slots:
     int setgovernor(const QVariantMap &parameters);
 };

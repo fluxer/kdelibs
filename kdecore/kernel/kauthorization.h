@@ -84,7 +84,8 @@ public:
         AuthorizationError = -4
     };
 
-    KAuthorization(QObject *parent = nullptr);
+    KAuthorization(const char* const helper, QObject *parent = nullptr);
+    ~KAuthorization();
 
     /*!
         @brief Returns @p true if the current user is allowed to execute @p helper methods,
@@ -112,7 +113,7 @@ private:
 #define K_AUTH_MAIN(HELPER, CLASS) \
     int main(int argc, char **argv) { \
         QCoreApplication app(argc, argv); \
-        KAuthorization::helperMain(HELPER, new CLASS()); \
+        KAuthorization::helperMain(HELPER, new CLASS(HELPER, qApp)); \
         return app.exec(); \
     }
 
