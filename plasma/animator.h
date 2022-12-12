@@ -46,10 +46,8 @@ class PLASMA_EXPORT Animator : public QObject
 {
     Q_OBJECT
     Q_ENUMS(Animation)
-    Q_ENUMS(Movement)
 
 public:
-
     enum Animation {
         AppearAnimation = 0, /*<< Animate the appearance of an element */
         DisappearAnimation,  /*<< Animate the disappearance of an element */
@@ -66,17 +64,6 @@ public:
         PixmapTransitionAnimation, /*<< Transition between two pixmaps*/
         LastAnimation = 1024
     };
-
-    enum Movement {
-        SlideInMovement = 0,
-        SlideOutMovement,
-        FastSlideInMovement,
-        FastSlideOutMovement
-    };
-
-    /**
-     * Singleton accessor
-     **/
 
     /**
      * Factory to build new animation objects. To control their behavior,
