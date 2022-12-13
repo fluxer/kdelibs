@@ -26,6 +26,7 @@
 #include <QtCore/QMap>
 #include <QtCore/qmetaobject.h>
 #include <QtCore/QRegExp>
+#include <QtCore/QBitArray>
 #include <QtGui/QTextDocument>
 
 #include <kdebug.h>
@@ -235,19 +236,6 @@ bool BrowserArguments::forcesNewWindow() const
 namespace KParts
 {
 
-// Internal class, use to store the status of the actions
-class KBitArray
-{
-public:
-    int val;
-    KBitArray() { val = 0; }
-    bool operator [](int index) { return (val & (1 << index)) ? true : false; }
-    void setBit(int index, bool value) {
-        if (value) val = val | (1 << index);
-        else val = val & ~(1 << index);
-    }
-};
-
 class BrowserExtension::BrowserExtensionPrivate
 {
 public:
@@ -264,7 +252,7 @@ public:
 
   QList<DelayedRequest> m_requests;
   bool m_urlDropHandlingEnabled;
-  KBitArray m_actionStatus;
+  QBitArray m_actionStatus;
   QMap<int, QString> m_actionText;
 
   static void createActionSlotMap();
