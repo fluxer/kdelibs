@@ -245,6 +245,7 @@ KExiv2PropertyList KExiv2::metadata() const
             KExiv2Property kexiv2property;
             kDebug() << "Mapping Exif data for" << d->m_path;
             const Exiv2::ExifData exiv2data = d->m_exiv2image->exifData();
+            result.reserve(exiv2data.count());
             for (Exiv2::ExifData::const_iterator it = exiv2data.begin(); it != exiv2data.end(); it++) {
                 const std::string key = (*it).key();
                 const std::string value = (*it).value().toString();
@@ -258,6 +259,7 @@ KExiv2PropertyList KExiv2::metadata() const
 
             kDebug() << "Mapping IPTC data for" << d->m_path;
             const Exiv2::IptcData iptcdata = d->m_exiv2image->iptcData();
+            result.reserve(result.size() + iptcdata.count());
             for (Exiv2::IptcData::const_iterator it = iptcdata.begin(); it != iptcdata.end(); it++) {
                 const std::string key = (*it).key();
                 const std::string value = (*it).value().toString();
@@ -271,6 +273,7 @@ KExiv2PropertyList KExiv2::metadata() const
 
             kDebug() << "Mapping XMP data for" << d->m_path;
             const Exiv2::XmpData xmpdata = d->m_exiv2image->xmpData();
+            result.reserve(result.size() + xmpdata.count());
             for (Exiv2::XmpData::const_iterator it = xmpdata.begin(); it != xmpdata.end(); it++) {
                 const std::string key = (*it).key();
                 const std::string value = (*it).value().toString();
