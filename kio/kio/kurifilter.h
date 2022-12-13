@@ -960,17 +960,10 @@ protected:
     /**
      * Constructor.
      *
-     * Creates a KUriFilter object and calls @ref loadPlugins to load all
-     * available URI filter plugins.
+     * Creates a KUriFilter object and loads URI filter plugins that have not
+     * been disabled.
      */
     KUriFilter();
-
-    /**
-     * Loads all allowed plugins.
-     *
-     * This function only loads URI filter plugins that have not been disabled.
-     */
-    void loadPlugins();
 
 private:
     KUriFilterPrivate * const d;

@@ -608,7 +608,7 @@ public:
     }
     QHash<QString, KUriFilterPlugin *> plugins;
     // NOTE: DO NOT REMOVE this variable! Read the
-    // comments in KUriFilter::loadPlugins to understand why...
+    // comments in KUriFilter constructor to understand why...
     QStringList pluginNames; 
 };
 
@@ -621,7 +621,23 @@ KUriFilter *KUriFilter::self()
 KUriFilter::KUriFilter()
     : d(new KUriFilterPrivate())
 {
-    loadPlugins();
+    const KService::List offers = KServiceTypeTrader::self()->query( "KUriFilter/Plugin" );
+
+    // NOTE: Plugin priority is determined by the InitialPreference entry in
+    // the .desktop files, so the trader result is already sorted and should
+    // not be manually sorted.
+    Q_FOREACH (const KService::Ptr &ptr, offers) {
+        KUriFilterPlugin *plugin = ptr->createInstance<KUriFilterPlugin>();
+        if (plugin) {
+            const QString& pluginName = plugin->objectName();
+            Q_ASSERT( !pluginName.isEmpty() );
+            d->plugins.insert(pluginName, plugin );
+            // Needed to ensure the order of filtering is honored since
+            // items are ordered arbitarily in a QHash and QMap always
+            // sorts by keys. Both undesired behavior.
+            d->pluginNames << pluginName;
+        }
+    }
 }
 
 KUriFilter::~KUriFilter()
@@ -700,27 +716,6 @@ bool KUriFilter::filterSearchUri(KUriFilterData &data, SearchFilterTypes types)
 QStringList KUriFilter::pluginNames() const
 {
     return d->pluginNames;
-}
-
-void KUriFilter::loadPlugins()
-{
-    const KService::List offers = KServiceTypeTrader::self()->query( "KUriFilter/Plugin" );
-
-    // NOTE: Plugin priority is determined by the InitialPreference entry in
-    // the .desktop files, so the trader result is already sorted and should
-    // not be manually sorted.    
-    Q_FOREACH (const KService::Ptr &ptr, offers) {
-        KUriFilterPlugin *plugin = ptr->createInstance<KUriFilterPlugin>();
-        if (plugin) {
-            const QString& pluginName = plugin->objectName();
-            Q_ASSERT( !pluginName.isEmpty() );
-            d->plugins.insert(pluginName, plugin );
-            // Needed to ensure the order of filtering is honored since
-            // items are ordered arbitarily in a QHash and QMap always
-            // sorts by keys. Both undesired behavior.
-            d->pluginNames << pluginName;
-        }
-    }
 }
 
 #include "kurifilter.moc"
