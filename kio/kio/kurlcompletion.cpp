@@ -801,10 +801,8 @@ bool KUrlCompletionPrivate::userCompletion(const KUrlCompletionPrivate::MyURL& u
 
             // If the thread finishes quickly make sure that the results
             // are added to the first matching case.
-
             userListThread->wait(200);
-            const QStringList l = userListThread->matches();
-            addMatches(l);
+            addMatches(userListThread->matches());
         }
     }
     *pMatch = finished();
