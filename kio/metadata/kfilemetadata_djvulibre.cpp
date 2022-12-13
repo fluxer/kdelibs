@@ -76,7 +76,7 @@ QList<KFileMetaInfoItem> KFileMetaDataDjVuLibrePlugin::metaData(const KUrl &url,
         QCoreApplication::processEvents(QEventLoop::AllEvents, s_eventstime);
         QThread::msleep(s_sleeptime);
     }
-    kDebug() << "Waiting for document annotation decoding to complete";
+    kDebug() << "Done waiting for document annotation decoding to complete";
     miniexp_t* djvulibremetadatakeys = ddjvu_anno_get_metadata_keys(djvulibreannotation);
     if (djvulibremetadatakeys) {
         int counter = 0;
