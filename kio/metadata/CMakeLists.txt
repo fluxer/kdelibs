@@ -147,3 +147,25 @@ if (FREETYPE_FOUND)
         DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
     )
 endif()
+
+if (DJVULIBRE_FOUND)
+    include_directories(${DJVULIBRE_INCLUDE_DIR})
+
+    set(kfilemetadata_djvulibre_SRCS kfilemetadata_djvulibre.cpp)
+
+    kde4_add_plugin(kfilemetadata_djvulibre ${kfilemetadata_djvulibre_SRCS})
+    target_link_libraries(kfilemetadata_djvulibre
+        ${KDE4_KIO_LIBS}
+        ${DJVULIBRE_LIBRARY}
+    )
+
+    install(
+        TARGETS kfilemetadata_djvulibre
+        DESTINATION ${KDE4_PLUGIN_INSTALL_DIR}
+    )
+
+    install(
+        FILES kfilemetadata_djvulibre.desktop
+        DESTINATION ${KDE4_SERVICES_INSTALL_DIR}
+    )
+endif()

@@ -274,6 +274,14 @@ set_package_properties(Freetype PROPERTIES
     PURPOSE "Fonts metadata extraction"
 )
 
+kde4_optional_find_package(DjVuLibre)
+set_package_properties(DjVuLibre PROPERTIES
+    DESCRIPTION "Open source DjVu library"
+    URL "https://djvu.sourceforge.net/"
+    TYPE RECOMMENDED
+    PURPOSE "DjVu metadata extraction"
+)
+
 kde4_optional_find_package(OpenSSL)
 set_package_properties(OpenSSL PROPERTIES
     DESCRIPTION "Robust, commercial-grade, full-featured toolkit for general-purpose cryptography and secure communication"

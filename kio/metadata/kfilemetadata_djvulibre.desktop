@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Service
+Name=KFileMetaDataDjVuLibrePlugin
+GenericName=DjVuLibre
+Comment=Extracts metadata from DjVu documents
+MimeType=image/vnd.djvu;image/vnd.djvu+multipage;image/x.djvu
+X-KDE-Library=kfilemetadata_djvulibre
+X-KDE-ServiceTypes=KFileMetaData/Plugin
+X-KDE-MetadataKeys=http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title,http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter,http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified
+InitialPreference=1
