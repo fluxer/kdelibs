@@ -81,10 +81,9 @@ public:
    WarningContinueCancel = 3,
    WarningYesNoCancel = 4,
    Information = 5,
-   // Reserved for: SSLMessageBox = 6
-   Sorry = 7,
-   Error = 8,
-   QuestionYesNoCancel = 9
+   Sorry = 6,
+   Error = 7,
+   QuestionYesNoCancel = 8
  };
 
  enum Option
