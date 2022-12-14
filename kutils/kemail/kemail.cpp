@@ -397,7 +397,7 @@ bool KEMail::send(const QStringList &to, const QString &subject, const QString &
     (void)curl_easy_setopt(d->m_curl, CURLOPT_READFUNCTION, KEMailPrivate::curlReadCallback);
     (void)curl_easy_setopt(d->m_curl, CURLOPT_READDATA, d);
     (void)curl_easy_setopt(d->m_curl, CURLOPT_UPLOAD, 1L);
-    // curl_easy_setopt(d->m_curl, CURLOPT_VERBOSE, 1L);
+    // (void)curl_easy_setopt(d->m_curl, CURLOPT_VERBOSE, 1L);
 
     bool result = true;
     curlresult = curl_easy_perform(d->m_curl);
