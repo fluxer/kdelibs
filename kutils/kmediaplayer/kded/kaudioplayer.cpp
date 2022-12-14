@@ -45,7 +45,7 @@ void KAudioPlayerModule::play(const QString &path, const QString &playerID)
 void KAudioPlayerModule::_removeFinished()
 {
     KAudioPlayer* player = qobject_cast<KAudioPlayer*>(sender());
-    disconnect(player, SIGNAL(finished()), player, SLOT(_removeFinished()));
+    disconnect(player, SIGNAL(finished()), this, SLOT(_removeFinished()));
     player->deleteLater();
 }
 
