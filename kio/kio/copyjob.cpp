@@ -20,41 +20,35 @@
 */
 
 #include "copyjob.h"
-#include <errno.h>
 #include "kdirlister.h"
 #include "kfileitem.h"
 #include "deletejob.h"
 #include "clipboardupdater_p.h"
+#include "job_p.h"
+#include "slave.h"
+#include "scheduler.h"
+#include "kdirwatch.h"
+#include "kprotocolmanager.h"
+#include "jobuidelegate.h"
 
 #include <klocale.h>
 #include <kdesktopfile.h>
 #include <kdebug.h>
 #include <kde_file.h>
-
-#include "slave.h"
-#include "scheduler.h"
-#include "kdirwatch.h"
-#include "kprotocolmanager.h"
-
-#include "jobuidelegate.h"
-
+#include <kdiskfreespaceinfo.h>
 #include <kdirnotify.h>
 #include <ktemporaryfile.h>
 
-#ifdef Q_OS_UNIX
-#include <utime.h>
-#endif
-#include <assert.h>
-
-#include <QtCore/QList>
-#include <QtCore/QTimer>
-#include <QtCore/QFile>
-#include <sys/stat.h> // mode_t
+#include <QList>
+#include <QTimer>
+#include <QFile>
 #include <QPointer>
-#include <QtCore/qfileinfo.h>
+#include <QFileInfo>
 
-#include "job_p.h"
-#include <kdiskfreespaceinfo.h>
+#include <utime.h>
+#include <sys/stat.h> // mode_t
+#include <assert.h>
+#include <errno.h>
 
 using namespace KIO;
 
