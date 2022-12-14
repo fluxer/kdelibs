@@ -455,6 +455,7 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the XFER info callback is not called
     curl_easy_setopt(m_curl, CURLOPT_XFERINFODATA, this);
     curl_easy_setopt(m_curl, CURLOPT_XFERINFOFUNCTION, curlXFERCallback);
+    // curl_easy_setopt(m_curl, CURLOPT_VERBOSE, 1L); // debugging
 
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
     CURLcode curlresult = curl_easy_setopt(m_curl, CURLOPT_URL, urlbytes.constData());

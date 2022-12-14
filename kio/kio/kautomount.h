@@ -20,11 +20,8 @@
 #define KAUTOMOUNT_H
 
 #include <QtCore/QObject>
-#include <QtGlobal>
 
 #include <kio/kio_export.h>
-
-#ifdef Q_OS_UNIX
 
 class KJob;
 namespace KIO {
@@ -106,6 +103,4 @@ private:
     KAutoUnmountPrivate* const d;
 };
 
-#endif //Q_OS_UNIX
-
-#endif
+#endif // KAUTOMOUNT_H
