@@ -162,8 +162,8 @@ void KMediaWidget::open(const QString &path)
         d->m_volumeline.setFrameRange(0, d->m_ui->w_volume->value());
         setVolume(0);
     }
-    d->m_player->load(path);
     d->m_ui->w_position->setSliderPosition(0); // fake seek to start
+    d->m_player->load(path);
     if (d->m_smoothvolume) {
         d->m_volumeline.start();
     }
