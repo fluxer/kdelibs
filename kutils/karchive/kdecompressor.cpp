@@ -21,7 +21,6 @@
 #include "klocale.h"
 #include "kmimetype.h"
 #include "kdebug.h"
-#include <qplatformdefs.h>
 
 #include <limits.h>
 #include <libdeflate.h>
@@ -33,6 +32,8 @@
 #if defined(HAVE_LIBLZMA)
 #  include <lzma.h>
 #endif
+
+#define KDECOMPRESSOR_BUFFSIZE 1024 * 1000 // 1MB
 
 // for reference:
 // http://linux.math.tifr.res.in/manuals/html/manual_3.html
@@ -151,7 +152,7 @@ bool KDecompressor::process(const QByteArray &data)
                 }
 
                 if (decompresult == LIBDEFLATE_INSUFFICIENT_SPACE) {
-                    speculativesize = (speculativesize + QT_BUFFSIZE);
+                    speculativesize = (speculativesize + KDECOMPRESSOR_BUFFSIZE);
                     d->m_result.resize(speculativesize);
                 }
 
@@ -184,7 +185,7 @@ bool KDecompressor::process(const QByteArray &data)
                 );
 
                 if (decompresult == BZ_OUTBUFF_FULL) {
-                    speculativesize = (speculativesize + QT_BUFFSIZE);
+                    speculativesize = (speculativesize + KDECOMPRESSOR_BUFFSIZE);
                     d->m_result.resize(speculativesize);
                 }
 
@@ -228,7 +229,7 @@ bool KDecompressor::process(const QByteArray &data)
                 decompresult = lzma_code(&decomp, LZMA_FINISH);
 
                 if (decompresult == LZMA_BUF_ERROR) {
-                    speculativesize = (speculativesize + QT_BUFFSIZE);
+                    speculativesize = (speculativesize + KDECOMPRESSOR_BUFFSIZE);
                     d->m_result.resize(speculativesize);
 
                     if (speculativesize >= INT_MAX) {

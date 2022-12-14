@@ -21,7 +21,6 @@
 #include "klocale.h"
 #include "kmimetype.h"
 #include "kdebug.h"
-#include <qplatformdefs.h>
 
 #include <libdeflate.h>
 
