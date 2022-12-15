@@ -229,10 +229,6 @@ QString KAboutLicense::text() const
         knownLicense = true;
         pathToFile = KStandardDirs::locate("data", QString::fromLatin1("LICENSES/ARTISTIC"));
         break;
-    case KAboutData::License_QPL_V1_0:
-        knownLicense = true;
-        pathToFile = KStandardDirs::locate("data", QString::fromLatin1("LICENSES/QPL_V1.0"));
-        break;
     case KAboutData::License_GPL_V3:
         knownLicense = true;
         pathToFile = KStandardDirs::locate("data", QString::fromLatin1("LICENSES/GPL_V3"));
@@ -294,10 +290,6 @@ QString KAboutLicense::name(KAboutData::NameFormat formatName) const
         licenseShort = i18nc("@item license (short name)","Artistic License");
         licenseFull = i18nc("@item license","Artistic License");
         break;
-    case KAboutData::License_QPL_V1_0:
-        licenseShort = i18nc("@item license (short name)","QPL v1.0");
-        licenseFull = i18nc("@item license","Q Public License");
-        break;
     case KAboutData::License_GPL_V3:
         licenseShort = i18nc("@item license (short name)","GPL v3");
         licenseFull = i18nc("@item license","GNU General Public License Version 3");
@@ -348,9 +340,6 @@ KAboutLicense KAboutLicense::byKeyword(const QString &rawKeyword)
         ldict.insert("lgplv2+", KAboutData::License_LGPL_V2);
         ldict.insert("bsd", KAboutData::License_BSD);
         ldict.insert("artistic", KAboutData::License_Artistic);
-        ldict.insert("qpl", KAboutData::License_QPL);
-        ldict.insert("qplv1", KAboutData::License_QPL_V1_0);
-        ldict.insert("qplv10", KAboutData::License_QPL_V1_0);
         ldict.insert("gplv3", KAboutData::License_GPL_V3);
         ldict.insert("gplv3+", KAboutData::License_GPL_V3);
         ldict.insert("lgplv3", KAboutData::License_LGPL_V3);
