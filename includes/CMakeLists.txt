@@ -345,8 +345,6 @@ install(
     OrgKdeKDirNotifyInterface
     OrgKdeKLauncherInterface
     ThumbCreator
-    kdbgstream
-    kndbgstream
     KCategorizedView
     KCategoryDrawer
     KCategorizedSortFilterProxyModel
