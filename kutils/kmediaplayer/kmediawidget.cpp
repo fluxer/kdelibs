@@ -151,9 +151,6 @@ void KMediaWidget::open(const QString &path)
     d->m_path = path;
     d->m_replay = false;
 
-    d->m_ui->w_play->setEnabled(true);
-    d->m_ui->w_position->setEnabled(true);
-
     if (d->m_smoothvolume) {
         if (d->m_volumeline.state() == QTimeLine::Running) {
             d->m_volumeline.stop();
@@ -167,8 +164,6 @@ void KMediaWidget::open(const QString &path)
     if (d->m_smoothvolume) {
         d->m_volumeline.start();
     }
-
-    d->m_ui->w_position->setEnabled(d->m_player->isSeekable());
 }
 
 KMediaPlayer* KMediaWidget::player() const
@@ -286,7 +281,9 @@ void KMediaWidget::_updateLoaded()
     if (!title.isEmpty()) {
         d->updateStatus(title);
     }
+    d->m_ui->w_play->setEnabled(true);
     _updatePlay(!d->m_player->isPlaying());
+    _updateSeekable(d->m_player->isSeekable());
 }
 
 void KMediaWidget::_updateFinished()
