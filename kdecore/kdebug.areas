@@ -122,10 +122,11 @@
 90250       kcminit
 
 # kde-extraapps
-500         kdeprint
 4700        okular (app)
 4710        okular (Poppler)
 4711        okular (Spectre)
+4712        okular (DjVu)
+4713        okular (EPub)
 5001        kget
 5002        kemu
 5010        krdc
