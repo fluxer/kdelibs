@@ -133,8 +133,8 @@ QList<KFileMetaInfoItem> KFileMetaDataDjVuLibrePlugin::metaData(const KUrl &url,
             }
             counter++;
         }
+        ::free(djvulibremetadatakeys);
     }
-    ::free(djvulibremetadatakeys);
     ddjvu_document_release(djvudoc);
     ddjvu_context_release(djvuctx);
     return result;
