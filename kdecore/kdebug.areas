@@ -126,14 +126,9 @@
 4700        okular (app)
 4710        okular (Poppler)
 4711        okular (Spectre)
-4712        okular (XpsGenerator)
-4713        okular (DVI)
-4715        okular (OooGenerator)
 5001        kget
 5002        kemu
 5010        krdc
 5011        krdc (VNC backend)
 5012        krdc (RDP backend)
 67100       kmix
-87400       kcron
-87500       ksystemlog
