@@ -116,14 +116,12 @@ public:
 
     bool resume:1;
     bool needSendCanResume:1;
-    bool onHold:1;
     bool wasKilled:1;
     bool inOpenLoop:1;
     bool exit_loop:1;
     MetaData configData;
     KConfig *config;
     KConfigGroup *configGroup;
-    KUrl onHoldUrl;
 
     struct timeval last_tv;
     KIO::filesize_t totalSize;
@@ -234,8 +232,7 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     d->config = new KConfig(QString(), KConfig::SimpleConfig);
     // The KConfigGroup needs the KConfig to exist during its whole lifetime.
     d->configGroup = new KConfigGroup(d->config, QString());
-    d->onHold = false;
-    d->wasKilled=false;
+    d->wasKilled = false;
     d->last_tv.tv_sec = 0;
     d->last_tv.tv_usec = 0;
     d->totalSize=0;
@@ -464,8 +461,6 @@ void SlaveBase::slaveStatus( const QString &host, bool connected )
     qint64 pid = static_cast<qint64>(::getpid());
     qint8 b = connected ? 1 : 0;
     KIO_DATA << pid << mProtocol << host << b;
-    if (d->onHold)
-       stream << d->onHoldUrl;
     send( MSG_SLAVE_STATUS, data );
 }
 
@@ -943,7 +938,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             break;
         }
         case CMD_SLAVE_CONNECT: {
-            d->onHold = false;
             QString app_socket;
             QDataStream stream( data );
             stream >> app_socket;
