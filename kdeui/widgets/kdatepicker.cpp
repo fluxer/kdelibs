@@ -25,6 +25,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QFont>
+#include <QtGui/QFontDatabase>
 #include <QtGui/QLayout>
 #include <QtGui/qevent.h>
 #include <QtGui/QMenu>
@@ -261,9 +262,11 @@ void KDatePicker::init( const QDate &date_ )
     d->table = new KDateTable( this );
     setFocusProxy( d->table );
 
-    d->fontsize = KGlobalSettings::generalFont().pointSize();
+    QFont generalFont = KGlobalSettings::generalFont();
+    d->fontsize = generalFont.pointSize();
     if ( d->fontsize == -1 ) {
-        d->fontsize = QFontInfo( KGlobalSettings::generalFont() ).pointSize();
+        QFontDatabase fdb;
+        d->fontsize = fdb.font(generalFont.family(), generalFont.styleName(), generalFont.pointSize()).pointSize();
     }
 
     d->fontsize++; // Make a little bigger

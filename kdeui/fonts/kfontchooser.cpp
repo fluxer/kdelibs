@@ -137,12 +137,12 @@ public:
     int          customSizeRow;
     QString      standardSizeAtCustom;
 
+    QFontDatabase fontdb;
     // Mappings of translated to Qt originated family and style strings.
     QHash<QString, QString> qtFamilies;
     QHash<QString, QString> qtStyles;
     // Mapping of translated style strings to internal style identifiers.
     QHash<QString, QString> styleIDs;
-
 };
 
 
@@ -501,8 +501,9 @@ void KFontChooser::setFont( const QFont& aFont, bool onlyFixed )
 {
     d->selFont = aFont;
     d->selectedSize=aFont.pointSizeF();
-    if (d->selectedSize == -1)
-        d->selectedSize = QFontInfo(aFont).pointSizeF();
+    if (d->selectedSize == -1) {
+        d->selectedSize = d->fontdb.font(aFont.family(), aFont.styleName(), aFont.pointSize()).pointSizeF();
+    }
 
     if( onlyFixed != d->usingFixed)
     {
@@ -564,8 +565,7 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
     }
 
     // Get the list of styles available in this family.
-    QFontDatabase dbase;
-    QStringList styles = dbase.styles(currentFamily);
+    QStringList styles = fontdb.styles(currentFamily);
     if (styles.isEmpty()) {
         // Avoid extraction, it is in kdeqt.po
         styles.append(I18NC_NOX("QFontDatabase", "Normal"));
@@ -583,8 +583,8 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
         // Sometimes the font database will report an invalid style,
         // that falls back back to another when set.
         // Remove such styles, by checking set/get round-trip.
-        QFont testFont = dbase.font(currentFamily, style, 10);
-        if (dbase.styleString(testFont) != style) {
+        QFont testFont = fontdb.font(currentFamily, style, 10);
+        if (fontdb.styleString(testFont) != style) {
             stylesit.remove();
             continue;
         }
@@ -631,8 +631,8 @@ void KFontChooser::Private::_k_family_chosen_slot(const QString& family)
         qreal currentSize = setupSizeListBox(currentFamily, currentStyle);
         sizeOfFont->setValue(currentSize);
 
-        selFont = dbase.font(currentFamily, currentStyle, int(currentSize));
-        if (dbase.isScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
+        selFont = fontdb.font(currentFamily, currentStyle, int(currentSize));
+        if (fontdb.isScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
             selFont.setPointSizeF(currentSize);
         }
         emit q->fontSelected(selFont);
@@ -647,7 +647,6 @@ void KFontChooser::Private::_k_style_chosen_slot(const QString& style)
     }
     signalsAllowed = false;
 
-    QFontDatabase dbase;
     QString currentFamily = qtFamilies[familyListBox->currentItem()->text()];
     QString currentStyle;
     if (style.isEmpty()) {
@@ -660,8 +659,8 @@ void KFontChooser::Private::_k_style_chosen_slot(const QString& style)
     qreal currentSize = setupSizeListBox(currentFamily, currentStyle);
     sizeOfFont->setValue(currentSize);
 
-    selFont = dbase.font(currentFamily, currentStyle, int(currentSize));
-    if (dbase.isScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
+    selFont = fontdb.font(currentFamily, currentStyle, int(currentSize));
+    if (fontdb.isScalable(currentFamily, currentStyle) && selFont.pointSize() == floor(currentSize)) {
         selFont.setPointSizeF(currentSize);
     }
     emit q->fontSelected(selFont);
@@ -715,7 +714,6 @@ void KFontChooser::Private::_k_size_value_slot(double dval)
     // We compare with qreal, so convert for platforms where qreal != double.
     qreal val = qreal(dval);
 
-    QFontDatabase dbase;
     QString family = qtFamilies[familyListBox->currentItem()->text()];
     QString style = qtStyles[styleListBox->currentItem()->text()];
 
@@ -725,7 +723,7 @@ void KFontChooser::Private::_k_size_value_slot(double dval)
         customSizeRow = -1;
     }
 
-    bool canCustomize = dbase.isScalable(family, style);
+    bool canCustomize = fontdb.isScalable(family, style);
 
     // Set the current size in the size listbox.
     int row = nearestSizeRow(val, canCustomize);
@@ -742,8 +740,6 @@ void KFontChooser::Private::_k_displaySample( const QFont& font )
 {
     sampleEdit->setFont(font);
     // sampleEdit->setCursorPosition(0);
-
-    // QFontInfo a = QFontInfo(font);
     // kDebug() << "font:" << font.toString();
 }
 
@@ -813,15 +809,14 @@ qreal KFontChooser::Private::fillSizeList (const QList<qreal> &sizes_)
 
 qreal KFontChooser::Private::setupSizeListBox (const QString& family, const QString& style)
 {
-    QFontDatabase dbase;
     QList<qreal> sizes;
-    if (dbase.isScalable(family, style)) {
+    if (fontdb.isScalable(family, style)) {
         // A vector font.
         //>sampleEdit->setPaletteBackgroundPixmap( VectorPixmap ); // TODO
     } else {
         // A bitmap font.
         //sampleEdit->setPaletteBackgroundPixmap( BitmapPixmap ); // TODO
-        QList<int> pointSizes = dbase.pointSizes(family, style);
+        QList<int> pointSizes = fontdb.pointSizes(family, style);
         foreach (const int size, pointSizes) {
             sizes.append(qreal(size));
         }
@@ -845,12 +840,12 @@ qreal KFontChooser::Private::setupSizeListBox (const QString& family, const QStr
 
 void KFontChooser::Private::setupDisplay()
 {
-    QFontDatabase dbase;
     QString family = selFont.family().toLower();
     QString styleID = styleIdentifier(selFont);
     qreal size = selFont.pointSizeF();
-    if (size == -1)
-        size = QFontInfo( selFont ).pointSizeF();
+    if (size == -1) {
+        size = fontdb.font(selFont.family(), selFont.styleName(), selFont.pointSize()).pointSizeF();
+    }
 
     int numEntries, i;
 
@@ -928,7 +923,7 @@ void KFontChooser::Private::setupDisplay()
     // otherwise just select the nearest available size.
     QString currentFamily = qtFamilies[familyListBox->currentItem()->text()];
     QString currentStyle = qtStyles[styleListBox->currentItem()->text()];
-    bool canCustomize = dbase.isScalable(currentFamily, currentStyle);
+    bool canCustomize = fontdb.isScalable(currentFamily, currentStyle);
     sizeListBox->setCurrentRow(nearestSizeRow(size, canCustomize));
 
     // Set current size in the spinbox.
@@ -938,8 +933,8 @@ void KFontChooser::Private::setupDisplay()
 
 void KFontChooser::getFontList( QStringList &list, uint fontListCriteria)
 {
-    QFontDatabase dbase;
-    QStringList lstSys(dbase.families());
+    QFontDatabase fdb;
+    QStringList lstSys(fdb.families());
 
     // if we have criteria; then check fonts before adding
     if (fontListCriteria)
@@ -947,8 +942,8 @@ void KFontChooser::getFontList( QStringList &list, uint fontListCriteria)
         QStringList lstFonts;
         for (QStringList::const_iterator it = lstSys.constBegin(); it != lstSys.constEnd(); ++it)
         {
-            if ((fontListCriteria & FixedWidthFonts) > 0 && !dbase.isFixedPitch(*it)) continue;
-            if ((fontListCriteria & SmoothScalableFonts) > 0 && !dbase.isScalable(*it)) continue;
+            if ((fontListCriteria & FixedWidthFonts) > 0 && !fdb.isFixedPitch(*it)) continue;
+            if ((fontListCriteria & SmoothScalableFonts) > 0 && !fdb.isScalable(*it)) continue;
             lstFonts.append(*it);
         }
 
