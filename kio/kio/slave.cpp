@@ -32,6 +32,7 @@
 #include <QtCore/QTimer>
 #include <QtDBus/QtDBus>
 #include <QtCore/QProcess>
+#include <QtCore/QDir>
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -398,10 +399,23 @@ Slave* Slave::createSlave( const QString &protocol, const KUrl& url, int& error,
         return 0;
     }
 
-    const QStringList args = QStringList() << slaveexe << slaveAddress;
     kDebug() << "kioslave" << ", " << slaveexe << ", " << protocol << ", " << slaveAddress;
 
-    QProcess::startDetached( KStandardDirs::findExe("kioslave"), args );
+    const QStringList slaveargs = QStringList() << slaveexe << slaveAddress;
+    Q_PID slavepid = 0;
+    const bool result = QProcess::startDetached(
+        KStandardDirs::findExe("kioslave"),
+        slaveargs,
+        QDir::currentPath(),
+        &slavepid
+    );
+    if (!result || !slavepid) {
+        error_text = i18n("Can not start io-slave for protocol '%1'.", protocol);
+        error = KIO::ERR_CANNOT_LAUNCH_PROCESS;
+        delete slave;
+        return 0;
+    }
+    slave->setPID(slavepid);
 
     return slave;
 }
