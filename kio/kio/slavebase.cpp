@@ -114,11 +114,11 @@ public:
     QTime m_timeSinceLastBatch;
     Connection appConnection;
 
-    bool resume:1;
-    bool needSendCanResume:1;
-    bool wasKilled:1;
-    bool inOpenLoop:1;
-    bool exit_loop:1;
+    bool resume;
+    bool needSendCanResume;
+    bool wasKilled;
+    bool inOpenLoop;
+    bool exit_loop;
     MetaData configData;
     KConfig *config;
     KConfigGroup *configGroup;
@@ -179,21 +179,16 @@ static SlaveBase *globalSlave = nullptr;
 
 static volatile bool slaveWriteError = false;
 
-extern "C" {
 static void genericsig_handler(int sigNumber)
 {
-   KDE_signal(sigNumber, SIG_IGN);
+    KDE_signal(sigNumber, SIG_DFL);
 
-   //WABA: Don't do anything that requires malloc, we can deadlock on it since
-   //a SIGTERM signal can come in while we are in malloc/free.
-   //kDebug()<<"kioslave : exiting due to signal "<<sigNumber;
-   //set the flag which will be checked in dispatchLoop() and which *should* be checked
-   //in lengthy operations in the various slaves
-   if (globalSlave != 0)
-      globalSlave->setKillFlag();
-   KDE_signal(SIGALRM, SIG_DFL);
-   alarm(5);  //generate an alarm signal in 5 seconds, in this time the slave has to exit
-}
+    kDebug(7019) << "exiting due to signal" << sigNumber;
+    // set the flag which will be checked in dispatchLoop() and which *should* be checked
+    // in lengthy operations in the various slaves
+    if (globalSlave != 0) {
+        globalSlave->setKillFlag();
+    }
 }
 
 //////////////
@@ -281,17 +276,14 @@ void SlaveBase::dispatchLoop()
                 else
                     dispatch(cmd, data);
             }
-        } else {
-            ret = d->appConnection.isConnected() ? 0 : -1;
         }
 
-        if (ret == -1) { // some error occurred, perhaps no more application
-            disconnectSlave();
-            closeConnection();
+        if (ret == -1 || !d->appConnection.isConnected()) {
+            // some error occurred or not connected to application socket
             break;
         }
 
-        //I think we get here when we were killed in dispatch() and not in select()
+        // I think we get here when we were killed in dispatch() and not in select()
         if (wasKilled()) {
             kDebug(7019) << "slave was killed, returning";
             break;
@@ -588,9 +580,7 @@ void SlaveBase::mimeType( const QString &_type)
 void SlaveBase::exit()
 {
     d->exit_loop = true;
-    // Using ::exit() here is too much (crashes in qdbus's qglobalstatic object),
-    // so let's cleanly exit dispatchLoop() instead.
-    // Update: we do need to call exit(), otherwise a long download (get()) would
+    // We do need to call exit(), otherwise a long download (get()) would
     // keep going until it ends, even though the application exited.
     ::exit(255);
 }
