@@ -22,7 +22,6 @@
 
 #include <kstandarddirs.h>
 #include <kiconloader.h>
-#include <kspeech.h>
 
 KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
 	: QWidget(parent)
@@ -40,26 +39,16 @@ KNotifyConfigActionsWidget::KNotifyConfigActionsWidget( QWidget * parent )
 	m_ui.Logfile_check->setIcon(KIcon("text-x-generic"));
 	m_ui.Execute_check->setIcon(KIcon("system-run"));
 	m_ui.Taskbar_check->setIcon(KIcon("services"));
-	m_ui.KTTS_check->setIcon(KIcon("text-speak"));
 
 	connect(m_ui.Execute_check,SIGNAL(toggled(bool)), this, SIGNAL(changed()));
 	connect(m_ui.Sound_check,SIGNAL(toggled(bool)), this, SIGNAL(changed()));
 	connect(m_ui.Popup_check,SIGNAL(toggled(bool)), this, SIGNAL(changed()));
 	connect(m_ui.Logfile_check,SIGNAL(toggled(bool)), this, SIGNAL(changed()));
 	connect(m_ui.Taskbar_check,SIGNAL(toggled(bool)), this, SIGNAL(changed()));
-	connect(m_ui.KTTS_check,SIGNAL(toggled(bool)), this, SLOT(slotKTTSComboChanged()));
 	connect(m_ui.Execute_select,SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 	connect(m_ui.Sound_select,SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 	connect(m_ui.Logfile_select,SIGNAL(textChanged(QString)), this, SIGNAL(changed()));
 	connect(m_ui.Sound_play,SIGNAL(clicked()), this, SLOT(slotPlay()));
-	connect(m_ui.KTTS_combo,SIGNAL(currentIndexChanged(int)), this, SLOT(slotKTTSComboChanged()));
-	m_ui.KTTS_combo->setEnabled(false);
-	if(!KNotifyConfigElement::have_kttsd())
-	{
-		m_ui.KTTS_check->setVisible(false);
-		m_ui.KTTS_select->setVisible(false);
-		m_ui.KTTS_combo->setVisible(false);
-	}
 	
 }
 
@@ -78,18 +67,10 @@ void KNotifyConfigActionsWidget::setConfigElement( KNotifyConfigElement * config
 	m_ui.Logfile_check->setChecked( actions.contains("Logfile") );
 	m_ui.Execute_check->setChecked( actions.contains("Execute") );
 	m_ui.Taskbar_check->setChecked( actions.contains("Taskbar") );
-	m_ui.KTTS_check->setChecked( actions.contains("KTTS") );
 
 	m_ui.Sound_select->setUrl( KUrl( config->readEntry( "Sound" , true ) ) );
 	m_ui.Logfile_select->setUrl( KUrl( config->readEntry( "Logfile" , true ) ) );
 	m_ui.Execute_select->setUrl( KUrl( config->readEntry( "Execute"  ) ) );
-	m_ui.KTTS_select->setText( config->readEntry( "KTTS"  )  );
-	if(m_ui.KTTS_select->text() == QLatin1String("%e"))
-		m_ui.KTTS_combo->setCurrentIndex(1);
-	else if(m_ui.KTTS_select->text() == QLatin1String("%m") || m_ui.KTTS_select->text() == QLatin1String("%s"))
-		m_ui.KTTS_combo->setCurrentIndex(0);
-	else
-		m_ui.KTTS_combo->setCurrentIndex(2);
 	blockSignals(blocked);
 }
 
@@ -106,26 +87,12 @@ void KNotifyConfigActionsWidget::save( KNotifyConfigElement * config )
 		actions << "Execute";
 	if(m_ui.Taskbar_check->isChecked())
 		actions << "Taskbar";
-	if(m_ui.KTTS_check->isChecked())
-		actions << "KTTS";
 
 	config->writeEntry( "Action" , actions.join("|") );
 
 	config->writeEntry( "Sound" , m_ui.Sound_select->url().url() );
 	config->writeEntry( "Logfile" , m_ui.Logfile_select->url().url() );
 	config->writeEntry( "Execute" , m_ui.Execute_select->url().path() );
-	switch(m_ui.KTTS_combo->currentIndex())
-	{
-		case 0:
-			config->writeEntry( "KTTS" , "%s" );
-			break;
-		case 1:
-			config->writeEntry( "KTTS" , "%e" );
-			break;
-		case 2:
-		default:
-			config->writeEntry( "KTTS" , m_ui.KTTS_select->text() );
-	}
 }
 
 void KNotifyConfigActionsWidget::slotPlay(  )
@@ -143,12 +110,6 @@ void KNotifyConfigActionsWidget::slotPlay(  )
 	// same ID as the one used in kde-workspace/knotify/notifybysound.cpp
 	QDBusInterface kaudioplayer("org.kde.kded", "/modules/kaudioplayer", "org.kde.kaudioplayer");
 	kaudioplayer.call("play", soundURL.prettyUrl(), QString::fromLatin1("knotify"));
-}
-
-void KNotifyConfigActionsWidget::slotKTTSComboChanged()
-{
-	m_ui.KTTS_select->setEnabled(m_ui.KTTS_check->isChecked() &&  m_ui.KTTS_combo->currentIndex() == 2);
-	emit changed();
 }
 
 #include "moc_knotifyconfigactionswidget.cpp"

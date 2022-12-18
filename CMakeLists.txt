@@ -299,14 +299,6 @@ set_package_properties(Libmicrohttpd PROPERTIES
     PURPOSE "HTTP(S) server"
 )
 
-kde4_optional_find_package(Speechd)
-set_package_properties(Speechd PROPERTIES
-    DESCRIPTION "Speech Dispatcher provides a high-level device independent layer for speech synthesis"
-    URL "https://freebsoft.org/speechd"
-    TYPE RECOMMENDED
-    PURPOSE "Text-To-Speech"
-)
-
 kde4_optional_find_package(LibArchive 3.0.3)
 set_package_properties(LibArchive PROPERTIES
     DESCRIPTION "Multi-format archive and compression library"

@@ -126,7 +126,7 @@
  *  Action is the string representing the action. Actions can be added to
  *  the KNotify daemon as plugins, by deriving from KNotifyPlugin.
  *  At the time of writing, the following actions are available: Taskbar,
- *  Sound, Popup, Logfile, KTTS, Execute.
+ *  Sound, Popup, Logfile, Execute.
  *  Actions can be combined by seperating them with '|'.
  *
  *  Contexts is a comma separated list of possible context for this event.

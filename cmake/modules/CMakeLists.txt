@@ -14,7 +14,6 @@ set(cmakeFilesDontInstall
     FindLibCDIO.cmake
     FindDevinfo.cmake
     FindFFmpeg.cmake
-    FindSpeechd.cmake
     FindLibRaw.cmake
     FindLibJPEG.cmake
     FindOpenJPEG.cmake

@@ -5,8 +5,6 @@ include_directories(
     ${CMAKE_SOURCE_DIR}/interfaces/kregexpeditor
     ${CMAKE_SOURCE_DIR}/kdecore/sonnet
     ${CMAKE_SOURCE_DIR}/kdeui
-    ${CMAKE_SOURCE_DIR}/kutils/kspeech
-    ${CMAKE_BINARY_DIR}/kutils/kspeech
     ${KDE4_KDECORE_INCLUDES}
     actions
     colors
@@ -335,7 +333,6 @@ target_link_libraries(kdeui PRIVATE
 
 target_link_libraries(kdeui PUBLIC
     ${KDE4_KDECORE_LIBS}
-    ${KDE4_KSPEECH_LIBS}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}

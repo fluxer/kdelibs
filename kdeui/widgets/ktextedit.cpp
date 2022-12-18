@@ -34,7 +34,6 @@
 #include <dialog.h>
 #include "backgroundchecker.h"
 #include <kdebug.h>
-#include <kspeech.h>
 #include <kaction.h>
 #include <kcursor.h>
 #include <kglobalsettings.h>
@@ -573,25 +572,7 @@ QMenu *KTextEdit::mousePopupMenu()
           popup->addAction(replaceAction);
       }
   }
-  if (KSpeech::isSupported()) {
-    popup->addSeparator();
-    QAction *speakAction = popup->addAction(i18n("Speak Text"));
-    speakAction->setIcon(KIcon("preferences-desktop-text-to-speech"));
-    speakAction->setEnabled(!emptyDocument );
-    connect( speakAction, SIGNAL(triggered(bool)), this, SLOT(slotSpeakText()) );
-  }
   return popup;
-}
-
-void KTextEdit::slotSpeakText()
-{
-    QString text;
-    if(textCursor().hasSelection())
-        text = textCursor().selectedText();
-    else
-        text = toPlainText();
-    KSpeech kspeech(this);
-    kspeech.say(text);
 }
 
 void KTextEdit::contextMenuEvent(QContextMenuEvent *event)
