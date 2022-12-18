@@ -26,6 +26,8 @@
 #include <QFile>
 #include <QFileSystemWatcher>
 
+// for reference:
+// https://www.kernel.org/doc/Documentation/cpu-freq/governors.txt
 static QString governorForProfile(const QString &profile, const QStringList &governors)
 {
     const QString lowerprofile = profile.toLower();
