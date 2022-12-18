@@ -239,11 +239,6 @@ bool JPGHandler::canRead(QIODevice *device)
     return false;
 }
 
-QStringList JPGPlugin::keys() const
-{
-    return QStringList() << s_jpgpluginformat;
-}
-
 QList<QByteArray> JPGPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()

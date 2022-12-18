@@ -267,11 +267,6 @@ bool TIFFHandler::canRead(QIODevice *device)
     return false;
 }
 
-QStringList TIFFPlugin::keys() const
-{
-    return QStringList() << s_tiffpluginformat;
-}
-
 QList<QByteArray> TIFFPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()

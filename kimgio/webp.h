@@ -16,8 +16,8 @@
     Boston, MA 02110-1301, USA.
 */
 
-#ifndef WEBP_H
-#define WEBP_H
+#ifndef KIMGIO_WEBP_H
+#define KIMGIO_WEBP_H
 
 #include <QStringList>
 #include <QImageIOHandler>
@@ -58,10 +58,9 @@ private:
 class WebPPlugin : public QImageIOPlugin
 {
 public:
-    QStringList keys() const;
-    QList<QByteArray> mimeTypes() const;
-    Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
+    QList<QByteArray> mimeTypes() const final;
+    QImageIOPlugin::Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
     QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;
 };
 
-#endif
+#endif // KIMGIO_WEBP_H

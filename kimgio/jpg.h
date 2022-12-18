@@ -47,9 +47,8 @@ private:
 class JPGPlugin : public QImageIOPlugin
 {
 public:
-    QStringList keys() const;
-    QList<QByteArray> mimeTypes() const;
-    Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
+    QList<QByteArray> mimeTypes() const final;
+    QImageIOPlugin::Capabilities capabilities(QIODevice *device, const QByteArray &format) const final;
     QImageIOHandler *create(QIODevice *device, const QByteArray &format = QByteArray()) const final;
 };
 
