@@ -291,11 +291,6 @@ bool RAWHandler::canRead(QIODevice *device)
     return true;
 }
 
-QStringList RAWPlugin::keys() const
-{
-    return QStringList() << s_rawpluginformat;
-}
-
 QList<QByteArray> RAWPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()

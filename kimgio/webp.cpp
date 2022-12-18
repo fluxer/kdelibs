@@ -25,6 +25,8 @@
 #include <webp/encode.h>
 #include <webp/demux.h>
 
+static const char* const s_webppluginformat = "tiff";
+
 static const ushort s_peekbuffsize = 32;
 
 WebPHandler::WebPHandler()
@@ -288,11 +290,6 @@ bool WebPHandler::canRead(QIODevice *device)
     return false;
 }
 
-QStringList WebPPlugin::keys() const
-{
-    return QStringList() << "webp";
-}
-
 QList<QByteArray> WebPPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()
@@ -302,7 +299,7 @@ QList<QByteArray> WebPPlugin::mimeTypes() const
 
 QImageIOPlugin::Capabilities WebPPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
-    if (format == "webp") {
+    if (format == s_webppluginformat) {
         return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead | QImageIOPlugin::CanWrite);
     }
     if (!device || !device->isOpen()) {

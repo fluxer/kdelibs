@@ -399,11 +399,6 @@ bool ICOHandler::canRead(QIODevice *device)
     return false;
 }
 
-QStringList ICOPlugin::keys() const
-{
-    return QStringList() << s_icopluginformat;
-}
-
 QList<QByteArray> ICOPlugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()

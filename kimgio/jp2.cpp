@@ -312,11 +312,6 @@ bool JP2Handler::canRead(QIODevice *device)
     return (guessOJCodec(data) != OPJ_CODEC_UNKNOWN);
 }
 
-QStringList JP2Plugin::keys() const
-{
-    return QStringList() << s_jp2pluginformat;
-}
-
 QList<QByteArray> JP2Plugin::mimeTypes() const
 {
     static const QList<QByteArray> list = QList<QByteArray>()
