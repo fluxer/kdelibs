@@ -125,7 +125,7 @@ if(KDE4_FIND_REQUIRED OR KDE4Internal_FIND_REQUIRED)
     set(_REQ_STRING_KDE4 REQUIRED)
 endif()
 
-find_package(Katie ${_REQ_STRING_KDE4} 4.12.0)
+find_package(Katie ${_REQ_STRING_KDE4} 4.13.0)
 
 # Check that we really found everything.
 # If KDE4 was searched with REQUIRED, we error out with FATAL_ERROR if something
