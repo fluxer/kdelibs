@@ -24,7 +24,6 @@ kde4_bool_to_01(EXIV2_FOUND HAVE_EXIV2)                 # kexiv2
 kde4_bool_to_01(LIBMICROHTTPD_FOUND HAVE_LIBMICROHTTPD) # khttp
 kde4_bool_to_01(MPV_FOUND HAVE_MPV)                     # kmediaplayer
 kde4_bool_to_01(OPENSSL_FOUND HAVE_OPENSSL)             # kpasswdstore
-kde4_bool_to_01(SPEECHD_FOUND HAVE_SPEECHD)             # kspeech
 kde4_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)               # kio
 
 check_include_files(fstab.h       HAVE_FSTAB_H)                        # kio, kdecore

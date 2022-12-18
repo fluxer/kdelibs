@@ -65,9 +65,6 @@
 /* Define to 1 if you have OpenSSL */
 #cmakedefine HAVE_OPENSSL 1
 
-/* Define to 1 if you have Speech Dispatcher */
-#cmakedefine HAVE_SPEECHD 1
-
 /* Define to 1 if getmntinfo() uses statvfs struct */
 #cmakedefine GETMNTINFO_USES_STATVFS 1
 

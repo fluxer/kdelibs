@@ -268,7 +268,6 @@ install(
     KShortcutWidget
     KSortableItem
     KSortableList
-    KSpeech
     KSplashScreen
     KSqueezedTextLabel
     KStandardDirs

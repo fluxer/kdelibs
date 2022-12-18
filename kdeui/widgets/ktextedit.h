@@ -326,10 +326,6 @@ class KDEUI_EXPORT KTextEdit : public QTextEdit //krazy:exclude=qclasses
     void slotFind();
     void slotFindNext();
     void slotReplace();
-    /**
-     * @since 4.3
-     */
-    void slotSpeakText();
 
   protected:
     /**

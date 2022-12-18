@@ -69,8 +69,6 @@ void KNotifyEventList::KNotifyEventListDelegate::paint( QPainter* painter,
 	iconList << ( optionsList.contains("Logfile") ? KIcon("text-x-generic")       : KIcon() );
 	iconList << ( optionsList.contains("Taskbar") ? KIcon("services")             : KIcon() );
 	iconList << ( optionsList.contains("Execute") ? KIcon("system-run")           : KIcon() );
-	if( KNotifyConfigElement::have_kttsd() )
-		iconList << ( optionsList.contains("KTTS") ? KIcon("text-speak") : KIcon() );
 
 	int mc_x=0;
 	
@@ -103,7 +101,7 @@ KNotifyEventList::KNotifyEventList(QWidget *parent)
 	setIconSize( QSize(iconWidth, iconWidth) );
 	
 	header()->setResizeMode( 0, QHeaderView::Fixed ); 
-	header()->resizeSection( 0, KNotifyConfigElement::have_kttsd() ? (iconWidth+4)*6: (iconWidth+4)*5 );
+	header()->resizeSection( 0, (iconWidth + 4) * 5 );
 	header()->setResizeMode( 1, QHeaderView::ResizeToContents );
 
 	connect(this, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)) , this , SLOT(slotSelectionChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
