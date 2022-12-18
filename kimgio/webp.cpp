@@ -25,7 +25,7 @@
 #include <webp/encode.h>
 #include <webp/demux.h>
 
-static const char* const s_webppluginformat = "tiff";
+static const char* const s_webppluginformat = "webp";
 
 static const ushort s_peekbuffsize = 32;
 
