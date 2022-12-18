@@ -26,6 +26,28 @@
 #include <QFile>
 #include <QFileSystemWatcher>
 
+static QString governorForProfile(const QString &profile, const QStringList &governors)
+{
+    const QString lowerprofile = profile.toLower();
+    if (governors.contains(lowerprofile)) {
+        // exact match
+        return lowerprofile;
+    }
+    if (lowerprofile == QLatin1String("powersave")) {
+        if (governors.contains(QString::fromLatin1("conservative"))) {
+            return QString::fromLatin1("conservative");
+        }
+        if (governors.contains(QString::fromLatin1("ondemand"))) {
+            return QString::fromLatin1("ondemand");
+        }
+        if (governors.contains(QString::fromLatin1("schedutil"))) {
+            return QString::fromLatin1("schedutil");
+        }
+    }
+    // will trigger error
+    return lowerprofile;
+}
+
 class KPowerManagerPrivate
  {
 public:
@@ -80,8 +102,7 @@ bool KPowerManager::setProfile(const QString &profile)
 
     KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
     KConfigGroup kconfigprofile = kconfig.group(profile);
-    // this assumes the CPU governors are not disabled
-    const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", profile.toLower());
+    const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", governorForProfile(profile, CPUGovernors()));
     kDebug() << "Power manager CPU governor" << cpugovernor;
     return setCPUGovernor(cpugovernor);
 }
@@ -143,7 +164,7 @@ bool KPowerManager::isSupported()
     KConfig kconfig("kpowermanagerrc", KConfig::SimpleConfig);
     foreach (const QString &profile, kpowermanager.profiles()) {
         KConfigGroup kconfigprofile = kconfig.group(profile);
-        const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", profile.toLower());
+        const QString cpugovernor = kconfigprofile.readEntry("CPUGovernor", governorForProfile(profile, cpugovernors));
         if (!cpugovernors.contains(cpugovernor)) {
             result = false;
             break;
