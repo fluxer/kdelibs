@@ -30,6 +30,8 @@ static void setPowerProfile(bool save_power)
         } else {
             kpowermanager.setProfile(QString::fromLatin1("Performance"));
         }
+    } else {
+        kWarning() << "Power management not supported";
     }
 }
 

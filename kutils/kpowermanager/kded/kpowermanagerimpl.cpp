@@ -200,10 +200,10 @@ void KPowerManagerImpl::emitSignals()
     m_cansuspend = CanSuspend();
     m_powersavestatus = GetPowerSaveStatus();
 
-    kDebug() << "old can hibernate" << oldcanhibernate << "new can hibernate" << m_canhibernate;
-    kDebug() << "old can hybrid suspend" << oldcanhybridsuspend << "new can hybrid suspend" << m_canhybridsuspend;
-    kDebug() << "old can can suspend" << oldcansuspend << "new can can suspend" << m_cansuspend;
-    kDebug() << "old can power save status" << oldpowersavestatus << "new can power save status" << m_powersavestatus;
+    kDebug() << "Old can hibernate" << oldcanhibernate << "new can hibernate" << m_canhibernate;
+    kDebug() << "Old can hybrid suspend" << oldcanhybridsuspend << "new can hybrid suspend" << m_canhybridsuspend;
+    kDebug() << "Old can can suspend" << oldcansuspend << "new can can suspend" << m_cansuspend;
+    kDebug() << "Old can power save status" << oldpowersavestatus << "new can power save status" << m_powersavestatus;
 
     if (oldcanhibernate != m_canhibernate) {
         emit CanHibernateChanged(m_canhibernate);

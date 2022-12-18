@@ -212,7 +212,7 @@ void KPowerManagerInhibitImpl::emitSignals()
     const bool oldhasinhibit = m_hasinhibit;
     m_hasinhibit = HasInhibit();
 
-    kDebug() << "old has inhibit" << oldhasinhibit << "new has inhibit" << m_hasinhibit;
+    kDebug() << "Old has inhibit" << oldhasinhibit << "new has inhibit" << m_hasinhibit;
 
     if (oldhasinhibit != m_hasinhibit) {
         emit HasInhibitChanged(m_hasinhibit);
