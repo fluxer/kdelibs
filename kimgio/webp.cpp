@@ -41,7 +41,7 @@ WebPHandler::WebPHandler()
 bool WebPHandler::canRead() const
 {
     if (canRead(device())) {
-        setFormat("webp");
+        setFormat(s_webppluginformat);
         return true;
     }
     return false;
@@ -169,7 +169,7 @@ bool WebPHandler::write(const QImage &image)
 
 QByteArray WebPHandler::name() const
 {
-    return "webp";
+    return s_webppluginformat;
 }
 
 bool WebPHandler::supportsOption(QImageIOHandler::ImageOption option) const
