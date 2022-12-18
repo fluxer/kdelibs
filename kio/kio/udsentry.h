@@ -233,16 +233,7 @@ namespace KIO
             UDS_DEVICE_ID = 25 | UDS_NUMBER,
             /// Inode number for this file, used to detect hardlinks
             /// @since 4.7.3
-            UDS_INODE = 26 | UDS_NUMBER,
-
-            /// Extra data (used only if you specified Columns/ColumnsTypes)
-            /// KDE 4.0 change: you cannot repeat this entry anymore, use UDS_EXTRA + i
-            /// until UDS_EXTRA_END.
-            UDS_EXTRA = 100 | UDS_STRING,
-            /// Extra data (used only if you specified Columns/ColumnsTypes)
-            /// KDE 4.0 change: you cannot repeat this entry anymore, use UDS_EXTRA + i
-            /// until UDS_EXTRA_END.
-            UDS_EXTRA_END = 140 | UDS_STRING
+            UDS_INODE = 26 | UDS_NUMBER
         };
 
     private:
