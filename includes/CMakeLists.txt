@@ -342,7 +342,6 @@ install(
     NETRootInfo
     NETWinInfo
     OrgKdeKDirNotifyInterface
-    OrgKdeKLauncherInterface
     ThumbCreator
     KCategorizedView
     KCategoryDrawer

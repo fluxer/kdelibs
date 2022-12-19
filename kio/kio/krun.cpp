@@ -944,7 +944,6 @@ bool KRun::run(const KService& _service, const KUrl::List& _urls, QWidget* windo
     const KUrl::List urls = resolveURLs(_urls, _service);
 
     QString error;
-    qint64 pid = 0;
 
     QByteArray myasn = asn;
     // startServiceByDesktopPath() doesn't take QWidget*, add it to the startup info now
@@ -962,8 +961,8 @@ bool KRun::run(const KService& _service, const KUrl::List& _urls, QWidget* windo
     }
 
     int i = KToolInvocation::startServiceByDesktopPath(
-                _service.entryPath(), urls.toStringList(), &error, 0L, &pid, myasn
-            );
+        _service.entryPath(), urls.toStringList(), &error, myasn
+    );
 
     if (i != 0) {
         kDebug(7010) << error;

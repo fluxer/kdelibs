@@ -26,7 +26,7 @@ set(klauncher_SRCS
     ${CMAKE_CURRENT_BINARY_DIR}/org.kde.KLauncher.xml
 )
 
-# The adaptor is manually edited, generate the xml from it.
+# Generate the xml from the adaptor.
 qt4_generate_dbus_interface(klauncher_adaptor.h org.kde.KLauncher.xml)
 
 add_executable(klauncher4 ${klauncher_SRCS})
@@ -39,8 +39,6 @@ target_link_libraries(klauncher4
 kde4_add_dbus_service(org.kde.klauncher.service.in)
 
 install(TARGETS klauncher4 DESTINATION ${KDE4_BIN_INSTALL_DIR})
-
-########### install files ###############
 
 install(
     FILES

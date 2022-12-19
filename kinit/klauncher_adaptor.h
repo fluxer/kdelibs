@@ -25,6 +25,7 @@
 #include <QDBusMessage>
 #include <QDBusConnectionInterface>
 #include <QProcess>
+#include <QMutex>
 
 // #define KLAUNCHER_DEBUG
 
@@ -36,11 +37,11 @@ class KLauncherAdaptor: public QDBusAbstractAdaptor
 public:
     enum KLauncherError {
         NoError = 0,
-        ServiceError = 1,
-        FindError = 2,
-        ArgumentsError = 3,
-        ExecError = 4,
-        DBusError = 5
+        ServiceError = -1,
+        FindError = -2,
+        ArgumentsError = -3,
+        ExecError = -4,
+        DBusError = -5
     };
 
     KLauncherAdaptor(QObject *parent);
@@ -56,11 +57,11 @@ public Q_SLOTS:
 
     // used by KToolInvocation
     void setLaunchEnv(const QString &name, const QString &value);
-    int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QString& workdir, const QStringList &env, const QString& startup_id, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
-    int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind, const QDBusMessage &msg, QString &dbusServiceName, QString &error, qint64 &pid);
+    int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id);
+    int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id);
+    int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id, const QString &workdir);
+    int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind);
+    int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind);
 
     // for debugging
 #ifdef KLAUNCHER_DEBUG
@@ -78,10 +79,12 @@ private Q_SLOTS:
 
 private:
     QString findExe(const QString &app) const;
+    int startProgram(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id, const QString &workdir, qint64 &pid);
     void sendSIStart() const;
     void sendSIChange();
     void sendSIFinish();
 
+    QMutex m_mutex;
     QProcessEnvironment m_environment;
     QDBusConnectionInterface* m_dbusconnectioninterface;
     KStartupInfoId m_kstartupinfoid;

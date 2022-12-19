@@ -26,11 +26,10 @@
 #define KTOOLINVOCATION_H
 
 #include <kdecore_export.h>
-#include <klauncher_iface.h>
 
-#include <QtCore/qstringlist.h>
+#include <QStringList>
+#include <QDBusInterface>
 
-class OrgKdeKLauncherInterface;
 class KUrl;
 
 /**
@@ -91,9 +90,9 @@ public Q_SLOTS:
    *           "" ( empty string ) is the default
    */
 
-  static void invokeHelp( const QString& anchor = QString(),
-                   const QString& appname = QString(),
-                   const QByteArray& startup_id = QByteArray());
+  static void invokeHelp(const QString &anchor = QString(),
+                         const QString &appname = QString(),
+                         const QByteArray &startup_id = QByteArray());
 
   /**
    * Convenience method; invokes the standard email application.
@@ -103,8 +102,8 @@ public Q_SLOTS:
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    */
-  static void invokeMailer( const QString &address, const QString &subject,
-          const QByteArray& startup_id = QByteArray() );
+  static void invokeMailer(const QString &address, const QString &subject,
+                           const QByteArray &startup_id = QByteArray());
 
   /**
    * Invokes the standard email application.
@@ -115,8 +114,8 @@ public Q_SLOTS:
    * @param allowAttachments whether attachments specified in mailtoURL should be honoured.
                The default is false; do not honor requests for attachments.
    */
-  static void invokeMailer( const KUrl &mailtoURL, const QByteArray& startup_id = QByteArray(),
-          bool allowAttachments = false );
+  static void invokeMailer(const KUrl &mailtoURL, const QByteArray &startup_id = QByteArray(),
+                           bool allowAttachments = false );
 
   /**
    * Convenience method; invokes the standard email application.
@@ -132,9 +131,9 @@ public Q_SLOTS:
    *           "" ( empty string ) is the default
    */
   static void invokeMailer(const QString &to, const QString &cc,
-                    const QString &subject, const QString &body,
-                    const QStringList &attachURLs = QStringList(),
-                    const QByteArray& startup_id = QByteArray() );
+                           const QString &subject, const QString &body,
+                           const QStringList &attachURLs = QStringList(),
+                           const QByteArray &startup_id = QByteArray());
 
   /**
    * Invokes the user's preferred browser.
@@ -150,8 +149,8 @@ public Q_SLOTS:
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    */
-  static void invokeBrowser( const QString &url,
-          const QByteArray& startup_id = QByteArray() );
+  static void invokeBrowser(const QString &url,
+                            const QByteArray &startup_id = QByteArray());
 
   /**
    * Invokes the standard terminal application.
@@ -164,7 +163,7 @@ public Q_SLOTS:
    * @since 4.1
    */
   static void invokeTerminal(const QString &command,
-                             const QString& workdir = QString(),
+                             const QString &workdir = QString(),
                              const QByteArray &startup_id = "");
 
 public:
@@ -186,20 +185,14 @@ public:
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
    *         ignored
-   * @param serviceName On success, @p serviceName contains the DCOP name
-   *         under which this service is available. If empty, the service does
-   *         not provide DCOP services. If the pointer is 0 the argument
-   *         will be ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopPath( const QString& name, const QString &URL,
-                QString *error=0, QString *serviceName=0, qint64 *pid = 0,
-                const QByteArray &startup_id = QByteArray(), bool noWait = false );
+  static int startServiceByDesktopPath(const QString &name, const QString &URL,
+                                       QString *error = 0,
+                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
 
   /**
    * Starts a service based on the desktop path of the service.
@@ -209,20 +202,15 @@ public:
    * @param URLs if not empty these URLs will be passed to the service
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
-   *         ignored   * @param serviceName On success, @p serviceName contains the DCOP name
-   *         under which this service is available. If empty, the service does
-   *         not provide DCOP services. If the pointer is 0 the argument
-   *         will be ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
+   *         ignored
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopPath( const QString& name, const QStringList &URLs=QStringList(),
-                QString *error=0, QString *serviceName=0, qint64 *pid = 0,
-                const QByteArray &startup_id = QByteArray(), bool noWait = false );
+  static int startServiceByDesktopPath(const QString &name, const QStringList &URLs = QStringList(),
+                                       QString *error = 0,
+                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
 
   /**
    * Starts a service based on the desktop name of the service.
@@ -233,20 +221,14 @@ public:
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
    *         ignored
-   * @param serviceName On success, @p serviceName contains the D-Bus service name
-   *         under which this service is available. If empty, the service does
-   *         not provide D-Bus services. If the pointer is 0 the argument
-   *         will be ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopName( const QString& name, const QString &URL,
-                                        QString *error=0, QString *serviceName=0, qint64 *pid = 0,
-                                        const QByteArray &startup_id = QByteArray(), bool noWait = false );
+  static int startServiceByDesktopName(const QString &name, const QString &URL,
+                                       QString *error = 0,
+                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
 
   /**
    * Starts a service based on the desktop name of the service.
@@ -257,20 +239,14 @@ public:
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
    *         ignored
-   * @param serviceName On success, @p serviceName contains the D-Bus service name
-   *         under which this service is available. If empty, the service does
-   *         not provide D-Bus services. If the pointer is 0 the argument
-   *         will be ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int startServiceByDesktopName( const QString& name, const QStringList &URLs=QStringList(),
-                                        QString *error=0, QString *serviceName=0, qint64 *pid = 0,
-                                        const QByteArray &startup_id = QByteArray(), bool noWait = false );
+  static int startServiceByDesktopName(const QString &name, const QStringList &URLs = QStringList(),
+                                       QString *error = 0,
+                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
 
   /**
    * Starts a program via kdeinit.
@@ -283,14 +259,12 @@ public:
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
    *         ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int kdeinitExec( const QString& name, const QStringList &args=QStringList(),
-                QString *error=0, qint64 *pid = 0, const QByteArray& startup_id = QByteArray() );
+  static int kdeinitExec( const QString& name, const QStringList &args = QStringList(),
+                          QString *error = 0, const QByteArray &startup_id = QByteArray());
 
   /**
    * Starts a program via kdeinit and wait for it to finish.
@@ -303,21 +277,19 @@ public:
    * @param error On failure, @p error contains a description of the error
    *         that occurred. If the pointer is 0, the argument will be
    *         ignored
-   * @param pid On success, the process id of the new service will be written
-   *        here. If the pointer is 0, the argument will be ignored.
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int kdeinitExecWait( const QString& name, const QStringList &args=QStringList(),
-                QString *error=0, qint64 *pid = 0, const QByteArray& startup_id = QByteArray() );
+  static int kdeinitExecWait(const QString& name, const QStringList &args = QStringList(),
+                             QString *error = 0, const QByteArray &startup_id = QByteArray());
 
 Q_SIGNALS:
   /**
    * Hook for KApplication in kdeui
    * @internal
    */
-  void kapplication_hook(QStringList& env , QByteArray& startup_id);
+  void kapplication_hook(QStringList &env , QByteArray &startup_id);
 
 private:
   /**
@@ -325,11 +297,11 @@ private:
    */
   int startServiceInternal(const char *_function,
                            const QString& name, const QStringList &URLs,
-                           QString *error, QString *serviceName, qint64 *pid,
-                           const QByteArray& startup_id, bool noWait,
-                           const QString& workdir = QString());
+                           QString *error,
+                           const QByteArray &startup_id, bool noWait,
+                           const QString &workdir = QString());
 
-  org::kde::KLauncher *klauncherIface;
+  QDBusInterface *klauncherIface;
 };
 
 #endif

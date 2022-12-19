@@ -206,7 +206,7 @@ void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
     QString error;
     // TODO this should check if cmd has a .desktop file, and use data from it, together
     // with sending more ASN data
-    if (kdeinitExec(cmd, cmdTokens, &error, NULL, startup_id ))
+    if (kdeinitExec(cmd, cmdTokens, &error, startup_id ))
     {
       KMessage::message(KMessage::Error,
                       i18n("Could not launch the mail client:\n\n%1", error),
@@ -253,7 +253,7 @@ void KToolInvocation::invokeBrowser( const QString &url, const QByteArray& start
                 if (service) {
                     kDebug() << "Starting service" << service->entryPath();
                     if (startServiceByDesktopPath(service->entryPath(), args,
-                            &error, 0, 0, startup_id)) {
+                            &error, startup_id)) {
                         KMessage::message(KMessage::Error,
                                           // TODO: i18n("Could not launch %1:\n\n%2", exe, error),
                                           i18n("Could not launch the browser:\n\n%1", error),
@@ -266,8 +266,7 @@ void KToolInvocation::invokeBrowser( const QString &url, const QByteArray& start
             const KService::Ptr htmlApp = KMimeTypeTrader::self()->preferredService(QLatin1String("text/html"));
             if (htmlApp) {
                 QString error;
-                qint64 pid = 0;
-                int err = startServiceByDesktopPath(htmlApp->entryPath(), url, &error, 0, &pid, startup_id);
+                int err = startServiceByDesktopPath(htmlApp->entryPath(), url, &error, startup_id);
                 if (err != 0) {
                     KMessage::message(KMessage::Error,
                                       // TODO: i18n("Could not launch %1:\n\n%2", htmlApp->exec(), error),
@@ -287,7 +286,7 @@ void KToolInvocation::invokeBrowser( const QString &url, const QByteArray& start
     }
 
     kDebug(180) << "Using" << exe << "to open" << url;
-    if (kdeinitExec(exe, args, &error, NULL, startup_id ))
+    if (kdeinitExec(exe, args, &error, startup_id ))
     {
         KMessage::message(KMessage::Error,
                           // TODO: i18n("Could not launch %1:\n\n%2", exe, error),
@@ -325,7 +324,7 @@ void KToolInvocation::invokeTerminal(const QString &command,
 
     QString error;
     if (self()->startServiceInternal("kdeinit_exec_with_workdir",
-                                    cmd, cmdTokens, &error, 0, NULL, startup_id, false, workdir)) {
+                                    cmd, cmdTokens, &error, startup_id, false, workdir)) {
       KMessage::message(KMessage::Error,
                       i18n("Could not launch the terminal client:\n\n%1", error),
                       i18n("Could not launch Terminal Client"));
