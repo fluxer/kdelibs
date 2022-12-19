@@ -78,6 +78,8 @@ static inline long HTTPCode(CURL *curl)
     return curlresponsecode;
 }
 
+// for reference:
+// https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 static inline KIO::Error HTTPToKIOError(const long httpcode)
 {
     switch (httpcode) {
@@ -91,6 +93,10 @@ static inline KIO::Error HTTPToKIOError(const long httpcode)
         }
         case 500: {
             return KIO::ERR_INTERNAL_SERVER;
+        }
+        case 404:
+        case 503: {
+            return KIO::ERR_SERVICE_NOT_AVAILABLE;
         }
         default: {
             return KIO::ERR_NO_CONTENT;

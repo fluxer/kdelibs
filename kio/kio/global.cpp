@@ -336,6 +336,9 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case KIO::ERR_UPGRADE_REQUIRED:
       result = i18n( "%1 is required by the server, but is not available." , errorText);
       break;
+    case KIO::ERR_SERVICE_NOT_AVAILABLE:
+      result = i18n( "The server cannot handle the request\n%1" , errorText);
+      break;
     default:
       result = i18n( "Unknown error code %1\n%2\nPlease send a full bug report at %3.", errorCode , errorText, QString::fromLatin1(KDE_BUG_REPORT_URL) );
       break;
