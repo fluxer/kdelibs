@@ -21,6 +21,7 @@
 #include "kstandarddirs.h"
 #include "kservice.h"
 #include "kautostart.h"
+#include "kshell.h"
 #include "kdebug.h"
 
 #include <QDir>
@@ -83,6 +84,7 @@ KLauncherAdaptor::~KLauncherAdaptor()
 void KLauncherAdaptor::autoStart(int phase)
 {
     if (m_autostart.isEmpty()) {
+        kDebug() << "finding autostart desktop files" << phase;
         m_autostart = KGlobal::dirs()->findAllResources(
             "autostart",
             QString::fromLatin1("*.desktop"),
@@ -92,17 +94,18 @@ void KLauncherAdaptor::autoStart(int phase)
 
     kDebug() << "autostart phase" << phase;
     foreach(const QString &it, m_autostart) {
+        kDebug() << "checking autostart" << it;
         KAutostart kautostart(it);
-        if (!kautostart.autostarts(QString::fromLatin1("KDE"), KAutostart::CheckAll)) {
-            continue;
-        }
         if (kautostart.startPhase() != phase) {
             continue;
         }
-        KService kservice(it);
-        QStringList programandargs = KRun::processDesktopExec(kservice, KUrl::List());
+        if (!kautostart.autostarts(QString::fromLatin1("KDE"), KAutostart::CheckAll)) {
+            kDebug() << "not autostarting" << it;
+            continue;
+        }
+        QStringList programandargs = KShell::splitArgs(kautostart.command());
         if (programandargs.isEmpty()) {
-            kWarning() << "could not process service" << kservice.entryPath();
+            kWarning() << "could not process autostart" << it;
             continue;
         }
         const QString program = programandargs.takeFirst();
