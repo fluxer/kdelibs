@@ -190,6 +190,7 @@ public:
     QString m_error;
     QByteArray m_readpass;
     QByteArray m_writepass;
+    QString m_tempprefix;
 
 #if defined(HAVE_LIBARCHIVE)
     struct archive* openRead(const QByteArray &path);
@@ -200,6 +201,8 @@ public:
 
     bool copyData(struct archive* readarchive, struct archive* writearchive);
     bool copyData(struct archive* readarchive, QByteArray *buffer);
+
+    QString tempFilePath() const;
 #endif
 };
 
@@ -403,6 +406,15 @@ bool KArchivePrivate::copyData(struct archive* readarchive, QByteArray *buffer)
 
     return true;
 }
+
+QString KArchivePrivate::tempFilePath() const
+{
+    QFileInfo fileinfo(m_path);
+    QString tmptemplate = m_tempprefix;
+    tmptemplate.append(QLatin1String("XXXXXXXXXX."));
+    tmptemplate.append(fileinfo.completeSuffix());
+    return KTemporaryFile::filePath(tmptemplate);
+}
 #endif // HAVE_LIBARCHIVE
 
 KArchive::KArchive(const QString &path, QObject *parent)
@@ -467,9 +479,7 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         return result;
     }
 
-    QFileInfo fileinfo(d->m_path);
-    const QString tmptemplate = QString::fromLatin1("XXXXXXXXXX.%1").arg(fileinfo.completeSuffix());
-    const QString tmpfile = KTemporaryFile::filePath(tmptemplate);
+    const QString tmpfile = d->tempFilePath();
 
     struct archive* writearchive = d->openWrite(QFile::encodeName(tmpfile));
     if (!writearchive) {
@@ -718,9 +728,7 @@ bool KArchive::remove(const QStringList &paths) const
         return result;
     }
 
-    QFileInfo fileinfo(d->m_path);
-    const QString tmptemplate = QString::fromLatin1("XXXXXXXXXX.%1").arg(fileinfo.completeSuffix());
-    const QString tmpfile = KTemporaryFile::filePath(tmptemplate);
+    const QString tmpfile = d->tempFilePath();
 
     struct archive* writearchive = d->openWrite(QFile::encodeName(tmpfile));
     if (!writearchive) {
@@ -1137,14 +1145,12 @@ bool KArchive::requiresPassphrase() const
 {
     bool result = false;
 
-#if defined(HAVE_LIBARCHIVE)
     foreach (const KArchiveEntry &karchiveentry, KArchive::list()) {
         if (karchiveentry.encrypted == true) {
             result = true;
             break;
         }
     }
-#endif
 
     return result;
 }
@@ -1157,6 +1163,16 @@ void KArchive::setReadPassphrase(const QString &passphrase)
 void KArchive::setWritePassphrase(const QString &passphrase)
 {
     d->m_writepass = passphrase.toUtf8();
+}
+
+QString KArchive::tempPrefix() const
+{
+    return d->m_tempprefix;
+}
+
+void KArchive::setTempPrefix(const QString &prefix)
+{
+    d->m_tempprefix = prefix;
 }
 
 QString KArchive::errorString() const

@@ -152,6 +152,16 @@ public:
     //! @brief Sets the passphrase to be used when writing archive
     void setWritePassphrase(const QString &passphrase);
 
+    /*!
+        @brief Returns if temporary file path prefix, may be empty
+        @note The default (which is empty) means the temporary file will be placed in /tmp
+        (usually), if large files are compressed and there is not enough space write error may
+        occurr
+    */
+    QString tempPrefix() const;
+    //! @brief Sets the temporary file path prefix to @p prefix
+    void setTempPrefix(const QString &prefix);
+
     //! @brief Returns human-readable description of the error that occured
     QString errorString() const;
 
