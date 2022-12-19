@@ -23,8 +23,7 @@
 #include <ktoolinvocation.h>
 #include <kdebug.h>
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
    KAboutData about("ktoolinvocationtest", 0, ki18n("ktoolinvocationtest"), "version");
    KComponentData cData(&about);
@@ -41,10 +40,8 @@ main(int argc, char *argv[])
    }
 
    QString error;
-   QString dbusService;
-   qint64 pid;
-   KToolInvocation::startServiceByDesktopPath( serviceId, url, &error, &dbusService, &pid );
-   kDebug() << "Started. error=" << error << " dbusService=" << dbusService << " pid=" << pid;
+   KToolInvocation::startServiceByDesktopPath( serviceId, url, &error );
+   kDebug() << "Started. error=" << error;
 
    return 0;
 }
