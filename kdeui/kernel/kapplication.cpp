@@ -455,8 +455,14 @@ void KApplicationPrivate::init()
 
     KCheckAccelerators::initiateIfNeeded(q);
 
-    q->connect(KToolInvocation::self(), SIGNAL(kapplication_hook(QStringList&,QByteArray&)),
-               q, SLOT(_k_KToolInvocation_hook(QStringList&,QByteArray&)));
+    // HACK: KLauncher creates KApplication instance and KToolInvocation creates KLauncher instance
+    // (i.e recursion)
+    if (q->applicationName() != QLatin1String("klauncher")) {
+        q->connect(
+            KToolInvocation::self(), SIGNAL(kapplication_hook(QStringList&,QByteArray&)),
+            q, SLOT(_k_KToolInvocation_hook(QStringList&,QByteArray&))
+        );
+    }
   }
   // too late to restart if the application is about to quit (e.g. if QApplication::quit() was
   // called or SIGTERM was received)
