@@ -27,7 +27,6 @@
 #include <klocale.h>
 #include <kconfiggroup.h>
 #include <kservice.h>
-#include <kmimetypetrader.h>
 #include <kservicetypetrader.h>
 #include <kmimetype.h>
 
@@ -74,50 +73,37 @@ void KFileMetaInfoPrivate::init(const QString &filename, const KUrl &url, KFileM
     KConfig config("kmetainformationrc", KConfig::NoGlobals);
     KConfigGroup pluginsgroup = config.group("Plugins");
     const KMimeType::Ptr filemimetype = KMimeType::findByUrl(url);
-    if (filemimetype) {
-        KFileMetaDataPlugin *kfmdplugininstance = nullptr;
-        KService::List kfmdplugins = KMimeTypeTrader::self()->query(filemimetype->name(), "KFileMetaData/Plugin");
-        foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
-            const QString key = kfmdplugin->desktopEntryName();
-            const bool enable = pluginsgroup.readEntry(key, true);
-            if (enable) {
-                kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
-                kDebug() << "Preferred match for" << filemimetype->name() << kfmdplugin->desktopEntryName();
-                break;
-            }
-        }
-
-        if (!kfmdplugininstance) {
-            kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
-            bool breakouterloop = false;
-            foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
-                const QString key = kfmdplugin->desktopEntryName();
-                const bool enable = pluginsgroup.readEntry(key, true);
-                if (enable) {
-                    foreach (const QString &kfmdpluginmime, kMetaGlobMimeTypes(kfmdplugin->serviceTypes())) {
-                        if (kfmdpluginmime.endsWith('*')) {
-                            const QString kfmdpluginmimeglob = kfmdpluginmime.mid(0, kfmdpluginmime.size() - 1);
-                            if (filemimetype->name().startsWith(kfmdpluginmimeglob)) {
-                                kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
-                                kDebug() << "Glob match for" << filemimetype->name() << kfmdplugin->desktopEntryName();
-                                breakouterloop = true;
-                                break;
-                            }
-                        }
+    const KService::List kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
+    foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
+        const QString kfmdname = kfmdplugin->desktopEntryName();
+        const bool enable = pluginsgroup.readEntry(kfmdname, true);
+        if (enable) {
+            // qDebug() << Q_FUNC_INFO << filemimetype->name() << kfmdname;
+            foreach (const QString &kfmdpluginmime, kMetaGlobMimeTypes(kfmdplugin->serviceTypes())) {
+                bool mimematches = false;
+                if (kfmdpluginmime.endsWith('*')) {
+                    const QString kfmdpluginmimeglob = kfmdpluginmime.mid(0, kfmdpluginmime.size() - 1);
+                    if (filemimetype && filemimetype->name().startsWith(kfmdpluginmimeglob)) {
+                        mimematches = true;
                     }
                 }
 
-                if (breakouterloop) {
+                if (!mimematches && filemimetype->is(kfmdpluginmime)) {
+                    mimematches = true;
+                }
+
+                if (mimematches) {
+                    kDebug() << "Extracting metadata via" << kfmdname;
+                    KFileMetaDataPlugin *kfmdplugininstance = kfmdplugin->createInstance<KFileMetaDataPlugin>();
+                    if (kfmdplugininstance) {
+                        items.append(kfmdplugininstance->metaData(url, w));
+                        delete kfmdplugininstance;
+                    } else {
+                        kWarning() << "Could not create KFileMetaDataPlugin instance";
+                    }
                     break;
                 }
             }
-        }
-
-        if (kfmdplugininstance) {
-            items.append(kfmdplugininstance->metaData(url, w));
-            delete kfmdplugininstance;
-        } else {
-            kDebug() << "No match for" << filemimetype->name();
         }
     }
 
@@ -255,8 +241,8 @@ QStringList KFileMetaInfo::supportedKeys()
     KConfigGroup pluginsgroup = config.group("Plugins");
     const KService::List kfmdplugins = KServiceTypeTrader::self()->query("KFileMetaData/Plugin");
     foreach (const KService::Ptr &kfmdplugin, kfmdplugins) {
-        const QString key = kfmdplugin->desktopEntryName();
-        const bool enable = pluginsgroup.readEntry(key, true);
+        const QString kfmdname = kfmdplugin->desktopEntryName();
+        const bool enable = pluginsgroup.readEntry(kfmdname, true);
         if (enable) {
             keys.append(kfmdplugin->property("X-KDE-MetadataKeys", QVariant::StringList).toStringList());
         }

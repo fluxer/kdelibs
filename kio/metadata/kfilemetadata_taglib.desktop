@@ -7,4 +7,3 @@ MimeType=audio/x-ape;application/vnd.ms-asf;video/x-ms-asf;audio/x-flac;audio/fl
 X-KDE-Library=kfilemetadata_taglib
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 X-KDE-MetadataKeys=http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#comment,http://www.semanticdesktop.org/ontologies/2007/05/10/nexif#artist,http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#musicAlbum,http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#genre,http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber,http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalReleaseYear,http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration,http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate,http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate,http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels
-InitialPreference=2

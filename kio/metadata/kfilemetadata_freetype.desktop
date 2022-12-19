@@ -7,4 +7,3 @@ MimeType=font/ttf;application/x-font-ttf;application/x-font-type1;font/otf;appli
 X-KDE-Library=kfilemetadata_freetype
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 X-KDE-MetadataKeys=http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fontFamily,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#copyright
-InitialPreference=1

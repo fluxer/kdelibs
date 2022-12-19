@@ -7,4 +7,3 @@ MimeType=application/pdf;application/x-pdf
 X-KDE-Library=kfilemetadata_poppler
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 X-KDE-MetadataKeys=http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#subject,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#keyword,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#generator,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentLastModified,http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator,http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#textWriter,http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount
-InitialPreference=1

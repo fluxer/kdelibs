@@ -7,4 +7,3 @@ MimeType=application/postscript
 X-KDE-Library=kfilemetadata_spectre
 X-KDE-ServiceTypes=KFileMetaData/Plugin
 X-KDE-MetadataKeys=http://www.semanticdesktop.org/ontologies/2007/01/19/nie#title,http://www.semanticdesktop.org/ontologies/2007/03/22/nco#creator,http://www.semanticdesktop.org/ontologies/2007/01/19/nie#contentCreated,http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount
-InitialPreference=1
