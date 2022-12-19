@@ -42,7 +42,12 @@ KLocaleTest::initTestCase()
 
 void KLocaleTest::languages()
 {
-    QVERIFY(KGlobal::locale()->installedLanguages().contains("en_GB"));
+    QStringList installed = KGlobal::locale()->installedLanguages();
+    if (installed.size() == 0) {
+        QSKIP("This test requires translations", SkipSingle);
+        return;
+    }
+    QVERIFY(installed.contains("en_GB"));
 }
 
 void
