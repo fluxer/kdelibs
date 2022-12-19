@@ -115,7 +115,7 @@ public Q_SLOTS:
                The default is false; do not honor requests for attachments.
    */
   static void invokeMailer(const KUrl &mailtoURL, const QByteArray &startup_id = QByteArray(),
-                           bool allowAttachments = false );
+                           bool allowAttachments = false);
 
   /**
    * Convenience method; invokes the standard email application.
@@ -263,8 +263,8 @@ public:
    *           "" ( empty string ) is the default
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int kdeinitExec( const QString& name, const QStringList &args = QStringList(),
-                          QString *error = 0, const QByteArray &startup_id = QByteArray());
+  static int kdeinitExec(const QString &name, const QStringList &args = QStringList(),
+                         QString *error = 0, const QByteArray &startup_id = QByteArray());
 
   /**
    * Starts a program via kdeinit and wait for it to finish.
@@ -281,7 +281,7 @@ public:
    *           "" ( empty string ) is the default
    * @return an error code indicating success (== 0) or failure (> 0).
    */
-  static int kdeinitExecWait(const QString& name, const QStringList &args = QStringList(),
+  static int kdeinitExecWait(const QString &name, const QStringList &args = QStringList(),
                              QString *error = 0, const QByteArray &startup_id = QByteArray());
 
 Q_SIGNALS:
@@ -296,7 +296,7 @@ private:
    * @internal
    */
   int startServiceInternal(const char *_function,
-                           const QString& name, const QStringList &URLs,
+                           const QString &name, const QStringList &URLs,
                            QString *error,
                            const QByteArray &startup_id, bool noWait,
                            const QString &workdir = QString());

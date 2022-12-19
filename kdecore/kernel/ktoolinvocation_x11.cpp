@@ -112,7 +112,7 @@ static QStringList splitEmailAddressList( const QString & aStr )
 void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
                                    const QString &subject, const QString &body,
                                    const QStringList &attachURLs,
-                                   const QByteArray& startup_id )
+                                   const QByteArray &startup_id)
 {
     KConfig config(QString::fromLatin1("emaildefaults"));
     KConfigGroup profileGrp(&config, "General");
@@ -214,7 +214,7 @@ void KToolInvocation::invokeMailer(const QString &to, const QString &cc,
     }
 }
 
-void KToolInvocation::invokeBrowser( const QString &url, const QByteArray& startup_id )
+void KToolInvocation::invokeBrowser(const QString &url, const QByteArray& startup_id)
 {
     QStringList args;
     args << url;
@@ -324,7 +324,7 @@ void KToolInvocation::invokeTerminal(const QString &command,
 
     QString error;
     if (self()->startServiceInternal("kdeinit_exec_with_workdir",
-                                    cmd, cmdTokens, &error, startup_id, false, workdir)) {
+                                     cmd, cmdTokens, &error, startup_id, false, workdir)) {
       KMessage::message(KMessage::Error,
                       i18n("Could not launch the terminal client:\n\n%1", error),
                       i18n("Could not launch Terminal Client"));

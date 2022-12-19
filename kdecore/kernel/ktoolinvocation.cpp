@@ -175,7 +175,7 @@ int KToolInvocation::startServiceByDesktopPath(const QString &name, const QStrin
                                         name, URLs, error, startup_id, noWait);
 }
 
-int KToolInvocation::startServiceByDesktopName(const QString& name, const QString &URL,
+int KToolInvocation::startServiceByDesktopName(const QString &name, const QString &URL,
                                                QString *error,
                                                const QByteArray &startup_id, bool noWait)
 {
