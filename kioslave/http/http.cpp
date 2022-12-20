@@ -75,6 +75,7 @@ static inline long HTTPCode(CURL *curl)
     if (curlresult != CURLE_OK) {
         kWarning(7103) << "Could not get response code info" << curl_easy_strerror(curlresult);
     }
+    kDebug(7103) << "HTTP error" << curlresponsecode;
     return curlresponsecode;
 }
 
@@ -107,11 +108,11 @@ static inline KIO::Error HTTPToKIOError(const long httpcode)
 
 static inline KIO::Error curlToKIOError(const CURLcode curlcode, CURL *curl)
 {
+    kWarning(7103) << "curl error" << curl_easy_strerror(curlcode);
     switch (curlcode) {
         case CURLE_HTTP_RETURNED_ERROR:
         case CURLE_ABORTED_BY_CALLBACK: {
             const long httpcode = HTTPCode(curl);
-            kDebug(7103) << "HTTP error" << httpcode;
             return HTTPToKIOError(httpcode);
         }
         case CURLE_URL_MALFORMAT: {
@@ -155,7 +156,6 @@ static inline KIO::Error curlToKIOError(const CURLcode curlcode, CURL *curl)
         }
         case CURLE_COULDNT_CONNECT:
         default: {
-            kWarning(7103) << "curl error" << curl_easy_strerror(curlcode);
             return KIO::ERR_COULD_NOT_CONNECT;
         }
     }
@@ -259,6 +259,7 @@ void HttpProtocol::stat(const KUrl &url)
 
     // NOTE: do not set CURLOPT_NOBODY, server may not send some headers
     CURLcode curlresult = curl_easy_perform(m_curl);
+    kDebug(7103) << "Transfer result" << curlresult;
     if (curlresult != CURLE_OK) {
         const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
         if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
@@ -319,6 +320,7 @@ void HttpProtocol::get(const KUrl &url)
     }
 
     CURLcode curlresult = curl_easy_perform(m_curl);
+    kDebug(7103) << "Transfer result" << curlresult;
     if (curlresult != CURLE_OK) {
         const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
         if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
@@ -353,6 +355,7 @@ void HttpProtocol::put(const KUrl &url, int permissions, KIO::JobFlags flags)
     }
 
     curlresult = curl_easy_perform(m_curl);
+    kDebug(7103) << "Transfer result" << curlresult;
     if (curlresult != CURLE_OK) {
         const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
         if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
@@ -461,6 +464,7 @@ bool HttpProtocol::setupCurl(const KUrl &url)
     curl_easy_setopt(m_curl, CURLOPT_NOPROGRESS, 0L); // otherwise the XFER info callback is not called
     curl_easy_setopt(m_curl, CURLOPT_XFERINFODATA, this);
     curl_easy_setopt(m_curl, CURLOPT_XFERINFOFUNCTION, curlXFERCallback);
+    curl_easy_setopt(m_curl, CURLOPT_FAILONERROR, 1L);
     // curl_easy_setopt(m_curl, CURLOPT_VERBOSE, 1L); // debugging
 
     const QByteArray urlbytes = url.prettyUrl().toLocal8Bit();
