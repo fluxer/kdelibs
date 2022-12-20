@@ -688,13 +688,15 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
 
     if (result) {
         kDebug() << "Replacing" << d->m_path << "with" << tmpfile;
-
         // TODO: set permissions on file after copy, same as the original
         result = (KDE::rename(tmpfile, d->m_path) != -1);
         if (!result) {
             d->m_error = i18n("Could not move: %1 to: %2", tmpfile, d->m_path);
             kDebug() << d->m_error;
         }
+    } else {
+        kDebug() << "Removing temporary archive" << tmpfile;
+        QFile::remove(tmpfile);
     }
 #else
     Q_UNUSED(paths);
@@ -796,12 +798,14 @@ bool KArchive::remove(const QStringList &paths) const
 
     if (result) {
         kDebug() << "Replacing" << d->m_path << "with" << tmpfile;
-
         result = (KDE::rename(tmpfile, d->m_path) != -1);
         if (!result) {
             d->m_error = i18n("Could not move: %1 to: %2", tmpfile, d->m_path);
             kDebug() << d->m_error;
         }
+    } else {
+        kDebug() << "Removing temporary archive" << tmpfile;
+        QFile::remove(tmpfile);
     }
 
     if (!notfound.isEmpty()) {
