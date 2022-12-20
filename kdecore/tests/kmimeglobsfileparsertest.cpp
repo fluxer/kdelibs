@@ -72,10 +72,10 @@ private Q_SLOTS:
         QCOMPARE(textGlobs[0].pattern, ext1);
         QCOMPARE(textGlobs[0].mimeType, QString("text/plain"));
         QCOMPARE(textGlobs[0].weight, 40);
-        QCOMPARE(textGlobs[0].flags, (int)KMimeTypeRepository::CaseSensitive);
+        QCOMPARE(textGlobs[0].casesensitive, true);
         QCOMPARE(textGlobs[1].pattern, ext2);
         QCOMPARE(textGlobs[1].weight, 20);
-        QCOMPARE(textGlobs[1].flags, 0);
+        QCOMPARE(textGlobs[1].casesensitive, false);
         QCOMPARE(textGlobs[1].mimeType, QString("text/plain"));
     }
 

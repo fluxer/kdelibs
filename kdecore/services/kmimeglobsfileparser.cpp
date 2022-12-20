@@ -141,16 +141,12 @@ bool KMimeGlobsFileParser::parseGlobFile(QIODevice* file, Format format, AllGlob
             globs.removeMime(mimeTypeNameStr);
             lastMime.clear();
         } else {
-            int flags = 0;
-            if (caseSensitive)
-                flags = KMimeTypeRepository::CaseSensitive;
-
             //if (mimeTypeName == "text/plain")
             //    kDebug() << "Adding pattern" << pattern << "to mimetype" << mimeTypeName << "from globs file, with weight" << weight;
             //if (pattern.toLower() == "*.c")
             //    kDebug() << " Adding pattern" << pattern << "to mimetype" << mimeTypeName << "from globs file, with weight" << weight << "flags" << flags;
             const QString patternStr = QString::fromLatin1(pattern.constData(), pattern.size());
-            globs.addGlob(Glob(mimeTypeNameStr, weight, patternStr, flags));
+            globs.addGlob(Glob(mimeTypeNameStr, weight, patternStr, caseSensitive));
             lastMime = mimeTypeName;
             lastPattern = pattern;
         }
@@ -175,7 +171,7 @@ void KMimeGlobsFileParser::AllGlobs::addGlob(const Glob& glob)
     // or lowWeightPatternOffset (<=50)
 
     Glob adjustedGlob(glob);
-    if ((adjustedGlob.flags & KMimeTypeRepository::CaseSensitive) == 0)
+    if (!adjustedGlob.casesensitive)
         adjustedGlob.pattern = adjustedGlob.pattern.toLower();
     if (adjustedGlob.weight >= 50) {
         if (!m_highWeightGlobs.hasPattern(adjustedGlob.mimeType, adjustedGlob.pattern))

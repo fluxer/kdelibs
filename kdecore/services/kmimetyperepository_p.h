@@ -62,11 +62,6 @@ public:
      */
     QStringList parents(const QString& mime);
 
-    enum GlobMatchingFlag {
-        NoFlag = 0,
-        CaseSensitive = 0x1
-    };
-
     /**
      * This function makes sure that vital mime types are installed.
      */

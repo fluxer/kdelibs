@@ -43,10 +43,10 @@ public:
     AllGlobs parseGlobs(const QStringList&);
 
     struct Glob {
-        Glob(const QString& mime, int w = 50, const QString& pat = QString(), int _flags = 0)
-            : weight(w), flags(_flags), pattern(pat), mimeType(mime) {}
+        Glob(const QString& mime, int w = 50, const QString& pat = QString(), bool cs = false)
+            : weight(w), casesensitive(cs), pattern(pat), mimeType(mime) {}
         int weight;
-        int flags;
+        bool casesensitive;
         QString pattern;
         QString mimeType;
     };

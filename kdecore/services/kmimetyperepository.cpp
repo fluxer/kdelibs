@@ -185,7 +185,7 @@ void KMimeTypeRepository::findFromOtherPatternList(QStringList& matchingMimeType
     const KMimeGlobsFileParser::GlobList::const_iterator end = patternList.constEnd();
     for ( ; it != end; ++it ) {
         const KMimeGlobsFileParser::Glob& glob = *it;
-        if ( matchFileName( (glob.flags & CaseSensitive) ? fileName : lowerCaseFileName, glob.pattern ) ) {
+        if ( matchFileName( glob.casesensitive ? fileName : lowerCaseFileName, glob.pattern ) ) {
             // Is this a lower-weight pattern than the last match? Stop here then.
             if (glob.weight < lastMatchedWeight)
                 break;
