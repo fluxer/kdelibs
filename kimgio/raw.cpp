@@ -42,7 +42,7 @@ public:
     char *gets(char* rawbuffer, int rawsize) final;
     int scanf_one(const char*, void*) final;
     int eof() final;
-    void *make_jas_stream() final;
+    void *make_jas_stream(); // may be disabled since v0.21
     const char *fname() final;
 
 private:
