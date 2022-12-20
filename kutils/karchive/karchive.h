@@ -153,7 +153,7 @@ public:
     void setWritePassphrase(const QString &passphrase);
 
     /*!
-        @brief Returns if temporary file path prefix, may be empty
+        @brief Returns the temporary file path prefix, may be empty
         @note The default (which is empty) means the temporary file will be placed in /tmp
         (usually), if large files are compressed and there is not enough space write error may
         occurr
