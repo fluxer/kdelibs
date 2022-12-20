@@ -460,7 +460,7 @@ void Kded::updateDirWatch()
         if (m_pDirWatch->contains(path)) {
             continue;
         }
-        m_pDirWatch->addDir(path, KDirWatch::WatchFiles|KDirWatch::WatchSubDirs);
+        m_pDirWatch->addDir(path);
     }
 }
 
