@@ -191,17 +191,17 @@ void KLauncherAdaptor::setLaunchEnv(const QString &name, const QString &value)
     m_environment.insert(name, value);
 }
 
-int KLauncherAdaptor::start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind)
+int KLauncherAdaptor::start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id)
 {
     KService::Ptr kservice = KService::serviceByDesktopName(serviceName);
     if (!kservice) {
         kWarning() << "invalid service name" << serviceName;
         return KLauncherAdaptor::ServiceError;
     }
-    return start_service_by_desktop_path(kservice->entryPath(), urls, envs, startup_id, blind);
+    return start_service_by_desktop_path(kservice->entryPath(), urls, envs, startup_id);
 }
 
-int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind)
+int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id)
 {
     QMutexLocker locker(&m_mutex);
     KService::Ptr kservice = KService::serviceByStorageId(serviceName);
@@ -234,7 +234,7 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         kWarning() << "could not process service" << kservice->entryPath();
         return KLauncherAdaptor::ArgumentsError;
     }
-    kDebug() << "starting" << kservice->entryPath() << urls << blind << dbusServiceName;
+    kDebug() << "starting" << kservice->entryPath() << urls << dbusServiceName;
     const QString program = programandargs.takeFirst();
     const QStringList programargs = programandargs;
     Q_ASSERT(m_kstartupinfoid.none() == true);
@@ -260,8 +260,7 @@ int KLauncherAdaptor::start_service_by_desktop_path(const QString &serviceName, 
         // sendSIFinish() is called on exec error
         return result;
     }
-    // blind means do not wait, even if its type is wait
-    if (blind || dbusstartuptype == KService::DBusNone) {
+    if (dbusstartuptype == KService::DBusNone) {
         sendSIFinish();
         return result;
     } else if (dbusstartuptype != KService::DBusNone && dbusServiceName.isEmpty()) {

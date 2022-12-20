@@ -102,7 +102,7 @@ void KToolInvocation::setLaunchEnv(const QString &name, const QString &value)
 int KToolInvocation::startServiceInternal(const char *_function,
                                           const QString &name, const QStringList &URLs,
                                           QString *error,
-                                          const QByteArray &startup_id, bool noWait,
+                                          const QByteArray &startup_id,
                                           const QString &workdir)
 {
     QString function = QString::fromLatin1(_function);
@@ -115,10 +115,6 @@ int KToolInvocation::startServiceInternal(const char *_function,
     if (qstrcmp(_function, "kdeinit_exec_with_workdir") == 0) {
         reply = klauncherIface->asyncCall(
             function, name, URLs, envs, QString::fromLatin1(asn, asn.size()), workdir
-        );
-    } else if (qstrcmp(_function, "start_service_by_desktop_name") == 0 || qstrcmp(_function, "start_service_by_desktop_path") == 0) {
-        reply = klauncherIface->asyncCall(
-            function, name, URLs, envs, QString::fromLatin1(asn, asn.size()), noWait
         );
     } else {
         reply = klauncherIface->asyncCall(
@@ -158,40 +154,40 @@ int KToolInvocation::startServiceInternal(const char *_function,
 
 int KToolInvocation::startServiceByDesktopPath(const QString &name, const QString &URL,
                                                QString *error,
-                                               const QByteArray &startup_id, bool noWait)
+                                               const QByteArray &startup_id)
 {
     QStringList URLs;
     if (!URL.isEmpty())
         URLs.append(URL);
     return self()->startServiceInternal("start_service_by_desktop_path",
-                                        name, URLs, error, startup_id, noWait);
+                                        name, URLs, error, startup_id);
 }
 
 int KToolInvocation::startServiceByDesktopPath(const QString &name, const QStringList &URLs,
                                                QString *error,
-                                               const QByteArray &startup_id, bool noWait)
+                                               const QByteArray &startup_id)
 {
     return self()->startServiceInternal("start_service_by_desktop_path",
-                                        name, URLs, error, startup_id, noWait);
+                                        name, URLs, error, startup_id);
 }
 
 int KToolInvocation::startServiceByDesktopName(const QString &name, const QString &URL,
                                                QString *error,
-                                               const QByteArray &startup_id, bool noWait)
+                                               const QByteArray &startup_id)
 {
     QStringList URLs;
     if (!URL.isEmpty())
         URLs.append(URL);
     return self()->startServiceInternal("start_service_by_desktop_name",
-                                        name, URLs, error, startup_id, noWait);
+                                        name, URLs, error, startup_id);
 }
 
 int KToolInvocation::startServiceByDesktopName(const QString &name, const QStringList &URLs,
                                                QString *error,
-                                               const QByteArray &startup_id, bool noWait)
+                                               const QByteArray &startup_id)
 {
     return self()->startServiceInternal("start_service_by_desktop_name",
-                                        name, URLs, error, startup_id, noWait);
+                                        name, URLs, error, startup_id);
 }
 
 int KToolInvocation::kdeinitExec(const QString &name, const QStringList &args,
@@ -199,7 +195,7 @@ int KToolInvocation::kdeinitExec(const QString &name, const QStringList &args,
                                  const QByteArray &startup_id)
 {
     return self()->startServiceInternal("kdeinit_exec",
-                                        name, args, error, startup_id, false);
+                                        name, args, error, startup_id);
 }
 
 
@@ -208,7 +204,7 @@ int KToolInvocation::kdeinitExecWait(const QString &name, const QStringList &arg
                                      const QByteArray &startup_id)
 {
     return self()->startServiceInternal("kdeinit_exec_wait",
-                                        name, args, error, startup_id, false);
+                                        name, args, error, startup_id);
 }
 
 void KToolInvocation::invokeHelp(const QString &anchor,

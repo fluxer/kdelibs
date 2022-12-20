@@ -324,7 +324,7 @@ void KToolInvocation::invokeTerminal(const QString &command,
 
     QString error;
     if (self()->startServiceInternal("kdeinit_exec_with_workdir",
-                                     cmd, cmdTokens, &error, startup_id, false, workdir)) {
+                                     cmd, cmdTokens, &error, startup_id, workdir)) {
       KMessage::message(KMessage::Error,
                       i18n("Could not launch the terminal client:\n\n%1", error),
                       i18n("Could not launch Terminal Client"));

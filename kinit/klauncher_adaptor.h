@@ -60,8 +60,8 @@ public Q_SLOTS:
     int kdeinit_exec(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id);
     int kdeinit_exec_wait(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id);
     int kdeinit_exec_with_workdir(const QString &app, const QStringList &args, const QStringList &envs, const QString &startup_id, const QString &workdir);
-    int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind);
-    int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id, bool blind);
+    int start_service_by_desktop_name(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id);
+    int start_service_by_desktop_path(const QString &serviceName, const QStringList &urls, const QStringList &envs, const QString &startup_id);
 
     // for debugging
 #ifdef KLAUNCHER_DEBUG

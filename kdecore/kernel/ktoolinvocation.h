@@ -187,12 +187,11 @@ public:
    *         ignored
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
-   * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopPath(const QString &name, const QString &URL,
                                        QString *error = 0,
-                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
+                                       const QByteArray &startup_id = QByteArray());
 
   /**
    * Starts a service based on the desktop path of the service.
@@ -205,12 +204,11 @@ public:
    *         ignored
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
-   * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopPath(const QString &name, const QStringList &URLs = QStringList(),
                                        QString *error = 0,
-                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
+                                       const QByteArray &startup_id = QByteArray());
 
   /**
    * Starts a service based on the desktop name of the service.
@@ -223,12 +221,11 @@ public:
    *         ignored
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
-   * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopName(const QString &name, const QString &URL,
                                        QString *error = 0,
-                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
+                                       const QByteArray &startup_id = QByteArray());
 
   /**
    * Starts a service based on the desktop name of the service.
@@ -241,12 +238,11 @@ public:
    *         ignored
    * @param startup_id for app startup notification, "0" for none,
    *           "" ( empty string ) is the default
-   * @param noWait if set, the function does not wait till the service is running.
    * @return an error code indicating success (== 0) or failure (> 0).
    */
   static int startServiceByDesktopName(const QString &name, const QStringList &URLs = QStringList(),
                                        QString *error = 0,
-                                       const QByteArray &startup_id = QByteArray(), bool noWait = false);
+                                       const QByteArray &startup_id = QByteArray());
 
   /**
    * Starts a program via kdeinit.
@@ -298,7 +294,7 @@ private:
   int startServiceInternal(const char *_function,
                            const QString &name, const QStringList &URLs,
                            QString *error,
-                           const QByteArray &startup_id, bool noWait,
+                           const QByteArray &startup_id,
                            const QString &workdir = QString());
 
   QDBusInterface *klauncherIface;
