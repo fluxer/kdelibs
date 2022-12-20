@@ -36,7 +36,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 
 #define KTOOLINVOCATION_TIMEOUT 250
-#define KTOOLINVOCATION_SLEEPTIME 150
+#define KTOOLINVOCATION_SLEEPTIME 50
 
 // NOTE: keep in sync with:
 // kdelibs/kinit/klauncher_adaptor.h
