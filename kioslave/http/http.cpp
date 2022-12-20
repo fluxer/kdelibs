@@ -212,7 +212,7 @@ int main(int argc, char **argv)
     kDebug(7103) << "Starting" << ::getpid();
 
     if (argc != 2) {
-        ::fprintf(stderr, "Usage: kio_http protocol domain-socket1 domain-socket2\n");
+        ::fprintf(stderr, "Usage: kio_http app-socket\n");
         ::exit(-1);
     }
 
