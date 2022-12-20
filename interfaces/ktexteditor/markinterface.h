@@ -391,9 +391,6 @@ class KTEXTEDITOR_EXPORT MarkInterface
      * \param handled set this to 'true' if this event was handled externally, and kate should not do own handling of the left click.
      */
     void markClicked( KTextEditor::Document* document, KTextEditor::Mark mark, bool& handled );
-
-  private:
-    class MarkInterfacePrivate* const d;
 };
 
 }

@@ -117,9 +117,6 @@ class KTEXTEDITOR_EXPORT SessionConfigInterface
      * \see readSessionConfig()
      */
     virtual void writeSessionConfig (KConfigGroup& config) = 0;
-
-  private:
-    class SessionConfigInterfacePrivate* const d;
 };
 
 

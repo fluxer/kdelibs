@@ -128,9 +128,6 @@ protected:
      * Behaviour might change !!!!!!!
      */
     bool KTE_INTERNAL_setupIntialValues(const QString &templateString, QMap<QString,QString> *initialValues);
-    
-  private:
-    class TemplateInterfacePrivate* const d;
 };
 
 }

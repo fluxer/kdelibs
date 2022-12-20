@@ -117,9 +117,6 @@ class KTEXTEDITOR_EXPORT ConfigInterface
      * Set a the \p key's value to \p value.
      */
     virtual void setConfigValue(const QString &key, const QVariant &value) = 0;
-
-  private:
-    class ConfigInterfacePrivate* const d;
 };
 
 }

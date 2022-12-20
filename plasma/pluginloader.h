@@ -30,8 +30,6 @@ class DataEngine;
 class Service;
 class AbstractRunner;
 
-class PluginLoaderPrivate;
-
 //TODO:
 // * add support for ContainmentActions plugins
 // * add KPluginInfo listing support for Containments (already loaded via the applet loading code)
@@ -148,9 +146,6 @@ public:
      * Return the active plugin loader
      **/
     static PluginLoader* pluginLoader();
-
-private:
-    PluginLoaderPrivate * const d;
 };
 
 }

@@ -104,9 +104,6 @@ class KTEXTEDITOR_EXPORT VariableInterface
      * \see variable()
      */
     virtual void variableChanged( Document* document, const QString &variable, const QString &value ) = 0;
-
-  private:
-    class VariableInterfacePrivate* const d;
 };
 
 

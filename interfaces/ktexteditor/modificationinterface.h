@@ -138,9 +138,6 @@ class KTEXTEDITOR_EXPORT ModificationInterface
     virtual void modifiedOnDisk (KTextEditor::Document *document,
                                  bool isModified,
                                  KTextEditor::ModificationInterface::ModifiedOnDiskReason reason) = 0;
-
-  private:
-    class ModificationInterfacePrivate* const d;
 };
 
 }

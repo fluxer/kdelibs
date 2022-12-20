@@ -151,9 +151,6 @@ class KTEXTEDITOR_EXPORT SearchInterface
      * \author Sebastian Pipping \<webmaster@hartwork.org\>
      */
     virtual Search::SearchOptions supportedSearchOptions() const = 0;
-
-  private:
-    class SearchInterfacePrivate* const d;
 };
 
 }

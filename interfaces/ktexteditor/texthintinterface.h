@@ -121,9 +121,6 @@ class KTEXTEDITOR_EXPORT TextHintInterface
      * \todo KDE5: add first parameter "KTextEditor::View * view"
      */
     virtual void needTextHint(const KTextEditor::Cursor& position, QString &text) = 0;
-
-  private:
-    class TextHintInterfacePrivate* const d;
 };
 
 }

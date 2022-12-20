@@ -89,9 +89,6 @@ class KTEXTEDITOR_EXPORT RecoveryInterface
      */
     // void setDataRecoveryEnabled(bool enable);
     // bool dataRecoveryEnabled() const;
-
-  private:
-    class RecoveryInterfacePrivate* const d;
 };
 
 }

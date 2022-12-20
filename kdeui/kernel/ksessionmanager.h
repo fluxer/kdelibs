@@ -71,9 +71,6 @@ public:
   static QList<KSessionManager*>& sessionClients();
 
 private:
-  class Private;
-  Private* const d;
-
   Q_DISABLE_COPY(KSessionManager)
 };
 

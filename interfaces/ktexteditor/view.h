@@ -589,9 +589,6 @@ class KTEXTEDITOR_EXPORT View :  public QWidget, public KXMLGUIClient
      * \see textInserted()
      */
     virtual bool insertText (const QString &text);
-
-  private:
-    class ViewPrivate* const d;
 };
 
 /**

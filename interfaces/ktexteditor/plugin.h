@@ -185,9 +185,6 @@ class KTEXTEDITOR_EXPORT Plugin : public QObject
      * \see addView(), removeDocument()
      */
     virtual void removeView (View *view) { Q_UNUSED(view); }
-
-  private:
-    class PluginPrivate* const d;
 };
 
 }

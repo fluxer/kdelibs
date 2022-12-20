@@ -67,7 +67,6 @@ using namespace KTextEditor;
 
 Factory::Factory( QObject *parent )
  : KParts::Factory( parent )
- , d(0)
 {
 }
 
@@ -179,7 +178,6 @@ Editor *KTextEditor::editor(const char *libname)
 
 ConfigPage::ConfigPage ( QWidget *parent )
   : QWidget (parent)
-  , d(0)
 {}
 
 ConfigPage::~ConfigPage ()
@@ -187,7 +185,6 @@ ConfigPage::~ConfigPage ()
 
 View::View ( QWidget *parent )
   : QWidget(parent), KXMLGUIClient()
-  , d(0)
 {}
 
 View::~View ()
@@ -195,21 +192,18 @@ View::~View ()
 
 Plugin::Plugin ( QObject *parent )
   : QObject (parent)
-  , d(0)
 {}
 
 Plugin::~Plugin ()
 {}
 
 MarkInterface::MarkInterface ()
-  : d(0)
 {}
 
 MarkInterface::~MarkInterface ()
 {}
 
 ModificationInterface::ModificationInterface ()
-  : d(0)
 {}
 
 ModificationInterface::~ModificationInterface ()
@@ -235,14 +229,12 @@ ViewBarContainer::~ViewBarContainer()
 
 
 SearchInterface::SearchInterface()
-  : d(0)
 {}
 
 SearchInterface::~SearchInterface()
 {}
 
 SessionConfigInterface::SessionConfigInterface()
-  : d(0)
 {}
 
 SessionConfigInterface::~SessionConfigInterface()
@@ -255,21 +247,18 @@ ParameterizedSessionConfigInterface::~ParameterizedSessionConfigInterface()
 {}
 
 TemplateInterface::TemplateInterface()
-  : d(0)
 {}
 
 TemplateInterface::~TemplateInterface()
 {}
 
 TextHintInterface::TextHintInterface()
-  : d(0)
 {}
 
 TextHintInterface::~TextHintInterface()
 {}
 
 VariableInterface::VariableInterface()
-  : d(0)
 {}
 
 VariableInterface::~VariableInterface()
@@ -299,7 +288,7 @@ ModeInterface::~ModeInterface() {
 }
 
 RecoveryInterface::RecoveryInterface()
-  : d(0) {
+{
 }
 
 RecoveryInterface::~RecoveryInterface() {

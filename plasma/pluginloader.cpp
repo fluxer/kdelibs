@@ -39,19 +39,12 @@ namespace Plasma {
 
 static PluginLoader* s_pluginLoader = 0;
 
-class PluginLoaderPrivate
-{
-
-};
-
 PluginLoader::PluginLoader()
-    : d(0)
 {
 }
 
 PluginLoader::~PluginLoader()
 {
-    delete d;
 }
 
 void PluginLoader::setPluginLoader(PluginLoader* loader)

@@ -85,9 +85,6 @@ class KTEXTEDITOR_EXPORT ConfigPage : public QWidget
      * Emit this signal whenever a config option changed.
      */
     void changed();
-
-  private:
-    class ConfigPagePrivate* const d;
 };
 
 }
