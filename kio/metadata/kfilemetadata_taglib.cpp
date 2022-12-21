@@ -94,21 +94,21 @@ QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url, co
                 )
             );
         }
-        const QString taglibyear = QString::number(taglibtag->year());
-        if (!taglibyear.isEmpty() && taglibtag->year() > 0) {
+        const qlonglong taglibyear = taglibtag->year();
+        if (taglibyear > 0) {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#originalReleaseYear"),
-                    taglibyear
+                    QString::number(taglibyear)
                 )
             );
         }
-        const QString taglibtrack = QString::number(taglibtag->track());
-        if (!taglibtrack.isEmpty() && taglibtag->track() > 0) {
+        const qlonglong taglibtrack = taglibtag->track();
+        if (taglibtrack > 0) {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2009/02/19/nmm#trackNumber"),
-                    taglibtrack
+                    QString::number(taglibtrack)
                 )
             );
         }
@@ -117,42 +117,42 @@ QList<KFileMetaInfoItem> KFileMetaDataTagLibPlugin::metaData(const KUrl &url, co
     if (!taglibaudio) {
         kDebug() << "Null audio properties for" << urlpath;
     } else {
-        const QString tagliblength = KGlobal::locale()->formatTime(
-            QTime().addSecs(taglibaudio->length()),
-            true, true
-        );
-        if (!tagliblength.isEmpty() && taglibaudio->length() > 0) {
+        const qlonglong tagliblength = taglibaudio->length();
+        if (tagliblength > 0) {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#duration"),
-                    tagliblength
+                    KGlobal::locale()->formatTime(
+                        QTime().addSecs(tagliblength),
+                        true, true
+                    )
                 )
             );
         }
-        const QString taglibbitrate = i18nc("kfilemetadata", "%1 kb/s", taglibaudio->bitrate());
-        if (!taglibbitrate.isEmpty() && taglibaudio->bitrate() > 0) {
+        const qlonglong taglibbitrate = taglibaudio->bitrate();
+        if (taglibbitrate > 0) {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#averageBitrate"),
-                    taglibbitrate
+                    i18nc("kfilemetadata", "%1 kb/s", taglibbitrate)
                 )
             );
         }
-        const QString taglibsamplerate = i18nc("kfilemetadata", "%1 Hz", taglibaudio->sampleRate());
-        if (!taglibsamplerate.isEmpty() && taglibaudio->sampleRate() > 0) {
+        const qlonglong taglibsamplerate = taglibaudio->sampleRate();
+        if (taglibsamplerate > 0) {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#sampleRate"),
-                    taglibsamplerate
+                    i18nc("kfilemetadata", "%1 Hz", taglibsamplerate)
                 )
             );
         }
-        const QString taglibchannels = QString::number(taglibaudio->channels());
-        if (!taglibchannels.isEmpty() && taglibaudio->channels() > 0) {
+        const qlonglong taglibchannels = taglibaudio->channels();
+        if (taglibchannels > 0) {
             result.append(
                 KFileMetaInfoItem(
                     QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#channels"),
-                    taglibchannels
+                    QString::number(taglibchannels)
                 )
             );
         }
