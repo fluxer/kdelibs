@@ -71,7 +71,7 @@ install(TARGETS kbuildsycoca4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 ########### install files ###############
 
 install(
-    FILES applications.menu
+    FILES kde-applications.menu
     DESTINATION ${KDE4_SYSCONF_INSTALL_DIR}/xdg/menus
 )
 

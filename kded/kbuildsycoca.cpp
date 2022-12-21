@@ -307,7 +307,7 @@ bool KBuildSycoca::build()
      if (!m_trackId.isEmpty())
         g_vfolder->setTrackId(m_trackId);
 
-     VFolderMenu::SubMenu *kdeMenu = g_vfolder->parseMenu("applications.menu");
+     VFolderMenu::SubMenu *kdeMenu = g_vfolder->parseMenu("kde-applications.menu");
 
      KServiceGroup::Ptr entry = g_buildServiceGroupFactory->addNew("/", kdeMenu->directoryFile, KServiceGroup::Ptr(), false);
      entry->setLayoutInfo(kdeMenu->layoutList);
