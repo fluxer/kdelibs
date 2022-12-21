@@ -96,11 +96,13 @@ void KDirWatch::addFile(const QString &path)
 
 void KDirWatch::removeDir(const QString &path)
 {
+    d->watcheddirs.removeAll(path);
     d->watcher->removePath(path);
 }
 
 void KDirWatch::removeFile(const QString &path)
 {
+    d->watchedfiles.removeAll(path);
     d->watcher->removePath(path);
 }
 
