@@ -55,7 +55,7 @@ static void foldNode(QDomElement &docElem, QDomElement &e, QMap<QString,QDomElem
 
 static void replaceNode(QDomElement &docElem, QDomNode &n, const QStringList &list, const QString &tag)
 {
-   foreach(const QString it, list)
+   foreach(const QString &it, list)
    {
       QDomElement e = docElem.ownerDocument().createElement(tag);
       QDomText txt = docElem.ownerDocument().createTextNode(it);
@@ -622,7 +622,7 @@ VFolderMenu::mergeMenus(QDomElement &docElem, QString &name)
          QString dir = absoluteDir(e.text(), e.attribute("__BaseDir"), true);
 
          const QStringList dirs = KGlobal::dirs()->findDirs("xdgconf-menu", dir);
-         foreach(const QString it, dirs)
+         foreach(const QString &it, dirs)
          {
             registerDirectory(it);
          }
@@ -640,7 +640,7 @@ VFolderMenu::mergeMenus(QDomElement &docElem, QString &name)
                                                      KStandardDirs::NoDuplicates, fileList);
          }
 
-         foreach(const QString it, fileList)
+         foreach(const QString &it, fileList)
          {
             pushDocInfo(it);
             mergeFile(docElem, n);
@@ -789,7 +789,7 @@ VFolderMenu::locateDirectoryFile(const QString &fileName)
    }
 
    // First location in the list wins
-   foreach(const QString it, m_directoryDirs)
+   foreach(const QString &it, m_directoryDirs)
    {
       const QString tmp = it+fileName;
       if (KGlobal::dirs()->exists(tmp))
@@ -1373,7 +1373,7 @@ VFolderMenu::parseMenu(const QString &file)
    m_appsInfo = 0;
 
    const QStringList dirs = KGlobal::dirs()->resourceDirs("xdgconf-menu");
-   foreach(const QString it, dirs) {
+   foreach(const QString &it, dirs) {
       registerDirectory(it);
    }
 
