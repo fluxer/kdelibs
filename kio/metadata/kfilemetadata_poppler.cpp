@@ -131,16 +131,14 @@ QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url, c
             )
         );
     }
-    if (popplerdocument->pages() > 0) {
-        const QString popplerpages = QString::number(popplerdocument->pages());
-        if (!popplerpages.isEmpty()) {
-            result.append(
-                KFileMetaInfoItem(
-                    QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount"),
-                    popplerpages
-                )
-            );
-        }
+    const int popplerpages = popplerdocument->pages();
+    if (popplerpages > 0) {
+        result.append(
+            KFileMetaInfoItem(
+                QString::fromLatin1("http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#pageCount"),
+                QString::number(popplerpages)
+            )
+        );
     }
     delete popplerdocument;
     return result;
