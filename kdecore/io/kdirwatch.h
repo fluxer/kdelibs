@@ -56,8 +56,9 @@ public:
    /**
     * Adds a directory to be watched.
     * @param path the path to watch
+    * @param recurse add sub-directories aswell
     */
-   void addDir(const QString &path);
+   void addDir(const QString &path, bool recurse = false);
 
    /**
     * Adds a file to be watched.
@@ -78,9 +79,9 @@ public:
    void removeFile(const QString &file);
 
    /**
-    * Check if a directory is being watched by this KDirWatch instance
-    * @param path the directory to check
-    * @return true if the directory is being watched
+    * Check if a file or directory is being watched by this KDirWatch instance
+    * @param path the file or directory to check
+    * @return true if the path is being watched
     */
    bool contains(const QString &path) const;
 

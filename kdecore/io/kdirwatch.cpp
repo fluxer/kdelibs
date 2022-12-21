@@ -55,7 +55,7 @@ KDirWatch::~KDirWatch()
     delete d;
 }
 
-void KDirWatch::addDir(const QString &path)
+void KDirWatch::addDir(const QString &path, bool recurse)
 {
     if (path.isEmpty() || path.startsWith(QLatin1String("/dev"))) {
         return; // Don't even go there.
@@ -64,15 +64,22 @@ void KDirWatch::addDir(const QString &path)
     }
 
     kDebug(7001) << "watching directory" << path;
+    QString dirpath = path;
     // watching non-existing directory requires a trailing slash
-    if (!path.endsWith(QDir::separator())) {
-        const QString dirpath = path + QDir::separator();
-        d->watcheddirs.append(dirpath);
-        d->watcher->addPath(dirpath);
-        return;
+    if (!dirpath.endsWith(QDir::separator())) {
+        dirpath.append(QDir::separator());
     }
-    d->watcheddirs.append(path);
-    d->watcher->addPath(path);
+    d->watcheddirs.append(dirpath);
+    d->watcher->addPath(dirpath);
+
+    if (recurse) {
+        QDir dir(dirpath);
+        foreach(const QFileInfo &info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::Dirs)) {
+            if (info.isDir()) {
+                addDir(info.absoluteFilePath(), recurse);
+            }
+        }
+    }
 }
 
 void KDirWatch::addFile(const QString &path)
