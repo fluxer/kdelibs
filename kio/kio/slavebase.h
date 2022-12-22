@@ -574,7 +574,6 @@ public:
      */
     virtual void reparseConfiguration();
 
-
     /**
      * @return timeout value for connecting to remote host.
      */

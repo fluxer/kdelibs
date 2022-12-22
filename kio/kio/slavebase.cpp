@@ -26,8 +26,6 @@
 #include <config.h>
 
 #include <sys/time.h>
-
-#include <kdebug.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <unistd.h>
@@ -40,20 +38,20 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QCoreApplication>
 
-#include <kcrash.h>
-#include <kconfig.h>
-#include <kconfiggroup.h>
-#include <kde_file.h>
-#include <klocale.h>
-#include <kpassworddialog.h>
-#include <kwindowsystem.h>
-
+#include "kdebug.h"
+#include "kcrash.h"
+#include "kconfig.h"
+#include "kconfiggroup.h"
+#include "kde_file.h"
+#include "klocale.h"
+#include "kpassworddialog.h"
+#include "kwindowsystem.h"
+#include "kpasswdstore.h"
 #include "kremoteencoding.h"
-
 #include "connection.h"
 #include "ioslave_defaults.h"
 #include "slaveinterface.h"
-#include "kpasswdstore.h"
+#include "job_p.h"
 
 #define AUTHINFO_EXTRAFIELD_DOMAIN QLatin1String("domain")
 #define AUTHINFO_EXTRAFIELD_ANONYMOUS QLatin1String("anonymous")

@@ -18,6 +18,7 @@
 
 #include "global.h"
 #include "job.h"
+#include "job_p.h"
 
 #include <config.h>
 

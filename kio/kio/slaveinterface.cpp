@@ -19,9 +19,9 @@
 #include "slaveinterface.h"
 #include "slaveinterface_p.h"
 #include "usernotificationhandler_p.h"
-
 #include "slavebase.h"
 #include "connection.h"
+#include "job_p.h"
 
 #include <errno.h>
 #include <stdlib.h>

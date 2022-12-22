@@ -34,18 +34,17 @@
 #include <QtCore/QProcess>
 #include <QtCore/QDir>
 
-#include <kdebug.h>
-#include <klocale.h>
-#include <kglobal.h>
-#include <kstandarddirs.h>
-#include <ktoolinvocation.h>
-
+#include "kdebug.h"
+#include "klocale.h"
+#include "kglobal.h"
+#include "kstandarddirs.h"
+#include "ktoolinvocation.h"
 #include "kservice.h"
-#include <kio/global.h>
+#include "kio/global.h"
 #include "kio/connection.h"
-#include <kprotocolinfo.h>
-
+#include "kprotocolinfo.h"
 #include "slaveinterface_p.h"
+#include "job_p.h"
 
 using namespace KIO;
 
