@@ -45,7 +45,6 @@ namespace KIO {
         CMD_CONNECT = '1',
         CMD_DISCONNECT = '2',
         CMD_SLAVE_STATUS = '3',
-        CMD_SLAVE_CONNECT = '4',
         CMD_NONE = 'A',
         CMD_GET = 'B',
         CMD_PUT = 'C',

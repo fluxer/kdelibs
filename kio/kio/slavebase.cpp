@@ -527,12 +527,11 @@ void SlaveBase::redirection( const KUrl& _url )
 
 static bool isSubCommand(int cmd)
 {
-   return ( (cmd == CMD_REPARSECONFIGURATION) ||
-            (cmd == CMD_META_DATA) ||
-            (cmd == CMD_CONFIG) ||
-            (cmd == CMD_SUBURL) ||
-            (cmd == CMD_SLAVE_STATUS) ||
-            (cmd == CMD_SLAVE_CONNECT));
+   return ((cmd == CMD_REPARSECONFIGURATION) ||
+           (cmd == CMD_META_DATA) ||
+           (cmd == CMD_CONFIG) ||
+           (cmd == CMD_SUBURL) ||
+           (cmd == CMD_SLAVE_STATUS));
 }
 
 void SlaveBase::mimeType( const QString &_type)
@@ -921,15 +920,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
             // TODO verify that the slave has called slaveStatus()?
             d->verifyErrorFinishedNotCalled("slave_status()");
             d->m_state = d->Idle;
-            break;
-        }
-        case CMD_SLAVE_CONNECT: {
-            QString app_socket;
-            QDataStream stream( data );
-            stream >> app_socket;
-            d->appConnection.send( MSG_SLAVE_ACK );
-            disconnectSlave();
-            connectSlave(app_socket);
             break;
         }
         case CMD_REPARSECONFIGURATION: {
