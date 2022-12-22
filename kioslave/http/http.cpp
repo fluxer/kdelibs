@@ -87,7 +87,7 @@ static inline KIO::Error HTTPToKIOError(const long httpcode)
         case 401:
         case 403:
         case 407: {
-            return KIO::ERR_COULD_NOT_AUTHENTICATE;
+            return KIO::ERR_COULD_NOT_LOGIN;
         }
         case 408: {
             return KIO::ERR_SERVER_TIMEOUT;
@@ -127,7 +127,7 @@ static inline KIO::Error curlToKIOError(const CURLcode curlcode, CURL *curl)
         case CURLE_AUTH_ERROR:
         case CURLE_LOGIN_DENIED:
         case CURLE_REMOTE_ACCESS_DENIED: {
-            return KIO::ERR_COULD_NOT_AUTHENTICATE;
+            return KIO::ERR_COULD_NOT_LOGIN;
         }
         case CURLE_FILE_COULDNT_READ_FILE:
         case CURLE_READ_ERROR: {
@@ -262,7 +262,7 @@ void HttpProtocol::stat(const KUrl &url)
     kDebug(7103) << "Transfer result" << curlresult;
     if (curlresult != CURLE_OK) {
         const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
-        if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
+        if (kioerror == KIO::ERR_COULD_NOT_LOGIN) {
             if (authUrl(url)) {
                 return;
             }
@@ -323,7 +323,7 @@ void HttpProtocol::get(const KUrl &url)
     kDebug(7103) << "Transfer result" << curlresult;
     if (curlresult != CURLE_OK) {
         const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
-        if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
+        if (kioerror == KIO::ERR_COULD_NOT_LOGIN) {
             if (authUrl(url)) {
                 return;
             }
@@ -358,7 +358,7 @@ void HttpProtocol::put(const KUrl &url, int permissions, KIO::JobFlags flags)
     kDebug(7103) << "Transfer result" << curlresult;
     if (curlresult != CURLE_OK) {
         const KIO::Error kioerror = curlToKIOError(curlresult, m_curl);
-        if (kioerror == KIO::ERR_COULD_NOT_AUTHENTICATE) {
+        if (kioerror == KIO::ERR_COULD_NOT_LOGIN) {
             if (authUrl(url)) {
                 return;
             }
