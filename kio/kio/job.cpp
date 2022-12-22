@@ -231,10 +231,10 @@ QString Job::queryMetaData(const QString &key)
     return d_func()->m_incomingMetaData.value(key, QString());
 }
 
-void Job::setMetaData( const KIO::MetaData &_metaData)
+void Job::setMetaData( const KIO::MetaData &metaData)
 {
     Q_D(Job);
-    d->m_outgoingMetaData = _metaData;
+    d->m_outgoingMetaData = metaData;
 }
 
 void Job::addMetaData( const QString &key, const QString &value)
@@ -531,14 +531,10 @@ int SimpleJobPrivate::requestMessageBox(int _type, const QString& text, const QS
     return -1;
 }
 
-void SimpleJob::slotMetaData( const KIO::MetaData &_metaData )
+void SimpleJob::slotMetaData( const KIO::MetaData &metaData )
 {
     Q_D(SimpleJob);
-    QMapIterator<QString,QString> it (_metaData);
-    while (it.hasNext()) {
-        it.next();
-        d->m_incomingMetaData.insert(it.key(), it.value());
-    }
+    d->m_incomingMetaData += metaData;
 }
 
 //////////

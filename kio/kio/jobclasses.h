@@ -191,7 +191,7 @@ namespace KIO {
          * @see addMetaData()
          * @see mergeMetaData()
          */
-        void setMetaData( const KIO::MetaData &metaData);
+        void setMetaData( const MetaData &metaData);
 
         /**
          * Add key/value pair to the meta data that is sent to the slave.
@@ -370,10 +370,10 @@ namespace KIO {
 
         /**
          * MetaData from the slave is received.
-         * @param _metaData the meta data
+         * @param metaData the meta data
          * @see metaData()
          */
-        virtual void slotMetaData( const KIO::MetaData &_metaData);
+        virtual void slotMetaData( const KIO::MetaData &metaData);
 
     protected:
         /**
