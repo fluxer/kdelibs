@@ -262,13 +262,12 @@ namespace KIO
 
   /**
    * Returns translated error details for @p errorCode using the
-   * additional error information provided by @p errorText , @p reqUrl
-   * (the request URL), and the ioslave @p method .
+   * additional error information provided by @p errorText and @p reqUrl
+   * (the request URL).
    *
    * @param errorCode the error code
    * @param errorText the additional error text
    * @param reqUrl the request URL
-   * @param method the ioslave method
    * @return the following data:
    * @li QString errorName - the name of the error
    * @li QString techName - if not null, the more technical name of the error
@@ -277,7 +276,7 @@ namespace KIO
    * @li QStringList solutions - a liso of solutions for the error
    */
   KIO_EXPORT QByteArray rawErrorDetail(int errorCode, const QString &errorText,
-                                const KUrl *reqUrl = 0L, int method = -1 );
+                                       const KUrl *reqUrl = 0L);
 
   /**
    * Returns an appropriate error message if the given command @p cmd

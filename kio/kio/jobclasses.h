@@ -152,13 +152,10 @@ namespace KIO {
          * strings suitable for presentation in a detailed error message box.
          *
          * @param reqUrl the request URL that generated this error message
-         * @param method the method that generated this error message
-         * (unimplemented)
          * @return the following strings: caption, error + description,
          *         causes+solutions
          */
-        QStringList detailedErrorStrings(const KUrl *reqUrl = 0L,
-                                         int method = -1) const;
+        QStringList detailedErrorStrings(const KUrl *reqUrl = 0L) const;
 
         /**
          * Returns whether the user should be asked about things when the job
