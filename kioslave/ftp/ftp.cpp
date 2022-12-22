@@ -1527,12 +1527,6 @@ void Ftp::listDir( const KUrl &url )
   finished();
 }
 
-void Ftp::slave_status()
-{
-  kDebug(7102) << "Got slave_status host = " << (!m_host.toLatin1().isEmpty() ? m_host.toAscii() : "[None]") << " [" << (m_bLoggedOn ? "Connected" : "Not connected") << "]";
-  slaveStatus( m_host, m_bLoggedOn );
-}
-
 bool Ftp::ftpOpenDir( const QString & path )
 {
   //QString path( _url.path(KUrl::RemoveTrailingSlash) );

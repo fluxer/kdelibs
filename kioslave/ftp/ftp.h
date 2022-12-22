@@ -83,8 +83,6 @@ public:
   virtual void put( const KUrl& url, int permissions, KIO::JobFlags flags );
   //virtual void mimetype( const KUrl& url );
 
-  virtual void slave_status();
-
   /**
    * Handles the case that one side of the job is a local file
    */

@@ -187,16 +187,6 @@ bool SlaveInterface::dispatch(int cmd, const QByteArray &rawdata)
             emit error(i, str);
             break;
         }
-        case MSG_SLAVE_STATUS: {
-            QDataStream stream(rawdata);
-            qint64 pid;
-            QByteArray protocol;
-            QString str;
-            qint8 b;
-            stream >> pid >> protocol >> str >> b;
-            emit slaveStatus(static_cast<pid_t>(pid), protocol, str, (b != 0));
-            break;
-        }
         case MSG_CONNECTED: {
             emit connected();
             break;

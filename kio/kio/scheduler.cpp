@@ -572,8 +572,6 @@ public:
                     const QStringList &proxyList, bool newSlave);
 
     void slotSlaveDied(KIO::Slave *slave);
-    void slotSlaveStatus(pid_t pid, const QByteArray &protocol,
-                         const QString &host, bool connected);
 
     void slotReparseSlaveConfiguration(const QString &, const QDBusMessage&);
 

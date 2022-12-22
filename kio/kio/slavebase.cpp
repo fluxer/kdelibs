@@ -446,14 +446,6 @@ void SlaveBase::needSubUrlData()
     send( MSG_NEED_SUBURL_DATA );
 }
 
-void SlaveBase::slaveStatus( const QString &host, bool connected )
-{
-    qint64 pid = static_cast<qint64>(::getpid());
-    qint8 b = connected ? 1 : 0;
-    KIO_DATA << pid << mProtocol << host << b;
-    send( MSG_SLAVE_STATUS, data );
-}
-
 void SlaveBase::canResume()
 {
     send( MSG_CANRESUME );
@@ -530,8 +522,7 @@ static bool isSubCommand(int cmd)
    return ((cmd == CMD_REPARSECONFIGURATION) ||
            (cmd == CMD_META_DATA) ||
            (cmd == CMD_CONFIG) ||
-           (cmd == CMD_SUBURL) ||
-           (cmd == CMD_SLAVE_STATUS));
+           (cmd == CMD_SUBURL));
 }
 
 void SlaveBase::mimeType( const QString &_type)
@@ -696,10 +687,6 @@ void SlaveBase::chown(KUrl const &, const QString &, const QString &)
 { error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_CHOWN)); }
 void SlaveBase::setSubUrl(KUrl const &)
 { error(  ERR_UNSUPPORTED_ACTION, unsupportedActionErrorString(mProtocol, CMD_SUBURL)); }
-
-
-void SlaveBase::slave_status()
-{ slaveStatus( QString(), false ); }
 
 void SlaveBase::reparseConfiguration()
 {
@@ -912,14 +899,6 @@ void SlaveBase::dispatch( int command, const QByteArray &data )
         }
         case CMD_DISCONNECT: {
             closeConnection();
-            break;
-        }
-        case CMD_SLAVE_STATUS: {
-            d->m_state = d->InsideMethod;
-            slave_status();
-            // TODO verify that the slave has called slaveStatus()?
-            d->verifyErrorFinishedNotCalled("slave_status()");
-            d->m_state = d->Idle;
             break;
         }
         case CMD_REPARSECONFIGURATION: {
