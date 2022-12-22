@@ -307,7 +307,13 @@ bool KBuildSycoca::build()
      if (!m_trackId.isEmpty())
         g_vfolder->setTrackId(m_trackId);
 
-     VFolderMenu::SubMenu *kdeMenu = g_vfolder->parseMenu("kde-applications.menu");
+     QString applicationsMenu = QLatin1String("kde-applications.menu");
+     const QString xdgMenuPrefix = QString::fromLocal8Bit(qgetenv("XDG_MENU_PREFIX"));
+     if (!xdgMenuPrefix.isEmpty())
+     {
+        applicationsMenu = xdgMenuPrefix + QLatin1String("applications.menu");
+     }
+     VFolderMenu::SubMenu *kdeMenu = g_vfolder->parseMenu(applicationsMenu);
 
      KServiceGroup::Ptr entry = g_buildServiceGroupFactory->addNew("/", kdeMenu->directoryFile, KServiceGroup::Ptr(), false);
      entry->setLayoutInfo(kdeMenu->layoutList);

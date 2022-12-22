@@ -750,29 +750,8 @@ VFolderMenu::locateMenuFile(const QString &fileName)
       return QString();
    }
 
-   QString result;
-
-   QString xdgMenuPrefix = QString::fromLocal8Bit(qgetenv("XDG_MENU_PREFIX"));
-   if (!xdgMenuPrefix.isEmpty())
-   {
-      QFileInfo fileInfo(fileName);
-
-      QString fileNameOnly = fileInfo.fileName();
-      if (!fileNameOnly.startsWith(xdgMenuPrefix))
-         fileNameOnly = xdgMenuPrefix + fileNameOnly;
-
-      QString baseName = QDir::cleanPath(m_docInfo.baseDir +
-                                         fileInfo.path() + '/' + fileNameOnly);
-      result = KStandardDirs::locate("xdgconf-menu", baseName);
-   }
-
-   if (result.isEmpty())
-   {
-       QString baseName = QDir::cleanPath(m_docInfo.baseDir + fileName);
-       result = KStandardDirs::locate("xdgconf-menu", baseName);
-   }
-
-   return result;
+   QString baseName = QDir::cleanPath(m_docInfo.baseDir + fileName);
+   return KStandardDirs::locate("xdgconf-menu", baseName);
 }
 
 QString
