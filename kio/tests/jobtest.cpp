@@ -472,7 +472,7 @@ void JobTest::moveFileNoPermissions()
 
     KIO::CopyJob* job = KIO::move( u, d, KIO::HideProgressInfo );
     job->setUiDelegate( 0 ); // no skip dialog, thanks
-    QMap<QString, QString> metaData;
+    KIO::MetaData metaData;
     bool ok = KIO::NetAccess::synchronousRun( job, 0, 0, 0, &metaData );
     QVERIFY( !ok );
     QVERIFY( KIO::NetAccess::lastError() == KIO::ERR_ACCESS_DENIED );
@@ -503,7 +503,7 @@ void JobTest::moveDirectoryNoPermissions()
 
     KIO::CopyJob* job = KIO::move( u, d, KIO::HideProgressInfo );
     job->setUiDelegate( 0 ); // no skip dialog, thanks
-    QMap<QString, QString> metaData;
+    KIO::MetaData metaData;
     bool ok = KIO::NetAccess::synchronousRun( job, 0, 0, 0, &metaData );
     QVERIFY( !ok );
     QCOMPARE( KIO::NetAccess::lastError(), (int)KIO::ERR_ACCESS_DENIED );

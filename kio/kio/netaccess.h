@@ -24,15 +24,12 @@
 #define KIO_NETACCESS_H
 
 #include <QtCore/QObject>
+#include <QStringList>
+#include <QWidget>
 #include <kio/global.h>
 #include <kio/udsentry.h>
 #include <kurl.h>
 #include <kio/jobclasses.h> // for KIO::JobFlags
-
-#include <QStringList>
-#include <QWidget>
-
-#include <QMap>
 
 class KJob;
 namespace KIO {
@@ -309,7 +306,7 @@ public:
      *
      * @code
      * KIO::Job *job = KIO::get( url );
-     * QMap<QString, QString> metaData;
+     * KIO::MetaData metaData;
      * metaData.insert( "no-auth", "yes" );
      * if ( NetAccess::synchronousRun( job, 0, &data, &url, &metaData ) ) {
      *   kDebug()<<"Success";
@@ -334,7 +331,7 @@ public:
      * @return true on success, false on failure.
      */
     static bool synchronousRun( Job* job, QWidget* window, QByteArray* data=0,
-                                KUrl* finalURL=0, QMap<QString,QString>* metaData=0 );
+                                KUrl* finalURL=0, MetaData* metaData=0 );
 
     /**
      * Determines the mimetype of a given URL.
@@ -395,7 +392,7 @@ private:
     bool delInternal(const KUrl & url, QWidget* window = 0);
     bool mkdirInternal(const KUrl & url, int permissions, QWidget* window = 0);
     bool synchronousRunInternal( Job* job, QWidget* window, QByteArray* data,
-                                 KUrl* finalURL, QMap<QString,QString>* metaData );
+                                 KUrl* finalURL, MetaData* metaData );
 
     QString mimetypeInternal(const KUrl & url, QWidget* window = 0);
     void enter_loop();

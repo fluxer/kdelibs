@@ -242,17 +242,12 @@ void Job::addMetaData( const QString &key, const QString &value)
     d_func()->m_outgoingMetaData.insert(key, value);
 }
 
-void Job::addMetaData( const QMap<QString,QString> &values)
+void Job::addMetaData( const MetaData &values)
 {
-    Q_D(Job);
-    QMapIterator<QString,QString> it(values);
-    while(it.hasNext()) {
-        it.next();
-        d->m_outgoingMetaData.insert(it.key(), it.value());
-    }
+    d_func()->m_outgoingMetaData += values;
 }
 
-void Job::mergeMetaData( const QMap<QString,QString> &values)
+void Job::mergeMetaData( const MetaData &values)
 {
     Q_D(Job);
     QMapIterator<QString,QString> it(values);

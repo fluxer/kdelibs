@@ -209,7 +209,7 @@ namespace KIO {
          * @see setMetaData()
          * @see mergeMetaData()
          */
-        void addMetaData(const QMap<QString,QString> &values);
+        void addMetaData(const MetaData &values);
 
         /**
          * Add key/value pairs to the meta data that is sent to the slave.
@@ -218,7 +218,7 @@ namespace KIO {
          * @see setMetaData()
          * @see addMetaData()
          */
-        void mergeMetaData(const QMap<QString,QString> &values);
+        void mergeMetaData(const MetaData &values);
 
         /**
          * @internal. For the scheduler. Do not use.

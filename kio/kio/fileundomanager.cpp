@@ -173,8 +173,8 @@ void CommandRecorder::slotCopyingDone(KIO::Job *job, const KUrl &from, const KUr
   if (m_cmd.m_type == FileUndoManager::Trash)
   {
       Q_ASSERT(to.protocol() == "trash");
-      const QMap<QString, QString> metaData = job->metaData();
-      QMap<QString, QString>::ConstIterator it = metaData.find("trashURL-" + from.path());
+      const KIO::MetaData metaData = job->metaData();
+      KIO::MetaData::ConstIterator it = metaData.find("trashURL-" + from.path());
       if (it != metaData.constEnd()) {
           // Update URL
           op.m_dst = it.value();
@@ -320,8 +320,8 @@ quint64 FileUndoManager::currentCommandSerialNumber() const
         const UndoCommand& cmd = d->m_commands.last();
         assert(cmd.m_valid);
         return cmd.m_serialNumber;
-    } else
-    	return 0;
+    }
+    return 0;
 }
 
 void FileUndoManager::undo()

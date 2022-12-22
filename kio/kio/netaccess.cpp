@@ -60,7 +60,7 @@ namespace KIO
         QString m_mimetype;
         QByteArray m_data;
         KUrl m_url;
-        QMap<QString, QString> *m_metaData;
+        MetaData *m_metaData;
 
         /**
          * Whether the download succeeded or not
@@ -228,7 +228,7 @@ bool NetAccess::mkdir( const KUrl & url, QWidget* window, int permissions )
 }
 
 bool NetAccess::synchronousRun( Job* job, QWidget* window, QByteArray* data,
-                                KUrl* finalURL, QMap<QString, QString>* metaData )
+                                KUrl* finalURL, MetaData* metaData )
 {
   NetAccess kioNet;
   // Disable autodeletion until we are back from this event loop (#170963)
@@ -357,13 +357,13 @@ void NetAccess::slotMimetype( KIO::Job *, const QString & type  )
 }
 
 bool NetAccess::synchronousRunInternal( Job* job, QWidget* window, QByteArray* data,
-                                        KUrl* finalURL, QMap<QString,QString>* metaData )
+                                        KUrl* finalURL, MetaData* metaData )
 {
   if ( job->ui() ) job->ui()->setWindow( window );
 
   d->m_metaData = metaData;
   if ( d->m_metaData ) {
-      for ( QMap<QString, QString>::iterator it = d->m_metaData->begin(); it != d->m_metaData->end(); ++it ) {
+      for ( MetaData::iterator it = d->m_metaData->begin(); it != d->m_metaData->end(); ++it ) {
           job->addMetaData( it.key(), it.value() );
       }
   }
