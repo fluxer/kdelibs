@@ -546,13 +546,6 @@ public:
     virtual void del( const KUrl &url, bool isfile);
 
     /**
-     * Change the destination of a symlink
-     * @param url the url of the symlink to modify
-     * @param target the new destination (target) of the symlink
-     */
-    virtual void setLinkDest( const KUrl& url, const QString& target );
-
-    /**
      * Used for any command that is specific to this slave (protocol)
      * Examples are : HTTP POST, mount and unmount (kio_file)
      *
