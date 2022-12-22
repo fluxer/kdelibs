@@ -266,9 +266,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case  KIO::ERR_COULD_NOT_AUTHENTICATE:
       result = i18n( "Authorization failed, %1 authentication not supported", errorText );
       break;
-    case  KIO::ERR_ABORTED:
-      result = i18n( "User canceled action\n%1", errorText );
-      break;
     case  KIO::ERR_INTERNAL_SERVER:
       result = i18n( "Internal error in server\n%1", errorText );
       break;
@@ -914,13 +911,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << i18n( "Please file a bug at <a href=\"%1\">"
         "%2/</a> to inform the team working on it of the unsupported "
         "authentication method.", QString::fromLatin1(KDE_BUG_REPORT_URL), QString::fromLatin1(KDE_BUG_REPORT_URL) ) << sSysadmin;
-      break;
-
-    case  KIO::ERR_ABORTED:
-      errorName = i18n( "Request Aborted" );
-      description = i18n( "The request was not completed because it was "
-        "aborted." );
-      solutions << i18n( "Retry the request." );
       break;
 
     case  KIO::ERR_INTERNAL_SERVER:

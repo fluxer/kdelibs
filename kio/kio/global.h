@@ -223,31 +223,29 @@ namespace KIO
     ERR_OUT_OF_MEMORY = KJob::UserDefinedError + 38,
     ERR_UNKNOWN_PROXY_HOST = KJob::UserDefinedError + 39,
     ERR_COULD_NOT_AUTHENTICATE = KJob::UserDefinedError + 40,
-    // Action got aborted from application side
-    ERR_ABORTED = KJob::UserDefinedError + 41,
-    ERR_INTERNAL_SERVER = KJob::UserDefinedError + 42,
-    ERR_SERVER_TIMEOUT = KJob::UserDefinedError + 43,
-    ERR_SERVICE_NOT_AVAILABLE = KJob::UserDefinedError + 44,
-    ERR_UNKNOWN = KJob::UserDefinedError + 45,
-    ERR_CANNOT_DELETE_ORIGINAL = KJob::UserDefinedError + 46,
-    ERR_CANNOT_DELETE_PARTIAL = KJob::UserDefinedError + 47,
-    ERR_CANNOT_RENAME_ORIGINAL = KJob::UserDefinedError + 48,
-    ERR_CANNOT_RENAME_PARTIAL = KJob::UserDefinedError + 49,
-    ERR_CANNOT_SYMLINK = KJob::UserDefinedError + 50,
+    ERR_INTERNAL_SERVER = KJob::UserDefinedError + 41,
+    ERR_SERVER_TIMEOUT = KJob::UserDefinedError + 42,
+    ERR_SERVICE_NOT_AVAILABLE = KJob::UserDefinedError + 43,
+    ERR_UNKNOWN = KJob::UserDefinedError + 44,
+    ERR_CANNOT_DELETE_ORIGINAL = KJob::UserDefinedError + 45,
+    ERR_CANNOT_DELETE_PARTIAL = KJob::UserDefinedError + 46,
+    ERR_CANNOT_RENAME_ORIGINAL = KJob::UserDefinedError + 47,
+    ERR_CANNOT_RENAME_PARTIAL = KJob::UserDefinedError + 48,
+    ERR_CANNOT_SYMLINK = KJob::UserDefinedError + 49,
     // Action succeeded but no content will follow.
-    ERR_NO_CONTENT = KJob::UserDefinedError + 51,
-    ERR_DISK_FULL = KJob::UserDefinedError + 52,
+    ERR_NO_CONTENT = KJob::UserDefinedError + 50,
+    ERR_DISK_FULL = KJob::UserDefinedError + 51,
     // src==dest when moving/copying
-    ERR_IDENTICAL_FILES = KJob::UserDefinedError + 53,
+    ERR_IDENTICAL_FILES = KJob::UserDefinedError + 52,
     // for slave specified errors that can be
     // rich text.  Email links will be handled
     // by the standard email app and all hrefs
     // will be handled by the standard browser.
     // <a href="exec:/khelpcenter ?" will be
     // forked.
-    ERR_SLAVE_DEFINED = KJob::UserDefinedError + 54,
+    ERR_SLAVE_DEFINED = KJob::UserDefinedError + 53,
     // Emitted by setModificationTime
-    ERR_CANNOT_SETTIME = KJob::UserDefinedError + 55
+    ERR_CANNOT_SETTIME = KJob::UserDefinedError + 54
   };
 
   /**
