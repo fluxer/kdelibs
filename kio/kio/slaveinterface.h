@@ -160,7 +160,6 @@ Q_SIGNALS:
     void mimeType( const QString & );
     void warning( const QString & );
     void infoMessage( const QString & );
-    //void connectFinished(); //it does not get emitted anywhere
 
 protected:
     /////////////////

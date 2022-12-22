@@ -230,11 +230,10 @@ SlaveBase::SlaveBase( const QByteArray &protocol,
     d->last_tv.tv_usec = 0;
     d->totalSize=0;
     d->timeout = 0;
-    connectSlave(QFile::decodeName(app_socket));
-
     d->remotefile = 0;
     d->inOpenLoop = false;
     d->exit_loop = false;
+    connectSlave(QFile::decodeName(app_socket));
 }
 
 SlaveBase::~SlaveBase()
