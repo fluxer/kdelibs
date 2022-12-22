@@ -622,7 +622,6 @@ void KApplication::saveState( QSessionManager& sm )
     }
 
     // finally: do session management
-    emit saveYourself(); // for compatibility
     bool canceled = false;
     foreach(KSessionManager* it, KSessionManager::sessionClients()) {
       if(canceled) break;

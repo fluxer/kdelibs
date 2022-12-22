@@ -275,36 +275,6 @@ public Q_SLOTS:
   Q_SCRIPTABLE void reparseConfiguration();
   Q_SCRIPTABLE void quit();
 
-Q_SIGNALS:
-  /**
-      Session management asks you to save the state of your application.
-
-     This signal is provided for compatibility only. For new
-     applications, simply use KMainWindow. By reimplementing
-     KMainWindow::queryClose(), KMainWindow::saveProperties() and
-     KMainWindow::readProperties() you can simply handle session
-     management for applications with multiple toplevel windows.
-
-     For purposes without KMainWindow, create an instance of
-     KSessionManager and reimplement the functions
-     KSessionManager::commitData() and/or
-     KSessionManager::saveState()
-
-     If you still want to use this signal, here is what you should do:
-
-     Connect to this signal in order to save your data. Do NOT
-     manipulate the UI in that slot, it is blocked by the session
-     manager.
-
-     Use the sessionConfig() KConfig object to store all your
-     instance specific data.
-
-     Do not do any closing at this point! The user may still select
-     Cancel  wanting to continue working with your
-     application. Cleanups could be done after aboutToQuit().
-  */
-  void saveYourself();
-
 protected:
   /**
    * @internal Used by KUniqueApplication
