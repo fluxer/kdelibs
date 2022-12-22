@@ -163,9 +163,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case  KIO::ERR_UNSUPPORTED_PROTOCOL:
       result = i18n( "The protocol %1 is not supported.", errorText );
       break;
-    case  KIO::ERR_NO_SOURCE_PROTOCOL:
-      result = i18n( "The protocol %1 is only a filter protocol.", errorText );
-      break;
     case  KIO::ERR_UNSUPPORTED_ACTION:
       result = errorText;
 //       result = i18n( "Unsupported action %1" ).arg( errorText );
@@ -197,29 +194,17 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case  KIO::ERR_CANNOT_ENTER_DIRECTORY:
       result = i18n( "Could not enter folder %1.", errorText );
       break;
-    case  KIO::ERR_PROTOCOL_IS_NOT_A_FILESYSTEM:
-      result = i18n( "The protocol %1 does not implement a folder service.", errorText );
-      break;
     case  KIO::ERR_CYCLIC_LINK:
       result = i18n( "Found a cyclic link in %1.", errorText );
       break;
     case  KIO::ERR_USER_CANCELED:
       // Do nothing in this case. The user doesn't need to be told what he just did.
       break;
-    case  KIO::ERR_CYCLIC_COPY:
-      result = i18n( "Found a cyclic link while copying %1.", errorText );
-      break;
-    case  KIO::ERR_COULD_NOT_CREATE_SOCKET:
-      result = i18n( "Could not create socket for accessing %1.", errorText );
-      break;
     case  KIO::ERR_COULD_NOT_CONNECT:
       result = i18n( "Could not connect to host %1.", errorText.isEmpty() ? QLatin1String("localhost") : errorText );
       break;
     case  KIO::ERR_CONNECTION_BROKEN:
       result = i18n( "Connection to host %1 is broken.", errorText );
-      break;
-    case  KIO::ERR_NOT_FILTER_PROTOCOL:
-      result = i18n( "The protocol %1 is not a filter protocol.", errorText );
       break;
     case  KIO::ERR_COULD_NOT_MOUNT:
       result = i18n( "Could not mount device.\nThe reported error was:\n%1", errorText );
@@ -296,17 +281,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case  KIO::ERR_UNKNOWN:
       result = i18n( "Unknown error\n%1", errorText );
       break;
-    case  KIO::ERR_UNKNOWN_INTERRUPT:
-      result = i18n( "Unknown interrupt\n%1", errorText );
-      break;
-/*
-    case  KIO::ERR_CHECKSUM_MISMATCH:
-      if (errorText)
-        result = i18n( "Warning: MD5 Checksum for %1 does not match checksum returned from server" ).arg(errorText);
-      else
-        result = i18n( "Warning: MD5 Checksum for %1 does not match checksum returned from server" ).arg("document");
-      break;
-*/
     case KIO::ERR_CANNOT_DELETE_ORIGINAL:
       result = i18n( "Could not delete original file %1.\nPlease check permissions." ,  errorText );
       break;
@@ -333,9 +307,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
       break;
     case KIO::ERR_SLAVE_DEFINED:
       result = errorText;
-      break;
-    case KIO::ERR_UPGRADE_REQUIRED:
-      result = i18n( "%1 is required by the server, but is not available." , errorText);
       break;
     case KIO::ERR_SERVICE_NOT_AVAILABLE:
       result = i18n( "The server cannot handle the request\n%1" , errorText);
@@ -589,19 +560,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         << sUpdate << sSysadmin;
       break;
 
-    case  KIO::ERR_NO_SOURCE_PROTOCOL:
-      errorName = i18n( "URL Does Not Refer to a Resource." );
-      techName = i18n( "Protocol is a Filter Protocol" );
-      description = i18n( "The <strong>U</strong>niform <strong>R</strong>esource "
-        "<strong>L</strong>ocator (URL) that you entered did not refer to a "
-        "specific resource." );
-      causes << i18n( "The Desktop is able to communicate through a protocol within a "
-        "protocol; the protocol specified is only for use in such situations, "
-        "however this is not one of these situations. This is a rare event, and "
-        "is likely to indicate a programming error." );
-      solutions << sTypo;
-      break;
-
     case  KIO::ERR_UNSUPPORTED_ACTION:
       errorName = i18n( "Unsupported Action: %1" ,  errorText );
       description = i18n( "The requested action is not supported by the Desktop "
@@ -699,16 +657,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sQuerylock << sSysadmin;
       break;
 
-    case  KIO::ERR_PROTOCOL_IS_NOT_A_FILESYSTEM:
-      errorName = i18n( "Folder Listing Unavailable" );
-      techName = i18n( "Protocol %1 is not a Filesystem" ,  protocol );
-      description = i18n( "This means that a request was made which requires "
-        "determining the contents of the folder, and the Desktop program supporting "
-        "this protocol is unable to do so." );
-      causes << cBug;
-      solutions << sUpdate << sBugreport;
-      break;
-
     case  KIO::ERR_CYCLIC_LINK:
       errorName = i18n( "Cyclic Link Detected" );
       description = i18n( "UNIX environments are commonly able to link a file or "
@@ -728,27 +676,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       description = i18n( "The request was not completed because it was "
         "aborted." );
       solutions << i18n( "Retry the request." );
-      break;
-
-    case  KIO::ERR_CYCLIC_COPY:
-      errorName = i18n( "Cyclic Link Detected During Copy" );
-      description = i18n( "UNIX environments are commonly able to link a file or "
-        "folder to a separate name and/or location. During the requested copy "
-        "operation, Detected a link or series of links that results in an "
-        "infinite loop - i.e. the file was (perhaps in a roundabout way) linked "
-        "to itself." );
-      solutions << i18n( "Delete one part of the loop in order that it does not "
-        "cause an infinite loop, and try again." ) << sSysadmin;
-      break;
-
-    case  KIO::ERR_COULD_NOT_CREATE_SOCKET:
-      errorName = i18n( "Could Not Create Network Connection" );
-      techName = i18n( "Could Not Create Socket" );
-      description = i18n( "This is a fairly technical error in which a required "
-        "device for network communications (a socket) could not be created." );
-      causes << i18n( "The network connection may be incorrectly configured, or "
-        "the network interface may not be enabled." );
-      solutions << sNetwork << sSysadmin;
       break;
 
     case  KIO::ERR_COULD_NOT_CONNECT:
@@ -773,21 +700,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       causes << cNetwork << cNetpath << i18n( "A protocol error may have occurred, "
         "causing the server to close the connection as a response to the error." );
       solutions << sTryagain << sServeradmin << sSysadmin;
-      break;
-
-    case  KIO::ERR_NOT_FILTER_PROTOCOL:
-      errorName = i18n( "URL Resource Invalid" );
-      techName = i18n( "Protocol %1 is not a Filter Protocol" ,  protocol );
-      description = i18n( "The <strong>U</strong>niform <strong>R</strong>esource "
-        "<strong>L</strong>ocator (URL) that you entered did not refer to "
-        "a valid mechanism of accessing the specific resource, "
-        "<strong>%1%2</strong>." ,
-          !host.isNull() ? host + '/' : QString() , path );
-      causes << i18n( "The Desktop is able to communicate through a protocol within a "
-        "protocol. This request specified a protocol be used as such, however "
-        "this protocol is not capable of such an action. This is a rare event, "
-        "and is likely to indicate a programming error." );
-      solutions << sTypo << sSysadmin;
       break;
 
     case  KIO::ERR_COULD_NOT_MOUNT:
@@ -1068,15 +980,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       description = i18n( "The program on your computer which provides access "
         "to the <strong>%1</strong> protocol has reported an unknown error: "
         "%2." ,  protocol ,  errorText );
-      causes << cBug;
-      solutions << sUpdate << sBugreport;
-      break;
-
-    case  KIO::ERR_UNKNOWN_INTERRUPT:
-      errorName = i18n( "Unknown Interruption" );
-      description = i18n( "The program on your computer which provides access "
-        "to the <strong>%1</strong> protocol has reported an interruption of "
-        "an unknown type: %2." ,  protocol ,  errorText );
       causes << cBug;
       solutions << sUpdate << sBugreport;
       break;
