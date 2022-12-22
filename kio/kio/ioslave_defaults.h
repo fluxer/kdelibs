@@ -32,14 +32,8 @@
 // PORT DEFAULTS
 #define DEFAULT_FTP_PORT                    21
 #define DEFAULT_SFTP_PORT                   22
-#define DEFAULT_HTTP_PORT                   80
-#define DEFAULT_HTTPS_PORT                 443
-
-// OTHER GENERIC PORT DEFAULTS
-#define DEFAULT_PROXY_PORT                8080
-#define MAX_PORT_VALUE                   65535
 
 // DEFAULT USER AGENT KEY - ENABLES OS NAME
 #define DEFAULT_USER_AGENT_KEYS         "om"            // Show OS, Machine
 
-#endif
+#endif // KIO_IOSLAVE_DEFAULTS_H

@@ -23,18 +23,16 @@
 
 #include <QtCore/QVariant>
 #include <QtCore/QFile>  // for QFile::Permissions
+#include <QtCore/QTime>
+#include <QtGui/QPixmap> // for pixmapForUrl
 
 #include <kiconloader.h>
-#include <QtGui/QPixmap> // for pixmapForUrl
+#include <kjob.h>
 
 #include <sys/types.h> // mode_t
 
-#include <kjob.h>
-
 class KUrl;
 class KJobTrackerInterface;
-
-#include <QTime>
 
 /**
  * @short A namespace for KIO globals

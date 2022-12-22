@@ -38,7 +38,6 @@
 #include <sys/stat.h>  // S_ISDIR
 #include <sys/wait.h>
 #include <sys/uio.h>
-
 #include <assert.h>
 #include <signal.h>
 #include <stdlib.h>
