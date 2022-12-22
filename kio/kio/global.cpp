@@ -160,9 +160,6 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
     case  KIO::ERR_MALFORMED_URL:
       result = i18n( "Malformed URL %1.", errorText );
       break;
-    case  KIO::ERR_UNSUPPORTED_PROTOCOL:
-      result = i18n( "The protocol %1 is not supported.", errorText );
-      break;
     case  KIO::ERR_UNSUPPORTED_ACTION:
       result = errorText;
 //       result = i18n( "Unsupported action %1" ).arg( errorText );
@@ -541,22 +538,6 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "<blockquote><strong>protocol://user:password@www.example.org:port/folder/"
         "filename.extension?query=value</strong></blockquote>" );
       solutions << sTypo;
-      break;
-
-    case  KIO::ERR_UNSUPPORTED_PROTOCOL:
-      errorName = i18n( "Unsupported Protocol %1" ,  protocol );
-      description = i18n( "The protocol <strong>%1</strong> is not supported "
-        "by the programs currently installed on this computer." ,
-          protocol );
-      causes << i18n( "The requested protocol may not be supported." )
-        << i18n( "The versions of the %1 protocol supported by this computer and "
-        "the server may be incompatible." ,  protocol );
-      solutions << i18n( "You may perform a search on the Internet for a "
-        "program (called a kioslave or ioslave) which supports this protocol. "
-        "Places to search include <a href=\"http://kde-apps.org/\">"
-        "http://kde-apps.org/</a> and <a href=\"http://freshmeat.net/\">"
-        "http://freshmeat.net/</a>." )
-        << sUpdate << sSysadmin;
       break;
 
     case  KIO::ERR_UNSUPPORTED_ACTION:
