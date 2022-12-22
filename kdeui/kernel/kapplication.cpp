@@ -399,8 +399,9 @@ void KApplicationPrivate::init()
 
 
   // sanity checking, to make sure we've connected
+  QDBusConnection sessionBus = QDBusConnection::sessionBus();
   QDBusConnectionInterface *bus = 0;
-  if (!QDBusConnection::sessionBus().isConnected() || !(bus = QDBusConnection::sessionBus().interface())) {
+  if (!sessionBus.isConnected() || !(bus = sessionBus.interface())) {
       kFatal(240) << "Session bus not found, to circumvent this problem try the following command (with Linux and bash)\n"
                   << "export $(dbus-launch)";
       ::exit(125);
@@ -426,10 +427,10 @@ void KApplicationPrivate::init()
           ::exit(126);
       }
   }
-  QDBusConnection::sessionBus().registerObject(QLatin1String("/MainApplication"), q,
-                                               QDBusConnection::ExportScriptableSlots |
-                                               QDBusConnection::ExportScriptableProperties |
-                                               QDBusConnection::ExportAdaptors);
+  sessionBus.registerObject(QLatin1String("/MainApplication"), q,
+                            QDBusConnection::ExportScriptableSlots |
+                            QDBusConnection::ExportScriptableProperties |
+                            QDBusConnection::ExportAdaptors);
 
   // Trigger creation of locale.
   (void) KGlobal::locale();
@@ -467,6 +468,15 @@ void KApplicationPrivate::init()
   // too late to restart if the application is about to quit (e.g. if QApplication::quit() was
   // called or SIGTERM was received)
   q->connect(q, SIGNAL(aboutToQuit()), SLOT(_k_disableAutorestartSlot()));
+
+  // TODO: static quitOnDisconnected() method for use with QCoreApplication/QApplication
+  sessionBus.connect(
+    QString(),
+    QString::fromLatin1("/org/freedesktop/DBus/Local"),
+    QString::fromLatin1("org.freedesktop.DBus.Local"),
+    QString::fromLatin1("Disconnected"),
+    q, SLOT(quit())
+  );
 
   qRegisterMetaType<KUrl>();
   qRegisterMetaType<KUrl::List>();
