@@ -104,19 +104,18 @@ static void quit_handler(int sig)
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
         const QWidgetList toplevelwidgets = QApplication::topLevelWidgets();
         if (!toplevelwidgets.isEmpty()) {
-            kDebug(240) << "closing top-level widgets";
+            kDebug(240) << "closing top-level main windows";
             foreach (QWidget* topwidget, toplevelwidgets) {
-                if (!topwidget) {
+                if (!topwidget || !topwidget->isWindow() || !topwidget->inherits("QMainWindow")) {
                     continue;
                 }
-                QCloseEvent closeevent;
-                QApplication::sendEvent(topwidget, &closeevent);
-                if (!closeevent.isAccepted()) {
-                    kDebug(240) << "not quiting because a top-level widget did not close";
+                kDebug(240) << "sending close event to" << topwidget;
+                if (!topwidget->close()) {
+                    kDebug(240) << "not quiting because a top-level window did not close";
                     return;
                 }
             }
-            kDebug(240) << "all top-level widgets closed";
+            kDebug(240) << "all top-level main windows closed";
         }
     }
     KDE_signal(sig, SIG_DFL);
