@@ -52,7 +52,6 @@ public:
     virtual ~JobUiDelegate();
 
 public:
-
     /**
      * Associate this job with a window given by @p window.
      * @param window the window to associate to
@@ -168,6 +167,9 @@ public:
                           const QString& iconYes = QString(),
                           const QString& iconNo = QString(),
                           const QString& dontAskAgainName = QString());
+
+    virtual void showErrorMessage();
+
 private:
     class Private;
     Private * const d;

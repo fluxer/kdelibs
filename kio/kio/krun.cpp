@@ -1276,7 +1276,7 @@ void KRun::slotStatResult(KJob * job)
         if (errCode != KIO::ERR_NO_CONTENT) {
             d->m_showingDialog = true;
             kError(7010) << this << "ERROR" << job->error() << job->errorString();
-            error(job->errorString());
+            job->uiDelegate()->showErrorMessage();
             kDebug(7010) << this << " KRun returning from error, starting timer to delete us";
             d->m_showingDialog = false;
             d->m_bFault = true;
@@ -1345,7 +1345,7 @@ void KRun::slotScanFinished(KJob *job)
         if (errCode != KIO::ERR_NO_CONTENT) {
             d->m_showingDialog = true;
             kError(7010) << this << "ERROR (stat):" << job->error() << ' ' << job->errorString();
-            error(job->errorString());
+            job->uiDelegate()->showErrorMessage();
             kDebug(7010) << this << " KRun returning from error, starting timer to delete us";
             d->m_showingDialog = false;
 

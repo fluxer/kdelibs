@@ -243,4 +243,31 @@ int KIO::JobUiDelegate::requestMessageBox(KIO::JobUiDelegate::MessageBoxType typ
     return result;
 }
 
+void KIO::JobUiDelegate::showErrorMessage()
+{
+    KJob* kjob = job();
+    if (kjob->error() != KJob::KilledJobError) {
+        KIO::SimpleJob* kiosimplejob = qobject_cast<KIO::SimpleJob*>(kjob);
+        if (kiosimplejob) {
+            const KUrl kiosimplejoburl = kiosimplejob->url();
+            const QStringList errors = kiosimplejob->detailedErrorStrings(&kiosimplejoburl);
+            // qDebug() << Q_FUNC_INFO << errors;
+            Q_ASSERT(errors.size() == 3);
+            KMessageBox::detailedError(window(), errors[1], errors[2]);
+            return;
+        }
+
+        KIO::Job* kiojob = qobject_cast<KIO::Job*>(kjob);
+        if (kiojob) {
+            const QStringList errors = kiojob->detailedErrorStrings();
+            Q_ASSERT(errors.size() == 3);
+            // qDebug() << Q_FUNC_INFO << errors;
+            KMessageBox::detailedError(window(), errors[1], errors[2]);
+            return;
+        }
+
+        KMessageBox::messageBox(window(), KMessageBox::Error, kjob->errorString());
+    }
+}
+
 #include "moc_jobuidelegate.cpp"
