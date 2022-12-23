@@ -154,6 +154,12 @@ static inline KIO::Error curlToKIOError(const CURLcode curlcode, CURL *curl)
         case CURLE_OPERATION_TIMEDOUT: {
             return KIO::ERR_SERVER_TIMEOUT;
         }
+        case CURLE_REMOTE_FILE_EXISTS: {
+            return KIO::ERR_FILE_ALREADY_EXIST;
+        }
+        case CURLE_COULDNT_RESOLVE_HOST: {
+            return KIO::ERR_UNKNOWN_HOST;
+        }
         case CURLE_COULDNT_CONNECT:
         default: {
             return KIO::ERR_COULD_NOT_CONNECT;
