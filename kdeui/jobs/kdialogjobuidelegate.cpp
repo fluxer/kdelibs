@@ -43,7 +43,7 @@ public:
 KDialogJobUiDelegate::KDialogJobUiDelegate()
     : d(new Private())
 {
-    d->errorParentWidget = 0L;
+    d->errorParentWidget = nullptr;
 #if defined Q_WS_X11
     d->userTimestamp = QX11Info::appUserTime();
 #endif
@@ -64,11 +64,12 @@ QWidget *KDialogJobUiDelegate::window() const
     return d->errorParentWidget;
 }
 
-void KDialogJobUiDelegate::updateUserTimestamp( unsigned long time )
+void KDialogJobUiDelegate::updateUserTimestamp(unsigned long time)
 {
 #if defined Q_WS_X11
-  if( d->userTimestamp == 0 || NET::timestampCompare( time, d->userTimestamp ) > 0 )
-      d->userTimestamp = time;
+    if (d->userTimestamp == 0 || NET::timestampCompare(time, d->userTimestamp) > 0) {
+        d->userTimestamp = time;
+    }
 #endif
 }
 
@@ -79,19 +80,18 @@ unsigned long KDialogJobUiDelegate::userTimestamp() const
 
 void KDialogJobUiDelegate::showErrorMessage()
 {
-    if ( job()->error() != KJob::KilledJobError )
-    {
-        KMessageBox::queuedMessageBox( d->errorParentWidget, KMessageBox::Error, job()->errorString() );
+    if (job()->error() != KJob::KilledJobError) {
+        KMessageBox::queuedMessageBox(d->errorParentWidget, KMessageBox::Error, job()->errorString());
     }
 }
 
-void KDialogJobUiDelegate::slotWarning(KJob* /*job*/, const QString &plain, const QString &/*rich*/)
+void KDialogJobUiDelegate::slotWarning(KJob* job, const QString &plain, const QString &rich)
 {
-    if (isAutoWarningHandlingEnabled())
-    {
-	KMessageBox::queuedMessageBox(d->errorParentWidget, KMessageBox::Information, plain);
+    Q_UNUSED(job);
+    Q_UNUSED(rich);
+    if (isAutoWarningHandlingEnabled()) {
+        KMessageBox::queuedMessageBox(d->errorParentWidget, KMessageBox::Information, plain);
     }
 }
-
 
 #include "moc_kdialogjobuidelegate.cpp"

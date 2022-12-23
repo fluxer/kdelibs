@@ -44,8 +44,6 @@ public:
      */
     virtual ~KDialogJobUiDelegate();
 
-public:
-
     /**
      * Associate this job with a window given by @p window.
      * @param window the window to associate to
@@ -64,7 +62,7 @@ public:
      * Updates the last user action timestamp to the given time.
      * See KApplication::updateUserTimestamp().
      */
-    void updateUserTimestamp( unsigned long time );
+    void updateUserTimestamp(unsigned long time);
 
     /**
      * @internal
