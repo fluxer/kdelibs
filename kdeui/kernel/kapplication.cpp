@@ -109,7 +109,7 @@ static void quit_handler(int sig)
                 if (!topwidget || !topwidget->isWindow() || !topwidget->inherits("QMainWindow")) {
                     continue;
                 }
-                kDebug(240) << "sending close event to" << topwidget;
+                kDebug(240) << "closing" << topwidget;
                 if (!topwidget->close()) {
                     kDebug(240) << "not quiting because a top-level window did not close";
                     return;
@@ -292,7 +292,7 @@ QString KApplicationPrivate::sessionConfigName() const
     QString sessKey = q->sessionKey();
     if ( sessKey.isEmpty() && !sessionKey.isEmpty() )
         sessKey = sessionKey;
-    return QString(QLatin1String("session/%1_%2_%3")).arg(q->applicationName()).arg(q->sessionId()).arg(sessKey);
+    return QString::fromLatin1("session/%1_%2_%3").arg(q->applicationName()).arg(q->sessionId()).arg(sessKey);
 }
 
 #ifdef Q_WS_X11
