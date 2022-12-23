@@ -135,7 +135,6 @@ KMediaWidget::~KMediaWidget()
         d->m_volumeline.stop();
         d->m_player->setVolume(d->m_volumeline.endFrame());
     }
-    d->m_player->stop();
     /*
         Deleting the player has to be done before the UI is deleted because the player is embeded
         into UI widget and MPV accessing the window ID of d->m_ui->w_player may cause fatal X11 I/O
