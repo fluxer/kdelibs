@@ -145,134 +145,134 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
 
   switch( errorCode )
     {
-    case  KIO::ERR_CANNOT_OPEN_FOR_READING:
+    case KIO::ERR_CANNOT_OPEN_FOR_READING:
       result = i18n( "Could not read %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_OPEN_FOR_WRITING:
+    case KIO::ERR_CANNOT_OPEN_FOR_WRITING:
       result = i18n( "Could not write to %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_LAUNCH_PROCESS:
+    case KIO::ERR_CANNOT_LAUNCH_PROCESS:
       result = i18n( "Could not start process %1.", errorText );
       break;
-    case  KIO::ERR_INTERNAL:
+    case KIO::ERR_INTERNAL:
       result = i18n( "Internal Error\nPlease send a full bug report at %1\n%2", QString::fromLatin1(KDE_BUG_REPORT_URL), errorText );
       break;
-    case  KIO::ERR_MALFORMED_URL:
+    case KIO::ERR_MALFORMED_URL:
       result = i18n( "Malformed URL %1.", errorText );
       break;
-    case  KIO::ERR_UNSUPPORTED_ACTION:
+    case KIO::ERR_UNSUPPORTED_ACTION:
       result = errorText;
 //       result = i18n( "Unsupported action %1" ).arg( errorText );
       break;
-    case  KIO::ERR_IS_DIRECTORY:
+    case KIO::ERR_IS_DIRECTORY:
       result = i18n( "%1 is a folder, but a file was expected.", errorText );
       break;
-    case  KIO::ERR_IS_FILE:
+    case KIO::ERR_IS_FILE:
       result = i18n( "%1 is a file, but a folder was expected.", errorText );
       break;
-    case  KIO::ERR_DOES_NOT_EXIST:
+    case KIO::ERR_DOES_NOT_EXIST:
       result = i18n( "The file or folder %1 does not exist.", errorText );
       break;
-    case  KIO::ERR_FILE_ALREADY_EXIST:
+    case KIO::ERR_FILE_ALREADY_EXIST:
       result = i18n( "A file named %1 already exists." , errorText );
       break;
-    case  KIO::ERR_DIR_ALREADY_EXIST:
+    case KIO::ERR_DIR_ALREADY_EXIST:
       result = i18n( "A folder named %1 already exists.", errorText );
       break;
-    case  KIO::ERR_UNKNOWN_HOST:
+    case KIO::ERR_UNKNOWN_HOST:
       result = errorText.isEmpty() ? i18n( "No hostname specified." ) : i18n( "Unknown host %1" ,  errorText );
       break;
-    case  KIO::ERR_ACCESS_DENIED:
+    case KIO::ERR_ACCESS_DENIED:
       result = i18n( "Access denied to %1.", errorText );
       break;
-    case  KIO::ERR_WRITE_ACCESS_DENIED:
+    case KIO::ERR_WRITE_ACCESS_DENIED:
       result = i18n( "Access denied.\nCould not write to %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_ENTER_DIRECTORY:
+    case KIO::ERR_CANNOT_ENTER_DIRECTORY:
       result = i18n( "Could not enter folder %1.", errorText );
       break;
-    case  KIO::ERR_CYCLIC_LINK:
+    case KIO::ERR_CYCLIC_LINK:
       result = i18n( "Found a cyclic link in %1.", errorText );
       break;
-    case  KIO::ERR_USER_CANCELED:
+    case KIO::ERR_USER_CANCELED:
       // Do nothing in this case. The user doesn't need to be told what he just did.
       break;
-    case  KIO::ERR_COULD_NOT_CONNECT:
+    case KIO::ERR_COULD_NOT_CONNECT:
       result = i18n( "Could not connect to host %1.", errorText.isEmpty() ? QLatin1String("localhost") : errorText );
       break;
-    case  KIO::ERR_CONNECTION_BROKEN:
+    case KIO::ERR_CONNECTION_BROKEN:
       result = i18n( "Connection to host %1 is broken.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_MOUNT:
+    case KIO::ERR_COULD_NOT_MOUNT:
       result = i18n( "Could not mount device.\nThe reported error was:\n%1", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_UNMOUNT:
+    case KIO::ERR_COULD_NOT_UNMOUNT:
       result = i18n( "Could not unmount device.\nThe reported error was:\n%1", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_READ:
+    case KIO::ERR_COULD_NOT_READ:
       result = i18n( "Could not read file %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_WRITE:
+    case KIO::ERR_COULD_NOT_WRITE:
       result = i18n( "Could not write to file %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_BIND:
+    case KIO::ERR_COULD_NOT_BIND:
       result = i18n( "Could not bind %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_LISTEN:
+    case KIO::ERR_COULD_NOT_LISTEN:
       result = i18n( "Could not listen %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_ACCEPT:
+    case KIO::ERR_COULD_NOT_ACCEPT:
       result = i18n( "Could not accept %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_LOGIN:
+    case KIO::ERR_COULD_NOT_LOGIN:
       result = errorText;
       break;
-    case  KIO::ERR_COULD_NOT_STAT:
+    case KIO::ERR_COULD_NOT_STAT:
       result = i18n( "Could not access %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_CLOSEDIR:
+    case KIO::ERR_COULD_NOT_CLOSEDIR:
       result = i18n( "Could not terminate listing %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_MKDIR:
+    case KIO::ERR_COULD_NOT_MKDIR:
       result = i18n( "Could not make folder %1.", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_RMDIR:
+    case KIO::ERR_COULD_NOT_RMDIR:
       result = i18n( "Could not remove folder %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_RESUME:
+    case KIO::ERR_CANNOT_RESUME:
       result = i18n( "Could not resume file %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_RENAME:
+    case KIO::ERR_CANNOT_RENAME:
       result = i18n( "Could not rename file %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_CHMOD:
+    case KIO::ERR_CANNOT_CHMOD:
       result = i18n( "Could not change permissions for %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_CHOWN:
+    case KIO::ERR_CANNOT_CHOWN:
       result = i18n( "Could not change ownership for %1.", errorText );
       break;
-    case  KIO::ERR_CANNOT_DELETE:
+    case KIO::ERR_CANNOT_DELETE:
       result = i18n( "Could not delete file %1.", errorText );
       break;
-    case  KIO::ERR_SLAVE_DIED:
+    case KIO::ERR_SLAVE_DIED:
       result = i18n( "The process for the %1 protocol died unexpectedly.", errorText );
       break;
-    case  KIO::ERR_OUT_OF_MEMORY:
+    case KIO::ERR_OUT_OF_MEMORY:
       result = i18n( "Error. Out of memory.\n%1", errorText );
       break;
-    case  KIO::ERR_UNKNOWN_PROXY_HOST:
+    case KIO::ERR_UNKNOWN_PROXY_HOST:
       result = i18n( "Unknown proxy host\n%1", errorText );
       break;
-    case  KIO::ERR_COULD_NOT_AUTHENTICATE:
+    case KIO::ERR_COULD_NOT_AUTHENTICATE:
       result = i18n( "Authorization failed, %1 authentication not supported", errorText );
       break;
-    case  KIO::ERR_INTERNAL_SERVER:
+    case KIO::ERR_INTERNAL_SERVER:
       result = i18n( "Internal error in server\n%1", errorText );
       break;
-    case  KIO::ERR_SERVER_TIMEOUT:
+    case KIO::ERR_SERVER_TIMEOUT:
       result = i18n( "Timeout on server\n%1", errorText );
       break;
-    case  KIO::ERR_UNKNOWN:
+    case KIO::ERR_UNKNOWN:
       result = i18n( "Unknown error\n%1", errorText );
       break;
     case KIO::ERR_CANNOT_DELETE_ORIGINAL:
@@ -486,7 +486,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
   QString sNetwork = i18n( "Check your network connection status." );
 
   switch( errorCode ) {
-    case  KIO::ERR_CANNOT_OPEN_FOR_READING:
+    case KIO::ERR_CANNOT_OPEN_FOR_READING:
       errorName = i18n( "Cannot Open Resource For Reading" );
       description = i18n( "This means that the contents of the requested file "
         "or folder <strong>%1</strong> could not be retrieved, as read "
@@ -496,7 +496,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sQuerylock << sSysadmin;
       break;
 
-    case  KIO::ERR_CANNOT_OPEN_FOR_WRITING:
+    case KIO::ERR_CANNOT_OPEN_FOR_WRITING:
       errorName = i18n( "Cannot Open Resource For Writing" );
       description = i18n( "This means that the file, <strong>%1</strong>, could "
         "not be written to as requested, because access with permission to "
@@ -505,7 +505,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sQuerylock << sSysadmin;
       break;
 
-    case  KIO::ERR_CANNOT_LAUNCH_PROCESS:
+    case KIO::ERR_CANNOT_LAUNCH_PROCESS:
       errorName = i18n( "Cannot Initiate the %1 Protocol" ,  protocol );
       techName = i18n( "Unable to Launch Process" );
       description = i18n( "The program on your computer which provides access "
@@ -518,7 +518,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sUpdate << sSysadmin;
       break;
 
-    case  KIO::ERR_INTERNAL:
+    case KIO::ERR_INTERNAL:
       errorName = i18n( "Internal Error" );
       description = i18n( "The program on your computer which provides access "
         "to the <strong>%1</strong> protocol has reported an internal error." ,
@@ -527,7 +527,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sUpdate << sBugreport;
       break;
 
-    case  KIO::ERR_MALFORMED_URL:
+    case KIO::ERR_MALFORMED_URL:
       errorName = i18n( "Improperly Formatted URL" );
       description = i18n( "The <strong>U</strong>niform <strong>R</strong>esource "
         "<strong>L</strong>ocator (URL) that you entered was not properly "
@@ -537,7 +537,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sTypo;
       break;
 
-    case  KIO::ERR_UNSUPPORTED_ACTION:
+    case KIO::ERR_UNSUPPORTED_ACTION:
       errorName = i18n( "Unsupported Action: %1" ,  errorText );
       description = i18n( "The requested action is not supported by the Desktop "
         "program which is implementing the <strong>%1</strong> protocol." ,
@@ -549,7 +549,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "outcome." );
       break;
 
-    case  KIO::ERR_IS_DIRECTORY:
+    case KIO::ERR_IS_DIRECTORY:
       errorName = i18n( "File Expected" );
       description = i18n( "The request expected a file, however the "
         "folder <strong>%1</strong> was found instead." , path );
@@ -557,7 +557,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sUpdate << sSysadmin;
       break;
 
-    case  KIO::ERR_IS_FILE:
+    case KIO::ERR_IS_FILE:
       errorName = i18n( "Folder Expected" );
       description = i18n( "The request expected a folder, however "
         "the file <strong>%1</strong> was found instead." , filename );
@@ -565,7 +565,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sUpdate << sSysadmin;
       break;
 
-    case  KIO::ERR_DOES_NOT_EXIST:
+    case KIO::ERR_DOES_NOT_EXIST:
       errorName = i18n( "File or Folder Does Not Exist" );
       description = i18n( "The specified file or folder <strong>%1</strong> "
         "does not exist." , path );
@@ -573,7 +573,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sExists;
       break;
 
-    case  KIO::ERR_FILE_ALREADY_EXIST:
+    case KIO::ERR_FILE_ALREADY_EXIST:
       errorName = i18n( "File Already Exists" );
       description = i18n( "The requested file could not be created because a "
         "file with the same name already exists." );
@@ -583,7 +583,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         << i18n( "Choose an alternate filename for the new file." );
       break;
 
-    case  KIO::ERR_DIR_ALREADY_EXIST:
+    case KIO::ERR_DIR_ALREADY_EXIST:
       errorName = i18n( "Folder Already Exists" );
       description = i18n( "The requested folder could not be created because "
         "a folder with the same name already exists." );
@@ -593,7 +593,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         << i18n( "Choose an alternate name for the new folder." );
       break;
 
-    case  KIO::ERR_UNKNOWN_HOST:
+    case KIO::ERR_UNKNOWN_HOST:
       errorName = i18n( "Unknown Host" );
       description = i18n( "An unknown host error indicates that the server with "
         "the requested name, <strong>%1</strong>, could not be "
@@ -604,7 +604,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sNetwork << sSysadmin;
       break;
 
-    case  KIO::ERR_ACCESS_DENIED:
+    case KIO::ERR_ACCESS_DENIED:
       errorName = i18n( "Access Denied" );
       description = i18n( "Access was denied to the specified resource, "
         "<strong>%1</strong>." ,  url );
@@ -617,7 +617,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       if ( !isSlaveNetwork ) solutions << sServeradmin;
       break;
 
-    case  KIO::ERR_WRITE_ACCESS_DENIED:
+    case KIO::ERR_WRITE_ACCESS_DENIED:
       errorName = i18n( "Write Access Denied" );
       description = i18n( "This means that an attempt to write to the file "
         "<strong>%1</strong> was rejected." ,  filename );
@@ -625,7 +625,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sQuerylock << sSysadmin;
       break;
 
-    case  KIO::ERR_CANNOT_ENTER_DIRECTORY:
+    case KIO::ERR_CANNOT_ENTER_DIRECTORY:
       errorName = i18n( "Unable to Enter Folder" );
       description = i18n( "This means that an attempt to enter (in other words, "
         "to open) the requested folder <strong>%1</strong> was rejected." ,
@@ -634,7 +634,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sQuerylock << sSysadmin;
       break;
 
-    case  KIO::ERR_CYCLIC_LINK:
+    case KIO::ERR_CYCLIC_LINK:
       errorName = i18n( "Cyclic Link Detected" );
       description = i18n( "UNIX environments are commonly able to link a file or "
         "folder to a separate name and/or location. Detected a link or "
@@ -644,7 +644,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "cause an infinite loop, and try again." ) << sSysadmin;
       break;
 
-    case  KIO::ERR_USER_CANCELED:
+    case KIO::ERR_USER_CANCELED:
       // Do nothing in this case. The user doesn't need to be told what he just did.
       // rodda: However, if we have been called, an application is about to display
       // this information anyway. If we don't return sensible information, the
@@ -655,7 +655,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << i18n( "Retry the request." );
       break;
 
-    case  KIO::ERR_COULD_NOT_CONNECT:
+    case KIO::ERR_COULD_NOT_CONNECT:
       errorName = i18n( "Connection to Server Refused" );
       description = i18n( "The server <strong>%1</strong> refused to allow this "
         "computer to make a connection." ,  host );
@@ -669,7 +669,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sTryagain << sServeradmin << sSysadmin;
       break;
 
-    case  KIO::ERR_CONNECTION_BROKEN:
+    case KIO::ERR_CONNECTION_BROKEN:
       errorName = i18n( "Connection to Server Closed Unexpectedly" );
       description = i18n( "Although a connection was established to "
         "<strong>%1</strong>, the connection was closed at an unexpected point "
@@ -679,7 +679,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sTryagain << sServeradmin << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_MOUNT:
+    case KIO::ERR_COULD_NOT_MOUNT:
       errorName = i18n( "Unable to Initialize Input/Output Device" );
       techName = i18n( "Could Not Mount Device" );
       description = i18n( "The requested device could not be initialized "
@@ -698,7 +698,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "on.; and try again." ) << sAccess << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_UNMOUNT:
+    case KIO::ERR_COULD_NOT_UNMOUNT:
       errorName = i18n( "Unable to Uninitialize Input/Output Device" );
       techName = i18n( "Could Not Unmount Device" );
       description = i18n( "The requested device could not be uninitialized "
@@ -716,7 +716,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "and try again." ) << sAccess << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_READ:
+    case KIO::ERR_COULD_NOT_READ:
       errorName = i18n( "Cannot Read From Resource" );
       description = i18n( "This means that although the resource, "
         "<strong>%1</strong>, was able to be opened, an error occurred while "
@@ -729,7 +729,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_WRITE:
+    case KIO::ERR_COULD_NOT_WRITE:
       errorName = i18n( "Cannot Write to Resource" );
       description = i18n( "This means that although the resource, <strong>%1</strong>"
         ", was able to be opened, an error occurred while writing to the resource." ,
@@ -742,7 +742,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_BIND:
+    case KIO::ERR_COULD_NOT_BIND:
       errorName = i18n( "Could Not Listen for Network Connections" );
       techName = i18n( "Could Not Bind" );
       description = i18n( "This is a fairly technical error in which a required "
@@ -753,7 +753,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sNetwork << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_LISTEN:
+    case KIO::ERR_COULD_NOT_LISTEN:
       errorName = i18n( "Could Not Listen for Network Connections" );
       techName = i18n( "Could Not Listen" );
       description = i18n( "This is a fairly technical error in which a required "
@@ -764,7 +764,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sNetwork << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_ACCEPT:
+    case KIO::ERR_COULD_NOT_ACCEPT:
       errorName = i18n( "Could Not Accept Network Connection" );
       description = i18n( "This is a fairly technical error in which an error "
         "occurred while attempting to accept an incoming network connection." );
@@ -774,7 +774,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sNetwork << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_LOGIN:
+    case KIO::ERR_COULD_NOT_LOGIN:
       errorName = i18n( "Could Not Login: %1" ,  errorText );
       description = i18n( "An attempt to login to perform the requested "
         "operation was unsuccessful." );
@@ -786,7 +786,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "are entered correctly." ) << sServeradmin << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_STAT:
+    case KIO::ERR_COULD_NOT_STAT:
       errorName = i18n( "Could Not Determine Resource Status" );
       techName = i18n( "Could Not Stat Resource" );
       description = i18n( "An attempt to determine information about the status "
@@ -798,13 +798,13 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "are entered correctly." ) << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_CLOSEDIR:
+    case KIO::ERR_COULD_NOT_CLOSEDIR:
       //result = i18n( "Could not terminate listing %1" ).arg( errorText );
       errorName = i18n( "Could Not Cancel Listing" );
       techName = i18n( "FIXME: Document this" );
       break;
 
-    case  KIO::ERR_COULD_NOT_MKDIR:
+    case KIO::ERR_COULD_NOT_MKDIR:
       errorName = i18n( "Could Not Create Folder" );
       description = i18n( "An attempt to create the requested folder failed." );
       causes << cAccess << i18n( "The location where the folder was to be created "
@@ -813,7 +813,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << i18n( "Retry the request." ) << sAccess;
       break;
 
-    case  KIO::ERR_COULD_NOT_RMDIR:
+    case KIO::ERR_COULD_NOT_RMDIR:
       errorName = i18n( "Could Not Remove Folder" );
       description = i18n( "An attempt to remove the specified folder, "
         "<strong>%1</strong>, failed." , path );
@@ -825,7 +825,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "again." ) << sAccess;
       break;
 
-    case  KIO::ERR_CANNOT_RESUME:
+    case KIO::ERR_CANNOT_RESUME:
       errorName = i18n( "Could Not Resume File Transfer" );
       description = i18n( "The specified request asked that the transfer of "
         "file <strong>%1</strong> be resumed at a certain point of the "
@@ -836,7 +836,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "transfer." );
       break;
 
-    case  KIO::ERR_CANNOT_RENAME:
+    case KIO::ERR_CANNOT_RENAME:
       errorName = i18n( "Could Not Rename Resource" );
       description = i18n( "An attempt to rename the specified resource "
         "<strong>%1</strong> failed." ,  url );
@@ -845,7 +845,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sExists;
       break;
 
-    case  KIO::ERR_CANNOT_CHMOD:
+    case KIO::ERR_CANNOT_CHMOD:
       errorName = i18n( "Could Not Alter Permissions of Resource" );
       description = i18n( "An attempt to alter the permissions on the specified "
         "resource <strong>%1</strong> failed." ,  url );
@@ -853,7 +853,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sExists;
       break;
 
-    case  KIO::ERR_CANNOT_CHOWN:
+    case KIO::ERR_CANNOT_CHOWN:
       errorName = i18n( "Could Not Change Ownership of Resource" );
       description = i18n( "An attempt to change the ownership of the specified "
         "resource <strong>%1</strong> failed." ,  url );
@@ -861,7 +861,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sExists;
       break;
 
-    case  KIO::ERR_CANNOT_DELETE:
+    case KIO::ERR_CANNOT_DELETE:
       errorName = i18n( "Could Not Delete Resource" );
       description = i18n( "An attempt to delete the specified resource "
         "<strong>%1</strong> failed." ,  url );
@@ -869,7 +869,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sAccess << sExists;
       break;
 
-    case  KIO::ERR_SLAVE_DIED:
+    case KIO::ERR_SLAVE_DIED:
       errorName = i18n( "Unexpected Program Termination" );
       description = i18n( "The program on your computer which provides access "
         "to the <strong>%1</strong> protocol has unexpectedly terminated." ,
@@ -878,7 +878,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sUpdate << sBugreport;
       break;
 
-    case  KIO::ERR_OUT_OF_MEMORY:
+    case KIO::ERR_OUT_OF_MEMORY:
       errorName = i18n( "Out of Memory" );
       description = i18n( "The program on your computer which provides access "
         "to the <strong>%1</strong> protocol could not obtain the memory "
@@ -887,7 +887,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sUpdate << sBugreport;
       break;
 
-    case  KIO::ERR_UNKNOWN_PROXY_HOST:
+    case KIO::ERR_UNKNOWN_PROXY_HOST:
       errorName = i18n( "Unknown Proxy Host" );
       description = i18n( "While retrieving information about the specified "
         "proxy host, <strong>%1</strong>, an Unknown Host error was encountered. "
@@ -901,7 +901,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         << sSysadmin;
       break;
 
-    case  KIO::ERR_COULD_NOT_AUTHENTICATE:
+    case KIO::ERR_COULD_NOT_AUTHENTICATE:
       errorName = i18n( "Authentication Failed: Method %1 Not Supported" ,
            errorText );
       description = i18n( "Although you may have supplied the correct "
@@ -913,7 +913,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "authentication method.", QString::fromLatin1(KDE_BUG_REPORT_URL), QString::fromLatin1(KDE_BUG_REPORT_URL) ) << sSysadmin;
       break;
 
-    case  KIO::ERR_INTERNAL_SERVER:
+    case KIO::ERR_INTERNAL_SERVER:
       errorName = i18n( "Internal Error in Server" );
       description = i18n( "The program on the server which provides access "
         "to the <strong>%1</strong> protocol has reported an internal error: "
@@ -927,7 +927,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "submit the bug report directly to them." );
       break;
 
-    case  KIO::ERR_SERVER_TIMEOUT:
+    case KIO::ERR_SERVER_TIMEOUT:
       errorName = i18n( "Timeout Error" );
       description = i18n( "Although contact was made with the server, a "
         "response was not received within the amount of time allocated for "
@@ -945,7 +945,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
       solutions << sTryagain << sServeradmin;
       break;
 
-    case  KIO::ERR_UNKNOWN:
+    case KIO::ERR_UNKNOWN:
       errorName = i18n( "Unknown Error" );
       description = i18n( "The program on your computer which provides access "
         "to the <strong>%1</strong> protocol has reported an unknown error: "

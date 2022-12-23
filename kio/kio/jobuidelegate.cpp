@@ -253,7 +253,7 @@ void KIO::JobUiDelegate::showErrorMessage()
             const QStringList errors = kiosimplejob->detailedErrorStrings(&kiosimplejoburl);
             // qDebug() << Q_FUNC_INFO << errors;
             Q_ASSERT(errors.size() == 3);
-            KMessageBox::detailedError(window(), errors[1], errors[2]);
+            KMessageBox::detailedError(window(), errors[1], errors[2], errors[0]);
             return;
         }
 
@@ -262,7 +262,7 @@ void KIO::JobUiDelegate::showErrorMessage()
             const QStringList errors = kiojob->detailedErrorStrings();
             Q_ASSERT(errors.size() == 3);
             // qDebug() << Q_FUNC_INFO << errors;
-            KMessageBox::detailedError(window(), errors[1], errors[2]);
+            KMessageBox::detailedError(window(), errors[1], errors[2], errors[0]);
             return;
         }
 
