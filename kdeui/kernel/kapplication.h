@@ -259,7 +259,7 @@ public:
   static void quitOnSignal();
 
   /**
-   * Connects D-Bus disconnected to QApplication::quit().
+   * Connects D-Bus disconnected signal to QApplication::quit().
    * @note By default KApplication constructor calls this static method, unless QCoreApplication
    * or QApplication instance is used you should not call it.
    * @since 4.23
