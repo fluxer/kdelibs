@@ -21,7 +21,7 @@
 
 #include <kio/kio_export.h>
 
-#include <QtCore/QVariant>
+#include <QtCore/QMap>
 #include <QtCore/QFile>  // for QFile::Permissions
 #include <QtCore/QTime>
 #include <QtGui/QPixmap> // for pixmapForUrl
