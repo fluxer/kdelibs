@@ -96,11 +96,31 @@ static const int s_quit_signals[] = {
 
 static void quit_handler(int sig)
 {
-    KDE_signal(sig, SIG_DFL);
-
-    if (qApp) {
-       qApp->quit();
+    if (!qApp) {
+        KDE_signal(sig, SIG_DFL);
+        return;
     }
+
+    if (qApp->type() == KAPPLICATION_GUI_TYPE) {
+        const QWidgetList toplevelwidgets = QApplication::topLevelWidgets();
+        if (!toplevelwidgets.isEmpty()) {
+            kDebug(240) << "closing top-level widgets";
+            foreach (QWidget* topwidget, toplevelwidgets) {
+                if (!topwidget) {
+                    continue;
+                }
+                QCloseEvent closeevent;
+                QApplication::sendEvent(topwidget, &closeevent);
+                if (!closeevent.isAccepted()) {
+                    kDebug(240) << "not quiting because a top-level widget did not close";
+                    return;
+                }
+            }
+            kDebug(240) << "all top-level widgets closed";
+        }
+    }
+    KDE_signal(sig, SIG_DFL);
+    qApp->quit();
 }
 
 /*
