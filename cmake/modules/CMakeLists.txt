@@ -17,6 +17,7 @@ set(cmakeFilesDontInstall
     FindLibRaw.cmake
     FindLibJPEG.cmake
     FindOpenJPEG.cmake
+    FindLibmicrohttpd.cmake
 )
 
 # Explicitly list all files which will be installed.
