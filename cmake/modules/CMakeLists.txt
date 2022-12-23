@@ -18,6 +18,7 @@ set(cmakeFilesDontInstall
     FindLibJPEG.cmake
     FindOpenJPEG.cmake
     FindLibmicrohttpd.cmake
+    FindWebP.cmake
 )
 
 # Explicitly list all files which will be installed.
@@ -63,7 +64,6 @@ set(cmakeFiles
     FindSharedMimeInfo.cmake
     FindSudo.cmake
     FindTaglib.cmake
-    FindWebP.cmake
     FindX11_XCB.cmake
     FindXCB.cmake
     kde4_cmake_uninstall.cmake.in
