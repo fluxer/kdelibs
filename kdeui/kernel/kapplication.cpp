@@ -465,18 +465,13 @@ void KApplicationPrivate::init()
         );
     }
   }
+
   // too late to restart if the application is about to quit (e.g. if QApplication::quit() was
   // called or SIGTERM was received)
   q->connect(q, SIGNAL(aboutToQuit()), SLOT(_k_disableAutorestartSlot()));
 
-  // TODO: static quitOnDisconnected() method for use with QCoreApplication/QApplication
-  sessionBus.connect(
-    QString(),
-    QString::fromLatin1("/org/freedesktop/DBus/Local"),
-    QString::fromLatin1("org.freedesktop.DBus.Local"),
-    QString::fromLatin1("Disconnected"),
-    q, SLOT(quit())
-  );
+  KApplication::quitOnSignal();
+  KApplication::quitOnDisconnected();
 
   qRegisterMetaType<KUrl>();
   qRegisterMetaType<KUrl::List>();
@@ -824,6 +819,21 @@ void KApplication::quitOnSignal()
         counter++;
     }
     ::sigprocmask(SIG_UNBLOCK, &handlermask, NULL);
+}
+
+void KApplication::quitOnDisconnected()
+{
+  if (!qApp) {
+    kWarning(240) << "KApplication::quitOnDisconnected() called before application instance is created";
+    return;
+  }
+  QDBusConnection::sessionBus().connect(
+    QString(),
+    QString::fromLatin1("/org/freedesktop/DBus/Local"),
+    QString::fromLatin1("org.freedesktop.DBus.Local"),
+    QString::fromLatin1("Disconnected"),
+    qApp, SLOT(quit())
+  );
 }
 
 void KApplication::setTopWidget( QWidget *topWidget )

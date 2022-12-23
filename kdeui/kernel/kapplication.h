@@ -253,8 +253,18 @@ public:
   /**
    * Setups signal handler for SIGTERM, SIGHUP and SIGINT to call QApplication::quit() when such
    * signal is received.
+   * @note By default KApplication constructor calls this static method, unless QCoreApplication
+   * or QApplication instance is used you should not call it.
    */
   static void quitOnSignal();
+
+  /**
+   * Connects D-Bus disconnected to QApplication::quit().
+   * @note By default KApplication constructor calls this static method, unless QCoreApplication
+   * or QApplication instance is used you should not call it.
+   * @since 4.23
+   */
+  static void quitOnDisconnected();
 
 #ifdef Q_WS_X11
   /**

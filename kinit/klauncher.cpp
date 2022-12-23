@@ -75,7 +75,6 @@ int main(int argc, char *argv[])
     KApplication app;
     app.setQuitOnLastWindowClosed(false);
     app.disableSessionManagement();
-    app.quitOnSignal();
     
     QDBusConnection session = QDBusConnection::sessionBus();
     if (!session.isConnected()) {
