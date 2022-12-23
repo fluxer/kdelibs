@@ -739,10 +739,25 @@ bool KArchive::remove(const QStringList &paths) const
         return result;
     }
 
+    QStringList recursivepaths;
+    foreach (const QString &path, paths) {
+        if (path.endsWith(QLatin1Char('/'))) {
+            const QByteArray pathbytes = QFile::encodeName(path);
+            foreach (const KArchiveEntry &karchiveentry, KArchive::list(path)) {
+                if (karchiveentry.pathname.startsWith(pathbytes)) {
+                    recursivepaths.append(QFile::decodeName(karchiveentry.pathname));
+                }
+            }
+        } else {
+            recursivepaths << path;
+        }
+    }
+    recursivepaths.removeDuplicates();
+
     QStringList notfound = paths;
 
     qreal progressvalue = 0.0;
-    const qreal progessstep = (qreal(1.0) / qreal(paths.size()));
+    const qreal progessstep = (qreal(1.0) / qreal(recursivepaths.size()));
 
     struct archive_entry* entry = archive_entry_new();
     int ret = archive_read_next_header(readarchive, &entry);
@@ -758,7 +773,7 @@ bool KArchive::remove(const QStringList &paths) const
 
         const QByteArray pathname = archive_entry_pathname(entry);
         const QString pathnamestring = QFile::decodeName(pathname);
-        if (paths.contains(pathnamestring)) {
+        if (recursivepaths.contains(pathnamestring)) {
             kDebug() << "Removing" << pathname;
             notfound.removeAll(pathname);
             archive_read_data_skip(readarchive);
@@ -853,10 +868,25 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
         return result;
     }
 
+    QStringList recursivepaths;
+    foreach (const QString &path, paths) {
+        if (path.endsWith(QLatin1Char('/'))) {
+            const QByteArray pathbytes = QFile::encodeName(path);
+            foreach (const KArchiveEntry &karchiveentry, KArchive::list(path)) {
+                if (karchiveentry.pathname.startsWith(pathbytes)) {
+                    recursivepaths.append(QFile::decodeName(karchiveentry.pathname));
+                }
+            }
+        } else {
+            recursivepaths << path;
+        }
+    }
+    recursivepaths.removeDuplicates();
+
     QStringList notfound = paths;
 
     qreal progressvalue = 0.0;
-    const qreal progessstep = (qreal(1.0) / qreal(paths.size()));
+    const qreal progessstep = (qreal(1.0) / qreal(recursivepaths.size()));
 
     struct archive_entry* entry = archive_entry_new();
     int ret = archive_read_next_header(readarchive, &entry);
@@ -872,7 +902,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
 
         const QByteArray pathname = archive_entry_pathname(entry);
         const QString pathnamestring = QFile::decodeName(pathname);
-        if (!paths.contains(pathnamestring)) {
+        if (!recursivepaths.contains(pathnamestring)) {
             archive_read_data_skip(readarchive);
             ret = archive_read_next_header(readarchive, &entry);
             continue;

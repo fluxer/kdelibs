@@ -56,6 +56,8 @@ private Q_SLOTS:
     void remove_data();
     void remove();
 
+    // TODO: extract tests
+
     void error_data();
     void error();
 
@@ -152,15 +154,26 @@ void KArchiveTest::remove()
     QVERIFY(karchive.isWritable());
     QList<KArchiveEntry> karchiveentries = karchive.list();
     QCOMPARE(karchiveentries.size(), 3);
-    QStringList toremove = QStringList()
-        << QFile::decodeName("tests/CMakeLists.txt");
-    QVERIFY(karchive.remove(toremove));
-    QList<KArchiveEntry> karchiveentries2 = karchive.list();
-    QCOMPARE(karchiveentries2.size(), 2);
-    QCOMPARE(karchiveentries2.at(0).pathname, QByteArray("tests/"));
-    QVERIFY(S_ISDIR(karchiveentries2.at(0).mode));
-    QCOMPARE(karchiveentries2.at(1).pathname, QByteArray("tests/karchivetest.cpp"));
-    QVERIFY(S_ISREG(karchiveentries2.at(1).mode));
+
+    {
+        QStringList toremove = QStringList()
+            << QFile::decodeName("tests/CMakeLists.txt");
+        QVERIFY(karchive.remove(toremove));
+        QList<KArchiveEntry> karchiveentries2 = karchive.list();
+        QCOMPARE(karchiveentries2.size(), 2);
+        QCOMPARE(karchiveentries2.at(0).pathname, QByteArray("tests/"));
+        QVERIFY(S_ISDIR(karchiveentries2.at(0).mode));
+        QCOMPARE(karchiveentries2.at(1).pathname, QByteArray("tests/karchivetest.cpp"));
+        QVERIFY(S_ISREG(karchiveentries2.at(1).mode));
+    }
+
+    {
+        QStringList toremove = QStringList()
+            << QFile::decodeName("tests/");
+        QVERIFY(karchive.remove(toremove));
+        QList<KArchiveEntry> karchiveentries3 = karchive.list();
+        QCOMPARE(karchiveentries3.size(), 0);
+    }
 }
 
 void KArchiveTest::error_data()
