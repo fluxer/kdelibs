@@ -162,7 +162,7 @@ KIO_EXPORT QString KIO::buildErrorString(int errorCode, const QString &errorText
       break;
     case KIO::ERR_UNSUPPORTED_ACTION:
       result = errorText;
-//       result = i18n( "Unsupported action %1" ).arg( errorText );
+      // result = i18n( "Unsupported action %1" ).arg( errorText );
       break;
     case KIO::ERR_IS_DIRECTORY:
       result = i18n( "%1 is a folder, but a file was expected.", errorText );
@@ -534,6 +534,7 @@ KIO_EXPORT QByteArray KIO::rawErrorDetail(int errorCode, const QString &errorTex
         "formatted. The format of a URL is generally as follows:"
         "<blockquote><strong>protocol://user:password@www.example.org:port/folder/"
         "filename.extension?query=value</strong></blockquote>" );
+      causes << cTypo;
       solutions << sTypo;
       break;
 
