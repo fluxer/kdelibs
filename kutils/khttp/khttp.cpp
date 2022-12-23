@@ -378,7 +378,6 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
             MHD_RESPMEM_MUST_COPY
         );
     } else if (!mhdoutfilepath.isEmpty()) {
-        int mhdfd = KDE::open(mhdoutfilepath, O_RDONLY);
         KDE_struct_stat statbuf;
         if (KDE::stat(mhdoutfilepath, &statbuf) == -1) {
             kWarning() << "Could not stat" << mhdoutfilepath;
@@ -388,6 +387,7 @@ enum MHD_Result KHTTPPrivate::accessCallback(void *cls,
             kWarning() << "Filepath does not point to regular file" << mhdoutfilepath;
             return MHD_NO;
         }
+        int mhdfd = KDE::open(mhdoutfilepath, O_RDONLY);
         mhdresult = MHD_is_feature_supported(MHD_FEATURE_LARGE_FILE);
         if (mhdresult == MHD_NO) {
             mhdresponse = MHD_create_response_from_fd(statbuf.st_size, mhdfd);
