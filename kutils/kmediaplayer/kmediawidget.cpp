@@ -133,7 +133,7 @@ KMediaWidget::~KMediaWidget()
 {
     if (d->m_volumeline.state() == QTimeLine::Running) {
         d->m_volumeline.stop();
-        setVolume(d->m_volumeline.endFrame());
+        d->m_player->setVolume(d->m_volumeline.endFrame());
     }
     d->m_player->stop();
     /*
@@ -154,10 +154,9 @@ void KMediaWidget::open(const QString &path)
     if (d->m_smoothvolume) {
         if (d->m_volumeline.state() == QTimeLine::Running) {
             d->m_volumeline.stop();
-            setVolume(d->m_volumeline.endFrame());
         }
         d->m_volumeline.setFrameRange(0, d->m_ui->w_volume->value());
-        setVolume(0);
+        d->m_player->setVolume(0);
     }
     d->m_ui->w_position->setSliderPosition(0); // fake seek to start
     d->m_player->load(path);
@@ -199,6 +198,9 @@ void KMediaWidget::setPosition(const int value)
 
 void KMediaWidget::setVolume(const int value)
 {
+    if (d->m_volumeline.state() == QTimeLine::Running) {
+        d->m_volumeline.stop();
+    }
     d->m_player->setVolume(value);
 }
 
@@ -298,7 +300,7 @@ void KMediaWidget::_updateVolume(const int volume)
     if (volume == d->m_volumeline.endFrame()) {
         d->m_volumeline.stop();
     }
-    setVolume(volume);
+    d->m_player->setVolume(volume);
 }
 
 void KMediaWidget::_updateError(const QString &error)
