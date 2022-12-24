@@ -849,7 +849,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
 
     const QString currentdir = QDir::currentPath();
     if (!QDir::setCurrent(destination)) {
-        d->m_error = i18n("could not change to destination directory: %1", destination);
+        d->m_error = i18n("Could not change to destination directory: %1", destination);
         kDebug() << d->m_error;
         return result;
     }
