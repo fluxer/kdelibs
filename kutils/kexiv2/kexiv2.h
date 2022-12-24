@@ -31,6 +31,7 @@ class KExiv2Private;
 /*!
     Structure that holds information about Exif, IPTC or XMP property.
 
+    @ingroup Types
     @since 4.22
     @see KExiv2
     @link https://exiv2.org/metadata.html

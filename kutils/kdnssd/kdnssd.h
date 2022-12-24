@@ -38,6 +38,7 @@
     @p KProtocolInfo::isKnownProtocol() may be used to check if there is KIO slave that can handle
     @p url since some KIO slaves are optional (such as the SFTP (SSH) slave).
 
+    @ingroup Types
     @since 4.21
     @see KDNSSD
     @link http://www.dns-sd.org/ServiceTypes.html

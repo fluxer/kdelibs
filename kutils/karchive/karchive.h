@@ -28,9 +28,7 @@
 /*!
     Archive entry information holder, valid object is obtained via @p KArchive::entry
 
-    @note It is up to the programmer to keep the integrity of the structure
     @ingroup Types
-
     @see KArchive
     @since 4.22
 */

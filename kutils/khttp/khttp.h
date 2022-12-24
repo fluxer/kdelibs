@@ -25,6 +25,14 @@
 #include <QMap>
 #include <QHostAddress>
 
+/*!
+    Map that holds information about HTTP headers.
+
+    @ingroup Types
+
+    @since 4.21
+    @see KHTTP
+*/
 typedef QMap<QByteArray,QByteArray> KHTTPHeaders;
 
 class KHTTPPrivate;
@@ -33,6 +41,7 @@ class KHTTPPrivate;
     Class to serve data over HTTP(S).
 
     @since 4.21
+    @see KHTTPHeaders
 */
 class KHTTP_EXPORT KHTTP : public QObject
 {
