@@ -193,9 +193,9 @@ public:
     QString m_tempprefix;
 
 #if defined(HAVE_LIBARCHIVE)
-    struct archive* openRead(const QByteArray &path);
-    struct archive* openWrite(const QByteArray &path);
-    struct archive* openDisk(const bool preserve);
+    struct archive* openRead(const QByteArray &path) const;
+    struct archive* openWrite(const QByteArray &path) const;
+    struct archive* openDisk(const bool preserve) const;
     static bool closeRead(struct archive*);
     static bool closeWrite(struct archive*);
 
@@ -212,7 +212,7 @@ KArchivePrivate::KArchivePrivate()
 }
 
 #if defined(HAVE_LIBARCHIVE)
-struct archive* KArchivePrivate::openRead(const QByteArray &path)
+struct archive* KArchivePrivate::openRead(const QByteArray &path) const
 {
     struct archive* readarchive = archive_read_new();
 
@@ -245,7 +245,7 @@ struct archive* KArchivePrivate::openRead(const QByteArray &path)
     return readarchive;
 }
 
-struct archive* KArchivePrivate::openWrite(const QByteArray &path)
+struct archive* KArchivePrivate::openWrite(const QByteArray &path) const
 {
     struct archive* writearchive = archive_write_new();
 
@@ -296,20 +296,20 @@ struct archive* KArchivePrivate::openWrite(const QByteArray &path)
     return writearchive;
 }
 
-struct archive* KArchivePrivate::openDisk(const bool preserve)
+struct archive* KArchivePrivate::openDisk(const bool preserve) const
 {
     struct archive* writearchive = archive_write_disk_new();
 
     if (writearchive) {
-        int extractFlags = ARCHIVE_EXTRACT_TIME;
-        extractFlags |= ARCHIVE_EXTRACT_SECURE_SYMLINKS | ARCHIVE_EXTRACT_SECURE_NODOTDOT;
+        int archiveflags = ARCHIVE_EXTRACT_TIME;
+        archiveflags |= ARCHIVE_EXTRACT_SECURE_SYMLINKS | ARCHIVE_EXTRACT_SECURE_NODOTDOT;
         if (preserve) {
-            extractFlags |= ARCHIVE_EXTRACT_PERM;
-            extractFlags |= ARCHIVE_EXTRACT_ACL | ARCHIVE_EXTRACT_XATTR;
-            extractFlags |= ARCHIVE_EXTRACT_FFLAGS | ARCHIVE_EXTRACT_MAC_METADATA;
+            archiveflags |= ARCHIVE_EXTRACT_PERM;
+            archiveflags |= ARCHIVE_EXTRACT_ACL | ARCHIVE_EXTRACT_XATTR;
+            archiveflags |= ARCHIVE_EXTRACT_FFLAGS | ARCHIVE_EXTRACT_MAC_METADATA;
         }
 
-        if (archive_write_disk_set_options(writearchive, extractFlags) != ARCHIVE_OK) {
+        if (archive_write_disk_set_options(writearchive, archiveflags) != ARCHIVE_OK) {
             kDebug() << "archive_write_disk_set_options" << archive_error_string(writearchive);
             KArchivePrivate::closeWrite(writearchive);
             return nullptr;
