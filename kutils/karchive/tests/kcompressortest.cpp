@@ -22,6 +22,7 @@
 
 #include <qplatformdefs.h>
 
+static const QByteArray s_emptydata;
 static const QByteArray s_shorttestdata = QByteArray("foobar");
 static const QByteArray s_longtestdata = s_shorttestdata.repeated(QT_BUFFSIZE);
 
@@ -50,8 +51,7 @@ void KCompressorTest::process_data()
 {
     QTest::addColumn<int>("type");
     QTest::addColumn<int>("level");
-    QTest::addColumn<QByteArray>("shortdata");
-    QTest::addColumn<QByteArray>("longdata");
+    QTest::addColumn<QByteArray>("data");
 
     static const char* kcompressortypestr[] = {
         "KCompressor::TypeUnknown",
@@ -67,7 +67,12 @@ void KCompressorTest::process_data()
                 // compression level 0 is not valid for Bzip2
                 continue;
             }
-            QTest::newRow(kcompressortypestr[itype]) << itype << ilevel << s_shorttestdata << s_longtestdata;
+            const QByteArray emptytag = QByteArray(kcompressortypestr[itype]) + " (empty data)";
+            QTest::newRow(emptytag.constData()) << itype << ilevel << s_emptydata;
+            const QByteArray shorttag = QByteArray(kcompressortypestr[itype]) + " (short data)";
+            QTest::newRow(shorttag.constData()) << itype << ilevel << s_shorttestdata;
+            const QByteArray longtag = QByteArray(kcompressortypestr[itype]) + " (long data)";
+            QTest::newRow(longtag.constData()) << itype << ilevel << s_longtestdata;
         }
     }
 }
@@ -76,30 +81,16 @@ void KCompressorTest::process()
 {
     QFETCH(int, type);
     QFETCH(int, level);
-    QFETCH(QByteArray, shortdata);
-    QFETCH(QByteArray, longdata);
+    QFETCH(QByteArray, data);
 
-    {
-        KCompressor::KCompressorType kcompressortype = static_cast<KCompressor::KCompressorType>(type);
-        KCompressor kcompressor;
-        kcompressor.setType(kcompressortype);
-        QCOMPARE(kcompressor.type(), kcompressortype);
-        kcompressor.setLevel(level);
-        QCOMPARE(kcompressor.level(), level);
-        QCOMPARE(kcompressor.process(shortdata), true);
-        QCOMPARE(kcompressor.errorString(), QString());
-    }
-
-    {
-        KCompressor::KCompressorType kcompressortype = static_cast<KCompressor::KCompressorType>(type);
-        KCompressor kcompressor;
-        kcompressor.setType(kcompressortype);
-        QCOMPARE(kcompressor.type(), kcompressortype);
-        kcompressor.setLevel(level);
-        QCOMPARE(kcompressor.level(), level);
-        QCOMPARE(kcompressor.process(longdata), true);
-        QCOMPARE(kcompressor.errorString(), QString());
-    }
+    KCompressor::KCompressorType kcompressortype = static_cast<KCompressor::KCompressorType>(type);
+    KCompressor kcompressor;
+    kcompressor.setType(kcompressortype);
+    QCOMPARE(kcompressor.type(), kcompressortype);
+    kcompressor.setLevel(level);
+    QCOMPARE(kcompressor.level(), level);
+    QCOMPARE(kcompressor.process(data), true);
+    QCOMPARE(kcompressor.errorString(), QString());
 }
 
 #include "kcompressortest.moc"

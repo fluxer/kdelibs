@@ -23,6 +23,7 @@
 
 #include <qplatformdefs.h>
 
+static const QByteArray s_emptydata;
 static const QByteArray s_shorttestdata = QByteArray("foobar");
 static const QByteArray s_longtestdata = s_shorttestdata.repeated(QT_BUFFSIZE);
 
@@ -51,8 +52,7 @@ void KDecompressorTest::process_data()
 {
     QTest::addColumn<int>("type");
     QTest::addColumn<int>("level");
-    QTest::addColumn<QByteArray>("shortdata");
-    QTest::addColumn<QByteArray>("longdata");
+    QTest::addColumn<QByteArray>("data");
 
     static const char* kdecompressortypestr[] = {
         "KDecompressor::TypeUnknown",
@@ -68,7 +68,12 @@ void KDecompressorTest::process_data()
                 // compression level 0 is not valid for Bzip2
                 continue;
             }
-            QTest::newRow(kdecompressortypestr[itype]) << itype << ilevel << s_shorttestdata << s_longtestdata;
+            const QByteArray emptytag = QByteArray(kdecompressortypestr[itype]) + " (empty data)";
+            QTest::newRow(emptytag.constData()) << itype << ilevel << s_emptydata;
+            const QByteArray shorttag = QByteArray(kdecompressortypestr[itype]) + " (short data)";
+            QTest::newRow(shorttag.constData()) << itype << ilevel << s_shorttestdata;
+            const QByteArray longtag = QByteArray(kdecompressortypestr[itype]) + " (long data)";
+            QTest::newRow(longtag.constData()) << itype << ilevel << s_longtestdata;
         }
     }
 }
@@ -77,48 +82,25 @@ void KDecompressorTest::process()
 {
     QFETCH(int, type);
     QFETCH(int, level);
-    QFETCH(QByteArray, shortdata);
-    QFETCH(QByteArray, longdata);
+    QFETCH(QByteArray, data);
 
-    {
-        KCompressor::KCompressorType kcompressortype = static_cast<KCompressor::KCompressorType>(type);
-        KCompressor kcompressor;
-        kcompressor.setType(kcompressortype);
-        QCOMPARE(kcompressor.type(), kcompressortype);
-        kcompressor.setLevel(level);
-        QCOMPARE(kcompressor.level(), level);
-        QCOMPARE(kcompressor.process(shortdata), true);
-        const QByteArray compresseddata = kcompressor.result();
+    KCompressor::KCompressorType kcompressortype = static_cast<KCompressor::KCompressorType>(type);
+    KCompressor kcompressor;
+    kcompressor.setType(kcompressortype);
+    QCOMPARE(kcompressor.type(), kcompressortype);
+    kcompressor.setLevel(level);
+    QCOMPARE(kcompressor.level(), level);
+    QCOMPARE(kcompressor.process(data), true);
+    const QByteArray compresseddata = kcompressor.result();
 
-        KDecompressor::KDecompressorType kdecompressortype = static_cast<KDecompressor::KDecompressorType>(type);
-        KDecompressor kdecompressor;
-        kdecompressor.setType(kdecompressortype);
-        QCOMPARE(kdecompressor.type(), kdecompressortype);
-        QCOMPARE(kdecompressor.process(compresseddata), true);
-        QCOMPARE(kdecompressor.errorString(), QString());
-        const QByteArray decompresseddata = kdecompressor.result();
-        QCOMPARE(decompresseddata, shortdata);
-    }
-
-    {
-        KCompressor::KCompressorType kcompressortype = static_cast<KCompressor::KCompressorType>(type);
-        KCompressor kcompressor;
-        kcompressor.setType(kcompressortype);
-        QCOMPARE(kcompressor.type(), kcompressortype);
-        kcompressor.setLevel(level);
-        QCOMPARE(kcompressor.level(), level);
-        QCOMPARE(kcompressor.process(longdata), true);
-        const QByteArray compresseddata = kcompressor.result();
-
-        KDecompressor::KDecompressorType kdecompressortype = static_cast<KDecompressor::KDecompressorType>(type);
-        KDecompressor kdecompressor;
-        kdecompressor.setType(kdecompressortype);
-        QCOMPARE(kdecompressor.type(), kdecompressortype);
-        QCOMPARE(kdecompressor.process(compresseddata), true);
-        QCOMPARE(kdecompressor.errorString(), QString());
-        const QByteArray decompresseddata = kdecompressor.result();
-        QCOMPARE(decompresseddata, longdata);
-    }
+    KDecompressor::KDecompressorType kdecompressortype = static_cast<KDecompressor::KDecompressorType>(type);
+    KDecompressor kdecompressor;
+    kdecompressor.setType(kdecompressortype);
+    QCOMPARE(kdecompressor.type(), kdecompressortype);
+    QCOMPARE(kdecompressor.process(compresseddata), true);
+    QCOMPARE(kdecompressor.errorString(), QString());
+    const QByteArray decompresseddata = kdecompressor.result();
+    QCOMPARE(decompresseddata, data);
 }
 
 #include "kdecompressortest.moc"
