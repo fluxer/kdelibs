@@ -248,13 +248,14 @@ static QByteArray HTTPStatusToContent(const ushort httpstatus)
 
 static KHTTPHeaders HTTPHeaders(const QString &serverid, const bool authenticate)
 {
+    const QByteArray httpserver = serverid.toAscii();
     KHTTPHeaders khttpheaders;
-    khttpheaders.insert("Server", serverid.toAscii());
+    khttpheaders.insert("Server", httpserver);
     const QString httpdate = QDateTime::currentDateTimeUtc().toString("ddd, dd MMM yyyy hh:mm:ss") + QLatin1String(" GMT");
     khttpheaders.insert("Date", httpdate.toAscii());
     if (authenticate) {
-        const QString httpauthenticate = QString::fromLatin1("Basic realm=") + serverid;
-        khttpheaders.insert("WWW-Authenticate", httpauthenticate.toAscii());
+        const QByteArray httpauthenticate = QByteArray("Basic realm=\"") + httpserver + "\"";
+        khttpheaders.insert("WWW-Authenticate", httpauthenticate);
     }
     return khttpheaders;
 }
