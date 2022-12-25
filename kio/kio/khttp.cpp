@@ -246,7 +246,7 @@ static QByteArray HTTPStatusToContent(const ushort httpstatus)
     return httpdata;
 }
 
-static KHTTPHeaders responseHeaders(const bool authenticate)
+static KHTTPHeaders HTTPHeaders(const bool authenticate)
 {
     KHTTPHeaders khttpheaders;
     const QString httpserver = QCoreApplication::applicationName();
@@ -260,7 +260,7 @@ static KHTTPHeaders responseHeaders(const bool authenticate)
     return khttpheaders;
 }
 
-static QByteArray responseData(const ushort httpstatus, const KHTTPHeaders &httpheaders, const qint64 datasize)
+static QByteArray HTTPData(const ushort httpstatus, const KHTTPHeaders &httpheaders, const qint64 datasize)
 {
     QByteArray httpdata("HTTP/1.1 ");
     httpdata.append(QByteArray::number(httpstatus));
@@ -361,6 +361,8 @@ KHTTPPrivate::KHTTPPrivate(QObject *parent)
     : QObject(parent),
     tcpserver(nullptr)
 {
+    authmessage = HTTPStatusToContent(401);
+
     // NOTE: the default maximum for pending connections is 30
     tcpserver = new QTcpServer(this);
     connect(tcpserver, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));
@@ -387,11 +389,11 @@ void KHTTPPrivate::slotNewConnection()
     khttpheadersparser.parseHeaders(clientdata, requiresauthorization);
     // qDebug() << Q_FUNC_INFO << "url" << khttpheadersparser.path();
 
-    KHTTPHeaders khttpheaders = responseHeaders(requiresauthorization);
+    KHTTPHeaders khttpheaders = HTTPHeaders(requiresauthorization);
     if (requiresauthorization &&
         (khttpheadersparser.authUser() != authusername || khttpheadersparser.authPass() != authpassword)) {
         kDebug(s_khttpdebugarea) << "sending unauthorized to client";
-        const QByteArray httpdata = responseData(401, khttpheaders, authmessage.size());
+        const QByteArray httpdata = HTTPData(401, khttpheaders, authmessage.size());
         client->write(httpdata);
         client->flush();
         client->write(authmessage);
@@ -414,7 +416,7 @@ void KHTTPPrivate::slotNewConnection()
         QFile httpfile(responsefilepath);
         if (httpfile.open(QFile::ReadOnly)) {
             kDebug(s_khttpdebugarea) << "sending file to client" << responsefilepath << khttpheaders;
-            const QByteArray httpdata = responseData(responsestatus, khttpheaders, httpfile.size());
+            const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, httpfile.size());
             client->write(httpdata);
             client->flush();
 
@@ -437,9 +439,9 @@ void KHTTPPrivate::slotNewConnection()
             }
         } else {
             kWarning(s_khttpdebugarea) << "could not open" << responsefilepath;
-            khttpheaders = responseHeaders(false);
+            khttpheaders = HTTPHeaders(false);
             const QByteArray data500 = HTTPStatusToContent(500);
-            const QByteArray httpdata = responseData(500, khttpheaders, data500.size());
+            const QByteArray httpdata = HTTPData(500, khttpheaders, data500.size());
             client->write(httpdata);
             client->flush();
             client->write(data500);
@@ -455,7 +457,7 @@ void KHTTPPrivate::slotNewConnection()
     if (responsedata.isEmpty()) {
         responsedata = HTTPStatusToContent(responsestatus);
     }
-    const QByteArray httpdata = responseData(responsestatus, khttpheaders, responsedata.size());
+    const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, responsedata.size());
     client->write(httpdata);
     client->flush();
     client->write(responsedata);
@@ -489,6 +491,9 @@ bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &passwo
     d->authusername = username;
     d->authpassword = password;
     d->authmessage = message.toAscii();
+    if (d->authmessage.isEmpty()) {
+        d->authmessage = HTTPStatusToContent(401);
+    }
     return true;
 }
 
