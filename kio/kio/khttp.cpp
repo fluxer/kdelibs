@@ -17,7 +17,7 @@
 */
 
 #include "khttp.h"
-#include "krandom.h"
+#include "klocale.h"
 #include "kdebug.h"
 
 #include <QTcpServer>
@@ -26,7 +26,6 @@
 #include <QCoreApplication>
 #include <QThread>
 #include <QFile>
-#include <qplatformdefs.h>
 
 #include <limits.h>
 
@@ -482,7 +481,7 @@ bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &passwo
 {
     d->errorstring.clear();
     if (username.isEmpty() || password.isEmpty()) {
-        d->errorstring = QString::fromLatin1("User name or password is empty");
+        d->errorstring = i18n("User name or password is empty");
         d->authusername.clear();
         d->authpassword.clear();
         return false;
