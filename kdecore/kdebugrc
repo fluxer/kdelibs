@@ -33,7 +33,7 @@
 #
 
 # KHTTP warning, error and fatal to syslog
-[51007]
+[7050]
 InfoOutput=4
 WarnOutput=3
 ErrorOutput=3
