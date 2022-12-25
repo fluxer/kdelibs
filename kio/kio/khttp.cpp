@@ -240,9 +240,11 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
 
 static QByteArray HTTPStatusToContent(const ushort httpstatus)
 {
-    QByteArray httpdata("<html>");
+    QByteArray httpdata("<html>\n");
+    httpdata.append(QByteArray::number(httpstatus));
+    httpdata.append(" ");
     httpdata.append(HTTPStatusToBytes(httpstatus));
-    httpdata.append("</html>");
+    httpdata.append("\n</html>");
     return httpdata;
 }
 
