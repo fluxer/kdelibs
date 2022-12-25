@@ -401,7 +401,6 @@ void KHTTPPrivate::slotNewConnection()
     khttpheadersparser.parseHeaders(clientdata, requiresauthorization);
     // qDebug() << Q_FUNC_INFO << "url" << khttpheadersparser.path();
 
-    KHTTPHeaders khttpheaders = HTTPHeaders(serverid, requiresauthorization);
     if (requiresauthorization &&
         (khttpheadersparser.authUser() != authusername || khttpheadersparser.authPass() != authpassword)) {
         writeResponse(401, true, client);
@@ -413,6 +412,7 @@ void KHTTPPrivate::slotNewConnection()
     const QByteArray responseurl = khttpheadersparser.path();
     QByteArray responsedata;
     ushort responsestatus = 404;
+    KHTTPHeaders khttpheaders = HTTPHeaders(serverid, requiresauthorization);
     QString responsefilepath;
     khttp->respond(responseurl, &responsedata, &responsestatus, &khttpheaders, &responsefilepath);
 
