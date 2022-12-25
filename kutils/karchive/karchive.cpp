@@ -741,7 +741,7 @@ bool KArchive::remove(const QStringList &paths) const
 
     QStringList recursivepaths;
     foreach (const QString &path, paths) {
-        if (path.endsWith(QLatin1Char('/'))) {
+        if (path.endsWith(QLatin1Char('/')) || S_ISDIR(KArchive::entry(path).mode)) {
             const QByteArray pathbytes = QFile::encodeName(path);
             foreach (const KArchiveEntry &karchiveentry, KArchive::list(path)) {
                 if (karchiveentry.pathname.startsWith(pathbytes)) {
@@ -870,7 +870,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
 
     QStringList recursivepaths;
     foreach (const QString &path, paths) {
-        if (path.endsWith(QLatin1Char('/'))) {
+        if (path.endsWith(QLatin1Char('/')) || S_ISDIR(KArchive::entry(path).mode)) {
             const QByteArray pathbytes = QFile::encodeName(path);
             foreach (const KArchiveEntry &karchiveentry, KArchive::list(path)) {
                 if (karchiveentry.pathname.startsWith(pathbytes)) {
