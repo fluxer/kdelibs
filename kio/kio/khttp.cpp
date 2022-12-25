@@ -246,15 +246,14 @@ static QByteArray HTTPStatusToContent(const ushort httpstatus)
     return httpdata;
 }
 
-static KHTTPHeaders HTTPHeaders(const bool authenticate)
+static KHTTPHeaders HTTPHeaders(const QString &serverid, const bool authenticate)
 {
     KHTTPHeaders khttpheaders;
-    const QString httpserver = QCoreApplication::applicationName();
-    khttpheaders.insert("Server", httpserver.toAscii());
+    khttpheaders.insert("Server", serverid.toAscii());
     const QString httpdate = QDateTime::currentDateTimeUtc().toString("ddd, dd MMM yyyy hh:mm:ss") + QLatin1String(" GMT");
     khttpheaders.insert("Date", httpdate.toAscii());
     if (authenticate) {
-        const QString httpauthenticate = QString::fromLatin1("Basic realm=") + httpserver;
+        const QString httpauthenticate = QString::fromLatin1("Basic realm=") + serverid;
         khttpheaders.insert("WWW-Authenticate", httpauthenticate.toAscii());
     }
     return khttpheaders;
@@ -352,6 +351,7 @@ private Q_SLOTS:
     void slotNewConnection();
 
 public:
+    QString serverid;
     QByteArray authusername;
     QByteArray authpassword;
     QString errorstring;
@@ -365,6 +365,8 @@ KHTTPPrivate::KHTTPPrivate(QObject *parent)
     : QObject(parent),
     tcpserver(nullptr)
 {
+    serverid = QCoreApplication::applicationName();
+
     // NOTE: the default maximum for pending connections is 30
     tcpserver = new QTcpServer(this);
     connect(tcpserver, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));
@@ -398,7 +400,7 @@ void KHTTPPrivate::slotNewConnection()
     khttpheadersparser.parseHeaders(clientdata, requiresauthorization);
     // qDebug() << Q_FUNC_INFO << "url" << khttpheadersparser.path();
 
-    KHTTPHeaders khttpheaders = HTTPHeaders(requiresauthorization);
+    KHTTPHeaders khttpheaders = HTTPHeaders(serverid, requiresauthorization);
     if (requiresauthorization &&
         (khttpheadersparser.authUser() != authusername || khttpheadersparser.authPass() != authpassword)) {
         writeResponse(401, true, client);
@@ -467,7 +469,7 @@ void KHTTPPrivate::slotNewConnection()
 void KHTTPPrivate::writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client)
 {
     kDebug(s_khttpdebugarea) << "sending status to client" << httpstatus << client->peerAddress() << client->peerPort();
-    KHTTPHeaders khttpheaders = HTTPHeaders(authenticate);
+    KHTTPHeaders khttpheaders = HTTPHeaders(serverid, authenticate);
     const QByteArray contentdata = HTTPStatusToContent(httpstatus);
     const QByteArray httpdata = HTTPData(httpstatus, khttpheaders, contentdata.size());
     client->write(httpdata);
@@ -490,6 +492,11 @@ KHTTP::~KHTTP()
 {
     stop();
     delete d;
+}
+
+void KHTTP::setServerID(const QString &id)
+{
+    d->serverid = id;
 }
 
 bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &password)

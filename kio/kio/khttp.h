@@ -54,6 +54,12 @@ public:
     ~KHTTP();
 
     /*!
+        @brief Sets the server ID to @p id
+        @note The ID is @p QApplication::applicationName() by default
+    */
+    void setServerID(const QString &id);
+
+    /*!
         @brief Sets @p username and @p password to be used for authentication.
         @note The authentication method used is basic.
     */
