@@ -38,7 +38,7 @@ typedef QMap<QByteArray,QByteArray> KHTTPHeaders;
 class KHTTPPrivate;
 
 /*!
-    Class to serve data over HTTP(S).
+    Class to serve data over HTTP.
 
     @since 4.21
     @see KHTTPHeaders
