@@ -54,11 +54,10 @@ public:
     ~KHTTP();
 
     /*!
-        @brief Sets @p username and @p password to be used for authentication with @p message as
-        content to be send to clients when authentication fails.
+        @brief Sets @p username and @p password to be used for authentication.
         @note The authentication method used is basic.
     */
-    bool setAuthenticate(const QByteArray &username, const QByteArray &password, const QString &message);
+    bool setAuthenticate(const QByteArray &username, const QByteArray &password);
 
     /*!
         @brief Starts serving data for requests at @p address on @p port.

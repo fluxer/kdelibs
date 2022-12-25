@@ -354,17 +354,17 @@ private Q_SLOTS:
 public:
     QByteArray authusername;
     QByteArray authpassword;
-    QByteArray authmessage;
     QString errorstring;
     QTcpServer* tcpserver;
+
+private:
+    void writeResponse(const ushort httpstatus, QTcpSocket *client);
 };
 
 KHTTPPrivate::KHTTPPrivate(QObject *parent)
     : QObject(parent),
     tcpserver(nullptr)
 {
-    authmessage = HTTPStatusToContent(401);
-
     // NOTE: the default maximum for pending connections is 30
     tcpserver = new QTcpServer(this);
     connect(tcpserver, SIGNAL(newConnection()), this, SLOT(slotNewConnection()));
@@ -386,16 +386,7 @@ void KHTTPPrivate::slotNewConnection()
     const qint64 httpclientresult = client->read(httpbuffer.data(), httpbuffer.size());
     if (client->bytesAvailable() > 0) {
         kWarning(s_khttpdebugarea) << "client payload too large" << client->peerAddress() << client->peerPort();
-        KHTTPHeaders khttpheaders = HTTPHeaders(false);
-        const QByteArray data413 = HTTPStatusToContent(413);
-        const QByteArray httpdata = HTTPData(413, khttpheaders, data413.size());
-        client->write(httpdata);
-        client->flush();
-        client->write(data413);
-        client->flush();
-        kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
-        client->disconnectFromHost();
-        client->deleteLater();
+        writeResponse(413, client);
         return;
     }
     const QByteArray clientdata = httpbuffer.mid(0, httpclientresult);
@@ -410,15 +401,7 @@ void KHTTPPrivate::slotNewConnection()
     KHTTPHeaders khttpheaders = HTTPHeaders(requiresauthorization);
     if (requiresauthorization &&
         (khttpheadersparser.authUser() != authusername || khttpheadersparser.authPass() != authpassword)) {
-        kDebug(s_khttpdebugarea) << "sending unauthorized to client";
-        const QByteArray httpdata = HTTPData(401, khttpheaders, authmessage.size());
-        client->write(httpdata);
-        client->flush();
-        client->write(authmessage);
-        client->flush();
-        kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
-        client->disconnectFromHost();
-        client->deleteLater();
+        writeResponse(401, client);
         return;
     }
 
@@ -432,37 +415,34 @@ void KHTTPPrivate::slotNewConnection()
 
     if (!responsefilepath.isEmpty()) {
         QFile httpfile(responsefilepath);
-        if (httpfile.open(QFile::ReadOnly)) {
-            kDebug(s_khttpdebugarea) << "sending file to client" << responsefilepath << khttpheaders;
-            const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, httpfile.size());
-            client->write(httpdata);
-            client->flush();
-
-            qint64 httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
-            while (httpfileresult > 0) {
-                client->write(httpbuffer.constData(), httpfileresult);
-                client->flush();
-
-                // TODO: this check should be done before every write
-                if (client->state() != QTcpSocket::ConnectedState) {
-                    kDebug(s_khttpdebugarea) << "client disconnected while writing file" << client->peerAddress() << client->peerPort();
-                    break;
-                }
-
-                QCoreApplication::processEvents(QEventLoop::AllEvents, KHTTP_TIMEOUT);
-                QThread::msleep(KHTTP_SLEEPTIME);
-
-                httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
-            }
-        } else {
+        if (!httpfile.open(QFile::ReadOnly)) {
             kWarning(s_khttpdebugarea) << "could not open" << responsefilepath;
-            khttpheaders = HTTPHeaders(false);
-            const QByteArray data500 = HTTPStatusToContent(500);
-            const QByteArray httpdata = HTTPData(500, khttpheaders, data500.size());
-            client->write(httpdata);
-            client->flush();
-            client->write(data500);
+            writeResponse(500, client);
+            return;
         }
+
+        kDebug(s_khttpdebugarea) << "sending file to client" << responsefilepath << khttpheaders;
+        const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, httpfile.size());
+        client->write(httpdata);
+        client->flush();
+
+        qint64 httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
+        while (httpfileresult > 0) {
+            client->write(httpbuffer.constData(), httpfileresult);
+            client->flush();
+
+            // TODO: this check should be done before every write
+            if (client->state() != QTcpSocket::ConnectedState) {
+                kDebug(s_khttpdebugarea) << "client disconnected while writing file" << client->peerAddress() << client->peerPort();
+                break;
+            }
+
+            QCoreApplication::processEvents(QEventLoop::AllEvents, KHTTP_TIMEOUT);
+            QThread::msleep(KHTTP_SLEEPTIME);
+
+            httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
+        }
+
         client->flush();
         kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
         client->disconnectFromHost();
@@ -484,6 +464,22 @@ void KHTTPPrivate::slotNewConnection()
     client->deleteLater();
 }
 
+void KHTTPPrivate::writeResponse(const ushort httpstatus, QTcpSocket *client)
+{
+    kDebug(s_khttpdebugarea) << "sending status to client" << httpstatus << client->peerAddress() << client->peerPort();
+    KHTTPHeaders khttpheaders = HTTPHeaders(false);
+    const QByteArray contentdata = HTTPStatusToContent(httpstatus);
+    const QByteArray httpdata = HTTPData(httpstatus, khttpheaders, contentdata.size());
+    client->write(httpdata);
+    client->flush();
+    client->write(contentdata);
+    client->flush();
+    kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
+    client->disconnectFromHost();
+    client->deleteLater();
+}
+
+
 KHTTP::KHTTP(QObject *parent)
     : QObject(parent),
     d(new KHTTPPrivate(this))
@@ -496,7 +492,7 @@ KHTTP::~KHTTP()
     delete d;
 }
 
-bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &password, const QString &message)
+bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &password)
 {
     d->errorstring.clear();
     if (username.isEmpty() || password.isEmpty()) {
@@ -507,10 +503,6 @@ bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &passwo
     }
     d->authusername = username;
     d->authpassword = password;
-    d->authmessage = message.toAscii();
-    if (d->authmessage.isEmpty()) {
-        d->authmessage = HTTPStatusToContent(401);
-    }
     return true;
 }
 
