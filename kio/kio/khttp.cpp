@@ -40,6 +40,7 @@ static const int s_khttpdebugarea = 7050;
 // https://datatracker.ietf.org/doc/html/rfc7230
 // https://datatracker.ietf.org/doc/html/rfc7235
 // https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+// https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 
 static QByteArray HTTPStatusToBytes(const ushort httpstatus)
 {
@@ -302,12 +303,14 @@ public:
 
     QByteArray method() const { return m_method; }
     QByteArray path() const { return m_path; }
+    QByteArray version() const { return m_version; }
     QByteArray authUser() const { return m_authuser; }
     QByteArray authPass() const { return m_authpass; }
 
 private:
     QByteArray m_method;
     QByteArray m_path;
+    QByteArray m_version;
     QByteArray m_authuser;
     QByteArray m_authpass;
 };
@@ -322,9 +325,11 @@ void KHTTPHeadersParser::parseHeaders(const QByteArray &header, const bool authe
         }
         if (firstline) {
             const QList<QByteArray> splitline = line.split(' ');
-            if (splitline.size() >= 3) {
+            if (splitline.size() == 3) {
+                // qDebug() << Q_FUNC_INFO << "method, path and version" << splitline;
                 m_method = splitline.at(0).trimmed().toUpper();
                 m_path = splitline.at(1).trimmed();
+                m_version = splitline.at(2).trimmed();
             }
         } else if (authenticate && qstrnicmp(line.constData(), "Authorization", 13) == 0) {
             const QList<QByteArray> splitline = line.split(':');
@@ -344,7 +349,7 @@ void KHTTPHeadersParser::parseHeaders(const QByteArray &header, const bool authe
         }
         firstline = false;
     }
-    // qDebug() << Q_FUNC_INFO << m_path << m_authuser << m_authpass;
+    // qDebug() << Q_FUNC_INFO << m_method << m_path << m_version << m_authuser << m_authpass;
 }
 
 class KHTTPPrivate : public QObject
@@ -404,10 +409,15 @@ void KHTTPPrivate::slotNewConnection()
 
     KHTTPHeadersParser khttpheadersparser;
     khttpheadersparser.parseHeaders(clientdata, requiresauthorization);
-    kDebug(s_khttpdebugarea) << "client request" << khttpheadersparser.method() << khttpheadersparser.path();
+    kDebug(s_khttpdebugarea) << "client request" << khttpheadersparser.method() << khttpheadersparser.path() << khttpheadersparser.version();
 
     if (khttpheadersparser.method() != "GET") {
         writeResponse(405, false, client);
+        return;
+    }
+
+    if (khttpheadersparser.version() != "HTTP/1.1") {
+        writeResponse(505, false, client);
         return;
     }
 
