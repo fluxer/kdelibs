@@ -300,11 +300,13 @@ class KHTTPHeadersParser
 public:
     void parseHeaders(const QByteArray &header, const bool authenticate);
 
+    QByteArray method() const { return m_method; }
     QByteArray path() const { return m_path; }
     QByteArray authUser() const { return m_authuser; }
     QByteArray authPass() const { return m_authpass; }
 
 private:
+    QByteArray m_method;
     QByteArray m_path;
     QByteArray m_authuser;
     QByteArray m_authpass;
@@ -321,6 +323,7 @@ void KHTTPHeadersParser::parseHeaders(const QByteArray &header, const bool authe
         if (firstline) {
             const QList<QByteArray> splitline = line.split(' ');
             if (splitline.size() >= 3) {
+                m_method = splitline.at(0).trimmed().toUpper();
                 m_path = splitline.at(1).trimmed();
             }
         } else if (authenticate && qstrnicmp(line.constData(), "Authorization", 13) == 0) {
@@ -401,7 +404,12 @@ void KHTTPPrivate::slotNewConnection()
 
     KHTTPHeadersParser khttpheadersparser;
     khttpheadersparser.parseHeaders(clientdata, requiresauthorization);
-    // qDebug() << Q_FUNC_INFO << "url" << khttpheadersparser.path();
+    kDebug(s_khttpdebugarea) << "client request" << khttpheadersparser.method() << khttpheadersparser.path();
+
+    if (khttpheadersparser.method() != "GET") {
+        writeResponse(405, false, client);
+        return;
+    }
 
     if (requiresauthorization &&
         (khttpheadersparser.authUser() != authusername || khttpheadersparser.authPass() != authpassword)) {
