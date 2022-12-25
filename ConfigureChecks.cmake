@@ -21,7 +21,6 @@ kde4_bool_to_01(BZIP2_FOUND HAVE_BZIP2)                 # karchive
 kde4_bool_to_01(LIBLZMA_FOUND HAVE_LIBLZMA)             # karchive
 kde4_bool_to_01(AVAHI_FOUND HAVE_AVAHI)                 # kdnssd
 kde4_bool_to_01(EXIV2_FOUND HAVE_EXIV2)                 # kexiv2
-kde4_bool_to_01(LIBMICROHTTPD_FOUND HAVE_LIBMICROHTTPD) # khttp
 kde4_bool_to_01(MPV_FOUND HAVE_MPV)                     # kmediaplayer
 kde4_bool_to_01(OPENSSL_FOUND HAVE_OPENSSL)             # kpasswdstore
 kde4_bool_to_01(ACL_FOUND HAVE_POSIX_ACL)               # kio

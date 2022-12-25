@@ -62,6 +62,7 @@
 7021        kbuildsycoca4
 7022        kurifilter
 7043        kio (bookmarks)
+7050        kio (KHTTP)
 7101        kio_file
 7102        kio_ftp
 7103        kio_http
@@ -69,7 +70,6 @@
 51004       kpasswdstore
 51005       kpowermanager
 51006       kdnssd
-51007       khttp
 51009       karchive
 51010       kemail
 

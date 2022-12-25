@@ -59,6 +59,7 @@ set(kiocore_STAT_SRCS
     kio/krun.cpp
     kio/kurifilter.cpp
     kio/kurlcompletion.cpp
+    kio/khttp.cpp
     kio/netaccess.cpp
     kio/paste.cpp
     kio/pastedialog.cpp
@@ -233,6 +234,7 @@ install(
     kio/krun.h
     kio/kurifilter.h
     kio/kurlcompletion.h
+    kio/khttp.h
     kfile/kabstractfilemodule.h
     kfile/kabstractfilewidget.h
     kfile/kdiskfreespaceinfo.h

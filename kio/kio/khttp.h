@@ -19,7 +19,7 @@
 #ifndef KHTTP_H
 #define KHTTP_H
 
-#include "khttp_export.h"
+#include <kio/kio_export.h>
 
 #include <QObject>
 #include <QMap>
@@ -43,7 +43,7 @@ class KHTTPPrivate;
     @since 4.21
     @see KHTTPHeaders
 */
-class KHTTP_EXPORT KHTTP : public QObject
+class KIO_EXPORT KHTTP : public QObject
 {
     Q_OBJECT
 public:
@@ -53,17 +53,6 @@ public:
     KHTTP(QObject *parent = nullptr);
     ~KHTTP();
 
-    /*!
-        @brief Sets @p keydata and @p certdata to be used for TLS/SSL handshake, if the key
-        requires password it must also be provided as @p password.
-        @note HTTP requests to the server address will not be redirected, clients must request
-        HTTPS address. For example if TLS/SSL certificate is set "http://foo.bar" will not be
-        accessible (no data is send) however "https://foo.bar" will be, unless external means are
-        used to redirect the request. This is the case only when non-standard ports are used, if
-        HTTP server runs on port 80 and HTTPS server runs on port 443 then both are accessible but
-        clients will most likely be making requests to the HTTP server on port 80.
-    */
-    bool setCertificate(const QByteArray &keydata, const QByteArray &certdata, const QByteArray &password = QByteArray());
     /*!
         @brief Sets @p username and @p password to be used for authentication with @p message as
         content to be send to clients when authentication fails.

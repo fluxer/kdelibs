@@ -17,7 +17,6 @@ set(cmakeFilesDontInstall
     FindLibRaw.cmake
     FindLibJPEG.cmake
     FindOpenJPEG.cmake
-    FindLibmicrohttpd.cmake
     FindWebP.cmake
 )
 
