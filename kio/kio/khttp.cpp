@@ -329,7 +329,7 @@ void KHTTPHeadersParser::parseHeaders(const QByteArray &header, const bool authe
                 // qDebug() << Q_FUNC_INFO << "method, path and version" << splitline;
                 m_method = splitline.at(0).trimmed().toUpper();
                 m_path = splitline.at(1).trimmed();
-                m_version = splitline.at(2).trimmed();
+                m_version = splitline.at(2).trimmed().toUpper();
             }
         } else if (authenticate && qstrnicmp(line.constData(), "Authorization", 13) == 0) {
             const QList<QByteArray> splitline = line.split(':');
