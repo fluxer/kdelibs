@@ -83,9 +83,8 @@ protected:
     /*!
         @brief Reimplement this method to send back data to clients when @p url is requested.
         @p outdata is the content, @p outhttpstatus is a standard HTTP status (e.g. 404) and
-        @p outheaders is map of additional headers to be send (e.g. "Content-Type"). Either
-        @p outdata must be non-empty or @p outfilepath must be pointing to a file, the other
-        arguments (@p outhttpstatus and @p outheaders) are optional.
+        @p outheaders is map of additional headers to be send (e.g. "Content-Type"). All
+        output arguments are optional, by default 404 reply is send.
         @note Prefer @p outfilepath over @p outdata for serving files, Large File Support is
         transparent.
         @link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
