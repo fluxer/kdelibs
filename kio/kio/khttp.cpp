@@ -288,6 +288,8 @@ static QByteArray HTTPData(const ushort httpstatus, const KHTTPHeaders &httphead
     httpdata.append(QByteArray::number(datasize));
     httpdata.append("\r\n\r\n");
 
+    // qDebug() << Q_FUNC_INFO << "HTTP data" << httpdata;
+
     return httpdata;
 }
 
@@ -380,7 +382,23 @@ void KHTTPPrivate::slotNewConnection()
         return;
     }
 
-    const QByteArray clientdata = client->readAll();
+    QByteArray httpbuffer(KHTTP_BUFFSIZE, '\0');
+    const qint64 httpclientresult = client->read(httpbuffer.data(), httpbuffer.size());
+    if (client->bytesAvailable() > 0) {
+        kWarning(s_khttpdebugarea) << "client payload too large" << client->peerAddress() << client->peerPort();
+        KHTTPHeaders khttpheaders = HTTPHeaders(false);
+        const QByteArray data413 = HTTPStatusToContent(413);
+        const QByteArray httpdata = HTTPData(413, khttpheaders, data413.size());
+        client->write(httpdata);
+        client->flush();
+        client->write(data413);
+        client->flush();
+        kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
+        client->disconnectFromHost();
+        client->deleteLater();
+        return;
+    }
+    const QByteArray clientdata = httpbuffer.mid(0, httpclientresult);
     // qDebug() << Q_FUNC_INFO << "request" << clientdata;
 
     const bool requiresauthorization = (!authusername.isEmpty() && !authpassword.isEmpty());
@@ -420,7 +438,6 @@ void KHTTPPrivate::slotNewConnection()
             client->write(httpdata);
             client->flush();
 
-            QByteArray httpbuffer(KHTTP_BUFFSIZE, '\0');
             qint64 httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
             while (httpfileresult > 0) {
                 client->write(httpbuffer.constData(), httpfileresult);
