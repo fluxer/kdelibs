@@ -358,7 +358,7 @@ public:
     QTcpServer* tcpserver;
 
 private:
-    void writeResponse(const ushort httpstatus, QTcpSocket *client);
+    void writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client);
 };
 
 KHTTPPrivate::KHTTPPrivate(QObject *parent)
@@ -386,7 +386,7 @@ void KHTTPPrivate::slotNewConnection()
     const qint64 httpclientresult = client->read(httpbuffer.data(), httpbuffer.size());
     if (client->bytesAvailable() > 0) {
         kWarning(s_khttpdebugarea) << "client payload too large" << client->peerAddress() << client->peerPort();
-        writeResponse(413, client);
+        writeResponse(413, false, client);
         return;
     }
     const QByteArray clientdata = httpbuffer.mid(0, httpclientresult);
@@ -401,7 +401,7 @@ void KHTTPPrivate::slotNewConnection()
     KHTTPHeaders khttpheaders = HTTPHeaders(requiresauthorization);
     if (requiresauthorization &&
         (khttpheadersparser.authUser() != authusername || khttpheadersparser.authPass() != authpassword)) {
-        writeResponse(401, client);
+        writeResponse(401, true, client);
         return;
     }
 
@@ -417,7 +417,7 @@ void KHTTPPrivate::slotNewConnection()
         QFile httpfile(responsefilepath);
         if (!httpfile.open(QFile::ReadOnly)) {
             kWarning(s_khttpdebugarea) << "could not open" << responsefilepath;
-            writeResponse(500, client);
+            writeResponse(500, false, client);
             return;
         }
 
@@ -464,10 +464,10 @@ void KHTTPPrivate::slotNewConnection()
     client->deleteLater();
 }
 
-void KHTTPPrivate::writeResponse(const ushort httpstatus, QTcpSocket *client)
+void KHTTPPrivate::writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client)
 {
     kDebug(s_khttpdebugarea) << "sending status to client" << httpstatus << client->peerAddress() << client->peerPort();
-    KHTTPHeaders khttpheaders = HTTPHeaders(false);
+    KHTTPHeaders khttpheaders = HTTPHeaders(authenticate);
     const QByteArray contentdata = HTTPStatusToContent(httpstatus);
     const QByteArray httpdata = HTTPData(httpstatus, khttpheaders, contentdata.size());
     client->write(httpdata);
