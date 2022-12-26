@@ -282,6 +282,8 @@ static KHTTPHeaders HTTPHeaders(const QString &serverid, const bool authenticate
     // optional, see:
     // https://www.rfc-editor.org/rfc/rfc9110.html#section-14.3
     khttpheaders.insert("Accept-Ranges", "none");
+    // TODO: maybe implement persistent connections
+    khttpheaders.insert("Connection", "close");
     if (authenticate) {
         const QByteArray httpauthenticate = QByteArray("Basic realm=\"") + httpserver + "\"";
         khttpheaders.insert("WWW-Authenticate", httpauthenticate);
