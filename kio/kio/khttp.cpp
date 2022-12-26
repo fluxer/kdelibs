@@ -37,9 +37,9 @@
 static const int s_khttpdebugarea = 7050;
 
 // for reference:
+// https://datatracker.ietf.org/doc/html/rfc9110
 // https://datatracker.ietf.org/doc/html/rfc7230
 // https://datatracker.ietf.org/doc/html/rfc7235
-// https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 // https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
 
 static QByteArray HTTPStatusToBytes(const ushort httpstatus)
@@ -105,6 +105,7 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
         case 305: {
             return QByteArray("Use Proxy");
         }
+        // (Unused)
         case 306: {
             return QByteArray("Switch Proxy");
         }
@@ -154,7 +155,7 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
             return QByteArray("Precondition Failed");
         }
         case 413: {
-            return QByteArray("Payload Too Large");
+            return QByteArray("Content Too Large");
         }
         case 414: {
             return QByteArray("URI Too Long");
@@ -168,6 +169,7 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
         case 417: {
             return QByteArray("Expectation Failed");
         }
+        // (Unused)
         case 418: {
             return QByteArray("I'm a teapot");
         }
@@ -175,7 +177,7 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
             return QByteArray("Misdirected Request");
         }
         case 422: {
-            return QByteArray("Unprocessable Entity");
+            return QByteArray("Unprocessable Content");
         }
         case 423: {
             return QByteArray("Locked");

@@ -87,7 +87,7 @@ protected:
         output arguments are optional, by default 404 reply is send.
         @note Prefer @p outfilepath over @p outdata for serving files, Large File Support is
         transparent.
-        @link https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
+        @link https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
         @link https://en.wikipedia.org/wiki/Large-file_support
     */
     virtual void respond(
