@@ -26,6 +26,7 @@
 #include <QCoreApplication>
 #include <QThread>
 #include <QFile>
+#include <QFileInfo>
 
 #include <limits.h>
 
@@ -241,6 +242,14 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
     return QByteArray("OK");
 }
 
+static const QByteArray HTTPDate(const QDateTime &datetime)
+{
+    Q_ASSERT(datetime.timeSpec() == Qt::UTC);
+    QByteArray httpdate = datetime.toString("ddd, dd MMM yyyy hh:mm:ss").toAscii();
+    httpdate.append(" GMT");
+    return httpdate;
+}
+
 static QByteArray HTTPStatusToContent(const ushort httpstatus)
 {
     QByteArray httpdata("<html>\n");
@@ -256,8 +265,8 @@ static KHTTPHeaders HTTPHeaders(const QString &serverid, const bool authenticate
     const QByteArray httpserver = serverid.toAscii();
     KHTTPHeaders khttpheaders;
     khttpheaders.insert("Server", httpserver);
-    const QString httpdate = QDateTime::currentDateTimeUtc().toString("ddd, dd MMM yyyy hh:mm:ss") + QLatin1String(" GMT");
-    khttpheaders.insert("Date", httpdate.toAscii());
+    const QByteArray httpdate = HTTPDate(QDateTime::currentDateTimeUtc());
+    khttpheaders.insert("Date", httpdate);
     // optional for anything but 405, see:
     // https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.1
     khttpheaders.insert("Allow", "GET");
@@ -461,6 +470,20 @@ void KHTTPPrivate::slotNewConnection()
             kWarning(s_khttpdebugarea) << "could not open" << responsefilepath;
             writeResponse(500, false, client);
             return;
+        }
+
+        bool haslastmodified = false;
+        foreach (const QByteArray &httpkey, khttpheaders.keys()) {
+            if (qstricmp(httpkey.constData(), "Last-Modified") == 0) {
+                haslastmodified = true;
+                break;
+            }
+        }
+        if (!haslastmodified) {
+            kDebug(s_khttpdebugarea) << "adding Last-Modified";
+            const QDateTime responsefilelastmodified = QFileInfo(responsefilepath).lastModified();
+            const QByteArray httpfilelastmodified = HTTPDate(responsefilelastmodified.toUTC());
+            khttpheaders.insert("Last-Modified", httpfilelastmodified);
         }
 
         kDebug(s_khttpdebugarea) << "sending file to client" << responsefilepath << khttpheaders;
