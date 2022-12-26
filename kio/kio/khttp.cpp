@@ -363,6 +363,7 @@ private Q_SLOTS:
     void slotNewConnection();
 
 public:
+    bool start(const QHostAddress &address, quint16 port);
     void stop();
 
     QString serverid;
@@ -371,20 +372,16 @@ public:
     QString errorstring;
     QTcpServer* tcpserver;
 
-protected:
-    void timerEvent(QTimerEvent *event) final;
-
 private:
     void writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client);
 
-    int m_timerid;
-    QMutex m_mutex;
+    QAtomicInt m_ref;
 };
 
 KHTTPPrivate::KHTTPPrivate(QObject *parent)
     : QObject(parent),
     tcpserver(nullptr),
-    m_timerid(0)
+    m_ref(0)
 {
     serverid = QCoreApplication::applicationName();
 
@@ -395,7 +392,10 @@ KHTTPPrivate::KHTTPPrivate(QObject *parent)
 
 void KHTTPPrivate::slotNewConnection()
 {
-    QMutexLocker locker(&m_mutex);
+    if (m_ref.load() != 0) {
+        kDebug(s_khttpdebugarea) << "not accepting client connections";
+        return;
+    }
 
     QTcpSocket *client = tcpserver->nextPendingConnection();
     kDebug(s_khttpdebugarea) << "new client" << client->peerAddress() << client->peerPort();
@@ -463,7 +463,7 @@ void KHTTPPrivate::slotNewConnection()
 
         qint64 httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
         while (httpfileresult > 0) {
-            if (m_timerid != 0) {
+            if (m_ref.load() != 0) {
                 // NOTE: at that point it is not safe to access the client pointer
                 kDebug(s_khttpdebugarea) << "aborting client request";
                 return;
@@ -505,22 +505,16 @@ void KHTTPPrivate::slotNewConnection()
     client->deleteLater();
 }
 
-void KHTTPPrivate::stop()
+bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
 {
-    m_timerid = startTimer(1000);
+    m_ref.store(0);
+    return tcpserver->listen(address, port);
 }
 
-void KHTTPPrivate::timerEvent(QTimerEvent *event)
+void KHTTPPrivate::stop()
 {
-    if (event->timerId() == m_timerid) {
-        QMutexLocker locker(&m_mutex);
-        tcpserver->close();
-        killTimer(m_timerid);
-        m_timerid = 0;
-        event->accept();
-    } else {
-        event->ignore();
-    }
+    m_ref.store(1);
+    tcpserver->close();
 }
 
 void KHTTPPrivate::writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client)
@@ -572,7 +566,7 @@ bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &passwo
 
 bool KHTTP::start(const QHostAddress &address, quint16 port)
 {
-    return d->tcpserver->listen(address, port);
+    return d->start(address, port);
 }
 
 bool KHTTP::stop()
