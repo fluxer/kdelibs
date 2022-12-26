@@ -372,7 +372,7 @@ public:
     QTcpServer* tcpserver;
 
 protected:
-    void timerEvent(QTimerEvent *event);
+    void timerEvent(QTimerEvent *event) final;
 
 private:
     void writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client);
