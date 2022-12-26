@@ -26,7 +26,6 @@
 #include <QCoreApplication>
 #include <QThread>
 #include <QFile>
-#include <QMutex>
 
 #include <limits.h>
 
