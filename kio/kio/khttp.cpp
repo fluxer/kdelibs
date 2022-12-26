@@ -242,6 +242,12 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
     return QByteArray("OK");
 }
 
+static bool shouldWriteData(const ushort httpstatus)
+{
+    // 1xx and 204 are exceptions
+    return (httpstatus >= 200 && httpstatus != 204);
+}
+
 static const QByteArray HTTPDate(const QDateTime &datetime)
 {
     Q_ASSERT(datetime.timeSpec() == Qt::UTC);
@@ -252,6 +258,9 @@ static const QByteArray HTTPDate(const QDateTime &datetime)
 
 static QByteArray HTTPStatusToContent(const ushort httpstatus)
 {
+    if (!shouldWriteData(httpstatus)) {
+        return QByteArray();
+    }
     QByteArray httpdata("<html>\n");
     httpdata.append(QByteArray::number(httpstatus));
     httpdata.append(" ");
@@ -528,8 +537,10 @@ void KHTTPPrivate::slotNewConnection()
     const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, responsedata.size());
     client->write(httpdata);
     client->flush();
-    client->write(responsedata);
-    client->flush();
+    if (shouldWriteData(responsestatus)) {
+        client->write(responsedata);
+        client->flush();
+    }
     kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
     client->disconnectFromHost();
     client->deleteLater();
@@ -555,8 +566,10 @@ void KHTTPPrivate::writeResponse(const ushort httpstatus, const bool authenticat
     const QByteArray httpdata = HTTPData(httpstatus, khttpheaders, contentdata.size());
     client->write(httpdata);
     client->flush();
-    client->write(contentdata);
-    client->flush();
+    if (shouldWriteData(httpstatus)) {
+        client->write(contentdata);
+        client->flush();
+    }
     kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
     client->disconnectFromHost();
     client->deleteLater();
