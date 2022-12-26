@@ -259,6 +259,9 @@ static KHTTPHeaders HTTPHeaders(const QString &serverid, const bool authenticate
     // optional for anything but 405, see:
     // https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.1
     khttpheaders.insert("Allow", "GET");
+    // optional, see:
+    // https://www.rfc-editor.org/rfc/rfc9110.html#section-14.3
+    khttpheaders.insert("Accept-Ranges", "none");
     if (authenticate) {
         const QByteArray httpauthenticate = QByteArray("Basic realm=\"") + httpserver + "\"";
         khttpheaders.insert("WWW-Authenticate", httpauthenticate);
