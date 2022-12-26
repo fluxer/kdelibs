@@ -69,7 +69,7 @@ public:
         @brief Starts serving data for requests at @p address on @p port.
         @note If port is 0 (the default) then a random port is chosen.
     */
-    bool start(const QHostAddress &address = QHostAddress::Any, quint16 port = 0);
+    bool start(const QHostAddress &address = QHostAddress::Any, const quint16 port = 0);
     bool stop();
 
     /*!

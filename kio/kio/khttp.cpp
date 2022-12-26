@@ -363,7 +363,7 @@ private Q_SLOTS:
     void slotNewConnection();
 
 public:
-    bool start(const QHostAddress &address, quint16 port);
+    bool start(const QHostAddress &address, const quint16 port);
     void stop();
 
     QString serverid;
@@ -505,7 +505,7 @@ void KHTTPPrivate::slotNewConnection()
     client->deleteLater();
 }
 
-bool KHTTPPrivate::start(const QHostAddress &address, quint16 port)
+bool KHTTPPrivate::start(const QHostAddress &address, const quint16 port)
 {
     m_ref.store(0);
     return tcpserver->listen(address, port);
@@ -564,7 +564,7 @@ bool KHTTP::setAuthenticate(const QByteArray &username, const QByteArray &passwo
     return true;
 }
 
-bool KHTTP::start(const QHostAddress &address, quint16 port)
+bool KHTTP::start(const QHostAddress &address, const quint16 port)
 {
     return d->start(address, port);
 }
