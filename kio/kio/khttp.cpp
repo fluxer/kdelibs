@@ -20,6 +20,8 @@
 #include "klocale.h"
 #include "kdebug.h"
 
+#include <QRunnable>
+#include <QThreadPool>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QDateTime>
@@ -380,6 +382,61 @@ void KHTTPHeadersParser::parseHeaders(const QByteArray &header, const bool authe
     // qDebug() << Q_FUNC_INFO << m_method << m_path << m_version << m_authuser << m_authpass;
 }
 
+class KHTTPRunnable : public QRunnable
+{
+public:
+    KHTTPRunnable(QFile *file, QTcpSocket *client, QAtomicInt *ref);
+
+protected:
+    void run() final;
+
+private:
+    QFile* m_file;
+    QTcpSocket *m_client;
+    QAtomicInt* m_ref;
+};
+
+KHTTPRunnable::KHTTPRunnable(QFile *file, QTcpSocket *client, QAtomicInt *ref)
+    : QRunnable(),
+    m_file(file),
+    m_client(client),
+    m_ref(ref)
+{
+}
+
+void KHTTPRunnable::run()
+{
+    QByteArray httpbuffer(KHTTP_BUFFSIZE, '\0');
+    qint64 httpfileresult = m_file->read(httpbuffer.data(), httpbuffer.size());
+    while (httpfileresult > 0) {
+        if (m_ref->load() != 0) {
+            kDebug(s_khttpdebugarea) << "aborting client request" << m_client->peerAddress() << m_client->peerPort();
+            break;
+        }
+
+        m_client->write(httpbuffer.constData(), httpfileresult);
+        m_client->flush();
+
+        // TODO: this check should be done before every write
+        if (m_client->state() != QTcpSocket::ConnectedState) {
+            kDebug(s_khttpdebugarea) << "client disconnected while writing file" << m_client->peerAddress() << m_client->peerPort();
+            break;
+        }
+
+        QCoreApplication::processEvents(QEventLoop::AllEvents, KHTTP_TIMEOUT);
+        QThread::msleep(KHTTP_SLEEPTIME);
+
+        httpfileresult = m_file->read(httpbuffer.data(), httpbuffer.size());
+    }
+
+    m_client->flush();
+    kDebug(s_khttpdebugarea) << "done with client" << m_client->peerAddress() << m_client->peerPort();
+    m_client->disconnectFromHost();
+    m_client->deleteLater();
+    m_file->deleteLater();
+}
+
+
 class KHTTPPrivate : public QObject
 {
     Q_OBJECT
@@ -403,6 +460,7 @@ private:
     void writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client);
 
     QAtomicInt m_ref;
+    QThreadPool* m_filepool;
 };
 
 KHTTPPrivate::KHTTPPrivate(QObject *parent)
@@ -411,6 +469,9 @@ KHTTPPrivate::KHTTPPrivate(QObject *parent)
     m_ref(0)
 {
     serverid = QCoreApplication::applicationName();
+
+    // NOTE: the default thread limit is number of CPU cores online
+    m_filepool = new QThreadPool(this);
 
     // NOTE: the default maximum for pending connections is 30
     tcpserver = new QTcpServer(this);
@@ -476,10 +537,11 @@ void KHTTPPrivate::slotNewConnection()
     khttp->respond(responseurl, &responsedata, &responsestatus, &khttpheaders, &responsefilepath);
 
     if (!responsefilepath.isEmpty()) {
-        QFile httpfile(responsefilepath);
-        if (!httpfile.open(QFile::ReadOnly)) {
+        QFile* httpfile = new QFile(responsefilepath);
+        if (!httpfile->open(QFile::ReadOnly)) {
             kWarning(s_khttpdebugarea) << "could not open" << responsefilepath;
             writeResponse(500, false, client);
+            delete httpfile;
             return;
         }
 
@@ -498,37 +560,11 @@ void KHTTPPrivate::slotNewConnection()
         }
 
         kDebug(s_khttpdebugarea) << "sending file to client" << responsefilepath << khttpheaders;
-        const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, httpfile.size());
+        const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, httpfile->size());
         client->write(httpdata);
         client->flush();
 
-        qint64 httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
-        while (httpfileresult > 0) {
-            if (m_ref.load() != 0) {
-                // NOTE: at that point it is not safe to access the client pointer
-                kDebug(s_khttpdebugarea) << "aborting client request";
-                return;
-            }
-
-            client->write(httpbuffer.constData(), httpfileresult);
-            client->flush();
-
-            // TODO: this check should be done before every write
-            if (client->state() != QTcpSocket::ConnectedState) {
-                kDebug(s_khttpdebugarea) << "client disconnected while writing file" << client->peerAddress() << client->peerPort();
-                break;
-            }
-
-            QCoreApplication::processEvents(QEventLoop::AllEvents, KHTTP_TIMEOUT);
-            QThread::msleep(KHTTP_SLEEPTIME);
-
-            httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
-        }
-
-        client->flush();
-        kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
-        client->disconnectFromHost();
-        client->deleteLater();
+        m_filepool->start(new KHTTPRunnable(httpfile, client, &m_ref));
         return;
     }
 
@@ -557,6 +593,9 @@ bool KHTTPPrivate::start(const QHostAddress &address, const quint16 port)
 void KHTTPPrivate::stop()
 {
     m_ref.store(1);
+    kDebug(s_khttpdebugarea) << "waiting for file pool";
+    m_filepool->waitForDone();
+    kDebug(s_khttpdebugarea) << "done waiting for file pool";
     tcpserver->close();
 }
 
