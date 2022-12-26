@@ -256,6 +256,9 @@ static KHTTPHeaders HTTPHeaders(const QString &serverid, const bool authenticate
     khttpheaders.insert("Server", httpserver);
     const QString httpdate = QDateTime::currentDateTimeUtc().toString("ddd, dd MMM yyyy hh:mm:ss") + QLatin1String(" GMT");
     khttpheaders.insert("Date", httpdate.toAscii());
+    // optional for anything but 405, see:
+    // https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.1
+    khttpheaders.insert("Allow", "GET");
     if (authenticate) {
         const QByteArray httpauthenticate = QByteArray("Basic realm=\"") + httpserver + "\"";
         khttpheaders.insert("WWW-Authenticate", httpauthenticate);
