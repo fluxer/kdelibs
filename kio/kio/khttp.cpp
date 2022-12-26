@@ -464,7 +464,7 @@ void KHTTPPrivate::slotNewConnection()
         qint64 httpfileresult = httpfile.read(httpbuffer.data(), httpbuffer.size());
         while (httpfileresult > 0) {
             if (m_timerid != 0) {
-                // NOTE: at that point it is not save to access the client pointer
+                // NOTE: at that point it is not safe to access the client pointer
                 kDebug(s_khttpdebugarea) << "aborting client request";
                 return;
             }
