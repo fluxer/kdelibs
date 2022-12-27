@@ -250,7 +250,7 @@ static bool shouldWriteData(const ushort httpstatus)
     return (httpstatus >= 200 && httpstatus != 204);
 }
 
-static const QByteArray HTTPDate(const QDateTime &datetime)
+static QByteArray HTTPDate(const QDateTime &datetime)
 {
     Q_ASSERT(datetime.timeSpec() == Qt::UTC);
     QByteArray httpdate = datetime.toString("ddd, dd MMM yyyy hh:mm:ss").toAscii();
@@ -466,7 +466,8 @@ private:
 KHTTPPrivate::KHTTPPrivate(QObject *parent)
     : QObject(parent),
     tcpserver(nullptr),
-    m_ref(0)
+    m_ref(0),
+    m_filepool(nullptr)
 {
     serverid = QCoreApplication::applicationName();
 
