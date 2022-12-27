@@ -244,10 +244,10 @@ static QByteArray HTTPStatusToBytes(const ushort httpstatus)
     return QByteArray("OK");
 }
 
-static bool shouldWriteData(const ushort httpstatus)
+static bool shouldWriteContent(const ushort httpstatus, const bool get)
 {
     // 1xx and 204 are exceptions
-    return (httpstatus >= 200 && httpstatus != 204);
+    return (get && httpstatus >= 200 && httpstatus != 204);
 }
 
 static QByteArray HTTPDate(const QDateTime &datetime)
@@ -260,9 +260,6 @@ static QByteArray HTTPDate(const QDateTime &datetime)
 
 static QByteArray HTTPStatusToContent(const ushort httpstatus)
 {
-    if (!shouldWriteData(httpstatus)) {
-        return QByteArray();
-    }
     QByteArray httpdata("<html>\n");
     httpdata.append(QByteArray::number(httpstatus));
     httpdata.append(" ");
@@ -280,7 +277,7 @@ static KHTTPHeaders HTTPHeaders(const QString &serverid, const bool authenticate
     khttpheaders.insert("Date", httpdate);
     // optional for anything but 405, see:
     // https://www.rfc-editor.org/rfc/rfc9110.html#section-10.2.1
-    khttpheaders.insert("Allow", "GET");
+    khttpheaders.insert("Allow", "GET, HEAD");
     // optional, see:
     // https://www.rfc-editor.org/rfc/rfc9110.html#section-14.3
     khttpheaders.insert("Accept-Ranges", "none");
@@ -457,7 +454,7 @@ public:
     QTcpServer* tcpserver;
 
 private:
-    void writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client);
+    void writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client, const bool get);
 
     QAtomicInt m_ref;
     QThreadPool* m_filepool;
@@ -500,7 +497,7 @@ void KHTTPPrivate::slotNewConnection()
     const qint64 httpclientresult = client->read(httpbuffer.data(), httpbuffer.size());
     if (client->bytesAvailable() > 0) {
         kWarning(s_khttpdebugarea) << "client payload too large" << client->peerAddress() << client->peerPort();
-        writeResponse(413, false, client);
+        writeResponse(413, false, client, true);
         return;
     }
     const QByteArray clientdata = httpbuffer.mid(0, httpclientresult);
@@ -512,19 +509,20 @@ void KHTTPPrivate::slotNewConnection()
     khttpheadersparser.parseHeaders(clientdata, requiresauthorization);
     kDebug(s_khttpdebugarea) << "client request" << khttpheadersparser.method() << khttpheadersparser.path() << khttpheadersparser.version();
 
-    if (khttpheadersparser.method() != "GET") {
-        writeResponse(405, false, client);
+    const bool get = (khttpheadersparser.method() == "GET");
+    if (!get && khttpheadersparser.method() != "HEAD") {
+        writeResponse(405, false, client, get);
         return;
     }
 
     if (khttpheadersparser.version() != "HTTP/1.1") {
-        writeResponse(505, false, client);
+        writeResponse(505, false, client, get);
         return;
     }
 
     if (requiresauthorization &&
         (khttpheadersparser.authUser() != authusername || khttpheadersparser.authPass() != authpassword)) {
-        writeResponse(401, true, client);
+        writeResponse(401, true, client, get);
         return;
     }
 
@@ -541,7 +539,7 @@ void KHTTPPrivate::slotNewConnection()
         QFile* httpfile = new QFile(responsefilepath);
         if (!httpfile->open(QFile::ReadOnly)) {
             kWarning(s_khttpdebugarea) << "could not open" << responsefilepath;
-            writeResponse(500, false, client);
+            writeResponse(500, false, client, get);
             delete httpfile;
             return;
         }
@@ -565,7 +563,14 @@ void KHTTPPrivate::slotNewConnection()
         client->write(httpdata);
         client->flush();
 
-        m_filepool->start(new KHTTPRunnable(httpfile, client, &m_ref));
+        if (get) {
+            m_filepool->start(new KHTTPRunnable(httpfile, client, &m_ref));
+        } else {
+            kDebug(s_khttpdebugarea) << "done with client" << client->peerAddress() << client->peerPort();
+            client->disconnectFromHost();
+            client->deleteLater();
+            delete httpfile;
+        }
         return;
     }
 
@@ -576,7 +581,7 @@ void KHTTPPrivate::slotNewConnection()
     const QByteArray httpdata = HTTPData(responsestatus, khttpheaders, responsedata.size());
     client->write(httpdata);
     client->flush();
-    if (shouldWriteData(responsestatus)) {
+    if (shouldWriteContent(responsestatus, get)) {
         client->write(responsedata);
         client->flush();
     }
@@ -600,7 +605,7 @@ void KHTTPPrivate::stop()
     tcpserver->close();
 }
 
-void KHTTPPrivate::writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client)
+void KHTTPPrivate::writeResponse(const ushort httpstatus, const bool authenticate, QTcpSocket *client, const bool get)
 {
     kDebug(s_khttpdebugarea) << "sending status to client" << httpstatus << client->peerAddress() << client->peerPort();
     KHTTPHeaders khttpheaders = HTTPHeaders(serverid, authenticate);
@@ -608,7 +613,7 @@ void KHTTPPrivate::writeResponse(const ushort httpstatus, const bool authenticat
     const QByteArray httpdata = HTTPData(httpstatus, khttpheaders, contentdata.size());
     client->write(httpdata);
     client->flush();
-    if (shouldWriteData(httpstatus)) {
+    if (shouldWriteContent(httpstatus, get)) {
         client->write(contentdata);
         client->flush();
     }
