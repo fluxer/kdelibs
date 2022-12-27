@@ -368,7 +368,7 @@ bool ICOHandler::write(const QImage &image)
 
     const QImage bmpimagemask = bmpimage.createAlphaMask();
     const char* bmpimagemaskbits = reinterpret_cast<const char*>(bmpimagemask.constBits());
-    uint bmpimagemasksize = bmpimagemask.byteCount();
+    const int bmpimagemasksize = bmpimagemask.byteCount();
     datastream.writeRawData(bmpimagemaskbits, bmpimagemasksize);
 
     return (datastream.status() == QDataStream::Ok);
