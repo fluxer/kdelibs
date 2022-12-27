@@ -330,7 +330,7 @@ bool ICOHandler::write(const QImage &image)
 
     uint bmpheadersize = 40;
     uint bmpwidth = bmpimage.width();
-    uint bmpheight = bmpimage.height();
+    uint bmpheight = (bmpimage.height() * 2);
     ushort bmpplanes = 0;
     ushort bmpbpp = bmpimage.depth();
     uint bmpcompression = BMPCompression::CompressionRGB;
@@ -365,6 +365,11 @@ bool ICOHandler::write(const QImage &image)
     const char* bmpimagebits = reinterpret_cast<const char*>(bmpimage.constBits());
     datastream.writeRawData(bmpimagebits, bmpimagesize);
 #endif
+
+    const QImage bmpimagemask = bmpimage.createAlphaMask();
+    const char* bmpimagemaskbits = reinterpret_cast<const char*>(bmpimagemask.constBits());
+    uint bmpimagemasksize = bmpimagemask.byteCount();
+    datastream.writeRawData(bmpimagemaskbits, bmpimagemasksize);
 
     return (datastream.status() == QDataStream::Ok);
 }
