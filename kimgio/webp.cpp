@@ -309,7 +309,7 @@ QImageIOPlugin::Capabilities WebPPlugin::capabilities(QIODevice *device, const Q
     if (device->isReadable() && WebPHandler::canRead(device)) {
         cap |= QImageIOPlugin::CanRead;
     }
-    if (device->isWritable()) {
+    if (format == s_webppluginformat && device->isWritable()) {
         cap |= QImageIOPlugin::CanWrite;
     }
     return cap;

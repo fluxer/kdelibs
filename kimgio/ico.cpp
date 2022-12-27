@@ -418,7 +418,7 @@ QImageIOPlugin::Capabilities ICOPlugin::capabilities(QIODevice *device, const QB
     if (device->isReadable() && ICOHandler::canRead(device)) {
         cap |= QImageIOPlugin::CanRead;
     }
-    if (device->isWritable()) {
+    if (format == s_icopluginformat && device->isWritable()) {
         cap |= QImageIOPlugin::CanWrite;
     }
     return cap;

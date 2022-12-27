@@ -258,7 +258,7 @@ QImageIOPlugin::Capabilities JPGPlugin::capabilities(QIODevice *device, const QB
     if (device->isReadable() && JPGHandler::canRead(device)) {
         cap |= QImageIOPlugin::CanRead;
     }
-    if (device->isWritable()) {
+    if (format == s_jpgpluginformat && device->isWritable()) {
         cap |= QImageIOPlugin::CanWrite;
     }
     return cap;
