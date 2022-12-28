@@ -220,8 +220,7 @@ public:
      * @p canReturnNull parameter.
      *
      * @param name The name of the icon, without extension.
-     * @param group The icon group. This will specify the size of and effects to
-     * be applied to the icon.
+     * @param group The icon group. This will specify the size of the icon.
      * @param size If nonzero, this overrides the size specified by @p group.
      *             See KIconLoader::StdSizes.
      * @param state The icon state: @p DefaultState, @p ActiveState or
@@ -251,8 +250,7 @@ public:
      * This is basically like loadIcon except that extra desktop themes are loaded if necessary.
      *
      * @param iconName The name of the icon, without extension, usually from KMimeType.
-     * @param group The icon group. This will specify the size of and effects to
-     * be applied to the icon.
+     * @param group The icon group. This will specify the size of the icon.
      * @param size If nonzero, this overrides the size specified by @p group.
      *             See KIconLoader::StdSizes.
      * @param state The icon state: @p DefaultState, @p ActiveState or
