@@ -366,6 +366,7 @@ bool ICOHandler::write(const QImage &image)
     datastream.writeRawData(bmpimagebits, bmpimagesize);
 #endif
 
+    // NOTE: the mask is undocumented but some browsers fail to load images without mask
     const QImage bmpimagemask = bmpimage.createAlphaMask();
     const char* bmpimagemaskbits = reinterpret_cast<const char*>(bmpimagemask.constBits());
     const int bmpimagemasksize = bmpimagemask.byteCount();
