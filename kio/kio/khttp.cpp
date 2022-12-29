@@ -408,6 +408,8 @@ void KHTTPRunnable::run()
     while (httpfileresult > 0) {
         if (m_ref->load() != 0) {
             kDebug(s_khttpdebugarea) << "aborting client request" << m_client->peerAddress() << m_client->peerPort();
+            // this is thing that the RFC does not clearly state what to do other than mention a
+            // use for 503 as "scheduled maintenance"
             break;
         }
 
