@@ -251,24 +251,6 @@ public:
   static bool showFilePreview( const QString& protocol );
 
   /**
-   * Returns the list of capabilities provided by the kioslave implementing
-   * this protocol.
-   *
-   * This corresponds to the "Capabilities=" field in the protocol description file.
-   *
-   * The capability names are not defined globally, they are up to each
-   * slave implementation. For example when adding support for a new
-   * special command for mounting, one would add the string "Mount" to the
-   * capabilities list, and applications could check for that string
-   * before sending a special() command that would otherwise do nothing
-   * on older kioslave implementations.
-   *
-   * @param protocol the protocol to check
-   * @return the list of capabilities.
-   */
-  static QStringList capabilities( const QString& protocol );
-
-  /**
    * Returns the name of the protocol through which the request
    * will be routed if proxy support is enabled.
    *

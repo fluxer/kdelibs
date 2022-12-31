@@ -53,8 +53,6 @@ public:
   bool canRenameToFile : 1;
   bool canDeleteRecursive : 1;
   KProtocolInfo::FileNameUsedForCopying fileNameUsedForCopying;
-  //KUrl::URIMode uriMode;
-  QStringList capabilities;
   QString proxyProtocol;
   int maxSlavesPerHost;
 };

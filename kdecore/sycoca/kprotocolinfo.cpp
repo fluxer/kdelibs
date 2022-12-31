@@ -96,7 +96,6 @@ KProtocolInfo::KProtocolInfo(const QString &path)
 
   d->showPreviews = config.readEntry( "ShowPreviews", d->protClass == QLatin1String(":local") );
 
-  d->capabilities = config.readEntry( "Capabilities", QStringList() );
   d->proxyProtocol = config.readEntry( "ProxiedBy" );
 }
 
@@ -139,7 +138,7 @@ KProtocolInfo::load( QDataStream& _str)
         >> i_canCopyFromFile >> i_canCopyToFile
         >> m_config >> m_maxSlaves >> d->docPath >> d->protClass
         >> i_showPreviews
-        >> d->capabilities >> d->proxyProtocol
+        >> d->proxyProtocol
         >> i_canRenameFromFile >> i_canRenameToFile
         >> i_canDeleteRecursive >> i_fileNameUsedForCopying
         >> d->maxSlavesPerHost;
@@ -217,7 +216,7 @@ KProtocolInfoPrivate::save( QDataStream& _str)
         << i_canCopyFromFile << i_canCopyToFile
         << q->m_config << q->m_maxSlaves << docPath << protClass
         << i_showPreviews
-        << capabilities << proxyProtocol
+        << proxyProtocol
         << i_canRenameFromFile << i_canRenameToFile
         << i_canDeleteRecursive << i_fileNameUsedForCopying
         << maxSlavesPerHost;
@@ -358,15 +357,6 @@ bool KProtocolInfo::showFilePreview( const QString& _protocol )
     return false;
 
   return prot->d_func()->showPreviews;
-}
-
-QStringList KProtocolInfo::capabilities( const QString& _protocol )
-{
-  KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-  if ( !prot )
-    return QStringList();
-
-  return prot->d_func()->capabilities;
 }
 
 QString KProtocolInfo::proxiedBy( const QString& _protocol )
