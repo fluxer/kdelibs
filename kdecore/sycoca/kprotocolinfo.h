@@ -282,7 +282,6 @@ protected:
   QString m_exec;
   Type m_inputType;
   Type m_outputType;
-  QStringList m_listing;
   bool m_isSourceProtocol;
   bool m_isHelperProtocol;
   bool m_supportsListing;

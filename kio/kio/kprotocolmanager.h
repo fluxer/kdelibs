@@ -494,20 +494,6 @@ public:
   static KProtocolInfo::Type outputType( const KUrl &url );
 
   /**
-   * Returns the list of fields this protocol returns when listing
-   * The current possibilities are
-   * Name, Type, Size, Date, AccessDate, Access, Owner, Group, Link, URL, MimeType.
-   *
-   * This corresponds to the "listing=" field in the protocol description file.
-   * The supported fields should be separated with ',' in the protocol description file.
-   *
-   * @param url the url to check
-   * @return a list of field names
-   */
-  static QStringList listing( const KUrl &url );
-
-
-  /**
    * Returns whether the protocol can act as a source protocol.
    *
    * A source protocol retrieves data from or stores data to the

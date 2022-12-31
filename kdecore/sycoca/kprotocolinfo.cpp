@@ -42,6 +42,7 @@ KProtocolInfo::KProtocolInfo(const QString &path)
   m_exec = config.readPathEntry( "exec", QString() );
   m_isSourceProtocol = config.readEntry( "source", true );
   m_isHelperProtocol = config.readEntry( "helper", false );
+  m_supportsListing = config.readEntry( "listing", false );
   m_supportsReading = config.readEntry( "reading", false );
   m_supportsWriting = config.readEntry( "writing", false );
   m_supportsMakeDir = config.readEntry( "makedir", false );
@@ -61,11 +62,6 @@ KProtocolInfo::KProtocolInfo(const QString &path)
   else if (fnu == QLatin1String("DisplayName"))
     d->fileNameUsedForCopying = DisplayName;
 
-  m_listing = config.readEntry( "listing", QStringList() );
-  // Many .protocol files say "Listing=false" when they really mean "Listing=" (i.e. unsupported)
-  if ( m_listing.count() == 1 && m_listing.first() == QLatin1String("false") )
-    m_listing.clear();
-  m_supportsListing = ( m_listing.count() > 0 );
   m_defaultMimetype = config.readEntry( "defaultMimetype" );
   m_determineMimetypeFromExtension = config.readEntry( "determineMimetypeFromExtension", true );
   m_icon = config.readEntry( "Icon" );
@@ -126,7 +122,7 @@ KProtocolInfo::load( QDataStream& _str)
           i_canRenameFromFile, i_canRenameToFile,
           i_canDeleteRecursive, i_fileNameUsedForCopying;
 
-   _str >> m_name >> m_exec >> m_listing >> m_defaultMimetype
+   _str >> m_name >> m_exec >> m_defaultMimetype
         >> i_determineMimetypeFromExtension
         >> m_icon
         >> i_inputType >> i_outputType
@@ -204,7 +200,7 @@ KProtocolInfoPrivate::save( QDataStream& _str)
    i_determineMimetypeFromExtension = q->m_determineMimetypeFromExtension ? 1 : 0;
    i_showPreviews = showPreviews ? 1 : 0;
 
-   _str << q->m_name << q->m_exec << q->m_listing << q->m_defaultMimetype
+   _str << q->m_name << q->m_exec << q->m_defaultMimetype
         << i_determineMimetypeFromExtension
         << q->m_icon
         << i_inputType << i_outputType

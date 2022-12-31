@@ -740,15 +740,6 @@ bool KProtocolManager::supportsListing( const KUrl &url )
   return prot->m_supportsListing;
 }
 
-QStringList KProtocolManager::listing( const KUrl &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return QStringList();
-
-  return prot->m_listing;
-}
-
 bool KProtocolManager::supportsReading( const KUrl &url )
 {
   KProtocolInfo::Ptr prot = findProtocol(url);
