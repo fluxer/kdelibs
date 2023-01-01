@@ -93,21 +93,17 @@ class KGlobalSettingsData
   public: // access, is not const due to caching
     QFont font( FontTypes fontType );
     QFont largeFont( const QString& text );
-    KGlobalSettings::KMouseSettings& mouseSettings();
 
   public:
     void dropFontSettingsCache();
-    void dropMouseSettingsCache();
 
   protected:
     QFont* mFonts[FontTypesCount];
     QFont* mLargeFont;
-    KGlobalSettings::KMouseSettings* mMouseSettings;
 };
 
 KGlobalSettingsData::KGlobalSettingsData()
-  : mLargeFont( 0 ),
-    mMouseSettings( 0 )
+  : mLargeFont( 0 )
 {
     for( int i=0; i<FontTypesCount; ++i )
         mFonts[i] = 0;
@@ -118,8 +114,6 @@ KGlobalSettingsData::~KGlobalSettingsData()
     for( int i=0; i<FontTypesCount; ++i )
         delete mFonts[i];
     delete mLargeFont;
-
-    delete mMouseSettings;
 }
 
 K_GLOBAL_STATIC( KGlobalSettingsData, globalSettingsDataSingleton )
@@ -471,59 +465,41 @@ void KGlobalSettingsData::dropFontSettingsCache()
     mLargeFont = 0;
 }
 
-KGlobalSettings::KMouseSettings& KGlobalSettingsData::mouseSettings()
+KGlobalSettings::Mouse KGlobalSettings::mouseButtonMapping()
 {
-    if (!mMouseSettings)
-    {
-        mMouseSettings = new KGlobalSettings::KMouseSettings;
-        KGlobalSettings::KMouseSettings& s = *mMouseSettings; // for convenience
+    KGlobalSettings::Mouse handed = KGlobalSettings::RightHanded;
 
-        KConfigGroup g( KGlobal::config(), "Mouse" );
-        QString setting = g.readEntry("MouseButtonMapping");
-        if (setting == "RightHanded")
-            s.handed = KGlobalSettings::KMouseSettings::RightHanded;
-        else if (setting == "LeftHanded")
-            s.handed = KGlobalSettings::KMouseSettings::LeftHanded;
-        else
-        {
-#ifdef Q_WS_X11
-            // get settings from X server
-            // This is a simplified version of the code in input/mouse.cpp
-            // Keep in sync !
-            s.handed = KGlobalSettings::KMouseSettings::RightHanded;
-            unsigned char map[20];
-            int num_buttons = XGetPointerMapping(QX11Info::display(), map, 20);
-            if( num_buttons == 2 )
-            {
-                if ( (int)map[0] == 1 && (int)map[1] == 2 )
-                    s.handed = KGlobalSettings::KMouseSettings::RightHanded;
-                else if ( (int)map[0] == 2 && (int)map[1] == 1 )
-                    s.handed = KGlobalSettings::KMouseSettings::LeftHanded;
+    KConfig config("kcminputrc");
+    KConfigGroup g = config.group("Mouse");
+    QString setting = g.readEntry("MouseButtonMapping");
+    if (setting == "RightHanded") {
+        handed = KGlobalSettings::RightHanded;
+    } else if (setting == "LeftHanded") {
+        handed = KGlobalSettings::LeftHanded;
+    } else {
+        // get settings from X server
+        // This is a simplified version of the code in input/mouse.cpp
+        // Keep in sync !
+        handed = KGlobalSettings::RightHanded;
+        unsigned char map[20];
+        ::memset(map, 0, sizeof(map) * sizeof(unsigned char));
+        int num_buttons = XGetPointerMapping(QX11Info::display(), map, 20);
+        if (num_buttons == 2) {
+            if ((int)map[0] == 1 && (int)map[1] == 2) {
+                handed = KGlobalSettings::RightHanded;
+            } else if ((int)map[0] == 2 && (int)map[1] == 1) {
+                handed = KGlobalSettings::LeftHanded;
             }
-            else if( num_buttons >= 3 )
-            {
-                if ( (int)map[0] == 1 && (int)map[2] == 3 )
-                    s.handed = KGlobalSettings::KMouseSettings::RightHanded;
-                else if ( (int)map[0] == 3 && (int)map[2] == 1 )
-                    s.handed = KGlobalSettings::KMouseSettings::LeftHanded;
+        } else if (num_buttons >= 3) {
+            if ((int)map[0] == 1 && (int)map[2] == 3) {
+                handed = KGlobalSettings::RightHanded;
+            } else if ((int)map[0] == 3 && (int)map[2] == 1) {
+                handed = KGlobalSettings::LeftHanded;
             }
-#else
-        // FIXME: Implement on other platforms
-#endif
         }
     }
-    return *mMouseSettings;
-}
-// KDE5: make this a const return?
-KGlobalSettings::KMouseSettings & KGlobalSettings::mouseSettings()
-{
-    return KGlobalSettingsData::self()->mouseSettings();
-}
 
-void KGlobalSettingsData::dropMouseSettingsCache()
-{
-    delete mMouseSettings;
-    mMouseSettings = 0;
+    return handed;
 }
 
 QString KGlobalSettings::desktopPath()
@@ -744,9 +720,6 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
             }
         } else {
             switch (category) {
-                case SETTINGS_MOUSE:
-                    KGlobalSettingsData::self()->dropMouseSettingsCache();
-                    break;
                 case SETTINGS_LOCALE:
                     KGlobal::locale()->reparseConfiguration();
                     break;

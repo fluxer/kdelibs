@@ -203,19 +203,18 @@ public:
     static Completion completionMode();
 
     /**
-     * Describes the mouse settings.
+     * This enum describes the mouse button mapping.
      */
-    struct KMouseSettings
-    {
-        enum { RightHanded = 0, LeftHanded = 1 };
-        int handed; // left or right
+    enum Mouse {
+        RightHanded = 0,
+        LeftHanded = 1
     };
 
     /**
-     * This returns the current mouse settings.
-     * @return the current mouse settings
+     * This returns the current mouse button mapping.
+     * @return the current mouse button mapping
      */
-    static KMouseSettings & mouseSettings();
+    static Mouse mouseButtonMapping();
 
     /**
      * The path to the desktop directory of the current user.
