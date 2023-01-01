@@ -93,9 +93,6 @@ public: // public for KBuildServiceFactory
 
 protected:
     virtual MimeTypeEntry *createEntry(int offset) const;
-private:
-    // d pointer: useless since this header is not installed
-    //class KMimeTypeFactoryPrivate* d;
 };
 
 #endif

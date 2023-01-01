@@ -68,9 +68,6 @@ protected:
   KServiceGroup* createEntry(int offset) const;
   KSycocaDict *m_baseGroupDict;
   int m_baseGroupDictOffset;
-
-private:
-  class KServiceGroupFactoryPrivate* d;
 };
 
 #endif

@@ -56,7 +56,7 @@ KProtocolInfo::KProtocolInfo(const QString &path)
     m_determineMimetypeFromExtension = config.readEntry("determineMimetypeFromExtension", true);
     m_icon = config.readEntry("Icon", QString());
     m_config = config.readEntry("config", m_name);
-    m_maxSlaves = config.readEntry( "maxInstances", 1);
+    m_maxSlaves = config.readEntry("maxInstances", 1);
 
     d->canRenameFromFile = config.readEntry("renameFromFile", false);
     d->canRenameToFile = config.readEntry("renameToFile", false);
@@ -68,7 +68,7 @@ KProtocolInfo::KProtocolInfo(const QString &path)
     } else if (fnu == QLatin1String("DisplayName")) {
         d->fileNameUsedForCopying = DisplayName;
     }
-    d->maxSlavesPerHost = config.readEntry( "maxInstancesPerHost", 0);
+    d->maxSlavesPerHost = config.readEntry("maxInstancesPerHost", 0);
     d->docPath = config.readPathEntry("X-DocPath", QString());
     d->protClass = config.readEntry("Class").toLower();
     if (d->protClass[0] != QLatin1Char(':')) {

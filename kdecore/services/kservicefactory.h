@@ -114,9 +114,6 @@ protected:
     int m_relNameDictOffset;
     KSycocaDict *m_menuIdDict;
     int m_menuIdDictOffset;
-
-private:
-    class KServiceFactoryPrivate* d;
 };
 
 #endif

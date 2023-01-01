@@ -86,7 +86,6 @@ protected:
 
 private:
   QMap<QString,KProtocolInfo::Ptr> m_cache;
-  class KProtocolInfoFactoryPrivate* d;
 };
 
 #endif

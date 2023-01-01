@@ -38,26 +38,23 @@ KProtocolInfoFactory::~KProtocolInfoFactory()
     }
 }
 
-KProtocolInfo*
-KProtocolInfoFactory::createEntry(int offset) const
+KProtocolInfo* KProtocolInfoFactory::createEntry(int offset) const
 {
-   KProtocolInfo *info = 0;
-   KSycocaType type;
-   QDataStream *str = KSycoca::self()->findEntry(offset, type);
-   switch (type)
-   {
-     case KST_KProtocolInfo:
-       info = new KProtocolInfo(*str, offset);
-       break;
-     default:
-       return 0;
-   }
-   if (!info->isValid())
-   {
-      delete info;
-      info = 0;
-   }
-   return info;
+    KProtocolInfo *info = 0;
+    KSycocaType type;
+    QDataStream *str = KSycoca::self()->findEntry(offset, type);
+    switch (type) {
+        case KST_KProtocolInfo:
+            info = new KProtocolInfo(*str, offset);
+            break;
+        default:
+            return 0;
+    }
+    if (!info->isValid()) {
+        delete info;
+        info = 0;
+    }
+    return info;
 }
 
 
@@ -88,30 +85,34 @@ KProtocolInfo::List KProtocolInfoFactory::allProtocols() const
 
 KProtocolInfo::Ptr KProtocolInfoFactory::findProtocol(const QString &protocol)
 {
-  if (!sycocaDict()) return KProtocolInfo::Ptr(); // Error!
+    if (!sycocaDict()) {
+        return KProtocolInfo::Ptr(); // Error!
+    }
 
-  QMap<QString,KProtocolInfo::Ptr>::iterator it = m_cache.find(protocol);
-  if (it != m_cache.end())
-     return *it;
+    QMap<QString,KProtocolInfo::Ptr>::iterator it = m_cache.find(protocol);
+    if (it != m_cache.end()) {
+        return *it;
+    }
 
-  int offset = sycocaDict()->find_string( protocol );
+    int offset = sycocaDict()->find_string(protocol);
+    if (!offset) {
+        return KProtocolInfo::Ptr(); // Not found;
+    }
 
-  if (!offset) return KProtocolInfo::Ptr(); // Not found;
+    KProtocolInfo::Ptr info(createEntry(offset));
 
-  KProtocolInfo::Ptr info(createEntry(offset));
-
-  if (info && (info->name() != protocol))
-  {
-     // No it wasn't...
-     return KProtocolInfo::Ptr(); // Not found
-  }
-  m_cache.insert(protocol,info);
-  return info;
+    if (info && (info->name() != protocol)) {
+        // No it wasn't...
+        return KProtocolInfo::Ptr(); // Not found
+    }
+    m_cache.insert(protocol, info);
+    return info;
 }
 
 KProtocolInfoFactory* KProtocolInfoFactory::self()
 {
-    if (!kProtocolInfoFactoryInstance)
+    if (!kProtocolInfoFactoryInstance) {
         kProtocolInfoFactoryInstance = new KProtocolInfoFactory();
+    }
     return kProtocolInfoFactoryInstance;
 }

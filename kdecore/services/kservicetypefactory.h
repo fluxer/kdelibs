@@ -82,9 +82,6 @@ protected:
 
   // protected for KBuildServiceTypeFactory
   QMap<QString,int> m_propertyTypeDict;
-
-private:
-  class KServiceTypeFactoryPrivate* d;
 };
 
 #endif
