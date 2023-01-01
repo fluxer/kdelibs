@@ -480,6 +480,22 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         return false;
     }
 
+#if CURL_AT_LEAST_VERSION(7, 85, 0)
+    static const char* const curlprotocols = "http,https";
+
+    curlresult = curl_easy_setopt(m_curl, CURLOPT_PROTOCOLS_STR, curlprotocols);
+    if (curlresult != CURLE_OK) {
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+        return false;
+    }
+
+    curlresult = curl_easy_setopt(m_curl, CURLOPT_REDIR_PROTOCOLS_STR, curlprotocols);
+    if (curlresult != CURLE_OK) {
+        error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
+        return false;
+    }
+#else
+    // deprecated since v7.85.0
     curlresult = curl_easy_setopt(m_curl, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS);
     if (curlresult != CURLE_OK) {
         error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
@@ -491,6 +507,7 @@ bool HttpProtocol::setupCurl(const KUrl &url)
         error(KIO::ERR_SLAVE_DEFINED, curl_easy_strerror(curlresult));
         return false;
     }
+#endif
 
     kDebug(7103) << "Metadata" << allMetaData();
 
