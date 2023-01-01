@@ -26,6 +26,14 @@
 #include <QDateTime>
 
 #include <poppler/cpp/poppler-document.h>
+#include <poppler/cpp/poppler-version.h>
+#include <sys/types.h>
+
+#if POPPLER_VERSION_MAJOR >= 22 && POPPLER_VERSION_MINOR >= 5
+typedef time_t popplertimetype;
+#else
+typedef poppler::time_type popplertimetype;
+#endif
 
 static QString getString(const poppler::ustring &popplerstring)
 {
@@ -33,7 +41,7 @@ static QString getString(const poppler::ustring &popplerstring)
     return QString::fromUtf8(popplerbytes.data(), popplerbytes.size());
 }
 
-static QString getTime(const poppler::time_type &popplertime)
+static QString getTime(const popplertimetype &popplertime)
 {
     const KDateTime kdatetime(QDateTime::fromTime_t(popplertime));
     return KGlobal::locale()->formatDateTime(kdatetime, KLocale::FancyLongDate);
@@ -113,7 +121,11 @@ QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url, c
             )
         );
     }
+#if POPPLER_VERSION_MAJOR >= 22 && POPPLER_VERSION_MINOR >= 5
+    const QString popplercreationdate = getTime(popplerdocument->get_creation_date_t());
+#else
     const QString popplercreationdate = getTime(popplerdocument->get_creation_date());
+#endif
     if (!popplercreationdate.isEmpty()) {
         result.append(
             KFileMetaInfoItem(
@@ -122,7 +134,11 @@ QList<KFileMetaInfoItem> KFileMetaDataPopplerPlugin::metaData(const KUrl &url, c
             )
         );
     }
+#if POPPLER_VERSION_MAJOR >= 22 && POPPLER_VERSION_MINOR >= 5
+    const QString popplermodificationdate = getTime(popplerdocument->get_modification_date_t());
+#else
     const QString popplermodificationdate = getTime(popplerdocument->get_modification_date());
+#endif
     if (!popplermodificationdate.isEmpty()) {
         result.append(
             KFileMetaInfoItem(
