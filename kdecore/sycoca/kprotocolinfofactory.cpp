@@ -65,10 +65,11 @@ QStringList KProtocolInfoFactory::protocols() const
 {
     QStringList res;
     const KSycocaEntry::List list = allEntries();
-    for( KSycocaEntry::List::const_iterator it = list.begin(); it != list.end(); ++it) {
+    res.reserve(list.size());
+    for (KSycocaEntry::List::const_iterator it = list.begin(); it != list.end(); ++it) {
         const KSycocaEntry *entry = (*it).data();
         const KProtocolInfo *info = static_cast<const KProtocolInfo *>(entry);
-        res.append( info->name() );
+        res.append(info->name());
     }
     return res;
 }

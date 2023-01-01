@@ -33,9 +33,9 @@ KProtocolInfo::KProtocolInfo(const QString &path)
     : KSycocaEntry(*new KProtocolInfoPrivate(path, this))
 {
     Q_D(KProtocolInfo);
-    QString fullPath = KStandardDirs::locate("services", path);
 
-    KConfig sconfig( fullPath );
+    const QString fullPath = KStandardDirs::locate("services", path);
+    KConfig sconfig(fullPath);
     KConfigGroup config(&sconfig, "Protocol");
 
     m_name = config.readEntry("protocol");
