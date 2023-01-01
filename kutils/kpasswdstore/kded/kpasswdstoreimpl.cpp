@@ -30,6 +30,7 @@
 #if defined(HAVE_OPENSSL)
 #  include <openssl/evp.h>
 #  include <openssl/err.h>
+#  include <openssl/opensslv.h>
 #endif
 
 static const int kpasswdstore_buffsize = 1024;
@@ -66,7 +67,10 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
 #endif
 {
 #if defined(HAVE_OPENSSL)
+    // deprecated since v1.1.1
+#if !OPENSSL_VERSION_PREREQ(1, 1)
     ERR_load_ERR_strings();
+#endif
     EVP_add_cipher(EVP_aes_256_cbc());
 
     m_opensslkeylen = EVP_CIPHER_key_length(EVP_aes_256_cbc());
