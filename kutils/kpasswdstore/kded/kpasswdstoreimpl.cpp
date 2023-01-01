@@ -68,7 +68,7 @@ KPasswdStoreImpl::KPasswdStoreImpl(const QString &id)
 {
 #if defined(HAVE_OPENSSL)
     // deprecated since v1.1.1
-#if !OPENSSL_VERSION_PREREQ(1, 1)
+#if OPENSSL_VERSION_NUMBER < 0x10101000L
     ERR_load_ERR_strings();
 #endif
     EVP_add_cipher(EVP_aes_256_cbc());
