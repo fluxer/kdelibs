@@ -91,19 +91,6 @@ public:
   static QString exec( const QString& protocol );
 
   /**
-   * Describes the type of a protocol.
-   * For instance ftp:// appears as a filesystem with folders and files,
-   * while bzip2:// appears as a single file (a stream of data),
-   * and telnet:// doesn't output anything.
-   * @see outputType
-   */
-  enum Type { T_STREAM, ///< stream of data (e.g. single file)
-	      T_FILESYSTEM, ///< structured directory
-	      T_NONE,   ///< no information about the type available
-	      T_ERROR   ///< used to signal an error
-  };
-
-  /**
    * Returns whether the protocol can act as a helper protocol.
    * A helper protocol invokes an external application and does not return
    * a file or stream.
@@ -280,8 +267,6 @@ public:
 protected:
   QString m_name;
   QString m_exec;
-  Type m_inputType;
-  Type m_outputType;
   bool m_isSourceProtocol;
   bool m_isHelperProtocol;
   bool m_supportsListing;

@@ -320,10 +320,7 @@ void KServicePrivate::load(QDataStream& s)
     qint8 def, term;
     qint8 dst, initpref;
 
-    // WARNING: THIS NEEDS TO REMAIN COMPATIBLE WITH PREVIOUS KDE 4.x VERSIONS!
-    // !! This data structure should remain binary compatible at all times !!
-    // You may add new fields at the end. Make sure to update the version
-    // number in ksycoca.h
+    // NOTE: make sure to update the version number in ksycoca.cpp
     s >> m_strType >> m_strName >> m_strExec >> m_strIcon
       >> term >> m_strTerminalOptions
       >> m_strPath >> m_strComment >> def >> m_mapProps
@@ -349,10 +346,7 @@ void KServicePrivate::save(QDataStream& s)
     qint8 term = m_bTerminal;
     qint8 dst = (qint8) m_DBUSStartusType;
 
-    // WARNING: THIS NEEDS TO REMAIN COMPATIBLE WITH PREVIOUS KDE 4.x VERSIONS!
-    // !! This data structure should remain binary compatible at all times !!
-    // You may add new fields at the end. Make sure to update the version
-    // number in ksycoca.h
+    // NOTE: make sure to update the version number in ksycoca.cpp
     s << m_strType << m_strName << m_strExec << m_strIcon
       << term << m_strTerminalOptions
       << m_strPath << m_strComment << def << m_mapProps

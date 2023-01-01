@@ -1,8 +1,6 @@
 [Protocol]
 exec=kio_ftp
 protocol=ftp
-input=none
-output=filesystem
 copyToFile=true
 copyFromFile=true
 listing=true

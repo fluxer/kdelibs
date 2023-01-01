@@ -50,7 +50,7 @@
  * If the existing file is outdated, it will not get read
  * but instead we'll ask kded to regenerate a new one...
  */
-#define KSYCOCA_VERSION 243
+#define KSYCOCA_VERSION 244
 
 /**
  * Sycoca file name, used internally (by kbuildsycoca)

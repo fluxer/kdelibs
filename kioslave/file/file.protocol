@@ -2,8 +2,6 @@
 exec=kio_file
 protocol=file
 Icon=folder
-input=none
-output=filesystem
 listing=true
 reading=true
 writing=true

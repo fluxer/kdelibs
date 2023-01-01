@@ -702,26 +702,6 @@ static KProtocolInfo::Ptr findProtocol(const KUrl &url)
    return KProtocolInfoFactory::self()->findProtocol(protocol);
 }
 
-
-KProtocolInfo::Type KProtocolManager::inputType( const KUrl &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return KProtocolInfo::T_NONE;
-
-  return prot->m_inputType;
-}
-
-KProtocolInfo::Type KProtocolManager::outputType( const KUrl &url )
-{
-  KProtocolInfo::Ptr prot = findProtocol(url);
-  if ( !prot )
-    return KProtocolInfo::T_NONE;
-
-  return prot->m_outputType;
-}
-
-
 bool KProtocolManager::isSourceProtocol( const KUrl &url )
 {
   KProtocolInfo::Ptr prot = findProtocol(url);

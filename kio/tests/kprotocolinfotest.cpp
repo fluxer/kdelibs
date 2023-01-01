@@ -36,21 +36,15 @@ int main(int argc, char **argv) {
 
     KUrl url("/tmp");
     assert( KProtocolManager::supportsListing( KUrl( "ftp://10.1.1.10") ) );
-    assert( KProtocolManager::inputType(url) == KProtocolInfo::T_NONE );
-    assert( KProtocolManager::outputType(url) == KProtocolInfo::T_FILESYSTEM );
     assert( KProtocolManager::supportsReading(url) == true );
 
     assert( KProtocolInfo::showFilePreview( "file" ) == true );
-    assert( KProtocolInfo::showFilePreview( "audiocd" ) == false );
-    assert( KGlobalSettings::showFilePreview( KUrl( "audiocd:/" ) ) == false );
+    assert( KProtocolInfo::showFilePreview( "http" ) == false );
+    assert( KGlobalSettings::showFilePreview( KUrl( "http:/" ) ) == false );
 
     QString proxy;
     QString protocol = KProtocolManager::slaveProtocol( KUrl( "http://bugs.kde.org" ), proxy );
     assert( protocol == "http" );
-
-    QStringList capabilities = KProtocolInfo::capabilities( "imap" );
-    kDebug() << "kio_imap capabilities: " << capabilities;
-    //assert(capabilities.contains("ACL"));
 
     return 0;
 }

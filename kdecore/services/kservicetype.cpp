@@ -111,9 +111,7 @@ void
 KServiceTypePrivate::save( QDataStream& _str )
 {
   KSycocaEntryPrivate::save( _str );
-  // !! This data structure should remain binary compatible at all times !!
-  // You may add new fields at the end. Make sure to update the version
-  // number in ksycoca.h
+  // NOTE: make sure to update the version number in ksycoca.cpp
   _str << m_strName << m_strComment << m_mapProps << m_mapPropDefs
        << m_serviceOffersOffset;
 }

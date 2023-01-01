@@ -470,30 +470,6 @@ public:
   static QString defaultMimetype( const KUrl& url );
 
   /**
-   * Returns whether the protocol should be treated as a filesystem
-   * or as a stream when reading from it.
-   *
-   * This corresponds to the "input=" field in the protocol description file.
-   * Valid values for this field are "filesystem", "stream" or "none" (default).
-   *
-   * @param url the url to check
-   * @return the input type of the given @p url
-   */
-  static KProtocolInfo::Type inputType( const KUrl &url );
-
-  /**
-   * Returns whether the protocol should be treated as a filesystem
-   * or as a stream when writing to it.
-   *
-   * This corresponds to the "output=" field in the protocol description file.
-   * Valid values for this field are "filesystem", "stream" or "none" (default).
-   *
-   * @param url the url to check
-   * @return the output type of the given @p url
-   */
-  static KProtocolInfo::Type outputType( const KUrl &url );
-
-  /**
    * Returns whether the protocol can act as a source protocol.
    *
    * A source protocol retrieves data from or stores data to the
