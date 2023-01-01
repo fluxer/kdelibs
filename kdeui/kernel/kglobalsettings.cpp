@@ -194,8 +194,8 @@ void KGlobalSettings::activate(ActivateOptions options)
         d->activated = true;
 
         if (options & ListenForChanges) {
-            QDBusConnection::sessionBus().connect( QString(), "/KGlobalSettings", "org.kde.KGlobalSettings",
-                                                   "notifyChange", this, SLOT(_k_slotNotifyChange(int,int)) );
+            QDBusConnection::sessionBus().connect(QString(), "/KGlobalSettings", "org.kde.KGlobalSettings",
+                                                  "notifyChange", this, SLOT(_k_slotNotifyChange(int,int)));
         }
 
         if (options & ApplySettings) {
@@ -209,13 +209,13 @@ void KGlobalSettings::activate(ActivateOptions options)
 
 int KGlobalSettings::dndEventDelay()
 {
-    KConfigGroup g( KGlobal::config(), "General" );
+    KConfigGroup g(KGlobal::config(), "General");
     return g.readEntry("StartDragDist", QApplication::startDragDistance());
 }
 
 bool KGlobalSettings::singleClick()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("SingleClick", KDE_DEFAULT_SINGLECLICK );
 }
 
@@ -235,20 +235,20 @@ KGlobalSettings::TearOffHandle KGlobalSettings::insertTearOffHandle()
 
 bool KGlobalSettings::changeCursorOverIcon()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("ChangeCursor", KDE_DEFAULT_CHANGECURSOR);
 }
 
 int KGlobalSettings::autoSelectDelay()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("AutoSelectDelay", KDE_DEFAULT_AUTOSELECTDELAY);
 }
 
 KGlobalSettings::Completion KGlobalSettings::completionMode()
 {
     int completion;
-    KConfigGroup g( KGlobal::config(), "General" );
+    KConfigGroup g(KGlobal::config(), "General");
     completion = g.readEntry("completionMode", -1);
     if ((completion < (int) CompletionNone) ||
         (completion > (int) CompletionPopupAuto))
@@ -268,56 +268,50 @@ bool KGlobalSettings::showContextMenusOnPress ()
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::inactiveTitleColor()
 {
-    KConfigGroup g( KGlobal::config(), "WM" );
-    return g.readEntry( "inactiveBackground", QColor(224,223,222) );
+    KConfigGroup g(KGlobal::config(), "WM");
+    return g.readEntry("inactiveBackground", QColor(224,223,222));
 }
 
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::inactiveTextColor()
 {
-    KConfigGroup g( KGlobal::config(), "WM" );
-    return g.readEntry( "inactiveForeground", QColor(75,71,67) );
+    KConfigGroup g(KGlobal::config(), "WM");
+    return g.readEntry("inactiveForeground", QColor(75,71,67));
 }
 
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::activeTitleColor()
 {
-    KConfigGroup g( KGlobal::config(), "WM" );
-    return g.readEntry( "activeBackground", QColor(48,174,232));
+    KConfigGroup g(KGlobal::config(), "WM");
+    return g.readEntry("activeBackground", QColor(48,174,232));
 }
 
 // NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::activeTextColor()
 {
-    KConfigGroup g( KGlobal::config(), "WM" );
-    return g.readEntry( "activeForeground", QColor(255,255,255) );
+    KConfigGroup g( KGlobal::config(), "WM");
+    return g.readEntry("activeForeground", QColor(255,255,255));
 }
 
 int KGlobalSettings::contrast()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
-    return g.readEntry( "contrast", 7 );
+    KConfigGroup g(KGlobal::config(), "KDE");
+    return g.readEntry("contrast", 7);
 }
 
 qreal KGlobalSettings::contrastF(const KSharedConfigPtr &config)
 {
     if (config) {
-        KConfigGroup g( config, "KDE" );
-        return 0.1 * g.readEntry( "contrast", 7 );
+        KConfigGroup g(config, "KDE");
+        return 0.1 * g.readEntry("contrast", 7);
     }
     return 0.1 * (qreal)contrast();
 }
 
 bool KGlobalSettings::shadeSortColumn()
 {
-    KConfigGroup g( KGlobal::config(), "General" );
-    return g.readEntry( "shadeSortColumn", KDE_DEFAULT_SHADE_SORT_COLUMN );
-}
-
-bool KGlobalSettings::allowDefaultBackgroundImages()
-{
-    KConfigGroup g( KGlobal::config(), "General" );
-    return g.readEntry( "allowDefaultBackgroundImages", KDE_DEFAULT_ALLOW_DEFAULT_BACKGROUND_IMAGES );
+    KConfigGroup g(KGlobal::config(), "General");
+    return g.readEntry("shadeSortColumn", KDE_DEFAULT_SHADE_SORT_COLUMN);
 }
 
 struct KFontData
@@ -342,17 +336,16 @@ static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
     { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8 }
 };
 
-QFont KGlobalSettingsData::font( FontTypes fontType )
+QFont KGlobalSettingsData::font(FontTypes fontType)
 {
     QFont* cachedFont = mFonts[fontType];
 
-    if (!cachedFont)
-    {
+    if (!cachedFont) {
         const KFontData& fontData = DefaultFontData[fontType];
-        cachedFont = new QFont( fontData.FontName, fontData.Size );
+        cachedFont = new QFont(fontData.FontName, fontData.Size);
 
-        const KConfigGroup configGroup( KGlobal::config(), fontData.ConfigGroupKey );
-        *cachedFont = configGroup.readEntry( fontData.ConfigKey, *cachedFont );
+        const KConfigGroup configGroup(KGlobal::config(), fontData.ConfigGroupKey);
+        *cachedFont = configGroup.readEntry(fontData.ConfigKey, *cachedFont);
 
         mFonts[fontType] = cachedFont;
     }
@@ -898,7 +891,7 @@ void KGlobalSettings::Private::applyCursorTheme()
 {
 #if defined(Q_WS_X11) && defined(HAVE_XCURSOR)
     KConfig config("kcminputrc");
-    KConfigGroup g(&config, "Mouse");
+    KConfigGroup g = config.group("Mouse");
 
     QByteArray theme = g.readEntry("cursorTheme", QByteArray("Oxygen_White"));
     int size = g.readEntry("cursorSize", -1);

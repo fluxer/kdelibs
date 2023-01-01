@@ -40,7 +40,6 @@
 #define KDE_DEFAULT_OPAQUE_RESIZE true
 #define KDE_DEFAULT_BUTTON_LAYOUT 0
 #define KDE_DEFAULT_SHADE_SORT_COLUMN true
-#define KDE_DEFAULT_ALLOW_DEFAULT_BACKGROUND_IMAGES true
 #define KDE_DEFAULT_NATURAL_SORTING true
 #define KDE_DEFAULT_FONT "DejaVu Sans"
 #define KDE_DEFAULT_FIXED_FONT "DejaVu Sans Mono"
@@ -298,14 +297,6 @@ public:
      * @return true if the sorted column shall be shaded
      */
     static bool shadeSortColumn();
-
-    /**
-     * Returns if default background images are allowed by the color scheme.
-     * A "default" background image is just that, i.e. the user has not
-     * actively selected a background image to use.
-     * @return true if default background images may be used
-     */
-    static bool allowDefaultBackgroundImages();
 
     /**
      * Returns the default general font.
