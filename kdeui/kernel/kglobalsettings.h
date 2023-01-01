@@ -300,46 +300,38 @@ public:
 
     /**
      * Returns the default general font.
-     * @return the default general font.
      */
     static QFont generalFont();
 
     /**
      * Returns the default fixed font.
-     * @return the default fixed font.
      */
     static QFont fixedFont();
 
     /**
      * Returns the default toolbar font.
-     * @return the default toolbar font.
      */
     static QFont toolBarFont();
 
     /**
      * Returns the default menu font.
-     * @return the default menu font.
      */
     static QFont menuFont();
 
     /**
      * Returns the default window title font.
-     * @return the default window title font.
      */
     static QFont windowTitleFont();
 
     /**
      * Returns the default taskbar font.
-     * @return the default taskbar font.
      */
     static QFont taskbarFont();
 
     /**
-     * Returns a font of approx. 48 pt. capable of showing @p text.
-     * @param text the text to test
-     * @return the font that is capable to show the text with 48 pt
+     * Returns a font of approx. 48 pt.
      */
-    static QFont largeFont(const QString &text = QString());
+    static QFont largeFont();
 
     /**
      * Returns the smallest readable font. This can be used in dockers,

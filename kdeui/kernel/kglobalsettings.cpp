@@ -21,7 +21,7 @@
 #include <config.h>
 
 #include <kconfig.h>
-#include <kdebug.h>
+#include <kconfiggroup.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
@@ -29,6 +29,7 @@
 #include <kcolorscheme.h>
 #include <kstyle.h>
 #include <kapplication.h>
+#include <kdebug.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QStandardPaths>
@@ -37,8 +38,6 @@
 #include <QtGui/QCursor>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QFont>
-#include <QtGui/QFontDatabase>
-#include <QtGui/QKeySequence>
 #include <QtGui/QPixmap>
 #include <QtGui/QPixmapCache>
 #include <QtGui/QToolTip>
@@ -59,70 +58,6 @@
 #endif
 
 #include <stdlib.h>
-#include <kconfiggroup.h>
-
-
-// TODO: merge this with KGlobalSettings::Private
-//
-// F. Kossebau: KDE5: think to make all methods static and not expose an object,
-// making KGlobalSettings rather a namespace
-// D. Faure: how would people connect to signals, then?
-class KGlobalSettingsData
-{
-  public:
-    // if adding a new type here also add an entry to DefaultFontData
-    enum FontTypes
-    {
-        GeneralFont = 0,
-        FixedFont,
-        ToolbarFont,
-        MenuFont,
-        WindowTitleFont,
-        TaskbarFont ,
-        SmallestReadableFont,
-        FontTypesCount
-    };
-
-  public:
-    KGlobalSettingsData();
-    ~KGlobalSettingsData();
-
-  public:
-    static KGlobalSettingsData* self();
-
-  public: // access, is not const due to caching
-    QFont font( FontTypes fontType );
-    QFont largeFont( const QString& text );
-
-  public:
-    void dropFontSettingsCache();
-
-  protected:
-    QFont* mFonts[FontTypesCount];
-    QFont* mLargeFont;
-};
-
-KGlobalSettingsData::KGlobalSettingsData()
-  : mLargeFont( 0 )
-{
-    for( int i=0; i<FontTypesCount; ++i )
-        mFonts[i] = 0;
-}
-
-KGlobalSettingsData::~KGlobalSettingsData()
-{
-    for( int i=0; i<FontTypesCount; ++i )
-        delete mFonts[i];
-    delete mLargeFont;
-}
-
-K_GLOBAL_STATIC( KGlobalSettingsData, globalSettingsDataSingleton )
-
-inline KGlobalSettingsData* KGlobalSettingsData::self()
-{
-    return globalSettingsDataSingleton;
-}
-
 
 class KGlobalSettings::Private
 {
@@ -174,7 +109,8 @@ KGlobalSettings* KGlobalSettings::self()
 }
 
 KGlobalSettings::KGlobalSettings()
-    : QObject(0), d(new Private(this))
+    : QObject(0),
+    d(new Private(this))
 {
 }
 
@@ -216,19 +152,19 @@ int KGlobalSettings::dndEventDelay()
 bool KGlobalSettings::singleClick()
 {
     KConfigGroup g(KGlobal::config(), "KDE");
-    return g.readEntry("SingleClick", KDE_DEFAULT_SINGLECLICK );
+    return g.readEntry("SingleClick", KDE_DEFAULT_SINGLECLICK);
 }
 
 bool KGlobalSettings::smoothScroll()
 {
     KConfigGroup g( KGlobal::config(), "KDE" );
-    return g.readEntry("SmoothScroll", KDE_DEFAULT_SMOOTHSCROLL );
+    return g.readEntry("SmoothScroll", KDE_DEFAULT_SMOOTHSCROLL);
 }
 
 KGlobalSettings::TearOffHandle KGlobalSettings::insertTearOffHandle()
 {
     bool effectsenabled = (KGlobalSettings::graphicEffectsLevel() > KGlobalSettings::NoEffects);
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g( KGlobal::config(), "KDE");
     int tearoff = g.readEntry("InsertTearOffHandle", KDE_DEFAULT_INSERTTEAROFFHANDLES);
     return effectsenabled ? (TearOffHandle) tearoff : Disable;
 }
@@ -247,49 +183,42 @@ int KGlobalSettings::autoSelectDelay()
 
 KGlobalSettings::Completion KGlobalSettings::completionMode()
 {
-    int completion;
     KConfigGroup g(KGlobal::config(), "General");
-    completion = g.readEntry("completionMode", -1);
-    if ((completion < (int) CompletionNone) ||
-        (completion > (int) CompletionPopupAuto))
-      {
+    int completion = g.readEntry("completionMode", -1);
+    if ((completion < (int) CompletionNone) || (completion > (int) CompletionPopupAuto)) {
         completion = (int) CompletionPopup; // Default
-      }
-  return (Completion) completion;
+    }
+    return (Completion) completion;
 }
 
-bool KGlobalSettings::showContextMenusOnPress ()
+bool KGlobalSettings::showContextMenusOnPress()
 {
     KConfigGroup g(KGlobal::config(), "ContextMenus");
     return g.readEntry("ShowOnPress", true);
 }
 
-
-// NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
+// NOTE: keep this in sync with kde-workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::inactiveTitleColor()
 {
     KConfigGroup g(KGlobal::config(), "WM");
     return g.readEntry("inactiveBackground", QColor(224,223,222));
 }
 
-// NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::inactiveTextColor()
 {
     KConfigGroup g(KGlobal::config(), "WM");
     return g.readEntry("inactiveForeground", QColor(75,71,67));
 }
 
-// NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::activeTitleColor()
 {
     KConfigGroup g(KGlobal::config(), "WM");
     return g.readEntry("activeBackground", QColor(48,174,232));
 }
 
-// NOTE: keep this in sync with kdebase/workspace/kcontrol/colors/colorscm.cpp
 QColor KGlobalSettings::activeTextColor()
 {
-    KConfigGroup g( KGlobal::config(), "WM");
+    KConfigGroup g(KGlobal::config(), "WM");
     return g.readEntry("activeForeground", QColor(255,255,255));
 }
 
@@ -314,148 +243,61 @@ bool KGlobalSettings::shadeSortColumn()
     return g.readEntry("shadeSortColumn", KDE_DEFAULT_SHADE_SORT_COLUMN);
 }
 
-struct KFontData
-{
-    const char* ConfigGroupKey;
-    const char* ConfigKey;
-    const char* FontName;
-    int Size;
-};
-
-// NOTE: keep in sync with kdebase/workspace/kcontrol/fonts/fonts.cpp
-static const char GeneralId[] =      "General";
-
-static const KFontData DefaultFontData[KGlobalSettingsData::FontTypesCount] =
-{
-    { GeneralId, "font",                 KDE_DEFAULT_FONT,       9 },
-    { GeneralId, "fixed",                KDE_DEFAULT_FIXED_FONT, 9 },
-    { GeneralId, "toolBarFont",          KDE_DEFAULT_FONT,       8 },
-    { GeneralId, "menuFont",             KDE_DEFAULT_FONT,       9 },
-    { "WM",      "activeFont",           KDE_DEFAULT_FONT,       8 },
-    { GeneralId, "taskbarFont",          KDE_DEFAULT_FONT,       9 },
-    { GeneralId, "smallestReadableFont", KDE_DEFAULT_FONT,       8 }
-};
-
-QFont KGlobalSettingsData::font(FontTypes fontType)
-{
-    QFont* cachedFont = mFonts[fontType];
-
-    if (!cachedFont) {
-        const KFontData& fontData = DefaultFontData[fontType];
-        cachedFont = new QFont(fontData.FontName, fontData.Size);
-
-        const KConfigGroup configGroup(KGlobal::config(), fontData.ConfigGroupKey);
-        *cachedFont = configGroup.readEntry(fontData.ConfigKey, *cachedFont);
-
-        mFonts[fontType] = cachedFont;
-    }
-
-    return *cachedFont;
-}
-
+// NOTE: keep in sync with kde-workspace/kcontrol/fonts/fonts.cpp
 QFont KGlobalSettings::generalFont()
 {
-    return KGlobalSettingsData::self()->font( KGlobalSettingsData::GeneralFont );
+    static const QFont defaultFont(KDE_DEFAULT_FONT, 9);
+    KConfigGroup g(KGlobal::config(), "General");
+    return g.readEntry("font", defaultFont);
 }
+
 QFont KGlobalSettings::fixedFont()
 {
-    return KGlobalSettingsData::self()->font( KGlobalSettingsData::FixedFont );
+    static const QFont defaultFont(KDE_DEFAULT_FIXED_FONT, 9);
+    KConfigGroup g(KGlobal::config(), "General");
+    return g.readEntry("fixed", defaultFont);
 }
+
 QFont KGlobalSettings::toolBarFont()
 {
-    return KGlobalSettingsData::self()->font( KGlobalSettingsData::ToolbarFont );
+    static const QFont defaultFont(KDE_DEFAULT_FIXED_FONT, 8);
+    KConfigGroup g(KGlobal::config(), "General");
+    return g.readEntry("toolBarFont", defaultFont);
 }
+
 QFont KGlobalSettings::menuFont()
 {
-    return KGlobalSettingsData::self()->font( KGlobalSettingsData::MenuFont );
+    static const QFont defaultFont(KDE_DEFAULT_FONT, 9);
+    KConfigGroup g(KGlobal::config(), "General");
+    return g.readEntry("menuFont", defaultFont);
 }
+
 QFont KGlobalSettings::windowTitleFont()
 {
-    return KGlobalSettingsData::self()->font( KGlobalSettingsData::WindowTitleFont );
+    static const QFont defaultFont(KDE_DEFAULT_FONT, 8);
+    KConfigGroup g(KGlobal::config(), "WM");
+    return g.readEntry("activeFont", defaultFont);
 }
+
 QFont KGlobalSettings::taskbarFont()
 {
-    return KGlobalSettingsData::self()->font( KGlobalSettingsData::TaskbarFont );
+    static const QFont defaultFont(KDE_DEFAULT_FONT, 9);
+    KConfigGroup g(KGlobal::config(), "General");
+    return g.readEntry("taskbarFont", defaultFont);
 }
+
 QFont KGlobalSettings::smallestReadableFont()
 {
-    return KGlobalSettingsData::self()->font( KGlobalSettingsData::SmallestReadableFont );
+    static const QFont defaultFont(KDE_DEFAULT_FONT, 8);
+    KConfigGroup g(KGlobal::config(), "General");
+    return g.readEntry("smallestReadableFont", defaultFont);
 }
 
-
-QFont KGlobalSettingsData::largeFont( const QString& text )
+QFont KGlobalSettings::largeFont()
 {
-    QFontDatabase db;
-    QStringList fam = db.families();
-
-    // Move a bunch of preferred fonts to the front.
-    // most preferred last
-    static const char* const PreferredFontNames[] =
-    {
-        "DejaVu Sans",
-        "FreeSans",
-        "Liberation Sans",
-    };
-    static const unsigned int PreferredFontNamesCount = sizeof(PreferredFontNames)/sizeof(const char*);
-    for( unsigned int i=0; i<PreferredFontNamesCount; ++i )
-    {
-        const QString fontName (PreferredFontNames[i]);
-        if (fam.removeAll(fontName)>0)
-            fam.prepend(fontName);
-    }
-
-    if (mLargeFont) {
-        fam.prepend(mLargeFont->family());
-        delete mLargeFont;
-    }
-
-    for(QStringList::ConstIterator it = fam.constBegin();
-        it != fam.constEnd(); ++it)
-    {
-        if (db.isScalable(*it) && !db.isFixedPitch(*it))
-        {
-            QFont font(*it);
-            font.setPixelSize(75);
-            QFontMetrics metrics(font);
-            int h = metrics.height();
-            if ((h < 60) || ( h > 90))
-                continue;
-
-            bool ok = true;
-            for(int i = 0; i < text.length(); i++)
-            {
-                if (!metrics.inFont(text[i]))
-                {
-                    ok = false;
-                    break;
-                }
-            }
-            if (!ok)
-                continue;
-
-            font.setPointSize(48);
-            mLargeFont = new QFont(font);
-            return *mLargeFont;
-        }
-    }
-    mLargeFont = new QFont( font(GeneralFont) );
-    mLargeFont->setPointSize(48);
-    return *mLargeFont;
-}
-QFont KGlobalSettings::largeFont( const QString& text )
-{
-    return KGlobalSettingsData::self()->largeFont( text );
-}
-
-void KGlobalSettingsData::dropFontSettingsCache()
-{
-    for( int i=0; i<FontTypesCount; ++i )
-    {
-        delete mFonts[i];
-        mFonts[i] = 0;
-    }
-    delete mLargeFont;
-    mLargeFont = 0;
+    QFont largeFont = generalFont();
+    largeFont.setPointSize(48);
+    return largeFont;
 }
 
 KGlobalSettings::Mouse KGlobalSettings::mouseButtonMapping()
@@ -698,7 +540,6 @@ void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
 
     case FontChanged:
         KGlobal::config()->reparseConfiguration();
-        KGlobalSettingsData::self()->dropFontSettingsCache();
         if (activated) {
             kdisplaySetFont();
         }
@@ -856,13 +697,11 @@ void KGlobalSettings::Private::kdisplaySetFont()
     }
 
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
-        KGlobalSettingsData* data = KGlobalSettingsData::self();
-
-        QApplication::setFont( data->font(KGlobalSettingsData::GeneralFont) );
-        const QFont menuFont = data->font( KGlobalSettingsData::MenuFont );
-        QApplication::setFont( menuFont, "QMenuBar" );
-        QApplication::setFont( menuFont, "QMenu" );
-        QApplication::setFont( data->font(KGlobalSettingsData::ToolbarFont), "QToolBar" );
+        QApplication::setFont(KGlobalSettings::generalFont());
+        const QFont menuFont = KGlobalSettings::menuFont();
+        QApplication::setFont(menuFont, "QMenuBar");
+        QApplication::setFont(menuFont, "QMenu");
+        QApplication::setFont(KGlobalSettings::toolBarFont(), "QToolBar");
     }
     emit q->kdisplayFontChanged();
     emit q->appearanceChanged();
