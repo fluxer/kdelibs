@@ -157,7 +157,7 @@ bool KGlobalSettings::singleClick()
 
 bool KGlobalSettings::smoothScroll()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g( KGlobal::config(), "KDE");
     return g.readEntry("SmoothScroll", KDE_DEFAULT_SMOOTHSCROLL);
 }
 
@@ -339,38 +339,38 @@ KGlobalSettings::Mouse KGlobalSettings::mouseButtonMapping()
 
 QString KGlobalSettings::desktopPath()
 {
-    QString path = QStandardPaths::writableLocation( QStandardPaths::DesktopLocation );
-    return path.isEmpty() ? QDir::homePath() : path;
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation);
+    return (path.isEmpty() ? QDir::homePath() : path);
 }
 
 QString KGlobalSettings::documentPath()
 {
-    QString path = QStandardPaths::writableLocation( QStandardPaths::DocumentsLocation );
-    return path.isEmpty() ? QDir::homePath() : path;
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    return (path.isEmpty() ? QDir::homePath() : path);
 }
 
 QString KGlobalSettings::downloadPath()
 {
-    QString path = QStandardPaths::writableLocation( QStandardPaths::DownloadsLocation );
-    return path.isEmpty() ? QDir::homePath() + "/Downloads" : path;
+    QString path = QStandardPaths::writableLocation(QStandardPaths::DownloadsLocation);
+    return (path.isEmpty() ? QDir::homePath() + "/Downloads" : path);
 }
 
 QString KGlobalSettings::videosPath()
 {
-    QString path = QStandardPaths::writableLocation( QStandardPaths::VideosLocation );
-    return path.isEmpty() ? QDir::homePath() : path;
+    QString path = QStandardPaths::writableLocation(QStandardPaths::VideosLocation);
+    return (path.isEmpty() ? QDir::homePath() : path);
 }
 
 QString KGlobalSettings::picturesPath()
 {
-    QString path = QStandardPaths::writableLocation( QStandardPaths::PicturesLocation );
-    return path.isEmpty() ? QDir::homePath() :path;
+    QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+    return (path.isEmpty() ? QDir::homePath() : path);
 }
 
 QString KGlobalSettings::musicPath()
 {
-    QString path = QStandardPaths::writableLocation( QStandardPaths::MusicLocation );
-    return path.isEmpty() ? QDir::homePath() : path;
+    QString path = QStandardPaths::writableLocation(QStandardPaths::MusicLocation);
+    return (path.isEmpty() ? QDir::homePath() : path);
 }
 
 bool KGlobalSettings::isMultiHead()
@@ -384,8 +384,8 @@ bool KGlobalSettings::isMultiHead()
 
 bool KGlobalSettings::wheelMouseZooms()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
-    return g.readEntry( "WheelMouseZooms", KDE_DEFAULT_WHEEL_ZOOM );
+    KConfigGroup g(KGlobal::config(), "KDE");
+    return g.readEntry("WheelMouseZooms", KDE_DEFAULT_WHEEL_ZOOM);
 }
 
 QRect KGlobalSettings::splashScreenDesktopGeometry()
@@ -396,15 +396,13 @@ QRect KGlobalSettings::splashScreenDesktopGeometry()
         KConfigGroup group(KGlobal::config(), "Windows");
         int scr = group.readEntry("Unmanaged", -3);
         if (group.readEntry("XineramaEnabled", true) && scr != -2) {
-            if (scr == -3)
+            if (scr == -3) {
                 scr = dw->screenNumber(QCursor::pos());
+            }
             return dw->screenGeometry(scr);
-        } else {
-            return dw->geometry();
         }
-    } else {
-        return dw->geometry();
     }
+    return dw->geometry();
 }
 
 QRect KGlobalSettings::desktopGeometry(const QPoint& point)
@@ -416,12 +414,9 @@ QRect KGlobalSettings::desktopGeometry(const QPoint& point)
         if (group.readEntry("XineramaEnabled", true) &&
             group.readEntry("XineramaPlacementEnabled", true)) {
             return dw->screenGeometry(dw->screenNumber(point));
-        } else {
-            return dw->geometry();
         }
-    } else {
-        return dw->geometry();
     }
+    return dw->geometry();
 }
 
 QRect KGlobalSettings::desktopGeometry(const QWidget* w)
@@ -432,33 +427,30 @@ QRect KGlobalSettings::desktopGeometry(const QWidget* w)
         KConfigGroup group(KGlobal::config(), "Windows");
         if (group.readEntry("XineramaEnabled", true) &&
             group.readEntry("XineramaPlacementEnabled", true)) {
-            if (w)
+            if (w) {
                 return dw->screenGeometry(dw->screenNumber(w));
-            else return dw->screenGeometry(-1);
-        } else {
-            return dw->geometry();
+            }
+            return dw->screenGeometry(-1);
         }
-    } else {
-        return dw->geometry();
     }
+    return dw->geometry();
 }
 
 bool KGlobalSettings::showIconsOnPushButtons()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("ShowIconsOnPushButtons", KDE_DEFAULT_ICON_ON_PUSHBUTTON);
 }
 
 bool KGlobalSettings::naturalSorting()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("NaturalSorting", KDE_DEFAULT_NATURAL_SORTING);
 }
 
 KGlobalSettings::GraphicEffects KGlobalSettings::graphicEffectsLevel()
 {
-    KConfigGroup g( KGlobal::config(), "KDE-Global GUI Settings" );
-
+    KConfigGroup g(KGlobal::config(), "KDE-Global GUI Settings");
     int graphicEffects = g.readEntry("GraphicEffectsLevel", int(KGlobalSettings::graphicEffectsLevelDefault()));
     return GraphicEffects(graphicEffects);
 }
@@ -477,19 +469,19 @@ bool KGlobalSettings::showFilePreview(const KUrl &url)
 {
     KConfigGroup g(KGlobal::config(), "PreviewSettings");
     QString protocol = url.protocol();
-    bool defaultSetting = KProtocolInfo::showFilePreview( protocol );
-    return g.readEntry(protocol, defaultSetting );
+    bool defaultSetting = KProtocolInfo::showFilePreview(protocol);
+    return g.readEntry(protocol, defaultSetting);
 }
 
 bool KGlobalSettings::opaqueResize()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("OpaqueResize", KDE_DEFAULT_OPAQUE_RESIZE);
 }
 
 int KGlobalSettings::buttonLayout()
 {
-    KConfigGroup g( KGlobal::config(), "KDE" );
+    KConfigGroup g(KGlobal::config(), "KDE");
     return g.readEntry("ButtonLayout", KDE_DEFAULT_BUTTON_LAYOUT);
 }
 
@@ -501,7 +493,7 @@ QT_END_NAMESPACE
 
 void KGlobalSettings::emitChange(ChangeType changeType, int arg)
 {
-    QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings", "org.kde.KGlobalSettings", "notifyChange" );
+    QDBusMessage message = QDBusMessage::createSignal("/KGlobalSettings", "org.kde.KGlobalSettings", "notifyChange");
     QList<QVariant> args;
     args.append(static_cast<int>(changeType));
     args.append(arg);
@@ -518,73 +510,74 @@ void KGlobalSettings::emitChange(ChangeType changeType, int arg)
 void KGlobalSettings::Private::_k_slotNotifyChange(int changeType, int arg)
 {
     switch(changeType) {
-    case StyleChanged:
-        if (activated) {
-            KGlobal::config()->reparseConfiguration();
-            kdisplaySetStyle();
-        }
-        break;
-
-    case ToolbarStyleChanged:
-        KGlobal::config()->reparseConfiguration();
-        emit q->toolbarAppearanceChanged(arg);
-        break;
-
-    case PaletteChanged:
-        if (activated) {
-            KGlobal::config()->reparseConfiguration();
-            paletteCreated = false;
-            kdisplaySetPalette();
-        }
-        break;
-
-    case FontChanged:
-        KGlobal::config()->reparseConfiguration();
-        if (activated) {
-            kdisplaySetFont();
-        }
-        break;
-
-    case SettingsChanged: {
-        KGlobal::config()->reparseConfiguration();
-        SettingsCategory category = static_cast<SettingsCategory>(arg);
-        if (category == SETTINGS_QT) {
+        case StyleChanged: {
             if (activated) {
-                propagateQtSettings();
+                KGlobal::config()->reparseConfiguration();
+                kdisplaySetStyle();
             }
-        } else {
-            switch (category) {
-                case SETTINGS_LOCALE:
-                    KGlobal::locale()->reparseConfiguration();
-                    break;
-                default:
-                    break;
-            }
-            emit q->settingsChanged(category);
+            break;
         }
-        break;
-    }
-    case IconChanged:
-        QPixmapCache::clear();
-        KGlobal::config()->reparseConfiguration();
-        emit q->iconChanged(arg);
-        break;
-
-    case CursorChanged:
-        applyCursorTheme();
-        break;
-
-    case BlockShortcuts:
-        // NOTE: KGlobalAccel connects to this signal
-        emit q->blockShortcuts(arg); // see kwin
-        break;
-
-    case NaturalSortingChanged:
-        emit q->naturalSortingChanged();
-        break;
-
-    default:
-        kWarning(240) << "Unknown type of change in KGlobalSettings::slotNotifyChange: " << changeType;
+        case ToolbarStyleChanged: {
+            KGlobal::config()->reparseConfiguration();
+            emit q->toolbarAppearanceChanged(arg);
+            break;
+        }
+        case PaletteChanged: {
+            if (activated) {
+                KGlobal::config()->reparseConfiguration();
+                paletteCreated = false;
+                kdisplaySetPalette();
+            }
+            break;
+        }
+        case FontChanged: {
+            KGlobal::config()->reparseConfiguration();
+            if (activated) {
+                kdisplaySetFont();
+            }
+            break;
+        }
+        case SettingsChanged: {
+            KGlobal::config()->reparseConfiguration();
+            SettingsCategory category = static_cast<SettingsCategory>(arg);
+            if (category == SETTINGS_QT) {
+                if (activated) {
+                    propagateQtSettings();
+                }
+            } else {
+                switch (category) {
+                    case SETTINGS_LOCALE:
+                        KGlobal::locale()->reparseConfiguration();
+                        break;
+                    default:
+                        break;
+                }
+                emit q->settingsChanged(category);
+            }
+            break;
+        }
+        case IconChanged: {
+            QPixmapCache::clear();
+            KGlobal::config()->reparseConfiguration();
+            emit q->iconChanged(arg);
+            break;
+        }
+        case CursorChanged: {
+            applyCursorTheme();
+            break;
+        }
+        case BlockShortcuts: {
+            // NOTE: KGlobalAccel connects to this signal
+            emit q->blockShortcuts(arg); // see kwin
+            break;
+        }
+        case NaturalSortingChanged: {
+            emit q->naturalSortingChanged();
+            break;
+        }
+        default: {
+            kWarning(240) << "Unknown type of change in KGlobalSettings::slotNotifyChange: " << changeType;
+        }
     }
 }
 
@@ -634,39 +627,42 @@ QPalette KGlobalSettings::Private::createNewApplicationPalette(const KSharedConf
 {
     QPalette palette;
 
-    QPalette::ColorGroup states[3] = { QPalette::Active, QPalette::Inactive,
-                                       QPalette::Disabled };
+    QPalette::ColorGroup states[3] = {
+        QPalette::Active,
+        QPalette::Inactive,
+        QPalette::Disabled
+    };
 
     // TT thinks tooltips shouldn't use active, so we use our active colors for all states
     KColorScheme schemeTooltip(QPalette::Active, KColorScheme::Tooltip, config);
 
-    for ( int i = 0; i < 3 ; i++ ) {
+    for (int i = 0; i < 3; i++) {
         QPalette::ColorGroup state = states[i];
         KColorScheme schemeView(state, KColorScheme::View, config);
         KColorScheme schemeWindow(state, KColorScheme::Window, config);
         KColorScheme schemeButton(state, KColorScheme::Button, config);
         KColorScheme schemeSelection(state, KColorScheme::Selection, config);
 
-        palette.setBrush( state, QPalette::WindowText, schemeWindow.foreground() );
-        palette.setBrush( state, QPalette::Window, schemeWindow.background() );
-        palette.setBrush( state, QPalette::Base, schemeView.background() );
-        palette.setBrush( state, QPalette::Text, schemeView.foreground() );
-        palette.setBrush( state, QPalette::Button, schemeButton.background() );
-        palette.setBrush( state, QPalette::ButtonText, schemeButton.foreground() );
-        palette.setBrush( state, QPalette::Highlight, schemeSelection.background() );
-        palette.setBrush( state, QPalette::HighlightedText, schemeSelection.foreground() );
-        palette.setBrush( state, QPalette::ToolTipBase, schemeTooltip.background() );
-        palette.setBrush( state, QPalette::ToolTipText, schemeTooltip.foreground() );
+        palette.setBrush(state, QPalette::WindowText, schemeWindow.foreground());
+        palette.setBrush(state, QPalette::Window, schemeWindow.background());
+        palette.setBrush(state, QPalette::Base, schemeView.background());
+        palette.setBrush(state, QPalette::Text, schemeView.foreground());
+        palette.setBrush(state, QPalette::Button, schemeButton.background());
+        palette.setBrush(state, QPalette::ButtonText, schemeButton.foreground());
+        palette.setBrush(state, QPalette::Highlight, schemeSelection.background());
+        palette.setBrush(state, QPalette::HighlightedText, schemeSelection.foreground());
+        palette.setBrush(state, QPalette::ToolTipBase, schemeTooltip.background());
+        palette.setBrush(state, QPalette::ToolTipText, schemeTooltip.foreground());
 
-        palette.setColor( state, QPalette::Light, schemeWindow.shade( KColorScheme::LightShade ) );
-        palette.setColor( state, QPalette::Midlight, schemeWindow.shade( KColorScheme::MidlightShade ) );
-        palette.setColor( state, QPalette::Mid, schemeWindow.shade( KColorScheme::MidShade ) );
-        palette.setColor( state, QPalette::Dark, schemeWindow.shade( KColorScheme::DarkShade ) );
-        palette.setColor( state, QPalette::Shadow, schemeWindow.shade( KColorScheme::ShadowShade ) );
+        palette.setColor(state, QPalette::Light, schemeWindow.shade(KColorScheme::LightShade));
+        palette.setColor(state, QPalette::Midlight, schemeWindow.shade(KColorScheme::MidlightShade));
+        palette.setColor(state, QPalette::Mid, schemeWindow.shade(KColorScheme::MidShade));
+        palette.setColor(state, QPalette::Dark, schemeWindow.shade(KColorScheme::DarkShade));
+        palette.setColor(state, QPalette::Shadow, schemeWindow.shade(KColorScheme::ShadowShade));
 
-        palette.setBrush( state, QPalette::AlternateBase, schemeView.background( KColorScheme::AlternateBackground) );
-        palette.setBrush( state, QPalette::Link, schemeView.foreground( KColorScheme::LinkText ) );
-        palette.setBrush( state, QPalette::LinkVisited, schemeView.foreground( KColorScheme::VisitedText ) );
+        palette.setBrush(state, QPalette::AlternateBase, schemeView.background(KColorScheme::AlternateBackground));
+        palette.setBrush(state, QPalette::Link, schemeView.foreground(KColorScheme::LinkText));
+        palette.setBrush(state, QPalette::LinkVisited, schemeView.foreground(KColorScheme::VisitedText));
     }
 
     if (config == KGlobal::config()) {
@@ -684,7 +680,7 @@ void KGlobalSettings::Private::kdisplaySetPalette()
     }
 
     if (qApp->type() == KAPPLICATION_GUI_TYPE) {
-        QApplication::setPalette( q->createApplicationPalette() );
+        QApplication::setPalette(q->createApplicationPalette());
     }
     emit q->kdisplayPaletteChanged();
     emit q->appearanceChanged();
@@ -737,8 +733,7 @@ void KGlobalSettings::Private::applyCursorTheme()
 
     // Default cursor size is 16 points
     if (size == -1) {
-        QApplication *app = static_cast<QApplication*>(QApplication::instance());
-        size = app->desktop()->screen(0)->logicalDpiY() * 16 / 72;
+        size = qApp->desktop()->screen(0)->logicalDpiY() * 16 / 72;
     }
 
     // Note that in X11R7.1 and earlier, calling XcursorSetTheme()
