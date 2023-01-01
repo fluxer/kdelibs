@@ -111,30 +111,6 @@ public:
     static bool isHelperProtocol(const QString &protocol);
 
     /**
-     * Returns whether the protocol can act as a filter protocol.
-     *
-     * A filter protocol can operate on data that is passed to it
-     * but does not retrieve/store data itself, like sftp.
-     * A filter protocol is the opposite of a source protocol.
-     *
-     * The "source=" field in the protocol description file determines
-     * whether a protocol is a source protocol or a filter protocol.
-     * Valid values for this field are "true" (default) for source protocol or
-     * "false" for filter protocol.
-     *
-     * @param url the url to check
-     * @return true if the protocol is a filter (e.g. sftp), false if the
-     *         protocol is a helper or source
-     */
-    static bool isFilterProtocol(const KUrl &url);
-
-    /**
-     * Same as above except you can supply just the protocol instead of
-     * the whole URL.
-     */
-    static bool isFilterProtocol(const QString &protocol);
-
-    /**
      * Returns the name of the icon, associated with the specified protocol.
      *
      * This corresponds to the "Icon=" field in the protocol description file.
