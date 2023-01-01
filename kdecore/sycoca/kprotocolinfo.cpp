@@ -36,32 +36,32 @@ KProtocolInfo::KProtocolInfo(const QString &path)
     QString fullPath = KStandardDirs::locate("services", path);
 
     KConfig sconfig( fullPath );
-    KConfigGroup config(&sconfig, "Protocol" );
+    KConfigGroup config(&sconfig, "Protocol");
 
-    m_name = config.readEntry( "protocol" );
-    m_exec = config.readPathEntry( "exec", QString() );
-    m_isSourceProtocol = config.readEntry( "source", true );
-    m_isHelperProtocol = config.readEntry( "helper", false );
-    m_supportsListing = config.readEntry( "listing", false );
-    m_supportsReading = config.readEntry( "reading", false );
-    m_supportsWriting = config.readEntry( "writing", false );
-    m_supportsMakeDir = config.readEntry( "makedir", false );
-    m_supportsDeleting = config.readEntry( "deleting", false );
-    m_supportsLinking = config.readEntry( "linking", false );
-    m_supportsMoving = config.readEntry( "moving", false );
-    m_supportsOpening = config.readEntry( "opening", false );
-    m_canCopyFromFile = config.readEntry( "copyFromFile", false );
-    m_canCopyToFile = config.readEntry( "copyToFile", false );
-    m_defaultMimetype = config.readEntry( "defaultMimetype" );
-    m_determineMimetypeFromExtension = config.readEntry( "determineMimetypeFromExtension", true );
-    m_icon = config.readEntry( "Icon" );
-    m_config = config.readEntry( "config", m_name );
+    m_name = config.readEntry("protocol");
+    m_exec = config.readPathEntry("exec", QString());
+    m_isSourceProtocol = config.readEntry("source", true);
+    m_isHelperProtocol = config.readEntry("helper", false);
+    m_supportsListing = config.readEntry("listing", false);
+    m_supportsReading = config.readEntry("reading", false);
+    m_supportsWriting = config.readEntry("writing", false);
+    m_supportsMakeDir = config.readEntry("makedir", false);
+    m_supportsDeleting = config.readEntry("deleting", false);
+    m_supportsLinking = config.readEntry("linking", false);
+    m_supportsMoving = config.readEntry("moving", false);
+    m_supportsOpening = config.readEntry("opening", false);
+    m_canCopyFromFile = config.readEntry("copyFromFile", false);
+    m_canCopyToFile = config.readEntry("copyToFile", false);
+    m_defaultMimetype = config.readEntry("defaultMimetype");
+    m_determineMimetypeFromExtension = config.readEntry("determineMimetypeFromExtension", true);
+    m_icon = config.readEntry("Icon", QString());
+    m_config = config.readEntry("config", m_name);
     m_maxSlaves = config.readEntry( "maxInstances", 1);
 
-    d->canRenameFromFile = config.readEntry( "renameFromFile", false );
-    d->canRenameToFile = config.readEntry( "renameToFile", false );
-    d->canDeleteRecursive = config.readEntry( "deleteRecursive", false );
-    const QString fnu = config.readEntry( "fileNameUsedForCopying", "FromURL" );
+    d->canRenameFromFile = config.readEntry("renameFromFile", false);
+    d->canRenameToFile = config.readEntry("renameToFile", false);
+    d->canDeleteRecursive = config.readEntry("deleteRecursive", false);
+    const QString fnu = config.readEntry( "fileNameUsedForCopying", "FromURL");
     d->fileNameUsedForCopying = FromUrl;
     if (fnu == QLatin1String("Name")) {
         d->fileNameUsedForCopying = Name;
@@ -69,26 +69,26 @@ KProtocolInfo::KProtocolInfo(const QString &path)
         d->fileNameUsedForCopying = DisplayName;
     }
     d->maxSlavesPerHost = config.readEntry( "maxInstancesPerHost", 0);
-    d->docPath = config.readPathEntry( "X-DocPath", QString() );
-    d->protClass = config.readEntry( "Class" ).toLower();
+    d->docPath = config.readPathEntry("X-DocPath", QString());
+    d->protClass = config.readEntry("Class").toLower();
     if (d->protClass[0] != QLatin1Char(':')) {
         d->protClass.prepend(QLatin1Char(':'));
     }
-    d->showPreviews = config.readEntry( "ShowPreviews", d->protClass == QLatin1String(":local") );
-    d->proxyProtocol = config.readEntry( "ProxiedBy" );
+    d->showPreviews = config.readEntry("ShowPreviews", d->protClass == QLatin1String(":local"));
+    d->proxyProtocol = config.readEntry("ProxiedBy");
 }
 
-KProtocolInfo::KProtocolInfo( QDataStream& _str, int offset)
-    : KSycocaEntry(*new KProtocolInfoPrivate( _str, offset, this) )
+KProtocolInfo::KProtocolInfo(QDataStream &str, int offset)
+    : KSycocaEntry(*new KProtocolInfoPrivate(str, offset, this))
 {
-    load( _str );
+    load(str);
 }
 
 KProtocolInfo::~KProtocolInfo()
 {
 }
 
-void KProtocolInfo::load( QDataStream& _str)
+void KProtocolInfo::load(QDataStream &str)
 {
     Q_D(KProtocolInfo);
     // NOTE: make sure to update the version number in ksycoca.cpp
@@ -102,21 +102,21 @@ void KProtocolInfo::load( QDataStream& _str)
           i_canRenameFromFile, i_canRenameToFile,
           i_canDeleteRecursive, i_fileNameUsedForCopying;
 
-    _str >> m_name >> m_exec >> m_defaultMimetype
-         >> i_determineMimetypeFromExtension
-         >> m_icon
-         >> i_isSourceProtocol >> i_isHelperProtocol
-         >> i_supportsListing >> i_supportsReading
-         >> i_supportsWriting >> i_supportsMakeDir
-         >> i_supportsDeleting >> i_supportsLinking
-         >> i_supportsMoving >> i_supportsOpening
-         >> i_canCopyFromFile >> i_canCopyToFile
-         >> m_config >> m_maxSlaves >> d->docPath >> d->protClass
-         >> i_showPreviews
-         >> d->proxyProtocol
-         >> i_canRenameFromFile >> i_canRenameToFile
-         >> i_canDeleteRecursive >> i_fileNameUsedForCopying
-         >> d->maxSlavesPerHost;
+    str >> m_name >> m_exec >> m_defaultMimetype
+        >> i_determineMimetypeFromExtension
+        >> m_icon
+        >> i_isSourceProtocol >> i_isHelperProtocol
+        >> i_supportsListing >> i_supportsReading
+        >> i_supportsWriting >> i_supportsMakeDir
+        >> i_supportsDeleting >> i_supportsLinking
+        >> i_supportsMoving >> i_supportsOpening
+        >> i_canCopyFromFile >> i_canCopyToFile
+        >> m_config >> m_maxSlaves >> d->docPath >> d->protClass
+        >> i_showPreviews
+        >> d->proxyProtocol
+        >> i_canRenameFromFile >> i_canRenameToFile
+        >> i_canDeleteRecursive >> i_fileNameUsedForCopying
+        >> d->maxSlavesPerHost;
 
     m_isSourceProtocol = (i_isSourceProtocol != 0);
     m_isHelperProtocol = (i_isHelperProtocol != 0);
@@ -139,9 +139,9 @@ void KProtocolInfo::load( QDataStream& _str)
 }
 
 void
-KProtocolInfoPrivate::save( QDataStream& _str)
+KProtocolInfoPrivate::save(QDataStream &str)
 {
-    KSycocaEntryPrivate::save( _str );
+    KSycocaEntryPrivate::save(str);
 
     // NOTE: make sure to update the version number in ksycoca.cpp
     qint8 i_isSourceProtocol, i_isHelperProtocol,
@@ -173,21 +173,21 @@ KProtocolInfoPrivate::save( QDataStream& _str)
     i_determineMimetypeFromExtension = q->m_determineMimetypeFromExtension ? 1 : 0;
     i_showPreviews = showPreviews ? 1 : 0;
 
-    _str << q->m_name << q->m_exec << q->m_defaultMimetype
-         << i_determineMimetypeFromExtension
-         << q->m_icon
-         << i_isSourceProtocol << i_isHelperProtocol
-         << i_supportsListing << i_supportsReading
-         << i_supportsWriting << i_supportsMakeDir
-         << i_supportsDeleting << i_supportsLinking
-         << i_supportsMoving << i_supportsOpening
-         << i_canCopyFromFile << i_canCopyToFile
-         << q->m_config << q->m_maxSlaves << docPath << protClass
-         << i_showPreviews
-         << proxyProtocol
-         << i_canRenameFromFile << i_canRenameToFile
-         << i_canDeleteRecursive << i_fileNameUsedForCopying
-         << maxSlavesPerHost;
+    str << q->m_name << q->m_exec << q->m_defaultMimetype
+        << i_determineMimetypeFromExtension
+        << q->m_icon
+        << i_isSourceProtocol << i_isHelperProtocol
+        << i_supportsListing << i_supportsReading
+        << i_supportsWriting << i_supportsMakeDir
+        << i_supportsDeleting << i_supportsLinking
+        << i_supportsMoving << i_supportsOpening
+        << i_canCopyFromFile << i_canCopyToFile
+        << q->m_config << q->m_maxSlaves << docPath << protClass
+        << i_showPreviews
+        << proxyProtocol
+        << i_canRenameFromFile << i_canRenameToFile
+        << i_canDeleteRecursive << i_fileNameUsedForCopying
+        << maxSlavesPerHost;
 }
 
 //
@@ -198,17 +198,17 @@ QStringList KProtocolInfo::protocols()
     return KProtocolInfoFactory::self()->protocols();
 }
 
-bool KProtocolInfo::isFilterProtocol( const QString& _protocol )
+bool KProtocolInfo::isFilterProtocol(const QString &protocol)
 {
     // call the findProtocol directly (not via KProtocolManager) to bypass any proxy settings.
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return false;
     }
     return !prot->m_isSourceProtocol;
 }
 
-void KProtocolInfo::selectServiceOrHelper(const QString& protocol, KProtocolInfo::Ptr& returnProtocol, KService::Ptr& returnService)
+void KProtocolInfo::selectServiceOrHelper(const QString &protocol, KProtocolInfo::Ptr &returnProtocol, KService::Ptr &returnService)
 {
     // have up to two sources of data:
     // 1) the exec line of the .protocol file, if there's one (could be a kioslave or a helper app)
@@ -236,7 +236,7 @@ void KProtocolInfo::selectServiceOrHelper(const QString& protocol, KProtocolInfo
     }
 }
 
-QString KProtocolInfo::icon(const QString& protocol)
+QString KProtocolInfo::icon(const QString &protocol)
 {
     KProtocolInfo::Ptr prot;
     KService::Ptr service;
@@ -249,44 +249,44 @@ QString KProtocolInfo::icon(const QString& protocol)
     return QString();
 }
 
-QString KProtocolInfo::config( const QString& _protocol )
+QString KProtocolInfo::config(const QString &protocol)
 {
     // call the findProtocol directly (not via KProtocolManager) to bypass any proxy settings
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return QString();
     }
     return QString::fromLatin1("kio_%1rc").arg(prot->m_config);
 }
 
-int KProtocolInfo::maxSlaves( const QString& _protocol )
+int KProtocolInfo::maxSlaves( const QString &protocol)
 {
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return 1;
     }
     return prot->m_maxSlaves;
 }
 
-int KProtocolInfo::maxSlavesPerHost( const QString& _protocol )
+int KProtocolInfo::maxSlavesPerHost(const QString &protocol)
 {
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return 0;
     }
     return prot->d_func()->maxSlavesPerHost;
 }
 
-bool KProtocolInfo::determineMimetypeFromExtension( const QString &_protocol )
+bool KProtocolInfo::determineMimetypeFromExtension(const QString &protocol)
 {
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol( _protocol );
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return true;
     }
     return prot->m_determineMimetypeFromExtension;
 }
 
-QString KProtocolInfo::exec(const QString& protocol)
+QString KProtocolInfo::exec(const QString &protocol)
 {
     KProtocolInfo::Ptr prot;
     KService::Ptr service;
@@ -299,37 +299,37 @@ QString KProtocolInfo::exec(const QString& protocol)
     return QString();
 }
 
-QString KProtocolInfo::docPath( const QString& _protocol )
+QString KProtocolInfo::docPath(const QString &protocol)
 {
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return QString();
     }
     return prot->d_func()->docPath;
 }
 
-QString KProtocolInfo::protocolClass( const QString& _protocol )
+QString KProtocolInfo::protocolClass(const QString &protocol)
 {
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return QString();
     }
     return prot->d_func()->protClass;
 }
 
-bool KProtocolInfo::showFilePreview( const QString& _protocol )
+bool KProtocolInfo::showFilePreview(const QString &protocol)
 {
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return false;
     }
     return prot->d_func()->showPreviews;
 }
 
-QString KProtocolInfo::proxiedBy( const QString& _protocol )
+QString KProtocolInfo::proxiedBy(const QString &protocol)
 {
-    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(_protocol);
-    if ( !prot ) {
+    KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
+    if (!prot) {
         return QString();
     }
     return prot->d_func()->proxyProtocol;
@@ -369,17 +369,17 @@ KProtocolInfo::FileNameUsedForCopying KProtocolInfo::fileNameUsedForCopying() co
     return d->fileNameUsedForCopying;
 }
 
-bool KProtocolInfo::isFilterProtocol( const KUrl &url )
+bool KProtocolInfo::isFilterProtocol(const KUrl &url)
 {
-    return isFilterProtocol (url.protocol());
+    return isFilterProtocol(url.protocol());
 }
 
-bool KProtocolInfo::isHelperProtocol( const KUrl &url )
+bool KProtocolInfo::isHelperProtocol(const KUrl &url)
 {
-    return isHelperProtocol (url.protocol());
+    return isHelperProtocol(url.protocol());
 }
 
-bool KProtocolInfo::isHelperProtocol( const QString &protocol )
+bool KProtocolInfo::isHelperProtocol(const QString &protocol)
 {
     // call the findProtocol directly (not via KProtocolManager) to bypass any proxy settings.
     KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
@@ -390,12 +390,12 @@ bool KProtocolInfo::isHelperProtocol( const QString &protocol )
     return !service.isNull();
 }
 
-bool KProtocolInfo::isKnownProtocol( const KUrl &url )
+bool KProtocolInfo::isKnownProtocol(const KUrl &url)
 {
-    return isKnownProtocol (url.protocol());
+    return isKnownProtocol(url.protocol());
 }
 
-bool KProtocolInfo::isKnownProtocol( const QString &protocol )
+bool KProtocolInfo::isKnownProtocol(const QString &protocol)
 {
     // call the findProtocol (const QString&) to bypass any proxy settings.
     KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
