@@ -41,8 +41,8 @@
 
 #include <assert.h>
 
-// Slaves may be idle for a certain time (3 minutes) before they are killed.
-static const int s_idleSlaveLifetime = 3 * 60;
+// Slaves may be idle for a certain time (1 minute) before they are killed.
+static const int s_idleSlaveLifetime = 1 * 60;
 
 
 using namespace KIO;
