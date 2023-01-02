@@ -249,7 +249,7 @@ QString KProtocolInfo::config(const QString &protocol)
     return QString::fromLatin1("kio_%1rc").arg(prot->m_config);
 }
 
-int KProtocolInfo::maxSlaves( const QString &protocol)
+int KProtocolInfo::maxSlaves(const QString &protocol)
 {
     KProtocolInfo::Ptr prot = KProtocolInfoFactory::self()->findProtocol(protocol);
     if (!prot) {

@@ -764,41 +764,8 @@ bool KUrl::hasSubUrl() const
   const QString uscheme = scheme();
   if ( uscheme.isEmpty() /*|| !isValid()*/ )
     return false;
-  const QString ref( fragment() );
-  if (ref.isEmpty())
+  if (fragment().isEmpty())
      return false;
-  switch ( ref.at(0).unicode() ) {
-  case 'g':
-    if ( ref.startsWith(QLatin1String("gzip:")) )
-      return true;
-    break;
-  case 'b':
-    if ( ref.startsWith(QLatin1String("bzip:")) || ref.startsWith(QLatin1String("bzip2:")) )
-      return true;
-    break;
-  case 'l':
-    if ( ref.startsWith(QLatin1String("lzma:")) )
-      return true;
-    break;
-  case 'x':
-    if ( ref.startsWith(QLatin1String("xz:")) )
-      return true;
-    break;
-  case 't':
-    if ( ref.startsWith(QLatin1String("tar:")) )
-      return true;
-    break;
-  case 'a':
-    if ( ref.startsWith(QLatin1String("ar:")) )
-      return true;
-    break;
-  case 'z':
-    if ( ref.startsWith(QLatin1String("zip:")) )
-      return true;
-    break;
-  default:
-    break;
-  }
   if ( uscheme == QLatin1String("error") ) // anything that starts with error: has suburls
      return true;
   return false;

@@ -645,9 +645,7 @@ void KUrlTest::testUpUrl()
 
 void KUrlTest::testSetFileName() // and addPath
 {
-  KUrl u2( "file:/home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/README" );
-  //qDebug( "* URL is %s", qPrintable( u2.url() ) );
-
+  KUrl u2( "file:/home/dfaure/README" );
   u2.setFileName( "myfile.txt" );
   QCOMPARE( u2.url(), QString("file:///home/dfaure/myfile.txt") );
   u2.setFileName( "myotherfile.txt" );
@@ -1263,81 +1261,13 @@ void KUrlTest::testSetEncodedFragment()
 
 void KUrlTest::testSubURL()
 {
-  QString u1 = "file:/home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/#myref";
-  KUrl url1(u1);
-  // KDE3: was #,#,#, Qt-4.0 to 4.4: #,%23,%23 . 4.5: #,#,#, good
-  QCOMPARE( url1.url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/#myref") );
-  QVERIFY( url1.hasRef() );
-  QVERIFY( !url1.isLocalFile() );  // Not strictly local!
-  QVERIFY( url1.hasSubUrl() );
-  //QCOMPARE( url1.htmlRef(), QString("myref") );
-  QCOMPARE( url1.upUrl().url(), QString("file:///home/dfaure/") );
-
-  const KUrl::List splitList = KUrl::split( url1 );
-  QCOMPARE( splitList.count(), 3 );
-  //kDebug() << splitList.toStringList();
-  QCOMPARE( splitList[0].url(), QString("file:///home/dfaure/my%20tar%20file.tgz#myref") );
-  QCOMPARE( splitList[1].url(), QString("gzip:/#myref") );
-  QCOMPARE( splitList[2].url(), QString("tar:/#myref") );
-
-  KUrl rejoined = KUrl::join(splitList);
-  QCOMPARE(rejoined.url(), url1.url());
-
-  u1 = "error:/?error=14&errText=Unknown%20host%20asdfu.adgi.sdfgoi#http://asdfu.adgi.sdfgoi";
-  url1 = u1;
+  QString u1 = "error:/?error=14&errText=Unknown%20host%20asdfu.adgi.sdfgoi#http://asdfu.adgi.sdfgoi";
+  KUrl url1 = u1;
   QCOMPARE( url1.url(), QString("error:/?error=14&errText=Unknown%20host%20asdfu.adgi.sdfgoi#http://asdfu.adgi.sdfgoi") );
   QVERIFY( url1.hasSubUrl() );
   QVERIFY( url1.hasRef() );
   QVERIFY( !url1.isLocalFile() );
   QVERIFY( !url1.hasHTMLRef() );
-
-  u1 = "file:/home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/";
-  url1 = u1;
-  QCOMPARE( url1.url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/") );
-  QVERIFY( url1.hasRef() );
-  QVERIFY( !url1.hasHTMLRef() );
-  QVERIFY( url1.hasSubUrl() );
-  QVERIFY( url1.htmlRef().isNull() );
-  QCOMPARE( url1.upUrl().url(), QString("file:///home/dfaure/") );
-
-  u1 = "file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/";
-  url1 = u1;
-  QCOMPARE( url1.url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/") );
-  QVERIFY( url1.hasRef() );
-  QVERIFY( !url1.hasHTMLRef() );
-  QVERIFY( url1.hasSubUrl() );
-  QVERIFY( url1.htmlRef().isNull() );
-  QCOMPARE( url1.upUrl().url(), QString("file:///home/dfaure/") );
-
-#if 0
-// This URL is broken, '#' should be escaped.
-  u1 = "file:/home/dfaure/cdrdao-1.1.5/dao/#CdrDriver.cc#";
-  url1 = u1;
-  QCOMPARE( url1.url(), QString("file:///home/dfaure/cdrdao-1.1.5/dao/#CdrDriver.cc#") );
-  QVERIFY( !url1.hasRef() );
-  QVERIFY( !url1.hasHTMLRef() );
-  QVERIFY( url1.hasSubUrl() );
-  QVERIFY( url1.htmlRef().isNull() );
-  QCOMPARE( url1.upUrl().url(), QString("file:///home/dfaure/cdrdao-1.1.5/dao/#CdrDriver.cc#") );
-#endif
-
-  u1 = "file:/home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/README";
-  url1 = u1;
-  QCOMPARE( url1.url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/README") );
-  QVERIFY( url1.hasRef() );
-  QVERIFY( !url1.hasHTMLRef() );
-  QVERIFY( url1.hasSubUrl() );
-  QVERIFY( url1.htmlRef().isNull() );
-  const KUrl::List url1Splitted = KUrl::split( url1 );
-  QCOMPARE( url1Splitted.count(), 3 );
-  //kDebug() << url1Splitted.toStringList();
-  QCOMPARE(url1Splitted[0].url(), QString("file:///home/dfaure/my%20tar%20file.tgz"));
-  QCOMPARE(url1Splitted[1].url(), QString("gzip:/"));
-  QCOMPARE(url1Splitted[2].url(), QString("tar:/README"));
-  const KUrl url1Rejoined = KUrl::join(url1Splitted);
-  QCOMPARE(url1Rejoined.url(), url1.url());
-  QCOMPARE(url1.upUrl().url(), QString("file:///home/dfaure/my%20tar%20file.tgz#gzip:/#tar:/"));
-
 }
 
 void KUrlTest::testSetUser()
