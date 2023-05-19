@@ -269,11 +269,6 @@ KCmdLineArgsStatic::KCmdLineArgsStatic () {
     qt_options.add("title <title>", ki18n("sets the application title (caption)"));
     qt_options.add("reverse", ki18n("mirrors the whole layout of widgets"));
     qt_options.add("stylesheet <file.qss>", ki18n("applies the Katie stylesheet to the application widgets"));
-#ifndef QT_KATIE
-    qt_options.add("qmljsdebugger <port>", ki18n("QML JS debugger information. Application must be\nbuilt with -DQT_DECLARATIVE_DEBUG for the debugger to be\nenabled"));
-#else
-    kde_options.add("qmljsdebugger", ki18n("QML JS debugger information."));
-#endif
     // KDE options
     kde_options.add("caption <caption>",   ki18n("Use 'caption' as name in the titlebar"));
     kde_options.add("icon <icon>",         ki18n("Use 'icon' as the application icon"));
@@ -1362,19 +1357,11 @@ KCmdLineArgsPrivate::setOption(const QByteArray &opt, const QByteArray &value)
 {
    if (isQt)
    {
-      // Qt does it's own parsing.
+      // Katie does it's own parsing.
       QByteArray argString = "-"; // krazy:exclude=doublequote_chars
       argString += opt;
-      if (opt == "qmljsdebugger") {
-          // hack: Qt expects the value of the "qmljsdebugger" option to be 
-          // passed using a '=' separator rather than a space, so we recreate it
-          // correctly.
-          // See code of QCoreApplicationPrivate::processCommandLineArguments()
-          addArgument(argString + "=" + value);
-      } else {
-          addArgument(argString);
-          addArgument(value);
-      }
+      addArgument(argString);
+      addArgument(value);
 
 #if defined(Q_WS_X11)
       // Hack coming up!

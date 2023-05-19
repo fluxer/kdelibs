@@ -29,13 +29,8 @@
 #include <QtDeclarative/QDeclarativeExpression>
 #include <QtScript/QScriptEngine>
 #include <QtScript/QScriptValueIterator>
-#ifndef QT_KATIE
-#  include <QtDeclarative/qdeclarativedebug.h>
-#else
-#  include <QtScriptTools/QScriptEngineDebugger>
-#  include <QtGui/QMainWindow>
-#  include <QtGui/QHBoxLayout>
-#endif // QT_KATIE
+#include <QtScript/QScriptEngineAgent>
+#include <QtScript/QScriptContextInfo>
 #include <kcmdlineargs.h>
 #include <kdebug.h>
 #include <kglobal.h>
@@ -47,6 +42,49 @@
 void registerNonGuiMetaTypes(QScriptEngine *engine);
 QScriptValue constructIconClass(QScriptEngine *engine);
 QScriptValue constructKUrlClass(QScriptEngine *engine);
+
+class KScriptEngineAgent : public QScriptEngineAgent
+{
+public:
+    KScriptEngineAgent(QScriptEngine *engine);
+
+    // reimplementation
+    void exceptionThrow(qint64 scriptId, const QScriptValue &exception, bool hasHandler) final;
+
+private:
+    Q_DISABLE_COPY(KScriptEngineAgent);
+};
+
+KScriptEngineAgent::KScriptEngineAgent(QScriptEngine *engine)
+    : QScriptEngineAgent(engine)
+{
+    engine->setAgent(this);
+};
+
+void KScriptEngineAgent::exceptionThrow(qint64 scriptId, const QScriptValue &exception, bool hasHandler)
+{
+    // qDebug() << Q_FUNC_INFO << scriptId;
+
+    if (!hasHandler) {
+        QScriptEngine* engine = QScriptEngineAgent::engine();
+        if (Q_UNLIKELY(!engine)) {
+            kWarning() << "No engine";
+            return;
+        }
+
+        QScriptContext* engineContext = engine->currentContext();
+        if (Q_UNLIKELY(!engineContext)) {
+            kWarning() << "No engine context";
+            return;
+        }
+
+        QScriptContextInfo contextInfo(engineContext);
+        const QString infoFile = contextInfo.fileName();
+        const QString infoLine = QString::number(contextInfo.lineNumber());
+        const QString infoString = QString::fromLatin1("%1:%2").arg(infoFile, infoLine);
+        kDebug() << infoString << exception.toString();
+    }
+}
 
 KDeclarativePrivate::KDeclarativePrivate()
     : initialized(false)
@@ -136,10 +174,6 @@ void KDeclarative::initialize()
 
     d->scriptEngine.data()->setGlobalObject(newGlobalObject);
 
-#ifdef QT_KATIE
-    KCmdLineArgs::init(KCmdLineArgs::qtArgc(), KCmdLineArgs::qtArgv(), nullptr);
-#endif
-
     d->initialized = true;
 }
 
@@ -177,27 +211,13 @@ void KDeclarative::setupBindings()
     // setup ImageProvider for KDE icons
     d->declarativeEngine.data()->addImageProvider(QString("icon"), new KIconProvider);
 
-#ifdef QT_KATIE
-    if (KCmdLineArgs::parsedArgs("kde")->isSet("qmljsdebugger")) {
-        QScriptEngineDebugger *debugger = new QScriptEngineDebugger();
-        debugger->attachTo(engine);
-        debugger->standardWindow()->show();
-    }
-#endif
+    // the engine should take ownership
+    (void)new KScriptEngineAgent(engine);
 }
 
 QScriptEngine *KDeclarative::scriptEngine() const
 {
     return d->scriptEngine.data();
-}
-
-void KDeclarative::setupQmlJsDebugger()
-{
-#ifndef QT_KATIE
-    if (KCmdLineArgs::parsedArgs("qt")->isSet("qmljsdebugger")) {
-        QDeclarativeDebuggingEnabler enabler;
-    }
-#endif
 }
 
 QString KDeclarative::defaultComponentsTarget()

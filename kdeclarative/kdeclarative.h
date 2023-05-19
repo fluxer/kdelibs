@@ -44,13 +44,6 @@ public:
     QScriptEngine *scriptEngine() const;
 
     /**
-     * This method must be called very early at startup time to ensure the
-     * debugger is enabled. Ideally it should be called in main(), after
-     * command-line options are defined.
-     */
-    void setupQmlJsDebugger();
-
-    /**
      * @return the runtime platform, e.g. "desktop" or "tablet, touch". The first entry/ies in
      *         the list relate to the platform formfactor and the last is the input method
      *         specialization. If the string is empty, there is no specified runtime platform
