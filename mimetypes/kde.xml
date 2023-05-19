@@ -71,9 +71,7 @@ Notes:
     <comment xml:lang="uk">схема кольорів KDE</comment>
     <comment xml:lang="zh_CN">KDE 配色方案</comment>
     <comment xml:lang="zh_TW">KDE 顏色機制</comment>
-    <acronym>KDE</acronym>
-    <expanded-acronym>K Desktop Environment</expanded-acronym>
-    <glob pattern="*.kcsrc"/>
+    <glob pattern="*.colors"/>
   </mime-type>
 
   <!-- all/ fake mime types -->
