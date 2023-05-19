@@ -179,13 +179,7 @@ void KDeclarative::setupBindings()
 
 #ifdef QT_KATIE
     if (KCmdLineArgs::parsedArgs("kde")->isSet("qmljsdebugger")) {
-        QScriptEngine *engine = scriptEngine();
-        if (!engine) {
-            kWarning() << "Failed to get the script engine";
-            return;
-        }
-
-        QScriptEngineDebugger *debugger = new QScriptEngineDebugger;
+        QScriptEngineDebugger *debugger = new QScriptEngineDebugger();
         debugger->attachTo(engine);
         debugger->standardWindow()->show();
     }
