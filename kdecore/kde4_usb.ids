@@ -36,10 +36,6 @@
 # https://linux-hardware.org/?probe=66d159169f
 	e009  Qualcomm Atheros Bluetooth Device
 
-047f  Plantronics, Inc.
-# https://linux-hardware.org/?probe=66d159169f
-	c056  Blackwire 3220 Series
-
 041e  Creative Technology, Ltd
 # https://linux-hardware.org/?probe=75dbc4ddab
 	3256  Sound BlasterX G6
@@ -83,10 +79,6 @@
 0bda  Realtek Semiconductor Corp.
 # https://linux-hardware.org/?probe=c1c54ece08
 	58eb  HP Wide Vision HD Camera
-
-# manually filtered
-046d  Logitech, Inc.
-	c077  M105 Optical Mouse
 
 04d9  Holtek Semiconductor, Inc.
 	0295  Ducky One 2 USB 3 Keyboard [Tenkeyless / ISO]
