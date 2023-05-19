@@ -622,55 +622,6 @@ void KIconEffect::semiTransparent(QPixmap &pix)
     pix.setMask(QBitmap::fromImage(img));
 }
 
-QImage KIconEffect::doublePixels(const QImage &src) const
-{
-    int w = src.width();
-    int h = src.height();
-
-    QImage dst( w*2, h*2, src.format() );
-
-    if (src.depth() == 1)
-    {
-	kDebug(265) << "image depth 1 not supported\n";
-	return QImage();
-    }
-
-    int x, y;
-    if (src.depth() == 32)
-    {
-	QRgb* l1, *l2;
-	for (y=0; y<h; ++y)
-	{
-	    l1 = (QRgb*)src.scanLine(y);
-	    l2 = (QRgb*)dst.scanLine(y*2);
-	    for (x=0; x<w; ++x)
-	    {
-		l2[x*2] = l2[x*2+1] = l1[x];
-	    }
-	    memcpy(dst.scanLine(y*2+1), l2, dst.bytesPerLine());
-	}
-    } else
-    {
-	for (x=0; x<src.colorCount(); ++x)
-	    dst.setColor(x, src.color(x));
-
-	const unsigned char *l1;
-	unsigned char *l2;
-	for (y=0; y<h; ++y)
-	{
-	    l1 = src.scanLine(y);
-	    l2 = dst.scanLine(y*2);
-	    for (x=0; x<w; ++x)
-	    {
-		l2[x*2] = l1[x];
-		l2[x*2+1] = l1[x];
-	    }
-	    memcpy(dst.scanLine(y*2+1), l2, dst.bytesPerLine());
-	}
-    }
-    return dst;
-}
-
 void KIconEffect::overlay(QImage &src, QImage &overlay)
 {
     if (src.depth() != overlay.depth())

@@ -142,13 +142,6 @@ public:
     QPixmap apply(const QPixmap &src, int effect, float value, const QColor &rgb, const QColor &rgb2, bool trans) const;
 
     /**
-     * Returns an image twice as large, consisting of 2x2 pixels.
-     * @param src the image.
-     * @return the scaled image.
-     */
-    QImage doublePixels(const QImage &src) const;
-
-    /**
      * Tints an image gray.
      *
      * @param image The image
