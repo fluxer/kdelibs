@@ -55,9 +55,6 @@
 #include "kiconeffect.h"
 #include "k3icon_p.h"
 
-// Used to make cache keys for icons with no group. Result type is QString*
-K_GLOBAL_STATIC_WITH_ARGS(QString, NULL_EFFECT_FINGERPRINT, (QString::fromLatin1("noeffect")))
-
 /**
  * Checks for relative paths quickly on UNIX-alikes, slowly on everything else.
  */
@@ -734,8 +731,7 @@ QString KIconLoaderPrivate::makeCacheKey(const QString &name, KIconLoader::Group
            + QString::number(size)
            + QLatin1Char('_')
            + overlays.join("_")
-           + ( group >= 0 ? mpEffect.fingerprint(group, state)
-                          : *NULL_EFFECT_FINGERPRINT);
+           + ( group >= 0 ? mpEffect.fingerprint(group, state) : QLatin1String("noeffect"));
 }
 
 QImage KIconLoaderPrivate::createIconImage(const QString &path, int size)
