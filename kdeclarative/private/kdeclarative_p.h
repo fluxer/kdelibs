@@ -31,7 +31,6 @@ public:
 
     QWeakPointer<QDeclarativeEngine> declarativeEngine;
     QWeakPointer<QScriptEngine> scriptEngine;
-    bool initialized;
 };
 
 #endif

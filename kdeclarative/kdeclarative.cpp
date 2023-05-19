@@ -87,7 +87,6 @@ void KScriptEngineAgent::exceptionThrow(qint64 scriptId, const QScriptValue &exc
 }
 
 KDeclarativePrivate::KDeclarativePrivate()
-    : initialized(false)
 {
 }
 
@@ -107,7 +106,6 @@ void KDeclarative::setDeclarativeEngine(QDeclarativeEngine *engine)
     if (d->declarativeEngine.data() == engine) {
         return;
     }
-    d->initialized = false;
     d->declarativeEngine = engine;
 }
 
@@ -173,8 +171,6 @@ void KDeclarative::initialize()
     }
 
     d->scriptEngine.data()->setGlobalObject(newGlobalObject);
-
-    d->initialized = true;
 }
 
 void KDeclarative::setupBindings()
