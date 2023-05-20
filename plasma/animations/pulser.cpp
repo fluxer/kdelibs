@@ -22,7 +22,7 @@
 #include <QGraphicsWidget>
 #include <QParallelAnimationGroup>
 #include <QPropertyAnimation>
-#include <QtCore/qsharedpointer.h>
+#include <QWeakPointer>
 
 #include <kdebug.h>
 
@@ -63,7 +63,7 @@ void PulseAnimation::setCopy()
     }
 
     if (!m_under.data()) {
-        m_under = new WidgetSnapShot;
+        m_under = new WidgetSnapShot();
     }
 
     m_under.data()->setTarget(target);
@@ -97,14 +97,8 @@ void PulseAnimation::updateState(QAbstractAnimation::State newState, QAbstractAn
             setCopy();
         }
 
-        if (m_under.data()->isIconBigger()) {
-            m_under.data()->setScale(0);
-            m_endScale = 1.0;
-
-        } else {
-            m_scale = 0;
-            m_endScale = 1.5;
-        }
+        m_scale = 0;
+        m_endScale = 1.5;
 
         if (m_under.data()->isVisible() == false) {
             m_under.data()->setVisible(true);
@@ -122,13 +116,9 @@ void PulseAnimation::updateEffectiveTime(int currentTime)
     if (m_under.data()) {
         qreal delta = currentTime / qreal(duration());
 
-        if (m_under.data()->isIconBigger()) {
-            m_under.data()->setScale(delta);
-        } else {
-            m_under.data()->setScale(delta);
-            delta = (1 - m_endScale) * delta;
-            m_under.data()->setScale(1 - delta);
-        }
+        m_under.data()->setScale(delta);
+        delta = (1 - m_endScale) * delta;
+        m_under.data()->setScale(1 - delta);
 
         delta = currentTime / qreal(duration());
         if (direction() == Forward) {

@@ -39,8 +39,6 @@ public:
                const QStyleOptionGraphicsItem *option,
                QWidget *widget);
 
-    bool isIconBigger() const;
-
     QPixmap snapShot() const;
 
 private:
@@ -48,7 +46,6 @@ private:
                           const QStyleOptionGraphicsItem *option,
                           QGraphicsItem *target);
 
-    bool m_iconBig;
     int stack;
     QPixmap m_snapShot;
     QGraphicsWidget *m_target;

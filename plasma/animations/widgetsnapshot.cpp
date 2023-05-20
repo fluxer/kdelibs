@@ -20,7 +20,7 @@
 #include <QPainter>
 #include <QImage>
 #include <QPixmap>
-#include <QtGui/qstyleoption.h>
+#include <QStyleOptionGraphicsItem>
 #include <QDebug>
 
 static const int RECURSION_MAX = 20;
@@ -30,9 +30,8 @@ namespace Plasma
 
 WidgetSnapShot::WidgetSnapShot(QGraphicsItem *parent)
     : QGraphicsWidget(parent),
-      m_iconBig(false),
       stack(0),
-      m_target(0)
+      m_target(nullptr)
 {
 }
 
@@ -77,18 +76,6 @@ void WidgetSnapShot::setTarget(QGraphicsWidget *target)
     m_target = target;
     setParentItem(target);
     QSize size(target->size().toSize());
-    m_iconBig = false;
-
-    if (m_target->property("iconRepresentation").isValid()) {
-        m_iconBig = true;
-        m_snapShot = QPixmap::fromImage(
-            m_target->property("iconRepresentation").value<QImage>());
-        if ((m_snapShot.height() > 0) && (m_snapShot.width() > 0)) {
-            resize(m_snapShot.size());
-            setTransformOriginPoint(target->geometry().center());
-            return;
-        }
-    }
 
     resize(target->size());
 
@@ -112,12 +99,6 @@ void WidgetSnapShot::setTarget(QGraphicsWidget *target)
 QGraphicsWidget *WidgetSnapShot::target() const
 {
     return m_target;
-}
-
-
-bool WidgetSnapShot::isIconBigger() const
-{
-    return m_iconBig;
 }
 
 QPixmap WidgetSnapShot::snapShot() const
