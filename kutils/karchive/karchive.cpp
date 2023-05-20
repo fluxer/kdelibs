@@ -203,6 +203,9 @@ public:
     bool copyData(struct archive* readarchive, QByteArray *buffer);
 
     QString tempFilePath() const;
+
+    // TODO: use archive_match_include_pattern() instead?
+    QList<KArchiveEntry> m_cache;
 #endif
 };
 
@@ -739,6 +742,7 @@ bool KArchive::remove(const QStringList &paths) const
         return result;
     }
 
+    d->m_cache = KArchive::list();
     QStringList recursivepaths;
     foreach (const QString &path, paths) {
         if (path.endsWith(QLatin1Char('/')) || S_ISDIR(KArchive::entry(path).mode)) {
@@ -750,6 +754,7 @@ bool KArchive::remove(const QStringList &paths) const
         }
     }
     recursivepaths.removeDuplicates();
+    d->m_cache.clear();
 
     QStringList notfound = paths;
 
@@ -865,6 +870,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
         return result;
     }
 
+    d->m_cache = KArchive::list();
     QStringList recursivepaths;
     foreach (const QString &path, paths) {
         if (path.endsWith(QLatin1Char('/')) || S_ISDIR(KArchive::entry(path).mode)) {
@@ -876,6 +882,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
         }
     }
     recursivepaths.removeDuplicates();
+    d->m_cache.clear();
 
     QStringList notfound = paths;
 
@@ -966,6 +973,22 @@ QList<KArchiveEntry> KArchive::list(const QString &path) const
         return result;
     }
 
+    if (!d->m_cache.isEmpty()) {
+        if (!path.isEmpty()) {
+            foreach (const KArchiveEntry &karchiveentry, d->m_cache) {
+                const QString pathnamestring = QFile::decodeName(karchiveentry.pathname);
+                if (!pathnamestring.startsWith(path)) {
+                    continue;
+                }
+                result.append(karchiveentry);
+            }
+            return result;
+        }
+
+        result = d->m_cache;
+        return result;
+    }
+
     struct archive* readarchive = d->openRead(QFile::encodeName(d->m_path));
     if (!readarchive) {
         d->m_error = i18n("Could not open archive: %1", d->m_path);
@@ -989,6 +1012,7 @@ QList<KArchiveEntry> KArchive::list(const QString &path) const
         if (!path.isEmpty()) {
             const QString pathnamestring = QFile::decodeName(pathname);
             if (!pathnamestring.startsWith(path)) {
+                archive_read_data_skip(readarchive);
                 ret = archive_read_next_header(readarchive, &entry);
                 continue;
             }
@@ -1011,6 +1035,7 @@ QList<KArchiveEntry> KArchive::list(const QString &path) const
 
         result << karchiveentry;
 
+        archive_read_data_skip(readarchive);
         ret = archive_read_next_header(readarchive, &entry);
     }
 
@@ -1031,6 +1056,18 @@ KArchiveEntry KArchive::entry(const QString &path) const
     if (d->m_path.isEmpty()) {
         d->m_error = i18n("Empty archive path");
         kDebug() << d->m_error;
+        return result;
+    }
+
+    if (!d->m_cache.isEmpty()) {
+        foreach (const KArchiveEntry &karchiveentry, d->m_cache) {
+            const QString pathnamestring = QFile::decodeName(karchiveentry.pathname);
+            if (pathnamestring != path) {
+                continue;
+            }
+            result = karchiveentry;
+            break;
+        }
         return result;
     }
 
@@ -1074,6 +1111,7 @@ KArchiveEntry KArchive::entry(const QString &path) const
             break;
         }
 
+        archive_read_data_skip(readarchive);
         ret = archive_read_next_header(readarchive, &entry);
     }
 
