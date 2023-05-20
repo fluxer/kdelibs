@@ -266,8 +266,8 @@ ExtenderItem *Extender::item(const QString &name) const
         containments << containment;
     }
 
-    foreach (Containment *c, containments) {
-        foreach (Applet *applet, c->applets()) {
+    foreach (const Containment *c, containments) {
+        foreach (const Applet *applet, c->applets()) {
             if (applet->d->extender) {
                 if (applet->d->extender.data() == this) {
                     // skip it, we checked it already
@@ -926,12 +926,12 @@ void ExtenderPrivate::adjustSize()
 bool Extender::isEmpty() const
 {
     //It's empty if it doesn't have items or has only group that are empty and autohide
-    foreach (ExtenderItem *item, d->attachedExtenderItems) {
+    foreach (const ExtenderItem *item, d->attachedExtenderItems) {
         if (!item->isGroup()) {
             return false;
         } else {
             //a static_cast here should be safe, it's not the case apparently
-            ExtenderGroup *group = qobject_cast<ExtenderGroup *>(item);
+            const ExtenderGroup *group = qobject_cast<const ExtenderGroup *>(item);
             if (group && (!group->autoHide() || group->items().size() > 0)) {
                 return false;
             }
