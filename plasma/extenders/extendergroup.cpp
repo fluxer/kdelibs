@@ -213,11 +213,6 @@ void ExtenderGroup::collapseGroup()
     }
 }
 
-void ExtenderGroup::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    ExtenderItem::resizeEvent(event);
-}
-
 bool ExtenderGroup::eventFilter(QObject *watched, QEvent *event)
 {
     if (watched == d->childsWidget && event->type() == QEvent::GraphicsSceneResize) {

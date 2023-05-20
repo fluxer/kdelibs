@@ -115,7 +115,6 @@ class PLASMA_EXPORT ExtenderGroup : public ExtenderItem
         void collapseGroup();
 
     protected:
-        void resizeEvent(QGraphicsSceneResizeEvent *event);
         bool eventFilter(QObject *watched, QEvent *event);
         void dragEnterEvent(QGraphicsSceneDragDropEvent *event);
         void dragMoveEvent(QGraphicsSceneDragDropEvent *event);
