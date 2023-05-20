@@ -779,11 +779,6 @@ void ExtenderItem::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
 {
 }
 
-QSizeF ExtenderItem::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
-{
-    return QGraphicsWidget::sizeHint(which, constraint);
-}
-
 void ExtenderItem::setTransient(const bool transient)
 {
     d->transient = transient;
