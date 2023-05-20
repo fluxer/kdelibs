@@ -488,6 +488,10 @@ KLengthPrivate::KLengthPrivate(const double number, const QString &unit)
         || unit == QLatin1String("kilometer") || unit == QLatin1String("kilometers")
         || unit == QLatin1String("km")) {
         m_unitenum = KLength::Kilometer;
+    } else if (unit == QLatin1String("Foot")
+        || unit == QLatin1String("foot") || unit == QLatin1String("feet")
+        || unit == QLatin1String("ft")) {
+        m_unitenum = KLength::Foot;
     } else if (unit == QLatin1String("Mile")
         || unit == QLatin1String("mile") || unit == QLatin1String("miles")
         || unit == QLatin1String("mi")) {
@@ -522,6 +526,8 @@ QString KLength::unit() const
     switch (d->m_unitenum) {
         case KLength::Kilometer:
             return QLatin1String("km");
+        case KLength::Foot:
+            return QLatin1String("ft");
         case KLength::Mile:
             return QLatin1String("mi");
         case KLength::Invalid:
@@ -549,11 +555,23 @@ double KLength::convertTo(const KLengUnit unit) const
 
     // for reference:
     // https://www.rapidtables.com/convert/length/km-to-mile.html
+    // https://www.rapidtables.com/convert/length/km-to-feet.html
+    // https://www.rapidtables.com/convert/length/feet-to-km.html
+    // https://www.rapidtables.com/convert/length/feet-to-mile.html
     // https://www.rapidtables.com/convert/length/mile-to-km.html
+    // https://www.rapidtables.com/convert/length/mile-to-feet.html
     if (d->m_unitenum == KLength::Kilometer && unit == KLength::Mile) {
         return (d->m_number / 1.609344);
+    } else if (d->m_unitenum == KLength::Kilometer && unit == KLength::Foot) {
+        return (d->m_number * 3280.84);
+    } else if (d->m_unitenum == KLength::Foot && unit == KLength::Kilometer) {
+        return (d->m_number / 3280.84);
+    } else if (d->m_unitenum == KLength::Foot && unit == KLength::Mile) {
+        return (d->m_number / 5280);
     } else if (d->m_unitenum == KLength::Mile && unit == KLength::Kilometer) {
         return (d->m_number * 1.609344);
+    } else if (d->m_unitenum == KLength::Mile && unit == KLength::Foot) {
+        return (d->m_number * 5280);
     }
     return 0.0;
 }
@@ -568,6 +586,8 @@ QString KLength::unitDescription(const KLengUnit unit)
     switch (unit) {
         case KLength::Kilometer:
             return i18n("Kilometer (km)");
+        case KLength::Foot:
+            return i18n("Foot (ft)");
         case KLength::Mile:
             return i18n("Mile (mi)");
         case KLength::Invalid:

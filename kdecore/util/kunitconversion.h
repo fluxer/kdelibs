@@ -213,8 +213,9 @@ public:
     enum KLengUnit {
         Invalid = -1,
         Kilometer = 0,
-        Mile = 1,
-        UnitCount = 2
+        Foot = 1,
+        Mile = 2,
+        UnitCount = 3
     };
 
     KLength(const double number, const KLengUnit unit);

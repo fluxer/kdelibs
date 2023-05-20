@@ -160,15 +160,25 @@ void KUnitConversionTest::testLength()
     KLength kmleng(12.3, "kilometer");
     QCOMPARE(kmleng.unitEnum(), KLength::Kilometer);
     QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Invalid), 1), 0.0);
-    QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Mile), 1), 7.6);
     QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Kilometer), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Foot), 1), 40354.3);
+    QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::Mile), 1), 7.6);
     QCOMPARE(KUnitConversion::round(kmleng.convertTo(KLength::UnitCount), 1), 0.0);
+
+    KLength ftleng(12.3, "foot");
+    QCOMPARE(ftleng.unitEnum(), KLength::Foot);
+    QCOMPARE(KUnitConversion::round(ftleng.convertTo(KLength::Invalid), 1), 0.0);
+    QCOMPARE(KUnitConversion::round(ftleng.convertTo(KLength::Kilometer), 8), 0.00374904);
+    QCOMPARE(KUnitConversion::round(ftleng.convertTo(KLength::Foot), 1), 12.3);
+    QCOMPARE(KUnitConversion::round(ftleng.convertTo(KLength::Mile), 8), 0.00232955);
+    QCOMPARE(KUnitConversion::round(ftleng.convertTo(KLength::UnitCount), 1), 0.0);
 
     KLength mileng(12.3, "mile");
     QCOMPARE(mileng.unitEnum(), KLength::Mile);
     QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Invalid), 1), 0.0);
-    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Mile), 1), 12.3);
     QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Kilometer), 1), 19.8);
+    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Foot), 1), 64944.0);
+    QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::Mile), 1), 12.3);
     QCOMPARE(KUnitConversion::round(mileng.convertTo(KLength::UnitCount), 1), 0.0);
 }
 
