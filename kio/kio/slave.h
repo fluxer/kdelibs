@@ -54,7 +54,7 @@ public:
   virtual ~Slave();
 
   void setPID(pid_t);
-  int slave_pid();
+  int slave_pid() const;
 
   void setJob(KIO::SimpleJob *job);
   KIO::SimpleJob *job() const;
@@ -67,7 +67,7 @@ public:
   /**
    * @return true if the slave survived the last mission.
    */
-  bool isAlive();
+  bool isAlive() const;
 
   /**
    * Set host for url
@@ -76,8 +76,7 @@ public:
    * @param user to login as
    * @param passwd to login with
    */
-  virtual void setHost( const QString &host, quint16 port,
-                const QString &user, const QString &passwd);
+  virtual void setHost(const QString &host, quint16 port, const QString &user, const QString &passwd);
 
   /**
    * Clear host info.
@@ -94,9 +93,9 @@ public:
    *
    * @return name of protocol handled by this slave, as seen by the user
    */
-  QString protocol();
+  QString protocol() const;
 
-  void setProtocol(const QString & protocol);
+  void setProtocol(const QString &protocol);
 
   /**
    * The actual protocol used to handle the request.
@@ -110,27 +109,27 @@ public:
    *
    * @return the actual protocol (io-slave) that handled the request
    */
-  QString slaveProtocol();
+  QString slaveProtocol() const;
 
   /**
    * @return Host this slave is (was?) connected to
    */
-  QString host();
+  QString host() const;
 
   /**
    * @return port this slave is (was?) connected to
    */
-  quint16 port();
+  quint16 port() const;
 
   /**
    * @return User this slave is (was?) logged in as
    */
-  QString user();
+  QString user() const;
 
   /**
    * @return Passwd used to log in
    */
-  QString passwd();
+  QString passwd() const;
 
   /**
    * Creates a new slave.
@@ -142,7 +141,7 @@ public:
    *
    * @return 0 on failure, or a pointer to a slave otherwise.
    */
-  static Slave* createSlave( const QString &protocol, const KUrl& url, int& error, QString& error_text );
+  static Slave* createSlave(const QString &protocol, const KUrl &url, int &error, QString &error_text);
 
   // == communication with connected kioslave ==
   // whenever possible prefer these methods over the respective
@@ -175,7 +174,7 @@ public:
   /**
    * @return The time this slave has been idle.
    */
-  time_t idleTime();
+  time_t idleTime() const;
 
   /**
    * Marks this slave as idle.
@@ -186,7 +185,7 @@ public:
    * @returns Whether the slave is connected
    * (Connection oriented slaves only)
    */
-  bool isConnected();
+  bool isConnected() const;
   void setConnected(bool c);
 
   void ref();

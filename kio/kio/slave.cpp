@@ -169,9 +169,9 @@ Slave::~Slave()
     //delete d;
 }
 
-QString Slave::protocol()
+QString Slave::protocol() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->m_protocol;
 }
 
@@ -181,33 +181,33 @@ void Slave::setProtocol(const QString & protocol)
     d->m_protocol = protocol;
 }
 
-QString Slave::slaveProtocol()
+QString Slave::slaveProtocol() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->m_slaveProtocol;
 }
 
-QString Slave::host()
+QString Slave::host() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->m_host;
 }
 
-quint16 Slave::port()
+quint16 Slave::port() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->m_port;
 }
 
-QString Slave::user()
+QString Slave::user() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->m_user;
 }
 
-QString Slave::passwd()
+QString Slave::passwd() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->m_passwd;
 }
 
@@ -217,9 +217,9 @@ void Slave::setIdle()
     d->m_idleSince = time(0);
 }
 
-bool Slave::isConnected()
+bool Slave::isConnected() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->contacted;
 }
 
@@ -246,9 +246,9 @@ void Slave::deref()
     }
 }
 
-time_t Slave::idleTime()
+time_t Slave::idleTime() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     if (!d->m_idleSince) {
         return time_t(0);
     }
@@ -261,9 +261,9 @@ void Slave::setPID(pid_t pid)
     d->m_pid = pid;
 }
 
-int Slave::slave_pid()
+int Slave::slave_pid() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return d->m_pid;
 }
 
@@ -279,9 +279,9 @@ KIO::SimpleJob *Slave::job() const
     return d->m_job;
 }
 
-bool Slave::isAlive()
+bool Slave::isAlive() const
 {
-    Q_D(Slave);
+    Q_D(const Slave);
     return !d->dead;
 }
 
