@@ -141,33 +141,15 @@ void KDeclarative::initialize()
 
     QScriptValue newGlobalObject = d->scriptEngine.data()->newObject();
 
-    QString eval = QLatin1String("eval");
-    QString version = QLatin1String("version");
+    QScriptValueIterator iter(originalGlobalObject);
+    while (iter.hasNext()) {
+        iter.next();
 
-    {
-        QScriptValueIterator iter(originalGlobalObject);
-        QVector<QString> names;
-        QVector<QScriptValue> values;
-        QVector<QScriptValue::PropertyFlags> flags;
-        while (iter.hasNext()) {
-            iter.next();
-
-            QString name = iter.name();
-
-            if (name == version) {
-                continue;
-            }
-
-            if (name != eval) {
-                names.append(name);
-                values.append(iter.value());
-                flags.append(iter.flags() | QScriptValue::Undeletable);
-            }
-            newGlobalObject.setProperty(iter.scriptName(), iter.value());
-
-           // m_illegalNames.insert(name);
+        if (iter.name() == QLatin1String("version")) {
+            continue;
         }
 
+        newGlobalObject.setProperty(iter.scriptName(), iter.value());
     }
 
     d->scriptEngine.data()->setGlobalObject(newGlobalObject);
