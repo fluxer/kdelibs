@@ -2869,7 +2869,7 @@ AppletOverlayWidget::AppletOverlayWidget(QGraphicsWidget *parent)
 
 void AppletOverlayWidget::destroy()
 {
-    Animation *anim = Plasma::Animator::create(Plasma::Animator::DisappearAnimation);
+    Animation *anim = Plasma::Animator::create(Plasma::Animator::ZoomAnimation);
     if (anim) {
         connect(anim, SIGNAL(finished()), this, SLOT(overlayAnimationComplete()));
         anim->setTargetWidget(this);

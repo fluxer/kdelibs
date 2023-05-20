@@ -879,12 +879,11 @@ void Containment::addApplet(Applet *applet, const QPointF &pos, bool delayInit)
     if (!delayInit && !currentContainment) {
         applet->restore(*applet->d->mainConfigGroup());
         applet->init();
-        Plasma::Animation *anim = Plasma::Animator::create(Plasma::Animator::AppearAnimation);
+        Plasma::Animation *anim = Plasma::Animator::create(Plasma::Animator::ZoomAnimation);
         if (anim) {
             connect(anim, SIGNAL(finished()), this, SLOT(appletAppearAnimationComplete()));
             anim->setTargetWidget(applet);
-            //FIXME: small hack until we have proper js anim support; allows 'zoom' to work in the
-            //'right' direction for appearance
+            //FIXME: small hack that allows 'zoom' to work in the 'right' direction for appearance
             anim->setDirection(QAbstractAnimation::Backward);
             anim->start(QAbstractAnimation::DeleteWhenStopped);
         } else {

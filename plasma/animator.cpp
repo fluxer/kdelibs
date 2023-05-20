@@ -16,7 +16,6 @@
 */
 
 #include "animator.h"
-#include "private/animator_p.h"
 
 #include <kdebug.h>
 
@@ -37,102 +36,49 @@
 namespace Plasma
 {
 
-QHash<Animator::Animation, Animator::Animation> AnimatorPrivate::s_stockAnimMappings;
-QHash<Animator::Animation, QString> AnimatorPrivate::s_loadableAnimMappings;
-
-void AnimatorPrivate::mapAnimation(Animator::Animation from, Animator::Animation to)
-{
-    if (from == to) {
-        return;
-    }
-
-    s_loadableAnimMappings.remove(from);
-    s_stockAnimMappings.insert(from, to);
-}
-
-void AnimatorPrivate::mapAnimation(Animator::Animation from, const QString &to)
-{
-    s_stockAnimMappings.remove(from);
-    s_loadableAnimMappings.insert(from, to);
-}
-
 Plasma::Animation* Animator::create(Animator::Animation type, QObject *parent)
 {
-    if (AnimatorPrivate::s_stockAnimMappings.contains(type)) {
-        return create(AnimatorPrivate::s_stockAnimMappings.value(type));
-    } else if (AnimatorPrivate::s_loadableAnimMappings.contains(type)) {
-        const QString anim = AnimatorPrivate::s_loadableAnimMappings.value(type);
-        return create(anim, parent);
-    }
-
     Plasma::Animation *result = 0;
 
     switch (type) {
         case FadeAnimation: {
-            result = create("FadeAnimation", parent);
-            if (!result) {
-                result = new Plasma::FadeAnimation(parent);
-            }
+            result = new Plasma::FadeAnimation(parent);
             break;
         }
         case GrowAnimation: {
-            result = create("GrowAnimation", parent);
-            if (!result) {
-                result = new Plasma::GrowAnimation(parent);
-            }
+            result = new Plasma::GrowAnimation(parent);
             break;
         }
         case PulseAnimation: {
-            result = create("PulseAnimation", parent);
-            if (!result) {
-                result = new Plasma::PulseAnimation(parent);
-            }
+            result = new Plasma::PulseAnimation(parent);
             break;
         }
         case RotationAnimation: {
-            result = create("RotationAnimation", parent);
-            if (!result) {
-                result = new Plasma::RotationAnimation(parent);
-            }
+            result = new Plasma::RotationAnimation(parent);
             break;
         }
         case RotationStackedAnimation: {
-            result = create("RotationStackedAnimation", parent);
-            if (!result) {
-                result = new Plasma::RotationStackedAnimation(parent);
-            }
+            result = new Plasma::RotationStackedAnimation(parent);
             break;
         }
         case SlideAnimation: {
-            result = create("SlideAnimation", parent);
-            if (!result) {
-                result = new Plasma::SlideAnimation(parent);
-            }
+            result = new Plasma::SlideAnimation(parent);
             break;
         }
         case GeometryAnimation: {
-            result = create("GeometryAnimation", parent);
-            if (!result) {
-                result = new Plasma::GeometryAnimation(parent);
-            }
+            result = new Plasma::GeometryAnimation(parent);
             break;
         }
         case ZoomAnimation: {
-            result = create("ZoomAnimation", parent);
-            if (!result) {
-                result = new Plasma::ZoomAnimation(parent);
-            }
+            result = new Plasma::ZoomAnimation(parent);
             break;
         }
         case PixmapTransitionAnimation: {
-            result = create("PixmapTransitionAnimation", parent);
-            if (!result) {
-                result = new Plasma::PixmapTransition(parent);
-            }
+            result = new Plasma::PixmapTransition(parent);
             break;
         }
         default: {
-            //kDebug() << "Unsupported animation type.";
+            kWarning() << "Unsupported animation type" << type;
             break;
         }
     }

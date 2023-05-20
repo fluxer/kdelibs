@@ -52,9 +52,6 @@ void JavascriptAnimation::prepInstance()
     QScriptEngine *engine = AnimationScriptEngine::globalEngine();
     m_instance.setProperty("__plasma_javascriptanimation", engine->newQObject(this),
                           QScriptValue::ReadOnly | QScriptValue::Undeletable | QScriptValue::SkipInEnumeration);
-    ADD_ENUM_VALUE(m_instance, Plasma::Animator, AppearAnimation);
-    ADD_ENUM_VALUE(m_instance, Plasma::Animator, DisappearAnimation);
-    ADD_ENUM_VALUE(m_instance, Plasma::Animator, ActivateAnimation);
     ADD_ENUM_VALUE(m_instance, Plasma::Animator, FadeAnimation);
     ADD_ENUM_VALUE(m_instance, Plasma::Animator, GrowAnimation);
     ADD_ENUM_VALUE(m_instance, Plasma::Animator, PulseAnimation);

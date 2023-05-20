@@ -48,19 +48,15 @@ class PLASMA_EXPORT Animator : public QObject
 
 public:
     enum Animation {
-        AppearAnimation = 0, /*<< Animate the appearance of an element */
-        DisappearAnimation,  /*<< Animate the disappearance of an element */
-        ActivateAnimation,    /*<< When something is activated or launched,
-                                such as an app icon being clicked */
-        FadeAnimation, /*<< Can be used for both fade in and out */
-        GrowAnimation, /*<< Grow animated object geometry */
-        PulseAnimation, /*<< Pulse animated object (opacity/geometry/scale) */
-        RotationAnimation, /*<< Rotate an animated object */
-        RotationStackedAnimation, /*<< for flipping one object with another */
-        SlideAnimation, /*<< Move the position of animated object */
-        GeometryAnimation, /*<< Geometry animation*/
-        ZoomAnimation, /*<<Zoom animation */
-        PixmapTransitionAnimation, /*<< Transition between two pixmaps*/
+        FadeAnimation = 0,         /* Can be used for both fade in and out */
+        GrowAnimation,             /* Grow animated object geometry */
+        PulseAnimation,            /* Pulse animated object (opacity/geometry/scale) */
+        RotationAnimation,         /* Rotate an animated object */
+        RotationStackedAnimation,  /* For flipping one object with another */
+        SlideAnimation,            /* Move the position of animated object */
+        GeometryAnimation,         /* Geometry animation */
+        ZoomAnimation,             /* Zoom animation */
+        PixmapTransitionAnimation, /* Transition between two pixmaps */
         LastAnimation = 1024
     };
 
