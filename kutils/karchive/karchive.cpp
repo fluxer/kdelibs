@@ -511,6 +511,7 @@ bool KArchive::add(const QStringList &paths, const QByteArray &strip, const QByt
         if (!readarchive) {
             d->m_error = i18n("Could not open archive: %1", d->m_path);
             kDebug() << d->m_error;
+            KArchivePrivate::closeWrite(writearchive);
             return result;
         }
 
@@ -739,6 +740,7 @@ bool KArchive::remove(const QStringList &paths) const
     if (!writearchive) {
         d->m_error = i18n("Could not open temporary archive: %1", tmpfile);
         kDebug() << d->m_error;
+        KArchivePrivate::closeRead(readarchive);
         return result;
     }
 
@@ -867,6 +869,7 @@ bool KArchive::extract(const QStringList &paths, const QString &destination, con
     if (!writearchive) {
         d->m_error = i18n("Could not open destination: %1", destination);
         kDebug() << d->m_error;
+        KArchivePrivate::closeRead(readarchive);
         return result;
     }
 
