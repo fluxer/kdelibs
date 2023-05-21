@@ -97,7 +97,6 @@ class DataEnginePrivate
         bool valid;
         QString engineName;
         QString serviceName;
-        Service *publishedService;
         QString waitingSourceRequest;
 };
 

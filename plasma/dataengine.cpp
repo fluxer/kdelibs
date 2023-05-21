@@ -440,8 +440,7 @@ DataEnginePrivate::DataEnginePrivate(DataEngine *e, const KPluginInfo &info)
       updateTimerId(0),
       minPollingInterval(-1),
       limit(0),
-      valid(true),
-      publishedService(0)
+      valid(true)
 {
     updateTimer.start();
 
