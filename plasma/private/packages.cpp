@@ -70,7 +70,6 @@ PlasmoidPackage::PlasmoidPackage(QObject *parent)
     addFileDefinition("mainconfigxml", "config/main.xml", i18n("Configuration XML file"));
     addFileDefinition("mainscript", "code/main", i18n("Main Script File"));
     addFileDefinition("defaultconfig", "config/default-configrc", i18n("Default configuration"));
-    addDirectoryDefinition("animations", "animations", i18n("Animation scripts"));
     setRequired("mainscript", true);
 }
 
@@ -105,7 +104,6 @@ ThemePackage::ThemePackage(QObject *parent)
                       i18n("Theme for the logout dialog"));
 
     addDirectoryDefinition("wallpapers", "wallpapers/", i18n("Wallpaper packages"));
-    addDirectoryDefinition("animations", "animations/", i18n("Animation scripts"));
 
     addDirectoryDefinition("widgets", "widgets/", i18n("Images for widgets"));
 

@@ -65,7 +65,7 @@ void PackageStructureTest::type()
 void PackageStructureTest::directories()
 {
     QList<QByteArray> dirs;
-    dirs << "animations" << "config" << "data" << "images" << "scripts" << "theme" << "translations" << "ui";
+    dirs << "config" << "data" << "images" << "scripts" << "theme" << "translations" << "ui";
 
     QList<QByteArray> psDirs = ps->directories();
 
@@ -192,7 +192,7 @@ void PackageStructureTest::write()
     QStringList groups;
     groups << "images" << "theme" << "config" << "data" << "defaultconfig" << "scripts"
            << "mainconfigui" << "mainconfigxml" << "mainscript"
-           << "translations" << "ui" << "animations";
+           << "translations" << "ui";
     groups.sort();
 
     QStringList actualGroups = config.groupList();

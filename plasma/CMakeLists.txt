@@ -53,11 +53,8 @@ set(plasma_LIB_SRCS
     abstracttoolbox.cpp
     animator.cpp
     animations/animation.cpp
-    animations/animationscriptengine.cpp
-    animations/bindings/easingcurve.cpp
     animations/easinganimation.cpp
     animations/fade.cpp
-    animations/javascriptanimation.cpp
     animations/pixmaptransition.cpp
     animations/pulser.cpp
     animations/slide.cpp

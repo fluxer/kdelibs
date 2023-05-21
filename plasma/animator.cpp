@@ -20,14 +20,12 @@
 #include <kdebug.h>
 
 #include "animations/animation.h"
-#include "animations/animationscriptengine_p.h"
 #include "animations/fade_p.h"
 #include "animations/pulser_p.h"
 #include "animations/slide_p.h"
 #include "animations/geometry_p.h"
 #include "animations/zoom_p.h"
 #include "animations/pixmaptransition_p.h"
-#include "animations/javascriptanimation_p.h"
 #include "theme.h"
 
 namespace Plasma
@@ -69,35 +67,6 @@ Plasma::Animation* Animator::create(Animator::Animation type, QObject *parent)
     }
 
     return result;
-}
-
-Plasma::Animation *Animator::create(const QString &anim, QObject *parent)
-{
-    if (AnimationScriptEngine::animationFailedToLoad(anim)) {
-        return 0;
-    }
-
-    if (!AnimationScriptEngine::isAnimationRegistered(anim)) {
-        const QString path = Theme::defaultTheme()->animationPath(anim);
-        if (path.isEmpty()) {
-            AnimationScriptEngine::addToLoadFailures(anim);
-            //kError() << "************ failed to find script file for animation" << anim;
-            return 0;
-        }
-
-        if (!AnimationScriptEngine::loadScript(path)) {
-            AnimationScriptEngine::addToLoadFailures(anim);
-            return 0;
-        }
-
-        if (!AnimationScriptEngine::isAnimationRegistered(anim)) {
-            //kError() << "successfully loaded script file" << path << ", but did not get animation object for" << anim;
-            AnimationScriptEngine::addToLoadFailures(anim);
-            return 0;
-        }
-    }
-
-    return new Plasma::JavascriptAnimation(anim, parent);
 }
 
 } // namespace Plasma
