@@ -41,11 +41,9 @@ ServiceMonitor::~ServiceMonitor()
 
 void ServiceMonitor::slotJobFinished(Plasma::ServiceJob *job)
 {
-    kDebug() << "engine ready!";
-    QString engineName = job->parameters()["EngineName"].toString();
-    QString location = job->destination();
-    QPair<QString, QString> pair(location, engineName);
-    kDebug() << "pair = " << pair;
+    const QString engineName = job->parameters()["EngineName"].toString();
+    const QString location = job->destination();
+    kDebug() << "engine ready!" << engineName << location;
 }
 
 void ServiceMonitor::slotServiceReady(Plasma::Service *plasmoidService)
