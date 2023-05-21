@@ -30,8 +30,6 @@ namespace Plasma
 {
 
 class Applet;
-class DataEngine;
-class GetSource;
 class PlasmoidService;
 
 class PlasmoidServiceJob : public ServiceJob
@@ -48,7 +46,6 @@ class PlasmoidServiceJob : public ServiceJob
 
     private:
         PlasmoidService *m_service;
-        QString m_pluginName;
 };
 
 class PlasmoidService : public Service, DataEngineConsumer
