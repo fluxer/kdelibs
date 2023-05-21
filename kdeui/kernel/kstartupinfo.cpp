@@ -91,7 +91,7 @@ struct KStartupInfoId::Private
 struct KStartupInfoData::Private
 {
     Private() : desktop( 0 ), wmclass( "" ), hostname( "" ),
-        silent( KStartupInfoData::Unknown ), timestamp( ~0U ), screen( -1 ), xinerama( -1 ), launched_by( 0 ) {}
+        silent( KStartupInfoData::Unknown ), timestamp( ~0U ), screen( -1 ), xinerama( -1 ) {}
 
     QString to_text() const;
     void remove_pid( pid_t pid );
@@ -108,7 +108,6 @@ struct KStartupInfoData::Private
     unsigned long timestamp;
     int screen;
     int xinerama;
-    WId launched_by;
     QString application_id;
 };
 
@@ -1137,8 +1136,6 @@ QString KStartupInfoData::Private::to_text() const
         ret += QString::fromLatin1( " SCREEN=%1" ).arg( screen );
     if( xinerama != -1 )
         ret += QString::fromLatin1( " XINERAMA=%1" ).arg( xinerama );
-    if( launched_by != 0 )
-        ret += QString::fromLatin1( " LAUNCHED_BY=%1" ).arg( (qptrdiff)launched_by );
     if( !application_id.isEmpty())
         ret += QString::fromLatin1( " APPLICATION_ID=\"%1\"" ).arg( application_id );
     return ret;
@@ -1154,13 +1151,12 @@ KStartupInfoData::KStartupInfoData( const QString& txt_P ) : d(new Private)
     const QString desktop_str = QString::fromLatin1( "DESKTOP=" );
     const QString wmclass_str = QString::fromLatin1( "WMCLASS=" );
     const QString hostname_str = QString::fromLatin1( "HOSTNAME=" ); // SELI nonstd
-    const QString pid_str = QString::fromLatin1( "PID=" );  // SELI nonstd
+    const QString pid_str = QString::fromLatin1( "PID=" ); // SELI nonstd
     const QString silent_str = QString::fromLatin1( "SILENT=" );
     const QString timestamp_str = QString::fromLatin1( "TIMESTAMP=" );
     const QString screen_str = QString::fromLatin1( "SCREEN=" );
-    const QString xinerama_str = QString::fromLatin1( "XINERAMA=" );
-    const QString launched_by_str = QString::fromLatin1( "LAUNCHED_BY=" );
-    const QString application_id_str = QString::fromLatin1( "APPLICATION_ID=" );
+    const QString xinerama_str = QString::fromLatin1( "XINERAMA=" ); // nonstd
+    const QString application_id_str = QString::fromLatin1( "APPLICATION_ID=" ); // nonstd
     for( QStringList::ConstIterator it = items.begin();
          it != items.end(); ++it ) {
         if( ( *it ).startsWith( bin_str ))
@@ -1192,8 +1188,6 @@ KStartupInfoData::KStartupInfoData( const QString& txt_P ) : d(new Private)
             d->screen = get_num( *it );
         else if( ( *it ).startsWith( xinerama_str ))
             d->xinerama = get_num( *it );
-        else if( ( *it ).startsWith( launched_by_str ))
-            d->launched_by = ( WId ) get_num( *it );
         else if( ( *it ).startsWith( application_id_str ))
             d->application_id = get_str( *it );
     }
@@ -1237,8 +1231,6 @@ void KStartupInfoData::update( const KStartupInfoData& data_P )
         d->screen = data_P.screen();
     if( data_P.xinerama() != -1 && xinerama() != -1 ) // don't overwrite
         d->xinerama = data_P.xinerama();
-    if( data_P.launchedBy() != 0 && launchedBy() != 0 ) // don't overwrite
-        d->launched_by = data_P.launchedBy();
     if( !data_P.applicationId().isEmpty() && applicationId().isEmpty()) // don't overwrite
         d->application_id = data_P.applicationId();
 }
@@ -1413,16 +1405,6 @@ void KStartupInfoData::setXinerama( int xinerama )
 int KStartupInfoData::xinerama() const
 {
     return d->xinerama;
-}
-
-void KStartupInfoData::setLaunchedBy( WId window )
-{
-    d->launched_by = window;
-}
-
-WId KStartupInfoData::launchedBy() const
-{
-    return d->launched_by;
 }
 
 void KStartupInfoData::setApplicationId( const QString& desktop )

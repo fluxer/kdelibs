@@ -619,18 +619,6 @@ class KDEUI_EXPORT KStartupInfoData
         void setXinerama( int xinerama );
 
         /**
-         * The toplevel window of the application that caused this startup notification,
-         * 0 if unknown.
-         */
-        WId launchedBy() const;
-        
-        /**
-	 * Sets the toplevel window of the application that caused this startup notification.
-	 * @param window window ID of the toplevel window that is responsible for this startup
-         */
-        void setLaunchedBy( WId window );
-
-        /**
          * The .desktop file used to initiate this startup notification, or empty. This information
          * should be used only to identify the application, not to read any additional information.
          * @since 4.5

@@ -561,9 +561,6 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
             data.setSilent(KStartupInfoData::Yes);
         }
         data.setDesktop(KWindowSystem::currentDesktop());
-        if (window) {
-            data.setLaunchedBy(window->winId());
-        }
         if(service && !service->entryPath().isEmpty())
             data.setApplicationId(service->entryPath());
         KStartupInfo::sendStartup(id, data);
@@ -945,23 +942,8 @@ bool KRun::run(const KService& _service, const KUrl::List& _urls, QWidget* windo
 
     QString error;
 
-    QByteArray myasn = asn;
-    // startServiceByDesktopPath() doesn't take QWidget*, add it to the startup info now
-    if (window != NULL) {
-        if (myasn.isEmpty()) {
-            myasn = KStartupInfo::createNewStartupId();
-        }
-        if (myasn != "0") {
-            KStartupInfoId id;
-            id.initId(myasn);
-            KStartupInfoData data;
-            data.setLaunchedBy(window->winId());
-            KStartupInfo::sendChange(id, data);
-        }
-    }
-
     int i = KToolInvocation::startServiceByDesktopPath(
-        _service.entryPath(), urls.toStringList(), &error, myasn
+        _service.entryPath(), urls.toStringList(), &error, asn
     );
 
     if (i != 0) {
