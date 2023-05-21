@@ -44,6 +44,7 @@
 #include <kstandarddirs.h>
 #include <ktemporaryfile.h>
 #include <kwindowsystem.h>
+#include <kdebug.h>
 
 #ifndef PLASMA_NO_KIO
 #include "kio/jobclasses.h" // for KIO::JobFlags

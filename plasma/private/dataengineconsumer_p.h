@@ -24,30 +24,10 @@
 
 #include <QtCore/QSet>
 
-#include <kdebug.h>
-
-#include "plasma/dataenginemanager.h"
-#include <servicejob.h>
+#include "plasma/dataengine.h"
 
 namespace Plasma
 {
-
-class DataEngineConsumer;
-
-class ServiceMonitor : public QObject
-{
-    Q_OBJECT
-public:
-    ServiceMonitor(DataEngineConsumer *consumer);
-    ~ServiceMonitor();
-
-public Q_SLOTS:
-    void slotJobFinished(Plasma::ServiceJob *job);
-    void slotServiceReady(Plasma::Service *service);
-
-private:
-    DataEngineConsumer *m_consumer;
-};
 
 class DataEngineConsumer
 {
@@ -58,14 +38,8 @@ public:
 
 private:
     QSet<QString> m_loadedEngines;
-    QMap<Service*, QString> m_engineNameForService;
-    ServiceMonitor *m_monitor;
-
-    friend class ServiceMonitor;
 };
 
 } // namespace Plasma
 
 #endif
-
-

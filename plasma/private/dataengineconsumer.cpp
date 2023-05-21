@@ -25,47 +25,13 @@
 
 #include <kdebug.h>
 
-#include <servicejob.h>
+#include "plasma/dataenginemanager.h"
+#include "servicejob.h"
 
 namespace Plasma
 {
 
-ServiceMonitor::ServiceMonitor(DataEngineConsumer *consumer)
-    : m_consumer(consumer)
-{
-}
-
-ServiceMonitor::~ServiceMonitor()
-{
-}
-
-void ServiceMonitor::slotJobFinished(Plasma::ServiceJob *job)
-{
-    const QString engineName = job->parameters()["EngineName"].toString();
-    const QString location = job->destination();
-    kDebug() << "engine ready!" << engineName << location;
-}
-
-void ServiceMonitor::slotServiceReady(Plasma::Service *plasmoidService)
-{
-    kDebug() << "service ready!";
-    if (!m_consumer->m_engineNameForService.contains(plasmoidService)) {
-        kDebug() << "no engine name for service!";
-        kDebug() << "amount of services in map: " << m_consumer->m_engineNameForService.count();
-    } else {
-        kDebug() << "value = " << m_consumer->m_engineNameForService.value(plasmoidService);
-    }
-
-    kDebug() << "requesting dataengine!";
-    KConfigGroup op = plasmoidService->operationDescription("DataEngine");
-    op.writeEntry("EngineName", m_consumer->m_engineNameForService.value(plasmoidService));
-    plasmoidService->startOperationCall(op);
-    connect(plasmoidService, SIGNAL(finished(Plasma::ServiceJob*)),
-            this, SLOT(slotJobFinished(Plasma::ServiceJob*)));
-}
-
 DataEngineConsumer::DataEngineConsumer()
-    : m_monitor(new ServiceMonitor(this))
 {
 }
 
@@ -74,8 +40,6 @@ DataEngineConsumer::~DataEngineConsumer()
     foreach (const QString &engine, m_loadedEngines) {
         DataEngineManager::self()->unloadEngine(engine);
     }
-
-    delete m_monitor;
 }
 
 DataEngine *DataEngineConsumer::dataEngine(const QString &name)

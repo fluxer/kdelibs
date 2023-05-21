@@ -27,6 +27,8 @@
 #include <QGraphicsLinearLayout>
 #include <QPainter>
 
+#include <kdebug.h>
+
 #include "applet.h"
 #include "containment.h"
 #include "corona.h"
