@@ -101,16 +101,15 @@ void KIconEffect::init()
     QString _none("none");
     QString _tomonochrome("tomonochrome");
 
-    for (it=groups.constBegin(), i=0; it!=groups.constEnd(); ++it, ++i)
-    {
-	// Default effects
-	d->effect[i][0] = KIconEffect::NoEffect;
-	d->effect[i][1] =  ((i==0)||(i==4)) ? KIconEffect::ToGamma : KIconEffect::NoEffect;
-	d->effect[i][2] = KIconEffect::ToGray;
+    for (it = groups.constBegin(), i = 0; it != groups.constEnd(); ++it, ++i) {
+        // Default effects
+        d->effect[i][0] = KIconEffect::NoEffect;
+        d->effect[i][1] = ((i==0 || i == 4) ? KIconEffect::ToGamma : KIconEffect::NoEffect);
+        d->effect[i][2] = KIconEffect::ToGray;
 
-	d->trans[i][0] = false;
-	d->trans[i][1] = false;
-	d->trans[i][2] = true;
+        d->trans[i][0] = false;
+        d->trans[i][1] = false;
+        d->trans[i][2] = true;
         d->value[i][0] = 1.0;
         d->value[i][1] = ((i==0)||(i==4)) ? 0.7 : 1.0;
         d->value[i][2] = 1.0;
@@ -121,32 +120,32 @@ void KIconEffect::init()
         d->color2[i][1] = QColor(0,0,0);
         d->color2[i][2] = QColor(0,0,0);
 
-	KConfigGroup cg(config, *it + "Icons");
-	for (it2=states.constBegin(), j=0; it2!=states.constEnd(); ++it2, ++j)
-	{
-	    QString tmp = cg.readEntry(*it2 + "Effect", QString());
-	    if (tmp == _togray)
-		effect = KIconEffect::ToGray;
-	    else if (tmp == _colorize)
-		effect = KIconEffect::Colorize;
-	    else if (tmp == _desaturate)
-		effect = KIconEffect::DeSaturate;
-	    else if (tmp == _togamma)
-		effect = KIconEffect::ToGamma;
-	    else if (tmp == _tomonochrome)
-		effect = KIconEffect::ToMonochrome;
-            else if (tmp == _none)
-		effect = KIconEffect::NoEffect;
-	    else
-		continue;
-	    if(effect != -1)
+        KConfigGroup cg(config, *it + "Icons");
+        for (it2 = states.constBegin(), j = 0; it2 != states.constEnd(); ++it2, ++j) {
+            QString tmp = cg.readEntry(*it2 + "Effect", QString());
+            if (tmp == _togray) {
+                effect = KIconEffect::ToGray;
+            } else if (tmp == _colorize) {
+                effect = KIconEffect::Colorize;
+            } else if (tmp == _desaturate) {
+                effect = KIconEffect::DeSaturate;
+            } else if (tmp == _togamma) {
+                effect = KIconEffect::ToGamma;
+            } else if (tmp == _tomonochrome) {
+                effect = KIconEffect::ToMonochrome;
+            } else if (tmp == _none) {
+                effect = KIconEffect::NoEffect;
+            } else {
+                continue;
+            }
+            if (effect != -1) {
                 d->effect[i][j] = effect;
-	    d->value[i][j] = cg.readEntry(*it2 + "Value", 0.0);
-	    d->color[i][j] = cg.readEntry(*it2 + "Color", QColor());
-	    d->color2[i][j] = cg.readEntry(*it2 + "Color2", QColor());
-	    d->trans[i][j] = cg.readEntry(*it2 + "SemiTransparent", false);
-
-	}
+            }
+            d->value[i][j] = cg.readEntry(*it2 + "Value", 0.0);
+            d->color[i][j] = cg.readEntry(*it2 + "Color", QColor());
+            d->color2[i][j] = cg.readEntry(*it2 + "Color2", QColor());
+            d->trans[i][j] = cg.readEntry(*it2 + "SemiTransparent", false);
+        }
     }
 }
 
@@ -192,12 +191,12 @@ QString KIconEffect::fingerprint(int group, int state) const
 
 QImage KIconEffect::apply(const QImage &image, int group, int state) const
 {
-    if (state >= KIconLoader::LastState) {
-        kDebug(265) << "Illegal icon state: " << state << "\n";
+    if (group < 0 || group >= KIconLoader::LastGroup) {
+        kDebug(265) << "Illegal icon group: " << group;
         return image;
     }
-    if (group >= KIconLoader::LastGroup) {
-        kDebug(265) << "Illegal icon group: " << group << "\n";
+    if (state >= KIconLoader::LastState) {
+        kDebug(265) << "Illegal icon state: " << state;
         return image;
     }
 
@@ -223,7 +222,7 @@ QImage KIconEffect::apply(const QImage &img, int effect, float value,
                           const QColor &col, const QColor &col2, bool trans)
 {
     if (effect >= KIconEffect::LastEffect) {
-        kDebug(265) << "Illegal icon effect: " << effect << "\n";
+        kDebug(265) << "Illegal icon effect:" << effect;
         return img;
     }
 
@@ -264,12 +263,12 @@ QImage KIconEffect::apply(const QImage &img, int effect, float value,
 
 QPixmap KIconEffect::apply(const QPixmap &pixmap, int group, int state) const
 {
-    if (state >= KIconLoader::LastState) {
-        kDebug(265) << "Illegal icon state: " << state << "\n";
+    if (group < 0 || group >= KIconLoader::LastGroup) {
+        kDebug(265) << "Illegal icon group: " << group;
         return pixmap;
     }
-    if (group >= KIconLoader::LastGroup) {
-        kDebug(265) << "Illegal icon group: " << group << "\n";
+    if (state >= KIconLoader::LastState) {
+        kDebug(265) << "Illegal icon state: " << state;
         return pixmap;
     }
 
@@ -294,16 +293,16 @@ QPixmap KIconEffect::apply(const QPixmap &pixmap, int effect, float value,
 QPixmap KIconEffect::apply(const QPixmap &pixmap, int effect, float value,
                            const QColor &col, const QColor &col2, bool trans)
 {
-    if (effect >= LastEffect) {
-        kDebug(265) << "Illegal icon effect: " << effect << "\n";
+    if (effect >= KIconEffect::LastEffect) {
+        kDebug(265) << "Illegal icon effect:" << effect;
         return pixmap;
     }
 
     QPixmap result;
-    if ((trans == true) && (effect == NoEffect)) {
+    if (trans == true && effect == KIconEffect::NoEffect) {
         result = pixmap;
         semiTransparent(result);
-    } else if ( effect != NoEffect) {
+    } else if (effect != KIconEffect::NoEffect) {
         QImage tmpImg = pixmap.toImage();
         tmpImg = apply(tmpImg, effect, value, col, col2, trans);
         result = QPixmap::fromImage(tmpImg);
@@ -322,8 +321,7 @@ struct KIEImgEdit
 
     KIEImgEdit(QImage& _img):img(_img)
     {
-	if (img.depth() > 8)
-        {
+        if (img.depth() > 8) {
             //Code using data and pixels assumes that the pixels are stored
             //in 32bit values and that the image is not premultiplied
             if ((img.format() != QImage::Format_ARGB32) &&
@@ -332,20 +330,19 @@ struct KIEImgEdit
                 img = img.convertToFormat(QImage::Format_ARGB32);
             }
             data   = (unsigned int*)img.bits();
-	    pixels = img.width()*img.height();
-	}
-	else
-	{
-	    pixels = img.colorCount();
-	    colors = img.colorTable();
-	    data   = (unsigned int*)colors.data();
-	}
+            pixels = img.width()*img.height();
+        } else {
+            pixels = img.colorCount();
+            colors = img.colorTable();
+            data   = (unsigned int*)colors.data();
+        }
     }
 
     ~KIEImgEdit()
     {
-	if (img.depth() == 1)
-	    img.setColorTable(colors);
+        if (img.depth() == 1) {
+            img.setColorTable(colors);
+        }
     }
 };
 
@@ -546,7 +543,7 @@ void KIconEffect::semiTransparent(QImage &img)
 #else
                 line = img.scanLine(y) + 3;
 #endif
-                for(x = 0; x<width; ++x){
+                for (x = 0; x < width; ++x){
                     *line >>= 1;
                     line += 4;
                 }
@@ -581,13 +578,14 @@ void KIconEffect::semiTransparent(QImage &img)
         unsigned char *line;
         bool setOn = (transColor != 0);
         if (img.format() == QImage::Format_MonoLSB) {
-            for(y=0; y<img.height(); ++y){
+            for (y = 0; y < img.height(); ++y){
                 line = img.scanLine(y);
-                for(x = (y%2); x < img.width(); x += 2){
-                    if(!setOn)
+                for (x = (y%2); x < img.width(); x += 2) {
+                    if (!setOn) {
                         *(line + (x >> 3)) &= ~(1 << (x & 7));
-                    else
+                    } else {
                         *(line + (x >> 3)) |= (1 << (x & 7));
+                    }
                 }
             }
         } else {
@@ -622,10 +620,10 @@ void KIconEffect::semiTransparent(QPixmap &pix)
         img.fill(1);
     }
 
-    for (int y=0; y<img.height(); y++) {
+    for (int y = 0; y < img.height(); y++) {
         QRgb* line = (QRgb*)img.scanLine(y);
         QRgb pattern = (y % 2) ? 0x55555555 : 0xaaaaaaaa;
-        for (int x=0; x<(img.width()+31)/32; x++) {
+        for (int x = 0; x < (img.width()+31)/32; x++) {
             line[x] &= pattern;
         }
     }
@@ -635,11 +633,11 @@ void KIconEffect::semiTransparent(QPixmap &pix)
 void KIconEffect::overlay(QImage &src, QImage &overlay)
 {
     if (src.depth() != overlay.depth()) {
-        kDebug(265) << "Image depth src (" << src.depth() << ") != overlay " << "(" << overlay.depth() << ")!\n";
+        kDebug(265) << "Image depth src (" << src.depth() << ") != overlay " << "(" << overlay.depth() << ")!";
         return;
     }
     if (src.size() != overlay.size()) {
-        kDebug(265) << "Image size src != overlay\n";
+        kDebug(265) << "Image size src != overlay";
         return;
     }
 
@@ -648,7 +646,7 @@ void KIconEffect::overlay(QImage &src, QImage &overlay)
     }
 
     if (overlay.format() == QImage::Format_RGB32) {
-        kDebug(265) << "Overlay doesn't have alpha buffer!\n";
+        kDebug(265) << "Overlay doesn't have alpha buffer!";
         return;
     } else if (overlay.format() == QImage::Format_ARGB32_Premultiplied) {
         overlay = overlay.convertToFormat(QImage::Format_ARGB32);
@@ -656,7 +654,7 @@ void KIconEffect::overlay(QImage &src, QImage &overlay)
 
     // We don't do 1 bpp
     if (src.depth() == 1) {
-        kDebug(265) << "1bpp not supported!\n";
+        kDebug(265) << "1bpp not supported!";
         return;
     }
 
@@ -784,8 +782,9 @@ inline static void blurHorizontal(QImage &image, unsigned int *stack, int div, i
             sum -= sum_out;
 
             stackstart = stackindex + div - radius;
-            if (stackstart >= div)
+            if (stackstart >= div) {
                 stackstart -= div;
+            }
 
             unsigned int *stackpix = &stack[stackstart];
 
@@ -798,8 +797,9 @@ inline static void blurHorizontal(QImage &image, unsigned int *stack, int div, i
             sum_in += *stackpix;
             sum    += sum_in;
 
-            if (++stackindex >= div)
+            if (++stackindex >= div) {
                 stackindex = 0;
+            }
 
             stackpix = &stack[stackindex];
 
@@ -856,8 +856,9 @@ inline static void blurVertical(QImage &image, unsigned int *stack, int div, int
             sum -= sum_out;
 
             stackstart = stackindex + div - radius;
-            if (stackstart >= div)
+            if (stackstart >= div) {
                 stackstart -= div;
+            }
 
             unsigned int *stackpix = &stack[stackstart];
 
@@ -870,8 +871,9 @@ inline static void blurVertical(QImage &image, unsigned int *stack, int div, int
             sum_in += *stackpix;
             sum    += sum_in;
 
-            if (++stackindex >= div)
+            if (++stackindex >= div) {
                 stackindex = 0;
+            }
 
             stackpix = &stack[stackindex];
 
