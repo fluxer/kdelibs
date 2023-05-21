@@ -58,7 +58,6 @@ set(plasma_LIB_SRCS
     animations/pixmaptransition.cpp
     animations/pulser.cpp
     animations/slide.cpp
-    animations/stackedlayout.cpp
     animations/geometry.cpp
     animations/widgetsnapshot.cpp
     animations/zoom.cpp
