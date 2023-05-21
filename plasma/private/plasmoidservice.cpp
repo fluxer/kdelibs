@@ -64,8 +64,7 @@ PlasmoidService::PlasmoidService(const QString &packageLocation)
 {
     setName("plasmoidservice");
 
-    QString location;
-    location = packageLocation;
+    QString location(packageLocation);
     if (!location.endsWith('/')) {
         location.append('/');
     }
