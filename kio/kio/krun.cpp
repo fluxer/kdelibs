@@ -583,36 +583,29 @@ static bool runCommandInternal(KProcess* proc, const KService* service, const QS
 // This code is also used in klauncher.
 bool KRun::checkStartupNotify(const KService* service, bool* silent_arg, QByteArray* wmclass_arg)
 {
+    if (!service || service->entryPath().isEmpty()) {
+         // non-compliant app or service action
+
+         // TODO: for service actions (and other KService's crafted from the name, exec and icon)
+         // get the ASN property from the "Desktop Entry" group in the .desktop file somehow
+         return false;
+    }
+
     bool silent = false;
     QByteArray wmclass;
-    if (service && service->property("StartupNotify").isValid()) {
+    if (service->property("StartupNotify").isValid()) {
         silent = !service->property("StartupNotify").toBool();
         wmclass = service->property("StartupWMClass").toString().toLatin1();
-    }
-    else if (service && service->property("X-KDE-StartupNotify").isValid()) {
+    } else if (service->property("X-KDE-StartupNotify").isValid()) {
         silent = !service->property("X-KDE-StartupNotify").toBool();
         wmclass = service->property("X-KDE-WMClass").toString().toLatin1();
-    }
-    else { // non-compliant app
-        if (service) {
-            if (service->isApplication()) { // doesn't have .desktop entries needed, start as non-compliant
-                wmclass = "0"; // krazy:exclude=doublequote_chars
-            }
-            else {
-                return false; // no startup notification at all
-            }
-        }
-        else {
-#if 0
-            // Create startup notification even for apps for which there shouldn't be any,
-            // just without any visual feedback. This will ensure they'll be positioned on the proper
-            // virtual desktop, and will get user timestamp from the ASN ID.
-            wmclass = '0';
-            silent = true;
-#else   // That unfortunately doesn't work, when the launched non-compliant application
-            // launches another one that is compliant and there is any delay inbetween (bnc:#343359)
-            return false;
-#endif
+    } else {
+        // non-compliant app
+        if (service->isApplication()) {
+            // doesn't have .desktop entries needed, start as non-compliant
+            wmclass = "0";
+        } else {
+            return false; // no startup notification at all
         }
     }
     if (silent_arg != NULL) {
