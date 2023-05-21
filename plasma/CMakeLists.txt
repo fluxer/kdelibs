@@ -57,12 +57,9 @@ set(plasma_LIB_SRCS
     animations/bindings/easingcurve.cpp
     animations/easinganimation.cpp
     animations/fade.cpp
-    animations/grow.cpp
     animations/javascriptanimation.cpp
     animations/pixmaptransition.cpp
     animations/pulser.cpp
-    animations/rotation.cpp
-    animations/rotationstacked.cpp
     animations/slide.cpp
     animations/stackedlayout.cpp
     animations/geometry.cpp

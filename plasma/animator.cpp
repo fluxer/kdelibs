@@ -22,11 +22,8 @@
 #include "animations/animation.h"
 #include "animations/animationscriptengine_p.h"
 #include "animations/fade_p.h"
-#include "animations/grow_p.h"
 #include "animations/pulser_p.h"
-#include "animations/rotation_p.h"
 #include "animations/slide_p.h"
-#include "animations/rotationstacked_p.h"
 #include "animations/geometry_p.h"
 #include "animations/zoom_p.h"
 #include "animations/pixmaptransition_p.h"
@@ -45,20 +42,8 @@ Plasma::Animation* Animator::create(Animator::Animation type, QObject *parent)
             result = new Plasma::FadeAnimation(parent);
             break;
         }
-        case GrowAnimation: {
-            result = new Plasma::GrowAnimation(parent);
-            break;
-        }
         case PulseAnimation: {
             result = new Plasma::PulseAnimation(parent);
-            break;
-        }
-        case RotationAnimation: {
-            result = new Plasma::RotationAnimation(parent);
-            break;
-        }
-        case RotationStackedAnimation: {
-            result = new Plasma::RotationStackedAnimation(parent);
             break;
         }
         case SlideAnimation: {

@@ -28,7 +28,6 @@
 #include <QFile>
 #include <QtCore/qmetaobject.h>
 #include <QParallelAnimationGroup>
-#include <QPauseAnimation>
 #include <QSequentialAnimationGroup>
 #include <QTextStream>
 
@@ -150,9 +149,7 @@ QScriptValue animation(QScriptContext *context, QScriptEngine *engine)
         anim = Plasma::Animator::create(animName, parent);
     } else {
         int animId = context->argument(0).toInt32();
-        if (animId == JavascriptAnimation::PauseAnimation) {
-            anim = new QPauseAnimation(parent);
-        } else if (animId == JavascriptAnimation::PropertyAnimation) {
+        if (animId == JavascriptAnimation::PropertyAnimation) {
             anim = new QPropertyAnimation(parent);
         } else {
             anim = Plasma::Animator::create(static_cast<Animator::Animation>(animId), parent);

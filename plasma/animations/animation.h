@@ -47,7 +47,6 @@ class PLASMA_EXPORT Animation : public QAbstractAnimation
 {
 
     Q_OBJECT
-    Q_ENUMS(Reference)
     Q_ENUMS(MovementDirection)
     Q_PROPERTY(int duration READ duration WRITE setDuration)
     Q_PROPERTY(QEasingCurve easingCurve READ easingCurve WRITE setEasingCurve)
@@ -59,19 +58,6 @@ public:
      * @return duration in ms.
      */
     int duration() const;
-
-    /**
-     * Animation movement reference (used by \ref RotationAnimation).
-     */
-    enum ReferenceFlag {
-        Center = 0,
-        Up = 0x1,
-        Down = 0x2,
-        Left = 0x4,
-        Right = 0x8
-    };
-
-    Q_DECLARE_FLAGS(Reference, ReferenceFlag)
 
     /**
      * Animation movement direction.

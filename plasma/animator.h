@@ -49,10 +49,7 @@ class PLASMA_EXPORT Animator : public QObject
 public:
     enum Animation {
         FadeAnimation = 0,         /* Can be used for both fade in and out */
-        GrowAnimation,             /* Grow animated object geometry */
         PulseAnimation,            /* Pulse animated object (opacity/geometry/scale) */
-        RotationAnimation,         /* Rotate an animated object */
-        RotationStackedAnimation,  /* For flipping one object with another */
         SlideAnimation,            /* Move the position of animated object */
         GeometryAnimation,         /* Geometry animation */
         ZoomAnimation,             /* Zoom animation */

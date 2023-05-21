@@ -39,8 +39,8 @@ class JavascriptAnimation: public EasingAnimation
     Q_OBJECT
 
 public:
-    enum { PauseAnimation = Animator::LastAnimation + 1,
-           PropertyAnimation = Animator::LastAnimation + 2
+    enum {
+        PropertyAnimation = Animator::LastAnimation + 1
     };
 
     explicit JavascriptAnimation(const QString &name, QObject *parent = 0);
