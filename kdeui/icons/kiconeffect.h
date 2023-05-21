@@ -68,9 +68,15 @@ public:
      * @li DeSaturate: Reduce the saturation of the icon
      * @li ToMonochrome: Produces a monochrome icon
      */
-    enum Effects { NoEffect, ToGray, Colorize, ToGamma, DeSaturate,
-                   ToMonochrome,
-                   LastEffect };
+    enum Effects {
+        NoEffect,
+        ToGray,
+        Colorize,
+        ToGamma,
+        DeSaturate,
+        ToMonochrome,
+        LastEffect
+    };
 
     /**
      * Rereads configuration.
@@ -117,8 +123,8 @@ public:
      * @param trans Add Transparency if trans = true.
      * @return An image with the effect applied.
      */
-    QImage apply(const QImage &src, int effect, float value, const QColor &rgb, bool trans) const;
-    QImage apply(const QImage &src, int effect, float value, const QColor &rgb, const QColor &rgb2, bool trans) const;
+    static QImage apply(const QImage &src, int effect, float value, const QColor &rgb, bool trans);
+    static QImage apply(const QImage &src, int effect, float value, const QColor &rgb, const QColor &rgb2, bool trans);
 
     /**
      * Applies an effect to a pixmap.
@@ -138,8 +144,8 @@ public:
      * @param trans Add Transparency if trans = true.
      * @return A pixmap with the effect applied.
      */
-    QPixmap apply(const QPixmap &src, int effect, float value, const QColor &rgb, bool trans) const;
-    QPixmap apply(const QPixmap &src, int effect, float value, const QColor &rgb, const QColor &rgb2, bool trans) const;
+    static QPixmap apply(const QPixmap &src, int effect, float value, const QColor &rgb, bool trans);
+    static QPixmap apply(const QPixmap &src, int effect, float value, const QColor &rgb, const QColor &rgb2, bool trans);
 
     /**
      * Tints an image gray.
