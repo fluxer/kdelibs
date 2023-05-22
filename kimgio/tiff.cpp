@@ -19,6 +19,7 @@
 #include "tiff.h"
 
 #include <QImage>
+#include <QVariant>
 #include <kdebug.h>
 
 #include <stdio.h>
@@ -346,6 +347,81 @@ bool TIFFHandler::write(const QImage &image)
 QByteArray TIFFHandler::name() const
 {
     return s_tiffpluginformat;
+}
+
+bool TIFFHandler::supportsOption(QImageIOHandler::ImageOption option) const
+{
+    switch (option) {
+        case QImageIOHandler::Size: {
+            return true;
+        }
+        default: {
+            return false;
+        }
+    }
+    Q_UNREACHABLE();
+}
+
+QVariant TIFFHandler::option(QImageIOHandler::ImageOption option) const
+{
+    switch (option) {
+        case QImageIOHandler::Size: {
+            const qint64 devicepos = device()->pos();
+
+            s_tifferrorhandler = TIFFSetErrorHandler(tiff_error_handler);
+            s_tiffwarninghandler = TIFFSetWarningHandler(tiff_warning_handler);
+
+            TIFF* tiffclient = TIFFClientOpen(
+                "TIFFHandler", "r",
+                device(),
+                tiff_read_proc,
+                tiff_write_proc,
+                tiff_seek_proc,
+                tiff_close_proc,
+                tiff_size_proc,
+                tiff_mapfile_proc,
+                tiff_unmapfile_proc
+            );
+            if (!Q_UNLIKELY(tiffclient)) {
+                kWarning() << "Could not open client";
+                TIFFSetErrorHandler(s_tifferrorhandler);
+                TIFFSetWarningHandler(s_tiffwarninghandler);
+                return false;
+            }
+
+            uint32_t tiffwidth = 0;
+            int tiffresult = TIFFGetField(tiffclient, TIFFTAG_IMAGEWIDTH, &tiffwidth);
+            if (Q_UNLIKELY(tiffresult != 1)) {
+                kWarning() << "Could not get image width";
+                TIFFClose(tiffclient);
+                TIFFSetErrorHandler(s_tifferrorhandler);
+                TIFFSetWarningHandler(s_tiffwarninghandler);
+                device()->seek(devicepos);
+                return false;
+            }
+
+            uint32_t tiffheight = 0;
+            tiffresult = TIFFGetField(tiffclient, TIFFTAG_IMAGELENGTH, &tiffheight);
+            if (Q_UNLIKELY(tiffresult != 1)) {
+                kWarning() << "Could not get image length";
+                TIFFClose(tiffclient);
+                TIFFSetErrorHandler(s_tifferrorhandler);
+                TIFFSetWarningHandler(s_tiffwarninghandler);
+                device()->seek(devicepos);
+                return false;
+            }
+
+            TIFFClose(tiffclient);
+            TIFFSetErrorHandler(s_tifferrorhandler);
+            TIFFSetWarningHandler(s_tiffwarninghandler);
+            device()->seek(devicepos);
+            return QVariant(QSize(tiffwidth, tiffheight));
+        }
+        default: {
+            return QVariant();
+        }
+    }
+    Q_UNREACHABLE();
 }
 
 bool TIFFHandler::canRead(QIODevice *device)

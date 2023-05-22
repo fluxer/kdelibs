@@ -34,6 +34,9 @@ public:
 
     QByteArray name() const final;
 
+    bool supportsOption(QImageIOHandler::ImageOption option) const final;
+    QVariant option(QImageIOHandler::ImageOption option) const final;
+
     static bool canRead(QIODevice *device);
 };
 
