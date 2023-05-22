@@ -25,6 +25,7 @@
 #include <kmessagebox.h>
 #include <kcalendarsystem.h>
 #include <kemailsettings.h>
+#include <kuser.h>
 #include <kdebug.h>
 
 #include <QString>
@@ -36,204 +37,65 @@
 
 using namespace KTextEditor;
 
-bool TemplateInterface::expandMacros( QMap<QString, QString> &map, QWidget *parentWindow)
+bool TemplateInterface::insertTemplateText(const Cursor& insertPosition, const QString &templateString, const QMap<QString, QString> &initialValues)
 {
+  // NOTE: THE IMPLEMENTATION WILL HANDLE cursor AND selection
+
   QDateTime datetime = QDateTime::currentDateTime();
   QDate date = datetime.date();
   QTime time = datetime.time();
+  QWidget *parentWindow = dynamic_cast<QWidget*>(this);
 
-  QMap<QString,QString>::Iterator it;
-  for ( it = map.begin(); it != map.end(); ++it )
-  {
-    QString placeholder = it.key();
-    if ( map[ placeholder ].isEmpty() )
-    {
-      if ( placeholder == "index" ) map[ placeholder ] = "i";
-      else if ( placeholder == "loginname" )
-      {}
-      else if (placeholder == "fullname" || placeholder == "email")
-      {
-        KEMailSettings mailsettings;
-        const QString fullname = mailsettings.getSetting(KEMailSettings::RealName);
-        const QString email = mailsettings.getSetting(KEMailSettings::EmailAddress);
-        if (fullname.isEmpty() || email.isEmpty()) {
-          KMessageBox::sorry(parentWindow,i18n("The template needs information about you but it is not available.\n The information can be set set from system settings."));
-          return false;
-        }
-        map[ "fullname" ] = fullname;
-        map[ "email" ] = email;
-      }
-      else if ( placeholder == "date" )
-      {
-        map[ placeholder ] = KGlobal::locale() ->formatDate( date, KLocale::ShortDate );
-      }
-      else if ( placeholder == "time" )
-      {
-        map[ placeholder ] = KGlobal::locale() ->formatTime( time, true, false );
-      }
-      else if ( placeholder == "year" )
-      {
-        map[ placeholder ] = KGlobal::locale() ->calendar() ->formatDate(date, KLocale::Year, KLocale::LongNumber);
-      }
-      else if ( placeholder == "month" )
-      {
-        map[ placeholder ] = QString::number( KGlobal::locale() ->calendar() ->month( date ) );
-      }
-      else if ( placeholder == "day" )
-      {
-        map[ placeholder ] = QString::number( KGlobal::locale() ->calendar() ->day( date ) );
-      }
-      else if ( placeholder == "hostname" )
-      {
-        map[ placeholder ] = QHostInfo::localHostName();
-      }
-      else if ( placeholder == "cursor" )
-      {
-        map[ placeholder ] = '|';
-      }
-      else if (placeholder== "selection" ) {
-        //DO NOTHING, THE IMPLEMENTATION WILL HANDLE THIS
-      }
-      else map[ placeholder ] = placeholder;
+  QMap<QString, QString> enhancedInitValues(initialValues);
+  if (templateString.contains(QLatin1String("%{loginname}"))) {
+    enhancedInitValues["loginname"] = KUser().loginName();
+  }
+
+  if (templateString.contains(QLatin1String("%{fullname}"))) {
+    KEMailSettings mailsettings;
+    const QString fullname = mailsettings.getSetting(KEMailSettings::RealName);
+    if (fullname.isEmpty()) {
+      KMessageBox::sorry(parentWindow,i18n("The template needs information about you but it is not available.\n The information can be set set from system settings."));
+      return false;
     }
+    enhancedInitValues["fullname"] = fullname;
   }
-  return true;
-}
 
-bool TemplateInterface::KTE_INTERNAL_setupIntialValues(const QString& templateString,QMap<QString,QString> *initialValues)
-{
-  QMap<QString, QString> enhancedInitValues( *initialValues );
-  
-  QRegExp rx( "[$%]\\{([^}\\r\\n]+)\\}" );
-  rx.setMinimal( true );
-  int pos = 0;
-  int offset;
-  QString initValue;
-  while ( pos >= 0 )
-  {
-    bool initValue_specified=false;
-    pos = rx.indexIn( templateString, pos );
-
-    if ( pos > -1 )
-    {
-      offset = 0;
-      while ( pos - offset > 0 && templateString[ pos - offset - 1 ] == '\\' ) {
-        ++offset;
-      }
-      if ( offset % 2 == 1 ) {
-        // match is escaped
-        ++pos;
-        continue;
-      }
-      QString placeholder = rx.cap( 1 );
-      
-      int pos_colon=placeholder.indexOf(":");
-      int pos_slash=placeholder.indexOf("/");
-      int pos_backtick=placeholder.indexOf("`");
-      bool check_slash=false;
-      bool check_colon=false;
-      bool check_backtick=false;
-      if ((pos_colon==-1) && ( pos_slash==-1)) {
-        //do nothing
-      } else if ( (pos_colon==-1) && (pos_slash!=-1)) {
-        check_slash=true;
-      } else if ( (pos_colon!=-1) && (pos_slash==-1)) {
-        check_colon=true;
-      } else {
-        if (pos_colon<pos_slash)
-          check_colon=true;
-        else
-          check_slash=true;
-      }
-      
-      if ( (!check_slash) && (!check_colon) && (pos_backtick>=0) )
-        check_backtick=true;
-      
-      if (check_slash) {                
-        //in most cases it should not matter, but better safe then sorry.
-        const int end=placeholder.length();
-        int slashcount=0;
-        int backslashcount=0;
-        for (int i=0;i<end;i++) {
-          if (placeholder[i]=='/') {
-            if ((backslashcount%2)==0) slashcount++;
-            if (slashcount==3) break;
-            backslashcount=0;
-          } else if (placeholder[i]=='\\')
-            backslashcount++;
-          else
-            backslashcount=0; //any character terminates a backslash sequence
-        }
-        if (slashcount!=3) {
-          const int tmpStrLength=templateString.length();
-          for (int i=pos+rx.matchedLength();(slashcount<3) && (i<tmpStrLength);i++,pos++) {
-              if (templateString[i]=='/') {
-                if ((backslashcount%2)==0) slashcount++;
-                backslashcount=0;
-              } else if (placeholder[i]=='\\')
-                backslashcount++;
-              else
-                backslashcount=0; //any character terminates a backslash sequence              
-          }
-        }
-        //this is needed
-        placeholder=placeholder.left(placeholder.indexOf("/"));
-      } else if (check_colon) {
-        initValue=placeholder.mid(pos_colon+1);
-        initValue_specified=true;
-        int  backslashcount=0;
-        for (int i=initValue.length()-1;(i>=0) && (initValue[i]=='\\'); i--) {
-          backslashcount++;
-        }
-        initValue=initValue.left(initValue.length()-((backslashcount+1)/2));
-        if ((backslashcount % 2) ==1) {
-          initValue+="}";
-          const int tmpStrLength=templateString.length();
-          backslashcount=0;
-          for (int i=pos+rx.matchedLength();(i<tmpStrLength);i++,pos++) {
-              if (templateString[i]=='}') {
-                initValue=initValue.left(initValue.length()-((backslashcount+1)/2));
-                if ((backslashcount%2)==0) break;
-                backslashcount=0;
-              } else if (placeholder[i]=='\\')
-                backslashcount++;
-              else
-                backslashcount=0; //any character terminates a backslash sequence              
-            initValue+=placeholder[i];
-          }
-        }
-        placeholder=placeholder.left(placeholder.indexOf(":"));
-      } else if (check_backtick) {
-        placeholder=placeholder.left(pos_backtick);
-      }
-      
-      if (placeholder.contains("@")) placeholder=placeholder.left(placeholder.indexOf("@"));
-      if ( (! enhancedInitValues.contains( placeholder )) || (enhancedInitValues[placeholder]==DUMMY_VALUE)  ) {
-        if (initValue_specified) {
-          enhancedInitValues[placeholder]=initValue;
-        } else {
-          enhancedInitValues[ placeholder ] = DUMMY_VALUE;
-        }
-      }
-      pos += rx.matchedLength();
+  if (templateString.contains(QLatin1String("%{email}"))) {
+    KEMailSettings mailsettings;
+    const QString email = mailsettings.getSetting(KEMailSettings::EmailAddress);
+    if (email.isEmpty()) {
+      KMessageBox::sorry(parentWindow,i18n("The template needs information about you but it is not available.\n The information can be set set from system settings."));
+      return false;
     }
+    enhancedInitValues["email"] = email;
   }
 
-  kDebug()<<"-----------------------------------";
-  for (QMap<QString,QString>::iterator it=enhancedInitValues.begin();it!=enhancedInitValues.end();++it) {
-    kDebug()<<"key:"<<it.key()<<" init value:"<<it.value();
-    if (it.value()==DUMMY_VALUE) it.value()="";
+  if (templateString.contains(QLatin1String("%{date}"))) {
+    enhancedInitValues["date"] = KGlobal::locale()->formatDate(date, KLocale::ShortDate);
   }
-  kDebug()<<"-----------------------------------";
-  if (!expandMacros( enhancedInitValues, dynamic_cast<QWidget*>(this) ) ) return false;
-  *initialValues=enhancedInitValues;
-  return true;
-}  
 
-bool TemplateInterface::insertTemplateText ( const Cursor& insertPosition, const QString &templateString, const QMap<QString, QString> &initialValues) {
-  QMap<QString,QString> enhancedInitValues(initialValues);
-  if (!KTE_INTERNAL_setupIntialValues(templateString,&enhancedInitValues)) return false;
-  return insertTemplateTextImplementation( insertPosition, templateString, enhancedInitValues);
+  if (templateString.contains(QLatin1String("%{time}"))) {
+    enhancedInitValues["time"] = KGlobal::locale()->formatTime(time, true, false);
+  }
+
+  if (templateString.contains(QLatin1String("%{year}"))) {
+    enhancedInitValues["year"] = KGlobal::locale()->calendar()->formatDate(date, KLocale::Year, KLocale::LongNumber);
+  }
+
+  if (templateString.contains(QLatin1String("%{month}"))) {
+    enhancedInitValues["month"] = QString::number(KGlobal::locale()->calendar()->month(date));
+  }
+
+  if (templateString.contains(QLatin1String("%{day}"))) {
+    enhancedInitValues["day"] = QString::number(KGlobal::locale()->calendar()->day(date));
+  }
+
+  if (templateString.contains(QLatin1String("%{hostname}"))) {
+    enhancedInitValues["hostname"] = QHostInfo::localHostName();
+  }
+
+  return insertTemplateTextImplementation(insertPosition, templateString, enhancedInitValues);
 }
 
 // kate: space-indent on; indent-width 2; replace-tabs on;

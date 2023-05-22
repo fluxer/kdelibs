@@ -42,54 +42,26 @@ class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInt
     TemplateInterface();
     virtual ~TemplateInterface();
 
-    /**
-     * Parses \p templateString for macros in the form [$%]{NAME} and finds
-     * the value corresponding to NAME if any. The NAME string may contain
-     * any non-whitespace character execpt '}'
-     * \param initialValues a map with the keys for the macros to expand.
-     * keys with a value are ignored.
-     * \param parentWindow is used if dialogs have to be shown
-     * \return true if all macros was successfully expanded
-     * \see insertTemplateText for a list of supported macros
-     */
-    static bool expandMacros( QMap<QString, QString> &initialValues, QWidget *parentWindow );
-
   public:
 
     /**
-     * Inserts an interactive ediable template text at line "line", column "col".
+     * Inserts an interactive ediable template text at cursor position @p insertPosition.
      * \return true if inserting the string succeeded
      *
      * Use insertTemplateText(lines(), ...) to append text at end of document
      * Template  strings look like
-     * "for( int ${index}=0;${index}<10;${index}++) { ${cursor} };"
+     * "for( int i=0;i<10;i++) { %{cursor} };"
      * or "%{date}"
      *
      * This syntax is somewhat similar to the one found in the Eclipse editor or textmate.
      *
      * There are certain common placeholders (macros), which get assigned a
-     * default initialValue, If the second parameter does not a given value.
-     * For all others the initial value is the name of the placeholder.
+     * default initialValue.
      *
      * Placeholder names may only consist of a-zA-Z0-9_
      * 
-     * @since 4.5
-     * if a placeholder is a mirror, the place holder name may contain additional information
-     * ${something/regexp/replacement/} takes the value of the placeholder something and replaces the match with the replacement before inserting the mirrored value
-     * ${something/regexp/replacement/g} like above, but for all occurences
-     *                          The syntax of the regexp and the replacement are the ones from kateparts regexp search/replace
-     * ${something/regexp/replacement/i} like above, but case insensitive
-     *                          The syntax of the regexp and the replacement are the ones from kateparts regexp search/replace
-     * Possible flags: g and i. Those flags can be combined too
-     * If a literal / should appear in the regexp, it has to be escaped \/,
-     * literal \ has to be escaped too 
-     * 
-     * If you have mirrored ranges and want another occurence than the first one as the master
-     * you can add @ directly after the placeholder name.
-     * 
      * Common placeholders and values are
      *
-     * - index: "i"
      * - loginname: The current users's loginname
      * - fullname: The current user's first and last name retrieved from kabc
      * - email: The current user's primary email address retrieved from kabc
@@ -100,13 +72,7 @@ class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInt
      * - day: current day
      * - hostname: hostname of the computer
      * - selection: The implementation should set this to the selected text, if any
-     * - cursor: at this position the cursor will be after editing of the
-     *   template has finished, this has to be taken care of by the actual
-     *   implementation. The placeholder gets a value of "|" assigned.
-     *
-     * If a macro is started with a % (persent sign) like "%{date}" it isn't added
-     * to the list editable strings ( for example TAB key navigation) if a value
-     * differing from the macro name is found.
+     * - cursor: The implementation should set the cursor position there, if any.
      *
      * If the editor supports some kind of smart indentation, the inserted code
      * should be layouted by the indenter.
@@ -122,12 +88,6 @@ protected:
      * \return true if any text was inserted.
      */
     virtual bool insertTemplateTextImplementation ( const Cursor &insertPosition, const QString &templateString, const QMap<QString,QString> &initialValues)=0;
-
-    /**
-     * DO NOT USE !!!! THIS IS USED INTERNALLY by the interface only !!!!!!
-     * Behaviour might change !!!!!!!
-     */
-    bool KTE_INTERNAL_setupIntialValues(const QString &templateString, QMap<QString,QString> *initialValues);
 };
 
 }
