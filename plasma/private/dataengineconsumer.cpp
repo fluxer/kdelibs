@@ -21,12 +21,9 @@
 
 #include "dataengineconsumer_p.h"
 
-#include <QtCore/QSet>
-
 #include <kdebug.h>
 
 #include "plasma/dataenginemanager.h"
-#include "servicejob.h"
 
 namespace Plasma
 {
@@ -62,7 +59,3 @@ DataEngine *DataEngineConsumer::dataEngine(const QString &name)
 }
 
 } // namespace Plasma
-
-#include "moc_dataengineconsumer_p.cpp"
-
-
