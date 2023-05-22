@@ -136,7 +136,7 @@ bool WebPHandler::write(const QImage &image)
         return false;
     }
 
-    QImage image32 = image.convertToFormat(QImage::Format_ARGB32);
+    const QImage image32 = image.convertToFormat(QImage::Format_ARGB32);
 
     uint8_t *webpoutput = nullptr;
 #if Q_BYTE_ORDER == Q_BIG_ENDIAN
