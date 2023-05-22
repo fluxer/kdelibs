@@ -35,7 +35,6 @@ namespace Plasma
 {
 
 class ConfigLoader;
-class ServiceProvider;
 
 class NullServiceJob : public ServiceJob
 {
@@ -74,8 +73,7 @@ public:
     ServicePrivate(Service *service)
         : q(service),
           config(0),
-          dummyConfig(0),
-          serviceProvider(0)
+          dummyConfig(0)
     {
     }
 
@@ -96,10 +94,8 @@ public:
     Service *q;
     QString destination;
     QString name;
-    QString resourcename;
     ConfigLoader *config;
     KConfig *dummyConfig;
-    ServiceProvider *serviceProvider;
     QMultiHash<QWidget *, QString> associatedWidgets;
     QMultiHash<QGraphicsObject *, QString> associatedGraphicsWidgets;
     QSet<QString> disabledOperations;

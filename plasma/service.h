@@ -319,8 +319,6 @@ private:
     friend class DataEnginePrivate;
     friend class GetSource;
     friend class PackagePrivate;
-    friend class ServiceProvider;
-    friend class RemoveService;
     friend class PluginLoader;
 };
 
