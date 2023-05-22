@@ -139,16 +139,4 @@ static inline void blurcol(QImage &im, int col, int alpha)
   }
 }
 
-template<class T>
-inline const T &qClamp(const T &x, const T &low, const T &high)
-{
-    if (x <  low) {
-        return low;
-    } else if (x > high) {
-        return high;
-    } else {
-        return x;
-    }
-}
-
 #endif
