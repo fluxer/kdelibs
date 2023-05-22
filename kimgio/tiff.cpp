@@ -69,8 +69,11 @@ static tmsize_t tiff_read_proc(thandle_t tiffhandle, void* tiffptr, tmsize_t tif
 
 static tmsize_t tiff_write_proc(thandle_t tiffhandle, void* tiffptr, tmsize_t tiffsize)
 {
-    QIODevice* device = static_cast<QIODevice*>(tiffhandle);
-    return device->write(static_cast<char*>(tiffptr), tiffsize);
+    // dummy
+    Q_UNUSED(tiffhandle);
+    Q_UNUSED(tiffptr);
+    Q_UNUSED(tiffsize);
+    return 0;
 }
 
 static toff_t tiff_seek_proc(thandle_t tiffhandle, toff_t tiffoffset, int tiffwhence)
@@ -238,110 +241,8 @@ bool TIFFHandler::read(QImage *image)
 
 bool TIFFHandler::write(const QImage &image)
 {
-    s_tifferrorhandler = TIFFSetErrorHandler(tiff_error_handler);
-    s_tiffwarninghandler = TIFFSetWarningHandler(tiff_warning_handler);
-
-    TIFF* tiffclient = TIFFClientOpen(
-        "TIFFHandler", "w",
-        device(),
-        tiff_read_proc,
-        tiff_write_proc,
-        tiff_seek_proc,
-        tiff_close_proc,
-        tiff_size_proc,
-        tiff_mapfile_proc,
-        tiff_unmapfile_proc
-    );
-    if (!Q_UNLIKELY(tiffclient)) {
-        kWarning() << "Could not open client";
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    QImage image32 = image.convertToFormat(QImage::Format_ARGB32).rgbSwapped();
-
-    const int width = image32.width();
-    int tiffresult = TIFFSetField(tiffclient, TIFFTAG_IMAGEWIDTH, width);
-    if (Q_UNLIKELY(tiffresult != 1)) {
-        kWarning() << "Could not set width field";
-        TIFFClose(tiffclient);
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    const int height = image32.height();
-    tiffresult = TIFFSetField(tiffclient, TIFFTAG_IMAGELENGTH, height);
-    if (Q_UNLIKELY(tiffresult != 1)) {
-        kWarning() << "Could not set height field";
-        TIFFClose(tiffclient);
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    tiffresult = TIFFSetField(tiffclient, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-    if (Q_UNLIKELY(tiffresult != 1)) {
-        kWarning() << "Could not set planar config field";
-        TIFFClose(tiffclient);
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    tiffresult = TIFFSetField(tiffclient, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
-    if (Q_UNLIKELY(tiffresult != 1)) {
-        kWarning() << "Could not set photometric field";
-        TIFFClose(tiffclient);
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    tiffresult = TIFFSetField(tiffclient, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
-    if (Q_UNLIKELY(tiffresult != 1)) {
-        kWarning() << "Could not set compression field";
-        TIFFClose(tiffclient);
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    tiffresult = TIFFSetField(tiffclient, TIFFTAG_SAMPLESPERPIXEL, 4);
-    if (Q_UNLIKELY(tiffresult != 1)) {
-        kWarning() << "Could not set samples per-pixel field";
-        TIFFClose(tiffclient);
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    tiffresult = TIFFSetField(tiffclient, TIFFTAG_BITSPERSAMPLE, 8);
-    if (Q_UNLIKELY(tiffresult != 1)) {
-        kWarning() << "Could not set bits per-pixel field";
-        TIFFClose(tiffclient);
-        TIFFSetErrorHandler(s_tifferrorhandler);
-        TIFFSetWarningHandler(s_tiffwarninghandler);
-        return false;
-    }
-
-    for (int i = 0; i < height; i++) {
-        uchar* scanline = image32.scanLine(i);
-        tiffresult = TIFFWriteScanline(tiffclient, scanline, i);
-        if (Q_UNLIKELY(tiffresult != 1)) {
-            kWarning() << "Could not write scanline";
-            TIFFClose(tiffclient);
-            TIFFSetErrorHandler(s_tifferrorhandler);
-            TIFFSetWarningHandler(s_tiffwarninghandler);
-            return false;
-        }
-    }
-
-    TIFFClose(tiffclient);
-    TIFFSetErrorHandler(s_tifferrorhandler);
-    TIFFSetWarningHandler(s_tiffwarninghandler);
-    return true;
+    // this plugin is a read-only kind of plugin
+    return false;
 }
 
 QByteArray TIFFHandler::name() const
@@ -454,19 +355,15 @@ QList<QByteArray> TIFFPlugin::mimeTypes() const
 QImageIOPlugin::Capabilities TIFFPlugin::capabilities(QIODevice *device, const QByteArray &format) const
 {
     if (format == s_tiffpluginformat) {
-        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead | QImageIOPlugin::CanWrite);
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
     }
     if (!device || !device->isOpen()) {
         return 0;
     }
-    QImageIOPlugin::Capabilities cap;
     if (device->isReadable() && TIFFHandler::canRead(device)) {
-        cap |= QImageIOPlugin::CanRead;
+        return QImageIOPlugin::Capabilities(QImageIOPlugin::CanRead);
     }
-    if (format == s_tiffpluginformat && device->isWritable()) {
-        cap |= QImageIOPlugin::CanWrite;
-    }
-    return cap;
+    return 0;
 }
 
 QImageIOHandler *TIFFPlugin::create(QIODevice *device, const QByteArray &format) const
