@@ -208,11 +208,20 @@ macro(KDE4_ADD_WIDGET _sources)
         set(_moc ${CMAKE_CURRENT_BINARY_DIR}/${_basename}widgets.moc)
 
         # create source file from the .widgets file
-        add_custom_command(
-            COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE} -o ${_output} ${_input}
-            MAIN_DEPENDENCY ${_input}
-            OUTPUT ${_output}
-        )
+        if(_kdeBootStrapping)
+            add_custom_command(
+                COMMAND "${CMAKE_BINARY_DIR}/kde4_exec.sh" ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${KDE4_MAKEKDEWIDGETS_EXECUTABLE} -o ${_output} ${_input}
+                MAIN_DEPENDENCY ${_input}
+                DEPENDS ${KDE4_MAKEKDEWIDGETS_EXECUTABLE}
+                OUTPUT ${_output}
+            )
+        else()
+            add_custom_command(
+                COMMAND ${KDE4_MAKEKDEWIDGETS_EXECUTABLE} -o ${_output} ${_input}
+                MAIN_DEPENDENCY ${_input}
+                OUTPUT ${_output}
+            )
+        endif()
 
         qt4_generate_moc("${_output}" "${_moc}")
 
