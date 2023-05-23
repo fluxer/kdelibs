@@ -128,7 +128,6 @@ private:
     KAccelString  m_content;
     ItemList      *m_children;
     int           m_index;
-
   };
 };
 
@@ -528,25 +527,29 @@ void KAcceleratorManager::last_manage(QString &added,  QString &changed, QString
  *********************************************************************/
 
 KAccelString::KAccelString(const QString &input, int initialWeight)
-  : m_pureText(input), m_weight()
+    : m_pureText(input), m_weight()
 {
     m_orig_accel = m_pureText.indexOf("(!)&");
-    if (m_orig_accel != -1)
-	m_pureText.remove(m_orig_accel, 4);
+    if (m_orig_accel != -1) {
+        m_pureText.remove(m_orig_accel, 4);
+    }
 
     m_orig_accel = m_pureText.indexOf("(&&)");
-    if (m_orig_accel != -1)
+    if (m_orig_accel != -1) {
         m_pureText.replace(m_orig_accel, 4, "&");
+    }
 
     m_origText = m_pureText;
 
-    if (m_pureText.contains('\t'))
+    if (m_pureText.contains('\t')) {
         m_pureText = m_pureText.left(m_pureText.indexOf('\t'));
+    }
 
     m_orig_accel = m_accel = stripAccelerator(m_pureText);
 
-    if (initialWeight == -1)
+    if (initialWeight == -1) {
         initialWeight = KAccelManagerAlgorithm::DEFAULT_WEIGHT;
+    }
 
     calculateWeights(initialWeight);
 
@@ -556,40 +559,42 @@ KAccelString::KAccelString(const QString &input, int initialWeight)
 
 QString KAccelString::accelerated() const
 {
-  QString result = m_origText;
-  if (result.isEmpty())
-      return result;
+    QString result = m_origText;
+    if (result.isEmpty())
+        return result;
 
-  if (KAcceleratorManagerPrivate::programmers_mode)
-  {
-    if (m_accel != m_orig_accel) {
-      int oa = m_orig_accel;
+    if (KAcceleratorManagerPrivate::programmers_mode) {
+        if (m_accel != m_orig_accel) {
+            int oa = m_orig_accel;
 
-      if (m_accel >= 0) {
-              result.insert(m_accel, "(!)&");
-              if (m_accel < m_orig_accel)
-                  oa += 4;
-      }
-      if (m_orig_accel >= 0)
-	  result.replace(oa, 1, "(&&)");
+            if (m_accel >= 0) {
+                result.insert(m_accel, "(!)&");
+                if (m_accel < m_orig_accel) {
+                    oa += 4;
+                }
+            }
+            if (m_orig_accel >= 0) {
+                result.replace(oa, 1, "(&&)");
+            }
+        }
+    } else {
+        if (m_accel >= 0 && m_orig_accel != m_accel) {
+            if (m_orig_accel != -1) {
+                result.remove(m_orig_accel, 1);
+            }
+            result.insert(m_accel, "&");
+        }
     }
-  } else {
-      if (m_accel >= 0 && m_orig_accel != m_accel) {
-          if (m_orig_accel != -1)
-              result.remove(m_orig_accel, 1);
-          result.insert(m_accel, "&");
-      }
-  }
-  return result;
+    return result;
 }
 
 
 QChar KAccelString::accelerator() const
 {
-  if ((m_accel < 0) || (m_accel > (int)m_pureText.length()))
-    return QChar();
-
-  return m_pureText[m_accel].toLower();
+    if ((m_accel < 0) || (m_accel > (int)m_pureText.length())) {
+        return QChar();
+    }
+    return m_pureText[m_accel].toLower();
 }
 
 
