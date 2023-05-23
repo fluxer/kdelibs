@@ -39,7 +39,7 @@ using namespace KTextEditor;
 
 bool TemplateInterface::insertTemplateText(const Cursor& insertPosition, const QString &templateString, const QMap<QString, QString> &initialValues)
 {
-  // NOTE: THE IMPLEMENTATION WILL HANDLE cursor AND selection
+  // NOTE: THE IMPLEMENTATION WILL HANDLE %{cursor}
 
   QDateTime datetime = QDateTime::currentDateTime();
   QDate date = datetime.date();

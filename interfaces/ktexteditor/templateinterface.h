@@ -71,7 +71,6 @@ class KTEXTEDITOR_EXPORT TemplateInterface //should be named AbstractTemplateInt
      * - month: current month
      * - day: current day
      * - hostname: hostname of the computer
-     * - selection: The implementation should set this to the selected text, if any
      * - cursor: The implementation should set the cursor position there, if any.
      *
      * If the editor supports some kind of smart indentation, the inserted code
