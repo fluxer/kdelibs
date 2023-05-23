@@ -87,7 +87,7 @@ static void buildFile( QTextStream &stream, const QString& group, const QString&
 int main( int argc, char **argv ) {
     new KComponentData( "makekdewidgets" );
 
-    KLocalizedString description = ki18n( "Builds Qt widget plugins from an ini style description file." );
+    KLocalizedString description = ki18n( "Builds Katie widget plugins from an ini style description file." );
     const char version[] = "0.5";
 
     KCmdLineOptions options;
@@ -209,7 +209,7 @@ QString buildWidgetClass( const QString &name, KConfig &_input, const QString &g
     }
     else {
         // Wrap domXml value into QLatin1String
-        domXml = QString(QLatin1String("QLatin1String(\"%1\")")).arg(domXml.replace( '\"', "\\\"" ));
+        domXml = QString::fromLatin1("QLatin1String(\"%1\")").arg(domXml.replace( '\"', "\\\"" ));
     }
     defMap.insert( "DomXml", domXml  );
     defMap.insert( "CodeTemplate", input.readEntry( "CodeTemplate" ) );
