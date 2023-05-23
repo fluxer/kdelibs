@@ -204,7 +204,6 @@ public:
 
     QString tempFilePath() const;
 
-    // TODO: use archive_match_include_pattern() instead?
     QList<KArchiveEntry> m_cache;
 #endif
 };
