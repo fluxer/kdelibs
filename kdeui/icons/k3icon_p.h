@@ -36,7 +36,6 @@ class KDEUI_EXPORT K3Icon
 {
 public:
     K3Icon();
-    ~K3Icon();
 
     bool isValid() const;
     int size;
@@ -46,4 +45,4 @@ public:
     QString path;
 };
 
-#endif
+#endif // K3ICON_P_H

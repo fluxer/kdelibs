@@ -46,29 +46,22 @@ class KIconEngine : public QIconEngineV2
      *
      * @sa KIconLoader
      */
-    KIconEngine(const QString& iconName, KIconLoader* iconLoader, const QStringList& overlays);
+    KIconEngine(const QString &iconName, KIconLoader* iconLoader, const QStringList &overlays);
 
     /**
      * \overload
      */
-    KIconEngine(const QString& iconName, KIconLoader* iconLoader);
+    KIconEngine(const QString &iconName, KIconLoader* iconLoader);
 
-    /**
-     * Destructor.
-     */
-    virtual ~KIconEngine();
+    /// Reimplementations
+    QSize actualSize(const QSize &size, QIcon::Mode mode, QIcon::State state) final;
+    void paint(QPainter *painter, const QRect &rect, QIcon::Mode mode, QIcon::State state) final;
+    QPixmap pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state) final;
 
-    /// Reimplementation
-    virtual QSize actualSize ( const QSize & size, QIcon::Mode mode, QIcon::State state );
-    /// Reimplementation
-    virtual void paint ( QPainter * painter, const QRect & rect, QIcon::Mode mode, QIcon::State state );
-    /// Reimplementation
-    virtual QPixmap pixmap ( const QSize & size, QIcon::Mode mode, QIcon::State state );
-
-    virtual QString key() const;
-    virtual QIconEngineV2 *clone() const;
-    virtual bool read(QDataStream &in);
-    virtual bool write(QDataStream &out) const;
+    QString key() const final;
+    QIconEngineV2 *clone() const final;
+    bool read(QDataStream &in) final;
+    bool write(QDataStream &out) const final;
 
   private:
     QString mIconName;
@@ -76,8 +69,4 @@ class KIconEngine : public QIconEngineV2
     QWeakPointer<KIconLoader> mIconLoader;
 };
 
-inline KIconEngine::~KIconEngine()
-{
-}
-
-#endif
+#endif // KICONENGINE_H

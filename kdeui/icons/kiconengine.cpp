@@ -26,7 +26,7 @@
 #include <QtGui/QApplication>
 
 
-KIconEngine::KIconEngine(const QString& iconName, KIconLoader* iconLoader, const QStringList& overlays)
+KIconEngine::KIconEngine(const QString &iconName, KIconLoader* iconLoader, const QStringList &overlays)
     : mIconName(iconName),
       mOverlays(overlays), 
       mIconLoader(iconLoader)
@@ -34,13 +34,13 @@ KIconEngine::KIconEngine(const QString& iconName, KIconLoader* iconLoader, const
     
 }
 
-KIconEngine::KIconEngine(const QString& iconName, KIconLoader* iconLoader)
+KIconEngine::KIconEngine(const QString &iconName, KIconLoader* iconLoader)
     : mIconName(iconName),
       mIconLoader(iconLoader)
 {
 }
 
-static inline int qIconModeToKIconState( QIcon::Mode mode )
+static inline int qIconModeToKIconState(QIcon::Mode mode)
 {
     int kstate;
     switch (mode) {
@@ -58,7 +58,7 @@ static inline int qIconModeToKIconState( QIcon::Mode mode )
     return kstate;
 }
 
-QSize KIconEngine::actualSize( const QSize & size, QIcon::Mode mode, QIcon::State state )
+QSize KIconEngine::actualSize(const QSize &size, QIcon::Mode mode, QIcon::State state)
 {
     Q_UNUSED(state)
     Q_UNUSED(mode)
@@ -66,7 +66,7 @@ QSize KIconEngine::actualSize( const QSize & size, QIcon::Mode mode, QIcon::Stat
     return QSize(iconSize, iconSize);
 }
 
-void KIconEngine::paint(QPainter * painter, const QRect & rect, QIcon::Mode mode, QIcon::State state)
+void KIconEngine::paint(QPainter* painter, const QRect &rect, QIcon::Mode mode, QIcon::State state)
 {
     if (!mIconLoader) {
         return;
@@ -78,10 +78,11 @@ void KIconEngine::paint(QPainter * painter, const QRect & rect, QIcon::Mode mode
     KIconLoader::Group group = KIconLoader::Desktop;
 
     if (QWidget* targetWidget = dynamic_cast<QWidget*>(painter->device())) {
-        if (qobject_cast<QMenu*>(targetWidget))
+        if (qobject_cast<QMenu*>(targetWidget)) {
             group = KIconLoader::Small;
-        else if (qobject_cast<QToolBar*>(targetWidget->parent()))
+        } else if (qobject_cast<QToolBar*>(targetWidget->parent())) {
             group = KIconLoader::Toolbar;
+        }
     }
 
     const int iconSize = qMin(rect.width(), rect.height());
@@ -89,7 +90,7 @@ void KIconEngine::paint(QPainter * painter, const QRect & rect, QIcon::Mode mode
     painter->drawPixmap(rect, pix);
 }
 
-QPixmap KIconEngine::pixmap(const QSize & size, QIcon::Mode mode, QIcon::State state)
+QPixmap KIconEngine::pixmap(const QSize &size, QIcon::Mode mode, QIcon::State state)
 {
     Q_UNUSED(state)
 
@@ -137,4 +138,3 @@ bool KIconEngine::write(QDataStream &out) const
     out << mIconName << mOverlays;
     return true;
 }
-

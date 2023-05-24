@@ -107,11 +107,7 @@ private:
 /*** K3Icon ***/
 
 K3Icon::K3Icon()
-{
-    size = 0;
-}
-
-K3Icon::~K3Icon()
+    : size(0)
 {
 }
 
