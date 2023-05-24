@@ -53,7 +53,6 @@
 // kdeui
 #include "kicontheme.h"
 #include "kiconeffect.h"
-#include "k3icon_p.h"
 
 /**
  * Checks for relative paths quickly on UNIX-alikes, slowly on everything else.
@@ -87,7 +86,7 @@ public:
 
     void queryIcons(QStringList *lst, int size, KIconLoader::Context context) const;
     void queryIconsByContext(QStringList *lst, int size, KIconLoader::Context context) const;
-    K3Icon findIcon(const QString& name, int size, KIconLoader::MatchType match) const;
+    QString findIcon(const QString& name, int size, KIconLoader::MatchType match) const;
     void printTree(QString& dbgString) const;
 
     KIconTheme *theme;
@@ -126,8 +125,8 @@ void KIconThemeNode::queryIconsByContext(QStringList *result,
     *result += theme->queryIconsByContext(size, context);
 }
 
-K3Icon KIconThemeNode::findIcon(const QString& name, int size,
-                               KIconLoader::MatchType match) const
+QString KIconThemeNode::findIcon(const QString& name, int size,
+                                 KIconLoader::MatchType match) const
 {
     return theme->iconPath(name, size, match);
 }
@@ -175,7 +174,7 @@ public:
      * tries to find an icon with the name. It tries some extension and
      * match strategies
      */
-    K3Icon findMatchingIcon(const QString& name, int size) const;
+    QString findMatchingIcon(const QString& name, int size) const;
 
     /**
      * @internal
@@ -183,7 +182,7 @@ public:
      * This is one layer above findMatchingIcon -- it also implements generic fallbacks
      * such as generic icons for mimetypes.
      */
-    K3Icon findMatchingIconWithGenericFallbacks(const QString& name, int size) const;
+    QString findMatchingIconWithGenericFallbacks(const QString& name, int size) const;
 
     /**
      * @internal
@@ -804,10 +803,10 @@ int KIconLoaderPrivate::overlaySize(const QSize &size) const
     return 64;
 }
 
-K3Icon KIconLoaderPrivate::findMatchingIconWithGenericFallbacks(const QString& name, int size) const
+QString KIconLoaderPrivate::findMatchingIconWithGenericFallbacks(const QString& name, int size) const
 {
-    K3Icon icon = findMatchingIcon(name, size);
-    if (icon.isValid())
+    QString icon = findMatchingIcon(name, size);
+    if (!icon.isEmpty())
         return icon;
 
     const QString genericIcon = s_globalData->genericIconFor(name);
@@ -817,11 +816,11 @@ K3Icon KIconLoaderPrivate::findMatchingIconWithGenericFallbacks(const QString& n
     return icon;
 }
 
-K3Icon KIconLoaderPrivate::findMatchingIcon(const QString& name, int size) const
+QString KIconLoaderPrivate::findMatchingIcon(const QString& name, int size) const
 {
     const_cast<KIconLoaderPrivate*>(this)->initIconThemes();
 
-    K3Icon icon;
+    QString icon;
 
     const char * const ext[4] = { ".png", ".svgz", ".svg", ".xpm" };
     bool genericFallback = name.endsWith(QLatin1String("-x-generic"));
@@ -840,17 +839,17 @@ K3Icon KIconLoaderPrivate::findMatchingIcon(const QString& name, int size) const
     foreach (KIconThemeNode *themeNode, links) {
         for (int i = 0 ; i < 4 ; i++) {
             icon = themeNode->theme->iconPath(name + ext[i], size, KIconLoader::MatchExact);
-            if (icon.isValid()) {
+            if (!icon.isEmpty()) {
                 break;
             }
 
             icon = themeNode->theme->iconPath(name + ext[i], size, KIconLoader::MatchBest);
-            if (icon.isValid()) {
+            if (!icon.isEmpty()) {
                 break;
             }
         }
 
-        if (icon.isValid() && icon.path.contains("/apps/")) {
+        if (icon.contains("/apps/")) {
             return icon;
         }
     }
@@ -863,12 +862,12 @@ K3Icon KIconLoaderPrivate::findMatchingIcon(const QString& name, int size) const
 
             for (int i = 0 ; i < 4 ; i++) {
                 icon = themeNode->theme->iconPath(currentName + ext[i], size, KIconLoader::MatchExact);
-                if (icon.isValid()) {
+                if (!icon.isEmpty()) {
                     return icon;
                 }
 
                 icon = themeNode->theme->iconPath(currentName + ext[i], size, KIconLoader::MatchBest);
-                if (icon.isValid()) {
+                if (!icon.isEmpty()) {
                     return icon;
                 }
             }
@@ -911,14 +910,12 @@ inline QString KIconLoaderPrivate::unknownIconPath( int size ) const
 {
     static const QString str_unknown = QString::fromLatin1("unknown");
 
-    K3Icon icon = findMatchingIcon(str_unknown, size);
-    if (!icon.isValid())
+    QString icon = findMatchingIcon(str_unknown, size);
+    if (icon.isEmpty())
     {
-        kDebug(264) << "Warning: could not find \"Unknown\" icon for size = "
-                     << size;
-        return QString();
+        kDebug(264) << "Warning: could not find \"Unknown\" icon for size = " << size;
     }
-    return icon.path;
+    return icon;
 }
 
 // Finds the absolute path to an icon.
@@ -970,9 +967,9 @@ QString KIconLoader::iconPath(const QString& _name, int group_or_size,
             return d->unknownIconPath(size);
     }
 
-    K3Icon icon = d->findMatchingIconWithGenericFallbacks(name, size);
+    QString icon = d->findMatchingIconWithGenericFallbacks(name, size);
 
-    if (!icon.isValid())
+    if (icon.isEmpty())
     {
         // Try "User" group too.
         path = iconPath(name, KIconLoader::User, true);
@@ -981,7 +978,7 @@ QString KIconLoader::iconPath(const QString& _name, int group_or_size,
 
         return d->unknownIconPath(size);
     }
-    return icon.path;
+    return icon;
 }
 
 QPixmap KIconLoader::loadMimeTypeIcon( const QString& _iconName, KIconLoader::Group group, int size,
@@ -1054,13 +1051,13 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
     QString key = d->makeCacheKey(name, group, overlays, size, state);
     QPixmap pix;
     bool iconWasUnknown = false;
-    K3Icon icon;
+    QString icon;
 
-    // icon.path would be empty for "unknown" icons, which should be searched for
+    // icon would be empty for "unknown" icons, which should be searched for
     // anew each time.
-    if (d->findCachedPixmapWithPath(key, pix, icon.path) && !icon.path.isEmpty()) {
+    if (d->findCachedPixmapWithPath(key, pix, icon) && !icon.isEmpty()) {
         if (path_store) {
-            *path_store = icon.path;
+            *path_store = icon;
         }
 
         return pix;
@@ -1076,13 +1073,9 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
     // First we look for non-User icons. If we don't find one we'd search in
     // the User space anyways...
     if (group != KIconLoader::User) {
-        // K3Icon seems to hold some needed information.
-
         if (absolutePath && !favIconOverlay)
         {
-            icon.context = KIconLoader::Any;
-            icon.type = KIconLoader::Scalable;
-            icon.path = name;
+            icon = name;
         }
         else
         {
@@ -1090,20 +1083,19 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
         }
     }
 
-    if (icon.path.isEmpty()) {
+    if (icon.isEmpty()) {
         // We do have a "User" icon, or we couldn't find the non-User one.
-        icon.path = (absolutePath) ? name :
-                        iconPath(name, KIconLoader::User, canReturnNull);
+        icon = (absolutePath ? name : iconPath(name, KIconLoader::User, canReturnNull));
     }
 
     // Still can't find it? Use "unknown" if we can't return null.
     // We keep going in the function so we can ensure this result gets cached.
-    if (icon.path.isEmpty() && !canReturnNull) {
-        icon.path = d->unknownIconPath(size);
+    if (icon.isEmpty() && !canReturnNull) {
+        icon = d->unknownIconPath(size);
         iconWasUnknown = true;
     }
 
-    QImage img = d->createIconImage(icon.path, size);
+    QImage img = d->createIconImage(icon, size);
 
     if (group >= 0)
     {
@@ -1153,13 +1145,13 @@ QPixmap KIconLoader::loadIcon(const QString& _name, KIconLoader::Group group, in
     // Don't add the path to our unknown icon to the cache, only cache the
     // actual image.
     if (iconWasUnknown) {
-        icon.path.clear();
+        icon.clear();
     }
 
-    d->insertCachedPixmapWithPath(key, pix, icon.path);
+    d->insertCachedPixmapWithPath(key, pix, icon);
 
     if (path_store) {
-        *path_store = icon.path;
+        *path_store = icon;
     }
 
     return pix;
@@ -1192,8 +1184,7 @@ QStringList KIconLoader::loadAnimated(const QString& name, KIconLoader::Group gr
     {
         if (size == 0)
             size = d->mpGroups[group].size;
-        K3Icon icon = d->findMatchingIcon(file, size);
-        file = icon.isValid() ? icon.path : QString();
+        file = d->findMatchingIcon(file, size);
 
     }
     if (file.isEmpty())

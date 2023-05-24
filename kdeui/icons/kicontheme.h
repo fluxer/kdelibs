@@ -29,7 +29,6 @@
 
 #include <QAction>
 class KIconThemeDir;
-class K3Icon;
 
 /**
  * @internal
@@ -152,11 +151,10 @@ public:
      * @param match The matching mode. KIconLoader::MatchExact returns an icon
      * only if matches exactly. KIconLoader::MatchBest returns the best matching
      * icon.
-     * @return A K3Icon class that describes the icon. If an icon is found, an invalid
-     *         K3Icon object otherwise.
-     * @see KIconLoader::isValid will return true, and false otherwise.
+     * @return A filepath to the icon. If an icon is not found the QString object
+     *         is empty.
      */
-    K3Icon iconPath(const QString& name, int size, KIconLoader::MatchType match) const;
+    QString iconPath(const QString& name, int size, KIconLoader::MatchType match) const;
 
     /**
      * Returns true if the theme has any icons for the given context.

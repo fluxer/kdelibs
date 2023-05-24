@@ -22,7 +22,6 @@
  */
 
 #include "kicontheme.h"
-#include "k3icon_p.h"
 #include "kdebug.h"
 #include "kicon.h"
 #include "kstandarddirs.h"
@@ -49,10 +48,6 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <limits.h>
-
-// The following define exists because the Qt SVG renderer needs
-// to be improved. This will be removed soon. (ereslibre)
-#undef KDE_QT_SVG_RENDERER_FIXED
 
 class KIconTheme::KIconThemePrivate
 {
@@ -102,20 +97,6 @@ private:
 
     QString mBaseDirThemeDir;
 };
-
-
-/*** K3Icon ***/
-
-K3Icon::K3Icon()
-    : size(0)
-{
-}
-
-bool K3Icon::isValid() const
-{
-    return size != 0;
-}
-
 
 /*** KIconTheme ***/
 
@@ -410,9 +391,9 @@ bool KIconTheme::hasContext(KIconLoader::Context context) const
     return false;
 }
 
-K3Icon KIconTheme::iconPath(const QString& name, int size, KIconLoader::MatchType match) const
+QString KIconTheme::iconPath(const QString& name, int size, KIconLoader::MatchType match) const
 {
-    K3Icon icon;
+    QString icon;
     QString path;
     int delta = -INT_MAX;  // current icon size delta of 'icon'
     int dw = INT_MAX;      // icon size delta of current directory
@@ -478,18 +459,7 @@ K3Icon KIconTheme::iconPath(const QString& name, int size, KIconLoader::MatchTyp
         if (path.isEmpty()) {
             continue;
         }
-        icon.path = path;
-// The following code has been commented out because the Qt SVG renderer needs
-// to be improved. If you are going to change/remove some code from this part,
-// please contact me before (ereslibre@kde.org), or kde-core-devel@kde.org. (ereslibre)
-#ifdef KDE_QT_SVG_RENDERER_FIXED
-        icon.size = size;
-#else
-        icon.size = dir->size();
-#endif
-        icon.type = dir->type();
-        icon.threshold = dir->threshold();
-        icon.context = dir->context();
+        icon = path;
 
         // if we got in MatchExact that far, we find no better
         if (match == KIconLoader::MatchExact) {
