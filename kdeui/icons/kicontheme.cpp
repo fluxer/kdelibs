@@ -74,6 +74,13 @@ K_GLOBAL_STATIC(QStringList, _theme_list)
 class KIconThemeDir
 {
 public:
+   enum KIconType {
+       Fixed,
+       Scalable,
+       Threshold
+   };
+
+
     KIconThemeDir(const QString& basedir, const QString &themedir, const KConfigGroup &config);
 
     bool isValid() const { return mbValid; }
@@ -82,7 +89,7 @@ public:
     QString dir() const { return mBaseDirThemeDir; }
 
     KIconLoader::Context context() const { return mContext; }
-    KIconLoader::Type type() const { return mType; }
+    KIconType type() const { return mType; }
     int size() const { return mSize; }
     int minSize() const { return mMinSize; }
     int maxSize() const { return mMaxSize; }
@@ -90,7 +97,7 @@ public:
 
 private:
     bool mbValid;
-    KIconLoader::Type mType;
+    KIconType mType;
     KIconLoader::Context mContext;
     int mSize, mMinSize, mMaxSize;
     int mThreshold;
@@ -195,7 +202,7 @@ KIconTheme::KIconTheme(const QString& name, const QString& appName)
         if (!dir) {
             break;
         }
-        if ((dir->type() == KIconLoader::Scalable) && !scIcons.contains(dir->size())) {
+        if ((dir->type() == KIconThemeDir::Scalable) && !scIcons.contains(dir->size())) {
             QList<int> lst;
             for (i=dir->minSize(); i<=dir->maxSize(); ++i) {
                 lst += i;
@@ -313,16 +320,16 @@ QStringList KIconTheme::queryIcons(int size, KIconLoader::Context context) const
         dir = d->mDirs.at(i);
         if ((context != KIconLoader::Any) && (context != dir->context()))
             continue;
-        if ((dir->type() == KIconLoader::Fixed) && (dir->size() == size)) {
+        if ((dir->type() == KIconThemeDir::Fixed) && (dir->size() == size)) {
             result += dir->iconList();
             continue;
         }
-        if ((dir->type() == KIconLoader::Scalable) &&
+        if ((dir->type() == KIconThemeDir::Scalable) &&
             (size >= dir->minSize()) && (size <= dir->maxSize())) {
             result += dir->iconList();
             continue;
         }
-        if ((dir->type() == KIconLoader::Threshold) &&
+        if ((dir->type() == KIconThemeDir::Threshold) &&
             (abs(size-dir->size())<dir->threshold())) {
             result+=dir->iconList();
         }
@@ -411,23 +418,23 @@ QString KIconTheme::iconPath(const QString& name, int size, KIconLoader::MatchTy
         dir = d->mDirs.at(i);
 
         if (match == KIconLoader::MatchExact) {
-            if ((dir->type() == KIconLoader::Fixed) && (dir->size() != size)) {
+            if ((dir->type() == KIconThemeDir::Fixed) && (dir->size() != size)) {
                 continue;
             }
-            if ((dir->type() == KIconLoader::Scalable) &&
+            if ((dir->type() == KIconThemeDir::Scalable) &&
                 ((size < dir->minSize()) || (size > dir->maxSize()))) {
                 continue;
             }
-            if ((dir->type() == KIconLoader::Threshold) &&
+            if ((dir->type() == KIconThemeDir::Threshold) &&
                 (abs(dir->size() - size) > dir->threshold())) {
                 continue;
             }
         } else {
             // dw < 0 means need to scale up to get an icon of the requested size.
             // Upscaling should only be done if no larger icon is available.
-            if (dir->type() == KIconLoader::Fixed) {
+            if (dir->type() == KIconThemeDir::Fixed) {
                 dw = dir->size() - size;
-            } else if (dir->type() == KIconLoader::Scalable) {
+            } else if (dir->type() == KIconThemeDir::Scalable) {
                 if (size < dir->minSize()) {
                     dw = dir->minSize() - size;
                 } else if (size > dir->maxSize()) {
@@ -435,7 +442,7 @@ QString KIconTheme::iconPath(const QString& name, int size, KIconLoader::MatchTy
                 } else {
                     dw = 0;
                 }
-            } else if (dir->type() == KIconLoader::Threshold) {
+            } else if (dir->type() == KIconThemeDir::Threshold) {
                 if (size < dir->size() - dir->threshold()) {
                     dw = dir->size() - dir->threshold() - size;
                 } else if (size > dir->size() + dir->threshold()) {
@@ -593,7 +600,7 @@ KIconThemeDir::KIconThemeDir(const QString& basedir, const QString &themedir, co
     mSize = config.readEntry("Size", 0);
     mMinSize = 1;    // just set the variables to something
     mMaxSize = 50;   // meaningful in case someone calls minSize or maxSize
-    mType = KIconLoader::Fixed;
+    mType = KIconThemeDir::Fixed;
 
     if (mSize == 0) {
         return;
@@ -630,19 +637,19 @@ KIconThemeDir::KIconThemeDir(const QString& basedir, const QString &themedir, co
     }
     tmp = config.readEntry("Type");
     if (tmp == "Fixed")
-        mType = KIconLoader::Fixed;
+        mType = KIconThemeDir::Fixed;
     else if (tmp == "Scalable")
-        mType = KIconLoader::Scalable;
+        mType = KIconThemeDir::Scalable;
     else if (tmp == "Threshold")
-        mType = KIconLoader::Threshold;
+        mType = KIconThemeDir::Threshold;
     else {
         kDebug(264) << "Invalid Type=" << tmp << "line for icon theme: " << dir() << "\n";
         return;
     }
-    if (mType == KIconLoader::Scalable) {
+    if (mType == KIconThemeDir::Scalable) {
         mMinSize = config.readEntry("MinSize", mSize);
         mMaxSize = config.readEntry("MaxSize", mSize);
-    } else if (mType == KIconLoader::Threshold) {
+    } else if (mType == KIconThemeDir::Threshold) {
         mThreshold = config.readEntry("Threshold", 2);
     }
     mbValid = true;

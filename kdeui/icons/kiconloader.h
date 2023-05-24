@@ -74,7 +74,6 @@ class KDEUI_EXPORT KIconLoader : public QObject
 {
     Q_OBJECT
     Q_ENUMS(Context)
-    Q_ENUMS(Type)
     Q_ENUMS(MatchType)
     Q_ENUMS(Group)
     Q_ENUMS(StdSizes)
@@ -98,15 +97,6 @@ public:
         Place,         ///< An icon that represents a location (e.g. 'home', 'trash').
         StatusIcon     ///< An icon that represents an event.
     };
-
-    /**
-     * The type of the icon.
-     */
-   enum Type {
-       Fixed,    ///< Fixed-size icon.
-       Scalable, ///< Scalable-size icon.
-       Threshold ///< A threshold icon.
-   };
 
     /**
      * The type of a match.
