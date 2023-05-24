@@ -24,45 +24,26 @@
 #include "kiconengine_p.h"
 
 KIcon::KIcon(const QString& iconName, KIconLoader* iconLoader, const QStringList &overlays)
-  : QIcon(new KIconEngine(iconName, iconLoader ? iconLoader : KIconLoader::global(), overlays)),
-    d(0)
+  : QIcon(new KIconEngine(iconName, iconLoader ? iconLoader : KIconLoader::global(), overlays))
 {
 }
 
 KIcon::KIcon(const QString& iconName, KIconLoader* iconLoader)
-  : QIcon(new KIconEngine(iconName, iconLoader ? iconLoader : KIconLoader::global())),
-    d(0)
+  : QIcon(new KIconEngine(iconName, iconLoader ? iconLoader : KIconLoader::global()))
 {
 }
 
 KIcon::KIcon(const QString& iconName)
-  : QIcon(new KIconEngine(iconName, KIconLoader::global())),
-    d(0)
-{
-}
-
-KIcon::KIcon()
-    : d(0)
+  : QIcon(new KIconEngine(iconName, KIconLoader::global()))
 {
 }
 
 KIcon::KIcon(const QIcon& copy)
-  : QIcon(copy),
-    d(0)
+  : QIcon(copy)
 {
 }
 
-KIcon::~KIcon()
+KIcon::KIcon()
+  : QIcon()
 {
-    //delete d;
-}
-
-KIcon& KIcon::operator=( const KIcon &other )
-{
-    if (this != &other) {
-        // copy d-pointer
-        QIcon::operator=(other);
-    }
-
-    return *this;
 }

@@ -22,9 +22,9 @@
 #include <kdeui_export.h>
 
 #include <QtGui/QIcon>
+#include <QStringList>
 
 class KIconLoader;
-#include <QStringList>
 
 /**
  * \short A wrapper around QIcon that provides KDE icon features
@@ -76,17 +76,6 @@ public:
      * Constructor for a null icon.
      */
     KIcon();
-
-    /**
-     * Destroys the icon.
-     */
-    ~KIcon();
-
-    KIcon& operator=( const KIcon &other );
-
-private:
-    class Private;
-    Private* const d;
 };
 
-#endif
+#endif // KICON_H

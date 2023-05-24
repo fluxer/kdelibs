@@ -44,10 +44,6 @@ public:
     KIconLoader::Type type;
     int threshold;
     QString path;
-
-private:
-    class KIconPrivate;
-    KIconPrivate * d;
 };
 
 #endif
