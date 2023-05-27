@@ -48,29 +48,7 @@
 static const QString s_statusNotifierWatcherServiceName("org.kde.StatusNotifierWatcher");
 
 #ifdef HAVE_DBUSMENUQT
-
-#include <dbusmenuexporter.h>
-
-/**
- * Specialization to provide access to KDE icon names
- */
-class KDBusMenuExporter : public DBusMenuExporter
-{
-public:
-    KDBusMenuExporter(const QString &dbusObjectPath, QMenu *menu, const QDBusConnection &dbusConnection)
-    : DBusMenuExporter(dbusObjectPath, menu, dbusConnection)
-    {}
-
-protected:
-    virtual QString iconNameForAction(QAction *action)
-    {
-        KIcon icon(action->icon());
-        // QIcon::name() is in the 4.7 git branch, but it is not in 4.7 TP.
-        // If you get a build error here, you need to update your pre-release
-        // of Qt 4.7.
-        return icon.isNull() ? QString() : icon.name();
-    }
-};
+#  include <dbusmenuexporter.h>
 #endif
 
 KStatusNotifierItem::KStatusNotifierItem(QObject *parent)
@@ -409,7 +387,7 @@ void KStatusNotifierItem::setContextMenu(KMenu *menu)
 #ifdef HAVE_DBUSMENUQT
         } else {
             d->menuObjectPath = "/MenuBar";
-            new KDBusMenuExporter(d->menuObjectPath, menu, d->statusNotifierItemDBus->dbusConnection());
+            new DBusMenuExporter(d->menuObjectPath, menu, d->statusNotifierItemDBus->dbusConnection());
         }
 #endif
 
