@@ -38,9 +38,6 @@
 /* Define to 1 if you have the XSync extension */
 #cmakedefine HAVE_XSYNC 1
 
-/* Define to 1 if you have DBusMenuQt */
-#cmakedefine HAVE_DBUSMENUQT 1
-
 /* Define to 1 if you have libarchive */
 #cmakedefine HAVE_LIBARCHIVE 1
 

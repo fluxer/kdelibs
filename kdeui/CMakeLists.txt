@@ -154,6 +154,9 @@ set(kdeui_LIB_SRCS
     notifications/knotification.cpp
     notifications/knotificationmanager.cpp
     notifications/knotificationrestrictions.cpp
+    notifications/kdbusmenuexporter.cpp
+    notifications/kdbusmenuimporter.cpp
+    notifications/kdbusmenu_p.cpp
     paged/kpagedialog.cpp
     paged/kpagemodel.cpp
     paged/kpageview.cpp
@@ -257,15 +260,6 @@ set(kdeui_LIB_SRCS
     notifications/kstatusnotifieritem.cpp
     notifications/kstatusnotifieritemdbus_p.cpp
 )
-
-if(DBUSMENUQT_FOUND)
-    include_directories(${DBUSMENUQT_INCLUDE_DIR})
-
-    set(KDEUI_EXTRA_LIBS
-        ${KDEUI_EXTRA_LIBS}
-        ${DBUSMENUQT_LIBRARIES}
-    )
-endif()
 
 qt4_add_dbus_interface(kdeui_LIB_SRCS
     notifications/org.kde.StatusNotifierWatcher.xml
@@ -478,6 +472,8 @@ install(
     notifications/ksystemtrayicon.h
     notifications/knotification.h
     notifications/knotificationrestrictions.h
+    notifications/kdbusmenuexporter.h
+    notifications/kdbusmenuimporter.h
     paged/kpagedialog.h
     paged/kpagemodel.h
     paged/kpageview.h

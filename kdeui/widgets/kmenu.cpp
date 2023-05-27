@@ -42,28 +42,24 @@
 
 static const char KMENU_TITLE[] = "kmenu_title";
 
-class KMenu::KMenuPrivate
-    : public QObject
+/**
+* @internal
+*
+* The event filter which is installed on the widget prevent clicks (what would
+* change down and focus properties on the title) on the title of the menu.
+*
+* @author Rafael Fernández López <ereslibre@kde.org>
+*/
+class KMenuToolButton : public QToolButton
 {
+    Q_OBJECT
 public:
-    KMenuPrivate (KMenu *_parent);
-    ~KMenuPrivate ();
+    KMenuToolButton(QWidget *parent) : QToolButton(parent)
+    {
+        // prevent clicks on the title of the menu
+        installEventFilter(this);
+    }
 
-    void resetKeyboardVars(bool noMatches = false);
-    void actionHovered(QAction* action);
-    void showCtxMenu(const QPoint &pos);
-    void skipTitles(QKeyEvent *event);
-
-    /**
-     * @internal
-     *
-     * This event filter which is installed
-     * on the title of the menu, which is a QToolButton. This will
-     * prevent clicks (what would change down and focus properties on
-     * the title) on the title of the menu.
-     *
-     * @author Rafael Fernández López <ereslibre@kde.org>
-     */
     bool eventFilter(QObject *object, QEvent *event)
     {
         Q_UNUSED(object);
@@ -77,6 +73,19 @@ public:
         event->accept();
         return true;
     }
+};
+
+class KMenu::KMenuPrivate
+    : public QObject
+{
+public:
+    KMenuPrivate (KMenu *_parent);
+    ~KMenuPrivate ();
+
+    void resetKeyboardVars(bool noMatches = false);
+    void actionHovered(QAction* action);
+    void showCtxMenu(const QPoint &pos);
+    void skipTitles(QKeyEvent *event);
 
     KMenu *parent;
 
@@ -172,22 +181,7 @@ QAction* KMenu::addTitle(const QString &text, QAction* before)
 
 QAction* KMenu::addTitle(const QIcon &icon, const QString &text, QAction* before)
 {
-    QAction *buttonAction = new QAction(this);
-    QFont font = buttonAction->font();
-    font.setBold(true);
-    buttonAction->setFont(font);
-    buttonAction->setText(text);
-    buttonAction->setIcon(icon);
-
-    QWidgetAction *action = new QWidgetAction(this);
-    action->setObjectName(KMENU_TITLE);
-    QToolButton *titleButton = new QToolButton(this);
-    titleButton->installEventFilter(d); // prevent clicks on the title of the menu
-    titleButton->setDefaultAction(buttonAction);
-    titleButton->setDown(true); // prevent hover style changes in some styles
-    titleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    action->setDefaultWidget(titleButton);
-
+    QAction *action = KMenu::titleAction(icon, text, this);
     insertAction(before, action);
     return action;
 }
@@ -555,6 +549,25 @@ QAction * KMenu::contextMenuFocusAction( )
   return 0L;
 }
 
+QAction* KMenu::titleAction(const QIcon &icon, const QString &text, QWidget* parent)
+{
+    QAction *buttonAction = new QAction(parent);
+    QFont font = buttonAction->font();
+    font.setBold(true);
+    buttonAction->setFont(font);
+    buttonAction->setText(text);
+    buttonAction->setIcon(icon);
+
+    QWidgetAction *action = new QWidgetAction(parent);
+    action->setObjectName(KMENU_TITLE);
+    KMenuToolButton *titleButton = new KMenuToolButton(parent);
+    titleButton->setDefaultAction(buttonAction);
+    titleButton->setDown(true); // prevent hover style changes in some styles
+    titleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    action->setDefaultWidget(titleButton);
+    return action;
+}
+
 void KMenu::contextMenuEvent(QContextMenuEvent* e)
 {
     if (d->ctxMenu)
@@ -598,9 +611,6 @@ void KMenu::hideEvent(QHideEvent *e)
  */
 
 
-
-
-
 KMenuContext::KMenuContext( )
   : m_menu(0L)
   , m_action(0L)
@@ -620,3 +630,4 @@ KMenuContext::KMenuContext(QPointer<KMenu> menu,QPointer<QAction> action)
 }
 
 #include "moc_kmenu.cpp"
+#include "kmenu.moc"

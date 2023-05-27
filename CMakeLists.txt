@@ -107,13 +107,6 @@ if(X11_FOUND)
     endif(NOT HAVE_XSYNC AND NOT HAVE_XSCREENSAVER)
 endif(X11_FOUND)
 
-kde4_optional_find_package(DBusMenuQt)
-set_package_properties(DBusMenuQt PROPERTIES
-    DESCRIPTION "Support for notification area menus via the DBusMenu protocol"
-    URL "https://osdn.net/projects/kde/"
-    TYPE RECOMMENDED
-)
-
 kde4_optional_find_package(MPV 0.23.0)
 set_package_properties(MPV PROPERTIES
     DESCRIPTION "A fork of mplayer2 and MPlayer"

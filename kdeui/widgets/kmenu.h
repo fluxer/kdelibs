@@ -121,6 +121,11 @@ public:
     static QAction* contextMenuFocusAction();
 
     /**
+     * returns QAction for use as title
+     */
+    static QAction* titleAction(const QIcon &icon, const QString &text, QWidget* parent);
+
+    /**
      * Return the state of the mouse buttons when the last menuitem was activated.
      */
     Qt::MouseButtons mouseButtons() const;

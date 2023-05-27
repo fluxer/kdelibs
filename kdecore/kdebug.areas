@@ -30,6 +30,7 @@
 297         kdeui (KNotificationRestrictions)
 299         kdeui (KNotification)
 300         kdeui (KConfigDialogManager)
+301         kdeui (KDBusMenu)
 700         kutils (KSettings::Dialog)
 701         kutils (KSettings::Dispatcher)
 702         kutils (KPluginSelector)

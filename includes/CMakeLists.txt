@@ -93,6 +93,8 @@ install(
     KDateTimeWidget
     KDateValidator
     KDateWidget
+    KDBusMenuExporter
+    KDBusMenuImporter
     KDesktopFile
     KDialog
     KDialogButtonBox
