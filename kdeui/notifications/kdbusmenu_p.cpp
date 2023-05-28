@@ -51,6 +51,7 @@ QDBusArgument& operator<<(QDBusArgument &argument, const KDBusMenuAction &kdbusm
     argument << kdbusmenuaction.icondata;
     argument << kdbusmenuaction.title;
     argument << kdbusmenuaction.exclusive;
+    argument << kdbusmenuaction.submenu;
     argument.endStructure();
     return argument;
 }
@@ -66,6 +67,7 @@ const QDBusArgument& operator>>(const QDBusArgument &argument, KDBusMenuAction &
     argument >> kdbusmenuaction.icondata;
     argument >> kdbusmenuaction.title;
     argument >> kdbusmenuaction.exclusive;
+    argument >> kdbusmenuaction.submenu;
     argument.endStructure();
     return argument;
 }

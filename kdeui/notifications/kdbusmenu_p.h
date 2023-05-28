@@ -61,6 +61,7 @@ struct KDBusMenuAction
     QByteArray icondata;
     bool title;
     bool exclusive;
+    bool submenu;
 };
 Q_DECLARE_METATYPE(KDBusMenuAction);
 Q_DECLARE_METATYPE(QList<KDBusMenuAction>);

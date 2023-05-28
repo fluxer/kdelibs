@@ -41,7 +41,7 @@ public Q_SLOTS:
 
     KDBusMenu menu() const;
 
-    QList<KDBusMenuAction> actions() const;
+    QList<KDBusMenuAction> actions(quint64 actionid = 0) const;
     bool triggerAction(quint64 actionid) const;
 
 private:
@@ -107,21 +107,32 @@ KDBusMenu KDBusMenuAdaptor::menu() const
     return result;
 }
 
-QList<KDBusMenuAction> KDBusMenuAdaptor::actions() const
+QList<KDBusMenuAction> KDBusMenuAdaptor::actions(quint64 actionid) const
 {
     QList<KDBusMenuAction> result;
     if (m_menu.isNull()) {
         kWarning(s_kdbusmenuarea) << "Menu is null";
         return result;
     }
-    foreach (QAction* action, m_menu->actions()) {
+    QList<QAction*> actionslist;
+    if (actionid == 0) {
+        actionslist = m_menu->actions();
+    } else {
+        foreach (const QAction* action, m_menu->actions()) {
+            const quint64 itactionid = kDBusMenuActionID(action);
+            if (actionid == itactionid) {
+                const QMenu* actionmenu = action->menu();
+                if (!actionmenu) {
+                    kWarning(s_kdbusmenuarea) << "Requested actions for non-menu action" << actionid;
+                    return result;
+                }
+                actionslist = actionmenu->actions();
+            }
+        }
+    }
+    foreach (QAction* action, actionslist) {
         const quint64 actionid = kDBusMenuActionID(action);
         kDebug(s_kdbusmenuarea) << "Exporting action" << actionid;
-        const QMenu* actionmenu = action->menu();
-        if (actionmenu) {
-            kWarning(s_kdbusmenuarea) << "Menu actions are not supported";
-            continue;
-        }
         KDBusMenuAction actionproperties;
         // see kdeui/widgets/kmenu.cpp
         actionproperties.title = (action->objectName() == QLatin1String("kmenu_title"));
@@ -170,6 +181,8 @@ QList<KDBusMenuAction> KDBusMenuAdaptor::actions() const
         }
         const QActionGroup* actiongroup = action->actionGroup();
         actionproperties.exclusive = (actiongroup && actiongroup->isExclusive());
+        const QMenu* actionmenu = action->menu();
+        actionproperties.submenu = (actionmenu != nullptr);
         result.append(actionproperties);
     }
     return result;
@@ -183,9 +196,18 @@ bool KDBusMenuAdaptor::triggerAction(quint64 actionid) const
         return false;
     }
     foreach (QAction* action, m_menu->actions()) {
-        const quint64 itactionid = kDBusMenuActionID(action);
+        quint64 itactionid = kDBusMenuActionID(action);
         if (itactionid == actionid) {
             return QMetaObject::invokeMethod(action, "triggered");
+        }
+        const QMenu* actionmenu = action->menu();
+        if (actionmenu) {
+            foreach (QAction* subaction, actionmenu->actions()) {
+                itactionid = kDBusMenuActionID(subaction);
+                if (itactionid == actionid) {
+                    return QMetaObject::invokeMethod(subaction, "triggered");
+                }
+            }
         }
     }
     kWarning(s_kdbusmenuarea) << "Could not find action for" << actionid;
