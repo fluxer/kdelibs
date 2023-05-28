@@ -23,7 +23,6 @@
 
 #include <QDBusAbstractAdaptor>
 #include <QPointer>
-#include <QBuffer>
 #include <QToolButton>
 #include <QWidgetAction>
 #include <qdbusmetatype.h>
@@ -91,18 +90,7 @@ KDBusMenu KDBusMenuAdaptor::menu() const
     result.icon = menuicon.name();
     result.title = m_menu->title();
     if (result.icon.isEmpty()) {
-        QBuffer iconbuffer;
-        QPixmap iconpixmap = menuicon.pixmap(s_kdbusmenuiconsize);
-        if (iconpixmap.isNull()) {
-            kWarning(s_kdbusmenuarea) << "Menu icon name is empty and icon pixmap is null";
-        } else {
-            const bool savedicon = iconpixmap.save(&iconbuffer, s_kdbusmenuiconformat);
-            if (!savedicon) {
-                kWarning(s_kdbusmenuarea) << "Could not save menu icon pixmap";
-            } else {
-                result.icondata = iconbuffer.data();
-            }
-        }
+        result.icondata = kDBusMenuIconData(menuicon);
     }
     return result;
 }
@@ -166,18 +154,7 @@ QList<KDBusMenuAction> KDBusMenuAdaptor::actions(quint64 actionid) const
         }
         actionproperties.shortcuts = shortcuts;
         if (actionproperties.icon.isEmpty()) {
-            QBuffer iconbuffer;
-            QPixmap iconpixmap = action->icon().pixmap(s_kdbusmenuiconsize);
-            if (iconpixmap.isNull()) {
-                kWarning(s_kdbusmenuarea) << "Icon name is empty and icon pixmap is null" << actionid;
-            } else {
-                const bool savedicon = iconpixmap.save(&iconbuffer, s_kdbusmenuiconformat);
-                if (!savedicon) {
-                    kWarning(s_kdbusmenuarea) << "Could not save icon pixmap" << actionid;
-                } else {
-                    actionproperties.icondata = iconbuffer.data();
-                }
-            }
+            actionproperties.icondata = kDBusMenuIconData(action->icon());
         }
         const QActionGroup* actiongroup = action->actionGroup();
         actionproperties.exclusive = (actiongroup && actiongroup->isExclusive());

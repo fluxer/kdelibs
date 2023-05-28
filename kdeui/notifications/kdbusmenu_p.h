@@ -29,6 +29,8 @@
 #include <QAction>
 #include <QMenu>
 #include <QImageWriter>
+#include <QBuffer>
+#include <QPixmap>
 
 static const int s_kdbusmenuiconsize = KIconLoader::SizeSmall;
 static const QByteArray s_kdbusmenuiconformat = QImageWriter::defaultImageFormat();
@@ -76,21 +78,36 @@ static quint64 kDBusMenuActionID(const QAction *action)
     return quint64(quintptr(action));
 }
 
-static QIcon kDBusMenuIcon(const QIcon &actionicon, const QByteArray &actionicondata)
+static QByteArray kDBusMenuIconData(const QIcon &actionicon)
 {
-    if (!actionicon.isNull()) {
-        return actionicon;
+    QBuffer iconbuffer;
+    QPixmap iconpixmap = actionicon.pixmap(s_kdbusmenuiconsize);
+    if (iconpixmap.isNull()) {
+        // it is common for actions to not have a icon
+        kDebug(s_kdbusmenuarea) << "Action/menu icon name is empty and icon pixmap is null";
+        return QByteArray();
     }
-    if (!actionicondata.isEmpty()) {
-        QPixmap actionpixmap;
-        const bool pixmaploaded = actionpixmap.loadFromData(actionicondata, s_kdbusmenuiconformat);
-        if (!pixmaploaded) {
-            kWarning(s_kdbusmenuarea) << "Could not load action/menu icon pixmap";
-            return QIcon();
-        }
-        return QIcon(actionpixmap);
+    const bool iconsaved = iconpixmap.save(&iconbuffer, s_kdbusmenuiconformat);
+    if (!iconsaved) {
+        kWarning(s_kdbusmenuarea) << "Could not save action/menu icon pixmap";
+        return QByteArray();
     }
-    return QIcon();
+    return iconbuffer.data();
+}
+
+static QIcon kDBusMenuIcon(const QByteArray &actionicondata)
+{
+    if (actionicondata.isEmpty()) {
+        // see kDBusMenuIconData()
+        return QIcon();
+    }
+    QPixmap actionpixmap;
+    const bool pixmaploaded = actionpixmap.loadFromData(actionicondata, s_kdbusmenuiconformat);
+    if (!pixmaploaded) {
+        kWarning(s_kdbusmenuarea) << "Could not load action/menu icon pixmap";
+        return QIcon();
+    }
+    return QIcon(actionpixmap);
 }
 
 static QAction* kDBusMenuAction(QMenu *menu, const KDBusMenuAction &actionproperties)
@@ -106,6 +123,7 @@ static QAction* kDBusMenuAction(QMenu *menu, const KDBusMenuAction &actionproper
     action->setEnabled(actionproperties.enabled);
     action->setVisible(actionproperties.visible);
     QList<QKeySequence> shortcuts;
+    shortcuts.reserve(actionproperties.shortcuts.size());
     foreach (const QString &keysequence, actionproperties.shortcuts) {
         shortcuts.append(QKeySequence::fromString(keysequence));
     }

@@ -18,7 +18,6 @@
 */
 
 #include "kdbusmenuimporter.h"
-#include "kicon.h"
 #include "kmenu.h"
 #include "kdebug.h"
 #include "kdbusmenu_p.h"
@@ -82,10 +81,10 @@ void KDBusMenuImporter::updateMenu()
     }
     const KDBusMenu menuproperties = menureply.value();
     d->menu->setTitle(menuproperties.title);
-    const QIcon menuicon = kDBusMenuIcon(
-        KDBusMenuImporter::iconForName(menuproperties.icon),
-        menuproperties.icondata
-    );
+    QIcon menuicon = KDBusMenuImporter::iconForName(menuproperties.icon);
+    if (menuicon.isNull()) {
+        menuicon = kDBusMenuIcon(menuproperties.icondata);
+    }
     d->menu->setIcon(menuicon);
     
     QDBusReply<QList<KDBusMenuAction>> actionsreply = d->interface->call("actions");
@@ -96,10 +95,10 @@ void KDBusMenuImporter::updateMenu()
     foreach (const KDBusMenuAction &actionproperties, actionsreply.value()) {
         const quint64 actionid = actionproperties.id;
         kDebug(s_kdbusmenuarea) << "Importing action" << actionid;
-        const QIcon actionicon = kDBusMenuIcon(
-            KDBusMenuImporter::iconForName(actionproperties.icon),
-            actionproperties.icondata
-        );
+        QIcon actionicon = KDBusMenuImporter::iconForName(actionproperties.icon);
+        if (actionicon.isNull()) {
+            actionicon = kDBusMenuIcon(actionproperties.icondata);
+        }
         QAction* action = nullptr;
         if (actionproperties.title) {
             // see kdeui/widgets/kmenu.cpp
@@ -115,10 +114,10 @@ void KDBusMenuImporter::updateMenu()
             }
             QMenu* subactionmenu = KDBusMenuImporter::createMenu(d->menu);
             foreach (const KDBusMenuAction &subactionproperties, subactionsreply.value()) {
-                const QIcon subactionicon = kDBusMenuIcon(
-                    KDBusMenuImporter::iconForName(subactionproperties.icon),
-                    subactionproperties.icondata
-                );
+                QIcon subactionicon = KDBusMenuImporter::iconForName(subactionproperties.icon);
+                if (subactionicon.isNull()) {
+                    subactionicon = kDBusMenuIcon(subactionproperties.icondata);
+                }
                 QAction* subaction = kDBusMenuAction(subactionmenu, subactionproperties);
                 subaction->setIcon(subactionicon);
                 connect(subaction, SIGNAL(triggered()), this, SLOT(slotActionTriggered()));
