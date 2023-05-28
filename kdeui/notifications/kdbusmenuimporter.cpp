@@ -1,5 +1,5 @@
 /* This file is part of the KDE libraries
-   Copyright (C) 2023 smil3y <xakepa10@gmail.com>
+   Copyright (C) 2023 Ivailo Monev <xakepa10@gmail.com>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -70,11 +70,11 @@ QMenu* KDBusMenuImporter::menu() const
 void KDBusMenuImporter::updateMenu()
 {
     kDebug(s_kdbusmenuarea) << "Updating menu";
-    if (d->menu) {
-        delete d->menu;
-        d->menu = nullptr;
+    if (!d->menu) {
+        d->menu = KDBusMenuImporter::createMenu(nullptr);
+    } else {
+        d->menu->clear();
     }
-    d->menu = KDBusMenuImporter::createMenu(nullptr);
     QDBusReply<KDBusMenu> menureply = d->interface->call("menu");
     if (!menureply.isValid()) {
         kWarning(s_kdbusmenuarea) << "Invalid menu reply" << menureply.error();

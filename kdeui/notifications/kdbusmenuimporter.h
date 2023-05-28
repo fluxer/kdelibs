@@ -1,5 +1,5 @@
 /* This file is part of the KDE libraries
-   Copyright (C) 2023 smil3y <xakepa10@gmail.com>
+   Copyright (C) 2023 Ivailo Monev <xakepa10@gmail.com>
 
    This library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public
@@ -46,7 +46,7 @@ Q_SIGNALS:
     void actionActivationRequested(QAction *action);
 
 protected:
-    virtual QMenu *createMenu(QWidget *parent);
+    virtual QMenu* createMenu(QWidget *parent);
     virtual QIcon iconForName(const QString &name);
 
 private Q_SLOTS:
