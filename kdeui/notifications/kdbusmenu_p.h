@@ -21,11 +21,13 @@
 #define KDBUSMENU_H
 
 #include "kiconloader.h"
+#include "kdebug.h"
 
 #include <QString>
 #include <QStringList>
 #include <QDBusArgument>
 #include <QAction>
+#include <QMenu>
 #include <QImageWriter>
 
 static const int s_kdbusmenuiconsize = KIconLoader::SizeSmall;
@@ -72,6 +74,48 @@ const QDBusArgument& operator>>(const QDBusArgument &argument, KDBusMenuAction &
 static quint64 kDBusMenuActionID(const QAction *action)
 {
     return quint64(quintptr(action));
+}
+
+static QIcon kDBusMenuIcon(const QIcon &actionicon, const QByteArray &actionicondata)
+{
+    if (!actionicon.isNull()) {
+        return actionicon;
+    }
+    if (!actionicondata.isEmpty()) {
+        QPixmap actionpixmap;
+        const bool pixmaploaded = actionpixmap.loadFromData(actionicondata, s_kdbusmenuiconformat);
+        if (!pixmaploaded) {
+            kWarning(s_kdbusmenuarea) << "Could not load action/menu icon pixmap";
+            return QIcon();
+        }
+        return QIcon(actionpixmap);
+    }
+    return QIcon();
+}
+
+static QAction* kDBusMenuAction(QMenu *menu, const KDBusMenuAction &actionproperties)
+{
+    QAction* action = new QAction(menu);
+    action->setText(actionproperties.text);
+    action->setToolTip(actionproperties.tooltip);
+    action->setStatusTip(actionproperties.statustip);
+    action->setWhatsThis(actionproperties.whatsthis);
+    action->setSeparator(actionproperties.separator);
+    action->setCheckable(actionproperties.checkable);
+    action->setChecked(actionproperties.checked);
+    action->setEnabled(actionproperties.enabled);
+    action->setVisible(actionproperties.visible);
+    QList<QKeySequence> shortcuts;
+    foreach (const QString &keysequence, actionproperties.shortcuts) {
+        shortcuts.append(QKeySequence::fromString(keysequence));
+    }
+    action->setShortcuts(shortcuts);
+    if (actionproperties.exclusive) {
+        QActionGroup *actiongroup = new QActionGroup(action);
+        actiongroup->addAction(action);
+    }
+    action->setData(QVariant(actionproperties.id));
+    return action;
 }
 
 #endif // KDBUSMENU_H

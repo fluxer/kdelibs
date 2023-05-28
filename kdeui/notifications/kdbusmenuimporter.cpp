@@ -32,8 +32,6 @@ class KDBusMenuImporterPrivate
 public:
     KDBusMenuImporterPrivate();
 
-    static QAction* createAction(QMenu *menu, const KDBusMenuAction &actionproperties);
-
     QDBusInterface* interface;
     QMenu* menu;
 };
@@ -42,31 +40,6 @@ KDBusMenuImporterPrivate::KDBusMenuImporterPrivate()
     : interface(nullptr),
     menu(nullptr)
 {
-}
-
-QAction* KDBusMenuImporterPrivate::createAction(QMenu *menu, const KDBusMenuAction &actionproperties)
-{
-    QAction* action = new QAction(menu);
-    action->setText(actionproperties.text);
-    action->setToolTip(actionproperties.tooltip);
-    action->setStatusTip(actionproperties.statustip);
-    action->setWhatsThis(actionproperties.whatsthis);
-    action->setSeparator(actionproperties.separator);
-    action->setCheckable(actionproperties.checkable);
-    action->setChecked(actionproperties.checked);
-    action->setEnabled(actionproperties.enabled);
-    action->setVisible(actionproperties.visible);
-    QList<QKeySequence> shortcuts;
-    foreach (const QString &keysequence, actionproperties.shortcuts) {
-        shortcuts.append(QKeySequence::fromString(keysequence));
-    }
-    action->setShortcuts(shortcuts);
-    if (actionproperties.exclusive) {
-        QActionGroup *actiongroup = new QActionGroup(action);
-        actiongroup->addAction(action);
-    }
-    action->setData(QVariant(actionproperties.id));
-    return action;
 }
 
 
@@ -109,16 +82,10 @@ void KDBusMenuImporter::updateMenu()
     }
     const KDBusMenu menuproperties = menureply.value();
     d->menu->setTitle(menuproperties.title);
-    QIcon menuicon = KDBusMenuImporter::iconForName(menuproperties.icon);
-    if (menuicon.isNull() && !menuproperties.icondata.isEmpty()) {
-        QPixmap menupixmap;
-        const bool pixmaploaded = menupixmap.loadFromData(menuproperties.icondata, s_kdbusmenuiconformat);
-        if (!pixmaploaded) {
-            kWarning(s_kdbusmenuarea) << "Could not load menu icon pixmap";
-        } else {
-            menuicon = QIcon(menupixmap);
-        }
-    }
+    const QIcon menuicon = kDBusMenuIcon(
+        KDBusMenuImporter::iconForName(menuproperties.icon),
+        menuproperties.icondata
+    );
     d->menu->setIcon(menuicon);
     
     QDBusReply<QList<KDBusMenuAction>> actionsreply = d->interface->call("actions");
@@ -129,22 +96,16 @@ void KDBusMenuImporter::updateMenu()
     foreach (const KDBusMenuAction &actionproperties, actionsreply.value()) {
         const quint64 actionid = actionproperties.id;
         kDebug(s_kdbusmenuarea) << "Importing action" << actionid;
-        QIcon actionicon = KDBusMenuImporter::iconForName(actionproperties.icon);
-        if (actionicon.isNull() && !actionproperties.icondata.isEmpty()) {
-            QPixmap actionpixmap;
-            const bool pixmaploaded = actionpixmap.loadFromData(actionproperties.icondata, s_kdbusmenuiconformat);
-            if (!pixmaploaded) {
-                kWarning(s_kdbusmenuarea) << "Could not load action icon pixmap" << actionid;
-            } else {
-                actionicon = QIcon(actionpixmap);
-            }
-        }
+        const QIcon actionicon = kDBusMenuIcon(
+            KDBusMenuImporter::iconForName(actionproperties.icon),
+            actionproperties.icondata
+        );
         QAction* action = nullptr;
         if (actionproperties.title) {
             // see kdeui/widgets/kmenu.cpp
             action = KMenu::titleAction(actionicon, actionproperties.text, d->menu);
         } else {
-            action = KDBusMenuImporterPrivate::createAction(d->menu, actionproperties);
+            action = kDBusMenuAction(d->menu, actionproperties);
         }
         if (actionproperties.submenu) {
             QDBusReply<QList<KDBusMenuAction>> subactionsreply = d->interface->call("actions", actionid);
@@ -154,17 +115,11 @@ void KDBusMenuImporter::updateMenu()
             }
             QMenu* subactionmenu = KDBusMenuImporter::createMenu(d->menu);
             foreach (const KDBusMenuAction &subactionproperties, subactionsreply.value()) {
-                QIcon subactionicon = KDBusMenuImporter::iconForName(subactionproperties.icon);
-                if (subactionicon.isNull() && !subactionproperties.icondata.isEmpty()) {
-                    QPixmap subactionpixmap;
-                    const bool subpixmaploaded = subactionpixmap.loadFromData(subactionproperties.icondata, s_kdbusmenuiconformat);
-                    if (!subpixmaploaded) {
-                        kWarning(s_kdbusmenuarea) << "Could not load sub-action icon pixmap" << actionid;
-                    } else {
-                        subactionicon = QIcon(subactionpixmap);
-                    }
-                }
-                QAction* subaction = KDBusMenuImporterPrivate::createAction(subactionmenu, subactionproperties);
+                const QIcon subactionicon = kDBusMenuIcon(
+                    KDBusMenuImporter::iconForName(subactionproperties.icon),
+                    subactionproperties.icondata
+                );
+                QAction* subaction = kDBusMenuAction(subactionmenu, subactionproperties);
                 subaction->setIcon(subactionicon);
                 connect(subaction, SIGNAL(triggered()), this, SLOT(slotActionTriggered()));
                 subactionmenu->addAction(subaction);
