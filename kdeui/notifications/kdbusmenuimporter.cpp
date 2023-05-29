@@ -147,12 +147,12 @@ void KDBusMenuImporter::slotActionTriggered()
     QAction* action = qobject_cast<QAction*>(sender());
     const quint64 actionid = action->data().toULongLong();
     kDebug(s_kdbusmenuarea) << "Action triggered" << actionid;
-    QDBusReply<bool> reply = d->interface->call("triggerAction", actionid);
-    if (!reply.isValid()) {
-        kWarning(s_kdbusmenuarea) << "Invalid action trigger reply" << reply.error();
+    QDBusReply<bool> triggerreply = d->interface->call("triggerAction", actionid);
+    if (!triggerreply.isValid()) {
+        kWarning(s_kdbusmenuarea) << "Invalid action trigger reply" << triggerreply.error();
         return;
     }
-    if (reply.value() != true) {
+    if (triggerreply.value() != true) {
         kWarning(s_kdbusmenuarea) << "Could not trigger action" << actionid;
         return;
     }

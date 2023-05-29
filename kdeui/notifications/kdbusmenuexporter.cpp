@@ -119,25 +119,25 @@ QList<KDBusMenuAction> KDBusMenuAdaptor::actions(quint64 actionid) const
         }
     }
     foreach (QAction* action, actionslist) {
-        const quint64 actionid = kDBusMenuActionID(action);
-        kDebug(s_kdbusmenuarea) << "Exporting action" << actionid;
+        const quint64 itactionid = kDBusMenuActionID(action);
+        kDebug(s_kdbusmenuarea) << "Exporting action" << itactionid;
         KDBusMenuAction actionproperties;
         // see kdeui/widgets/kmenu.cpp
         actionproperties.title = (action->objectName() == QLatin1String("kmenu_title"));
         if (actionproperties.title) {
             const QWidgetAction *actionwidget = qobject_cast<QWidgetAction*>(action);
             if (!actionwidget) {
-                kWarning(s_kdbusmenuarea) << "Title has no widget" << actionid;
+                kWarning(s_kdbusmenuarea) << "Title has no widget" << itactionid;
             } else {
                 const QToolButton *actionbutton = qobject_cast<QToolButton*>(actionwidget->defaultWidget());
                 if (!actionbutton) {
-                    kWarning(s_kdbusmenuarea) << "Title has no button" << actionid;
+                    kWarning(s_kdbusmenuarea) << "Title has no button" << itactionid;
                 } else {
                     action = actionbutton->defaultAction();
                 }
             }
         }
-        actionproperties.id = actionid;
+        actionproperties.id = itactionid;
         actionproperties.text = action->text();
         actionproperties.icon = m_exporter->iconNameForAction(action);
         actionproperties.tooltip = action->toolTip();
