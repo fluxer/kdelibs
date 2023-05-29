@@ -65,10 +65,6 @@ Q_SIGNALS:
         @brief Signals that the menu was updated.
     */
     void menuUpdated();
-    /*!
-        @brief Signals that menu action @p action was activated.
-    */
-    void actionActivationRequested(QAction *action);
 
 protected:
     /*!

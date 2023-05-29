@@ -154,7 +154,5 @@ void KDBusMenuImporter::slotActionTriggered()
     }
     if (triggerreply.value() != true) {
         kWarning(s_kdbusmenuarea) << "Could not trigger action" << actionid;
-        return;
     }
-    emit actionActivationRequested(action);
 }

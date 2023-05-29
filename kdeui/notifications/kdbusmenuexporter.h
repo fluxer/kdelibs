@@ -50,21 +50,6 @@ public:
     KDBusMenuExporter(const QString &objectpath, QMenu *menu, const QDBusConnection &connection = QDBusConnection::sessionBus());
     virtual ~KDBusMenuExporter();
 
-    /*!
-        @brief Returns the exported menu status, usually "normal" or "notice".
-        @note It may be other string, including empty, but that should not be considered valid.
-    */
-    QString status() const;
-    /*!
-        @brief Sets the exported menu status to @p status.
-    */
-    void setStatus(const QString &status);
-
-    /*!
-        @brief Activates (triggers) the action. If the action is invalid nothing happens.
-    */
-    void activateAction(QAction *action);
-
 protected:
     /*!
         @brief Reimplement to provide custom icons for actions and menus. The default

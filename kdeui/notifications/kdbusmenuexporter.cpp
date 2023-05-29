@@ -35,9 +35,6 @@ public:
     KDBusMenuAdaptor(KDBusMenuExporter *exporter, QMenu* menu);
 
 public Q_SLOTS:
-    QString status() const;
-    void setStatus(const QString &status);
-
     KDBusMenu menu() const;
 
     QList<KDBusMenuAction> actions(quint64 actionid = 0) const;
@@ -45,33 +42,17 @@ public Q_SLOTS:
 
 private:
     KDBusMenuExporter* m_exporter;
-    QString m_status;
     QPointer<QMenu> m_menu;
 };
 
 KDBusMenuAdaptor::KDBusMenuAdaptor(KDBusMenuExporter *exporter, QMenu* menu)
     : QDBusAbstractAdaptor(exporter),
     m_exporter(exporter),
-    m_status(QString::fromLatin1("normal")),
     m_menu(menu)
 {
     qDBusRegisterMetaType<KDBusMenu>();
     qDBusRegisterMetaType<KDBusMenuAction>();
     qDBusRegisterMetaType<QList<KDBusMenuAction>>();
-}
-
-QString KDBusMenuAdaptor::status() const
-{
-    return m_status;
-}
-
-void KDBusMenuAdaptor::setStatus(const QString &status)
-{
-    kDebug(s_kdbusmenuarea) << "Changing status to" << status;
-    if (status != QLatin1String("normal") && status != QLatin1String("notice")) {
-        kWarning(s_kdbusmenuarea) << "Invalid status" << status;
-    }
-    m_status = status;
 }
 
 KDBusMenu KDBusMenuAdaptor::menu() const
@@ -227,22 +208,6 @@ KDBusMenuExporter::~KDBusMenuExporter()
     QDBusConnection dbusconnection(d->connectionname);
     dbusconnection.unregisterObject(d->objectpath);
     delete d;
-}
-
-QString KDBusMenuExporter::status() const
-{
-    return d->adaptor->status();
-}
-
-void KDBusMenuExporter::setStatus(const QString &status)
-{
-    d->adaptor->setStatus(status);
-}
-
-void KDBusMenuExporter::activateAction(QAction *action)
-{
-    const quint64 actionid = kDBusMenuActionID(action);
-    d->adaptor->triggerAction(actionid);
 }
 
 QString KDBusMenuExporter::iconNameForAction(QAction *action)
