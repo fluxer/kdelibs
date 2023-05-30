@@ -91,7 +91,7 @@ void slideWindow(WId id, Plasma::Location location, int offset)
 #ifdef Q_WS_X11
     Display *dpy = QX11Info::display();
     Atom atom = XInternAtom(dpy, "_KDE_SLIDE", False);
-    QVarLengthArray<long, 2> data(2);
+    QVarLengthArray<long> data(2);
 
     data[0] = offset;
 
@@ -159,7 +159,7 @@ void showWindowThumbnails(WId parent, const QList<WId> &windows, const QList<QRe
     int numWindows = windows.size();
 
     // 64 is enough for 10 windows and is a nice base 2 number
-    QVarLengthArray<long, 64> data(1 + (6 * numWindows));
+    QVarLengthArray<long> data(1 + (6 * numWindows));
     data[0] = numWindows;
 
     QList<QRect>::const_iterator rectsIt = rects.constBegin();
@@ -188,7 +188,7 @@ void presentWindows(WId controller, const QList<WId> &ids)
 {
 #ifdef Q_WS_X11
     const int numWindows = ids.count();
-    QVarLengthArray<long, 32> data(numWindows);
+    QVarLengthArray<long> data(numWindows);
     for (int i = 0; i < numWindows; ++i) {
         data[i] = ids.at(i);
     }
@@ -204,7 +204,7 @@ void presentWindows(WId controller, const QList<WId> &ids)
 void presentWindows(WId controller, int desktop)
 {
 #ifdef Q_WS_X11
-    QVarLengthArray<long, 1> data(1);
+    QVarLengthArray<long> data(1);
     data[0] = desktop;
     Display *dpy = QX11Info::display();
     Atom atom = XInternAtom(dpy, "_KDE_PRESENT_WINDOWS_DESKTOP", False);
@@ -225,7 +225,7 @@ void highlightWindows(WId controller, const QList<WId> &ids)
         return;
     }
 
-    QVarLengthArray<long, 32> data(numWindows);
+    QVarLengthArray<long> data(numWindows);
     for (int i = 0; i < numWindows; ++i) {
         data[i] = ids.at(i);
 

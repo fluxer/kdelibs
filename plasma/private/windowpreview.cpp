@@ -21,7 +21,6 @@
 #include "windowpreview_p.h"
 
 #include <QPainter>
-#include <QVarLengthArray>
 #include <QtGui/qevent.h>
 
 #include <kwindowsystem.h>

@@ -36,7 +36,6 @@
 #include <QtGui/QGraphicsWidget>
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QVarLengthArray>
 #include <QGraphicsLayout>
 
 #include <kdebug.h>
