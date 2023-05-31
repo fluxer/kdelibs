@@ -347,7 +347,6 @@ class KTimeZoneDataPrivate
     public:
         QList<KTimeZone::Phase>       phases;
         QList<KTimeZone::Transition>  transitions;
-        QList<KTimeZone::LeapSeconds> leapChanges;
         QList<int>                    utcOffsets;
         QList<QByteArray>             abbreviations;
         KTimeZone::Phase              prePhase;    // phase to use before the first transition
@@ -697,11 +696,6 @@ bool KTimeZone::operator==(const KTimeZone &rhs) const
     return d->d == rhs.d->d;
 }
 
-QByteArray KTimeZone::type() const
-{
-    return d->type();
-}
-
 bool KTimeZone::isValid() const
 {
     return !d->d->name.isEmpty();
@@ -793,13 +787,6 @@ QList<QDateTime> KTimeZone::transitionTimes(const Phase &phase, const QDateTime 
     if (!data(true))
         return QList<QDateTime>();
     return d->d->data->transitionTimes(phase, start, end);
-}
-
-QList<KTimeZone::LeapSeconds> KTimeZone::leapSecondChanges() const
-{
-    if (!data(true))
-        return QList<KTimeZone::LeapSeconds>();
-    return d->d->data->leapSecondChanges();
 }
 
 KTimeZoneSource *KTimeZone::source() const
@@ -1034,7 +1021,6 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
 
     quint32 abbrCharCount;     // the number of characters of time zone abbreviation strings
     quint32 ttisgmtcnt;
-    quint8  is;
     quint8  T_, Z_, i_, f_;    // tzfile identifier prefix
 
     QString path = zone.name();
@@ -1107,23 +1093,15 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
         qint32 gmtoff;     // number of seconds to be added to UTC
         bool   isdst;      // whether tm_isdst should be set by localtime(3)
         quint8 abbrIndex;  // index into the list of time zone abbreviations
-        bool   isutc;      // transition times are in UTC. If UTC, isstd is ignored.
-        bool   isstd;      // if true, transition times are in standard time;
-                           // if false, transition times are in wall clock time,
-                           // i.e. standard time or daylight savings time
-                           // whichever is current before the transition
     };
     LocalTimeType *localTimeTypes = new LocalTimeType[nLocalTimeTypes];
     LocalTimeType *ltt = localTimeTypes;
     for (i = 0;  i < nLocalTimeTypes;  ++ltt, ++i)
     {
         str >> ltt->gmtoff;
-        str >> is;
-        ltt->isdst = (is != 0);
+        str >> ltt->isdst;
         str >> ltt->abbrIndex;
-        // kDebug() << "local type: " << ltt->gmtoff << ", " << is << ", " << ltt->abbrIndex;
-        ltt->isstd = false;   // default if no data
-        ltt->isutc = false;   // default if no data
+        // kDebug() << "local type: " << ltt->gmtoff << ", " << ltt->isdst << ", " << ltt->abbrIndex;
     }
 
     // Read the timezone abbreviations. They are stored as null terminated strings in
@@ -1163,40 +1141,13 @@ KTimeZoneData *KTimeZoneSource::parse(const KTimeZone &zone) const
         }
     }
 
-
-    // Read the leap second adjustments
-    qint32  t;
-    quint32 s;
-    QList<KTimeZone::LeapSeconds> leapChanges;
-    for (i = 0;  i < nLeapSecondAdjusts;  ++i)
-    {
-        str >> t >> s;
-        // kDebug() << "leap entry: " << t << ", " << s;
-        // Don't use QDateTime::setTime_t() because it takes an unsigned argument
-        leapChanges += KTimeZone::LeapSeconds(fromTime_t(t), static_cast<int>(s));
-    }
-    data->setLeapSecondChanges(leapChanges);
-
-    // Read the standard/wall time indicators.
-    // These are true if the transition times associated with local time types
-    // are specified as standard time, false if wall clock time.
-    for (i = 0;  i < nIsStandard;  ++i)
-    {
-        str >> is;
-        localTimeTypes[i].isstd = (is != 0);
-        // kDebug() << "standard: " << is;
-    }
-
-    // Read the UTC/local time indicators.
-    // These are true if the transition times associated with local time types
-    // are specified as UTC, false if local time.
-    for (i = 0;  i < nIsUtc;  ++i)
-    {
-        str >> is;
-        localTimeTypes[i].isutc = (is != 0);
-        // kDebug() << "UTC: " << is;
-    }
-
+    // Skip the leap second adjustments, standard/wall and UTC/local time indicators.
+    const int skiptotal = (
+        (nLeapSecondAdjusts * (sizeof(qint32) + sizeof(quint32))) +
+        (nIsStandard * sizeof(qint8)) +
+        (nIsUtc * sizeof(qint8))
+    );
+    str.skipRawData(skiptotal);
 
     // Find the starting offset from UTC to use before the first transition time.
     // This is first non-daylight savings local time type, or if there is none,
@@ -1285,80 +1236,6 @@ QString KTimeZoneSource::location() const
 {
     return d->mLocation;
 }
-
-/******************************************************************************/
-
-class KTimeZoneLeapSecondsPrivate
-{
-    public:
-        QDateTime  dt;         // UTC time when this change occurred
-        QString    comment;    // optional comment
-        int        seconds;    // number of leap seconds
-};
-
-
-KTimeZone::LeapSeconds::LeapSeconds()
-  : d(new KTimeZoneLeapSecondsPrivate)
-{
-}
-
-KTimeZone::LeapSeconds::LeapSeconds(const QDateTime &utc, int leap, const QString &cmt)
-  : d(new KTimeZoneLeapSecondsPrivate)
-{
-    if (utc.timeSpec() == Qt::UTC)   // invalid if start time is not UTC
-    {
-        d->dt      = utc;
-        d->comment = cmt;
-        d->seconds = leap;
-    }
-}
-
-KTimeZone::LeapSeconds::LeapSeconds(const KTimeZone::LeapSeconds &c)
-  : d(new KTimeZoneLeapSecondsPrivate)
-{
-    d->dt      = c.d->dt;
-    d->comment = c.d->comment;
-    d->seconds = c.d->seconds;
-}
-
-KTimeZone::LeapSeconds::~LeapSeconds()
-{
-    delete d;
-}
-
-KTimeZone::LeapSeconds &KTimeZone::LeapSeconds::operator=(const KTimeZone::LeapSeconds &c)
-{
-    d->dt      = c.d->dt;
-    d->comment = c.d->comment;
-    d->seconds = c.d->seconds;
-    return *this;
-}
-
-bool KTimeZone::LeapSeconds::operator<(const KTimeZone::LeapSeconds& c) const
-{
-    return d->dt < c.d->dt;
-}
-
-QDateTime KTimeZone::LeapSeconds::dateTime() const
-{
-    return d->dt;
-}
-
-bool KTimeZone::LeapSeconds::isValid() const
-{
-    return d->dt.isValid();
-}
-
-int KTimeZone::LeapSeconds::leapSeconds() const
-{
-    return d->seconds;
-}
-
-QString KTimeZone::LeapSeconds::comment() const
-{
-    return d->comment;
-}
-
 
 /******************************************************************************/
 
@@ -1451,7 +1328,6 @@ KTimeZoneData::KTimeZoneData(const KTimeZoneData &c)
 {
     d->phases        = c.d->phases;
     d->transitions   = c.d->transitions;
-    d->leapChanges   = c.d->leapChanges;
     d->utcOffsets    = c.d->utcOffsets;
     d->abbreviations = c.d->abbreviations;
     d->prePhase      = c.d->prePhase;
@@ -1466,7 +1342,6 @@ KTimeZoneData &KTimeZoneData::operator=(const KTimeZoneData &c)
 {
     d->phases        = c.d->phases;
     d->transitions   = c.d->transitions;
-    d->leapChanges   = c.d->leapChanges;
     d->utcOffsets    = c.d->utcOffsets;
     d->abbreviations = c.d->abbreviations;
     d->prePhase      = c.d->prePhase;
@@ -1666,29 +1541,4 @@ QList<QDateTime> KTimeZoneData::transitionTimes(const KTimeZone::Phase &phase, c
         }
     }
     return times;
-}
-
-QList<KTimeZone::LeapSeconds> KTimeZoneData::leapSecondChanges() const
-{
-    return d->leapChanges;
-}
-
-void KTimeZoneData::setLeapSecondChanges(const QList<KTimeZone::LeapSeconds> &adjusts)
-{
-    d->leapChanges = adjusts;
-}
-
-KTimeZone::LeapSeconds KTimeZoneData::leapSecondChange(const QDateTime &utc) const
-{
-    if (utc.timeSpec() != Qt::UTC)
-        kError() << "KTimeZoneData::leapSecondChange(): non-UTC time specified";
-    else
-    {
-        for (int i = d->leapChanges.count();  --i >= 0;  )
-        {
-            if (d->leapChanges[i].dateTime() < utc)
-                return d->leapChanges[i];
-        }
-    }
-    return KTimeZone::LeapSeconds();
 }

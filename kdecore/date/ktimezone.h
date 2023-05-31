@@ -46,7 +46,6 @@ class KTimeZonePrivate;
 class KTimeZoneSourcePrivate;
 class KTimeZoneDataPrivate;
 class KTimeZoneTransitionPrivate;
-class KTimeZoneLeapSecondsPrivate;
 
 /** @defgroup timezones Time zone classes
  *
@@ -84,9 +83,8 @@ class KTimeZoneLeapSecondsPrivate;
  *
  * KTimeZoneData holds the definitions of the different daylight saving time and
  * standard time phases in KTimeZone::Phase objects, and the timed sequence of
- * daylight saving time changes in KTimeZone::Transition objects. Leap seconds
- * adjustments are held in KTimeZone::LeapSeconds objects. You can access this
- * data directly via KTimeZone and KTimeZoneData methods if required.
+ * daylight saving time changes in KTimeZone::Transition objects. You can access
+ * this data directly via KTimeZone and KTimeZoneData methods if required.
  *
  * The mapping of the different classes to external data is as follows:
  *
@@ -100,8 +98,7 @@ class KTimeZoneLeapSecondsPrivate;
  *   adjustments, while still others might contain information on which countries
  *   use the time zone. To allow for this variation, KTimeZoneData is made
  *   available for inheritance. When the necessary information is not available,
- *   the KTimeZone::Phase, KTimeZone::Transition and KTimeZone::LeapSeconds data
- *   will be empty.
+ *   the KTimeZone::Phase and KTimeZone::Transition data will be empty.
  *
  * - Each KTimeZoneData class will have a corresponding KTimeZone class, and
  *   related KTimeZoneBackend class, which can interpret its data.
@@ -159,7 +156,7 @@ class KTimeZoneLeapSecondsPrivate;
  *     // Read the data for 'zoneName' from the new data source.
  *
  *     // Parse what we have read, and write it into 'data'.
- *     // Compile the sequence of daylight savings changes and leap
+ *     // Compile the sequence of daylight savings changes
  *     // seconds adjustments (if available) and write into 'data'.
  *
  *     return data;
@@ -510,62 +507,6 @@ public:
         KTimeZoneTransitionPrivate *const d;
     };
 
-
-    /*
-     * Leap seconds adjustment for a time zone.
-     *
-     * This class defines a leap seconds adjustment for a time zone by its UTC time of
-     * occurrence and the cumulative number of leap seconds to be added at that time.
-     *
-     * @short Leap seconds adjustment for a time zone
-     * @see KTimeZone, KTimeZoneData
-     * @ingroup timezones
-     * @author David Jarvie <djarvie@kde.org>.
-     */
-    class KDECORE_EXPORT LeapSeconds
-    {
-    public:
-        LeapSeconds();
-        LeapSeconds(const QDateTime &utcTime, int leapSeconds, const QString &comment = QString());
-        LeapSeconds(const LeapSeconds &c);
-        ~LeapSeconds();
-        LeapSeconds &operator=(const LeapSeconds &c);
-        bool operator<(const LeapSeconds &c) const;    // needed by qSort()
-
-        /**
-         * Return whether this instance holds valid data.
-         *
-         * @return true if valid, false if invalid
-         */
-        bool isValid() const;
-
-        /**
-         * Return the UTC date/time when this change occurred.
-         *
-         * @return date/time
-         */
-        QDateTime dateTime() const;
-
-        /**
-         * Return the cumulative number of leap seconds to be added after this
-         * change occurs.
-         *
-         * @return number of leap seconds
-         */
-        int leapSeconds() const;
-
-        /**
-         * Return the comment (if any) applying to this change.
-         *
-         * @return comment
-         */
-        QString comment() const;
-
-    private:
-        KTimeZoneLeapSecondsPrivate *const d;
-    };
-
-
     /**
      * Constructs a null time zone. A null time zone is invalid.
      *
@@ -611,15 +552,6 @@ public:
      */
     bool operator==(const KTimeZone &rhs) const;
     bool operator!=(const KTimeZone &rhs) const  { return !operator==(rhs); }
-
-    /**
-     * Returns the class name of the data represented by this instance.
-     * If a derived class object has been assigned to this instance, this
-     * method will return the name of that class.
-     *
-     * @return "KTimeZone" or the class name of a derived class
-     */
-    QByteArray type() const;
 
     /**
      * Checks whether the instance is valid.
@@ -948,17 +880,6 @@ public:
     QList<QDateTime> transitionTimes(const Phase &phase, const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime()) const;
 
     /**
-     * Return all leap second adjustments, in time order.
-     *
-     * Note that some time zone data sources (such as system time zones accessed
-     * via the system libraries) may not provide information on leap second
-     * adjustments. In such cases, this method will return an empty list.
-     *
-     * @return list of adjustments
-     */
-    QList<LeapSeconds> leapSecondChanges() const;
-
-    /**
      * Returns the source reader/parser for the time zone's source database.
      *
      * @return reader/parser
@@ -1273,7 +1194,7 @@ private:
  *
  * It contains all the data available from the KTimeZoneSource class,
  * including, when available, a complete list of daylight savings time
- * changes and leap seconds adjustments.
+ * changes.
  *
  * This base class can be instantiated, but contains no data.
  *
@@ -1438,26 +1359,6 @@ public:
      */
     QList<QDateTime> transitionTimes(const KTimeZone::Phase &phase, const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime()) const;
 
-    /**
-     * Return all leap second adjustments, in time order.
-     *
-     * Note that some time zone data sources (such as system time zones accessed
-     * via the system libraries) may not provide information on leap second
-     * adjustments. In such cases, this method will return an empty list.
-     *
-     * @return list of adjustments
-     */
-    QList<KTimeZone::LeapSeconds> leapSecondChanges() const;
-
-    /**
-     * Find the leap second adjustment which is applicable at a given UTC time.
-     *
-     * @param utc UTC date/time. An error occurs if @p utc.timeSpec() is not Qt::UTC.
-     * @return leap second adjustment, or invalid if @p utc is earlier than the
-     *         first leap second adjustment or @p utc is a local time
-     */
-    KTimeZone::LeapSeconds leapSecondChange(const QDateTime &utc) const;
-
 protected:
     /**
      * Initialise the daylight savings time phase list.
@@ -1489,14 +1390,6 @@ protected:
      * @see transitions()
      */
     void setTransitions(const QList<KTimeZone::Transition> &transitions);
-
-    /**
-     * Initialise the leap seconds adjustment list.
-     *
-     * @param adjusts list of adjustments
-     * @see leapSecondChanges()
-     */
-    void setLeapSecondChanges(const QList<KTimeZone::LeapSeconds> &adjusts);
 
 private:
     friend KTimeZoneSource;
