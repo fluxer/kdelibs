@@ -862,16 +862,6 @@ public:
     QList<Phase> phases() const;
 
     /**
-     * Return whether daylight saving transitions are available for the time zone.
-     *
-     * The base class returns @c false.
-     *
-     * @return @c true if transitions are available, @c false if not
-     * @see transitions(), transition()
-     */
-    virtual bool hasTransitions() const;
-
-    /**
      * Return all daylight saving transitions, in time order. If desired, the
      * transitions returned may be restricted to a specified time range.
      *
@@ -886,7 +876,7 @@ public:
      * @param end end UTC date/time, or invalid date/time for no end. @p end.timeSpec()
      *                must be Qt::UTC, else @p end will be considered invalid.
      * @return list of transitions, in time order
-     * @see hasTransitions(), transition(), transitionTimes()
+     * @see transition(), transitionTimes()
      */
     QList<KTimeZone::Transition> transitions(const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime()) const;
 
@@ -908,7 +898,7 @@ public:
      *                  to true otherwise
      * @return time zone transition, or null either if @p dt is either outside the
      *         defined range of the transition data or if @p dt does not occur
-     * @see transitionIndex(), hasTransitions(), transitions()
+     * @see transitionIndex(), transitions()
      */
     const KTimeZone::Transition *transition(const QDateTime &dt, const Transition **secondTransition = 0, bool *validTime = 0) const;
 
@@ -932,7 +922,7 @@ public:
      * @return index into the time zone transition list, or -1 either if @p dt is
      *         either outside the defined range of the transition data or if @p dt
      *         does not occur
-     * @see transition(), transitions(), hasTransitions()
+     * @see transition(), transitions()
      */
     int transitionIndex(const QDateTime &dt, int *secondIndex = 0, bool *validTime = 0) const;
 
@@ -953,7 +943,7 @@ public:
      * @param end end UTC date/time, or invalid date/time for no end. @p end.timeSpec()
      *                must be Qt::UTC, else @p end will be considered invalid.
      * @return ordered list of transition times
-     * @see hasTransitions(), transition(), transitions()
+     * @see transition(), transitions()
      */
     QList<QDateTime> transitionTimes(const Phase &phase, const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime()) const;
 
@@ -1175,12 +1165,6 @@ public:
      * @param caller calling KTimeZone object
      */
     virtual bool isDst(const KTimeZone* caller, time_t t) const;
-    /**
-     * Implements KTimeZone::hasTransitions().
-     *
-     * @param caller calling KTimeZone object
-     */
-    virtual bool hasTransitions(const KTimeZone* caller) const;
 
 private:
     KTimeZonePrivate *d;   // non-const
@@ -1369,16 +1353,6 @@ public:
     QList<KTimeZone::Phase> phases() const;
 
     /**
-     * Return whether daylight saving transitions are available for the time zone.
-     *
-     * The base class returns @c false.
-     *
-     * @return @c true if transitions are available, @c false if not
-     * @see transitions(), transition()
-     */
-    virtual bool hasTransitions() const;
-
-    /**
      * Return all daylight saving transitions, in time order. If desired, the
      * transitions returned may be restricted to a specified time range.
      *
@@ -1393,7 +1367,7 @@ public:
      * @param end end date/time, or invalid date/time for no end. @p end.timeSpec()
      *                must be Qt::UTC, else @p end will be considered invalid.
      * @return list of transitions, in time order
-     * @see hasTransitions(), transition(), transitionTimes()
+     * @see transition(), transitionTimes()
      */
     QList<KTimeZone::Transition> transitions(const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime()) const;
 
@@ -1415,7 +1389,7 @@ public:
      *                  to true otherwise
      * @return time zone transition, or null either if @p dt is either outside the
      *         defined range of the transition data or if @p dt does not occur
-     * @see transitionIndex(), hasTransitions(), transitions()
+     * @see transitionIndex(), transitions()
      */
     const KTimeZone::Transition *transition(const QDateTime &dt, const KTimeZone::Transition **secondTransition = 0, bool *validTime = 0) const;
 
@@ -1439,7 +1413,7 @@ public:
      * @return index into the time zone transition list, or -1 either if @p dt is
      *         either outside the defined range of the transition data or if @p dt
      *         does not occur
-     * @see transition(), transitions(), hasTransitions()
+     * @see transition(), transitions()
      */
     int transitionIndex(const QDateTime &dt, int *secondIndex = 0, bool *validTime = 0) const;
 
@@ -1460,7 +1434,7 @@ public:
      * @param end end UTC date/time, or invalid date/time for no end. @p end.timeSpec()
      *                must be Qt::UTC, else @p end will be considered invalid.
      * @return ordered list of transition times
-     * @see hasTransitions(), transition(), transitions()
+     * @see transition(), transitions()
      */
     QList<QDateTime> transitionTimes(const KTimeZone::Phase &phase, const QDateTime &start = QDateTime(), const QDateTime &end = QDateTime()) const;
 

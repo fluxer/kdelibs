@@ -641,13 +641,6 @@ bool KTimeZoneBackend::isDst(const KTimeZone* caller, time_t t) const
     return isDstAtUtc(caller, KTimeZone::fromTime_t(t));
 }
 
-bool KTimeZoneBackend::hasTransitions(const KTimeZone* caller) const
-{
-    Q_UNUSED(caller);
-    return true;
-}
-
-
 /******************************************************************************/
 
 #if SIZEOF_TIME_T == 8
@@ -767,11 +760,6 @@ QList<KTimeZone::Phase> KTimeZone::phases() const
     return d->d->data->phases();
 }
 
-bool KTimeZone::hasTransitions() const
-{
-    return d->hasTransitions(this);
-}
-
 QList<KTimeZone::Transition> KTimeZone::transitions(const QDateTime &start, const QDateTime &end) const
 {
     if (!data(true))
@@ -881,42 +869,26 @@ QDateTime KTimeZone::toZoneTime(const QDateTime &utcDateTime, bool *secondOccurr
         return QDateTime();
 
     // Convert UTC to local time
-    if (hasTransitions())
+    if (!data(true))
     {
-        if (!data(true))
-        {
-            // No data - default to UTC
-            QDateTime dt = utcDateTime;
-            dt.setTimeSpec(Qt::LocalTime);
-            return dt;
-        }
+        // No data - default to UTC
+        QDateTime dt = utcDateTime;
+        dt.setTimeSpec(Qt::LocalTime);
+        return dt;
+    }
 
-        const KTimeZoneData *data = d->d->data;
-        const int index = data->transitionIndex(utcDateTime);
-        const int secs = (index >= 0) ? data->transitions().at(index).phase().utcOffset() : data->previousUtcOffset();
-        QDateTime dt = utcDateTime.addSecs(secs);
-        if (secondOccurrence)
-        {
-            // Check whether the local time occurs twice around a daylight savings time
-            // shift, and if so, whether it's the first or second occurrence.
-            *secondOccurrence = data->d->isSecondOccurrence(dt, index);
-        }
-        dt.setTimeSpec(Qt::LocalTime);
-        return dt;
-    }
-    else
+    const KTimeZoneData *data = d->d->data;
+    const int index = data->transitionIndex(utcDateTime);
+    const int secs = (index >= 0) ? data->transitions().at(index).phase().utcOffset() : data->previousUtcOffset();
+    QDateTime dt = utcDateTime.addSecs(secs);
+    if (secondOccurrence)
     {
-        const int secs = offsetAtUtc(utcDateTime);
-        QDateTime dt = utcDateTime.addSecs(secs);
-        dt.setTimeSpec(Qt::LocalTime);
-        if (secondOccurrence)
-        {
-            // Check whether the local time occurs twice around a daylight savings time
-            // shift, and if so, whether it's the first or second occurrence.
-            *secondOccurrence = (secs != offsetAtZoneTime(dt));
-        }
-        return dt;
+        // Check whether the local time occurs twice around a daylight savings time
+        // shift, and if so, whether it's the first or second occurrence.
+        *secondOccurrence = data->d->isSecondOccurrence(dt, index);
     }
+    dt.setTimeSpec(Qt::LocalTime);
+    return dt;
 }
 
 QDateTime KTimeZone::convert(const KTimeZone &newZone, const QDateTime &zoneDateTime) const
@@ -1568,11 +1540,6 @@ void KTimeZoneData::setPhases(const QList<KTimeZone::Phase> &phases, int previou
 {
     d->phases   = phases;
     d->prePhase = KTimeZone::Phase(previousUtcOffset, QByteArray(), false);
-}
-
-bool KTimeZoneData::hasTransitions() const
-{
-    return true;
 }
 
 QList<KTimeZone::Transition> KTimeZoneData::transitions(const QDateTime &start, const QDateTime &end) const
