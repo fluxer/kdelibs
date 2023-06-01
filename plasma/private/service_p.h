@@ -61,7 +61,7 @@ public:
         setName("NullService");
     }
 
-    ServiceJob *createJob(const QString &operation, QMap<QString, QVariant> &)
+    ServiceJob *createJob(const QString &operation, const QMap<QString, QVariant> &)
     {
         return new NullServiceJob(destination(), operation, this);
     }

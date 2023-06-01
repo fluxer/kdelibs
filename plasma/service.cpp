@@ -159,8 +159,7 @@ ServiceJob *Service::startOperationCall(const KConfigGroup &description, QObject
         if (d->disabledOperations.contains(op)) {
             kDebug() << "Operation" << op << "is disabled";
         } else {
-            QMap<QString, QVariant> params = parametersFromDescription(description);
-            job = createJob(op, params);
+            job = createJob(op, parametersFromDescription(description));
         }
     } else {
         kDebug() << op << "is not a valid group; valid groups are:" << d->config->groupList();

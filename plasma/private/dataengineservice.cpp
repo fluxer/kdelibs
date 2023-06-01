@@ -36,7 +36,7 @@ DataEngineService::DataEngineService(DataEngine *engine)
 }
 
 Plasma::ServiceJob* DataEngineService::createJob(const QString& operation,
-                                          QMap<QString,QVariant>& parameters)
+                                                 const QMap<QString,QVariant>& parameters)
 {
     return new GetSource(m_engine, operation, parameters, this);
 }

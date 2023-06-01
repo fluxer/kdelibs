@@ -42,7 +42,7 @@ class DataEngineService : public Plasma::Service
 
     protected:
         Plasma::ServiceJob* createJob(const QString& operation,
-                                      QMap<QString,QVariant>& parameters);
+                                      const QMap<QString,QVariant>& parameters);
 
     private Q_SLOTS:
         void sourceAdded(QString source);

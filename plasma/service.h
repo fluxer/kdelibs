@@ -276,7 +276,7 @@ protected:
      * @return a ServiceJob that can be started and monitored by the consumer
      */
     virtual ServiceJob *createJob(const QString &operation,
-                                  QMap<QString, QVariant> &parameters) = 0;
+                                  const QMap<QString, QVariant> &parameters) = 0;
 
     /**
      * By default this is based on the file in plasma/services/name.operations, but can be

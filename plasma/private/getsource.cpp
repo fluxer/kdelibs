@@ -30,9 +30,9 @@ namespace Plasma
 {
 
 GetSource::GetSource(DataEngine *engine, const QString& operation,
-                    QMap<QString,QVariant>& parameters,
-                    DataEngineService *service)
-    : ServiceJob(QString("publickey"), operation, parameters, service),
+                     const QMap<QString,QVariant>& parameters,
+                     DataEngineService *service)
+    : ServiceJob(QString::fromLatin1("publickey"), operation, parameters, service),
       m_engine(engine),
       m_service(service)
 {
