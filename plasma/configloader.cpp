@@ -394,14 +394,9 @@ ConfigLoader::~ConfigLoader()
     delete d;
 }
 
-KConfigSkeletonItem *ConfigLoader::findItem(const QString &group, const QString &key)
+KConfigSkeletonItem *ConfigLoader::findItemByGroup(const QString &group, const QString &key)
 {
     return KConfigSkeleton::findItem(d->keysToNames[group + key]);
-}
-
-KConfigSkeletonItem *ConfigLoader::findItemByName(const QString &name)
-{
-    return KConfigSkeleton::findItem(name);
 }
 
 QVariant ConfigLoader::property(const QString &name)

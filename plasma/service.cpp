@@ -138,7 +138,7 @@ QMap<QString, QVariant> Service::parametersFromDescription(const KConfigGroup &d
 
     const QString op = description.name();
     foreach (const QString &key, description.keyList()) {
-        KConfigSkeletonItem *item = d->config->findItem(op, key);
+        KConfigSkeletonItem *item = d->config->findItemByGroup(op, key);
         if (item) {
             params.insert(key, description.readEntry(key, item->property()));
         }
