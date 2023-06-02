@@ -24,18 +24,16 @@
 #include <QtCore/QStringList>
 #include <QtCore/QObject>
 #include <QtCore/QPair>
-#include <QtXml/qdom.h>
-#include <QtXml/qdom.h>
+#include <QtGui/QTreeWidgetItem>
+#include <QtGui/QLabel>
+#include <QtGui/QTreeWidget>
+#include <QtXml/QDomDocument>
+#include <QtDBus/QDBusMessage>
 
 #include <kurl.h>
 #include "kbookmark.h"
 
 class KBookmarkGroup;
-#include <QDBusMessage>
-
-#include <QTreeWidgetItem>
-#include <QLabel>
-#include <QTreeWidget>
 class KLineEdit;
 class KMenu;
 class KBookmarkDialog;
